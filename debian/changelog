@@ -130,6 +130,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * data/fields/archive-sections:
     + [NT] Added new sections.  Thanks to Michael Biebl for the
       reminder.  (Closes: #652123)
+  * data/shared-libs/ldconfig-dirs:
+    + [NT] Auto-generate file with help from dpkg-architecture.
+      (Closes: #653832)
 
   * doc/lintian.xml:
     + [NT] Corrected the runtime estimate for an archive-wide run.
@@ -214,6 +217,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * man/lintian.pod.in:
     + [NT] Removed the notes that some options disable loading of a
       profile.  Lintian now always loads a profile when doing checks.
+
+  * private/refresh-archs:
+    + [NT] Rewritten.
 
   * reporting/harness:
     + [NT] Removed useless "TODO" message from the log output.
