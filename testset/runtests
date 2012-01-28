@@ -136,7 +136,8 @@ $| = 1;
 
 $testok = 1;
 
-my $profile = Lintian::Profile->new ('debian/main', ["$ENV{'LINTIAN_ROOT'}/profiles"]);
+my $profile = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
+                                     ["$ENV{'LINTIAN_ROOT'}/profiles"]);
 
 # force all checks to be loaded - not the best solution
 # - At the time of writing it is not needed for 'debian/main', but
