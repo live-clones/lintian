@@ -77,7 +77,7 @@ unless ($prof) {
     $prof = find_default_profile(@proc_inc);
 
 }
-$profile = Lintian::Profile->new($prof, \@proc_inc);
+$profile = Lintian::Profile->new($prof, $ENV{'LINTIAN_ROOT'}, \@proc_inc);
 
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,

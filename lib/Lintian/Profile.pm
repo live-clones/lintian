@@ -41,7 +41,7 @@ Lintian::Profile - Profile parser for Lintian
  # Check if the Ubuntu default profile is present.
  my $file = Lintian::Profile->find_profile('ubuntu', @inc);
  # Parse the debian profile (if available)
- my $profile = Lintian::Profile->new('debian', [@inc]);
+ my $profile = Lintian::Profile->new('debian', $ENV{'LINTIAN_ROOT'}, [@inc]);
  foreach my $tag ($profile->tags) {
      print "Enabled tag: $tag\n";
  }
@@ -84,18 +84,18 @@ my %SEC_FIELDS = (
     'severity'    => 1,
     );
 
-=item Lintian::Profile->new($profname, $ppath)
+=item Lintian::Profile->new($profname, $root, $ppath)
 
-Creates a new profile from the profile located by
-using find_profile($profname, @$ppath).  $profname
-is the name of the profile and $ppath is a list
-reference containing the directories to search for
-the profile and (if any) its parents.
+Creates a new profile from the profile located by using
+find_profile($profname, @$ppath).  $profname is the name of the
+profile and $ppath is a list reference containing the directories to
+search for the profile and (if any) its parents.  $root is the
+"LINTIAN_ROOT" and is used for finding checks.
 
 =cut
 
 sub new {
-    my ($type, $name, $ppath) = @_;
+    my ($type, $name, $root, $ppath) = @_;
     my $profile;
     croak "Illegal profile name \"$name\".\n"
         if $name =~ m,^/,o or $name =~ m/\./o;
@@ -109,6 +109,7 @@ sub new {
         'severity-changes'     => {},
         'check-scripts'        => {}, # maps script name to Lintian::CheckScript
         'known-tags'           => {}, # maps tag name to Lintian::Tag::Info
+        'root'         => $root,
     };
     $self = bless $self, $type;
     $profile = $self->find_profile($name);
@@ -130,9 +131,13 @@ Note: This list reference and its contents should not be modified.
 Returns the name of the profile, which may differ from the name used
 to create this instance of the profile (e.g. due to symlinks).
 
+=item $prof->root
+
+Returns the LINTIAN_ROOT associated with the profile.
+
 =cut
 
-Lintian::Profile->mk_ro_accessors (qw(parents name));
+Lintian::Profile->mk_ro_accessors (qw(parents name root));
 
 =item $prof->tags([$known])
 
@@ -480,7 +485,7 @@ sub _check_for_invalid_fields {
 
 sub _load_check {
     my ($self, $profile, $check) = @_;
-    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
+    my $root = $self->root;
     my $cf = "$root/checks/${check}.desc";
     croak "$profile references unknown $check.\n" unless -f $cf;
     my $c = Lintian::CheckScript->new ($cf);
@@ -498,7 +503,7 @@ sub _load_check {
 sub _load_checks {
     # NB: testset/runtests uses this directly.
     my ($self, $profile) = @_;
-    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
+    my $root = $self->root;
     opendir my $dirfd, "$root/checks" or croak "opendir $root/checks: $!";
     for my $desc (sort readdir $dirfd) {
         next unless $desc =~ s/\.desc$//o;

@@ -57,7 +57,8 @@ use Text_utils;
 use Util;
 
 my $profile = Lintian::Profile->new (find_default_profile ("$LINTIAN_ROOT/profiles"),
-                                    ["$LINTIAN_ROOT/profiles"]);
+                                     $LINTIAN_ROOT,
+                                     ["$LINTIAN_ROOT/profiles"]);
 
 
 # Set the Lintian version, current timestamp, and archive timestamp.

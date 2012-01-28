@@ -784,7 +784,7 @@ unless ($opt{'LINTIAN_PROFILE'}){
     # Time to ask dpkg-vendor for a vendor name
     $opt{'LINTIAN_PROFILE'} = find_default_profile(@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles");
 }
-$PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'},
+$PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'}, $opt{'LINTIAN_ROOT'},
                                   [@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles"]);
 v_msg('Using profile ' . $PROFILE->name . '.');
 
