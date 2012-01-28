@@ -97,6 +97,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [JW] Check for Multi-Arch foreign packages shipping shared
       libraries in public library directories.  (Closes: #650444)
     + [NT] Use the new hwcap-dirs data file to determine hwcap dirs.
+    + [NT] Ignore missing symbols/shlibs files for libc libnss
+      plugins.
   * checks/source-copyright:
     + [JW] Allow a trailing slash in the DEP-5 1.0 URL.
       (Closes: #649813)

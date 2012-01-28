@@ -297,7 +297,8 @@ if ($#shlibs == -1) {
             for my $shlib (@shlibs) {
                 # skip it if it's not a public shared library
                 next unless $ldconfig_dirs->known(dirname($shlib));
-                tag 'no-shlibs-control-file', $shlib;
+                tag 'no-shlibs-control-file', $shlib
+                    unless is_nss_plugin ($shlib);
             }
         }
     } else {
@@ -335,7 +336,8 @@ if ($#shlibs == -1) {
                 # skip it if it's not a public shared library
                 next unless $ldconfig_dirs->known(dirname($shlib));
                 # no!!
-                tag 'shlib-missing-in-control-file', $shlib_name, 'for', $shlib;
+                tag 'shlib-missing-in-control-file', $shlib_name, 'for', $shlib
+                    unless is_nss_plugin ($shlib);
             }
         }
         for $shlib_name (keys %shlibs_control) {
@@ -373,7 +375,8 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
         for my $shlib (@shlibs, keys %unversioned_shlibs) {
             # skip it if it's not a public shared library
             next unless $ldconfig_dirs->known(dirname($shlib));
-            tag 'no-symbols-control-file', $shlib;
+            tag 'no-symbols-control-file', $shlib
+                unless is_nss_plugin ($shlib);
         }
     }
 } elsif (open(IN, '<', $symbolsf)) {
@@ -518,7 +521,8 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
         unless (exists $symbols_control{$shlib_name}) {
             # skip it if it's not a public shared library
             next unless $ldconfig_dirs->known(dirname($shlib));
-            tag 'shlib-missing-in-symbols-control-file', $shlib_name, 'for', $shlib;
+            tag 'shlib-missing-in-symbols-control-file', $shlib_name, 'for', $shlib
+                unless is_nss_plugin ($shlib);
         }
     }
     for $shlib_name (keys %symbols_control) {
@@ -645,6 +649,14 @@ sub format_soname {
     }
 
     return $soname
+}
+
+# Returns a truth value if the first argument appears to be the path
+# to an libc nss plugin (libnss_<name>.so.$version).
+sub is_nss_plugin {
+    my ($path) = @_;
+    return 1 if $path =~ m,^(.*/)?libnss_[^.]+\.so\.\d+$,o;
+    return 0;
 }
 
 1;
