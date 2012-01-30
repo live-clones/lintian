@@ -109,11 +109,6 @@ MAINTAINER does not contain an e-mail address in angle brackets (<>).
 MAINTAINER does not contain a full name before the address, or the e-mail
 address was not in angle brackets.
 
-=item %s-not-full-name
-
-The name portion of MAINTAINER is a single word.  This tag is not issued
-for a FIELD of C<changed-by>.
-
 =item wrong-debian-qa-address-set-as-maintainer
 
 MAINTAINER appears to be the Debian QA Group, but the e-mail address
@@ -163,15 +158,8 @@ sub check_maintainer {
     tag "$field-address-looks-weird", $maintainer
         if (not $del and $name and $mail);
 
-    # Wookey really only has one name.  If we get more of these, consider
-    # removing the check.  Skip the full name check for changes files as it's
-    # not important there; we'll get it from the debian/control checks if
-    # needed.
     if (not $name) {
         tag "$field-name-missing", $maintainer;
-    } elsif ($name !~ /^\S+\s+\S+/ and $name ne 'Wookey') {
-        tag "$field-not-full-name", $name
-            if $field ne 'changed-by';
     }
 
     # Don't issue the malformed tag twice if we already saw problems.

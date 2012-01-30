@@ -18,9 +18,11 @@ lintian (2.5.5) UNRELEASED; urgency=low
       - syntax-error-in-debconf-template
     + Removed:
       - dh_dhelp-is-deprecated
+      - maintainer-not-full-name
       - maintainer-script-calls-deprecated-wm-menu-config
       - maintainer-script-does-not-check-for-existence-of-wm-menu-config
       - uploader-address-missing
+      - uploader-not-full-name
 
   * checks/*:
     + [NT] Fixed assumptions about certain fields being present.
@@ -76,6 +78,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       (Closes: #655907)
     + [NT] Ignore self relations in Replaces and Provides.  This
       is allowed according to §7.6.2.  (Closes: #657034)
+    + [NT] Applied patch from intrigeri to remove "not-full-name"
+      tags.  (Closes: #658031)
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)
@@ -188,6 +192,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Check.pm:
     + [NT] Do not check for missing uploader address as it cannot be
       done reliably anymore.
+    + [NT] Applied patch from intrigeri to remove the "not-full-name"
+      tags.
   * lib/Lintian/CheckScript.pm:
     + [NT] New file.
   * lib/Lintian/Collect/{Binary,Source}.pm:

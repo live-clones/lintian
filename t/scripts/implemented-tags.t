@@ -33,7 +33,6 @@ our $EXCLUDE =
                  .*-name-missing$
                  .*-address-missing$
                  .*-address-malformed$
-                 .*-not-full-name$
                  .*-address-looks-weird$
                  .*-address-is-on-localhost$
                  .*-address-causes-mail-loops-or-bounces$

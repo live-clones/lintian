@@ -4,7 +4,6 @@ Section: devel
 Maintainer: {$author}
 Uploaders: Mrs. Localhost <user@localhost>,
            Mr. Weird<no-space@somewhere.com>,
-           One-name <has-only-1-name@elsewhere.com>,
            Malformed Email <@ddress@myspace.com>,
            John A. J. Doe <i.am.ok@somewhere.com>,
            Doris Double-Email <Doris Double-Email <doris@demail.com>>

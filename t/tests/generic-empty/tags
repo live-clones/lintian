@@ -11,11 +11,9 @@ E: generic-empty: package-has-no-description
 W: generic-empty source: changelog-should-mention-nmu
 W: generic-empty source: debian-rules-missing-recommended-target build-arch
 W: generic-empty source: debian-rules-missing-recommended-target build-indep
-W: generic-empty source: maintainer-not-full-name a
 W: generic-empty source: no-debian-copyright
 W: generic-empty source: no-section-field-for-source
 W: generic-empty source: source-nmu-has-incorrect-version-number 1.0
 W: generic-empty: empty-binary-package
-W: generic-empty: maintainer-not-full-name a
 W: generic-empty: no-priority-field
 W: generic-empty: no-section-field

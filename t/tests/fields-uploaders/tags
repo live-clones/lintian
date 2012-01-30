@@ -3,4 +3,3 @@ E: fields-uploaders source: uploader-address-malformed Doris Double-Email <Doris
 E: fields-uploaders source: uploader-address-malformed Malformed Email <@ddress@myspace.com>
 E: fields-uploaders source: uploader-address-malformed Mrs. Localhost <user@localhost>
 W: fields-uploaders source: uploader-address-looks-weird Mr. Weird<no-space@somewhere.com>
-W: fields-uploaders source: uploader-not-full-name One-name

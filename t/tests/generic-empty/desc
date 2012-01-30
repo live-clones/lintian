@@ -9,7 +9,6 @@ Test-For:
  changelog-should-mention-nmu
  debian-rules-missing-required-target
  maintainer-address-missing
- maintainer-not-full-name
  no-copyright-file
  no-priority-field
  no-section-field
