@@ -21,18 +21,18 @@
 # MA 02110-1301, USA.
 
 use strict;
-use Getopt::Std;
+use Getopt::Long;
 
-use vars qw($opt_c $opt_f $opt_i $opt_r);
-unless (getopts('cfir')) {
+
+sub usage {
   print <<END;
 Lintian reporting harness
 Create and maintain Lintian reports automatically
 
-Usage: harness [ -i | -c [-f] ] [ -r ]
+Usage: harness [ -i | -f | -r | -c ]
 
 Options:
-  -c    clean mode, erase everything and start from scratch
+  -c    clean mode, erase everything and start from scratch (implies -f)
   -f    full mode, blithely overwrite lintian.log
   -i    incremental mode, use old lintian.log data, process changes only
   -r    generate HTML reports only
@@ -46,9 +46,31 @@ END
   exit;
 }
 
-die 'Cannot use both incremental and full/clean.' if ($opt_i && ($opt_f || $opt_c));
-$opt_f = 1 if $opt_c;
-die 'Cannot use other modes with reports only.' if ($opt_r && ($opt_i || $opt_f || $opt_c));
+my %opt = ();
+
+my %opthash = (
+    'i' => \$opt{'incremental-mode'},
+    'c' => \$opt{'clean-mode'},
+    'f' => \$opt{'full-mode'},
+    'r' => \$opt{'reports-only'},
+    'help|h' => \&usage,
+);
+
+# init commandline parser
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+# process commandline options
+GetOptions(%opthash)
+    or die("error parsing options\n");
+
+# clean implies full - do this as early as possible, so we can just
+# check $opt{'full-mode'} rather than a full
+#   ($opt{'clean-mode'} || $opt{'full-mode'})
+$opt{'full-mode'} = 1 if $opt{'clean-mode'};
+
+die "Cannot use both incremental and full/clean.\n" if $opt{'incremental-mode'} && $opt{'full-mode'};
+die "Cannot use other modes with reports only.\n"
+    if $opt{'reports-only'} && ($opt{'full-mode'} || $opt{'incremental-mode'});
 
 # read configuration
 require './config';
@@ -105,21 +127,21 @@ if ($LINTIAN_GPG_CHECK) {
 my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 
 # purge the old packages
-$LAB->remove if $opt_c;
+$LAB->remove if $opt{'clean-mode'};
 
 $LAB->create ({ 'mode' => 02775}) unless $LAB->exists;
 
-unless ($opt_f || $opt_c) {
-  unless ($opt_r) {
+if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
+    # Nothing explicitly chosen, default to -i if the log is present,
+    # otherwise -f.
     if (-f $lintian_log) {
-      $opt_i = 1;
+        $opt{'incremental-mode'} = 1;
     } else {
-      $opt_f = 1;
+        $opt{'full-mode'} = 1;
     }
-  }
 }
 
-unless ($opt_r) {
+unless ($opt{'reports-only'}) {
     $LAB->open;
     my @manifests = local_mirror_manifests ($LINTIAN_ARCHIVEDIR, [_trim_split ($LINTIAN_DIST)],
                                             [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
@@ -193,7 +215,7 @@ unless ($opt_r) {
     # Flushes the changed manifest to the file system - croaks on error
     $LAB->close;
 
-    if ($opt_i) {
+    if ($opt{'incremental-mode'}) {
         # Extra work for the incremental run
 
         die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;

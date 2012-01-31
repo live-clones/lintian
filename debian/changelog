@@ -235,6 +235,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
 
   * reporting/harness:
     + [NT] Removed useless "TODO" message from the log output.
+    + [NT] Added -h/--help option to print usage information.
   * reporting/html_reports:
     + [JW] Properly handle uploader names with commas.
     + [NT] Use the severities from profiles when generating tag pages.
