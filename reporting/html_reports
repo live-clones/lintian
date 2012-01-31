@@ -333,7 +333,7 @@ undef $source_info;
 # a summary page of errors and warnings for each maintainer, output a full
 # page that includes info, experimental, and overriden tags, and assemble the
 # maintainer index and the QA package list as we go.
-my (%qa, %maintainers, %packages);
+my (%qa, %maintainers, %sources);
 my @maintainers;
 {
     my %unique;
@@ -355,7 +355,9 @@ for my $maintainer (@maintainers) {
             my $tags = $by_maint{$maintainer}{$source}{$version};
             for my $tag (@$tags) {
                 $count{$tag->{code}}++;
-                $packages{$tag->{package}} = $tag->{xref};
+            }
+            if (@$tags) {
+                $sources{$source} = $tags->[0]->{xref};
             }
         }
         $qa{$source} = \%count;
@@ -506,7 +508,7 @@ $list{'0-9, A-F'} = [];
 $list{'G-L'}      = [];
 $list{'M-R'}      = [];
 $list{'S-Z'}      = [];
-for my $package (sort keys %packages) {
+for my $package (sort keys %sources) {
     my $first = uc substr($package, 0, 1);
     if    ($first le 'F') { push(@{ $list{'0-9, A-F'} }, $package) }
     elsif ($first le 'L') { push(@{ $list{'G-L'} },      $package) }
@@ -514,7 +516,7 @@ for my $package (sort keys %packages) {
     else                  { push(@{ $list{'S-Z'} },      $package) }
 }
 %data = (
-    packages  => \%packages,
+    sources => \%sources,
 );
 my $i = 1;
 for my $section (sort keys %list) {

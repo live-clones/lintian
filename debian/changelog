@@ -243,6 +243,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       Lintian::Profile.
     + [NT] Pass a profile to the templates (as $profile) instead of the
       old %all hash.
+    + [NT] List only source packages on the "packages_X.html" pages.
   * reporting/templates/tags-all.tmpl:
     + [NT] Use $profile instead of the %all hash.
 

@@ -2,7 +2,7 @@
   <h1>Package Index: {$section}</h1>
 
   <p>
-    This is a list of all source or binary packages that have at least one
+    This is a list of all source packages that have at least one
     lintian tag.  This includes all tags, even experimental and info tags
     and tags that were overridden.  The list is huge, so it's broken into
     four separate pages.  This page covers package names starting with
@@ -26,7 +26,7 @@
             $OUT .= qq(  <h2>$first</h2>\n\n  <p>\n);
             $letter = $first;
         }
-        $OUT .= qq(    <a href="full/$packages{$package}">$package</a>\n);
+        $OUT .= qq(    <a href="full/$sources{$package}">$package</a>\n);
     }
 }  </p>
 { foot() }
