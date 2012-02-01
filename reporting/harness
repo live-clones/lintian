@@ -32,10 +32,13 @@ Create and maintain Lintian reports automatically
 Usage: harness [ -i | -f | -r | -c ]
 
 Options:
-  -c    clean mode, erase everything and start from scratch (implies -f)
-  -f    full mode, blithely overwrite lintian.log
-  -i    incremental mode, use old lintian.log data, process changes only
-  -r    generate HTML reports only
+  -c         clean mode, erase everything and start from scratch (implies -f)
+  -f         full mode, blithely overwrite lintian.log
+  -i         incremental mode, use old lintian.log data, process changes only
+  -r         generate HTML reports only
+  --dry-run  pretend to do the actions without actually doing them.  The
+             "normal" harness output will go to stdout rather than the
+             harness.log.
 
 Incremental mode is the default if you have a lintian.log;
 otherwise, it's full.
@@ -53,6 +56,7 @@ my %opthash = (
     'c' => \$opt{'clean-mode'},
     'f' => \$opt{'full-mode'},
     'r' => \$opt{'reports-only'},
+    'dry-run' => \$opt{'dry-run'},
     'help|h' => \&usage,
 );
 
@@ -102,34 +106,57 @@ require Lintian::Processable::Package;
 # turn file buffering off
 $| = 1;
 
-# rotate log files
-system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null") == 0
-    or Die('cannot rotate log files');
+unless ($opt{'dry-run'}) {
+    # rotate log files
+    system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null") == 0
+        or Die('cannot rotate log files');
 
-# create new log file
-open(LOG, '>', $log_file)
-    or Die("cannot open log file $log_file for writing: $!");
+    # create new log file
+    open(LOG, '>', $log_file)
+        or Die("cannot open log file $log_file for writing: $!");
+} else {
+    $log_file = \*STDOUT{IO};
+    Log('Running in dry-run mode');
+}
 
-system("mkdir -p -m 775 $LINTIAN_BIN_DIR") == 0 || die "$!";
+unless ($opt{'dry-run'}) {
+    system("mkdir -p -m 775 $LINTIAN_BIN_DIR") == 0 || die "$!";
+
+    if ($LINTIAN_GPG_CHECK) {
+        if (-l $LINTIAN_BIN_DIR . '/gpg') {
+            unlink($LINTIAN_BIN_DIR . '/gpg');
+        } else {
+            rename($LINTIAN_BIN_DIR . '/gpg', $LINTIAN_BIN_DIR . '/gpg.bkp');
+        }
+    } else {
+        symlink '/bin/true', $LINTIAN_BIN_DIR . '/gpg'
+            unless(-f $LINTIAN_BIN_DIR . '/gpg');
+    }
+}
+
 $ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};
 
-if ($LINTIAN_GPG_CHECK) {
-  if (-l $LINTIAN_BIN_DIR . '/gpg') {
-    unlink($LINTIAN_BIN_DIR . '/gpg');
-  } else {
-    rename($LINTIAN_BIN_DIR . '/gpg', $LINTIAN_BIN_DIR . '/gpg.bkp');
-  }
-} else {
-  symlink '/bin/true', $LINTIAN_BIN_DIR . '/gpg'
-    unless(-f $LINTIAN_BIN_DIR . '/gpg');
-}
 
 my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 
-# purge the old packages
-$LAB->remove if $opt{'clean-mode'};
+unless ($opt{'dry-run'}) {
+    # purge the old packages
+    $LAB->remove if $opt{'clean-mode'};
 
-$LAB->create ({ 'mode' => 02775}) unless $LAB->exists;
+    $LAB->create ({ 'mode' => 02775}) unless $LAB->exists;
+} else {
+    if (! $LAB->exists || $opt{'clean-mode'}) {
+        # We either do not have a lab or we were asked to clean
+        # the existing one.  We solve this by creating a temp
+        # lab (which will be empty).  This means that A) the lab
+        # will appear to be empty (as expected by clean-mode) and
+        # B) that we do not have to do a dry-run check on every
+        # "read-only" lab operation (we still have to guard write
+        # operations).
+        $LAB = Lintian::Lab->new;
+        $LAB->create;
+    }
+}
 
 if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
     # Nothing explicitly chosen, default to -i if the log is present,
@@ -165,7 +192,7 @@ unless ($opt{'reports-only'}) {
             if ($entry) {
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
-                if ($entry->remove) {
+                if ($opt{'dry-run'} || $entry->remove) {
                     Log ("Removed $type $pkg_name ($pkg_version)$arch");
                 } else {
                     Log ("Removing $type $pkg_name ($pkg_version)$arch failed.");
@@ -194,12 +221,16 @@ unless ($opt{'reports-only'}) {
                 my $ok = 0;
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
-                eval {
-                    $entry->create;
-                    $entry->update_status_file or
-                        die "creating status file: $!";
+                if ($opt{'dry-run'}) {
                     $ok = 1;
-                };
+                } else {
+                    eval {
+                        $entry->create;
+                        $entry->update_status_file or
+                            die "creating status file: $!";
+                        $ok = 1;
+                    };
+                }
                 if ($ok) {
                     my $query = "$type:$pkg_name/$pkg_version";
                     $query .= "/$pkg_arch" if $pkg_arch;
@@ -212,7 +243,13 @@ unless ($opt{'reports-only'}) {
         }
     }
 
-    # Flushes the changed manifest to the file system - croaks on error
+    # Flushes the changed manifest to the file system - croaks on
+    # error
+    # - no need to check dry-run here as nothing changed and it frees
+    #   memory to do this.
+    # - in the (hopefully unlikely) case that dry-run is *buggy* and
+    #   the lab actually was modified, then this will at least keep
+    #   the lab metadata consistent with the actual contents.
     $LAB->close;
 
     if ($opt{'incremental-mode'}) {
@@ -222,11 +259,17 @@ unless ($opt{'reports-only'}) {
 
         # update lintian.log
         Log('Updating lintian.log...');
-        rename $lintian_log, $old_lintian_log;
+        my $nfd;
+        if ($opt{'dry-run'}) {
+            rename $lintian_log, $old_lintian_log;
+            open $nfd, '>', $lintian_log
+                or Die ("cannot open lintian.log $lintian_log for writing: $!");
+        } else {
+            open $nfd, '>', '/dev/null'
+                or Die ("cannot open lintian.log /dev/null for writing: $!");
+        }
         open my $ofd, '<', $old_lintian_log
             or Die ("cannot open old lintian.log $old_lintian_log for reading: $!");
-        open my $nfd, '>', $lintian_log
-            or Die ("cannot open lintian.log $lintian_log for writing: $!");
         my $copy_mode = 1;
         while (<$ofd>) {
             if (/^N: Processing (binary|udeb|source) package (\S+) \(version (\S+), arch (\S+)\) \.\.\./o) {
@@ -246,12 +289,14 @@ unless ($opt{'reports-only'}) {
         Log ('');
         if (@inc) {
             Log ('Creating work list for lintian');
-            open my $lfd, '>', $list_file
-                or Die ("opening $list_file: $!");
-            foreach my $query (@inc) {
-                print $lfd "!query: $query\n";
+            unless ($opt{'dry-run'}) {
+                open my $lfd, '>', $list_file
+                    or Die ("opening $list_file: $!");
+                foreach my $query (@inc) {
+                    print $lfd "!query: $query\n";
+                }
+                close $lfd;
             }
-            close $lfd;
             Log ('');
 
             # incremental run cmd changes
@@ -269,9 +314,11 @@ unless ($opt{'reports-only'}) {
 
     if ($cmd) {
         Log("Executing $cmd");
-        my $res = (system($cmd) >> 8);
-        (($res == 0) or ($res == 1))
-            or Log("warning: executing lintian returned $res");
+        unless ($opt{'dry-run'}) {
+            my $res = (system($cmd) >> 8);
+            (($res == 0) or ($res == 1))
+                or Log("warning: executing lintian returned $res");
+        }
         Log('');
     }
 }
@@ -283,18 +330,20 @@ run("$html_reports_cmd $lintian_log >$html_reports_log 2>&1")
 Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
-if (-f $statistics_file) {
+if (!$opt{'dry-run'} && -f $statistics_file) {
     system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
         or Log('warning: could not rotate the statistics file');
 }
 
 # install new html directory
 Log('Installing HTML reports...');
-system("rm -rf $HTML_DIR") == 0
-    or Die("error removing $HTML_DIR");
-# a tiny bit of race right here
-rename($HTML_TMP_DIR,$HTML_DIR)
-    or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
+unless ($opt{'dry-run'}) {
+    system("rm -rf $HTML_DIR") == 0
+        or Die("error removing $HTML_DIR");
+    # a tiny bit of race right here
+    rename($HTML_TMP_DIR,$HTML_DIR)
+        or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
+}
 Log('');
 
 # ready!!! :-)
@@ -309,6 +358,7 @@ sub Log {
 
 sub run {
     Log("Executing $_[0]");
+    return 1 if $opt{'dry-run'};
     return (system($_[0]) == 0);
 }
 
