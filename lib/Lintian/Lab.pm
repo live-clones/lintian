@@ -406,7 +406,7 @@ sub _pool_path {
     return "$dir/pool/$p";
 }
 
-=item lab->generate_diffs(@lists)
+=item $lab->generate_diffs(@lists)
 
 Each member of @lists must be a Lintian::Lab::Manifest.
 
@@ -433,6 +433,76 @@ sub generate_diffs {
     return @diffs;
 }
 
+=item $lab->repair_lab ()
+
+Checks the lab contents against the current meta-data and syncs them.
+The lab must be open and should not be access while this method is
+running.
+
+This returns the number of corrections done by this process.  If there
+were any corrections, the state files are written before returning.
+
+The method may croak if it is unable to do a full check of the lab or
+if it is unable to write the corrected metadata.
+
+Note: This may (and generally will) correct "broken" entries by
+removing them.
+
+=cut
+
+sub repair_lab {
+    my ($self) = @_;
+    my $updates = 0;
+    croak "Lab is not open.\n" unless $self->is_open;
+    foreach my $pkg_type (keys %SUPPORTED_TYPES) {
+        my $index = $self->_get_lab_index ($pkg_type);
+        my $visitor = sub {
+            my ($metadata, @keys) = @_;
+            my ($pkg_name, $pkg_version, $pkg_arch) = @keys;
+            my $pkg_src = $metadata->{'source'}//$pkg_name;
+            my $pkg_src_version = $metadata->{'source-version'}//$pkg_version;
+            my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
+            my $entry;
+            unless ( -d $dir && -f "$dir/.lintian-status") {
+                # The entry is clearly not here, remove it from the metadata
+                $index->delete (@keys);
+                $updates++;
+                -d $dir && rmdir $dir;
+                return;
+            }
+            eval {
+                $entry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
+                                                    $pkg_type, undef, $pkg_src, $pkg_src_version,
+                                                    $dir);
+            };
+            unless ($entry && $entry->exists) {
+                # We either cannot load the entry or it does not
+                # believe it exists - either way, the metadata is out
+                # of date.
+                if ($entry) {
+                    $entry->remove;
+                    # Strictly speaking $entry->remove ought to clean
+                    # up the index for us, but fall through and do it
+                    # anyway.
+                } else {
+                    # The entry is not here to clean up, lets purge it
+                    # the good old fashioned way.
+                    delete_dir ($dir);
+                }
+                $index->delete (@keys);
+                $updates++;
+            }
+        };
+
+        $index->visit_all ($visitor);
+    }
+
+    # FIXME: scan the pool for entries not in the metadata.
+
+    $self->_write_manifests;
+
+    return $updates;
+}
 
 =item $lab->create ([$opts])
 
@@ -635,16 +705,21 @@ sub close {
         # Temporary lab (without "keep-lab" property)
         $self->remove;
     } else {
-        my $dir = $self->dir;
-        while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
-            # write_list croaks on error, so no need for "or croak/die"
-            $plist->write_list ("$dir/info/${pkg_type}-packages");
-        }
+        $self->_write_manifests;
     }
     $self->{'state'} = {};
     $self->{'is_open'} = 0;
     $self->{'lab-info'} = {};
     return 1;
+}
+
+sub _write_manifests {
+    my ($self) = @_;
+    my $dir = $self->dir;
+    while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
+        # write_list croaks on error, so no need for "or croak/die"
+        $plist->write_list ("$dir/info/${pkg_type}-packages");
+    }
 }
 
 =item $lab->remove
