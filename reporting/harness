@@ -109,15 +109,17 @@ $| = 1;
 unless ($opt{'dry-run'}) {
     # rotate log files
     system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null") == 0
-        or Die('cannot rotate log files');
+        or die "Cannot rotate log files.\n";
 
     # create new log file
     open(LOG, '>', $log_file)
-        or Die("cannot open log file $log_file for writing: $!");
+        or die "cannot open log file $log_file for writing: $!";
 } else {
-    $log_file = \*STDOUT{IO};
+    open LOG, '>&', \*STDOUT
+        or die "Cannot open log file <stdout> for writing: $!";
     Log('Running in dry-run mode');
 }
+# From here on we can use Log() and Die().
 
 unless ($opt{'dry-run'}) {
     system("mkdir -p -m 775 $LINTIAN_BIN_DIR") == 0 || die "$!";
