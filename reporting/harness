@@ -187,11 +187,14 @@ unless ($opt{'reports-only'}) {
         Log ("Removing old or changed $type packages from the lab");
         foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
             my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
-            my $entry = $LAB->get_package ($pkg_name, $type, $pkg_version, $pkg_arch);
+            my $entry;
             my $sk = "$type:$pkg_name/$pkg_version";
             $sk .= "/$pkg_arch" if $pkg_arch;
             $skip{$sk} = 1; # For log-cleaning (incremental runs)
-            if ($entry) {
+            unless ($opt{'dry-run'}) {
+                $entry = $LAB->get_package ($pkg_name, $type, $pkg_version, $pkg_arch);
+            }
+            if ($opt{'dry-run'} || $entry) {
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
                 if ($opt{'dry-run'} || $entry->remove) {
@@ -208,18 +211,23 @@ unless ($opt{'reports-only'}) {
             my $me = $man->get (@$added);
             my $file = $me->{'file'};
             my $proc;
-            eval {
-                $proc = Lintian::Processable::Package->new ($type, $file);
-            };
-            unless ($proc) {
-                my $name = "$type:$pkg_name/$pkg_version";
-                $name .= "/$pkg_arch" if $pkg_arch;
-                Log ("Skipping $name due to errors ($@)");
-                next;
-            }
+            my $entry;
+            unless ($opt{'dry-run'}) {
+                eval {
+                    $proc = Lintian::Processable::Package->new ($type, $file);
+                };
+                unless ($proc) {
+                    my $name = "$type:$pkg_name/$pkg_version";
+                    $name .= "/$pkg_arch" if $pkg_arch;
+                    # Handle newlines in the error message.
+                    $@ =~ s/\n*$//; $@ =~ s/\n/ /og;
+                    Log ("Skipping $name due to errors ($@)");
+                    next;
+                }
 
-            my $entry = $LAB->get_package ($proc);
-            if ($entry) {
+                $entry = $LAB->get_package ($proc);
+            }
+            if ($opt{'dry-run'} || $entry) {
                 my $ok = 0;
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
