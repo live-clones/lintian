@@ -81,6 +81,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Allow fonts in packages starting with "fonts-".  This
       completes the fix for #646838.  Thanks to أحمد المحمودي
       for the follow up report.  (Closes: #651045)
+    + [NT] Re-added swfobject.js to the list of known javascript
+      libraries.  Thanks to Paul Wise for noticing it had been
+      uploaded.
   * checks/menus{,.desc}:
     + [NT] Remove obsolete checks for wm-menu/wm-menu-config use in
       maintainer scripts.  The executables are not shipped in menu

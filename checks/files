@@ -72,6 +72,7 @@ my @jslibraries = (
     [ qr,(?i)dojo\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+' ],
     [ qr,(?i)dijit\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+' ],
     [ qr,(?i)strophe(\.min)?\.js(\.gz)?$, => qr'libjs-strophe' ],
+    [ qr,(?i)swfobject(?:\.min)?\.js(?:\.gz)?$, => qr'libjs-swfobject' ],
     [ qr,(?i)underscore(\.min)?\.js(\.gz)?$, => qr'libjs-underscore' ],
 # not yet available in unstable:
 #    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => qr'xinha' ],
