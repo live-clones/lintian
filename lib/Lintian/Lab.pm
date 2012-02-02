@@ -878,7 +878,7 @@ sub _entry_created {
             $area = $1;
         }
         $data{'architecture'}   = $entry->pkg_arch;
-        $data{'area'}           = 'main';
+        $data{'area'}           = $area;
         $data{'package'}        = $pkg_name;
         $data{'source'}         = $entry->pkg_src;
         $data{'source-version'} = $entry->pkg_src_version;

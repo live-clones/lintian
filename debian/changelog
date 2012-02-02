@@ -206,6 +206,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Lab.pm:
     + [NT] Added "is_temp" method to identify temp labs from static
       labs.
+    + [NT] Corrected issue where the lab would record binaries as
+      being from "main", even if their "section" field implied
+      otherwise.
   * lib/Lintian/Lab/Entry.pm:
     + [NT] Properly strip whitespace when loading collection status.
   * lib/Lintian/Processable/Package.pm:
