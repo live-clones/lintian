@@ -7,9 +7,9 @@
 ARCH=$(shell dpkg-architecture -qDEB_HOST_ARCH)
 
 ifeq (i386,$(ARCH))
-    TRIPLETT = i386-linux-gnu
+    TRIPLET = i386-linux-gnu
 else
-    TRIPLETT = x86_64-linux-gnu
+    TRIPLET = x86_64-linux-gnu
 endif
 
 %:
@@ -18,4 +18,4 @@ endif
 override_dh_makeshlibs:
 	# dpkg-dev uses ld.so.conf so if we do not pass the lib directly
 	#  this will fail on all x86 machines without with libc6 < 2.13-5
-	dh_makeshlibs -- -edebian/libbasic2/usr/lib/$(TRIPLETT)/libbasic.so.2
+	dh_makeshlibs -- -edebian/libbasic2/usr/lib/$(TRIPLET)/libbasic.so.2

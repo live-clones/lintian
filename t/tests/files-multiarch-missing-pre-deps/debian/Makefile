@@ -6,9 +6,9 @@
 ARCH=$(shell dpkg-architecture -qDEB_HOST_ARCH)
 
 ifeq (i386,$(ARCH))
-    TRIPLETT = i386-linux-gnu
+    TRIPLET = i386-linux-gnu
 else
-    TRIPLETT = x86_64-linux-gnu
+    TRIPLET = x86_64-linux-gnu
 endif
 
 
@@ -17,8 +17,8 @@ all:
 
 install:
 	# install it under the correct triplet directory
-	install -d $(DESTDIR)/usr/lib/$(TRIPLETT)
-	install -m 644 -c -s libbasic.so.2 $(DESTDIR)/usr/lib/$(TRIPLETT)/libbasic.so.2
+	install -d $(DESTDIR)/usr/lib/$(TRIPLET)
+	install -m 644 -c -s libbasic.so.2 $(DESTDIR)/usr/lib/$(TRIPLET)/libbasic.so.2
 
 clean distclean:
 	rm -f libbasic.so.2
