@@ -92,27 +92,18 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Re-added swfobject.js to the list of known javascript
       libraries.  Thanks to Paul Wise for noticing it had been
       uploaded.
-  * checks/menus{,.desc}:
-    + [NT] Remove obsolete checks for wm-menu/wm-menu-config use in
-      maintainer scripts.  The executables are not shipped in menu
-      in Squeeze nor sid.  Furthermore the tags are not emitted in
-      any package (according to lintian.d.o).
   * checks/group-check{,.desc}:
     + [NT] Check for file conflicts in binaries built from the same
       source package.  (Closes: #293838)
     + [JW] Added check for incomplete Multi-arch'ification.
       (Closes: #650838)
+  * checks/menus{,.desc}:
+    + [NT] Remove obsolete checks for wm-menu/wm-menu-config use in
+      maintainer scripts.  The executables are not shipped in menu
+      in Squeeze nor sid.  Furthermore the tags are not emitted in
+      any package (according to lintian.d.o).
   * checks/nmu:
     + [JW] Properly handle uploader names with commas.
-  * checks/shared-libs{,.desc}:
-    + [JW] Check for Multi-Arch foreign packages shipping shared
-      libraries in public library directories.  (Closes: #650444)
-    + [NT] Use the new hwcap-dirs data file to determine hwcap dirs.
-    + [NT] Ignore missing symbols/shlibs files for libc libnss
-      plugins.
-  * checks/source-copyright:
-    + [JW] Allow a trailing slash in the DEP-5 1.0 URL.
-      (Closes: #649813)
   * checks/scripts:
     + [NT] Accepted patch from Evan Broder to check for missing
       versioned pre-depends on dpkg when using maintscript helper.
@@ -122,6 +113,15 @@ lintian (2.5.5) UNRELEASED; urgency=low
       a known interpreter.  (Closes: #652594)
     + [NT] Accepted patch from Martin Erik Werner to recognize
       "fontforge" as a known interpreter.  (Closes: #652736)
+  * checks/shared-libs{,.desc}:
+    + [JW] Check for Multi-Arch foreign packages shipping shared
+      libraries in public library directories.  (Closes: #650444)
+    + [NT] Use the new hwcap-dirs data file to determine hwcap dirs.
+    + [NT] Ignore missing symbols/shlibs files for libc libnss
+      plugins.
+  * checks/source-copyright:
+    + [JW] Allow a trailing slash in the DEP-5 1.0 URL.
+      (Closes: #649813)
   * checks/symlinks:
     + [NT] Ignore langpack symlinks if they appear to be consistent.
       Thanks to Evan Broder for the report.  (Closes: #650793)
