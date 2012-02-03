@@ -10,6 +10,7 @@ I: fields source: missing-debian-source-format
 W: fields source: changelog-should-mention-nmu
 W: fields source: debhelper-but-no-misc-depends another-version
 W: fields source: debhelper-but-no-misc-depends fields
+W: fields source: debhelper-compat-file-is-missing
 W: fields source: debian-revision-not-well-formed 1.5-.3
 W: fields source: native-package-with-dash-version
 W: fields source: no-debian-copyright

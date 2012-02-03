@@ -1,0 +1,2 @@
+W: debhelper-compat-missing source: debhelper-compat-file-is-missing
+W: debhelper-compat-missing source: package-uses-deprecated-debhelper-compat-version 1

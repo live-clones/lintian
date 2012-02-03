@@ -267,7 +267,10 @@ if (-f "$droot/compat") {
     } else {
         tag 'debhelper-compat-file-is-empty';
     }
+} else {
+    tag 'debhelper-compat-file-is-missing';
 }
+
 if (defined($level) and $level !~ m/^\d+$/ and not $compatnan) {
     tag 'debhelper-compatibility-level-not-a-number', $level;
     $level =~ s/[^\d]//g;

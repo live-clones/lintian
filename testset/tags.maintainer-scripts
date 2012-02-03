@@ -41,6 +41,7 @@ I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postr
 W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is 3.9.2)
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: debhelper-but-no-misc-depends maintainer-scripts
+W: maintainer-scripts source: debhelper-compat-file-is-missing
 W: maintainer-scripts source: debian-watch-file-in-native-package
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 11
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 7

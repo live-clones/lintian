@@ -359,3 +359,14 @@ Info: The package uses a variable in one of its debhelper config
  needs more than that, and makes sure the variable is exported through
  the build one way or the othern, then this tag can be safely ignored
  or overridden.
+
+Tag: debhelper-compat-file-is-missing
+Severity: normal
+Certainty: certain
+Info: The package uses debhelper but does not ship a compat file.
+ This is deprecated and eventaully cause the package to FTBFS.
+ .
+ Please refer to the dehelper documentation on how to create the
+ compat file and the differences between each compat level.
+Ref: http://packages.qa.debian.org/d/debhelper/news/20120115T191738Z.html,
+ debhelper(7)
