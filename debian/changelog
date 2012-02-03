@@ -196,6 +196,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       done reliably anymore.
     + [NT] Applied patch from intrigeri to remove the "not-full-name"
       tags.
+    + [NT] Only emit a spelling tag once for each spelling error in each
+      field/file/text.
   * lib/Lintian/CheckScript.pm:
     + [NT] New file.
   * lib/Lintian/Collect/{Binary,Source}.pm:

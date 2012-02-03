@@ -220,6 +220,7 @@ sub check_spelling {
     my ($tag, $text, $filename, $exceptions) = @_;
     return unless $text;
 
+    my %seen = ();
     my $counter = 0;
     my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
     my $corrections_multiword =
@@ -243,6 +244,7 @@ sub check_spelling {
             } elsif ($word =~ /^[A-Z]/) {
                 $correction = ucfirst $correction;
             }
+            next if $seen{$lcword}++;
             _tag($tag, $filename, $word, $correction) if defined $tag;
         }
     }
@@ -259,6 +261,7 @@ sub check_spelling {
                 $correction = ucfirst $correction;
             }
             $counter++;
+            next if $seen{lc $word}++;
             _tag($tag, $filename, $word, $correction)
                 if defined $tag;
         }
@@ -283,6 +286,7 @@ Returns the number of spelling mistakes found in TEXT.
 sub check_spelling_picky {
     my ($tag, $text, $filename) = @_;
 
+    my %seen = ();
     my $counter = 0;
     my $corrections_case =
         Lintian::Data->new('spelling/corrections-case', '\|\|');
@@ -303,6 +307,7 @@ sub check_spelling_picky {
         $word =~ s/^\(|[).,?!:;]+$//g;
         if ($corrections_case->known($word)) {
             $counter++;
+            next if $seen{$word}++;
             _tag($tag, $filename, $word, $corrections_case->value($word))
                 if defined $tag;
             next;

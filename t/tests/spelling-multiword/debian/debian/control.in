@@ -20,6 +20,7 @@ Description: {$description}
    * Debian/GNU Linux
    * Permits to
    * This packages
+   * This packages (again, but only tagged once)
  .
  Not errors:
    * These packages
