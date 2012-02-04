@@ -157,7 +157,7 @@ sub _init {
 # Derive the name from the file name
 #  - the name is the part of the basename up to (and excl.) the first "_".
 #
-# _derivate_name ('somewhere/lintian_2.5.2_amd64.changes', 'changes') eq 'lintian'
+# _derive_name ('somewhere/lintian_2.5.2_amd64.changes', 'changes') eq 'lintian'
 sub _derive_name {
     my ($file, $ext) = @_;
     my ($name) = ($file =~ m,(?:.*/)?([^_/]+)[^/]*\.$ext$,);
@@ -177,7 +177,8 @@ sub info {
         my $lpkg = $self->lab_pkg();
         croak "Need a Lab package before creating a Lintian::Collect\n"
             unless defined $lpkg;
-        return $lpkg->info;
+        $info = $lpkg->info;
+        $self->{info} = $info;
     }
     return $info;
 }

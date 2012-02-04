@@ -26,9 +26,6 @@ use warnings;
 
 use Carp qw(croak);
 
-# Black listed characters - any match will be replaced with a _.
-use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
-
 =head1 NAME
 
 Lintian::Processable -- An (abstract) object that Lintian can process
@@ -141,20 +138,15 @@ Lintian::Processable->mk_accessors (qw(group));
 
 Returns L<Lintian::Collect|$info> element for this processable.
 
-Note: This method is must implemented by sub-classes.
+Note: This method must implemented by sub-classes unless they
+provide an "info" field.
 
 =cut
 
 sub info {
     my ($self) = @_;
-    my $info = $self->{info};
-    if (! defined $info) {
-        my $lpkg = $self->lab_pkg();
-        croak "Need a Lab package before creating a Lintian::Collect\n"
-            unless defined $lpkg;
-        return $lpkg->info;
-    }
-    return $info;
+    return $self->{info} if exists $self->{info};
+    croak "Not implemented.\n";
 }
 
 =item $proc->clear_cache
