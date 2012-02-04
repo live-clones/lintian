@@ -138,7 +138,7 @@ Lintian::Processable->mk_accessors (qw(group));
 
 Returns L<Lintian::Collect|$info> element for this processable.
 
-Note: This method must implemented by sub-classes unless they
+Note: This method must be implemented by sub-classes unless they
 provide an "info" field.
 
 =cut
