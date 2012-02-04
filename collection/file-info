@@ -55,7 +55,7 @@ chdir('unpacked')
 my %opts = ( pipe_in => FileHandle->new,
              out => $outfile,
              fail => 'never' );
-spawn(\%opts, ['xargs', '-0r', 'file', '-F', '', '--print0', '--'], '|', [$helper]);
+spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$helper]);
 $opts{pipe_in}->blocking(1);
 
 while (<INDEX>) {

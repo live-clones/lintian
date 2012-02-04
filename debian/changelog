@@ -133,8 +133,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * collection/index:
     + [NT] Use Lintian::Processable::Package to determine source
       name and version.
-  * collection/file-info-helper:
+  * collection/file-info{,-helper}:
     + [NT] Do not open non-files when double-checking gzip files.
+    + [NT] Pass "-N" to file as Lintian does not need the aligned
+      output.
   * collection/md5sums:
     + [NT] Properly handle unpacked being a symlink.
   * collection/source-control-file{,.desc}:
