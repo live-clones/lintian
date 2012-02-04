@@ -161,7 +161,7 @@ for my $file (keys(%$file_info)) {
             # file does not declare it as "data".
             my $path = $info->unpacked ($file);
             my $marker = 0;
-            next unless -f $path;
+            next unless -f $path and not -l $path;
             open my $fd, '<', $path or fail "Opening $file: $!";
             while ( my $line = <$fd> ) {
                 next unless $line =~ m/^#/o;
