@@ -186,6 +186,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Removed check loading code.  This has been moved into
       Lintian::Profile.
     + [NT] Always load a profile.
+    + [NT] Allow TMPDIR in the configuration file.
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.

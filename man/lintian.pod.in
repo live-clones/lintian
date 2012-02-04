@@ -499,7 +499,7 @@ If no lab location is specified via the LINTIAN_LAB environment
 variable, configuration, or the B<--lab> command-line option, lintian
 defaults to creating a temporary lab directory in I</tmp>.  To change
 the directory used, set the TMPDIR environment variable to a suitable
-directory.
+directory.  TMPDIR can be set in the configuration file.
 
 =item I</usr/share/lintian/checks>
 
@@ -557,8 +557,9 @@ Lintian will ignore empty lines or lines starting with the
 B<#>-character.
 
 Generally options will be the long form of the command-line option
-without the leading dashes.  There some exceptions (such as --area),
-where Lintian uses the same name as the environment variable.
+without the leading dashes.  There some exceptions (such as
+--profile), where Lintian uses the same name as the environment
+variable.
 
 Lintian only allows a subset of the options specified in the
 configuration file; please refer to the individual options in
@@ -575,12 +576,19 @@ the command line.  Though some options allow a slightly different
 format (i.e. --display-level); these exceptions are explained for the
 relevant options in L</OPTIONS>.
 
+Beyond command line options, it is also allowed to specify the
+environment variable "TMPDIR" in the configuration file.
+
 A sample configuration file could look like:
 
  # Sample configuration file for lintian
  #
  # Set the default profile (--profile)
  LINTIAN_PROFILE = debian
+ 
+ # Set the default TMPDIR for lintian to /var/tmp/lintian
+ # - useful if /tmp is tmpfs with "limited" size.
+ TMPDIR = /var/tmp/lintian/
  
  # Show info (I:) tags by default (--display-info)
  #  NB: this cannot be used with display-level

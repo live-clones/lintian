@@ -40,11 +40,13 @@ use Getopt::Long;
 #
 #### END NOTE ABOUT LINTIAN_ROOT
 
+# Variables from %opt (defined below) we must export to %ENV
 my @MUST_EXPORT = (qw(
     LINTIAN_LAB
     LINTIAN_ROOT
 ));
 # LINTIAN_DEBUG, but that is handled separately
+# TMPDIR, handled separatedly
 
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
@@ -53,12 +55,16 @@ my @MUST_EXPORT = (qw(
 # after parsing cmd-line options.  A given value in %opt is
 # updated to use the ENV variable if the one in %opt is undef
 # and ENV has a value.
+#
+# NB: Variables listed here are not always exported - use @MUST_EXPORT
+# for that.
 my @ENV_VARS = (
 # LINTIAN_CFG  - handled manually
 # LINTIAN_ROOT - handled manually
 qw(
     LINTIAN_PROFILE
     LINTIAN_LAB
+    TMPDIR
 ));
 
 
@@ -684,6 +690,11 @@ foreach my $var (@MUST_EXPORT) {
         $opt{$var} = ''; # Avoids some undef warnings later
     }
 }
+
+# We do this manually since the above would set $ENV{TMPDIR} to ''
+# if it was undef and that causes tempdir to give us some "funny"
+# (read: broken) paths.
+$ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined $opt{'TMPDIR'};
 
 # If we are running the test suite we should ignore
 # user/system profiles.
