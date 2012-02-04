@@ -168,6 +168,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       hours".
     + [NT] Documented architecture specific overrides.
       (Closes: #651816)
+  * doc/lintianrc.example:
+    + [NT] Removed depreacted variables and added sample TMPDIR
+      usage.
 
   * frontend/lintian:
     + [NT] Allow -U to be given more than once.

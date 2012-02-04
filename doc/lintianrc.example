@@ -41,13 +41,6 @@
 # about packages being checked.
 #LINTIAN_LAB="/var/spool/lintian"
 
-# If you want lintian to check the whole Debian archive instead of just
-# single packages you have to set the LINTIAN_DIST variable to the root
-# directory of the distribution archive (i.e., a local Debian mirror).
-#
-#LINTIAN_DIST="/ftp/debian/dists/unstable"
-
-# Specify a default architecture--when checking the full archive (as
-# specified by LINTIAN_DIST), Lintian will only check packages of this
-# architecture or of architecture `all'.
-#LINTIAN_ARCH="i386"
+# Use a different directory for temporary files - useful if /tmp is a
+# tmpfs with "limited" capacity.
+#TMPDIR="/var/tmp"
