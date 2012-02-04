@@ -554,8 +554,8 @@ sub create {
     if ( !$dir or $self->is_temp) {
         if ($self->is_temp) {
             my $keep = $opts->{'keep-lab'}//0;
-            my $topts = { CLEAN => !$keep, TMPDIR => 1 };
-            my $t = tempdir ('temp-lintian-lab-XXXXXX', $topts);
+            my %topts = ( 'CLEANUP' => !$keep, 'TMPDIR' => 1 );
+            my $t = tempdir ('temp-lintian-lab-XXXXXXXXXX', %topts);
             $dir = Cwd::abs_path ($t);
             croak "Could not resolve $t: $!" unless $dir;
             $self->{'dir'} = $dir;
