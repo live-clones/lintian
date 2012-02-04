@@ -142,6 +142,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * collection/source-control-file{,.desc}:
     + [NT] Removed as they are no longer needed.  They have been
       replaced by a smarter Lintian::Collect.
+  * collcetion/unpacked:
+    + [NT] Pass --no-check to dpkg-source when requested not to
+      check signatures (via reporting/harness).
 
   * data/{fields => common}/architectures:
     + [NT] Moved architectures to data/common.

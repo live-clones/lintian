@@ -137,6 +137,8 @@ unless ($opt{'dry-run'}) {
             symlink '/bin/true', "$LINTIAN_BIN_DIR/$g"
                 unless -f "$LINTIAN_BIN_DIR/$g";
         }
+        # Passed to coll/unpacked
+        $ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'} = 1;
     }
 }
 
