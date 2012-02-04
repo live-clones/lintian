@@ -615,7 +615,6 @@ if ($opt{'LINTIAN_CFG'}) {
 
         my $found = 0;
         foreach my $var (@ENV_VARS) {
-            $var = "LINTIAN_$var";
             if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
                 if (exists $conf_opt{$var}){
                     print STDERR "Configuration variable $var appears more than once\n";
