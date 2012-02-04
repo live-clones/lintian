@@ -151,7 +151,30 @@ for my $file (keys(%$file_info)) {
         tag 'source-contains-prebuilt-binary', $file;
     } elsif ($file_info->{$file} =~ m/\b(?:PE(?:32|64)|COFF executable)\b/) {
         tag 'source-contains-prebuilt-windows-binary', $file;
-    } elsif ($file_info->{$file} =~ m/data/ and $file =~ /\bwaf$/) {
+    } elsif ($file =~ /\bwaf$/) {
+        my $ok = 1;
+        # If file believes this is data, then we trust that
+        $ok = 0 if $file_info->{$file} =~ m/data/;
+        if ($ok) {
+            # Unfortunately file 5.04 (Squeeze) and 5.09 does not
+            # always agree, so manually check for the bz2 entry if
+            # file does not declare it as "data".
+            my $path = $info->unpacked ($file);
+            my $marker = 0;
+            next unless -f $path;
+            open my $fd, '<', $path or fail "Opening $file: $!";
+            while ( my $line = <$fd> ) {
+                next unless $line =~ m/^#/o;
+                if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
+                    $ok = 0;
+                    last;
+                }
+                $marker = 1 if $line =~ m/^#==>/o;
+                # We could probably stop here, but just in case
+                $marker = 0 if $line =~ m/^#<==/o;
+            }
+            close $fd;
+        }
         tag 'source-contains-waf-binary', $file;
     }
 }
