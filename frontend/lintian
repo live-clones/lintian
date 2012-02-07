@@ -1055,8 +1055,10 @@ if (@unpack_info) {
 # All required checks and collections have been calculated at this point.
 # We are just adding this information to a map now that will generate the
 # execution order.
-
+#
+# $map is just here to check that all the needed collections are present.
 my $map = Lintian::DepMap::Properties->new();
+my @scripts = sort $PROFILE->scripts;
 my $collmap = Lintian::DepMap::Properties->new();
 
 for my $c (keys %unpack_infos) {
@@ -1069,7 +1071,7 @@ for my $c (keys %unpack_infos) {
     }
 }
 
-for my $c ($PROFILE->scripts) {
+for my $c (@scripts) {
     # Add the checks with their dependency information
     my $cs = $PROFILE->get_script ($c);
     $map->add('check-' . $c, $cs);
@@ -1090,6 +1092,8 @@ debug_msg(1,
 # Make sure the resolver is in a sane state:
 scalar($map->missing()) == 0
     or fail('There are missing nodes on the resolver: '.join(', ', $map->missing()));
+undef $map;
+
 
 # Now action is always either "check" or "unpack"
 # these two variables are used by process_package
@@ -1438,17 +1442,6 @@ sub process_group {
         my $base = $lpkg->base_dir();
 
         $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);
-        $collmap->initialise();
-        $map->initialise();
-        # put the check map into a state where all collections has been run
-        #  - this may seem redundant, but it allowed re-use of existing
-        #    code to skip checks that are irrevalant for the type of pkg.
-        while ($collmap->pending){
-            foreach my $req ($collmap->selectable){
-                $collmap->satisfy($req);
-                $map->satisfy($req);
-            }
-        }
 
         debug_msg(1, "Base directory in lab: $base");
 
@@ -1461,36 +1454,29 @@ sub process_group {
         }
 
         unless ($opt{'no-override'}) {
-            if ($collmap->done('coll-override-file')) {
+            if ($collmap->known('coll-override-file') && -f "$base/override") {
                 debug_msg(1, 'Override file collected, loading it ...');
-                $TAGS->file_overrides("$base/override")
-                    if (-f "$base/override");
+                $TAGS->file_overrides("$base/override");
             }
         }
-        while ($map->pending) {
-            foreach my $req (sort $map->selectable) {
-                my $cs = $map->getProp($req);
-                my $check = $cs->name;
+        foreach my $script (@scripts) {
+            my $cs = $PROFILE->get_script ($script);
+            my $check = $cs->name;
 
-                # The lintian check is done by this frontend and we
-                # also skip the check if it is not for this type of
-                # package.
-                if (!$cs->is_check_type ($pkg_type) || $check eq 'lintian') {
-                    $map->satisfy($req);
-                    next;
-                }
+            # The lintian check is done by this frontend and we
+            # also skip the check if it is not for this type of
+            # package.
+            next if (!$cs->is_check_type ($pkg_type) || $check eq 'lintian');
 
-                debug_msg(1, "Running check: $check ...");
-                my $returnvalue = _run_check ($cs, $pkg_name, $pkg_type, $info, $proc, $group);
-                # Set exit_code correctly if there was not yet an exit code
-                $exit_code = $returnvalue unless $exit_code;
+            debug_msg(1, "Running check: $check ...");
+            my $returnvalue = _run_check ($cs, $pkg_name, $pkg_type, $info, $proc, $group);
+            # Set exit_code correctly if there was not yet an exit code
+            $exit_code = $returnvalue unless $exit_code;
 
-                if ($returnvalue == 2) {
-                    warning("skipping $action of $pkg_type package $pkg_name");
-                    $exit_code = 2;
-                    next PROC;
-                }
-                $map->satisfy($req);
+            if ($returnvalue == 2) {
+                warning("skipping $action of $pkg_type package $pkg_name");
+                $exit_code = 2;
+                next PROC;
             }
         }
         # chdir to lintian root directory (to unlock $base so it can be removed below)
