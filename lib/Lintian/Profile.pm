@@ -158,7 +158,7 @@ sub tags {
 =item $prof->scripts ([$known])
 
 Returns the list of Check-Scripts in this profile.  If $known
-is given and it is a turth value, the list of known Check-Scripts
+is given and it is a truth value, the list of known Check-Scripts
 is returned.  Otherwise only checks with an enabled tag will be
 enabled.
 
