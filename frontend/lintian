@@ -380,6 +380,11 @@ sub display_infotags {
     push(@display_level, [ '+', '>=', 'wishlist' ]);
 }
 
+# Process --pedantic flag
+sub display_pedantictags {
+    push(@display_level, [ '+', '=', 'pedantic' ]);
+}
+
 # Process --display-source flag
 sub record_display_source {
     $display_source{$_[1]} = 1;
@@ -404,15 +409,28 @@ sub deprecated{
 #    --display-level/--display-info
 sub cfg_display_level {
     my ($var, $val) = @_;
-    if ($var eq 'display-info'){
-        die "display-info and display-level may not both appear in the config file.\n"
+    if ($var eq 'display-info' or $var eq 'pedantic'){
+        die "$var and display-level may not both appear in the config file.\n"
             if $conf_opt{'display-level'};
 
-        return unless $val; # case "display-info=no"
-        push @display_level, [ '+', '>=', 'wishlist' ] unless @display_level;
+        return unless $val; # case "display-info=no" (or "pedantic=no")
+
+        # We are only supposed to modify @display_level if it was not
+        # set by a command-line option.  However, both display-info
+        # and pedantic comes here so we cannot determine this solely
+        # by checking if @display_level is empty.  We use
+        # "__conf-display-opts" to determine if @display_level was set
+        # by a conf option or not.
+        return if @display_level && !$conf_opt{'__conf-display-opts'};
+
+        $conf_opt{'__conf-display-opts'} = 1;
+        display_infotags() if $var eq 'display-info';
+        display_pedantictags() if $var eq 'pedantic';
     } elsif ($var eq 'display-level'){
-        die "display-info and display-level may not both appear in the config file.\n"
-            if $conf_opt{'display-info'};
+        foreach my $other (qw(pedantic display-info)) {
+            die "$other and display-level may not both appear in the config file.\n"
+                if $conf_opt{$other};
+        }
 
         return if @display_level;
         $val =~ s/^\s++//;
@@ -473,7 +491,7 @@ my %opthash = (                 # ------------------ actions
                'info|i' => \$opt{'info'},
                'display-info|I' => \&display_infotags,
                'display-experimental|E' => \$opt{'display-experimental'},
-               'pedantic' => \$opt{'pedantic'},
+               'pedantic' => \&display_pedantictags,
                'display-level|L=s' => \&record_display_level,
                'display-source=s' => \&record_display_source,
                'suppress-tags=s' => \&record_suppress_tags,
@@ -519,7 +537,7 @@ my %cfghash = (
                'display-level'        => \&cfg_display_level,
                'fail-on-warnings'     => \$opt{'fail-on-warnings'},
                'info'                 => \$opt{'info'},
-               'pedantic'             => \$opt{'pedantic'},
+               'pedantic'             => \&cfg_display_level,
                'quiet'                => \&cfg_verbosity,
                'no-override'          => \$opt{'no-override'},
                'show-overrides'       => \$opt{'show-overrides'},
@@ -786,7 +804,6 @@ debug_msg(1,
 my $PROFILE;
 our $TAGS = Lintian::Tags->new;
 $TAGS->show_experimental($opt{'display-experimental'});
-$TAGS->show_pedantic($opt{'pedantic'});
 $TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
 
@@ -1653,11 +1670,11 @@ sub _update_profile {
         $profile->disable_tags ($profile->tags);
         if ($check_tags) {
             $TAGS->show_experimental(1);
-            $TAGS->show_pedantic(1);
             # discard whatever is in @display_level and request
             # everything
             @display_level = ();
             display_infotags();
+            display_pedantictags();
             $profile->enable_tags (split /,/, $check_tags);
         } else {
             for my $c (split /,/, $checks) {

@@ -190,6 +190,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
       Lintian::Profile.
     + [NT] Always load a profile.
     + [NT] Allow TMPDIR in the configuration file.
+    + [NT] Treat "pendantic" as a normal severity.  In previous
+      release, pedantic tags were not affected by --display-level.
+      A side-effect of this is that "pedantic" can no longer be
+      used with "display-level" in the configuration file.
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.
@@ -252,6 +256,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Emit "malformed-override" for architecture specific tags for
       unknown architectures and for "arch:all" packages.
     + [NT] Use a Profile to determine if a tag is suppressed or not.
+    + [NT] Handle "pedantic" like the other severities.
 
   * man/lintian.pod.in:
     + [NT] Removed the notes that some options disable loading of a

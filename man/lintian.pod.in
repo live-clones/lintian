@@ -260,18 +260,18 @@ the automatic clean up of some collections.
 
 Fine-grained selection of tags to be displayed. It is possible to add,
 remove or set the levels to display, specifying a severity (S:
-serious, important, normal, minor, wishlist), a certainty (C: certain,
-possible, wild-guess), or both (S/C).  The default settings are
-equivalent to B<-L> ">=important" B<-L> "+>=normal/possible" B<-L>
-+minor/certain).
+serious, important, normal, minor, wishlist, pedantic), a certainty
+(C: certain, possible, wild-guess), or both (S/C).  The default
+settings are equivalent to B<-L> ">=important" B<-L>
+"+>=normal/possible" B<-L> +minor/certain).
 
 This option overrides the B<display-level> variable in the
 configuration file.  The value of the B<display-level> in
 configuration file should be space separated entries in the same
 format as passed via command-line.
 
-Note: B<display-level> and B<display-info> may not both appear in the
-configuration file.
+Note: B<display-level> may not be used with B<display-info> or B<pedantic>
+in the configuration file.
 
 =item B<-m>, B<--md5sums>, B<--checksums>
 
@@ -300,6 +300,9 @@ tags is probably not worth the effort.
 
 This option overrides the B<pedantic> variable in the configuration
 file.
+
+Note: B<pedantic> and B<display-info> may not both appear in the
+configuration file.
 
 =item B<--profile> vendor[/prof]
 

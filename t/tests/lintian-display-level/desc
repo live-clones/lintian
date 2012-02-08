@@ -18,7 +18,6 @@ Test-For:
  maintainer-upload-has-incorrect-version-number
  new-essential-package
  no-homepage-field
- no-upstream-changelog
  possible-gpl-code-linked-with-openssl
 Test-Against:
  binary-control-field-duplicates-source

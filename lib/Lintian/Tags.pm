@@ -38,7 +38,7 @@ BEGIN {
 our $GLOBAL;
 
 # Ordered lists of severities and certainties, used for display level parsing.
-our @SEVERITIES  = qw(wishlist minor normal important serious);
+our @SEVERITIES  = qw(pedantic wishlist minor normal important serious);
 our @CERTAINTIES = qw(wild-guess possible certain);
 
 =head1 NAME
@@ -125,9 +125,6 @@ created object.
 # show_overrides:
 #     True if overridden tags should be displayed.  False by default.
 #
-# show_pedantic:
-#     True if pedantic tags should be displayed.  False by default.
-#
 # statistics:
 #     Statistics per file.  Key is the filename, value another hash with
 #     the following keys:
@@ -155,7 +152,6 @@ sub new {
         profile              => undef,
         show_experimental    => 0,
         show_overrides       => 0,
-        show_pedantic        => 0,
         statistics           => {},
     };
     bless($self, $class);
@@ -398,18 +394,6 @@ configure overridden tags to not be shown.
 sub show_overrides {
     my ($self, $bool) = @_;
     $self->{show_overrides} = $bool ? 1 : 0;
-}
-
-=item show_pedantic(BOOL)
-
-If BOOL is true, configure pedantic tags to be shown.  If BOOL is false,
-configure pedantic tags to not be shown.
-
-=cut
-
-sub show_pedantic {
-    my ($self, $bool) = @_;
-    $self->{show_pedantic} = $bool ? 1 : 0;
 }
 
 =item sources([SOURCE [, ...]])
@@ -704,18 +688,7 @@ sub displayed {
     my $severity = $info->severity;
     my $certainty = $info->certainty;
 
-    # Pedantic is determined separately by the show_pedantic setting rather
-    # than by the normal display levels.  This is probably a mistake; this
-    # should probably be consistent.
-    #
-    # Severity and certainty should always be available, but avoid Perl
-    # warnings if the tag data is corrupt for some reason.
-    my $display;
-    if ($severity eq 'pedantic') {
-        $display = $self->{show_pedantic} ? 1 : 0;
-    } else {
-        $display = $self->{display_level}{$severity}{$certainty};
-    }
+    my $display = $self->{display_level}{$severity}{$certainty};
 
     # If display_source is set, we need to check whether any of the references
     # of this tag occur in display_source.
