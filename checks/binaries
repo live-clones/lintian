@@ -128,7 +128,10 @@ my $info = shift;
 my $proc = shift;
 
 my $arch;
+my $multiarch;
 my $madir;
+my $gnu_triplet_re;
+my $ruby_triplet_re;
 my $dynsyms = 0;
 my $needs_libc = '';
 my $needs_libc_file;
@@ -140,6 +143,7 @@ my $has_php_ext = 0;
 my %SONAME;
 
 $arch = $info->field('architecture')//'';
+$multiarch = $info->field('multi-arch')//'no';
 my $srcpkg = $proc->pkg_src()//'';
 
 foreach my $file (sort keys %{$info->objdump_info}) {
@@ -184,11 +188,18 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 # nsswitch modules
 $madir = $MULTIARCH_DIRS->value($arch);
 
-# In the (unlikely) case that the architecture is unknown (or we do
+# In the case that the architecture is "all" or unknown (or we do
 # not know the multi-arch path for a known architecture) , we assume
 # it the multi-arch path to be this (hopefully!) non-existent path to
 # avoid warnings about uninitialized variables.
 $madir = './!non-existant-path!/./' unless defined $madir;
+
+$gnu_triplet_re = quotemeta $madir;
+$gnu_triplet_re =~ s,^i386,i[3-6]86,;
+$ruby_triplet_re = $gnu_triplet_re;
+$ruby_triplet_re =~ s,linux\\-gnu$,linux,;
+$ruby_triplet_re =~ s,linux\\-gnu,linux\\-,;
+
 sub lib_soname_path {
     my ($dir, @paths) = @_;
     foreach my $path (@paths) {
@@ -264,6 +275,12 @@ foreach my $file (@{$info->sorted_file_info}) {
 
     if ($file =~ m,^usr/share/,) {
         tag 'arch-dependent-file-in-usr-share', $file;
+    }
+
+    if ($multiarch eq 'same') {
+        unless ($file =~ m,/(?:$gnu_triplet_re|$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,) {
+            tag 'arch-dependent-file-not-in-arch-specific-directory', $file;
+        }
     }
 
     # ELF?

@@ -1,0 +1,5 @@
+Testname: binaries-multiarch-same
+Sequence: 6000
+Version: 1.0
+Description: Test of multiarch same package with unsafe binaries
+Test-For: arch-dependent-file-not-in-arch-specific-directory

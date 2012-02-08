@@ -113,6 +113,13 @@ Ref: fhs usrsharearchitectureindependentdata
 Info: This package installs an ELF binary in the <tt>/usr/share</tt>
  hierarchy, which is reserved for architecture-independent files.
 
+Tag: arch-dependent-file-not-in-arch-specific-directory
+Severity: serious
+Certainty: possible
+Ref: https://wiki.ubuntu.com/MultiarchSpec
+Info: This package is Multi-Arch "same", but it installs an ELF binary in the
+ directory that is not architecture-specific.
+
 Tag: binary-in-etc
 Severity: serious
 Certainty: certain

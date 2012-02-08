@@ -2,6 +2,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - arch-dependent-file-not-in-arch-specific-directory
       - control-file-contains-dh_make-vcs-comment
       - debhelper-compat-file-is-missing
       - dependency-is-not-multi-archified
@@ -29,8 +30,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Fixed assumptions about certain fields being present.
       Where needed, Lintian will make guesses to the most likely
       value (or the least "broken" value).
-  * checks/binaries:
+  * checks/binaries{,.desc}:
     + [NT] Allow libnss_* plugins in usr/lib.
+    + [JW] Check for ELF binaries installed in unsafe paths in
+      Multi-Arch: same packages.  (Closes: #650445)
   * checks/control-file{,.desc}:
     + [NT] Allow "pkg (= ${source:Version})" versioned dependency if
       pkg is architecture all.  This fixes a false-positive
