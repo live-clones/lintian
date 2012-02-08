@@ -72,8 +72,7 @@ metadata elements or to format the tag description.
 
 =item new(HASH, SCRIPT_NAME, SCRIPT_TYPE)
 
-Creates a new Lintian::Tag:Info - this constructor does not use the "cache"
-(as mentioned above) in anyway.
+Creates a new Lintian::Tag:Info.
 
 =cut
 
@@ -81,15 +80,30 @@ sub new {
     my ($class, $tag, $sn, $st) = @_;
     my %copy;
     my $self;
+    my $tagname;
     croak 'no tag specified' unless $tag;
     %copy = %$tag;
     $self = \%copy;
     croak "Missing Tag field" unless $self->{'tag'};
+    $tagname = $self->{'tag'};
+    croak "Missing Severity field for $tag" unless $self->{'severity'};
+    croak "Missing Certainity field for $tag" unless $self->{'certainty'};
     $self->{'info'} = '' unless $self->{'info'};
     $self->{'script'} = $sn;
     $self->{'script-type'} = $st;
     $self->{'effective-severity'} = $self->{severity};
-    return bless $self, $class;
+
+    bless $self, $class;
+
+    # Check the tag has a code - if it doesn't, either the severity or
+    # certainty is wrong (or we introduced a new one but forgot to add
+    # it to %CODES).
+    unless ($self->code) {
+        croak "Cannot determine the code of $tag (severity:"
+            . " $self->{'severity'}, certainity: $self->{'certainty'}).\n";
+    }
+
+    return $self;
 }
 
 =back
@@ -244,14 +258,13 @@ sub description {
     my $info = $self->{info};
     $info =~ s/\n[ \t]/\n/g;
     my @text = split_paragraphs($info);
+    my $severity = $self->severity;
+    my $certainty = $self->certainty;
+
     if ($self->{ref}) {
         push(@text, '', _format_reference($self->{ref}));
     }
-    if ($self->severity and $self->certainty) {
-        my $severity = $self->severity;
-        my $certainty = $self->certainty;
-        push(@text, '', "Severity: $severity, Certainty: $certainty");
-    }
+    push(@text, '', "Severity: $severity, Certainty: $certainty");
     if ($self->{script} and $self->{'script-type'}){
         my $script = $self->{script};
         my $stype = $self->{'script-type'};
@@ -309,6 +322,7 @@ Modifies the effective severity of the tag.
 
 sub set_severity{
     my ($self, $sev) = @_;
+    croak "Unknown severity $sev.\n" unless exists $CODES{$sev};
     $self->{'effective-severity'} = $sev;
 }
 

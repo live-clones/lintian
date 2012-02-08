@@ -809,6 +809,9 @@ lintian (2.5.3) unstable; urgency=low
     + [JW] Create links for references pointing to files in html
       output.
     + [JW] Parse "#nnnnnn" references as links to Debian bugs.
+    + [NT] Check severity and certainty when loading checks.  This
+      causes Lintian to reject checks with broken/incomplete tags
+      even if the tag was never used.
   * lib/Lintian/Tag/Override.pm:
     + [NT] New file.
   * lib/Lintian/Tags.pm:

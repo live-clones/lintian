@@ -713,10 +713,8 @@ sub displayed {
     my $display;
     if ($severity eq 'pedantic') {
         $display = $self->{show_pedantic} ? 1 : 0;
-    } elsif ($severity and $certainty) {
-        $display = $self->{display_level}{$severity}{$certainty};
     } else {
-        $display = 1;
+        $display = $self->{display_level}{$severity}{$certainty};
     }
 
     # If display_source is set, we need to check whether any of the references
