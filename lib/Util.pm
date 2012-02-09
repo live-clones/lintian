@@ -272,7 +272,7 @@ sub system_env {
     if (not defined $pid) {
         return -1;
     } elsif ($pid == 0) {
-        clean_env();
+        clean_env(1);
         exec @_ or die("exec of $_[0] failed: $!\n");
     } else {
         waitpid $pid, 0;
@@ -281,13 +281,32 @@ sub system_env {
 }
 
 # Destructively clean %ENV - removes all variables from %ENV except
-# those listed as arguments.  If called without arguments a default
-# whitelist (including PATH and LOCPATH) will be used) instead.
+# a selected few whitelisted variables (including PATH and LOCPATH)
+#
+# Based on LOCPATH (and /usr/lib/locale), this function will set
+# LC_ALL to C.UTF-8 or en_US.UTF-8.  If neither LOCPATH nor
+# /usr/lib/locale has any of those locales, then LC_ALL will be
+# cleared.  It is possible to skip the LC_ALL check by passing a
+# truth value as first argument.
 sub clean_env {
-    my @whitelist = @_;
-    @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH) unless @whitelist;
+    my ($no_lcall) = @_;
+    my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
+    my @locales = qw(C.UTF-8 en_US.UTF-8);
     my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
     %ENV = %newenv;
+    return if $no_lcall;
+    foreach my $locpath ($ENV{LOCPATH}, '/usr/lib/locale') {
+        if ($locpath && -d $ENV{LOCPATH}) {
+            $locpath = $ENV{LOCPATH};
+            foreach my $loc (@locales) {
+                if ( -d "$locpath/$loc" ) {
+                    $ENV{LC_ALL} = $loc;
+                    return;
+                }
+            }
+        }
+    }
+    fail ("clean_env: could not find needed locale");
 }
 
 # Translate permission strings like `-rwxrwxrwx' into an octal number.

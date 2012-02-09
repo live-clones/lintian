@@ -218,7 +218,6 @@ foreach my $file (@{$info->sorted_index}) {
                 fail("cannot run lexgrog: $!");
             } elsif ($pid == 0) {
                 clean_env;
-                $ENV{LC_ALL} = 'en_US.UTF-8';
                 exec "lexgrog \Q$path\E 2>&1"
                     or fail("cannot run lexgrog: $!");
             }
@@ -250,7 +249,6 @@ foreach my $file (@{$info->sorted_index}) {
             fail("cannot run man -E UTF-8 -l: $!");
         } elsif ($pid == 0) {
             clean_env;
-            $ENV{LC_ALL} = 'en_US.UTF-8';
             $ENV{MANWIDTH} = 80;
             exec "($cmd >/dev/null) 2>&1"
                 or fail("cannot run man -E UTF-8 -l: $!");
