@@ -24,7 +24,6 @@ LC_ALL="C"
 LINTIAN_ROOT=""
 LINTIAN_PROFILE=debian
 LINTIAN_INTERNAL_TESTSUITE=1
-LOCPATH="$(pwd)/debian/test.locale"
 NO_PKG_MANGLE=true
 
 [ "$TEST_WORK_DIR" ] || TEST_WORK_DIR="debian/test-out"
@@ -33,7 +32,6 @@ export LC_ALL
 export LINTIAN_ROOT
 export LINTIAN_PROFILE
 export LINTIAN_INTERNAL_TESTSUITE
-export LOCPATH
 export NO_PKG_MANGLE
 
 fail(){
@@ -41,11 +39,21 @@ fail(){
     exit 1
 }
 
-if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
-    echo "Generating en_US.UTF-8 locale for the test suite"
-    mkdir -p "$LOCPATH"
-    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias \
-        --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
+if [ ! -e "/usr/lib/locale/C.UTF-8" ] ; then
+    LOCPATH="$(pwd)/debian/test.locale"
+    export LOCPATH
+
+    if [ ! -e "$LOCPATH"/C.UTF-8 ] ; then
+        echo "Generating C.UTF-8 locale for the test suite"
+        mkdir -p "$LOCPATH"
+        localedef -i C -c -f UTF-8 -A /usr/share/locale/locale.alias \
+            --quiet "$LOCPATH"/C.UTF-8 || fail "Locale generation failed"
+    else
+        echo "Using pre-generated C.UTF-8 locale in $LOCPATH"
+    fi
+else
+    echo "Using C.UTF-8 locale from /usr/lib/locale"
+    unset LOCPATH
 fi
 
 if [ "${NEW_SUITE}" = 1 ] ; then
