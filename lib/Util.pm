@@ -296,8 +296,7 @@ sub clean_env {
     %ENV = %newenv;
     return if $no_lcall;
     foreach my $locpath ($ENV{LOCPATH}, '/usr/lib/locale') {
-        if ($locpath && -d $ENV{LOCPATH}) {
-            $locpath = $ENV{LOCPATH};
+        if ($locpath && -d $locpath) {
             foreach my $loc (@locales) {
                 if ( -d "$locpath/$loc" ) {
                     $ENV{LC_ALL} = $loc;
