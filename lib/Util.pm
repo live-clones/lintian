@@ -46,6 +46,7 @@ BEGIN {
                  touch_file
                  perm2oct
                  check_path
+                 clean_env
                  resolve_pkg_path);
 }
 
@@ -267,18 +268,26 @@ sub file_is_encoded_in_non_utf8 {
 # Just like system, except cleanses the environment first to avoid any strange
 # side effects due to the user's environment.
 sub system_env {
-    my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
-    my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } @whitelist;
     my $pid = fork;
     if (not defined $pid) {
         return -1;
     } elsif ($pid == 0) {
-        %ENV = %newenv;
+        clean_env();
         exec @_ or die("exec of $_[0] failed: $!\n");
     } else {
         waitpid $pid, 0;
         return $?;
     }
+}
+
+# Destructively clean %ENV - removes all variables from %ENV except
+# those listed as arguments.  If called without arguments a default
+# whitelist (including PATH and LOCPATH) will be used) instead.
+sub clean_env {
+    my @whitelist = @_;
+    @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH) unless @whitelist;
+    my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
+    %ENV = %newenv;
 }
 
 # Translate permission strings like `-rwxrwxrwx' into an octal number.

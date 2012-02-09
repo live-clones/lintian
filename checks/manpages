@@ -217,10 +217,8 @@ foreach my $file (@{$info->sorted_index}) {
             if (not defined $pid) {
                 fail("cannot run lexgrog: $!");
             } elsif ($pid == 0) {
-                my %newenv = (LC_ALL => 'en_US.UTF-8', PATH => $ENV{PATH},
-                              LOCPATH => $ENV{LOCPATH});
-                undef %ENV;
-                %ENV = %newenv;
+                clean_env;
+                $ENV{LC_ALL} = 'en_US.UTF-8';
                 exec "lexgrog \Q$path\E 2>&1"
                     or fail("cannot run lexgrog: $!");
             }
@@ -251,10 +249,9 @@ foreach my $file (@{$info->sorted_index}) {
         if (not defined $pid) {
             fail("cannot run man -E UTF-8 -l: $!");
         } elsif ($pid == 0) {
-            my %newenv = (LC_ALL => 'en_US.UTF-8', PATH => $ENV{PATH},
-                          MANWIDTH => 80, LOCPATH => $ENV{LOCPATH});
-            undef %ENV;
-            %ENV = %newenv;
+            clean_env;
+            $ENV{LC_ALL} = 'en_US.UTF-8';
+            $ENV{MANWIDTH} = 80;
             exec "($cmd >/dev/null) 2>&1"
                 or fail("cannot run man -E UTF-8 -l: $!");
         }
