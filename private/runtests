@@ -43,13 +43,15 @@ if [ ! -e "/usr/lib/locale/C.UTF-8" ] ; then
     LOCPATH="$(pwd)/debian/test.locale"
     export LOCPATH
 
-    if [ ! -e "$LOCPATH"/C.UTF-8 ] ; then
-        echo "Generating C.UTF-8 locale for the test suite"
+    # Apparently, it is not possible to generate a C.UTF-8 locale in
+    # Squeeze, so settle with an en_US.UTF-8 one.
+    if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
+        echo "Generating en_US.UTF-8 locale for the test suite"
         mkdir -p "$LOCPATH"
-        localedef -i C -c -f UTF-8 -A /usr/share/locale/locale.alias \
-            --quiet "$LOCPATH"/C.UTF-8 || fail "Locale generation failed"
+        localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias \
+            --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
     else
-        echo "Using pre-generated C.UTF-8 locale in $LOCPATH"
+        echo "Using pre-generated en_US.UTF-8 locale in $LOCPATH"
     fi
 else
     echo "Using C.UTF-8 locale from /usr/lib/locale"
