@@ -272,6 +272,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       unknown architectures and for "arch:all" packages.
     + [NT] Use a Profile to determine if a tag is suppressed or not.
     + [NT] Handle "pedantic" like the other severities.
+    + [NT] Count experimental tags as a separate group of tags.  This
+      fixes an issue where lintian would exit 1 if the only error
+      tags emitted were experimental.  (Closes: #658971)
   * lib/Util.pm:
     + [NT] Create clean_env function to handle cleaning of the
       environment for children processes and finding a suitable UTF-8

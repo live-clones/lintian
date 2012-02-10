@@ -213,13 +213,15 @@ sub _check_overrides {
 sub _record_stats {
     my ($self, $tag, $info, $override) = @_;
     my $stats = $self->{statistics}{$self->{current}};
+    my $code = $info->code;
+    $code = 'X' if $info->experimental;
     if ($override) {
         $stats = $self->{statistics}{$self->{current}}{overrides};
     }
     $stats->{tags}{$tag}++;
     $stats->{severity}{$info->severity}++;
     $stats->{certainty}{$info->certainty}++;
-    $stats->{types}{$info->code}++;
+    $stats->{types}{$code}++;
 }
 
 sub tag {
