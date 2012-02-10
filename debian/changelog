@@ -165,6 +165,18 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Auto-generate file with help from dpkg-architecture.
       (Closes: #653832)
 
+  * debian/control:
+    + [NT] Prefer libc-bin (>= 2.13) to locales.  Thanks to Josh
+      Triplett for the suggestion, investigative work and the
+      proposed patch to make this possible.  (Closes: #636086)
+  * debian/{postinst,prerm}:
+    + [JW,NT] Remove the internal Lintian locale if a C.UTF-8 locale
+      is found in /usr/lib/locale.
+  * debian/triggers:
+    + [JW] Added trigger for libc-bin C.UTF-8 locale.  This ensures
+      the internal Lintian locale can removed if libc-bin is upgraded
+      after Lintian.
+
   * doc/lintian.xml:
     + [NT] Corrected the runtime estimate for an archive-wide run.
       With 35 000+ packages, it can no longer be done in "a few
@@ -260,6 +272,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
       unknown architectures and for "arch:all" packages.
     + [NT] Use a Profile to determine if a tag is suppressed or not.
     + [NT] Handle "pedantic" like the other severities.
+  * lib/Util.pm:
+    + [NT] Create clean_env function to handle cleaning of the
+      environment for children processes and finding a suitable UTF-8
+      locale (when needed).
 
   * man/lintian.pod.in:
     + [NT] Removed the notes that some options disable loading of a

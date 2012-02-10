@@ -19,11 +19,15 @@ gen_locale() {
 
 if [ "$1" = "configure" ]; then
     if [ ! -f "$locale_dir/en_US.UTF-8/LC_CTYPE" ] &&
-	[ -f /usr/share/locale/locale.alias ]; then
+	[ -f /usr/share/locale/locale.alias ] &&
+	[ ! -d /usr/lib/locale/C.UTF-8/ ] ; then
 
 	# handle upgrades from the previous, incorrect, directory:
 	rm -rf "$locale_dir"
 	gen_locale
+    elif [ -d "$locale_dir" -a -d /usr/lib/locale/C.UTF-8/ ] ; then
+        # handle upgrades into a system with the libc C.UTF-8
+        rm -rf "$locale_dir"
     fi
 fi
 
@@ -32,9 +36,13 @@ if [ "$1" = "triggered" ]; then
     # If locales is removed, locales-all should provide us the locale
     # we want.
     # If locales is upgraded, we should still regenerate our locale.
+    # If the libc provided C.UTF-8 appeared, we do not need our locale
+    # anymore.
     rm -rf "$locale_dir"
 
-    if [ -f /usr/share/locale/locale.alias ]; then
+    if [ -f /usr/share/locale/locale.alias ] &&
+	[ ! -d /usr/lib/locale/C.UTF-8/ ] ; then
+
 	gen_locale
     fi
 fi
