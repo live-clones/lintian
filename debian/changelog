@@ -156,6 +156,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * data/debhelper/dh_commands-manual:
     + [JW] Add python3-sphinx as provider of dh_sphinxdoc.
       (Closes: #649640)
+    + [NT] Added libxine-dev | libxine2-dev as provider of dh_xine.
+      (Closes: #659285)
   * data/fields/archive-sections:
     + [NT] Added new sections.  Thanks to Michael Biebl for the
       reminder.  (Closes: #652123)
