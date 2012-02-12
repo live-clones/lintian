@@ -44,6 +44,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Accepted patch from Gergely Nagy to catch dh-make vcs
       templates in comments.  Thanks to Paul Wise for suggesting this
       check.  (Closes: #657110)
+  * checks/copyright.desc:
+    + [RA] Rephrase copyright-with-old-dh-make-debian-copyright long
+      description to be clearer about the legal status of copyright
+      notices.  (Closes: #659574)
   * checks/cruft{,.desc}:
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to

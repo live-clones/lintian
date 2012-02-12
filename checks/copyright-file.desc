@@ -264,9 +264,15 @@ Severity: wishlist
 Certainty: certain
 Info: The copyright file contains the incomplete Debian packaging
  copyright boilerplate from older versions of <tt>dh_make</tt>.
- <tt>(C)</tt> is not considered as a valid way to express the copyright
- ownership.  The word <tt>Copyright</tt> or the © symbol should be used
- instead or in addition to <tt>(C)</tt>.
+ <tt>(C)</tt> alone is not considered a valid copyright notice in at least
+ some countries.  The word <tt>Copyright</tt> or the © symbol should be
+ used instead or in addition to <tt>(C)</tt>.
+ .
+ Copyright notices like this are, in any country that's a signatory to the
+ Berne Convention, not required to claim copyright on a work, but their
+ presence may allow claiming additional damages should a copyright case go
+ to court.  If you provide a notice, you may as well provide one that's
+ legally valid.
 
 Tag: copyright-refers-to-bad-php-license
 Severity: serious
