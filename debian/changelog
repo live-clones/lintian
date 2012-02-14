@@ -48,6 +48,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [RA] Rephrase copyright-with-old-dh-make-debian-copyright long
       description to be clearer about the legal status of copyright
       notices.  (Closes: #659574)
+    + [RA,NT] Make copyright-with-old-dh-make-debian-copyright a
+      pedantic tag.
   * checks/cruft{,.desc}:
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to

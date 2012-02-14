@@ -260,7 +260,7 @@ Info: The string "This copyright info was automatically extracted"
  you didn't remove that paragraph after having done so.
 
 Tag: copyright-with-old-dh-make-debian-copyright
-Severity: wishlist
+Severity: pedantic
 Certainty: certain
 Info: The copyright file contains the incomplete Debian packaging
  copyright boilerplate from older versions of <tt>dh_make</tt>.
