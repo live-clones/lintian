@@ -81,7 +81,6 @@ sub parse_dpkg_control {
 sub _parse_dpkg_control_iterative {
     my ($code, $CONTROL, $debconf_flag) = @_;
 
-    my $cur_section = 0;
     my $section = {};
     my $open_section = 0;
     my $last_tag;
@@ -100,7 +99,6 @@ sub _parse_dpkg_control_iterative {
                 # pass the current section to the handler
                 $code->($section);
                 $section = {};
-                $cur_section++;
                 $open_section = 0;
             }
         }
@@ -138,8 +136,8 @@ sub _parse_dpkg_control_iterative {
             $last_tag = $tag;
         }
         # continued field?
-        elsif (m/^([ \t].*)$/o) {
-            $open_section or fail("syntax error in paragraph $cur_section after the field $last_tag: $_");
+        elsif (m/^([ \t].*\S.*)$/o) {
+            $open_section or die "syntax error at line $.: Continuation line outside a paragraph.\n";
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
@@ -151,9 +149,15 @@ sub _parse_dpkg_control_iterative {
         }
         # None of the above => syntax error
         else {
-            my $message = "syntax error in paragraph $cur_section";
-            $message.= " after the field $last_tag: $_" if defined $last_tag;
-            fail($message);
+            my $message = "syntax error at line $.";
+            if (m/^\s+$/) {
+                $message .= ": Whitespace line not allowed (possibly missing a \".\").\n";
+            } else {
+                # Replace non-printables and non-space characters with "_"... just in case.
+                s/[^[:graph:][:space:]]/_/go;
+                $message .= ": Cannot parse line \"$_\"\n";
+            }
+            die $message;
         }
     }
     # pass the last section (if not already done).

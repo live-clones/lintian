@@ -1,2 +1,2 @@
-E: debconf-syntax-error source: syntax-error-in-debconf-template templates: paragraph 0 after the field type: Description whoops, I forgot a colon
-E: debconf-syntax-error: syntax-error-in-debconf-template templates: paragraph 0 after the field type: Description whoops, I forgot a colon
+E: debconf-syntax-error source: syntax-error-in-debconf-template templates: syntax error at line 3: Cannot parse line "Description whoops, I forgot a colon"
+E: debconf-syntax-error: syntax-error-in-debconf-template templates: syntax error at line 3: Cannot parse line "Description whoops, I forgot a colon"

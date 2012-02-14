@@ -1,1 +1,1 @@
-E: control-file-syntax-error source: syntax-error-in-control-file debian/control: paragraph 1 after the field depends: Recommends a-colon, after-the-field, name
+E: control-file-syntax-error source: syntax-error-in-control-file debian/control: syntax error at line 11: Cannot parse line "Recommends a-colon, after-the-field, name"

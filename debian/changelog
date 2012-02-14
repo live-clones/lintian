@@ -285,6 +285,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Create clean_env function to handle cleaning of the
       environment for children processes and finding a suitable UTF-8
       locale (when needed).
+    + [NT] Report line number instead of "0-indexed" paragraph number
+      in syntax errors.  Thanks to Jari Aalto for the suggestion.
+      (Closes: #659909)
 
   * man/lintian.pod.in:
     + [NT] Removed the notes that some options disable loading of a
