@@ -62,6 +62,7 @@ use Digest::MD5;
 # arguments:
 #    $filehandle
 #    $debconf_flag (true if the file is a debconf template file)
+#    $lines (will be updated to contain line number of each paragraph)
 # output:
 #    list of hashes
 #    (a hash contains one sections,
@@ -79,7 +80,7 @@ sub parse_dpkg_control {
 # large dpkg-control based files without having the entire file
 # in memory.
 sub _parse_dpkg_control_iterative {
-    my ($code, $CONTROL, $debconf_flag) = @_;
+    my ($code, $CONTROL, $debconf_flag, $lines) = @_;
 
     my $section = {};
     my $open_section = 0;
@@ -116,6 +117,7 @@ sub _parse_dpkg_control_iterative {
         }
         # new empty field?
         elsif (m/^([^: \t]+):\s*$/o) {
+            push @$lines, $. if defined $lines and not $open_section;
             $open_section = 1;
 
             my ($tag) = (lc $1);
@@ -125,6 +127,7 @@ sub _parse_dpkg_control_iterative {
         }
         # new field?
         elsif (m/^([^: \t]+):\s*(.*)$/o) {
+            push @$lines, $. if defined $lines and not $open_section;
             $open_section = 1;
 
             # Policy: Horizontal whitespace (spaces and tabs) may occur
@@ -165,7 +168,7 @@ sub _parse_dpkg_control_iterative {
 }
 
 sub read_dpkg_control {
-    my ($file, $debconf_flag) = @_;
+    my ($file, $debconf_flag, $lines) = @_;
 
     if (not _ensure_file_is_sane($file)) {
         return;
@@ -173,7 +176,7 @@ sub read_dpkg_control {
 
     open(my $CONTROL, '<', $file)
         or fail("cannot open control file $file for reading: $!");
-    my @data = parse_dpkg_control($CONTROL, $debconf_flag);
+    my @data = parse_dpkg_control($CONTROL, $debconf_flag, $lines);
     close($CONTROL)
         or fail("pipe for control file $file exited with status: $?");
     return @data;

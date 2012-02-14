@@ -131,6 +131,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * checks/source-copyright:
     + [JW] Allow a trailing slash in the DEP-5 1.0 URL.
       (Closes: #649813)
+    + [NT] Use line numbers rather than "0-indexed" paragraph numbers
+      in the emitted tags.  Thanks to Jari Aalto for the suggestion.
   * checks/symlinks:
     + [NT] Ignore langpack symlinks if they appear to be consistent.
       Thanks to Evan Broder for the report.  (Closes: #650793)

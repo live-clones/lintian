@@ -69,6 +69,7 @@ $_ = slurp_entire_file($copyright_filename);
 study $_;
 
 my @dep5;
+my @lines;
 
 if (m{
     (^ | \n)
@@ -129,12 +130,11 @@ if (m{
                 # We are reasonably certain that we're dealing with an up-to-date
                 # DEP-5 format. Let's try to do more strict checks.
                 eval {
-                    @dep5 = read_dpkg_control($copyright_filename);
+                    @dep5 = read_dpkg_control($copyright_filename, 0, \@lines);
                 };
                 if ($@) {
                     chomp $@;
-                    $@ =~ s/^internal error: //;
-                    $@ =~ s/^syntax error in //;
+                    $@ =~ s/^syntax error at //;
                     tag 'syntax-error-in-dep5-copyright', $@;
                 }
             }
@@ -152,17 +152,17 @@ if (@dep5) {
     for my $field (keys %{$first_para}) {
         my $renamed_to = $dep5_renamed_fields{$field};
         if (defined $renamed_to) {
-            tag 'obsolete-field-in-dep5-copyright', $field, $renamed_to
+            tag 'obsolete-field-in-dep5-copyright', $field, $renamed_to, "(paragraph at line $lines[0])";
         }
     }
     if (not defined $first_para->{'format'} and not defined $first_para->{'format-specification'}) {
-        tag 'missing-field-in-dep5-copyright', 'paragraph', '1', 'format';
+        tag 'missing-field-in-dep5-copyright', 'format', "(paragraph at line $lines[0])";
     }
     for my $license (split_licenses($first_para->{'license'})) {
         $required_standalone_licenses{$license} = 1;
     }
     my $commas_in_files = 0;
-    my $i = 1;
+    my $i = 0;
     for my $para (@dep5) {
         $i++;
         my $license = $para->{'license'};
@@ -170,7 +170,7 @@ if (@dep5) {
         if (defined $license and not defined $files) {
             # Standalone license paragraph
             if (not $license =~ m/\n/) {
-                tag 'missing-license-text-in-dep5-copyright', 'paragraph', $i, "\L$license";
+                tag 'missing-license-text-in-dep5-copyright', lc $license, "(paragrah at line $lines[$i])";
             }
             ($license, undef) = split /\n/, $license, 2;
             for (split_licenses($license)) {
@@ -179,35 +179,35 @@ if (@dep5) {
         }
         elsif (defined $files) {
             # Files paragraph
-            $commas_in_files = 1 if $files =~ /,/;
+            $commas_in_files = $i if not $commas_in_files and $files =~ /,/;
             if (defined $license) {
                 for (split_licenses($license)) {
                     $required_standalone_licenses{$_} = $i;
                 }
             }
             else {
-                tag 'missing-field-in-dep5-copyright', 'paragraph', $i, 'license';
+                tag 'missing-field-in-dep5-copyright', "license (paragraph at line $lines[$i])";
             }
             if (not defined $para->{'copyright'}) {
-                tag 'missing-field-in-dep5-copyright', 'paragraph', $i, 'copyright';
+                tag 'missing-field-in-dep5-copyright', "copyright (paragraph at line $lines[$i])";
             }
         }
         else {
-            tag 'unknown-paragraph-in-dep5-copyright', 'paragraph', $i;
+            tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line', $lines[$i];
         }
     }
     if ($commas_in_files) {
-        tag 'comma-separated-files-in-dep5-copyright'
+        tag 'comma-separated-files-in-dep5-copyright', 'paragraph at line', $lines[$i]
             unless grep(/,/, $info->sorted_index);
     }
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
-            tag 'missing-license-paragraph-in-dep5-copyright', 'paragraph', $i, $license;
+            tag 'missing-license-paragraph-in-dep5-copyright', $license, "(paragraph at line $lines[$i])";
         }
     }
     while ((my $license, $i) = each %standalone_licenses) {
         if (not defined $required_standalone_licenses{$license}) {
-            tag 'unused-license-paragraph-in-dep5-copyright', 'paragraph', $i, $license;
+            tag 'unused-license-paragraph-in-dep5-copyright', $license, "(paragraph at line $lines[$i])";
         }
     }
 }

@@ -1,8 +1,8 @@
-I: source-copyright-dep5-general source: unused-license-paragraph-in-dep5-copyright paragraph 9 expat
-W: source-copyright-dep5-general source: comma-separated-files-in-dep5-copyright
-W: source-copyright-dep5-general source: missing-field-in-dep5-copyright paragraph 4 license
-W: source-copyright-dep5-general source: missing-field-in-dep5-copyright paragraph 5 copyright
-W: source-copyright-dep5-general source: missing-license-paragraph-in-dep5-copyright paragraph 6 mit
-W: source-copyright-dep5-general source: missing-license-text-in-dep5-copyright paragraph 8 gpl-3
-W: source-copyright-dep5-general source: obsolete-field-in-dep5-copyright upstream-maintainer upstream-contact
-W: source-copyright-dep5-general source: unknown-paragraph-in-dep5-copyright paragraph 2
+I: source-copyright-dep5-general source: unused-license-paragraph-in-dep5-copyright expat (paragraph at line 40)
+W: source-copyright-dep5-general source: comma-separated-files-in-dep5-copyright paragraph at line 40
+W: source-copyright-dep5-general source: missing-field-in-dep5-copyright copyright (paragraph at line 15)
+W: source-copyright-dep5-general source: missing-field-in-dep5-copyright license (paragraph at line 12)
+W: source-copyright-dep5-general source: missing-license-paragraph-in-dep5-copyright mit (paragraph at line 18)
+W: source-copyright-dep5-general source: missing-license-text-in-dep5-copyright gpl-3 (paragrah at line 38)
+W: source-copyright-dep5-general source: obsolete-field-in-dep5-copyright upstream-maintainer upstream-contact (paragraph at line 1)
+W: source-copyright-dep5-general source: unknown-paragraph-in-dep5-copyright paragraph at line 6

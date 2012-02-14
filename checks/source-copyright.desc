@@ -94,6 +94,8 @@ Certainty: possible
 Ref: http://dep.debian.net/deps/dep5/
 Info: A list of files in the machine-readable copyright format appears to be
  separated by commas.  The file list should be whitespace separated instead.
+ .
+ Please note this tag is only emitted once per checked copyright file.
 
 Tag: missing-field-in-dep5-copyright
 Severity: normal
