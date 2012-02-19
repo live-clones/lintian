@@ -118,11 +118,11 @@ Note that the laboratory is usually abbreviated to "Lab".
 
 =item Overridden (Tag)
 
-Tag that was overriden by the maintainer.  Usually it means that the
+Tag that was overridden by the maintainer.  Usually it means that the
 maintainer believes Lintian misdiagnosed the issue.  In some cases it
 is also used for tags that does not handle "corner-cases"
 
-Overriden tags are not displayed by default, but they are still
+Overridden tags are not displayed by default, but they are still
 counted in statistics.  This should not be confused with "Suppressed".
 
 =item Suppressed (Tag)
@@ -130,7 +130,7 @@ counted in statistics.  This should not be confused with "Suppressed".
 Tags that are suppressed cannot be emitted.
 
 Note that suppressed tags are ignored by Lintian, so they are not
-counted in statistics.  Not to be confused with "Overriden".
+counted in statistics.  Not to be confused with "Overridden".
 
 =item Tag
 
@@ -158,10 +158,10 @@ shell snippet can be used for this purpose:
 Beware of two things: If LINTIAN_ROOT is not set, Lintian will attempt to
 use the code from the installed version (in /usr/share/lintian).
 
-The other issue is that Lintian needs a en_US.UTF-8 locale, so if this is
-absent, it may trigger some issues with some (i.e. manpage) checks.  Lintian
-currently generates a private locale when the test-suite is run and if Lintian
-is installed.
+The other issue is that Lintian needs a C.UTF-8 (or an en_US.UTF-8)
+locale, so if this is absent, it may trigger some issues with some
+(e.g. manpage) checks.  Lintian currently generates a private locale
+when the test-suite is run and if Lintian is installed.
 
 =head3 Running tests
 

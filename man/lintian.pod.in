@@ -569,14 +569,14 @@ configuration file; please refer to the individual options in
 L</OPTIONS>.
 
 In the configuration file, all options listed must have a value, even
-if they do not accept a value on command line (i.e. --pedantic).  The
+if they do not accept a value on command line (e.g. --pedantic).  The
 values "yes", "y", "1", or "true" will enable such a option and "no",
 "n", "0" or "false" will disable it.  Prior to the 2.5.2 release,
 these values were case sensitive.
 
 For other options, they generally take the same values as they do on
 the command line.  Though some options allow a slightly different
-format (i.e. --display-level); these exceptions are explained for the
+format (e.g. --display-level).  These exceptions are explained for the
 relevant options in L</OPTIONS>.
 
 Beyond command line options, it is also allowed to specify the
@@ -670,7 +670,7 @@ packages or when type is "GROUP".
 
 Note: For changes packages, this must match the contents of the
 architecture field in the changes.  This field may contain a space
-(i.e. "source all") and therefore may also need proper shell escape.
+(e.g. "source all") and therefore may also need proper shell escape.
 
 =back
 
