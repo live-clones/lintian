@@ -82,7 +82,6 @@ my @RULE_CLEAN_DEPENDS =
      [ $PYTHON3_DEPEND => qr'^\t\s*python3\s', 'missing-python-build-dependency' ],
      [ $ANYPYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
      [ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
-     [ yada => qr'^\t\s*yada\s' ],
     );
 
 # The following targets are required per Policy.

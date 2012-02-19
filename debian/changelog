@@ -117,6 +117,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
       any package (according to lintian.d.o).
   * checks/nmu:
     + [JW] Properly handle uploader names with commas.
+  * checks/po-debconf:
+    + [NT] Remove special handling for packages using yada.
+  * checks/rules:
+    + [NT] Remove check for missing build-depends on yada.
   * checks/scripts:
     + [NT] Accepted patch from Evan Broder to check for missing
       versioned pre-depends on dpkg when using maintscript helper.
