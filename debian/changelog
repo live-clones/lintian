@@ -11,6 +11,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       - dh-exec-script-without-dh-exec-features
       - dh-exec-subst-unknown-variable
       - executable-debhelper-file-without-being-executable
+      - missing-dependency-on-numpy-abi
       - package-file-is-executable
       - package-uses-dh-exec-but-lacks-build-depends
       - preinst-uses-dpkg-maintscript-helper-without-predepends
@@ -34,6 +35,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Allow libnss_* plugins in usr/lib.
     + [JW] Check for ELF binaries installed in unsafe paths in
       Multi-Arch: same packages.  (Closes: #650445)
+    + [JW] Added check numpy ABI dependency.  (Closes: #658311)
   * checks/control-file{,.desc}:
     + [NT] Allow "pkg (= ${source:Version})" versioned dependency if
       pkg is architecture all.  This fixes a false-positive
@@ -189,6 +191,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Prefer libc-bin (>= 2.13) to locales.  Thanks to Josh
       Triplett for the suggestion, investigative work and the
       proposed patch to make this possible.  (Closes: #636086)
+    + [JW] Add Build-Dependency on python-numpy and python-all-dev
+      for the test suite.
   * debian/{postinst,prerm}:
     + [JW,NT] Remove the internal Lintian locale if a C.UTF-8 locale
       is found in /usr/lib/locale.

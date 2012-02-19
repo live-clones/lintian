@@ -139,6 +139,7 @@ my $needs_libc_count = 0;
 my $needs_depends_line = 0;
 my $has_perl_lib = 0;
 my $has_php_ext = 0;
+my $uses_numpy_c_abi = 0;
 
 my %SONAME;
 
@@ -370,6 +371,13 @@ foreach my $file (@{$info->sorted_file_info}) {
         $has_php_ext = 1;
     }
 
+    # Python extension using Numpy C ABI?
+    if ($file =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$,) {
+        if ($strings =~ m,module compiled against ABI version %x but this version of numpy is %x,) {
+            $uses_numpy_c_abi = 1;
+        }
+    }
+
     # Something other than detached debugging symbols in /usr/lib/debug paths.
     if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
         if (exists($objdump->{NEEDED})) {
@@ -472,6 +480,17 @@ if ($has_php_ext) {
     unless ($depends =~ /(?:^|,)\s*phpapi-[\d\w+]+\s*(?:,|\z)/) {
         tag 'missing-dependency-on-phpapi';
     }
+}
+
+# Check for dependency on python-numpy-abiN dependency (or strict versioned
+# dependency on python-numpy)
+if ($uses_numpy_c_abi and $pkg ) {
+    tag 'missing-dependency-on-numpy-abi'
+        unless
+            $depends =~ m/(?:^|,)\s*python-numpy-abi\d+\s*(?:,|\z)/ or (
+            $depends =~ m/(?:^|,)\s*python-numpy\s+\(>[>=]/ and
+            $depends =~ m/(?:^|,)\s*python-numpy\s+\(<[<=]/) or
+            $pkg eq 'python-numpy';
 }
 
 }
