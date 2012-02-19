@@ -4,3 +4,5 @@ lintian source: quilt-build-dep-but-no-series-file
 lintian source: patch-system-but-no-source-readme
 # We build-depend on cdbs for the test suite
 lintian source: unused-build-dependency-on-cdbs
+# We build-depend on python-dev for the test suite
+lintian source: build-depends-on-python-dev-with-no-arch-any

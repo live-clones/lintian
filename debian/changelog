@@ -196,6 +196,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * debian/{postinst,prerm}:
     + [JW,NT] Remove the internal Lintian locale if a C.UTF-8 locale
       is found in /usr/lib/locale.
+  * debian/source/lintian-overrides:
+    + [NT] Added override for python-dev tag.  We need python-all-dev
+      for the test suite.
   * debian/triggers:
     + [JW] Added trigger for libc-bin C.UTF-8 locale.  This ensures
       the internal Lintian locale can removed if libc-bin is upgraded
