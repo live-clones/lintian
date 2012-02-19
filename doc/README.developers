@@ -159,9 +159,9 @@ Beware of two things: If LINTIAN_ROOT is not set, Lintian will attempt to
 use the code from the installed version (in /usr/share/lintian).
 
 The other issue is that Lintian needs a C.UTF-8 (or an en_US.UTF-8)
-locale, so if this is absent, it may trigger some issues with some
-(e.g. manpage) checks.  Lintian currently generates a private locale
-when the test-suite is run and if Lintian is installed.
+locale.  If this is absent, it may trigger some issues with some
+(e.g. manpage) checks.  With libc-bin from Wheezy and Lintian 2.5.5,
+this is no longer an issue.
 
 =head3 Running tests
 
@@ -266,7 +266,7 @@ structure data from a package.  This data is then used by the checks
 
 The check may be doing the extraction (or structuring) of data itself,
 but it should generally be avoided for "heavy" tasks.  Unlike checks,
-collections can (and generally is) run in parallel to improve the
+collections can (and generally are) run in parallel to improve the
 effective runtime.
 
 

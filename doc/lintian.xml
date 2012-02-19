@@ -320,9 +320,20 @@
       <para>
         The only known caveat of using Lintian from the source
         directory is that Lintian requires a C.UTF-8 (or en_US.UTF-8)
-        locale to correctly process some files.
-        The <systemitem role="package">lintian</systemitem> Debian
-        package will set up this locale during installation.
+        locale to correctly process some files.  Lintian 2.5.5
+        supports using the C.UTF-8 locale
+        from the <systemitem role="package">libc-bin</systemitem>
+        in Debian Wheezy.
+      </para>
+      <para>
+        If either your version
+        of <systemitem role="package">libc-bin</systemitem> or Lintian
+        are too old, you can work around this issue by generating an
+        en_US.UTF-8 locale.  Alternatively, installing a copy
+        of <systemitem role="package">lintian</systemitem> should
+        solve this, as older versions of Lintian generates a private
+        locale at install time.  Note, older versions of Lintian can
+        only use the en_US.UTF-8 locale.
       </para>
     </sect1>
 
