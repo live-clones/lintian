@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2011-09-05
+# Last updated: 2012-02-19
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -152,8 +152,9 @@ devref::6.7.4::Specific types of packages::http://www.debian.org/doc/developers-
 devref::6.7.5::Architecture-independent data::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-archindepdata
 devref::6.7.6::Needing a certain locale during build::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-locale
 devref::6.7.7::Make transition packages deborphan compliant::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-transition
-devref::6.7.8::Best practices for <code>.orig.tar.{gz,bz2,lzma}</code> files::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-origtargz
+devref::6.7.8::Best practices for <code>.orig.tar.{gz,bz2,xz}</code> files::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-origtargz
 devref::6.7.9::Best practices for debug packages::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-dbg
+devref::6.7.10::Best practices for meta-packages::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#bpp-meta
 devref::7::Beyond Packaging::http://www.debian.org/doc/developers-reference/beyond-pkging.html
 devref::7.1::Bug reporting::http://www.debian.org/doc/developers-reference/beyond-pkging.html#submit-bug
 devref::7.1.1::Reporting lots of bugs at once (mass bug filing)::http://www.debian.org/doc/developers-reference/beyond-pkging.html#submit-many-bugs
@@ -188,8 +189,7 @@ devref::A.2.2::<strong>debdiff</strong>::http://www.debian.org/doc/developers-re
 devref::A.3::Helpers for <code>debian/rules</code>::http://www.debian.org/doc/developers-reference/tools.html#tools-helpers
 devref::A.3.1::<code>debhelper</code>::http://www.debian.org/doc/developers-reference/tools.html#debhelper
 devref::A.3.2::<code>dh-make</code>::http://www.debian.org/doc/developers-reference/tools.html#dh-make
-devref::A.3.3::<code>yada</code>::http://www.debian.org/doc/developers-reference/tools.html#yada
-devref::A.3.4::<code>equivs</code>::http://www.debian.org/doc/developers-reference/tools.html#equivs
+devref::A.3.3::<code>equivs</code>::http://www.debian.org/doc/developers-reference/tools.html#equivs
 devref::A.4::Package builders::http://www.debian.org/doc/developers-reference/tools.html#tools-builders
 devref::A.4.1::<code>cvs-buildpackage</code>::http://www.debian.org/doc/developers-reference/tools.html#cvs-buildpackage
 devref::A.4.2::<code>debootstrap</code>::http://www.debian.org/doc/developers-reference/tools.html#debootstrap
@@ -464,13 +464,15 @@ lintian::2.1::Installing Lintian::http://lintian.debian.org/manual/chapter-2.htm
 lintian::2.2::Running lintian::http://lintian.debian.org/manual/section-2.2.html
 lintian::2.3::Lintian Tags::http://lintian.debian.org/manual/section-2.3.html
 lintian::2.4::Overrides::http://lintian.debian.org/manual/section-2.4.html
+lintian::2.4.1::Format of override files::http://lintian.debian.org/manual/section-2.4.html#section-2.4.1
+lintian::2.4.2::Documenting overrides::http://lintian.debian.org/manual/section-2.4.html#section-2.4.2
+lintian::2.4.3::Architecture specific overrides::http://lintian.debian.org/manual/section-2.4.html#section-2.4.3
 lintian::2.5::Vendor Profiles::http://lintian.debian.org/manual/section-2.5.html
 lintian::2.5.1::Rules for profile names and location::http://lintian.debian.org/manual/section-2.5.html#section-2.5.1
 lintian::2.5.2::Profile syntax and semantics::http://lintian.debian.org/manual/section-2.5.html#section-2.5.2
 lintian::3::Advanced usage::http://lintian.debian.org/manual/chapter-3.html
 lintian::3.1::How Lintian works::http://lintian.debian.org/manual/chapter-3.html#section-3.1
 lintian::3.2::The laboratory::http://lintian.debian.org/manual/section-3.2.html
-lintian::3.3::Distribution directory::http://lintian.debian.org/manual/section-3.3.html
 menu::::Debian Menu System::http://www.debian.org/doc/packaging-manuals/menu.html/
 menu::1::Introduction::http://www.debian.org/doc/packaging-manuals/menu.html/ch1.html
 menu::2::Menu from the viewpoint of a user::http://www.debian.org/doc/packaging-manuals/menu.html/ch2.html

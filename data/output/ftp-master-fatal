@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2011-09-04
+# Last updated: 2012-02-19
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -14,6 +14,7 @@ binary-in-etc
 build-info-in-binary-control-file-section
 control-file-has-bad-owner
 control-file-has-bad-permissions
+control-file-is-not-a-file
 control-interpreter-in-usr-local
 copyright-file-compressed
 copyright-file-is-symlink

@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2011-10-25
+# Last updated: 2012-02-19
 
 # Keep: xserver-xorg-input, xserver-xorg-input-2, xserver-xorg-input-2.1
 # Keep: xserver-xorg-input-4
@@ -24,7 +24,7 @@ aptitude-doc
 aspell-dictionary
 aspell6a-dictionary
 asterisk-prompt-fr
-asterisk-vocemail-storage
+asterisk-voicemail-storage
 audio-mixer
 automaken
 awk
@@ -42,11 +42,6 @@ childsplay-alphabet-sounds
 cl-sql-backend
 console-utilities
 cudf-solver
-cyrus-admin-2.2
-cyrus-clients-2.2
-cyrus-common-2.2
-cyrus-imapd-2.2
-cyrus-pop3d-2.2
 d-compiler
 debconf-2.0
 debian-installer-netboot
@@ -61,7 +56,7 @@ dssi-plugin
 dyndns-client
 editor
 emacsen
-erlang-abi-13.a
+erlang-abi-15.b
 ettercap
 exim4-localscanapi-1.0
 exim4-localscanapi-1.1
@@ -78,23 +73,26 @@ fortran95-compiler
 fortune-cookie-db
 freeciv
 freeciv-client
-freediams-doc
 fsck-backend
 fso-config
 fso-deviced-player
-fso-sounds
 ftp-server
-fuse-emulator
 fusionforge-plugin-scm
 gcompris-sound
+gem-plugin-film
+gem-plugin-image
+gem-plugin-record
+gem-plugin-video
 geoclue-provider
 gforge-mta
 gfxboot-theme
-ggz-core-client
 gimp-help
 gnome-www-browser
-gnustep-back0.18-alt
+gnumach-image
+gnustep-back0.20-alt
+gnutls-dev
 go-compiler
+gsettings-backend
 gstreamer0.10-audiosink
 gstreamer0.10-audiosource
 gstreamer0.10-videosink
@@ -108,8 +106,9 @@ hunspell-dictionary
 hunspell-dictionary-de
 hunspell-dictionary-en
 hunspell-dictionary-fr
-hunspell-dictionary-hu
+hunspell-dictionary-ru
 hyphen-hyphenation-patterns
+icedtea6-jre-cacao
 ident-server
 ike-server
 imap-client
@@ -140,22 +139,23 @@ java6-sdk
 kde-l10n-without-pim
 kfreebsd-headers
 kfreebsd-headers-8
+kfreebsd-headers-9
 kfreebsd-image
 kfreebsd-image-8
+kfreebsd-image-9
+kfreebsd-source
 koffice-l10n
 ladspa-host
 ladspa-plugin
-libasound-dev
 libblas-3gf.so
 libblas.so.3gf
 libcompress-zlib-perl
 libcurl-dev
 libcurl-ssl-dev
 libcurl4-dev
-libcyrus-imap-perl22
+libdeps-renderer
 libdesktop-agnostic-cfg
 libdesktop-agnostic-fdo
-libdesktop-agnostic-vfs
 libdspam7-drv
 libedac
 libfcgi-ruby
@@ -165,14 +165,13 @@ libgd-dev
 libgd2
 libgdchart
 libgdchart-gd2-dev
+libgearman-server0
 libgettext-ruby
 libggi-target
 libgl-dev
 libgl1
 libguile-dev
 libhdf5-1.8
-libhdf5-1.8.4
-libhdf5-dev
 libhtml-wikiconverter-dialect
 libimage-size-ruby
 libio-compress-base-perl
@@ -194,7 +193,9 @@ libreoffice-l10n-3.4
 libreoffice-style
 libstdc++-dev
 libstlport-dev
+libxine-doc
 libzip-ruby
+libzookeeper-dev
 licq-plugin
 lightdm-greeter
 linux-headers
@@ -206,6 +207,7 @@ live-config-backend
 live-manual
 lsb-qt4-ia32
 lsb-qt4-noarch
+lua
 lv2-host
 lv2-plugin
 mail-reader
@@ -232,6 +234,8 @@ netpbm-dev
 netscript
 news-reader
 news-transport-system
+nova-compute-hypervisor
+ntrack-module-0
 objc++-compiler
 objc-compiler
 opendnssec-enforcer-backend
@@ -262,6 +266,7 @@ python2.6-setuptools
 python2.7-setuptools
 python3.2-gdbm
 python3.2-setuptools
+quantum-plugin
 radius-server
 ratbox-services
 readline-editor
@@ -277,7 +282,6 @@ sugar-browse-activity
 sugar-chat-activity
 sugar-emulator
 sugar-presence-service
-sugar-read-activity
 sugar-tools
 sugar-web-activity
 sword-comm
@@ -293,10 +297,8 @@ tclsh
 telepathy-connection-manager
 telnet-client
 telnet-server
-tesseract-ocr-language
 time-daemon
 tkdoc
-ttf-japanese-mincho
 ups-monitor
 va-driver
 vala-doc
@@ -313,8 +315,6 @@ wims-extra
 wish
 wordlist
 www-browser
-wx-doc
-wx-i18n
 x-audio-mixer
 x-display-manager
 x-session-manager

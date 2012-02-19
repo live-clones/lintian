@@ -169,11 +169,21 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * data/fields/archive-sections:
     + [NT] Added new sections.  Thanks to Michael Biebl for the
       reminder.  (Closes: #652123)
+  * data/files/fonts:
+    + [NT] Refreshed against sid.
+  * data/init.d/virtual_facilities:
+    + [NT] Refreshed against sid.
+  * data/output/ftp-master-{,non}fatal:
+    + [NT] Refreshed.
+  * data/output/manual-references:
+    + [NT] Refreshed.
   * data/shared-libs/hwcap-dirs:
     + [JW] New data file for listing known hwcap dirs.
   * data/shared-libs/ldconfig-dirs:
     + [NT] Auto-generate file with help from dpkg-architecture.
       (Closes: #653832)
+  * data/fields/virtual-packages:
+    + [NT] Refreshed against sid.  (Closes: #657155)
 
   * debian/control:
     + [NT] Prefer libc-bin (>= 2.13) to locales.  Thanks to Josh
@@ -301,6 +311,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Rewritten.
   * private/refresh-hwcap:
     + [JW] New file.
+
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [NT] Refreshed.
 
   * reporting/harness:
     + [NT] Removed useless "TODO" message from the log output.
