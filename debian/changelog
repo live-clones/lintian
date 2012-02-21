@@ -242,6 +242,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       release, pedantic tags were not affected by --display-level.
       A side-effect of this is that "pedantic" can no longer be
       used with "display-level" in the configuration file.
+    + [NT] Produce a better error message when asked to process an
+      URL or a path that is definitely not a valid lab query.
+      Thanks to Nicholas Bamber for the report.  (Closes: #651332)
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.

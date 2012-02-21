@@ -1561,7 +1561,19 @@ sub handle_lab_query {
         ($type, $query) = ($1, $2);
     }
     # Split on /
-    ($pkg, $version, $arch) = split m,/,o, $query;
+    ($pkg, $version, $arch) = split m,/,o, $query, 3;
+    if ($pkg =~ m|^\.{0,2}$| or $pkg =~ m,_, or
+          (defined $arch and $arch =~ m,/,) ) {
+        # Technically, a string like "../somewhere/else",
+        # "somepkg_version_arch.deb", "/somewhere/somepkg.deb" or even
+        # "http://ftp.debian.org/pool/l/lintian/lintian_2.5.5_all.deb"
+        # could match the above.  Obviously, that is not a lab query.
+        # But the frontend sends it here, because the file denoted by
+        # that string does not exist.
+        warning ("\"$orig\" cannot be processed.");
+        warning ("It is not a valid lab query and it is not an existing file.");
+        exit 2;
+    }
 
     # if version (or/and arch) is omitted or is the special
     # value "_", let it be wildcard.
@@ -1588,8 +1600,11 @@ sub handle_lab_query {
         }
     } else {
         # specific type requested
-        my @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
-        push @res, @pkgs;
+        my @pkgs;
+        eval {
+            @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
+            push @res, @pkgs;
+        };
     }
 
     if (@res) {
