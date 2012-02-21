@@ -46,7 +46,7 @@ Ref: http://dep.debian.net/deps/dep5/
 Info: Format URI of the machine-readable copyright file refers to Debian Wiki.
  .
  Debian Wiki is not used for the format development anymore.  Please use
- <tt>http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?revision=<i>revision</i></tt>
+ <tt>http://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i></tt>
  as the format URI instead.
 
 Tag: unversioned-copyright-format-uri
@@ -56,7 +56,7 @@ Ref: http://dep.debian.net/deps/dep5/
 Info: Format URI of the machine-readable copyright file is not versioned.
  .
  Please use
- <tt>http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?revision=<i>revision</i></tt>
+ <tt>http://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i></tt>
  as the format URI instead.
 
 Tag: out-of-date-copyright-format-uri

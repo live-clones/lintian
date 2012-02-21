@@ -138,11 +138,14 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Use the new hwcap-dirs data file to determine hwcap dirs.
     + [NT] Ignore missing symbols/shlibs files for libc libnss
       plugins.
-  * checks/source-copyright:
+  * checks/source-copyright{,.desc}:
     + [JW] Allow a trailing slash in the DEP-5 1.0 URL.
       (Closes: #649813)
     + [NT] Use line numbers rather than "0-indexed" paragraph numbers
       in the emitted tags.  Thanks to Jari Aalto for the suggestion.
+    + [NT] Recommend the URI to the copyright-format subpolicy as
+      DEP-5 format specification URI.  Thanks to Helmut Grohne for
+      the report.  (Closes: #651392)
   * checks/symlinks:
     + [NT] Ignore langpack symlinks if they appear to be consistent.
       Thanks to Evan Broder for the report.  (Closes: #650793)
