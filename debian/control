@@ -51,7 +51,7 @@ Build-Depends: binutils,
                rsync,
                unzip,
                zip
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
 Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 

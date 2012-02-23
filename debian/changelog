@@ -180,6 +180,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * data/fields/archive-sections:
     + [NT] Added new sections.  Thanks to Michael Biebl for the
       reminder.  (Closes: #652123)
+  * data/fields/virtual-packages:
+    + [NT] Refreshed against sid.  (Closes: #657155)
   * data/files/fonts:
     + [NT] Refreshed against sid.
   * data/init.d/virtual_facilities:
@@ -193,8 +195,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * data/shared-libs/ldconfig-dirs:
     + [NT] Auto-generate file with help from dpkg-architecture.
       (Closes: #653832)
-  * data/fields/virtual-packages:
-    + [NT] Refreshed against sid.  (Closes: #657155)
+  * data/standards-version/release-dates:
+    + [NT] Added release date for Standards-Version 3.9.3.
 
   * debian/control:
     + [NT] Prefer libc-bin (>= 2.13) to locales.  Thanks to Josh
@@ -202,6 +204,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       proposed patch to make this possible.  (Closes: #636086)
     + [JW] Add Build-Dependency on python-numpy and python-all-dev
       for the test suite.
+    + [NT] Bumped Lintian's Standards-Version to 3.9.3.  No changes
+      required.
   * debian/{postinst,prerm}:
     + [JW,NT] Remove the internal Lintian locale if a C.UTF-8 locale
       is found in /usr/lib/locale.
