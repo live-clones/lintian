@@ -348,7 +348,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       its binaries are processed as well.
     + [NT] Also symlink $LINTIAN_BIN_DIR/gpgv to /bin/true when
       skipping signature checks.  This avoids issues when some tools
-      (such as dpkg-source) prefers gpgv to gpg.
+      prefers gpgv to gpg.
   * reporting/html_reports:
     + [JW] Properly handle uploader names with commas.
     + [NT] Use the severities from profiles when generating tag pages.
