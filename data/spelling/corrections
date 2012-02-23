@@ -194,6 +194,8 @@ delemiter||delimiter
 dependancies||dependencies
 dependancy||dependency
 dependant||dependent
+depreacte||deprecate
+depreacted||deprecated
 desactivate||deactivate
 detabase||database
 developement||development
@@ -389,6 +391,7 @@ paramters||parameters
 parametised||parametrised
 particularily||particularly
 pased||passed
+pendantic||pedantic
 peprocessor||preprocessor
 perfoming||performing
 permissons||permissions
