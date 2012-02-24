@@ -270,7 +270,7 @@ sub description {
         my $stype = $self->{'script-type'};
         push(@text, '', "Check: $script, Type: $stype");
     }
-    if ($self->{experimental}) {
+    if ($self->experimental) {
         push(@text, '',
              'This tag is marked experimental, which means that the code that'
              . ' generates it is not as well-tested as the rest of Lintian'

@@ -1,3 +1,11 @@
+lintian (2.5.6) UNRELEASED; urgency=low
+
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Fixed issue where "Experimental: no" was handled as a
+      "yes" when generating a tag description.
+
+ -- Niels Thykier <niels@thykier.net>  Fri, 24 Feb 2012 09:40:30 +0100
+
 lintian (2.5.5) unstable; urgency=low
 
   The "Policy 3.9.3" release.
