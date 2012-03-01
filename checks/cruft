@@ -175,7 +175,7 @@ for my $file (keys(%$file_info)) {
             }
             close $fd;
         }
-        tag 'source-contains-waf-binary', $file;
+        tag 'source-contains-waf-binary', $file unless $ok;
     }
 }
 
