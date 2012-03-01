@@ -1,5 +1,10 @@
 lintian (2.5.6) UNRELEASED; urgency=low
 
+  * checks/source-copyright.desc:
+    + [NT] Update references for copyright-format checks.  Thanks
+      to Thijs Kinkhorst for the report and the patch.
+      (Closes: #661778)
+
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fixed issue where "Experimental: no" was handled as a
       "yes" when generating a tag description.
