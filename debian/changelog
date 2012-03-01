@@ -4,6 +4,8 @@ lintian (2.5.6) UNRELEASED; urgency=low
     + [NT] Update references for copyright-format checks.  Thanks
       to Thijs Kinkhorst for the report and the patch.
       (Closes: #661778)
+    + [NT] Added trailing slash to copyright-format URLs in tag
+      descriptions for consistency with the policy.
 
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fixed issue where "Experimental: no" was handled as a
