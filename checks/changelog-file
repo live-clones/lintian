@@ -217,7 +217,7 @@ if ($native_pkg) {
             }
         }
         if (not $found) {
-            tag 'no-upstream-changelog';
+            tag 'no-upstream-changelog' unless $info->is_transitional;
         }
     }
 
