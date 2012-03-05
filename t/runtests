@@ -462,18 +462,18 @@ sub run_lintian {
         my @data = <$in>;
         close $in;
         $status = ($? >> 8) & 255;
-        @data = sort @data if $testdata->{sort};
-        open my $fd, '>', $out or fail "opening $out: $!";
-        print $fd $_ for @data;
-        close $fd or fail "closing $out: $!";
+        unless ($status == 0 or $status == 1) {
+            msg_print "FAILED\n";
+            msg_print @data;
+            fail "$LINTIAN @options $file exited with status $status";
+        } else {
+            @data = sort @data if $testdata->{sort};
+            open my $fd, '>', $out or fail "opening $out: $!";
+            print $fd $_ for @data;
+            close $fd or fail "closing $out: $!";
+        }
     } else {
-        # Set it to 255 so it fails below
-        $status = 255;
-    }
-
-    unless ($status == 0 or $status == 1) {
-        msg_print "FAILED:\n";
-        fail("$LINTIAN @options $file exited with status $status\n");
+        fail ("pipe+fork: $!");
     }
     return 1;
 }
@@ -630,7 +630,7 @@ sub _check_result {
             msg_print "TODO\n";
             return 1;
         } else {
-            msg_print "FAILED:\n";
+            msg_print "FAILED\n";
             runsystem_ok('diff', '-u', $expected, $actual);
             return;
         }
