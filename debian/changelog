@@ -4,6 +4,10 @@ lintian (2.5.6) UNRELEASED; urgency=low
     + [NT] Added missing "unless" in the code.  Fixes false
       positive "source-contains-waf-binary".  Thanks to
       Dmitrijs Ledkovs for the report.  (Closes: #661561)
+  * checks/scripts:
+    + [NT] Allow fontforge-nox as (alternative) provider for the
+      fontforge interpreter.  Thanks to Martin Erik Werner for
+      the report.  (Closes: #661363)
   * checks/source-copyright.desc:
     + [NT] Update references for copyright-format checks.  Thanks
       to Thijs Kinkhorst for the report and the patch.
