@@ -8,7 +8,7 @@ Uploaders: Mrs. Localhost <user@localhost>,
            John A. J. Doe <i.am.ok@somewhere.com>,
            Doris Double-Email <Doris Double-Email <doris@demail.com>>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 9)
 
 Package: {$srcpkg}
 Architecture: {$architecture}

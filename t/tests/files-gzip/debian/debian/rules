@@ -2,7 +2,7 @@
 pkg=files-gzip
 %:
 	dh $@
-binary:
-	dh --until install binary
+
+override_dh_installdocs:
+	dh_installdocs
 	echo "Hello world :)" > debian/$(pkg)/usr/share/doc/$(pkg)/changelog.gz
-	dh --after install binary

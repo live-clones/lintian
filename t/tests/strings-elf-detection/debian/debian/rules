@@ -2,14 +2,11 @@
 pkg=strings-elf-detection
 %:
 	dh $@
-binary:
-	dh --before dh_install binary
+
+override_dh_install:
 	cp /bin/true .
 	touch foo bar::ELF
 	mkdir -p debian/$(pkg)/usr/lib/foo
 	cp /bin/true debian/$(pkg)/usr/lib/foo/true\ false
-	dh --remaining binary
+	dh_install
 
-clean:
-	dh clean
-	$(RM) true foo bar::ELF
