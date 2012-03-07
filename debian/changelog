@@ -95,6 +95,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] New file.
     + [NT] Add libav libraries.  Thanks to Andres Mejia for the
       suggestion and the suggested patch.  (Closes: #666765)
+  * data/binaries/hardening-tags:
+    + [NT] New file.
   * data/changes-file/{debian-dists -> known-dists}:
     + [NT] Renamed file.
 

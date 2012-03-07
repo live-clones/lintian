@@ -24,7 +24,15 @@ use warnings;
 use File::Temp qw(tempfile);
 use POSIX qw (strftime);
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Util qw(parse_dpkg_control);
+
 my $datapath = shift;
+my %hardening = map { $_ => 1 } qw(
+    fortify
+    relro
+    stackprotector
+);
 my %archs = ();
 my %files = ();
 
@@ -95,6 +103,16 @@ add_data_file (
 EOF
 );
 
+add_data_file (
+    'filename' => 'binaries/hardening-tags',
+    'line-spec' => ['@DEB_HOST_ARCH@ || @HARDENING@'],
+    'header' => <<EOF
+# Map of architectures to enabled hardening tags.
+#
+# NB: Keep this in sync with checks/binaries.desc
+EOF
+);
+
 unless ($datapath) {
     print STDERR "Usage: $0 path/to/lintian/data\n";
     exit 1;
@@ -107,6 +125,9 @@ chomp $dver;
 
 open my $dlfd, '-|', "dpkg-architecture -L 2>/dev/null" or die "dpkg-architecture -L: $!";
 while ( my $archstr = <$dlfd> ) {
+    my @hardening;
+    my @htags;
+    delete $ENV{'DEB_HOST_ARCH'};
     chomp $archstr;
     open my $dafd, '-|', "dpkg-architecture -a$archstr 2>/dev/null" or die "dpkg-architecture -a$archstr: $!";
     while ( my $var = <$dafd> ) {
@@ -115,6 +136,21 @@ while ( my $archstr = <$dlfd> ) {
         $archs{$archstr}{$key} = $value;
     }
     close $dafd;
+
+    $ENV{'DEB_HOST_ARCH'} = $archstr;
+    open my $dbfd, "-|", "dpkg-buildflags --query-features hardening 2>/dev/null" or die "dpkg-buildflags --query-features hardening: $!";
+    @hardening = parse_dpkg_control ($dbfd);
+    close $dbfd;
+
+    foreach my $paragraph (@hardening) {
+        if (($paragraph->{'enabled'}//'no') eq 'yes') {
+            my $tag = 'hardening-no-' . $paragraph->{'feature'};
+            next if not exists $hardening{$paragraph->{'feature'}};
+            $tag = 'hardening-no-fortify-functions' if $tag eq 'hardening-no-fortify';
+            push @htags, $tag;
+        }
+    }
+    $archs{$archstr}{'HARDENING'} = join (', ', sort @htags);
 }
 close $dlfd;
 

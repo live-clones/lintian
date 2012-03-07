@@ -241,9 +241,8 @@ sub hardening_info {
     while (<$idx>) {
         chomp;
 
-        if (m,^([^:]+):\./(.*)$,) {
+        if (m,^([^:]+):(?:\./)?(.*)$,) {
             my ($tag, $file) = ($1, $2);
-
             push(@{$hardening_info{$file}}, $tag);
         }
     }

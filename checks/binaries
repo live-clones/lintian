@@ -117,6 +117,15 @@ our $EMBEDDED_LIBRARIES = Lintian::Data->new ('binaries/embedded-libs', qr/\s*+\
 
 our $MULTIARCH_DIRS = Lintian::Data->new('binaries/multiarch-dirs', '\s+');
 
+sub _split_hash {
+    my (undef, $val) = @_;
+    my $hash = {};
+    map { $hash->{$_} = 1 } split m/\s*,\s*/o, $val;
+    return $hash;
+}
+
+our $HARDENING = Lintian::Data->new ('binaries/hardening-tags', qr/\s*\|\|\s*/o, \&_split_hash);
+
 sub run {
 
 my $pkg = shift;
@@ -435,8 +444,12 @@ foreach my $file (@{$info->sorted_index}) {
         # handles the following checks:
         # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
         if (exists($info->hardening_info->{$file})) {
-            foreach my $tag (@{$info->hardening_info->{$file}}) {
-                tag "hardening-$tag", $file;
+            my $flags = $HARDENING->value ($arch);
+            if ($flags) {
+                foreach my $t (@{$info->hardening_info->{$file}}) {
+                    my $tag = "hardening-$t";
+                    tag $tag, $file if $flags->{$tag};
+                }
             }
         }
     }

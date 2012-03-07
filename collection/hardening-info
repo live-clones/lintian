@@ -31,62 +31,41 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
-use Cwd;
+use Lintian::Collect;
 
-open (OUT, '>', 'hardening-info')
+my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
+my $file_info = $info->file_info;
+
+if ( -e "$dir/hardening-info" ) {
+    unlink "$dir/hardening-info" or fail "unlink hardening-info: $!";
+}
+
+open OUT, '>', "$dir/hardening-info"
     or fail("cannot open hardening-info: $!");
 
 # If we're running inside the Lintian test suite itself, we need to avoid
 # all the tests except the "binaries-hardening" test.
-my $base = Cwd::realpath('.');
 exit 0
     if (defined $ENV{'LINTIAN_INTERNAL_TESTSUITE'} and
         $ENV{'LINTIAN_INTERNAL_TESTSUITE'} eq "1" and
-        $base !~ m|/binaries-hardening/binaries-hardening_1.0_.*_binary$|);
-
-open (FILES, '<', 'file-info')
-    or fail("cannot open file-info: $!");
-
-# Override the arch seen by dpkg-buildflags for the arch of this package.
-my @fields = read_dpkg_control ('control/control');
-defined ($fields[0]{'architecture'})
-    or fail ("cannot determine architecture of package!");
-$ENV{'DEB_HOST_ARCH'} = $fields[0]{'architecture'}
-    if ($fields[0]{'architecture'} ne "all");
+        $dir !~ m|/binaries-hardening/binaries-hardening_1.0_.*_binary$|);
 
 # Prepare to examine the file tree.
-chdir ('unpacked')
+chdir ("$dir/unpacked")
     or fail("unable to chdir to unpacked: $!");
 
-# We must figure out what hardening features are expected by default for a
-# given architecture. Extract this from "dpkg-buildflags", and set up the
-# needed arguments for calling "hardening-check".
-open (my $FLAGS, '-|', "dpkg-buildflags --query-features hardening")
-    or fail ("could not launch dpkg-buildflags: $!");
-my $args = "--lintian";
-my $feature = "";
-@fields = parse_dpkg_control ($FLAGS);
-foreach my $flag (@fields) {
-    if ($flag->{enabled} eq "no") {
-        $args .= " --no" . $flag->{feature};
-    }
-}
-close $FLAGS;
-
-while (<FILES>) {
-    if (m/^(.+?)\x00\s.*ELF/) {
-        my $bin = $1;
-
-        if (open (PIPE, '-|', "hardening-check $args -- \Q$bin\E 2>&1")) {
-            local $/;
-            local $_ = <PIPE>;
-            print OUT $_;
-            close PIPE;
-        }
+foreach my $bin (keys %$file_info) {
+    my $finfo = $file_info->{$bin};
+    next unless $finfo =~ m/\bELF\b/o;
+    if (open (PIPE, '-|', "hardening-check --lintian -- \Q$bin\E 2>&1")) {
+        local $/;
+        local $_ = <PIPE>;
+        print OUT $_;
+        close PIPE;
     }
 }
 
-close FILES;
 close OUT or fail("cannot write objdump-info: $!");
 
 exit 0;
