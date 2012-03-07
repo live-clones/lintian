@@ -22,20 +22,22 @@
 use strict;
 use warnings;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Util qw(fail);
+
 # Sanity check
 unless (-d 'unpacked/') {
-    print STDERR 'error: collection script called in wrong directory!\n';
-    exit 2;
+    fail "java-info called in wrong directory!";
 }
 
 open (INDEX, '<', 'index')
-    or fail("cannot open index: $!\n");
+    or fail "cannot open index: $!\n";
 
 open (OUT, '>', 'java-info')
-    or fail("cannot open java-info: $!\n");
+    or fail "cannot open java-info: $!";
 
 chdir ('unpacked')
-    or fail ("unable to chdir to unpacked: $!\n");
+    or fail "unable to chdir to unpacked: $!";
 
 while (<INDEX>) {
     chomp;

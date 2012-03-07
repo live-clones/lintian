@@ -22,6 +22,9 @@
 use strict;
 use warnings;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Util qw(fail);
+
 open(SCRIPTS, '>', 'scripts') or fail("cannot open scripts output file: $!");
 open(INDEX, '<', 'index') or fail("cannot open index file: $!");
 
@@ -87,19 +90,6 @@ closedir(CONTROL);
 close(SCRIPTS) or fail("cannot write control-scripts file: $!");
 
 exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
-}
 
 # Local Variables:
 # indent-tabs-mode: nil
