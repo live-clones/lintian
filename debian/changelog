@@ -27,6 +27,8 @@ lintian (2.5.6) UNRELEASED; urgency=low
   * collection/scripts:
     + [NT] Use "fail" from Util.pm rather than using an embedded
       copy.
+  * collection/strings:
+    + [NT] Use Lintian::Collect to find ELF files.
 
   * frontend/lintian:
     + [NT] Pass directory of the package to the collections.

@@ -24,15 +24,16 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
+use Lintian::Collect;
 use Lintian::Command qw(spawn);
 use Lintian::Command::Simple;
 
 ($#ARGV == 2) or fail('syntax: strings <pkg> <type> <dir>');
 
-my (undef, undef, $dir) = @ARGV;
+my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
--f "$dir/file-info"
-    or fail 'strings invoked in wrong directory';
+my $file_info = $info->file_info;
 
 if ( -e "$dir/elf-index" ) {
     unlink "$dir/elf-index" or fail "unlink elf-index: $!";
@@ -45,13 +46,10 @@ if ( -d "$dir/strings" ) {
 open ELF_INDEX, '>', "$dir/elf-index"
     or fail "Could not open 'elf-index' for writing: $!";
 
-open FILE_INFO, '<', "$dir/file-info"
-    or fail "Could not open 'file-info' for reading: $!";
 
-while (<FILE_INFO>) {
-    next unless(m/^(.+?)\x00\s+[^,]*\bELF\b/);
-    my $bin = $1;
-
+foreach my $bin (keys %$file_info) {
+    my $finfo = $file_info->{$bin};
+    next unless $finfo =~ m/\bELF\b/o;
     print ELF_INDEX "$bin\n";
 
     next if ($bin =~ m,^/usr/lib/debug/,);
@@ -66,7 +64,6 @@ while (<FILE_INFO>) {
 }
 
 close(ELF_INDEX) or fail("cannot write elf-index file: $!");
-close(FILE_INFO);
 
 # Local Variables:
 # indent-tabs-mode: nil

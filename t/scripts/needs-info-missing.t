@@ -22,7 +22,8 @@ use Test::More;
 use Util qw(read_dpkg_control slurp_entire_file);
 
 # Find all of the desc files in checks.  We'll do one check per description.
-our @DESCS = (<$ENV{LINTIAN_ROOT}/checks/*.desc>);
+our @DESCS = (<$ENV{LINTIAN_ROOT}/checks/*.desc>,
+              <$ENV{LINTIAN_ROOT}/collection/*.desc>);
 our @MODULES = (<$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm>,
 		<$ENV{LINTIAN_ROOT}/lib/Lintian/Collect/*.pm>);
 
@@ -117,7 +118,8 @@ for my $desc (@DESCS) {
     }
 
     my $short = $desc;
-    $short =~ s,^\Q$ENV{LINTIAN_ROOT}/checks/,,;
+    $short =~ s,^\Q$ENV{LINTIAN_ROOT}/,,;
+    $short =~ s,^collection/,coll/,;
     is($missing, 0, "$short has all required needs-info for Lintian::Collect") or
 	diag(@warnings);
 }
