@@ -1273,7 +1273,7 @@ sub auto_clean_package {
             next unless $lpkg->is_coll_finished ($coll, $ci->{'version'});
             my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
             debug_msg(1, "Auto removing: $ci->{'script'} ...");
-            unless (Lintian::Command::Simple::rundir($base, $script, $pkg_name, "remove-${pkg_type}") == 0) {
+            unless (Lintian::Command::Simple::run ($script, $pkg_name, "remove-${pkg_type}", $base) == 0) {
                 warning("removing collect info $coll about package $pkg_name failed",
                         "skipping cleanup of $pkg_type package $pkg_name");
                 return 0;
@@ -1393,7 +1393,7 @@ sub unpack_group {
                 debug_msg(1, "Collecting info: $coll ...");
                 my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
                 my $cmd = Lintian::Command::Simple->new();
-                unless ($cmd->background_dir($base, $script, $pkg_name, $pkg_type) > 0) {
+                unless ($cmd->background ($script, $pkg_name, $pkg_type, $base) > 0) {
                     warning("collect info $coll about package $pkg_name failed",
                             "skipping $action of $pkg_type package $pkg_name");
                     $exit_code = 2;

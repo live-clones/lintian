@@ -26,22 +26,20 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: doc-base-files <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: doc-base-files <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 
-
-if (-e 'doc-base') {
-    delete_dir('doc-base')
+if ( -e "$dir/doc-base") {
+    delete_dir ("$dir/doc-base")
         or fail('cannot rm old doc-base directory');
 }
 
-if (-d 'unpacked/usr/share/doc-base') {
-    copy_dir('unpacked/usr/share/doc-base', 'doc-base')
+if ( -d "$dir/unpacked/usr/share/doc-base") {
+    copy_dir ("$dir/unpacked/usr/share/doc-base", "$dir/doc-base")
         or fail('cannot copy directory unpacked/usr/share/doc-base');
 } else {
     # no doc-base directory
-    mkdir('doc-base', 0777) or fail("cannot mkdir doc-base: $!");
+    mkdir ("$dir/doc-base", 0777) or fail "cannot mkdir doc-base: $!";
 }
 
 # Local Variables:

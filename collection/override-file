@@ -26,24 +26,23 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: override-file <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail('syntax: override-file <pkg> <type> <dir>');
+my ($pkg, $type, $dir) = @ARGV;
 
--d 'unpacked' or fail('override-file invoked in wrong directory');
+-d "$dir/unpacked" or fail 'override-file invoked with wrong dir argument';
 
-if (-e 'override'){
-    unlink('override') or fail("could not remove old override file: $!");
+if ( -e "$dir/override"){
+    unlink "$dir/override" or fail "could not remove old override file: $!";
 }
 
 # Pick the first of these files that exists.  Prefer source/lintian-overrides
 # to source.lintian-overrides for source packages.
 my (@overrides, $file);
 if ($type eq 'source') {
-    @overrides = qw(unpacked/debian/source/lintian-overrides
-                    unpacked/debian/source.lintian-overrides);
+    @overrides = ("$dir/unpacked/debian/source/lintian-overrides",
+                  "$dir/unpacked/debian/source.lintian-overrides");
 } else {
-    @overrides = ("unpacked/usr/share/lintian/overrides/$pkg");
+    @overrides = ("$dir/unpacked/usr/share/lintian/overrides/$pkg");
 }
 for my $override (@overrides) {
     if (-f $override) {
@@ -56,9 +55,9 @@ for my $override (@overrides) {
 if (not defined $file) {
     # no override found
 } elsif ($file =~ /\.gz$/) {
-    gunzip_file($file, 'override');
+    gunzip_file ($file, "$dir/override");
 } else {
-    link($file, 'override')
+    link ($file, "$dir/override")
         or fail("cannot link $file to override: $!");
 }
 

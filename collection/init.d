@@ -25,21 +25,20 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: init.d <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail('syntax: init.d <pkg> <type> <dir>');
+my ($pkg, $type, $dir) = @ARGV;
 
-if (-e 'init.d') {
-    delete_dir('init.d')
+if (-e "$dir/init.d") {
+    delete_dir ("$dir/init.d")
         or fail('cannot rm old init.d directory');
 }
 
-if (-d 'unpacked/etc/init.d') {
-    copy_dir('unpacked/etc/init.d', 'init.d')
+if (-d "$dir/unpacked/etc/init.d") {
+    copy_dir("$dir/unpacked/etc/init.d", "$dir/init.d")
         or fail('cannot copy init.d directory');
 } else {
     # no etc/init.d
-    mkdir('init.d', 0777) or fail("cannot mkdir init.d: $!");
+    mkdir ("$dir/init.d", 0777) or fail "cannot mkdir init.d: $!";
 }
 
 # Local Variables:

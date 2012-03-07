@@ -27,17 +27,15 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn);
 use Util;
 
-($#ARGV == 1) or fail('syntax: unpacked <package> <type>');
+($#ARGV == 2) or fail('syntax: unpacked <package> <type> <dir>');
+my ($pkg, $type, $dir) = @ARGV;
 
-my $pkg = shift;
-my $type = shift;
-
-if (-d 'unpacked/') {
-    delete_dir('unpacked/') or
+if (-d "$dir/unpacked/") {
+    delete_dir ("$dir/unpacked/") or
         fail("failed to remove unpacked directory of $pkg");
 }
-if (-f 'unpacked-errors') {
-    unlink('unpacked-errors') or
+if (-f "$dir/unpacked-errors") {
+    unlink ("$dir/unpacked-errors") or
         fail("failed to remove unpacked-errors file of $pkg");
 }
 # If we are asked to only remove the files stop right here
@@ -49,12 +47,12 @@ if ($type eq 'source') {
     if (can_use_dpkg_source()) {
         # Ignore STDOUT of the child process because older versions of
         # dpkg-source print things out even with -q.
-        my $opts = { out => '/dev/null', err => 'unpacked-errors' };
+        my $opts = { out => '/dev/null', err => "$dir/unpacked-errors" };
         my @args = ('-q');
         push @args, '--no-check' if $ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'};
         print "N: Using dpkg-source to unpack $pkg\n" if $ENV{'LINTIAN_DEBUG'};
-        unless (spawn($opts, ['dpkg-source', @args, '-x', 'dsc', 'unpacked'])) {
-            open(ERRORS, '<', 'unpacked-errors')
+        unless (spawn ($opts, ['dpkg-source', @args, '-x', "$dir/dsc", "$dir/unpacked"])) {
+            open ERRORS, '<', "$dir/unpacked-errors"
                 or fail("cannot open unpacked-errors: $!");
             print STDERR while <ERRORS>;
             close ERRORS;
@@ -62,26 +60,26 @@ if ($type eq 'source') {
         }
     } else {
         print "N: Using libdpkg-perl to unpack $pkg\n" if $ENV{'LINTIAN_DEBUG'};
-        libdpkg_unpack_dsc('dsc', 'unpacked');
+        libdpkg_unpack_dsc("$dir/dsc", "$dir/unpacked");
     }
 
     # fix permissions
     spawn({ fail => 'error' },
-          ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
+          ['chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked"]);
 
 } else {
-    mkdir('unpacked', 0777) or fail("mkdir unpacked: $!");
+    mkdir ("$dir/unpacked", 0777) or fail "mkdir unpacked: $!";
 
     # avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2
     # improvement on large debs, and factor 1.5 on small debs.
     # I heard it's because dpkg-deb syncs while writing.  -- Richard
 
-    my $opts = { err => 'unpacked-errors' };
+    my $opts = { err => "$dir/unpacked-errors" };
     spawn($opts,
-            ['dpkg-deb', '--fsys-tarfile', 'deb'],
-            '|', ['tar', 'xf', '-', '-C', 'unpacked']);
+            ['dpkg-deb', '--fsys-tarfile', "$dir/deb"],
+            '|', ['tar', 'xf', '-', '-C', "$dir/unpacked"]);
     unless ($opts->{success}) {
-        open(ERRORS, '<', 'unpacked-errors')
+        open ERRORS, '<', "$dir/unpacked-errors"
             or fail("cannot open unpacked-errors: $!");
         print STDERR while <ERRORS>;
         close ERRORS;
@@ -90,7 +88,7 @@ if ($type eq 'source') {
 
     # fix permissions
     spawn({ fail => 'error' },
-            ['chmod', '-R', 'u+rwX,go-w', 'unpacked']);
+            ['chmod', '-R', 'u+rwX,go-w', "$dir/unpacked"]);
 }
 
 sub libdpkg_unpack_dsc {

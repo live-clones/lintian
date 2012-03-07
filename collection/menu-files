@@ -25,16 +25,15 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: menu-files <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail('syntax: menu-files <pkg> <type> <dir>');
+my ($pkg, $type, $dir) = @ARGV;
 
-if (-e 'menu') {
-    delete_dir('menu')
+if ( -e "$dir/menu") {
+    delete_dir ("$dir/menu")
         or fail('cannot rm old menu directory');
 }
 
-mkdir('menu', 0777) or fail("cannot mkdir menu: $!");
+mkdir ("$dir/menu", 0777) or fail ("cannot mkdir menu: $!");
 
 my %dirs;
 $dirs{'share'}   = 'usr/share/menu';
@@ -42,12 +41,12 @@ $dirs{'lib'}     = 'usr/lib/menu';
 $dirs{'methods'} = 'etc/menu-methods';
 
 while (my ($shortn, $path) = each %dirs) {
-    if (-d "unpacked/$path") {
-         copy_dir("unpacked/$path", "menu/$shortn")
+    if (-d "$dir/unpacked/$path") {
+         copy_dir ("$dir/unpacked/$path", "$dir/menu/$shortn")
             or fail("cannot copy unpacked/$path/ directory");
     } else {
         # no menu directory
-        mkdir("menu/$shortn", 0777) or fail("cannot mkdir menu/$shortn: $!");
+        mkdir ("$dir/menu/$shortn", 0777) or fail ("cannot mkdir menu/$shortn: $!");
     }
 }
 

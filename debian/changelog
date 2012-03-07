@@ -19,11 +19,17 @@ lintian (2.5.6) UNRELEASED; urgency=low
     + [NT] Added trailing slash to copyright-format URLs in tag
       descriptions for consistency with the policy.
 
+  * collection/*:
+    + [NT] Removed assumption that "cwd" is the same as the
+      directory for the package being examined.
   * collection/java-info:
     + [NT] Added missing "use Util".
   * collection/scripts:
     + [NT] Use "fail" from Util.pm rather than using an embedded
       copy.
+
+  * frontend/lintian:
+    + [NT] Pass directory of the package to the collections.
 
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fixed issue where "Experimental: no" was handled as a

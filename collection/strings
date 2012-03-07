@@ -27,19 +27,26 @@ use Util;
 use Lintian::Command qw(spawn);
 use Lintian::Command::Simple;
 
-($#ARGV == 1) or fail('syntax: strings <pkg> <type>');
+($#ARGV == 2) or fail('syntax: strings <pkg> <type> <dir>');
 
--f 'file-info'
-    or fail('file-info invoked in wrong directory');
+my (undef, undef, $dir) = @ARGV;
 
-unlink('elf-index');
-delete_dir('strings');
+-f "$dir/file-info"
+    or fail 'strings invoked in wrong directory';
 
-open(ELF_INDEX, '>', 'elf-index')
-    or fail("Could not open 'elf-index' for writing: $!\n");
+if ( -e "$dir/elf-index" ) {
+    unlink "$dir/elf-index" or fail "unlink elf-index: $!";
+}
 
-open(FILE_INFO, '<', 'file-info')
-    or fail("Could not open 'file-info' for reading: $!\n");
+if ( -d "$dir/strings" ) {
+    delete_dir ("$dir/strings") or fail "rmdir strings: $!";
+}
+
+open ELF_INDEX, '>', "$dir/elf-index"
+    or fail "Could not open 'elf-index' for writing: $!";
+
+open FILE_INFO, '<', "$dir/file-info"
+    or fail "Could not open 'file-info' for reading: $!";
 
 while (<FILE_INFO>) {
     next unless(m/^(.+?)\x00\s+[^,]*\bELF\b/);
@@ -49,13 +56,13 @@ while (<FILE_INFO>) {
 
     next if ($bin =~ m,^/usr/lib/debug/,);
 
-    my $dir = $bin;
-    $dir =~ s,/[^/]+?$,,;
+    my $elfdir = $bin;
+    $elfdir =~ s,/[^/]+?$,,;
 
-    Lintian::Command::Simple::run('mkdir', '-p', "strings/$dir") == 0
-        or fail("Failed to create directory 'strings/$dir'\n");
+    Lintian::Command::Simple::run ('mkdir', '-p', "$dir/strings/$elfdir") == 0
+        or fail "Failed to create directory 'strings/$elfdir'";
 
-    spawn({out => "strings/$bin", fail => 'error'}, ['strings', "unpacked/$bin"]);
+    spawn ({out => "$dir/strings/$bin", fail => 'error'}, ['strings', "$dir/unpacked/$bin"]);
 }
 
 close(ELF_INDEX) or fail("cannot write elf-index file: $!");

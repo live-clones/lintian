@@ -25,23 +25,22 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: debian-readme <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: debian-readme <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 
-if (-f 'README.Debian') {
-    unlink('README.Debian') or fail("Could not remove old README.Debian: $!");
+if ( -f "$dir/README.Debian") {
+    unlink "$dir/README.Debian" or fail "Could not remove old README.Debian: $!";
 }
 
 # Pick the first of these files that exists.
-my @readmes = ("unpacked/usr/share/doc/$pkg/README.Debian.gz",
-               "unpacked/usr/share/doc/$pkg/README.Debian",
-               "unpacked/usr/share/doc/$pkg/README.debian.gz",
-               "unpacked/usr/share/doc/$pkg/README.debian",
-               "unpacked/usr/doc/$pkg/README.Debian.gz",
-               "unpacked/usr/doc/$pkg/README.Debian",
-               "unpacked/usr/doc/$pkg/README.debian.gz",
-               "unpacked/usr/doc/$pkg/README.debian");
+my @readmes = ("$dir/unpacked/usr/share/doc/$pkg/README.Debian.gz",
+               "$dir/unpacked/usr/share/doc/$pkg/README.Debian",
+               "$dir/unpacked/usr/share/doc/$pkg/README.debian.gz",
+               "$dir/unpacked/usr/share/doc/$pkg/README.debian",
+               "$dir/unpacked/usr/doc/$pkg/README.Debian.gz",
+               "$dir/unpacked/usr/doc/$pkg/README.Debian",
+               "$dir/unpacked/usr/doc/$pkg/README.debian.gz",
+               "$dir/unpacked/usr/doc/$pkg/README.debian");
 
 my $file;
 for (@readmes) {
@@ -53,11 +52,11 @@ for (@readmes) {
 
 if (not defined $file) {
     # no README found
-    touch_file('README.Debian');
+    touch_file ("$dir/README.Debian");
 } elsif ($file =~ m/\.gz$/) {
-    gunzip_file($file, 'README.Debian');
+    gunzip_file ($file, "$dir/README.Debian");
 } else {
-    link($file, 'README.Debian')
+    link ($file, "$dir/README.Debian")
         or fail("cannot link $file to README.Debian: $!");
 }
 

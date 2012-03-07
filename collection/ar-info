@@ -27,19 +27,20 @@ use FileHandle;
 use Lintian::Command qw(spawn);
 use Util qw(fail);
 
-($#ARGV == 1) or fail('syntax: ar-info <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: ar-info <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 
-unlink('ar-info');
+if ( -e "$dir/ar-info" ) {
+    unlink "$dir/ar-info" or fail "unlink ar-info: $!";
+}
 
 # Open before chdir, as unpacked may be a symlink
-open(INDEX, '<', 'index')
+open INDEX, '<', "$dir/index"
     or fail("cannot open index file: $!");
-open(OUT, '>', 'ar-info')
+open OUT, '>', "$dir/ar-info"
     or fail("cannot open ar-info file: $!");
 
-chdir('unpacked')
+chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
 while (<INDEX>) {

@@ -34,12 +34,11 @@ use Util;
 use Lintian::Command qw(spawn reap);
 use Lintian::Processable::Package;
 
-($#ARGV == 1) or fail 'syntax: index <pkg> <type>';
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: index <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 
-unlink 'index' or fail "Could not unlink index: $!" if -e 'index' && -s 'index';
-unlink 'index-errors' or fail "Could not unlink index-errors: $!" if -e 'index-errors' && -s 'index-errors';
+unlink "$dir/index" or fail "Could not unlink index: $!" if -e "$dir/index";
+unlink "$dir/index-errors" or fail "Could not unlink index-errors: $!" if -e "$dir/index-errors";
 
 if ($type ne 'source') {
     index_deb();
@@ -51,16 +50,14 @@ exit 0;
 
 # returns all (orig) tarballs.
 sub gather_tarballs {
-    my $file = Cwd::realpath('dsc');
-    my $dir;
+    my $file = Cwd::realpath ("$dir/dsc");
     my $data;
     my $version;
     my @tarballs;
     my $base;
     my $baserev;
     my $proc;
-    fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.\n" unless $file and -e $file;
-    (undef, $dir, undef) = File::Spec->splitpath($file);
+    fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file." unless $file and -e $file;
     # Use Lintian::Processable::Package to determine source and version as handles missing fields
     # for us to some extend.
     $proc = Lintian::Processable::Package->new ('source', $file);
@@ -125,8 +122,8 @@ sub index_src {
                 }
             }
         }; # End $collect = sub;
-        spawn({ fail => 'never', out => $collect, err_append => 'index-errors' },
-              ['tar', @tar_options, $tarball]);
+        spawn({ fail => 'never', out => $collect, err_append => "$dir/index-errors" },
+              ['tar', @tar_options, "$dir/$tarball"]);
         if ($last) {
             fail("tar output (for $tarball from $pkg) does not end in a newline");
         }
@@ -176,7 +173,7 @@ sub index_src {
                 } @index;
                 my $filename = 'source-prefix';
                 $filename .= "-$compname" if $compname;
-                open(PREFIX, '>', $filename)
+                open PREFIX, '>', "$dir/$filename"
                     or fail "opening $filename for $pkg: $!";
                 print PREFIX "$prefix\n";
                 close PREFIX or fail "closing $filename for $pkg: $!";
@@ -190,7 +187,7 @@ sub index_src {
     }
     # Now that we have the file names we want, write them out sorted to the index
     # file.
-    spawn({ fail => 'error', out_append => 'index' },
+    spawn({ fail => 'error', out_append => "$dir/index" },
           sub { print @result }, '|', ['sort', '-k', '6']);
     return 1;
 }
@@ -200,29 +197,29 @@ sub index_deb {
     my (@jobs, $job);
 
     foreach my $file (qw(index index-errors index-owner-id)) {
-        unlink $file or fail "$file: $!" if -f $file;
+        unlink "$dir/$file" or fail "$file: $!" if -f "$dir/$file";
     }
 
     $job = { fail => 'error',
-             out  => 'index',
-             err  => 'index-errors' };
+             out  => "$dir/index",
+             err  => "$dir/index-errors" };
     push @jobs, $job;
     # (replaces dpkg-deb -c)
     # create index file for package
     spawn($job,
-          ['dpkg-deb', '--fsys-tarfile', 'deb' ],
+          ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
           '|', ['tar', 'tfv', '-'],
           '|', ['sed', '-e', 's/^h/-/'],
           '|', ['sort', '-k', '6'], '&');
 
     $job = { fail => 'error',
-             out  => 'index-owner-id',
+             out  => "$dir/index-owner-id",
              err  => '/dev/null' };
     push @jobs, $job;
     # (replaces dpkg-deb -c)
     # create index file for package with owner IDs instead of names
     spawn($job,
-          ['dpkg-deb', '--fsys-tarfile', 'deb' ],
+          ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
           '|', ['tar', '--numeric-owner', '-tvf', '-'],
           '|', ['sed', '-e', 's/^h/-/'],
           '|', ['sort', '-k', '6'], '&');

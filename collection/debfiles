@@ -26,21 +26,20 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: debfiles <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: debfiles <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 
--e 'unpacked' or fail('debfiles invoked in wrong directory');
+-e "$dir/unpacked" or fail 'debfiles invoked with wrong dir argument';
 
-if (-e 'debfiles') {
-    delete_dir('debfiles')
+if ( -e "$dir/debfiles") {
+    delete_dir ("$dir/debfiles")
         or fail('cannot rm old debfiles directory');
 }
 
-if ( -l 'unpacked/debian' ) {
+if ( -l "$dir/unpacked/debian" ) {
     require Cwd;
-    my $target = Cwd::abs_path ('unpacked/debian');
-    my $ud = Cwd::abs_path ('unpacked');
+    my $target = Cwd::abs_path ("$dir/unpacked/debian");
+    my $ud = "$dir/unpacked";
     fail ("cannot resolve debian directory symlink in $pkg: $!") unless $target;
     fail ("cannot resolve unpacked dir for $pkg: $!") unless $ud;
     # We need the the trailing slash on $ud to ensure $target is a subdir of $ud.  However
@@ -50,7 +49,7 @@ if ( -l 'unpacked/debian' ) {
 }
 
 # Copy the whole debian directory
-copy_dir('unpacked/debian/', 'debfiles')
+copy_dir ("$dir/unpacked/debian/", "$dir/debfiles")
     or fail("cannot copy unpacked/debian to debfiles: $!");
 
 # Local Variables:

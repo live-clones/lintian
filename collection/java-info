@@ -25,18 +25,20 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Util qw(fail);
 
+my ($pkg, undef, $dir) = @ARGV;
+
 # Sanity check
-unless (-d 'unpacked/') {
-    fail "java-info called in wrong directory!";
+unless ( -d "$dir/unpacked/") {
+    fail "java-info called with the wrong dir argument!";
 }
 
-open (INDEX, '<', 'index')
-    or fail "cannot open index: $!\n";
+open INDEX, '<', "$dir/index"
+    or fail "cannot open index: $!";
 
-open (OUT, '>', 'java-info')
+open OUT, '>', "$dir/java-info"
     or fail "cannot open java-info: $!";
 
-chdir ('unpacked')
+chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
 while (<INDEX>) {

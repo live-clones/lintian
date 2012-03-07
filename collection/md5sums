@@ -22,19 +22,20 @@
 use strict;
 use warnings;
 
-use Cwd();
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
 use Util;
 
-($#ARGV == 1) or fail('syntax: md5sums <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
-my $dir = Cwd::cwd();
+($#ARGV == 2) or fail 'syntax: md5sums <pkg> <type> <dir>';
 
-unlink('md5sums');
-chdir('unpacked')
+my ($pkg, $type, $dir) = @ARGV;
+
+if ( -e "$dir/md5sums" ) {
+    unlink "$dir/md5sums" or fail "unlink md5sums: $!";
+}
+
+chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
 my %opts = ( pipe_in => FileHandle->new,

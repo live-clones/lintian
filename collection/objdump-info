@@ -26,15 +26,17 @@
 use strict;
 use warnings;
 
+my (undef, undef, $dir) = @ARGV;
+
 my $failed = 0;
 
-open (FILES, '<', 'file-info')
+open FILES, '<', "$dir/file-info"
     or fail("cannot open file-info: $!");
 
-open (OUT, '>', 'objdump-info')
+open OUT, '>', "$dir/objdump-info"
     or fail("cannot open objdump-info: $!");
 
-chdir ('unpacked')
+chdir ("$dir/unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
 
 while (<FILES>) {

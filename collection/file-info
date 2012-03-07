@@ -28,24 +28,21 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Lintian::Command qw(spawn reap);
 
-($#ARGV == 1) or fail('syntax: file-info <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: file-info <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 my $last = '';
 
 my $helper = realpath("$0-helper");
-my $outfile = realpath('./file-info');
+my $outfile = "$dir/file-info";
 
-unlink($outfile);
+if ( -e $outfile ) {
+    unlink($outfile) or fail "unlink file-info: $!";
+}
 
-# Open files before we chdir, since unpacked could be a symlink (at
-# the time of writing, it never is, but it could be a reasonable way
-# of fixing #262783)
-
-open(INDEX, '<', 'index')
+open INDEX, '<', "$dir/index"
     or fail("cannot open index file: $!");
 
-chdir('unpacked')
+chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
 # We ignore failures from file because sometimes file returns a non-zero exit

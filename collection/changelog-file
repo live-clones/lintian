@@ -25,26 +25,25 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: changelog-file <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail('syntax: changelog-file <pkg> <type> <dir>');
+my ($pkg, $type, $dir) = @ARGV;
 
-unlink('changelog') or fail("cannot remove changelog file: $!")
-    if ( -e 'changelog' or -l 'changelog');
+unlink "$dir/changelog" or fail "cannot remove changelog file: $!"
+    if -e "$dir/changelog" or -l "$dir/changelog";
 
 # Pick the first of these files that exists.
-my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
-                  "unpacked/usr/share/doc/$pkg/changelog.Debian",
-                  "unpacked/usr/share/doc/$pkg/changelog.debian.gz",
-                  "unpacked/usr/share/doc/$pkg/changelog.debian",
-                  "unpacked/usr/share/doc/$pkg/changelog.gz",
-                  "unpacked/usr/share/doc/$pkg/changelog",
-                  "unpacked/usr/doc/$pkg/changelog.Debian.gz",
-                  "unpacked/usr/doc/$pkg/changelog.Debian",
-                  "unpacked/usr/doc/$pkg/changelog.debian.gz",
-                  "unpacked/usr/doc/$pkg/changelog.debian",
-                  "unpacked/usr/doc/$pkg/changelog.gz",
-                  "unpacked/usr/doc/$pkg/changelog");
+my @changelogs = ("$dir/unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
+                  "$dir/unpacked/usr/share/doc/$pkg/changelog.Debian",
+                  "$dir/unpacked/usr/share/doc/$pkg/changelog.debian.gz",
+                  "$dir/unpacked/usr/share/doc/$pkg/changelog.debian",
+                  "$dir/unpacked/usr/share/doc/$pkg/changelog.gz",
+                  "$dir/unpacked/usr/share/doc/$pkg/changelog",
+                  "$dir/unpacked/usr/doc/$pkg/changelog.Debian.gz",
+                  "$dir/unpacked/usr/doc/$pkg/changelog.Debian",
+                  "$dir/unpacked/usr/doc/$pkg/changelog.debian.gz",
+                  "$dir/unpacked/usr/doc/$pkg/changelog.debian",
+                  "$dir/unpacked/usr/doc/$pkg/changelog.gz",
+                  "$dir/unpacked/usr/doc/$pkg/changelog");
 
 my $chl;
 
@@ -63,7 +62,7 @@ for (@changelogs) {
 if (defined ($chl) && -l $chl) {
     my $link = readlink $chl or fail("cannot readlink $chl: $!");
     if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-        symlink('file-is-in-another-package', 'changelog')
+        symlink ("$dir/file-is-in-another-package", "$dir/changelog")
             or fail("cannot create changelog symlink: $!");
         undef $chl;
     } elsif (! -f $chl) {
@@ -78,16 +77,16 @@ if (defined ($chl) && -l $chl) {
 if (not defined $chl) {
     # no changelog found
 } elsif ($chl =~ /\.gz$/) {
-    gunzip_file($chl, 'changelog');
+    gunzip_file ($chl, "$dir/changelog");
 } elsif (-f $chl && -l $chl) {
     local $_;
     open (CHL, '<', $chl) or fail("cannot open $chl: $!");
-    open (COPY, '>', 'changelog') or fail("cannot create changelog: $!");
+    open (COPY, '>', "$dir/changelog") or fail "cannot create changelog: $!";
     print COPY while <CHL>;
     close CHL;
     close (COPY) or fail("cannot write changelog: $!");
 } else {
-    link($chl, 'changelog')
+    link ($chl, "$dir/changelog")
         or fail("cannot link $chl to changelog: $!");
 }
 
@@ -95,7 +94,7 @@ if ($chl && $chl !~ m/changelog\.debian/i) {
     # Either this is a native package OR a non-native package where the
     # debian changelog is missing.  checks/changelog is not too happy
     # with the latter case, so check looks like a Debian changelog.
-    open my $fd, '<', 'changelog' or fail "Opening changelog: $!";
+    open my $fd, '<', "$dir/changelog" or fail "Opening changelog: $!";
     my $ok = 0;
     while ( my $line = <$fd> ) {
         next if $line =~ m/^\s*+$/o;
@@ -108,14 +107,14 @@ if ($chl && $chl !~ m/changelog\.debian/i) {
     }
     close $fd;
     # Remove it if it not the Debian changelog.
-    unlink 'changelog' unless $ok;
+    unlink "$dir/changelog" unless $ok;
 }
 
 # Extract NEWS.Debian files as well, with similar precautious.  Ignore any
 # symlinks to other packages here; in that case, we just won't check the file.
-unlink('NEWS.Debian') or fail("cannot unlink NEWS.Debian: $!")
-    if (-e 'NEWS.Debian' or -l 'NEWS.Debian');
-my $news = "unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
+unlink "$dir/NEWS.Debian" or fail "cannot unlink NEWS.Debian: $!"
+    if -e "$dir/NEWS.Debian" or -l "$dir/NEWS.Debian";
+my $news = "$dir/unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {
         my $link = readlink $news or fail("cannot readlink $chl: $!");
@@ -126,7 +125,7 @@ if (-f $news) {
         }
     }
     if ($news) {
-        gunzip_file($news, 'NEWS.Debian');
+        gunzip_file ($news, "$dir/NEWS.Debian");
     }
 }
 

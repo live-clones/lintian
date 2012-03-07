@@ -31,31 +31,31 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: diffstat <pkg> <type>');
-my $pkg = shift;
+($#ARGV == 2) or fail 'syntax: diffstat <pkg> <type> <dir>';
+my ($pkg, undef, $dir) = @ARGV;
 my $data;
 my $ver;
 
--f 'dsc' or fail('diffstat invoked in wrong directory');
+-f "$dir/dsc" or fail 'diffstat invoked with wrong dir argument';
 
-$data = get_dsc_info('dsc');
+$data = get_dsc_info ("$dir/dsc");
 $ver = $data->{'version'};
 
-unlink('debian-patch') or fail("cannot unlink debian-patch: $!")
-    if( -e 'debian-patch' or -l 'debian-patch');
+unlink "$dir/debian-patch" or fail "cannot unlink debian-patch: $!"
+    if -e "$dir/debian-patch" or -l "$dir/debian-patch";
 
 $ver =~ s/^\d://; #Remove epoch for this
 
-my $diff_file = "${pkg}_${ver}.diff.gz";
+my $diff_file = "$dir/${pkg}_${ver}.diff.gz";
 exit 0 unless (-f $diff_file);
 
-gunzip_file($diff_file, 'debian-patch');
+gunzip_file($diff_file, "$dir/debian-patch");
 
-open (STAT, '>', 'diffstat') or fail("cannot open scripts output file: $!");
+open STAT, '>', "$dir/diffstat" or fail "cannot open scripts output file: $!";
 # diffstat is noisy on stderr if its stdout is not a tty.
 # Shut it up by redirecting stderr to /dev/null.
 open STDERR, '>', '/dev/null';
-open (DIFF, '-|', qw/diffstat -p1 debian-patch/)
+open DIFF, '-|', 'diffstat',  '-p1', "$dir/debian-patch"
   or fail("cannot open pipe to diffstat on debian-patch: $!");
 # Copy all except last line to the STAT file
 my $previous;

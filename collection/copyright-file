@@ -27,14 +27,15 @@ use Util;
 
 use File::Copy qw(copy);
 
-($#ARGV == 1) or fail('syntax: copyright-file <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
+($#ARGV == 2) or fail 'syntax: copyright-file <pkg> <type> <dir>';
+my ($pkg, $type, $dir) = @ARGV;
 
-unlink('copyright');
+if ( -e "$dir/copyright" ) {
+    unlink "$dir/copyright" or fail "unlink copyright: $!";
+}
 
-my $file1 = "unpacked/usr/share/doc/$pkg/copyright";
-my $file2 = "unpacked/usr/doc/$pkg/copyright";
+my $file1 = "$dir/unpacked/usr/share/doc/$pkg/copyright";
+my $file2 = "$dir/unpacked/usr/doc/$pkg/copyright";
 
 my $file;
 if (-f $file1 ) { $file = $file1; }
@@ -46,18 +47,18 @@ else { $file = $file2; }
 if (-l $file) {
     my $link = readlink($file) or fail("cannot readlink $file: $!");
     if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-        touch_file('copyright');
+        touch_file "$dir/copyright";
     } else {
-        copy($file, 'copyright') or fail("cannot copy $file: $!");
+        copy ($file, "$dir/copyright") or fail "cannot copy $file: $!";
     }
 } elsif (-f $file) {
-    link($file, 'copyright')
+    link ($file, "$dir/copyright")
         or fail("cannot link $file to copyright: $!");
 } elsif (-f "$file.gz") {
-    gunzip_file($file, 'copyright');
+    gunzip_file ($file, "$dir/copyright");
 } else {
     # no copyright file found
-    touch_file('copyright');
+    touch_file ("$dir/copyright");
 }
 
 # Local Variables:
