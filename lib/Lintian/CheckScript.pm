@@ -28,7 +28,7 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 
 use Lintian::Tag::Info ();
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Util qw(read_dpkg_control unix_locale_split);
 
 =head1 NAME
 
@@ -64,22 +64,49 @@ common meta data of the check (such as Needs-Info).
 
 =over 4
 
-=item Lintian::CheckScript->new ($basedir, $checkname)
+=item Lintian::CheckScript->new($basedir, $checkname[, $profile, $lang])
 
-Parses the $file as a check desc file.
+Parses the $file as a check desc file.  If $profile and $lang is
+given, translations for the check will be loaded as well.
 
 =cut
 
 sub new {
-    my ($class, $basedir, $checkname) = @_;
+    my ($class, $basedir, $checkname, $profile, $lang) = @_;
     my ($header, @tags) = read_dpkg_control("$basedir/${checkname}.desc");
-    my $self;
-    my $dir;
-    unless ($header->{'check-script'}) {
+    my ($self, %loc, $dir, $name);
+    unless ($name = $header->{'check-script'}) {
         croak "Missing Check-Script field in $basedir/${checkname}.desc";
     }
     $dir = realpath($basedir)
       or croak "Cannot resolve $basedir: $!";
+
+    if (defined($lang) and my @i10ns = unix_locale_split($lang)) {
+        my $stem = "l10n/checks/${checkname}";
+        for my $path_prefix ($profile->include_path($stem)) {
+            for my $i10n (@i10ns) {
+                my $path = "${path_prefix}_${i10n}.desc";
+                if (-f $path) {
+                    my ($header, @paras) = read_dpkg_control($path);
+                    my $for_check = $header->{'check-script-translation'};
+                    if (not defined($for_check)
+                        or $for_check ne $name) {
+                        croak(  "Translation file $path is missing mandatory"
+                              . ' Check-Script-Translation field')
+                          if not defined($for_check);
+                        croak(  "Translation file $path suggests it is for"
+                              . " $for_check, but it was loaded for $name.");
+                    }
+
+                    foreach my $para (@paras) {
+                        next unless $para->{'tag'} && $para->{'info'};
+                        $loc{$para->{'tag'}} = $para->{'info'};
+                    }
+                    last;
+                }
+            }
+        }
+    }
 
     $self = {
         'name' => $header->{'check-script'},
@@ -107,6 +134,7 @@ sub new {
         my $ti;
         croak "Missing Tag field for tag in $basedir/${checkname}.desc"
           unless $pg->{'tag'};
+        $pg->{'info'} = $loc{$pg->{'tag'}} if exists $loc{$pg->{'tag'}};
         $ti = Lintian::Tag::Info->new($pg, $self->{'name'}, $self->{'type'});
         $self->{'tag-table'}->{$ti->tag} = $ti;
     }

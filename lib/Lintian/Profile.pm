@@ -97,8 +97,7 @@ If $ipath is not given, a default one will be used.
 
 sub new {
     my ($type, $name, $ipath, $extra) = @_;
-    my $profile;
-    my @full_inc_path;
+    my ($profile, @full_inc_path, $lang);
     if (!defined $ipath) {
         # Temporary fix (see _safe_include_path)
         @full_inc_path = [_default_inc_path()] unless $ipath;
@@ -109,8 +108,13 @@ sub new {
         }
     }
 
-    if (defined $extra and exists $extra->{'restricted-search-dirs'}) {
-        @full_inc_path = @{ $extra->{'restricted-search-dirs'} };
+    if (defined $extra) {
+        if (exists($extra->{'restricted-search-dirs'})) {
+            @full_inc_path = @{ $extra->{'restricted-search-dirs'} };
+        }
+        if (exists($extra->{'language'})) {
+            $lang = $extra->{'language'};
+        }
     }
     push @full_inc_path, @$ipath;
 
@@ -128,6 +132,7 @@ sub new {
         'check-scripts'        => {},
         # maps tag name to Lintian::Tag::Info
         'known-tags'           => {},
+        'language'             => $lang,
     };
     $self = bless $self, $type;
     if (not defined $name) {
@@ -591,8 +596,7 @@ sub _parse_check {
     # or symlink
     return $self->{'check-scripts'}->{$gcname}
       if exists $self->{'check-scripts'}->{$gcname};
-
-    my $c = Lintian::CheckScript->new($dir, $gcname);
+    my $c= Lintian::CheckScript->new($dir, $gcname,$self, $self->{'language'});
     my $cname = $c->name;
     if (exists $self->{'check-scripts'}->{$cname}) {
         # We have loaded the check under a different name
