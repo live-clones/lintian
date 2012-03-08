@@ -57,6 +57,7 @@ Build-Depends: aspell,
 # a test, so we can live with its absence in Wheezy.  The bash dependency
 # is just used as an "Wheezy indicator"-dependency.
                pkg-php-tools (>= 1.5~) | bash (<< 4.2+dfsg-1~),
+               po4a,
                python,
                python-all-dev,
                python-numpy,

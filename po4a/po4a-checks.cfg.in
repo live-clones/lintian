@@ -1,0 +1,5 @@
+[po_directory] po4a/po/checks
+
+# s/lintian/text/ when #663148 is fixed.
+[options] opt:"-o control=Info" opt:"-k 80" opt:"-M UTF-8"
+

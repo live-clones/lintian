@@ -1,0 +1,10 @@
+#!/bin/sh
+
+CFG="$1"
+cp -f "$CFG".in "$CFG"
+# Map a CHECK (e.g. python/depends or fields) to
+#  [type: lintian] checks/CHECK.desc \$lang:l10n/checks/CHECK_\$lang.desc
+#
+# sort is not strictly necessary, but it makes it easier to review.
+find checks/ -name '*.desc' | sort | \
+   perl -ne 'chomp; $file = $_; s{^checks/(.+)\.desc$}{$1}; print "[type: lintian] $file \$lang:l10n/checks/${_}_\$lang.desc\n";' >> "$CFG";

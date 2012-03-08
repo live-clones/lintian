@@ -15,6 +15,7 @@ tagfiles := $(wildcard t/changes/*.changes t/*/*/tags)
 testfiles := $(wildcard t/tests/*/*.desc)
 perlprovides := data/fields/perl-provides
 autoreject_data := $(wildcard private/build-time-data/*)
+po4acheckcfg := po4a/po4a-checks.cfg
 onlyrun =
 tag =
 
@@ -46,12 +47,32 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	t/runtests --dump-logs -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
+runtests-translation: $(neededfiles) $(allchecks) update-po
+	@echo .... running translation tests ....
+	mkdir -p "$(TEST_WORK_DIR)"
+	t/runtests --dump-logs -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
+	  translation-check-descs
+
 # this target is only run manually
 refresh-perl-provides:
 	perl private/refresh-perl-provides > $(perlprovides)
 
+# For translators, we keep basically any file regardless of how little
+# is translated.  But for release purposes, we require 80%.
+update-po: $(po4acheckcfg)
+	rm -rf l10n
+	PERL5LIB=lib/ po4a --keep 0.001 $<
+
+update-po-release: $(po4acheckcfg)
+	rm -rf l10n
+	PERL5LIB=lib/ --keep 80 po4a $<
+
+po4a/%.cfg: po4a/%.cfg.in private/gen-po4a-conf
+	private/gen-po4a-conf $@
+
+
 build-arch build-indep build: build-stamp
-build-stamp: $(neededfiles) $(docsource) $(testtarget)
+build-stamp: $(neededfiles) $(docsource) $(testtarget) update-po-release
 	@echo .... running build ....
 	dh_testdir
 	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
@@ -76,6 +97,7 @@ clean: $(neededfiles)
 	rm -rf doc/api.html
 	rm -rf "$(TEST_WORK_DIR)"
 	rm -rf man/man1/
+	rm -fr $(po4acheckcfg) l10n/
 	dh_clean
 
 binary-indep: $(neededfiles) build
@@ -107,5 +129,5 @@ binary-arch:
 
 binary:	binary-indep binary-arch
 
-.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides
+.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides update-po update-po-release
 .DELETE_ON_ERROR: runtests

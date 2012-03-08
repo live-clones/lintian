@@ -141,6 +141,11 @@ CAVEAT: If the filter rejects a directory, none of the files in it will be
 considered either.  Even if the filter accepts a file, that file will
 only be processed if it has the proper extension (i.e. with I<.desc>).
 
+=item translation
+
+If defined and a truth value, the desc files are expected to contain
+translations.  Otherwise, they must be regular checks.
+
 =back
 
 =cut
@@ -151,12 +156,17 @@ sub test_check_desc {
     my $colldir = '/usr/share/lintian/collection';
     my $find_opt = {'filter' => undef,};
     my $tested = 0;
+    my $is_translation = 0;
+    my $content_type_base = 'Check';
 
     if (ref $_[0] eq 'HASH') {
         $opts = shift;
         $colldir = $opts->{'coll-dir'}//'' if exists $opts->{'coll-dir'};
         $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
+        $is_translation = $opts->{'translation'}
+          if exists $opts->{'translation'};
     }
+    $content_type_base = 'Check-Translation' if $is_translation;
     $opts //= {};
     @descs = @_;
     load_profile_for_test();
@@ -170,23 +180,49 @@ sub test_check_desc {
             $builder->diag("Error: $err");
             next;
         }
+        my $content_type = $content_type_base;
         my $cname = $header->{'check-script'}//'';
         my $ctype = $header->{'type'} // '';
         my $cinfo = $header->{'info'} // '';
         my $needs = $header->{'needs-info'} // '';
+        my $tname = $header->{'check-script-translation'} // '';
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
-        $builder->isnt_eq($cname, '', "Check has a name ($desc_file)");
+        if ($is_translation) {
+            $builder->isnt_eq($tname, '',
+                "$content_type has a name ($desc_file)");
+            $builder->is_eq($cname, '',
+                    "$content_type does not have the "
+                  . " Check-Script field ($desc_file)");
+            # Use $cname from here on as the name of the check.
+            $cname = $tname;
+            if ($tname ne '') {
+                # If the check has a name, we can also what language
+                # it is for (based on the file name).
+                my $lang = basename($desc_file, '.desc');
+                $lang =~ s/\Q$tname\E_//;
+                $content_type .= "[$lang]";
+            }
+        } else {
+            $builder->isnt_eq($cname, '',
+                "$content_type has a name ($desc_file)");
+            $builder->is_eq($tname, '',
+                    "$content_type does not have the "
+                  . " Check-Script-Translation field ($desc_file)");
+        }
+        # From here on, we just use "$cname" as name of the check, so
+        # we don't need to choose been it and $tname.
         $cname = '<missing>' if $cname eq '';
-        $tested++;
+        $tested += 2;
 
-        if ($cname eq 'lintian') {
+        if ($is_translation or $cname eq 'lintian') {
+            my $reason = 'tranlations have no type';
+            $reason = 'check "lintian" does not have a type'
+              if not $is_translation;
             # skip these two tests for this special case...
-            $builder->skip(
-                'Special case, check "lintian" does not have a type');
-            $builder->skip(
-                'Special case, check "lintian" does not have a type');
+            $builder->skip("Special case, $reason");
+            $builder->skip("Special case, $reason");
         } elsif ($builder->isnt_eq($ctype, '', "$cname has a type")) {
             my @bad = ();
             # new lines are not allowed, map them to "\\n" for readability.
@@ -202,33 +238,41 @@ sub test_check_desc {
         }
 
         if ($needs and $colldir ne '') {
-            my @bad = ();
 
             # new lines are not allowed, map them to "\\n" for readability.
             $needs =~ s/\n/\\n/go;
-            foreach my $need (split m/\s*+,\s*+/o, $needs) {
-                push @bad, $need unless -f "$colldir/$need.desc";
+            if ($is_translation) {
+                $builder->is_eq('', $needs,
+                    "Translations for $cname ". 'should not have Needs-Info');
+            } else {
+                my @bad = ();
+                foreach my $need (split m/\s*+,\s*+/o, $needs) {
+                    push @bad, $need unless -f "$colldir/$need.desc";
+                }
+                $builder->is_eq(join(', ', @bad),
+                    '', "$cname has unknown collections in Needs-Info");
             }
-            $builder->is_eq(join(', ', @bad),
-                '', "$cname has unknown collections in Needs-Info");
         } else {
-            $builder->ok(1, 'Tag has a valid Needs-Info (empty)')
+            $builder->ok(1, "$content_type has a valid Needs-Info (empty)")
               if $colldir ne '';
             $builder->skip(
                 'Needs-Info test checks skipped due to empty coll-dir')
               if $needs ne '';
         }
 
-        $builder->is_eq(check_spelling(undef, $cinfo),
-            0, "$cname Info has no spelling errors");
+        if ($is_translation) {
+            $builder->skip('Skip language specific test');
+        } else {
+            $builder->is_eq(check_spelling(undef, $cinfo),
+                0, "$cname Info has no spelling errors");
+        }
 
         foreach my $tpara (@tagpara) {
             my $tag = $tpara->{'tag'}//'';
             my $severity = $tpara->{'severity'}//'';
             my $certainty = $tpara->{'certainty'}//'';
             my $info = $tpara->{'info'} // '';
-            my @htmltags = ();
-            my %seen = ();
+            my (@htmltags, %seen);
 
             $i++;
 
@@ -242,31 +286,45 @@ sub test_check_desc {
               or $builder->diag("$cname: $tag\n");
 
             # Severity / Certainty
-            $builder->ok(!$severity || exists $severities{$severity},
-                'Tag has valid severity')
-              or $builder->diag("$cname: $tag severity: $severity\n");
-            $builder->ok(!$certainty || exists $certainties{$certainty},
-                'Tag has valid certainty')
-              or $builder->diag("$cname: $tag certainty: $certainty\n");
+            if ($is_translation) {
+                $builder->is_eq($severity, '',
+                    "$content_type $cname:". " $tag should not have severity");
+                $builder->is_eq($certainty, '',
+                        "$content_type $cname:"
+                      . " $tag should not have certainty");
+            } else {
+                $builder->ok($severity && exists $severities{$severity},
+                    'Tag has valid severity')
+                  or $builder->diag("$cname: $tag severity: $severity\n");
+                $builder->ok($certainty && exists $certainties{$certainty},
+                    'Tag has valid certainty')
+                  or $builder->diag("$cname: $tag certainty: $certainty\n");
+            }
 
             # Info
-            $builder->is_eq(check_spelling(undef, $info),
-                0,"$cname: $tag has no spelling errors");
+            if ($is_translation) {
+                $builder->skip('Skip language specific test');
+                $builder->skip('Skip language specific test');
+                $builder->skip('Skip language specific test');
+                $builder->skip('Skip language specific test');
+            } else {
+                $builder->is_eq(check_spelling(undef, $info),
+                    0, "$content_type $cname: $tag has no spelling errors");
 
-            $builder->ok($info !~ /(?:^| )(?:[Ww]e|I)\b/,
-                'Tag info does not speak of "I", or "we"')
-              or $builder->diag("$cname: $tag\n");
+                $builder->ok($info !~ /(?:^| )(?:[Ww]e|I)\b/,
+                    'Tag info does not speak of "I", or "we"')
+                  or $builder->diag("$content_type $cname: $tag\n");
 
-            $builder->ok(
-                $info !~ /(\S\w)\. [^ ]/
-                  || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
-                'Tag info uses two spaces after a full stop'
-            ) or $builder->diag("$cname: $tag\n");
+                $builder->ok(
+                    $info !~ /(\S\w)\. [^ ]/
+                      || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
+                    'Tag info uses two spaces after a full stop'
+                ) or $builder->diag("$content_type $cname: $tag\n");
 
-            $builder->ok($info !~ /(\S\w\.   )/,
-                'Tag info uses only two spaces after a full stop')
-              or $builder->diag("$cname: $tag ($1)\n");
-
+                $builder->ok($info !~ /(\S\w\.   )/,
+                    'Tag info uses only two spaces after a full stop')
+                  or $builder->diag("$content_type $cname: $tag ($1)\n");
+            }
             # Check the tag info for unescaped <> or for unknown tags (which
             # probably indicate the same thing).
             while ($info =~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s) {
@@ -276,23 +334,27 @@ sub test_check_desc {
               = grep { !exists $known_html_tags{$_} && !$seen{$_}++ }@htmltags;
             $builder->is_eq(join(', ', @htmltags),
                 '', 'Tag info has no unknown html tags')
-              or $builder->diag("$cname: $tag\n");
+              or $builder->diag("$content_type $cname: $tag\n");
 
             $builder->ok($info !~ /[<>]/,
                 'Tag info has no stray angle brackets')
-              or $builder->diag("$cname: $tag\n");
+              or $builder->diag("$content_type $cname: $tag\n");
 
             if ($tpara->{'ref'}) {
                 my @issues = _check_reference($tpara->{'ref'});
                 my $text = join("\n\t", @issues);
                 $builder->ok(!@issues, 'Proper references are used')
-                  or $builder->diag("$cname: $tag\n\t$text");
+                  or $builder->diag("$content_type $cname: $tag\n\t$text");
             }
         }
     }
 
-    $builder->cmp_ok($tested, '>', 0, 'Tested at least one desc file')
-      if @descs;
+    if ($is_translation) {
+        $builder->skip('Translations are not required');
+    } else {
+        $builder->cmp_ok($tested, '>', 0, 'Tested at least one desc file')
+          if @descs;
+    }
     return;
 }
 
