@@ -1,0 +1,85 @@
+# Map interpreter to installation placement (and optionally
+# the dependency relation required to obtain the interpreter)
+#
+# syntax:
+#   <interpreter> => <path>[, <dependency-relation>]
+#
+# NB: <dependency-relation> can have the magic value @NODEPS@
+# meaning that the interpreter will be provided by an essential
+# package or otherwise no need a dependency.
+#
+# If <dependency-relation> is left out, its value is assumed to
+# be the same as the interpreter itself (saves some typing).
+#
+# Do NOT list versioned interpreters here (such as pythonX.Y,
+# rubyX.Y, etc.).  They are handled separately.
+#
+# Manually maintained list - please keep it sorted (by key)!
+#
+
+ash            => /bin
+awk            => /usr/bin, @NODEPS@
+bash           => /bin, @NODEPS@
+bltwish        => /usr/bin, blt
+clisp          => /usr/bin
+csh            => /bin, tcsh | csh | c-shell
+dash           => /bin, @NODEPS@
+escript        => /usr/bin, erlang-base | erlang-base-hipe
+expect         => /usr/bin
+expectk        => /usr/bin
+fish           => /usr/bin
+fontforge      => /usr/bin, fontforge-nox | fontforge
+gawk           => /usr/bin
+gbr2           => /usr/bin, gambas2-runtime
+gbx            => /usr/bin, gambas-runtime
+gbx2           => /usr/bin, gambas2-runtime
+gforth         => /usr/bin
+gnuplot        => /usr/bin
+gosh           => /usr/bin, gauche
+icmake         => /usr/bin, icmake
+install-menu   => /usr/bin, @NODEPS@
+ir             => /usr/bin, ironruby
+jed            => /usr/bin
+jed-script     => /usr/bin, jed | xjed
+kaptain        => /usr/bin
+ksh            => /bin, ksh | mksh | pdksh | zsh
+lefty          => /usr/bin, graphviz
+liquidsoap     => /usr/bin
+magicfilter    => /usr/sbin
+make           => /usr/bin, make | build-essential | dpkg-dev
+mawk           => /usr/bin
+mksh           => /bin
+mscgen         => /usr/bin
+nickle         => /usr/bin
+ocamlrun       => /usr/bin, ocaml-base-nox | ocaml-base | ocaml-nox | ocaml
+pagsh          => /usr/bin, openafs-client | heimdal-clients
+parrot         => /usr/bin
+perl           => /usr/bin, @NODEPS@
+perl6          => /usr/bin, rakudo
+procmail       => /usr/bin
+python         => /usr/bin, python | python-minimal
+pforth         => /usr/bin
+racket         => /usr/bin
+r              => /usr/bin, littler
+rc             => /usr/bin
+regina         => /usr/bin, regina-rexx
+rep            => /usr/bin
+rexx           => /usr/bin, regina-rexx
+rrdcgi         => /usr/bin, rrdtool
+ruby           => /usr/bin, ruby | ruby-interpreter
+runhaskell     => /usr/bin, ghc | ghc6
+runhugs        => /usr/bin, hugs | hugs98
+sed            => /bin, @NODEPS@
+seed           => /usr/bin
+sh             => /bin, @NODEPS@
+slsh           => /usr/bin
+speedy         => /usr/bin, speedy-cgi-perl
+swipl          => /usr/bin, swi-prolog | swi-prolog-nox
+tcsh           => /usr/bin
+texlua         => /usr/bin, luatex
+tixwish        => /usr/bin, tix
+trs            => /usr/bin, konwert
+xjed           => /usr/bin, xjed
+yforth         => /usr/bin, yforth
+yorick         => /usr/bin
+zsh            => /bin, zsh | zsh-beta

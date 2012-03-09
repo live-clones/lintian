@@ -29,92 +29,30 @@ use warnings;
 use Util;
 
 use Lintian::Check qw($known_shells_regex);
+use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 
-# This is a map of all known interpreters.  The key is the interpreter name
-# (the binary invoked on the #! line).  The value is an anonymous array of one
-# or two elements.  The first, mandatory argument is the path on a Debian
-# system where that interpreter would be installed.  The second, optional
-# argument is the dependency that provides that interpreter.  If the second
-# argument isn't given, the package name is assumed to be the same as the
-# interpreter name.  (Saves some typing.)
+sub _parse_interpreters {
+    my ($interpreter, $value) = @_;
+    my ($path, $dep) = split m/\s*,\s*/, $value, 2;
+    $dep = $interpreter if not $dep;
+    $dep = '' if $dep eq '@NODEPS@';
+    return [$path, $dep];
+}
+
+# This is a map of all known interpreters.  The key is the interpreter
+# name (the binary invoked on the #! line).  The value is an anonymous
+# array of two elements.  The first argument is the path on a Debian
+# system where that interpreter would be installed.  The second
+# argument is the dependency that provides that interpreter.
 #
-# Some interpreters list empty dependencies (as opposed to undefined ones).
-# Those interpreters should not have any dependency for one reason or another
-# (usually because they're essential packages or aren't used in a normal way).
+# $INTERPRETERS maps names of (unversioned) interpreters to the path
+# they are installed and what package to depend on to use them.
 #
-# Do not list versioned patterns here (such as pythonX.Y, rubyX.Y, etc.).  For
-# those, see %versioned_interpreters below.
-my %interpreters =
-    (ash            => [ '/bin' ],
-     awk            => [ '/usr/bin', '' ],
-     bash           => [ '/bin', '' ],
-     bltwish        => [ '/usr/bin', 'blt' ],
-     clisp          => [ '/usr/bin' ],
-     csh            => [ '/bin', 'tcsh | csh | c-shell' ],
-     dash           => [ '/bin', '' ],
-     escript        => [ '/usr/bin', 'erlang-base | erlang-base-hipe' ],
-     expect         => [ '/usr/bin' ],
-     expectk        => [ '/usr/bin' ],
-     fish           => [ '/usr/bin' ],
-     fontforge      => [ '/usr/bin', 'fontforge-nox | fontforge' ],
-     gawk           => [ '/usr/bin' ],
-     gbr2           => [ '/usr/bin', 'gambas2-runtime' ],
-     gbx            => [ '/usr/bin', 'gambas-runtime' ],
-     gbx2           => [ '/usr/bin', 'gambas2-runtime' ],
-     gforth         => [ '/usr/bin' ],
-     gnuplot        => [ '/usr/bin' ],
-     gosh           => [ '/usr/bin', 'gauche' ],
-     icmake         => [ '/usr/bin', 'icmake' ],
-     'install-menu' => [ '/usr/bin', '' ],
-     ir             => [ '/usr/bin', 'ironruby' ],
-     jed            => [ '/usr/bin' ],
-     'jed-script'   => [ '/usr/bin', 'jed | xjed' ],
-     kaptain        => [ '/usr/bin' ],
-     ksh            => [ '/bin', 'ksh | mksh | pdksh | zsh' ],
-     lefty          => [ '/usr/bin', 'graphviz' ],
-     liquidsoap     => [ '/usr/bin' ],
-     magicfilter    => [ '/usr/sbin' ],
-     make           => [ '/usr/bin', 'make | build-essential | dpkg-dev' ],
-     mawk           => [ '/usr/bin' ],
-     mksh           => [ '/bin' ],
-     mscgen         => [ '/usr/bin' ],
-     nickle         => [ '/usr/bin' ],
-     ocamlrun       => [ '/usr/bin',
-                         'ocaml-base-nox | ocaml-base | ocaml-nox | ocaml' ],
-     pagsh          => [ '/usr/bin', 'openafs-client | heimdal-clients' ],
-     parrot         => [ '/usr/bin' ],
-     perl           => [ '/usr/bin', '' ],
-     perl6          => [ '/usr/bin', 'rakudo' ],
-     procmail       => [ '/usr/bin' ],
-     python         => [ '/usr/bin', 'python | python-minimal' ],
-     pforth         => [ '/usr/bin' ],
-     racket         => [ '/usr/bin' ],
-     r              => [ '/usr/bin', 'littler' ],
-     rc             => [ '/usr/bin' ],
-     regina         => [ '/usr/bin', 'regina-rexx' ],
-     rep            => [ '/usr/bin' ],
-     rexx           => [ '/usr/bin', 'regina-rexx' ],
-     rrdcgi         => [ '/usr/bin', 'rrdtool' ],
-     ruby           => [ '/usr/bin', 'ruby | ruby-interpreter' ],
-     runhaskell     => [ '/usr/bin', 'ghc | ghc6' ],
-     runhugs        => [ '/usr/bin', 'hugs | hugs98' ],
-     sed            => [ '/bin', '' ],
-     seed           => [ '/usr/bin' ],
-     sh             => [ '/bin', '' ],
-     slsh           => [ '/usr/bin' ],
-     speedy         => [ '/usr/bin', 'speedy-cgi-perl' ],
-     swipl          => [ '/usr/bin', 'swi-prolog | swi-prolog-nox' ],
-     tcsh           => [ '/usr/bin' ],
-     texlua         => [ '/usr/bin', 'luatex' ],
-     tixwish        => [ '/usr/bin', 'tix' ],
-     trs            => [ '/usr/bin', 'konwert' ],
-     xjed           => [ '/usr/bin', 'xjed' ],
-     yforth         => [ '/usr/bin', 'yforth' ],
-     yorick         => [ '/usr/bin' ],
-     zsh            => [ '/bin', 'zsh | zsh-beta' ],
-    );
+my $INTERPRETERS = Lintian::Data->new ('scripts/interpreters', qr/\s*=\>\s*/o,
+                                       \&_parse_interpreters);
+
 
 # The more complex case of interpreters that may have a version number.
 #
@@ -422,10 +360,10 @@ for my $filename (sort keys %{$info->scripts}) {
     }
 
     # Try to find the expected path of the script to check.  First check
-    # %interpreters and %versioned_interpreters.  If not found there, see if
+    # $INTERPRETERS and %versioned_interpreters.  If not found there, see if
     # it ends in a version number and the base is found in
     # %versioned_interpreters.
-    my $data = $interpreters{$base};
+    my $data = $INTERPRETERS->value ($base);
     my $versioned = 0;
     if (not defined $data) {
         $data = $versioned_interpreters{$base};
@@ -565,7 +503,7 @@ while (<SCRIPTS>) {
     if ($interpreter =~ m|/usr/local/|) {
         tag 'control-interpreter-in-usr-local', "control/$file", "#!$interpreter";
     } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
-        my $expected = $interpreters{$base}->[0] . '/' . $base;
+        my $expected = ($INTERPRETERS->value ($base))->[0] . '/' . $base;
         tag 'wrong-path-for-interpreter', "#!$interpreter != $expected",
             "(control/$file)"
             unless ($interpreter eq $expected);
@@ -573,8 +511,8 @@ while (<SCRIPTS>) {
         tag 'forbidden-config-interpreter', "#!$interpreter";
     } elsif ($file eq 'postrm') {
         tag 'forbidden-postrm-interpreter', "#!$interpreter";
-    } elsif (exists $interpreters{$base}) {
-        my $data = $interpreters{$base};
+    } elsif ($INTERPRETERS->known ($base)) {
+        my $data = $INTERPRETERS->value ($base);
         my $expected = $data->[0] . '/' . $base;
         unless ($interpreter eq $expected) {
             tag 'wrong-path-for-interpreter', "#!$interpreter != $expected",
