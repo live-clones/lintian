@@ -277,12 +277,13 @@ unless ($opt{'reports-only'}) {
         Log('Updating lintian.log...');
         my $nfd;
         if ($opt{'dry-run'}) {
-            rename $lintian_log, $old_lintian_log;
-            open $nfd, '>', $lintian_log
-                or Die ("cannot open lintian.log $lintian_log for writing: $!");
-        } else {
             open $nfd, '>', '/dev/null'
                 or Die ("cannot open lintian.log /dev/null for writing: $!");
+        } else {
+            rename $lintian_log, $old_lintian_log
+                or Die ("cannot rename lintian.log to $old_lintian_log: $!");
+            open $nfd, '>', $lintian_log
+                or Die ("cannot open lintian.log $lintian_log for writing: $!");
         }
         open my $ofd, '<', $old_lintian_log
             or Die ("cannot open old lintian.log $old_lintian_log for reading: $!");
