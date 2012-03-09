@@ -119,7 +119,7 @@ for my $cur_file (@{$info->sorted_index}) {
         if ($cur_file eq $real_file) {
             # executable?
             my $perms = sprintf('%04o', $real_perm);
-            if ($real_perm & 0100 or $real_perm & 010 or $real_perm & 01) {
+            if ($real_perm & 0111) {
                 # Yes.  But if the library has an INTERP section, it's
                 # designed to do something useful when executed, so don't
                 # report an error.  Also give ld.so a pass, since it's

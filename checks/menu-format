@@ -406,7 +406,7 @@ foreach my $file (@{$info->sorted_index}) {
     if ($index_info->{type} =~ m/[-h]/ &&
         $file =~ m,^usr/share/applications/.*\.desktop$,) {
 
-        if ($operm & 0100 or $operm & 010 or $operm & 01) {
+        if ($operm & 0111) {
            tag 'executable-desktop-file', sprintf('%s %04o',$file,$operm);
         }
         unless ($file =~ m,template,o) {

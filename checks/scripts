@@ -256,8 +256,7 @@ foreach (@{$info->sorted_index}) {
     next if $_ eq '';
     my $index_info = $info->index->{$_};
     my $operm = $index_info->{operm};
-    next unless ($index_info->{type} =~ m,^[-h], and ($operm & 01 or
-        $operm & 010 or $operm & 0100));
+    next unless $index_info->{type} =~ m,^[-h], and ($operm & 0111);
     my $is_suid = $operm & 04000;
     $executable{$_} = 1;
 }

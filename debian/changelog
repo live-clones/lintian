@@ -1,5 +1,7 @@
 lintian (2.5.6) UNRELEASED; urgency=low
 
+  * checks/*:
+    + [NT] Simplified some bit operations done on file permissions.
   * checks/changelog-file:
     + [NT] Do not emit "no-upstream-changelog" for transitional
       packages.  Thanks to Paul Wise for the report.

@@ -403,7 +403,7 @@ foreach my $file (@{$info->sorted_index}) {
                 # executable in /usr/share/doc ?
                 if ($index_info->{type} =~ m/^[-h]/ and
                     $file !~ m,^usr/share/doc/(?:[^/]+/)?examples/, and
-                    ($operm & 01 or $operm & 010 or $operm & 0100)) {
+                    ($operm & 0111)) {
                     if ($script{$file}) {
                         tag 'script-in-usr-share-doc', $file;
                     } else {
@@ -537,8 +537,7 @@ foreach my $file (@{$info->sorted_index}) {
             if ($index_info->{type} =~ m/^d/) {
                 tag 'stray-directory-in-manpage-directory', $file
                     if ($file !~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,);
-            } elsif ($index_info->{type} =~ m,^[-h], and
-                ($operm & 01 or $operm & 010 or $operm & 0100)) {
+            } elsif ($index_info->{type} =~ m,^[-h], and ($operm & 0111)) {
                 tag 'executable-manpage', $file;
             }
         }
@@ -1091,7 +1090,7 @@ foreach my $file (@{$info->sorted_index}) {
         }
 
         # ---------------- general: setuid/setgid files!
-        if ($operm & 04000 or $operm & 02000) {
+        if ($operm & 06000) {
             my ($setuid, $setgid) = ('','');
             # get more info:
             $setuid = $index_info->{owner} if ($operm & 04000);
@@ -1137,7 +1136,7 @@ foreach my $file (@{$info->sorted_index}) {
             }
         }
         # ---------------- general: executable files
-        elsif ($operm & 01 or $operm & 010 or $operm & 0100) {
+        elsif ($operm & 0111) {
             # executable
             if ($owner eq 'root/games') {
                 if ($operm != 2755) {
