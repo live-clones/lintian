@@ -370,7 +370,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     }
 
     # PHP extension?
-    if ($file =~ m,^usr/lib/php\d/.*\.so$,) {
+    if ($file =~ m,^usr/lib/php\d/.*\.so(?:\.\d+)*$,) {
         $has_php_ext = 1;
     }
 

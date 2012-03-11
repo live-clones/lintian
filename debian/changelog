@@ -2,6 +2,10 @@ lintian (2.5.6) UNRELEASED; urgency=low
 
   * checks/*:
     + [NT] Simplified some bit operations done on file permissions.
+  * checks/binaries:
+    + [NT] Fix false-negative missing-dependency-on-phpapi when the
+      binary included a "SOVERSION" in its name.  Thanks to Ondřej
+      Surý for the report.  (Closes: #662936)
   * checks/changelog-file:
     + [NT] Do not emit "no-upstream-changelog" for transitional
       packages.  Thanks to Paul Wise for the report.
