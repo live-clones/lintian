@@ -296,7 +296,7 @@ my @indebfiles = ();
 opendir(DEBIAN, $droot)
     or fail("Can't open debfiles directory.");
 foreach my $file (sort readdir(DEBIAN)) {
-    next if $file eq 'rules';
+    next if $file eq 'rules' or not -f "$droot/$file";
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
         next unless $needtomodifyscripts;
 
@@ -344,7 +344,7 @@ foreach my $file (sort readdir(DEBIAN)) {
                 # debhelper only use executable files in compat 9
                 _tag_if_executable ($file, "$droot/$file");
             } else {
-                if (-f "$droot/$file" && -x "$droot/$file") {
+                if ( -x "$droot/$file") {
                     my $cmd =  _shebang_cmd  ("debian/$file", "$droot/$file");
                     unless ( $cmd ) {
                         tag 'executable-debhelper-file-without-being-executable', "debian/$file";
