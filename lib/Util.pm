@@ -292,9 +292,11 @@ sub system_env {
 #
 # Based on LOCPATH (and /usr/lib/locale), this function will set
 # LC_ALL to C.UTF-8 or en_US.UTF-8.  If neither LOCPATH nor
-# /usr/lib/locale has any of those locales, then LC_ALL will be
-# cleared.  It is possible to skip the LC_ALL check by passing a
-# truth value as first argument.
+# /usr/lib/locale has any of those locales, then LC_ALL will be set to
+# en_US.UTF-8.
+#
+#  It is possible to skip the LC_ALL check by passing a truth value as
+# first argument.
 sub clean_env {
     my ($no_lcall) = @_;
     my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
@@ -312,7 +314,10 @@ sub clean_env {
             }
         }
     }
-    fail ("clean_env: could not find needed locale");
+    # We could not find any valid locale so far - presumably we get our locales
+    # from "locales-all", so just set it to "en_US.UTF-8".
+    # (related bug: #663459)
+    $ENV{LC_ALL} = 'en_US.UTF-8';
 }
 
 # Translate permission strings like `-rwxrwxrwx' into an octal number.

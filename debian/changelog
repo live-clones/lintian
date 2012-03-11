@@ -50,6 +50,16 @@ lintian (2.5.6) UNRELEASED; urgency=low
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fixed issue where "Experimental: no" was handled as a
       "yes" when generating a tag description.
+  * lib/Util.pm:
+    + [NT] If no locale can be found, just set LC_ALL to en_US.UTF-8.
+      This fixes an issue with Lintian in backports when only
+      locales-all is installed.  Thanks to Peter Palfrader for the
+      report.  (Closes: #663459)
+
+  * private/runtests:
+    + [NT] Support using en_US.UTF-8 from locales-all, when that is
+      available.  This allows locales-all to be used as a substitute
+      for locales when compiling Lintian on Squeeze.
 
   * reporting/harness:
     + [NT] Corrected inverted logic when checking for dry-run.
