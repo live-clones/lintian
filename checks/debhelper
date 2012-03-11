@@ -344,7 +344,7 @@ foreach my $file (sort readdir(DEBIAN)) {
                 # debhelper only use executable files in compat 9
                 _tag_if_executable ($file, "$droot/$file");
             } else {
-                if (-x "$droot/$file") {
+                if (-f "$droot/$file" && -x "$droot/$file") {
                     my $cmd =  _shebang_cmd  ("debian/$file", "$droot/$file");
                     unless ( $cmd ) {
                         tag 'executable-debhelper-file-without-being-executable', "debian/$file";
