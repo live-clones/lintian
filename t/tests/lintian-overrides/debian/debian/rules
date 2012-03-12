@@ -5,9 +5,8 @@ pkg=lintian-overrides
 %:
 	dh $@
 
-binary:
-	dh binary --before install
+override_dh_fixperms:
 	install -D -m 0644 $(CURDIR)/debian/overrides \
 		$(CURDIR)/debian/$(pkg)/usr/share/lintian/overrides/$(pkg)
 	dh_fixperms
-	dh binary --remaining
+

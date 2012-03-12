@@ -2,9 +2,8 @@
 %:
 	dh $@
 
-build:
+override_dh_prep:
 	dh_prep -X~ -Xrej
-	dh build --remaining
 
 clean:
 	@echo 'Do nothing'

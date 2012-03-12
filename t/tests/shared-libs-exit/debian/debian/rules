@@ -1,6 +1,0 @@
-#!/usr/bin/make -f
-
-DUPSHF:=debian/libdupshf1/DEBIAN/shlibs
-
-%:
-	dh $@
