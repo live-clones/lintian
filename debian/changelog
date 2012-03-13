@@ -18,6 +18,9 @@ lintian (2.5.6) UNRELEASED; urgency=low
     + [NT] Fix FP executable-debhelper-file-without-being-executable
       emitted for directories.  Thanks to Felix Geyer for the report
       and the patch.  (Closes: #663447)
+  * checks/files.desc:
+    + [NT] Fix a typo in a tag description.  Thanks to Ludovic
+      Rousseau for spotting it.  (Closes: #663759)
   * checks/scripts:
     + [NT] Allow fontforge-nox as (alternative) provider for the
       fontforge interpreter.  Thanks to Martin Erik Werner for
