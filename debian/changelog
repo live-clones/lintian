@@ -47,6 +47,10 @@ lintian (2.5.6) UNRELEASED; urgency=low
   * frontend/lintian:
     + [NT] Pass directory of the package to the collections.
 
+  * lib/Lintian/Check.pm:
+    + [NT] Fixed false positive "*-address-malformed" if the local
+      part of the email was "0".  Thanks to Christopher Vollick for
+      the report.  (Closes: #663659)
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fixed issue where "Experimental: no" was handled as a
       "yes" when generating a tag description.
