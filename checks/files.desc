@@ -33,14 +33,6 @@ Certainty: certain
 Info: This file is reserved by a specific package.  Please email the
  maintainer of the package in question if you have questions.
 
-Tag: package-uses-obsolete-file
-Severity: normal
-Certainty: certain
-Info: the file, /etc/nntpserver, is no longer recommenced.  As of policy
- revision 2.5.1.0, /etc/news/server is the preferred file to use to specify
- a news server.
-Ref: policy 11.7
-
 Tag: FSSTND-dir-in-usr
 Severity: serious
 Certainty: certain
@@ -218,14 +210,6 @@ Info: The package contains a <i>special</i> file (e.g., a device file).
  you should create it by calling <tt>makedev</tt> from the postinst
  script.
 Ref: policy 10.6
-
-Tag: old-style-example-dir
-Severity: important
-Certainty: certain
-Info: The package installs some files into the old
- <tt>/usr/doc/examples</tt> directory.  The new location for examples
- is <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
-Ref: policy 12.6
 
 Tag: compressed-symlink-with-wrong-ext
 Severity: important

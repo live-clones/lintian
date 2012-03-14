@@ -317,11 +317,8 @@ foreach my $file (@{$info->sorted_index}) {
 
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
-        if ($file =~ m,^etc/nntpserver, ) {
-            tag 'package-uses-obsolete-file', $file;
-        }
         # ---------------- /etc/cron.daily, etc.
-        elsif ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*\., ) {
+        if ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*\., ) {
             tag 'run-parts-cron-filename-contains-full-stop', $file;
         }
         # ---------------- /etc/cron.d
@@ -453,12 +450,6 @@ foreach my $file (@{$info->sorted_index}) {
                     tag 'compressed-objects.inv', $file;
                 }
 
-            }
-        }
-        # ---------------- /usr/doc
-        elsif ($file =~ m,^usr/doc/\S,) {
-            if ($file =~ m,^usr/doc/examples/\S+, and $index_info->{type} eq 'd') {
-                tag 'old-style-example-dir', $file;
             }
         }
 
