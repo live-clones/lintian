@@ -2,7 +2,4 @@ Testname: manpages-wrong-dir
 Sequence: 6000
 Version: 1.0
 Description: Test for manpages in wrong dirs
-Test-For:
- manpage-for-non-x11-binary-in-wrong-directory
- manpage-for-x11-binary-in-wrong-directory
- manpage-in-wrong-directory
+Test-For: manpage-in-wrong-directory

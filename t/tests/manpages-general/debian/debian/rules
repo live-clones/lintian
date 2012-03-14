@@ -1,13 +1,13 @@
 #!/usr/bin/make -f
 
-tmp = $(CURDIR)/debian/$(shell dh_listpackages)
+tmp := $(CURDIR)/debian/$(shell dh_listpackages)
 
 %:
 	dh $@
 
 override_dh_auto_install:
 	install -d $(tmp)/usr/share/man/man1 $(tmp)/usr/share/man/man3 \
-	    $(tmp)/usr/share/man/man6 $(tmp)/usr/X11R6/man/man6 \
+	    $(tmp)/usr/share/man/man6 \
 	    $(tmp)/usr/bin $(tmp)/usr/sbin $(tmp)/usr/X11R6/bin \
 	    $(tmp)/usr/share/man/de/man1 $(tmp)/usr/X11R6/man/man1
 	printf '#!/bin/sh\ntrue\n' > $(tmp)/usr/bin/usr-bin-binary-alt
@@ -42,9 +42,10 @@ override_dh_auto_install:
 	touch $(tmp)/usr/share/man/man6/usr-games-binary.6
 	chmod 644 $(tmp)/usr/share/man/man6/usr-games-binary.6
 	gzip -1 $(tmp)/usr/share/man/man6/usr-games-binary.6
-	touch $(tmp)/usr/X11R6/man/man6/X11R6-binary.man
-	chmod 644 $(tmp)/usr/X11R6/man/man6/X11R6-binary.man
 	touch $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
+
+	pod2man --section 6 simple.pod | gzip -c --best > \
+		$(tmp)/usr/share/man/man6/simple.pod.gz
 
 	gzip -c9 < test.1p.de \
 	    > $(tmp)/usr/share/man/man1/test-latin1-chars.1p.gz

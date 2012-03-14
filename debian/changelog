@@ -1,7 +1,15 @@
 lintian (2.5.7) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed:
+      - manpage-for-non-x11-binary-in-wrong-directory
+      - manpage-for-x11-binary-in-wrong-directory
+      - x11-games-should-be-in-usr-games
+
   * checks/files:
     + [NT] Remove "manual" lazy loads of data files.
+  * checks/manpages{,.desc}:
+    + [NT] Remove old tags.
   * checks/menus:
     + [NT] Remove "manual" lazy load of data file.
 

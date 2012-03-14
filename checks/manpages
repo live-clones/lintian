@@ -127,11 +127,6 @@ foreach my $file (@{$info->sorted_index}) {
         tag 'manpage-has-wrong-extension', $file;
     }
 
-    # special check for manual pages for X11 games
-    if ($path =~ m,^usr/X11R6/man/man6/,o) {
-        tag 'x11-games-should-be-in-usr-games', $file;
-    }
-
     # check symbolic links to other manual pages
     if ($perm =~ m,^l,o) {
         if ($link =~ m,(^|/)undocumented,o) {
@@ -352,29 +347,6 @@ foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
 
 for my $f (sort keys %binary) {
     if (exists $manpage{$f}) {
-        # X11 binary?  This shouldn't happen any more; these are no longer
-        # allowed.
-        if ($binary{$f} =~ m,usr/X11R6, or
-             ($link{$f} && $link{$f} =~ m,(\.\.|usr)/X11R6,)) {
-            # yes. manpage in X11 too?
-            for my $manp_info (@{$manpage{$f}}) {
-                if ($manp_info->{file} =~ m/X11R6/) {
-                    # ok.
-                } else {
-                    tag 'manpage-for-x11-binary-in-wrong-directory', "$binary{$f} $manp_info->{file}";
-                }
-            }
-        } else {
-            for my $manp_info (@{$manpage{$f}}) {
-                # no. manpage in X11?
-                if ($manp_info->{file} =~ m/X11R6/) {
-                    tag 'manpage-for-non-x11-binary-in-wrong-directory', "$binary{$f} $manp_info->{file}";
-                } else {
-                    # ok.
-                }
-            }
-        }
-
         if (not grep { $_->{lang} eq '' } @{$manpage{$f}}) {
             tag 'binary-without-english-manpage', "$binary{$f}";
         }

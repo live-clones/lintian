@@ -1,5 +1,5 @@
-Last generated 2012-02-09
-Coverage: 792/960 (82.50%), w. legacy tests: 898/960 (93.54%)
+Last generated 2012-03-14
+Coverage: 791/958 (82.57%), w. legacy tests: 896/958 (93.53%)
 
 The following tags are not tested by the test suite:
 
@@ -119,7 +119,6 @@ debconf using-question-in-extended-description-in-templates
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
-files package-contains-hardlink
 files package-contains-upstream-install-documentation
 files package-installs-packlist
 files script-in-usr-share-doc
@@ -225,7 +224,6 @@ binary
   menu-method-should-include-menu-h
   non-wm-module-in-wm-modules-menu-section
   old-fsf-address-in-copyright-file
-  package-contains-hardlink
   package-contains-upstream-install-documentation
   postinst-does-not-call-updatemenus
   postrm-does-not-call-updatemenus
