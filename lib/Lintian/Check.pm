@@ -176,6 +176,8 @@ sub check_maintainer {
                 # Email::Valid does not handle emails starting with "0" too
                 # well.  So replace it with a "1", which Email::Valid cannot
                 # misinterpret as a "false-value".
+                # - Fixed in libemail-valid-perl/0.187-2, this work around
+                #   can be dropped when the fix is in stable.
                 my $copy = $mail;
                 $copy =~ s/^0/1/;
                 $malformed = 0 if Email::Valid->address ($copy);
