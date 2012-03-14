@@ -584,7 +584,7 @@ if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_every
     syntax();
 }
 
-die "Cannot use profile together wtih --ftp-master-rejects.\n" if $opt{'LINTIAN_PROFILE'} and $ftpmaster_tags;
+die "Cannot use profile together with --ftp-master-rejects.\n" if $opt{'LINTIAN_PROFILE'} and $ftpmaster_tags;
 # --ftp-master-rejects is implemented in a profile
 $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 
@@ -1670,7 +1670,7 @@ sub _update_profile {
     my %abbrev = ();
 
     if ($sup_check || $only_check) {
-        # Build an abbrevation map
+        # Build an abbreviation map
         for my $c ($profile->scripts (1)) {
             my $cs = $profile->get_script ($c, 1);
             next unless $cs->abbrev;
@@ -1680,7 +1680,7 @@ sub _update_profile {
 
     # if tags are listed explicitly (--tags) then show them even if
     # they are pedantic/experimental etc.  However, for --check-part
-    # people explictly have to pass the relevant options.
+    # people explicitly have to pass the relevant options.
     if ($checks || $check_tags) {
         $profile->disable_tags ($profile->tags);
         if ($check_tags) {
