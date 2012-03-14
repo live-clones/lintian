@@ -1,4 +1,4 @@
-lintian (2.5.6) UNRELEASED; urgency=low
+lintian (2.5.6) unstable; urgency=low
 
   * checks/*:
     + [NT] Simplified some bit operations done on file permissions.
@@ -71,7 +71,7 @@ lintian (2.5.6) UNRELEASED; urgency=low
   * reporting/harness:
     + [NT] Corrected inverted logic when checking for dry-run.
 
- -- Niels Thykier <niels@thykier.net>  Fri, 24 Feb 2012 09:40:30 +0100
+ -- Niels Thykier <niels@thykier.net>  Wed, 14 Mar 2012 15:00:25 +0100
 
 lintian (2.5.5) unstable; urgency=low
 
