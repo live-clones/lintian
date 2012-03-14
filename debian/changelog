@@ -4,9 +4,13 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + Removed:
       - manpage-for-non-x11-binary-in-wrong-directory
       - manpage-for-x11-binary-in-wrong-directory
+      - old-app-defaults-directory
+      - package-installs-file-to-usr-x11r6-bin
+      - package-installs-font-to-usr-x11r6
       - x11-games-should-be-in-usr-games
 
-  * checks/files:
+  * checks/files{,.desc}:
+    + [NT] Remove old tags.
     + [NT] Remove "manual" lazy loads of data files.
   * checks/manpages{,.desc}:
     + [NT] Remove old tags.

@@ -14,8 +14,8 @@ E: filenames: no-copyright-file
 E: filenames: non-standard-toplevel-dir files/
 E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/
-E: filenames: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
-E: filenames: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/testxbin2
+E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
+E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2
 E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
 E: filenames: postinst-does-not-call-updatemenus usr/share/menu/menu
 E: filenames: subdir-in-usr-bin usr/bin/bin/

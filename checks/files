@@ -461,18 +461,8 @@ foreach my $file (@{$info->sorted_index}) {
                 tag 'old-style-example-dir', $file;
             }
         }
-        # ---------------- /usr/X11R6/lib/X11/app-defaults
-        elsif ($file =~ m,usr/X11R6/lib/X11/app-defaults,) {
-            tag 'old-app-defaults-directory', $file;
-        }
 
         #----------------- /usr/X11R6/
-        elsif ($file =~ m,^usr/X11R6/bin, && $pkg ne 'x11-common') {
-            tag 'package-installs-file-to-usr-x11r6-bin', $file;
-        }
-        elsif ($file =~ m,^usr/X11R6/lib/X11/fonts,) {
-            tag 'package-installs-font-to-usr-x11r6', $file;
-        }
         elsif ($file =~ m,^usr/X11R6/, and
                $index_info->{type} !~ m,^l,) { #links to FHS locations are allowed
             tag 'package-installs-file-to-usr-x11r6', $file;

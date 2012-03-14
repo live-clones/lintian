@@ -14,46 +14,6 @@ Info: Your package contains a file that claims to have been generated
  will be rejected by the Debian archive scripts if it contains a file
  with such a timestamp.
 
-Tag: old-app-defaults-directory
-Severity: important
-Certainty: certain
-Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
- the old directory, /usr/X11R6/lib/X11/app-defaults/, will no longer be
- used by X. The old directory should not exist in packages at all;
- this prevents X from replacing it with a compatibility symlink.
-Ref: policy 11.8.6
-
-Tag: package-installs-font-to-usr-x11r6
-Severity: important
-Certainty: certain
-Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
- Packages providing X fonts must install them into the new path.  Fonts
- installed into the old /usr/X11R6/lib/X11/fonts path may not be seen by
- the X server.
- .
- If the package uses imake, it must build-depend on xutils-dev (&gt;=
- 1:1.0.2-2) for the correct paths. If it uses dh_installxfonts to handle X
- font installation, it must build-depend on debhelper (&gt;= 5.0.31).
-Ref: policy 11.8.5
-
-Tag: package-installs-file-to-usr-x11r6-bin
-Severity: important
-Certainty: certain
-Info: Debian has switched to the modular X tree which now uses the regular
- FHS paths, and all packages must follow. All packages installing binaries
- must install them into /usr/bin (or some other appropriate location)
- instead of /usr/X11R6/bin.
- .
- The x11-common package attempts to change /usr/X11R6/bin into a symlink
- to /usr/bin, so if this migration has already occurred, a package
- installing files into /usr/X11R6/bin may appear to install
- successfully. However, such a package will be left in an inconsistent
- state and may orphan files when the compatibility link goes away.
- .
- If the package uses imake, it must build-depend on xutils-dev (&gt;=
- 1:1.0.2-2) for the correct paths.
-Ref: policy 11.8.7
-
 Tag: package-installs-file-to-usr-x11r6
 Severity: important
 Certainty: certain

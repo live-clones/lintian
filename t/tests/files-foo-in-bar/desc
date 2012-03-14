@@ -19,8 +19,6 @@ Test-For:
  image-file-in-usr-lib
  package-contains-xvpics-dir
  package-installs-file-to-usr-x11r6
- package-installs-file-to-usr-x11r6-bin
- package-installs-font-to-usr-x11r6
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d

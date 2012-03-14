@@ -13,11 +13,11 @@ E: manpages-general: manpage-not-compressed-with-gzip usr/share/man/man1/usr-bin
 E: manpages-general: manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages-general: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-games-binary.6.gz
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/
+E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
+E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/bin/rstartd
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
-E: manpages-general: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
-E: manpages-general: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/rstartd
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:11
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:12
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
