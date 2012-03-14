@@ -51,10 +51,6 @@ our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 }
 
 my $KNOWN_PRIOS = Lintian::Data->new ('common/priorities', qr/\s*=\s*/o);
 
-our %known_obsolete_fields = map { $_ => 1 }
-    ('revision', 'package-revision', 'package_revision',
-     'recommended', 'optional', 'class');
-
 our @supported_source_formats =
   ( qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/ );
 
@@ -961,17 +957,14 @@ for my $field (keys %{$info->field}) {
 
     next if ($field eq 'original-maintainer') and $version =~ /ubuntu/;
 
-    tag 'obsolete-field', $field
-        if $known_obsolete_fields{$field};
-
     tag 'unknown-field-in-dsc', $field
-        if ($type eq 'source' && ! $SOURCE_FIELDS->known($field) && ! $known_obsolete_fields{$field});
+        if ($type eq 'source' && ! $SOURCE_FIELDS->known ($field));
 
     tag 'unknown-field-in-control', $field
-        if ($type eq 'binary' && ! $KNOWN_BINARY_FIELDS->known($field) && ! $known_obsolete_fields{$field});
+        if ($type eq 'binary' && ! $KNOWN_BINARY_FIELDS->known ($field));
 
     tag 'unknown-field-in-control', $field
-        if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS->known($field) && ! $known_obsolete_fields{$field});
+        if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS->known ($field));
 }
 
 }

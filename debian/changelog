@@ -4,6 +4,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + Removed:
       - manpage-for-non-x11-binary-in-wrong-directory
       - manpage-for-x11-binary-in-wrong-directory
+      - obsolete-field
       - old-app-defaults-directory
       - old-style-example-dir
       - package-installs-file-to-usr-x11r6-bin
@@ -11,6 +12,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
       - package-uses-obsolete-file
       - x11-games-should-be-in-usr-games
 
+  * checks/fields{,.desc}:
+    + [NT] Remove old tags.
   * checks/files{,.desc}:
     + [NT] Remove old tags.
     + [NT] Remove "manual" lazy loads of data files.

@@ -405,13 +405,6 @@ Info: The Homepage field for this package points to CPAN and the URL
  .
    http://search.cpan.org/~samtregar/HTML-Template-2.9/
 
-Tag: obsolete-field
-Severity: important
-Certainty: certain
-Info: This field is listed in the Policy Manual as obsolete and
- not-to-be-present in any package.
-Ref: policy D.2.6
-
 Tag: unknown-field-in-dsc
 Severity: minor
 Certainty: certain

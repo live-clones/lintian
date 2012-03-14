@@ -1,0 +1,6 @@
+Testname: fields-unknown-fields
+Sequence: 6000
+Version: 1.0
+Description: General tests for unknown fields
+Test-For:
+ unknown-field-in-dsc
