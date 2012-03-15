@@ -624,26 +624,12 @@ Info: The indicated program run in a maintainer script has a prepended
  replacement version of a command for some local reason.
 Ref: policy 6.1
 
-Tag: ancient-dpkg-predepends-check
-Severity: minor
-Certainty: certain
-Info: The package calls dpkg --assert-support-predepends in a maintainer
- script.  This check is obsolete and has always returned true since dpkg
- 1.1.0, released 1996-02-11.
-
 Tag: ancient-dpkg-epoch-check
 Severity: minor
 Certainty: certain
 Info: The package calls dpkg --assert-working-epoch in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.4.0.7, released 1997-01-25.
-
-Tag: ancient-dpkg-long-filenames-check
-Severity: minor
-Certainty: certain
-Info: The package calls dpkg --assert-long-filenames in a maintainer
- script.  This check is obsolete and has always returned true since dpkg
- 1.4.1.17, released 1999-10-21.
 
 Tag: ancient-dpkg-multi-conrep-check
 Severity: minor

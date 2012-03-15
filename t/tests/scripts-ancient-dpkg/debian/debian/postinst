@@ -1,15 +1,7 @@
 #!/bin/sh
 set -e
 
-if dpkg --assert-support-predepends ; then
-    echo Yay
-fi
-
 if dpkg --assert-working-epoch ; then
-    echo Yay
-fi
-
-if dpkg --assert-long-filenames ; then
     echo Yay
 fi
 

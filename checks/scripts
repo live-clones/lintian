@@ -781,14 +781,8 @@ while (<SCRIPTS>) {
                 }
 
                 # Ancient dpkg feature tests.
-                if (m/${LEADIN}dpkg\s+--assert-support-predepends\b/) {
-                    tag 'ancient-dpkg-predepends-check', "$file:$.";
-                }
                 if (m/${LEADIN}dpkg\s+--assert-working-epoch\b/) {
                     tag 'ancient-dpkg-epoch-check', "$file:$.";
-                }
-                if (m/${LEADIN}dpkg\s+--assert-long-filenames\b/) {
-                    tag 'ancient-dpkg-long-filenames-check', "$file:$.";
                 }
                 if (m/${LEADIN}dpkg\s+--assert-multi-conrep\b/) {
                     tag 'ancient-dpkg-multi-conrep-check', "$file:$.";

@@ -1,4 +1,2 @@
-W: scripts-ancient-dpkg: ancient-dpkg-epoch-check postinst:8
-W: scripts-ancient-dpkg: ancient-dpkg-long-filenames-check postinst:12
-W: scripts-ancient-dpkg: ancient-dpkg-multi-conrep-check postinst:16
-W: scripts-ancient-dpkg: ancient-dpkg-predepends-check postinst:4
+W: scripts-ancient-dpkg: ancient-dpkg-epoch-check postinst:4
+W: scripts-ancient-dpkg: ancient-dpkg-multi-conrep-check postinst:8
