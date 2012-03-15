@@ -6,13 +6,6 @@ Info: Check if a binary package conforms to policy with respect to
  <b>menu</b> and <b>doc-base</b> files.
 Needs-Info: doc-base-files, menu-files, bin-pkg-control, index
 
-Tag: postinst-should-not-set-usr-doc-link
-Severity: normal
-Certainty: certain
-Info: The technical committee chose the symlink transition method to move
- from FSSTND to FHS.  That transition has been completed with woody and thus
- this link is no longer required.
-
 Tag: maintainer-script-does-not-check-for-existence-of-updatemenus
 Severity: important
 Certainty: possible
@@ -139,12 +132,6 @@ Certainty: certain
 Info: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
  already in use by the <tt>menu</tt> package itself.  The menu file should
  be named after the package that installs it.
-
-Tag: doc-base-file-references-usr-doc
-Severity: normal
-Certainty: certain
-Info: Files in <tt>/usr/share/doc-base</tt> should only contain links to
- files in the <tt>/usr/share/doc</tt> directory.
 
 Tag: doc-base-index-references-multiple-files
 Severity: important

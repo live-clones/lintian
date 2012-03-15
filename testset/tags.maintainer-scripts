@@ -161,7 +161,6 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:98 '>& bar'
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:50
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
 W: maintainer-scripts: postinst-does-not-load-confmodule
-W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
 W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:159

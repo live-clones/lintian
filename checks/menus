@@ -170,11 +170,6 @@ if ($preinst{'calls-installdocs'}) {
     tag 'preinst-calls-installdocs';
 }
 
-# don't set the /usr/doc link, the FHS transition is over (2002-10-08)
-if (defined $postinst{'sets-link'} && $postinst{'sets-link'} == 1) {
-    tag 'postinst-should-not-set-usr-doc-link';
-}
-
 $anymenu_file = $menu_file || $menumethod_file;
 
 # No one needs to call install-docs any more; triggers now handles that.
@@ -347,9 +342,6 @@ sub check_doc_base_field {
         }
         for my $file (@files) {
             next if $file eq '';
-            if ($file =~ m%^/usr/doc%) {
-                tag 'doc-base-file-references-usr-doc', "$dbfile:$line";
-            }
             my $realfile = delink ($file, $all_links);
             # openoffice.org-dev-doc has thousands of files listed so try to
             # use the hash if possible.
@@ -630,22 +622,6 @@ sub check_script {
             if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
                 tag 'maintainer-script-does-not-check-for-existence-of-updatemenus', "$script:$." unless $no_check_menu++;
             }
-        }
-
-        # does the script set a link in /usr/doc?
-        # does the script remove a link in /usr/doc?
-        if ($interp eq 'sh') {
-            if (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
-                $pres->{'sets-link'} = 1;
-            }
-        } elsif ($interp eq 'perl') {
-            if (m|symlink\s*\(?\s*[\"\']\.\./share/doc/\.+?[\"\']\s*,|) {
-                $pres->{'sets-link'} = 1;
-            } elsif (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
-                $pres->{'sets-link'} = 1;
-            }
-        } else {
-            # just fall through for now
         }
 
         # does the script check whether install-docs exists?

@@ -1,5 +1,0 @@
-Testname: menus-usr-doc-link
-Sequence: 6000
-Version: 1.0
-Description: Test for setting the usr-doc link in postinst
-Test-For: postinst-should-not-set-usr-doc-link
