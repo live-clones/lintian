@@ -50,7 +50,6 @@ no-package-name
 no-source-field
 no-version-field
 not-allowed-control-file
-old-style-copyright-file
 package-contains-ancient-file
 package-has-no-description
 package-installs-python-bytecode

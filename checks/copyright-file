@@ -107,10 +107,6 @@ foreach (@{$info->sorted_index}) {
         # Check if the link points to a package from the same source.
         check_cross_link($group, $link);
         last;
-    } elsif (m,usr/doc/copyright/$ppkg$,) {
-        tag 'old-style-copyright-file';
-        $found = 1;
-        last;
     }
 }
 

@@ -9,6 +9,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
       - manpage-for-x11-binary-in-wrong-directory
       - obsolete-field
       - old-app-defaults-directory
+      - old-style-copyright-file
       - old-style-example-dir
       - package-installs-file-to-usr-x11r6-bin
       - package-installs-font-to-usr-x11r6
@@ -16,6 +17,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
       - postinst-should-not-set-usr-doc-link
       - x11-games-should-be-in-usr-games
 
+  * checks/copyright-file{,.desc}:
+    + [NT] Remove old tags.
   * checks/fields{,.desc}:
     + [NT] Remove old tags.
   * checks/files{,.desc}:

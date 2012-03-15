@@ -113,13 +113,6 @@ Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
  this when I'm checking both the binary and the corresponding source
  package.
 
-Tag: old-style-copyright-file
-Severity: serious
-Certainty: certain
-Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,
- you should place the copyright file in /usr/share/doc/<i>pkg</i>/copyright.
-Ref: policy 12.5
-
 Tag: old-fsf-address-in-copyright-file
 Severity: normal
 Certainty: certain
