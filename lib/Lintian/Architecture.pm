@@ -67,22 +67,21 @@ The following methods are exportable:
 
 # Setup code
 
-my $ARCH_RAW = Lintian::Data->new ('common/architectures', qr/\s*+\Q||\E\s*+/o,
-                                   sub { return [split /\s++/o, $_[1]]});
+# Valid architecture wildcards.
+my %ARCH_WILDCARDS = ();
 
-# Generate the list of valid architecture wildcards.
-my $ARCH_WILDCARDS = {};
-
-foreach my $archstr ($ARCH_RAW->all) {
-    my ($os, $arch);
-    next if $archstr eq 'all' or $archstr eq 'any';
-    ($os, $arch) = @{ $ARCH_RAW->value($archstr) };
+sub _parse_arch {
+    my ($archstr, $raw) = @_;
+    my ($os, $arch) = split /\s++/o, $raw;
     # map $os-any (e.g. "linux-any") and any-$arch (e.g. "any-amd64") to
     # the relevant architectures.
-    $ARCH_WILDCARDS->{"$os-any"}->{$archstr} = 1;
-    $ARCH_WILDCARDS->{"any-$arch"}->{$archstr} = 1;
-    $ARCH_WILDCARDS->{'any'}->{$archstr} = 1;
+    $ARCH_WILDCARDS{"$os-any"}->{$archstr} = 1;
+    $ARCH_WILDCARDS{"any-$arch"}->{$archstr} = 1;
+    $ARCH_WILDCARDS{'any'}->{$archstr} = 1;
 }
+
+my $ARCH_RAW = Lintian::Data->new ('common/architectures', qr/\s*+\Q||\E\s*+/o,
+                                   \&_parse_arch);
 
 =item is_arch_wildcard ($wc)
 
@@ -94,7 +93,8 @@ Note: 'any' is considered a wildcard and not an architecture.
 
 sub is_arch_wildcard {
     my ($wc) = @_;
-    return exists $ARCH_WILDCARDS->{$wc} ? 1 : 0;
+    $ARCH_RAW->known ('any') unless %ARCH_WILDCARDS;
+    return exists $ARCH_WILDCARDS{$wc} ? 1 : 0;
 }
 
 =item is_arch ($arch)
@@ -142,8 +142,10 @@ its derivaties.
 
 sub expand_arch_wildcard {
     my ($wc) = @_;
-    return () unless exists $ARCH_WILDCARDS->{$wc};
-    return keys %{ $ARCH_WILDCARDS->{$wc} };
+    # Load the wildcards if it has not been done yet.
+    $ARCH_RAW->known ('any') unless %ARCH_WILDCARDS;
+    return () unless exists $ARCH_WILDCARDS{$wc};
+    return keys %{ $ARCH_WILDCARDS{$wc} };
 }
 
 =item wildcard_include_arch ($wc, $arch)
@@ -159,7 +161,9 @@ This is generally faster than
 
 sub wildcard_includes_arch {
     my ($wc, $arch) = @_;
-    return exists $ARCH_WILDCARDS->{$wc}->{$arch} ? 1 : 0;
+    # Load the wildcards if it has not been done yet.
+    $ARCH_RAW->known ('any') unless %ARCH_WILDCARDS;
+    return exists $ARCH_WILDCARDS{$wc}->{$arch} ? 1 : 0;
 }
 
 =back
