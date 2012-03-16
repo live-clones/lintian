@@ -47,10 +47,7 @@ our %KNOWN_DOCBASE_FORMAT_FIELDS = (
         'index'   => 0
 );
 
-# Will contain the list of valid sections as a Lintian::Data object if it's
-# needed.  We don't load it unless we need it since many packages don't have
-# doc-base files.
-our $SECTIONS;
+our $SECTIONS = Lintian::Data->new ('doc-base/sections');
 
 sub run {
 
@@ -413,7 +410,6 @@ sub check_doc_base_field {
 
     # Section field.
     } elsif ($field eq 'section') {
-        $SECTIONS = Lintian::Data->new('doc-base/sections') unless $SECTIONS;
         $_ = join (' ', @$vals);
         unless ($SECTIONS->known($_)) {
             if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {

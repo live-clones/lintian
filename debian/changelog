@@ -1,5 +1,10 @@
 lintian (2.5.7) UNRELEASED; urgency=low
 
+  * checks/files:
+    + [NT] Remove "manual" lazy loads of data files.
+  * checks/menus:
+    + [NT] Remove "manual" lazy load of data file.
+
   * frontend/lintian:
     + [JW] Fix typo in error message.
 

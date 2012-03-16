@@ -28,10 +28,10 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Util;
 
-my $FONT_PACKAGES;
-my $TRIPLETS;
-my $LOCALE_CODES;
-my $INCORRECT_LOCALE_CODES;
+my $FONT_PACKAGES = Lintian::Data->new ('files/fonts', qr/\s++/);
+my $TRIPLETS = Lintian::Data->new ('files/triplets', qr/\s++/);
+my $LOCALE_CODES = Lintian::Data->new ('files/locale-codes', qr/\s++/);
+my $INCORRECT_LOCALE_CODES = Lintian::Data->new ('files/incorrect-locale-codes', qr/\s++/);
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
@@ -749,8 +749,6 @@ foreach my $file (@{$info->sorted_index}) {
 
     if ($file =~ m,^(?:usr/)?lib/([^/]+)/$,o) {
         my $subdir = $1;
-        $TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
-            unless defined($TRIPLETS);
         if ($TRIPLETS->known($subdir)) {
             tag 'triplet-dir-and-architecture-mismatch', "$file is for", $TRIPLETS->value($subdir)
                 unless ($arch eq $TRIPLETS->value($subdir));
@@ -762,8 +760,6 @@ foreach my $file (@{$info->sorted_index}) {
         my $subdir = $1;
         # Skip if it not an ELF file (probably a .so script)
         next unless ($info->file_info->{$file}//'') =~ m/\bELF\b/o;
-        $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/o)
-            unless defined($TRIPLETS);
         if ($TRIPLETS->known($subdir) && $arch eq $TRIPLETS->value($subdir)) {
             my $dep = $info->relation('pre-depends');
             tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
@@ -1040,8 +1036,6 @@ foreach my $file (@{$info->sorted_index}) {
         # ---------------- fonts
         if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
             my $font = lc $1;
-            $FONT_PACKAGES = Lintian::Data->new('files/fonts', '\s+')
-                unless defined($FONT_PACKAGES);
             if ($FONT_PACKAGES->known($font)) {
                 tag 'duplicate-font-file', "$file also in", $FONT_PACKAGES->value($font)
                     if ($pkg ne $FONT_PACKAGES->value($font) and $type ne 'udeb');
@@ -1229,11 +1223,6 @@ foreach my $file (@{$info->sorted_index}) {
 
             # special exception:
             if ($lwccode ne 'l10n') {
-                $INCORRECT_LOCALE_CODES = Lintian::Data->new('files/incorrect-locale-codes', '\s+')
-                    unless defined($INCORRECT_LOCALE_CODES);
-                $LOCALE_CODES = Lintian::Data->new('files/locale-codes', '\s+')
-                    unless defined($LOCALE_CODES);
-
                 if ($INCORRECT_LOCALE_CODES->known($lwccode)) {
                     tag 'incorrect-locale-code',
                         "$lwccode ->", $INCORRECT_LOCALE_CODES->value($lwccode);
