@@ -37,6 +37,7 @@ BEGIN {
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Data;
 use Lintian::Internal::FrontendUtil;
 use Lintian::Profile;
 use Text_utils;
@@ -78,6 +79,8 @@ unless ($prof) {
 
 }
 $profile = Lintian::Profile->new($prof, $ENV{'LINTIAN_ROOT'}, \@proc_inc);
+
+Lintian::Data->set_vendor ($profile);
 
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,

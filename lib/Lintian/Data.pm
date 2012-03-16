@@ -59,9 +59,7 @@ sub new {
     sub _load_data {
         my ($self, $type, $separator, $code) = @_;
         unless (exists $data{$type}) {
-            my $dir = $ENV{LINTIAN_ROOT} . '/data';
-            open(my $fd, '<', "$dir/$type")
-                or croak("unknown data type $type");
+            my $fd = $self->_open_data_file ($type);
             local ($_, $.);
             while (<$fd>) {
                 chomp;
@@ -88,8 +86,26 @@ sub new {
             close $fd;
         }
         $self->{'data'} = $data{$type};
-     }
+    }
 }
+
+{
+    my $profile;
+    sub set_vendor {
+        my (undef, $vendor) = @_;
+        $profile = $vendor;
+    }
+
+    sub _open_data_file {
+        my ($self, $type) = @_;
+        my $dir = $ENV{LINTIAN_ROOT} . '/data';
+        croak "No vendor given" unless $profile;
+        open my $fd, '<', "$dir/$type"
+            or croak "unknown data type $type";
+        return $fd;
+    }
+}
+
 
 sub _force_promise {
     my ($self) = @_;
@@ -199,6 +215,11 @@ the key/value pairs.  See the L</Interface for the CODE argument> above.
 A given file will only be loaded once.  If new() is called again with the
 same TYPE argument, the data previously loaded will be reused, avoiding
 multiple file reads.
+
+=item set_vendor(PROFILE)
+
+Specifies vendor profile.  It must be set before the first data file
+is loaded.
 
 =back
 

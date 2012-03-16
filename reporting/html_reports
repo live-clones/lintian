@@ -50,6 +50,7 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
+use Lintian::Data;
 use Lintian::Lab;
 use Lintian::Profile;
 use Lintian::Internal::FrontendUtil;
@@ -59,6 +60,8 @@ use Util;
 my $profile = Lintian::Profile->new (find_default_profile ("$LINTIAN_ROOT/profiles"),
                                      $LINTIAN_ROOT,
                                      ["$LINTIAN_ROOT/profiles"]);
+
+Lintian::Data->set_vendor ($profile);
 
 
 # Set the Lintian version, current timestamp, and archive timestamp.

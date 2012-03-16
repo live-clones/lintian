@@ -24,13 +24,19 @@ use warnings;
 use Test::More qw(no_plan);
 
 use Lintian::Check qw(check_spelling);
+use Lintian::Data;
+use Lintian::Profile;
 use Lintian::Tags ();
 use Util qw(read_dpkg_control);
 
+my $vendor = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
+                                 ["$ENV{'LINTIAN_ROOT'}/profiles"]);
 my @DESCS = <$ENV{'LINTIAN_ROOT'}/checks/*.desc>;
 
 my %severities = map { $_ => 1 } 'pedantic', @Lintian::Tags::SEVERITIES;
 my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
+
+Lintian::Data->set_vendor ($vendor);
 
 for my $desc_file (@DESCS) {
     for my $i (read_dpkg_control($desc_file)) {

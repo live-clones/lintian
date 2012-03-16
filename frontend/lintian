@@ -828,7 +828,7 @@ if ($dont_check || %suppress_tags || $checks || $check_tags) {
 }
 
 $TAGS->profile ($PROFILE);
-
+Lintian::Data->set_vendor ($PROFILE);
 
 # Initialize display level settings.
 for my $level (@display_level) {
