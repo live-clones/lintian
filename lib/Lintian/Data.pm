@@ -59,31 +59,13 @@ sub new {
     sub _load_data {
         my ($self, $type, $separator, $code) = @_;
         unless (exists $data{$type}) {
-            my $fd = $self->_open_data_file ($type);
-            local ($_, $.);
-            while (<$fd>) {
-                chomp;
-                s/^\s+//;
-                next if /^\#/;
-                next if $_ eq '';
-                my ($key, $val);
-                if (defined $separator) {
-                    ($key, $val) = split(/$separator/, $_, 2);
-                    if ($code) {
-                        my $pval = $data{$type}{$key};
-                        $val = $code->($key, $val, $pval);
-                        next if ! defined $val && defined $pval;
-                        unless (defined $val) {
-                            next if defined $pval;
-                            croak "undefined value for $key (type: $type)";
-                        }
-                    }
-                } else {
-                    ($key, $val) = ($_ => 1);
-                }
-                $data{$type}{$key} = $val;
-            }
+            my $vendors = $self->_get_vendor_names;
+            my $dataset = {};
+            my ($fd, $vno) = $self->_open_data_file ($type, $vendors, 0);
+            $self->_parse_file ($type, $fd, $dataset, $separator, $code,
+                                $vendors, $vno);
             close $fd;
+            $data{$type} = $dataset;
         }
         $self->{'data'} = $data{$type};
     }
@@ -91,21 +73,97 @@ sub new {
 
 {
     my $profile;
+    # Set vendor profile
     sub set_vendor {
         my (undef, $vendor) = @_;
         $profile = $vendor;
     }
 
-    sub _open_data_file {
-        my ($self, $type) = @_;
-        my $dir = $ENV{LINTIAN_ROOT} . '/data';
+    # Returns a listref of profile names
+    sub _get_vendor_names {
+        my ($self) = @_;
         croak "No vendor given" unless $profile;
-        open my $fd, '<', "$dir/$type"
-            or croak "unknown data type $type";
-        return $fd;
+        my @vendors = ();
+        push @vendors, reverse @{ $profile->profile_list };
+        return \@vendors;
+    }
+
+    # Open the (next) data file
+    #
+    # $self->_open_data_file ($type, $vendors, $start)
+    # - $type is the data file (e.g. "common/architectures")
+    # - $vendors is the listref return by _get_vendor_names
+    # - $start is an index into $vendors (the first $vendor to try)
+    sub _open_data_file {
+        my ($self, $type, $vendors, $start) = @_;
+        my $root = $profile->root;
+        my $file;
+        my @basedirs = ("$ENV{'HOME'}/.lintian/vendors", "$root/vendors", '/etc/lintian/vendors');
+        my $cur = $start;
+        # Do not allow user or system settings to affect the test results.
+        @basedirs = ("$root/vendors") if $ENV{'LINTIAN_INTERNAL_TESTSUITE'};
+        OUTER: for (; $cur < scalar @$vendors ; $cur++) {
+            foreach my $basedir (@basedirs) {
+                if ( -f "$basedir/$vendors->[$cur]/data/$type" ) {
+                    $file = "$basedir/$vendors->[$cur]/data/$type";
+                    last OUTER;
+                }
+            }
+        }
+        if (not defined $file) {
+            croak "Unknown data file: $type" unless $start;
+            croak "No parent data file for $vendors->[$start]";
+        }
+        open my $fd, '<', "$file"
+            or croak "$file: $!";
+        return ($fd, $cur);
     }
 }
 
+sub _parse_file {
+    my ($self, $type, $fd, $dataset, $separator, $code, $vendors, $vno) = @_;
+    my $filename = $vendors->[$vno] . '/' . $type;
+    local ($_, $.);
+    while (<$fd>) {
+        chomp;
+        s/^\s++//;
+        next if /^\#/ or $_ eq '';
+        if (s/^\@//) {
+            my ($op, $value) = split m/\s++/;
+            if ($op eq 'delete') {
+                croak "Missing key after \@delete in $filename at line $."
+                    unless defined $value && length $value;
+                delete $dataset->{$value};
+            } elsif ($op eq 'include-parent') {
+                my ($pfd, $pvo) = $self->_open_data_file ($type, $vendors,
+                                                          $vno +1);
+                $self->_parse_file ($type, $pfd, $dataset, $separator,
+                                    $code, $vendors, $pvo);
+                close $pfd;
+            } else {
+                croak "Unknown operation \@$op in $filename at line $.";
+            }
+            next;
+        }
+
+        my ($key, $val);
+        if (defined $separator) {
+            ($key, $val) = split(/$separator/, $_, 2);
+            if ($code) {
+                my $pval = $dataset->{$key};
+                $val = $code->($key, $val, $pval) if $code;
+                next if ! defined $val && defined $pval;
+                unless (defined $val) {
+                    next if defined $pval;
+                    croak "undefined value for $key (type: $type)";
+                }
+            }
+        } else {
+            ($key, $val) = ($_ => 1);
+        }
+        $dataset->{$key} = $val;
+    }
+}
 
 sub _force_promise {
     my ($self) = @_;

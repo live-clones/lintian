@@ -23,7 +23,6 @@ BEGIN {
 }
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
-use Lintian::Data;
 use Util;
 
 my $root = $ENV{LINTIAN_ROOT};
@@ -39,8 +38,8 @@ foreach my $check (<$root/checks/*.desc>){
     push @checks, $cname;
 }
 
-@fatal = Lintian::Data->new('output/ftp-master-fatal')->all;
-@nonfatal = Lintian::Data->new('output/ftp-master-nonfatal')->all;
+@fatal = read_tags ('vendors/debian/ftp-master-auto-reject/data/output/ftp-master-fatal');
+@nonfatal = read_tags ('vendors/debian/ftp-master-auto-reject/data/output/ftp-master-nonfatal');
 
 foreach my $dir (@dirs) {
     mkdir $dir or fail "mkdir $dir: $!" unless -d $dir;
@@ -105,6 +104,21 @@ sub format_field {
         }
     }
     print $fd "\n";
+}
+
+sub read_tags {
+    my ($file) = @_;
+    my @tags = ();
+    open my $fd, '<', $file or die "$file: $!";
+    while (<$fd>) {
+        chomp;
+        s/^\s++//;
+        next if /^#/ or $_ eq '';
+        s/\s++$//;
+        push @tags, $_;
+    }
+    close $fd;
+    return @tags;
 }
 
 # Local Variables:

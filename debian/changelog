@@ -66,6 +66,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Replace all usage of objdump with readelf.
       (Closes: #614034)
 
+  * data:
+    + [NT] Move to vendors/debian/ftp-master-auto-reject and replace
+      it with a symlink.
   * data/binaries/embedded-libs:
     + [NT] New file.
     + [NT] Add libav libraries.  Thanks to Andres Mejia for the
@@ -89,6 +92,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Lazily load data files.
     + [NT] Allow pre-process sub to alter existing value for a key
       by passing the previous value as third argument.
+    + [NT] Allow vendor specific data files.  They will be loaded
+      from LINTIAN_ROOT/vendors/$profile/data.
   * lib/Lintian/Output{,/*}.pm:
     + [NT] Replace non-printables with "?" in output.
   * lib/Lintian/Profile.pm:
