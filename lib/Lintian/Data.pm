@@ -22,16 +22,42 @@ use warnings;
 
 use Carp qw(croak);
 
-# The constructor loads a list into a hash in %data, which is private to this
-# module.  Use %data as a cache to avoid loading the same list more than once
-# (which means lintian doesn't support having the list change over the life of
-# the proces.  The returned object knows what list, stored in %data, it is
-# supposed to act on.
+sub new {
+    my ($class, @args) = @_;
+    my $type = $args[0];
+    my $self = {};
+    my $data;
+    croak 'no data type specified' unless $type;
+    bless $self, $class;
+    $data = $self->_get_data ($type);
+    if ($data) {
+        # We already loaded this data file - just pull from cache
+        $self->{'data'} = $data;
+    } else {
+        # Pretend we loaded this data file, but leave a "reminder" to
+        # do it later.
+        $self->{'promise'} = \@args;
+    }
+    return $self;
+}
+
+# _get_data fetches an already loaded dataset by type.  It is
+# mostly useful for determining whether it makes sense to make
+# sense to be "lazy".
+#
+# _load_data loads a dataset into %data, which is private to this
+# module.  Use %data as a cache to avoid loading the same dataset more
+# than once (which means lintian doesn't support having the list
+# change over the life of the process).  The returned object knows
+# what dataset, stored in %data, it is supposed to act on.
 {
     my %data;
-    sub new {
-        my ($class, $type, $separator, $code) = @_;
-        croak('no data type specified') unless $type;
+    sub _get_data {
+        my ($self, $type) = @_;
+        return $data{$type};
+    }
+    sub _load_data {
+        my ($self, $type, $separator, $code) = @_;
         unless (exists $data{$type}) {
             my $dir = $ENV{LINTIAN_ROOT} . '/data';
             open(my $fd, '<', "$dir/$type")
@@ -53,27 +79,35 @@ use Carp qw(croak);
             }
             close $fd;
         }
-        my $self = { data => $data{$type} };
-        bless($self, $class);
-        return $self;
-    }
+        $self->{'data'} = $data{$type};
+     }
+}
+
+sub _force_promise {
+    my ($self) = @_;
+    my $promise = $self->{promise};
+    $self->_load_data (@$promise);
+    delete $self->{promise}
 }
 
 # Query a data object for whether a particular keyword is valid.
 sub known {
     my ($self, $keyword) = @_;
+    $self->_force_promise unless exists $self->{data};
     return (exists $self->{data}{$keyword}) ? 1 : undef;
 }
 
 # Return all known keywords (in no particular order).
 sub all {
     my ($self) = @_;
+    $self->_force_promise unless exists $self->{data};
     return keys(%{ $self->{data} });
 }
 
 # Query a data object for the value attached to a particular keyword.
 sub value {
     my ($self, $keyword) = @_;
+    $self->_force_promise unless exists $self->{data};
     return (exists $self->{data}{$keyword}) ? $self->{data}{$keyword} : undef;
 }
 
@@ -112,6 +146,9 @@ as they are listed in the file and may include spaces.
 This module allows lists such as menu sections, doc-base sections,
 obsolete packages, package fields, and so forth to be stored in simple,
 easily editable files.
+
+NB: By default Lintian::Data is lazy and defers loading of the data
+file until it is actually needed.
 
 =head1 CLASS METHODS
 
