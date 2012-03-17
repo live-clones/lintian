@@ -32,8 +32,11 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
-  * checks/fields.desc:
+  * checks/fields{,.desc}:
     + [NT] Add devref reference.
+    + [NT] Remove special handling of the Ubuntu specific field,
+      "original-maintainer".  This field is now handled by vendor
+      specific data files.  (Closes: #649852)
   * checks/files{,.desc}:
     + [NT] Remove "manual" lazy loads of data files.
     + [NT] Remove code for the uses-FHS-doc-dir tag.
@@ -107,6 +110,11 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [JW] Consider duplicate fields a syntax error in dctrl files.
       Previously, duplicate fields were silently ignored (except
       when a separate tag would check for it).  (Closes: #664061)
+
+  * vendors/ubuntu/main/data/common/source-fields:
+    + [NT] New file.
+  * vendors/ubuntu/main/data/fields/{binary,udeb}-fields:
+    + [NT] New files.
 
  -- Niels Thykier <niels@thykier.net>  Wed, 14 Mar 2012 22:55:46 +0100
 

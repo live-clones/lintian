@@ -952,8 +952,6 @@ while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
 
 for my $field (keys %{$info->field}) {
 
-    next if ($field eq 'original-maintainer') and $version =~ /ubuntu/;
-
     tag 'unknown-field-in-dsc', $field
         if ($type eq 'source' && ! $SOURCE_FIELDS->known ($field));
 
