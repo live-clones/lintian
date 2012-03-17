@@ -102,7 +102,7 @@ sub new {
     croak "Undefined profile path" unless $ppath;
     my $self = {
         'parent-map'           => {},
-        'parents'              => [],
+        'profile_list'         => [],
         'profile-path'         => $ppath,
         'enabled-tags'         => {}, # "set" of tags enabled (value is largely ignored)
         'enabled-checks'       => {}, # maps script to the number of tags enabled (0 if disabled)
@@ -120,10 +120,11 @@ sub new {
     return $self;
 }
 
-=item $prof->parents
+=item $prof->profile_list
 
-Returns a list ref of the names of its parents, in the order they are
-applied.
+Returns a list ref of the (normalized) names of the profile and its
+parents.  The last element of the list is the name of the profile
+itself, the second last is its parent and so on.
 
 Note: This list reference and its contents should not be modified.
 
@@ -138,7 +139,7 @@ Returns the LINTIAN_ROOT associated with the profile.
 
 =cut
 
-Lintian::Profile->mk_ro_accessors (qw(parents name root));
+Lintian::Profile->mk_ro_accessors (qw(profile_list name root));
 
 =item $prof->tags([$known])
 
@@ -295,6 +296,7 @@ sub _read_profile {
     my $pheader;
     my $pmap = $self->{'parent-map'};
     my $pname;
+    my $plist = $self->{'profile_list'};
     @pdata = read_dpkg_control($pfile, 0);
     $pheader = shift @pdata;
     croak "Profile field is missing from $pfile"
@@ -302,13 +304,16 @@ sub _read_profile {
     $pname = $pheader->{'profile'};
     croak "Invalid Profile field in $pfile"
             if $pname =~ m,^/,o or $pname =~ m/\./o;
+
+    # Normalize the profile name
+    $pname .= '/main' unless $pname =~m,/,;
+
     croak "Recursive definition of $pname"
         if exists $pmap->{$pname};
     $pmap->{$pname} = 0; # Mark as being loaded.
     $self->{'name'} = $pname unless exists $self->{'name'};
     if (exists $pheader->{'extends'} ){
         my $parent = $pheader->{'extends'};
-        my $plist = $self->{'parents'};
         my $parentf;
         croak "Invalid Extends field in $pfile"
             unless $parent && $parent !~ m/\./o;
@@ -316,10 +321,12 @@ sub _read_profile {
         croak "Cannot find $parent, which $pname extends"
             unless $parentf;
         $self->_read_profile($parentf);
-        # Use the extends field in parents, even though the extended
-        # profile might actually identity itself differently.
-        push @$plist, $parent;
     }
+
+    # Add the profile to the "chain" after loading its parent (if
+    # any).
+    push @$plist, $pname;
+
     $self->_read_profile_tags($pname, $pheader);
     if (@pdata){
         my $i = 2; # section counter

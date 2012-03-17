@@ -61,6 +61,10 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Lazily evaluate the data file.
   * lib/Lintian/Data.pm:
     + [NT] Lazily load data files.
+  * lib/Lintian/Profile.pm:
+    + [NT] Normalize profile name and replace "parents" with
+      "profile_list".  The latter also includes the current profile
+      name.
   * lib/Util.pm:
     + [JW] Consider duplicate fields a syntax error in dctrl files.
       Previously, duplicate fields were silently ignored (except
