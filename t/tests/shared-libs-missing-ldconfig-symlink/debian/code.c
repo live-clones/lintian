@@ -1,7 +1,10 @@
 #include <stdlib.h>
-#include <unistd.h>
+#include <math.h>
 
-void e(void){
-  if (fork() != 0)
-    exit(1);
+double e(void (*f)(char *)){
+  char tmp[10];
+  double x;
+  f(tmp);
+  x = atof(tmp);
+  return exp(x);
 }

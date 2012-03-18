@@ -1,5 +1,5 @@
 all:
-	gcc -o dummy dummy.c
+	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o dummy dummy.c
 
 install:
 	install -d $(DESTDIR)/usr/bin

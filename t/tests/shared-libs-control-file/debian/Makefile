@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Winline -O2 -fPIC
+CFLAGS+= -fPIC
 
 SONAMES:= libnoshf.so.1 libeshf.so.1 libunshf.so.1 libfdshf.so.1 \
 	  libdupshf.so.1
@@ -8,7 +8,7 @@ LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
 all: $(LIBFILES)
 
 $(LIBFILES): code.o
-	$(CC) -o $@ -shared -Wl,-soname,$(patsubst %.0.1,%,$@) $^ -lc
+	$(CC) $(LDFLAGS) -o $@ -shared -Wl,-soname,$(patsubst %.0.1,%,$@) $^ -lc
 
 clean:
 	rm -f *.a *.o *.so*

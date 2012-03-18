@@ -1,3 +1,4 @@
-int do_something(int a){
-  return a * a;
+int do_something(int (*a)(char *)){
+  char test[10];
+  return a(test);
 }

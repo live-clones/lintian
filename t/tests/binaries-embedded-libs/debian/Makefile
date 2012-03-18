@@ -5,7 +5,7 @@ MANPAGES := $(patsubst %,%.1,$(BINARIES))
 all: $(BINARIES) $(MANPAGES)
 
 %: %.c
-	gcc -o $* $*.c
+	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $* $*.c
 
 %.1: template.1
 	sed 's/#BIN#/$*/g' < $< > $@

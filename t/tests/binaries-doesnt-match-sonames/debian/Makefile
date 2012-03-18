@@ -1,5 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -Winline -O2 -fPIC
+MYCFLAGS=-Wall -Winline -O2 -fPIC
+CFLAGS:=$(MYCFLAGS) $(CPPFLAGS) $(CFLAGS)
 
 SONAMES:= libany.so.1
 LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
@@ -7,7 +8,7 @@ LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
 all: $(LIBFILES)
 
 $(LIBFILES): code.o
-	$(CC) -o $@ -shared -Wl,-soname,$(patsubst %.0.1,%,$@) $^ -lc
+	$(CC) $(LDFLAGS) -o $@ -shared -Wl,-soname,$(patsubst %.0.1,%,$@) $^ -lc
 
 clean:
 	rm -f *.a *.o *.so*

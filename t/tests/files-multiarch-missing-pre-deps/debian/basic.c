@@ -1,7 +1,12 @@
 #include <stdio.h>
 
 int
-lib_interface(void)
+lib_interface(int (*a)(char *))
 {
-    printf("Hello world!\n");
+    char tmp[10];
+    int r = a(tmp);
+    if (r < 0) {
+      fprintf(stderr, "%s\n", tmp);
+    }
+    return r;
 }

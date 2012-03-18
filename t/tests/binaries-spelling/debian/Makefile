@@ -1,5 +1,5 @@
 all:
-	gcc -o basic basic.c
+	gcc $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o basic basic.c
 
 install:
 	install -d $(DESTDIR)/usr/bin
