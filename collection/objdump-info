@@ -26,6 +26,9 @@
 use strict;
 use warnings;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Util qw(fail);
+
 my (undef, undef, $dir) = @ARGV;
 
 my $failed = 0;
@@ -228,17 +231,6 @@ close FILES;
 close OUT or fail("cannot write objdump-info: $!");
 
 exit $failed;
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
-}
 
 # Local Variables:
 # indent-tabs-mode: nil
