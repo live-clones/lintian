@@ -134,6 +134,11 @@ sub _parse_dpkg_control_iterative {
             # immediately before or after the value and is ignored there.
             my ($tag,$value) = (lc $1,$2);
             $value =~ s/\s+$//;
+            if (exists $section->{$tag}) {
+                # Policy: A paragraph must not contain more than one instance
+                # of a particular field name.
+                die "syntax error at line $.: Duplicate field $tag.\n";
+            }
             $section->{$tag} = $value;
 
             $last_tag = $tag;

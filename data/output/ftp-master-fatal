@@ -21,7 +21,6 @@ copyright-file-is-symlink
 copyright-refers-to-incorrect-directory
 copyright-refers-to-old-directory
 debian-control-file-uses-obsolete-national-encoding
-debian-control-with-duplicate-fields
 debian-rules-missing-required-target
 debian-rules-not-a-makefile
 description-is-dh_make-template

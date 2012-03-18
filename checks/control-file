@@ -50,8 +50,7 @@ if ($line) {
     tag 'debian-control-file-uses-obsolete-national-encoding', "at line $line"
 }
 
-# Check that each field is only used once:
-my $seen_fields = {};
+# Nag about dh_make Vcs comment only once
 my $seen_vcs_comment = 0;
 open (CONTROL, '<', $dcontrol)
     or fail "Couldn't read debfiles/control: $!";
@@ -67,16 +66,9 @@ while (<CONTROL>) {
 
     next if /^\#/;
 
-    #Reset seen_fields if we enter a new section:
-    $seen_fields = {} if $_ eq '';
-
     #line with field:
     if (/^(\S+):/) {
         my $field = lc ($1);
-        if ($seen_fields->{$field}) {
-            tag 'debian-control-with-duplicate-fields', "$field: $$seen_fields{$field}, $.";
-        }
-        $seen_fields->{$field} = $.;
         if ($field =~ /^xs-vcs-/) {
             my $base = $field;
             $base =~ s/^xs-//;

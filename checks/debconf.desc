@@ -19,13 +19,6 @@ Info: Packages using debconf in their preinst script must pre-depend
  almost always already installed, this is normally better than depending
  on it and falling back to a different configuration system.
 
-Tag: duplicate-fields-in-templates
-Severity: important
-Certainty: certain
-Info: A template contains two identical fields (with identical values or
- not). This is either an error in this template, or two templates are
- not properly separated by a lone newline.
-
 Tag: unknown-field-in-templates
 Severity: important
 Certainty: certain

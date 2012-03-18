@@ -1,1 +1,1 @@
-E: control-file-duplicate-field source: debian-control-with-duplicate-fields depends: 10, 11
+E: control-file-duplicate-field source: syntax-error-in-control-file debian/control: syntax error at line 11: Duplicate field depends.

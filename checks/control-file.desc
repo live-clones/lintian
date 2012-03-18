@@ -27,14 +27,6 @@ Info: The control file has a Build-Depends, Build-Depends-Indep,
  section.  These specify source package relationships, and should be in
  the source section of the control file.
 
-Tag: debian-control-with-duplicate-fields
-Severity: serious
-Certainty: certain
-Ref: policy 5.1
-Info: One of the paragraphs of your debian/control contains the same
- field more than once. This can lead to unexpected behaviour in
- <tt>dpkg</tt> and <tt>apt</tt>.
-
 Tag: debian-control-has-unusual-field-spacing
 Severity: pedantic
 Certainty: certain

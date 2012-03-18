@@ -177,36 +177,6 @@ if ($seenconfig and not -x "$cdir/config") {
     tag 'debconf-config-not-executable';
 }
 
-# First check that templates look valid
-if ($seentemplates) {
-    open(TMPL, '<', "$cdir/templates")
-        or fail("Can't open control/templates: $!");
-    local $/ = "\n\n";
-    while (<TMPL>) {
-        chomp;
-        my %fields = ();
-        my $name = 'unknown';
-
-        foreach my $line (split "\n", $_) {
-            if ($line =~ s/^([-_.A-Za-z0-9]+):\s*(.+)//) {
-                $fields{$1}++;
-                $name = $2 if ($1 eq 'Template');
-            }
-        }
-
-        foreach (keys %fields) {
-            if ($fields{$_} > 1) {
-                local $/ = "\n";
-                tag 'duplicate-fields-in-templates', "$name $_";
-                #  Templates file is corrupted, no need to report
-                #  further errors
-                $seentemplates = '';
-            }
-        }
-    }
-    close TMPL;
-}
-
 # Lots of template checks.
 
 my @templates = ();

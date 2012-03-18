@@ -1,5 +1,5 @@
-Last generated 2012-03-15
-Coverage: 784/947 (82.79%), w. legacy tests: 889/947 (93.88%)
+Last generated 2012-03-18
+Coverage: 783/945 (82.86%), w. legacy tests: 888/945 (93.97%)
 
 The following tags are not tested by the test suite:
 
@@ -15,7 +15,6 @@ deb-format tar-errors-from-data
 
 debconf boolean-template-has-bogus-default
 debconf debconf-is-not-a-registry
-debconf duplicate-fields-in-templates
 debconf duplicate-long-description-in-template
 debconf empty-translated-choices
 debconf isdefault-flag-is-deprecated
