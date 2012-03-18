@@ -27,14 +27,14 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Lintian::Collect;
 use Util qw(fail);
 
-my (undef, undef, $dir) = @ARGV;
-
+my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 my $failed = 0;
 
-open FILES, '<', "$dir/file-info"
-    or fail("cannot open file-info: $!");
+my $file_info = $info->file_info;
 
 open OUT, '>', "$dir/objdump-info"
     or fail("cannot open objdump-info: $!");
@@ -42,9 +42,9 @@ open OUT, '>', "$dir/objdump-info"
 chdir ("$dir/unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
 
-while (<FILES>) {
-    if (m/^(.+?)\x00\s.*ELF/) {
-        my $bin = $1;
+foreach my $bin (@{ $info->sorted_file_info }) {
+    my $finfo = $file_info->{$bin};
+    if ($finfo =~ m/^\bELF\b/) {
 
         print OUT "-- $bin\n";
 
@@ -227,7 +227,6 @@ while (<FILES>) {
     }
 }
 
-close FILES;
 close OUT or fail("cannot write objdump-info: $!");
 
 exit $failed;

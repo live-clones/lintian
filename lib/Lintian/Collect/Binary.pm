@@ -171,7 +171,7 @@ sub objdump_info {
 
         next if m/^\s*$/o;
 
-        if (m,^-- \./(.+)$,) {
+        if (m,^-- (?:\./)?(.+)$,) {
             if ($file) {
                 $objdump_info{$file->{name}} = $file;
             }
@@ -205,9 +205,9 @@ sub objdump_info {
                 push @{$file->{NOTES}}, 'File format not recognized';
             } elsif (m/^objdump: .*?: File truncated$/) {
                 push @{$file->{NOTES}}, 'File truncated';
-            } elsif (m/^objdump: \..*?: Packed with UPX$/) {
+            } elsif (m/^objdump: .*?: Packed with UPX$/) {
                 push @{$file->{NOTES}}, 'Packed with UPX';
-            } elsif (m/objdump: \..*?: Invalid operation$/) {
+            } elsif (m/objdump: .*?: Invalid operation$/) {
                 # Don't anchor this regex since it can be interspersed with other
                 # output and hence not on the beginning of a line.
                 push @{$file->{NOTES}}, 'Invalid operation';

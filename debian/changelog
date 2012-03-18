@@ -35,6 +35,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * collection/objdump-info:
     + [NT] Use "fail" from Util.pm rather than embedding a copy of
       it.
+    + [NT] Use Lintian::Collect to find ELF files.
 
   * frontend/lintian:
     + [JW] Fix typo in error message.
