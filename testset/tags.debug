@@ -1,6 +1,7 @@
 E: debug source: build-depends-indep-without-arch-indep
 E: debug source: version-substvar-for-external-package libhello0-dbg -> libhello
 E: hello-dbg: changelog-file-missing-in-native-package
+E: hello: binary-with-bad-dynamic-table usr/bin/hello.dbg
 E: hello: pkg-has-symbols-control-file-but-no-shared-libs
 E: hello: statically-linked-binary usr/bin/hello.dbg
 E: hello: unstripped-binary-or-object usr/bin/hello.dbg
