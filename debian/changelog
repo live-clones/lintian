@@ -4,6 +4,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + Removed:
       - ancient-dpkg-long-filenames-check
       - ancient-dpkg-predepends-check
+      - binary-nmu-uses-old-version-style
       - debian-control-with-duplicate-fields
       - doc-base-file-references-usr-doc
       - duplicate-fields-in-templates
@@ -19,27 +20,17 @@ lintian (2.5.7) UNRELEASED; urgency=low
       - postinst-should-not-set-usr-doc-link
       - x11-games-should-be-in-usr-games
 
-  * checks/copyright-file{,.desc}:
-    + [NT] Remove old tags.
-  * checks/control-file{,.desc}:
-    + [NT] Remove redundant tag.
-  * checks/debconf{,.desc}:
-    + [NT] Remove redundant tag.
-  * checks/fields{,.desc}:
-    + [NT] Remove old tags.
+  * checks/*:
+    + [NT] Remove some old tags that are no longer useful.
+      (Closes: #663516)
   * checks/files{,.desc}:
-    + [NT] Remove old tags.
     + [NT] Remove "manual" lazy loads of data files.
     + [NT] Remove code for the uses-FHS-doc-dir tag.
   * checks/manpages{,.desc}:
-    + [NT] Remove old tags.
     + [RA] Detect hyphen used as minus sign following a groff \f[C] font
       change.  Thanks, Iustin Pop.  (Closes: #664471)
   * checks/menus{,.desc}:
     + [NT] Remove "manual" lazy load of data file.
-    + [NT] Remove old tags.
-  * checks/scripts{,.desc}:
-    + [NT] Remove old tags.
 
   * collection/objdump-info:
     + [NT] Use "fail" from Util.pm rather than embedding a copy of

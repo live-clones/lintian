@@ -3,6 +3,4 @@ Sequence: 6000
 Type: non-native
 Version: 1.0-1.0.1
 Description: Check binary NMU version handling
-Test-For:
- binary-nmu-debian-revision-in-source
- binary-nmu-uses-old-version-style
+Test-For: binary-nmu-debian-revision-in-source

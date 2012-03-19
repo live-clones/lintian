@@ -804,15 +804,6 @@ Certainty: certain
 Info: You use the Origin field though the field value is the default (Debian).
  In this case the field is redundant and should be removed.
 
-Tag: binary-nmu-uses-old-version-style
-Severity: normal
-Certainty: certain
-Ref: devref 5.10.2.1
-Info: The version number of a binary NMU should be formed by appending
- <tt>+b</tt> and a digit to the source version.  This version scheme is
- special-cased by the archive software.  The -x.x.x version number style
- should no longer be used.
-
 Tag: binary-nmu-debian-revision-in-source
 Severity: normal
 Certainty: certain
