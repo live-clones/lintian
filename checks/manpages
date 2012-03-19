@@ -290,13 +290,14 @@ foreach my $file (@{$info->sorted_index}) {
             # Catch hyphens used as minus signs by looking for ones at the
             # beginning of a word, but don't generate false positives on \s-1
             # (small font), \*(-- (pod2man long dash), or things like \h'-1'.
-            # Ignoring hyphens contained in draft mode (.eo).
+            # Ignoring hyphens contained in draft mode (.eo).  Do catch
+            # hyphens after \f[C], a groff font change.
             $draft_mode = 1 if $line =~ /^\.\s*eo/;
             $draft_mode = 0 if $line =~ /^\.\s*ec/;
             if (not $draft_mode
                 and $line =~ /^(
                                 ([^\.].*)?
-                                [\s\'\"\`\(\[]
+                                [\s\'\"\`\(\[\]]
                                 (?<! \\s | \*\( | \(- | \w\' )
                                )?
                               (--?\w+)/ox) {
