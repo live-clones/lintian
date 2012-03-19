@@ -582,8 +582,6 @@ foreach my $file (@{$info->sorted_index}) {
                                     local|sbin|share|
                                     src|spool|tmp)/,x) {
                 tag 'non-standard-dir-in-usr', $file;
-            } elsif ($file =~ m,^usr/share/doc,) {
-                tag 'uses-FHS-doc-dir', $file;
             }
 
             # unless $file =~ m,^usr/[^/]+-linuxlibc1/,; was tied into print
