@@ -1,1 +1,1 @@
-E: some-udeb udeb: udeb-uses-non-gzip-data-tarball
+E: some-udeb udeb: udeb-uses-unsupported-compression-for-data-tarball

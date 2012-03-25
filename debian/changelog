@@ -1,6 +1,8 @@
 lintian (2.5.7) UNRELEASED; urgency=low
 
   * Summary of tag changes:
+    + Added:
+      - udeb-uses-unsupported-compression-for-data-tarball
     + Removed:
       - ancient-dpkg-long-filenames-check
       - ancient-dpkg-predepends-check
@@ -18,11 +20,15 @@ lintian (2.5.7) UNRELEASED; urgency=low
       - package-installs-font-to-usr-x11r6
       - package-uses-obsolete-file
       - postinst-should-not-set-usr-doc-link
+      - udeb-uses-non-gzip-data-tarball
       - x11-games-should-be-in-usr-games
 
   * checks/*:
     + [NT] Remove some old tags that are no longer useful.
       (Closes: #663516)
+  * checks/deb-format{,.desc}:
+    + [NT] Replace old udeb compression tag with a more general
+      one.  (Closes: #664600)
   * checks/files{,.desc}:
     + [NT] Remove "manual" lazy loads of data files.
     + [NT] Remove code for the uses-FHS-doc-dir tag.

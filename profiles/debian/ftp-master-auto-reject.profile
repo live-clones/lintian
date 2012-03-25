@@ -33,9 +33,9 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  preinst-interpreter-without-predepends, section-is-dh_make-template,
  source-field-does-not-match-pkg-name, statically-linked-binary,
  symlink-has-too-many-up-segments, too-many-architectures,
- udeb-uses-non-gzip-data-tarball, uploader-address-is-on-localhost,
- uploader-address-malformed, uploader-name-missing,
- usr-share-doc-symlink-to-foreign-package,
+ udeb-uses-unsupported-compression-for-data-tarball,
+ uploader-address-is-on-localhost, uploader-address-malformed,
+ uploader-name-missing, usr-share-doc-symlink-to-foreign-package,
  usr-share-doc-symlink-without-dependency, wrong-file-owner-uid-or-gid
 
 Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
@@ -62,8 +62,8 @@ Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-
  package-not-lowercase, package-uses-local-diversion,
  section-is-dh_make-template, source-field-does-not-match-pkg-name,
  symlink-has-too-many-up-segments, too-many-architectures,
- udeb-uses-non-gzip-data-tarball, uploader-address-is-on-localhost,
- uploader-address-malformed, uploader-name-missing,
- usr-share-doc-symlink-to-foreign-package
+ udeb-uses-unsupported-compression-for-data-tarball,
+ uploader-address-is-on-localhost, uploader-address-malformed,
+ uploader-name-missing, usr-share-doc-symlink-to-foreign-package
 Overridable: no
 

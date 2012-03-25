@@ -58,7 +58,7 @@ section-is-dh_make-template
 source-field-does-not-match-pkg-name
 symlink-has-too-many-up-segments
 too-many-architectures
-udeb-uses-non-gzip-data-tarball
+udeb-uses-unsupported-compression-for-data-tarball
 uploader-address-is-on-localhost
 uploader-address-malformed
 uploader-name-missing

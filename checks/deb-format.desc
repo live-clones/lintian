@@ -39,13 +39,15 @@ Info: tar produced an error while listing the contents of the data
  member of this package.  This probably means there's something broken or
  at least strange about the way the package was constructed.
 
-Tag: udeb-uses-non-gzip-data-tarball
+Tag: udeb-uses-unsupported-compression-for-data-tarball
 Severity: serious
 Certainty: certain
-Info: This udeb contains non-gzip data tarballs.  udpkg,
- debian-installer's dpkg equivalent, does not support non-gzip
- tarballs which means udebs that contain them will not be
- installable. This can also break the daily or weekly d-i images.
+Info: The data tarball of this udeb package is not compressed in format
+ that udpkg (debian-installer's dpkg equivalent) does not support.  Thus
+ the udeb is likely to be uninstallable and could break daily or weekly
+ d-i images.
+ .
+ Currently, udpkg supports .gz and .xz compressed tarballs.
 
 Tag: data.tar.xz-member-without-dpkg-pre-depends
 Severity: pedantic
