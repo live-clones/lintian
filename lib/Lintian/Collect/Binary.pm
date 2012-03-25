@@ -256,17 +256,17 @@ sub java_info {
         chomp;
         next if m/^\s*$/o;
 
-        if (m#^-- \./(.+)$#o) {
-            $file = $1;
-            $java_info{$file}->{files} = [];
-            $file_list = $java_info{$file}->{files};
-            $manifest = 0;
-        }
-        elsif (m#^-- MANIFEST: \./(?:.+)$#o) {
+        if (m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
             # TODO: check $file == $1 ?
             $java_info{$file}->{manifest} = {};
             $manifest = $java_info{$file}->{manifest};
             $file_list = 0;
+        }
+        elsif (m#^-- (?:\./)?(.+)$#o) {
+            $file = $1;
+            $java_info{$file}->{files} = [];
+            $file_list = $java_info{$file}->{files};
+            $manifest = 0;
         }
         else {
             if($manifest && m#^  (\S+):\s(.*)$#o) {

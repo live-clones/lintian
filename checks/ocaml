@@ -42,7 +42,7 @@ my %provided_o;
 open ARINFO, '<', 'ar-info';
 while (<ARINFO>) {
     chomp;
-    if (/^\.\/([^:]+): (.*)$/) {
+    if (/^(?:\.\/)?([^:]+): (.*)$/) {
         my $filename = $1;
         my $dirname = dirname($filename);
         foreach (split(m/ /o, $2)) {

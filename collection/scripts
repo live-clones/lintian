@@ -23,26 +23,24 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Lintian::Collect;
 use Util qw(fail);
 
-my (undef, undef, $dir) = @ARGV;
+my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 open SCRIPTS, '>', "$dir/scripts" or fail "cannot open scripts output file: $!";
-open INDEX, '<', "$dir/index" or fail "cannot open index file: $!";
 
 my $file;
 my $magic;
 my $scriptpath;
 
-while (<INDEX>) {
-    next unless /^-/;   # skip non-files
-    chop;
+foreach my $origfile (@{ $info->sorted_index }) {
+    next unless $info->index->{$origfile}->{type} eq '-';
+    my $file = $origfile;
+    $file =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $file =~ s/\\\\/\\/g;
 
-    # Extract the filename field from the tar-like file index.
-    # Note that the split is done with an explicit limit so that filenames
-    # with embedded spaces are handled correctly.
-    $file = (split(' ', $_, 6))[5];
-    $file =~ s/ link to .*//;    # cut off info about hard links
     # This used to call fail() instead of next.  However, the check to
     # see if all files in the index can be opened should be done elsewhere.
     open(FILE, '<', "$dir/unpacked/$file") or next;
@@ -69,7 +67,6 @@ while (<INDEX>) {
     }
     close(FILE);
 }
-close(INDEX);
 close(SCRIPTS) or fail("cannot write scripts file: $!");
 
 open SCRIPTS, '>', "$dir/control-scripts"

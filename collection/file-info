@@ -26,10 +26,12 @@ use Cwd qw(realpath);
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
+use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 
 ($#ARGV == 2) or fail 'syntax: file-info <pkg> <type> <dir>';
 my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 my $last = '';
 
 my $helper = realpath("$0-helper");
@@ -42,9 +44,6 @@ if ( -e "$dir/file-info" ) {
 if ( -e $outfile ) {
     unlink ($outfile) or fail "unlink file-info.gz: $!";
 }
-
-open INDEX, '<', "$dir/index"
-    or fail("cannot open index file: $!");
 
 chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
@@ -59,16 +58,13 @@ my %opts = ( pipe_in => FileHandle->new,
 spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$helper], '|', ['gzip', '--best', '-c']);
 $opts{pipe_in}->blocking(1);
 
-while (<INDEX>) {
-    chomp;
-    $_ = (split(' ', $_, 6))[5];
-    s/ link to .*//;
-    s/ -> .*//;
-    s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    s/\\\\/\\/;
-    printf {$opts{pipe_in}} "%s\0", $_;
+foreach my $file (@{ $info->sorted_index }) {
+    next unless $file; # ignore "root-dir" which has "no name" (post stripping).
+    my $c = $file;
+    $c =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $c =~ s/\\\\/\\/g;
+    printf {$opts{pipe_in}} "%s\0", $c;
 }
-close(INDEX) or fail("cannot close index file: $!");
 
 close $opts{pipe_in};
 reap(\%opts);

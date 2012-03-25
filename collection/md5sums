@@ -24,12 +24,14 @@ use warnings;
 
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Util;
 
 ($#ARGV == 2) or fail 'syntax: md5sums <pkg> <type> <dir>';
 
 my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/md5sums" ) {
     unlink "$dir/md5sums" or fail "unlink md5sums: $!";
@@ -43,18 +45,14 @@ my %opts = ( pipe_in => FileHandle->new,
              fail => 'error' );
 spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
 $opts{pipe_in}->blocking(1);
-open(INDEX, '<', "$dir/index")
-    or fail("cannot open index file: $!");
-while (<INDEX>) {
-    next unless m/^-/;
-    chop;
-    $_ = (split(' ', $_, 6))[5];
-    s/ link to .*//;
-    s/\\(\d+)/chr(oct($1))/eg;
-    s/\\\\/\\/g;
-    printf {$opts{pipe_in}} "%s\0", $_;
+
+foreach my $file (@{ $info->sorted_index }) {
+    next unless $info->index->{$file}->{type} =~ m/^[-h]/;
+    my $c = $file;
+    $c =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $c =~ s/\\\\/\\/g;
+    printf {$opts{pipe_in}} "%s\0", $c;
 }
-close(INDEX);
 
 close $opts{pipe_in};
 reap(\%opts);

@@ -23,17 +23,16 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Lintian::Collect;
 use Util qw(fail);
 
-my ($pkg, undef, $dir) = @ARGV;
+my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 # Sanity check
 unless ( -d "$dir/unpacked/") {
     fail "java-info called with the wrong dir argument!";
 }
-
-open INDEX, '<', "$dir/index"
-    or fail "cannot open index: $!";
 
 open OUT, '>', "$dir/java-info"
     or fail "cannot open java-info: $!";
@@ -41,12 +40,13 @@ open OUT, '>', "$dir/java-info"
 chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
-while (<INDEX>) {
-    chomp;
-    $_ = (split(' ', $_, 6))[5];
-    next if / -> .*/;           # We skip symlinks.
-    if (m#\S+\.jar$#i) {
-        my $file = $_;
+foreach my $origfile (@{ $info->sorted_index }) {
+    my $ftype = $info->index->{$origfile}->{type};
+    next unless $ftype eq '-' or $ftype eq 'h';
+    my $file = $origfile;
+    $file =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $file =~ s/\\\\/\\/g;
+    if ($file =~ m#\S+\.jar$#i) {
         my $has_manifest = 0;
 
         # This script needs unzip, there's no way around.
@@ -85,7 +85,6 @@ while (<INDEX>) {
     }
 }
 
-close INDEX;
 close OUT or fail("cannot write java-info: $!");
 
 exit 0

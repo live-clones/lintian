@@ -24,30 +24,31 @@ use warnings;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use FileHandle;
+use Lintian::Collect;
 use Lintian::Command qw(spawn);
 use Util qw(fail);
 
 ($#ARGV == 2) or fail 'syntax: ar-info <pkg> <type> <dir>';
 my ($pkg, $type, $dir) = @ARGV;
+my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/ar-info" ) {
     unlink "$dir/ar-info" or fail "unlink ar-info: $!";
 }
 
-# Open before chdir, as unpacked may be a symlink
-open INDEX, '<', "$dir/index"
-    or fail("cannot open index file: $!");
 open OUT, '>', "$dir/ar-info"
     or fail("cannot open ar-info file: $!");
 
 chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
-while (<INDEX>) {
-    chomp;
-    next unless /\.a$/;
-    my $file = (split(' ', $_, 6))[5];
-    next unless -f $file;
+foreach my $origfile (@{ $info->sorted_index }) {
+    next unless $origfile =~ m/\.a$/;
+    next unless -f $origfile and not -l $origfile;
+    my $file = $origfile;
+    $file =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $file =~ s/\\\\/\\/g;
+
     my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
     spawn($opts, [ 'ar', 't', $file ]);
     print OUT "$file:";
@@ -60,7 +61,6 @@ while (<INDEX>) {
     $opts->{harness}->finish;
 }
 
-close(INDEX);
 close(OUT) or fail("cannot write ar-info: $!");
 
 # Local Variables:
