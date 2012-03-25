@@ -40,8 +40,13 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * collection/*:
     + [NT] Use Lintian::Collect to access the package index.
+  * collection/bin-pkg-control{,.desc}:
+    + [NT] Compress control-index file and bump version of
+      bin-pkg-control.
   * collection/file-info{,.desc}:
     + [NT] Compress file-info output and bump version of file-info.
+  * collection/index{,.desc}:
+    + [NT] Compress index output and bump version of index.
   * collection/objdump-info:
     + [NT] Use "fail" from Util.pm rather than embedding a copy of
       it.

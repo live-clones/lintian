@@ -114,11 +114,11 @@ sub _fetch_index_data {
     my (%idxh, %dir_counts);
     my $num_idx;
     my %rhlinks;
-    open my $idx, '<', "$base_dir/$index"
-        or croak "cannot open index file $base_dir/$index: $!";
+    open my $idx, '-|', 'gzip', '-dc', "$base_dir/${index}.gz"
+        or croak "cannot open index file $base_dir/${index}.gz: $!";
     if ($indexown) {
-        open $num_idx, '<', "$base_dir/$indexown"
-            or croak "cannot open index file $base_dir/$indexown: $!";
+        open $num_idx, '-|', 'gzip', '-dc', "$base_dir/${indexown}.gz"
+            or croak "cannot open index file $base_dir/${indexown}.gz: $!";
     }
     while (<$idx>) {
         chomp;

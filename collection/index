@@ -37,8 +37,12 @@ use Lintian::Processable::Package;
 ($#ARGV == 2) or fail 'syntax: index <pkg> <type> <dir>';
 my ($pkg, $type, $dir) = @ARGV;
 
-unlink "$dir/index" or fail "Could not unlink index: $!" if -e "$dir/index";
-unlink "$dir/index-errors" or fail "Could not unlink index-errors: $!" if -e "$dir/index-errors";
+unlink "$dir/index" or fail "Could not unlink index: $!"
+    if -e "$dir/index";
+unlink "$dir/index.gz" or fail "Could not unlink index.gz: $!"
+    if -e "$dir/index.gz";
+unlink "$dir/index-errors" or fail "Could not unlink index-errors: $!"
+    if -e "$dir/index-errors";
 
 if ($type ne 'source') {
     index_deb();
@@ -187,8 +191,9 @@ sub index_src {
     }
     # Now that we have the file names we want, write them out sorted to the index
     # file.
-    spawn({ fail => 'error', out_append => "$dir/index" },
-          sub { print @result }, '|', ['sort', '-k', '6']);
+    spawn({ fail => 'error', out => "$dir/index.gz" },
+          sub { print @result }, '|', ['sort', '-k', '6'],
+          '|', ['gzip', '--best', '-c']);
     return 1;
 }
 
@@ -201,7 +206,7 @@ sub index_deb {
     }
 
     $job = { fail => 'error',
-             out  => "$dir/index",
+             out  => "$dir/index.gz",
              err  => "$dir/index-errors" };
     push @jobs, $job;
     # (replaces dpkg-deb -c)
@@ -210,10 +215,11 @@ sub index_deb {
           ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
           '|', ['tar', 'tfv', '-'],
           '|', ['sed', '-e', 's/^h/-/'],
-          '|', ['sort', '-k', '6'], '&');
+          '|', ['sort', '-k', '6'],
+          '|', ['gzip', '--best', '-c'], '&');
 
     $job = { fail => 'error',
-             out  => "$dir/index-owner-id",
+             out  => "$dir/index-owner-id.gz",
              err  => '/dev/null' };
     push @jobs, $job;
     # (replaces dpkg-deb -c)
@@ -222,7 +228,8 @@ sub index_deb {
           ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
           '|', ['tar', '--numeric-owner', '-tvf', '-'],
           '|', ['sed', '-e', 's/^h/-/'],
-          '|', ['sort', '-k', '6'], '&');
+          '|', ['sort', '-k', '6'],
+          '|', ['gzip', '--best', '-c'], '&');
 
     reap(@jobs);
     undef @jobs;

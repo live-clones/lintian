@@ -33,6 +33,10 @@ my (@jobs, $job);
 if ( -e "$dir/control"){
     delete_dir ("$dir/control") or fail 'Cannot remove old control dir';
 }
+unlink "$dir/control-index" or fail "control-index: $!"
+    if -e "$dir/control-index";
+unlink "$dir/control-index.gz" or fail "control-index.gz: $!"
+    if -e "$dir/control-index.gz";
 
 mkdir ("$dir/control", 0777) or fail "mkdir control: $!";
 
@@ -51,14 +55,15 @@ spawn($job,
       ['tar', 'xf', "$dir/control.tar", '-C', "$dir/control", '&']);
 
 $job = { fail => 'error',
-         out  => "$dir/control-index",
+         out  => "$dir/control-index.gz",
          err  => "$dir/control-index-errors" };
 
 push @jobs, $job;
 # create index of control.tar.gz
 spawn($job,
       ['tar', 'tvf', "$dir/control.tar"],
-      '|', ['sort', '-k', '6'], '&');
+      '|', ['sort', '-k', '6'],
+      '|', ['gzip', '--best', '-c'], '&');
 
 reap(@jobs);
 undef @jobs;
