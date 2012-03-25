@@ -35,8 +35,12 @@ my $last = '';
 my $helper = realpath("$0-helper");
 my $outfile = "$dir/file-info.gz";
 
+if ( -e "$dir/file-info" ) {
+    unlink ("$dir/file-info") or fail "unlink file-info: $!";
+}
+
 if ( -e $outfile ) {
-    unlink($outfile) or fail "unlink file-info: $!";
+    unlink ($outfile) or fail "unlink file-info.gz: $!";
 }
 
 open INDEX, '<', "$dir/index"
