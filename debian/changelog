@@ -38,6 +38,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/menus{,.desc}:
     + [NT] Remove "manual" lazy load of data file.
 
+  * collection/file-info{,.desc}:
+    + [NT] Compress file-info output and bump version of file-info.
   * collection/objdump-info:
     + [NT] Use "fail" from Util.pm rather than embedding a copy of
       it.

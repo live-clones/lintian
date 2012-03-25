@@ -33,7 +33,7 @@ my ($pkg, $type, $dir) = @ARGV;
 my $last = '';
 
 my $helper = realpath("$0-helper");
-my $outfile = "$dir/file-info";
+my $outfile = "$dir/file-info.gz";
 
 if ( -e $outfile ) {
     unlink($outfile) or fail "unlink file-info: $!";
@@ -52,7 +52,7 @@ chdir ("$dir/unpacked")
 my %opts = ( pipe_in => FileHandle->new,
              out => $outfile,
              fail => 'never' );
-spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$helper]);
+spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$helper], '|', ['gzip', '--best', '-c']);
 $opts{pipe_in}->blocking(1);
 
 while (<INDEX>) {

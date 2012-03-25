@@ -42,8 +42,8 @@ sub file_info {
     my $base_dir = $self->base_dir();
     my %file_info;
     # sub file_info Needs-Info file-info
-    open(my $idx, '<', "$base_dir/file-info")
-        or croak "cannot open $base_dir/file-info: $!";
+    open my $idx, '-|', 'gzip', '-dc', "$base_dir/file-info.gz"
+        or croak "cannot open $base_dir/file-info.gz: $!";
     while (<$idx>) {
         chomp;
 
