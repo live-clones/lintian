@@ -622,7 +622,10 @@ Info: The indicated program run in a maintainer script has a prepended
  path prepended.  dpkg ensures that the PATH is set to a reasonable value,
  and prepending a path may prevent the local administrator from using a
  replacement version of a command for some local reason.
-Ref: policy 6.1
+ .
+ If the path is required to test a program for existence, one of the suggested
+ workarounds in the developer's reference can be used.
+Ref: policy 6.1, devref 6.4
 
 Tag: ancient-dpkg-epoch-check
 Severity: minor
