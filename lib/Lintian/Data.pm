@@ -71,7 +71,15 @@ sub new {
                 my ($key, $val);
                 if (defined $separator) {
                     ($key, $val) = split(/$separator/, $_, 2);
-                    $val = $code->($key, $val) if $code;
+                    if ($code) {
+                        my $pval = $data{$type}{$key};
+                        $val = $code->($key, $val, $pval);
+                        next if ! defined $val && defined $pval;
+                        unless (defined $val) {
+                            next if defined $pval;
+                            croak "undefined value for $key (type: $type)";
+                        }
+                    }
                 } else {
                     ($key, $val) = ($_ => 1);
                 }
@@ -150,6 +158,26 @@ easily editable files.
 NB: By default Lintian::Data is lazy and defers loading of the data
 file until it is actually needed.
 
+=head2 Interface for the CODE argument
+
+This section describes the interface between for the CODE argument
+for the class method new.
+
+The sub will be called once for each key/pair with three arguments,
+KEY, VALUE and CURVALUE.  The first two are the key/value pair parsed
+from the data file and CURVALUE is current value assoicated with the
+key.  CURVALUE will be C<undef> the first time the sub is called with
+that KEY argument.
+
+The sub can then modify VALUE in some way and return the new value for
+that KEY.  If CURVALUE is not C<undef>, the sub may return C<undef> to
+indicate that the current value should still be used.  It is not
+permissible for the sub to return C<undef> if CURVALUE is C<undef>.
+
+Where Perl semantics allow it, the sub can modify CURVALUE and the
+changes will be reflected in the result.  As an example, if CURVALUE
+is a hashref, new keys can be inserted etc.
+
 =head1 CLASS METHODS
 
 =over 4
@@ -166,9 +194,7 @@ If SEPARATOR is given, it will be used as a regular expression for splitting
 the lines into key/value pairs.
 
 If CODE is also given, it is assumed to be a sub that will pre-process
-the key/value pairs.  The sub will be called once for each key/pair
-value with the key as the first and the value as the second argument.
-The value returned is will be used as the value for the key.
+the key/value pairs.  See the L</Interface for the CODE argument> above.
 
 A given file will only be loaded once.  If new() is called again with the
 same TYPE argument, the data previously loaded will be reused, avoiding
@@ -211,6 +237,11 @@ new() was called without a TYPE argument.
 
 The TYPE argument to new() did not correspond to a file in the F<data>
 directory of the Lintian root.
+
+=item undefined value for %s (type: %s)
+
+The CODE argument return undef for the KEY and no previous value for
+that KEY was available.
 
 =back
 

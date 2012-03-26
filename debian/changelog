@@ -61,6 +61,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Lazily evaluate the data file.
   * lib/Lintian/Data.pm:
     + [NT] Lazily load data files.
+    + [NT] Allow pre-process sub to alter existing value for a key
+      by passing the previous value as third argument.
   * lib/Lintian/Profile.pm:
     + [NT] Normalize profile name and replace "parents" with
       "profile_list".  The latter also includes the current profile
