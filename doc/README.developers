@@ -46,7 +46,8 @@ contains unpacking scripts
 
 =item data
 
-data sets used by checks via the Lintian::Data API
+Symlink to the data set for the Debian vendor profiles.  See entry for
+vendors below.
 
 =item debian
 
@@ -87,6 +88,12 @@ the new test suite
 =item testset
 
 the legacy test suite
+
+=item vendors
+
+Per vendor data sets used by checks (and Lintian::Architecture) via
+the Lintian::Data API.  Data set is stored in I<vendors/profilename/data>,
+where I<profilename> is the "full name" of the profile (e.g. ubuntu/main).
 
 =back
 
