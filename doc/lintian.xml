@@ -898,6 +898,141 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
         </sect3>
       </sect2>
     </sect1>
+    <sect1 label="2.6" id="section-2.6">
+      <title>Vendor specific data files</title>
+      <para>
+        Lintian uses a number of data files for various checks,
+        ranging from common spelling mistakes to lists of
+        architectures.  While some of these data files are generally
+        applicable for all vendors (or Debian derivatives), others
+        are not.
+      </para>
+      <para>
+        Starting with version 2.5.7, Lintian supports vendor
+        specific data files.  This allows vendors to deploy their
+        own data files tailored for their kind of system.  Lintian
+        supports both extending an existing data file and completely
+        overriding it.
+      </para>
+      <sect2 label="2.6.1" id="section-2.6.1">
+        <title id="section-2.6.1-title">Load paths and order</title>
+        <para>
+          Lintian will search the following directories in order for
+          vendor specific data files:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              <filename>$HOME/.lintian/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <filename>/etc/lintian/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <filename>$LINTIAN_ROOT/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
+            </para>
+          </listitem>
+          </itemizedlist>
+        <para>
+          If none of the directories exists or none of them provide
+          the data file in question, Lintian will (recursively)
+          retry with the parent of the vendor (if any).  If the
+          vendor and none of its parents provide the data file,
+          Lintian will terminate with an error.
+        </para>
+      </sect2>
+      <sect2 label="2.6.2" id="section-2.6.2">
+        <title>Basic syntax of data files</title>
+        <para>
+          Generally, data files are read line by line.  Leading
+          whitespace of every line is removed and (now) empty lines
+          are ignored.  Lines starting with a <literal>#</literal>
+          are comments and are also ignored by the parser.  Lines
+          are processed in the order they are read.
+        </para>
+        <para>
+          If the first character of the line is
+          a <literal>@</literal>, the first word is parsed as a
+          special processing instruction.  The rest of the line
+          is a parameter to that processing instruction.  Please
+          refer to <xref linkend="section-2.6.2.1" endterm="section-2.6.2.1-title" />.
+        </para>
+        <para>
+          All other lines are read as actual data.  If the data file
+          is a table (or map), the lines will parsed as key-value
+          pairs.  If the data file is a list (or set), the full line
+          will be considered a single value of the list.
+        </para>
+        <para>
+          It is permissible to define the same key twice with a
+          different value.  In this case, the value associated with
+          the key is generally redefined.  There are very rare
+          exceptions to this rule, where the data file is a table of
+          tables (of values).  In this case, a recurring key is used to
+          generate the inner table.
+        </para>
+
+        <sect3 label="2.6.2.1" id="section-2.6.2.1">
+          <title id="section-2.6.2.1-title">List of processing instructions</title>
+          <para>
+            The following processing instructions are recognised:
+          </para>
+          <variablelist>
+            <varlistentry>
+              <term><emphasis>@delete <replaceable>ENTRY</replaceable></emphasis></term>
+              <listitem>
+                <para>
+                  Removes a single entry denoted by <replaceable>ENTRY</replaceable> that
+                  has already been parsed.
+                </para>
+                <para>
+                  It is permissible to list a non-existent entry, in which case the
+                  instruction has no effect. This instruction does
+                  <emphasis>not</emphasis> prevent the entry from being (re-)defined later,
+                  it only affects the current definition of the entry.
+                </para>
+                <para>
+                  For key-pair based data files, <replaceable>ENTRY</replaceable> must
+                  match the key.  For single value data files,
+                  <replaceable>ENTRY</replaceable> must match the line to remove.
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>@include-parent</emphasis></term>
+              <listitem>
+                <para>
+                  Processes parent data file of the current data file.
+                </para>
+                <para>
+                  The informal semantics of this instruction is that it reads the "next"
+                  data file in the vendor "chain".  The parsing of the parent is comparable
+                  to a C-style include or sourcing a shell script.
+                </para>
+                <para>
+                  More formally, let <replaceable>CP</replaceable> be the name of the vendor
+                  profile that defines the the data file containing the instruction.  Let
+                  the parent of <replaceable>CP</replaceable> be referred to as
+                  <replaceable>PCP</replaceable>.
+                </para>
+                <para>
+                  Lintian will search for the data file provided by
+                  <replaceable>PCP</replaceable> using the rules as specified in
+                  <xref linkend="section-2.6.1" endterm="section-2.6.1-title" />.  If no
+                  data file is found, Lintian will terminate the parsing with an error.
+                  Thus, this instruction can only be used by profiles that extends other
+                  profiles.
+                </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+      </sect2>
+    </sect1>
   </chapter>
 
   <chapter label="3" id="chapter-3">
