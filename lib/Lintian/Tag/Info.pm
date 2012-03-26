@@ -36,7 +36,7 @@ our $MANURL
 
 # Stores the parsed manual reference data.  Loaded the first time info()
 # is called.
-our %MANUALS;
+our $MANUALS = Lintian::Data->new ('output/manual-references', qr/::/, \&_load_manual_data);
 
 # Map severity/certainty levels to tag codes.
 our %CODES = (
@@ -152,26 +152,17 @@ formatted output.
 
 =cut
 
-# Load manual reference data into %MANUALS.  This information doesn't have
-# a single unique key and has multiple data values per key, so we don't
-# try to use the Lintian::Data interface.  Instead, we read a file
-# delimited by double colons.  We do use a path similar to Lintian::Data
-# to keep such files in the same general location.
+# Parse manual reference data from the data file.
 sub _load_manual_data {
-    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
-    open(REFS, '<', "$root/data/output/manual-references")
-        or fail("can't open $root/data/output/manual-references: $!");
-    local $_;
-    while (<REFS>) {
-        chomp;
-        next if /^\#/;
-        next if /^\s*$/;
-        next unless /^(.+?)::(.*?)::(.+?)::(.*?)$/;
-        my ($manual, $section, $title, $url) = split('::');
-        $MANUALS{$manual}{$section}{title} = $title;
-        $MANUALS{$manual}{$section}{url} = $url;
+    my ($key, $rawvalue, $pval) = @_;
+    my ($section, $title, $url) = split m/::/, $rawvalue, 3;
+    my $ret = undef;
+    if (not defined $pval) {
+        $ret = $pval = {};
     }
-    close REFS;
+    $pval->{$section}{title} = $title;
+    $pval->{$section}{url} = $url;
+    return $ret;
 }
 
 # Format a reference to a manual in the HTML that Lintian uses internally
@@ -180,12 +171,12 @@ sub _load_manual_data {
 # argument isn't a known manual.
 sub _manual_reference {
     my ($manual, $section) = @_;
-    _load_manual_data unless %MANUALS;
-    return '' unless exists $MANUALS{$manual}{''};
+    return '' unless $MANUALS->known ($manual);
 
+    my $man = $MANUALS->value ($manual);
     # Start with the reference to the overall manual.
-    my $title = $MANUALS{$manual}{''}{title};
-    my $url   = $MANUALS{$manual}{''}{url};
+    my $title = $man->{''}{title};
+    my $url   = $man->{''}{url};
     my $text  = $url ? qq(<a href="$url">$title</a>) : $title;
 
     # Add the section information, if present, and a direct link to that
@@ -197,9 +188,9 @@ sub _manual_reference {
     } elsif ($section and $section =~ /^[A-Z\d.]+$/) {
         $text .= " section $section";
     }
-    if ($section and exists $MANUALS{$manual}{$section}) {
-        my $sec_title = $MANUALS{$manual}{$section}{title};
-        my $sec_url   = $MANUALS{$manual}{$section}{url};
+    if ($section and exists $man->{$section}) {
+        my $sec_title = $man->{$section}{title};
+        my $sec_url   = $man->{$section}{url};
         $text .= $sec_url ? qq[ (<a href="$sec_url">$sec_title</a>)] : qq[ ($sec_title)];
     }
 

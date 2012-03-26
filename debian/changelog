@@ -67,6 +67,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Normalize profile name and replace "parents" with
       "profile_list".  The latter also includes the current profile
       name.
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Use Lintian::Data to load the manual-references data
+      file instead using an ad-hoc parser.
   * lib/Util.pm:
     + [JW] Consider duplicate fields a syntax error in dctrl files.
       Previously, duplicate fields were silently ignored (except
