@@ -29,6 +29,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
+  * checks/fields.desc:
+    + [NT] Add devref reference.
   * checks/files{,.desc}:
     + [NT] Remove "manual" lazy loads of data files.
     + [NT] Remove code for the uses-FHS-doc-dir tag.
