@@ -56,17 +56,20 @@ Info: This example script uses a relative path to locate its interpreter.
 Tag: unusual-interpreter
 Severity: normal
 Certainty: possible
-Info: This package contains a script for an interpreter that the Lintian
- maintainers have not heard of.  It could be a typo for a common
- interpreter.  If not, please file a wishlist bug on lintian so that the
- Lintian maintainers can add this interpreter to their list.
+Info: This package contains a script for an interpreter that is not shipped
+ in the package and is not known to Lintian.  It is possible that there is
+ a typo or the interpreter is not executable.  If not, please file a
+ wishlist bug against lintian, so it can be added to the list of known
+ interpreters.
 
 Tag: example-unusual-interpreter
 Severity: pedantic
 Certainty: possible
-Info: This package contains an example script for an interpreter that the
- Lintian maintainers have not heard of.  It could be a typo for a common
- interpreter.
+Info: This package contains an example script for an interpreter that
+ is not shipped in the package and is not known to Lintian.  It is
+ possible that there is a typo or the interpreter is not executable.
+ If not, please file a wishlist bug against lintian, so it can be
+ added to the list of known interpreters.
 
 Tag: script-uses-bin-env
 Severity: normal

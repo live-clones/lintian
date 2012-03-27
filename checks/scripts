@@ -387,7 +387,16 @@ for my $filename (sort keys %{$info->scripts}) {
     } elsif ($interpreter eq '/bin/env') {
         script_tag('script-uses-bin-env', $filename);
     } else {
-        script_tag('unusual-interpreter', $filename, "#!$interpreter");
+        my $pinter = 0;
+        if ($interpreter =~ m,^/,) {
+            # Check if the package ships the interpreter (and it is
+            # executable).
+            my $interfile = substr $interpreter, 1;
+            my $index_info = $info->index->{$interfile};
+            $pinter = 1 if $index_info && ($index_info->{operm} & 0111);
+        }
+        script_tag('unusual-interpreter', $filename, "#!$interpreter")
+            unless $pinter;
     }
 
     # Check for obsolete perl libraries
