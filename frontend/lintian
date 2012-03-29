@@ -465,6 +465,14 @@ sub cfg_verbosity {
     $opt{'verbose'} = $val;
 }
 
+# Process overrides option in the cfg files
+sub cfg_override {
+    my ($var, $val) = @_;
+    return if defined $opt{'no-override'};
+    # This option is inverted in the config file
+    $opt{'no-override'} = !$val;
+}
+
 # Hash used to process commandline options
 my %opthash = (                 # ------------------ actions
                'setup-lab|S' => \&record_action,
@@ -539,7 +547,7 @@ my %cfghash = (
                'info'                 => \$opt{'info'},
                'pedantic'             => \&cfg_display_level,
                'quiet'                => \&cfg_verbosity,
-               'no-override'          => \$opt{'no-override'},
+               'override'             => \&cfg_override,
                'show-overrides'       => \$opt{'show-overrides'},
                'verbose'              => \&cfg_verbosity,
     );

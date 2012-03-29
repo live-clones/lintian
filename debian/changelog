@@ -65,6 +65,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [JW] Fix typo in error message.
+    + [JW,NT] Fix handling of "override" option in the lintianrc file.
+      (Closes: #666207)
 
   * lib/Lintian/Architecture.pm:
     + [NT] Lazily evaluate the data file.

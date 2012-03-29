@@ -285,7 +285,7 @@ in changes files.  As of 2.5.1, Lintian always does this.
 
 Don't use the overrides file.
 
-This option overrides the B<overrides> variable in the configuration
+This option overrides the B<override> variable in the configuration
 file.
 
 =item B<--pedantic>
