@@ -190,6 +190,22 @@ post_test
     but it may be useful for other cases where the output of Lintian
     may change on different systems.
 
+test_calibration
+    If present and executable, this script is run after the Lintian
+    output has been generated and after post_test (if present).  The
+    script can be used to calibrate the expected output or actual
+    output.
+
+    It is useful for cases the expected output is architecture
+    dependent beyond what the post_test script can handle.
+
+    The script will be passed 3 arguments, the "expected output" file,
+    the "actual output" file and file name to write the "calibrated
+    expected output".  The script may modify the "actual output" file
+    and create the calibration file, which (if it is created) will
+    be used instead of the original "expected output" file.
+
+
 Be aware that Git doesn't track directories, only files, so any
 directory must contain at least one file to exist in a fresh Git
 checkout.  Test cases that just use the template must therefore still

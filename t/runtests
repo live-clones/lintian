@@ -371,6 +371,8 @@ sub test_package {
 
     my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
+    my $expected = "$origdir/tags";
+    my $origexp = $expected;
 
     if (-f "$origdir/skip") {
         msg_print "skipped.\n";
@@ -428,7 +430,15 @@ sub test_package {
     runsystem_ok("sed -ri -f $origdir/post_test $rundir/tags.$pkg")
         if -e "$origdir/post_test";
 
-    return _check_result($testdata, "$origdir/tags", "$rundir/tags.$pkg");
+    if ( -x "$origdir/test_calibration" ) {
+        my $calibrated = "$rundir/expected.$pkg.calibrated";
+        msg_print 'running test_calibration hook... ' if $VERBOSE;
+        runsystem_ok ("$origdir/test_calibration", $expected,
+                      "$rundir/tags.$pkg", $calibrated);
+        $expected = $calibrated if -e $calibrated;
+    }
+
+    return _check_result($testdata, $expected, "$rundir/tags.$pkg", $origexp);
 }
 
 sub _builder_tests {
@@ -618,7 +628,7 @@ sub generic_test_runner {
 }
 
 sub _check_result {
-    my ($testdata, $expected, $actual) = @_;
+    my ($testdata, $expected, $actual, $origexp) = @_;
     # Compare the output to the expected tags.
     my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
 
@@ -676,6 +686,31 @@ sub _check_result {
         }
         close $etags;
         if (%test_for) {
+            if ($origexp && $origexp ne $expected) {
+                # Test has been calibrated, check if some of the
+                # "Test-For" has been calibrated out.  (Happens with
+                # binaries-hardening on some architectures).
+                open my $oe, '<', $expected or fail "open $expected: $!";
+                my %cp_tf = %test_for;
+                while ( <$oe> ) {
+                    next if m/^N: /;
+                    # Some of the traversal tests are skipped; accept that in the output
+                    next if m/tainted/o && m/skipping/o;
+                    if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
+                        msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+                        msg_print ": Invalid line:\n$_";
+                        $okay = 0;
+                        next;
+                    }
+                    print STDERR "N: Kept tag: $1\n";
+                    delete $cp_tf{$1};
+                }
+                close $oe;
+                # Remove tags that has been calibrated out.
+                foreach my $tag (keys %cp_tf) {
+                    delete $test_for{$tag};
+                }
+            }
             for my $tag (sort keys %test_for) {
                 msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
                 msg_print ": Tag $tag listed in Test-For but not found\n";

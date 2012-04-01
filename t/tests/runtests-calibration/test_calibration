@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+echo "E: runtests-calibration source: lintian-says-goodbye" >> "$2"
+echo "E: runtests-calibration source: lintian-says-goodbye" > "$3"

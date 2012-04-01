@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib "$ENV{LINTIAN_ROOT}/lib";
+
+use Lintian::Data;
+use Lintian::Profile;
+
+sub _split_hash {
+    my (undef, $val) = @_;
+    my $hash = {};
+    map { $hash->{$_} = 1 } split m/\s*,\s*/o, $val;
+    return $hash;
+}
+my $PROFILE = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
+                                     ["$ENV{'LINTIAN_ROOT'}/profiles"]);
+
+Lintian::Data->set_vendor ($PROFILE);
+
+my $HARDENING = Lintian::Data->new ('binaries/hardening-tags', qr/\s*\|\|\s*/o, \&_split_hash);
+
+my ($expected, undef, $calibrated) = @ARGV;
+
+my $arch = `dpkg-architecture -qDEB_HOST_ARCH`;
+chomp $arch;
+
+die "Unknown architecture: $arch" unless $HARDENING->known ($arch);
+
+open my $cfd, '>', $calibrated or die "open $calibrated: $!";
+open my $efd, '<', $expected or die "open $expected: $!";
+
+while (my $line = <$efd>) {
+    my $dp = 0;
+    if ($line =~ m/^.: [^:]++: (hardening-\S+)/) {
+        # It is a hardening flag, maybe it is not for this architecture
+        $dp = 1 if $HARDENING->value ($arch)->{$1};
+    } else {
+        # only calibrate hardening flags.
+        $dp = 1;
+    }
+
+    print $cfd $line if $dp;
+}
+
+close $efd;
+close $cfd or die "close $expected: $!";
