@@ -1,0 +1,75 @@
+# Manually maintained table of embedded libraries.
+#
+# Basic syntax:
+#   key ||<regex>
+#   key || [options] ||<regex>
+#
+# Where [options] is space separated list of:
+#
+#  source=<src>
+#     - If present, it declares that this library is built from the
+#       source package <src>
+#     - If both "source" and "source-regex" are omitted, then
+#       Lintian will defailt to using "source" with a value equal
+#       to the key.
+#     - Cannot be used with "source-regex"
+#
+#  source-regex=<srcregex>
+#     - If present, it declares that this library is built from (or
+#       expected in binaries build from) any source package, which
+#       name matches <srcregex>.
+#     - Cannot be used with "source"
+#
+#  libname=<name>
+#     - Declares the "name" of the library.
+#     - If omitted, the key will be used.
+#
+# Note: Avoid unintended leading and trailing whitespace in <regex>
+# as Lintian will assume such whitespace is a part of the regex.
+# If possible, consider using \s or [ ] to mark intended trailing
+# whitespace.
+#
+# If <regex> contains the separator (||), then the "options" part is
+# not optional.
+#
+# Please keep it sorted by key.
+#
+
+bzip2     ||(?m)^This is a bug in bzip2
+curl      ||A libcurl function was given a bad argument
+expat     ||(?m)^requested feature requires XML_DTD support in Expat
+file      ||(?m)^could not find any magic files
+ftgl      ||FTGlyphContainer
+gl2ps     ||\(C\) 1999-2009 C\. Geuzaine
+glee      ||Extension name exceeds 1023 characters\.
+glew      ||Missing GL version
+libgd2    ||gd-(?:png|jpeg:) error:
+libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
+libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
+libmng    ||TERM misplaced during creation of MNG stream
+libmsn    ||The MSN server has terminated the connection with an unknown reason code\.
+libmikmod ||APUN \(APlayer\) and UNI \(MikMod\)
+libmysqlclient ||source-regex=mysql-\d.* ||MySQL client ran out of memory
+libpcap   ||(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)
+libpng    ||(?m)^Potential overflow in png_zalloc
+
+# Trailing whitespace was present when the file was created (see commit: 77fd246)
+libtheora ||Xiph.Org libtheora\s
+
+libxml2   ||root and DTD name do not match
+ltdl      ||source=libtool ||(?m)^library already shutdown
+ncurses   ||Not enough memory to create terminal structure
+openjpeg  ||tcd_decode: incomplete bistream
+openssl   ||You need to read the OpenSSL FAQ
+pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
+sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
+t1lib     ||t1lib is copyright \(c\) Rainer Menzner
+tiff      ||source-regex=tiff\d* ||No space for PixarLog state block
+tinyxml   ||Error when TiXmlDocument added to document
+
+# We exclude version strings starting with "4 " since that's a mark of the
+# Pascal implementation, which is not what this tag is designed to detect.
+# (The "4" is actually the string length (52 characters) in the Pascal
+# counted string format.)
+zlib      ||source-regex=(?:zlib|klibc|kfreebsd-kernel-di\w+) ||(?m)(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])
+

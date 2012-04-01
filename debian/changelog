@@ -26,6 +26,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Remove some old tags that are no longer useful.
       (Closes: #663516)
+  * checks/binaries:
+    + [NT] Move embedded library data to a data file.
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
@@ -62,6 +64,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Use Lintian::Collect to find ELF files.
     + [NT] Replace all usage of objdump with readelf.
       (Closes: #614034)
+
+  * data/binaries/embedded-libs:
+    + [NT] New file.
 
   * frontend/lintian:
     + [JW] Fix typo in error message.
