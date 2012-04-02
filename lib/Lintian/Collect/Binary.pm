@@ -89,19 +89,6 @@ sub control_index {
     return $self->_fetch_index_data('control-index', 'control-index');
 }
 
-# Returns sorted file info (eqv to sort keys %{$info->file_info'}), except it is cached.
-#  sub sorted_file_info Needs-Info file-info
-sub sorted_file_info{
-    my ($self) = @_;
-    my $info;
-    my @result;
-    return $self->{sorted_file_info} if exists $self->{sorted_file_info};
-    $info = $self->file_info();
-    @result = sort keys %{$info};
-    $self->{sorted_file_info} = \@result;
-    return \@result;
-}
-
 # Returns the md5sums as calculated by the md5sums collection
 #  sub md5sums Needs-Info md5sums
 sub md5sums {

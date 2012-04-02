@@ -42,8 +42,9 @@ open OUT, '>', "$dir/objdump-info"
 chdir ("$dir/unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
 
-foreach my $bin (@{ $info->sorted_file_info }) {
+foreach my $bin (@{ $info->sorted_index }) {
     my $finfo = $file_info->{$bin};
+
     if ($finfo =~ m/^\bELF\b/) {
 
         print OUT "-- $bin\n";

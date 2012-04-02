@@ -4,4 +4,4 @@ Info: This script runs objdump(1) over all binaries and object files of a
  binary package.
 Type: binary, udeb
 Version: 1
-Needs-Info: file-info, unpacked
+Needs-Info: file-info, unpacked, index

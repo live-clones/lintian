@@ -26,6 +26,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Remove some old tags that are no longer useful.
       (Closes: #663516)
+    + [NT] Migrate to sorted_index from sorted_file_info.
   * checks/binaries:
     + [NT] Move embedded library data to a data file.
   * checks/deb-format{,.desc}:
@@ -79,6 +80,11 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Lazily evaluate the data file.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Remove an extra level of quoting in index.
+    + [NT] Remove root dir from sorted_index.
+    + [NT] Keep trailing slash in dir names for file_info.
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Remove sorted_file_info as sorted_index now produces
+      an identical list.
   * lib/Lintian/Data.pm:
     + [NT] Lazily load data files.
     + [NT] Allow pre-process sub to alter existing value for a key

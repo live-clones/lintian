@@ -254,15 +254,13 @@ my $info = shift;
 
 foreach (@{$info->sorted_index}) {
     next if $_ eq '';
+    $ELF{$_} = 1 if $info->file_info->{$_} =~ /^[^,]*\bELF\b/o;
+
     my $index_info = $info->index->{$_};
     my $operm = $index_info->{operm};
     next unless $index_info->{type} =~ m,^[-h], and ($operm & 0111);
     my $is_suid = $operm & 04000;
     $executable{$_} = 1;
-}
-
-for my $file (@{$info->sorted_file_info}) {
-    $ELF{$file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 }
 
 my $all_deps = '';

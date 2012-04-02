@@ -79,7 +79,7 @@ my $dev_prefix;
 # does the package provide a META file?
 my $has_meta = 0;
 
-foreach my $file (@{$info->sorted_file_info}) {
+foreach my $file (@{$info->sorted_index}) {
     my $fileinfo = $info->file_info->{$file};
 
     # For each .cmxa file, there must be a matching .a file (#528367)

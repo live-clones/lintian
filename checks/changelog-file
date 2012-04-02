@@ -47,7 +47,7 @@ my %file_info;
 my %is_a_symlink;
 
 # Modify the file_info by following symbolic links.
-for my $file (@{$info->sorted_file_info}) {
+for my $file (@{$info->sorted_index}) {
     next unless $file =~ m/doc/o;
 
     $file_info{$file} = $info->file_info->{$file};

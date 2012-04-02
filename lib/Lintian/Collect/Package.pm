@@ -52,7 +52,6 @@ sub file_info {
         my ($file, $info) = ($1,$2);
 
         $file =~ s,^\./,,o;
-        $file =~ s,/+$,,o;
 
         $file_info{$file} = $info;
     }
@@ -79,6 +78,7 @@ sub sorted_index {
     return $self->{sorted_index} if exists $self->{sorted_index};
     $index = $self->index();
     @result = sort keys %{$index};
+    shift @result if scalar @result && $result[0] eq '';
     $self->{sorted_index} = \@result;
     return \@result;
 }
@@ -317,7 +317,7 @@ Note the file names do not have any leading "./" nor "/".
 
 Returns a sorted list of all files listed in index (or file_info hashref).
 
-It may contain an "empty" entry denoting the "root dir".
+It does not contain "root dir".
 
 =back
 
