@@ -29,14 +29,6 @@ our %ERRORS = ('control-errors'       => 'tar-errors-from-control',
                'index-errors'         => 'tar-errors-from-data',
                'unpacked-errors'      => 'tar-errors-from-data');
 
-# Used to match Ubuntu distribution names in target distributions.
-our $UBUNTU_REGEX;
-{
-    my $dists = Lintian::Data->new('changelog-file/ubuntu-dists');
-    my $string = join ('|', 'ubuntu', $dists->all);
-    $UBUNTU_REGEX = qr/$string/o;
-}
-
 sub run {
 
 my $pkg = shift;
@@ -61,16 +53,7 @@ if ($success) {
             "second member $members[1] not control.tar.gz";
     } elsif ($members[2] eq 'data.tar.lzma') {
         # Ubuntu's archive allows lzma packages.
-        my $distribution = '';
-        if (defined $info->changelog) {
-            my ($entry) = $info->changelog->data;
-            $distribution = $entry->Distribution;
-        }
-        if ($distribution =~ m/$UBUNTU_REGEX/) {
-            $okay = 1;
-        } else {
-            tag 'lzma-deb-archive';
-        }
+        tag 'lzma-deb-archive';
     } elsif ($members[2] !~ /^data\.tar\.(?:gz|bz2|xz)\z/) {
         tag 'malformed-deb-archive',
             "third member $members[2] not data.tar.(gz|bz2|xz)";

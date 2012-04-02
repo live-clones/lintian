@@ -32,6 +32,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
+    + [NT] Remove logic for checking if a deb is meant for
+      Ubuntu.  Instead unconditionally emit the tag and let the
+      vendor profiles handle it.
   * checks/fields{,.desc}:
     + [NT] Add devref reference.
     + [NT] Remove special handling of the Ubuntu specific field,
