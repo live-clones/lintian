@@ -2,5 +2,6 @@ Testname: deb-format-xz-compression-ubuntu
 Sequence: 6000
 Version: 1.0
 Profile: ubuntu/main
+Distribution: precise
 Description: Test of xz compression without dpkg pre-dep
 Test-For: data.tar.xz-member-without-dpkg-pre-depends

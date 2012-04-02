@@ -6,6 +6,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + Removed:
       - ancient-dpkg-long-filenames-check
       - ancient-dpkg-predepends-check
+      - bad-ubuntu-distribution-in-changes-file
       - binary-nmu-uses-old-version-style
       - debian-control-with-duplicate-fields
       - doc-base-file-references-usr-doc
@@ -29,6 +30,11 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Migrate to sorted_index from sorted_file_info.
   * checks/binaries:
     + [NT] Move embedded library data to a data file.
+  * checks/changes-file{,.desc}:
+    + [NT] Remove Ubuntu specific handling of distribution names.
+      Instead replace it with a more generalized one that derivatives
+      can reuse by extending vendor specific data files.
+      (Closes: #648777)
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
@@ -82,6 +88,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] New file.
     + [NT] Add libav libraries.  Thanks to Andres Mejia for the
       suggestion and the suggested patch.  (Closes: #666765)
+  * data/changes-file/{debian-dists -> known-dists}:
+    + [NT] Renamed file.
 
   * frontend/lintian:
     + [JW] Fix typo in error message.
@@ -121,6 +129,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Add a number of NMU related tags to the list of disabled
       tags.
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [NT] New file based on data/changes-file/ubuntu-dists.
   * vendors/ubuntu/main/data/common/source-fields:
     + [NT] New file.
   * vendors/ubuntu/main/data/fields/{binary,udeb}-fields:

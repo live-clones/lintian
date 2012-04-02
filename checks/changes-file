@@ -26,13 +26,7 @@ use Util;
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 
-my $DEBIAN_DISTS = Lintian::Data->new ('changes-file/debian-dists');
-my $UBUNTU_REGEX;
-{
-    my $ubuntu_dists = Lintian::Data->new ('changes-file/ubuntu-dists');
-    my $reg_str = join('|', $ubuntu_dists->all);
-    $UBUNTU_REGEX = qr/$reg_str/o;
-}
+my $KNOWN_DISTS = Lintian::Data->new ('changes-file/known-dists');
 
 sub run {
 
@@ -49,7 +43,7 @@ if (!$info->field('format')) {
 
 # Description is mandated by dak, but only makes sense if binary
 # packages are included.  Don't tag pure source uploads.
-if (!$info->field('description') && $info->field('architecture') ne 'source') {
+if (!$info->field('description') && ($info->field('architecture')//'') ne 'source') {
     tag 'no-description-in-changes-file';
 }
 
@@ -59,20 +53,17 @@ if (defined $info->field('distribution')) {
     for my $distribution (@distributions) {
         if ($distribution eq 'UNRELEASED') {
             # ignore
-        } elsif ($info->field('version') =~ m/ubuntu|$UBUNTU_REGEX/o
-            or $distribution =~ m/$UBUNTU_REGEX/o) {
-                if ($distribution !~ m/^(?:$UBUNTU_REGEX)(?:-(?:proposed|updates|backports|security))?$/o ) {
-                    tag 'bad-ubuntu-distribution-in-changes-file',
-                        $distribution;
-                }
-        } elsif (! ($DEBIAN_DISTS->known ($distribution)
-                     or ($distribution =~ /^\w+-backports$/)
-                     or ($distribution =~ /^\w+-proposed-updates$/)
-                     or ($distribution =~ /^\w+-security$/)
-                     or ($distribution =~ /^\w+-volatile$/))
-                ) {
-            # bad distribution entry
-            tag 'bad-distribution-in-changes-file', $distribution;
+        } else {
+            my $dist = $distribution;
+            if ($dist !~ m/^(?:sid|unstable|experimental)/) {
+                # Strip common "extensions" for distributions (except sid and
+                # experimental, where they would make no sense)
+                $dist =~ s/-(?:backports|proposed(?:-updates)?|updates|security|volatile)$//o;
+            }
+            if (! $KNOWN_DISTS->known ($dist)) {
+                # bad distribution entry
+                tag 'bad-distribution-in-changes-file', $distribution;
+            }
         }
     }
 
