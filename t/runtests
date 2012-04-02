@@ -806,6 +806,7 @@ sub check_test_is_sane {
     $data->{srcpkg} ||= $data->{testname};
     $data->{type} ||= 'native';
     $data->{date} ||= $DATE;
+    $data->{distribution} ||= 'unstable';
     $data->{description} ||= 'No Description Available';
     $data->{author} ||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{architecture} ||= 'all';
