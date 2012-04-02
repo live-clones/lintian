@@ -77,6 +77,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * lib/Lintian/Architecture.pm:
     + [NT] Lazily evaluate the data file.
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] Remove an extra level of quoting in index.
   * lib/Lintian/Data.pm:
     + [NT] Lazily load data files.
     + [NT] Allow pre-process sub to alter existing value for a key

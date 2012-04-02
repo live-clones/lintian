@@ -35,11 +35,8 @@ my $file;
 my $magic;
 my $scriptpath;
 
-foreach my $origfile (@{ $info->sorted_index }) {
-    next unless $info->index->{$origfile}->{type} eq '-';
-    my $file = $origfile;
-    $file =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $file =~ s/\\\\/\\/g;
+foreach my $file (@{ $info->sorted_index }) {
+    next unless $info->index->{$file}->{type} eq '-';
 
     # This used to call fail() instead of next.  However, the check to
     # see if all files in the index can be opened should be done elsewhere.

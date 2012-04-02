@@ -42,12 +42,9 @@ open OUT, '>', "$dir/ar-info"
 chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
-foreach my $origfile (@{ $info->sorted_index }) {
-    next unless $origfile =~ m/\.a$/;
-    next unless -f $origfile and not -l $origfile;
-    my $file = $origfile;
-    $file =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $file =~ s/\\\\/\\/g;
+foreach my $file (@{ $info->sorted_index }) {
+    next unless $file =~ m/\.a$/;
+    next unless -f $file and not -l $file;
 
     my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
     spawn($opts, [ 'ar', 't', $file ]);

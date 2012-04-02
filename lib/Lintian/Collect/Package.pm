@@ -105,6 +105,19 @@ sub _fetch_extracted_dir {
     return $dir;
 }
 
+# Strip an extra layer quoting in index file names and optionally
+# remove an initial "./" if any.
+#
+# sub _dequote_name Needs-Info <>
+sub _dequote_name {
+    my ($name, $slsd) = @_;
+    $slsd = 1 unless defined $slsd; # Remove initial ./ by default
+    $name =~ s,^\./,, if $slsd;
+    $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $name =~ s/\\\\/\\/;
+    return $name;
+}
+
 # Backing method for index and others; this is not a part of the API.
 # sub _fetch_index_data Needs-Info <>
 sub _fetch_index_data {
@@ -145,18 +158,17 @@ sub _fetch_index_data {
         $file{owner} = 'root' if $file{owner} eq '0';
         $file{group} = 'root' if $file{group} eq '0';
 
-        $name =~ s,^\./,,;
         if ($name =~ s/ link to (.*)//) {
-            my $target = $1;
-            $target =~ s,^\./,,;
+            my $target = _dequote_name ($1);
             $file{type} = 'h';
             $file{link} = $target;
 
-            push @{$rhlinks{$target}}, $name;
+            push @{$rhlinks{$target}}, _dequote_name ($name);
         } elsif ($file{type} eq 'l') {
             ($name, $file{link}) = split ' -> ', $name, 2;
+            $file{link} = _dequote_name ($file{link}, 0);
         }
-        $file{name} = $name;
+        $file{name} = $name = _dequote_name ($name);
 
         # count directory contents:
         $dir_counts{$name} ||= 0 if $file{type} eq 'd';

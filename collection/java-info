@@ -40,12 +40,9 @@ open OUT, '>', "$dir/java-info"
 chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
-foreach my $origfile (@{ $info->sorted_index }) {
-    my $ftype = $info->index->{$origfile}->{type};
+foreach my $file (@{ $info->sorted_index }) {
+    my $ftype = $info->index->{$file}->{type};
     next unless $ftype eq '-' or $ftype eq 'h';
-    my $file = $origfile;
-    $file =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $file =~ s/\\\\/\\/g;
     if ($file =~ m#\S+\.jar$#i) {
         my $has_manifest = 0;
 

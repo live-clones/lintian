@@ -60,10 +60,7 @@ $opts{pipe_in}->blocking(1);
 
 foreach my $file (@{ $info->sorted_index }) {
     next unless $file; # ignore "root-dir" which has "no name" (post stripping).
-    my $c = $file;
-    $c =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $c =~ s/\\\\/\\/g;
-    printf {$opts{pipe_in}} "%s\0", $c;
+    printf {$opts{pipe_in}} "%s\0", $file;
 }
 
 close $opts{pipe_in};

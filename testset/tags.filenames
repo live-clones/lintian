@@ -87,7 +87,7 @@ W: filenames: extra-license-file usr/share/pixmaps/license.foo
 W: filenames: extra-license-file usr/share/pixmaps/license.txt
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
-W: filenames: file-in-unusual-dir files/'\\ 
+W: filenames: file-in-unusual-dir files/'\ 
 W: filenames: file-in-unusual-dir files/.#Maelstrom Sound.1.1.1
 W: filenames: file-in-unusual-dir files/.arch-inventory
 W: filenames: file-in-unusual-dir files/.cvsignore
@@ -98,7 +98,7 @@ W: filenames: file-in-unusual-dir files/feedparser.py
 W: filenames: file-in-unusual-dir files/svk-commitsEr9P.tmp
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: file-in-usr-lib-sgml usr/lib/sgml/package
-W: filenames: file-name-ends-in-whitespace files/'\\ 
+W: filenames: file-name-ends-in-whitespace files/'\ 
 W: filenames: gz-file-not-gzip usr/share/filenames/prototype.js.gz
 W: filenames: macos-ds-store-file-in-package usr/share/doc/filenames/.DS_Store
 W: filenames: macos-resource-fork-file-in-package usr/share/doc/filenames/._NEWS.Debian
@@ -144,7 +144,7 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debia
 W: more-filename-games: binary-without-manpage usr/bin/another-test-game
 W: more-filename-games: binary-without-manpage usr/games/yet-another-test-game
 W: more-filename-games: package-section-games-but-has-usr-bin
-X: filenames: duplicate-files usr/share/doc/filenames/.DS_Store usr/share/doc/filenames/._NEWS.Debian usr/share/doc/filenames/Thumbs.db usr/share/doc/filenames/link-one
+X: filenames: duplicate-files usr/share/doc/filenames/.DS_Store usr/share/doc/filenames/._NEWS.Debian usr/share/doc/filenames/Thumbs.db usr/share/doc/filenames/bokm??l usr/share/doc/filenames/bokm?l usr/share/doc/filenames/link-one
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink1ok ../../share/symlink
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink1wrong ../../../etc/symlink
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink2ok etc/symlink
