@@ -118,7 +118,7 @@ sub print_tag {
 
     my $tag = $tag_info->tag;
 
-    $information = ' ' . $information if $information ne '';
+    $information = ' ' . $self->_quote_print ($information) if $information ne '';
 
     if ($self->_do_color) {
         my $color = $self->colors->{$sev}{$cer};

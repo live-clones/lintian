@@ -44,7 +44,7 @@ sub print_tag {
                  [ certainty => $tag_info->certainty ],
                  [ flags     => $flags ],
                  [ name      => $tag_info->tag ]);
-    print { $self->stdout } $self->_make_xml_tag('tag', \@attrs, $information, $comment), "\n";
+    print { $self->stdout } $self->_make_xml_tag('tag', \@attrs, $self->_quote_print ($information), $comment), "\n";
 }
 
 sub print_start_pkg {

@@ -285,7 +285,7 @@ Lintian::Tags::tag().
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
-    $information = ' ' . $information if $information ne '';
+    $information = ' ' . $self->_quote_print ($information) if $information ne '';
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
     my $fpkg_info = $self->_format_pkg_info ($pkg_info, $tag_info, $override);
@@ -306,7 +306,9 @@ sub print_tag {
     }
 
     if ($override && @{ $override->comments }) {
-        $self->msg(@{ $override->comments } );
+        foreach my $c (@{ $override->comments }) {
+            $self->msg( $self->_quote_print ($c) );
+        }
     }
 
     $self->_print('', $fpkg_info, "$tag$information");
@@ -454,6 +456,20 @@ sub _do_color {
     return ($self->color eq 'always' || $self->color eq 'html'
             || ($self->color eq 'auto'
                 && -t $self->stdout));
+}
+
+=item C<_quote_print($string)>
+
+Called to quote a string.  By default it will replace all
+non-printables with "?".  Sub-classes can override it if
+they allow non-ascii printables etc.
+
+=cut
+
+sub _quote_print {
+    my ($self, $string) = @_;
+    $string =~ s/[^[:print:]]/?/go;
+    return $string;
 }
 
 =back

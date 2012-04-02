@@ -31,7 +31,7 @@ sub print_tag {
     my $odata = '';
     if ($override) {
         $odata = $override->tag;
-        $odata .= ' ' . $override->extra if $override->extra;
+        $odata .= ' ' . $self->_quote_print ($override->extra) if $override->extra;
     }
 
     $self->issued_tag($tag_info->tag);
@@ -44,7 +44,7 @@ sub print_tag {
         (defined($override) ? 'O' : ''),
         @{$pkg_info}{'package','version','arch','type'},
         $tag_info->tag,
-        $information,
+        $self->_quote_print ($information),
         $odata,
         );
 }

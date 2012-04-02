@@ -81,6 +81,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Lazily load data files.
     + [NT] Allow pre-process sub to alter existing value for a key
       by passing the previous value as third argument.
+  * lib/Lintian/Output{,/*}.pm:
+    + [NT] Replace non-printables with "?" in output.
   * lib/Lintian/Profile.pm:
     + [NT] Normalize profile name and replace "parents" with
       "profile_list".  The latter also includes the current profile
