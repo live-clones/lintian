@@ -33,8 +33,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/changes-file{,.desc}:
     + [NT] Remove Ubuntu specific handling of distribution names.
       Instead replace it with a more generalized one that derivatives
-      can reuse by extending vendor specific data files.
-      (Closes: #648777)
+      can reuse by extending vendor specific data files.  Thanks to
+      Daniel Dehennin for the suggestion.  (Closes: #648777)
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
