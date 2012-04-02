@@ -50,6 +50,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
       change.  Thanks, Iustin Pop.  (Closes: #664471)
   * checks/menus{,.desc}:
     + [NT] Remove "manual" lazy load of data file.
+  * checks/nmu:
+    + [NT] Remove Ubuntu specific code to handle their (lack of) NMUs.
+      These tags are instead suppressed by the Ubuntu profile.
   * checks/scripts{,.desc}:
     + [NT] Mention devref 6.4 in command-with-path-in-maintainer-script.
       Thanks to Arno Töll for the patch.
@@ -113,6 +116,10 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [JW] Consider duplicate fields a syntax error in dctrl files.
       Previously, duplicate fields were silently ignored (except
       when a separate tag would check for it).  (Closes: #664061)
+
+  * profiles/ubuntu/main.profile:
+    + [NT] Add a number of NMU related tags to the list of disabled
+      tags.
 
   * vendors/ubuntu/main/data/common/source-fields:
     + [NT] New file.
