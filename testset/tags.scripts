@@ -35,6 +35,7 @@ I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.9.3)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
+W: scripts source: changelog-should-mention-nmu
 W: scripts source: debhelper-but-no-misc-depends scripts
 W: scripts source: debhelper-compat-file-is-missing
 W: scripts source: debian-watch-file-declares-multiple-versions line 7
@@ -46,6 +47,7 @@ W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: patch-system-but-no-source-readme
+W: scripts source: source-nmu-has-incorrect-version-number 6ds-1ubuntu0.5.10.1
 W: scripts: binary-without-manpage usr/bin/envfoo
 W: scripts: binary-without-manpage usr/bin/guile-bizarre
 W: scripts: binary-without-manpage usr/bin/jruby-broken
