@@ -26,10 +26,10 @@ use Util;
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 
-my $DEBIAN_DISTS = Lintian::Data->new ('changelog-file/debian-dists');
+my $DEBIAN_DISTS = Lintian::Data->new ('changes-file/debian-dists');
 my $UBUNTU_REGEX;
 {
-    my $ubuntu_dists = Lintian::Data->new ('changelog-file/ubuntu-dists');
+    my $ubuntu_dists = Lintian::Data->new ('changes-file/ubuntu-dists');
     my $reg_str = join('|', $ubuntu_dists->all);
     $UBUNTU_REGEX = qr/$reg_str/o;
 }
