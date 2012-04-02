@@ -1,0 +1,2 @@
+phpmyfoo2		/etc/apache2/conf-available
+local-phpmyfoo2.conf	/etc/apache2/conf-available

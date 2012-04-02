@@ -1,0 +1,13 @@
+Testname: apache2-modules-general
+Sequence: 6000
+Version: 1.0
+Description: Several tests related to Apache2 module packages
+Test-For:
+ apache2-module-depends-on-real-apache2-package
+ apache2-module-does-not-depend-on-apache2-api
+ wrong-apache2-module-package-name
+ apache2-module-does-not-ship-load-file
+ apache2-reverse-dependency-ships-file-in-not-allowed-directory
+ apache2-reverse-dependency-calls-wrapper-script
+ apache2-configuration-files-need-conf-suffix
+ apache2-unparseable-dependency

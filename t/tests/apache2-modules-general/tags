@@ -1,0 +1,10 @@
+E: libapache2-mod-foo2: apache2-module-does-not-ship-load-file etc/apache2/mods-available/foo2.load
+E: libapache2-mod-foo2: apache2-reverse-dependency-ships-file-in-not-allowed-directory etc/apache2/mods-enabled/foo.conf
+E: libapache2-mod-foo: apache2-configuration-files-need-conf-suffix etc/apache2/mods-available/foo
+E: libapache2-modbaz: apache2-module-depends-on-real-apache2-package apache2.2-common
+E: libapache2-modbaz: apache2-module-does-not-depend-on-apache2-api
+W: libapache2-mod-foo2: apache2-reverse-dependency-calls-wrapper-script postinst a2enmod
+W: libapache2-mod-foo2: apache2-reverse-dependency-calls-wrapper-script postrm a2dismod
+W: libapache2-mod-foo: apache2-unparseable-dependency etc/apache2/mods-available/foo.load baz4.load
+W: libapache2-mod-foo: apache2-unparseable-dependency etc/apache2/mods-available/foo.load mod_baz3
+W: libapache2-modbaz: wrong-apache2-module-package-name libapache2-modbaz != libapache2-mod-baz

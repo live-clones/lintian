@@ -1,0 +1,14 @@
+Testname: apache2-webapplications-general
+Sequence: 6000
+Version: 1.0
+Description: Several tests related to Apache2 web application packages
+Test-For:
+ wrong-apache2-configuration-name
+ apache2-reverse-dependency-calls-invoke-rc.d
+ apache2-reverse-dependency-calls-wrapper-script
+ web-application-depends-on-apache2-data-package
+ web-application-should-not-depend-unconditionally-on-apache2
+ apache2-reverse-dependency-uses-obsolete-directory
+ apache2-configuration-files-need-conf-suffix
+ apache2-unsupported-dependency
+ apache2-unparseable-dependency

@@ -1,0 +1,271 @@
+# apache2 -- lintian check script -*- perl -*-
+#
+# Copyright © 2012 Arno Töll
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::apache2;
+
+use strict;
+use warnings;
+
+use File::Basename;
+use Lintian::Collect::Binary ();
+use Lintian::Tags qw(tag);
+use Lintian::Relation ();
+use Lintian::Util qw(fail);
+
+sub run {
+    my $pkg = shift;
+    my $type = shift;
+    my $info = shift;
+
+
+    # Do nothing if the package in question appears to be related to
+    # the web server itself
+    return if $pkg =~ m/^apache2(:?\.2)?(?:-\w+)?$/;
+
+    # whether the package appears to be an Apache2 module/web application
+    my $seen_apache2_special_file = 0;
+
+    if ($type eq 'binary') {
+        foreach my $file (@{ $info->sorted_index }) {
+            next if $file eq '';
+            my $file_info = $info->index->{$file};
+
+            # File is probably not relevant to us, ignore it
+            next if $file_info->{type} eq 'd';
+            next if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
+
+
+            # Package installs an unrecognized file - check this for all files
+            if ($file !~ m#\.conf$# and $file =~ m#^(etc/apache2/(conf|site|mods)-available/(.*))$#)  {
+                my $temp_path = $1;
+                my $temp_type = $2;
+                my $temp_file = $3;
+                # ... except modules which are allowed to ship .load files
+                tag 'apache2-configuration-files-need-conf-suffix', $temp_path
+                    unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
+            }
+
+            # Package appears to be a binary module
+            if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
+                check_module_package ($pkg, $info, $1);
+                $seen_apache2_special_file++;
+            }
+
+            # Package appears to be a web application
+            elsif ($file =~ m#^(etc/apache2/(conf|site)-available/(.*))$#) {
+                check_web_application_package ($pkg, $type, $info, $1, $2, $3);
+                $seen_apache2_special_file++;
+            }
+
+            # Package appears to be a legacy web application
+            elsif ($file =~ m#^(etc/apache2/conf\.d/(.*))$#) {
+                tag "apache2-reverse-dependency-uses-obsolete-directory", $1;
+                check_web_application_package ($pkg, $type, $info, $1, 'conf', $2);
+                $seen_apache2_special_file++;
+            }
+
+            # Package does scary things
+            elsif ($file =~ m#^(etc/apache2/(?:conf|sites|mods)-enabled/.*)$#) {
+                tag "apache2-reverse-dependency-ships-file-in-not-allowed-directory", $1;
+                $seen_apache2_special_file++;
+            }
+
+        }
+
+        if ($seen_apache2_special_file) {
+            check_maintainer_scripts ($info);
+        }
+    }
+}
+
+sub check_web_application_package {
+    my ($pkg, $type, $info, $file, $pkgtype, $webapp) = @_;
+
+    tag "wrong-apache2-configuration-name", $webapp, '!=', "$pkg.conf"
+        if $webapp ne "$pkg.conf" or $webapp =~ m/^local-./;
+
+    my $uncondep = 0;
+    my $datadep = 0;
+
+    for my $type (qw/pre-depends depends recommends/) {
+        my $raw_dependency = $info->field ($type);
+        next unless $raw_dependency;
+        for my $dependency (split /\s*,\s*/, $raw_dependency) {
+            my $relation = $info->relation ($type);
+            # A web application must not depend on apache2-whatever
+            if ($dependency =~ m/\b(apache2(?:\.2)?-(?:common|data|bin))\b/) {
+                tag 'web-application-depends-on-apache2-data-package', $1
+                    unless $datadep++;
+            }
+
+            # ... nor on apache2 only. Moreover, it should be in the form
+            # apache2 | httpd but don't worry about versions, virtual package
+            # don't support that
+            if ($relation->implies ('apache2')) {
+                tag 'web-application-should-not-depend-unconditionally-on-apache2',
+                    unless $uncondep++;
+            }
+        }
+    }
+
+    if (defined $info->index->{$file}) {
+        inspect_conf_file ($info, $pkgtype, $file);
+    }
+
+}
+
+sub check_module_package {
+    my ($pkg, $info, $module) = @_;
+
+    # We want packages to be follow our naming scheme. Modules should be named
+    # libapache2-mod-<foo> if it ships a mod_foo.so
+    my $expected_name = 'libapache2-' . $module;
+
+    # Package depends on apache2-api-YYYYMMDD
+    my $seen_api_dependency = 0;
+
+    $expected_name =~ tr/_/-/;
+    if ( $expected_name ne $pkg ) {
+        tag 'wrong-apache2-module-package-name', $pkg, '!=', $expected_name;
+    }
+
+    for my $type (qw/pre-depends depends recommends/)  {
+        my $raw_dependency = $info->field($type);
+        next unless $raw_dependency;
+        for my $dependency (split /\s*,\s*/, $raw_dependency) {
+            # no no no, do not depend on our real packages. A module must not
+            # depend on apache2-common or even worse apache2.
+            if ($dependency =~ m/\b(apache2(?:\.2)?-(?:common|data|bin))\b/) {
+                tag 'apache2-module-depends-on-real-apache2-package', $1;
+            }
+            # ... on the other hand, module packages must depend on
+            # apache2-api-YYYYMMDD
+            if (($type eq 'depends' or $type eq 'pre-depends') and $dependency =~ m/\bapache2-api-\d+\b/) {
+                $seen_api_dependency++;
+            }
+        }
+    }
+
+    if (not $seen_api_dependency) {
+        tag 'apache2-module-does-not-depend-on-apache2-api';
+    }
+
+    # The module is called mod_foo.so, thus the load file is expected to be
+    # named foo.load
+    my $load_file = $module;
+    my $conf_file = $module;
+    $load_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.load#;
+    $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
+
+    if (defined $info->index->{$load_file}) {
+        inspect_conf_file ($info, "mods", $load_file);
+    } else {
+        tag 'apache2-module-does-not-ship-load-file', $load_file;
+    }
+
+    if (defined $info->index->{$conf_file}) {
+        inspect_conf_file ($info, "mods", $conf_file);
+    }
+
+}
+
+
+sub check_maintainer_scripts {
+    my ($info) = @_;
+
+    open my $fd, '<', 'control-scripts' or fail "cannot open lintian control-scripts file: $!";
+
+    while (<$fd>)
+    {
+        m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
+        my $interpreter = $1;
+        my $file = $2;
+        my $filename = $info->control ($file);
+
+        # Don't follow links
+        next if -l $filename;
+        # Don't try to parse the file if it does not appear to be a shell script
+        next if $interpreter !~ m/sh\b/;
+
+        open my $sfd, '<', $filename or fail "cannot open maintainer script $filename: $!";
+        while (<$sfd>) {
+            # skip comments
+            next if substr ($_, 0, $-[0]) =~ /#/;
+
+            # Do not allow reverse dependencies to call "a2enmod" and friends
+            # directly
+            if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
+                tag 'apache2-reverse-dependency-calls-wrapper-script', $file, $1;
+            }
+
+            # Do not allow reverse dependencies to call "invoke-rc.d apache2
+            if (m/invoke-rc\.d\s+apache2/) {
+                tag 'apache2-reverse-dependency-calls-invoke-rc.d', $file;
+            }
+
+            # XXX: Check whether apache2-maintscript-helper is used
+            # unconditionally e.g. not protected by a [ -e ], [ -x ] or so.
+            # That's going to be complicated. Or not possible without grammar
+            # parser.
+        }
+        close $sfd;
+    }
+
+    close $fd;
+}
+
+
+sub inspect_conf_file {
+    my ($info, $conftype, $file) = @_;
+
+
+    my $filename =  $info->unpacked ($file);
+    # Don't follow links
+    return if -l $filename;
+    open my $fd, '<', $filename or fail "cannot open configuration file $filename: $!";
+    while (<$fd>)  {
+        # only check until the first non-empty non-comment line. That follows
+        # the a2enmod reference implementation
+        last unless m/^\s*(?:#.*)?$/;
+
+        if (m/^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
+            tag 'apache2-unsupported-dependency', $file, $1
+                if $1 eq 'Conflicts' and $conftype ne 'mods';
+            my @dependencies = split( /[\n\s]+/, $2 );
+            foreach my $dep (@dependencies) {
+                tag 'apache2-unparseable-dependency', $file, $dep
+                    if $dep =~ m/\W/ or
+                       $dep =~ /^mod\_/ or
+                       $dep =~ m/\.(?:conf|load)/;
+            }
+        }
+
+    }
+    close $fd;
+
+}
+
+1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

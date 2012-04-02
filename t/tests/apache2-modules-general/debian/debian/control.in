@@ -1,0 +1,44 @@
+Source: {$srcpkg}
+Section: web
+Priority: extra
+Maintainer:  Big Kahuna <kahuna@example.com>
+Uploaders: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 9)
+
+Package: libapache2-mod-foo
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\},
+ $\{misc:Depends\},
+ apache2-api-19700101
+Description: {$description}
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: libapache2-modbaz
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\},
+ $\{misc:Depends\},
+ apache2.2-common,
+Description: {$description} don't care
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ To avoid duplicate description warnings this line differs. Ignore me.
+
+Package: libapache2-mod-foo2
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\},
+ $\{misc:Depends\},
+ apache2-api-19700101,
+Description: {$description} still don't care
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ To avoid duplicate description warnings this line differs. Still ignore me.
