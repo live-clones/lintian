@@ -5,3 +5,4 @@ collection		usr/share/lintian
 data			usr/share/lintian
 lib			usr/share/lintian
 profiles		usr/share/lintian
+vendors 		usr/share/lintian
