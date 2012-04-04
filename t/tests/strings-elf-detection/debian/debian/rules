@@ -4,9 +4,8 @@ pkg=strings-elf-detection
 	dh $@
 
 override_dh_install:
-	cp /bin/true .
 	touch foo bar::ELF
 	mkdir -p debian/$(pkg)/usr/lib/foo
-	cp /bin/true debian/$(pkg)/usr/lib/foo/true\ false
+	cp true debian/$(pkg)/usr/lib/foo/true\ false
 	dh_install
 

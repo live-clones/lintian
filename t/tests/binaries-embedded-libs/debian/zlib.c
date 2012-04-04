@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "hardening-trigger.h"
 
 /*
  * zlib asks derivative works to include this string, so it's the signature

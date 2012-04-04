@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "hardening-trigger.h"
 
 /*
  * The quantization tables warning message is unique enough to be used to

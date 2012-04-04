@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "hardening-trigger.h"
 
 /*
  * the sqlite_master table is used by sqlite 2 and 3

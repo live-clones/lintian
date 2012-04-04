@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "hardening-trigger.h"
 
 /*
  * The tcd_decode error message appears to be unique enough to be used to
