@@ -44,13 +44,6 @@ if ( -e "$dir/hardening-info" ) {
 open OUT, '>', "$dir/hardening-info"
     or fail("cannot open hardening-info: $!");
 
-# If we're running inside the Lintian test suite itself, we need to avoid
-# all the tests except the "binaries-hardening" test.
-exit 0
-    if (defined $ENV{'LINTIAN_INTERNAL_TESTSUITE'} and
-        $ENV{'LINTIAN_INTERNAL_TESTSUITE'} eq "1" and
-        $dir !~ m|/binaries-hardening/binaries-hardening_1.0_.*_binary$|);
-
 # Prepare to examine the file tree.
 chdir ("$dir/unpacked")
     or fail("unable to chdir to unpacked: $!");
