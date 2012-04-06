@@ -1,5 +1,5 @@
 # Hey emacs! This is a -*- Perl -*- script!
-# Text_utils -- Perl utility functions for lintian
+# Lintian::Tag::TextUtil -- Perl utility functions for lintian
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #
@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Text_utils;
+package Lintian::Tag::TextUtil;
 
 use strict;
 use warnings;

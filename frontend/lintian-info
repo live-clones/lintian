@@ -40,7 +40,6 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil;
 use Lintian::Profile;
-use Text_utils;
 
 my %already_displayed = ();
 my @proc_inc = (

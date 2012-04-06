@@ -24,7 +24,7 @@ use warnings;
 
 use Carp qw(croak);
 
-use Text_utils qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
+use Lintian::Tag::TextUtil qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 use Util qw(fail);
 
 # The URL to a web man page service.  NAME is replaced by the man page
