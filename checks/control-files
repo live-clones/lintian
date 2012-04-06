@@ -102,7 +102,6 @@ foreach my $file (sort keys %$cindex) {
 
 # for other maintainer scripts checks, see the scripts check
 }
-close IN;
 
 } # </run>
 
