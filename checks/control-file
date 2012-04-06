@@ -256,7 +256,7 @@ foreach my $bin (@package_names) {
     }
     next if $area eq $bin_area or ($area eq 'main' and $bin_area eq 'contrib');
 
-    tag 'section-area-mismatch', $bin, $area, $bin_area;
+    tag 'section-area-mismatch', 'Package', $bin;
 }
 
 # Check for duplicate descriptions.
