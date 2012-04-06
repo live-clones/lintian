@@ -259,9 +259,10 @@ sub java_info {
     my ($self) = @_;
     return $self->{java_info} if exists $self->{java_info};
 
+    my $base_dir = $self->base_dir;
     my %java_info;
-    open(my $idx, '<', 'java-info')
-        or fail("cannot open java-info: $!");
+    open my $idx, '<', "$base_dir/java-info"
+        or fail "cannot open $base_dir/java-info: $!";
     my $file;
     my $file_list = 0;
     my $manifest = 0;
