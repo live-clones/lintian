@@ -154,13 +154,6 @@ for my $tag ($profile->tags (1)){
 
 undef $profile; # Don't need it any more.
 
-if ($testok) {
-    print "done.\n";
-} else {
-    print "FAILED!\n";
-    exit 1 unless $run_all_tests;
-}
-
 # ok, I can make a static lab, now let's test the package checks
 # in temporary labs
 my @tests;
