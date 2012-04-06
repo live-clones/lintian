@@ -24,7 +24,7 @@ use warnings;
 use base 'Lintian::Collect';
 
 use Carp qw(croak);
-use Util qw(perm2oct);
+use Lintian::Util qw(perm2oct);
 
 # Returns the path to the dir where the package is unpacked
 #  or a file therein (see pod below)
@@ -299,7 +299,7 @@ The following code may be helpful in checking for path traversal:
     die "Possibly path traversal ($file)";
  }
 
-Alternatively one can use Util::resolve_pkg_path.
+Alternatively one can use Lintian::Util::resolve_pkg_path.
 
 =item file_info
 

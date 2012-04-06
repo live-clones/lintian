@@ -24,7 +24,6 @@ use warnings;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Util;
 
 sub run {
 

@@ -25,7 +25,7 @@ use warnings;
 use Carp qw(croak);
 
 use Cwd();
-use Util;
+use Lintian::Util;
 
 use Lintian::Processable::Package;
 use Lintian::ProcessableGroup;

@@ -26,7 +26,7 @@ use lib "$ENV{LINTIAN_ROOT}/lib";
 use FileHandle;
 use Lintian::Collect;
 use Lintian::Command qw(spawn);
-use Util qw(fail);
+use Lintian::Util qw(fail);
 
 ($#ARGV == 2) or fail 'syntax: ar-info <pkg> <type> <dir>';
 my ($pkg, $type, $dir) = @ARGV;

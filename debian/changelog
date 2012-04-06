@@ -93,8 +93,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * collection/index{,.desc}:
     + [NT] Compress index output and bump version of index.
   * collection/objdump-info:
-    + [NT] Use "fail" from Util.pm rather than embedding a copy of
-      it.
+    + [NT] Use "fail" from Lintian::Util.pm rather than embedding a
+      copy of it.
     + [NT] Use Lintian::Collect to find ELF files.
     + [NT] Replace all usage of objdump with readelf.
       (Closes: #614034)
@@ -142,7 +142,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
       file instead using an ad-hoc parser.
   * lib/{Text_utils => Lintian/Tag/TextUtil}.pm:
     + [NT] Renamed module.
-  * lib/Util.pm:
+  * lib/{Util => Lintian/Util}.pm:
+    + [NT] Renamed Util to Lintian::Util.
     + [JW] Consider duplicate fields a syntax error in dctrl files.
       Previously, duplicate fields were silently ignored (except
       when a separate tag would check for it).  (Closes: #664061)

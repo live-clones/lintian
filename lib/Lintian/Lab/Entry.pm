@@ -65,8 +65,7 @@ use File::Spec;
 use Cwd();
 
 use Lintian::Lab;
-
-use Util qw(delete_dir read_dpkg_control get_dsc_info);
+use Lintian::Util qw(delete_dir read_dpkg_control get_dsc_info);
 
 # This is the entry format version - this changes whenever the layout of
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT

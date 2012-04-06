@@ -1,5 +1,5 @@
 # Hey emacs! This is a -*- Perl -*- script!
-# Util -- Perl utility functions for lintian
+# Lintian::Util -- Perl utility functions for lintian
 
 # Copyright (C) 1998 Christian Schwarz
 #
@@ -19,7 +19,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Util;
+package Lintian::Util;
 use strict;
 use warnings;
 

@@ -27,6 +27,8 @@ use warnings;
 use Lintian::Collect;
 use Lintian::Tags qw(tag);
 
+use Lintian::Util qw(fail);
+
 sub run {
 
 my $pkg = shift;

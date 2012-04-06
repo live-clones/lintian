@@ -23,8 +23,8 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
 use Lintian::Command qw(spawn reap);
+use Lintian::Util qw(fail);
 
 ($#ARGV == 2) or fail 'syntax: bin-pkg-control <pkg> <type> <dir>';
 my ($pkg, $type, $dir) = @ARGV;

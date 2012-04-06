@@ -23,7 +23,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
+use Lintian::Util qw(copy_dir delete_dir fail);
 
 ($#ARGV == 2) or fail('syntax: init.d <pkg> <type> <dir>');
 my ($pkg, $type, $dir) = @ARGV;

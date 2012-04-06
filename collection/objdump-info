@@ -28,7 +28,7 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
-use Util qw(fail);
+use Lintian::Util qw(fail);
 
 my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);

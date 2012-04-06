@@ -28,8 +28,6 @@ use warnings;
 
 use Dpkg::Version qw(version_check);
 
-use Util;
-
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);

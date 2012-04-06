@@ -752,8 +752,8 @@ unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
 require Lintian::Lab;
 
-require Util;
-import Util;
+require Lintian::Util;
+import Lintian::Util;
 
 require Lintian::Collect;
 require Lintian::DepMap::Properties;

@@ -37,7 +37,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Util;
+use Lintian::Util;
 
 use File::Basename;
 

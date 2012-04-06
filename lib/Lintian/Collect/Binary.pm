@@ -28,7 +28,7 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Util;
+use Lintian::Util qw(fail);
 
 # Initialize a new binary package collect object.  Takes the package name,
 # which is currently unused.

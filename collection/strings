@@ -23,10 +23,10 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
 use Lintian::Collect;
 use Lintian::Command qw(spawn);
 use Lintian::Command::Simple;
+use Lintian::Util qw(delete_dir fail);
 
 ($#ARGV == 2) or fail('syntax: strings <pkg> <type> <dir>');
 

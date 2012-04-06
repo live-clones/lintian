@@ -22,9 +22,9 @@ package Lintian::debhelper;
 use strict;
 use warnings;
 
-use Util;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(fail slurp_entire_file);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.

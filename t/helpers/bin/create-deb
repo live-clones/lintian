@@ -27,7 +27,7 @@ use Getopt::Long;
 use Cwd();
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util qw(get_dsc_info);
+use Lintian::Util qw(get_dsc_info);
 
 # known compression styles
 my %TAR_OPTIONS = (

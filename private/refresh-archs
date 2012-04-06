@@ -25,7 +25,7 @@ use File::Temp qw(tempfile);
 use POSIX qw (strftime);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
-use Util qw(parse_dpkg_control);
+use Lintian::Util qw(parse_dpkg_control);
 
 my $datapath = shift;
 my %hardening = map { $_ => 1 } qw(

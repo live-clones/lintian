@@ -25,7 +25,7 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn);
-use Util;
+use Lintian::Util qw(check_path delete_dir fail);
 
 ($#ARGV == 2) or fail('syntax: unpacked <package> <type> <dir>');
 my ($pkg, $type, $dir) = @ARGV;

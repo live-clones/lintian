@@ -20,7 +20,7 @@ package Lintian::Collect;
 use strict;
 use warnings;
 
-use Util qw(get_dsc_info get_deb_info);
+use Lintian::Util qw(get_dsc_info get_deb_info);
 use Carp qw(croak);
 
 # Take the package name and type, initialize an appropriate collect object

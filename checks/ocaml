@@ -25,8 +25,9 @@ use warnings;
 
 use File::Basename;
 use Lintian::Collect::Binary ();
-use Lintian::Tags qw(tag);
 use Lintian::Relation ();
+use Lintian::Tags qw(tag);
+use Lintian::Util qw(fail);
 
 # The maximum number of *.cmi files to show individually.
 our $MAX_CMI = 3;
@@ -39,7 +40,7 @@ my $info = shift;
 
 # Collect information about .a files from ar-info dump
 my %provided_o;
-open ARINFO, '<', 'ar-info';
+open ARINFO, '<', 'ar-info' or fail "opening ar-info: $!";
 while (<ARINFO>) {
     chomp;
     if (/^(?:\.\/)?([^:]+): (.*)$/) {

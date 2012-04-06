@@ -23,7 +23,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
+use Lintian::Util qw(fail gunzip_file touch_file);
 
 use File::Copy qw(copy);
 

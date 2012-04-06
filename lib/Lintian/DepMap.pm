@@ -17,7 +17,7 @@ package Lintian::DepMap;
 
 use strict;
 use warnings;
-use Util ();
+use Lintian::Util qw(fail);
 
 =head1 NAME
 
@@ -209,11 +209,11 @@ sub satisfy {
     my $node = shift;
 
     if (grep {$_ eq $node} $self->missing()) {
-        Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
+        fail("Attempted to mark node '$node' as satisfied but it is not ".
                     'reachable, perhaps you forgot to add() it first?');
     }
     if (not exists($self->{'nodes'}{$node})) {
-        Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
+        fail("Attempted to mark node '$node' as satisfied but it is not ".
                     'reachable, perhaps you forgot to satisfy() its dependencies first?');
     }
     return 0 unless (exists($self->{'map'}{$node}));
@@ -294,7 +294,7 @@ sub unlink {
     $soft = (defined($soft) && $soft eq 'soft');
 
     if (not exists($self->{'nodes'}{$node})) {
-        Util::fail("Attempted to unlink node '$node' but it can not be found".
+        fail("Attempted to unlink node '$node' but it can not be found".
                     ', perhaps it has already been satisfied?');
     }
 
@@ -346,7 +346,7 @@ sub select {
     my $node = shift;
 
     if (not exists($self->{'map'}{$node})) {
-        Util::fail("Attempted to mark node '$node' as selected but it is not ".
+        fail("Attempted to mark node '$node' as selected but it is not ".
                     'known, perhaps its parents are not yet satisfied?');
     }
     return 0 if (exists($self->{'selected'}{$node}));
@@ -438,7 +438,7 @@ sub parents {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-        Util::fail("Attempted to get the parents of node '$node' but it is not".
+        fail("Attempted to get the parents of node '$node' but it is not".
                     'known, perhaps you forgot to add() it first?');
     }
 

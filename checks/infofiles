@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Util;
+use Lintian::Util qw(clean_env fail);
 
 use File::Basename qw(fileparse);
 

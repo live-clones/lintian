@@ -26,7 +26,7 @@ use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Util;
+use Lintian::Util qw(fail);
 
 ($#ARGV == 2) or fail 'syntax: md5sums <pkg> <type> <dir>';
 

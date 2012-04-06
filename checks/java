@@ -23,7 +23,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Util;
+use Lintian::Util qw(resolve_pkg_path);
 
 sub run {
 

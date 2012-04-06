@@ -26,7 +26,6 @@ use Encode qw(decode);
 
 use Lintian::Check qw(check_spelling check_spelling_picky);
 use Lintian::Tags qw(tag);
-use Util;
 
 sub run {
 

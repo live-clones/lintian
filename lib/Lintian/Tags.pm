@@ -25,7 +25,7 @@ use warnings;
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
 use Lintian::Tag::Override;
-use Util qw(fail);
+use Lintian::Util qw(fail);
 
 use base 'Exporter';
 BEGIN {

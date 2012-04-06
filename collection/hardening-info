@@ -30,8 +30,8 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
 use Lintian::Collect;
+use Lintian::Util qw(fail);
 
 my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);

@@ -22,9 +22,10 @@ package Lintian::manpages;
 use strict;
 use warnings;
 
-use Util;
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(clean_env fail);
+
 use Text::ParseWords ();
 use File::Basename;
 

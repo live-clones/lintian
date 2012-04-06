@@ -29,7 +29,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
+use Lintian::Util qw(fail get_dsc_info gunzip_file);
 
 ($#ARGV == 2) or fail 'syntax: diffstat <pkg> <type> <dir>';
 my ($pkg, undef, $dir) = @ARGV;

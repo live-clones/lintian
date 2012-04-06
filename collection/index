@@ -30,9 +30,9 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Cwd();
 use File::Spec;
-use Util;
 use Lintian::Command qw(spawn reap);
 use Lintian::Processable::Package;
+use Lintian::Util qw(fail get_dsc_info);
 
 ($#ARGV == 2) or fail 'syntax: index <pkg> <type> <dir>';
 my ($pkg, $type, $dir) = @ARGV;

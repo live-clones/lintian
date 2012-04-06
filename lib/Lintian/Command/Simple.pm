@@ -460,7 +460,7 @@ __END__
 
 Provide the necessary methods to modify the environment variables of
 the to-be-executed commands.  This would let us drop C<system_env> (from
-lib/Util.pm) and make C<run> more useful.
+Lintian::Util) and make C<run> more useful.
 
 =head1 NOTES
 

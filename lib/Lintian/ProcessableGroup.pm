@@ -22,9 +22,9 @@ package Lintian::ProcessableGroup;
 use strict;
 use warnings;
 
-use Util;
 use Lintian::Collect::Group;
 use Lintian::Processable;
+use Lintian::Util;
 
 =head1 NAME
 

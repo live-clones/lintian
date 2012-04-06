@@ -10,7 +10,7 @@ use warnings;
 use Test::More;
 
 use File::Find;
-require Util; # Test::More (also) exports fail
+use Lintian::Util qw(read_dpkg_control); # Test::More (also) exports fail
 
 my $root = $ENV{'LINTIAN_ROOT'};
 my @profiles;
@@ -18,7 +18,7 @@ my %CHECKS;
 my %TAGS;
 
 foreach my $desc (<$root/checks/*.desc>) {
-    my ($header, @tags) = Util::read_dpkg_control($desc);
+    my ($header, @tags) = read_dpkg_control($desc);
     my $list = [];
     unless ($header->{'check-script'}) {
         fail("missing Check-Script field in $desc");
@@ -47,7 +47,7 @@ exit 0;
 
 sub parse_profile {
     my ($profile) = @_;
-    my ($header, @section) = Util::read_dpkg_control($profile);
+    my ($header, @section) = read_dpkg_control($profile);
     my $en_checks = $header->{'enable-tags-from-check'}//'';
     my $dis_checks = $header->{'disable-tags-from-check'}//'';
     my $en_tag = $header->{'enable-tags'}//'';

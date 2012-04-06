@@ -21,7 +21,7 @@ use strict;
 use warnings;
 
 use base qw(Exporter);
-use Util;
+use Lintian::Util;
 
 our @EXPORT = qw(&check_test_feature &find_default_profile);
 

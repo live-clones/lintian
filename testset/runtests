@@ -114,7 +114,7 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Profile;
-use Util;
+use Lintian::Util;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
 my $lintian_options = '-I -E';

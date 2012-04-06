@@ -26,7 +26,7 @@ use warnings;
 
 use Carp qw(croak);
 
-use Util qw(get_deb_info get_dsc_info);
+use Lintian::Util qw(get_deb_info get_dsc_info);
 
 # Black listed characters - any match will be replaced with a _.
 use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;

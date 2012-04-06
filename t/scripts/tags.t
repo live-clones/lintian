@@ -27,7 +27,7 @@ use Lintian::Check qw(check_spelling);
 use Lintian::Data;
 use Lintian::Profile;
 use Lintian::Tags ();
-use Util qw(read_dpkg_control);
+use Lintian::Util qw(read_dpkg_control);
 
 my $vendor = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
                                  ["$ENV{'LINTIAN_ROOT'}/profiles"]);

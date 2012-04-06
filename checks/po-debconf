@@ -22,8 +22,8 @@ package Lintian::po_debconf;
 use strict;
 use warnings;
 
-use Util;
 use Lintian::Tags qw(tag);
+use Lintian::Util;
 
 sub run {
 

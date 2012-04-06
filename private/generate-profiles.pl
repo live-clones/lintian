@@ -23,7 +23,7 @@ BEGIN {
 }
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
-use Util;
+use Lintian::Util;
 
 my $root = $ENV{LINTIAN_ROOT};
 my @dirs = ('profiles/debian');

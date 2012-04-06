@@ -25,7 +25,7 @@ use warnings;
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_spelling);
-use Util;
+use Lintian::Util qw(fail file_is_encoded_in_non_utf8);
 
 use Encode qw(decode);
 use Parse::DebianChangelog;

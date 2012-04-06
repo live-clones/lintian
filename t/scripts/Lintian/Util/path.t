@@ -4,9 +4,9 @@ use strict;
 use warnings;
 use Test::More tests => 12;
 
-# Util exports fail, which clashes with Test::More, so we
+# Lintian::Util exports fail, which clashes with Test::More, so we
 # have to be explicit about the import(s).
-BEGIN { use_ok('Util', qw(resolve_pkg_path)); }
+BEGIN { use_ok('Lintian::Util', qw(resolve_pkg_path)); }
 
 # Safe - absolute
 is(resolve_pkg_path('/usr/share/java', '/usr/share/ant/file'), 'usr/share/ant/file', 'Safe absolute path');

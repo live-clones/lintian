@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
+use Lintian::Util qw(fail gunzip_file);
 
 ($#ARGV == 2) or fail('syntax: override-file <pkg> <type> <dir>');
 my ($pkg, $type, $dir) = @ARGV;

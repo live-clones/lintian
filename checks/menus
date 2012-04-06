@@ -22,11 +22,12 @@
 
 package Lintian::menus;
 use strict;
+use warnings;
 
 use Lintian::Check qw(check_spelling check_spelling_picky $known_shells_regex);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Util;
+use Lintian::Util;
 
 # Supported documentation formats for doc-base files.
 our %known_doc_base_formats = map { $_ => 1 }

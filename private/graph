@@ -11,7 +11,7 @@ BEGIN {
 }
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Util;
+use Lintian::Util;
 
 my %opt = (
     'checks'     => 1,

@@ -54,7 +54,7 @@ use Lintian::Data;
 use Lintian::Lab;
 use Lintian::Profile;
 use Lintian::Internal::FrontendUtil;
-use Util;
+use Lintian::Util;
 
 my $profile = Lintian::Profile->new (find_default_profile ("$LINTIAN_ROOT/profiles"),
                                      $LINTIAN_ROOT,

@@ -23,8 +23,8 @@ package Lintian::conffiles;
 use strict;
 use warnings;
 
-use Util;
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(fail);
 
 sub run {
 

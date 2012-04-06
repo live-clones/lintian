@@ -21,9 +21,10 @@
 
 package Lintian::patch_systems;
 use strict;
+use warnings;
 
 use Lintian::Tags qw(tag);
-use Util;
+use Lintian::Util;
 use Cwd qw(realpath);
 
 sub run {

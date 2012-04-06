@@ -65,11 +65,10 @@ BEGIN {
     );
 };
 
-use Util qw(delete_dir get_dsc_info);
-
 use Lintian::Collect;
 use Lintian::Lab::Entry;
 use Lintian::Lab::Manifest;
+use Lintian::Util qw(delete_dir get_dsc_info);
 
 =encoding utf8
 

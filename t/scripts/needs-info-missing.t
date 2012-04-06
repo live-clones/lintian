@@ -19,7 +19,7 @@
 use strict;
 
 use Test::More;
-use Util qw(read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 # Find all of the desc files in checks.  We'll do one check per description.
 our @DESCS = (<$ENV{LINTIAN_ROOT}/checks/*.desc>,

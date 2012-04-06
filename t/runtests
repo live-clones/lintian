@@ -58,7 +58,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Util;
+use Lintian::Util;
 
 # --- Global configuration
 

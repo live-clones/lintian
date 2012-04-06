@@ -21,11 +21,12 @@ package Lintian::CheckScript;
 use strict;
 use warnings;
 
-use Util qw(read_dpkg_control);
 use base 'Class::Accessor';
 
 use Carp qw(croak);
+
 use Lintian::Tag::Info ();
+use Lintian::Util qw(read_dpkg_control);
 
 =head1 NAME
 

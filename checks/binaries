@@ -23,10 +23,10 @@ package Lintian::binaries;
 use strict;
 use warnings;
 
-use Util;
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
 use Lintian::Output qw(debug_msg);
+use Lintian::Util qw(fail slurp_entire_file);
 
 use File::Spec;
 

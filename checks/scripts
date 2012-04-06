@@ -26,12 +26,11 @@ package Lintian::scripts;
 use strict;
 use warnings;
 
-use Util;
-
 use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
+use Lintian::Util;
 
 sub _parse_interpreters {
     my ($interpreter, $value) = @_;

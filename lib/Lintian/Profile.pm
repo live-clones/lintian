@@ -25,9 +25,9 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
-use Util qw(read_dpkg_control);
 
 use Lintian::CheckScript;
+use Lintian::Util qw(read_dpkg_control);
 
 =head1 NAME
 
