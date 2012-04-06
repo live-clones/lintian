@@ -29,7 +29,8 @@ use Util;
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
-our @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
+my @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
+my $LIBCS = Lintian::Relation->new(join(' | ', @LIBCS));
 my $src_fields = Lintian::Data->new('common/source-fields');
 
 sub run {
@@ -97,6 +98,8 @@ if ($@) {
     tag 'syntax-error-in-control-file', "debian/control: $@";
     return;
 }
+
+my @package_names = sort keys %{ $info->binaries };
 
 for my $binary_control (@binary_controls) {
     tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}
@@ -183,22 +186,19 @@ for my $control ($header, @binary_controls) {
 # Use this traversal to build a list of package names built from this source
 # package, which we'll use later to check for dependencies in -dev packages.
 my @dep_fields = qw(pre-depends depends recommends suggests);
-my $libcs = Lintian::Relation->new(join(' | ', @LIBCS));
-my @package_names;
-for my $control (@binary_controls) {
-    push (@package_names, $control->{package});
+foreach my $bin (@package_names) {
     for my $strong (0 .. $#dep_fields) {
-        next unless $control->{$dep_fields[$strong]};
-        my $relation = Lintian::Relation->new($control->{$dep_fields[$strong]});
-        tag 'package-depends-on-itself', $control->{package}, $dep_fields[$strong]
-            if $relation->implies($control->{package});
-        tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
-            if ($relation->implies($libcs) and $pkg !~ /^e?glibc$/);
+        next unless $info->binary_field ($bin, $dep_fields[$strong]);
+        my $relation = $info->binary_relation ($bin, $dep_fields[$strong]);
+        tag 'package-depends-on-itself', $bin, $dep_fields[$strong]
+            if $relation->implies($bin);
+        tag 'package-depends-on-hardcoded-libc', $bin, $dep_fields[$strong]
+            if $relation->implies($LIBCS) and $pkg !~ /^e?glibc$/;
         for my $weak (($strong + 1) .. $#dep_fields) {
-            next unless $control->{$dep_fields[$weak]};
-            for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
+            next unless $info->binary_field ($bin, $dep_fields[$weak]);
+            for my $dependency (split /\s*,\s*/, $info->binary_field ($bin, $dep_fields[$weak])) {
                 next unless $dependency;
-                tag 'stronger-dependency-implies-weaker', $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
+                tag 'stronger-dependency-implies-weaker', $bin, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
                     if $relation->implies($dependency);
             }
         }
@@ -294,7 +294,7 @@ for my $i (0 .. $#descriptions) {
 
 
 # Check the dependencies of a -dev package.  Any dependency on one of the
-# packages in @package_names that looks like the underlying library needs to
+# packages in @packages that looks like the underlying library needs to
 # have a version restriction that's at least as strict as the same upstream
 # version.
 sub check_dev_depends {
