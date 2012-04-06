@@ -182,9 +182,6 @@ for my $control ($header, @binary_controls) {
 # another problem, and check that the package doesn't hard-code a dependency
 # on libc.  We have to do the latter check here rather than in checks/fields
 # to distinguish from dependencies created by ${shlibs:Depends}.
-#
-# Use this traversal to build a list of package names built from this source
-# package, which we'll use later to check for dependencies in -dev packages.
 my @dep_fields = qw(pre-depends depends recommends suggests);
 foreach my $bin (@package_names) {
     for my $strong (0 .. $#dep_fields) {
@@ -222,47 +219,44 @@ foreach my $bin (@package_names) {
 # should be able to duplicate the descriptions of non-udeb packages and the
 # package description for udebs is much less important or significant to the
 # user.
-my $area;
-if ($header->{'section'}) {
-    if ($header->{'section'} =~ m%^([^/]+)/%) {
+my $area = $header->{'section'};
+if (defined $area) {
+    if ($area =~ m%^([^/]+)/%) {
         $area = $1;
     } else {
-        $area = '';
+        $area = 'main';
     }
 } else {
     tag 'no-section-field-for-source';
 }
 my @descriptions;
-for my $binary_control (@binary_controls) {
-    my $package = $binary_control->{'package'};
+foreach my $bin (@package_names) {
 
     # Accumulate the description.
-    my $desc = $binary_control->{'description'};
-    if ($desc and (not $binary_control->{'xc-package-type'}
-               or $binary_control->{'xc-package-type'} ne 'udeb')) {
-        push(@descriptions, [ $package, split("\n", $desc, 2) ]);
+    my $desc = $info->binary_field ($bin, 'description');
+    my $bin_area;
+    if ($desc and $info->binaries->{$bin} ne 'udeb') {
+        push @descriptions, [ $bin, split("\n", $desc, 2) ];
     }
 
     # If this looks like a -dev package, check its dependencies.
-    if ($package =~ /-dev$/ and $binary_control->{'depends'}) {
-        check_dev_depends ($info, $package, $binary_control->{depends},
+    if ($bin =~ /-dev$/ and $info->binary_field ($bin,'depends')) {
+        check_dev_depends ($info, $bin, $info->binary_field ($bin, 'depends'),
                   @package_names);
     }
 
     # Check mismatches in archive area.
-    next unless $binary_control->{'section'};
-    if (!defined ($area)) {
-        if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
-            $area = ($1 eq 'contrib') ? '' : $1;
-        } else {
-            $area = '';
-        }
-        next;
+    $bin_area = $info->binary_field ($bin, 'section');
+    next unless $area && $bin_area;
+
+    if ($bin_area =~ m%^([^/]+)/%) {
+        $bin_area = $1;
+    } else {
+        $bin_area = 'main';
     }
-    tag 'section-area-mismatch', 'Package ' . $package
-        if ($area && $binary_control->{'section'} !~ m%^$area/%);
-    tag 'section-area-mismatch', 'Package ' . $package
-        if (!$area && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
+    next if $area eq $bin_area or ($area eq 'main' and $bin_area eq 'contrib');
+
+    tag 'section-area-mismatch', $bin, $area, $bin_area;
 }
 
 # Check for duplicate descriptions.
