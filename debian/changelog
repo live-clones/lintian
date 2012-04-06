@@ -78,6 +78,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * collection/bin-pkg-control{,.desc}:
     + [NT] Compress control-index file and bump version of
       bin-pkg-control.
+  * collection/copyright-file:
+    + [NT] Remove code to look for old-style copyright file.
   * collection/file-info{,.desc}:
     + [NT] Compress file-info output and bump version of file-info.
   * collection/hardening-info{,.desc}:
