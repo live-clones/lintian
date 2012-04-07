@@ -154,9 +154,9 @@ sub lab_pkg {
 
 =item $lpkg->info
 
-Returns the L<Lintian::Collect|info> object associated with this entry.
+Returns the L<info|Lintian::Collect> object associated with this entry.
 
-Overrides info from L<Lintian::Processable|Lintian::Processable>.
+Overrides info from L<Lintian::Processable>.
 
 =cut
 
@@ -175,9 +175,9 @@ sub info {
 
 =item $lpkg->clear_cache
 
-Clears any caches held; this includes discarding the L<Lintian::Collect|info> object.
+Clears any caches held; this includes discarding the L<info|Lintian::Collect> object.
 
-Overrides clear_cache from L<Lintian::Processable|Lintian::Processable>.
+Overrides clear_cache from L<Lintian::Processable>.
 
 =cut
 

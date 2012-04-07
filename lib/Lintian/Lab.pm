@@ -71,6 +71,8 @@ use Lintian::Collect;
 use Lintian::Lab::Entry;
 use Lintian::Lab::Manifest;
 
+=encoding utf8
+
 =head1 NAME
 
 Lintian::Lab -- Interface to the Lintian Lab
