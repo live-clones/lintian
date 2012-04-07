@@ -39,51 +39,35 @@ my $info = shift;
 my $proc = shift;
 my $group = shift;
 
-my $ppkg = quotemeta($pkg);
-
 my $found = 0;
 my $linked = 0;
+my $path = "usr/share/doc/$pkg";
 
-# Read package contents...
-foreach (@{$info->sorted_index}) {
-    my $index_info = $info->index->{$_};
-    if (m,usr/share/doc/$ppkg/copyright(\.\S+)?$,) {
-        my $ext = $1;
+if (exists $info->index->{"$path/copyright.gz"}) {
+    tag 'copyright-file-compressed';
+    $found = 1;
+}
 
-        $ext = '' if (! defined $ext);
-        #an extension other than .gz doesn't count as copyright file
-        next unless ($ext eq '') or ($ext eq '.gz');
-        $found = 1;
-
-        #search for an extension
-        if ($ext eq '.gz') {
-            tag 'copyright-file-compressed';
-            last;
-        }
-
-        #make sure copyright is not a symlink
-        if ($index_info->{link}) {
-            tag 'copyright-file-is-symlink';
-            last;
-        }
-
-        #otherwise, pass
-        if (($ext eq '') and not $index_info->{link}) {
-            # everything is ok.
-            last;
-        }
-        fail("unhandled case: $_");
-
-    } elsif (m,usr/share/doc/$ppkg$, and $index_info->{link}) {
-        my $link = $index_info->{link};
-
-        $found = 1;
+if (exists $info->index->{"$path/copyright"}) {
+    my $index_info = $info->index->{"$path/copyright"};
+    $found = 1;
+    if ($index_info->{type} eq 'l') {
+        tag 'copyright-file-is-symlink';
         $linked = 1;
+        # Fall through here - coll/copyright-file protects us
+        # from reading through an "evil" link.
+    }
+}
+
+if (not $found) {
+    my $index_info = $info->index->{$path};
+    if (defined $index_info && $index_info->{link}) {
+        my $link = $index_info->{link};
 
         # check if this symlink references a directory elsewhere
         if ($link =~ m,^(?:\.\.)?/,) {
             tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc', $link;
-            last;
+            return;
         }
 
         # The symlink may point to a subdirectory of another /usr/share/doc
@@ -100,13 +84,13 @@ foreach (@{$info->sorted_index}) {
         # We therefore just require the dependency for now and don't worry
         # about the version number.
         $link =~ s,/.*,,;
-        if (not depends_on($info, $link)) {
+        if (not depends_on ($info, $link)) {
             tag 'usr-share-doc-symlink-without-dependency', $link;
-            last;
+            return;
         }
         # Check if the link points to a package from the same source.
-        check_cross_link($group, $link);
-        last;
+        check_cross_link ($group, $link);
+        return;
     }
 }
 
