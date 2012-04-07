@@ -195,7 +195,7 @@ sub exists {
 
 Fetches an existing package from the lab.
 
-The first argument can be a L<Lintian::Processable|proccessable>.  In that
+The first argument can be a L<processable|Lintian::Processable>.  In that
 case all other arguments are ignored.
 
 If the first calling convention is used then this method will search

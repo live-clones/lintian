@@ -278,7 +278,7 @@ Print a tag.  The first two arguments are hash reference with the
 information about the package and the tag, $extra is the extra
 information for the tag (if any) as an array reference, and $override
 is either undef if the tag is not overridden or the
-L<Lintian::Tag::Override|override> for this tag.  Called from
+L<override|Lintian::Tag::Override> for this tag.  Called from
 Lintian::Tags::tag().
 
 =cut
@@ -375,7 +375,7 @@ sub print_end_pkg {
 
 The following methods are only intended for subclassing and are
 only available as instance methods.  The methods mentioned in
-L<CLASS/INSTANCE METHODS>
+L</CLASS/INSTANCE METHODS>
 usually only check whether they should do anything at all (according
 to the values of verbosity_level and debug) and then call one of
 the following methods to do the actual printing. Allmost all of them
@@ -507,7 +507,7 @@ tags are available:
 
 =item :messages
 
-Exports all the methods in L<CLASS/INSTANCE METHODS>
+Exports all the methods in L</CLASS/INSTANCE METHODS>
 
 =item :util
 

@@ -67,8 +67,8 @@ sub new {
 
 =item $pool->add_file($file)
 
-Adds a file to the pool.  The $file will be turned into
-a L<Lintian::Processable> and grouped together with other
+Adds a file to the pool.  The $file will be turned into a
+L<processable|Lintian::Processable> and grouped together with other
 processables from the same source package (if any).
 
 =cut
@@ -97,7 +97,7 @@ sub add_file {
 
 =item $pool->add_proc ($proc)
 
-Adds a L<Lintian::Processable|processable> to the pool.
+Adds a L<processable|Lintian::Processable> to the pool.
 
 =cut
 

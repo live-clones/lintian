@@ -44,7 +44,7 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 Instances of this perl class are objects that Lintian can process (e.g.
 deb files).  Multiple objects can then be combined into
-L<Lintain::ProcessableGroup|groups>, which Lintian will process
+L<groups|Lintain::ProcessableGroup>, which Lintian will process
 together.
 
 =head1 METHODS
@@ -108,11 +108,6 @@ Returns the name of the source package.
 
 Returns the version of the source package.
 
-=item $proc->group()
-
-Returns the L<Lintain::ProcessableGroup|group> $proc is in,
-if any.  If the processable is not in a group, this returns C<undef>.
-
 =item $proc->tainted()
 
 Returns a truth value if one or more fields in this Processable is
@@ -125,7 +120,7 @@ Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch 
 
 =item $proc->group([$group])
 
-Returns the L<Lintain::ProcessableGroup|group> $proc is in,
+Returns the L<group|Lintain::ProcessableGroup> $proc is in,
 if any.  If the processable is not in a group, this returns C<undef>.
 
 Can also be used to set the group of this processable.
@@ -136,7 +131,7 @@ Lintian::Processable->mk_accessors (qw(group));
 
 =item $proc->info
 
-Returns L<Lintian::Collect|$info> element for this processable.
+Returns L<$info|Lintian::Collect> element for this processable.
 
 Note: This method must be implemented by sub-classes unless they
 provide an "info" field.

@@ -48,7 +48,7 @@ Lintian::Processable::Package -- An object that Lintian can process
 
 Instances of this perl class are objects that Lintian can process (e.g.
 deb files).  Multiple objects can then be combined into
-L<Lintain::ProcessableGroup|groups>, which Lintian will process
+L<groups|Lintian::ProcessableGroup>, which Lintian will process
 together.
 
 =head1 METHODS
@@ -65,7 +65,7 @@ defines this type of processable (e.g. the changes file).
 
 =item $proc->lab_pkg([$lpkg])
 
-Returns or sets the L<Lab::Package|$info> element for this processable.
+Returns or sets the L<$lpkg|Lintian::Lab::Entry> element for this processable.
 
 =cut
 

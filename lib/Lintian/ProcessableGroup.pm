@@ -44,7 +44,7 @@ Lintian::ProcessableGroup -- A group of objects that Lintian can process
 =head1 DESCRIPTION
 
 Instances of this perl class are sets of
-L<Lintian::Processable|processables>.  It allows at most one source
+L<processables|Lintian::Processable>.  It allows at most one source
 and one changes package per set, but multiple binary packages
 (provided that the binary is not already in the set).
 
@@ -296,7 +296,7 @@ sub get_binary_processables {
 
 =item $group->info
 
-Returns L<Lintian::Collect::Group|$info> element for this group.
+Returns L<$info|Lintian::Collect::Group> element for this group.
 
 =cut
 

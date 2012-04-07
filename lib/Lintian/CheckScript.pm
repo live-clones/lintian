@@ -152,9 +152,9 @@ sub is_check_type {
     return $self->{'type-table'}->{$type};
 }
 
-=item $cs->get_tag ($tag)
+=item $cs->get_tag ($tagname)
 
-Return the L<$tag|Lintian::Info::Tag> or undef (if the tag is not in
+Return the L<tag|Lintian::Info::Tag> or undef (if the tag is not in
 this check).
 
 =cut

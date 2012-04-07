@@ -121,8 +121,8 @@ Lintian::Collect - Lintian interface to package data collection
 
 =head1 SYNOPSIS
 
-    my ($name, $type) = ('foobar', 'udeb');
-    my $collect = Lintian::Collect->new($name, $type);
+    my ($name, $type, $dir) = ('foobar', 'udeb', '/some/abs/path');
+    my $collect = Lintian::Collect->new ($name, $type, $dir);
     $name = $collect->name;
     $type = $collect->type;
 
@@ -132,6 +132,10 @@ Lintian::Collect provides the shared interface to package data used by
 source, binary and udeb packages and .changes files.  It creates an 
 object of the appropriate type and provides common functions used by the 
 collection interface to all types of package.
+
+Usually instances should not be created directly (exceptions include
+collections), but instead be requested via the
+L<info|Lintian::Lab::Entry/info> method in Lintian::Lab::Entry.
 
 This module is in its infancy.  Most of Lintian still reads all data from
 files in the laboratory whenever that data is needed and generates that
@@ -144,13 +148,16 @@ data in memory.
 
 =over 4
 
-=item new(PACKAGE, TYPE)
+=item new(PACKAGE, TYPE, BASEDIR)
 
-Creates a new object appropriate to the package type.  TYPE can be 
-retrieved later with the type() method.  Returns undef an unknown TYPE.
+Creates a new object appropriate to the package type.  TYPE can be
+retrieved later with the type() method.  Croaks if given an unknown
+TYPE.
 
 PACKAGE is the name of the package and is stored in the collect object.
 It can be retrieved with the name() method.
+
+BASEDIR is the base directory for the data and should be absolute.
 
 =back
 
