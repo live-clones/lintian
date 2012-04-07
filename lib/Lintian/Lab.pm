@@ -88,13 +88,17 @@ Lintian::Lab -- Interface to the Lintian Lab
  $lab->open;
  
  # Fetch a package from the lab
- my $pkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
+ my $lpkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
  
  #FIXME: Add more to the synopsis here
  
  $lab->close;
 
 =head1 DESCRIPTION
+
+This module provides an abstraction from "How and where" packages are
+placed.  It handles creation and deletion of the Lintian Lab itself as
+well as providing access to the entries.
 
 =head2 Methods
 

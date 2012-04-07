@@ -29,18 +29,24 @@ Lintian::Lab::Entry - A package inside the Lab
 
  use Lintian::Lab;
  
- my $lab = Lintian::Lab->new ("dir", "dist");
- my $lpkg = $lab->get_package ("name", "version", "arch", "type", "path");
+ my $lab = Lintian::Lab->new ("dir");
+ my $lpkg = $lab->get_package ("name", "version", "arch", "type");
  
  # create the entry if it does not exist
  $lpkg->create unless $lpkg->exists;
+ 
+ # obtain an Lintian::Collect object.
+ my $info = $lpkg->info;
+ 
+ $lpkg->clear_cache;
  
  # Remove package from lab.
  $lpkg->remove;
 
 =head1 DESCRIPTION
 
-... FIXME ?
+This module provides basic access and manipulation about an entry
+(i.e.  processable) stored in the Lab.
 
 =head2 METHODS
 
