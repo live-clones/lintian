@@ -55,6 +55,7 @@ use FileHandle;
 use Lintian::Command qw(spawn);
 use Lintian::Output qw(string);
 use Digest::MD5;
+use Scalar::Util qw(openhandle);
 
 # general function to read dpkg control files
 # this function can parse output of `dpkg-deb -f', .dsc,
@@ -226,13 +227,23 @@ sub _ensure_file_is_sane {
     return 0;
 }
 
+# Reads an entire file(-handle) and return it as a scalar.
+#
+# NB: When given a handle, it will *not* close the handle for
+# the caller.
 sub slurp_entire_file {
     my $file = shift;
-    open(C, '<', $file)
-        or fail("cannot open file $file for reading: $!");
+    my $fd;
+    my $res;
+    if (openhandle $file) {
+        $fd = $file;
+    } else {
+        open $fd, '<', $file
+            or fail ("cannot open file $file for reading: $!");
+    }
     local $/;
-    local $_ = <C>;
-    close(C);
+    local $_ = <$fd>;
+    close $fd unless openhandle $file;
     return $_;
 }
 
