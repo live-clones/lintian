@@ -5,7 +5,7 @@ Type: binary
 Info: Checks various build mistakes in Apache2 reverse dependencies
 Needs-Info: bin-pkg-control, index, scripts, unpacked
 
-Tag: wrong-apache2-module-package-name
+Tag: non-standard-apache2-module-package-name
 Severity: normal
 Certainty: certain
 Info: The package appears to be an Apache2 HTTPD server module but it isn't
@@ -53,7 +53,7 @@ Info: The package installs a piece of Apache2 configuration to
  must be used.
 
 
-Tag: wrong-apache2-configuration-name
+Tag: non-standard-apache2-configuration-name
 Severity: normal
 Certainty: certain
 Info: The package appears to be a web application which is installing a

@@ -98,7 +98,7 @@ sub run {
 sub check_web_application_package {
     my ($pkg, $type, $info, $file, $pkgtype, $webapp) = @_;
 
-    tag "wrong-apache2-configuration-name", $webapp, '!=', "$pkg.conf"
+    tag "non-standard-apache2-configuration-name", $webapp, '!=', "$pkg.conf"
         if $webapp ne "$pkg.conf" or $webapp =~ m/^local-./;
 
     my $uncondep = 0;
@@ -143,7 +143,7 @@ sub check_module_package {
 
     $expected_name =~ tr/_/-/;
     if ( $expected_name ne $pkg ) {
-        tag 'wrong-apache2-module-package-name', $pkg, '!=', $expected_name;
+        tag 'non-standard-apache2-module-package-name', $pkg, '!=', $expected_name;
     }
 
     for my $type (qw/pre-depends depends recommends/)  {
