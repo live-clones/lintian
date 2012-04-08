@@ -216,6 +216,17 @@ if (not defined $info->field('version')) {
         if ($version =~ /\+b\d+$/ && $type eq 'source') {
             tag 'binary-nmu-debian-revision-in-source', $version;
         }
+        if ($upstream =~ m/[^~a-z](rc|alpha|beta|dev|pre(?:view|release)?)([^a-z].*|\z)/) {
+            my $expected = $upstream;
+            my $rc = $1;
+            my $rest = $2//'';
+            my $suggestion;
+            # Remove the rc-part and the preceeding symbol (if any).
+            $expected =~ s/[\.\+\-\:]?\Q$rc\E.*//;
+            $suggestion = "$expected~$rc$rest";
+            tag 'rc-version-greater-than-expected-version', $upstream, '>', $expected, "(consider using $suggestion)",
+                if $info->native or ($debian eq 1 or $debian =~ m,^0(?:\.1|ubuntu1)?$,);
+        }
 
         # Checks for the dfsg convention for repackaged upstream
         # source.  Only check these against the source package to not

@@ -2,6 +2,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - rc-version-greater-than-expected-version
       - udeb-uses-unsupported-compression-for-data-tarball
     + Removed:
       - ancient-dpkg-long-filenames-check
@@ -51,6 +52,11 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Remove special handling of the Ubuntu specific field,
       "original-maintainer".  This field is now handled by vendor
       specific data files.  (Closes: #649852)
+    + [JW,NT] Check for common mistakes with preview release and
+      release candidate versions.  For non-native packages, this
+      check is only done on initial uploads of new upstream
+      releases.  Thanks to Stefano Rivera and Julian Taylor for
+      their additional suggestions.  (Closes: #649277)
   * checks/files{,.desc}:
     + [NT] Remove "manual" lazy loads of data files.
     + [NT] Remove code for the uses-FHS-doc-dir tag.

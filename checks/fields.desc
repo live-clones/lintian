@@ -1077,3 +1077,12 @@ Info: The package appears to be a transitional package, but it is not
  .
  Using oldlibs/extra assists package managers in handling the
  transition package correctly.
+
+Tag: rc-version-greater-than-expected-version
+Severity: normal
+Certainty: possible
+Ref: policy 5.6.12
+Info: The package appears to be a release candidate or preview release, but
+ the version sorts higher than the expected final release.
+ .
+ Note this check is limited to new upstream releases of non-native packages.
