@@ -10,7 +10,7 @@
 #     - If present, it declares that this library is built from the
 #       source package <src>
 #     - If both "source" and "source-regex" are omitted, then
-#       Lintian will defailt to using "source" with a value equal
+#       Lintian will default to using "source" with a value equal
 #       to the key.
 #     - Cannot be used with "source-regex"
 #
