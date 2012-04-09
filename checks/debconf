@@ -54,8 +54,8 @@ my %valid_priorities = map { $_ => 1 }
 
 # All the packages that provide debconf functionality.  Anything using debconf
 # needs to have dependencies that satisfy one of these.
-my @debconfs = qw(debconf debconf-2.0 cdebconf cdebconf-udeb libdebconfclient0
-                  libdebconfclient0-udeb);
+my $ANY_DEBCONF = Lintian::Relation->new (join (' | ', qw(debconf debconf-2.0 cdebconf
+                           cdebconf-udeb libdebconfclient0 libdebconfclient0-udeb)));
 
 sub run {
 
@@ -145,21 +145,7 @@ if (defined $info->field('version')) {
     $selfrel = "$pkg";
 }
 
-my (%dependencies, @alldeps);
-
-for my $field (qw(depends pre-depends)) {
-    if (defined $info->field($field)) {
-        $_ = $info->field($field);
-        $_ .= ", $selfrel";
-        push @alldeps, $_;
-        $dependencies{$field} = Lintian::Relation->new($_);
-    } else {
-        push @alldeps, $selfrel;
-        $dependencies{$field} = Lintian::Relation->new($selfrel);
-    }
-}
-
-my $alldependencies = Lintian::Relation->new(join ', ', @alldeps);
+my $alldependencies = $info->relation ('strong');
 
 # See if the package depends on dbconfig-common.  Packages that do are allowed
 # to have a config file with no templates, since they use the dbconfig-common
@@ -488,14 +474,13 @@ foreach my $template (@templates_seen) {
 # Check that the right dependencies are in the control file.  Accept any
 # package that might provide debconf functionality.
 
-my $anydebconf = join (' | ', @debconfs);
 if ($usespreinst) {
-    unless ($dependencies{'pre-depends'}->implies($anydebconf)) {
+    unless ($info->relation ('pre-depends')->implies($ANY_DEBCONF)) {
         tag 'missing-debconf-dependency-for-preinst'
             unless $type eq 'udeb';
     }
 } else {
-    unless ($alldependencies->implies($anydebconf) or $usesdbconfig) {
+    unless ($alldependencies->implies ($ANY_DEBCONF) or $usesdbconfig) {
         tag 'missing-debconf-dependency';
     }
 }
