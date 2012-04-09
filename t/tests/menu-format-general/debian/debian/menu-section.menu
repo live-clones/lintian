@@ -1,8 +1,11 @@
 ?package(menu-section):needs="X11" section="Root"\
   title="pargs (new root)" command="/usr/bin/pargs-section"\
   longtitle="Argument printer"
-?package(menu-section):needs="X11" section="Apps/Games"\
+?package(menu-section):needs="X11" section="Apps/Games/Toys"\
   title="pargs (apps/games)" command="/usr/bin/pargs-section"\
+  longtitle="Argument printer"
+?package(menu-section):needs="X11" section="Games"\
+  title="pargs (games)" command="/usr/bin/pargs-section"\
   longtitle="Argument printer"
 ?package(menu-section):needs="X11" section="Apps/Programming"\
   title="pargs (apps/prog)" command="/usr/bin/pargs-section"\

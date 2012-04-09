@@ -65,6 +65,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/manpages{,.desc}:
     + [RA] Detect hyphen used as minus sign following a groff \f[C] font
       change.  Thanks, Iustin Pop.  (Closes: #664471)
+  * checks/menu-format:
+    + [NT] Move menu section lists into a data file.
   * checks/menus{,.desc}:
     + [NT] Remove "manual" lazy load of data file.
   * checks/nmu:
@@ -110,6 +112,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] New file.
   * data/changes-file/{debian-dists -> known-dists}:
     + [NT] Renamed file.
+  * data/menu-format/menu-sections:
+    + [NT] New file.
 
   * frontend/lintian:
     + [JW] Fix typo in error message.
