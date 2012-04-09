@@ -191,6 +191,7 @@ sub _load_binary_fields {
 # following special field names are supported:  all (pre-depends, depends,
 # recommends, and suggests), strong (pre-depends and depends), and weak
 # (recommends and suggests).
+# sub binary_relation Needs-Info debfiles
 sub binary_relation {
     my ($self, $package, $field) = @_;
     $field = lc $field;
@@ -202,23 +203,17 @@ sub binary_relation {
                    weak   => [ qw(recommends suggests) ]);
     my $result;
     if ($special{$field}) {
-        my $merged;
-        for my $f (@{ $special{$field} }) {
-            # sub binary_relation Needs-Info debfiles
-            my $value = $self->binary_field($package, $f);
-            $merged .= ', ' if (defined($merged) and defined($value));
-            $merged .= $value if defined($value);
-        }
-        $result = $merged;
+        $result = Lintian::Relation->and (
+            map { $self->binary_relation ($package, $_) } @{ $special{$field} }
+        );
     } else {
         my %known = map { $_ => 1 }
             qw(pre-depends depends recommends suggests enhances breaks
                conflicts provides replaces);
         croak("unknown relation field $field") unless $known{$field};
         my $value = $self->binary_field($package, $field);
-        $result = $value if defined($value);
+        $result = Lintian::Relation->new ($value);
     }
-    $result = Lintian::Relation->new($result);
     $self->{binary_relation}->{$package}->{$field} = $result;
     return $result;
 }

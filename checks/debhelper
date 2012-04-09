@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Lintian::Data;
+use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail slurp_entire_file);
 
@@ -51,6 +52,8 @@ my %versions = (
     dh_installgsettings => '8.1.3~',
     dh_ucf              => '8.1.5~',
 );
+
+my $MISC_DEPENDS = Lintian::Relation->new ('${misc:Depends}');
 
 sub run {
 
@@ -223,22 +226,17 @@ my $pkgs = $info->binaries;
 my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
 
 for my $binpkg (keys %$pkgs) {
-    my ($weak_depends, $strong_depends, $depends) = ('','','');
+    next if $pkgs->{$binpkg} ne 'deb';
+    my $strong = $info->binary_relation ($binpkg, 'strong');
+    my $all = $info->binary_relation ($binpkg, 'all');
 
-    foreach my $field (qw(pre-depends depends)) {
-        $strong_depends .= ($info->binary_field($binpkg, $field)//'');
+    if (!$all->implies ($MISC_DEPENDS)) {
+        tag 'debhelper-but-no-misc-depends', $binpkg;
+    } else {
+        tag 'weak-dependency-on-misc-depends', $binpkg
+            unless $strong->implies ($MISC_DEPENDS);
     }
-    foreach my $field (qw(recommends suggests)) {
-        $weak_depends .= ($info->binary_field($binpkg, $field)//'');
-    }
-    $depends = $weak_depends . $strong_depends;
 
-    tag 'debhelper-but-no-misc-depends', $binpkg
-        if $depends !~ m/\$\{misc:Depends\}/ and $pkgs->{$binpkg} eq 'deb';
-
-    tag 'weak-dependency-on-misc-depends', $binpkg
-        if $weak_depends =~ m/\$\{misc:Depends\}/
-           and $pkgs->{$binpkg} eq 'deb';
 }
 
 my $compatnan = 0;

@@ -312,22 +312,18 @@ sub relation {
                    weak   => [ qw(recommends suggests) ]);
     my $result;
     if ($special{$field}) {
-        my $merged;
-        for my $f (@{ $special{$field} }) {
-            my $value = $self->field($f);
-            $merged .= ', ' if (defined($merged) and defined($value));
-            $merged .= $value if defined($value);
-        }
-        $result = $merged;
+        $result = Lintian::Relation->and (
+            map { $self->relation ($_) } @{ $special{$field} }
+        );
     } else {
         my %known = map { $_ => 1 }
             qw(pre-depends depends recommends suggests enhances breaks
                conflicts provides replaces);
         croak("unknown relation field $field") unless $known{$field};
         my $value = $self->field($field);
-        $result = $value if defined($value);
+        $result = Lintian::Relation->new ($value);
     }
-    $self->{relation}->{$field} = Lintian::Relation->new($result);
+    $self->{relation}->{$field} = $result;
     return $self->{relation}->{$field};
 }
 

@@ -160,6 +160,46 @@ sub new_noarch {
     return $class->new($relation);
 }
 
+
+=item and(RELATION, ...)
+
+Creates a new Lintian::Relation object produced by AND'ing all the
+relations together.  Semantically it is the similar to:
+
+ Lintian::Relation->new (join (', ', @relations))
+
+Except it can avoid some overhead and it works if some of the elements
+are Lintian::Relation objects already.
+
+=cut
+
+sub and {
+    my ($class, @args) = @_;
+    my @result;
+    foreach my $arg (@args) {
+        my $rel = $arg;
+        unless ($arg && ref $arg eq 'Lintian::Relation') {
+            # Optimize out empty entries.
+            next unless $arg;
+            $rel = Lintian::Relation->new ($arg);
+        }
+        if ($rel->[0] eq 'AND') {
+            my @r = @$rel;
+            push @result, @r[1..$#r];
+        } else {
+            push @result, $rel;
+        }
+    }
+    my $self;
+    if (@result == 1) {
+        $self = $result[0];
+    } else {
+        $self = ['AND', @result];
+    }
+    bless ($self, $class);
+    return $self;
+}
+
 =back
 
 =head1 INSTANCE METHODS

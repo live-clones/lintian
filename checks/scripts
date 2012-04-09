@@ -262,16 +262,10 @@ foreach (@{$info->sorted_index}) {
     $executable{$_} = 1;
 }
 
-my $all_deps = '';
-for my $field (qw/suggests recommends depends pre-depends provides/) {
-    if (defined $info->field($field)) {
-        $all_deps .= ', ' if $all_deps;
-        $all_deps .= $info->field($field);
-    }
-}
-$all_deps .= ', ' if $all_deps;
-$all_deps .= $pkg;
-my $all_parsed = Lintian::Relation->new($all_deps);
+my $all_parsed = Lintian::Relation->and ($info->relation ('all'),
+                                         $info->relation ('provides'),
+                                         $pkg);
+my $all_deps = $all_parsed->unparse ();
 my $str_deps = $info->relation('strong');
 
 

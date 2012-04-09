@@ -259,10 +259,7 @@ $provides .= "( = $version)" if defined $version;
 # Assume the version to be a non-native version to avoid
 # uninitialization warnings later.
 $version = '0-1' unless defined $version;
-if (defined $info->field('provides')) {
-    $provides .= ', ' . $info->field('provides');
-}
-$provides = Lintian::Relation->new($provides);
+$provides = Lintian::Relation->and ($info->relation ('provides'), $provides);
 
 my $shlibsf = $info->control('shlibs');
 my $symbolsf = $info->control('symbols');
