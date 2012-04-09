@@ -24,6 +24,21 @@ use warnings;
 
 use Lintian::Relation::Version;
 
+use constant {
+    MATCH_PRED_NAME => 0,
+    MATCH_PRED_FULL => 1,
+    MATCH_OR_CLAUSE_FULL => 3,
+};
+use base 'Exporter';
+our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
+@EXPORT = ();
+%EXPORT_TAGS = (
+    constants => [qw(MATCH_PRED_NAME MATCH_PRED_FULL MATCH_OR_CLAUSE_FULL)],
+);
+@EXPORT_OK = (
+    @{ $EXPORT_TAGS{constants} }
+);
+
 =head1 NAME
 
 Lintian::Relation - Lintian operations on dependencies and relationships
@@ -655,6 +670,113 @@ sub unparse {
     } else {
         return;
     }
+}
+
+=item matches (REGEX[, RULE])
+
+Check if one of the predicates in this relation matches REGEX.  RULE
+determines what is tested against REGEX and if not given, defaults to
+MATCH_PRED_NAME.
+
+This method will return a truth value if REGEX matches at least one
+predicate or clause (as defined by the RULE parameter - see below).
+
+NOTE: Often L</implies> (or L</implies_inverse>) is a better choice
+than this method.  This method should generally only be used when
+checking for a "pattern" package (e.g. phpapi-[\d\w+]+).
+
+
+RULE can be one of:
+
+=over 4
+
+=item MATCH_PRED_NAME
+
+Match REGEX against the package name in each predicate (i.e. version
+and architecture constrains are ignored).  Each predicate is tested in
+isolation.  As an example:
+
+ my $rel = Lintian::Relation->new ('somepkg | pkg-0 (>= 1)');
+ # Will match (version is ignored)
+ $rel->matches (qr/^pkg-\d$/, MATCH_PRED_NAME);
+
+=item MATCH_PRED_FULL
+
+Match REGEX against the full (normalized) predicate (i.e. including
+version and architecture).  Each predicate is testing in isolation.
+As an example:
+
+ my $vrel = Lintian::Relation->new ('somepkg | pkg-0 (>= 1)');
+ my $uvrel = Lintian::Relation->new ('somepkg | pkg-0');
+
+ # Will NOT match (does not match with version)
+ $vrel->matches (qr/^pkg-\d$/, MATCH_PRED_FULL);
+ # Will match (this relation does not have a version)
+ $uvrel->matches (qr/^pkg-\d$/, MATCH_PRED_FULL);
+
+ # Will match (but only because there is a version)
+ $vrel->matches (qr/^pkg-\d \(.*\)$/, MATCH_PRED_FULL);
+ # Will NOT match (there is no verson in the relation)
+ $uvrel->matches (qr/^pkg-\d  \(.*\)$/, MATCH_PRED_FULL);
+
+=item MATCH_OR_CLAUSE_FULL
+
+Match REGEX against the full (normalized) OR clause.  Each predicate
+will have both version and architecture constrains present.  As an
+example:
+
+
+ my $vpred = Lintian::Relation->new ('pkg-0 (>= 1)');
+ my $orrel = Lintian::Relation->new ('somepkg | pkg-0 (>= 1)');
+ my $rorrel = Lintian::Relation->new ('pkg-0 (>= 1) | somepkg');
+
+ # Will match
+ $vrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, MATCH_OR_CLAUSE_FULL);
+ # These Will NOT match (does not match the "|" and the "somepkg" part)
+ $orrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, MATCH_OR_CLAUSE_FULL);
+ $rorrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, MATCH_OR_CLAUSE_FULL);
+
+=back
+
+=cut
+
+
+# The last argument is not part of the public API.  It's a partial
+# relation that's not a blessed object and is used by matches()
+# internally so that it can recurse.
+
+sub matches {
+    my ($self, $regex, $rule, $partial) = @_;
+    my $relation = $partial // $self;
+    $rule //= MATCH_PRED_NAME;
+    if ($relation->[0] eq 'PRED') {
+        my $against = $relation->[1];
+        $against = $self->unparse ($relation) if $rule & MATCH_PRED_FULL;
+        return 1 if $against =~ m/$regex/;
+        return;
+    } elsif ($rule == MATCH_OR_CLAUSE_FULL and $relation->[0] eq 'OR') {
+        my $against = $self->unparse ($relation);
+        return 1 if $against =~ m/$regex/;
+        return;
+    } elsif ($relation->[0] eq 'AND' or $relation->[0] eq 'OR' or
+             $relation->[0] eq 'NOT') {
+        for my $rel (@$relation[1 .. $#$relation]) {
+            return 1 if $self->matches ($regex, $rule, $rel);
+        }
+        return;
+    }
+}
+
+=item empty ()
+
+Returns a truth value if this relation is empty (i.e. it contains no
+predicates).
+
+=cut
+
+sub empty {
+    my ($self) = @_;
+    return 1 if $self->[0] eq 'AND' and not $self->[1];
 }
 
 =back

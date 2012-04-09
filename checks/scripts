@@ -265,7 +265,6 @@ foreach (@{$info->sorted_index}) {
 my $all_parsed = Lintian::Relation->and ($info->relation ('all'),
                                          $info->relation ('provides'),
                                          $pkg);
-my $all_deps = $all_parsed->unparse ();
 my $str_deps = $info->relation('strong');
 
 
@@ -418,7 +417,8 @@ for my $filename (sort keys %{$info->scripts}) {
                 # Initialization files for csh.
             } elsif ($base eq 'fish' && $filename =~ m,^etc/fish\.d/,) {
                 # Initialization files for fish.
-            } elsif ($base eq 'ocamlrun' && $all_deps =~ /\bocaml(-base)?(-nox)?-\d\.[\d.]+/) {
+            } elsif ($base eq 'ocamlrun' &&
+                     $all_parsed->matches (qr/^ocaml(?:-base)?(?:-nox)?-\d\.[\d.]+/)) {
                 # ABI-versioned virtual packages for ocaml
             } else {
                 tag 'missing-dep-for-interpreter', "$base => $depends",
