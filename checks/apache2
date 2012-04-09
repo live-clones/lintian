@@ -241,9 +241,12 @@ sub inspect_conf_file {
     return if -l $filename;
     open my $fd, '<', $filename or fail "cannot open configuration file $filename: $!";
     while (<$fd>)  {
-        # only check until the first non-empty non-comment line. That follows
-        # the a2enmod reference implementation
-        last unless m/^\s*(?:#.*)?$/;
+
+        for my $directive ('Order', 'Satisfy', 'Allow', 'Deny', '<(|/)Limit.*?>', '<(|/)LimitExcept.*?>') {
+            if (m/($directive)/) {
+                tag 'apache2-deprecated-auth-config', $1;
+            }
+        }
 
         if (m/^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
             tag 'apache2-unsupported-dependency', $file, $1
