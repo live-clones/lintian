@@ -20,6 +20,8 @@ mkdir "${dir}/.hg"
 echo 'diff-contains-hg-control-dir' > "${dir}/.hg/foo"
 mkdir "${dir}/.be"
 echo 'diff-contains-bts-control-dir' > "${dir}/.be/foo"
+mkdir "${dir}/.pc"
+echo 'diff-contains-quilt-control-dir' > "${dir}/.pc/foo"
 
 echo 'diff-contains-cmake-cache-file' > "${dir}/CMakeCache.txt"
 echo 'diff-contains-svn-commit-file' > "${dir}/svn-commit.tmp"

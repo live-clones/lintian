@@ -16,6 +16,7 @@ Test-For:
  diff-contains-hg-control-dir
  diff-contains-hg-tags-file
  diff-contains-patch-failure-file
+ diff-contains-quilt-control-dir
  diff-contains-substvars
  diff-contains-svk-commit-file
  diff-contains-svn-commit-file

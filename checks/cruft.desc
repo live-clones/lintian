@@ -190,6 +190,16 @@ Info: The Debian diff or native package contains files in a directory
  respectively.
 Ref: dpkg-source(1)
 
+Tag: diff-contains-quilt-control-dir
+Severity: normal
+Certainty: certain
+Info: The Debian diff or native package contains files in a directory
+ used by quilt, which are not useful in a diff or native package.
+ <tt>dpkg-source</tt> will automatically exclude these if it is passed
+ <tt>-I</tt> or <tt>-i</tt> for native and non-native packages
+ respectively.
+Ref: dpkg-source(1)
+
 Tag: source-contains-bts-control-dir
 Severity: pedantic
 Certainty: certain

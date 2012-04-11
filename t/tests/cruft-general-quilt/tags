@@ -10,6 +10,7 @@ W: cruft-general-quilt source: diff-contains-git-control-dir debian/.git
 W: cruft-general-quilt source: diff-contains-hg-control-dir debian/.hg
 W: cruft-general-quilt source: diff-contains-hg-tags-file debian/.hgtags
 W: cruft-general-quilt source: diff-contains-patch-failure-file debian/foo.rej
+W: cruft-general-quilt source: diff-contains-quilt-control-dir debian/.pc
 W: cruft-general-quilt source: diff-contains-substvars debian/somepackage.substvars
 W: cruft-general-quilt source: diff-contains-substvars debian/substvars
 W: cruft-general-quilt source: diff-contains-svk-commit-file debian/svk-commit444.tmp

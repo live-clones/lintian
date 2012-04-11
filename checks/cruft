@@ -65,6 +65,9 @@ my @directory_checks =
      [ qr,^(.+/)?\.hg$,       => 'hg-control-dir'   ],
      [ qr,^(.+/)?\.be$,       => 'bts-control-dir'  ],
      [ qr,^(.+/)?\.ditrack$,  => 'bts-control-dir'  ],
+
+     # Special case (can only be triggered for diffs)
+     [ qr,^(.+/)?\.pc$,       => 'quilt-control-dir'  ],
     );
 
 # File checks.  These regexes match files that shouldn't be in the source
@@ -325,6 +328,9 @@ sub find_cruft {
     # Ignore the .pc directory and its contents, created as part of the
     # unpacking of a 3.0 (quilt) source package.
     if (-d and $_ eq '.pc') {
+        # NB: this catches all .pc dirs (regardless of depth).  If you
+        # change that, please check we have a
+        # "source-contains-quilt-control-dir" tag.
         $File::Find::prune = 1;
         return;
     }

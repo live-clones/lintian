@@ -2,6 +2,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - diff-contains-quilt-control-dir
       - rc-version-greater-than-expected-version
       - udeb-uses-unsupported-compression-for-data-tarball
     + Removed:
@@ -41,6 +42,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
       Instead replace it with a more generalized one that derivatives
       can reuse by extending vendor specific data files.  Thanks to
       Daniel Dehennin for the suggestion.  (Closes: #648777)
+  * checks/cruft{,.desc}:
+    + [NT] Check for quilt control dirs in the debian packaging files.
   * checks/deb-format{,.desc}:
     + [NT] Replace old udeb compression tag with a more general
       one.  (Closes: #664600)
