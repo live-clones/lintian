@@ -124,7 +124,8 @@ sub binaries {
 sub source_field {
     my ($self, $field) = @_;
     $self->_load_dctrl unless exists $self->{source_field};
-    return $self->{source_field}{$field};
+    return $self->{source_field}{$field} if $field;
+    return $self->{source_field};
 }
 
 # Returns the value of a control field for a binary package or undef
@@ -137,9 +138,10 @@ sub binary_field {
 
     # Check if the package actually exists, otherwise it may create an
     # empty entry for it.
-    return $self->{binary_field}{$package}{$field}
-        if exists $self->{binary_field}{$package};
-
+    if (exists $self->{binary_field}{$package}) {
+        return $self->{binary_field}{$package}{$field} if $field;
+        return $self->{binary_field}{$package};
+    }
     return;
 }
 
@@ -169,6 +171,7 @@ sub _load_dctrl {
     unless ($ok) {
         # Bad file, assume the package and field does not exist.
         $self->{binary_field} = {};
+        $self->{source_field} = {};
         return;
     }
     my @control_data;
@@ -362,12 +365,15 @@ Package-Type as value (which should be either C<deb> or C<udeb>
 currently).  The debfiles collection script must have been run
 to make the F<debfiles/control> file available.
 
-=item binary_field(PACKAGE, FIELD)
+=item binary_field(PACKAGE[, FIELD])
 
 Returns the content of the field FIELD for the binary package PACKAGE in
 the F<debian/control> file, or an undef if the field is not present.
 Inheritance of field values from the source section of the control file is
 not implemented.  Only the literal value of the field is returned.
+
+If FIELD is not given, return a hashref mapping field names to their
+values.  This hashref should not be modified.
 
 The debfiles collection script must have been run to make the
 F<debfiles/control> file available.
@@ -448,11 +454,14 @@ object will be empty (always satisfied and implies nothing).
 The same as relation(), but ignores architecture restrictions in the
 FIELD field.
 
-=item source_field(FIELD)
+=item source_field([FIELD])
 
 Returns the content of the field FIELD from source package paragraph
 of the F<debian/control> file, or an undef if the field is not
 present.  Only the literal value of the field is returned.
+
+If FIELD is not given, return a hashref mapping field names to their
+values.  This hashref should not be modified.
 
 The debfiles collection script must have been run to make the
 F<debfiles/control> file available.
