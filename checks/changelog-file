@@ -44,8 +44,6 @@ my $ppkg = quotemeta($pkg);
 my @doc_files;
 
 my %file_info;
-my %is_a_symlink;
-
 
 # skip packages which have a /usr/share/doc/$pkg -> foo symlink
 return 0 if $info->index->{"usr/share/doc/$pkg"} and
@@ -59,7 +57,6 @@ for my $file (@{$info->sorted_index}) {
     $file_info{$file} = $info->file_info->{$file};
 
     if ($file_info{$file} =~ m/^(?:broken )?symbolic link to (.*)/) {
-        $is_a_symlink{$file} = 1;
         # Figure out the link destination.  This algorithm is
         # not perfect but should be good enough.  (If it fails,
         # all that happens is that an evil symlink causes a bogus warning).
@@ -121,7 +118,7 @@ foreach (@{$info->sorted_index}) {
                 }
             }
             if (not $max_compressed and $file_info{$file1} =~ m/gzip compressed/) {
-                unless ($is_a_symlink{$file1}) {
+                if ($info->index->{$file1}->{type} ne 'l') {
                     tag 'changelog-not-compressed-with-max-compression', $file;
                 }
             }
