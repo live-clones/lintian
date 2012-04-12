@@ -1,5 +1,6 @@
 {$srcpkg} ({$version}) unstable; urgency=low
 
+
   * Test: {$testname}
   * improbable-bug-number-in-closes (Closes: #12)
   * Another bug closer without a colon (Closes #555555)
@@ -8,6 +9,10 @@
   * http://www.example.com/but-a-really-long-url-does-not-count-as-a-long-line-at-all
     See http://www.example.com/but-a-really-long-url-does-not-count-as-a-long-line-at-all
     even if preceded by See.
+
+  * Here is another really long in the changelog, and it would be really nice if a
+    certain program would report its line number correctly.  Especially since,
+    we have an extra empty line in the start of the entry.
 
  -- {$author}  {$date}
 

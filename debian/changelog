@@ -37,6 +37,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Move embedded library data to a data file.
     + [NT] Add ELF hardening checks.  Thanks to Kees Cook for
       report and the patches.  (Closes: 650536)
+  * checks/changelog-file:
+    + [NT] Output the correct line number for the "line-too-long"
+      tag.  Thanks to Arno Töll for the report.  (Closes: #657402)
   * checks/changes-file{,.desc}:
     + [NT] Remove Ubuntu specific handling of distribution names.
       Instead replace it with a more generalized one that derivatives
