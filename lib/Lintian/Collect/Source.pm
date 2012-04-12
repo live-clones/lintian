@@ -106,7 +106,7 @@ sub binaries {
     my ($self) = @_;
     return $self->{binaries} if exists $self->{binaries};
     # we need the binary fields for this.
-    $self->_load_binary_fields unless exists $self->{binary_field};
+    $self->_load_dctrl unless exists $self->{binary_field};
 
     my %binaries;
     foreach my $pkg (keys %{ $self->{binary_field} } ) {
@@ -118,13 +118,22 @@ sub binaries {
     return $self->{binaries};
 }
 
+# Returns the value of a source field in d/control or undef
+# if that field is not present.
+# sub source_field Needs-Info debfiles
+sub source_field {
+    my ($self, $field) = @_;
+    $self->_load_dctrl unless exists $self->{source_field};
+    return $self->{source_field}{$field};
+}
+
 # Returns the value of a control field for a binary package or undef
 # if that control field isn't present.  This does not implement
 # inheritance from the settings in the source stanza.
 # sub binary_field Needs-Info debfiles
 sub binary_field {
     my ($self, $package, $field) = @_;
-    $self->_load_binary_fields unless exists $self->{binary_field};
+    $self->_load_dctrl unless exists $self->{binary_field};
 
     # Check if the package actually exists, otherwise it may create an
     # empty entry for it.
@@ -134,9 +143,10 @@ sub binary_field {
     return;
 }
 
-# Internal method to load binary fields from debfiles/control
-# sub _load_binary_fields Needs-Info debfiles
-sub _load_binary_fields {
+# Internal method to load binary and source fields from
+# debfiles/control
+# sub _load_dctrl Needs-Info debfiles
+sub _load_dctrl {
     my ($self) = @_;
     # Load the fields from d/control
     my $dctrl = $self->debfiles('control');
@@ -166,7 +176,6 @@ sub _load_binary_fields {
 
     eval {
         @control_data = read_dpkg_control($dctrl);
-        shift @control_data; # throw away the source part
     };
     if ($@) {
         # If it is a syntax error, ignore it (we emit
@@ -176,6 +185,8 @@ sub _load_binary_fields {
         $self->{binary_field} = {};
         return 0;
     }
+    my $src = shift @control_data;
+    $self->{source_field} = $src;
 
     foreach my $binary (@control_data) {
         my $pkg = $binary->{'package'};
@@ -436,6 +447,18 @@ object will be empty (always satisfied and implies nothing).
 
 The same as relation(), but ignores architecture restrictions in the
 FIELD field.
+
+=item source_field(FIELD)
+
+Returns the content of the field FIELD from source package paragraph
+of the F<debian/control> file, or an undef if the field is not
+present.  Only the literal value of the field is returned.
+
+The debfiles collection script must have been run to make the
+F<debfiles/control> file available.
+
+NB: If a field from the "dsc" file itself is desired, please use
+L<field|Lintian::Collect/field> returns a field.
 
 =back
 
