@@ -88,10 +88,10 @@ while (<CONTROL>) {
 }
 close CONTROL;
 
-my ($header, @binary_controls);
-
 eval {
-    ($header, @binary_controls) = read_dpkg_control($dcontrol);
+    # check we can parse it, but ignore the result - we will fetch
+    # the fields we need from $info.
+    read_dpkg_control ($dcontrol);
 };
 if ($@) {
     chomp $@;
@@ -132,45 +132,24 @@ foreach my $bin (@package_names) {
 # Also check for < and > relations.  dpkg-gencontrol warns about them and then
 # transforms them in the output to <= and >=, but it's easy to miss the error
 # message.  Similarly, check for duplicates, which dpkg-source eliminates.
-for my $control ($header, @binary_controls) {
-    for my $field (qw(pre-depends depends recommends suggests breaks
-              conflicts provides replaces enhances
-              build-depends build-depends-indep
+
+foreach my $field (qw(build-depends build-depends-indep
               build-conflicts build-conflicts-indep)) {
-        next unless $control->{$field};
-        my $relation = Lintian::Relation->new($control->{$field});
-        my @dups = $relation->duplicates;
-        for my $dup (@dups) {
-            tag 'duplicate-in-relation-field', 'in',
-                ($control->{source} ? 'source' : $control->{package}),
-                "$field:", join(', ', @$dup);
-        }
-        my $value = $control->{$field};
-        $value =~ s/\n(\s)/$1/g;
-        $value =~ s/\[[^\]]*\]//g;
-        if ($value =~ /(?:^|\s)
-                   (
-                (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
-                (?:\([^\)]*\)\s*)?
-                   )
-                   \s+
-                   (
-                (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
-                (?:\([^\)]*\)\s*)?
-                   )/x) {
-            my ($prev, $next) = ($1, $2);
-            for ($prev, $next) {
-                s/\s+$//;
-            }
-            tag 'missing-separator-between-items', 'in',
-                ($control->{source} ? 'source' : $control->{package}),
-                "$field field between '$prev' and '$next'";
-        }
-        while ($value =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
-            tag 'obsolete-relation-form-in-source', 'in',
-                ($control->{source} ? 'source' : $control->{package}),
-                "$field: $1";
-        }
+    my $raw = $info->source_field ($field);
+    my $rel;
+    next unless $raw;
+    $rel = Lintian::Relation->new ($raw);
+    check_relation ('source', $field, $raw, $rel);1
+}
+
+for my $bin (@package_names) {
+    for my $field (qw(pre-depends depends recommends suggests breaks
+              conflicts provides replaces enhances)) {
+        my $raw = $info->binary_field ($bin, $field);
+        my $rel;
+        next unless $raw;
+        $rel = $info->binary_relation ($bin, $field);
+        check_relation ($bin, $field, $raw, $rel);
     }
 }
 
@@ -221,7 +200,7 @@ foreach my $bin (@package_names) {
 # should be able to duplicate the descriptions of non-udeb packages and the
 # package description for udebs is much less important or significant to the
 # user.
-my $area = $header->{'section'};
+my $area = $info->source_field ('section');
 if (defined $area) {
     if ($area =~ m%^([^/]+)/%) {
         $area = $1;
@@ -342,6 +321,42 @@ sub check_dev_depends {
         }
     }
 }
+
+# Checks for duplicates in a relation, for missing separators and
+# obsolete relation forms.
+sub check_relation {
+    my ($pkg, $field, $rawvalue, $relation) = @_;
+    for my $dup ($relation->duplicates) {
+        tag 'duplicate-in-relation-field', 'in', $pkg,
+            "$field:", join(', ', @$dup);
+    }
+
+    $rawvalue =~ s/\n(\s)/$1/g;
+    $rawvalue =~ s/\[[^\]]*\]//g;
+    if ($rawvalue =~ /(?:^|\s)
+                   (
+                (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
+                (?:\([^\)]*\)\s*)?
+                   )
+                   \s+
+                   (
+                (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
+                (?:\([^\)]*\)\s*)?
+                   )/x) {
+        my ($prev, $next) = ($1, $2);
+        for ($prev, $next) {
+            s/\s+$//;
+        }
+        tag 'missing-separator-between-items', 'in', $pkg,
+            "$field field between '$prev' and '$next'";
+    }
+    while ($rawvalue =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
+        tag 'obsolete-relation-form-in-source', 'in', $pkg,
+            "$field: $1";
+    }
+
+}
+
 
 1;
 
