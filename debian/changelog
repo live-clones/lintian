@@ -60,6 +60,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
       check is only done on initial uploads of new upstream
       releases.  Thanks to Stefano Rivera and Julian Taylor for
       their additional suggestions.  (Closes: #649277)
+  * checks/filename-length.desc:
+    + [ADB, NT] Reword description of package-has-long-file-name.
+      Thanks to Andreas Beckmann for suggestion.
   * checks/files{,.desc}:
     + [NT] Remove "manual" lazy loads of data files.
     + [NT] Remove code for the uses-FHS-doc-dir tag.
