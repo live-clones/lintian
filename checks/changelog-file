@@ -46,6 +46,12 @@ my @doc_files;
 my %file_info;
 my %is_a_symlink;
 
+
+# skip packages which have a /usr/share/doc/$pkg -> foo symlink
+return 0 if $info->index->{"usr/share/doc/$pkg"} and
+    $info->index->{"usr/share/doc/$pkg"}->{type} eq 'l';
+
+
 # Modify the file_info by following symbolic links.
 for my $file (@{$info->sorted_index}) {
     next unless $file =~ m/doc/o;
@@ -82,13 +88,9 @@ for my $file (@{$info->sorted_index}) {
 # Read package contents....  Capitalization errors are dealt with later.
 foreach (@{$info->sorted_index}) {
     next unless length $_;
-    # skip packages which have a /usr/share/doc/$pkg -> foo symlink
-    if (m,usr/share/doc/$ppkg$, and defined $info->index->{$_}->{link}) {
-        return 0;
-    }
 
     # we are only interested in files or symlinks in /usr/(share/)?doc/$pkg
-    if (m,usr/(?:share/)?doc/$ppkg/([^/\s]+), ) {
+    if (m,usr/share/doc/$ppkg/([^/\s]+), ) {
         my $file = $1;
         my $file1 = "usr/share/doc/$pkg/$file";
 
