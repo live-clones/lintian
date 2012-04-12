@@ -22,6 +22,8 @@ package Lintian::control_file;
 use strict;
 use warnings;
 
+use List::Util qw(first);
+
 use Lintian::Data ();
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
@@ -101,13 +103,13 @@ if ($@) {
 
 my @package_names = sort keys %{ $info->binaries };
 
-for my $binary_control (@binary_controls) {
-    tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}
-        if ($binary_control->{'build-depends'} || $binary_control->{'build-depends-indep'} ||
-            $binary_control->{'build-conflicts'} || $binary_control->{'build-conflicts-indep'});
-    for my $field (keys %$binary_control) {
-        tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
-            if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
+foreach my $bin (@package_names) {
+    my $bfields = $info->binary_field ($bin);
+    tag 'build-info-in-binary-control-file-section', "Package $bin"
+        if (first { $bfields->{"build-$_"} } qw(depends depends-indep conflicts conflicts-indep) );
+    foreach my $field (keys %$bfields) {
+        tag 'binary-control-field-duplicates-source', "field \"$field\" in package $bin"
+            if ($info->source_field ($field) && $bfields->{$field} eq $info->source_field ($field));
     }
 }
 
