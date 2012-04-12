@@ -34,7 +34,8 @@ use base 'Exporter';
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 @EXPORT = ();
 %EXPORT_TAGS = (
-    constants => [qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL)],
+    constants => [qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL
+                     VISIT_STOP_FIRST_MATCH)],
 );
 @EXPORT_OK = (
     @{ $EXPORT_TAGS{constants} }
