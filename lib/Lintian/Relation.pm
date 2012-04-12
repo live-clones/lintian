@@ -25,15 +25,16 @@ use warnings;
 use Lintian::Relation::Version;
 
 use constant {
-    MATCH_PRED_NAME => 0,
-    MATCH_PRED_FULL => 1,
-    MATCH_OR_CLAUSE_FULL => 3,
+    VISIT_PRED_NAME => 0,
+    VISIT_PRED_FULL => 1,
+    VISIT_OR_CLAUSE_FULL => 3,
+    VISIT_STOP_FIRST_MATCH => 4,
 };
 use base 'Exporter';
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 @EXPORT = ();
 %EXPORT_TAGS = (
-    constants => [qw(MATCH_PRED_NAME MATCH_PRED_FULL MATCH_OR_CLAUSE_FULL)],
+    constants => [qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL)],
 );
 @EXPORT_OK = (
     @{ $EXPORT_TAGS{constants} }
@@ -672,25 +673,25 @@ sub unparse {
     }
 }
 
-=item matches (REGEX[, RULE])
+=item matches (REGEX[, WHAT])
 
-Check if one of the predicates in this relation matches REGEX.  RULE
+Check if one of the predicates in this relation matches REGEX.  WHAT
 determines what is tested against REGEX and if not given, defaults to
-MATCH_PRED_NAME.
+VISIT_PRED_NAME.
 
 This method will return a truth value if REGEX matches at least one
-predicate or clause (as defined by the RULE parameter - see below).
+predicate or clause (as defined by the WHAT parameter - see below).
 
 NOTE: Often L</implies> (or L</implies_inverse>) is a better choice
 than this method.  This method should generally only be used when
 checking for a "pattern" package (e.g. phpapi-[\d\w+]+).
 
 
-RULE can be one of:
+WHAT can be one of:
 
 =over 4
 
-=item MATCH_PRED_NAME
+=item VISIT_PRED_NAME
 
 Match REGEX against the package name in each predicate (i.e. version
 and architecture constrains are ignored).  Each predicate is tested in
@@ -698,9 +699,9 @@ isolation.  As an example:
 
  my $rel = Lintian::Relation->new ('somepkg | pkg-0 (>= 1)');
  # Will match (version is ignored)
- $rel->matches (qr/^pkg-\d$/, MATCH_PRED_NAME);
+ $rel->matches (qr/^pkg-\d$/, VISIT_PRED_NAME);
 
-=item MATCH_PRED_FULL
+=item VISIT_PRED_FULL
 
 Match REGEX against the full (normalized) predicate (i.e. including
 version and architecture).  Each predicate is testing in isolation.
@@ -710,16 +711,16 @@ As an example:
  my $uvrel = Lintian::Relation->new ('somepkg | pkg-0');
 
  # Will NOT match (does not match with version)
- $vrel->matches (qr/^pkg-\d$/, MATCH_PRED_FULL);
+ $vrel->matches (qr/^pkg-\d$/, VISIT_PRED_FULL);
  # Will match (this relation does not have a version)
- $uvrel->matches (qr/^pkg-\d$/, MATCH_PRED_FULL);
+ $uvrel->matches (qr/^pkg-\d$/, VISIT_PRED_FULL);
 
  # Will match (but only because there is a version)
- $vrel->matches (qr/^pkg-\d \(.*\)$/, MATCH_PRED_FULL);
+ $vrel->matches (qr/^pkg-\d \(.*\)$/, VISIT_PRED_FULL);
  # Will NOT match (there is no verson in the relation)
- $uvrel->matches (qr/^pkg-\d  \(.*\)$/, MATCH_PRED_FULL);
+ $uvrel->matches (qr/^pkg-\d  \(.*\)$/, VISIT_PRED_FULL);
 
-=item MATCH_OR_CLAUSE_FULL
+=item VISIT_OR_CLAUSE_FULL
 
 Match REGEX against the full (normalized) OR clause.  Each predicate
 will have both version and architecture constrains present.  As an
@@ -731,37 +732,90 @@ example:
  my $rorrel = Lintian::Relation->new ('pkg-0 (>= 1) | somepkg');
 
  # Will match
- $vrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, MATCH_OR_CLAUSE_FULL);
+ $vrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, VISIT_OR_CLAUSE_FULL);
  # These Will NOT match (does not match the "|" and the "somepkg" part)
- $orrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, MATCH_OR_CLAUSE_FULL);
- $rorrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, MATCH_OR_CLAUSE_FULL);
+ $orrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, VISIT_OR_CLAUSE_FULL);
+ $rorrel->matches (qr/^pkg-\d(?: \([^\)]\))?$/, VISIT_OR_CLAUSE_FULL);
 
 =back
 
 =cut
 
+sub matches {
+    my ($self, $regex, $what, $partial) = @_;
+    my $relation = $partial // $self;
+    $what //= VISIT_PRED_NAME;
+    return $self->visit ( sub { m/$regex/ }, $what | VISIT_STOP_FIRST_MATCH);
+}
+
+=item visit (CODE[, FLAGS])
+
+Visit clauses or predicates of this relation.  Each clause or
+predicate is passed to CODE as first argument and will be available as
+C<$_>.
+
+The optional bitmask paramater, FLAGS, can be used to control what is
+visited and such.  If FLAGS is not given, it defaults to
+VISIT_PRED_NAME.  The possible values of FLAGS are:
+
+=over 4
+
+=item VISIT_PRED_NAME
+
+The package name in each predicate is visited, but the version and
+architecture part(s) are left out (if any).
+
+=item VISIT_PRED_FULL
+
+The full predicates are visited in turn.  The predicate will be
+normalized (by L</unparse>).
+
+=item VISIT_OR_CLAUSE_FULL
+
+CODE will be passed the full OR clauses of this relation.  The clauses
+will be normalized (by L</unparse>)
+
+Note: It will not visit the underlying predicates in the clause.
+
+=item VISIT_STOP_FIRST_MATCH
+
+Stop the visits the first time CODE returns a truth value.  This is
+similar to L<first|List::Util/first>, except visit will return the
+value returned by CODE.
+
+=back
+
+Except where a given flag specifies otherwise, the return value of
+visit is last value returned by CODE (or C<undef> for the empty
+relation).
+
+=cut
+
 
 # The last argument is not part of the public API.  It's a partial
-# relation that's not a blessed object and is used by matches()
+# relation that's not a blessed object and is used by visit()
 # internally so that it can recurse.
 
-sub matches {
-    my ($self, $regex, $rule, $partial) = @_;
+sub visit {
+    my ($self, $code, $flags, $partial) = @_;
     my $relation = $partial // $self;
-    $rule //= MATCH_PRED_NAME;
+    $flags //= 0;
     if ($relation->[0] eq 'PRED') {
         my $against = $relation->[1];
-        $against = $self->unparse ($relation) if $rule & MATCH_PRED_FULL;
-        return 1 if $against =~ m/$regex/;
-        return;
-    } elsif ($rule == MATCH_OR_CLAUSE_FULL and $relation->[0] eq 'OR') {
+        $against = $self->unparse ($relation) if $flags & VISIT_PRED_FULL;
+        local $_ = $against;
+        return $code->($against);
+    } elsif (($flags & VISIT_OR_CLAUSE_FULL) and $relation->[0] eq 'OR') {
         my $against = $self->unparse ($relation);
-        return 1 if $against =~ m/$regex/;
-        return;
+        local $_ = $against;
+        return $code->($against);
     } elsif ($relation->[0] eq 'AND' or $relation->[0] eq 'OR' or
              $relation->[0] eq 'NOT') {
         for my $rel (@$relation[1 .. $#$relation]) {
-            return 1 if $self->matches ($regex, $rule, $rel);
+            my $ret = $self->visit ($code, $flags, $rel);
+            if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
+                return $ret;
+            }
         }
         return;
     }

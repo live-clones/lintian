@@ -483,7 +483,7 @@ if ($has_perl_lib) {
     # It is a virtual package, so no version is allowed and
     # alternatives probably does not make sense here either.
     my $re = qr/^perlapi-[\d.]+(?:\s*\[[^\]]+\])?$/;
-    unless ($depends->matches ($re, MATCH_OR_CLAUSE_FULL)) {
+    unless ($depends->matches ($re, VISIT_OR_CLAUSE_FULL)) {
         tag 'missing-dependency-on-perlapi';
     }
 }
@@ -492,7 +492,7 @@ if ($has_perl_lib) {
 if ($has_php_ext) {
     # It is a virtual package, so no version is allowed and
     # alternatives probably does not make sense here either.
-    unless ($depends->matches (qr/^phpapi-[\d\w+]+$/, MATCH_OR_CLAUSE_FULL)) {
+    unless ($depends->matches (qr/^phpapi-[\d\w+]+$/, VISIT_OR_CLAUSE_FULL)) {
         tag 'missing-dependency-on-phpapi';
     }
 }
@@ -504,9 +504,9 @@ if ($uses_numpy_c_abi and $pkg ) {
     # relation.  Also, we do not allow versions for -abi as it is a virtual package.
     tag 'missing-dependency-on-numpy-abi'
         unless
-            $depends->matches (qr/^python-numpy-abi\d+$/, MATCH_OR_CLAUSE_FULL) or (
-            $depends->matches (qr/^python-numpy \(>[>=][^\|]+$/, MATCH_OR_CLAUSE_FULL) and
-            $depends->matches (qr/^python-numpy \(<[<=][^\|]+$/, MATCH_OR_CLAUSE_FULL)) or
+            $depends->matches (qr/^python-numpy-abi\d+$/, VISIT_OR_CLAUSE_FULL) or (
+            $depends->matches (qr/^python-numpy \(>[>=][^\|]+$/, VISIT_OR_CLAUSE_FULL) and
+            $depends->matches (qr/^python-numpy \(<[<=][^\|]+$/, VISIT_OR_CLAUSE_FULL)) or
             $pkg eq 'python-numpy';
 }
 
