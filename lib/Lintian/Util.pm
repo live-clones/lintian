@@ -61,17 +61,102 @@ use Lintian::Output qw(string);
 use Digest::MD5;
 use Scalar::Util qw(openhandle);
 
-# general function to read dpkg control files
-# this function can parse output of `dpkg-deb -f', .dsc,
-# and .changes files (and probably all similar formats)
-# arguments:
-#    $filehandle
-#    $debconf_flag (true if the file is a debconf template file)
-#    $lines (will be updated to contain line number of each paragraph)
-# output:
-#    list of hashes
-#    (a hash contains one sections,
-#    keys in hash are lower case letters of control fields)
+=head1 NAME
+
+Lintian::Util - Lintian utility functions
+
+=head1 SYNOPSIS
+
+ use Lintian::Util qw(slurp_entire_file resolve_pkg_path);
+ 
+ my $text = slurp_entire_file ('some-file');
+ if ($text =~ m/regex/) {
+    # ...
+ }
+
+ my $path = resolve_pkg_path ('/usr/bin/', '../lib/git-core/git-pull');
+ if (-e $path) {
+    # ....
+ }
+ 
+ my (@paragraphs);
+ eval { @paragraphs = read_dpkg_control ('some/debian/ctrl/file'); };
+ if ($@) {
+    # syntax error etc.
+    die "ctrl/file: $@";
+ }
+ 
+ foreach my $para (@paragraphs) {
+    my $value = $para->{'some-field'};
+    if (defined $value) {
+        # ...
+    }
+ }
+
+=head1 DESCRIPTION
+
+This module contains a number of utility subs that are nice to have,
+but on their own did not warrant their own module.
+
+Most subs are imported only on request.
+
+=head1 FUNCTIONS
+
+=over
+
+=item parse_dpkg_control (HANDLE[, DEBCONF_FLAG[, LINES]])
+
+Reads a debian control file from HANDLE and returns a list of
+paragraphs in it.  A paragraph is represented via a hashref, which
+maps (lower cased) field names to their values.
+
+If DEBCONF_FLAG is passed and a truth value, the handle is assumed to
+point to a debconf template.  These files have slightly different
+syntax and the flag is needed to parse them correctly.
+
+If LINES is given, it should be a reference to an empty list.  On
+return, LINES will be populated to the line numbers where a given
+paragraph "started" (i.e. the line number of first field in the
+paragraph).
+
+If the file is empty (i.e. it contains no paragraphs), the method will
+contain an I<empty> list.  Lines looking like a GPG-signature is
+ignored when parsing the file.
+
+On syntax errors, parse_dpkg_control will call die with the following
+string:
+
+  "syntax error at line %d: %s\n"
+
+Where %d is the line number of the issue and %s is one of:
+
+=over
+
+=item Duplicate field %s
+
+The field appeared twice in the paragraph.
+
+=item Continuation line outside a paragraph
+
+A continuation line appears outside a paragraph - usually caused by an
+unintended empty line before it.
+
+=item Whitespace line not allowed (possibly missing a ".")
+
+An empty continuation line was found.  This usually means that a
+period is missing to denote an "empty line" in (e.g.) the long
+description of a package.
+
+=item Cannot parse line "%s"
+
+Generic error containing the text of the line that confused the
+parser.  Note that all non-printables in %s will be replaced by
+underscores.
+
+=back
+
+=cut
+
 sub parse_dpkg_control {
     my @result;
     my $c = sub { push @result, @_; };
@@ -177,6 +262,23 @@ sub _parse_dpkg_control_iterative {
     $code->($section) if $open_section;
 }
 
+=item read_dpkg_control (FILE[, DEBCONF_FLAG[, LINES]])
+
+This is a convenience function to ease using L</parse_dpkg_control>
+with paths to files (rather than open handles).  The first argument
+must be the path to a FILE, which should be read as a debian control
+file.  If the file does not exist (or is empty), an empty list is
+returned.
+
+Otherwise, this behaves like:
+
+ open my $fd, '<' FILE or fail ...;
+ my @p = parse_dpkg_control ($fd, DEBCONF_FLAG, LINES);
+ close $fd;
+ return @p;
+
+=cut
+
 sub read_dpkg_control {
     my ($file, $debconf_flag, $lines) = @_;
 
@@ -191,6 +293,21 @@ sub read_dpkg_control {
         or fail("pipe for control file $file exited with status: $?");
     return @data;
 }
+
+=item get_deb_control (DEBFILE)
+
+Extracts the control file from DEBFILE and returns it as a hashref.
+
+Basically, this is a fancy convenience for setting up an ar + tar pipe
+and passing said pipe to L<parse_dpkg_control>.
+
+If DEBFILE does not exists (or is empty), the empty list is returned.
+
+Note: the control file is only expected to have a single paragraph and
+thus only the first is returned (in the unlikely case that there are
+more than one).
+
+=cut
 
 sub get_deb_info {
     my ($file) = @_;
@@ -215,6 +332,18 @@ sub get_deb_info {
     return $data[0];
 }
 
+=item get_dsc_control (DSCFILE)
+
+Convenience function for reading dsc files.  It will read the DSCFILE
+using L</read_dpkg_control> and then return the first paragraph.  If
+the file has no paragraphs, C<undef> is returned instead.
+
+Note: the control file is only expected to have a single paragraph and
+thus only the first is returned (in the unlikely case that there are
+more than one).
+
+=cut
+
 sub get_dsc_info {
     my ($file) = @_;
     my @data = read_dpkg_control($file);
@@ -231,12 +360,17 @@ sub _ensure_file_is_sane {
     return 0;
 }
 
-# slurp_entire_file ($file[, $noclose])
-#
-# Reads an entire file(-handle) and return it as a scalar.
-#
-# NB: When given a handle, it will close the handle for the caller
-# except when $noclose is passed and a truth value.
+=item slurp_entire_file (FOH[, NOCLOSE])
+
+Reads the contents of FOH into memory and return it as a scalar.  FOH
+can be either the path to a file or an open file handle.
+
+If it is a handle, the optional NOCLOSE parameter can be used to
+prevent the sub from closing the handle.  The NOCLOSE parameter has no
+effect if FOH is not a handle.
+
+=cut
+
 sub slurp_entire_file {
     my ($file, $noclose) = @_;
     my $fd;
@@ -253,6 +387,18 @@ sub slurp_entire_file {
     return $_;
 }
 
+=item get_file_checksum (ALGO, FILE)
+
+Returns a hexadecimal string of the message digest checksum generated
+by the algorithm ALGO on FILE.
+
+ALGO can be 'md5' or shaX, where X is any number supported by
+L<Digest::SHA> (e.g. 'sha256').
+
+This sub is a convenience wrapper around Digest::{MD5,SHA}.
+
+=cut
+
 sub get_file_checksum {
     my ($alg, $file) = @_;
     open (FILE, '<', $file) or fail("Couldn't open $file");
@@ -267,6 +413,12 @@ sub get_file_checksum {
     close FILE or fail("Couldn't close $file");
     return $digest->hexdigest;
 }
+
+=item file_is_encoded_in_non_utf8 (...)
+
+Undocumented
+
+=cut
 
 sub file_is_encoded_in_non_utf8 {
     my ($file, $type, $pkg) = @_;
@@ -294,8 +446,13 @@ sub file_is_encoded_in_non_utf8 {
     return $line;
 }
 
-# Just like system, except cleanses the environment first to avoid any strange
-# side effects due to the user's environment.
+=item system_env (CMD)
+
+Behaves like system (CMD) except that the environment of CMD is
+cleaned (as defined by L</clean_env>(1)).
+
+=cut
+
 sub system_env {
     my $pid = fork;
     if (not defined $pid) {
@@ -309,23 +466,50 @@ sub system_env {
     }
 }
 
-# Destructively clean %ENV - removes all variables from %ENV except
-# a selected few whitelisted variables (including PATH and LOCPATH)
-#
-# Based on LOCPATH (and /usr/lib/locale), this function will set
-# LC_ALL to C.UTF-8 or en_US.UTF-8.  If neither LOCPATH nor
-# /usr/lib/locale has any of those locales, then LC_ALL will be set to
-# en_US.UTF-8.
-#
-#  It is possible to skip the LC_ALL check by passing a truth value as
-# first argument.
+=item clean_env ([CLOC])
+
+Destructively cleans %ENV - removes all variables %ENV except a
+selected few whitelisted variables.
+
+The list of whitelisted %ENV variables are:
+
+ PATH
+ INTLTOOL_EXTRACT
+ LOCPATH
+ LC_ALL (*)
+
+(*) LC_ALL is a special case as clean_env will change its value using
+the following rules:
+
+
+If CLOC is given (and a truth value), clean_env will set LC_ALL to
+"C".
+
+Otherwise, clean_env sets LC_ALL to "C.UTF-8" or "en_US.UTF-8" by
+checking for the presence of the following paths (in preferred order):
+
+ $ENV{LOCPATH}/C.UTF-8
+ $ENV{LOCPATH}/en_US.UTF-8
+ /usr/lib/locale/C.UTF-8
+ /usr/lib/locale/en_US.UTF-8
+
+If none of these exists, LC_ALL is set to en_US.UTF-8 (as locales-all
+provides that locale without creating any paths in /usr/lib/locaale).
+
+=cut
+
 sub clean_env {
-    my ($no_lcall) = @_;
+    my ($cloc) = @_;
     my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
     my @locales = qw(C.UTF-8 en_US.UTF-8);
     my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
     %ENV = %newenv;
-    return if $no_lcall;
+
+    if ($cloc) {
+        $ENV{LC_ALL} = 'C';
+        return;
+    }
+
     foreach my $locpath ($ENV{LOCPATH}, '/usr/lib/locale') {
         if ($locpath && -d $locpath) {
             foreach my $loc (@locales) {
@@ -342,13 +526,37 @@ sub clean_env {
     $ENV{LC_ALL} = 'en_US.UTF-8';
 }
 
-# Translate permission strings like `-rwxrwxrwx' into an octal number.
+=item perm2oct (PERM)
+
+Translates PERM to an octal permission.  PERM should be a string describing
+the permissions as done by I<tar t> or I<ls -l>.  That is, it should be a
+string like "-rwr--r--".
+
+Note, there is no sanity checking of PERM and "unknown" permissions
+are silently ignored (as if they had been "-").  Thus, callers should
+be fairly certain that PERM is indeed a permission string - otherwise,
+this will cause the "garbage in, garbage out" effect.
+
+Examples:
+
+ # Good
+ perm2oct ('-rw-r--r--') == 0644
+ perm2oct ('-rwxr-xr-x') == 0755
+
+ # Bad
+ perm2oct ('broken') == 0000  # too short to be recognised
+ perm2oct ('aresurunet') == 05101 # read as "-r-s-----t"
+
+=cut
+
 sub perm2oct {
     my ($t) = @_;
 
     my $o = 0;
 
-    $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
+    if ($t !~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o) {
+        return 0;
+    }
 
     $o += 00400 if $1 eq 'r';   # owner read
     $o += 00200 if $2 eq 'w';   # owner write
@@ -369,19 +577,48 @@ sub perm2oct {
     return $o;
 }
 
+=item delete_dir (ARGS)
+
+Convient way of calling I<rm -fr ARGS>.
+
+=cut
+
 sub delete_dir {
     return spawn(undef, ['rm', '-rf', '--', @_]);
 }
 
+=item copy_dir (ARGS)
+
+Convient way of calling I<cp -a ARGS>.
+
+=cut
+
 sub copy_dir {
     return spawn(undef, ['cp', '-a', '--', @_]);
 }
+
+=item gunzip_file (IN, OUT)
+
+Decompresses contents of the file IN and stores the contents in the
+file OUT.  IN is I<not> removed by this call.
+
+=cut
 
 sub gunzip_file {
     my ($in, $out) = @_;
     spawn({out => $out, fail => 'error'},
           ['gzip', '-dc', $in]);
 }
+
+=item touch_File (FILE)
+
+Updates the "mtime" of FILE.  If FILE does not exist, it will be
+created.
+
+Returns 1 on success and 0 on failure.  On failure, $! will contain
+the failure.
+
+=cut
 
 # create an empty file
 # --okay, okay, this is not exactly what `touch' does :-)
@@ -391,6 +628,13 @@ sub touch_file {
 
     return 1;
 }
+
+=item fail (MSG)
+
+Use to signal an internal error.  MSG will be a diagnostic printed to
+the user.
+
+=cut
 
 sub fail {
     my $str;
@@ -405,10 +649,12 @@ sub fail {
     die $str;
 }
 
-#check_path($command)>
-#
-#Return true if and only if $command is on the executable search path.
-#
+=item check_path (CMD)
+
+Returns 1 if CMD can be found in PATH (i.e. $ENV{PATH}) and is
+executable.  Otherwise, the function return 0.
+
+=cut
 
 sub check_path {
     my $command = shift;
@@ -421,27 +667,30 @@ sub check_path {
     return 0;
 }
 
-#resolve_pkg_path($curdir, $dest)
-#
-# Using $curdir as current directory from the (package) root,
-# resolve $dest and return (the absolute) path to the destination.
-# Note that the result will never start with a slash, even if
-# $curdir or $dest does. Nor will it end with a slash.
-#
-# Note it will return '.' if the result is the package root.
-#
-# Returns a non-truth value, if it cannot safely resolve the path
-# (e.g. $dest would be outside the package root).
-#
-# Example:
-#  resolve_pkg_path('/usr/share/java', '../ant/file') eq  'usr/share/ant/file'
-#  resolve_pkg_path('/usr/share/java', '../../../usr/share/ant/file') eq  'usr/share/ant/file'
-#  resolve_pkg_path('/', 'usr/..') eq '.';
-#
-# The following will give a non-truth result:
-#  resolve_pkg_path('/usr/bin', '../../../../etc/passwd')
-#  resolve_pkg_path('/usr/bin', '/../etc/passwd')
-#
+=item resolve_pkg_path (CURDIR, DEST)
+
+Using $CURDIR as current directory from the (package) root,
+resolve DEST and return (the absolute) path to the destination.
+Note that the result will never start with a slash, even if
+CURDIR or DEST does. Nor will it end with a slash.
+
+Note it will return '.' if the result is the package root.
+
+Returns a non-truth value, if it cannot safely resolve the path
+(e.g. DEST would be outside the package root).
+
+Examples:
+
+  resolve_pkg_path('/usr/share/java', '../ant/file') eq  'usr/share/ant/file'
+  resolve_pkg_path('/usr/share/java', '../../../usr/share/ant/file') eq  'usr/share/ant/file'
+  resolve_pkg_path('/', 'usr/..') eq '.';
+
+ The following will give a non-truth result:
+  resolve_pkg_path('/usr/bin', '../../../../etc/passwd')
+  resolve_pkg_path('/usr/bin', '/../etc/passwd')
+
+=cut
+
 sub resolve_pkg_path {
     my ($curdir, $dest) = @_;
     my (@cc, @dc);
@@ -493,6 +742,13 @@ sub resolve_pkg_path {
     return join '/', @cc;
 }
 
+=back
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
 
 1;
 
