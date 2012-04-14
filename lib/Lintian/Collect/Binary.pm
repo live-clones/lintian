@@ -28,7 +28,7 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail open_gz);
 
 # Initialize a new binary package collect object.  Takes the package name,
 # which is currently unused.
@@ -101,7 +101,7 @@ sub strings {
         open my $fd, '<', '/dev/null';
         return $fd;
     }
-    open my $fd, '-|', 'gzip', '-dc', "$real.gz" or fail "open ${file}.gz: $!";
+    my $fd = open_gz ("$real.gz") or fail "open ${file}.gz: $!";
     return $fd;
 }
 

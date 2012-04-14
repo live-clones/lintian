@@ -25,7 +25,7 @@ use base 'Lintian::Collect';
 
 use Carp qw(croak);
 use Lintian::Path;
-use Lintian::Util qw(perm2oct);
+use Lintian::Util qw(open_gz perm2oct);
 
 # Returns the path to the dir where the package is unpacked
 #  or a file therein (see pod below)
@@ -44,7 +44,7 @@ sub file_info {
     my %file_info;
     local $_;
     # sub file_info Needs-Info file-info
-    open my $idx, '-|', 'gzip', '-dc', "$base_dir/file-info.gz"
+    my $idx = open_gz ("$base_dir/file-info.gz")
         or croak "cannot open $base_dir/file-info.gz: $!";
     while (<$idx>) {
         chomp;
@@ -124,10 +124,10 @@ sub _fetch_index_data {
     my %rhlinks;
     my @sorted;
     local $_;
-    open my $idx, '-|', 'gzip', '-dc', "$base_dir/${index}.gz"
+    my $idx = open_gz ("$base_dir/${index}.gz")
         or croak "cannot open index file $base_dir/${index}.gz: $!";
     if ($indexown) {
-        open $num_idx, '-|', 'gzip', '-dc', "$base_dir/${indexown}.gz"
+        $num_idx = open_gz ("$base_dir/${indexown}.gz")
             or croak "cannot open index file $base_dir/${indexown}.gz: $!";
     }
     while (<$idx>) {

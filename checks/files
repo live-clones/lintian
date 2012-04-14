@@ -26,7 +26,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail open_gz);
 
 my $FONT_PACKAGES = Lintian::Data->new ('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new ('files/triplets', qr/\s++/);
@@ -427,8 +427,10 @@ foreach my $file ($info->sorted_index) {
                 if ($file =~ m,.gz$, and $index_info->size <= 276
                     and $index_info->is_file
                     and $info->file_info->{$file} =~ m/gzip compressed/) {
-                    my $f = quotemeta($info->unpacked($file));
-                    unless (`gzip -dc $f`) {
+                    my $fd = open_gz ($info->unpacked ($file)) or fail "open $file: $!";
+                    my $f = <$fd>;
+                    close $fd;
+                    unless (length $f) {
                         tag 'zero-byte-file-in-doc-directory', $file;
                     }
                 }

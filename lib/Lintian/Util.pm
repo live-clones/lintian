@@ -39,6 +39,13 @@ BEGIN {
             constants => [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS)]
     );
 
+    eval { require PerlIO::gzip };
+    if ($@) {
+        *open_gz = \&__open_gz_ext;
+    } else {
+        *open_gz = \&__open_gz_pio;
+    }
+
     @EXPORT_OK = (qw(
                  visit_dpkg_paragraph
                  parse_dpkg_control
@@ -52,6 +59,7 @@ BEGIN {
                  delete_dir
                  copy_dir
                  gunzip_file
+                 open_gz
                  touch_file
                  perm2oct
                  check_path
@@ -747,6 +755,30 @@ sub gunzip_file {
     my ($in, $out) = @_;
     spawn({out => $out, fail => 'error'},
           ['gzip', '-dc', $in]);
+}
+
+
+=item open_gz (FILE)
+
+Opens a handle that reads from the GZip compressed FILE.
+
+Note: The handle may be a pipe from an external processes.
+
+=cut
+
+# Preferred implementation of open_gz (used if the perlio layer
+# is available)
+sub __open_gz_pio {
+    my ($file) = @_;
+    open my $fd, '<:gzip', $file or return;
+    return $fd;
+}
+
+# Fallback implementation of open_gz
+sub __open_gz_ext {
+    my ($file) = @_;
+    open my $fd, '-|', 'gzip', '-dc', $file or return;
+    return $fd;
 }
 
 =item touch_File (FILE)
