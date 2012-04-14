@@ -28,16 +28,28 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
+use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
 my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 my $failed = 0;
 
+if ( -e "$dir/objdump-info" ) {
+    unlink "$dir/objdump-info" or fail "unlink objdump-info: $!"
+}
+
+if ( -e "$dir/objdump-info.gz" ) {
+    unlink "$dir/objdump-info.gz" or fail "unlink objdump-info.gz: $!"
+}
+
 my $file_info = $info->file_info;
 
-open OUT, '>', "$dir/objdump-info"
-    or fail("cannot open objdump-info: $!");
+my %opts = ( pipe_in => FileHandle->new,
+             out => "$dir/objdump-info.gz",
+             fail => 'error' );
+spawn(\%opts, ['gzip', '-9c'] );
+$opts{pipe_in}->blocking(1);
 
 chdir ("$dir/unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
@@ -47,10 +59,10 @@ foreach my $bin (@{ $info->sorted_index }) {
 
     if ($finfo =~ m/^\bELF\b/) {
 
-        print OUT "-- $bin\n";
+        print {$opts{pipe_in}} "-- $bin\n";
 
         system("head \Q$bin\E | grep -q 'packed.*with.*UPX'");
-        print OUT "objdump: $bin: Packed with UPX" if $? == 0;
+        print {$opts{pipe_in}} "objdump: $bin: Packed with UPX" if $? == 0;
 
         my @sections;
         my @symbol_versions;
@@ -63,17 +75,17 @@ foreach my $bin (@{ $info->sorted_index }) {
             while(<PIPE>) {
                 chomp;
                 if (m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/) {
-                    print OUT "objdump: $bin: File truncated\n" unless $truncated++;
+                    print {$opts{pipe_in}} "objdump: $bin: File truncated\n" unless $truncated++;
                     next;
                 } elsif (m/^Program Headers:/) {
                     $section = 'PH';
-                    print OUT "$_\n";
+                    print {$opts{pipe_in}} "$_\n";
                 } elsif (m/^Section Headers:/) {
                     $section = 'SH';
-                    print OUT "$_\n";
+                    print {$opts{pipe_in}} "$_\n";
                 } elsif (m/^Dynamic section at offset .*:/) {
                     $section = 'DS';
-                    print OUT "$_\n";
+                    print {$opts{pipe_in}} "$_\n";
                 } elsif (m/^Version symbols section /) {
                     $section = 'VS';
                 } elsif (m/^\s*$/) {
@@ -90,7 +102,7 @@ foreach my $bin (@{ $info->sorted_index }) {
                     $newflags .= ($flags =~ m/E/) ? 'x' : '-';
 
                     $program_headers{$header} = $newflags;
-                    print OUT "  $header off 0x0 X 0x0 X 0x0\n  flags $newflags\n";
+                    print {$opts{pipe_in}} "  $header off 0x0 X 0x0 X 0x0\n  flags $newflags\n";
                 } elsif (m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
                          and $section eq 'SH') {
                     $sections[$1] = $2;
@@ -98,7 +110,7 @@ foreach my $bin (@{ $info->sorted_index }) {
                     # - The 0 0 0 0 2**3 is just there to make it look like objdump output
                     #   (supposedly we don't even check for those extra fields in
                     #    L::Collect::Binary)
-                    print OUT " $1 $2   0 0 0 0 2**3\n";
+                    print {$opts{pipe_in}} " $1 $2   0 0 0 0 2**3\n";
                 } elsif (m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
                          and $section eq 'DS') {
                     my ($type, $value) = ($1, $2);
@@ -108,7 +120,7 @@ foreach my $bin (@{ $info->sorted_index }) {
                         $value =~ s/\]\s*$//;
                     }
                     $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
-                    print OUT "  $type   $value\n";
+                    print {$opts{pipe_in}} "  $type   $value\n";
                 } elsif (m/^\s*[0-9A-F]+: \s+ \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
                          and $section eq 'VS') {
                     while (m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
@@ -124,14 +136,14 @@ foreach my $bin (@{ $info->sorted_index }) {
                     # The headers declare a dynamic section but it's
                     # empty. Generate the same error as objdump,
                     # the checks scripts special-case the string.
-                    print OUT "\n\nobjdump: $bin: Invalid operation\n";
+                    print {$opts{pipe_in}} "\n\nobjdump: $bin: Invalid operation\n";
                 }
             }
             close PIPE;
         }
 
         if (open(PIPE, '-|', "readelf -W -s -D \Q$bin\E 2>&1")) {
-            print OUT "DYNAMIC SYMBOL TABLE:\n";
+            print {$opts{pipe_in}} "DYNAMIC SYMBOL TABLE:\n";
 
             while(<PIPE>) {
                 last if m/^Symbol table of/;
@@ -163,7 +175,7 @@ foreach my $bin (@{ $info->sorted_index }) {
                         $seg = $sections[$seg];
                     }
 
-                    print OUT "00      XX $seg  000000  $ver  $sym\n";
+                    print {$opts{pipe_in}} "00      XX $seg  000000  $ver  $sym\n";
                 }
             }
 
@@ -172,7 +184,8 @@ foreach my $bin (@{ $info->sorted_index }) {
     }
 }
 
-close OUT or fail("cannot write objdump-info: $!");
+close $opts{pipe_in} or fail "cannot write objdump-info.gz: $!";
+reap(\%opts);
 
 exit $failed;
 

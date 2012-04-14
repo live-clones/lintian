@@ -165,9 +165,9 @@ sub objdump_info {
     my %objdump_info;
     my ($dynsyms, $file);
     # sub objdump_info Needs-Info objdump-info
-    open(my $idx, '<', "$base_dir/objdump-info")
-        or fail("cannot open $base_dir/objdump-info: $!");
-    while (<$idx>) {
+    open my $fd, '-|', 'gzip', '-dc', "$base_dir/objdump-info.gz"
+        or fail "cannot open $base_dir/objdump-info.gz: $!";
+    while (<$fd>) {
         chomp;
 
         next if m/^\s*$/o;
@@ -236,6 +236,8 @@ sub objdump_info {
         $objdump_info{$file->{name}} = $file;
     }
     $self->{objdump_info} = \%objdump_info;
+
+    close $fd;
 
     return $self->{objdump_info};
 }

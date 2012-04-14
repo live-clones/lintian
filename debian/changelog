@@ -112,6 +112,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Use Lintian::Collect to find ELF files.
     + [NT] Replace all usage of objdump with readelf.
       (Closes: #614034)
+    + [NT] Compress objdump-info output and bump version of objdump-info.
   * collection/strings{,.desc}:
     + [NT] Compress strings output and bump version of strings.
 

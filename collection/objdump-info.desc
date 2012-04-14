@@ -3,5 +3,5 @@ Author: Christian Schwarz <schwarz@debian.org>
 Info: This script runs objdump(1) over all binaries and object files of a
  binary package.
 Type: binary, udeb
-Version: 1
+Version: 2
 Needs-Info: file-info, unpacked, index
