@@ -309,7 +309,7 @@ foreach my $file (@{$info->sorted_index}) {
         }
     }
 
-    my $strings = slurp_entire_file("strings/$file");
+    my $strings = slurp_entire_file ($info->strings ($file));
     check_spelling('spelling-error-in-binary', $strings, $file, { $pkg => 1 });
 
     # stripped?

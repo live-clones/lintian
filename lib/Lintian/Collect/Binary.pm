@@ -90,6 +90,19 @@ sub control_index {
     return $self->_fetch_index_data('control-index', 'control-index');
 }
 
+# Returns a handle with the strings in a given binary file (as computed
+# by coll/strings)
+#
+# If there are no strings for the given file, this method fails.
+#
+# sub strings Needs-Info strings
+sub strings {
+    my ($self, $file) = @_;
+    my $real = $self->_fetch_extracted_dir ('strings', 'strings', $file);
+    open my $fd, '-|', 'gzip', '-dc', "$real.gz" or fail "open ${file}.gz: $!";
+    return $fd;
+}
+
 # Returns the md5sums as calculated by the md5sums collection
 #  sub md5sums Needs-Info md5sums
 sub md5sums {
@@ -503,6 +516,11 @@ Returns a truth value if the package appears to be a transitional
 package.
 
 This is based on the package's description.
+
+=item strings (FILE)
+
+Returns an open handle, which will read the data from coll/strings for
+FILE.
 
 =back
 

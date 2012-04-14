@@ -60,7 +60,8 @@ foreach my $bin (keys %$file_info) {
     Lintian::Command::Simple::run ('mkdir', '-p', "$dir/strings/$elfdir") == 0
         or fail "Failed to create directory 'strings/$elfdir'";
 
-    spawn ({out => "$dir/strings/$bin", fail => 'error'}, ['strings', "$dir/unpacked/$bin"]);
+    spawn ({out => "$dir/strings/${bin}.gz", fail => 'error'},
+           ['strings', "$dir/unpacked/$bin"], '|', ['gzip', '-9c']);
 }
 
 close(ELF_INDEX) or fail("cannot write elf-index file: $!");
