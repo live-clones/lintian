@@ -24,7 +24,7 @@ use warnings;
 
 use Lintian::Collect::Group;
 use Lintian::Processable;
-use Lintian::Util;
+use Lintian::Util qw(fail get_dsc_info);
 
 =head1 NAME
 

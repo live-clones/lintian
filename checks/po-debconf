@@ -23,7 +23,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util;
+use Lintian::Util qw(fail system_env);
 
 sub run {
 

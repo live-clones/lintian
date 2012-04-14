@@ -27,7 +27,7 @@ use warnings;
 use Lintian::Check qw(check_spelling check_spelling_picky $known_shells_regex);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util;
+use Lintian::Util qw(fail file_is_encoded_in_non_utf8);
 
 # Supported documentation formats for doc-base files.
 our %known_doc_base_formats = map { $_ => 1 }

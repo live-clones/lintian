@@ -23,20 +23,19 @@ package Lintian::Util;
 use strict;
 use warnings;
 
-use Exporter;
+use base 'Exporter';
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
 # otherwise.
-our (@ISA, @EXPORT);
+our (@EXPORT_OK, @EXPORT);
 BEGIN {
-    @ISA = qw(Exporter);
-    @EXPORT = qw(parse_dpkg_control
+    @EXPORT_OK = qw(
+                 parse_dpkg_control
                  read_dpkg_control
                  get_deb_info
                  get_dsc_info
                  slurp_entire_file
-                 get_file_checksum
                  file_is_encoded_in_non_utf8
                  fail
                  system_env
@@ -48,6 +47,11 @@ BEGIN {
                  check_path
                  clean_env
                  resolve_pkg_path);
+
+    # Export by default due to its wide spread use in "one-liners" in
+    # t/source/*/Makefile.
+    @EXPORT = qw(get_file_checksum);
+
 }
 
 use Encode ();

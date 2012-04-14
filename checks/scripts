@@ -30,7 +30,7 @@ use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util;
+use Lintian::Util qw(fail);
 
 sub _parse_interpreters {
     my ($interpreter, $value) = @_;

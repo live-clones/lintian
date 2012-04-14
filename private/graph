@@ -11,7 +11,7 @@ BEGIN {
 }
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util;
+use Lintian::Util qw(get_dsc_info);
 
 my %opt = (
     'checks'     => 1,

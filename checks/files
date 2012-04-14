@@ -26,7 +26,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util;
+use Lintian::Util qw(fail);
 
 my $FONT_PACKAGES = Lintian::Data->new ('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new ('files/triplets', qr/\s++/);

@@ -26,7 +26,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util;
+use Lintian::Util qw(read_dpkg_control);
 
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).

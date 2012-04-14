@@ -29,7 +29,7 @@ use Cwd();
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
-use Lintian::Util;
+use Lintian::Util qw(read_dpkg_control);
 
 # Initialize a new source package collect object.  Takes the package name,
 # which is currently unused.
