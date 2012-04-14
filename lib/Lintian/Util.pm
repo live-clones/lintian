@@ -227,12 +227,14 @@ sub _ensure_file_is_sane {
     return 0;
 }
 
+# slurp_entire_file ($file[, $noclose])
+#
 # Reads an entire file(-handle) and return it as a scalar.
 #
-# NB: When given a handle, it will *not* close the handle for
-# the caller.
+# NB: When given a handle, it will close the handle for the caller
+# except when $noclose is passed and a truth value.
 sub slurp_entire_file {
-    my $file = shift;
+    my ($file, $noclose) = @_;
     my $fd;
     my $res;
     if (openhandle $file) {
@@ -243,7 +245,7 @@ sub slurp_entire_file {
     }
     local $/;
     local $_ = <$fd>;
-    close $fd unless openhandle $file;
+    close $fd unless $noclose && openhandle $file;
     return $_;
 }
 
