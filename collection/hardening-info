@@ -59,7 +59,7 @@ foreach my $bin (keys %$file_info) {
     }
 }
 
-close OUT or fail("cannot write objdump-info: $!");
+close OUT or fail("cannot write hardening-info: $!");
 
 exit 0;
 
