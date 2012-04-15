@@ -1,9 +1,8 @@
 Last generated 2012-07-10
-Coverage: 812/965 (84.15%), w. legacy tests: 917/965 (95.03%)
+Coverage: 812/964 (84.23%), w. legacy tests: 917/964 (95.12%)
 
 The following tags are not tested by the test suite:
 
-binaries apparently-corrupted-elf-binary
 binaries binary-file-compressed-with-upx
 binaries library-not-linked-against-libc
 binaries ocaml-custom-executable

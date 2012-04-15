@@ -131,16 +131,10 @@ foreach my $file (sort keys %{$info->objdump_info}) {
             }
         }
     }
-    foreach (@{$objdump->{NOTES}}) {
-        if ($_ eq 'File format not recognized') {
-            tag 'apparently-corrupted-elf-binary', $file;
-        } elsif ($_ eq 'File truncated') {
-            tag 'apparently-truncated-elf-binary', $file;
-        } elsif ($_ eq 'Packed with UPX') {
-            tag 'binary-file-compressed-with-upx', $file;
-        } elsif ($_ eq 'Invalid operation') {
-            tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
-        }
+    tag 'binary-file-compressed-with-upx', $file if $objdump->{'UPX'};
+    tag 'apparently-corrupted-elf-binary', $file if $objdump->{'ERRORS'};
+    if ($objdump->{'BAD-DYNAMIC-TABLE'}) {
+        tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
     }
 }
 
@@ -291,11 +285,10 @@ foreach my $file ($info->sorted_index) {
             tag 'library-in-debug-or-profile-should-not-be-stripped', $file;
         } else {
             # appropriately stripped, but is it stripped enough?
-            if (exists $objdump->{NOTE_SECTION}) {
-                tag 'binary-has-unneeded-section', "$file .note";
-            }
-            if (exists $objdump->{COMMENT_SECTION}) {
-                tag 'binary-has-unneeded-section', "$file .comment";
+            foreach my $sect ('.note', '.comment') {
+                if (exists $objdump->{'SH'}->{$sect}) {
+                    tag 'binary-has-unneeded-section', "$file $sect";
+                }
             }
         }
     }
@@ -346,21 +339,21 @@ foreach my $file ($info->sorted_index) {
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
     if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
-        if (exists($objdump->{NEEDED})) {
+        if (scalar (@{ $objdump->{NEEDED} }) ) {
             tag 'debug-file-should-use-detached-symbols', $file;
         }
     }
 
     # Detached debugging symbols directly in /usr/lib/debug.
     if ($file =~ m,^usr/lib/debug/[^/]+$,) {
-        unless (exists($objdump->{NEEDED})
+        unless (scalar (@{ $objdump->{NEEDED} })
             || $fileinfo =~ m/statically linked/) {
             tag 'debug-symbols-directly-in-usr-lib-debug', $file;
         }
     }
 
     # statically linked?
-    if (!exists($objdump->{NEEDED}) || !defined($objdump->{NEEDED})) {
+    if (! scalar (@{ $objdump->{NEEDED} }) ) {
         if ($fileinfo =~ m/shared object/o) {
             # Some exceptions: detached debugging information and the dynamic
             # loader (which itself has no dependencies).
@@ -374,7 +367,8 @@ foreach my $file ($info->sorted_index) {
             next if ($file =~ /[\.-]static$/);
             next if ($pkg =~ /-static$/);
             # klibc binaries appear to be static.
-            next if ($objdump->{KLIBC});
+            next if (exists $objdump->{INTERP}
+                     && $objdump->{INTERP} =~ m,/lib/klibc-\S+\.so,);
             # Location of debugging symbols.
             next if ($file =~ m%^usr/lib/debug/%);
             # ldconfig must be static.

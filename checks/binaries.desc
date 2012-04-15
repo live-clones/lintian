@@ -150,24 +150,22 @@ Info: The package name of a library package should usually reflect
 Tag: binary-with-bad-dynamic-table
 Severity: serious
 Certainty: possible
-Info: This appears to be an ELF file but objdump -T cannot parse it.
- If it is external debugging symbols for another file, it should be
- installed under /usr/lib/debug.
+Info: This appears to be an ELF file.  According to readelf, the
+ program headers suggests it should have a dynamic section, but
+ readelf cannot find it.
+ .
+ If it is meant to be external debugging symbols for another file,
+ it should be installed under /usr/lib/debug.  Otherwise, this
+ could be a corrupt ELF file.
 
 Tag: apparently-corrupted-elf-binary
 Severity: normal
 Certainty: possible
-Info: This appears to be an ELF file but objdump -T doesn't recognize it
- as valid.  This may be a mistake or a corrupted file, you may need to
+Info: This appears to be an ELF file but readelf cannot parse it.
+ .
+ This may be a mistake or a corrupted file, you may need to
  install binutils-multiarch on the system running lintian so that
  non-native binaries are handled correctly, or it may be a
- misidentification of a file as ELF that actually isn't.
-
-Tag: apparently-truncated-elf-binary
-Severity: normal
-Certainty: possible
-Info: This appears to be an ELF file, but objdump believes it is
- truncated.  This may be a mistake or a corrupted file, or it may be a
  misidentification of a file as ELF that actually isn't.
 
 Tag: missing-dependency-on-libc

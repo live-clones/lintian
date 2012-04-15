@@ -28,7 +28,7 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(fail open_gz);
+use Lintian::Util qw(fail open_gz parse_dpkg_control);
 
 # Initialize a new binary package collect object.  Takes the package name,
 # which is currently unused.
@@ -171,71 +171,56 @@ sub objdump_info {
     # sub objdump_info Needs-Info objdump-info
     open my $fd, '-|', 'gzip', '-dc', "$base_dir/objdump-info.gz"
         or fail "cannot open $base_dir/objdump-info.gz: $!";
-    while (<$fd>) {
-        chomp;
-
-        next if m/^\s*$/o;
-
-        if (m,^-- (?:\./)?(.+)$,) {
-            if ($file) {
-                $objdump_info{$file->{name}} = $file;
+    foreach my $pg (parse_dpkg_control ($fd)) {
+        my %info = (
+            'PH' => {},
+            'SH' => {},
+            'NOTES'  => [],
+            'NEEDED' => [],
+            'RPATH'  => {},
+            'SONAME' => [],
+        );
+        $info{'ERRORS'} = lc ($pg->{'broken'}//'no') eq 'yes' ? 1 : 0;
+        $info{'UPX'} = lc ($pg->{'upx'}//'no') eq 'yes' ? 1 : 0;
+        $info{'BAD-DYNAMIC-TABLE'} = lc ($pg->{'bad-dynamic-table'}//'no') eq 'yes' ? 1 : 0;
+        foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {
+            next unless $symd;
+            if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
+                # $ver is not always there
+                my ($sec, $ver, $sym) = ($1, $2, $3);
+                $ver //= '';
+                push @{ $info{'SYMBOLS'} }, [ $sec, $ver, $sym ];
             }
-            $file = { name => $1 };
-            $dynsyms = 0;
-        } elsif ($dynsyms) {
-            # The (?:(\S+)\s+)? near the end is added because a number of optional fields
-            # might be printed.  The symbol name should be the last word.
-            if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(?:(\S+)\s+)?(\S+)$/){
-                my ($foo, $sec, $sym) = ($1, $2, $3);
-                $sec //= '';
-                push @{$file->{SYMBOLS}}, [ $foo, $sec, $sym ];
-            }
-        } else {
-            if (m/^\s*NEEDED\s*(\S+)/o) {
-                push @{$file->{NEEDED}}, $1;
-            } elsif (m/^\s*RPATH\s*(\S+)/o) {
-                my $rpath = $1;
-                foreach my $r (split m/:/o, $rpath) {
-                    $file->{RPATH}{$r}++;
-                }
-            } elsif (m/^\s*SONAME\s*(\S+)/o) {
-                push @{$file->{SONAME}}, $1;
-            } elsif (m/^\s*\d+\s+\.comment\s+/o) {
-                $file->{COMMENT_SECTION} = 1;
-            } elsif (m/^\s*\d+\s+\.note\s+/o) {
-                $file->{NOTE_SECTION} = 1;
-            } elsif (m/^DYNAMIC SYMBOL TABLE:/) {
-                $dynsyms = 1;
-            } elsif (m/^objdump: .*?: File format not recognized$/) {
-                push @{$file->{NOTES}}, 'File format not recognized';
-            } elsif (m/^objdump: .*?: File truncated$/) {
-                push @{$file->{NOTES}}, 'File truncated';
-            } elsif (m/^objdump: .*?: Packed with UPX$/) {
-                push @{$file->{NOTES}}, 'Packed with UPX';
-            } elsif (m/objdump: .*?: Invalid operation$/) {
-                # Don't anchor this regex since it can be interspersed with other
-                # output and hence not on the beginning of a line.
-                push @{$file->{NOTES}}, 'Invalid operation';
-            } elsif (m/CXXABI/) {
-                $file->{CXXABI} = 1;
-            } elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
-                $file->{KLIBC} = 1;
-            } elsif (m/^\s*TEXTREL\s/o) {
-                $file->{TEXTREL} = 1;
-            } elsif (m/^\s*INTERP\s/) {
-                $file->{INTERP} = 1;
-            } elsif (m/^\s*STACK\s/) {
-                $file->{STACK} = '0';
-            } else {
-                if (defined $file->{STACK} and $file->{STACK} eq '0') {
-                    m/\sflags\s+(\S+)/o;
-                    $file->{STACK} = $1;
+        }
+        foreach my $data (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
+            next unless $data;
+            my (undef, $section) = split m/\s++/, $data;
+            $info{'SH'}->{$section}++;
+        }
+        foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {
+            next unless $data;
+            my ($header, @vals) = split m/\s++/, $data;
+            $info{'PH'}->{$header} = {};
+            foreach my $extra (@vals) {
+                my ($opt, $val) = split m/=/, $extra;
+                $info{'PH'}->{$header}->{$opt} = $val;
+                if ($opt eq 'interp' and $header eq 'INTERP') {
+                    $info{'INTERP'} = $val;
                 }
             }
         }
-    }
-    if ($file) {
-        $objdump_info{$file->{name}} = $file;
+        foreach my $data (split m/\s*\n\s*/, $pg->{'dynamic-section'}//'') {
+            next unless $data;
+            # Here we just need RPATH and NEEDS, so ignore the rest for now
+            my ($header, $val) = split m/\s++/, $data;
+            if ($header eq 'RPATH') {
+                $info{$header}->{$val} = 1;
+            } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
+                push @{ $info{$header} }, $val;
+            }
+        }
+
+        $objdump_info{$pg->{'filename'}} = \%info;
     }
     $self->{objdump_info} = \%objdump_info;
 
