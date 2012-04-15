@@ -226,8 +226,6 @@ sub objdump_info {
                 if (defined $file->{STACK} and $file->{STACK} eq '0') {
                     m/\sflags\s+(\S+)/o;
                     $file->{STACK} = $1;
-                } else {
-                    $file->{OTHER_DATA} = 1;
                 }
             }
         }

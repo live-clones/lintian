@@ -149,7 +149,8 @@ for my $cur_file (@{$info->sorted_index}) {
         # executable stack.  We can only warn about a missing section on some
         # architectures.  Only warn if there's an Architecture field; if
         # that's missing, we'll already be complaining elsewhere.
-        if (exists $objdump->{$cur_file}->{OTHER_DATA}) {
+        #  - exists $objdump->{$cur_file}->{name} implies it is an "object" file
+        if (exists $objdump->{$cur_file}->{name}) {
             if (not defined $objdump->{$cur_file}->{STACK}) {
                 if (defined $info->field('architecture')) {
                     my $arch = $info->field('architecture');
@@ -160,8 +161,7 @@ for my $cur_file (@{$info->sorted_index}) {
                 tag 'shlib-with-executable-stack', $cur_file;
             }
         }
-    } elsif (exists $objdump->{$cur_file}->{OTHER_DATA}
-             && $ldconfig_dirs->known(dirname($cur_file))
+    } elsif ($ldconfig_dirs->known(dirname($cur_file))
              && exists $sharedobject{$cur_file}) {
         tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
     } elsif ($cur_file =~ m/\.la$/ and not defined($cur_file_data->{link})) {
