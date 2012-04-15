@@ -25,12 +25,21 @@ use warnings;
 
 use base 'Exporter';
 
+use constant {
+  DCTRL_DEBCONF_TEMPLATE => 1,
+  DCTRL_NO_COMMENTS => 2,
+};
+
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
 # otherwise.
-our (@EXPORT_OK, @EXPORT);
+our (@EXPORT_OK, @EXPORT, %EXPORT_TAGS);
 BEGIN {
-    @EXPORT_OK = qw(
+    %EXPORT_TAGS = (
+            constants => [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS)]
+    );
+
+    @EXPORT_OK = (qw(
                  visit_dpkg_paragraph
                  parse_dpkg_control
                  read_dpkg_control
@@ -47,7 +56,9 @@ BEGIN {
                  perm2oct
                  check_path
                  clean_env
-                 resolve_pkg_path);
+                 resolve_pkg_path),
+                 @{ $EXPORT_TAGS{constants} }
+    );
 
     # Export by default due to its wide spread use in "one-liners" in
     # t/source/*/Makefile.
@@ -137,19 +148,38 @@ open filehandle rather than a file name.
 
 =back
 
+=head1 CONSTANTS
+
+The following constants can be passed to the Debian control file
+parser functions to alter their parsing flag.
+
+=over 4
+
+=item DCTRL_DEBCONF_TEMPLATE
+
+The file should be parsed as debconf template.  These have slightly
+syntax rules for whitespace in some cases.
+
+=item DCTRL_NO_COMMENTS
+
+The file do not allow comments.  With this flag, any comment in the
+file is considered a syntax error.
+
+=back
+
 =head1 FUNCTIONS
 
 =over 4
 
-=item parse_dpkg_control (HANDLE[, DEBCONF_FLAG[, LINES]])
+=item parse_dpkg_control (HANDLE[, FLAGS[, LINES]])
 
 Reads a debian control file from HANDLE and returns a list of
 paragraphs in it.  A paragraph is represented via a hashref, which
 maps (lower cased) field names to their values.
 
-If DEBCONF_FLAG is passed and a truth value, the handle is assumed to
-point to a debconf template.  These files have slightly different
-syntax and the flag is needed to parse them correctly.
+FLAGS (if given) is a bitmask of the I<DCTRL_*> constants.  Please
+refer to L</CONSTANTS> for the list of constants and their meaning.
+The default value for FLAGS is 0.
 
 If LINES is given, it should be a reference to an empty list.  On
 return, LINES will be populated to the line numbers where a given
@@ -166,27 +196,27 @@ NB: parse_dpkg_control does I<not> close the handle for the caller.
 =cut
 
 sub parse_dpkg_control {
-    my ($handle, $debconf_flag, $lines) = @_;
+    my ($handle, $flags, $lines) = @_;
     my @result;
     my $c = sub {
         my ($para, $line) = @_;
         push @result, $para;
         push @$lines, $line if defined $lines;
     };
-    visit_dpkg_paragraph ($c, $handle, $debconf_flag);
+    visit_dpkg_paragraph ($c, $handle, $flags);
     return @result;
 }
 
 
-=item visit_dpkg_paragraph (CODE, HANDLE[, DEBCONF_FLAG])
+=item visit_dpkg_paragraph (CODE, HANDLE[, FLAGS])
 
 Reads a debian control file from HANDLE and passes each paragraph to
 CODE.  A paragraph is represented via a hashref, which maps (lower
 cased) field names to their values.
 
-If DEBCONF_FLAG is passed and a truth value, the handle is assumed to
-point to a debconf template.  These files have slightly different
-syntax and the flag is needed to parse them correctly.
+FLAGS (if given) is a bitmask of the I<DCTRL_*> constants.  Please
+refer to L</CONSTANTS> for the list of constants and their meaning.
+The default value for FLAGS is 0.
 
 If the file is empty (i.e. it contains no paragraphs), the method will
 contain an I<empty> list.  Lines looking like a GPG-signature is
@@ -253,17 +283,22 @@ Generic error containing the text of the line that confused the
 parser.  Note that all non-printables in %s will be replaced by
 underscores.
 
+=item Comments are not allowed
+
+A comment line appeared and FLAGS contained DCTRL_NO_COMMENTS.
+
 =back
 
 =cut
 
 sub visit_dpkg_paragraph {
-    my ($code, $CONTROL, $debconf_flag) = @_;
-
+    my ($code, $CONTROL, $flags) = @_;
+    $flags//=0;
     my $sline = -1;
     my $section = {};
     my $open_section = 0;
     my $last_tag;
+    my $debconf = $flags & DCTRL_DEBCONF_TEMPLATE;
 
     local $_;
     while (<$CONTROL>) {
@@ -271,10 +306,13 @@ sub visit_dpkg_paragraph {
 
         # FIXME: comment lines are only allowed in debian/control and should
         # be an error for other control files.
-        next if /^\#/;
+        if (/^\#/) {
+            next unless $flags & DCTRL_NO_COMMENTS;
+            die "syntax error at line $.: Comments are not allowed.\n";
+        }
 
         # empty line?
-        if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && $_ eq '')) {
+        if ((!$debconf && m/^\s*$/) or ($debconf && $_ eq '')) {
             if ($open_section) { # end of current section
                 # pass the current section to the handler
                 $code->($section, $sline);
@@ -351,7 +389,7 @@ sub visit_dpkg_paragraph {
     $code->($section, $sline) if $open_section;
 }
 
-=item read_dpkg_control (FILE[, DEBCONF_FLAG[, LINES]])
+=item read_dpkg_control (FILE[, FLAGS[, LINES]])
 
 This is a convenience function to ease using L</parse_dpkg_control>
 with paths to files (rather than open handles).  The first argument
@@ -362,7 +400,7 @@ returned.
 Otherwise, this behaves like:
 
  open my $fd, '<' FILE or die ...;
- my @p = parse_dpkg_control ($fd, DEBCONF_FLAG, LINES);
+ my @p = parse_dpkg_control ($fd, FLAGS, LINES);
  close $fd;
  return @p;
 
@@ -374,14 +412,14 @@ L</parse_dpkg_control> do.  It can also emit the following error:
 =cut
 
 sub read_dpkg_control {
-    my ($file, $debconf_flag, $lines) = @_;
+    my ($file, $flags, $lines) = @_;
 
     if (not _ensure_file_is_sane($file)) {
         return;
     }
 
     open my $CONTROL, '<', $file or die "cannot open $file: $!";
-    my @data = parse_dpkg_control($CONTROL, $debconf_flag, $lines);
+    my @data = parse_dpkg_control($CONTROL, $flags, $lines);
     close $CONTROL;
 
     return @data;
