@@ -101,7 +101,7 @@ unshift @INC, "$LINTIAN_ROOT/lib";
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable::Package;
-require Lintian::Util; # _parse_dpkg_control_iterative
+require Lintian::Util qw(visit_dpkg_paragraph);
 
 # turn file buffering off
 $| = 1;
@@ -426,14 +426,14 @@ sub local_mirror_manifests {
                 my $binsub = sub { _parse_pkgs_pg ($active_srcs, $binman, $mirdir, $area, @_) };
                 my $upkgfd = _open_data_file ($upkgs);
                 my $udebsub = sub { _parse_pkgs_pg ($active_srcs, $udebman, $mirdir, $area, @_) };
-                Lintian::Util::_parse_dpkg_control_iterative ($binsub, $pkgfd);
-                Lintian::Util::_parse_dpkg_control_iterative ($udebsub, $upkgfd);
+                visit_dpkg_paragraph ($binsub, $pkgfd);
+                visit_dpkg_paragraph ($udebsub, $upkgfd);
                 close $pkgfd;
                 close $upkgfd;
             }
             $srcfd = _open_data_file ($srcs);
             $srcsub = sub { _parse_srcs_pg ($active_srcs, $srcman, $mirdir, $area, @_) };
-            Lintian::Util::_parse_dpkg_control_iterative ($srcsub, $srcfd);
+            visit_dpkg_paragraph ($srcsub, $srcfd);
             close $srcfd;
         }
     }

@@ -31,6 +31,7 @@ use base 'Exporter';
 our (@EXPORT_OK, @EXPORT);
 BEGIN {
     @EXPORT_OK = qw(
+                 visit_dpkg_paragraph
                  parse_dpkg_control
                  read_dpkg_control
                  get_deb_info
@@ -100,9 +101,45 @@ but on their own did not warrant their own module.
 
 Most subs are imported only on request.
 
+=head2 Debian control parsers
+
+At first glance, this module appears to contain several debian control
+parsers.  In practise, there is only one real parser
+(L</visit_dpkg_paragraph>) - the rest are convience functions around
+it.
+
+If you have very large files (e.g. Packages_amd64), you almost
+certainly want L</visit_dpkg_paragraph>.  Otherwise, one of the
+convience methods are probably what you are looking for.
+
+=over 4
+
+=item Use L</get_deb_info> when
+
+You have a I<.deb> (or I<.udeb>) file and you want the control file
+from it.
+
+=item Use L</get_dsc_info> when
+
+You have a I<.dsc> (or I<.changes>) file.  Alternative, it is also
+useful if you have a control file and only care about the first
+paragraph.
+
+=item Use L</read_dpkg_control> when
+
+You have a debian control file (such I<debian/control>) and you want
+a number of paragraphs from it.
+
+=item Use L</parse_dpkg_control> when
+
+When you would have used L</read_dpkg_control>, except you have an
+open filehandle rather than a file name.
+
+=back
+
 =head1 FUNCTIONS
 
-=over
+=over 4
 
 =item parse_dpkg_control (HANDLE[, DEBCONF_FLAG[, LINES]])
 
@@ -119,12 +156,75 @@ return, LINES will be populated to the line numbers where a given
 paragraph "started" (i.e. the line number of first field in the
 paragraph).
 
+This is a convience sub around L</visit_dpkg_paragraph> and can
+therefore produce the same errors as it.  Please see
+L</visit_dpkg_paragraph> for the finer semantics of how the
+control file is parsed.
+
+NB: parse_dpkg_control does I<not> close the handle for the caller.
+
+=cut
+
+sub parse_dpkg_control {
+    my ($handle, $debconf_flag, $lines) = @_;
+    my @result;
+    my $c = sub {
+        my ($para, $line) = @_;
+        push @result, $para;
+        push @$lines, $line if defined $lines;
+    };
+    visit_dpkg_paragraph ($c, $handle, $debconf_flag);
+    return @result;
+}
+
+
+=item visit_dpkg_paragraph (CODE, HANDLE[, DEBCONF_FLAG])
+
+Reads a debian control file from HANDLE and passes each paragraph to
+CODE.  A paragraph is represented via a hashref, which maps (lower
+cased) field names to their values.
+
+If DEBCONF_FLAG is passed and a truth value, the handle is assumed to
+point to a debconf template.  These files have slightly different
+syntax and the flag is needed to parse them correctly.
+
 If the file is empty (i.e. it contains no paragraphs), the method will
 contain an I<empty> list.  Lines looking like a GPG-signature is
 ignored when parsing the file.
 
-On syntax errors, parse_dpkg_control will call die with the following
-string:
+visit_dpkg_paragraph will pass paragraphs to CODE as they are
+completed.  If CODE can process the paragraphs as they are seen, very
+large control files can be processed without keeping all the
+paragraphs in memory.
+
+As a consequence of how the file is parsed, CODE may be passed a
+number of (valid) paragraphs before parsing is stopped due to a syntax
+error.
+
+NB: visit_dpkg_paragraph does I<not> close the handle for the caller.
+
+CODE is expected to be a callable reference (e.g. a sub) and will be
+invoked as the following:
+
+=over 4
+
+=item CODE->(PARA, STARTLINE)
+
+The first argument, PARA, is a hashref to the most recent paragraph
+parsed.  The second argument, STARTLINE, is the line number where the
+paragraph "started" (i.e. the line number of first field in the
+paragraph).
+
+The return value of CODE is ignored.
+
+If the CODE invokes die (or similar) the error is propagated to the
+caller.
+
+=back
+
+
+I<On syntax errors>, visit_dpkg_paragraph will call die with the
+following string:
 
   "syntax error at line %d: %s\n"
 
@@ -157,21 +257,10 @@ underscores.
 
 =cut
 
-sub parse_dpkg_control {
-    my @result;
-    my $c = sub { push @result, @_; };
-    _parse_dpkg_control_iterative( $c, @_);
-    return @result;
-}
+sub visit_dpkg_paragraph {
+    my ($code, $CONTROL, $debconf_flag) = @_;
 
-# parses a dpkg-control file like parse_dpkg_control, except
-# at the end of each section (or paragraph) it will pass the
-# section to a piece of code to handle it.  This allows reading
-# large dpkg-control based files without having the entire file
-# in memory.
-sub _parse_dpkg_control_iterative {
-    my ($code, $CONTROL, $debconf_flag, $lines) = @_;
-
+    my $sline = -1;
     my $section = {};
     my $open_section = 0;
     my $last_tag;
@@ -188,7 +277,7 @@ sub _parse_dpkg_control_iterative {
         if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && $_ eq '')) {
             if ($open_section) { # end of current section
                 # pass the current section to the handler
-                $code->($section);
+                $code->($section, $sline);
                 $section = {};
                 $open_section = 0;
             }
@@ -207,7 +296,7 @@ sub _parse_dpkg_control_iterative {
         }
         # new empty field?
         elsif (m/^([^: \t]+):\s*$/o) {
-            push @$lines, $. if defined $lines and not $open_section;
+            $sline = $. if not $open_section;
             $open_section = 1;
 
             my ($tag) = (lc $1);
@@ -217,7 +306,7 @@ sub _parse_dpkg_control_iterative {
         }
         # new field?
         elsif (m/^([^: \t]+):\s*(.*)$/o) {
-            push @$lines, $. if defined $lines and not $open_section;
+            $sline = $. if not $open_section;
             $open_section = 1;
 
             # Policy: Horizontal whitespace (spaces and tabs) may occur
@@ -259,7 +348,7 @@ sub _parse_dpkg_control_iterative {
         }
     }
     # pass the last section (if not already done).
-    $code->($section) if $open_section;
+    $code->($section, $sline) if $open_section;
 }
 
 =item read_dpkg_control (FILE[, DEBCONF_FLAG[, LINES]])
@@ -272,10 +361,15 @@ returned.
 
 Otherwise, this behaves like:
 
- open my $fd, '<' FILE or fail ...;
+ open my $fd, '<' FILE or die ...;
  my @p = parse_dpkg_control ($fd, DEBCONF_FLAG, LINES);
  close $fd;
  return @p;
+
+This goes without saying that may fail with any of the messages that
+L</parse_dpkg_control> do.  It can also emit the following error:
+
+ "cannot open %s: %s"
 
 =cut
 
@@ -286,11 +380,10 @@ sub read_dpkg_control {
         return;
     }
 
-    open(my $CONTROL, '<', $file)
-        or fail("cannot open control file $file for reading: $!");
+    open my $CONTROL, '<', $file or die "cannot open $file: $!";
     my @data = parse_dpkg_control($CONTROL, $debconf_flag, $lines);
-    close($CONTROL)
-        or fail("pipe for control file $file exited with status: $?");
+    close $CONTROL;
+
     return @data;
 }
 
@@ -307,6 +400,11 @@ Note: the control file is only expected to have a single paragraph and
 thus only the first is returned (in the unlikely case that there are
 more than one).
 
+This function may fail with any of the messages that
+L</parse_dpkg_control> do.  It can also emit:
+
+ "cannot fork to unpack %s: %s\n"
+
 =cut
 
 sub get_deb_info {
@@ -321,7 +419,7 @@ sub get_deb_info {
     spawn($opts,
           ['ar', 'p', $file, 'control.tar.gz'],
           '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
-        or fail("cannot fork to unpack $file: $opts->{exception}\n");
+        or die "cannot fork to unpack $file: $opts->{exception}\n";
     my @data = parse_dpkg_control($opts->{pipe_out});
 
     # Consume all data before exiting so that we don't kill child processes
@@ -341,6 +439,9 @@ the file has no paragraphs, C<undef> is returned instead.
 Note: the control file is only expected to have a single paragraph and
 thus only the first is returned (in the unlikely case that there are
 more than one).
+
+This function may fail with any of the messages that
+L</read_dpkg_control> do.
 
 =cut
 
