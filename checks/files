@@ -603,14 +603,6 @@ foreach my $file (@{$info->sorted_index}) {
             tag 'desktop-file-in-wrong-dir', $file;
         }
 
-        # ---------------- png files under /usr/share/apps/*/icons/*
-        elsif ($file =~ m,^usr/share/apps/[^/]+/icons/[^/]+/(\d+x\d+)/.*\.png$,) {
-            my ($dsize, $fsize) = ($1);
-            $info->file_info->{$file} =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/;
-            $fsize = $1.'x'.$2;
-            tag 'icon-size-and-directory-name-mismatch', $file, $fsize
-                unless ($dsize eq $fsize);
-        }
         # ---------------- non-games-specific data in games subdirectory
         elsif ($file =~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,
                and $index_info->{type} !~ m/^d/) {
@@ -925,6 +917,14 @@ foreach my $file (@{$info->sorted_index}) {
             }
         }
         tag 'python-module-in-wrong-location', @correction if (@correction);
+    }
+
+    if ($file =~ m,/icons/[^/]+/(\d+x\d+)/.*\.png$,) {
+        my ($dsize, $fsize) = ($1);
+        $info->file_info->{$file} =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/;
+        $fsize = $1.'x'.$2;
+        tag 'icon-size-and-directory-name-mismatch', $file, $fsize
+            unless ($dsize eq $fsize);
     }
 
     # ---------------- plain files
