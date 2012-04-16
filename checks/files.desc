@@ -984,6 +984,12 @@ Info: The icon has a size that differs from the size specified by the name
  of the directory under which it was installed.  The icon was probably
  mistakenly installed into the wrong directory.
 
+Tag: raster-image-in-scalable-directory
+Severity: normal
+Certainty: certain
+Info: The given raster image was installed into a "scalable" icon directory.
+ Only vector graphics (e.g. SVG) should be installed into those directories.
+
 Tag: gz-file-not-gzip
 Severity: normal
 Certainty: possible

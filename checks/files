@@ -927,6 +927,10 @@ foreach my $file (@{$info->sorted_index}) {
             unless ($dsize eq $fsize);
     }
 
+    if ($file =~ m,/icons/[^/]+/scalable/.*\.(?:png|xpm)$,) {
+        tag 'raster-image-in-scalable-directory', $file;
+    }
+
     # ---------------- plain files
     if ($index_info->{type} =~ m/^[-h]/) {
         # ---------------- backup files and autosave files

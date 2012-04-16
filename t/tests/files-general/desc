@@ -22,6 +22,7 @@ Test-For:
  package-contains-mime-cache-file
  package-contains-mimeinfo.cache-file
  package-modifies-ld.so-search-path
+ raster-image-in-scalable-directory
  star-file
  stray-directory-in-manpage-directory
  windows-devel-file-in-package
