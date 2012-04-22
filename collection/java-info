@@ -24,6 +24,7 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
+use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
 my ($pkg, $type, $dir) = @ARGV;
@@ -34,8 +35,16 @@ unless ( -d "$dir/unpacked/") {
     fail "java-info called with the wrong dir argument!";
 }
 
-open OUT, '>', "$dir/java-info"
-    or fail "cannot open java-info: $!";
+if ( -f "$dir/java-info" ) {
+    unlink "$dir/java-info" or fail "unlink $dir/java-info: $!";
+}
+if ( -f "$dir/java-info.gz" ) {
+    unlink "$dir/java-info.gz" or fail "unlink $dir/java-info.gz: $!";
+}
+
+# We lazily start the gzip process to avoid creating the java-info.gz
+# file when there are no jar files in the package.
+my %opts;
 
 chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
@@ -46,20 +55,21 @@ foreach my $file (@{ $info->sorted_index }) {
     if ($file =~ m#\S+\.jar$#i) {
         my $has_manifest = 0;
 
+        open_java_info() unless %opts;
         # This script needs unzip, there's no way around.
-        print OUT "-- $file\n";
+        print {$opts{pipe_in}} "-- $file\n";
 
         # First, the file list:
         open FILE_LIST, '-|', 'zipinfo', '-1', $file;
         while(<FILE_LIST>) {
             $has_manifest = 1 if $_ =~ m@^META-INF/MANIFEST.MF$@oi;
             next if( m#/$#o);   # Skip directories
-            print OUT;
+            print {$opts{pipe_in}} $_;
         }
         close FILE_LIST;
 
         if($has_manifest) {
-            print OUT "-- MANIFEST: $file\n";
+            print {$opts{pipe_in}} "-- MANIFEST: $file\n";
 
             open MANIFEST, '-|', 'unzip', '-p', $file, 'META-INF/MANIFEST.MF';
             my $first = 1;
@@ -67,24 +77,35 @@ foreach my $file (@{ $info->sorted_index }) {
                 chomp $line;
                 $line =~ s/\r//go;
                 if($line =~ m/^(\S+:)\s*(.*)/o) {
-                    print OUT "\n" unless $first;
+                    print {$opts{pipe_in}} "\n" unless $first;
                     $first = 0;
-                    print OUT "  $1 $2";
+                    print {$opts{pipe_in}} "  $1 $2";
                 }
                 if($line =~ m/^ /o) {
-                    print OUT substr $line, 1;
+                    print {$opts{pipe_in}} substr $line, 1;
                 }
             }
             close MANIFEST;
-            print OUT "\n" unless $first;
+            print {$opts{pipe_in}} "\n" unless $first;
 
         }
     }
 }
 
-close OUT or fail("cannot write java-info: $!");
+if (%opts) {
+    close $opts{pipe_in} or fail "cannot write java-info.gz: $!";
+    reap (\%opts);
+}
 
-exit 0
+exit 0;
+
+sub open_java_info {
+    %opts = ( pipe_in => FileHandle->new,
+              out => "$dir/java-info.gz",
+              fail => 'error' );
+    spawn(\%opts, ['gzip', '-9c'] );
+    $opts{pipe_in}->blocking(1);
+}
 
 # Local Variables:
 # indent-tabs-mode: nil

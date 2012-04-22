@@ -2,5 +2,5 @@ Collector-Script: java-info
 Author: Vincent Fourmond <fourmond@debian.org>
 Info: This script extracts information from manifests of JAR files
 Type: binary
-Version: 1
+Version: 2
 Needs-Info: unpacked, index

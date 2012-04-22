@@ -274,8 +274,15 @@ sub java_info {
 
     my $base_dir = $self->base_dir;
     my %java_info;
-    open my $idx, '<', "$base_dir/java-info"
-        or fail "cannot open $base_dir/java-info: $!";
+    if ( ! -f "$base_dir/java-info.gz" ) {
+        # no java-info.gz => no jar files to collect data.  Just
+        # return an empty hash ref.
+        $self->{java_info} = \%java_info;
+        return $self->{java_info};
+    }
+
+    open my $idx, '-|', 'gzip', '-dc', "$base_dir/java-info.gz"
+        or fail "cannot open $base_dir/java-info.gz: $!";
     my $file;
     my $file_list = 0;
     my $manifest = 0;

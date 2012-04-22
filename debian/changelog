@@ -111,6 +111,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] New files.  Thanks to Kees Cook for the patch.
   * collection/index{,.desc}:
     + [NT] Compress index output and bump version of index.
+  * collection/java-info{,.desc}:
+    + [NT] Compress java-info output and bump version of java-info.
   * collection/objdump-info:
     + [NT] Use "fail" from Lintian::Util.pm rather than embedding a
       copy of it.
