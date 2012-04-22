@@ -118,6 +118,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
       Thanks to Arno Töll for the patch.
     + [NT] Do not emit unusual-interpreter if the package provides the
       interpreter itself.
+    + [NT] Ignore the lack of exec bit on th debconf shell modules.
   * checks/standards-version.desc:
     + [NT] Add references to the Policy upgrading checklist.  Thanks to
       Simon Paillard for the patch.

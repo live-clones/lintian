@@ -315,6 +315,7 @@ for my $filename (sort keys %{$info->scripts}) {
                 or $filename =~ m,^usr/(lib|share)/.*\.pm,
                 or $filename =~ m,^usr/(lib|share)/.*\.py,
                 or $filename =~ m,^usr/(lib|share)/ruby/.*\.rb,
+                or $filename =~ m,^usr/share/debconf/confmodule(?:\.sh)?$,
                 or $filename =~ m,\.in$,
                 or $filename =~ m,\.erb$,
                 or $filename =~ m,\.ex$,
