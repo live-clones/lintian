@@ -1,6 +1,6 @@
-Testname: shared-libs-dev-symlink
+Testname: shared-libs-non-dev-symlink
 Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test checks related to dev symlink
-Test-For: dev-pkg-without-shlib-symlink
+Test-For: non-dev-pkg-with-shlib-symlink

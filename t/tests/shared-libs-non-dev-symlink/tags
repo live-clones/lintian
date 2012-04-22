@@ -1,0 +1,1 @@
+W: libfoo1: non-dev-pkg-with-shlib-symlink usr/lib/libfoo.so.1.0.1 usr/lib/libfoo.so

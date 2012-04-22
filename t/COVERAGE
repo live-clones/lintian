@@ -1,5 +1,5 @@
 Last generated 2012-04-22
-Coverage: 803/964 (83.30%), w. legacy tests: 908/964 (94.19%)
+Coverage: 804/964 (83.40%), w. legacy tests: 909/964 (94.29%)
 
 The following tags are not tested by the test suite:
 
@@ -65,7 +65,6 @@ po-debconf not-using-po-debconf
 
 shared-libs ldconfig-symlink-is-not-a-symlink
 shared-libs ldconfig-symlink-referencing-wrong-file
-shared-libs non-dev-pkg-with-shlib-symlink
 shared-libs pkg-has-shlibs-control-file-but-no-actual-shared-libs
 shared-libs shlib-with-bad-permissions
 shared-libs shlib-with-executable-stack
