@@ -178,6 +178,7 @@ my $py_support_nver = undef;
 my $arch_dep_files = 0;
 my $arch = $info->field ('architecture')//'';
 my $isma_same = ($info->field ('multi-arch')//'') eq 'same';
+my $ppkg = quotemeta ($pkg);
 
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
@@ -431,13 +432,12 @@ foreach my $file (@{$info->sorted_index}) {
                 }
 
                 # contains an INSTALL file?
-                my $tmp = quotemeta($pkg);
-                if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
+                if ($file =~ m,^usr/share/doc/$ppkg/INSTALL(?:\..+)*$,) {
                     tag 'package-contains-upstream-install-documentation', $file;
                 }
 
                 # contains a README for another distribution/platform?
-                if ($file =~ m,^usr/share/doc/$tmp/readme\.(?:apple|aix|atari|be|beos|bsd|bsdi|
+                if ($file =~ m,^usr/share/doc/$ppkg/readme\.(?:apple|aix|atari|be|beos|bsd|bsdi|
                                 cygwin|darwin|irix|gentoo|freebsd|mac|macos|macosx|netbsd|
                                 openbsd|osf|redhat|sco|sgi|solaris|suse|sun|vms|win32|win9x|
                                 windows)(?:\.txt)?(?:\.gz)?$,xi){
@@ -445,7 +445,7 @@ foreach my $file (@{$info->sorted_index}) {
                 }
 
                 # contains a compressed version of objects.inv in sphinx-generated documentation?
-                if ($file =~ m,^usr/share/doc/$tmp/(?:[^/]+/)+objects\.inv\.gz$,
+                if ($file =~ m,^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$,
                     and $info->file_info->{$file} =~ m/gzip compressed/) {
                     tag 'compressed-objects.inv', $file;
                 }
@@ -858,19 +858,18 @@ foreach my $file (@{$info->sorted_index}) {
     }
 
     # ---------------- misplaced lintian overrides
-    my $tmp = quotemeta($pkg);
-    if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(?:\.gz)?$, or
-        $file =~ m,^usr/share/lintian/overrides/$tmp/.+,) {
+    if ($file =~ m,^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$, or
+        $file =~ m,^usr/share/lintian/overrides/$ppkg/.+,) {
         tag 'override-file-in-wrong-location', $file;
     }
 
     # ---------------- pyshared-data
-    if ($file =~ m,^usr/share/pyshared-data/$tmp$,){
+    if ($file =~ m,^usr/share/pyshared-data/$ppkg$,){
         my $dep = $info->relation('depends');
         tag 'missing-dependency-on-python-central' unless ($dep->implies('python-central (>= 0.6)'));
     }
 
-    if ($file =~ m,^usr/share/python-support/$tmp\.(?:public|private)$,){
+    if ($file =~ m,^usr/share/python-support/$ppkg\.(?:public|private)$,){
         $py_support_nver = '(>= 0.90)';
     } elsif ($file =~ m,^usr/share/python-support/\S+,o && !$py_support_nver){
         $py_support_nver = '';
