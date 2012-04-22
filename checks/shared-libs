@@ -64,8 +64,12 @@ my @words;
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
+my $proc = shift;
+my $group = shift;
 
 my $objdump = $info->objdump_info;
+
+my @devpkgs;
 
 # 1st step: get info about shared libraries installed by this package
 foreach my $file (sort keys %{$objdump}) {
@@ -78,6 +82,15 @@ foreach my $file (@{$info->sorted_index}) {
     my $fileinfo = $info->file_info->{$file};
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
         $sharedobject{$file} = 1;
+    }
+}
+
+if (%SONAME) {
+    foreach my $bin ($group->get_binary_processables) {
+        next unless $bin->pkg_name =~ m/\-dev$/;
+        if ($bin->info->relation ('strong')->implies ($pkg)) {
+            push @devpkgs, $bin;
+        }
     }
 }
 
@@ -221,23 +234,22 @@ for my $shlib_file (keys %SONAME) {
     # determine shlib link name (w/o version)
     $link_file =~ s/\.so.*$/.so/o;
 
-    # -dev package?
-    if ($pkg =~ m/\-dev$/o) {
-        # yes!!
-
-        # need shlib symlink
-        if (not exists $info->index->{$link_file}) {
-            tag 'dev-pkg-without-shlib-symlink', "$shlib_file $link_file";
+    # shlib symlink may not exist.
+    # if shlib doesn't _have_ a version, then $link_file and $shlib_file will
+    # be equal, and it's not a development link, so don't complain.
+    if (exists $info->index->{$link_file} and $link_file ne $shlib_file) {
+        tag 'non-dev-pkg-with-shlib-symlink', "$shlib_file $link_file";
+    } elsif (@devpkgs) {
+        # -dev package - it needs a shlib symlink
+        my $ok = 0;
+        foreach my $devpkg (@devpkgs) {
+            if (exists $devpkg->info->index->{$link_file}) {
+                $ok = 1;
+                last;
+            }
         }
-    } else {
-        # no.
-
-        # shlib symlink may not exist.
-        # if shlib doesn't _have_ a version, then $link_file and $shlib_file will
-        # be equal, and it's not a development link, so don't complain.
-        if (exists $info->index->{$link_file} and $link_file ne $shlib_file) {
-            tag 'non-dev-pkg-with-shlib-symlink', "$shlib_file $link_file";
-        }
+        tag 'dev-pkg-without-shlib-symlink', "$shlib_file $link_file"
+            unless $ok;
     }
 }
 

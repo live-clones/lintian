@@ -1,5 +1,5 @@
-Last generated 2012-03-19
-Coverage: 782/944 (82.84%), w. legacy tests: 887/944 (93.96%)
+Last generated 2012-04-22
+Coverage: 803/964 (83.30%), w. legacy tests: 908/964 (94.19%)
 
 The following tags are not tested by the test suite:
 
@@ -63,7 +63,6 @@ po-debconf missing-potfiles-in
 po-debconf missing-templates-pot
 po-debconf not-using-po-debconf
 
-shared-libs dev-pkg-without-shlib-symlink
 shared-libs ldconfig-symlink-is-not-a-symlink
 shared-libs ldconfig-symlink-referencing-wrong-file
 shared-libs non-dev-pkg-with-shlib-symlink

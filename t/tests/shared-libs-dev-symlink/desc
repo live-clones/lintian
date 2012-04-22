@@ -1,0 +1,6 @@
+Testname: shared-libs-dev-symlink
+Sequence: 6000
+Version: 1.0-1
+Type: non-native
+Description: Test checks related to symbols files
+Test-For: dev-pkg-without-shlib-symlink

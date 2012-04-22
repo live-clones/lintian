@@ -49,6 +49,9 @@ W: libbaz source: package-depends-on-lower-priority-package libbaz2-dbg:optional
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
 W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
 W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
+W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz.so usr/lib/libbaz.so
+W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz3.so.1.0.3b usr/lib/libbaz3.so
+W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libfoo2.so.1.0.3b usr/lib/libbaz2.so
 W: libbaz1: missing-depends-line
 W: libbaz1: new-package-should-close-itp-bug
 W: libbaz1: package-name-doesnt-match-sonames libbaz libbaz2-1.0 libbaz3-1
