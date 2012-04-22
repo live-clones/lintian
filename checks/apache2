@@ -53,12 +53,11 @@ sub run {
 
 
             # Package installs an unrecognized file - check this for all files
-            if ($file !~ m#\.conf$# and $file =~ m#^(etc/apache2/(conf|site|mods)-available/(.*))$#)  {
-                my $temp_path = $1;
-                my $temp_type = $2;
-                my $temp_file = $3;
+            if ($file !~ m#\.conf$# and $file =~ m#^etc/apache2/(conf|site|mods)-available/(.*)$#)  {
+                my $temp_type = $1;
+                my $temp_file = $2;
                 # ... except modules which are allowed to ship .load files
-                tag 'apache2-configuration-files-need-conf-suffix', $temp_path
+                tag 'apache2-configuration-files-need-conf-suffix', $file
                     unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
             }
 
@@ -69,21 +68,21 @@ sub run {
             }
 
             # Package appears to be a web application
-            elsif ($file =~ m#^(etc/apache2/(conf|site)-available/(.*))$#) {
-                check_web_application_package ($pkg, $type, $info, $1, $2, $3);
+            elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
+                check_web_application_package ($pkg, $type, $info, $file, $1, $2);
                 $seen_apache2_special_file++;
             }
 
             # Package appears to be a legacy web application
-            elsif ($file =~ m#^(etc/apache2/conf\.d/(.*))$#) {
-                tag "apache2-reverse-dependency-uses-obsolete-directory", $1;
-                check_web_application_package ($pkg, $type, $info, $1, 'conf', $2);
+            elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
+                tag "apache2-reverse-dependency-uses-obsolete-directory", $file;
+                check_web_application_package ($pkg, $type, $info, $file, 'conf', $1);
                 $seen_apache2_special_file++;
             }
 
             # Package does scary things
-            elsif ($file =~ m#^(etc/apache2/(?:conf|sites|mods)-enabled/.*)$#) {
-                tag "apache2-reverse-dependency-ships-file-in-not-allowed-directory", $1;
+            elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
+                tag "apache2-reverse-dependency-ships-file-in-not-allowed-directory", $file;
                 $seen_apache2_special_file++;
             }
 
