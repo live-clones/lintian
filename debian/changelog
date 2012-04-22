@@ -108,6 +108,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
       change.  Thanks, Iustin Pop.  (Closes: #664471)
   * checks/menu-format:
     + [NT] Move menu section lists into a data file.
+    + [NT] If a package is missing a menu icon, check its direct strong
+      dependencies built from the same source (if any) for the icon.
+      This fixes false-positives menu-icon-missing in some cases.
   * checks/menus{,.desc}:
     + [NT] Remove "manual" lazy load of data file.
   * checks/nmu:

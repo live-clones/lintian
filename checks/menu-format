@@ -328,6 +328,8 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
+my $proc = shift;
+my $group = shift;
 
 my @menufiles;
 opendir (MENUDIR, 'menu/lib') or fail('cannot read menu/lib file directory.');
@@ -411,11 +413,11 @@ foreach my $menufile (@menufiles) {
         # Note that I allow whitespace after the continuation character.
         # This is caught by VerifyLine().
         if (! ($menufile_line =~ m/\\\s*?$/)) {
-            VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
+            VerifyLine($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
             $line='';
         }
     } while ($menufile_line = <IN>);
-    VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
+    VerifyLine($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
 
     close IN;
 }
@@ -427,7 +429,7 @@ foreach my $menufile (@menufiles) {
 # Pass this a line of a menu file, it sanitizes it and
 # verifies that it is correct.
 sub VerifyLine {
-    my ($pkg, $info, $type, $menufile, $fullname, $line, $linecount) = @_;
+    my ($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $linecount) = @_;
 
     my %vals;
 
@@ -567,13 +569,13 @@ sub VerifyLine {
                 or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
     if (exists($vals{'icon'})) {
-        VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
+        VerifyIcon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
     }
     if (exists($vals{'icon32x32'})) {
-        VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
+        VerifyIcon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
     }
     if (exists($vals{'icon16x16'})) {
-        VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
+        VerifyIcon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
     }
 
     # Check the needs tag.
@@ -637,7 +639,7 @@ sub VerifyLine {
 
 
 sub VerifyIcon {
-    my ($info, $menufile, $fullname, $linecount, $icon, $size) = @_;
+    my ($info, $proc, $group, $menufile, $fullname, $linecount, $icon, $size) = @_;
     local *IN;
 
     if ($icon eq 'none') {
@@ -656,6 +658,16 @@ sub VerifyIcon {
     my $iconfile = $info->unpacked($icon);
     if (! -f $iconfile) {
         $iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
+        if (! -f $iconfile) {
+            my $ginfo = $group->info;
+            foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
+                my $dinfo = $depproc->info;
+                $iconfile = $dinfo->unpacked($icon);
+                last if -f $iconfile;
+                $iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
+                last if -f $iconfile;
+            }
+        }
     }
 
     if (! open (IN, '<', $iconfile)) {
