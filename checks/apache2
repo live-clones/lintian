@@ -26,7 +26,7 @@ use warnings;
 use File::Basename;
 use Lintian::Collect::Binary ();
 use Lintian::Tags qw(tag);
-use Lintian::Relation ();
+use Lintian::Relation qw(:constants);
 use Lintian::Util qw(fail);
 
 sub run {
@@ -100,28 +100,24 @@ sub check_web_application_package {
     tag "non-standard-apache2-configuration-name", $webapp, '!=', "$pkg.conf"
         if $webapp ne "$pkg.conf" or $webapp =~ m/^local-./;
 
-    my $uncondep = 0;
-    my $datadep = 0;
+    my $rel = Lintian::Relation->and ($info->relation ('strong'),
+                                      $info->relation ('recommends'));
 
-    for my $type (qw/pre-depends depends recommends/) {
-        my $raw_dependency = $info->field ($type);
-        next unless $raw_dependency;
-        for my $dependency (split /\s*,\s*/, $raw_dependency) {
-            my $relation = $info->relation ($type);
-            # A web application must not depend on apache2-whatever
-            if ($dependency =~ m/\b(apache2(?:\.2)?-(?:common|data|bin))\b/) {
-                tag 'web-application-depends-on-apache2-data-package', $1
-                    unless $datadep++;
-            }
-
-            # ... nor on apache2 only. Moreover, it should be in the form
-            # apache2 | httpd but don't worry about versions, virtual package
-            # don't support that
-            if ($relation->implies ('apache2')) {
-                tag 'web-application-should-not-depend-unconditionally-on-apache2',
-                    unless $uncondep++;
-            }
+    # A web application must not depend on apache2-whatever
+    my $visit = sub {
+        if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {
+            tag 'web-application-depends-on-apache2-data-package', $_;
+            return 1;
         }
+        return 0;
+    };
+    $rel->visit ($visit, VISIT_STOP_FIRST_MATCH);
+
+    # ... nor on apache2 only. Moreover, it should be in the form
+    # apache2 | httpd but don't worry about versions, virtual package
+    # don't support that
+    if ($rel->implies ('apache2')) {
+        tag 'web-application-should-not-depend-unconditionally-on-apache2';
     }
 
     if (defined $info->index->{$file}) {
@@ -139,30 +135,24 @@ sub check_module_package {
 
     # Package depends on apache2-api-YYYYMMDD
     my $seen_api_dependency = 0;
+    my $rel;
+    my $visit = sub {
+        if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {
+            tag 'apache2-module-depends-on-real-apache2-package', $_;
+            return 1;
+        }
+        return 0;
+    };
 
     $expected_name =~ tr/_/-/;
     if ( $expected_name ne $pkg ) {
         tag 'non-standard-apache2-module-package-name', $pkg, '!=', $expected_name;
     }
 
-    for my $type (qw/pre-depends depends recommends/)  {
-        my $raw_dependency = $info->field($type);
-        next unless $raw_dependency;
-        for my $dependency (split /\s*,\s*/, $raw_dependency) {
-            # no no no, do not depend on our real packages. A module must not
-            # depend on apache2-common or even worse apache2.
-            if ($dependency =~ m/\b(apache2(?:\.2)?-(?:common|data|bin))\b/) {
-                tag 'apache2-module-depends-on-real-apache2-package', $1;
-            }
-            # ... on the other hand, module packages must depend on
-            # apache2-api-YYYYMMDD
-            if (($type eq 'depends' or $type eq 'pre-depends') and $dependency =~ m/\bapache2-api-\d+\b/) {
-                $seen_api_dependency++;
-            }
-        }
-    }
-
-    if (not $seen_api_dependency) {
+    $info->relation ('strong')->visit ($visit, VISIT_STOP_FIRST_MATCH);
+    $rel = Lintian::Relation->and ($info->relation ('strong'),
+                                   $info->relation ('recommends'));
+    if (! $rel->matches (qr/^apache2-api-\d+$/o)) {
         tag 'apache2-module-does-not-depend-on-apache2-api';
     }
 
