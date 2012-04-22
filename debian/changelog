@@ -2,9 +2,24 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - apache2-configuration-files-need-conf-suffix
+      - apache2-deprecated-auth-config
+      - apache2-module-depends-on-real-apache2-package
+      - apache2-module-does-not-depend-on-apache2-api
+      - apache2-module-does-not-ship-load-file
+      - apache2-reverse-dependency-calls-invoke-rc.d
+      - apache2-reverse-dependency-calls-wrapper-script
+      - apache2-reverse-dependency-ships-file-in-not-allowed-directory
+      - apache2-reverse-dependency-uses-obsolete-directory
+      - apache2-unparseable-dependency
+      - apache2-unsupported-dependency
       - diff-contains-quilt-control-dir
+      - non-standard-apache2-configuration-name
+      - non-standard-apache2-module-package-name
       - rc-version-greater-than-expected-version
       - udeb-uses-unsupported-compression-for-data-tarball
+      - web-application-depends-on-apache2-data-package
+      - web-application-should-not-depend-unconditionally-on-apache2
     + Removed:
       - ancient-dpkg-long-filenames-check
       - ancient-dpkg-predepends-check
@@ -35,6 +50,10 @@ lintian (2.5.7) UNRELEASED; urgency=low
       (Closes: #663516)
     + [NT] Migrate to sorted_index from sorted_file_info.
     + [NT] Explicitly import needed subs from L::Util.
+  * checks/apache2{,.desc}:
+    + [NT] New files to check for apache2 related packages.  Thanks
+      to Arno Töll and Stefan Fritsch for the patches.
+      (Closes: #668546)
   * checks/binaries{,.desc}:
     + [NT] Move embedded library data to a data file.
     + [NT] Add ELF hardening checks.  Thanks to Kees Cook for
