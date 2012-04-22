@@ -145,7 +145,12 @@ if (defined $info->field('version')) {
     $selfrel = "$pkg";
 }
 
-my $alldependencies = $info->relation ('strong');
+# Include self and provides as a package providing debconf presumably
+# satisfies its own use of debconf (if any).
+my $selfrelation = Lintian::Relation->and ($info->relation ('provides'),
+                                           $selfrel);
+my $alldependencies = Lintian::Relation->and ($info->relation ('strong'),
+                                              $selfrelation);
 
 # See if the package depends on dbconfig-common.  Packages that do are allowed
 # to have a config file with no templates, since they use the dbconfig-common
@@ -433,7 +438,10 @@ for my $file (qw(config prerm postrm preinst postinst)) {
         }
 
         if ($file eq 'postrm') {
-            unless ($db_purge) {
+            # If we haven't seen db_purge we emit the tag unless the
+            # package is a debconf provider (in which case db_purge
+            # won't be available)
+            unless ($db_purge or $selfrelation->implies ($ANY_DEBCONF)) {
                 tag 'postrm-does-not-purge-debconf';
             }
         }
@@ -443,8 +451,11 @@ for my $file (qw(config prerm postrm preinst postinst)) {
         tag 'postinst-does-not-load-confmodule'
             unless ($type eq 'udeb' || !$seenconfig);
     } elsif ($file eq 'postrm') {
+        # Make an exception for debconf providing packages as some of
+        # them (incl. "debconf" itself) cleans up in prerm and have no
+        # postrm script at all.
         tag 'postrm-does-not-purge-debconf'
-            unless ($type eq 'udeb');
+            unless $type eq 'udeb' or $selfrelation->implies ($ANY_DEBCONF);
     }
 }
 

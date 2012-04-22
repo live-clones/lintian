@@ -76,6 +76,11 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Remove logic for checking if a deb is meant for
       Ubuntu.  Instead unconditionally emit the tag and let the
       vendor profiles handle it.
+  * checks/debconf:
+    + [NT] Special case debconf providers for purge-debconf tag.
+      Generally they cannot use db_purge in postrm (for obvious
+      reasons), so the tag will be a false-positive in such
+      cases.
   * checks/fields{,.desc}:
     + [NT] Add devref reference.
     + [NT] Remove special handling of the Ubuntu specific field,
