@@ -1,0 +1,7 @@
+Testname: po-debconf-missing
+Sequence: 6000
+Version: 1.0
+Description: Test for missing po-debconf files
+Test-For:
+ missing-potfiles-in
+ missing-templates-pot

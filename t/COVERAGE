@@ -1,5 +1,5 @@
-Last generated 2012-04-22
-Coverage: 804/964 (83.40%), w. legacy tests: 909/964 (94.29%)
+Last generated 2012-04-23
+Coverage: 811/964 (84.13%), w. legacy tests: 916/964 (95.02%)
 
 The following tags are not tested by the test suite:
 
@@ -59,14 +59,6 @@ menus doc-base-file-syntax-error
 menus executable-in-usr-share-docbase
 menus executable-menu-file
 
-po-debconf missing-potfiles-in
-po-debconf missing-templates-pot
-po-debconf not-using-po-debconf
-
-shared-libs ldconfig-symlink-is-not-a-symlink
-shared-libs ldconfig-symlink-referencing-wrong-file
-shared-libs pkg-has-shlibs-control-file-but-no-actual-shared-libs
-shared-libs shlib-with-bad-permissions
 shared-libs shlib-with-executable-stack
 shared-libs shlib-without-PT_GNU_STACK-section
 

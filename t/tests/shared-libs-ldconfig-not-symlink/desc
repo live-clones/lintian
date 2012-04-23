@@ -1,0 +1,6 @@
+Testname: shared-libs-ldconfig-not-symlink
+Sequence: 6000
+Version: 1.0-1
+Type: non-native
+Description: Test ldconfig symlink not being a symlink
+Test-For: ldconfig-symlink-is-not-a-symlink
