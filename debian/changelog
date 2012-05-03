@@ -209,6 +209,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] New file based on data/changes-file/ubuntu-dists.
+    + [ADB] Add "quantal" (Quetzal)
   * vendors/ubuntu/main/data/common/source-fields:
     + [NT] New file.
   * vendors/ubuntu/main/data/fields/{binary,udeb}-fields:
