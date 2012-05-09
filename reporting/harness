@@ -101,7 +101,8 @@ unshift @INC, "$LINTIAN_ROOT/lib";
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable::Package;
-require Lintian::Util qw(visit_dpkg_paragraph);
+require Lintian::Util;
+import Lintian::Util qw(visit_dpkg_paragraph);
 
 # turn file buffering off
 $| = 1;
