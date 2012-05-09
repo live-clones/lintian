@@ -1737,7 +1737,7 @@ sub _run_check {
 
     if ( $@ ) {
         print STDERR $@;
-        print STDERR "internal error: cannot run $check check on package $pkg_name";
+        print STDERR "internal error: cannot run $check check on package $pkg_name\n";
         $ret = 2;
     }
     return $ret;
