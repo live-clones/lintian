@@ -1,0 +1,5 @@
+Testname: rules-ignores-error-clean
+Sequence: 6000
+Version: 1.0
+Description: Check for rules ignoring clean error
+Test-For: debian-rules-ignores-make-clean-error

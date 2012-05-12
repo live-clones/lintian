@@ -188,8 +188,11 @@ while (<RULES>) {
         tag 'debian-rules-uses-pwd', "line $.";
     }
     if (m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s ||
-        m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/s) {
-        tag 'debian-rules-ignores-make-clean-error', "line $.";
+        m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s) {
+        # Ignore "-C<dir>" (#671537)
+        if (not $1 or $1 !~ m,^C,) {
+            tag 'debian-rules-ignores-make-clean-error', "line $.";
+        }
     }
     if (/\$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
         tag 'debian-rules-uses-DEB_BUILD_OPTS', "line $.";

@@ -119,6 +119,10 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/nmu:
     + [NT] Remove Ubuntu specific code to handle their (lack of) NMUs.
       These tags are instead suppressed by the Ubuntu profile.
+  * chekcs/rules:
+    + [NT] Fix false-positive "ignores-make-clean-error" tag caused by
+      using make with -C and a dir containing the letter "i".  Thanks to
+      Tobias Hansen for the report.  (Closes: #671537)
   * checks/scripts{,.desc}:
     + [NT] Mention devref 6.4 in command-with-path-in-maintainer-script.
       Thanks to Arno Töll for the patch.
