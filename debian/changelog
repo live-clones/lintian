@@ -101,6 +101,9 @@ lintian (2.5.7) UNRELEASED; urgency=low
       raster images in "scalable" icon directories.  Thanks to
       Paul Wise for the report and Felix Geyer for the patches.
       (Closes: #628189)
+  * checks/group-checks:
+    + [NT] Include Provides when checking for conflict relations.
+      Thanks to Damyan Ivanov for the report.  (Closes: #672615)
   * checks/lintian.desc:
     + [NT] Updated the description of the override tags.
   * checks/manpages{,.desc}:

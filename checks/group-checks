@@ -22,8 +22,10 @@ package Lintian::group_checks;
 use strict;
 use warnings;
 
-use Lintian::Tags qw(tag);
 use Lintian::Data;
+use Lintian::Relation;
+use Lintian::Tags qw(tag);
+
 
 my $KNOWN_PRIOS = Lintian::Data->new ('common/priorities', qr/\s*=\s*/o);
 
@@ -107,18 +109,22 @@ sub _check_file_overlap {
     for (my $i = 0 ; $i < scalar @sorted ; $i++) {
         my $proc = $sorted[$i];
         my $pinfo = $proc->info;
+        my @p = grep { $_ } split /,/o, $pinfo->field ('provides')//'';
+        my $prov = Lintian::Relation->new (join (' |̈́ ', $proc->pkg_name, @p));
         for (my $j = $i ; $j < scalar @sorted ; $j++) {
             my $other = $sorted[$j];
             my $oinfo = $other->info;
+            my @op = grep { $_ } split /,/o, $oinfo->field ('provides')//'';
+            my $oprov = Lintian::Relation->new (join (' | ', $other->pkg_name, @op));
             # poor man's "Multi-arch: same" work-around.
             next if $proc->pkg_name eq $other->pkg_name;
 
             # $other conflicts/replaces with $proc
-            next if $oinfo->relation ('conflicts')->implies ($proc->pkg_name);
+            next if $oinfo->relation ('conflicts')->implies ($prov);
             next if $oinfo->relation ('replaces')->implies ($proc->pkg_name);
 
             # $proc conflicts/replaces with $other
-            next if $pinfo->relation ('conflicts')->implies ($other->pkg_name);
+            next if $pinfo->relation ('conflicts')->implies ($oprov);
             next if $pinfo->relation ('replaces')->implies ($other->pkg_name);
 
             _overlap_check ($proc, $pinfo, $other, $oinfo);
