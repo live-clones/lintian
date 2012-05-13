@@ -31,43 +31,7 @@ use Lintian::Util qw(fail slurp_entire_file);
 
 use File::Spec;
 
-# Table based on checks/emdebian's %archdetecttable, as found in
-# emdebian-tools.
-our %ARCH_REGEX = (
-        '32'            => qr'ELF 32-bit',
-        '64'            => qr'ELF 64-bit',
-        'alpha'         => qr'ELF 64-bit LSB .* Alpha',
-        'amd64'         => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
-        'arm'           => qr'ELF 32-bit LSB .* ARM, version \d,',
-        'armeb'         => qr'ELF 32-bit MSB .* ARM',
-        'armel'         => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
-        'armhf'         => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
-#       'avr32'         => qr'ELF 32-bit MSB .* \(SYSV\)',
-        'hppa'          => qr'ELF 32-bit MSB .* PA-RISC',
-        'hppa64'        => qr'ELF 64-bit MSB .* PA-RISC',
-        'hurd-i386'     => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
-        'i386'          => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
-        'ia64'          => qr'ELF 64-bit LSB .* IA-64',
-        'kfreebsd-amd64'=> qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/kFreeBSD|(?!GNU))',
-        'kfreebsd-i386' => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU))',
-        'lpia'          => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
-        'm32r'          => qr'ELF 32-bit MSB .* M32R',
-        'm68k'          => qr'ELF 32-bit MSB .* 680[02]0',
-        'mips'          => qr'ELF 32-bit MSB .* MIPS',
-        'mipsel'        => qr'ELF 32-bit LSB .* MIPS',
-#       'mipsn32'       => qr'ELF 32-bit LSB .* MIPS.* N32',
-        'mips64'        => qr'ELF 64-bit MSB .* MIPS',
-        'mipsel64'      => qr'ELF 64-bit LSB .* MIPS',
-        'powerpc'       => qr'ELF 32-bit MSB .* PowerPC',
-        'powerpcspe'    => qr'ELF 32-bit MSB .* PowerPC .* cisco 4500',
-        'ppc64'         => qr'ELF 64-bit MSB .* PowerPC',
-        's390'          => qr'ELF 32-bit MSB .* S.390',
-        's390x'         => qr'ELF 64-bit MSB .* S.390',
-        'sh4'           => qr'ELF 32-bit LSB .* Renesas SH',
-        'sparc'         => qr'ELF 32-bit MSB .* SPARC',
-#       'sparcv9b'      => qr'ELF 32-bit MSB .* SPARC.* V8\+',
-        'sparc64'       => qr'ELF 64-bit MSB .* SPARC');
-
+my $ARCH_REGEX = Lintian::Data->new ('binaries/arch-regex', qr/\s*\~\~/o, sub { return qr/$_[1]/ } );
 my $ARCH_64BIT_EQUIVS = Lintian::Data->new ('binaries/arch-64bit-equivs', qr/\s*\=\>\s*/);
 
 sub _embedded_libs {
@@ -249,12 +213,6 @@ foreach (@{$info->sorted_index}) {
     $directories{"/$path"}++;
 }
 
-# If we have an unknown architecture, pretend that all binaries are fine.
-if ($arch ne 'all' and not exists($ARCH_REGEX{$arch})) {
-    debug_msg(1, "Unknown architecture: $arch");
-    $ARCH_REGEX{$arch} = qr/./;
-}
-
 # process all files in package
 foreach my $file (@{$info->sorted_index}) {
     my $fileinfo = $info->file_info->{$file};
@@ -285,19 +243,29 @@ foreach my $file (@{$info->sorted_index}) {
     # ELF?
     next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
-    if ($arch ne 'all' and $fileinfo !~ m/$ARCH_REGEX{$arch}/) {
-        if ($file =~ m,(?:^|/)lib(\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
-            tag 'binary-from-other-architecture', $file
-                unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
-        } elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
-            # Ignore i386 binaries in amd64 packages for right now.
-        } elsif ($ARCH_64BIT_EQUIVS->known ($arch)
-            and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS->value ($arch)}/
-            and $file =~ m,^lib/modules/,) {
+    if ($arch eq 'all' or not $ARCH_REGEX->known ($arch)) {
+        # arch:all or unknown architecture - not much we can say here
+        1;
+    } else {
+        my $archre = $ARCH_REGEX->value ($arch);
+        my $bad = 1;
+        if ($fileinfo =~ m/$archre/) {
+            # If it matches the architecture regex, it is good
+            $bad = 0;
+        } elsif ($file =~ m,(?:^|/)lib(\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
+            my $bitre = $ARCH_REGEX-> value($1);
+            # Special case - "old" multi-arch dirs
+            $bad = 0 if $fileinfo =~ m/$bitre/
+        } elsif ($ARCH_64BIT_EQUIVS->known ($arch) && $file =~ m,^lib/modules/,) {
+            my $arch64re = $ARCH_REGEX->value ($ARCH_64BIT_EQUIVS->value ($arch));
             # Allow amd64 kernel modules to be installed on i386.
-        } else {
-            tag 'binary-from-other-architecture', $file;
+            $bad = 0 if $fileinfo =~ m/$arch64re/;
+        } elsif ($arch eq 'amd64') {
+            my $arch32re = $ARCH_REGEX->value ('i386');
+            # Ignore i386 binaries in amd64 packages for right now.
+            $bad = 0 if $fileinfo =~ m/$arch32re/;
         }
+        tag 'binary-from-other-architecture', $file if $bad;
     }
 
     my $strings = slurp_entire_file ($info->strings ($file));
