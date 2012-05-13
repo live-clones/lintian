@@ -104,6 +104,10 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * checks/group-checks:
     + [NT] Include Provides when checking for conflict relations.
       Thanks to Damyan Ivanov for the report.  (Closes: #672615)
+  * checks/java:
+    + [NT] Ignore "codeless" jars if they appear to be maven
+      javadoc jars.  Thanks to Ludovic Claude for the patch.
+      (Closes: #660845)
   * checks/lintian.desc:
     + [NT] Updated the description of the override tags.
   * checks/manpages{,.desc}:

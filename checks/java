@@ -97,7 +97,9 @@ for my $jar_file (sort keys %{$java_info}) {
 
             # Eclipse / OSGi bundles are sometimes source bundles
             #   these do not ship classes but java files and other sources.
-            if ($bsname !~ m/\.source$/o || $cp) {
+            # Javadoc jars deployed in the Maven repository also do not ship
+            #   classes but HTML files, images and CSS files
+            if (($bsname !~ m/\.source$/o && $jar_file !~ m#^usr/share/maven-repo/.*-javadoc\.jar#) || $cp) {
                 tag 'codeless-jar', $jar_file;
             }
         }
