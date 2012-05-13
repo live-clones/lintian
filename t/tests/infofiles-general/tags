@@ -7,4 +7,3 @@ E: infofiles-general: info-document-not-compressed-with-gzip usr/share/info/foo-
 E: infofiles-general: info-document-not-compressed-with-max-compression usr/share/info/foo-nomax.gz
 W: infofiles-general: gz-file-not-gzip usr/share/info/foo-nogz.gz
 W: infofiles-general: info-document-has-wrong-extension usr/share/info/bar.newinfo.gz
-W: infofiles-general: missing-dependency-on-install-info

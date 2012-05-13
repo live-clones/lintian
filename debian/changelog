@@ -33,6 +33,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
       - duplicate-fields-in-templates
       - manpage-for-non-x11-binary-in-wrong-directory
       - manpage-for-x11-binary-in-wrong-directory
+      - missing-dependency-on-install-info
       - obsolete-field
       - old-app-defaults-directory
       - old-style-copyright-file

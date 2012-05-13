@@ -34,8 +34,6 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my $has_info_file;
-
 # Read package contents...
 foreach my $file (@{$info->sorted_index}) {
     my $index_info = $info->index->{$file};
@@ -49,9 +47,6 @@ foreach my $file (@{$info->sorted_index}) {
     # Ignore dir files.  That's a different error which we already catch in
     # the files check.
     next if $fname =~ /^dir(?:\.old)?(?:\.gz)?/;
-
-    # Note that this package contains at least one info file.
-    $has_info_file = 1;
 
     # Analyze the file names making sure the documents are named properly.
     # Note that Emacs 22 added support for images in info files, so we have to
@@ -104,16 +99,6 @@ foreach my $file (@{$info->sorted_index}) {
         close INFO;
         tag 'info-document-missing-dir-section', $file unless $section;
         tag 'info-document-missing-dir-entry', $file unless $start && $end;
-    }
-}
-
-# If there's at least one info file in the package, the package should depend
-# on dpkg (>= 1.15.4) | install-info to ensure the dir file is properly
-# handled on partial upgrades.
-if ($has_info_file) {
-    my $depends = $info->relation('depends');
-    unless ($depends->implies('dpkg (>= 1.15.4) | install-info')) {
-        tag 'missing-dependency-on-install-info';
     }
 }
 
