@@ -58,6 +58,7 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Move embedded library data to a data file.
     + [NT] Add ELF hardening checks.  Thanks to Kees Cook for
       report and the patches.  (Closes: 650536)
+    + [NT] Replace arch-64bit-equivs with a data file.
   * checks/changelog-file:
     + [NT] Output the correct line number for the "line-too-long"
       tag.  Thanks to Arno Töll for the report.  (Closes: #657402)
@@ -165,12 +166,12 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * data:
     + [NT] Move to vendors/debian/ftp-master-auto-reject and replace
       it with a symlink.
+  * data/binaries/{arch-64bit-equivs,hardening-tags}:
+    + [NT] New file.
   * data/binaries/embedded-libs:
     + [NT] New file.
     + [NT] Add libav libraries.  Thanks to Andres Mejia for the
       suggestion and the suggested patch.  (Closes: #666765)
-  * data/binaries/hardening-tags:
-    + [NT] New file.
   * data/changes-file/{debian-dists -> known-dists}:
     + [NT] Renamed file.
   * data/menu-format/menu-sections:

@@ -68,16 +68,7 @@ our %ARCH_REGEX = (
 #       'sparcv9b'      => qr'ELF 32-bit MSB .* SPARC.* V8\+',
         'sparc64'       => qr'ELF 64-bit MSB .* SPARC');
 
-our %ARCH_64BIT_EQUIVS = (
-        'hppa'          => 'hppa64',
-        'i386'          => 'amd64',
-        'kfreebsd-i386' => 'kfreebsd-amd64',
-        'mips'          => 'mips64',
-        'mipsel'        => 'mipsel64',
-        'powerpc'       => 'ppc64',
-        's390'          => 's390x',
-        'sparc'         => 'sparc64',
-);
+my $ARCH_64BIT_EQUIVS = Lintian::Data->new ('binaries/arch-64bit-equivs', qr/\s*\=\>\s*/);
 
 sub _embedded_libs {
     my ($key, $val, undef) = @_;
@@ -300,8 +291,8 @@ foreach my $file (@{$info->sorted_index}) {
                 unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
         } elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
             # Ignore i386 binaries in amd64 packages for right now.
-        } elsif (exists $ARCH_64BIT_EQUIVS{$arch}
-            and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS{$arch}}/
+        } elsif ($ARCH_64BIT_EQUIVS->known ($arch)
+            and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS->value ($arch)}/
             and $file =~ m,^lib/modules/,) {
             # Allow amd64 kernel modules to be installed on i386.
         } else {
