@@ -535,7 +535,6 @@ if ($type eq 'binary') {
     $metapackage = 1 if $KNOWN_METAPACKAGES->known($pkg);
 }
 if (($type eq 'binary') || ($type eq 'udeb')) {
-    my (%fields, %parsed);
     my $javalib = 0;
     my $replaces = $info->relation('replaces');
     my %nag_once = ();
@@ -546,7 +545,6 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
         my $data = $info->field($field);
         my $javadep = 0;
         unfold($field, \$data);
-        $fields{$field} = $data;
 
         my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs, @seen_libpngs);
 
@@ -715,11 +713,11 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
     # If Conflicts or Breaks is set, make sure it's not inconsistent with
     # the other dependency fields.
     for my $conflict (qw/conflicts breaks/) {
-        next unless $fields{$conflict};
+        next unless $info->field ($conflict);
         for my $field (qw(depends pre-depends recommends suggests)) {
             next unless $info->field($field);
             my $relation = $info->relation($field);
-            for my $package (split /\s*,\s*/, $fields{$conflict}) {
+            for my $package (split /\s*,\s*/, $info->field ($conflict)) {
                 tag 'conflicts-with-dependency', $field, $package
                     if $relation->implies($package);
             }
@@ -840,7 +838,6 @@ if ($type eq 'source') {
     }
 
     # Make sure build dependencies and conflicts are consistent.
-    my %parsed;
     for ($depend{'build-conflicts'}, $depend{'build-conflicts-indep'}) {
         next unless $_;
         for my $conflict (split /\s*,\s*/, $_) {
