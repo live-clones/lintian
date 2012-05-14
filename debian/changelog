@@ -182,6 +182,10 @@ lintian (2.5.7) UNRELEASED; urgency=low
   * data/menu-format/menu-sections:
     + [NT] New file.
 
+  * debian/changelog:
+    + [NT] Amend the 2.5.5 to mention that it also added the tag
+      binaries-have-file-conflict.
+
   * frontend/lintian:
     + [JW] Fix typo in error message.
     + [JW,NT] Fix handling of "override" option in the lintianrc file.
@@ -316,6 +320,7 @@ lintian (2.5.5) unstable; urgency=low
   * Summary of tag changes:
     + Added:
       - arch-dependent-file-not-in-arch-specific-directory
+      - binaries-have-file-conflict
       - control-file-contains-dh_make-vcs-comment
       - debhelper-compat-file-is-missing
       - dependency-is-not-multi-archified
