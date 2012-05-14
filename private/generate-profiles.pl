@@ -35,7 +35,8 @@ foreach my $check (<$root/checks/*.desc>){
     my ($header, undef) = read_dpkg_control($check);
     my $cname = $header->{'check-script'};
     fail "$check missing check-script\n" unless defined $cname;
-    push @checks, $cname;
+    # FIXME, enable apache2 when apache2.4 is uploaded to sid.
+    push @checks, $cname unless $cname eq 'apache2';
 }
 
 @fatal = read_tags ('vendors/debian/ftp-master-auto-reject/data/output/ftp-master-fatal');
@@ -48,6 +49,11 @@ foreach my $dir (@dirs) {
 generate_profile('debian/main', {
     'Extends' => 'debian/ftp-master-auto-reject',
     'Enable-Tags-From-Check' => \@checks,
+    });
+
+generate_profile('debian/extra-apache2', {
+    'Extends' => 'debian/main',
+    'Enable-Tags-From-Check' => ['apache2'],
     });
 
 generate_profile('debian/ftp-master-auto-reject', {

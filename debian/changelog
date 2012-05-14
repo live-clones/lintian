@@ -55,6 +55,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] New files to check for apache2 related packages.  Thanks
       to Arno Töll and Stefan Fritsch for the patches.
       (Closes: #668546)
+    + [NT] This check is not enabled by default.  It can be used
+      via the debian/extra-apache2 profile.
   * checks/binaries{,.desc}:
     + [NT] Move embedded library data to a data file.
     + [NT] Add ELF hardening checks.  Thanks to Kees Cook for
