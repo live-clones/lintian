@@ -62,6 +62,8 @@ lintian (2.5.7) UNRELEASED; urgency=low
     + [NT] Add ELF hardening checks.  Thanks to Kees Cook for
       report and the patches.  (Closes: 650536)
     + [NT] Replace architecture tables with data files.
+    + [JW] Check for missing Python3 numpy ABI dependency.
+      (Closes: #671024)
   * checks/changelog-file:
     + [NT] Output the correct line number for the "line-too-long"
       tag.  Thanks to Arno Töll for the report.  (Closes: #657402)

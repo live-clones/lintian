@@ -337,7 +337,8 @@ foreach my $file (@{$info->sorted_index}) {
     }
 
     # Python extension using Numpy C ABI?
-    if ($file =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$,) {
+    if ($file =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$, or
+            ($file =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$, and $1 !~ /d/)) {
         if ($strings =~ m,module compiled against ABI version %x but this version of numpy is %x,) {
             $uses_numpy_c_abi = 1;
         }
@@ -463,10 +464,10 @@ if ($uses_numpy_c_abi and $pkg ) {
     # relation.  Also, we do not allow versions for -abi as it is a virtual package.
     tag 'missing-dependency-on-numpy-abi'
         unless
-            $depends->matches (qr/^python-numpy-abi\d+$/, VISIT_OR_CLAUSE_FULL) or (
+            $depends->matches (qr/^python3?-numpy-abi\d+$/, VISIT_OR_CLAUSE_FULL) or (
             $depends->matches (qr/^python-numpy \(>[>=][^\|]+$/, VISIT_OR_CLAUSE_FULL) and
             $depends->matches (qr/^python-numpy \(<[<=][^\|]+$/, VISIT_OR_CLAUSE_FULL)) or
-            $pkg eq 'python-numpy';
+            $pkg =~ m,^python3?-numpy$,;
 }
 
 }
