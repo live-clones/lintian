@@ -1,3 +1,12 @@
+lintian (2.5.8) UNRELEASED; urgency=low
+
+  * debian/control:
+    + [NT] Add versioned Build-Depends on dpkg-dev (>= 1.16.1~)
+      as the test suite relies on it.  Thanks to Luca Falavigna
+      for reporting it.
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 16 May 2012 13:57:40 +0200
+
 lintian (2.5.7) unstable; urgency=low
 
   * Summary of tag changes:
