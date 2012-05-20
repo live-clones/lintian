@@ -5,6 +5,11 @@ lintian (2.5.8) UNRELEASED; urgency=low
       as the test suite relies on it.  Thanks to Luca Falavigna
       for reporting it.
 
+  * t:
+    + [NT] Generate empty ".so" files used in the test.  This
+      resolves an issue where dpkg-source would exclude them
+      causing a FTBFS.  (Closes: #673198)
+
  -- Niels Thykier <niels@thykier.net>  Wed, 16 May 2012 13:57:40 +0200
 
 lintian (2.5.7) unstable; urgency=low
