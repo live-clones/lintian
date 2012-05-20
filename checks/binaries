@@ -425,7 +425,7 @@ if ($needs_depends_line) {
         tag 'missing-depends-line';
     } elsif ($needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
         # Match libcXX or libcXX-*, but not libc3p0.
-        my $re = qr/^\Q$needs_libc\E$/;
+        my $re = qr/^\Q$needs_libc\E\b/;
         if (!$depends->matches ($re)) {
             my $others = '';
             $needs_libc_count--;

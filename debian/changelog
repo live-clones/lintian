@@ -1,5 +1,11 @@
 lintian (2.5.8) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [NT] Fix a too strict regex causing false-positives for
+      biarch packages.  This was a regression introduced in
+      version 2.5.7.  Thanks to Sven Joachim for reporting it.
+      (Closes: #673106)
+
   * debian/control:
     + [NT] Add versioned Build-Depends on dpkg-dev (>= 1.16.1~)
       as the test suite relies on it.  Thanks to Luca Falavigna
