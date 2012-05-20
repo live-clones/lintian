@@ -1,6 +1,10 @@
 all: weak.1 strong.1
 	# Build without dpkg-buildflags.
-	gcc -o weak hello.c
+	gcc -o weak \
+		-fno-stack-protector \
+		-Wl,-z,norelro \
+		-U_FORTIFY_SOURCE \
+		hello.c
 	gcc -o strong \
 		$(shell dpkg-buildflags --get CPPFLAGS) \
 		$(shell dpkg-buildflags --get CFLAGS) \
