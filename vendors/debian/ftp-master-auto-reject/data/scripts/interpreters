@@ -41,6 +41,7 @@ install-menu   => /usr/bin, @NODEPS@
 ir             => /usr/bin, ironruby
 jed            => /usr/bin
 jed-script     => /usr/bin, jed | xjed
+jython         => /usr/bin
 kaptain        => /usr/bin
 ksh            => /bin, ksh | mksh | pdksh | zsh
 lefty          => /usr/bin, graphviz
