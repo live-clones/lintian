@@ -41,6 +41,7 @@ sub files {
     my %files;
 
     my $file_list = $self->field('files') || '';
+    local $_;
     for (split /\n/, $file_list) {
         chomp;
         s/^\s+//o;

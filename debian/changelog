@@ -15,6 +15,10 @@ lintian (2.5.8) UNRELEASED; urgency=low
     + [RA] Remove corrections for "writeable" and "overwriteable".  These
       spellings are permitted by the OED in UK English.  (Closes: #673611)
 
+  * lib/Lintian/Collect/*.pm:
+    + [NT] Localize "$_" to avoid truncating caller's variable.
+      (Closes: #673613)
+
   * t:
     + [NT] Generate empty ".so" files used in the test.  This
       resolves an issue where dpkg-source would exclude them

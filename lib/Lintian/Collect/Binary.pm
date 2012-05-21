@@ -134,6 +134,7 @@ sub scripts {
     return $self->{scripts} if exists $self->{scripts};
     my $base_dir = $self->base_dir();
     my %scripts;
+    local $_;
     # sub scripts Needs-Info scripts
     open(SCRIPTS, '<', "$base_dir/scripts")
         or fail("cannot open scripts $base_dir/file: $!");
@@ -164,6 +165,7 @@ sub objdump_info {
     my $base_dir = $self->base_dir();
     my %objdump_info;
     my ($dynsyms, $file);
+    local $_;
     # sub objdump_info Needs-Info objdump-info
     open my $fd, '-|', 'gzip', '-dc', "$base_dir/objdump-info.gz"
         or fail "cannot open $base_dir/objdump-info.gz: $!";
@@ -249,6 +251,7 @@ sub hardening_info {
     my $base_dir = $self->base_dir();
     my %hardening_info;
     my ($file);
+    local $_;
     open(my $idx, '<', "$base_dir/hardening-info")
         or fail("cannot open $base_dir/hardening-info: $!");
     while (<$idx>) {
@@ -286,6 +289,7 @@ sub java_info {
     my $file;
     my $file_list = 0;
     my $manifest = 0;
+    local $_;
     while (<$idx>) {
         chomp;
         next if m/^\s*$/o;

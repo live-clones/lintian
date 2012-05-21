@@ -41,6 +41,7 @@ sub file_info {
     return $self->{file_info} if exists $self->{file_info};
     my $base_dir = $self->base_dir();
     my %file_info;
+    local $_;
     # sub file_info Needs-Info file-info
     open my $idx, '-|', 'gzip', '-dc', "$base_dir/file-info.gz"
         or croak "cannot open $base_dir/file-info.gz: $!";
@@ -127,6 +128,7 @@ sub _fetch_index_data {
     my (%idxh, %dir_counts);
     my $num_idx;
     my %rhlinks;
+    local $_;
     open my $idx, '-|', 'gzip', '-dc', "$base_dir/${index}.gz"
         or croak "cannot open index file $base_dir/${index}.gz: $!";
     if ($indexown) {
