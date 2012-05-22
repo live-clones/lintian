@@ -12,7 +12,8 @@ lintian (2.5.8) UNRELEASED; urgency=low
       for reporting it.
 
   * data/scripts/interpreters:
-    + [NT] Add jython as known interpreter.  (Closes: #669911)
+    + [NT] Add gbr3 and jython as known interpreters.
+      (Closes: #669911, #671387)
   * data/spelling/corrections:
     + [RA] Remove corrections for "writeable" and "overwriteable".  These
       spellings are permitted by the OED in UK English.  (Closes: #673611)

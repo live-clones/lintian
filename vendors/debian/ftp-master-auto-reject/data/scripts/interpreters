@@ -31,6 +31,7 @@ fish           => /usr/bin
 fontforge      => /usr/bin, fontforge-nox | fontforge
 gawk           => /usr/bin
 gbr2           => /usr/bin, gambas2-runtime
+gbr3           => /usr/bin, gambas3-runtime
 gbx            => /usr/bin, gambas-runtime
 gbx2           => /usr/bin, gambas2-runtime
 gforth         => /usr/bin
