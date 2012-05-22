@@ -49,6 +49,12 @@ foreach my $dir (@dirs) {
 generate_profile('debian/main', {
     'Extends' => 'debian/ftp-master-auto-reject',
     'Enable-Tags-From-Check' => \@checks,
+    'Disable-Tags' => ['hardening-no-stackprotector']
+    });
+
+generate_profile('debian/extra-hardening', {
+    'Extends' => 'debian/main',
+    'Enable-Tags' => ['hardening-no-stackprotector']
     });
 
 generate_profile('debian/extra-apache2', {

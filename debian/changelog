@@ -1,10 +1,12 @@
 lintian (2.5.8) UNRELEASED; urgency=low
 
-  * checks/binaries:
+  * checks/binaries{,.desc}:
     + [NT] Fix a too strict regex causing false-positives for
       biarch packages.  This was a regression introduced in
       version 2.5.7.  Thanks to Sven Joachim for reporting it.
       (Closes: #673106)
+    + [NT] Demote certainty of hardening-no-stackprotector to
+      wild-guess and move it to debian/extra-hardening profile.
   * checks/shared-libs:
     + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
       for shared libraries using "libtool -release X.Y".

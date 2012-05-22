@@ -8,4 +8,5 @@ Enable-Tags-From-Check: binaries, changelog-file, changes-file, conffiles, contr
  lintian, manpages, md5sums, menu-format, menus, nmu, ocaml, patch-systems,
  po-debconf, rules, scripts, shared-libs, source-copyright, standards-version,
  symlinks, version-substvars, watch-file
+Disable-Tags: hardening-no-stackprotector
 

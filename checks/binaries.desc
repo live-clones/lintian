@@ -302,7 +302,7 @@ Info: This package provides an OCaml bytecode executable linked with a
 
 Tag: hardening-no-stackprotector
 Severity: normal
-Certainty: possible
+Certainty: wild-guess
 Info: This package provides an ELF binary that lacks the stack protector
  function <tt>__stack_chk_fail</tt>. Either there are no character arrays used
  on the stack of any routines, or the package was not built with the
