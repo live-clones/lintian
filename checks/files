@@ -918,8 +918,8 @@ foreach my $file (@{$info->sorted_index}) {
         tag 'python-module-in-wrong-location', @correction if (@correction);
     }
 
-    if ($file =~ m,/icons/[^/]+/(\d+x\d+)/(?!animations/).*\.png$,) {
-        my $dsize = $1;
+    if ($file =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,) {
+        my ($dwidth, $dheight) = ($1, $2);
         my $path;
         if ($index_info->{type} =~ m/^l/) {
             $path = resolve_pkg_path(dirname($file), $link);
@@ -928,9 +928,11 @@ foreach my $file (@{$info->sorted_index}) {
         }
         my $fileinfo = $info->file_info->{$path};
         if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
-            my $fsize = $1.'x'.$2;
-            tag 'icon-size-and-directory-name-mismatch', $file, $fsize
-                unless ($dsize eq $fsize);
+            my ($fwidth, $fheight) = ($1, $2);
+            my $width_delta = abs($dwidth - $fwidth);
+            my $height_delta = abs($dheight - $fheight);
+            tag 'icon-size-and-directory-name-mismatch', $file, $fwidth.'x'.$fheight
+                unless ($width_delta <= 2 && $height_delta <= 2);
         }
     }
 
