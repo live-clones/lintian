@@ -919,11 +919,13 @@ foreach my $file (@{$info->sorted_index}) {
     }
 
     if ($file =~ m,/icons/[^/]+/(\d+x\d+)/(?!animations/).*\.png$,) {
-        my ($dsize, $fsize) = ($1);
-        $info->file_info->{$file} =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/;
-        $fsize = $1.'x'.$2;
-        tag 'icon-size-and-directory-name-mismatch', $file, $fsize
-            unless ($dsize eq $fsize);
+        my $dsize = $1;
+        my $fileinfo = $info->file_info->{$file};
+        if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
+            my $fsize = $1.'x'.$2;
+            tag 'icon-size-and-directory-name-mismatch', $file, $fsize
+                unless ($dsize eq $fsize);
+        }
     }
 
     if ($file =~ m,/icons/[^/]+/scalable/.*\.(?:png|xpm)$,) {
