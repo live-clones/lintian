@@ -32,29 +32,6 @@ use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 
-sub _parse_interpreters {
-    my ($interpreter, $value) = @_;
-    my ($path, $dep) = split m/\s*,\s*/, $value, 2;
-    $dep = $interpreter if not $dep;
-    $dep = '' if $dep eq '@NODEPS@';
-    return [$path, $dep];
-}
-
-sub _parse_versioned_interpreters {
-    my ($interpreter, $value) = @_;
-    my ($path, $regex, $deptmp, $vers, $deprel) = split m/\s*,\s*/, $value, 5;
-    my @versions = split m/\s++/, $vers;
-    $deprel = $interpreter if not $deprel;
-    if ($deprel eq '@NO_DEFAULT_DEPS@') {
-        $deprel = '';
-    } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
-        $deprel = undef;
-    } elsif ($deprel =~ m/@/) {
-        fail "Unknown magic value $deprel for versioned interpreter $interpreter";
-    }
-    return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
-}
-
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
 # array of two elements.  The first argument is the path on a Debian
@@ -1131,6 +1108,34 @@ sub unquote($$) {
 
     return $string;
 }
+
+sub _parse_interpreters {
+    my ($interpreter, $value) = @_;
+    my ($path, $dep) = split m/\s*,\s*/, $value, 2;
+    $dep = $interpreter if not $dep;
+    if ($dep eq '@NODEPS@') {
+        $dep = '';
+    } elsif ($dep =~ m/@/) {
+        fail "Unknown magic value $dep for versioned interpreter $interpreter";
+    }
+    return [$path, $dep];
+}
+
+sub _parse_versioned_interpreters {
+    my ($interpreter, $value) = @_;
+    my ($path, $regex, $deptmp, $vers, $deprel) = split m/\s*,\s*/, $value, 5;
+    my @versions = split m/\s++/, $vers;
+    $deprel = $interpreter if not $deprel;
+    if ($deprel eq '@NO_DEFAULT_DEPS@') {
+        $deprel = '';
+    } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
+        $deprel = undef;
+    } elsif ($deprel =~ m/@/) {
+        fail "Unknown magic value $deprel for versioned interpreter $interpreter";
+    }
+    return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
+}
+
 
 1;
 
