@@ -25,7 +25,7 @@ use warnings;
 
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(parse_dpkg_control slurp_entire_file fail);
 
 my $dep5_last_normative_change = '0+svn~166';
 my $dep5_last_overhaul = '0+svn~148';
@@ -65,13 +65,13 @@ if (not -f $copyright_filename) {
 
 return unless defined $copyright_filename;
 
-$_ = slurp_entire_file($copyright_filename);
-study $_;
+my $contents = slurp_entire_file ($copyright_filename);
+study $contents;
 
 my @dep5;
 my @lines;
 
-if (m{
+if ($contents =~ m{
     (^ | \n)
     (?i: format(:|[-\s]spec) )
     (?: . | \n\s+ )*
@@ -80,7 +80,7 @@ if (m{
 {
     # Before trying to parse the copyright as Debian control file, try to
     # determine the format URI.
-    my $first_para = $_;
+    my $first_para = $contents;
     $first_para =~ s,^#.*,,mg;
     $first_para =~ s,[ \t]+$,,mg;
     $first_para =~ s,^\n+,,g;
@@ -130,7 +130,9 @@ if (m{
                 # We are reasonably certain that we're dealing with an up-to-date
                 # DEP-5 format. Let's try to do more strict checks.
                 eval {
-                    @dep5 = read_dpkg_control($copyright_filename, 0, \@lines);
+                    open my $fd, '<', \$contents or fail "open <string>: $!";
+                    @dep5 = parse_dpkg_control ($fd, 0, \@lines);
+                    close $fd;
                 };
                 if ($@) {
                     chomp $@;

@@ -23,6 +23,10 @@ lintian (2.5.8) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
       for shared libraries using "libtool -release X.Y".
+  * checks/source-copyright:
+    + [NT] Use the in-memory contents of the copyright file
+      instead of re-reading the file when parsing it as a
+      DEP-5 copyright file.
 
   * debian/control:
     + [NT] Add versioned Build-Depends on dpkg-dev (>= 1.16.1~)
