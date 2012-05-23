@@ -5,6 +5,7 @@ lintian-22x22.png usr/share/apps/lintian/icons/hicolor/20x20
 lintian-16x16.png usr/share/doc/lintian/
 lintian-22x22.png usr/share/games/icons/hicolor/22x22
 lintian-16x16.png usr/share/icons/hicolor/scalable/apps
+lintian-22x22.png usr/share/icons/16x16/animations/
 --lzma etc/modprobe.d
 lintian.conf etc/modprobe.d
 dir usr/share/info

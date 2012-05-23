@@ -7,6 +7,16 @@ lintian (2.5.8) UNRELEASED; urgency=low
       (Closes: #673106)
     + [NT] Demote certainty of hardening-no-stackprotector to
       wild-guess and move it to debian/extra-hardening profile.
+  * checks/files:
+    + [NT] Properly handle symlinks in icon directories.  Thanks
+      to Nicholas Breen for the report and Felix Geyer for the
+      patches.  (Closes: #673352)
+    + [NT] Ignore wrong sizes on images in animations as it may
+      be a method to implement the animation.  Thanks to Matthias
+      Klumpp for the report and Felix Geyer for the patch.
+      (Closes: #673862)
+    + [NT] Ignore wrong icon sizes if the size difference is at
+      most 2px.  Thanks to Felix Geyer for the patch.
   * checks/scripts:
     + [NT] Refactor the %versioned_interpreters into a new
       data file.
