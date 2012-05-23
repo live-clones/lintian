@@ -26,7 +26,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail resolve_pkg_path);
 
 my $FONT_PACKAGES = Lintian::Data->new ('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new ('files/triplets', qr/\s++/);
@@ -920,7 +920,13 @@ foreach my $file (@{$info->sorted_index}) {
 
     if ($file =~ m,/icons/[^/]+/(\d+x\d+)/(?!animations/).*\.png$,) {
         my $dsize = $1;
-        my $fileinfo = $info->file_info->{$file};
+        my $path;
+        if ($index_info->{type} =~ m/^l/) {
+            $path = resolve_pkg_path(dirname($file), $link);
+        } else {
+            $path = $file;
+        }
+        my $fileinfo = $info->file_info->{$path};
         if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
             my $fsize = $1.'x'.$2;
             tag 'icon-size-and-directory-name-mismatch', $file, $fsize
