@@ -40,6 +40,21 @@ sub _parse_interpreters {
     return [$path, $dep];
 }
 
+sub _parse_versioned_interpreters {
+    my ($interpreter, $value) = @_;
+    my ($path, $regex, $deptmp, $vers, $deprel) = split m/\s*,\s*/, $value, 5;
+    my @versions = split m/\s++/, $vers;
+    $deprel = $interpreter if not $deprel;
+    if ($deprel eq '@NO_DEFAULT_DEPS@') {
+        $deprel = '';
+    } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
+        $deprel = undef;
+    } elsif ($deprel =~ m/@/) {
+        fail "Unknown magic value $deprel for versioned interpreter $interpreter";
+    }
+    return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
+}
+
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
 # array of two elements.  The first argument is the path on a Debian
@@ -52,79 +67,38 @@ sub _parse_interpreters {
 my $INTERPRETERS = Lintian::Data->new ('scripts/interpreters', qr/\s*=\>\s*/o,
                                        \&_parse_interpreters);
 
-
 # The more complex case of interpreters that may have a version number.
 #
 # This is a hash from the base interpreter name to a list.  The base
 # interpreter name may appear by itself or followed by some combination of
-# dashes, digits, and periods.  The values are the directory in which the
-# interpreter is found, the dependency to add for a version-less interpreter,
-# a regular expression to match versioned interpreters and extract the version
-# number, the package dependency for a versioned interpreter, and the list of
-# known versions.
+# dashes, digits, and periods.
 #
-# An interpreter with a version must have a dependency on the specific package
-# formed by taking the fourth element of the list and replacing $1 with the
-# version number.  An interpreter without a version is rejected if the second
-# element is undef; otherwise, the package must satisfy a dependency on the
-# disjunction of the second argument (if non-empty) and all the packages
-# formed by taking the list of known versions (the fifth element and on) and
-# replacing $1 in the fourth argument with them.
+# The list contains the following values:
+#  [<path>, <dependency-relation>, <regex>, <dependency-templatel>, <version-list>]
 #
-# For example:
+# Their meaning is documented in Lintian's scripts/versioned-interpreters
+# file, though they are ordered differently and there are a few differences
+# as described below:
 #
-#    lua => [ '/usr/bin', 'lua', qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1) ]
+# * <regex> has been passed through qr/^<value>$/
+# * If <dependency-relation> was left out, it has been substituted by the
+#   interpreter.
+# * The magic values of <dependency-relation> are represented as:
+#   @NO_DEFAULT_DEPS@  -> '' (i.e. an empty string)
+#   @SKIP_UNVERSIONED@ ->  undef (i.e the undefined value)
+# * <version-list> has been split into a list of versions.
+#   (e.g. "1.6 1.8" will be ["1.6", "1.8"])
 #
-# says that any lua interpreter must be in /usr/bin, a package using
-# /usr/bin/lua50 must depend on lua50, and a package using just /usr/bin/lua
-# must satisfy lua | lua40 | lusa50 | lua5.1.
+# A full example is:
 #
-# The list of known versions is the largest maintenance headache here, but
-# it's only used for the unversioned dependency handling, and then only when
-# someone uses the unversioned script but depends on a specific version for
-# some reason.  So it's not a huge problem if it's a little out of date.
-my %versioned_interpreters =
-    (guile   => [ '/usr/bin', 'guile',
-                  qr/^guile-([\d.]+)$/, 'guile-$1', qw(1.6 1.8)
-                ],
-     jruby   => [ '/usr/bin', 'jruby',
-                  qr/^jruby([\d.]+)$/, 'jruby$1', qw(1.0 1.1 1.2)
-                ],
-     lua     => [ '/usr/bin', 'lua',
-                  qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1)
-                ],
-     octave  => [ '/usr/bin', 'octave',
-                  qr/^octave([\d.]+)$/, 'octave$1', qw(3.0 3.2)
-                ],
-     php     => [ '/usr/bin', '',
-                  qr/^php(\d+)$/, 'php$1-cli', qw(5)
-                ],
-     pike    => [ '/usr/bin', '',
-                  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6 7.8)
-                ],
-     python  => [ '/usr/bin', undef,
-                  qr/^python([\d.]+)$/, 'python$1 | python$1-minimal',
-                  qw(2.4 2.5 2.6)
-                ],
-     rackup  => [ '/usr/bin', undef,
-                  qr/^rackup([\d.]+)$/, 'librack-ruby$1', qw(1.8 1.9)
-                ],
-     ruby    => [ '/usr/bin', undef,
-                  qr/^ruby([\d.]+)$/, 'ruby$1', qw(1.8 1.9)
-                ],
-     runghc  => [ '/usr/bin', 'ghc',
-                  qr/^runghc(\d+)$/, 'ghc$1', qw(6)
-                ],
-     scsh    => [ '/usr/bin', 'scsh',
-                  qr/^scsh-([\d.]+)$/, 'scsh-$1', qw(0.6)
-                ],
-     tclsh   => [ '/usr/bin', 'tclsh | tcl',
-                  qr/^tclsh([\d.]+)$/, 'tcl$1', qw(8.3 8.4 8.5 8.6)
-                ],
-     wish    => [ '/usr/bin', 'wish | tk',
-                  qr/^wish([\d.]+)$/, 'tk$1', qw(8.3 8.4 8.5 8.6)
-                ],
-    );
+#    data:
+#        lua => /usr/bin, lua([\d.]+), 'lua$1', 40 50 5.1
+#
+#    $VERSIONED_INTERPRETERS->value ('lua') is
+#       [ '/usr/bin', 'lua', qr/^lua([\d.]+)$/, 'lua$1', ["40", "50", "5.1"] ]
+#
+my $VERSIONED_INTERPRETERS = Lintian::Data->new ('scripts/versioned-interpreters', qr/\s*=\>\s*/o,
+                                                 \&_parse_versioned_interpreters);
 
 # Any of the following packages can satisfy an update-inetd dependency.
 my $update_inetd
@@ -356,10 +330,10 @@ for my $filename (sort keys %{$info->scripts}) {
     my $data = $INTERPRETERS->value ($base);
     my $versioned = 0;
     if (not defined $data) {
-        $data = $versioned_interpreters{$base};
+        $data = $VERSIONED_INTERPRETERS->value ($base);
         undef $data if ($data and not defined ($data->[1]));
         if (not defined ($data) and $base =~ /^(.*[^\d.-])-?[\d.]+$/) {
-            $data = $versioned_interpreters{$1};
+            $data = $VERSIONED_INTERPRETERS->value ($1);
             undef $data unless ($data and $base =~ /$data->[2]/);
         }
         $versioned = 1 if $data;
@@ -426,8 +400,8 @@ for my $filename (sort keys %{$info->scripts}) {
                     "($filename)";
             }
         }
-    } elsif ($versioned_interpreters{$base}) {
-        my @versions = @$data[4 .. @$data - 1];
+    } elsif ($VERSIONED_INTERPRETERS->known ($base)) {
+        my @versions = @{ $data->[4] };
         my @depends = map {
             my $d = $data->[3];
             $d =~ s/\$1/$_/g;
@@ -522,8 +496,8 @@ while (<SCRIPTS>) {
 
         # Interpreters used by preinst scripts must be in Pre-Depends.
         # Interpreters used by postinst or prerm scripts must be in Depends.
-        unless (defined ($data->[1]) and not $data->[1]) {
-            my $depends = Lintian::Relation->new($data->[1] || $base);
+        unless (not $data->[1]) {
+            my $depends = Lintian::Relation->new($data->[1]);
             if ($file eq 'preinst') {
                 unless ($info->relation('pre-depends')->implies($depends)) {
                     tag 'preinst-interpreter-without-predepends',

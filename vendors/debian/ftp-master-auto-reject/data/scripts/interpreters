@@ -12,9 +12,10 @@
 # be the same as the interpreter itself (saves some typing).
 #
 # Do NOT list versioned interpreters here (such as pythonX.Y,
-# rubyX.Y, etc.).  They are handled separately.
+# rubyX.Y, etc.).  These are handled by the file
+# scripts/versioned-interpreters.
 #
-# Manually maintained list - please keep it sorted (by key)!
+# Manually maintained table - please keep it sorted (by key)!
 #
 
 ash            => /bin

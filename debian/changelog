@@ -7,6 +7,9 @@ lintian (2.5.8) UNRELEASED; urgency=low
       (Closes: #673106)
     + [NT] Demote certainty of hardening-no-stackprotector to
       wild-guess and move it to debian/extra-hardening profile.
+  * checks/scripts:
+    + [NT] Refactor the %versioned_interpreters into a new
+      data file.
   * checks/shared-libs:
     + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
       for shared libraries using "libtool -release X.Y".
@@ -22,6 +25,9 @@ lintian (2.5.8) UNRELEASED; urgency=low
   * data/scripts/interpreters:
     + [NT] Add gbr3 and jython as known interpreters.
       (Closes: #669911, #671387)
+  * data/scripts/versioned-interpreters:
+    + [NT] New file.
+    + [NT] Added python2.7 to the list of known Python 2 interpreters.
   * data/spelling/corrections:
     + [RA] Remove corrections for "writeable" and "overwriteable".  These
       spellings are permitted by the OED in UK English.  (Closes: #673611)
