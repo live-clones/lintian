@@ -320,7 +320,10 @@ Info: This package provides an ELF binary that lacks the use of fortified
  validated at compile-time, or the package was not built with the default
  Debian compiler flags defined by <tt>dpkg-buildflags</tt>. If built using
  <tt>dpkg-buildflags</tt> directly, be sure to import <tt>CPPFLAGS</tt>.
-Ref: http://wiki.debian.org/Hardening
+ .
+ NB: Due to false-positives, Lintian ignores some unprotected functions
+ (e.g. memcpy).
+Ref: http://wiki.debian.org/Hardening, #673112
 
 Tag: hardening-no-relro
 Severity: normal

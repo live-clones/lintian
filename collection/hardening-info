@@ -51,11 +51,24 @@ chdir ("$dir/unpacked")
 foreach my $bin (keys %$file_info) {
     my $finfo = $file_info->{$bin};
     next unless $finfo =~ m/\bELF\b/o;
-    if (open (PIPE, '-|', "hardening-check --lintian -- \Q$bin\E 2>&1")) {
-        local $/;
-        local $_ = <PIPE>;
-        print OUT $_;
-        close PIPE;
+    if (open (my $pipe, '-|', "hardening-check --lintian -- \Q$bin\E 2>&1")) {
+        while ( my $line = <$pipe> ) {
+            my $emit = 1;
+            if ($line =~ m/^no-fortify-functions:/o ) {
+                $emit = 0;
+                open my $p2, '-|', "hardening-check --verbose -- \Q$bin\E 2>&1" or fail "hardening-check: $!";
+                while ( my $l2 = <$p2> ) {
+                    if ($l2 =~ m/^\s+unprotected:\s*(\S+)/) {
+                        next if $1 eq 'memcpy';
+                        $emit = 1;
+                        last;
+                    }
+                }
+                close $p2;
+            }
+            print OUT $line if $emit;
+        }
+        close $pipe;
     }
 }
 

@@ -7,6 +7,10 @@ lintian (2.5.8) UNRELEASED; urgency=low
       (Closes: #673106)
     + [NT] Demote certainty of hardening-no-stackprotector to
       wild-guess and move it to debian/extra-hardening profile.
+    + [NT] Skip hardening-no-fortify-functions for binaries only
+      using the unprotected memcpy.  This greatly reduces the
+      number of false positives for binaries compiled with
+      gcc-4.7 -O2 (or higher optimization).  (Closes: #673112)
   * checks/files:
     + [NT] Properly handle symlinks in icon directories.  Thanks
       to Nicholas Breen for the report and Felix Geyer for the
