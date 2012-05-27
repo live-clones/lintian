@@ -49,6 +49,7 @@ lintian (2.5.8) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [RA] Remove corrections for "writeable" and "overwriteable".  These
       spellings are permitted by the OED in UK English.  (Closes: #673611)
+    + [NT] Add correction for "pointer".
 
   * lib/Lintian/Collect/*.pm:
     + [NT] Localize "$_" to avoid truncating caller's variable.
