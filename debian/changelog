@@ -41,8 +41,8 @@ lintian (2.5.8) UNRELEASED; urgency=low
       need it and dpkg will not replace the dir with a symlink.
 
   * data/scripts/interpreters:
-    + [NT] Add gbr3 and jython as known interpreters.
-      (Closes: #669911, #671387)
+    + [NT] Add falcon, gbr3, jython and ngp2 as known interpreters.
+      (Closes: #669911, #671387, #662134, #667895)
   * data/scripts/versioned-interpreters:
     + [NT] New file.
     + [NT] Added python2.7 to the list of known Python 2 interpreters.
