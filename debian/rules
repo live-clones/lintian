@@ -20,7 +20,7 @@ tag =
 
 # Work/output dir for tests
 # private/runtests gets TEST_WORK_DIR from environment
-export TEST_WORK_DIR:= $(CURDIR)/debian/test-out
+export TEST_WORK_DIR ?= $(CURDIR)/debian/test-out
 
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	testtarget = runtests
