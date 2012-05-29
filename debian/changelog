@@ -1,3 +1,11 @@
+lintian (2.5.9) UNRELEASED; urgency=low
+
+  * debian/changelog:
+    + [NT] raster-image-in-scalable-directory was added in 2.5.7,
+      not removed.
+
+ -- Niels Thykier <niels@thykier.net>  Tue, 29 May 2012 13:19:07 +0200
+
 lintian (2.5.8) unstable; urgency=low
 
   Its like 2.5.7, only with less false positives and no FTBFS.
@@ -101,6 +109,7 @@ lintian (2.5.7) unstable; urgency=low
       - hardening-no-stackprotector
       - non-standard-apache2-configuration-name
       - non-standard-apache2-module-package-name
+      - raster-image-in-scalable-directory
       - rc-version-greater-than-expected-version
       - udeb-uses-unsupported-compression-for-data-tarball
       - web-application-depends-on-apache2-data-package
@@ -124,7 +133,6 @@ lintian (2.5.7) unstable; urgency=low
       - package-installs-font-to-usr-x11r6
       - package-uses-obsolete-file
       - postinst-should-not-set-usr-doc-link
-      - raster-image-in-scalable-directory
       - udeb-uses-non-gzip-data-tarball
       - x11-games-should-be-in-usr-games
 
