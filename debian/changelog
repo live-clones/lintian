@@ -1,4 +1,6 @@
-lintian (2.5.8) UNRELEASED; urgency=low
+lintian (2.5.8) unstable; urgency=low
+
+  Its like 2.5.7, only with less false positives and no FTBFS.
 
   * checks/binaries{,.desc}:
     + [NT] Fix a too strict regex causing false-positives for
@@ -76,7 +78,7 @@ lintian (2.5.8) UNRELEASED; urgency=low
       flags are enabled by default.  Thanks to Marc Deslauriers
       for the report and the patch.  (Closes: #673449)
 
- -- Niels Thykier <niels@thykier.net>  Wed, 16 May 2012 13:57:40 +0200
+ -- Niels Thykier <niels@thykier.net>  Tue, 29 May 2012 11:49:47 +0200
 
 lintian (2.5.7) unstable; urgency=low
 
