@@ -27,6 +27,11 @@ lintian (2.5.8) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
       for shared libraries using "libtool -release X.Y".
+      Thanks to Sven Joachim for the report.  (Closes: #673109)
+    + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
+      for shared libraries installed in /lib.  Lintian now
+      correctly expects the dev-symlink beneath /usr/lib.
+      Thanks to Guillem Jover for the report.
   * checks/source-copyright:
     + [NT] Use the in-memory contents of the copyright file
       instead of re-reading the file when parsing it as a

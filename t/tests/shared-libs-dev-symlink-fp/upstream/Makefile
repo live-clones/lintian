@@ -2,8 +2,9 @@ CC=gcc
 CFLAGS+= -fPIC
 
 SONAME:= libfoo-1.so
-DEVSYMLINK:=$(shell echo $(SONAME) | perl -pe 's:-[\d\.]*\.so$$:\.so:')
-LIBFILES:=$(SONAME)
+LSONAME:= libbar-1.so
+devsymlink=$(shell echo $(1) | perl -pe 's:-[\d\.]*\.so$$:\.so:')
+LIBFILES:=$(SONAME) $(LSONAME)
 
 all: $(LIBFILES)
 
@@ -14,11 +15,13 @@ clean:
 	rm -f *.a *.o *.so*
 
 install: all
-	echo $(SONAME) -- $(DEVSYMLINK)
+	install -m 0755 -d $(DESTDIR)/lib
 	install -m 0755 -d $(DESTDIR)/usr/lib
 	install -m 0755 -d $(DESTDIR)/usr/include
+	install -m 0644 $(LSONAME) $(DESTDIR)/lib
 	install -m 0644 $(SONAME) $(DESTDIR)/usr/lib
-	ln -s $(SONAME) $(DESTDIR)/usr/lib/$(DEVSYMLINK)
+	ln -s /lib/$(LSONAME) $(DESTDIR)/usr/lib/$(call devsymlink,$(LSONAME))
+	ln -s $(SONAME) $(DESTDIR)/usr/lib/$(call devsymlink,$(SONAME))
 	install -m 0644 code.h $(DESTDIR)/usr/include
 
 .PHONY: install clean
