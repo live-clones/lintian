@@ -37,6 +37,12 @@ lintian (2.5.8) UNRELEASED; urgency=low
       instead of re-reading the file when parsing it as a
       DEP-5 copyright file.
 
+  * collection/objdump-info{,.desc}:
+    + [NT] Drop -D flag for readelf when looking for symbols.
+      This makes some checks more reliable in Ubuntu.  Thanks
+      to Marc Deslauriers for the report and the patch.
+      (Closes: #673451)
+
   * debian/control:
     + [NT] Add versioned Build-Depends on dpkg-dev (>= 1.16.1~)
       as the test suite relies on it.  Thanks to Luca Falavigna

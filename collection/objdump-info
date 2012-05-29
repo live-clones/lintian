@@ -142,16 +142,20 @@ foreach my $bin (@{ $info->sorted_index }) {
             close PIPE;
         }
 
-        if (open(PIPE, '-|', "readelf -W -s -D \Q$bin\E 2>&1")) {
+        if (open(PIPE, '-|', "readelf -W -s \Q$bin\E 2>&1")) {
+            my $section = '';
             print {$opts{pipe_in}} "DYNAMIC SYMBOL TABLE:\n";
 
             while(<PIPE>) {
-                last if m/^Symbol table of/;
-
-                if (m/^\s*(\d+)\s+\d+:\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/) {
+                if (m/^Symbol table '.dynsym'/) {
+                    $section = 'DS';
+                } elsif (m/^Symbol table/) {
+                    $section = '';
+                } elsif (m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/
+                         and $section eq 'DS') {
                     my ($symnum, $seg, $sym, $ver) = ($1, $2, $3, '');
 
-                    if ($sym =~ m/^(.*)@(.*)$/) {
+                    if ($sym =~ m/^(.*)@(.*) \(.*\)$/) {
                         $sym = $1;
                         $ver = $2;
                     } elsif (@symbol_versions == 0) {
