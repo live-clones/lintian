@@ -47,6 +47,8 @@ lintian (2.5.8) UNRELEASED; urgency=low
     + [NT] Add versioned Build-Depends on dpkg-dev (>= 1.16.1~)
       as the test suite relies on it.  Thanks to Luca Falavigna
       for reporting it.
+    + [NT] Update the description to mention that the version
+      of Lintian is calibrated for version 3.9.3 of the Policy.
   * debian/lintian.install:
     + [NT] Remove usr/share/lintian/data - Lintian does not
       need it and dpkg will not replace the dir with a symlink.
