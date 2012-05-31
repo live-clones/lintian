@@ -1,5 +1,9 @@
 lintian (2.5.9) UNRELEASED; urgency=low
 
+  * checks/fields:
+    + [NT] Also classify lib*-cli-dev as belonging to the section
+      cli-mono (rather than libdevel).  Thanks to Chow Loong Jin
+      for the report and the patch.  (Closes: #675358)
   * checks/shared-libs:
     + [NT] Reverse order of two subst expressions to prevent
       dev-pkg-without-shlib-symlink false positives.  Thanks to
