@@ -1,5 +1,10 @@
 lintian (2.5.9) UNRELEASED; urgency=low
 
+  * checks/shared-libs:
+    + [NT] Reverse order of two subst expressions to prevent
+      dev-pkg-without-shlib-symlink false positives.  Thanks to
+      Aurelien Jarno and Stephen M. Webb for the report and the
+      patch.  (Closes: #675826, #675832)
   * debian/changelog:
     + [NT] raster-image-in-scalable-directory was added in 2.5.7,
       not removed.

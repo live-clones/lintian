@@ -231,10 +231,10 @@ for my $shlib_file (keys %SONAME) {
         }
     }
 
-    # determine shlib link name (w/o version)
-    $link_file =~ s/\.so.*$/.so/o;
     # libtool "-release" variant
-    $link_file =~ s/-[\d\.]*\.so$/.so/o;
+    $link_file =~ s/-[\d\.]\.so.*$/.so/o;
+    # determine shlib link name (w/o version)
+    $link_file =~ s/\.so.+$/.so/o;
 
     # shlib symlink may not exist.
     # if shlib doesn't _have_ a version, then $link_file and $shlib_file will
