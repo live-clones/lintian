@@ -24,6 +24,7 @@ use warnings;
 use base 'Lintian::Collect';
 
 use Carp qw(croak);
+use Lintian::Path;
 use Lintian::Util qw(perm2oct);
 
 # Returns the path to the dir where the package is unpacked
@@ -63,7 +64,6 @@ sub file_info {
 }
 
 # Returns the information from the indices
-# FIXME: should maybe return an object
 # sub index Needs-Info index
 sub index {
     my ($self) = @_;
@@ -224,6 +224,9 @@ sub _fetch_index_data {
             }
         }
     }
+    foreach my $file (keys %idxh) {
+        $idxh{$file} = Lintian::Path->new ($idxh{$file});
+    }
     $self->{$field} = \%idxh;
     close $idx;
     close $num_idx if $num_idx;
@@ -311,7 +314,7 @@ Note the file names do not have any leading "./" nor "/".
 
 =item index
 
-Returns a hashref to the index information (permissions, file type etc).
+Returns a hashref to the index information (Lintian::Path objects).
 
 Note the file names do not have any leading "./" nor "/".
 

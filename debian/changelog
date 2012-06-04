@@ -14,8 +14,12 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] raster-image-in-scalable-directory was added in 2.5.7,
       not removed.
 
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] Represent files (from index) as Lintian::Path objects.
   * lib/Lintian/Package/Source.pm:
     + [NT] sorted_index now returns a list rather than a list ref.
+  * lib/Lintian/Path.pm:
+    + [NT] New file.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 29 May 2012 13:19:07 +0200
 
