@@ -77,7 +77,7 @@ foreach my $file (sort keys %{$objdump}) {
         if defined $objdump->{$file}->{SONAME};
 }
 
-foreach my $file (@{$info->sorted_index}) {
+foreach my $file ($info->sorted_index) {
     next unless length $file;
     my $fileinfo = $info->file_info->{$file};
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
@@ -96,7 +96,7 @@ if (%SONAME) {
 
 # 2nd step: read package contents
 
-for my $cur_file (@{$info->sorted_index}) {
+for my $cur_file ($info->sorted_index) {
     # shared library?
     my $cur_file_data = $info->index->{$cur_file};
 

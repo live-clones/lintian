@@ -135,7 +135,7 @@ sub _check_file_overlap {
 sub _overlap_check {
     my ($a_proc, $a_info, $b_proc, $b_info) = @_;
     my $b_index = $b_info->index;
-    foreach my $raw (@{ $a_info->sorted_index }) {
+    foreach my $raw ($a_info->sorted_index) {
         my $file;
         my $a_file;
         my $b_file;

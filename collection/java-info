@@ -49,7 +49,7 @@ my %opts;
 chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
-foreach my $file (@{ $info->sorted_index }) {
+foreach my $file ($info->sorted_index) {
     my $ftype = $info->index->{$file}->{type};
     next unless $ftype eq '-' or $ftype eq 'h';
     if ($file =~ m#\S+\.jar$#i) {

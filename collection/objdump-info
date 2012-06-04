@@ -54,7 +54,7 @@ $opts{pipe_in}->blocking(1);
 chdir ("$dir/unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
 
-foreach my $bin (@{ $info->sorted_index }) {
+foreach my $bin ($info->sorted_index) {
     my $finfo = $file_info->{$bin};
 
     if ($finfo =~ m/^\bELF\b/) {

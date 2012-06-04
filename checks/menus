@@ -84,7 +84,7 @@ if (-f $info->control('postrm')) {
 }
 
 # read package contents
-for my $file (@{$info->sorted_index}) {
+for my $file ($info->sorted_index) {
     next if $file eq '';
 
     add_file_link_info ($info, $file, \%all_files, \%all_links);

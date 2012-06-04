@@ -202,7 +202,7 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-foreach my $file (@{$info->sorted_index}) {
+foreach my $file ($info->sorted_index) {
     next if $file eq '';
     $ELF{$file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 
@@ -980,7 +980,7 @@ for my $divert (keys %added_diversions) {
 
     if ($expand_diversions) {
         tag 'diversion-for-unknown-file', $divert, "$script:$line"
-            unless (grep { $_ =~ m/$divertrx/ } @{$info->sorted_index});
+            unless (grep { $_ =~ m/$divertrx/ } $info->sorted_index);
     } else {
         tag 'diversion-for-unknown-file', $divert, "$script:$line"
             unless (exists $info->index->{$divert});

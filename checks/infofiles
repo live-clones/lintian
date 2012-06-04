@@ -35,7 +35,7 @@ my $type = shift;
 my $info = shift;
 
 # Read package contents...
-foreach my $file (@{$info->sorted_index}) {
+foreach my $file ($info->sorted_index) {
     my $index_info = $info->index->{$file};
     my $file_info = $info->file_info->{$file};
     my $link = $index_info->{link} || '';

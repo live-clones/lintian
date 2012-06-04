@@ -58,7 +58,7 @@ my %opts = ( pipe_in => FileHandle->new,
 spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$helper], '|', ['gzip', '--best', '-c']);
 $opts{pipe_in}->blocking(1);
 
-foreach my $file (@{ $info->sorted_index }) {
+foreach my $file ($info->sorted_index) {
     next unless $file; # ignore "root-dir" which has "no name" (post stripping).
     printf {$opts{pipe_in}} "%s\0", $file;
 }

@@ -60,7 +60,7 @@ unless (-f $control) {
     # for conffiles since this information would
     # be redundant
     my $only_conffiles = 1;
-    foreach my $file (@{ $info->sorted_index }) {
+    foreach my $file ($info->sorted_index) {
         # Skip non-files, they will not appear in the md5sums file
         next if !$file or $info->index->{$file}->{type} ne '-';
         unless ($conffile{$file}) {

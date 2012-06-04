@@ -42,7 +42,7 @@ open OUT, '>', "$dir/ar-info"
 chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
-foreach my $file (@{ $info->sorted_index }) {
+foreach my $file ($info->sorted_index) {
     next unless $file =~ m/\.a$/;
     next unless -f $file and not -l $file;
 

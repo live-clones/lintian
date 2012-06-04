@@ -76,12 +76,12 @@ sub sorted_index {
     my ($self) = @_;
     my $index;
     my @result;
-    return $self->{sorted_index} if exists $self->{sorted_index};
+    return @{ $self->{sorted_index} } if exists $self->{sorted_index};
     $index = $self->index();
     @result = sort keys %{$index};
     shift @result if scalar @result && $result[0] eq '';
     $self->{sorted_index} = \@result;
-    return \@result;
+    return @result;
 }
 
 

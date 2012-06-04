@@ -35,7 +35,7 @@ my $file;
 my $magic;
 my $scriptpath;
 
-foreach my $file (@{ $info->sorted_index }) {
+foreach my $file ($info->sorted_index) {
     next unless $info->index->{$file}->{type} eq '-';
 
     # This used to call fail() instead of next.  However, the check to
