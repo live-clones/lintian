@@ -145,7 +145,7 @@ sub _overlap_check {
         $b_file = $b_index->{$file} // $b_index->{"$file/"};
         if ($b_file) {
             $a_file = $a_info->index->{$file} // $a_info->index->{"$file/"};
-            next if $a_file->{type} eq $b_file->{type} && $a_file->{type} eq 'd';
+            next if $a_file->is_dir and $b_file->is_dir;
             tag 'binaries-have-file-conflict', $a_proc->pkg_name, $b_proc->pkg_name, $file;
         }
     }

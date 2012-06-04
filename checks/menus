@@ -89,9 +89,9 @@ for my $file ($info->sorted_index) {
 
     add_file_link_info ($info, $file, \%all_files, \%all_links);
     my $index_info = $info->index->{$file};
-    my $operm = $index_info->{operm};
+    my $operm = $index_info->operm;
 
-    if ($index_info->{type} =~ m,^[-h],) { # file checks
+    if ($index_info->is_file) { # file checks
         # menu file?
         if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
             if ($operm & 0111) {
@@ -496,8 +496,8 @@ sub check_doc_base_file_section {
 # links have to include a leading /.
 sub add_file_link_info {
     my ($info, $file, $all_files, $all_links) = @_;
-    my $link = $info->index->{$file}->{link};
-    my $ishard = ($info->index->{$file}->{type} eq 'h');
+    my $link = $info->index->{$file}->link;
+    my $ishard = $info->index->{$file}->is_hardlink;
 
     $file = "/" . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;                           # remove duplicated `/'

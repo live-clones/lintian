@@ -101,14 +101,14 @@ for my $cur_file ($info->sorted_index) {
     my $cur_file_data = $info->index->{$cur_file};
 
     if (exists $SONAME{$cur_file} or
-        (defined $cur_file_data->{link} and exists $SONAME{abs_path(dirname($cur_file).'/'.$cur_file_data->{link})})) {
+        (defined $cur_file_data->link and exists $SONAME{abs_path(dirname($cur_file).'/'.$cur_file_data->link)})) {
         # yes!!
         my ($real_file, $perm);
         if (exists $SONAME{$cur_file}) {
             $real_file = $cur_file;
-            $perm = $cur_file_data->{operm};
+            $perm = $cur_file_data->operm;
         } else {
-            $real_file = abs_path(dirname($cur_file).'/'.$cur_file_data->{link});
+            $real_file = abs_path (dirname ($cur_file) . '/' . $cur_file_data->link);
             # perm not needed for this branch
         }
 
@@ -166,7 +166,7 @@ for my $cur_file ($info->sorted_index) {
     } elsif ($ldconfig_dirs->known(dirname($cur_file))
              && exists $sharedobject{$cur_file}) {
         tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
-    } elsif ($cur_file =~ m/\.la$/ and not defined($cur_file_data->{link})) {
+    } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file_data->link) {
         local $_;
         open(LAFILE, '<', $info->unpacked($cur_file))
             or fail("Could not open $cur_file for reading!");
@@ -215,15 +215,15 @@ for my $shlib_file (keys %SONAME) {
             # the library file uses its SONAME, this is ok...
         } else {
             # $link_file really a symlink?
-            if (exists $info->index->{$link_file}->{link}) {
+            if ($info->index->{$link_file}->is_symlink) {
                 # yes.
 
                 # $link_file pointing to correct file?
-                if ($info->index->{$link_file}->{link} eq $shlib_name) {
+                if ($info->index->{$link_file}->link eq $shlib_name) {
                     # ok.
                 } else {
                     tag 'ldconfig-symlink-referencing-wrong-file',
-                        "$link_file -> " . $info->index->{$link_file}->{link} . " instead of $shlib_name";
+                        "$link_file -> " . $info->index->{$link_file}->link . " instead of $shlib_name";
                 }
             } else {
                 tag 'ldconfig-symlink-is-not-a-symlink', "$shlib_file $link_file";

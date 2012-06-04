@@ -207,9 +207,8 @@ foreach my $file ($info->sorted_index) {
     $ELF{$file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 
     my $index_info = $info->index->{$file};
-    my $operm = $index_info->{operm};
-    next unless $index_info->{type} =~ m,^[-h], and ($operm & 0111);
-    my $is_suid = $operm & 04000;
+    my $operm = $index_info->operm;
+    next unless $index_info->is_file and ($operm & 0111);
     $executable{$file} = 1;
 }
 
@@ -335,7 +334,7 @@ for my $filename (sort keys %{$info->scripts}) {
             # executable).
             my $interfile = substr $interpreter, 1;
             my $index_info = $info->index->{$interfile};
-            $pinter = 1 if $index_info && ($index_info->{operm} & 0111);
+            $pinter = 1 if $index_info && ($index_info->operm & 0111);
         }
         script_tag('unusual-interpreter', $filename, "#!$interpreter")
             unless $pinter;

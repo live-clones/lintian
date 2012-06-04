@@ -51,7 +51,7 @@ if (exists $info->index->{"$path/copyright.gz"}) {
 if (exists $info->index->{"$path/copyright"}) {
     my $index_info = $info->index->{"$path/copyright"};
     $found = 1;
-    if ($index_info->{type} eq 'l') {
+    if ($index_info->is_symlink) {
         tag 'copyright-file-is-symlink';
         $linked = 1;
         # Fall through here - coll/copyright-file protects us
@@ -61,8 +61,8 @@ if (exists $info->index->{"$path/copyright"}) {
 
 if (not $found) {
     my $index_info = $info->index->{$path};
-    if (defined $index_info && $index_info->{link}) {
-        my $link = $index_info->{link};
+    if (defined $index_info && $index_info->is_symlink) {
+        my $link = $index_info->link;
 
         # check if this symlink references a directory elsewhere
         if ($link =~ m,^(?:\.\.)?/,) {

@@ -1,5 +1,7 @@
 lintian (2.5.9) UNRELEASED; urgency=low
 
+  * checks/*:
+    + [NT] Migrate to new Lintian::Path API.
   * checks/fields:
     + [NT] Also classify lib*-cli-dev as belonging to the section
       cli-mono (rather than libdevel).  Thanks to Chow Loong Jin

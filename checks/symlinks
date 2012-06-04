@@ -41,9 +41,8 @@ my @dindexes;
 
 foreach my $file ($info->sorted_index) {
     my $index_info = $index->{$file};
-    my $perm = $index_info->{type};
-    if ($perm =~ m/^l/o){
-        my $target = $index_info->{link}//''; # the link target
+    if ($index_info->is_symlink){
+        my $target = $index_info->link//''; # the link target
         my $path; # the target (from the pkg root)
         # Should not happen (too often) - but just in case
         next unless $target;
