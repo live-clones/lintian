@@ -12,6 +12,10 @@ lintian (2.5.9) UNRELEASED; urgency=low
       Aurelien Jarno and Stephen M. Webb for the report and the
       patch.  (Closes: #675826, #675832)
 
+  * data/scripts/interpreters:
+    + [NT] Replace ngp2 with ngraph.  Thanks to Koichi Akabe for
+      the report.  (Closes: #675139)
+
   * debian/changelog:
     + [NT] raster-image-in-scalable-directory was added in 2.5.7,
       not removed.
