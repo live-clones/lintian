@@ -16,8 +16,15 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] raster-image-in-scalable-directory was added in 2.5.7,
       not removed.
 
+  * frontend/lintian{,-info}:
+    + [NT] Remove assumption that $ENV{HOME} is set/defined.  If
+      $ENV{HOME} is not sent, user specific profiles will simply
+      be ignored.
+
   * lib/Lintian/Collect/Package.pm:
     + [NT] Represent files (from index) as Lintian::Path objects.
+  * lib/Lintian/Data.pm:
+    + [NT] Gracefully handle the absence of $ENV{HOME}.
   * lib/Lintian/Package/Source.pm:
     + [NT] sorted_index now returns a list rather than a list ref.
   * lib/Lintian/Path.pm:

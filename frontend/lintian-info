@@ -42,11 +42,12 @@ use Lintian::Internal::FrontendUtil;
 use Lintian::Profile;
 
 my %already_displayed = ();
-my @proc_inc = (
-    "$ENV{HOME}/.lintian/profiles",
-    '/etc/lintian/profiles',
-    "$ENV{'LINTIAN_ROOT'}/profiles"
-);
+my @proc_inc;
+# In some (rare) cases, $ENV{HOME} will not be available.
+# - Handle that gracefully by not emitting "Uninitialized ...".
+push @proc_inc, "$ENV{HOME}/.lintian/profiles" if defined $ENV{HOME};
+push @proc_inc, '/etc/lintian/profiles', "$ENV{'LINTIAN_ROOT'}/profiles";
+
 my ($annotate, $tags, $help, $prof);
 my $profile;
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');

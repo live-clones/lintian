@@ -98,8 +98,12 @@ sub new {
         my ($self, $type, $vendors, $start) = @_;
         my $root = $profile->root;
         my $file;
-        my @basedirs = ("$ENV{'HOME'}/.lintian/vendors", "$root/vendors", '/etc/lintian/vendors');
         my $cur = $start;
+        my @basedirs;
+        # Gracefully handle $ENV{'HOME'} being unset
+        push @basedirs, "$ENV{'HOME'}/.lintian/vendors" if defined $ENV{'HOME'};
+        push @basedirs, "$root/vendors", '/etc/lintian/vendors';
+
         # Do not allow user or system settings to affect the test results.
         @basedirs = ("$root/vendors") if $ENV{'LINTIAN_INTERNAL_TESTSUITE'};
         OUTER: for (; $cur < scalar @$vendors ; $cur++) {

@@ -105,10 +105,12 @@ my %group_cache = ();           # Cache to store groups in case of group
 # The profile search path except LINTIAN_ROOT/profiles
 #  which will be added later (we dont know LINTIAN_ROOT
 #  at this point)
-my @prof_inc = (
-    "$ENV{HOME}/.lintian/profiles",
-    '/etc/lintian/profiles'
-);
+my @prof_inc;
+# In some (rare) cases, $ENV{HOME} will not be available.
+# - Handle that gracefully by not emitting "Uninitialized ...".
+push @prof_inc, "$ENV{HOME}/.lintian/profiles" if defined $ENV{HOME};
+push @prof_inc, '/etc/lintian/profiles';
+
 
 my $experimental_output_opts = undef;
 
