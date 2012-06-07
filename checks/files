@@ -26,7 +26,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail resolve_pkg_path);
+use Lintian::Util qw(fail);
 
 my $FONT_PACKAGES = Lintian::Data->new ('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new ('files/triplets', qr/\s++/);
@@ -924,7 +924,7 @@ foreach my $file ($info->sorted_index) {
         my ($dwidth, $dheight) = ($1, $2);
         my $path;
         if ($index_info->is_symlink) {
-            $path = resolve_pkg_path(dirname($file), $link);
+            $path = $index_info->link_resolved;
         } else {
             $path = $file;
         }

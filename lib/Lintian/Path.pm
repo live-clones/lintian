@@ -23,6 +23,11 @@ use warnings;
 
 use base qw(Class::Accessor);
 
+use Carp qw(croak);
+use File::Basename qw(dirname);
+
+use Lintian::Util qw(resolve_pkg_path);
+
 =head1 NAME
 
 Lintian::Path - Lintian representation of a path entry in a package
@@ -186,6 +191,36 @@ sub is_hardlink { return $_[0]->_is_type ('h'); }
 sub is_dir { return $_[0]->_is_type ('d'); }
 sub is_file { return $_[0]->_is_type ('-') || $_[0]->_is_type ('h'); }
 sub is_regular_file  { return $_[0]->_is_type ('-'); }
+
+=item link_resolved
+
+Resolve the link and return the resolved name.  If the link cannot be
+resolved or it is unsafe to resolve, this method returns undef.
+
+NB: This method will return the empty string for links pointing to the
+root dir of the package.
+
+Only available on "links" (i.e. symlinks or hardlinks).  On non-links
+this will croak.
+
+=cut
+
+sub link_resolved {
+    my ($self) = @_;
+    return $self->{'link_target'} if exists $self->{'link_target'};
+    my $name = $self->name;
+    my $link = $self->link;
+    croak "$name is not a link" unless defined $link;
+    my $target = resolve_pkg_path (dirname ($name), $link);
+    if ($target) {
+        # map "." to ''.
+        $target = '' if $target eq '.';
+    } else {
+        $target = undef;
+    }
+    $self->{'link_target'} = $target;
+    return $target;
+}
 
 =back
 

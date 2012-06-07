@@ -24,7 +24,6 @@ use warnings;
 
 use File::Basename qw(dirname);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(resolve_pkg_path);
 
 sub run {
 
@@ -49,9 +48,9 @@ foreach my $file ($info->sorted_index) {
         # Skip usr/share/doc/<pkg> - we got a separate check for
         # that.
         next if $file eq "usr/share/doc/$pkg";
-        $path = resolve_pkg_path(dirname($file), $target);
+        $path = $index_info->link_resolved;
         # skip unresolvable links and links to "/"
-        next if $path eq '' or $path eq '.';
+        next unless $path;
 
         # Check if the destination is in the package itself
         next if $index->{$path} || $index->{"$path/"};
