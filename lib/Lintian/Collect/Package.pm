@@ -74,17 +74,11 @@ sub index {
 #  sub sorted_index Needs-Info index
 sub sorted_index {
     my ($self) = @_;
-    my $index;
-    my @result;
-    return @{ $self->{sorted_index} } if exists $self->{sorted_index};
-    $index = $self->index();
-    @result = sort keys %{$index};
-    shift @result if scalar @result && $result[0] eq '';
-    $self->{sorted_index} = \@result;
-    return @result;
+    # index does all our work for us, so call it if sorted_index has
+    # not been created yet.
+    $self->index unless exists $self->{sorted_index};
+    return @{ $self->{sorted_index} };
 }
-
-
 
 # Backing method for unpacked, debfiles and others; this is not a part of the
 # API.
@@ -125,9 +119,10 @@ sub _fetch_index_data {
     my ($self, $field, $index, $indexown) = @_;
     return $self->{$field} if exists $self->{$index};
     my $base_dir = $self->base_dir();
-    my (%idxh, %dir_counts);
+    my (%idxh, %children);
     my $num_idx;
     my %rhlinks;
+    my @sorted;
     local $_;
     open my $idx, '-|', 'gzip', '-dc', "$base_dir/${index}.gz"
         or croak "cannot open index file $base_dir/${index}.gz: $!";
@@ -172,18 +167,18 @@ sub _fetch_index_data {
         }
         $file{name} = $name = _dequote_name ($name);
 
-        # count directory contents:
-        $dir_counts{$name} ||= 0 if $file{type} eq 'd';
-        $dir_counts{$1} = ($dir_counts{$1} || 0) + 1
-            if $name =~ m,^(.+/)[^/]+/?$,;
+        # Record children
+        $children{$name} ||= [] if $file{type} eq 'd';
+        my ($parent) = ($name =~ m,^(.+/)?[^/]+/?$,);
+        $parent = '' unless defined $parent;
+        $children{$parent} = [] unless exists $children{$parent};
+        push @{ $children{$parent} }, $name;
 
         $idxh{$name} = \%file;
     }
-    foreach my $file (keys %idxh) {
+    @sorted = sort keys %idxh;
+    foreach my $file (@sorted) {
         my $e = $idxh{$file};
-        if ($dir_counts{$e->{name}}) {
-            $e->{count} = $dir_counts{$e->{name}};
-        }
         if ($rhlinks{$e->{name}}) {
             # There is hard link pointing to this file (or hardlink).
             my %candidates = ();
@@ -224,10 +219,18 @@ sub _fetch_index_data {
             }
         }
     }
-    foreach my $file (keys %idxh) {
+    foreach my $file (reverse @sorted) {
+        # Add them in reverse order - entries in a dir are made
+        # objects before the dir itself.
+        if ($idxh{$file}->{type} eq 'd') {
+            $idxh{$file}->{children} = [ map { $idxh{$_} } sort @{ $children{$file} } ];
+        }
         $idxh{$file} = Lintian::Path->new ($idxh{$file});
     }
     $self->{$field} = \%idxh;
+    # Remove the "top" dir in the sorted_index as it is hardly ever used.
+    shift @sorted if scalar @sorted && $sorted[0] eq '';
+    $self->{"sorted_$field"} = \@sorted;
     close $idx;
     close $num_idx if $num_idx;
     return $self->{$field};

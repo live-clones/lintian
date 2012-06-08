@@ -145,6 +145,20 @@ for symlinks.
 
 Lintian::Path->mk_ro_accessors (qw(name owner group link type uid gid size date operm));
 
+=item children
+
+Returns a list of children (as Lintian::Path objects) of this entry.
+The list and its contents should not be modified.
+
+NB: Returns the empty list for non-dir entries.
+
+=cut
+
+sub children {
+    my ($self) = @_;
+    return @{ $self->{'children'} };
+}
+
 # Backing method implementing the is_X tests
 sub _is_type {
     my ($self, $t) = @_;

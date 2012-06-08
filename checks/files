@@ -1431,9 +1431,7 @@ sub dir_counts {
     my ($info, $dir) = @_;
 
     if (defined $info->index->{$dir}) {
-        # internal access to undocumented field
-        # - stinks, but "count" is hardly API worthy.
-        return $info->index->{$dir}->{count} || 0;
+        return scalar $info->index->{$dir}->children;
     } else {
         return 0;
     }
