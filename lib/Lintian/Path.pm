@@ -141,9 +141,28 @@ NB: This is only well defined for file entries that are subject to
 permissions (e.g. files).  Particularly, the value is not well defined
 for symlinks.
 
+=item dirname
+
+Returns the "directory" part of the name, similar to dirname(1) or
+File::Basename::dirname.  The dirname will end with a trailing slash
+(except the "root" dir - see below).
+
+NB: Returns the empty string for the "root" dir.
+
+=item basename
+
+Returns the "filename" part of the name, similar basename(1) or
+File::Basename::basename (without passing a suffix to strip in either
+case).  For dirs, the basename will end with a trailing slash (except
+for the "root" dir - see below).
+
+NB: Returns the empty string for the "root" dir.
+
 =cut
 
-Lintian::Path->mk_ro_accessors (qw(name owner group link type uid gid size date operm));
+Lintian::Path->mk_ro_accessors (qw(name owner group link type uid gid
+  size date operm dirname basename
+));
 
 =item children
 

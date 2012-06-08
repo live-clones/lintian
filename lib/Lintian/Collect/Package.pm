@@ -167,14 +167,18 @@ sub _fetch_index_data {
         }
         $file{name} = $name = _dequote_name ($name);
 
+        $idxh{$name} = \%file;
+
         # Record children
         $children{$name} ||= [] if $file{type} eq 'd';
-        my ($parent) = ($name =~ m,^(.+/)?[^/]+/?$,);
+        my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
         $parent = '' unless defined $parent;
+        $base = '' unless defined $base;
+        $file{dirname} = $parent;
+        $file{basename} = $base;
         $children{$parent} = [] unless exists $children{$parent};
         push @{ $children{$parent} }, $name;
 
-        $idxh{$name} = \%file;
     }
     @sorted = sort keys %idxh;
     foreach my $file (@sorted) {
