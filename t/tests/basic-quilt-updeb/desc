@@ -1,0 +1,5 @@
+Testname: basic-quilt-updeb
+Sequence: 0001
+Type: non-native
+Version: 1.0-1
+Description: Basic test of a 3.0 (quilt) non-native package

@@ -58,7 +58,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(fail read_dpkg_control);
+use Lintian::Util qw(delete_dir fail read_dpkg_control slurp_entire_file);
 
 # --- Global configuration
 
@@ -407,6 +407,13 @@ sub test_package {
         }
         runsystem("cd $rundir && ".
                   "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
+        if ( -f "$origdir/debian/debian/source/format" ) {
+            my $format = slurp_entire_file ("$origdir/debian/debian/source/format");
+            chomp $format;
+            if ($format =~ m/^3.\d+ \(quilt\)$/) {
+                delete_dir ("$targetdir/debian/");
+            }
+        }
     }
     copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
                       ['--exclude=debian/changelog']);
