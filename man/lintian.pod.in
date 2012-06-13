@@ -46,6 +46,14 @@ If you specify a I<.changes> file, Lintian will process all packages
 listed in that file.  This is convenient when checking a new package
 before uploading it.
 
+If you specify packages to be checked or use one of the options
+B<--all>, B<--packages-from-file> or B<--packages-file>, the packages
+requested will be processed.  Otherwise, if I<debian/changelog>
+exists, it is parsed to determine the name of the .changes file to
+look for in the parent directory (when using the actions B<--check> or
+B<--unpack>).  See L</CHECKING LAST BUILD> for more information.
+
+
 =head1 OPTIONS
 
 Actions of the lintian command: (Only one action can be specified per invocation)
@@ -681,9 +689,74 @@ group.  The I<package> and I<version> part will be used to look up one
 or more source packages.  The binaries, udebs and changes files for
 each matching source package will also be activated.
 
+=head1 CHECKING LAST BUILD
+
+When run in an unpacked package dir (with no package selection
+arguments), Lintian will use I<debian/changelog> to determine the
+source and version of the package.  Lintian will then attempt to find
+a matching I<.changes> file for this source and version combination.
+
+Lintian will (in order) search the following directories:
+
+=over 4
+
+=item ..
+
+Used by dpkg-buildpackage(1).
+
+=item ../build-area
+
+Used by svn-buildpackage(1).
+
+=item /var/cache/pbuilder/result
+
+Used by pbuilder(1) and cowbuilder(1).
+
+=back
+
+In each directory, Lintian will attempt to find a I<.changes> file
+using the following values as architectecture (in order):
+
+=over 4
+
+=item I<$DEB_BUILD_ARCH>
+
+The environment variable DEB_BUILD_ARCH.
+
+=item I<$DEB_HOST_ARCH> (or I<dpkg --print-architecture>)
+
+The environment variable DEB_HOST_ARCH (if not set, "dpkg
+--print-architecture" will be used instead)
+
+=item I<dpkg --print-foreign-architectures>
+
+If dpkg(1) appears to support multi-arch, then any architecture listed
+by "dpkg --print-foreign-architectures" will be used (in the order
+returned by dpkg).
+
+=item I<multi>
+
+Pseudo architecture used by mergechanges(1).
+
+=item I<source>
+
+Used for "source only" builds (e.g. dpkg-buildpackage -S).
+
+=back
+
+If a I<.changes> file matches any combination above exists, Lintian
+will process the first match as if you had passed it per command line.
+If no I<.changes> file can be found, Lintian will print a list of attempted
+locations on STDERR and exit 0.
+
 =head1 EXAMPLES
 
 =over 4
+
+=item B<$ lintian foo.changes>
+
+Check the changes file itself and any (binary, udeb or source) package
+listed in it.
 
 =item B<$ lintian foo.deb>
 
@@ -720,6 +793,12 @@ Unpack all packages named foo in the Lintian laboratory.
 =item B<$ lintian -r foo>
 
 Remove all packages named foo from the Lintian laboratory.
+
+=item B<$ lintian>
+
+Assuming I<debian/changelog> exists, look for a changes file for the
+source in the parent dir.  Otherwise, print usage information and
+exit.
 
 =back
 

@@ -50,6 +50,10 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] Remove assumption that $ENV{HOME} is set/defined.  If
       $ENV{HOME} is not sent, user specific profiles will simply
       be ignored.
+  * frontend/lintian:
+    + [NT] Attempt to automatically determine what to process, if
+      no packages are given and debian/changelog exists.  Thanks
+      to Gilles Filippini for the suggestion.  (Closes: #676799)
 
   * lib/Lintian/Collect/Package.pm:
     + [NT] sorted_index now returns a list rather than a list ref.

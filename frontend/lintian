@@ -591,7 +591,17 @@ $action = 'check' unless $action;
 
 # check for arguments
 if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file and not $opt{'packages-from-file'}) {
-    syntax();
+    my $ok = 0;
+    if ($action eq 'check' or $action eq 'unpack') {
+        # If debian/changelog exists, assume an implied "../<source>_<version>_<arch>.changes"
+        # (or "../<source>_<version>_source.changes").
+        if ( -f 'debian/changelog' ) {
+            my $file = _find_changes();
+            push @ARGV, $file;
+            $ok = 1;
+        }
+    }
+    syntax() unless $ok;
 }
 
 die "Cannot use profile together with --ftp-master-rejects.\n" if $opt{'LINTIAN_PROFILE'} and $ftpmaster_tags;
@@ -1642,6 +1652,98 @@ sub _build_group_cache {
 
 sub _clear_group_cache {
     undef %group_cache;
+}
+
+sub _find_changes {
+    require Parse::DebianChangelog;
+    my $dch = Parse::DebianChangelog->init ( { infile => 'debian/changelog', quiet => 1 } );
+    my $data = $dch->data;
+    my $last = $data ? $data->[0] : undef;
+    my ($source, $version, $arch);
+    my $changes;
+    my @archs;
+    my @dirs;
+    if (not $last) {
+        my @errors = $dch->get_parse_errors;
+        if (@errors) {
+            print STDERR "Cannot parse debian/changelog due to errors:\n";
+            for my $error (@errors) {
+                print STDERR "$error->[2] (line $error->[1])\n";
+            }
+        } else {
+            print STDERR "debian/changelog does not have any data?\n";
+        }
+        exit 2;
+    }
+    $version = $last->Version;
+    $source = $last->Source;
+    if (not defined $version or not defined $source) {
+        $version//='<N/A>';
+        $source//='<N/A>';
+        print STDERR "Cannot determine source and version from debian/changelog:\n";
+        print STDERR "Source: $source\n";
+        print STDERR "Version: $source\n";
+        exit 2;
+    }
+    # remove the epoch
+    $version =~ s/^\d+://;
+    if (exists $ENV{'DEB_BUILD_ARCH'}) {
+        my $barch = $ENV{'DEB_BUILD_ARCH'};
+        push @archs, $barch;
+        $changes = "../${source}_${version}_${barch}.changes";
+        return $changes if -f $changes;
+    }
+    if (exists $ENV{'DEB_HOST_ARCH'}) {
+        $arch = $ENV{'DEB_HOST_ARCH'};
+    } else {
+        chomp ( $arch = `dpkg --print-architecture` );
+    }
+    if ($arch ne ($ENV{'DEB_BUILD_ARCH'}//'')) {
+        push @archs, $arch;
+        $changes = "../${source}_${version}_${arch}.changes";
+        return $changes if -f $changes;
+    }
+    if (system ('dpkg', '--assert-multi-arch') == 0) {
+        # Maybe cross-built for something dpkg knows about...
+        open my $foreign, '-|', 'dpkg', '--print-foreign-architectures'
+            or die "dpkg --print-foreign-architectures: $!\n";
+        while ( my $line = <$foreign> ) {
+            chomp $line;
+            # Skip already attempted architectures (e.g. via DEB_BUILD_ARCH)
+            next if grep { $_ eq $line } @archs;
+            $changes = "../${source}_${version}_${line}.changes";
+            if ( -f $changes ) {
+                # Consume the entire input, even if we don't need it.
+                1 for <$foreign>;
+                close $foreign;
+                return $changes;
+            }
+            push @archs, $line;
+        }
+        close $foreign;
+    }
+    foreach my $a (qw(multi source)) {
+        $changes = "../${source}_${version}_${a}.changes";
+        return $changes if -f $changes;
+        push @archs, $a;
+    }
+    foreach my $dir ('../build-area', '/var/cache/pbuilder/result') {
+        next unless -d $dir;
+        foreach my $a (@archs) {
+            $changes = "$dir/${source}_${version}_${a}.changes";
+            return $changes if -f $changes;
+        }
+        push @dirs, $dir;
+    }
+    print STDERR "Cannot find changes file for ${source}/${version}, tried:\n";
+    foreach my $a (@archs) {
+        print STDERR "  ../${source}_${version}_${a}.changes\n";
+    }
+    if (@dirs) {
+        print STDERR " Also tried the following dirs:\n";
+        print STDERR '  ' , join ("\n  ", @dirs), "\n";
+    }
+    exit 0;
 }
 
 sub _guess_version {
