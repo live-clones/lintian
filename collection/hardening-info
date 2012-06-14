@@ -29,50 +29,46 @@
 use strict;
 use warnings;
 
+use Cwd qw(realpath);
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
+use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
 my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 my $file_info = $info->file_info;
 
+my $helper = realpath("$0-helper");
+
 if ( -e "$dir/hardening-info" ) {
     unlink "$dir/hardening-info" or fail "unlink hardening-info: $!";
 }
-
-open OUT, '>', "$dir/hardening-info"
-    or fail("cannot open hardening-info: $!");
 
 # Prepare to examine the file tree.
 chdir ("$dir/unpacked")
     or fail("unable to chdir to unpacked: $!");
 
-foreach my $bin (keys %$file_info) {
+my %opts = ( pipe_in => FileHandle->new,
+             out => "$dir/hardening-info",
+             fail => 'never' );
+
+# Use xargs to keep processing times of packages like linux-image
+# reasonble.
+spawn(\%opts, ['xargs', '-0r', 'hardening-check', '--lintian', '--'], '|',
+    [$helper]);
+$opts{pipe_in}->blocking(1);
+
+
+foreach my $bin ($info->sorted_index) {
+    next unless $info->index->{$bin}->is_file;
     my $finfo = $file_info->{$bin};
     next unless $finfo =~ m/\bELF\b/o;
-    if (open (my $pipe, '-|', "hardening-check --lintian -- \Q$bin\E 2>&1")) {
-        while ( my $line = <$pipe> ) {
-            my $emit = 1;
-            if ($line =~ m/^no-fortify-functions:/o ) {
-                $emit = 0;
-                open my $p2, '-|', "hardening-check --verbose -- \Q$bin\E 2>&1" or fail "hardening-check: $!";
-                while ( my $l2 = <$p2> ) {
-                    if ($l2 =~ m/^\s+unprotected:\s*(\S+)/) {
-                        next if $1 eq 'memcpy';
-                        $emit = 1;
-                        last;
-                    }
-                }
-                close $p2;
-            }
-            print OUT $line if $emit;
-        }
-        close $pipe;
-    }
+    printf {$opts{pipe_in}} "%s\0", $bin;
 }
 
-close OUT or fail("cannot write hardening-info: $!");
+close $opts{pipe_in};
+reap (\%opts);
 
 exit 0;
 

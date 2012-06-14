@@ -25,6 +25,14 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] Clarify that dev-pkg-without-shlib-symlink is emitted
       on library and not "-dev" packages.
 
+  * collection/hardening-info:
+    + [NT] Process binaries with hardening-check via xargs.  This
+      greatly reduces the processing time for packages with many
+      binaries (like some of the linux binaries).  Thanks to
+      Bastian Blank for the heads up.
+  * collection/hardening-info-helper:
+    + [NT] New file.
+
   * data/*:
     + [NT] Refresh with tools/data from sid.
   * data/scripts/interpreters:
