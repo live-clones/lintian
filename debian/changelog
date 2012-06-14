@@ -30,6 +30,7 @@ lintian (2.5.9) UNRELEASED; urgency=low
       greatly reduces the processing time for packages with many
       binaries (like some of the linux binaries).  Thanks to
       Bastian Blank for the heads up.
+    + [NT] Skip kernel modules (.ko files).
   * collection/hardening-info-helper:
     + [NT] New file.
 
