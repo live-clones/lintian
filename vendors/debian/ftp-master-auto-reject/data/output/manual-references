@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2012-02-19
+# Last updated: 2012-06-14
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -470,6 +470,9 @@ lintian::2.4.3::Architecture specific overrides::http://lintian.debian.org/manua
 lintian::2.5::Vendor Profiles::http://lintian.debian.org/manual/section-2.5.html
 lintian::2.5.1::Rules for profile names and location::http://lintian.debian.org/manual/section-2.5.html#section-2.5.1
 lintian::2.5.2::Profile syntax and semantics::http://lintian.debian.org/manual/section-2.5.html#section-2.5.2
+lintian::2.6::Vendor specific data files::http://lintian.debian.org/manual/section-2.6.html
+lintian::2.6.1::Load paths and order::http://lintian.debian.org/manual/section-2.6.html#section-2.6.1
+lintian::2.6.2::Basic syntax of data files::http://lintian.debian.org/manual/section-2.6.html#section-2.6.2
 lintian::3::Advanced usage::http://lintian.debian.org/manual/chapter-3.html
 lintian::3.1::How Lintian works::http://lintian.debian.org/manual/chapter-3.html#section-3.1
 lintian::3.2::The laboratory::http://lintian.debian.org/manual/section-3.2.html
@@ -533,6 +536,7 @@ perl-policy::5.1::Script Magic::http://www.debian.org/doc/packaging-manuals/perl
 perl-policy::5.2::Program Dependencies::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-program_deps
 perl-policy::6.1::Building Embedded Programs::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-build_embedded
 perl-policy::6.2::Embedded Perl Dependencies::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-embedded_deps
+perl-policy::6.3::Perl Package Upgrades::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-perl_upgrades
 perl-policy::4.4.1::Architecture-Independent Modules::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-indep_modules
 perl-policy::4.4.2::Binary Modules::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-binary_modules
 perl-policy::4.4.3::Automating Perl Dependencies::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-dh_perl
@@ -621,7 +625,7 @@ policy::9.1::File system hierarchy::http://www.debian.org/doc/debian-policy/ch-o
 policy::9.2::Users and groups::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2
 policy::9.3::System run levels and init.d scripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-sysvinit
 policy::9.4::Console messages from init.d scripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.4
-policy::9.5::Cron jobs::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.5
+policy::9.5::Cron jobs::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-cron-jobs
 policy::9.6::Menus::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-menus
 policy::9.7::Multimedia handlers::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-mime
 policy::9.8::Keyboard configuration::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.8
@@ -709,6 +713,7 @@ policy::8.6.4::Providing a shlibs file::http://www.debian.org/doc/debian-policy/
 policy::9.1.1::File System Structure::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs
 policy::9.1.2::Site-specific programs::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.2
 policy::9.1.3::The system-wide mail directory::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.3
+policy::9.1.4::/run and /run/lock::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs-run
 policy::9.2.1::Introduction::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.1
 policy::9.2.2::UID and GID classes::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.2
 policy::9.3.1::Introduction::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-/etc/init.d
@@ -718,6 +723,7 @@ policy::9.3.3.1::Managing the links::http://www.debian.org/doc/debian-policy/ch-
 policy::9.3.3.2::Running initscripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3.2
 policy::9.3.4::Boot-time initialization::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.4
 policy::9.3.5::Example::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.5
+policy::9.5.1::Cron job file names::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-cron-files
 policy::10.7.1::Definitions::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.1
 policy::10.7.2::Location::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.2
 policy::10.7.3::Behavior::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.3
@@ -732,7 +738,7 @@ policy::11.8.4::Packages providing a window manager::http://www.debian.org/doc/d
 policy::11.8.5::Packages providing fonts::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.5
 policy::11.8.6::Application defaults files::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-appdefaults
 policy::11.8.7::Installation directory issues::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.7
-policy::11.8.8::The OSF/Motif and OpenMotif libraries::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.8
+policy::12.5.1::Machine-readable copyright information::http://www.debian.org/doc/debian-policy/ch-docs.html#s-copyrightformat
 policy::C.1.1::dpkg-source - packs and unpacks Debian source packages::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-source
 policy::C.1.2::dpkg-buildpackage - overall package-building control script::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-buildpackage
 policy::C.1.3::dpkg-gencontrol - generates binary package control files::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-gencontrol

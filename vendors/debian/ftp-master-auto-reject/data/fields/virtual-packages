@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2012-02-19
+# Last updated: 2012-06-14
 
 # Keep: xserver-xorg-input, xserver-xorg-input-2, xserver-xorg-input-2.1
 # Keep: xserver-xorg-input-4
@@ -17,8 +17,10 @@
 
 ada-compiler
 aide-binary
+alsa
 alsaplayer-interface
 alsaplayer-output
+amora-server
 apache2-mpm
 aptitude-doc
 aspell-dictionary
@@ -37,6 +39,7 @@ c++-compiler
 c++abi2-dev
 c-compiler
 c-shell
+calligra-l10n
 chasen-dic
 childsplay-alphabet-sounds
 cl-sql-backend
@@ -52,6 +55,7 @@ dictd-dictionary
 djvu-viewer
 docbook-xsl-doc
 docutils
+doom-engine
 dssi-plugin
 dyndns-client
 editor
@@ -73,9 +77,11 @@ fortran95-compiler
 fortune-cookie-db
 freeciv
 freeciv-client
+freediams-doc
+freemedforms-emr-doc
 fsck-backend
-fso-config
 fso-deviced-player
+fso-gsmd-platform
 ftp-server
 fusionforge-plugin-scm
 gcompris-sound
@@ -84,9 +90,11 @@ gem-plugin-image
 gem-plugin-record
 gem-plugin-video
 geoclue-provider
+germlin-encoders
 gforge-mta
 gfxboot-theme
 gimp-help
+gmt-gshhs-data
 gnome-www-browser
 gnumach-image
 gnustep-back0.20-alt
@@ -97,6 +105,7 @@ gstreamer0.10-audiosink
 gstreamer0.10-audiosource
 gstreamer0.10-videosink
 gstreamer0.10-videosource
+gstreamer0.10-visualization
 guile
 gvim
 httpd
@@ -113,6 +122,7 @@ ident-server
 ike-server
 imap-client
 imap-server
+indicator-renderer
 inet-superserver
 inews
 info-browser
@@ -144,10 +154,10 @@ kfreebsd-image
 kfreebsd-image-8
 kfreebsd-image-9
 kfreebsd-source
-koffice-l10n
-ladspa-host
 ladspa-plugin
 libblas-3gf.so
+libblas.so
+libblas.so.3
 libblas.so.3gf
 libcompress-zlib-perl
 libcurl-dev
@@ -159,13 +169,11 @@ libdesktop-agnostic-fdo
 libdspam7-drv
 libedac
 libfcgi-ruby
-libfilesystem-ruby
 libfltk-dev
 libgd-dev
 libgd2
 libgdchart
 libgdchart-gd2-dev
-libgearman-server0
 libgettext-ruby
 libggi-target
 libgl-dev
@@ -173,7 +181,6 @@ libgl1
 libguile-dev
 libhdf5-1.8
 libhtml-wikiconverter-dialect
-libimage-size-ruby
 libio-compress-base-perl
 libio-compress-bzip2-perl
 libio-compress-zlib-perl
@@ -181,32 +188,34 @@ libjack-0.116
 libjack-dev-session
 libjack0.100.0-dev
 libjpeg-dbg
-liblapack-3gf.so
+liblapack-3.so
+liblapack.so.3
 liblapack.so.3gf
-libmp3splt-plugin
+libmp3splt0-plugin
 libmpich-dev
 libneon-dev
 libode0-dev
 libreadline-dbg
-libreoffice-help-3.4
-libreoffice-l10n-3.4
+libreoffice-grammarcheck
+libreoffice-help-3.5
+libreoffice-l10n-3.5
 libreoffice-style
+libserf-dbg
 libstdc++-dev
 libstlport-dev
+libvala-dev
 libxine-doc
 libzip-ruby
 libzookeeper-dev
 licq-plugin
-lightdm-greeter
 linux-headers
 linux-image
 linux-initramfs-tool
 linux-kernel-log-daemon
+linux-manual
 lisp-compiler
 live-config-backend
 live-manual
-lsb-qt4-ia32
-lsb-qt4-noarch
 lua
 lv2-host
 lv2-plugin
@@ -218,6 +227,7 @@ monodoc-viewer
 mp3-decoder
 mpd-client
 mpipython
+munin-plugins
 mupen64plus-rsp
 mupen64plus-video
 myspell-dictionary
@@ -225,13 +235,12 @@ myspell-dictionary-de
 myspell-dictionary-en
 myspell-dictionary-fr
 myspell-dictionary-pt
+mysql-server-core
 mythes-thesaurus
 mythes-thesaurus-de
 nes-emulator
 nethack
-netkit-inetd
 netpbm-dev
-netscript
 news-reader
 news-transport-system
 nova-compute-hypervisor
@@ -245,11 +254,10 @@ openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
 paw-binary
 pcsc-ifd-handler
-pd
 pdf-viewer
 pdns-backend
 phonon-backend
-phpapi-20090626+lfs
+phpapi-20100525+lfs
 pinentry
 pinentry-x11
 ping
@@ -271,6 +279,8 @@ radius-server
 ratbox-services
 readline-editor
 roaraudio-server
+root-db-client
+root-fitter
 ruby-interpreter
 skkserv
 snd-gtk-alsa
@@ -278,7 +288,6 @@ snort-rules
 ssh-server
 sugar
 sugar-artwork
-sugar-browse-activity
 sugar-chat-activity
 sugar-emulator
 sugar-presence-service
@@ -300,7 +309,6 @@ telnet-server
 time-daemon
 tkdoc
 ups-monitor
-va-driver
 vala-doc
 vala-utils
 vim-lua
@@ -308,6 +316,8 @@ vim-perl
 vim-python
 vim-ruby
 vim-tcl
+virtual-mysql-client
+virtual-mysql-server
 vnc-server
 vnc-viewer
 wicd-client

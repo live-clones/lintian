@@ -7,11 +7,11 @@ dh_installdebconf
 dh_installdocs
 dh_installgsettings
 dh_installinfo
-dh_installinit
 dh_installlisting
 dh_installtex
 dh_installxfonts
 dh_installxmlcatalogs
+dh_linktree
 dh_lisp
 dh_nativejava
 dh_pangomodules

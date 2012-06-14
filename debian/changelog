@@ -15,6 +15,8 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] Clarify that dev-pkg-without-shlib-symlink is emitted
       on library and not "-dev" packages.
 
+  * data/*:
+    + [NT] Refresh with tools/data from sid.
   * data/scripts/interpreters:
     + [NT] Replace ngp2 with ngraph.  Thanks to Koichi Akabe for
       the report.  (Closes: #675139)
