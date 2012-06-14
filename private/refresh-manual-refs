@@ -127,6 +127,19 @@ my %manuals = (
     ],
 );
 
+# Check all of the manuals are present before trying anything
+{
+    my $ok = 1;
+    foreach my $manual (sort keys %manuals) {
+        my ($index, undef) = @{$manuals{$manual}};
+        unless ( -f $index ) {
+            print STDERR "Manual \"$manual\" not available (missing: $index)\n";
+            $ok = 0;
+        }
+    }
+    exit 1 unless $ok;
+}
+
 # extract_refs -- Extract manual references from HTML file.
 #
 # This function takes the output file handle, the path to the page, and the
@@ -206,10 +219,6 @@ HEADER
 
 for my $manual (sort keys %manuals) {
     my ($index, $url, $ref_re, $fields, $sub_re) = @{$manuals{$manual}};
-
-    if (not -f $index) {
-        die "Manual '$manual' not installed, aborting.\n";
-    }
 
     # Extract references from the index.
     my @subpages
