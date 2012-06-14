@@ -321,7 +321,7 @@ foreach my $file ($info->sorted_index) {
         # ---------------- /etc/cron.daily, etc.
         if ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*[\+\.], ) {
             # NB: cron ships ".placeholder" files, which shouldn't be run.
-            tag 'run-parts-cron-filename-contains-illegal-char', $file;
+            tag 'run-parts-cron-filename-contains-illegal-chars', $file;
         }
         # ---------------- /etc/cron.d
         elsif ($file =~ m,^etc/cron\.d/[^\.], and $operm != 0644) {
