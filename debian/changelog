@@ -9,8 +9,9 @@ lintian (2.5.9) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [NT] Reverse order of two subst expressions to prevent
       dev-pkg-without-shlib-symlink false positives.  Thanks to
-      Aurelien Jarno and Stephen M. Webb for the report and the
-      patch.  (Closes: #675826, #675832)
+      Aurelien Jarno, Yves-Alexis Perez and Stephen M. Webb for
+      the reports and the patch.
+      (Closes: #675826, #677310, #675832)
     + [NT] Clarify that dev-pkg-without-shlib-symlink is emitted
       on library and not "-dev" packages.
 
