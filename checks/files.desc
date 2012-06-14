@@ -317,12 +317,14 @@ Info: The symbolic link has needless segments like ".." and "." in the
  will fix this problem for you.
 Ref: policy 10.5
 
-Tag: run-parts-cron-filename-contains-full-stop
+Tag: run-parts-cron-filename-contains-illegal-chars
 Severity: normal
 Certainty: certain
 Info: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
- run-parts(8) because the filename contains a "." (full stop).
-Ref: run-parts(8)
+ run-parts(8) because the filename contains a "." (full stop) or "+" (plus).
+ .
+ It is recommended to use "_" (underscores) instead of these symbols.
+Ref: run-parts(8), policy 9.5.1
 
 Tag: bad-permissions-for-etc-cron.d-script
 Severity: important

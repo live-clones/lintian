@@ -319,11 +319,13 @@ foreach my $file ($info->sorted_index) {
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
         # ---------------- /etc/cron.daily, etc.
-        if ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*\., ) {
-            tag 'run-parts-cron-filename-contains-full-stop', $file;
+        if ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*[\+\.], ) {
+            # NB: cron ships ".placeholder" files, which shouldn't be run.
+            tag 'run-parts-cron-filename-contains-illegal-char', $file;
         }
         # ---------------- /etc/cron.d
-        elsif ($file =~ m,^etc/cron\.d/\S, and $operm != 0644) {
+        elsif ($file =~ m,^etc/cron\.d/[^\.], and $operm != 0644) {
+            # NB: cron ships ".placeholder" files in etc/cron.d, which we shouldn't tag.
             tag 'bad-permissions-for-etc-cron.d-script', sprintf('%s %04o != 0644',$file,$operm);
         }
         # ---------------- /etc/emacs.*

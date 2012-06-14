@@ -1,11 +1,21 @@
 lintian (2.5.9) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - run-parts-cron-filename-contains-illegal-chars
+    + Removed:
+      - run-parts-cron-filename-contains-full-stop
+
   * checks/*:
     + [NT] Migrate to new Lintian::Path API.
   * checks/fields:
     + [NT] Also classify lib*-cli-dev as belonging to the section
       cli-mono (rather than libdevel).  Thanks to Chow Loong Jin
       for the report and the patch.  (Closes: #675358)
+  * checks/files{,.desc}:
+    + [NT] Rename run-parts-cron-filename-contains-full-stop and
+      have it catch "+" in the filename as well.  Add reference
+      to policy 9.5.1 in the  tag description.
   * checks/shared-libs:
     + [NT] Reverse order of two subst expressions to prevent
       dev-pkg-without-shlib-symlink false positives.  Thanks to
