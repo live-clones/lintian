@@ -1,4 +1,4 @@
-lintian (2.5.9) UNRELEASED; urgency=low
+lintian (2.5.9) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -73,7 +73,7 @@ lintian (2.5.9) UNRELEASED; urgency=low
   * lib/Lintian/Path.pm:
     + [NT] New file.
 
- -- Niels Thykier <niels@thykier.net>  Tue, 29 May 2012 13:19:07 +0200
+ -- Niels Thykier <niels@thykier.net>  Fri, 15 Jun 2012 21:29:03 +0200
 
 lintian (2.5.8) unstable; urgency=low
 
