@@ -66,7 +66,8 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] Represent files (from index) as Lintian::Path objects.
   * lib/Lintian/Collect/Source.pm:
     + [NT] Recognise "Package-Type" as an alternative of the "X-"
-      field of same name.  (Closes: #677649)
+      field of same name.  Thanks to Christian Perrier for the
+      report.  (Closes: #677649)
   * lib/Lintian/Data.pm:
     + [NT] Gracefully handle the absence of $ENV{HOME}.
   * lib/Lintian/Path.pm:
