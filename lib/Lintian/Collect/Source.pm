@@ -110,7 +110,8 @@ sub binaries {
 
     my %binaries;
     foreach my $pkg (keys %{ $self->{binary_field} } ) {
-        my $type = $self->binary_field($pkg, 'xc-package-type') || 'deb';
+        my $type = $self->binary_field ($pkg, 'package-type');
+        $type ||= $self->binary_field ($pkg, 'xc-package-type') || 'deb';
         $binaries{$pkg} = lc $type;
     }
 
