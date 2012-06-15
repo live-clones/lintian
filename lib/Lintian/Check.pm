@@ -31,7 +31,10 @@ use Lintian::Tags qw(tag);
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
 our @ISA    = qw(Exporter);
-our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky $known_shells_regex);
+our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky $known_shells_regex
+                 $PKGNAME_REGEX
+);
+
 
 =head1 NAME
 
@@ -336,11 +339,20 @@ sub check_spelling_picky {
 
 =item $known_shells_regex
 
-Regular expression that maches names of any known shell.
+Regular expression that matches names of any known shell.
 
 =cut
 
 our $known_shells_regex = qr'(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh';
+
+=item $PKGNAME_REGEX
+
+Regular expressions that matches valid package names.  The regression is
+not anchored and does not enforce any "boundry" characters.
+
+=cut
+
+our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/o;
 
 =back
 

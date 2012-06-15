@@ -30,7 +30,7 @@ use Dpkg::Version qw(version_check);
 
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
-use Lintian::Check qw(check_maintainer);
+use Lintian::Check qw(check_maintainer $PKGNAME_REGEX);
 use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
@@ -170,7 +170,7 @@ if ($type eq 'binary'){
         my $name = $info->field('package');
 
         unfold('package', \$name);
-        tag 'bad-package-name' unless $name =~ /^[A-Z0-9][-+\.A-Z0-9]+$/i;
+        tag 'bad-package-name' unless $name =~ /^$PKGNAME_REGEX$/i;
         tag 'package-not-lowercase' if ($name =~ /[A-Z]/)
     }
 }

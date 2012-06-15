@@ -22,6 +22,7 @@ package Lintian::init_d;
 use strict;
 use warnings;
 
+use Lintian::Check qw($PKGNAME_REGEX);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 
@@ -78,7 +79,6 @@ my %initd_postrm;
 my %conffiles;
 
 my $opts_r = qr/-\S+\s*/;
-my $name_r = qr/[\w.-]+/;
 my $action_r = qr/\w+/;
 my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
@@ -88,7 +88,7 @@ if (open(IN, '<', $postinst)) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
-            (?:$opts_r)*($name_r)\s+($action_r)/xo;
+            (?:$opts_r)*($PKGNAME_REGEX)\s+($action_r)/xo;
         my ($name,$opt) = ($1,$2);
         next if $opt eq 'remove';
         if ($initd_postinst{$name}++ == 1) {
@@ -107,7 +107,9 @@ if (open(IN, '<', $preinst)) {
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
-        next unless m/update-rc\.d\s+(?:$opts_r)*($name_r)\s+($action_r)/o;
+        next unless m/update-rc\.d \s+
+                       (?:$opts_r)*($PKGNAME_REGEX) \s+
+                       ($action_r)/ox;
         my ($name,$opt) = ($1,$2);
         next if $opt eq 'remove';
         tag 'preinst-calls-updaterc.d', $name;
@@ -120,7 +122,7 @@ if (open(IN, '<', $postrm)) {
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
-        next unless m/update-rc\.d\s+($opts_r)*($name_r)/o;
+        next unless m/update-rc\.d\s+($opts_r)*($PKGNAME_REGEX)/o;
         if ($initd_postrm{$2}++ == 1) {
             tag 'duplicate-updaterc.d-calls-in-postrm', $2;
             next;
@@ -137,7 +139,7 @@ if (open(IN, '<', $prerm)) {
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
-        next unless m/update-rc\.d\s+($opts_r)*($name_r)/o;
+        next unless m/update-rc\.d\s+($opts_r)*($PKGNAME_REGEX)/o;
         tag 'prerm-calls-updaterc.d', $2;
     }
     close(IN);

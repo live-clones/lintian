@@ -16,6 +16,10 @@ lintian (2.5.9) UNRELEASED; urgency=low
     + [NT] Rename run-parts-cron-filename-contains-full-stop and
       have it catch "+" in the filename as well.  Add reference
       to policy 9.5.1 in the  tag description.
+  * checks/init.d:
+    + [NT] Use the proper regex for matching package names rather
+      than an ad-hoc regex.  Thanks to Thorsten Alteholz for the
+      report and suggested patch. (Closes: #677142)
   * checks/shared-libs:
     + [NT] Reverse order of two subst expressions to prevent
       dev-pkg-without-shlib-symlink false positives.  Thanks to
@@ -55,6 +59,8 @@ lintian (2.5.9) UNRELEASED; urgency=low
       no packages are given and debian/changelog exists.  Thanks
       to Gilles Filippini for the suggestion.  (Closes: #676799)
 
+  * lib/Lintian/Check.pm:
+    + [NT] Add regex to match valid package names.
   * lib/Lintian/Collect/Package.pm:
     + [NT] sorted_index now returns a list rather than a list ref.
     + [NT] Represent files (from index) as Lintian::Path objects.
