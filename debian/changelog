@@ -19,7 +19,7 @@ lintian (2.5.9) UNRELEASED; urgency=low
   * checks/init.d:
     + [NT] Use the proper regex for matching package names rather
       than an ad-hoc regex.  Thanks to Thorsten Alteholz for the
-      report and suggested patch. (Closes: #677142)
+      report and suggested patch.  (Closes: #677142)
   * checks/shared-libs:
     + [NT] Reverse order of two subst expressions to prevent
       dev-pkg-without-shlib-symlink false positives.  Thanks to
