@@ -759,11 +759,15 @@ the failure.
 
 =cut
 
-# create an empty file
-# --okay, okay, this is not exactly what `touch' does :-)
 sub touch_file {
-    open(T, '>', $_[0]) or return 0;
-    close(T) or return 0;
+    my ($file) = @_;
+    # We use '>>' because '>' truncates the file if it has contents
+    # (which `touch file` doesn't).
+    open my $fd, '>>', $file or return 0;
+    close $fd or return 0;
+    # open with '>>' does not update the mtime if the file already
+    # exists, so use utime to solve that.
+    utime undef, undef, $file or return 0;
 
     return 1;
 }
