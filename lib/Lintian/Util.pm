@@ -77,7 +77,6 @@ BEGIN {
 use Encode ();
 use FileHandle;
 use Lintian::Command qw(spawn);
-use Lintian::Output qw(string);
 use Digest::MD5;
 use Scalar::Util qw(openhandle);
 
@@ -804,21 +803,29 @@ sub touch_file {
     return 1;
 }
 
-=item fail (MSG)
+=item fail (MSG[, ...])
 
-Use to signal an internal error.  MSG will be a diagnostic printed to
-the user.
+Use to signal an internal error. The argument(s) will used to print a
+dianostic message to the user.
+
+If multiple arguments are given, they will be merged into a single
+string (by join (' ', @_)).  If only one argument is given it will be
+stringified and used directly.
 
 =cut
 
 sub fail {
-    my $str;
+    my $str = 'internal error: ';
     if (@_) {
-        $str = string('internal error', @_);
-    } elsif ($!) {
-        $str = string('internal error', $!);
+        $str .=  join " ", @_;
     } else {
-        $str = string('internal error');
+        my (undef, $filename, $line) = caller;
+        if ($!) {
+            $str .= "$!";
+        } else {
+            $str .= "No context.";
+        }
+        $str .= " (called from $filename:$line)\n";
     }
     $! = 2; # set return code outside eval()
     die $str;
