@@ -24,6 +24,7 @@ use warnings;
 
 use Carp qw(croak);
 
+use Lintian::Data;
 use Lintian::Tag::TextUtil qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 use Lintian::Util qw(fail);
 
