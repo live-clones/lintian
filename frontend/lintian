@@ -1241,20 +1241,22 @@ sub auto_clean_package {
     my $pkg_name = $lpkg->pkg_name();
     my $pkg_type = $lpkg->pkg_type();
     my $base = $lpkg->base_dir();
+    my $changed = 0;
     for my $coll (keys %collection_info) {
         my $ci = $collection_info{$coll};
         if ($ci->auto_remove and not $keep_coll{$coll}) {
             next unless $lpkg->is_coll_finished ($coll, $ci->version);
             debug_msg(1, "Auto removing: $coll ...");
+            $changed = 1;
             unless (system ($ci->script_path, $pkg_name, "remove-${pkg_type}", $base) == 0) {
                 warning("removing collect info $coll about package $pkg_name failed",
                         "skipping cleanup of $pkg_type package $pkg_name");
-                return 0;
+                return -1;
             }
             $lpkg->_clear_coll_status ($coll);
         }
     }
-    return 1;
+    return $changed;
 }
 
 sub post_pkg_process_overrides{
@@ -1315,7 +1317,7 @@ sub unpack_group {
         my $lpkg = _get_lpkg ($proc);
         my $base;
         my $info;
-
+        my $changed = 0;
 
         if (!defined $lpkg) {
             my $err = '.';
@@ -1363,6 +1365,7 @@ sub unpack_group {
         Lintian::Command::Simple::kill(\%running_jobs);
         %running_jobs = ();
         while ($collmap->pending) {
+            $changed = 1;
             foreach my $req ($collmap->selectable) {
                 my $ri = $collmap->getProp($req);
                 my $coll = $ri->{'name'};
@@ -1425,15 +1428,18 @@ sub unpack_group {
         } else {
             # else we are done
             if (!$keep_lab) {
-                auto_clean_package($lpkg) or $exit_code = 2;
+                my $ret = auto_clean_package($lpkg);
+                $exit_code = 2 if $ret < 0;
+                $changed = 1 if $ret;
             }
         }
-        # All successful, make sure to record it so we do not unpack the same package
-        # in a later run (mostly for archive-wide checks).
-        unless ($lpkg->update_status_file) {
-            warning("could not create status file for package $pkg_name: $!");
+        if ($changed) {
+            # All successful, make sure to record it so we do not unpack the same package
+            # in a later run (mostly for archive-wide checks).
+            unless ($lpkg->update_status_file) {
+                warning("could not create status file for package $pkg_name: $!");
+            }
         }
-
     }
     return 1;
 }
@@ -1512,14 +1518,16 @@ sub process_group {
         # Invoke auto-clean now that the group has been checked
         foreach my $proc ($group->get_processables()){
             my $lpkg = $proc->lab_pkg();
-            auto_clean_package($lpkg) or $exit_code = 2;
-            # Update the status file as auto_clean_package may have removed some
-            # collections
-            unless ($lpkg->update_status_file) {
-                my $pkg_name = $proc->pkg_name;
-                warning("could not create status file for package $pkg_name: $!");
+            my $ret = auto_clean_package($lpkg);
+            $exit_code = 2 if $ret < 0;
+            if ($ret) {
+                # Update the status file as auto_clean_package may have removed some
+                # collections
+                unless ($lpkg->update_status_file) {
+                    my $pkg_name = $proc->pkg_name;
+                    warning("could not create status file for package $pkg_name: $!");
+                }
             }
-
         }
 
     }
