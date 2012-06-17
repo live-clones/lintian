@@ -723,7 +723,8 @@ sub _write_manifests {
     my $dir = $self->dir;
     while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
         # write_list croaks on error, so no need for "or croak/die"
-        $plist->write_list ("$dir/info/${pkg_type}-packages");
+        $plist->write_list ("$dir/info/${pkg_type}-packages")
+            if $plist->dirty;
     }
 }
 
