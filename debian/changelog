@@ -1,3 +1,16 @@
+lintian (2.5.10) UNRELEASED; urgency=low
+
+  * frontend/lintian:
+    + [NT] Check if some collections can be skipped for existing
+      entries.  This is mostly useful for static labs, where
+      certain checks can be now be rerun without having to run
+      "unpacked".
+
+  * lib/Lintian/CollScript.pm:
+    + [NT] New file.
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 17 Jun 2012 23:25:06 +0200
+
 lintian (2.5.9) unstable; urgency=low
 
   * Summary of tag changes:

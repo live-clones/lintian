@@ -134,6 +134,7 @@ my %keep_coll;
 my %collection_info;
 my %check_abbrev;
 my %unpack_infos;
+my %requested_unpack;
 
 # }}}
 
@@ -1044,6 +1045,7 @@ if ($action eq 'check') {
         my $cs = $PROFILE->get_script($c);
         for my $i (@{ $cs->needs_info }) {
             $unpack_infos{$i} = 1;
+            $requested_unpack{$i} = 1;
         }
     }
 }
@@ -1055,12 +1057,14 @@ if ($action eq 'unpack') {
     # With --unpack we want all of it
     for my $c (keys %collection_info) {
         $unpack_infos{$c} = 1;
+        $requested_unpack{$c} = 1;
     }
 } else {
     my @needed = keys %unpack_infos;
     my %added = ();
     unless ($opt{'no-override'}) {
         push @needed, 'override-file';
+        $requested_unpack{'override-file'} = 1;
     }
     while ( my $c = pop @needed ) {
         next if $added{$c};
@@ -1098,9 +1102,9 @@ my $collmap = Lintian::DepMap::Properties->new();
 for my $c (keys %unpack_infos) {
     # Add the collections with their dependency information
     $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
-    $collmap->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
+    $collmap->add($c, {'type' => 'collection', 'name' => $c});
     $map->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
-    $collmap->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
+    $collmap->add($c, $collection_info{$c}->needs_info);
 }
 
 for my $c (@scripts) {
@@ -1325,8 +1329,30 @@ sub unpack_group {
         $base = $lpkg->base_dir();
         debug_msg(1, "Unpacking $pkg_name $pkg_ver [$pkg_arch] ($pkg_type) in $base");
 
-        # Ensure it has been unpacked
-        unless ($lpkg->create){
+        $collmap->initialise();
+
+        if ($lpkg->exists) {
+            # It already exists - only collect what we need.
+            # - $collmap has everything we need, but in some cases more than that.
+            my %need = ();
+            my @check = keys %requested_unpack;
+            while (my $cname = pop @check) {
+                my $coll = $collection_info{$cname};
+                # Skip collections not relevant to us (they will never
+                # be finished and we do not want to use their
+                # dependencies if they are the only ones using them)
+                next unless $coll->is_type ($pkg_type);
+                next if $lpkg->is_coll_finished ($cname, $coll->version);
+                $need{$cname} = 1;
+                push @check, $coll->needs_info;
+            }
+            while (1) {
+                my @s = grep { not $need{$_} } $collmap->selectable;
+                last if not @s;
+                $collmap->satisfy (@s);
+            }
+        } elsif (not $lpkg->create){
+            # Cannot create the entry? Skip
             warning("could not create the package entry in the lab: $!",
                     "skipping $action of $pkg_type package $pkg_name");
             $exit_code = 2;
@@ -1336,7 +1362,6 @@ sub unpack_group {
         # Kill pending jobs, if any
         Lintian::Command::Simple::kill(\%running_jobs);
         %running_jobs = ();
-        $collmap->initialise();
         while ($collmap->pending) {
             foreach my $req ($collmap->selectable) {
                 my $ri = $collmap->getProp($req);
@@ -1389,7 +1414,7 @@ sub unpack_group {
                     next PROC;
                 }
 
-                $collmap->satisfy('coll-' . $coll);
+                $collmap->satisfy ($coll);
             }
             debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
         }
@@ -1439,7 +1464,7 @@ sub process_group {
         }
 
         unless ($opt{'no-override'}) {
-            if ($collmap->known('coll-override-file') && -f "$base/override") {
+            if ($collmap->known('override-file') && -f "$base/override") {
                 debug_msg(1, 'Override file collected, loading it ...');
                 $TAGS->file_overrides("$base/override");
             }
