@@ -130,6 +130,7 @@ my $cwd;
 my $exit_code = 0;
 my $LAB;
 
+my %keep_coll;
 my %collection_info;
 my %check_abbrev;
 my %unpack_infos;
@@ -768,6 +769,7 @@ require Lintian::Util;
 import Lintian::Util qw(fail read_dpkg_control);
 
 require Lintian::Collect;
+require Lintian::CollScript;
 require Lintian::DepMap::Properties;
 require Lintian::Data;
 require Lintian::Output;
@@ -1064,9 +1066,7 @@ if ($action eq 'unpack') {
         next if $added{$c};
         $added{$c} = 1;
         $unpack_infos{$c} = 1;
-        if (exists $collection_info{$c}{'needs-info'}) {
-            push @needed, @{$collection_info{$c}{'needs-info'}};
-        }
+        push @needed, $collection_info{$c}->needs_info;
     }
 }
 
@@ -1077,10 +1077,7 @@ if (@unpack_info) {
             fail("unknown info specified: $i");
         }
         $unpack_infos{$i} = 1;
-        # This implies always keeping them as well!  Note that auto_clean_package
-        # depends on this to do the "right thing".  If you remove this, please
-        # remember to update auto_clean_package.
-        $collection_info{$i}{'auto-remove'} = 0;
+        $keep_coll{$i} = 1;
     }
 }
 
@@ -1102,10 +1099,8 @@ for my $c (keys %unpack_infos) {
     # Add the collections with their dependency information
     $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
     $collmap->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
-    if (exists $collection_info{$c}{'needs-info'}) {
-        $map->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
-        $collmap->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
-    }
+    $map->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
+    $collmap->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
 }
 
 for my $c (@scripts) {
@@ -1227,61 +1222,16 @@ sub load_collections{
         next unless $f =~ /\.desc$/;
 
         debug_msg(2, "Reading collector description file $f ...");
-        my @secs = read_dpkg_control("$dirname/$f");
-        my $script;
-        ($#secs+1 == 1)
-            or fail("syntax error in description file $f: too many sections");
-
-        ($script = $secs[0]->{'collector-script'})
-            or fail("error in description file $f: `Collector-Script:' not defined");
-
-        delete $secs[0]->{'collector-script'};
-        $cinfo->{$script}->{'script'} = $script;
-        my $p = $cinfo->{$script};
-
-        set_value($f, $p,'type',$secs[0],1);
-        # convert Type:
-        my %type;
-        for (split(/\s*,\s*/o,$p->{'type'})) {
-            if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
-                || $_ eq 'changes') {
-                $type{$_} = 1;
-            } else {
-                fail("unknown type $_ specified in description file $f");
-            }
-        }
-        $p->{'type'} = \%type;
-
-        set_value($f,$p,'version',$secs[0],1);
-        set_value($f,$p,'auto-remove',$secs[0],0);
-
-        if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-            for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-                push @{$p->{'needs-info'}}, $_;
-            }
-            delete $secs[0]->{'needs-info'};
-        }
-
-        # ignore Info: and other fields for now
-        delete $secs[0]->{'info'};
-        delete $secs[0]->{'author'};
-
-        for (keys %{$secs[0]}) {
-            warning("unused tag $_ in description file $f");
-        }
-
-        debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
+        my $cs = Lintian::CollScript->new ("$dirname/$f");
+        $cinfo->{$cs->name} = $cs;
     }
 
     closedir($dir);
 }
 
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
-#  - depends on global variables %collection_info and $opt{'LINTIAN_ROOT'}
+#  - depends on global variables %collection_info and %keep_coll
 #
-# Note: collections explicitly requested by the user (using -U coll) will
-# not be auto-removed *because* the argument handling of -U alters the
-# Auto-Remove value for these collections.
 sub auto_clean_package {
     my ($lpkg) = @_;
     my $pkg_name = $lpkg->pkg_name();
@@ -1289,11 +1239,10 @@ sub auto_clean_package {
     my $base = $lpkg->base_dir();
     for my $coll (keys %collection_info) {
         my $ci = $collection_info{$coll};
-        if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
-            next unless $lpkg->is_coll_finished ($coll, $ci->{'version'});
-            my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
-            debug_msg(1, "Auto removing: $ci->{'script'} ...");
-            unless (Lintian::Command::Simple::run ($script, $pkg_name, "remove-${pkg_type}", $base) == 0) {
+        if ($ci->auto_remove and not $keep_coll{$coll}) {
+            next unless $lpkg->is_coll_finished ($coll, $ci->version);
+            debug_msg(1, "Auto removing: $coll ...");
+            unless (system ($ci->script_path, $pkg_name, "remove-${pkg_type}", $base) == 0) {
                 warning("removing collect info $coll about package $pkg_name failed",
                         "skipping cleanup of $pkg_type package $pkg_name");
                 return 0;
@@ -1395,13 +1344,13 @@ sub unpack_group {
                 my $ci = $collection_info{$coll};
 
                 # current type?
-                unless (exists $ci->{'type'}{$pkg_type}) {
+                unless ($ci->is_type ($pkg_type)) {
                     $collmap->satisfy($req);
                     next;
                 }
 
                 # check if it has been run previously
-                if ($lpkg->is_coll_finished($coll, $ci->{'version'})) {
+                if ($lpkg->is_coll_finished ($coll, $ci->version)) {
                     $collmap->satisfy($req);
                     next;
                 }
@@ -1411,9 +1360,8 @@ sub unpack_group {
                 # collect info
                 $collmap->select($req);
                 debug_msg(1, "Collecting info: $coll ...");
-                my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
                 my $cmd = Lintian::Command::Simple->new();
-                unless ($cmd->background ($script, $pkg_name, $pkg_type, $base) > 0) {
+                unless ($cmd->background ($ci->script_path, $pkg_name, $pkg_type, $base) > 0) {
                     warning("collect info $coll about package $pkg_name failed",
                             "skipping $action of $pkg_type package $pkg_name");
                     $exit_code = 2;
@@ -1430,7 +1378,7 @@ sub unpack_group {
                 delete $running_jobs{$coll};
                 if ($cmd->status() == 0) {
                     my $ci = $collection_info{$coll};
-                    $lpkg->_mark_coll_finished($coll, $ci->{'version'})
+                    $lpkg->_mark_coll_finished($coll, $ci->version)
                         or fail("cannot mark $coll for complete: $!");
                     debug_msg(1, "Collection script $coll done");
                 } else {
