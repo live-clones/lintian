@@ -31,15 +31,6 @@ use Getopt::Long;
 
 # {{{ Application Variables
 
-#### NOTE ABOUT LINTIAN_ROOT
-#
-# Some of the Lintian modules need LINTIAN_ROOT (e.g. Lintian::Data)
-# and we supply it via $ENV{'LINTIAN_ROOT'}.  This means that
-# $ENV{'LINTIAN_ROOT'} must generally always be update *before* we
-# load Lintian modules.
-#
-#### END NOTE ABOUT LINTIAN_ROOT
-
 # Variables from %opt (defined below) we must export to %ENV
 my @MUST_EXPORT = (qw(
     LINTIAN_LAB
