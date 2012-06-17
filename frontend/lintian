@@ -1829,8 +1829,6 @@ sub _run_check {
     my $ret = 0;
     my $cs_pkg = $cs->script_pkg;
 
-    debug_msg(1, "Running check: $check ...");
-
     require "$opt{'LINTIAN_ROOT'}/checks/$check";
 
     {
