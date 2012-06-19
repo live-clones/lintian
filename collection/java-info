@@ -69,12 +69,22 @@ foreach my $file ($info->sorted_index) {
         # First, the file list:
         foreach my $member ($azip->members) {
             my $name = $member->fileName;
+            my $jversion;
             next if $member->isDirectory;
             $manifest = $member if $name =~ m@^META-INF/MANIFEST.MF$@oi;
             if ($name =~ m/\.class$/o) {
                 # Collect the Major version of the class file.
+                my ($contents, $zerr) = $member->contents;
+                fail "Failed to decompress $name of $file: $zerr"
+                    unless $zerr == AZ_OK;
+                # translation of the unpack
+                #  NN NN NN NN, nn nn, nn nn   - bytes read (in hex, network order)
+                #     $magic  , __ __, $major  - variables
+                my ($magic, undef, $major) = unpack ('Nnn', $contents);
+                $jversion = $major if $magic == 0xCAFEBABE;
             }
-            print {$opts{pipe_in}} $name, "\n";
+            $jversion //= '-';
+            print {$opts{pipe_in}} $name, ": $jversion\n";
         }
 
         if ($manifest) {

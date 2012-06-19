@@ -36,6 +36,8 @@ my $missing_jarwrapper = 0;
 my $need_cp = 0;
 my $has_public_jars = 0;
 my $has_jars = 0;
+my $jmajlow = '-';
+
 
 my $depends = $info->relation('strong')->unparse();
 # Remove all libX-java-doc packages to avoid thinking they are java libs
@@ -49,11 +51,11 @@ $need_cp = 1 if @java_lib_depends;
 # We first loop over jar files to find problems
 
 for my $jar_file (sort keys %{$java_info}) {
-    my $file_list = $java_info->{$jar_file}->{files};
+    my $files = $java_info->{$jar_file}->{files};
     my $manifest = $java_info->{$jar_file}->{manifest};
     my $operm = $info->index->{$jar_file}->operm;
     my $jar_dir;
-    my $classes = 1;
+    my $classes = 0;
     my $datafiles = 1;
     my $cp = '';
     my $bsname = '';
@@ -71,9 +73,33 @@ for my $jar_file (sort keys %{$java_info}) {
         $has_public_jars = 1;
     }
     # check for common code files like .class or .clj (Clojure files)
-    $classes = 0 unless grep m/\.(?:class|clj)$/oi, @{$file_list};
+    foreach my $class (grep m/\.(?:class|clj)$/oi, sort keys %$files) {
+        my $mver = $files->{$class};
+        $classes = 1;
+        next if $class =~ m/\.clj$/;
+        # .class but no major version?
+        next if $mver eq '-';
+        if ($mver <= 44 or $mver >= 52) {
+            # First public major version was 45 (Java1), latest
+            # version is 51 (Java7).
+            tag 'unknown-java-class-version', $jar_file, "($class -> $mver)";
+            # Skip the rest of this Jar.
+            last;
+        }
+
+        # Collect the "lowest" Class version used.  We assume that
+        # mixed class formats implies special compat code for certain
+        # JVM cases.
+        if ($jmajlow eq '-') {
+            # first;
+            $jmajlow = $mver;
+        } else {
+            $jmajlow = $mver if $mver < $jmajlow;
+        }
+    }
+
     $datafiles = 0
-        unless grep m/\.(?:xml|properties|x?html|xhp)$/io, @{$file_list};
+        unless grep m/\.(?:xml|properties|x?html|xhp)$/io, keys %$files;
 
     if($operm & 0111) {
         # Executable ?
@@ -112,7 +138,7 @@ for my $jar_file (sort keys %{$java_info}) {
         $need_cp = 0 if $bsname;
         # Maybe it is a maven plugin?
         $need_cp = 0 if $need_cp
-            && grep { m,^META-INF/maven/plugin.xml$,io } @{$file_list};
+            && grep { m,^META-INF/maven/plugin.xml$,io } keys %$files;
     } else {
         # Only run the tests when a classpath is present
         my @relative = ();
@@ -151,6 +177,26 @@ for my $jar_file (sort keys %{$java_info}) {
 
 
 tag 'missing-dep-on-jarwrapper' if $missing_jarwrapper;
+
+if ($jmajlow ne '-') {
+    # Byte code numbers:
+    #  45-49 -> Java1 - Java5 (Always ok)
+    #     50 -> Java6
+    #     51 -> Java7
+    my $bad = 0;
+
+    # If the lowest version used is:
+    $bad = 1 if $jmajlow == 51; # Java7 - consider bad per request.
+
+    # Technically we ought to do some checks with Java6 class files and
+    # dependencies/package types, but for now just skip that.  (See #673276)
+
+    if ($bad) {
+        # Map the Class version to a Java version.
+        my $v = $jmajlow - 44;
+        tag 'incompatible-java-bytecode-format', "Java${v} version (Class format: $jmajlow)";
+    }
+}
 
 
 if($has_jars && $need_cp) {

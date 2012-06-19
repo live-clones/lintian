@@ -1,5 +1,17 @@
 lintian (2.5.10) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - incompatible-java-bytecode-format
+      - unknown-java-class-version
+
+  * checks/java{,.desc}:
+    + [NT] Catch unknown Java class versions.
+    + [NT] Catch uses of Java7 byte code as an experimental
+      check.  It lacks the proper checks for cases where
+      packages have the proper dependencies for Java7 byte
+      code.  (Closes: #673276)
+
   * collection/java-info{,.desc}:
     + [NT] Use Archive::Zip instead of zipinfo + unzip to
       extract information from Jar files.

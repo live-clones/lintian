@@ -85,3 +85,23 @@ Severity: normal
 Certainty: certain
 Info: The jar file contains a manifest but no code. This probably indicates
  that something went wrong at build-time.
+
+Tag: incompatible-java-bytecode-format
+Severity: normal
+Certainty: possible
+Experimental: yes
+Info: The package contains Java class files with a minimum requirement on the
+ listed Java version.  This Java version is not supported by the default JVM
+ in Debian and is therefore likely to be a mistake.
+Ref: #673276
+
+Tag: unknown-java-class-version
+Severity: normal
+Certainty: certain
+Info: The package contains a Jar file with Java class files compiled for an
+ unknown Java version.  Most likely the class file is corrupt or compiled
+ for a newer version of Java than Lintian knows about.  In the latter case,
+ please file a bug against Lintian.
+ .
+ Lastest class version known by Lintian is Java7 (Major version 51).
+

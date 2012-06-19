@@ -287,7 +287,7 @@ sub java_info {
     open my $idx, '-|', 'gzip', '-dc', "$base_dir/java-info.gz"
         or fail "cannot open $base_dir/java-info.gz: $!";
     my $file;
-    my $file_list = 0;
+    my $file_list;
     my $manifest = 0;
     local $_;
     while (<$idx>) {
@@ -302,7 +302,7 @@ sub java_info {
         }
         elsif (m#^-- (?:\./)?(.+)$#o) {
             $file = $1;
-            $java_info{$file}->{files} = [];
+            $java_info{$file}->{files} = {};
             $file_list = $java_info{$file}->{files};
             $manifest = 0;
         }
@@ -310,8 +310,9 @@ sub java_info {
             if($manifest && m#^  (\S+):\s(.*)$#o) {
                 $manifest->{$1} = $2;
             }
-            elsif($file_list) {
-                push @{$file_list}, $_;
+            elsif ($file_list) {
+                my ($fname, $clmajor) = (m#^(.*):\s*([-\d]+)$#);
+                $file_list->{$fname} = $clmajor;
             }
 
         }
