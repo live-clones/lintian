@@ -21,6 +21,7 @@
 
 use strict;
 use warnings;
+use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
@@ -50,31 +51,40 @@ chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
 foreach my $file ($info->sorted_index) {
-    my $ftype = $info->index->{$file}->{type};
-    next unless $ftype eq '-' or $ftype eq 'h';
+    my $ftype = $info->index->{$file};
+    next unless $ftype->is_file;
+    next unless $info->file_info->{$file} =~ m/Zip archive/o;
     if ($file =~ m#\S+\.jar$#i) {
         my $has_manifest = 0;
+        my $manifest;
+        my $azip = Archive::Zip->new;
 
         open_java_info() unless %opts;
         # This script needs unzip, there's no way around.
         print {$opts{pipe_in}} "-- $file\n";
 
-        # First, the file list:
-        open FILE_LIST, '-|', 'zipinfo', '-1', $file;
-        while(<FILE_LIST>) {
-            $has_manifest = 1 if $_ =~ m@^META-INF/MANIFEST.MF$@oi;
-            next if( m#/$#o);   # Skip directories
-            print {$opts{pipe_in}} $_;
-        }
-        close FILE_LIST;
+        # stringify or $azip will make a call back that fails.
+        $azip->read ("$file") == AZ_OK or fail "Could not read $file: $!";
 
-        if($has_manifest) {
+        # First, the file list:
+        foreach my $member ($azip->members) {
+            my $name = $member->fileName;
+            next if $member->isDirectory;
+            $manifest = $member if $name =~ m@^META-INF/MANIFEST.MF$@oi;
+            if ($name =~ m/\.class$/o) {
+                # Collect the Major version of the class file.
+            }
+            print {$opts{pipe_in}} $name, "\n";
+        }
+
+        if ($manifest) {
             print {$opts{pipe_in}} "-- MANIFEST: $file\n";
 
-            open MANIFEST, '-|', 'unzip', '-p', $file, 'META-INF/MANIFEST.MF';
+            my ($contents, $zerr) = $manifest->contents;
+            fail "Failed to decompress Manifest of $file: $zerr"
+                unless $zerr == AZ_OK;
             my $first = 1;
-            while(my $line = <MANIFEST>) {
-                chomp $line;
+            foreach my $line (split m/\n/, $contents) {
                 $line =~ s/\r//go;
                 if($line =~ m/^(\S+:)\s*(.*)/o) {
                     print {$opts{pipe_in}} "\n" unless $first;
@@ -85,9 +95,7 @@ foreach my $file ($info->sorted_index) {
                     print {$opts{pipe_in}} substr $line, 1;
                 }
             }
-            close MANIFEST;
             print {$opts{pipe_in}} "\n" unless $first;
-
         }
     }
 }

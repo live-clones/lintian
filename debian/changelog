@@ -1,5 +1,16 @@
 lintian (2.5.10) UNRELEASED; urgency=low
 
+  * collection/java-info{,.desc}:
+    + [NT] Use Archive::Zip instead of zipinfo + unzip to
+      extract information from Jar files.
+    + [NT] Limit java-info to files classified as "Zip Archive"
+      by file(1).
+
+  * debian/control:
+    + [NT] Add (Build-)Dependency on libarchive-zip-perl.
+    + [NT] Remove runtime dependency on unzip (replaced by
+      libarchive-zip-perl).
+
   * frontend/lintian:
     + [NT] Check if some collections can be skipped for existing
       entries.  This is mostly useful for static labs, where
