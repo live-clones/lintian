@@ -42,7 +42,6 @@ Build-Depends: binutils,
                libtext-template-perl,
                libtimedate-perl,
                liburi-perl,
-               xz-lzma | lzma,
                man-db,
                patchutils,
                perl,
@@ -53,6 +52,8 @@ Build-Depends: binutils,
                quilt,
                rsync,
                unzip,
+               xz-utils,
+               xz-utils (>= 5.1.1alpha+20120614) | xz-lzma | lzma,
                zip
 Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
@@ -87,6 +88,7 @@ Suggests: binutils-multiarch,
           dpkg-dev,
           libhtml-parser-perl,
           libtext-template-perl,
+          lzma,
           man-db (>= 2.5.1-1),
           xz-utils
 Multi-Arch: foreign

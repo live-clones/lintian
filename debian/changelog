@@ -22,6 +22,12 @@ lintian (2.5.10) UNRELEASED; urgency=low
     + [NT] Add (Build-)Dependency on libarchive-zip-perl.
     + [NT] Remove runtime dependency on unzip (replaced by
       libarchive-zip-perl).
+    + [NT] Add explicit Build-Dependency on xz-utils instead
+      of relying on dpkg-dev's dependency on it.
+    + [NT] Add versioned xz-utils as alternative to xz-lzma
+      or lzma.  (Closes: #678775)
+    + [NT] Add missing suggests for lzma packages.  lzma is
+      only used for source packages compressed with lzma.
 
   * frontend/lintian:
     + [NT] Check if some collections can be skipped for existing
