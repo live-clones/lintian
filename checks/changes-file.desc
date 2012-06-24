@@ -29,7 +29,7 @@ Certainty: certain
 Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file.  It is possible that you are uploading
  for a different distribution than the one Lintian is checking for.  In
- that case, passing --vendor $VENDOR may fix this warning.
+ that case, passing --profile $VENDOR may fix this warning.
  .
  Note that the distributions <tt>non-free</tt> and <tt>contrib</tt> are no
  longer valid. You'll have to use distribution <tt>unstable</tt> and

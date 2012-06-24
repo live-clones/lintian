@@ -5,6 +5,9 @@ lintian (2.5.10) UNRELEASED; urgency=low
       - incompatible-java-bytecode-format
       - unknown-java-class-version
 
+  * checks/changes-file.desc:
+    + [NT] Fix typo in tag description.  Thanks to Luca
+      Falavigna for spotting it.
   * checks/java{,.desc}:
     + [NT] Catch unknown Java class versions.
     + [NT] Catch uses of Java7 byte code as an experimental
