@@ -1742,7 +1742,7 @@ sub _find_changes {
         }
         close $foreign;
     }
-    foreach my $a (qw(multi source)) {
+    foreach my $a (qw(multi all source)) {
         $changes = "../${source}_${version}_${a}.changes";
         return $changes if -f $changes;
         push @archs, $a;
