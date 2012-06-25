@@ -567,6 +567,16 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(%opthash)
     or die("error parsing options\n");
 
+# root permissions?
+# check if effective UID is 0
+if ($> == 0 and not $allow_root) {
+    print STDERR "warning: the authors of lintian do not recommend running it with root privileges!\n";
+}
+
+# }}}
+
+# {{{ Read important environment
+
 # determine LINTIAN_ROOT if it was not set with --root.
 $opt{'LINTIAN_ROOT'} = $ENV{'LINTIAN_ROOT'} unless (defined($opt{'LINTIAN_ROOT'}));
 if (defined $opt{'LINTIAN_ROOT'}) {
@@ -578,6 +588,18 @@ if (defined $opt{'LINTIAN_ROOT'}) {
 } else {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
 }
+
+# environment variables overwrite settings in conf file, so load them now
+# assuming they were not set by cmd-line options
+foreach my $var (@ENV_VARS) {
+    # note $opt{$var} will usually always exists due to the call to GetOptions
+    # so we have to use "defined" here
+    $opt{$var} = $ENV{$var} if $ENV{$var} && ! defined $opt{$var};
+}
+
+# }}}
+
+# {{{ Sanity check command-line options (that are unaffected by the configuration file)
 
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
@@ -616,20 +638,51 @@ $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 
 # }}}
 
-# {{{ Setup Configuration
-#
-# root permissions?
-# check if effective UID is 0
-if ($> == 0 and not $allow_root) {
-    print STDERR "warning: the authors of lintian do not recommend running it with root privileges!\n";
-}
+# {{{ Loading lintian's own libraries, parse config file and setup output
+unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
-# environment variables overwrite settings in conf file, so load them now
-# assuming they were not set by cmd-line options
-foreach my $var (@ENV_VARS) {
-    # note $opt{$var} will usually always exists due to the call to GetOptions
-    # so we have to use "defined" here
-    $opt{$var} = $ENV{$var} if $ENV{$var} && ! defined $opt{$var};
+require Lintian::Lab;
+
+require Lintian::Util;
+import Lintian::Util qw(fail read_dpkg_control);
+
+require Lintian::Collect;
+require Lintian::CollScript;
+require Lintian::DepMap::Properties;
+require Lintian::Data;
+require Lintian::Output;
+import Lintian::Output qw(:messages);
+require Lintian::Command::Simple;
+require Lintian::Command;
+import Lintian::Command qw(spawn reap);
+require Lintian::Internal::FrontendUtil;
+import Lintian::Internal::FrontendUtil;
+require Lintian::ProcessablePool;
+require Lintian::Profile;
+require Lintian::Tags;
+import Lintian::Tags qw(tag);
+
+if (defined $experimental_output_opts) {
+    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
+    foreach (keys %opts) {
+        if ($_ eq 'format') {
+            if ($opts{$_} eq 'colons') {
+                require Lintian::Output::ColonSeparated;
+                $Lintian::Output::GLOBAL = Lintian::Output::ColonSeparated->new;
+            } elsif ($opts{$_} eq 'letterqualifier') {
+                require Lintian::Output::LetterQualifier;
+                $Lintian::Output::GLOBAL = Lintian::Output::LetterQualifier->new;
+            } elsif ($opts{$_} eq 'xml') {
+                require Lintian::Output::XML;
+                $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+            } elsif ($opts{$_} eq 'fullewi') {
+                require Lintian::Output::FullEWI;
+                $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+            }
+        }
+        no strict 'refs';
+        ${"Tags::$_"} = $opts{$_};
+    }
 }
 
 # search for configuration file if it was not set with --cfg
@@ -783,60 +836,16 @@ if (-d "$opt{'LINTIAN_ROOT'}/locale/en_US.UTF-8") {
     $ENV{LOCPATH} = '/var/lib/lintian/locale';
 }
 
+$Lintian::Output::GLOBAL->verbosity_level ($opt{'verbose'});
+$Lintian::Output::GLOBAL->debug ($debug);
+$Lintian::Output::GLOBAL->color ($opt{'color'});
+$Lintian::Output::GLOBAL->showdescription ($opt{'info'});
+
 # }}}
 
-# {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)
-unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
-
-require Lintian::Lab;
-
-require Lintian::Util;
-import Lintian::Util qw(fail read_dpkg_control);
-
-require Lintian::Collect;
-require Lintian::CollScript;
-require Lintian::DepMap::Properties;
-require Lintian::Data;
-require Lintian::Output;
-import Lintian::Output qw(:messages);
-require Lintian::Command::Simple;
-require Lintian::Command;
-import Lintian::Command qw(spawn reap);
-require Lintian::Internal::FrontendUtil;
-import Lintian::Internal::FrontendUtil;
-require Lintian::ProcessablePool;
-require Lintian::Profile;
-require Lintian::Tags;
-import Lintian::Tags qw(tag);
-
-if (defined $experimental_output_opts) {
-    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
-    foreach (keys %opts) {
-        if ($_ eq 'format') {
-            if ($opts{$_} eq 'colons') {
-                require Lintian::Output::ColonSeparated;
-                $Lintian::Output::GLOBAL = Lintian::Output::ColonSeparated->new;
-            } elsif ($opts{$_} eq 'letterqualifier') {
-                require Lintian::Output::LetterQualifier;
-                $Lintian::Output::GLOBAL = Lintian::Output::LetterQualifier->new;
-            } elsif ($opts{$_} eq 'xml') {
-                require Lintian::Output::XML;
-                $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
-            } elsif ($opts{$_} eq 'fullewi') {
-                require Lintian::Output::FullEWI;
-                $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
-            }
-        }
-        no strict 'refs';
-        ${"Tags::$_"} = $opts{$_};
-    }
-}
 
 
-$Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
-$Lintian::Output::GLOBAL->debug($debug);
-$Lintian::Output::GLOBAL->color($opt{'color'});
-$Lintian::Output::GLOBAL->showdescription($opt{'info'});
+# {{{ Load profile, setup display setting etc.
 
 # Print Debug banner, now that we're finished determining
 # the values and have Lintian::Output available
