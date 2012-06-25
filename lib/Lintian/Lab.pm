@@ -274,7 +274,7 @@ sub get_package {
             $e = $index->get (@keys);
             return unless $e;
             $pkg_src = $e->{'source'};
-            $pkg_src_version = $e->{'source-version'}//$pkg_version;
+            $pkg_src_version = $e->{'source-version'};
         }
         $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
         push @entries, Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $dir);
@@ -294,7 +294,7 @@ sub get_package {
             $pp = $entry->{'file'};
             $pkg_src = $entry->{'source'};
             $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $v, $a);
-            push @entries,  Lintian::Lab::Entry->_new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $pkg_src, $entry->{'source-version'}//$v, $dir);
+            push @entries,  Lintian::Lab::Entry->_new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $pkg_src, $entry->{'source-version'}, $dir);
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
@@ -326,7 +326,7 @@ sub visit_packages {
             my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
             my $pkg_src = $me->{'source'}//$pkg_name;
             my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-            my $pkg_src_version = $me->{'source-version'}//$pkg_version;
+            my $pkg_src_version = $me->{'source-version'};
             my $lentry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
                                                    $pkg_type, undef, $pkg_src, $pkg_src_version, $dir);
             $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
@@ -465,7 +465,7 @@ sub repair_lab {
             my ($metadata, @keys) = @_;
             my ($pkg_name, $pkg_version, $pkg_arch) = @keys;
             my $pkg_src = $metadata->{'source'}//$pkg_name;
-            my $pkg_src_version = $metadata->{'source-version'}//$pkg_version;
+            my $pkg_src_version = $metadata->{'source-version'};
             my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
             my $entry;
             unless ( -d $dir && -f "$dir/.lintian-status") {
