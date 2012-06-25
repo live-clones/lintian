@@ -136,6 +136,10 @@ my %check_abbrev;
 my %unpack_infos;
 my %requested_unpack;
 
+# Timer handling (by default to nothing)
+my $start_timer = sub { 0; };
+my $finish_timer =  sub { ''; };
+
 # }}}
 
 # {{{ Setup Code
@@ -745,6 +749,26 @@ if ($ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
 if ($debug) {
     $opt{'verbose'} = 1;
     $ENV{'LINTIAN_DEBUG'} = $debug;
+    if ($debug > 1) {
+        eval {
+            require Time::HiRes;
+            import Time::HiRes qw(gettimeofday tv_interval);
+
+            $start_timer = sub {
+                return [gettimeofday()];
+            };
+            $finish_timer =  sub {
+                my ($start) = @_;
+                my $diff = tv_interval ($start);
+                return sprintf (' (%.3fs)', $diff);
+            };
+            print "N: Using Time::HiRes to debug running times\n";
+        };
+        if ($@) {
+            print "N: Cannot load Time::HiRes ($@)\n";
+            print "N: Running times will not be timed.\n";
+        }
+    }
 } else {
     # Ensure verbose has a defined value
     $opt{'verbose'} = 0 unless defined $opt{'verbose'};
@@ -1364,6 +1388,7 @@ sub unpack_group {
         # Kill pending jobs, if any
         Lintian::Command::Simple::kill(\%running_jobs);
         %running_jobs = ();
+        my %timers = ();
         while ($collmap->pending) {
             $changed = 1;
             foreach my $req ($collmap->selectable) {
@@ -1388,6 +1413,7 @@ sub unpack_group {
                 # collect info
                 $collmap->select($req);
                 debug_msg(1, "Collecting info: $coll ...");
+                $timers{$coll} = $start_timer->();
                 my $cmd = Lintian::Command::Simple->new();
                 unless ($cmd->background ($ci->script_path, $pkg_name, $pkg_type, $base) > 0) {
                     warning("collect info $coll about package $pkg_name failed",
@@ -1406,9 +1432,10 @@ sub unpack_group {
                 delete $running_jobs{$coll};
                 if ($cmd->status() == 0) {
                     my $ci = $collection_info{$coll};
+                    my $tres = $finish_timer->($timers{$coll});
                     $lpkg->_mark_coll_finished($coll, $ci->version)
                         or fail("cannot mark $coll for complete: $!");
-                    debug_msg(1, "Collection script $coll done");
+                    debug_msg(1, "Collection script $coll done$tres");
                 } else {
                     warning("collect info $coll about package $pkg_name failed");
                     warning("skipping $action of $pkg_type package $pkg_name");
@@ -1478,6 +1505,7 @@ sub process_group {
         foreach my $script (@scripts) {
             my $cs = $PROFILE->get_script ($script);
             my $check = $cs->name;
+            my $timer = $start_timer->();
 
             # The lintian check is done by this frontend and we
             # also skip the check if it is not for this type of
@@ -1488,6 +1516,8 @@ sub process_group {
             my $returnvalue = _run_check ($cs, $pkg_name, $pkg_type, $info, $proc, $group);
             # Set exit_code correctly if there was not yet an exit code
             $exit_code = $returnvalue unless $exit_code;
+            my $tres = $finish_timer->($timer);
+            debug_msg(1, "Finished check: $check$tres");
 
             if ($returnvalue == 2) {
                 warning("skipping $action of $pkg_type package $pkg_name");

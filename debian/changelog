@@ -37,6 +37,8 @@ lintian (2.5.10) UNRELEASED; urgency=low
       entries.  This is mostly useful for static labs, where
       certain checks can be now be rerun without having to run
       "unpacked".
+    + [NT] Emit run times of collections and checks with debug
+      level 2 (or higher).
 
   * lib/Lintian/CollScript.pm:
     + [NT] New file.
