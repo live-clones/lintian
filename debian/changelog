@@ -20,6 +20,8 @@ lintian (2.5.10) UNRELEASED; urgency=low
       extract information from Jar files.
     + [NT] Limit java-info to files classified as "Zip Archive"
       by file(1).
+  * collection/objdump-info:
+    + [NT] Only call readelf once per binary.
 
   * debian/control:
     + [NT] Add (Build-)Dependency on libarchive-zip-perl.

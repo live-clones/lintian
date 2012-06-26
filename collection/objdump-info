@@ -66,9 +66,10 @@ foreach my $bin ($info->sorted_index) {
 
         my @sections;
         my @symbol_versions;
+        my @dyn_symbols;
         my $truncated = 0;
 
-        if (open(PIPE, '-|', "readelf -W -l -t -d -V \Q$bin\E 2>&1")) {
+        if (open(PIPE, '-|', "readelf -W -l -t -d -V -s \Q$bin\E 2>&1")) {
             my $section = '';
             my %program_headers;
 
@@ -88,6 +89,10 @@ foreach my $bin ($info->sorted_index) {
                     print {$opts{pipe_in}} "$_\n";
                 } elsif (m/^Version symbols section /) {
                     $section = 'VS';
+                } elsif (m/^Symbol table '.dynsym'/) {
+                    $section = 'DS';
+                } elsif (m/^Symbol table/) {
+                    $section = '';
                 } elsif (m/^\s*$/) {
                     $section = '';
                 } elsif (m/^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
@@ -131,6 +136,13 @@ foreach my $bin ($info->sorted_index) {
                         }
                         push @symbol_versions, $verstring;
                     }
+                } elsif (m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/
+                         and $section eq 'DS') {
+                    # We (somtimes) need to read the "Version symbols section" first to
+                    # use this data and readelf tends to print after this section, so
+                    # save for later.
+                    push @dyn_symbols, [$1, $2, $3, '']
+
                 } elsif (m/^There is no dynamic section in this file/
                          and exists $program_headers{DYNAMIC}) {
                     # The headers declare a dynamic section but it's
@@ -142,18 +154,10 @@ foreach my $bin ($info->sorted_index) {
             close PIPE;
         }
 
-        if (open(PIPE, '-|', "readelf -W -s \Q$bin\E 2>&1")) {
-            my $section = '';
+        if (@dyn_symbols) {
             print {$opts{pipe_in}} "DYNAMIC SYMBOL TABLE:\n";
-
-            while(<PIPE>) {
-                if (m/^Symbol table '.dynsym'/) {
-                    $section = 'DS';
-                } elsif (m/^Symbol table/) {
-                    $section = '';
-                } elsif (m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/
-                         and $section eq 'DS') {
-                    my ($symnum, $seg, $sym, $ver) = ($1, $2, $3, '');
+            foreach my $dynsym (@dyn_symbols) {
+                my ($symnum, $seg, $sym, $ver) = @$dynsym;
 
                     if ($sym =~ m/^(.*)@(.*) \(.*\)$/) {
                         $sym = $1;
@@ -180,10 +184,7 @@ foreach my $bin ($info->sorted_index) {
                     }
 
                     print {$opts{pipe_in}} "00      XX $seg  000000  $ver  $sym\n";
-                }
             }
-
-            close PIPE;
         }
     }
 }
