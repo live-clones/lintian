@@ -1,0 +1,207 @@
+#!/usr/bin/perl
+# objdump-info-helper -- lintian collection script
+
+# Most of it is taken from objdump-info (Lintian 2.5.9), which had the
+# following copyright/license statements:
+#
+# The original shell script version of this script is
+# Copyright (C) 1998 Christian Schwarz
+# 
+# This version, including support for etch's binutils, is
+# Copyright (C) 2008 Adam D. Barratt
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+
+my @sections;
+my @symbol_versions;
+my @dyn_symbols;
+my $truncated = 0;
+my $section = '';
+my %program_headers;
+my $bin;
+
+# it would have been nice to do open '-|', "readelf ... 2>&1" but
+# then we have to escape the args and that puts us over the
+# argument limit in some cases...
+my $pid = open my $readelf, '-|';
+
+if (not defined $pid) {
+    die "fork: $!";
+}
+if (not $pid) {
+    # child - re-direct standerr and exec
+    open STDERR, '>&', STDOUT or die "redirect STDERR: $!";
+    exec 'readelf', '-WltdVs', @ARGV;
+}
+
+if (scalar @ARGV == 1) {
+    # Special case - readelf will not prefix the output with "File:
+    # $name" if it only gets one file argument, so act as if it did...
+    # - In fact, if readelf always emitted that File: header, we could
+    #   simply use xargs directly on readelf and just parse its output
+    #   in the loop below.
+    $bin = $ARGV[0];
+    print "-- $bin\n";
+
+    system ("head \Q$bin\E | grep -q 'packed.*with.*UPX'");
+    print "objdump: $bin: Packed with UPX" if $? == 0;
+}
+
+while ( my $line = <$readelf> ) {
+
+    chomp $line;
+
+    if ($line =~ m/^File: (.+)$/) {
+        my $file = $1;
+        finish_file();
+
+        $bin = $file;
+        print "-- $bin\n";
+
+        system ("head \Q$bin\E | grep -q 'packed.*with.*UPX'");
+        print "objdump: $bin: Packed with UPX" if $? == 0;
+    } elsif ($line =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/) {
+        print "objdump: $bin: File truncated\n" unless $truncated++;
+        next;
+    } elsif ($line =~ m/^Program Headers:/) {
+        $section = 'PH';
+        print "$line\n";
+    } elsif ($line =~ m/^Section Headers:/) {
+        $section = 'SH';
+        print "$line\n";
+    } elsif ($line =~ m/^Dynamic section at offset .*:/) {
+        $section = 'DS';
+        print "$line\n";
+    } elsif ($line =~ m/^Version symbols section /) {
+        $section = 'VS';
+    } elsif ($line =~ m/^Symbol table '.dynsym'/) {
+        $section = 'DS';
+    } elsif ($line =~ m/^Symbol table/) {
+        $section = '';
+    } elsif ($line =~ m/^\s*$/) {
+        $section = '';
+    } elsif ($line =~ m/^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
+             and $section eq 'PH') {
+        my ($header, $flags) = ($1, $2);
+        $header =~ s/^GNU_//g;
+        next if $header eq 'Type';
+
+        my $newflags = '';
+        $newflags .= ($flags =~ m/R/) ? 'r' : '-';
+        $newflags .= ($flags =~ m/W/) ? 'w' : '-';
+        $newflags .= ($flags =~ m/E/) ? 'x' : '-';
+
+        $program_headers{$header} = $newflags;
+        print "  $header off 0x0 X 0x0 X 0x0\n  flags $newflags\n";
+    } elsif ($line =~ m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
+                 and $section eq 'SH') {
+        $sections[$1] = $2;
+        # We need sections as well (i.e. for incomplete stripping)
+        # - The 0 0 0 0 2**3 is just there to make it look like objdump output
+        #   (supposedly we don't even check for those extra fields in
+        #    L::Collect::Binary)
+        print " $1 $2   0 0 0 0 2**3\n";
+    } elsif ($line =~ m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
+                 and $section eq 'DS') {
+        my ($type, $value) = ($1, $2);
+
+        if ($type eq 'RPATH') {
+            $value =~ s/.*\[//;
+            $value =~ s/\]\s*$//;
+        }
+        $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
+        print "  $type   $value\n";
+    } elsif ($line =~ m/^\s*[0-9A-F]+: \s+ \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
+                 and $section eq 'VS') {
+        while ($line =~ m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
+            my ($vernum, $verstring) = ($1, $2);
+            $verstring ||= '';
+            if ($vernum =~ m/h$/) {
+                $verstring = "($verstring)";
+            }
+            push @symbol_versions, $verstring;
+        }
+    } elsif ($line =~ m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/
+                 and $section eq 'DS') {
+        # We (somtimes) need to read the "Version symbols section" first to
+        # use this data and readelf tends to print after this section, so
+        # save for later.
+        push @dyn_symbols, [$1, $2, $3, ''];
+
+    } elsif ($line =~ m/^There is no dynamic section in this file/
+                 and exists $program_headers{DYNAMIC}) {
+        # The headers declare a dynamic section but it's
+        # empty. Generate the same error as objdump,
+        # the checks scripts special-case the string.
+        print "\n\nobjdump: $bin: Invalid operation\n";
+    }
+}
+
+# Finish the last file
+finish_file ();
+
+close $readelf;
+
+exit 0;
+
+sub finish_file {
+
+    if (@dyn_symbols) {
+        print "DYNAMIC SYMBOL TABLE:\n";
+        foreach my $dynsym (@dyn_symbols) {
+            my ($symnum, $seg, $sym, $ver) = @$dynsym;
+
+            if ($sym =~ m/^(.*)@(.*) \(.*\)$/) {
+                $sym = $1;
+                $ver = $2;
+            } elsif (@symbol_versions == 0) {
+                # No versioned symbols...
+                $ver = '';
+            } else {
+                $ver = $symbol_versions[$symnum];
+
+                if ($ver eq '*local*' or $ver eq '*global*') {
+                    if ($seg eq 'UND') {
+                        $ver = '   ';
+                    } else {
+                        $ver = 'Base';
+                    }
+                } elsif ($ver eq '()') {
+                    $ver = '(Base)';
+                }
+            }
+
+            if ($seg =~ m/^\d+$/ and defined $sections[$seg]) {
+                $seg = $sections[$seg];
+            }
+
+            print "00      XX $seg  000000  $ver  $sym\n";
+        }
+    }
+
+    # reset variables
+    @sections = ();
+    @symbol_versions = ();
+    @dyn_symbols = ();
+    $truncated = 0;
+    $section = '';
+    %program_headers = ();
+    $bin = '';
+}

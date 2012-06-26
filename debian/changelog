@@ -22,6 +22,10 @@ lintian (2.5.10) UNRELEASED; urgency=low
       by file(1).
   * collection/objdump-info:
     + [NT] Only call readelf once per binary.
+    + [NT] Use xargs + a new helper to reduce the number of
+      readelf calls even further.
+  * collection/objdump-info-helper:
+    + [NT] New file.
 
   * debian/control:
     + [NT] Add (Build-)Dependency on libarchive-zip-perl.
