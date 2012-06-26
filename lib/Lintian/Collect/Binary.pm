@@ -93,12 +93,14 @@ sub control_index {
 # Returns a handle with the strings in a given binary file (as computed
 # by coll/strings)
 #
-# If there are no strings for the given file, this method fails.
-#
 # sub strings Needs-Info strings
 sub strings {
     my ($self, $file) = @_;
     my $real = $self->_fetch_extracted_dir ('strings', 'strings', $file);
+    if ( not -f "${real}.gz" ) {
+        open my $fd, '<', '/dev/null';
+        return $fd;
+    }
     open my $fd, '-|', 'gzip', '-dc', "$real.gz" or fail "open ${file}.gz: $!";
     return $fd;
 }

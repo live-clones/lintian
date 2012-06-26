@@ -22,9 +22,11 @@
 use strict;
 use warnings;
 
+use Cwd qw(realpath);
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
-use Lintian::Command qw(spawn);
+use Lintian::Command qw(spawn reap);
 use Lintian::Command::Simple;
 use Lintian::Util qw(delete_dir fail);
 
@@ -33,7 +35,9 @@ use Lintian::Util qw(delete_dir fail);
 my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
+my $helper = realpath("$0-helper");
 my $file_info = $info->file_info;
+my @manual = ();
 
 if ( -e "$dir/elf-index" ) {
     unlink "$dir/elf-index" or fail "unlink elf-index: $!";
@@ -46,25 +50,53 @@ if ( -d "$dir/strings" ) {
 open ELF_INDEX, '>', "$dir/elf-index"
     or fail "Could not open 'elf-index' for writing: $!";
 
+# The directory is required, even if it would be empty.
+mkdir "$dir/strings" or
+    fail "mkdir $dir/strings: $!";
 
-foreach my $bin (keys %$file_info) {
+chdir ("$dir/unpacked")
+    or fail("cannot chdir to unpacked directory: $!");
+
+my %opts = ( pipe_in => FileHandle->new,
+             fail => 'error' );
+spawn (\%opts, ['xargs', '-0r', 'strings', '-f', '--'], '|', [$helper, "$dir/strings"]);
+$opts{pipe_in}->blocking(1);
+
+foreach my $bin ($info->sorted_index) {
     my $finfo = $file_info->{$bin};
     next unless $finfo =~ m/\bELF\b/o;
     print ELF_INDEX "$bin\n";
 
     next if ($bin =~ m,^/usr/lib/debug/,);
-
-    my $elfdir = $bin;
-    $elfdir =~ s,/[^/]+?$,,;
-
-    Lintian::Command::Simple::run ('mkdir', '-p', "$dir/strings/$elfdir") == 0
-        or fail "Failed to create directory 'strings/$elfdir'";
-
-    spawn ({out => "$dir/strings/${bin}.gz", fail => 'error'},
-           ['strings', "$dir/unpacked/$bin"], '|', ['gzip', '-9c']);
+    if ($bin =~ m/[:\n\r]/) {
+        # Do these "interesting cases" manual
+        push @manual, $bin;
+        next;
+    }
+    printf {$opts{pipe_in}} "%s\0", $bin;
 }
+close $opts{pipe_in};
+reap (\%opts);
 
+
+# Fall back to the safe but slower method for files with "special"
+# names.
+if (@manual) {
+    require File::Basename;
+    foreach my $file (@manual) {
+        my $strdir = $dir . '/strings/' . File::Basename::dirname ($file);
+        # create the dir if needed.
+        unless ( -d $strdir) {
+            system ('mkdir', '-p', $strdir) == 0
+                or fail "mkdir -p $strdir failed " . (($? >> 8) & 256), "\n";
+        }
+        spawn ({out => "$dir/strings/${file}.gz", fail => 'fail'},
+               ['strings', "$dir/unpacked/$file"], '|', ['gzip', '-9nc']);
+    }
+}
 close(ELF_INDEX) or fail("cannot write elf-index file: $!");
+
+exit 0;
 
 # Local Variables:
 # indent-tabs-mode: nil

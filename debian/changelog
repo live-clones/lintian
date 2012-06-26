@@ -26,6 +26,11 @@ lintian (2.5.10) UNRELEASED; urgency=low
       readelf calls even further.
   * collection/objdump-info-helper:
     + [NT] New file.
+  * collection/strings:
+    + [NT] Optimize for the "common case" file names with a
+      fall-back to previous behaviour with special file names.
+  * collection/strings-helper:
+    + [NT] New file.
 
   * debian/control:
     + [NT] Add (Build-)Dependency on libarchive-zip-perl.

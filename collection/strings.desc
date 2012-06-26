@@ -4,4 +4,4 @@ Info: This script runs the strings(1) command over all files of a binary
  package.
 Type: binary, udeb
 Version: 2
-Needs-Info: unpacked, file-info
+Needs-Info: index, unpacked, file-info
