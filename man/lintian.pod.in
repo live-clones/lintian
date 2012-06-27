@@ -405,6 +405,15 @@ information about the packages it checks.  This option overrides the
 B<LINTIAN_LAB> environment variable and the configuration file entry
 of the same name.
 
+=item B<-j> X, B<--jobs> X
+
+Limit the number of unpacking jobs Lintian will run in parallel.
+
+This option overrides the B<jobs> variable in the configuration file.
+
+By default Lintian will use I</proc/cpuinfo> to determine a reasonable
+default (or 2, if the file cannot be read).
+
 =item B<--root> rootdir
 
 Look for B<lintian>'s support files (such as check scripts and

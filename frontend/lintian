@@ -219,6 +219,7 @@ Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg CONFIGFILE       do not read any CONFIGFILE
     --dist DIST               scan packages in this distribution (e.g. sid)
+    -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
 Package selection options:

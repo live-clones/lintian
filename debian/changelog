@@ -54,6 +54,10 @@ lintian (2.5.10) UNRELEASED; urgency=low
     + [NT] Emit run times of collections and checks with debug
       level 2 (or higher).
     + [NT] Load lintian's libraries earlier.
+    + [NT] Add new option "--jobs" to control the number of
+      unpacking jobs Lintian will schedule in parallel.
+    + [NT] Improve Lintian's job scheduler to schedule unpacking
+      jobs on a group level rather than just a package level.
 
   * lib/Lintian/Collect/[Binary,Package}.pm:
     + [NT] Use new gzip decompressor from L::Util.
