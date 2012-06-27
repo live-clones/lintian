@@ -411,8 +411,8 @@ Limit the number of unpacking jobs Lintian will run in parallel.
 
 This option overrides the B<jobs> variable in the configuration file.
 
-By default Lintian will use I</proc/cpuinfo> to determine a reasonable
-default (or 2, if the file cannot be read).
+By default Lintian will use I<nproc> to determine a reasonable default
+(or 2, if the nproc fails).
 
 =item B<--root> rootdir
 
