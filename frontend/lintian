@@ -1397,7 +1397,7 @@ sub unpack_group {
         # Kill pending jobs, if any
         Lintian::Command::Simple::kill(\%running_jobs);
         %running_jobs = ();
-        my %timers = ();
+        my %job_data = ();
         while ($collmap->pending) {
             $changed = 1;
             foreach my $req ($collmap->selectable) {
@@ -1422,7 +1422,6 @@ sub unpack_group {
                 # collect info
                 $collmap->select($req);
                 debug_msg(1, "Collecting info: $coll ...");
-                $timers{$coll} = $start_timer->();
                 my $cmd = Lintian::Command::Simple->new();
                 unless ($cmd->background ($ci->script_path, $pkg_name, $pkg_type, $base) > 0) {
                     warning("collect info $coll about package $pkg_name failed",
@@ -1431,17 +1430,20 @@ sub unpack_group {
                     $group->remove_processable($proc);
                     next PROC;
                 }
-                $running_jobs{$coll} = $cmd;
+                $running_jobs{$cmd->pid} = $cmd;
+                $job_data{$cmd->pid} = [$coll, $start_timer->()];
             }
             # wait until a job finishes to run its branches, if any, or skip
             # this package if any of the jobs failed.
             debug_msg(1, "Reaping done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
 
-            while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
-                delete $running_jobs{$coll};
+            while (my ($key, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+                my ($coll, $timer) = @{ $job_data{$key} };
+                delete $running_jobs{$key};
+                delete $job_data{$key};
                 if ($cmd->status() == 0) {
                     my $ci = $collection_info{$coll};
-                    my $tres = $finish_timer->($timers{$coll});
+                    my $tres = $finish_timer->($timer);
                     $lpkg->_mark_coll_finished($coll, $ci->version)
                         or fail("cannot mark $coll for complete: $!");
                     debug_msg(1, "Collection script $coll done$tres");
