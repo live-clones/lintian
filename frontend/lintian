@@ -1422,6 +1422,7 @@ sub unpack_group {
 
     while (1) {
         my $newjobs = 0;
+        my $nohang = 0;
         foreach my $proc ($group->get_processables){
             my $procid = $proc->identifier;
             my $wlist = $worklists{$procid};
@@ -1473,7 +1474,7 @@ sub unpack_group {
         # this package if any of the jobs failed.
         debug_msg(1, "Reaping done jobs ... unpack group $groupid");
 
-        while (my ($key, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+        while (my ($key, $cmd) = Lintian::Command::Simple::wait(\%running_jobs, $nohang)) {
             my $jdata = $job_data{$key};
             my (undef, undef, $lpkg) = @$jdata;
             my $res;
@@ -1490,6 +1491,7 @@ sub unpack_group {
                 next;
             }
             $newjobs += $res;
+            $nohang = 1 if $res;
         }
         debug_msg(1, "Reap done jobs ... unpack group $groupid");
 

@@ -18,6 +18,8 @@ package Lintian::Command::Simple;
 use strict;
 use warnings;
 
+use POSIX ":sys_wait_h";
+
 =head1 NAME
 
 Lintian::Command::Simple - Run commands without pipes
@@ -282,20 +284,23 @@ results.
 =cut
 
 sub wait {
-    my ($self, $pid);
+    my ($self, $pid, $nohang);
 
     if (ref $_[0] eq 'Lintian::Command::Simple') {
-        $self = shift;
+        ($self, $nohang) = @_;
         $pid = $self->{'pid'};
     } else {
-        $pid = shift;
+        ($pid, $nohang) = @_;
     }
+
+    $nohang = WNOHANG if $nohang;
+    $nohang //= 0;
 
     if (defined($pid) && !ref $pid) {
         $self->{'pid'} = undef
             if defined($self);
 
-        my $ret = waitpid($pid, 0);
+        my $ret = waitpid($pid, $nohang);
         my $status = $?;
 
         $self->{'status'} = $?
@@ -315,10 +320,10 @@ sub wait {
             return;
         }
 
-        $reaped_pid = CORE::wait();
+        $reaped_pid = waitpid(-1, $nohang);
         $reaped_status = $?;
 
-        if ($reaped_pid == -1) {
+        if ($reaped_pid == -1 or ($nohang and $reaped_pid == 0)) {
             return;
         }
 
