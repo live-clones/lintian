@@ -1341,6 +1341,9 @@ sub _get_lpkg {
 sub unpack_group {
     my ($group) = @_;
     my %worklists;
+    my %job_data = ();
+    my $groupid;
+
     foreach my $proc ($group->get_processables()){
         my $pkg_name = $proc->pkg_name();
         my $pkg_type = $proc->pkg_type();
@@ -1397,24 +1400,38 @@ sub unpack_group {
             # created
             $changed = 1;
         }
+
+        $groupid = $proc->pkg_src . '/' . $proc->pkg_src_version
+            unless defined $groupid;
         # We only need this if we are checking the package later
         $proc->lab_pkg($lpkg) unless $proc->isa ('Lintian::Lab::Entry');
-        $worklists{$lpkg->identifier} = [$cmap, $lpkg, $changed];
+        $worklists{$lpkg->identifier} = {
+            'collmap' => $cmap,
+            'lab-entry' => $lpkg,
+            'changed' => $changed
+        };
     }
-  PROC:
-    foreach my $proc ($group->get_processables){
-        my ($cmap, $lpkg, $changed) = @{ $worklists{$proc->identifier} };
-        my $pkg_name = $lpkg->pkg_name;
-        my $pkg_type = $lpkg->pkg_type;
-        my $pkg_ver  = $lpkg->pkg_version;
-        my $pkg_arch = $lpkg->pkg_arch;
-        my $base = $lpkg->base_dir;
-        # Kill pending jobs, if any
-        Lintian::Command::Simple::kill(\%running_jobs);
-        %running_jobs = ();
-        my %job_data = ();
-        while ($cmap->pending) {
-            $changed = 1;
+
+    # Stop here if there is nothing list for us to do
+    return unless %worklists;
+
+    # Kill pending jobs, if any
+    Lintian::Command::Simple::kill(\%running_jobs);
+    %running_jobs = ();
+
+
+    while (1) {
+        my $newjobs = 0;
+        foreach my $proc ($group->get_processables){
+            my $procid = $proc->identifier;
+            my $wlist = $worklists{$procid};
+            my $cmap = $wlist->{'collmap'};
+            my $lpkg = $wlist->{'lab-entry'};
+            my $pkg_name = $lpkg->pkg_name;
+            my $pkg_type = $lpkg->pkg_type;
+            my $pkg_ver  = $lpkg->pkg_version;
+            my $pkg_arch = $lpkg->pkg_arch;
+            my $base = $lpkg->base_dir;
             foreach my $req ($cmap->selectable) {
                 my $ri = $cmap->getProp($req);
                 my $coll = $ri->{'name'};
@@ -1436,36 +1453,55 @@ sub unpack_group {
 
                 # collect info
                 $cmap->select ($req);
-                debug_msg(1, "Collecting info: $coll ...");
+                $wlist->{'changed'} = 1;
+                debug_msg(1, "Collecting info: $coll for $procid ...");
                 my $cmd = Lintian::Command::Simple->new();
                 unless ($cmd->background ($ci->script_path, $pkg_name, $pkg_type, $base) > 0) {
                     warning("collect info $coll about package $pkg_name failed",
                             "skipping $action of $pkg_type package $pkg_name");
                     $exit_code = 2;
                     $group->remove_processable ($lpkg);
-                    next PROC;
+                    delete $worklists{$proc->identifer};
+                    # Lets not start any more jobs for this processable
+                    last;
                 }
                 $running_jobs{$cmd->pid} = $cmd;
                 $job_data{$cmd->pid} = [$ci, $cmap, $lpkg, $start_timer->()];
             }
-            # wait until a job finishes to run its branches, if any, or skip
-            # this package if any of the jobs failed.
-            debug_msg(1, "Reaping done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
-
-            while (my ($key, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
-                my $jdata = $job_data{$key};
-                my $res = finished_coll ($key, $cmd, $jdata);
-                delete $running_jobs{$key};
-                delete $job_data{$key};
-                if ($res < 0) {
-                    my (undef, undef, $clpkg) = @$jdata;
-                    $group->remove_processable ($clpkg);
-                    next PROC;
-                }
-            }
-            debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
         }
+        # wait until a job finishes to run its branches, if any, or skip
+        # this package if any of the jobs failed.
+        debug_msg(1, "Reaping done jobs ... unpack group $groupid");
 
+        while (my ($key, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+            my $jdata = $job_data{$key};
+            my (undef, undef, $lpkg) = @$jdata;
+            my $res;
+            delete $running_jobs{$key};
+            delete $job_data{$key};
+
+            # Check if the processable has been dropped due other errors.
+            next unless exists $worklists{$lpkg->identifier};
+
+            $res = finished_coll ($key, $cmd, $jdata);
+            if ($res < 0) {
+                $group->remove_processable ($lpkg);
+                delete $worklists{$lpkg->identifer};
+                next;
+            }
+            $newjobs += $res;
+        }
+        debug_msg(1, "Reap done jobs ... unpack group $groupid");
+
+        # Stop when there are no running jobs and no new pending ones.
+        last unless %running_jobs or $newjobs;
+    }
+
+    foreach my $proc ($group->get_processables) {
+        my $lpkg = _get_lpkg ($proc);
+        my $wlist = $worklists{$proc->identifier};
+        my $changed = 1;
+        $changed = $wlist->{'changed'} if $wlist;
         if ($action ne 'check') {
             # we are done now - start auto-cleaning
             if (!$keep_lab) {
@@ -1478,6 +1514,7 @@ sub unpack_group {
             # All successful, make sure to record it so we do not unpack the same package
             # in a later run (mostly for archive-wide checks).
             unless ($lpkg->update_status_file) {
+                my $pkg_name = $lpkg->pkg_name;
                 warning("could not create status file for package $pkg_name: $!");
             }
         }
@@ -1876,9 +1913,12 @@ sub finished_coll {
     my $coll = $ci->name;
     if ($job->status() == 0) {
         my $tres = $finish_timer->($timer);
+        my $procid = $lpkg->identifier;
+
         $lpkg->_mark_coll_finished($coll, $ci->version)
-            or fail ("cannot mark $coll for complete: $!");
-        debug_msg (1, "Collection script $coll done$tres");
+            or fail ("cannot mark $coll for $procid as complete: $!");
+
+        debug_msg (1, "Collection script $coll for $procid done$tres");
     } else {
         my $pkg_name  = $lpkg->pkg_name;
         my $pkg_type = $lpkg->pkg_type;
