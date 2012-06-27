@@ -1509,7 +1509,20 @@ sub unpack_group {
         debug_msg(1, "Reap done jobs ... unpack group $groupid");
 
         # Stop when there are no running jobs and no new pending ones.
-        last unless %running_jobs or $newjobs;
+        unless (%running_jobs or $newjobs) {
+            # No more running jobs and no new jobs have become available...
+            # It is not quite sufficient, so ensure that all jobs have in
+            # fact been run.
+            my $done = 1;
+            foreach my $wlist (values %worklists) {
+                my $cmap = $wlist->{'collmap'};
+                if ($cmap->pending) {
+                    $done = 0;
+                    last;
+                }
+            }
+            last if $done;
+        }
     }
 
     foreach my $proc ($group->get_processables) {
