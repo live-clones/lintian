@@ -17,6 +17,9 @@ package Lintian::DepMap;
 
 use strict;
 use warnings;
+
+use base 'Clone';
+
 use Lintian::Util qw(fail);
 
 =head1 NAME
