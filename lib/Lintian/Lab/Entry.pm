@@ -128,6 +128,7 @@ sub _new {
 
 
     $self->_init();
+    $self->_make_identifier;
     return $self;
 }
 

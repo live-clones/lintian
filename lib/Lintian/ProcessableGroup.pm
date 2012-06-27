@@ -166,9 +166,7 @@ sub add_processable{
         $self->{source} = $processable;
     } else {
         my $phash;
-        my $name = $processable->pkg_name;
-        my $version = $processable->pkg_version;
-        my $arch = $processable->pkg_arch;
+        my $id = $processable->identifier;
         fail "Unknown type $pkg_type"
             unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
         $phash = $self->{$pkg_type};
@@ -177,8 +175,8 @@ sub add_processable{
             $self->{$pkg_type} = $phash;
         }
         # duplicate ?
-        return 0 if (exists $phash->{"${name}_${version}_${arch}"});
-        $phash->{"${name}_${version}_${arch}"} = $processable;
+        return 0 if (exists $phash->{$id});
+        $phash->{$id} = $processable;
     }
     $processable->group($self);
     return 1;
@@ -240,10 +238,8 @@ sub remove_processable {
         delete $self->{$pkg_type};
     } elsif (defined $self->{$pkg_type}) {
         my $phash = $self->{$pkg_type};
-        my $name = $proc->pkg_name();
-        my $version = $proc->pkg_version();
-        my $arch = $proc->pkg_arch();
-        delete $phash->{"${name}_${version}_${arch}"};
+        my $id = $proc->identifier;
+        delete $phash->{$id};
     }
     return 1;
 }

@@ -72,7 +72,21 @@ sub new {
     $self->{pkg_type} = $pkg_type;
     $self->{tainted} = 0;
     $self->_init ($pkg_type, @args);
+    $self->_make_identifier unless exists $self->{identifier};
     return $self;
+}
+
+sub _make_identifier {
+    my ($self) = @_;
+    my $pkg_type = $self->pkg_type;
+    my $pkg_name = $self->pkg_name;
+    my $pkg_version = $self->pkg_version;
+    my $pkg_arch = $self->pkg_arch;
+    my $id = "$pkg_type:$pkg_name/$pkg_version";
+    if ($pkg_type ne 'source' and $pkg_type ne 'changes') {
+        $id .= "/$pkg_arch";
+    }
+    $self->{identifier} = $id;
 }
 
 
@@ -114,9 +128,14 @@ Returns a truth value if one or more fields in this Processable is
 tainted.  On a best effort basis tainted fields will be sanitized
 to less dangerous (but possibly invalid) values.
 
+=item $proc->identifier
+
+Proceduces an identifier for this processable.  The identifier is
+based on the type, name, version and architecture of the package.
+
 =cut
 
-Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted));
+Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted identifier));
 
 =item $proc->group([$group])
 
