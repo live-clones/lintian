@@ -533,6 +533,8 @@ my %opthash = (                 # ------------------ actions
                'profile=s' => \$opt{'LINTIAN_PROFILE'},
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
+               'jobs|j=i' => \$opt{'jobs'},
+
                # ------------------ package selection options
                'all|a' => \$check_everything,
                'binary|b' => \&record_pkgmode,
@@ -553,6 +555,7 @@ my %cfghash = (
                'display-level'        => \&cfg_display_level,
                'fail-on-warnings'     => \$opt{'fail-on-warnings'},
                'info'                 => \$opt{'info'},
+               'jobs'                 => \$opt{'jobs'},
                'pedantic'             => \&cfg_display_level,
                'quiet'                => \&cfg_verbosity,
                'override'             => \&cfg_override,
@@ -1151,10 +1154,13 @@ for my $c (@scripts) {
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
+$opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
+
 debug_msg(1,
           "Selected action: $action",
           sprintf('Requested data to collect: %s', join(',',sort keys %unpack_infos)),
           sprintf('Selected checks: %s', join(',',sort $PROFILE->scripts)),
+          "Parallization limit: $opt{'jobs'}",
     );
 
 
@@ -1343,6 +1349,7 @@ sub unpack_group {
     my %worklists;
     my %job_data = ();
     my $groupid;
+    my $jobs = $opt{'jobs'};
 
     foreach my $proc ($group->get_processables()){
         my $pkg_name = $proc->pkg_name();
@@ -1423,6 +1430,7 @@ sub unpack_group {
     while (1) {
         my $newjobs = 0;
         my $nohang = 0;
+      PROC:
         foreach my $proc ($group->get_processables){
             my $procid = $proc->identifier;
             my $wlist = $worklists{$procid};
@@ -1468,6 +1476,10 @@ sub unpack_group {
                 }
                 $running_jobs{$cmd->pid} = $cmd;
                 $job_data{$cmd->pid} = [$ci, $cmap, $lpkg, $start_timer->()];
+                if ($jobs) {
+                    # Have we hit the limit of running jobs?
+                    last PROC if scalar keys %running_jobs >= $jobs;
+                }
             }
         }
         # wait until a job finishes to run its branches, if any, or skip
@@ -1932,6 +1944,35 @@ sub finished_coll {
 
     $cmap->satisfy ($coll);
     return $cmap->selectable;
+}
+
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    if ( -r '/proc/cpuinfo') {
+        my $jobs = 0;
+        my $cpus = 0;
+        open my $fd, '<', '/proc/cpuinfo'
+            or fail ("failed to open /proc/cpuinfo: $!");
+        while (<$fd>) {
+            next unless m/^cpu cores\s*:\s*(\d+)/;
+            $jobs += $1;
+            $cpus++;
+        }
+        close $fd;
+
+        if ($cpus) {
+            # Running up to twice the number of cores usually gets the most out
+            # of the CPUs and disks but it might be too aggresive to be the
+            # default for -j. Only use <cores>+1 then.
+            debug_msg (1, "Number of cores: $jobs (CPUs: $cpus)");
+
+            return $jobs + 1;
+        }
+        debug_msg (1, "Did not find any core information for any cpus in /proc/cpuinfo?");
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
 }
 
 # }}}
