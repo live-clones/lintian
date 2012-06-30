@@ -78,6 +78,7 @@ use Encode ();
 use FileHandle;
 use Lintian::Command qw(spawn);
 use Digest::MD5;
+use Digest::SHA;
 use Scalar::Util qw(openhandle);
 
 =head1 NAME
@@ -552,7 +553,6 @@ sub get_file_checksum {
     if ($alg eq 'md5') {
         $digest = Digest::MD5->new;
     } elsif ($alg =~ /sha(\d+)/) {
-        require Digest::SHA;
         $digest = Digest::SHA->new($1);
     }
     $digest->addfile(*FILE);

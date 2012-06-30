@@ -66,6 +66,7 @@ lintian (2.5.10) UNRELEASED; urgency=low
   * lib/Lintian/Util.pm:
     + [NT] Add gzip decompressor preferring libperlio-perl if
       available, but with fallback to a "fork+exec" of gzip.
+    + [NT] Load Digest::SHA immediately like Digest::MD5.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 17 Jun 2012 23:25:06 +0200
 
