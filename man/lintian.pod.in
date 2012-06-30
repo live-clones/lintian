@@ -137,7 +137,9 @@ General options:
 
 Display debugging messages. (Implies B<-v> and overrules any B<-q>).
 
-Can be used multiple times to increase the debug information.
+Can be used multiple times to increase the debug information.  If
+passed twice or more, Lintian will emit approximate run times for
+collections and checks (if L<Time::HiRes> can be loaded).
 
 This option cannot be specified in the config file.  If used on the
 command line it will override the B<verbose> and the B<quiet> options
@@ -747,6 +749,11 @@ returned by dpkg).
 
 Pseudo architecture used by mergechanges(1).
 
+=item I<all>
+
+Used when building architecture indep packages only (e.g
+dpkg-buildpackage -A).
+
 =item I<source>
 
 Used for "source only" builds (e.g. dpkg-buildpackage -S).
@@ -813,8 +820,9 @@ exit.
 
 =head1 BUGS
 
-Lintian does not have any locking mechanisms yet.
-(Running several checks simultaneously is likely to fail.)
+Lintian does not have any locking mechanisms yet.  (Running several
+Lintian processes on the same laboratory simultaneously is likely to fail
+or corrupt the laboratory.)
 
 If you discover any other bugs in lintian, please contact the authors.
 
