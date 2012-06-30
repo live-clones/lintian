@@ -430,7 +430,7 @@ foreach my $file ($info->sorted_index) {
                     my $fd = open_gz ($info->unpacked ($file)) or fail "open $file: $!";
                     my $f = <$fd>;
                     close $fd;
-                    unless (length $f) {
+                    unless (defined $f and length $f) {
                         tag 'zero-byte-file-in-doc-directory', $file;
                     }
                 }
