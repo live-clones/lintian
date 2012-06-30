@@ -1,4 +1,4 @@
-lintian (2.5.10) UNRELEASED; urgency=low
+lintian (2.5.10) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -18,7 +18,7 @@ lintian (2.5.10) UNRELEASED; urgency=low
       code.  (Closes: #673276)
 
   * collection/*:
-    + [NT] Add missing loads of FileHandle module.
+    + [NT] Add missing load of the FileHandle module.
   * collection/java-info{,.desc}:
     + [NT] Use Archive::Zip instead of zipinfo + unzip to
       extract information from Jar files.
@@ -70,7 +70,7 @@ lintian (2.5.10) UNRELEASED; urgency=low
       available, but with fallback to a "fork+exec" of gzip.
     + [NT] Load Digest::SHA immediately like Digest::MD5.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 17 Jun 2012 23:25:06 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 30 Jun 2012 17:21:27 +0200
 
 lintian (2.5.9) unstable; urgency=low
 
