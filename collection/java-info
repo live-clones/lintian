@@ -21,7 +21,9 @@
 
 use strict;
 use warnings;
+
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
+use FileHandle;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;

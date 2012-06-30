@@ -17,6 +17,8 @@ lintian (2.5.10) UNRELEASED; urgency=low
       packages have the proper dependencies for Java7 byte
       code.  (Closes: #673276)
 
+  * collection/*:
+    + [NT] Add missing loads of FileHandle module.
   * collection/java-info{,.desc}:
     + [NT] Use Archive::Zip instead of zipinfo + unzip to
       extract information from Jar files.

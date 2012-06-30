@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Cwd qw(realpath);
+use FileHandle;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;

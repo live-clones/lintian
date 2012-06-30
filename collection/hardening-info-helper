@@ -22,6 +22,8 @@
 use strict;
 use warnings;
 
+use FileHandle;
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
