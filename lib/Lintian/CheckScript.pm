@@ -44,7 +44,7 @@ Lintian::CheckScript - Check script meta data
     print "$tag is a part of the check $name\n";
     # Do something with $ti / $tag
  }
- foreach my $needs (@{ $cs->needs_info }) {
+ foreach my $needs ($cs->needs_info) {
     print "$name needs $needs\n";
  }
  if ($cs->is_check_type ('binary') && $cs->is_check_type ('source')) {
@@ -129,14 +129,21 @@ lintian.desc, where this field is simply not present.
 
 Returns the value of the Abbrev field from the desc file.
 
-=item $cs->needs_info
+=cut
 
-Returns a listref of all items listed in the Needs-Info field.
-Neither the listref nor its contents should be modified.
+Lintian::CheckScript->mk_ro_accessors (qw(name script_pkg type abbrev));
+
+=item needs_info
+
+Returns a list of all items listed in the Needs-Info field.  Neither
+the list nor its contents should be modified.
 
 =cut
 
-Lintian::CheckScript->mk_ro_accessors (qw(name script_pkg type abbrev needs_info));
+sub needs_info {
+    my ($self) = @_;
+    return @{ $self->{'needs_info'} };
+}
 
 =item $cs->is_check_type ($type)
 

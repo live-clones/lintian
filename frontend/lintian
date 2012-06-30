@@ -1071,7 +1071,7 @@ if ($action eq 'check') {
     # determine which info is needed by the checks
     for my $c (sort $PROFILE->scripts) {
         my $cs = $PROFILE->get_script($c);
-        for my $i (@{ $cs->needs_info }) {
+        for my $i ($cs->needs_info) {
             $unpack_infos{$i} = 1;
             $requested_unpack{$i} = 1;
         }
@@ -1139,8 +1139,8 @@ for my $c (@scripts) {
     # Add the checks with their dependency information
     my $cs = $PROFILE->get_script ($c);
     $map->add('check-' . $c, $cs);
-    if (@{ $cs->needs_info }) {
-        $map->addp('check-' . $c, 'coll-', @{ $cs->needs_info });
+    if ($cs->needs_info) {
+        $map->addp('check-' . $c, 'coll-', $cs->needs_info);
     }
 }
 # }}}
