@@ -941,6 +941,9 @@ Info: This package declares an unnecessary versioned dependency
  should come second.
  .
  Example: libextutils-parsexs-perl (&gt;= 2.210000) | perl (&gt;= 5.14)
+ .
+ Running <tt>cme fix dpkg -from control -filter Depends</tt> should be able
+ to update these dependencies.
 Ref: policy 7.5
 
 Tag: package-superseded-by-perl
@@ -962,6 +965,9 @@ Info: This package is also provided by one of the Perl core packages
  versioned dependency a secondary one.
  .
  Example: perl (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
+ .
+ Running <tt>cme fix dpkg -from control -filter Depends</tt> should be able
+ to update these dependencies.
 Ref: policy 7.5
 
 Tag: vcs-field-uses-not-recommended-uri-format
