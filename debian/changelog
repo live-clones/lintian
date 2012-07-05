@@ -6,6 +6,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * checks/deb-format{,.desc}:
     + [NT] Retire data.tar.xz tag.  (Closes: #680391)
+  * checks/fields.desc:
+    + [NT] Mention that cme can automate fixing some perl
+      related tags.  Thanks to gregor herrmann for the report
+      and patch.  (Closes: #680446)
 
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 
