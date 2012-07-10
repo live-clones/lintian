@@ -250,6 +250,8 @@ foreach my $file ($info->sorted_index) {
             clean_env;
             close STDOUT;
             close $read;
+            open STDOUT, '>', '/dev/null'
+                or fail "Redirecting STDOUT: $!";
             open STDERR, '>&', $write
                 or fail "Redirecting STDERR: $!";
             if ($dir) {
