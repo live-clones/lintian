@@ -10,9 +10,11 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Mention that cme can automate fixing some perl
       related tags.  Thanks to gregor herrmann for the report
       and patch.  (Closes: #680446)
-  * checks/manpages:
-    + [NT] Manually do redirects and chdir rather than invoking
-      a shell when calling man.
+  * checks/manpages{,.desc}:
+    + [CW,NT] Manually do redirects and chdir rather than
+      invoking a shell when calling man.
+    + [CW,NT] Be stricter with missing roff preprocessors by
+      setting MANROFFSEQ to the empty string when calling man.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 

@@ -164,8 +164,11 @@ Info: This man page provokes warnings or errors from man.
  At worst, warning messages can be disabled with the .warn directive, see
  "Debugging" in the groff manual.
  .
+ Lintian also stricter in regards to declaring manpage preprocessors.
+ .
  To test this for yourself you can use the following command:
-  LC_ALL=en_US.UTF-8 MANWIDTH=80 man --warnings -E UTF-8 -l &lt;file&gt; &gt;/dev/null
+  LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
+         man --warnings -E UTF-8 -l &lt;file&gt; &gt;/dev/null
 
 Tag: manpage-has-errors-from-pod2man
 Severity: normal

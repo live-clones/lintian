@@ -255,6 +255,7 @@ foreach my $file ($info->sorted_index) {
             if ($dir) {
                 chdir $dir or fail "chdir $dir: $!";
             }
+            $ENV{MANROFFSEQ} = '';
             $ENV{MANWIDTH} = 80;
             exec { $cmd[0] } @cmd
                 or fail("cannot run man -E UTF-8 -l: $!");
