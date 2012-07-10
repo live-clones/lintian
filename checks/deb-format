@@ -60,10 +60,6 @@ if ($success) {
     } else {
         if ($type eq 'udeb' && $members[2] !~ m/^data\.tar\.[gx]z$/) {
             tag 'udeb-uses-unsupported-compression-for-data-tarball';
-        } elsif ($type ne 'udeb' && $members[2] eq 'data.tar.xz') {
-            my $rel = $info->relation('pre-depends');
-            tag 'data.tar.xz-member-without-dpkg-pre-depends'
-                unless $rel->implies('dpkg (>= 1.15.6~)');
         }
         $okay = 1;
     }

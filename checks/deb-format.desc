@@ -49,11 +49,3 @@ Info: The data tarball of this udeb package is not compressed in format
  .
  Currently, udpkg supports .gz and .xz compressed tarballs.
 
-Tag: data.tar.xz-member-without-dpkg-pre-depends
-Severity: pedantic
-Certainty: certain
-Info: The deb uses xz compression for the data member, which requires
- a Pre-Depends on dpkg (&gt;= 1.15.6~).  This is trivially satisfied in
- Debian, but it can complicate upgrades from Ubuntu Lucid where dpkg
- 1.15.6 is not currently available.
-

@@ -12,7 +12,6 @@ Disable-Tags: changelog-should-mention-nmu,
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d
 
 # Serious as it may break Lucid upgrade path
-Tags: data.tar.xz-member-without-dpkg-pre-depends,
- preinst-uses-dpkg-maintscript-helper-without-predepends
+Tags: preinst-uses-dpkg-maintscript-helper-without-predepends
 Severity: serious
 
