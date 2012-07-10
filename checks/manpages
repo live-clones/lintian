@@ -233,7 +233,7 @@ foreach my $file ($info->sorted_index) {
         # parent directory before running man so that .so directives are
         # processed properly.  (Yes, there are man pages that include other
         # pages with .so but aren't simple links; rbash, for instance.)
-        my @cmd = ('man', '--warnings', '-E', 'UTF-8', '-l');
+        my @cmd = ('man', '--warnings', '-E', 'UTF-8', '-l', '-Tutf8', '-Z');
         my $dir;
         if ($path =~ m,^(.*)/(man\d/.*)$,) {
             $dir = $1;

@@ -168,7 +168,7 @@ Info: This man page provokes warnings or errors from man.
  .
  To test this for yourself you can use the following command:
   LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
-         man --warnings -E UTF-8 -l &lt;file&gt; &gt;/dev/null
+         man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null
 
 Tag: manpage-has-errors-from-pod2man
 Severity: normal
