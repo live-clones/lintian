@@ -1,6 +1,6 @@
 # Taken from /usr/share/doc-base/data/sections.list.
 #
-# Last synchronized with doc-base 0.9.5 (2009-10-27).
+# Last synchronized with doc-base 0.10.4 (2012-07-10).
 
 Accessibility
 Amateur Radio
@@ -31,6 +31,7 @@ Mobile Devices
 Network/Communication
 Network/File Transfer
 Network/Monitoring
+Network/Remote Access
 Network/Web Browsing
 Network/Web News
 Office

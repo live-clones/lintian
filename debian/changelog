@@ -5,6 +5,9 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
       related tags.  Thanks to gregor herrmann for the report
       and patch.  (Closes: #680446)
 
+  * data/doc-base/sections:
+    + [NT] Update section list.  (Closes: #678650)
+
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 
 lintian (2.5.10) unstable; urgency=low
