@@ -43,7 +43,7 @@ if (!$info->field('format')) {
 
 # Description is mandated by dak, but only makes sense if binary
 # packages are included.  Don't tag pure source uploads.
-if (!$info->field('description') && ($info->field('architecture')//'') ne 'source') {
+if (!$info->field ('description') && $info->field ('architecture', '') ne 'source') {
     tag 'no-description-in-changes-file';
 }
 

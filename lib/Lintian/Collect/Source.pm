@@ -119,13 +119,13 @@ sub binaries {
     return $self->{binaries};
 }
 
-# Returns the value of a source field in d/control or undef
+# Returns the value of a source field in d/control or $def//undef
 # if that field is not present.
 # sub source_field Needs-Info debfiles
 sub source_field {
-    my ($self, $field) = @_;
+    my ($self, $field, $def) = @_;
     $self->_load_dctrl unless exists $self->{source_field};
-    return $self->{source_field}{$field} if $field;
+    return $self->{source_field}{$field}//$def if $field;
     return $self->{source_field};
 }
 
@@ -134,13 +134,13 @@ sub source_field {
 # inheritance from the settings in the source stanza.
 # sub binary_field Needs-Info debfiles
 sub binary_field {
-    my ($self, $package, $field) = @_;
+    my ($self, $package, $field, $def) = @_;
     $self->_load_dctrl unless exists $self->{binary_field};
 
     # Check if the package actually exists, otherwise it may create an
     # empty entry for it.
     if (exists $self->{binary_field}{$package}) {
-        return $self->{binary_field}{$package}{$field} if $field;
+        return $self->{binary_field}{$package}{$field}//$def if $field;
         return $self->{binary_field}{$package};
     }
     return;
@@ -366,12 +366,13 @@ Package-Type as value (which should be either C<deb> or C<udeb>
 currently).  The debfiles collection script must have been run
 to make the F<debfiles/control> file available.
 
-=item binary_field(PACKAGE[, FIELD])
+=item binary_field(PACKAGE[, FIELD[, DEFAULT]])
 
-Returns the content of the field FIELD for the binary package PACKAGE in
-the F<debian/control> file, or an undef if the field is not present.
-Inheritance of field values from the source section of the control file is
-not implemented.  Only the literal value of the field is returned.
+Returns the content of the field FIELD for the binary package PACKAGE
+in the F<debian/control> file, or DEFAULT (defaulting to undef) if the
+field is not present.  Inheritance of field values from the source
+section of the control file is not implemented.  Only the literal
+value of the field is returned.
 
 If FIELD is not given, return a hashref mapping field names to their
 values.  This hashref should not be modified.
@@ -455,11 +456,12 @@ object will be empty (always satisfied and implies nothing).
 The same as relation(), but ignores architecture restrictions in the
 FIELD field.
 
-=item source_field([FIELD])
+=item source_field([FIELD[, DEFAULT]])
 
 Returns the content of the field FIELD from source package paragraph
-of the F<debian/control> file, or an undef if the field is not
-present.  Only the literal value of the field is returned.
+of the F<debian/control> file, or DEFAULT (defaulting to undef) if the
+field is not present.  Only the literal value of the field is
+returned.
 
 If FIELD is not given, return a hashref mapping field names to their
 values.  This hashref should not be modified.

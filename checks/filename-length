@@ -71,7 +71,7 @@ return if $type ne 'source';
 # Reset to work with elements of the dsc file.
 $len = 0;
 
-foreach my $entry (split m/\n/o, $info->field('files')//''){
+foreach my $entry (split m/\n/o, $info->field ('files', '')){
     my $filename;
     my $flen;
     $entry =~ s/^\s++//o;

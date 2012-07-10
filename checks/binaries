@@ -105,9 +105,9 @@ my $uses_numpy_c_abi = 0;
 
 my %SONAME;
 
-$arch = $info->field('architecture')//'';
-$multiarch = $info->field('multi-arch')//'no';
-my $srcpkg = $proc->pkg_src()//'';
+$arch = $info->field ('architecture', '');
+$multiarch = $info->field ('multi-arch', 'no');
+my $srcpkg = $proc->pkg_src;
 
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};

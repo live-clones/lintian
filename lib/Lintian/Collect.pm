@@ -75,21 +75,22 @@ sub base_dir {
 # information will be retrieved from the file itself.
 # sub field Needs-Info <>
 sub field {
-    my ($self, $field) = @_;
-    return $self->_get_field($field);
+    my ($self, $field, $def) = @_;
+    return $self->_get_field ($field, $def);
 }
 
-# $self->_get_field([$name])
+# $self->_get_field([$name[, $def]])
 #
 # Method getting the fields; this is the backing method of $self->field
 #
 # It must return either a field (if $name is given) or a hash, where the keys are
-# the name of the fields.
+# the name of the fields.  If $name is given and it is not present, then it will
+# return $def (or undef if $def was not given).
 #
 # It must cache the result if possible, since field and fields are called often.
 # sub _get_field Needs-Info <>
 sub _get_field {
-    my ($self, $field) = @_;
+    my ($self, $field, $def) = @_;
     my $fields;
     unless (exists $self->{field}) {
         my $base_dir = $self->base_dir();
@@ -111,7 +112,7 @@ sub _get_field {
     } else {
         $fields = $self->{field};
     }
-    return $fields->{$field} if $field;
+    return $fields->{$field}//$def if $field;
     return $fields;
 }
 
@@ -170,12 +171,15 @@ binary / udeb packages and .changes files.
 
 =over 4
 
-=item field([FIELD])
+=item field([FIELD[, DEFAULT]])
 
 If FIELD is given, this method returns the value of the control field
 FIELD in the control file for the package.  For a source package, this
 is the *.dsc file; for a binary package, this is the control file in
 the control section of the package.
+
+If FIELD is passed but not present, then this method will return
+DEFAULT (if given) or undef.
 
 Otherwise this will return a hash of fields, where the key is the field
 name (in all lowercase).

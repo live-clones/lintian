@@ -176,8 +176,8 @@ my %linked_against_libvga;
 my $py_support_nver = undef;
 
 my $arch_dep_files = 0;
-my $arch = $info->field ('architecture')//'';
-my $isma_same = ($info->field ('multi-arch')//'') eq 'same';
+my $arch = $info->field ('architecture', '');
+my $isma_same = $info->field ('multi-arch', '') eq 'same';
 my $ppkg = quotemeta ($pkg);
 
 # read data from objdump-info file
@@ -198,10 +198,10 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 #
 # Otherwise set it to the empty string to avoid "unitialized value"
 # warnings if we end up using it a bit too carelessly.
-$source_pkg = $proc->pkg_src()//'';
+$source_pkg = $proc->pkg_src;
 
 # Get section if available.
-$pkg_section = $info->field('section')//'';
+$pkg_section = $info->field ('section', '');
 
 # find out which files are scripts
 my %script = map {$_ => 1} (sort keys %{$info->scripts});

@@ -439,7 +439,7 @@ if (not defined $info->field('section')) {
             }
         }
         if ($info->is_transitional) {
-            my $pri = $info->field ('priority')//'';
+            my $pri = $info->field ('priority', '');
             # Cannot use "unfold" as it could emit a tag for priority,
             # which will be duplicated below.
             $pri =~ s/\n//;
@@ -735,7 +735,7 @@ if ($type eq 'source') {
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
     foreach my $binpkg (keys %$binpkgs) {
-        my $arch = $info->binary_field($binpkg, 'architecture')//'';
+        my $arch = $info->binary_field($binpkg, 'architecture', '');
         if ($arch eq 'all') {
             $arch_indep_packages++;
         } else {
@@ -851,14 +851,14 @@ if ($type eq 'source') {
     foreach my $binpkg (keys %$binpkgs) {
         if ($binpkg =~ m/-dbg$/) {
             push @dbg_pkgs, $binpkg;
-        } elsif (($info->binary_field($binpkg, 'architecture')//'') ne 'all') {
+        } elsif ($info->binary_field ($binpkg, 'architecture', '') ne 'all') {
             push @arch_dep_pkgs, $binpkg;
         }
     }
     foreach (@dbg_pkgs) {
         my $deps;
-        $deps  = ($info->binary_field($_, 'pre-depends')//'') . ', ';
-        $deps .= $info->binary_field($_, 'depends');
+        $deps  = $info->binary_field($_, 'pre-depends', '') . ', ';
+        $deps .= $info->binary_field($_, 'depends', '');
         tag 'dbg-package-missing-depends', $_
            unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(?:\s|,|^)$quoted_name(?:\s|,|\z)/} @arch_dep_pkgs);
     }

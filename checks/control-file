@@ -309,7 +309,7 @@ sub check_dev_depends {
                 # Note, we do not check if the -dev package is
                 # arch:all as well.  The version-substvars check
                 # handles that for us.
-                next if ($info->binary_field ($target, 'architecture')//'') eq 'all'
+                next if $info->binary_field ($target, 'architecture', '') eq 'all'
                     && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 tag 'weak-library-dev-dependency', "$package on $depends[0]";
             }
