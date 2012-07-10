@@ -23,6 +23,8 @@ package Lintian::source_copyright;
 use strict;
 use warnings;
 
+use Text::Levenshtein qw(distance);
+
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(parse_dpkg_control slurp_entire_file fail);
@@ -167,8 +169,8 @@ if (@dep5) {
     my $i = 0;
     for my $para (@dep5) {
         $i++;
-        my $license = $para->{'license'};
-        my $files = $para->{'files'};
+        my $license = get_field ($para, 'license');
+        my $files = get_field ($para, 'files');
         if (defined $license and not defined $files) {
             # Standalone license paragraph
             if (not $license =~ m/\n/) {
@@ -190,7 +192,7 @@ if (@dep5) {
             else {
                 tag 'missing-field-in-dep5-copyright', "license (paragraph at line $lines[$i])";
             }
-            if (not defined $para->{'copyright'}) {
+            if (not defined get_field ($para, 'copyright')) {
                 tag 'missing-field-in-dep5-copyright', "copyright (paragraph at line $lines[$i])";
             }
         }
@@ -222,6 +224,19 @@ sub split_licenses {
     return () if /\n/;
     s/[(),]//;
     return map "\L$_", (split /\s++(?:and|or)\s++/);
+}
+
+sub get_field {
+    my ($para, $field) = @_;
+    return $para->{$field} if exists $para->{$field};
+    # Fall back to a "likely misspelling" of the field.
+    foreach my $f (sort keys %$para) {
+        if (distance ($field, $f) < 3) {
+            tag 'field-name-typo-in-dep5-copyright', $f, '->', $field;
+            return $para->{$f};
+        }
+    }
+    return;
 }
 
 1;

@@ -132,3 +132,16 @@ Certainty: possible
 Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The machine-readable copyright file contains a paragraph that is neither
  a standalone license paragraph nor a files paragraph.
+
+Tag: field-name-typo-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Info: The listed field name is a likely misspelling of one of the documented
+ DEP-5 fields.
+ .
+ Lintian will continue by using the "misspelled" variant, but other parsers
+ are unlikely to do so.
+ .
+ Implementation detail: The typo is detected by using "Levenshtein
+ edit distance".  Therefore, if the typo involve several characters,
+ Lintian may not detect it.
