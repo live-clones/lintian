@@ -26,6 +26,7 @@ use strict;
 use warnings;
 
 use Getopt::Long;
+use POSIX qw(:sys_wait_h);
 
 # }}}
 
@@ -1174,6 +1175,10 @@ foreach my $gname (sort $pool->get_group_names()) {
     if ($action eq 'check'){
         process_group($group);
         clear_group_cache($group);
+        # Double check that no processes are running;  hopefully
+        # it will catch regressions like 3bbcc3b earlier.
+        fail ("Unreaped processes after running checks!?")
+            if waitpid (-1, WNOHANG) != -1;
     }
 }
 
