@@ -20,6 +20,7 @@ Package: program-data
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          foreign-pkg (= $\{Source-Version\})
+Replaces: other-foreign-pkg (<< $\{binary:Version\})
 Description: {$description} - data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

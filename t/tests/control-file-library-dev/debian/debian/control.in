@@ -70,9 +70,9 @@ Section: libdevel
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
  libcontrol-file-foo1 (<= $\{source:Upstream-Version\}-99)
- | libcontrol-file-other-foo1 (<= $\{source:Upstream-Version\}-99),
+ | libcontrol-file-baz9-4 (<= $\{source:Upstream-Version\}-99),
  libcontrol-file-foo1 (>= $\{binary:Version\})
- | libcontrol-file-other-foo1 (>= $\{binary:Version\})
+ | libcontrol-file-baz9-4 (>= $\{binary:Version\})
 Description: {$description} (dev package with version)
  Dev package containing a number.
  .
