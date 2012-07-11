@@ -421,7 +421,7 @@ foreach (keys %executable) {
                  );
 }
 
-open(SCRIPTS, '<', 'control-scripts')
+open SCRIPTS, '<', $info->lab_data_path ('control-scripts')
     or fail("cannot open lintian control-scripts file: $!");
 
 # Handle control scripts.  This is an edited version of the code for

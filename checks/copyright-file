@@ -100,14 +100,15 @@ if (not $found) {
       unless $pkg eq 'perl';
 }
 
+my $dcopy = $info->lab_data_path ('copyright');
 # check that copyright is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8('copyright', $type, $pkg);
+my $line = file_is_encoded_in_non_utf8 ($dcopy, $type, $pkg);
 if ($line) {
     tag 'debian-copyright-file-uses-obsolete-national-encoding', "at line $line"
 }
 
 # check contents of copyright file
-$_ = slurp_entire_file('copyright');
+$_ = slurp_entire_file ($dcopy);
 study $_;
 
 if (m,\r,) {

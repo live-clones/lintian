@@ -196,8 +196,9 @@ for my $file (@EOL_TERMINATORS_FILES) {
 # isn't just tar cruft.
 for my $file (keys %ERRORS) {
     my $tag = $ERRORS{$file};
-    if (-s $file) {
-        open(ERRORS, '<', $file) or fail("cannot open $file: $!");
+    my $path = $info->lab_data_path ($file);
+    if (-s $path) {
+        open ERRORS, '<', $path or fail "cannot open $file: $!";
         local $_;
         while (<ERRORS>) {
             chomp;

@@ -36,10 +36,12 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+my $deb = $info->lab_data_path ('deb');
+
 # Run ar t on the *.deb file.  deb will be a symlink to it.
 my $okay = 0;
 my $opts = {};
-my $success = spawn($opts, ['ar', 't', 'deb']);
+my $success = spawn ($opts, ['ar', 't', $deb]);
 if ($success) {
     my @members = split("\n", ${ $opts->{out} });
     if (@members != 3) {
@@ -80,7 +82,7 @@ if ($success) {
 # permitted in the archive yet.
 if ($okay) {
     $opts = {};
-    $success = spawn($opts, ['ar', 'p', 'deb', 'debian-binary']);
+    $success = spawn ($opts, ['ar', 'p', $deb, 'debian-binary']);
     if (not $success) {
         tag 'malformed-deb-archive', "can't read debian-binary member";
     } elsif (${ $opts->{out} } !~ /^2\.\d+\n/) {
@@ -94,8 +96,9 @@ if ($okay) {
 # just tar noise that doesn't represent an actual problem.
 for my $file (keys %ERRORS) {
     my $tag = $ERRORS{$file};
-    if (-s $file) {
-        open(ERRORS, '<', $file) or fail("cannot open $file: $!");
+    my $path = $info->lab_data_path ($file);
+    if (-s $path) {
+        open ERRORS, '<', $path or fail "cannot open $file: $!";
         local $_;
         while (<ERRORS>) {
             chomp;

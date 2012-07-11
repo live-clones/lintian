@@ -68,6 +68,8 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+my $initd_dir = $info->lab_data_path ('init.d');
+
 my $postinst = $info->control('postinst');
 my $preinst = $info->control('preinst');
 my $postrm = $info->control('postrm');
@@ -171,36 +173,38 @@ if (open(IN, '<', $conffiles)) {
     close(IN);
 }
 
-for (keys %initd_postinst) {
-    next if /^\$/;
-    my $initd_file = "init.d/$_";
+foreach my $initd_file (keys %initd_postinst) {
+    next unless $initd_file;
+    my $initd_path = "$initd_dir/$initd_file";
 
     # init.d scripts have to be marked as conffiles unless they're symlinks.
-    unless ($conffiles{"/etc/init.d/$_"} or $conffiles{"etc/init.d/$_"}
-            or -l $initd_file) {
-        tag 'init.d-script-not-marked-as-conffile', "etc/init.d/$_";
+    unless ($conffiles{"/etc/init.d/$initd_file"} or $conffiles{"etc/init.d/$initd_file"}
+            or -l $initd_path) {
+        tag 'init.d-script-not-marked-as-conffile', "etc/init.d/$initd_file";
     }
 
     # Check if file exists in package and check the script for other issues if
     # it was included in the package.
-    if (-f $initd_file) {
-        check_init($initd_file);
-    } elsif (not -l $initd_file) {
-        tag 'init.d-script-not-included-in-package', "etc/init.d/$_";
+    if (-f $initd_path) {
+        check_init ($initd_file, $initd_path);
+    } elsif (not -l $initd_path) {
+        tag 'init.d-script-not-included-in-package', "etc/init.d/$initd_file";
     }
 }
 
 # files actually installed in /etc/init.d should match our list :-)
-opendir(INITD, 'init.d') or fail("cannot read init.d directory: $!");
-for (readdir(INITD)) {
-    my $script = $_;
+opendir INITD, $initd_dir
+    or fail "cannot read init.d directory: $!";
+for my $script (readdir(INITD)) {
     my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
     next if grep {$script eq $_} qw(. .. README skeleton rc rcS);
 
+    my $script_path = "$initd_dir/$script";
+
     # In an upstart system, such as Ubuntu, init scripts are symlinks to
     # upstart-job which are not registered with update-rc.d.
-    if (-l "init.d/$_") {
-        my $target = readlink("init.d/$_");
+    if (-l $script_path) {
+        my $target = readlink ($script_path);
         if ($target =~ m,(?:\A|/)lib/init/upstart-job\z,) {
             $tagname = 'upstart-job-in-etc-init.d-not-registered-via-update-rc.d';
         }
@@ -212,7 +216,7 @@ for (readdir(INITD)) {
     # that we get more complete Lintian coverage in the first pass.
     unless ($initd_postinst{$script}) {
         tag $tagname, "etc/init.d/$script";
-        check_init("init.d/$script") if -f "init.d/$script";
+        check_init ($script, $script_path) if -f $script_path;
     }
 }
 closedir(INITD);
@@ -220,18 +224,18 @@ closedir(INITD);
 }
 
 sub check_init {
-    my ($initd_file) = @_;
+    my ($initd_file, $initd_path) = @_;
 
     # In an upstart system, such as Ubuntu, init scripts are symlinks to
     # upstart-job.  It doesn't make sense to check the syntax of upstart-job,
     # so skip the checks of the init script itself in that case.
-    if (-l $initd_file) {
-        my $target = readlink($initd_file);
+    if (-l $initd_path) {
+        my $target = readlink ($initd_path);
         if ($target =~ m,(?:\A|/)lib/init/upstart-job\z,) {
             return;
         }
     }
-    open(IN, '<', $initd_file)
+    open IN, '<', $initd_path
         or fail("cannot open init.d file $initd_file: $!");
     my (%tag, %lsb);
     my $in_file_test = 0;

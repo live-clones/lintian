@@ -331,12 +331,13 @@ my $info = shift;
 my $proc = shift;
 my $group = shift;
 
+my $mdir = $info->lab_data_path ('menu');
 my @menufiles;
-opendir (MENUDIR, 'menu/lib') or fail('cannot read menu/lib file directory.');
-push @menufiles, map { "menu/lib/$_" } readdir(MENUDIR);
+opendir MENUDIR, "$mdir/lib" or fail 'cannot read menu/lib file directory';
+push @menufiles, map { "$mdir/lib/$_" } readdir (MENUDIR);
 closedir MENUDIR;
-opendir (MENUDIR, 'menu/share') or fail('cannot read menu/share file directory.');
-push @menufiles, map { "menu/share/$_" } readdir(MENUDIR);
+opendir MENUDIR, "$mdir/share" or fail 'cannot read menu/share file directory';
+push @menufiles, map { "$mdir/share/$_" } readdir (MENUDIR);
 closedir MENUDIR;
 
 # Find the desktop files in the package for verification.
@@ -370,7 +371,7 @@ foreach my $menufile (@menufiles) {
 
     my $basename = basename $menufile;
     my $fullname = "usr/share/menu/$basename";
-    $fullname = "usr/lib/menu/$basename" if $menufile =~ m,^menu/lib/,o;
+    $fullname = "usr/lib/menu/$basename" if $menufile =~ m,^\Q$mdir\E/lib/,;
 
     next if $basename eq 'README'; # README is a special case
 

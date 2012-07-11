@@ -29,9 +29,10 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 my $readme = '';
 
-if (open(IN, '<', 'README.Debian')) {
+if (open (IN, '<', $info->lab_data_path ('README.Debian'))) {
     local $_;
     while (<IN>) {
         if (m,/usr/doc\b,) {

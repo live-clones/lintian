@@ -91,7 +91,7 @@ if ($info->field('changed-by')) {
 }
 
 my $files = $info->files;
-my $path = readlink('changes');
+my $path = readlink ($info->lab_data_path ('changes'));
 $path =~ s#/[^/]+$##;
 foreach my $file (keys %$files) {
     my $file_info = $files->{$file};

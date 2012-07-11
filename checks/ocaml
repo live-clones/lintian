@@ -40,7 +40,8 @@ my $info = shift;
 
 # Collect information about .a files from ar-info dump
 my %provided_o;
-open ARINFO, '<', 'ar-info' or fail "opening ar-info: $!";
+open ARINFO, '<', $info->lab_data_path ('ar-info')
+    or fail "opening ar-info: $!";
 while (<ARINFO>) {
     chomp;
     if (/^(?:\.\/)?([^:]+): (.*)$/) {

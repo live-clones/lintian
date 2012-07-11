@@ -7,6 +7,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
       - apparently-truncated-elf-binary
       - data.tar.xz-member-without-dpkg-pre-depends
 
+  * checks/*:
+    + [NT] Remove assumption that lintian will chdir into the
+      the lab before calling the check.
   * checks/binaries{,.desc}:
     + [NT] Merge apparently-truncated-elf-binary into
       apparently-corrupted-elf-binary.

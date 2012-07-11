@@ -179,7 +179,8 @@ sub check_module_package {
 sub check_maintainer_scripts {
     my ($info) = @_;
 
-    open my $fd, '<', 'control-scripts' or fail "cannot open lintian control-scripts file: $!";
+    open my $fd, '<', $info->lab_data_path ('control-scripts')
+        or fail "cannot open lintian control-scripts file: $!";
 
     while (<$fd>)
     {
