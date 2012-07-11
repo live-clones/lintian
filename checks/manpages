@@ -288,7 +288,9 @@ foreach my $file ($info->sorted_index) {
             tag 'manpage-has-errors-from-man', $file, $_;
             last;
         }
-        close(MANERRS);
+        close $read;
+        # reap man process
+        waitpid $pid, 0;
         # Now we search through the whole man page for some common errors
         my $lc = 0;
         my $hc = 0;
