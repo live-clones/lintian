@@ -21,6 +21,7 @@ use warnings;
 
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(fail);
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
