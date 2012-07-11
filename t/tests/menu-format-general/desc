@@ -6,7 +6,10 @@ Test-For:
  bad-test-in-menu-item
  duplicated-tag-in-menu-item
  menu-command-not-in-package
+ menu-icon-cannot-be-parsed
  menu-icon-missing
+ menu-icon-not-in-xpm-format
+ menu-icon-too-big
  menu-item-creates-new-root-section
  menu-item-creates-new-section
  menu-item-uses-apps-games-section

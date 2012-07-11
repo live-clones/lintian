@@ -1,5 +1,5 @@
-Last generated 2012-07-10
-Coverage: 812/964 (84.23%), w. legacy tests: 917/964 (95.12%)
+Last generated 2012-07-11
+Coverage: 815/964 (84.54%), w. legacy tests: 920/964 (95.44%)
 
 The following tags are not tested by the test suite:
 
@@ -41,9 +41,6 @@ init.d file-in-etc-rc.d-marked-as-conffile
 manpages FSSTND-dir-in-manual-page
 manpages bad-so-link-within-manual-page
 
-menu-format menu-icon-cannot-be-parsed
-menu-format menu-icon-not-in-xpm-format
-menu-format menu-icon-too-big
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-needs-dwww
 menu-format old-format-menu-file
