@@ -48,6 +48,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [NT] Fix synopsis for --no-cfg option in the help output.
+    + [NT] Remove chdir calls for checks.
 
   * lib/Lintian/Collect{/Source}.pm:
     + [NT] Add optional parameter to field (and X_field)

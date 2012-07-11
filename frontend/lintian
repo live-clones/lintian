@@ -1563,14 +1563,6 @@ sub process_group {
 
         debug_msg(1, "Base directory in lab: $base");
 
-        # chdir to base directory
-        unless (chdir($base)) {
-            warning("could not chdir into directory $base: $!",
-                    "skipping $action of $pkg_type package $pkg_name");
-            $exit_code = 2;
-            next;
-        }
-
         unless ($opt{'no-override'}) {
             if ($collmap->known('override-file') && -f "$base/override") {
                 debug_msg(1, 'Override file collected, loading it ...');
@@ -1599,13 +1591,6 @@ sub process_group {
                 $exit_code = 2;
                 next PROC;
             }
-        }
-        # chdir to lintian root directory (to unlock $base so it can be removed below)
-        unless (chdir($opt{'LINTIAN_ROOT'})) {
-            warning("could not chdir into directory $opt{'LINTIAN_ROOT'}: $!",
-                    "skipping $action of $pkg_type package $pkg_name");
-            $exit_code = 2;
-            next;
         }
 
         unless ($exit_code) {
