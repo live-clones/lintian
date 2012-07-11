@@ -8,6 +8,9 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
   * data/doc-base/sections:
     + [NT] Update section list.  (Closes: #678650)
 
+  * frontend/lintian:
+    + [NT] Fix synopsis for --no-cfg option in the help output.
+
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 
 lintian (2.5.10) unstable; urgency=low

@@ -208,7 +208,7 @@ Configuration options:
     --area AREA               scan packages in this archive area (e.g. main)
     --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
     --cfg CONFIGFILE          read CONFIGFILE for configuration
-    --no-cfg CONFIGFILE       do not read any CONFIGFILE
+    --no-cfg                  do not read any config files
     --dist DIST               scan packages in this distribution (e.g. sid)
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
