@@ -340,6 +340,9 @@ sub wait {
                 return $cmd;
             }
         }
+        # Unknown pid; per docs we return undef.  Be explicit about it
+        # though because implicit returns can give "funny results".
+        return;
     } elsif (not defined($self)) {
         return (CORE::wait() == -1)? -1 : ($? >> 8);
     } else {
