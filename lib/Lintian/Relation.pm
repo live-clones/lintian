@@ -806,7 +806,8 @@ sub visit {
         $against = $self->unparse ($relation) if $flags & VISIT_PRED_FULL;
         local $_ = $against;
         return $code->($against);
-    } elsif (($flags & VISIT_OR_CLAUSE_FULL) and $relation->[0] eq 'OR') {
+    } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL and
+             $relation->[0] eq 'OR') {
         my $against = $self->unparse ($relation);
         local $_ = $against;
         return $code->($against);
