@@ -68,6 +68,16 @@ sub base_dir {
     return $self->{base_dir};
 }
 
+# Return the path to a file (or dir) in the lab
+# - convenience around base_dir
+# sub lab_data_path Needs-Info <>
+sub lab_data_path {
+    my ($self, $entry) = @_;
+    my $base = $self->base_dir;
+    return "$base/$entry" if $entry;
+    return $base;
+}
+
 # Return the value of the specified control field of the package, or undef if
 # that field wasn't present in the control file for the package.  For source
 # packages, this is the *.dsc file; for binary packages, this is the control
@@ -203,6 +213,12 @@ Returns the type of the package.
 =item base_dir()
 
 Returns the base_dir where all the package information is stored.
+
+=item lab_data_path ([ENTRY])
+
+Return the path to the ENTRY in the lab.  This is a convenience method
+around base_dir.  If ENTRY is not given, this method behaves like
+base_dir.
 
 =back
 

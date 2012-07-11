@@ -46,12 +46,11 @@ sub new {
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    my $base_dir = $self->base_dir();
-    if (-l "$base_dir/debfiles/changelog" ||
-        ! -f "$base_dir/debfiles/changelog") {
+    my $dch = $self->lab_data_path ('debfiles/changelog');
+    if (-l $dch || ! -f $dch) {
         $self->{changelog} = undef;
     } else {
-        my %opts = (infile => "$base_dir/debfiles/changelog", quiet => 1);
+        my %opts = (infile => $dch, quiet => 1);
         $self->{changelog} = Parse::DebianChangelog->init(\%opts);
     }
     return $self->{changelog};
@@ -63,7 +62,7 @@ sub changelog {
 sub diffstat {
     my ($self) = @_;
     return $self->{diffstat} if exists $self->{diffstat};
-    my $dstat = $self->base_dir() . '/diffstat';
+    my $dstat = $self->lab_data_path ('diffstat');
     $dstat = '/dev/null' unless -e $dstat;
     $self->{diffstat} = $dstat;
     return $dstat;

@@ -61,12 +61,12 @@ sub native {
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    my $base_dir = $self->base_dir();
+    my $dch = $self->lab_data_path ('changelog');
     # sub changelog Needs-Info changelog-file
-    if (-l "$base_dir/changelog" || ! -f "$base_dir/changelog") {
+    if (-l $dch || ! -f $dch) {
         $self->{changelog} = undef;
     } else {
-        my %opts = (infile => "$base_dir/changelog", quiet => 1);
+        my %opts = (infile => $dch, quiet => 1);
         $self->{changelog} = Parse::DebianChangelog->init(\%opts);
     }
     return $self->{changelog};
@@ -110,17 +110,17 @@ sub strings {
 sub md5sums {
     my ($self) = @_;
     return $self->{md5sums} if exists $self->{md5sums};
-    my $base_dir = $self->base_dir();
+    my $md5f = $self->lab_data_path ('md5sums');
     my $result = {};
 
     # read in md5sums info file
-    open(my $fd, '<', "$base_dir/md5sums")
-        or fail("cannot open $base_dir/md5sums info file: $!");
+    open my $fd, '<', $md5f
+        or fail "cannot open $md5f info file: $!";
     while (my $line = <$fd>) {
         chop($line);
         next if $line =~ m/^\s*$/o;
         $line =~ m/^(\S+)\s*(\S.*)$/o
-            or fail("syntax error in $base_dir/md5sums info file: $line");
+            or fail "syntax error in $md5f info file: $line";
         my $zzsum = $1;
         my $zzfile = $2;
         $zzfile =~ s,^(?:\./)?,,o;
@@ -134,12 +134,12 @@ sub md5sums {
 sub scripts {
     my ($self) = @_;
     return $self->{scripts} if exists $self->{scripts};
-    my $base_dir = $self->base_dir();
+    my $scrf = $self->lab_data_path ('scripts');
     my %scripts;
     local $_;
     # sub scripts Needs-Info scripts
-    open(SCRIPTS, '<', "$base_dir/scripts")
-        or fail("cannot open scripts $base_dir/file: $!");
+    open SCRIPTS, '<', $scrf
+        or fail "cannot open scripts $scrf: $!";
     while (<SCRIPTS>) {
         chomp;
         my (%file, $name);
@@ -164,13 +164,13 @@ sub scripts {
 sub objdump_info {
     my ($self) = @_;
     return $self->{objdump_info} if exists $self->{objdump_info};
-    my $base_dir = $self->base_dir();
+    my $objf = $self->lab_data_path ('objdump-info.gz');
     my %objdump_info;
     my ($dynsyms, $file);
     local $_;
     # sub objdump_info Needs-Info objdump-info
-    open my $fd, '-|', 'gzip', '-dc', "$base_dir/objdump-info.gz"
-        or fail "cannot open $base_dir/objdump-info.gz: $!";
+    my $fd = open_gz ($objf)
+        or fail "cannot open $objf: $!";
     foreach my $pg (parse_dpkg_control ($fd)) {
         my %info = (
             'PH' => {},
@@ -235,12 +235,12 @@ sub objdump_info {
 sub hardening_info {
     my ($self) = @_;
     return $self->{hardening_info} if exists $self->{hardening_info};
-    my $base_dir = $self->base_dir();
+    my $hardf = $self->lab_data_path ('hardening-info');
     my %hardening_info;
     my ($file);
     local $_;
-    open(my $idx, '<', "$base_dir/hardening-info")
-        or fail("cannot open $base_dir/hardening-info: $!");
+    open my $idx, '<', $hardf
+        or fail "cannot open $hardf: $!";
     while (<$idx>) {
         chomp;
 
@@ -261,18 +261,16 @@ sub hardening_info {
 sub java_info {
     my ($self) = @_;
     return $self->{java_info} if exists $self->{java_info};
-
-    my $base_dir = $self->base_dir;
+    my $javaf = $self->lab_data_path ('java-info.gz');
     my %java_info;
-    if ( ! -f "$base_dir/java-info.gz" ) {
+    if ( ! -f $javaf ) {
         # no java-info.gz => no jar files to collect data.  Just
         # return an empty hash ref.
         $self->{java_info} = \%java_info;
         return $self->{java_info};
     }
-
-    open my $idx, '-|', 'gzip', '-dc', "$base_dir/java-info.gz"
-        or fail "cannot open $base_dir/java-info.gz: $!";
+    my $idx = open_gz ($javaf)
+        or fail "cannot open $javaf: $!";
     my $file;
     my $file_list;
     my $manifest = 0;

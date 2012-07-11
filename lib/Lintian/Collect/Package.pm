@@ -40,12 +40,12 @@ sub unpacked {
 sub file_info {
     my ($self) = @_;
     return $self->{file_info} if exists $self->{file_info};
-    my $base_dir = $self->base_dir();
     my %file_info;
+    my $path = $self->lab_data_path ('file-info.gz');
     local $_;
     # sub file_info Needs-Info file-info
-    my $idx = open_gz ("$base_dir/file-info.gz")
-        or croak "cannot open $base_dir/file-info.gz: $!";
+    my $idx = open_gz ($path)
+        or croak "cannot open $path: $!";
     while (<$idx>) {
         chomp;
 
@@ -87,8 +87,7 @@ sub _fetch_extracted_dir {
     my ($self, $field, $dirname, $file) = @_;
     my $dir = $self->{$field};
     if ( not defined $dir ) {
-        my $base_dir = $self->base_dir;
-        $dir = "$base_dir/$dirname";
+        $dir = $self->lab_data_path ($dirname);
         croak "$field ($dirname) is not available" unless -d "$dir/";
         $self->{$field} = $dir;
     }
