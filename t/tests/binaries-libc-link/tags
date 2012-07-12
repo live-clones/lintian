@@ -1,0 +1,3 @@
+W: binaries-libc-link: library-not-linked-against-libc usr/lib/basic/libbasic-nolibc
+W: binaries-libc-link: program-not-linked-against-libc usr/bin/basic
+W: binaries-libc-link: shared-lib-without-dependency-information usr/lib/basic/libbasic-nodeps

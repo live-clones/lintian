@@ -1,12 +1,10 @@
 Last generated 2012-07-12
-Coverage: 819/964 (84.96%), w. legacy tests: 921/964 (95.54%)
+Coverage: 822/964 (85.27%), w. legacy tests: 923/964 (95.75%)
 
 The following tags are not tested by the test suite:
 
 binaries binary-file-compressed-with-upx
-binaries library-not-linked-against-libc
 binaries ocaml-custom-executable
-binaries program-not-linked-against-libc
 
 cruft source-contains-prebuilt-windows-binary
 
@@ -62,7 +60,6 @@ The following tags are only tested by the legacy test suite:
 binaries binary-has-unneeded-section
 binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
-binaries shared-lib-without-dependency-information
 binaries statically-linked-binary
 binaries unstripped-binary-or-object
 
@@ -242,7 +239,6 @@ debug
   changelog-file-missing-in-native-package
   changelog-should-not-mention-nmu
   debug-file-should-use-detached-symbols
-  shared-lib-without-dependency-information
   sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib
   symbols-declares-dependency-on-other-package
