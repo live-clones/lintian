@@ -1,5 +1,5 @@
-Last generated 2012-07-11
-Coverage: 815/964 (84.54%), w. legacy tests: 920/964 (95.44%)
+Last generated 2012-07-12
+Coverage: 816/964 (84.65%), w. legacy tests: 921/964 (95.54%)
 
 The following tags are not tested by the test suite:
 
@@ -55,7 +55,6 @@ menus doc-base-file-syntax-error
 menus executable-in-usr-share-docbase
 menus executable-menu-file
 
-shared-libs shlib-with-executable-stack
 shared-libs shlib-without-PT_GNU_STACK-section
 
 The following tags are only tested by the legacy test suite:
