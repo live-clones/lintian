@@ -8,6 +8,9 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
   * data/doc-base/sections:
     + [NT] Update section list.  (Closes: #678650)
 
+  * debian/changelog:
+    + [NT] Fix some typos in earlier entries.
+
   * frontend/lintian:
     + [NT] Fix synopsis for --no-cfg option in the help output.
 
@@ -76,7 +79,7 @@ lintian (2.5.10) unstable; urgency=low
     + [NT] Improve Lintian's job scheduler to schedule unpacking
       jobs on a group level rather than just a package level.
 
-  * lib/Lintian/Collect/[Binary,Package}.pm:
+  * lib/Lintian/Collect/{Binary,Package}.pm:
     + [NT] Use new gzip decompressor from L::Util.
   * lib/Lintian/CollScript.pm:
     + [NT] New file.
@@ -1067,7 +1070,7 @@ lintian (2.5.4) unstable; urgency=medium
     + [NT] Fixed an "uninitialized variable" warning if no tarballs were
       present or the tarball is empty.  (Closes: #645660, LP: #886487)
     + [NT] Fixed deprecation warning when using perl 5.14.
-  * collcetion/debfiles:
+  * collection/debfiles:
     + [NT] Bail if the debian dir is a symlink.
 
   * data/changelog-file/debian-dists:
@@ -1122,7 +1125,7 @@ lintian (2.5.4) unstable; urgency=medium
       name"-based search.
 
   * lib/Lab{,/Package}.pm:
-    + [NT] Removed, replaced by Lintian::Package{,::Entry}.
+    + [NT] Removed, replaced by Lintian::Lab{,::Entry}.
   * lib/Lintian/Check.pm:
     + [JW] Merged with common_data.pm.
   * lib/Lintian/Collect/Group.pm:
