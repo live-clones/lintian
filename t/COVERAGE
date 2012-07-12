@@ -1,5 +1,5 @@
 Last generated 2012-07-12
-Coverage: 816/964 (84.65%), w. legacy tests: 921/964 (95.54%)
+Coverage: 819/964 (84.96%), w. legacy tests: 921/964 (95.54%)
 
 The following tags are not tested by the test suite:
 
@@ -166,12 +166,9 @@ scripts maintainer-script-removes-device-files
 scripts script-not-executable
 scripts update-alternatives-remove-called-in-postrm
 
-shared-libs duplicate-entry-in-symbols-control-file
-shared-libs invalid-template-id-in-symbols-file
 shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
-shared-libs syntax-error-in-symbols-file
 shared-libs udeb-postinst-must-not-call-ldconfig
 shared-libs unknown-meta-field-in-symbols-file
 shared-libs unused-shlib-entry-in-symbols-control-file
@@ -245,13 +242,10 @@ debug
   changelog-file-missing-in-native-package
   changelog-should-not-mention-nmu
   debug-file-should-use-detached-symbols
-  duplicate-entry-in-symbols-control-file
-  invalid-template-id-in-symbols-file
   shared-lib-without-dependency-information
   sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib
   symbols-declares-dependency-on-other-package
-  syntax-error-in-symbols-file
   unknown-meta-field-in-symbols-file
   unused-shlib-entry-in-symbols-control-file
 

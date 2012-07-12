@@ -13,7 +13,7 @@ Description: {$description} (deb revision)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
  .
- Checks for deb revisions in symbols files.
+ Checks for deb revisions in symbols files and other brokenness.
 
 Package: libsym1
 Architecture: any
