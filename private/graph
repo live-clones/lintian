@@ -258,6 +258,7 @@ sub usage {
     print <<EOF ;
 Usage: $p [options]
 
+  -h, --help       - Print this help and exit
   --[no-]checks    - Whether to include checks in the graph
   --[no-]dep-level - Try to prettify the graph by using "dependency levels"
   --longest-paths  - Highlight the longest paths in the graph.
@@ -281,6 +282,7 @@ In a dot-generated image, the boxes (with blue borders) will be the checks
 and the ellipses are collections.
 
 EOF
+    exit 0;
 }
 
 # Local Variables:
