@@ -3,8 +3,11 @@ Sequence: 6000
 Version: 1.0
 Description: Test tags for file paths, names, and modes
 Test-For:
+ FSSTND-dir-in-usr
+ FSSTND-dir-in-var
  backup-file-in-package
  bad-perm-for-file-in-etc-sudoers.d
+ config-file-reserved
  dir-or-file-in-var-lock
  dir-or-file-in-var-run
  duplicated-compressed-file
@@ -14,6 +17,7 @@ Test-For:
  global-data-in-games-directory
  icon-size-and-directory-name-mismatch
  lengthy-symlink
+ nfs-temporary-file-in-package
  non-conf-file-in-modprobe.d
  non-standard-toplevel-dir
  obsolete-comments-style-in-php-ini

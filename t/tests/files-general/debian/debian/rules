@@ -1,16 +1,19 @@
 #!/usr/bin/make -f
 
-tmp = $(CURDIR)/debian/$(shell dh_listpackages)
+tmp := $(CURDIR)/debian/$(shell dh_listpackages)
 
 %:
 	dh $@
 
 override_dh_install:
 	dh_install
-	mkdir -p $(tmp)/usr/share/foo
+	echo "#fake conf file" > $(tmp)/etc/pam.conf
 	echo "Back-up file" > $(tmp)/usr/share/foo/file~
+	touch $(tmp)/usr/doc/FSSTND
 	touch $(tmp)/usr/share/foo/'*'
 	touch $(tmp)/usr/share/foo/'ws '
+	touch $(tmp)/usr/share/foo/.nfs-fake-tmpfile
+	touch $(tmp)/var/catman/do
 
 override_dh_fixperms:
 	dh_fixperms

@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test tags about symlinks
 Test-For:
+ compressed-symlink-with-wrong-ext
  symlink-contains-spurious-segments
  symlink-ends-with-slash
  symlink-has-double-slash
@@ -10,4 +11,3 @@ Test-For:
  symlink-is-self-recursive
  symlink-should-be-absolute
  symlink-should-be-relative
-

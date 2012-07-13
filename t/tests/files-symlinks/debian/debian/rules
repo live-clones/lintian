@@ -4,6 +4,8 @@
 	dh $@
 
 override_dh_auto_build:
+	mkdir tmp
+	gzip -9c  < data-file > tmp/comp-data.gz
 	mkdir symlinks/
 	ln -s ../../../../etc/lintian/pkg.conf symlinks/pkg-old.conf
 	ln -s ../..//..//..//../etc/lintian/pkg.conf symlinks/pkg.conf
@@ -11,9 +13,10 @@ override_dh_auto_build:
 	ln -s /etc/lintian/ symlinks/etc-lintian
 	ln -s / symlinks/self-resursive
 	ln -s ../../lintian-old/../lintian/data/data-file  symlinks/spurious
+	ln -s ../../../share/lintian/data/comp-data.gz symlinks/comp-data
 
 override_dh_auto_clean:
-	rm -fr symlinks/
+	rm -fr symlinks/ tmp
 
 override_dh_link:
 	# it will fix our symlinks and ruin the test, so skip it.

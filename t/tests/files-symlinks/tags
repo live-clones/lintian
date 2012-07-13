@@ -1,3 +1,4 @@
+E: files-symlinks: compressed-symlink-with-wrong-ext usr/lib/lintian/data/comp-data ../../../share/lintian/data/comp-data.gz
 E: files-symlinks: symlink-contains-spurious-segments usr/share/lintian/data/spurious ../../lintian-old/../lintian/data/data-file
 E: files-symlinks: symlink-has-too-many-up-segments usr/share/lintian/data/pkg.conf ../..//..//..//../etc/lintian/pkg.conf
 E: files-symlinks: symlink-should-be-absolute usr/share/lintian/data/pkg-old.conf ../../../../etc/lintian/pkg.conf
