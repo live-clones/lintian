@@ -26,4 +26,5 @@ W: copyright-misc-errors: copyright-contains-dh-make-perl-boilerplate
 W: copyright-misc-errors: copyright-has-url-from-dh_make-boilerplate
 W: copyright-misc-errors: copyright-refers-to-deprecated-bsd-license-file
 W: copyright-misc-errors: copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2
+W: copyright-old-fsf: old-fsf-address-in-copyright-file
 W: copyright-poor-common-licenses: copyright-does-not-refer-to-common-license-file /GPL-3

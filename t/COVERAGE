@@ -1,5 +1,5 @@
 Last generated 2012-07-13
-Coverage: 829/964 (86.00%), w. legacy tests: 930/964 (96.47%)
+Coverage: 830/964 (86.10%), w. legacy tests: 930/964 (96.47%)
 
 The following tags are not tested by the test suite:
 
@@ -56,8 +56,6 @@ binaries unstripped-binary-or-object
 
 changelog-file changelog-file-missing-in-native-package
 changelog-file wrong-name-for-debian-news-file
-
-copyright-file old-fsf-address-in-copyright-file
 
 debconf config-does-not-load-confmodule
 debconf debconf-config-not-executable
@@ -188,7 +186,6 @@ binary
   menu-item-needs-tag-has-unknown-value
   menu-method-should-include-menu-h
   non-wm-module-in-wm-modules-menu-section
-  old-fsf-address-in-copyright-file
   package-contains-upstream-install-documentation
   postinst-does-not-call-updatemenus
   postrm-does-not-call-updatemenus
