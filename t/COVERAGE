@@ -1,5 +1,5 @@
 Last generated 2012-07-13
-Coverage: 830/963 (86.19%), w. legacy tests: 930/963 (96.57%)
+Coverage: 832/963 (86.40%), w. legacy tests: 932/963 (96.78%)
 
 The following tags are not tested by the test suite:
 
@@ -25,9 +25,6 @@ fields no-source-field
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
-
-init.d duplicate-updaterc.d-calls-in-postinst
-init.d file-in-etc-rc.d-marked-as-conffile
 
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-needs-dwww
