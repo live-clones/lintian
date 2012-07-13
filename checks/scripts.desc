@@ -157,14 +157,6 @@ Info: The package contains a <tt>preinst</tt> maintainer script that uses
  section 3.5).
 Ref: policy 7.2
 
-Tag: preinst-uses-dpkg-maintscript-helper-without-predepends
-Severity: pedantic
-Certainty: possible
-Info: The package contains a <tt>preinst</tt> maintainer script that
- uses <tt>dpkg-maintscript-helper</tt> but does not declare a
- versoned pre-dependency on <tt>dpkg (&gt;= 1.15.7.2~)</tt> that provides that
- script.
-
 Tag: control-interpreter-without-depends
 Severity: serious
 Certainty: possible

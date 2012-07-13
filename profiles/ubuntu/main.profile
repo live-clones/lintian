@@ -11,7 +11,5 @@ Disable-Tags: changelog-should-mention-nmu,
  uploader-address-causes-mail-loops-or-bounces,
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d
 
-# Serious as it may break Lucid upgrade path
-Tags: preinst-uses-dpkg-maintscript-helper-without-predepends
-Severity: serious
+
 

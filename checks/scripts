@@ -770,12 +770,6 @@ while (<SCRIPTS>) {
         if (m,\bsuidregister\b,) {
             tag 'suidregister-used-in-maintainer-script', $file;
         }
-        if ($file eq 'preinst') {
-            if (m/^\s*dpkg-maintscript-helper(?:\s|\z)/ &&
-                    !$info->relation('pre-depends')->implies('dpkg (>= 1.15.7.2~)')) {
-                tag 'preinst-uses-dpkg-maintscript-helper-without-predepends', "$file:$.";
-            }
-        }
         if ($file eq 'postrm') {
             if (m,update\-alternatives \-\-remove,) {
                 tag 'update-alternatives-remove-called-in-postrm';

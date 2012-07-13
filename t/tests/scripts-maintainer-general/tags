@@ -9,7 +9,6 @@ E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file p
 E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly postinst
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
-E: scripts-maintainer-general: preinst-uses-dpkg-maintscript-helper-without-predepends preinst:5
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
 E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
