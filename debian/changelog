@@ -26,7 +26,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
       and patch.  (Closes: #680446)
   * checks/manpages{,.desc}:
     + [CW,NT] Manually do redirects and chdir rather than
-      invoking a shell when calling man.
+      invoking a shell when calling man and lexgrog.
     + [CW,NT] Be stricter with missing roff preprocessors by
       setting MANROFFSEQ to the empty string when calling man.
     + [CW,NT] Pass -Tutf8 -Z to man to skip an unused part of

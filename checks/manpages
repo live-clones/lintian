@@ -214,11 +214,13 @@ foreach my $file ($info->sorted_index) {
         if ($path =~ m,/man/man\d/,) {
             my $pid = open LEXGROG, '-|';
             if (not defined $pid) {
-                fail("cannot run lexgrog: $!");
+                fail "fork (lexgrog) failed: $!";
             } elsif ($pid == 0) {
                 clean_env;
-                exec "lexgrog \Q$path\E 2>&1"
-                    or fail("cannot run lexgrog: $!");
+                open STDERR, '>&', STDOUT
+                    or fail "Redirect STDERR failed: $!";
+                exec 'lexgrog', $path
+                    or fail "exec lexgrog failed: $!";
             }
             my $desc = <LEXGROG>;
             $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
