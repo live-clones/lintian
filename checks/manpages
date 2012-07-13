@@ -226,7 +226,7 @@ foreach my $file ($info->sorted_index) {
             $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
             if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
                 tag 'manpage-has-useless-whatis-entry', $file;
-            } elsif ($desc =~ /(\S+)\s+-\s+programs? to do something/i) {
+            } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
                 tag 'manpage-is-dh_make-template', $file;
             }
             1 while <LEXGROG>;
@@ -276,7 +276,7 @@ foreach my $file ($info->sorted_index) {
             next if /^Reformatting/;
             next if /^\s*$/;
             # ignore errors from gzip, will be dealt with at other places
-            next if /^(man|gzip)/;
+            next if /^(?:man|gzip)/;
             # ignore wrapping failures for Asian man pages (groff problem)
             if ($lang =~ /^(?:ja|ko|zh)/) {
                 next if /warning \[.*\]: cannot adjust line/;
@@ -284,11 +284,11 @@ foreach my $file ($info->sorted_index) {
             }
             # ignore wrapping failures if they contain URLs (.UE is an
             # extension for marking the end of a URL).
-            next if /:(\d+): warning \[.*\]: (can\'t break|cannot adjust) line/
+            next if /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
                 and (   $manfile[$1 - 1] =~ m,(?:https?|ftp)://.+,i
                      or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
             # ignore common undefined macros from pod2man << Perl 5.10
-            next if /warning: (?:macro )?\`(Tr|IX)\' not defined/;
+            next if /warning: (?:macro )?\`(?:Tr|IX)\' not defined/;
             chomp;
             s/^[^:]+://o;
             tag 'manpage-has-errors-from-man', $file, $_;
