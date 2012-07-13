@@ -24,7 +24,7 @@ use warnings;
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env fail);
+use Lintian::Util qw(clean_env fail open_gz);
 
 use Text::ParseWords ();
 use File::Basename;
@@ -161,11 +161,15 @@ foreach my $file ($info->sorted_index) {
         }
     } else { # not a symlink
         my $path = $info->unpacked($file);
-        open (MANFILE, '-|', "zcat \Q$path\E 2>/dev/null")
-            or fail("cannot open $file: $!");
-        my @manfile = ();
-        while (<MANFILE>) { push @manfile, $_; }
-        close MANFILE;
+        my $fd;
+        if ($file_info =~ m/gzip compressed/) {
+            $fd = open_gz ($path);
+        } else {
+            open $fd, '<', $path;
+        }
+        $fd or fail "cannot open $file: $!";
+        my @manfile = <$fd>;
+        close $fd;
         # Is it a .so link?
         if ($index_info->size < 256) {
             my ($i, $first) = (0, '');

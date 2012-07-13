@@ -31,6 +31,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       setting MANROFFSEQ to the empty string when calling man.
     + [CW,NT] Pass -Tutf8 -Z to man to skip an unused part of
       the groff pipeline.
+    + [CW,NT] Use the L::Util gzip decompressor to open gzipped
+      manpages.
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
   * checks/source-copyright{,.desc}:
