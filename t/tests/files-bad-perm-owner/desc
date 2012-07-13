@@ -12,9 +12,9 @@ Test-For:
  non-standard-dir-perm
  non-standard-executable-perm
  non-standard-file-perm
+ non-standard-file-permissions-for-etc-init.d-script
  non-standard-game-executable-perm
  non-standard-setuid-executable-perm
  setgid-binary
  setuid-binary
  setuid-gid-binary
-

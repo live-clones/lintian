@@ -1,5 +1,5 @@
 Last generated 2012-07-13
-Coverage: 830/964 (86.10%), w. legacy tests: 930/964 (96.47%)
+Coverage: 831/964 (86.20%), w. legacy tests: 931/964 (96.58%)
 
 The following tags are not tested by the test suite:
 
@@ -24,7 +24,6 @@ fields malformed-python-version
 fields no-source-field
 
 files debug-package-should-be-named-dbg
-files non-standard-file-permissions-for-etc-init.d-script
 files udeb-contains-documentation-file
 
 init.d duplicate-updaterc.d-calls-in-postinst

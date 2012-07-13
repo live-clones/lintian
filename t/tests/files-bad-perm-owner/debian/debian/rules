@@ -31,3 +31,4 @@ override_dh_fixperms:
 	chmod 0755 debian/$(PKG)/usr/share/doc/$(PKG)/some-file
 	chmod 0755 debian/$(PKG)/etc/cron.d/script
 	chmod 0755 debian/$(PKG)/etc/emacs.d/script
+	chmod 0765 debian/$(PKG)/etc/init.d/binary

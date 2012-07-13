@@ -2,10 +2,12 @@ E: binary: bad-owner-for-doc-file usr/share/doc/binary/README daemon/daemon != r
 E: binary: bad-permissions-for-etc-cron.d-script etc/cron.d/script 0755 != 0644
 E: binary: bad-permissions-for-etc-emacs-script etc/emacs.d/script 0755 != 0644
 E: binary: executable-in-usr-share-doc usr/share/doc/binary/some-file 0755
+E: binary: non-standard-file-permissions-for-etc-init.d-script etc/init.d/binary 0765 != 0755
 W: binary: bad-permissions-for-ali-file usr/lib/some-where/sample.ali
 W: binary: executable-is-not-world-readable usr/bin/script-ro 0751
 W: binary: executable-not-elf-or-script usr/share/doc/binary/some-file
 W: binary: non-standard-dir-perm usr/share/doc/binary/ 0744 != 0755
+W: binary: non-standard-executable-perm etc/init.d/binary 0765 != 0755
 W: binary: non-standard-executable-perm usr/bin/script-wexec 0775 != 0755
 W: binary: non-standard-file-perm usr/share/doc/binary/read-only 0444 != 0644
 W: binary: non-standard-setuid-executable-perm usr/bin/script-wuid 4744
