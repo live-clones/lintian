@@ -9,6 +9,8 @@
 Use more up-level tools like human brains to understand lintian.
 Here's a bad undefined macro.
 Here's a serious syntax error.
+.SH "FILES"
+This program does not use /var/catman/do or any other FSSTND location.
 .dep
 .PP
 .nh

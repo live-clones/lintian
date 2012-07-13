@@ -1,4 +1,5 @@
 E: manpages-general: bad-link-to-undocumented-manpage usr/share/man/man1/sbin-binary.1.gz
+E: manpages-general: bad-so-link-within-manual-page usr/share/man/man1/bad-so.1.gz
 E: manpages-general: empty-manual-page usr/share/man/de/man1/binary-without-english-manpage.1
 E: manpages-general: empty-manual-page usr/share/man/man1/usr-bin-binary-alt.1.gz
 E: manpages-general: empty-manual-page usr/share/man/man1/usr-bin-binary.1
@@ -18,6 +19,7 @@ E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/bin/rstartd
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
+I: manpages-general: FSSTND-dir-in-manual-page usr/share/man/man1/test.1p.gz:13 /var/catman/
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:11
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:12
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
@@ -35,9 +37,9 @@ W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-bin
 W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
-W: manpages-general: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 12: warning: macro `dep' not defined (possibly missing space after `de')
+W: manpages-general: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 14: warning: macro `dep' not defined (possibly missing space after `de')
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man3/included.3.gz 6: warning: macro `zY' not defined
-W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:17
+W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:19
 W: manpages-general: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages-general: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
 W: manpages-general: manpage-section-mismatch usr/X11R6/man/man1/rstartd.1x.gz:5 1x != 1

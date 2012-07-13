@@ -54,6 +54,7 @@ override_dh_auto_install:
 	install -d $(tmp)/usr/share/man/de_DE/man1
 	gzip -c9 < test.1p.utf-8 \
 	    > $(tmp)/usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
+	gzip -c9 < bad-so.1 > $(tmp)/usr/share/man/man1/bad-so.1.gz
 
 	gzip -c9 <include.3 >$(tmp)/usr/share/man/man3/include.3.gz
 	gzip -c9 <included.3 >$(tmp)/usr/share/man/man3/included.3.gz

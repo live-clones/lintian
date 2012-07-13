@@ -3,7 +3,9 @@ Sequence: 6000
 Version: 1.0
 Description: General tests for manpage checks
 Test-For:
+ FSSTND-dir-in-manual-page
  bad-link-to-undocumented-manpage
+ bad-so-link-within-manual-page
  binary-without-english-manpage
  empty-manual-page
  hyphen-used-as-minus-sign

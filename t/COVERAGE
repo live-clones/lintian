@@ -1,5 +1,5 @@
 Last generated 2012-07-13
-Coverage: 827/964 (85.79%), w. legacy tests: 928/964 (96.27%)
+Coverage: 829/964 (86.00%), w. legacy tests: 930/964 (96.47%)
 
 The following tags are not tested by the test suite:
 
@@ -29,9 +29,6 @@ files udeb-contains-documentation-file
 
 init.d duplicate-updaterc.d-calls-in-postinst
 init.d file-in-etc-rc.d-marked-as-conffile
-
-manpages FSSTND-dir-in-manual-page
-manpages bad-so-link-within-manual-page
 
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-needs-dwww
