@@ -30,3 +30,5 @@ echo 'source-contains-cvs-conflict-copy' > "${dir}/.#foo.1.1"
 echo 'source-contains-svn-conflict-file' > "${dir}/foo.r1352"
 
 echo 'configure-generated-file-in-source' > "${dir}/config.cache"
+
+printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3c" > "${dir}/fake-win32-bin.exe"
