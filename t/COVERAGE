@@ -1,12 +1,10 @@
-Last generated 2012-07-13
-Coverage: 832/963 (86.40%), w. legacy tests: 932/963 (96.78%)
+Last generated 2012-07-14
+Coverage: 833/963 (86.50%), w. legacy tests: 933/963 (96.88%)
 
 The following tags are not tested by the test suite:
 
 binaries binary-file-compressed-with-upx
 binaries ocaml-custom-executable
-
-deb-format tar-errors-from-data
 
 debconf boolean-template-has-bogus-default
 debconf debconf-is-not-a-registry
