@@ -106,7 +106,7 @@ sub _fetch_extracted_dir {
 sub _dequote_name {
     my ($name, $slsd) = @_;
     $slsd = 1 unless defined $slsd; # Remove initial ./ by default
-    $name =~ s,^\./,, if $slsd;
+    $name =~ s,^\.?/,, if $slsd;
     $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
     $name =~ s/\\\\/\\/;
     return $name;
