@@ -37,6 +37,9 @@ profiles: $(profiles)
 $(profiles): $(allchecks) private/generate-profiles.pl
 	private/generate-profiles.pl
 
+api-doc:
+	private/generate-html-docs ./lib doc/api.html $(VER)
+
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf "$(TEST_WORK_DIR)"
@@ -84,6 +87,7 @@ clean: $(neededfiles)
 	rm -f runtests build-stamp
 	rm -f doc/help.tmp doc/README
 	rm -rf doc/lintian.html/ doc/lintian.txt
+	rm -rf doc/api.html
 	rm -rf "$(TEST_WORK_DIR)"
 	rm -rf man/man1/
 	rm -fr debian/test.locale

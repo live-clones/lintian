@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use Pod::Simple::HTMLBatch;
+use Pod::Simple::HTML;
+
+my ($input, $output, $version) = @ARGV;
+
+$input //= './lib';
+$output //= './doc/api.html';
+$version //= '<version>';
+
+if ( ! -d $output) {
+    mkdir $output or die "could not create directory: $!";
+}
+
+my $convert = Pod::Simple::HTMLBatch->new;
+$convert->html_render_class ('Pod::Simple::HTML');
+$convert->contents_page_start( header() );
+$convert->batch_convert ($input, $output);
+
+print "HTML version available at $output/index.html\n";
+
+sub header {
+
+    return <<EOF;
+
+<html>
+<head><title>Lintian (v$version) API doc</title></head>
+<body class='contentspage'>
+<h1>Lintian (v$version) API doc</h1>
+EOF
+}
