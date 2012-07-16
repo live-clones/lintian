@@ -82,11 +82,11 @@ my $dev_prefix;
 my $has_meta = 0;
 
 foreach my $file ($info->sorted_index) {
-    my $fileinfo = $info->file_info->{$file};
+    my $fileinfo = $info->file_info ($file);
 
     # For each .cmxa file, there must be a matching .a file (#528367)
     $_ = $file;
-    if (s/\.cmxa$/.a/ && !(exists $info->file_info->{$_})) {
+    if (s/\.cmxa$/.a/ && !$info->file_info ($_)) {
         tag 'ocaml-dangling-cmxa', $file;
     }
 
@@ -95,8 +95,8 @@ foreach my $file ($info->sorted_index) {
     if ($is_lib_package) {
         $_ = $file;
         if (s/\.cmxs$/.cm/
-            && !(exists $info->file_info->{"${_}a"})
-            && !(exists $info->file_info->{"${_}o"})) {
+            && !$info->file_info ("${_}a")
+            && !$info->file_info ("${_}o")) {
             tag 'ocaml-dangling-cmxs', $file;
         }
     }
@@ -106,7 +106,7 @@ foreach my $file ($info->sorted_index) {
     # .a file in the same directory
     $_ = $file;
     if (s/\.cmx$/.o/
-        && !(exists $info->file_info->{$_})
+        && !$info->file_info ($_)
         && !(exists $provided_o{$_})) {
         tag 'ocaml-dangling-cmx', $file;
     }
@@ -114,8 +114,8 @@ foreach my $file ($info->sorted_index) {
     # $somename.cmi should be shipped with $somename.mli or $somename.ml
     $_ = $file;
     if ($is_dev_package && s/\.cmi$/.ml/
-        && !(exists $info->file_info->{"${_}i"})
-        && !(exists $info->file_info->{$_})) {
+        && !$info->file_info ("${_}i")
+        && !$info->file_info ($_)) {
         $cmi_number++;
         if ($cmi_number <= $MAX_CMI) {
             tag 'ocaml-dangling-cmi', $file;
@@ -134,7 +134,7 @@ foreach my $file ($info->sorted_index) {
 
     # $somename.cmo should usually not be shipped with $somename.cma
     $_ = $file;
-    if (s/\.cma$/.cmo/ && exists $info->file_info->{$_}) {
+    if (s/\.cma$/.cmo/ && $info->file_info ($_)) {
         tag 'ocaml-stray-cmo', $file;
     }
 

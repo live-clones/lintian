@@ -39,7 +39,6 @@ use Lintian::Util qw(fail);
 
 my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-my $file_info = $info->file_info;
 
 my $helper = realpath("$0-helper");
 
@@ -67,7 +66,7 @@ foreach my $bin ($info->sorted_index) {
     # Skip kernel modules - most of the checks do not apply to the
     # kernel.
     next if $bin =~ m/\.ko/o;
-    my $finfo = $file_info->{$bin};
+    my $finfo = $info->file_info ($bin);
     next unless $finfo =~ m/\bELF\b/o;
     printf {$opts{pipe_in}} "%s\0", $bin;
 }

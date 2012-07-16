@@ -38,8 +38,12 @@ sub unpacked {
 
 # Returns the information from collect/file-info
 sub file_info {
-    my ($self) = @_;
-    return $self->{file_info} if exists $self->{file_info};
+    my ($self, $file) = @_;
+    if (exists $self->{file_info}) {
+        return $self->{file_info}->{$file}
+            if exists $self->{file_info}->{$file};
+        return;
+    }
     my %file_info;
     my $path = $self->lab_data_path ('file-info.gz');
     local $_;
@@ -60,7 +64,9 @@ sub file_info {
     close $idx;
     $self->{file_info} = \%file_info;
 
-    return $self->{file_info};
+    return $self->{file_info}->{$file}
+        if exists $self->{file_info}->{$file};
+    return;
 }
 
 # Returns the information from the indices
@@ -317,9 +323,9 @@ The following code may be helpful in checking for path traversal:
 
 Alternatively one can use Lintian::Util::resolve_pkg_path.
 
-=item file_info
+=item file_info (FILE)
 
-Returns a hashref mapping file names to the output of file for that file.
+Returns the output of file(1) for FILE (if it exists) or C<undef>.
 
 Note the file names do not have any leading "./" nor "/".
 

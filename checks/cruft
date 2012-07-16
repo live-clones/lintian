@@ -147,17 +147,17 @@ find($wanted, $abs);
 
 # Look for cruft based on file's results, but allow cruft in test directories
 # where it may be part of a test suite.
-my $file_info = $info->file_info;
-for my $file (keys(%$file_info)) {
+for my $file ($info->sorted_index) {
     next if ($file =~ m,(?:^|/)t(?:est(?:s(?:et)?)?)?/,);
-    if ($file_info->{$file} =~ m/\bELF\b/) {
+    my $file_info = $info->file_info ($file);
+    if ($file_info =~ m/\bELF\b/) {
         tag 'source-contains-prebuilt-binary', $file;
-    } elsif ($file_info->{$file} =~ m/\b(?:MS-DOS|PE(?:32|64)|COFF executable)\b/) {
+    } elsif ($file_info =~ m/\b(?:MS-DOS|PE(?:32|64)|COFF executable)\b/) {
         tag 'source-contains-prebuilt-windows-binary', $file;
     } elsif ($file =~ /\bwaf$/) {
         my $ok = 1;
         # If file believes this is data, then we trust that
-        $ok = 0 if $file_info->{$file} =~ m/data/;
+        $ok = 0 if $file_info =~ m/data/;
         if ($ok) {
             # Unfortunately file 5.04 (Squeeze) and 5.09 does not
             # always agree, so manually check for the bz2 entry if
@@ -184,12 +184,12 @@ for my $file (keys(%$file_info)) {
 
 for my $file (@EOL_TERMINATORS_FILES) {
     $file = "debian/$file";
-
-    next unless defined $file_info->{$file};
+    my $file_info = $info->file_info ($file);
+    next unless defined $file_info;
 
 
     tag 'control-file-with-CRLF-EOLs', $file
-        if ($file_info->{$file} =~ m/\bCRLF\b/);
+        if $file_info =~ m/\bCRLF\b/;
 }
 
 # Report any error messages from tar while unpacking the source package if it

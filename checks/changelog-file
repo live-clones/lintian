@@ -54,7 +54,7 @@ return 0 if $info->index ("usr/share/doc/$pkg") and
 for my $file ($info->sorted_index) {
     next unless $file =~ m/doc/o;
 
-    $file_info{$file} = $info->file_info->{$file};
+    $file_info{$file} = $info->file_info ($file);
 
     if ($file_info{$file} =~ m/^(?:broken )?symbolic link to (.*)/) {
         # Figure out the link destination.  This algorithm is
@@ -76,8 +76,8 @@ for my $file ($info->sorted_index) {
             # concatenate the results
             $newfile .= '/' . $link;
         }
-        if (exists $info->file_info->{$newfile}) {
-            $file_info{$file} = $info->file_info->{$newfile};
+        if ($info->file_info ($newfile)) {
+            $file_info{$file} = $info->file_info ($newfile);
         }
     }
 }

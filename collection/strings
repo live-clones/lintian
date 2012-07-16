@@ -37,7 +37,6 @@ my ($pkg, $type, $dir) = @ARGV;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 my $helper = realpath("$0-helper");
-my $file_info = $info->file_info;
 my @manual = ();
 
 if ( -e "$dir/elf-index" ) {
@@ -64,7 +63,7 @@ spawn (\%opts, ['xargs', '-0r', 'strings', '-f', '--'], '|', [$helper, "$dir/str
 $opts{pipe_in}->blocking(1);
 
 foreach my $bin ($info->sorted_index) {
-    my $finfo = $file_info->{$bin};
+    my $finfo = $info->file_info ($bin);
     next unless $finfo =~ m/\bELF\b/o;
     print ELF_INDEX "$bin\n";
 

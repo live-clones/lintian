@@ -204,7 +204,7 @@ my $info = shift;
 
 foreach my $file ($info->sorted_index) {
     next if $file eq '';
-    $ELF{$file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
+    $ELF{$file} = 1 if $info->file_info ($file) =~ /^[^,]*\bELF\b/o;
 
     my $index_info = $info->index ($file);
     my $operm = $index_info->operm;

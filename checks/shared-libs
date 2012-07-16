@@ -79,7 +79,7 @@ foreach my $file (sort keys %{$objdump}) {
 
 foreach my $file ($info->sorted_index) {
     next unless length $file;
-    my $fileinfo = $info->file_info->{$file};
+    my $fileinfo = $info->file_info ($file);
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
         $sharedobject{$file} = 1;
     }

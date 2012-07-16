@@ -426,7 +426,7 @@ foreach my $file ($info->sorted_index) {
                 # 276 is 255 bytes (maximal length for a filename) + gzip overhead
                 if ($file =~ m,.gz$, and $index_info->size <= 276
                     and $index_info->is_file
-                    and $info->file_info->{$file} =~ m/gzip compressed/) {
+                    and $info->file_info ($file) =~ m/gzip compressed/) {
                     my $fd = open_gz ($info->unpacked ($file)) or fail "open $file: $!";
                     my $f = <$fd>;
                     close $fd;
@@ -450,7 +450,7 @@ foreach my $file ($info->sorted_index) {
 
                 # contains a compressed version of objects.inv in sphinx-generated documentation?
                 if ($file =~ m,^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$,
-                    and $info->file_info->{$file} =~ m/gzip compressed/) {
+                    and $info->file_info ($file) =~ m/gzip compressed/) {
                     tag 'compressed-objects.inv', $file;
                 }
 
@@ -734,7 +734,7 @@ foreach my $file ($info->sorted_index) {
             $file =~ m,^(?:usr/)?lib/([^/]+)/lib[^/]+\.so(?:\.[^/]+)?$,o) {
         my $subdir = $1;
         # Skip if it not an ELF file (probably a .so script)
-        next unless ($info->file_info->{$file}//'') =~ m/\bELF\b/o;
+        next unless ($info->file_info ($file)//'') =~ m/\bELF\b/o;
         if ($TRIPLETS->known($subdir) && $arch eq $TRIPLETS->value($subdir)) {
             my $dep = $info->relation('pre-depends');
             tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
@@ -839,7 +839,7 @@ foreach my $file ($info->sorted_index) {
 
         # okay, we cannot rule it out based on file name; but if it is an elf or a static
         # library, we also skip it.  (In case you hadn't guessed; liblicense)
-        my $fileinfo = $info->file_info->{$file};
+        my $fileinfo = $info->file_info ($file);
         tag 'extra-license-file', $file
             unless $fileinfo && ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
     }
@@ -930,7 +930,7 @@ foreach my $file ($info->sorted_index) {
         } else {
             $path = $file;
         }
-        my $fileinfo = $info->file_info->{$path};
+        my $fileinfo = $info->file_info ($path);
         if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
             my ($fwidth, $fheight) = ($1, $2);
             my $width_delta = abs($dwidth - $fwidth);
@@ -1050,7 +1050,7 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- .gz files
         if ($file =~ m/\.gz$/) {
-            my $finfo = $info->file_info->{$file} || '';
+            my $finfo = $info->file_info ($file) || '';
             if ($finfo !~ m/gzip compressed/) {
                 tag 'gz-file-not-gzip', $file;
             } elsif ($isma_same && $file !~ m/\Q$arch\E/o) {
@@ -1076,7 +1076,7 @@ foreach my $file ($info->sorted_index) {
         # --------------- compressed + uncompressed files
         if ($file =~ m,^(.+)\.(?:gz|bz2)$,) {
             tag 'duplicated-compressed-file', $file
-                if exists $info->file_info->{$1};
+                if $info->file_info ($1);
         }
 
         # ---------------- general: setuid/setgid files!

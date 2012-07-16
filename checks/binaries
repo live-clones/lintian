@@ -209,7 +209,7 @@ foreach ($info->sorted_index) {
 
 # process all files in package
 foreach my $file ($info->sorted_index) {
-    my $fileinfo = $info->file_info->{$file};
+    my $fileinfo = $info->file_info ($file);
     my $objdump = $info->objdump_info->{$file};
 
     # binary or object file?
