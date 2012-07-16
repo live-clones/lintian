@@ -70,6 +70,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Bump API for objdump method.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Strip leading slash off files extracted from tar.
+  * lib/Lintian/Internal/FrontendUtil.pm:
+    + [NT] Always use Dpkg::Vendor to determine the default
+      vendor.  Previously dpkg-vendor would be preferred if
+      available.
 
   * man/lintian.pod.in:
     + [NT] Remove documentation about removed options.
