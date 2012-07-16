@@ -53,32 +53,15 @@ return 0 if $info->index ("usr/share/doc/$pkg") and
 # Modify the file_info by following symbolic links.
 for my $file ($info->sorted_index) {
     next unless $file =~ m/doc/o;
+    my $path = $info->index ($file);
 
     $file_info{$file} = $info->file_info ($file);
 
-    if ($file_info{$file} =~ m/^(?:broken )?symbolic link to (.*)/) {
-        # Figure out the link destination.  This algorithm is
-        # not perfect but should be good enough.  (If it fails,
-        # all that happens is that an evil symlink causes a bogus warning).
-        my $newfile;
-        my $link = $1;
-        if ($link =~ m/^\//) {
-            # absolute path; replace
-            $newfile = $link;
-        } else {
-            $newfile = $file;   # relative path; base on $file
-            $newfile =~ s,/[^/]+$,,; # strip final pathname component
-            # strip another component for every leading ../ in $link
-            while ($link =~ m,^\.\./,) {
-                $newfile =~ s,/[^/]+$,,;
-                $link =~ s,^\.\./,,;
-            }
-            # concatenate the results
-            $newfile .= '/' . $link;
-        }
-        if ($info->file_info ($newfile)) {
-            $file_info{$file} = $info->file_info ($newfile);
-        }
+    if ($path->is_symlink) {
+        # A symlink; use its target info if available.
+        my $target = $path->link_resolved;
+        my $tinfo = $info->file_info ($target);
+        $file_info{$file} = $tinfo if defined $tinfo;
     }
 }
 
