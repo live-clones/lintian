@@ -620,7 +620,7 @@ import Lintian::Util qw(fail read_dpkg_control);
 
 require Lintian::Collect;
 require Lintian::CollScript;
-require Lintian::DepMap::Properties;
+require Lintian::DepMap;
 require Lintian::Data;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
@@ -1089,14 +1089,14 @@ if (@unpack_info) {
 # execution order.
 #
 # $map is just here to check that all the needed collections are present.
-my $map = Lintian::DepMap::Properties->new();
+my $map = Lintian::DepMap->new();
 my @scripts = sort $PROFILE->scripts;
-my $collmap = Lintian::DepMap::Properties->new();
+my $collmap = Lintian::DepMap->new();
 
 for my $c (keys %unpack_infos) {
     # Add the collections with their dependency information
-    $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
-    $collmap->add($c, {'type' => 'collection', 'name' => $c});
+    $map->add('coll-' . $c);
+    $collmap->add($c);
     $map->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
     $collmap->add($c, $collection_info{$c}->needs_info);
 }
@@ -1104,7 +1104,7 @@ for my $c (keys %unpack_infos) {
 for my $c (@scripts) {
     # Add the checks with their dependency information
     my $cs = $PROFILE->get_script ($c);
-    $map->add('check-' . $c, $cs);
+    $map->add('check-' . $c);
     if ($cs->needs_info) {
         $map->addp('check-' . $c, 'coll-', $cs->needs_info);
     }
@@ -1372,27 +1372,25 @@ sub unpack_group {
             my $pkg_ver  = $lpkg->pkg_version;
             my $pkg_arch = $lpkg->pkg_arch;
             my $base = $lpkg->base_dir;
-            foreach my $req ($cmap->selectable) {
-                my $ri = $cmap->getProp($req);
-                my $coll = $ri->{'name'};
+            foreach my $coll ($cmap->selectable) {
                 my $ci = $collection_info{$coll};
 
                 # current type?
                 unless ($ci->is_type ($pkg_type)) {
-                    $cmap->satisfy ($req);
+                    $cmap->satisfy ($coll);
                     next;
                 }
 
                 # check if it has been run previously
                 if ($lpkg->is_coll_finished ($coll, $ci->version)) {
-                    $cmap->satisfy ($req);
+                    $cmap->satisfy ($coll);
                     next;
                 }
                 # Not run before (or out of date)
                 $lpkg->_clear_coll_status($coll);
 
                 # collect info
-                $cmap->select ($req);
+                $cmap->select ($coll);
                 $wlist->{'changed'} = 1;
                 debug_msg(1, "Collecting info: $coll for $procid ...");
                 my $cmd = Lintian::Command::Simple->new();
