@@ -987,6 +987,14 @@ Info: The VCS-* field contains more spaces than expected or spaces at
  in URIs to avoid any ambiguity with respect to possible future additional
  optional fields.
 
+Tag: vcs-field-not-canonical
+Severity: minor
+Certainty: possible
+Info: The VCS-* field contains an uncanonical URI. Please update to use
+ the current canonical URI instead. This reduces the network bandwidth used
+ and makes debcheckout work independent of the port forwarding and
+ redirections properly working.
+
 Tag: lib-recommends-documentation
 Severity: normal
 Certainty: possible

@@ -118,6 +118,40 @@ my %VCS_EXTRACT = (
     # that's a hostname followed by a module name:
     mtn     => sub { return shift =~ /^(.+?)\s+(\S+)$/;},
 );
+my %VCS_CANONIFY = (
+    browser => sub {
+        $_[0] =~ s{https?://svn.debian.org/wsvn/}{http://anonscm.debian.org/viewvc/};
+        $_[0] =~ s{http://git.debian.org/\?p=}{http://anonscm.debian.org/gitweb/?p=};
+        $_[0] =~ s{http://bzr.debian.org/loggerhead/}{http://anonscm.debian.org/loggerhead/};
+    },
+    cvs      => sub {
+	$_[0] =~ s{\@cvs.alioth.debian.org:/cvsroot/}{\@anonscm.debian.org:/cvs/};
+	$_[0] =~ s{\@cvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
+	$_[0] =~ s{\@anonscm.debian.org:/cvsroot/}{\@anonscm.debian.org:/cvs/};
+    },
+    arch     => sub {
+        $_[0] =~ s{http://arch.debian.org/arch/}{http://anonscm.debian.org/arch/};
+    },
+    bzr     => sub {
+        $_[0] =~ s{http://bzr.debian.org/}{http://anonscm.debian.org/bzr/};
+        $_[0] =~ s{http://anonscm.debian.org/bzr/bzr/}{http://anonscm.debian.org/bzr/};
+    },
+    git     => sub {
+        $_[0] =~ s{http://git.debian.org/}{http://anonscm.debian.org/git/};
+        $_[0] =~ s{http://anonscm.debian.org/git/git/}{http://anonscm.debian.org/git/};
+        $_[0] =~ s{git://git.debian.org/}{git://anonscm.debian.org/};
+        $_[0] =~ s{git://anonscm.debian.org/git/}{git://anonscm.debian.org/};
+    },
+    hg      => sub {
+        $_[0] =~ s{http://hg.debian.org/}{http://anonscm.debian.org/hg/};
+        $_[0] =~ s{http://anonscm.debian.org/hg/hg/}{http://anonscm.debian.org/hg/};
+    },
+    svn     => sub {
+        $_[0] =~ s{svn://cvs.alioth.debian.org/}{svn://anonscm.debian.org/};
+        $_[0] =~ s{svn://svn.debian.org/}{svn://anonscm.debian.org/};
+        $_[0] =~ s{svn://anonscm.debian.org/svn/}{svn://anonscm.debian.org/};
+    },
+);
 # Valid URI formats for the Vcs-* fields
 # currently only checks the protocol, not the actual format of the URI
 my %VCS_RECOMMENDED_URIS = (
@@ -975,6 +1009,15 @@ while (my ($vcs, $splitter) = each %VCS_EXTRACT) {
             }
             if (grep { $_ and /\s/} @parts) {
                 tag 'vcs-field-has-unexpected-spaces', "vcs-$vcs", $uri;
+            }
+        }
+        if ($VCS_CANONIFY{$vcs}) {
+            my $canonicalized = $parts[0];
+            foreach my $canonify ($VCS_CANONIFY{$vcs}) {
+                &$canonify($canonicalized);
+            }
+            if ($canonicalized ne $parts[0]) {
+                tag 'vcs-field-not-canonical', $parts[0], $canonicalized;
             }
         }
     }
