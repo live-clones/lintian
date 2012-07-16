@@ -59,6 +59,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * frontend/lintian:
     + [NT] Fix synopsis for --no-cfg option in the help output.
     + [NT] Remove chdir calls for checks.
+    + [NT] Retire depreciated command line and config options.
 
   * lib/Lintian/Collect{,/Source}.pm:
     + [NT] Add optional parameter to field (and X_field)
@@ -69,6 +70,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Bump API for objdump method.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Strip leading slash off files extracted from tar.
+
+  * man/lintian.pod.in:
+    + [NT] Remove documentation about removed options.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 

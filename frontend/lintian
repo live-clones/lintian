@@ -85,7 +85,6 @@ my $lintian_info = 0;           #flag for -i|--info switch
 my $ftpmaster_tags = 0;         #flag for -F|--ftp-master-rejects switch
 my $allow_root = 0;             #flag for --allow-root switch
 my $keep_lab = 0;               #flag for --keep-lab switch
-my $packages_file = 0;          #string for the -p option
 
 my $no_conf = 0;                #flag for --no-cfg
 my %opt;                        #hash of some flags from cmd or cfg
@@ -205,19 +204,14 @@ Behaviour options:
     --suppress-tags-from-file X don\'t show the tags listed in file X
     -U X, --unpack-info X     specify which info should be collected
 Configuration options:
-    --arch ARCH               scan packages with architecture ARCH
-    --area AREA               scan packages in this archive area (e.g. main)
-    --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
-    --dist DIST               scan packages in this distribution (e.g. sid)
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
 Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
-    -p X, --packages-file X   process all files in file (special syntax!)
     --packages-from-file  X   process the packages in a file (if "-" use stdin)
     -s, --source              process only source packages
     --udeb                    process only udeb packages
@@ -396,12 +390,6 @@ sub record_quiet {
     $opt{'verbose'} = -1;
 }
 
-# Process deprecated flags
-sub deprecated{
-    print STDERR "warning: $_[0] is deprecated and may be removed\n";
-    print STDERR "in a future Lintian release.\n";
-}
-
 # Process display-info and display-level options in cfg files
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
@@ -509,7 +497,6 @@ my %opthash = (                 # ------------------ actions
                'show-overrides' => \$opt{'show-overrides'},
                'color=s' => \$opt{'color'},
                'unpack-info|U=s' => \&record_unpack_info,
-               'checksums|md5sums|m' => \&deprecated,
                'allow-root' => \$allow_root,
                'fail-on-warnings' => \$opt{'fail-on-warnings'},
                'keep-lab' => \$keep_lab,
@@ -518,11 +505,6 @@ my %opthash = (                 # ------------------ actions
                'cfg=s' => \$opt{'LINTIAN_CFG'},
                'no-cfg' => \$no_conf,
                'lab=s' => \$opt{'LINTIAN_LAB'},
-               'archivedir=s' => \&deprecated,
-               'dist=s' => \&deprecated,
-               'area=s' => \&deprecated,
-               'section=s' => \&deprecated,
-               'arch=s' => \&deprecated,
                'profile=s' => \$opt{'LINTIAN_PROFILE'},
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
@@ -533,7 +515,6 @@ my %opthash = (                 # ------------------ actions
                'binary|b' => \&record_pkgmode,
                'source|s' => \&record_pkgmode,
                'udeb' => \&record_pkgmode,
-               'packages-file|p=s' => \$packages_file,
                'packages-from-file=s' => \$opt{'packages-from-file'},
 
                # ------------------ experimental
@@ -598,23 +579,18 @@ foreach my $var (@ENV_VARS) {
 # {{{ Sanity check command-line options (that are unaffected by the configuration file)
 
 # option --all and packages specified at the same time?
-if (($check_everything or $packages_file or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
-    print STDERR "warning: options -a, -p and --packages-from-file cannot be mixed with package parameters!\n";
-    print STDERR "(will ignore -a, -p or/and --packages-from-file option)\n";
+if (($check_everything or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
+    print STDERR "warning: options -a and --packages-from-file cannot be mixed with package parameters!\n";
+    print STDERR "(will ignore -a or/and --packages-from-file option)\n";
     undef $check_everything;
-    undef $packages_file;
     delete $opt{'packages-from-file'};
-}
-
-if ($packages_file && $opt{'packages-from-file'}) {
-    die "The options -p and --packages-from-file cannot be used together.\n"
 }
 
 # check specified action
 $action = 'check' unless $action;
 
 # check for arguments
-if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file and not $opt{'packages-from-file'}) {
+if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $opt{'packages-from-file'}) {
     my $ok = 0;
     if ($action eq 'check' or $action eq 'unpack') {
         # If debian/changelog exists, assume an implied "../<source>_<version>_<arch>.changes"
@@ -725,10 +701,6 @@ if ($opt{'LINTIAN_CFG'}) {
                 $found = 1;
                 last;
             }
-        }
-        if (m/^\s*LINTIAN_(ARCH|ARCHIVEDIR|AREA|DIST)\s*=/o) {
-            print STDERR "LINTIAN_$1 is deprecated (seen in $opt{'LINTIAN_CFG'} at line $.)\n";
-            $found = 1;
         }
         unless ($found) {
             # check if it is a config option
@@ -975,22 +947,6 @@ if ($check_everything) {
     };
     $t = undef if $pkg_mode eq 'auto';
     $LAB->visit_packages($visitor, $t);
-} elsif ($packages_file) {
-    # process all packages listed in packages file?
-    print STDERR "warning: --packages-file is deprecated and may be removed in a later release.\n";
-    print STDERR "  - consider using --packages-from-file (one pkg per line)\n";
-    open(my $pkgin, '<', $packages_file) or fail("Reading $packages_file: $!");
-    while (my $line = <$pkgin>) {
-        chomp($line);
-        my ($t, undef, undef, $file) = split(/\s+/, $line, 4);
-        unless (defined $file && length $t == 1) {
-            print STDERR "Syntax error in packages-file at line $.\n";
-            print STDERR " - perhaps you meant to use \"--packages-from-file $packages_file\"\n";
-            exit 1;
-        }
-        $pool->add_file($file);
-    }
-    close($pkgin);
 } elsif ($opt{'packages-from-file'}){
     my $fd;
     if ($opt{'packages-from-file'} eq '-') {

@@ -283,14 +283,6 @@ format as passed via command-line.
 Note: B<display-level> may not be used with B<display-info> or B<pedantic>
 in the configuration file.
 
-=item B<-m>, B<--md5sums>, B<--checksums>
-
-This has become redundant in lintian 2.5.1 and may be removed in a
-later release.
-
-This option used to control whether Lintian would verify checksums
-in changes files.  As of 2.5.1, Lintian always does this.
-
 =item B<-o>, B<--no-override>
 
 Don't use the overrides file.
@@ -369,18 +361,6 @@ Configuration options:
 
 =over 4
 
-=item B<--arch> arch
-
-Deprecated, does nothing and may be removed in a later release.
-
-=item B<--area> area
-
-Deprecated, does nothing and may be removed in a later release.
-
-=item B<--archivedir> archivedir
-
-Deprecated, does nothing and may be removed in a later release.
-
 =item B<--cfg> configfile
 
 Read the configuration from configfile rather than the default
@@ -391,14 +371,6 @@ variable.
 
 Do not read any configuration file.  This option overrides the
 B<--cfg> above.
-
-=item B<--dist> distdir
-
-Deprecated, does nothing and may be removed in a later release.
-
-=item B<--section> area
-
-Deprecated, does nothing and may be removed in a later release.
 
 =item B<--lab> labdir
 
@@ -441,21 +413,6 @@ The lab-queries listed on the command line are by default binary
 packages.
 
 With B<--all> this means check all binary packages in the lab.
-
-=item B<-p> X, B<--packages-file> X
-
-Process all packages which are listed in file X.  Each package has to
-be listed in a single line using the following format:
-
-B<type> B<package> B<version> B<file>
-
-where B<type> is either `b', `u', or `s' (binary, udeb, or source
-package), B<package> is the package name, B<version> is the package's
-version, and B<file> is the package file name (absolute path
-specification).
-
-Please note this has been deprecated in favour B<--packages-from-file>,
-which does not require a weird/special syntax.
 
 =item B<--packages-from-file> X
 
