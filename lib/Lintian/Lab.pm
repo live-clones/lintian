@@ -91,7 +91,11 @@ Lintian::Lab -- Interface to the Lintian Lab
  # Fetch a package from the lab
  my $lpkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
  
- #FIXME: Add more to the synopsis here
+ my $visitor = sub {
+     my ($lpkg, $pkg_name, $pkg_ver, $pkg_arch) = @_;
+     # do stuff with that entry
+ };
+ $lab->visit_packages ($visitor, 'source');
  
  $lab->close;
 
@@ -101,18 +105,17 @@ This module provides an abstraction from "How and where" packages are
 placed.  It handles creation and deletion of the Lintian Lab itself as
 well as providing access to the entries.
 
-=head2 Methods
+=head1 CLASS METHODS
 
 =over 4
 
-=item Lintian::Lab->new([$dir])
+=item new ([DIR])
 
-Creates a new Lab instance.  If C<$dir> is passed it will be used as
+Creates a new Lab instance.  If DIR is passed it will be used as
 the path to the lab and the lab will be in static mode.  Otherwise the
 lab will be in temporary mode and will point to a temporary directory.
 
 =cut
-
 
 sub new {
     my ($class, $dir) = @_;
@@ -150,16 +153,22 @@ sub new {
     return $self;
 }
 
-=item $lab->dir
+=back
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item dir
 
 Returns the absolute path to the base of the lab.
 
 Note: This may return the empty string if either the lab has been
 deleted or this is a temporary lab that has not been created yet.  In
-the latter case, $lab->create or $lab->open should be run to get a
+the latter case, L</create> or L</open> should be run to get a
 non-empty value from this method.
 
-=item $lab->is_open
+=item is_open
 
 Returns a truth value if this lab is open.
 
@@ -170,9 +179,9 @@ closed then the lab may or may not exist (see L</exists>).
 
 Lintian::Lab->mk_ro_accessors (qw(dir is_open));
 
-=item $lab->exists
+=item exists
 
-Returns a truth value if B<$lab> points to an existing lab.
+Returns a truth value if the instance points to an existing lab.
 
 Note: This never implies that the lab is open.  Though it may imply
 the lab is closed (see L</is_open>).
@@ -192,7 +201,7 @@ sub exists {
         && -d "$dir/info";
 }
 
-=item $lab->get_package ($pkg_name, $pkg_type[, @extra]), $lab->get_package ($proc)
+=item get_package (NAME, TYPE[, EXTRA]), get_package (PROC)
 
 Fetches an existing package from the lab.
 
@@ -200,12 +209,18 @@ The first argument can be a L<processable|Lintian::Processable>.  In that
 case all other arguments are ignored.
 
 If the first calling convention is used then this method will search
-for an existing package.  The @extra argument can be used to narrow
+for an existing package.  The EXTRA argument can be used to narrow
 the search or even to add a new entry.
 
-@extra consists of (in order):
- - version
- - arch (Ignored if $pkg_type is "source")
+EXTRA consists of (in order):
+
+=over 4
+
+=item * version
+
+=item * arch (ignored if TYPE is "source")
+
+=back
 
 If version or arch is omitted (or if it is undef) then that search
 parameter is consider a wildcard for "any".  Example:
@@ -222,13 +237,14 @@ parameter is consider a wildcard for "any".  Example:
 
 
 In list context, this returns a list of matches.  In scalar context
-this returns the first match (if any).
+this returns the first match (if any).  Note there is no guaranteed
+order (e.g. the returned list is not ordered).
 
 If the second calling convention is used, then this method will search
 for an entry matching the the processable passed.  If such an entry
 does not exists, an new "non-existing" L<entry|Lintian::Lab::Entry>
-will be returned.  This entry can be created by using the "create"
-method on the entry.
+will be returned.  This entry can be created by using the
+L<create|Lintian::Lab::Entry/create> method on the entry.
 
 =cut
 
@@ -304,12 +320,12 @@ sub get_package {
     return wantarray ? @entries : $entries[0];
 }
 
-=item $lab->visit_packages ($visitor[, $pkg_type])
+=item visit_packages (VISITOR[, TYPE])
 
-Passes each lab entry to $visitor.  If $pkg_type is passed, then only
+Passes each lab entry to VISITOR.  If TYPE is passed, then only
 entries of that type are passed.
 
-The visitor is given a reference to the L<entry|Lintian::Lab::Entry>,
+VISITOR is given a reference to the L<entry|Lintian::Lab::Entry>,
 the package name, the package version and the package architecture
 (may be undef for source packages).
 
@@ -411,15 +427,15 @@ sub _pool_path {
     return "$dir/pool/$p";
 }
 
-=item $lab->generate_diffs(@lists)
+=item generate_diffs (LIST)
 
-Each member of @lists must be a Lintian::Lab::Manifest.
+Each member of LIST must be a L<Lintian::Lab::Manifest>.
 
 The lab will generate a diff between the given member and its state
 for the given package type.
 
-The diffs are valid until the original manifest is modified or a package
-is added or removed to the lab.
+The diffs are accurate until the original manifest is modified or a
+package is added or removed to the lab.
 
 =cut
 
@@ -438,7 +454,7 @@ sub generate_diffs {
     return @diffs;
 }
 
-=item $lab->repair_lab ()
+=item repair_lab
 
 Checks the lab contents against the current meta-data and syncs them.
 The lab must be open and should not be access while this method is
@@ -509,16 +525,16 @@ sub repair_lab {
     return $updates;
 }
 
-=item $lab->create ([$opts])
+=item create ([OPTS])
 
-Creates a new lab.  It will create $lab->dir if it does not exist.
+Creates a new lab.  It will create L</dir> if it does not exist.
 It will also create a basic empty lab.  If this is a temporary
 lab, this method will also setup the temporary dir for the lab.
 
-The $lab will I<not> be opened by this method.  This should be done
-afterwards by invoking the open method.
+The lab will I<not> be opened by this method.  This should be done
+afterwards by invoking the L</open> method.
 
-B<$opts> (if present) is a hashref containing options.  The following
+OPTS (if present) is a hashref containing options.  The following
 options are accepted:
 
 =over 4
@@ -527,19 +543,20 @@ options are accepted:
 
 If "keep-lab" points to a truth value the temporary directory will
 I<not> be removed by closing the lab (nor exiting the application).
-However, explicitly calling $lab->remove will remove the lab.
+However, explicitly calling L</remove> will remove the lab.
 
 =item mode
 
-If present, this will be used as mode for creating directories.
-Will default to 0777 if not specified.
+If present, this will be used as mode for creating directories.  Will
+default to 0777 if not specified.  It is passed to mkdir and is thus
+subject to umask settings.
 
 =back
 
-Note: This will not create parent directories of $lab->dir and will
+Note: This will not create parent directories of L</dir> and will
 croak if these does not exist.
 
-Note: This may update the value of $lab->dir as resolving the path
+Note: This may update the value of L</dir> as resolving the path
 requires it to exist.
 
 Note: This does nothing if the lab appears to already exists.
@@ -629,22 +646,21 @@ sub create {
     return 1;
 }
 
-=item $lab->open
+=item open
 
 Opens the lab and reads the contents into caches.  If the lab is
 temporary and does not exists, this method will call create to
 initialize the temporary lab.
 
 This will croak if the lab is already open.  It may also croak for
-the same reasons as $lab->create if the lab is temporary (see above).
+the same reasons as L</create> if the lab is temporary.
 
-Note: for static labs, $lab->dir must point to an existing consistent
-lab or this will croak.  To open a new lab, please use
-$lab->create.
+Note: for static labs, L</dir> must point to an existing consistent
+lab or this will croak.  To open a new lab, please use L</create>.
 
 Note: It is not possible to pass options to the creation of the
 temporary lab.  If special options are required, please use
-$lab->create directly.
+L</create> directly.
 
 =cut
 
@@ -692,14 +708,14 @@ sub open {
     return 1;
 }
 
-=item $lab->close
+=item close
 
 Close the lab - all state caches will be flushed to the disk and the
 lab can no longer be used.  All references to entries in the lab
 should be considered invalid.
 
 Note: if the lab is a temporary one, this will be deleted unless it
-was created with "keep-lab" (see $lab->create).
+was created with "keep-lab" (see L</create>).
 
 =cut
 
@@ -728,18 +744,18 @@ sub _write_manifests {
     }
 }
 
-=item $lab->remove
+=item remove
 
 Removes the lab and everything in it.  Any reference to an entry
 returned from this lab will immediately become invalid.
 
-If this is a temporary lab, the lab root dir (as returned $lab->dir)
+If this is a temporary lab, the lab root dir (as returned L</dir>)
 will be removed as well on success.  Otherwise the lab root dir will
 not be removed by this call.
 
 On success, this will return a truth value.  If the lab is a temporary
 lab, the directory path will be set to the empty string (that is,
-$lab->dir will return '').
+L</dir> will return '').
 
 On error, this method will croak.
 
@@ -794,9 +810,9 @@ sub remove {
     return 1;
 }
 
-=item $lab->is_temp
+=item is_temp
 
-Returns a truth value if $lab is a temporary lab.
+Returns a truth value if lab is a temporary lab.
 
 Note: This returns a truth value, even if the lab was created with the
 "keep-lab" property.
@@ -931,7 +947,7 @@ The pool format dictates that packages are stored in:
 
 Note that $arch is left out for source packages, $l is the first
 letter of the package name (except if the name starts with "lib", then
-it is the first 4 letters of the package name).  Whitespaces (i.e. "
+it is the first 4 letters of the package name).  Whitespaces (e.g. "
 ") are replaced with dashes ("-") and colons (":") with underscores
 ("_").
 

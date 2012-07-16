@@ -30,7 +30,7 @@ Lintian::Lab::Entry - A package inside the Lab
  use Lintian::Lab;
  
  my $lab = Lintian::Lab->new ("dir");
- my $lpkg = $lab->get_package ("name", "version", "arch", "type");
+ my $lpkg = $lab->get_package ("name", "type", "version", "arch");
  
  # create the entry if it does not exist
  $lpkg->create unless $lpkg->exists;
@@ -46,9 +46,11 @@ Lintian::Lab::Entry - A package inside the Lab
 =head1 DESCRIPTION
 
 This module provides basic access and manipulation about an entry
-(i.e.  processable) stored in the Lab.
+(i.e. processable) stored in the Lab.  Instances of this class
+are not created directly, instead they are returned by various
+methods from L<Lintian::Lab>.
 
-=head2 METHODS
+=head1 INSTANCE METHODS
 
 =over 4
 
@@ -132,7 +134,7 @@ sub _new {
     return $self;
 }
 
-=item $lpkg->base_dir
+=item base_dir
 
 Returns the base directory of this package inside the lab.
 
@@ -140,10 +142,11 @@ Returns the base directory of this package inside the lab.
 
 Lintian::Lab::Entry->mk_ro_accessors (qw(base_dir));
 
-=item $lpkg->lab_pkg
+=item lab_pkg
 
-Return $lpkg.  This method is here to simplify using a
-L::Lab::Entry as a replacement for L::Processable::Package.
+Returns the instance itself.  This method is here to simplify using a
+L<Lintian::Lab::Entry> as a replacement for
+L<Lintian::Processable::Package>.
 
 =cut
 
@@ -152,7 +155,7 @@ sub lab_pkg {
     return $self;
 }
 
-=item $lpkg->info
+=item info
 
 Returns the L<info|Lintian::Collect> object associated with this entry.
 
@@ -173,7 +176,7 @@ sub info {
 }
 
 
-=item $lpkg->clear_cache
+=item clear_cache
 
 Clears any caches held; this includes discarding the L<info|Lintian::Collect> object.
 
@@ -186,7 +189,7 @@ sub clear_cache {
     delete $self->{info};
 }
 
-=item $lpkg->remove
+=item remove
 
 Removes all unpacked parts of the package in the lab.  Returns a truth
 value if successful.
@@ -205,9 +208,9 @@ sub remove {
     return 1;
 }
 
-=item $lpkg->exists
+=item exists
 
-Returns a truth value if the lab-entry exists.
+Returns a truth value if the entry exists.
 
 =cut
 
@@ -230,9 +233,9 @@ sub exists {
     return 0;
 }
 
-=item $lpkg->create
+=item create
 
-Creates a minimum lab-entry, in which collections and checks
+Creates a minimum entry, in which collections and checks
 can be run.  Note if it already exists, then this will do
 nothing.
 
@@ -291,12 +294,12 @@ sub create {
     return 1;
 }
 
-=item $lpkg->coll_version ($coll)
+=item coll_version (COLL)
 
-Returns the version of the collection named $coll, if that
-$coll has been marked as finished.
+Returns the version of the collection named COLL, if that
+COLL has been marked as finished.
 
-Returns the empty string if $coll has not been marked as finished.
+Returns the empty string if COLL has not been marked as finished.
 
 Note: The version can be 0.
 
@@ -307,13 +310,13 @@ sub coll_version {
     return $self->{coll}->{$coll}//'';
 }
 
-=item $lpkg->is_coll_finished ($coll, $version)
+=item is_coll_finished (COLL, VERSION)
 
-Returns a truth value if the collection $coll has been completed and
-its version is at least $version.  The versions are assumed to be
+Returns a truth value if the collection COLL has been completed and
+its version is at least VERSION.  The versions are assumed to be
 integers (the comparision is performed with ">=").
 
-This returns 0 if the collection $coll has not been marked as
+This returns 0 if the collection COLL has not been marked as
 finished.
 
 =cut
@@ -343,7 +346,7 @@ sub _clear_coll_status {
     return 1;
 }
 
-=item $lpkg->update_status_file ()
+=item update_status_file
 
 Flushes the cached changes of which collections have been completed.
 

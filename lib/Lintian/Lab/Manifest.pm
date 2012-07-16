@@ -66,7 +66,7 @@ The (order of the) fields used in the tree are listed in the
 @{BIN,SRC,CHG}_QUERY lists below.  The fields may (and generally do)
 differ between package types.
 
-=head1 METHODS
+=head1 CLASS METHODS
 
 =over 4
 
@@ -134,7 +134,7 @@ my @CHG_QUERY = (
     'architecture',
 );
 
-=item Lintian::Lab::Manifest->new ($pkg_type)
+=item new (TYPE)
 
 Creates a new packages list for a certain type of packages.  This type
 defines the format of the files.
@@ -158,12 +158,18 @@ sub new {
     return $self;
 }
 
-=item $manifest->dirty
+=back
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item dirty
 
 Returns a truth value if the manifest has changed since it was last
 written.
 
-=item $manifest->type
+=item type
 
 Returns the type of packages that this manifest has information about.
 (one of binary, udeb, source or changes)
@@ -185,13 +191,13 @@ sub type {
     return $self->{'type'};
 }
 
-=item $manifest->read_list ($file)
+=item read_list (FILE)
 
-Reads a manifest from $file.  Any records already in the manifest will
+Reads a manifest from FILE.  Any records already in the manifest will
 be discarded before reading the contents.
 
-On success, this will clear the L<dirty|/dirty> flag and on error it
-will croak.
+On success, this will clear the L</dirty> flag and on error it will
+croak.
 
 =cut
 
@@ -216,14 +222,14 @@ sub read_list {
     return 1;
 }
 
-=item $manifest->write_list ($file)
+=item write_list (FILE)
 
-Writes the manifest to $file.
+Writes the manifest to FILE.
 
-On success, this will clear the L<dirty|/dirty> flag and on error it
-will croak.
+On success, this will clear the L</dirty> flag and on error it will
+croak.
 
-On error, the contents of $file are undefined.
+On error, the contents of FILE are undefined.
 
 =cut
 
@@ -249,16 +255,16 @@ sub write_list {
     return 1;
 }
 
-=item $manifest->visit_all ($visitor[, $key1, ..., $keyN])
+=item visit_all (VISITOR[, KEY1, ..., KEYN])
 
-Visits entries and passes them to $visitor.  If any keys are passed they
+Visits entries and passes them to VISITOR.  If any keys are passed they
 are used to reduce the search.  See get for a list of (common) keys.
 
-The $visitor is called as:
+The VISITOR is called as:
 
- $visitor->($entry, @keys)
+ VISITOR->(ENTRY, KEYS)
 
-where $entry is the entry and @keys are the keys to be used to look up
+where ENTRY is the entry and KEYS are the keys to be used to look up
 this entry via get method.  So for the lintian 2.5.2 binary the keys
 would be something like:
  ('lintian', '2.5.2', 'all')
@@ -281,16 +287,24 @@ sub visit_all {
     $self->_recurse_visit ($root, $visitor, scalar @$qf - 1, @keys);
 }
 
-=item $manifest->get (@keys)
+=item get (KEYS)
 
-Fetches the entry for @keys (if any).  Returns C<undef> if the entry
+Fetches the entry for KEYS (if any).  Returns C<undef> if the entry
 is not known.
 
 The keys are (in general and in order):
 
- * package/source
- * version
- * architeture (except for source packages)
+=over 4
+
+=item package/source
+
+=item version
+
+=item architeture
+
+except for source packages
+
+=back
 
 =cut
 
@@ -299,12 +313,12 @@ sub get {
     return $self->_do_get ($self->{'state'}, @keys);
 }
 
-=item $manifest->set ($entry)
+=item set (ENTRY)
 
-Inserts $entry into the manifest.  This may replace an existing entry.
+Inserts ENTRY into the manifest.  This may replace an existing entry.
 
-Note: The interesting fields from $entry are copied, so later changes
-to $entry will not affect the data in $manifest.
+Note: The interesting fields from ENTRY are copied, so later changes
+to ENTRY will not affect the data in the manifest.
 
 =cut
 
@@ -331,9 +345,9 @@ sub set {
     return 1;
 }
 
-=item $manifest->delete (@keys)
+=item delete (KEYS)
 
-Removes the entry/entries found by @keys (if any).  @keys must contain
+Removes the entry/entries found by KEYS (if any).  KEYS must contain
 at least one item - if the list of keys cannot uniquely identify a single
 element, all "matching" elements will be removed.  Examples:
 
@@ -351,7 +365,7 @@ element, all "matching" elements will be removed.  Examples:
 This will mark the list as dirty if an element was removed.  If it returns
 a truth value, an element was removed - otherwise it will return 0.
 
-See L</$manifest->get (@keys)|get> for the key names.
+See L</get> for the key names.
 
 =cut
 
@@ -377,13 +391,13 @@ sub delete {
     return 1;
 }
 
-=item $manifest->diff ($newlist)
+=item diff (MANIFEST)
 
-Returns a L<Lintian::Lab::ManifestDiff|diff> between $manifest and
-$newlist.
+Returns a L<diff|Lintian::Lab::ManifestDiff> between this manifest and
+MANIFEST.
 
-$manifest is considered the "original" and "$newlist" is "new" version
-of the manifest.  (See the olist and nlist methods of
+This instance is considered the "original" and MANIFEST is "new"
+version of the manifest.  (See the olist and nlist methods of
 L<Lintian::Lab::ManifestDiff> for more information.
 
 =cut
