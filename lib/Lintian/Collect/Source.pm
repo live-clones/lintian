@@ -310,8 +310,8 @@ sub debfiles {
 #
 # sub index Needs-Info index
 sub index {
-    my ($self) = @_;
-    return $self->_fetch_index_data('index', 'index', undef);
+    my ($self, $file) = @_;
+    return $self->_fetch_index_data('index', 'index', undef, $file);
 }
 
 =head1 NAME

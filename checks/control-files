@@ -42,10 +42,9 @@ my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
 my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
 
 # process control-index file
-my $cindex = $info->control_index;
-foreach my $file (sort keys %$cindex) {
+foreach my $file ($info->sorted_control_index) {
     next unless $file;
-    my $cindex_info = $cindex->{$file};
+    my $cindex_info = $info->control_index ($file);
     my $owner;
     my $operm;
     my $experm;

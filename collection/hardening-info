@@ -63,7 +63,7 @@ $opts{pipe_in}->blocking(1);
 
 
 foreach my $bin ($info->sorted_index) {
-    next unless $info->index->{$bin}->is_file;
+    next unless $info->index ($bin)->is_file;
     # Skip kernel modules - most of the checks do not apply to the
     # kernel.
     next if $bin =~ m/\.ko/o;

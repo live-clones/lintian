@@ -262,7 +262,7 @@ if (!$is_dummy) {
 # Read package contents...
 foreach my $file ($info->sorted_index) {
     next if $file eq '';
-    my $index_info = $info->index->{$file};
+    my $index_info = $info->index ($file);
     my $owner = $index_info->owner . '/' . $index_info->group;
     my $operm = $index_info->operm;
     my $link = $index_info->link;
@@ -1387,7 +1387,7 @@ if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
 # python-support needs a directory for each package even it might be empty
 if($pkg ne 'base-files'){
     foreach my $dir ($info->sorted_index) {
-        next if $dir eq '' or not $info->index->{$dir}->is_dir;
+        next if $dir eq '' or not $info->index ($dir)->is_dir;
         next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
         if (dir_counts($info, $dir) == 0) {
             if ($dir ne 'usr/lib/perl5/'
@@ -1432,8 +1432,8 @@ if ($x11_font_dirs{misc} and keys (%x11_font_dirs) > 1) {
 sub dir_counts {
     my ($info, $dir) = @_;
 
-    if (defined $info->index->{$dir}) {
-        return scalar $info->index->{$dir}->children;
+    if (defined $info->index ($dir)) {
+        return scalar $info->index ($dir)->children;
     } else {
         return 0;
     }

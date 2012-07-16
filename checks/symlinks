@@ -34,12 +34,11 @@ my $proc = shift;
 my $group = shift;
 
 my $ginfo = $group->info;
-my $index = $info->index;
 my @brokenlinks;
 my @dindexes;
 
 foreach my $file ($info->sorted_index) {
-    my $index_info = $index->{$file};
+    my $index_info = $info->index ($file);
     if ($index_info->is_symlink){
         my $target = $index_info->link//''; # the link target
         my $path; # the target (from the pkg root)
@@ -53,7 +52,7 @@ foreach my $file ($info->sorted_index) {
         next unless $path;
 
         # Check if the destination is in the package itself
-        next if $index->{$path} || $index->{"$path/"};
+        next if $info->index ($path) || $info->index ("$path/");
 
         $target =~ s,^/++,,o; # strip leading slashes (for reporting)
 
@@ -77,7 +76,7 @@ foreach my $file ($info->sorted_index) {
         }
 
         # Possibly broken symlink
-        push @brokenlinks, [$file, $path, $target] unless $index->{$path};
+        push @brokenlinks, [$file, $path, $target] unless $info->index ($path);
     }
 
 }
@@ -86,15 +85,15 @@ return unless @brokenlinks;
 
 # Check our dependencies:
 foreach my $depproc (@{ $ginfo->direct_dependencies ($proc)}) {
-    push @dindexes, $depproc->info->index;
+    push @dindexes, $depproc->info;
 }
 
 BLINK:
 foreach my $blink (@brokenlinks){
     my ($file, $path, $target) = @$blink;
-    foreach my $dindex (@dindexes){
+    foreach my $dinfo (@dindexes){
         # Is it in our dependency?
-        next BLINK if $dindex->{$path} || $dindex->{"$path/"};
+        next BLINK if $dinfo->index ($path) || $dinfo->index ("$path/");
     }
     # nope - not found in any of our direct dependencies.
     tag 'package-contains-broken-symlink', $file, $target

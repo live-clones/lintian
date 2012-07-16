@@ -522,7 +522,7 @@ my $metapackage = 0;
 if ($type eq 'binary') {
     $metapackage = 1;
     for my $file ($info->sorted_index) {
-        next if $info->index->{$file}->is_dir;
+        next if $info->index ($file)->is_dir;
         next if $file =~ m%^usr/share/doc/%;
         next if $file =~ m%^usr/share/lintian/overrides/%;
         next if $file =~ m%^usr/share/cdd/%;

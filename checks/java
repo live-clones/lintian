@@ -53,7 +53,7 @@ $need_cp = 1 if @java_lib_depends;
 for my $jar_file (sort keys %{$java_info}) {
     my $files = $java_info->{$jar_file}->{files};
     my $manifest = $java_info->{$jar_file}->{manifest};
-    my $operm = $info->index->{$jar_file}->operm;
+    my $operm = $info->index ($jar_file)->operm;
     my $jar_dir;
     my $classes = 0;
     my $datafiles = 1;

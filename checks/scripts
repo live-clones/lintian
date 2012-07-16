@@ -206,7 +206,7 @@ foreach my $file ($info->sorted_index) {
     next if $file eq '';
     $ELF{$file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 
-    my $index_info = $info->index->{$file};
+    my $index_info = $info->index ($file);
     my $operm = $index_info->operm;
     next unless $index_info->is_file and ($operm & 0111);
     $executable{$file} = 1;
@@ -333,7 +333,7 @@ for my $filename (sort keys %{$info->scripts}) {
             # Check if the package ships the interpreter (and it is
             # executable).
             my $interfile = substr $interpreter, 1;
-            my $index_info = $info->index->{$interfile};
+            my $index_info = $info->index ($interfile);
             $pinter = 1 if $index_info && ($index_info->operm & 0111);
         }
         script_tag('unusual-interpreter', $filename, "#!$interpreter")
@@ -976,7 +976,7 @@ for my $divert (keys %added_diversions) {
             unless (grep { $_ =~ m/$divertrx/ } $info->sorted_index);
     } else {
         tag 'diversion-for-unknown-file', $divert, "$script:$line"
-            unless (exists $info->index->{$divert});
+            unless $info->index ($divert);
     }
 }
 

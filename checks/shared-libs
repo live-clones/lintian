@@ -98,7 +98,7 @@ if (%SONAME) {
 
 for my $cur_file ($info->sorted_index) {
     # shared library?
-    my $cur_file_data = $info->index->{$cur_file};
+    my $cur_file_data = $info->index ($cur_file);
 
     if (exists $SONAME{$cur_file} or
         (defined $cur_file_data->link and exists $SONAME{abs_path(dirname($cur_file).'/'.$cur_file_data->link)})) {
@@ -196,7 +196,7 @@ close(IN);
 # 3rd step: check if shlib symlinks are present and in correct order
 for my $shlib_file (keys %SONAME) {
     # file found?
-    if (not exists $info->index->{$shlib_file}) {
+    if (not $info->index ($shlib_file)) {
         fail("shlib $shlib_file not found in package (should not happen!)");
     }
 
@@ -207,7 +207,7 @@ for my $shlib_file (keys %SONAME) {
 
     # symlink found?
     my $link_file = "$dir/$SONAME{$shlib_file}";
-    if (not exists $info->index->{$link_file}) {
+    if (not $info->index ($link_file)) {
         tag 'ldconfig-symlink-missing-for-shlib', "$link_file $shlib_file $SONAME{$shlib_file}";
     } else {
         # $link_file really another file?
@@ -215,15 +215,15 @@ for my $shlib_file (keys %SONAME) {
             # the library file uses its SONAME, this is ok...
         } else {
             # $link_file really a symlink?
-            if ($info->index->{$link_file}->is_symlink) {
+            if ($info->index ($link_file)->is_symlink) {
                 # yes.
 
                 # $link_file pointing to correct file?
-                if ($info->index->{$link_file}->link eq $shlib_name) {
+                if ($info->index ($link_file)->link eq $shlib_name) {
                     # ok.
                 } else {
                     tag 'ldconfig-symlink-referencing-wrong-file',
-                        "$link_file -> " . $info->index->{$link_file}->link . " instead of $shlib_name";
+                        "$link_file -> " . $info->index ($link_file)->link . " instead of $shlib_name";
                 }
             } else {
                 tag 'ldconfig-symlink-is-not-a-symlink', "$shlib_file $link_file";
@@ -239,7 +239,7 @@ for my $shlib_file (keys %SONAME) {
     # shlib symlink may not exist.
     # if shlib doesn't _have_ a version, then $link_file and $shlib_file will
     # be equal, and it's not a development link, so don't complain.
-    if (exists $info->index->{$link_file} and $link_file ne $shlib_file) {
+    if ($info->index ($link_file) and $link_file ne $shlib_file) {
         tag 'non-dev-pkg-with-shlib-symlink', "$shlib_file $link_file";
     } elsif (@devpkgs) {
         # -dev package - it needs a shlib symlink
@@ -250,7 +250,7 @@ for my $shlib_file (keys %SONAME) {
         $link_file = "usr/$link_file" unless $shlib_file =~ m,^usr/,;
 
         foreach my $devpkg (@devpkgs) {
-            if (exists $devpkg->info->index->{$link_file}) {
+            if ($devpkg->info->index ($link_file)) {
                 $ok = 1;
                 last;
             }

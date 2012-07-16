@@ -201,7 +201,7 @@ foreach ($info->sorted_index) {
     # create copy, don't modify the index
     my $path = $_;
 
-    my $index_info = $info->index->{$path};
+    my $index_info = $info->index ($path);
     next unless $index_info->is_dir || $index_info->is_symlink;
     $path =~ s,/\z,,;
     $directories{"/$path"}++;

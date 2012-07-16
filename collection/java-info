@@ -53,7 +53,7 @@ chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
 foreach my $file ($info->sorted_index) {
-    my $ftype = $info->index->{$file};
+    my $ftype = $info->index ($file);
     next unless $ftype->is_file;
     next unless $info->file_info->{$file} =~ m/Zip archive/o;
     if ($file =~ m#\S+\.jar$#i) {

@@ -66,8 +66,8 @@ sub file_info {
 # Returns the information from the indices
 # sub index Needs-Info index
 sub index {
-    my ($self) = @_;
-    return $self->_fetch_index_data('index', 'index', 'index-owner-id');
+    my ($self, $file) = @_;
+    return $self->_fetch_index_data('index', 'index', 'index-owner-id', $file);
 }
 
 # Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
@@ -76,7 +76,7 @@ sub sorted_index {
     my ($self) = @_;
     # index does all our work for us, so call it if sorted_index has
     # not been created yet.
-    $self->index unless exists $self->{sorted_index};
+    $self->index ('') unless exists $self->{sorted_index};
     return @{ $self->{sorted_index} };
 }
 
@@ -115,9 +115,13 @@ sub _dequote_name {
 # Backing method for index and others; this is not a part of the API.
 # sub _fetch_index_data Needs-Info <>
 sub _fetch_index_data {
-    my ($self, $field, $index, $indexown) = @_;
-    return $self->{$field} if exists $self->{$index};
-    my $base_dir = $self->base_dir();
+    my ($self, $field, $index, $indexown, $file) = @_;
+    if (exists $self->{$index}) {
+        return $self->{$field}->{$file}
+            if exists $self->{$index}->{$file};
+        return;
+    }
+    my $base_dir = $self->base_dir;
     my (%idxh, %children);
     my $num_idx;
     my %rhlinks;
@@ -236,7 +240,8 @@ sub _fetch_index_data {
     $self->{"sorted_$field"} = \@sorted;
     close $idx;
     close $num_idx if $num_idx;
-    return $self->{$field};
+    return $self->{$field}->{$file} if $self->{$field}->{$file};
+    return;
 }
 
 1;
@@ -318,9 +323,10 @@ Returns a hashref mapping file names to the output of file for that file.
 
 Note the file names do not have any leading "./" nor "/".
 
-=item index
+=item index (FILE)
 
-Returns a hashref to the index information (Lintian::Path objects).
+Looks up FILE in the package index and returns a L<Lintian::Path>
+for it or C<undef> (if FILE is not in the index).
 
 Note the file names do not have any leading "./" nor "/".
 

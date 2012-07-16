@@ -36,7 +36,7 @@ my $magic;
 my $scriptpath;
 
 foreach my $file ($info->sorted_index) {
-    next unless $info->index->{$file}->{type} eq '-';
+    next unless $info->index ($file)->is_regular_file;
 
     # This used to call fail() instead of next.  However, the check to
     # see if all files in the index can be opened should be done elsewhere.

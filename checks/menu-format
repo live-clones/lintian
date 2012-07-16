@@ -343,7 +343,7 @@ closedir MENUDIR;
 # Find the desktop files in the package for verification.
 my @desktop_files;
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index->{$file};
+    my $index_info = $info->index ($file);
     my $operm = $index_info->operm;
 
     tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
@@ -880,10 +880,10 @@ sub VerifyCmd {
     }
     my $okay = $cmd
         && ($cmd =~ /^[\'\"]/
-            || $info->index->{$cmd_file}
+            || $info->index ($cmd_file)
             || $cmd =~ m,^(/bin/)?sh,
             || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
-            || grep { $info->index->{$_ . $cmd} } @path);
+            || grep { $info->index ($_ . $cmd) } @path);
     return ($okay, $cmd_file);
 }
 

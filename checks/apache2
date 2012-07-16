@@ -45,7 +45,7 @@ sub run {
     if ($type eq 'binary') {
         foreach my $file ($info->sorted_index) {
             next if $file eq '';
-            my $index_info = $info->index->{$file};
+            my $index_info = $info->index ($file);
 
             # File is probably not relevant to us, ignore it
             next if $index_info->is_dir;
@@ -120,7 +120,7 @@ sub check_web_application_package {
         tag 'web-application-should-not-depend-unconditionally-on-apache2';
     }
 
-    if (defined $info->index->{$file}) {
+    if (defined $info->index ($file)) {
         inspect_conf_file ($info, $pkgtype, $file);
     }
 
@@ -163,13 +163,13 @@ sub check_module_package {
     $load_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.load#;
     $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
 
-    if (defined $info->index->{$load_file}) {
+    if (defined $info->index ($load_file)) {
         inspect_conf_file ($info, "mods", $load_file);
     } else {
         tag 'apache2-module-does-not-ship-load-file', $load_file;
     }
 
-    if (defined $info->index->{$conf_file}) {
+    if (defined $info->index ($conf_file)) {
         inspect_conf_file ($info, "mods", $conf_file);
     }
 

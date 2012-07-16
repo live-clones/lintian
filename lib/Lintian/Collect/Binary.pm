@@ -86,8 +86,21 @@ sub control {
 #
 # sub control_index Needs-Info bin-pkg-control
 sub control_index {
+    my ($self, $file) = @_;
+    return $self->_fetch_index_data ('control-index', 'control-index',
+                                     undef, $file);
+}
+
+# Like sorted_index except it returns the index for the control/metadata of
+# binary package.
+#
+# sub sorted_control_index Needs-Info bin-pkg-control
+sub sorted_control_index {
     my ($self) = @_;
-    return $self->_fetch_index_data('control-index', 'control-index');
+    # control_index does all our work for us, so call it if
+    # sorted_control_index has not been created yet.
+    $self->control_index ('') unless exists $self->{'sorted_control-index'};
+    return @{ $self->{'sorted_control-index'} };
 }
 
 # Returns a handle with the strings in a given binary file (as computed

@@ -46,8 +46,8 @@ my @doc_files;
 my %file_info;
 
 # skip packages which have a /usr/share/doc/$pkg -> foo symlink
-return 0 if $info->index->{"usr/share/doc/$pkg"} and
-    $info->index->{"usr/share/doc/$pkg"}->is_symlink;
+return 0 if $info->index ("usr/share/doc/$pkg") and
+    $info->index ("usr/share/doc/$pkg")->is_symlink;
 
 
 # Modify the file_info by following symbolic links.
@@ -118,7 +118,7 @@ foreach ($info->sorted_index) {
                 }
             }
             if (not $max_compressed and $file_info{$file1} =~ m/gzip compressed/) {
-                if (!$info->index->{$file1}->is_symlink) {
+                if (!$info->index ($file1)->is_symlink) {
                     tag 'changelog-not-compressed-with-max-compression', $file;
                 }
             }

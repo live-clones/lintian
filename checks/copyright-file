@@ -43,13 +43,13 @@ my $found = 0;
 my $linked = 0;
 my $path = "usr/share/doc/$pkg";
 
-if (exists $info->index->{"$path/copyright.gz"}) {
+if ($info->index ("$path/copyright.gz")) {
     tag 'copyright-file-compressed';
     $found = 1;
 }
 
-if (exists $info->index->{"$path/copyright"}) {
-    my $index_info = $info->index->{"$path/copyright"};
+if ($info->index ("$path/copyright")) {
+    my $index_info = $info->index ("$path/copyright");
     $found = 1;
     if ($index_info->is_symlink) {
         tag 'copyright-file-is-symlink';
@@ -60,7 +60,7 @@ if (exists $info->index->{"$path/copyright"}) {
 }
 
 if (not $found) {
-    my $index_info = $info->index->{$path};
+    my $index_info = $info->index ($path);
     if (defined $index_info && $index_info->is_symlink) {
         my $link = $index_info->link;
 
