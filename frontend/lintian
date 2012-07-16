@@ -1019,7 +1019,16 @@ if($action eq 'remove'){
 # }}}
 
 # {{{ Load information about collector scripts
-load_collections(\%collection_info, "$opt{'LINTIAN_ROOT'}/collection");
+{
+    my $load_coll = sub {
+        my ($cs) = @_;
+        my $coll = $cs->name;
+        debug_msg(2, "Read collector description for $coll ...");
+        $collection_info{$coll} = $cs;
+    };
+
+    load_collections ($load_coll, "$opt{'LINTIAN_ROOT'}/collection");
+}
 # }}}
 
 # {{{ determine which checks have been requested
@@ -1193,26 +1202,6 @@ while (my ($coll, undef) = Lintian::Command::Simple::wait(\%running_jobs)) {
 exit $exit_code;
 
 # {{{ Some subroutines
-
-# Given a ref to %collection_info and the path to the collection
-# directory, this will load all the collection information into
-# %collection_info.
-sub load_collections{
-    my ($cinfo, $dirname) = @_;
-    opendir(my $dir, $dirname)
-        or fail("cannot read directory $dirname");
-
-    for my $f (readdir($dir)) {
-        next if $f =~ /^\./;
-        next unless $f =~ /\.desc$/;
-
-        debug_msg(2, "Reading collector description file $f ...");
-        my $cs = Lintian::CollScript->new ("$dirname/$f");
-        $cinfo->{$cs->name} = $cs;
-    }
-
-    closedir($dir);
-}
 
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
 #  - depends on global variables %collection_info and %keep_coll

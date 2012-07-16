@@ -24,9 +24,10 @@ use base qw(Exporter);
 
 use Dpkg::Vendor;
 
+use Lintian::CollScript;
 use Lintian::Util qw(check_path fail);
 
-our @EXPORT = qw(&check_test_feature &find_default_profile);
+our @EXPORT = qw(check_test_feature find_default_profile load_collections);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -61,6 +62,28 @@ sub find_default_profile {
     }
     fail("Could not find a profile for vendor $orig") unless $vendor;
     return lc($vendor);
+}
+
+# load_collections ($visitor, $dirname)
+#
+# Load collections from $dirname and pass them to $visitor.  $visitor
+# will be called once per collection as it has been loaded.  The first
+# (and only) argument to $visitor is the collection as an instance of
+# Lintian::CollScript instance.
+sub load_collections {
+    my ($visitor, $dirname) = @_;
+
+    opendir my $dir, $dirname
+        or fail "cannot read directory $dirname: $!";
+
+    foreach my $file (readdir $dir) {
+        next if $file =~ m/^\./;
+        next unless $file =~ m/\.desc$/;
+        my $cs = Lintian::CollScript->new ("$dirname/$file");
+        $visitor->($cs);
+    }
+
+    closedir $dir;
 }
 
 1;
