@@ -1,6 +1,7 @@
 /build-stamp
 /debian/test-out/
 /debian/test.locale/
+/doc/api.html/
 /doc/README
 /doc/help.tmp
 /doc/lintian.html/
