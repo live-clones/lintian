@@ -1,2 +1,3 @@
 I: fields-malformed-vcs-fields source: vcs-field-uses-not-recommended-uri-format vcs-svn svn+ssh://svn.debian.org/svn/foobar/trunk
+W: fields-malformed-vcs-fields source: vcs-field-has-unexpected-spaces vcs-git git://anonscm.debian.org/test/test.git --branch wrong
 W: fields-malformed-vcs-fields source: vcs-field-uses-unknown-uri-format vcs-browser svn.debian.org/wsvn/foobar/trunk

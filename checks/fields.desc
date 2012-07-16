@@ -979,6 +979,14 @@ Certainty: possible
 Info: The VCS-* field uses an URI which doesn't match any known format.
  You might have forgotten the protocol before the hostname.
 
+Tag: vcs-field-has-unexpected-spaces
+Severity: normal
+Certainty: possible
+Info: The VCS-* field contains more spaces than expected or spaces at
+ places where they were not expected. Where possible escape valid spaces
+ in URIs to avoid any ambiguity with respect to possible future additional
+ optional fields.
+
 Tag: lib-recommends-documentation
 Severity: normal
 Certainty: possible

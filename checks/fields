@@ -104,6 +104,20 @@ my @NAME_SECTION_MAPPINGS = (
     [ qr/^lib.*-dev$/                  => 'libdevel' ],
 );
 
+my %VCS_EXTRACT = (
+    browser => sub { return @_;},
+    arch    => sub { return @_;},
+    bzr     => sub { return @_;},
+    # cvs rootdir followed by optional module name:
+    cvs     => sub { return shift =~ /^(.+?)(?:\s+(\S*))?$/;},
+    darcs   => sub { return @_;},
+    hg      => sub { return @_;},
+    # git uri followed by optional " -b " + branchname:
+    git     => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
+    svn     => sub { return @_;},
+    # that's a hostname followed by a module name:
+    mtn     => sub { return shift =~ /^(.+?)\s+(\S+)$/;},
+);
 # Valid URI formats for the Vcs-* fields
 # currently only checks the protocol, not the actual format of the URI
 my %VCS_RECOMMENDED_URIS = (
@@ -115,7 +129,7 @@ my %VCS_RECOMMENDED_URIS = (
     hg      => qr;^https?://;,
     git     => qr;^(?:git|https?|rsync)://;,
     svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
-    mtn     => qr;^[\w.-]+\s+\S+;, # that's a hostname followed by a module name
+    mtn     => qr;^[\w.-]+$;,
 );
 my %VCS_VALID_URIS = (
     arch    => qr;^https?://;,
@@ -944,15 +958,23 @@ if (defined $info->field('dm-upload-allowed')) {
 
 #----- Vcs-*
 
-while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
+while (my ($vcs, $splitter) = each %VCS_EXTRACT) {
     if (defined $info->field("vcs-$vcs")) {
         my $uri = $info->field("vcs-$vcs");
         unfold("vcs-$vcs", \$uri);
-        if ($uri !~ $regex) {
-            if ($VCS_VALID_URIS{$vcs} and $uri =~ $VCS_VALID_URIS{$vcs}) {
-                tag 'vcs-field-uses-not-recommended-uri-format', "vcs-$vcs", $uri;
-            } else {
-                tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
+        my @parts = &$splitter($uri);
+        if (not @parts or not $parts[0]) {
+            tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
+        } else {
+            if ($VCS_RECOMMENDED_URIS{$vcs} and $parts[0] !~ $VCS_RECOMMENDED_URIS{$vcs}) {
+                if ($VCS_VALID_URIS{$vcs} and $parts[0] =~ $VCS_VALID_URIS{$vcs}) {
+                    tag 'vcs-field-uses-not-recommended-uri-format', "vcs-$vcs", $uri;
+                } else {
+                    tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
+                }
+            }
+            if (grep { $_ and /\s/} @parts) {
+                tag 'vcs-field-has-unexpected-spaces', "vcs-$vcs", $uri;
             }
         }
     }
