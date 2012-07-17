@@ -27,7 +27,7 @@ use Dpkg::Vendor;
 use Lintian::CollScript;
 use Lintian::Util qw(check_path fail);
 
-our @EXPORT = qw(check_test_feature find_default_profile load_collections);
+our @EXPORT = qw(check_test_feature default_parallel find_default_profile load_collections);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -84,6 +84,22 @@ sub load_collections {
     }
 
     closedir $dir;
+}
+
+# Return the default number of parallization to be used
+sub default_parallel {
+    # check cpuinfo for the number of cores...
+    my $cpus;
+    chomp ( $cpus = `nproc 2>&1` );
+    if ($? == 0 and $cpus =~ m/^\d+$/ ) {
+        # Running up to twice the number of cores usually gets the most out
+        # of the CPUs and disks but it might be too aggresive to be the
+        # default for -j. Only use <cores>+1 then.
+        return $cpus + 1;
+    }
+
+    # No decent number of jobs? Just use 2 as a default
+    return 2;
 }
 
 1;

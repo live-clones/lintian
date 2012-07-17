@@ -1875,22 +1875,6 @@ sub finished_coll {
     return $cmap->selectable;
 }
 
-sub default_parallel {
-    # check cpuinfo for the number of cores...
-    my $cpus;
-    chomp ( $cpus = `nproc 2>&1` );
-    if ($? == 0 and $cpus =~ m/^\d+$/ ) {
-        # Running up to twice the number of cores usually gets the most out
-        # of the CPUs and disks but it might be too aggresive to be the
-        # default for -j. Only use <cores>+1 then.
-        debug_msg (1, "Number of CPUs: $cpus");
-        return $cpus + 1;
-    }
-
-    # No decent number of jobs? Just use 2 as a default
-    return 2;
-}
-
 # }}}
 
 # {{{ Exit handler.
