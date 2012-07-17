@@ -1100,6 +1100,12 @@ for my $c (@scripts) {
         $map->addp('check-' . $c, 'coll-', $cs->needs_info);
     }
 }
+
+# Make sure the resolver is in a sane state:
+scalar ($map->missing) == 0
+    or fail ('There are missing nodes on the resolver: '.join (', ', $map->missing));
+undef $map;
+
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
@@ -1111,12 +1117,6 @@ debug_msg(1,
           sprintf('Selected checks: %s', join(',',sort $PROFILE->scripts)),
           "Parallization limit: $opt{'jobs'}",
     );
-
-
-# Make sure the resolver is in a sane state:
-scalar($map->missing()) == 0
-    or fail('There are missing nodes on the resolver: '.join(', ', $map->missing()));
-undef $map;
 
 
 # Now action is always either "check" or "unpack"
