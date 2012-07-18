@@ -621,6 +621,7 @@ import Lintian::Util qw(fail read_dpkg_control);
 require Lintian::Collect;
 require Lintian::CollScript;
 require Lintian::DepMap;
+require Lintian::DepMap::Properties;
 require Lintian::Data;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
@@ -1092,12 +1093,12 @@ if (@unpack_info) {
 # $map is just here to check that all the needed collections are present.
 my $map = Lintian::DepMap->new();
 my @scripts = sort $PROFILE->scripts;
-my $collmap = Lintian::DepMap->new();
+my $collmap = Lintian::DepMap::Properties->new();
 
 for my $c (keys %unpack_infos) {
     # Add the collections with their dependency information
     $map->add('coll-' . $c);
-    $collmap->add($c);
+    $collmap->add($c, $collection_info{$c});
     $map->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
     $collmap->add($c, $collection_info{$c}->needs_info);
 }
@@ -1132,8 +1133,7 @@ debug_msg(1,
 # Now action is always either "check" or "unpack"
 # these two variables are used by process_package
 #  and need to persist between invocations.
-my $unpacker = Lintian::Unpacker->new (\%collection_info, $collmap,
-                                       \%requested_unpack, $opt{'jobs'});
+my $unpacker = Lintian::Unpacker->new ($collmap, \%requested_unpack, $opt{'jobs'});
 my %overrides;
 
 foreach my $gname (sort $pool->get_group_names()) {

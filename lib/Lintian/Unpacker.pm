@@ -33,18 +33,18 @@ Lintian::Unpacker -- Job handler to unpack collections
 
 =head1 SYNOPSIS
 
- use Lintian::DepMap;
+ use Lintian::DepMap::Properties;
  use Lintian::Unpacker;
  
  my $done = 1;
  my $joblimit = 4;
- my $collmap = Lintian::DepMap->new;
- my %coll = ();
+ my $collmap = Lintian::DepMap::Properties->new;
  my %requested = ( 'debfiles' => 1 );
- # Map node names from $collmap to their Lintian::CollScript
- # instance in %coll.
- my $unpacker = Lintian::Unpacker->new (\%coll, $collmap,
-                                          \%requested, $joblimit);
+ # Initialise $collmap with the collections and their relations
+ # - Each node in $collmap should an instance of L::CollScript
+ #   as property.
+ my $unpacker = Lintian::Unpacker->new ($collmap, \%requested,
+                                        $joblimit);
  
  while (1) {
      my $errhandler = sub {}; # Insert hook
@@ -69,15 +69,13 @@ available via L<Lintian::Collect>.
 
 =over 4
 
-=item new (COLLTABLE, COLLMAP, REQUESTED[, JOBLIMIT])
+=item new (COLLMAP, REQUESTED[, JOBLIMIT])
 
 Creates a new unpacker.
 
-COLLTABLE is a table mapping collection names to their
-L<Lintian::CollScript> instances.
-
-COLLMAP is a L<Lintian::DepMap> decribing the dependencies between the
-collections.
+COLLMAP is a L<Lintian::DepMap::Properties> decribing the dependencies
+between the collections.  Each node in COLLMAP must have a
+L<Lintian::CollScript> as property.
 
 REQUESTED is a hash table containing requested collections.  The
 values are ignored, only the keys are considered.  For existing
@@ -91,11 +89,10 @@ changed with the L</jobs> method later.
 
 
 sub new {
-    my ($class, $colltable, $collmap, $requested, $jobs) = @_;
+    my ($class, $collmap, $requested, $jobs) = @_;
     my $ccmap = $collmap->clone;
     $jobs //= 0;
     my $self = {
-        'colltable' => $colltable,
         'collmap' => $ccmap,
         'jobs' => $jobs,
         'requested' => $requested,
@@ -144,7 +141,6 @@ or manually.
 sub prepare_tasks {
     my ($self, $errorhandler, @lpkgs) = @_;
     my $collmap = $self->{'collmap'};
-    my $colls = $self->{'colltable'};
     my $requested = $self->{'requested'};
     my %worklists = ();
     foreach my $lpkg (@lpkgs) {
@@ -158,9 +154,9 @@ sub prepare_tasks {
             my @check;
             my $pkg_type = $lpkg->pkg_type;
             @check = keys %$requested if defined $requested;
-            @check = keys %$colls unless defined $requested;
+            @check = keys $collmap->known unless defined $requested;
             while (my $cname = pop @check) {
-                my $coll = $colls->{$cname};
+                my $coll = $collmap->getp ($cname);
                 # Skip collections not relevant to us (they will never
                 # be finished and we do not want to use their
                 # dependencies if they are the only ones using them)
@@ -265,7 +261,7 @@ sub process_tasks {
     my ($self, $hooks) = @_;
     my $worklists = $self->{'worktable'};
     my $running_jobs = $self->{'running-jobs'};
-    my $colls = $self->{'colltable'};
+    my $colls = $self->{'collmap'};
     my $jobs = $self->jobs;
 
     $hooks //= {};
@@ -288,7 +284,7 @@ sub process_tasks {
             my $pkg_type = $lpkg->pkg_type;
             my $base = $lpkg->base_dir;
             foreach my $coll ($cmap->selectable) {
-                my $cs = $colls->{$coll};
+                my $cs = $colls->getp ($coll);
 
                 # current type?
                 unless ($cs->is_type ($pkg_type)) {
