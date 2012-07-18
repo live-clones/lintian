@@ -106,23 +106,23 @@ sub addp {
     return $self->SUPER::addp(@_);
 }
 
-=item getProp(node)
+=item getp(node)
 
 Returns the reference to the given C<node>'s properties.
 
 E.g.
 
     # prints John Doe
-    print $map->getProp('foo')->{'name'};
+    print $map->getp('foo')->{'name'};
     # changes the value of 'name'
-    $map->getProp('foo')->{'name'} = 'Jane Doe';
+    $map->getp('foo')->{'name'} = 'Jane Doe';
     # prints Jane Doe
-    print $map->getProp('foo')->{'name'};
+    print $map->getp('foo')->{'name'};
 
 =cut
 #'
 
-sub getProp {
+sub getp {
     my $self = shift;
     my $node = shift;
     return $self->{'properties'}->{$node};
