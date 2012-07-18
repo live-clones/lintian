@@ -15,7 +15,7 @@ my %prop = (name => 'John Doe', age => 20);
 
 ok($map->add('P1', \%prop), "Add node with properties as a hash");
 
-is_deeply($map->getProp('P1'), \%prop, "Properties are preserved");
+is_deeply($map->getp('P1'), \%prop, "Properties are preserved");
 
 ok($map->add('P2', 'P1'), "Nodes can be added without properties");
 
