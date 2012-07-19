@@ -35,7 +35,7 @@ Lintian::Processable -- An (abstract) object that Lintian can process
  use Lintian::Processable::Package;
  
  # Instantiate via Lintian::Processable::Package
- my $proc = Lintian::Processable::Package->new ('binary', 'lintian_2.5.0_all.deb');
+ my $proc = Lintian::Processable::Package->new ('lintian_2.5.0_all.deb');
  my $pkg_name = $proc->pkg_name;
  my $pkg_version = $proc->pkg_version;
  # etc.
@@ -47,34 +47,11 @@ deb files).  Multiple objects can then be combined into
 L<groups|Lintain::ProcessableGroup>, which Lintian will process
 together.
 
-=head1 METHODS
+=head1 INSTANCE METHODS
 
 =over 4
 
-=item Lintian::Processable->new ($pkg_type[, ...])
-
-Creates a new processable of type $pkg_type, which must be one of:
- 'binary', 'udeb', 'source' or 'changes'
-
-This rest of the arguments (if any) will be passed to $self->_init,
-which sub-classes must override.
-
-Note: This method should not be called directly via
-Lintian::Processable.  Please refer to a sub-class like
-L<Lintian::Processable::Package>.
-
 =cut
-
-sub new {
-    my ($class, $pkg_type, @args) = @_;
-    my $self = {};
-    bless $self, $class;
-    $self->{pkg_type} = $pkg_type;
-    $self->{tainted} = 0;
-    $self->_init ($pkg_type, @args);
-    $self->_make_identifier unless exists $self->{identifier};
-    return $self;
-}
 
 sub _make_identifier {
     my ($self) = @_;
@@ -175,17 +152,6 @@ overriden by sub-classes.
 
 sub clear_cache {
     my ($self) = @_;
-}
-
-sub _init {
-    my ($self, $pkg_type, @args) = @_;
-    my $type = ref $self;
-    if ($type && $type eq 'Lintian::Processable') {
-        croak 'Cannot create Lintian::Processable directly';
-    } elsif ($type) {
-        croak "$type has not overridden " . ${type} . '::_init';
-    }
-    croak 'Lintian::Processable::_init should not be called directly';
 }
 
 

@@ -75,7 +75,7 @@ sub _init_group_from_changes {
     fail "$changes does not exist" unless -e $changes;
     $cinfo = get_dsc_info ($changes) or
         fail "$changes is not a valid changes file";
-    $self->add_new_processable('changes', $changes);
+    $self->add_new_processable ($changes, 'changes');
     $cdir = $changes;
     if ( $changes =~ m,^/+[^/]++$,o){
         # it is "/files.changes?"
@@ -87,7 +87,7 @@ sub _init_group_from_changes {
         $cdir =~ s,(.+)/[^/]+$,$1,;
     }
     foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
-        my ($file, $pkg_type);
+        my ($file);
         next unless defined $line;
         chomp($line);
         $line =~ s/^\s++//o;
@@ -108,38 +108,33 @@ sub _init_group_from_changes {
             exit 2;
         }
 
-        if ($file =~ /\.deb$/o) {
-            $pkg_type = 'binary';
-        } elsif ($file =~ /\.udeb$/o){
-            $pkg_type = 'udeb';
-        } elsif ($file =~ /\.dsc$/o){
-            $pkg_type = 'source';
-        } else {
+        if ($file !~ /\.u?deb$/o and $file !~ m/\.dsc$/o) {
             # Some file we do not care about (at least not here).
             next;
         }
 
-        $self->add_new_processable($pkg_type, "$cdir/$file");
+        $self->add_new_processable ("$cdir/$file");
 
     }
     return 1;
 }
 
-=item $group->add_new_processable($pkg_type, $pkg_path)
+=item $group->add_new_processable ($pkg_path[, $pkg_type])
 
-Adds a new processable of type $pkg_type from $pkg_path.
+Adds a new processable of type $pkg_type from $pkg_path.  If $pkg_type
+is not given, it will be determined by the file extension.
 
 This is short hand for:
 
  $group->add_processable(
-    Lintian::Processable->new($pkg_type, $pkg_path));
+    Lintian::Processable->new ($pkg_path, $pkg_type));
 
 =cut
 
 sub add_new_processable {
-    my ($self, $pkg_type, $pkg_path) = @_;
+    my ($self, $pkg_path, $pkg_type) = @_;
     return $self->add_processable(
-        Lintian::Processable::Package->new($pkg_type, $pkg_path));
+        Lintian::Processable::Package->new ($pkg_path, $pkg_type));
 }
 
 =item $group->add_processable($proc)

@@ -64,7 +64,7 @@ sub gather_tarballs {
     fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file." unless $file and -e $file;
     # Use Lintian::Processable::Package to determine source and version as handles missing fields
     # for us to some extend.
-    $proc = Lintian::Processable::Package->new ('source', $file);
+    $proc = Lintian::Processable::Package->new ($file, 'source');
     $data = get_dsc_info($file) or fail "Could not parse dsc file for $pkg.\n";
     #  Version handling is based on Dpkg::Version::parseversion.
     $version = $proc->pkg_src_version;

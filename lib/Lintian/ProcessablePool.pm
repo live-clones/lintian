@@ -75,23 +75,14 @@ processables from the same source package (if any).
 
 sub add_file {
     my ($self, $file) = @_;
-    my ($pkg_path, $pkg_type, $proc, $procid);
-    croak "$file does not exist" unless -e $file;
-    $pkg_path = Cwd::abs_path ($file);
-    if ($pkg_path =~ m/\.changes$/o){
+    if ($file =~ m/\.changes$/o){
+        croak "$file does not exist" unless -f $file;
+        my $pkg_path = Cwd::abs_path ($file);
+        croak "Cannot resolve $file: $!" unless $pkg_path;
         return $self->_add_changes_file ($pkg_path);
     }
-    if ($pkg_path =~ m/\.dsc$/o) {
-        $pkg_type = 'source';
-    } elsif ($pkg_path =~ m/\.deb$/o) {
-        $pkg_type = 'binary';
-    } elsif ($pkg_path =~ m/\.udeb$/o) {
-        $pkg_type = 'udeb';
-    } else {
-        croak "$pkg_path is not a known type of package.";
-    }
 
-    $proc = Lintian::Processable::Package->new ($pkg_type, $pkg_path);
+    my $proc = Lintian::Processable::Package->new ($file);
     return $self->add_proc ($proc);
 }
 

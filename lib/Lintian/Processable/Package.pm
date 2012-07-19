@@ -24,6 +24,7 @@ use base qw(Lintian::Processable Class::Accessor);
 use strict;
 use warnings;
 
+use Cwd qw(realpath);
 use Carp qw(croak);
 
 use Lintian::Util qw(get_deb_info get_dsc_info);
@@ -39,7 +40,7 @@ Lintian::Processable::Package -- An object that Lintian can process
 
  use Lintian::Processable::Package;
  
- my $proc = Lintian::Processable::Package->new ('binary', 'lintian_2.5.0_all.deb');
+ my $proc = Lintian::Processable::Package->new ('lintian_2.5.0_all.deb');
  my $pkg_name = $proc->pkg_name;
  my $pkg_version = $proc->pkg_version;
  # etc.
@@ -51,32 +52,54 @@ deb files).  Multiple objects can then be combined into
 L<groups|Lintian::ProcessableGroup>, which Lintian will process
 together.
 
-=head1 METHODS
+=head1 CLASS METHODS
 
 =over 4
 
-=item Lintian::Processable::Package->new($pkg_type, $pkg_path)
+=item new (FILE[, TYPE])
 
-Creates a new processable of type $pkg_type, which must be one of:
- 'binary', 'udeb', 'source' or 'changes'
+Creates a processable from FILE.  If TYPE is given, the FILE is
+assumed to be that TYPE otherwise the type is determined by the file
+extension.
 
-$pkg_path should be the absolute path to the package file that
-defines this type of processable (e.g. the changes file).
-
-=item $proc->lab_pkg([$lpkg])
-
-Returns or sets the L<$lpkg|Lintian::Lab::Entry> element for this processable.
+TYPE is one of "binary" (.deb), "udeb" (.udeb), "source" (.dsc) or
+"changes" (.changes).
 
 =cut
 
-Lintian::Processable::Package->mk_accessors (qw(group lab_pkg));
-
 # internal initialization method.
 #  reads values from fields etc.
-sub _init {
-    my ($self, $pkg_type, $pkg_path) = @_;
+sub new {
+    my ($class, $file, $pkg_type) = @_;
+    my $pkg_path;
+    my $self;
 
-    $self->{pkg_path} = $pkg_path;
+    if (not defined $pkg_type) {
+        if ($file =~ m/\.dsc$/o) {
+            $pkg_type = 'source';
+        } elsif ($file =~ m/\.deb$/o) {
+            $pkg_type = 'binary';
+        } elsif ($file =~ m/\.udeb$/o) {
+            $pkg_type = 'udeb';
+        } elsif ($file =~ m/\.changes$/o) {
+            $pkg_type = 'changes';
+        } else {
+            croak "$file is not a known type of package";
+        }
+    }
+
+    croak "$file does not exists"
+        unless -f $file;
+
+    $pkg_path = realpath ($file);
+    croak "Cannot resolve $file: $!"
+        unless $pkg_path;
+
+    $self = {
+        pkg_type => $pkg_type,
+        pkg_path => $pkg_path,
+        tainted => 0,
+    };
 
     if ($pkg_type eq 'binary' or $pkg_type eq 'udeb'){
         my $dinfo = get_deb_info ($pkg_path) or
@@ -149,8 +172,25 @@ sub _init {
             $self->{$field} =~ s,${\EVIL_CHARACTERS},_,go;
         }
     }
-    return 1;
+    bless $self, $class;
+    $self->_make_identifier;
+    return $self;
 }
+
+
+=back
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+=item $proc->lab_pkg([$lpkg])
+
+Returns or sets the L<$lpkg|Lintian::Lab::Entry> element for this processable.
+
+=cut
+
+Lintian::Processable::Package->mk_accessors (qw(group lab_pkg));
 
 # _derive_name ($file, $ext)
 #

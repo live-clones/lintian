@@ -221,7 +221,7 @@ unless ($opt{'reports-only'}) {
             my $entry;
             unless ($opt{'dry-run'}) {
                 eval {
-                    $proc = Lintian::Processable::Package->new ($type, $file);
+                    $proc = Lintian::Processable::Package->new ($file, $type);
                 };
                 unless ($proc) {
                     my $name = "$type:$pkg_name/$pkg_version";
