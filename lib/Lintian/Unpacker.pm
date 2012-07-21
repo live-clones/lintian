@@ -409,7 +409,7 @@ sub reset_worklist {
 =item wait_for_jobs
 
 Block and wait for all running jobs to terminate.  Usually this is not
-neeed unless process_tasks was interrupted somehow.
+needed unless process_tasks was interrupted somehow.
 
 =cut
 
@@ -426,7 +426,7 @@ sub wait_for_jobs {
 
 =item kill_jobs
 
-Forcefully terminate all running jobs.  Usually this is not neeed
+Forcefully terminate all running jobs.  Usually this is not needed
 unless process_tasks was interrupted somehow.
 
 =cut
