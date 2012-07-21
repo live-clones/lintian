@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Lintian::Check qw($PKGNAME_REGEX);
+use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 

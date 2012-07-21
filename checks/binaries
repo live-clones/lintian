@@ -24,6 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Check qw(check_spelling);
+use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Output qw(debug_msg);

@@ -36,6 +36,7 @@ package Lintian::menu_format;
 use strict;
 use warnings;
 
+use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 
