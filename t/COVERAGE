@@ -1,5 +1,5 @@
 Last generated 2012-07-22
-Coverage: 836/962 (86.90%), w. legacy tests: 934/962 (97.09%)
+Coverage: 837/962 (87.01%), w. legacy tests: 935/962 (97.19%)
 
 The following tags are not tested by the test suite:
 
@@ -16,8 +16,6 @@ debconf no-template-name
 debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
-
-fields malformed-python-version
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
