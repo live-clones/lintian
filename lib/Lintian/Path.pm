@@ -24,7 +24,6 @@ use warnings;
 use base qw(Class::Accessor);
 
 use Carp qw(croak);
-use File::Basename qw(dirname);
 
 use Lintian::Util qw(resolve_pkg_path);
 
@@ -118,8 +117,7 @@ If this is not a link, then this returns undef.
 
 If the path is a symlink this method can be used to determine if the
 symlink is relative or absolute.  This is I<not> true for hardlinks,
-as the hardlink normalization may change a relative link into an
-absolute link.
+where the link target is always relative to the root.
 
 NB: Even for symlinks, a leading "./" will be stripped.
 
@@ -244,7 +242,10 @@ sub link_resolved {
     my $name = $self->name;
     my $link = $self->link;
     croak "$name is not a link" unless defined $link;
-    my $target = resolve_pkg_path (dirname ($name), $link);
+    my $dir = $self->dirname;
+    # hardlinks are always relative to the package root
+    $dir = '/' if $self->is_hardlink;
+    my $target = resolve_pkg_path ($dir, $link);
     if ($target) {
         # map "." to ''.
         $target = '' if $target eq '.';
