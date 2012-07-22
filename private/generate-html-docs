@@ -16,6 +16,8 @@ if ( ! -d $output) {
     mkdir $output or die "could not create directory: $!";
 }
 
+$Pod::Simple::HTML::Content_decl = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >};
+
 my $convert = Pod::Simple::HTMLBatch->new;
 $convert->html_render_class ('Pod::Simple::HTML');
 $convert->contents_page_start( header() );

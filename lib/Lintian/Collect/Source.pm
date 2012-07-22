@@ -469,7 +469,7 @@ The debfiles collection script must have been run to make the
 F<debfiles/control> file available.
 
 NB: If a field from the "dsc" file itself is desired, please use
-L<field|Lintian::Collect/field> returns a field.
+L<field|Lintian::Collect/field> instead.
 
 =back
 

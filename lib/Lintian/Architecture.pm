@@ -36,6 +36,7 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 
 %EXPORT_TAGS = (all => \@EXPORT_OK);
 
+=encoding utf-8
 
 =head1 NAME
 
