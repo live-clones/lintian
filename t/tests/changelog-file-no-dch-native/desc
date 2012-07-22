@@ -1,0 +1,5 @@
+Testname: changelog-file-no-dch-native
+Sequence: 6000
+Version: 1.0
+Description: Test if Debian changelog is missing in native pkg
+Test-For: changelog-file-missing-in-native-package

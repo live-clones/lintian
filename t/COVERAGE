@@ -1,6 +1,6 @@
 Last generated 2012-07-22
-Coverage (Tags): 837/962 (87.01%), w. legacy tests: 935/962 (97.19%)
-Coverage (Checks): 30/41 (73.17%), w. legacy tests: 35/41 (85.37%)
+Coverage (Tags): 839/962 (87.21%), w. legacy tests: 935/962 (97.19%)
+Coverage (Checks): 31/41 (75.61%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
 
@@ -44,9 +44,6 @@ binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
 binaries statically-linked-binary
 binaries unstripped-binary-or-object
-
-changelog-file changelog-file-missing-in-native-package
-changelog-file wrong-name-for-debian-news-file
 
 debconf config-does-not-load-confmodule
 debconf debconf-config-not-executable
@@ -212,7 +209,6 @@ debconf
 
 debug
   binary-with-bad-dynamic-table
-  changelog-file-missing-in-native-package
   changelog-should-not-mention-nmu
   debug-file-should-use-detached-symbols
   sharedobject-in-library-directory-missing-soname
@@ -233,7 +229,6 @@ filenames
   use-of-compat-symlink
   windows-thumbnail-database-in-package
   wrong-file-owner-uid-or-gid
-  wrong-name-for-debian-news-file
 
 foo++
 
