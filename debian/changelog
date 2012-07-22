@@ -24,6 +24,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Mention that cme can automate fixing some perl
       related tags.  Thanks to gregor herrmann for the report
       and patch.  (Closes: #680446)
+  * checks/infofiles:
+    + [NT] Use L::Util's gzip decompressor rather than zcat.
   * checks/manpages{,.desc}:
     + [CW,NT] Manually do redirects and chdir rather than
       invoking a shell when calling man and lexgrog.

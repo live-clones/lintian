@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env fail);
+use Lintian::Util qw(fail open_gz);
 
 use File::Basename qw(fileparse);
 
@@ -79,24 +79,16 @@ foreach my $file ($info->sorted_index) {
     # If this is the main info file (no numeric extension). make sure it has
     # appropriate dir entry information.
     if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
-        my $pid = open INFO, '-|';
-        if (not defined $pid) {
-            fail("cannot fork: $!");
-        } elsif ($pid == 0) {
-            my $f = quotemeta($info->unpacked($file));
-            clean_env(1);
-            $ENV{LC_ALL} = 'C';
-            exec "zcat $f 2>&1"
-                or fail("cannot run zcat: $!");
-        }
+        my $fd = open_gz ($info->unpacked ($file));
+        fail "open_gz $file: $!" unless defined $fd;
         local $_;
         my ($section, $start, $end);
-        while (<INFO>) {
+        while (<$fd>) {
             $section = 1 if /^INFO-DIR-SECTION\s+\S/;
             $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
             $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
         }
-        close INFO;
+        close $fd;
         tag 'info-document-missing-dir-section', $file unless $section;
         tag 'info-document-missing-dir-entry', $file unless $start && $end;
     }
