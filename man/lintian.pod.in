@@ -379,9 +379,11 @@ information about the packages it checks.  This option overrides the
 B<LINTIAN_LAB> environment variable and the configuration file entry
 of the same name.
 
-=item B<-j> X, B<--jobs> X
+=item B<-j> [X], B<--jobs>[=X]
 
-Limit the number of unpacking jobs Lintian will run in parallel.
+Set the limit for how many unpacking jobs Lintian will run in
+parallel.  If X is not given, Lintian will not limit the number of
+unpacking jobs run that can run in parallel.
 
 This option overrides the B<jobs> variable in the configuration file.
 

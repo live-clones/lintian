@@ -508,7 +508,7 @@ my %opthash = (                 # ------------------ actions
                'profile=s' => \$opt{'LINTIAN_PROFILE'},
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
-               'jobs|j=i' => \$opt{'jobs'},
+               'jobs|j:i' => \$opt{'jobs'},
 
                # ------------------ package selection options
                'all|a' => \$check_everything,

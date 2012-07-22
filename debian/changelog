@@ -69,6 +69,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Remove chdir calls for checks.
     + [NT] Retire depreciated command line and config options.
     + [NT] Refactor unpackaging into Lintian::Unpacker.
+    + [NT] Make parameter for --jobs optional.  In its absence
+      Lintian will not limit the number of parallel jobs.
 
   * lib/Lintian/Architecture.pm:
     + [NT] Properly handle cases like "linux-amd64" being an
