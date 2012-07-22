@@ -24,7 +24,6 @@ use warnings;
 use base qw(Class::Accessor);
 
 use Carp qw(croak);
-use File::Basename qw(dirname);
 
 use Lintian::Util qw(resolve_pkg_path);
 
