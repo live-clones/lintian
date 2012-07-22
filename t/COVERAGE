@@ -1,5 +1,6 @@
 Last generated 2012-07-22
-Coverage: 837/962 (87.01%), w. legacy tests: 935/962 (97.19%)
+Coverage (Tags): 837/962 (87.01%), w. legacy tests: 935/962 (97.19%)
+Coverage (Checks): 30/41 (73.17%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
 

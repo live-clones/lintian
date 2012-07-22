@@ -31,25 +31,30 @@ use Lintian::Util qw(read_dpkg_control);
 # Check that we're being run from the right place (although the above probably
 # died if we weren't).
 unless (-f 't/runtests') {
-    warn "update-never-seen source be run from the top level of the Lintian\n";
-    warn "source tree or LINTIAN_ROOT must be set in the environment.\n\n";
+    warn "update-coverage source be run from the top level of the Lintian\n";
+    warn "source tree.\n\n";
     die "Cannot find t/runtests -- run from the right directory?\n";
 }
 
 # Gather a list of all tags.
 my %tags;
+my %checks;
 my $total;
+my $check_total;
 my ($tc, $ltc);
+my ($ctc, $cltc);
 for my $desc (<checks/*.desc>) {
     for my $data (read_dpkg_control($desc)) {
         $desc =~ s,.*/,,;
         $desc =~ s/\.desc$//;
         if (exists $data->{tag}) {
             $tags{$data->{tag}} = $desc;
+            $checks{$desc}++;
         }
     }
 }
 $total = scalar keys %tags;
+$check_total = scalar keys %checks;
 
 
 # Parse all test configuration files from the new test suite looking for
@@ -58,12 +63,17 @@ for my $desc (<t/tests/*/desc>, <t/changes/*.desc>, <t/debs/*/desc>, <t/source/*
     my ($data) = read_dpkg_control($desc);
     if (exists $data->{'test-for'}) {
         for my $tag (split(' ', $data->{'test-for'})) {
+            my $check = $tags{$tag};
             delete $tags{$tag};
+            if ($check) {
+                delete $checks{$check} unless --$checks{$check};
+            }
         }
     }
 }
 
 $tc = $total - scalar keys %tags;
+$ctc = $check_total - scalar keys %checks;
 
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
@@ -79,6 +89,8 @@ for my $tagfile (<testset/tags.*>) {
         if (/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/) {
             my $tag = $1;
             if (exists $tags{$tag}) {
+                my $check = $tags{$tag};
+                delete $checks{$check} unless --$checks{$check};
                 $legacy{$tag} = $tags{$tag};
                 delete $tags{$tag};
                 push (@{ $legacy_test{$case} }, $tag);
@@ -89,13 +101,17 @@ for my $tagfile (<testset/tags.*>) {
 }
 
 $ltc = $total - scalar keys %tags;
+$cltc = $check_total - scalar keys %checks;
 
 my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : '';
 my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : '';
+my $ctcr = $check_total ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100 : '';
+my $cltcr = $check_total ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100 : '';
 # Open COVERAGE and print out a date stamp.
 open(OUT, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
 print OUT 'Last generated ', strftime ('%Y-%m-%d', gmtime), "\n";
-print OUT "Coverage: $tc/$total$tcr, w. legacy tests: $ltc/$total$ltcr\n\n";
+print OUT "Coverage (Tags): $tc/$total$tcr, w. legacy tests: $ltc/$total$ltcr\n";
+print OUT "Coverage (Checks): $ctc/$check_total$ctcr, w. legacy tests: $cltc/$check_total$cltcr\n\n";
 
 # Whatever is left in the %tags hash are untested.  Print them out sorted by
 # checks file.
