@@ -66,6 +66,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Retire depreciated command line and config options.
     + [NT] Refactor unpackaging into Lintian::Unpacker.
 
+  * lib/Lintian/Architecture.pm:
+    + [NT] Properly handle cases like "linux-amd64" being an
+      alias of "amd64".
   * lib/Lintian/Collect{,/Source}.pm:
     + [NT] Add optional parameter to field (and X_field)
       methods that denotes the default value if a field is
