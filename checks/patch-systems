@@ -28,7 +28,7 @@ use Lintian::Util qw(fail);
 use Cwd qw(realpath);
 
 sub run {
-    my ($pkg, $type, $info) = @_;
+    my (undef, undef, $info) = @_;
 
     #Some (cruft) checks are valid for every patch system, so we need to record that:
     my $uses_patch_system = 0;

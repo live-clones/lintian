@@ -59,9 +59,7 @@ my $ANY_DEBCONF = Lintian::Relation->new (join (' | ', qw(debconf debconf-2.0 cd
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, $type, $info) = @_;
 
 my $seenconfig='';
 my $seentemplates='';

@@ -52,9 +52,7 @@ my @CURRENT      = split(m/\./, $CURRENT);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 # udebs aren't required to conform to policy, so they don't need
 # Standards-Version. (If they have it, though, it should be valid.)

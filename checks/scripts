@@ -191,16 +191,14 @@ sub script_tag {
 
 sub run {
 
+my ($pkg, undef, $info) = @_;
+
 my %executable = ();
 my %ELF = ();
 my %scripts = ();
 
 # no dependency for install-menu, because the menu package specifically
 # says not to depend on it.
-
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
 
 foreach my $file ($info->sorted_index) {
     next if $file eq '';

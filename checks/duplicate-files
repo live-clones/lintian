@@ -26,9 +26,7 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 my %hashmap;
 

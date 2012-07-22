@@ -32,9 +32,8 @@ use Parse::DebianChangelog;
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, $type, $info) = @_;
+
 my $found_html=0;
 my $found_text=0;
 my $native_pkg;

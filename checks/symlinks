@@ -27,11 +27,7 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
-my $group = shift;
+my ($pkg, undef, $info, $proc, $group) = @_;
 
 my $ginfo = $group->info;
 my @brokenlinks;

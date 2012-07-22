@@ -33,11 +33,7 @@ our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
-my $group = shift;
+my ($pkg, $type, $info, undef, $group) = @_;
 
 my $found = 0;
 my $linked = 0;

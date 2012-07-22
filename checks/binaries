@@ -85,10 +85,7 @@ our $HARDENING = Lintian::Data->new ('binaries/hardening-tags', qr/\s*\|\|\s*/o,
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
+my ($pkg, $type, $info, $proc) = @_;
 
 my $arch;
 my $multiarch;

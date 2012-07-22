@@ -326,11 +326,7 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
-my $group = shift;
+my ($pkg, $type, $info, $proc, $group) = @_;
 
 my $mdir = $info->lab_data_path ('menu');
 my @menufiles;

@@ -27,9 +27,7 @@ use Lintian::Util qw(resolve_pkg_path);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, undef, $info) = @_;
 
 my $java_info = $info->java_info;
 my $missing_jarwrapper = 0;

@@ -41,7 +41,7 @@ my %dep5_renamed_fields = (
 
 sub run {
 
-my ($pkg, $type, $info) = @_;
+my (undef, undef, $info) = @_;
 
 my $copyright_filename = $info->debfiles('copyright');
 

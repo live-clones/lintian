@@ -138,10 +138,8 @@ our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
+my ($pkg, $type, $info, $proc) = @_;
+
 my $version;
 my $arch_indep;
 

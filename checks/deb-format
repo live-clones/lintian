@@ -32,9 +32,7 @@ our %ERRORS = ('control-errors'       => 'tar-errors-from-control',
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, $type, $info) = @_;
 
 my $deb = $info->lab_data_path ('deb');
 

@@ -31,9 +31,7 @@ use Lintian::Util qw(fail);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 my $template = 0;
 my $wfile = $info->debfiles('watch');

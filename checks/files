@@ -158,10 +158,7 @@ my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
+my ($pkg, $type, $info, $proc) = @_;
 
 my $file;
 my $source_pkg;

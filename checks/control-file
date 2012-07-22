@@ -37,9 +37,7 @@ my $src_fields = Lintian::Data->new('common/source-fields');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, $type, $info) = @_;
 
 my $dcontrol = $info->debfiles('control');
 

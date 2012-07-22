@@ -30,9 +30,7 @@ use File::Basename qw(fileparse);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {

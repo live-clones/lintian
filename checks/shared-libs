@@ -52,6 +52,8 @@ my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 
 sub run {
 
+my ($pkg, $type, $info, undef, $group) = @_;
+
 my $file;
 my $must_call_ldconfig;
 my %SONAME;
@@ -60,12 +62,6 @@ my @shlibs;
 my @words;
 
 # ---end-of-configuration-part---
-
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
-my $group = shift;
 
 my $objdump = $info->objdump_info;
 

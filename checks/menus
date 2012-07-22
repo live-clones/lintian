@@ -52,9 +52,7 @@ our $SECTIONS = Lintian::Data->new ('doc-base/sections');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, $type, $info) = @_;
 
 my %all_files = ();
 my %all_links = ();

@@ -34,9 +34,7 @@ our $MAX_CMI = 3;
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, undef, $info) = @_;
 
 # Collect information about .a files from ar-info dump
 my %provided_o;

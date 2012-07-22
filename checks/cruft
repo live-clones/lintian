@@ -93,9 +93,7 @@ our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, undef, $info) = @_;
 
 my $droot = $info->debfiles;
 

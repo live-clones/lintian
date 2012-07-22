@@ -29,9 +29,7 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, $type, $info) = @_;
 
 my $tabs = 0;
 my $lines = 0;

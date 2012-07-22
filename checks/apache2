@@ -30,10 +30,7 @@ use Lintian::Relation qw(:constants);
 use Lintian::Util qw(fail);
 
 sub run {
-    my $pkg = shift;
-    my $type = shift;
-    my $info = shift;
-
+    my ($pkg, $type, $info) = @_;
 
     # Do nothing if the package in question appears to be related to
     # the web server itself

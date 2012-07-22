@@ -33,9 +33,7 @@ our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 my $dsrc = $info->debfiles('source');
 

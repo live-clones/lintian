@@ -27,9 +27,8 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my ($pkg, undef, $info) = @_;
+
 my $readme = '';
 
 if (open (IN, '<', $info->lab_data_path ('README.Debian'))) {

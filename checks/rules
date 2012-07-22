@@ -104,11 +104,7 @@ my %debhelper_order =
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
-my $proc = shift;
-my $group = shift;
+my (undef, undef, $info, undef, $group) = @_;
 
 my $rules = $info->debfiles('rules');
 

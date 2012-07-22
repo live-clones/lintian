@@ -32,9 +32,7 @@ my $THRESHOLD_PERC = 50;
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 # Skip architecture-dependent packages.
 my $arch = $info->field('architecture') || '';

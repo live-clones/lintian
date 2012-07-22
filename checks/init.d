@@ -65,9 +65,7 @@ our $VIRTUAL_FACILITIES = Lintian::Data->new('init.d/virtual_facilities');
 
 sub run {
 
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
+my (undef, undef, $info) = @_;
 
 my $initd_dir = $info->lab_data_path ('init.d');
 
