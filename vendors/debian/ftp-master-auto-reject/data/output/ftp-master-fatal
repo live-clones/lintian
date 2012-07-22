@@ -46,7 +46,6 @@ no-architecture-field
 no-copyright-file
 no-maintainer-field
 no-package-name
-no-source-field
 no-version-field
 not-allowed-control-file
 package-contains-ancient-file
