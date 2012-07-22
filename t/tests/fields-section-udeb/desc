@@ -1,5 +1,0 @@
-Testname: fields-section-udeb
-Sequence: 6000
-Version: 1.0
-Description: Test for udeb in the wrong section
-Test-For: wrong-section-for-udeb

@@ -1,5 +1,5 @@
 Last generated 2012-07-22
-Coverage: 835/962 (86.80%), w. legacy tests: 933/962 (96.99%)
+Coverage: 836/962 (86.90%), w. legacy tests: 934/962 (97.09%)
 
 The following tags are not tested by the test suite:
 
@@ -17,7 +17,6 @@ debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
 
-fields bad-menu-item
 fields malformed-python-version
 
 files debug-package-should-be-named-dbg
