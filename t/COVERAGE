@@ -1,6 +1,6 @@
 Last generated 2012-07-22
-Coverage (Tags): 839/962 (87.21%), w. legacy tests: 935/962 (97.19%)
-Coverage (Checks): 31/41 (75.61%), w. legacy tests: 35/41 (85.37%)
+Coverage (Tags): 843/962 (87.63%), w. legacy tests: 935/962 (97.19%)
+Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
 
@@ -126,11 +126,6 @@ menus menu-method-should-include-menu-h
 menus postinst-does-not-call-updatemenus
 menus postrm-does-not-call-updatemenus
 
-nmu changelog-should-mention-qa
-nmu changelog-should-not-mention-nmu
-nmu orphaned-package-should-not-have-uploaders
-nmu qa-upload-has-incorrect-version-number
-
 po-debconf newer-debconf-templates
 po-debconf unknown-encoding-in-po-file
 
@@ -209,7 +204,6 @@ debconf
 
 debug
   binary-with-bad-dynamic-table
-  changelog-should-not-mention-nmu
   debug-file-should-use-detached-symbols
   sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib
@@ -235,7 +229,6 @@ foo++
 libbaz
 
 maintainer-scripts
-  changelog-should-mention-qa
   config-does-not-load-confmodule
   debconf-config-not-executable
   init.d-script-not-included-in-package
@@ -243,14 +236,12 @@ maintainer-scripts
   maintainer-script-ignores-errors
   maintainer-script-removes-device-files
   no-debconf-templates
-  orphaned-package-should-not-have-uploaders
   output-of-updaterc.d-not-redirected-to-dev-null
   postinst-does-not-load-confmodule
   postrm-contains-additional-updaterc.d-calls
   postrm-does-not-call-updaterc.d-for-init.d-script
   preinst-calls-updaterc.d
   prerm-calls-updaterc.d
-  qa-upload-has-incorrect-version-number
   update-alternatives-remove-called-in-postrm
 
 relations
