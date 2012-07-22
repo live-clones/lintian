@@ -413,8 +413,20 @@ for my $filename (sort keys %{$info->scripts}) {
 }
 
 foreach (keys %executable) {
+    my $index_info = $info->index ($_);
+    my $ok = 0;
+    if ($index_info->is_hardlink) {
+        # We don't collect script information for hardlinks, so check
+        # if the target is a script.
+        my $target = $index_info->link_resolved;
+        if (exists $info->scripts->{$target}) {
+            $ok = 1;
+        }
+    }
+
     tag 'executable-not-elf-or-script', $_
-        unless ( $ELF{$_}
+        unless ( $ok
+                 or $ELF{$_}
                  or $scripts{$_}
                  or $_ =~ m,^usr(?:/X11R6)?/man/,
                  or $_ =~ m/\.exe$/ # mono convention

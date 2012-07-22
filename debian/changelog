@@ -37,6 +37,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       manpages.
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
+    + [NT] Fix false positive "executable-not-elf-or-script" when
+      the file is an executable hardlink to a script.
   * checks/source-copyright{,.desc}:
     + [NT] Check for possible misspellings of known field
       names.  (Closes: #678639)

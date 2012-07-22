@@ -1,0 +1,2 @@
+W: scripts-exec: executable-not-elf-or-script usr/bin/04-not-a-script
+W: scripts-exec: script-not-executable usr/bin/02-no-exec-script

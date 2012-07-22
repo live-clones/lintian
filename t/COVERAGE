@@ -1,5 +1,5 @@
-Last generated 2012-07-14
-Coverage: 833/963 (86.50%), w. legacy tests: 933/963 (96.88%)
+Last generated 2012-07-22
+Coverage: 835/963 (86.71%), w. legacy tests: 933/963 (96.88%)
 
 The following tags are not tested by the test suite:
 
@@ -140,10 +140,8 @@ nmu qa-upload-has-incorrect-version-number
 po-debconf newer-debconf-templates
 po-debconf unknown-encoding-in-po-file
 
-scripts executable-not-elf-or-script
 scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
-scripts script-not-executable
 scripts update-alternatives-remove-called-in-postrm
 
 shared-libs sharedobject-in-library-directory-missing-soname
@@ -174,7 +172,6 @@ binary
   doc-base-index-references-multiple-files
   doc-base-invalid-document-field
   doc-base-unknown-section
-  executable-not-elf-or-script
   menu-file-in-usr-lib
   menu-item-missing-required-tag
   menu-item-needs-tag-has-unknown-value
@@ -236,7 +233,6 @@ filenames
   desktop-file-in-wrong-dir
   package-contains-devhelp-file-without-symlink
   package-installs-packlist
-  script-not-executable
   use-of-compat-symlink
   windows-thumbnail-database-in-package
   wrong-file-owner-uid-or-gid
