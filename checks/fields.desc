@@ -258,12 +258,6 @@ Info: The Maintainer address for this package is a mailing list and there
  maintainers in the Uploaders field.
 Ref: policy 3.3, devref 5.12
 
-Tag: no-source-field
-Severity: serious
-Certainty: certain
-Info: The package does not have a "Source:" field in its control file.
-Ref: policy 5.2
-
 Tag: source-field-does-not-match-pkg-name
 Severity: serious
 Certainty: certain

@@ -6,6 +6,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + Removed:
       - apparently-truncated-elf-binary
       - data.tar.xz-member-without-dpkg-pre-depends
+      - no-source-field
       - preinst-uses-dpkg-maintscript-helper-without-predepends
 
   * checks/*:
@@ -20,10 +21,13 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Detect MS-DOS executables as windows binaries.
   * checks/deb-format{,.desc}:
     + [NT] Retire data.tar.xz tag.  (Closes: #680391)
-  * checks/fields.desc:
+  * checks/fields{,.desc}:
     + [NT] Mention that cme can automate fixing some perl
       related tags.  Thanks to gregor herrmann for the report
       and patch.  (Closes: #680446)
+    + [NT] Retire no-source-field since Lintian cannot emit it any
+      more due to dpkg-source refusing to extract such source
+      packages.
   * checks/infofiles:
     + [NT] Use L::Util's gzip decompressor rather than zcat.
   * checks/manpages{,.desc}:

@@ -359,7 +359,11 @@ if (defined $info->field('uploaders') && defined $info->field('maintainer')) {
 #---- Source
 
 if (not defined $info->field('source')) {
-    tag 'no-source-field' if $type eq 'source';
+    # Optional in binary packages, required in source packages, but we
+    # cannot check it as dpkg-source(1) refuses to unpack source packages
+    # without this field (and fields indirectly depends on unpacked).  So
+    # "pass"...
+    1;
 } else {
     my $source = $info->field('source');
 
