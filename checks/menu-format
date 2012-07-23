@@ -180,129 +180,7 @@ my %main_categories = map { $_ => 1 }
 # This is a list of all Additional Categories for .desktop files.  Ideally we
 # should be checking to be sure the associated Main Categories are present,
 # but we don't have support for that yet.
-my %categories = map { $_ => 1 }
-    qw(
-       Building
-       Debugger
-       IDE
-       GUIDesigner
-       Profiling
-       RevisionControl
-       Translation
-       Calendar
-       ContactManagement
-       Database
-       Dictionary
-       Chart
-       Email
-       Finance
-       FlowChart
-       PDA
-       ProjectManagement
-       Presentation
-       Spreadsheet
-       WordProcessor
-       2DGraphics
-       VectorGraphics
-       RasterGraphics
-       3DGraphics
-       Scanning
-       OCR
-       Photography
-       Publishing
-       Viewer
-       TextTools
-       DesktopSettings
-       HardwareSettings
-       Printing
-       PackageManager
-       Dialup
-       InstantMessaging
-       Chat
-       IRCClient
-       FileTransfer
-       HamRadio
-       News
-       P2P
-       RemoteAccess
-       Telephony
-       TelephonyTools
-       VideoConference
-       WebBrowser
-       WebDevelopment
-       Midi
-       Mixer
-       Sequencer
-       Tuner
-       TV
-       AudioVideoEditing
-       Player
-       Recorder
-       DiscBurning
-       ActionGame
-       AdventureGame
-       ArcadeGame
-       BoardGame
-       BlocksGame
-       CardGame
-       KidsGame
-       LogicGame
-       RolePlaying
-       Simulation
-       SportsGame
-       StrategyGame
-       Art
-       Construction
-       Music
-       Languages
-       Science
-       ArtificialIntelligence
-       Astronomy
-       Biology
-       Chemistry
-       ComputerScience
-       DataVisualization
-       Economy
-       Electricity
-       Geography
-       Geology
-       Geoscience
-       History
-       ImageProcessing
-       Literature
-       Math
-       NumericalAnalysis
-       MedicalSoftware
-       Physics
-       Robotics
-       Sports
-       ParallelComputing
-       Amusement
-       Archiving
-       Compression
-       Electronics
-       Emulator
-       Engineering
-       FileTools
-       FileManager
-       TerminalEmulator
-       Filesystem
-       Monitor
-       Security
-       Accessibility
-       Calculator
-       Clock
-       TextEditor
-       Documentation
-       Core
-       KDE
-       GNOME
-       GTK
-       Qt
-       Motif
-       Java
-       ConsoleOnly
-      );
+my $ADD_CATEGORIES = Lintian::Data->new ('menu-format/add-categories');
 
 # This is a list of Reserved Categories for .desktop files.  To use one of
 # these, the desktop entry must also have an OnlyShowIn key limiting the
@@ -795,7 +673,7 @@ sub VerifyDesktopFile {
                     unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
                 $in_reserved = 1;
-            } elsif (not $categories{$cat} and not $main_categories{$cat}) {
+            } elsif (not $ADD_CATEGORIES->known ($cat) and not $main_categories{$cat}) {
                 tag 'desktop-entry-invalid-category', "$cat $file";
             } elsif ($main_categories{$cat}) {
                 $saw_main = 1;
