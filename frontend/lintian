@@ -654,8 +654,6 @@ if (defined $experimental_output_opts) {
                 $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
             }
         }
-        no strict 'refs';
-        ${"Tags::$_"} = $opts{$_};
     }
 }
 
