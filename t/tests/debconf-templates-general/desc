@@ -1,0 +1,17 @@
+Testname: debconf-templates-general
+Sequence: 6000
+Version: 1.0
+Description: Test for various debconf template issues
+Test-For:
+ boolean-template-has-bogus-default
+ duplicate-long-description-in-template
+ empty-translated-choices
+ malformed-template-name
+ mismatch-translated-choices
+ no-template-description
+ no-template-name
+ no-template-type
+ select-with-boolean-choices
+ select-without-choices
+ unknown-field-in-templates
+ unknown-template-type

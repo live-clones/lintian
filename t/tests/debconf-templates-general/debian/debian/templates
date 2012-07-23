@@ -1,0 +1,52 @@
+Template: debconf/translated
+Type: error
+_Description: Useless note
+
+Type: text
+Description: Missing template field.
+
+Template: debconf-malformed-template
+Type: boolean
+Description: Is this a bad template?
+
+Template: debconf/no-type
+Description: Missing type
+
+Template: debconf/unknown-type
+Type: lintian
+Description: Template with unknown type
+
+Template: debconf/boolean-bogus-default
+Type: boolean
+Default: lintian
+Description: How do you like the default?
+ On a scale of "false" to "true".
+
+Template: debconf/select-boolean-choice
+Type: select
+Choices: yes, no
+Description: A boolean type would have been better
+
+Template: debconf/select-empty-trans-choices
+Type: select
+Choices: sakana, sake
+Choices-Da:
+Description: Preference
+
+Template: debconf/select-without-choices
+Type: select
+Description: Missing a Choices field
+
+Template: debconf/no-description
+Type: error
+
+Template: debconf/duplicate-long-desc
+Type: error
+Description: Duplicate long description
+ Duplicate long description
+
+Template: debconf/unknown-field
+Type: boolean
+Description: Is the field below unknown?
+Unknown-field: yes, it is.
+

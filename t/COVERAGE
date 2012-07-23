@@ -1,5 +1,5 @@
-Last generated 2012-07-22
-Coverage (Tags): 843/962 (87.63%), w. legacy tests: 935/962 (97.19%)
+Last generated 2012-07-23
+Coverage (Tags): 855/962 (88.88%), w. legacy tests: 943/962 (98.02%)
 Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
@@ -7,16 +7,8 @@ The following tags are not tested by the test suite:
 binaries binary-file-compressed-with-upx
 binaries ocaml-custom-executable
 
-debconf boolean-template-has-bogus-default
 debconf debconf-is-not-a-registry
-debconf duplicate-long-description-in-template
-debconf empty-translated-choices
 debconf isdefault-flag-is-deprecated
-debconf malformed-template-name
-debconf no-template-name
-debconf select-without-choices
-debconf unknown-field-in-templates
-debconf unknown-template-type
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
@@ -52,17 +44,13 @@ debconf making-assumptions-about-interfaces-in-templates
 debconf malformed-prompt-in-templates
 debconf malformed-question-in-templates
 debconf malformed-title-in-templates
-debconf mismatch-translated-choices
 debconf missing-debconf-dependency
 debconf missing-debconf-dependency-for-preinst
 debconf no-debconf-templates
-debconf no-template-description
-debconf no-template-type
 debconf possible-debconf-note-abuse
 debconf postinst-does-not-load-confmodule
 debconf postinst-uses-db-input
 debconf postrm-does-not-purge-debconf
-debconf select-with-boolean-choices
 debconf template-uses-unsplit-choices
 debconf too-long-extended-description-in-templates
 debconf too-long-short-description-in-templates
@@ -182,16 +170,12 @@ debconf
   malformed-prompt-in-templates
   malformed-question-in-templates
   malformed-title-in-templates
-  mismatch-translated-choices
   missing-debconf-dependency
   missing-debconf-dependency-for-preinst
   newer-debconf-templates
-  no-template-description
-  no-template-type
   possible-debconf-note-abuse
   postinst-uses-db-input
   postrm-does-not-purge-debconf
-  select-with-boolean-choices
   template-uses-unsplit-choices
   too-long-extended-description-in-templates
   too-long-short-description-in-templates

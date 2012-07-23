@@ -1,0 +1,12 @@
+E: debconf-templates-general: boolean-template-has-bogus-default debconf/boolean-bogus-default lintian
+E: debconf-templates-general: empty-translated-choices debconf/select-empty-trans-choices choices-da
+E: debconf-templates-general: malformed-template-name debconf-malformed-template
+E: debconf-templates-general: mismatch-translated-choices debconf/select-empty-trans-choices choices-da
+E: debconf-templates-general: no-template-description debconf/no-description
+E: debconf-templates-general: no-template-name
+E: debconf-templates-general: no-template-type debconf/no-type
+E: debconf-templates-general: select-without-choices debconf/select-without-choices
+E: debconf-templates-general: unknown-field-in-templates debconf/unknown-field unknown-field
+E: debconf-templates-general: unknown-template-type lintian
+W: debconf-templates-general: duplicate-long-description-in-template debconf/duplicate-long-desc
+W: debconf-templates-general: select-with-boolean-choices debconf/select-boolean-choice
