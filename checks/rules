@@ -326,19 +326,13 @@ while (<RULES>) {
                 $indep = 1 if $target eq '%';
                 $indep = 1 if $target =~ /^override_/;
             }
-            if ($arch) {
+            if (not $maybe_skipping and ($arch or $indep)) {
+                my $table = \%needed;
+                $table = \%needed_clean if $arch;
                 for my $rule (@RULE_CLEAN_DEPENDS) {
-                    if (/$rule->[1]/ and not $maybe_skipping) {
-                        $needed_clean{$rule->[0]}
-                            = $rule->[2] || $needed_clean{$rule->[0]} || '';
-                    }
-                }
-            } elsif ($indep) {
-                for my $rule (@RULE_CLEAN_DEPENDS) {
-                    if (/$rule->[1]/ and not $maybe_skipping) {
-                        $needed{$rule->[0]}
-                            = $rule->[2] || $needed{$rule->[0]} || '';
-                    }
+                    my ($dep, $pattern, $tagname) = @$rule;
+                    next unless /$pattern/;
+                    $table->{$dep} = $tagname || $table->{$dep} || '';
                 }
             }
             if (m/^\s+(dh_\S+)\b/ and $debhelper_order{$1}) {
