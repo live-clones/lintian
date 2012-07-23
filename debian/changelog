@@ -7,6 +7,9 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
 
   * data/doc-base/sections:
     + [NT] Update section list.  (Closes: #678650)
+  * data/spelling/corrections:
+    + [NT] Add new corrections.  Thanks to Justin B Rye.
+      (Closes: #681527)
 
   * debian/changelog:
     + [NT] Fix some typos in earlier entries.
