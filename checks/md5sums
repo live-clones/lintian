@@ -33,20 +33,6 @@ my $control = $info->control('md5sums');
 
 my %control_entry;
 my %info_entry;
-my %conffile;
-
-# read in conffiles
-if (-f $info->control('conffiles')) {
-    open(C, '<', $info->control('conffiles'))
-        or fail("cannot open control file conffiles: $!");
-    while (<C>) {
-        chop;
-        next if m/^\s*$/o;
-        s,^/,,o;
-        $conffile{$_} = 1;
-    }
-    close(C);
-}
 
 # Is there a md5sums control file?
 unless (-f $control) {
@@ -61,7 +47,7 @@ unless (-f $control) {
     foreach my $file ($info->sorted_index) {
         # Skip non-files, they will not appear in the md5sums file
         next unless $info->index ($file)->is_regular_file;
-        unless ($conffile{$file}) {
+        unless ($info->is_conffile ($file)) {
             $only_conffiles = 0;
             last;
         }
@@ -104,7 +90,7 @@ for my $file (keys %control_entry) {
 for my $file (keys %{ $info->md5sums }) {
     next if $control_entry{$file};
     tag 'file-missing-in-md5sums', $file
-        unless ($conffile{$file} || $file =~ m%^var/lib/[ai]spell/.%o);
+        unless ($info->is_conffile ($file) || $file =~ m%^var/lib/[ai]spell/.%o);
 }
 
 }

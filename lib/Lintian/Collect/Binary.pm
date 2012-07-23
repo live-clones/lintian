@@ -359,6 +359,36 @@ sub is_transitional {
     return $desc =~ m/transitional package/;
 }
 
+# Returns a truth value if the file is listed in the conffiles file
+# - Note files should be passed relative to the package root.
+# sub is_conffile Needs-Info bin-pkg-control
+sub is_conffile {
+    my ($self, $file) = @_;
+    if (exists $self->{'conffiles'}) {
+        return 1 if exists $self->{'conffiles'}->{$file};
+        return;
+    }
+    my $cf = $self->control ('conffiles');
+    my %conffiles = ();
+    $self->{'conffiles'} = \%conffiles;
+    # No real packages use links in their control.tar.gz and conffiles
+    # must be a file.
+    return if -l $cf or not -f $cf;
+    open my $fd, '<', $cf or fail "opening control/conffiles: $!";
+    while ( my $line = <$fd> ) {
+        chomp $line;
+        next if $line =~ m/^\s*$/;
+        # Look up happens with a relative path (e.g. etc/file.conf).
+        # Side-effect is that we silently "fix" relative conffiles,
+        # but checks/conffiles catches those for us.
+        $line =~ s,^/++,,o;
+        $conffiles{$line} = 1;
+    }
+    close $fd;
+    return 1 if exists $conffiles{$file};
+    return;
+}
+
 =head1 NAME
 
 Lintian::Collect::Binary - Lintian interface to binary package data collection
@@ -531,6 +561,17 @@ This is based on the package's description.
 
 Returns an open handle, which will read the data from coll/strings for
 FILE.
+
+=item is_conffile (FILE)
+
+Returns a truth value if FILE is listed in the conffiles control file.
+If the control file is not present or FILE is not listed in it, it
+returns C<undef>.
+
+Note that FILE should be the filename relative to the package root
+(even though the control file uses absolute paths).  If the control
+file does relative paths, they are assumed to be relative to the
+package root as well (and used without warning).
 
 =back
 

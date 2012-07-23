@@ -39,6 +39,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
       the groff pipeline.
     + [CW,NT] Use the L::Util gzip decompressor to open gzipped
       manpages.
+  * checks/md5sums:
+    + [NT] Use L::Collect's conffile API instead of accessing the
+      "conffiles" control file directly.
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
     + [NT] Fix false positive "executable-not-elf-or-script" when
@@ -82,6 +85,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       of the methods.
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Bump API for objdump method.
+    + [NT] Add API for checking if a file is considered a
+      conffile.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Strip leading slash off files extracted from tar.
   * lib/Lintian/Internal/FrontendUtil.pm:
