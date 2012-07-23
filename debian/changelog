@@ -17,6 +17,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
       apparently-corrupted-elf-binary.
     + [NT] Remove some references to objdump in tag descriptions
       as Lintian uses readelf.
+  * checks/conffiles:
+    + [NT] Remove leading slash on the filename when emitting
+      file-in-etc-rc.d-marked-as-conffile.
   * checks/cruft:
     + [NT] Detect MS-DOS executables as windows binaries.
   * checks/deb-format{,.desc}:
@@ -30,6 +33,11 @@ lintian (2.5.11) UNRELEASED; urgency=low
       packages.
   * checks/infofiles:
     + [NT] Use L::Util's gzip decompressor rather than zcat.
+  * checks/init.d{,.desc}:
+    + [NT] Move file-in-etc-rc.d-marked-as-conffile to conffiles
+      check.
+    + [NT] Use L::Collect's conffile API instead of accessing the
+      "conffiles" control file directly.
   * checks/manpages{,.desc}:
     + [CW,NT] Manually do redirects and chdir rather than
       invoking a shell when calling man and lexgrog.

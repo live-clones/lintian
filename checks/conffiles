@@ -63,6 +63,8 @@ if (-f $cf) {
         } else {
             unless (m,^/etc/,) {
                 tag 'non-etc-file-marked-as-conffile', $file;
+            } elsif (m,^/etc/rc.\.d,) {
+                tag 'file-in-etc-rc.d-marked-as-conffile', $file;
             }
         }
 

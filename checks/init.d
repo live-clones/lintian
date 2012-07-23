@@ -73,11 +73,9 @@ my $postinst = $info->control('postinst');
 my $preinst = $info->control('preinst');
 my $postrm = $info->control('postrm');
 my $prerm = $info->control('prerm');
-my $conffiles = $info->control('conffiles');
 
 my %initd_postinst;
 my %initd_postrm;
-my %conffiles;
 
 my $opts_r = qr/-\S+\s*/;
 my $action_r = qr/\w+/;
@@ -158,26 +156,12 @@ for (keys %initd_postrm) {
     tag 'postrm-contains-additional-updaterc.d-calls', "etc/init.d/$_";
 }
 
-# load conffiles
-if (open(IN, '<', $conffiles)) {
-    while (<IN>) {
-        chop;
-        next if m/^\s*$/o;
-        $conffiles{$_} = 1;
-
-        if (m,^/?etc/rc.\.d,o) {
-            tag 'file-in-etc-rc.d-marked-as-conffile', $_;
-        }
-    }
-    close(IN);
-}
-
 foreach my $initd_file (keys %initd_postinst) {
     next unless $initd_file;
     my $initd_path = "$initd_dir/$initd_file";
 
     # init.d scripts have to be marked as conffiles unless they're symlinks.
-    unless ($conffiles{"/etc/init.d/$initd_file"} or $conffiles{"etc/init.d/$initd_file"}
+    unless ($info->is_conffile ("etc/init.d/$initd_file")
             or -l $initd_path) {
         tag 'init.d-script-not-marked-as-conffile', "etc/init.d/$initd_file";
     }

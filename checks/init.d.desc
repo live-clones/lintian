@@ -53,12 +53,6 @@ Certainty: certain
 Info: The <tt>postrm</tt> de-registers an <tt>/etc/init.d</tt> script which
  has not been registered in the <tt>postinst</tt> script before.
 
-Tag: file-in-etc-rc.d-marked-as-conffile
-Severity: important
-Certainty: certain
-Ref: policy 9.3.3
-Info: The symbolic links in <tt>/etc/rc?.d</tt> may not be marked as conffiles.
-
 Tag: init.d-script-not-marked-as-conffile
 Severity: important
 Certainty: wild-guess

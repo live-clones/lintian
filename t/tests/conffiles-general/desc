@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test for conffile-related checks
 Test-For:
+    file-in-etc-rc.d-marked-as-conffile
     file-in-usr-marked-as-conffile
     non-etc-file-marked-as-conffile
     relative-conffile

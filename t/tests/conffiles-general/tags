@@ -1,4 +1,5 @@
 E: conffiles-general: duplicate-conffile etc/foo
+E: conffiles-general: file-in-etc-rc.d-marked-as-conffile etc/rc2.d/file
 E: conffiles-general: file-in-usr-marked-as-conffile usr/share/foo
 E: conffiles-general: non-etc-file-marked-as-conffile var/cache/foo
 E: conffiles-general: relative-conffile etc/foo

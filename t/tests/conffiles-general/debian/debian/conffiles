@@ -1,4 +1,5 @@
 /etc/foo
+/etc/rc2.d/file
 /usr/share/foo
 /var/cache/foo
 etc/foo

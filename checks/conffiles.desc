@@ -44,3 +44,10 @@ Certainty: certain
 Ref: policy 10.7
 Info: Files in <tt>/etc</tt> must be marked conffiles if they are included
  in a package.  Otherwise they should be created by maintainer scripts.
+
+Tag: file-in-etc-rc.d-marked-as-conffile
+Severity: important
+Certainty: certain
+Ref: policy 9.3.3
+Info: The symbolic links in <tt>/etc/rc?.d</tt> may not be marked as conffiles.
+

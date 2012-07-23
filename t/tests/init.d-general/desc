@@ -4,7 +4,6 @@ Version: 1.0
 Description: Test tags related to the init.d checks
 Test-For:
  duplicate-updaterc.d-calls-in-postinst
- file-in-etc-rc.d-marked-as-conffile
  init.d-script-does-not-implement-optional-option
  init.d-script-does-not-implement-required-option
  init.d-script-sourcing-without-test
