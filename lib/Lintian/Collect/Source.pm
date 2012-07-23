@@ -42,11 +42,11 @@ sub new {
 
 # Get the changelog file of a source package as a Parse::DebianChangelog
 # object.  Returns undef if the changelog file couldn't be found.
-# sub changelog Needs-Info debfiles
+# sub changelog Needs-Info :debfiles
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->lab_data_path ('debfiles/changelog');
+    my $dch = $self->debfiles ('changelog');
     if (-l $dch || ! -f $dch) {
         $self->{changelog} = undef;
     } else {
@@ -72,7 +72,7 @@ sub diffstat {
 # format 3.0 (quilt) packages, we base this on whether we have a Debian
 # *.diff.gz file.  3.0 (quilt) packages are always non-native.  Returns true
 # if the package is native and false otherwise.
-# sub native Needs-Info <>
+# sub native Needs-Info :field
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
@@ -100,7 +100,7 @@ sub native {
 
 # Returns a hash of binaries to the package type, assuming a type of deb
 # unless the package type field is present.
-# sub binaries Needs-Info debfiles
+# sub binaries Needs-Info :binary_field
 sub binaries {
     my ($self) = @_;
     return $self->{binaries} if exists $self->{binaries};
@@ -120,7 +120,7 @@ sub binaries {
 
 # Returns the value of a source field in d/control or $def//undef
 # if that field is not present.
-# sub source_field Needs-Info debfiles
+# sub source_field Needs-Info :_load_dctrl
 sub source_field {
     my ($self, $field, $def) = @_;
     $self->_load_dctrl unless exists $self->{source_field};
@@ -131,7 +131,7 @@ sub source_field {
 # Returns the value of a control field for a binary package or undef
 # if that control field isn't present.  This does not implement
 # inheritance from the settings in the source stanza.
-# sub binary_field Needs-Info debfiles
+# sub binary_field Needs-Info :_load_dctrl
 sub binary_field {
     my ($self, $package, $field, $def) = @_;
     $self->_load_dctrl unless exists $self->{binary_field};
@@ -205,7 +205,7 @@ sub _load_dctrl {
 # following special field names are supported:  all (pre-depends, depends,
 # recommends, and suggests), strong (pre-depends and depends), and weak
 # (recommends and suggests).
-# sub binary_relation Needs-Info debfiles
+# sub binary_relation Needs-Info :binary_field
 sub binary_relation {
     my ($self, $package, $field) = @_;
     $field = lc $field;
@@ -238,7 +238,7 @@ sub binary_relation {
 # following special field names are supported:  build-depends-all
 # (build-depends and build-depends-indep) and build-conflicts-all
 # (build-conflicts and build-conflicts-indep).
-# sub relation Needs-Info <>
+# sub relation Needs-Info :field
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -267,7 +267,7 @@ sub relation {
 # Similar to relation(), return a Lintian::Relation object for the given build
 # relationship field, but ignore architecture restrictions.  It supports the
 # same special field names.
-# sub relation_noarch Needs-Info <>
+# sub relation_noarch Needs-Info :field
 sub relation_noarch {
     my ($self, $field) = @_;
     $field = lc $field;

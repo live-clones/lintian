@@ -41,7 +41,7 @@ sub new {
 
 # Returns whether the package is a native package according to
 # its version number
-# sub native Needs-Info <>
+# sub native Needs-Info :field
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
@@ -94,7 +94,7 @@ sub control_index {
 # Like sorted_index except it returns the index for the control/metadata of
 # binary package.
 #
-# sub sorted_control_index Needs-Info bin-pkg-control
+# sub sorted_control_index Needs-Info :control_index
 sub sorted_control_index {
     my ($self) = @_;
     # control_index does all our work for us, so call it if
@@ -324,7 +324,7 @@ sub java_info {
 # field names are supported: all (pre-depends, depends, recommends, and
 # suggests), strong (pre-depends and depends), and weak (recommends and
 # suggests).
-# sub relation Needs-Info <>
+# sub relation Needs-Info :field
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -352,7 +352,7 @@ sub relation {
 
 # Returns a truth value if the package appears to be transitional package.
 # - this is based on the package description.
-# sub is_transitional Needs-Info <>
+# sub is_transitional Needs-Info :field
 sub is_transitional {
     my ($self) = @_;
     my $desc = $self->field ('description')//'';
@@ -361,7 +361,7 @@ sub is_transitional {
 
 # Returns a truth value if the file is listed in the conffiles file
 # - Note files should be passed relative to the package root.
-# sub is_conffile Needs-Info bin-pkg-control
+# sub is_conffile Needs-Info :control
 sub is_conffile {
     my ($self, $file) = @_;
     if (exists $self->{'conffiles'}) {

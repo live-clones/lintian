@@ -77,7 +77,7 @@ sub index {
 }
 
 # Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
-#  sub sorted_index Needs-Info index
+#  sub sorted_index Needs-Info :index
 sub sorted_index {
     my ($self) = @_;
     # index does all our work for us, so call it if sorted_index has

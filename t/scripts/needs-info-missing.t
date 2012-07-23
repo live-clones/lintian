@@ -29,6 +29,14 @@ our @MODULES = (<$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm>,
 
 plan tests => scalar(@DESCS)+scalar(@MODULES);
 
+# Maps a sub to a Disjunctive Normal Form (DNF) of dependencies
+#  e.g. "changelog-file,:field or debfiles,:field"
+# As it is a DNF, it is read as
+#  "(changelog-file AND :field) OR (debfiles AND :field)".
+#
+# ":X" is a symbol dependency used in L::Collect{,::*}.  It is useful
+# to declare an "indirect" dependency, so methods using (e.g.) the
+# "field" sub does not need to know what it depends on.
 my %needs_info;
 
 # Build the Needs-Info hash from the Collect modules
@@ -104,13 +112,12 @@ for my $desc (@DESCS) {
 
     for my $sub (keys %subs) {
 	if (exists($needs_info{$sub})) {
-	    # TODO: try to satisfy either branch when an 'or' exists
-	    next if ($needs_info{$sub} =~ m/ or /);
-	    for my $needed (split(/,/, $needs_info{$sub})) {
-		unless (exists($needs{$needed})) {
-		    $missing++;
-		    push @warnings, "$sub needs $needed\n";
-		}
+            my @miss = find_missing (\%needs, $needs_info{$sub});
+            if (@miss) {
+                $missing++;
+                foreach my $needed (@miss) {
+                    push @warnings, "$sub needs $needed\n";
+                }
 	    }
 	} else {
 	    push @warnings, "Unknown method \$info->$sub\n";
@@ -122,4 +129,43 @@ for my $desc (@DESCS) {
     $short =~ s,^collection/,coll/,;
     is($missing, 0, "$short has all required needs-info for Lintian::Collect") or
 	diag(@warnings);
+}
+
+sub find_missing {
+    my ($declared, $depends) = @_;
+    my @missing = ();
+    my @unchecked = ($depends);
+    # Each $depline has the format "X,Y or Z", which is read as
+    # "(X and Y) or Z".  This is also known as "Disjunctive Normal Form"
+    # (without negation).
+    while (my $depline = pop @unchecked) {
+        my @orlist = split m/\s+or\s+/o, $depline;
+        my $ok = 0;
+      ORDEP:
+        foreach my $ordep (@orlist) {
+            my @deps = split m/\s+,\s+/o, $ordep;
+            while (my $dep = pop @deps) {
+                # symbolic dependency ?
+                if ($dep =~ s/^://) {
+                    # Handle with recursion
+                    if (find_missing ($declared, $needs_info{$dep})) {
+                        # cannot satisfy this part of the relation
+                        next ORDEP;
+                    }
+                    next;
+                }
+                # ... "normal" dependency
+                unless (exists $declared->{$dep}) {
+                    # cannot satisfy this part of the relation
+                    next ORDEP;
+                }
+            }
+            $ok = 1;
+            last;
+        }
+        if (not $ok) {
+            push @missing, $depline;
+        }
+    }
+    return @missing;
 }
