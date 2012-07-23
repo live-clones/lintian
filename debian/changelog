@@ -5,6 +5,9 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
       related tags.  Thanks to gregor herrmann for the report
       and patch.  (Closes: #680446)
 
+  * data/binaries/embedded-libs:
+    + [NT] Update source-regex for libmysqlclient.  Thanks to
+      Nicholas Bamber for the report.  (Closes: #682022)
   * data/doc-base/sections:
     + [NT] Update section list.  (Closes: #678650)
   * data/spelling/corrections:
