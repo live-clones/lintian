@@ -1,5 +1,5 @@
 Last generated 2012-07-24
-Coverage (Tags): 864/962 (89.81%), w. legacy tests: 943/962 (98.02%)
+Coverage (Tags): 869/962 (90.33%), w. legacy tests: 944/962 (98.13%)
 Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
@@ -8,7 +8,6 @@ binaries binary-file-compressed-with-upx
 binaries ocaml-custom-executable
 
 debconf debconf-is-not-a-registry
-debconf isdefault-flag-is-deprecated
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
@@ -37,18 +36,14 @@ binaries debug-file-should-use-detached-symbols
 binaries statically-linked-binary
 binaries unstripped-binary-or-object
 
-debconf config-does-not-load-confmodule
-debconf debconf-config-not-executable
 debconf loads-obsolete-confmodule
 debconf missing-debconf-dependency
 debconf missing-debconf-dependency-for-preinst
 debconf no-debconf-templates
-debconf possible-debconf-note-abuse
 debconf postinst-does-not-load-confmodule
 debconf postinst-uses-db-input
 debconf postrm-does-not-purge-debconf
 debconf template-uses-unsplit-choices
-debconf unknown-debconf-priority
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
@@ -160,12 +155,10 @@ debconf
   missing-debconf-dependency
   missing-debconf-dependency-for-preinst
   newer-debconf-templates
-  possible-debconf-note-abuse
   postinst-uses-db-input
   postrm-does-not-purge-debconf
   template-uses-unsplit-choices
   udeb-postinst-must-not-call-ldconfig
-  unknown-debconf-priority
   unknown-encoding-in-po-file
 
 debug
@@ -195,8 +188,6 @@ foo++
 libbaz
 
 maintainer-scripts
-  config-does-not-load-confmodule
-  debconf-config-not-executable
   init.d-script-not-included-in-package
   init.d-script-not-marked-as-conffile
   maintainer-script-ignores-errors
