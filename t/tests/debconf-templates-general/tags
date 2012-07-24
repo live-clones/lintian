@@ -14,6 +14,7 @@ W: debconf-templates-general: malformed-prompt-in-templates debconf/malformed-pr
 W: debconf-templates-general: malformed-question-in-templates debconf/malformed-question
 W: debconf-templates-general: malformed-title-in-templates debconf/malformed-note-title
 W: debconf-templates-general: select-with-boolean-choices debconf/select-boolean-choice
+W: debconf-templates-general: too-long-extended-description-in-templates debconf/5-green-bottles-on-the-wall
 W: debconf-templates-general: too-long-short-description-in-templates debconf/too-long-short-desc
 W: debconf-templates-general: using-first-person-in-templates debconf/first-person
 W: debconf-templates-general: using-imperative-form-in-templates debconf/imperative-select

@@ -1,5 +1,5 @@
 Last generated 2012-07-24
-Coverage (Tags): 863/962 (89.71%), w. legacy tests: 943/962 (98.02%)
+Coverage (Tags): 864/962 (89.81%), w. legacy tests: 943/962 (98.02%)
 Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
@@ -48,7 +48,6 @@ debconf postinst-does-not-load-confmodule
 debconf postinst-uses-db-input
 debconf postrm-does-not-purge-debconf
 debconf template-uses-unsplit-choices
-debconf too-long-extended-description-in-templates
 debconf unknown-debconf-priority
 
 files desktop-file-in-wrong-dir
@@ -165,7 +164,6 @@ debconf
   postinst-uses-db-input
   postrm-does-not-purge-debconf
   template-uses-unsplit-choices
-  too-long-extended-description-in-templates
   udeb-postinst-must-not-call-ldconfig
   unknown-debconf-priority
   unknown-encoding-in-po-file

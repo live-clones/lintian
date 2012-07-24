@@ -86,9 +86,14 @@ Type: boolean
 Description: Do you like Lintian?
  Pick "yes" if you do.
 
-Template: debconf/4-green-bottles-on-the-wall
+Template: debconf/5-green-bottles-on-the-wall
 Type: string
 Description: Name the title of this song:
+ Five green bottles sitting on the wall,
+ Five green bottles sitting on the wall,
+ And if one green bottle should accidentally fall,
+ There'll be four green bottles sitting on the wall.
+ .
  Four green bottles sitting on the wall,
  Four green bottles sitting on the wall,
  And if one green bottle should accidentally fall,
