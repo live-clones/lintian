@@ -50,3 +50,61 @@ Type: boolean
 Description: Is the field below unknown?
 Unknown-field: yes, it is.
 
+Template: debconf/malformed-prompt
+Type: string
+Description: What is the name of this package checker:
+
+Template: debconf/imperative-select
+Type: select
+Choices: x,y
+Description: Select either x or y
+
+Template: debconf/malformed-question
+Type: boolean
+Description: Lintian is the best!
+
+Template: debconf/question-in-extended
+Type: boolean
+Description: Do you like sakana?
+ Or do you prefer sake?
+
+Template: debconf/malformed-note-title
+Type: note
+Description: Aren't you tired of all these debconf prompts?
+
+Template: debconf/too-long-short-desc
+Type: boolean
+Description: This template has a very long short description, is that what you call an oxymoron?
+
+Template: debconf/first-person
+Type: select
+Choices: lintian, no-lintian
+Description: I think Lintian is the best
+
+Template: debconf/assumption
+Type: boolean
+Description: Do you like Lintian?
+ Pick "yes" if you do.
+
+Template: debconf/4-green-bottles-on-the-wall
+Type: string
+Description: Name the title of this song:
+ Four green bottles sitting on the wall,
+ Four green bottles sitting on the wall,
+ And if one green bottle should accidentally fall,
+ There'll be three green bottles sitting on the wall.
+ .
+ Three green bottles sitting on the wall,
+ Three green bottles sitting on the wall,
+ And if one green bottle should accidentally fall,
+ There'll be two green bottles sitting on the wall.
+ .
+ Two green bottles sitting on the wall,
+ Two green bottles sitting on the wall,
+ And if one green bottle should accidentally fall,
+ There'll be one green bottle sitting on the wall.
+ .
+ One green bottle sitting on the wall,
+ One green bottle sitting on the wall,
+ And if one green bottle should accidentally fall,
+ There'll be no green bottles sitting on the wall.

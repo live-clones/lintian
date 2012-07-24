@@ -6,12 +6,20 @@ Test-For:
  boolean-template-has-bogus-default
  duplicate-long-description-in-template
  empty-translated-choices
+ making-assumptions-about-interfaces-in-templates
+ malformed-prompt-in-templates
+ malformed-question-in-templates
  malformed-template-name
+ malformed-title-in-templates
  mismatch-translated-choices
  no-template-description
  no-template-name
  no-template-type
  select-with-boolean-choices
  select-without-choices
+ too-long-short-description-in-templates
  unknown-field-in-templates
  unknown-template-type
+ using-first-person-in-templates
+ using-imperative-form-in-templates
+ using-question-in-extended-description-in-templates

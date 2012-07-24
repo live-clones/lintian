@@ -1,5 +1,5 @@
-Last generated 2012-07-23
-Coverage (Tags): 855/962 (88.88%), w. legacy tests: 943/962 (98.02%)
+Last generated 2012-07-24
+Coverage (Tags): 863/962 (89.71%), w. legacy tests: 943/962 (98.02%)
 Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
@@ -40,10 +40,6 @@ binaries unstripped-binary-or-object
 debconf config-does-not-load-confmodule
 debconf debconf-config-not-executable
 debconf loads-obsolete-confmodule
-debconf making-assumptions-about-interfaces-in-templates
-debconf malformed-prompt-in-templates
-debconf malformed-question-in-templates
-debconf malformed-title-in-templates
 debconf missing-debconf-dependency
 debconf missing-debconf-dependency-for-preinst
 debconf no-debconf-templates
@@ -53,11 +49,7 @@ debconf postinst-uses-db-input
 debconf postrm-does-not-purge-debconf
 debconf template-uses-unsplit-choices
 debconf too-long-extended-description-in-templates
-debconf too-long-short-description-in-templates
 debconf unknown-debconf-priority
-debconf using-first-person-in-templates
-debconf using-imperative-form-in-templates
-debconf using-question-in-extended-description-in-templates
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
@@ -166,10 +158,6 @@ binary
 
 debconf
   loads-obsolete-confmodule
-  making-assumptions-about-interfaces-in-templates
-  malformed-prompt-in-templates
-  malformed-question-in-templates
-  malformed-title-in-templates
   missing-debconf-dependency
   missing-debconf-dependency-for-preinst
   newer-debconf-templates
@@ -178,13 +166,9 @@ debconf
   postrm-does-not-purge-debconf
   template-uses-unsplit-choices
   too-long-extended-description-in-templates
-  too-long-short-description-in-templates
   udeb-postinst-must-not-call-ldconfig
   unknown-debconf-priority
   unknown-encoding-in-po-file
-  using-first-person-in-templates
-  using-imperative-form-in-templates
-  using-question-in-extended-description-in-templates
 
 debug
   binary-with-bad-dynamic-table

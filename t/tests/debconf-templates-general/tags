@@ -9,4 +9,12 @@ E: debconf-templates-general: select-without-choices debconf/select-without-choi
 E: debconf-templates-general: unknown-field-in-templates debconf/unknown-field unknown-field
 E: debconf-templates-general: unknown-template-type lintian
 W: debconf-templates-general: duplicate-long-description-in-template debconf/duplicate-long-desc
+W: debconf-templates-general: making-assumptions-about-interfaces-in-templates debconf/assumption
+W: debconf-templates-general: malformed-prompt-in-templates debconf/malformed-prompt
+W: debconf-templates-general: malformed-question-in-templates debconf/malformed-question
+W: debconf-templates-general: malformed-title-in-templates debconf/malformed-note-title
 W: debconf-templates-general: select-with-boolean-choices debconf/select-boolean-choice
+W: debconf-templates-general: too-long-short-description-in-templates debconf/too-long-short-desc
+W: debconf-templates-general: using-first-person-in-templates debconf/first-person
+W: debconf-templates-general: using-imperative-form-in-templates debconf/imperative-select
+W: debconf-templates-general: using-question-in-extended-description-in-templates debconf/question-in-extended

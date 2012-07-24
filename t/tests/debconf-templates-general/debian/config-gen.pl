@@ -27,6 +27,6 @@ sub pg {
     my $template = $paragraph->{'template'};
     # Some of them will not have a name, so skip those.
     return unless $template;
-    print "db_input medium $template || true\n";
+    print "db_input high $template || true\n";
     print "db_go\n\n";
 }
