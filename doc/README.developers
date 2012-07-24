@@ -250,6 +250,10 @@ are run.
 To run all tests that has a "Test-For" or a "Test-Against" for a given
 tag, use:
 
+ $ debian/rules runtests onlyrun=tag:$tag
+
+Alternatively:
+
  $ debian/rules check-tag tag=$tag
 
 The legacy test suite will not be run in this case.

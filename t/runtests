@@ -193,7 +193,11 @@ my $prev;
 my $q = Thread::Queue->new();
 our $MSG_Q = Thread::Queue->new();
 
-if ($singletest && $singletest =~ m/^suite:(.++)/) {
+if ($singletest && $singletest =~ s/^tag://) {
+    $tag = $singletest;
+    # clear singletest to avoid find a "single" test.
+    $singletest = '';
+} elsif ($singletest && $singletest =~ m/^suite:(.++)/) {
     my $list = $1;
     %suites = ();
     foreach my $s (split m/\s*+,\s*+/, $list) {

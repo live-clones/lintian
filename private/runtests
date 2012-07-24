@@ -12,12 +12,17 @@ if [ "$1" = "-j" ] ; then
 fi
 
 NEW_SUITE=1
+OLD_SUITE=1
 
-if [ "$1" = "-t" ] ; then
-    TAG=yes
-elif [ "$1" = "--legacy-only" ] ; then
-    NEW_SUITE=0
-    shift
+if [ "$1" ] ; then
+    if [ "$1" = "-t" ] || echo "$1" | grep -q ':' ; then
+        # Only the new suite "gets" this, so skip the old one.
+        OLD_SUITE=0
+    elif [ "$1" = "--legacy-only" ] ; then
+        # We were asked only to run the old one
+        NEW_SUITE=0
+        shift
+    fi
 fi
 
 LC_ALL="C"
@@ -70,7 +75,7 @@ fi
 if [ "${NEW_SUITE}" = 1 ] ; then
     t/runtests --dump-logs -k $PARALLEL_ARGS t "$TEST_WORK_DIR" "$@"
 fi
-if [ "$TAG" = "" ] ; then
+if [ "${OLD_SUITE}" = 1 ] ; then
     echo " --- LEGACY TEST SUITE ---"
     testset/runtests -k testset "$TEST_WORK_DIR" "$@"
 fi
