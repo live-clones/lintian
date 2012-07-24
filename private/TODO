@@ -36,13 +36,6 @@ collection:
   the file index and so that we can do interesting checks on desktop files
   from inside the Lintian lab.
 
-- Switch from objdump to readelf in objdump-info.  readelf provides the
-  data we want in a sometimes-nicer format and is more reliable with
-  broken binaries and non-native architectures.  We already use readelf
-  and hack its output where we have to; replace all of that with always
-  using readelf and modify lib/Lintian/Collect/Binary.pm to understand the
-  readelf output syntax instead.  This is #614034.
-
 doc:
 
 - Either update doc/CREDITS based on the changelog file or archive it
@@ -75,12 +68,6 @@ lib:
 - Provide a utility function to check a command as currently done in
   checks/menu-format, after which we could split desktop checking and menu
   checking into two separate check scripts.
-
-- Move the remaining libraries in lib into real modules in the Lintian
-  namespace.  In some cases, this correctly involves significantly
-  rewriting how that part of Lintian is handled to make it more
-  object-oriented.  Add specific to-do tasks for particular files if
-  you've thought through how to do this.
 
 private:
 
