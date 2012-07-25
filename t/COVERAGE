@@ -1,13 +1,11 @@
 Last generated 2012-07-25
-Coverage (Tags): 875/962 (90.96%), w. legacy tests: 944/962 (98.13%)
-Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
+Coverage (Tags): 878/962 (91.27%), w. legacy tests: 945/962 (98.23%)
+Coverage (Checks): 33/41 (80.49%), w. legacy tests: 36/41 (87.80%)
 
 The following tags are not tested by the test suite:
 
 binaries binary-file-compressed-with-upx
 binaries ocaml-custom-executable
-
-debconf debconf-is-not-a-registry
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
@@ -35,9 +33,6 @@ binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
 binaries statically-linked-binary
 binaries unstripped-binary-or-object
-
-debconf missing-debconf-dependency
-debconf no-debconf-templates
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
@@ -145,7 +140,6 @@ binary
   unstripped-binary-or-object
 
 debconf
-  missing-debconf-dependency
   newer-debconf-templates
   udeb-postinst-must-not-call-ldconfig
   unknown-encoding-in-po-file
@@ -181,7 +175,6 @@ maintainer-scripts
   init.d-script-not-marked-as-conffile
   maintainer-script-ignores-errors
   maintainer-script-removes-device-files
-  no-debconf-templates
   output-of-updaterc.d-not-redirected-to-dev-null
   postrm-contains-additional-updaterc.d-calls
   postrm-does-not-call-updaterc.d-for-init.d-script

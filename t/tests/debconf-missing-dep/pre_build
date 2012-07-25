@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DIR="$1"
+make --silent -C "$DIR" -f "$DIR/gen-source.mk" all
