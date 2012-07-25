@@ -17,6 +17,7 @@ Test-For:
  no-template-type
  select-with-boolean-choices
  select-without-choices
+ template-uses-unsplit-choices
  too-long-extended-description-in-templates
  too-long-short-description-in-templates
  unknown-field-in-templates

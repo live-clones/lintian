@@ -1,5 +1,5 @@
 Last generated 2012-07-25
-Coverage (Tags): 874/962 (90.85%), w. legacy tests: 944/962 (98.13%)
+Coverage (Tags): 875/962 (90.96%), w. legacy tests: 944/962 (98.13%)
 Coverage (Checks): 32/41 (78.05%), w. legacy tests: 35/41 (85.37%)
 
 The following tags are not tested by the test suite:
@@ -38,7 +38,6 @@ binaries unstripped-binary-or-object
 
 debconf missing-debconf-dependency
 debconf no-debconf-templates
-debconf template-uses-unsplit-choices
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
@@ -148,7 +147,6 @@ binary
 debconf
   missing-debconf-dependency
   newer-debconf-templates
-  template-uses-unsplit-choices
   udeb-postinst-must-not-call-ldconfig
   unknown-encoding-in-po-file
 

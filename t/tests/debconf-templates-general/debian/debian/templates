@@ -2,6 +2,11 @@ Template: debconf/translated
 Type: error
 _Description: Useless note
 
+Template: debconf/unsplit-choices
+Type: select
+_Choices: left, right, up, down
+Description: Pick the odd one out
+
 Type: text
 Description: Missing template field.
 
