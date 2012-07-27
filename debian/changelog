@@ -1,4 +1,4 @@
-lintian (2.5.10.1) UNRELEASED; urgency=low
+lintian (2.5.10.1) unstable; urgency=low
 
   * checks/fields.desc:
     + [NT] Mention that cme can automate fixing some perl
@@ -38,7 +38,7 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
       being unused.  Thanks to Christoph Biedl for the report
       (Closes: #682941)
 
- -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
+ -- Niels Thykier <niels@thykier.net>  Fri, 27 Jul 2012 16:32:26 +0200
 
 lintian (2.5.10) unstable; urgency=low
 
