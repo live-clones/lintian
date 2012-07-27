@@ -30,6 +30,9 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
   * lib/Lintian/Path.pm:
     + [NT] Always resolve hardlinks relative to the package
       root.
+  * lib/Lintian/Relation.pm:
+    + [NT] Fix handling of VISIT_OR_CLAUSE_FULL bit mask in a
+      condition.
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fix poor error message due to the wrong variable
       being unused.  Thanks to Christoph Biedl for the report
