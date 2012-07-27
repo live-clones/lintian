@@ -87,8 +87,8 @@ sub new {
     $self = \%copy;
     croak "Missing Tag field" unless $self->{'tag'};
     $tagname = $self->{'tag'};
-    croak "Missing Severity field for $tag" unless $self->{'severity'};
-    croak "Missing Certainity field for $tag" unless $self->{'certainty'};
+    croak "Missing Severity field for $tagname" unless $self->{'severity'};
+    croak "Missing Certainty field for $tagname" unless $self->{'certainty'};
     $self->{'info'} = '' unless $self->{'info'};
     $self->{'script'} = $sn;
     $self->{'script-type'} = $st;
@@ -100,7 +100,7 @@ sub new {
     # certainty is wrong (or we introduced a new one but forgot to add
     # it to %CODES).
     unless ($self->code) {
-        croak "Cannot determine the code of $tag (severity:"
+        croak "Cannot determine the code of $tagname (severity:"
             . " $self->{'severity'}, certainity: $self->{'certainty'}).\n";
     }
 
