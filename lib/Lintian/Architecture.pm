@@ -99,13 +99,15 @@ my %ALT_ARCH_NAMES = ();
 
 sub _parse_arch {
     my ($archstr, $raw) = @_;
-    my ($os, $arch) = split /\s++/o, $raw;
+    # NB: "$os-$cpu" ne $archstr in some cases
+    my ($os, $cpu) = split /\s++/o, $raw;
     # map $os-any (e.g. "linux-any") and any-$arch (e.g. "any-amd64") to
     # the relevant architectures.
     $ARCH_WILDCARDS{"$os-any"}->{$archstr} = 1;
-    $ARCH_WILDCARDS{"any-$arch"}->{$archstr} = 1;
+    $ARCH_WILDCARDS{"any-$cpu"}->{$archstr} = 1;
     $ARCH_WILDCARDS{'any'}->{$archstr} = 1;
     if ($os eq 'linux') {
+        my ($long, $short);
         # Per Policy §11.1 (3.9.3):
         #
         #"""[architecture] strings are in the format "os-arch", though
@@ -113,9 +115,19 @@ sub _parse_arch {
         #
         # i.e. "linux-amd64" and "amd64" are aliases, so handle them
         # as such.  Currently, dpkg-architecture -L gives us "amd64"
-        $ALT_ARCH_NAMES{"$os-$arch"} = $archstr;
-        # ... but in case it changes to "linux-amd64", we are prepared.
-        $ALT_ARCH_NAMES{$arch} = $archstr;
+        # but in case it changes to "linux-amd64", we are prepared.
+        if ($archstr =~ m/^linux-/) {
+            # It may be temping to use $cpu here, but it does not work
+            # for (e.g.) arm based architectures.  Instead extract the
+            # "short" architecture name from $archstr
+            (undef, $short) = split m/-/, $archstr, 2;
+            $long = $archstr;
+        } else {
+            $short = $archstr;
+            $long = "$os-$short";
+        }
+        $ALT_ARCH_NAMES{$short} = $archstr;
+        $ALT_ARCH_NAMES{$long} = $archstr;
     }
 }
 
