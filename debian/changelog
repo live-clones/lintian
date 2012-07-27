@@ -23,6 +23,10 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
   * lib/Lintian/Architecture.pm:
     + [NT] Properly handle cases like "linux-amd64" being an
       alias of "amd64".
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Fix poor error message due to the wrong variable
+      being unused.  Thanks to Christoph Biedl for the report
+      (Closes: #682941)
 
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 
