@@ -47,6 +47,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
       the groff pipeline.
     + [CW,NT] Use the L::Util gzip decompressor to open gzipped
       manpages.
+    + [NT] Ignore wrapping issues on lines containing "file://" as
+      those are probably also URLs.  Thanks to Faheem Mitha for the
+      report.  (Closes: #682701)
   * checks/menu-format:
     + [NT] Move a table of categories to a data file.
   * checks/md5sums:

@@ -281,7 +281,7 @@ foreach my $file ($info->sorted_index) {
             # ignore wrapping failures if they contain URLs (.UE is an
             # extension for marking the end of a URL).
             next if /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
-                and (   $manfile[$1 - 1] =~ m,(?:https?|ftp)://.+,i
+                and (   $manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
                      or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
             # ignore common undefined macros from pod2man << Perl 5.10
             next if /warning: (?:macro )?\`(?:Tr|IX)\' not defined/;
