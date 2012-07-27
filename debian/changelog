@@ -4,6 +4,10 @@ lintian (2.5.10.1) UNRELEASED; urgency=low
     + [NT] Mention that cme can automate fixing some perl
       related tags.  Thanks to gregor herrmann for the report
       and patch.  (Closes: #680446)
+  * checks/manpages:
+    + [NT] Ignore wrapping issues on lines containing "file://" as
+      those are probably also URLs.  Thanks to Faheem Mitha for the
+      report.  (Closes: #682701)
 
   * data/binaries/embedded-libs:
     + [NT] Update source-regex for libmysqlclient.  Thanks to
