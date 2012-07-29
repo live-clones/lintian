@@ -22,6 +22,39 @@ use strict;
 use warnings;
 use base 'Lintian::Collect';
 
+=head1 NAME
+
+Lintian::Collect::Changes - Lintian interface to .changes file data collection
+
+=head1 SYNOPSIS
+
+    my ($name, $type) = ('foobar_1.2_i386.changes', 'changes');
+    my $collect = Lintian::Collect->new($name, $type);
+    my $files = $collect->files();
+
+    foreach my $file (keys %{$files}) {
+        my $size = $files->{$file}->{size};
+        print "File $file has size $size\n";
+    }
+
+=head1 DESCRIPTION
+
+Lintian::Collect::Changes provides an interface to data for .changes
+files.  It implements data collection methods specific to .changes 
+files.
+
+=head1 CLASS METHODS
+
+=over 4
+
+=item new (PACKAGE)
+
+Creates a new Lintian::Collect::Changes object.  Currently, PACKAGE is
+ignored.  Normally, this method should not be called directly, only via
+the L<Lintian::Collect> constructor.
+
+=cut
+
 # Initialize a new .changes file collect object.  Takes the package name,
 # which is currently unused.
 sub new {
@@ -31,8 +64,63 @@ sub new {
     return $self;
 }
 
-# Returns information about the files referenced in the .changes file.
-# sub files Needs-Info <>
+=back
+
+=head1 INSTANCE METHODS
+
+=over 4
+
+In addition to the instance methods listed below, all instance methods
+documented in the L<Lintian::Collect> module are also available.
+
+=over 4
+
+=item files
+
+Returns a reference to a hash containing information about files listed
+in the .changes file.  Each hash may have the following keys:
+
+=over 4
+
+=item name
+
+Name of the file.
+
+=item size
+
+The size of the file in bytes.
+
+=item section
+
+The archive section to which the file belongs.
+
+=item priority
+
+The priority of the file.
+
+=item checksums
+
+A hash with the keys being checksum algorithms and the values themselves being
+hashes containing
+
+=over 4
+
+=item sum
+
+The result of applying the given algorithm to the file.
+
+=item filesize
+
+The size of the file as given in the .changes section relating to the given
+checksum.
+
+=back
+
+=back
+
+=cut
+
+# sub files Needs-Info :fields
 sub files {
     my ($self) = @_;
 
@@ -79,89 +167,6 @@ sub files {
     return $self->{files};
 }
 
-=head1 NAME
-
-Lintian::Collect::Changes - Lintian interface to .changes file data collection
-
-=head1 SYNOPSIS
-
-    my ($name, $type) = ('foobar_1.2_i386.changes', 'changes');
-    my $collect = Lintian::Collect->new($name, $type);
-    my $files = $collect->files();
-
-    foreach my $file (keys %{$files}) {
-        my $size = $files->{$file}->{size};
-        print "File $file has size $size\n";
-    }
-
-=head1 DESCRIPTION
-
-Lintian::Collect::Changes provides an interface to data for .changes
-files.  It implements data collection methods specific to .changes 
-files.
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(PACKAGE)
-
-Creates a new Lintian::Collect::Changes object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the Lintian::Collect constructor.
-
-=back
-
-=head1 INSTANCE METHODS
-
-In addition to the instance methods listed below, all instance methods
-documented in the Lintian::Collect module are also available.
-
-=over 4
-
-=item files()
-
-Returns a reference to a hash containing information about files listed
-in the .changes file.  Each hash may have the following keys:
-
-=over 4
-
-=item name
-
-Name of the file.
-
-=item size
-
-The size of the file in bytes.
-
-=item section
-
-The archive section to which the file belongs.
-
-=item priority
-
-The priority of the file.
-
-=item checksums
-
-A hash with the keys being checksum algorithms and the values themselves being
-hashes containing
-
-=over 4
-
-=item sum
-
-The result of applying the given algorithm to the file.
-
-=item filesize
-
-The size of the file as given in the .changes section relating to the given
-checksum.
-
-=back
-
-=back
-
 =back
 
 =head1 AUTHOR
@@ -170,7 +175,7 @@ Originally written by Adam D. Barratt <adsb@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3)
+lintian(1), L<Lintian::Collect>
 
 =cut
 

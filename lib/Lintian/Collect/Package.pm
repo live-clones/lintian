@@ -27,16 +27,104 @@ use Carp qw(croak);
 use Lintian::Path;
 use Lintian::Util qw(open_gz perm2oct);
 
-# Returns the path to the dir where the package is unpacked
-#  or a file therein (see pod below)
-# May croak if the package has not been unpacked.
+=head1 NAME
+
+Lintian::Collect::Package - Lintian base interface to binary and source package data collection
+
+=head1 SYNOPSIS
+
+    my ($name, $type) = ('foobar', 'source');
+    my $collect = Lintian::Collect->new($name, $type);
+    my $file;
+    eval { $file = $collect->unpacked('/bin/ls'); };
+    if ( $file && -e $file ) {
+        # work with $file
+        ;
+    } elsif ($file) {
+        print "/bin/ls is not available in the Package\n";
+    } else {
+        print "Package has not been unpacked\n";
+    }
+
+=head1 DESCRIPTION
+
+Lintian::Collect::Package provides part of an interface to package
+data for source and binary packages.  It implements data collection
+methods specific to all packages that can be unpacked (or can contain
+files)
+
+This module is in its infancy.  Most of Lintian still reads all data from
+files in the laboratory whenever that data is needed and generates that
+data via collect scripts.  The goal is to eventually access all data about
+source packages via this module so that the module can cache data where
+appropriate and possibly retire collect scripts in favor of caching that
+data in memory.
+
+=head1 INSTANCE METHODS
+
+In addition to the instance methods listed below, all instance methods
+documented in the L<Lintian::Collect> module are also available.
+
+=over 4
+
+=item unpacked ([FILE])
+
+Returns the path to the directory in which the package has been
+unpacked.  FILE must be relative to the root of the of the package and
+should be without leading slash (and without leading "./").  If FILE
+is not in the package, it returns the path to a non-existent file
+entry.
+
+The path returned is not guaranteed to be inside the Lintian Lab as
+the package may have been unpacked outside the Lab (e.g. as
+optimization).
+
+Caveat with symlinks: Package is extracted as is and the path returned
+by this method points to the extracted file object.  If this is a
+symlink, it may "escape the root" and point to a file outside the lab
+(and a path traversal).
+
+The following code may be helpful in checking for path traversal:
+
+ use Cwd qw(realpath);
+
+ my $collect = ... ;
+ my $file = '../../../etc/passwd';
+ # Append slash to follow symlink if $collect->unpacked returns a symlink
+ my $uroot = realpath ($collect->unpacked . '/');
+ my $ufile = realpath ($collect->unpacked ($file));
+ if ($ufile =~ m,^$uroot,) {
+    # has not escaped $uroot
+    do_stuff($ufile);
+ } else {
+    # escaped $uroot
+    die "Possibly path traversal ($file)";
+ }
+
+Alternatively one can use resolve_pkg_path in L<Lintian::Util> or
+L<link_resolved|Lintian::Path/link_resolved>.
+
+To get a list of entries in the package or the file meta data of the
+entries (as L<path objects|Lintian::Path>), see L</sorted_index> and
+L</index (FILE)>.
+
+=cut
+
 # sub unpacked Needs-Info unpacked
 sub unpacked {
     my ($self, $file) = @_;
     return $self->_fetch_extracted_dir('unpacked', 'unpacked', $file);
 }
 
-# Returns the information from collect/file-info
+=item file_info (FILE)
+
+Returns the output of file(1) for FILE (if it exists) or C<undef>.
+
+NB: The value may have been calibrated by Lintian.  A notorious example
+is gzip files, where file(1) can be unreliable at times (see #620289)
+
+=cut
+
 sub file_info {
     my ($self, $file) = @_;
     if (exists $self->{file_info}) {
@@ -69,14 +157,40 @@ sub file_info {
     return;
 }
 
-# Returns the information from the indices
+=item index (FILE)
+
+Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
+must be relative to the root of the control.tar.gz and must be without
+leading slash (or "./").  If FILE is not in the package, it returns
+C<undef>.
+
+To get a list of entries in the package, see L</sorted_index>.  To
+actually access the underlying file (e.g. the contents), use
+L</unpacked ([FILE])>.
+
+Caveat: Not
+
+=cut
+
 # sub index Needs-Info index
 sub index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data('index', 'index', 'index-owner-id', $file);
 }
 
-# Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
+=item sorted_control_index
+
+Returns a sorted array of file names listed in the package.  The names
+will not have a leading slash (or "./") and can be passed to
+L</unpacked ([FILE])> or L</index (FILE)> as is.
+
+The array will not contain the entry for the "root" of the package.
+
+NB: For source packages, please see the
+L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
+
+=cut
+
 #  sub sorted_index Needs-Info :index
 sub sorted_index {
     my ($self) = @_;
@@ -252,96 +366,6 @@ sub _fetch_index_data {
 
 1;
 
-=head1 NAME
-
-Lintian::Collect::Package - Lintian base interface to binary and source package data collection
-
-=head1 SYNOPSIS
-
-    my ($name, $type) = ('foobar', 'source');
-    my $collect = Lintian::Collect->new($name, $type);
-    my $file;
-    eval { $file = $collect->unpacked('/bin/ls'); };
-    if ( $file && -e $file ) {
-        # work with $file
-        ;
-    } elsif ($file) {
-        print "/bin/ls is not available in the Package\n";
-    } else {
-        print "Package has not been unpacked\n";
-    }
-
-=head1 DESCRIPTION
-
-Lintian::Collect::Package provides part of an interface to package
-data for source and binary packages.  It implements data collection
-methods specific to all packages that can be unpacked (or can contain
-files)
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data about
-source packages via this module so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
-
-=head1 INSTANCE METHODS
-
-=over 4
-
-=item unpacked([$name])
-
-Returns the path to the directory in which the package has been
-unpacked.  If C<$name> is given, it will return the path to that
-specific file (or dir).  The method will strip any leading "./" and
-"/" from C<$name>, but it will not check if C<$name> actually exists
-nor will it check for path traversals.
-  Caller is responsible for checking the sanity of the path passed to
-unpacked and verifying that the returned path points to the expected
-file.
-
-The path returned is not guaranteed to be inside the Lintian Lab as
-the package may have been unpacked outside the Lab (e.g. as
-optimization).
-
-The following code may be helpful in checking for path traversal:
-
- use Cwd qw(realpath);
-
- my $collect = ... ;
- my $file = '../../../etc/passwd';
- # Append slash to follow symlink if $collect->unpacked returns a symlink
- my $uroot = realpath($collect->unpacked() . '/');
- my $ufile = realpath($collect->unpacked($file));
- if ($ufile =~ m,^$uroot,) {
-    # has not escaped $uroot
-    do_stuff($ufile);
- } else {
-    # escaped $uroot
-    die "Possibly path traversal ($file)";
- }
-
-Alternatively one can use Lintian::Util::resolve_pkg_path.
-
-=item file_info (FILE)
-
-Returns the output of file(1) for FILE (if it exists) or C<undef>.
-
-Note the file names do not have any leading "./" nor "/".
-
-=item index (FILE)
-
-Looks up FILE in the package index and returns a L<Lintian::Path>
-for it or C<undef> (if FILE is not in the index).
-
-Note the file names do not have any leading "./" nor "/".
-
-=item sorted_index
-
-Returns a sorted list of all files listed in index (or file_info hashref).
-
-It does not contain "root dir".
-
 =back
 
 =head1 AUTHOR
@@ -350,8 +374,8 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3), Lintian::Collect::Binary(3),
-Lintian::Collect::Source(3)
+lintian(1), L<Lintian::Collect>, L<Lintian::Collect::Binary>,
+L<Lintian::Collect::Source>
 
 =cut
 

@@ -31,6 +31,43 @@ use Parse::DebianChangelog;
 
 use Lintian::Util qw(read_dpkg_control);
 
+=head1 NAME
+
+Lintian::Collect::Source - Lintian interface to source package data collection
+
+=head1 SYNOPSIS
+
+    my ($name, $type) = ('foobar', 'source');
+    my $collect = Lintian::Collect->new($name, $type);
+    if ($collect->native) {
+        print "Package is native\n";
+    }
+
+=head1 DESCRIPTION
+
+Lintian::Collect::Source provides an interface to package data for source
+packages.  It implements data collection methods specific to source
+packages.
+
+This module is in its infancy.  Most of Lintian still reads all data from
+files in the laboratory whenever that data is needed and generates that
+data via collect scripts.  The goal is to eventually access all data about
+source packages via this module so that the module can cache data where
+appropriate and possibly retire collect scripts in favor of caching that
+data in memory.
+
+=head1 CLASS METHODS
+
+=over 4
+
+=item new (PACKAGE)
+
+Creates a new Lintian::Collect::Source object.  Currently, PACKAGE is
+ignored.  Normally, this method should not be called directly, only via
+the Lintian::Collect constructor.
+
+=cut
+
 # Initialize a new source package collect object.  Takes the package name,
 # which is currently unused.
 sub new {
@@ -40,8 +77,25 @@ sub new {
     return $self;
 }
 
-# Get the changelog file of a source package as a Parse::DebianChangelog
-# object.  Returns undef if the changelog file couldn't be found.
+=back
+
+=head1 INSTANCE METHODS
+
+In addition to the instance methods listed below, all instance methods
+documented in the L<Lintian::Collect> and L<Lintian::Collect::Package>
+modules are also available.
+
+=over 4
+
+=item changelog
+
+Returns the changelog of the source package as a Parse::DebianChangelog
+object, or C<undef> if the changelog is a symlink or doesn't exist.  The
+debfiles collection script must have been run to create the changelog
+file, which this method expects to find in F<debfiles/changelog>.
+
+=cut
+
 # sub changelog Needs-Info :debfiles
 sub changelog {
     my ($self) = @_;
@@ -56,8 +110,15 @@ sub changelog {
     return $self->{changelog};
 }
 
-# Returns the path to diffstat result on the diff (if it exists) or an empty file
-# if there is no diff.gz
+=item diffstat
+
+Returns the path to diffstat output run on the Debian packaging diff
+(a.k.a. the "diff.gz") for 1.0 non-native packages.  For source
+packages without a "diff.gz" component, this returns the path to an
+empty file (this may be a device like /dev/null).
+
+=cut
+
 #  sub diffstat Needs-Info diffstat
 sub diffstat {
     my ($self) = @_;
@@ -68,10 +129,22 @@ sub diffstat {
     return $dstat;
 }
 
-# Returns whether the package is a native package.  For everything except
-# format 3.0 (quilt) packages, we base this on whether we have a Debian
-# *.diff.gz file.  3.0 (quilt) packages are always non-native.  Returns true
-# if the package is native and false otherwise.
+=item native
+
+Returns true if the source package is native and false otherwise.
+This is generally determined from the source format, though in the 1.0
+case the nativeness is determined by looking for the diff.gz (using
+the name of the source package and its version).
+
+If the source format is 1.0 and the version number is absent, this
+will return false (as native packages are a lot rarer than non-native
+ones).
+
+Note if the source format is missing, it is assumed to be an 1.0
+package.
+
+=cut
+
 # sub native Needs-Info :field
 sub native {
     my ($self) = @_;
@@ -98,8 +171,15 @@ sub native {
     return $self->{native};
 }
 
-# Returns a hash of binaries to the package type, assuming a type of deb
-# unless the package type field is present.
+=item binaries
+
+Returns a hash reference with the binary package names as keys and the
+(X-)Package-Type as value (which should be either C<deb> or C<udeb>
+currently).  The debfiles collection script must have been run to make
+the F<debfiles/control> file available.
+
+=cut
+
 # sub binaries Needs-Info :binary_field
 sub binaries {
     my ($self) = @_;
@@ -118,8 +198,25 @@ sub binaries {
     return $self->{binaries};
 }
 
-# Returns the value of a source field in d/control or $def//undef
-# if that field is not present.
+=item source_field([FIELD[, DEFAULT]])
+
+Returns the content of the field FIELD from source package paragraph
+of the F<debian/control> file, or DEFAULT (defaulting to C<undef>) if
+the field is not present.  Only the literal value of the field is
+returned.
+
+If FIELD is not given, return a hashref mapping field names to their
+values (in this case DEFAULT is ignored).  This hashref should not be
+modified.
+
+The debfiles collection script must have been run to make the
+F<debfiles/control> file available.
+
+NB: If a field from the "dsc" file itself is desired, please use
+L<field|Lintian::Collect/field> instead.
+
+=cut
+
 # sub source_field Needs-Info :_load_dctrl
 sub source_field {
     my ($self, $field, $def) = @_;
@@ -128,9 +225,26 @@ sub source_field {
     return $self->{source_field};
 }
 
-# Returns the value of a control field for a binary package or undef
-# if that control field isn't present.  This does not implement
-# inheritance from the settings in the source stanza.
+=item binary_field (PACKAGE[, FIELD[, DEFAULT]])
+
+Returns the content of the field FIELD for the binary package PACKAGE
+in the F<debian/control> file, or DEFAULT (defaulting to C<undef>) if
+the field is not present.  Inheritance of field values from the source
+section of the control file is not implemented.  Only the literal
+value of the field is returned.
+
+If FIELD is not given, return a hashref mapping field names to their
+values (in this case, DEFAULT is ignored).  This hashref should not be
+modified.
+
+If PACKAGE is not a binary built from this source, this returns
+C<undef> regardless of FIELD and DEFAULT.
+
+The debfiles collection script must have been run to make the
+F<debfiles/control> file available.
+
+=cut
+
 # sub binary_field Needs-Info :_load_dctrl
 sub binary_field {
     my ($self, $package, $field, $def) = @_;
@@ -200,11 +314,37 @@ sub _load_dctrl {
     return 1;
 }
 
-# Return a Lintian::Relation object for the given relationship field in a
-# binary package.  In addition to all the normal relationship fields, the
-# following special field names are supported:  all (pre-depends, depends,
-# recommends, and suggests), strong (pre-depends and depends), and weak
-# (recommends and suggests).
+=item binary_relation (PACKAGE, FIELD)
+
+Returns a L<Lintian::Relation> object for the specified FIELD in the
+binary package PACKAGE in the F<debian/control> file.  FIELD should be
+one of the possible relationship fields of a Debian package or one of
+the following special values:
+
+=over 4
+
+=item all
+
+The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
+
+=item strong
+
+The concatenation of Pre-Depends and Depends.
+
+=item weak
+
+The concatenation of Recommends and Suggests.
+
+=back
+
+If FIELD isn't present in the package, the returned Lintian::Relation
+object will be empty (always satisfied and implies nothing).
+
+Any substvars in F<debian/control> will be represented in the returned
+relation as packages named after the substvar.
+
+=cut
+
 # sub binary_relation Needs-Info :binary_field
 sub binary_relation {
     my ($self, $package, $field) = @_;
@@ -232,12 +372,29 @@ sub binary_relation {
     return $result;
 }
 
+=item relation (FIELD)
 
-# Return a Lintian::Relation object for the given build relationship
-# field.  In addition to all the normal build relationship fields, the
-# following special field names are supported:  build-depends-all
-# (build-depends and build-depends-indep) and build-conflicts-all
-# (build-conflicts and build-conflicts-indep).
+Returns a L<Lintian::Relation> object for the given build relationship
+field FIELD.  In addition to the normal build relationship fields, the
+following special field names are supported:
+
+=over 4
+
+=item build-depends-all
+
+The concatenation of Build-Depends and Build-Depends-Indep.
+
+=item build-conflicts-all
+
+The concatenation of Build-Conflicts and Build-Conflicts-Indep.
+
+=back
+
+If FIELD isn't present in the package, the returned Lintian::Relation
+object will be empty (always satisfied and implies nothing).
+
+=cut
+
 # sub relation Needs-Info :field
 sub relation {
     my ($self, $field) = @_;
@@ -263,6 +420,13 @@ sub relation {
     $self->{relation}->{$field} = Lintian::Relation->new($result);
     return $self->{relation}->{$field};
 }
+
+=item relation_noarch (FIELD)
+
+The same as L</relation (FIELD)>, but ignores architecture
+restrictions in the FIELD field.
+
+=cut
 
 # Similar to relation(), return a Lintian::Relation object for the given build
 # relationship field, but ignore architecture restrictions.  It supports the
@@ -295,6 +459,19 @@ sub relation_noarch {
     return $self->{relation_noarch}->{$field};
 }
 
+=item debfiles ([FILE])
+
+Returns the path to FILE in the debian dir of the extracted source
+package.  FILE must be relative to the root of the debian dir and
+should be without leading slash (and and without "./").  If FILE is
+not in the debian dir, it returns the path to a non-existent file
+entry.
+
+The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
+also apply to this method.
+
+=cut
+
 # Like unpacked except this only returns the contents of debian/ from a source
 # package.
 #
@@ -303,6 +480,26 @@ sub debfiles {
     my ($self, $file) = @_;
     return $self->_fetch_extracted_dir('debfiles', 'debfiles', $file);
 }
+
+=item index (FILE)
+
+For the general documentation of this method, please refer to the
+documenation of it in
+L<Lintian::Collect::Package|Lintian::Collect::Package/index (FILE)>.
+
+The index of a source package is not very well defined for source
+packages and this is reflected in the behaviour of this method and
+sorted_index as well.  In general all files in the "upstream
+tarball(s)" are covered by this method and sorted_index.
+
+For non-native packages, this means that the packaging is generally
+not available via these methods.  Though if upstream has its own
+packages files, these may be listed even if they are not available
+via unpacked as is the case for 3.0 (quilt) packages.
+
+=back
+
+=cut
 
 # Overriden method; please see Lintian::Collect::Package::index for
 # more information.
@@ -314,162 +511,6 @@ sub index {
     return $self->_fetch_index_data('index', 'index', undef, $file);
 }
 
-=head1 NAME
-
-Lintian::Collect::Source - Lintian interface to source package data collection
-
-=head1 SYNOPSIS
-
-    my ($name, $type) = ('foobar', 'source');
-    my $collect = Lintian::Collect->new($name, $type);
-    if ($collect->native) {
-        print "Package is native\n";
-    }
-
-=head1 DESCRIPTION
-
-Lintian::Collect::Source provides an interface to package data for source
-packages.  It implements data collection methods specific to source
-packages.
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data about
-source packages via this module so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(PACKAGE)
-
-Creates a new Lintian::Collect::Source object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the Lintian::Collect constructor.
-
-=back
-
-=head1 INSTANCE METHODS
-
-In addition to the instance methods listed below, all instance methods
-documented in the Lintian::Collect module are also available.
-
-=over 4
-
-=item binaries()
-
-Returns a hash reference with the binary package names as keys and the
-Package-Type as value (which should be either C<deb> or C<udeb>
-currently).  The debfiles collection script must have been run
-to make the F<debfiles/control> file available.
-
-=item binary_field(PACKAGE[, FIELD[, DEFAULT]])
-
-Returns the content of the field FIELD for the binary package PACKAGE
-in the F<debian/control> file, or DEFAULT (defaulting to undef) if the
-field is not present.  Inheritance of field values from the source
-section of the control file is not implemented.  Only the literal
-value of the field is returned.
-
-If FIELD is not given, return a hashref mapping field names to their
-values.  This hashref should not be modified.
-
-The debfiles collection script must have been run to make the
-F<debfiles/control> file available.
-
-=item binary_relation(PACKAGE, FIELD)
-
-Returns a Lintian::Relation object for the specified FIELD in the binary
-package PACKAGE in the F<debian/control> file.  FIELD should be one of the
-possible relationship fields of a Debian package or one of the following
-special values:
-
-=over 4
-
-=item all
-
-The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
-
-=item strong
-
-The concatenation of Pre-Depends and Depends.
-
-=item weak
-
-The concatenation of Recommends and Suggests.
-
-=back
-
-If FIELD isn't present in the package, the returned Lintian::Relation
-object will be empty (always satisfied and implies nothing).
-
-Any substvars in F<debian/control> will be represented in the returned
-relation as packages named after the substvar.
-
-=item changelog()
-
-Returns the changelog of the source package as a Parse::DebianChangelog
-object, or undef if the changelog is a symlink or doesn't exist.  The
-debfiles collection script must have been run to create the changelog
-file, which this method expects to find in F<debfiles/changelog>.
-
-=item native()
-
-Returns true if the source package is native and false otherwise.
-This is generally determined from the source format, though in the 1.0
-case the nativeness is determined by looking for the diff.gz (using
-the name of the source package and its version).
-
-If the source format is 1.0 and the version number is absent, this
-will return false (as native packages are a lot rarer than non-native
-ones).
-
-Note if the source format is missing, it is assumed to be an 1.0
-package.
-
-=item relation(FIELD)
-
-Returns a Lintian::Relation object for the given build relationship field
-FIELD.  In addition to the normal build relationship fields, the
-following special field names are supported:
-
-=over 4
-
-=item build-depends-all
-
-The concatenation of Build-Depends and Build-Depends-Indep.
-
-=item build-conflicts-all
-
-The concatenation of Build-Conflicts and Build-Conflicts-Indep.
-
-=back
-
-If FIELD isn't present in the package, the returned Lintian::Relation
-object will be empty (always satisfied and implies nothing).
-
-=item relation_noarch(FIELD)
-
-The same as relation(), but ignores architecture restrictions in the
-FIELD field.
-
-=item source_field([FIELD[, DEFAULT]])
-
-Returns the content of the field FIELD from source package paragraph
-of the F<debian/control> file, or DEFAULT (defaulting to undef) if the
-field is not present.  Only the literal value of the field is
-returned.
-
-If FIELD is not given, return a hashref mapping field names to their
-values.  This hashref should not be modified.
-
-The debfiles collection script must have been run to make the
-F<debfiles/control> file available.
-
-NB: If a field from the "dsc" file itself is desired, please use
-L<field|Lintian::Collect/field> instead.
 
 =back
 

@@ -23,9 +23,57 @@ use warnings;
 use Lintian::Util qw(get_dsc_info get_deb_info);
 use Carp qw(croak);
 
-# Take the package name and type, initialize an appropriate collect object
-# based on the package type, and return it.  fail with unknown types,
-# since we do not check in other packes if this returns a value.
+=head1 NAME
+
+Lintian::Collect - Lintian interface to package data collection
+
+=head1 SYNOPSIS
+
+    my ($name, $type, $dir) = ('foobar', 'udeb', '/some/abs/path');
+    my $collect = Lintian::Collect->new ($name, $type, $dir);
+    $name = $collect->name;
+    $type = $collect->type;
+
+=head1 DESCRIPTION
+
+Lintian::Collect provides the shared interface to package data used by
+source, binary and udeb packages and .changes files.  It creates an
+object of the appropriate type and provides common functions used by the
+collection interface to all types of package.
+
+Usually instances should not be created directly (exceptions include
+collections), but instead be requested via the
+L<info|Lintian::Lab::Entry/info> method in Lintian::Lab::Entry.
+
+This module is in its infancy.  Most of Lintian still reads all data from
+files in the laboratory whenever that data is needed and generates that
+data via collect scripts.  The goal is to eventually access all data via
+this module and its subclasses so that the module can cache data where
+appropriate and possibly retire collect scripts in favor of caching that
+data in memory.
+
+=head1 CLASS METHODS
+
+=over 4
+
+=item new (PACKAGE, TYPE, BASEDIR[, FIELDS]))
+
+Creates a new object appropriate to the package type.  TYPE can be
+retrieved later with the L</type> method.  Croaks if given an unknown
+TYPE.
+
+PACKAGE is the name of the package and is stored in the collect object.
+It can be retrieved with the L</name> method.
+
+BASEDIR is the base directory for the data and should be absolute.
+
+If FIELDS is given it is assumed to be the fields from the underlying
+control file.  This is only used to avoid an unnecessary read
+operation (possibly incl. an ar | gzip pipeline) when the fields are
+already known.
+
+=cut
+
 sub new {
     my ($class, $pkg, $type, $base_dir, $fields) = @_;
     my $object;
@@ -48,29 +96,61 @@ sub new {
     return $object;
 }
 
-# Return the package name.
+=back
+
+=head1 INSTANCE METHODS
+
+In addition to the instance methods documented here, see the documentation
+of L<Lintian::Collect::Source>, L<Lintian::Collect::Binary> and
+L<Lintian::Collect::Changes> for instance methods specific to source and
+binary / udeb packages and .changes files.
+
+=over 4
+
+=item name
+
+Returns the name of the package.
+
+=cut
+
 # sub name Needs-Info <>
 sub name {
     my ($self) = @_;
     return $self->{name};
 }
 
-# Return the package type.
+=item type
+
+Returns the type of the package.
+
+=cut
+
 # sub type Needs-Info <>
 sub type {
     my ($self) = @_;
     return $self->{type};
 }
 
-# Return the base dir of the package's lab.
+=item base_dir
+
+Returns the base_dir where all the package information is stored.
+
+=cut
+
 # sub base_dir Needs-Info <>
 sub base_dir {
     my ($self) = @_;
     return $self->{base_dir};
 }
 
-# Return the path to a file (or dir) in the lab
-# - convenience around base_dir
+=item lab_data_path ([ENTRY])
+
+Return the path to the ENTRY in the lab.  This is a convenience method
+around base_dir.  If ENTRY is not given, this method behaves like
+base_dir.
+
+=cut
+
 # sub lab_data_path Needs-Info <>
 sub lab_data_path {
     my ($self, $entry) = @_;
@@ -79,11 +159,29 @@ sub lab_data_path {
     return $base;
 }
 
-# Return the value of the specified control field of the package, or undef if
-# that field wasn't present in the control file for the package.  For source
-# packages, this is the *.dsc file; for binary packages, this is the control
-# file in the control section of the package.  For .changes files, the 
-# information will be retrieved from the file itself.
+=item field ([FIELD[, DEFAULT]])
+
+If FIELD is given, this method returns the value of the control field
+FIELD in the control file for the package.  For a source package, this
+is the *.dsc file; for a binary package, this is the control file in
+the control section of the package.
+
+If FIELD is passed but not present, then this method will return
+DEFAULT (if given) or undef.
+
+Otherwise this will return a hash of fields, where the key is the field
+name (in all lowercase).
+
+Note: For binary and udeb packages, this method will create the
+"source"-field if it does not exist (using the value of the
+"package"-field as described in §5.6.1 of the Debian Policy Manual).
+
+Some checks rely on the presence "source"-field to whitelist some
+packages, so removing this behaviour may cause regressions (see
+bug 640186 for an example).
+
+=cut
+
 # sub field Needs-Info <>
 sub field {
     my ($self, $field, $def) = @_;
@@ -126,97 +224,6 @@ sub _get_field {
     return $fields;
 }
 
-=head1 NAME
-
-Lintian::Collect - Lintian interface to package data collection
-
-=head1 SYNOPSIS
-
-    my ($name, $type, $dir) = ('foobar', 'udeb', '/some/abs/path');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
-    $name = $collect->name;
-    $type = $collect->type;
-
-=head1 DESCRIPTION
-
-Lintian::Collect provides the shared interface to package data used by
-source, binary and udeb packages and .changes files.  It creates an 
-object of the appropriate type and provides common functions used by the 
-collection interface to all types of package.
-
-Usually instances should not be created directly (exceptions include
-collections), but instead be requested via the
-L<info|Lintian::Lab::Entry/info> method in Lintian::Lab::Entry.
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data via
-this module and its subclasses so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(PACKAGE, TYPE, BASEDIR[, FIELDS])
-
-Creates a new object appropriate to the package type.  TYPE can be
-retrieved later with the type() method.  Croaks if given an unknown
-TYPE.
-
-PACKAGE is the name of the package and is stored in the collect object.
-It can be retrieved with the name() method.
-
-BASEDIR is the base directory for the data and should be absolute.
-
-If FIELDS is given it is assumed to be the fields from the underlying
-control file.  This is only used to avoid an unnecessary read
-operation (possibly incl. an ar | gzip pipeline) when the fields are
-already known.
-
-=back
-
-=head1 INSTANCE METHODS
-
-In addition to the instance methods documented here, see the documentation
-of Lintian::Collect::Source, Lintian::Collect::Binary and 
-Lintian::Collect::Changes for instance methods specific to source and 
-binary / udeb packages and .changes files.
-
-=over 4
-
-=item field([FIELD[, DEFAULT]])
-
-If FIELD is given, this method returns the value of the control field
-FIELD in the control file for the package.  For a source package, this
-is the *.dsc file; for a binary package, this is the control file in
-the control section of the package.
-
-If FIELD is passed but not present, then this method will return
-DEFAULT (if given) or undef.
-
-Otherwise this will return a hash of fields, where the key is the field
-name (in all lowercase).
-
-=item name()
-
-Returns the name of the package.
-
-=item type()
-
-Returns the type of the package.
-
-=item base_dir()
-
-Returns the base_dir where all the package information is stored.
-
-=item lab_data_path ([ENTRY])
-
-Return the path to the ENTRY in the lab.  This is a convenience method
-around base_dir.  If ENTRY is not given, this method behaves like
-base_dir.
-
 =back
 
 =head1 AUTHOR
@@ -225,8 +232,8 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect::Binary(3), Lintian::Collect::Changes(3),
-Lintian::Collect::Source(3)
+lintian(1), L<Lintian::Collect::Binary>, L<Lintian::Collect::Changes>,
+L<Lintian::Collect::Source>
 
 =cut
 

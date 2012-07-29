@@ -30,8 +30,43 @@ use Parse::DebianChangelog;
 
 use Lintian::Util qw(fail open_gz parse_dpkg_control);
 
-# Initialize a new binary package collect object.  Takes the package name,
-# which is currently unused.
+=head1 NAME
+
+Lintian::Collect::Binary - Lintian interface to binary package data collection
+
+=head1 SYNOPSIS
+
+    my ($name, $type) = ('foobar', 'binary');
+    my $collect = Lintian::Collect->new($name, $type);
+    if ($collect->native) {
+        print "Package is native\n";
+    }
+
+=head1 DESCRIPTION
+
+Lintian::Collect::Binary provides an interface to package data for binary
+packages.  It implements data collection methods specific to binary
+packages.
+
+This module is in its infancy.  Most of Lintian still reads all data from
+files in the laboratory whenever that data is needed and generates that
+data via collect scripts.  The goal is to eventually access all data about
+binary packages via this module so that the module can cache data where
+appropriate and possibly retire collect scripts in favor of caching that
+data in memory.
+
+=head1 CLASS METHODS
+
+=over 4
+
+=item new (PACKAGE)
+
+Creates a new Lintian::Collect::Binary object.  Currently, PACKAGE is
+ignored.  Normally, this method should not be called directly, only via
+the L<Lintian::Collect> constructor.
+
+=cut
+
 sub new {
     my ($class, $pkg) = @_;
     my $self = {};
@@ -39,8 +74,26 @@ sub new {
     return $self;
 }
 
-# Returns whether the package is a native package according to
-# its version number
+=back
+
+=head1 INSTANCE METHODS
+
+In addition to the instance methods listed below, all instance methods
+documented in the L<Lintian::Collect> and the
+L<Lintian::Collect::Package> modules are also available.
+
+=over 4
+
+=item native
+
+Returns true if the binary package is native and false otherwise.
+Nativeness will be judged by its version number.
+
+If the version number is absent, this will return false (as
+native packages are a lot rarer than non-native ones).
+
+=cut
+
 # sub native Needs-Info :field
 sub native {
     my ($self) = @_;
@@ -56,8 +109,15 @@ sub native {
     return $self->{native};
 }
 
-# Get the changelog file of a binary package as a Parse::DebianChangelog
-# object.  Returns undef if the changelog file couldn't be found.
+=item changelog
+
+Returns the changelog of the binary package as a Parse::DebianChangelog
+object, or undef if the changelog doesn't exist.  The changelog-file
+collection script must have been run to create the changelog file, which
+this method expects to find in F<changelog>.
+
+=cut
+
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
@@ -72,18 +132,42 @@ sub changelog {
     return $self->{changelog};
 }
 
-# Like unpacked except this returns the contents of the control.tar.gz
-# in an unpacked directory.
-#
+=item control ([FILE])
+
+Returns the path to FILE in the control.tar.gz.  FILE must be relative
+to the root of the control.tar.gz and should be without leading slash
+(and and without "./").  If FILE is not in the control.tar.gz, it
+returns the path to a non-existent file entry.
+
+To get a list of entries in the control.tar.gz or the file meta data
+of the entries (as L<path objects|Lintian::Path>), see
+L</sorted_control_index> and L</control_index (FILE)>.
+
+The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
+also apply to this method.  However, as the control.tar.gz is not
+known to contain symlinks, a simple file type check is usually enough.
+
+=cut
+
 # sub control Needs-Info bin-pkg-control
 sub control {
     my ($self, $file) = @_;
     return $self->_fetch_extracted_dir('control', 'control', $file);
 }
 
-# Like index except it returns the index for the control/metadata of
-# binary package.
-#
+=item control_index (FILE)
+
+Returns a L<path object|Lintian::Path> to FILE in the control.tar.gz.
+FILE must be relative to the root of the control.tar.gz and must be
+without leading slash (or "./").  If FILE is not in the
+control.tar.gz, it returns C<undef>.
+
+To get a list of entries in the control.tar.gz, see
+L</sorted_control_index>.  To actually access the underlying file
+(e.g. the contents), use L</control ([FILE])>.
+
+=cut
+
 # sub control_index Needs-Info bin-pkg-control
 sub control_index {
     my ($self, $file) = @_;
@@ -91,9 +175,17 @@ sub control_index {
                                      undef, $file);
 }
 
-# Like sorted_index except it returns the index for the control/metadata of
-# binary package.
-#
+=item sorted_control_index
+
+Returns a sorted array of file names listed in the control.tar.gz.
+The names will not have a leading slash (or "./") and can be passed
+to L</control ([FILE])> or L</control_index (FILE)> as is.
+
+The array will not contain the entry for the "root" of the
+control.tar.gz.
+
+=cut
+
 # sub sorted_control_index Needs-Info :control_index
 sub sorted_control_index {
     my ($self) = @_;
@@ -103,22 +195,36 @@ sub sorted_control_index {
     return @{ $self->{'sorted_control-index'} };
 }
 
-# Returns a handle with the strings in a given binary file (as computed
-# by coll/strings)
-#
+=item strings (FILE)
+
+Returns an open handle, which will read the data from coll/strings for
+FILE.  If coll/strings did not collect any strings about FILE, this
+returns an open read handle with no content.
+
+Caller is responsible for closing the handle either way.
+
+=cut
+
 # sub strings Needs-Info strings
 sub strings {
     my ($self, $file) = @_;
     my $real = $self->_fetch_extracted_dir ('strings', 'strings', $file);
     if ( not -f "${real}.gz" ) {
-        open my $fd, '<', '/dev/null';
+        open my $fd, '<', '/dev/null' or fail "open /dev/null: $!";
         return $fd;
     }
     my $fd = open_gz ("$real.gz") or fail "open ${file}.gz: $!";
     return $fd;
 }
 
-# Returns the md5sums as calculated by the md5sums collection
+=item md5sums
+
+Returns a hashref mapping a FILE to its md5sum.  The md5sum is
+computed by Lintian during extraction and is not guaranteed to match
+the md5sum in the "md5sums" control file.
+
+=cut
+
 #  sub md5sums Needs-Info md5sums
 sub md5sums {
     my ($self) = @_;
@@ -143,6 +249,41 @@ sub md5sums {
     $self->{md5sums} = $result;
     return $result;
 }
+
+=item scripts
+
+Returns a hashref mapping a FILE to its script/interpreter information
+(if FILE is a script).  If FILE is not a script, it is not in the hash
+(and callers should use exists to test membership to ensure this
+invariant holds).
+
+The value for a given FILE consists of a table with the following keys
+(and associated value):
+
+=over 4
+
+=item calls_env
+
+Returns a truth value if the script uses env (/usr/bin/env or
+/bin/env) in the "#!".  Otherwise it is C<undef>.
+
+=item interpreter
+
+This is the interpreter used.  If calls_env is true, this will be the
+first argument to env.  Otherwise it will be the command listed after
+the "#!".
+
+NB: Some template files have "#!" lines like "#!@PERL@" or "#!perl".
+In this case, this value will be @PERL@ or perl (respectively).
+
+=item name
+
+Return the file name of the script.  This will be identical to key to
+look up this table.
+
+=back
+
+=cut
 
 sub scripts {
     my ($self) = @_;
@@ -172,6 +313,13 @@ sub scripts {
     return $self->{scripts};
 }
 
+=item objdump_info
+
+Returns a hashref mapping a FILE to the data collected by objdump-info
+or C<undef> if no data is available for that FILE.  Data is generally
+only collected for ELF files.
+
+=cut
 
 # Returns the information from collect/objdump-info
 sub objdump_info {
@@ -242,8 +390,15 @@ sub objdump_info {
     return $self->{objdump_info};
 }
 
+=item hardening_info
 
-# Returns the information from collect/hardening-info
+Returns a hashref mapping a FILE to its hardening issues.
+
+NB: This is generally only useful for checks/binaries to emit the
+hardening-no-* tags.
+
+=cut
+
 # sub hardening_info Needs-Info hardening-info
 sub hardening_info {
     my ($self) = @_;
@@ -268,8 +423,37 @@ sub hardening_info {
     return $self->{hardening_info};
 }
 
+=item java_info
 
-# Returns the information from collect/objdump-info
+Returns a hashref containing information about JAR files found in
+binary packages, in the form I<file name> -> I<info>, where I<info> is
+a hash containing the following keys:
+
+=over 4
+
+=item manifest
+
+A hash containing the contents of the JAR file manifest. For instance,
+to find the classpath of I<$file>, you could use:
+
+ if (exists $info->java_info->{$file}->{'manifest'}) {
+     my $cp = $info->java_info->{$file}->{'manifest'}->{'Class-Path'};
+     # ...
+ }
+
+NB: Not all jar files have a manifest.  For those without, this will
+value will not be available.  Use exists (rather than defined) to
+check for it.
+
+=item files
+
+A table of the files in the JAR.  Each key is a file name and its value
+is its "Major class version" for Java or "-" if it is not a class file.
+
+=back
+
+=cut
+
 # sub java_info Needs-Info java-info
 sub java_info {
     my ($self) = @_;
@@ -319,11 +503,33 @@ sub java_info {
     return $self->{java_info};
 }
 
-# Return a Lintian::Relation object for the given relationship field.  In
-# addition to all the normal relationship fields, the following special
-# field names are supported: all (pre-depends, depends, recommends, and
-# suggests), strong (pre-depends and depends), and weak (recommends and
-# suggests).
+=item relation (FIELD)
+
+Returns a Lintian::Relation object for the specified FIELD, which should
+be one of the possible relationship fields of a Debian package or one of
+the following special values:
+
+=over 4
+
+=item all
+
+The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
+
+=item strong
+
+The concatenation of Pre-Depends and Depends.
+
+=item weak
+
+The concatenation of Recommends and Suggests.
+
+=back
+
+If FIELD isn't present in the package, the returned Lintian::Relation
+object will be empty (always satisfied and implies nothing).
+
+=cut
+
 # sub relation Needs-Info :field
 sub relation {
     my ($self, $field) = @_;
@@ -350,8 +556,15 @@ sub relation {
     return $self->{relation}->{$field};
 }
 
-# Returns a truth value if the package appears to be transitional package.
-# - this is based on the package description.
+=item is_transitional
+
+Returns a truth value if the package appears to be a transitional
+package.
+
+This is based on the package's description.
+
+=cut
+
 # sub is_transitional Needs-Info :field
 sub is_transitional {
     my ($self) = @_;
@@ -359,8 +572,19 @@ sub is_transitional {
     return $desc =~ m/transitional package/;
 }
 
-# Returns a truth value if the file is listed in the conffiles file
-# - Note files should be passed relative to the package root.
+=item is_conffile (FILE)
+
+Returns a truth value if FILE is listed in the conffiles control file.
+If the control file is not present or FILE is not listed in it, it
+returns C<undef>.
+
+Note that FILE should be the filename relative to the package root
+(even though the control file uses absolute paths).  If the control
+file does relative paths, they are assumed to be relative to the
+package root as well (and used without warning).
+
+=cut
+
 # sub is_conffile Needs-Info :control
 sub is_conffile {
     my ($self, $file) = @_;
@@ -389,190 +613,6 @@ sub is_conffile {
     return;
 }
 
-=head1 NAME
-
-Lintian::Collect::Binary - Lintian interface to binary package data collection
-
-=head1 SYNOPSIS
-
-    my ($name, $type) = ('foobar', 'binary');
-    my $collect = Lintian::Collect->new($name, $type);
-    if ($collect->native) {
-        print "Package is native\n";
-    }
-
-=head1 DESCRIPTION
-
-Lintian::Collect::Binary provides an interface to package data for binary
-packages.  It implements data collection methods specific to binary
-packages.
-
-This module is in its infancy.  Most of Lintian still reads all data from
-files in the laboratory whenever that data is needed and generates that
-data via collect scripts.  The goal is to eventually access all data about
-binary packages via this module so that the module can cache data where
-appropriate and possibly retire collect scripts in favor of caching that
-data in memory.
-
-=head1 CLASS METHODS
-
-=over 4
-
-=item new(PACKAGE)
-
-Creates a new Lintian::Collect::Binary object.  Currently, PACKAGE is
-ignored.  Normally, this method should not be called directly, only via
-the Lintian::Collect constructor.
-
-=back
-
-=head1 INSTANCE METHODS
-
-In addition to the instance methods listed below, all instance methods
-documented in the Lintian::Collect module are also available.
-
-=over 4
-
-=item changelog()
-
-Returns the changelog of the binary package as a Parse::DebianChangelog
-object, or undef if the changelog doesn't exist.  The changelog-file
-collection script must have been run to create the changelog file, which
-this method expects to find in F<changelog>.
-
-=item java_info()
-
-Returns a hash containing information about JAR files found in binary
-packages, in the form I<file name> -> I<info>, where I<info> is a hash
-containing the following keys:
-
-=over 4
-
-=item manifest
-
-A hash containing the contents of the JAR file manifest. For instance,
-to find the classpath of I<$file>, you could use:
-
- my $cp = $info->java_info()->{$file}->{'Class-Path'};
-
-=item files
-
-the list of the files contained in the archive.
-
-=back
-
-=item native()
-
-Returns true if the binary package is native and false otherwise.
-Nativeness will be judged by its version number.
-
-If the version number is absent, this will return false (as
-native packages are a lot rarer than non-native ones).
-
-=item index()
-
-Returns a reference to an array of hash references with content
-information about the binary package.  Each hash may have the
-following keys:
-
-=over 4
-
-=item name
-
-Name of the index entry without leading slash.
-
-=item owner
-
-=item group
-
-=item uid
-
-=item gid
-
-The former two are in string form and may depend on the local system,
-the latter two are the original numerical values as saved by tar.
-
-=item date
-
-Format "YYYY-MM-DD".
-
-=item time
-
-Format "hh:mm".
-
-=item type
-
-Entry type as one character.
-
-=item operm
-
-Entry permissions as octal number.
-
-=item size
-
-Entry size in bytes.  Note that tar(1) lists the size of directories as
-0 (so this is what you will get) contrary to what ls(1) does.
-
-=item link
-
-If the entry is either a hardlink or symlink, contains the target of the
-link.
-
-=item count
-
-If the entry is a directory, contains the number of other entries this
-directory contains.
-
-=back
-
-=item relation(FIELD)
-
-Returns a Lintian::Relation object for the specified FIELD, which should
-be one of the possible relationship fields of a Debian package or one of
-the following special values:
-
-=over 4
-
-=item all
-
-The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
-
-=item strong
-
-The concatenation of Pre-Depends and Depends.
-
-=item weak
-
-The concatenation of Recommends and Suggests.
-
-=back
-
-If FIELD isn't present in the package, the returned Lintian::Relation
-object will be empty (always satisfied and implies nothing).
-
-=item is_transitional
-
-Returns a truth value if the package appears to be a transitional
-package.
-
-This is based on the package's description.
-
-=item strings (FILE)
-
-Returns an open handle, which will read the data from coll/strings for
-FILE.
-
-=item is_conffile (FILE)
-
-Returns a truth value if FILE is listed in the conffiles control file.
-If the control file is not present or FILE is not listed in it, it
-returns C<undef>.
-
-Note that FILE should be the filename relative to the package root
-(even though the control file uses absolute paths).  If the control
-file does relative paths, they are assumed to be relative to the
-package root as well (and used without warning).
-
 =back
 
 =head1 AUTHOR
@@ -581,7 +621,7 @@ Originally written by Frank Lichtenheld <djpig@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3), Lintian::Relation(3)
+lintian(1), L<Lintian::Collect>, L<Lintian::Relation>
 
 =cut
 
