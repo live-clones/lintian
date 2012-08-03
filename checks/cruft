@@ -150,7 +150,7 @@ for my $file ($info->sorted_index) {
     my $file_info = $info->file_info ($file);
     if ($file_info =~ m/\bELF\b/) {
         tag 'source-contains-prebuilt-binary', $file;
-    } elsif ($file_info =~ m/\b(?:MS-DOS|PE(?:32|64)|COFF executable)\b/) {
+    } elsif ($file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/) {
         tag 'source-contains-prebuilt-windows-binary', $file;
     } elsif ($file =~ /\bwaf$/) {
         my $ok = 1;
