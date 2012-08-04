@@ -21,6 +21,8 @@ package Lintian::CheckScript;
 use strict;
 use warnings;
 
+use Cwd qw(realpath);
+use File::Basename qw(dirname);
 use base 'Class::Accessor';
 
 use Carp qw(croak);
@@ -71,10 +73,13 @@ sub new {
     my ($class, $file) = @_;
     my ($header, @tags) = read_dpkg_control ($file);
     my $self;
+    my $dir;
     unless ($header->{'check-script'}) {
         croak "Missing Check-Script field in $file";
     }
-
+    $dir = realpath ($file)
+        or croak "Cannot resolve $file: $!";
+    $dir = dirname ($dir);
 
     $self = {
         'name' => $header->{'check-script'},
@@ -86,6 +91,8 @@ sub new {
     $self->{'script_pkg'} = $self->{'name'};
     $self->{'script_pkg'} =~ s,/,::,go;
     $self->{'script_pkg'} =~ s,[-.],_,go;
+
+    $self->{'script_path'} = $dir . '/' . $self->{'name'};
 
     if ($self->{'type'}//'ALL' ne 'ALL') {
         $self->{'type-table'} = {};
@@ -111,11 +118,6 @@ sub new {
 Returns the "name" of the check script.  This is the value in the
 Check-Script field in the file.
 
-=item $cs->script_pkg
-
-Returns the perl "package" name for the script.  Used by the frontend
-to run the check.
-
 =item $cs->type
 
 Returns the value stored in the "Type" field of the file.  For the
@@ -131,7 +133,7 @@ Returns the value of the Abbrev field from the desc file.
 
 =cut
 
-Lintian::CheckScript->mk_ro_accessors (qw(name script_pkg type abbrev));
+Lintian::CheckScript->mk_ro_accessors (qw(name type abbrev));
 
 =item needs_info
 
@@ -182,6 +184,42 @@ should be modified.
 sub tags {
     my ($self) = @_;
     return keys %{ $self->{'tag-table'}};
+}
+
+=item $cs->run_check ($proc, $group)
+
+Run the check on C<$proc>, which is in the
+L<group|Lintian::ProcessableGroup> C<$group>.  C<$proc> should be
+a L<lab entry|Lintian::Lab::Entry> and must have the proper
+collections run on it prior to calling this method (See
+L<Lintian::Unpacker>).
+
+The method may error out if loading the check failed or if the check
+itself calls die/croak/fail/etc.
+
+Returns normally on success; the return value has no semantic meaning
+and is currently C<undef>.
+
+=cut
+
+sub run_check {
+    my ($self, $proc, $group) = @_;
+    my $cs_pkg = $self->{'script_pkg'};
+    my $cs_path = $self->{'script_path'};
+
+    require $cs_path;
+
+    my @args = ($proc->pkg_name,
+                $proc->pkg_type,
+                $proc->info,
+                $proc,
+                $group);
+    {
+        # minimal "no strict refs" scope.
+        no strict 'refs';
+        &{'Lintian::' . $cs_pkg . '::run'}(@args);
+    }
+    return;
 }
 
 =back

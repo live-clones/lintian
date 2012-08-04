@@ -1402,7 +1402,6 @@ sub process_group {
         my $pkg_path = $proc->pkg_path();
         my $pkg_arch = $proc->pkg_arch();
         my $lpkg = $proc->lab_pkg();
-        my $info = $proc->info();
         my $base = $lpkg->base_dir();
 
         $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);
@@ -1426,17 +1425,19 @@ sub process_group {
             next if (!$cs->is_check_type ($pkg_type) || $check eq 'lintian');
 
             debug_msg(1, "Running check: $check ...");
-            my $returnvalue = _run_check ($cs, $pkg_name, $pkg_type, $info, $proc, $group);
-            # Set exit_code correctly if there was not yet an exit code
-            $exit_code = $returnvalue unless $exit_code;
+            eval {
+                $cs->run_check ($lpkg, $group);
+            };
+            my $err = $@;
             my $tres = $finish_timer->($timer);
-            debug_msg(1, "Finished check: $check$tres");
-
-            if ($returnvalue == 2) {
+            if ($err) {
+                print STDERR $err;
+                print STDERR "internal error: cannot run $check check on package $pkg_name\n";
                 warning("skipping $action of $pkg_type package $pkg_name");
                 $exit_code = 2;
                 next PROC;
             }
+            debug_msg(1, "Finished check: $check$tres");
         }
 
         unless ($exit_code) {
@@ -1738,28 +1739,6 @@ sub _update_profile {
         # we are disabling tags
         $profile->disable_tags (keys %$sup_tags);
     }
-}
-
-sub _run_check {
-    my ($cs, $pkg_name, @args) = @_;
-    my $check = $cs->name;
-    my $ret = 0;
-    my $cs_pkg = $cs->script_pkg;
-
-    require "$opt{'LINTIAN_ROOT'}/checks/$check";
-
-    {
-        # minimal "no strict refs" scope.
-        no strict 'refs';
-        eval { &{'Lintian::' . $cs_pkg . '::run'}($pkg_name, @args); };
-    }
-
-    if ( $@ ) {
-        print STDERR $@;
-        print STDERR "internal error: cannot run $check check on package $pkg_name\n";
-        $ret = 2;
-    }
-    return $ret;
 }
 
 # }}}
