@@ -51,17 +51,19 @@ Lintian::ProcessablePool -- Pool of processables
 
 =over 4
 
-=item Lintian::ProcessablePool->new([$lab])
+=item Lintian::ProcessablePool->new
 
 Creates a new empty pool.
 
 =cut
 
 sub new {
-    my ($class, $lab) = @_;
+    my ($class) = @_;
     my $self = {};
+    foreach my $field (qw(binary changes groups source udeb)){
+        $self->{$field} = {};
+    }
     bless $self, $class;
-    $self->_init($lab);
     return $self;
 }
 
@@ -163,7 +165,6 @@ Do not modify the list nor its contents.
 
 sub get_groups{
     my ($self) = @_;
-    my $result = [];
     my $groups = $self->{groups};
     if (scalar keys %$groups) {
         return values %$groups;
@@ -183,15 +184,6 @@ sub empty{
 }
 
 #### Internal subs ####
-
-sub _init {
-    my ($self, $lab) = @_;
-    foreach my $field (qw(binary changes groups source udeb)){
-        $self->{$field} = {};
-    }
-    $self->{'lab'} = $lab if $lab;
-    return 1;
-}
 
 sub _add_changes_file{
     my ($self, $pkg_path) = @_;
@@ -236,7 +228,6 @@ sub _add_changes_file{
 sub _get_group_id{
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_src;
-    my $lab = $self->{'lab'};
     $id .= '_' . $pkg->pkg_src_version;
     return $id;
 }
@@ -246,7 +237,6 @@ sub _get_group_id{
 sub _get_proc_id {
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_name;
-    my $lab = $self->{'lab'};
     $id .= '_' . $pkg->pkg_version;
     $id .= '_' . $pkg->pkg_arch;
     return $id;

@@ -922,7 +922,7 @@ v_msg ("Setting up lab in $opt{'LINTIAN_LAB'} ...")
 
 # {{{ Compile list of files to process
 
-$pool = Lintian::ProcessablePool->new($LAB);
+$pool = Lintian::ProcessablePool->new;
 # process package/file arguments
 
 while (my $arg = shift) {
