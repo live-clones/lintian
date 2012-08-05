@@ -625,7 +625,6 @@ require Lintian::DepMap::Properties;
 require Lintian::Data;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
-require Lintian::Command::Simple;
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
 require Lintian::Internal::FrontendUtil;

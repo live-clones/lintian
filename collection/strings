@@ -28,7 +28,6 @@ use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Command::Simple;
 use Lintian::Util qw(delete_dir fail);
 
 ($#ARGV == 2) or fail('syntax: strings <pkg> <type> <dir>');
