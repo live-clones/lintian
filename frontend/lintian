@@ -618,7 +618,6 @@ require Lintian::Lab;
 require Lintian::Util;
 import Lintian::Util qw(fail read_dpkg_control);
 
-require Lintian::Collect;
 require Lintian::CollScript;
 require Lintian::DepMap;
 require Lintian::DepMap::Properties;
