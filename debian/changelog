@@ -1,6 +1,9 @@
 lintian (2.5.10.2) UNRELEASED; urgency=low
 
   * checks/source-copyright{,.desc}:
+    + [NT] Report the correct line number for the use of commas in
+      the "Files" field in DEP-5 copyright files.  Thanks to Faheem
+      Mitha for the report.  (Closes: #683946)
     + [NT] Mention that syntax-error-in-dep5-copyright may hide
       other issues as Lintian skips some DEP-5 checks in this case.
       Thanks to Faheem Mitha for the report.

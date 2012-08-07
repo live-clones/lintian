@@ -1,5 +1,5 @@
 I: source-copyright-dep5-general source: unused-license-paragraph-in-dep5-copyright expat (paragraph at line 40)
-W: source-copyright-dep5-general source: comma-separated-files-in-dep5-copyright paragraph at line 40
+W: source-copyright-dep5-general source: comma-separated-files-in-dep5-copyright paragraph at line 8
 W: source-copyright-dep5-general source: missing-field-in-dep5-copyright copyright (paragraph at line 15)
 W: source-copyright-dep5-general source: missing-field-in-dep5-copyright license (paragraph at line 12)
 W: source-copyright-dep5-general source: missing-license-paragraph-in-dep5-copyright mit (paragraph at line 18)
