@@ -637,7 +637,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
                 if (&$is_dep_field($field) && $known_obsolete_emacs{$alternatives[0]->[0]});
 
             for my $part_d (@alternatives) {
-                my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
+                my ($d_pkg, $d_march, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
                 tag 'versioned-provides', $part_d_orig
                     if ($field eq 'provides' && $d_version->[0]);
@@ -815,7 +815,7 @@ if ($type eq 'source') {
                     if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0]) && &$is_dep_field($field));
 
                 for my $part_d (@alternatives) {
-                    my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
+                    my ($d_pkg, $d_march, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
                     my $negated = 0;
                     for my $arch (@{$d_arch->[0]}) {
@@ -1041,16 +1041,20 @@ for my $field (keys %{$info->field}) {
 
 }
 
-# splits "foo (>= 1.2.3) [!i386 ia64]" into
-# ( "foo", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], "" )
-#                                                  ^^^   ^^
-#              count of negated arches, if ! was given   ||
-#           rest (should always be "" for valid dependencies)
+# splits "foo:bar (>= 1.2.3) [!i386 ia64]" into
+# ( "foo", "bar", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], "" )
+#                                                         ^^^   ^^
+#                     count of negated arches, if ! was given   ||
+#                  rest (should always be "" for valid dependencies)
 sub _split_dep {
     my $dep = shift;
-    my ($pkg, $version, $darch) = ('', ['',''], [[], 0]);
+    my ($pkg, $dmarch, $version, $darch) = ('', '', ['',''], [[], 0]);
 
-    $pkg = $1 if $dep =~ s/^\s*([^\s\[\(]+)\s*//;
+    my $pkgname = $1 if $dep =~ s/^\s*([^\s\[\(]+)\s*//;
+    if (defined $pkgname) {
+        ($pkg, $dmarch) = split /:/, $pkgname, 2;
+        $dmarch //= '';  # Ensure it is defined (in case there is no ":")
+    }
 
     if (length $dep) {
         if ($dep =~ s/\s* \( \s* (<<|<=|<|=|>=|>>|>) \s* ([^\s(]+) \s* \) \s*//x) {
@@ -1067,7 +1071,7 @@ sub _split_dep {
         }
     }
 
-    return ($pkg, $version, $darch, $dep);
+    return ($pkg, $dmarch, $version, $darch, $dep);
 }
 
 sub perl_core_has_version {
