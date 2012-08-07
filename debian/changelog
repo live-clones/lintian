@@ -62,6 +62,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/source-copyright{,.desc}:
     + [NT] Check for possible misspellings of known field
       names.  (Closes: #678639)
+    + [NT] Report the correct line number for the use of commas in
+      the "Files" field in DEP-5 copyright files.  Thanks to Faheem
+      Mitha for the report.  (Closes: #683946)
   * checks/version-substvars{,.desc}:
     + [JW,NT] Extend version-substvar-for-external-package to
       all relations.  Previously it was only triggered for
