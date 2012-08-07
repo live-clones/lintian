@@ -1,5 +1,10 @@
 lintian (2.5.10.2) UNRELEASED; urgency=low
 
+  * checks/source-copyright{,.desc}:
+    + [NT] Mention that syntax-error-in-dep5-copyright may hide
+      other issues as Lintian skips some DEP-5 checks in this case.
+      Thanks to Faheem Mitha for the report.
+
   * frontend/lintian:
     + [NT] Fix typo of identifier method, which causes Lintian to
       crash in case a "coll" cannot be started or it fails.
