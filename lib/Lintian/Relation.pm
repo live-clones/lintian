@@ -103,29 +103,30 @@ sub parse_element {
           \$\{[a-zA-Z0-9:-]+\}          #   substvar
          )*                             #  zero or more portions or substvars
         )                               # end of package name or substvar
+        (?:[:]([a-z0-9-]+))?            # optional Multi-arch arch specification (2)
         (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part
-         \s* (<<|<=|=|>=|>>|<|>)        # relation part (2)
-         \s* (.*?)                      # version (3)
+         \s* (<<|<=|=|>=|>>|<|>)        # relation part (3)
+         \s* (.*?)                      # version (4)
          \s* \)                         # closing parenthesis
         )?                              # end of optional version
         (?:                             # start of optional architecture
          \s* \[                         # open bracket for architecture
-         \s* (.*?)                      # architectures (4)
+         \s* (.*?)                      # architectures (5)
          \s* \]                         # closing bracket
         )?                              # end of optional architecture
     /x;
 
+    my ($pkgname, $march, $relop, $relver, $bdarch) = ($1, $2, $3, $4, $5);
     # If there's no version, we don't need to do any further processing.
     # Otherwise, convert the legacy < and > relations to the current ones.
-    return ['PRED', $1, undef, undef, $4] if not defined $2;
-    my $two = $2;
-    if ($two eq '<') {
-        $two = '<<';
-    } elsif ($two eq '>') {
-        $two = '>>';
+    return ['PRED', $pkgname, undef, undef, $bdarch, $march] if not defined $relop;
+    if ($relop eq '<') {
+        $relop = '<<';
+    } elsif ($relop eq '>') {
+        $relop = '>>';
     }
-    return ['PRED', $1, $two, $3, $4];
+    return ['PRED', $pkgname, $relop, $relver, $bdarch, $march];
 }
 
 
@@ -375,6 +376,29 @@ sub implies_element {
             }
             return unless $subset;
         }
+    }
+
+    # Multi-arch architecture specification
+
+    # According to the spec, only the special value "any" is allowed
+    # and it is "recommended" to consider "other such package
+    # relations as unsatisfiable".  That said, there seem to be an
+    # interest in supporting ":<arch>" as well, so we will (probably)
+    # have to accept those as well.
+    #
+    # Other than that, we would need to know that the package has the
+    # field "Multi-arch: allowed", but we cannot check that here.  So
+    # we assume that it is okay.
+    #
+    # For now assert that only the identity holds.  In practise, the
+    # "pkg:X" (for any valid value of X) seems to imply "pkg:any",
+    # fixing that is a TODO (because version clauses complicates
+    # matters)
+    if (defined $$p[5]) {
+        # Assume the identity to hold
+        return unless defined $$q[5] and $$p[5] eq $$q[5];
+    } elsif (defined $$q[5]) {
+        return;
     }
 
     # Now, down to version.  The implication is true if p's clause is stronger
@@ -650,6 +674,9 @@ sub unparse {
     my $relation = defined($partial) ? $partial : $self;
     if ($relation->[0] eq 'PRED') {
         my $text = $relation->[1];
+        if (defined $relation->[5]) {
+            $text .= ":$relation->[5]";
+        }
         if (defined $relation->[2]) {
             $text .= " ($relation->[2] $relation->[3])";
         }
