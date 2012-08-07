@@ -74,6 +74,9 @@ Certainty: possible
 Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The machine-readable copyright file didn't pass Debian control file
  syntax check.
+ .
+ This issue may hide other issues as Lintian skips some checks on the
+ file in this case.
 
 Tag: obsolete-field-in-dep5-copyright
 Severity: normal
