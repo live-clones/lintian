@@ -38,16 +38,9 @@ BEGIN {
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Data;
-use Lintian::Internal::FrontendUtil;
 use Lintian::Profile;
 
 my %already_displayed = ();
-my @proc_inc;
-# In some (rare) cases, $ENV{HOME} will not be available.
-# - Handle that gracefully by not emitting "Uninitialized ...".
-push @proc_inc, "$ENV{HOME}/.lintian/profiles" if defined $ENV{HOME};
-push @proc_inc, '/etc/lintian/profiles', "$ENV{'LINTIAN_ROOT'}/profiles";
-
 my ($annotate, $tags, $help, $prof);
 my $profile;
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
@@ -74,11 +67,7 @@ EOT
     exit 0;
 }
 
-unless ($prof) {
-    $prof = find_default_profile(@proc_inc);
-
-}
-$profile = Lintian::Profile->new($prof, $ENV{'LINTIAN_ROOT'}, \@proc_inc);
+$profile = Lintian::Profile->new ($prof, $ENV{'LINTIAN_ROOT'});
 
 Lintian::Data->set_vendor ($profile);
 

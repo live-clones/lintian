@@ -35,13 +35,10 @@ Lintian::Profile - Profile parser for Lintian
 
 =head1 SYNOPSIS
 
- my @inc = ("$ENV{'HOME'}/.lintian/profiles/",
-            '/etc/lintian/profiles/',
-            "$ENV{'LINTIAN_ROOT'}/profiles/");
- # Check if the Ubuntu default profile is present.
- my $file = Lintian::Profile->find_profile('ubuntu', @inc);
- # Parse the debian profile (if available)
- my $profile = Lintian::Profile->new('debian', $ENV{'LINTIAN_ROOT'}, [@inc]);
+ # Load the debian profile (if available)
+ my $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'});
+ # Load the "default" profile for the current vendor
+ $profile = Lintian::Profile->new (undef, $ENV{'LINTIAN_ROOT'});
  foreach my $tag ($profile->tags) {
      print "Enabled tag: $tag\n";
  }
@@ -84,7 +81,7 @@ my %SEC_FIELDS = (
     'severity'    => 1,
     );
 
-=item Lintian::Profile->new($profname, $root, $ppath)
+=item Lintian::Profile->new($profname, $root[, $ppath])
 
 Creates a new profile from the profile located by using
 find_profile($profname, @$ppath).  $profname is the name of the
@@ -92,14 +89,17 @@ profile and $ppath is a list reference containing the directories to
 search for the profile and (if any) its parents.  $root is the
 "LINTIAN_ROOT" and is used for finding checks.
 
+If $profname is C<undef>, the default vendor will be loaded based on
+Dpkg::Vendor::get_current_vendor.
+
+If $ppath is not given, a default one will be used.
+
 =cut
 
 sub new {
     my ($type, $name, $root, $ppath) = @_;
     my $profile;
-    croak "Illegal profile name \"$name\""
-        if $name =~ m,^/,o or $name =~ m/\./o;
-    croak "Undefined profile path" unless $ppath;
+    $ppath = [_default_inc_path ($root)] unless $ppath;
     my $self = {
         'parent-map'           => {},
         'profile_list'         => [],
@@ -113,7 +113,13 @@ sub new {
         'root'         => $root,
     };
     $self = bless $self, $type;
-    $profile = $self->find_profile($name);
+    if (not defined $name) {
+        ($profile, $name) = $self->_find_vendor_profile;
+    } else {
+        croak "Illegal profile name \"$name\""
+            if $name =~ m,^/,o or $name =~ m/\./o;
+        $profile = $self->_find_profile ($name);
+    }
     croak "Cannot find profile $name (in " . join(', ', @$ppath).")"
         unless $profile;
     $self->_read_profile($profile);
@@ -250,36 +256,23 @@ sub disable_tags {
     }
 }
 
-=item Lintian::Profile->find_profile($pname, @dirs), $prof->find_profile($pname[, @dirs])
+# $prof->_find_profile ($pname)
+#
+# Finds a profile called $pname in the search directories and returns
+# the path to it.  If $pname does not contain a slash, then it will look
+# for a profile called "$pname/main" instead of $pname.
+#
+# Returns a non-truth value if the profile could not be found.  $pname
+# cannot contain any dots.
 
-This can both be used as a static or as an instance method.  If used
-as an instance method, the @dirs argument may be omitted.
-
-Finds a profile called $pname in the search directories (see below)
-and returns the path to it.  If $pname does not contain a slash, then
-it will look for a profile called "$pname/main" instead of $pname.
-
-Returns a non-truth value if the profile could not be found.  $pname
-cannot contain any dots.
-
-Search Dirs: For the static call, only @dirs are considered.  For the
-instance method @dirs is augmented with the search dirs present when
-the object was created.
-
-=cut
-
-sub find_profile {
-    my ($self, $pname, @dirs) = @_;
+sub _find_profile {
+    my ($self, $pname) = @_;
     my $pfile;
     croak "\"$pname\" is not a valid profile name" if $pname =~ m/\./o;
-    # Allow @dirs to override the default path for this profile-search
-    if (ref $self) {
-        push @dirs, @{ $self->{'profile-path'} } if defined $self->{'profile-path'};
-    }
     # $vendor is short for $vendor/main
     $pname = "$pname/main" unless $pname =~ m,/,o;
     $pfile = "$pname.profile";
-    foreach my $path (@dirs){
+    foreach my $path (@{ $self->{'profile-path'} }){
         return "$path/$pfile" if -e "$path/$pfile";
     }
     return '';
@@ -317,7 +310,7 @@ sub _read_profile {
         my $parentf;
         croak "Invalid Extends field in $pfile"
             unless $parent && $parent !~ m/\./o;
-        $parentf = $self->find_profile($parent);
+        $parentf = $self->_find_profile ($parent);
         croak "Cannot find $parent, which $pname extends"
             unless $parentf;
         $self->_read_profile($parentf);
@@ -517,6 +510,35 @@ sub _load_checks {
         $self->_load_check($profile, $desc);
     }
     close $dirfd;
+}
+
+sub _default_inc_path {
+    my ($root) = @_;
+    my @path = ();
+    push @path, "$ENV{'HOME'}/.lintian/profiles"
+        if exists $ENV{'HOME'} and defined $ENV{'HOME'};
+    push @path, '/etc/lintian/profiles', "$root/profiles";
+    return @path;
+}
+
+sub _find_vendor_profile {
+    my ($self) = @_;
+    require Dpkg::Vendor;
+    my $vendor = Dpkg::Vendor::get_current_vendor ();
+    croak "Could not determine the current vendor"
+        unless $vendor;
+    my $orig = $vendor; # copy
+    while ($vendor) {
+        my $file = $self->_find_profile (lc $vendor);
+        return ($file, $vendor) if $file;
+        my $info = Dpkg::Vendor::get_vendor_info ($vendor);
+        # Cannot happen atm, but in case Dpkg::Vendor changes its internals
+        #  or our code changes
+        croak "Could not look up the parent vendor of $vendor"
+            unless $info;
+        $vendor = $info->{'Parent'};
+    }
+    croak "Could not find a profile for vendor $orig";
 }
 
 =back

@@ -53,10 +53,9 @@ use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Data;
 use Lintian::Lab;
 use Lintian::Profile;
-use Lintian::Internal::FrontendUtil;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
-my $profile = Lintian::Profile->new (find_default_profile ("$LINTIAN_ROOT/profiles"),
+my $profile = Lintian::Profile->new (undef,
                                      $LINTIAN_ROOT,
                                      ["$LINTIAN_ROOT/profiles"]);
 

@@ -27,7 +27,7 @@ use Dpkg::Vendor;
 use Lintian::CollScript;
 use Lintian::Util qw(check_path fail);
 
-our @EXPORT = qw(check_test_feature default_parallel find_default_profile load_collections);
+our @EXPORT = qw(check_test_feature default_parallel load_collections);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -38,30 +38,6 @@ sub check_test_feature{
         return 1 if($env =~ m/$feat/);
     }
     return 0;
-}
-
-# find_default_profile(@prof_path)
-#
-# locates the default profile - used if no profile was explicitly given.
-sub find_default_profile {
-    my (@prof_path) = @_;
-    my $vendor = Dpkg::Vendor::get_current_vendor();
-    fail "Could not determine the current vendor.\n"
-        unless $vendor;
-    my $orig = $vendor; # copy
-    while ($vendor) {
-        my $p;
-        $p = Lintian::Profile->find_profile(lc($vendor), @prof_path);
-        last if $p;
-        my $info = Dpkg::Vendor::get_vendor_info ($vendor);
-        # Cannot happen atm, but in case Dpkg::Vendor changes its internals
-        #  or our code changes
-        fail "Could not look up the parent vendor of $vendor.\n"
-            unless $info;
-        $vendor = $info->{'Parent'};
-    }
-    fail("Could not find a profile for vendor $orig") unless $vendor;
-    return lc($vendor);
 }
 
 # load_collections ($visitor, $dirname)
