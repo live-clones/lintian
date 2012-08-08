@@ -146,6 +146,9 @@ sub new {
     $self->colors({%default_colors});
     $self->issuedtags({});
 
+    # Set defaults to avoid "uninitialized" warnings
+    $self->verbosity_level (0);
+    $self->color ('never');
     return $self;
 }
 
