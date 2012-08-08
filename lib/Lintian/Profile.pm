@@ -509,7 +509,6 @@ sub _load_check {
 }
 
 sub _load_checks {
-    # NB: testset/runtests uses this directly.
     my ($self, $profile) = @_;
     my $root = $self->root;
     opendir my $dirfd, "$root/checks" or croak "opendir $root/checks: $!";

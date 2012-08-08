@@ -113,7 +113,6 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Profile;
 use Lintian::Util qw(fail);
 
 # --- Set the ways to call lintian and dpkg-buildpackage
@@ -123,8 +122,7 @@ my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
     . ' -INEVER_MATCH_ANYTHING';
 my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
 
-my $testok = 0;
-my %tags;
+my $testok = 1;
 
 # --- Display output immediately
 $| = 1;
@@ -133,26 +131,6 @@ $| = 1;
 
 -d $rundir
     or fail("test directory $rundir does not exist\n");
-
-$testok = 1;
-
-my $profile = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
-                                     ["$ENV{'LINTIAN_ROOT'}/profiles"]);
-
-# force all checks to be loaded - not the best solution
-# - At the time of writing it is not needed for 'debian/main', but
-#   that may change...
-$profile->_load_checks();
-
-for my $tag ($profile->tags (1)){
-    my $ti = $profile->get_tag ($tag, 1);
-    my $code = $ti->code;
-    $code = 'X' if $ti->experimental;
-    $tags{$tag}{'desc_file'} = $ti->script .'.desc';
-    $tags{$tag}{'desc_type'} = $code;
-}
-
-undef $profile; # Don't need it any more.
 
 # ok, I can make a static lab, now let's test the package checks
 # in temporary labs
@@ -227,12 +205,10 @@ for (@tests) {
     open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
     while (<TAGS>) {
         next if m/^N: /;
-        if (not /^(.): (\S+)(?: (?:source|udeb|changes))?: (\S+)/) {
+        if (not /^.: \S+(?: (?:source|udeb|changes))?: \S+/) {
             print "E: Invalid line:\n$_";
             next;
         }
-        $tags{$3}{'tested_type'} = $1;
-        $tags{$3}{'tested_package'} = $2;
     }
     close TAGS;
 }
@@ -243,30 +219,6 @@ if (!$tests_run) {
     } else {
         print "E: No tests run, did you specify a valid testset directory?\n";
     }
-}
-
-print "Checking whether all tags are tested and tags have description ... \n";
-$testok = 1;
-for (keys %tags) {
-    my $values = $tags{$_};
-    if (not defined $values->{'desc_type'}) {
-        print "E: tag-has-no-description $_ in $values->{'tested_package'}\n";
-        $testok = 0;
-    } elsif (not defined $values->{'tested_type'}) {
-        print "I: tag-is-not-tested $_ in $values->{'desc_file'}\n"
-            if $verbose;
-    } elsif ($values->{'desc_type'} ne $values->{'tested_type'}) {
-        print "E: tag-has-inconsistent-type $_ $values->{'tested_type'} vs ".
-            "$values->{'desc_type'}\n";
-        $testok = 0;
-    }
-}
-
-if ($testok) {
-    print "done.\n";
-} else {
-    print "FAILED\n";
-    exit 1 unless $run_all_tests;
 }
 
 # --------------
