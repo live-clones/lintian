@@ -55,6 +55,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/md5sums:
     + [NT] Use L::Collect's conffile API instead of accessing the
       "conffiles" control file directly.
+  * checks/po-debconf:
+    + [NT] Fix dirhandle leak.
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
     + [NT] Fix false positive "executable-not-elf-or-script" when
@@ -123,6 +125,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * lib/Lintian/Path.pm:
     + [NT] Always resolve hardlinks relative to the package
       root.
+  * lib/Lintian/Profile.pm:
+    + [NT] Use "closedir" rather than "close" to close a dir
+      handle.
   * lib/Lintian/Tag/Info.pm:
     + [NT] Fix poor error message due to the wrong variable
       being unused.  Thanks to Christoph Biedl for the report

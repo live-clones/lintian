@@ -160,6 +160,7 @@ while (defined(my $file=readdir(DEBIAN))) {
         $full_translation = 1;
     }
 }
+closedir DEBIAN;
 
 tag 'no-complete-debconf-translation' if !$full_translation;
 

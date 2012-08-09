@@ -509,7 +509,7 @@ sub _load_checks {
         next unless $desc =~ s/\.desc$//o;
         $self->_load_check($profile, $desc);
     }
-    close $dirfd;
+    closedir $dirfd;
 }
 
 sub _default_inc_path {
