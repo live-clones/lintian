@@ -1,5 +1,7 @@
 lintian (2.5.10.2) UNRELEASED; urgency=low
 
+  * checks/po-debconf:
+    + [NT] Fix dirhandle leak.
   * checks/source-copyright{,.desc}:
     + [NT] Report the correct line number for the use of commas in
       the "Files" field in DEP-5 copyright files.  Thanks to Faheem
@@ -11,6 +13,10 @@ lintian (2.5.10.2) UNRELEASED; urgency=low
   * frontend/lintian:
     + [NT] Fix typo of identifier method, which causes Lintian to
       crash in case a "coll" cannot be started or it fails.
+
+  * lib/Lintian/Profile.pm:
+    + [NT] Use "closedir" rather than "close" to close a dir
+      handle.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 06 Sep 2012 09:55:09 +0200
 
