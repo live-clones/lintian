@@ -333,12 +333,6 @@ sub record_dont_check_part {
     $dont_check = "$_[1]";
 }
 
-
-# Process for -U|--unpack-info flag
-sub record_unpack_info {
-    push @unpack_info, "$_[1]";
-}
-
 # Record what type of data is specified
 # Options: -b|--binary, -s|--source, --udeb
 sub record_pkgmode {
@@ -495,7 +489,7 @@ my %opthash = (                 # ------------------ actions
                'no-override|o' => \$opt{'no-override'},
                'show-overrides' => \$opt{'show-overrides'},
                'color=s' => \$opt{'color'},
-               'unpack-info|U=s' => \&record_unpack_info,
+               'unpack-info|U=s' => \@unpack_info,
                'allow-root' => \$allow_root,
                'fail-on-warnings' => \$opt{'fail-on-warnings'},
                'keep-lab' => \$keep_lab,
