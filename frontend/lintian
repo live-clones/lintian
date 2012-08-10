@@ -124,7 +124,6 @@ my $LAB;
 my %keep_coll;
 my %collection_info;
 my %check_abbrev;
-my %unpack_infos;
 my %requested_unpack;
 
 # Timer handling (by default to nothing)
@@ -1015,86 +1014,23 @@ if($action eq 'remove'){
 # }}}
 
 # {{{ Load information about collector scripts
+
+# $map is just here to check that all the needed collections are present.
+my $map = Lintian::DepMap->new();
+my @scripts = sort $PROFILE->scripts;
+my $collmap = Lintian::DepMap::Properties->new();
+
 {
     my $load_coll = sub {
         my ($cs) = @_;
         my $coll = $cs->name;
         debug_msg(2, "Read collector description for $coll ...");
         $collection_info{$coll} = $cs;
+        $collmap->add ($cs->name, $cs->needs_info, $cs);
+        $map->addp ('coll-' . $cs->name, 'coll-', $cs->needs_info);
     };
 
     load_collections ($load_coll, "$opt{'LINTIAN_ROOT'}/collection");
-}
-# }}}
-
-# {{{ determine which checks have been requested
-if ($action eq 'check') {
-
-    # determine which info is needed by the checks
-    for my $c (sort $PROFILE->scripts) {
-        my $cs = $PROFILE->get_script($c);
-        for my $i ($cs->needs_info) {
-            $unpack_infos{$i} = 1;
-            $requested_unpack{$i} = 1;
-        }
-    }
-}
-
-# }}}
-
-# {{{ determine which info is needed by the collection scripts
-if ($action eq 'unpack') {
-    # With --unpack we want all of it
-    for my $c (keys %collection_info) {
-        $unpack_infos{$c} = 1;
-        $requested_unpack{$c} = 1;
-    }
-} else {
-    my @needed = keys %unpack_infos;
-    my %added = ();
-    unless ($opt{'no-override'}) {
-        push @needed, 'override-file';
-        $requested_unpack{'override-file'} = 1;
-    }
-    while ( my $c = pop @needed ) {
-        next if $added{$c};
-        $added{$c} = 1;
-        $unpack_infos{$c} = 1;
-        push @needed, $collection_info{$c}->needs_info;
-    }
-}
-
-if (@unpack_info) {
-    # Add collections specifically requested by the user (--unpack-info)
-    for my $i (map { split m/,/ } @unpack_info) {
-        unless ($collection_info{$i}) {
-            fail("unknown info specified: $i");
-        }
-        $unpack_infos{$i} = 1;
-        $keep_coll{$i} = 1;
-    }
-}
-
-
-# }}}
-
-# {{{ Create the dependency tree and populate it with checks and collections
-
-# All required checks and collections have been calculated at this point.
-# We are just adding this information to a map now that will generate the
-# execution order.
-#
-# $map is just here to check that all the needed collections are present.
-my $map = Lintian::DepMap->new();
-my @scripts = sort $PROFILE->scripts;
-my $collmap = Lintian::DepMap::Properties->new();
-
-for my $c (keys %unpack_infos) {
-    # Add the collections with their dependency information
-    $map->add('coll-' . $c);
-    $collmap->add($c, $collection_info{$c});
-    $map->addp('coll-' . $c, 'coll-', $collection_info{$c}->needs_info);
-    $collmap->add($c, $collection_info{$c}->needs_info);
 }
 
 for my $c (@scripts) {
@@ -1113,12 +1049,48 @@ undef $map;
 
 # }}}
 
+# {{{ determine which info is needed by the collection scripts
+if ($action eq 'check') {
+
+    # determine which info is needed by the checks
+    for my $c (@scripts) {
+        my $cs = $PROFILE->get_script($c);
+        for my $i ($cs->needs_info) {
+            $requested_unpack{$i} = 1;
+        }
+    }
+    # For overrides we need "overrride-file" as well
+    unless ($opt{'no-override'}) {
+        $requested_unpack{'override-file'} = 1;
+    }
+
+} else {
+    # With --unpack we want all of it
+    for my $c (keys %collection_info) {
+        $requested_unpack{$c} = 1;
+    }
+}
+
+if (@unpack_info) {
+    # Add collections specifically requested by the user (--unpack-info)
+    for my $i (map { split m/,/ } @unpack_info) {
+        unless ($collection_info{$i}) {
+            fail("unknown info specified: $i");
+        }
+        $requested_unpack{$i} = 1;
+        $keep_coll{$i} = 1;
+    }
+}
+
+
+# }}}
+
 # {{{ Okay, now really processing the packages in one huge loop
 $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
 
 debug_msg(1,
           "Selected action: $action",
-          sprintf('Requested data to collect: %s', join(',',sort keys %unpack_infos)),
+          sprintf('Requested data to collect: %s', join(',',sort keys %requested_unpack)),
           sprintf('Selected checks: %s', join(',',sort $PROFILE->scripts)),
           "Parallization limit: $opt{'jobs'}",
     );
