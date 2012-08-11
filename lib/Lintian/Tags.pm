@@ -434,9 +434,9 @@ sub profile {
 
 =over 4
 
-=item file_start(FILE, PACKAGE, VERSION, ARCH, TYPE)
+=item file_start(PROC)
 
-Adds a new file with the given metadata, initializes the data structures
+Adds a new file from a processable, initializes the data structures
 used for statistics and overrides, and makes it the default file for which
 tags will be issued.  Also call Lintian::Output::print_end_pkg() to end
 the previous file, if any, and Lintian::Output::print_start_pkg() to start
@@ -448,16 +448,18 @@ earlier.
 =cut
 
 sub file_start {
-    my ($self, $file, $pkg, $version, $arch, $type) = @_;
+    my ($self, $proc) = @_;
+    my $file = $proc->pkg_path;
     if (exists $self->{info}{$file}) {
         die "duplicate of file $file added to Lintian::Tags object";
     }
     $self->{info}{$file} = {
         file              => $file,
-        package           => $pkg,
-        version           => $version,
-        arch              => $arch,
-        type              => $type,
+        package           => $proc->pkg_name,
+        version           => $proc->pkg_version,
+        arch              => $proc->pkg_arch,
+        type              => $proc->pkg_type,
+        processable       => $proc,
         overrides         => {},
         'overrides-data'  => {},
     };
@@ -617,9 +619,9 @@ sub file_end {
 
 =over 4
 
-=item overrides(FILE)
+=item overrides(PROC)
 
-Returns a reference to the overrides hash for the given file.  The keys of
+Returns a reference to the overrides hash for the given processable.  The keys of
 this hash are the tags for which are overrides.  The value for each key is
 another hash, whose keys are the extra data matched by that override and
 whose values are the counts of tags that matched that override.  Overrides
@@ -635,17 +637,17 @@ tag some-tag, regardless of what extra data was associated with it.
 =cut
 
 sub overrides {
-    my ($self, $file) = @_;
-    if ($self->{info}{$file}) {
-        return $self->{info}{$file}{overrides};
+    my ($self, $proc) = @_;
+    if ($proc and $self->{info}{$proc->pkg_path}) {
+        return $self->{info}{$proc->pkg_path}{overrides};
     } else {
         return;
     }
 }
 
-=item statistics([FILE])
+=item statistics([PROC])
 
-Returns a reference to the statistics hash for the given file or, if FILE
+Returns a reference to the statistics hash for the given proccessable or, if PROC
 is omitted, a reference to the full statistics hash for all files.  In the
 latter case, the returned hash reference has as keys the file names and as
 values the per-file statistics.
@@ -660,8 +662,8 @@ regular counts).
 =cut
 
 sub statistics {
-    my ($self, $file) = @_;
-    return $self->{statistics}{$file} if $file;
+    my ($self, $proc) = @_;
+    return $self->{statistics}{$proc->pkg_path} if $proc;
     return $self->{statistics};
 }
 

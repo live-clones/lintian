@@ -978,10 +978,7 @@ if($action eq 'remove'){
     foreach my $group ($pool->get_groups()){
         foreach my $proc ($group->get_processables()){
             my $pkg_name = $proc->pkg_name();
-            my $pkg_ver  = $proc->pkg_version();
             my $pkg_type = $proc->pkg_type();
-            my $pkg_path = $proc->pkg_path();
-            my $pkg_arch = $proc->pkg_arch();
             my $lpkg = _get_lpkg ($proc);
 
             if (!defined $lpkg){
@@ -991,8 +988,7 @@ if($action eq 'remove'){
                 $exit_code = 2;
                 next;
             }
-            $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
-                              $pkg_arch, $pkg_type);
+            $TAGS->file_start ($lpkg);
             debug_msg(1, 'Removing package in lab ...');
             unless ($lpkg->remove){
                 warning("cannot remove entry for $pkg_name: $!");
@@ -1189,10 +1185,10 @@ sub auto_clean_package {
 }
 
 sub post_pkg_process_overrides{
-    my ($pkg_path) = @_;
+    my ($lpkg) = @_;
     # report unused overrides
     if (not $opt{'no-override'}) {
-        my $overrides = $TAGS->overrides($pkg_path);
+        my $overrides = $TAGS->overrides ($lpkg);
 
         for my $tag (sort keys %$overrides) {
             next if $TAGS->suppressed($tag);
@@ -1208,7 +1204,7 @@ sub post_pkg_process_overrides{
 
     # Report override statistics.
     if (not $opt{'no-override'} and not $opt{'show-overrides'}) {
-        my $stats = $TAGS->statistics($pkg_path);
+        my $stats = $TAGS->statistics ($lpkg);
         my $errors = $stats->{overrides}{types}{E} || 0;
         my $warnings = $stats->{overrides}{types}{W} || 0;
         my $info = $stats->{overrides}{types}{I} || 0;
@@ -1359,14 +1355,11 @@ sub process_group {
   PROC:
     foreach my $proc ($group->get_processables()){
         my $pkg_name = $proc->pkg_name();
-        my $pkg_ver  = $proc->pkg_version();
         my $pkg_type = $proc->pkg_type();
-        my $pkg_path = $proc->pkg_path();
-        my $pkg_arch = $proc->pkg_arch();
         my $lpkg = $proc->lab_pkg();
         my $base = $lpkg->base_dir();
 
-        $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);
+        $TAGS->file_start ($lpkg);
 
         debug_msg(1, "Base directory in lab: $base");
 
@@ -1403,14 +1396,14 @@ sub process_group {
         }
 
         unless ($exit_code) {
-            my $stats = $TAGS->statistics($pkg_path);
+            my $stats = $TAGS->statistics ($lpkg);
             if ($stats->{types}{E}) {
                 $exit_code = 1;
             } elsif ($opt{'fail-on-warnings'} && $stats->{types}{W}) {
                 $exit_code = 1;
             }
         }
-        post_pkg_process_overrides($pkg_path);
+        post_pkg_process_overrides ($lpkg);
     } # end foreach my $proc ($group->get_processable())
 
     if (!$keep_lab) {
