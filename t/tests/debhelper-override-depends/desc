@@ -1,5 +1,0 @@
-Testname: debhelper-override-depends
-Sequence: 6000
-Version: 1.0
-Description: Test dependency requirements for debhelper overrides
-Test-For: debhelper-overrides-need-versioned-build-depends

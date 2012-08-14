@@ -1,1 +1,0 @@
-W: debhelper-override-depends source: debhelper-overrides-need-versioned-build-depends (>= 7.0.50~)

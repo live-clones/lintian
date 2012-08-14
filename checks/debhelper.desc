@@ -199,21 +199,6 @@ Info: The given debhelper script was introduced in a later version of
  assumes a newer version should explicitly declare so for the sake of
  etch backports.
 
-Tag: debhelper-overrides-need-versioned-build-depends
-Severity: normal
-Certainty: certain
-Ref: dh(1)
-Info: The override targets facility in debhelper, involving debian/rules
- targets that begin with "override_dh_", was introduced in a later version
- of debhelper than the package Build-Depends on.  The package Build-Depends
- should be updated to require at least debhelper 7.0.50.  Giving the version
- followed by <tt>~</tt> is recommended so that backports will satisfy the
- dependency.
- .
- lenny was released with debhelper version 7.0.15, so every package that
- assumes a newer version should explicitly declare so for the sake of lenny
- backports.
-
 Tag: debhelper-maintscript-needs-versioned-build-depends
 Severity: normal
 Certainty: certain

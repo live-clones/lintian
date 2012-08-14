@@ -31,7 +31,7 @@ binary-indep: install-stamp
 	dh_icons
 	dh_installifupdown
 	dh_lintian
-	dh_bugfiles
+	-dh_ucf
 	dh binary-indep --remaining
 
 .PHONY: binary binary-arch binary-indep build clean install
