@@ -110,7 +110,7 @@ my @pearmodules = (
 # and the packages providing them
 my @phplibraries = (
     [ qr,(?i)adodb\.inc\.php$, => qr'libphp-adodb' ],
-    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => qr'smarty' ],
+    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => qr'smarty3?' ],
     [ qr,(?i)class\.phpmailer(\.(php|inc))+$, => qr'libphp-phpmailer' ],
     [ qr,(?i)phpsysinfo\.dtd$, => qr'phpsysinfo' ],
     [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => qr'phpsysinfo' ],

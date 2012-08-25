@@ -39,6 +39,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Retire no-source-field since Lintian cannot emit it any
       more due to dpkg-source refusing to extract such source
       packages.
+  * checks/files:
+    + [RG] Recognise smarty3 as smarty itself.
   * checks/infofiles:
     + [NT] Use L::Util's gzip decompressor rather than zcat.
   * checks/init.d{,.desc}:
