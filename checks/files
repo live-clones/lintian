@@ -109,32 +109,32 @@ my @pearmodules = (
 # A list of known packaged php (!PEAR) libraries
 # and the packages providing them
 my @phplibraries = (
-    [ qr,(?i)adodb\.inc\.php$, => 'libphp-adodb' ],
-    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => 'smarty' ],
-    [ qr,(?i)class\.phpmailer(\.(php|inc))+$, => 'libphp-phpmailer' ],
-    [ qr,(?i)phpsysinfo\.dtd$, => 'phpsysinfo' ],
-    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => 'phpsysinfo' ],
-    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => 'php-openid' ],
-    [ qr,(?i)Snoopy\.class\.(php|inc)$, => 'libphp-snoopy' ],
-    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
-    [ qr,(?i)geshi\.php$, => 'php-geshi' ],
-    [ qr,(?i)(class[.-])?pclzip\.(inc|lib)?\.php$, => 'libphp-pclzip' ],
-    [ qr,(?i).*layersmenu.*/(lib/)?PHPLIB\.php$, => 'libphp-phplayersmenu' ],
-    [ qr,(?i)phpSniff\.(class|core)\.php$, => 'libphp-phpsniff' ],
-    [ qr,(?i)(class\.)?jabber\.php$, => 'libphp-jabber' ],
-    [ qr,(?i)(class[\.-])?simplepie(\.(php|inc))+$, => 'libphp-simplepie' ],
-    [ qr,(?i)jpgraph\.php$, => 'libphp-jpgraph' ],
-    [ qr,(?i)fpdf\.php$, => 'php-fpdf' ],
-    [ qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => 'php-getid3' ],
-    [ qr,(?i)streams\.php$, => 'php-gettext' ],
-    [ qr,(?i)rss_parse\.(php|inc)$, => 'libphp-magpierss' ],
-    [ qr,(?i)unit_tester\.php$, => 'php-simpletest' ],
-    [ qr,(?i)Sparkline\.php$, => 'libsparkline-php' ],
-    [ qr,(?i)(?:class\.)?nusoap\.(?:php|inc)$, => 'libnusoap-php' ],
-    [ qr,(?i)HTMLPurifier\.php$, => 'php-htmlpurifier' ],
+    [ qr,(?i)adodb\.inc\.php$, => qr'libphp-adodb' ],
+    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => qr'smarty' ],
+    [ qr,(?i)class\.phpmailer(\.(php|inc))+$, => qr'libphp-phpmailer' ],
+    [ qr,(?i)phpsysinfo\.dtd$, => qr'phpsysinfo' ],
+    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => qr'phpsysinfo' ],
+    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => qr'php-openid' ],
+    [ qr,(?i)Snoopy\.class\.(php|inc)$, => qr'libphp-snoopy' ],
+    [ qr,(?i)markdown\.php$, => qr'libmarkdown-php' ],
+    [ qr,(?i)geshi\.php$, => qr'php-geshi' ],
+    [ qr,(?i)(class[.-])?pclzip\.(inc|lib)?\.php$, => qr'libphp-pclzip' ],
+    [ qr,(?i).*layersmenu.*/(lib/)?PHPLIB\.php$, => qr'libphp-phplayersmenu' ],
+    [ qr,(?i)phpSniff\.(class|core)\.php$, => qr'libphp-phpsniff' ],
+    [ qr,(?i)(class\.)?jabber\.php$, => qr'libphp-jabber' ],
+    [ qr,(?i)(class[\.-])?simplepie(\.(php|inc))+$, => qr'libphp-simplepie' ],
+    [ qr,(?i)jpgraph\.php$, => qr'libphp-jpgraph' ],
+    [ qr,(?i)fpdf\.php$, => qr'php-fpdf' ],
+    [ qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => qr'php-getid3' ],
+    [ qr,(?i)streams\.php$, => qr'php-gettext' ],
+    [ qr,(?i)rss_parse\.(php|inc)$, => qr'libphp-magpierss' ],
+    [ qr,(?i)unit_tester\.php$, => qr'php-simpletest' ],
+    [ qr,(?i)Sparkline\.php$, => qr'libsparkline-php' ],
+    [ qr,(?i)(?:class\.)?nusoap\.(?:php|inc)$, => qr'libnusoap-php' ],
+    [ qr,(?i)HTMLPurifier\.php$, => qr'php-htmlpurifier' ],
 # not yet available in unstable:,
-#    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
-#    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
+#    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => qr'libphp-ixr' ],
+#    [ qr,(?i)(class\.)?kses\.php$, => qr'libphp-kses' ],
 );
 
 # A list of known non-free flash executables
@@ -1021,7 +1021,7 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- embedded php libraries
         foreach my $phplibrary (@phplibraries) {
-            if ($file =~ m,/$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
+            if ($file =~ m,/$phplibrary->[0], and $pkg !~ m,^$phplibrary->[1]$,) {
                 tag 'embedded-php-library', $file;
             }
         }
