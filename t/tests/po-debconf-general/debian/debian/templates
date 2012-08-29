@@ -1,7 +1,7 @@
 Template: po-debconf-general/test
 Type: string
 _Default: foo
-_Description: This is a string question used for testing:
+Description: This is a string question used for testing:
 
 Template: po-debconf-general/test-2
 Type: string

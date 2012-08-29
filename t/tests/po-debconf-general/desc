@@ -10,4 +10,5 @@ Test-For:
  no-debconf-config
  stray-translated-debconf-templates
  translated-default-field
+ untranslatable-debconf-templates
  unused-debconf-template

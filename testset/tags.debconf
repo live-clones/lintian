@@ -1,5 +1,7 @@
 E: debconf source: build-depends-on-obsolete-package build-depends: dpatch
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
+E: debconf source: untranslatable-debconf-templates debconf-test.templates: 47
+E: debconf source: untranslatable-debconf-templates debconf-test.templates: 58
 E: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test-noscripts: no-debconf-config
 E: debconf-test-postinst: copyright-contains-dh_make-todo-boilerplate

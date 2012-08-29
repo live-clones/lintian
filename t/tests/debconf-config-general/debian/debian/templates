@@ -4,12 +4,12 @@ _Description: Useless note
 
 Template: debconf/note-abuse
 Type: note
-Description: This is a note abuse
+_Description: This is a note abuse
 
 Template: debconf/unknown-priority
 Type: error
-Description: Invoked with unknown debconf priority
+_Description: Invoked with unknown debconf priority
 
 Template: debconf/deprecated-default
 Type: boolean
-Description: Is this use deprecated?
+_Description: Is this use deprecated?

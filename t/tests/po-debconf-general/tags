@@ -1,3 +1,4 @@
+E: po-debconf-general source: untranslatable-debconf-templates templates: 4
 E: po-debconf-general: no-debconf-config
 I: po-debconf-general source: no-complete-debconf-translation
 I: po-debconf-general: unused-debconf-template po-debconf-general/test

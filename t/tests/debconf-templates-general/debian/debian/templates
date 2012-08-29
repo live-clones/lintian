@@ -5,95 +5,95 @@ _Description: Useless note
 Template: debconf/unsplit-choices
 Type: select
 _Choices: left, right, up, down
-Description: Pick the odd one out
+_Description: Pick the odd one out
 
 Type: text
-Description: Missing template field.
+_Description: Missing template field.
 
 Template: debconf-malformed-template
 Type: boolean
-Description: Is this a bad template?
+_Description: Is this a bad template?
 
 Template: debconf/no-type
-Description: Missing type
+_Description: Missing type
 
 Template: debconf/unknown-type
 Type: lintian
-Description: Template with unknown type
+_Description: Template with unknown type
 
 Template: debconf/boolean-bogus-default
 Type: boolean
 Default: lintian
-Description: How do you like the default?
+_Description: How do you like the default?
  On a scale of "false" to "true".
 
 Template: debconf/select-boolean-choice
 Type: select
 Choices: yes, no
-Description: A boolean type would have been better
+_Description: A boolean type would have been better
 
 Template: debconf/select-empty-trans-choices
 Type: select
 Choices: sakana, sake
 Choices-Da:
-Description: Preference
+_Description: Preference
 
 Template: debconf/select-without-choices
 Type: select
-Description: Missing a Choices field
+_Description: Missing a Choices field
 
 Template: debconf/no-description
 Type: error
 
 Template: debconf/duplicate-long-desc
 Type: error
-Description: Duplicate long description
+_Description: Duplicate long description
  Duplicate long description
 
 Template: debconf/unknown-field
 Type: boolean
-Description: Is the field below unknown?
+_Description: Is the field below unknown?
 Unknown-field: yes, it is.
 
 Template: debconf/malformed-prompt
 Type: string
-Description: What is the name of this package checker:
+_Description: What is the name of this package checker:
 
 Template: debconf/imperative-select
 Type: select
 Choices: x,y
-Description: Select either x or y
+_Description: Select either x or y
 
 Template: debconf/malformed-question
 Type: boolean
-Description: Lintian is the best!
+_Description: Lintian is the best!
 
 Template: debconf/question-in-extended
 Type: boolean
-Description: Do you like sakana?
+_Description: Do you like sakana?
  Or do you prefer sake?
 
 Template: debconf/malformed-note-title
 Type: note
-Description: Aren't you tired of all these debconf prompts?
+_Description: Aren't you tired of all these debconf prompts?
 
 Template: debconf/too-long-short-desc
 Type: boolean
-Description: This template has a very long short description, is that what you call an oxymoron?
+_Description: This template has a very long short description, is that what you call an oxymoron?
 
 Template: debconf/first-person
 Type: select
 Choices: lintian, no-lintian
-Description: I think Lintian is the best
+_Description: I think Lintian is the best
 
 Template: debconf/assumption
 Type: boolean
-Description: Do you like Lintian?
+_Description: Do you like Lintian?
  Pick "yes" if you do.
 
 Template: debconf/5-green-bottles-on-the-wall
 Type: string
-Description: Name the title of this song:
+_Description: Name the title of this song:
  Five green bottles sitting on the wall,
  Five green bottles sitting on the wall,
  And if one green bottle should accidentally fall,

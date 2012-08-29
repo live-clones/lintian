@@ -4,6 +4,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + Added:
       - dm-upload-allowed-is-obsolete
       - field-name-typo-in-dep5-copyright
+      - untranslatable-debconf-templates
     + Removed:
       - apparently-truncated-elf-binary
       - data.tar.xz-member-without-dpkg-pre-depends
@@ -79,6 +80,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/md5sums:
     + [NT] Use L::Collect's conffile API instead of accessing the
       "conffiles" control file directly.
+  * checks/po-debconf{,.desc}:
+    + [NT] Check for untranslatable templates that should be
+      translatable.  Thanks to David Prévot for the report and the
+      patch.  (Closes: #686179)
   * checks/shared-libs.desc:
     + [NT] Clearify the description of dev-pkg-without-shlib-symlink
       to mention that the dev symlink is always expected in /usr.

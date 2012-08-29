@@ -44,6 +44,13 @@ for my $file (readdir(DEB)) {
     if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
         if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
             push (@lang_templates, $file);
+            open(PO, '<', "$debfiles/$file")
+                or fail("Can't open debfiles/$file file.");
+            while (<PO>) {
+                tag 'untranslatable-debconf-templates', "$file: $."
+                    if (m/^Description: (.+)/i and $1 !~/for internal use/);
+            }
+            close PO;
         } else {
             open(PO, '<', "$debfiles/$file")
                 or fail("Can't open debfiles/$file file.");
@@ -51,6 +58,8 @@ for my $file (readdir(DEB)) {
             while (<PO>) {
                 tag 'translated-default-field', "$file: $."
                     if (m/^_Default(Choice)?: [^\[]*$/);
+                tag 'untranslatable-debconf-templates', "$file: $."
+                    if (m/^Description: (.+)/i and $1 !~/for internal use/);
                 if (/^Template: (\S+)/i) {
                     my $template = $1;
                     next if $template =~ m,^shared/packages-(wordlist|ispell)$,;
