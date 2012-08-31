@@ -102,9 +102,12 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * collection/deb-format.desc:
     + [NT] Remove unneeded changelog-file from "Needs-Info".
-  * collection/objdump-info{-helper,.desc}:
+  * collection/objdump-info{,-helper,.desc}:
     + [NT] Change the output format for the collection and
       bump the version of the collection accordingly.
+    + [NT] Apply patch from Peter Pentchev to ensure set{u,g}id
+      ELF binaries are properly processed, even when Lintian is
+      run as root.  (Closes: #686352)
 
   * data/fields/archive-sections:
     + [NT] Add new "tasks" section.
