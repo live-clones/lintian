@@ -147,6 +147,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Fix poor error message due to the wrong variable
       being unused.  Thanks to Christoph Biedl for the report
       (Closes: #682941)
+  * lib/Lintian/Tags.pm:
+    + [NT] Be explicit about the reason when rejecting an
+      override.  Thanks to Yves-Alexis Perez for the report.
+      (Closes: #673073)
   * lib/Lintian/Unpacker.pm:
     + [NT] New file.
 

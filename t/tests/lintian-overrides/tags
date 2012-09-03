@@ -1,2 +1,2 @@
-E: lintian-overrides: malformed-override lintian-override:
+E: lintian-overrides: malformed-override Cannot parse line 1: lintian-override:
 I: lintian-overrides: unused-override copyright-contains-dh_make-todo-boilerplate foo-bar-extra

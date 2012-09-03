@@ -25,7 +25,7 @@ use warnings;
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
 use Lintian::Tag::Override;
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail $PKGNAME_REGEX);
 
 use base 'Exporter';
 BEGIN {
@@ -523,20 +523,30 @@ sub file_overrides {
         my $override = $_;
         # The override looks like the following:
         # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
-        if ($override =~ m/^(?:                    # start optional part
-                  (?:\Q$info->{package}\E)?        # Optionally starts with package name
-                  (?: \s*+ \[([^\]]+?)\])?         # optionally followed by an [arch-list] (like in B-D) -> $1
-                  (?: \s*+ \Q$info->{type}\E)?     # optionally followed by the type
-                :\s++)?                            # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x){ # <tag-name> [extra] -> $2
+        if ($override =~ m/^(?:                     # start optional part
+                  ($PKGNAME_REGEX)?                 # optionally starts with package name -> $1
+                  (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
+                  (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
+                :\s++)?                             # end optional part
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/ox){ # <tag-name> [extra] -> $4
             # Valid - so far at least
-            my ($archlist, $tagdata) = ($1, $2);
+            my ($opkg_name, $archlist, $opkg_type, $tagdata) = ($1, $2, $3, $4);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
             my $tagover;
             my $com;
             my $data;
+            if ($opkg_name and $opkg_name ne $info->{package}) {
+                tag 'malformed-override',
+                    "Override of $tag for $opkg_name (expecting $info->{package}) at line $.";
+                next;
+            }
+            if ($opkg_type and $opkg_type ne $info->{type}) {
+                tag 'malformed-override',
+                    "Override of $tag for package type $opkg_type (expecting $info->{type}) at line $.";
+                next;
+            }
             if ($info->{arch} eq 'all' && $archlist) {
-                tag 'malformed-override', $_, 'Architecture list for arch:all package';
+                tag 'malformed-override', "Architecture list for arch:all package at line $. (for tag $tag)";
                 next;
             }
             if ($archlist) {
@@ -551,13 +561,13 @@ sub file_overrides {
                     } elsif (is_arch ($a)) {
                         $found = 1 if $a eq $info->{arch};
                     } else {
-                        tag 'malformed-override', $_, "Unknown architecture \"$a\"";
+                        tag 'malformed-override', "Unknown architecture \"$a\" at line $. (for tag $tag)";
                         next OVERRIDE;
                     }
                 }
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
-                    tag 'malformed-override', $_, 'Inconsistent architecture negation';
+                    tag 'malformed-override', "Inconsistent architecture negation at line $. (for tag $tag)";
                     next;
                 }
                 # missing wildcard checks and sanity checking archs $arch
@@ -591,7 +601,7 @@ sub file_overrides {
             $info->{overrides}{$tag}{$extra} = 0;
             $last_over = $tagover;
         } else {
-            tag('malformed-override', $_);
+            tag 'malformed-override', "Cannot parse line $.: $_";
         }
     }
     close $file;
