@@ -1094,7 +1094,7 @@ my %overrides;
 
 foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
-    unpack_group($group);
+    unpack_group ($gname, $group);
     if ($action eq 'check'){
         process_group($group);
         clear_group_cache($group);
@@ -1243,7 +1243,7 @@ sub prep_unpack_error {
 }
 
 sub unpack_group {
-    my ($group) = @_;
+    my ($gname, $group) = @_;
     my @lpkgs = ();
     my $errhandler = sub { prep_unpack_error ($group, @_) };
 
@@ -1280,6 +1280,8 @@ sub unpack_group {
 
     # Stop here if there is nothing list for us to do
     return unless $unpacker->prepare_tasks ($errhandler, @lpkgs);
+
+    v_msg ("Unpacking packages in group $gname");
 
     my %timers = ();
     my %hooks = (

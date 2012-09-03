@@ -118,6 +118,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Refactor unpackaging into Lintian::Unpacker.
     + [NT] Make parameter for --jobs optional.  In its absence
       Lintian will not limit the number of parallel jobs.
+    + [JW,NT] During the unpack phase, emit the name of the
+      group currently being unpacked when --verbose is given.
+      (Closes: #677890)
 
   * lib/Lintian/Architecture.pm:
     + [NT] Properly handle cases like "linux-amd64" being an
