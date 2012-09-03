@@ -228,7 +228,7 @@ sub _add_changes_file{
 sub _get_group_id{
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_src;
-    $id .= '_' . $pkg->pkg_src_version;
+    $id .= '/' . $pkg->pkg_src_version;
     return $id;
 }
 
@@ -236,10 +236,7 @@ sub _get_group_id{
 # than _get_group_id even for src processables.
 sub _get_proc_id {
     my ($self, $pkg) = @_;
-    my $id = $pkg->pkg_name;
-    $id .= '_' . $pkg->pkg_version;
-    $id .= '_' . $pkg->pkg_arch;
-    return $id;
+    return $pkg->identifier;
 }
 
 =back
