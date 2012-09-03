@@ -1,3 +1,4 @@
+E: another-version: debian-changelog-file-missing
 E: another-version: debian-revision-should-not-be-zero 123.4-0
 E: another-version: new-essential-package
 E: another-version: no-copyright-file

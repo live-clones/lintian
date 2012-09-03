@@ -115,12 +115,6 @@ foreach ($info->sorted_index) {
     }
 }
 
-# ignore packages which don't have a /usr/share/doc/$pkg directory, since
-# the copyright check will complain about this
-if ($#doc_files < 0) {
-    return 0;
-}
-
 # Check a NEWS.Debian file if we have one.  Save the parsed version of the
 # flie for later checks against the changelog file.
 my $news;

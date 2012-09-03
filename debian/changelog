@@ -20,6 +20,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
       as Lintian uses readelf.
     + [JW,NT] Update the "extract SONAME" shell snippet to properly
       handle SONAMEs with uppercase letters.
+  * checks/changelog-file:
+    + [NT] Emit "missing changelog" for packages that are missing
+      their usr/share/doc/<pkg>/ dir and do not have a doc symlink.
+      Thanks to Faheem Mitha for the report.  (Closes: #683224)
   * checks/conffiles:
     + [NT] Remove leading slash on the filename when emitting
       file-in-etc-rc.d-marked-as-conffile.

@@ -5,6 +5,7 @@ E: generic-empty source: debian-rules-missing-required-target binary-arch
 E: generic-empty source: debian-rules-missing-required-target binary-indep
 E: generic-empty source: maintainer-address-missing a
 E: generic-empty source: no-standards-version-field
+E: generic-empty: changelog-file-missing-in-native-package
 E: generic-empty: maintainer-address-missing a
 E: generic-empty: no-copyright-file
 E: generic-empty: package-has-no-description
