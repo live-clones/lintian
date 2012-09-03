@@ -22,10 +22,9 @@ package Lintian::init_d;
 use strict;
 use warnings;
 
-use Lintian::Check qw($PKGNAME_REGEX);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail $PKGNAME_REGEX);
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (provides            => 1,

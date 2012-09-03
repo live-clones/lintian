@@ -30,10 +30,11 @@ use Dpkg::Version qw(version_check);
 
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
-use Lintian::Check qw(check_maintainer $PKGNAME_REGEX);
+use Lintian::Check qw(check_maintainer);
 use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
+use Lintian::Util qw($PKGNAME_REGEX);
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');

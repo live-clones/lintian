@@ -64,7 +64,8 @@ BEGIN {
                  perm2oct
                  check_path
                  clean_env
-                 resolve_pkg_path),
+                 resolve_pkg_path
+                 $PKGNAME_REGEX),
                  @{ $EXPORT_TAGS{constants} }
     );
 
@@ -172,6 +173,21 @@ syntax rules for whitespace in some cases.
 
 The file do not allow comments.  With this flag, any comment in the
 file is considered a syntax error.
+
+=back
+
+=head1 VARIABLES
+
+=over 4
+
+=item $PKGNAME_REGEX
+
+Regular expressions that matches valid package names.  The regression is
+not anchored and does not enforce any "boundry" characters.
+
+=cut
+
+our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/o;
 
 =back
 

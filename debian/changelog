@@ -290,8 +290,6 @@ lintian (2.5.9) unstable; urgency=low
       no packages are given and debian/changelog exists.  Thanks
       to Gilles Filippini for the suggestion.  (Closes: #676799)
 
-  * lib/Lintian/Check.pm:
-    + [NT] Add regex to match valid package names.
   * lib/Lintian/Collect/Package.pm:
     + [NT] sorted_index now returns a list rather than a list ref.
     + [NT] Represent files (from index) as Lintian::Path objects.
@@ -303,6 +301,8 @@ lintian (2.5.9) unstable; urgency=low
     + [NT] Gracefully handle the absence of $ENV{HOME}.
   * lib/Lintian/Path.pm:
     + [NT] New file.
+  * lib/Lintian/Util.pm:
+    + [NT] Add regex to match valid package names.
 
  -- Niels Thykier <niels@thykier.net>  Fri, 15 Jun 2012 21:29:03 +0200
 
