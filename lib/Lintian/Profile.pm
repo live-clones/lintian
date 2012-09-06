@@ -179,8 +179,7 @@ enabled.
 sub scripts {
     my ($self, $known) = @_;
     return keys %{ $self->{'check-scripts'} } if $known;
-    return grep { $self->{'enabled-checks'}->{$_} }
-               keys %{ $self->{'enabled-checks'} };
+    return keys %{ $self->{'enabled-checks'} };
 }
 
 =item $prof->is_overridable ($tag)
@@ -222,7 +221,7 @@ provides are enabled.
 
 sub get_script {
     my ($self, $script, $known) = @_;
-    return unless $known || $self->{'enabled-checks'}->{$script};
+    return unless $known || exists $self->{'enabled-checks'}->{$script};
     return $self->{'check-scripts'}->{$script};
 }
 
