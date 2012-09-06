@@ -1462,7 +1462,7 @@ sub unpack_group {
                             "skipping $action of $pkg_type package $pkg_name");
                     $exit_code = 2;
                     $group->remove_processable ($lpkg);
-                    delete $worklists{$proc->identifer};
+                    delete $worklists{$proc->identifier};
                     # Lets not start any more jobs for this processable
                     last;
                 }
@@ -1491,7 +1491,7 @@ sub unpack_group {
             $res = finished_coll ($key, $cmd, $jdata);
             if ($res < 0) {
                 $group->remove_processable ($lpkg);
-                delete $worklists{$lpkg->identifer};
+                delete $worklists{$lpkg->identifier};
                 next;
             }
             $newjobs += $res;

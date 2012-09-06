@@ -1,3 +1,11 @@
+lintian (2.5.10.2) UNRELEASED; urgency=low
+
+  * frontend/lintian:
+    + [NT] Fix typo of identifier method, which causes Lintian to
+      crash in case a "coll" cannot be started or it fails.
+
+ -- Niels Thykier <niels@thykier.net>  Thu, 06 Sep 2012 09:55:09 +0200
+
 lintian (2.5.10.1) unstable; urgency=low
 
   * checks/fields.desc:
