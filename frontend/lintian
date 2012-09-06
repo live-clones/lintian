@@ -626,6 +626,8 @@ require Lintian::Profile;
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 require Lintian::Unpacker;
+require Lintian::Util;
+import Lintian::Util qw(parse_boolean);
 
 if (defined $experimental_output_opts) {
     my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
@@ -707,11 +709,10 @@ if ($opt{'LINTIAN_CFG'}) {
                 }
                 $conf_opt{$var} = 1;
                 $found = 1;
-                if ($val =~ m/^y(?:es)?|true$/oi){
-                    $val = 1;
-                } elsif ($val =~ m/^no?|false$/oi){
-                    $val = 0;
-                }
+                # Translate boolean strings to "0" or "1"; ignore
+                # errors as not all values are (intended to be)
+                # booleans.
+                eval { $val = parse_boolean ($val); };
                 if (ref $ref eq 'SCALAR'){
                     # Check it was already set
                     next if defined $$ref;

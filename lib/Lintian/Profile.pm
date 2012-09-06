@@ -27,7 +27,7 @@ use warnings;
 use Carp qw(croak);
 
 use Lintian::CheckScript;
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Util qw(parse_boolean read_dpkg_control);
 
 =head1 NAME
 
@@ -39,7 +39,7 @@ Lintian::Profile - Profile parser for Lintian
  my $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'});
  # Load the debian profile using an explicit search path
  $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'},
-    ['/path/to/profiles', "$ENV{'LINTIAN_ROOT'}/profiles"])
+    ['/path/to/profiles', "$ENV{'LINTIAN_ROOT'}/profiles"]);
  # Load the "default" profile for the current vendor
  $profile = Lintian::Profile->new (undef, $ENV{'LINTIAN_ROOT'});
  foreach my $tag ($profile->tags) {
@@ -453,13 +453,12 @@ sub _check_duplicates{
 # error reporting.
 sub _parse_boolean {
     my ($self, $bool, $def, $pname, $sno) = @_;
+    my $val;
     return $def unless defined $bool;
-    $bool = lc $bool;
-    return 1 if $bool eq 'yes' || $bool eq 'true' ||
-        ($bool =~ m/^\d++$/o && $bool != 0);
-    return 0  if $bool eq 'no' || $bool eq 'false' ||
-        ($bool =~ m/^\d++$/o && $bool == 0);
-    croak "\"$bool\" is not a boolean value in $pname (section $sno)";
+    eval { $val = parse_boolean ($bool); };
+    croak "\"$bool\" is not a boolean value in $pname (section $sno)"
+        if $@;
+    return $val;
 }
 
 # $self->_split_comma_sep_field($data)

@@ -23,6 +23,8 @@ package Lintian::Util;
 use strict;
 use warnings;
 
+use Carp qw(croak);
+
 use base 'Exporter';
 
 use constant {
@@ -65,6 +67,7 @@ BEGIN {
                  check_path
                  clean_env
                  resolve_pkg_path
+                 parse_boolean
                  $PKGNAME_REGEX),
                  @{ $EXPORT_TAGS{constants} }
     );
@@ -938,6 +941,38 @@ sub resolve_pkg_path {
     }
     return '.' unless @cc;
     return join '/', @cc;
+}
+
+=item parse_boolean (STR)
+
+Attempt to parse STR as a boolean and return its value.
+If STR is not a valid/recognised boolean, the sub will
+invoke croak.
+
+The following values recognised (string checks are not
+case sensitive):
+
+=over 4
+
+=item The integer 0 is considered false
+
+=item Any non-zero integer is considered true
+
+=item "true", "y" and "yes" are considered true
+
+=item "false", "n" and "no" are considered false
+
+=back
+
+=cut
+
+sub parse_boolean {
+    my ($str) = @_;
+    return $str == 0 ? 0 : 1 if $str =~ m/^-?\d++$/o;
+    $str = lc $str;
+    return 1 if $str eq 'true' or $str =~ m/^y(?:es)?$/;
+    return 0 if $str eq 'false' or $str =~ m/^no?$/;
+    croak "\"$str\" is not a valid boolean value";
 }
 
 =back
