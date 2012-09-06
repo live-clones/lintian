@@ -37,6 +37,9 @@ Lintian::Profile - Profile parser for Lintian
 
  # Load the debian profile (if available)
  my $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'});
+ # Load the debian profile using an explicit search path
+ $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'},
+    ['/path/to/profiles', "$ENV{'LINTIAN_ROOT'}/profiles"])
  # Load the "default" profile for the current vendor
  $profile = Lintian::Profile->new (undef, $ENV{'LINTIAN_ROOT'});
  foreach my $tag ($profile->tags) {
@@ -46,7 +49,8 @@ Lintian::Profile - Profile parser for Lintian
 
 =head1 DESCRIPTION
 
-
+Lintian::Profile handles finding, parsing and implementation of
+Lintian Profiles as well as loading the relevant Lintian checks.
 
 =head1 CLASS METHODS
 
