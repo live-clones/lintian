@@ -52,19 +52,33 @@ and one changes package per set, but multiple binary packages
 
 =over 4
 
-=item Lintian::ProcessableGroup->new([$changes_file])
+=item Lintian::ProcessableGroup->new ([LAB[, CHANGES]])
 
-Creates a group and optionally add all processables from $changes_file.
+Creates a group and optionally add all processables from CHANGES.
+
+If the LAB parameter is given, all processables added to this group
+will bestored as a L<lab entry|Lintian::Lab::Entry> from LAB.
 
 =cut
 
 sub new {
-    my ($class, $changes) = @_;
-    my $self = {};
+    my ($class, $lab, $changes) = @_;
+    my $self = {
+        'lab' => $lab,
+    };
     bless $self, $class;
     $self->_init_group_from_changes($changes)
         if defined $changes;
     return $self;
+}
+
+# Map a processable to L::Lab::Entry if needed.
+sub _lab_proc {
+    my ($self, $proc) = @_;
+    return $proc unless $self->{'lab'};
+    return $proc if $proc->isa ('Lintian::Lab::Entry') and
+        not $proc->from_lab ($self->{'lab'});
+    return $self->{'lab'}->get_package ($proc);
 }
 
 # Internal initialization sub
@@ -155,10 +169,10 @@ sub add_processable{
 
     if ($pkg_type eq 'changes'){
         fail 'Cannot add another changes file' if (exists $self->{changes});
-        $self->{changes} = $processable;
+        $self->{changes} = $self->_lab_proc ($processable);
     } elsif ($pkg_type eq 'source'){
         fail 'Cannot add another source package' if (exists $self->{source});
-        $self->{source} = $processable;
+        $self->{source} = $self->_lab_proc ($processable);
     } else {
         my $phash;
         my $id = $processable->identifier;
@@ -171,7 +185,7 @@ sub add_processable{
         }
         # duplicate ?
         return 0 if (exists $phash->{$id});
-        $phash->{$id} = $processable;
+        $phash->{$id} = $self->_lab_proc ($processable);
     }
     $processable->group($self);
     return 1;

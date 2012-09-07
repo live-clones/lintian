@@ -51,15 +51,21 @@ Lintian::ProcessablePool -- Pool of processables
 
 =over 4
 
-=item Lintian::ProcessablePool->new
+=item Lintian::ProcessablePool->new ([LAB])
 
 Creates a new empty pool.
+
+If LAB is given, it is assumed to be a Lintian::Lab.  In this case,
+any processable added to this pool will be stored as a
+L<lab entry|Lintian::Lab::Entry> from LAB.
 
 =cut
 
 sub new {
-    my ($class) = @_;
-    my $self = {};
+    my ($class, $lab) = @_;
+    my $self = {
+        'lab' => $lab,
+    };
     foreach my $field (qw(binary changes groups source udeb)){
         $self->{$field} = {};
     }
@@ -101,8 +107,7 @@ sub add_proc {
     my $pkg_type = $proc->pkg_type;
     my $tmap = $self->{$pkg_type};
 
-
-   if ($proc->tainted) {
+    if ($proc->tainted) {
         warn (sprintf ("warning: tainted %1\$s package '%2\$s', skipping\n",
              $pkg_type, $proc->pkg_name));
         return 0;
@@ -121,7 +126,7 @@ sub add_proc {
         return $group->add_processable ($proc);
     } else {
         # Create a new group
-        $group = Lintian::ProcessableGroup->new;
+        $group = Lintian::ProcessableGroup->new ($self->{'lab'});
         $group->add_processable($proc);
         $self->{groups}->{$groupid} = $group;
     }
@@ -187,7 +192,7 @@ sub empty{
 
 sub _add_changes_file{
     my ($self, $pkg_path) = @_;
-    my $group = Lintian::ProcessableGroup->new($pkg_path);
+    my $group = Lintian::ProcessableGroup->new ($self->{'lab'}, $pkg_path);
     my $cproc = $group->get_changes_processable();
     my $gid = $self->_get_group_id($cproc);
     my $ogroup = $self->{groups}->{$gid};

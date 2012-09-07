@@ -66,6 +66,8 @@ use File::Spec;
 
 use Cwd();
 
+use Scalar::Util qw(refaddr);
+
 use Lintian::Lab;
 use Lintian::Util qw(delete_dir read_dpkg_control get_dsc_info);
 
@@ -141,6 +143,17 @@ Returns the base directory of this package inside the lab.
 =cut
 
 Lintian::Lab::Entry->mk_ro_accessors (qw(base_dir));
+
+=item from_lab (LAB)
+
+Returns a truth value if this entry is from LAB.
+
+=cut
+
+sub from_lab {
+    my ($self, $lab) = @_;
+    return refaddr $lab eq refaddr $self->{'lab'} ? 1 : 0;
+}
 
 =item lab_pkg
 
