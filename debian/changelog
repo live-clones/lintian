@@ -104,6 +104,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Update section list.  (Closes: #678650)
   * data/menu-format/add-categories:
     + [NT] New file.
+  * data/scripts/interpreters:
+    + [NT] Add nodejs as a known interpreter.  Thanks to
+      Marcelo Jorge Vieira for the report.
+      (Closes: #623265)
   * data/spelling/corrections:
     + [NT] Add new corrections.  Thanks to Justin B Rye.
       (Closes: #681527)

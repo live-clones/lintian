@@ -56,6 +56,7 @@ mksh           => /bin
 mscgen         => /usr/bin
 ngraph         => /usr/bin, ngraph-gtk
 nickle         => /usr/bin
+nodejs         => /usr/bin
 ocamlrun       => /usr/bin, ocaml-base-nox | ocaml-base | ocaml-nox | ocaml
 pagsh          => /usr/bin, openafs-client | heimdal-clients
 parrot         => /usr/bin
