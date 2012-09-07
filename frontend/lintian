@@ -608,9 +608,6 @@ unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
 require Lintian::Lab;
 
-require Lintian::Util;
-import Lintian::Util qw(fail read_dpkg_control);
-
 require Lintian::CollScript;
 require Lintian::DepMap;
 require Lintian::DepMap::Properties;
@@ -627,7 +624,7 @@ require Lintian::Tags;
 import Lintian::Tags qw(tag);
 require Lintian::Unpacker;
 require Lintian::Util;
-import Lintian::Util qw(parse_boolean);
+import Lintian::Util qw(fail parse_boolean read_dpkg_control);
 
 if (defined $experimental_output_opts) {
     my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
