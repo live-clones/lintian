@@ -912,7 +912,7 @@ v_msg ("Setting up lab in $opt{'LINTIAN_LAB'} ...")
 
 # {{{ Compile list of files to process
 
-$pool = Lintian::ProcessablePool->new;
+$pool = Lintian::ProcessablePool->new ($LAB);
 # process package/file arguments
 
 while (my $arg = shift) {
@@ -977,10 +977,9 @@ if ($pool->empty()) {
 if($action eq 'remove'){
     # Handle remove here - makes the unpack/check loop simpler.
     foreach my $group ($pool->get_groups()){
-        foreach my $proc ($group->get_processables()){
-            my $pkg_name = $proc->pkg_name();
-            my $pkg_type = $proc->pkg_type();
-            my $lpkg = _get_lpkg ($proc);
+        foreach my $lpkg ($group->get_processables()){
+            my $pkg_name = $lpkg->pkg_name();
+            my $pkg_type = $lpkg->pkg_type();
 
             if (!defined $lpkg){
                 my $err = '.';
@@ -1215,22 +1214,6 @@ sub post_pkg_process_overrides{
     }
 }
 
-sub _get_lpkg {
-    my ($proc) = @_;
-    my $lpkg;
-    # If $proc is an lab entry (i.e. we got it from the Lab already)
-    # just use it directly.
-    if ($proc->isa ('Lintian::Lab::Entry')) {
-        $lpkg = $proc;
-    } else {
-        # Else use the $proc to get the lab entry
-        eval{
-            $lpkg = $LAB->get_package($proc);
-        };
-    }
-    return $lpkg;
-}
-
 sub prep_unpack_error {
     my ($group, $lpkg) = @_;
     my $err = $!;
@@ -1248,12 +1231,11 @@ sub unpack_group {
     my @lpkgs = ();
     my $errhandler = sub { prep_unpack_error ($group, @_) };
 
-    foreach my $proc ($group->get_processables()){
-        my $pkg_name = $proc->pkg_name();
-        my $pkg_type = $proc->pkg_type();
-        my $pkg_ver  = $proc->pkg_version();
-        my $pkg_arch = $proc->pkg_arch();
-        my $lpkg = _get_lpkg ($proc);
+    foreach my $lpkg ($group->get_processables){
+        my $pkg_name = $lpkg->pkg_name;
+        my $pkg_type = $lpkg->pkg_type;
+        my $pkg_ver  = $lpkg->pkg_version;
+        my $pkg_arch = $lpkg->pkg_arch;
         my $base;
 
         if (!defined $lpkg) {
@@ -1261,7 +1243,7 @@ sub unpack_group {
             $err = ": $@" if defined $@;
             warning("skipping $action of $pkg_type package ${pkg_name}$err");
             $exit_code = 2;
-            $group->remove_processable($proc);
+            $group->remove_processable ($lpkg);
             next;
         }
 
@@ -1270,9 +1252,6 @@ sub unpack_group {
         # determine base directory
         $base = $lpkg->base_dir();
         debug_msg(1, "Unpacking $pkg_name $pkg_ver [$pkg_arch] ($pkg_type) in $base");
-
-        # We only need this if we are checking the package later
-        $proc->lab_pkg($lpkg) unless $proc->isa ('Lintian::Lab::Entry');
     }
 
     # Kill pending jobs, if any
@@ -1356,10 +1335,9 @@ sub coll_hook {
 sub process_group {
     my ($group) = @_;
   PROC:
-    foreach my $proc ($group->get_processables()){
-        my $pkg_name = $proc->pkg_name();
-        my $pkg_type = $proc->pkg_type();
-        my $lpkg = $proc->lab_pkg();
+    foreach my $lpkg ($group->get_processables){
+        my $pkg_name = $lpkg->pkg_name;
+        my $pkg_type = $lpkg->pkg_type;
         my $base = $lpkg->base_dir();
 
         $TAGS->file_start ($lpkg);
@@ -1407,19 +1385,18 @@ sub process_group {
             }
         }
         post_pkg_process_overrides ($lpkg);
-    } # end foreach my $proc ($group->get_processable())
+    } # end foreach my $lpkg ($group->get_processable)
 
     if (!$keep_lab) {
         # Invoke auto-clean now that the group has been checked
-        foreach my $proc ($group->get_processables()){
-            my $lpkg = $proc->lab_pkg();
+        foreach my $lpkg ($group->get_processables){
             my $ret = auto_clean_package($lpkg);
             $exit_code = 2 if $ret < 0;
             if ($ret) {
                 # Update the status file as auto_clean_package may have removed some
                 # collections
                 unless ($lpkg->update_status_file) {
-                    my $pkg_name = $proc->pkg_name;
+                    my $pkg_name = $lpkg->pkg_name;
                     warning("could not create status file for package $pkg_name: $!");
                 }
             }
