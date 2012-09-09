@@ -255,7 +255,8 @@ sub disable_tags {
         croak "Unknown tag $tag" unless $ti;
         next unless exists $self->{'enabled-tags'}->{$tag};
         delete $self->{'enabled-tags'}->{$tag};
-        $self->{'enabled-checks'}->{$ti->script}--;
+        delete $self->{'enabled-checks'}->{$ti->script}
+            unless --$self->{'enabled-checks'}->{$ti->script};
     }
 }
 
