@@ -22,6 +22,7 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use Scalar::Util qw(blessed);
 
 use base 'Class::Accessor';
 
@@ -77,10 +78,20 @@ COLLMAP is a L<Lintian::DepMap::Properties> decribing the dependencies
 between the collections.  Each node in COLLMAP must have a
 L<Lintian::CollScript> as property.
 
-REQUESTED is a hash table containing requested collections.  The
-values are ignored, only the keys are considered.  For existing
-entries, as few collections as possible will be processed.  The
-collections mentioned in REQUESTED are considered required.
+REQUESTED is either, C<undef> a reference to a hash table or a
+L<Lintian::Profile>.  If it is a hash table reference, then the values
+are ignored.  The keys are considered names of the requested
+collections.
+
+If REQUESTED is a Lintian::Profile, then all collections needed for
+the I<enabled> checks will be considered the requested collections.
+
+If REQUESTED is C<undef> then every collection mentioned in COLLMAP is
+considered "required".
+
+For existing entries, as few collections as possible will be
+processed.  The collections mentioned in REQUESTED are considered
+the "minimum requirement".
 
 JOBLIMIT is the max number of jobs to be run in parallel.  Can be
 changed with the L</jobs> method later.
@@ -91,14 +102,24 @@ changed with the L</jobs> method later.
 sub new {
     my ($class, $collmap, $requested, $jobs) = @_;
     my $ccmap = $collmap->clone;
+    my $req_table = $requested;
     $jobs //= 0;
     my $self = {
         'collmap' => $ccmap,
         'jobs' => $jobs,
-        'requested' => $requested,
         'running-jobs' => {},
         'worktable' => {},
     };
+    if (defined $requested && blessed $requested &&
+          $requested->isa ('Lintian::Profile')) {
+        $req_table = {};
+        foreach my $cname ($requested->scripts) {
+            my $check = $requested->get_script ($cname);
+            $req_table->{$_} = 1 for $check->needs_info;
+        }
+    }
+    $self->{'requested'} = $req_table;
+
     # Initialise our copy
     $ccmap->initialise;
     bless $self, $class;
