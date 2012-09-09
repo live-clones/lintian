@@ -27,6 +27,7 @@ use Scalar::Util qw(blessed);
 use base 'Class::Accessor';
 
 use Lintian::Command::Simple;
+use Lintian::Util qw(fail);
 
 =head1 NAME
 
@@ -117,6 +118,31 @@ sub new {
             my $check = $requested->get_script ($cname);
             $req_table->{$_} = 1 for $check->needs_info;
         }
+    }
+    if (defined $req_table) {
+        # For new entries we take everything in the collmap, which is
+        # a bit too much in some cases.  Since we have cloned collmap,
+        # we might as well prune the nodes we will not need in our
+        # copy.  While not perfect, it reduces the unnecessary work
+        # rather well.
+        #
+        #  Known issue: "lintian -oC files some.dsc" should not need
+        #  to do anything because "files" is "binary, udeb"-only.
+        my %needed = ();
+        my @check = keys %$req_table;
+        while ( my $coll = pop @check ) {
+            $needed{$coll} = 1;
+            push @check,
+                grep { ! exists $needed{$_} } $ccmap->parents ($coll);
+        }
+        # remove unneeded nodes in our copy
+        foreach my $node ($collmap->known) {
+            next if $needed{$node};
+            $ccmap->unlink ($node);
+        }
+        # ccmap should not be inconsistent by this change.
+        fail "Inconsistent collmap after deletion"
+            if $ccmap->missing;
     }
     $self->{'requested'} = $req_table;
 
