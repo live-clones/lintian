@@ -203,8 +203,8 @@ LAB-ENTRY is an array of lab entries to be processed.  They must be
 instances of L<Lintian::Lab::Entry>, but do not have to exists.  They
 will be created as needed.
 
-If at least one entry did not cause an error, it returns a truth
-value.  Otherwise, it returns C<undef>.
+Returns a truth value if at least one entry needs to be processed
+and it did not cause an error.  Otherwise, it returns C<undef>.
 
 NB: The status file is not updated for created entries on successful
 return.  It should either be done by running the process_tasks method
@@ -220,44 +220,12 @@ sub prepare_tasks {
     my %worklists = ();
     foreach my $lpkg (@lpkgs) {
         my $changed = 0;
-        my $cmap = $collmap->clone;
+        my $cmap;
+        my $needed;
 
         if ($lpkg->exists) {
-            # It already exists - only collect what we need.
-            # - $collmap has everything we need, but in some cases more than that.
-            my %need = ();
-            my @check;
-            my $pkg_type = $lpkg->pkg_type;
-            if ($profile) {
-                my %tmp = ();
-                foreach my $cname ($profile->scripts) {
-                    my $check = $profile->get_script ($cname);
-                    next unless $check->is_check_type ($pkg_type);
-                    $tmp{$_} = 1 for $check->needs_info;
-                }
-                @check = keys %tmp;
-                push @check, grep { ! exists $tmp{$_} } keys %$extra
-                    if defined $extra;
-            } else {
-                @check = keys $collmap->known;
-            }
-            while (my $cname = pop @check) {
-                my $coll = $collmap->getp ($cname);
-                # Skip collections not relevant to us (they will never
-                # be finished and we do not want to use their
-                # dependencies if they are the only ones using them)
-                next unless $coll->is_type ($pkg_type);
-                next if $lpkg->is_coll_finished ($cname, $coll->version);
-                $need{$cname} = 1;
-                push @check, $coll->needs_info;
-            }
-            # skip it, unless we need to unpack something.
-            next unless %need;
-            while (1) {
-                my @s = grep { not $need{$_} } $cmap->selectable;
-                last if not @s;
-                $cmap->satisfy (@s);
-            }
+            # It already exists, do nothing.
+            1;
         } elsif (not $lpkg->create){
             eval {
                 $errorhandler->($lpkg);
@@ -282,15 +250,60 @@ sub prepare_tasks {
             $changed = 1;
         }
 
+        ($cmap, $needed) = $self->_requested_colls ($lpkg, $changed);
+
+        next unless $cmap; # nothing to do
+
         $worklists{$lpkg->identifier} = {
             'collmap' => $cmap,
             'lab-entry' => $lpkg,
-            'changed' => $changed
+            'changed' => $changed,
+            'needed' => $needed,
         };
     }
     return unless %worklists;
     $self->{'worktable'} = \%worklists;
     return 1;
+}
+
+sub _requested_colls {
+    my ($self, $lpkg, $new) = @_;
+    my $profile = $self->{'profile'};
+    my $cmap = $self->{'collmap'}->clone;
+    my $extra = $self->{'extra-coll'};
+    my $pkg_type = $lpkg->pkg_type;
+    my %needed = ();
+    my @check;
+
+    # if its new and $profile is undef, we have to run all
+    # of collections.  So lets extra early.
+    return ($cmap, undef) if $new and not $profile;
+    if ($profile) {
+        my %tmp = ();
+        foreach my $cname ($profile->scripts) {
+            my $check = $profile->get_script ($cname);
+            next unless $check->is_check_type ($pkg_type);
+            $tmp{$_} = 1 for $check->needs_info;
+        }
+        @check = keys %tmp;
+        push @check, grep { ! exists $tmp{$_} } keys %$extra
+            if defined $extra;
+    } else {
+        @check = keys $cmap->known;
+    }
+    while (my $cname = pop @check) {
+        my $coll = $cmap->getp ($cname);
+        # Skip collections not relevant to us (they will never
+        # be finished and we do not want to use their
+        # dependencies if they are the only ones using them)
+        next unless $coll->is_type ($pkg_type);
+        next if $lpkg->is_coll_finished ($cname, $coll->version);
+        $needed{$cname} = 1;
+        push @check, $coll->needs_info;
+    }
+    # skip it, unless we need to unpack something.
+    return ($cmap, \%needed) if %needed;
+    return;
 }
 
 =item process_tasks (HOOKS)
@@ -366,6 +379,7 @@ sub process_tasks {
             my $wlist = $worklists->{$procid};
             my $cmap = $wlist->{'collmap'};
             my $lpkg = $wlist->{'lab-entry'};
+            my $needed = $wlist->{'needed'};
             my $pkg_name = $lpkg->pkg_name;
             my $pkg_type = $lpkg->pkg_type;
             my $base = $lpkg->base_dir;
@@ -380,6 +394,12 @@ sub process_tasks {
 
                 # check if it has been run previously
                 if ($lpkg->is_coll_finished ($coll, $cs->version)) {
+                    $cmap->satisfy ($coll);
+                    next;
+                }
+
+                # Check if its actually on our TODO list.
+                if (defined $needed and not exists $needed->{$coll}) {
                     $cmap->satisfy ($coll);
                     next;
                 }
