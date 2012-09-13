@@ -124,7 +124,8 @@ my $LAB;
 my %keep_coll;
 my %collection_info;
 my %check_abbrev;
-my %requested_unpack;
+my %extra_unpack;
+my %unpack_options;
 
 # Timer handling (by default to nothing)
 my $start_timer = sub { 0; };
@@ -1039,23 +1040,18 @@ undef $map;
 # {{{ determine which info is needed by the collection scripts
 if ($action eq 'check') {
 
-    # determine which info is needed by the checks
-    for my $c (@scripts) {
-        my $cs = $PROFILE->get_script($c);
-        for my $i ($cs->needs_info) {
-            $requested_unpack{$i} = 1;
-        }
-    }
     # For overrides we need "overrride-file" as well
     unless ($opt{'no-override'}) {
-        $requested_unpack{'override-file'} = 1;
+        $extra_unpack{'override-file'} = 1;
     }
-
+    # For checking, pass a profile to the unpacker to limit what it
+    # unpacks.
+    $unpack_options{'profile'} = $PROFILE;
+    $unpack_options{'extra-coll'} = \%extra_unpack;
 } else {
-    # With --unpack we want all of it
-    for my $c (keys %collection_info) {
-        $requested_unpack{$c} = 1;
-    }
+    # With --unpack we want all of them.  That's the default so,
+    # "done!"
+    1;
 }
 
 if (@unpack_info) {
@@ -1064,7 +1060,7 @@ if (@unpack_info) {
         unless ($collection_info{$i}) {
             fail("unknown info specified: $i");
         }
-        $requested_unpack{$i} = 1;
+        $extra_unpack{$i} = 1;
         $keep_coll{$i} = 1;
     }
 }
@@ -1074,10 +1070,11 @@ if (@unpack_info) {
 
 # {{{ Okay, now really processing the packages in one huge loop
 $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
+$unpack_options{'jobs'} = $opt{'jobs'};
 
 debug_msg(1,
           "Selected action: $action",
-          sprintf('Requested data to collect: %s', join(',',sort keys %requested_unpack)),
+          sprintf('Extra data to collect: %s', join(',',sort keys %extra_unpack)),
           sprintf('Selected checks: %s', join(',',sort $PROFILE->scripts)),
           "Parallization limit: $opt{'jobs'}",
     );
@@ -1086,7 +1083,7 @@ debug_msg(1,
 # Now action is always either "check" or "unpack"
 # these two variables are used by process_package
 #  and need to persist between invocations.
-my $unpacker = Lintian::Unpacker->new ($collmap, \%requested_unpack, $opt{'jobs'});
+my $unpacker = Lintian::Unpacker->new ($collmap, \%unpack_options);
 my %overrides;
 
 foreach my $gname (sort $pool->get_group_names()) {

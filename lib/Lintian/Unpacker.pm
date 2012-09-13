@@ -71,7 +71,7 @@ available via L<Lintian::Collect>.
 
 =over 4
 
-=item new (COLLMAP, REQUESTED[, JOBLIMIT])
+=item new (COLLMAP, PROFILE[, OPTIONS])
 
 Creates a new unpacker.
 
@@ -79,44 +79,71 @@ COLLMAP is a L<Lintian::DepMap::Properties> decribing the dependencies
 between the collections.  Each node in COLLMAP must have a
 L<Lintian::CollScript> as property.
 
-REQUESTED is either, C<undef> a reference to a hash table or a
-L<Lintian::Profile>.  If it is a hash table reference, then the values
-are ignored.  The keys are considered names of the requested
-collections.
+OPTIONS is an optional hashref containing optional configurations.  If
+a key is not present, its value is assumed to be C<undef> unless
+otherwise stated.  The following key/values are available:
 
-If REQUESTED is a Lintian::Profile, then all collections needed for
-the I<enabled> checks will be considered the requested collections.
+=over 4
 
-If REQUESTED is C<undef> then every collection mentioned in COLLMAP is
-considered "required".
+=item "profile"
 
-For existing entries, as few collections as possible will be
-processed.  The collections mentioned in REQUESTED are considered
-the "minimum requirement".
+If this key is present and its value is defined, the value must be
+L<Lintian::Profile>.  The unpacker will use the enabled checks of the
+Profile to determine what collections to use.
 
-JOBLIMIT is the max number of jobs to be run in parallel.  Can be
-changed with the L</jobs> method later.
+If "profile" is not present or its value is undefined, then all
+collections in COLLMAP will be unpacked.
+
+=item "extra-coll"
+
+If this key is present and its value is defined, it must be a
+reference to a hash table.  The keys are considered names of "extra"
+collections to unpack.  The values in this table is ignored.
+
+Extra collections will be unpacked on top of other collections.
+
+NB: This value is ignored if "profile" is not given.
+
+=item "jobs"
+
+This value is the max number of jobs to be run in parallel.  Can be
+changed with the L</jobs> method later.  If omitted, it defaults to
+0.  Refer to L</jobs> for more info.
+
+=back
 
 =cut
 
 
 sub new {
-    my ($class, $collmap, $requested, $jobs) = @_;
+    my ($class, $collmap, $options) = @_;
     my $ccmap = $collmap->clone;
-    my $req_table = $requested;
-    $jobs //= 0;
+    my $req_table = undef;
+    my $profile = undef;
+    my $extra = undef;
+    my $jobs = 0;
+    if ($options) {
+        $extra = $options->{'extra-coll'} if exists $options->{'extra-coll'};
+        $profile = $options->{'profile'} if exists $options->{'profile'};
+        $jobs = $options->{'jobs'} if exists $options->{'jobs'};
+    }
     my $self = {
         'collmap' => $ccmap,
         'jobs' => $jobs,
+        'profile' => $profile,
         'running-jobs' => {},
         'worktable' => {},
     };
-    if (defined $requested && blessed $requested &&
-          $requested->isa ('Lintian::Profile')) {
+    if (defined $profile) {
         $req_table = {};
-        foreach my $cname ($requested->scripts) {
-            my $check = $requested->get_script ($cname);
+        foreach my $cname ($profile->scripts) {
+            my $check = $profile->get_script ($cname);
             $req_table->{$_} = 1 for $check->needs_info;
+        }
+        if ($extra) {
+            foreach my $ecoll (keys %$extra) {
+                $req_table->{$ecoll} = 1;
+            }
         }
     }
     if (defined $req_table) {
@@ -144,7 +171,7 @@ sub new {
         fail "Inconsistent collmap after deletion"
             if $ccmap->missing;
     }
-    $self->{'requested'} = $req_table;
+    $self->{'extra-coll'} = $extra;
 
     # Initialise our copy
     $ccmap->initialise;
@@ -188,7 +215,8 @@ or manually.
 sub prepare_tasks {
     my ($self, $errorhandler, @lpkgs) = @_;
     my $collmap = $self->{'collmap'};
-    my $requested = $self->{'requested'};
+    my $extra = $self->{'extra-coll'};
+    my $profile = $self->{'profile'};
     my %worklists = ();
     foreach my $lpkg (@lpkgs) {
         my $changed = 0;
@@ -200,8 +228,19 @@ sub prepare_tasks {
             my %need = ();
             my @check;
             my $pkg_type = $lpkg->pkg_type;
-            @check = keys %$requested if defined $requested;
-            @check = keys $collmap->known unless defined $requested;
+            if ($profile) {
+                my %tmp = ();
+                foreach my $cname ($profile->scripts) {
+                    my $check = $profile->get_script ($cname);
+                    next unless $check->is_check_type ($pkg_type);
+                    $tmp{$_} = 1 for $check->needs_info;
+                }
+                @check = keys %tmp;
+                push @check, grep { ! exists $tmp{$_} } keys %$extra
+                    if defined $extra;
+            } else {
+                @check = keys $collmap->known;
+            }
             while (my $cname = pop @check) {
                 my $coll = $collmap->getp ($cname);
                 # Skip collections not relevant to us (they will never
