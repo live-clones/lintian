@@ -39,7 +39,7 @@ Lintian::Profile - Profile parser for Lintian
  my $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'});
  # Load the debian profile using an explicit search path
  $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'},
-    ['/path/to/profiles', "$ENV{'LINTIAN_ROOT'}/profiles"]);
+    ['/path/to/alt/root', $ENV{'LINTIAN_ROOT'}]);
  # Load the "default" profile for the current vendor
  $profile = Lintian::Profile->new (undef, $ENV{'LINTIAN_ROOT'});
  foreach my $tag ($profile->tags) {
@@ -85,36 +85,33 @@ my %SEC_FIELDS = (
     'severity'    => 1,
     );
 
-=item Lintian::Profile->new($profname, $root[, $ppath])
+=item Lintian::Profile->new($profname[, $ipath])
 
-Creates a new profile from the profile located by using
-find_profile($profname, @$ppath).  $profname is the name of the
-profile and $ppath is a list reference containing the directories to
-search for the profile and (if any) its parents.  $root is the
-"LINTIAN_ROOT" and is used for finding checks.
+Creates a new profile from the profile.  $profname is the name of the
+profile and $ipath is a list reference containing containing the path
+to one (or more) Lintian "roots".
 
 If $profname is C<undef>, the default vendor will be loaded based on
 Dpkg::Vendor::get_current_vendor.
 
-If $ppath is not given, a default one will be used.
+If $ipath is not given, a default one will be used.
 
 =cut
 
 sub new {
-    my ($type, $name, $root, $ppath) = @_;
+    my ($type, $name, $ipath) = @_;
     my $profile;
-    $ppath = [_default_inc_path ($root)] unless $ppath;
+    $ipath = [_default_inc_path ()] unless $ipath;
     my $self = {
         'parent-map'           => {},
         'profile_list'         => [],
-        'profile-path'         => $ppath,
+        'include-path'         => $ipath,
         'enabled-tags'         => {}, # "set" of tags enabled (value is largely ignored)
         'enabled-checks'       => {}, # maps script to the number of tags enabled (0 if disabled)
         'non-overridable-tags' => {},
         'severity-changes'     => {},
         'check-scripts'        => {}, # maps script name to Lintian::CheckScript
         'known-tags'           => {}, # maps tag name to Lintian::Tag::Info
-        'root'         => $root,
     };
     $self = bless $self, $type;
     if (not defined $name) {
@@ -124,7 +121,7 @@ sub new {
             if $name =~ m,^/,o or $name =~ m/\./o;
         $profile = $self->_find_profile ($name);
     }
-    croak "Cannot find profile $name (in " . join(', ', @$ppath).")"
+    croak "Cannot find profile $name (in " . join(', ', map { "$_/profiles" } @$ipath).")"
         unless $profile;
     $self->_read_profile($profile);
     return $self;
@@ -143,13 +140,9 @@ Note: This list reference and its contents should not be modified.
 Returns the name of the profile, which may differ from the name used
 to create this instance of the profile (e.g. due to symlinks).
 
-=item $prof->root
-
-Returns the LINTIAN_ROOT associated with the profile.
-
 =cut
 
-Lintian::Profile->mk_ro_accessors (qw(profile_list name root));
+Lintian::Profile->mk_ro_accessors (qw(profile_list name));
 
 =item $prof->tags([$known])
 
@@ -260,6 +253,28 @@ sub disable_tags {
     }
 }
 
+=item $prof->include_path ([$path])
+
+Returns an array of paths to the (partial) Lintian roots, which are
+used by this profile.  The paths are ordered from "highest" to
+"lowest" priority (i.e. items in the earlier paths should shadow those
+in later ones).
+
+If $path is given, the array will contain the paths to the path in
+these roots denoted by $path.
+
+Paths returned are not guaranteed to exists.
+
+=cut
+
+sub include_path {
+    my ($self, $path) = @_;
+    unless (defined $path) {
+        return @{ $self->{'include-path'} };
+    }
+    return map { "$_/$path" } @{ $self->{'include-path'} };
+}
+
 # $prof->_find_profile ($pname)
 #
 # Finds a profile called $pname in the search directories and returns
@@ -276,7 +291,7 @@ sub _find_profile {
     # $vendor is short for $vendor/main
     $pname = "$pname/main" unless $pname =~ m,/,o;
     $pfile = "$pname.profile";
-    foreach my $path (@{ $self->{'profile-path'} }){
+    foreach my $path ($self->include_path ('profiles')) {
         return "$path/$pfile" if -e "$path/$pfile";
     }
     return '';
@@ -392,7 +407,7 @@ sub _read_profile_tags{
     my $tag_sub = sub {
         my ($field, $tag) = @_;
         unless (exists $self->{'known-tags'}->{$tag}) {
-            $self->_load_checks($pname);
+            $self->_load_checks;
             croak "Unknown tag \"$tag\" in profile \"$pname\""
                 unless exists $self->{'known-tags'}->{$tag};
         }
@@ -489,10 +504,21 @@ sub _check_for_invalid_fields {
 
 sub _load_check {
     my ($self, $profile, $check) = @_;
-    my $root = $self->root;
-    my $cf = "$root/checks/${check}.desc";
-    croak "$profile references unknown $check" unless -f $cf;
-    my $c = Lintian::CheckScript->new ($cf);
+    my $desc = undef;
+    foreach my $checkdir ($self->include_path ('checks')) {
+        my $cf = "$checkdir/${check}.desc";
+        if ( -f $cf ) {
+            $desc = $cf;
+            last;
+        }
+    }
+    croak "$profile references unknown $check" unless defined $desc;
+    $self->_parse_check ($desc);
+}
+
+sub _parse_check {
+    my ($self, $desc) = @_;
+    my $c = Lintian::CheckScript->new ($desc);
     return if $self->{'check-scripts'}->{$c->name};
     $self->{'check-scripts'}->{$c->name} = $c;
     for my $tn ($c->tags) {
@@ -505,22 +531,27 @@ sub _load_check {
 }
 
 sub _load_checks {
-    my ($self, $profile) = @_;
-    my $root = $self->root;
-    opendir my $dirfd, "$root/checks" or croak "opendir $root/checks: $!";
-    for my $desc (sort readdir $dirfd) {
-        next unless $desc =~ s/\.desc$//o;
-        $self->_load_check($profile, $desc);
+    my ($self) = @_;
+    foreach my $checkdir ($self->include_path ('checks')) {
+        next unless -d $checkdir;
+        opendir my $dirfd, $checkdir or croak "opendir $checkdir: $!";
+        for my $desc (sort readdir $dirfd) {
+            next unless $desc =~ m/\.desc$/o;
+            # _parse_check ignores duplicates, so we don't have to check for it.
+            $self->_parse_check ("$checkdir/$desc");
+        }
+        closedir $dirfd;
     }
-    closedir $dirfd;
 }
 
 sub _default_inc_path {
-    my ($root) = @_;
     my @path = ();
-    push @path, "$ENV{'HOME'}/.lintian/profiles"
+    push @path, "$ENV{'HOME'}/.lintian"
         if exists $ENV{'HOME'} and defined $ENV{'HOME'};
-    push @path, '/etc/lintian/profiles', "$root/profiles";
+    push @path, '/etc/lintian';
+    # ENV{LINTIAN_ROOT} replaces /usr/share/lintian if present.
+    push @path, $ENV{'LINTIAN_ROOT'} if defined $ENV{'LINTIAN_ROOT'};
+    push @path, '/usr/share/lintian' unless defined $ENV{'LINTIAN_ROOT'};
     return @path;
 }
 

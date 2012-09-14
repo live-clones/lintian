@@ -29,8 +29,8 @@ use Lintian::Profile;
 use Lintian::Tags ();
 use Lintian::Util qw(read_dpkg_control);
 
-my $vendor = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
-                                 ["$ENV{'LINTIAN_ROOT'}/profiles"]);
+my $vendor = Lintian::Profile->new ('debian/main',
+                                 [$ENV{'LINTIAN_ROOT'}]);
 my @DESCS = <$ENV{'LINTIAN_ROOT'}/checks/*.desc>;
 
 my %severities = map { $_ => 1 } 'pedantic', @Lintian::Tags::SEVERITIES;

@@ -67,7 +67,7 @@ EOT
     exit 0;
 }
 
-$profile = Lintian::Profile->new ($prof, $ENV{'LINTIAN_ROOT'});
+$profile = Lintian::Profile->new ($prof);
 
 Lintian::Data->set_vendor ($profile);
 

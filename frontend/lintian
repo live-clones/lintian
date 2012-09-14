@@ -93,14 +93,13 @@ my %conf_opt;                   #names of options set in the cfg file
 my %group_cache = ();           # Cache to store groups in case of group
                                 # queries
 
-# The profile search path except LINTIAN_ROOT/profiles
-#  which will be added later (we dont know LINTIAN_ROOT
-#  at this point)
+# The search path except $ENV{'LINTIAN_ROOT'}/--root LINTIAN_ROOT
+# which will be added later.
 my @prof_inc;
 # In some (rare) cases, $ENV{HOME} will not be available.
 # - Handle that gracefully by not emitting "Uninitialized ...".
-push @prof_inc, "$ENV{HOME}/.lintian/profiles" if defined $ENV{HOME};
-push @prof_inc, '/etc/lintian/profiles';
+push @prof_inc, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
+push @prof_inc, '/etc/lintian';
 
 
 my $experimental_output_opts = undef;
@@ -820,8 +819,8 @@ $TAGS->show_experimental($opt{'display-experimental'});
 $TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
 
-$PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'}, $opt{'LINTIAN_ROOT'},
-                                  [@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles"]);
+$PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'},
+                                  [@prof_inc, $opt{'LINTIAN_ROOT'}]);
 # Ensure $opt{'LINTIAN_PROFILE'} is defined
 $opt{'LINTIAN_PROFILE'} = $PROFILE->name unless defined $opt{'LINTIAN_PROFILE'};
 v_msg('Using profile ' . $PROFILE->name . '.');

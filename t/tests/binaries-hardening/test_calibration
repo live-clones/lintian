@@ -13,8 +13,8 @@ sub _split_hash {
     map { $hash->{$_} = 1 } split m/\s*,\s*/o, $val;
     return $hash;
 }
-my $PROFILE = Lintian::Profile->new ('debian/main', $ENV{'LINTIAN_ROOT'},
-                                     ["$ENV{'LINTIAN_ROOT'}/profiles"]);
+my $PROFILE = Lintian::Profile->new ('debian/main',
+                                     [$ENV{'LINTIAN_ROOT'}]);
 
 Lintian::Data->set_vendor ($PROFILE);
 

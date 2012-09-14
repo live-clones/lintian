@@ -96,20 +96,14 @@ sub new {
     # - $start is an index into $vendors (the first $vendor to try)
     sub _open_data_file {
         my ($self, $type, $vendors, $start) = @_;
-        my $root = $profile->root;
         my $file;
         my $cur = $start;
-        my @basedirs;
-        # Gracefully handle $ENV{'HOME'} being unset
-        push @basedirs, "$ENV{'HOME'}/.lintian/vendors" if defined $ENV{'HOME'};
-        push @basedirs, "$root/vendors", '/etc/lintian/vendors';
 
-        # Do not allow user or system settings to affect the test results.
-        @basedirs = ("$root/vendors") if $ENV{'LINTIAN_INTERNAL_TESTSUITE'};
         OUTER: for (; $cur < scalar @$vendors ; $cur++) {
-            foreach my $basedir (@basedirs) {
-                if ( -f "$basedir/$vendors->[$cur]/data/$type" ) {
-                    $file = "$basedir/$vendors->[$cur]/data/$type";
+            my $vendorpart = "vendors/$vendors->[$cur]/data/$type";
+            foreach my $datafile ($profile->include_path ($vendorpart)) {
+                if ( -f $datafile) {
+                    $file = $datafile;
                     last OUTER;
                 }
             }
