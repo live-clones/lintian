@@ -123,6 +123,33 @@ sub type {
     return 'group';
 }
 
+=item spelling_exceptions
+
+Returns a hashref of words, which the spell checker should ignore.
+These words are generally based on the package names in the group to
+avoid false-positive "spelling error" when packages have "fun" names.
+
+Example: Package alot-doc (#687464)
+
+=cut
+
+# sub spelling_exceptions Needs-Info <>
+sub spelling_exceptions {
+    my ($self) = @_;
+    return $self->{'spelling_exceptions'}
+        if exists $self->{'spelling_exceptions'};
+    my %except = ();
+    my $group = $self->{'group'};
+    foreach my $proc ($group->get_processables ('binary')) {
+        foreach my $name ($proc->pkg_name, $proc->pkg_src) {
+            $except{$name} = 1;
+            $except{$_} = 1 for split m/-/, $name;
+        }
+    }
+    $self->{'seplling_exceptions'} = \%except;
+    return \%except;
+}
+
 =back
 
 =head1 AUTHOR

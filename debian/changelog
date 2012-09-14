@@ -13,6 +13,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Remove assumption that lintian will chdir into the
       the lab before calling the check.
+    + [NT] Be better at avoiding false-positive spelling errors
+      for references to packages that also happen to be common
+      spelling mistake.  Thanks to Paul Tagliamonte for the
+      report.  (Closes: #687464)
   * checks/binaries{,.desc}:
     + [NT] Merge apparently-truncated-elf-binary into
       apparently-corrupted-elf-binary.

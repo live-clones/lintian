@@ -29,7 +29,7 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my ($pkg, $type, $info) = @_;
+my ($pkg, $type, $info, undef, $group) = @_;
 
 my $tabs = 0;
 my $lines = 0;
@@ -194,7 +194,7 @@ unless ($info->field('homepage') or $flagged_homepage) {
 
 if ($description) {
     check_spelling('spelling-error-in-description', $description,
-                   undef, {$pkg => 1});
+                   undef, $group->info->spelling_exceptions);
     check_spelling_picky('capitalization-error-in-description', $description);
 }
 

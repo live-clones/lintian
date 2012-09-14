@@ -271,7 +271,8 @@ if ($found && !$linked && !/(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{
     tag 'copyright-without-copyright-notice';
 }
 
-check_spelling('spelling-error-in-copyright', $_, undef, { $pkg => 1 });
+check_spelling('spelling-error-in-copyright', $_, undef,
+               $group->info->spelling_exceptions);
 
 # Now, check for linking against libssl if the package is covered by the GPL.
 # (This check was requested by ftp-master.)  First, see if the package is

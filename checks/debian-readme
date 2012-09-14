@@ -27,7 +27,7 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my ($pkg, undef, $info) = @_;
+my ($pkg, undef, $info, undef, $group) = @_;
 
 my $readme = '';
 
@@ -53,7 +53,8 @@ if ($readme =~ m/$regex/io) {
     tag 'readme-debian-contains-invalid-email-address', $1;
 }
 
-check_spelling('spelling-error-in-readme-debian', $readme, undef, { $pkg => 1 });
+check_spelling('spelling-error-in-readme-debian', $readme, undef,
+               $group->info->spelling_exceptions);
 
 }
 

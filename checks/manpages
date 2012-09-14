@@ -336,7 +336,8 @@ foreach my $file ($info->sorted_index) {
                 tag 'manpage-has-errors-from-pod2man', "$file:$lc";
             }
             # Check for spelling errors if the manpage is English
-            check_spelling('spelling-error-in-manpage', $line, $file, { $pkg => 1 })
+            check_spelling('spelling-error-in-manpage', $line, $file,
+                           $ginfo->spelling_exceptions)
                 if ($path =~ m,/man/man\d/,);
         }
         tag 'hyphen-used-as-minus-sign', $file, ($hc - 10),

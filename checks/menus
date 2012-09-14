@@ -52,7 +52,7 @@ our $SECTIONS = Lintian::Data->new ('doc-base/sections');
 
 sub run {
 
-my ($pkg, $type, $info) = @_;
+my ($pkg, $type, $info, undef, $group) = @_;
 
 my %all_files = ();
 my %all_links = ();
@@ -190,7 +190,8 @@ if ($docbase_file) {
         my $dbpath = $info->lab_data_path ("doc-base/$dbfile");
         # don't try to parse executables, plus we already warned about it
         next if -x $dbfile;
-        check_doc_base_file ($dbfile, $dbpath, $pkg, $type, \%all_files, \%all_links);
+        check_doc_base_file ($dbfile, $dbpath, $pkg, $type, \%all_files, \%all_links,
+                             $group);
     }
     closedir DOCBASEDIR;
 } elsif ($documentation) {
@@ -234,7 +235,7 @@ if ($anymenu_file) {
 # -----------------------------------
 
 sub check_doc_base_file {
-    my ($dbfile, $dbpath, $pkg, $type, $all_files, $all_links) = @_;
+    my ($dbfile, $dbpath, $pkg, $type, $all_files, $all_links, $group) = @_;
 
     my $line = file_is_encoded_in_non_utf8 ($dbpath, $type, $pkg);
     if ($line) {
@@ -259,7 +260,7 @@ sub check_doc_base_file {
             if ($field) {
                 check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
                                      \%sawfields, \%sawformats, $knownfields,
-                                     $all_files, $all_links);
+                                     $all_files, $all_links, $group);
             }
             $field = lc $new[0];
             @vals  = ($new[1]);
@@ -282,7 +283,7 @@ sub check_doc_base_file {
             # Check previously defined field and section.
             check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
                                  \%sawfields, \%sawformats, $knownfields,
-                                 $all_files, $all_links);
+                                 $all_files, $all_links, $group);
             check_doc_base_file_section($dbfile, $line + 1, \%sawfields,
                                         \%sawformats, $knownfields);
 
@@ -305,7 +306,7 @@ sub check_doc_base_file {
     if ($field) {
         check_doc_base_field($pkg, $dbfile, $line, $field, \@vals, \%sawfields,
                              \%sawformats, $knownfields, $all_files,
-                             $all_links);
+                             $all_links, $group);
         check_doc_base_file_section($dbfile, $line, \%sawfields, \%sawformats,
                                     $knownfields);
     }
@@ -320,7 +321,7 @@ sub check_doc_base_file {
 # all lines of the field.  Modifies $sawfields and $sawformats.
 sub check_doc_base_field {
     my ($pkg, $dbfile, $line, $field, $vals, $sawfields, $sawformats,
-        $knownfields, $all_files, $all_links) = @_;
+        $knownfields, $all_files, $all_links, $group) = @_;
 
     tag 'doc-base-file-unknown-field', "$dbfile:$line", $field
         unless defined $knownfields->{$field};
@@ -397,7 +398,8 @@ sub check_doc_base_field {
     } elsif ($field eq 'title') {
         if (@$vals) {
             check_spelling('spelling-error-in-doc-base-title-field',
-                           join (' ', @$vals), "$dbfile:$line", { $pkg => 1});
+                           join (' ', @$vals), "$dbfile:$line",
+                           $group->info->spelling_exceptions);
             check_spelling_picky('spelling-error-in-doc-base-title-field',
                                  join (' ', @$vals), "$dbfile:$line");
         }
@@ -464,7 +466,8 @@ sub check_doc_base_field {
         # Check spelling.
         if (@$vals) {
             check_spelling('spelling-error-in-doc-base-abstract-field',
-                           join (' ', @$vals), "$dbfile:$line", { $pkg => 1 });
+                           join (' ', @$vals), "$dbfile:$line",
+                           $group->info->spelling_exceptions);
             check_spelling_picky('spelling-error-in-doc-base-abstract-field',
                                  join (' ', @$vals), "$dbfile:$line");
         }

@@ -32,7 +32,7 @@ use Parse::DebianChangelog;
 
 sub run {
 
-my ($pkg, $type, $info) = @_;
+my ($pkg, $type, $info, undef, $group) = @_;
 
 my $found_html=0;
 my $found_text=0;
@@ -138,7 +138,7 @@ if (-f $dnews) {
             tag 'debian-news-entry-has-strange-distribution', $news->Distribution;
         }
         check_spelling('spelling-error-in-news-debian', $news->Changes,
-                       undef, { $pkg => 1});
+                       undef, $group->info->spelling_exceptions);
         if ($news->Changes =~ /^\s*\*\s/) {
             tag 'debian-news-entry-uses-asterisk';
         }
@@ -374,7 +374,8 @@ if (@entries) {
     # Strip out all lines that contain the word spelling to avoid false
     # positives on changelog entries for spelling fixes.
     $changes =~ s/^.*spelling.*\n//gm;
-    check_spelling('spelling-error-in-changelog', $changes, undef, { $pkg => 1});
+    check_spelling('spelling-error-in-changelog', $changes, undef,
+                   $group->info->spelling_exceptions);
 }
 
 }
