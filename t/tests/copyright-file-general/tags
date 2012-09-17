@@ -8,6 +8,7 @@ E: copyright-full-gpl-2: copyright-should-refer-to-common-license-file-for-lgpl
 E: copyright-full-gpl: copyright-file-contains-full-gpl-license
 E: copyright-full-gpl: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-full-lgpl: copyright-should-refer-to-common-license-file-for-lgpl
+E: copyright-iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
 E: copyright-misc-errors: copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
 E: copyright-misc-errors: copyright-refers-to-incorrect-directory usr/share/common-licences
 E: copyright-misc-errors: copyright-refers-to-old-directory
@@ -21,7 +22,6 @@ E: copyright-poor-common-licenses: copyright-should-refer-to-common-license-file
 E: copyright-symlink: copyright-file-is-symlink
 P: copyright-crln: copyright-has-crs
 W: copyright-full-apache-2: copyright-without-copyright-notice
-W: copyright-iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
 W: copyright-misc-errors: copyright-contains-dh-make-perl-boilerplate
 W: copyright-misc-errors: copyright-has-url-from-dh_make-boilerplate
 W: copyright-misc-errors: copyright-refers-to-deprecated-bsd-license-file

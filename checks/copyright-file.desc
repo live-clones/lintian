@@ -223,9 +223,10 @@ Info: There is "url://example.com" in your copyright file. This was most
  upstream sources (if any).
 
 Tag: debian-copyright-file-uses-obsolete-national-encoding
-Severity: normal
+Severity: serious
 Certainty: certain
-Info: The Debian copyright file should be valid UTF-8, an encoding of
+Ref: policy 12.5
+Info: The Debian copyright file must be valid UTF-8, an encoding of
  the Unicode character set.
  .
  There are many ways to convert a copyright file from an obsoleted encoding

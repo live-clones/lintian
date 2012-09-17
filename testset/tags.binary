@@ -3,6 +3,7 @@ E: binary source: not-binnmuable-all-depends-any binary-data -> binary
 E: binary source: not-binnmuable-any-depends-all binary -> binary-data
 E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
+E: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-metapackage pre-depends: xorg
 E: binary: deprecated-kdelnk-file usr/share/applications/hello.kdelnk
@@ -77,7 +78,6 @@ W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-news-debian-mismatch distribution unstable != UNRELEASED
 W: binary: changelog-news-debian-mismatch urgency low != high
-W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package usr/share/applications/goodbye.desktop goodbye
