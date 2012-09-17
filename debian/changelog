@@ -1,4 +1,4 @@
-lintian (2.5.10.2) UNRELEASED; urgency=low
+lintian (2.5.10.2) unstable; urgency=low
 
   * checks/po-debconf:
     + [NT] Fix dirhandle leak.
@@ -18,7 +18,7 @@ lintian (2.5.10.2) UNRELEASED; urgency=low
     + [NT] Use "closedir" rather than "close" to close a dir
       handle.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 06 Sep 2012 09:55:09 +0200
+ -- Niels Thykier <niels@thykier.net>  Mon, 17 Sep 2012 11:56:18 +0200
 
 lintian (2.5.10.1) unstable; urgency=low
 
