@@ -152,11 +152,11 @@ Info: The given field in the <tt>debian/control</tt> file contains a list
 
 Tag: obsolete-relation-form-in-source
 Ref: policy 7.1
-Severity: normal
+Severity: serious
 Certainty: certain
 Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
  and "&gt;&gt;" as one might expect.  These forms were marked obsolete and
- should no longer be used.  Use the longer forms instead.
+ must no longer be used.  Use the longer forms instead.
 
 Tag: package-depends-on-hardcoded-libc
 Severity: normal
