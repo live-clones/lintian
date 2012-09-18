@@ -122,7 +122,6 @@ my $exit_code = 0;
 my $LAB;
 
 my %keep_coll;
-my %collection_info;
 my %check_abbrev;
 my %extra_unpack;
 my %unpack_options;
@@ -1013,7 +1012,6 @@ my $collmap = Lintian::DepMap::Properties->new();
         my ($cs) = @_;
         my $coll = $cs->name;
         debug_msg(2, "Read collector description for $coll ...");
-        $collection_info{$coll} = $cs;
         $collmap->add ($cs->name, $cs->needs_info, $cs);
         $map->addp ('coll-' . $cs->name, 'coll-', $cs->needs_info);
     };
@@ -1057,7 +1055,7 @@ if ($action eq 'check') {
 if (@unpack_info) {
     # Add collections specifically requested by the user (--unpack-info)
     for my $i (map { split m/,/ } @unpack_info) {
-        unless ($collection_info{$i}) {
+        unless ($collmap->getp ($i)) {
             fail("unknown info specified: $i");
         }
         $extra_unpack{$i} = 1;
@@ -1161,8 +1159,8 @@ sub auto_clean_package {
     my $pkg_type = $lpkg->pkg_type();
     my $base = $lpkg->base_dir();
     my $changed = 0;
-    for my $coll (keys %collection_info) {
-        my $ci = $collection_info{$coll};
+    for my $coll ($collmap->known) {
+        my $ci = $collmap->getp ($coll);
         if ($ci->auto_remove and not $keep_coll{$coll}) {
             next unless $lpkg->is_coll_finished ($coll, $ci->version);
             debug_msg(1, "Auto removing: $coll ...");
@@ -1339,7 +1337,7 @@ sub process_group {
         debug_msg(1, "Base directory in lab: $base");
 
         unless ($opt{'no-override'}) {
-            if ($collmap->known('override-file') && -f "$base/override") {
+            if ($collmap->getp ('override-file') && -f "$base/override") {
                 debug_msg(1, 'Override file collected, loading it ...');
                 $TAGS->file_overrides("$base/override");
             }
