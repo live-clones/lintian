@@ -1076,7 +1076,7 @@ debug_msg(1,
           "Selected action: $action",
           sprintf('Extra data to collect: %s', join(',',sort keys %extra_unpack)),
           sprintf('Selected checks: %s', join(',',sort $PROFILE->scripts)),
-          "Parallization limit: $opt{'jobs'}",
+          "Parallelization limit: $opt{'jobs'}",
     );
 
 
