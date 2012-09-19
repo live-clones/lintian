@@ -50,11 +50,13 @@ if (-l $file) {
     link ($file, "$dir/copyright")
         or fail("cannot link $file to copyright: $!");
 } elsif (-f "$file.gz") {
-    gunzip_file ($file, "$dir/copyright");
+    gunzip_file ("$file.gz", "$dir/copyright");
 } else {
     # no copyright file found
     touch_file ("$dir/copyright");
 }
+
+exit 0;
 
 # Local Variables:
 # indent-tabs-mode: nil
