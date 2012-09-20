@@ -289,7 +289,7 @@ sub _requested_colls {
         push @check, grep { ! exists $tmp{$_} } keys %$extra
             if defined $extra;
     } else {
-        @check = keys $cmap->known;
+        @check = $cmap->known;
     }
     while (my $cname = pop @check) {
         my $coll = $cmap->getp ($cname);
