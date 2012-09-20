@@ -609,7 +609,6 @@ unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
 require Lintian::Lab;
 
-require Lintian::CollScript;
 require Lintian::DepMap;
 require Lintian::DepMap::Properties;
 require Lintian::Data;
