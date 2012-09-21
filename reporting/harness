@@ -100,7 +100,7 @@ $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
-require Lintian::Processable::Package;
+require Lintian::Processable;
 require Lintian::Util;
 import Lintian::Util qw(visit_dpkg_paragraph);
 
@@ -221,7 +221,7 @@ unless ($opt{'reports-only'}) {
             my $entry;
             unless ($opt{'dry-run'}) {
                 eval {
-                    $proc = Lintian::Processable::Package->new ($file, $type);
+                    $proc = Lintian::Processable->new_from_metadata ($type, $me);
                 };
                 unless ($proc) {
                     my $name = "$type:$pkg_name/$pkg_version";

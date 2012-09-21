@@ -335,10 +335,7 @@ sub set {
         $val =~ tr/;\n/_ /;
         $pdata{$field} = $val;
     }
-    # define source-version as alias of version for
-    # source packages.
-    $pdata{'source-version'} = $pdata{'version'}
-        unless defined $pdata{'source-version'};
+    $self->_make_alias_fields (\%pdata);
 
     $self->_do_set ($self->{'state'}, $qf, \%pdata);
     $self->_mark_dirty(1);
@@ -482,14 +479,23 @@ sub _do_read_file {
         for ( my $i = 0 ; $i < $count ; $i++) {
             $entry->{$fields->[$i]} = $values[$i]//'';
         }
-        # define source-version as alias of version for
-        # source packages.
-        $entry->{'source-version'} = $entry->{'version'}
-            unless defined $entry->{'source-version'};
+        $self->_make_alias_fields ($entry);
         $self->_do_set ($root, $qf, $entry);
     }
     close $fd;
     return $root;
+}
+
+sub _make_alias_fields {
+    my ($self, $entry) = @_;
+    # define source-version as alias of version for
+    # source packages.
+    $entry->{'source-version'} = $entry->{'version'}
+        unless defined $entry->{'source-version'};
+    # For compat with Lintian::Processable->new_from_metadata
+    $entry->{'pkg_path'} = $entry->{'file'};
+    $entry->{'package'} = $entry->{'source'}
+        unless defined $entry->{'package'};
 }
 
 sub _do_get {
