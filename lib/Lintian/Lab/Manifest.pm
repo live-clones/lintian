@@ -244,6 +244,7 @@ sub write_list {
 
     $visitor = sub {
         my ($entry) = @_;
+        return if exists $entry->{'_transient'};
         my %values = %$entry;
         print $fd join(';', @values{@$fields}) . "\n";
     };
@@ -349,6 +350,25 @@ sub set {
     $self->_do_set ($self->{'state'}, $qf, \%pdata);
     $self->_mark_dirty(1);
     return 1;
+}
+
+=item set_transient_marker (TRANSIENT, KEYS...)
+
+Set or clear transient flag.  Transient entries are not written to the
+disk (i.e. They will not appear in the file created/written by
+L</write_list (FILE)>).  KEYS is passed as is passed to
+L</get (KEYS...)>.
+
+By default all entries are persistent.
+
+=cut
+
+sub set_transient_marker {
+    my ($self, $marker, @keys) = @_;
+    my $entry = $self->get (@keys);
+    return unless $entry;
+    $self->{'_transient'} = 1 if $marker;
+    delete $self->{'_transient'} unless $marker;
 }
 
 =item delete (KEYS...)
