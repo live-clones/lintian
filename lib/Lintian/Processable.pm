@@ -73,6 +73,9 @@ from the required fields according to the Policy Manual.
 my %KEEP = map { $_ => 1 } qw(
     pkg_name pkg_version pkg_src pkg_src_version pkg_type pkg_path pkg_arch
 );
+my %KEEP_EXTRA = map { $_ => 1} qw(
+    section binary uploaders maintainer area
+);
 
 sub new_from_metadata {
     my ($clazz, $pkg_type, $paragraph, $basepath) = @_;
@@ -140,8 +143,13 @@ sub new_from_metadata {
     }
     # Prune the field list...
     foreach my $k (keys %$self) {
-        delete $self->{$k} unless exists $KEEP{$k};
+        my $val;
+        $val = delete $self->{$k} unless exists $KEEP{$k};
+        if (defined $val && exists $KEEP_EXTRA{$k}) {
+            $self->{'extra-fields'}->{$k} = $val;
+        }
     }
+    $self->_make_identifier;
     return $self;
 }
 
@@ -258,6 +266,32 @@ sub clear_cache {
     my ($self) = @_;
 }
 
+
+=item $proc->get_field ($field[, $def])
+
+Optional method to access a field in the underlying data set.
+
+Returns $def if the field is not present or the implementation does
+not have (or want to expose) it.  This method is I<not> guaranteed to
+return the same value as "$proc->info->field ($field, $def)".
+
+If C<$def> is omitted is defaults to C<undef>.
+
+Default implementation accesses them via the hashref stored in
+"extra-fields" if present.  If the field is present, but not defined
+$def is returned instead.
+
+NB: This is mostly an optimization used by L<Lintian::Lab> to avoid
+(re-)reading the underlying package data.
+
+=cut
+
+sub get_field {
+    my ($self, $field, $def) = @_;
+    return $def unless exists $self->{'extra-fields'} and
+        exists $self->{'extra-fields'}->{$field};
+    return $self->{'extra-fields'}->{$field}//$def;
+}
 
 =back
 

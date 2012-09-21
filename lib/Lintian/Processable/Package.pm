@@ -129,6 +129,7 @@ sub new {
         $self->{pkg_arch} = $dinfo->{architecture};
         $self->{pkg_src} = $pkg_src;
         $self->{pkg_src_version} = $pkg_src_version;
+        $self->{'extra-fields'} = $dinfo;
     } elsif ($pkg_type eq 'source'){
         my $dinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not valid dsc file";
         my $pkg_name = $dinfo->{source};
@@ -142,6 +143,7 @@ sub new {
         $self->{pkg_arch} = 'source';
         $self->{pkg_src} = $pkg_name; # it is own source pkg
         $self->{pkg_src_version} = $pkg_version;
+        $self->{'extra-fields'} = $dinfo;
     } elsif ($pkg_type eq 'changes'){
         my $cinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not a valid changes file";
         my $pkg_version = $cinfo->{version};
@@ -155,6 +157,7 @@ sub new {
         $self->{pkg_src} = $pkg_name;
         $self->{pkg_src_version} = $pkg_version;
         $self->{pkg_arch} = $cinfo->{architecture};
+        $self->{'extra-fields'} = $cinfo;
     } else {
         croak "Unknown package type $pkg_type";
     }
