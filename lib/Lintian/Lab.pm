@@ -251,7 +251,6 @@ L<create|Lintian::Lab::Entry/create> method on the entry.
 sub get_package {
     my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch) = @_;
     my $pkg_name;
-    my $pkg_path;
     my @entries;
     my $index;
     my $proc;
@@ -263,11 +262,14 @@ sub get_package {
     # circular references (and weaken may be un-available)
 
     if (blessed $pkg && $pkg->isa ('Lintian::Processable')) {
+        if ($pkg->isa ('Lintian::Lab::Entry') and $pkg->from_lab ($self)) {
+            # Shouldn't happen too often, but ...
+            return $pkg;
+        }
         $pkg_name = $pkg->pkg_name;
         $pkg_type = $pkg->pkg_type;
         $pkg_version = $pkg->pkg_version;
         $pkg_arch = $pkg->pkg_arch;
-        $pkg_path = $pkg->pkg_path;
         $proc = $pkg;
     } else {
         $pkg_name = $pkg;
@@ -276,24 +278,22 @@ sub get_package {
 
     $index = $self->_get_lab_index ($pkg_type);
 
-    if (defined $pkg_version && (defined $pkg_arch || $pkg_type eq 'source')) {
+    if ($proc) {
+        my $pkg_src = $proc->pkg_src;
+        my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
+        push @entries, Lintian::Lab::Entry->_new_from_proc ($proc, $self, $dir);
+    } elsif (defined $pkg_version && (defined $pkg_arch || $pkg_type eq 'source')) {
         # We know everything - just do a regular look up
         my $dir;
         my @keys = ($pkg_name, $pkg_version);
-        my $e;
-        my ($pkg_src, $pkg_src_version);
+        my $entry;
+        my $pkg_src;
         push @keys, $pkg_arch if $pkg_type ne 'source';
-        if ($proc) {
-            $pkg_src = $proc->pkg_src;
-            $pkg_src_version = $proc->pkg_src_version;
-        } else {
-            $e = $index->get (@keys);
-            return unless $e;
-            $pkg_src = $e->{'source'};
-            $pkg_src_version = $e->{'source-version'};
-        }
+        $entry = $index->get (@keys);
+        return unless $entry;
+        $pkg_src = $entry->{'source'};
         $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-        push @entries, Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $dir);
+        push @entries, Lintian::Lab::Entry->new_from_metadata ($pkg_type, $entry, $self, $dir);
     } else {
         # clear $pkg_arch if it is a source package - it simplifies
         # the search code below

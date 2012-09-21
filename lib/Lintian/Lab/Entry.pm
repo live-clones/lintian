@@ -116,20 +116,21 @@ sub new_from_metadata {
 }
 
 # private constructor (called by Lintian::Lab)
-sub _new {
-    my ($type, $lab, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $base_dir) = @_;
+sub _new_from_proc {
+    my ($type, $proc, $lab, $base_dir) = @_;
     my $self = {};
+    my $pkg_path = $proc->pkg_path;
     bless $self, $type;
-    $self->{pkg_name}        = $pkg_name;
-    $self->{pkg_version}     = $pkg_version;
-    $self->{pkg_type}        = $pkg_type;
-    $self->{pkg_src}         = $pkg_src;
-    $self->{pkg_src_version} = $pkg_src_version;
+    $self->{pkg_name}        = $proc->pkg_name;
+    $self->{pkg_version}     = $proc->pkg_version;
+    $self->{pkg_type}        = $proc->pkg_type;
+    $self->{pkg_src}         = $proc->pkg_src;
+    $self->{pkg_src_version} = $proc->pkg_src_version;
     $self->{lab}             = $lab;
     $self->{info}            = undef; # load on demand.
     $self->{coll}            = {};
-    if ($pkg_type ne 'source') {
-        $self->{pkg_arch} = $pkg_arch;
+    if ($self->pkg_type ne 'source') {
+        $self->{pkg_arch} = $proc->pkg_arch;
     } else {
         $self->{pkg_arch} = 'source';
     }
@@ -139,6 +140,15 @@ sub _new {
     $self->_init ($pkg_path);
     $self->_make_identifier;
 
+    if ($proc->isa ('Lintian::Processable::Package')) {
+        my $ctrl = $proc->_ctrl_fields;
+        if ($ctrl) {
+            # The processable has already loaded the fields, cache them to save
+            # info from doing it later...
+            $self->{info} = Lintian::Collect->new ($self->pkg_name, $self->pkg_type,
+                                                   $self->base_dir, $ctrl);
+        }
+    }
     return $self;
 }
 

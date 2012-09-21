@@ -207,6 +207,17 @@ sub _derive_name {
     return $name;
 }
 
+# $proc->_ctrl_fields
+#
+# Return a hashref of the control fields if available.  Used by
+# L::Lab::Entry to avoid (re-)loading the fields from the control
+# file.
+sub _ctrl_fields {
+    my ($self) = @_;
+    return $self->{'extra-fields'} if exists $self->{'extra-fields'};
+    return;
+}
+
 =item $proc->info
 
 Overrides info from L<Lintian::Processable>.
