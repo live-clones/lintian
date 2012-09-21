@@ -287,12 +287,13 @@ sub visit_all {
     $self->_recurse_visit ($root, $visitor, scalar @$qf - 1, @keys);
 }
 
-=item get (KEYS)
+=item get (KEYS...)
 
-Fetches the entry for KEYS (if any).  Returns C<undef> if the entry
-is not known.
+Fetches the entry for KEYS (if any).  Returns C<undef> if the entry is
+not known.  If KEYS is exactly one item, it is assumed to be a
+L<Lintian::Processable> and the correct keys are extracted from it.
 
-The keys are (in general and in order):
+Otherwise, the keys are (in general and in order):
 
 =over 4
 
@@ -310,7 +311,15 @@ except for source packages
 
 sub get {
     my ($self, @keys) = @_;
+    @keys = $self->_make_keys ($keys[0]) if scalar @keys == 1;
     return $self->_do_get ($self->{'state'}, @keys);
+}
+
+sub _make_keys {
+    my ($self, $entry) = @_;
+    my @keys = ($entry->pkg_name, $entry->pkg_version);
+    push @keys, $entry->pkg_arch if $entry->pkg_type ne 'source';
+    return @keys;
 }
 
 =item set (ENTRY)
@@ -342,7 +351,7 @@ sub set {
     return 1;
 }
 
-=item delete (KEYS)
+=item delete (KEYS...)
 
 Removes the entry/entries found by KEYS (if any).  KEYS must contain
 at least one item - if the list of keys cannot uniquely identify a single
@@ -358,16 +367,21 @@ element, all "matching" elements will be removed.  Examples:
  # Delete all gcc-4.6 entries regardless of version and architecture
  $manifest->delete ('gcc-4.6')
 
+If KEYS is exactly one item, it is assumed to be a
+L<Lintian::Processable>.  If so, the proper keys will be extracted
+from that processable and (if present) that one element will be
+removed.
 
 This will mark the list as dirty if an element was removed.  If it returns
 a truth value, an element was removed - otherwise it will return 0.
 
-See L</get> for the key names.
+See L</get (KEYS...)> for the key names.
 
 =cut
 
 sub delete {
     my ($self, @keys) = @_;
+    @keys = $self->_make_keys ($keys[0]) if scalar @keys == 1;
     # last key, that is what we will remove :)
     my $lk = pop @keys;
     my $hash;
