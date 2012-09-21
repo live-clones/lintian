@@ -1625,6 +1625,12 @@ sub _update_profile {
     my ($profile, $sup_check, $sup_tags, $only_check, $only_tags) = @_;
     my %abbrev = ();
 
+    # --suppress-tags{,-from-file} can appear alone, but can also be
+    # mixed with -C or -X
+    if (%$sup_tags) {
+        $profile->disable_tags (keys %$sup_tags);
+    }
+
     if ($sup_check || $only_check) {
         # Build an abbreviation map
         for my $c ($profile->scripts (1)) {
@@ -1661,9 +1667,6 @@ sub _update_profile {
             fail ("Unknown check script $c") unless $cs;
             $profile->disable_tags ($cs->tags);
         }
-    } elsif (%$sup_tags) {
-        # we are disabling tags
-        $profile->disable_tags (keys %$sup_tags);
     }
 }
 
