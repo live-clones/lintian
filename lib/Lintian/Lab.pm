@@ -149,7 +149,6 @@ sub new {
     };
     $self->{'_correct_dir'} = 1 unless $dok;
     bless $self, $class;
-    $self->_init ($dir);
     return $self;
 }
 
@@ -281,7 +280,16 @@ sub get_package {
     if ($proc) {
         my $pkg_src = $proc->pkg_src;
         my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-        push @entries, Lintian::Lab::Entry->_new_from_proc ($proc, $self, $dir);
+        my $entry = Lintian::Lab::Entry->_new_from_proc ($proc, $self, $dir);
+        push @entries, $entry;
+        if (not $index->get ($proc)) {
+            # Add the entry to the index
+            # Ignore errors - happens if $proc does not have the extra fields
+            # we need.
+            eval {
+                $self->_new_entry ($entry, $proc);
+            };
+        }
     } elsif (defined $pkg_version && (defined $pkg_arch || $pkg_type eq 'source')) {
         # We know everything - just do a regular look up
         my $dir;
@@ -338,9 +346,7 @@ sub visit_packages {
             my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
             my $pkg_src = $me->{'source'}//$pkg_name;
             my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-            my $pkg_src_version = $me->{'source-version'};
-            my $lentry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
-                                                   $pkg_type, undef, $pkg_src, $pkg_src_version, $dir);
+            my $lentry = Lintian::Lab::Entry->new_from_metadata ($pkg_type, $me, $self, $dir);
             $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
         };
         $index->visit_all ($intv);
@@ -820,32 +826,25 @@ sub is_temp {
     return $self->{'mode'} eq LAB_MODE_TEMP ? 1 : 0;
 }
 
-# initialize the instance
-#
-# May be overriden by a sub-class.
-#
-# $self->dir may be the empty string if this is a temporary lab.
-sub _init {
-    my ($self) = @_;
-}
-
 # event - triggered by Lintian::Lab::Entry
 sub _entry_removed {
     my ($self, $entry) = @_;
-    my $pkg_name    = $entry->pkg_name;
-    my $pkg_type    = $entry->pkg_type;
-    my $pkg_version = $entry->pkg_version;
-    my @keys = ($pkg_name, $pkg_version);
+    my $pkg_type = $entry->pkg_type;
     my $pf = $self->_get_lab_index ($pkg_type);
-
-    push @keys, $entry->pkg_arch if $pkg_type ne 'source';
-
-    $pf->delete (@keys);
+    $pf->delete ($entry);
 }
 
 # event - triggered by Lintian::Lab::Entry
 sub _entry_created {
     my ($self, $entry) = @_;
+    my $pkg_type = $entry->pkg_type;
+    my $pf = $self->_get_lab_index ($pkg_type);
+    $self->_new_entry ($entry) unless $pf->get ($entry);
+    $pf->set_transient_marker (0, $entry);
+}
+
+sub _new_entry {
+    my ($self, $entry, $proc) = @_;
     my $pkg_name    = $entry->pkg_name;
     my $pkg_type    = $entry->pkg_type;
     my $pkg_version = $entry->pkg_version;
@@ -856,16 +855,21 @@ sub _entry_created {
         'file'    => $pkg_path,
         'version' => $pkg_version,
     );
+    my $field = sub {
+        my ($f) = @_;
+        my $v;
+        return $proc->get_field ($f) if $proc;
+        return $entry->info->field ($f, '');
+    };
 
     if (my @stat = stat $pkg_path) {
         $ts = $stat[9];
     }
     $data{'timestamp'} = $ts;
     if ($pkg_type eq 'source') {
-        my $info = $entry->info;
-        my $up = $info->field ('uploaders')//'';
-        my $maint = $info->field ('maintainer')//'';
-        my $bin = $info->field ('binary')//'';
+        my $up = $field->('uploaders');
+        my $maint = $field->('maintainer');
+        my $bin = $field->('binary');
 
         # Normalize the fields - usually this will be "no-ops", but we
         # do check some really warped packages every now and then...
@@ -889,9 +893,8 @@ sub _entry_created {
         $data{'architecture'} = $entry->pkg_arch;
         $data{'source'}       = $pkg_name;
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-        my $info = $entry->info;
         my $area = 'main';
-        my $s = $info->field ('section')//'';
+        my $s = $field->('section');
         if ($s && $s =~ m,\s*([a-zA-Z0-9-_]+)/,o) {
             $area = $1;
         }
@@ -905,6 +908,7 @@ sub _entry_created {
     }
 
     $pf->set (\%data);
+    $pf->set_transient_marker (1, $entry);
 }
 
 =back
