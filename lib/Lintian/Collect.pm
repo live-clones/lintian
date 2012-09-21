@@ -27,7 +27,7 @@ use Carp qw(croak);
 # based on the package type, and return it.  fail with unknown types,
 # since we do not check in other packes if this returns a value.
 sub new {
-    my ($class, $pkg, $type, $base_dir) = @_;
+    my ($class, $pkg, $type, $base_dir, $fields) = @_;
     my $object;
     if ($type eq 'source') {
         require Lintian::Collect::Source;
@@ -44,6 +44,7 @@ sub new {
     $object->{name} = $pkg;
     $object->{type} = $type;
     $object->{base_dir} = $base_dir;
+    $object->{field} = $fields if defined $fields;
     return $object;
 }
 
@@ -159,7 +160,7 @@ data in memory.
 
 =over 4
 
-=item new(PACKAGE, TYPE, BASEDIR)
+=item new(PACKAGE, TYPE, BASEDIR[, FIELDS])
 
 Creates a new object appropriate to the package type.  TYPE can be
 retrieved later with the type() method.  Croaks if given an unknown
@@ -169,6 +170,11 @@ PACKAGE is the name of the package and is stored in the collect object.
 It can be retrieved with the name() method.
 
 BASEDIR is the base directory for the data and should be absolute.
+
+If FIELDS is given it is assumed to be the fields from the underlying
+control file.  This is only used to avoid an unnecessary read
+operation (possibly incl. an ar | gzip pipeline) when the fields are
+already known.
 
 =back
 
