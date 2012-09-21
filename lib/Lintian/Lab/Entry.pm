@@ -50,7 +50,7 @@ This module provides basic access and manipulation about an entry
 are not created directly, instead they are returned by various
 methods from L<Lintian::Lab>.
 
-=head1 INSTANCE METHODS
+=head1 CLASS METHODS
 
 =over 4
 
@@ -86,6 +86,35 @@ our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
     @{ $EXPORT_TAGS{constants} }
 );
 
+=item new_from_metadata (PKG_TYPE, METADATA, LAB, BASEDIR)
+
+Overrides same contructor in Lintian::Processable.
+
+Used by L<Lintian::Lab> to load an existing entry from the lab.
+
+=cut
+
+sub new_from_metadata {
+    my ($type, $pkg_type, $metadata, $lab, $base_dir) = @_;
+    my $self;
+    my $pkg_path;
+    $pkg_path = $metadata->{'pkg_path'}
+        if exists $metadata->{'pkg_path'};
+    {
+        # Create a phony pkg_path if missing
+        local $metadata->{'pkg_path'} = '<PLACEHOLDER>'
+            unless exists $metadata->{'pkg_path'};
+        $self = $type->SUPER::new_from_metadata ($pkg_type, $metadata);
+    }
+    $self->{lab}      = $lab;
+    $self->{info}     = undef; # load on demand.
+    $self->{coll}     = {};
+    $self->{base_dir} = $base_dir;
+    $self->_init ($pkg_path);
+
+    return $self;
+}
+
 # private constructor (called by Lintian::Lab)
 sub _new {
     my ($type, $lab, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $base_dir) = @_;
@@ -107,34 +136,17 @@ sub _new {
 
     $self->{base_dir} = $base_dir;
 
-    if (defined $pkg_path) {
-        croak "$pkg_path does not exist." unless -e $pkg_path;
-    } else {
-        # This error should not happen unless someone (read: me) breaks
-        # Lintian::Lab::get_package
-        my $arch = '';
-        $arch = " [$pkg_arch]" if $pkg_arch;
-        croak "$pkg_name $pkg_type ($pkg_version)$arch does not exists"
-            unless $self->exists;
-        my $link;
-        $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
-        $link = 'dsc' if $pkg_type eq 'source';
-        $link = 'changes' if $pkg_type eq 'changes';
-
-        croak "Unknown package type $pkg_type" unless $link;
-        # Resolve the link if possible, but else just fall back to the link
-        # - this is not safe in case of a "delete and create", but if
-        #   abs_path fails odds are the package cannot be read anyway.
-        $pkg_path = Cwd::abs_path("$base_dir/$link") // "$base_dir/$link";
-    }
-
-    $self->{pkg_path} = $pkg_path;
-
-
-    $self->_init();
+    $self->_init ($pkg_path);
     $self->_make_identifier;
+
     return $self;
 }
+
+=back
+
+=head1 INSTANCE METHODS
+
+=over 4
 
 =item base_dir
 
@@ -401,12 +413,36 @@ sub update_status_file {
 }
 
 sub _init {
-    my ($self) = @_;
+    my ($self, $pkg_path) = @_;
     my $base_dir = $self->base_dir;
     my @data;
     my $head;
     my $coll;
-    return unless $self->exists;
+    my $exists = $self->exists;
+
+    if (defined $pkg_path) {
+        croak "$pkg_path does not exist." unless -e $pkg_path;
+    } else {
+        # This error should not happen unless someone (read: me) breaks
+        # Lintian::Lab::get_package
+        my $pkg_type = $self->pkg_type;
+        my $id = $self->identifier;
+        croak "$id does not exists" unless $exists;
+        my $link;
+        $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
+        $link = 'dsc' if $pkg_type eq 'source';
+        $link = 'changes' if $pkg_type eq 'changes';
+
+        croak "Unknown package type $pkg_type" unless $link;
+        # Resolve the link if possible, but else just fall back to the link
+        # - this is not safe in case of a "delete and create", but if
+        #   abs_path fails odds are the package cannot be read anyway.
+        $pkg_path = Cwd::abs_path("$base_dir/$link") // "$base_dir/$link";
+    }
+
+    $self->{pkg_path} = $pkg_path;
+
+    return unless $exists;
     return unless -e "$base_dir/.lintian-status";
     @data = read_dpkg_control ("$base_dir/.lintian-status");
     $head = $data[0];

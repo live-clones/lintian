@@ -302,15 +302,11 @@ sub get_package {
             my ($entry, @keys) = @_;
             my ($n, $v, $a) = @keys;
             my $dir;
-            my $pp;
-            my $pkg_src;
             # We do not have to check version - if we have a specific
             # version, only entries with that version will be visited.
             return if defined $pkg_arch && $a ne $pkg_arch;
-            $pp = $entry->{'file'};
-            $pkg_src = $entry->{'source'};
-            $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $v, $a);
-            push @entries,  Lintian::Lab::Entry->_new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $pkg_src, $entry->{'source-version'}, $dir);
+            $dir = $self->_pool_path ($entry->{'source'}, $pkg_type, $pkg_name, $v, $a);
+            push @entries,  Lintian::Lab::Entry->new_from_metadata ($pkg_type, $entry, $self, $dir);
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
