@@ -292,9 +292,8 @@ sub create {
         # If it is a source package, pull in all the related files
         #  - else unpacked will fail or we would need a separate
         #    collection for the symlinking.
-        my $data = get_dsc_info($pkg_path);
         my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
-        for my $fs (split(m/\n/o,$data->{'files'})) {
+        for my $fs (split(m/\n/o, $self->info->field ('files'))) {
             $fs =~ s/^\s*//o;
             next if $fs eq '';
             my @t = split(/\s+/o,$fs);
