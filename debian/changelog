@@ -103,6 +103,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       all relations.  Previously it was only triggered for
       strong dependnecy relations.  (Closes: #658474)
 
+  * collection/deb-format.desc:
+    + [NT] Remove unneeded "Needs-Info".
   * collection/objdump-info{-helper,.desc}:
     + [NT] Change the output format for the collection and
       bump the version of the collection accordingly.
