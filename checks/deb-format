@@ -25,6 +25,7 @@ use Lintian::Util qw(fail);
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
+# - These files are created by bin-pkg-control, index and unpacked respectively
 our %ERRORS = ('control-errors'       => 'tar-errors-from-control',
                'control-index-errors' => 'tar-errors-from-control',
                'index-errors'         => 'tar-errors-from-data',
