@@ -128,6 +128,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * debian/control:
     + [NT] Add (Build-)Depends on libtext-levenshtein-perl.
+  * debian/lintian.install:
+    + [NT] Install Lintian perl modules in /usr/share/perl5.
   * debian/rules:
     + [NT] Add target to generate HTML API doc.  Currently
       this is only run manually.

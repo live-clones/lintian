@@ -605,7 +605,10 @@ $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 # }}}
 
 # {{{ Loading lintian's own libraries, parse config file and setup output
-unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
+
+# Only update @INC if the LINTIAN_ROOT actually contains any libraries...
+unshift @INC, "$opt{'LINTIAN_ROOT'}/lib"
+    if -d "$opt{'LINTIAN_ROOT'}/lib";
 
 require Lintian::Lab;
 
