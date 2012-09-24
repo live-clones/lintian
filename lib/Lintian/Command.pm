@@ -86,6 +86,10 @@ The following hash keys can be set to alter the behaviour of spawn():
 
 STDIN for the first forked child.  Defaults to C<\undef>.
 
+CAVEAT: Due to #301774, passing a SCALAR ref as STDIN for the child
+leaks memory.  The leak is plugged for the C<\undef> case in spawn,
+but other scalar refs may still be leaked.
+
 =item pipe_in
 
 Use a pipe for STDIN and start the process in the background.
@@ -175,8 +179,16 @@ sub spawn {
         @in = ('<pipe', $opts->{pipe_in});
         $background = 1;
     } else {
-        $opts->{in} ||= \undef;
-        @in = ('<', $opts->{in});
+        # ("<", \$ref) leaks memory, but ("<&-") doesn't (see #301774)
+        #
+        # We plug the \undef case here because it has a trivial work
+        # around and it is the default value.
+        my $in = $opts->{in};
+        if (not defined $in or (ref $in eq 'SCALAR' and not defined $$in)) {
+            @in = ('<&-');
+        } else {
+            @in = ('<', $opts->{in});
+        }
     }
     if ($opts->{pipe_out}) {
         @out = ('>pipe', $opts->{pipe_out});

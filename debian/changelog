@@ -163,6 +163,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       conffile.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Strip leading slash off files extracted from tar.
+  * lib/Lintian/Command.pm:
+    + [NT] Work around a leak in IPC::Run (see #301774).
   * lib/Lintian/Internal/FrontendUtil.pm:
     + [NT] Always use Dpkg::Vendor to determine the default
       vendor.  Previously dpkg-vendor would be preferred if
