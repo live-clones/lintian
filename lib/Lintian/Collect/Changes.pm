@@ -68,8 +68,6 @@ sub new {
 
 =head1 INSTANCE METHODS
 
-=over 4
-
 In addition to the instance methods listed below, all instance methods
 documented in the L<Lintian::Collect> module are also available.
 

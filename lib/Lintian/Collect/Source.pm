@@ -497,11 +497,9 @@ not available via these methods.  Though if upstream has its own
 packages files, these may be listed even if they are not available
 via unpacked as is the case for 3.0 (quilt) packages.
 
-=back
-
 =cut
 
-# Overriden method; please see Lintian::Collect::Package::index for
+# Overridden method; please see Lintian::Collect::Package::index for
 # more information.
 #
 #
