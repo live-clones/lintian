@@ -76,7 +76,6 @@ sub new {
         'type' => $header->{'type'},
         'version' => $header->{'version'},
         'type-table' => {},
-        'needs_info' => [split /\s*,\s*/, $header->{'needs-info'}//''],
         'auto_remove' => 0,
     };
     $self->{'script_path'} =  dirname ($file) . '/' . $self->{'name'};
@@ -88,7 +87,38 @@ sub new {
 
     bless $self, $class;
 
+    $self->_parse_needs ($header->{'needs-info'});
+
     return $self;
+}
+
+sub _parse_needs {
+    my ($self, $needs) = @_;
+    my @min = ();
+    my %typespec = ();
+    my %seen = ();
+    my @max = ();
+
+    foreach my $part (split /\s*,\s*/, $needs//'') {
+        if ($part =~ m/^ \s* (\S+) \s*  \[ \s* ( [^]]+ ) \s* \] \s*$/x) {
+            my ($dep, $typelist) = ($1, $2);
+            my @types = split m/\s++/, $typelist;
+            if (@types) {
+                push @max, $dep unless exists $seen{$dep};
+                foreach my $type (@types) {
+                    push @{ $typespec{$type} }, $dep;
+                }
+            } else {
+                croak "Unknown conditional dependency in coll $self->{'name'}: $part\n";
+            }
+        } else {
+            push @min, $part;
+            push @max, $part unless exists $seen{$part};
+        }
+    }
+    $self->{'needs_info'}->{'min'} = \@min;
+    $self->{'needs_info'}->{'type'} = \%typespec;
+    $self->{'needs_info'}->{'max'} = \@max;
 }
 
 =back
@@ -128,7 +158,7 @@ Lintian::CollScript->mk_ro_accessors (qw(name type version auto_remove
     script_path
 ));
 
-=item needs_info
+=item needs_info ([COND])
 
 Returns a list of all items listed in the Needs-Info field.  Neither
 the list nor its contents should be modified.
@@ -136,8 +166,8 @@ the list nor its contents should be modified.
 =cut
 
 sub needs_info {
-    my ($self) = @_;
-    return @{ $self->{'needs_info'} };
+    my ($self, $cond) = @_;
+    return @{ $self->{'needs_info'}->{'max'} };
 }
 
 =item is_type (TYPE)

@@ -19,6 +19,7 @@
 use strict;
 
 use Test::More;
+use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control);
 
 # Find all of the desc files in either collection or checks.  We'll do one
@@ -31,8 +32,15 @@ plan tests => scalar(@DESCS);
 # its Needs-Info script references exist.
 for my $desc (@DESCS) {
     my ($header) = read_dpkg_control($desc);
-    my @needs = split(/\s*,\s*/, $header->{'needs-info'} || '');
+    my @needs;
     my @missing;
+
+    if ($header->{'collector-script'}) {
+        my $coll = Lintian::CollScript->new ($desc);
+        @needs = $coll->needs_info;
+    } else {
+        @needs = split(/\s*,\s*/, $header->{'needs-info'} || '');
+    }
     for my $coll (@needs) {
         unless (-f "$ENV{LINTIAN_ROOT}/collection/$coll") {
             push(@missing, $coll);

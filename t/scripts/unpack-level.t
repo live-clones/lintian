@@ -19,13 +19,14 @@
 use strict;
 
 use Test::More;
+use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 # Find all of the desc files in either collection or checks.  We'll do one
 # check per description.
 our @DESCS = (<$ENV{LINTIAN_ROOT}/collection/*.desc>,
               <$ENV{LINTIAN_ROOT}/checks/*.desc>);
-plan tests => scalar(@DESCS) * 2;
+plan tests => scalar(@DESCS);
 
 my @l2refs = (
         qr|->unpacked|,
@@ -39,17 +40,20 @@ my @l2refs = (
 # it is level two then there should be a reference
 for my $desc (@DESCS) {
     my ($header) = read_dpkg_control($desc);
-    my $level = $header->{'unpack-level'};
+    my @needs;
+    if ($header->{'collector-script'}) {
+        my $coll = Lintian::CollScript->new ($desc);
+        @needs = $coll->needs_info;
+    } else {
+        @needs = split(/\s*,\s*/, $header->{'needs-info'} || '');
+    }
 
     if ($desc =~ m/lintian\.desc$/) {
-	ok(!defined($level), "lintian.desc doesn't define unpack-level");
 	ok(1, "lintian.desc has valid needs-info for unpack level");
 	next;
     }
 
-    my $info = $header->{'needs-info'} || '';
-    chomp $info;
-    my %ninfo = map {$_ => 1} split(/\s*,\s*/, $info);
+    my %ninfo = map {$_ => 1} @needs;
     my ($file) = split(/\.desc$/, $desc);
     my $code = slurp_entire_file($file);
     my $requires_unpacked = 0;
@@ -65,9 +69,6 @@ for my $desc (@DESCS) {
 
     # it is ok that collection/unpacked doesn't depend on itself :)
     $requires_unpacked = 0 if ($short eq 'collection/unpacked.desc');
-
-    # no script should be using unpack-level: n anymore
-    ok(!defined($level), "$short doesn't define unpack-level");
 
     ok($requires_unpacked? defined($ninfo{'unpacked'}) : !defined($ninfo{'unpacked'}),
 	"$short has valid needs-info for unpack level");
