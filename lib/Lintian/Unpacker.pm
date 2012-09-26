@@ -128,6 +128,7 @@ sub new {
         $jobs = $options->{'jobs'} if exists $options->{'jobs'};
     }
     my $self = {
+        'cache' => {},
         'collmap' => $ccmap,
         'jobs' => $jobs,
         'profile' => $profile,
@@ -266,14 +267,37 @@ sub prepare_tasks {
     return 1;
 }
 
+sub _gen_type_coll {
+    my ($self, $pkg_type) = @_;
+    my $collmap = $self->{'collmap'};
+    my $cmap = Lintian::DepMap::Properties->new;
+    my $cond = { 'type' => $pkg_type };
+
+    foreach my $node ($collmap->known) {
+        my $coll = $collmap->getp ($node);
+        $cmap->add ($node, $coll->needs_info ($cond), $coll);
+    }
+
+    $cmap->initialise;
+
+    $self->{'cache'}->{$pkg_type} = $cmap;
+    return $cmap->clone;
+}
+
 sub _requested_colls {
     my ($self, $lpkg, $new) = @_;
     my $profile = $self->{'profile'};
-    my $cmap = $self->{'collmap'}->clone;
+    my $cmap;
     my $extra = $self->{'extra-coll'};
     my $pkg_type = $lpkg->pkg_type;
     my %needed = ();
     my @check;
+
+    unless (exists $self->{'cache'}->{$pkg_type}) {
+        $cmap = $self->_gen_type_coll ($pkg_type);
+    } else {
+        $cmap = $self->{'cache'}->{$pkg_type}->clone;
+    }
 
     # if its new and $profile is undef, we have to run all
     # of collections.  So lets extra early.

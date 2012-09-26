@@ -163,10 +163,33 @@ Lintian::CollScript->mk_ro_accessors (qw(name type version auto_remove
 Returns a list of all items listed in the Needs-Info field.  Neither
 the list nor its contents should be modified.
 
+COND is optional and used to determine what conditions are true.  If
+omitted, all "extra" dependencies are returned.  Otherwise, only the
+dependencies required by COND are included.  COND is a hashref and
+with the following key/values:
+
+=over 4
+
+=item type
+
+The value is a package type that determines which package type is
+being unpacked.  This is used to determine if the condition for
+"<dep> [<type>]" relations are true or not.
+
+=back
+
 =cut
 
 sub needs_info {
     my ($self, $cond) = @_;
+    if ($cond && exists $cond->{'type'}) {
+        my $needs = $self->{'needs_info'};
+        my @min = @{ $needs->{'min'} };
+        my $type = $cond->{'type'};
+        push @min, @{ $needs->{'type'}->{$type} }
+            if exists $needs->{'type'}->{$type};
+        return @min;
+    }
     return @{ $self->{'needs_info'}->{'max'} };
 }
 
