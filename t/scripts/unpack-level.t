@@ -31,7 +31,7 @@ my @l2refs = (
         qr|->unpacked|,
 	qr<unpacked/>,
 	qr<unpacked-errors>,
-	qr<chdir\s*\(\s*["'](?:\$dir/)?unpacked/?['"]\s*\)>,
+	qr<chdir\s*\(?\s*["'](?:\$dir/)?unpacked/?['"]\s*\)?>,
 );
 
 # For each desc file, load the first stanza of the file and check that if

@@ -160,15 +160,13 @@ sub file_info {
 =item index (FILE)
 
 Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
-must be relative to the root of the control.tar.gz and must be without
-leading slash (or "./").  If FILE is not in the package, it returns
-C<undef>.
+must be relative to the root of the unpacked package and must be
+without leading slash (or "./").  If FILE is not in the package, it
+returns C<undef>.
 
 To get a list of entries in the package, see L</sorted_index>.  To
 actually access the underlying file (e.g. the contents), use
 L</unpacked ([FILE])>.
-
-Caveat: Not
 
 =cut
 
@@ -178,7 +176,7 @@ sub index {
     return $self->_fetch_index_data('index', 'index', 'index-owner-id', $file);
 }
 
-=item sorted_control_index
+=item sorted_index
 
 Returns a sorted array of file names listed in the package.  The names
 will not have a leading slash (or "./") and can be passed to

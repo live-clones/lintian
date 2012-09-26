@@ -248,6 +248,50 @@ sub source_field {
     return $self->{source_field};
 }
 
+=item orig_index (FILE)
+
+Like L</index> except orig_index is based on the "orig tarballs" of
+the source packages.
+
+For native packages L</index> and L</orig_index> are generally
+identical.
+
+NB: If sorted_index includes a debian packaging, it is was
+contained in upstream part of the source package (or the package is
+native).
+
+=cut
+
+# sub orig_index Needs-Info src-orig-index
+sub orig_index {
+    my ($self, $file) = @_;
+    return $self->_fetch_index_data ('orig-index', 'src-orig-index', undef, $file);
+}
+
+=item sorted_orig_index
+
+Like L<sorted_index|Lintian::Collect/sorted_index> except
+sorted_orig_index is based on the "orig tarballs" of the source
+packages.
+
+For native packages L<sorted_index|Lintian::Collect/sorted_index> and
+L</sorted_orig_index> are generally identical.
+
+NB: If sorted_orig_index includes a debian packaging, it is was
+contained in upstream part of the source package (or the package is
+native).
+
+=cut
+
+# sub sorted_orig_index Needs-Info :orig_index
+sub sorted_orig_index {
+    my ($self) = @_;
+    # orig_index does all our work for us, so call it if
+    # sorted_orig_index has not been created yet.
+    $self->orig_index ('') unless exists $self->{'sorted_orig-index'};
+    return @{ $self->{'sorted_orig-index'} };
+}
+
 =item binary_field (PACKAGE[, FIELD[, DEFAULT]])
 
 Returns the content of the field FIELD for the binary package PACKAGE
@@ -510,15 +554,39 @@ For the general documentation of this method, please refer to the
 documenation of it in
 L<Lintian::Collect::Package|Lintian::Collect::Package/index (FILE)>.
 
-The index of a source package is not very well defined for source
-packages and this is reflected in the behaviour of this method and
-sorted_index as well.  In general all files in the "upstream
-tarball(s)" are covered by this method and sorted_index.
+The index of a source package is not very well defined for non-native
+source packages.  This method gives the index of the "unpacked"
+package (with 3.0 (quilt), this implies patches have been applied).
 
-For non-native packages, this means that the packaging is generally
-not available via these methods.  Though if upstream has its own
-packages files, these may be listed even if they are not available
-via unpacked as is the case for 3.0 (quilt) packages.
+If you want the index of what is listed in the upstream orig tarballs,
+then there is L</orig_index>.
+
+For native packages, the two indices are generally the same as they
+only have one tarball and their debian packaging is included in that
+tarball.
+
+IMPLEMENTATION DETAIL/CAVEAT: Lintian currently (2.5.11) generates
+this by running "find(1)" after unpacking the the source package.
+This has three consequnces.
+
+First it means that (original) owner/group data is lost; Lintian
+inserts "root/root" here.  This is usually not a problem as
+owner/group information for source packages do not really follow any
+standards.
+
+Secondly, permissions are modified by A) umask and B) laboratory
+set{g,u}id bits (the laboratory on lintian.d.o has setgid).  This is
+*not* corrected/altered.  Note Lintian (usually) breaks if any of the
+"user" bits are set in the umask, so that part of the permission bit
+I<should> be reliable.
+
+Again, this shouldn't be a problem as permissions in source packages
+are usually not important.  Though if accuracy is needed here,
+L</orig_index> may used instead (assuming it has the file in
+question).
+
+Third, hardlinking information is lost and no attempt has been made
+to restore it.
 
 =cut
 
