@@ -32,7 +32,7 @@ I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 I: relations-multiple-libs: ored-depends-on-obsolete-package suggests: gs
 I: relations: conflicts-with-version foobar (<< 5+5)
 I: relations: ored-depends-on-obsolete-package recommends: gs-aladdin
-W: relations source: ancient-standards-version 3.7.3 (current is 3.9.3)
+W: relations source: ancient-standards-version 3.7.3 (current is 3.9.4)
 W: relations source: bad-homepage lintian.debian.org
 W: relations source: build-depends-on-1-revision build-depends-indep: libfoo (>= 1.2-1)
 W: relations source: build-depends-on-python-dev-with-no-arch-any

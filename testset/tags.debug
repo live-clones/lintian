@@ -21,7 +21,7 @@ E: libhello0: syntax-error-in-symbols-file 3
 E: libhello0: syntax-error-in-symbols-file 4
 E: libhello0: unknown-meta-field-in-symbols-file Build-Dep-Foo, line 11
 I: debug source: missing-debian-source-format
-W: debug source: ancient-standards-version 3.7.0 (current is 3.9.3)
+W: debug source: ancient-standards-version 3.7.0 (current is 3.9.4)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: dbg-package-missing-depends hi-dbg
 W: debug source: dbg-package-missing-depends libhello0-dbg

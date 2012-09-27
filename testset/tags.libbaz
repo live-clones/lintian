@@ -35,7 +35,7 @@ I: libbaz2-dev: no-md5sums-control-file
 I: libbaz2: no-md5sums-control-file
 I: libbaz2: no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
 N: 4 tags overridden (4 warnings)
-W: libbaz source: ancient-standards-version 3.2.1 (current is 3.9.3)
+W: libbaz source: ancient-standards-version 3.2.1 (current is 3.9.4)
 W: libbaz source: binaries-have-file-conflict libbaz1 libbaz1-dev usr/lib/perl5/auto/Foo/Foo.so
 W: libbaz source: binaries-have-file-conflict libbaz1 libbaz2-dev usr/lib/libbaz2.a
 W: libbaz source: changelog-should-mention-nmu

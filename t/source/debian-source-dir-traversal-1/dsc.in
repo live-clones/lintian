@@ -4,7 +4,7 @@ Binary: debian-source-dir-traversal-1
 Architecture: all
 Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Build-Depends: debhelper (>= 7), quilt
 Checksums-Sha1:
  @SHA1@ @SIZE@ debian-source-dir-traversal-1_1.tar.gz
