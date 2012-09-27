@@ -242,7 +242,7 @@ for my $shlib_file (keys %SONAME) {
         my $ok = 0;
 
         # If the shared library is in /lib, we have to look for the dev symlink
-        # in /lib
+        # in /usr/lib
         $link_file = "usr/$link_file" unless $shlib_file =~ m,^usr/,;
 
         foreach my $devpkg (@devpkgs) {
