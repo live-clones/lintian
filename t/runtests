@@ -72,7 +72,7 @@ if (`dpkg-source --help` =~ m,\s--commit\s,) {
     # explicitly asked to do so:
     $DPKG_BUILDPACKAGE .= ' --source-option=--auto-commit';
 }
-our $STANDARDS_VERSION = '3.9.3';
+our $STANDARDS_VERSION = '3.9.4';
 our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $ARCHITECTURE;
 

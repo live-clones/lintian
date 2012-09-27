@@ -10,7 +10,7 @@ E: etcfiles: no-copyright-file
 E: etcfiles: non-etc-file-marked-as-conffile var/lib/foo
 E: only-etcfiles: extended-description-is-empty
 I: etcfiles source: missing-debian-source-format
-W: etcfiles source: ancient-standards-version 3.5.0 (current is 3.9.3)
+W: etcfiles source: ancient-standards-version 3.5.0 (current is 3.9.4)
 W: etcfiles source: no-debian-copyright
 W: etcfiles: file-missing-in-md5sums etc/improper-link
 W: etcfiles: file-missing-in-md5sums usr/share/doc/etcfiles/changelog
