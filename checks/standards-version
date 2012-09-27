@@ -25,6 +25,7 @@ use strict;
 use warnings;
 
 use POSIX qw(strftime);
+use List::Util qw(first);
 use Date::Parse qw(str2time);
 
 use Lintian::Data;
@@ -57,14 +58,10 @@ my (undef, undef, $info) = @_;
 # udebs aren't required to conform to policy, so they don't need
 # Standards-Version. (If they have it, though, it should be valid.)
 my $version = $info->field('standards-version');
-my $pkgs = $info->binaries;
 my $all_udeb = 1;
-foreach my $bin_type (values %$pkgs) {
-    if ($bin_type ne 'udeb') {
-        $all_udeb = 0;
-        last;
-    }
-}
+$all_udeb = 0
+     if first { $info->binary_package_type ($_) ne 'udeb' } $info->binaries;
+
 if (not defined $version) {
     tag 'no-standards-version-field' unless $all_udeb;
     return 0;

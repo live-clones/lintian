@@ -173,17 +173,39 @@ sub native {
 
 =item binaries
 
-Returns a hash reference with the binary package names as keys and the
-(X-)Package-Type as value (which should be either C<deb> or C<udeb>
-currently).  The debfiles collection script must have been run to make
-the F<debfiles/control> file available.
+Returns a list of the binary and udeb packages listed in the
+F<debian/control>.
 
 =cut
 
-# sub binaries Needs-Info :binary_field
+# sub binaries Needs-Info :binary_package_type
 sub binaries {
     my ($self) = @_;
-    return $self->{binaries} if exists $self->{binaries};
+    # binary_package_type does all the work for us.
+    $self->binary_package_type ('') unless exists $self->{binaries};
+    return keys %{ $self->{binaries} };
+}
+
+=item binary_package_type (BINARY)
+
+Returns package type based on value of the Package-Type (or if absent,
+X-Package-Type) field.  If the field is omitted, the default value
+"deb" is used.
+
+If the BINARY is not a binary listed in the source packages
+F<debian/control> file, this method return C<undef>.
+
+=cut
+
+# sub binary_package_type Needs-Info :binary_field
+
+sub binary_package_type {
+    my ($self, $binary) = @_;
+    if (exists $self->{binaries}) {
+        return $self->{binaries}->{$binary}
+            if exists $self->{binaries}->{$binary};
+        return;
+    }
     # we need the binary fields for this.
     $self->_load_dctrl unless exists $self->{binary_field};
 
@@ -195,7 +217,8 @@ sub binaries {
     }
 
     $self->{binaries} = \%binaries;
-    return $self->{binaries};
+    return $binaries{$binary} if exists $binaries{$binary};
+    return;
 }
 
 =item source_field([FIELD[, DEFAULT]])

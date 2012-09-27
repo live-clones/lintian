@@ -99,7 +99,7 @@ if ($@) {
     return;
 }
 
-my @package_names = sort keys %{ $info->binaries };
+my @package_names = sort $info->binaries;
 
 foreach my $bin (@package_names) {
     my $bfields = $info->binary_field ($bin);
@@ -214,7 +214,7 @@ foreach my $bin (@package_names) {
     # Accumulate the description.
     my $desc = $info->binary_field ($bin, 'description');
     my $bin_area;
-    if ($desc and $info->binaries->{$bin} ne 'udeb') {
+    if ($desc and $info->binary_package_type ($bin) ne 'udeb') {
         push @descriptions, [ $bin, split("\n", $desc, 2) ];
     }
 

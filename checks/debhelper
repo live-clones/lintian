@@ -217,11 +217,11 @@ unless ($inclcdbs){
 
 return unless $seencommand;
 
-my $pkgs = $info->binaries;
-my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
+my @pkgs = $info->binaries;
+my $single_pkg = scalar @pkgs == 1 ? $info->binary_package_type ($pkgs[0]) : '';
 
-for my $binpkg (keys %$pkgs) {
-    next if $pkgs->{$binpkg} ne 'deb';
+for my $binpkg (@pkgs) {
+    next if $info->binary_package_type ($binpkg) ne 'deb';
     my $strong = $info->binary_relation ($binpkg, 'strong');
     my $all = $info->binary_relation ($binpkg, 'all');
 
@@ -307,8 +307,9 @@ foreach my $file (sort readdir(DEBIAN)) {
         }
         close IN;
         if (!$seentag) {
-            unless (($binpkg && exists($pkgs->{$binpkg})
-                     && ($pkgs->{$binpkg} eq 'udeb'))
+            my $binpkg_type = $info->binary_package_type ($binpkg);
+            unless (($binpkg && defined $binpkg_type
+                     && ($binpkg_type eq 'udeb'))
                     or (!$binpkg && ($single_pkg eq 'udeb'))) {
                 tag 'maintainer-script-lacks-debhelper-token', "debian/$file";
             }
@@ -444,7 +445,7 @@ if ($seen_python_helper == -1 and $level >= 9) {
 }
 if ($seen_dh and $seen_python_helper != 1) {
     my %python_depends = ();
-    for my $binpkg (keys %$pkgs) {
+    for my $binpkg (@pkgs) {
         if ($info->binary_relation($binpkg, 'all')->implies('${python:Depends}')) {
             $python_depends{$binpkg} = 1;
         }
@@ -460,7 +461,7 @@ if ($seen_dh and $seen_python_helper != 1) {
 }
 if ($seen_dh and $seen_python3_helper != 1) {
     my %python3_depends = ();
-    for my $binpkg (keys %$pkgs) {
+    for my $binpkg (@pkgs) {
         if ($info->binary_relation($binpkg, 'all')->implies('${python3:Depends}')) {
             $python3_depends{$binpkg} = 1;
         }

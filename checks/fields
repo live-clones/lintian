@@ -732,12 +732,12 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 
 if ($type eq 'source') {
 
-    my $binpkgs = $info->binaries;
+    my @binpkgs = $info->binaries;
 
     #Get number of arch-indep packages:
     my $arch_indep_packages = 0;
     my $arch_dep_packages = 0;
-    foreach my $binpkg (keys %$binpkgs) {
+    foreach my $binpkg (@binpkgs) {
         my $arch = $info->binary_field($binpkg, 'architecture', '');
         if ($arch eq 'all') {
             $arch_indep_packages++;
@@ -851,7 +851,7 @@ if ($type eq 'source') {
     }
 
     my (@arch_dep_pkgs, @dbg_pkgs);
-    foreach my $binpkg (keys %$binpkgs) {
+    foreach my $binpkg (@binpkgs) {
         if ($binpkg =~ m/-dbg$/) {
             push @dbg_pkgs, $binpkg;
         } elsif ($info->binary_field ($binpkg, 'architecture', '') ne 'all') {
