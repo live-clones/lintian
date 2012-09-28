@@ -77,6 +77,14 @@ Info: A "-dev" package is supposed to install a "libsomething.so" symbolic
  doesn't include the version number -- this is because such a link is used
  by the linker when other programs are built against this shared library.
  .
+ The symlink is generally expected in the same directory as the library
+ itself.  The major exception to this rule is if the library is installed
+ in (or beneath) <tt>/lib</tt>, where the symlink must be installed in the
+ same dir beneath <tt>/usr</tt>.
+ .
+ Example: If the library is installed in <tt>/lib/i386-linux-gnu/libXYZ.so.V</tt>,
+ the symlink is expected at <tt>/usr/lib/i386-linux-gnu/libXYZ.so</tt>.
+ .
  Implementation detail: This tag is emitted for the library package and not
  the "-dev" package.
 Ref: policy 8.4

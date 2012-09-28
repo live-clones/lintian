@@ -84,6 +84,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
       "conffiles" control file directly.
   * checks/po-debconf:
     + [NT] Fix dirhandle leak.
+  * checks/shared-libs.desc:
+    + [NT] Clearify the description of dev-pkg-without-shlib-symlink
+      to mention that the dev symlink is always expected in /usr.
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
       (Closes: #685497)
