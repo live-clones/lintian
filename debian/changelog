@@ -50,9 +50,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
       (Closes: #681894)
     + [NT] Retire debhelper-overrides-need-versioned-build-depends.
   * checks/fields{,.desc}:
-    + [NT] Mention that cme can automate fixing some perl
-      related tags.  Thanks to gregor herrmann for the report
-      and patch.  (Closes: #680446)
     + [NT] Retire no-source-field since Lintian cannot emit it any
       more due to dpkg-source refusing to extract such source
       packages.
@@ -74,16 +71,11 @@ lintian (2.5.11) UNRELEASED; urgency=low
       the groff pipeline.
     + [CW,NT] Use the L::Util gzip decompressor to open gzipped
       manpages.
-    + [NT] Ignore wrapping issues on lines containing "file://" as
-      those are probably also URLs.  Thanks to Faheem Mitha for the
-      report.  (Closes: #682701)
   * checks/menu-format:
     + [NT] Move a table of categories to a data file.
   * checks/md5sums:
     + [NT] Use L::Collect's conffile API instead of accessing the
       "conffiles" control file directly.
-  * checks/po-debconf:
-    + [NT] Fix dirhandle leak.
   * checks/shared-libs.desc:
     + [NT] Clearify the description of dev-pkg-without-shlib-symlink
       to mention that the dev symlink is always expected in /usr.
@@ -95,12 +87,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/source-copyright{,.desc}:
     + [NT] Check for possible misspellings of known field
       names.  (Closes: #678639)
-    + [NT] Report the correct line number for the use of commas in
-      the "Files" field in DEP-5 copyright files.  Thanks to Faheem
-      Mitha for the report.  (Closes: #683946)
-    + [NT] Mention that syntax-error-in-dep5-copyright may hide
-      other issues as Lintian skips some DEP-5 checks in this case.
-      Thanks to Faheem Mitha for the report.
   * checks/version-substvars{,.desc}:
     + [JW,NT] Extend version-substvar-for-external-package to
       all relations.  Previously it was only triggered for
@@ -112,11 +98,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Change the output format for the collection and
       bump the version of the collection accordingly.
 
-  * data/binaries/embedded-libs:
-    + [NT] Update source-regex for libmysqlclient.  Thanks to
-      Nicholas Bamber for the report.  (Closes: #682022)
-  * data/doc-base/sections:
-    + [NT] Update section list.  (Closes: #678650)
   * data/fields/archive-sections:
     + [NT] Add new "tasks" section.
   * data/menu-format/add-categories:
@@ -125,9 +106,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Add nodejs as a known interpreter.  Thanks to
       Marcelo Jorge Vieira for the report.
       (Closes: #623265)
-  * data/spelling/corrections:
-    + [NT] Add new corrections.  Thanks to Justin B Rye.
-      (Closes: #681527)
 
   * debian/control:
     + [NT] Add (Build-)Depends on libtext-levenshtein-perl.
@@ -138,7 +116,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
       this is only run manually.
 
   * frontend/lintian:
-    + [NT] Fix synopsis for --no-cfg option in the help output.
     + [NT] Remove chdir calls for checks.
     + [NT] Retire depreciated command line and config options.
     + [NT] Refactor unpackaging into Lintian::Unpacker.
@@ -152,9 +129,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
       was ignored if -C or -X was passed.  Thanks to Thorsten
       Glaser for reporting it.  (Closes: #688320)
 
-  * lib/Lintian/Architecture.pm:
-    + [NT] Properly handle cases like "linux-amd64" being an
-      alias of "amd64".
   * lib/Lintian/Collect{,/Source}.pm:
     + [NT] Add optional parameter to field (and X_field)
       methods that denotes the default value if a field is
@@ -175,16 +149,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * lib/Lintian/Lab/Entry.pm:
     + [NT] Use the L::Collect during creation instead of
       manually reading the dsc for source packages.
-  * lib/Lintian/Path.pm:
-    + [NT] Always resolve hardlinks relative to the package
-      root.
-  * lib/Lintian/Profile.pm:
-    + [NT] Use "closedir" rather than "close" to close a dir
-      handle.
-  * lib/Lintian/Tag/Info.pm:
-    + [NT] Fix poor error message due to the wrong variable
-      being unused.  Thanks to Christoph Biedl for the report
-      (Closes: #682941)
   * lib/Lintian/Tags.pm:
     + [NT] Be explicit about the reason when rejecting an
       override.  Thanks to Yves-Alexis Perez for the report.
@@ -196,6 +160,70 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Remove documentation about removed options.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
+
+lintian (2.5.10.2) unstable; urgency=low
+
+  * checks/po-debconf:
+    + [NT] Fix dirhandle leak.
+  * checks/source-copyright{,.desc}:
+    + [NT] Report the correct line number for the use of commas in
+      the "Files" field in DEP-5 copyright files.  Thanks to Faheem
+      Mitha for the report.  (Closes: #683946)
+    + [NT] Mention that syntax-error-in-dep5-copyright may hide
+      other issues as Lintian skips some DEP-5 checks in this case.
+      Thanks to Faheem Mitha for the report.
+
+  * frontend/lintian:
+    + [NT] Fix typo of identifier method, which causes Lintian to
+      crash in case a "coll" cannot be started or it fails.
+
+  * lib/Lintian/Profile.pm:
+    + [NT] Use "closedir" rather than "close" to close a dir
+      handle.
+
+ -- Niels Thykier <niels@thykier.net>  Mon, 17 Sep 2012 11:56:18 +0200
+
+lintian (2.5.10.1) unstable; urgency=low
+
+  * checks/fields.desc:
+    + [NT] Mention that cme can automate fixing some perl
+      related tags.  Thanks to gregor herrmann for the report
+      and patch.  (Closes: #680446)
+  * checks/manpages:
+    + [NT] Ignore wrapping issues on lines containing "file://" as
+      those are probably also URLs.  Thanks to Faheem Mitha for the
+      report.  (Closes: #682701)
+
+  * data/binaries/embedded-libs:
+    + [NT] Update source-regex for libmysqlclient.  Thanks to
+      Nicholas Bamber for the report.  (Closes: #682022)
+  * data/doc-base/sections:
+    + [NT] Update section list.  (Closes: #678650)
+  * data/spelling/corrections:
+    + [NT] Add new corrections.  Thanks to Justin B Rye.
+      (Closes: #681527)
+
+  * debian/changelog:
+    + [NT] Fix some typos in earlier entries.
+
+  * frontend/lintian:
+    + [NT] Fix synopsis for --no-cfg option in the help output.
+
+  * lib/Lintian/Architecture.pm:
+    + [NT] Properly handle cases like "linux-amd64" being an
+      alias of "amd64".
+  * lib/Lintian/Path.pm:
+    + [NT] Always resolve hardlinks relative to the package
+      root.
+  * lib/Lintian/Relation.pm:
+    + [NT] Fix handling of VISIT_OR_CLAUSE_FULL bit mask in a
+      condition.
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Fix poor error message due to the wrong variable
+      being unused.  Thanks to Christoph Biedl for the report
+      (Closes: #682941)
+
+ -- Niels Thykier <niels@thykier.net>  Fri, 27 Jul 2012 16:32:26 +0200
 
 lintian (2.5.10) unstable; urgency=low
 
