@@ -11,7 +11,8 @@ BEGIN {
 }
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::CheckScript;
+use Lintian::CollScript;
 
 my %opt = (
     'checks'     => 1,
@@ -25,8 +26,10 @@ my %rneeds;
 my %depth = ();
 my @levels;
 
+my %collmap = ();
 my @colls  = ();
 my @checks = ();
+my $cond = undef;
 
 my %nodes = ();
 my %edges = ();
@@ -38,6 +41,7 @@ my %opthash = (
     'checks!' => \$opt{'checks'},
     'dep-level!' => \$opt{'dep-level'},
     'longest-paths' => \$opt{'longest-paths'},
+    'pkg-type=s' => \$opt{'pkg-type'},
     'h|help' => \&usage,
 );
 
@@ -49,28 +53,42 @@ GetOptions(%opthash)
     or die("error parsing options\n");
 
 $opt{'dep-level'} = 1 if $opt{'longest-paths'};
+$cond = { 'type' => $opt{'pkg-type'} } if defined $opt{'pkg-type'};
 
 foreach my $collf (glob ("$LINTIAN_ROOT/collection/*.desc")) {
-    my $coll = get_dsc_info($collf) or die "$collf: $!";
-    my $name = $coll->{'collector-script'} or die "$collf is missing collector-script field.\n";
-    my @needs = split m/\s*+,\s*+/o, $coll->{'needs-info'}//'';
+    my $coll = Lintian::CollScript->new ($collf);
+    my $name = $coll->name;
+    my @needs = $coll->needs_info ($cond);
     push @colls, $name;
     $needs{"coll-$name"} = \@needs;
+    $collmap{$name} = $coll;
     foreach my $n (@needs) {
         push @{ $rneeds{"coll-$n"} }, "coll-$name";
     }
 }
 
+if ($cond) {
+    my %newneeds = ();
+    my %newrneeds = ();
+    @colls = grep { $collmap{$_}->is_type ($opt{'pkg-type'}) } @colls;
+    foreach my $cname (@colls) {
+        my @oldneed = @{ $needs{"coll-$cname"} };
+        my $n = prune_needs ("coll-$cname", \%newrneeds, @oldneed);
+        $newneeds{"coll-$cname"} = $n;
+    }
+    %needs = %newneeds;
+    %rneeds = %newrneeds;
+}
+
 if ($opt{'checks'}) {
     foreach my $checkf (glob ("$LINTIAN_ROOT/checks/*.desc")) {
-        my $check = get_dsc_info($checkf) or die "$checkf: $!";
-        my $name = $check->{'check-script'} or die "$checkf is missing check-script field.\n";
-        my @needs = split m/\s*+,\s*+/o, $check->{'needs-info'}//'';
+        my $check = Lintian::CheckScript->new ($checkf);
+        my $name = $check->name;
+        my $n;
+        next if defined $opt{'pkg-type'} and not $check->is_check_type ($opt{'pkg-type'});
         push @checks, $name;
-        $needs{"check-$name"} = \@needs;
-        foreach my $n (@needs) {
-            push @{ $rneeds{"coll-$n"} }, "check-$name";
-        }
+        $n = prune_needs ("check-$name", \%rneeds, $check->needs_info);
+        $needs{"check-$name"} = $n;
     }
 }
 
@@ -79,6 +97,24 @@ gen_coll_check();
 make_graph();
 
 exit 0;
+
+sub prune_needs {
+    my ($name, $rneeds, @oldneed) = @_;
+    my %filtneeds = ();
+    my %seen = ();
+    while (my $need = pop @oldneed) {
+        $seen{$need} = 1;
+        if (not defined $opt{'pkg-type'} or $collmap{$need}->is_type ($opt{'pkg-type'}) ) {
+            $filtneeds{$need} = 1;
+            push @{ $rneeds->{"coll-$need"} }, $name;
+        } else {
+            push @oldneed,
+               grep { ! exists $seen{$_} } $collmap{$need}->needs_info ($cond);
+        }
+    }
+    $rneeds->{$name} = [] unless exists $rneeds->{$name};
+    return [keys %filtneeds];
+}
 
 sub gen_depth_level {
     my @queue;
@@ -263,6 +299,8 @@ Usage: $p [options]
   --[no-]dep-level - Try to prettify the graph by using "dependency levels"
   --longest-paths  - Highlight the longest paths in the graph.
                      implies --dep-level
+  --pkg-type TYPE  - Assume only TYPE packages are checked/unpacked.
+                     (TYPE is one of "binary", "udeb", "source" or "changes")
 
 Generates a (Graphviz dot) graph that describes relations between
 various checks and collections.
