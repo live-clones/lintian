@@ -19,6 +19,7 @@ I: foo++: no-md5sums-control-file
 W: foo++ source: ancient-standards-version 3.1.1 (current is 3.9.4)
 W: foo++ source: debian-watch-file-in-native-package
 W: foo++ source: debian-watch-file-unknown-version 0
+W: foo++ source: dm-upload-allowed-is-obsolete
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 W: foo++-helper: empty-binary-package
 W: foo++: latest-debian-changelog-entry-without-new-date

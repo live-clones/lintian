@@ -933,6 +933,8 @@ if (defined $info->field('python-version')) {
 if (defined $info->field('dm-upload-allowed')) {
     my $dmupload = $info->field('dm-upload-allowed');
 
+    tag 'dm-upload-allowed-is-obsolete';
+
     unfold('dm-upload-allowed', \$dmupload);
 
     unless ($dmupload eq 'yes') {

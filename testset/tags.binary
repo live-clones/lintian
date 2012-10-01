@@ -63,6 +63,7 @@ W: binary source: ancient-standards-version 3.2.1 (current is 3.9.4)
 W: binary source: debian-rules-ignores-make-clean-error line 14
 W: binary source: debian-rules-missing-recommended-target build-indep
 W: binary source: debian-rules-uses-pwd line 9
+W: binary source: dm-upload-allowed-is-obsolete
 W: binary source: intra-source-package-circular-dependency binary binary-data
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version

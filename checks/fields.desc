@@ -1086,3 +1086,12 @@ Info: The package appears to be a release candidate or preview release, but
  the version sorts higher than the expected final release.
  .
  Note this check is limited to new upstream releases of non-native packages.
+
+Tag: dm-upload-allowed-is-obsolete
+Severity: normal
+Certainty: certain
+Info: The implementation of the "Debian Maintainers" GR has changed
+ and the "DM-Upload-Allowed" field is now obsolete.
+ .
+ Instead these permissions are granted via "dak-commands" files.
+Ref: https://lists.debian.org/debian-devel-announce/2012/09/msg00008.html
