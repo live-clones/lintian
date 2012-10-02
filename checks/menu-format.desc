@@ -138,8 +138,11 @@ Info: This icon file couldn't be found.  If the path to the icon in the
  the package.  If the path is relative or a simple filename, make sure the
  icon is installed in <tt>/usr/share/pixmaps</tt>, the default location.
  .
- If the icon is in a package this package depends on, add a lintian
- override for this warning.  lintian cannot check icons in other packages.
+ If the icon is provided by another package on which this package
+ depends, lintian may not be able to determine that icon pages are
+ available.  In this case, after confirming that all icons are
+ available after this package and its dependencies are installed,
+ please add a lintian override.
 Ref: menu 3.7
 
 Tag: menu-icon-too-big

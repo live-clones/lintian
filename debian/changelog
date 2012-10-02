@@ -75,8 +75,12 @@ lintian (2.5.11) UNRELEASED; urgency=low
       the groff pipeline.
     + [CW,NT] Use the L::Util gzip decompressor to open gzipped
       manpages.
-  * checks/menu-format:
+  * checks/menu-format{,.desc}:
     + [NT] Move a table of categories to a data file.
+    + [NT] Update description of menu-icon-missing.  Lintian is now
+      sometimes able to find the icon in dependencies (if they are
+      built from the same source).  Thanks to Ryan Kavanagh for the
+      report and the suggested patch.  (Closes: #683516)
   * checks/md5sums:
     + [NT] Use L::Collect's conffile API instead of accessing the
       "conffiles" control file directly.
