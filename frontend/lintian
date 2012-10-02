@@ -978,13 +978,6 @@ if($action eq 'remove'){
             my $pkg_name = $lpkg->pkg_name();
             my $pkg_type = $lpkg->pkg_type();
 
-            if (!defined $lpkg){
-                my $err = '.';
-                $err = ": $@" if defined $@;
-                warning("skipping $action of $pkg_type package ${pkg_name}$err");
-                $exit_code = 2;
-                next;
-            }
             $TAGS->file_start ($lpkg);
             debug_msg(1, 'Removing package in lab ...');
             unless ($lpkg->remove){
