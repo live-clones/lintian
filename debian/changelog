@@ -88,9 +88,11 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Check for untranslatable templates that should be
       translatable.  Thanks to David Prévot for the report and the
       patch.  (Closes: #686179)
-  * checks/shared-libs.desc:
+  * checks/shared-libs{,.desc}:
     + [NT] Clearify the description of dev-pkg-without-shlib-symlink
       to mention that the dev symlink is always expected in /usr.
+    + [NT] Add missing "+" in libtool regex.  Thanks to Leo 'costela'
+      Antunes for the report.
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
       (Closes: #685497)

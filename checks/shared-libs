@@ -228,7 +228,7 @@ for my $shlib_file (keys %SONAME) {
     }
 
     # libtool "-release" variant
-    $link_file =~ s/-[\d\.]\.so$/.so/o;
+    $link_file =~ s/-[\d\.]+\.so$/.so/o;
     # determine shlib link name (w/o version)
     $link_file =~ s/\.so.+$/.so/o;
 
