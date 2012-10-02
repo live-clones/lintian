@@ -7,4 +7,5 @@ Test-For:
  no-shlibs-control-file
  shlib-missing-in-control-file
  shlibs-declares-dependency-on-other-package
+ shlibs-uses-obsolete-relation
  unused-shlib-entry-in-control-file

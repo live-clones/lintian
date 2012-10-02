@@ -2,4 +2,5 @@ E: libdupshf1: duplicate-entry-in-shlibs-control-file libdupshf 1
 E: libeshf1: shlib-missing-in-control-file libeshf 1 for usr/lib/libeshf.so.1.0.1
 E: libnoshf1: no-shlibs-control-file usr/lib/libnoshf.so.1.0.1
 W: libfdshf1: shlibs-declares-dependency-on-other-package libforeign1
+W: libunshf1: shlibs-uses-obsolete-relation libunshf1 (> 0.1)
 W: libunshf1: unused-shlib-entry-in-control-file libfoo 1

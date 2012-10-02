@@ -359,6 +359,8 @@ if ($#shlibs == -1) {
             unless ($provides->implies($depend)) {
                 tag 'shlibs-declares-dependency-on-other-package', $depend;
             }
+            tag 'shlibs-uses-obsolete-relation', $depend
+                if $depend =~ m/\(\s*[><](?![<>=])\s*/;
         }
     }
 }
