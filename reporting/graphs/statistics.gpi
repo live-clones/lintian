@@ -1,0 +1,38 @@
+# set terminal png truecolor small size 600,300
+set terminal svg size 600,300
+
+set style line 10 linetype 1 linecolor rgb "#FF6700" lw 1.5
+set style line 11 linetype 1 linecolor rgb "#FFEB44" lw 1.5
+set style line 12 linetype 1 linecolor rgb "#C7EA3C" lw 1.5
+set style line 13 linetype 1 linecolor rgb "#E7F6AC" lw 1.5
+set style line 14 linetype 1 linecolor rgb "#EE99EE" lw 1.5
+set style line 15 linetype 1 linecolor rgb "#CCCCCC" lw 1.5
+
+set key outside
+
+set xdata time
+set timefmt "%s"
+set format x "%b/%y"
+
+set size 1.0,0.85
+set origin 0.0,0.05
+
+set nomxtics
+set xtics nomirror scale 0.5,0 rotate by 55 offset -2.5,-2.4
+set ytics nomirror scale 0.5,0
+set offsets 0,0,500,0
+
+load "common.gpi"
+
+set xrange [ date_min : date_max ]
+set yrange [ 0 : ]
+
+set output sprintf("%s/statistics.svg", graph_dir)
+plot sprintf("%s/statistics.dat", history_dir) \
+    u 1:7  w l ls 10 t 'Errors', \
+ '' u 1:8  w l ls 11 t 'Warnings', \
+ '' u 1:9  w l ls 12 t 'Info', \
+ '' u 1:11 w l ls 13 t 'Pedantic', \
+ '' u 1:10 w l ls 14 t 'Experimental', \
+ '' u 1:12 w l ls 15 t 'Overridden'
+

@@ -23,7 +23,9 @@
 
 use strict;
 
+use POSIX qw(strftime);
 use File::Copy qw(copy);
+use Fcntl qw(SEEK_SET);
 use URI::Escape;
 use Text::Template ();
 
@@ -34,7 +36,8 @@ use Text::Template ();
 # FIXME: $statistics_file should be in all caps as well.
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
-     $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE);
+     $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE,
+     $GRAPH_RANGE_DAYS, $GRAPHS, $GRAPH_DIR);
 
 # Read the configuration.
 require './config';
@@ -568,6 +571,9 @@ output_template ('index.html', $templates{index}, \%data);
 exit 0 if (not $HISTORY);
 
 # Update history.
+my %versions = ();
+my $commonf = "$GRAPH_DIR/common.gpi";
+my $do_graphs = 1;
 my $unix_time = time();
 mkdir("$HISTORY_DIR")
     or die "cannot create history directory $HISTORY_DIR: $!\n"
@@ -581,10 +587,50 @@ my $stats = '';
 for my $attr (@attrs) {
     $stats .= " $statistics{$attr}";
 }
-open(HIST, '>>', $history_file)
+open(HIST, '+>>', $history_file)
     or die "cannot open history file: $!\n";
 print HIST "$unix_time $LINTIAN_VERSION$stats\n";
+
+if ($GRAPHS and seek HIST, 0, SEEK_SET) {
+    while ( <HIST> ) {
+        my @fields = split();
+        $versions{$fields[1]} = $fields[0] if not exists $versions{$fields[1]};
+    }
+} elsif ($GRAPHS) {
+    die "seek failed: $!\n";
+}
 close HIST or die "cannot write to $history_file: $!\n";
+
+if ($GRAPHS) {
+    mkdir("$GRAPH_DIR", 0777)
+        or die "cannot create output directory $GRAPH_DIR: $!\n";
+    mkdir("$GRAPH_DIR/tags", 0777)
+        or die "cannot create output directory $GRAPH_DIR/tags: $!\n";
+    my $RANGE_DAYS = 240;
+
+    my $date_min = strftime ("%s", localtime ($unix_time - 3600 * 24 * $RANGE_DAYS));
+    my $date_max = strftime ("%s", localtime ($unix_time));
+
+    # Generate loadable Gnuplot file with common variables and labels/arrows
+    # for Lintian versions.
+    open my $common, '>', $commonf
+        or die "cannot open $commonf: $!\n";
+    print { $common } "history_dir='$HISTORY_DIR'\n";
+    print { $common } "graph_dir='$GRAPH_DIR'\n";
+    print { $common } "date_min='$date_min'\n";
+    print { $common } "date_max='$date_max'\n";
+    for my $v (sort keys %versions) {
+        print { $common } "set label '$v' at '$versions{$v}',graph 1.04 ",
+            "rotate by 90 font ',10'\n";
+        print { $common } "set arrow from '$versions{$v}',graph 0 to ",
+            "'$versions{$v}',graph 1 nohead lw 0.4\n";
+    }
+    close $common or die "close $commonf: $!\n";
+
+    print "Plotting global statistics...\n";
+    chdir_system ($GRAPH_DIR, ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
+        or die "gnuplot died with $?\n";
+}
 
 for my $tag (sort keys %tag_statistics) {
     $history_file = "$HISTORY_DIR/tags/$tag.dat";
@@ -594,6 +640,16 @@ for my $tag (sort keys %tag_statistics) {
     print HIST "$unix_time $stats->{'count'} $stats->{'overrides'} " .
                "$stats->{'packages'}\n";
     close HIST or die "cannot write to $history_file: $!\n";
+    if ($GRAPHS) {
+        print "Plotting $tag statistics...\n";
+        chdir_system ($GRAPH_DIR, ['gnuplot', '-e', "tag='$tag'",
+                                   "$LINTIAN_ROOT/reporting/graphs/tags.gpi"]) == 0
+            or die "gnuplot died with $?\n";
+    }
+}
+
+if ($GRAPHS) {
+    unlink $commonf or die "unlink $commonf: $!";
 }
 
 exit 0;
@@ -686,6 +742,20 @@ sub by_tag {
         || $a->{type}    cmp $b->{type}
         || $a->{tag}     cmp $b->{tag}
         || $a->{extra}   cmp $b->{extra};
+}
+
+sub chdir_system {
+    my ($dir, $cmd) = @_;
+    my $pid = fork // die "fork: $!";
+    if ($pid) {
+        waitpid ($pid, 0) == $pid or die "waitpid failed: $!\n";
+        return $?
+    }
+
+    chdir $dir
+        or "chdir failed: $!";
+    exec @$cmd
+        or die "exec failed: $!";
 }
 
 # Local Variables:

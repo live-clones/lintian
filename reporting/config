@@ -12,6 +12,7 @@ $LINTIAN_LAB = "$HOME/laboratory";
 $LOG_DIR = "$HOME/logs";
 $HTML_DIR = "$HOME/www";
 $HTML_TMP_DIR = "$HTML_DIR.new";
+$GRAPH_DIR = "$HTML_TMP_DIR/graphs";
 $LINTIAN_CFG = "$LINTIAN_ROOT/reporting/lintian-dummy.cfg";  # this config file has to be empty!
 $LINTIAN_BIN_DIR = "$HOME/bin";
 $LINTIAN_GPG_CHECK = 0;
@@ -21,6 +22,13 @@ $LINTIAN_SOURCE = "http://anonscm.debian.org/gitweb/?p=lintian/lintian.git";
 
 $HISTORY = 0;
 $HISTORY_DIR = "$HOME/history";
+
+# Whether or not to create graphs from $HISTORY
+#   Requires that $HISTORY is enabled.
+$GRAPHS = 1;
+# Make graphs of the data in the time interval
+#   [today() - $GRAPH_RANGE_DAYS ; now()]
+$GRAPHS_RANGE_DAYS = 240;
 
 $log_file = "$LOG_DIR/harness.log";
 $changes_file = "$LOG_DIR/setup-lab.log";

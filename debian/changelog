@@ -179,6 +179,12 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * man/lintian.pod.in:
     + [NT] Remove documentation about removed options.
 
+  * reporting/graphs/{statistics,tags}.gpi:
+    + [JP] New file.
+  * reporting/html_reports:
+    + [JP,NT] Generate graphs of the collected history data.
+      (Closes: #672273)
+
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 
 lintian (2.5.10.2) unstable; urgency=low
