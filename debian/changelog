@@ -48,7 +48,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/deb-format{,.desc}:
     + [NT] Retire data.tar.xz tag.  (Closes: #680391)
   * checks/debhelper{,.desc}:
-    + [JW,NT] Consider missing versioned builde-depennds on
+    + [JW,NT] Consider missing versioned build-depends on
       debhelper for compat 8 (or less) a pedantic issue.
       (Closes: #681894)
     + [NT] Retire debhelper-overrides-need-versioned-build-depends.
