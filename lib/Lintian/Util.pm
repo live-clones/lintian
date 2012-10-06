@@ -35,7 +35,7 @@ use constant {
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
 # otherwise.
-our (@EXPORT_OK, @EXPORT, %EXPORT_TAGS);
+our (@EXPORT_OK, %EXPORT_TAGS);
 BEGIN {
     %EXPORT_TAGS = (
             constants => [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS)]
@@ -54,6 +54,7 @@ BEGIN {
                  read_dpkg_control
                  get_deb_info
                  get_dsc_info
+                 get_file_checksum
                  slurp_entire_file
                  file_is_encoded_in_non_utf8
                  fail
@@ -71,11 +72,6 @@ BEGIN {
                  $PKGNAME_REGEX),
                  @{ $EXPORT_TAGS{constants} }
     );
-
-    # Export by default due to its wide spread use in "one-liners" in
-    # t/source/*/Makefile.
-    @EXPORT = qw(get_file_checksum);
-
 }
 
 use Encode ();
