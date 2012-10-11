@@ -172,7 +172,8 @@ sub _make_identifier {
     my $pkg_version = $self->pkg_version;
     my $pkg_arch = $self->pkg_arch;
     my $id = "$pkg_type:$pkg_name/$pkg_version";
-    if ($pkg_type ne 'source' and $pkg_type ne 'changes') {
+    if ($pkg_type ne 'source') {
+        $pkg_arch =~ s/\s++/_/g; # avoid spaces in ids
         $id .= "/$pkg_arch";
     }
     $self->{identifier} = $id;
