@@ -302,8 +302,8 @@ unless ($opt{'reports-only'}) {
             }
         }
         print $nfd "N: ---end-of-old-lintian-log-file---\n";
-        close $nfd;
-        close $ofd;
+        close $nfd or Die ("Close $lintian_log: $!");
+        close $ofd; # Ignore (read-only handle)
         Log ('');
         if (@inc) {
             Log ('Creating work list for lintian');
@@ -313,7 +313,7 @@ unless ($opt{'reports-only'}) {
                 foreach my $query (@inc) {
                     print $lfd "!query: $query\n";
                 }
-                close $lfd;
+                close $lfd or Die ("Close $list_file: $!");
             }
             Log ('');
 
