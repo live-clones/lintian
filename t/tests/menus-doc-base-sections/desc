@@ -1,7 +1,0 @@
-Testname: menus-doc-base-sections
-Sequence: 6000
-Version: 1.0
-Description: Test some doc-base section related tags
-Test-Against: doc-base-unknown-section
-Test-For: doc-base-uses-applications-section
-References: Debian Bug#495836

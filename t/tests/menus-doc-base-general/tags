@@ -1,0 +1,7 @@
+E: menus-doc-base-general: doc-base-document-field-not-in-first-line doc2:2
+E: menus-doc-base-general: doc-base-file-duplicated-field doc2:5 author
+E: menus-doc-base-general: doc-base-file-syntax-error doc2:18
+W: menus-doc-base-general: doc-base-abstract-field-is-template doc2:10
+W: menus-doc-base-general: doc-base-abstract-field-separator-extra-whitespaces doc2:8
+W: menus-doc-base-general: doc-base-file-separator-extra-whitespaces doc2:13
+W: menus-doc-base-general: doc-base-uses-applications-section doc2:11 Apps/Programming

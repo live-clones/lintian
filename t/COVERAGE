@@ -1,5 +1,5 @@
-Last generated 2012-10-02
-Coverage (Tags): 880/964 (91.29%), w. legacy tests: 947/964 (98.24%)
+Last generated 2012-10-13
+Coverage (Tags): 886/964 (91.91%), w. legacy tests: 952/964 (98.76%)
 Coverage (Checks): 33/41 (80.49%), w. legacy tests: 36/41 (87.80%)
 
 The following tags are not tested by the test suite:
@@ -15,12 +15,7 @@ menu-format menu-item-needs-dwww
 menu-format old-format-menu-file
 menu-format whitespace-after-continuation-character
 
-menus doc-base-abstract-field-is-template
 menus doc-base-abstract-might-contain-extra-leading-whitespaces
-menus doc-base-document-field-not-in-first-line
-menus doc-base-file-duplicated-field
-menus doc-base-file-separator-extra-whitespaces
-menus doc-base-file-syntax-error
 menus executable-in-usr-share-docbase
 menus executable-menu-file
 
@@ -70,7 +65,6 @@ menu-format su-wrapper-without--c
 menu-format unquoted-string-in-menu-item
 
 menus bad-menu-file-name
-menus doc-base-abstract-field-separator-extra-whitespaces
 menus doc-base-document-field-ends-in-whitespace
 menus doc-base-file-duplicated-format
 menus doc-base-file-lacks-required-field
@@ -110,7 +104,6 @@ binary
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
   desktop-entry-missing-required-key
-  doc-base-abstract-field-separator-extra-whitespaces
   doc-base-document-field-ends-in-whitespace
   doc-base-file-duplicated-format
   doc-base-file-lacks-required-field
