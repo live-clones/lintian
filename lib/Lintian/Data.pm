@@ -108,6 +108,15 @@ sub new {
                 }
             }
         }
+        if (not defined $file and $cur == scalar @$vendors) {
+            foreach my $datafile ($profile->include_path ("data/$type")) {
+                if ( -f $datafile) {
+                    $file = $datafile;
+                    last;
+                }
+            }
+            $cur++;
+        }
         if (not defined $file) {
             croak "Unknown data file: $type" unless $start;
             croak "No parent data file for $vendors->[$start]";
@@ -120,7 +129,8 @@ sub new {
 
 sub _parse_file {
     my ($self, $type, $fd, $dataset, $separator, $code, $vendors, $vno) = @_;
-    my $filename = $vendors->[$vno] . '/' . $type;
+    my $filename = $type;
+    $filename = $vendors->[$vno] . '/' . $type if $vno < scalar @$vendors;
     local ($_, $.);
     while (<$fd>) {
         chomp;

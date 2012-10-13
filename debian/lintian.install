@@ -2,6 +2,7 @@ frontend/lintian	usr/bin
 frontend/lintian-info	usr/bin
 checks			usr/share/lintian
 collection		usr/share/lintian
+data		  	usr/share/lintian
 lib/Lintian		usr/share/perl5
 profiles		usr/share/lintian
 vendors 		usr/share/lintian
