@@ -110,7 +110,8 @@ sub new_from_metadata {
     $self->{info}     = undef; # load on demand.
     $self->{coll}     = {};
     $self->{base_dir} = $base_dir;
-    $self->_init ($pkg_path);
+    $self->{pkg_path} = $pkg_path; # Could be undef, _init will fix that
+    $self->_init ();
 
     return $self;
 }
@@ -126,6 +127,7 @@ sub _new_from_proc {
     $self->{pkg_type}        = $proc->pkg_type;
     $self->{pkg_src}         = $proc->pkg_src;
     $self->{pkg_src_version} = $proc->pkg_src_version;
+    $self->{pkg_path}        = $proc->pkg_path;
     $self->{lab}             = $lab;
     $self->{info}            = undef; # load on demand.
     $self->{coll}            = {};
@@ -137,7 +139,7 @@ sub _new_from_proc {
 
     $self->{base_dir} = $base_dir;
 
-    $self->_init ($pkg_path);
+    $self->_init (1);
     $self->_make_identifier;
 
     if ($proc->isa ('Lintian::Processable::Package')) {
@@ -423,14 +425,15 @@ sub update_status_file {
 }
 
 sub _init {
-    my ($self, $pkg_path) = @_;
+    my ($self, $newentry) = @_;
     my $base_dir = $self->base_dir;
     my @data;
     my $head;
     my $coll;
     my $exists = $self->exists;
 
-    if (defined $pkg_path) {
+    if ($newentry) {
+        my $pkg_path = $self->pkg_path;
         croak "$pkg_path does not exist." unless -e $pkg_path;
     } else {
         # This error should not happen unless someone (read: me) breaks
@@ -444,13 +447,15 @@ sub _init {
         $link = 'changes' if $pkg_type eq 'changes';
 
         croak "Unknown package type $pkg_type" unless $link;
-        # Resolve the link if possible, but else just fall back to the link
-        # - this is not safe in case of a "delete and create", but if
-        #   abs_path fails odds are the package cannot be read anyway.
-        $pkg_path = Cwd::abs_path("$base_dir/$link") // "$base_dir/$link";
+        if (not $self->pkg_path) {
+            # This case shouldn't happen unless the entry is missing from the metadata.
+            my $linkp = "$base_dir/$link";
+            # Resolve the link if possible, but else just fall back to the link
+            # - this is not safe in case of a "delete and create", but if
+            #   abs_path fails odds are the package cannot be read anyway.
+            $self->{pkg_path} = Cwd::abs_path ("$base_dir/$link") // "$base_dir/$link";
+        }
     }
-
-    $self->{pkg_path} = $pkg_path;
 
     return unless $exists;
     return unless -e "$base_dir/.lintian-status";
