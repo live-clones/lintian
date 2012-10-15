@@ -510,21 +510,36 @@ sub _load_check {
         }
     }
     croak "$profile references unknown $check" unless defined $desc;
-    $self->_parse_check ($desc);
+    $self->_parse_check ($desc, $check);
 }
 
 sub _parse_check {
-    my ($self, $desc) = @_;
+    my ($self, $desc, $gcname) = @_;
+    # Have we already tried to load this before?  Possibly via an alias
+    # or symlink
+    return $self->{'check-scripts'}->{$gcname}
+        if exists $self->{'check-scripts'}->{$gcname};
+
     my $c = Lintian::CheckScript->new ($desc);
-    return if $self->{'check-scripts'}->{$c->name};
-    $self->{'check-scripts'}->{$c->name} = $c;
+    my $cname = $c->name;
+    if (exists $self->{'check-scripts'}->{$cname}) {
+        # We have loaded the check under a different name
+        $c = $self->{'check-scripts'}->{$cname};
+        # Record the alias so we don't have to parse the check file again.
+        $self->{'check-scripts'}->{$gcname} = $c;
+        return $c;
+    }
+    $self->{'check-scripts'}->{$cname} = $c;
+    $self->{'check-scripts'}->{$gcname} = $c if $gcname ne $cname;
+
     for my $tn ($c->tags) {
         if ($self->{'known-tags'}->{$tn}) {
             my $ocn = $self->{'known-tags'}->{$tn}->script;
-            croak $c->name . " redefined tag $tn which was defined by $ocn";
+            croak "$cname redefined tag $tn which was defined by $ocn";
         }
         $self->{'known-tags'}->{$tn} = $c->get_tag ($tn);
     }
+    return $c;
 }
 
 sub _load_checks {
@@ -533,9 +548,10 @@ sub _load_checks {
         next unless -d $checkdir;
         opendir my $dirfd, $checkdir or croak "opendir $checkdir: $!";
         for my $desc (sort readdir $dirfd) {
-            next unless $desc =~ m/\.desc$/o;
+            my $cname = $desc;
+            next unless $cname =~ s/\.desc$//o;
             # _parse_check ignores duplicates, so we don't have to check for it.
-            $self->_parse_check ("$checkdir/$desc");
+            $self->_parse_check ("$checkdir/$desc", $cname);
         }
         closedir $dirfd;
     }
