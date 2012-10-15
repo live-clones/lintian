@@ -58,6 +58,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
       packages.
     + [NT] Add tag for using the obsolete DMUA field.  Thanks to
       Ansgar Burchardt for the report.  (Closes: #688494)
+    + [NT] Apply patches from Bernhard R. Link to check for
+      unintentional whitespace and use of non-cannical URIs in
+      Vcs-* fields.  (Closes: #681769)
   * checks/files:
     + [RG] Recognise smarty3 as smarty itself.
   * checks/infofiles:
