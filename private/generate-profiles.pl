@@ -39,8 +39,8 @@ foreach my $check (<$root/checks/*.desc>){
     push @checks, $cname unless $cname eq 'apache2';
 }
 
-@fatal = read_tags ('vendors/debian/ftp-master-auto-reject/data/output/ftp-master-fatal');
-@nonfatal = read_tags ('vendors/debian/ftp-master-auto-reject/data/output/ftp-master-nonfatal');
+@fatal = read_tags ('data/output/ftp-master-fatal');
+@nonfatal = read_tags ('data/output/ftp-master-nonfatal');
 
 foreach my $dir (@dirs) {
     mkdir $dir or fail "mkdir $dir: $!" unless -d $dir;
