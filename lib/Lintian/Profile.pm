@@ -109,7 +109,6 @@ sub new {
         'enabled-tags'         => {}, # "set" of tags enabled (value is largely ignored)
         'enabled-checks'       => {}, # maps script to the number of tags enabled (0 if disabled)
         'non-overridable-tags' => {},
-        'severity-changes'     => {},
         'check-scripts'        => {}, # maps script name to Lintian::CheckScript
         'known-tags'           => {}, # maps tag name to Lintian::Tag::Info
     };
@@ -361,7 +360,6 @@ sub _read_profile_section {
     my $overridable = $self->_parse_boolean($section->{'overridable'}, -1, $pname, $sno);
     my $severity = $section->{'severity'}//'';
     my $noover = $self->{'non-overridable-tags'};
-    my $sev_map = $self->{'severity-changes'};
     $self->_check_for_invalid_fields($section, \%SEC_FIELDS, $pname, "section $sno");
     croak "Profile \"$pname\" is missing Tags field (or it is empty) in section $sno" unless @tags;
     croak "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno"
@@ -370,7 +368,6 @@ sub _read_profile_section {
         croak "Unknown check $tag in $pname (section $sno)" unless $self->{'known-tags'}->{$tag};
         if ($severity) {
             $self->{'known-tags'}->{$tag}->set_severity ($severity);
-            $sev_map->{$tag} = $severity;
         }
         if ( $overridable != -1 ) {
             if ($overridable) {
