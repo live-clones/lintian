@@ -2,7 +2,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
-      -  debug-package-for-multi-arch-same-pkg-not-coinstallable
+      - debug-package-for-multi-arch-same-pkg-not-coinstallable
       - dm-upload-allowed-is-obsolete
       - field-name-typo-in-dep5-copyright
       - shlibs-uses-obsolete-relation
