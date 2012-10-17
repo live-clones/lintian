@@ -2,6 +2,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      -  debug-package-for-multi-arch-same-pkg-not-coinstallable
       - dm-upload-allowed-is-obsolete
       - field-name-typo-in-dep5-copyright
       - shlibs-uses-obsolete-relation
@@ -70,6 +71,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
       Vcs-* fields.  (Closes: #681769)
   * checks/files:
     + [RG] Recognise smarty3 as smarty itself.
+  * checks/group-checks{,.desc}:
+    + [NT] Detect debug packages not co-installable with itself,
+      when it provides debug symbols for a Multi-Arch: same package.
+      Thanks to Carsten Hey for the report.  (Closes: #678896)
   * checks/infofiles:
     + [NT] Use L::Util's gzip decompressor rather than zcat.
   * checks/init.d{,.desc}:

@@ -25,3 +25,15 @@ Description: {$description} - pkg-same
  things.  It should not be installed like a regular package.
  .
  Multi-arch same package.
+
+Package: pkg-dbg
+Section: debug
+Architecture: any
+Depends: $\{misc:Depends\}, pkg-same (= $\{binary:Version\}),
+ pkg-foreign (>= $\{source:Version\})
+Description: {$description} - pkg-dbg
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Multi-arch <none> debug package.

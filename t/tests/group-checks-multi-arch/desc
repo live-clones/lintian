@@ -2,4 +2,6 @@ Testname: group-checks-multi-arch
 Sequence: 6000
 Version: 1.0
 Description: Test for multi-arch issues
-Test-For: dependency-is-not-multi-archified
+Test-For:
+ debug-package-for-multi-arch-same-pkg-not-coinstallable
+ dependency-is-not-multi-archified
