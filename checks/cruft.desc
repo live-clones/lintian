@@ -374,11 +374,13 @@ Info: The referenced file has a time stamp older than year 2004 and the
  apparently does not update it.  This usually means that the source
  package will not build correctly on all currently released architectures.
  .
- Read /usr/share/doc/autotools-dev/README.Debian.gz (from the
- autotools-dev package) for information on how to fix this problem.  cdbs
- will automatically update these files if autotools-dev is installed
- during build, but the build dependency on autotools-dev is still
- necessary.
+ For packages using debhelper, the tools from the dh-autoreconf
+ package should handle this issue.  cdbs will automatically update
+ these files if autotools-dev is installed during build, but the build
+ dependency on autotools-dev is still necessary.
+ .
+ Otherwise, read /usr/share/doc/autotools-dev/README.Debian.gz (from the
+ autotools-dev package) for information on how to fix this problem.
 
 Tag: outdated-autotools-helper-file
 Severity: normal
@@ -389,11 +391,13 @@ Info: The referenced file has a time stamp older than June of 2006 and the
  package will not build correctly on AVR32, for which a Debian port is
  currently in progress, and may not support other newer architectures.
  .
- Read /usr/share/doc/autotools-dev/README.Debian.gz (from the
- autotools-dev package) for information on how to fix this problem.  cdbs
- will automatically update these files if autotools-dev is installed
- during build, but the build dependency on autotools-dev is still
- necessary.
+ For packages using debhelper, the tools from the dh-autoreconf
+ package should handle this issue.  cdbs will automatically update
+ these files if autotools-dev is installed during build, but the build
+ dependency on autotools-dev is still necessary.
+ .
+ Otherwise, read /usr/share/doc/autotools-dev/README.Debian.gz (from the
+ autotools-dev package) for information on how to fix this problem.
 
 Tag: ancient-libtool
 Severity: normal

@@ -375,7 +375,11 @@ sub find_cruft {
                 my ($date, $year, $month) = ($1, $2, $3);
                 if ($year < 2004) {
                     tag 'ancient-autotools-helper-file', $name, $date;
-                } elsif (($year < 2006) or ($year == 2006 and $month < 6)) {
+                } elsif (($year < 2012) or ($year == 2012 and $month < 4)) {
+                    # config.sub   >= 2012-04-18 (was bumped from 2012-02-10)
+                    # config.guess >= 2012-06-10 (was bumped from 2012-02-10)
+                    # Flagging anything earlier than 2012-04 as outdated
+                    # works, due to the "bumped from" dates.
                     tag 'outdated-autotools-helper-file', $name, $date;
                 }
             }

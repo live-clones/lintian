@@ -43,8 +43,15 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * checks/copyright.desc:
     + [NT] Bump debian-copyright-file-uses-obsolete-national-encoding
       to serious as copyright files must now be UTF-8 encoded.
-  * checks/cruft:
+  * checks/cruft{,.desc}:
     + [NT] Detect MS-DOS executables as windows binaries.
+    + [NT] Bump the version of config.{guess,sub} needed for
+      triggering the "outdated-autotools-helper-file" tag for arm64
+      support.  Thanks to Paul Wise for the report and the
+      investigative work.  (Closes: #690014)
+    + [RA,NT] Extend the description of the tags {outdated,ancient}-
+      autotools-helper-file to mention that dh-autoreconf might be
+      helpful tool.
   * checks/deb-format{,.desc}:
     + [NT] Retire data.tar.xz tag.  (Closes: #680391)
   * checks/debhelper{,.desc}:
