@@ -200,6 +200,10 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [JP,NT] Generate graphs of the collected history data.
       (Closes: #672273)
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [NT] Add "raring" as known Ubuntu distribution.  Thanks to
+      Dmitry Shachnev.  (LP: #1068208)
+
  -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
 
 lintian (2.5.10.2) unstable; urgency=low
