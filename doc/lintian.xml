@@ -1139,6 +1139,346 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
       </para>
     </sect1>
 
+    <sect1 label="3.3" id="section-3.3">
+      <title>Writing your own Lintian checks</title>
+      <para>
+        This section describes how to write and deploy your own
+        Lintian checks.  Lintian will load checks from the following
+        directories (in order):
+      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <filename>$HOME/.lintian/checks</filename>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <filename>/etc/lintian/checks</filename>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <filename>$LINTIAN_ROOT/checks</filename>
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        Existing checks can be shadowed by placing a check with the
+        same name in an directory appearing earlier in the list.  This
+        also holds for the checks provided by Lintian itself.
+      </para>
+      <para>
+        Checks in Lintian consists of a description file (.desc) and a
+        Perl module implementing the actual check (no extension).  The
+        names of these checks must consist entirely of the lower case
+        characters ([a-z]), digits ([0-9]), underscore (_), dash (-),
+        period (.) and forward slashes (/).
+      </para>
+      <para>
+        The check name must be a valid Perl unique module name after
+        the following transformations.  All periods and dashes are
+        replaced with underscores.  All forward slashes are replaced
+        with two colons (::).
+      </para>
+      <para>
+        Check names without a forward slash (e.g. "fields") and names
+        starting with "lintian/" are reserved for built-in checks.
+        Vendors are recommended to use their vendor name before the
+        first slash (e.g. "ubuntu/fields").
+      </para>
+      <sect2 label="3.3.1" id="section-3.3.1">
+        <title>Check description file</title>
+        <para>
+          The check description file is written in the same syntax as
+          Debian control files as described in the
+          <ulink url="http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
+          Debian Policy Manual §5.1</ulink>.  Check description files
+          allow comments as described in the Policy Manual.
+        </para>
+        <para>
+          The check description file has two paragraph types.  The
+          first is the check description itself and must be the first
+          paragraph.  The rest of the descriptions describe tags, one
+          tag per paragraph.
+        </para>
+        <sect3 label="3.3.1.1" id="section-3.3.1.1">
+          <title>Check description paragraph</title>
+          <para>
+            The fields in the check description paragraph are:
+          </para>
+          <variablelist>
+            <varlistentry>
+              <term><emphasis>Check-Script</emphasis> (simple, mandatory)</term>
+              <listitem>
+                <para>
+                  Name of the check.  This is used to determine the
+                  package name of the Perl module implementing the
+                  check.
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Type</emphasis> (simple, mandatory)</term>
+              <listitem>
+                <para>
+                  Comma separated list of package types for which this
+                  check should be run.  Allowed values in the list are
+                  "binary" (.deb files), "changes" (.changes files),
+                  "source" (.dsc files) and "udeb" (.udeb files).
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Needs-Info</emphasis> (simple, mandatory)</term>
+              <listitem>
+                <para>
+                  Comma separated list of collections required for the
+                  check to be run.  Common values here include "unpacked",
+                  "index" and "file-info".
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Info</emphasis> (multiline, optional)</term>
+              <listitem>
+                <para>
+                  A short description of what the check is for.
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Author</emphasis> (simple, optional)</term>
+              <listitem>
+                <para>
+                  Name and email of the person, who created (or
+                  implemented etc.) the check.
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Abbrev</emphasis> (simple, optional)</term>
+              <listitem>
+                <para>
+                  Alternative or abbreviated name of the check.  These
+                  can be used with certain command line options as an
+                  alternative name of the real check.
+                </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+        <sect3 label="3.3.1.2" id="section-3.3.1.2">
+          <title>Tag description paragraph</title>
+          <para>
+            The fields in the tag description paragraph are:
+          </para>
+          <variablelist>
+            <varlistentry>
+              <term><emphasis>Tag</emphasis> (simple, mandatory)</term>
+              <listitem>
+                <para>
+                  Name of the tag.  It must consist entirely of the
+                  lower or/and upper case characters ([a-zA-Z]),
+                  digits ([0-9]), underscore (_), dash (-) and period (.).
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Severity</emphasis> (simple, mandatory)</term>
+              <listitem>
+                <para>
+                  Determines the default value for how "severe" the
+                  tag is.  The value must be one of "serious",
+                  "important", "normal", "minor", "wishlist" and
+                  "pedantic".  The effective severity and the value of
+                  the Certainty field of a tag determines the
+                  "one-letter" code (of non-experimental tags).
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Certainty</emphasis> (simple, mandatory)</term>
+              <listitem>
+                <para>
+                  How accurate the tag is (believed to be).  The value
+                  must be one of "certain", "possible", "wild-guess".
+                  The effective severity and the value of the
+                  Certainty field of a tag determines the "one-letter"
+                  code (of non-experimental tags).
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Info</emphasis> (multiline, mandatory)</term>
+              <listitem>
+                <para>
+                  The description of the tag, which can be seen by
+                  using lintian-info (etc.).  The HTML tags
+                  "&lt;tt&gt;" and "&lt;i&gt;" may be used in the
+                  description.
+                </para>
+                <para>
+                  The symbols &amp;, &lt; and &gt; must be escaped as
+                  &amp;amp;, &amp;lt; and &amp;gt; (respectively).
+                </para>
+                <para>
+                  Intended lines are considered "pre-formatted" and
+                  will not be line wrapped.  These lines are still
+                  subject to the allowed HTML tags and above mentioned
+                  escape sequences.
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Ref</emphasis> (simple, optional)</term>
+              <listitem>
+                <para>
+                  A comma separated list of references.  It can be used
+                  to refer to extra documentation.  It is primarily
+                  used for manual references, HTTP links or Debian bug
+                  references.
+                </para>
+                <para>
+                  If a reference contains a space, it is taken as a
+                  manual reference (e.g. "policy 4.14").  These
+                  references are recorded in the
+                  "output/manual-references" data file.
+                </para>
+                <para>
+                  Other references include manpages ("lintian(1)"),
+                  ftp or http(s) links ("http://lintian.debian.org"),
+                  file references ("/usr/share/doc/lintian/changelog.gz")
+                  or Debian bug numbers prefixed with a hash ("#651816").
+                </para>
+                <para>
+                  Unknown references are (silently) ignored.
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Experimental</emphasis> (simple, optional)</term>
+              <listitem>
+                <para>
+                  Whether or not the tag is considered "experimental".
+                  Recognised values are "no" (default) and "yes".
+                  Experimental tags always use "X" as their
+                  "one-letter" code.
+                </para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </sect3>
+      </sect2>
+      <sect2 label="3.3.2" id="section-3.3.2">
+        <title>Check Perl module file</title>
+        <para>
+          This section describes the requirements for the Perl module
+          implementing a given check.
+        </para>
+        <para>
+          The Perl package name of the check must be identical to
+          the check name (as defined by the "Check-Script" field in
+          the description file) with the following transformations:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>All periods and dashes are replaced with underscores.</para>
+          </listitem>
+          <listitem>
+            <para>All forward slashes are replaced by two colons (::).</para>
+          </listitem>
+          <listitem>
+            <para>The resulting value is prefixed with "Lintian::".</para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          As an example, the check name <literal>contrib/hallo-world</literal>
+          will result in the Perl package name
+          <literal>Lintian::contrib::hallo_world</literal>.
+        </para>
+        <sect3 label="3.3.2.1" id="section-3.3.2.1">
+          <title>API of the "run" sub</title>
+          <para>
+            The Perl module must implement the sub called <literal>run</literal> in
+            that Perl package.  This sub will be run once for each package to be
+            checked with 5 arguments.  These are (in order):
+          </para>
+          <itemizedlist>
+            <listitem>
+              <para>The package name.</para>
+            </listitem>
+            <listitem>
+              <para>
+                The package type being checked in this run.  This string
+                is one of "binary" (.deb), "changes" (.changes), "source"
+                (.dsc) or "udeb" (.udeb).
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                An instance of API Lintian::Collect.  Its exact type depends
+                on the type being processed and is one of
+                Lintian::Collect::Binary (.deb or .udeb),
+                Lintian::Collect::Changes (.changes) or
+                Lintian::Collect::Source (.dsc).
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                An instance of Lintian::Processable that represent the
+                package being processed.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                An instance of Lintian::ProcessableGroup that represent
+                the other processables in the given group.  An instance
+                of the Lintian::Collect::Group is available via its
+                "info" method.
+              </para>
+            </listitem>
+          </itemizedlist>
+          <para>
+            Further arguments may be added in the future after the above
+            mentioned ones.  Implementations should therefore ignore
+            extra arguments beyond the ones it know of.
+          </para>
+          <para>
+            If the run sub returns "normally", the check was run
+            successfully.  Implementations should ensure the return
+            value is undefined.
+          </para>
+          <para>
+            If the run sub invokes a trappable error (e.g. "die"), no
+            further checks are done on the package and Lintian will
+            (eventually) exit with 2 to its caller.  The check may
+            still be run on other packages.
+          </para>
+          <para>
+            The run sub may emit tags by invoking that sub "tag" from
+            Lintian::Tags (it can be imported).  The first argument is
+            the name of the tag to emit.  Any extra arguments will be
+            used as the "tag extra" (or diagnostics).  Example:
+          </para>
+          <programlisting>
+use Lintian::Tags qw(tag);
+sub run {
+    tag 'my-tag', 'hallo world';
+}
+</programlisting>
+          <para>
+            would emit the tag "my-tag" with the extra note "hallo
+            world" like this:
+          </para>
+          <screen>
+I: package: my-tag hallo world
+</screen>
+        </sect3>
+      </sect2>
+    </sect1>
+
+
   </chapter>
 </book><!-- Keep this comment at the end of the file
 Local variables:
