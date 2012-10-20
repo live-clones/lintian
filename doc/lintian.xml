@@ -890,6 +890,13 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
             A profile is invalid if it directly or indirectly extends
             itself or if it extends an invalid profile.
           </para>
+          <para>
+            By default the tags from the check "lintian" will be loaded
+            as they assist people in writing and maintaining their
+            overrides file (e.g. by emitting <literal>malformed-override</literal>).
+            However, they can be disabled by explicitly adding the check
+            <literal>lintian</literal> in the Disable-Tags-From-Check field.
+          </para>
         </sect3>
         <sect3 label="2.5.2.2" id="section-2.5.2.2">
           <title>Tag alteration paragraphs</title>
