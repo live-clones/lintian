@@ -391,7 +391,7 @@ sub _read_profile_section {
 sub _read_profile_tags{
     my ($self, $pname, $pheader) = @_;
     $self->_check_for_invalid_fields($pheader, \%MAIN_FIELDS, $pname, 'profile header');
-    $self->_check_duplicates($pname, $pheader, 'enable-tags-from-check', 'disable-tags-from-check');
+    $self->_check_duplicates($pname, $pheader, 'load-checks', 'enable-tags-from-check', 'disable-tags-from-check');
     $self->_check_duplicates($pname, $pheader, 'enable-tags', 'disable-tags');
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
@@ -410,6 +410,12 @@ sub _read_profile_tags{
         }
         return $tag;
     };
+    if ($pheader->{'load-checks'}) {
+        foreach my $check ($self->_split_comma_sep_field ($pheader->{'load-checks'})) {
+            $self->_load_check ($pname, $check)
+                unless exists $self->{'check-scripts'}->{$check};
+        }
+    }
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check', $tags_from_check_sub, 1);
     $self->_enable_tags_from_field($pname, $pheader, 'disable-tags-from-check', $tags_from_check_sub, 0);
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags', $tag_sub, 1);

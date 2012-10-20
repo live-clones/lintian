@@ -184,6 +184,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * lib/Lintian/Lab/Entry.pm:
     + [NT] Use the L::Collect during creation instead of
       manually reading the dsc for source packages.
+  * lib/Lintian/Profile.pm:
+    + [NT] Add support for the new optional "Load-Checks"
+      field in profiles.
   * lib/Lintian/Tags.pm:
     + [NT] Be explicit about the reason when rejecting an
       override.  Thanks to Yves-Alexis Perez for the report.

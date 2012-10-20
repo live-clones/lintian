@@ -792,11 +792,36 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
               </listitem>
             </varlistentry>
             <varlistentry>
+              <term><emphasis>Load-Checks</emphasis> (folded, optional)</term>
+              <listitem>
+                <para>
+                  Comma-separated list of checks.  Lintian will ensure
+                  all checks listed are loaded (allowing tags from
+                  them to be enabled or disabled via Enable-Tags or
+                  Disable-Tags).
+                </para>
+                <para>
+                  If a given check was already loaded before this
+                  field is processed, then it is silently ignored.
+                  Otherwise, the check is loaded and all of its tags
+                  are disabled (as if it had been listed in
+                  Disable-Tags-From-Check).
+                </para>
+                <para>
+                  This field is most likely only useful if the profile
+                  needs to enable a list of tags from a check in
+                  additional to any tags already enabled from that
+                  check (if any).
+                </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
               <term><emphasis>Enable-Tags-From-Check</emphasis> (folded, optional)</term>
               <listitem>
                 <para>
                   Comma-separated list of checks.  All tags from each
-                  check listed will be enabled in this profile.
+                  check listed will be enabled in this profile.  The check will
+                  be loaded if it wasn't already.
                 </para>
               </listitem>
             </varlistentry>
@@ -805,15 +830,20 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
               <listitem>
                 <para>
                 Comma-separated list of checks.  All tags from each
-                check listed will be disabled in this profile.
+                check listed will be disabled in this profile.  The check will
+                be loaded if it wasn't already.
                 </para>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term><emphasis>Enable-Tags</emphasis> (folded, optional)</term>
               <listitem>
-                <para> Comma-separated list of tags that should be
-                enabled.
+                <para>
+                  Comma-separated list of tags that should be enabled.
+                  It may only list tags from checks already loaded or
+                  listed in one of the following fields "Load-Checks",
+                  "Enable-Tags-From-Check" or
+                  "Disable-Tags-From-Check" in the current profile.
                 </para>
               </listitem>
             </varlistentry>
@@ -822,7 +852,10 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
               <listitem>
                 <para>
                   Comma-separated list of tags that should be
-                  disabled.
+                  disabled.  It may only list tags from checks already
+                  loaded or listed in one of the following fields
+                  "Load-Checks", "Enable-Tags-From-Check" or
+                  "Disable-Tags-From-Check" in the current profile.
                 </para>
               </listitem>
             </varlistentry>
@@ -830,8 +863,9 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           <para>
             The profile is invalid and is rejected, if Enable-Tags and
             Disable-Tags lists the same tag twice - even if it is in
-            the same field.  This holds analogously for
-            Enable-Tags-From-Check and Disable-Tags-From-Check.
+            the same field.  This holds analogously for checks and the
+            three fields Load-Checks, Enable-Tags-From-Check and
+            Disable-Tags-From-Check.
           </para>
           <para>
             It is allowed to list a tag in Enable-Tags or
@@ -843,9 +877,14 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
             the profile.
           </para>
           <para>
-            It is not an error to enable or disable a check that is
-            already enabled or disabled respectively (e.g. by a
-            parent profile).
+            Load-Checks, Enable-Tags-From-Check and
+            Disable-Tags-From-Check can be used to load third-party or
+            vendor specific checks.
+          </para>
+          <para>
+            It is not an error to load, enable or disable a check or
+            tag that is already loaded, enabled or disabled
+            respectively (e.g. by a parent profile).
           </para>
           <para>
             A profile is invalid if it directly or indirectly extends
