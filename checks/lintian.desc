@@ -1,6 +1,9 @@
 Check-Script: lintian
 Info: This description file is a special case.  It contains the tag info
  for the tags produced by the lintian frontend itself.
+ .
+ The tags in this check are enabled in all profiles by default, but can
+ be disabled.
 
 Tag: unused-override
 Severity: wishlist

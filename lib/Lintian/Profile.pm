@@ -122,6 +122,14 @@ sub new {
     }
     croak "Cannot find profile $name (in " . join(', ', map { "$_/profiles" } @$ipath).")"
         unless $profile;
+
+    # Implementation detail: Ensure that the "lintian" check is always
+    # loaded to avoid "attempt to emit unknown tags" caused by
+    # the frontend or L::Tags.  Also default to enabling the Lintian
+    # tags as they are helpful (e.g. for debugging overrides files)
+    my $c = $self->_load_check ($self->name, 'lintian');
+    $self->enable_tags ($c->tags);
+
     $self->_read_profile($profile);
     return $self;
 }

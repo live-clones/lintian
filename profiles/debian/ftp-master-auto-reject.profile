@@ -1,5 +1,6 @@
 # This profile is auto-generated
 Profile: debian/ftp-master-auto-reject
+Disable-Tags-From-Check: lintian
 Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-share,
  arch-independent-package-contains-binary-or-object, bad-package-name,
  bad-perm-for-file-in-etc-sudoers.d, bad-relation, bad-version-number,

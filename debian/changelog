@@ -187,6 +187,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * lib/Lintian/Profile.pm:
     + [NT] Add support for the new optional "Load-Checks"
       field in profiles.
+    + [NT] Ensure that the "lintian" check is always loaded
+      as these tags are not emitted by check modules.  Also
+      enable the tags from the check by default.
   * lib/Lintian/Tags.pm:
     + [NT] Be explicit about the reason when rejecting an
       override.  Thanks to Yves-Alexis Perez for the report.

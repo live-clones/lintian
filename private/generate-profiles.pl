@@ -63,6 +63,8 @@ generate_profile('debian/extra-apache2', {
     });
 
 generate_profile('debian/ftp-master-auto-reject', {
+    # "lintian" is enabled by default, so we explicitly disable it.
+    'Disable-Tags-From-Check' => ['lintian'],
     'Enable-Tags' => [@fatal, @nonfatal],
     },
     { 'Tags' => \@fatal,
