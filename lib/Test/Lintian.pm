@@ -45,9 +45,12 @@ use warnings;
 
 my $CLASS = __PACKAGE__;
 my $PROFILE = undef;
-our @EXPORT = qw(load_profile_for_test test_check_desc);
+our @EXPORT = qw(load_profile_for_test test_check_desc test_load_profiles);
 
 use base 'Test::Builder::Module';
+
+use File::Find ();
+use Cwd qw(realpath);
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Data;
@@ -196,6 +199,54 @@ sub test_check_desc {
             # TODO: Implement check of Ref (?)
         }
     }
+}
+
+=item test_load_profile (ROOT, INC...)
+
+Test that all profiles in I<ROOT/profiles> are loadable.  INC will be
+the INC path used as include path for the profile.
+
+If INC is omitted, then the include path will consist of (ROOT,
+'/usr/share/lintian').  Otherwise, INC will be used as is (and should
+include ROOT).
+
+This sub will do one test per profile loaded.
+
+=cut
+
+sub test_load_profiles {
+    my ($dir, @inc) = @_;
+    my $builder = $CLASS->builder;
+    my $absdir = realpath $dir;
+    my $sre;
+    my %opt = (
+        'no_chdir' => 1,
+    );
+    if (not defined $absdir) {
+        die "$dir cannot be resolved: $!";
+    }
+    $absdir = "$absdir/profiles";
+    $sre = qr,\Q$absdir\E/,;
+
+    @inc = ($absdir, '/usr/share/lintian') unless @inc;
+
+    $opt{'wanted'} = sub {
+        my $profname = $File::Find::name;
+        my ($err, $prof);
+
+        return unless $profname =~ s/\.profile$//o;
+        $profname =~ s,^$sre,,;
+
+        eval {
+            $prof = Lintian::Profile->new ($profname, \@inc);
+        };
+        $err = $@;
+
+        $builder->ok ($prof, "$profname is loadable.")
+            or $builder->diag ("Load error: $@\n");
+    };
+
+    File::Find::find (\%opt, $absdir);
 }
 
 =item load_profile_for_test ([PROFNAME[, INC...]])
