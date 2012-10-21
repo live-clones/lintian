@@ -22,31 +22,24 @@ use Test::More;
 use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control);
 
-# Find all of the desc files in either collection or checks.  We'll do one
-# check per description.
-our @DESCS = (<$ENV{LINTIAN_ROOT}/collection/*.desc>,
-              <$ENV{LINTIAN_ROOT}/checks/*.desc>);
+# Find all of the desc files in collection.  We'll do one check per
+# description.  We don't check checks/*.desc because check-desc.t
+# handles that.
+our @DESCS = (<$ENV{LINTIAN_ROOT}/collection/*.desc>):
 plan tests => scalar(@DESCS);
 
 # For each desc file, load the first stanza of the file and check that all of
 # its Needs-Info script references exist.
 for my $desc (@DESCS) {
-    my ($header) = read_dpkg_control($desc);
-    my @needs;
+    my $coll = Lintian::CollScript->new ($desc);
+    my $name = $coll->name;
+    my @needs = $coll->needs_info;
     my @missing;
 
-    if ($header->{'collector-script'}) {
-        my $coll = Lintian::CollScript->new ($desc);
-        @needs = $coll->needs_info;
-    } else {
-        @needs = split(/\s*,\s*/, $header->{'needs-info'} || '');
-    }
     for my $coll (@needs) {
         unless (-f "$ENV{LINTIAN_ROOT}/collection/$coll") {
-            push(@missing, $coll);
+            push @missing, $coll;
         }
     }
-    my $short = $desc;
-    $short =~ s/^\Q$ENV{LINTIAN_ROOT}//;
-    is(join(', ', @missing), '', "$short has valid needs-info");
+    is (join (', ', @missing), '', "$name has valid needs-info");
 }

@@ -26,6 +26,10 @@ use Test::Lintian;
 
 load_profile_for_test ('debian/main', $ENV{'LINTIAN_ROOT'});
 
-test_check_desc (<$ENV{'LINTIAN_ROOT'}/checks/*.desc>);
+my $opts = {
+    'coll-dir' => "$ENV{'LINTIAN_ROOT'}/collection",
+};
+
+test_check_desc ($opts, <$ENV{'LINTIAN_ROOT'}/checks/*.desc>);
 
 done_testing;

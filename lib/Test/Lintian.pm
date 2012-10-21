@@ -79,14 +79,31 @@ recommended to not specify a plan and use done_testing().
 
 This sub uses a Data file (see L</load_profile_for_test ([PROFNAME[, INC...]])>).
 
+OPTS may contain the following key/value pairs:
+
+=over 4
+
+=item coll-dir
+
+Path to the collection directory (defaults to:
+/usr/share/lintian/collection).  This is mostly useful for testing
+Lintian itself.
+
+If set to C<undef>, the test of Needs-Info containing only existing
+collections will be skipped.
+
+=back
+
 =cut
 
 sub test_check_desc {
     my ($opts, @descs);
     my $builder = $CLASS->builder;
+    my $colldir = '/usr/share/lintian/collection';
 
     if (ref $_[0] eq 'HASH') {
         $opts = shift;
+        $colldir = $opts->{'coll-dir'}//'' if exists $opts->{'coll-dir'};
     }
     $opts //= {};
     @descs = @_;
@@ -97,6 +114,7 @@ sub test_check_desc {
         my $cname = $header->{'check-script'}//'';
         my $ctype = $header->{'type'} // '';
         my $cinfo = $header->{'info'} // '';
+        my $needs = $header->{'needs-info'} // '';
         my $i = 1; # paragraph counter.
         $builder->isnt_eq ($cname, '', "Check has a name ($desc_file)");
         $cname = '<missing>' if $cname eq '';
@@ -115,6 +133,20 @@ sub test_check_desc {
             $builder->is_eq (join (', ', @bad), '', "The type of $cname is valid");
         } else {
             $builder->skip ("Cannot check type of $cname is valid (field is empty/missing)");
+        }
+
+        if ($needs and $colldir ne '') {
+            my @bad = ();
+
+            # new lines are not allowed, map them to "\\n" for readability.
+            $needs =~ s/\n/\\n/go;
+            foreach my $need (split m/\s*+,\s*+/o, $needs) {
+                push @bad, $need unless -f "$colldir/$need.desc";
+            }
+            $builder->is_eq (join (', ', @bad), '', '$cname has unknown collections in Needs-Info');
+        } else {
+            $builder->ok (1, 'Tag has a valid Needs-Info (empty)') if $colldir ne '';
+            $builder->skip ('Needs-Info test checks due to empty coll-dir') if $needs ne '';
         }
 
         $builder->is_eq (check_spelling (undef, $cinfo), 0,
