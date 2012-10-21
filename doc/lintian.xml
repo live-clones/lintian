@@ -810,7 +810,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
                 <para>
                   This field is most likely only useful if the profile
                   needs to enable a list of tags from a check in
-                  additional to any tags already enabled from that
+                  addition to any tags already enabled from that
                   check (if any).
                 </para>
               </listitem>
@@ -1215,7 +1215,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
         also holds for the checks provided by Lintian itself.
       </para>
       <para>
-        Checks in Lintian consists of a description file (.desc) and a
+        Checks in Lintian consist of a description file (.desc) and a
         Perl module implementing the actual check (no extension).  The
         names of these checks must consist entirely of the lower case
         characters ([a-z]), digits ([0-9]), underscore (_), dash (-),
@@ -1308,7 +1308,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
                 <para>
                   Alternative or abbreviated name of the check.  These
                   can be used with certain command line options as an
-                  alternative name of the real check.
+                  alternative name for the check.
                 </para>
               </listitem>
             </varlistentry>
@@ -1339,7 +1339,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
                   tag is.  The value must be one of "serious",
                   "important", "normal", "minor", "wishlist" and
                   "pedantic".  The effective severity and the value of
-                  the Certainty field of a tag determines the
+                  the Certainty field of a tag determine the
                   "one-letter" code (of non-experimental tags).
                 </para>
               </listitem>
@@ -1351,7 +1351,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
                   How accurate the tag is (believed to be).  The value
                   must be one of "certain", "possible", "wild-guess".
                   The effective severity and the value of the
-                  Certainty field of a tag determines the "one-letter"
+                  Certainty field of a tag determine the "one-letter"
                   code (of non-experimental tags).
                 </para>
               </listitem>
@@ -1370,7 +1370,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
                   &amp;amp;, &amp;lt; and &amp;gt; (respectively).
                 </para>
                 <para>
-                  Intended lines are considered "pre-formatted" and
+                  Indented lines are considered "pre-formatted" and
                   will not be line wrapped.  These lines are still
                   subject to the allowed HTML tags and above mentioned
                   escape sequences.
@@ -1473,13 +1473,13 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
             </listitem>
             <listitem>
               <para>
-                An instance of Lintian::Processable that represent the
+                An instance of Lintian::Processable that represents the
                 package being processed.
               </para>
             </listitem>
             <listitem>
               <para>
-                An instance of Lintian::ProcessableGroup that represent
+                An instance of Lintian::ProcessableGroup that represents
                 the other processables in the given group.  An instance
                 of the Lintian::Collect::Group is available via its
                 "info" method.
@@ -1489,7 +1489,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           <para>
             Further arguments may be added in the future after the above
             mentioned ones.  Implementations should therefore ignore
-            extra arguments beyond the ones it know of.
+            extra arguments beyond the ones they know of.
           </para>
           <para>
             If the run sub returns "normally", the check was run
@@ -1503,7 +1503,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
             still be run on other packages.
           </para>
           <para>
-            The run sub may emit tags by invoking that sub "tag" from
+            The run sub may emit tags by invoking the sub "tag" from
             Lintian::Tags (it can be imported).  The first argument is
             the name of the tag to emit.  Any extra arguments will be
             used as the "tag extra" (or diagnostics).  Example:
