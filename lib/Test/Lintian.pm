@@ -74,9 +74,9 @@ Test check desc files (and the tags in them) for common errors.
 OPTS is an optional HASHREF that determines if some of the tests
 are optional or not.  Currently it is unused.
 
-DESCFILES is a list of paths to check desc files.
+DESCFILES is a list of paths in which to check desc files.
 
-As the number tests depend on the number of tags in desc, it is
+As the number of tests depends on the number of tags in desc, it is
 difficult to "plan ahead" when using this test.  It is therefore
 recommended to not specify a plan and use done_testing().
 
