@@ -1276,7 +1276,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
               </listitem>
             </varlistentry>
             <varlistentry>
-              <term><emphasis>Needs-Info</emphasis> (simple, mandatory)</term>
+              <term><emphasis>Needs-Info</emphasis> (simple, optional)</term>
               <listitem>
                 <para>
                   Comma separated list of collections required for the
@@ -1327,6 +1327,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
                   Name of the tag.  It must consist entirely of the
                   lower or/and upper case characters ([a-zA-Z]),
                   digits ([0-9]), underscore (_), dash (-) and period (.).
+                  The tag name should be at most 68 characters long.
                 </para>
               </listitem>
             </varlistentry>
