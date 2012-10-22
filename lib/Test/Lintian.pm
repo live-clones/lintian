@@ -149,7 +149,7 @@ sub test_check_desc {
             $builder->is_eq (join (', ', @bad), '', '$cname has unknown collections in Needs-Info');
         } else {
             $builder->ok (1, 'Tag has a valid Needs-Info (empty)') if $colldir ne '';
-            $builder->skip ('Needs-Info test checks due to empty coll-dir') if $needs ne '';
+            $builder->skip ('Needs-Info test checks skipped due to empty coll-dir') if $needs ne '';
         }
 
         $builder->is_eq (check_spelling (undef, $cinfo), 0,
@@ -243,7 +243,7 @@ sub test_load_profiles {
         $err = $@;
 
         $builder->ok ($prof, "$profname is loadable.")
-            or $builder->diag ("Load error: $@\n");
+            or $builder->diag ("Load error: $err\n");
     };
 
     File::Find::find (\%opt, $absdir);
