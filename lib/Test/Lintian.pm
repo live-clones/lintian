@@ -45,7 +45,13 @@ use warnings;
 
 my $CLASS = __PACKAGE__;
 my $PROFILE = undef;
-our @EXPORT = qw(load_profile_for_test test_check_desc test_load_profiles);
+our @EXPORT = qw(
+    load_profile_for_test
+
+    test_check_desc
+    test_load_checks
+    test_load_profiles
+);
 
 use base 'Test::Builder::Module';
 
@@ -247,6 +253,64 @@ sub test_load_profiles {
     };
 
     File::Find::find (\%opt, $absdir);
+}
+
+=item test_load_checks (DESCFILES...)
+
+Test that the Perl module implementation of the checks can be loaded
+and has a run sub.
+
+DESCFILES is a list of paths in which to check desc files.
+
+For planning purposes, every element in DESCFILES counts for 2 tests.
+
+NB: This will load a profile if one hasn't been loaded already.  This
+is done to avoid issues loading L<data files|Lintian::Data> in the
+package scope of the checks.  (see
+L</load_profile_for_test ([PROFNAME[, INC...]])>)
+
+=cut
+
+sub test_load_checks {
+    my (@descs) = @_;
+    my $builder = $CLASS->builder;
+
+    load_profile_for_test ();
+
+    foreach my $desc (@descs) {
+        my $cs = Lintian::CheckScript->new ($desc);
+        my $cname = $cs->name;
+        my $ppkg = $cname;
+        my $path = $desc;
+        my $err;
+        my $rs_ref = 'MISSING';
+
+        $path =~ s,\.desc$,,o;
+
+        eval {
+            require $path;
+        };
+
+        if (!$builder->is_eq ($@//'', '', "Check $cname can be loaded")) {
+            $builder->skip ("Cannot check if $cname has a run sub due to load error");
+            next;
+        }
+
+        $ppkg =~ s,[-.],_,go;
+        $ppkg =~ s,/,::,go;
+        $ppkg = "Lintian::$ppkg";
+        eval {
+            # minimal "no strict refs" scope.
+            no strict 'refs';
+            $rs_ref = 'PRESENT'
+                if defined &{$ppkg . '::run'};
+        };
+        $err = $@//'';
+        if (! $builder->is_eq ($rs_ref, 'PRESENT', "Check $cname has runsub")) {
+            $builder->diag ("Expected package name is $ppkg\n");
+            $builder->diag ("Error: $err\n") if $err;
+        }
+    }
 }
 
 =item load_profile_for_test ([PROFNAME[, INC...]])
