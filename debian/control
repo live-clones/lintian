@@ -57,8 +57,8 @@ Build-Depends: binutils,
                xz-utils (>= 5.1.1alpha+20120614) | xz-lzma | lzma,
                zip
 Standards-Version: 3.9.3
-Vcs-Git: git://git.debian.org/git/lintian/lintian.git
-Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
+Vcs-Git: git://anonscm.debian.org/lintian/lintian.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=lintian/lintian.git
 
 Package: lintian
 Architecture: all
