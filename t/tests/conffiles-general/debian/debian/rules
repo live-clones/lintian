@@ -5,4 +5,6 @@ pkg=conffiles-general
 	dh $@
 
 override_dh_builddeb:
+	mkdir -p debian/$(pkg)/etc/
+	echo "Hallo World" > debian/$(pkg)/etc/foo
 	dpkg-deb --nocheck --build debian/$(pkg) ../$(pkg)_1.0_all.deb

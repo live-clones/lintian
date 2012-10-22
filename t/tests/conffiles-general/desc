@@ -3,8 +3,9 @@ Sequence: 6000
 Version: 1.0
 Description: Test for conffile-related checks
 Test-For:
+    conffile-has-bad-file-type
+    duplicate-conffile
     file-in-etc-rc.d-marked-as-conffile
     file-in-usr-marked-as-conffile
     non-etc-file-marked-as-conffile
     relative-conffile
-    duplicate-conffile

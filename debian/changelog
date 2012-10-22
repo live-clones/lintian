@@ -2,6 +2,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - conffile-has-bad-file-type
       - debug-package-for-multi-arch-same-pkg-not-coinstallable
       - dm-upload-allowed-is-obsolete
       - field-name-typo-in-dep5-copyright
@@ -35,9 +36,11 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Emit "missing changelog" for packages that are missing
       their usr/share/doc/<pkg>/ dir and do not have a doc symlink.
       Thanks to Faheem Mitha for the report.  (Closes: #683224)
-  * checks/conffiles:
+  * checks/conffiles{,.desc}:
     + [NT] Remove leading slash on the filename when emitting
       file-in-etc-rc.d-marked-as-conffile.
+    + [NT] Add check for "non-file" conffiles.  Thanks to Guillem
+      Jover for the report.  (Closes: #690910)
   * checks/control-file.desc:
     + [NT] Bump obsolete-relation-form-in-source to serious as these
       forms are now "must not" instead of "should not".

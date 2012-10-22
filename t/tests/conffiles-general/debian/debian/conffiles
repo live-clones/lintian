@@ -1,5 +1,7 @@
 /etc/foo
 /etc/rc2.d/file
+/etc/symlink
 /usr/share/foo
 /var/cache/foo
 etc/foo
+
