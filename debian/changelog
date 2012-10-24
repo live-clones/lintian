@@ -146,6 +146,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Add nodejs as a known interpreter.  Thanks to
       Marcelo Jorge Vieira for the report.
       (Closes: #623265)
+  * data/spelling/corrections:
+    + [NT] Add more corrections.
 
   * debian/control:
     + [NT] Add (Build-)Depends on libtext-levenshtein-perl.
