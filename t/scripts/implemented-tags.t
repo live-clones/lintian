@@ -19,7 +19,7 @@
 use strict;
 
 use Test::More;
-use Lintian::Util qw(read_dpkg_control slurp_entire_file);
+use Test::Lintian;
 
 # Exclude the following tags, which are handled specially and can't be
 # detected by this script.
@@ -38,7 +38,6 @@ our $EXCLUDE =
                  .*-address-causes-mail-loops-or-bounces$
                  ^wrong-debian-qa-address-set-as-maintainer$
                  ^wrong-debian-qa-group-name$
-                 ^malformed-override$
                  ^example.*interpreter.*
                  ^example-script-.*$
                  ^example-shell-script-.*$
@@ -46,29 +45,10 @@ our $EXCLUDE =
                 ));
 
 # Find all of the check description files.  We'll do one check per
-# description.
-our @DESCS = (<$ENV{LINTIAN_ROOT}/checks/*.desc>);
-plan tests => scalar(@DESCS);
+# description.  Exclude "lintian.desc" as it does not have a perl
+# module like other checks.
+our @DESCS = (grep {!m,/lintian\.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
+plan tests => scalar @DESCS;
 
-# For each desc file, build a list of tags and then scan the corresponding
-# source code looking for use of that tag.  The scanning is fairly
-# simple-minded.
-for my $desc (@DESCS) {
-    my @tags = map { $_->{tag} || () } read_dpkg_control($desc);
-    @tags = grep { !/$EXCLUDE/o } @tags;
-    my $file;
-    if ($desc =~ m,/lintian\.desc$,) {
-        $file = "$ENV{LINTIAN_ROOT}/frontend/lintian";
-    } else {
-        $file = $desc;
-        $file =~ s,\.desc$,,;
-    }
-    my $code = slurp_entire_file($file);
-    my @missing;
-    for my $tag (@tags) {
-        push(@missing, $tag) unless $code =~ /\Q$tag/;
-    }
-    my $short = $desc;
-    $short =~ s,^\Q$ENV{LINTIAN_ROOT}/*,,;
-    is(join(', ', @missing), '', "$short has all tags implemented");
-}
+test_tags_implemented ( {'exclude-pattern' => $EXCLUDE}, @DESCS);
+

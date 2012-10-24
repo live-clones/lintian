@@ -51,6 +51,7 @@ our @EXPORT = qw(
     test_check_desc
     test_load_checks
     test_load_profiles
+    test_tags_implemented
 );
 
 use base 'Test::Builder::Module';
@@ -62,7 +63,7 @@ use Lintian::Check qw(check_spelling);
 use Lintian::Data;
 use Lintian::Profile;
 use Lintian::Tags;
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 my %severities = map { $_ => 1 } @Lintian::Tags::SEVERITIES;
 my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
@@ -310,6 +311,107 @@ sub test_load_checks {
             $builder->diag ("Expected package name is $ppkg\n");
             $builder->diag ("Error: $err\n") if $err;
         }
+    }
+}
+
+=item test_tags_implemented ([OPTS, ]DESCFILES...)
+
+Test a given check implements all the tags listed in its desc file.
+For planning purposes, each file listed in DESCFILES counts as one
+test.
+
+This is a simple scan of the source code looking asserting that the
+tag names I<appear> (in the actual code part).  For a vast majority of
+Lintian's tags it is reliable enough to be useful.  However it has
+false-positives and false-negatives - the former can be handled via
+"exclude-pattern" (see below).
+
+The optional parameter OPTS is a hashref.  If passed it must be the
+first argument.  The followin key/value pairs are defined:
+
+=over 4
+
+=item exclude-pattern
+
+The value is assumed to be a regex (or a string describing a regex).
+Any tag matching this regex will be excluded from this test and is
+assumed to be implemented (regardless of whather that is true or not).
+
+This is useful for avoiding false-positives with cases like:
+
+  foreach my $x (@y) {
+    tag "some-tag-for-$x", "blah blah $x"
+        unless f($x);
+  }
+
+=back
+
+As mentioned, this test assert that the tag name appears in the code.
+Consider the following example:
+
+ my $tagname = 'my-tag';
+ $tagname = 'my-other-tag' if $condition;
+
+In this example, this test would conclude that 'my-tag' and
+'my-other-tag' are both implemented.  Which is good when $tagname is
+eventually passed to L<tag|Lintian::Tags/tag>, and a false-negative
+otherwise.
+
+Comment lines are I<not> ignored, so comments can be used as an
+alternative to the exclude-pattern (above).
+
+=cut
+
+sub test_tags_implemented {
+    my ($opts, @descs);
+    my $pattern;
+    my $builder = $CLASS->builder;
+
+    if ($_[0] and ref $_[0] eq 'HASH') {
+        ($opts, @descs) = @_;
+    } else {
+        $opts = {};
+        @descs = @_;
+    }
+
+    if (exists $opts->{'exclude-pattern'}) {
+        if (ref $opts->{'exclude-pattern'} eq 'Regexp') {
+            $pattern = $opts->{'exclude-pattern'};
+        } else {
+            $pattern = qr/$opts->{'exclude-pattern'}/;
+        }
+    }
+
+    foreach my $desc (@descs) {
+        my $cs = Lintian::CheckScript->new ($desc);
+        my $cname = $cs->name;
+        my $check = $desc;
+        my @tags = ();
+        my $codestr;
+        my @missing;
+        $check =~ s/\.desc$//;
+
+        @tags = $cs->tags unless defined $pattern;
+        @tags = grep { !m/$pattern/ } $cs->tags
+            if defined $pattern;
+
+        # Any tags left to check?
+        unless (@tags) {
+            $builder->skip ("All tags $cname are excluded");
+            next;
+        }
+
+        $codestr = slurp_entire_file ($check);
+
+        # Might as well...
+        study $codestr;
+
+        for my $tag (@tags) {
+            push @missing, $tag unless $codestr =~ /\Q$tag/;
+        }
+
+        $builder->is_eq (join (', ', @missing), '',
+                         "$cname has all tags implemented");
     }
 }
 
