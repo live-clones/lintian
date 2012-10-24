@@ -738,11 +738,11 @@ sub chdir_system {
     my $pid = fork // die "fork: $!";
     if ($pid) {
         waitpid ($pid, 0) == $pid or die "waitpid failed: $!\n";
-        return $?
+        return $?;
     }
 
     chdir $dir
-        or "chdir failed: $!";
+        or die "chdir failed: $!";
     exec @$cmd
         or die "exec failed: $!";
 }
