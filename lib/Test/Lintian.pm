@@ -153,7 +153,7 @@ sub test_check_desc {
             foreach my $need (split m/\s*+,\s*+/o, $needs) {
                 push @bad, $need unless -f "$colldir/$need.desc";
             }
-            $builder->is_eq (join (', ', @bad), '', '$cname has unknown collections in Needs-Info');
+            $builder->is_eq (join (', ', @bad), '', "$cname has unknown collections in Needs-Info");
         } else {
             $builder->ok (1, 'Tag has a valid Needs-Info (empty)') if $colldir ne '';
             $builder->skip ('Needs-Info test checks skipped due to empty coll-dir') if $needs ne '';
