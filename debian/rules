@@ -15,6 +15,7 @@ allcollect := $(wildcard collection/*)
 tagfiles := $(wildcard testset/tags.* t/*/*/tags)
 testfiles := $(wildcard t/tests/*/*.desc)
 perlprovides := data/fields/perl-provides
+autoreject_data := private/build-time-data/ftp-master-fatal private/build-time-data/ftp-master-nonfatal
 onlyrun =
 tag =
 
@@ -34,7 +35,7 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 endif
 
 profiles: $(profiles)
-$(profiles): $(allchecks) private/generate-profiles.pl
+$(profiles): $(allchecks) $(autoreject_data) private/generate-profiles.pl
 	private/generate-profiles.pl
 
 api-doc:

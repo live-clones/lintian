@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2012-02-19
+# Last updated: 2012-10-24
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -57,7 +57,6 @@ section-is-dh_make-template
 source-field-does-not-match-pkg-name
 symlink-has-too-many-up-segments
 too-many-architectures
-udeb-uses-unsupported-compression-for-data-tarball
 uploader-address-is-on-localhost
 uploader-address-malformed
 uploader-name-missing

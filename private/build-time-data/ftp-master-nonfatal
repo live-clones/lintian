@@ -2,7 +2,7 @@
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2012-02-19
+# Last updated: 2012-10-24
 
 arch-dependent-file-in-usr-share
 arch-independent-package-contains-binary-or-object
@@ -22,6 +22,7 @@ no-shlibs-control-file
 non-etc-file-marked-as-conffile
 package-contains-info-dir-file
 preinst-interpreter-without-predepends
+source-contains-waf-binary
 statically-linked-binary
 usr-share-doc-symlink-without-dependency
 wrong-file-owner-uid-or-gid

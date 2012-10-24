@@ -62,8 +62,8 @@ for my $line (@yaml) {
 
 # Print out the fatal and nonfatal tags to our data files.
 my $date = strftime('%Y-%m-%d', gmtime);
-open(NONFATAL, '>', 'data/output/ftp-master-nonfatal')
-    or die "Cannot create data/output/ftp-master-nonfatal: $!\n";
+open NONFATAL, '>', 'private/build-time-data/ftp-master-nonfatal'
+    or die "Cannot create private/build-time-data/ftp-master-nonfatal: $!\n";
 print NONFATAL <<"EOH";
 # This file lists all tags that cause an automatic reject on upload but can
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
@@ -74,8 +74,8 @@ print NONFATAL <<"EOH";
 EOH
 print NONFATAL join("\n", sort(@nonfatal), '');
 close NONFATAL;
-open(FATAL, '>', 'data/output/ftp-master-fatal')
-    or die "Cannot create data/output/ftp-master-fatal: $!\n";
+open FATAL, '>', 'private/build-time-data/ftp-master-fatal'
+    or die "Cannot create private/build-time-data/ftp-master-fatal: $!\n";
 print FATAL <<"EOH";
 # This file lists all tags that cause an automatic reject on upload and cannot
 # be overridden.  It is based on the data file retrieved from
