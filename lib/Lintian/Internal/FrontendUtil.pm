@@ -27,7 +27,7 @@ use Dpkg::Vendor;
 use Lintian::CollScript;
 use Lintian::Util qw(check_path fail);
 
-our @EXPORT = qw(check_test_feature default_parallel load_collections);
+our @EXPORT = qw(check_test_feature default_parallel load_collections split_tag);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -76,6 +76,31 @@ sub default_parallel {
 
     # No decent number of jobs? Just use 2 as a default
     return 2;
+}
+
+{
+    # Matches something like:  (1:2.0-3) [arch1 arch2]
+    # - captures the version and the architectures
+    my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
+    #                             ^^^^^^^^          ^^^^^^^^^^^^
+    #                           ( version   )      [architecture ]
+
+    # matches the full deal:
+    #    1  222 3333  4444444   5555   666  777
+    # -  T: pkg type (version) [arch]: tag [...]
+    #           ^^^^^^^^^^^^^^^^^^^^^
+    # Where the marked part(s) are optional values.  The numbers above the example
+    # are the capture groups.
+    my $TAG_REGEX = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
+
+    sub split_tag {
+        my ($tag_input) = @_;
+        my $pkg_type;
+        return unless $tag_input =~ m/^${TAG_REGEX}$/o;
+        # default value...
+        $pkg_type = $3//'binary';
+        return ($1, $2, $pkg_type, $4, $5, $6, $7);
+    }
 }
 
 1;

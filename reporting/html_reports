@@ -54,6 +54,7 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Data;
+use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
 use Lintian::Profile;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
@@ -184,23 +185,12 @@ my (%by_maint, %by_uploader, %by_tag);
 # about it).
 my (%seen, %saw_maintainer);
 
-# Matches something like:  (1:2.0-3) [arch1 arch2]
-# - captures the version and the architectures
-my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
-#                             ^^^^^^^^          ^^^^^^^^^^^^
-#                           ( version   )      [architecture ]
-
-# matches the full deal:
-#    1  222 3333  4444444   5555   666  777
-# -  T: pkg type (version) [arch]: tag [...]
-#           ^^^^^^^^^^^^^^^^^^^^^
-# Where the marked part(s) are optional values.  The numbers above the example
-# are the capture groups.
-my $fullre = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
 while (<>) {
+    my @parts;
     chomp;
-    next unless m/^$fullre/o;
-    my ($code, $package, $type, $pver, $parch, $tag, $extra) = ($1, $2, $3, $4, $5, $6, $7);
+    @parts = split_tag ($_);
+    next unless @parts;
+    my ($code, $package, $type, $pver, $parch, $tag, $extra) = @parts;
     $type = 'binary' unless (defined $type);
     $extra = '' unless (defined $extra);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');

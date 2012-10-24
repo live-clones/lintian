@@ -38,6 +38,7 @@ BEGIN {
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Data;
+use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 
 my %already_displayed = ();
@@ -94,19 +95,6 @@ if ($tags) {
 }
 
 my $type_re = qr/(?:binary|changes|source|udeb)/o;
-# Matches something like:  (1:2.0-3) [arch1 arch2]
-# - captures the version and the architectures
-my $verarchre = qr,(?: \s* \( [^\)]++ \) \s* \[   [^\]]++  \]),xo;
-#                             ^^^^^^^             ^^^^^^^
-#                           ( version )       [architecture ]
-
-# matches the full deal:
-#                                  111
-# -  T: pkg type (version) [arch]: tag [...]
-#           ^^^^^^^^^^^^^^^^^^^^^
-# Where the marked part(s) are optional values.  The numbers above the example
-# are the capture groups.
-my $fullre = qr/[EWIXOP]: \S+(?: $type_re(?:$verarchre)?)?: (\S+)(?:\s+.*)?/o;
 
 # Otherwise, read input files or STDIN, watch for tags, and add descriptions
 # whenever we see one, can, and haven't already explained that tag.  Strip off
@@ -132,8 +120,9 @@ while (<>) {
         $tagdata = $1;
         ($tag, undef) = split m/ /o, $tagdata, 2;
     } else {
-        next unless m/^$fullre$/o;
-        $tag = $1;
+        my @parts = split_tag ($_);
+        next unless @parts;
+        $tag = $parts[5];
     }
     next if $already_displayed{$tag}++;
     my $info = $profile->get_tag ($tag, 1);
