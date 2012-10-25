@@ -12,6 +12,7 @@ Test-For:
  gconftool-used-in-maintainer-script
  install-info-used-in-maintainer-script
  install-sgmlcatalog-deprecated
+ maintainer-script-has-unexpanded-debhelper-token
  maintainer-script-hides-init-failure
  maintainer-script-modifies-inetd-conf
  maintainer-script-modifies-ld-so-conf

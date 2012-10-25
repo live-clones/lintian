@@ -9,6 +9,7 @@ override_dh_builddeb:
 	    if [ -f debian/$${P}.$${S} ] ; then \
 	      cp -af debian/$${P}.$${S} debian/$${P}/DEBIAN/$${S} ; \
 	      chmod 0755 debian/$${P}/DEBIAN/$${S} ; \
+	      sed -i '/#DEBHELPER#/ d' debian/$${P}/DEBIAN/$${S} ; \
 	    fi ; \
 	  done ; \
 	done

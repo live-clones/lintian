@@ -1,4 +1,4 @@
-W: debconf-maintscripts-deps: loads-obsolete-confmodule postrm:7 /usr/share/debconf/confmodule.sh
+W: debconf-maintscripts-deps: loads-obsolete-confmodule postrm:6 /usr/share/debconf/confmodule.sh
 W: debconf-maintscripts-deps: missing-debconf-dependency-for-preinst
 W: debconf-maintscripts-deps: postinst-does-not-load-confmodule
 W: debconf-maintscripts-deps: postinst-uses-db-input

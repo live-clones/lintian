@@ -19,6 +19,7 @@ W: scripts-maintainer-general: deprecated-chown-usage postinst:84 'chown -R root
 W: scripts-maintainer-general: fc-cache-used-in-maintainer-script postinst:95
 W: scripts-maintainer-general: gconftool-used-in-maintainer-script postinst:44
 W: scripts-maintainer-general: install-info-used-in-maintainer-script postinst:105
+W: scripts-maintainer-general: maintainer-script-has-unexpanded-debhelper-token postinst
 W: scripts-maintainer-general: maintainer-script-hides-init-failure postinst:31
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-gconf2 postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst

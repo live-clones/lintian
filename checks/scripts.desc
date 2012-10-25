@@ -672,3 +672,13 @@ Info: This package includes perl scripts using obsoleted perl 4-era
  are likely to be removed from the core in perl 5.16. Please either
  remove references to these libraries, or add a dependency on
  <tt>libperl4-corelibs-perl | perl (&lt;&lt; 5.12.3-7)</tt> to this package.
+
+Tag: maintainer-script-has-unexpanded-debhelper-token
+Severity: normal
+Certainty: possible
+Info: Lintian has detected the presence of a #DEBEHELPER# token in the
+ listed maintainer/control script.  By default, dh_installdeb will remove
+ the token when it makes a substitution in a script.
+ .
+ Please note that dh_installdeb does <i>not</i> substitute the #DEBHELPER#
+ token in udebs.

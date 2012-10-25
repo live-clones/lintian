@@ -533,6 +533,10 @@ while (<SCRIPTS>) {
             $saw_bange = 1;
         }
 
+        if (/\#DEBHELPER\#/) {
+            tag 'maintainer-script-has-unexpanded-debhelper-token', $file;
+        }
+
         next if m,^\s*$,;  # skip empty lines
         next if m,^\s*\#,; # skip comment lines
         $_ = remove_comments($_);
