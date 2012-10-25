@@ -3,6 +3,7 @@
 
 $HOME = "/org/lintian.debian.org";
 $LINTIAN_ARCHIVEDIR = "/org/ftp.debian.org/ftp";
+$LINTIAN_MIRROR_NAME = "ftp-master.debian.org";
 $LINTIAN_DIST = "sid";
 $LINTIAN_AREA = "main";
 $LINTIAN_ARCH = "i386";

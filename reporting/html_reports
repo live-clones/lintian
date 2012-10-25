@@ -37,14 +37,14 @@ use Text::Template ();
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
      $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE,
-     $GRAPH_RANGE_DAYS, $GRAPHS, $GRAPH_DIR);
+     $GRAPH_RANGE_DAYS, $GRAPHS, $GRAPH_DIR, $LINTIAN_MIRROR_NAME);
 
 # Read the configuration.
 require './config';
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP
-    = "$LINTIAN_ARCHIVEDIR/project/trace/ftp-master.debian.org";
+    = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
 
 # FIXME: At least the lab should be a parameter to Read_pkglists rather
 # than an environment variable.

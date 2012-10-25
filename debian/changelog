@@ -217,6 +217,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * reporting/html_reports:
     + [JP,NT] Generate graphs of the collected history data.
       (Closes: #672273)
+    + [NT] Make the mirror name configurable.
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Add "raring" as known Ubuntu distribution.  Thanks to
