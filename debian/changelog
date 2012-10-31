@@ -95,7 +95,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [CW,NT] Be stricter with missing roff preprocessors by
       setting MANROFFSEQ to the empty string when calling man.
     + [CW,NT] Pass -Tutf8 -Z to man to skip an unused part of
-      the groff pipeline.
+      the groff pipeline.  (Closes: #677874)
     + [CW,NT] Use the L::Util gzip decompressor to open gzipped
       manpages.
   * checks/menu-format{,.desc}:
