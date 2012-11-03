@@ -50,6 +50,7 @@ libavformat ||source=libav||Format detected only with low score of %d, misdetect
 libavutil   ||source=libav||AVOption type %d of option %s not implemented yet\n
 libgd2    ||gd-(?:png|jpeg:) error:
 libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
+libjsoncpp ||A valid JSON document must be either an array or an object value\.
 libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
 libmng    ||TERM misplaced during creation of MNG stream
 libmsn    ||The MSN server has terminated the connection with an unknown reason code\.

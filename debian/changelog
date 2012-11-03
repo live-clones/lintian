@@ -142,6 +142,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       ELF binaries are properly processed, even when Lintian is
       run as root.  (Closes: #686352)
 
+  * data/binaries/embedded-libs:
+    + [RG] Check for embedded copies of jsoncpp.
   * data/fields/archive-sections:
     + [NT] Add new "tasks" section.
   * data/menu-format/add-categories:
