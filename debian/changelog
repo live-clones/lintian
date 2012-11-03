@@ -151,9 +151,9 @@ lintian (2.5.11) UNRELEASED; urgency=low
   * data/output/ftp-master-{,non}fatal:
     + [NT] Removed, not used at run time.
   * data/scripts/interpreters:
-    + [NT] Add nodejs as a known interpreter.  Thanks to
-      Marcelo Jorge Vieira for the report.
-      (Closes: #623265)
+    + [NT] Add nodejs and Rscript as a known interpreter.
+      Thanks to Marcelo Jorge Vieira and Sébastien Boisvert
+      for the report.  (Closes: #623265, #692232)
   * data/spelling/corrections:
     + [NT,RG] Add more corrections.
     + [RG] Re-sort the corrections.

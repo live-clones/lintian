@@ -15,7 +15,8 @@
 # rubyX.Y, etc.).  These are handled by the file
 # scripts/versioned-interpreters.
 #
-# Manually maintained table - please keep it sorted (by key)!
+# Manually maintained table - please keep it sorted (by key,
+# insensitively)!
 #
 
 ash            => /bin
@@ -72,6 +73,7 @@ regina         => /usr/bin, regina-rexx
 rep            => /usr/bin
 rexx           => /usr/bin, regina-rexx
 rrdcgi         => /usr/bin, rrdtool
+Rscript        => /usr/bin, r-base-core
 ruby           => /usr/bin, ruby | ruby-interpreter
 runhaskell     => /usr/bin, ghc | ghc6
 runhugs        => /usr/bin, hugs | hugs98
