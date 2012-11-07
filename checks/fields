@@ -489,7 +489,7 @@ if (not defined $info->field('section')) {
                 last;
             }
         }
-        if ($info->is_transitional) {
+        if ($info->is_pkg_class ('transitional')) {
             my $pri = $info->field ('priority', '');
             # Cannot use "unfold" as it could emit a tag for priority,
             # which will be duplicated below.

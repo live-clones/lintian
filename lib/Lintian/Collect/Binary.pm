@@ -556,20 +556,55 @@ sub relation {
     return $self->{relation}->{$field};
 }
 
-=item is_transitional
+=item is_pkg_class ([TYPE])
 
-Returns a truth value if the package appears to be a transitional
-package.
+Returns a truth value if the package is the given TYPE of special
+package.  TYPE can be one of "transitional" or "any-meta".  If omitted
+it defaults to "any-meta".  The semantics for these values are:
 
-This is based on the package's description.
+=over 4
+
+=item transitional
+
+The package is (probably) a transitional package (e.g. it is probably
+empty, just depend on stuff will eventually disappear.)
+
+Guessed from package description.
+
+=item any-meta
+
+This package is (probably) some kind of meta or task package.  A meta
+package is usually empty and just depend on stuff.  It will also
+return a truth value for "tasks" (i.e. tasksel "tasks").
+
+A transitional package will also match this.
+
+Guessed from package description, section or package name.
+
+=back
 
 =cut
 
-# sub is_transitional Needs-Info :field
-sub is_transitional {
-    my ($self) = @_;
-    my $desc = $self->field ('description')//'';
-    return $desc =~ m/transitional package/;
+# sub is_pkg_class Needs-Info :field
+
+{
+    # Regexes to try against the package description to find metapackages or
+    # transitional packages.
+    my $METAPKG_REGEX = qr/meta[ -]?package|dummy|(?:dependency|empty|virtual) package/;
+
+    sub is_pkg_class {
+        my ($self, $pkg_class) = @_;
+        my $desc = $self->field ('description', '');
+        $pkg_class //= 'any-meta';
+        return 1 if $desc =~ m/transitional package/;
+        if ($pkg_class eq 'any-meta') {
+            my ($section) = $self->field ('section', '');
+            return 1 if $desc =~ m/$METAPKG_REGEX/o;
+            return 1 if $section =~ m,(?:^|/)tasks$,;
+            return 1 if $self->name =~ m/^task-/;
+        }
+        return;
+    }
 }
 
 =item is_conffile (FILE)

@@ -146,12 +146,6 @@ my @flash_nonfree = (
 #    qr,(?i)xspf_jukebox\.swf$,
 );
 
-# Regexes to try against the package description to find metapackages or
-# transitional packages.
-my @METAPKG_REGEX =
-    (qr/meta[ -]?package/, qr/dummy/,
-     qr/(?:dependency|empty|virtual) package/);
-
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.
 my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
@@ -214,16 +208,8 @@ my @devhelp_links;
 my %x11_font_dirs;
 
 # Check if package is empty
-my $is_dummy = $info->is_transitional;
-my $description = $info->field('description');
-if (!$is_dummy && $description) {
-    for my $regex (@METAPKG_REGEX) {
-        if ($description =~ /$regex/) {
-            $is_dummy = 1;
-            last;
-        }
-    }
-}
+my $is_dummy = $info->is_pkg_class ('any-meta');
+
 if (!$is_dummy) {
     my $is_empty = 1;
     for my $file ($info->sorted_index) {

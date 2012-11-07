@@ -75,6 +75,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
       Vcs-* fields.  (Closes: #681769)
   * checks/files:
     + [RG] Recognise smarty3 as smarty itself.
+    + [NT] Consider "tasksel tasks" as a meta package.
+      (Closes: #691489)
   * checks/group-checks{,.desc}:
     + [NT] Detect debug packages not co-installable with itself,
       when it provides debug symbols for a Multi-Arch: same package.
