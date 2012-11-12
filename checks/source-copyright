@@ -174,7 +174,7 @@ if (@dep5) {
         if (defined $license and not defined $files) {
             # Standalone license paragraph
             if (not $license =~ m/\n/) {
-                tag 'missing-license-text-in-dep5-copyright', lc $license, "(paragrah at line $lines[$i])";
+                tag 'missing-license-text-in-dep5-copyright', lc $license, "(paragraph at line $lines[$i])";
             }
             ($license, undef) = split /\n/, $license, 2;
             for (split_licenses($license)) {
