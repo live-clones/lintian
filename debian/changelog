@@ -113,13 +113,6 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Check for untranslatable templates that should be
       translatable.  Thanks to David Prévot for the report and the
       patch.  (Closes: #686179)
-  * checks/shared-libs{,.desc}:
-    + [NT] Clearify the description of dev-pkg-without-shlib-symlink
-      to mention that the dev symlink is always expected in /usr.
-    + [NT] Add missing "+" in libtool regex.  Thanks to Leo 'costela'
-      Antunes for the report.
-    + [RA,NT] Check for use of obsolete "<" and ">" in shlibs control
-      files.  (Closes: #660655)
   * checks/scripts{,.desc}:
     + [NT] Retire check for dpkg-maintscript-helper in preinst.
       (Closes: #685497)
@@ -127,6 +120,13 @@ lintian (2.5.11) UNRELEASED; urgency=low
       the file is an executable hardlink to a script.
     + [NT] Check maintainer scripts for unexpanded #DEBHELPER# tokens.
       Thanks to Cyril "KiBi" Brulebois for the suggestion.
+  * checks/shared-libs{,.desc}:
+    + [NT] Clearify the description of dev-pkg-without-shlib-symlink
+      to mention that the dev symlink is always expected in /usr.
+    + [NT] Add missing "+" in libtool regex.  Thanks to Leo 'costela'
+      Antunes for the report.
+    + [RA,NT] Check for use of obsolete "<" and ">" in shlibs control
+      files.  (Closes: #660655)
   * checks/source-copyright{,.desc}:
     + [NT] Check for possible misspellings of known field
       names.  (Closes: #678639)
