@@ -31,7 +31,7 @@ use Dpkg::Version qw(version_check);
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);
-use Lintian::Relation ();
+use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw($PKGNAME_REGEX);
@@ -906,12 +906,13 @@ if ($type eq 'source') {
             push @arch_dep_pkgs, $binpkg;
         }
     }
+    my $dstr = join ('|', @arch_dep_pkgs);
+    my $depregex = qr/^(?:$dstr)$/;
     foreach (@dbg_pkgs) {
-        my $deps;
-        $deps  = $info->binary_field($_, 'pre-depends', '') . ', ';
-        $deps .= $info->binary_field($_, 'depends', '');
+        my $deps = Lintian::Relation->and ($info->binary_relation ($_, 'pre-depends'),
+                                           $info->binary_relation ($_, 'depends'));
         tag 'dbg-package-missing-depends', $_
-           unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(?:\s|,|^)$quoted_name(?:\s|,|\z)/} @arch_dep_pkgs);
+           unless $deps->matches ($depregex, VISIT_PRED_NAME);
     }
 
     # Check for a python*-dev build dependency in source packages that
