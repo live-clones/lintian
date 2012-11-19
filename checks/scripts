@@ -719,8 +719,13 @@ while (<SCRIPTS>) {
                 if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
                     tag 'read-in-maintainer-script', "$file:$.";
                 }
-                if (m,^\s*rm\s+([^>]*\s)?/dev/,) {
-                    tag 'maintainer-script-removes-device-files', "$file:$.";
+                if (m,^\s*rm\s+(?:[^>]*\s)?/dev/([^/ ]+),) {
+                    my $f = $1//'';
+                    if ($f ne 'shm' && $f !~ m,^\.[^.]+,) {
+                        # Ignore /dev/shm (initscripts) and dot-files (which are probably
+                        # not a dev).
+                        tag 'maintainer-script-removes-device-files', "$file:$.";
+                    }
                 }
                 if (m,>\s*(/etc/(?:services|protocols|rpc))(\s|\Z),) {
                     tag 'maintainer-script-modifies-netbase-managed-file', "$file:$. $1";
