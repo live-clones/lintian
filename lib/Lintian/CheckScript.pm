@@ -38,7 +38,8 @@ Lintian::CheckScript - Check script meta data
 
  use Lintian::CheckScript;
  
- my $cs = Lintian::CheckScript->new ("$ENV{'LINTIAN_ROOT'}/checks/files.desc");
+ my $cs = Lintian::CheckScript->new ("$ENV{'LINTIAN_ROOT'}/checks/",
+                                     'files');
  my $name = $cs->name;
  foreach my $tag ($cs->tags) {
     # $ti is an instance of Lintian::Tag::Info
@@ -63,23 +64,22 @@ common meta data of the check (such as Needs-Info).
 
 =over 4
 
-=item Lintian::CheckScript->new ($file)
+=item Lintian::CheckScript->new ($basedir, $checkname)
 
 Parses the $file as a check desc file.
 
 =cut
 
 sub new {
-    my ($class, $file) = @_;
-    my ($header, @tags) = read_dpkg_control ($file);
+    my ($class, $basedir, $checkname) = @_;
+    my ($header, @tags) = read_dpkg_control ("$basedir/${checkname}.desc");
     my $self;
     my $dir;
     unless ($header->{'check-script'}) {
-        croak "Missing Check-Script field in $file";
+        croak "Missing Check-Script field in $basedir/${checkname}.desc";
     }
-    $dir = realpath ($file)
-        or croak "Cannot resolve $file: $!";
-    $dir = dirname ($dir);
+    $dir = realpath ($basedir)
+        or croak "Cannot resolve $basedir: $!";
 
     $self = {
         'name' => $header->{'check-script'},
@@ -103,7 +103,8 @@ sub new {
 
     for my $pg (@tags) {
         my $ti;
-        croak "Missing Tag field for tag in $file" unless $pg->{'tag'};
+        croak "Missing Tag field for tag in $basedir/${checkname}.desc"
+            unless $pg->{'tag'};
         $ti = Lintian::Tag::Info->new($pg, $self->{'name'}, $self->{'type'});
         $self->{'tag-table'}->{$ti->tag} = $ti;
     }
@@ -131,9 +132,13 @@ lintian.desc, where this field is simply not present.
 
 Returns the value of the Abbrev field from the desc file.
 
+=item $cs->script_path
+
+Returns the (expected) path to the script implementing this check.
+
 =cut
 
-Lintian::CheckScript->mk_ro_accessors (qw(name type abbrev));
+Lintian::CheckScript->mk_ro_accessors (qw(name type abbrev script_path));
 
 =item needs_info
 

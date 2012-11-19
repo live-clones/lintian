@@ -82,7 +82,9 @@ if ($cond) {
 
 if ($opt{'checks'}) {
     foreach my $checkf (glob ("$LINTIAN_ROOT/checks/*.desc")) {
-        my $check = Lintian::CheckScript->new ($checkf);
+        my $cname = $checkf;
+        $cname =~ s,^\Q$LINTIAN_ROOT\E/checks/(.+)\.desc$,$1,;
+        my $check = Lintian::CheckScript->new ("$LINTIAN_ROOT/checks", $cname);
         my $name = $check->name;
         my $n;
         next if defined $opt{'pkg-type'} and not $check->is_check_type ($opt{'pkg-type'});

@@ -26,9 +26,12 @@ use Test::Lintian;
 
 # Test that all checks can be loaded (except lintian.desc, which is
 # a special case).
-our @DESCS = (grep { !m,/lintian.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
+our @CHECKNAMES = map {
+    s,^\Q$ENV{'LINTIAN_ROOT'}\E/checks/(.+)\.desc$,$1,;
+    $_
+ } (grep { !m,/lintian.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
 
-plan tests => 2 * scalar @DESCS;
+plan tests => 2 * scalar @CHECKNAMES;
 
-test_load_checks (@DESCS);
+test_load_checks ("$ENV{'LINTIAN_ROOT'}/checks", @CHECKNAMES);
 

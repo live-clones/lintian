@@ -47,8 +47,13 @@ our $EXCLUDE =
 # Find all of the check description files.  We'll do one check per
 # description.  Exclude "lintian.desc" as it does not have a perl
 # module like other checks.
-our @DESCS = (grep {!m,/lintian\.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
-plan tests => scalar @DESCS;
+our @CHECKNAMES = map {
+    s,^\Q$ENV{'LINTIAN_ROOT'}\E/checks/(.+)\.desc$,$1,;
+    $_
+ } (grep {!m,/lintian\.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
 
-test_tags_implemented ( {'exclude-pattern' => $EXCLUDE}, @DESCS);
+plan tests => scalar @CHECKNAMES;
+
+test_tags_implemented ( {'exclude-pattern' => $EXCLUDE},
+                        "$ENV{LINTIAN_ROOT}/checks", @CHECKNAMES);
 

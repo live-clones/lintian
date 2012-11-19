@@ -256,14 +256,16 @@ sub test_load_profiles {
     File::Find::find (\%opt, $absdir);
 }
 
-=item test_load_checks (DESCFILES...)
+=item test_load_checks (DIR, CHECKNAMES...)
 
 Test that the Perl module implementation of the checks can be loaded
 and has a run sub.
 
-DESCFILES is a list of paths in which to check desc files.
+DIR is the directory where the checks can be found.
 
-For planning purposes, every element in DESCFILES counts for 2 tests.
+CHECKNAMES is a list of check names.
+
+For planning purposes, every element in CHECKNAMES counts for 2 tests.
 
 NB: This will load a profile if one hasn't been loaded already.  This
 is done to avoid issues loading L<data files|Lintian::Data> in the
@@ -273,20 +275,18 @@ L</load_profile_for_test ([PROFNAME[, INC...]])>)
 =cut
 
 sub test_load_checks {
-    my (@descs) = @_;
+    my ($dir, @checknames) = @_;
     my $builder = $CLASS->builder;
 
     load_profile_for_test ();
 
-    foreach my $desc (@descs) {
-        my $cs = Lintian::CheckScript->new ($desc);
+    foreach my $checkname (@checknames) {
+        my $cs = Lintian::CheckScript->new ($dir, $checkname);
         my $cname = $cs->name;
         my $ppkg = $cname;
-        my $path = $desc;
+        my $path = $cs->script_path;
         my $err;
         my $rs_ref = 'MISSING';
-
-        $path =~ s,\.desc$,,o;
 
         eval {
             require $path;
@@ -314,10 +314,10 @@ sub test_load_checks {
     }
 }
 
-=item test_tags_implemented ([OPTS, ]DESCFILES...)
+=item test_tags_implemented ([OPTS, ], DIR, CHECKNAMES...)
 
 Test a given check implements all the tags listed in its desc file.
-For planning purposes, each file listed in DESCFILES counts as one
+For planning purposes, each check listed in CHECKNAMES counts as one
 test.
 
 This is a simple scan of the source code looking asserting that the
@@ -326,8 +326,11 @@ Lintian's tags it is reliable enough to be useful.  However it has
 false-positives and false-negatives - the former can be handled via
 "exclude-pattern" (see below).
 
+The DIR argument is the directory in which to find the checks.
+CHECKNAMES is a list of the check names.
+
 The optional parameter OPTS is a hashref.  If passed it must be the
-first argument.  The followin key/value pairs are defined:
+first argument.  The following key/value pairs are defined:
 
 =over 4
 
@@ -363,15 +366,15 @@ alternative to the exclude-pattern (above).
 =cut
 
 sub test_tags_implemented {
-    my ($opts, @descs);
+    my ($opts, $dir, @checknames);
     my $pattern;
     my $builder = $CLASS->builder;
 
     if ($_[0] and ref $_[0] eq 'HASH') {
-        ($opts, @descs) = @_;
+        ($opts, $dir, @checknames) = @_;
     } else {
         $opts = {};
-        @descs = @_;
+        ($dir, @checknames) = @_;
     }
 
     if (exists $opts->{'exclude-pattern'}) {
@@ -382,14 +385,13 @@ sub test_tags_implemented {
         }
     }
 
-    foreach my $desc (@descs) {
-        my $cs = Lintian::CheckScript->new ($desc);
+    foreach my $checkname (@checknames) {
+        my $cs = Lintian::CheckScript->new ($dir, $checkname);
         my $cname = $cs->name;
-        my $check = $desc;
+        my $check = $cs->script_path;
         my @tags = ();
         my $codestr;
         my @missing;
-        $check =~ s/\.desc$//;
 
         @tags = $cs->tags unless defined $pattern;
         @tags = grep { !m/$pattern/ } $cs->tags

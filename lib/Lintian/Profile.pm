@@ -515,26 +515,26 @@ sub _check_for_invalid_fields {
 
 sub _load_check {
     my ($self, $profile, $check) = @_;
-    my $desc = undef;
+    my $dir = undef;
     foreach my $checkdir ($self->include_path ('checks')) {
         my $cf = "$checkdir/${check}.desc";
         if ( -f $cf ) {
-            $desc = $cf;
+            $dir = $checkdir;
             last;
         }
     }
-    croak "$profile references unknown $check" unless defined $desc;
-    $self->_parse_check ($desc, $check);
+    croak "$profile references unknown $check" unless defined $dir;
+    $self->_parse_check ($check, $dir);
 }
 
 sub _parse_check {
-    my ($self, $desc, $gcname) = @_;
+    my ($self, $gcname, $dir) = @_;
     # Have we already tried to load this before?  Possibly via an alias
     # or symlink
     return $self->{'check-scripts'}->{$gcname}
         if exists $self->{'check-scripts'}->{$gcname};
 
-    my $c = Lintian::CheckScript->new ($desc);
+    my $c = Lintian::CheckScript->new ($dir, $gcname);
     my $cname = $c->name;
     if (exists $self->{'check-scripts'}->{$cname}) {
         # We have loaded the check under a different name
@@ -565,7 +565,7 @@ sub _load_checks {
             my $cname = $desc;
             next unless $cname =~ s/\.desc$//o;
             # _parse_check ignores duplicates, so we don't have to check for it.
-            $self->_parse_check ("$checkdir/$desc", $cname);
+            $self->_parse_check ($cname, $checkdir);
         }
         closedir $dirfd;
     }
