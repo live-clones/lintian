@@ -962,6 +962,16 @@ Info: This package contains a *.ttf, *.otf, or *.pfb file, file
  the font should be packaged separately, since fonts are usually useful
  outside of the package that embeds them.
 
+Tag: font-adobe-copyrighted-fragment
+Severity: serious
+Certainty: possible
+Info: This type 1 font file includes some postscript fragment with a
+ non free license of Adobe. In order to check if this tag is genuine
+ please follow the proceedure described in the reference.
+ .
+ Should this be a false-positive, please override the tag.
+Ref: http://wiki.debian.org/qa.debian.org/type1nondfsg
+
 Tag: duplicate-font-file
 Severity: normal
 Certainty: possible

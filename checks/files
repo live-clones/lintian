@@ -1021,6 +1021,26 @@ foreach my $file ($info->sorted_index) {
             } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
                 tag 'font-in-non-font-package', $file;
             }
+            my $finfo = $info->file_info ($file) || '';
+            if ($finfo =~ m/PostScript Type 1 font program data/) {
+               my $path = $info->unpacked ($file);
+               open my $t1pipe, '-|', 't1disasm', $path or fail "Can't pipe from t1disasm: $!";
+               my $foundadobeline = 0;
+               while (my $line = <$t1pipe>) {
+                    if ($foundadobeline) {
+                       if ($line =~ m/^[%\s]*All\s*Rights\s*Reserved\.?\s*$/i) {
+                          tag 'font-adobe-copyrighted-fragment', $file;
+                          last;
+                       } else {
+                          $foundadobeline = 0;
+                       }
+                    }
+                    if ($line =~ m/^[%\s]*Copyright\s*\(c\)\s*19\d{2}[\-\s]19\d{2}\s*Adobe\s*Systems\s*Incorporated\.?\s*$/i) {
+                       $foundadobeline = 1;
+                    }
+               }
+               close $t1pipe or fail "could not close pipe: $! $?";
+            }
         }
 
         # ---------------- non-free .swf files

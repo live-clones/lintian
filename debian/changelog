@@ -6,6 +6,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
       - debug-package-for-multi-arch-same-pkg-not-coinstallable
       - dm-upload-allowed-is-obsolete
       - field-name-typo-in-dep5-copyright
+      - font-adobe-copyrighted-fragment
       - maintainer-script-has-unexpanded-debhelper-token
       - shlibs-uses-obsolete-relation
       - untranslatable-debconf-templates
@@ -79,6 +80,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [RG] Recognise smarty3 as smarty itself.
     + [NT] Consider "tasksel tasks" as a meta package.
       (Closes: #691489)
+    + [NT] Add patch from Bastien Roucaries to check for adobe font
+      license issues.  (Closes: #694328)
   * checks/group-checks{,.desc}:
     + [NT] Detect debug packages not co-installable with itself,
       when it provides debug symbols for a Multi-Arch: same package.
