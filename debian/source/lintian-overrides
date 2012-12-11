@@ -6,3 +6,6 @@ lintian source: patch-system-but-no-source-readme
 lintian source: unused-build-dependency-on-cdbs
 # We build-depend on python-dev for the test suite
 lintian source: build-depends-on-python-dev-with-no-arch-any
+# That is a comment reference to the license statement in a tag
+# description (and not the license itself).
+lintian source: license-problem-json-evil checks/cruft.desc
