@@ -1,9 +1,13 @@
-lintian (2.5.11) UNRELEASED; urgency=low
+lintian (2.5.10.3) UNRELEASED; urgency=low
 
   * checks/scripts{,.desc}:
     + [NT] Fix false-positive for removal of device files as /dev/shm
       is not a device.  Thanks to Steve Langasek for the report and
       Roger Leigh for the extra info.  (Closes: #693442)
+  * checks/standards-version:
+    + [NT] Recognise Standards-Version 3.9.4.
+    + [NT] Accept Standards-Version 3.9.3 as current (enough) during
+      the freeze.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 11 Dec 2012 19:19:20 +0100
 

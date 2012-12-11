@@ -117,8 +117,10 @@ if (not $STANDARDS->known($stdver)) {
     } else {
         tag 'invalid-standards-version', $version;
     }
-} elsif ($stdver eq $CURRENT) {
-    # Current standard.  Nothing more to check.
+} elsif ($stdver eq $CURRENT or $stdver eq '3.9.3') {
+    # Current or 3.9.3 standard.  Nothing more to check.
+    # - accept 3.9.3 as current to not encourage people to bump S-V in the
+    #   middle of the freeze.
     return 0;
 } else {
     # Otherwise, we need to see if the standard that this package declares is
