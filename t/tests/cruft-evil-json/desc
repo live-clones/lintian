@@ -1,0 +1,5 @@
+Testname: cruft-evil-json
+Sequence: 6000
+Version: 1.0
+Description: Check for the "Evil JSON" license
+Test-For: license-problem-json-evil

@@ -322,6 +322,7 @@ sub check_debfiles {
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
     my ($pkg, $info, $root, $warned, $atdinbd, $ltinbd) = @_;
+    my $basename;
     (my $name = $File::Find::name) =~ s,^$root/,,;
 
     # Ignore the .pc directory and its contents, created as part of the
@@ -349,6 +350,7 @@ sub find_cruft {
         }
     }
     -f or return; # we just need normal files for the rest
+    $basename = basename $name;
 
     unless ($warned->{$name}) {
         for my $rule (@file_checks) {
@@ -367,8 +369,7 @@ sub find_cruft {
             tag 'configure-generated-file-in-source', $name;
         }
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
-        my $b = basename $name;
-        open F, '<', $b or fail "can't open $name: $!";
+        open F, '<', $basename or fail "can't open $name: $!";
         while (<F>) {
             last if $. > 10; # it's on the 6th line, but be a bit more lenient
             if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
@@ -388,8 +389,7 @@ sub find_cruft {
     } elsif ($name =~ m,^(.+/)?ltconfig$, and not $ltinbd) {
         tag 'ancient-libtool', $name;
     } elsif ($name =~ m,^(.+/)?ltmain\.sh$, and not $ltinbd) {
-        my $b = basename $name;
-        open F, '<', $b or fail "can't open $name: $!";
+        open F, '<', $basename or fail "can't open $name: $!";
         while (<F>) {
             if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                 my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
@@ -405,6 +405,18 @@ sub find_cruft {
             }
         }
         close F;
+    }
+
+    # test license problem is source file (only text file)
+    if (-T $basename) {
+        open my $F, '<', $basename or fail "can't open $name: $!";
+        while (my $line = <$F>) {
+          # json evil license
+          if ($line =~ m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/i) {
+             tag 'license-problem-json-evil', $name;
+          }
+        }
+        close $F or fail "can not close opened file $name: $!"
     }
 }
 

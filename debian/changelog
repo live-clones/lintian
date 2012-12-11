@@ -7,6 +7,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
       - dm-upload-allowed-is-obsolete
       - field-name-typo-in-dep5-copyright
       - font-adobe-copyrighted-fragment
+      - license-problem-json-evil
       - maintainer-script-has-unexpanded-debhelper-token
       - shlibs-uses-obsolete-relation
       - untranslatable-debconf-templates
@@ -58,6 +59,8 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [RA,NT] Extend the description of the tags {outdated,ancient}-
       autotools-helper-file to mention that dh-autoreconf might be
       helpful tool.
+    + [NT] Apply patch from Bastien Roucariès to detect file licensed
+      under the "Good, not Evil"-JSON license.  (Closes: #692616)
   * checks/deb-format{,.desc}:
     + [NT] Retire data.tar.xz tag.  (Closes: #680391)
   * checks/debhelper{,.desc}:
@@ -80,7 +83,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [RG] Recognise smarty3 as smarty itself.
     + [NT] Consider "tasksel tasks" as a meta package.
       (Closes: #691489)
-    + [NT] Add patch from Bastien Roucaries to check for adobe font
+    + [NT] Add patch from Bastien Roucariès to check for adobe font
       license issues.  (Closes: #694328)
   * checks/group-checks{,.desc}:
     + [NT] Detect debug packages not co-installable with itself,

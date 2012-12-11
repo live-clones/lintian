@@ -478,3 +478,11 @@ Info: The given control file uses <tt>CRLF</tt> as line terminator
  <tt>CR</tt> character in the file:
  .
  <tt>sed -i 's/\r//g' path/to/file</tt>
+
+Tag: license-problem-json-evil
+Severity: serious
+Certainty: possible
+Info: The given source file is copyrighted under the non free
+ license of json and the infamous clause:
+ The Software shall be used for Good, not Evil.
+Ref: http://wiki.debian.org/qa.debian.org/jsonevil
