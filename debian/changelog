@@ -1,4 +1,4 @@
-lintian (2.5.11) UNRELEASED; urgency=low
+lintian (2.5.11) experimental; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -244,7 +244,7 @@ lintian (2.5.11) UNRELEASED; urgency=low
     + [NT] Add "raring" as known Ubuntu distribution.  Thanks to
       Dmitry Shachnev.  (LP: #1068208)
 
- -- Niels Thykier <niels@thykier.net>  Tue, 10 Jul 2012 13:21:56 +0200
+ -- Niels Thykier <niels@thykier.net>  Tue, 11 Dec 2012 22:12:06 +0100
 
 lintian (2.5.10.2) unstable; urgency=low
 
