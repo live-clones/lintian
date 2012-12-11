@@ -57,7 +57,7 @@ Build-Depends: binutils,
                xz-utils,
                xz-utils (>= 5.1.1alpha+20120614) | xz-lzma | lzma,
                zip
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Vcs-Git: git://anonscm.debian.org/lintian/lintian.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=lintian/lintian.git
 
@@ -113,4 +113,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 3.9.3.
+ This version of Lintian is calibrated for policy version 3.9.4.
