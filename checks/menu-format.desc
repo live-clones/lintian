@@ -306,6 +306,18 @@ Info: The categories for this desktop entry do not contain any Main
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
+Tag: desktop-entry-lacks-keywords-entry
+Severity: wishlist
+Certainty: certain
+Info: The categories for this desktop entry do not contain any
+ Keywords. Keywords should not be redundant with the values of Name
+ or GenericName.
+ .
+ The desktop-file-validate tool in the desktop-file-utils package is
+ useful for checking the syntax of desktop entries.
+Ref: http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s05.html,
+ #693918
+
 Tag: desktop-entry-uses-reserved-category
 Severity: normal
 Certainty: certain

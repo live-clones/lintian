@@ -5,3 +5,4 @@ Comment=Incorrectly limited to particular environments
 Categories=Development;
 Exec=foo
 OnlyShowIn=GNOME;KDE;
+Keywords=Golf

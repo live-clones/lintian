@@ -2,6 +2,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - desktop-entry-lacks-keywords-entry
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
@@ -14,6 +15,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)
+  * checks/menu-format{,.desc}:
+    + [NT] Apply patch from Bastien Roucariès to detect missing
+      "Keywords" in desktop files.  Thanks to Jeremy Bicha for
+      the report.  (Closes: #693918)
 
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given

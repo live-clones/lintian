@@ -5,3 +5,4 @@ Type=Application
 Categories=Screensaver;
 Exec=foo
 OnlyShowIn=GNOME;KDE;
+Keywords=Blur

@@ -95,6 +95,7 @@ my %known_desktop_keys = map { $_ => 1 }
        Comment
        Icon
        Hidden
+       Keywords
        OnlyShowIn
        NotShowIn
        TryExec
@@ -645,6 +646,13 @@ sub VerifyDesktopFile {
     for my $tag (@req_desktop_keys) {
         unless (defined $vals{$tag}) {
             tag 'desktop-entry-missing-required-key', "$file $tag";
+        }
+    }
+
+    # test if missing Keywords (only if NoDisplay is not set)
+    if (!defined $vals{NoDisplay}) {
+        if (!defined $vals{Keywords}) {
+            tag 'desktop-entry-lacks-keywords-entry', $file;
         }
     }
 
