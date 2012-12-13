@@ -3,6 +3,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * reporting/harness:
     + [NT] Add --to-stdout option to emit log information to
       stdout as well as the log files.
+    + [NT] Always schedule packages in groups.  Otherwise, binNMU'ed
+      binaries would not be tested together with their source
+      package (and architecture independent packages).
 
  -- Niels Thykier <niels@thykier.net>  Thu, 13 Dec 2012 13:38:59 +0100
 

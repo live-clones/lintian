@@ -64,6 +64,8 @@ my %opthash = (
     'help|h' => \&usage,
 );
 
+my %group_cache;
+
 # init commandline parser
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
@@ -105,6 +107,8 @@ unshift @INC, "$LINTIAN_ROOT/lib";
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable;
+require Lintian::Relation::Version;
+import Lintian::Relation::Version qw(versions_lt);
 require Lintian::Util;
 import Lintian::Util qw(visit_dpkg_paragraph);
 
@@ -188,7 +192,8 @@ unless ($opt{'reports-only'}) {
                                             [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
     my @diffs = $LAB->generate_diffs (@manifests);
     my %skip = ();
-    my @inc;
+    my @worklist;
+    my %dirty_groups = ();
     # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
     # but still...
     my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
@@ -196,16 +201,30 @@ unless ($opt{'reports-only'}) {
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
+        my $old_manifest = $diff->olist;
+        my $man = $diff->nlist;
         Log ("Removing old or changed $type packages from the lab");
         foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
             my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
             my $entry;
+            my ($pkg_src, $pkg_src_version);
             my $sk = "$type:$pkg_name/$pkg_version";
             $sk .= "/$pkg_arch" if $pkg_arch;
             $skip{$sk} = 1; # For log-cleaning (incremental runs)
-            unless ($opt{'dry-run'}) {
+            if ($opt{'dry-run'}) {
+                $entry = Lintian::Processable->new_from_metadata ($type,
+                                                                  $old_manifest->get (@$removed))
+            } else {
                 $entry = $LAB->get_package ($pkg_name, $type, $pkg_version, $pkg_arch);
             }
+
+            $pkg_src = $entry->pkg_src;
+            $pkg_src_version = $entry->pkg_src_version;
+            $dirty_groups{$pkg_src}->{$pkg_src_version} = 1;
+
+            # Under dry-run, $entry is not a L::Lab::Entry, so kill it so we don't try to
+            # use it as one later.
+            $entry = undef if $opt{'dry-run'};
             if ($opt{'dry-run'} || $entry) {
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
@@ -219,24 +238,15 @@ unless ($opt{'reports-only'}) {
         Log ("Adding new and changed $type packages to the lab");
         foreach my $added (@{ $diff->added }, @{ $diff->changed }) {
             my ($pkg_name, $pkg_version, $pkg_arch) = @$added;
-            my $man = $diff->nlist;
             my $me = $man->get (@$added);
-            my $file = $me->{'file'};
-            my $proc;
             my $entry;
-            unless ($opt{'dry-run'}) {
-                eval {
-                    $proc = Lintian::Processable->new_from_metadata ($type, $me);
-                };
-                unless ($proc) {
-                    my $name = "$type:$pkg_name/$pkg_version";
-                    $name .= "/$pkg_arch" if $pkg_arch;
-                    # Handle newlines in the error message.
-                    $@ =~ s/\n*$//; $@ =~ s/\n/ /og;
-                    Log ("Skipping $name due to errors ($@)");
-                    next;
-                }
+            my $proc = Lintian::Processable->new_from_metadata ($type, $me);
+            my $pkg_src = $proc->pkg_src;
+            my $pkg_src_version = $proc->pkg_src_version;
 
+            $dirty_groups{$pkg_src}->{$pkg_src_version} = 1;
+
+            unless ($opt{'dry-run'}) {
                 $entry = $LAB->get_package ($proc);
             }
             if ($opt{'dry-run'} || $entry) {
@@ -257,13 +267,56 @@ unless ($opt{'reports-only'}) {
                     my $query = "$type:$pkg_name/$pkg_version";
                     $query .= "/$pkg_arch" if $pkg_arch;
                     Log ("Added $type $pkg_name ($pkg_version)$arch");
-                    push @inc, $query;
                 } else {
                     Log ("Adding $type $pkg_name ($pkg_version)$arch failed: $@");
                 }
             }
         }
     }
+
+    # At this point %dirty_groups has queries for all dirty groups for the incremental
+    # run.  Basically each group falls into 2 cases:
+    #  1. All entries in the group have been added/removed
+    #     - Package added to or removed from suite
+    #     - New version replacing an older version.
+    #  2. Only part of the entries in a group has been added/removed:
+    #     - binNMUs etc.
+    #
+    # If we just "blindly" run the packages from case 1, then binaries
+    # from group 2 will not be procesed with their (full) group
+    # (particularly without the source package).
+
+    _build_group_cache ();
+
+    if ($opt{'full-mode'}) {
+        # for full run, just replace %dirty_groups with "<all groups in lab>".
+        %dirty_groups = %group_cache;
+    }
+
+    # Sort so that the worklist is also sorted (makes it easier to review).
+    my $comparator = sub { versions_lt ($a, $b) ? -1 : 1; };
+    foreach my $gname (sort keys %dirty_groups) {
+        next unless exists $group_cache{$gname};
+        my $dver = $dirty_groups{$gname};
+        my $kver = $group_cache{$gname};
+        foreach my $gversion (sort $comparator keys %$dver) {
+            next unless exists $kver->{$gversion};
+            # Group is still in the Lab - reprocess it together
+            my $query = "GROUP:${gname}/${gversion}";
+            foreach my $entry (@{ $kver->{$gversion} } ) {
+                # Remove old log entry for all entries in this group
+                # NB: This part is unable to replace the update to %skip
+                # in the "foreach removed-entry in diff" above.  In case
+                # the entire group is removed, we will enter this loop,
+                # but we will see each of the entries removed in the
+                # loop above.
+                $skip{$entry->identifier} = 1;
+            }
+            push @worklist, $query;
+        }
+    }
+
+    _clear_group_cache ();
 
     # Flushes the changed manifest to the file system - croaks on
     # error
@@ -274,7 +327,7 @@ unless ($opt{'reports-only'}) {
     #   the lab metadata consistent with the actual contents.
     $LAB->close;
 
-    if ($opt{'incremental-mode'}) {
+    if (@worklist and $opt{'incremental-mode'}) {
         # Extra work for the incremental run
 
         die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;
@@ -309,30 +362,35 @@ unless ($opt{'reports-only'}) {
         print $nfd "N: ---end-of-old-lintian-log-file---\n";
         close $nfd or Die ("Close $lintian_log: $!");
         close $ofd; # Ignore (read-only handle)
-        Log ('');
-        if (@inc) {
-            Log ('Creating work list for lintian');
-            unless ($opt{'dry-run'}) {
-                open my $lfd, '>', $list_file
-                    or Die ("opening $list_file: $!");
-                foreach my $query (@inc) {
-                    print $lfd "!query: $query\n";
-                }
-                close $lfd or Die ("Close $list_file: $!");
-            }
-            Log ('');
+    }
 
-            # incremental run cmd changes
-            Log ('Running Lintian over newly introduced and changed packages...');
-            $cmd .= " --packages-from-file $list_file >>$lintian_log 2>&1";
+    Log ('');
+
+    if (@worklist) {
+        Log ('Creating work list for lintian');
+        unless ($opt{'dry-run'}) {
+            open my $lfd, '>', $list_file
+                or Die ("opening $list_file: $!");
+            foreach my $query (@worklist) {
+                print $lfd "!query: $query\n";
+            }
+            close $lfd or Die ("Close $list_file: $!");
+        }
+        Log ('');
+
+        # incremental run cmd changes
+        Log ('Running Lintian over newly introduced and changed packages...');
+        $cmd .= " --packages-from-file $list_file ";
+        if ($opt{'incremental-mode'}) {
+            # append
+            $cmd .= " >>$lintian_log 2>&1";
         } else {
-            $cmd = undef;
-            Log ('Skipping Lintian run - nothing to do...');
+            # truncate
+            $cmd .= " >$lintian_log 2>&1";
         }
     } else {
-        # full run cmd changes
-        Log('Running Lintian over all packages...');
-        $cmd .= " -a >$lintian_log 2>&1";
+        $cmd = undef;
+        Log ('Skipping Lintian run - nothing to do...');
     }
 
     if ($cmd) {
@@ -397,6 +455,21 @@ sub _trim_split {
     $val =~ s/^\s++//o;
     $val =~ s/\s++$//o;
     return split m/\s*+,\s*+/o, $val;
+}
+
+#FIXME: Lab should handle this (frontend/lintian uses something similar)
+sub _build_group_cache {
+    # Globals %group_cache and $LAB
+    $LAB->visit_packages (sub {
+        my ($entry) = @_;
+        my $src = $entry->pkg_src;
+        my $src_version = $entry->pkg_src_version;
+        push @{ $group_cache{$src}->{$src_version} }, $entry;
+    });
+}
+
+sub _clear_group_cache {
+    undef %group_cache;
 }
 
 # local_mirror_manifests ($mirdir, $dists, $areas, $archs)

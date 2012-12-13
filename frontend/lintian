@@ -1477,6 +1477,7 @@ sub handle_lab_query {
     }
 }
 
+#FIXME: Lab should handle this (harness uses something similar)
 sub _build_group_cache {
     # Globals %group_cache and $LAB
     $LAB->visit_packages (sub {
