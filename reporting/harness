@@ -39,6 +39,9 @@ Options:
   --dry-run  pretend to do the actions without actually doing them.  The
              "normal" harness output will go to stdout rather than the
              harness.log.
+  --to-stdout
+             [For debugging] Have output go to stdout as well as the usual
+             log files.  Note, this option has no (extra) effect with --dry-run.
 
 Incremental mode is the default if you have a lintian.log;
 otherwise, it's full.
@@ -57,6 +60,7 @@ my %opthash = (
     'f' => \$opt{'full-mode'},
     'r' => \$opt{'reports-only'},
     'dry-run' => \$opt{'dry-run'},
+    'to-stdout' => \$opt{'to-stdout'},
     'help|h' => \&usage,
 );
 
@@ -116,6 +120,7 @@ unless ($opt{'dry-run'}) {
     open(LOG, '>', $log_file)
         or die "cannot open log file $log_file for writing: $!";
 } else {
+    $opt{'to-stdout'} = 0;
     open LOG, '>&', \*STDOUT
         or die "Cannot open log file <stdout> for writing: $!";
     Log('Running in dry-run mode');
@@ -372,6 +377,7 @@ exit 0;
 
 sub Log {
     print LOG $_[0],"\n";
+    print $_[0], "\n" if $opt{'to-stdout'};
 }
 
 sub run {
