@@ -6,6 +6,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Always schedule packages in groups.  Otherwise, binNMU'ed
       binaries would not be tested together with their source
       package (and architecture independent packages).
+    + [NT] Schedule groups in chuncks (default 512 per chuck).
+      This makes the Lintian processes shorter and makes memory
+      reclaimable sooner.  (Closes: #695839)
 
  -- Niels Thykier <niels@thykier.net>  Thu, 13 Dec 2012 13:38:59 +0100
 

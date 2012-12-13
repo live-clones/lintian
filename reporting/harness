@@ -42,6 +42,10 @@ Options:
   --to-stdout
              [For debugging] Have output go to stdout as well as the usual
              log files.  Note, this option has no (extra) effect with --dry-run.
+  --schedule-chuck-size N
+             Schedule at most N groups in a given run of Lintian.  If more than N
+             groups need to be processed, harness will invoke Lintian more than
+             once.  If N is 0, schedule all groups in one go.  (Default: 512)
 
 Incremental mode is the default if you have a lintian.log;
 otherwise, it's full.
@@ -52,7 +56,9 @@ END
   exit;
 }
 
-my %opt = ();
+my %opt = (
+    'schedule-chuck-size' => 512,
+);
 
 my %opthash = (
     'i' => \$opt{'incremental-mode'},
@@ -60,6 +66,7 @@ my %opthash = (
     'f' => \$opt{'full-mode'},
     'r' => \$opt{'reports-only'},
     'dry-run' => \$opt{'dry-run'},
+    'schedule-chuck-size=i' => \$opt{'schedule-chuck-size'},
     'to-stdout' => \$opt{'to-stdout'},
     'help|h' => \&usage,
 );
@@ -88,7 +95,7 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
             $LINTIAN_ARCH $LINTIAN_CFG
             $lintian_cmd $html_reports_cmd
             $log_file $lintian_log $old_lintian_log
-            $changes_file $list_file $html_reports_log
+            $html_reports_log
             $LOG_DIR $statistics_file
             $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR $LINTIAN_GPG_CHECK
             $LINTIAN_AREA);
@@ -117,7 +124,7 @@ $| = 1;
 
 unless ($opt{'dry-run'}) {
     # rotate log files
-    system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null") == 0
+    system("savelog $log_file $html_reports_log >/dev/null") == 0
         or die "Cannot rotate log files.\n";
 
     # create new log file
@@ -197,7 +204,7 @@ unless ($opt{'reports-only'}) {
     # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
     # but still...
     my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
-        " --exp-output=format=fullewi";
+        " --exp-output=format=fullewi --packages-from-file -";
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
@@ -367,40 +374,66 @@ unless ($opt{'reports-only'}) {
     Log ('');
 
     if (@worklist) {
-        Log ('Creating work list for lintian');
-        unless ($opt{'dry-run'}) {
-            open my $lfd, '>', $list_file
-                or Die ("opening $list_file: $!");
-            foreach my $query (@worklist) {
-                print $lfd "!query: $query\n";
-            }
-            close $lfd or Die ("Close $list_file: $!");
-        }
-        Log ('');
-
         # incremental run cmd changes
-        Log ('Running Lintian over newly introduced and changed packages...');
-        $cmd .= " --packages-from-file $list_file ";
-        if ($opt{'incremental-mode'}) {
-            # append
-            $cmd .= " >>$lintian_log 2>&1";
-        } else {
-            # truncate
-            $cmd .= " >$lintian_log 2>&1";
+        $cmd .= " --packages-from-file -";
+        my $lintpipe;
+        my $scs = $opt{'schedule-chuck-size'};
+        my $round = 0;
+        my $rounds = 1;
+        my $output = ">>$lintian_log 2>&1";
+        # truncate in full-mode
+        $output = ">$lintian_log 2>&1" if $opt{'full-mode'};
+
+        if ($scs > 0) {
+            # compute the number of rounds needed.
+            $rounds = int((scalar @worklist + ($scs -1)) / $scs);
+        }
+
+        Log (sprintf ('Groups to process %d will take %d round(s) [round limit: %s]',
+                      scalar @worklist, $rounds, $scs > 0 ? $scs : "none"));
+
+        while (@worklist) {
+            my $start = 0;
+            my $len = scalar @worklist;
+            $round++;
+            # correct bounds to fit chuck size
+            $len = $scs if $scs > 0 and $len > $scs;
+
+            Log ("Running Lintian (round $round/$rounds) ...");
+            Log (" - cmd: $cmd $output");
+            Log (" - Range: $worklist[$start] ... " . $worklist[$start + $len - 1]);
+            open $lintpipe, '|-', "$cmd $output"
+                or Die ("fork failed: $!");
+            foreach my $query (splice @worklist, $start, $len) {
+                # Technically, we emit these items in reverse order to Lintian,
+                # but Lintian sorts it anyway
+                print {$lintpipe} "!query: $query\n";
+            }
+            $! = 0;
+            close $lintpipe;
+            Die ("Closing pipe failed: $!") if $!;
+            if ($?) {
+                # exit 1 (policy violations) happens all the time (sadly)
+                # exit 2 (broken packages) also happens all the time...
+                my $res = ($? >> 8) & 0xff;
+                if ($res != 1 and $res != 0) {
+                    Log ("warning: executing lintian returned $res");
+                } else {
+                    Log ("Lintian terminated by signal: $?");
+                    # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
+                    # don't start the next round.
+                    #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
+                    Log (" - skipping the rest of the worklist");
+                    @worklist = ();
+                }
+            }
+
+            # In round 2+ (if present) we append to the log
+            $output = " >>$lintian_log 2>&1";
         }
     } else {
         $cmd = undef;
         Log ('Skipping Lintian run - nothing to do...');
-    }
-
-    if ($cmd) {
-        Log("Executing $cmd");
-        unless ($opt{'dry-run'}) {
-            my $res = (system($cmd) >> 8);
-            (($res == 0) or ($res == 1))
-                or Log("warning: executing lintian returned $res");
-        }
-        Log('');
     }
 }
 
