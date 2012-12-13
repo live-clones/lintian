@@ -416,10 +416,11 @@ unless ($opt{'reports-only'}) {
                 # exit 1 (policy violations) happens all the time (sadly)
                 # exit 2 (broken packages) also happens all the time...
                 my $res = ($? >> 8) & 0xff;
+                my $sig = $? & 0xff;
                 if ($res != 1 and $res != 0) {
                     Log ("warning: executing lintian returned $res");
-                } else {
-                    Log ("Lintian terminated by signal: $?");
+                } elsif ($sig) {
+                    Log ("Lintian terminated by signal: $sig");
                     # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
                     # don't start the next round.
                     #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
