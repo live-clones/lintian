@@ -1,5 +1,13 @@
 lintian (2.5.12) UNRELEASED; urgency=low
 
+  * checks/cruft:
+    + [NT] Do not emit the license-problem-json-evil tag for
+      non-free packages.
+
+  * lib/Lintian/Collect.pm:
+    + [NT] Add "is_non_free" method to easily check of a given
+      package appears to be non-free.
+
   * reporting/harness:
     + [NT] Add --to-stdout option to emit log information to
       stdout as well as the log files.

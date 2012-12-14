@@ -224,6 +224,24 @@ sub _get_field {
     return $fields;
 }
 
+=item is_non_free
+
+Returns a truth value if the package appears to be non-free (based on
+the section field; "non-free/*" and "restricted/*")
+
+=cut
+
+# sub is_non_free Needs-Info <>
+
+sub is_non_free {
+    my ($self) = @_;
+    return $self->{is_non_free} if exists $self->{is_non_free};
+    $self->{is_non_free} = 0;
+    $self->{is_non_free} = 1
+        if $self->field ('section', 'main') =~ m,^(?:non-free|restricted)/,;
+    return $self->{is_non_free};
+}
+
 =back
 
 =head1 AUTHOR

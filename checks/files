@@ -1044,10 +1044,11 @@ foreach my $file ($info->sorted_index) {
         }
 
         # ---------------- non-free .swf files
-        foreach my $flash (@flash_nonfree) {
-            last if ($pkg_section =~ m,^non-free/,);
-            if ($file =~ m,/$flash,) {
-                tag 'non-free-flash', $file;
+        unless ($info->is_non_free) {
+            foreach my $flash (@flash_nonfree) {
+                if ($file =~ m,/$flash,) {
+                    tag 'non-free-flash', $file;
+                }
             }
         }
 
