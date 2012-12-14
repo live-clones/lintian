@@ -208,7 +208,7 @@ sub test_check_desc {
     }
 }
 
-=item test_load_profile (ROOT, INC...)
+=item test_load_profiles (ROOT, INC...)
 
 Test that all profiles in I<ROOT/profiles> are loadable.  INC will be
 the INC path used as include path for the profile.

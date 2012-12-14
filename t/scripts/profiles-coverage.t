@@ -17,8 +17,23 @@ my @profiles;
 my %CHECKS;
 my %TAGS;
 
-foreach my $desc (<$root/checks/*.desc>) {
-    my ($header, @tags) = read_dpkg_control($desc);
+File::Find::find(\&check_wanted, "$root/checks");
+
+plan tests => scalar (keys %TAGS);
+
+File::Find::find(\&prof_wanted, "$root/profiles");
+
+foreach my $tag (sort keys %TAGS){
+    cmp_ok($TAGS{$tag}, '>', 0, $tag);
+}
+
+exit 0;
+
+## SUBS ##
+
+sub parse_check {
+    my ($desc) = @_;
+    my ($header, @tags) = read_dpkg_control ($desc);
     my $list = [];
     unless ($header->{'check-script'}) {
         fail("missing Check-Script field in $desc");
@@ -33,17 +48,12 @@ foreach my $desc (<$root/checks/*.desc>) {
     }
 }
 
-plan tests => scalar (keys %TAGS);
-
-File::Find::find(\&prof_wanted, "$root/profiles");
-
-foreach my $tag (sort keys %TAGS){
-    cmp_ok($TAGS{$tag}, '>', 0, $tag);
+sub trim_split {
+    my ($input) = @_;
+    $input =~ s/^(?:\s|\n)++//o;
+    $input =~ s/(?:\s|\n)++$//o;
+    return split m/\s*,\s*/,  $input;
 }
-
-exit 0;
-
-## SUBS ##
 
 sub parse_profile {
     my ($profile) = @_;
@@ -52,30 +62,34 @@ sub parse_profile {
     my $dis_checks = $header->{'disable-tags-from-check'}//'';
     my $en_tag = $header->{'enable-tags'}//'';
     my $dis_tag = $header->{'disable-tags'}//'';
-    foreach my $check (split m/\s*+,\s*+/o, $en_checks){
+    foreach my $check (trim_split ($en_checks)){
         die "Unknown check ($check) in $profile.\n" unless $CHECKS{$check};
         foreach my $tag (@{$CHECKS{$check}}){
             $TAGS{$tag}++;
         }
     }
-    foreach my $tag (split m/\s*+,\s*+/o, $en_tag){
+    foreach my $tag (trim_split ($en_tag)){
         die "Unknown tag ($tag) in $profile.\n" unless exists $TAGS{$tag};
         $TAGS{$tag}++;
     }
 
     # Check for unknown checks in the other fields
-    foreach my $check (split m/\s*+,\s*+/o, $dis_checks){
+    foreach my $check (trim_split ($dis_checks)){
         die "Unknown check in $profile.\n" unless $CHECKS{$check};
     }
-    foreach my $tag (split m/\s*+,\s*+/o, $dis_tag){
-        die "Unknown tag in $profile.\n" unless exists $TAGS{$tag};
+    foreach my $tag (trim_split ($dis_tag)){
+        die "Unknown tag ($tag) in $profile.\n" unless exists $TAGS{$tag};
     }
     # ... and other fields
     foreach my $sect (@section){
-        foreach my $tag (split m/\s*+,\s*+/o, $sect->{'tags'}//''){
+        foreach my $tag (trim_split ($sect->{'tags'}//'')){
             die "Unknown tag ($tag) in $profile.\n" unless exists $TAGS{$tag};
         }
     }
+}
+
+sub check_wanted {
+    parse_check ($_) if -f && m/\.desc$/o;
 }
 
 sub prof_wanted {
