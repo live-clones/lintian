@@ -11,5 +11,5 @@ override_dh_builddeb:
 	echo "# Aloha!" > debian/nolibrary/DEBIAN/symbols
 	# ... they are also too smart to install slightly broken
 	# variants of symbols files
-	cp -a debian/libfoo1.symbols debian/libfoo1/DEBIAN/symbols
+	install -m 0644 debian/libfoo1.symbols debian/libfoo1/DEBIAN/symbols
 	dh_builddeb
