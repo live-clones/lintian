@@ -26,6 +26,11 @@ package Lintian::cruft;
 use strict;
 use warnings;
 
+# Half of the size used in the "sliding window" for detecting bad
+# licenses like GFDL with invariant sections.
+# NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
+use constant BLOCKSIZE => 4096;
+
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
@@ -412,13 +417,50 @@ sub find_cruft {
     # test license problem is source file (only text file)
     if (-T $basename) {
         open my $F, '<', $basename or fail "can't open $name: $!";
-        while (my $line = <$F>) {
-          # json evil license
-          if ($line =~ m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/i) {
-             tag 'license-problem-json-evil', $name;
-          }
+        binmode ($F);
+
+        my @queue = ('', '');
+        my %licenseproblemhash = ();
+
+        # we try to read this file in block and use a sliding window
+        # for efficiency.  We store two blocks in @queue and the whole
+        # string to match in $block. Please emit license tags only once
+        # per file
+        while (read ($F, my $window, BLOCKSIZE)) {
+            my $block;
+            shift @queue;
+            push @queue, $window;
+            $block =  join '', @queue;
+
+            # json evil license
+            if (!exists $licenseproblemhash{'json-evil'}) {
+                if ($block =~ m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/is) {
+                    tag 'license-problem-json-evil', $name;
+                    $licenseproblemhash{'json-evil'} = 1;
+                }
+            }
+            if (!exists $licenseproblemhash{'gfdl-invariants'}) {
+                # check GFDL block - The ".{0,1024}"-part in the regex
+                # will contain the "no invariants etc."  part if
+                # it is a good use of the license.  We include it
+                # here to ensure that we do not emit a false positive
+                # if the "redeeming" part is in the next block.
+                #
+                # See cruft-gfdl-fp-sliding-win for the test case.
+                if ($block =~m/GNU \s+ Free \s+ Documentation \s+ License .{0,1024}
+                               A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
+                    # GFDL license, assume it is bad unless it
+                    # explicitly states it has no "bad sections".
+                    unless ($block =~m/with \s+ no \s+ Invariant \s+ Sections,?
+                                       \s+ no \s+ Front-Cover \s+ Texts,? \s+ and
+                                       \s+ no \s+ Back-Cover \s+ Texts/xis) {
+                        tag 'license-problem-gfdl-invariants', $name;
+                        $licenseproblemhash{'gfdl-invariants'} = 1;
+                    }
+                }
+            }
         }
-        close $F or fail "can not close opened file $name: $!"
+        close $F or fail "can not close opened file $name: $!";
     }
 }
 

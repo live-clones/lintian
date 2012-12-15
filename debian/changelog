@@ -9,6 +9,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * checks/cruft:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.
+    + [NT] Apply patch from Bastien Roucariès to catch GFDL
+      licenses with invariants (etc.).  (Closes: #695967)
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)
