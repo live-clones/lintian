@@ -336,6 +336,10 @@ foreach my $file ($info->sorted_index) {
         elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and !$index_info->is_dir) {
             tag 'non-conf-file-in-modprobe.d', $file;
         }
+        #---------------- /etc/opt
+        elsif ($file =~ m,^etc/opt/.,) {
+            tag 'dir-or-file-in-etc-opt', $file;
+        }
         #----------------- /etc/pam.conf
         elsif ($file =~ m,^etc/pam.conf, and $pkg ne 'libpam-runtime' ) {
             tag 'config-file-reserved', "$file by libpam-runtime";
@@ -639,6 +643,13 @@ foreach my $file ($info->sorted_index) {
     } elsif ($file =~ m,^servers/.,) {
         next;
     }
+    # -------------- /home
+    elsif ($file =~ m,^home/.,) {
+       tag 'dir-or-file-in-home', $file;
+    }
+    elsif ($file =~ m,^root/.,) {
+       tag 'dir-or-file-in-home', $file;
+    }
     # ---------------- /tmp, /var/tmp, /usr/tmp
     elsif ($file =~ m,^tmp/., or $file =~ m,^(?:var|usr)/tmp/.,) {
         tag 'dir-or-file-in-tmp', $file;
@@ -656,6 +667,10 @@ foreach my $file ($info->sorted_index) {
     # ---------------- /srv
     elsif ($file =~ m,^srv/.,) {
         tag 'dir-or-file-in-srv', $file;
+    }
+    # build directory
+    elsif ($file =~ m,^var/cache/pbuilder/build/., or $file =~ m,^var/lib/sbuild/., or $file =~ m,^var/lib/buildd/.,) {
+        tag 'dir-or-file-in-build-tree', $file;
     }
     # ---------------- FHS directory?
     elsif ($file =~ m,^[^/]+/$,o and
@@ -700,7 +715,7 @@ foreach my $file ($info->sorted_index) {
                 or $file =~ m,^usr/[^/]+-linux[^/]*/,
                 or $file =~ m,^usr/iraf/,
                 # not allowed, but tested indivudually
-                or $file =~ m,^(?:mnt|opt|run|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
+                or $file =~ m,^(?:home|mnt|opt|root|run|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
             tag 'file-in-unusual-dir', $file;
         }
     }

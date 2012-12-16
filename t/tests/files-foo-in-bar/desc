@@ -4,6 +4,9 @@ Version: 1.0
 Description: Test tags about files or dirs in given paths
 Test-For:
  dir-in-usr-local
+ dir-or-file-in-build-tree
+ dir-or-file-in-etc-opt
+ dir-or-file-in-home
  dir-or-file-in-mnt
  dir-or-file-in-run
  dir-or-file-in-srv

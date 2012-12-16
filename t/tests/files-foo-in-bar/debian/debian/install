@@ -28,6 +28,12 @@ bar var/foo
 bar var/lock/foo
 bar var/run/foo
 bar var/www/foo
+bar home/johndoe
+bar root
+bar etc/opt
+bar var/cache/pbuilder/build
+bar var/lib/sbuild
+bar var/lib/buildd
 
 Bar.pm usr/lib/perl5/Foo
 bar.png usr/lib/files-foo-in-bar

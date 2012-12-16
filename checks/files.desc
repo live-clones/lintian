@@ -424,6 +424,13 @@ Info: Debian packages should not install into <tt>/opt</tt>, because it
  is reserved for add-on software.
 Ref: fhs optaddonapplicationsoftwarepackages
 
+Tag: dir-or-file-in-etc-opt
+Severity: serious
+Certainty: certain
+Info: Debian packages should not install into <tt>/etc/opt</tt>, because it
+ is reserved for add-on software.
+Ref: fhs optaddonapplicationsoftwarepackages
+
 Tag: dir-or-file-in-srv
 Severity: serious
 Certainty: certain
@@ -1273,3 +1280,14 @@ Info: The gzip file contains a timestamp that will differ between
  byte-for-byte identical.
  .
  This can usually be fixed by passing -n to gzip.
+
+Tag: dir-or-file-in-home
+Severity: serious
+Certainty: certain
+Info: Debian packages should not install into <tt>/home</tt>, because it
+ is reserved for users.
+
+Tag: dir-or-file-in-build-tree
+Severity: serious
+Certainty: possible
+Info: Your package install file in our build tree.
