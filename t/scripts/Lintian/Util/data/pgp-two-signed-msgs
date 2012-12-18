@@ -1,0 +1,19 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+
+Package: lintian
+
+-----BEGIN PGP SIGNATURE-----
+
+Some signature.
+
+-----END PGP SIGNATURE-----
+
+-----BEGIN PGP SIGNED MESSAGE-----
+
+Package: dpkg
+
+-----BEGIN PGP SIGNATURE-----
+
+Aother signature.
+
+-----END PGP SIGNATURE-----

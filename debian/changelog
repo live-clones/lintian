@@ -57,6 +57,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * lib/Lintian/Relation/Version.pm:
     + [NT] Add and export "versions_comparator" that can be used for
       sorting purposes.
+  * lib/Lintian/Util.pm:
+    + [NT] Reject partially signed Deb822 files.  Most Deb822 files
+      are not signed at all; but those that are should be completely
+      covered by a signature.  (Closes: #696230)
 
   * reporting/config:
     + [JP] Remove unused $GRAPH_DIR configuration option.

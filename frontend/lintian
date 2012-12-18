@@ -915,7 +915,13 @@ while (my $arg = shift) {
     # file?
     if (-f $arg) {
         if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
-            $pool->add_file($arg);
+            eval {
+                $pool->add_file($arg);
+            };
+            if ($@) {
+                print STDERR "Skipping $arg: $@";
+                $exit_code = 2;
+            }
         } else {
             fail("bad package file name $arg (neither .deb, .udeb, .changes or .dsc file)");
         }

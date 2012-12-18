@@ -242,8 +242,14 @@ refer to L</CONSTANTS> for the list of constants and their meaning.
 The default value for FLAGS is 0.
 
 If the file is empty (i.e. it contains no paragraphs), the method will
-contain an I<empty> list.  Lines looking like a GPG-signature is
-ignored when parsing the file.
+contain an I<empty> list.  The deb822 contents may be inside a
+I<signed> PGP message with a signature.
+
+visit_dpkg_paragraph will require the PGP headers to be correct (if
+present) and require that the entire file is covered by the signature.
+However, it will I<not> validate the signature (in fact, the contents
+of the PGP SIGNATURE part can be empty).  The signature should be
+validated separatedly.
 
 visit_dpkg_paragraph will pass paragraphs to CODE as they are
 completed.  If CODE can process the paragraphs as they are seen, very
@@ -310,6 +316,45 @@ underscores.
 
 A comment line appeared and FLAGS contained DCTRL_NO_COMMENTS.
 
+=item PGP signature seen before start of signed message
+
+A "BEGIN PGP SIGNATURE" header is seen and a "BEGIN PGP MESSAGE" has
+not been seen yet.
+
+=item Two PGP signatures (first one at line %d)
+
+Two "BEGIN PGP SIGNATURE" headers are seen in the same file.
+
+=item Unexpected %s header
+
+A valid PGP header appears (e.g. "BEGIN PUBLIC KEY BLOCK").
+
+=item Malformed PGP header
+
+An invalid or malformed PGP header appears.
+
+=item Expected at most one signed message (previous at line %d)
+
+Two "BEGIN PGP MESSAGE" headers appears in the same message.
+
+=item End of file but expected a "END PGP SIGNATURE" header
+
+The file ended after a "BEGIN PGP SIGNATURE" header without being
+followed by a "END PGP SIGNATURE".
+
+=item PGP MESSAGE header must be first content if present
+
+The file had content before PGP MESSAGE.
+
+=item Data after the PGP SIGNATURE
+
+The file had data after the PGP SIGNATURE block ended.
+
+=item End of file before "BEGIN PGP SIGNATURE"
+
+The file had a "BEGIN PGP MESSAGE" header, but no signature was
+present.
+
 =back
 
 =cut
@@ -322,13 +367,13 @@ sub visit_dpkg_paragraph {
     my $open_section = 0;
     my $last_tag;
     my $debconf = $flags & DCTRL_DEBCONF_TEMPLATE;
+    my $signed = 0;
+    my $signature = 0;
 
     local $_;
     while (<$CONTROL>) {
         chomp;
 
-        # FIXME: comment lines are only allowed in debian/control and should
-        # be an error for other control files.
         if (/^\#/) {
             next unless $flags & DCTRL_NO_COMMENTS;
             die "syntax error at line $.: Comments are not allowed.\n";
@@ -343,17 +388,100 @@ sub visit_dpkg_paragraph {
                 $open_section = 0;
             }
         }
-        # pgp sig?
-        elsif (m/^-----BEGIN PGP SIGNATURE/) { # skip until end of signature
-            while (<$CONTROL>) {
-                last if m/^-----END PGP SIGNATURE/o;
+        # pgp sig? Be strict here (due to #696230)
+        # According to http://tools.ietf.org/html/rfc4880#section-6.2
+        # The header MUST start at the beginning of the line and MUST NOT have
+        # any other text (except whitespace) after the header.
+        elsif (m/^-----BEGIN PGP SIGNATURE-----\s*$/) { # skip until end of signature
+            my $saw_end = 0;
+            if (not $signed or $signature) {
+                die "syntax error at line $.: PGP signature seen before start of signed message\n"
+                    if not $signed;
+                die "syntax error at line $.: Two PGP signatures (first one at line $signature)\n";
             }
+            $signature = $.;
+            while (<$CONTROL>) {
+                if (m/^-----END PGP SIGNATURE-----\s*$/o) {
+                    $saw_end = 1;
+                    last;
+                }
+            }
+            # The "at line X" may seem a little weird, but it keeps the
+            # message format identical.
+            die "syntax error at line $.: End of file but expected a \"END PGP SIGNATURE\" header\n"
+                unless $saw_end;
         }
         # other pgp control?
-        elsif (m/^-----BEGIN PGP/) { # skip until the next blank line
+        elsif (m/^-----(?:BEGIN|END) PGP/) {
+            # At this point it could be a malformed PGP header or one
+            # of the following valid headers (RFC4880):
+            #  * BEGIN PGP MESSAGE
+            #    - Possibly a signed Debian CTRL, so okay (for now)
+            #  * BEGIN PGP {PUBLIC,PRIVATE} KEY BLOCK
+            #    - Valid header, but not a Debian CTRL file.
+            #  * BEGIN PGP MESSAGE, PART X{,/Y}
+            #    - Valid, but we don't support partial messages, so
+            #      bail on those.
+
+            unless (m/^-----BEGIN PGP SIGNED MESSAGE-----\s*$/) {
+                # Not a (full) PGP MESSAGE; reject.
+
+                my $key = qr/(?:BEGIN|END) PGP (?:PUBLIC|PRIVATE) KEY BLOCK/;
+                my $msgpart = qr{BEGIN PGP MESSAGE, PART \d+(?:/\d+)?};
+                my $msg = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYTPED) )?MESSAGE/;
+
+                if (m/^-----($key|$msgpart|$msg)-----\s*$/o) {
+                    die "syntax error at line $.: Unexpected $1 header\n";
+                } else {
+                    die "syntax error at line $.: Malformed PGP header\n";
+                }
+            } else {
+                if ($signed) {
+                    die "syntax error at line $.: Expected at most one signed message" .
+                        " (previous at line $signed)\n"
+                }
+                if ($sline > -1) {
+                    # NB: If you remove this, keep in mind that it may allow two paragraphs to
+                    # merge.  Consider:
+                    #
+                    # Field-P1: some-value
+                    # -----BEGIN PGP SIGANTURE----
+                    #
+                    # Field-P2: another value
+                    #
+                    # At the time of writing: If $open_section is
+                    # true, it will remain so until the empty line
+                    # after the PGP header.
+                    die "syntax error at line $.: PGP MESSAGE header must be first" .
+                        " content if present\n";
+                }
+                $signed = $.;
+            }
+
+            # skip until the next blank line
             while (<$CONTROL>) {
                 last if /^\s*$/o;
             }
+        }
+        # did we see a signature already?  We allow all whitespace/comment lines
+        # outside the signature.
+        elsif ($signature) {
+            # Accept empty lines after the signature.
+            next if m/^\s*$/;
+
+            #NB: If you remove this, keep in mind that it may allow two paragraphs to
+            # merge.  Consider:
+            #
+            # Field-P1: some-value
+            # -----BEGIN PGP SIGANTURE----
+            # [...]
+            # -----END PGP SIGANTURE----
+            # Field-P2: another value
+            #
+            # At the time of writing: If $open_section is
+            # true, it will remain so until the empty line
+            # after the PGP header.
+            die "syntax error at line $.: Data after the PGP SIGNATURE\n";
         }
         # new empty field?
         elsif (m/^([^: \t]+):\s*$/o) {
@@ -410,6 +538,14 @@ sub visit_dpkg_paragraph {
     }
     # pass the last section (if not already done).
     $code->($section, $sline) if $open_section;
+
+    # Given the API, we cannot use this check to prevent any paragraphs from being
+    # emitted to the code argument, so we might as well just do this last.
+    if ($signed and not $signature) {
+        # The "at line X" may seem a little weird, but it keeps the
+        # message format identical.
+        die "syntax error at line $.: End of file before \"BEGIN PGP SIGNATURE\"\n";
+    }
 }
 
 =item read_dpkg_control (FILE[, FLAGS[, LINES]])
