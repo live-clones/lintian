@@ -8,6 +8,10 @@ lintian (2.5.10.4) unstable; urgency=low
   * lib/Lintian/Collect/Package.pm:
     + [NT] Ensure the "root" entry of indices do not contain itself.
       (Closes: #695866)
+  * lib/Lintian/Util.pm:
+    + [NT] Reject partially signed Deb822 files.  Most Deb822 files
+      are not signed at all; but those that are should be completely
+      covered by a signature.  (Closes: #696230)
 
  -- Niels Thykier <niels@thykier.net>  Sat, 13 Feb 2013 12:50:00 +0100
 

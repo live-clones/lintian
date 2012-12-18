@@ -1,0 +1,14 @@
+Package: dpkg
+
+# Unsigned above, signed below (bad)
+
+-----BEGIN PGP SIGNED MESSAGE-----
+
+Package: lintian
+
+-----BEGIN PGP SIGNATURE-----
+
+Some signature.
+
+-----END PGP SIGNATURE-----
+
