@@ -6,6 +6,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
+      - license-problem-gfdl-invariants
 
   * checks/cruft:
     + [NT] Do not emit the license-problem-json-evil tag for
