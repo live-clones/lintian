@@ -340,6 +340,7 @@ sub objdump_info {
             'NEEDED' => [],
             'RPATH'  => {},
             'SONAME' => [],
+            'TEXTREL' => 0,
         );
         $info{'ERRORS'} = lc ($pg->{'broken'}//'no') eq 'yes' ? 1 : 0;
         $info{'UPX'} = lc ($pg->{'upx'}//'no') eq 'yes' ? 1 : 0;
@@ -378,6 +379,8 @@ sub objdump_info {
                 $info{$header}->{$val} = 1;
             } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
                 push @{ $info{$header} }, $val;
+            } elsif ($header eq 'TEXTREL') {
+                $info{$header} = 1;
             }
         }
 

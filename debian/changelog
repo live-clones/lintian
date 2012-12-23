@@ -24,6 +24,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given
       package appears to be non-free.
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Re-instate the "TEXTREL" marker.  This fixes a regression
+      where shared-libs compiled without pic was not reported.
+      Thanks to Dmitry Shachnev for the assistance in debugging this.
 
   * reporting/harness:
     + [NT] Add --to-stdout option to emit log information to
