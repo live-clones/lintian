@@ -28,7 +28,7 @@ $HISTORY_DIR = "$HOME/history";
 #   Requires that $HISTORY is enabled.
 $GRAPHS = 1;
 # Make graphs of the data in the time interval
-#   [today() - $GRAPH_RANGE_DAYS ; now()]
+#   [today() - $GRAPHS_RANGE_DAYS ; now()]
 $GRAPHS_RANGE_DAYS = 240;
 
 $log_file = "$LOG_DIR/harness.log";

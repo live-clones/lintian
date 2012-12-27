@@ -51,6 +51,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       Thanks to Joerg "Gannef" Jasper for the suggestion to use
       RewriteMap.  (Closes: #696960)
     + [JP] Fix version labels glitches.
+    + [JP] Use global $GRAPHS_RANGE_DAYS.
   * reporting/templates/{packages,maintainer,tag}.tmpl:
     + [NT] Properly handle multiple versions of the same source and
       add versioned anchors to them.

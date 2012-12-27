@@ -37,7 +37,7 @@ use Text::Template ();
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
      $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE,
-     $GRAPH_RANGE_DAYS, $GRAPHS, $GRAPH_DIR, $LINTIAN_MIRROR_NAME);
+     $GRAPHS_RANGE_DAYS, $GRAPHS, $GRAPH_DIR, $LINTIAN_MIRROR_NAME);
 
 # Read the configuration.
 require './config';
@@ -615,9 +615,8 @@ if ($GRAPHS) {
         or die "cannot create output directory $GRAPH_DIR: $!\n";
     mkdir("$GRAPH_DIR/tags", 0777)
         or die "cannot create output directory $GRAPH_DIR/tags: $!\n";
-    my $RANGE_DAYS = 240;
 
-    my $date_min = strftime ("%s", localtime ($unix_time - 3600 * 24 * $RANGE_DAYS));
+    my $date_min = strftime ("%s", localtime ($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
     my $date_max = strftime ("%s", localtime ($unix_time));
 
     # Generate loadable Gnuplot file with common variables and labels/arrows
@@ -637,7 +636,7 @@ if ($GRAPHS) {
 
         # Skip label if previous release is too close; graphs can't display
         # more than ~32 labels.
-        my $min_spacing = 3600 * 24 * $RANGE_DAYS / 32;
+        my $min_spacing = 3600 * 24 * $GRAPHS_RANGE_DAYS / 32;
         if ($versions{$v} - $last_version > $min_spacing) {
             (my $label = $v) =~ s/\-[\w\d]+$//;
             print { $common } "set label '$label' at '$versions{$v}',graph ",
