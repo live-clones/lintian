@@ -52,9 +52,14 @@ lintian (2.5.12) UNRELEASED; urgency=low
       RewriteMap.  (Closes: #696960)
     + [JP] Fix version labels glitches.
     + [JP] Use global $GRAPHS_RANGE_DAYS.
+    + [JP] Pass graph variables to index and tag templates.
+  * reporting/lintian.css:
+    + [JP] Tweak graph alignment.
   * reporting/templates/{packages,maintainer,tag}.tmpl:
     + [NT] Properly handle multiple versions of the same source and
       add versioned anchors to them.
+  * reporting/templates/{index,tag}.tmpl:
+    + [JP] Include history graphs in HTML templates.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 13 Dec 2012 13:38:59 +0100
 

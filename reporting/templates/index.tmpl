@@ -85,5 +85,18 @@
       (The numbers in parentheses describe the changes since the last Lintian
       report, published on {$previous}.)
     </p>
+
+{
+    if ($graphs) {
+        $OUT .= qq(  <p>\n);
+        $OUT .= qq(    Evolution of Lintian tags over the past\n);
+        $OUT .= qq(    $graphs_days days: <div class="graph"><img\n);
+        $OUT .= qq(    src="graphs/statistics.svg" alt="History of Lintian\n);
+        $OUT .= qq(    tags" /></div>\n);
+        $OUT .= qq(  </p>);
+    }
+    '';
+}
+
   </div> <!-- stats -->
 { foot() }

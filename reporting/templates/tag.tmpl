@@ -10,6 +10,18 @@
 {$description}
   </blockquote>
 
+{
+    if ($graphs) {
+        $OUT .= qq(  <p>\n);
+        $OUT .= qq(    Evolution of the $tag Lintian tag over the past\n);
+        $OUT .= qq(    $graphs_days days: <div class="graph"><img\n);
+        $OUT .= qq(    src="../graphs/tags/$tag.svg" alt="History of $tag"\n);
+        $OUT .= qq(    /></div>\n);
+        $OUT .= qq(  </p>);
+    }
+    '';
+}
+
   <p>
     The package names link to the relevant maintainer page and the
     corresponding report for the source package.  The links go to the full

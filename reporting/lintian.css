@@ -183,6 +183,10 @@ hr {
     font-family: monospace;
 }
 
+#stats div.graph {
+    text-align: left;
+}
+
 /* Maintainer reports */
 
 #summary {
@@ -201,6 +205,10 @@ hr {
 ul.report {
     padding-left: 20px;
     padding-bottom: 1em;
+}
+
+div.graph {
+    text-align: center;
 }
 
 ul.tag {

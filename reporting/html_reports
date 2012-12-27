@@ -498,6 +498,8 @@ for my $tag (sort $profile->tags (1)) {
         tag         => html_quote ($tag),
         code        => $info->code,
         tags        => $by_tag{$tag},
+        graphs      => $GRAPHS,
+        graphs_days => $GRAPHS_RANGE_DAYS,
     );
     output_template ("tags/$tag.html", $templates{$tmpl}, \%maint_data);
 }
@@ -574,6 +576,8 @@ close STATS or die "cannot write to $statistics_file: $!\n";
     mirror       => $mirror_timestamp,
     previous     => $old_statistics->{'last-updated'},
     area         => join(', ', split(/\s*,\s*/, $LINTIAN_AREA)),
+    graphs       => $GRAPHS,
+    graphs_days  => $GRAPHS_RANGE_DAYS,
 );
 output_template ('index.html', $templates{index}, \%data);
 
