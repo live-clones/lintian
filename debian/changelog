@@ -50,6 +50,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       map source packages to the full report for that source.
       Thanks to Joerg "Gannef" Jasper for the suggestion to use
       RewriteMap.  (Closes: #696960)
+    + [JP] Fix version labels glitches.
   * reporting/templates/{packages,maintainer,tag}.tmpl:
     + [NT] Properly handle multiple versions of the same source and
       add versioned anchors to them.

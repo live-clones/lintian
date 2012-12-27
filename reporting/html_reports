@@ -628,11 +628,23 @@ if ($GRAPHS) {
     print { $common } "graph_dir='$GRAPH_DIR'\n";
     print { $common } "date_min='$date_min'\n";
     print { $common } "date_max='$date_max'\n";
-    for my $v (sort keys %versions) {
-        print { $common } "set label '$v' at '$versions{$v}',graph 1.04 ",
-            "rotate by 90 font ',10'\n";
+    my $last_version = 0;
+    for my $v (sort { $versions{$a} <=> $versions{$b} } keys %versions) {
+        next unless $versions{$v} > $date_min;
+
         print { $common } "set arrow from '$versions{$v}',graph 0 to ",
             "'$versions{$v}',graph 1 nohead lw 0.4\n";
+
+        # Skip label if previous release is too close; graphs can't display
+        # more than ~32 labels.
+        my $min_spacing = 3600 * 24 * $RANGE_DAYS / 32;
+        if ($versions{$v} - $last_version > $min_spacing) {
+            (my $label = $v) =~ s/\-[\w\d]+$//;
+            print { $common } "set label '$label' at '$versions{$v}',graph ",
+                "1.04 rotate by 90 font ',8'\n"
+        }
+
+        $last_version = $versions{$v};
     }
     close $common or die "close $commonf: $!\n";
 
