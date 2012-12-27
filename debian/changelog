@@ -32,6 +32,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Add and export "versions_comparator" that can be used for
       sorting purposes.
 
+  * reporting/graphs/{statistics,tags}.gpi:
+    + [JP] Tweak graph size to allow longer labels, and force font
+      family.
   * reporting/harness:
     + [NT] Add --to-stdout option to emit log information to
       stdout as well as the log files.
