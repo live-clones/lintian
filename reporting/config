@@ -13,7 +13,6 @@ $LINTIAN_LAB = "$HOME/laboratory";
 $LOG_DIR = "$HOME/logs";
 $HTML_DIR = "$HOME/www";
 $HTML_TMP_DIR = "$HTML_DIR.new";
-$GRAPH_DIR = "$HTML_TMP_DIR/graphs";
 $LINTIAN_CFG = "$LINTIAN_ROOT/reporting/lintian-dummy.cfg";  # this config file has to be empty!
 $LINTIAN_BIN_DIR = "$HOME/bin";
 $LINTIAN_GPG_CHECK = 0;

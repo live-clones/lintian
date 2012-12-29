@@ -37,7 +37,7 @@ use Text::Template ();
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
      $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE,
-     $GRAPHS_RANGE_DAYS, $GRAPHS, $GRAPH_DIR, $LINTIAN_MIRROR_NAME);
+     $GRAPHS_RANGE_DAYS, $GRAPHS, $LINTIAN_MIRROR_NAME);
 
 # Read the configuration.
 require './config';
@@ -585,8 +585,8 @@ exit 0 if (not $HISTORY);
 
 # Update history.
 my %versions = ();
-my $commonf = "$GRAPH_DIR/common.gpi";
-my $do_graphs = 1;
+my $graph_dir = "$HTML_TMP_DIR/graphs";
+my $commonf = "$graph_dir/common.gpi";
 my $unix_time = time();
 mkdir("$HISTORY_DIR")
     or die "cannot create history directory $HISTORY_DIR: $!\n"
@@ -615,10 +615,10 @@ if ($GRAPHS and seek HIST, 0, SEEK_SET) {
 close HIST or die "cannot write to $history_file: $!\n";
 
 if ($GRAPHS) {
-    mkdir("$GRAPH_DIR", 0777)
-        or die "cannot create output directory $GRAPH_DIR: $!\n";
-    mkdir("$GRAPH_DIR/tags", 0777)
-        or die "cannot create output directory $GRAPH_DIR/tags: $!\n";
+    mkdir("$graph_dir", 0777)
+        or die "cannot create output directory $graph_dir: $!\n";
+    mkdir("$graph_dir/tags", 0777)
+        or die "cannot create output directory $graph_dir/tags: $!\n";
 
     my $date_min = strftime ("%s", localtime ($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
     my $date_max = strftime ("%s", localtime ($unix_time));
@@ -628,7 +628,7 @@ if ($GRAPHS) {
     open my $common, '>', $commonf
         or die "cannot open $commonf: $!\n";
     print { $common } "history_dir='$HISTORY_DIR'\n";
-    print { $common } "graph_dir='$GRAPH_DIR'\n";
+    print { $common } "graph_dir='$graph_dir'\n";
     print { $common } "date_min='$date_min'\n";
     print { $common } "date_max='$date_max'\n";
     my $last_version = 0;
@@ -652,7 +652,7 @@ if ($GRAPHS) {
     close $common or die "close $commonf: $!\n";
 
     print "Plotting global statistics...\n";
-    chdir_system ($GRAPH_DIR, ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
+    chdir_system ($graph_dir, ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
         or die "gnuplot died with $?\n";
 }
 
@@ -666,7 +666,7 @@ for my $tag (sort keys %tag_statistics) {
     close HIST or die "cannot write to $history_file: $!\n";
     if ($GRAPHS) {
         print "Plotting $tag statistics...\n";
-        chdir_system ($GRAPH_DIR, ['gnuplot', '-e', "tag='$tag'",
+        chdir_system ($graph_dir, ['gnuplot', '-e', "tag='$tag'",
                                    "$LINTIAN_ROOT/reporting/graphs/tags.gpi"]) == 0
             or die "gnuplot died with $?\n";
     }

@@ -32,6 +32,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Add and export "versions_comparator" that can be used for
       sorting purposes.
 
+  * reporting/config:
+    + [JP] Remove unused $GRAPH_DIR configuration option.
   * reporting/graphs/{statistics,tags}.gpi:
     + [JP] Tweak graph size to allow longer labels, and force font
       family.
