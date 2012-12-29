@@ -44,16 +44,17 @@ our $EXCLUDE =
                  ^hardening-.*$
                 ));
 
-# Find all of the check description files.  We'll do one check per
-# description.  Exclude "lintian.desc" as it does not have a perl
-# module like other checks.
-our @CHECKNAMES = map {
-    s,^\Q$ENV{'LINTIAN_ROOT'}\E/checks/(.+)\.desc$,$1,;
-    $_
- } (grep {!m,/lintian\.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
+# Exclude "lintian.desc" as it does not have a perl module like other
+# checks.
+sub accept_filter {
+    !m,/lintian\.desc$,;
+}
 
-plan tests => scalar @CHECKNAMES;
+my $opts = {
+    'exclude-pattern' => $EXCLUDE,
+    'filter' => \&accept_filter,
+};
 
-test_tags_implemented ( {'exclude-pattern' => $EXCLUDE},
-                        "$ENV{LINTIAN_ROOT}/checks", @CHECKNAMES);
+test_tags_implemented ($opts, "$ENV{LINTIAN_ROOT}/checks");
 
+done_testing;

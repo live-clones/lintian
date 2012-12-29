@@ -21,17 +21,20 @@
 use strict;
 use warnings;
 
-use Test::More import => ['plan'];
+use Test::More import => ['done_testing'];
 use Test::Lintian;
 
 # Test that all checks can be loaded (except lintian.desc, which is
 # a special case).
-our @CHECKNAMES = map {
-    s,^\Q$ENV{'LINTIAN_ROOT'}\E/checks/(.+)\.desc$,$1,;
-    $_
- } (grep { !m,/lintian.desc$, } <$ENV{LINTIAN_ROOT}/checks/*.desc>);
+sub accept_filter {
+    !m,/lintian\.desc$,;
+}
 
-plan tests => 2 * scalar @CHECKNAMES;
+my $opts = {
+    'filter' => \&accept_filter,
+};
 
-test_load_checks ("$ENV{'LINTIAN_ROOT'}/checks", @CHECKNAMES);
+test_load_checks ($opts, "$ENV{'LINTIAN_ROOT'}/checks");
+
+done_testing;
 

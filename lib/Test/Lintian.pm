@@ -74,14 +74,17 @@ my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 
 =over 4
 
-=item test_check_desc ([OPTS, ]DESCFILES...)
+=item test_check_desc ([OPTS, ]CHECKS...)
 
 Test check desc files (and the tags in them) for common errors.
 
-OPTS is an optional HASHREF that determines if some of the tests
-are optional or not.  Currently it is unused.
+OPTS is an optional HASHREF containing key/value pairs, which are
+described below.
 
-DESCFILES is a list of paths in which to check desc files.
+CHECKS is a list of paths in which to check desc files.  Any given
+element in CHECKS can be either a file or a dir.  Files are assumed to
+be check desc file.  Directories are searched and all I<.desc> files
+in those dirs are processed.
 
 As the number of tests depends on the number of tags in desc, it is
 difficult to "plan ahead" when using this test.  It is therefore
@@ -102,6 +105,19 @@ Lintian itself.
 If set to C<undef>, the test of Needs-Info containing only existing
 collections will be skipped.
 
+=item filter
+
+If defined, it is a filter function that examines $_ (or its first
+argument) and returns a truth value if C<$_> should be considered or
+false otherwise.  C<$_> will be the path to the current file (or dir)
+in question; it may be relative or absolute.
+
+NB: I<all> elements in CHECKS are subject to the filter.
+
+CAVEAT: If the filter rejects a directory, none of the files in it will be
+considered either.  Even if the filter accepts a file, that file will
+only be processed if it has the proper extension (i.e. with I<.desc>).
+
 =back
 
 =cut
@@ -110,16 +126,21 @@ sub test_check_desc {
     my ($opts, @descs);
     my $builder = $CLASS->builder;
     my $colldir = '/usr/share/lintian/collection';
+    my $find_opt = {
+        'filter' => undef,
+    };
+    my $tested = 0;
 
     if (ref $_[0] eq 'HASH') {
         $opts = shift;
         $colldir = $opts->{'coll-dir'}//'' if exists $opts->{'coll-dir'};
+        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
     }
     $opts //= {};
     @descs = @_;
     load_profile_for_test ();
 
-    foreach my $desc_file (@descs) {
+    foreach my $desc_file (map { _find_check ($find_opt, $_) } @descs) {
         my ($header, @tagpara) = read_dpkg_control ($desc_file);
         my $cname = $header->{'check-script'}//'';
         my $ctype = $header->{'type'} // '';
@@ -128,6 +149,7 @@ sub test_check_desc {
         my $i = 1; # paragraph counter.
         $builder->isnt_eq ($cname, '', "Check has a name ($desc_file)");
         $cname = '<missing>' if $cname eq '';
+        $tested++;
 
         if ($cname eq 'lintian') {
             # skip these two tests for this special case...
@@ -206,6 +228,9 @@ sub test_check_desc {
             # TODO: Implement check of Ref (?)
         }
     }
+
+    $builder->cmp_ok ($tested, '>', 0, 'Tested at least one desc file')
+        if @descs;
 }
 
 =item test_load_profiles (ROOT, INC...)
@@ -256,27 +281,72 @@ sub test_load_profiles {
     File::Find::find (\%opt, $absdir);
 }
 
-=item test_load_checks (DIR, CHECKNAMES...)
+=item test_load_checks ([OPTS, ]DIR[, CHECKNAMES...])
 
 Test that the Perl module implementation of the checks can be loaded
 and has a run sub.
 
+OPTS is an optional HASHREF containing key/value pairs, which are
+described below.
+
 DIR is the directory where the checks can be found.
 
-CHECKNAMES is a list of check names.
+CHECKNAMES is a list of check names.  If CHECKNAMES is given, only the
+checks in this list will be processed.  Otherwise, all the checks in
+DIR will be processed.
 
-For planning purposes, every element in CHECKNAMES counts for 2 tests.
+For planning purposes, every check processed counts for 2 tests and
+the call itself does on additional check.  So if CHECKNAMES contains
+10 elements, then 21 tests will be done (2 * 10 + 1).  Filtered out
+checks will I<not> be counted.
 
 NB: This will load a profile if one hasn't been loaded already.  This
 is done to avoid issues loading L<data files|Lintian::Data> in the
 package scope of the checks.  (see
 L</load_profile_for_test ([PROFNAME[, INC...]])>)
 
+OPTS may contain the following key/value pairs:
+
+=over 4
+
+=item filter
+
+If defined, it is a filter function that examines $_ (or its first
+argument) and returns a truth value if C<$_> should be considered or
+false otherwise.  C<$_> will be the path to the current file (or dir)
+in question; it may be relative or absolute.
+
+NB: filter is I<not> used if CHECKNAMES is given.
+
+CAVEAT: If the filter rejects a directory, none of the files in it will be
+considered either.  Even if the filter accepts a file, that file will
+only be processed if it has the proper extension (i.e. with I<.desc>).
+
+=back
+
 =cut
 
 sub test_load_checks {
-    my ($dir, @checknames) = @_;
+    my ($opts, $dir, @checknames);
     my $builder = $CLASS->builder;
+
+    if ($_[0] and ref $_[0] eq 'HASH') {
+        ($opts, $dir, @checknames) = @_;
+    } else {
+        $opts = {};
+        ($dir, @checknames) = @_;
+    }
+
+    unless (@checknames) {
+        my $find_opt = {
+            'want-check-name' => 1,
+        };
+        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
+        @checknames = _find_check ($find_opt, $dir);
+        $builder->cmp_ok (scalar @checknames, '>', 0, 'Found checks to test');
+    } else {
+        $builder->skip ('Given an explicit list of checks');
+    }
 
     load_profile_for_test ();
 
@@ -314,11 +384,12 @@ sub test_load_checks {
     }
 }
 
-=item test_tags_implemented ([OPTS, ], DIR, CHECKNAMES...)
+=item test_tags_implemented ([OPTS, ], DIR[, CHECKNAMES...])
 
 Test a given check implements all the tags listed in its desc file.
-For planning purposes, each check listed in CHECKNAMES counts as one
-test.
+For planning purposes, each check counts as one test and the call
+itself do one additional check.  So if 10 checks are tested, the plan
+should account for 11 tests.
 
 This is a simple scan of the source code looking asserting that the
 tag names I<appear> (in the actual code part).  For a vast majority of
@@ -327,7 +398,10 @@ false-positives and false-negatives - the former can be handled via
 "exclude-pattern" (see below).
 
 The DIR argument is the directory in which to find the checks.
-CHECKNAMES is a list of the check names.
+
+CHECKNAMES is a list of the check names.  If CHECKNAMES is given, only
+the checks in this list will be processed.  Otherwise, all the checks
+in DIR will be processed.
 
 The optional parameter OPTS is a hashref.  If passed it must be the
 first argument.  The following key/value pairs are defined:
@@ -346,6 +420,19 @@ This is useful for avoiding false-positives with cases like:
     tag "some-tag-for-$x", "blah blah $x"
         unless f($x);
   }
+
+=item filter
+
+If defined, it is a filter function that examines $_ (or its first
+argument) and returns a truth value if C<$_> should be considered or
+false otherwise.  C<$_> will be the path to the current file (or dir)
+in question; it may be relative or absolute.
+
+NB: filter is I<not> used if CHECKNAMES is given.
+
+CAVEAT: If the filter rejects a directory, none of the files in it will be
+considered either.  Even if the filter accepts a file, that file will
+only be processed if it has the proper extension (i.e. with I<.desc>).
 
 =back
 
@@ -369,12 +456,26 @@ sub test_tags_implemented {
     my ($opts, $dir, @checknames);
     my $pattern;
     my $builder = $CLASS->builder;
+    my $find_opt = {
+        'want-check-name' => 1,
+    };
 
     if ($_[0] and ref $_[0] eq 'HASH') {
         ($opts, $dir, @checknames) = @_;
     } else {
         $opts = {};
         ($dir, @checknames) = @_;
+    }
+
+    unless (@checknames) {
+        my $find_opt = {
+            'want-check-name' => 1,
+        };
+        $find_opt->{'filter'} = $opts->{'filter'} if exists $opts->{'filter'};
+        @checknames = _find_check ($find_opt, $dir);
+        $builder->cmp_ok (scalar @checknames, '>', 0, 'Found checks to test');
+    } else {
+        $builder->skip ('Given an explicit list of checks');
     }
 
     if (exists $opts->{'exclude-pattern'}) {
@@ -463,6 +564,51 @@ sub load_profile_for_test {
     Lintian::Data->set_vendor ($PROFILE);
 }
 
+
+sub _find_check {
+    my ($find_opt, $input) = @_;
+    $find_opt//= {};
+    my $filter = $find_opt->{'filter'};
+
+    if ($filter) {
+        local $_ = $input;
+        # filtered out?
+        return () unless $filter->($_);
+    }
+
+    if ( -d $input) {
+        my @result = ();
+        my $regex = undef;
+        if ($find_opt->{'want-check-name'}) {
+            $regex = qr,^\Q$input\E/*,
+        }
+        my $wanted = sub {
+            if (defined $filter) {
+                local $_ = $_;
+                if (not $filter->($_)) {
+                    # filtered out; if a dir - filter the
+                    # entire dir.
+                    $File::Find::prune = 1 if -d $_;
+                    return;
+                }
+            }
+            return unless m/\.desc$/ and -f $_;
+            if ($regex) {
+                s/$regex//;
+                s/\.desc$//;
+            }
+            push @result, $_;
+        };
+        my $opt = {
+            'wanted' => $wanted,
+            'no_chdir' => 1,
+        };
+        File::Find::find ($opt, $input);
+        return @result;
+    }
+
+    return ($input);
+}
 
 =back
 
