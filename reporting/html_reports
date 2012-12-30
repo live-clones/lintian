@@ -429,8 +429,8 @@ foreach my $source (sort keys %sources) {
     my $first = 1;
     foreach my $version (sort versions_comparator keys %{ $sources{$source} }) {
         my $xref = $sources{$source}{$version};
-        print {$table} "$source maintainer/$xref\n" if $first;
-        print {$table} "$source/$version maintainer/$xref\n";
+        print {$table} "$source full/$xref\n" if $first;
+        print {$table} "$source/$version full/$xref\n";
         $first = 0;
     }
 }
