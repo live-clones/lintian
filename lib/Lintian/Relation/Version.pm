@@ -28,7 +28,7 @@ use Carp qw(croak);
 use base 'Exporter';
 BEGIN {
     our @EXPORT = qw(versions_equal versions_lte versions_gte versions_lt
-                     versions_gt versions_compare);
+                     versions_gt versions_compare versions_comparator);
 }
 
 use AptPkg::Config '$_config';
@@ -159,6 +159,23 @@ sub versions_compare {
     elsif ($op eq '<<') { return versions_lt   ($p, $q) }
     elsif ($op eq '>>') { return versions_gt   ($p, $q) }
     else { croak("unknown operator $op") }
+}
+
+=item versions_comparator (A, B)
+
+Returns -1,0 or 1 if the version A is (respectively) less than, equal
+to or greater than B.  This is useful for (e.g.) sorting a list of
+versions:
+
+ foreach my $version (sort versions_comparator @versions) {
+    ...
+ }
+
+=cut
+
+sub versions_comparator {
+    my ($p, $q) = @_;
+    return $versioning->compare ($p, $q);
 }
 
 =back
