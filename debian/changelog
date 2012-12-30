@@ -41,6 +41,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Schedule groups in chunks (default 512 per chunk).
       This makes the Lintian processes shorter and makes memory
       reclaimable sooner.  (Closes: #695839)
+  * reporting/templates/maintainer.tmpl:
+    + [NT] Properly handle multiple versions of the same source and
+      add versioned anchors to them.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 13 Dec 2012 13:38:59 +0100
 

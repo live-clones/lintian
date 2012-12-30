@@ -29,25 +29,36 @@
             # Only display a link for the package if either we're
             # displaying the full report, or the package has error
             # or warning tags
-            my $interesting = 0;
+            my @interesting = ();
+            my $versions = $packages{$source} || $uploads{$source};
+
             if (!$errors) {
                 # Full report, so include the package
-                $interesting = 1;
+                @interesting = sort by_version keys %$versions
             } else {
-                my $versions = $packages{$source} || $uploads{$source};
-                VERSIONS: for my $version (sort keys %$versions) {
+                for my $version (sort by_version keys %$versions) {
                     my $tags = $versions->{$version};
                     for my $tag (@$tags) {
                         if (($tag->{code} eq 'E') or ($tag->{code} eq 'W')) {
-                            $interesting = 1;
-                            last VERSIONS;
+                            push @interesting, $version;
+                            last;
                         }
                     }
                 }
             }
 
-            if ($interesting) {
-                $OUT .= qq(      <li><a href="#$source">$source</a></li>\n);
+            if (@interesting) {
+                if (scalar @interesting > 1) {
+                    $OUT .= qq(      <li>$source<ul>\n);
+                    foreach my $version (@interesting) {
+                        $OUT .= '            ' .
+                            qq(<li><a href="#${source}_${version}">$version</a></li>\n);
+                    }
+                    $OUT .= qq(      </ul></li>\n);
+                } else {
+                    my ($version) = @interesting;
+                    $OUT .= qq(      <li><a href="#${source}_${version}">$source</a> ($version)</li>\n);
+                }
             }
         }
         $OUT .= "    </ul>\n  </div>\n";
@@ -61,13 +72,14 @@
     # the value.
     for my $source (sort (keys (%packages), keys (%uploads))) {
         my ($data, $upload);
+        my $first_version = 1;
         if ($packages{$source}) {
             $data = $packages{$source};
         } else {
             $data = $uploads{$source};
             $upload = 1;
         }
-        for my $version (sort keys %$data) {
+        for my $version (sort by_version keys %$data) {
             my $tags = $data->{$version};
             my $first = 1;
             my $binary = '';
@@ -85,9 +97,14 @@
                 $firstarea = $info->{area} unless $firstarea;
                 if ($first) {
                     $OUT .= qq(  <div class="source-header">\n);
-                    $OUT .= qq(   <h2 id="$source">);
+                    $OUT .= qq(   <h2 id="${source}_${version}">);
                     $OUT .= "$source ($version$area)";
                     $OUT .= " [Uploader]" if $upload;
+                    if ($first_version) {
+                        # Unversioned #<pkg> references just go to the first version.
+                        $first_version = 0;
+                        $OUT .= qq( <a id="${source}" />)
+                    }
                     $OUT .= "</h2>\n";
                     $OUT .= qq(   <p class="info-links">\n);
                     $OUT .= qq(    <a href="http://packages.debian.org/src:$source">Info</a>\n);

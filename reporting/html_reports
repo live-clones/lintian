@@ -57,6 +57,7 @@ use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
 use Lintian::Profile;
+use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 my $profile = Lintian::Profile->new (undef,
@@ -702,6 +703,7 @@ sub output_template {
     my ($file, $template, $data) = @_;
     $data->{version} ||= $LINTIAN_VERSION;
     $data->{timestamp} ||= $timestamp;
+    $data->{by_version} ||= \&versions_comparator;
     $data->{head} ||= sub { $templates{head}->fill_in (HASH => { page_title => $_[0],
                                                                  path_prefix => '../' x ($_[1]||0),
                                                                  %$data }) };
