@@ -163,7 +163,7 @@ sub versions_compare {
 
 =item versions_comparator (A, B)
 
-Returns -1,0 or 1 if the version A is (respectively) less than, equal
+Returns -1, 0 or 1 if the version A is (respectively) less than, equal
 to or greater than B.  This is useful for (e.g.) sorting a list of
 versions:
 
