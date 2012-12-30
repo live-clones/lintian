@@ -173,7 +173,9 @@ versions:
 
 =cut
 
-sub versions_comparator {
+# Use a prototype to avoid confusing Perl when used with sort.
+
+sub versions_comparator ($$) {
     my ($p, $q) = @_;
     return $versioning->compare ($p, $q);
 }
