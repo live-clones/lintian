@@ -23,11 +23,11 @@
     my ($last, $tag, $has_nonoverridden);
     for my $info (sort { $a->{package} cmp $b->{package} } @tags) {
         if (!$last
-            or "$info->{package} $info->{type}" ne "$last->{package} $last->{type}") {
+            or "$info->{package} $info->{type} $info->{version}" ne "$last->{package} $last->{type} $last->{version}") {
             if ($last) {
                 my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
                 $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
-                $OUT .= "$last->{package}</a> ($last->{type})$overridden</h2>\n";
+                $OUT .= "$last->{package} $last->{version}</a> ($last->{type})$overridden</h2>\n";
                 $OUT .= qq(  <ul class="tag">\n);
                 $OUT .= $tag;
                 $OUT .= "</ul>\n";
@@ -45,7 +45,7 @@
     }
     my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
     $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
-    $OUT .= "$last->{package}</a> ($last->{type})$overridden</h2>\n";
+    $OUT .= "$last->{package} $last->{version}</a> ($last->{type})$overridden</h2>\n";
     $OUT .= qq(  <ul class="tag">\n);
     $OUT .= $tag;
     $OUT .= "</ul>\n";

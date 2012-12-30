@@ -17,6 +17,7 @@
   </p>
 
 {
+    # ' # hi, emacs
     # Put headings before each new initial letter.
     my $letter = '';
     for my $package (@list) {
@@ -26,7 +27,9 @@
             $OUT .= qq(  <h2>$first</h2>\n\n  <p>\n);
             $letter = $first;
         }
-        $OUT .= qq(    <a href="full/$sources{$package}">$package</a>\n);
+        foreach my $version (sort by_version keys %{ $sources{$package} }) {
+            $OUT .= qq(    <a href="full/$sources{$package}{$version}">$package ($version)</a>\n);
+        }
     }
 }  </p>
 { foot() }

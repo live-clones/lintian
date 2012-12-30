@@ -163,7 +163,8 @@ my (%statistics, %tag_statistics);
 #             severity  => 'normal',
 #             certainty => 'certain',
 #             extra     => 'gnubg-data'
-#             xref      => 'rra@debian.org.html#gnubg' } ] } }
+#             xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
+#           } ] } }
 #
 # and then stored under the key 'Russ Allbery <rra@debian.org>'
 #
@@ -285,7 +286,7 @@ while (<>) {
         severity  => html_quote ($profile->get_tag ($tag, 1)->severity),
         certainty => html_quote ($profile->get_tag ($tag, 1)->certainty),
         extra     => html_quote ($extra),
-        xref      => maintainer_url ($maintainer) . "#$source"
+        xref      => maintainer_url ($maintainer) . "#${source}_${source_version}"
     };
     $by_maint{$maintainer}{$source}{$source_version} ||= [];
     push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
@@ -345,13 +346,13 @@ for my $maintainer (@maintainers) {
     # double-counting.
     for my $source (keys %{ $by_maint{$maintainer} }) {
         my %count;
-        for my $version (keys %{ $by_maint{$maintainer}{$source} }) {
+        for my $version (sort versions_comparator keys %{ $by_maint{$maintainer}{$source} }) {
             my $tags = $by_maint{$maintainer}{$source}{$version};
             for my $tag (@$tags) {
                 $count{$tag->{code}}++;
             }
             if (@$tags) {
-                $sources{$source} = $tags->[0]->{xref};
+                $sources{$source}{$version} = $tags->[0]->{xref};
             }
         }
         $qa{$source} = \%count;
