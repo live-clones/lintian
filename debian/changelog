@@ -43,6 +43,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       reclaimable sooner.  (Closes: #695839)
   * reporting/html_reports:
     + [NT] Update xrefs to include source version.
+    + [NT] Generate a text file suitable for Apache's RewriteMap to
+      map source packages to the maintainer report for that source.
+      Thanks to Joerg "Gannef" Jasper for the suggestion to use
+      RewriteMap.  (Closes: #696960)
   * reporting/templates/{packages,maintainer,tag}.tmpl:
     + [NT] Properly handle multiple versions of the same source and
       add versioned anchors to them.
