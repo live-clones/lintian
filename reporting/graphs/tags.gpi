@@ -29,6 +29,6 @@ set yrange [ 0 : ]
 set output sprintf("%s/tags/%s.svg", graph_dir, tag)
 plot sprintf("%s/tags/%s.dat", history_dir, tag) \
     u 1:2 w filledcurve x1 ls 20 t 'Tags', \
- '' u 1:3 w filledcurve x1 ls 21 t 'Packages', \
- '' u 1:4 w filledcurve x1 ls 22 t 'Overridden'
+ '' u 1:4 w filledcurve x1 ls 21 t 'Packages', \
+ '' u 1:3 w filledcurve x1 ls 22 t 'Overridden'
 
