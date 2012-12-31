@@ -1,0 +1,530 @@
+=encoding utf-8
+
+=head1 NAME
+
+Lintian::Tutorial::WritingChecks -- Writing checks for Lintian
+
+=head1 SYNOPSIS
+
+This guide will quickly guide you through the basics of writing a
+Lintian check.  Most of the work is in writing the two files:
+
+  checks/<my-check>
+  checks/<my-check>.desc
+
+And then either adding a Lintian profile or extending an exisiting
+one.
+
+=head1 DESCRIPTION
+
+The basics of writing a check is outlined in the Lintian User Manual
+(§3.3).  This tutorial will focus on the part of writing the actual
+check.  In this tutorial, we will assume the name of the check to be
+written is called "deb/pkg-check".
+
+The tutorial will work with a "binary" and "udeb" check.  Checking
+source packages works in a similar fasion.
+
+=head2 Create a check I<.desc> file
+
+As mentioned, this tutorial will focus on the part of writing a check.
+Please see the Lintian User Manual (§3.3) for how to do this part.
+
+=head2 Create the Perl check module
+
+Start with the template:
+
+ # deb/pkg-check is loaded as Lintian::deb::pkg_check
+ # - See Lintian User Manual §3.3 for more info
+ package Lintian::deb::pkg_check;
+
+ use strict;
+ use warnings;
+ 
+ use Lintian::Tags qw(tag);
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+ }
+
+This snippet above is a simple valid check that does "nothing at all".
+We will extend it in just a moment, but first let us have a look at
+the arguments at the setup.
+
+The I<run> sub is the entry point of our "deb/pkg-check" check; it
+will be invoked once per package it should process.  In our case, that
+will be once per "binary" (.deb) and once per udeb package processed.
+
+It is given 5 arguments (in the future, possibly more), which are:
+
+=over 4
+
+=item $pkg - The name of the package being processed.
+
+(Same as $proc->pkg_name)
+
+=item $type - The type of the package being processed.
+
+At the moment, $type is one of "binary" (.deb), "udeb", "source"
+(.dsc) or "changes".  This argument is mostly useful if certain checks
+do not apply equally to all package types being processed.
+
+Generally it is advisable to do check only binaries ("binary" and
+"udeb"), sources or changes in a given check.  But in rare cases, it
+makes sense to lump multiple types together in the same check and this
+arguments help you do that.
+
+(Current it is always identical to $proc->pkg_type)
+
+=item $info - Accessor to the data Lintian has extracted
+
+Basically all information you want about a given package comes from
+the $info object.  Sometimes referred to as either the "info object" or
+(an instance of) L<Lintian::Collect>.
+
+This object (together with a properly set Needs-Info in the I<.desc>
+file) will grant you access to all of the data Lintian has extracted
+about this package.
+
+Based on the value of the $type argument, it will be one of
+L<Lintian::Collect::Binary>, L<Lintian::Collect::Changes> or
+L<Lintian::Collect::Source>.
+
+(Currently it is the same as $proc->info)
+
+=item $proc - Basic metadata about the pacakage
+
+This is an instance of L<Lintian::Processable> and is useful for
+trivially obtaining very basic package metadata.  Particularly, name
+of source package and version of source package readily available.
+
+=item $group - Group of processables from the same source
+
+If you want to do a cross-check between different packages built from
+the same source, $group helps you access those other packages
+(if they are available).
+
+This is an instance of L<Lintian::ProcessableGroup>.
+
+=back
+
+Now back to the part of coding.
+
+=head2 Emitting a tag
+
+Emitting a tag is fairly simple in itself.  Simply invoke the
+L<tag|Lintian::Tags/tag(TAG, [EXTRA, ...])> sub with one or more
+arguments in the I<run> sub.  The first argument being the name of the
+tag to emit and the rest being the "extra" information (if any).
+
+The full example being:
+
+ # deb/pkg-check is loaded as Lintian::deb::pkg_check
+ # - See Lintian User Manual §3.3 for more info
+ package Lintian::deb::pkg_check;
+ 
+ use strict;
+ use warnings;
+ 
+ use Lintian::Tags qw(tag);
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+     tag 'deb-pkg-check-works',
+         "I was emitted for $pkg, which was a $type package";
+ }
+
+Assuming there is a tag called "deb-pkg-check-works" in your I<.desc>
+file, the above will faithfully emit said tag for all pakages
+processed by this check.
+
+Emitting a tag is fairly simple; the hard part is emitting exactly
+when there is an issue.
+
+
+=head2 Accessing fields
+
+Lets do a slightly harder example.  Assume we wanted to emit a tag for
+all packages without a (valid) Multi-Arch field.  This requires us to
+A) identify if the package has a Multi-Arch field and B) identify if
+the contents of the field was valid.
+
+Starting from the top.  All $info objects have a method called field,
+which gives you access to a (raw) field from the control file of the
+package.  It returns C<undef> if said field is not present or the
+contents of said field otherwise.  Note that field names must be given
+in all lowercase letters (i.e. use "multi-arch", not "Multi-Arch").
+
+ # deb/pkg-check is loaded as Lintian::deb::pkg_check
+ # - See Lintian User Manual §3.3 for more info
+ package Lintian::deb::pkg_check;
+ 
+ use strict;
+ use warnings;
+ 
+ use Lintian::Tags qw(tag);
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+ 
+     my $multiarch = $info->field ('multi-arch');
+ 
+     # Emit a "missing-mutli-arch-field" for all packages without the
+     # Multi-Arch field
+     tag 'missing-multi-arch-field' unless defined $multiarch;
+ }
+
+This was the first half.  Lets look at checking the value.  Multi-arch
+fields can (currently) be one of "no", "same", "foreign" or "allowed".
+One way of checking this would be using the regex:
+
+  /^no|same|foreign|allowed$/
+
+An alternative route is using a table like:
+
+  my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(no same foreign allowed);
+
+Notice that Lintian automatically strips leading and trailing spaces
+on the I<first> line in a field.  It also strips trailing spaces from
+all other lines, but leading spaces and the " ."-continutation markers
+are kept as is.
+
+We will use the second here:
+
+ # deb/pkg-check is loaded as Lintian::deb::pkg_check
+ # - See Lintian User Manual §3.3 for more info
+ package Lintian::deb::pkg_check;
+ 
+ use strict;
+ use warnings;
+ 
+ use Lintian::Tags qw(tag);
+ 
+ my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(
+      no same foreign allowed
+ );
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+ 
+     my $multiarch = $info->field ('multi-arch');
+ 
+     if (defined $multiarch) {
+        # The field is present, lets check it is valid.
+        tag 'invalid-multi-arch-field', $multiarch
+            unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
+     } else {
+         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Multi-Arch field
+         tag 'missing-multi-arch-field';
+     }
+ }
+
+So far so good.
+
+=head2 Checking dependecies
+
+Lintian can do some checking of dependencies.  For most cases it works
+similar to a normal dependency check, but keep in mind that Lintian
+uses I<pure> logic to determine if dependencies are satisifies (i.e. it
+will not look up relations like Provides for you).
+
+Suppose you wanted all packages with a multi-arch "same" field to
+pre-depend on the package "multiarch-support".  Well, we could use the
+L<$info->relation|Lintian::Collect::Binary/relation (FIELD)> method for
+this.
+
+The $info->relation returns an instance of L<Lintian::Relation>.  This
+object as an "implies" method that can be used to check if a package
+has an explicit dependency.  Note that "implies" actually checks if
+one relations "implies" another (i.e. if you satisified relationA then
+you definitely also satisified relationB).
+
+Like with the "field"-method, field names have to be given in all
+lowercase.  But "relation" will never return C<undef> (not even if the
+field is missing).
+
+So in example:
+
+ my $predepends = $info->relation ('pre-depends');
+ unless ($predepends->implies ('multiarch-support')) {
+    tag 'missing-pre-depends-on-multiarch-support';
+ }
+
+Inserted in the proper place, our check now looks like:
+
+ # deb/pkg-check is loaded as Lintian::deb::pkg_check
+ # - See Lintian User Manual §3.3 for more info
+ package Lintian::deb::pkg_check;
+ 
+ use strict;
+ use warnings;
+ 
+ use Lintian::Tags qw(tag);
+ 
+ my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(
+      no same foreign allowed
+ );
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+ 
+     my $multiarch = $info->field ('multi-arch');
+ 
+     if (defined $multiarch) {
+         # The field is present, lets check it is valid.
+         tag 'invalid-multi-arch-field', $multiarch
+             unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
+         if ($multiarch eq 'same') {
+             my $predepends = $info->relation ('pre-depends');
+             tag 'missing-pre-depends-on-multiarch-support'
+                 unless $predepends->implies ('multiarch-support');
+         }
+     } else {
+         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Multi-Arch field
+         tag 'missing-multi-arch-field';
+     }
+ }
+
+=head2 Using static data files
+
+Currently our check mixes data and code.  Namely all the valid values
+for the Multi-Arch field is currently hard-coded in our check.  We can
+move those out of the check by using a data file.
+
+Lintian natively supports data files that are either "sets" or
+"tables" via L<Lintian::Data> (i.e. "unordered" collections).  As an
+added bonus, L<Lintian::Data> transparently supports vendor specific
+data files for us.
+
+First we need to make a data file containing the values.  Which could be:
+
+ # A table of all the valid values for the multi-arch field.
+ no
+ same
+ foreign
+ allowed
+
+This can then be stored in the data directory as
+I<data/deb/pkg-check/multiarch-values>.
+
+Now we can load it by using:
+
+ use Lintian::Data;
+ 
+ my $VALID_MULTI_ARCH_VALUES =
+     Lintian::Data->new ('deb/pkg-check/multiarch-values');
+
+Actually, this is not quite true.  L<Lintian::Data> is lazy, so it
+will not load anything before we force it to do so.  Most of the time
+this is just an added bonus.  However, if you ever have to force it to
+load something immediately, you can do so by invoking its "known"
+method (with an arbitrary defined string and ignore the result).
+
+Data files work with 3 access methods, "all", "known" and "value".
+
+=over 4
+
+=item all
+
+"all" (i.e. $data->all) returns a list of all the entries in the data
+files (for key/value tables, all returns the keys).  The list is not
+sorted in any order (not even input order).
+
+=item known
+
+"known" (i.e. $data->known ('item')) returns a truth value if a given
+item or key is known (present) in the data set or table.  For key/pair
+tables, the value associated with the key can be retrieved with
+"value" (see below).
+
+=item value
+
+"value" (i.e. $data->value ('key')) returns a value associated with a
+key for key/value tables.  For unknown keys, it returns C<undef>.  If
+the data file is not a key/value table but just a set, value returns
+a truth value for known keys.
+
+=back
+
+While we could use both "value" and "known", we will use the latter
+for readability (and to remind ourselves that this is a data set and
+not a data table).
+
+Basically we will be replacing:
+
+  unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
+
+with
+
+  unless $VALID_MULTI_ARCH_VALUES->known ($multiarch);
+
+So the resulting check is:
+
+ # deb/pkg-check is loaded as Lintian::deb::pkg_check
+ # - See Lintian User Manual §3.3 for more info
+ package Lintian::deb::pkg_check;
+ 
+ use strict;
+ use warnings;
+ 
+ use Lintian::Data;
+ use Lintian::Tags qw(tag);
+ 
+ my $VALID_MULTI_ARCH_VALUES =
+     Lintian::Data->new ('deb/pkg-check/multiarch-values');
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+ 
+     my $multiarch = $info->field ('multi-arch');
+ 
+     if (defined $multiarch) {
+         # The field is present, lets check it is valid.
+         tag 'invalid-multi-arch-field', $multiarch
+             unless $VALID_MULTI_ARCH_VALUES->known ($multiarch);
+         if ($multiarch eq 'same') {
+             my $predepends = $info->relation ('pre-depends');
+             tag 'missing-pre-depends-on-multiarch-support'
+                 unless $predepends->implies ('multiarch-support');
+         }
+     } else {
+         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Multi-Arch field
+         tag 'missing-multi-arch-field';
+     }
+ }
+
+=head2 Accessing contents of the package
+
+Another very used mechanism is to check for the presence (or absence)
+of a given file.  Generally this is what the
+L<$info->index|Lintian::Collect::Package/index (FILE)> and
+L<$info->sorted_index|Lintian::Collect::Package/sorted_index> methods
+are for.  The "index" method returns instances of L<Lintian::Path>,
+which has a number of utility methods.
+
+If you want to loop over all files in a package, the sorted_index will
+do this for you.  If you are looking for a specific file (or dir), a
+call to "index" will be much faster.  For the contents of a specific dir,
+you can use something like:
+
+ foreach my $elem ($info-> index ('path/to/dir/')->children) {
+     print $elem->name . " is a file" if $elem->is_file;
+     # ...
+ }
+
+Keep in mind that using the "index" or "sorted_index" method will
+require that you put "index" in Needs-Info.  See L<Keeping Needs-Info
+up to date>.
+
+=head3 Accessing contents of a file in a package
+
+When you actually want to see the contents of a file, you can use
+L<unpacked ('path/to/file')|Lintian::Collect::Package/ my $VALID_MULTI_ARCH_VALUES =
+     Lintian::Data->new ('deb/pkg-check/multiarch-values');
+ 
+ sub run {
+     my ($pkg, $type, $info, $proc, $group) = @_;
+ 
+     my $multiarch = $info->field ('multi-arch');
+ 
+     if (defined $multiarch) {
+         # The field is present, lets check it is valid.
+         tag 'invalid-multi-arch-field', $multiarch
+             unless $VALID_MULTI_ARCH_VALUES->known ($multiarch);
+         if ($multiarch eq 'same') {
+             my $predepends = $info->relation ('pre-depends');
+             tag 'missing-pre-depends-on-multiarch-support'
+                 unless $predepends->implies ('multiarch-support');
+         }
+     } else {
+         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Multi-Arch field
+         tag 'missing-multi-arch-field';
+     }
+ }
+
+=head2 Accessing contents of the package
+
+Another very used mechanism is to check for the presence (or absence)
+of a given file.  Generally this is what the
+L<$info->index|Lintian::Collect::Package/index (FILE)> and
+L<$info->sorted_index|Lintian::Collect::Package/sorted_index> methods
+are for.  The "index" method returns instances of L<Lintian::Path>,
+which has a number of utility methods.
+
+If you want to loop over all files in a package, the sorted_index will
+do this for you.  If you are looking for a specific file (or dir), a
+call to "index" will be much faster.  For the contents of a specific dir,
+you can use something like:
+
+ foreach my $elem ($info-> index ('path/to/dir/')->children) {
+     print $elem->name . " is a file" if $elem->is_file;
+     # ...
+ }
+
+Keep in mind that using the "index" or "sorted_index" method will
+require that you put "index" in Needs-Info.  See L<Keeping Needs-Info
+up to date>.
+
+=head3 Accessing contents of a file in a package
+
+When you actually want to see the contents of a file, you can use
+L<unpacked ('path/to/file')|Lintian::Collect::Package/unpacked ([FILE])>.
+This will give you access to the raw contents of the package, which can
+be a blessing and a curse!
+
+The major caveat here is that there is no fail-safes for you here!
+When you use unpacked, keep things like
+"../../../../../etc/passwd"-symlink and "fifo" pipes in mind.
+
+It is generally a good idea to use L<Lintian::Path> first to check if
+it is a regular file before opening a given path (or use something
+like "if (! -l $path and -f $path) { ... }").
+
+Using the "unpacked" method requires that the "unpacked" collection is
+listed in Needs-Info.  See L<Keeping Needs-Info up to date>.
+
+=head2 Keeping Needs-Info up to date
+
+Keeping the "Needs-Info" field of your I<.desc> file is a bit of
+manual work.  Whenever you use something from an
+L<info|Lintian::Collect> object, find the relevant method in the
+source of that module.  Usually just above the method name (but
+something in the middle of its code) you will find a comment saying:
+
+  # sub methodx Needs-Info Y
+
+Which means generally that the methodx requires Y to work.  Here Y is a
+comma separated list and each element of Y basically falls into 3 cases.
+
+=over 4
+
+=item The element is a diamond (i.e. <>)
+
+In this case, the method has no "external" requirements and can be
+used without any changes to your Needs-Info.  The "field" method
+is an example of this.
+
+This only makes sense if it is the only element in the list.
+
+=item The element is method prefixed with a colon (e.g. ":index")
+
+In this case, the method uses another method to do is job.  An example
+is the "sorted_index" method, which uses the "index" method.  So using
+"sorted_index" has the same requirements as using "index".
+
+=item The element is the name of a collection (e.g. "index").
+
+In this case, the method needs the given collection to be run.  So to
+use (e.g.) "index", you have to put "index" in your Needs-Info.
+
+=back
+
+CAVEAT: Methods can have different requirements based on the type of
+package!  Example being "changelog", which requires "changelog-file"
+in binary packages and ":debfiles" in source packages.
+
+=cut

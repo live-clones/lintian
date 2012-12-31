@@ -6,9 +6,13 @@ use warnings;
 use Pod::Simple::HTMLBatch;
 use Pod::Simple::HTML;
 
-my ($input, $output, $version) = @ARGV;
+my (@input, $output, $version);
 
-$input //= './lib';
+$version = pop @ARGV;
+$output = pop @ARGV;
+@input = @ARGV;
+
+push @input, './lib', './doc/tutorial' unless @input;
 $output //= './doc/api.html';
 $version //= '<version>';
 
@@ -21,7 +25,7 @@ $Pod::Simple::HTML::Content_decl = q{<meta http-equiv="Content-Type" content="te
 my $convert = Pod::Simple::HTMLBatch->new;
 $convert->html_render_class ('Pod::Simple::HTML');
 $convert->contents_page_start( header() );
-$convert->batch_convert ($input, $output);
+$convert->batch_convert (\@input, $output);
 
 print "HTML version available at $output/index.html\n";
 

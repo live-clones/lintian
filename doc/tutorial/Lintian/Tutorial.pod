@@ -1,0 +1,25 @@
+=head1 NAME
+
+Lintian::Tutorial -- The newcomer's guide to Lintian
+
+=head1 SYNOPSIS
+
+Getting started with lintian in 5 minutes... maybe 10.
+
+=head1 DESCRIPTION
+
+Depending on what you want to work with there are different ways to
+approach Lintian and its code.
+
+=over 4
+
+=item L<Writing a Lintian check|Lintian::Tutorial::WritingChecks>
+
+=item Understanding Lintian
+
+To be written.
+
+=back
+
+=cut
+

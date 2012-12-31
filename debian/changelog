@@ -21,6 +21,12 @@ lintian (2.5.12) UNRELEASED; urgency=low
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
       the report.  (Closes: #693918)
 
+  * debian/rules:
+    + [NT] Include the new Tutorial pods in the "api-doc" target.
+
+  * doc/tutorial/Lintian/Tutorial{/WritingChecks}.pod:
+    + [NT] Add POD tutorial on writing checks.
+
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given
       package appears to be non-free.

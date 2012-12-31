@@ -39,7 +39,7 @@ $(profiles): $(allchecks) $(autoreject_data) private/generate-profiles.pl
 	private/generate-profiles.pl
 
 api-doc:
-	private/generate-html-docs ./lib doc/api.html $(VER)
+	private/generate-html-docs ./lib ./doc/tutorial doc/api.html $(VER)
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
