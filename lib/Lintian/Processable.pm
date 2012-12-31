@@ -101,8 +101,11 @@ sub new_from_metadata {
         if ($self->{'pkg_src'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
             $self->{'pkg_src'} = $1;
             $self->{'pkg_src_version'} = $2;
+            croak "Two source-versions given (source + source-version)"
+                if exists $self->{'source-version'};
         } else {
-            $self->{'pkg_src_version'} = $self->pkg_version
+            $rename_field->('source-version', 'pkg_src_version',
+                            $self->pkg_version);
         }
         if (not exists $self->{'pkg_path'}) {
             my $fn = delete $self->{'filename'};

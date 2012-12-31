@@ -34,6 +34,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Re-instate the "TEXTREL" marker.  This fixes a regression
       where shared-libs compiled without pic was not reported.
       Thanks to Dmitry Shachnev for the assistance in debugging this.
+  * lib/Lintian/Processable.pm:
+    + [NT] Fix issue where packages loaded from the lab indices would
+      sometimes get a wrong source-version.
   * lib/Lintian/Relation/Version.pm:
     + [NT] Add and export "versions_comparator" that can be used for
       sorting purposes.
