@@ -230,8 +230,9 @@ while (<>) {
             $maintainer = $pkg_data->{maintainer};
             $uploaders = $pkg_data->{uploaders};
         } else {
-            warn "source package $package not listed!\n";
             $source_version = $version = $pver;
+            $pver//='N/A';
+            warn "source package $package/$pver not found!\n";
         }
     } else {
         my $src_data;
@@ -248,7 +249,14 @@ while (<>) {
             $maintainer = $src_data->{maintainer};
             $uploaders = $src_data->{uploaders};
         } else {
-            warn "source for package $package not found!\n";
+            $pver//='N/A';
+            $parch//='N/A';
+            if (defined $pkg_data) {
+                warn "source for package $package/$pver/$parch"
+                    . " ($source/$source_version) not found!\n";
+            } else {
+                warn "data for package $package/$pver/$parch not found!\n"
+            }
             $maintainer = undef;
             $uploaders = undef;
         }
