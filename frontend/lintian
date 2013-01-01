@@ -1406,7 +1406,7 @@ sub clear_group_cache {
 sub handle_lab_query {
     my ($query) = @_;
     my @res;
-    my $type = $pkg_mode;
+    my $type = undef;
     my ($pkg, $version, $arch);
     my $orig = $query; # Save for the error message later
 
@@ -1432,37 +1432,12 @@ sub handle_lab_query {
         exit 2;
     }
 
-    # if version (or/and arch) is omitted or is the special
-    # value "_", let it be wildcard.
-    $version = undef if !$version or $version eq '_';
-    $arch = undef if !$arch or $arch eq '_';
-    debug_msg (2, "$orig => $type, $pkg, " . ($version//'*') . ', ' . ($arch//'*'));
-
-    if ($type eq 'auto' or $type eq 'ALL') {
-        # Check for all types
-        foreach my $t (qw(binary source udeb changes)) {
-            my @pkgs = $LAB->get_package ($pkg, $t, $version, $arch);
-            push @res, @pkgs;
-        }
-    } elsif ($type eq 'GROUP') {
-        _build_group_cache() unless %group_cache;
-        if (exists $group_cache{$pkg}) {
-            if (defined $version) {
-                push @res, @{ $group_cache{$pkg}->{$version} };
-            } else {
-                foreach my $v (keys %{ $group_cache{$pkg} }) {
-                    push @res, @{ $group_cache{$pkg}->{$v} };
-                }
-            }
-        }
-    } else {
-        # specific type requested
-        my @pkgs;
-        eval {
-            @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
-            push @res, @pkgs;
-        };
+    if (not defined $type and $pkg_mode ne 'auto') {
+        $query = "$pkg_mode:$query";
+        $type = $pkg_mode;
     }
+
+    @res = $LAB->lab_query ($query);
 
     if (@res) {
         foreach my $p (@res) {
