@@ -53,6 +53,10 @@ my %SUPPORTED_TYPES = (
     'udeb'    => 1,
 );
 
+my %SUPPORTED_VIEWS = (
+    'GROUP' => 1,
+);
+
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
@@ -136,12 +140,15 @@ sub new {
     } else {
         $absdir = ''; #Ensure it is defined.
     }
+    my $state = {
+        'GROUP' => Lintian::Lab::Manifest->new ('GROUP'),
+    };
     my $self = {
         # Must be absolute (frontend/lintian depends on it)
         #  - also $self->dir promises this
         #  - it may be the empty string (see $self->dir)
         'dir'         => $absdir,
-        'state'       => {},
+        'state'       => $state,
         'mode'        => $mode,
         'is_open'     => 0,
         'keep-lab'    => 0,
@@ -275,6 +282,10 @@ sub get_package {
         croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
     }
 
+    # get_package only works with "real" types (and not views).
+    croak "Not a supported type ($pkg_type)"
+        unless exists $SUPPORTED_TYPES{$pkg_type};
+
     $index = $self->_get_lab_index ($pkg_type);
 
     if ($proc) {
@@ -378,27 +389,19 @@ sub _get_lab_manifest_data {
 
 # Returns the index of packages in the lab of a given type (of packages).
 #
-# Unlike $lab->_load_lab_index, this uses the cached version if it is
-# available.
-#
 # Note this is also used by reporting/html_reports
 sub _get_lab_index {
     my ($self, $pkg_type) = @_;
     croak "Undefined (or empty) package type" unless $pkg_type;
-    croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};
-    # Fetch (or load) the index of that type
-    return $self->{'state'}->{$pkg_type} // $self->_load_lab_index ($pkg_type);
-}
+    croak "Unknown package type $pkg_type"
+        unless $SUPPORTED_TYPES{$pkg_type} or $SUPPORTED_VIEWS{$pkg_type};
 
-# Unconditionally (re-)loads the index of packages in the lab of a
-# given type (of packages).
-#
-# $lab->_get_lab_index is generally faster since it uses the cache if
-# available.
-sub _load_lab_index {
-    my ($self, $pkg_type) = @_;
+    # Fetch (or load) the index of that type
+    return $self->{'state'}->{$pkg_type} if exists $self->{'state'}->{$pkg_type};
+
     my $dir = $self->dir;
-    my $manifest = Lintian::Lab::Manifest->new ($pkg_type);
+    my $manifest = Lintian::Lab::Manifest->new ($pkg_type,
+                                                $self->{'state'}->{'GROUP'});
     my $lif = "$dir/info/${pkg_type}-packages";
     $manifest->read_list ($lif);
     $self->{'state'}->{$pkg_type} = $manifest;
@@ -742,7 +745,7 @@ sub _write_manifests {
     while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
         # write_list croaks on error, so no need for "or croak/die"
         $plist->write_list ("$dir/info/${pkg_type}-packages")
-            if $plist->dirty;
+            if $plist->dirty and exists $SUPPORTED_TYPES{$plist->type};
     }
 }
 
