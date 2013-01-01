@@ -335,6 +335,106 @@ sub get_package {
     return wantarray ? @entries : $entries[0];
 }
 
+=item lab_query (QUERY)
+
+Process a given QUERY and return the results from it.  A QUERY is a string
+of the format:
+
+  [TYPE:]NAME[/VERSION[/ARCH]]
+
+TYPE can be one of the regular package type (e.g. "binary") or one of
+the two special values "ALL" (default if omitted) or "GROUP".  If TYPE
+is ALL, then the query is one once for each of package type.
+
+NAME is the name of the package to request.  For GROUP queries, this
+is the name of the source package.  It is not possible to do any kind
+of wildcards in NAME:
+
+VERSION is the version of the package.  For GROUP queries, this is the
+version of the source package.  If omitted or the string '_',
+then any version will match.
+
+ARCH is the architecture of the package.  For GROUP and "source"
+queries, ARCH is ignored (if given).  If ARCH is omitted or the string
+'_', then any package architecture will match.  NB: The ARCH field
+should match the architecture field of the entry (which for
+I<.changes> files usually contains spaces).
+
+lab_query will return a list of L<entries|Lintian::Lab::Entry>
+matching the query.  If no entries match, an empty list will be
+returned.
+
+=cut
+
+sub lab_query {
+    my ($self, $query_orig) = @_;
+    my $query = $query_orig;
+    my $type = 'ALL';
+    my @types = ();
+    my @result;
+    my ($name, $version, $arch);
+
+    if ($query =~ s/^([^:]++)://) {
+        $type = $1;
+        unless (exists $SUPPORTED_TYPES{$type} or
+                exists $SUPPORTED_VIEWS{$type} or
+                $type eq 'ALL') {
+            croak "Unknown/unsupported type ($type) in lab query";
+        }
+    }
+
+    ($name, $version, $arch) = map {
+        # map '_' to undef, which is easier for us to deal with later
+        $_ eq '_' ? undef : $_
+    } split m:/:, $query, 3;
+
+    # arch is not supposed to have "/" => bad query.
+    croak "$query_orig is not a valid Lab query"
+        if defined $arch and $arch =~ m,/, ;
+    # if $name is empty/undef, "." or ".." or contains "_" it is a bad
+    # query as well.
+    croak "$query_orig is not a valid Lab query"
+        if not defined $name or $name =~ m|^\.?\.?$| or $name =~ m,_,;
+
+    # At this point we "probably" have a reasonable query.
+
+    push @types, $type if $type ne 'ALL';
+    push @types, keys %SUPPORTED_TYPES if $type eq 'ALL';
+
+    if ($type eq 'GROUP') {
+        # Ensure all indices have been loaded
+        foreach my $t (keys %SUPPORTED_TYPES) {
+            if (not exists $self->{'state'}->{$t}) {
+                # force load
+                $self->_get_lab_index ($t);
+            }
+        }
+    }
+
+    foreach my $t (@types) {
+        my $index = $self->_get_lab_index ($t);
+        my @keys = ($name);
+        my $searcher = sub {
+            my ($entry) = @_;
+            my $dir;
+            # NB: for GROUP queries $t ne $entry_type
+            my $entry_type = $entry->{'pkg_type'};
+            if (defined $arch and $entry_type ne 'source') {
+                return unless $entry->{'architecture'} eq $arch;
+            }
+            $dir = $self->_pool_path ($entry->{'source'}, $entry_type,
+                                      $entry->{'package'}, $entry->{'version'},
+                                      $entry->{'architecture'});
+            push @result, Lintian::Lab::Entry->new_from_metadata (
+                    $entry_type, $entry, $self, $dir
+                );
+        };
+        push @keys, $version if defined $version;
+        $index->visit_all ($searcher, @keys)
+    }
+    return @result;
+}
+
 =item visit_packages (VISITOR[, TYPE])
 
 Passes each lab entry to VISITOR.  If TYPE is passed, then only
