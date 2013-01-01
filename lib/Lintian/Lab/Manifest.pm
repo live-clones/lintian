@@ -122,6 +122,12 @@ my @SRC_QUERY = (
     'version',
 );
 
+my @GROUP_QUERY = (
+    'source',
+    'version',
+    'identifier',
+);
+
 my @BIN_QUERY = (
     'package',
     'version',
@@ -134,7 +140,7 @@ my @CHG_QUERY = (
     'architecture',
 );
 
-=item new (TYPE)
+=item new (TYPE[, GROUPING])
 
 Creates a new packages list for a certain type of packages.  This type
 defines the format of the files.
@@ -144,15 +150,19 @@ The known types are:
  * changes
  * source
  * udeb
+ * GROUP
+
+If TYPE is GROUP, then GROUPING should be omitted.
 
 =cut
 
 sub new {
-    my ($class, $pkg_type) = @_;
+    my ($class, $pkg_type, $grouping) = @_;
     my $self = {
         'type'  => $pkg_type,
         'dirty' => 0,
         'state' => {},
+        'grouping' => $grouping,
     };
     bless $self, $class;
     return $self;
@@ -203,6 +213,7 @@ croak.
 
 sub read_list {
     my ($self, $file) = @_;
+    croak "Cannot read a GROUP manifest" if $self->type eq 'GROUP';
     my $header;
     my $fields;
     my $qf;
@@ -235,6 +246,7 @@ On error, the contents of FILE are undefined.
 
 sub write_list {
     my ($self, $file) = @_;
+    croak "Cannot write a GROUP manifest" if $self->type eq 'GROUP';
     my ($header, $fields, undef) = $self->_type_to_fields;
     my $visitor;
 
@@ -334,6 +346,8 @@ to ENTRY will not affect the data in the manifest.
 
 sub set {
     my ($self, $entry) = @_;
+    croak "Cannot alter a GROUP manifest directly"
+        if $self->type eq 'GROUP';
     my %pdata;
     my (undef, $fields, $qf) = $self->_type_to_fields;
 
@@ -401,6 +415,13 @@ See L</get (KEYS...)> for the key names.
 
 sub delete {
     my ($self, @keys) = @_;
+    croak "Cannot alter a GROUP manifest directly"
+        if $self->type eq 'GROUP';
+    return $self->_do_delete (@keys);
+}
+
+sub _do_delete {
+    my ($self, @keys) = @_;
     @keys = $self->_make_keys ($keys[0]) if scalar @keys == 1;
     # last key, that is what we will remove :)
     my $lk = pop @keys;
@@ -415,11 +436,16 @@ sub delete {
     }
 
     if (defined $hash && exists $hash->{$lk}) {
-        delete $hash->{$lk};
+        my $entry = delete $hash->{$lk};
         $self->_mark_dirty(1);
-        return 0;
+        if (my $grouping = $self->{'grouping'}) {
+            my @keys = ($entry->{'source'}, $entry->{'source-version'},
+                        $entry->{'identifier'});
+            $grouping->_do_delete  (@keys);
+        }
+        return 1;
     }
-    return 1;
+    return 0;
 }
 
 =item diff (MANIFEST)
@@ -435,6 +461,7 @@ L<Lintian::Lab::ManifestDiff> for more information.
 
 sub diff {
     my ($self, $other) = @_;
+    croak "Cannot diff a GROUP manifest" if $self->type eq 'GROUP';
     my $copy;
     my @changed;
     my @added;
@@ -522,6 +549,7 @@ sub _do_read_file {
 
 sub _make_alias_fields {
     my ($self, $entry) = @_;
+
     # define source-version as alias of version for
     # source packages.
     $entry->{'source-version'} = $entry->{'version'}
@@ -530,6 +558,16 @@ sub _make_alias_fields {
     $entry->{'pkg_path'} = $entry->{'file'};
     $entry->{'package'} = $entry->{'source'}
         unless defined $entry->{'package'};
+
+    $entry->{'pkg_type'} = $self->type;
+
+    unless (defined $entry->{'identifier'}) {
+        my $pkg = $entry->{'package'};
+        my $version = $entry->{'version'};
+        my $id = $self->type . ":$pkg/$version";
+        $id .= '/' . $entry->{'architecture'} if $self->type ne 'source';
+        $entry->{'identifier'} = $id;
+    }
 }
 
 sub _do_get {
@@ -568,6 +606,9 @@ sub _do_set {
     }
     $k = $entry->{$qf->[$qfl]};
     $cur->{$k} = $entry;
+    if (my $grouping = $self->{'grouping'}) {
+        $grouping->_do_set ($grouping->{'state'}, \@GROUP_QUERY, $entry);
+    }
     return 1;
 }
 
@@ -595,6 +636,10 @@ sub _type_to_fields {
         $fields = \@CHG_FILE_FIELDS;
         $qf = \@CHG_QUERY;
         $header = CHGLIST_FORMAT;
+    } elsif ($type eq 'GROUP') {
+        $fields = undef; #N/A
+        $qf = \@GROUP_QUERY;
+        $header = undef; #N/A
     } else {
         croak "Unknown type $type";
     }
