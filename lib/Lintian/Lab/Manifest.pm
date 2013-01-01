@@ -293,6 +293,12 @@ sub visit_all {
     if (@keys) {
         $root = $self->_do_get ($self->{'state'}, @keys);
         return unless $root;
+        if (scalar @$qf == scalar @keys) {
+            # If we are given an exact match, just visit that and
+            # stop.
+            $visitor->($root, @keys);
+            return;
+        }
     } else {
         $root = $self->{'state'};
     }
