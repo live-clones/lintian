@@ -27,6 +27,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * doc/tutorial/Lintian/Tutorial{/WritingChecks}.pod:
     + [NT] Add POD tutorial on writing checks.
 
+  * frontend/lintian:
+    + [NT] Remove "make-shift" lab-query support now that
+      Lintian::Lab supports it.
+
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given
       package appears to be non-free.
@@ -34,6 +38,13 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Re-instate the "TEXTREL" marker.  This fixes a regression
       where shared-libs compiled without pic was not reported.
       Thanks to Dmitry Shachnev for the assistance in debugging this.
+  * lib/Lintian/Lab.pm:
+    + [NT] Add lab_query method to handle lab-queries directly.
+  * lib/Lintian/Lab{,/Manifest}.pm:
+    + [NT] Add support for grouping of manifests.
+  * lib/Lintian/Lab/Manifest.pm:
+    + [NT] Fix an error in visit_all when sufficient keys for an
+      exact look up was given.
   * lib/Lintian/Processable.pm:
     + [NT] Fix issue where packages loaded from the lab indices would
       sometimes get a wrong source-version.
@@ -55,6 +66,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Schedule groups in chunks (default 512 per chunk).
       This makes the Lintian processes shorter and makes memory
       reclaimable sooner.  (Closes: #695839)
+    + [NT] Remove "make-shift" lab-query support now that
+      Lintian::Lab supports it.
   * reporting/html_reports:
     + [NT] Update xrefs to include source version.
     + [NT] Generate a text file suitable for Apache's RewriteMap to
