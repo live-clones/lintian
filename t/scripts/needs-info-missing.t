@@ -49,16 +49,40 @@ for my $module (@MODULES) {
 	if (m/^\s*sub\s+(\w+)/) {
 	    $seen_subs{$1} = 1;
 	}
-	if (m/^\s*\#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/) {
+	# We use "# sub X Needs-Info Y" for "internal" methods and
+	# the "Needs-Info requirements for using X: Y" for "public"
+	# methods.  The latter will appear in generated/processed
+	# documentations.
+	if (m/^\s*\#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/ or
+		m/^\s*Needs-Info\s+requirements\s+for\s+using\s+I\<(\w+)\>\s*:\s*(.*)\s*$/) {
 	    my ($sub, $all_info) = ($1, $2);
 	    $seen_needsinfo{$sub} = 1;
+	    # Allow some L<> linking - it makes the generated
+	    # api-doc's a bit better than just reading the source.
+            $all_info =~ s,L\<[^\>]*/([A-Z0-9a-z_])+[^\>]*>,:$1,g;
+
 	    $all_info =~ s/\s//g;
 	    $all_info =~ s/,,/,/g;
+
+	    if ($all_info =~ m/[A-Z]\</) {
+		push @errors, "$sub has an (unknown/supported) POD formatting instruction\n";
+		next;
+	    }
 	    if (!$all_info) {
 		push @errors, "$sub has empty needs-info\n";
 		next;
 	    }
-	    $all_info =~ s/^<>$//;
+	    # While "none" technically is a valid name for a
+	    # collection, anyone reading:
+	    #
+	    #    Needs-Info requirements for using X: none"
+	    #
+	    #  (or "sub X Needs-Info none" for that matter)
+	    #
+	    # will almost certainly understand that as "there are no
+	    # dependencies".  Also "none" is more human-readable than
+	    # "<>" (which was used previously).
+	    $all_info = '' if $all_info eq 'none';
 	    if (exists($needs_info{$sub})) {
 		if ($all_info ne $needs_info{$sub}) {
 		    $needs_info{$sub} .= " or $all_info";

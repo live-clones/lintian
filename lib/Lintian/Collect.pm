@@ -111,9 +111,10 @@ binary / udeb packages and .changes files.
 
 Returns the name of the package.
 
+Needs-Info requirements for using I<name>: none
+
 =cut
 
-# sub name Needs-Info <>
 sub name {
     my ($self) = @_;
     return $self->{name};
@@ -123,9 +124,10 @@ sub name {
 
 Returns the type of the package.
 
+Needs-Info requirements for using I<type>: none
+
 =cut
 
-# sub type Needs-Info <>
 sub type {
     my ($self) = @_;
     return $self->{type};
@@ -135,9 +137,10 @@ sub type {
 
 Returns the base_dir where all the package information is stored.
 
+Needs-Info requirements for using I<base_dir>: none
+
 =cut
 
-# sub base_dir Needs-Info <>
 sub base_dir {
     my ($self) = @_;
     return $self->{base_dir};
@@ -149,9 +152,10 @@ Return the path to the ENTRY in the lab.  This is a convenience method
 around base_dir.  If ENTRY is not given, this method behaves like
 base_dir.
 
+Needs-Info requirements for using I<lab_data_path>: L</base_dir>
+
 =cut
 
-# sub lab_data_path Needs-Info <>
 sub lab_data_path {
     my ($self, $entry) = @_;
     my $base = $self->base_dir;
@@ -180,9 +184,10 @@ Some checks rely on the presence "source"-field to whitelist some
 packages, so removing this behaviour may cause regressions (see
 bug 640186 for an example).
 
+Needs-Info requirements for using I<field>: none
+
 =cut
 
-# sub field Needs-Info <>
 sub field {
     my ($self, $field, $def) = @_;
     return $self->_get_field ($field, $def);
@@ -197,7 +202,7 @@ sub field {
 # return $def (or undef if $def was not given).
 #
 # It must cache the result if possible, since field and fields are called often.
-# sub _get_field Needs-Info <>
+# sub _get_field Needs-Info none
 sub _get_field {
     my ($self, $field, $def) = @_;
     my $fields;
@@ -229,9 +234,9 @@ sub _get_field {
 Returns a truth value if the package appears to be non-free (based on
 the section field; "non-free/*" and "restricted/*")
 
-=cut
+Needs-Info requirements for using I<is_non_free>: L</field ([FIELD[, DEFAULT]])>
 
-# sub is_non_free Needs-Info <>
+=cut
 
 sub is_non_free {
     my ($self) = @_;

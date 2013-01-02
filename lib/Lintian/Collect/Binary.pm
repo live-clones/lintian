@@ -92,9 +92,10 @@ Nativeness will be judged by its version number.
 If the version number is absent, this will return false (as
 native packages are a lot rarer than non-native ones).
 
+Needs-Info requirements for using I<native>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
 =cut
 
-# sub native Needs-Info :field
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
@@ -116,13 +117,14 @@ object, or undef if the changelog doesn't exist.  The changelog-file
 collection script must have been run to create the changelog file, which
 this method expects to find in F<changelog>.
 
+Needs-Info requirements for using I<changelog>: changelog-file
+
 =cut
 
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
     my $dch = $self->lab_data_path ('changelog');
-    # sub changelog Needs-Info changelog-file
     if (-l $dch || ! -f $dch) {
         $self->{changelog} = undef;
     } else {
@@ -147,9 +149,10 @@ The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
 also apply to this method.  However, as the control.tar.gz is not
 known to contain symlinks, a simple file type check is usually enough.
 
+Needs-Info requirements for using I<control>: bin-pkg-control
+
 =cut
 
-# sub control Needs-Info bin-pkg-control
 sub control {
     my ($self, $file) = @_;
     return $self->_fetch_extracted_dir('control', 'control', $file);
@@ -166,9 +169,10 @@ To get a list of entries in the control.tar.gz, see
 L</sorted_control_index>.  To actually access the underlying file
 (e.g. the contents), use L</control ([FILE])>.
 
+Needs-Info requirements for using I<control_index>: bin-pkg-control
+
 =cut
 
-# sub control_index Needs-Info bin-pkg-control
 sub control_index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data ('control-index', 'control-index',
@@ -184,9 +188,10 @@ to L</control ([FILE])> or L</control_index (FILE)> as is.
 The array will not contain the entry for the "root" of the
 control.tar.gz.
 
+Needs-Info requirements for using I<sorted_control_index>: L<Same as control_index|/control_index (FILE)>
+
 =cut
 
-# sub sorted_control_index Needs-Info :control_index
 sub sorted_control_index {
     my ($self) = @_;
     # control_index does all our work for us, so call it if
@@ -203,9 +208,10 @@ returns an open read handle with no content.
 
 Caller is responsible for closing the handle either way.
 
+Needs-Info requirements for using I<strings>: strings
+
 =cut
 
-# sub strings Needs-Info strings
 sub strings {
     my ($self, $file) = @_;
     my $real = $self->_fetch_extracted_dir ('strings', 'strings', $file);
@@ -223,9 +229,10 @@ Returns a hashref mapping a FILE to its md5sum.  The md5sum is
 computed by Lintian during extraction and is not guaranteed to match
 the md5sum in the "md5sums" control file.
 
+Needs-Info requirements for using I<md5sums>: md5sums
+
 =cut
 
-#  sub md5sums Needs-Info md5sums
 sub md5sums {
     my ($self) = @_;
     return $self->{md5sums} if exists $self->{md5sums};
@@ -283,6 +290,8 @@ look up this table.
 
 =back
 
+Needs-Info requirements for using I<scripts>: scripts
+
 =cut
 
 sub scripts {
@@ -291,7 +300,6 @@ sub scripts {
     my $scrf = $self->lab_data_path ('scripts');
     my %scripts;
     local $_;
-    # sub scripts Needs-Info scripts
     open SCRIPTS, '<', $scrf
         or fail "cannot open scripts $scrf: $!";
     while (<SCRIPTS>) {
@@ -319,9 +327,10 @@ Returns a hashref mapping a FILE to the data collected by objdump-info
 or C<undef> if no data is available for that FILE.  Data is generally
 only collected for ELF files.
 
+Needs-Info requirements for using I<objdump_info>: objdump-info
+
 =cut
 
-# Returns the information from collect/objdump-info
 sub objdump_info {
     my ($self) = @_;
     return $self->{objdump_info} if exists $self->{objdump_info};
@@ -329,7 +338,6 @@ sub objdump_info {
     my %objdump_info;
     my ($dynsyms, $file);
     local $_;
-    # sub objdump_info Needs-Info objdump-info
     my $fd = open_gz ($objf)
         or fail "cannot open $objf: $!";
     foreach my $pg (parse_dpkg_control ($fd)) {
@@ -400,9 +408,10 @@ Returns a hashref mapping a FILE to its hardening issues.
 NB: This is generally only useful for checks/binaries to emit the
 hardening-no-* tags.
 
+Needs-Info requirements for using I<hardening_info>: hardening-info
+
 =cut
 
-# sub hardening_info Needs-Info hardening-info
 sub hardening_info {
     my ($self) = @_;
     return $self->{hardening_info} if exists $self->{hardening_info};
@@ -455,9 +464,10 @@ is its "Major class version" for Java or "-" if it is not a class file.
 
 =back
 
+Needs-Info requirements for using I<java_info>: java-info
+
 =cut
 
-# sub java_info Needs-Info java-info
 sub java_info {
     my ($self) = @_;
     return $self->{java_info} if exists $self->{java_info};
@@ -508,7 +518,7 @@ sub java_info {
 
 =item relation (FIELD)
 
-Returns a Lintian::Relation object for the specified FIELD, which should
+Returns a L<Lintian::Relation> object for the specified FIELD, which should
 be one of the possible relationship fields of a Debian package or one of
 the following special values:
 
@@ -531,9 +541,10 @@ The concatenation of Recommends and Suggests.
 If FIELD isn't present in the package, the returned Lintian::Relation
 object will be empty (always satisfied and implies nothing).
 
+Needs-Info requirements for using I<relation>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
 =cut
 
-# sub relation Needs-Info :field
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -586,9 +597,9 @@ Guessed from package description, section or package name.
 
 =back
 
-=cut
+Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
 
-# sub is_pkg_class Needs-Info :field
+=cut
 
 {
     # Regexes to try against the package description to find metapackages or
@@ -621,9 +632,10 @@ Note that FILE should be the filename relative to the package root
 file does relative paths, they are assumed to be relative to the
 package root as well (and used without warning).
 
+Needs-Info requirements for using I<is_conffile>: L<Same as control|/control ([FILE])>
+
 =cut
 
-# sub is_conffile Needs-Info :control
 sub is_conffile {
     my ($self, $file) = @_;
     if (exists $self->{'conffiles'}) {

@@ -94,9 +94,10 @@ object, or C<undef> if the changelog is a symlink or doesn't exist.  The
 debfiles collection script must have been run to create the changelog
 file, which this method expects to find in F<debfiles/changelog>.
 
+Needs-Info requirements for using I<changelog>: L<Same as debfiles|/debfiles ([FILE])>
+
 =cut
 
-# sub changelog Needs-Info :debfiles
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
@@ -117,9 +118,10 @@ Returns the path to diffstat output run on the Debian packaging diff
 packages without a "diff.gz" component, this returns the path to an
 empty file (this may be a device like /dev/null).
 
+Needs-Info requirements for using I<diffstat>: diffstat
+
 =cut
 
-#  sub diffstat Needs-Info diffstat
 sub diffstat {
     my ($self) = @_;
     return $self->{diffstat} if exists $self->{diffstat};
@@ -143,9 +145,10 @@ ones).
 Note if the source format is missing, it is assumed to be an 1.0
 package.
 
+Needs-Info requirements for using I<native>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
 =cut
 
-# sub native Needs-Info :field
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
@@ -176,9 +179,10 @@ sub native {
 Returns a list of the binary and udeb packages listed in the
 F<debian/control>.
 
+Needs-Info requirements for using I<binaries>: L<Same as binary_package_type|/binary_package_type (BINARY)>
+
 =cut
 
-# sub binaries Needs-Info :binary_package_type
 sub binaries {
     my ($self) = @_;
     # binary_package_type does all the work for us.
@@ -195,9 +199,9 @@ X-Package-Type) field.  If the field is omitted, the default value
 If the BINARY is not a binary listed in the source packages
 F<debian/control> file, this method return C<undef>.
 
-=cut
+Needs-Info requirements for using I<binary_package_type>: L<Same as binary_field|/binary_field (PACKAGE[, FIELD[, DEFAULT]])>
 
-# sub binary_package_type Needs-Info :binary_field
+=cut
 
 sub binary_package_type {
     my ($self, $binary) = @_;
@@ -238,9 +242,13 @@ F<debfiles/control> file available.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
+Needs-Info requirements for using I<source_field>: L<Same as debfiles|/debfiles ([FILE])>
+
 =cut
 
-# sub source_field Needs-Info :_load_dctrl
+# NB: We don't say "same as _load_ctrl" in the above, because
+# _load_ctrl has no POD and would not appear in the generated
+# API-docs.
 sub source_field {
     my ($self, $field, $def) = @_;
     $self->_load_dctrl unless exists $self->{source_field};
@@ -260,9 +268,10 @@ NB: If sorted_index includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is
 native).
 
+Needs-Info requirements for using I<orig_index>: src-orig-index
+
 =cut
 
-# sub orig_index Needs-Info src-orig-index
 sub orig_index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data ('orig-index', 'src-orig-index', undef, $file);
@@ -281,9 +290,10 @@ NB: If sorted_orig_index includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is
 native).
 
+Needs-Info requirements for using I<sorted_orig_index>: L<Same as orig_index|/orig_index ([FILE])>
+
 =cut
 
-# sub sorted_orig_index Needs-Info :orig_index
 sub sorted_orig_index {
     my ($self) = @_;
     # orig_index does all our work for us, so call it if
@@ -310,9 +320,13 @@ C<undef> regardless of FIELD and DEFAULT.
 The debfiles collection script must have been run to make the
 F<debfiles/control> file available.
 
+Needs-Info requirements for using I<binary_field>: L<Same as debfiles|/debfiles ([FILE])>
+
 =cut
 
-# sub binary_field Needs-Info :_load_dctrl
+# NB: We don't say "same as _load_ctrl" in the above, because
+# _load_ctrl has no POD and would not appear in the generated
+# API-docs.
 sub binary_field {
     my ($self, $package, $field, $def) = @_;
     $self->_load_dctrl unless exists $self->{binary_field};
@@ -410,9 +424,10 @@ object will be empty (always satisfied and implies nothing).
 Any substvars in F<debian/control> will be represented in the returned
 relation as packages named after the substvar.
 
+Needs-Info requirements for using I<binary_relation>: L<Same as binary_field|/binary_field (PACKAGE[, FIELD[, DEFAULT]])>
+
 =cut
 
-# sub binary_relation Needs-Info :binary_field
 sub binary_relation {
     my ($self, $package, $field) = @_;
     $field = lc $field;
@@ -460,9 +475,10 @@ The concatenation of Build-Conflicts and Build-Conflicts-Indep.
 If FIELD isn't present in the package, the returned Lintian::Relation
 object will be empty (always satisfied and implies nothing).
 
+Needs-Info requirements for using I<relation>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
 =cut
 
-# sub relation Needs-Info :field
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -493,12 +509,10 @@ sub relation {
 The same as L</relation (FIELD)>, but ignores architecture
 restrictions in the FIELD field.
 
+Needs-Info requirements for using I<relation_noarch>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
 =cut
 
-# Similar to relation(), return a Lintian::Relation object for the given build
-# relationship field, but ignore architecture restrictions.  It supports the
-# same special field names.
-# sub relation_noarch Needs-Info :field
 sub relation_noarch {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -537,12 +551,10 @@ entry.
 The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
 also apply to this method.
 
+Needs-Info requirements for using I<debfiles>: debfiles
+
 =cut
 
-# Like unpacked except this only returns the contents of debian/ from a source
-# package.
-#
-# sub debfiles Needs-Info debfiles
 sub debfiles {
     my ($self, $file) = @_;
     return $self->_fetch_extracted_dir('debfiles', 'debfiles', $file);
@@ -588,13 +600,10 @@ question).
 Third, hardlinking information is lost and no attempt has been made
 to restore it.
 
+Needs-Info requirements for using I<index>: index
+
 =cut
 
-# Overridden method; please see Lintian::Collect::Package::index for
-# more information.
-#
-#
-# sub index Needs-Info index
 sub index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data('index', 'index', undef, $file);

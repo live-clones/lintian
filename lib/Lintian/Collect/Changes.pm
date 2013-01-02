@@ -116,9 +116,10 @@ checksum.
 
 =back
 
+Needs-Info requirements for using I<files>: L<Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
 =cut
 
-# sub files Needs-Info :fields
 sub files {
     my ($self) = @_;
 

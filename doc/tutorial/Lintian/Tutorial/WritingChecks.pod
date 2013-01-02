@@ -490,19 +490,17 @@ listed in Needs-Info.  See L<Keeping Needs-Info up to date>.
 =head2 Keeping Needs-Info up to date
 
 Keeping the "Needs-Info" field of your I<.desc> file is a bit of
-manual work.  Whenever you use something from an
-L<info|Lintian::Collect> object, find the relevant method in the
-source of that module.  Usually just above the method name (but
-something in the middle of its code) you will find a comment saying:
+manual work.  In the API description for the method there will
+generally be a line looking something like:
 
-  # sub methodx Needs-Info Y
+  Needs-Info requirements for using methodx: Y
 
 Which means generally that the methodx requires Y to work.  Here Y is a
 comma separated list and each element of Y basically falls into 3 cases.
 
 =over 4
 
-=item The element is a diamond (i.e. <>)
+=item * The element is a the word I<none>
 
 In this case, the method has no "external" requirements and can be
 used without any changes to your Needs-Info.  The "field" method
@@ -510,21 +508,26 @@ is an example of this.
 
 This only makes sense if it is the only element in the list.
 
-=item The element is method prefixed with a colon (e.g. ":index")
+=item * The element is a link to a method
 
 In this case, the method uses another method to do is job.  An example
-is the "sorted_index" method, which uses the "index" method.  So using
-"sorted_index" has the same requirements as using "index".
+is the
+L<sorted_control_index|Lintian::Collect::Binary/sorted_control_index>
+method, which uses the
+L<control_index|Lintian::Collect::Binary/control_index (FILE)>
+method.  So using I<sorted_control_index> has the same requirements as
+using I<control_index>.
 
-=item The element is the name of a collection (e.g. "index").
+=item * The element is the name of a collection (e.g. "control_index").
 
 In this case, the method needs the given collection to be run.  So to
-use (e.g.) "index", you have to put "index" in your Needs-Info.
+use (e.g.) L<control_index|Lintian::Collect::Binary/control_index (FILE)>,
+you have to put "bin-pkg-control" in your Needs-Info.
 
 =back
 
 CAVEAT: Methods can have different requirements based on the type of
 package!  Example being "changelog", which requires "changelog-file"
-in binary packages and ":debfiles" in source packages.
+in binary packages and "Same as debfiles" in source packages.
 
 =cut

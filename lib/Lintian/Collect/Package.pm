@@ -108,9 +108,10 @@ To get a list of entries in the package or the file meta data of the
 entries (as L<path objects|Lintian::Path>), see L</sorted_index> and
 L</index (FILE)>.
 
+Needs-Info requirements for using I<unpacked>: unpacked
+
 =cut
 
-# sub unpacked Needs-Info unpacked
 sub unpacked {
     my ($self, $file) = @_;
     return $self->_fetch_extracted_dir('unpacked', 'unpacked', $file);
@@ -122,6 +123,8 @@ Returns the output of file(1) for FILE (if it exists) or C<undef>.
 
 NB: The value may have been calibrated by Lintian.  A notorious example
 is gzip files, where file(1) can be unreliable at times (see #620289)
+
+Needs-Info requirements for using I<file_info>: file-info
 
 =cut
 
@@ -135,7 +138,6 @@ sub file_info {
     my %file_info;
     my $path = $self->lab_data_path ('file-info.gz');
     local $_;
-    # sub file_info Needs-Info file-info
     my $idx = open_gz ($path)
         or croak "cannot open $path: $!";
     while (<$idx>) {
@@ -168,9 +170,10 @@ To get a list of entries in the package, see L</sorted_index>.  To
 actually access the underlying file (e.g. the contents), use
 L</unpacked ([FILE])>.
 
+Needs-Info requirements for using I<index>: index
+
 =cut
 
-# sub index Needs-Info index
 sub index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data('index', 'index', 'index-owner-id', $file);
@@ -187,9 +190,10 @@ The array will not contain the entry for the "root" of the package.
 NB: For source packages, please see the
 L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
 
+Needs-Info requirements for using I<sorted_index>: L<Same as index|/index (FILE)>
+
 =cut
 
-#  sub sorted_index Needs-Info :index
 sub sorted_index {
     my ($self) = @_;
     # index does all our work for us, so call it if sorted_index has
@@ -200,7 +204,7 @@ sub sorted_index {
 
 # Backing method for unpacked, debfiles and others; this is not a part of the
 # API.
-# sub _fetch_extracted_dir Needs-Info <>
+# sub _fetch_extracted_dir Needs-Info none
 sub _fetch_extracted_dir {
     my ($self, $field, $dirname, $file) = @_;
     my $dir = $self->{$field};
@@ -220,7 +224,7 @@ sub _fetch_extracted_dir {
 # Strip an extra layer quoting in index file names and optionally
 # remove an initial "./" if any.
 #
-# sub _dequote_name Needs-Info <>
+# sub _dequote_name Needs-Info none
 sub _dequote_name {
     my ($name, $slsd) = @_;
     $slsd = 1 unless defined $slsd; # Remove initial ./ by default
@@ -231,7 +235,7 @@ sub _dequote_name {
 }
 
 # Backing method for index and others; this is not a part of the API.
-# sub _fetch_index_data Needs-Info <>
+# sub _fetch_index_data Needs-Info none
 sub _fetch_index_data {
     my ($self, $field, $index, $indexown, $file) = @_;
     if (exists $self->{$index}) {
