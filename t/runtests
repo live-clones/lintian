@@ -65,12 +65,12 @@ use Lintian::Util qw(delete_dir fail read_dpkg_control slurp_entire_file);
 our $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
-our $DPKG_BUILDPACKAGE = 'dpkg-buildpackage -rfakeroot -us -uc -d'
-    . ' -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING';
+our @DPKG_BUILDPACKAGE_CMD = (qw(dpkg-buildpackage -rfakeroot -us -uc -d),
+    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING));
 if (`dpkg-source --help` =~ m,\s--commit\s,) {
     # dpkg (>= 1.16.1) doesn't automatically create patches anymore, unless
     # explicitly asked to do so:
-    $DPKG_BUILDPACKAGE .= ' --source-option=--auto-commit';
+    push @DPKG_BUILDPACKAGE_CMD, '--source-option=--auto-commit';
 }
 our $STANDARDS_VERSION = '3.9.4';
 our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
@@ -405,8 +405,7 @@ sub test_package {
             msg_print 'running pre_upstream hook... ' if $VERBOSE;
             runsystem("$origdir/pre_upstream", $targetdir);
         }
-        runsystem("cd $rundir && ".
-                  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
+        chdir_runcmd ($rundir, ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
         if ( -f "$origdir/debian/debian/source/format" ) {
             my $format = slurp_entire_file ("$origdir/debian/debian/source/format");
             chomp $format;
@@ -425,7 +424,12 @@ sub test_package {
     }
 
     unless ($is_native || -e "$targetdir/debian/watch") {
-        runsystem("echo >$targetdir/debian/watch");
+        my $f = "$targetdir/debian/watch";
+        # Create a watch file with "content" as lintian checks for
+        # non-zero file size.
+        open my $fd, '>', $f or fail "open $f: $!";
+        print {$fd} "# Empty watch file\n";
+        close $fd or fail "close $f: $!";
     }
     if (-x "$origdir/pre_build") {
         msg_print 'running pre_build hook... ' if $VERBOSE;
@@ -438,7 +442,7 @@ sub test_package {
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    runsystem_ok("sed -ri -f $origdir/post_test $rundir/tags.$pkg")
+    runsystem_ok('sed', '-ri', '-f', "$origdir/post_test", "$rundir/tags.$pkg")
         if -e "$origdir/post_test";
 
     if ( -x "$origdir/test_calibration" ) {
@@ -456,10 +460,10 @@ sub _builder_tests {
     my ($testdata, $testdir, $log) = @_;
     my $pkg = $testdata->{srcpkg};
     msg_print 'building... ';
-    my $res = system("cd $testdir && $DPKG_BUILDPACKAGE >$log 2>&1");
+    my $res = chdir_runcmd ($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
     if ($res){
         dump_log($pkg, $log) if $DUMP_LOGS;
-        fail("cd $testdir && $DPKG_BUILDPACKAGE >$log 2>&1");
+        fail("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
     }
     my $version = $testdata->{version};
     $version =~ s/^(\d+)://;
@@ -472,14 +476,14 @@ sub run_lintian {
     my ($testdata, $file, $out) = @_;
     msg_print 'testing... ';
     my $status = 0;
-    # Quote (A test use -L <=, which blows up if we don't... plus it is safer that way)
-    my @options = map { quotemeta $_ } split(' ', $testdata->{options}//'');
+    my @options = split(' ', $testdata->{options}//'');
     my $cmd;
     my $ret;
     unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
-    $cmd = "$LINTIAN " . join(' ', @options). " $file 2>&1";
-    if (open my $in, '-|', $cmd) {
+    my $pid = open my $in, '-|';
+    fail "pipe/fork error: $!" unless defined $pid;
+    if ($pid) {
         my @data = <$in>;
         close $in;
         $status = ($? >> 8) & 255;
@@ -494,7 +498,8 @@ sub run_lintian {
             close $fd or fail "closing $out: $!";
         }
     } else {
-        fail ("pipe+fork: $!");
+        open STDERR, '>&', STDOUT or fail "redirect STDERR failed: $!";
+        exec {$LINTIAN} $LINTIAN, @options, $file or fail "exec failed: $!";
     }
     return 1;
 }
@@ -622,7 +627,7 @@ sub generic_test_runner {
     }
 
     msg_print 'building... ';
-    my $res = system("cd $targetdir && fakeroot make >../build.$test 2>&1");
+    my $res = chdir_runcmd($targetdir, ['fakeroot', 'make'], "../build.$test");
     if ($res){
         dump_log($test, "$RUNDIR/build.$test") if $DUMP_LOGS;
         fail("cd $targetdir && fakeroot make >../build.$test 2>&1");
@@ -822,6 +827,22 @@ sub runsystem_ok {
     $errcode == 0 or $errcode == (1 << 8)
         or fail("failed: @_\n");
     return $errcode == 0;
+}
+
+sub chdir_runcmd {
+    my ($dir, $cmd, $log) = @_;
+    my $pid = fork // fail "fork: $!";
+    if ($pid) {
+        waitpid $pid, 0;
+        return $?;
+    } else {
+        $log //= '/dev/null';
+        chdir $dir or fail "chdir $dir failed: $!";
+        open STDIN, '<', '/dev/null' or fail "redirect stdin failed: $!";
+        open STDOUT, '>', $log or fail "redirect stdout to $log failed: $!";
+        open STDERR, '>&', STDOUT or fail "redirect stderr failed: $!";
+        exec { $cmd->[0] } @$cmd or fail 'exec ' . @$cmd . " failed: $!";
+    }
 }
 
 sub fill_in_tmpl {
