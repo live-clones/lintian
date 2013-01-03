@@ -21,6 +21,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
       the report.  (Closes: #693918)
 
+  * collection/strings:
+    + [NT] Fix a regression in filtering out "debug" ELF binaries.
+
   * debian/rules:
     + [NT] Include the new Tutorial pods in the "api-doc" target.
 

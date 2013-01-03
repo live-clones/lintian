@@ -66,7 +66,7 @@ foreach my $bin ($info->sorted_index) {
     next unless $finfo =~ m/\bELF\b/o;
     print ELF_INDEX "$bin\n";
 
-    next if ($bin =~ m,^/usr/lib/debug/,);
+    next if $bin =~ m,^usr/lib/debug/,;
     if ($bin =~ m/[:\n\r]/) {
         # Do these "interesting cases" manual
         push @manual, $bin;
