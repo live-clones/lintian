@@ -1414,12 +1414,12 @@ sub handle_lab_query {
     # "britney"-like format - note this catches the old style, where only the
     # package name was specified.
     # Check if it starts with a type specifier (i.e. binary:eclipse/3.5.2-1/amd64)
-    if ($query =~ m,^([^:]+):(.*),) {
+    if ($query =~ m,^([a-z]+):(.*),i) {
         ($type, $query) = ($1, $2);
     }
     # Split on /
     ($pkg, $version, $arch) = split m,/,o, $query, 3;
-    if ($pkg =~ m|^\.{0,2}$| or $pkg =~ m,_, or
+    if ($pkg =~ m|^\.{0,2}$| or $pkg =~ m,[_:], or
           (defined $arch and $arch =~ m,/,) ) {
         # Technically, a string like "../somewhere/else",
         # "somepkg_version_arch.deb", "/somewhere/somepkg.deb" or even
@@ -1433,11 +1433,26 @@ sub handle_lab_query {
     }
 
     if (not defined $type and $pkg_mode ne 'auto') {
+        # No type specified and "auto" is not the default so we
+        # pre-append the default type.
         $query = "$pkg_mode:$query";
         $type = $pkg_mode;
+    } else {
+        # Type specified or no type and "auto" being the default.  In
+        # this case we just process the original query.
+        $query = $orig;
     }
 
-    @res = $LAB->lab_query ($query);
+    eval {
+        @res = $LAB->lab_query ($query);
+    };
+    if (my $err = $@) {
+        $err =~ s/ at .*? line \d+\s*$//;
+        warning ("Bad lab-query: $orig");
+        warning ("Error: $err");
+        $exit_code = 2;
+        return ();
+    }
 
     if (@res) {
         foreach my $p (@res) {

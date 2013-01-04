@@ -374,7 +374,7 @@ sub lab_query {
     my @result;
     my ($name, $version, $arch);
 
-    if ($query =~ s/^([^:]++)://) {
+    if ($query =~ s/^([a-z]++)://i) {
         $type = $1;
         unless (exists $SUPPORTED_TYPES{$type} or
                 exists $SUPPORTED_VIEWS{$type} or
@@ -391,10 +391,10 @@ sub lab_query {
     # arch is not supposed to have "/" => bad query.
     croak "$query_orig is not a valid Lab query"
         if defined $arch and $arch =~ m,/, ;
-    # if $name is empty/undef, "." or ".." or contains "_" it is a bad
-    # query as well.
+    # if $name is empty/undef, ".", ".." or contains "_" or ":" it is
+    # a bad query as well.
     croak "$query_orig is not a valid Lab query"
-        if not defined $name or $name =~ m|^\.?\.?$| or $name =~ m,_,;
+        if not defined $name or $name =~ m|^\.?\.?$| or $name =~ m,[_:],;
 
     # At this point we "probably" have a reasonable query.
 
