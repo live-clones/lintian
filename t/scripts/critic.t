@@ -31,7 +31,7 @@ for my $check (@CHECKS) {
 }
 
 subtest 'All scripts with correct shebang or extension' => sub {
-    all_critic_ok(qw(collection frontend lib unpack));
+    all_critic_ok(qw(collection frontend lib));
 };
 
 sub should_skip() {

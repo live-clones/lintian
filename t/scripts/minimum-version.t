@@ -14,7 +14,7 @@ plan skip_all => 'Test::MinimumVersion required to run this test' if $@;
 # sarge was released with 5.8.4, etch with 5.8.8, lenny with 5.10.0
 our $REQUIRED = 'v5.10.0';
 
-our @PATHS = qw(checks collection frontend lib unpack);
+our @PATHS = qw(checks collection frontend lib);
 
 # It creates as many threads as elements in @PATHS
 for my $path (@PATHS) {
