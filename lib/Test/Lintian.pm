@@ -141,12 +141,23 @@ sub test_check_desc {
     load_profile_for_test ();
 
     foreach my $desc_file (map { _find_check ($find_opt, $_) } @descs) {
-        my ($header, @tagpara) = read_dpkg_control ($desc_file);
+        my ($header, @tagpara);
+        eval {
+            ($header, @tagpara) = read_dpkg_control ($desc_file);
+        };
+        if (my $err = $@) {
+            $err =~ s/ at .*? line \d+\s*\n//;
+            $builder->ok (0, "Cannot parse $desc_file");
+            $builder->diag ("Error: $err");
+            next;
+        }
         my $cname = $header->{'check-script'}//'';
         my $ctype = $header->{'type'} // '';
         my $cinfo = $header->{'info'} // '';
         my $needs = $header->{'needs-info'} // '';
         my $i = 1; # paragraph counter.
+        $builder->ok (1, "Can parse check $desc_file");
+
         $builder->isnt_eq ($cname, '', "Check has a name ($desc_file)");
         $cname = '<missing>' if $cname eq '';
         $tested++;
@@ -351,7 +362,17 @@ sub test_load_checks {
     load_profile_for_test ();
 
     foreach my $checkname (@checknames) {
-        my $cs = Lintian::CheckScript->new ($dir, $checkname);
+        my $cs;
+        eval {
+            $cs = Lintian::CheckScript->new ($dir, $checkname);
+        };
+        if (my $err = $@) {
+            $err =~ s/ at .*? line \d+\s*\n//;
+            $builder->ok (0, "Cannot parse ${checkname}.desc");
+            $builder->diag ("Error: $err\n");
+            $builder->skip ("Cannot parse ${checkname}.desc");
+            next;
+        }
         my $cname = $cs->name;
         my $ppkg = $cname;
         my $path = $cs->script_path;
@@ -487,7 +508,16 @@ sub test_tags_implemented {
     }
 
     foreach my $checkname (@checknames) {
-        my $cs = Lintian::CheckScript->new ($dir, $checkname);
+        my $cs;
+        eval {
+            $cs = Lintian::CheckScript->new ($dir, $checkname);
+        };
+        if (my $err = $@) {
+            $err =~ s/ at .*? line \d+\s*\n//;
+            $builder->ok (0, "Cannot parse ${checkname}.desc");
+            $builder->diag ("Error: $err\n");
+            next;
+        }
         my $cname = $cs->name;
         my $check = $cs->script_path;
         my @tags = ();
