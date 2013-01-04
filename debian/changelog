@@ -775,7 +775,7 @@ lintian (2.5.7) unstable; urgency=low
       Thanks to Arno Töll for the patch.
     + [NT] Do not emit unusual-interpreter if the package provides the
       interpreter itself.
-    + [NT] Ignore the lack of exec bit on th debconf shell modules.
+    + [NT] Ignore the lack of exec bit on the debconf shell modules.
   * checks/standards-version.desc:
     + [NT] Add references to the Policy upgrading checklist.  Thanks to
       Simon Paillard for the patch.
@@ -1047,7 +1047,7 @@ lintian (2.5.5) unstable; urgency=low
     + [JW] Include ssh:// as a valid protocol for hg.
       (Closes: #655907)
     + [NT] Ignore self relations in Replaces and Provides.  This
-      is allowed according to §7.6.2.  (Closes: #657034)
+      is allowed according to Policy §7.6.2.  (Closes: #657034)
     + [NT] Applied patch from intrigeri to remove "not-full-name"
       tags.  (Closes: #658031)
   * checks/files:
@@ -1348,7 +1348,7 @@ lintian (2.5.4) unstable; urgency=medium
     + [JW] Fixed a false-positive when using the multiarch dir in
       RPATH.  (Closes: #646817)
   * checks/changes-file{,.desc}:
-    + [NT] Added the "precise" to the list of Ubuntu distributions.
+    + [NT] Added "precise" to the list of Ubuntu distributions.
       Thanks to Loïc Minier for the patch.
     + [NT] Accept release codename in the changes file.  Thanks to
       Julien Cristau for the report.  (Closes: #637540)
@@ -1414,7 +1414,6 @@ lintian (2.5.4) unstable; urgency=medium
       font policy.  (Closes: #646838)
     + [JW,NT] Check that gzip files are compressed with -n in
       "Multi-Arch: same" packages.  (Closes: #649329)
-      packages.
     + [NT] Corrected perl4 check, thanks to Dominic Hargreaves for the
       report and the patch.
   * checks/init.d{,.desc}:
@@ -2040,7 +2039,7 @@ lintian (2.5.2) unstable; urgency=low
       "jar-not-in-usr-share" check.  (Closes: #635495)
     + [NT] Fixed a typo in a tag description.
   * checks/menu-format.desc:
-    + [NT] Mentioned how to git rid of the CR characters in the
+    + [NT] Mentioned how to get rid of the CR characters in the
       desktop file.  Thanks to Jakub Wilk.
   * checks/nmu:
     + [NT] "LowThresholdNMU" will now work as an alternative to
@@ -2234,7 +2233,7 @@ lintian (2.5.2) unstable; urgency=low
     + [NT] New files.
 
   * unpack/list-binpkg:
-    + [NT] Added a -u option to make it fetch udebs insteaad of
+    + [NT] Added a -u option to make it fetch udebs instead of
       regular binaries.  This and the udeb/bin format merge makes
       list-udebpkg obsolete.
   * unpack/list-udebpkg:
