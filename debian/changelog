@@ -26,6 +26,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 
+  * data/fields/obsolete-packages:
+    + [NT] Apply patch from Guillem Jover to add fuse-utils as an
+      obsolete package.  (Closes: #697534)
   * data/files/locale-codes:
     + [NT] Refresh against sid data files.
   * data/menu-format/add-categories:

@@ -60,6 +60,9 @@ xutils
 # Last seen in Squeeze
 default-jdk-builddep
 
+# Last seen in Wheezy
+fuse-utils
+
 # See: http://wiki.debian.org/Teams/DebianPerlGroup/OpenTasks/Transitions/DigestSHA1ToDigestSHA
 libdigest-sha1-perl
 
