@@ -13,7 +13,7 @@ my %jobs;
 while ($c) {
     $cmd = Lintian::Command::Simple->new();
     $cmd->background("sleep", 1);
-    $jobs{$c} = $cmd;
+    $jobs{$cmd->pid} = $cmd;
     $c--;
 }
 
@@ -29,13 +29,13 @@ is($c, 4, "4 jobs were started, 4 reaped");
 while ($c) {
     $cmd = Lintian::Command::Simple->new();
     $cmd->background("sleep", 1);
-    $jobs{"Job $c"} = $cmd;
+    $jobs{$cmd->pid} = $cmd;
     $c--;
 }
 
-my $name;
-while (($name, $cmd) = Lintian::Command::Simple::wait(\%jobs)) {
-    is($cmd->status(), 0, "$name terminated successfully");
+my $pid;
+while (($pid, $cmd) = Lintian::Command::Simple::wait(\%jobs)) {
+    is($cmd->status(), 0, "Pid $pid terminated successfully");
     $c++;
 }
 
@@ -45,12 +45,12 @@ is($c, 4, "4 more jobs were started, 4 reaped");
 # (i.e. undef is returned and no process is reaped)
 
 %jobs = ();
-my $pid = Lintian::Command::Simple::background("true");
+$pid = Lintian::Command::Simple::background("true");
 is(Lintian::Command::Simple::wait(\%jobs), undef,
     "With an empty hash ref, wait() returns undef");
 
 is(Lintian::Command::Simple::wait($pid), 0,
-    "With an empty hash ref, wait() doesn't reap");
+    "With a pid, wait() does reap");
 
 # Again but now in list context
 

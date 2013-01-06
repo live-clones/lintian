@@ -56,7 +56,7 @@ $cmd = Lintian::Command::Simple->new();
 
 $cmd->background("true");
 
-is(Lintian::Command::Simple::wait(), 0, 'Another wait() call reaps an OO job');
+is(wait(), $cmd->pid, 'Another wait() call reaps an OO job');
 
 is($cmd->wait(), -1, "We only know the job is gone, no return status");
 

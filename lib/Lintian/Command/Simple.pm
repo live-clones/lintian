@@ -32,7 +32,7 @@ Lintian::Command::Simple - Run commands without pipes
 
     # Start a command in the background:
     Lintian::Command::Simple::background("sleep", 10);
-    print (Lintian::Command::Simple::wait())? "success" : "failure";
+    print wait() > 0 ? "success" : "failure";
 
     # Using the OO interface
 
@@ -233,33 +233,41 @@ sub background_dir {
     }
 }
 
-=item wait([pid|hashref])
+=item wait (pid|hashref[, nohang])
+
+=item wait ([nohang])
 
 When called as a function:
 If C<pid> is specified, it waits until the given process (which must be
-a child of the current process) returns. If C<pid> is not specified, it
-waits for any child process to finish and returns.
+a child of the current process) returns.  If C<nohang> is a truth value,
+then the function will attempt to reap the process without waiting for
+it.
+
+If C<pid> is not specified, the function returns -1 and $! is set to
+EINVAL.
 
 When called as a method:
-It takes no argument. It waits for the previously background()ed process to
-return.
+It takes one optional argument C<nohang>. It waits for the previously
+background()ed process to return.  If C<nohang> is a truth value, it
+will do a non-blocking attempt to reap the process.  If the process
+is still running it will return immediately with -1 and $! set to 0.
 
 The return value is either -1, probably indicating an error, or the
 return status of the process as it would be seen from a shell script.
-See 'perldoc -f wait' for more details about the possible meanings of
--1.
+See 'perldoc -f waitpid' for more details about the possible meanings
+of -1.
 
 
 To reap one from many:
 
 When starting multiple processes asynchronously, it is common to wait
 until the first is done. While the CORE::wait() function is usually
-used for that very pourpose, it does not provide the desired results
+used for that very purpose, it does not provide the desired results
 when the processes were started via the OO interface.
 
 To help with this task, wait() can take a hash ref where the value of
 each entry is an instance of Lintian::Command::Simple. The key of each
-entry is irrelevant and is not used for any pourpose.
+entry is the pid of that command (i.e. $cmd->pid).
 
 Under this mode, wait() waits until any child process is done and if the
 deceased process is one of the set passed via the hash ref it marks it
@@ -269,14 +277,19 @@ The results and return value are undefined when under this mode wait()
 in the hash ref.
 
 The return value in scalar context is the instance of the object that
-started the now deceased process. In list context, the key and value
+started the now deceased process. In list context, the pid and value
 (i.e. the object instance) are returned.
-Whenever CORE::wait() would return -1, wait() returns undef or a null
+Whenever CORE::waitpid() would return -1, wait() returns undef or a null
 value so that it is safe to:
 
     while($cmd = Lintian::Command::Simple::wait(\%hash)) { something; }
 
 The same is true whenever the hash reference points to an empty hash.
+
+If C<nohang> is also given, wait will attempt to reap any child
+process in non-blockingly.  If no child can be reaped, it will
+immediately return (like there were no more processes left) instead of
+waiting.
 
 Passing any other kind of reference or value as arguments has undefined
 results.
@@ -297,16 +310,25 @@ sub wait {
     $nohang //= 0;
 
     if (defined($pid) && !ref $pid) {
-        $self->{'pid'} = undef
-            if defined($self);
-
         my $ret = waitpid($pid, $nohang);
         my $status = $?;
+        my $reaped = 0;
 
-        $self->{'status'} = $?
-            if defined($self);
+        $reaped = 1 unless $ret == -1 or ($ret == 0 and $nohang);
 
-        return ($ret == -1)? -1 : $status >> 8;
+        if (defined $self) {
+            # Clear the PID field if we reaped the child or the child
+            # no longer exists.
+            $self->{'pid'} = undef
+                if $reaped or ($ret == -1 and $! == POSIX::ECHILD);
+            # Set the status only if we reaped the child
+            $self->{'status'} = $status
+                if $reaped;
+        }
+
+        $! = 0 if $ret == 0 and $nohang;
+
+        return $reaped ? $status >> 8 : -1;
     } elsif (defined($pid)) {
         # in this case $pid is a ref (must be a hash ref)
         # rename it accordingly:
@@ -327,25 +349,19 @@ sub wait {
             return;
         }
 
-        while (my ($k, $cmd) = each %$jobs) {
-            next unless (defined($cmd->pid()) && $reaped_pid == $cmd->pid());
+        my $cmd = delete $jobs->{$reaped_pid};
+        # Did we reap some other pid?
+        return unless $cmd;
 
-            $cmd->status($reaped_status)
+        $cmd->status($reaped_status)
                 or die("internal error: object of pid $reaped_pid " .
                         "failed to recognise its termination\n");
 
-            if (wantarray) {
-                return ($k, $cmd);
-            } else {
-                return $cmd;
-            }
-        }
-        # Unknown pid; per docs we return undef.  Be explicit about it
-        # though because implicit returns can give "funny results".
-        return;
-    } elsif (not defined($self)) {
-        return (CORE::wait() == -1)? -1 : ($? >> 8);
+        return ($reaped_pid, $cmd) if wantarray;
+        return $cmd;
+
     } else {
+        $! = POSIX::EINVAL;
         return -1;
     }
 }

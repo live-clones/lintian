@@ -41,6 +41,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Re-instate the "TEXTREL" marker.  This fixes a regression
       where shared-libs compiled without pic was not reported.
       Thanks to Dmitry Shachnev for the assistance in debugging this.
+  * lib/Lintian/Command/Simple.pm:
+    + [NT] Use constant time lookup access instead of linear scan with
+      "hashref" wait.
   * lib/Lintian/Lab.pm:
     + [NT] Add lab_query method to handle lab-queries directly.
   * lib/Lintian/Lab{,/Manifest}.pm:
