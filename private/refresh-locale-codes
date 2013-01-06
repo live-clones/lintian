@@ -64,6 +64,7 @@ export LC_ALL=C
                  while (<>) {
                     next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
                     ($iso1, $iso2) = ($2, $1);
+                    next if $iso2 eq "zxx";
                     if (!defined($iso1)) {
                         $iso1 = $iso2;
                         $iso2 = undef;

@@ -24,6 +24,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 
+  * data/files/locale-codes:
+    + [NT] Refresh against sid data files.
+
   * debian/rules:
     + [NT] Include the new Tutorial pods in the "api-doc" target.
 
@@ -61,6 +64,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Reject partially signed Deb822 files.  Most Deb822 files
       are not signed at all; but those that are should be completely
       covered by a signature.  (Closes: #696230)
+
+  * private/refresh-locale-codes:
+    + [JW,NT] Ignore the "zxx" locale code, which means "No
+      linguistic content".  (Closes: #692548)
 
   * reporting/config:
     + [JP] Remove unused $GRAPH_DIR configuration option.
