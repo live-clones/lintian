@@ -43,13 +43,17 @@ use Lintian::Profile;
 
 my %already_displayed = ();
 my ($annotate, $tags, $help, $prof);
+my $user_dirs = 1; # Allow user dirs ($HOME/.lintian and /etc/lintian) by default
 my $profile;
+my @dirs = ();
+
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
     'annotate|a' => \$annotate,
     'tags|t' => \$tags,
     'help|h' => \$help,
     'profile=s' => \$prof,
+    'user-dirs!' => \$user_dirs,
 ) or die("error parsing options\n");
 
 # help
@@ -68,7 +72,16 @@ EOT
     exit 0;
 }
 
-$profile = Lintian::Profile->new ($prof);
+if ($user_dirs) {
+    # If requested, include user dirs
+    push @dirs, "$ENV{'HOME'}/.lintian" if exists $ENV{'HOME'};
+    push @dirs, '/etc/lintian';
+}
+# Add the Lintian root in the end...
+push @dirs, $ENV{'LINTIAN_ROOT'} if exists $ENV{'LINTIAN_ROOT'};
+push @dirs, $ENV{'LINTIAN_ROOT'} unless exists $ENV{'LINTIAN_ROOT'};
+
+$profile = Lintian::Profile->new ($prof, \@dirs);
 
 Lintian::Data->set_vendor ($profile);
 

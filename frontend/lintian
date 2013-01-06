@@ -87,19 +87,23 @@ my $allow_root = 0;             #flag for --allow-root switch
 my $keep_lab = 0;               #flag for --keep-lab switch
 
 my $no_conf = 0;                #flag for --no-cfg
-my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
 
 my %group_cache = ();           # Cache to store groups in case of group
                                 # queries
+my %opt = (                     #hash of some flags from cmd or cfg
+                                # Init some cmd-line value defaults
+    # Allow user-dirs ($HOME/.lintian + /etc/lintian) by default
+    'user-dirs' => 1,
+);
 
 # The search path except $ENV{'LINTIAN_ROOT'}/--root LINTIAN_ROOT
 # which will be added later.
-my @prof_inc;
+my @search_dirs;
 # In some (rare) cases, $ENV{HOME} will not be available.
 # - Handle that gracefully by not emitting "Uninitialized ...".
-push @prof_inc, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
-push @prof_inc, '/etc/lintian';
+push @search_dirs, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
+push @search_dirs, '/etc/lintian';
 
 
 my $experimental_output_opts = undef;
@@ -501,6 +505,7 @@ my %opthash = (                 # ------------------ actions
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
                'jobs|j:i' => \$opt{'jobs'},
+               'user-dirs!' => \$opt{'user-dirs'},
 
                # ------------------ package selection options
                'all|a' => \$check_everything,
@@ -557,6 +562,13 @@ if (defined $opt{'LINTIAN_ROOT'}) {
 } else {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
 }
+
+if (!$opt{'user-dirs'} or $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
+    # Remove the user part of the search dirs.
+    @search_dirs = ();
+}
+
+push @search_dirs, $opt{'LINTIAN_ROOT'};
 
 # environment variables overwrite settings in conf file, so load them now
 # assuming they were not set by cmd-line options
@@ -653,9 +665,9 @@ unless ($no_conf) {
     } elsif (exists $ENV{'LINTIAN_CFG'} &&
              -f ($opt{'LINTIAN_CFG'} = $ENV{'LINTIAN_CFG'})) {
     } elsif (-f ($opt{'LINTIAN_CFG'} = $opt{'LINTIAN_ROOT'} . '/lintianrc')) {
-    } elsif (exists $ENV{'HOME'} &&
+    } elsif ($opt{'user-dirs'} && exists $ENV{'HOME'} &&
              -f ($opt{'LINTIAN_CFG'} = $ENV{'HOME'} . '/.lintianrc')) {
-    } elsif (-f ($opt{'LINTIAN_CFG'} = '/etc/lintianrc')) {
+    } elsif ($opt{'user-dirs'} && -f ($opt{'LINTIAN_CFG'} = '/etc/lintianrc')) {
     } else {
         $opt{'LINTIAN_CFG'} = '';
     }
@@ -749,12 +761,6 @@ foreach my $var (@MUST_EXPORT) {
 # (read: broken) paths.
 $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined $opt{'TMPDIR'};
 
-# If we are running the test suite we should ignore
-# user/system profiles.
-if ($ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
-    @prof_inc = ();
-}
-
 if ($debug) {
     $opt{'verbose'} = 1;
     $ENV{'LINTIAN_DEBUG'} = $debug;
@@ -820,7 +826,7 @@ $TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
 
 $PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'},
-                                  [@prof_inc, $opt{'LINTIAN_ROOT'}]);
+                                  \@search_dirs);
 # Ensure $opt{'LINTIAN_PROFILE'} is defined
 $opt{'LINTIAN_PROFILE'} = $PROFILE->name unless defined $opt{'LINTIAN_PROFILE'};
 v_msg('Using profile ' . $PROFILE->name . '.');

@@ -479,7 +479,7 @@ sub run_lintian {
     my @options = split(' ', $testdata->{options}//'');
     my $cmd;
     my $ret;
-    unshift(@options, '--allow-root', '--no-cfg');
+    unshift @options, '--allow-root', '--no-cfg', '--no-user-dirs';
     unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
     my $pid = open my $in, '-|';
     fail "pipe/fork error: $!" unless defined $pid;

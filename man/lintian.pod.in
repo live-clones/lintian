@@ -396,6 +396,19 @@ Look for B<lintian>'s support files (such as check scripts and
 collection scripts) in rootdir.  This overrides the B<LINTIAN_ROOT>
 environment variable.  The default location is I</usr/share/lintian>.
 
+=item B<--user-dirs>, B<--no-user-dirs>
+
+By default, B<lintian> will check I<$HOME> and I</etc> for files
+supplied by the user or the local sysadmin (e.g. config files and
+profiles).  This default can be disabled (and re-enabled) by using
+B<--no-user-dirs> (and B<--user-dirs>, respectively).
+
+These options will I<not> affect the inclusion of LINTIAN_ROOT, which
+is always included.
+
+These option can appear multiple times, in which case the of them
+to appear determines the result.
+
 =back
 
 Package selection options:

@@ -28,7 +28,6 @@ fi
 LC_ALL="C"
 LINTIAN_ROOT=""
 LINTIAN_PROFILE=debian
-LINTIAN_INTERNAL_TESTSUITE=1
 NO_PKG_MANGLE=true
 unset MAKEFLAGS
 # Ensure Lintian works without $ENV{HOME}
@@ -39,7 +38,6 @@ unset HOME
 export LC_ALL
 export LINTIAN_ROOT
 export LINTIAN_PROFILE
-export LINTIAN_INTERNAL_TESTSUITE
 export NO_PKG_MANGLE
 
 fail(){

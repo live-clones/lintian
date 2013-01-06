@@ -77,6 +77,16 @@ profiles.
 Rather than treating them as log file names, treat any command-line
 options as tag names and display the descriptions of each tag.
 
+=item B<--user-dirs>, B<--no-user-dirs>
+
+By default, B<lintian> will check I<$HOME> and I</etc> for files
+supplied by the user or the local sysadmin (e.g. profiles).  This
+default can be disabled (and re-enabled) by using B<--no-user-dirs>
+(and B<--user-dirs>, respectively).
+
+These option can appear multiple times, in which case the of them
+to appear determines the result.
+
 =back
 
 =head1 EXIT STATUS

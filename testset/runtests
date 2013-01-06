@@ -182,8 +182,8 @@ for (@tests) {
     runsystem("cd $rundir/$pkgdir && dpkg-buildpackage $dpkg_buildpackage_options >../build.$pkg 2>&1");
 
     print "testing... ";
-    print "Running lintian --allow-root --no-cfg $lintian_options on $rundir/$pkg\_$ver*.changes...\n" if $debug;
-    runsystem_ok("$lintian_path --allow-root --no-cfg $lintian_options $rundir/$pkg\_$ver*.changes".
+    print "Running lintian --allow-root --no-cfg --no-user-dirs $lintian_options on $rundir/$pkg\_$ver*.changes...\n" if $debug;
+    runsystem_ok("$lintian_path --allow-root --no-cfg --no-user-dirs $lintian_options $rundir/$pkg\_$ver*.changes".
         " 2>&1 | sort > $rundir/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
