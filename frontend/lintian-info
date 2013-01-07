@@ -67,6 +67,7 @@ Options:
     -a, --annotate    display descriptions of tags in Lintian overrides
     -t, --tags        display tag descriptions
     --profile X       use vendor profile X to determine severities
+    --[no-]user-dirs  whether to include profiles from user directories
 EOT
 
     exit 0;
@@ -79,7 +80,7 @@ if ($user_dirs) {
 }
 # Add the Lintian root in the end...
 push @dirs, $ENV{'LINTIAN_ROOT'} if exists $ENV{'LINTIAN_ROOT'};
-push @dirs, $ENV{'LINTIAN_ROOT'} unless exists $ENV{'LINTIAN_ROOT'};
+push @dirs, '/usr/share/lintian' unless exists $ENV{'LINTIAN_ROOT'};
 
 $profile = Lintian::Profile->new ($prof, \@dirs);
 

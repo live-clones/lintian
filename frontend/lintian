@@ -211,6 +211,7 @@ Configuration options:
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
+    --[no-]user-dirs          whether to use files from user directories
 Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
