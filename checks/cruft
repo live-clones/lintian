@@ -451,11 +451,20 @@ sub find_cruft {
                                A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     # GFDL license, assume it is bad unless it
                     # explicitly states it has no "bad sections".
-                    unless ($1 =~m/with \s+ (?:the\s+)? no \s+ Invariant \s+ Sections,?
+                    my $gfdlsections = $1;
+                    unless ($gfdlsections =~m/with \s+ (?:the\s+)? no \s+ Invariant \s+ Sections,?
                                        \s+ (?:with\s+)? (?:the\s+)? no \s+ Front-Cover \s+ Texts,? \s+ and
                                        \s+ (?:with\s+)? (?:the\s+)? no \s+ Back-Cover \s+ Texts/xis) {
-                        tag 'license-problem-gfdl-invariants', $name;
-                        $licenseproblemhash{'gfdl-invariants'} = 1;
+                        # license gfdl text verbatim is ok
+                        unless ($gfdlsections =~m/with \s+ the \s+ Invariant \s+ Sections \s+ being
+                                        \s+ (?:\@var\{|<var>)? LIST \s+ THEIR \s+TITLES (?:\}|<\/var>)? \s? ,?
+                                        \s+ with \s+ the \s+ Front-Cover \s+ Texts \s+ being
+                                        \s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)? \s? ,?
+                                        \s+ and \s+ with \s+ the \s+ Back-Cover \s+ Texts \s+ being
+                                        \s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xis) {
+                            tag 'license-problem-gfdl-invariants', $name;
+                            $licenseproblemhash{'gfdl-invariants'} = 1;
+                        }
                     }
                 }
             }
