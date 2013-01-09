@@ -451,9 +451,9 @@ sub find_cruft {
                                A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     # GFDL license, assume it is bad unless it
                     # explicitly states it has no "bad sections".
-                    unless ($1 =~m/with \s+ no \s+ Invariant \s+ Sections,?
-                                       \s+ (?:with\s+)? no \s+ Front-Cover \s+ Texts,? \s+ and
-                                       \s+ (?:with\s+)? no \s+ Back-Cover \s+ Texts/xis) {
+                    unless ($1 =~m/with \s+ (?:the\s+)? no \s+ Invariant \s+ Sections,?
+                                       \s+ (?:with\s+)? (?:the\s+)? no \s+ Front-Cover \s+ Texts,? \s+ and
+                                       \s+ (?:with\s+)? (?:the\s+)? no \s+ Back-Cover \s+ Texts/xis) {
                         tag 'license-problem-gfdl-invariants', $name;
                         $licenseproblemhash{'gfdl-invariants'} = 1;
                     }
