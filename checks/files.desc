@@ -1186,8 +1186,8 @@ Info: This binary package appears to be empty, and its description does
  files in the correct place.
  .
  If the package is deliberately empty, please mention in the package long
- description one of the phrases "metapackage," "dummy," "dependency
- package," "empty package," or "virtual package."
+ description one of the phrases "metapackage", "dummy", "dependency
+ package", or "empty package".
 
 Tag: star-file
 Severity: important

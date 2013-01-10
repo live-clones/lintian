@@ -16,6 +16,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)
+    + [NT] Do not suggest the use of "virtual package" as a way
+      to suppress empty-binary-package.  Lintian will still
+      accept it the phrase for now.
   * checks/menu-format{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to detect missing
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
