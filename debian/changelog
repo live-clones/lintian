@@ -20,12 +20,18 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Apply patch from Bastien Roucariès to detect missing
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
       the report.  (Closes: #693918)
+    + [NT] Apply patch from Matthias Klumpp to add missing
+      "Science" category.  Thanks to Matthias Klose for the bug
+      report.  (Closes: #697693)
 
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 
   * data/files/locale-codes:
     + [NT] Refresh against sid data files.
+  * data/menu-format/add-categories:
+    + [NT] Apply patch from Matthias Klumpp to add missing
+      subcategories.
 
   * debian/rules:
     + [NT] Include the new Tutorial pods in the "api-doc" target.

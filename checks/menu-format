@@ -171,6 +171,7 @@ my %main_categories = map { $_ => 1 }
        Graphics
        Network
        Office
+       Science
        Settings
        System
        Utility
