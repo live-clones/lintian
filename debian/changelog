@@ -21,8 +21,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
       the report.  (Closes: #693918)
     + [NT] Apply patch from Matthias Klumpp to add missing
-      "Science" category.  Thanks to Matthias Klose for the bug
-      report.  (Closes: #697693)
+      "Science" category.  (Closes: #697693)
 
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
