@@ -569,7 +569,7 @@ foreach my $file ($info->sorted_index) {
             # FHS dirs
             elsif ($file !~ m,^usr/(?:X11R6|X386|
                                     bin|games|include|
-                                    lib|lib32|lib64|
+                                    lib|libx?32|lib64|
                                     local|sbin|share|
                                     src|spool|tmp)/,x) {
                 tag 'non-standard-dir-in-usr', $file;
@@ -674,7 +674,7 @@ foreach my $file ($info->sorted_index) {
     }
     # ---------------- FHS directory?
     elsif ($file =~ m,^[^/]+/$,o and
-           $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|run|sbin|selinux|srv|sys|tmp|usr|var)/,o) {
+           $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|x?32)?|mnt|opt|root|run|sbin|selinux|srv|sys|tmp|usr|var)/,o) {
         # Make an exception for the base-files package here and other similar
         # packages because they install a slew of top-level directories for
         # setting up the base system.  (Specifically, /cdrom, /floppy,
@@ -706,9 +706,9 @@ foreach my $file ($info->sorted_index) {
     if (not $index_info->is_dir) {
         unless ($type eq 'udeb'
                 or $file =~ m,^usr/(?:bin|dict|doc|games|
-                                    include|info|lib(?:32|64)?|
+                                    include|info|lib(?:x?32|64)?|
                                     man|sbin|share|src|X11R6)/,x
-                or $file =~ m,^lib(?:32|64)?/(?:modules/|libc5-compat/)?,
+                or $file =~ m,^lib(?:x?32|64)?/(?:modules/|libc5-compat/)?,
                 or $file =~ m,^var/(?:games|lib|www|named)/,
                 or $file =~ m,^(?:bin|boot|dev|etc|sbin)/,
                 # non-FHS, but still usual

@@ -8,6 +8,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-home
       - license-problem-gfdl-invariants
 
+  * checks/binaries:
+    + [NT] Accept libx32 as a bi-arch directory.
   * checks/cruft:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.
@@ -19,6 +21,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Do not suggest the use of "virtual package" as a way
       to suppress empty-binary-package.  Lintian will still
       accept it the phrase for now.
+    + [NT] Accept libx32 as an bi-arch directory.
   * checks/menu-format{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to detect missing
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
@@ -29,11 +32,16 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 
+  * data/binaries/arch-regex:
+    + [NT] Recognise x32 as an ELF32 binary.
   * data/fields/obsolete-packages:
     + [NT] Apply patch from Guillem Jover to add fuse-utils as an
       obsolete package.  (Closes: #697534)
   * data/files/locale-codes:
     + [NT] Refresh against sid data files.
+  * data/shared-libs/ldconfig-dirs:
+    + [NT] Add libx32 and usr/libx32 used by some gcc x32 bi-arch
+      packages.
   * data/menu-format/add-categories:
     + [NT] Apply patch from Matthias Klumpp to add missing
       subcategories.

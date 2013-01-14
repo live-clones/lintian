@@ -49,4 +49,4 @@ sh4           ~~ELF 32-bit LSB .* Renesas SH
 sparc         ~~ELF 32-bit MSB .* SPARC
 #sparcv9b      ~~ELF 32-bit MSB .* SPARC.* V8\+
 sparc64       ~~ELF 64-bit MSB .* SPARC
-
+x32           ~~ELF 32-bit LSB .* x86-64

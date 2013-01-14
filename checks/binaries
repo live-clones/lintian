@@ -244,10 +244,10 @@ foreach my $file ($info->sorted_index) {
         if ($fileinfo =~ m/$archre/) {
             # If it matches the architecture regex, it is good
             $bad = 0;
-        } elsif ($file =~ m,(?:^|/)lib(\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
+        } elsif ($file =~ m,(?:^|/)lib(x?\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
             my $bitre = $ARCH_REGEX-> value($1);
             # Special case - "old" multi-arch dirs
-            $bad = 0 if $fileinfo =~ m/$bitre/
+            $bad = 0 if $bitre and $fileinfo =~ m/$bitre/
         } elsif ($ARCH_64BIT_EQUIVS->known ($arch) && $file =~ m,^lib/modules/,) {
             my $arch64re = $ARCH_REGEX->value ($ARCH_64BIT_EQUIVS->value ($arch));
             # Allow amd64 kernel modules to be installed on i386.

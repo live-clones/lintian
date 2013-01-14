@@ -18,9 +18,11 @@
 # Keep: lib
 # Keep: lib32
 # Keep: lib64
+# Keep: libx32
 # Keep: usr/lib
 # Keep: usr/lib32
 # Keep: usr/lib64
+# Keep: usr/libx32
 # Keep: usr/local/lib
 
 lib
@@ -310,6 +312,7 @@ lib/x86_64-solaris
 lib/x86_64-uclinux-uclibc
 lib32
 lib64
+libx32
 usr/lib
 usr/lib/aarch64-darwin
 usr/lib/aarch64-freebsd
@@ -597,4 +600,5 @@ usr/lib/x86_64-solaris
 usr/lib/x86_64-uclinux-uclibc
 usr/lib32
 usr/lib64
+usr/libx32
 usr/local/lib
