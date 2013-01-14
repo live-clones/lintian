@@ -22,6 +22,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to suppress empty-binary-package.  Lintian will still
       accept it the phrase for now.
     + [NT] Accept libx32 as an bi-arch directory.
+  * checks/shared-libs:
+    + [NT] Special case gcc packages when looking for dev symlinks.
+      gcc stores its dev symlinks in some special directories.
   * checks/menu-format{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to detect missing
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
