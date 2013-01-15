@@ -42,11 +42,11 @@ lintian (2.5.12) UNRELEASED; urgency=low
       obsolete package.  (Closes: #697534)
   * data/files/locale-codes:
     + [NT] Refresh against sid data files.
-  * data/output/manual-references:
-    + [NT] Refresh with Policy 3.9.4.
   * data/menu-format/add-categories:
     + [NT] Apply patch from Matthias Klumpp to add missing
       subcategories.
+  * data/output/manual-references:
+    + [NT] Refresh with Policy 3.9.4.
   * data/shared-libs/ldconfig-dirs:
     + [NT] Add libx32 and usr/libx32 used by some gcc x32 bi-arch
       packages.
