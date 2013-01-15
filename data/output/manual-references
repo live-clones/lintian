@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2012-06-14
+# Last updated: 2013-01-15
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -615,12 +615,13 @@ policy::7.4::Conflicting binary packages - Conflicts::http://www.debian.org/doc/
 policy::7.5::Virtual packages - Provides::http://www.debian.org/doc/debian-policy/ch-relationships.html#s-virtual
 policy::7.6::Overwriting files and replacing packages - Replaces::http://www.debian.org/doc/debian-policy/ch-relationships.html#s-replaces
 policy::7.7::Relationships between source and binary packages - Build-Depends, Build-Depends-Indep, Build-Conflicts, Build-Conflicts-Indep::http://www.debian.org/doc/debian-policy/ch-relationships.html#s-sourcebinarydeps
+policy::7.8::Additional source packages used to build the binary - Built-Using::http://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using
 policy::8.1::Run-time shared libraries::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-runtime
 policy::8.2::Shared library support files::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-support-files
 policy::8.3::Static libraries::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-static
 policy::8.4::Development files::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-dev
 policy::8.5::Dependencies between the packages of the same library::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-intradeps
-policy::8.6::Dependencies between the library and other packages - the shlibs system::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-shlibdeps
+policy::8.6::Dependencies between the library and other packages::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-depends
 policy::9.1::File system hierarchy::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1
 policy::9.2::Users and groups::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2
 policy::9.3::System run levels and init.d scripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-sysvinit
@@ -631,6 +632,7 @@ policy::9.7::Multimedia handlers::http://www.debian.org/doc/debian-policy/ch-ope
 policy::9.8::Keyboard configuration::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.8
 policy::9.9::Environment variables::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.9
 policy::9.10::Registering Documents using doc-base::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-doc-base
+policy::9.11::Alternate init systems::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-alternateinit
 policy::10.1::Binaries::http://www.debian.org/doc/debian-policy/ch-files.html#s-binaries
 policy::10.2::Libraries::http://www.debian.org/doc/debian-policy/ch-files.html#s-libraries
 policy::10.3::Shared libraries::http://www.debian.org/doc/debian-policy/ch-files.html#s10.3
@@ -703,13 +705,20 @@ policy::5.6.22::Closes::http://www.debian.org/doc/debian-policy/ch-controlfields
 policy::5.6.23::Homepage::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Homepage
 policy::5.6.24::Checksums-Sha1 and Checksums-Sha256::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Checksums
 policy::5.6.25::DM-Upload-Allowed::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-DM-Upload-Allowed
+policy::5.6.26::Version Control System (VCS) fields::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-VCS-fields
 policy::7.6.1::Overwriting files in other packages::http://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.1
 policy::7.6.2::Replacing whole packages, forcing their removal::http://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.2
 policy::8.1.1::ldconfig::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-ldconfig
-policy::8.6.1::The shlibs files present on the system::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.1
-policy::8.6.2::How to use dpkg-shlibdeps and the shlibs files::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.2
-policy::8.6.3::The shlibs File Format::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs
-policy::8.6.4::Providing a shlibs file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.4
+policy::8.6.1::Generating dependencies on shared libraries::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-dpkg-shlibdeps
+policy::8.6.2::Shared library ABI changes::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-updates
+policy::8.6.3::The symbols system::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-symbols
+policy::8.6.3.1::The symbols files present on the system::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-symbols-paths
+policy::8.6.3.2::The symbols File Format::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-symbols
+policy::8.6.3.3::Providing a symbols file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-providing-symbols
+policy::8.6.4::The shlibs system::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-shlibdeps
+policy::8.6.4.1::The shlibs files present on the system::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs-paths
+policy::8.6.4.2::The shlibs File Format::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs
+policy::8.6.4.3::Providing a shlibs file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.4.3
 policy::9.1.1::File System Structure::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs
 policy::9.1.2::Site-specific programs::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.2
 policy::9.1.3::The system-wide mail directory::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.3
@@ -724,6 +733,7 @@ policy::9.3.3.2::Running initscripts::http://www.debian.org/doc/debian-policy/ch
 policy::9.3.4::Boot-time initialization::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.4
 policy::9.3.5::Example::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.5
 policy::9.5.1::Cron job file names::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-cron-files
+policy::9.11.1::Event-based boot with upstart::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-upstart
 policy::10.7.1::Definitions::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.1
 policy::10.7.2::Location::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.2
 policy::10.7.3::Behavior::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.3
