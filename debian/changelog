@@ -62,6 +62,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * doc/tutorial/Lintian/Tutorial{/WritingChecks}.pod:
     + [NT] Add POD tutorial on writing checks.
 
+  * frontend/lintian{,-info}:
+    + [NT] Add --include-dir command line option.  This can be used
+      to load additional Lintian checks, profiles, libraries or data.
+      (Closes: #359059)
   * frontend/lintian:
     + [NT] Remove "make-shift" lab-query support now that
       Lintian::Lab supports it.

@@ -54,6 +54,7 @@ GetOptions(
     'help|h' => \$help,
     'profile=s' => \$prof,
     'user-dirs!' => \$user_dirs,
+    'include-dir=s' => \@dirs,
 ) or die("error parsing options\n");
 
 # help
@@ -67,6 +68,7 @@ Options:
     -a, --annotate    display descriptions of tags in Lintian overrides
     -t, --tags        display tag descriptions
     --profile X       use vendor profile X to determine severities
+    --include-dir DIR check for Lintian data in DIR
     --[no-]user-dirs  whether to include profiles from user directories
 EOT
 
@@ -74,9 +76,9 @@ EOT
 }
 
 if ($user_dirs) {
-    # If requested, include user dirs
-    push @dirs, "$ENV{'HOME'}/.lintian" if exists $ENV{'HOME'};
-    push @dirs, '/etc/lintian';
+    # If requested, pre-append user dirs
+    unshift @dirs, '/etc/lintian';
+    unshift @dirs, "$ENV{'HOME'}/.lintian" if exists $ENV{'HOME'};
 }
 # Add the Lintian root in the end...
 push @dirs, $ENV{'LINTIAN_ROOT'} if exists $ENV{'LINTIAN_ROOT'};

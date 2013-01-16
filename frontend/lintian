@@ -25,6 +25,8 @@
 use strict;
 use warnings;
 
+use Cwd qw(abs_path);
+
 use Getopt::Long;
 use POSIX qw(:sys_wait_h);
 
@@ -97,14 +99,10 @@ my %opt = (                     #hash of some flags from cmd or cfg
     'user-dirs' => 1,
 );
 
-# The search path except $ENV{'LINTIAN_ROOT'}/--root LINTIAN_ROOT
-# which will be added later.
+# The search path - affected by --include-dir X, --[no-]user-dirs
+# The LINTIAN_ROOT will be appended last and the user dirs will be
+# pre-appended (depending --[no-]user-dirs).
 my @search_dirs;
-# In some (rare) cases, $ENV{HOME} will not be available.
-# - Handle that gracefully by not emitting "Uninitialized ...".
-push @search_dirs, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
-push @search_dirs, '/etc/lintian';
-
 
 my $experimental_output_opts = undef;
 
@@ -208,6 +206,7 @@ Behaviour options:
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
+    --include-dir DIR         include checks, libraries (etc.) from DIR
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
@@ -506,6 +505,7 @@ my %opthash = (                 # ------------------ actions
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
                'jobs|j:i' => \$opt{'jobs'},
+               'include-dir=s' => \@search_dirs,
                'user-dirs!' => \$opt{'user-dirs'},
 
                # ------------------ package selection options
@@ -556,17 +556,42 @@ if ($> == 0 and not $allow_root) {
 $opt{'LINTIAN_ROOT'} = $ENV{'LINTIAN_ROOT'} unless (defined($opt{'LINTIAN_ROOT'}));
 if (defined $opt{'LINTIAN_ROOT'}) {
     unless ($opt{'LINTIAN_ROOT'} =~ m,^/,) {
-        require Cwd;
-        my $cwd = Cwd::getcwd();
-        $opt{'LINTIAN_ROOT'} = "$cwd/$opt{'LINTIAN_ROOT'}";
+        my $resolved = abs_path ($opt{'LINTIAN_ROOT'});
+        unless (defined $resolved) {
+            print STDERR "Cannot resolve $opt{'LINTIAN_ROOT'}: $!\n";
+            exit 2;
+        }
+        $opt{'LINTIAN_ROOT'} = $resolved;
     }
 } else {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
 }
 
-if (!$opt{'user-dirs'} or $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
-    # Remove the user part of the search dirs.
-    @search_dirs = ();
+# Filter out non-existent paths and resolve the rest.
+# - as we will add them to @INC, make sure they are resolved
+#   so a check doing a chdir will not suddently load anything
+#   differently.
+@search_dirs = map {
+    if (-d $_) {
+        my $resolved = abs_path ($_);
+        unless (defined $resolved) {
+            print STDERR "Cannot resolve $_: $!\n";
+            exit 2;
+        }
+        ($resolved);
+    } else {
+        ();
+    }
+} @search_dirs;
+
+if ($opt{'user-dirs'} and not $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
+    # Pre-append the user part of the search dirs.
+
+    unshift @search_dirs, '/etc/lintian';
+
+    # In some (rare) cases, $ENV{HOME} will not be available.
+    # - Handle that gracefully by not emitting "Uninitialized ...".
+    unshift @search_dirs, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
 }
 
 push @search_dirs, $opt{'LINTIAN_ROOT'};
@@ -617,9 +642,9 @@ $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 
 # {{{ Loading lintian's own libraries, parse config file and setup output
 
-# Only update @INC if the LINTIAN_ROOT actually contains any libraries...
-unshift @INC, "$opt{'LINTIAN_ROOT'}/lib"
-    if -d "$opt{'LINTIAN_ROOT'}/lib";
+# Include (only existsing) lib directories from @search_dirs in @INC
+
+unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
 
 require Lintian::Lab;
 

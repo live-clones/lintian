@@ -379,6 +379,27 @@ information about the packages it checks.  This option overrides the
 B<LINTIAN_LAB> environment variable and the configuration file entry
 of the same name.
 
+=item B<--include-dir> dir
+
+Use dir as an additional "LINTIAN_ROOT".  The directory is expected
+have a similar layout to the LINTIAN_ROOT (if it exists), but does not
+need to be a full self-contained root.
+
+B<lintian> will check this directory for (additional) profiles, data
+files, support libraries and checks.  The latter two implies that
+Lintian may attempt to I<load and execute code> from this directory.
+
+Unlike with the B<--root> option, B<lintian> will I<not> load
+collections from this directory.
+
+This option may appear more than once; each time adding an additional
+directory.  Directories are searched in the order they appear on the
+command line.
+
+The additional directories will be checked I<after> the user
+directories (though see B<--no-user-dirs>) and I<before> the core
+LINTIAN_ROOT (e.g. B<--root>).
+
 =item B<-j> [X], B<--jobs>[=X]
 
 Set the limit for how many unpacking jobs Lintian will run in
@@ -395,6 +416,10 @@ By default Lintian will use I<nproc> to determine a reasonable default
 Look for B<lintian>'s support files (such as check scripts and
 collection scripts) in rootdir.  This overrides the B<LINTIAN_ROOT>
 environment variable.  The default location is I</usr/share/lintian>.
+
+This option is mostly useful for development or testing of B<lintian>.
+To add additional support files (e.g. extra checks), consider using
+B<--include-dir> instead.
 
 =item B<--user-dirs>, B<--no-user-dirs>
 

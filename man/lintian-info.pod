@@ -60,6 +60,18 @@ about that tag.
 
 Display usage information and exit.
 
+=item B<--include-dir> dir
+
+Use dir as an additional "Lintian root".  The directory is expected
+have a similar layout to the LINTIAN_ROOT (if it exists), but does not
+need to be a full self-contained root.
+
+Unlike B<lintian>, B<lintian-info> will I<not> load any code from
+these additional directories.
+
+This option may appear more than once; each time adding an additional
+directory.
+
 =item B<--profile> prof
 
 Use the severities from the vendor profile prof when displaying tags.
