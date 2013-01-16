@@ -7,6 +7,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
       - license-problem-gfdl-invariants
+      - menu-icon-uses-relative-path
 
   * checks/binaries{,.desc}:
     + [NT] Accept libx32 as a bi-arch directory.
@@ -33,6 +34,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       the report.  (Closes: #693918)
     + [NT] Apply patch from Matthias Klumpp to add missing
       "Science" category.  (Closes: #697693)
+    + [NT] Apply patch from Thomas Preud'homme to detect uses of
+      relative icons in menu files.  (Closes: #697916)
 
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.

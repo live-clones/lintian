@@ -1,16 +1,22 @@
 E: menu-broken: bad-test-in-menu-item usr/share/menu/menu-broken:4
 E: menu-broken: unparsable-menu-item usr/share/menu/menu-broken:12
-E: menu-cmd: menu-icon-not-in-xpm-format pargs.png
-E: menu-cmd: menu-icon-too-big too-large.xpm: 256x256 > 32x32
+E: menu-cmd: menu-icon-not-in-xpm-format usr/share/pixmaps/pargs.png
+E: menu-cmd: menu-icon-too-big usr/share/pixmaps/too-large.xpm: 256x256 > 32x32
 E: menu-section: menu-item-creates-new-root-section Root usr/share/menu/menu-section:3
 E: menu-section: non-wm-in-windowmanager-menu-section x11 usr/share/menu/menu-section:15
 W: menu-broken: duplicated-tag-in-menu-item usr/share/menu/menu-broken longtitle:12
 W: menu-broken: pkg-not-in-package-test wrong-package usr/share/menu/menu-broken
 W: menu-cmd: menu-command-not-in-package usr/share/menu/menu-cmd:4 usr/bin/not-here
-W: menu-cmd: menu-icon-cannot-be-parsed broken.xpm: looking for XPM header
+W: menu-cmd: menu-icon-cannot-be-parsed usr/share/pixmaps/broken.xpm: looking for XPM header
 W: menu-none: menu-icon-missing non-existent.xpm
+W: menu-none: menu-icon-missing non-existent16.xpm
+W: menu-none: menu-icon-missing non-existent32.xpm
+W: menu-none: menu-icon-missing usr/share/menu-none/non-existent.xpm
 W: menu-none: menu-icon-missing usr/share/menu-none/non-existent16.xpm
 W: menu-none: menu-icon-missing usr/share/menu-none/non-existent32.xpm
+W: menu-none: menu-icon-uses-relative-path non-existent.xpm
+W: menu-none: menu-icon-uses-relative-path non-existent16.xpm
+W: menu-none: menu-icon-uses-relative-path non-existent32.xpm
 W: menu-none: menu-item-uses-icon-none usr/share/menu/menu-none:4
 W: menu-section: menu-item-creates-new-section Games usr/share/menu/menu-section:9
 W: menu-section: menu-item-creates-new-section WindowManagers/Programming usr/share/menu/menu-section:15

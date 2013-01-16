@@ -15,6 +15,7 @@ Test-For:
  menu-item-uses-apps-games-section
  menu-item-uses-apps-section
  menu-item-uses-icon-none
+ menu-icon-uses-relative-path
  menu-item-uses-windowmanagers-section
  non-wm-in-windowmanager-menu-section
  pkg-not-in-package-test

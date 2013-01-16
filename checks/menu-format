@@ -525,6 +525,9 @@ sub VerifyIcon {
         return;
     }
 
+    tag 'menu-icon-uses-relative-path', $icon
+        unless $icon =~ m,^/,;
+
     $icon =~ s|^/*||og;
 
     if (not ($icon =~ m/\.xpm$/i)) {
