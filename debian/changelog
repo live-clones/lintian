@@ -8,8 +8,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-home
       - license-problem-gfdl-invariants
 
-  * checks/binaries:
+  * checks/binaries{,.desc}:
     + [NT] Accept libx32 as a bi-arch directory.
+    + [NT] Correct reference policy reference.  Thanks to
+      Samuel Bronson for the correction.  (Closes: #698234)
   * checks/cruft:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.

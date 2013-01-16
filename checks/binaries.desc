@@ -172,7 +172,7 @@ Info: This appears to be an ELF file but readelf cannot parse it.
 Tag: missing-dependency-on-libc
 Severity: serious
 Certainty: possible
-Ref: policy 8.6
+Ref: policy 8.6.1
 Info: The listed file appears to be linked against the C library, but the
  package doesn't depend on the C library package.  Normally this indicates
  that ${shlibs:Depends} was omitted from the Depends line for this package
