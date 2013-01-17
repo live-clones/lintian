@@ -8,6 +8,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-home
       - license-problem-gfdl-invariants
       - menu-icon-uses-relative-path
+      - vcs-field-bitrotted
+      - vcs-git-uses-invalid-user-uri
 
   * checks/binaries{,.desc}:
     + [NT] Accept libx32 as a bi-arch directory.
