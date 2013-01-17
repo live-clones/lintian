@@ -22,6 +22,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Apply patch from Samuel Bronson to detect some
       broken or poor Vcs URLs.  Also thanks to James McCoy for
       his report.  (Closes: #652595)
+    + [JW] Reduce severity of b-d-on-python-dev-with-no-arch-any
+      to minor.
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)

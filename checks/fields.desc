@@ -1024,7 +1024,7 @@ Info: The given package appears to be a library package, but it recommends
  instead of Recommends.
 
 Tag: build-depends-on-python-dev-with-no-arch-any
-Severity: normal
+Severity: minor
 Certainty: possible
 Info: The given package appears to have a Python development package
  (python-dev, python-all-dev or pythonX.Y-dev) listed in its Build-Depends

@@ -27,6 +27,7 @@ E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: depends-on-obsolete-package recommends: gs
 E: relations: needlessly-depends-on-awk pre-depends
 E: relations: no-copyright-file
+I: relations source: build-depends-on-python-dev-with-no-arch-any
 I: relations source: missing-debian-source-format
 I: relations source: ored-build-depends-on-obsolete-package build-depends-indep: gs
 I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
@@ -36,7 +37,6 @@ I: relations: ored-depends-on-obsolete-package recommends: gs-aladdin
 W: relations source: ancient-standards-version 3.7.3 (current is 3.9.4)
 W: relations source: bad-homepage lintian.debian.org
 W: relations source: build-depends-on-1-revision build-depends-indep: libfoo (>= 1.2-1)
-W: relations source: build-depends-on-python-dev-with-no-arch-any
 W: relations source: no-debian-copyright
 W: relations source: package-depends-on-itself relations depends
 W: relations source: package-depends-on-itself relations-multiple-libs recommends

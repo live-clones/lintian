@@ -9,9 +9,9 @@ E: fields-build-depends-general source: depends-on-build-essential-package-witho
 E: fields-build-depends-general source: invalid-arch-string-in-source-relation all [build-depends: foo [all]]
 E: fields-build-depends-general source: invalid-arch-string-in-source-relation i3!86 [build-depends: baz [source i3!86]]
 E: fields-build-depends-general source: invalid-arch-string-in-source-relation source [build-depends: baz [source i3!86]]
+I: fields-build-depends-general source: build-depends-on-python-dev-with-no-arch-any
 I: fields-build-depends-general source: ored-build-depends-on-obsolete-package build-depends: xlibmesa-gl-dev
 W: fields-build-depends-general source: build-depends-on-1-revision build-depends: revision-1 (>= 1.0-1)
-W: fields-build-depends-general source: build-depends-on-python-dev-with-no-arch-any
 W: fields-build-depends-general source: build-depends-on-versioned-berkeley-db build-depends:libdb5.1++-dev
 W: fields-build-depends-general source: build-depends-on-versioned-berkeley-db build-depends:libdb5.1-java-dev
 W: fields-build-depends-general source: depends-on-packaging-dev build-depends
