@@ -125,9 +125,10 @@ my %VCS_CANONIFY = (
         $_[0] =~ s{http://bzr.debian.org/loggerhead/}{http://anonscm.debian.org/loggerhead/};
     },
     cvs      => sub {
-	$_[0] =~ s{\@cvs.alioth.debian.org:/cvsroot/}{\@anonscm.debian.org:/cvs/};
+        if ($_[0] =~ s{\@(?:cvs.alioth|anonscm).debian.org:/cvsroot/}{\@anonscm.debian.org:/cvs/}) {
+            $_[1] = 'vcs-field-bitrotted';
+        }
 	$_[0] =~ s{\@cvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
-	$_[0] =~ s{\@anonscm.debian.org:/cvsroot/}{\@anonscm.debian.org:/cvs/};
     },
     arch     => sub {
         $_[0] =~ s{http://arch.debian.org/arch/}{http://anonscm.debian.org/arch/};
@@ -137,6 +138,9 @@ my %VCS_CANONIFY = (
         $_[0] =~ s{http://anonscm.debian.org/bzr/bzr/}{http://anonscm.debian.org/bzr/};
     },
     git     => sub {
+        if ($_[0] =~ s{git://(?:git|anonscm).debian.org/~}{git://anonscm.debian.org/users/}) {
+            $_[1] = 'vcs-git-uses-invalid-user-uri';
+        }
         $_[0] =~ s{http://git.debian.org/}{http://anonscm.debian.org/git/};
         $_[0] =~ s{http://anonscm.debian.org/git/git/}{http://anonscm.debian.org/git/};
         $_[0] =~ s{git://git.debian.org/}{git://anonscm.debian.org/};
@@ -1014,11 +1018,12 @@ while (my ($vcs, $splitter) = each %VCS_EXTRACT) {
         }
         if ($VCS_CANONIFY{$vcs}) {
             my $canonicalized = $parts[0];
+            my $tag = 'vcs-field-not-canonical';
             foreach my $canonify ($VCS_CANONIFY{$vcs}) {
-                &$canonify($canonicalized);
+                &$canonify($canonicalized, $tag);
             }
             if ($canonicalized ne $parts[0]) {
-                tag 'vcs-field-not-canonical', $parts[0], $canonicalized;
+                tag $tag, $parts[0], $canonicalized;
             }
         }
     }

@@ -3,4 +3,6 @@ Sequence: 6000
 Description: Test for vcs fields needing canonication
 Version: 1.0
 Test-For:
+ vcs-field-bitrotted
  vcs-field-not-canonical
+ vcs-git-uses-invalid-user-uri

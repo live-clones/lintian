@@ -18,6 +18,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       non-free packages.
     + [NT] Apply patch from Bastien Roucariès to catch GFDL
       licenses with invariants (etc.).  (Closes: #695967)
+  * checks/fields{,.desc}:
+    + [NT] Apply patch from Samuel Bronson to detect some
+      broken or poor Vcs URLs.  Also thanks to James McCoy for
+      his report.  (Closes: #652595)
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)
