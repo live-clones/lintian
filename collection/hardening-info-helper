@@ -53,9 +53,6 @@ my ($in, $out);
 my ($cread, $cwrite);
 my $cpid;
 my @recheck = ();
-# Work around bug in hardening-check when it proceses multiple binaries
-# with --lintian (see #677530).
-my %seen = ();
 my %whitelisted_funcs = (
     'memcpy' => 1,
     'memset' => 1,
@@ -80,8 +77,6 @@ if ($cpid) {
 while (my $line = <$in>) {
     chomp $line;
     if ($cpid) {
-        # The parent filters the duplicate tags (#677530)
-        next if $seen{$line}++;
         if ($line =~ m/^no-fortify-functions:(.*)$/o) {
             my $bin = $1;
             push @recheck, $bin;
@@ -94,7 +89,6 @@ while (my $line = <$in>) {
     print $out "$line\n";
 }
 
-undef %seen;
 
 if (not $cpid) {
     # child's second pass
