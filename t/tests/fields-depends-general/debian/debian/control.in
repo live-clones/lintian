@@ -10,7 +10,7 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
  conflict-dep, gawk | awk, new-package | xbase-clients, {$srcpkg},
  gaim, emacs21, emacs22, makedev, libfile-temp-perl (>= 0.18),
- packaging-dev, xfont-a, libdigest-sha1-perl:i386
+ packaging-dev, xfont-a
 Breaks: package-without-version, {$srcpkg} (<< 0.1),
  replaced-wo-version
 Replaces: replaced-wo-version
