@@ -55,6 +55,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       not properly expand.  Thanks to Bernd Zeimetz for the report.
       (Closes: #683737)
 
+  * collection/hardening-info{,-helper,.desc}:
+    + [NT] Whitelist "memset" and "memmove" as "always safe"
+      functions.  Thanks to Sebastian Ramacher for the suggestion
+      and Roland Stigge for the report.  (Closes: #685299)
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 

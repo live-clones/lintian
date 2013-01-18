@@ -56,6 +56,11 @@ my @recheck = ();
 # Work around bug in hardening-check when it proceses multiple binaries
 # with --lintian (see #677530).
 my %seen = ();
+my %whitelisted_funcs = (
+    'memcpy' => 1,
+    'memset' => 1,
+    'memmove' => 1,
+);
 
 pipe ($cread, $cwrite) or fail "pipe failed: $!";
 $cpid = fork();
@@ -108,8 +113,9 @@ if (not $cpid) {
             $emit = 0;
         } elsif ($line =~ m/^\s+Fortify Source functions:/) {
             $infsf = 1;
-        } elsif ($infsf and $line =~ m/^\s+unprotected:\s*(\S+)/) {
-            next if $1 eq 'memcpy';
+        } elsif ($infsf and $line =~ m/^\s+(un)?protected:\s*(\S+)/) {
+            next unless ($1//'') eq 'un';
+            next if exists $whitelisted_funcs{$2};
             $emit = 1;
         } else {
             $infsf = 0;
