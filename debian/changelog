@@ -2,6 +2,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - ambiguous-paragraph-in-dep5-copyright
       - debug-file-with-no-debug-symbols
       - desktop-entry-lacks-keywords-entry
       - dir-or-file-in-build-tree
@@ -55,6 +56,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [NT] Special case gcc packages when looking for dev symlinks.
       gcc stores its dev symlinks in some special directories.
+  * checks/source-copyright{,.desc}:
+    + [JW,NT] Add a separate tag for ambiguous DEP-5 paragraphs,
+      where Lintian cannot reliably figure out what is intended.
+      Thanks to Julian Taylor for the report.  (Closes: #652380)
   * checks/symlinks{,.desc}:
     + [NT] Warn about broken symlinks that contains a literal "*"
       in their target.  This is usually a sign that a wildcard did

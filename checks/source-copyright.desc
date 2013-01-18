@@ -148,3 +148,23 @@ Info: The listed field name is a likely misspelling of one of the documented
  Implementation detail: The typo is detected by using "Levenshtein
  edit distance".  Therefore, if the typo involve several characters,
  Lintian may not detect it.
+
+Tag: ambiguous-paragraph-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: #652380, http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The paragraph has a "License" and a "Copyright" field, but no
+ "Files" field.  Technically, this is a valid paragraph per the DEP-5
+ specification.  However, it is mostly likely a mistake.
+ .
+ If it is a <tt>stand-alone license paragraph</tt>, the "Copyright"
+ field is not needed and should be removed.  On the other hand, if it
+ is a <tt>files paragraph</tt>, it is missing the "Files" field.
+ .
+ Please note that while the "Files" field was optional in some cases
+ in some of the earlier draft versions, it is mandatory in <i>all</i>
+ <tt>files paragraphs</tt> in the current specification.
+ .
+ Lintian will attempt to guess what you intended and continue based on
+ its guess.  It the guess is wrong, you may see spurious tags related
+ to this paragraph.

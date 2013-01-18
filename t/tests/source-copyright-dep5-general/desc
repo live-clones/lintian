@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test for various errors in DEP-5 copyright files
 Test-For:
+ ambiguous-paragraph-in-dep5-copyright
  comma-separated-files-in-dep5-copyright
  missing-field-in-dep5-copyright
  missing-license-paragraph-in-dep5-copyright

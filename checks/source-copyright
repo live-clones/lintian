@@ -171,6 +171,15 @@ if (@dep5) {
         $i++;
         my $license = get_field ($para, 'license');
         my $files = get_field ($para, 'files');
+        my $copyright = get_field ($para, 'copyright');
+
+        if (not defined $files and defined $license and defined $copyright) {
+            tag 'ambiguous-paragraph-in-dep5-copyright', "paragraph at line $lines[$i]";
+            # If it is the first paragraph, it might be an instance of
+            # the (no-longer) optional "first Files-field".
+            $files = '*' if $i == 1;
+        }
+
         if (defined $license and not defined $files) {
             # Standalone license paragraph
             if (not $license =~ m/\n/) {
@@ -192,7 +201,7 @@ if (@dep5) {
             else {
                 tag 'missing-field-in-dep5-copyright', "license (paragraph at line $lines[$i])";
             }
-            if (not defined get_field ($para, 'copyright')) {
+            if (not defined $copyright) {
                 tag 'missing-field-in-dep5-copyright', "copyright (paragraph at line $lines[$i])";
             }
         }
