@@ -4,4 +4,5 @@ E: binaries-general: binary-or-shlib-defines-rpath usr/share/foo/basic /usr/loca
 E: binaries-general: debug-symbols-directly-in-usr-lib-debug usr/lib/debug/basic
 E: binaries-general: library-in-debug-or-profile-should-not-be-stripped usr/lib/debug/usr/share/foo/basic
 W: binaries-general: binary-compiled-with-profiling-enabled usr/share/foo/basic
+W: binaries-general: debug-file-with-no-debug-symbols usr/lib/debug/usr/share/foo/basic
 W: binaries-general: debug-package-should-be-named-dbg usr/lib/debug/basic

@@ -1,7 +1,7 @@
 # This is the correct way to build a lib
 
 CC=gcc
-CFLAGS=-Wall -Winline -O2
+CFLAGS=-g -Wall -Winline -O2
 
 OBJS=baz.o extra.o
 SHOBJS=baz.sho extra.sho

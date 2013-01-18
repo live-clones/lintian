@@ -30,12 +30,15 @@ W: debug source: debhelper-but-no-misc-depends hi-dbg
 W: debug source: debhelper-compat-file-is-missing
 W: debug source: debian-rules-sets-DH_COMPAT line 5
 W: debug source: timewarp-standards-version (2006-04-04 < 2006-04-26)
+W: hello-dbg: debug-file-with-no-debug-symbols usr/lib/debug/usr/bin/hello
 W: hello-hello-dbg: latest-debian-changelog-entry-without-new-version
 W: hello: binary-without-manpage usr/bin/hello
 W: hello: binary-without-manpage usr/bin/hello.dbg
 W: hello: latest-debian-changelog-entry-without-new-version
 W: hi-dbg: latest-debian-changelog-entry-without-new-version
 W: libhello0-dbg: debug-file-should-use-detached-symbols usr/lib/debug/lib/libhello.so.0.0
+W: libhello0-dbg: debug-file-with-no-debug-symbols usr/lib/debug/lib/libhello.so.0.0
+W: libhello0-dbg: debug-file-with-no-debug-symbols usr/lib/debug/usr/lib/libhello.so.0.0
 W: libhello0-dbg: latest-debian-changelog-entry-without-new-version
 W: libhello0-dbg: shared-lib-without-dependency-information usr/lib/libhello.so.dbg
 W: libhello0: latest-debian-changelog-entry-without-new-version

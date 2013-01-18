@@ -2,6 +2,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - debug-file-with-no-debug-symbols
       - desktop-entry-lacks-keywords-entry
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
@@ -15,6 +16,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Accept libx32 as a bi-arch directory.
     + [NT] Correct reference policy reference.  Thanks to
       Samuel Bronson for the correction.  (Closes: #698234)
+    + [NT] Detect debug ELF binaries with no debug symbols.
+      Thanks to Nelson A. de Oliveira for the report.
+      (Closes: #668437)
   * checks/cruft:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.
