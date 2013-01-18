@@ -343,3 +343,16 @@ Info: The binary is installed as a detached "debug symbols" ELF file,
  .
  Implementation detail: Lintian currently checks for the ".debug_line"
  section, which is a part of the DWARF standard.
+
+Tag: binary-file-built-without-LFS-support
+Severity: minor
+Certainty: possible
+Experimental: yes
+Info: The listed ELF binary appears to be built without "Large File
+ Support" (LFS).  If so, it may not be able to handle large files
+ correctly.
+ .
+ To support large files, ensure that <tt>_FILE_OFFSET_BITS</tt> is
+ defined and set to 64 before the relevant files are included.  This
+ can be done by using the <tt>AC_SYS_LARGEFILE</tt> macro with
+ autoconf.

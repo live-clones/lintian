@@ -82,6 +82,9 @@ sub _split_hash {
 }
 
 our $HARDENING = Lintian::Data->new ('binaries/hardening-tags', qr/\s*\|\|\s*/o, \&_split_hash);
+our $LFS_SYMBOLS = Lintian::Data->new ('binaries/lfs-symbols');
+
+our $ARCH_32_REGEX;
 
 sub run {
 
@@ -109,6 +112,12 @@ my $srcpkg = $proc->pkg_src;
 
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
+    my $has_lfs = undef;
+    # Only 32bit ELF binaries can lack LFS.
+    $ARCH_32_REGEX = $ARCH_REGEX->value ('32') unless defined $ARCH_32_REGEX;
+    $has_lfs = 1 unless $info->file_info ($file) =~ m/$ARCH_32_REGEX/o;
+    # We don't care if it is a debug file
+    $has_lfs = 1 if $file =~ m,^usr/lib/debug/,;
 
     if (defined $objdump->{SONAME}) {
         foreach my $soname (@{$objdump->{SONAME}}) {
@@ -118,6 +127,20 @@ foreach my $file (sort keys %{$info->objdump_info}) {
     }
     foreach my $symbol (@{$objdump->{SYMBOLS}}) {
         my ($foo, $sec, $sym) = @{$symbol};
+
+        unless ($has_lfs) {
+            if ($LFS_SYMBOLS->known ($sym)) {
+                # Using a 32bit only interface call, assume it is
+                # built without LFS (for now).  We may disapprove this
+                # later if a 64 variant comes along.
+                $has_lfs = 0;
+            } elsif ($sym =~ m/^(.+)64$/) {
+                # all LFS symbols appear to be end with 64; exploit
+                # that to check if LFS is enabled.
+                my $base = $1;
+                $has_lfs = 1 if $LFS_SYMBOLS->known ($base);
+            }
+        }
         if ($arch ne 'hppa') {
             if ($foo eq '.text' and $sec eq 'Base' and
                 $sym eq '__gmon_start__') {
@@ -131,6 +154,8 @@ foreach my $file (sort keys %{$info->objdump_info}) {
     }
     tag 'binary-file-compressed-with-upx', $file if $objdump->{'UPX'};
     tag 'apparently-corrupted-elf-binary', $file if $objdump->{'ERRORS'};
+    tag 'binary-file-built-without-LFS-support', $file
+        if defined $has_lfs and not $has_lfs;
     if ($objdump->{'BAD-DYNAMIC-TABLE'}) {
         tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
     }

@@ -3,6 +3,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - ambiguous-paragraph-in-dep5-copyright
+      - binary-file-built-without-LFS-support
       - debug-file-with-no-debug-symbols
       - desktop-entry-lacks-keywords-entry
       - dir-or-file-in-build-tree
@@ -23,6 +24,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Detect debug ELF binaries with no debug symbols.
       Thanks to Nelson A. de Oliveira for the report.
       (Closes: #668437)
+    + [NT] Check for binaries built without LFS.  This can
+      only be checked for 32bit binaries as 64bit binaries
+      have LFS by definition.  Thanks to Guillem Jover for
+      the report.  (Closes: #670963)
   * checks/cruft:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.

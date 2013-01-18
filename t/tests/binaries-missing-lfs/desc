@@ -1,0 +1,6 @@
+Testname: binaries-missing-lfs
+Sequence: 6000
+Version: 1.0
+Description: Test for missing lfs
+Architecture: i386
+Test-For: binary-file-built-without-LFS-support
