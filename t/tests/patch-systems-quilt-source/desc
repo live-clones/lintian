@@ -1,8 +1,0 @@
-Testname: patch-systems-quilt-source
-Sequence: 6000
-Type: non-native
-Version: 1.0-1
-Options: --pedantic -I -E
-Description: Test for quilt patches which do not have accompanying descriptions
-Test-For: unneeded-build-dep-on-quilt
-References: Debian Bug #582767

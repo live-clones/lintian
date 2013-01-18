@@ -116,9 +116,6 @@ sub run {
     #----- quilt
     if ($build_deps->implies("quilt") or $quilt_format) {
         $uses_patch_system++;
-        if($quilt_format && $build_deps->implies("quilt")){
-            tag "unneeded-build-dep-on-quilt";
-        }
         #check for a debian/patches file:
         if (! -r "$dpdir/series") {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;

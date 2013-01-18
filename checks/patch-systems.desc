@@ -174,16 +174,3 @@ Info: This package build-depends on a patch system such as dpatch or
  can refer to <tt>/usr/share/doc/dpatch/README.source.gz</tt> for dpatch.
 Ref: policy 4.14
 
-Tag: unneeded-build-dep-on-quilt
-Severity: pedantic
-Certainty: possible
-Info: This package build-depends on quilt, which is not required since
- dpkg-source will apply patches at unpack time for 3.0 (quilt) source
- packages.
- .
- Remember to remove any references to quilt in the rules file (e.g.
- "--with quilt", dh_quilt_* or quilt makefile includes).
- .
- This tag is meant to remind people that with 3.0 (quilt), quilt is
- not necessary.  If you keep the build-depends on quilt to ease
- backporting to older releases, then please ignore/override this tag.

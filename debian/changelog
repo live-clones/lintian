@@ -12,6 +12,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - package-contains-broken-symlink-wildcard
       - vcs-field-bitrotted
       - vcs-git-uses-invalid-user-uri
+    + Removed:
+      - unneeded-build-dep-on-quilt
 
   * checks/binaries{,.desc}:
     + [NT] Accept libx32 as a bi-arch directory.
@@ -46,6 +48,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       "Science" category.  (Closes: #697693)
     + [NT] Apply patch from Thomas Preud'homme to detect uses of
       relative icons in menu files.  (Closes: #697916)
+  * checks/patch-systems{,.desc}:
+    + [NT] Retire unneeded-build-dep-on-quilt, it is only a pedantic
+      tag and apparently not too accurate.  Thanks to Charles Plessy
+      and Frank Kuester for the reports.  (Closes: #615516, #681061)
   * checks/shared-libs:
     + [NT] Special case gcc packages when looking for dev symlinks.
       gcc stores its dev symlinks in some special directories.
