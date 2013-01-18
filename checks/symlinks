@@ -92,7 +92,13 @@ foreach my $blink (@brokenlinks){
         next BLINK if $dinfo->index ($path) || $dinfo->index ("$path/");
     }
     # nope - not found in any of our direct dependencies.
-    tag 'package-contains-broken-symlink', $file, $target
+    if ($target =~ m/\*/) {
+        # If it contains a "*" it probably a bad ln -s target/*.so link
+        # expansion.
+        tag 'package-contains-broken-symlink-wildcard', $file, $target
+    } else {
+        tag 'package-contains-broken-symlink', $file, $target
+    }
 }
 
 }

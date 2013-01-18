@@ -1,2 +1,3 @@
+W: broken-links: package-contains-broken-symlink-wildcard usr/lib/broken-links/some-other.conf etc/some-*.conf
 X: broken-links: package-contains-broken-symlink usr/lib/broken-links/some.conf etc/some.conf
 X: broken-links: package-contains-broken-symlink usr/lib/broken-links/some.data ../../share/broken-links/some.data

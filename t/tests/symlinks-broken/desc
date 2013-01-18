@@ -4,3 +4,4 @@ Version: 1.0
 Description: General tests broken symlinks
 Test-For:
  package-contains-broken-symlink
+ package-contains-broken-symlink-wildcard

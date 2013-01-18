@@ -9,6 +9,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-home
       - license-problem-gfdl-invariants
       - menu-icon-uses-relative-path
+      - package-contains-broken-symlink-wildcard
       - vcs-field-bitrotted
       - vcs-git-uses-invalid-user-uri
 
@@ -37,9 +38,6 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to suppress empty-binary-package.  Lintian will still
       accept it the phrase for now.
     + [NT] Accept libx32 as an bi-arch directory.
-  * checks/shared-libs:
-    + [NT] Special case gcc packages when looking for dev symlinks.
-      gcc stores its dev symlinks in some special directories.
   * checks/menu-format{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to detect missing
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
@@ -48,6 +46,14 @@ lintian (2.5.12) UNRELEASED; urgency=low
       "Science" category.  (Closes: #697693)
     + [NT] Apply patch from Thomas Preud'homme to detect uses of
       relative icons in menu files.  (Closes: #697916)
+  * checks/shared-libs:
+    + [NT] Special case gcc packages when looking for dev symlinks.
+      gcc stores its dev symlinks in some special directories.
+  * checks/symlinks{,.desc}:
+    + [NT] Warn about broken symlinks that contains a literal "*"
+      in their target.  This is usually a sign that a wildcard did
+      not properly expand.  Thanks to Bernd Zeimetz for the report.
+      (Closes: #683737)
 
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
