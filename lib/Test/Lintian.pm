@@ -62,6 +62,7 @@ use Cwd qw(realpath);
 use Lintian::Check qw(check_spelling);
 use Lintian::Data;
 use Lintian::Profile;
+use Lintian::Tag::Info;
 use Lintian::Tags;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
@@ -69,6 +70,12 @@ my %severities = map { $_ => 1 } @Lintian::Tags::SEVERITIES;
 my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
 my %known_html_tags = map { $_ => 1 } qw(a em i tt);
+
+# We use this to check for explicit links where it is possible to use
+# a manual ref.
+my $MANUALS = $Lintian::Tag::Info::MANUALS;
+# lazy-load this (so loading a profile can affect it)
+my %URLS = ();
 
 =head1 FUNCTIONS
 
@@ -236,7 +243,11 @@ sub test_check_desc {
             $builder->ok ($info !~ /[<>]/, 'Tag info has no stray angle brackets')
 		or $builder->diag ("$cname: $tag\n");
 
-            # TODO: Implement check of Ref (?)
+            if ($tpara->{'ref'}) {
+                my @issues = _check_reference ($tpara->{'ref'});
+                $builder->ok (!scalar @issues, 'Proper references are used')
+                    or $builder->diag ("$cname: $tag\n\t" . join ("\n\t", @issues));
+            }
         }
     }
 
@@ -594,6 +605,51 @@ sub load_profile_for_test {
     Lintian::Data->set_vendor ($PROFILE);
 }
 
+
+sub _check_reference {
+    my ($refdata) = @_;
+    my @issues = ();
+
+    unless (%URLS) {
+        $MANUALS->known (''); # force it to load the manual refs
+        foreach my $manid ($MANUALS->all) {
+            my $table = $MANUALS->value ($manid);
+            foreach my $section (keys %$table) {
+                my $url = $table->{$section}{url};
+                next unless $url;
+                $URLS{$url} = "$manid $section";
+            }
+        }
+    }
+
+    foreach my $reference (split /\s*,\s*/, $refdata) {
+        if ($reference =~ m,^http://bugs.debian.org/(\d++)$, or
+            $reference =~ m,^http://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$,) {
+            push @issues, "replace \"$reference\" with \"#$1\"";
+        } elsif (exists $URLS{$reference}) {
+            push @issues, "replace \"$reference\" with \"$URLS{$reference}\"";
+        } elsif ($reference =~ m/^([\w-]++)\s++(\S++)$/) {
+            my ($manual, $section) = ($1, $2);
+            if ($MANUALS->known ($manual)) {
+                push @issues, "unknown section \"$section\" in $manual"
+                    unless exists $MANUALS->value ($manual)->{$section};
+            } else {
+                push @issues, "unknown manual \"$manual\"";
+            }
+        } else {
+            # Check it is a valid reference like URLs or #123456
+            # NB: "policy 10.1" references already covered above
+            my $ok = 0;
+            $ok = 1 if $reference =~ m/^#\d++$/; # debbug reference
+            $ok = 1 if $reference =~ m,^(?:ftp|https?)://,; # browser URL
+            $ok = 1 if $reference =~ m,^/,; # local file reference
+            $ok = 1 if $reference =~ m,[\w_-]+\(\d\w*\)$,; # man reference
+            push @issues, "unknown/malformed reference \"$reference\""
+                unless $ok;
+        }
+    }
+    return @issues;
+}
 
 sub _find_check {
     my ($find_opt, $input) = @_;
