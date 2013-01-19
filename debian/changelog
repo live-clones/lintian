@@ -141,6 +141,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Reject partially signed Deb822 files.  Most Deb822 files
       are not signed at all; but those that are should be completely
       covered by a signature.  (Closes: #696230)
+    + [ADB] Fix a typo in the matching of expected delimiters for some
+      signed messages; thanks Samuel Bronson.
 
   * private/refresh-locale-codes:
     + [JW,NT] Ignore the "zxx" locale code, which means "No

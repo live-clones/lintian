@@ -428,7 +428,7 @@ sub visit_dpkg_paragraph {
 
                 my $key = qr/(?:BEGIN|END) PGP (?:PUBLIC|PRIVATE) KEY BLOCK/;
                 my $msgpart = qr{BEGIN PGP MESSAGE, PART \d+(?:/\d+)?};
-                my $msg = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYTPED) )?MESSAGE/;
+                my $msg = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
 
                 if (m/^-----($key|$msgpart|$msg)-----\s*$/o) {
                     die "syntax error at line $.: Unexpected $1 header\n";
