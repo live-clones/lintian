@@ -46,6 +46,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to suppress empty-binary-package.  Lintian will still
       accept it the phrase for now.
     + [NT] Accept libx32 as an bi-arch directory.
+    + [NT] Ignore gzipped lintian overrides when checking whether
+      a package is empty.
   * checks/init.d:
     + [NT] Fix regression where Lintian would not properly match
       init.d passed to update-rc.d.  Thanks to Michael Meskes for

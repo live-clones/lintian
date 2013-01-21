@@ -215,12 +215,10 @@ if (!$is_dummy) {
     for my $file ($info->sorted_index) {
         # Ignore directories
         unless ($file =~ m,/$,) {
-            # Skip if $file is an empty string
-            next if not $file;
             # Skip if $file is outside /usr/share/doc/$pkg directory
             if ($file !~ m,^usr/share/doc/\Q$pkg\E,) {
                 # - except if it is an lintian override.
-                next if ($file =~ m,^usr/share/lintian/overrides/\Q$pkg\E$,);
+                next if $file =~ m,^usr/share/lintian/overrides/\Q$pkg\E(?:\.gz)?$,;
                 $is_empty = 0;
                 last;
             }
