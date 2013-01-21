@@ -1,5 +1,10 @@
 lintian (2.5.10.4) unstable; urgency=low
 
+  * checks/init.d:
+    + [NT] Fix regression where Lintian would not properly match
+      init.d passed to update-rc.d.  Thanks to Michael Meskes for
+      reporting.  (Closes: #698602)
+
   * lib/Lintian/Collect/Package.pm:
     + [NT] Ensure the "root" entry of indices do not contain itself.
       (Closes: #695866)
