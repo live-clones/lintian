@@ -24,7 +24,7 @@ use warnings;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail $PKGNAME_REGEX);
+use Lintian::Util qw(fail);
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (provides            => 1,
@@ -61,6 +61,11 @@ my %implied_dependencies =
     );
 
 our $VIRTUAL_FACILITIES = Lintian::Data->new('init.d/virtual_facilities');
+# Regex to match names of init.d scripts; it is a bit more lax than
+# package names (e.g. allows "_").  We do not allow it to start with a
+# "dash" to avoid confusing it with a command-line option (also,
+# update-rc.d does not allow this).
+our $INITD_NAME_REGEX = qr/[\w\.\+][\w\-\.\+]*/;
 
 sub run {
 
@@ -86,7 +91,7 @@ if (open(IN, '<', $postinst)) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
-            (?:$opts_r)*($PKGNAME_REGEX)\s+($action_r)/xo;
+            (?:$opts_r)*($INITD_NAME_REGEX)\s+($action_r)/xo;
         my ($name,$opt) = ($1,$2);
         next if $opt eq 'remove';
         if ($initd_postinst{$name}++ == 1) {
@@ -106,7 +111,7 @@ if (open(IN, '<', $preinst)) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless m/update-rc\.d \s+
-                       (?:$opts_r)*($PKGNAME_REGEX) \s+
+                       (?:$opts_r)*($INITD_NAME_REGEX) \s+
                        ($action_r)/ox;
         my ($name,$opt) = ($1,$2);
         next if $opt eq 'remove';
@@ -120,7 +125,7 @@ if (open(IN, '<', $postrm)) {
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
-        next unless m/update-rc\.d\s+($opts_r)*($PKGNAME_REGEX)/o;
+        next unless m/update-rc\.d\s+($opts_r)*($INITD_NAME_REGEX)/o;
         if ($initd_postrm{$2}++ == 1) {
             tag 'duplicate-updaterc.d-calls-in-postrm', $2;
             next;
@@ -137,7 +142,7 @@ if (open(IN, '<', $prerm)) {
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
-        next unless m/update-rc\.d\s+($opts_r)*($PKGNAME_REGEX)/o;
+        next unless m/update-rc\.d\s+($opts_r)*($INITD_NAME_REGEX)/o;
         tag 'prerm-calls-updaterc.d', $2;
     }
     close(IN);
