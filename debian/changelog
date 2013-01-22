@@ -82,6 +82,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       functions.  Thanks to Sebastian Ramacher for the suggestion
       and Roland Stigge for the report.  (Closes: #685299)
     + [NT] Remove work around for #677530
+  * collection/index{,.desc}:
+    + [NT] Fix missing trailing slash on dirnames and bump index
+      version accordingly.  Thanks to Nicolas Boulenguez for
+      noticing.
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 
