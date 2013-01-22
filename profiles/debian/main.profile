@@ -7,6 +7,6 @@ Enable-Tags-From-Check: binaries, changelog-file, changes-file, conffiles, contr
  filename-length, files, group-checks, huge-usr-share, infofiles, init.d, java,
  lintian, manpages, md5sums, menu-format, menus, nmu, ocaml, patch-systems,
  po-debconf, rules, scripts, shared-libs, source-copyright, standards-version,
- symlinks, version-substvars, watch-file
+ symlinks, testsuite, version-substvars, watch-file
 Disable-Tags: hardening-no-stackprotector
 

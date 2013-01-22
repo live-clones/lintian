@@ -1,0 +1,5 @@
+Testname: testsuite-control-not-file
+Sequence: 6000
+Version: 1.0
+Description: Tests for the autopkgtest control being non-file
+Test-For: debian-tests-control-is-not-a-regular-file

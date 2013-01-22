@@ -1,0 +1,7 @@
+Testname: testsuite-general
+Sequence: 6000
+Version: 1.0
+Description: General tests of the autopkgtest control file
+Test-For:
+ debian-tests-control-uses-national-encoding
+ inconsistent-testsuite-field

@@ -4,14 +4,18 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + Added:
       - ambiguous-paragraph-in-dep5-copyright
       - binary-file-built-without-LFS-support
+      - debian-tests-control-is-not-a-regular-file
+      - debian-tests-control-uses-national-encoding
       - debug-file-with-no-debug-symbols
       - desktop-entry-lacks-keywords-entry
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
+      - inconsistent-testsuite-field
       - license-problem-gfdl-invariants
       - menu-icon-uses-relative-path
       - package-contains-broken-symlink-wildcard
+      - unknown-testsuite
       - vcs-field-bitrotted
       - vcs-git-uses-invalid-user-uri
     + Removed:
@@ -76,6 +80,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       in their target.  This is usually a sign that a wildcard did
       not properly expand.  Thanks to Bernd Zeimetz for the report.
       (Closes: #683737)
+  * checks/testsuite{,.desc}:
+    + [NT] New check written by Nicolas Boulenguez to catch some
+      mistakes with the new autopkgtest tests.
 
   * collection/hardening-info{,-helper,.desc}:
     + [NT] Whitelist "memset" and "memmove" as "always safe"

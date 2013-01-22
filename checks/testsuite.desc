@@ -1,0 +1,44 @@
+Check-Script: testsuite
+Author: Nicolas Boulenguez <nicolas@debian.org>
+Type: source
+Needs-Info: index, unpacked
+Info: This script checks the Testsuite field in package dsc files,
+ and debian/tests/control if any.
+
+Tag: debian-tests-control-is-not-a-regular-file
+Severity: wishlist
+Certainty: certain
+Info: In case the dsc file contains a Testsuite field, "debian/tests"
+ must be a directory and contain a "control" regular file.
+
+Tag: debian-tests-control-uses-national-encoding
+Severity: normal
+Certainty: certain
+Info: The debian/tests/control file should be valid UTF-8, an encoding
+ of the Unicode character set.
+ .
+ There are many ways to convert a file from an encoding like
+ ISO-8859-1; you may for example use "iconv" like:
+ .
+  $ iconv -f ISO-8859-1 -t UTF-8 file &gt; file.new
+  $ mv file.new file
+
+Tag: inconsistent-testsuite-field
+Severity: wishlist
+Certainty: certain
+Info: The package provides a debian/tests/control file but no
+ Testsuite field in the dsc file, or the field exists but not the
+ file.
+ .
+ For discoverability, packages shipping tests for the autopkgtest
+ testing framework should declare their presence in the package
+ dsc file by adding "XS-Testsuite: autopkgtest" to their debian/control.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: unknown-testsuite
+Severity: normal
+Certainty: certain
+Info: The dsc file sets Testsuite to a value other than autopkgtest,
+ the only one allowed. This field is most probably copied by
+ dpkg-source from XS-Testsuite in debian/control.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD

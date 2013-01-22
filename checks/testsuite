@@ -1,0 +1,54 @@
+# testsuite -- lintian check script -*- perl -*-
+
+# Copyright (C) 2013 Nicolas Boulenguez <nicolas@debian.org>
+
+# This file is part of lintian.
+
+# Lintian is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# Lintian is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Lintian.  If not, see <http://www.gnu.org/licenses/>.
+
+package Lintian::testsuite;
+
+use strict;
+use warnings;
+
+use Lintian::Tags qw(tag);
+use Lintian::Util qw(file_is_encoded_in_non_utf8);
+
+sub run {
+    my ($pkg, $type, $info) = @_;
+
+    my $testsuite = $info->field ('testsuite');
+    my $control = $info->index ('debian/tests/control');
+
+    if (defined $testsuite xor defined $control) {
+        tag 'inconsistent-testsuite-field';
+    }
+    if (defined $testsuite and $testsuite ne 'autopkgtest') {
+        tag 'unknown-testsuite', $testsuite;
+    }
+    if (defined $control) {
+        if (not $control->is_regular_file) {
+            tag 'debian-tests-control-is-not-a-regular-file';
+        } else {
+            my $path = $info->unpacked ($control->name);
+
+            my $not_utf8_line = file_is_encoded_in_non_utf8 ($path, $type, $pkg);
+            if ($not_utf8_line) {
+                tag 'debian-tests-control-uses-national-encoding', "at line $not_utf8_line";
+            }
+        }
+    }
+}
+
+1;

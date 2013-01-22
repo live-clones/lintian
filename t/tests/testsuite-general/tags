@@ -1,0 +1,2 @@
+I: testsuite-general source: inconsistent-testsuite-field
+W: testsuite-general source: debian-tests-control-uses-national-encoding at line 2

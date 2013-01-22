@@ -1,0 +1,5 @@
+Testname: testsuite-unknown-suite
+Sequence: 6000
+Version: 1.0
+Description: Tests for unknown suite in the control being non-file
+Test-For: unknown-testsuite

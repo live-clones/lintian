@@ -23,6 +23,7 @@ python-version
 ruby-versions
 source
 standards-version
+testsuite
 uploaders
 vcs-arch
 vcs-browser
