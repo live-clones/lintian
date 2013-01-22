@@ -108,6 +108,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       subcategories.
   * data/output/manual-references:
     + [NT] Refresh with Policy 3.9.4.
+  * data/scripts/versioned-interpreters:
+    + [NT] Apply patch from Thijs Kinkhorst to add lua5.2 as a
+      versioned alternative to lua.  (Closes: #698704)
   * data/shared-libs/ldconfig-dirs:
     + [NT] Add libx32 and usr/libx32 used by some gcc x32 bi-arch
       packages.
