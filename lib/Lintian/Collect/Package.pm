@@ -164,7 +164,11 @@ sub file_info {
 Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
 must be relative to the root of the unpacked package and must be
 without leading slash (or "./").  If FILE is not in the package, it
-returns C<undef>.
+returns C<undef>.  If FILE is supposed to be a directory, it must be
+given with a trailing slash.  Example:
+
+  my $file = $info->index ("usr/bin/lintian");
+  my $dir = $info->index ("usr/bin/");
 
 To get a list of entries in the package, see L</sorted_index>.  To
 actually access the underlying file (e.g. the contents), use
