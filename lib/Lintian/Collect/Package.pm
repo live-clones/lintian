@@ -362,7 +362,7 @@ sub _fetch_index_data {
     $self->{"sorted_$field"} = \@sorted;
     close $idx;
     close $num_idx if $num_idx;
-    return $self->{$field}->{$file} if $self->{$field}->{$file};
+    return $self->{$field}->{$file} if exists $self->{$field}->{$file};
     return;
 }
 
