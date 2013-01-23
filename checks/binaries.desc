@@ -364,7 +364,17 @@ Info: The listed ELF binary appears to be built without "Large File
  Support" (LFS).  If so, it may not be able to handle large files
  correctly.
  .
- To support large files, ensure that <tt>_FILE_OFFSET_BITS</tt> is
- defined and set to 64 before the relevant files are included.  This
- can be done by using the <tt>AC_SYS_LARGEFILE</tt> macro with
- autoconf.
+ To support large files, code review might be needed to make sure that
+ those files are not slurped into memory or mmap(2)ed, and that correct
+ 64-bit data types are used (ex: off_t instead of ssize_t), etc.  Once
+ that has been done ensure <tt>_FILE_OFFSET_BITS</tt> is defined and
+ set to 64 before the relevant files are included.  This can be done by
+ using the <tt>AC_SYS_LARGEFILE</tt> macro with autoconf.
+ .
+ Take into account that even if this tag is not emitted, that does not
+ mean the binary is LFS-safe (ie. no OOM conditions, file truncation
+ or overwrite will happen).
+ .
+ Also note that enabling LFS on a shared library is not always safe as
+ it might break ABI in case some of the exported types change size, in
+ those cases a SOVERSION bump might be required.
