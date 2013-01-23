@@ -128,17 +128,11 @@ foreach my $file (sort keys %{$info->objdump_info}) {
     foreach my $symbol (@{$objdump->{SYMBOLS}}) {
         my ($foo, $sec, $sym) = @{$symbol};
 
-        unless ($has_lfs) {
+        unless (defined $has_lfs) {
             if ($LFS_SYMBOLS->known ($sym)) {
-                # Using a 32bit only interface call, assume it is
-                # built without LFS (for now).  We may disapprove this
-                # later if a 64 variant comes along.
+                # Using a 32bit only interface call, some parts of the
+                # binary are built without LFS.
                 $has_lfs = 0;
-            } elsif ($sym =~ m/^(.+)64$/) {
-                # all LFS symbols appear to be end with 64; exploit
-                # that to check if LFS is enabled.
-                my $base = $1;
-                $has_lfs = 1 if $LFS_SYMBOLS->known ($base);
             }
         }
         if ($arch ne 'hppa') {

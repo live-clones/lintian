@@ -360,9 +360,9 @@ Tag: binary-file-built-without-LFS-support
 Severity: minor
 Certainty: possible
 Experimental: yes
-Info: The listed ELF binary appears to be built without "Large File
- Support" (LFS).  If so, it may not be able to handle large files
- correctly.
+Info: The listed ELF binary appears to be (partially) built without
+ "Large File Support" (LFS).  If so, it may not be able to handle large
+ files correctly.
  .
  To support large files, code review might be needed to make sure that
  those files are not slurped into memory or mmap(2)ed, and that correct
