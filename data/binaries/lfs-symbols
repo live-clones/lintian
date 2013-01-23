@@ -27,6 +27,11 @@ fstatfs
 fstatvfs
 ftello
 ftruncate
+fts_open
+fts_read
+fts_children
+fts_set
+fts_close
 ftw
 getdirentries
 getrlimit
