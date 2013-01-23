@@ -231,7 +231,7 @@ will not look up relations like Provides for you).
 
 Suppose you wanted all packages with a multi-arch "same" field to
 pre-depend on the package "multiarch-support".  Well, we could use the
-L<$info->relation|Lintian::Collect::Binary/relation (FIELD)> method for
+L<< $info->relation|Lintian::Collect::Binary/relation (FIELD) >> method for
 this.
 
 The $info->relation returns an instance of L<Lintian::Relation>.  This
@@ -400,8 +400,8 @@ So the resulting check is:
 
 Another very used mechanism is to check for the presence (or absence)
 of a given file.  Generally this is what the
-L<$info->index|Lintian::Collect::Package/index (FILE)> and
-L<$info->sorted_index|Lintian::Collect::Package/sorted_index> methods
+L<< $info->index|Lintian::Collect::Package/index (FILE) >> and
+L<< $info->sorted_index|Lintian::Collect::Package/sorted_index >> methods
 are for.  The "index" method returns instances of L<Lintian::Path>,
 which has a number of utility methods.
 
@@ -450,8 +450,8 @@ L<unpacked ('path/to/file')|Lintian::Collect::Package/ my $VALID_MULTI_ARCH_VALU
 
 Another very used mechanism is to check for the presence (or absence)
 of a given file.  Generally this is what the
-L<$info->index|Lintian::Collect::Package/index (FILE)> and
-L<$info->sorted_index|Lintian::Collect::Package/sorted_index> methods
+L<< $info->index|Lintian::Collect::Package/index (FILE) >> and
+L<< $info->sorted_index|Lintian::Collect::Package/sorted_index >> methods
 are for.  The "index" method returns instances of L<Lintian::Path>,
 which has a number of utility methods.
 
