@@ -1,0 +1,94 @@
+Format: 1.8
+Date: Sun, 17 Jun 2012 23:25:06 +0200
+Source: lintian
+Binary: lintian
+Architecture: source
+Version: 2.5.10
+Distribution: UNRELEASED
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Niels Thykier <niels@thykier.net>
+Description: 
+ lintian    - Debian package checker
+Closes: 673276 678775
+Changes: 
+ lintian (2.5.10) UNRELEASED; urgency=low
+ .
+   * Summary of tag changes:
+     + Added:
+       - incompatible-java-bytecode-format
+       - unknown-java-class-version
+ .
+   * checks/changes-file.desc:
+     + [NT] Fix typo in tag description.  Thanks to Luca
+       Falavigna for spotting it.
+   * checks/files:
+     + [NT] Use new gzip decompressor from L::Util.
+   * checks/java{,.desc}:
+     + [NT] Catch unknown Java class versions.
+     + [NT] Catch uses of Java7 byte code as an experimental
+       check.  It lacks the proper checks for cases where
+       packages have the proper dependencies for Java7 byte
+       code.  (Closes: #673276)
+ .
+   * collection/*:
+     + [NT] Add missing loads of FileHandle module.
+   * collection/java-info{,.desc}:
+     + [NT] Use Archive::Zip instead of zipinfo + unzip to
+       extract information from Jar files.
+     + [NT] Limit java-info to files classified as "Zip Archive"
+       by file(1).
+   * collection/objdump-info:
+     + [NT] Only call readelf once per binary.
+     + [NT] Use xargs + a new helper to reduce the number of
+       readelf calls even further.
+   * collection/objdump-info-helper:
+     + [NT] New file.
+   * collection/strings:
+     + [NT] Optimize for the "common case" file names with a
+       fall-back to previous behaviour with special file names.
+   * collection/strings-helper:
+     + [NT] New file.
+ .
+   * debian/control:
+     + [NT] Add (Build-)Dependency on libarchive-zip-perl.
+     + [NT] Remove runtime dependency on unzip (replaced by
+       libarchive-zip-perl).
+     + [NT] Add explicit Build-Dependency on xz-utils instead
+       of relying on dpkg-dev's dependency on it.
+     + [NT] Add versioned xz-utils as alternative to xz-lzma
+       or lzma.  (Closes: #678775)
+     + [NT] Add missing suggests for lzma packages.  lzma is
+       only used for source packages compressed with lzma.
+     + [NT] Add suggests on libperlio-gzip-perl.
+ .
+   * frontend/lintian:
+     + [NT] Check if some collections can be skipped for existing
+       entries.  This is mostly useful for static labs, where
+       certain checks can be now be rerun without having to run
+       "unpacked".
+     + [NT] Emit run times of collections and checks with debug
+       level 2 (or higher).
+     + [NT] Load lintian's libraries earlier.
+     + [NT] Add new option "--jobs" to control the number of
+       unpacking jobs Lintian will schedule in parallel.
+     + [NT] Improve Lintian's job scheduler to schedule unpacking
+       jobs on a group level rather than just a package level.
+ .
+   * lib/Lintian/Collect/[Binary,Package}.pm:
+     + [NT] Use new gzip decompressor from L::Util.
+   * lib/Lintian/CollScript.pm:
+     + [NT] New file.
+   * lib/Lintian/Util.pm:
+     + [NT] Add gzip decompressor preferring libperlio-perl if
+       available, but with fallback to a "fork+exec" of gzip.
+     + [NT] Load Digest::SHA immediately like Digest::MD5.
+Checksums-Sha1: 
+ b4b96b4d27c2cda31acf6d01b2e0654b6a09a132 1670 lintian_2.5.10.dsc
+ 8ea77c3b4a81fcbb63bac6a0847c687d4ddf2534 1105415 lintian_2.5.10.tar.gz
+Checksums-Sha256: 
+ e15ca14cfbf30e0086cb5942b395f34a7d933e5668b3c7fa2b3900fed1ee98d2 1670 lintian_2.5.10.dsc
+ 5b91379747dfb6a779e4117db4a5bfb41154e97854de11b21475ddd273343c9c 1105415 lintian_2.5.10.tar.gz
+Files: 
+ dda8d51e21900fd23393d2d4401e13d8 1670 devel optional lintian_2.5.10.dsc
+ b99b2e42c3b933efb8b147745dabdc46 1105415 devel optional lintian_2.5.10.tar.gz

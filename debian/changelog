@@ -146,6 +146,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       "hashref" wait.
   * lib/Lintian/Lab.pm:
     + [NT] Add lab_query method to handle lab-queries directly.
+    + [NT] Fix bitrot of repair_lab and rename it to repair for
+      consistency.
   * lib/Lintian/Lab{,/Manifest}.pm:
     + [NT] Add support for grouping of manifests.
   * lib/Lintian/Lab/Manifest.pm:

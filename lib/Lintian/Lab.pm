@@ -559,7 +559,7 @@ sub generate_diffs {
     return @diffs;
 }
 
-=item repair_lab
+=item repair
 
 Checks the lab contents against the current meta-data and syncs them.
 The lab must be open and should not be access while this method is
@@ -576,10 +576,10 @@ removing them.
 
 =cut
 
-sub repair_lab {
+sub repair {
     my ($self) = @_;
     my $updates = 0;
-    croak "Lab is not open.\n" unless $self->is_open;
+    croak "Lab is not open" unless $self->is_open;
     foreach my $pkg_type (keys %SUPPORTED_TYPES) {
         my $index = $self->_get_lab_index ($pkg_type);
         my $visitor = sub {
@@ -589,17 +589,14 @@ sub repair_lab {
             my $pkg_src_version = $metadata->{'source-version'};
             my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
             my $entry;
-            unless ( -d $dir && -f "$dir/.lintian-status") {
+            unless ( -d $dir) {
                 # The entry is clearly not here, remove it from the metadata
                 $index->delete (@keys);
                 $updates++;
-                -d $dir && rmdir $dir;
                 return;
             }
             eval {
-                $entry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
-                                                    $pkg_type, undef, $pkg_src, $pkg_src_version,
-                                                    $dir);
+                $entry = Lintian::Lab::Entry->new_from_metadata ($pkg_type, $metadata, $self, $dir);
             };
             unless ($entry && $entry->exists) {
                 # We either cannot load the entry or it does not
@@ -617,6 +614,12 @@ sub repair_lab {
                 }
                 $index->delete (@keys);
                 $updates++;
+            } else {
+                unless (-f "$dir/.lintian-status" or $entry->update_status_file) {
+                    # if we cannot write the status file, scrap the entry.
+                    $entry->remove;
+                    $updates++;
+                }
             }
         };
 

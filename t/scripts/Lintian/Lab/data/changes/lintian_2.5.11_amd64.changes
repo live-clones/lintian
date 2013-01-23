@@ -1,0 +1,272 @@
+Format: 1.8
+Date: Tue, 11 Dec 2012 22:12:06 +0100
+Source: lintian
+Binary: lintian
+Architecture: source all
+Version: 2.5.11
+Distribution: experimental
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Niels Thykier <niels@thykier.net>
+Description: 
+ lintian    - Debian package checker
+Closes: 623265 658474 660655 672273 673073 677874 677890 678639 678896 680391 681410 681769 681894 683224 683516 685497 686179 686352 687464 688320 688494 690014 690910 691489 692232 692616 693013 693442 693589 694328
+Changes: 
+ lintian (2.5.11) experimental; urgency=low
+ .
+   * Summary of tag changes:
+     + Added:
+       - conffile-has-bad-file-type
+       - debug-package-for-multi-arch-same-pkg-not-coinstallable
+       - dm-upload-allowed-is-obsolete
+       - field-name-typo-in-dep5-copyright
+       - font-adobe-copyrighted-fragment
+       - license-problem-json-evil
+       - maintainer-script-has-unexpanded-debhelper-token
+       - shlibs-uses-obsolete-relation
+       - untranslatable-debconf-templates
+     + Removed:
+       - apparently-truncated-elf-binary
+       - data.tar.xz-member-without-dpkg-pre-depends
+       - debhelper-overrides-need-versioned-build-depends
+       - no-source-field
+       - preinst-uses-dpkg-maintscript-helper-without-predepends
+ .
+   * checks/*:
+     + [NT] Remove assumption that lintian will chdir into the
+       the lab before calling the check.
+     + [NT] Be better at avoiding false-positive spelling errors
+       for references to packages that also happen to be common
+       spelling mistake.  Thanks to Paul Tagliamonte for the
+       report.  (Closes: #687464)
+   * checks/binaries{,.desc}:
+     + [NT] Merge apparently-truncated-elf-binary into
+       apparently-corrupted-elf-binary.
+     + [NT] Remove some references to objdump in tag descriptions
+       as Lintian uses readelf.
+     + [JW,NT] Update the "extract SONAME" shell snippet to properly
+       handle SONAMEs with uppercase letters.
+     + [JW] Recognise any path with matching the GNU multi-arch
+       triplet as a "Multi-arch: same"-safe directory.  Thanks to
+       Matthias Klose for the report.  (Closes: #681410)
+   * checks/changelog-file:
+     + [NT] Emit "missing changelog" for packages that are missing
+       their usr/share/doc/<pkg>/ dir and do not have a doc symlink.
+       Thanks to Faheem Mitha for the report.  (Closes: #683224)
+   * checks/conffiles{,.desc}:
+     + [NT] Remove leading slash on the filename when emitting
+       file-in-etc-rc.d-marked-as-conffile.
+     + [NT] Add check for "non-file" conffiles.  Thanks to Guillem
+       Jover for the report.  (Closes: #690910)
+   * checks/control-file.desc:
+     + [NT] Bump obsolete-relation-form-in-source to serious as these
+       forms are now "must not" instead of "should not".
+   * checks/copyright.desc:
+     + [NT] Bump debian-copyright-file-uses-obsolete-national-encoding
+       to serious as copyright files must now be UTF-8 encoded.
+   * checks/cruft{,.desc}:
+     + [NT] Detect MS-DOS executables as windows binaries.
+     + [NT] Bump the version of config.{guess,sub} needed for
+       triggering the "outdated-autotools-helper-file" tag for arm64
+       support.  Thanks to Paul Wise for the report and the
+       investigative work.  (Closes: #690014)
+     + [RA,NT] Extend the description of the tags {outdated,ancient}-
+       autotools-helper-file to mention that dh-autoreconf might be
+       helpful tool.
+     + [NT] Apply patch from Bastien Roucariès to detect file licensed
+       under the "Good, not Evil"-JSON license.  (Closes: #692616)
+   * checks/deb-format{,.desc}:
+     + [NT] Retire data.tar.xz tag.  (Closes: #680391)
+   * checks/debhelper{,.desc}:
+     + [JW,NT] Consider missing versioned build-depends on
+       debhelper for compat 8 (or less) a pedantic issue.
+       (Closes: #681894)
+     + [NT] Retire debhelper-overrides-need-versioned-build-depends.
+   * checks/fields{,.desc}:
+     + [NT] Retire no-source-field since Lintian cannot emit it any
+       more due to dpkg-source refusing to extract such source
+       packages.
+     + [NT] Add tag for using the obsolete DMUA field.  Thanks to
+       Ansgar Burchardt for the report.  (Closes: #688494)
+     + [NT] Apply patches from Bernhard R. Link to check for
+       unintentional whitespace and use of non-cannical URIs in
+       Vcs-* fields.  (Closes: #681769)
+     + [NT] Fix false-positive caused by insignificant whitespace.
+       Thanks to Dima Kogan for the report.  (Closes: #693589)
+   * checks/files:
+     + [RG] Recognise smarty3 as smarty itself.
+     + [NT] Consider "tasksel tasks" as a meta package.
+       (Closes: #691489)
+     + [NT] Add patch from Bastien Roucariès to check for adobe font
+       license issues.  (Closes: #694328)
+   * checks/group-checks{,.desc}:
+     + [NT] Detect debug packages not co-installable with itself,
+       when it provides debug symbols for a Multi-Arch: same package.
+       Thanks to Carsten Hey for the report.  (Closes: #678896)
+   * checks/infofiles:
+     + [NT] Use L::Util's gzip decompressor rather than zcat.
+   * checks/init.d{,.desc}:
+     + [NT] Move file-in-etc-rc.d-marked-as-conffile to conffiles
+       check.
+     + [NT] Use L::Collect's conffile API instead of accessing the
+       "conffiles" control file directly.
+   * checks/java.desc:
+     + [NT] Remove the "experimental" marker of the Java byte-code
+       check.
+   * checks/manpages{,.desc}:
+     + [CW,NT] Manually do redirects and chdir rather than
+       invoking a shell when calling man and lexgrog.
+     + [CW,NT] Be stricter with missing roff preprocessors by
+       setting MANROFFSEQ to the empty string when calling man.
+     + [CW,NT] Pass -Tutf8 -Z to man to skip an unused part of
+       the groff pipeline.  (Closes: #677874)
+     + [CW,NT] Use the L::Util gzip decompressor to open gzipped
+       manpages.
+   * checks/menu-format{,.desc}:
+     + [NT] Move a table of categories to a data file.
+     + [NT] Update description of menu-icon-missing.  Lintian is now
+       sometimes able to find the icon in dependencies (if they are
+       built from the same source).  Thanks to Ryan Kavanagh for the
+       report and the suggested patch.  (Closes: #683516)
+   * checks/md5sums:
+     + [NT] Use L::Collect's conffile API instead of accessing the
+       "conffiles" control file directly.
+   * checks/po-debconf{,.desc}:
+     + [NT] Check for untranslatable templates that should be
+       translatable.  Thanks to David Prévot for the report and the
+       patch.  (Closes: #686179)
+   * checks/scripts{,.desc}:
+     + [NT] Retire check for dpkg-maintscript-helper in preinst.
+       (Closes: #685497)
+     + [NT] Fix false positive "executable-not-elf-or-script" when
+       the file is an executable hardlink to a script.
+     + [NT] Check maintainer scripts for unexpanded #DEBHELPER# tokens.
+       Thanks to Cyril "KiBi" Brulebois for the suggestion.
+     + [NT] Fix false-positive for removal of device files as /dev/shm
+       is not a device.  Thanks to Steve Langasek for the report and
+       Roger Leigh for the extra info.  (Closes: #693442)
+   * checks/shared-libs{,.desc}:
+     + [NT] Clearify the description of dev-pkg-without-shlib-symlink
+       to mention that the dev symlink is always expected in /usr.
+     + [NT] Add missing "+" in libtool regex.  Thanks to Leo 'costela'
+       Antunes for the report.
+     + [RA,NT] Check for use of obsolete "<" and ">" in shlibs control
+       files.  (Closes: #660655)
+   * checks/source-copyright{,.desc}:
+     + [NT] Check for possible misspellings of known field
+       names.  (Closes: #678639)
+     + [NT] Fix typo of paragraph.  Thanks to Logan Rosen for spotting
+       it.  (Closes: #693013)
+   * checks/version-substvars{,.desc}:
+     + [JW,NT] Extend version-substvar-for-external-package to
+       all relations.  Previously it was only triggered for
+       strong dependnecy relations.  (Closes: #658474)
+ .
+   * collection/deb-format.desc:
+     + [NT] Remove unneeded changelog-file from "Needs-Info".
+   * collection/objdump-info{,-helper,.desc}:
+     + [NT] Change the output format for the collection and
+       bump the version of the collection accordingly.
+     + [NT] Apply patch from Peter Pentchev to ensure set{u,g}id
+       ELF binaries are properly processed, even when Lintian is
+       run as root.  (Closes: #686352)
+ .
+   * data/binaries/embedded-libs:
+     + [RG] Check for embedded copies of jsoncpp.
+   * data/fields/archive-sections:
+     + [NT] Add new "tasks" section.
+   * data/menu-format/add-categories:
+     + [NT] New file.
+   * data/output/ftp-master-{,non}fatal:
+     + [NT] Removed, not used at run time.
+   * data/scripts/interpreters:
+     + [NT] Add nodejs and Rscript as a known interpreter.
+       Thanks to Marcelo Jorge Vieira and Sébastien Boisvert
+       for the report.  (Closes: #623265, #692232)
+   * data/spelling/corrections:
+     + [NT,RG] Add more corrections.
+     + [RG] Re-sort the corrections.
+ .
+   * debian/control:
+     + [NT] Add (Build-)Depends on libtext-levenshtein-perl.
+     + [NT] Use anonscm.d.o in the Vcs-* fields instead of
+       git.d.o.
+   * debian/lintian.install:
+     + [NT] Install Lintian perl modules in /usr/share/perl5.
+   * debian/rules:
+     + [NT] Add target to generate HTML API doc.  Currently
+       this is only run manually.
+ .
+   * frontend/lintian:
+     + [NT] Remove chdir calls for checks.
+     + [NT] Retire depreciated command line and config options.
+     + [NT] Refactor unpackaging into Lintian::Unpacker.
+     + [NT] Make parameter for --jobs optional.  In its absence
+       Lintian will not limit the number of parallel jobs.
+     + [JW,NT] During the unpack phase, emit the name of the
+       group currently being unpacked when --verbose is given.
+       (Closes: #677890)
+     + [JW] Fix typo of Parallelization.
+     + [NT] Fix regression where --suppress-tags{,-from-file}
+       was ignored if -C or -X was passed.  Thanks to Thorsten
+       Glaser for reporting it.  (Closes: #688320)
+ .
+   * lib/Lintian/Collect{,/Source}.pm:
+     + [NT] Add optional parameter to field (and X_field)
+       methods that denotes the default value if a field is
+       missing.  This avoid some boiler plate for callers
+       of the methods.
+   * lib/Lintian/Collect/Binary.pm:
+     + [NT] Bump API for objdump method.
+     + [NT] Add API for checking if a file is considered a
+       conffile.
+   * lib/Lintian/Collect/Package.pm:
+     + [NT] Strip leading slash off files extracted from tar.
+   * lib/Lintian/Command.pm:
+     + [NT] Work around a leak in IPC::Run (see #301774).
+   * lib/Lintian/Internal/FrontendUtil.pm:
+     + [NT] Always use Dpkg::Vendor to determine the default
+       vendor.  Previously dpkg-vendor would be preferred if
+       available.
+   * lib/Lintian/Lab/Entry.pm:
+     + [NT] Use the L::Collect during creation instead of
+       manually reading the dsc for source packages.
+   * lib/Lintian/Profile.pm:
+     + [NT] Add support for the new optional "Load-Checks"
+       field in profiles.
+     + [NT] Ensure that the "lintian" check is always loaded
+       as these tags are not emitted by check modules.  Also
+       enable the tags from the check by default.
+   * lib/Lintian/Tags.pm:
+     + [NT] Be explicit about the reason when rejecting an
+       override.  Thanks to Yves-Alexis Perez for the report.
+       (Closes: #673073)
+   * lib/Lintian/Unpacker.pm:
+     + [NT] New file.
+ .
+   * man/lintian.pod.in:
+     + [NT] Remove documentation about removed options.
+ .
+   * reporting/graphs/{statistics,tags}.gpi:
+     + [JP] New file.
+   * reporting/html_reports:
+     + [JP,NT] Generate graphs of the collected history data.
+       (Closes: #672273)
+     + [NT] Make the mirror name configurable.
+ .
+   * vendors/ubuntu/main/data/changes-file/known-dists:
+     + [NT] Add "raring" as known Ubuntu distribution.  Thanks to
+       Dmitry Shachnev.  (LP: #1068208)
+Checksums-Sha1: 
+ 850fcd4ceaf870dd6ac276c15c43b104dba52e9b 2602 lintian_2.5.11.dsc
+ c83143fc76461efbdfd687ea63964c650de9511e 1140318 lintian_2.5.11.tar.gz
+ 2148b6ee048eb28026990c33a25d16d2ea555d7e 733808 lintian_2.5.11_all.deb
+Checksums-Sha256: 
+ 482bf299f9e3e77467b06fe7a49e719d961584a4826db73a84333fe709a209a5 2602 lintian_2.5.11.dsc
+ 91f96295eac39c4711a1e53715f9c4324539665ef8aa4c1500af5ba5efd39cd5 1140318 lintian_2.5.11.tar.gz
+ 9f33060a392f8cf1adf8ed37041d66fe2a270d01732386ea5fbb3fe700c4670d 733808 lintian_2.5.11_all.deb
+Files: 
+ 8b4bd5c4bea641f0ff2f0d957fbbea78 2602 devel optional lintian_2.5.11.dsc
+ 90000a9fc6b5a7061f63154a946f9b79 1140318 devel optional lintian_2.5.11.tar.gz
+ 5bd3ff3eb29a80322a57cdbe2676bfbd 733808 devel optional lintian_2.5.11_all.deb
+

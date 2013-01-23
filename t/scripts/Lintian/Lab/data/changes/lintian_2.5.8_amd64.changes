@@ -1,0 +1,106 @@
+Format: 1.8
+Date: Tue, 29 May 2012 11:49:47 +0200
+Source: lintian
+Binary: lintian
+Architecture: source all
+Version: 2.5.8
+Distribution: unstable
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Niels Thykier <niels@thykier.net>
+Description: 
+ lintian    - Debian package checker
+Closes: 662134 667895 669911 671387 673106 673109 673112 673198 673352 673449 673451 673611 673613 673862
+Changes: 
+ lintian (2.5.8) unstable; urgency=low
+ .
+   Its like 2.5.7, only with less false positives and no FTBFS.
+ .
+   * checks/binaries{,.desc}:
+     + [NT] Fix a too strict regex causing false-positives for
+       biarch packages.  This was a regression introduced in
+       version 2.5.7.  Thanks to Sven Joachim for reporting it.
+       (Closes: #673106)
+     + [NT] Demote certainty of hardening-no-stackprotector to
+       wild-guess and move it to debian/extra-hardening profile.
+     + [NT] Skip hardening-no-fortify-functions for binaries only
+       using the unprotected memcpy.  This greatly reduces the
+       number of false positives for binaries compiled with
+       gcc-4.7 -O2 (or higher optimization).  (Closes: #673112)
+   * checks/files:
+     + [NT] Properly handle symlinks in icon directories.  Thanks
+       to Nicholas Breen for the report and Felix Geyer for the
+       patches.  (Closes: #673352)
+     + [NT] Ignore wrong sizes on images in animations as it may
+       be a method to implement the animation.  Thanks to Matthias
+       Klumpp for the report and Felix Geyer for the patch.
+       (Closes: #673862)
+     + [NT] Ignore wrong icon sizes if the size difference is at
+       most 2px.  Thanks to Felix Geyer for the patch.
+   * checks/scripts:
+     + [NT] Refactor the %versioned_interpreters into a new
+       data file.
+   * checks/shared-libs:
+     + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
+       for shared libraries using "libtool -release X.Y".
+       Thanks to Sven Joachim for the report.  (Closes: #673109)
+     + [NT] Fix false positive "dev-pkg-without-shlib-symlink"
+       for shared libraries installed in /lib.  Lintian now
+       correctly expects the dev-symlink beneath /usr/lib.
+       Thanks to Guillem Jover for the report.
+   * checks/source-copyright:
+     + [NT] Use the in-memory contents of the copyright file
+       instead of re-reading the file when parsing it as a
+       DEP-5 copyright file.
+ .
+   * collection/objdump-info{,.desc}:
+     + [NT] Drop -D flag for readelf when looking for symbols.
+       This makes some checks more reliable in Ubuntu.  Thanks
+       to Marc Deslauriers for the report and the patch.
+       (Closes: #673451)
+ .
+   * debian/control:
+     + [NT] Add versioned Build-Depends on dpkg-dev (>= 1.16.1~)
+       as the test suite relies on it.  Thanks to Luca Falavigna
+       for reporting it.
+     + [NT] Update the description to mention that the version
+       of Lintian is calibrated for version 3.9.3 of the Policy.
+   * debian/lintian.install:
+     + [NT] Remove usr/share/lintian/data - Lintian does not
+       need it and dpkg will not replace the dir with a symlink.
+ .
+   * data/scripts/interpreters:
+     + [NT] Add falcon, gbr3, jython and ngp2 as known interpreters.
+       (Closes: #669911, #671387, #662134, #667895)
+   * data/scripts/versioned-interpreters:
+     + [NT] New file.
+     + [NT] Added python2.7 to the list of known Python 2 interpreters.
+   * data/spelling/corrections:
+     + [RA] Remove corrections for "writeable" and "overwriteable".  These
+       spellings are permitted by the OED in UK English.  (Closes: #673611)
+     + [NT] Add correction for "pointer".
+ .
+   * lib/Lintian/Collect/*.pm:
+     + [NT] Localize "$_" to avoid truncating caller's variable.
+       (Closes: #673613)
+ .
+   * t:
+     + [NT] Generate empty ".so" files used in the test.  This
+       resolves an issue where dpkg-source would exclude them
+       causing a FTBFS.  (Closes: #673198)
+     + [NT] Fix test failure in derivatives where some hardening
+       flags are enabled by default.  Thanks to Marc Deslauriers
+       for the report and the patch.  (Closes: #673449)
+Checksums-Sha1: 
+ de2ae82463727f45b3d28dce15b89bbea8fc641c 2485 lintian_2.5.8.dsc
+ 576c06a94e7758e358a43b549b123052a7e49fdc 1092923 lintian_2.5.8.tar.gz
+ d6f247358c070a7e37c9f22c84aee63fbfd816fb 697324 lintian_2.5.8_all.deb
+Checksums-Sha256: 
+ 20fd9f4084197aaa923af9a7bb7dba8cc06bd1ed307a16c8b14e275d91e1093f 2485 lintian_2.5.8.dsc
+ b0a6016d9a0e5ba3ed1fc00cabd8b3be75c572fcfee7cd5079d06c64f626d343 1092923 lintian_2.5.8.tar.gz
+ 587c014c2f87ea1359f139e5a37bce1acd0b1552d7c49ca0e54e5e8b24f57c5c 697324 lintian_2.5.8_all.deb
+Files: 
+ 71653df24991d1734fea17f3205ef042 2485 devel optional lintian_2.5.8.dsc
+ 1121be8bcccaf75a571e4c17197bebbc 1092923 devel optional lintian_2.5.8.tar.gz
+ 4fd057457a01384ffdc4fa39888f4f4d 697324 devel optional lintian_2.5.8_all.deb
+

@@ -1,0 +1,264 @@
+Format: 1.8
+Date: Mon, 14 May 2012 23:45:08 +0200
+Source: lintian
+Binary: lintian
+Architecture: source all
+Version: 2.5.7
+Distribution: unstable
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Niels Thykier <niels@thykier.net>
+Description: 
+ lintian    - Debian package checker
+Closes: 614034 628189 648777 649277 649852 650536 657402 660845 663516 664061 664471 664600 666207 666765 668546 671024 671537 672615
+Changes: 
+ lintian (2.5.7) unstable; urgency=low
+ .
+   * Summary of tag changes:
+     + Added:
+       - apache2-configuration-files-need-conf-suffix
+       - apache2-deprecated-auth-config
+       - apache2-module-depends-on-real-apache2-package
+       - apache2-module-does-not-depend-on-apache2-api
+       - apache2-module-does-not-ship-load-file
+       - apache2-reverse-dependency-calls-invoke-rc.d
+       - apache2-reverse-dependency-calls-wrapper-script
+       - apache2-reverse-dependency-ships-file-in-not-allowed-directory
+       - apache2-reverse-dependency-uses-obsolete-directory
+       - apache2-unparseable-dependency
+       - apache2-unsupported-dependency
+       - diff-contains-quilt-control-dir
+       - hardening-no-fortify-functions
+       - hardening-no-relro
+       - hardening-no-stackprotector
+       - non-standard-apache2-configuration-name
+       - non-standard-apache2-module-package-name
+       - rc-version-greater-than-expected-version
+       - udeb-uses-unsupported-compression-for-data-tarball
+       - web-application-depends-on-apache2-data-package
+       - web-application-should-not-depend-unconditionally-on-apache2
+     + Removed:
+       - ancient-dpkg-long-filenames-check
+       - ancient-dpkg-predepends-check
+       - bad-ubuntu-distribution-in-changes-file
+       - binary-nmu-uses-old-version-style
+       - debian-control-with-duplicate-fields
+       - doc-base-file-references-usr-doc
+       - duplicate-fields-in-templates
+       - manpage-for-non-x11-binary-in-wrong-directory
+       - manpage-for-x11-binary-in-wrong-directory
+       - missing-dependency-on-install-info
+       - obsolete-field
+       - old-app-defaults-directory
+       - old-style-copyright-file
+       - old-style-example-dir
+       - package-installs-file-to-usr-x11r6-bin
+       - package-installs-font-to-usr-x11r6
+       - package-uses-obsolete-file
+       - postinst-should-not-set-usr-doc-link
+       - raster-image-in-scalable-directory
+       - udeb-uses-non-gzip-data-tarball
+       - x11-games-should-be-in-usr-games
+ .
+   * checks/*:
+     + [NT] Remove some old tags that are no longer useful.
+       (Closes: #663516)
+     + [NT] Migrate to sorted_index from sorted_file_info.
+     + [NT] Explicitly import needed subs from L::Util.
+   * checks/apache2{,.desc}:
+     + [NT] New files to check for apache2 related packages.  Thanks
+       to Arno Töll and Stefan Fritsch for the patches.
+       (Closes: #668546)
+     + [NT] This check is not enabled by default.  It can be used
+       via the debian/extra-apache2 profile.
+   * checks/binaries{,.desc}:
+     + [NT] Move embedded library data to a data file.
+     + [NT] Add ELF hardening checks.  Thanks to Kees Cook for
+       report and the patches.  (Closes: 650536)
+     + [NT] Replace architecture tables with data files.
+     + [JW] Check for missing Python3 numpy ABI dependency.
+       (Closes: #671024)
+   * checks/changelog-file:
+     + [NT] Output the correct line number for the "line-too-long"
+       tag.  Thanks to Arno Töll for the report.  (Closes: #657402)
+   * checks/changes-file{,.desc}:
+     + [NT] Remove Ubuntu specific handling of distribution names.
+       Instead replace it with a more generalized one that derivatives
+       can reuse by extending vendor specific data files.  Thanks to
+       Daniel Dehennin for the suggestion.  (Closes: #648777)
+   * checks/control-file:
+     + [NT] Rewrote parts to use Lintian::Collect for fetching data.
+   * checks/cruft{,.desc}:
+     + [NT] Check for quilt control dirs in the debian packaging files.
+   * checks/deb-format{,.desc}:
+     + [NT] Replace old udeb compression tag with a more general
+       one.  (Closes: #664600)
+     + [NT] Remove logic for checking if a deb is meant for
+       Ubuntu.  Instead unconditionally emit the tag and let the
+       vendor profiles handle it.
+   * checks/debconf:
+     + [NT] Special case debconf providers for purge-debconf tag.
+       Generally they cannot use db_purge in postrm (for obvious
+       reasons), so the tag will be a false-positive in such
+       cases.
+   * checks/fields{,.desc}:
+     + [NT] Add devref reference.
+     + [NT] Remove special handling of the Ubuntu specific field,
+       "original-maintainer".  This field is now handled by vendor
+       specific data files.  (Closes: #649852)
+     + [JW,NT] Check for common mistakes with preview release and
+       release candidate versions.  For non-native packages, this
+       check is only done on initial uploads of new upstream
+       releases.  Thanks to Stefano Rivera and Julian Taylor for
+       their additional suggestions.  (Closes: #649277)
+   * checks/filename-length.desc:
+     + [ADB, NT] Reword description of package-has-long-file-name.
+       Thanks to Andreas Beckmann for suggestion.
+   * checks/files{,.desc}:
+     + [NT] Remove "manual" lazy loads of data files.
+     + [NT] Remove code for the uses-FHS-doc-dir tag.
+     + [NT] Extend icon checks to all icon directories and look for
+       raster images in "scalable" icon directories.  Thanks to
+       Paul Wise for the report and Felix Geyer for the patches.
+       (Closes: #628189)
+   * checks/group-checks:
+     + [NT] Include Provides when checking for conflict relations.
+       Thanks to Damyan Ivanov for the report.  (Closes: #672615)
+   * checks/java:
+     + [NT] Ignore "codeless" jars if they appear to be maven
+       javadoc jars.  Thanks to Ludovic Claude for the patch.
+       (Closes: #660845)
+   * checks/lintian.desc:
+     + [NT] Updated the description of the override tags.
+   * checks/manpages{,.desc}:
+     + [RA] Detect hyphen used as minus sign following a groff \f[C] font
+       change.  Thanks, Iustin Pop.  (Closes: #664471)
+   * checks/menu-format:
+     + [NT] Move menu section lists into a data file.
+     + [NT] If a package is missing a menu icon, check its direct strong
+       dependencies built from the same source (if any) for the icon.
+       This fixes false-positives menu-icon-missing in some cases.
+   * checks/menus{,.desc}:
+     + [NT] Remove "manual" lazy load of data file.
+   * checks/nmu:
+     + [NT] Remove Ubuntu specific code to handle their (lack of) NMUs.
+       These tags are instead suppressed by the Ubuntu profile.
+   * chekcs/rules:
+     + [NT] Fix false-positive "ignores-make-clean-error" tag caused by
+       using make with -C and a dir containing the letter "i".  Thanks to
+       Tobias Hansen for the report.  (Closes: #671537)
+   * checks/scripts{,.desc}:
+     + [NT] Mention devref 6.4 in command-with-path-in-maintainer-script.
+       Thanks to Arno Töll for the patch.
+     + [NT] Do not emit unusual-interpreter if the package provides the
+       interpreter itself.
+     + [NT] Ignore the lack of exec bit on th debconf shell modules.
+   * checks/standards-version.desc:
+     + [NT] Add references to the Policy upgrading checklist.  Thanks to
+       Simon Paillard for the patch.
+ .
+   * collection/*:
+     + [NT] Use Lintian::Collect to access the package index.
+   * collection/bin-pkg-control{,.desc}:
+     + [NT] Compress control-index file and bump version of
+       bin-pkg-control.
+   * collection/copyright-file:
+     + [NT] Remove code to look for old-style copyright file.
+   * collection/file-info{,.desc}:
+     + [NT] Compress file-info output and bump version of file-info.
+   * collection/hardening-info{,.desc}:
+     + [NT] New files.  Thanks to Kees Cook for the patch.
+   * collection/index{,.desc}:
+     + [NT] Compress index output and bump version of index.
+   * collection/java-info{,.desc}:
+     + [NT] Compress java-info output and bump version of java-info.
+   * collection/objdump-info:
+     + [NT] Use "fail" from Lintian::Util.pm rather than embedding a
+       copy of it.
+     + [NT] Use Lintian::Collect to find ELF files.
+     + [NT] Replace all usage of objdump with readelf.
+       (Closes: #614034)
+     + [NT] Compress objdump-info output and bump version of objdump-info.
+   * collection/strings{,.desc}:
+     + [NT] Compress strings output and bump version of strings.
+ .
+   * data:
+     + [NT] Move to vendors/debian/ftp-master-auto-reject and replace
+       it with a symlink.
+   * data/binaries/{arch-{64bit-equivs,regex},hardening-tags}:
+     + [NT] New file.
+   * data/binaries/embedded-libs:
+     + [NT] New file.
+     + [NT] Add libav libraries.  Thanks to Andres Mejia for the
+       suggestion and the suggested patch.  (Closes: #666765)
+   * data/changes-file/{debian-dists -> known-dists}:
+     + [NT] Renamed file.
+   * data/menu-format/menu-sections:
+     + [NT] New file.
+ .
+   * debian/changelog:
+     + [NT] Amend the 2.5.5 to mention that it also added the tag
+       binaries-have-file-conflict.
+ .
+   * frontend/lintian:
+     + [JW] Fix typo in error message.
+     + [JW,NT] Fix handling of "override" option in the lintianrc file.
+       (Closes: #666207)
+ .
+   * lib/Lintian/Architecture.pm:
+     + [NT] Lazily evaluate the data file.
+   * lib/Lintian/Collect/Package.pm:
+     + [NT] Remove an extra level of quoting in index.
+     + [NT] Remove root dir from sorted_index.
+     + [NT] Keep trailing slash in dir names for file_info.
+   * lib/Lintian/Collect/Binary.pm:
+     + [NT] Remove sorted_file_info as sorted_index now produces
+       an identical list.
+   * lib/Lintian/Data.pm:
+     + [NT] Lazily load data files.
+     + [NT] Allow pre-process sub to alter existing value for a key
+       by passing the previous value as third argument.
+     + [NT] Allow vendor specific data files.  They will be loaded
+       from LINTIAN_ROOT/vendors/$profile/data.
+   * lib/Lintian/Output{,/*}.pm:
+     + [NT] Replace non-printables with "?" in output.
+   * lib/Lintian/Profile.pm:
+     + [NT] Normalize profile name and replace "parents" with
+       "profile_list".  The latter also includes the current profile
+       name.
+   * lib/Lintian/Tag/Info.pm:
+     + [NT] Use Lintian::Data to load the manual-references data
+       file instead using an ad-hoc parser.
+   * lib/{Text_utils => Lintian/Tag/TextUtil}.pm:
+     + [NT] Renamed module.
+   * lib/{Util => Lintian/Util}.pm:
+     + [NT] Renamed Util to Lintian::Util.
+     + [JW] Consider duplicate fields a syntax error in dctrl files.
+       Previously, duplicate fields were silently ignored (except
+       when a separate tag would check for it).  (Closes: #664061)
+     + [NT] Stop exported a majority of all subs by default.
+ .
+   * profiles/ubuntu/main.profile:
+     + [NT] Add a number of NMU related tags to the list of disabled
+       tags.
+ .
+   * vendors/ubuntu/main/data/changes-file/known-dists:
+     + [NT] New file based on data/changes-file/ubuntu-dists.
+     + [ADB] Add "quantal" (Quetzal)
+   * vendors/ubuntu/main/data/common/source-fields:
+     + [NT] New file.
+   * vendors/ubuntu/main/data/fields/{binary,udeb}-fields:
+     + [NT] New files.
+Checksums-Sha1: 
+ 0b03babd3aa8571eb0af02af768f7c4fade12fbd 2462 lintian_2.5.7.dsc
+ 3af1c36dbe4ae3dc7b70aa375107928c28c8555f 1087847 lintian_2.5.7.tar.gz
+ 2ebf64764da8e9b03cea8555ec6db1cf5da38f59 692506 lintian_2.5.7_all.deb
+Checksums-Sha256: 
+ 0dd400eff2da35e2e1b39370a0edf8a918ce3e3cdd68b6be2fcb53ae8a143e5f 2462 lintian_2.5.7.dsc
+ c56d7550e10acb7672708911c7636611d128ab7ec3eded8e70035737581f1a26 1087847 lintian_2.5.7.tar.gz
+ 5fd3554d5e76aa70334a4a56f87c75fe6a287b9723d64330621d7a423fffb2a0 692506 lintian_2.5.7_all.deb
+Files: 
+ ab60445e9f6618d0b9349dbc8e3455c3 2462 devel optional lintian_2.5.7.dsc
+ ec47bdf0735e61fffd0a582cd76cdb74 1087847 devel optional lintian_2.5.7.tar.gz
+ af45b86b4b0a254ab0cb46fab4de2bbf 692506 devel optional lintian_2.5.7_all.deb
+

@@ -1,0 +1,101 @@
+Format: 1.8
+Date: Fri, 15 Jun 2012 21:29:03 +0200
+Source: lintian
+Binary: lintian
+Architecture: source all
+Version: 2.5.9
+Distribution: unstable
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Niels Thykier <niels@thykier.net>
+Description: 
+ lintian    - Debian package checker
+Closes: 675139 675358 675826 675832 676799 677142 677310 677649
+Changes: 
+ lintian (2.5.9) unstable; urgency=low
+ .
+   * Summary of tag changes:
+     + Added:
+       - run-parts-cron-filename-contains-illegal-chars
+     + Removed:
+       - run-parts-cron-filename-contains-full-stop
+ .
+   * checks/*:
+     + [NT] Migrate to new Lintian::Path API.
+   * checks/fields:
+     + [NT] Also classify lib*-cli-dev as belonging to the section
+       cli-mono (rather than libdevel).  Thanks to Chow Loong Jin
+       for the report and the patch.  (Closes: #675358)
+   * checks/files{,.desc}:
+     + [NT] Rename run-parts-cron-filename-contains-full-stop and
+       have it catch "+" in the filename as well.  Add reference
+       to policy 9.5.1 in the  tag description.
+   * checks/init.d:
+     + [NT] Use the proper regex for matching package names rather
+       than an ad-hoc regex.  Thanks to Thorsten Alteholz for the
+       report and suggested patch.  (Closes: #677142)
+   * checks/shared-libs:
+     + [NT] Reverse order of two subst expressions to prevent
+       dev-pkg-without-shlib-symlink false positives.  Thanks to
+       Aurelien Jarno, Yves-Alexis Perez and Stephen M. Webb for
+       the reports and the patch.
+       (Closes: #675826, #677310, #675832)
+     + [NT] Clarify that dev-pkg-without-shlib-symlink is emitted
+       on library and not "-dev" packages.
+ .
+   * collection/hardening-info:
+     + [NT] Process binaries with hardening-check via xargs.  This
+       greatly reduces the processing time for packages with many
+       binaries (like some of the linux binaries).  Thanks to
+       Bastian Blank for the heads up.
+     + [NT] Skip kernel modules (.ko files).
+   * collection/hardening-info-helper:
+     + [NT] New file.
+ .
+   * data/*:
+     + [NT] Refresh with tools/data from sid.
+   * data/scripts/interpreters:
+     + [NT] Replace ngp2 with ngraph.  Thanks to Koichi Akabe for
+       the report.  (Closes: #675139)
+   * data/spelling/corrections:
+     + [NT] Add corrections for usage, invocation(s) and ancient.
+ .
+   * debian/changelog:
+     + [NT] raster-image-in-scalable-directory was added in 2.5.7,
+       not removed.
+ .
+   * frontend/lintian{,-info}:
+     + [NT] Remove assumption that $ENV{HOME} is set/defined.  If
+       $ENV{HOME} is not sent, user specific profiles will simply
+       be ignored.
+   * frontend/lintian:
+     + [NT] Attempt to automatically determine what to process, if
+       no packages are given and debian/changelog exists.  Thanks
+       to Gilles Filippini for the suggestion.  (Closes: #676799)
+ .
+   * lib/Lintian/Check.pm:
+     + [NT] Add regex to match valid package names.
+   * lib/Lintian/Collect/Package.pm:
+     + [NT] sorted_index now returns a list rather than a list ref.
+     + [NT] Represent files (from index) as Lintian::Path objects.
+   * lib/Lintian/Collect/Source.pm:
+     + [NT] Recognise "Package-Type" as an alternative of the "X-"
+       field of same name.  Thanks to Christian Perrier for the
+       report.  (Closes: #677649)
+   * lib/Lintian/Data.pm:
+     + [NT] Gracefully handle the absence of $ENV{HOME}.
+   * lib/Lintian/Path.pm:
+     + [NT] New file.
+Checksums-Sha1: 
+ 5910ab721c5785b01400b3444cb9d6904ad6a876 2485 lintian_2.5.9.dsc
+ 0f0de9cbf56a6702509a95c2c976ca8f6bafef47 1100166 lintian_2.5.9.tar.gz
+ 40be3ed688b6d01c66bf9440fccefb5c32b189f3 702742 lintian_2.5.9_all.deb
+Checksums-Sha256: 
+ 9263501f00c3e3a762803375c8febc9cd651a34d4a3710f48e0d13266d3ead8d 2485 lintian_2.5.9.dsc
+ bd5c285d46ab54588819879e10e16d301542162cc886939c29ec2a4da05b7357 1100166 lintian_2.5.9.tar.gz
+ 6caf9ba0dd9b98713356d03818f844be36f4e58af44d14374ec1366631eb3a2a 702742 lintian_2.5.9_all.deb
+Files: 
+ 152a018943890d860377d5438d58f6fa 2485 devel optional lintian_2.5.9.dsc
+ d5abfd1dbca688d0bcaa90890052b758 1100166 devel optional lintian_2.5.9.tar.gz
+ 44934b36c0b11b01579cc4713772897c 702742 devel optional lintian_2.5.9_all.deb
+

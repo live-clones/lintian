@@ -1,0 +1,98 @@
+Format: 1.8
+Date: Sat, 30 Jun 2012 17:21:27 +0200
+Source: lintian
+Binary: lintian
+Architecture: source all
+Version: 2.5.10
+Distribution: unstable
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Niels Thykier <niels@thykier.net>
+Description: 
+ lintian    - Debian package checker
+Closes: 673276 678775
+Changes: 
+ lintian (2.5.10) unstable; urgency=low
+ .
+   * Summary of tag changes:
+     + Added:
+       - incompatible-java-bytecode-format
+       - unknown-java-class-version
+ .
+   * checks/changes-file.desc:
+     + [NT] Fix typo in tag description.  Thanks to Luca
+       Falavigna for spotting it.
+   * checks/files:
+     + [NT] Use new gzip decompressor from L::Util.
+   * checks/java{,.desc}:
+     + [NT] Catch unknown Java class versions.
+     + [NT] Catch uses of Java7 byte code as an experimental
+       check.  It lacks the proper checks for cases where
+       packages have the proper dependencies for Java7 byte
+       code.  (Closes: #673276)
+ .
+   * collection/*:
+     + [NT] Add missing load of the FileHandle module.
+   * collection/java-info{,.desc}:
+     + [NT] Use Archive::Zip instead of zipinfo + unzip to
+       extract information from Jar files.
+     + [NT] Limit java-info to files classified as "Zip Archive"
+       by file(1).
+   * collection/objdump-info:
+     + [NT] Only call readelf once per binary.
+     + [NT] Use xargs + a new helper to reduce the number of
+       readelf calls even further.
+   * collection/objdump-info-helper:
+     + [NT] New file.
+   * collection/strings:
+     + [NT] Optimize for the "common case" file names with a
+       fall-back to previous behaviour with special file names.
+   * collection/strings-helper:
+     + [NT] New file.
+ .
+   * debian/control:
+     + [NT] Add (Build-)Dependency on libarchive-zip-perl.
+     + [NT] Remove runtime dependency on unzip (replaced by
+       libarchive-zip-perl).
+     + [NT] Add explicit Build-Dependency on xz-utils instead
+       of relying on dpkg-dev's dependency on it.
+     + [NT] Add versioned xz-utils as alternative to xz-lzma
+       or lzma.  (Closes: #678775)
+     + [NT] Add missing suggests for lzma packages.  lzma is
+       only used for source packages compressed with lzma.
+     + [NT] Add suggests on libperlio-gzip-perl.
+ .
+   * frontend/lintian:
+     + [NT] Check if some collections can be skipped for existing
+       entries.  This is mostly useful for static labs, where
+       certain checks can be now be rerun without having to run
+       "unpacked".
+     + [NT] Emit run times of collections and checks with debug
+       level 2 (or higher).
+     + [NT] Load lintian's libraries earlier.
+     + [NT] Add new option "--jobs" to control the number of
+       unpacking jobs Lintian will schedule in parallel.
+     + [NT] Improve Lintian's job scheduler to schedule unpacking
+       jobs on a group level rather than just a package level.
+ .
+   * lib/Lintian/Collect/[Binary,Package}.pm:
+     + [NT] Use new gzip decompressor from L::Util.
+   * lib/Lintian/CollScript.pm:
+     + [NT] New file.
+   * lib/Lintian/Util.pm:
+     + [NT] Add gzip decompressor preferring libperlio-perl if
+       available, but with fallback to a "fork+exec" of gzip.
+     + [NT] Load Digest::SHA immediately like Digest::MD5.
+Checksums-Sha1: 
+ ea252bf1960aed48a93766b7bdc6a0c9f18f51d1 2556 lintian_2.5.10.dsc
+ 4fc358f2aeb6b797f580b75a254390f7cf2f7551 1105393 lintian_2.5.10.tar.gz
+ 736dc7b2ef09398327ea270bdcb1b51ccf479758 707676 lintian_2.5.10_all.deb
+Checksums-Sha256: 
+ b29adb3b1eadbc00be0274f09f5345954e1340672e76f7b3f56af2b153a08b74 2556 lintian_2.5.10.dsc
+ 249f1a23d14d824151181728cc026e0971a5960ce7f7b1b383cc1e42e4244961 1105393 lintian_2.5.10.tar.gz
+ d1405f3aeffe079c75d2a2ee56666b3e6f20eb3e3ce5c77f7888bf4838400f31 707676 lintian_2.5.10_all.deb
+Files: 
+ 8767bfbf1b004474936eb319b60f8dae 2556 devel optional lintian_2.5.10.dsc
+ 5dd1d5ca1ab71f672b34992e249064ca 1105393 devel optional lintian_2.5.10.tar.gz
+ e45c47e1110e05f76dc7df35f5f501c4 707676 devel optional lintian_2.5.10_all.deb
+
