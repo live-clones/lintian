@@ -14,6 +14,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - illegal-runtime-test-name
       - inconsistent-testsuite-field
       - license-problem-gfdl-invariants
+      - license-problem-gfdl-invariants-empty
       - menu-icon-uses-relative-path
       - missing-runtime-test-file
       - missing-runtime-tests-field

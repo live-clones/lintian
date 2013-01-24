@@ -497,3 +497,15 @@ Info: The given source file is licensed under GFDL with invariant
  suitable for main.
 Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
  http://www.debian.org/vote/2006/vote_001
+
+Tag: license-problem-gfdl-invariants-empty
+Severity: minor
+Certainty: possible
+Info: The given source file is licensed under GFDL, but without any
+ precision about the presence of invariant sections, front-cover or
+ back-cover text.
+ .
+ GFDL license explicitly requests you to document this non presence.
+ .
+Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
+ http://www.debian.org/vote/2006/vote_001

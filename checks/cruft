@@ -472,6 +472,15 @@ sub find_cruft {
                                         \s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xis) {
                                 # verbatim text of license is ok
                             }
+                            when(m/\A \s* (?:(?:\,|\.|;)\s*)? version \s+ \d+(?:\.\d+)? \s+
+                                   (?:or \s+ any \s+ later \s+ version\s+)?
+                                   published \s+ by \s+ the \s+ Free \s+ Software \s+ Foundation \s*
+                                   (?:(?:\,|\.|;)\s*)? \z
+                                   /xis) {
+                                # empty text is ambiguous
+                                tag 'license-problem-gfdl-invariants-empty', $name;
+                                $licenseproblemhash{'gfdl-invariants'} = 1;
+                            }
                             default {
                                 tag 'license-problem-gfdl-invariants', $name;
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
