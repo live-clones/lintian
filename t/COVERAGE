@@ -1,6 +1,6 @@
-Last generated 2012-10-25
-Coverage (Tags): 891/969 (91.95%), w. legacy tests: 957/969 (98.76%)
-Coverage (Checks): 33/41 (80.49%), w. legacy tests: 36/41 (87.80%)
+Last generated 2013-01-24
+Coverage (Tags): 909/986 (92.19%), w. legacy tests: 975/986 (98.88%)
+Coverage (Checks): 34/42 (80.95%), w. legacy tests: 37/42 (88.10%)
 
 The following tags are not tested by the test suite:
 
@@ -15,7 +15,6 @@ menu-format menu-item-needs-dwww
 menu-format old-format-menu-file
 menu-format whitespace-after-continuation-character
 
-menus doc-base-abstract-might-contain-extra-leading-whitespaces
 menus executable-in-usr-share-docbase
 menus executable-menu-file
 

@@ -6,8 +6,8 @@ Author: Duplicate field... oops.
 Abstract: Document 2
  Blah blah manage online manuals Debian blah blah
   .
- The second line is totally a template.  Oh yeah, a space too
- much on the " ."-line.
+  The second line is totally a template.  Oh yeah, a space too
+  much on the " ."-line followed by wrong indentation.
 Section: Apps/Programming
 
   

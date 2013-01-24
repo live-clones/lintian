@@ -6,6 +6,7 @@ Test-Against: doc-base-unknown-section
 Test-For:
  doc-base-abstract-field-is-template
  doc-base-abstract-field-separator-extra-whitespaces
+ doc-base-abstract-might-contain-extra-leading-whitespaces
  doc-base-document-field-not-in-first-line
  doc-base-file-duplicated-field
  doc-base-file-separator-extra-whitespaces
