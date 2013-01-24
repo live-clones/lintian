@@ -25,6 +25,8 @@
 package Lintian::cruft;
 use strict;
 use warnings;
+use v5.10;
+use feature "switch";
 
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.
@@ -432,40 +434,51 @@ sub find_cruft {
             push @queue, $window;
             $block =  join '', @queue;
 
-            # json evil license
-            if (!exists $licenseproblemhash{'json-evil'}) {
-                if ($block =~ m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/is) {
-                    tag 'license-problem-json-evil', $name;
-                    $licenseproblemhash{'json-evil'} = 1;
+            given ($block) {
+                # json evil license
+                when (m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/is) {
+                    if(!exists $licenseproblemhash{'json-evil'}) {
+                         tag 'license-problem-json-evil', $name;
+                         $licenseproblemhash{'json-evil'} = 1;
+                    }
+                    continue;
                 }
-            }
-            if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                 # check GFDL block - The ".{0,1024}"-part in the regex
                 # will contain the "no invariants etc."  part if
                 # it is a good use of the license.  We include it
                 # here to ensure that we do not emit a false positive
                 # if the "redeeming" part is in the next block.
                 #
-                # See cruft-gfdl-fp-sliding-win for the test case.
-                if ($block =~m/GNU \s+ Free \s+ Documentation \s+ License (.{0,1024})
-                               A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
-                    # GFDL license, assume it is bad unless it
-                    # explicitly states it has no "bad sections".
-                    my $gfdlsections = $1;
-                    unless ($gfdlsections =~m/with \s+ (?:the\s+)? no \s+ Invariant \s+ Sections,?
-                                       \s+ (?:with\s+)? (?:the\s+)? no \s+ Front-Cover \s+ Texts,? \s+ and
-                                       \s+ (?:with\s+)? (?:the\s+)? no \s+ Back-Cover \s+ Texts/xis) {
-                        # license gfdl text verbatim is ok
-                        unless ($gfdlsections =~m/with \s+ the \s+ Invariant \s+ Sections \s+ being
+                # See cruft-gfdl-fp-sliding-win for the test case
+                when(m/GNU \s+ Free \s+ Documentation \s+ License (.{0,1024})
+                         A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
+                    if (!exists $licenseproblemhash{'gfdl-invariants'}) {
+                        my $gfdlsections = $1;
+                        # local space
+                        my $s = '(?:\s+|\@c)';
+                         # GFDL license, assume it is bad unless it
+                        # explicitly states it has no "bad sections".
+                        given($gfdlsections) {
+                            when(m/with \s+ (?:the\s+)? no \s+ Invariant \s+ Sections,?
+                                        \s+ (?:with\s+)? (?:the\s+)? no \s+ Front-Cover \s+ Texts,? \s+ and
+                                        \s+ (?:with\s+)? (?:the\s+)? no \s+ Back-Cover \s+ Texts/xis) {
+                                # no invariant
+                            }
+                            when(m/with \s+ the \s+ Invariant \s+ Sections \s+ being
                                         \s+ (?:\@var\{|<var>)? LIST \s+ THEIR \s+TITLES (?:\}|<\/var>)? \s? ,?
                                         \s+ with \s+ the \s+ Front-Cover \s+ Texts \s+ being
                                         \s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)? \s? ,?
                                         \s+ and \s+ with \s+ the \s+ Back-Cover \s+ Texts \s+ being
                                         \s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xis) {
-                            tag 'license-problem-gfdl-invariants', $name;
-                            $licenseproblemhash{'gfdl-invariants'} = 1;
+                                # verbatim text of license is ok
+                            }
+                            default {
+                                tag 'license-problem-gfdl-invariants', $name;
+                                $licenseproblemhash{'gfdl-invariants'} = 1;
+                            }
                         }
                     }
+                    continue;
                 }
             }
         }
