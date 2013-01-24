@@ -450,15 +450,14 @@ sub find_cruft {
                 # if the "redeeming" part is in the next block.
                 #
                 # See cruft-gfdl-fp-sliding-win for the test case
-                when(m/GNU \s+ Free \s+ Documentation \s+ License (.{0,1024})
+                when(m/GNU \s+ Free \s+ Documentation \s+ License (?'gfdlsections'.{0,1024})
                          A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
-                        my $gfdlsections = $1;
                         # local space
                         my $s = '(?:\s|\@c)';
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
-                        given($gfdlsections) {
+                        given($+{gfdlsections}) {
                             when(m/with $s+ (?:the$s+)? no $s+ Invariant $s+ Sections,?
                                         $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-Cover $s+ Texts,? $s+ and
                                         $s+ (?:with$s+)? (?:the$s+)? no $s+ Back-Cover $s+ Texts/xiso) {
