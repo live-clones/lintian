@@ -970,16 +970,14 @@ sub fail {
     if (@_) {
         $str .=  join " ", @_;
     } else {
-        my (undef, $filename, $line) = caller;
         if ($!) {
             $str .= "$!";
         } else {
             $str .= "No context.";
         }
-        $str .= " (called from $filename:$line)\n";
     }
     $! = 2; # set return code outside eval()
-    die $str;
+    croak $str;
 }
 
 =item check_path (CMD)
