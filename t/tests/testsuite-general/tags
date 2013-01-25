@@ -1,2 +1,9 @@
 I: testsuite-general source: inconsistent-testsuite-field
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/fifo
+P: testsuite-general source: unknown-runtime-tests-feature unknownfeature
+P: testsuite-general source: unknown-runtime-tests-field comment
+P: testsuite-general source: unknown-runtime-tests-restriction unknownrestriction
 W: testsuite-general source: debian-tests-control-uses-national-encoding at line 2
+W: testsuite-general source: illegal-runtime-test-name under_score
+W: testsuite-general source: missing-runtime-test-file debian/tests/missing-test
+W: testsuite-general source: missing-runtime-tests-field tests

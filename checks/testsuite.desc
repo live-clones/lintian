@@ -23,6 +23,14 @@ Info: The debian/tests/control file should be valid UTF-8, an encoding
   $ iconv -f ISO-8859-1 -t UTF-8 file &gt; file.new
   $ mv file.new file
 
+Tag: illegal-runtime-test-name
+Severity: normal
+Certainty: certain
+Info: Runtime test names in debian/tests/control are only allowed to
+ contain decimal digits, lowercase ASCII letters, plus or minus signs,
+ dots or slashes.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
 Tag: inconsistent-testsuite-field
 Severity: wishlist
 Certainty: certain
@@ -33,6 +41,61 @@ Info: The package provides a debian/tests/control file but no
  For discoverability, packages shipping tests for the autopkgtest
  testing framework should declare their presence in the package
  dsc file by adding "XS-Testsuite: autopkgtest" to their debian/control.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: missing-runtime-tests-field
+Severity: normal
+Certainty: certain
+Info: A mandatory field is missing in some paragraph of the
+ debian/tests/control file.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: missing-runtime-test-file
+Severity: normal
+Certainty: possible
+Info: A test file listed in the debian/tests/control file does not
+ exist in the package source.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: runtime-test-file-is-not-a-regular-file
+Severity: wishlist
+Certainty: certain
+Info: A runtime test listed by debian/tests/control is not a regular
+ file.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: syntax-error-in-debian-tests-control
+Severity: normal
+Certainty: certain
+Info: The debian/tests/control file didn't pass Debian control file
+ syntax check.
+ .
+ This issue may hide other issues as Lintian skips some checks on the
+ file in this case.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: unknown-runtime-tests-feature
+Severity: pedantic
+Certainty: wild-guess
+Info: A paragraph in debian/tests/control mentions a non standard
+ value for the Features field. Though allowed, this may indicate an
+ error, as the value will be ignored.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: unknown-runtime-tests-field
+Severity: pedantic
+Certainty: wild-guess
+Info: A paragraph in debian/tests/control mentions a non standard
+ field. Though allowed, this may indicate an error, as the whole
+ paragraph will be ignored.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
+
+Tag: unknown-runtime-tests-restriction
+Severity: pedantic
+Certainty: wild-guess
+Info: A paragraph in debian/tests/control mentions a non standard
+ value for the Restrictions field. Though allowed, this may indicate an
+ error, as the whole paragraph will be ignored.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests;hb=HEAD
 
 Tag: unknown-testsuite

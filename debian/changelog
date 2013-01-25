@@ -11,10 +11,17 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
+      - illegal-runtime-test-name
       - inconsistent-testsuite-field
       - license-problem-gfdl-invariants
       - menu-icon-uses-relative-path
+      - missing-runtime-test-file
+      - missing-runtime-tests-field
       - package-contains-broken-symlink-wildcard
+      - runtime-test-file-is-not-a-regular-file
+      - unknown-runtime-tests-feature
+      - unknown-runtime-tests-field
+      - unknown-runtime-tests-restriction
       - unknown-testsuite
       - vcs-field-bitrotted
       - vcs-git-uses-invalid-user-uri

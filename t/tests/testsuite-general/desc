@@ -2,6 +2,15 @@ Testname: testsuite-general
 Sequence: 6000
 Version: 1.0
 Description: General tests of the autopkgtest control file
+Options: -I -E --pedantic
+Skeleton: pedantic
 Test-For:
  debian-tests-control-uses-national-encoding
+ illegal-runtime-test-name
  inconsistent-testsuite-field
+ missing-runtime-test-file
+ missing-runtime-tests-field
+ runtime-test-file-is-not-a-regular-file
+ unknown-runtime-tests-feature
+ unknown-runtime-tests-field
+ unknown-runtime-tests-restriction

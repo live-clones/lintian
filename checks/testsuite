@@ -23,7 +23,29 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(file_is_encoded_in_non_utf8);
+use Lintian::Util qw(
+    file_is_encoded_in_non_utf8
+    read_dpkg_control
+);
+
+my @mandatory_fields = qw(
+    tests
+);
+my %expected_fields = map { $_ => 1 } qw(
+    tests
+    restrictions
+    features
+    depends
+    tests-directory
+);
+my %expected_features = map { $_ => 1 } qw(
+);
+my %expected_restrictions = map { $_ => 1 } qw(
+    breaks-testbed
+    build-needed
+    needs-root
+    rw-build-tree
+);
 
 sub run {
     my ($pkg, $type, $info) = @_;
@@ -47,8 +69,78 @@ sub run {
             if ($not_utf8_line) {
                 tag 'debian-tests-control-uses-national-encoding', "at line $not_utf8_line";
             }
+
+            check_control_contents ($info, $path);
         }
     }
+}
+sub check_control_contents {
+    my ($info, $path) = @_;
+
+    my @paragraphs;
+    if (not eval { @paragraphs = read_dpkg_control ($path); }) {
+        chomp $@;
+        $@ =~ s/^syntax error at //;
+        tag 'syntax-error-in-debian-tests-control', $@;
+    } else {
+        for (@paragraphs) {
+            check_control_paragraph ($info, $_);
+        }
+    }
+}
+sub check_control_paragraph {
+    my ($info, $paragraph) = @_;
+
+    for (@mandatory_fields) {
+        if (not exists $paragraph->{$_}) {
+            tag 'missing-runtime-tests-field', $_;
+        }
+    }
+    for (keys %$paragraph) {
+        if (not exists $expected_fields {$_}) {
+            tag 'unknown-runtime-tests-field', $_;
+        }
+    }
+    if (exists $paragraph->{'features'}) {
+        for (split ' ', $paragraph->{'features'}) {
+            if (not exists $expected_features {$_}) {
+                tag 'unknown-runtime-tests-feature', $_;
+            }
+        }
+    }
+    if (exists $paragraph->{'restrictions'}) {
+        for (split ' ', $paragraph->{'restrictions'}) {
+            if (not exists $expected_restrictions {$_}) {
+                tag 'unknown-runtime-tests-restriction', $_;
+            }
+        }
+    }
+    if (exists $paragraph->{'tests'}) {
+        my $directory;
+        if (exists $paragraph->{'tests-directory'}) {
+            $directory = $paragraph->{'tests-directory'};
+        } else {
+            $directory = 'debian/tests';
+        }
+        for (split ' ', $paragraph->{'tests'}) {
+            check_test_file ($info, $directory, $_);
+        }
+    }
+}
+sub check_test_file {
+    my ($info, $directory, $name) = @_;
+
+    if ($name !~ /^[[:digit:][:lower:]\+\-\.\/]*$/) {
+        tag 'illegal-runtime-test-name', $name;
+    }
+    my $path = "$directory/$name";
+    my $index = $info->index ($path);
+    if (not defined $index) {
+        tag 'missing-runtime-test-file', $path;
+    } elsif (not $index->is_regular_file) {
+        tag 'runtime-test-file-is-not-a-regular-file', $path;
+    }
+    # Test files are allowed not to be executable.
 }
 
 1;
