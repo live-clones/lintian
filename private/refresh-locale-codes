@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/usr/bin/perl
 # refresh-locale-codes -- Refresh the locale (aka ISO 639-1/639-2 codes)
 
-# Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
+# Copyright (C) 2013 Niels Thykier <niels@thykier.net>
+# Based on a shell script, which was:
+#   Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
 #
 # This file is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -16,73 +18,132 @@
 # You should have received a copy of the GNU General Public License
 # along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
-set -e
+use strict;
+use warnings;
 
-if [ -z "$1" ]; then
-    printf "Usage: %s <path-to-data>\n" "$(basename "$0")"
-    cat <<INFO
-<path-to-data> must be the path to the root of the Lintian data
-directory to update.
+use POSIX qw(strftime);
 
-This script requires the isoquery package to be installed.
-INFO
-    exit
-fi
+BEGIN {
+  # determine LINTIAN_ROOT
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '.';
+    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT
+        unless exists $ENV{'LINTIAN_ROOT'};
+};
 
-readonly lintian_data="$(readlink -f "$1")"
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Util qw(check_path);
 
-[ -d "$lintian_data" ] || {
-    printf "%s is not a directory, aborting" "$lintian_data" >&2
-    exit 1
-}
+my ($DATADIR) = @ARGV;
+my %CODES;
+my $outfile;
 
-readonly tmpfile="$(mktemp)"
+die "Usage: $0 <path-to-data-dir>\n"
+    unless defined $DATADIR and -d $DATADIR;
 
-cleanup () {
-    [ ! -f "$tmpfile" ] || unlink "$tmpfile"
-}; trap cleanup EXIT
+check_requirements();
 
-mkdir -p "$lintian_data/files"
+my $date = strftime ('%Y-%m-%d', gmtime);
 
-cat > "$tmpfile" <<EOF
+$ENV{LC_ALL} = 'C';
+
+parse_iso_query();
+parse_iso_xml();
+
+$outfile = "$DATADIR/files/locale-codes.new";
+
+open my $out, '>', $outfile or die "open $outfile: $!";
+
+print {$out} <<EOF ;
 # List of locale codes.  This is derived from the ISO 639-1, ISO
 # 639-2, and ISO 639-3 standards.
 # If a language has 639-1 and 639-2 codes, the -2 code is also included
 # as a key to be mapped to the -1 code.
 #
-# Last updated: $(date -u +'%Y-%m-%d')
+# Last updated: $date
 
 EOF
 
-export LC_ALL=C
+foreach my $code (sort keys %CODES) {
+    my $alt = $CODES{$code};
+    print {$out} $code;
+    print {$out} " $alt" if defined $alt;
+    print {$out} "\n";
+}
 
-{
-    isoquery -i 639
-    sed -nr '/\bid=/{s/^.*id="([^"]+)".*$/xxx \1 x/;p}' \
-        /usr/share/xml/iso-codes/iso_639_3.xml
-} | perl -w -e ' my %codes;
-                 while (<>) {
-                    next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
-                    ($iso1, $iso2) = ($2, $1);
-                    next if $iso2 eq "zxx";
-                    if (!defined($iso1)) {
-                        $iso1 = $iso2;
-                        $iso2 = undef;
-                    }
-                    $iso1 = lc $iso1;
-                    $codes{$iso1} = undef unless (exists $codes{$iso1});
-                    if (defined $iso2) {
-                        $codes{lc $iso2} = $iso1;
-                    }
-                }
-                while (my ($a, $b) = each %codes) {
-                    print $a.(defined($b)? " $b" : "")."\n";
-                } ' |
-    sort -u >> "$tmpfile"
+close $out or die "close $outfile: $!";
 
-mv "$tmpfile" "$lintian_data/files/locale-codes"
+rename $outfile, "$DATADIR/files/locale-codes"
+    or die "rename $outfile -> $DATADIR/files/locale-codes: $!";
 
-# Local Variables:
-# indent-tabs-mode: nil
-# End:
-# vim: syntax=sh sw=4 sts=4 sr et
+exit 0;
+
+sub parse_iso_xml {
+    open my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml'
+        or die "open iso_639_3.xml: $!";
+    local $_;
+    local $/ = '/>';
+    while (<$fd>) {
+        my $special = 0;
+        # skip it if it is a "special" isotype (#692548, comment #10).  However
+        # sometimes we "collect" these from iso-query.  If so, we have to
+        # prune them from %CODES.
+        $special = 1 if m/\<iso_639_3_entry [^\>]* \btype=[\'\"]S?[\'\"]/x;
+        # Extract the id of the entry.  We match the start of the tag
+        # again to ensure we catch the id inside the tag.  (Our input
+        # separator causes us to consume a lot of leading "stuff"
+        # prior to the first entry being closed).
+        next unless m/\<iso_639_3_entry [^\>]* \bid=[\'\"]([^\'\"]+)[\'\"]/x;
+        my $id = lc $1;
+
+        if ($special) {
+            delete $CODES{$id};
+        } else {
+            $CODES{$id} = undef unless exists $CODES{$id};
+        }
+    }
+
+    close $fd;
+
+}
+
+sub translator {
+    return unless m/\bid=/;
+    # Skip "special" types (#692548, comment #10)
+    return if m/\btype=[\"\']S?[\"\']/;
+    s/^.*id="([^"]+)".*$/xxx $1 x/;
+}
+
+sub parse_iso_query {
+    open my $fd, '-|', 'isoquery', '-i', '639'
+        or die "fork/exec isoquery: $!";
+    local $_;
+    while (<$fd>) {
+        next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
+        my ($iso1, $iso2) = ($2, $1);
+        next if $iso2 eq "zxx";
+        if (!defined $iso1) {
+            $iso1 = $iso2;
+            $iso2 = undef;
+        }
+        $iso1 = lc $iso1;
+        $CODES{$iso1} = undef unless exists $CODES{$iso1};
+        if (defined $iso2) {
+            $CODES{lc $iso2} = $iso1;
+        }
+    }
+    close $fd;
+}
+
+sub check_requirements {
+    my @missing;
+    push @missing, 'isoquery in PATH'
+        unless check_path ('isoquery');
+    push @missing, 'The file /usr/share/xml/iso-codes/iso_639_3.xml'
+        unless -f '/usr/share/xml/iso-codes/iso_639_3.xml';
+
+    return unless @missing;
+
+    print STDERR "Missing requirements:\n";
+    print STDERR "\t", join ("\n\t", @missing), "\n";
+    exit 1;
+}
