@@ -40,19 +40,14 @@ our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $GRAPHS_RANGE_DAYS, $GRAPHS, $LINTIAN_MIRROR_NAME);
 
 # Read the configuration.
-require './config';
+BEGIN { require './config'; }
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP
     = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
 
-# FIXME: At least the lab should be a parameter to Read_pkglists rather
-# than an environment variable.
-$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
-$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
-
 # Import Lintian Perl libraries.
-use lib "$ENV{LINTIAN_ROOT}/lib";
+use lib "$LINTIAN_ROOT/lib";
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
