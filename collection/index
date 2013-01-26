@@ -80,7 +80,6 @@ sub index_deb {
     spawn($job,
           ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
           '|', ['tar', 'tfv', '-'],
-          '|', ['sed', '-e', 's/^h/-/'],
           '|', ['sort', '-k', '6'],
           '|', ['gzip', '--best', '-c'], '&');
 
@@ -93,7 +92,6 @@ sub index_deb {
     spawn($job,
           ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
           '|', ['tar', '--numeric-owner', '-tvf', '-'],
-          '|', ['sed', '-e', 's/^h/-/'],
           '|', ['sort', '-k', '6'],
           '|', ['gzip', '--best', '-c'], '&');
 
