@@ -468,8 +468,7 @@ sub _builder_tests {
     my $version = $testdata->{version};
     $version =~ s/^(\d+)://;
 
-    my ($file) = glob("$testdir/../$pkg\_$version*.changes");
-    return $file;
+    return "$testdir/../${pkg}_${version}_${ARCHITECTURE}.changes";
 }
 
 sub run_lintian {
