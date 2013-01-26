@@ -309,11 +309,12 @@ sub _fetch_index_data {
         push @{ $children{$parent} }, $name;
 
     }
-    @sorted = sort keys %idxh;
-    foreach my $file (@sorted) {
-        my $e = $idxh{$file};
-        if ($rhlinks{$e->{name}}) {
-            # There is hard link pointing to this file (or hardlink).
+    if (%rhlinks) {
+        foreach my $file (sort keys %rhlinks) {
+            # We remove entries we have fixed up, so check the entry
+            # is still there.
+            next unless exists $rhlinks{$file};
+            my $e = $idxh{$file};
             my %candidates = ();
             my @check = ($e->{name});
             my @sorted;
@@ -352,6 +353,7 @@ sub _fetch_index_data {
             }
         }
     }
+    @sorted = sort keys %idxh;
     foreach my $file (reverse @sorted) {
         # Add them in reverse order - entries in a dir are made
         # objects before the dir itself.
