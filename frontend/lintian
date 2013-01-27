@@ -1005,12 +1005,11 @@ if($action eq 'remove'){
     # Handle remove here - makes the unpack/check loop simpler.
     foreach my $group ($pool->get_groups()){
         foreach my $lpkg ($group->get_processables()){
-            my $pkg_name = $lpkg->pkg_name();
-            my $pkg_type = $lpkg->pkg_type();
 
             $TAGS->file_start ($lpkg);
-            debug_msg(1, 'Removing package in lab ...');
+
             unless ($lpkg->remove){
+                my $pkg_name = $lpkg->pkg_name();
                 warning("cannot remove entry for $pkg_name: $!");
                 $exit_code = 2;
             }
