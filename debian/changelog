@@ -133,6 +133,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       Lintian::Lab supports it.
     + [NT] Add new command line option "--[no-]user-dirs" to disable
       loading from $HOME/.lintian{rc,/} and /etc/lintian{rc,/}.
+    + [NT] Error out early if a check cannot be loaded.
 
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given

@@ -1112,6 +1112,21 @@ debug_msg(1,
 my $unpacker = Lintian::Unpacker->new ($collmap, \%unpack_options);
 my %overrides;
 
+if ($action eq 'check') {
+    # Ensure all checks can actually be loaded...
+    foreach my $script (@scripts) {
+        my $cs = $PROFILE->get_script ($script);
+        eval {
+            $cs->load_check;
+        };
+        if ($@) {
+            warning ("Cannot load check \"$script\"");
+            print STDERR $@;
+            exit 2;
+        }
+    }
+}
+
 foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
     unpack_group ($gname, $group);
@@ -1350,7 +1365,7 @@ sub process_group {
             # The lintian check is done by this frontend and we
             # also skip the check if it is not for this type of
             # package.
-            next if (!$cs->is_check_type ($pkg_type) || $check eq 'lintian');
+            next if !$cs->is_check_type ($pkg_type);
 
             debug_msg(1, "Running check: $check ...");
             eval {
