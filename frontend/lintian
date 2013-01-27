@@ -659,7 +659,7 @@ require Lintian::Tags;
 import Lintian::Tags qw(tag);
 require Lintian::Unpacker;
 require Lintian::Util;
-import Lintian::Util qw(fail parse_boolean read_dpkg_control);
+import Lintian::Util qw(fail parse_boolean);
 
 if (defined $experimental_output_opts) {
     my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
