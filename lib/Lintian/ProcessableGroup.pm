@@ -306,6 +306,7 @@ sub info {
     my $info = $self->{info};
     if (! defined $info) {
         $info = Lintian::Collect::Group->new ($self);
+        $self->{info} = $info;
     }
     return $info;
 }

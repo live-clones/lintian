@@ -1406,6 +1406,7 @@ sub clear_group_cache {
     foreach my $proc ($group->get_processables()){
         $proc->clear_cache;
     }
+    $group->clear_cache;
     return 1;
 }
 
