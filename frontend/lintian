@@ -123,6 +123,7 @@ my $LAB;
 my %check_abbrev;
 my %extra_unpack;
 my %unpack_options;
+my @auto_remove = ();
 
 # Timer handling (by default to nothing)
 my $start_timer = sub { 0; };
@@ -1036,6 +1037,7 @@ my $collmap = Lintian::DepMap::Properties->new();
         debug_msg(2, "Read collector description for $coll ...");
         $collmap->add ($cs->name, $cs->needs_info, $cs);
         $map->addp ('coll-' . $cs->name, 'coll-', $cs->needs_info);
+        push @auto_remove, $coll if $cs->auto_remove;
     };
 
     load_collections ($load_coll, "$opt{'LINTIAN_ROOT'}/collection");
@@ -1082,7 +1084,12 @@ if (@unpack_info) {
         }
         $extra_unpack{$i} = 1;
     }
+    # Never auto-remove anything explicitly requested by the user
+    @auto_remove = grep { ! exists $extra_unpack{$_} } @auto_remove
+        if not $keep_lab;
 }
+# Never auto-remove anything if $keep_lab is set...
+@auto_remove = () if $keep_lab;
 
 
 # }}}
@@ -1180,19 +1187,17 @@ sub auto_clean_package {
     my $pkg_type = $lpkg->pkg_type();
     my $base = $lpkg->base_dir();
     my $changed = 0;
-    for my $coll ($collmap->known) {
+    for my $coll (@auto_remove) {
         my $ci = $collmap->getp ($coll);
-        if ($ci->auto_remove and not $extra_unpack{$coll}) {
-            next unless $lpkg->is_coll_finished ($coll, $ci->version);
-            debug_msg(1, "Auto removing: $coll ...");
-            $changed = 1;
-            unless (system ($ci->script_path, $pkg_name, "remove-${pkg_type}", $base) == 0) {
-                warning("removing collect info $coll about package $pkg_name failed",
-                        "skipping cleanup of $pkg_type package $pkg_name");
-                return -1;
-            }
-            $lpkg->_clear_coll_status ($coll);
+        next unless $lpkg->is_coll_finished ($coll, $ci->version);
+        debug_msg(1, "Auto removing: $coll ...");
+        $changed = 1;
+        unless (system ($ci->script_path, $pkg_name, "remove-${pkg_type}", $base) == 0) {
+            warning("removing collect info $coll about package $pkg_name failed",
+                    "skipping cleanup of $pkg_type package $pkg_name");
+            return -1;
         }
+        $lpkg->_clear_coll_status ($coll);
     }
     return $changed;
 }
