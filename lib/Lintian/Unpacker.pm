@@ -21,9 +21,6 @@ package Lintian::Unpacker;
 use strict;
 use warnings;
 
-use Carp qw(croak);
-use Scalar::Util qw(blessed);
-
 use base 'Class::Accessor';
 
 use Lintian::Command::Simple;
