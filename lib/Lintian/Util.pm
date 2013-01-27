@@ -25,7 +25,7 @@ use warnings;
 
 use Carp qw(croak);
 
-use base 'Exporter';
+use Exporter qw(import);
 
 use constant {
   DCTRL_DEBCONF_TEMPLATE => 1,

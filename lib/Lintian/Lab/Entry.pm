@@ -56,16 +56,15 @@ methods from L<Lintian::Lab>.
 
 =cut
 
-use base qw(Lintian::Processable Class::Accessor Exporter);
 
 use strict;
 use warnings;
 
+use base qw(Lintian::Processable Class::Accessor);
+
 use Carp qw(croak);
-use File::Spec;
-
 use Cwd();
-
+use File::Spec;
 use Scalar::Util qw(refaddr);
 
 use Lintian::Lab;
@@ -75,16 +74,6 @@ use Lintian::Util qw(delete_dir read_dpkg_control get_dsc_info);
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
 # presents the things "outside" the entry.
 use constant LAB_ENTRY_FORMAT => 1;
-
-our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
-
-@EXPORT = ();
-%EXPORT_TAGS = (
-    constants => [qw(LAB_FORMAT_ENTRY)],
-);
-@EXPORT_OK = (
-    @{ $EXPORT_TAGS{constants} }
-);
 
 =item new_from_metadata (PKG_TYPE, METADATA, LAB, BASEDIR)
 

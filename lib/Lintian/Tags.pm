@@ -22,12 +22,13 @@ package Lintian::Tags;
 use strict;
 use warnings;
 
+use Exporter qw(import);
+
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
 use Lintian::Tag::Override;
 use Lintian::Util qw(fail $PKGNAME_REGEX);
 
-use base 'Exporter';
 BEGIN {
     our @EXPORT = qw(tag);
 }

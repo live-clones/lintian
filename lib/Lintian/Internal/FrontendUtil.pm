@@ -20,7 +20,7 @@ package Lintian::Internal::FrontendUtil;
 use strict;
 use warnings;
 
-use base qw(Exporter);
+use Exporter qw(import);
 
 use Dpkg::Vendor;
 

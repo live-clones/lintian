@@ -25,7 +25,7 @@ BEGIN {
     $ENV{'IPCRUNDEBUG'} = 'none';
 }
 
-use base qw(Exporter);
+use Exporter qw(import);
 our @EXPORT = ();
 our @EXPORT_OK = qw(spawn reap kill);
 

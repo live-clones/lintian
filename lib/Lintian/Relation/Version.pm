@@ -24,8 +24,8 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use Exporter qw(import);
 
-use base 'Exporter';
 BEGIN {
     our @EXPORT = qw(versions_equal versions_lte versions_gte versions_lt
                      versions_gt versions_compare versions_comparator);

@@ -23,14 +23,14 @@ package Lintian::Check;
 use strict;
 use warnings;
 
-use Exporter ();
+use Exporter qw(import);
 use Email::Valid;
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
-our @ISA    = qw(Exporter);
 our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky
                  $known_shells_regex
 );

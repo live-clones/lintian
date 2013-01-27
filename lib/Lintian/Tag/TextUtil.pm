@@ -24,8 +24,7 @@ package Lintian::Tag::TextUtil;
 use strict;
 use warnings;
 
-use Exporter;
-our @ISA    = qw(Exporter);
+use Exporter qw(import);
 our @EXPORT = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 
 # requires wrap() function

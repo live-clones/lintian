@@ -24,13 +24,11 @@ package Lintian::Lab;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor Exporter);
+use base qw(Class::Accessor);
 
 use Carp qw(croak);
 use Cwd();
-
 use File::Temp qw(tempdir); # For temporary labs
-
 use Scalar::Util qw(blessed);
 
 
@@ -56,18 +54,6 @@ my %SUPPORTED_TYPES = (
 my %SUPPORTED_VIEWS = (
     'GROUP' => 1,
 );
-
-our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
-
-BEGIN {
-    @EXPORT = ();
-    %EXPORT_TAGS = (
-        constants => [qw(LAB_FORMAT)],
-    );
-    @EXPORT_OK = (
-        @{ $EXPORT_TAGS{constants} }
-    );
-};
 
 use Lintian::Collect;
 use Lintian::Lab::Entry;

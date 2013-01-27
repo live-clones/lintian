@@ -22,15 +22,14 @@ package Lintian::Relation;
 use strict;
 use warnings;
 
-use Lintian::Relation::Version;
-
 use constant {
     VISIT_PRED_NAME => 0,
     VISIT_PRED_FULL => 1,
     VISIT_OR_CLAUSE_FULL => 3,
     VISIT_STOP_FIRST_MATCH => 4,
 };
-use base 'Exporter';
+
+use Exporter qw(import);
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 @EXPORT = ();
 %EXPORT_TAGS = (
@@ -40,6 +39,8 @@ our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 @EXPORT_OK = (
     @{ $EXPORT_TAGS{constants} }
 );
+
+use Lintian::Relation::Version;
 
 =head1 NAME
 
