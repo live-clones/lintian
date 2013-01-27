@@ -1206,16 +1206,14 @@ sub post_pkg_process_overrides{
     my ($lpkg) = @_;
     # report unused overrides
     if (not $opt{'no-override'}) {
-        my $overrides = $TAGS->overrides ($lpkg);
+        my $pkg_overrides = $TAGS->overrides ($lpkg);
 
-        for my $tag (sort keys %$overrides) {
+        for my $tag (sort keys %$pkg_overrides) {
             next if $TAGS->suppressed($tag);
 
-            my $taginfo = $PROFILE->get_tag ($tag);
-
-            for my $extra (sort keys %{$overrides->{$tag}}) {
-                next if $overrides->{$tag}{$extra};
-                tag( 'unused-override', $tag, $extra );
+            for my $extra (sort keys %{$pkg_overrides->{$tag}}) {
+                next if $pkg_overrides->{$tag}{$extra};
+                tag ('unused-override', $tag, $extra);
             }
         }
     }
