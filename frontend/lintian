@@ -1242,38 +1242,14 @@ sub prep_unpack_error {
 
 sub unpack_group {
     my ($gname, $group) = @_;
-    my @lpkgs = ();
     my $errhandler = sub { prep_unpack_error ($group, @_) };
-
-    foreach my $lpkg ($group->get_processables){
-        my $pkg_name = $lpkg->pkg_name;
-        my $pkg_type = $lpkg->pkg_type;
-        my $pkg_ver  = $lpkg->pkg_version;
-        my $pkg_arch = $lpkg->pkg_arch;
-        my $base;
-
-        if (!defined $lpkg) {
-            my $err = '.';
-            $err = ": $@" if defined $@;
-            warning("skipping $action of $pkg_type package ${pkg_name}$err");
-            $exit_code = 2;
-            $group->remove_processable ($lpkg);
-            next;
-        }
-
-        push @lpkgs, $lpkg;
-
-        # determine base directory
-        $base = $lpkg->base_dir();
-        debug_msg(1, "Unpacking $pkg_name $pkg_ver [$pkg_arch] ($pkg_type) in $base");
-    }
 
     # Kill pending jobs, if any
     $unpacker->kill_jobs;
     $unpacker->reset_worklist;
 
     # Stop here if there is nothing list for us to do
-    return unless $unpacker->prepare_tasks ($errhandler, @lpkgs);
+    return unless $unpacker->prepare_tasks ($errhandler, $group->get_processables);
 
     v_msg ("Unpacking packages in group $gname");
 
