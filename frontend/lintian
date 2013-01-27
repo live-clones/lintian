@@ -120,7 +120,6 @@ my $cwd;
 my $exit_code = 0;
 my $LAB;
 
-my %keep_coll;
 my %check_abbrev;
 my %extra_unpack;
 my %unpack_options;
@@ -1083,7 +1082,6 @@ if (@unpack_info) {
             fail("unknown info specified: $i");
         }
         $extra_unpack{$i} = 1;
-        $keep_coll{$i} = 1;
     }
 }
 
@@ -1175,7 +1173,7 @@ exit $exit_code;
 # {{{ Some subroutines
 
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
-#  - depends on global variables %collection_info and %keep_coll
+#  - depends on global variables %collection_info and %extra_unpack
 #
 sub auto_clean_package {
     my ($lpkg) = @_;
@@ -1185,7 +1183,7 @@ sub auto_clean_package {
     my $changed = 0;
     for my $coll ($collmap->known) {
         my $ci = $collmap->getp ($coll);
-        if ($ci->auto_remove and not $keep_coll{$coll}) {
+        if ($ci->auto_remove and not $extra_unpack{$coll}) {
             next unless $lpkg->is_coll_finished ($coll, $ci->version);
             debug_msg(1, "Auto removing: $coll ...");
             $changed = 1;
