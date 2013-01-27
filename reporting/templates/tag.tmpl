@@ -14,10 +14,10 @@
     if ($graphs) {
         $OUT .= qq(  <p>\n);
         $OUT .= qq(    Evolution of the $tag Lintian tag over the past\n);
-        $OUT .= qq(    $graphs_days days: <div class="graph"><img\n);
+        $OUT .= qq(    $graphs_days days:</p>\n);
+        $OUT .= qq(  <div class="graph"><img\n);
         $OUT .= qq(    src="../graphs/tags/$tag.svg" alt="History of $tag"\n);
         $OUT .= qq(    /></div>\n);
-        $OUT .= qq(  </p>);
     }
     '';
 }
