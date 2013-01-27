@@ -160,6 +160,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * lib/Lintian/Relation/Version.pm:
     + [NT] Add and export "versions_comparator" that can be used for
       sorting purposes.
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Use "&amp;" in the manpage ref URLs to generate proper HTML.
+      Thanks to Vasudev Kamath for reporting the issue.
   * lib/Lintian/Util.pm:
     + [NT] Reject partially signed Deb822 files.  Most Deb822 files
       are not signed at all; but those that are should be completely
