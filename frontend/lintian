@@ -91,8 +91,6 @@ my $keep_lab = 0;               #flag for --keep-lab switch
 my $no_conf = 0;                #flag for --no-cfg
 my %conf_opt;                   #names of options set in the cfg file
 
-my %group_cache = ();           # Cache to store groups in case of group
-                                # queries
 my %opt = (                     #hash of some flags from cmd or cfg
                                 # Init some cmd-line value defaults
     # Allow user-dirs ($HOME/.lintian + /etc/lintian) by default
@@ -992,10 +990,6 @@ if ($check_everything) {
     close $fd unless $opt{'packages-from-file'} eq '-';
 }
 
-# Remove the group cache in case there has been group lab queries.  We
-# do not need this cache anymore.
-_clear_group_cache();
-
 # }}}
 
 # {{{ Some silent exit
@@ -1505,20 +1499,6 @@ sub handle_lab_query {
     }
 }
 
-#FIXME: Lab should handle this (harness uses something similar)
-sub _build_group_cache {
-    # Globals %group_cache and $LAB
-    $LAB->visit_packages (sub {
-        my ($entry) = @_;
-        my $src = $entry->pkg_src;
-        my $src_version = $entry->pkg_src_version;
-        push @{ $group_cache{$src}->{$src_version} }, $entry;
-    });
-}
-
-sub _clear_group_cache {
-    undef %group_cache;
-}
 
 sub _find_changes {
     require Parse::DebianChangelog;
