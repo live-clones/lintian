@@ -30,8 +30,7 @@ use constant {
 };
 
 use Exporter qw(import);
-our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
-@EXPORT = ();
+our (@EXPORT_OK, %EXPORT_TAGS);
 %EXPORT_TAGS = (
     constants => [qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL
                      VISIT_STOP_FIRST_MATCH)],

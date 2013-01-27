@@ -29,9 +29,8 @@ use Exporter qw(import);
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
 # otherwise.
-our (@EXPORT, %EXPORT_TAGS, @EXPORT_OK);
+our (%EXPORT_TAGS, @EXPORT_OK);
 BEGIN {
-    @EXPORT = ();
     %EXPORT_TAGS = ( messages => [qw(msg v_msg warning debug_msg delimiter)],
                      util => [qw(_global_or_object)]);
     @EXPORT_OK = (@{$EXPORT_TAGS{messages}},

@@ -26,7 +26,6 @@ BEGIN {
 }
 
 use Exporter qw(import);
-our @EXPORT = ();
 our @EXPORT_OK = qw(spawn reap kill);
 
 use IPC::Run qw(run harness kill_kill);

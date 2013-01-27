@@ -672,7 +672,6 @@ effect if FOH is not a handle.
 sub slurp_entire_file {
     my ($file, $noclose) = @_;
     my $fd;
-    my $res;
     if (openhandle $file) {
         $fd = $file;
     } else {
