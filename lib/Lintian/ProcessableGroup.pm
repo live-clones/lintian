@@ -200,9 +200,6 @@ all binaries (if any) and all udebs (if any).
 This order is based on the original order that Lintian processed
 packages in and some parts of the code relies on this order.
 
-In scalar context, this will return a copy to a list ref containing
-the processables.
-
 Note if $type is given, then only processables of that type is
 returned.
 
@@ -214,8 +211,7 @@ sub get_processables {
     if (defined $type){
         # We only want $type
         if ($type eq 'changes' or $type eq 'source'){
-            push @result, $self->{$type} if defined $self->{$type};
-            return @result;
+            return $self->{$type}  if defined $self->{$type};
         }
         return values %{$self->{$type}} if $type eq 'binary' or $type eq 'udeb';
         fail "Unknown type of processable: $type";
@@ -231,7 +227,7 @@ sub get_processables {
     foreach my $type (qw(binary udeb)){
         push @result, values %{$self->{$type}} if (exists $self->{$type});
     }
-    return wantarray ? @result : \@result;
+    return @result;
 }
 
 =item $group->remove_processable($proc)
