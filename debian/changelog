@@ -206,6 +206,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       add versioned anchors to them.
   * reporting/templates/{index,tag}.tmpl:
     + [JP] Include history graphs in HTML templates.
+  * reporting/templates/tag.tmpl:
+    + [NT] Fix "empty <ul>" tag when tag has no "extra" information.
+      Thanks to Vasudev Kamath for reporting the issue.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 13 Dec 2012 13:38:59 +0100
 

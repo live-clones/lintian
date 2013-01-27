@@ -297,6 +297,11 @@ h2.tag span.type-O {
     border: 1px solid #DDD;
 }
 
+br.tag {
+    padding-bottom: 1em;
+}
+
+
 /* E/W/I colors */
 
 span.type-I {

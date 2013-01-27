@@ -40,9 +40,13 @@
                 my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
                 $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
                 $OUT .= "$last->{package} $last->{version}</a> ($last->{type})$overridden</h2>\n";
-                $OUT .= qq(  <ul class="tag">\n);
-                $OUT .= $tag;
-                $OUT .= "</ul>\n";
+                if ($tag) {
+                    $OUT .= qq(  <ul class="tag">\n);
+                    $OUT .= $tag;
+                    $OUT .= "</ul>\n";
+                } else {
+                    $OUT .= qq(<br class="tag" />\n);
+                }
             }
             $last = $info;
             $tag = '';
@@ -58,8 +62,12 @@
     my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
     $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
     $OUT .= "$last->{package} $last->{version}</a> ($last->{type})$overridden</h2>\n";
-    $OUT .= qq(  <ul class="tag">\n);
-    $OUT .= $tag;
-    $OUT .= "</ul>\n";
+    if ($tag) {
+        $OUT .= qq(  <ul class="tag">\n);
+        $OUT .= $tag;
+        $OUT .= "</ul>\n";
+    } else {
+        $OUT .= qq(<br class="tag" />\n);
+    }
 }
 { foot() }
