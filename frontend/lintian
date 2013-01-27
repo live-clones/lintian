@@ -1568,10 +1568,9 @@ sub _find_changes {
 
 sub _guess_version {
     require File::Basename;
-    require Cwd;
     my ($frontend) = @_;
     my $guess;
-    my $absfront = Cwd::abs_path ($frontend);
+    my $absfront = abs_path ($frontend);
     my $rootdir;
     return '' unless $absfront;
     $rootdir = File::Basename::dirname (File::Basename::dirname ($absfront));
