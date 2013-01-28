@@ -389,22 +389,25 @@ sub process_tasks {
     my $finish_hook = $hooks->{'finish-hook'};
     my %job_data = ();
     my %failed = ();
+    my %active = map { $_ => 1 } keys %$worklists;
 
     while (1) {
-        my $newjobs = 0;
         my $nohang = 0;
       PROC:
-        foreach my $procid (keys %$worklists){
-            # Skip if failed
-            next if exists $failed{$procid};
+        foreach my $procid (keys %active) {
             my $wlist = $worklists->{$procid};
             my $cmap = $wlist->{'collmap'};
+            my @todo = $cmap->selectable;
+            unless (@todo) {
+                delete $active{$procid};
+                next PROC;
+            }
             my $lpkg = $wlist->{'lab-entry'};
             my $needed = $wlist->{'needed'};
             my $pkg_name = $lpkg->pkg_name;
             my $pkg_type = $lpkg->pkg_type;
             my $base = $lpkg->base_dir;
-            foreach my $coll ($cmap->selectable) {
+            foreach my $coll (@todo) {
                 my $cs = $colls->getp ($coll);
 
                 # current type?
@@ -436,6 +439,7 @@ sub process_tasks {
                 if ($pid < 0) {
                     # failed - Lets not start any more jobs for this processable
                     $failed{$lpkg->identifier} = 1;
+                    delete $active{$lpkg->identifier};
                     last;
                 }
                 $running_jobs->{$pid} = $cmd;
@@ -457,13 +461,15 @@ sub process_tasks {
             delete $job_data{$pid};
 
             my $status = $cmd->status;
+            my $procid = $lpkg->identifier;
 
             $coll_hook->($lpkg, 'finish', $cs, $pid, $status)
                 if $coll_hook;
 
             if ($status) {
                 # failed ...
-                $failed{$lpkg->identifier} = 1;
+                $failed{$procid} = 1;
+                delete $active{$procid};
                 next;
             }
 
@@ -473,16 +479,15 @@ sub process_tasks {
             $cmap->satisfy ($coll);
             # If the entry is marked as failed, don't break the loop
             # for it.
-            next if exists $failed{$lpkg->identifier};
-            my $new = $cmap->selectable;
-            if ($new) {
-                $newjobs += $new;
+            next if exists $failed{$procid};
+            if ($cmap->selectable) {
                 $nohang = 1;
+                $active{$procid} = 1;
             }
         }
 
         # Stop when there are no running jobs and no new pending ones.
-        unless (%$running_jobs or $newjobs) {
+        unless (%active or %$running_jobs) {
             # No more running jobs and no new jobs have become available...
             # It is not quite sufficient, so ensure that all jobs have in
             # fact been run.
