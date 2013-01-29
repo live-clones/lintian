@@ -1289,15 +1289,13 @@ sub finish_hook {
     } elsif ($state eq 'unchanged' or $state eq 'changed') {
         # If we are only unpacking stuff, auto-remove colls
         # immediately.
-        if ($action ne 'check') {
+        if ($action ne 'check' and @auto_remove) {
             # we are done now - start auto-cleaning
-            if (!$keep_lab) {
-                my $ret = auto_clean_package($lpkg);
-                # We don't have to remove it from the group if it
-                # fails as we are pretty much done.
-                $exit_code = 2 if $ret < 0;
-                $changed->() if $ret;
-            }
+            my $ret = auto_clean_package($lpkg);
+            # We don't have to remove it from the group if it
+            # fails as we are pretty much done.
+            $exit_code = 2 if $ret < 0;
+            $changed->() if $ret;
         }
     }
 }
@@ -1394,7 +1392,7 @@ sub process_group {
         post_pkg_process_overrides ($lpkg);
     } # end foreach my $lpkg ($group->get_processable)
 
-    if (!$keep_lab) {
+    if (@auto_remove) {
         # Invoke auto-clean now that the group has been checked
         foreach my $lpkg ($group->get_processables){
             my $ret = auto_clean_package($lpkg);
