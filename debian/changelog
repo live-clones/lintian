@@ -75,6 +75,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [JW,NT] Add a separate tag for ambiguous DEP-5 paragraphs,
       where Lintian cannot reliably figure out what is intended.
       Thanks to Julian Taylor for the report.  (Closes: #652380)
+    + [NT] Add paragraph line number to the "field typo" tag.
   * checks/symlinks{,.desc}:
     + [NT] Warn about broken symlinks that contains a literal "*"
       in their target.  This is usually a sign that a wildcard did

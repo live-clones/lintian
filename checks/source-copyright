@@ -169,9 +169,9 @@ if (@dep5) {
     my $i = 0;
     for my $para (@dep5) {
         $i++;
-        my $license = get_field ($para, 'license');
-        my $files = get_field ($para, 'files');
-        my $copyright = get_field ($para, 'copyright');
+        my $license = get_field ($para, 'license', $lines[$i]);
+        my $files = get_field ($para, 'files', $lines[$i]);
+        my $copyright = get_field ($para, 'copyright', $lines[$i]);
 
         if (not defined $files and defined $license and defined $copyright) {
             tag 'ambiguous-paragraph-in-dep5-copyright', "paragraph at line $lines[$i]";
@@ -236,12 +236,12 @@ sub split_licenses {
 }
 
 sub get_field {
-    my ($para, $field) = @_;
+    my ($para, $field, $line) = @_;
     return $para->{$field} if exists $para->{$field};
     # Fall back to a "likely misspelling" of the field.
     foreach my $f (sort keys %$para) {
         if (distance ($field, $f) < 3) {
-            tag 'field-name-typo-in-dep5-copyright', $f, '->', $field;
+            tag 'field-name-typo-in-dep5-copyright', $f, '->', $field, "(paragraph at line $line)";
             return $para->{$f};
         }
     }
