@@ -22,7 +22,8 @@ use warnings;
 
 BEGIN {
     # Disabling IPC::Run::Debug saves tons of useless calls.
-    $ENV{'IPCRUNDEBUG'} = 'none';
+    $ENV{'IPCRUNDEBUG'} = 'none'
+        unless exists $ENV{'IPCRUNDEBUG'};
 }
 
 use Exporter qw(import);

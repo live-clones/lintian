@@ -1596,6 +1596,9 @@ sub _guess_version {
     if ( -d "$rootdir/.git" ) {
         # Lets try git
         eval {
+            # Disabling IPC::Run::Debug saves tons of useless calls.
+            $ENV{'IPCRUNDEBUG'} = 'none'
+                unless exists $ENV{'IPCRUNDEBUG'};
             require IPC::Run;
             IPC::Run::run (['git', "--git-dir=$rootdir/.git", 'describe'], \undef, \$guess);
             chomp $guess;
