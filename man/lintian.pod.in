@@ -727,14 +727,14 @@ using the following values as architectecture (in order):
 
 =over 4
 
-=item I<$DEB_BUILD_ARCH>
+=item I<$DEB_BUILD_ARCH> (or I<dpkg --print-architecture>)
 
-The environment variable DEB_BUILD_ARCH.
-
-=item I<$DEB_HOST_ARCH> (or I<dpkg --print-architecture>)
-
-The environment variable DEB_HOST_ARCH (if not set, "dpkg
+The environment variable DEB_BUILD_ARCH (if not set, "dpkg
 --print-architecture" will be used instead)
+
+=item I<$DEB_HOST_ARCH>
+
+The environment variable DEB_HOST_ARCH.
 
 =item I<dpkg --print-foreign-architectures>
 

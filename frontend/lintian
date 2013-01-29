@@ -1497,10 +1497,10 @@ sub _find_changes {
     my $dch = Parse::DebianChangelog->init ( { infile => 'debian/changelog', quiet => 1 } );
     my $data = $dch->data;
     my $last = $data ? $data->[0] : undef;
-    my ($source, $version, $arch);
+    my ($source, $version);
     my $changes;
     my @archs;
-    my @dirs;
+    my @dirs = ('..', '../build-area', '/var/cache/pbuilder/result');
     if (not $last) {
         my @errors = $dch->get_parse_errors;
         if (@errors) {
@@ -1526,21 +1526,12 @@ sub _find_changes {
     # remove the epoch
     $version =~ s/^\d+://;
     if (exists $ENV{'DEB_BUILD_ARCH'}) {
-        my $barch = $ENV{'DEB_BUILD_ARCH'};
-        push @archs, $barch;
-        $changes = "../${source}_${version}_${barch}.changes";
-        return $changes if -f $changes;
-    }
-    if (exists $ENV{'DEB_HOST_ARCH'}) {
-        $arch = $ENV{'DEB_HOST_ARCH'};
+        push @archs, $ENV{'DEB_BUILD_ARCH'}
     } else {
-        chomp ( $arch = `dpkg --print-architecture` );
+        chomp ( my $arch = `dpkg --print-architecture 2>/dev/null` );
+        push @archs, $arch if $arch ne '';
     }
-    if ($arch ne ($ENV{'DEB_BUILD_ARCH'}//'')) {
-        push @archs, $arch;
-        $changes = "../${source}_${version}_${arch}.changes";
-        return $changes if -f $changes;
-    }
+    push @archs, $ENV{'DEB_HOST_ARCH'} if exists $ENV{'DEB_HOST_ARCH'};
     if (system ('dpkg', '--assert-multi-arch') == 0) {
         # Maybe cross-built for something dpkg knows about...
         open my $foreign, '-|', 'dpkg', '--print-foreign-architectures'
@@ -1549,38 +1540,23 @@ sub _find_changes {
             chomp $line;
             # Skip already attempted architectures (e.g. via DEB_BUILD_ARCH)
             next if grep { $_ eq $line } @archs;
-            $changes = "../${source}_${version}_${line}.changes";
-            if ( -f $changes ) {
-                # Consume the entire input, even if we don't need it.
-                1 for <$foreign>;
-                close $foreign;
-                return $changes;
-            }
             push @archs, $line;
         }
         close $foreign;
     }
-    foreach my $a (qw(multi all source)) {
-        $changes = "../${source}_${version}_${a}.changes";
-        return $changes if -f $changes;
-        push @archs, $a;
-    }
-    foreach my $dir ('../build-area', '/var/cache/pbuilder/result') {
-        next unless -d $dir;
-        foreach my $a (@archs) {
-            $changes = "$dir/${source}_${version}_${a}.changes";
+    push @archs, qw(multi all source);
+    foreach my $dir (@dirs) {
+        foreach my $arch (@archs) {
+            $changes = "$dir/${source}_${version}_${arch}.changes";
             return $changes if -f $changes;
         }
-        push @dirs, $dir;
     }
     print STDERR "Cannot find changes file for ${source}/${version}, tried:\n";
-    foreach my $a (@archs) {
-        print STDERR "  ../${source}_${version}_${a}.changes\n";
+    foreach my $arch (@archs) {
+        print STDERR "  ${source}_${version}_${arch}.changes\n";
     }
-    if (@dirs) {
-        print STDERR " Also tried the following dirs:\n";
-        print STDERR '  ' , join ("\n  ", @dirs), "\n";
-    }
+    print STDERR " in the following dirs:\n";
+    print STDERR '  ' , join ("\n  ", @dirs), "\n";
     exit 0;
 }
 
