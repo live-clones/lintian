@@ -1035,8 +1035,8 @@ my $collmap = Lintian::DepMap::Properties->new();
         my ($cs) = @_;
         my $coll = $cs->name;
         debug_msg(2, "Read collector description for $coll ...");
-        $collmap->add ($cs->name, $cs->needs_info, $cs);
-        $map->addp ('coll-' . $cs->name, 'coll-', $cs->needs_info);
+        $collmap->add ($coll, $cs->needs_info, $cs);
+        $map->addp ('coll-' . $coll, 'coll-', $cs->needs_info);
         push @auto_remove, $coll if $cs->auto_remove;
     };
 
