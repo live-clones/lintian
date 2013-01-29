@@ -167,14 +167,14 @@ The return value in scalar context is value associated with the pid of
 the reaped processed.  In list context, the pid and value are returned
 as a pair.
 
-Whenever waitpid() would return -1, wait() returns undef or a null
+Whenever waitpid() would return -1, wait_any() returns undef or a null
 value so that it is safe to:
 
-    while($cmd = Lintian::Command::Simple::wait(\%hash)) { something; }
+    while($cmd = wait_any(\%hash)) { something; }
 
 The same is true whenever the hash reference points to an empty hash.
 
-If C<nohang> is also given, wait will attempt to reap any child
+If C<nohang> is also given, wait_any will attempt to reap any child
 process non-blockingly.  If no child can be reaped, it will
 immediately return (like there were no more processes left) instead of
 waiting.
@@ -258,17 +258,8 @@ provided by this package itself.
 
 =head1 CAVEATS
 
-Combining asynchronous jobs from Lintian::Command and calls to wait()
-can lead to unexpected results.
-
-Calling wait() without a pid via the procedural interface can lead to
-processes started via the OO interface to be reaped. In this case, the
-object that started the reaped process won't be able to determine the
-return status, which can affect the rest of the application.
-
-As a general advise, the procedural and OO interfaces should not be
-combined when using background(). Unless, of course, you are calling wait()
-with a hash ref.
+Combining asynchronous jobs (e.g. via Lintian::Command) and calls to
+wait_any() can lead to unexpected results.
 
 =head1 AUTHOR
 
