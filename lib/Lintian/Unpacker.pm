@@ -23,7 +23,7 @@ use warnings;
 
 use base 'Class::Accessor';
 
-use Lintian::Command::Simple;
+use Lintian::Command::Simple qw(background wait_any kill_all);
 use Lintian::Util qw(fail);
 
 =head1 NAME
@@ -387,7 +387,6 @@ sub process_tasks {
     $hooks //= {};
     my $coll_hook = $hooks->{'coll-hook'};
     my $finish_hook = $hooks->{'finish-hook'};
-    my %job_data = ();
     my %failed = ();
     my %active = map { $_ => 1 } keys %$worklists;
 
@@ -433,8 +432,7 @@ sub process_tasks {
                 # collect info
                 $cmap->select ($coll);
                 $wlist->{'changed'} = 1;
-                my $cmd = Lintian::Command::Simple->new;
-                my $pid = $cmd->background ($cs->script_path, $pkg_name, $pkg_type, $base);
+                my $pid = background ($cs->script_path, $pkg_name, $pkg_type, $base);
                 $coll_hook->($lpkg, 'start', $cs, $pid) if $coll_hook;
                 if ($pid < 0) {
                     # failed - Lets not start any more jobs for this processable
@@ -442,8 +440,7 @@ sub process_tasks {
                     delete $active{$lpkg->identifier};
                     last;
                 }
-                $running_jobs->{$pid} = $cmd;
-                $job_data{$pid} = [$cs, $cmap, $lpkg];
+                $running_jobs->{$pid} = [$cs, $cmap, $lpkg];
                 if ($jobs) {
                     # Have we hit the limit of running jobs?
                     last PROC if scalar keys %$running_jobs >= $jobs;
@@ -453,14 +450,10 @@ sub process_tasks {
         # wait until a job finishes to run its branches, if any, or skip
         # this package if any of the jobs failed.
 
-        while (my ($pid, $cmd) = Lintian::Command::Simple::wait ($running_jobs, $nohang)) {
-            my $jdata = $job_data{$pid};
-            my ($cs, $cmap, $lpkg) = @$jdata;
+        while (my ($pid, $job_data) = wait_any ($running_jobs, $nohang)) {
+            my $status = $?;
+            my ($cs, $cmap, $lpkg) = @$job_data;
             my $res;
-            delete $running_jobs->{$pid};
-            delete $job_data{$pid};
-
-            my $status = $cmd->status;
             my $procid = $lpkg->identifier;
 
             $coll_hook->($lpkg, 'finish', $cs, $pid, $status)
@@ -549,7 +542,7 @@ sub wait_for_jobs {
     my ($self) = @_;
     my $running = $self->{'running-jobs'};
     if (%{ $running }) {
-        while (my ($key, undef) = Lintian::Command::Simple::wait ($running)) {
+        while (my ($key, undef) = wait_any ($running)) {
             delete $running->{$key};
         }
         $self->{'running-jobs'} = {}
@@ -567,7 +560,8 @@ sub kill_jobs {
     my ($self) = @_;
     my $running = $self->{'running-jobs'};
     if (%{ $running }) {
-        Lintian::Command::Simple::kill ($running);
+        kill_all ($running);
+        kill_all ($running, 'KILL') if %$running;
         $self->{'running-jobs'} = {}
     }
 }

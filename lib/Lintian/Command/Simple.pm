@@ -18,7 +18,10 @@ package Lintian::Command::Simple;
 use strict;
 use warnings;
 
+use Exporter qw(import);
 use POSIX ":sys_wait_h";
+
+our @EXPORT_OK = qw(rundir background background_dir wait_any kill_all);
 
 =head1 NAME
 
@@ -26,22 +29,13 @@ Lintian::Command::Simple - Run commands without pipes
 
 =head1 SYNOPSIS
 
-    use Lintian::Command::Simple;
+    use Lintian::Command::Simple qw(background rundir);
 
-    Lintian::Command::Simple::run("echo", "hello world");
+    Lintian::Command::Simple::rundir ('./some-dir/', 'echo', 'hello world');
 
     # Start a command in the background:
     Lintian::Command::Simple::background("sleep", 10);
     print wait() > 0 ? "success" : "failure";
-
-    # Using the OO interface
-
-    my $cmd = Lintian::Command::Simple->new();
-
-    $cmd->run("echo", "hello world");
-
-    $cmd->background("sleep", 10);
-    print ($cmd->wait())? "success" : "failure";
 
 
 =head1 DESCRIPTION
@@ -53,87 +47,31 @@ Pipes are not handled at all, except for those handled internally by
 the shell. See 'perldoc -f exec's note about shell metacharacters.
 If you want to pipe to/from Perl, look at Lintian::Command instead.
 
-A procedural and an Object-Oriented (from now on OO) interfaces are
-provided.
-
-It is possible to reuse an object to run multiple commands, but only
-after reaping the previous command.
-
 =over 4
-
-=item new()
-
-Creates a new Lintian::Command::Simple object and returns a reference
-to it.
-
-=cut
-
-sub new {
-    my ($class, $pkg) = @_;
-    my $self = {};
-    bless($self, $class);
-    return $self;
-}
-
-=item run(command, argument  [, ...])
-
-Executes the given C<command> with the given arguments and returns the
-status code as one would see it from a shell script.
-
-Being fair, the only advantage of this function (or method) over the
-CORE::system() function is the way the return status is reported.
-
-=cut
-
-sub run {
-    my $self;
-
-    if (ref $_[0]) {
-        $self = shift;
-        return -1
-            if defined($self->{'pid'});
-    }
-
-    system(@_);
-
-    $self->{'status'} = $?
-        if defined $self;
-
-    return $? >> 8;
-}
 
 =item rundir(dir, command, argument  [, ...])
 
 Executes the given C<command> with the given arguments and in C<dir>
 returns the status code as one would see it from a shell script.
 
-Being fair, the only advantage of this function (or method) over the
-CORE::system() function is the way the return status is reported.
+Being fair, the only advantage of this function over the
+CORE::system() function is the way the return status is reported
+and the chdir support.
 
 =cut
 
 sub rundir {
-    my $self;
     my $pid;
     my $res;
 
-    if (ref $_[0]) {
-        $self = shift;
-        return -1
-            if defined($self->{'pid'});
-    }
     $pid = fork();
     if (not defined($pid)) {
         # failed
         $res = -1;
     } elsif ($pid > 0) {
         # parent
-        if (defined($self)){
-            $self->{'pid'} = $pid;
-            $res = $self->wait();
-        } else {
-            $res = Lintian::Command::Simple::wait($pid);
-        }
+        waitpid ($pid, 0);
+        $res = $? >> 8;
     } else {
         # child
         my $dir = shift;
@@ -158,16 +96,6 @@ calling wait() to reap the previous command.
 =cut
 
 sub background {
-    my $self;
-
-    if (ref $_[0]) {
-        $self = shift;
-        return -1
-            if (defined($self->{'pid'}));
-
-        $self->{'status'} = undef;
-    }
-
     my $pid = fork();
 
     if (not defined($pid)) {
@@ -175,10 +103,6 @@ sub background {
         return -1;
     } elsif ($pid > 0) {
         # parent
-
-        $self->{'pid'} = $pid
-            if (defined($self));
-
         return $pid;
     } else {
         # child
@@ -201,16 +125,6 @@ calling wait() to reap the previous command.
 =cut
 
 sub background_dir {
-    my $self;
-
-    if (ref $_[0]) {
-        $self = shift;
-        return -1
-            if (defined($self->{'pid'}));
-
-        $self->{'status'} = undef;
-    }
-
     my $pid = fork();
 
     if (not defined($pid)) {
@@ -218,10 +132,6 @@ sub background_dir {
         return -1;
     } elsif ($pid > 0) {
         # parent
-
-        $self->{'pid'} = $pid
-            if (defined($self));
-
         return $pid;
     } else {
         # child
@@ -233,53 +143,31 @@ sub background_dir {
     }
 }
 
-=item wait (pid|hashref[, nohang])
-
-=item wait ([nohang])
-
-When called as a function:
-If C<pid> is specified, it waits until the given process (which must be
-a child of the current process) returns.  If C<nohang> is a truth value,
-then the function will attempt to reap the process without waiting for
-it.
-
-If C<pid> is not specified, the function returns -1 and $! is set to
-EINVAL.
-
-When called as a method:
-It takes one optional argument C<nohang>. It waits for the previously
-background()ed process to return.  If C<nohang> is a truth value, it
-will do a non-blocking attempt to reap the process.  If the process
-is still running it will return immediately with -1 and $! set to 0.
-
-The return value is either -1, probably indicating an error, or the
-return status of the process as it would be seen from a shell script.
-See 'perldoc -f waitpid' for more details about the possible meanings
-of -1.
-
-
-To reap one from many:
+=item wait_any (hashref[, nohang])
 
 When starting multiple processes asynchronously, it is common to wait
 until the first is done. While the CORE::wait() function is usually
 used for that very purpose, it does not provide the desired results
 when the processes were started via the OO interface.
 
-To help with this task, wait() can take a hash ref where the value of
-each entry is an instance of Lintian::Command::Simple. The key of each
-entry is the pid of that command (i.e. $cmd->pid).
+To help with this task, wait_any() can take a hash ref where the key
+of each entry is the pid of that command.  There are no requirements
+for the value (which can be used for any application specific
+purpose).
 
-Under this mode, wait() waits until any child process is done and if the
-deceased process is one of the set passed via the hash ref it marks it
-as reaped and stores the return status.
-The results and return value are undefined when under this mode wait()
-"accidentally" reaps a process not started by one of the objects passed
-in the hash ref.
+Under this mode, wait_any() waits until any child process is done.
+The key (and value) associated the pid of the reaped child will then
+be removed from the hashref.  The exitcode of the child is available
+via C<$?> as usual.
 
-The return value in scalar context is the instance of the object that
-started the now deceased process. In list context, the pid and value
-(i.e. the object instance) are returned.
-Whenever CORE::waitpid() would return -1, wait() returns undef or a null
+The results and return value are undefined when under this mode
+wait_any() "accidentally" reaps a process not listed in the hashref.
+
+The return value in scalar context is value associated with the pid of
+the reaped processed.  In list context, the pid and value are returned
+as a pair.
+
+Whenever waitpid() would return -1, wait() returns undef or a null
 value so that it is safe to:
 
     while($cmd = Lintian::Command::Simple::wait(\%hash)) { something; }
@@ -287,191 +175,67 @@ value so that it is safe to:
 The same is true whenever the hash reference points to an empty hash.
 
 If C<nohang> is also given, wait will attempt to reap any child
-process in non-blockingly.  If no child can be reaped, it will
+process non-blockingly.  If no child can be reaped, it will
 immediately return (like there were no more processes left) instead of
 waiting.
 
-Passing any other kind of reference or value as arguments has undefined
-results.
-
 =cut
 
-sub wait {
-    my ($self, $pid, $nohang);
-
-    if (ref $_[0] eq 'Lintian::Command::Simple') {
-        ($self, $nohang) = @_;
-        $pid = $self->{'pid'};
-    } else {
-        ($pid, $nohang) = @_;
-    }
+sub wait_any {
+    my ($jobs, $nohang) = @_;
+    my $reaped_pid;
+    my $extra;
 
     $nohang = WNOHANG if $nohang;
     $nohang //= 0;
 
-    if (defined($pid) && !ref $pid) {
-        my $ret = waitpid($pid, $nohang);
-        my $status = $?;
-        my $reaped = 0;
+    return unless scalar keys %$jobs;
 
-        $reaped = 1 unless $ret == -1 or ($ret == 0 and $nohang);
+    $reaped_pid = waitpid(-1, $nohang);
 
-        if (defined $self) {
-            # Clear the PID field if we reaped the child or the child
-            # no longer exists.
-            $self->{'pid'} = undef
-                if $reaped or ($ret == -1 and $! == POSIX::ECHILD);
-            # Set the status only if we reaped the child
-            $self->{'status'} = $status
-                if $reaped;
-        }
-
-        $! = 0 if $ret == 0 and $nohang;
-
-        return $reaped ? $status >> 8 : -1;
-    } elsif (defined($pid)) {
-        # in this case $pid is a ref (must be a hash ref)
-        # rename it accordingly:
-        my $jobs = $pid;
-        $pid = 0;
-
-        my ($reaped_pid, $reaped_status);
-
-        # count the number of members and reset the internal hash iterator
-        if (scalar keys %$jobs == 0) {
-            return;
-        }
-
-        $reaped_pid = waitpid(-1, $nohang);
-        $reaped_status = $?;
-
-        if ($reaped_pid == -1 or ($nohang and $reaped_pid == 0)) {
-            return;
-        }
-
-        my $cmd = delete $jobs->{$reaped_pid};
-        # Did we reap some other pid?
-        return unless $cmd;
-
-        $cmd->status($reaped_status)
-                or die("internal error: object of pid $reaped_pid " .
-                        "failed to recognise its termination\n");
-
-        return ($reaped_pid, $cmd) if wantarray;
-        return $cmd;
-
-    } else {
-        $! = POSIX::EINVAL;
-        return -1;
+    if ($reaped_pid == -1 or ($nohang and $reaped_pid == 0)) {
+        return;
     }
+
+    # Did we reap some other pid?
+    return unless exists $jobs->{$reaped_pid};
+
+    $extra = delete $jobs->{$reaped_pid};
+    return ($reaped_pid, $extra) if wantarray;
+    return $extra;
 }
 
-=item kill([pid|hashref])
+=item kill_all(hashref[, signal])
 
-When called as a function:
-C<pid> must be specified. It sigTERMs the given process.
-Under this mode, it acts as a wrapper around CORE::kill().
+In a similar way to wait_any(), it is possible to pass a hash
+reference to kill_all().  It will then kill all of the proceses
+(default signal being "TERM") followed by a reaping of the processes.
+All reaped processes (and their values) will be removed from the set.
 
-When called as a method:
-It takes no argument. It sigTERMsr the previously background()ed
-process and cleans up internal variables.
-
-The return value is that of CORE:kill().
-
-
-Killing multiple processes:
-
-In a similar way to wait(), it is possible to pass a hash reference to
-kill() so that it calls the kill() method of each of the objects and
-reaps them afterwards with wait().
-
-Only the processes that were successfully signaled are reaped.
-Depending on the effects of the signal, it is possible that the call to
-wait() blocks. To reduce the chances of blocking, the processes are
-reaped in the same order they were signaled.
-
-The return value is the number of processes that were successfully
-signaled (and per the above description, reaped.)
+Any entries remaining in the hashref are processes that did not
+terminate (or did not terminate yet).
 
 =cut
 
-sub kill {
-    my ($self, $pid);
+sub kill_all {
+    my ($jobs, $signal) = @_;
+    my $count = 0;
+    my @jobs;
 
-    if (ref $_[0] eq 'Lintian::Command::Simple') {
-        $self = shift;
-        $pid = $self->pid();
-    } elsif (ref $_[0]) {
-        my $jobs = shift;
-        my $count = 0;
-        my @killed_jobs;
+    $signal //= 'TERM';
 
-        # reset internal iterator
-        keys %$jobs;
-        # send signals
-        while (my ($k, $cmd) = each %$jobs) {
-            if ($cmd->kill()) {
-                $count++;
-                push @killed_jobs, $k;
-            }
-        }
-        # and reap afterwards
-        while (my $k = shift @killed_jobs) {
-            $jobs->{$k}->wait();
-        }
-
-        return $count;
-    } else {
-        $pid = shift;
+    foreach my $pid (keys %$jobs) {
+        push @jobs, $pid if kill $signal, $pid;
     }
 
-    return CORE::kill('TERM', $pid);
-}
-
-=item pid()
-
-Only available under the OO interface, it returns the pid of a
-background()ed process.
-
-After calling wait(), this method always returns undef.
-
-=cut
-
-sub pid {
-    my $self = shift;
-
-    return $self->{'pid'};
-}
-
-=item status()
-
-Only available under the OO interface, it returns the return status of
-the background()ed or run()-ran process.
-
-When used on async processes, it is only defined after calling wait().
-
-B<Note>: it is also the method internally used by wait() to set the return
-status in some cases.
-
-=cut
-
-sub status {
-    my $self = shift;
-    my $status = shift;
-
-    # Externally set the return status.
-    # It performs a sanity check by making sure the executed command is
-    # indeed done.
-    if (defined($status)) {
-        my $rstatus = $self->wait();
-
-        return 0 if ($rstatus != -1);
-
-        $self->{'status'} = $status;
-        return 1;
+    foreach my $pid (@jobs) {
+        if (waitpid ($pid, 0) == $pid) {
+            $count++;
+            delete $jobs->{$pid};
+        }
     }
 
-    return (defined $self->{'status'})? $self->{'status'} >> 8 : undef;
+    return scalar @jobs;
 }
 
 1;
