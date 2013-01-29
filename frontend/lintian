@@ -1604,6 +1604,7 @@ sub _guess_version {
     }
     # git was not possible - maybe the changelog is available
     if ( -f "$rootdir/debian/changelog" ) {
+        require Parse::DebianChangelog;
         eval {
             my $changelog = Parse::DebianChangelog->init({ infile => "$rootdir/debian/changelog" });
             $guess = $changelog->dpkg()->{'Version'} if $changelog;
