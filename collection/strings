@@ -19,6 +19,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::strings;
+
 use strict;
 use warnings;
 
@@ -30,12 +32,13 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(delete_dir fail);
 
-($#ARGV == 2) or fail('syntax: strings <pkg> <type> <dir>');
 
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+
+my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
-my $helper = realpath("$0-helper");
+my $helper = realpath(__FILE__ . '-helper');
 my @manual = ();
 
 if ( -e "$dir/elf-index" ) {
@@ -95,7 +98,11 @@ if (@manual) {
 }
 close(ELF_INDEX) or fail("cannot write elf-index file: $!");
 
-exit 0;
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)strings$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

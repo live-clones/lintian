@@ -20,6 +20,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::unpacked;
+
 use strict;
 use warnings;
 
@@ -27,8 +29,8 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn);
 use Lintian::Util qw(check_path delete_dir fail);
 
-($#ARGV == 2) or fail('syntax: unpacked <package> <type> <dir>');
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 if (-d "$dir/unpacked/") {
     delete_dir ("$dir/unpacked/") or
@@ -40,7 +42,7 @@ if (-f "$dir/unpacked-errors") {
 }
 # If we are asked to only remove the files stop right here
 if ($type =~ m/^remove-/) {
-    exit 0;
+    return;
 }
 
 if ($type eq 'source') {
@@ -91,6 +93,8 @@ if ($type eq 'source') {
             ['chmod', '-R', 'u+rwX,go-w', "$dir/unpacked"]);
 }
 
+}
+
 sub libdpkg_unpack_dsc {
     my ($dsc, $target) = @_;
     my $opt = {
@@ -119,6 +123,10 @@ sub can_use_dpkg_source{
     return 0 if defined $test && $test =~ m/unpack-libdpkg-perl/;
     return check_path('dpkg-source');
 }
+
+collect (@ARGV) if $0 =~ m,(?:^|/)unpacked$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

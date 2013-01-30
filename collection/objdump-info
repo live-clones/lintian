@@ -23,6 +23,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::objdump_info;
+
 use strict;
 use warnings;
 
@@ -34,9 +36,10 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-my $helper = realpath("$0-helper");
+my $helper = realpath (__FILE__ . '-helper');
 
 if ( -e "$dir/objdump-info" ) {
     unlink "$dir/objdump-info" or fail "unlink objdump-info: $!"
@@ -66,7 +69,10 @@ foreach my $bin ($info->sorted_index) {
 close $opts{pipe_in} or fail "cannot write objdump-info.gz: $!";
 reap(\%opts);
 
-exit 0;
+};
+
+collect (@ARGV) if $0 =~ m,(?:^|/)objdump-info$,;
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

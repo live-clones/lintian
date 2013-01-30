@@ -19,6 +19,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::md5sums;
+
 use strict;
 use warnings;
 
@@ -28,9 +30,8 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
-($#ARGV == 2) or fail 'syntax: md5sums <pkg> <type> <dir>';
-
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/md5sums" ) {
@@ -54,6 +55,10 @@ foreach my $file ($info->sorted_index) {
 
 close $opts{pipe_in};
 reap(\%opts);
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)md5sums$,;
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

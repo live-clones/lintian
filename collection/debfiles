@@ -19,6 +19,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::debfiles;
+
 use strict;
 use warnings;
 
@@ -26,8 +28,8 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail);
 
-($#ARGV == 2) or fail 'syntax: debfiles <pkg> <type> <dir>';
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 -e "$dir/unpacked" or fail 'debfiles invoked with wrong dir argument';
 
@@ -51,6 +53,12 @@ if ( -l "$dir/unpacked/debian" ) {
 # Copy the whole debian directory
 copy_dir ("$dir/unpacked/debian/", "$dir/debfiles")
     or fail("cannot copy unpacked/debian to debfiles: $!");
+
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)debfiles$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

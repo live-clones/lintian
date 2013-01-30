@@ -19,6 +19,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::src_orig_index;
+
 use strict;
 use warnings;
 
@@ -30,8 +32,8 @@ use Lintian::Command qw(spawn);
 use Lintian::Processable::Package;
 use Lintian::Util qw(fail);
 
-($#ARGV == 2) or fail 'syntax: src-orig-index <pkg> <type> <dir>';
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -f "$dir/orig-index.gz" ) {
@@ -44,13 +46,12 @@ if ( -f "$dir/orig-index.gz" ) {
 if ($info->native) {
     link "$dir/index.gz", "$dir/orig-index.gz"
         or fail "link index.gz orig-index.gz: $!";
-    exit 0
+    return;
 }
 
 index_orig ($info);
 
-exit 0;
-
+}
 
 # returns all (orig) tarballs.
 sub gather_tarballs {
@@ -191,3 +192,13 @@ sub index_orig {
           '|', ['gzip', '--best', '-c']);
     return 1;
 }
+
+collect (@ARGV) if $0 =~ m,(?:^|/)src-orig-index$,;
+
+1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

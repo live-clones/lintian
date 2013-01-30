@@ -19,6 +19,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::ar_info;
+
 use strict;
 use warnings;
 
@@ -28,8 +30,8 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn);
 use Lintian::Util qw(fail);
 
-($#ARGV == 2) or fail 'syntax: ar-info <pkg> <type> <dir>';
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+    my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/ar-info" ) {
@@ -59,6 +61,10 @@ foreach my $file ($info->sorted_index) {
 }
 
 close(OUT) or fail("cannot write ar-info: $!");
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)ar-info$,;
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

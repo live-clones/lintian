@@ -1229,9 +1229,9 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
       </para>
       <para>
         Check names without a forward slash (e.g. "fields") and names
-        starting with "lintian/" are reserved for built-in checks.
-        Vendors are recommended to use their vendor name before the
-        first slash (e.g. "ubuntu/fields").
+        starting with either "lintian/" or "coll/" are reserved for
+        the Lintian core.  Vendors are recommended to use their vendor
+        name before the first slash (e.g. "ubuntu/fields").
       </para>
       <sect2 label="3.3.1" id="section-3.3.1">
         <title>Check description file</title>

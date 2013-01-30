@@ -19,14 +19,16 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::menu_files;
+
 use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail);
 
-($#ARGV == 2) or fail('syntax: menu-files <pkg> <type> <dir>');
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 if ( -e "$dir/menu") {
     delete_dir ("$dir/menu")
@@ -49,6 +51,12 @@ while (my ($shortn, $path) = each %dirs) {
         mkdir ("$dir/menu/$shortn", 0777) or fail ("cannot mkdir menu/$shortn: $!");
     }
 }
+
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)menu-files$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

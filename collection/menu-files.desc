@@ -4,3 +4,4 @@ Info: This script copies the contents of /usr/lib/menu into the lintian menu/ di
 Type: binary
 Version: 2
 Needs-Info: unpacked
+Interface: perl-coll

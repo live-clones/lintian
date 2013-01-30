@@ -4,3 +4,4 @@ Info: This script runs the md5sums(1) over all files in a binary package.
 Type: binary, udeb
 Version: 1
 Needs-Info: unpacked, index
+Interface: perl-coll

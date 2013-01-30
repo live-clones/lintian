@@ -3,4 +3,4 @@ Info: This script create an index file of the contents of a package.
 Type: source, binary, udeb
 Needs-Info: unpacked [source]
 Version: 4
-
+Interface: perl-coll

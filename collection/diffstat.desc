@@ -4,3 +4,4 @@ Info: This script extracts the Debian diff of a source package, and runs
  diffstat on it, leaving the result in the diffstat output file
 Type: source
 Version: 1
+Interface: perl-coll

@@ -23,7 +23,9 @@ use warnings;
 
 use base 'Class::Accessor';
 
-use Lintian::Command::Simple qw(background wait_any kill_all);
+use POSIX;
+
+use Lintian::Command::Simple qw(wait_any kill_all);
 use Lintian::Util qw(fail);
 
 =head1 NAME
@@ -432,7 +434,24 @@ sub process_tasks {
                 # collect info
                 $cmap->select ($coll);
                 $wlist->{'changed'} = 1;
-                my $pid = background ($cs->script_path, $pkg_name, $pkg_type, $base);
+                my $pid = fork//-1;
+                if (not $pid) {
+                    # child
+                    my $ret = 0;
+                    if ($cs->interface eq 'perl-coll') {
+                        eval {
+                            $cs->collect ($pkg_name, $pkg_type, $base);
+                        };
+                        if ($@) {
+                            print STDERR $@;
+                            $ret = 2;
+                        }
+                    } else {
+                        exec $cs->script_path, $pkg_name, $pkg_type, $base
+                            or die "exec $cs->script_path: $!";
+                    }
+                    POSIX::_exit ($ret);
+                }
                 $coll_hook->($lpkg, 'start', $cs, $pid) if $coll_hook;
                 if ($pid < 0) {
                     # failed - Lets not start any more jobs for this processable

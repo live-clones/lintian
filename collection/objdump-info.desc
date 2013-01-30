@@ -5,3 +5,4 @@ Info: This script runs objdump(1) over all binaries and object files of a
 Type: binary, udeb
 Version: 4
 Needs-Info: file-info, unpacked, index
+Interface: perl-coll

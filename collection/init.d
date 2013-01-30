@@ -19,14 +19,16 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::init_d;
+
 use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail);
 
-($#ARGV == 2) or fail('syntax: init.d <pkg> <type> <dir>');
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 if (-e "$dir/init.d") {
     delete_dir ("$dir/init.d")
@@ -40,6 +42,11 @@ if (-d "$dir/unpacked/etc/init.d") {
     # no etc/init.d
     mkdir ("$dir/init.d", 0777) or fail "cannot mkdir init.d: $!";
 }
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)init\.d$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -20,14 +20,16 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::doc_base_files;
+
 use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail);
 
-($#ARGV == 2) or fail 'syntax: doc-base-files <pkg> <type> <dir>';
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 if ( -e "$dir/doc-base") {
     delete_dir ("$dir/doc-base")
@@ -41,6 +43,11 @@ if ( -d "$dir/unpacked/usr/share/doc-base") {
     # no doc-base directory
     mkdir ("$dir/doc-base", 0777) or fail "cannot mkdir doc-base: $!";
 }
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)doc-base-files$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

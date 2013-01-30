@@ -5,3 +5,4 @@ Info: This script runs hardening-check(1) over all ELF binaries of a binary
 Type: binary, udeb
 Version: 4
 Needs-Info: bin-pkg-control, file-info, index, unpacked
+Interface: perl-coll

@@ -5,3 +5,4 @@ Info: This script collects files shipped in the source of the
 Type: source
 Version: 1
 Needs-Info: unpacked
+Interface: perl-coll

@@ -23,6 +23,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::index;
+
 use strict;
 use warnings;
 
@@ -33,8 +35,8 @@ use Lintian::Command qw(spawn reap);
 use Lintian::Processable::Package;
 use Lintian::Util qw(fail get_dsc_info);
 
-($#ARGV == 2) or fail 'syntax: index <pkg> <type> <dir>';
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 unlink "$dir/index" or fail "Could not unlink index: $!"
     if -e "$dir/index";
@@ -44,7 +46,7 @@ unlink "$dir/index-errors" or fail "Could not unlink index-errors: $!"
     if -e "$dir/index-errors";
 
 if ($type ne 'source') {
-    index_deb();
+    index_deb ($dir);
 } else {
     chdir "$dir/unpacked"
         or fail "chdir $dir/unpacked: $!";
@@ -61,10 +63,11 @@ if ($type ne 'source') {
            '|', ['sort', '-k', '6'], '|', ['gzip', '-9c']);
 }
 
-exit 0;
+}
 
 # Creates an index for binary packages
 sub index_deb {
+    my ($dir) = @_;
     my (@jobs, $job);
 
     foreach my $file (qw(index index-errors index-owner-id)) {
@@ -100,6 +103,10 @@ sub index_deb {
 
     return 1;
 }
+
+collect (@ARGV) if $0 =~ m,(?:^|/)index$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

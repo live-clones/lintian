@@ -19,6 +19,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::bin_pkg_control;
+
 use strict;
 use warnings;
 
@@ -26,8 +28,8 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(delete_dir fail);
 
-($#ARGV == 2) or fail 'syntax: bin-pkg-control <pkg> <type> <dir>';
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 my (@jobs, $job);
 
 if ( -e "$dir/control"){
@@ -74,7 +76,11 @@ unlink "$dir/control.tar" or fail "unlink control.tar: $!";
 spawn({ fail => 'error' },
       ['chmod', '-R', 'u+rX,o-w', "$dir/control"]);
 
-exit 0;
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)bin-pkg-control$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

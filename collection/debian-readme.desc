@@ -5,3 +5,4 @@ Info: This script copies the <tt>README.Debian</tt> file of a package into
 Type: binary
 Version: 1
 Needs-Info: unpacked
+Interface: perl-coll

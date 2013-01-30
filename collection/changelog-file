@@ -19,14 +19,16 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::coll::changelog_file;
+
 use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file);
 
-($#ARGV == 2) or fail('syntax: changelog-file <pkg> <type> <dir>');
-my ($pkg, $type, $dir) = @ARGV;
+sub collect {
+my ($pkg, $type, $dir) = @_;
 
 unlink "$dir/changelog" or fail "cannot remove changelog file: $!"
     if -e "$dir/changelog" or -l "$dir/changelog";
@@ -128,6 +130,12 @@ if (-f $news) {
         gunzip_file ($news, "$dir/NEWS.Debian");
     }
 }
+
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)changelog-file$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

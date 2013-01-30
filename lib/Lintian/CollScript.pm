@@ -26,7 +26,7 @@ use base 'Class::Accessor';
 use Carp qw(croak);
 use File::Basename qw(dirname);
 
-use Lintian::Util qw(get_dsc_info);
+use Lintian::Util qw(fail get_dsc_info);
 
 =head1 NAME
 
@@ -77,6 +77,8 @@ sub new {
         'version' => $header->{'version'},
         'type-table' => {},
         'auto_remove' => 0,
+        'interface' => $header->{'interface'}//'exec',
+        '_collect_sub' => undef,
     };
     $self->{'script_path'} =  dirname ($file) . '/' . $self->{'name'};
     $self->{'auto_remove'} = 1
@@ -152,10 +154,33 @@ Returns a truth value if the collection has the "auto-remove" flag.
 
 Returns the absolute path to the collection script.
 
+=item interface
+
+The call interface for this collection script.
+
+=over 4
+
+=item exec
+
+The collection is run by invoking the script denoted by script_path
+with the proper arguments.
+
+This is the default value.
+
+=item perl-coll
+
+The collection is implemented in Perl in such a way that it can be
+loaded into perl and run via the L</collect (PKG, TASK, DIR)> method.
+
+Collections that have the "perl-coll" can also be run as if they had
+the "exec" interface (see above).
+
+=back
+
 =cut
 
 Lintian::CollScript->mk_ro_accessors (qw(name type version auto_remove
-    script_path
+    script_path interface
 ));
 
 =item needs_info ([COND])
@@ -202,6 +227,34 @@ Returns a truth value if this collection can be applied to a TYPE package.
 sub is_type {
     my ($self, $type) = @_;
     return $self->{'type-table'}->{$type};
+}
+
+=item collect (PKG, TASK, DIR)
+
+=cut
+
+sub collect {
+    my ($self, $pkg_name, $task, $dir) = @_;
+    my $collector = $self->{'_collect_sub'};
+    unless (defined $collector) {
+        my $cs_path = $self->script_path;
+        my $ppkg = $self->name;
+
+        $ppkg =~ s,[-.],_,go;
+        $ppkg =~ s,/,::,go;
+
+        require $cs_path;
+
+        {
+            no strict 'refs';
+            $collector = \&{'Lintian::coll::' . $ppkg . '::collect'}
+                if defined &{'Lintian::coll::' . $ppkg . '::collect'};
+        }
+        fail $self->name . ' does not have a collect function'
+            unless defined $collector;
+        $self->{'_collect_sub'} = $collector;
+    }
+    $collector->($pkg_name, $task, $dir);
 }
 
 =back

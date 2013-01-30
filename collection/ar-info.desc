@@ -4,3 +4,4 @@ Info: This script runs the "ar t" command over all .a files of package.
 Type: binary
 Needs-Info: unpacked, index
 Version: 1
+Interface: perl-coll

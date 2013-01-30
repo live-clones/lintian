@@ -5,3 +5,4 @@ Info: This script copies the <tt>override</tt> file of a package into the
 Type: binary, udeb, source
 Version: 1
 Needs-Info: unpacked
+Interface: perl-coll

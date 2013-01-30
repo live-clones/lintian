@@ -25,14 +25,16 @@
 # perl code will be perl modules, so only one perl interpreter
 # need be started.
 
+package Lintian::coll::diffstat;
+
 use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail get_dsc_info gunzip_file);
 
-($#ARGV == 2) or fail 'syntax: diffstat <pkg> <type> <dir>';
-my ($pkg, undef, $dir) = @ARGV;
+sub collect {
+my ($pkg, undef, $dir) = @_;
 my $data;
 my $ver;
 
@@ -47,7 +49,7 @@ unlink "$dir/debian-patch" or fail "cannot unlink debian-patch: $!"
 $ver =~ s/^\d://; #Remove epoch for this
 
 my $diff_file = "$dir/${pkg}_${ver}.diff.gz";
-exit 0 unless (-f $diff_file);
+return unless (-f $diff_file);
 
 gunzip_file($diff_file, "$dir/debian-patch");
 
@@ -65,6 +67,12 @@ while (<DIFF>) {
 }
 close DIFF or fail("cannot close pipe to diffstat on debian-patch: $!");
 close STAT or fail("error writing diffstat file: $!");
+
+}
+
+collect (@ARGV) if $0 =~ m,(?:^|/)diffstat$,;
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

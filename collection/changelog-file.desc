@@ -6,3 +6,4 @@ Info: This script copies the <tt>changelog</tt> file and
 Type: binary
 Version: 1
 Needs-Info: unpacked
+Interface: perl-coll

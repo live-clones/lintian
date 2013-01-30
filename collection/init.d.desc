@@ -5,3 +5,4 @@ Info: This script copies the etc/init.d directory into the lintian
 Type: binary
 Version: 1
 Needs-Info: unpacked
+Interface: perl-coll
