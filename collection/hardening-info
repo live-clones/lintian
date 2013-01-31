@@ -37,7 +37,7 @@ use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail touch_file);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
@@ -53,16 +53,18 @@ if ( -e "$dir/hardening-info" ) {
 chdir ("$dir/unpacked")
     or fail("unable to chdir to unpacked: $!");
 
-my %opts = ( pipe_in => FileHandle->new,
-             out => "$dir/hardening-info",
-             fail => 'never' );
+my %opts;
+my $open_hardening_info = sub {
+    # Use xargs to keep processing times of packages like linux-image
+    # reasonble.
 
-# Use xargs to keep processing times of packages like linux-image
-# reasonble.
-spawn(\%opts, ['xargs', '-0r', 'hardening-check', '--lintian', '--'], '|',
-    [$helper]);
-$opts{pipe_in}->blocking(1);
-
+    %opts = ( pipe_in => FileHandle->new,
+              out => "$dir/hardening-info",
+              fail => 'error' );
+    spawn (\%opts, ['xargs', '-0r', 'hardening-check', '--lintian', '--'], '|',
+           [$helper]);
+    $opts{pipe_in}->blocking(1);
+};
 
 foreach my $bin ($info->sorted_index) {
     next unless $info->index ($bin)->is_file;
@@ -71,11 +73,17 @@ foreach my $bin ($info->sorted_index) {
     next if $bin =~ m/\.ko$/o;
     my $finfo = $info->file_info ($bin);
     next unless $finfo =~ m/\bELF\b/o;
+    $open_hardening_info->() unless %opts;
     printf {$opts{pipe_in}} "%s\0", $bin;
 }
 
-close $opts{pipe_in};
-reap (\%opts);
+if (%opts) {
+    close $opts{pipe_in};
+    reap (\%opts);
+} else {
+    touch_file ("$dir/hardening-info");
+}
+
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)hardening-info$,;

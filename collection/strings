@@ -59,10 +59,13 @@ mkdir "$dir/strings" or
 chdir ("$dir/unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
-my %opts = ( pipe_in => FileHandle->new,
-             fail => 'error' );
-spawn (\%opts, ['xargs', '-0r', 'strings', '-f', '--'], '|', [$helper, "$dir/strings"]);
-$opts{pipe_in}->blocking(1);
+my %opts;
+my $open_strings_pipe = sub {
+    %opts = ( pipe_in => FileHandle->new,
+              fail => 'error' );
+    spawn (\%opts, ['xargs', '-0r', 'strings', '-f', '--'], '|', [$helper, "$dir/strings"]);
+    $opts{pipe_in}->blocking(1);
+};
 
 foreach my $bin ($info->sorted_index) {
     my $finfo = $info->file_info ($bin);
@@ -75,10 +78,14 @@ foreach my $bin ($info->sorted_index) {
         push @manual, $bin;
         next;
     }
+    $open_strings_pipe->() unless %opts;
     printf {$opts{pipe_in}} "%s\0", $bin;
 }
-close $opts{pipe_in};
-reap (\%opts);
+
+if (%opts) {
+    close $opts{pipe_in};
+    reap (\%opts);
+}
 
 
 # Fall back to the safe but slower method for files with "special"
