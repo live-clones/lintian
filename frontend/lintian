@@ -1207,8 +1207,11 @@ sub auto_clean_package {
         next unless $lpkg->is_coll_finished ($coll, $ci->version);
         debug_msg(1, "Auto removing: $coll ...");
         $changed = 1;
-        unless (system ($ci->script_path, $pkg_name, "remove-${pkg_type}", $base) == 0) {
-            warning("removing collect info $coll about package $pkg_name failed",
+        eval {
+            $ci->collect ($pkg_name, "remove-${pkg_type}", $base);
+        };
+        if ($@) {
+            warning($@, "removing collect info $coll about package $pkg_name failed",
                     "skipping cleanup of $pkg_type package $pkg_name");
             return -1;
         }

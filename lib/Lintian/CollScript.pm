@@ -235,26 +235,34 @@ sub is_type {
 
 sub collect {
     my ($self, $pkg_name, $task, $dir) = @_;
-    my $collector = $self->{'_collect_sub'};
-    unless (defined $collector) {
-        my $cs_path = $self->script_path;
-        my $ppkg = $self->name;
+    my $iface = $self->interface;
+    if ($iface eq 'perl-coll') {
+        my $collector = $self->{'_collect_sub'};
+        unless (defined $collector) {
+            my $cs_path = $self->script_path;
+            my $ppkg = $self->name;
 
-        $ppkg =~ s,[-.],_,go;
-        $ppkg =~ s,/,::,go;
+            $ppkg =~ s,[-.],_,go;
+            $ppkg =~ s,/,::,go;
 
-        require $cs_path;
+            require $cs_path;
 
-        {
-            no strict 'refs';
-            $collector = \&{'Lintian::coll::' . $ppkg . '::collect'}
-                if defined &{'Lintian::coll::' . $ppkg . '::collect'};
+            {
+                no strict 'refs';
+                $collector = \&{'Lintian::coll::' . $ppkg . '::collect'}
+                    if defined &{'Lintian::coll::' . $ppkg . '::collect'};
+            }
+            fail $self->name . ' does not have a collect function'
+                unless defined $collector;
+            $self->{'_collect_sub'} = $collector;
         }
-        fail $self->name . ' does not have a collect function'
-            unless defined $collector;
-        $self->{'_collect_sub'} = $collector;
+        $collector->($pkg_name, $task, $dir);
+    } elsif ($iface eq 'exec') {
+        system ($self->script_path, $pkg_name, $task, $dir) == 0
+            or die 'Collection ' . $self->name . " for $pkg_name failed\n";
+    } else {
+        fail "Unknown interface: $iface";
     }
-    $collector->($pkg_name, $task, $dir);
 }
 
 =back

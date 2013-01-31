@@ -438,7 +438,8 @@ sub process_tasks {
                 if (not $pid) {
                     # child
                     my $ret = 0;
-                    if ($cs->interface eq 'perl-coll') {
+                    if ($cs->interface ne 'exec') {
+                        # With a non-exec interface, let L::CollScript handle it
                         eval {
                             $cs->collect ($pkg_name, $pkg_type, $base);
                         };
@@ -447,6 +448,7 @@ sub process_tasks {
                             $ret = 2;
                         }
                     } else {
+                        # Its fork + exec - invoke that directly (saves a fork)
                         exec $cs->script_path, $pkg_name, $pkg_type, $base
                             or die "exec $cs->script_path: $!";
                     }
