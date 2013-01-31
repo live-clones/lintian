@@ -1241,7 +1241,7 @@ Certainty: certain
 Info: The package ships a library in one of the multiarch lib directories,
  /lib/&lt;triplet&gt; and /usr/lib/&lt;triplet&gt;, but does not declare a
  pre-dependency on multiarch-support.  Packages installing to these
- paths must Pre-Depend: multiarch-support to ensure the library can be
+ paths must Pre-Depends: multiarch-support to ensure the library can be
  found by the dynamic linker at every point during an upgrade.
 
 Tag: package-contains-no-arch-dependent-files
