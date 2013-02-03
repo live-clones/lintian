@@ -23,6 +23,7 @@ ash            => /bin
 awk            => /usr/bin, @NODEPS@
 bash           => /bin, @NODEPS@
 bltwish        => /usr/bin, blt
+cfagent        => /usr/sbin, cfengine2
 clisp          => /usr/bin
 csh            => /bin, tcsh | csh | c-shell
 dash           => /bin, @NODEPS@
