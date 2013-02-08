@@ -41,16 +41,28 @@ Info: The package installs a statically linked binary or object file.
  excluded, as are any binaries in packages named *-static.
 
 Tag: library-not-linked-against-libc
-Severity: minor
-Certainty: certain
+Severity: important
+Certainty: possible
+Ref: policy 10.2, #698720
 Info: The package installs a library which is not dynamically linked
  against libc.
+ .
+ It is theoretically possible to have a library which doesn't use any
+ symbols from libc, but it is far more likely that this is a violation
+ of the requirement that "shared libraries must be linked against all
+ libraries that they use symbols from in the same way that binaries
+ are".
 
 Tag: program-not-linked-against-libc
-Severity: minor
-Certainty: certain
+Severity: important
+Certainty: possible
+Ref: #698720
 Info: The package installs a binary which is not dynamically linked
  against libc.
+ .
+ It is theoretically possible to have a program which doesn't use any
+ symbols from libc, but it is far more likely that this binary simply
+ isn't linked correctly.
 
 Tag: binary-or-shlib-defines-rpath
 Severity: serious
