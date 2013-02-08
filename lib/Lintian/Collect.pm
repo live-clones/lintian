@@ -243,7 +243,7 @@ sub is_non_free {
     return $self->{is_non_free} if exists $self->{is_non_free};
     $self->{is_non_free} = 0;
     $self->{is_non_free} = 1
-        if $self->field ('section', 'main') =~ m,^(?:non-free|restricted)/,;
+        if $self->field ('section', 'main') =~ m,^(?:non-free|restricted|multiverse)/,;
     return $self->{is_non_free};
 }
 
