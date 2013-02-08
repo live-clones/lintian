@@ -614,7 +614,8 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
         if ($pkg_class eq 'any-meta') {
             my ($section) = $self->field ('section', '');
             return 1 if $desc =~ m/$METAPKG_REGEX/o;
-            return 1 if $section =~ m,(?:^|/)tasks$,;
+            # Section "tasks" or "metapackages" qualifies as well
+            return 1 if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
             return 1 if $self->name =~ m/^task-/;
         }
         return;

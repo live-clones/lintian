@@ -686,7 +686,8 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
                     if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
 
                 tag 'depends-on-packaging-dev', $field
-                    if (($field =~ /^(?:pre-)?depends$/ || $field eq 'recommends') && $d_pkg eq 'packaging-dev');
+                    if (($field =~ /^(?:pre-)?depends$/ || $field eq 'recommends') && $d_pkg eq 'packaging-dev'
+                        && not $info->is_pkg_class ('any-meta'));
 
                 tag 'needlessly-depends-on-awk', $field
                     if ($d_pkg eq 'awk' && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
