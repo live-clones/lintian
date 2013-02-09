@@ -464,9 +464,9 @@ sub find_cruft {
                                 # no invariant
                             }
                             when(m/with $s+ the $s+ Invariant $s+ Sections $s+ being
-                                        $s+ (?:\@var\{|<var>)? LIST $s+ THEIR $s+TITLES (?:\}|<\/var>)? $s? ,?
+                                        $s+ (?:\@var\{|<var>)? LIST $s+ THEIR $s+TITLES (?:\}|<\/var>)? $s* ,?
                                         $s+ with $s+ the $s+ Front-Cover $s+ Texts $s+ being
-                                        $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)? $s? ,?
+                                        $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)? $s* ,?
                                         $s+ and $s+ with $s+ the $s+ Back-Cover $s+ Texts $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xiso) {
                                 # verbatim text of license is ok
