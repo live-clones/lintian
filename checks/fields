@@ -548,7 +548,7 @@ if (defined $info->field('homepage')) {
         tag 'bad-homepage', $orig;
     }
 
-    if ($homepage =~ m,/search\.cpan\.org/.*-[0-9._]+/*$,) {
+    if ($homepage =~ m,/(?:search\.cpan\.org|metacpan\.org)/.*-[0-9._]+/*$,) {
         tag 'homepage-for-cpan-package-contains-version', $orig;
     }
 } elsif ($type eq 'binary' and not $info->native) {

@@ -58,6 +58,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [JW] Reduce severity of b-d-on-python-dev-with-no-arch-any
       to minor.
     + [NT] Skip "depends-on-packaging-dev" for metapackages.
+    + [NT] Apply patch from Gregor Herrmann to catch metacpan
+      homepage links with versions.  (Closes: #700110)
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)
