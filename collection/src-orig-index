@@ -49,13 +49,13 @@ if ($info->native) {
     return;
 }
 
-index_orig ($info);
+index_orig ($pkg, $dir, $info);
 
 }
 
 # returns all (orig) tarballs.
 sub gather_tarballs {
-    my ($info) = @_;
+    my ($pkg, $dir, $info) = @_;
     my $file = Cwd::realpath ("$dir/dsc");
     my $version;
     my @tarballs;
@@ -94,8 +94,8 @@ sub gather_tarballs {
 
 # Creates an index of the orig tarballs the source package
 sub index_orig {
-    my ($info) = @_;
-    my @tarballs = gather_tarballs ($info);
+    my ($pkg, $dir, $info) = @_;
+    my @tarballs = gather_tarballs ($pkg, $dir, $info);
     my @result;
     foreach my $tardata (@tarballs) {
         my ($tarball, $compname) = @$tardata;
