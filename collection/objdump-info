@@ -36,10 +36,11 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
+my $helper = realpath (__FILE__ . '-helper');
+
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-my $helper = realpath (__FILE__ . '-helper');
 
 if ( -e "$dir/objdump-info" ) {
     unlink "$dir/objdump-info" or fail "unlink objdump-info: $!"

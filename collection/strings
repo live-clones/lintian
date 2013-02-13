@@ -33,12 +33,12 @@ use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(delete_dir fail);
 
 
+my $helper = realpath(__FILE__ . '-helper');
+
 sub collect {
 
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-
-my $helper = realpath(__FILE__ . '-helper');
 my @manual = ();
 
 if ( -e "$dir/elf-index" ) {

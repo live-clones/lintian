@@ -39,11 +39,11 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail touch_file);
 
+my $helper = realpath (__FILE__ . '-helper');
+
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-
-my $helper = realpath (__FILE__ . '-helper');
 
 if ( -e "$dir/hardening-info" ) {
     unlink "$dir/hardening-info" or fail "unlink hardening-info: $!";

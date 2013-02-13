@@ -31,11 +31,12 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail);
 
+my $helper = realpath (__FILE__ . '-helper');
+
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
-my $helper = realpath (__FILE__ . '-helper');
 my $outfile = "$dir/file-info.gz";
 
 if ( -e "$dir/file-info" ) {
