@@ -34,7 +34,6 @@ use Lintian::Util qw(fail);
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-my $last = '';
 
 my $helper = realpath (__FILE__ . '-helper');
 my $outfile = "$dir/file-info.gz";
@@ -61,7 +60,6 @@ spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$help
 $opts{pipe_in}->blocking(1);
 
 foreach my $file ($info->sorted_index) {
-    next unless $file; # ignore "root-dir" which has "no name" (post stripping).
     printf {$opts{pipe_in}} "%s\0", $file;
 }
 

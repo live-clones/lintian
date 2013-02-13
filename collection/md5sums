@@ -48,7 +48,6 @@ spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
 $opts{pipe_in}->blocking(1);
 
 foreach my $file ($info->sorted_index) {
-    next unless $file;
     next unless $info->index ($file)->is_file;
     printf {$opts{pipe_in}} "%s\0", $file;
 }
