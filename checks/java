@@ -58,6 +58,11 @@ for my $jar_file (sort keys %{$java_info}) {
     my $cp = '';
     my $bsname = '';
 
+    if (exists $java_info->{$jar_file}->{error}) {
+        tag 'zip-parse-error', "$jar_file:", $java_info->{$jar_file}->{error};
+        next;
+    }
+
     # The Java Policy says very little about requires for (jars in) JVMs
     next if $jar_file =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
     # Ignore Mozilla's jar files, see #635495

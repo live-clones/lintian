@@ -42,3 +42,12 @@ Description: {$description} - part C
  java-related QA code in lintian. Third part.
  .
  This package should not be installed.
+
+Package: unparsable
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description} - unparable
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. The unparsable part.
+ .
+ This package should not be installed.

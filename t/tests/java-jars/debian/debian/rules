@@ -7,6 +7,10 @@ override_jh_build:
 	unzip testa.jar
 	zip -r codeless.jar META-INF/
 	zip -r manifestless.jar org/
+	printf "PK\003\004Watch the fireworks begin :>" > unparsable.jar
+
+override_jh_manifest override_jh_depends:
+	# Skip - it chokes on "unparsable.jar" and we don't need it
 
 override_dh_auto_clean:
 	rm -fr META-INF/ org/

@@ -104,3 +104,8 @@ Info: The package contains a Jar file with Java class files compiled for an
  .
  Lastest class version known by Lintian is Java7 (Major version 51).
 
+Tag: zip-parse-error
+Severity: normal
+Certainty: certain
+Info: The package contains a Jar file, but Lintian is unable to parse it.
+ It is possible that the Jar file is corrupt.

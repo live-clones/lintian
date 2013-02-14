@@ -6,3 +6,4 @@ W: libcodeless-java: codeless-jar usr/share/java/codeless-1.0.jar
 W: libtesta-java: binary-without-manpage usr/bin/testc.jar
 W: libtesta-java: executable-not-elf-or-script usr/bin/testc.jar
 W: libtesta-java: jar-not-in-usr-share usr/lib/testb.jar
+W: unparsable: zip-parse-error usr/share/unparsable/unparsable.jar: format error: can't find EOCD signature

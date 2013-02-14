@@ -462,6 +462,12 @@ check for it.
 A table of the files in the JAR.  Each key is a file name and its value
 is its "Major class version" for Java or "-" if it is not a class file.
 
+=item error
+
+If it exists, this is an error that occured during reading of the zip
+file.  If it exists, it is unlikely that the other fields will be
+present.
+
 =back
 
 Needs-Info requirements for using I<java_info>: java-info
@@ -489,7 +495,9 @@ sub java_info {
         chomp;
         next if m/^\s*$/o;
 
-        if (m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
+        if (m#^-- ERROR:\s*(\S.++)$#o) {
+            $java_info{$file}->{error} = $1;
+        } elsif (m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
             # TODO: check $file == $1 ?
             $java_info{$file}->{manifest} = {};
             $manifest = $java_info{$file}->{manifest};
@@ -506,7 +514,7 @@ sub java_info {
                 $manifest->{$1} = $2;
             }
             elsif ($file_list) {
-                my ($fname, $clmajor) = (m#^(.*):\s*([-\d]+)$#);
+                my ($fname, $clmajor) = (m#^([^-].*):\s*([-\d]+)$#);
                 $file_list->{$fname} = $clmajor;
             }
 

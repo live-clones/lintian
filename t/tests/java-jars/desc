@@ -12,3 +12,4 @@ Test-For:
  javalib-but-no-public-jars
  missing-dep-on-jarwrapper
  missing-manifest
+ zip-parse-error

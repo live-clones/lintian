@@ -58,11 +58,23 @@ my $open_java_info = sub {
     spawn(\%opts, ['gzip', '-9c'] );
     $opts{pipe_in}->blocking(1);
 };
-
+my $errorhandler = sub {
+    my ($err) = @_;
+    $err =~ s/\r?\n/ /g;
+    $err =~ s/\s++$//;
+    print {$opts{pipe_in}} "-- ERROR: $err\n";
+};
 
 chdir ("$dir/unpacked")
     or fail "unable to chdir to unpacked: $!";
 
+# Without this Archive::Zip will emit errors to standard error for
+# faulty zip files - but that is not what we want.  AFAICT, it is
+# the only way to get a textual error as well, so (ab)use it for
+# this purpose while we are at it.
+my $oldhandler = Archive::Zip::setErrorHandler ($errorhandler);
+
+FILE:
 foreach my $file ($info->sorted_index) {
     my $ftype = $info->index ($file);
     next unless $ftype->is_file;
@@ -77,7 +89,7 @@ foreach my $file ($info->sorted_index) {
         print {$opts{pipe_in}} "-- $file\n";
 
         # stringify or $azip will make a call back that fails.
-        $azip->read ("$file") == AZ_OK or fail "Could not read $file: $!";
+        $azip->read ("$file") == AZ_OK or next FILE;
 
         # First, the file list:
         foreach my $member ($azip->members) {
@@ -88,8 +100,8 @@ foreach my $file ($info->sorted_index) {
             if ($name =~ m/\.class$/o) {
                 # Collect the Major version of the class file.
                 my ($contents, $zerr) = $member->contents;
-                fail "Failed to decompress $name of $file: $zerr"
-                    unless $zerr == AZ_OK;
+                next FILE unless $zerr == AZ_OK;
+
                 # translation of the unpack
                 #  NN NN NN NN, nn nn, nn nn   - bytes read (in hex, network order)
                 #     $magic  , __ __, $major  - variables
@@ -104,8 +116,7 @@ foreach my $file ($info->sorted_index) {
             print {$opts{pipe_in}} "-- MANIFEST: $file\n";
 
             my ($contents, $zerr) = $manifest->contents;
-            fail "Failed to decompress Manifest of $file: $zerr"
-                unless $zerr == AZ_OK;
+            next FILE unless $zerr == AZ_OK;
             my $first = 1;
             foreach my $line (split m/\n/, $contents) {
                 $line =~ s/\r//go;
@@ -122,6 +133,8 @@ foreach my $file ($info->sorted_index) {
         }
     }
 }
+
+Archive::Zip::setErrorHandler ($oldhandler);
 
 if (%opts) {
     close $opts{pipe_in} or fail "cannot write java-info.gz: $!";
