@@ -26,6 +26,8 @@ use warnings;
 
 use Carp qw(croak);
 
+use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
+
 use Lintian::CheckScript;
 use Lintian::Util qw(parse_boolean read_dpkg_control);
 
@@ -118,7 +120,7 @@ sub new {
     } else {
         croak "Illegal profile name \"$name\""
             if $name =~ m,^/,o or $name =~ m/\./o;
-        $profile = $self->_find_profile ($name);
+        ($profile, undef) = $self->_find_vendor_profile ($name);
     }
     croak "Cannot find profile $name (in " . join(', ', map { "$_/profiles" } @$ipath).")"
         unless $profile;
@@ -336,7 +338,7 @@ sub _read_profile {
         my $parentf;
         croak "Invalid Extends field in $pfile"
             unless $parent && $parent !~ m/\./o;
-        $parentf = $self->_find_profile ($parent);
+        ($parentf, undef) = $self->_find_vendor_profile ($parent);
         croak "Cannot find $parent, which $pname extends"
             unless $parentf;
         $self->_read_profile($parentf);
@@ -583,23 +585,51 @@ sub _default_inc_path {
 }
 
 sub _find_vendor_profile {
-    my ($self) = @_;
-    require Dpkg::Vendor;
-    my $vendor = Dpkg::Vendor::get_current_vendor ();
-    croak "Could not determine the current vendor"
-        unless $vendor;
-    my $orig = $vendor; # copy
-    while ($vendor) {
-        my $file = $self->_find_profile (lc $vendor);
-        return ($file, $vendor) if $file;
-        my $info = Dpkg::Vendor::get_vendor_info ($vendor);
-        # Cannot happen atm, but in case Dpkg::Vendor changes its internals
-        #  or our code changes
-        croak "Could not look up the parent vendor of $vendor"
-            unless $info;
-        $vendor = $info->{'Parent'};
+    my ($self, $prof) = @_;
+    my @vendors;
+
+    if (defined $prof and $prof !~ m/[{}]/) {
+        # no substitution required...
+        return ($self->_find_profile ($prof), $prof);
+    } elsif (defined $prof) {
+        my $cpy = $prof;
+        # Check for unknown (or broken) subst.
+        $cpy =~ s/\Q{VENDOR}\E//g;
+        croak "Unknown substitution \"$1\" (in \"$prof\")"
+            if $cpy =~ m/\{([^ \}]+)\}/;
+        croak "Bad, broken or empty subtitution marker in \"$prof\""
+            if $cpy =~ m/[{}]/;
     }
-    croak "Could not find a profile for vendor $orig";
+
+    $prof //= '{VENDOR}/main';
+
+    @vendors = @{ $self->{'_vendor_cache'} } if exists $self->{'_vendor_cache'};
+    unless (@vendors) {
+        my $vendor = Dpkg::Vendor::get_current_vendor ();
+        croak "Could not determine the current vendor"
+            unless $vendor;
+        push @vendors, lc $vendor;
+        while ($vendor) {
+            my $info = Dpkg::Vendor::get_vendor_info ($vendor);
+            # Cannot happen atm, but in case Dpkg::Vendor changes its internals
+            #  or our code changes
+            croak "Could not look up the parent vendor of $vendor"
+                unless $info;
+            $vendor = $info->{'Parent'};
+            push @vendors, lc $vendor if $vendor;
+        }
+        $self->{'_vendor_cache'} = \@vendors;
+    }
+    foreach my $vendor (@vendors) {
+        my $file;
+        my $profname = $prof;
+        $profname =~ s/\Q{VENDOR}\E/$vendor/g;
+
+        $file = $self->_find_profile ($profname);
+
+        return ($file, $profname) if $file;
+    }
+    croak "Could not find a profile matching \"$prof\" for vendor $vendors[0]";
 }
 
 =back

@@ -312,8 +312,21 @@ Use the profile from vendor (or the profile with that name).  If the
 profile name does not contain a slash, the default profile for than
 vendor is chosen.
 
-If not specified, B<lintian> loads the best profile for the current
-vendor.
+As an example, if you are on Ubuntu and want to use Lintian's Debian
+checks, you can use:
+
+  --profile debian
+
+Likewise, on a Debian machine you can use this to request the Ubuntu
+checks.
+
+If the token I<{VENDOR}> appears in the profile name, B<lintian> will
+substitute the token with a vendor name to find the profile.
+B<lintian> uses L<Dpkg::Vendor> to determine the best vendor to use
+(the closer to the current vendor, the better).  This is mostly useful
+for people implementing their own checks ontop of Lintian.
+
+If not specified, the default value is I<{VENDOR}/main>.
 
 Please Refer to the Lintian User Manual for the full documentation of
 profiles.
