@@ -122,7 +122,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       noticing.
   * collection/java-info:
     + [NT] Gracefully handle broken Jar files.  Thanks to Paul
-       Tagliamonte for the report.  (Closes: #700543)
+      Tagliamonte for the report.  (Closes: #700543)
   * collection/strings:
     + [NT] Fix a regression in filtering out "debug" ELF binaries.
 
