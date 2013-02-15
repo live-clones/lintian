@@ -91,6 +91,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Retire unneeded-build-dep-on-quilt, it is only a pedantic
       tag and apparently not too accurate.  Thanks to Charles Plessy
       and Frank Kuester for the reports.  (Closes: #615516, #681061)
+  * checks/rules:
+    + [NT] Remove ant1.7 as alternative to ant as ant1.7 has been
+      removed from Wheezy.
   * checks/shared-libs:
     + [NT] Special case gcc packages when looking for dev symlinks.
       gcc stores its dev symlinks in some special directories.

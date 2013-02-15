@@ -39,7 +39,7 @@ my $DEPRECATED_MAKEFILES = Lintian::Data->new('rules/deprecated-makefiles');
 # than the default is required.
 our @GLOBAL_CLEAN_DEPENDS =
     (
-     [ 'ant | ant1.7' => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
+     [ ant => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
      [ cdbs => qr'^include\s+/usr/share/cdbs/' ],
      [ cdbs => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
      [ dbs => qr'^include\s+/usr/share/dbs/' ],
@@ -73,7 +73,7 @@ my @GLOBAL_DEPENDS =
 # depend on, this package is allowed (and required) in Build-Depends.
 my @RULE_CLEAN_DEPENDS =
     (
-     [ 'ant | ant1.7' => qr'^\t\s*(\S+=\S+\s+)*ant\s' ],
+     [ ant => qr'^\t\s*(\S+=\S+\s+)*ant\s' ],
      [ debhelper => qr'^\t\s*dh_.+' ],
      [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocamlinit\s' ],
      [ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
