@@ -4,5 +4,6 @@ checks			usr/share/lintian
 collection		usr/share/lintian
 data		  	usr/share/lintian
 lib/Lintian		usr/share/perl5
+lib/Test		usr/share/lintian/lib
 profiles		usr/share/lintian
 vendors 		usr/share/lintian

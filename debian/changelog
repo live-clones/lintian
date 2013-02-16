@@ -151,8 +151,13 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * debian/control:
     + [NT] Bump dependency on hardening-includes to avoid having
       to work around #677530.
+    + [NT] Add XS-Testsuite for autopkgtest tests.
+  * debian/lintian.install:
+    + [NT] Install Test::Lintian in /usr/share/lintian/lib.
   * debian/rules:
     + [NT] Include the new Tutorial pods in the "api-doc" target.
+  * debian/tests/{control,testsuite,testsuite-legacy}:
+    + [NT] New file.
 
   * doc/tutorial/Lintian/Tutorial{/WritingChecks}.pod:
     + [NT] Add POD tutorial on writing checks.

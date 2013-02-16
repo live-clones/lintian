@@ -65,6 +65,9 @@ use Lintian::Util qw(delete_dir fail read_dpkg_control slurp_entire_file);
 our $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
+$LINTIAN = $ENV{'LINTIAN_FRONTEND'} if exists $ENV{'LINTIAN_FRONTEND'};
+$ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
+
 our @DPKG_BUILDPACKAGE_CMD = (qw(dpkg-buildpackage -rfakeroot -us -uc -d),
     qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING));
 if (`dpkg-source --help` =~ m,\s--commit\s,) {

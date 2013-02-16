@@ -120,9 +120,10 @@ my $lintian_options = '-I -E';
 my $lintian_info_options = '-I -E -i';
 my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
     . ' -INEVER_MATCH_ANYTHING';
-my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
-
 my $testok = 1;
+my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
+$lintian_path = $ENV{'LINTIAN_FRONTEND'} if exists $ENV{'LINTIAN_FRONTEND'};
+
 
 # --- Display output immediately
 $| = 1;

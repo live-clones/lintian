@@ -2,6 +2,14 @@
 
 set -e
 
+if [ "$LINTIAN_TEST_INSTALLED" = "yes" ]; then
+    LINTIAN_FRONTEND="/usr/bin/lintian"
+    LINTIAN_ROOT="/usr/share/lintian"
+else
+    unset LINTIAN_FRONTEND
+    LINTIAN_ROOT=""
+fi
+
 if [ "$1" = "-j" ] ; then
     NUMJOBS="$2"
     test "$NUMJOBS" -gt 0 || (
@@ -26,7 +34,6 @@ if [ "$1" ] ; then
 fi
 
 LC_ALL="C"
-LINTIAN_ROOT=""
 LINTIAN_PROFILE=debian
 NO_PKG_MANGLE=true
 unset MAKEFLAGS
@@ -36,6 +43,7 @@ unset HOME
 [ "$TEST_WORK_DIR" ] || TEST_WORK_DIR="debian/test-out"
 
 export LC_ALL
+export LINTIAN_FRONTEND
 export LINTIAN_ROOT
 export LINTIAN_PROFILE
 export NO_PKG_MANGLE
