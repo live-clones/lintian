@@ -15,7 +15,7 @@ lintian (2.5.10.4) unstable; urgency=low
     + [ADB] Fix a typo in the matching of expected delimiters for some
       signed messages; thanks Samuel Bronson.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 13 Feb 2013 12:50:00 +0100
+ -- Niels Thykier <niels@thykier.net>  Sat, 16 Feb 2013 14:17:03 +0100
 
 lintian (2.5.10.3) unstable; urgency=low
 
