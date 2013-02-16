@@ -183,6 +183,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Recognise packages in section "metapackages" as a
       metapackage.  Thanks to Axel Beckert for the report.
       (Closes: #698610)
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] Ensure the "root" entry of indices do not contain itself.
+      (Closes: #695866)
   * lib/Lintian/Command/Simple.pm:
     + [NT] Use constant time lookup access instead of linear scan with
       "hashref" wait.
