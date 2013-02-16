@@ -524,23 +524,20 @@ sub file_overrides {
         my $override = $_;
         # The override looks like the following:
         # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
+        # - Note we do a strict package name check here because parsing overrides
+        #   is a bit ambigious (see #699628)
         if ($override =~ m/^(?:                     # start optional part
-                  ($PKGNAME_REGEX)?                 # optionally starts with package name -> $1
+                  (\Q$info->{package}\E)?           # optionally starts with package name -> $1
                   (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
                   (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
                 :\s++)?                             # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/ox){ # <tag-name> [extra] -> $4
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x){  # <tag-name> [extra] -> $4
             # Valid - so far at least
             my ($opkg_name, $archlist, $opkg_type, $tagdata) = ($1, $2, $3, $4);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
             my $tagover;
             my $com;
             my $data;
-            if ($opkg_name and $opkg_name ne $info->{package}) {
-                tag 'malformed-override',
-                    "Override of $tag for $opkg_name (expecting $info->{package}) at line $.";
-                next;
-            }
             if ($opkg_type and $opkg_type ne $info->{type}) {
                 tag 'malformed-override',
                     "Override of $tag for package type $opkg_type (expecting $info->{type}) at line $.";
@@ -602,6 +599,38 @@ sub file_overrides {
             $info->{overrides}{$tag}{$extra} = 0;
             $last_over = $tagover;
         } else {
+            # We know this to be a bad override; check if it might be an override for
+            # a different package.
+            if ($override !~ m/^\Q$info->{package}\E[\s:\[]/) {
+                # So, we got an override that does not start with the
+                # package name - cases include:
+                #  1 <tag> ...
+                #  2 <tag> someting: ...
+                #  3 <wrong-pkg> [archlist] <type>: <tag> ...
+                #  4 <wrong-pkg>: <tag> ...
+                #  5 <wrong-pkg> <type>: <tag> ...
+                #
+                # Case 2 and 5 are hard to distinguish from one another.
+
+                # First, remove the archlist if present (simplifies
+                # the next step)
+                $override =~ s/([^:\[]+)?\[[^\]]+\]([^:]*):/$1 $2:/;
+                $override =~ s/\s\s++/ /g;
+
+                if ($override =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/o) {
+                    my $opkg = $1;
+                    # Looks like a wrong package name - technically,
+                    # $opkg could be a tag if the tag information is
+                    # present, but it is very unlikely.
+                    tag 'malformed-override',
+                        "Possibly wrong package in override at line $. (got $opkg, expected $info->{package})";
+                    next;
+                }
+            }
+            # Nope, package name appears to match (or not present
+            # atall), not sure what the problem is so we just throw a
+            # generic parse error.
+
             tag 'malformed-override', "Cannot parse line $.: $_";
         }
     }

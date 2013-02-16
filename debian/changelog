@@ -212,6 +212,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * lib/Lintian/Tag/Info.pm:
     + [NT] Use "&amp;" in the manpage ref URLs to generate proper HTML.
       Thanks to Vasudev Kamath for reporting the issue.
+  * lib/Lintian/Tags.pm:
+    + [NT] Deal with parsing an ambigious override a bit better.  This
+      solves false-positive malformed-override, where Lintian misparsed
+      the tag name as a package name.  (Closes: #699628)
   * lib/Lintian/Util.pm:
     + [NT] Reject partially signed Deb822 files.  Most Deb822 files
       are not signed at all; but those that are should be completely
