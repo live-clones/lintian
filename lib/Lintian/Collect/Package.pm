@@ -177,8 +177,10 @@ sub _fetch_index_data {
         $file{dirname} = $parent;
         $file{basename} = $base;
         $children{$parent} = [] unless exists $children{$parent};
-        push @{ $children{$parent} }, $name;
-
+        # Ensure the "root" is not its own child.  It is not really helpful
+        # from an analysis PoV and it creates ref cycles  (and by extension
+        # leaks like #695866).
+        push @{ $children{$parent} }, $name unless $parent eq $name;
     }
     @sorted = sort keys %idxh;
     foreach my $file (@sorted) {

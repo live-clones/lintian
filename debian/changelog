@@ -1,3 +1,11 @@
+lintian (2.5.10.4) unstable; urgency=low
+
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] Ensure the "root" entry of indices do not contain itself.
+      (Closes: #695866)
+
+ -- Niels Thykier <niels@thykier.net>  Sat, 13 Feb 2013 12:50:00 +0100
+
 lintian (2.5.10.3) unstable; urgency=low
 
   * checks/scripts{,.desc}:
