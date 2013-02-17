@@ -5,6 +5,10 @@
 #
 # Please keep this sorted by key.
 
+__fxstat
+__fxstatat
+__lxstat
+__xstat
 aio_cancel
 aio_error
 aio_fsync
@@ -20,8 +24,6 @@ fopen
 freopen
 fseeko
 fsetpos
-fstat
-fstatat
 fstatfs
 fstatvfs
 ftello
@@ -39,7 +41,6 @@ globfree
 lio_listio
 lockf
 lseek
-lstat
 mkostemp
 mkostemps
 mkstemp
@@ -60,7 +61,6 @@ readdir_r
 scandir
 sendfile
 setrlimit
-stat
 statfs
 statvfs
 tmpfile
