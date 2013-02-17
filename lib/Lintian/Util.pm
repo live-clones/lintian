@@ -181,8 +181,8 @@ file is considered a syntax error.
 
 =item $PKGNAME_REGEX
 
-Regular expressions that matches valid package names.  The regression is
-not anchored and does not enforce any "boundry" characters.
+Regular expression that matches valid package names.  The expression
+is not anchored and does not enforce any "boundry" characters.
 
 =cut
 
