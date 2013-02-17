@@ -36,7 +36,7 @@ Lintian::Collect::Group - Lintain interface to group data collection
  
  foreach my $bin ($group->get_binary_processables) {
     my $pkg_name = $bin->pkg_name;
-    foreach my $dirdep ($ginfo->direct_dependencies ($pkg_name)) {
+    foreach my $dirdep ($ginfo->direct_dependencies ($bin)) {
         print "$pkg_name (pre-)depends on $dirdep (which is also in this group)\n";
     }
  }
@@ -67,12 +67,11 @@ sub new {
     return bless $self, $class;
 }
 
-=item $ginfo->direct_dependencies ($pkg_name)
+=item direct_dependencies (PROC)
 
-If $pkg_name is a part of the underlying processable group, this
-method returns a listref containing all the direct dependencies of
-$pkg_name.  If $pkg_name is not a part of the group, this returns
-undef.
+If PROC is a part of the underlying processable group, this method
+returns a listref containing all the direct dependencies of PROC.  If
+PROC is not a part of the group, this returns undef.
 
 Note: Only strong dependencies (Pre-Depends and Depends) are
 considered.
