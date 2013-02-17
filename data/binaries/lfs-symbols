@@ -1,8 +1,7 @@
-# Manually maintained table of non-lfs and lfs symbols
+# Manually maintained list of non-lfs symbols
 #
-# Maps a non-lfs symbol (_FILE_OFFSET_BITS=32) to its "large-file"
-# variant.  List was found by grepping around in /usr/include on an
-# i386 system with build-essential installed
+# List was found by grepping around in /usr/include on an i386 system
+# with build-essential installed
 #
 # Please keep this sorted by key.
 
