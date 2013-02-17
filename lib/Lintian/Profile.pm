@@ -29,6 +29,7 @@ use Carp qw(croak);
 use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::CheckScript;
+use Lintian::Tags;
 use Lintian::Util qw(parse_boolean read_dpkg_control);
 
 =head1 NAME
@@ -61,14 +62,7 @@ Lintian Profiles as well as loading the relevant Lintian checks.
 =cut
 
 # map of known valid severity allowed by profiles
-my %SEVERITIES = (
-    'pedantic'  => 1,
-    'wishlist'  => 1,
-    'minor'     => 1,
-    'normal'    => 1,
-    'important' => 1,
-    'serious'   => 1,
-    );
+my %SEVERITIES = map { $_ => 1} @Lintian::Tags::SEVERITIES;
 
 # List of fields in the main profile paragraph
 my %MAIN_FIELDS = (
