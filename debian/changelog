@@ -177,6 +177,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to be ignored.
     + [NT] Accept the magic token "{VENDOR}" as a part of the value
       to --profile.
+    + [NT] Add new command line option "--ignore-lintian-env" to make
+      lintian ignore all environment variables starting with LINTIAN_.
 
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given

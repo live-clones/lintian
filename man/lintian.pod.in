@@ -396,12 +396,21 @@ variable.
 Do not read any configuration file.  This option overrides the
 B<--cfg> above.
 
-=item B<--lab> labdir
+=item B<--ignore-lintian-env>
 
-Use labdir as the permanent laboratory.  This is where Lintian keeps
-information about the packages it checks.  This option overrides the
-B<LINTIAN_LAB> environment variable and the configuration file entry
-of the same name.
+Ignore all environment variables starting with I<LINTIAN_>.
+
+This option is mostly useful for applications running B<lintian> for
+checking packages and do not want the invoking user to affect the
+result (by setting LINTIAN_ROOT, LINTIAN_PROFILE etc.).
+
+Note it does I<not> cause B<lintian> to ignore the entire environment
+like I<TMPDIR> or I<DEB_VENDOR>.  The latter can affect the default
+profile (or "{VENDOR}" token for B<--profile>).
+
+Should usually be combined with B<--no-user-dirs> (or unsetting
+$HOME).  Otherwise, users can work around this option by shadowing the
+checks or libraries in their I<$HOME/.lintian>.
 
 =item B<--include-dir> dir
 
@@ -414,7 +423,7 @@ files, support libraries and checks.  The latter two implies that
 Lintian may attempt to I<load and execute code> from this directory.
 
 Unlike with the B<--root> option, B<lintian> will I<not> load
-collections from this directory.
+collections nor the I<lintianrc> from this directory.
 
 This option may appear more than once; each time adding an additional
 directory.  Directories are searched in the order they appear on the
@@ -434,6 +443,13 @@ This option overrides the B<jobs> variable in the configuration file.
 
 By default Lintian will use I<nproc> to determine a reasonable default
 (or 2, if the nproc fails).
+
+=item B<--lab> labdir
+
+Use labdir as the permanent laboratory.  This is where Lintian keeps
+information about the packages it checks.  This option overrides the
+B<LINTIAN_LAB> environment variable and the configuration file entry
+of the same name.
 
 =item B<--root> rootdir
 
@@ -457,6 +473,15 @@ is always included.
 
 These option can appear multiple times, in which case the of them
 to appear determines the result.
+
+Note that if the intention is only to disable the user's I<$HOME>,
+then unsetting $HOME may suffice.  Alternatively, I</etc> can be
+"re-added" by using I<--include-dir> (caveat: I</etc/lintianrc> will
+be ignored by this).
+
+If the intention is to avoid (unintentional) side-effects from the
+calling user, then this option could be combined with
+B<--ignore-lintian-env>.
 
 =back
 

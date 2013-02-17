@@ -204,6 +204,7 @@ Behaviour options:
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
+    --ignore-lintian-env      ignore LINTIAN_* env variables
     --include-dir DIR         include checks, libraries (etc.) from DIR
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
@@ -503,6 +504,7 @@ my %opthash = (                 # ------------------ actions
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
                'jobs|j:i' => \$opt{'jobs'},
+               'ignore-lintian-env' => \$opt{'ignore-lintian-env'},
                'include-dir=s' => \@search_dirs,
                'user-dirs!' => \$opt{'user-dirs'},
 
@@ -544,6 +546,10 @@ GetOptions(%opthash)
 # check if effective UID is 0
 if ($> == 0 and not $allow_root) {
     print STDERR "warning: the authors of lintian do not recommend running it with root privileges!\n";
+}
+
+if ($opt{'ignore-lintian-env'}) {
+    delete $ENV{$_} for grep { m/^LINTIAN_/ } keys %ENV;
 }
 
 # }}}
