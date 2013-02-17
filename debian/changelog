@@ -40,7 +40,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Check for binaries built without LFS.  This can
       only be checked for 32bit binaries as 64bit binaries
       have LFS by definition.  Thanks to Guillem Jover for
-      the report.  (Closes: #670963)
+      the report and patches.  (Closes: #670963)
     + [NT] Apply patch from Samuel Bronson to bump severity
       (but decrease certainty) of the "not linked against
       libc" tags.  (Closes: #698720)
