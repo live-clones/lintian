@@ -33,10 +33,10 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
 
 =head1 SYNOPSIS
 
-    my ($name, $type) = ('foobar', 'source');
-    my $collect = Lintian::Collect->new($name, $type);
+    my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
+    my $collect = Lintian::Collect->new ($name, $type, $dir);
     my $file;
-    eval { $file = $collect->unpacked('/bin/ls'); };
+    eval { $file = $collect->unpacked ('bin/ls'); };
     if ( $file && -e $file ) {
         # work with $file
         ;

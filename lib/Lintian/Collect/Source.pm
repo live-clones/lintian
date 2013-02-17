@@ -37,8 +37,8 @@ Lintian::Collect::Source - Lintian interface to source package data collection
 
 =head1 SYNOPSIS
 
-    my ($name, $type) = ('foobar', 'source');
-    my $collect = Lintian::Collect->new($name, $type);
+    my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
+    my $collect = Lintian::Collect->new ($name, $type, $dir);
     if ($collect->native) {
         print "Package is native\n";
     }

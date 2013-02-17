@@ -36,8 +36,8 @@ Lintian::Collect::Binary - Lintian interface to binary package data collection
 
 =head1 SYNOPSIS
 
-    my ($name, $type) = ('foobar', 'binary');
-    my $collect = Lintian::Collect->new($name, $type);
+    my ($name, $type, $dir) = ('foobar', 'binary', '/path/to/lab-entry');
+    my $collect = Lintian::Collect->new ($name, $type, $dir);
     if ($collect->native) {
         print "Package is native\n";
     }
