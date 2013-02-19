@@ -166,5 +166,5 @@ Info: The paragraph has a "License" and a "Copyright" field, but no
  <tt>files paragraphs</tt> in the current specification.
  .
  Lintian will attempt to guess what you intended and continue based on
- its guess.  It the guess is wrong, you may see spurious tags related
+ its guess.  If the guess is wrong, you may see spurious tags related
  to this paragraph.
