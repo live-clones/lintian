@@ -13,9 +13,11 @@ approach Lintian and its code.
 
 =over 4
 
-=item L<Writing a Lintian check|Lintian::Tutorial::WritingChecks>
+=item * L<Writing a Lintian check|Lintian::Tutorial::WritingChecks>
 
-=item Understanding Lintian
+=item * L<Running (parts of) the Lintian test suite|Lintian::Tutorial::TestSuite>
+
+=item * Understanding Lintian
 
 To be written.
 
