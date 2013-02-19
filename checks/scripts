@@ -222,8 +222,14 @@ for my $filename (sort keys %{$info->scripts}) {
     my $path;
     $scripts{$filename} = 1;
 
-    my $in_docs = $filename =~ m,usr/share/doc/,;
-    my $in_examples = $filename =~ m,usr/share/doc/[^/]+/examples/,;
+    # Consider /usr/src/ scripts as "documentation"
+    # - packages containing /usr/src/ tend to be "-source" .debs and usually
+    #   comes with overrides for most of the checks below.
+    # Supposedly, they could be checked as examples, but there is a risk
+    # that the scripts need substitution to be complete (so, syntax checking
+    # is not as reliable).
+    my $in_docs = $filename =~ m,^usr/(?:share/doc|src)/,;
+    my $in_examples = $filename =~ m,^usr/share/doc/[^/]+/examples/,;
 
     # no checks necessary at all for scripts in /usr/share/doc/
     # unless they are examples
