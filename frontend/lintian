@@ -1104,6 +1104,10 @@ if (@unpack_info) {
 $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
 $unpack_options{'jobs'} = $opt{'jobs'};
 
+# Filter out the "lintian" check if present - it does no real harm,
+# but it adds a bit of noise in the debug output.
+@scripts = grep { $_ ne 'lintian' } @scripts;
+
 debug_msg(1,
           "Selected action: $action",
           sprintf('Extra data to collect: %s', join(',',sort keys %extra_unpack)),
