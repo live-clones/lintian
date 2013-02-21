@@ -11,6 +11,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
+      - font-package-not-multi-arch-foreign
       - illegal-runtime-test-name
       - inconsistent-testsuite-field
       - license-problem-gfdl-invariants
@@ -62,6 +63,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Skip "depends-on-packaging-dev" for metapackages.
     + [NT] Apply patch from Gregor Herrmann to catch metacpan
       homepage links with versions.  (Closes: #700110)
+    + [NT] Apply patch from Vasudev Kamath to detect fonts
+      packages without a Multi-Arch foreign (or allowed) field.
+      (Closes: #701061)
   * checks/files{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to catch paths
       in (common) build dirs.  (Closes: #678857)

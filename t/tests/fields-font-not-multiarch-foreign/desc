@@ -1,0 +1,6 @@
+Testname: fields-font-not-multiarch-foreign
+Sequence: 6000
+Version: 1.0
+Description: Font package Multi-Arch checks
+Test-For:
+ font-package-not-multi-arch-foreign

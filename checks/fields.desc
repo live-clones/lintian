@@ -130,6 +130,17 @@ Info: The package is architecture all and has the Multi-Arch same value.
  This combination is not allowed by the Multi-Arch specification.
 Ref: https://wiki.ubuntu.com/MultiarchSpec
 
+Tag: font-package-not-multi-arch-foreign
+Severity: normal
+Certainty: certain
+Info: This package is architecture all and hence requires a Multi-Arch
+ foreign value.
+ .
+ An Architecture: all package to satisfy the dependencies of a
+ foreign-architecture package, it must be marked Multi-Arch: foreign
+ or Multi-Arch: allowed.
+Ref: https://wiki.ubuntu.com/MultiarchSpec#Dependencies_involving_Architecture:_all_packages/
+
 Tag: aspell-package-not-arch-all
 Severity: normal
 Certainty: certain

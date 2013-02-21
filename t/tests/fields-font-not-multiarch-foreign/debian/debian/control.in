@@ -1,6 +1,6 @@
 Source: {$srcpkg}
 Priority: extra
-Section: fonts
+Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
@@ -9,10 +9,9 @@ Homepage: http://lintian.debian.org/
 Package: fonts-{$srcpkg}
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
-Multi-Arch: foreign
-Description: {$description}
+Description: {$description} (okay)
+ Font package containing fonts.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
-
+ things.  It should not be installed like a regular package.
