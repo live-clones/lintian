@@ -494,7 +494,7 @@ sub process_tasks {
             # If the entry is marked as failed, don't break the loop
             # for it.
             next if exists $failed{$procid};
-            $active{$procid} = 1 $cmap->selectable;
+            $active{$procid} = 1 if $cmap->selectable;
             $nohang = 1 if %active;
         }
 
