@@ -494,10 +494,8 @@ sub process_tasks {
             # If the entry is marked as failed, don't break the loop
             # for it.
             next if exists $failed{$procid};
-            if ($cmap->selectable) {
-                $nohang = 1;
-                $active{$procid} = 1;
-            }
+            $active{$procid} = 1 $cmap->selectable;
+            $nohang = 1 if %active;
         }
 
         # Stop when there are no running jobs and no new pending ones.
