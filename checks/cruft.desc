@@ -385,7 +385,7 @@ Info: The referenced file has a time stamp older than year 2004 and the
 Tag: outdated-autotools-helper-file
 Severity: normal
 Certainty: possible
-Info: The referenced file has a time stamp older than June of 2006 and the
+Info: The referenced file has a time stamp older than April of 2012 and the
  package does not build-depend on autotools-dev or automake and therefore
  apparently does not update it.  This usually means that the source
  package will not build correctly on AVR32, for which a Debian port is

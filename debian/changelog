@@ -45,11 +45,14 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Apply patch from Samuel Bronson to bump severity
       (but decrease certainty) of the "not linked against
       libc" tags.  (Closes: #698720)
-  * checks/cruft:
+  * checks/cruft{,.desc}:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.
     + [NT] Apply patch from Bastien Roucariès to catch GFDL
       licenses with invariants (etc.).  (Closes: #695967)
+    + [NT] Correct description of an autotools tag.  Thanks
+      to Alberto Garcia and Timo Juhani Lindfors for the
+      report and patch.  (Closes: #703490)
   * checks/description:
     + [NT] Ignore "extended-description-is-probably-too-short"
       for metapackages.  Thanks to Axel Beckert for the
