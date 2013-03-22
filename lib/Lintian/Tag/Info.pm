@@ -268,7 +268,7 @@ sub description {
              . ' generates it is not as well-tested as the rest of Lintian'
              . ' and might still give surprising results.  Feel free to'
              . ' ignore experimental tags that do not seem to make sense,'
-             . ' though of course bug reports are always welcomed.');
+             . ' though of course bug reports are always welcome.');
     }
 
     # Format and return the output.
