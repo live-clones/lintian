@@ -225,6 +225,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * lib/Lintian/Tag/Info.pm:
     + [NT] Use "&amp;" in the manpage ref URLs to generate proper HTML.
       Thanks to Vasudev Kamath for reporting the issue.
+    + [NT] Produce a more helpful error message when a tag has an
+      invalid severity or certain.  (Closes: #703978)
   * lib/Lintian/Tags.pm:
     + [NT] Deal with parsing an ambigious override a bit better.  This
       solves false-positive malformed-override, where Lintian misparsed

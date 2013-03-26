@@ -26,6 +26,7 @@ use Carp qw(croak);
 
 use Lintian::Data;
 use Lintian::Tag::TextUtil qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
+use Lintian::Tags qw();
 use Lintian::Util qw(fail);
 
 # The URL to a web man page service.  NAME is replaced by the man page
@@ -89,20 +90,18 @@ sub new {
     $tagname = $self->{'tag'};
     croak "Missing Severity field for $tagname" unless $self->{'severity'};
     croak "Missing Certainty field for $tagname" unless $self->{'certainty'};
+    croak "Tag $tagname has invalid severity ($self->{'severity'}):"
+          . ' Must be one of ' . join (', ', @Lintian::Tags::SEVERITIES)
+        unless exists $CODES{$self->{'severity'}};
+    croak "Tag $tagname has invalid certainty ($self->{'certainty'}):"
+          . ' Must be one of ' . join (', ', @Lintian::Tags::CERTAINTIES)
+        unless exists $CODES{$self->{'severity'}}{$self->{'certainty'}};
     $self->{'info'} = '' unless $self->{'info'};
     $self->{'script'} = $sn;
     $self->{'script-type'} = $st;
     $self->{'effective-severity'} = $self->{severity};
 
     bless $self, $class;
-
-    # Check the tag has a code - if it doesn't, either the severity or
-    # certainty is wrong (or we introduced a new one but forgot to add
-    # it to %CODES).
-    unless ($self->code) {
-        croak "Cannot determine the code of $tagname (severity:"
-            . " $self->{'severity'}, certainity: $self->{'certainty'}).\n";
-    }
 
     return $self;
 }
