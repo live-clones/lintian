@@ -293,6 +293,7 @@ file.
 =item B<--pedantic>
 
 Display pedantic ("P:") tags as well.  They are normally suppressed.
+(This is equivalent to B<-L> "+=pedantic").
 
 Pedantic tags are Lintian at its most pickiest and include checks for
 particular Debian packaging styles and checks that many people

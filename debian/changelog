@@ -236,6 +236,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [ADB] Fix a typo in the matching of expected delimiters for some
       signed messages; thanks Samuel Bronson.
 
+  * man/lintian.pod.in:
+    + [NT] Document that --pedantic is the same as "-L +=pedantic".
+      (Closes: #703989)
+
   * private/refresh-locale-codes:
     + [JW,NT] Ignore the "zxx" locale code, which means "No
       linguistic content".  (Closes: #692548)
