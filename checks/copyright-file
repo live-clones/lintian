@@ -208,6 +208,7 @@ if (m,/usr/share/common-licenses,
     || m/compatible\s+with\s+(?:the\s+)?(?:GNU\s+)?GPL/
     || m/(?:GNU\s+)?GPL\W+compatible/
     || m/was\s+previously\s+(?:distributed\s+)?under\s+the\s+GNU/
+    || m/means\s+either\s+the\s+GNU\s+General\s+Public\s+License/
     || $wrong_directory_detected) {
     # False positive or correct reference.  Ignore.
 } elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {

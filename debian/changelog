@@ -45,6 +45,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Apply patch from Samuel Bronson to bump severity
       (but decrease certainty) of the "not linked against
       libc" tags.  (Closes: #698720)
+  * checks/copyright:
+    + [NT] Apply patch from Evgeni Golov to avoid false
+      positive tag when the MPL-2.0 license appears in the
+      copyright file.  (See #626454)
   * checks/cruft{,.desc}:
     + [NT] Do not emit the license-problem-json-evil tag for
       non-free packages.
