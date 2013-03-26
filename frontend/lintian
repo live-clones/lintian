@@ -189,6 +189,7 @@ Behaviour options:
     --color never/always/auto disable, enable, or enable color for TTY
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
+    --no-display-experimental suppress "X:" tags
     --fail-on-warnings        return a non-zero exit status if warnings found
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
@@ -482,7 +483,7 @@ my %opthash = (                 # ------------------ actions
                # ------------------ behaviour options
                'info|i' => \$opt{'info'},
                'display-info|I' => \&display_infotags,
-               'display-experimental|E' => \$opt{'display-experimental'},
+               'display-experimental|E!' => \$opt{'display-experimental'},
                'pedantic' => \&display_pedantictags,
                'display-level|L=s' => \&record_display_level,
                'display-source=s' => \&record_display_source,

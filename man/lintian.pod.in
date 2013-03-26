@@ -214,10 +214,10 @@ being the Policy Manual and the Developer Reference (respectively).
 The entire list of sources can be found in
 I<$LINTIAN_ROOT/data/output/manual-references>
 
-=item B<-E>, B<--display-experimental>
+=item B<-E>, B<--display-experimental>, B<--no-display-experimental>
 
-Display experimental ("X:") tags as well.  They are normally
-suppressed.
+Control whether to display experimental ("X:") tags.  They are
+normally suppressed.
 
 If a tag is marked experimental, this means that the code that
 generates this message is not as well tested as the rest of Lintian,
@@ -225,7 +225,7 @@ and might still give surprising results.  Feel free to ignore
 Experimental messages that do not seem to make sense, though of course
 bug reports are always welcomed (particularly if they include fixes).
 
-This option overrides the B<display-experimental> variable in the
+These options overrides the B<display-experimental> variable in the
 configuration file.
 
 =item B<--fail-on-warnings>
