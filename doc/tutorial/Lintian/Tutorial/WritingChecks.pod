@@ -410,63 +410,13 @@ do this for you.  If you are looking for a specific file (or dir), a
 call to "index" will be much faster.  For the contents of a specific dir,
 you can use something like:
 
- foreach my $elem ($info-> index ('path/to/dir/')->children) {
+ foreach my $elem ($info->index ('path/to/dir/')->children) {
      print $elem->name . " is a file" if $elem->is_file;
      # ...
  }
 
 Keep in mind that using the "index" or "sorted_index" method will
-require that you put "index" in Needs-Info.  See L<Keeping Needs-Info
-up to date>.
-
-=head3 Accessing contents of a file in a package
-
-When you actually want to see the contents of a file, you can use
-L<unpacked ('path/to/file')|Lintian::Collect::Package/ my $VALID_MULTI_ARCH_VALUES =
-     Lintian::Data->new ('deb/pkg-check/multiarch-values');
- 
- sub run {
-     my ($pkg, $type, $info, $proc, $group) = @_;
- 
-     my $multiarch = $info->field ('multi-arch');
- 
-     if (defined $multiarch) {
-         # The field is present, lets check it is valid.
-         tag 'invalid-multi-arch-field', $multiarch
-             unless $VALID_MULTI_ARCH_VALUES->known ($multiarch);
-         if ($multiarch eq 'same') {
-             my $predepends = $info->relation ('pre-depends');
-             tag 'missing-pre-depends-on-multiarch-support'
-                 unless $predepends->implies ('multiarch-support');
-         }
-     } else {
-         # Emit a "missing-mutli-arch-field" for all packages without the
-         # Multi-Arch field
-         tag 'missing-multi-arch-field';
-     }
- }
-
-=head2 Accessing contents of the package
-
-Another very used mechanism is to check for the presence (or absence)
-of a given file.  Generally this is what the
-L<< $info->index|Lintian::Collect::Package/index (FILE) >> and
-L<< $info->sorted_index|Lintian::Collect::Package/sorted_index >> methods
-are for.  The "index" method returns instances of L<Lintian::Path>,
-which has a number of utility methods.
-
-If you want to loop over all files in a package, the sorted_index will
-do this for you.  If you are looking for a specific file (or dir), a
-call to "index" will be much faster.  For the contents of a specific dir,
-you can use something like:
-
- foreach my $elem ($info-> index ('path/to/dir/')->children) {
-     print $elem->name . " is a file" if $elem->is_file;
-     # ...
- }
-
-Keep in mind that using the "index" or "sorted_index" method will
-require that you put "index" in Needs-Info.  See L<Keeping Needs-Info
+require that you put "index" in Needs-Info.  See L</Keeping Needs-Info
 up to date>.
 
 =head3 Accessing contents of a file in a package
@@ -485,7 +435,7 @@ it is a regular file before opening a given path (or use something
 like "if (! -l $path and -f $path) { ... }").
 
 Using the "unpacked" method requires that the "unpacked" collection is
-listed in Needs-Info.  See L<Keeping Needs-Info up to date>.
+listed in Needs-Info.  See L</Keeping Needs-Info up to date>.
 
 =head2 Keeping Needs-Info up to date
 
@@ -495,8 +445,8 @@ generally be a line looking something like:
 
   Needs-Info requirements for using methodx: Y
 
-Which means generally that the methodx requires Y to work.  Here Y is a
-comma separated list and each element of Y basically falls into 3 cases.
+Which means that the methodx requires Y to work.  Here Y is a comma
+separated list and each element of Y basically falls into 3 cases.
 
 =over 4
 
