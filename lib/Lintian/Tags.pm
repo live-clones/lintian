@@ -27,7 +27,7 @@ use Exporter qw(import);
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
 use Lintian::Tag::Override;
-use Lintian::Util qw(fail $PKGNAME_REGEX);
+use Lintian::Util qw(fail $PKGNAME_REGEX strip);
 
 BEGIN {
     our @EXPORT = qw(tag);
@@ -505,8 +505,7 @@ sub file_overrides {
     local $_;
   OVERRIDE:
     while (<$file>) {
-        s/^\s+//;
-        s/\s+$//;
+        strip;
         if ($_ eq '') {
             # Throw away comments, as they are not attached to a tag
             # also throw away the option of "carrying over" the last

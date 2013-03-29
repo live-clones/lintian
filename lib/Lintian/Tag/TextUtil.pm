@@ -30,7 +30,7 @@ our @EXPORT = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 # requires wrap() function
 use Text::Wrap;
 
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail strip);
 
 # html_wrap -- word-wrap a paragaph.  The wrap() function from Text::Wrap
 # is not suitable, because it chops words that are longer than the line
@@ -85,9 +85,8 @@ sub split_paragraphs {
         if (($t =~ s/^([ \t][^\n]*)\n?//o) or ($t =~ s/^()\n//o)) {
             #FLUSH;
             if ($l) {
-                $l =~ s/\s+/ /go;
-                $l =~ s/^\s+//o;
-                $l =~ s/\s+$//o;
+                strip ($l);
+                $l =~ s/\s++/ /go;
                 push(@o,$l);
                 undef $l;
             }
@@ -105,9 +104,8 @@ sub split_paragraphs {
     }
     #FLUSH;
     if ($l) {
-        $l =~ s/\s+/ /go;
-        $l =~ s/^\s+//o;
-        $l =~ s/\s+$//o;
+        strip ($l);
+        $l =~ s/\s++/ /go;
         push(@o,$l);
         undef $l;
     }

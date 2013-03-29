@@ -58,7 +58,7 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(delete_dir fail read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(delete_dir fail read_dpkg_control rstrip slurp_entire_file);
 
 # --- Global configuration
 
@@ -981,7 +981,7 @@ sub _msg_qh {
         my @output;
         for my $tid (keys %thrs) {
             my $p = $thrs{$tid}[-1];
-            $p =~ s/\s+$//;
+            rstrip ($p);
 
             push @output, $p;
         }

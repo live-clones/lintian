@@ -26,7 +26,7 @@ use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail lstrip);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
@@ -50,7 +50,7 @@ foreach my $file ($info->sorted_index) {
         next if ($scriptpath =~ m/^\#!/); # skip lincity data files
                                           # #!#!#!
         my $copy_path = $scriptpath;
-        $scriptpath =~ s/^\s+//; # remove leading whitespace
+        lstrip ($scriptpath); # remove leading whitespace
         $scriptpath =~ s/^\#.*//; # remove comments
         if ($scriptpath eq '') {
             print SCRIPTS "$copy_path $file\n";

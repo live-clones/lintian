@@ -27,7 +27,8 @@ use List::Util qw(first);
 use Lintian::Data ();
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail file_is_encoded_in_non_utf8 read_dpkg_control);
+use Lintian::Util qw(fail file_is_encoded_in_non_utf8 read_dpkg_control
+                     rstrip strip);
 
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
@@ -272,8 +273,7 @@ for my $i (0 .. $#descriptions) {
 # version.
 sub check_dev_depends {
     my ($info, $package, $depends, @packages) = @_;
-    $depends =~ s/^\s+//;
-    $depends =~ s/\s+$//;
+    strip ($depends);
     for my $target (@packages) {
         next unless ($target =~ /^lib[\w.+-]+\d/
                  and $target !~ /-(?:dev|docs?|common)$/);
@@ -343,7 +343,7 @@ sub check_relation {
                    )/x) {
         my ($prev, $next) = ($1, $2);
         for ($prev, $next) {
-            s/\s+$//;
+            rstrip;
         }
         tag 'missing-separator-between-items', 'in', $pkg,
             "$field field between '$prev' and '$next'";

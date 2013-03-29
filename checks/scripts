@@ -30,7 +30,7 @@ use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail strip);
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -859,8 +859,7 @@ while (<SCRIPTS>) {
             $divert =~ s,^/,,;
 
             # remove any remaining leading or trailing whitespace.
-            $divert =~ s/^\s+//;
-            $divert =~ s/\s+$//;
+            strip ($divert);
 
             $divert = quotemeta($divert);
 

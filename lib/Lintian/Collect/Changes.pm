@@ -22,6 +22,8 @@ use strict;
 use warnings;
 use base 'Lintian::Collect';
 
+use Lintian::Util qw(strip);
+
 =head1 NAME
 
 Lintian::Collect::Changes - Lintian interface to .changes file data collection
@@ -130,8 +132,7 @@ sub files {
     my $file_list = $self->field('files') || '';
     local $_;
     for (split /\n/, $file_list) {
-        chomp;
-        s/^\s+//o;
+        strip;
         next if $_ eq '';
 
         my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
@@ -149,8 +150,7 @@ sub files {
     foreach my $alg (qw(sha1 sha256)) {
         my $list = $self->field("checksums-$alg") || '';
         for (split /\n/, $list) {
-            chomp;
-            s/^\s+//o;
+            strip;
             next if $_ eq '';
 
             my ($checksum, $size, $file) = split(/\s+/o, $_);

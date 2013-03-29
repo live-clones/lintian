@@ -25,7 +25,7 @@ use warnings;
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail slurp_entire_file strip);
+use Lintian::Util qw(fail slurp_entire_file strip strip);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.
@@ -240,10 +240,8 @@ my $compatnan = 0;
 if (-f "$droot/compat") {
     my $compat_file = slurp_entire_file("$droot/compat");
     ($compat) = split(/\n/, $compat_file);
-    $compat =~ s/^\s+$//;
-    if ($compat) {
-        $compat =~ s/^\s+//;
-        $compat =~ s/\s+$//;
+    strip ($compat);
+    if ($compat ne '') {
         if ($compat !~ m/^\d+$/) {
             tag 'debhelper-compat-not-a-number', $compat;
             $compat =~ s/[^\d]//g;
