@@ -23,7 +23,7 @@ BEGIN {
 }
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
-use Lintian::Util qw(fail read_dpkg_control);
+use Lintian::Util qw(fail read_dpkg_control strip);
 
 my $root = $ENV{LINTIAN_ROOT};
 my @dirs = ('profiles/debian');
@@ -125,10 +125,8 @@ sub read_tags {
     my @tags = ();
     open my $fd, '<', $file or die "$file: $!";
     while (<$fd>) {
-        chomp;
-        s/^\s++//;
+        strip;
         next if /^#/ or $_ eq '';
-        s/\s++$//;
         push @tags, $_;
     }
     close $fd;

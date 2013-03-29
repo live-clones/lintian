@@ -115,7 +115,7 @@ require Lintian::Processable;
 require Lintian::Relation::Version;
 import Lintian::Relation::Version qw(versions_lt);
 require Lintian::Util;
-import Lintian::Util qw(visit_dpkg_paragraph);
+import Lintian::Util qw(strip visit_dpkg_paragraph);
 
 # turn file buffering off
 $| = 1;
@@ -490,9 +490,7 @@ sub Die {
 sub _trim_split {
     my ($val) = @_;
     return () unless $val;
-    $val =~ s/^\s++//o;
-    $val =~ s/\s++$//o;
-    return split m/\s*+,\s*+/o, $val;
+    return split m/\s*+,\s*+/o, strip ($val);
 }
 
 # local_mirror_manifests ($mirdir, $dists, $areas, $archs)
@@ -612,7 +610,7 @@ sub _parse_srcs_pg {
     return unless $active_srcs->{$s};
     $dir .= '/' if $dir;
     foreach my $f (split m/\n/, $data->{'files'}) {
-        $f =~ s/^\s++//o;
+        strip ($f);
         next unless $f && $f =~ m/\.dsc$/;
         my (undef, undef, $file) = split m/\s++/, $f;
         # $dir should end with a slash if it is non-empty.

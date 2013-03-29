@@ -418,8 +418,7 @@ sub cfg_display_level {
         }
 
         return if @display_level;
-        $val =~ s/^\s++//;
-        $val =~ s/\s++$//;
+        strip ($val);
         foreach my $dl (split m/\s++/, $val) {
             record_display_level('display-level', $dl);
         }
@@ -666,7 +665,7 @@ require Lintian::Tags;
 import Lintian::Tags qw(tag);
 require Lintian::Unpacker;
 require Lintian::Util;
-import Lintian::Util qw(fail parse_boolean);
+import Lintian::Util qw(fail parse_boolean strip);
 
 if (defined $experimental_output_opts) {
     my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );

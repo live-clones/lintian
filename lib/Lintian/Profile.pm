@@ -30,7 +30,7 @@ use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::CheckScript;
 use Lintian::Tags;
-use Lintian::Util qw(parse_boolean read_dpkg_control);
+use Lintian::Util qw(parse_boolean read_dpkg_control strip);
 
 =head1 NAME
 
@@ -490,10 +490,7 @@ sub _parse_boolean {
 sub _split_comma_sep_field {
     my ($self, $data) = @_;
     return () unless defined $data;
-    # remove trailing and leading white-space
-    $data =~ s/^\s++//o;
-    $data =~ s/\s++$//o;
-    return split m/\s*,\s*/o, $data;
+    return split m/\s*,\s*/o, strip ($data);
 }
 
 # $self->_check_for_invalid_fields($para, $known, $pname, $paraname)

@@ -58,6 +58,9 @@ BEGIN {
                  slurp_entire_file
                  file_is_encoded_in_non_utf8
                  fail
+                 strip
+                 lstrip
+                 rstrip
                  system_env
                  delete_dir
                  copy_dir
@@ -501,7 +504,7 @@ sub visit_dpkg_paragraph {
             # Policy: Horizontal whitespace (spaces and tabs) may occur
             # immediately before or after the value and is ignored there.
             my ($tag,$value) = (lc $1,$2);
-            $value =~ s/\s+$//;
+            rstrip ($value);
             if (exists $section->{$tag}) {
                 # Policy: A paragraph must not contain more than one instance
                 # of a particular field name.
@@ -519,8 +522,7 @@ sub visit_dpkg_paragraph {
             # each continuation line must start with a space or a tab.  Any
             # trailing spaces or tabs at the end of individual lines of a
             # field value are ignored.
-            my $value = $1;
-            $value =~ s/\s+$//;
+            my $value = rstrip ($1);
             $section->{$last_tag} .= "\n" . $value;
         }
         # None of the above => syntax error
@@ -977,6 +979,76 @@ sub fail {
     }
     $! = 2; # set return code outside eval()
     croak $str;
+}
+
+=item strip ([LINE])
+
+Strips whitespace from the beginning and the end of LINE and returns
+it.  If LINE is omitted, C<$_> will be used instead. Example
+
+ @lines = map { strip } <$fd>;
+
+In void context, the input argument will be modified so it can be
+used as a replacement for chomp in some cases:
+
+  while ( my $line = <$fd> ) {
+    strip ($line);
+    # $line no longer has any leading or trailing whitespace
+  }
+
+Otherwise, a copy of the string is returned:
+
+  while ( my $orig = <$fd> ) {
+    my $stripped = strip ($orig);
+    if ($stripped ne $orig) {
+        # $orig had leadning or/and trailing whitespace
+    }
+  }
+
+=item lstrip ([LINE])
+
+Like L<strip|/strip ([LINE])> but only strip leading whitespace.
+
+=item rstrip ([LINE])
+
+Like L<strip|/strip ([LINE])> but only strip trailing whitespace.
+
+=cut
+
+# prototype for default to $_
+sub strip (_) {
+    if (defined wantarray) {
+        # perl 5.14 s///r would have been useful here.
+        my ($arg) = @_;
+        $arg =~ s/^\s++|\s++$//g;
+        return $arg;
+    } else {
+        $_[0] =~ s/^\s++|\s++$//g;
+    }
+}
+
+# prototype for default to $_
+sub lstrip (_) {
+    if (defined wantarray) {
+        # perl 5.14 s///r would have been useful here.
+        my ($arg) = @_;
+        $arg =~ s/^\s++//;
+        return $arg;
+    } else {
+        $_[0] =~ s/^\s++//;
+    }
+}
+
+# prototype for default to $_
+sub rstrip (_) {
+    if (defined wantarray) {
+        # perl 5.14 s///r would have been useful here.
+        my ($arg) = @_;
+        $arg =~ s/\s++$//g;
+        return $arg;
+    } else {
+        $_[0] =~ s/\s++$//;
+    }
 }
 
 =item check_path (CMD)

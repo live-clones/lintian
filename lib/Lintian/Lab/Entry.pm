@@ -68,7 +68,7 @@ use File::Spec;
 use Scalar::Util qw(refaddr);
 
 use Lintian::Lab;
-use Lintian::Util qw(delete_dir read_dpkg_control get_dsc_info);
+use Lintian::Util qw(delete_dir read_dpkg_control get_dsc_info strip);
 
 # This is the entry format version - this changes whenever the layout of
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
@@ -307,7 +307,7 @@ sub create {
         #    collection for the symlinking.
         my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
         for my $fs (split(m/\n/o, $self->info->field ('files'))) {
-            $fs =~ s/^\s*//o;
+            strip ($fs);
             next if $fs eq '';
             my @t = split(/\s+/o,$fs);
             next if ($t[2] =~ m,/,o);
@@ -456,11 +456,7 @@ sub _init {
 
     $coll = $head->{'collections'}//'';
     $coll =~ s/\n/ /go;
-    # Strip leading and trailing space to avoid "interesting" issues
-    # with the "first" collection having leading spaces.
-    $coll =~ s/^\s++//go;
-    $coll =~ s/\s++$//go;
-    foreach my $c (split m/\s*,\s*+/o, $coll) {
+    foreach my $c (split m/\s*,\s*+/o, strip ($coll)) {
         my ($cname, $cver) = split m/\s*=\s*/, $c;
         $self->_mark_coll_finished ($cname, $cver);
     }

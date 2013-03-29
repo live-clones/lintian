@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(strip);
 
 use constant FILENAME_LENGTH_LIMIT => 80;
 
@@ -72,7 +73,7 @@ $len = 0;
 foreach my $entry (split m/\n/o, $info->field ('files', '')){
     my $filename;
     my $flen;
-    $entry =~ s/^\s++//o;
+    strip ($entry);
     next unless $entry;
     (undef, undef, $filename) = split m/\s++/o, $entry;
     next unless $filename;

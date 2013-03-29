@@ -26,6 +26,8 @@ use warnings;
 
 use Carp qw(croak);
 
+use Lintian::Util qw(strip);
+
 =head1 NAME
 
 Lintian::Processable -- An (abstract) object that Lintian can process
@@ -124,7 +126,7 @@ sub new_from_metadata {
             $dir .= '/' if defined $dir;
             $dir //= '';
             foreach my $f (split m/\n/, $fn) {
-                $f =~ s/^\s++//o;
+                strip ($f);
                 next unless $f && $f =~ m/\.dsc$/;
                 my (undef, undef, $file) = split m/\s++/, $f;
                 # $dir should end with a slash if it is non-empty.

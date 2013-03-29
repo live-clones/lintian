@@ -28,7 +28,7 @@ use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Output qw(debug_msg);
-use Lintian::Util qw(fail slurp_entire_file);
+use Lintian::Util qw(fail slurp_entire_file strip);
 
 use File::Spec;
 
@@ -45,8 +45,7 @@ sub _embedded_libs {
         $regex = $opts;
         $opts = '';
     } else {
-        $opts=~ s/^\s++//o;
-        $opts=~ s/^\s++//o;
+        strip ($opts);
         foreach my $optstr (split m/\s++/, $opts) {
             my ($opt, $val) = split m/=/, $optstr, 2;
             if ($opt eq 'source' or $opt eq 'libname') {

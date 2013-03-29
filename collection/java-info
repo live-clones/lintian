@@ -30,7 +30,7 @@ use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail rstrip);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
@@ -61,7 +61,7 @@ my $open_java_info = sub {
 my $errorhandler = sub {
     my ($err) = @_;
     $err =~ s/\r?\n/ /g;
-    $err =~ s/\s++$//;
+    rstrip ($err);
     print {$opts{pipe_in}} "-- ERROR: $err\n";
 };
 

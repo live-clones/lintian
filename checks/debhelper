@@ -25,7 +25,7 @@ use warnings;
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail slurp_entire_file);
+use Lintian::Util qw(fail slurp_entire_file strip);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.
@@ -523,16 +523,13 @@ sub _shebang_cmd {
     if (read $fd, $magic, 2) {
         if ($magic eq '#!') {
             $cmd = <$fd>;
-            chomp $cmd;
 
             # It is beyond me why anyone would place a lincity data
             # file here...  but if they do, we will handle it
             # correctly.
             $cmd = '' if $cmd =~ m/^#!/o;
 
-            # Strip whitespace if any
-            $cmd =~ s/^\s++//o;
-            $cmd =~ s/\s++$//o;
+            strip ($cmd);
         }
     }
     close $fd;

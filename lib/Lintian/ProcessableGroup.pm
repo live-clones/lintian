@@ -24,7 +24,7 @@ use warnings;
 
 use Lintian::Collect::Group;
 use Lintian::Processable;
-use Lintian::Util qw(fail get_dsc_info);
+use Lintian::Util qw(fail get_dsc_info strip);
 
 =head1 NAME
 
@@ -103,8 +103,7 @@ sub _init_group_from_changes {
     foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
         my ($file);
         next unless defined $line;
-        chomp($line);
-        $line =~ s/^\s++//o;
+        strip ($line);
         next if $line eq '';
         # Ignore files that may lead to path traversal issues.
 

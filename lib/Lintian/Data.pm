@@ -22,6 +22,8 @@ use warnings;
 
 use Carp qw(croak);
 
+use Lintian::Util qw(strip);
+
 sub new {
     my ($class, @args) = @_;
     my $type = $args[0];
@@ -133,8 +135,7 @@ sub _parse_file {
     $filename = $vendors->[$vno] . '/' . $type if $vno < scalar @$vendors;
     local ($_, $.);
     while (<$fd>) {
-        chomp;
-        s/^\s++//;
+        strip;
         next if /^\#/ or $_ eq '';
         if (s/^\@//) {
             my ($op, $value) = split m/\s++/;
