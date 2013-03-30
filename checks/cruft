@@ -26,7 +26,7 @@ package Lintian::cruft;
 use strict;
 use warnings;
 use v5.10;
-use feature "switch";
+use feature qw(switch);
 
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.

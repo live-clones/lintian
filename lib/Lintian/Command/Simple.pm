@@ -19,7 +19,7 @@ use strict;
 use warnings;
 
 use Exporter qw(import);
-use POSIX ":sys_wait_h";
+use POSIX qw(:sys_wait_h);
 
 our @EXPORT_OK = qw(rundir background background_dir wait_any kill_all);
 
@@ -34,8 +34,8 @@ Lintian::Command::Simple - Run commands without pipes
     Lintian::Command::Simple::rundir ('./some-dir/', 'echo', 'hello world');
 
     # Start a command in the background:
-    Lintian::Command::Simple::background("sleep", 10);
-    print wait() > 0 ? "success" : "failure";
+    Lintian::Command::Simple::background('sleep', 10);
+    print wait() > 0 ? 'success' : 'failure';
 
 
 =head1 DESCRIPTION

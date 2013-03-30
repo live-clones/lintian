@@ -72,14 +72,14 @@ sub run {
 
             # Package appears to be a legacy web application
             elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
-                tag "apache2-reverse-dependency-uses-obsolete-directory", $file;
+                tag 'apache2-reverse-dependency-uses-obsolete-directory', $file;
                 check_web_application_package ($pkg, $type, $info, $file, 'conf', $1);
                 $seen_apache2_special_file++;
             }
 
             # Package does scary things
             elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
-                tag "apache2-reverse-dependency-ships-file-in-not-allowed-directory", $file;
+                tag 'apache2-reverse-dependency-ships-file-in-not-allowed-directory', $file;
                 $seen_apache2_special_file++;
             }
 
@@ -94,7 +94,7 @@ sub run {
 sub check_web_application_package {
     my ($pkg, $type, $info, $file, $pkgtype, $webapp) = @_;
 
-    tag "non-standard-apache2-configuration-name", $webapp, '!=', "$pkg.conf"
+    tag 'non-standard-apache2-configuration-name', $webapp, '!=', "$pkg.conf"
         if $webapp ne "$pkg.conf" or $webapp =~ m/^local-./;
 
     my $rel = Lintian::Relation->and ($info->relation ('strong'),
@@ -161,13 +161,13 @@ sub check_module_package {
     $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
 
     if (defined $info->index ($load_file)) {
-        inspect_conf_file ($info, "mods", $load_file);
+        inspect_conf_file ($info, 'mods', $load_file);
     } else {
         tag 'apache2-module-does-not-ship-load-file', $load_file;
     }
 
     if (defined $info->index ($conf_file)) {
-        inspect_conf_file ($info, "mods", $conf_file);
+        inspect_conf_file ($info, 'mods', $conf_file);
     }
 
 }
@@ -236,9 +236,10 @@ sub inspect_conf_file {
         }
 
         if (m/^#\s*(Depends|Conflicts):\s+(.*?)\s*$/) {
-            tag 'apache2-unsupported-dependency', $file, $1
-                if $1 eq 'Conflicts' and $conftype ne 'mods';
-            my @dependencies = split( /[\n\s]+/, $2 );
+            my ($field, $value) = ($1, $2);
+            tag 'apache2-unsupported-dependency', $file, $field
+                if $field eq 'Conflicts' and $conftype ne 'mods';
+            my @dependencies = split( /[\n\s]+/, $value );
             foreach my $dep (@dependencies) {
                 tag 'apache2-unparseable-dependency', $file, $dep
                     if $dep =~ m/\W/ or

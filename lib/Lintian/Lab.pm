@@ -265,7 +265,7 @@ sub get_package {
         $proc = $pkg;
     } else {
         $pkg_name = $pkg;
-        croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
+        croak 'Package name and type must be defined' unless $pkg_name && $pkg_type;
     }
 
     # get_package only works with "real" types (and not views).
@@ -478,7 +478,7 @@ sub _get_lab_manifest_data {
 # Note this is also used by reporting/html_reports
 sub _get_lab_index {
     my ($self, $pkg_type) = @_;
-    croak "Undefined (or empty) package type" unless $pkg_type;
+    croak 'Undefined (or empty) package type' unless $pkg_type;
     croak "Unknown package type $pkg_type"
         unless $SUPPORTED_TYPES{$pkg_type} or $SUPPORTED_VIEWS{$pkg_type};
 
@@ -565,7 +565,7 @@ removing them.
 sub repair {
     my ($self) = @_;
     my $updates = 0;
-    croak "Lab is not open" unless $self->is_open;
+    croak 'Lab is not open' unless $self->is_open;
     foreach my $pkg_type (keys %SUPPORTED_TYPES) {
         my $index = $self->_get_lab_index ($pkg_type);
         my $visitor = sub {
@@ -761,7 +761,7 @@ L</create> directly.
 sub open {
     my ($self) = @_;
     my $dir;
-    my $msg = "Open Lab failed";
+    my $msg = 'Open Lab failed';
     croak ('Lab is already open') if $self->is_open;
     if ($self->is_temp) {
         $self->create unless $self->exists;

@@ -84,7 +84,7 @@ sub new {
     # Returns a listref of profile names
     sub _get_vendor_names {
         my ($self) = @_;
-        croak "No vendor given" unless $profile;
+        croak 'No vendor given' unless $profile;
         my @vendors = ();
         push @vendors, reverse @{ $profile->profile_list };
         return \@vendors;

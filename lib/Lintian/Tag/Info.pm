@@ -88,7 +88,7 @@ sub new {
     croak 'no tag specified' unless $tag;
     %copy = %$tag;
     $self = \%copy;
-    croak "Missing Tag field" unless $self->{'tag'};
+    croak 'Missing Tag field' unless $self->{'tag'};
     $tagname = $self->{'tag'};
     croak "Missing Severity field for $tagname" unless $self->{'severity'};
     croak "Missing Certainty field for $tagname" unless $self->{'certainty'};

@@ -93,7 +93,7 @@ for my $file ($info->sorted_index) {
         # menu file?
         if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
             if ($operm & 0111) {
-                tag 'executable-menu-file', sprintf("%s %04o",$file,$operm);
+                tag 'executable-menu-file', sprintf('%s %04o', $file, $operm);
             }
 
             next if $file =~ m,^usr/(lib|share)/menu/README$,;
@@ -111,7 +111,7 @@ for my $file ($info->sorted_index) {
         # doc-base file?
         elsif ($file =~ m,^usr/share/doc-base/\S,o) { # correct permissions?
             if ($operm & 0111) {
-                tag 'executable-in-usr-share-docbase', $file, sprintf("%04o",$operm);
+                tag 'executable-in-usr-share-docbase', $file, sprintf('%04o', $operm);
             }
             $docbase_file = $file;
         }
@@ -184,7 +184,7 @@ if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
 # docbase file?
 if ($docbase_file) {
     opendir DOCBASEDIR, $info->lab_data_path ('doc-base')
-        or fail "cannot read doc-base directory";
+        or fail 'cannot read doc-base directory';
     my $dbfile;
     while (defined ($dbfile = readdir DOCBASEDIR)) {
         my $dbpath = $info->lab_data_path ("doc-base/$dbfile");
@@ -443,13 +443,13 @@ sub check_doc_base_field {
             if (/manage\s+online\s+manuals\s.*Debian/o) {
                 tag 'doc-base-abstract-field-is-template', "$dbfile:$line"
                     unless $pkg eq 'doc-base';
-            } elsif (/^(\s+)\.(\s*)$/o and ($1 ne " " or $2)) {
+            } elsif (/^(\s+)\.(\s*)$/o and ($1 ne ' ' or $2)) {
                 tag 'doc-base-abstract-field-separator-extra-whitespaces',
                     "$dbfile:" . ($line - $#{$vals} + $idx);
             } elsif (!$leadsp && /^(\s+)(\S)/o) {
                 # The regexp should always match.
                 ($leadsp, $charafter) = ($1, $2);
-                $leadsp_ok = $leadsp eq " ";
+                $leadsp_ok = $leadsp eq ' ';
             } elsif (!$leadsp_ok && /^(\s+)(\S)/o) {
                 # The regexp should always match.
                 undef $charafter if $charafter && $charafter ne $2;
@@ -502,7 +502,7 @@ sub add_file_link_info {
     my $link = $info->index ($file)->link;
     my $ishard = $info->index ($file)->is_hardlink;
 
-    $file = "/" . $file if (not $file =~ m%^/%); # make file absolute
+    $file = '/' . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;                           # remove duplicated `/'
     $all_files->{$file} = 1;
 
@@ -511,7 +511,7 @@ sub add_file_link_info {
         if ($ishard) {
             $link =~ s,^\./,/,;
         } elsif (not $link =~ m,^/,) {            # not absolute link
-            $link = "/" . $link;                  # make sure link starts with '/'
+            $link = '/' . $link;                  # make sure link starts with '/'
             $link =~ s,/+\./+,/,g;                # remove all /./ parts
             my $dcount = 1;
             while ($link =~ s,^/+\.\./+,/,) {     #\ count & remove

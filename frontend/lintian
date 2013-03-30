@@ -65,7 +65,9 @@ qw(
 ### "Normal" application variables
 
 # Version number - Is replaced during build with sed, see d/rules
-my $LINTIAN_VERSION = "<VERSION>";      #External Version number
+# - use q{} here because we use '' in the snippet to replace the
+#   the string (and escaping it would be a pain...)
+my $LINTIAN_VERSION = q{<VERSION>};      #External Version number
 if ($LINTIAN_VERSION eq '<VERSION>') {
     # For some reason the version above has not be substituted.
     # Most likely this means we are a git clone or an unpacked
@@ -1145,7 +1147,7 @@ foreach my $gname (sort $pool->get_group_names()) {
         clear_group_cache($group);
         # Double check that no processes are running;  hopefully
         # it will catch regressions like 3bbcc3b earlier.
-        fail ("Unreaped processes after running checks!?")
+        fail ('Unreaped processes after running checks!?')
             if waitpid (-1, WNOHANG) != -1;
     }
 }
@@ -1463,7 +1465,7 @@ sub handle_lab_query {
         # But the frontend sends it here, because the file denoted by
         # that string does not exist.
         warning ("\"$orig\" cannot be processed.");
-        warning ("It is not a valid lab query and it is not an existing file.");
+        warning ('It is not a valid lab query and it is not an existing file.');
         exit 2;
     }
 

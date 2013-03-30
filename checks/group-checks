@@ -155,7 +155,7 @@ sub _check_multiarch {
             if ($dma eq 'same' or $dma eq 'foreign') {
                 1; # OK
             } else {
-                tag 'dependency-is-not-multi-archified', $proc->pkg_name . " depends on " . $dep->pkg_name . " (multi-arch: $dma)";
+                tag 'dependency-is-not-multi-archified', $proc->pkg_name . ' depends on ' . $dep->pkg_name . " (multi-arch: $dma)";
             }
         }
     } elsif ($ma ne 'same' and $proc->info->field ('section', 'none') =~ m,(?:^|/)debug$,o) {

@@ -969,12 +969,12 @@ stringified and used directly.
 sub fail {
     my $str = 'internal error: ';
     if (@_) {
-        $str .=  join " ", @_;
+        $str .=  join ' ', @_;
     } else {
         if ($!) {
             $str .= "$!";
         } else {
-            $str .= "No context.";
+            $str .= 'No context.';
         }
     }
     $! = 2; # set return code outside eval()

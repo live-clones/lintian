@@ -37,7 +37,7 @@ sub run {
     #meant to use:
     my $build_deps = $info->relation('build-depends-all');
     # Get source package format
-    my $format = "";
+    my $format = '';
     if (defined $info->field('format')) {
         $format = $info->field('format');
     }
@@ -47,7 +47,7 @@ sub run {
     my $dpdir = "$droot/patches";
 
     #----- dpatch
-    if ($build_deps->implies("dpatch")) {
+    if ($build_deps->implies('dpatch')) {
         $uses_patch_system++;
         #check for a debian/patches file:
         if (! -r "$dpdir/00list") {
@@ -104,7 +104,7 @@ sub run {
                         }
                         close(PATCH_FILE);
                         unless ($has_comment) {
-                            tag "dpatch-missing-description", $patch_file;
+                            tag 'dpatch-missing-description', $patch_file;
                         }
                     }
                     check_patch($dpdir, $patch_file);
@@ -114,7 +114,7 @@ sub run {
     }
 
     #----- quilt
-    if ($build_deps->implies("quilt") or $quilt_format) {
+    if ($build_deps->implies('quilt') or $quilt_format) {
         $uses_patch_system++;
         #check for a debian/patches file:
         if (! -r "$dpdir/series") {
@@ -137,7 +137,7 @@ sub run {
                 }
                 close(IN);
                 if (scalar(@badopts)) {
-                    tag "quilt-patch-with-non-standard-options", @badopts;
+                    tag 'quilt-patch-with-non-standard-options', @badopts;
                 }
 
                 # Check each patch.
@@ -161,7 +161,7 @@ sub run {
                         }
                         close(PATCH_FILE);
                         unless ($has_description) {
-                            tag "quilt-patch-missing-description", $patch_file;
+                            tag 'quilt-patch-missing-description', $patch_file;
                         }
                     }
                     check_patch($dpdir, $patch_file);
@@ -186,12 +186,12 @@ sub run {
 
     #----- look for README.source
     if ($uses_patch_system && ! $quilt_format && ! -f "$droot/README.source") {
-        tag "patch-system-but-no-source-readme";
+        tag 'patch-system-but-no-source-readme';
     }
 
     #----- general cruft checking:
     if ($uses_patch_system > 1) {
-        tag "more-than-one-patch-system";
+        tag 'more-than-one-patch-system';
     }
     my @direct;
     open(STAT, '<', $info->diffstat) or fail("cannot open diffstat file: $!");
@@ -204,9 +204,9 @@ sub run {
     if (@direct) {
         my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
 
-        tag "patch-system-but-direct-changes-in-diff", $files
+        tag 'patch-system-but-direct-changes-in-diff', $files
             if ($uses_patch_system);
-        tag "direct-changes-in-diff-but-no-patch-system", $files
+        tag 'direct-changes-in-diff-but-no-patch-system', $files
             if (not $uses_patch_system);
     }
 }

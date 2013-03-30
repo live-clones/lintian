@@ -213,14 +213,14 @@ croak.
 
 sub read_list {
     my ($self, $file) = @_;
-    croak "Cannot read a GROUP manifest" if $self->type eq 'GROUP';
+    croak 'Cannot read a GROUP manifest' if $self->type eq 'GROUP';
     my $header;
     my $fields;
     my $qf;
 
     # Accept a scalar (as an "in-memory file") - write_list does the same
     if (my $r = ref $file) {
-        croak "Attempt to pass non-scalar ref to read_list.\n" unless $r eq 'SCALAR';
+        croak 'Attempt to pass non-scalar ref to read_list' unless $r eq 'SCALAR';
     } else {
         # FIXME: clear the manifest if -s $file
         return unless -s $file;
@@ -246,7 +246,7 @@ On error, the contents of FILE are undefined.
 
 sub write_list {
     my ($self, $file) = @_;
-    croak "Cannot write a GROUP manifest" if $self->type eq 'GROUP';
+    croak 'Cannot write a GROUP manifest' if $self->type eq 'GROUP';
     my ($header, $fields, undef) = $self->_type_to_fields;
     my $visitor;
 
@@ -352,7 +352,7 @@ to ENTRY will not affect the data in the manifest.
 
 sub set {
     my ($self, $entry) = @_;
-    croak "Cannot alter a GROUP manifest directly"
+    croak 'Cannot alter a GROUP manifest directly'
         if $self->type eq 'GROUP';
     my %pdata;
     my (undef, $fields, $qf) = $self->_type_to_fields;
@@ -421,7 +421,7 @@ See L</get (KEYS...)> for the key names.
 
 sub delete {
     my ($self, @keys) = @_;
-    croak "Cannot alter a GROUP manifest directly"
+    croak 'Cannot alter a GROUP manifest directly'
         if $self->type eq 'GROUP';
     return $self->_do_delete (@keys);
 }
@@ -467,7 +467,7 @@ L<Lintian::Lab::ManifestDiff> for more information.
 
 sub diff {
     my ($self, $other) = @_;
-    croak "Cannot diff a GROUP manifest" if $self->type eq 'GROUP';
+    croak 'Cannot diff a GROUP manifest' if $self->type eq 'GROUP';
     my $copy;
     my @changed;
     my @added;

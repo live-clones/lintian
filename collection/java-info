@@ -38,7 +38,7 @@ my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 # Sanity check
 unless ( -d "$dir/unpacked/") {
-    fail "java-info called with the wrong dir argument!";
+    fail 'java-info called with the wrong dir argument';
 }
 
 if ( -f "$dir/java-info" ) {

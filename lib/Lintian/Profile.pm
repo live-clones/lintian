@@ -116,7 +116,7 @@ sub new {
             if $name =~ m,^/,o or $name =~ m/\./o;
         ($profile, undef) = $self->_find_vendor_profile ($name);
     }
-    croak "Cannot find profile $name (in " . join(', ', map { "$_/profiles" } @$ipath).")"
+    croak "Cannot find profile $name (in " . join(', ', map { "$_/profiles" } @$ipath).')'
         unless $profile;
 
     # Implementation detail: Ensure that the "lintian" check is always
@@ -597,7 +597,7 @@ sub _find_vendor_profile {
     @vendors = @{ $self->{'_vendor_cache'} } if exists $self->{'_vendor_cache'};
     unless (@vendors) {
         my $vendor = Dpkg::Vendor::get_current_vendor ();
-        croak "Could not determine the current vendor"
+        croak 'Could not determine the current vendor'
             unless $vendor;
         push @vendors, lc $vendor;
         while ($vendor) {

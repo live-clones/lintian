@@ -168,7 +168,7 @@ sub new {
             $ccmap->unlink ($node);
         }
         # ccmap should not be inconsistent by this change.
-        fail "Inconsistent collmap after deletion"
+        fail 'Inconsistent collmap after deletion'
             if $ccmap->missing;
     }
     $self->{'extra-coll'} = $extra;

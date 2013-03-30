@@ -103,7 +103,7 @@ sub new_from_metadata {
         if ($self->{'pkg_src'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
             $self->{'pkg_src'} = $1;
             $self->{'pkg_src_version'} = $2;
-            croak "Two source-versions given (source + source-version)"
+            croak 'Two source-versions given (source + source-version)'
                 if exists $self->{'source-version'};
         } else {
             $rename_field->('source-version', 'pkg_src_version',
@@ -111,7 +111,7 @@ sub new_from_metadata {
         }
         if (not exists $self->{'pkg_path'}) {
             my $fn = delete $self->{'filename'};
-            croak "Missing required \"filename\" field"
+            croak 'Missing required "filename" field'
                 unless defined $fn;
             $self->{'pkg_path'} = "$basepath/$fn";
         }
@@ -133,7 +133,7 @@ sub new_from_metadata {
                 $self->{'pkg_path'} = "$basepath/${dir}$file";
                 last;
             }
-            croak "dsc file not listed in \"Files\""
+            croak 'dsc file not listed in "Files"'
                 unless defined $self->{'pkg_path'};
         }
     } elsif ($pkg_type eq 'changes') {
@@ -141,7 +141,7 @@ sub new_from_metadata {
         $self->{'pkg_src'} = $self->pkg_name;
         $self->{'pkg_src_version'} = $self->pkg_version;
         $rename_field->('architecture', 'pkg_arch');
-        croak ".changes file must have pkg_path set"
+        croak '.changes file must have pkg_path set'
                 unless defined $self->{'pkg_path'};
     } else {
         croak "Unsupported type $pkg_type";
@@ -160,7 +160,7 @@ sub new_from_metadata {
 
 # Shadow Class::Accessor - otherwise you get some very "funny" errors
 # from Class::Accessor if you get the constructor wrong.
-sub new { croak "Not implemented"; }
+sub new { croak 'Not implemented'; }
 
 =back
 
@@ -255,7 +255,7 @@ provide an "info" field.
 sub info {
     my ($self) = @_;
     return $self->{info} if exists $self->{info};
-    croak "Not implemented.\n";
+    croak 'Not implemented.';
 }
 
 =item $proc->clear_cache
