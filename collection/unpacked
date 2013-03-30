@@ -54,10 +54,7 @@ if ($type eq 'source') {
         push @args, '--no-check' if $ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'};
         print "N: Using dpkg-source to unpack $pkg\n" if $ENV{'LINTIAN_DEBUG'};
         unless (spawn ($opts, ['dpkg-source', @args, '-x', "$dir/dsc", "$dir/unpacked"])) {
-            open ERRORS, '<', "$dir/unpacked-errors"
-                or fail("cannot open unpacked-errors: $!");
-            print STDERR while <ERRORS>;
-            close ERRORS;
+            dump_errors ("$dir/unpacked-errors");
             fail('dpkg-source -x failed with status ', $opts->{harness}->result);
         }
     } else {
@@ -81,10 +78,7 @@ if ($type eq 'source') {
             ['dpkg-deb', '--fsys-tarfile', "$dir/deb"],
             '|', ['tar', 'xf', '-', '-C', "$dir/unpacked"]);
     unless ($opts->{success}) {
-        open ERRORS, '<', "$dir/unpacked-errors"
-            or fail("cannot open unpacked-errors: $!");
-        print STDERR while <ERRORS>;
-        close ERRORS;
+        dump_errors ("$dir/unpacked-errors");
         fail('dpkg-deb | tar failed with status ', $opts->{harness}->result);
     }
 
@@ -93,6 +87,15 @@ if ($type eq 'source') {
             ['chmod', '-R', 'u+rwX,go-w', "$dir/unpacked"]);
 }
 
+}
+
+sub dump_errors {
+    my ($file) = @_;
+    open my $fd, '<', $file or fail "cannot open unpacked-errors: $!";
+    while (my $line = <$fd> ) {
+        print STDERR $line;
+    }
+    close $fd;
 }
 
 sub libdpkg_unpack_dsc {

@@ -97,22 +97,21 @@ for my $file (keys %ERRORS) {
     my $tag = $ERRORS{$file};
     my $path = $info->lab_data_path ($file);
     if (-s $path) {
-        open ERRORS, '<', $path or fail "cannot open $file: $!";
-        local $_;
-        while (<ERRORS>) {
-            chomp;
-            s,^(?:[/\w]+/)?tar: ,,;
+        open my $fd, '<', $path or fail "cannot open $file: $!";
+        while ( my $line = <$fd> ) {
+            chomp ($line);
+            $line =~ s,^(?:[/\w]+/)?tar: ,,;
 
             # Record size errors are harmless.  Ignore implausibly old
             # timestamps in the data section since we already check for that
             # elsewhere, but still warn for control.
-            next if /^Record size =/;
+            next if $line =~ /^Record size =/;
             if ($tag eq 'tar-errors-from-data') {
-                next if /implausibly old time stamp/;
+                next if $line =~ /implausibly old time stamp/;
             }
-            tag $tag, $_;
+            tag $tag, $line;
         }
-        close ERRORS;
+        close $fd;
     }
 }
 

@@ -49,7 +49,7 @@ if ( -d "$dir/strings" ) {
     delete_dir ("$dir/strings") or fail "rmdir strings: $!";
 }
 
-open ELF_INDEX, '>', "$dir/elf-index"
+open my $elf_fd, '>', "$dir/elf-index"
     or fail "Could not open 'elf-index' for writing: $!";
 
 # The directory is required, even if it would be empty.
@@ -70,7 +70,7 @@ my $open_strings_pipe = sub {
 foreach my $bin ($info->sorted_index) {
     my $finfo = $info->file_info ($bin);
     next unless $finfo =~ m/\bELF\b/o;
-    print ELF_INDEX "$bin\n";
+    print {$elf_fd} "$bin\n";
 
     next if $bin =~ m,^usr/lib/debug/,;
     if ($bin =~ m/[:\n\r]/) {
@@ -103,7 +103,7 @@ if (@manual) {
                ['strings', "$dir/unpacked/$file"], '|', ['gzip', '-9nc']);
     }
 }
-close(ELF_INDEX) or fail("cannot write elf-index file: $!");
+close $elf_fd or fail "cannot write elf-index file: $!";
 
 }
 

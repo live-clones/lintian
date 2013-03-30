@@ -54,9 +54,9 @@ if ($line) {
 
 # Nag about dh_make Vcs comment only once
 my $seen_vcs_comment = 0;
-open (CONTROL, '<', $dcontrol)
+open my $fd, '<', $dcontrol
     or fail "Couldn't read debfiles/control: $!";
-while (<CONTROL>) {
+while (<$fd>) {
     s/\s*\n$//;
 
     if (m,^\# \s* Vcs-(?:Git|Browser): \s* (?:git|http)://git\.debian\.org/(?:\?p=)?collab-maint/<pkg>\.git,ox) {
@@ -85,7 +85,7 @@ while (<CONTROL>) {
         }
     }
 }
-close CONTROL;
+close $fd;
 
 eval {
     # check we can parse it, but ignore the result - we will fetch

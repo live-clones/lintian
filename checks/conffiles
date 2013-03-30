@@ -41,8 +41,8 @@ return if -l $cf;
 
 if (-f $cf) {
 
-    open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
-    while (<IN>) {
+    open my $fd, '<', $cf or fail "cannot open $cf for reading: $!";
+    while (<$fd>) {
         chop;
         next if m/^\s*$/;
 
@@ -69,7 +69,7 @@ if (-f $cf) {
         }
 
     }
-    close(IN);
+    close $fd;
 
 }
 

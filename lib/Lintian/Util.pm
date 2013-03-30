@@ -700,15 +700,15 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 
 sub get_file_checksum {
     my ($alg, $file) = @_;
-    open (FILE, '<', $file) or fail("Couldn't open $file");
+    open my $fd, '<', $file or fail("Couldn't open $file");
     my $digest;
     if ($alg eq 'md5') {
         $digest = Digest::MD5->new;
     } elsif ($alg =~ /sha(\d+)/) {
         $digest = Digest::SHA->new($1);
     }
-    $digest->addfile(*FILE);
-    close FILE or fail("Couldn't close $file");
+    $digest->addfile($fd);
+    close $fd or fail("Couldn't close $file");
     return $digest->hexdigest;
 }
 
@@ -722,10 +722,10 @@ sub file_is_encoded_in_non_utf8 {
     my ($file, $type, $pkg) = @_;
     my $non_utf8 = 0;
 
-    open (ICONV, '<', $file)
+    open my $fd, '<', $file
         or fail("failure while checking encoding of $file for $type package $pkg");
     my $line = 0;
-    while (<ICONV>) {
+    while (<$fd>) {
         if (m,\e[-!"\$%()*+./],) {
             # ISO-2022
             $line = $.;
@@ -739,7 +739,7 @@ sub file_is_encoded_in_non_utf8 {
             last;
         }
     }
-    close ICONV;
+    close $fd;
 
     return $line;
 }

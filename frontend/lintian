@@ -707,9 +707,9 @@ unless ($no_conf) {
 
 # read configuration file
 if ($opt{'LINTIAN_CFG'}) {
-    open(CFG, '<', $opt{'LINTIAN_CFG'})
+    open my $fd, '<', $opt{'LINTIAN_CFG'}
         or die("cannot open configuration file $opt{'LINTIAN_CFG'} for reading: $!");
-    while (<CFG>) {
+    while (<$fd>) {
         chop;
         s/\#.*$//go;
         s/\"//go;
@@ -765,7 +765,7 @@ if ($opt{'LINTIAN_CFG'}) {
             die "syntax error in configuration file: $_\n";
         }
     }
-    close(CFG);
+    close $fd;
 }
 
 # check permitted values for --color / color

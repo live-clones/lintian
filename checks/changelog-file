@@ -392,12 +392,12 @@ sub check_dch {
     # pesky to replicate.  Demanding a match of $prefix and $suffix ought to
     # be enough to avoid false positives.
 
-    open IN, '<', $path
+    open my $fd, '<', $path
         or fail("cannot find changelog for $type package $pkg");
     my ($prefix, $suffix);
     my $lineno = 0;
     my ($estart, $tstart) = (0, 0);
-    while (<IN>) {
+    while (<$fd>) {
 
         unless ($tstart) {
             $lineno++;
@@ -422,7 +422,7 @@ sub check_dch {
             tag 'debian-changelog-file-contains-obsolete-user-emacs-settings';
         }
     }
-    close IN;
+    close $fd;
     return $lineno;
 }
 

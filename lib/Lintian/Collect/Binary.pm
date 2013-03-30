@@ -300,13 +300,13 @@ sub scripts {
     my $scrf = $self->lab_data_path ('scripts');
     my %scripts;
     local $_;
-    open SCRIPTS, '<', $scrf
+    open my $fd, '<', $scrf
         or fail "cannot open scripts $scrf: $!";
-    while (<SCRIPTS>) {
-        chomp;
+    while ( my $line = <$fd> ) {
         my (%file, $name);
+        chomp ($line);
 
-        m/^(env )?(\S*) (.*)$/o
+        $line =~ m/^(env )?(\S*) (.*)$/o
             or fail("bad line in scripts file: $_");
         ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
 
@@ -315,7 +315,7 @@ sub scripts {
         $file{name} = $name;
         $scripts{$name} = \%file;
     }
-    close SCRIPTS;
+    close $fd;
     $self->{scripts} = \%scripts;
 
     return $self->{scripts};
