@@ -35,7 +35,7 @@ Lintian::Path - Lintian representation of a path entry in a package
 
     my ($name, $type, $dir) = ('lintian', 'source', '/path/to/entry');
     my $info = Lintian::Collect->new ($name, $type, $dir);
-    my $path = $info->index->{'bin/ls'};
+    my $path = $info->index-> ('bin/ls');
     if ($path->is_file) {
        # is file (or hardlink)
        if ($path->is_hardlink) { }
@@ -45,8 +45,11 @@ Lintian::Path - Lintian representation of a path entry in a package
        if ($path->owner eq 'root') { }
        if ($path->group eq 'root') { }
     } elsif ($path->is_symlink) {
-       my $target = $path->link;
-       # is symlink (points to $target)
+       my $resolved = $path->link_resolved;
+       if (defined $resolved) {
+           # is a resolvable symlink (pointing to $target)
+           my $more_info = $info->index-> ($resolved);
+       }
     }
 
 =head1 INSTANCE METHODS

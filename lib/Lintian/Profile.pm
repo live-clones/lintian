@@ -39,12 +39,12 @@ Lintian::Profile - Profile parser for Lintian
 =head1 SYNOPSIS
 
  # Load the debian profile (if available)
- my $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'});
+ my $profile = Lintian::Profile->new ('debian');
  # Load the debian profile using an explicit search path
- $profile = Lintian::Profile->new ('debian', $ENV{'LINTIAN_ROOT'},
+ $profile = Lintian::Profile->new ('debian',
     ['/path/to/alt/root', $ENV{'LINTIAN_ROOT'}]);
  # Load the "default" profile for the current vendor
- $profile = Lintian::Profile->new (undef, $ENV{'LINTIAN_ROOT'});
+ $profile = Lintian::Profile->new;
  foreach my $tag ($profile->tags) {
      print "Enabled tag: $tag\n";
  }
@@ -81,7 +81,7 @@ my %SEC_FIELDS = (
     'severity'    => 1,
     );
 
-=item Lintian::Profile->new($profname[, $ipath])
+=item Lintian::Profile->new ([$profname[, $ipath]])
 
 Creates a new profile from the profile.  $profname is the name of the
 profile and $ipath is a list reference containing containing the path

@@ -38,11 +38,8 @@ Lintian::CollScript - Collection script handle
 
  my $cs = Lintian::CollScript->new ("$ENV{'LINTIAN_ROOT'}/collection/index.desc");
  my $name = $cs->name;
- foreach my $needs (@{ $cs->needs_info }) {
+ foreach my $needs ($cs->needs_info) {
     print "$name needs $needs\n";
- }
- if ($cs->is_check_type ('binary') && $cs->is_check_type ('source')) {
-    # Check applies to binary pkgs AND source pkgs
  }
 
 =head1 DESCRIPTION

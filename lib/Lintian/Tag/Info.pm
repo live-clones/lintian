@@ -56,7 +56,9 @@ Lintian::Tag::Info - Lintian interface to tag metadata
 
 =head1 SYNOPSIS
 
-    my $tag_info = Lintian::Tag::Info->new('some-tag');
+    my $cs = Lintian::CheckScript->new ("$ENV{'LINTIAN_ROOT'}/checks/",
+                                        'files');
+    my $tag_info = $cs->get_tag ('some-tag');
     print "Tag info is:\n";
     print $tag_info->description('text', '   ');
     print "\nTag info in HTML is:\n";

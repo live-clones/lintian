@@ -215,7 +215,7 @@ Lintian::Data - Lintian interface to query lists of keywords
     if ($list->known($keyword)) {
         # do something ...
     }
-    my $hash = Lintian::Data->new('another-type', '\s+');
+    my $hash = Lintian::Data->new('another-type', qr{\s++});
     if ($list->value($keyword) > 1) {
         # do something ...
     }

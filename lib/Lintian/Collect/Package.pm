@@ -34,16 +34,18 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
 =head1 SYNOPSIS
 
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
-    my $collect = Lintian::Collect->new ($name, $type, $dir);
-    my $file;
-    eval { $file = $collect->unpacked ('bin/ls'); };
-    if ( $file && -e $file ) {
-        # work with $file
-        ;
+    my $info = Lintian::Collect->new ($name, $type, $dir);
+    my $filename = "etc/conf.d/$name.conf";
+    my $file = $info->index ($filename);
+    if ($file && $file->is_regular_file) {
+        open my $fd, '<', $info->unpacked ($filename)
+            or die "opening $filename: $!";
+        # Use $fd ...
+        close $fd;
     } elsif ($file) {
-        print "/bin/ls is not available in the Package\n";
+        print "$file is available, but not a regular file\n";
     } else {
-        print "Package has not been unpacked\n";
+        print "$file is missing\n";
     }
 
 =head1 DESCRIPTION

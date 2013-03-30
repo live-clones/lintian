@@ -49,13 +49,15 @@ Lintian::Tags - Manipulate and output Lintian tags
 =head1 SYNOPSIS
 
     my $tags = Lintian::Tags->new;
-    $tags->file_start('/path/to/file', 'pkg', '1.0', 'i386', 'binary');
-    $tags->file_overrides('/path/to/file', 'pkg', 'binary');
-    $tags->tag('lintian-tag', 'data');
-    tag('other-lintian-tag', 'data');
-    my %overrides = $tags->overrides('/path/to/file');
+    my $proc = Lintian::Processable::Package->new ('/path/to/file');
+    $tags->file_start ($proc);
+    $tags->file_overrides ('/path/to/an/overrides-file');
+    $tags->tag ('lintian-tag', 'extra tag information');
+    tag ('other-lintian-tag', 'with some extra data');
+    tag ('third-lintian-tag'); # with no extra).
+    my %overrides = $tags->overrides ($proc);
     my %stats = $tags->statistics;
-    if ($tags->displayed('lintian-tag')) {
+    if ($tags->displayed ('lintian-tag')) {
         # do something if that tag would be displayed...
     }
 
