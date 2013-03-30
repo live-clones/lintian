@@ -25,7 +25,7 @@ use Term::ANSIColor qw(colored);
 use Lintian::Tag::Info ();
 
 use Lintian::Output qw(:util);
-use base qw(Lintian::Output);
+use parent qw(Lintian::Output);
 
 my %codes = (
     'pedantic' => {

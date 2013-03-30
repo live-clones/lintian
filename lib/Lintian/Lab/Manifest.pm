@@ -23,7 +23,7 @@ package Lintian::Lab::Manifest;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor Clone);
+use parent qw(Class::Accessor Clone);
 
 use Carp qw(croak);
 

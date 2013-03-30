@@ -47,7 +47,7 @@ package Lintian::Output::FullEWI;
 use strict;
 use warnings;
 
-use base qw(Lintian::Output);
+use parent qw(Lintian::Output);
 
 # Overridden from Lintian::Output
 sub _format_pkg_info {

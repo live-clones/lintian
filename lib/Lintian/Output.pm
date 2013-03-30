@@ -22,7 +22,7 @@ use strict;
 use warnings;
 
 use v5.8.0; # for PerlIO
-use base qw(Class::Accessor);
+use parent qw(Class::Accessor);
 
 use Exporter qw(import);
 

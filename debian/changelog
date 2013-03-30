@@ -196,6 +196,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       lintian ignore all environment variables starting with LINTIAN_.
     + [NT] Add a new command line option --no-display-experimental.
 
+  * lib/*:
+    + [NT] Use "parent" instead of the "base" pragma.
   * lib/Lintian/Collect.pm:
     + [NT] Add "is_non_free" method to easily check of a given
       package appears to be non-free.

@@ -24,7 +24,7 @@ package Lintian::Lab;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor);
+use parent qw(Class::Accessor);
 
 use Carp qw(croak);
 use Cwd();

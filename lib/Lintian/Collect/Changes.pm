@@ -20,7 +20,7 @@ package Lintian::Collect::Changes;
 
 use strict;
 use warnings;
-use base 'Lintian::Collect';
+use parent 'Lintian::Collect';
 
 use Lintian::Util qw(strip);
 

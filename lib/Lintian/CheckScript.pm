@@ -23,7 +23,7 @@ use warnings;
 
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
-use base 'Class::Accessor';
+use parent 'Class::Accessor';
 
 use Carp qw(croak);
 

@@ -21,7 +21,7 @@ package Lintian::Unpacker;
 use strict;
 use warnings;
 
-use base 'Class::Accessor';
+use parent 'Class::Accessor';
 
 use POSIX;
 

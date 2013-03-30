@@ -21,7 +21,7 @@ package Lintian::CollScript;
 use strict;
 use warnings;
 
-use base 'Class::Accessor';
+use parent 'Class::Accessor';
 
 use Carp qw(croak);
 use File::Basename qw(dirname);

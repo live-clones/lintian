@@ -17,7 +17,7 @@ package Lintian::DepMap::Properties;
 
 use strict;
 use warnings;
-use base 'Lintian::DepMap';
+use parent 'Lintian::DepMap';
 
 =head1 NAME
 

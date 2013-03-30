@@ -21,7 +21,7 @@ package Lintian::Collect::Package;
 
 use strict;
 use warnings;
-use base 'Lintian::Collect';
+use parent 'Lintian::Collect';
 
 use Carp qw(croak);
 use Lintian::Path;

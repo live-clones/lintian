@@ -19,7 +19,7 @@
 ## Represents something Lintian can process (e.g. a deb, dsc or a changes)
 package Lintian::Processable::Package;
 
-use base qw(Lintian::Processable Class::Accessor);
+use parent qw(Lintian::Processable Class::Accessor);
 
 use strict;
 use warnings;

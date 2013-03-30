@@ -54,7 +54,7 @@ our @EXPORT = qw(
     test_tags_implemented
 );
 
-use base 'Test::Builder::Module';
+use parent 'Test::Builder::Module';
 
 use File::Find ();
 use Cwd qw(realpath);

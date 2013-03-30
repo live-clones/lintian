@@ -18,7 +18,7 @@ package Lintian::DepMap;
 use strict;
 use warnings;
 
-use base 'Clone';
+use parent 'Clone';
 
 use Lintian::Util qw(fail);
 

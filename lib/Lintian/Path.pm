@@ -21,7 +21,7 @@ package Lintian::Path;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor);
+use parent qw(Class::Accessor);
 
 use Carp qw(croak);
 

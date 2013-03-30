@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Output qw(:util);
-use base qw(Lintian::Output);
+use parent qw(Lintian::Output);
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
