@@ -48,7 +48,7 @@ if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
 }
 
 if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
-    open (GITPATCHES, "$dsrc/git-patches")
+    open GITPATCHES, '<', "$dsrc/git-patches"
         or fail("cannot open debian/source/git-patches: $!");
     if (grep !/^\s*+#|^\s*+$/o, <GITPATCHES>) {
         my $dpseries = $info->debfiles('patches/series');
@@ -58,7 +58,7 @@ if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
             if (! -r $dpseries ) {
                 tag 'git-patches-not-exported';
             } else {
-                open (DEBSERIES, $dpseries)
+                open DEBSERIES, '<', $dpseries
                     or fail("cannot open debian/patches/series: $!");
                 my $comment_line = <DEBSERIES>;
                 my $count = grep !/^\s*+\#|^\s*+$/o, <DEBSERIES>;

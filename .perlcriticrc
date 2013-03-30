@@ -8,8 +8,8 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture
-#include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen QuotedWordLists
+include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture TwoArgOpen
+#include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches EndWithOne ConditionalUseStatements QuotedWordLists
 
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
