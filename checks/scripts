@@ -245,7 +245,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # Skip files that have the #! line, but are not executable and do not have
     # an absolute path and are not in a bin/ directory (/usr/bin, /bin etc)
     # They are probably not scripts after all.
-    next if ($filename !~ m,(bin/|etc/init\.d/), and !$executable{$filename}
+    next if ($filename !~ m,(?:bin/|etc/init\.d/), and !$executable{$filename}
              and !$is_absolute and !$in_examples);
 
     # Example directories sometimes contain Perl libraries, and some people
@@ -266,9 +266,9 @@ for my $filename (sort keys %{$info->scripts}) {
         unless $is_absolute;
     tag 'script-not-executable', $filename
         unless ($executable{$filename}
-                or $filename =~ m,^usr/(lib|share)/.*\.pm,
-                or $filename =~ m,^usr/(lib|share)/.*\.py,
-                or $filename =~ m,^usr/(lib|share)/ruby/.*\.rb,
+                or $filename =~ m,^usr/(?:lib|share)/.*\.pm,
+                or $filename =~ m,^usr/(?:lib|share)/.*\.py,
+                or $filename =~ m,^usr/(?:lib|share)/ruby/.*\.rb,
                 or $filename =~ m,^usr/share/debconf/confmodule(?:\.sh)?$,
                 or $filename =~ m,\.in$,
                 or $filename =~ m,\.erb$,
@@ -295,7 +295,7 @@ for my $filename (sort keys %{$info->scripts}) {
             and $filename !~ m,\.dpatch$,
             and $filename !~ m,\.erb$,
             # exclude some shells. zsh -n is broken, see #485885
-            and $base !~ m/^(z|t?c)sh$/) {
+            and $base !~ m/^(?:z|t?c)sh$/) {
 
             if (check_script_syntax($interpreter, $path)) {
                 script_tag('shell-script-fails-syntax-check', $filename);
@@ -573,11 +573,11 @@ while (<SCRIPTS>) {
             $has_code = 1;
         }
 
-        if ($shellscript && m,${LEADIN}set\s*(\s+-(-.*|[^e]+))*\s-\w*e,) {
+        if ($shellscript && m,${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e,) {
             $saw_sete = 1;
         }
 
-        if (m,[^\w]((/var)?/tmp|\$TMPDIR)/[^)\]}\s], and not m/\bmks?temp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/ and not m/\$RANDOM/) {
+        if (m,[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]}\s], and not m/\bmks?temp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/ and not m/\$RANDOM/) {
             tag 'possibly-insecure-handling-of-tmp-files-in-maintainer-script', "$file:$."
                 unless $warned{tmp};
             $warned{tmp} = 1;
@@ -596,7 +596,7 @@ while (<SCRIPTS>) {
         # doesn't exist, only tag direct invocations where invoke-rc.d is
         # never used in the same script.  Lots of false negatives, but
         # hopefully not many false positives.
-        if (m%^\s*/etc/init\.d/(\S+)\s+[\"\']?(\S+)[\"\']?%) {
+        if (m%^\s*/etc/init\.d/(?:\S+)\s+[\"\']?(?:\S+)[\"\']?%) {
             $saw_init = $.;
         }
         if (m%^\s*invoke-rc\.d\s+%) {
@@ -622,7 +622,7 @@ while (<SCRIPTS>) {
                 # detect source (.) trying to pass args to the command it runs
                 # The first expression weeds out '. "foo bar"'
                 if (not $found and
-                    not m/^\s*\.\s+(\"[^\"]+\"|\'[^\']+\')\s*(\&|\||\d?>|<|;|\Z)/
+                    not m/^\s*\.\s+(?:\"[^\"]+\"|\'[^\']+\')\s*(?:\&|\||\d?>|<|;|\Z)/
                     and m/^\s*(\.\s+[^\s;\`:]+\s+([^\s;]+))/) {
 
                     my $extra;
@@ -713,7 +713,7 @@ while (<SCRIPTS>) {
                     tag 'start-stop-daemon-in-maintainer-script', "$file:$.";
                 }
                 # Don't use chown foo.bar
-                if (/(chown(\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+/) {
+                if (/(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+/) {
                     tag 'deprecated-chown-usage', "$file:$. \'$1\'";
                 }
                 if (/invoke-rc.d.*\|\| exit 0/) {
@@ -733,13 +733,13 @@ while (<SCRIPTS>) {
                         tag 'maintainer-script-removes-device-files', "$file:$.";
                     }
                 }
-                if (m,>\s*(/etc/(?:services|protocols|rpc))(\s|\Z),) {
+                if (m,>\s*(/etc/(?:services|protocols|rpc))(?:\s|\Z),) {
                     tag 'maintainer-script-modifies-netbase-managed-file', "$file:$. $1";
                 }
                 if (m,^\s*(?:cp|mv)\s.*(/etc/(?:services|protocols|rpc))\s*$,) {
                     tag 'maintainer-script-modifies-netbase-managed-file', "$file:$. $1";
                 }
-                if (m,>\s*/etc/inetd\.conf(\s|\Z),) {
+                if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
                     tag 'maintainer-script-modifies-inetd-conf', "$file:$."
                         unless $info->relation('provides')->implies('inet-superserver');
                 }
@@ -747,7 +747,7 @@ while (<SCRIPTS>) {
                     tag 'maintainer-script-modifies-inetd-conf', "$file:$."
                         unless $info->relation('provides')->implies('inet-superserver');
                 }
-                if (m,>\s*/etc/ld\.so\.conf(\s|\Z),) {
+                if (m,>\s*/etc/ld\.so\.conf(?:\s|\Z),) {
                     tag 'maintainer-script-modifies-ld-so-conf', "$file:$."
                         unless $pkg =~ /^libc/;
                 }
@@ -765,7 +765,7 @@ while (<SCRIPTS>) {
                 }
 
                 # Commands that should not be used in maintainer scripts.
-                if (m,${LEADIN}(?:/usr/bin/)?fc-cache(\s|\Z),) {
+                if (m,${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z),) {
                     tag 'fc-cache-used-in-maintainer-script', "$file:$.";
                 }
 
@@ -780,7 +780,7 @@ while (<SCRIPTS>) {
                 # then check it for bashisms.
                 while (m,\`([^\`]+)\`,g) {
                     my $cmd = $1;
-                    if ($cmd =~ m,$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|\z),) {
+                    if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|\z),) {
                         tag 'command-with-path-in-maintainer-script',
                             "$file:$. $1";
                     }
@@ -803,7 +803,7 @@ while (<SCRIPTS>) {
             for my $rule (@depends_needed) {
                 my ($package, $regex) = @$rule;
                 if ($pkg ne $package and /$regex/ and ! $warned{$package}) {
-                    if (m,-x\s+\S*$regex, or m,(which|type)\s+$regex, or m,command\s+.*?$regex,) {
+                    if (m,-x\s+\S*$regex, or m,(?:which|type)\s+$regex, or m,command\s+.*?$regex,) {
                         $warned{$package} = 1;
                     } elsif (!/\|\|\s*true\b/) {
                         unless ($info->relation('strong')->implies($package)) {
@@ -816,7 +816,7 @@ while (<SCRIPTS>) {
                 }
             }
         }
-        if (m,\bgconftool(-2)?(\s|\Z),) {
+        if (m,\bgconftool(?:-2)?(?:\s|\Z),) {
             tag 'gconftool-used-in-maintainer-script', "$file:$.";
         }
         if (m,\binstall-sgmlcatalog\b, && !(m,--remove, && ($file eq 'prerm' || $file eq 'postinst'))) {
@@ -1025,7 +1025,7 @@ sub script_is_evil_and_wrong {
         last if (++$i > 55);
         if (m~
             # the exec should either be "eval"ed or a new statement
-            (^\s*|\beval\s*[\'\"]|(;|&&|\b(then|else))\s*)
+            (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
 
             # eat anything between the exec and $0
             exec\s*.+\s*
@@ -1034,7 +1034,7 @@ sub script_is_evil_and_wrong {
             .?\$$var.?\s*
 
             # optional "end of options" indicator
-            (--\s*)?
+            (?:--\s*)?
 
             # Match expressions of the form '${1+$@}', '${1:+"$@"',
             # '"${1+$@', "$@", etc where the quotes (before the dollar
@@ -1044,7 +1044,7 @@ sub script_is_evil_and_wrong {
             # Finally the whole subexpression may be omitted for scripts
             # which do not pass on their parameters (i.e. after re-execing
             # they take their parameters (and potentially data) from stdin
-            .?(\${1:?\+.?)?(\$(\@|\*))?~x) {
+            .?(?:\${1:?\+.?)?(?:\$[\@\*])?~x) {
             $ret = 1;
             last;
         } elsif (/^\s*(\w+)=\$0;/) {
@@ -1056,14 +1056,14 @@ sub script_is_evil_and_wrong {
 
             # As above
             .?\$$var.?\s*
-            (--\s*)?
-            .?(\${1:?\+.?)?(\$(\@|\*))?.?\s*\&~x) {
+            (?:--\s*)?
+            .?(?:\${1:?\+.?)?(?:\$[\@\*])?.?\s*\&~x) {
 
             $backgrounded = 1;
         } elsif ($backgrounded and m~
             # the exec should either be "eval"ed or a new statement
-            (^\s*|\beval\s*[\'\"]|(;|&&|\b(then|else))\s*)
-            exec\s+true(\s|\Z)~x) {
+            (?:^\s*|\beval\s*[\'\"]|(?:;|&&|\b(?:then|else))\s*)
+            exec\s+true(?:\s|\Z)~x) {
 
             $ret = 1;
             last;
@@ -1106,8 +1106,9 @@ sub remove_comments {
     # eat it. In either case, swap the unmodified script line
     # back in for processing (if required) and return it.
     if (m/(?:^|[^[\\])[\s\&;\(\)](\#.*$)/) {
+        my $comment = $1;
         $_ = $line;
-        s/\Q$1\E//;  # eat comments
+        s/\Q$comment\E//;  # eat comments
     } else {
         $_ = $line;
     }

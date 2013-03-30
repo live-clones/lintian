@@ -43,9 +43,9 @@ open ARINFO, '<', $info->lab_data_path ('ar-info')
 while (<ARINFO>) {
     chomp;
     if (/^(?:\.\/)?([^:]+): (.*)$/) {
-        my $filename = $1;
+        my ($filename, $contents) = ($1, $2);
         my $dirname = dirname($filename);
-        foreach (split(m/ /o, $2)) {
+        foreach (split m/ /o, $contents) {
             # Note: a .o may be legitimately in several different .a
             $provided_o{"$dirname/$_"} = $filename;
         }

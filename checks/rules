@@ -262,12 +262,13 @@ while (<RULES>) {
     }
 
     if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/s) {
-        @current_targets = split (' ', $1);
+        my ($target_names, $target_dependencies) = ($1, $2);
+        @current_targets = split ' ', $target_names;
         my @depends = map {
             $_ = quotemeta $_;
             s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g;
             qr/^$_$/;
-        } split (' ', $2);
+        } split (' ', $target_dependencies);
         for my $target (@current_targets) {
             if ($target =~ m/%/o) {
                 my $pattern = quotemeta $target;

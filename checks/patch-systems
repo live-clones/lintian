@@ -123,17 +123,18 @@ sub run {
             if (open(IN, '<', "$dpdir/series")) {
                 my @patches;
                 my @badopts;
-                while(<IN>) {
-                    strip; # Strip leading/trailing spaces
-                    s/(^|\s+)#.*$//; # Strip comment
-                    next unless $_;
-                    if (/^(\S+)\s+(\S.*)$/) {
-                        $_ = $1;
-                        if ($2 ne '-p1') {
-                            push @badopts, $_;
+                while (my $patch = <IN>) {
+                    strip ($patch); # Strip leading/trailing spaces
+                    $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
+                    next unless $patch;
+                    if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
+                        my $patch_options;
+                        ($patch, $patch_options) = ($1, $2);
+                        if ($patch_options ne '-p1') {
+                            push @badopts, $patch;
                         }
                     }
-                    push @patches, $_;
+                    push @patches, $patch;
                 }
                 close(IN);
                 if (scalar(@badopts)) {
@@ -157,7 +158,7 @@ sub run {
                             last if /^---/;
                             next if /^\s*$/;
                             # Skip common "lead-in" lines
-                            $has_description = 1 unless (/^(Index: |=+$|diff .+|index )/);
+                            $has_description = 1 unless m{^(?:Index: |=+$|diff .+|index )};
                         }
                         close(PATCH_FILE);
                         unless ($has_description) {

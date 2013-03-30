@@ -57,7 +57,7 @@ for my $file (readdir(DEB)) {
             my $in_template = 0;
             while (<PO>) {
                 tag 'translated-default-field', "$file: $."
-                    if (m/^_Default(Choice)?: [^\[]*$/);
+                    if (m{^_Default(?:Choice)?: [^\[]*$});
                 tag 'untranslatable-debconf-templates', "$file: $."
                     if (m/^Description: (.+)/i and $1 !~/for internal use/);
                 if (/^Template: (\S+)/i) {

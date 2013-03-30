@@ -165,7 +165,8 @@ while (<RULES>) {
         $needbuilddepends = 1;
         $needtomodifyscripts = 1;
         while (m/\s--with(?:=|\s+)(\S+)/go) {
-            for my $addon (split(m/,/o, $1)) {
+            my $addon_list = $1;
+            for my $addon (split(m/,/o, $addon_list)) {
                 $addon =~ y,-,_,;
                 my $depends =
                     $dh_addons_manual->value($addon) ||
