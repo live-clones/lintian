@@ -124,7 +124,6 @@ while (<>) {
     s,</span>,,g;
 
     my $tag;
-    my $type;
     if ($annotate) {
         my $tagdata;
         next unless m/^(?:                         # start optional part

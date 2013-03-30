@@ -121,7 +121,6 @@ sub new_from_metadata {
         $self->{'pkg_arch'} = 'source';
         if (not exists $self->{'pkg_path'}) {
             my $fn = delete $self->{'files'};
-            my $dsc;
             my $dir = delete $self->{'directory'};
             $dir .= '/' if defined $dir;
             $dir //= '';

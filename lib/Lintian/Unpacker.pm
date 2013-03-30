@@ -474,7 +474,6 @@ sub process_tasks {
         while (my ($pid, $job_data) = wait_any ($running_jobs, $nohang)) {
             my $status = $?;
             my ($cs, $cmap, $lpkg) = @$job_data;
-            my $res;
             my $procid = $lpkg->identifier;
 
             $coll_hook->($lpkg, 'finish', $cs, $pid, $status)

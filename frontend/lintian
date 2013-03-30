@@ -118,11 +118,9 @@ my $checks;
 my $check_tags;
 my $dont_check;
 my @unpack_info;
-my $cwd;
 my $exit_code = 0;
 my $LAB;
 
-my %check_abbrev;
 my %extra_unpack;
 my %unpack_options;
 my @auto_remove = ();

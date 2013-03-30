@@ -336,7 +336,7 @@ sub objdump_info {
     return $self->{objdump_info} if exists $self->{objdump_info};
     my $objf = $self->lab_data_path ('objdump-info.gz');
     my %objdump_info;
-    my ($dynsyms, $file);
+    my $file;
     local $_;
     my $fd = open_gz ($objf)
         or fail "cannot open $objf: $!";

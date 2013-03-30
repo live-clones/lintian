@@ -537,7 +537,6 @@ sub file_overrides {
             my ($opkg_name, $archlist, $opkg_type, $tagdata) = ($1, $2, $3, $4);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
             my $tagover;
-            my $com;
             my $data;
             if ($opkg_type and $opkg_type ne $info->{type}) {
                 tag 'malformed-override',
