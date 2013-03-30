@@ -38,8 +38,6 @@ sub should_skip() {
     my $skip = 1;
     my $pid;
 
-    return $skip unless (defined ($ENV{'CRITICISE'}));
-
     $pid = open (DPKG, '-|', 'dpkg-parsechangelog', '-c0');
 
     die("failed to execute dpkg-parsechangelog: $!")

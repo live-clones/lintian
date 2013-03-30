@@ -1,3 +1,4 @@
+# -*- conf -*-
 # FIXME: the list of checks should probably be moved to
 # t/scripts/critic.pl. Line continuations are not supported here
 
@@ -7,7 +8,7 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements
+#include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements
 
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
