@@ -469,7 +469,7 @@ B<--no-user-dirs> (and B<--user-dirs>, respectively).
 These options will I<not> affect the inclusion of LINTIAN_ROOT, which
 is always included.
 
-These option can appear multiple times, in which case the of them
+These option can appear multiple times, in which case the last of them
 to appear determines the result.
 
 Note that if the intention is only to disable the user's I<$HOME>,
@@ -594,10 +594,6 @@ Supporting data used by Lintian checks and for output formatting.
 =item I</usr/share/lintian/lib>
 
 Utility scripts used by the other lintian scripts.
-
-=item I</usr/share/lintian/unpack>
-
-Scripts that manage the I<laboratory>.
 
 =back
 
