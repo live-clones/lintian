@@ -22,6 +22,8 @@ package Lintian::java;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any none);
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(resolve_pkg_path);
 
@@ -102,7 +104,7 @@ for my $jar_file (sort keys %{$java_info}) {
     }
 
     $datafiles = 0
-        unless grep m/\.(?:xml|properties|x?html|xhp)$/io, keys %$files;
+        if none { m/\.(?:xml|properties|x?html|xhp)$/io } keys %$files;
 
     if($operm & 0111) {
         # Executable ?
@@ -141,7 +143,7 @@ for my $jar_file (sort keys %{$java_info}) {
         $need_cp = 0 if $bsname;
         # Maybe it is a maven plugin?
         $need_cp = 0 if $need_cp
-            && grep { m,^META-INF/maven/plugin.xml$,io } keys %$files;
+            && any { m,^META-INF/maven/plugin.xml$,io } keys %$files;
     } else {
         # Only run the tests when a classpath is present
         my @relative = ();
@@ -212,7 +214,7 @@ if($has_jars && $need_cp) {
 
 if(! $has_public_jars && $pkg =~ /^lib[^\s,]+-java$/) {
     # Skip this if it installs a symlink in usr/share/java
-    return if grep m@^usr/share/java/[^/]+\.jar$@o, $info->sorted_index;
+    return if any { m@^usr/share/java/[^/]+\.jar$@o } $info->sorted_index;
     tag 'javalib-but-no-public-jars';
 }
 

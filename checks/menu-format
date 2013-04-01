@@ -36,11 +36,12 @@ package Lintian::menu_format;
 use strict;
 use warnings;
 
+use File::Basename;
+use List::MoreUtils qw(any);
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
-
-use File::Basename;
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags=qw(needs section title command);
@@ -770,7 +771,7 @@ sub VerifyCmd {
             || $info->index ($cmd_file)
             || $cmd =~ m,^(/bin/)?sh,
             || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
-            || grep { $info->index ($_ . $cmd) } @path);
+            || any { $info->index ($_ . $cmd) } @path);
     return ($okay, $cmd_file);
 }
 

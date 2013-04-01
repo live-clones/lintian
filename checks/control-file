@@ -22,6 +22,7 @@ package Lintian::control_file;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
 use List::Util qw(first);
 
 use Lintian::Data ();
@@ -283,7 +284,7 @@ sub check_dev_depends {
         # If there are any alternatives here, something special is
         # going on.  Assume that the maintainer knows what they're
         # doing.  Otherwise, separate out just the versions.
-        next if grep { /\|/ } @depends;
+        next if any { /\|/ } @depends;
         my @versions = sort map {
             if (/^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
                 $1;

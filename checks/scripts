@@ -26,6 +26,8 @@ package Lintian::scripts;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
@@ -997,7 +999,7 @@ for my $divert (keys %added_diversions) {
 
     if ($expand_diversions) {
         tag 'diversion-for-unknown-file', $divert, "$script:$line"
-            unless (grep { $_ =~ m/$divertrx/ } $info->sorted_index);
+            unless (any { $_ =~ m/$divertrx/ } $info->sorted_index);
     } else {
         tag 'diversion-for-unknown-file', $divert, "$script:$line"
             unless $info->index ($divert);

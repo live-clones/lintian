@@ -168,6 +168,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to work around #677530.
     + [NT] Add XS-Testsuite for autopkgtest tests.
     + [NT] Add Build-Depends on libtest-perl-critic-perl.
+    + [NT] Add (Build-)Depends on liblist-moreutils-perl.
   * debian/lintian.install:
     + [NT] Install Test::Lintian in /usr/share/lintian/lib.
   * debian/rules:

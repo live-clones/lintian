@@ -22,6 +22,8 @@ package Lintian::duplicate_files;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Tags qw(tag);
 
 sub run {
@@ -52,7 +54,7 @@ foreach my $file ($info->sorted_index){
 foreach my $hash (keys %hashmap){
     my @files = @{ $hashmap{$hash} };
     next if scalar(@files) < 2;
-    if (grep { m,changelog,io} @files) {
+    if (any { m,changelog,io} @files) {
         tag 'duplicate-changelog-files', sort @files;
     } else {
         tag 'duplicate-files', sort @files;

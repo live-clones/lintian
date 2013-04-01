@@ -22,6 +22,8 @@ package Lintian::init_d;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any none);
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
@@ -184,7 +186,7 @@ opendir INITD, $initd_dir
     or fail "cannot read init.d directory: $!";
 for my $script (readdir(INITD)) {
     my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
-    next if grep {$script eq $_} qw(. .. README skeleton rc rcS);
+    next if any {$script eq $_} qw(. .. README skeleton rc rcS);
 
     my $script_path = "$initd_dir/$script";
 
@@ -352,7 +354,7 @@ sub check_init {
         if (length($stop) > 0 and $stop ne '0 1 6') {
             my $base = $initd_file;
             $base =~ s,.*/,,;
-            unless (grep { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
+            if (none { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
                 my @missing = grep { !defined $stop{$_} } qw(0 1 6);
                 tag 'init.d-script-possible-missing-stop', "etc/init.d/${initd_file}",
                     @missing;
@@ -384,13 +386,13 @@ sub check_init {
     if (defined $lsb{'default-start'} && length($lsb{'default-start'})) {
         my @required = split(' ', $lsb{'required-start'} || '');
         if ($needs_fs{remote}) {
-            unless (grep { /^\$(?:remote_fs|all)\z/ } @required) {
+            if (none { /^\$(?:remote_fs|all)\z/ } @required) {
                 tag 'init.d-script-missing-dependency-on-remote_fs',
                     "etc/init.d/${initd_file}: required-start";
             }
         }
         if ($needs_fs{local}) {
-            unless (grep { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
+            if (none { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
                 tag 'init.d-script-missing-dependency-on-local_fs',
                     "etc/init.d/${initd_file}: required-start";
             }
@@ -399,13 +401,13 @@ sub check_init {
     if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
         my @required = split(' ', $lsb{'required-stop'} || '');
         if ($needs_fs{remote}) {
-            unless (grep { /^(?:\$remote_fs|\$all|umountnfs)\z/ } @required) {
+            if (none { /^(?:\$remote_fs|\$all|umountnfs)\z/ } @required) {
                 tag 'init.d-script-missing-dependency-on-remote_fs',
                     "etc/init.d/${initd_file}: required-stop";
             }
         }
         if ($needs_fs{local}) {
-            unless (grep { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ } @required) {
+            if (none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ } @required) {
                 tag 'init.d-script-missing-dependency-on-local_fs',
                     "etc/init.d/${initd_file}: required-stop";
             }

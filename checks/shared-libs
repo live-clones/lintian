@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use File::Basename;
+use List::MoreUtils qw(any none);
 
 use Lintian::Data;
 use Lintian::Relation;
@@ -126,7 +127,7 @@ for my $cur_file ($info->sorted_index) {
         }
 
         my @symbol_names = map { @{$_}[2] } @{$objdump->{$cur_file}->{SYMBOLS}};
-        if ((grep /^_?exit$/, @symbol_names) && (!grep $_ eq 'fork', @symbol_names)) {
+        if ((any { m/^_?exit$/ } @symbol_names) && (none { $_ eq 'fork' } @symbol_names)) {
             # If it has an INTERP section it might be an application with
             # a SONAME (hi openjdk-6, see #614305).  Also see the comment
             # for "shlib-with-executable-bit" below.

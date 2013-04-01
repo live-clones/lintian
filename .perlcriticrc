@@ -24,6 +24,8 @@ criticism-fatal = 1
 color = 1
 allow-unsafe = 1
 
+[BuiltinFunctions::ProhibitBooleanGrep]
+
 [ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 allow_if_string_contains_single_quote = 1
 

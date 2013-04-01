@@ -23,6 +23,7 @@ package Lintian::source_copyright;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
 use Lintian::Relation::Version qw(versions_compare);
@@ -211,7 +212,7 @@ if (@dep5) {
     }
     if ($commas_in_files) {
         tag 'comma-separated-files-in-dep5-copyright', 'paragraph at line', $lines[$commas_in_files]
-            unless grep(/,/, $info->sorted_index);
+            unless any {m/,/} $info->sorted_index;
     }
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {

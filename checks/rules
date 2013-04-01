@@ -17,6 +17,8 @@ package Lintian::rules;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail rstrip);
@@ -300,7 +302,7 @@ while (<RULES>) {
                 $seen{$target}++ if $required{$target};
                 $seen{$target}++ if $recommended{$target};
             }
-            if (grep { $target =~ /$_/ } @arch_rules) {
+            if (any { $target =~ /$_/ } @arch_rules) {
                 push (@arch_rules, @depends);
             }
         }
@@ -320,8 +322,8 @@ while (<RULES>) {
             for my $target (@current_targets) {
                 $rules_per_target{$target} ||= [];
                 push @{$rules_per_target{$target}}, $_;
-                $arch = 1 if (grep { $target =~ /$_/ } @arch_rules);
-                $indep = 1 if (grep { $target =~ /$_/ } @indep_rules);
+                $arch = 1 if (any { $target =~ /$_/ } @arch_rules);
+                $indep = 1 if (any { $target =~ /$_/ } @indep_rules);
                 $indep = 1 if $target eq '%';
                 $indep = 1 if $target =~ /^override_/;
             }

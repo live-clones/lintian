@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Exporter qw(import);
+use List::MoreUtils qw(any);
 
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
@@ -738,7 +739,7 @@ sub displayed {
     # of this tag occur in display_source.
     if (keys %{ $self->{display_source} }) {
         my @sources = $info->sources;
-        unless (grep { $self->{display_source}{$_} } @sources) {
+        unless (any { $self->{display_source}{$_} } @sources) {
             $display = 0;
         }
     }

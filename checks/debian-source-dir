@@ -22,6 +22,8 @@ package Lintian::debian_source_dir;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
@@ -50,7 +52,7 @@ if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
 if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
     open GITPATCHES, '<', "$dsrc/git-patches"
         or fail("cannot open debian/source/git-patches: $!");
-    if (grep !/^\s*+#|^\s*+$/o, <GITPATCHES>) {
+    if (any { !/^\s*+#|^\s*+$/o} <GITPATCHES>) {
         my $dpseries = $info->debfiles('patches/series');
         # gitpkg does not create series as a link, so this is most likely
         # a traversal attempt.

@@ -22,6 +22,9 @@ package Lintian::nmu;
 use strict;
 use warnings;
 
+use List::MoreUtils qw(any);
+use List::Util qw(first);
+
 use Lintian::Tags qw(tag);
 
 sub run {
@@ -46,7 +49,7 @@ my ($entry) = $info->changelog->data;
 my $uploader = canonicalize($entry->Maintainer);
 my $changes = $entry->Changes;
 $changes =~ s/^(\s*\n)+//;
-my $firstline = (grep /^\s*\*/, split('\n', $changes))[0];
+my $firstline = first { /^\s*\*/ } split ('\n', $changes);
 
 # Check the first line for QA, NMU or team upload mentions.
 if ($firstline) {
@@ -89,7 +92,7 @@ if ($version =~ /local/i) {
 my $upload_is_nmu = $uploader ne $maintainer;
 if (defined $uploaders) {
     my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/, $uploaders;
-    $upload_is_nmu = 0 if grep /^\s*\Q$uploader\E\s*$/, @uploaders;
+    $upload_is_nmu = 0 if any { /^\s*\Q$uploader\E\s*$/ } @uploaders;
 }
 
 if ($maintainer =~ /packages\@qa.debian.org/) {

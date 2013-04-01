@@ -22,12 +22,13 @@ package Lintian::manpages;
 use strict;
 use warnings;
 
+use File::Basename;
+use List::MoreUtils qw(any none);
+use Text::ParseWords ();
+
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env fail open_gz);
-
-use Text::ParseWords ();
-use File::Basename;
 
 sub run {
 
@@ -369,7 +370,7 @@ foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
 
 for my $f (sort keys %binary) {
     if (exists $manpage{$f}) {
-        if (not grep { $_->{lang} eq '' } @{$manpage{$f}}) {
+        if (none { $_->{lang} eq '' } @{$manpage{$f}}) {
             tag 'binary-without-english-manpage', "$binary{$f}";
         }
     } else {

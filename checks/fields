@@ -27,6 +27,7 @@ use strict;
 use warnings;
 
 use Dpkg::Version qw(version_check);
+use List::MoreUtils qw(any true);
 
 use Lintian::Architecture qw(:all);
 use Lintian::Data ();
@@ -394,7 +395,7 @@ for my $f (qw(maintainer uploaders)) {
                 split />\K\s*,\s*/, $maintainer;
             for my $uploader (@uploaders) {
                 check_maintainer($uploader, 'uploader');
-                if ( ((grep { $_ eq $uploader } @uploaders) > 1) and
+                if ( ((true { $_ eq $uploader } @uploaders) > 1) and
                      ($duplicate_uploaders{$uploader}++ == 0)) {
                     tag 'duplicate-uploader', $uploader;
                 }
@@ -610,7 +611,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 
         my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs, @seen_libpngs);
 
-        my $is_dep_field = sub { grep { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
+        my $is_dep_field = sub { any { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
 
         tag 'alternates-not-allowed', $field
             if ($data =~ /\|/ && ! &$is_dep_field($field));
@@ -665,7 +666,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
                     if ($field eq 'conflicts' && $d_version->[0]);
 
                 tag 'obsolete-relation-form', "$field: $part_d_orig"
-                    if ($d_version && grep { $d_version->[0] eq $_ } ('<', '>'));
+                    if ($d_version && any { $d_version->[0] eq $_ } ('<', '>'));
 
                 tag 'bad-version-in-relation', "$field: $part_d_orig"
                     if ($d_version->[0] && ! version_check($d_version->[1]));
@@ -809,7 +810,7 @@ if ($type eq 'source') {
     tag 'build-depends-indep-without-arch-indep'
         if (defined $info->field('build-depends-indep') && $arch_indep_packages == 0);
 
-    my $is_dep_field = sub { grep { $_ eq $_[0] } qw(build-depends build-depends-indep) };
+    my $is_dep_field = sub { any { $_ eq $_[0] } qw(build-depends build-depends-indep) };
 
     my %depend;
     for my $field (qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)) {
@@ -972,7 +973,7 @@ if (defined $info->field('python-version')) {
 
     my @pyversion = split(/\s*,\s*/, $pyversion);
     if (@pyversion > 2) {
-        if (grep { !/^\d+\.\d+$/ } @pyversion) {
+        if (any { !/^\d+\.\d+$/ } @pyversion) {
             tag 'malformed-python-version', $pyversion;
         }
     } else {
@@ -1020,7 +1021,7 @@ while (my ($vcs, $splitter) = each %VCS_EXTRACT) {
                     tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
                 }
             }
-            if (grep { $_ and /\s/} @parts) {
+            if (any { $_ and /\s/} @parts) {
                 tag 'vcs-field-has-unexpected-spaces', "vcs-$vcs", $uri;
             }
         }

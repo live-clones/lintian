@@ -22,13 +22,15 @@ package Lintian::changelog_file;
 use strict;
 use warnings;
 
+use Encode qw(decode);
+use List::Util qw(first);
+use List::MoreUtils qw(any);
+use Parse::DebianChangelog;
+
+use Lintian::Check qw(check_spelling);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
-use Lintian::Check qw(check_spelling);
 use Lintian::Util qw(fail file_is_encoded_in_non_utf8);
-
-use Encode qw(decode);
-use Parse::DebianChangelog;
 
 sub run {
 
@@ -165,12 +167,11 @@ $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
 # case, both vars are false
 
 if ($native_pkg) {
-    my @foo;
     # native Debian package
-    if (grep m/^changelog(?:\.gz)?$/,@doc_files) {
+    if (any { m/^changelog(?:\.gz)?$/} @doc_files) {
         # everything is fine
-    } elsif (@foo = grep m/^changelog\.debian(?:\.gz)$/i,@doc_files) {
-        tag 'wrong-name-for-changelog-of-native-package', "usr/share/doc/$pkg/$foo[0]";
+    } elsif (my $chg = first { m/^changelog\.debian(?:\.gz)$/i} @doc_files) {
+        tag 'wrong-name-for-changelog-of-native-package', "usr/share/doc/$pkg/$chg";
     } else {
         tag 'changelog-file-missing-in-native-package';
     }
@@ -179,7 +180,7 @@ if ($native_pkg) {
 
     # 1. check for upstream changelog
     my $found_upstream_text_changelog = 0;
-    if (grep m/^changelog(\.html)?(?:\.gz)?$/,@doc_files) {
+    if (any { m/^changelog(\.html)?(?:\.gz)?$/ } @doc_files) {
         $found_upstream_text_changelog = 1 unless $1;
         # everything is fine
     } else {
@@ -198,10 +199,10 @@ if ($native_pkg) {
     }
 
     # 2. check for Debian changelog
-    if (grep m/^changelog\.Debian(?:\.gz)?$/,@doc_files) {
+    if (any { m/^changelog\.Debian(?:\.gz)?$/ } @doc_files) {
         # everything is fine
-    } elsif (my @foo = grep m/^changelog\.debian(?:\.gz)?$/i,@doc_files) {
-        tag 'wrong-name-for-debian-changelog-file', "usr/share/doc/$pkg/$foo[0]";
+    } elsif (my $chg = first { m/^changelog\.debian(?:\.gz)?$/i } @doc_files) {
+        tag 'wrong-name-for-debian-changelog-file', "usr/share/doc/$pkg/$chg";
     } else {
         if ($foreign_pkg && $found_upstream_text_changelog) {
             tag 'debian-changelog-file-missing-or-wrong-name';

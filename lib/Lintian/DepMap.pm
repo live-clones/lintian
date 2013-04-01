@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use parent 'Clone';
+use List::MoreUtils qw(any);
 
 use Lintian::Util qw(fail);
 
@@ -211,7 +212,7 @@ sub satisfy {
     my $self = shift;
     my $node = shift;
 
-    if (grep {$_ eq $node} $self->missing()) {
+    if (any {$_ eq $node} $self->missing()) {
         fail("Attempted to mark node '$node' as satisfied but it is not ".
                     'reachable, perhaps you forgot to add() it first?');
     }
