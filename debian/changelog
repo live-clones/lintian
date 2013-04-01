@@ -167,6 +167,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Bump dependency on hardening-includes to avoid having
       to work around #677530.
     + [NT] Add XS-Testsuite for autopkgtest tests.
+    + [NT] Add Build-Depends on libtest-perl-critic-perl.
   * debian/lintian.install:
     + [NT] Install Test::Lintian in /usr/share/lintian/lib.
   * debian/rules:
