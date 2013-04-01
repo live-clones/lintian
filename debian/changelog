@@ -168,7 +168,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to work around #677530.
     + [NT] Add XS-Testsuite for autopkgtest tests.
     + [NT] Add Build-Depends on libtest-perl-critic-perl.
-    + [NT] Add (Build-)Depends on liblist-moreutils-perl.
+    + [NT] Add (Build-)Depends on liblist-moreutils-perl and
+      libfile-basedir-perl.
   * debian/lintian.install:
     + [NT] Install Test::Lintian in /usr/share/lintian/lib.
   * debian/rules:
@@ -197,6 +198,11 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Add new command line option "--ignore-lintian-env" to make
       lintian ignore all environment variables starting with LINTIAN_.
     + [NT] Add a new command line option --no-display-experimental.
+    + [NT] Also search for the lintianrc file in XDG_CONFIG_{HOME,DIRS}.
+      The default paths are now ~/.config/lintian/lintianrc and
+      /etc/xdg/lintian/lintianrc.  The previous lintianrc paths are
+      still accepted.
+    + [NT] Stop looking for lintianrc files in the LINTIAN_ROOT.
 
   * lib/*:
     + [NT] Use "parent" instead of the "base" pragma.

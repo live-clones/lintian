@@ -691,15 +691,8 @@ if (defined $experimental_output_opts) {
 # search for configuration file if it was not set with --cfg
 # do not search the default locations if it was set.
 unless ($no_conf) {
-    if ($opt{'LINTIAN_CFG'}) {
-    } elsif (exists $ENV{'LINTIAN_CFG'} &&
-             -f ($opt{'LINTIAN_CFG'} = $ENV{'LINTIAN_CFG'})) {
-    } elsif (-f ($opt{'LINTIAN_CFG'} = $opt{'LINTIAN_ROOT'} . '/lintianrc')) {
-    } elsif ($opt{'user-dirs'} && exists $ENV{'HOME'} &&
-             -f ($opt{'LINTIAN_CFG'} = $ENV{'HOME'} . '/.lintianrc')) {
-    } elsif ($opt{'user-dirs'} && -f ($opt{'LINTIAN_CFG'} = '/etc/lintianrc')) {
-    } else {
-        $opt{'LINTIAN_CFG'} = '';
+    if (not $opt{'LINTIAN_CFG'}) {
+        $opt{'LINTIAN_CFG'} = _find_cfg_file() // '';
     }
 } else {
     $opt{'LINTIAN_CFG'} = '';
@@ -1502,6 +1495,42 @@ sub handle_lab_query {
     }
 }
 
+sub _find_cfg_file {
+    return $ENV{'LINTIAN_CFG'} if exists $ENV{'LINTIAN_CFG'} and -f $ENV{'LINTIAN_CFG'};
+
+    if ($opt{'user-dirs'}) {
+        my $rcfile;
+        {
+            # File::BaseDir sprews warnings if $ENV{'HOME'} is undef, so
+            # make sure it is defined when we load the module.  Though,
+            # we need to scope this, so $ENV{HOME} becomes undef again
+            # when we check for it later.
+            local $ENV{'HOME'} = $ENV{'HOME'} // '/nonexistent';
+            require File::BaseDir;
+            import File::BaseDir qw(config_home config_files);
+        };
+        # only accept config_home if either HOME or
+        # XDG_CONFIG_HOME was set.  If both are unset, then this
+        # will return the "bogus" path
+        # "/nonexistent/lintian/lintianrc" and we don't want that
+        # (in the however unlikely case that file actually
+        # exists).
+        $rcfile = config_home ('lintian/lintianrc')
+            if exists $ENV{'HOME'} or exists $ENV{'XDG_CONFIG_HOME'};
+        return $rcfile if defined $rcfile and -f $rcfile;
+        if (exists $ENV{'HOME'}) {
+            $rcfile = $ENV{'HOME'} . '/.lintianrc';
+            return $rcfile if -f $rcfile;
+        }
+        return '/etc/lintianrc' if -f '/etc/lintianrc';
+        # config_files checks that the file exists for us
+        $rcfile = config_files ('lintian/lintianrc');
+        return $rcfile if defined $rcfile and $rcfile ne '';
+
+    }
+
+    return; # None found
+}
 
 sub _find_changes {
     require Parse::DebianChangelog;
