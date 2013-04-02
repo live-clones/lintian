@@ -63,7 +63,7 @@ if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
                 open DEBSERIES, '<', $dpseries
                     or fail("cannot open debian/patches/series: $!");
                 my $comment_line = <DEBSERIES>;
-                my $count = grep !/^\s*+\#|^\s*+$/o, <DEBSERIES>;
+                my $count = grep { !/^\s*+\#|^\s*+$/o } <DEBSERIES>;
                 tag 'git-patches-not-exported'
                     unless ($count && ($comment_line =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
                 close(DEBSERIES);

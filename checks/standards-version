@@ -42,7 +42,7 @@ my $STANDARDS = Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 # release date of the standard released after the one a package declared.  Do
 # that by pulling all data out of the Lintian::Data structure and sorting it
 # by release date.  We can also use this to get the current standards version.
-my @STANDARDS = sort { $b->[1] <=> $a->[1] }
+my @STANDARDS = reverse sort { $a->[1] <=> $b->[1] }
     map { [ $_, $STANDARDS->value($_) ] } $STANDARDS->all;
 my $CURRENT_DATE = $STANDARDS[0][1];
 

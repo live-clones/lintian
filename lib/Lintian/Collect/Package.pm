@@ -337,7 +337,7 @@ sub _fetch_index_data {
             # the links.
             #
             # Sort in reverse order (allows pop instead of unshift)
-            @sorted = sort {$b cmp $a} keys %candidates;
+            @sorted = reverse sort keys %candidates;
             # Our prefered target
             $target = pop @sorted;
 

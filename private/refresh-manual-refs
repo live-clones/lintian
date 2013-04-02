@@ -28,6 +28,7 @@ use strict;
 use warnings;
 
 use File::Basename;
+use List::MoreUtils qw(none);
 use POSIX qw(strftime);
 
 BEGIN {
@@ -173,7 +174,7 @@ sub extract_refs {
             }
 
             if ($ref{url} =~ m/^(.+?\.html)#?/i) {
-                push(@linked_pages, $1) if not grep(m/$1/, @linked_pages);
+                push(@linked_pages, $1) if none { m/$1/ } @linked_pages;
             }
 
             # If the extracted URL part doesn't look like a URL, assume it is

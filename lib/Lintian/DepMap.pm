@@ -561,8 +561,9 @@ sub circular {
         $self->initialise();
     } else {
         for my $node (keys %{$self->{'nodes'}}) {
-            push @circ, grep $self->{'nodes'}{$node}->{'parents'}->{$_},
-                             keys %{$self->{'nodes'}{$node}->{'branches'}};
+            my $node_p = $self->{'nodes'}{$node}->{'parents'};
+            my $node_b = $self->{'nodes'}{$node}->{'branches'};
+            push @circ, grep { exists $node_p->{$_} } keys %{$node_p}
         }
     }
 

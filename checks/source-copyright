@@ -233,7 +233,7 @@ sub split_licenses {
     return () unless defined;
     return () if /\n/;
     s/[(),]//;
-    return map "\L$_", (split /\s++(?:and|or)\s++/);
+    return map { "\L$_" } (split /\s++(?:and|or)\s++/);
 }
 
 sub get_field {
