@@ -275,7 +275,7 @@ if (not defined $info->field('version')) {
             $expected =~ s/[\.\+\-\:]?\Q$rc\E.*//;
             $suggestion = "$expected~$rc$rest";
             tag 'rc-version-greater-than-expected-version', $upstream, '>', $expected, "(consider using $suggestion)",
-                if $info->native or ($debian eq 1 or $debian =~ m,^0(?:\.1|ubuntu1)?$,);
+                if $info->native or ($debian eq q{1} or $debian =~ m,^0(?:\.1|ubuntu1)?$,);
         }
 
         # Checks for the dfsg convention for repackaged upstream

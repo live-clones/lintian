@@ -8,8 +8,8 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture TwoArgOpen
-#include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches EndWithOne ConditionalUseStatements QuotedWordLists
+include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax
+#include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches ConditionalUseStatements QuotedWordLists
 
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
@@ -31,3 +31,4 @@ allow_if_string_contains_single_quote = 1
 
 [ValuesAndExpressions::ProhibitCommaSeparatedStatements]
 allow_last_statement_to_be_comma_separated_in_map_and_grep = 1
+
