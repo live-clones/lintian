@@ -25,7 +25,7 @@ use strict;
 use warnings;
 
 use Exporter qw(import);
-our @EXPORT = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
+our @EXPORT_OK = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 
 # requires wrap() function
 use Text::Wrap;

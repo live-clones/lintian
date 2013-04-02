@@ -175,8 +175,9 @@ sub _check_multiarch {
 }
 
 ## Encapsulate Tarjan's algorithm in an class/object to keep
-## the run sub somewhat sane.
-package Lintian::group_checks::Graph;
+## the run sub somewhat sane.  Allow this "extra" package as
+## it is not a proper subclass.
+package Lintian::group_checks::Graph;  ## no critic (Modules::ProhibitMultiplePackages)
 
 sub new {
     my ($type, $nodes, $edges) = @_;

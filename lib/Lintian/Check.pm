@@ -31,8 +31,8 @@ use Lintian::Tags qw(tag);
 
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
-our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky
-                 $known_shells_regex
+our @EXPORT_OK = qw(check_maintainer check_spelling check_spelling_picky
+                    $known_shells_regex
 );
 
 

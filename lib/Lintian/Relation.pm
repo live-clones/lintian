@@ -39,7 +39,7 @@ our (@EXPORT_OK, %EXPORT_TAGS);
     @{ $EXPORT_TAGS{constants} }
 );
 
-use Lintian::Relation::Version;
+use Lintian::Relation::Version qw(:all);
 
 =head1 NAME
 

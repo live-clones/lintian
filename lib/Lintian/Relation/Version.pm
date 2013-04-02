@@ -27,8 +27,9 @@ use Carp qw(croak);
 use Exporter qw(import);
 
 BEGIN {
-    our @EXPORT = qw(versions_equal versions_lte versions_gte versions_lt
-                     versions_gt versions_compare versions_comparator);
+    our @EXPORT_OK = qw(versions_equal versions_lte versions_gte versions_lt
+                        versions_gt versions_compare versions_comparator);
+    our %EXPORT_TAGS = ('all' => \@EXPORT_OK);
 }
 
 use AptPkg::Config '$_config';

@@ -27,7 +27,7 @@ use Dpkg::Vendor;
 use Lintian::CollScript;
 use Lintian::Util qw(check_path fail);
 
-our @EXPORT = qw(check_test_feature default_parallel load_collections split_tag);
+our @EXPORT_OK = qw(check_test_feature default_parallel load_collections split_tag);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl

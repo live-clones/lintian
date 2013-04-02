@@ -658,7 +658,7 @@ require Lintian::Data;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Internal::FrontendUtil;
-import Lintian::Internal::FrontendUtil;
+import Lintian::Internal::FrontendUtil qw(default_parallel load_collections);
 require Lintian::ProcessablePool;
 require Lintian::Profile;
 require Lintian::Tags;

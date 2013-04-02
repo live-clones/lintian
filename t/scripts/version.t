@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 13;
 
-use Lintian::Relation::Version;
+use Lintian::Relation::Version qw(:all);
 
 ok(  versions_equal('1.0', '1.0'), 'Basic equality' );
 ok(  versions_equal('1.0', '1.00'), '0 == 00' );
