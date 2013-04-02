@@ -75,7 +75,7 @@ sub pretty_print {
 sub extract_data {
     my ($folder, $fname, $abname) = @_;
     print "=over 4\n\n";
-    foreach my $file (<$folder/*.desc>) {
+    foreach my $file (glob ("$folder/*.desc")) {
         my ($header, @ignore) = read_dpkg_control ($file);
         my $name = $header->{$fname};
         my $abbr;

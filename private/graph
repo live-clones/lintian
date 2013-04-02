@@ -183,8 +183,8 @@ sub mark_longest_paths {
     # paths *must* pass through a node in each level.
 
     my $path_marks = {};
-    my @c = @{ $levels[$#levels] };
-    for ( my $i = $#levels ; $i >= 0 ; $i--) {
+    my @c = @{ $levels[-1] };
+    for my $i ($#levels..0) {
         my $next = $i - 1;
         my @nc = ();
         foreach my $node (@c) {

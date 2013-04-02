@@ -16,7 +16,7 @@ use POSIX qw(strftime);
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
     if (not $LINTIAN_ROOT) {
-        use Cwd ();
+        require Cwd;
         $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
     } else {
         chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";
@@ -43,7 +43,7 @@ my $total;
 my $check_total;
 my ($tc, $ltc);
 my ($ctc, $cltc);
-for my $desc (<checks/*.desc>) {
+for my $desc (glob ('checks/*.desc')) {
     for my $data (read_dpkg_control($desc)) {
         $desc =~ s,.*/,,;
         $desc =~ s/\.desc$//;
@@ -59,7 +59,7 @@ $check_total = scalar keys %checks;
 
 # Parse all test configuration files from the new test suite looking for
 # Test-For configuration options and remove those from the %tags hash.
-for my $desc (<t/tests/*/desc>, <t/changes/*.desc>, <t/debs/*/desc>, <t/source/*/desc>) {
+for my $desc (glob ('t/tests/*/desc t/changes/*.desc t/debs/*/desc t/source/*/desc')) {
     my ($data) = read_dpkg_control($desc);
     if (exists $data->{'test-for'}) {
         for my $tag (split(' ', $data->{'test-for'})) {
@@ -78,7 +78,7 @@ $ctc = $check_total - scalar keys %checks;
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
 my (%legacy, %legacy_test);
-for my $tagfile (<testset/tags.*>) {
+for my $tagfile (glob ('testset/tags.*')) {
     next if $tagfile =~ /\.sed$/;
     my $case = $tagfile;
     $case =~ s/.*tags\.//;

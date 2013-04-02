@@ -21,13 +21,15 @@
 use strict;
 use warnings;
 
-use LWP::Simple qw(get);
+# Not a B-D and script is compile tested...
+require LWP::Simple;
+import LWP::Simple qw(get);
 use POSIX qw(strftime);
 
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
     if (not $LINTIAN_ROOT) {
-        use Cwd ();
+        require Cwd;
         $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
     } else {
         chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";

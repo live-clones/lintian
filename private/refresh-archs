@@ -123,13 +123,13 @@ $ENV{'LC_ALL'} = 'C';
 my $dver = `dpkg-architecture --version | head -n1`;
 chomp $dver;
 
-open my $dlfd, '-|', "dpkg-architecture -L 2>/dev/null" or die "dpkg-architecture -L: $!";
+open my $dlfd, '-|', 'dpkg-architecture', '-L' or die "dpkg-architecture -L: $!";
 while ( my $archstr = <$dlfd> ) {
     my @hardening;
     my @htags;
     delete $ENV{'DEB_HOST_ARCH'};
     chomp $archstr;
-    open my $dafd, '-|', "dpkg-architecture -a$archstr 2>/dev/null" or die "dpkg-architecture -a$archstr: $!";
+    open my $dafd, '-|', 'dpkg-architecture', "-a$archstr" or die "dpkg-architecture -a$archstr: $!";
     while ( my $var = <$dafd> ) {
         chomp $var;
         my ($key, $value) = split /=/, $var, 2;
@@ -138,7 +138,7 @@ while ( my $archstr = <$dlfd> ) {
     close $dafd;
 
     $ENV{'DEB_HOST_ARCH'} = $archstr;
-    open my $dbfd, "-|", "dpkg-buildflags --query-features hardening 2>/dev/null" or die "dpkg-buildflags --query-features hardening: $!";
+    open my $dbfd, '-|', 'dpkg-buildflags', '--query-features', 'hardening' or die "dpkg-buildflags --query-features hardening: $!";
     @hardening = parse_dpkg_control ($dbfd);
     close $dbfd;
 

@@ -26,6 +26,8 @@ use warnings;
 use AptPkg::Config '$_config';
 use AptPkg::System '$_system';
 use AptPkg::Cache;
+use List::MoreUtils qw(none);
+
 
 (my $self = $0) =~ s#.*/##;
 
@@ -55,7 +57,7 @@ my @core_packages = (qw(perl-base perl perl-modules));
 
 # check we have a cache of Debian sid packages available
 warn('Warning: this list should only be updated on a system with an up to date APT cache of the Debian unstable distribution')
-    if !grep { defined $_->{Origin} &&
+    if none { defined $_->{Origin} &&
                defined $_->{Archive} &&
                $_->{Origin} eq 'Debian' &&
                $_->{Archive} eq 'unstable' }

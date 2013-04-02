@@ -31,7 +31,7 @@ my @checks;
 my @fatal;
 my @nonfatal;
 
-foreach my $check (<$root/checks/*.desc>){
+foreach my $check (glob ("$root/checks/*.desc")){
     my ($header, undef) = read_dpkg_control($check);
     my $cname = $header->{'check-script'};
     fail "$check missing check-script\n" unless defined $cname;
