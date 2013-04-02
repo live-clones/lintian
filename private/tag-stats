@@ -61,7 +61,7 @@ for my $check (readdir CHECKDIR) {
         $severity = 'unclassified' if not $severity;
         $certainty = 'unclassified' if not $certainty;
 
-        my $info = Lintian::Tag::Info->new($tag->{tag});
+        my $info = Lintian::Tag::Info->new($tag, $desc->{'check-script'}, $desc->{'type'});
         my $code = $info->code;
 
         push(@{$stats{severity}{$severity}}, $name);
