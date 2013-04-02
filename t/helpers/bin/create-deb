@@ -25,6 +25,7 @@ use warnings;
 
 use Getopt::Long;
 use Cwd();
+use List::MoreUtils qw(any);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(get_dsc_info);
@@ -89,7 +90,7 @@ if ($val{'auto-build-data'}) {
 }
 
 # default to "on" unless we are given an md5sums file explicitly
-$val{'md5sums'} = 1 unless defined $val{'md5sums'} || grep { $_ eq 'md5sums'} @ARGV;
+$val{'md5sums'} = 1 unless defined $val{'md5sums'} || any { $_ eq 'md5sums'} @ARGV;
 
 $cwd = Cwd::cwd();
 

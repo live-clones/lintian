@@ -41,8 +41,8 @@ while ( my $line = <$fd> ) {
         my $and = str2time($date) or die "Cannot parse date ($date, line $.): $!";
         my $time = time - ANCIENT_AGE;
         $found = 1;
-        cmp_ok($time, '<', $and + ERROR_MARGIN, "ANCIENT_DATE is up to date");
-        cmp_ok($time, '>', $and - ERROR_MARGIN, "ANCIENT_DATE is not too far ahead");
+        cmp_ok($time, '<', $and + ERROR_MARGIN, 'ANCIENT_DATE is up to date');
+        cmp_ok($time, '>', $and - ERROR_MARGIN, 'ANCIENT_DATE is not too far ahead');
         last;
     }
 }

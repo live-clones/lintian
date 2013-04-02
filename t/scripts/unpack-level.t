@@ -17,6 +17,7 @@
 # along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
+use warnings;
 
 use Test::More;
 use Lintian::CollScript;
@@ -24,8 +25,8 @@ use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 # Find all of the desc files in either collection or checks.  We'll do one
 # check per description.
-our @DESCS = (<$ENV{LINTIAN_ROOT}/collection/*.desc>,
-              <$ENV{LINTIAN_ROOT}/checks/*.desc>);
+our @DESCS = (glob("$ENV{LINTIAN_ROOT}/collection/*.desc>"),
+              glob("$ENV{LINTIAN_ROOT}/checks/*.desc"));
 plan tests => scalar(@DESCS);
 
 my @l2refs = (
@@ -49,7 +50,7 @@ for my $desc (@DESCS) {
     }
 
     if ($desc =~ m/lintian\.desc$/) {
-	ok(1, "lintian.desc has valid needs-info for unpack level");
+	ok(1, 'lintian.desc has valid needs-info for unpack level');
 	next;
     }
 

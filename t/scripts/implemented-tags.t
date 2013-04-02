@@ -17,6 +17,7 @@
 # along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
+use warnings;
 
 use Test::More;
 use Test::Lintian;

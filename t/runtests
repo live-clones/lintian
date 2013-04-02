@@ -36,6 +36,7 @@ use Thread::Queue;
 
 use Data::Dumper;
 use Getopt::Long qw(GetOptions);
+use List::MoreUtils qw(none);
 use Text::Template;
 
 use constant SUITES => qw(scripts changes debs source tests);
@@ -264,7 +265,7 @@ if ($singletest) {
     unless (-d "$TESTSET/changes") {
         fail("cannot find $TESTSET/changes: $!");
     }
-    @tests = map { read_dpkg_control($_) } sort(<$TESTSET/changes/*.desc>);
+    @tests = map { read_dpkg_control($_) } sort(glob("$TESTSET/changes/*.desc"));
 }
 print "Found the following changes tests: @tests\n" if $DEBUG;
 print "Changes tests:\n" if @tests;
@@ -480,7 +481,6 @@ sub run_lintian {
     my $status = 0;
     my @options = split(' ', $testdata->{options}//'');
     my $cmd;
-    my $ret;
     unshift @options, '--allow-root', '--no-cfg', '--no-user-dirs';
     unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
     my $pid = open my $in, '-|';
@@ -527,7 +527,7 @@ sub test_changes {
     # Check if we need to copy these files over.
     if ( ! -e $file && -e "$file.in" ) {
         my @files;
-        msg_print "building... ";
+        msg_print 'building... ';
         # copy all files but "tags" and desc.  Usually this will only
         # be ".changes.in", but in rare cases we have "other files"
         # as well.
@@ -905,7 +905,8 @@ sub check_test_is_sane {
     push @architectures, $ARCHITECTURE;
 
     # Check for arch-specific tests
-    if (!grep { $data->{architecture} =~ m/\b$_\b/ } @architectures) {
+    # FIXME: deal with wildcards correctly.
+    if (none { $data->{architecture} =~ m/\b$_\b/ } @architectures) {
         return 0;
     }
 

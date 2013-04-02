@@ -101,8 +101,10 @@ foreach (split /\n/,$changes) {
 	    or diag("line: $line");
     }
 
-    $prev_head = $1
-	if (m/^([*+-])/);
+    if (m/^([*+-])/) {
+        $prev_head = $1;
+    }
+
 }
 
 done_testing();

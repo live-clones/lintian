@@ -36,7 +36,7 @@ $err = $@ if $@;
 $LAB_A->remove if $LAB_A->exists;
 $LAB_B->remove if $LAB_B->exists;
 
-is ($err, undef, "Test had no errors");
+is ($err, undef, 'Test had no errors');
 
 exit 0;
 
@@ -103,7 +103,7 @@ sub do_tests {
     $diff = $full_manifest->diff ($LAB_A->_get_lab_index ('changes'));
     cmp_ok (scalar @{ $diff->added }, '==', 0, 'Lab A (broken): Nothing new appeared with repair');
     TODO: {
-        local $TODO = "Restoration not implemented yet";
+        local $TODO = 'Restoration not implemented yet';
         cmp_ok (scalar @{ $diff->removed }, '==', 0, 'Lab A (broken): Nothing disappeared with repair');
     }
     # Currently nothing changes (no pun intended) when repairing; it might in the

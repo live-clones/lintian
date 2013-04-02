@@ -30,7 +30,7 @@ TODO: {
     # We break the circular dependency:
     $map->unlink('C');
     is(join(', ', $map->circular('deep')), '', 'Deep circular dependency is now broken (w/o C)');
-    
+
     $map->add('C');
     is(join(', ', $map->circular('deep')), '', 'C re-added, circular dependency still broken');
 }

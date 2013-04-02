@@ -29,7 +29,7 @@ my $inmemdata;
 
 $plist->visit_all (sub { push @all, $_[1] });
 
-is( @all, 3, "Read 3 elements from the data file");
+is( @all, 3, 'Read 3 elements from the data file');
 for ( my $i = 0; $i < scalar @all; $i++) {
     my $no = $i + 1;
     is($all[$i], "pkg$no", "Element $no is pkg$no");
@@ -39,7 +39,7 @@ ok( eval {
     $plist->write_list(\$inmemdata);
     $olist->read_list(\$inmemdata);
     1;
-}, "Wrote and read the data");
+}, 'Wrote and read the data');
 
 SKIP: {
     my @pkeys;
@@ -53,7 +53,7 @@ SKIP: {
     }
     $plist->visit_all ($pv);
     $olist->visit_all ($ov);
-    is_deeply(\@pval, \@oval, "The lists contents the same elements");
+    is_deeply(\@pval, \@oval, 'The lists contents the same elements');
     for ( my $i = 0 ; $i < scalar @pkeys ; $i++) {
         my $no = $i + 1;
         my $e  = $plist->get (@{ $pkeys[$i] });

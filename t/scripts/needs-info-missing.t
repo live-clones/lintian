@@ -17,15 +17,16 @@
 # along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
+use warnings;
 
 use Test::More;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 # Find all of the desc files in checks.  We'll do one check per description.
-our @DESCS = (<$ENV{LINTIAN_ROOT}/checks/*.desc>,
-              <$ENV{LINTIAN_ROOT}/collection/*.desc>);
-our @MODULES = (<$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm>,
-		<$ENV{LINTIAN_ROOT}/lib/Lintian/Collect/*.pm>);
+our @DESCS = (glob("$ENV{LINTIAN_ROOT}/checks/*.desc"),
+              glob("$ENV{LINTIAN_ROOT}/collection/*.desc"));
+our @MODULES = (glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm"),
+		glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect/*.pm"));
 
 plan tests => scalar(@DESCS)+scalar(@MODULES);
 
@@ -109,8 +110,8 @@ for my $module (@MODULES) {
 
     is(scalar(keys(%seen_subs)) + scalar(keys(%seen_needsinfo)), 0,
 	"$pretty_module has per-method needs-info") or
-	diag("Subs missing info: ", join(', ', keys(%seen_subs)), "\n",
-	     "Info for unknown subs: ", join(', ', keys(%seen_needsinfo)),"\n");
+	diag('Subs missing info: ', join(', ', keys(%seen_subs)), "\n",
+	     'Info for unknown subs: ', join(', ', keys(%seen_needsinfo)),"\n");
 
     diag("\n", @warnings) if @warnings;
 }
@@ -120,7 +121,7 @@ for my $desc (@DESCS) {
     my %needs = map { $_ => 1 } split(/\s*,\s*/, $header->{'needs-info'} || '');
 
     if ($desc =~ m/lintian\.desc$/) {
-	pass("lintian.desc has all required needs-info for Lintian::Collect");
+	pass('lintian.desc has all required needs-info for Lintian::Collect');
 	next;
     }
 

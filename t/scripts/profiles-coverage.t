@@ -13,7 +13,6 @@ use File::Find;
 use Lintian::Util qw(read_dpkg_control); # Test::More (also) exports fail
 
 my $root = $ENV{'LINTIAN_ROOT'};
-my @profiles;
 my %CHECKS;
 my %TAGS;
 

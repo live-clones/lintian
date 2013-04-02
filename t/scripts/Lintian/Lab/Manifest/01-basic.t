@@ -25,17 +25,17 @@ $plist->set ($input);
 # Collect all entries and their keys
 $plist->visit_all (sub { my ($v, @k) = @_; push @contents, $v; push @keys, \@k} );
 
-is(@contents, 1, "Contents one element");
-is($contents[0]->{'source'}, $input->{'source'}, "Element has the right name");
+is(@contents, 1, 'Contents one element');
+is($contents[0]->{'source'}, $input->{'source'}, 'Element has the right name');
 
 # Change input, output should be unaffected
-$input->{'file'} = "lalalala";
+$input->{'file'} = 'lalalala';
 
 $output = $plist->get (@{ $keys[0] });
 
-ok($output, "get returns a defined object");
-is($output->{'source'}, $input->{'source'}, "Input{source} eq Output{source}");
+ok($output, 'get returns a defined object');
+is($output->{'source'}, $input->{'source'}, 'Input{source} eq Output{source}');
 
-isnt($output->{'random-field'}, "Output contains random-field");
-is($output->{'file'}, $orig_file, "Output{file} is unaffected by modification");
+isnt($output->{'random-field'}, 'Output contains random-field');
+is($output->{'file'}, $orig_file, 'Output{file} is unaffected by modification');
 

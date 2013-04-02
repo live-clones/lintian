@@ -6,7 +6,6 @@ use Test::More tests => 22;
 
 use Lintian::Command::Simple qw(background wait_any);
 
-my $cmd;
 my $c = 4;
 my %jobs;
 
@@ -22,7 +21,7 @@ while ( my $value = wait_any (\%jobs)) {
     $c++;
 }
 
-is($c, 4, "4 jobs were started, 4 reaped");
+is($c, 4, '4 jobs were started, 4 reaped');
 
 # again, but in list context
 
@@ -38,13 +37,13 @@ while ( my ($pid, $value) = wait_any (\%jobs)) {
     $c++;
 }
 
-is($c, 4, "4 more jobs were started, 4 reaped");
+is($c, 4, '4 more jobs were started, 4 reaped');
 
 # Make sure the case of an empty hash is handled properly
 # (i.e. undef is returned and no process is reaped)
 
 %jobs = ();
-my $pid = background("true");
+my $pid = background('true');
 is (wait_any (\%jobs), undef, 'With an empty hash ref, wait() returns undef');
 
 is (my @list = wait_any (\%jobs), 0,

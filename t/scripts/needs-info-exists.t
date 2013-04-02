@@ -17,6 +17,7 @@
 # along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
+use warnings;
 
 use Test::More;
 use Lintian::CollScript;
@@ -25,7 +26,7 @@ use Lintian::Util qw(read_dpkg_control);
 # Find all of the desc files in collection.  We'll do one check per
 # description.  We don't check checks/*.desc because check-desc.t
 # handles that.
-our @DESCS = (<$ENV{LINTIAN_ROOT}/collection/*.desc>);
+our @DESCS = (glob("$ENV{LINTIAN_ROOT}/collection/*.desc"));
 plan tests => scalar(@DESCS);
 
 # For each desc file, load the first stanza of the file and check that all of

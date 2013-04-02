@@ -47,5 +47,5 @@ TODO: {
     local $TODO = 'When re-adding B there are still references to the old B, and old $B != new $B';
     $map->add('B');
     $map->satisfy('B');
-    ok(eval {$map->satisfy('A')}, "B re-added, A can be satisfied");
+    ok(eval {$map->satisfy('A')}, 'B re-added, A can be satisfied');
 }

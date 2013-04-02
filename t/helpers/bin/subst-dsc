@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(get_file_checksum);
@@ -9,9 +10,9 @@ my ($size, $sha1, $sha2, $md5);
 my ($tarfile) = @ARGV;
 
 $size = (stat $tarfile)[7];
-$sha1 = get_file_checksum ("sha1", $tarfile);
-$sha2 = get_file_checksum ("sha256", $tarfile);
-$md5  = get_file_checksum ("md5", $tarfile);
+$sha1 = get_file_checksum ('sha1', $tarfile);
+$sha2 = get_file_checksum ('sha256', $tarfile);
+$md5  = get_file_checksum ('md5', $tarfile);
 
 while ( <STDIN> ) {
     s/\@SIZE\@/$size/g;
