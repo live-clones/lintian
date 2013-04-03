@@ -21,6 +21,7 @@
 package Lintian::debian_source_dir;
 use strict;
 use warnings;
+use autodie qw(open opendir close closedir);
 
 use List::MoreUtils qw(any);
 
@@ -40,7 +41,6 @@ my (undef, undef, $info) = @_;
 my $dsrc = $info->debfiles('source');
 
 if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
-        fail("cannot read debian/source/format: $!");
     open(my $fd, '<', "$dsrc/format");
     my $format = <$fd>;
     chomp $format;
@@ -51,8 +51,7 @@ if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
 }
 
 if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
-    open GITPATCHES, '<', "$dsrc/git-patches"
-        or fail("cannot open debian/source/git-patches: $!");
+    open(GITPATCHES, '<', "$dsrc/git-patches");
     if (any { !/^\s*+#|^\s*+$/o} <GITPATCHES>) {
         my $dpseries = $info->debfiles('patches/series');
         # gitpkg does not create series as a link, so this is most likely
@@ -61,8 +60,7 @@ if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
             if (! -r $dpseries ) {
                 tag 'git-patches-not-exported';
             } else {
-                open DEBSERIES, '<', $dpseries
-                    or fail("cannot open debian/patches/series: $!");
+                open(DEBSERIES, '<', $dpseries);
                 my $comment_line = <DEBSERIES>;
                 my $count = grep { !/^\s*+\#|^\s*+$/o } <DEBSERIES>;
                 tag 'git-patches-not-exported'
@@ -75,7 +73,7 @@ if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
 }
 
 if ( ! -l $dsrc && -d $dsrc ) {
-    opendir(DEBSRC, $dsrc) or fail("cannot opendir debian/source/: $!");
+    opendir(DEBSRC, $dsrc);
     my $file;
     while ($file = readdir(DEBSRC)) {
         next if $file eq '.' or $file eq '..';
