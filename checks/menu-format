@@ -539,14 +539,14 @@ sub verify_icon {
     # Try the explicit location, and if that fails, try the standard path.
     my $iconfile = $info->unpacked($icon);
     if (! -f $iconfile) {
-        $iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
+        $iconfile = $info->unpacked("usr/share/pixmaps/$icon");
         if (! -f $iconfile) {
             my $ginfo = $group->info;
             foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
                 my $dinfo = $depproc->info;
                 $iconfile = $dinfo->unpacked($icon);
                 last if -f $iconfile;
-                $iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
+                $iconfile = $info->unpacked("usr/share/pixmaps/$icon");
                 last if -f $iconfile;
             }
         }
