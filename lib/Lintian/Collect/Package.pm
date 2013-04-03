@@ -219,10 +219,13 @@ sub _fetch_extracted_dir {
         croak "$field ($dirname) is not available" unless -d "$dir/";
         $self->{$field} = $dir;
     }
-    if ($file) {
+    if (defined $file and $file ne '') {
         # strip leading ./ - if that leaves something, return the path there
-        $file =~ s,^\.?/*+,,go;
-        return "$dir/$file" if $file;
+        if ($file =~ s,^(?:\.?/)++,,go) {
+            warnings::warnif('Lintian::Collect',
+                qq{Argument to $field had leading "/" or "./"});
+        }
+        return "$dir/$file" if $file ne '';
     }
     return $dir;
 }

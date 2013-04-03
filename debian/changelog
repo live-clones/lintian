@@ -219,6 +219,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * lib/Lintian/Collect/Package.pm:
     + [NT] Ensure the "root" entry of indices do not contain itself.
       (Closes: #695866)
+    + [NT] Add warning to unpacked and debfiles when they are given a
+      path with leading slash or dot-slash.
   * lib/Lintian/Command/Simple.pm:
     + [NT] Use constant time lookup access instead of linear scan with
       "hashref" wait.

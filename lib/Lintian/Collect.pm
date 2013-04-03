@@ -19,6 +19,7 @@
 package Lintian::Collect;
 use strict;
 use warnings;
+use warnings::register;
 
 use Lintian::Util qw(get_dsc_info get_deb_info);
 use Carp qw(croak);
