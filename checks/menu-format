@@ -240,7 +240,7 @@ foreach my $file ($info->sorted_index) {
 
 # Verify all the desktop files.
 for my $desktop_file (@desktop_files) {
-    VerifyDesktopFile($desktop_file, $desktop_file, $pkg, $info);
+    verify_desktop_file($desktop_file, $desktop_file, $pkg, $info);
 }
 
 # Now all the menu files.
@@ -290,13 +290,13 @@ foreach my $menufile (@menufiles) {
         }
         $line .= $menufile_line;
         # Note that I allow whitespace after the continuation character.
-        # This is caught by VerifyLine().
+        # This is caught by verify_line().
         if (! ($menufile_line =~ m/\\\s*?$/)) {
-            VerifyLine($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
+            verify_line($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
             $line='';
         }
     } while ($menufile_line = <IN>);
-    VerifyLine($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
+    verify_line($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
 
     close IN;
 }
@@ -307,7 +307,7 @@ foreach my $menufile (@menufiles) {
 
 # Pass this a line of a menu file, it sanitizes it and
 # verifies that it is correct.
-sub VerifyLine {
+sub verify_line {
     my ($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $linecount) = @_;
 
     my %vals;
@@ -439,7 +439,7 @@ sub VerifyLine {
     $section =~ s:/$::;         # remove trailing slash.
 
     # Be sure the command is provided by the package.
-    my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'},
+    my ($okay, $command) = verify_cmd($fullname, $linecount, $vals{'command'},
                                       $pkg, $info);
     tag 'menu-command-not-in-package', "$fullname:$linecount $command"
         unless ($okay
@@ -448,13 +448,13 @@ sub VerifyLine {
                 or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
     if (exists($vals{'icon'})) {
-        VerifyIcon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
+        verify_icon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
     }
     if (exists($vals{'icon32x32'})) {
-        VerifyIcon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
+        verify_icon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
     }
     if (exists($vals{'icon16x16'})) {
-        VerifyIcon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
+        verify_icon($info, $proc, $group, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
     }
 
     # Check the needs tag.
@@ -517,7 +517,7 @@ sub VerifyLine {
 }
 
 
-sub VerifyIcon {
+sub verify_icon {
     my ($info, $proc, $group, $menufile, $fullname, $linecount, $icon, $size) = @_;
     local *IN;
 
@@ -585,7 +585,7 @@ parse_error:
 
 
 # Syntax-checks a .desktop file.
-sub VerifyDesktopFile {
+sub verify_desktop_file {
     my ($desktopfile, $file, $pkg, $info) = @_;
     my %vals;
     open (DESKTOP, '<', $info->unpacked($file))
@@ -668,7 +668,7 @@ sub VerifyDesktopFile {
     # TODO:  Should check quoting and the check special field
     # codes in Exec for desktop files.
     if ($file =~ m,^usr/share/applications/, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
-        my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'}, $pkg,
+        my ($okay, $command) = verify_cmd($file, undef, $vals{'Exec'}, $pkg,
                                           $info);
         tag 'desktop-command-not-in-package', "$file $command"
             unless $okay or $command eq 'kcmshell';
@@ -714,7 +714,7 @@ sub VerifyDesktopFile {
 # Returns a list whose first member is true if the command is present and
 # false otherwise, and whose second member is the command (minus any leading
 # su-to-root wrapper).  Shared between the desktop and menu code.
-sub VerifyCmd {
+sub verify_cmd {
     my ($file, $line, $exec, $pkg, $info) = @_;
     my $location = ($line ? "$file:$line" : $file);
 
