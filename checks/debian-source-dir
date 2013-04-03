@@ -40,10 +40,11 @@ my (undef, undef, $info) = @_;
 my $dsrc = $info->debfiles('source');
 
 if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
-    open(FORMAT, '<', "$dsrc/format") or
         fail("cannot read debian/source/format: $!");
-    my $format = <FORMAT>;
+    open(my $fd, '<', "$dsrc/format");
+    my $format = <$fd>;
     chomp $format;
+    close $fd;
     tag 'unknown-source-format', $format unless $KNOWN_FORMATS{$format};
 } else {
     tag 'missing-debian-source-format';
