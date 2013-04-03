@@ -27,7 +27,6 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
 
 our %KNOWN_FORMATS = map { $_ => 1 }
     ('1.0', '2.0', '3.0 (quilt)', '3.0 (native)', '3.0 (git)', '3.0 (bzr)');
