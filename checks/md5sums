@@ -50,6 +50,10 @@ if (-f $info->control('conffiles')) {
     close(C);
 }
 
+# The md5sums file should not be a symlink.  If it is, the best
+# we can do is to leave it alone.
+return if -l $control;
+
 # Is there a md5sums control file?
 unless (-f $control) {
     # ignore if package contains no files
