@@ -108,6 +108,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       reporting.  (Closes: #698602)
   * checks/java{,.desc}:
     + [NT] Report possibly broken jar files.
+  * checks/md5sums:
+    + [NT] Fix path traversal issue that could leak information
+      about the host system.
   * checks/menu-format{,.desc}:
     + [NT] Apply patch from Bastien Roucariès to detect missing
       "Keywords" in desktop files.  Thanks to Jeremy Bicha for
