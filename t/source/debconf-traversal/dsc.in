@@ -1,0 +1,14 @@
+Format: 1.0
+Source: debconf-traversal
+Binary: ../unpacked/debian/changelog@NULL@
+Architecture: all
+Version: 1
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 7)
+Checksums-Sha1:
+ @SHA1@ @SIZE@ debconf-traversal_1.tar.gz
+Checksums-Sha256:
+ @SHA256@ @SIZE@ debconf-traversal_1.tar.gz
+Files:
+ @MD5@ @SIZE@ debconf-traversal_1.tar.gz

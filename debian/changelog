@@ -1,5 +1,8 @@
 lintian (2.5.10.5) unstable; urgency=low
 
+  * checks/debconf:
+    + [NT] Fix path traversal issue that could leak information
+      about the host system.
   * checks/md5sums:
     + [NT] Fix path traversal issue that could leak information
       about the host system.
