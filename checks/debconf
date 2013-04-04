@@ -113,9 +113,13 @@ if ($type eq 'source') {
     return 0;
 }
 
-my $cdir = $info->control;
+my $preinst = $info->control('preinst');
+my $ctrl_config = $info->control('config');
+my $ctrl_templates = $info->control('templates');
 
-if (open(PREINST, '<', "$cdir/preinst")) {
+if ( -f $preinst and not -l $preinst) {
+    open(PREINST, '<', $preinst)
+        or fail "open preinst: $!";
     while (<PREINST>) {
         s/\#.*//;    # Not perfect for Perl, but should be OK
         if (m,/usr/share/debconf/confmodule, or
@@ -127,8 +131,8 @@ if (open(PREINST, '<', "$cdir/preinst")) {
     close PREINST;
 }
 
-$seenconfig=1 if -f "$cdir/config";
-$seentemplates=1 if -f "$cdir/templates";
+$seenconfig=1 if -f $ctrl_config and not -l $ctrl_config;
+$seentemplates=1 if -f $ctrl_templates and not -l $ctrl_templates;
 
 # This still misses packages that use debconf only in the postrm.  Packages
 # that ask debconf questions in the postrm should load the confmodule in the
@@ -165,7 +169,9 @@ if ($seenconfig and not $seentemplates and not $usesdbconfig) {
     tag 'no-debconf-config';
 }
 
-if ($seenconfig and not -x "$cdir/config") {
+# $seenconfig will be false if $ctrl_config is a symlink or if it was
+# not a file, so we do not have to check with -f/-l here again.
+if ($seenconfig and not -x $ctrl_config) {
     tag 'debconf-config-not-executable';
 }
 
@@ -177,7 +183,10 @@ my @templates_seen;
 
 if ($seentemplates) {
     eval {
-        @templates = read_dpkg_control("$cdir/templates", DCTRL_DEBCONF_TEMPLATE);
+        # $seentemplates (above) will be false if $ctrl_templates is a
+        # symlink or not a file, so this should be safe without
+        # (re-checking) with -f/-l.
+        @templates = read_dpkg_control($ctrl_templates, DCTRL_DEBCONF_TEMPLATE);
     };
     if ($@) {
         chomp $@;
@@ -350,13 +359,16 @@ my %templates_used;
 my %template_aliases;
 for my $file (qw(config prerm postrm preinst postinst)) {
     my $potential_makedev = {};
-    if (open(IN, '<', "$cdir/$file")) {
+    my $path = $info->control($file);
+    if ( -f $path and not -l $path) {
         my $usesconfmodule='';
         my $obsoleteconfmodule='';
         my $db_input='';
         my $isdefault='';
         my $usesseen='';
 
+        open(IN, '<', $path)
+            or fail "open $file: $!";
         # Only check scripts.
         my $fl = <IN>;
         unless ($fl && $fl =~ /^\#!/) {

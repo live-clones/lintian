@@ -64,8 +64,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to Alberto Garcia and Timo Juhani Lindfors for the
       report and patch.  (Closes: #703490)
   * checks/debconf:
-    + [NT] Fix path traversal issue that could leak information
-      about the host system.
+    + [NT] Fix several path traversal issues that could leak
+      information about the host system.
   * checks/debhelper{,.desc}:
     + [JW] Assume the proper python helpers are called if a
       (Makefile) variable is used.  (Closes: #659335)
