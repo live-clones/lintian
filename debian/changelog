@@ -3,6 +3,9 @@ lintian (2.5.10.5) unstable; urgency=low
   * checks/debconf:
     + [NT] Fix several path traversal issues that could leak
       information about the host system.
+  * checks/init.d:
+    + [NT] Fix possible symlink traversal that could leak
+      information about the host system.
   * checks/md5sums:
     + [NT] Fix path traversal issue that could leak information
       about the host system.
