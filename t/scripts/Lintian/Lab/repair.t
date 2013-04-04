@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use Test::More;
 use Lintian::Lab;
@@ -57,7 +58,7 @@ sub do_tests {
 
     $empty_manifest = $LAB_A->_get_lab_index ('changes')->clone;
 
-    opendir my $dirfd, "$DATADIR/changes" or die "opendir $DATADIR/changes: $!";
+    opendir(my $dirfd, "$DATADIR/changes");
     foreach my $pkgbase (readdir $dirfd) {
         next unless $pkgbase =~ m/\.(?:changes|u?deb|dsc)$/;
         my $path = "$DATADIR/changes/$pkgbase";
@@ -66,7 +67,7 @@ sub do_tests {
         $entry->create;
         $added++;
     }
-    closedir $dirfd;
+    closedir($dirfd);
 
     $full_manifest = $LAB_A->_get_lab_index ('changes')->clone;
 

@@ -10,6 +10,7 @@
 
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
@@ -38,10 +39,8 @@ my $percent = 0;
 
 my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
 
-opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
-    or fail("cannot read directory $LINTIAN_ROOT/checks");
-
-for my $check (readdir CHECKDIR) {
+opendir(my $checkdir, "$LINTIAN_ROOT/checks");
+for my $check (readdir($checkdir)) {
     next unless $check =~ /\.desc$/;
 
     my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
@@ -78,7 +77,7 @@ for my $check (readdir CHECKDIR) {
     }
 }
 
-closedir(CHECKDIR);
+closedir($checkdir);
 
 print "Severity\n";
 foreach my $s (@severities) {

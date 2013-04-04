@@ -35,6 +35,7 @@
 package Lintian::menu_format;
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use File::Basename;
 use List::MoreUtils qw(any);
@@ -211,12 +212,11 @@ my ($pkg, $type, $info, $proc, $group) = @_;
 
 my $mdir = $info->lab_data_path ('menu');
 my @menufiles;
-opendir MENUDIR, "$mdir/lib" or fail 'cannot read menu/lib file directory';
-push @menufiles, map { "$mdir/lib/$_" } readdir (MENUDIR);
-closedir MENUDIR;
-opendir MENUDIR, "$mdir/share" or fail 'cannot read menu/share file directory';
-push @menufiles, map { "$mdir/share/$_" } readdir (MENUDIR);
-closedir MENUDIR;
+for my $dir ("$mdir/lib", "$mdir/share") {
+    opendir(my $dirfd, $dir);
+    push(@menufiles, map { "$dir/$_" } readdir($dirfd));
+    close($dirfd);
+}
 
 # Find the desktop files in the package for verification.
 my @desktop_files;

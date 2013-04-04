@@ -23,6 +23,7 @@ package Lintian::coll::scripts;
 
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
@@ -34,7 +35,6 @@ my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 open SCRIPTS, '>', "$dir/scripts" or fail "cannot open scripts output file: $!";
 
-my $file;
 my $magic;
 my $scriptpath;
 
@@ -72,10 +72,8 @@ close(SCRIPTS) or fail("cannot write scripts file: $!");
 open SCRIPTS, '>', "$dir/control-scripts"
     or fail("cannot open control-scripts output file: $!");
 
-opendir CONTROL, "$dir/control"
-    or fail("cannot read control directory: $!");
-
-for $file (readdir CONTROL) {
+opendir(my $dirfd, "$dir/control");
+for my $file (readdir($dirfd)) {
     next if -l "$dir/control/$file" or ! -f _;
     open FILE, '<', "$dir/control/$file" or fail "cannot open control/$file: $!";
     if (read(FILE, $magic, 2) and $magic eq '#!') {
@@ -85,7 +83,7 @@ for $file (readdir CONTROL) {
     }
     close(FILE);
 }
-closedir(CONTROL);
+closedir($dirfd);
 close(SCRIPTS) or fail("cannot write control-scripts file: $!");
 
 }

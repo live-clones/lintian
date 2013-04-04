@@ -23,6 +23,7 @@
 package Lintian::menus;
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use Lintian::Check qw(check_spelling check_spelling_picky $known_shells_regex);
 use Lintian::Data;
@@ -183,17 +184,16 @@ if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
 # check consistency
 # docbase file?
 if ($docbase_file) {
-    opendir DOCBASEDIR, $info->lab_data_path ('doc-base')
-        or fail 'cannot read doc-base directory';
+    opendir(my $dirfd, $info->lab_data_path('doc-base'));
     my $dbfile;
-    while (defined ($dbfile = readdir DOCBASEDIR)) {
+    while (defined($dbfile = readdir($dirfd)) ) {
         my $dbpath = $info->lab_data_path ("doc-base/$dbfile");
         # don't try to parse executables, plus we already warned about it
         next if -x $dbfile;
         check_doc_base_file ($dbfile, $dbpath, $pkg, $type, \%all_files, \%all_links,
                              $group);
     }
-    closedir DOCBASEDIR;
+    closedir($dirfd);
 } elsif ($documentation) {
     if ($pkg =~ /^libghc6?-.*-doc$/) {
         # This is the library documentation for a haskell library. Haskell

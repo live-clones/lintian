@@ -21,6 +21,7 @@
 package Lintian::init_d;
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use List::MoreUtils qw(any none);
 
@@ -182,9 +183,8 @@ foreach my $initd_file (keys %initd_postinst) {
 }
 
 # files actually installed in /etc/init.d should match our list :-)
-opendir INITD, $initd_dir
-    or fail "cannot read init.d directory: $!";
-for my $script (readdir(INITD)) {
+opendir(my $dirfd, $initd_dir);
+for my $script (readdir($dirfd)) {
     my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
     next if any {$script eq $_} qw(. .. README skeleton rc rcS);
 
@@ -208,7 +208,7 @@ for my $script (readdir(INITD)) {
         check_init ($script, $script_path) if -f $script_path;
     }
 }
-closedir(INITD);
+closedir($dirfd);
 
 }
 

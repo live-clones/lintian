@@ -29,7 +29,7 @@ allow-unsafe = 1
 [BuiltinFunctions::ProhibitBooleanGrep]
 
 [InputOutput::RequireCheckedSyscalls]
-functions = open opendir chdir
+functions = open opendir chdir read readline closedir sysopen sysread sysclose
 # possible TODO read readline readdir close closedir
 
 # Checks and collections blow up

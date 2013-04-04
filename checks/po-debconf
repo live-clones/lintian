@@ -21,6 +21,7 @@
 package Lintian::po_debconf;
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail system_env);
@@ -35,11 +36,11 @@ my $debfiles = $info->debfiles;
 # First, check wether this package seems to use debconf but not po-debconf.
 # Read the templates file and look at the template names it provides, since
 # some shared templates aren't translated.
-opendir(DEB, $debfiles)
-    or fail("Can't open debfiles directory.");
+opendir(my $dirfd, $debfiles);
+
 my $has_template = my $has_depends = my $has_config = 0;
 my @lang_templates;
-for my $file (readdir(DEB)) {
+for my $file (readdir($dirfd)) {
     next if -d "$debfiles/$file";
     if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
         if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
@@ -77,7 +78,7 @@ for my $file (readdir(DEB)) {
         }
     }
 }
-closedir(DEB);
+closedir($dirfd);
 
 #TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template ) {
@@ -136,9 +137,8 @@ if (-x '/usr/bin/msgcmp' && -x '/usr/share/intltool-debian/intltool-update' ) {
 if (! -x '/usr/bin/msgfmt' ) {
     fail('msgfmt not found');
 }
-opendir(DEBIAN, "$debfiles/po")
-        or fail("Can't open debfiles/po directory.");
-while (defined(my $file=readdir(DEBIAN))) {
+opendir(my $po_dirfd, "$debfiles/po");
+while (defined(my $file=readdir($po_dirfd))) {
     next unless $file =~ m/\.po$/;
     tag 'misnamed-po-file', "debian/po/$file"
         unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
@@ -169,7 +169,7 @@ while (defined(my $file=readdir(DEBIAN))) {
         $full_translation = 1;
     }
 }
-closedir DEBIAN;
+closedir($po_dirfd);
 
 tag 'no-complete-debconf-translation' if !$full_translation;
 

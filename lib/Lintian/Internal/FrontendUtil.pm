@@ -19,6 +19,7 @@
 package Lintian::Internal::FrontendUtil;
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use Exporter qw(import);
 
@@ -49,8 +50,7 @@ sub check_test_feature{
 sub load_collections {
     my ($visitor, $dirname) = @_;
 
-    opendir my $dir, $dirname
-        or fail "cannot read directory $dirname: $!";
+    opendir(my $dir, $dirname);
 
     foreach my $file (readdir $dir) {
         next if $file =~ m/^\./;
@@ -59,7 +59,7 @@ sub load_collections {
         $visitor->($cs);
     }
 
-    closedir $dir;
+    closedir($dir);
 }
 
 # Return the default number of parallization to be used

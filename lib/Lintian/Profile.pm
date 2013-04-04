@@ -23,6 +23,7 @@ use parent qw(Class::Accessor);
 
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use Carp qw(croak);
 
@@ -553,14 +554,14 @@ sub _load_checks {
     my ($self) = @_;
     foreach my $checkdir ($self->include_path ('checks')) {
         next unless -d $checkdir;
-        opendir my $dirfd, $checkdir or croak "opendir $checkdir: $!";
+        opendir(my $dirfd, $checkdir);
         for my $desc (sort readdir $dirfd) {
             my $cname = $desc;
             next unless $cname =~ s/\.desc$//o;
             # _parse_check ignores duplicates, so we don't have to check for it.
             $self->_parse_check ($cname, $checkdir);
         }
-        closedir $dirfd;
+        closedir($dirfd);
     }
 }
 

@@ -21,6 +21,7 @@
 package Lintian::debhelper;
 use strict;
 use warnings;
+use autodie qw(opendir closedir);
 
 use Lintian::Data;
 use Lintian::Relation;
@@ -285,9 +286,8 @@ if ($seendhcleank and $level >= 7) {
 # Check the files in the debian directory for various debhelper-related
 # things.
 my @indebfiles = ();
-opendir(DEBIAN, $droot)
-    or fail("Can't open debfiles directory.");
-foreach my $file (sort readdir(DEBIAN)) {
+opendir(my $dirfd, $droot);
+for my $file (sort(readdir($dirfd))) {
     next if $file eq 'rules' or not -f "$droot/$file";
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
         next unless $needtomodifyscripts;
@@ -374,7 +374,7 @@ foreach my $file (sort readdir(DEBIAN)) {
         }
     }
 }
-closedir(DEBIAN);
+closedir($dirfd);
 
 $bdepends_noarch = $info->relation_noarch('build-depends-all');
 $bdepends = $info->relation('build-depends-all');
