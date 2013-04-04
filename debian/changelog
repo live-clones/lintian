@@ -126,6 +126,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       relative icons in menu files.  (Closes: #697916)
     + [NT] Document why only XPM are allowed in the tag description
       of menu-icon-not-in-xpm-format.  (Closes: 591812)
+  * checks/menus:
+    + [NT] Fix path traversal issue that could leak information
+      about the host system.
   * checks/patch-systems{,.desc}:
     + [NT] Retire unneeded-build-dep-on-quilt, it is only a pedantic
       tag and apparently not too accurate.  Thanks to Charles Plessy
