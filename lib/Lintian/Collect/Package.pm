@@ -25,7 +25,7 @@ use base 'Lintian::Collect';
 
 use Carp qw(croak);
 use Lintian::Path;
-use Lintian::Util qw(open_gz perm2oct);
+use Lintian::Util qw(open_gz perm2oct resolve_pkg_path);
 
 # Returns the path to the dir where the package is unpacked
 #  or a file therein (see pod below)
@@ -94,6 +94,13 @@ sub _fetch_extracted_dir {
     }
     if ($file) {
         # strip leading ./ - if that leaves something, return the path there
+        if ($file =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
+            # possible traversal - double check it and (if needed)
+            # stop it before it gets out of hand.
+            if (resolve_pkg_path('/', $file) eq '') {
+                croak qq{The path "$file" is not within the package root};
+            }
+        }
         $file =~ s,^\.?/*+,,go;
         return "$dir/$file" if $file;
     }
@@ -287,7 +294,7 @@ Returns the path to the directory in which the package has been
 unpacked.  If C<$name> is given, it will return the path to that
 specific file (or dir).  The method will strip any leading "./" and
 "/" from C<$name>, but it will not check if C<$name> actually exists
-nor will it check for path traversals.
+and it will only do a basic check for obvious path traversals.
 
 The path returned is not guaranteed to be inside the Lintian Lab as
 the package may have been unpacked outside the Lab (e.g. as

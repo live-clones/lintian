@@ -27,6 +27,11 @@ lintian (2.5.10.5) unstable; urgency=low
     + [NT] Skip collection if usr/share/doc/<pkg> is not contained
       within the package root.
 
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] When a check requests access to a raw file (or dir) in the
+      package, ensure that the resulting path does not "escape" the
+      top level directory.  This should preemptively guard against some
+      (but not all) traversal attempts.
   * lib/Lintian/Util.pm:
     + [NT] Add sub to check if a path is contained within a given dir.
 
