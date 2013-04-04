@@ -24,7 +24,7 @@ use warnings;
 
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail read_dpkg_control :constants);
+use Lintian::Util qw(fail read_dpkg_control :constants $PKGNAME_REGEX);
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.5.24.  Added indices for cdebconf (indicates sort order for
@@ -69,7 +69,10 @@ my $usesmultiselect='';
 if ($type eq 'source') {
     my $binaries = $info->field('binary');
     # no binary field?  There is not much we can do about it here.
-    return 0 unless defined $binaries;
+    return unless defined $binaries;
+    # do not trust the contents of that field any further than we can
+    # throw it.
+    return unless $binaries =~ m{^$PKGNAME_REGEX (?:\s*+ , \s*+ $PKGNAME_REGEX)*+ $}xsm;
     chomp $binaries;
     my @files = map { "$_.templates" } split /,\s+/, $binaries;
     push @files, 'templates';

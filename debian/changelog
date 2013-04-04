@@ -63,6 +63,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Correct description of an autotools tag.  Thanks
       to Alberto Garcia and Timo Juhani Lindfors for the
       report and patch.  (Closes: #703490)
+  * checks/debconf:
+    + [NT] Fix path traversal issue that could leak information
+      about the host system.
   * checks/debhelper{,.desc}:
     + [JW] Assume the proper python helpers are called if a
       (Makefile) variable is used.  (Closes: #659335)

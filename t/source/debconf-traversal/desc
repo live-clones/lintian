@@ -1,0 +1,5 @@
+Testname: debconf-traversal
+Sequence: 6000
+Version: 1.0
+Description: Test for traversal issues via debconf templates
+Test-Against: syntax-error-in-debconf-template
