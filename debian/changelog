@@ -141,6 +141,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [NT] Special case gcc packages when looking for dev symlinks.
       gcc stores its dev symlinks in some special directories.
+    + [NT] Fix path traversal issue that could leak information
+      about the host system.
   * checks/source-copyright{,.desc}:
     + [JW,NT] Add a separate tag for ambiguous DEP-5 paragraphs,
       where Lintian cannot reliably figure out what is intended.
