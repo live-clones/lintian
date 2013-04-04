@@ -75,18 +75,10 @@ my $menumethod_file;
 my $anymenu_file;
 my $documentation;
 
-if (-f 'control/preinst') {
-    check_script($pkg, 'preinst', \%preinst);
-}
-if (-f 'control/postinst') {
-    check_script($pkg, 'postinst', \%postinst);
-}
-if (-f 'control/prerm') {
-    check_script($pkg, 'prerm', \%prerm);
-}
-if (-f 'control/postrm') {
-    check_script($pkg, 'postrm', \%postrm);
-}
+check_script($pkg, 'preinst', \%preinst);
+check_script($pkg, 'postinst', \%postinst);
+check_script($pkg, 'prerm', \%prerm);
+check_script($pkg, 'postrm', \%postrm);
 
 # read package contents
 for my $file (sort keys %{$info->index}) {
@@ -589,8 +581,12 @@ sub check_script {
     my ($no_check_menu,$no_check_installdocs,$no_check_wmmenu,$calls_wmmenu);
     my $interp;
 
+    # control files are regular files and not symlinks, pipes etc.
+    return if -l "control/$script" or not -f "control/$script";
+
     open(IN, '<', "control/$script") or
 	fail("cannot open maintainer script control/$script for reading: $!");
+
     $interp = <IN>;
     $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {
