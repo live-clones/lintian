@@ -28,7 +28,7 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 
 our @ISA    = qw(Exporter);
-our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky);
+our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky $PKGNAME_REGEX);
 
 =head1 NAME
 
@@ -285,6 +285,21 @@ sub check_spelling_picky {
 
     return $counter;
 }
+
+=back
+
+=head1 VARIABLES
+
+=over 4
+
+=item $PKGNAME_REGEX
+
+Regular expression that matches valid package names.  The expression
+is not anchored and does not enforce any "boundry" characters.
+
+=cut
+
+our $PKGNAME_REGEX = qr{[a-z0-9][-+\.a-z0-9]+}o;
 
 =back
 

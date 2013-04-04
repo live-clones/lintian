@@ -21,6 +21,7 @@
 package Lintian::debconf;
 use strict;
 
+use Lintian::Check qw($PKGNAME_REGEX);
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Util;
@@ -69,6 +70,11 @@ my $usesmultiselect='';
 
 if ($type eq 'source') {
     my $binaries = $info->field('binary');
+    # no binary field?  There is not much we can do about it here.
+    return unless defined $binaries;
+    # do not trust the contents of that field any further than we can
+    # throw it.
+    return unless $binaries =~ m{^$PKGNAME_REGEX (?:\s*+ , \s*+ $PKGNAME_REGEX)*+ $}xsm;
     chomp $binaries;
     my @files = map { "$_.templates" } split /,\s+/, $binaries;
     push @files, "templates";

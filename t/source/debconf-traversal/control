@@ -1,0 +1,14 @@
+Source: debconf-traversal
+Section: devel
+Priority: optional
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.9.1
+
+Package: debconf-traversal
+Architecture: all
+Depends: ${misc:Depends}
+Description: Test against traversal issue in c/debconf
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
