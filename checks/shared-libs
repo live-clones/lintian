@@ -549,7 +549,7 @@ if (keys %shlibs_control and keys %symbols_control) {
 }
 
 # 6th step: check pre- and post- control files
-if (-f 'control/preinst') {
+if (-f 'control/preinst' and not -l 'control/preinst') {
     local $_ = slurp_entire_file('control/preinst');
     if (/^[^\#]*\bldconfig\b/m) {
 	tag "preinst-calls-ldconfig", ""
@@ -557,7 +557,7 @@ if (-f 'control/preinst') {
 }
 
 my $we_call_postinst=0;
-if (-f 'control/postinst') {
+if (-f 'control/postinst' and not -l 'control/postinst') {
     local $_ = slurp_entire_file('control/postinst');
 
     # Decide if we call ldconfig
@@ -576,14 +576,14 @@ if ($type eq 'udeb') {
 	if not $we_call_postinst and $must_call_ldconfig;
 }
 
-if (-f 'control/prerm') {
+if (-f 'control/prerm' and not -l 'control/prerm') {
     local $_ = slurp_entire_file('control/prerm');
     if (/^[^\#]*\bldconfig\b/m) {
 	tag "prerm-calls-ldconfig", "";
     }
 }
 
-if (-f 'control/postrm') {
+if (-f 'control/postrm' and not -l 'control/postrm') {
     local $_ = slurp_entire_file('control/postrm');
 
     # Decide if we call ldconfig
