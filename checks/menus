@@ -70,18 +70,10 @@ my $menumethod_file;
 my $anymenu_file;
 my $documentation;
 
-if (-f $info->control('preinst')) {
-    check_script($pkg, $info->control('preinst'), 'preinst', \%preinst);
-}
-if (-f $info->control('postinst')) {
-    check_script($pkg, $info->control('postinst'), 'postinst', \%postinst);
-}
-if (-f $info->control('prerm')) {
-    check_script($pkg, $info->control('prerm'), 'prerm', \%prerm);
-}
-if (-f $info->control('postrm')) {
-    check_script($pkg, $info->control('postrm'), 'postrm', \%postrm);
-}
+check_script($pkg, $info->control('preinst'), 'preinst', \%preinst);
+check_script($pkg, $info->control('postinst'), 'postinst', \%postinst);
+check_script($pkg, $info->control('prerm'), 'prerm', \%prerm);
+check_script($pkg, $info->control('postrm'), 'postrm', \%postrm);
 
 # read package contents
 for my $file ($info->sorted_index) {
@@ -574,6 +566,9 @@ sub check_script {
     my ($pkg, $spath, $script, $pres) = @_;
     my ($no_check_menu,$no_check_installdocs);
     my $interp;
+
+    # control files are regular files and not symlinks, pipes etc.
+    return if -l $spath or not -f $spath;
 
     open(IN, '<', $spath) or
         fail("cannot open maintainer script control/$script for reading: $!");
