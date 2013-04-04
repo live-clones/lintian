@@ -25,7 +25,7 @@ use parent 'Lintian::Collect';
 
 use Carp qw(croak);
 use Lintian::Path;
-use Lintian::Util qw(open_gz perm2oct);
+use Lintian::Util qw(open_gz perm2oct resolve_pkg_path);
 
 =head1 NAME
 
@@ -226,6 +226,13 @@ sub _fetch_extracted_dir {
         if ($file =~ s,^(?:\.?/)++,,go) {
             warnings::warnif('Lintian::Collect',
                 qq{Argument to $field had leading "/" or "./"});
+        }
+        if ($file =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
+            # possible traversal - double check it and (if needed)
+            # stop it before it gets out of hand.
+            if (resolve_pkg_path('/', $file) eq '') {
+                croak qq{The path "$file" is not within the package root};
+            }
         }
         return "$dir/$file" if $file ne '';
     }

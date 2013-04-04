@@ -275,6 +275,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       (Closes: #695866)
     + [NT] Add warning to unpacked and debfiles when they are given a
       path with leading slash or dot-slash.
+    + [NT] When a check requests access to a raw file (or dir) in the
+      package, ensure that the resulting path does not "escape" the
+      top level directory.  This should preemptively guard against some
+      (but not all) traversal attempts.
   * lib/Lintian/Command/Simple.pm:
     + [NT] Use constant time lookup access instead of linear scan with
       "hashref" wait.
