@@ -89,7 +89,9 @@ my $action_r = qr/\w+/;
 my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
 # read postinst control file
-if (open(IN, '<', $postinst)) {
+if ( -f $postinst and not -l $postinst) {
+    open(IN, '<', $postinst)
+        or fail "open postinst: $!";
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -105,11 +107,13 @@ if (open(IN, '<', $postinst)) {
             tag 'output-of-updaterc.d-not-redirected-to-dev-null', "$name postinst";
         }
     }
+    close(IN);
 }
-close(IN);
 
 # read preinst control file
-if (open(IN, '<', $preinst)) {
+if ( -f $preinst and not -l $preinst) {
+    open(IN, '<', $preinst)
+        or fail "open preinst: $!";
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -124,7 +128,9 @@ if (open(IN, '<', $preinst)) {
 }
 
 # read postrm control file
-if (open(IN, '<', $postrm)) {
+if ( -f $postrm and not -l $postrm) {
+    open(IN, '<', $postrm)
+        or fail "open postrm: $!";
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -141,7 +147,9 @@ if (open(IN, '<', $postrm)) {
 }
 
 # read prerm control file
-if (open(IN, '<', $prerm)) {
+if ( -f $prerm and not -l $prerm) {
+    open(IN, '<', $prerm)
+        or fail "open prerm: $!";
     while (<IN>) {
         next if /$exclude_r/o;
         s/\#.*$//o;

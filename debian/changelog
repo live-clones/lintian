@@ -109,6 +109,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Fix regression where Lintian would not properly match
       init.d passed to update-rc.d.  Thanks to Michael Meskes for
       reporting.  (Closes: #698602)
+    + [NT] Fix possible symlink traversal that could leak
+      information about the host system.
   * checks/java{,.desc}:
     + [NT] Report possibly broken jar files.
   * checks/md5sums:
