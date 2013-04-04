@@ -1,3 +1,11 @@
+lintian (2.4.3+squeeze2) stable; urgency=low
+
+  * checks/md5sums:
+    + [NT] Fix path traversal issue that could leak information
+      about the host system.
+
+ -- Niels Thykier <niels@thykier.net>  Fri, 05 Apr 2013 22:00:00 +0200
+
 lintian (2.4.3+squeeze1) stable; urgency=low
 
   * checks/{conffiles,etcfiles}:

@@ -1,0 +1,5 @@
+md5sums-traversal (1.0) unstable; urgency=low
+
+  * A Lintian test case.
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sat, 21 Feb 2009 13:34:21 -0800
