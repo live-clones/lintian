@@ -17,6 +17,7 @@ package Lintian::Command::Simple;
 
 use strict;
 use warnings;
+use autodie qw(open close chdir);
 
 use Exporter qw(import);
 use POSIX qw(:sys_wait_h);
@@ -77,7 +78,7 @@ sub rundir {
         my $dir = shift;
         close(STDIN);
         open(STDIN, '<', '/dev/null');
-        chdir($dir) or die("Failed to chdir to $dir: $!\n");
+        chdir($dir);
         CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
     }
 
@@ -138,7 +139,7 @@ sub background_dir {
         my $dir = shift;
         close(STDIN);
         open(STDIN, '<', '/dev/null');
-        chdir($dir) or die("Failed to chdir to $dir: $!\n");
+        chdir($dir);
         CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
     }
 }

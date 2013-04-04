@@ -29,6 +29,7 @@ package Lintian::coll::diffstat;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail get_dsc_info gunzip_file);
@@ -53,20 +54,19 @@ return unless (-f $diff_file);
 
 gunzip_file($diff_file, "$dir/debian-patch");
 
-open STAT, '>', "$dir/diffstat" or fail "cannot open scripts output file: $!";
+open(STAT, '>', "$dir/diffstat");
 # diffstat is noisy on stderr if its stdout is not a tty.
 # Shut it up by redirecting stderr to /dev/null.
-open STDERR, '>', '/dev/null';
-open DIFF, '-|', 'diffstat',  '-p1', "$dir/debian-patch"
-  or fail("cannot open pipe to diffstat on debian-patch: $!");
+open(STDERR, '>', '/dev/null');
+open(DIFF, '-|', 'diffstat',  '-p1', "$dir/debian-patch");
 # Copy all except last line to the STAT file
 my $previous;
 while (<DIFF>) {
     print STAT $previous if $previous;
     $previous = $_;
 }
-close DIFF or fail("cannot close pipe to diffstat on debian-patch: $!");
-close STAT or fail("error writing diffstat file: $!");
+close(DIFF);
+close(STAT);
 
 }
 

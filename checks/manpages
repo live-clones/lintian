@@ -21,6 +21,7 @@
 package Lintian::manpages;
 use strict;
 use warnings;
+use autodie qw(open close chdir);
 
 use File::Basename;
 use List::MoreUtils qw(any none);
@@ -160,11 +161,11 @@ foreach my $file ($info->sorted_index) {
         my $path = $info->unpacked($file);
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
-            $fd = open_gz ($path);
+            $fd = open_gz($path)
+                or fail "cannot open $file: $!";
         } else {
             open $fd, '<', $path;
         }
-        $fd or fail "cannot open $file: $!";
         my @manfile = <$fd>;
         close $fd;
         # Is it a .so link?
@@ -214,8 +215,7 @@ foreach my $file ($info->sorted_index) {
                 fail "fork (lexgrog) failed: $!";
             } elsif ($pid == 0) {
                 clean_env;
-                open STDERR, '>&', STDOUT
-                    or fail "Redirect STDERR failed: $!";
+                open(STDERR, '>&', \*STDOUT);
                 exec 'lexgrog', $path
                     or fail "exec lexgrog failed: $!";
             }
@@ -227,8 +227,15 @@ foreach my $file ($info->sorted_index) {
                 tag 'manpage-is-dh_make-template', $file;
             }
             1 while <LEXGROG>;
-            close LEXGROG;
-            tag 'manpage-has-bad-whatis-entry', $file if $? != 0;
+            eval {
+                close(LEXGROG);
+            };
+            if (my $err = $@) {
+                # Problem closing the pipe?
+                fail "close pipe: $err" if $err->errno;
+                # No, then lexgrog returned with a non-zero exit code.
+                tag 'manpage-has-bad-whatis-entry', $file;
+            }
         }
 
         # If it's not a .so link, run it through 'man' to check for errors.
@@ -253,12 +260,10 @@ foreach my $file ($info->sorted_index) {
             clean_env;
             close STDOUT;
             close $read;
-            open STDOUT, '>', '/dev/null'
-                or fail "Redirecting STDOUT: $!";
-            open STDERR, '>&', $write
-                or fail "Redirecting STDERR: $!";
+            open(STDOUT, '>', '/dev/null');
+            open(STDERR, '>&', $write);
             if ($dir) {
-                chdir $dir or fail "chdir $dir: $!";
+                chdir($dir);
             }
             $ENV{MANROFFSEQ} = '';
             $ENV{MANWIDTH} = 80;

@@ -28,6 +28,10 @@ allow-unsafe = 1
 
 [BuiltinFunctions::ProhibitBooleanGrep]
 
+[InputOutput::RequireCheckedSyscalls]
+functions = open opendir chdir
+# possible TODO read readline readdir close closedir
+
 # Checks and collections blow up
 [-Modules::RequireFilenameMatchesPackage]
 # We don't use package versions atm and even if we did, it probably
