@@ -101,7 +101,7 @@ well as providing access to the entries.
 
 =item new ([DIR])
 
-Creates a new Lab instance.  If DIR is passed it will be used as
+Creates a new Lab instance.  If DIR is defined it will be used as
 the path to the lab and the lab will be in static mode.  Otherwise the
 lab will be in temporary mode and will point to a temporary directory.
 
@@ -112,7 +112,7 @@ sub new {
     my $absdir;
     my $mode = LAB_MODE_TEMP;
     my $dok = 1;
-    if ($dir) {
+    if (defined $dir) {
         $mode = LAB_MODE_STATIC;
         $absdir = Cwd::abs_path ($dir);
         if (!$absdir) {

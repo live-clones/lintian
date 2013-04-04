@@ -203,6 +203,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       /etc/xdg/lintian/lintianrc.  The previous lintianrc paths are
       still accepted.
     + [NT] Stop looking for lintianrc files in the LINTIAN_ROOT.
+    + [NT] Stop exporting LINTIAN_LAB to processes run by lintian.
 
   * lib/*:
     + [NT] Use "parent" instead of the "base" pragma.

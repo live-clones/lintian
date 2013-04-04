@@ -34,14 +34,6 @@ use POSIX qw(:sys_wait_h);
 
 # {{{ Application Variables
 
-# Variables from %opt (defined below) we must export to %ENV
-my @MUST_EXPORT = (qw(
-    LINTIAN_LAB
-    LINTIAN_ROOT
-));
-# LINTIAN_DEBUG, but that is handled separately
-# TMPDIR, handled separatedly
-
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
 #
@@ -50,8 +42,7 @@ my @MUST_EXPORT = (qw(
 # updated to use the ENV variable if the one in %opt is undef
 # and ENV has a value.
 #
-# NB: Variables listed here are not always exported - use @MUST_EXPORT
-# for that.
+# NB: Variables listed here are not always exported.
 my @ENV_VARS = (
 # LINTIAN_CFG  - handled manually
 # LINTIAN_ROOT - handled manually
@@ -570,6 +561,8 @@ if (defined $opt{'LINTIAN_ROOT'}) {
 } else {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
 }
+# exported for collections, which are run as an external process.
+$ENV{'LINTIAN_ROOT'} = $opt{'LINTIAN_ROOT'};
 
 # Filter out non-existent paths and resolve the rest.
 # - as we will add them to @INC, make sure they are resolved
@@ -769,16 +762,6 @@ if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
     die "The color value must be one of \"never\", \"always\", \"auto\" or \"html\"\n";
 }
 
-# export current settings for our helper scripts
-foreach my $var (@MUST_EXPORT) {
-    if ($opt{$var}) {
-        $ENV{$var} = $opt{$var};
-    } else {
-        $ENV{$var} ='';
-        $opt{$var} = ''; # Avoids some undef warnings later
-    }
-}
-
 # We do this manually since the above would set $ENV{TMPDIR} to ''
 # if it was undef and that causes tempdir to give us some "funny"
 # (read: broken) paths.
@@ -838,7 +821,7 @@ debug_msg(1,
           $BANNER,
           "Lintian root directory: $opt{'LINTIAN_ROOT'}",
           "Configuration file: $opt{'LINTIAN_CFG'}",
-          "Laboratory: $opt{'LINTIAN_LAB'}",
+          'Laboratory: ' . ($opt{'LINTIAN_LAB'} // '<N/A>'),
           delimiter(),
     );
 
