@@ -105,7 +105,9 @@ if ($type eq 'source') {
     return 0;
 }
 
-if (open(PREINST, '<', "control/preinst")) {
+if ( -f "control/preinst" and not -l "control/preinst") {
+    open(PREINST, '<', "control/preinst")
+        or fail "open preinst: $!";
     while (<PREINST>) {
 	s/\#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or
@@ -117,10 +119,10 @@ if (open(PREINST, '<', "control/preinst")) {
     close PREINST;
 }
 
-if (-f "control/config") {
+if (-f "control/config" and not -l "control/config") {
     $seenconfig=1;
 }
-if (-f "control/templates") {
+if (-f "control/templates" and not -l "control/templates") {
     $seentemplates=1;
 }
 
@@ -166,6 +168,8 @@ if ($seenconfig and not $seentemplates and not $usesdbconfig) {
     tag "no-debconf-config", "";
 }
 
+# $seenconfig will be false if control/config is a symlink or if it was
+# not a file, so we do not have to check with -f/-l here again.
 if ($seenconfig and not -x "control/config") {
     tag "debconf-config-not-executable", "";
 }
@@ -369,7 +373,10 @@ my %templates_used;
 my %template_aliases;
 for my $file (qw(config prerm postrm preinst postinst)) {
     my $potential_makedev = {};
-    if (open(IN, '<', "control/$file")) {
+
+    if ( -f "control/$file" and ! -l "control/$file" ) {
+	open(IN, '<', "control/$file")
+	    or fail("open $file: $!");
 	my $usesconfmodule='';
 	my $obsoleteconfmodule='';
 	my $db_input='';
