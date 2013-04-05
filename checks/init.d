@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use autodie qw(opendir closedir);
 
+use File::Basename qw(dirname);
 use List::MoreUtils qw(any none);
 
 use Lintian::Data;
@@ -229,6 +230,11 @@ sub check_init {
     if (-l $initd_path) {
         my $target = readlink ($initd_path);
         if ($target =~ m,(?:\A|/)lib/init/upstart-job\z,) {
+            return;
+        }
+        if (!is_ancestor_of(dirname($initd_path), $initd_path)) {
+            # unsafe symlink, skip.  NB: dirname($initd_path) is safe
+            # because coll/init.d does sanity checking for us.
             return;
         }
     }

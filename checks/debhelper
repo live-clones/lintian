@@ -26,7 +26,7 @@ use autodie qw(opendir closedir);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail slurp_entire_file strip strip);
+use Lintian::Util qw(fail is_ancestor_of slurp_entire_file strip strip);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.
@@ -84,6 +84,11 @@ my $bdepends;
 my $seen_dh = 0;
 my $seen_python_helper = 0;
 my $seen_python3_helper = 0;
+
+if ( ! -f "$droot/rules" || !is_ancestor_of($droot, "$droot/rules")) {
+    # unsafe symlink
+    return;
+}
 
 open(RULES, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
 
@@ -296,6 +301,7 @@ for my $file (sort(readdir($dirfd))) {
     next if $file eq 'rules' or not -f "$droot/$file";
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
         next unless $needtomodifyscripts;
+        next unless is_ancestor_of($droot, "$droot/$file");
 
         # They need to have #DEBHELPER# in their scripts.  Search for scripts
         # that look like maintainer scripts and make sure the token is there.
@@ -338,6 +344,7 @@ for my $file (sort(readdir($dirfd))) {
         # Check whether this is a debhelper config file that takes a list of
         # filenames.
         if ($filename_configs->known($base)) {
+            next unless is_ancestor_of($droot, "$droot/$file");
             if ($level < 9) {
                 # debhelper only use executable files in compat 9
                 _tag_if_executable ($file, "$droot/$file");

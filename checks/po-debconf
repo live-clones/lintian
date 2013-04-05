@@ -24,7 +24,7 @@ use warnings;
 use autodie qw(opendir closedir);
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail system_env);
+use Lintian::Util qw(fail is_ancestor_of system_env);
 
 sub run {
 
@@ -82,6 +82,10 @@ closedir($dirfd);
 
 #TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template ) {
+    if ( -l "$debfiles/po" and not is_ancestor_of($debfiles, "$debfiles/po")) {
+        # debian/po is an unsafe symlink - lets stop here.
+        return;
+    }
     if ( ! -d "$debfiles/po" ) {
         tag 'not-using-po-debconf';
         return 0;
@@ -98,7 +102,7 @@ for (@lang_templates) {
 
 my $missing_files = 0;
 
-if ( -f "$debfiles/po/POTFILES.in") {
+if ( -f "$debfiles/po/POTFILES.in" and not -l "$debfiles/po/POTFILES.in") {
     open(POTFILES, '<', "$debfiles/po/POTFILES.in")
         or fail("Can't open debfiles/po/POTFILES.in.");
     while (<POTFILES>) {
@@ -117,7 +121,7 @@ if ( -f "$debfiles/po/POTFILES.in") {
     tag 'missing-potfiles-in';
     $missing_files = 1;
 }
-if (! -f "$debfiles/po/templates.pot") {
+if (! -f "$debfiles/po/templates.pot" && ! -l "$debfiles/po/templates.pot") {
     tag 'missing-templates-pot';
     $missing_files = 1;
 }
@@ -144,6 +148,8 @@ while (defined(my $file=readdir($po_dirfd))) {
         unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
     local ($/) = "\n\n";
     $_ = '';
+    # skip suspicious "files"
+    next if -l "$debfiles/po/$file" || ! -f "$debfiles/po/$file";
     open(PO, '<', "$debfiles/po/$file")
         or fail("Can't open debfiles/po/$file file.");
     while (<PO>) {

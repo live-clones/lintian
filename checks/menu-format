@@ -42,7 +42,7 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail is_ancestor_of);
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags=qw(needs section title command);
@@ -252,6 +252,7 @@ foreach my $menufile (@menufiles) {
     $fullname = "usr/lib/menu/$basename" if $menufile =~ m,^\Q$mdir\E/lib/,;
 
     next if $basename eq 'README'; # README is a special case
+    next if !is_ancestor_of($mdir, $menufile);
 
     my $menufile_line ='';
     open (IN, '<', $menufile) or
@@ -537,6 +538,7 @@ sub verify_icon {
     }
 
     # Try the explicit location, and if that fails, try the standard path.
+    my $pkgroot = $info->unpacked;
     my $iconfile = $info->unpacked($icon);
     if (! -f $iconfile) {
         $iconfile = $info->unpacked("usr/share/pixmaps/$icon");
@@ -544,6 +546,7 @@ sub verify_icon {
             my $ginfo = $group->info;
             foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
                 my $dinfo = $depproc->info;
+                $pkgroot = $dinfo->unpacked;
                 $iconfile = $dinfo->unpacked($icon);
                 last if -f $iconfile;
                 $iconfile = $info->unpacked("usr/share/pixmaps/$icon");
@@ -552,10 +555,18 @@ sub verify_icon {
         }
     }
 
-    if (! open (IN, '<', $iconfile)) {
+    # Last stat is a -f from above, reuse it
+    if (-e _) {
+        if (!is_ancestor_of($pkgroot, $iconfile)) {
+            # unsafe symlink
+            return;
+        }
+    } else {
         tag 'menu-icon-missing', $icon;
         return;
     }
+
+    open (IN, '<', $iconfile) or fail "open $iconfile: $!";
 
     my $parse = 'XPM header';
     my $line;
