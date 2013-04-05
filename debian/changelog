@@ -159,6 +159,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] New check written by Nicolas Boulenguez to catch some
       mistakes with the new autopkgtest tests.
 
+  * collection/changelog-file:
+    + [NT] Ignore files in usr/doc/<pkg>.
+    + [NT] Skip collection if usr/share/doc/<pkg> is not contained
+      within the package root.
   * collection/hardening-info{,-helper,.desc}:
     + [NT] Whitelist "memset" and "memmove" as "always safe"
       functions.  Thanks to Sebastian Ramacher for the suggestion

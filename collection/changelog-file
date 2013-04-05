@@ -25,13 +25,19 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(fail gunzip_file);
+use Lintian::Util qw(fail gunzip_file is_ancestor_of);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
 
 unlink "$dir/changelog" or fail "cannot remove changelog file: $!"
     if -e "$dir/changelog" or -l "$dir/changelog";
+
+# Extract NEWS.Debian files as well, with similar precautious.  Ignore any
+# symlinks to other packages here; in that case, we just won't check the file.
+unlink "$dir/NEWS.Debian" or fail "cannot unlink NEWS.Debian: $!"
+    if -e "$dir/NEWS.Debian" or -l "$dir/NEWS.Debian";
+
 
 # Pick the first of these files that exists.
 my @changelogs = ("$dir/unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
@@ -40,14 +46,16 @@ my @changelogs = ("$dir/unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
                   "$dir/unpacked/usr/share/doc/$pkg/changelog.debian",
                   "$dir/unpacked/usr/share/doc/$pkg/changelog.gz",
                   "$dir/unpacked/usr/share/doc/$pkg/changelog",
-                  "$dir/unpacked/usr/doc/$pkg/changelog.Debian.gz",
-                  "$dir/unpacked/usr/doc/$pkg/changelog.Debian",
-                  "$dir/unpacked/usr/doc/$pkg/changelog.debian.gz",
-                  "$dir/unpacked/usr/doc/$pkg/changelog.debian",
-                  "$dir/unpacked/usr/doc/$pkg/changelog.gz",
-                  "$dir/unpacked/usr/doc/$pkg/changelog");
+    );
 
 my $chl;
+
+if (-d "$dir/unpacked/usr/share/doc/$pkg"
+      && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")) {
+    # If the parent dir is outside this package, pretend we didn't find
+    # anything.
+    return;
+}
 
 for (@changelogs) {
     if (-l $_ || -f $_) {
@@ -112,10 +120,6 @@ if ($chl && $chl !~ m/changelog\.debian/i) {
     unlink "$dir/changelog" unless $ok;
 }
 
-# Extract NEWS.Debian files as well, with similar precautious.  Ignore any
-# symlinks to other packages here; in that case, we just won't check the file.
-unlink "$dir/NEWS.Debian" or fail "cannot unlink NEWS.Debian: $!"
-    if -e "$dir/NEWS.Debian" or -l "$dir/NEWS.Debian";
 my $news = "$dir/unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {
