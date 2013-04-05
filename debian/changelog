@@ -135,6 +135,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Retire unneeded-build-dep-on-quilt, it is only a pedantic
       tag and apparently not too accurate.  Thanks to Charles Plessy
       and Frank Kuester for the reports.  (Closes: #615516, #681061)
+  * checks/po-debconf:
+    + [NT] Unconditionally set INTLTOOL_EXTRACT.
   * checks/rules:
     + [NT] Remove ant1.7 as alternative to ant as ant1.7 has been
       removed from Wheezy.
