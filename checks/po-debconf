@@ -128,9 +128,10 @@ if (! -f "debfiles/po/templates.pot" and ! -l "debfiles/po/templates.pot") {
 	$missing_files = 1;
 }
 
+
 if (-x "/usr/bin/msgcmp" && -x "/usr/share/intltool-debian/intltool-update" ) {
 	if ($missing_files == 0) {
-		$ENV{"INTLTOOL_EXTRACT"} ||= "/usr/share/intltool-debian/intltool-extract";
+		$ENV{"INTLTOOL_EXTRACT"} = "/usr/share/intltool-debian/intltool-extract";
 		system_env("cd debfiles/po && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
 		system_env("/usr/bin/msgcmp --use-untranslated debfiles/po/test.pot debfiles/po/templates.pot >/dev/null 2>&1"
                            . "&& /usr/bin/msgcmp --use-untranslated debfiles/po/templates.pot debfiles/po/test.pot >/dev/null 2>&1") == 0

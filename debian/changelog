@@ -14,6 +14,8 @@ lintian (2.4.3+squeeze2) stable; urgency=low
   * checks/menus:
     + [NT] Fix path traversal issue that could leak information
       about the host system.
+  * checks/po-debconf:
+    + [NT] Unconditionally set INTLTOOL_EXTRACT.
   * checks/shared-libs:
     + [NT] Fix path traversal issue that could leak information
       about the host system.
