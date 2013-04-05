@@ -25,6 +25,7 @@ use strict;
 
 use Lintian::Collect;
 use Lintian::Tags qw(tag);
+use Util;
 
 sub run {
 
@@ -32,6 +33,9 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+if (-l "debfiles/watch") {
+    return unless is_ancestor_of("debfiles", "debfiles/watch");
+}
 if (! -f "debfiles/watch") {
     tag 'debian-watch-file-is-missing' unless ($info->native);
     return;

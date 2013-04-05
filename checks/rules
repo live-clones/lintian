@@ -110,7 +110,7 @@ my $info = shift;
 # all the tests if we then can't read it.
 if (-l "debfiles/rules") {
     tag "debian-rules-is-symlink", "";
-    return 0 unless -f "debfiles/rules";
+    return 0 unless -f "debfiles/rules" and is_ancestor_of("debfiles", "debfiles/rules");
 }
 
 #get architecture field:

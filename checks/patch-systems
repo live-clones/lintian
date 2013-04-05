@@ -47,16 +47,25 @@ sub run {
 	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
 	my $cwd = realpath('.');
+	if (!is_ancestor_of("debfiles", "debfiles/patches")) {
+	    # skip, bad symlink
+	    return;
+	}
 
 	#----- dpatch
 	if ($build_deps->implies("dpatch")) {
 		$uses_patch_system++;
 		#check for a debian/patches file:
-		if (! -r "debfiles/patches/00list") {
+		if (-l "debfiles/patches/00list"
+			and not is_ancestor_of("debfiles", "debfiles/patches/00list")) {
+			# skip
+		} elsif (! -r "debfiles/patches/00list") {
 			tag "dpatch-build-dep-but-no-patch-list";
 		} else {
 			my $list_uses_cpp = 0;
-			if (open(OPTS, '<', "debfiles/patches/00options")) {
+			if (-f "debian/patches/00options"
+				   && is_ancestor_of("debfiles", "debfiles/patches/00options")) {
+				open(OPTS, '<', "debfiles/patches/00options") or fail "open 00options: $!";
 				while(<OPTS>) {
 					if (/DPATCH_OPTION_CPP=1/) {
 						$list_uses_cpp = 1;
@@ -67,7 +76,8 @@ sub run {
 			}
 			foreach my $listfile (glob("debfiles/patches/00list*")) {
 				my @patches;
-				if (open(IN, '<', "$listfile")) {
+				if ( -f $listfile && is_ancestor_of("debfiles", $listfile)) {
+					open(IN, '<', "$listfile") or fail "open $listfile: $!";
 					while(<IN>) {
 						chomp;
 						next if (/^\#/); #ignore comments or CPP directive
@@ -119,7 +129,10 @@ sub run {
 	if ($build_deps->implies("quilt") or $quilt_format) {
 		$uses_patch_system++;
 		#check for a debian/patches file:
-		if (! -r "debfiles/patches/series") {
+		if (-l "debfiles/patches/series" and
+		    not is_ancestor_of("debfiles", "debfiles/patches/series")) {
+			# skip
+		} elsif (! -r "debfiles/patches/series") {
 			tag "quilt-build-dep-but-no-series-file" unless $quilt_format;
 		} else {
 			if (open(IN, '<', "debfiles/patches/series")) {
@@ -174,13 +187,18 @@ sub run {
 		if (-r "debfiles/patches/series" and
 		    -f "debfiles/patches/series") {
 			# 3.0 (quilt) sources don't need quilt as dpkg-source will do the work
-			tag "quilt-series-but-no-build-dep" unless $quilt_format;
+			if (! -l "debfiles/patches/series"
+				    or is_ancestor_of("defiles", "debfiles/patches/series")) {
+				tag "quilt-series-but-no-build-dep" unless $quilt_format;
+			}
 		}
 	}
 
 	#----- look for README.source
 	if ($uses_patch_system && ! $quilt_format && ! -f 'debfiles/README.source') {
-		tag "patch-system-but-no-source-readme";
+		if (! -l "debfiles/README.source") {
+			tag "patch-system-but-no-source-readme";
+		}
 	}
 
 	#----- general cruft checking:

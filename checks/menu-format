@@ -428,6 +428,7 @@ foreach my $menufile (@menufiles) {
     $fullname = "/usr/lib/menu/$basename" if $menufile =~ m,^menu/lib/,o;
 
     next if $basename eq "README"; # README is a special case
+    next if !is_ancestor_of('menu', $menufile);
 
     my $menufile_line ="";
     open (IN, '<', $menufile) or
@@ -704,12 +705,19 @@ sub VerifyIcon {
 	$iconfile = "unpacked/usr/share/pixmaps/$icon";
     }
 
-    if (! open (IN, '<', $iconfile)) {
-	tag "menu-icon-missing", "$icon";
-	return;
+    if (-e $iconfile) {
+        if (!is_ancestor_of("unpacked", $iconfile)) {
+            # unsafe symlink
+            return;
+        }
+    } else {
+        tag 'menu-icon-missing', $icon;
+        return;
     }
 
-    my $parse = "XPM header";
+    open (IN, '<', $iconfile) or fail "open $iconfile: $!";
+
+    my $parse = 'XPM header';
     my $line;
     do { defined ($line = <IN>) or goto parse_error; }
     until ($line =~ /\/\*\s*XPM\s*\*\//);

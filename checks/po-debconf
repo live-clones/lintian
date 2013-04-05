@@ -39,6 +39,7 @@ my $has_template = my $has_depends = my $has_config = 0;
 my @lang_templates;
 for my $file (readdir(DEB)) {
 	next if -d "debfiles/$file";
+	next if !is_ancestor_of("debfiles", "debfiles/$file");
 	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
 		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
 			push (@lang_templates, $file);
@@ -70,6 +71,10 @@ closedir(DEB);
 
 #TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template ) {
+    if ( -l "debfiles/po" and !is_ancestor_of("debfiles", "debfiles/po")) {
+        # debian/po is an unsafe symlink - lets stop here.
+        return;
+    }
     if ( ! -d "debfiles/po" ) {
 	tag "not-using-po-debconf", "";
 	return 0;
@@ -89,7 +94,7 @@ for (@lang_templates) {
 # check).
 my $missing_files = 0;
 my $yada = 0;
-if (open (RULES, '<', 'debfiles/rules')) {
+if ( ! -l "debfiles/rules" and open (RULES, '<', 'debfiles/rules')) {
     local $_;
     while (<RULES>) {
 	if (m%^\t\s*(?:perl debian/)?yada\s%) {
@@ -99,7 +104,7 @@ if (open (RULES, '<', 'debfiles/rules')) {
     }
 }
 
-if (!$yada && -f "debfiles/po/POTFILES.in") {
+if (!$yada && -f "debfiles/po/POTFILES.in" and ! -l "debfiles/po/POTFILES.in") {
 	open(POTFILES, '<', "debfiles/po/POTFILES.in")
 		or fail("Can't open debfiles/po/POTFILES.in.");
 	while (<POTFILES>) {
@@ -118,7 +123,7 @@ if (!$yada && -f "debfiles/po/POTFILES.in") {
 	tag "missing-potfiles-in", "";
 	$missing_files = 1;
 }
-if (! -f "debfiles/po/templates.pot") {
+if (! -f "debfiles/po/templates.pot" and ! -l "debfiles/po/templates.pot") {
 	tag "missing-templates-pot", "";
 	$missing_files = 1;
 }
@@ -146,6 +151,8 @@ while (defined(my $file=readdir(DEBIAN))) {
                 unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?\.po$/);
         local ($/) = "\n\n";
         $_ = '';
+        next if -l "debfiles/po/$file" or ! -f "debfiles/po/$file";
+
         open(PO, '<', "debfiles/po/$file")
                 or fail("Can't open debfiles/po/$file file.");
         while (<PO>) {

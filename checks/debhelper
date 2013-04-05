@@ -70,10 +70,16 @@ my $seendhcleank = '';
 my $overridetargets = 0;
 my %missingbdeps;
 
+if ( ! -f "debfiles/rules" or !is_ancestor_of("debfiles", "debfiles/rules")) {
+    # unsafe symlink
+    return;
+}
+
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $maybe_skipping;
 my $dhcompatvalue;
 my @versioncheck;
+
 while (<RULES>) {
     if (/^ifn?(eq|def)\s/) {
         $maybe_skipping++;
@@ -244,6 +250,7 @@ opendir(DEBIAN, 'debfiles')
 while (defined(my $file=readdir(DEBIAN))) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
 	next unless $needtomodifyscripts;
+	next unless is_ancestor_of("debfiles", "debfiles/$file");
 
 	# They need to have #DEBHELPER# in their scripts.  Search for scripts
 	# that look like maintainer scripts and make sure the token is there.
@@ -310,6 +317,8 @@ while (defined(my $file=readdir(DEBIAN))) {
 	# supported.
 	if ($filename_configs->known($base)) {
 	    next if $level < 3;
+	    next unless is_ancestor_of("debfiles", "debfiles/$file");
+
 	    open (IN, '<', "debfiles/$file")
 		or fail("Can't open debfiles/$file: $!");
 	    local $_;

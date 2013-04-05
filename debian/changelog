@@ -1,5 +1,7 @@
 lintian (2.4.3+squeeze2) stable; urgency=low
 
+  * checks/*:
+    + [NT] Avoid following unsafe symlinks.
   * checks/debconf:
     + [NT] Fix several path traversal issues that could leak
       information about the host system.
