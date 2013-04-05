@@ -16,9 +16,13 @@ lintian (2.5.10.5) unstable; urgency=low
     + [NT] Fix path traversal issue that could leak information
       about the host system.
 
+  * collection/changelog-file:
+    + [NT] Ignore files in usr/doc/<pkg>.
+    + [NT] Skip collection if usr/share/doc/<pkg> is not contained
+      within the package root.
+
   * lib/Lintian/Util.pm:
     + [NT] Add sub to check if a path is contained within a given dir.
-
 
  -- Niels Thykier <niels@thykier.net>  Fri, 05 Apr 2013 17:15:00 +0200
 
