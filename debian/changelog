@@ -16,7 +16,7 @@ lintian (2.4.3+squeeze2) stable; urgency=low
     + [NT] Fix path traversal issue that could leak information
       about the host system.
 
-  * collection/changelog-file:
+  * collection/{changelog-file,debian-readme}:
     + [NT] Ignore files in usr/doc/<pkg>.
     + [NT] Skip collection if usr/share/doc/<pkg> is not contained
       within the package root.

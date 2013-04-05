@@ -50,6 +50,16 @@ for (@readmes) {
     }
 }
 
+if (defined $file) {
+    my $dir = 'usr/share/doc';
+    $dir = 'usr/doc' if $file =~ m{^unpacked/usr/doc/}o;
+    if (!is_ancestor_of("unpacked", "unpacked/$dir/$pkg")) {
+        # Unsafe path, stop here
+        touch_file("README.Debian");
+        return;
+    }
+}
+
 if (not defined $file) {
     # no README found
     touch_file("README.Debian");
