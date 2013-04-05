@@ -26,7 +26,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(fail gunzip_file);
+use Lintian::Util qw(fail gunzip_file is_ancestor_of);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
@@ -52,6 +52,11 @@ for my $override (@overrides) {
     } elsif (-f "$override.gz") {
         $file = "$override.gz";
     }
+}
+
+if (defined $file and not is_ancestor_of("$dir/unpacked", $file)) {
+    # unsafe, pretend we didn't see it.
+    undef $file;
 }
 
 if (not defined $file) {
