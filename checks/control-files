@@ -67,10 +67,9 @@ while (<IN>) {
     next if $file eq './';
 
     $file =~ s,^(\./),,;
-    $file =~ s/ link to .*//;
-    $file =~ s/ -> .*//;
-
-    next if $file eq './';
+    # control files are not symlinks nor hardlinks
+    next if $file =~ s/ link to .*//;
+    next if $file =~ s/ -> .*//;
 
     # valid control file?
     unless ( exists $ctrl{$file} ) {
