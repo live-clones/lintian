@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail is_ancestor_of);
 use Cwd qw(realpath);
 
 sub run {
@@ -43,18 +43,27 @@ sub run {
     }
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
-    my $droot = realpath($info->debfiles);
+    my $droot = $info->debfiles;
     my $dpdir = "$droot/patches";
+    if (!is_ancestor_of($droot, $dpdir)) {
+        # Bad symlink
+        return;
+    }
 
     #----- dpatch
     if ($build_deps->implies("dpatch")) {
         $uses_patch_system++;
         #check for a debian/patches file:
-        if (! -r "$dpdir/00list") {
+        if (-l "$dpdir/00list" and not is_ancestor_of($droot, "$dpdir/00list")) {
+            # skip
+        } elsif (! -r "$dpdir/00list") {
             tag 'dpatch-build-dep-but-no-patch-list';
         } else {
             my $list_uses_cpp = 0;
-            if (open(OPTS, '<', "$dpdir/00options")) {
+            if (-f "$dpdir/00options"
+                  && is_ancestor_of($droot, "$dpdir/00options")) {
+                open(OPTS, '<', "$dpdir/00options")
+                    or fail "open 00options: $!";
                 while(<OPTS>) {
                     if (/DPATCH_OPTION_CPP=1/) {
                         $list_uses_cpp = 1;
@@ -65,7 +74,9 @@ sub run {
             }
             foreach my $listfile (glob("$dpdir/00list*")) {
                 my @patches;
-                if (open(IN, '<', $listfile)) {
+                if (-f $listfile and is_ancestor_of($droot, $listfile)) {
+                    open(IN, '<', $listfile)
+                        or fail "open $listfile: $!";
                     while(<IN>) {
                         chomp;
                         next if (/^\#/); #ignore comments or CPP directive
@@ -86,9 +97,8 @@ sub run {
                     $patch_file .= '.dpatch' if -e "$dpdir/$patch_file.dpatch"
                         and not -e "$dpdir/$patch_file";
                     next if ( -l "$dpdir/$patch_file" );
-                    unless (realpath("$dpdir/$patch_file") =~ m,^\Q$droot/,) {
-                        next;
-                    }
+                    next unless is_ancestor_of($droot, "$dpdir/$patch_file");
+
                     if (! -r "$dpdir/$patch_file") {
                         tag 'dpatch-index-references-non-existent-patch', $patch_file;
                         next;
@@ -120,7 +130,9 @@ sub run {
             tag "unneeded-build-dep-on-quilt";
         }
         #check for a debian/patches file:
-        if (! -r "$dpdir/series") {
+        if (-l "$dpdir/series" and not is_ancestor_of($droot, "$dpdir/series")) {
+            # skip
+        } elsif (! -r "$dpdir/series") {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
         } else {
             if (open(IN, '<', "$dpdir/series")) {
@@ -146,9 +158,8 @@ sub run {
                 # Check each patch.
                 foreach my $patch_file (@patches) {
                     next if ( -l "$dpdir/$patch_file" );
-                    unless (realpath("$dpdir/$patch_file") =~ m,^\Q$droot\E/,) {
-                        next;
-                    }
+                    next unless is_ancestor_of($droot, "$dpdir/$patch_file");
+
                     if (! -r "$dpdir/$patch_file") {
                         tag 'quilt-series-references-non-existent-patch', $patch_file;
                         next;
@@ -174,22 +185,43 @@ sub run {
         if ($quilt_format) { # 3.0 (quilt) specific checks
             # Format 3.0 packages may generate a debian-changes-$version patch
             my $version = $info->field('version');
-            if (-f "$dpdir/debian-changes-$version" &&
-            ! -f "$droot/source/patch-header") {
-            tag 'format-3.0-but-debian-changes-patch';
+            my $versioned_patch = "$dpdir/debian-changes-$version";
+            my $patch_header = "$droot/source/patch-header";
+            my $ok = 1;
+            if (-l "$droot/source" or -l $patch_header) {
+                # possible issue
+                if (!is_ancenstor_of($droot, $patch_header)) {
+                    $ok = 0;
+                }
+            }
+            # $dpdir is known to be safe at this point, so only check
+            # the patch itself
+            if ($ok and -l $versioned_patch) {
+                if (!is_ancenstor_of($droot, $versioned_patch)) {
+                    $ok = 0;
+                }
+            }
+            if ($ok && -f $versioned_patch && ! -f $patch_header) {
+                tag 'format-3.0-but-debian-changes-patch';
             }
         }
     } else {
         if (-r "$dpdir/series" and
             -f "$dpdir/series") {
             # 3.0 (quilt) sources don't need quilt as dpkg-source will do the work
-            tag 'quilt-series-but-no-build-dep' unless $quilt_format;
+            if (! -l "$dpdir/series" or is_ancestor_of($droot, "$dpdir/series")) {
+                tag 'quilt-series-but-no-build-dep' unless $quilt_format;
+            }
         }
     }
 
     #----- look for README.source
     if ($uses_patch_system && ! $quilt_format && ! -f "$droot/README.source") {
-        tag "patch-system-but-no-source-readme";
+        if (! -l "$droot/README.source") {
+            # tag, unless README.source was a symlink (which could be a
+            # traversal attempt)
+            tag 'patch-system-but-no-source-readme';
+        }
     }
 
     #----- general cruft checking:

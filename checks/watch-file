@@ -27,7 +27,7 @@ use warnings;
 use Lintian::Collect;
 use Lintian::Tags qw(tag);
 
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail is_ancestor_of);
 
 sub run {
 
@@ -37,6 +37,10 @@ my $info = shift;
 
 my $template = 0;
 my $wfile = $info->debfiles('watch');
+
+if (-l $wfile) {
+    return unless is_ancestor_of($info->debfiles, $wfile);
+}
 
 if (! -f $wfile) {
     tag 'debian-watch-file-is-missing' unless ($info->native);

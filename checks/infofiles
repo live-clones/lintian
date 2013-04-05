@@ -79,6 +79,10 @@ foreach my $file ($info->sorted_index) {
     # If this is the main info file (no numeric extension). make sure it has
     # appropriate dir entry information.
     if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
+        if ($index_info->is_symlink && !is_ancestor_of($info->unpacked, $file)) {
+            # unsafe symlink, skip
+            next;
+        }
         my $pid = open INFO, '-|';
         if (not defined $pid) {
             fail("cannot fork: $!");

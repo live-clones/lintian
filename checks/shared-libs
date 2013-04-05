@@ -289,7 +289,9 @@ for (keys %SONAME) {
 }
 @shlibs = grep { !$unversioned_shlibs{$_} } keys %SONAME;
 
-if ($#shlibs == -1) {
+if (-l $shlibsf) {
+    # control files are not symlinks, skip this part.
+} elsif ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
     # not be present
     if (-f $shlibsf) {
@@ -369,7 +371,9 @@ if ($#shlibs == -1) {
 
 # 5th step: check symbols control file.  Add back in the unversioned shared
 # libraries, since they can still have symbols files.
-if ($#shlibs == -1 and not %unversioned_shlibs) {
+if (-l $symbolsf) {
+    # control files are not symlinks, skip this part.
+} elsif ($#shlibs == -1 and not %unversioned_shlibs) {
     # no shared libraries included in package, thus symbols control file should
     # not be present
     if (-f $symbolsf) {

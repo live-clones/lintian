@@ -22,6 +22,8 @@ package Lintian::init_d;
 use strict;
 use warnings;
 
+use File::Basename qw(dirname);
+
 use Lintian::Check qw($PKGNAME_REGEX);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
@@ -241,6 +243,11 @@ sub check_init {
     if (-l $initd_file) {
         my $target = readlink($initd_file);
         if ($target =~ m,(?:\A|/)lib/init/upstart-job\z,) {
+            return;
+        }
+        if (!is_ancestor_of(dirname($initd_file), $initd_file)) {
+            # unsafe symlink, skip.  NB: dirname($initd_file) is safe
+            # because coll/init.d does sanity checking for us.
             return;
         }
     }

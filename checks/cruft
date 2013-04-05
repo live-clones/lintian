@@ -29,7 +29,7 @@ use warnings;
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail is_ancestor_of);
 
 use Cwd;
 use File::Find;
@@ -350,6 +350,10 @@ sub find_cruft {
         }
     }
     -f or return; # we just need normal files for the rest
+    if (-l && !is_ancestor_of($info->unpacked, $_)) {
+        # skip unsafe symlinks too
+        return;
+    }
 
     unless ($warned->{$name}) {
         for my $rule (@file_checks) {

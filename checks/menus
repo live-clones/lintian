@@ -180,7 +180,8 @@ if ($docbase_file) {
     my $dbfile;
     while (defined ($dbfile = readdir DOCBASEDIR)) {
         # don't try to parse executables, plus we already warned about it
-        next if -x "doc-base/$dbfile";
+        # - skip symlinks as well, unlikely to be used for real doc-base files.
+        next if -x "doc-base/$dbfile" or -l "doc-base/$dbfile";
         check_doc_base_file($dbfile, $pkg, $type, \%all_files, \%all_links);
     }
     closedir DOCBASEDIR;

@@ -1,5 +1,7 @@
 lintian (2.5.10.5) unstable; urgency=low
 
+  * checks/*:
+    + [NT] Avoid following unsafe symlinks.
   * checks/debconf:
     + [NT] Fix several path traversal issues that could leak
       information about the host system.
