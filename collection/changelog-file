@@ -32,7 +32,10 @@ my $type = shift;
 
 unlink("changelog");
 
+unlink('NEWS.Debian');
+
 # Pick the first of these files that exists.
+
 my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
 	       "unpacked/usr/share/doc/$pkg/changelog.Debian",
 	       "unpacked/usr/share/doc/$pkg/changelog.debian.gz",
@@ -48,10 +51,25 @@ my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
 
 my $chl;
 
+if (-d "unpacked/usr/share/doc/$pkg"
+    && !is_ancestor_of("unpacked", "unpacked/usr/share/doc/$pkg")) {
+    # If the parent dir is outside this package, pretend we didn't find
+    # anything.
+    return;
+}
+
 for (@changelogs) {
     if (-l $_ || -f $_) {
 	$chl = $_;
 	last;
+    }
+}
+
+if (defined($chl) and $chl =~ m{^unpacked/usr/doc/}o) {
+    if (!is_ancestor_of("unpacked", "unpacked/usr/doc/$pkg")) {
+        # If the parent dir is outside this package, pretend we didn't find
+        # anything.
+        return;
     }
 }
 
@@ -93,7 +111,6 @@ if (not defined $chl) {
 
 # Extract NEWS.Debian files as well, with similar precautious.  Ignore any
 # symlinks to other packages here; in that case, we just won't check the file.
-unlink('NEWS.Debian');
 my $news = "unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {
