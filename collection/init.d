@@ -23,7 +23,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(copy_dir delete_dir fail);
+use Lintian::Util qw(copy_dir delete_dir fail is_ancestor_of);
 
 ($#ARGV == 2) or fail('syntax: init.d <pkg> <type> <dir>');
 my ($pkg, $type, $dir) = @ARGV;
@@ -34,6 +34,12 @@ if (-e "$dir/init.d") {
 }
 
 if (-d "$dir/unpacked/etc/init.d") {
+    if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/etc/init.d")) {
+        # Unsafe, stop
+        mkdir ("$dir/init.d", 0777) or fail "cannot mkdir init.d: $!";
+        return;
+    }
+
     copy_dir("$dir/unpacked/etc/init.d", "$dir/init.d")
         or fail('cannot copy init.d directory');
 } else {
