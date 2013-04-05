@@ -24,6 +24,8 @@ use strict;
 use warnings;
 
 use base 'Exporter';
+use Carp qw(croak);
+use Cwd qw(abs_path);
 
 use constant {
   DCTRL_DEBCONF_TEMPLATE => 1,
@@ -64,7 +66,8 @@ BEGIN {
                  perm2oct
                  check_path
                  clean_env
-                 resolve_pkg_path),
+                 resolve_pkg_path
+                 is_ancestor_of),
                  @{ $EXPORT_TAGS{constants} }
     );
 
@@ -1058,6 +1061,38 @@ sub resolve_pkg_path {
     }
     return '.' unless @cc;
     return join '/', @cc;
+}
+
+=item is_ancestor_of(PARENTDIR, PATH)
+
+Returns true if and only if PATH is PARENTDIR or a path stored
+somewhere within PARENTDIR (or its subdirs).
+
+This function will resolve the paths; any failure to resolve the path
+will cause a trappable error.
+
+=cut
+
+sub is_ancestor_of {
+    my ($ancestor, $file) = @_;
+    my $resolved_file = abs_path($file)
+        // croak("resolving $file failed: $!");
+    my $resolved_ancestor = abs_path($ancestor)
+        // croak("resolving $ancestor failed: $!");
+    my $len;
+    return 1 if $resolved_ancestor eq $resolved_file;
+    # add a slash, "path/some-dir" is not "path/some-dir-2" and this
+    # allows us to blindly match against the root dir.
+    $resolved_file .= '/';
+    $resolved_ancestor .= '/';
+
+    # If $resolved_file is contained within $resolved_ancestor, then
+    # $resolved_ancestor will be a prefix of $resolved_file.
+    $len = length($resolved_ancestor);
+    if (substr($resolved_file, 0, $len) eq $resolved_ancestor) {
+        return 1;
+    }
+    return 0;
 }
 
 =back

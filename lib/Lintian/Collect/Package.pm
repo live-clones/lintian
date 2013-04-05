@@ -288,32 +288,41 @@ unpacked.  If C<$name> is given, it will return the path to that
 specific file (or dir).  The method will strip any leading "./" and
 "/" from C<$name>, but it will not check if C<$name> actually exists
 nor will it check for path traversals.
-  Caller is responsible for checking the sanity of the path passed to
-unpacked and verifying that the returned path points to the expected
-file.
 
 The path returned is not guaranteed to be inside the Lintian Lab as
 the package may have been unpacked outside the Lab (e.g. as
 optimization).
 
+Caveat with symlinks: Package is extracted as is and the path returned
+by this method points to the extracted file object.  If this is a
+symlink, it may "escape the root" and point to a file outside the lab
+(and a path traversal).
+
 The following code may be helpful in checking for path traversal:
 
- use Cwd qw(realpath);
+ use Lintian::Util qw(is_ancestor_of);
 
  my $collect = ... ;
  my $file = '../../../etc/passwd';
- # Append slash to follow symlink if $collect->unpacked returns a symlink
- my $uroot = realpath($collect->unpacked() . '/');
- my $ufile = realpath($collect->unpacked($file));
- if ($ufile =~ m,^$uroot,) {
+ my $uroot = $collect->unpacked;
+ my $ufile = $collect->unpacked($file);
+ # $uroot will exist, but $ufile might not.
+ if ( -e $ufile && is_ancestor_of($uroot, $ufile)) {
     # has not escaped $uroot
     do_stuff($ufile);
- } else {
+ } elsif ( -e $ufile) {
     # escaped $uroot
     die "Possibly path traversal ($file)";
+ } else {
+    # Does not exists
  }
 
-Alternatively one can use Lintian::Util::resolve_pkg_path.
+Alternatively one can use resolve_pkg_path in L<Lintian::Util> or
+L<link_resolved|Lintian::Path/link_resolved>.
+
+To get a list of entries in the package or the file meta data of the
+entries (as L<path objects|Lintian::Path>), see L</sorted_index> and
+L</index (FILE)>.
 
 =item file_info
 
