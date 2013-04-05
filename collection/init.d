@@ -36,6 +36,11 @@ if (-e "init.d") {
 }
 
 if (-d "unpacked/etc/init.d") {
+    if (!is_ancestor_of("unpacked", "unpacked/etc/init.d")) {
+        # Unsafe, stop
+        mkdir ("init.d", 0777) or fail "cannot mkdir init.d: $!";
+        return;
+    }
     copy_dir('unpacked/etc/init.d', 'init.d')
 	or fail("cannot copy init.d directory");
 } else {

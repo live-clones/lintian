@@ -50,6 +50,11 @@ for my $override (@overrides) {
     }
 }
 
+if (defined $file and !is_ancestor_of("unpacked", $file)) {
+    # unsafe, pretend we didn't see it.
+    undef $file;
+}
+
 if (not defined $file) {
     # no override found
 } elsif ($file =~ /\.gz$/) {

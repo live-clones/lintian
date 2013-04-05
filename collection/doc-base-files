@@ -37,6 +37,11 @@ if (-e "doc-base") {
 }
 
 if (-d "unpacked/usr/share/doc-base") {
+    if (!is_ancestor_of("unpacked", "unpacked/usr/share/doc-base")) {
+        # Unsafe
+        mkdir ("doc-base", 0777) or fail "cannot mkdir doc-base: $!";
+        return;
+    }
     copy_dir('unpacked/usr/share/doc-base', 'doc-base')
 	or fail("cannot copy directory unpacked/usr/share/doc-base");
 } else {

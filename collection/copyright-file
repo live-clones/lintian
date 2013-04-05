@@ -36,10 +36,22 @@ unlink("copyright");
 
 my $file1 = "unpacked/usr/share/doc/$pkg/copyright";
 my $file2 = "unpacked/usr/doc/$pkg/copyright";
+my $docdir = 'usr/share/doc';
 
 my $file;
 if (-f $file1 ) { $file = $file1; }
-else { $file = $file2; }
+else {
+    $file = $file2;
+    $docdir = 'usr/doc';
+}
+
+if (-d "unpacked/$docdir/$pkg"
+      && !is_ancestor_of("unpacked", "unpacked/$docdir/$pkg")) {
+    # if the parent dir is outside the package, just stop here before we
+    # do something we will regret.
+    touch_file("copyright");
+    return;
+}
 
 # If copyright was a symlink, we need to make a copy of it.  Just hardlinking
 # to the symlink may leave a relative symlink into a directory we can't

@@ -44,6 +44,11 @@ $dirs{'methods'} = 'etc/menu-methods';
 
 while (my ($shortn, $path) = each %dirs) {
     if (-d "unpacked/$path") {
+        if (!is_ancestor_of("unpacked", "unpacked/$path")) {
+            # Unsafe, skip
+            mkdir ("menu/$shortn", 0777) or fail ("cannot mkdir menu/$shortn: $!");
+            next;
+        }
 	 copy_dir("unpacked/$path", "menu/$shortn")
 	    or fail("cannot copy unpacked/$path/ directory");
     } else {
