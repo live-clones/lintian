@@ -35,6 +35,7 @@ use threads;
 use Thread::Queue;
 
 use Data::Dumper;
+use File::Basename qw(basename dirname);
 use Getopt::Long qw(GetOptions);
 use List::MoreUtils qw(none);
 use Text::Template;
@@ -257,7 +258,7 @@ if ($singletest) {
     $desc =~ s/\.changes$//;
     $desc = "$desc.desc";
     if (-f $desc) {
-        @tests = read_dpkg_control($desc);
+        push @tests, read_test_desc($desc);
     }
 } elsif ($tag) {
     @tests = find_tests_for_tag($tag, "$TESTSET/changes/*.desc");
@@ -265,7 +266,7 @@ if ($singletest) {
     unless (-d "$TESTSET/changes") {
         fail("cannot find $TESTSET/changes: $!");
     }
-    @tests = map { read_dpkg_control($_) } sort(glob("$TESTSET/changes/*.desc"));
+    @tests = map { read_test_desc($_) } sort(glob("$TESTSET/changes/*.desc"));
 }
 print "Found the following changes tests: @tests\n" if $DEBUG;
 print "Changes tests:\n" if @tests;
@@ -284,9 +285,9 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
     if ($singletest) {
         my $test = $singletest;
         if (-d "$TESTSET/$tdir/$test") {
-            @tests = read_dpkg_control("$TESTSET/$tdir/$test/desc");
+            push @tests, read_test_desc("$TESTSET/$tdir/$test/desc");
         } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
-            @tests = map { read_dpkg_control($_) } glob "$TESTSET/$tdir/$singletest-*/desc";
+            @tests = map { read_test_desc($_) } glob("$TESTSET/$tdir/$singletest-*/desc");
         }
     } elsif ($tag) {
         @tests = find_tests_for_tag($tag, $globstr);
@@ -294,7 +295,7 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
         unless (-d "$TESTSET/$tdir/") {
             fail("cannot find $TESTSET/$tdir: $!");
         }
-        @tests = map { read_dpkg_control($_) } glob $globstr;
+        @tests = map { read_test_desc($_) } glob($globstr);
     }
     @tests = sort {
         $a->{sequence} <=> $b->{sequence}
@@ -336,7 +337,7 @@ sub find_tests_for_tag {
     my ($tag, $glob) = @_;
     return generic_find_test_for_tag($tag, $glob, sub {
         my ($tag, $desc) = @_;
-        my ($data) = read_dpkg_control($desc);
+        my $data = read_test_desc($desc);
         my $tagnames = $data->{'test-for'}//'';
         $tagnames .= ' ' . $data->{'test-against'} if $data->{'test-against'};
         my %table = map { $_ => 1 } split(m/\s++/o, $tagnames);
@@ -576,11 +577,11 @@ sub generic_find_test_for_tag {
         my $testname;
         next unless $res;
 
-        if ($res =~ m/^\d+$/o){
+        if (not ref $res and $res =~ m/^\d+$/o){
             # returned a truth value; use the regex to deduce the test name
             ($testname) = ($file =~ m,.*/([^/]+)[/\.]tags$,);
         } else {
-            # The code returned the test name for us
+            # The code returned the test name or test data for us
             $testname = $res;
         }
         push @tests, $testname;
@@ -914,6 +915,33 @@ sub check_test_is_sane {
     }
 
     return 1;
+}
+
+sub read_test_desc {
+    my ($filename) = @_;
+    my @paragraphs = read_dpkg_control($filename);
+    my $testdata;
+    my $expected_name;
+    if (scalar(@paragraphs) != 1) {
+        fail("$filename does not have exactly one paragraph")
+    }
+    $testdata = $paragraphs[0];
+    if ($filename =~ m{/desc$}) {
+        # t/<suite>/<testname>/desc
+        $expected_name = basename(dirname($filename));
+    } else {
+        # t/changes/<testname>.desc
+        $expected_name = basename($filename, '.desc');
+    }
+
+    if (!exists $testdata->{'testname'}) {
+        fail("$filename is missing Testname field");
+    }
+    if ($expected_name ne $testdata->{'testname'}) {
+        fail("$filename is called $testdata->{'testname'}"
+             . " instead of $expected_name");
+    }
+    return $testdata;
 }
 
 sub msg_flush {
