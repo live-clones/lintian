@@ -491,7 +491,10 @@ sub run_lintian {
         $status = ($? >> 8) & 255;
         unless ($status == 0 or $status == 1) {
             msg_print "FAILED\n";
-            msg_print @data;
+            for my $line (@data) {
+                #NB: $line has trailing newline.
+                msg_print "$testdata->{testname}: $line";
+            }
             fail "$LINTIAN @options $file exited with status $status";
         } else {
             @data = sort @data if $testdata->{sort};
