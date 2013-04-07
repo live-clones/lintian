@@ -235,7 +235,7 @@ for my $filename (sort keys %{$info->scripts}) {
 
     # no checks necessary at all for scripts in /usr/share/doc/
     # unless they are examples
-    next if $in_docs and !$in_examples;
+    next if $in_docs and not $in_examples;
 
     my ($base) = $interpreter =~ m,([^/]*)$,;
 
@@ -247,16 +247,16 @@ for my $filename (sort keys %{$info->scripts}) {
     # Skip files that have the #! line, but are not executable and do not have
     # an absolute path and are not in a bin/ directory (/usr/bin, /bin etc)
     # They are probably not scripts after all.
-    next if ($filename !~ m,(?:bin/|etc/init\.d/), and !$executable{$filename}
-             and !$is_absolute and !$in_examples);
+    next if ($filename !~ m,(?:bin/|etc/init\.d/), && !$executable{$filename}
+             && !$is_absolute && !$in_examples);
 
     # Example directories sometimes contain Perl libraries, and some people
     # use initial lines like #!perl or #!python to provide editor hints, so
     # skip those too if they're not executable.  Be conservative here, since
     # it's not uncommon for people to both not set examples executable and not
     # fix the path and we want to warn about that.
-    next if ($filename =~ /\.pm\z/ and !$executable{$filename}
-             and !$is_absolute and $in_examples);
+    next if ($filename =~ /\.pm\z/ && !$executable{$filename}
+             && !$is_absolute && $in_examples);
 
     if ($interpreter eq '') {
         script_tag('script-without-interpreter', $filename);
@@ -285,7 +285,7 @@ for my $filename (sort keys %{$info->scripts}) {
         if (($base eq 'csh' or $base eq 'tcsh')
             and $executable{$filename}
             and $filename !~ m,^etc/csh/login\.d/,)
-            and !$in_docs;
+            and not $in_docs;
 
     $path = $info->unpacked($filename);
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
@@ -293,7 +293,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # up on the patch itself.
     if ($base =~ /^$known_shells_regex$/) {
         if (-x $interpreter
-            and ! script_is_evil_and_wrong($path)
+            and not script_is_evil_and_wrong($path)
             and $filename !~ m,\.dpatch$,
             and $filename !~ m,\.erb$,
             # exclude some shells. zsh -n is broken, see #485885
@@ -361,7 +361,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # If we found the interpreter and the script is executable, check
     # dependencies.  This should be the last thing we do in the loop so that
     # we can use next for an early exit and reduce the nesting.
-    next unless ($data && $executable{$filename} and !$in_docs);
+    next unless ($data and $executable{$filename} and not $in_docs);
     if (!$versioned) {
         my $depends = $data->[1];
         if (not defined $depends) {
@@ -616,7 +616,7 @@ while (<SCRIPTS>) {
             }
             # if cat_string is set, we are in a HERE document and need not
             # check for things
-            if ($cat_string eq '' and $checkbashisms and !$within_another_shell) {
+            if ($cat_string eq '' && $checkbashisms && !$within_another_shell) {
                 my $found = 0;
                 my $match = '';
 
@@ -804,7 +804,7 @@ while (<SCRIPTS>) {
         } else {
             for my $rule (@depends_needed) {
                 my ($package, $regex) = @$rule;
-                if ($pkg ne $package and /$regex/ and ! $warned{$package}) {
+                if ($pkg ne $package and /$regex/ and not $warned{$package}) {
                     if (m,-x\s+\S*$regex, or m,(?:which|type)\s+$regex, or m,command\s+.*?$regex,) {
                         $warned{$package} = 1;
                     } elsif (!/\|\|\s*true\b/) {
@@ -831,7 +831,7 @@ while (<SCRIPTS>) {
             tag 'maintainer-script-uses-dpkg-status-directly', $file;
         }
         if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s, && ! /--(?:help|list|truename|version)/) {
-            if (/--local/ or !/--package/) {
+            if (/--local/ || !m/--package/) {
                 tag 'package-uses-local-diversion', "$file:$.";
             }
             my $mode = /--remove/ ? 'remove' : 'add';

@@ -667,7 +667,7 @@ sub create {
 
     $opts = {} unless $opts;
     $mode = $opts->{'mode'} if exists $opts->{'mode'};
-    if ( !$dir or $self->is_temp) {
+    if (not $dir or $self->is_temp) {
         if ($self->is_temp) {
             my $keep = $opts->{'keep-lab'}//0;
             my %topts = ( 'CLEANUP' => !$keep, 'TMPDIR' => 1 );

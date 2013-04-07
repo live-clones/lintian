@@ -695,7 +695,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 
                 tag 'depends-on-packaging-dev', $field
                     if (($field =~ /^(?:pre-)?depends$/ || $field eq 'recommends') && $d_pkg eq 'packaging-dev'
-                        && not $info->is_pkg_class ('any-meta'));
+                        && !$info->is_pkg_class('any-meta'));
 
                 tag 'needlessly-depends-on-awk', $field
                     if ($d_pkg eq 'awk' && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');

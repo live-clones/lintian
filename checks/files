@@ -331,7 +331,7 @@ foreach my $file ($info->sorted_index) {
             tag 'package-modifies-ld.so-search-path', $file;
         }
         #----------------- /etc/modprobe.d
-        elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and !$index_info->is_dir) {
+        elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and not $index_info->is_dir) {
             tag 'non-conf-file-in-modprobe.d', $file;
         }
         #---------------- /etc/opt
@@ -837,7 +837,7 @@ foreach my $file ($info->sorted_index) {
         # library, we also skip it.  (In case you hadn't guessed; liblicense)
         my $fileinfo = $info->file_info ($file);
         tag 'extra-license-file', $file
-            unless $fileinfo && ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
+            unless $fileinfo and ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
     }
 
     # ---------------- .devhelp2? files

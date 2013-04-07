@@ -74,7 +74,7 @@ open SCRIPTS, '>', "$dir/control-scripts"
 
 opendir(my $dirfd, "$dir/control");
 for my $file (readdir($dirfd)) {
-    next if -l "$dir/control/$file" or ! -f _;
+    next if -l "$dir/control/$file" or not -f _;
     open FILE, '<', "$dir/control/$file" or fail "cannot open control/$file: $!";
     if (read(FILE, $magic, 2) and $magic eq '#!') {
         $scriptpath = <FILE>;
