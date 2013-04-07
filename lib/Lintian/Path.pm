@@ -35,7 +35,7 @@ Lintian::Path - Lintian representation of a path entry in a package
 
     my ($name, $type, $dir) = ('lintian', 'source', '/path/to/entry');
     my $info = Lintian::Collect->new ($name, $type, $dir);
-    my $path = $info->index-> ('bin/ls');
+    my $path = $info->index('bin/ls');
     if ($path->is_file) {
        # is file (or hardlink)
        if ($path->is_hardlink) { }
@@ -48,7 +48,7 @@ Lintian::Path - Lintian representation of a path entry in a package
        my $resolved = $path->link_resolved;
        if (defined $resolved) {
            # is a resolvable symlink (pointing to $target)
-           my $more_info = $info->index-> ($resolved);
+           my $more_info = $info->index($resolved);
        }
     }
 
