@@ -309,6 +309,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [ADB] Fix a typo in the matching of expected delimiters for some
       signed messages; thanks Samuel Bronson.
     + [NT] Add sub to check if a path is contained within a given dir.
+    + [NT] Fix bug in resolve_pkg_path that made it resolve some links
+      incorrectly.
 
   * man/lintian.pod.in:
     + [NT] Document that --pedantic is the same as "-L +=pedantic".

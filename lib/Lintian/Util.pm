@@ -1114,7 +1114,7 @@ sub resolve_pkg_path {
     my ($curdir, $dest) = @_;
     my (@cc, @dc);
     my $target;
-    $dest =~ s,//++,/,o;
+    $dest =~ s,//++,/,go;
     # short curcuit $dest eq '/' case.
     return '.' if $dest eq '/';
     # remove any initial ./ and trailing slashes.
@@ -1128,7 +1128,7 @@ sub resolve_pkg_path {
     }
 
     # clean up $curdir (as well)
-    $curdir =~ s,//++,/,o;
+    $curdir =~ s,//++,/,go;
     $curdir =~ s,/$,,o;
     $curdir =~ s,^/,,o;
     $curdir =~ s,^\./,,o;
