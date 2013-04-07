@@ -284,6 +284,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       package, ensure that the resulting path does not "escape" the
       top level directory.  This should preemptively guard against some
       (but not all) traversal attempts.
+  * lib/Lintian/Path.pm:
+    + [NT] Document that link_resolved is not sufficient to test the
+      "safeness" of a symlink.
   * lib/Lintian/Command/Simple.pm:
     + [NT] Use constant time lookup access instead of linear scan with
       "hashref" wait.
@@ -320,6 +323,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Add sub to check if a path is contained within a given dir.
     + [NT] Fix bug in resolve_pkg_path that made it resolve some links
       incorrectly.
+    + [NT] Document that resolve_pkg_path is not sufficient to test the
+      "safeness" of a symlink.
 
   * man/lintian.pod.in:
     + [NT] Document that --pedantic is the same as "-L +=pedantic".

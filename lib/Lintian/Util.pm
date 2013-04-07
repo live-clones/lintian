@@ -1088,7 +1088,7 @@ sub check_path {
 
 =item resolve_pkg_path (CURDIR, DEST)
 
-Using $CURDIR as current directory from the (package) root,
+Using CURDIR as current directory from the (package) root,
 resolve DEST and return (the absolute) path to the destination.
 Note that the result will never start with a slash, even if
 CURDIR or DEST does. Nor will it end with a slash.
@@ -1097,6 +1097,12 @@ Note it will return '.' if the result is the package root.
 
 Returns a non-truth value, if it cannot safely resolve the path
 (e.g. DEST would be outside the package root).
+
+B<CAVEAT>: This function is I<not always sufficient> to test if it is
+safe to open a given symlink.  Use
+L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
+that.  If you must use this function, remember to check that the
+target is not a symlink (or if it is, that it can be resolved).
 
 Examples:
 

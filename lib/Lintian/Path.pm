@@ -237,6 +237,12 @@ root dir of the package.
 Only available on "links" (i.e. symlinks or hardlinks).  On non-links
 this will croak.
 
+B<CAVEAT>: This method is I<not always sufficient> to test if it is
+safe to open a given symlink.  Use
+L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
+that.  If you must use this method, remember to check that the target
+is not a symlink (or if it is, that it can be resolved).
+
 =cut
 
 sub link_resolved {
