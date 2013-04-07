@@ -175,8 +175,7 @@ if ($JOBS <= 0) {
 }
 
 # --- Display output immediately
-
-$| = 1;
+STDOUT->autoflush;
 
 # --- Exit status for the test suite driver
 

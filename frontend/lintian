@@ -125,7 +125,7 @@ my $finish_timer =  sub { ''; };
 # {{{ Setup Code
 
 #turn off file buffering
-$| = 1;
+STDOUT->autoflush;
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
