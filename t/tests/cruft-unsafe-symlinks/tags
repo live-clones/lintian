@@ -1,0 +1,2 @@
+E: cruft-unsafe-symlinks source: source-contains-unsafe-symlink absolute-escape
+E: cruft-unsafe-symlinks source: source-contains-unsafe-symlink relative-escape

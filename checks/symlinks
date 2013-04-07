@@ -40,12 +40,20 @@ foreach my $file ($info->sorted_index) {
         my $path; # the target (from the pkg root)
         # Should not happen (too often) - but just in case
         next unless $target;
+        $path = $index_info->link_resolved;
+        if (not defined $path) {
+            # Unresolvable link
+            tag 'package-contains-unsafe-symlink', $file;
+            next;
+        }
+        # Links to the package root is always going to exist (although
+        # self-recursive and possibly not very useful)
+        next if $path eq '';
+
         # Skip usr/share/doc/<pkg> - we got a separate check for
         # that.
         next if $file eq "usr/share/doc/$pkg";
-        $path = $index_info->link_resolved;
-        # skip unresolvable links and links to "/"
-        next unless $path;
+
 
         # Check if the destination is in the package itself
         next if $info->index ($path) || $info->index ("$path/");

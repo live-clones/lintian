@@ -509,3 +509,12 @@ Info: The given source file is licensed under GFDL, but without any
  .
 Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
  http://www.debian.org/vote/2006/vote_001
+
+Tag: source-contains-unsafe-symlink
+Severity: serious
+Certainty: possible
+Info: The source contains an unsafe symlink.  If followed, the link
+ will escape the source root.
+ .
+ If it is a part of the package's testsuite, Lintian may have failed
+ to recognise it as a test.  In that case, please override the tag.

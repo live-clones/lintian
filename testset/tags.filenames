@@ -13,6 +13,7 @@ E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filename
 E: filenames: no-copyright-file
 E: filenames: non-standard-toplevel-dir files/
 E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
+E: filenames: package-contains-unsafe-symlink usr/lib/filenames/symlink2wrong
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2

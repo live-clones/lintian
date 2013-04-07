@@ -22,7 +22,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - missing-runtime-test-file
       - missing-runtime-tests-field
       - package-contains-broken-symlink-wildcard
+      - package-contains-unsafe-symlink
       - runtime-test-file-is-not-a-regular-file
+      - source-contains-unsafe-symlink
       - unknown-runtime-tests-feature
       - unknown-runtime-tests-field
       - unknown-runtime-tests-restriction
@@ -65,6 +67,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Correct description of an autotools tag.  Thanks
       to Alberto Garcia and Timo Juhani Lindfors for the
       report and patch.  (Closes: #703490)
+    + [NT] Check for unsafe symlinks (outside common testsuite
+      paths).
   * checks/debconf:
     + [NT] Fix several path traversal issues that could leak
       information about the host system.
@@ -159,6 +163,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       (Closes: #683737)
     + [NT] Demote certainty of package-contains-broken-symlink to
       wild-guess.
+    + [NT] Check for unsafe symlinks in binary packages.
   * checks/testsuite{,.desc}:
     + [NT] New check written by Nicolas Boulenguez to catch some
       mistakes with the new autopkgtest tests.

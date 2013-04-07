@@ -1,0 +1,5 @@
+Testname: symlinks-unsafe
+Sequence: 6000
+Version: 1.0
+Description: General tests of unsafe symlinks
+Test-For: package-contains-unsafe-symlink
