@@ -128,7 +128,11 @@ Tag: menu-icon-not-in-xpm-format
 Severity: important
 Certainty: certain
 Info: Icons in the Debian menu system should be in XPM format.
-Ref: menu 3.7
+ .
+ While other image types (e.g. png images) appears to "just work",
+ window managers are not "required to support them".  Accordingly
+ using non-XPM icons could break interoperability.
+Ref: menu 3.7, #591812
 
 Tag: menu-icon-uses-relative-path
 Severity: normal
