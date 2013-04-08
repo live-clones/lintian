@@ -54,6 +54,9 @@ ocaml||OCaml
 OpenLdap||OpenLDAP
 Openldap||OpenLDAP
 openldap||OpenLDAP
+openstreetmap||OpenStreetMap
+Openstreetmap||OpenStreetMap
+OpenStreetmap||OpenStreetMap
 Postgresql||PostgreSQL
 postgresql||PostgreSQL
 python||Python

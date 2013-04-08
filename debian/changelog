@@ -162,8 +162,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * data/shared-libs/ldconfig-dirs:
     + [NT] Add libx32 and usr/libx32 used by some gcc x32 bi-arch
       packages.
-  * data/spelling/corrections:
+  * data/spelling/corrections{,-case}:
     + [JW] Add correction for "privileges".  (Closes: #700882)
+    + [NT] Warn about incorrect case of "OpenStreetMap".  Thanks
+      to Paul Wise for the patch.
 
   * debian/control:
     + [NT] Bump dependency on hardening-includes to avoid having
