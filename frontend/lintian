@@ -94,6 +94,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
 # The LINTIAN_ROOT will be appended last and the user dirs will be
 # pre-appended (depending --[no-]user-dirs).
 my @search_dirs;
+my @restricted_search_dirs;
 
 my $experimental_output_opts = undef;
 
@@ -584,11 +585,11 @@ $ENV{'LINTIAN_ROOT'} = $opt{'LINTIAN_ROOT'};
 if ($opt{'user-dirs'} and not $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
     # Pre-append the user part of the search dirs.
 
-    unshift @search_dirs, '/etc/lintian';
+    unshift @restricted_search_dirs, '/etc/lintian';
 
     # In some (rare) cases, $ENV{HOME} will not be available.
     # - Handle that gracefully by not emitting "Uninitialized ...".
-    unshift @search_dirs, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
+    unshift @restricted_search_dirs, "$ENV{HOME}/.lintian" if defined $ENV{HOME};
 }
 
 push @search_dirs, $opt{'LINTIAN_ROOT'};
@@ -832,7 +833,9 @@ $TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
 
 $PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'},
-                                  \@search_dirs);
+                                  \@search_dirs,
+                                  { 'restricted-search-dirs' => \@restricted_search_dirs },
+);
 # Ensure $opt{'LINTIAN_PROFILE'} is defined
 $opt{'LINTIAN_PROFILE'} = $PROFILE->name unless defined $opt{'LINTIAN_PROFILE'};
 v_msg('Using profile ' . $PROFILE->name . '.');

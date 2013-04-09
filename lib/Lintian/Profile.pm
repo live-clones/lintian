@@ -82,7 +82,7 @@ my %SEC_FIELDS = (
     'severity'    => 1,
     );
 
-=item Lintian::Profile->new ([$profname[, $ipath]])
+=item Lintian::Profile->new ([$profname[, $ipath[, $extra]]])
 
 Creates a new profile from the profile.  $profname is the name of the
 profile and $ipath is a list reference containing containing the path
@@ -96,13 +96,29 @@ If $ipath is not given, a default one will be used.
 =cut
 
 sub new {
-    my ($type, $name, $ipath) = @_;
+    my ($type, $name, $ipath, $extra) = @_;
     my $profile;
-    $ipath = [_default_inc_path ()] unless $ipath;
+    my @full_inc_path;
+    if (!defined $ipath) {
+        # Temporary fix (see _safe_include_path)
+        @full_inc_path = [_default_inc_path ()] unless $ipath;
+        if (defined $ENV{'LINTIAN_ROOT'}) {
+            $ipath = [$ENV{'LINTIAN_ROOT'}];
+        } else {
+            $ipath = ['/usr/share/lintian'];
+        }
+    }
+
+    if (defined $extra and exists $extra->{'restricted-search-dirs'}) {
+        @full_inc_path = @{ $extra->{'restricted-search-dirs'} };
+    }
+    push @full_inc_path, @$ipath;
+
     my $self = {
         'parent-map'           => {},
         'profile_list'         => [],
-        'include-path'         => $ipath,
+        'include-path'         => \@full_inc_path,
+        'safe-include-path'    => $ipath,
         'enabled-tags'         => {}, # "set" of tags enabled (value is largely ignored)
         'enabled-checks'       => {}, # maps script to the number of tags enabled (0 if disabled)
         'non-overridable-tags' => {},
@@ -277,6 +293,17 @@ sub include_path {
         return @{ $self->{'include-path'} };
     }
     return map { "$_/$path" } @{ $self->{'include-path'} };
+}
+
+# Temporary until aptdaemon (etc.) has been upgraded to handle
+# Lintian loading code from user dirs.
+# LP: #1162947
+sub _safe_include_path {
+    my ($self, $path) = @_;
+    unless (defined $path) {
+        return @{ $self->{'safe-include-path'} };
+    }
+    return map { "$_/$path" } @{ $self->{'safe-include-path'} };
 }
 
 # $prof->_find_profile ($pname)
@@ -510,7 +537,7 @@ sub _check_for_invalid_fields {
 sub _load_check {
     my ($self, $profile, $check) = @_;
     my $dir = undef;
-    foreach my $checkdir ($self->include_path ('checks')) {
+    foreach my $checkdir ($self->_safe_include_path('checks')) {
         my $cf = "$checkdir/${check}.desc";
         if ( -f $cf ) {
             $dir = $checkdir;
@@ -552,7 +579,7 @@ sub _parse_check {
 
 sub _load_checks {
     my ($self) = @_;
-    foreach my $checkdir ($self->include_path ('checks')) {
+    foreach my $checkdir ($self->_safe_include_path('checks')) {
         next unless -d $checkdir;
         opendir(my $dirfd, $checkdir);
         for my $desc (sort readdir $dirfd) {

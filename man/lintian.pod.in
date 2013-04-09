@@ -409,9 +409,8 @@ Note it does I<not> cause B<lintian> to ignore the entire environment
 like I<TMPDIR> or I<DEB_VENDOR>.  The latter can affect the default
 profile (or "{VENDOR}" token for B<--profile>).
 
-Should usually be combined with B<--no-user-dirs> (or unsetting
-$HOME).  Otherwise, users can work around this option by shadowing the
-checks or libraries in their I<$HOME/.lintian>.
+Should usually be combined with B<--no-user-dirs> (or unsetting $HOME
+and all I<XDG_> variables).
 
 =item B<--include-dir> dir
 
@@ -473,13 +472,17 @@ These option can appear multiple times, in which case the last of them
 to appear determines the result.
 
 Note that if the intention is only to disable the user's I<$HOME>,
-then unsetting $HOME and $XDG_CONFIG_HOME may suffice.  Alternatively,
+then unsetting I<$HOME> and I<XDG_*_HOME> may suffice.  Alternatively,
 I</etc> can be "re-added" by using I<--include-dir> (caveat:
 I</etc/lintianrc> will be ignored by this).
 
 If the intention is to avoid (unintentional) side-effects from the
 calling user, then this option could be combined with
 B<--ignore-lintian-env>.
+
+If for some reason B<--no-user-dirs> cannot be used, then consider
+unsetting I<$HOME> and all the I<$XDG_*> variables (not just the
+I<$XDG_*_HOME> ones).
 
 =back
 
