@@ -11,6 +11,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
+      - font-adobe-copyrighted-fragment-no-credit
       - font-package-not-multi-arch-foreign
       - illegal-runtime-test-name
       - inconsistent-testsuite-field
@@ -84,6 +85,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       a package is empty.
     + [NT] Fix typo of Pre-Depends, thanks to Raúl Benencia for
       spotting it.  (Closes: #699452)
+    + [NT] Add patch from Bastien Roucariès to check for another
+      adobe font license issues.  (Closes: #705175)
   * checks/init.d:
     + [NT] Fix regression where Lintian would not properly match
       init.d passed to update-rc.d.  Thanks to Michael Meskes for

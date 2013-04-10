@@ -1051,6 +1051,13 @@ foreach my $file ($info->sorted_index) {
                     if ($line =~ m/^[%\s]*Copyright\s*\(c\)\s*19\d{2}[\-\s]19\d{2}\s*Adobe\s*Systems\s*Incorporated\.?\s*$/i) {
                        $foundadobeline = 1;
                     }
+                    # If copy pasted from black book they are copyright adobe a few line before
+                    # the only place where the startlock is documented is in the black book
+                    # copyrighted fragment
+                    if ($line =~ m/startlock\s*get\s*exec/) {
+                        tag 'font-adobe-copyrighted-fragment-no-credit', $file;
+                        last;
+                    }
                }
                close $t1pipe or fail "could not close pipe: $! $?";
             }

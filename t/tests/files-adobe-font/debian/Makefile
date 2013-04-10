@@ -1,4 +1,4 @@
-all: bad.pfb good.pfb
+all: bad.pfb good.pfb badnocredit.pfb badwithadobecode.pfb
 
 %.pfb: %.raw
 	t1asm $< > $@
