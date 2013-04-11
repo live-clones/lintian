@@ -272,6 +272,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
   * man/lintian.pod.in:
     + [NT] Document that --pedantic is the same as "-L +=pedantic".
       (Closes: #703989)
+    + [NT] Fix typo of the "override" variable in the config example.
 
   * private/refresh-locale-codes:
     + [JW,NT] Ignore the "zxx" locale code, which means "No

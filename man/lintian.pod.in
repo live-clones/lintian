@@ -684,9 +684,9 @@ A sample configuration file could look like:
  display-info=yes
  
  # Ignore all overrides (--no-override)
- #  NB: called "overrides" in the config file
+ #  NB: called "override" in the config file
  #      and has inverted value!
- overrides = no
+ override = no
  
  # Automatically determine if color should be used
  color = auto
