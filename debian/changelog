@@ -174,6 +174,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Add Build-Depends on libtest-perl-critic-perl.
     + [NT] Add (Build-)Depends on liblist-moreutils-perl and
       libfile-basedir-perl.
+    + [NT] Add versioned (Build)-Depends on perl | libautodie-perl.
   * debian/lintian.install:
     + [NT] Install Test::Lintian in /usr/share/lintian/lib.
   * debian/rules:

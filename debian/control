@@ -50,6 +50,7 @@ Build-Depends: binutils,
                patchutils,
                perl,
                perl (>= 5.12) | libtest-simple-perl (>= 0.93),
+               perl (>= 5.14~) | libautodie-perl (>= 2.10~)
                python,
                python-all-dev,
                python-numpy,
@@ -92,6 +93,7 @@ Depends: binutils,
          man-db,
          patchutils,
          perl,
+         perl (>= 5.14~) | libautodie-perl (>= 2.10~)
          t1utils,
          ${misc:Depends}
 Suggests: binutils-multiarch,
