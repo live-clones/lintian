@@ -6,7 +6,7 @@ Needs-Info: md5sums, index
 Info: This script checks for duplicate files using checksums
 
 Tag: duplicate-files
-Severity: minor
+Severity: pedantic
 Certainty: possible
 Experimental: yes
 Info: The package ships the two (or more) files with the exact same

@@ -7,7 +7,7 @@ Info: This script checks for broken symlinks.
 
 Tag: package-contains-broken-symlink
 Severity: normal
-Certainty: possible
+Certainty: wild-guess
 Experimental: yes
 Info: The package contains a symlink but the destination
  for the link does not exist in the package nor in its

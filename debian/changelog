@@ -67,6 +67,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Ignore "extended-description-is-probably-too-short"
       for metapackages.  Thanks to Axel Beckert for the
       report.
+  * checks/duplicate-files.desc:
+    + [NT] Demote severity of "duplicate-files" tag to pedantic.
   * checks/fields{,.desc}:
     + [NT] Apply patch from Samuel Bronson to detect some
       broken or poor Vcs URLs.  Also thanks to James McCoy for
@@ -130,6 +132,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       in their target.  This is usually a sign that a wildcard did
       not properly expand.  Thanks to Bernd Zeimetz for the report.
       (Closes: #683737)
+    + [NT] Demote certainty of package-contains-broken-symlink to
+      wild-guess.
   * checks/testsuite{,.desc}:
     + [NT] New check written by Nicolas Boulenguez to catch some
       mistakes with the new autopkgtest tests.
