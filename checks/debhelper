@@ -182,6 +182,11 @@ while (<RULES>) {
                 }
             }
         }
+        if (m,\$[({]\w,) {
+            # the variable could contain any add-ons
+            $seen_python_helper = 1;
+            $seen_python3_helper = 1;
+        }
         if ($seen_python_helper == 0) {
             $seen_python_helper = -1; # maybe; we'll check that later
         }
