@@ -86,8 +86,6 @@ my %conf_opt;                   #names of options set in the cfg file
 
 my %opt = (                     #hash of some flags from cmd or cfg
                                 # Init some cmd-line value defaults
-    # Allow user-dirs ($HOME/.lintian + /etc/lintian) by default
-    'user-dirs' => 1,
 );
 
 # The search path - affected by --include-dir X, --[no-]user-dirs
@@ -559,8 +557,13 @@ if (defined $opt{'LINTIAN_ROOT'}) {
         }
         $opt{'LINTIAN_ROOT'} = $resolved;
     }
+    # --root/$ENV{LINTIAN_ROOT} implies --no-user-dirs (but allow
+    # the users to explicitly override that if they so desire)
+    $opt{'user-dirs'} //= 0;
 } else {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
+    # Enable user dirs by default
+    $opt{'user-dirs'} //= 1;
 }
 # exported for collections, which are run as an external process.
 $ENV{'LINTIAN_ROOT'} = $opt{'LINTIAN_ROOT'};

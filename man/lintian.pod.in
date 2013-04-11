@@ -458,6 +458,8 @@ This option is mostly useful for development or testing of B<lintian>.
 To add additional support files (e.g. extra checks), consider using
 B<--include-dir> instead.
 
+This option implies B<--no-user-dirs>.
+
 =item B<--user-dirs>, B<--no-user-dirs>
 
 By default, B<lintian> will check I<$HOME> and I</etc> for files
@@ -601,7 +603,9 @@ Utility scripts used by the other lintian scripts.
 =back
 
 The I</usr/share/lintian> directory can be overridden with the
-B<LINTIAN_ROOT> environment variable or the B<--root> option.
+B<LINTIAN_ROOT> environment variable or the B<--root> option.  Note
+that setting the B<LINTIAN_ROOT> environment variable will imply
+B<--no-user-dirs>.
 
 For binary packages, Lintian looks for overrides in a file named
 I<usr/share/lintian/overrides/E<lt>packageE<gt>> inside the binary

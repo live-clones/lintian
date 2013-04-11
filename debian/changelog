@@ -209,6 +209,8 @@ lintian (2.5.12) UNRELEASED; urgency=low
       still accepted.
     + [NT] Stop looking for lintianrc files in the LINTIAN_ROOT.
     + [NT] Stop exporting LINTIAN_LAB to processes run by lintian.
+    + [NT] Use of --root (or setting LINTIAN_ROOT) will now imply
+      the option --no-user-dirs by default.
 
   * lib/*:
     + [NT] Use "parent" instead of the "base" pragma.
