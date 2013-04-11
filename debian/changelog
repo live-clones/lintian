@@ -205,7 +205,10 @@ lintian (2.5.12) UNRELEASED; urgency=low
       to --profile.
     + [NT] Add new command line option "--ignore-lintian-env" to make
       lintian ignore all environment variables starting with LINTIAN_.
-    + [NT] Add a new command line option --no-display-experimental.
+    + [NT] Add a new command line option --no-display-experimental
+      and --default-display-level.  These options can be used to
+      override some display options from the config file.
+      (Closes: #703985)
     + [NT] Also search for the lintianrc file in XDG_CONFIG_{HOME,DIRS}.
       The default paths are now ~/.config/lintian/lintianrc and
       /etc/xdg/lintian/lintianrc.  The previous lintianrc paths are

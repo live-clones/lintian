@@ -177,6 +177,7 @@ General options:
 Behaviour options:
     --allow-root              suppress lintian\'s warning when run as root
     --color never/always/auto disable, enable, or enable color for TTY
+    --default-display-level   reset the display level to the default
     --display-source X        restrict displayed tags by source
     -E, --display-experimental display "X:" tags (normally suppressed)
     --no-display-experimental suppress "X:" tags
@@ -366,6 +367,15 @@ sub display_pedantictags {
     push(@display_level, [ '+', '=', 'pedantic' ]);
 }
 
+# Process --default-display-level flag
+sub default_display_level {
+    push(@display_level,
+         ['=', '>=', 'important'],
+         ['+', '>=', 'normal', 'possible'],
+         ['+', '>=', 'minor', 'certain'],
+        );
+}
+
 # Process --display-source flag
 sub record_display_source {
     $display_source{$_[1]} = 1;
@@ -475,6 +485,7 @@ my %opthash = (                 # ------------------ actions
                'display-experimental|E!' => \$opt{'display-experimental'},
                'pedantic' => \&display_pedantictags,
                'display-level|L=s' => \&record_display_level,
+               'default-display-level' => \&default_display_level,
                'display-source=s' => \&record_display_source,
                'suppress-tags=s' => \&record_suppress_tags,
                'suppress-tags-from-file=s' => \&record_suppress_tags_from_file,

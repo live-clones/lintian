@@ -204,6 +204,15 @@ attribute (instead of ANSI color escape sequences).
 
 This option overrides the B<color> variable in the configuration file.
 
+=item B<--default-display-level>
+
+Reset the current display level to the default.  This option behaves
+exactly like passing B<-L> ">=important" B<-L> "+>=normal/possible"
+B<-L> "+minor/certain" to lintian.
+
+One use for this option is to override only the display settings in
+the config file.
+
 =item B<--display-source> X
 
 Only display tags from the source X (e.g. the Policy Manual or the
@@ -273,7 +282,7 @@ remove or set the levels to display, specifying a severity (S:
 serious, important, normal, minor, wishlist, pedantic), a certainty
 (C: certain, possible, wild-guess), or both (S/C).  The default
 settings are equivalent to B<-L> ">=important" B<-L>
-"+>=normal/possible" B<-L> +minor/certain).
+"+>=normal/possible" B<-L> "+minor/certain").
 
 This option overrides the B<display-level> variable in the
 configuration file.  The value of the B<display-level> in
