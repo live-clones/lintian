@@ -1,2 +1,2 @@
-X: debhelper-dh-python-helpers source: python-depends-but-no-python-helper python-cheshire
-X: debhelper-dh-python-helpers source: python3-depends-but-no-python3-helper python3-cheshire
+E: debhelper-dh-python-helpers source: python-depends-but-no-python-helper python-cheshire
+E: debhelper-dh-python-helpers source: python3-depends-but-no-python3-helper python3-cheshire

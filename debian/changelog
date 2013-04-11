@@ -58,9 +58,11 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Correct description of an autotools tag.  Thanks
       to Alberto Garcia and Timo Juhani Lindfors for the
       report and patch.  (Closes: #703490)
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [JW] Assume the proper python helpers are called if a
       (Makefile) variable is used.  (Closes: #659335)
+    + [JW] Promote python-depends-but-no-python-helper and
+      python3-depends-but-no-python3-helper to non-experimental.
   * checks/description:
     + [NT] Ignore "extended-description-is-probably-too-short"
       for metapackages.  Thanks to Axel Beckert for the

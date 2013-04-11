@@ -265,7 +265,6 @@ Info: The package build-depends on cdbs, but does not include any cdbs
 Tag: python-depends-but-no-python-helper
 Severity: serious
 Certainty: possible
-Experimental: yes
 Info: The source package declares a dependency on ${python:Depends} in the
  given binary package's debian/control entry.  However, debian/rules doesn't
  call any helper that would generate this substitution variable.
@@ -277,7 +276,6 @@ Info: The source package declares a dependency on ${python:Depends} in the
 Tag: python3-depends-but-no-python3-helper
 Severity: serious
 Certainty: possible
-Experimental: yes
 Info: The source package declares a dependency on ${python3:Depends} in the
  given binary package's debian/control entry.  However, debian/rules doesn't
  call any helper that would generate this substitution variable.
