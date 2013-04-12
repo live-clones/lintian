@@ -25,11 +25,20 @@ Test::Lintian -- Check Lintian files for issues
 
 =head1 SYNOPSIS
 
+ # file 1
  use Test::Lintian;
  use Test::More import => ['done_testing'];
+ test_load_profiles('some/path');
  
- load_profile_for_test ('vendor/profile', 'some/path/', '/usr/share/lintian');
- test_check_desc (<./checks/vendor/*.desc>);
+ done_testing;
+ 
+ # file 2
+ use Test::Lintian;
+ use Test::More import => ['done_testing'];
+ load_profile_for_test('vendor/profile', 'some/path', '/usr/share/lintian');
+ test_check_desc('some/path/checks');
+ test_load_checks('some/path/checks');
+ test_tags_implemented('some/path/checks');
  
  done_testing;
 
@@ -81,7 +90,7 @@ my %URLS = ();
 
 =over 4
 
-=item test_check_desc ([OPTS, ]CHECKS...)
+=item test_check_desc([OPTS, ]CHECKS...)
 
 Test check desc files (and the tags in them) for common errors.
 
@@ -255,7 +264,7 @@ sub test_check_desc {
         if @descs;
 }
 
-=item test_load_profiles (ROOT, INC...)
+=item test_load_profiles(ROOT, INC...)
 
 Test that all profiles in I<ROOT/profiles> are loadable.  INC will be
 the INC path used as include path for the profile.
@@ -303,7 +312,7 @@ sub test_load_profiles {
     File::Find::find (\%opt, $absdir);
 }
 
-=item test_load_checks ([OPTS, ]DIR[, CHECKNAMES...])
+=item test_load_checks([OPTS, ]DIR[, CHECKNAMES...])
 
 Test that the Perl module implementation of the checks can be loaded
 and has a run sub.
@@ -416,7 +425,7 @@ sub test_load_checks {
     }
 }
 
-=item test_tags_implemented ([OPTS, ], DIR[, CHECKNAMES...])
+=item test_tags_implemented ([OPTS, ]DIR[, CHECKNAMES...])
 
 Test a given check implements all the tags listed in its desc file.
 For planning purposes, each check counts as one test and the call
