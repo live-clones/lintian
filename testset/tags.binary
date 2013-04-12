@@ -142,6 +142,5 @@ W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:2
 W: binary: unquoted-string-in-menu-item usr/share/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item usr/share/menu/binary needs:2
-X: binary: duplicate-files usr/share/doc/binary/html/ch1.html usr/share/doc/binary/html/ch5.html usr/share/doc/binary/html/index.html
 X: binary: package-contains-broken-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 X: binary: package-contains-broken-symlink usr/share/doc/binary/html/ch3.html usr/share/doc/binary/htm/ch1.html

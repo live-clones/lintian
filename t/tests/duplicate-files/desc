@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test for duplicate files
 Skeleton: pedantic
+Options: -EIL +pedantic
 Test-For:
  duplicate-changelog-files
  duplicate-files
