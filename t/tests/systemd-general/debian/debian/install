@@ -1,0 +1,2 @@
+debian/test.service etc/systemd/system/
+debian/test.conf etc/tmpfiles.d/

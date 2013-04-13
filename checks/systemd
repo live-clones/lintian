@@ -1,0 +1,252 @@
+# systemd -- lintian check script -*- perl -*-
+#
+# Copyright © 2013 Michael Stapelberg
+#
+# based on the apache2 checks file by:
+# Copyright © 2012 Arno Töll
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::systemd;
+
+use strict;
+use warnings;
+
+use File::Basename;
+use Text::ParseWords qw(shellwords);
+
+use Lintian::Tags qw(tag);
+use Lintian::Util qw(fail is_ancestor_of);
+
+sub run {
+    my ($pkg, $type, $info) = @_;
+
+    # Figure out whether the maintainer of this package did any effort to
+    # make the package work with systemd. If not, we will not warn in case
+    # of an init script that has no systemd equivalent, for example.
+    my $ships_systemd_file = (scalar ( grep { m,/systemd/, } $info->sorted_index ) > 0);
+
+    # An array of names which are provided by the service files.
+    # This includes Alias= directives, so after parsing
+    # NetworkManager.service, it will contain NetworkManager and
+    # network-manager.
+    my @systemd_targets;
+
+    for my $file ($info->sorted_index) {
+        if ($file =~ m,^etc/tmpfiles\.d/.*\.conf$,) {
+            tag 'systemd-tmpfiles.d-outside-usr-lib', $file;
+        }
+        if ($file =~ m,^etc/systemd/system/.*\.service$,) {
+            tag 'systemd-service-file-outside-lib', $file;
+        }
+        if ($file =~ m,/systemd/system/.*\.service$,) {
+            check_systemd_service_file ($pkg, $info, $file);
+            for my $name (extract_service_file_names ($pkg, $info, $file)) {
+                push @systemd_targets, $name;
+            }
+        }
+    }
+
+    my @init_scripts = grep { m,^etc/init\.d/.+, } $info->sorted_index;
+
+    # Verify that each init script includes /lib/lsb/init-functions,
+    # because that is where the systemd diversion happens.
+    for my $init_script (@init_scripts) {
+        check_init_script ($pkg, $info, $init_script);
+    }
+
+    @init_scripts = map { basename($_) } @init_scripts;
+
+    if ($ships_systemd_file) {
+        for my $init_script (@init_scripts) {
+            tag 'systemd-no-service-for-init-script', $init_script
+                unless grep /\Q$init_script\E\.service/, @systemd_targets;
+        }
+    }
+
+    check_maintainer_scripts ($info);
+}
+
+sub check_init_script {
+    my ($pkg, $info, $file) = @_;
+    
+    my $lsb_source_seen;
+    my $unpacked_file = $info->unpacked ($file);
+    unless (-f $unpacked_file &&
+            is_ancestor_of ($info->unpacked, $unpacked_file)) {
+        tag 'init-script-is-not-a-file', $file;
+        return;
+    }
+    open(my $fh, '<', $info->unpacked ($file))
+        or fail "cannot open $file: $!";
+    while (<$fh>) {
+        s/^\s+//;
+        next if /^#/;
+        if (m,^(?:\.|source)\s+/lib/lsb/init-functions,) {
+            $lsb_source_seen = 1;
+            last;
+        }
+    }
+    close($fh);
+
+    if (!$lsb_source_seen) {
+        tag 'init.d-script-does-not-source-init-functions', $file;
+    }
+}
+
+sub check_systemd_service_file {
+    my ($pkg, $info, $file) = @_;
+
+    my @values = extract_service_file_values ($pkg, $info, $file, 'Unit', 'After');
+    my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
+    tag 'systemd-service-file-refers-to-obsolete-target', $file, $_ for @obsolete;
+}
+
+sub service_file_lines {
+    my ($file, $path) = @_;
+    open(my $fh, '<', $path)
+        or fail "cannot open $file: $!";
+    my @lines;
+    my $continuation;
+    while (<$fh>) {
+        chomp;
+
+        if (defined($continuation)) {
+            $_ = $continuation . $_;
+            $continuation = undef;
+        }
+
+        if (/\\$/) {
+            $continuation = $_;
+            $continuation =~ s/\\$/ /;
+            next;
+        }
+
+        # equivalent of strstrip(l)
+        $_ =~ s,[ \t\n\r]+$,,g;
+
+        next if $_ eq '';
+
+        next if /^[#;\n]/;
+
+        push @lines, $_;
+    }
+    close($fh);
+
+    return @lines;
+}
+
+# Extracts the values of a specific Key from a .service file
+sub extract_service_file_values {
+    my ($pkg, $info, $file, $extract_section, $extract_key) = @_;
+
+    my @values;
+    my $section;
+
+    my $unpacked_file = $info->unpacked ($file);
+    unless (-f $unpacked_file &&
+            is_ancestor_of ($info->unpacked, $unpacked_file)) {
+        tag 'service-file-is-not-a-file', $file;
+        return;
+    }
+    my @lines = service_file_lines($file, $info->unpacked ($file));
+    while (grep { /^\.include / } @lines) {
+        @lines = map {
+            if (/^\.include (.+)$/) {
+# XXX: edge case: what should we do when a service file .includes a file in another package? lintian will not have access and therefore cannot properly check the file.
+                my $path = $1;
+                $path =~ s,^/,,;
+                service_file_lines(basename($path), $info->unpacked ($path));
+            } else {
+                $_;
+            }
+        } @lines;
+    }
+    for (@lines) {
+        # section header
+        if (/^\[([^\]]+)\]$/) {
+            $section = $1;
+            next;
+        }
+
+        if (!defined($section)) {
+            # Assignment outside of section. Ignoring.
+            next;
+        }
+
+        my ($key, $value) = ($_ =~ m,^(.*)=(.*)$,);
+        if ($section eq $extract_section &&
+            $key eq $extract_key) {
+            if ($value eq '') {
+                # Empty assignment resets the list
+                @values = ();
+            }
+
+            @values = (@values, shellwords ($value));
+        }
+    }
+
+    return @values;
+}
+
+sub extract_service_file_names {
+    my ($pkg, $info, $file) = @_;
+
+    my @aliases = extract_service_file_values ($pkg, $info, $file, 'Install', 'Alias');
+    return (basename ($file), @aliases);
+}
+
+sub check_maintainer_scripts {
+    my ($info) = @_;
+
+    open my $fd, '<', $info->lab_data_path('/control-scripts')
+        or fail "cannot open lintian control-scripts file: $!";
+
+    while (<$fd>) {
+        m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
+        my $interpreter = $1;
+        my $file = $2;
+        my $filename = $info->control ($file);
+
+        # Don't follow links
+        next if -l $filename;
+        # Don't try to parse the file if it does not appear to be a shell script
+        next if $interpreter !~ m/sh\b/;
+
+        open my $sfd, '<', $filename or fail "cannot open maintainer script $filename: $!";
+        while (<$sfd>) {
+            # skip comments
+            next if substr ($_, 0, $-[0]) =~ /#/;
+
+            ## systemctl should not be called in maintainer scripts at all.
+            if (m/\bsystemctl\b/) {
+                tag 'maintainer-script-calls-systemctl', $file;
+            }
+        }
+        close $sfd;
+    }
+
+    close $fd;
+}
+
+1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
