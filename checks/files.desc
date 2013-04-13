@@ -1304,3 +1304,13 @@ Tag: dir-or-file-in-build-tree
 Severity: serious
 Certainty: possible
 Info: Your package install file in our build tree.
+
+Tag: file-name-is-not-valid-UTF-8
+Severity: normal
+Certainty: certain
+Ref: #701081
+Info: The file name does not appear to be valid UTF-8.  This may become
+ a requirement in future Policy versions.
+ .
+ Note that Lintian may be unable to display the filename accurately.
+ Unprintable characters may have been replaced.

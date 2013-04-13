@@ -26,7 +26,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail open_gz);
+use Lintian::Util qw(fail is_string_utf8_encoded open_gz);
 
 my $FONT_PACKAGES = Lintian::Data->new ('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new ('files/triplets', qr/\s++/);
@@ -242,13 +242,16 @@ if (!$is_dummy) {
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {
-    next if $file eq '';
     my $index_info = $info->index ($file);
     my $owner = $index_info->owner . '/' . $index_info->group;
     my $operm = $index_info->operm;
     my $link = $index_info->link;
 
     $arch_dep_files = 1 if $file !~ m,^usr/share/,o && $file ne 'usr/';
+
+    if (!is_string_utf8_encoded($file)) {
+        tag 'file-name-is-not-valid-UTF-8', $file;
+    }
 
     if ($index_info->is_hardlink) {
         my $link_target_dir = $link;

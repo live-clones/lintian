@@ -57,6 +57,7 @@ BEGIN {
                  get_file_checksum
                  slurp_entire_file
                  file_is_encoded_in_non_utf8
+                 is_string_utf8_encoded
                  fail
                  strip
                  lstrip
@@ -712,6 +713,29 @@ sub get_file_checksum {
     return $digest->hexdigest;
 }
 
+=item is_string_utf8_encoded(STRING)
+
+Returns a truth value if STRING can be decoded as valid UTF-8.
+
+=cut
+
+sub is_string_utf8_encoded {
+    my ($str) = @_;
+    if ($str =~ m,\e[-!"\$%()*+./],) {
+        # ISO-2022
+        return 0;
+    }
+    eval {
+        Encode::decode('UTF-8', $str, Encode::FB_CROAK);
+    };
+    if ($@) {
+        # fail
+        return 0;
+    }
+    # pass
+    return 1;
+}
+
 =item file_is_encoded_in_non_utf8 (...)
 
 Undocumented
@@ -726,15 +750,7 @@ sub file_is_encoded_in_non_utf8 {
         or fail("failure while checking encoding of $file for $type package $pkg");
     my $line = 0;
     while (<$fd>) {
-        if (m,\e[-!"\$%()*+./],) {
-            # ISO-2022
-            $line = $.;
-            last;
-        }
-        eval {
-            $_ = Encode::decode('UTF-8', $_, Encode::FB_CROAK);
-        };
-        if ($@) {
+        if (!is_string_utf8_encoded($_)) {
             $line = $.;
             last;
         }

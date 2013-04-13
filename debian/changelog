@@ -11,6 +11,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - dir-or-file-in-build-tree
       - dir-or-file-in-etc-opt
       - dir-or-file-in-home
+      - file-name-is-not-valid-UTF-8
       - font-adobe-copyrighted-fragment-no-credit
       - font-package-not-multi-arch-foreign
       - illegal-runtime-test-name
@@ -94,6 +95,9 @@ lintian (2.5.12) UNRELEASED; urgency=low
       spotting it.  (Closes: #699452)
     + [NT] Add patch from Bastien Roucariès to check for another
       adobe font license issues.  (Closes: #705175)
+    + [NT] Test for use of file names that are contain invalid
+      UTF-8 byte sequences.  Thanks to Helmut Grohne for the
+      suggestion.  (Closes: #704446)
   * checks/init.d:
     + [NT] Fix regression where Lintian would not properly match
       init.d passed to update-rc.d.  Thanks to Michael Meskes for
