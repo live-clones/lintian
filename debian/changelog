@@ -1,4 +1,4 @@
-lintian (2.5.10.5) unstable; urgency=low
+lintian (2.5.10.5) unstable; urgency=medium
 
   * checks/*:
     + [NT] Avoid following unsafe symlinks.  (CVE-2013-1429)
