@@ -51,10 +51,6 @@ lintian (2.5.12) UNRELEASED; urgency=medium
     + [NT] Apply patch from Samuel Bronson to bump severity
       (but decrease certainty) of the "not linked against
       libc" tags.  (Closes: #698720)
-  * checks/changes:
-    + [NT] Recognise "<dist>-backports-sloppy" as a valid
-      distribution.  Thanks to Romain Francoise for the
-      report and the patch.  (Closes: #705170)
   * checks/copyright:
     + [NT] Apply patch from Evgeni Golov to avoid false
       positive tag when the MPL-2.0 license appears in the
