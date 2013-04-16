@@ -1,4 +1,4 @@
-lintian (2.5.12) UNRELEASED; urgency=medium
+lintian (2.5.12) experimental; urgency=medium
 
   * Summary of tag changes:
     + Added:
@@ -368,7 +368,7 @@ lintian (2.5.12) UNRELEASED; urgency=medium
     + [NT] Fix "empty <ul>" tag when tag has no "extra" information.
       Thanks to Vasudev Kamath for reporting the issue.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 13 Dec 2012 13:38:59 +0100
+ -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 17:32:09 +0200
 
 lintian (2.5.11) experimental; urgency=low
 
