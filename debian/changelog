@@ -1,4 +1,4 @@
-lintian (2.5.12) UNRELEASED; urgency=low
+lintian (2.5.12) UNRELEASED; urgency=medium
 
   * Summary of tag changes:
     + Added:
@@ -36,7 +36,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       - unneeded-build-dep-on-quilt
 
   * checks/*:
-    + [NT] Avoid following unsafe symlinks.
+    + [NT] Avoid following unsafe symlinks.  (CVE-2013-1429)
   * checks/binaries{,.desc}:
     + [NT] Accept libx32 as a bi-arch directory.
     + [NT] Correct reference policy reference.  Thanks to
@@ -71,7 +71,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       paths).
   * checks/debconf:
     + [NT] Fix several path traversal issues that could leak
-      information about the host system.
+      information about the host system.  (CVE-2013-1429)
   * checks/debhelper{,.desc}:
     + [JW] Assume the proper python helpers are called if a
       (Makefile) variable is used.  (Closes: #659335)
@@ -116,7 +116,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       init.d passed to update-rc.d.  Thanks to Michael Meskes for
       reporting.  (Closes: #698602)
     + [NT] Fix possible symlink traversal that could leak
-      information about the host system.
+      information about the host system.  (CVE-2013-1429)
   * checks/java{,.desc}:
     + [NT] Report possibly broken jar files.
   * checks/md5sums:
@@ -134,7 +134,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
       of menu-icon-not-in-xpm-format.  (Closes: 591812)
   * checks/menus:
     + [NT] Fix path traversal issue that could leak information
-      about the host system.
+      about the host system.  (CVE-2013-1429)
   * checks/patch-systems{,.desc}:
     + [NT] Retire unneeded-build-dep-on-quilt, it is only a pedantic
       tag and apparently not too accurate.  Thanks to Charles Plessy
@@ -150,7 +150,7 @@ lintian (2.5.12) UNRELEASED; urgency=low
     + [NT] Special case gcc packages when looking for dev symlinks.
       gcc stores its dev symlinks in some special directories.
     + [NT] Fix path traversal issue that could leak information
-      about the host system.
+      about the host system.  (CVE-2013-1429)
   * checks/source-copyright{,.desc}:
     + [JW,NT] Add a separate tag for ambiguous DEP-5 paragraphs,
       where Lintian cannot reliably figure out what is intended.
@@ -170,10 +170,11 @@ lintian (2.5.12) UNRELEASED; urgency=low
 
   * collection/*:
     + [NT] Avoid reading files outside the package root.
+      (CVE-2013-1429)
   * collection/{changelog-file,debian-readme}:
     + [NT] Ignore files in usr/doc/<pkg>.
     + [NT] Skip collection if usr/share/doc/<pkg> is not contained
-      within the package root.
+      within the package root.  (CVE-2013-1429)
   * collection/hardening-info{,-helper,.desc}:
     + [NT] Whitelist "memset" and "memmove" as "always safe"
       functions.  Thanks to Sebastian Ramacher for the suggestion
