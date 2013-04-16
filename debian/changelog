@@ -312,7 +312,7 @@ lintian (2.5.12) UNRELEASED; urgency=medium
     + [NT] Produce a more helpful error message when a tag has an
       invalid severity or certainty.  (Closes: #703978)
   * lib/Lintian/Tags.pm:
-    + [NT] Deal with parsing an ambigious override a bit better.  This
+    + [NT] Deal with parsing an ambiguous override a bit better.  This
       solves false-positive malformed-override, where Lintian misparsed
       the tag name as a package name.  (Closes: #699628)
   * lib/Lintian/Util.pm:
