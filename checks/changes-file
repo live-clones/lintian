@@ -57,7 +57,7 @@ if (defined $info->field('distribution')) {
             if ($dist !~ m/^(?:sid|unstable|experimental)/) {
                 # Strip common "extensions" for distributions (except sid and
                 # experimental, where they would make no sense)
-                $dist =~ s/-(?:backports|proposed(?:-updates)?|updates|security|volatile)$//o;
+                $dist =~ s/-(?:backports(?:-sloppy)?|proposed(?:-updates)?|updates|security|volatile)$//o;
             }
             if (! $KNOWN_DISTS->known ($dist)) {
                 # bad distribution entry

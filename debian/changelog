@@ -1,3 +1,12 @@
+lintian (2.5.13) UNRELEASED; urgency=low
+
+  * checks/changes:
+    + [NT] Recognise "<dist>-backports-sloppy" as a valid
+      distribution.  Thanks to Romain Francoise for the
+      report and the patch.  (Closes: #705170)
+
+ -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 18:24:45 +0200
+
 lintian (2.5.12) experimental; urgency=medium
 
   * Summary of tag changes:
