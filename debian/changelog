@@ -1,31 +1,32 @@
 lintian (2.5.10.5) unstable; urgency=low
 
   * checks/*:
-    + [NT] Avoid following unsafe symlinks.
+    + [NT] Avoid following unsafe symlinks.  (CVE-2013-1429)
   * checks/debconf:
     + [NT] Fix several path traversal issues that could leak
-      information about the host system.
+      information about the host system.  (CVE-2013-1429)
   * checks/init.d:
     + [NT] Fix possible symlink traversal that could leak
-      information about the host system.
+      information about the host system.  (CVE-2013-1429)
   * checks/md5sums:
     + [NT] Fix path traversal issue that could leak information
-      about the host system.
+      about the host system.  (CVE-2013-1429)
   * checks/menus:
     + [NT] Fix path traversal issue that could leak information
-      about the host system.
+      about the host system.  (CVE-2013-1429)
   * checks/po-debconf:
     + [NT] Unconditionally set INTLTOOL_EXTRACT.
   * checks/shared-libs:
     + [NT] Fix path traversal issue that could leak information
-      about the host system.
+      about the host system.  (CVE-2013-1429)
 
   * collection/*:
     + [NT] Avoid reading files outside the package root.
+      (CVE-2013-1429)
   * collection/{changelog-file,debian-readme}:
     + [NT] Ignore files in usr/doc/<pkg>.
     + [NT] Skip collection if usr/share/doc/<pkg> is not contained
-      within the package root.
+      within the package root.  (CVE-2013-1429)
 
   * lib/Lintian/Collect/Package.pm:
     + [NT] When a check requests access to a raw file (or dir) in the
