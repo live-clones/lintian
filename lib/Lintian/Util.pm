@@ -199,7 +199,7 @@ our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/o;
 
 =over 4
 
-=item parse_dpkg_control (HANDLE[, FLAGS[, LINES]])
+=item parse_dpkg_control(HANDLE[, FLAGS[, LINES]])
 
 Reads a debian control file from HANDLE and returns a list of
 paragraphs in it.  A paragraph is represented via a hashref, which
@@ -552,23 +552,23 @@ sub visit_dpkg_paragraph {
     }
 }
 
-=item read_dpkg_control (FILE[, FLAGS[, LINES]])
+=item read_dpkg_control(FILE[, FLAGS[, LINES]])
 
 This is a convenience function to ease using L</parse_dpkg_control>
 with paths to files (rather than open handles).  The first argument
 must be the path to a FILE, which should be read as a debian control
-file.  If the file does not exist (or is empty), an empty list is
-returned.
+file.  If the file is empty, an empty list is returned.
 
 Otherwise, this behaves like:
 
  open my $fd, '<' FILE or die ...;
- my @p = parse_dpkg_control ($fd, FLAGS, LINES);
+ my @p = parse_dpkg_control($fd, FLAGS, LINES);
  close $fd;
  return @p;
 
 This goes without saying that may fail with any of the messages that
-L</parse_dpkg_control> do.  It can also emit the following error:
+L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])> do.  It can also emit
+the following error:
 
  "cannot open %s: %s"
 
@@ -577,10 +577,6 @@ L</parse_dpkg_control> do.  It can also emit the following error:
 sub read_dpkg_control {
     my ($file, $flags, $lines) = @_;
 
-    if (not _ensure_file_is_sane($file)) {
-        return;
-    }
-
     open my $CONTROL, '<', $file or die "cannot open $file: $!";
     my @data = parse_dpkg_control($CONTROL, $flags, $lines);
     close $CONTROL;
@@ -588,14 +584,16 @@ sub read_dpkg_control {
     return @data;
 }
 
-=item get_deb_control (DEBFILE)
+=item get_deb_control(DEBFILE)
 
 Extracts the control file from DEBFILE and returns it as a hashref.
 
 Basically, this is a fancy convenience for setting up an ar + tar pipe
-and passing said pipe to L<parse_dpkg_control>.
+and passing said pipe to L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])>.
 
-If DEBFILE does not exists (or is empty), the empty list is returned.
+DEBFILE must be an ar file containing a "control.tar.gz" member, which
+in turn should contain a "control" file.  If the "control" file is
+empty this will return an empty list.
 
 Note: the control file is only expected to have a single paragraph and
 thus only the first is returned (in the unlikely case that there are
@@ -611,10 +609,6 @@ L</parse_dpkg_control> do.  It can also emit:
 sub get_deb_info {
     my ($file) = @_;
 
-    if (not _ensure_file_is_sane($file)) {
-        return;
-    }
-
     # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
     my $opts = { pipe_out => FileHandle->new };
     spawn($opts,
@@ -627,6 +621,7 @@ sub get_deb_info {
     # with SIGPIPE.  This will normally only be an issue with malformed
     # control files.
     1 while readline $opts->{pipe_out};
+    close($opts->{pipe_out});
     $opts->{harness}->finish();
     return $data[0];
 }
@@ -634,15 +629,16 @@ sub get_deb_info {
 =item get_dsc_control (DSCFILE)
 
 Convenience function for reading dsc files.  It will read the DSCFILE
-using L</read_dpkg_control> and then return the first paragraph.  If
-the file has no paragraphs, C<undef> is returned instead.
+using L<read_dpkg_control(FILE[, FLAGS[, LINES]])> and then return the
+first paragraph.  If the file has no paragraphs, C<undef> is returned
+instead.
 
 Note: the control file is only expected to have a single paragraph and
 thus only the first is returned (in the unlikely case that there are
 more than one).
 
 This function may fail with any of the messages that
-L</read_dpkg_control> do.
+L</read_dpkg_control(FILE[, FLAGS[, LINES]])> do.
 
 =cut
 
@@ -650,16 +646,6 @@ sub get_dsc_info {
     my ($file) = @_;
     my @data = read_dpkg_control($file);
     return (defined($data[0])? $data[0] : undef);
-}
-
-sub _ensure_file_is_sane {
-    my ($file) = @_;
-
-    # if file exists and is not 0 bytes
-    if (-f $file and -s $file) {
-        return 1;
-    }
-    return 0;
 }
 
 =item slurp_entire_file (FOH[, NOCLOSE])
