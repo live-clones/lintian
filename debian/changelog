@@ -5,6 +5,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
       distribution.  Thanks to Romain Francoise for the
       report and the patch.  (Closes: #705170)
 
+  * lib/Lintian/Util.pm:
+    + [NT] Fix a race condition in touch_file.
+
  -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 18:24:45 +0200
 
 lintian (2.5.12) experimental; urgency=medium

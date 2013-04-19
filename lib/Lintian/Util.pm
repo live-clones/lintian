@@ -949,7 +949,7 @@ sub __open_gz_ext {
     return $fd;
 }
 
-=item touch_File (FILE)
+=item touch_file(FILE)
 
 Updates the "mtime" of FILE.  If FILE does not exist, it will be
 created.
@@ -964,12 +964,19 @@ sub touch_file {
     # We use '>>' because '>' truncates the file if it has contents
     # (which `touch file` doesn't).
     open my $fd, '>>', $file or return 0;
-    close $fd or return 0;
+
     # open with '>>' does not update the mtime if the file already
     # exists, so use utime to solve that.
-    utime undef, undef, $file or return 0;
+    if (!utime(undef, undef, $fd)) {
+        # utime failed.  Preserve the utime error in $! and
+        # always return 0
+        local $! = 0;
+        close($fd);
+        return 0;
+    }
 
-    return 1;
+    # utime succeeded, then close decides the return code (and $!).
+    return close($fd);
 }
 
 =item fail (MSG[, ...])
