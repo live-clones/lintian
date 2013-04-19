@@ -7,6 +7,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
 
   * lib/Lintian/Util.pm:
     + [NT] Fix a race condition in touch_file.
+    + [NT] Add sanity check in perm2oct for bad permission
+      strings and throw errors when they are seen (instead
+      of returning 0).
 
  -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 18:24:45 +0200
 

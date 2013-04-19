@@ -841,26 +841,24 @@ sub clean_env {
     $ENV{LC_ALL} = 'en_US.UTF-8';
 }
 
-=item perm2oct (PERM)
+=item perm2oct(PERM)
 
 Translates PERM to an octal permission.  PERM should be a string describing
 the permissions as done by I<tar t> or I<ls -l>.  That is, it should be a
 string like "-rwr--r--".
 
-Note, there is no sanity checking of PERM and "unknown" permissions
-are silently ignored (as if they had been "-").  Thus, callers should
-be fairly certain that PERM is indeed a permission string - otherwise,
-this will cause the "garbage in, garbage out" effect.
+If the string does not appear to be a valid permission, it will cause
+a trappable error.
 
 Examples:
 
  # Good
- perm2oct ('-rw-r--r--') == 0644
- perm2oct ('-rwxr-xr-x') == 0755
+ perm2oct('-rw-r--r--') == 0644
+ perm2oct('-rwxr-xr-x') == 0755
 
  # Bad
- perm2oct ('broken') == 0000  # too short to be recognised
- perm2oct ('aresurunet') == 05101 # read as "-r-s-----t"
+ perm2oct('broken')      # too short to be recognised
+ perm2oct('-resurunet')  # contains unknown permissions
 
 =cut
 
@@ -869,8 +867,15 @@ sub perm2oct {
 
     my $o = 0;
 
-    if ($t !~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o) {
-        return 0;
+    # Types:
+    #  file (-), block/character device (b & c), directory (d),
+    #  hardlink (h), symlink (l), named pipe (p).
+    if ($t !~ m/^   [-bcdhlp]                # file type
+                    ([-r])([-w])([-xsS])     # user
+                    ([-r])([-w])([-xsS])     # group
+                    ([-r])([-w])([-xtT])     # other
+               /xsmo) {
+        croak "$t does not appear to be a permission string";
     }
 
     $o += 00400 if $1 eq 'r';   # owner read
