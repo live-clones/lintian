@@ -464,7 +464,7 @@ is its "Major class version" for Java or "-" if it is not a class file.
 
 =item error
 
-If it exists, this is an error that occured during reading of the zip
+If it exists, this is an error that occurred during reading of the zip
 file.  If it exists, it is unlikely that the other fields will be
 present.
 

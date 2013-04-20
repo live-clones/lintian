@@ -57,7 +57,7 @@ and one changes package per set, but multiple binary packages
 Creates a group and optionally add all processables from CHANGES.
 
 If the LAB parameter is given, all processables added to this group
-will bestored as a L<lab entry|Lintian::Lab::Entry> from LAB.
+will be stored as a L<lab entry|Lintian::Lab::Entry> from LAB.
 
 =cut
 

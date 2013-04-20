@@ -12,6 +12,11 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Replace makeshift "is_ancestor_of" check with the
       one from L::Util.
 
+  * doc/tutorial/**/*.pod:
+    + [NT] Fix a number of spelling mistakes in the POD.
+
+  * lib/*:
+    + [NT] Fix a number of spelling mistakes in the POD.
   * lib/Lintian/Util.pm:
     + [NT] Fix a race condition in touch_file.
     + [NT] Add sanity check in perm2oct for bad permission

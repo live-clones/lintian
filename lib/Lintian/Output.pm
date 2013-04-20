@@ -382,7 +382,7 @@ only available as instance methods.  The methods mentioned in
 L</CLASS/INSTANCE METHODS>
 usually only check whether they should do anything at all (according
 to the values of verbosity_level and debug) and then call one of
-the following methods to do the actual printing. Allmost all of them
+the following methods to do the actual printing. Almost all of them
 finally call _print() to do that.  This convoluted scheme is necessary
 to be able to use the methods above as class methods and still make
 the behaviour overridable in subclasses.

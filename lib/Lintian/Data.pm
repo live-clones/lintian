@@ -248,7 +248,7 @@ for the class method new.
 
 The sub will be called once for each key/pair with three arguments,
 KEY, VALUE and CURVALUE.  The first two are the key/value pair parsed
-from the data file and CURVALUE is current value assoicated with the
+from the data file and CURVALUE is current value associated with the
 key.  CURVALUE will be C<undef> the first time the sub is called with
 that KEY argument.
 

@@ -563,7 +563,7 @@ sub debfiles {
 =item index (FILE)
 
 For the general documentation of this method, please refer to the
-documenation of it in
+documentation of it in
 L<Lintian::Collect::Package|Lintian::Collect::Package/index (FILE)>.
 
 The index of a source package is not very well defined for non-native
@@ -579,7 +579,7 @@ tarball.
 
 IMPLEMENTATION DETAIL/CAVEAT: Lintian currently (2.5.11) generates
 this by running "find(1)" after unpacking the the source package.
-This has three consequnces.
+This has three consequences.
 
 First it means that (original) owner/group data is lost; Lintian
 inserts "root/root" here.  This is usually not a problem as

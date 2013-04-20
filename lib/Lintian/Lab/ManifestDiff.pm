@@ -80,24 +80,24 @@ sub _new {
 
 =item $diff->added
 
-Returns a list ref containing the keys of the elements that has been added.
+Returns a listref containing the keys of the elements that has been added.
 
-Each element is a list of keys; this list (deref'ed) can be used with the
-manifest's get method to look up the item.
+Each element is a listref of keys; this list (when dereferenced) can be
+used with the manifest's get method to look up the item.
 
 =item $diff->removed
 
-Returns a list ref containing the keys of the elements that has been removed.
+Returns a listref containing the keys of the elements that has been removed.
 
-Each element is a list of keys; this list (deref'ed) can be used with the
-manifest's get method to look up the item.
+Each element is a listref of keys; this list (when dereferenced) can
+be used with the manifest's get method to look up the item.
 
 =item $diff->changed
 
-Returns a list ref containing the keys of the elements that has been changed.
+Returns a listref containing the keys of the elements that has been changed.
 
-Each element is a list of keys; this list (deref'ed) can be used with the
-manifest's get method to look up the item.
+Each element is a listref of keys; this list (when dereferenced) can
+be used with the manifest's get method to look up the item.
 
 =item $diff->nlist
 

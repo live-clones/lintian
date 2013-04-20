@@ -659,7 +659,7 @@ sub implies_inverse {
 Returns the textual form of a relationship.  This converts the internal
 form back into the textual representation and returns that, not the
 original argument, so the spacing is standardized.  Returns undef on
-internal faliures (such as an object in an unexpected format).
+internal failures (such as an object in an unexpected format).
 
 =cut
 
@@ -782,7 +782,7 @@ Visit clauses or predicates of this relation.  Each clause or
 predicate is passed to CODE as first argument and will be available as
 C<$_>.
 
-The optional bitmask paramater, FLAGS, can be used to control what is
+The optional bitmask parameter, FLAGS, can be used to control what is
 visited and such.  If FLAGS is not given, it defaults to
 VISIT_PRED_NAME.  The possible values of FLAGS are:
 

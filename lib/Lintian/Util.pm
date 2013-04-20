@@ -130,12 +130,12 @@ Most subs are imported only on request.
 
 At first glance, this module appears to contain several debian control
 parsers.  In practise, there is only one real parser
-(L</visit_dpkg_paragraph>) - the rest are convience functions around
+(L</visit_dpkg_paragraph>) - the rest are convenience functions around
 it.
 
 If you have very large files (e.g. Packages_amd64), you almost
 certainly want L</visit_dpkg_paragraph>.  Otherwise, one of the
-convience methods are probably what you are looking for.
+convenience functions are probably what you are looking for.
 
 =over 4
 
@@ -188,7 +188,7 @@ file is considered a syntax error.
 =item $PKGNAME_REGEX
 
 Regular expression that matches valid package names.  The expression
-is not anchored and does not enforce any "boundry" characters.
+is not anchored and does not enforce any "boundary" characters.
 
 =cut
 
@@ -215,7 +215,7 @@ return, LINES will be populated to the line numbers where a given
 paragraph "started" (i.e. the line number of first field in the
 paragraph).
 
-This is a convience sub around L</visit_dpkg_paragraph> and can
+This is a convenience sub around L</visit_dpkg_paragraph> and can
 therefore produce the same errors as it.  Please see
 L</visit_dpkg_paragraph> for the finer semantics of how the
 control file is parsed.
@@ -255,7 +255,7 @@ visit_dpkg_paragraph will require the PGP headers to be correct (if
 present) and require that the entire file is covered by the signature.
 However, it will I<not> validate the signature (in fact, the contents
 of the PGP SIGNATURE part can be empty).  The signature should be
-validated separatedly.
+validated separately.
 
 visit_dpkg_paragraph will pass paragraphs to CODE as they are
 completed.  If CODE can process the paragraphs as they are seen, very
@@ -829,7 +829,7 @@ sub clean_env {
 
 Translates PERM to an octal permission.  PERM should be a string describing
 the permissions as done by I<tar t> or I<ls -l>.  That is, it should be a
-string like "-rwr--r--".
+string like "-rw-r--r--".
 
 If the string does not appear to be a valid permission, it will cause
 a trappable error.
@@ -883,7 +883,7 @@ sub perm2oct {
 
 =item delete_dir (ARGS)
 
-Convient way of calling I<rm -fr ARGS>.
+Convenient way of calling I<rm -fr ARGS>.
 
 =cut
 
@@ -893,7 +893,7 @@ sub delete_dir {
 
 =item copy_dir (ARGS)
 
-Convient way of calling I<cp -a ARGS>.
+Convenient way of calling I<cp -a ARGS>.
 
 =cut
 
@@ -981,7 +981,7 @@ sub touch_file {
 =item fail (MSG[, ...])
 
 Use to signal an internal error. The argument(s) will used to print a
-dianostic message to the user.
+diagnostic message to the user.
 
 If multiple arguments are given, they will be merged into a single
 string (by join (' ', @_)).  If only one argument is given it will be

@@ -224,7 +224,7 @@ to less dangerous (but possibly invalid) values.
 
 =item $proc->identifier
 
-Proceduces an identifier for this processable.  The identifier is
+Produces an identifier for this processable.  The identifier is
 based on the type, name, version and architecture of the package.
 
 =cut
@@ -263,7 +263,7 @@ Discard the info element, so the memory used by it can be reclaimed.
 Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
 
 Note: By default this does nothing, but it may (and should) be
-overriden by sub-classes.
+overridden by sub-classes.
 
 =cut
 

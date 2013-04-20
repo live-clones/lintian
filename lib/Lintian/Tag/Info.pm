@@ -282,7 +282,7 @@ sub description {
 
 =item experimental()
 
-Returns true if this tag is experimental, false otheriwse.
+Returns true if this tag is experimental, false otherwise.
 
 =cut
 

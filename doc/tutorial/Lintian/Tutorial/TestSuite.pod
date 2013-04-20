@@ -30,7 +30,7 @@ tests> for the available options.
 The test suite respects the "DEB_BUILD_OPTIONS=parallel=n", though "n"
 denotes the amount of "worker" threads.  The test runner will
 generally have 2 threads more than that.  Also each "worker" will run
-lintian, which parallelizes its unpacking as well.
+lintian, which runs multiple unpacking jobs in parallel as well.
 
 In case you are wondering about the 2 extra threads in the test
 runner, the first of them is the "coordinator"-thread (which will

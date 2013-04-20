@@ -77,7 +77,7 @@ use constant LAB_ENTRY_FORMAT => 1;
 
 =item new_from_metadata (PKG_TYPE, METADATA, LAB, BASEDIR)
 
-Overrides same contructor in Lintian::Processable.
+Overrides same constructor in Lintian::Processable.
 
 Used by L<Lintian::Lab> to load an existing entry from the lab.
 
@@ -339,7 +339,7 @@ sub coll_version {
 
 Returns a truth value if the collection COLL has been completed and
 its version is at least VERSION.  The versions are assumed to be
-integers (the comparision is performed with ">=").
+integers (the comparison is performed with ">=").
 
 This returns 0 if the collection COLL has not been marked as
 finished.

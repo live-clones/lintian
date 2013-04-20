@@ -104,9 +104,9 @@ after the call.
 
 =item out_append
 
-STDOUT of all forked childs, cannot be used with out and should only be
+STDOUT of all forked children, cannot be used with out and should only be
 used with files.  Unlike out, this appends the output to the file
-instread of truncating the file.
+instead of truncating the file.
 
 =item pipe_out
 
@@ -116,13 +116,13 @@ process to end properly.
 
 =item err
 
-STDERR of all forked childs.  Defaults to STDERR of the parent.
+STDERR of all forked children.  Defaults to STDERR of the parent.
 
 =item err_append
 
-STDERR of all forked childs, cannot be used with err and should only be
+STDERR of all forked children, cannot be used with err and should only be
 used with files.  Unlike err, this appends the output to the file
-instread of truncating the file.
+instead of truncating the file.
 
 =item pipe_err
 
@@ -344,7 +344,7 @@ sub kill {
 
 =head2 C<done($opts)>
 
-Check if a process and its childs are done. This is useful when one wants to
+Check if a process and its children are done. This is useful when one wants to
 know whether reap() can be called without blocking waiting for the process.
 It takes a single hash reference as returned by spawn.
 

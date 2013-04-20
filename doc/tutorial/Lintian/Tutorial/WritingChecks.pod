@@ -12,7 +12,7 @@ Lintian check.  Most of the work is in writing the two files:
   checks/<my-check>
   checks/<my-check>.desc
 
-And then either adding a Lintian profile or extending an exisiting
+And then either adding a Lintian profile or extending an existing
 one.
 
 =head1 DESCRIPTION
@@ -23,7 +23,7 @@ check.  In this tutorial, we will assume the name of the check to be
 written is called "deb/pkg-check".
 
 The tutorial will work with a "binary" and "udeb" check.  Checking
-source packages works in a similar fasion.
+source packages works in a similar fashion.
 
 =head2 Create a check I<.desc> file
 
@@ -92,7 +92,7 @@ L<Lintian::Collect::Source>.
 
 (Currently it is the same as $proc->info)
 
-=item $proc - Basic metadata about the pacakage
+=item $proc - Basic metadata about the package
 
 This is an instance of L<Lintian::Processable> and is useful for
 trivially obtaining very basic package metadata.  Particularly, name
@@ -135,7 +135,7 @@ The full example being:
  }
 
 Assuming there is a tag called "deb-pkg-check-works" in your I<.desc>
-file, the above will faithfully emit said tag for all pakages
+file, the above will faithfully emit said tag for all packages
 processed by this check.
 
 Emitting a tag is fairly simple; the hard part is emitting exactly
@@ -186,7 +186,7 @@ An alternative route is using a table like:
 
 Notice that Lintian automatically strips leading and trailing spaces
 on the I<first> line in a field.  It also strips trailing spaces from
-all other lines, but leading spaces and the " ."-continutation markers
+all other lines, but leading spaces and the " ."-continuation markers
 are kept as is.
 
 We will use the second here:
@@ -222,11 +222,11 @@ We will use the second here:
 
 So far so good.
 
-=head2 Checking dependecies
+=head2 Checking dependencies
 
 Lintian can do some checking of dependencies.  For most cases it works
 similar to a normal dependency check, but keep in mind that Lintian
-uses I<pure> logic to determine if dependencies are satisifies (i.e. it
+uses I<pure> logic to determine if dependencies are satisfies (i.e. it
 will not look up relations like Provides for you).
 
 Suppose you wanted all packages with a multi-arch "same" field to
@@ -237,8 +237,8 @@ this.
 The $info->relation returns an instance of L<Lintian::Relation>.  This
 object as an "implies" method that can be used to check if a package
 has an explicit dependency.  Note that "implies" actually checks if
-one relations "implies" another (i.e. if you satisified relationA then
-you definitely also satisified relationB).
+one relations "implies" another (i.e. if you satisfied relationA then
+you definitely also satisfied relationB).
 
 Like with the "field"-method, field names have to be given in all
 lowercase.  But "relation" will never return C<undef> (not even if the

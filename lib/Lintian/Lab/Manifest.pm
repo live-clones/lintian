@@ -320,7 +320,7 @@ Otherwise, the keys are (in general and in order):
 
 =item version
 
-=item architeture
+=item architecture
 
 except for source packages
 

@@ -42,7 +42,7 @@ Lintian::Tag::Override -- Representation of an Lintian Override
 
 =head1 DESCRIPTION
 
-Represents and encalsulates a Lintian Override.
+Represents a Lintian Override.
 
 =head1 METHODS
 

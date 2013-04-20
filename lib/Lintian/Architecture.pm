@@ -41,7 +41,7 @@ our (@EXPORT_OK, %EXPORT_TAGS);
 
 =head1 NAME
 
-Lintian::Architecture -- Lintian API for handling architectures and wilcards
+Lintian::Architecture -- Lintian API for handling architectures and wildcards
 
 =head1 SYNOPSIS
 

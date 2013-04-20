@@ -453,7 +453,7 @@ first argument.  The following key/value pairs are defined:
 
 The value is assumed to be a regex (or a string describing a regex).
 Any tag matching this regex will be excluded from this test and is
-assumed to be implemented (regardless of whather that is true or not).
+assumed to be implemented (regardless of whether that is true or not).
 
 This is useful for avoiding false-positives with cases like:
 

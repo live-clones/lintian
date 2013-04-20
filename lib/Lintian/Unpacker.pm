@@ -74,7 +74,7 @@ available via L<Lintian::Collect>.
 
 Creates a new unpacker.
 
-COLLMAP is a L<Lintian::DepMap::Properties> decribing the dependencies
+COLLMAP is a L<Lintian::DepMap::Properties> describing the dependencies
 between the collections.  Each node in COLLMAP must have a
 L<Lintian::CollScript> as property.
 

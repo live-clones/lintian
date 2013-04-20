@@ -209,7 +209,7 @@ sub wait_any {
 =item kill_all(hashref[, signal])
 
 In a similar way to wait_any(), it is possible to pass a hash
-reference to kill_all().  It will then kill all of the proceses
+reference to kill_all().  It will then kill all of the processes
 (default signal being "TERM") followed by a reaping of the processes.
 All reaped processes (and their values) will be removed from the set.
 

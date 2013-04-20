@@ -27,7 +27,7 @@ use Carp qw(croak);
 
 =head1 NAME
 
-Lintian::Collect::Group - Lintain interface to group data collection
+Lintian::Collect::Group - Lintian interface to group data collection
 
 =head1 SYNOPSIS
 
