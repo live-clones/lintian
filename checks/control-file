@@ -39,7 +39,7 @@ my $src_fields = Lintian::Data->new('common/source-fields');
 
 sub run {
 
-my ($pkg, $type, $info) = @_;
+my ($pkg, undef, $info) = @_;
 
 my $dcontrol = $info->debfiles('control');
 
@@ -48,7 +48,7 @@ if (-l $dcontrol) {
 }
 
 # check that control is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8($dcontrol, $type, $pkg);
+my $line = file_is_encoded_in_non_utf8($dcontrol);
 if ($line) {
     tag 'debian-control-file-uses-obsolete-national-encoding', "at line $line"
 }

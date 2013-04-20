@@ -122,7 +122,7 @@ foreach ($info->sorted_index) {
 my $news;
 my $dnews = $info->lab_data_path ('NEWS.Debian');
 if (-f $dnews) {
-    my $line = file_is_encoded_in_non_utf8 ($dnews, $type, $pkg);
+    my $line = file_is_encoded_in_non_utf8($dnews);
     if ($line) {
         tag 'debian-news-file-uses-obsolete-national-encoding', "at line $line"
     }
@@ -233,7 +233,7 @@ unless (-f $dchpath) {
 }
 
 # check that changelog is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8 ($dchpath, $type, $pkg);
+my $line = file_is_encoded_in_non_utf8($dchpath);
 if ($line) {
     tag 'debian-changelog-file-uses-obsolete-national-encoding', "at line $line"
 }

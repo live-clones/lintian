@@ -34,7 +34,7 @@ our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 
 sub run {
 
-my ($pkg, $type, $info, undef, $group) = @_;
+my ($pkg, undef, $info, undef, $group) = @_;
 
 my $found = 0;
 my $linked = 0;
@@ -99,7 +99,7 @@ if (not $found) {
 
 my $dcopy = $info->lab_data_path ('copyright');
 # check that copyright is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8 ($dcopy, $type, $pkg);
+my $line = file_is_encoded_in_non_utf8($dcopy);
 if ($line) {
     tag 'debian-copyright-file-uses-obsolete-national-encoding', "at line $line"
 }

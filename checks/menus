@@ -183,7 +183,7 @@ if ($docbase_file) {
         # don't try to parse executables, plus we already warned about it
         # - skip symlinks as well, unlikely to be used for real doc-base files.
         next if -x $dbfile or -l $dbfile;
-        check_doc_base_file ($dbfile, $dbpath, $pkg, $type, \%all_files, \%all_links,
+        check_doc_base_file ($dbfile, $dbpath, $pkg, \%all_files, \%all_links,
                              $group);
     }
     closedir($dirfd);
@@ -228,9 +228,9 @@ if ($anymenu_file) {
 # -----------------------------------
 
 sub check_doc_base_file {
-    my ($dbfile, $dbpath, $pkg, $type, $all_files, $all_links, $group) = @_;
+    my ($dbfile, $dbpath, $pkg, $all_files, $all_links, $group) = @_;
 
-    my $line = file_is_encoded_in_non_utf8 ($dbpath, $type, $pkg);
+    my $line = file_is_encoded_in_non_utf8($dbpath);
     if ($line) {
         tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
     }
