@@ -1039,7 +1039,7 @@ The pool format dictates that packages are stored in:
 
 Note that $arch is left out for source packages, $l is the first
 letter of the package name (except if the name starts with "lib", then
-it is the first 4 letters of the package name).  Whitespaces (e.g. "
+it is the first 4 letters of the package name).  Whitespace (e.g. "
 ") are replaced with dashes ("-") and colons (":") with underscores
 ("_").
 
