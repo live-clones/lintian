@@ -21,6 +21,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
       read_dpkg_control and get_deb_control.
     + [NT] In copy_dir, pass --reflink=auto to cp.
 
+  * reporting/harness:
+    + [NT] Stop exporting ENV variables that lintian no longer
+      cares about.
+
  -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 18:24:45 +0200
 
 lintian (2.5.12) experimental; urgency=medium
