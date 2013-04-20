@@ -60,7 +60,7 @@ for my $file ($info->sorted_index) {
 
     if ($path->is_symlink) {
         # A symlink; use its target info if available.
-        my $target = $path->link_resolved;
+        my $target = $path->link_normalized;
         my $tinfo = $info->file_info ($target);
         $file_info{$file} = $tinfo if defined $tinfo;
     }

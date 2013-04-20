@@ -925,7 +925,7 @@ foreach my $file ($info->sorted_index) {
         my ($dwidth, $dheight) = ($1, $2);
         my $path;
         if ($index_info->is_symlink) {
-            $path = $index_info->link_resolved;
+            $path = $index_info->link_normalized;
         } else {
             $path = $file;
         }

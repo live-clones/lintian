@@ -424,7 +424,7 @@ foreach (keys %executable) {
     if ($index_info->is_hardlink) {
         # We don't collect script information for hardlinks, so check
         # if the target is a script.
-        my $target = $index_info->link_resolved;
+        my $target = $index_info->link_normalized;
         if (exists $info->scripts->{$target}) {
             $ok = 1;
         }

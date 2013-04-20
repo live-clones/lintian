@@ -114,7 +114,7 @@ The following code may be helpful in checking for path traversal:
  }
 
 Alternatively one can use normalize_pkg_path in L<Lintian::Util> or
-L<link_resolved|Lintian::Path/link_resolved>.
+L<link_normalized|Lintian::Path/link_normalized>.
 
 To get a list of entries in the package or the file meta data of the
 entries (as L<path objects|Lintian::Path>), see L</sorted_index> and

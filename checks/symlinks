@@ -40,7 +40,7 @@ foreach my $file ($info->sorted_index) {
         my $path; # the target (from the pkg root)
         # Should not happen (too often) - but just in case
         next unless $target;
-        $path = $index_info->link_resolved;
+        $path = $index_info->link_normalized;
         if (not defined $path) {
             # Unresolvable link
             tag 'package-contains-unsafe-symlink', $file;

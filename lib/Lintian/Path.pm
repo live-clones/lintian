@@ -45,10 +45,12 @@ Lintian::Path - Lintian representation of a path entry in a package
        if ($path->owner eq 'root') { }
        if ($path->group eq 'root') { }
     } elsif ($path->is_symlink) {
-       my $resolved = $path->link_resolved;
-       if (defined $resolved) {
-           # is a resolvable symlink (pointing to $target)
-           my $more_info = $info->index($resolved);
+       my $normalized = $path->link_normalized;
+       if (defined($normalized)) {
+           my $more_info = $info->index($normalized);
+           if (defined($more_info)) {
+               # target exists in the package...
+           }
        }
     }
 
@@ -228,8 +230,14 @@ sub is_regular_file  { return $_[0]->_is_type ('-'); }
 
 =item link_resolved
 
-Resolve the link and return the resolved name.  If the link cannot be
-resolved or it is unsafe to resolve, this method returns undef.
+Deprecated alias of link_normalized for << 2.5.13~.  This will go away
+in >= 2.5.14~.
+
+=item link_normalized
+
+Returns the target of the link normalized against it's directory name.
+If the link cannot be normalized or normalized path might escape the
+package root, this method returns C<undef>.
 
 NB: This method will return the empty string for links pointing to the
 root dir of the package.
@@ -241,11 +249,19 @@ B<CAVEAT>: This method is I<not always sufficient> to test if it is
 safe to open a given symlink.  Use
 L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
 that.  If you must use this method, remember to check that the target
-is not a symlink (or if it is, that it can be resolved).
+is not a symlink (or if it is, that it can be resolved safely).
+
+This method was named link_resolved in Lintian << 2.5.13~.
 
 =cut
 
 sub link_resolved {
+    warnings::warnif('deprecated',
+                     'link_resolved was renamed to link_normalized');
+    goto \&link_normalized;
+}
+
+sub link_normalized {
     my ($self) = @_;
     return $self->{'link_target'} if exists $self->{'link_target'};
     my $name = $self->name;
