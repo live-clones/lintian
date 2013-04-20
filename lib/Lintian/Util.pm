@@ -898,7 +898,10 @@ Convient way of calling I<cp -a ARGS>.
 =cut
 
 sub copy_dir {
-    return spawn(undef, ['cp', '-a', '--', @_]);
+    # --reflink=auto (coreutils >= 7.5).  On FS that support it,
+    # make a CoW copy of the data; otherwise fallback to a regular
+    # deep copy.
+    return spawn(undef, ['cp', '-a', '--reflink=auto', '--', @_]);
 }
 
 =item gunzip_file (IN, OUT)

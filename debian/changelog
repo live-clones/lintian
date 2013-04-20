@@ -19,6 +19,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
       of returning 0).
     + [NT] Require that the input file is present for
       read_dpkg_control and get_deb_control.
+    + [NT] In copy_dir, pass --reflink=auto to cp.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 18:24:45 +0200
 
