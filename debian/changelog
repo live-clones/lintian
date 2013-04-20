@@ -17,6 +17,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
 
   * lib/*:
     + [NT] Fix a number of spelling mistakes in the POD.
+  * lib/Lintian/Collect/{Package,Binary}.pm:
+    + [NT] Accept Lintian::Path objects to unpacked and control.
   * lib/Lintian/Util.pm:
     + [NT] Fix a race condition in touch_file.
     + [NT] Add sanity check in perm2oct for bad permission

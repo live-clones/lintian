@@ -24,6 +24,8 @@ use warnings;
 use parent 'Lintian::Collect';
 
 use Carp qw(croak);
+use Scalar::Util qw(blessed);
+
 use Lintian::Path;
 use Lintian::Util qw(open_gz perm2oct resolve_pkg_path);
 
@@ -36,9 +38,9 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
     my $info = Lintian::Collect->new ($name, $type, $dir);
     my $filename = "etc/conf.d/$name.conf";
-    my $file = $info->index ($filename);
+    my $file = $info->index($filename);
     if ($file && $file->is_regular_file) {
-        open my $fd, '<', $info->unpacked ($filename)
+        open my $fd, '<', $info->unpacked($file)
             or die "opening $filename: $!";
         # Use $fd ...
         close $fd;
@@ -72,10 +74,17 @@ documented in the L<Lintian::Collect> module are also available.
 =item unpacked ([FILE])
 
 Returns the path to the directory in which the package has been
-unpacked.  FILE must be relative to the root of the of the package and
-should be without leading slash (and without leading "./").  If FILE
-is not in the package, it returns the path to a non-existent file
-entry.
+unpacked.  FILE must be either a L<Lintian::Path> object or a
+string denoting the requested path.  In the latter case, the
+path must be relative to the root of the package and should be
+normalized.
+
+It is not permitted for FILE to be C<undef>.  If the "root" dir is
+desired either invoke this method without any arguments at all, pass
+it the correct L<Lintian::Path> or the empty string.
+
+If FILE is not in the package, it returns the path to a non-existent
+file entry.
 
 The path returned is not guaranteed to be inside the Lintian Lab as
 the package may have been unpacked outside the Lab (e.g. as
@@ -117,8 +126,14 @@ Needs-Info requirements for using I<unpacked>: unpacked
 =cut
 
 sub unpacked {
-    my ($self, $file) = @_;
-    return $self->_fetch_extracted_dir('unpacked', 'unpacked', $file);
+    ## no critic (Subroutines::RequireArgUnpacking)
+    #  - _fetch_extracted_dir checks if the FILE argument was explicitly
+    #    undef, but it relies on the size of @_ to do this.  With
+    #    unpacking we would have to use shift or check it directly here
+    #    (and duplicate said check in ::Binary::control and
+    #    ::Source::debfiles).
+    my $self = shift(@_);
+    return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
 }
 
 =item file_info (FILE)
@@ -216,25 +231,49 @@ sub sorted_index {
 sub _fetch_extracted_dir {
     my ($self, $field, $dirname, $file) = @_;
     my $dir = $self->{$field};
+    my $filename = '';
+    my $normalized = 0;
     if ( not defined $dir ) {
         $dir = $self->lab_data_path ($dirname);
         croak "$field ($dirname) is not available" unless -d "$dir/";
         $self->{$field} = $dir;
     }
-    if (defined $file and $file ne '') {
-        # strip leading ./ - if that leaves something, return the path there
-        if ($file =~ s,^(?:\.?/)++,,go) {
-            warnings::warnif('Lintian::Collect',
-                qq{Argument to $field had leading "/" or "./"});
+
+    if (!defined($file)) {
+        if (scalar(@_) >= 4) {
+            # Was this undef explicit?
+            croak('Input file was undef');
         }
-        if ($file =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
-            # possible traversal - double check it and (if needed)
-            # stop it before it gets out of hand.
-            if (resolve_pkg_path('/', $file) eq '') {
-                croak qq{The path "$file" is not within the package root};
+        $normalized = 1;
+    } else {
+        if (ref($file)) {
+            if (!blessed($file) || !$file->isa('Lintian::Path')) {
+                croak('Input file must be a string or a Lintian::Path object');
+            }
+            $filename = $file->name;
+            $normalized = 1;
+        } else {
+            $normalized = 0;
+            $filename = $file;
+        }
+    }
+
+    if ($filename ne '') {
+        if (!$normalized) {
+            # strip leading ./ - if that leaves something, return the path there
+            if ($filename =~ s,^(?:\.?/)++,,go) {
+                warnings::warnif('Lintian::Collect',
+                                 qq{Argument to $field had leading "/" or "./"});
+            }
+            if ($filename =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
+                # possible traversal - double check it and (if needed)
+                # stop it before it gets out of hand.
+                if (resolve_pkg_path('/', $filename) eq '') {
+                    croak qq{The path "$file" is not within the package root};
+                }
             }
         }
-        return "$dir/$file" if $file ne '';
+        return "$dir/$filename" if $filename ne '';
     }
     return $dir;
 }

@@ -25,6 +25,7 @@ use parent 'Lintian::Collect::Package';
 
 use Carp qw(croak);
 use Cwd();
+use Scalar::Util qw(blessed);
 
 use Lintian::Relation;
 use Parse::DebianChangelog;
@@ -548,6 +549,10 @@ should be without leading slash (and and without "./").  If FILE is
 not in the debian dir, it returns the path to a non-existent file
 entry.
 
+It is not permitted for FILE to be C<undef>.  If the "root" dir is
+desired either invoke this method without any arguments at all or use
+the empty string.
+
 The caveats of L<unpacked|Lintian::Collect::Package/unpacked ([FILE])>
 also apply to this method.
 
@@ -556,8 +561,13 @@ Needs-Info requirements for using I<debfiles>: debfiles
 =cut
 
 sub debfiles {
-    my ($self, $file) = @_;
-    return $self->_fetch_extracted_dir('debfiles', 'debfiles', $file);
+    ## no critic (Subroutines::RequireArgUnpacking)
+    # - see L::Collect::unpacked for why
+    my $self = shift(@_);
+    if (defined($_[0]) && blessed($_[0])) {
+        croak('debfiles does not accept blessed objects');
+    }
+    return $self->_fetch_extracted_dir('debfiles', 'debfiles', @_);
 }
 
 =item index (FILE)

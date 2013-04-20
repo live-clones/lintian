@@ -136,10 +136,14 @@ sub changelog {
 
 =item control ([FILE])
 
-Returns the path to FILE in the control.tar.gz.  FILE must be relative
-to the root of the control.tar.gz and should be without leading slash
-(and and without "./").  If FILE is not in the control.tar.gz, it
-returns the path to a non-existent file entry.
+Returns the path to FILE in the control.tar.gz.  FILE must be either a
+L<Lintian::Path> object or a string denoting the requested path.  In
+the latter case, the path must be relative to the root of the
+control.tar.gz member and should be normalized.
+
+It is not permitted for FILE to be C<undef>.  If the "root" dir is
+desired either invoke this method without any arguments at all, pass
+it the correct L<Lintian::Path> or the empty string.
 
 To get a list of entries in the control.tar.gz or the file meta data
 of the entries (as L<path objects|Lintian::Path>), see
@@ -154,8 +158,10 @@ Needs-Info requirements for using I<control>: bin-pkg-control
 =cut
 
 sub control {
-    my ($self, $file) = @_;
-    return $self->_fetch_extracted_dir('control', 'control', $file);
+    ## no critic (Subroutines::RequireArgUnpacking)
+    # - see L::Collect::unpacked for why
+    my $self = shift(@_);
+    return $self->_fetch_extracted_dir('control', 'control', @_);
 }
 
 =item control_index (FILE)
