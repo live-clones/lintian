@@ -25,7 +25,7 @@ use parent qw(Class::Accessor);
 
 use Carp qw(croak);
 
-use Lintian::Util qw(resolve_pkg_path);
+use Lintian::Util qw(normalize_pkg_path);
 
 =head1 NAME
 
@@ -254,7 +254,7 @@ sub link_resolved {
     my $dir = $self->dirname;
     # hardlinks are always relative to the package root
     $dir = '/' if $self->is_hardlink;
-    my $target = resolve_pkg_path ($dir, $link);
+    my $target = normalize_pkg_path($dir, $link);
     if ($target) {
         # map "." to ''.
         $target = '' if $target eq '.';

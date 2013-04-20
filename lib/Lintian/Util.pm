@@ -73,6 +73,7 @@ BEGIN {
                  check_path
                  clean_env
                  resolve_pkg_path
+                 normalize_pkg_path
                  parse_boolean
                  is_ancestor_of
                  $PKGNAME_REGEX),
@@ -93,20 +94,20 @@ Lintian::Util - Lintian utility functions
 
 =head1 SYNOPSIS
 
- use Lintian::Util qw(slurp_entire_file resolve_pkg_path);
+ use Lintian::Util qw(slurp_entire_file normalize_pkg_path);
  
- my $text = slurp_entire_file ('some-file');
+ my $text = slurp_entire_file('some-file');
  if ($text =~ m/regex/) {
     # ...
  }
 
- my $path = resolve_pkg_path ('/usr/bin/', '../lib/git-core/git-pull');
+ my $path = normalize_pkg_path('/usr/bin/', '../lib/git-core/git-pull');
  if (-e $path) {
     # ....
  }
  
  my (@paragraphs);
- eval { @paragraphs = read_dpkg_control ('some/debian/ctrl/file'); };
+ eval { @paragraphs = read_dpkg_control('some/debian/ctrl/file'); };
  if ($@) {
     # syntax error etc.
     die "ctrl/file: $@";
@@ -1092,37 +1093,55 @@ sub check_path {
     return 0;
 }
 
-=item resolve_pkg_path (CURDIR, DEST)
+=item normalize_pkg_path(CURDIR, DEST)
 
 Using CURDIR as current directory from the (package) root,
 resolve DEST and return (the absolute) path to the destination.
 Note that the result will never start with a slash, even if
 CURDIR or DEST does. Nor will it end with a slash.
 
+As the name suggests, this is a path "normalization" rather than a
+true path resolution (for that use Cwd::realpath).  Particularly,
+it assumes none of the path segments are symlinks.
+
 Note it will return '.' if the result is the package root.
 
-Returns a non-truth value, if it cannot safely resolve the path
-(e.g. DEST would be outside the package root).
+Returns a non-truth value, if the path cannot be normalized without
+escaping the the package root.
 
 B<CAVEAT>: This function is I<not always sufficient> to test if it is
 safe to open a given symlink.  Use
 L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
 that.  If you must use this function, remember to check that the
-target is not a symlink (or if it is, that it can be resolved).
+target is not a symlink (or if it is, that it can be resolved safely).
 
 Examples:
 
-  resolve_pkg_path('/usr/share/java', '../ant/file') eq  'usr/share/ant/file'
-  resolve_pkg_path('/usr/share/java', '../../../usr/share/ant/file') eq  'usr/share/ant/file'
-  resolve_pkg_path('/', 'usr/..') eq '.';
+  normalize_pkg_path('/usr/share/java', '../ant/file') eq  'usr/share/ant/file'
+  normalize_pkg_path('/usr/share/java', '../../../usr/share/ant/file') eq  'usr/share/ant/file'
+  normalize_pkg_path('/', 'usr/..') eq '.';
 
  The following will give a non-truth result:
-  resolve_pkg_path('/usr/bin', '../../../../etc/passwd')
-  resolve_pkg_path('/usr/bin', '/../etc/passwd')
+  normalize_pkg_path('/usr/bin', '../../../../etc/passwd')
+  normalize_pkg_path('/usr/bin', '/../etc/passwd')
+
+
+The sub was named resolve_pkg_path in Lintian << 2.5.13~.
+
+=item resolve_pkg_path (CURDIR, DEST)
+
+Deprecated alias of normalize_pkg_path for << 2.5.13~.  This will go
+away in >= 2.5.14~.
 
 =cut
 
 sub resolve_pkg_path {
+    warnings::warnif('deprecated',
+                     'resolve_pkg_path was renamed to normalize_pkg_path');
+    goto \&normalize_pkg_path;
+}
+
+sub normalize_pkg_path {
     my ($curdir, $dest) = @_;
     my (@cc, @dc);
     my $target;
@@ -1136,7 +1155,7 @@ sub resolve_pkg_path {
         # absolute path, strip leading slashes and resolve
         # as relative to the root.
         $dest =~ s,^/,,o;
-        return resolve_pkg_path('/', $dest);
+        return normalize_pkg_path('/', $dest);
     }
 
     # clean up $curdir (as well)

@@ -27,7 +27,7 @@ use Carp qw(croak);
 use Scalar::Util qw(blessed);
 
 use Lintian::Path;
-use Lintian::Util qw(open_gz perm2oct resolve_pkg_path);
+use Lintian::Util qw(open_gz perm2oct normalize_pkg_path);
 
 =head1 NAME
 
@@ -113,7 +113,7 @@ The following code may be helpful in checking for path traversal:
     # Does not exists
  }
 
-Alternatively one can use resolve_pkg_path in L<Lintian::Util> or
+Alternatively one can use normalize_pkg_path in L<Lintian::Util> or
 L<link_resolved|Lintian::Path/link_resolved>.
 
 To get a list of entries in the package or the file meta data of the
@@ -267,7 +267,7 @@ sub _fetch_extracted_dir {
             if ($filename =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
                 # possible traversal - double check it and (if needed)
                 # stop it before it gets out of hand.
-                if (resolve_pkg_path('/', $filename) eq '') {
+                if (normalize_pkg_path('/', $filename) eq '') {
                     croak qq{The path "$file" is not within the package root};
                 }
             }

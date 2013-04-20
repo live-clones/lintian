@@ -33,6 +33,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Require that the input file is present for
       read_dpkg_control and get_deb_control.
     + [NT] In copy_dir, pass --reflink=auto to cp.
+    + [NT] Rename resolve_pkg_path to normalize_pkg_path.
 
   * reporting/harness:
     + [NT] Stop exporting ENV variables that lintian no longer

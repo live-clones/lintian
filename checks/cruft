@@ -36,7 +36,7 @@ use constant BLOCKSIZE => 4096;
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of resolve_pkg_path);
+use Lintian::Util qw(fail is_ancestor_of normalize_pkg_path);
 
 use Cwd;
 use File::Find;
@@ -359,22 +359,22 @@ sub find_cruft {
     if (-l) {
         my $target = readlink($_);
         my $dirname = dirname($_);
-        my $resolved = resolve_pkg_path($dirname, $target);
-        if (not $resolved) {
+        my $normalized = normalize_pkg_path($dirname, $target);
+        if (not $normalized) {
             # skip unsafe symlinks too
             tag 'source-contains-unsafe-symlink', $_;
             return;
         }
         # This check may appear redundant, but it is not!
-        # resolve_pkg_path tells us that the link can "safely be
-        # resolved without escaping the root".  But it tells us
+        # normalized_pkg_path tells us that the link can "safely be
+        # normalized without escaping the root".  But it tells us
         # nothing about the target of the link (which could be an
         # unsafe symlink). Example
         #
         #  safe-symlink -> unsafe-symlink
         #  unsafe-symlink -> ../../../../etc/passwd
         #
-        # resolve_pkg_path would approve of "safe-symlink", but if we
+        # normalize_pkg_path would approve of "safe-symlink", but if we
         # were to open it we would actually end up escaping the
         # package root.
         if (-e and not is_ancestor_of($info->unpacked, $_)) {
