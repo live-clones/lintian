@@ -63,7 +63,7 @@ sub run {
         if (not $control->is_regular_file) {
             tag 'debian-tests-control-is-not-a-regular-file';
         } else {
-            my $path = $info->unpacked ($control->name);
+            my $path = $info->unpacked($control);
 
             my $not_utf8_line = file_is_encoded_in_non_utf8 ($path, $type, $pkg);
             if ($not_utf8_line) {

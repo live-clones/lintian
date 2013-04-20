@@ -348,7 +348,7 @@ foreach my $file ($info->sorted_index) {
         #----------------- /etc/php5/conf.d
         elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
             if ($index_info->is_file) {
-                open (PHPINI, '<', $info->unpacked($file)) or fail("cannot open .ini file: $!");
+                open (PHPINI, '<', $info->unpacked($index_info)) or fail("cannot open .ini file: $!");
                 while (<PHPINI>) {
                     next unless (m/^\s*#/);
                     tag 'obsolete-comments-style-in-php-ini', $file;
@@ -413,9 +413,9 @@ foreach my $file ($info->sorted_index) {
                 # gzipped zero byte files:
                 # 276 is 255 bytes (maximal length for a filename) + gzip overhead
                 if ($file =~ m,.gz$, and $index_info->size <= 276
-                    and $index_info->is_file
-                    and $info->file_info ($file) =~ m/gzip compressed/) {
-                    my $fd = open_gz ($info->unpacked ($file)) or fail "open $file: $!";
+                        and $index_info->is_file
+                        and $info->file_info ($file) =~ m/gzip compressed/) {
+                    my $fd = open_gz ($info->unpacked($index_info)) or fail "open $file: $!";
                     my $f = <$fd>;
                     close $fd;
                     unless (defined $f and length $f) {
@@ -796,7 +796,7 @@ foreach my $file ($info->sorted_index) {
     {
         my $dep = $info->relation('strong');
         if ($index_info->is_file && $file =~ m,\.pm$, && !$dep->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-            open (PM, '<', $info->unpacked($file)) or fail("cannot open .pm file: $!");
+            open (PM, '<', $info->unpacked($index_info)) or fail("cannot open .pm file: $!");
             while (<PM>) {
                 if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
                     tag 'perl-module-uses-perl4-libs-without-dep', "$file:$. ${1}.pl";
@@ -997,7 +997,7 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- embedded Feedparser library
         if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
-            open(FEEDPARSER, '<', $info->unpacked($file)) or fail("cannot open feedparser.py file: $!");
+            open(FEEDPARSER, '<', $info->unpacked($index_info)) or fail("cannot open feedparser.py file: $!");
             while (<FEEDPARSER>) {
                 if (m,Universal feed parser,) {
                     tag 'embedded-feedparser-library', $file;
@@ -1010,7 +1010,7 @@ foreach my $file ($info->sorted_index) {
         # ---------------- embedded PEAR modules
         foreach my $pearmodule (@pearmodules) {
             if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
-                open (PEAR, '<', $info->unpacked($file)) or fail("cannot open PHP file: $!");
+                open (PEAR, '<', $info->unpacked($index_info)) or fail("cannot open PHP file: $!");
                 while (<PEAR>) {
                     if (m,/pear[/.],i) {
                         tag 'embedded-pear-module', $file;
@@ -1039,7 +1039,7 @@ foreach my $file ($info->sorted_index) {
             }
             my $finfo = $info->file_info ($file) || '';
             if ($finfo =~ m/PostScript Type 1 font program data/) {
-               my $path = $info->unpacked ($file);
+               my $path = $info->unpacked($index_info);
                open my $t1pipe, '-|', 't1disasm', $path or fail "Can't pipe from t1disasm: $!";
                my $foundadobeline = 0;
                while (my $line = <$t1pipe>) {
@@ -1081,7 +1081,7 @@ foreach my $file ($info->sorted_index) {
             if ($finfo !~ m/gzip compressed/) {
                 tag 'gz-file-not-gzip', $file;
             } elsif ($isma_same && $file !~ m/\Q$arch\E/o) {
-                my $path = $info->unpacked ($file);
+                my $path = $info->unpacked($index_info);
                 open my $fd, '<', $path or fail "opening $file: $!";
                 my $buff;
                 # We need to read at least 8 bytes

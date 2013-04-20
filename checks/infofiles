@@ -80,7 +80,7 @@ foreach my $file ($info->sorted_index) {
             # unsafe symlink, skip
             next;
         }
-        my $fd = open_gz ($info->unpacked ($file));
+        my $fd = open_gz ($info->unpacked($index_info));
         fail "open_gz $file: $!" unless defined $fd;
         local $_;
         my ($section, $start, $end);

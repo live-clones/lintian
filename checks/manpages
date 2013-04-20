@@ -158,7 +158,7 @@ foreach my $file ($info->sorted_index) {
             }
         }
     } else { # not a symlink
-        my $path = $info->unpacked($file);
+        my $path = $info->unpacked($index_info);
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
             $fd = open_gz($path)
