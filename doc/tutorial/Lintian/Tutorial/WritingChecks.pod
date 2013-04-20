@@ -139,7 +139,7 @@ file, the above will faithfully emit said tag for all packages
 processed by this check.
 
 Emitting a tag is fairly simple; the hard part is emitting exactly
-when there is an issue.
+when there is an issue and without introducing a security issue.
 
 
 =head2 Accessing fields
@@ -428,11 +428,29 @@ be a blessing and a curse!
 
 The major caveat here is that there is no fail-safes for you here!
 When you use unpacked, keep things like
-"../../../../../etc/passwd"-symlink and "fifo" pipes in mind.
+"../../../../../etc/passwd"-symlink and "fifo" pipes in mind.  This
+caveat applies equally well to use of
+L<control ('path/to/file')|Lintian::Collect::Binary/control ([FILE])>
+and L<debfiles ('path/to/file')|Lintian::Collect::Source/debfiles ([FILE])>.
 
 It is generally a good idea to use L<Lintian::Path> first to check if
-it is a regular file before opening a given path (or use something
-like "if (! -l $path and -f $path) { ... }").
+it is a regular file before opening a given path.  If you must open a
+file (or a dir) from the underlying package, be sure to test that will
+not escape the package root.  The following snippet may be useful for
+this.
+
+ use Lintian::Util qw(is_ancestor_of);
+ 
+ my $path = ...;
+ # The snippet applies equally well to $info->debfiles and
+ # $info->control (just remember to subst all occurrances of
+ # $info->unpacked).
+ my $unpacked_file = $info->unpacked($path);
+ if ( -f $unpacked_file && is_ancestor_of($info->unpacked, $unpacked_file)) {
+    # a file and contained within the package root.
+ } else {
+    # not a file or an unsafe path
+ }
 
 Using the "unpacked" method requires that the "unpacked" collection is
 listed in Needs-Info.  See L</Keeping Needs-Info up to date>.
@@ -479,5 +497,61 @@ you have to put "bin-pkg-control" in your Needs-Info.
 CAVEAT: Methods can have different requirements based on the type of
 package!  Example being "changelog", which requires "changelog-file"
 in binary packages and "Same as debfiles" in source packages.
+
+=head2 Avoiding security issues
+
+Over the years a couple of security issues have been discovered in
+Lintian.  The problem is people can in theory create some really nasty
+packages that exceeds our ability to imagine such trickeries.  Please
+keep the following in mind when writing a check:
+
+=over 4
+
+=item * Avoid 2-arg open, system/exec($shellcmd), `$shellcmd` like the
+plague.
+
+When you any one of those wrong you introduce "arbitrary code
+execution" (we learned this the hard way via CVE-2009-4014).
+
+Usually 3-arg open and the non-shell variant of system/exec are
+enough.  When you actually need a shell pipeline, consider using
+L<Lintian::Command>.
+
+=item * Do not trust field values.
+
+This is especially true if you intend to use the value as part of a
+file name.  Verify that field contains what you expect before you use
+it.
+
+=item * Use is_ancestor_of with $info->unpacked('path/to/file')
+
+You might be tempted to think that the following code is safe:
+
+ my $filename = 'some/file';
+ my $ufile = $info->unpacked($filename);
+ if ( ! -l $ufile) {
+    # Looks safe, but isn't in general
+ }
+
+This is definitely unsafe if "$filename" contains at least one
+directory segment.  So if in doubt, use
+L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> to
+verify that the requested file is indeed the file you think it is.  A
+better version of the above would be:
+
+ use Lintian::Util qw(is_ancestor_of);
+ [...]
+ my $filename = 'some/file';
+ my $ufile = $info->unpacked($filename);
+ if ( ! -l $ufile && -f $ufile && is_ancestor_of($info->unpacked, $ufile)) {
+    # $ufile is a file and it is contained within the package root.
+ }
+
+In some cases you can even drop the "! -l $ufile" part.
+
+For more information, see
+L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)>
+
+=back
 
 =cut

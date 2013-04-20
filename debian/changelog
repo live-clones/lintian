@@ -17,6 +17,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
 
   * doc/tutorial/**/*.pod:
     + [NT] Fix a number of spelling mistakes in the POD.
+  * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
+    + [NT] Add a section about how to avoid some common ways
+      of introducing security issues.
 
   * lib/*:
     + [NT] Fix a number of spelling mistakes in the POD.
