@@ -167,11 +167,11 @@ in all lowercase letters (i.e. use "multi-arch", not "Multi-Arch").
  sub run {
      my ($pkg, $type, $info, $proc, $group) = @_;
  
-     my $multiarch = $info->field ('multi-arch');
+     my $multiarch = $info->field('multi-arch');
  
-     # Emit a "missing-mutli-arch-field" for all packages without the
+     # Emit a "missing-multi-arch-field" for all packages without the
      # Multi-Arch field
-     tag 'missing-multi-arch-field' unless defined $multiarch;
+     tag 'missing-multi-arch-field' unless defined($multiarch);
  }
 
 This was the first half.  Lets look at checking the value.  Multi-arch
@@ -207,14 +207,14 @@ We will use the second here:
  sub run {
      my ($pkg, $type, $info, $proc, $group) = @_;
  
-     my $multiarch = $info->field ('multi-arch');
+     my $multiarch = $info->field('multi-arch');
  
-     if (defined $multiarch) {
+     if (defined($multiarch)) {
         # The field is present, lets check it is valid.
         tag 'invalid-multi-arch-field', $multiarch
             unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
      } else {
-         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Emit a "missing-multi-arch-field" for all packages without the
          # Multi-Arch field
          tag 'missing-multi-arch-field';
      }
@@ -246,8 +246,8 @@ field is missing).
 
 So in example:
 
- my $predepends = $info->relation ('pre-depends');
- unless ($predepends->implies ('multiarch-support')) {
+ my $predepends = $info->relation('pre-depends');
+ unless ($predepends->implies('multiarch-support')) {
     tag 'missing-pre-depends-on-multiarch-support';
  }
 
@@ -269,19 +269,19 @@ Inserted in the proper place, our check now looks like:
  sub run {
      my ($pkg, $type, $info, $proc, $group) = @_;
  
-     my $multiarch = $info->field ('multi-arch');
+     my $multiarch = $info->field('multi-arch');
  
-     if (defined $multiarch) {
+     if (defined($multiarch)) {
          # The field is present, lets check it is valid.
          tag 'invalid-multi-arch-field', $multiarch
              unless exists $VALID_MULTI_ARCH_VALUES{$multiarch};
          if ($multiarch eq 'same') {
-             my $predepends = $info->relation ('pre-depends');
+             my $predepends = $info->relation('pre-depends');
              tag 'missing-pre-depends-on-multiarch-support'
-                 unless $predepends->implies ('multiarch-support');
+                 unless $predepends->implies('multiarch-support');
          }
      } else {
-         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Emit a "missing-multi-arch-field" for all packages without the
          # Multi-Arch field
          tag 'missing-multi-arch-field';
      }
@@ -314,7 +314,7 @@ Now we can load it by using:
  use Lintian::Data;
  
  my $VALID_MULTI_ARCH_VALUES =
-     Lintian::Data->new ('deb/pkg-check/multiarch-values');
+     Lintian::Data->new('deb/pkg-check/multiarch-values');
 
 Actually, this is not quite true.  L<Lintian::Data> is lazy, so it
 will not load anything before we force it to do so.  Most of the time
@@ -334,14 +334,14 @@ sorted in any order (not even input order).
 
 =item known
 
-"known" (i.e. $data->known ('item')) returns a truth value if a given
+"known" (i.e. $data->known('item')) returns a truth value if a given
 item or key is known (present) in the data set or table.  For key/pair
 tables, the value associated with the key can be retrieved with
 "value" (see below).
 
 =item value
 
-"value" (i.e. $data->value ('key')) returns a value associated with a
+"value" (i.e. $data->value('key')) returns a value associated with a
 key for key/value tables.  For unknown keys, it returns C<undef>.  If
 the data file is not a key/value table but just a set, value returns
 a truth value for known keys.
@@ -358,7 +358,7 @@ Basically we will be replacing:
 
 with
 
-  unless $VALID_MULTI_ARCH_VALUES->known ($multiarch);
+  unless $VALID_MULTI_ARCH_VALUES->known($multiarch);
 
 So the resulting check is:
 
@@ -373,24 +373,24 @@ So the resulting check is:
  use Lintian::Tags qw(tag);
  
  my $VALID_MULTI_ARCH_VALUES =
-     Lintian::Data->new ('deb/pkg-check/multiarch-values');
+     Lintian::Data->new('deb/pkg-check/multiarch-values');
  
  sub run {
      my ($pkg, $type, $info, $proc, $group) = @_;
  
-     my $multiarch = $info->field ('multi-arch');
+     my $multiarch = $info->field('multi-arch');
  
-     if (defined $multiarch) {
+     if (defined($multiarch)) {
          # The field is present, lets check it is valid.
          tag 'invalid-multi-arch-field', $multiarch
-             unless $VALID_MULTI_ARCH_VALUES->known ($multiarch);
+             unless $VALID_MULTI_ARCH_VALUES->known($multiarch);
          if ($multiarch eq 'same') {
-             my $predepends = $info->relation ('pre-depends');
+             my $predepends = $info->relation('pre-depends');
              tag 'missing-pre-depends-on-multiarch-support'
-                 unless $predepends->implies ('multiarch-support');
+                 unless $predepends->implies('multiarch-support');
          }
      } else {
-         # Emit a "missing-mutli-arch-field" for all packages without the
+         # Emit a "missing-multi-arch-field" for all packages without the
          # Multi-Arch field
          tag 'missing-multi-arch-field';
      }
@@ -410,7 +410,7 @@ do this for you.  If you are looking for a specific file (or dir), a
 call to "index" will be much faster.  For the contents of a specific dir,
 you can use something like:
 
- foreach my $elem ($info->index ('path/to/dir/')->children) {
+ foreach my $elem ($info->index('path/to/dir/')->children) {
      print $elem->name . " is a file" if $elem->is_file;
      # ...
  }
