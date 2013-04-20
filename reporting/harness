@@ -21,6 +21,8 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
+
 use Getopt::Long;
 
 
@@ -88,7 +90,7 @@ die "Cannot use other modes with reports only.\n"
     if $opt{'reports-only'} && ($opt{'full-mode'} || $opt{'incremental-mode'});
 
 # read configuration
-require './config';
+require './config'; ## no critic (Modules::RequireBarewordIncludes)
 use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
             $LINTIAN_ARCH $LINTIAN_CFG
             $lintian_cmd $html_reports_cmd
@@ -118,7 +120,7 @@ require Lintian::Util;
 import Lintian::Util qw(strip visit_dpkg_paragraph);
 
 # turn file buffering off
-$| = 1;
+STDOUT->autoflush;
 
 unless ($opt{'dry-run'}) {
     # rotate log files
@@ -202,7 +204,7 @@ unless ($opt{'reports-only'}) {
     # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
     # but still...
     my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
-        " --exp-output=format=fullewi --packages-from-file -";
+        ' --exp-output=format=fullewi --packages-from-file -';
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
@@ -372,7 +374,6 @@ unless ($opt{'reports-only'}) {
 
     if (@worklist) {
         # incremental run cmd changes
-        $cmd .= " --packages-from-file -";
         my $lintpipe;
         my $scs = $opt{'schedule-chuck-size'};
         my $round = 0;
@@ -387,7 +388,7 @@ unless ($opt{'reports-only'}) {
         }
 
         Log (sprintf ('Groups to process %d will take %d round(s) [round limit: %s]',
-                      scalar @worklist, $rounds, $scs > 0 ? $scs : "none"));
+                      scalar @worklist, $rounds, $scs > 0 ? $scs : 'none'));
 
         while (@worklist) {
             my $start = 0;
@@ -428,7 +429,7 @@ unless ($opt{'reports-only'}) {
                     # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
                     # don't start the next round.
                     #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
-                    Log (" - skipping the rest of the worklist");
+                    Log(' - skipping the rest of the worklist');
                     @worklist = ();
                 }
             }

@@ -22,6 +22,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use POSIX qw(strftime);
 use File::Copy qw(copy);
@@ -40,7 +41,7 @@ our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $GRAPHS_RANGE_DAYS, $GRAPHS, $LINTIAN_MIRROR_NAME);
 
 # Read the configuration.
-BEGIN { require './config'; }
+BEGIN { require './config'; } ## no critic (Modules::RequireBarewordIncludes)
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP
@@ -623,8 +624,8 @@ if ($GRAPHS) {
     mkdir("$graph_dir/tags", 0777)
         or die "cannot create output directory $graph_dir/tags: $!\n";
 
-    my $date_min = strftime ("%s", localtime ($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
-    my $date_max = strftime ("%s", localtime ($unix_time));
+    my $date_min = strftime ('%s', localtime ($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
+    my $date_max = strftime ('%s', localtime ($unix_time));
 
     # Generate loadable Gnuplot file with common variables and labels/arrows
     # for Lintian versions.
@@ -705,6 +706,11 @@ sub maintainer_url {
 # with a given e-mail address, issues a warning if two maintainers have the
 # same e-mail address, and returns the maintainer string that we should use
 # (which is whatever maintainer we saw first with that e-mail).
+
+# PerlCritic apparently does not recognise this way of "encapsulating"
+# variables.  Though, these could probably be replaced by "state"
+# variables.
+## no critic (ControlStructures::ProhibitUnreachableCode)
 {
     my (%urlmap, %warned);
     sub map_maintainer {
