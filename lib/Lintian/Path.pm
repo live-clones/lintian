@@ -271,12 +271,6 @@ sub link_normalized {
     # hardlinks are always relative to the package root
     $dir = '/' if $self->is_hardlink;
     my $target = normalize_pkg_path($dir, $link);
-    if ($target) {
-        # map "." to ''.
-        $target = '' if $target eq '.';
-    } else {
-        $target = undef;
-    }
     $self->{'link_target'} = $target;
     return $target;
 }

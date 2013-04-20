@@ -267,7 +267,7 @@ sub _fetch_extracted_dir {
             if ($filename =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
                 # possible traversal - double check it and (if needed)
                 # stop it before it gets out of hand.
-                if (normalize_pkg_path('/', $filename) eq '') {
+                if (!defined(normalize_pkg_path('/', $filename))) {
                     croak qq{The path "$file" is not within the package root};
                 }
             }

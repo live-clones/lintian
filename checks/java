@@ -157,6 +157,8 @@ for my $jar_file (sort keys %{$java_info}) {
                     if($p =~ m#/#o) {
                         my $target = normalize_pkg_path($jar_dir, $p);
                         my $tinfo;
+                        # Can it be normalized?
+                        next unless defined($target);
                         # Relative link to usr/share/java ? Works if we
                         # are depending of a Java library.
                         next if $target =~ m,^usr/share/java/[^/]+.jar$,o
