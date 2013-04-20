@@ -22,6 +22,7 @@
 package Lintian::Util;
 use strict;
 use warnings;
+use autodie;
 
 use Carp qw(croak);
 use Cwd qw(abs_path);
@@ -577,9 +578,9 @@ the following error:
 sub read_dpkg_control {
     my ($file, $flags, $lines) = @_;
 
-    open my $CONTROL, '<', $file or die "cannot open $file: $!";
+    open(my $CONTROL, '<', $file);
     my @data = parse_dpkg_control($CONTROL, $flags, $lines);
-    close $CONTROL;
+    close($CONTROL);
 
     return @data;
 }
@@ -662,15 +663,14 @@ effect if FOH is not a handle.
 sub slurp_entire_file {
     my ($file, $noclose) = @_;
     my $fd;
-    if (openhandle $file) {
+    if (openhandle($file)) {
         $fd = $file;
     } else {
-        open $fd, '<', $file
-            or fail ("cannot open file $file for reading: $!");
+        open($fd, '<', $file);
     }
     local $/;
     local $_ = <$fd>;
-    close $fd unless $noclose && openhandle $file;
+    close($fd) unless $noclose && openhandle($file);
     return $_;
 }
 
@@ -688,7 +688,7 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 
 sub get_file_checksum {
     my ($alg, $file) = @_;
-    open my $fd, '<', $file or fail("Couldn't open $file");
+    open(my $fd, '<', $file);
     my $digest;
     if ($alg eq 'md5') {
         $digest = Digest::MD5->new;
@@ -696,7 +696,7 @@ sub get_file_checksum {
         $digest = Digest::SHA->new($1);
     }
     $digest->addfile($fd);
-    close $fd or fail("Couldn't close $file");
+    close($fd);
     return $digest->hexdigest;
 }
 
@@ -730,11 +730,9 @@ Undocumented
 =cut
 
 sub file_is_encoded_in_non_utf8 {
-    my ($file, $type, $pkg) = @_;
-    my $non_utf8 = 0;
+    my ($file) = @_;
 
-    open my $fd, '<', $file
-        or fail("failure while checking encoding of $file for $type package $pkg");
+    open(my $fd, '<', $file);
     my $line = 0;
     while (<$fd>) {
         if (!is_string_utf8_encoded($_)) {
@@ -742,7 +740,7 @@ sub file_is_encoded_in_non_utf8 {
             last;
         }
     }
-    close $fd;
+    close($fd);
 
     return $line;
 }
@@ -929,6 +927,7 @@ Note: The handle may be a pipe from an external processes.
 # is available)
 sub __open_gz_pio {
     my ($file) = @_;
+    no autodie qw(open);
     open my $fd, '<:gzip', $file or return;
     return $fd;
 }
@@ -936,6 +935,7 @@ sub __open_gz_pio {
 # Fallback implementation of open_gz
 sub __open_gz_ext {
     my ($file) = @_;
+    no autodie qw(open);
     open my $fd, '-|', 'gzip', '-dc', $file or return;
     return $fd;
 }
@@ -952,6 +952,11 @@ the failure.
 
 sub touch_file {
     my ($file) = @_;
+
+    # We have to return 0 if one of these fails and for "close",
+    # we don't always want its $! (i.e. if utime fails)
+    no autodie qw(open close);
+
     # We use '>>' because '>' truncates the file if it has contents
     # (which `touch file` doesn't).
     open my $fd, '>>', $file or return 0;
