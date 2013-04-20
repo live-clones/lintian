@@ -226,7 +226,7 @@ So far so good.
 
 Lintian can do some checking of dependencies.  For most cases it works
 similar to a normal dependency check, but keep in mind that Lintian
-uses I<pure> logic to determine if dependencies are satisfies (i.e. it
+uses I<pure> logic to determine if dependencies are satisfied (i.e. it
 will not look up relations like Provides for you).
 
 Suppose you wanted all packages with a multi-arch "same" field to
