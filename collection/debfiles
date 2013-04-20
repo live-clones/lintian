@@ -23,10 +23,10 @@ package Lintian::coll::debfiles;
 
 use strict;
 use warnings;
-
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(copy_dir delete_dir fail);
+use Lintian::Util qw(copy_dir delete_dir is_ancestor_of fail);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
@@ -38,21 +38,21 @@ if ( -e "$dir/debfiles") {
         or fail('cannot rm old debfiles directory');
 }
 
-if ( -l "$dir/unpacked/debian" ) {
-    require Cwd;
-    my $target = Cwd::abs_path ("$dir/unpacked/debian");
-    my $ud = "$dir/unpacked";
-    fail ("cannot resolve debian directory symlink in $pkg: $!") unless $target;
-    fail ("cannot resolve unpacked dir for $pkg: $!") unless $ud;
-    # We need the the trailing slash on $ud to ensure $target is a subdir of $ud.  However
-    # if $target eq $ud, we also need a trailing slash on $target for the comparision to
-    # be successful
-    fail ("debian directory in $pkg is an unsafe symlink!") unless "$target/" =~ m,^$ud/,;
+if ( ! -d "$dir/unpacked/debian/" ) {
+    mkdir("$dir/debfiles");
+    return;
 }
-
+if ( -l "$dir/unpacked/debian") {
+    if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/debian/")) {
+        # unsafe, stop
+        mkdir("$dir/debfiles");
+        return;
+    }
+}
 # Copy the whole debian directory
-copy_dir ("$dir/unpacked/debian/", "$dir/debfiles")
-    or fail("cannot copy unpacked/debian to debfiles: $!");
+copy_dir("$dir/unpacked/debian/", "$dir/debfiles")
+    or fail('cannot copy unpacked/debian to debfiles');
+return;
 
 }
 

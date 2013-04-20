@@ -5,6 +5,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
       distribution.  Thanks to Romain Francoise for the
       report and the patch.  (Closes: #705170)
 
+  * collection/debfiles:
+    + [NT] Replace makeshift "is_ancestor_of" check with the
+      one from L::Util.
+
   * lib/Lintian/Util.pm:
     + [NT] Fix a race condition in touch_file.
     + [NT] Add sanity check in perm2oct for bad permission
