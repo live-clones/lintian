@@ -139,7 +139,8 @@ file, the above will faithfully emit said tag for all packages
 processed by this check.
 
 Emitting a tag is fairly simple; the hard part is emitting exactly
-when there is an issue and without introducing a security issue.
+when there is an issue and without introducing a security hole in
+Lintian/your check.
 
 
 =head2 Accessing fields
@@ -502,16 +503,16 @@ in binary packages and "Same as debfiles" in source packages.
 
 Over the years a couple of security issues have been discovered in
 Lintian.  The problem is people can in theory create some really nasty
-packages that exceeds our ability to imagine such trickeries.  Please
-keep the following in mind when writing a check:
+packages.  Please keep the following in mind when writing a check:
 
 =over 4
 
 =item * Avoid 2-arg open, system/exec($shellcmd), `$shellcmd` like the
 plague.
 
-When you any one of those wrong you introduce "arbitrary code
-execution" (we learned this the hard way via CVE-2009-4014).
+When you get any one of those wrong you introduce "arbitrary code
+execution" vulnerabilities (we learned this the hard way via
+CVE-2009-4014).
 
 Usually 3-arg open and the non-shell variant of system/exec are
 enough.  When you actually need a shell pipeline, consider using
