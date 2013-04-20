@@ -74,10 +74,9 @@ documented in the L<Lintian::Collect> module are also available.
 =item unpacked ([FILE])
 
 Returns the path to the directory in which the package has been
-unpacked.  FILE must be either a L<Lintian::Path> object or a
-string denoting the requested path.  In the latter case, the
-path must be relative to the root of the package and should be
-normalized.
+unpacked.  FILE must be either a L<Lintian::Path> object (>= 2.5.13~)
+or a string denoting the requested path.  In the latter case, the path
+must be relative to the root of the package and should be normalized.
 
 It is not permitted for FILE to be C<undef>.  If the "root" dir is
 desired either invoke this method without any arguments at all, pass
