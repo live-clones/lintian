@@ -9,8 +9,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
       report and the patch.  (Closes: #705170)
   * checks/fields.desc:
     + [NT] Clarify that the "canonical URI" for Vcs fields is
-      based on HTTP 301 responds codes from Alioth.  Thanks to
-      Torquil Sørensen for the report.  (Closes: #705835)
+      based on an announcement from the Alioth admins.  Thanks
+      to Torquil Sørensen for the report.  (Closes: #705835)
     + [NT] Clarify in the tag description of some tags related
       to "Vcs-*" fields that the tags are based on a data list
       (and is not a result of a HTTP request while checking the

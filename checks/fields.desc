@@ -1010,15 +1010,14 @@ Info: The VCS-* field contains an uncanonical URI. Please update to use
  and makes debcheckout work independent of the port forwarding and
  redirections properly working.
  .
- The definition of canoical used here is based the HTTP status code.
- For non-canonical URIs, Alioth returned <tt>301 Moved
- Permanently</tt>.  The new URI provided by Alioth (in the
- <tt>Location</tt>-field) was then considered "canonical".
+ The definition of canoical used here is the URIs announced by the Alioth
+ admins (see reference).
  .
  Note that this check is based on a list of known URIs.  Lintian did not
  send a HTTP request to the URI to test this.  Should the canonical URI
  have changed, please file a bug against Lintian so the check can be
  updated accordingly.
+Ref: https://lists.debian.org/debian-devel-announce/2011/05/msg00009.html
 
 Tag: vcs-field-bitrotted
 Severity: normal
