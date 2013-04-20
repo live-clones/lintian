@@ -65,7 +65,7 @@ sub run {
         } else {
             my $path = $info->unpacked($control);
 
-            my $not_utf8_line = file_is_encoded_in_non_utf8 ($path, $type, $pkg);
+            my $not_utf8_line = file_is_encoded_in_non_utf8($path);
             if ($not_utf8_line) {
                 tag 'debian-tests-control-uses-national-encoding', "at line $not_utf8_line";
             }
