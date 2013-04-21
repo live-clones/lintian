@@ -10,6 +10,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/conffiles:
     + [NT] Strip whitespace from conffiles similar to how dpkg
       does it.
+    + [NT] When emitting duplicate-conffile, avoid repeating
+      other tags related to that conffile.  The exception to
+      this is relative-conffile where the original file might
+      not have triggered that tag.
   * checks/fields.desc:
     + [NT] Clarify that the "canonical URI" for Vcs fields is
       based on an announcement from the Alioth admins.  Thanks

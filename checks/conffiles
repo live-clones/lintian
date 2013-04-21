@@ -60,6 +60,7 @@ if (-f $cf) {
 
         if ($conffiles{$filename} > 1) {
             tag 'duplicate-conffile', $filename;
+            next;
         }
 
         if ($filename =~ m{^ usr/ }xsm) {
