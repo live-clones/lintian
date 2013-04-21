@@ -28,19 +28,19 @@ use Lintian::Util qw(
     read_dpkg_control
 );
 
-my @mandatory_fields = qw(
+my @MANDATORY_FIELDS = qw(
     tests
 );
-my %expected_fields = map { $_ => 1 } qw(
+my %KNOWN_FIELDS = map { $_ => 1 } qw(
     tests
     restrictions
     features
     depends
     tests-directory
 );
-my %expected_features = map { $_ => 1 } qw(
+my %KNOWN_FEATURES = map { $_ => 1 } qw(
 );
-my %expected_restrictions = map { $_ => 1 } qw(
+my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
     breaks-testbed
     build-needed
     needs-root
@@ -49,93 +49,101 @@ my %expected_restrictions = map { $_ => 1 } qw(
 
 sub run {
     my ($pkg, $type, $info) = @_;
+    my $testsuite = $info->field('testsuite');
+    my $control = $info->index('debian/tests/control');
 
-    my $testsuite = $info->field ('testsuite');
-    my $control = $info->index ('debian/tests/control');
-
-    if (defined $testsuite xor defined $control) {
+    if (defined($testsuite) xor defined($control)) {
         tag 'inconsistent-testsuite-field';
     }
-    if (defined $testsuite and $testsuite ne 'autopkgtest') {
+    if (defined($testsuite) and $testsuite ne 'autopkgtest') {
         tag 'unknown-testsuite', $testsuite;
     }
-    if (defined $control) {
+
+    if (defined($control)) {
         if (not $control->is_regular_file) {
             tag 'debian-tests-control-is-not-a-regular-file';
         } else {
+            # Since $control is defined, we know that none of the
+            # parent segments (i.e. debian and debian/tests) were
+            # symlinks.  With the "is_regular_file" test above we know
+            # that the file itself is not a symlink.  These two facts
+            # _combined_ means we can skip the is_ancestor_of check
+            # here.
             my $path = $info->unpacked($control);
-
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
+
             if ($not_utf8_line) {
                 tag 'debian-tests-control-uses-national-encoding', "at line $not_utf8_line";
             }
-
-            check_control_contents ($info, $path);
+            check_control_contents($info, $path);
         }
     }
 }
+
 sub check_control_contents {
     my ($info, $path) = @_;
 
     my @paragraphs;
-    if (not eval { @paragraphs = read_dpkg_control ($path); }) {
+    if (not eval { @paragraphs = read_dpkg_control($path); }) {
         chomp $@;
         $@ =~ s/^syntax error at //;
         tag 'syntax-error-in-debian-tests-control', $@;
     } else {
-        for (@paragraphs) {
-            check_control_paragraph ($info, $_);
+        for my $paragraph (@paragraphs) {
+            check_control_paragraph($info, $paragraph);
         }
     }
 }
 sub check_control_paragraph {
     my ($info, $paragraph) = @_;
 
-    for (@mandatory_fields) {
-        if (not exists $paragraph->{$_}) {
-            tag 'missing-runtime-tests-field', $_;
+    for my $fieldname (@MANDATORY_FIELDS) {
+        if (not exists $paragraph->{$fieldname}) {
+            tag 'missing-runtime-tests-field', $fieldname;
         }
     }
-    for (keys %$paragraph) {
-        if (not exists $expected_fields {$_}) {
-            tag 'unknown-runtime-tests-field', $_;
+
+    for my $fieldname (sort(keys(%{$paragraph}))) {
+        if (not exists $KNOWN_FIELDS{$fieldname}) {
+            tag 'unknown-runtime-tests-field', $fieldname;
         }
     }
+
     if (exists $paragraph->{'features'}) {
-        for (split ' ', $paragraph->{'features'}) {
-            if (not exists $expected_features {$_}) {
-                tag 'unknown-runtime-tests-feature', $_;
+        for my $feature (split(' ', $paragraph->{'features'})) {
+            if (not exists $KNOWN_FEATURES{$feature}) {
+                tag 'unknown-runtime-tests-feature', $feature;
             }
         }
     }
+
     if (exists $paragraph->{'restrictions'}) {
-        for (split ' ', $paragraph->{'restrictions'}) {
-            if (not exists $expected_restrictions {$_}) {
-                tag 'unknown-runtime-tests-restriction', $_;
+        for my $restriction (split ' ', $paragraph->{'restrictions'}) {
+            if (not exists $KNOWN_RESTRICTIONS{$restriction}) {
+                tag 'unknown-runtime-tests-restriction', $restriction;
             }
         }
     }
+
     if (exists $paragraph->{'tests'}) {
-        my $directory;
+        my $directory = 'debian/tests';
         if (exists $paragraph->{'tests-directory'}) {
             $directory = $paragraph->{'tests-directory'};
-        } else {
-            $directory = 'debian/tests';
         }
-        for (split ' ', $paragraph->{'tests'}) {
-            check_test_file ($info, $directory, $_);
+        for my $testname (split(' ', $paragraph->{'tests'})) {
+            check_test_file ($info, $directory, $testname);
         }
     }
 }
 sub check_test_file {
     my ($info, $directory, $name) = @_;
+    my $path = "$directory/$name";
+    my $index = $info->index($path);
 
-    if ($name !~ /^[[:digit:][:lower:]\+\-\.\/]*$/) {
+    if ($name !~ m{^ [ [:digit:] [:lower:] \+ \- \. / ]++ $}xsm) {
         tag 'illegal-runtime-test-name', $name;
     }
-    my $path = "$directory/$name";
-    my $index = $info->index ($path);
-    if (not defined $index) {
+    if (not defined($index)) {
         tag 'missing-runtime-test-file', $path;
     } elsif (not $index->is_regular_file) {
         tag 'runtime-test-file-is-not-a-regular-file', $path;
