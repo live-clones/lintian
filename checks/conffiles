@@ -22,9 +22,9 @@
 package Lintian::conffiles;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
 
 sub run {
 
@@ -41,52 +41,53 @@ return if -l $cf;
 
 if (-f $cf) {
 
-    open my $fd, '<', $cf or fail "cannot open $cf for reading: $!";
-    while (<$fd>) {
-        chop;
-        next if m/^\s*$/;
+    open(my $fd, '<', $cf);
+    while (my $filename = <$fd>) {
+        chomp($filename);
 
-        unless (m,^/,) {
-            tag 'relative-conffile', $_;
-            $_ = '/' . $_;
-        }
-        my $file = $_;
-        $file =~ s@^/++@@o;
-        $conffiles{$file}++;
+        next if $filename eq q{};
 
-        if ($conffiles{$file} > 1) {
-            tag 'duplicate-conffile', $file;
-        }
-
-        if (m,^/usr/,) {
-            tag 'file-in-usr-marked-as-conffile', $file;
+        if ($filename !~ m{^ / }xsm) {
+            tag 'relative-conffile', $filename;
         } else {
-            unless (m,^/etc/,) {
-                tag 'non-etc-file-marked-as-conffile', $file;
-            } elsif (m,^/etc/rc.\.d,) {
-                tag 'file-in-etc-rc.d-marked-as-conffile', $file;
+            # strip the leading slash from here.
+            $filename =~ s{^ /++ }{}xsm;
+        }
+        $conffiles{$filename}++;
+
+        if ($conffiles{$filename} > 1) {
+            tag 'duplicate-conffile', $filename;
+        }
+
+        if ($filename =~ m{^ usr/ }xsm) {
+            tag 'file-in-usr-marked-as-conffile', $filename;
+        } else {
+            if ($filename !~ m{^ etc/ }xsm) {
+                tag 'non-etc-file-marked-as-conffile', $filename;
+            } elsif ($filename =~ m{^ etc/rc.\.d/ }xsm) {
+                tag 'file-in-etc-rc.d-marked-as-conffile', $filename;
             }
         }
 
     }
-    close $fd;
+    close($fd);
 
 }
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index ($file);
+    my $index_info = $info->index($file);
     if (not $index_info->is_file and exists $conffiles{$file}) {
         tag 'conffile-has-bad-file-type', $file;
     }
-    next unless $file =~ m,^etc, and $index_info->is_file;
+    next unless $file =~ m{^ etc/ }xsm and $index_info->is_file;
 
     # If there is a /etc/foo, it must be a conffile (with a few exceptions).
     if (not exists($conffiles{$file})
-        and $file !~ m,/README$,
-        and $file ne 'etc/init.d/skeleton'
-        and $file ne 'etc/init.d/rc'
-        and $file ne 'etc/init.d/rcS') {
+            and $file !~ m{ /README $}xsm
+            and $file ne 'etc/init.d/skeleton'
+            and $file ne 'etc/init.d/rc'
+            and $file ne 'etc/init.d/rcS') {
         tag 'file-in-etc-not-marked-as-conffile', $file;
     }
 }
