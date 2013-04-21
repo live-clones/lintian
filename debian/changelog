@@ -60,6 +60,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
       The latter has slightly different return values in some
       cases.
 
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [NT] Include md5sums-mismatch as an overridable tag.
+      (See #688300)
+
   * reporting/harness:
     + [NT] Stop exporting ENV variables that lintian no longer
       cares about.

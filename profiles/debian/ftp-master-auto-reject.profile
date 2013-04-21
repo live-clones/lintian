@@ -22,7 +22,7 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  library-in-debug-or-profile-should-not-be-stripped, magic-arch-in-arch-list,
  maintainer-address-is-on-localhost, maintainer-address-malformed,
  maintainer-address-missing, maintainer-name-missing,
- maintainer-script-removes-device-files, malformed-deb-archive,
+ maintainer-script-removes-device-files, malformed-deb-archive, md5sum-mismatch,
  missing-build-dependency, missing-dependency-on-libc,
  missing-dependency-on-perlapi, missing-pre-dependency-on-multiarch-support,
  mknod-in-maintainer-script, no-architecture-field, no-copyright-file,
