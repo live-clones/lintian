@@ -25,6 +25,7 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(rstrip);
 
 sub run {
 
@@ -43,7 +44,9 @@ if (-f $cf) {
 
     open(my $fd, '<', $cf);
     while (my $filename = <$fd>) {
-        chomp($filename);
+        # dpkg strips whitespace (using isspace) from the right hand
+        # side of the file name.
+        rstrip($filename);
 
         next if $filename eq q{};
 
