@@ -63,6 +63,10 @@ if (-f $cf) {
             next;
         }
 
+        if (not defined($info->index($filename))) {
+            tag 'conffile-is-not-in-package', $filename;
+        }
+
         if ($filename =~ m{^ usr/ }xsm) {
             tag 'file-in-usr-marked-as-conffile', $filename;
         } else {

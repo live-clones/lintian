@@ -1,4 +1,7 @@
 E: conffiles-general: conffile-has-bad-file-type etc/symlink
+E: conffiles-general: conffile-is-not-in-package etc/rc2.d/file
+E: conffiles-general: conffile-is-not-in-package usr/share/foo
+E: conffiles-general: conffile-is-not-in-package var/cache/foo
 E: conffiles-general: duplicate-conffile etc/foo
 E: conffiles-general: file-in-etc-rc.d-marked-as-conffile etc/rc2.d/file
 E: conffiles-general: file-in-usr-marked-as-conffile usr/share/foo

@@ -4,6 +4,7 @@ Version: 1.0
 Description: Test for conffile-related checks
 Test-For:
     conffile-has-bad-file-type
+    conffile-is-not-in-package
     duplicate-conffile
     file-in-etc-rc.d-marked-as-conffile
     file-in-usr-marked-as-conffile
