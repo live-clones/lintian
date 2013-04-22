@@ -24,6 +24,8 @@ use warnings::register;
 use Lintian::Util qw(get_dsc_info get_deb_info);
 use Carp qw(croak);
 
+=encoding utf-8
+
 =head1 NAME
 
 Lintian::Collect - Lintian interface to package data collection
