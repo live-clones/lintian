@@ -145,7 +145,6 @@ while (defined(my $file=readdir($po_dirfd))) {
     next if -l "$debfiles/po/$file" || ! -f "$debfiles/po/$file";
     open(PO, '<', "$debfiles/po/$file")
         or fail("Can't open debfiles/po/$file file.");
-    my $saw_team;
     while (<PO>) {
         if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {
             tag 'debconf-translation-using-general-list', $file;
