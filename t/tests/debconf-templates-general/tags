@@ -8,6 +8,7 @@ E: debconf-templates-general: no-template-type debconf/no-type
 E: debconf-templates-general: select-without-choices debconf/select-without-choices
 E: debconf-templates-general: unknown-field-in-templates debconf/unknown-field unknown-field
 E: debconf-templates-general: unknown-template-type lintian
+W: debconf-templates-general source: debconf-translation-using-general-list en_US.po
 W: debconf-templates-general source: template-uses-unsplit-choices debconf-templates-general - debconf/unsplit-choices
 W: debconf-templates-general: duplicate-long-description-in-template debconf/duplicate-long-desc
 W: debconf-templates-general: making-assumptions-about-interfaces-in-templates debconf/assumption

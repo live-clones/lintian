@@ -4,6 +4,7 @@ Version: 1.0
 Description: Test for various debconf template issues
 Test-For:
  boolean-template-has-bogus-default
+ debconf-translation-using-general-list
  duplicate-long-description-in-template
  empty-translated-choices
  making-assumptions-about-interfaces-in-templates

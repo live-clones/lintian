@@ -77,6 +77,18 @@ Info: Errors were found in the listed PO file that will cause its content
  to be discarded. Run <tt>msgfmt</tt> on the file to see the error
  messages.
 
+Tag: debconf-translation-using-general-list
+Severity: normal
+Certainty: certain
+Info: This debconf translation is using the general debconf-i18n list as
+ the address in the Language-Team field.
+ .
+ The intended purpose of the Language-Team field is to be an additional
+ contact for new translation requests in addition to the previous
+ translator (as recorded in Last-Translator).  The field should therefore
+ point to a mailing list dedicated to the language of this PO file, not
+ the general list for translation discussions.
+
 Tag: misnamed-po-file
 Severity: normal
 Certainty: possible

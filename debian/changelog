@@ -3,6 +3,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - conffile-is-not-in-package
+      - debconf-translation-using-general-list
 
   * checks/*:
     + [NT] Use Lintian::Path objects as arguments to unpacked
@@ -28,9 +29,12 @@ lintian (2.5.13) UNRELEASED; urgency=low
       to "Vcs-*" fields that the tags are based on a data list
       (and is not a result of a HTTP request while checking the
       package).
-  * checks/po-debconf:
+  * checks/po-debconf{,.desc}:
     + [NT] Remove tests for commands that are provided by
       Lintian's dependencies.
+    + [RA] Add new check for a Language-Team field in a translation
+      pointing to the debian-i18n mailing list.  Based on work by
+      victory.  (Closes: #705197)
 
   * collection/debfiles:
     + [NT] Replace makeshift "is_ancestor_of" check with the
