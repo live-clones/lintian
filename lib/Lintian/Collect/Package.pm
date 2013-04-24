@@ -21,6 +21,8 @@ package Lintian::Collect::Package;
 
 use strict;
 use warnings;
+use autodie;
+
 use parent 'Lintian::Collect';
 
 use Carp qw(croak);
@@ -35,15 +37,17 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
 
 =head1 SYNOPSIS
 
+    use autodie;
+    use Lintian::Collect;
+    
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
     my $info = Lintian::Collect->new ($name, $type, $dir);
     my $filename = "etc/conf.d/$name.conf";
     my $file = $info->index($filename);
     if ($file && $file->is_regular_file) {
-        open my $fd, '<', $info->unpacked($file)
-            or die "opening $filename: $!";
+        open(my $fd, '<', $info->unpacked($file));
         # Use $fd ...
-        close $fd;
+        close($fd);
     } elsif ($file) {
         print "$file is available, but not a regular file\n";
     } else {
@@ -169,7 +173,7 @@ sub file_info {
 
         $file_info{$file} = $info;
     }
-    close $idx;
+    close($idx);
     $self->{file_info} = \%file_info;
 
     return $self->{file_info}->{$file}
@@ -420,8 +424,8 @@ sub _fetch_index_data {
     # Remove the "top" dir in the sorted_index as it is hardly ever used.
     shift @sorted if scalar @sorted && $sorted[0] eq '';
     $self->{"sorted_$field"} = \@sorted;
-    close $idx;
-    close $num_idx if $num_idx;
+    close($idx);
+    close($num_idx) if $num_idx;
     return $self->{$field}->{$file} if exists $self->{$field}->{$file};
     return;
 }

@@ -17,8 +17,10 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lintian::Data;
+
 use strict;
 use warnings;
+use autodie;
 
 use Carp qw(croak);
 
@@ -66,7 +68,7 @@ sub new {
             my ($fd, $vno) = $self->_open_data_file ($type, $vendors, 0);
             $self->_parse_file ($type, $fd, $dataset, $separator, $code,
                                 $vendors, $vno);
-            close $fd;
+            close($fd);
             $data{$type} = $dataset;
         }
         $self->{'data'} = $data{$type};
@@ -123,8 +125,7 @@ sub new {
             croak "Unknown data file: $type" unless $start;
             croak "No parent data file for $vendors->[$start]";
         }
-        open my $fd, '<', "$file"
-            or croak "$file: $!";
+        open(my $fd, '<', "$file");
         return ($fd, $cur);
     }
 }
@@ -148,7 +149,7 @@ sub _parse_file {
                                                           $vno +1);
                 $self->_parse_file ($type, $pfd, $dataset, $separator,
                                     $code, $vendors, $pvo);
-                close $pfd;
+                close($pfd);
             } else {
                 croak "Unknown operation \@$op in $filename at line $.";
             }

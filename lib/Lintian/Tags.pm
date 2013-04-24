@@ -21,6 +21,7 @@ package Lintian::Tags;
 
 use strict;
 use warnings;
+use autodie;
 
 use Exporter qw(import);
 use List::MoreUtils qw(any);
@@ -503,8 +504,7 @@ sub file_overrides {
     my $info = $self->{info}{$self->{current}};
     my $comments = [];
     my $last_over = undef;
-    open(my $file, '<', $overrides)
-        or fail("cannot open override file $overrides: $!");
+    open(my $file, '<', $overrides);
     local $_;
   OVERRIDE:
     while (<$file>) {
@@ -635,7 +635,7 @@ sub file_overrides {
             tag 'malformed-override', "Cannot parse line $.: $_";
         }
     }
-    close $file;
+    close($file);
 }
 
 =item file_end()

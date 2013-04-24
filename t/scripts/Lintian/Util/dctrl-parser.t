@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Test::More;
 
@@ -38,11 +39,11 @@ plan tests => scalar keys %TESTS_BAD;
 foreach my $filename (sort keys %TESTS_BAD) {
     my $fail_regex = $TESTS_BAD{$filename};
     my $path = "$DATADIR/$filename";
-    open my $fd, '<', $path or die "open $path: $!";
+    open(my $fd, '<', $path);
     eval {
         visit_dpkg_paragraph (sub {}, $fd);
     };
-    close $fd;
+    close($fd);
     if (my $err = $@) {
         like ($err, $fail_regex, $filename);
     } else {

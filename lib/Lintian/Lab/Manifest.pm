@@ -22,6 +22,7 @@ package Lintian::Lab::Manifest;
 
 use strict;
 use warnings;
+use autodie;
 
 use parent qw(Class::Accessor Clone);
 
@@ -251,7 +252,7 @@ sub write_list {
     my $visitor;
 
 
-    open my $fd, '>', $file or croak "open $file: $!";
+    open(my $fd, '>', $file);
     print $fd "$header\n";
 
     $visitor = sub {
@@ -263,7 +264,7 @@ sub write_list {
 
     $self->visit_all ($visitor);
 
-    close $fd or croak "close $file: $!";
+    close($fd);
     $self->_mark_dirty(0);
     return 1;
 }
@@ -526,10 +527,13 @@ sub _do_read_file {
     my ($self, $file, $header, $fields, $qf) = @_;
     my $count = scalar @$fields;
     my $root = {};
-    open my $fd, '<', $file or croak "open $file: $!";
+    open(my $fd, '<', $file);
     my $hd = <$fd>;
     chop $hd;
     unless ($hd eq $header) {
+        # The interesting part here is the format is invalid, so
+        # "ignore" errors from close
+        no autodie qw(close);
         close($fd);
         croak "Unknown/unsupported file format ($hd)";
     }
@@ -540,7 +544,10 @@ sub _do_read_file {
         my (@values) = split m/\;/o, $line, $count;
         my $entry = {};
         unless ($count == scalar @values) {
-            close $fd;
+            # The interesting part here is the format is invalid, so
+            # "ignore" errors from close
+            no autodie qw(close);
+            close($fd);
             croak "Invalid line in $file at line $. ($_)"
         }
         for ( my $i = 0 ; $i < $count ; $i++) {
@@ -549,7 +556,7 @@ sub _do_read_file {
         $self->_make_alias_fields ($entry);
         $self->_do_set ($root, $qf, $entry);
     }
-    close $fd;
+    close($fd);
     return $root;
 }
 

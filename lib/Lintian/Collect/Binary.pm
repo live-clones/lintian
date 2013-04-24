@@ -22,6 +22,7 @@ package Lintian::Collect::Binary;
 
 use strict;
 use warnings;
+use autodie;
 use parent 'Lintian::Collect::Package';
 
 use Lintian::Relation;
@@ -246,8 +247,7 @@ sub md5sums {
     my $result = {};
 
     # read in md5sums info file
-    open my $fd, '<', $md5f
-        or fail "cannot open $md5f info file: $!";
+    open(my $fd, '<', $md5f);
     while (my $line = <$fd>) {
         chop($line);
         next if $line =~ m/^\s*$/o;
@@ -306,8 +306,7 @@ sub scripts {
     my $scrf = $self->lab_data_path ('scripts');
     my %scripts;
     local $_;
-    open my $fd, '<', $scrf
-        or fail "cannot open scripts $scrf: $!";
+    open(my $fd, '<', $scrf);
     while ( my $line = <$fd> ) {
         my (%file, $name);
         chomp ($line);
@@ -321,7 +320,7 @@ sub scripts {
         $file{name} = $name;
         $scripts{$name} = \%file;
     }
-    close $fd;
+    close($fd);
     $self->{scripts} = \%scripts;
 
     return $self->{scripts};
@@ -402,7 +401,7 @@ sub objdump_info {
     }
     $self->{objdump_info} = \%objdump_info;
 
-    close $fd;
+    close($fd);
 
     return $self->{objdump_info};
 }
@@ -425,8 +424,7 @@ sub hardening_info {
     my %hardening_info;
     my ($file);
     local $_;
-    open my $idx, '<', $hardf
-        or fail "cannot open $hardf: $!";
+    open(my $idx, '<', $hardf);
     while (<$idx>) {
         chomp;
 
@@ -437,7 +435,7 @@ sub hardening_info {
     }
 
     $self->{hardening_info} = \%hardening_info;
-
+    close($idx);
     return $self->{hardening_info};
 }
 
@@ -527,6 +525,7 @@ sub java_info {
         }
     }
     $self->{java_info} = \%java_info;
+    close($idx);
     return $self->{java_info};
 }
 
@@ -663,7 +662,7 @@ sub is_conffile {
     # No real packages use links in their control.tar.gz and conffiles
     # must be a file.
     return if -l $cf or not -f $cf;
-    open my $fd, '<', $cf or fail "opening control/conffiles: $!";
+    open(my $fd, '<', $cf);
     while ( my $line = <$fd> ) {
         chomp $line;
         next if $line =~ m/^\s*$/;
@@ -673,7 +672,7 @@ sub is_conffile {
         $line =~ s,^/++,,o;
         $conffiles{$line} = 1;
     }
-    close $fd;
+    close($fd);
     return 1 if exists $conffiles{$file};
     return;
 }
