@@ -21,6 +21,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
       not have triggered that tag.
     + [NT] Test that all paths listed in the "conffiles" control
       file is actually in the package being tested.
+  * checks/cruft.desc:
+    + [JW] Correct the name of the architecture listed in
+      description of the tag outdated-autotools-helper-file.
+      (Closes: #706166)
   * checks/description:
     + [NT] Skip extended-description-is-probably-too-short
       for -dbg packages.  Thanks to Paul Wise for the suggestion.

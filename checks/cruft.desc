@@ -388,7 +388,7 @@ Certainty: possible
 Info: The referenced file has a time stamp older than April of 2012 and the
  package does not build-depend on autotools-dev or automake and therefore
  apparently does not update it.  This usually means that the source
- package will not build correctly on AVR32, for which a Debian port is
+ package will not build correctly on ARM64, for which a Debian port is
  currently in progress, and may not support other newer architectures.
  .
  For packages using debhelper, the tools from the dh-autoreconf
