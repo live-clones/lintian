@@ -381,7 +381,7 @@ sub find_cruft {
         # normalize_pkg_path would approve of "safe-symlink", but if we
         # were to open it we would actually end up escaping the
         # package root.
-        if (-e and not is_ancestor_of($info->unpacked, $_)) {
+        if ( ! -e || ! is_ancestor_of($info->unpacked, $_)) {
             return;
         }
     }
