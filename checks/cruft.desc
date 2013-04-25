@@ -514,7 +514,9 @@ Tag: source-contains-unsafe-symlink
 Severity: serious
 Certainty: possible
 Info: The source contains an unsafe symlink.  If followed, the link
- will escape the source root.
+ will escape the source root.  Note that all absolute symlinks are
+ unconditionally considered "unsafe" in this case (unlike in binary
+ packages).
  .
  If it is a part of the package's testsuite, Lintian may have failed
  to recognise it as a test.  In that case, please override the tag.

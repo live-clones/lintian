@@ -359,7 +359,11 @@ sub find_cruft {
     if (-l) {
         my $target = readlink($_);
         my $dirname = dirname($_);
-        my $normalized = normalize_pkg_path($dirname, $target);
+        my $normalized;
+        # If it is an absolute link, it escapes the root by default
+        if ($target !~ m{\A / }xsm) {
+            $normalized = normalize_pkg_path($dirname, $target);
+        }
         if (not defined($normalized)) {
             # skip unsafe symlinks too
             tag 'source-contains-unsafe-symlink', $_;
