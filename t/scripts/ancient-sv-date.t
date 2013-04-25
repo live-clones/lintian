@@ -6,6 +6,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Test::More;
 
@@ -30,7 +31,7 @@ plan tests => 2;
 
 my $check = "$ENV{'LINTIAN_ROOT'}/checks/standards-version";
 my $found = 0;
-open my $fd, '<', $check or die "opening $check: $!";
+open(my $fd, '<', $check);
 while ( my $line = <$fd> ) {
     # We are looking for:
     #   my $ANCIENT_DATE = str2time('20 Aug 2009')
@@ -46,26 +47,21 @@ while ( my $line = <$fd> ) {
         last;
     }
 }
-close $fd;
+close($fd);
 
 die "Cannot find ANCIENT_DATE.\n" unless $found;
 
 
 sub should_skip {
     my $skip = 1;
-    my $pid;
 
-    $pid = open (DPKG, '-|', 'dpkg-parsechangelog', '-c0');
+    open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
 
-    die("failed to execute dpkg-parsechangelog: $!")
-	unless defined ($pid);
-
-    while (<DPKG>) {
+    while (<$fd>) {
 	$skip = 0 if m/^Distribution: UNRELEASED$/;
     }
 
-    close(DPKG)
-	or die ("dpkg-parsechangelog returned: $?");
+    close($fd);
 
     return $skip;
 }

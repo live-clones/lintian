@@ -18,8 +18,10 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Test::More;
+
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
 # Find all of the desc files in checks.  We'll do one check per description.
@@ -44,9 +46,9 @@ my %needs_info;
 for my $module (@MODULES) {
     my $pretty_module = $module;
     $pretty_module =~ s,^\Q$ENV{LINTIAN_ROOT}/lib/,,;
-    open(PM, '<', $module) or die("Could not open module $pretty_module");
+    open(my $fd, '<', $module);
     my (%seen_subs, %seen_needsinfo, @errors, @warnings);
-    while (<PM>) {
+    while (<$fd>) {
 	if (m/^\s*sub\s+(\w+)/) {
 	    $seen_subs{$1} = 1;
 	}
@@ -93,7 +95,7 @@ for my $module (@MODULES) {
 	    }
 	}
     }
-    close(PM);
+    close($fd);
     if (scalar(@errors)) {
 	ok(0, "$pretty_module has per-method needs-info") or diag(@errors);
 	diag("\n", @warnings) if (@warnings);

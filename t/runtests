@@ -28,6 +28,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Cwd();
 
@@ -151,13 +152,12 @@ if ( -d "$TESTSET/helpers/bin") {
 
 # Getopt::Long assigns 0 as default value if none was specified
 if ($JOBS == 0 && -r '/proc/cpuinfo') {
-    open(CPU, '<', '/proc/cpuinfo')
-        or fail("failed to open /proc/cpuinfo: $!");
-    while (<CPU>) {
+    open(my $fd, '<', '/proc/cpuinfo');
+    while (<$fd>) {
         next unless m/^cpu cores\s*:\s*(\d+)/;
         $JOBS += $1;
     }
-    close(CPU);
+    close($fd);
 
     print "Apparent number of cores: $JOBS\n" if $DEBUG;
 
@@ -431,9 +431,9 @@ sub test_package {
         my $f = "$targetdir/debian/watch";
         # Create a watch file with "content" as lintian checks for
         # non-zero file size.
-        open my $fd, '>', $f or fail "open $f: $!";
+        open(my $fd, '>', $f);
         print {$fd} "# Empty watch file\n";
-        close $fd or fail "close $f: $!";
+        close($fd);
     }
     if (-x "$origdir/pre_build") {
         msg_print 'running pre_build hook... ' if $VERBOSE;
@@ -478,17 +478,20 @@ sub _builder_tests {
 sub run_lintian {
     my ($testdata, $file, $out) = @_;
     msg_print 'testing... ';
-    my $status = 0;
     my @options = split(' ', $testdata->{options}//'');
-    my $cmd;
     unshift @options, '--allow-root', '--no-cfg', '--no-user-dirs';
     unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
-    my $pid = open my $in, '-|';
-    fail "pipe/fork error: $!" unless defined $pid;
+    my $pid = open(my $in, '-|');
     if ($pid) {
         my @data = <$in>;
-        close $in;
-        $status = ($? >> 8) & 255;
+        my $status = 0;
+        eval {
+            close($in);
+        };
+        if (my $err = $@) {
+            fail("close pipe: $!") if $err->errno;
+            $status = ($? >> 8) & 255;
+        }
         unless ($status == 0 or $status == 1) {
             msg_print "FAILED\n";
             for my $line (@data) {
@@ -498,12 +501,12 @@ sub run_lintian {
             fail "$LINTIAN @options $file exited with status $status";
         } else {
             @data = sort @data if $testdata->{sort};
-            open my $fd, '>', $out or fail "opening $out: $!";
+            open(my $fd, '>', $out);
             print $fd $_ for @data;
-            close $fd or fail "closing $out: $!";
+            close($fd);
         }
     } else {
-        open STDERR, '>&', STDOUT or fail "redirect STDERR failed: $!";
+        open(STDERR, '>&', \*STDOUT);
         exec {$LINTIAN} $LINTIAN, @options, $file or fail "exec failed: $!";
     }
     return 1;
@@ -683,7 +686,7 @@ sub _check_result {
         }
     } else {
         my $okay = 1;
-        open my $etags, '<', $actual or fail("opening: $actual");
+        open(my $etags, '<', $actual);
         while (<$etags>) {
             next if m/^N: /;
             # Some of the traversal tests are skipped; accept that in the output
@@ -705,13 +708,13 @@ sub _check_result {
             }
             delete $test_for{$tag};
         }
-        close $etags;
+        close($etags);
         if (%test_for) {
             if ($origexp && $origexp ne $expected) {
                 # Test has been calibrated, check if some of the
                 # "Test-For" has been calibrated out.  (Happens with
                 # binaries-hardening on some architectures).
-                open my $oe, '<', $expected or fail "open $expected: $!";
+                open(my $oe, '<', $expected);
                 my %cp_tf = %test_for;
                 while ( <$oe> ) {
                     next if m/^N: /;
@@ -726,7 +729,7 @@ sub _check_result {
                     print STDERR "N: Kept tag: $1\n";
                     delete $cp_tf{$1};
                 }
-                close $oe;
+                close($oe);
                 # Remove tags that has been calibrated out.
                 foreach my $tag (keys %cp_tf) {
                     delete $test_for{$tag};
@@ -750,7 +753,7 @@ sub _check_result {
 sub is_tag_in_file {
     my ($tag, $file) = @_;
     my $res = 0;
-    open my $tags, '<', $file or fail "Cannot open $file";
+    open(my $tags, '<', $file);
     while (my $line = <$tags>){
         next if $line =~ m/^N: /;
         next unless ($line =~ m/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/);
@@ -758,7 +761,7 @@ sub is_tag_in_file {
         $res = 1;
         last;
     }
-    close $tags;
+    close($tags);
     return $res;
 }
 
@@ -809,6 +812,7 @@ sub run_tests{
 
 sub dump_log{
     my ($pkg, $logf) = @_;
+    no autodie qw(open);
     if (open(my $log, '<', $logf)){
         print "$pkg: ---- START BUILD LOG\n";
         print "$pkg: $_" while (<$log>);
@@ -836,16 +840,16 @@ sub runsystem_ok {
 
 sub chdir_runcmd {
     my ($dir, $cmd, $log) = @_;
-    my $pid = fork // fail "fork: $!";
+    my $pid = fork();
     if ($pid) {
         waitpid $pid, 0;
         return $?;
     } else {
         $log //= '/dev/null';
-        chdir $dir or fail "chdir $dir failed: $!";
-        open STDIN, '<', '/dev/null' or fail "redirect stdin failed: $!";
-        open STDOUT, '>', $log or fail "redirect stdout to $log failed: $!";
-        open STDERR, '>&', STDOUT or fail "redirect stderr failed: $!";
+        chdir($dir);
+        open(STDIN, '<', '/dev/null');
+        open(STDOUT, '>', $log);
+        open(STDERR, '>&', \*STDOUT);
         exec { $cmd->[0] } @$cmd or fail 'exec ' . @$cmd . " failed: $!";
     }
 }
@@ -855,13 +859,12 @@ sub fill_in_tmpl {
     my $tmpl = "$file.in";
 
     my $template = Text::Template->new(TYPE => 'FILE',  SOURCE => $tmpl);
-    open my $out, '>', $file
-        or fail("cannot open $file: $!");
+    open(my $out, '>', $file);
 
     unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
         fail("cannout create $file");
     }
-    close $out;
+    close($out);
 }
 
 sub check_test_is_sane {
