@@ -173,7 +173,8 @@ if ($type ne 'udeb') {
         tag 'extended-description-is-empty';
     } elsif ($lines <= 2 and not $synopsis =~ /(dummy|transition)/i) {
         tag 'extended-description-is-probably-too-short'
-            unless $info->is_pkg_class ('any-meta');
+            unless $info->is_pkg_class('any-meta')
+                or $pkg =~ m{-dbg\Z}xsm;
     } elsif ($description =~ /^ \.\s*\n|\n \.\s*\n \.\s*\n|\n \.\s*\n?$/) {
         tag 'extended-description-contains-empty-paragraph';
     }

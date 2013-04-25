@@ -21,6 +21,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
       not have triggered that tag.
     + [NT] Test that all paths listed in the "conffiles" control
       file is actually in the package being tested.
+  * checks/description:
+    + [NT] Skip extended-description-is-probably-too-short
+      for -dbg packages.  Thanks to Paul Wise for the suggestion.
+      (Closes: #705441)
   * checks/fields.desc:
     + [NT] Clarify that the "canonical URI" for Vcs fields is
       based on an announcement from the Alioth admins.  Thanks
