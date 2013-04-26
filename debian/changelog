@@ -8,6 +8,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Use Lintian::Path objects as arguments to unpacked
       and control where these objects are available.
+  * checks/binaries:
+    + [RA] Do not complain about kernel modules with no shared
+      library dependency information.  Patch from Guillem Jover.
+      (Closes: #706242)
   * checks/changes:
     + [NT] Recognise "<dist>-backports-sloppy" as a valid
       distribution.  Thanks to Romain Francoise for the
