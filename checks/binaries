@@ -374,8 +374,9 @@ foreach my $file ($info->sorted_index) {
     # statically linked?
     if (! scalar (@{ $objdump->{NEEDED} }) ) {
         if ($fileinfo =~ m/shared object/o) {
-            # Some exceptions: detached debugging information and the dynamic
-            # loader (which itself has no dependencies).
+            # Some exceptions: kernel modules, detached debugging information
+            # and the dynamic loader (which itself has no dependencies).
+            next if ($file =~ m%^lib/modules/%);
             next if ($file =~ m%^usr/lib/debug/%);
             next if ($file =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
             tag 'shared-lib-without-dependency-information', $file;
