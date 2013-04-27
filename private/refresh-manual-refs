@@ -26,6 +26,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(none);
@@ -37,7 +38,7 @@ BEGIN {
         require Cwd;
         $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
     } else {
-        chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";
+        chdir($LINTIAN_ROOT);
     }
 }
 
@@ -151,13 +152,13 @@ sub extract_refs {
     my ($fh, $manual, $title, $page, $url, $ref_re, $fields) = @_;
     my @linked_pages = ();
 
-    open(PAGE, '<', $page) or die "Couldn't open $page: $!";
+    open(my $page_fd, '<', $page);
 
     # Read until there are 2 newlines. This hack is needed since some lines in
     # the Developer's Reference are cut in the middle of <a>...</a>.
     local $/ = "\n\n";
 
-    while (<PAGE>) {
+    while (<$page_fd>) {
         if (not $title and m/$title_re/) {
             $title = 1;
             my @out = ( $manual, '', $1, $url );
@@ -191,20 +192,20 @@ sub extract_refs {
             $ref{url} = '' if not $url;
 
             my @out = ( $manual, $ref{section}, $ref{title}, $ref{url} );
-            print $fh join('::', @out) . "\n";
+            print {$fh} join('::', @out) . "\n";
         }
     }
 
-    close(PAGE);
+    close($page_fd);
 
     return @linked_pages;
 }
 
 # Create a new reference file.
-open(OUT, '>', 'data/output/manual-references.new')
+open(my $ref_fd, '>', 'data/output/manual-references.new')
     or die "Cannot create data/output/manual-references.new: $!\n";
 my $date = strftime('%Y-%m-%d', localtime);
-print OUT <<"HEADER";
+print {$ref_fd} <<"HEADER";
 # Data about titles, sections, and URLs of manuals, used to expand references
 # in tag descriptions and add links for HTML output.  Each line of this file
 # has four fields separated by double colons:
@@ -223,21 +224,20 @@ for my $manual (sort keys %manuals) {
 
     # Extract references from the index.
     my @subpages
-        = extract_refs(\*OUT, $manual, 0, $index, $url, $ref_re, $fields);
+        = extract_refs($ref_fd, $manual, 0, $index, $url, $ref_re, $fields);
 
     # Extract additional subsection references if not available in the index.
     next if not $sub_re;
     foreach my $pagename (@subpages) {
         my $page = dirname($index) . "/$pagename";
-        extract_refs(\*OUT, $manual, 1, $page, $url, $sub_re, $fields);
+        extract_refs($ref_fd, $manual, 1, $page, $url, $sub_re, $fields);
     }
 }
 
 # Replace the old reference file.
-close OUT or die "Cannot flush data/output/manual-references.new: $!\n";
+close($ref_fd);
 rename('data/output/manual-references.new',
-       'data/output/manual-references')
-    or die "Cannot rename data/output/manual-references: $!\n";
+       'data/output/manual-references');
 
 # Local Variables:
 # indent-tabs-mode: nil

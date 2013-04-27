@@ -10,6 +10,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use POSIX qw(strftime);
 
@@ -19,7 +20,7 @@ BEGIN {
         require Cwd;
         $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
     } else {
-        chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";
+        chdir($LINTIAN_ROOT);
     }
 }
 
@@ -83,9 +84,9 @@ for my $tagfile (glob ('testset/tags.*')) {
     my $case = $tagfile;
     $case =~ s/.*tags\.//;
     $legacy_test{$case} ||= [];
-    open (IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
+    open(my $tag_fd, '<', $tagfile);
     local $_;
-    while (<IN>) {
+    while (<$tag_fd>) {
         if (/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/) {
             my $tag = $1;
             if (exists $tags{$tag}) {
@@ -97,7 +98,7 @@ for my $tagfile (glob ('testset/tags.*')) {
             }
         }
     }
-    close IN;
+    close($tag_fd);
 }
 
 $ltc = $total - scalar keys %tags;
@@ -108,30 +109,30 @@ my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : '';
 my $ctcr = $check_total ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100 : '';
 my $cltcr = $check_total ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100 : '';
 # Open COVERAGE and print out a date stamp.
-open(OUT, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
-print OUT 'Last generated ', strftime ('%Y-%m-%d', gmtime), "\n";
-print OUT "Coverage (Tags): $tc/$total$tcr, w. legacy tests: $ltc/$total$ltcr\n";
-print OUT "Coverage (Checks): $ctc/$check_total$ctcr, w. legacy tests: $cltc/$check_total$cltcr\n\n";
+open(my $coverage, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
+print {$coverage} 'Last generated ', strftime ('%Y-%m-%d', gmtime), "\n";
+print {$coverage} "Coverage (Tags): $tc/$total$tcr, w. legacy tests: $ltc/$total$ltcr\n";
+print {$coverage} "Coverage (Checks): $ctc/$check_total$ctcr, w. legacy tests: $cltc/$check_total$cltcr\n\n";
 
 # Whatever is left in the %tags hash are untested.  Print them out sorted by
 # checks file.
-print OUT "The following tags are not tested by the test suite:\n";
-print_tags(\%tags, \*OUT);
+print {$coverage} "The following tags are not tested by the test suite:\n";
+print_tags(\%tags, $coverage);
 
 # The contents of the %legacy hash are only tested by the legacy test suite.
-print OUT "\nThe following tags are only tested by the legacy test suite:\n";
-print_tags(\%legacy, \*OUT);
+print {$coverage} "\nThe following tags are only tested by the legacy test suite:\n";
+print_tags(\%legacy, $coverage);
 
 # Print out a breakdown of the tags that are only tested by the legacy test
 # suite, sorted by legacy test case.
-print OUT "\nBreakdown of remaining tags in legacy test suite by test case:\n";
+print {$coverage} "\nBreakdown of remaining tags in legacy test suite by test case:\n";
 for my $package (sort keys %legacy_test) {
-    print OUT "\n$package\n";
+    print {$coverage} "\n$package\n";
     for my $tag (sort @{ $legacy_test{$package} }) {
-        print OUT "  $tag\n";
+        print {$coverage} "  $tag\n";
     }
 }
-close OUT;
+close($coverage);
 
 # -----------------------------------
 
@@ -148,10 +149,10 @@ sub print_tags {
     for my $data (@untested) {
         my ($file, $tag) = @$data;
         if ($file ne $last) {
-            print $out "\n";
+            print {$out} "\n";
             $last = $file;
         }
-        print $out "$file $tag\n";
+        print {$out} "$file $tag\n";
     }
 }
 

@@ -20,6 +20,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 # Not a B-D and script is compile tested...
 require LWP::Simple;
@@ -32,7 +33,7 @@ BEGIN {
         require Cwd;
         $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
     } else {
-        chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";
+        chdir($LINTIAN_ROOT);
     }
 }
 
@@ -64,9 +65,8 @@ for my $line (@yaml) {
 
 # Print out the fatal and nonfatal tags to our data files.
 my $date = strftime('%Y-%m-%d', gmtime);
-open NONFATAL, '>', 'private/build-time-data/ftp-master-nonfatal'
-    or die "Cannot create private/build-time-data/ftp-master-nonfatal: $!\n";
-print NONFATAL <<"EOH";
+open(my $nonfatal, '>', 'private/build-time-data/ftp-master-nonfatal');
+print {$nonfatal} <<"EOH";
 # This file lists all tags that cause an automatic reject on upload but can
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # $YAML_URL
@@ -74,11 +74,10 @@ print NONFATAL <<"EOH";
 # Last updated: $date
 
 EOH
-print NONFATAL join("\n", sort(@nonfatal), '');
-close NONFATAL;
-open FATAL, '>', 'private/build-time-data/ftp-master-fatal'
-    or die "Cannot create private/build-time-data/ftp-master-fatal: $!\n";
-print FATAL <<"EOH";
+print {$nonfatal} join("\n", sort(@nonfatal), '');
+close($nonfatal);
+open(my $fatal, '>', 'private/build-time-data/ftp-master-fatal');
+print {$fatal} <<"EOH";
 # This file lists all tags that cause an automatic reject on upload and cannot
 # be overridden.  It is based on the data file retrieved from
 # $YAML_URL
@@ -86,8 +85,8 @@ print FATAL <<"EOH";
 # Last updated: $date
 
 EOH
-print FATAL join("\n", sort(@fatal), '');
-close FATAL;
+print {$fatal} join("\n", sort(@fatal), '');
+close($fatal);
 
 # Local Variables:
 # indent-tabs-mode: nil
