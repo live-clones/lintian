@@ -58,6 +58,7 @@ END
   exit;
 }
 
+my $LOG_FD;
 my %opt = (
     'schedule-chuck-size' => 512,
 );
@@ -124,11 +125,11 @@ unless ($opt{'dry-run'}) {
         or die "Cannot rotate log files.\n";
 
     # create new log file
-    open(LOG, '>', $log_file)
+    open($LOG_FD, '>', $log_file)
         or die "cannot open log file $log_file for writing: $!";
 } else {
     $opt{'to-stdout'} = 0;
-    open LOG, '>&', \*STDOUT
+    open($LOG_FD, '>&', \*STDOUT)
         or die "Cannot open log file <stdout> for writing: $!";
     Log('Running in dry-run mode');
 }
@@ -469,7 +470,7 @@ exit 0;
 # -------------------------------
 
 sub Log {
-    print LOG $_[0],"\n";
+    print {$LOG_FD} $_[0],"\n";
     print $_[0], "\n" if $opt{'to-stdout'};
 }
 
