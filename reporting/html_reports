@@ -23,6 +23,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use POSIX qw(strftime);
 use File::Copy qw(copy);
@@ -97,21 +98,14 @@ $source_info = $LAB->_get_lab_index ('source');
 
 
 # Create output directories.
-mkdir($HTML_TMP_DIR, 0777)
-    or die "cannot create output directory $HTML_TMP_DIR: $!\n";
-mkdir("$HTML_TMP_DIR/full", 0777)
-    or die "cannot create output directory $HTML_TMP_DIR/full: $!\n";
-mkdir("$HTML_TMP_DIR/maintainer", 0777)
-    or die "cannot create output directory $HTML_TMP_DIR/maintainer: $!\n";
-mkdir("$HTML_TMP_DIR/tags", 0777)
-    or die "cannot create output directory $HTML_TMP_DIR/tags: $!\n";
-symlink('.', "$HTML_TMP_DIR/reports")
-    or die "cannot create symlink $HTML_TMP_DIR/reports: $!\n";
-symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual")
-    or die "cannot create symlink $HTML_TMP_DIR/manual: $!\n";
+mkdir($HTML_TMP_DIR, 0777);
+mkdir("$HTML_TMP_DIR/full", 0777);
+mkdir("$HTML_TMP_DIR/maintainer", 0777);
+mkdir("$HTML_TMP_DIR/tags", 0777);
+symlink('.', "$HTML_TMP_DIR/reports");
+symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
 if ($ARGV[0]) {
-    symlink($ARGV[0], "$HTML_TMP_DIR/lintian.log")
-        or die "cannot create symlink $HTML_TMP_DIR/lintian.log: $!\n";
+    symlink($ARGV[0], "$HTML_TMP_DIR/lintian.log");
     system("gzip --best -c > \"$HTML_TMP_DIR/lintian.log.gz\" < \"$ARGV[0]\"")  == 0
         or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";
 }
@@ -424,9 +418,8 @@ my %data = (
 );
 output_template ('maintainers.html', $templates{maintainers}, \%data);
 
-mkdir "$HTML_TMP_DIR/lookup-tables" or die "mkdir $HTML_TMP_DIR: $!";
-open my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages"
-    or die "open $HTML_TMP_DIR/lookup-tables/source-packages: $!";
+mkdir("$HTML_TMP_DIR/lookup-tables");
+open(my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages");
 
 my %table_seen = ();
 foreach my $source (sort keys %sources) {
@@ -439,23 +432,21 @@ foreach my $source (sort keys %sources) {
     }
 }
 
-close $table
-    or die "close $HTML_TMP_DIR/lookup-tables/source-packages: $!";
+close($table);
 
 # Write out the QA package list.  This is a space-delimited file that contains
 # the package name and then the error count, warning count, info count,
 # pedantic count, experimental count, and overridden tag count.
-open (QA, '>', "$HTML_TMP_DIR/qa-list.txt")
-    or die "cannot create qa-list.txt: $!\n";
+open(my $qa_fd, '>', "$HTML_TMP_DIR/qa-list.txt");
 for my $source (sort keys %qa) {
-    print QA $source;
+    print {$qa_fd} $source;
     for my $code (qw/E W I P X O/) {
         my $count = $qa{$source}{$code} || 0;
-        print QA " $count";
+        print {$qa_fd} " $count";
     }
-    print QA "\n";
+    print {$qa_fd} "\n";
 }
-close QA or die "cannot write to qa-list: $!\n";
+close($qa_fd);
 
 # Now, generate stub pages for every maintainer who has only clean packages.
 for my $id (keys %clean) {
@@ -562,15 +553,14 @@ for my $attr (@attrs) {
 }
 
 # Update the statistics file.
-open (STATS, '>', $statistics_file)
-    or die "cannot open $statistics_file for writing: $!\n";
-print STATS "last-updated: $timestamp\n";
-print STATS "mirror-timestamp: $mirror_timestamp\n";
+open(my $stats_fd, '>', $statistics_file);
+print {$stats_fd} "last-updated: $timestamp\n";
+print {$stats_fd} "mirror-timestamp: $mirror_timestamp\n";
 for my $attr (@attrs) {
-    print STATS "$attr: $statistics{$attr}\n";
+    print {$stats_fd} "$attr: $statistics{$attr}\n";
 }
-print STATS "lintian-version: $LINTIAN_VERSION\n";
-close STATS or die "cannot write to $statistics_file: $!\n";
+print {$stats_fd} "lintian-version: $LINTIAN_VERSION\n";
+close($stats_fd);
 
 # Create the main page.
 %data = (
@@ -593,10 +583,8 @@ my $graph_dir = "$HTML_TMP_DIR/graphs";
 my $commonf = "$graph_dir/common.gpi";
 my $unix_time = time();
 mkdir("$HISTORY_DIR")
-    or die "cannot create history directory $HISTORY_DIR: $!\n"
     if (not -d "$HISTORY_DIR");
 mkdir("$HISTORY_DIR/tags")
-    or die "cannot create tag history directory $HISTORY_DIR/tags: $!\n"
     if (not -d "$HISTORY_DIR/tags");
 
 my $history_file = "$HISTORY_DIR/statistics.dat";
@@ -604,33 +592,28 @@ my $stats = '';
 for my $attr (@attrs) {
     $stats .= " $statistics{$attr}";
 }
-open(HIST, '+>>', $history_file)
-    or die "cannot open history file: $!\n";
-print HIST "$unix_time $LINTIAN_VERSION$stats\n";
+open(my $hist_fd, '+>>', $history_file);
+print {$hist_fd} "$unix_time $LINTIAN_VERSION$stats\n";
 
-if ($GRAPHS and seek HIST, 0, SEEK_SET) {
-    while ( <HIST> ) {
+if ($GRAPHS) {
+    seek($hist_fd, 0, SEEK_SET);
+    while ( <$hist_fd> ) {
         my @fields = split();
         $versions{$fields[1]} = $fields[0] if not exists $versions{$fields[1]};
     }
-} elsif ($GRAPHS) {
-    die "seek failed: $!\n";
 }
-close HIST or die "cannot write to $history_file: $!\n";
+close($hist_fd);
 
 if ($GRAPHS) {
-    mkdir("$graph_dir", 0777)
-        or die "cannot create output directory $graph_dir: $!\n";
-    mkdir("$graph_dir/tags", 0777)
-        or die "cannot create output directory $graph_dir/tags: $!\n";
+    mkdir("$graph_dir", 0777);
+    mkdir("$graph_dir/tags", 0777);
 
     my $date_min = strftime ('%s', localtime ($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
     my $date_max = strftime ('%s', localtime ($unix_time));
 
     # Generate loadable Gnuplot file with common variables and labels/arrows
     # for Lintian versions.
-    open my $common, '>', $commonf
-        or die "cannot open $commonf: $!\n";
+    open(my $common, '>', $commonf);
     print { $common } "history_dir='$HISTORY_DIR'\n";
     print { $common } "graph_dir='$graph_dir'\n";
     print { $common } "date_min='$date_min'\n";
@@ -653,7 +636,7 @@ if ($GRAPHS) {
 
         $last_version = $versions{$v};
     }
-    close $common or die "close $commonf: $!\n";
+    close($common);
 
     print "Plotting global statistics...\n";
     chdir_system ($graph_dir, ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
@@ -663,11 +646,10 @@ if ($GRAPHS) {
 for my $tag (sort keys %tag_statistics) {
     $history_file = "$HISTORY_DIR/tags/$tag.dat";
     $stats = $tag_statistics{$tag};
-    open(HIST, '>>', $history_file)
-        or die "cannot open tag history file $history_file: $!\n";
-    print HIST "$unix_time $stats->{'count'} $stats->{'overrides'} " .
+    open(my $tag_fd, '>>', $history_file);
+    print {$tag_fd} "$unix_time $stats->{'count'} $stats->{'overrides'} " .
                "$stats->{'packages'}\n";
-    close HIST or die "cannot write to $history_file: $!\n";
+    close($tag_fd);
     if ($GRAPHS) {
         print "Plotting $tag statistics...\n";
         chdir_system ($graph_dir, ['gnuplot', '-e', "tag='$tag'",
@@ -677,7 +659,7 @@ for my $tag (sort keys %tag_statistics) {
 }
 
 if ($GRAPHS) {
-    unlink $commonf or die "unlink $commonf: $!";
+    unlink($commonf);
 }
 
 exit 0;
@@ -752,11 +734,10 @@ sub output_template {
                                                                  %$data }) };
     $data->{foot} ||= sub { $templates{foot}->fill_in (HASH => { LINTIAN_SOURCE => $LINTIAN_SOURCE,
                                                                  %$data }) };
-    open (OUTPUT, '>', "$HTML_TMP_DIR/$file")
-        or die "creating $HTML_TMP_DIR/$file falied: $!\n";
-    $template->fill_in (OUTPUT => \*OUTPUT, HASH => $data)
+    open(my $fd, '>', "$HTML_TMP_DIR/$file");
+    $template->fill_in(OUTPUT => $fd, HASH => $data)
         or die "filling out $file failed: $Text::Template::ERROR\n";
-    close OUTPUT;
+    close($fd);
 }
 
 # Sort function for sorting lists of tags.  Sort by package, version, area,
@@ -780,14 +761,13 @@ sub by_tag {
 
 sub chdir_system {
     my ($dir, $cmd) = @_;
-    my $pid = fork // die "fork: $!";
+    my $pid = fork();
     if ($pid) {
         waitpid ($pid, 0) == $pid or die "waitpid failed: $!\n";
         return $?;
     }
 
-    chdir $dir
-        or die "chdir failed: $!";
+    chdir($dir);
     exec @$cmd
         or die "exec failed: $!";
 }
