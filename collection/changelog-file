@@ -23,6 +23,9 @@ package Lintian::coll::changelog_file;
 
 use strict;
 use warnings;
+use autodie;
+
+use File::Copy qw(copy);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file is_ancestor_of);
@@ -30,12 +33,12 @@ use Lintian::Util qw(fail gunzip_file is_ancestor_of);
 sub collect {
 my ($pkg, $type, $dir) = @_;
 
-unlink "$dir/changelog" or fail "cannot remove changelog file: $!"
+unlink("$dir/changelog")
     if -e "$dir/changelog" or -l "$dir/changelog";
 
 # Extract NEWS.Debian files as well, with similar precautious.  Ignore any
 # symlinks to other packages here; in that case, we just won't check the file.
-unlink "$dir/NEWS.Debian" or fail "cannot unlink NEWS.Debian: $!"
+unlink("$dir/NEWS.Debian")
     if -e "$dir/NEWS.Debian" or -l "$dir/NEWS.Debian";
 
 
@@ -70,10 +73,9 @@ for (@changelogs) {
 # directory or to a subdirectory we accept; anything else is replaced by an
 # intentinally broken symlink so that checks can do the right thing.
 if (defined ($chl) && -l $chl) {
-    my $link = readlink $chl or fail("cannot readlink $chl: $!");
+    my $link = readlink($chl);
     if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-        symlink ("$dir/file-is-in-another-package", "$dir/changelog")
-            or fail("cannot create changelog symlink: $!");
+        symlink("$dir/file-is-in-another-package", "$dir/changelog");
         undef $chl;
     } elsif (! -f $chl) {
         undef $chl;
@@ -89,22 +91,16 @@ if (not defined $chl) {
 } elsif ($chl =~ /\.gz$/) {
     gunzip_file ($chl, "$dir/changelog");
 } elsif (-f $chl && -l $chl) {
-    local $_;
-    open (CHL, '<', $chl) or fail("cannot open $chl: $!");
-    open (COPY, '>', "$dir/changelog") or fail "cannot create changelog: $!";
-    print COPY while <CHL>;
-    close CHL;
-    close (COPY) or fail("cannot write changelog: $!");
+    copy($chl, "$dir/changelog") or fail "cannot copy $chl: $!";
 } else {
-    link ($chl, "$dir/changelog")
-        or fail("cannot link $chl to changelog: $!");
+    link($chl, "$dir/changelog");
 }
 
 if ($chl && $chl !~ m/changelog\.debian/i) {
     # Either this is a native package OR a non-native package where the
     # debian changelog is missing.  checks/changelog is not too happy
     # with the latter case, so check looks like a Debian changelog.
-    open my $fd, '<', "$dir/changelog" or fail "Opening changelog: $!";
+    open(my $fd, '<', "$dir/changelog");
     my $ok = 0;
     while ( my $line = <$fd> ) {
         next if $line =~ m/^\s*+$/o;
@@ -115,15 +111,15 @@ if ($chl && $chl !~ m/changelog\.debian/i) {
         }
         last;
     }
-    close $fd;
+    close($fd);
     # Remove it if it not the Debian changelog.
-    unlink "$dir/changelog" unless $ok;
+    unlink("$dir/changelog") unless $ok;
 }
 
 my $news = "$dir/unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {
-        my $link = readlink $news or fail("cannot readlink $chl: $!");
+        my $link = readlink($news);
         if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
             undef $news;
         } elsif (! -f $news) {

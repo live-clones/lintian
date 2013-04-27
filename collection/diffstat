@@ -54,19 +54,19 @@ return unless (-f $diff_file);
 
 gunzip_file($diff_file, "$dir/debian-patch");
 
-open(STAT, '>', "$dir/diffstat");
+open(my $out, '>', "$dir/diffstat");
 # diffstat is noisy on stderr if its stdout is not a tty.
 # Shut it up by redirecting stderr to /dev/null.
 open(STDERR, '>', '/dev/null');
-open(DIFF, '-|', 'diffstat',  '-p1', "$dir/debian-patch");
+open(my $in, '-|', 'diffstat',  '-p1', "$dir/debian-patch");
 # Copy all except last line to the STAT file
 my $previous;
-while (<DIFF>) {
-    print STAT $previous if $previous;
+while (<$in>) {
+    print {$out} $previous if $previous;
     $previous = $_;
 }
-close(DIFF);
-close(STAT);
+close($out);
+close($in);
 
 }
 

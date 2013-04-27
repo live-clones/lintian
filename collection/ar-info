@@ -23,6 +23,7 @@ package Lintian::coll::ar_info;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use FileHandle;
@@ -35,14 +36,13 @@ sub collect {
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/ar-info" ) {
-    unlink "$dir/ar-info" or fail "unlink ar-info: $!";
+    unlink("$dir/ar-info");
 }
 
-open OUT, '>', "$dir/ar-info"
-    or fail("cannot open ar-info file: $!");
+open(my $out_fd, '>', "$dir/ar-info");
 
-chdir ("$dir/unpacked")
-    or fail("cannot chdir to unpacked directory: $!");
+chdir("$dir/unpacked");
+
 
 foreach my $file ($info->sorted_index) {
     next unless $file =~ m/\.a$/;
@@ -50,17 +50,17 @@ foreach my $file ($info->sorted_index) {
 
     my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
     spawn($opts, [ 'ar', 't', $file ]);
-    print OUT "$file:";
+    print {$out_fd} "$file:";
     while (defined($_ = readline($opts->{pipe_out}))) {
         chomp;
-        print OUT " $_";
+        print {$out_fd} " $_";
     }
     close($opts->{pipe_out});
-    print OUT "\n";
+    print {$out_fd} "\n";
     $opts->{harness}->finish;
 }
 
-close(OUT) or fail("cannot write ar-info: $!");
+close($out_fd);
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)ar-info$,;
