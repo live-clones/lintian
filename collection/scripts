@@ -27,7 +27,7 @@ use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
-use Lintian::Util qw(fail lstrip);
+use Lintian::Util qw(fail strip);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
@@ -35,35 +35,27 @@ my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 open(SCRIPTS, '>', "$dir/scripts");
 
-my $magic;
-my $scriptpath;
-
 foreach my $file ($info->sorted_index) {
-    next unless $info->index ($file)->is_regular_file;
+    next unless $info->index($file)->is_regular_file;
+    my $scriptpath = shebang_line($info->unpacked($file));
 
-    open(FILE, '<', "$dir/unpacked/$file");
-    if (read(FILE, $magic, 2) and $magic eq '#!' and not eof(FILE)) {
-        $scriptpath = <FILE>;
-        chomp($scriptpath);
-        next if ($scriptpath =~ m/^\#!/); # skip lincity data files
-                                          # #!#!#!
-        my $copy_path = $scriptpath;
-        lstrip ($scriptpath); # remove leading whitespace
-        $scriptpath =~ s/^\#.*//; # remove comments
-        if ($scriptpath eq '') {
-            print SCRIPTS "$copy_path $file\n";
-        } else {
-        # This used to have (\S+) rather than (\S*), but that went wrong
-        # with scripts that start with an empty #! line.
-            my $env = '';
-            if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
-                $env = 'env ';
-            }
-            $scriptpath =~ s/^(\S*).*/$1/s;
-            print SCRIPTS $env . "$scriptpath $file\n";
+    next unless defined($scriptpath); # no shebang line => not a script
+
+    next if ($scriptpath =~ m/^\#!/); # skip lincity data files
+                                      # #!#!#!
+    my $copy_path = $scriptpath;
+    $scriptpath =~ s/^\#.*//; # remove comments
+    if ($scriptpath eq '') {
+        print SCRIPTS "$copy_path $file\n";
+    } else {
+        my $env = '';
+        if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
+            $env = 'env ';
         }
+        # Remove everything after the first space (i.e. any options)
+        $scriptpath =~ s/\s++ .++ \Z//xsm;
+        print SCRIPTS $env . "$scriptpath $file\n";
     }
-    close(FILE);
 }
 close(SCRIPTS);
 
@@ -71,18 +63,34 @@ open(SCRIPTS, '>', "$dir/control-scripts");
 
 opendir(my $dirfd, "$dir/control");
 for my $file (readdir($dirfd)) {
-    next if -l "$dir/control/$file" or not -f _;
-    open(FILE, '<', "$dir/control/$file");
-    if (read(FILE, $magic, 2) and $magic eq '#!') {
-        $scriptpath = <FILE>;
-        $scriptpath =~ s/^\s*(\S*).*/$1/s;
-        print SCRIPTS "$scriptpath $file\n"
-    }
-    close(FILE);
+    next if $file =~ m{\A \. \.? \Z}xsm;
+    my $path = $info->control($file);
+    my $scriptpath;
+
+    next if -l $path or not -f _;
+    $scriptpath = shebang_line($path);
+    next unless defined($scriptpath);
+
+    # Remove everything after the first space (i.e. any options)
+    $scriptpath =~ s/\s++ .++ \Z//xsm;
+    print SCRIPTS "$scriptpath $file\n"
 }
 closedir($dirfd);
 close(SCRIPTS);
 
+}
+
+sub shebang_line {
+    my ($filename) = @_;
+    my $scriptpath;
+    my $magic;
+    open(my $fd, '<', $filename);
+    if (read($fd, $magic, 2) and $magic eq '#!' and not eof($fd)) {
+        $scriptpath = <$fd>;
+        strip($scriptpath);
+    }
+    close($fd);
+    return $scriptpath;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)scripts$,;
