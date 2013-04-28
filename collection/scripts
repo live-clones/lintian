@@ -23,7 +23,7 @@ package Lintian::coll::scripts;
 
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
@@ -33,7 +33,7 @@ sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
-open SCRIPTS, '>', "$dir/scripts" or fail "cannot open scripts output file: $!";
+open(SCRIPTS, '>', "$dir/scripts");
 
 my $magic;
 my $scriptpath;
@@ -41,9 +41,7 @@ my $scriptpath;
 foreach my $file ($info->sorted_index) {
     next unless $info->index ($file)->is_regular_file;
 
-    # This used to call fail() instead of next.  However, the check to
-    # see if all files in the index can be opened should be done elsewhere.
-    open(FILE, '<', "$dir/unpacked/$file") or next;
+    open(FILE, '<', "$dir/unpacked/$file");
     if (read(FILE, $magic, 2) and $magic eq '#!' and not eof(FILE)) {
         $scriptpath = <FILE>;
         chomp($scriptpath);
@@ -67,15 +65,14 @@ foreach my $file ($info->sorted_index) {
     }
     close(FILE);
 }
-close(SCRIPTS) or fail("cannot write scripts file: $!");
+close(SCRIPTS);
 
-open SCRIPTS, '>', "$dir/control-scripts"
-    or fail("cannot open control-scripts output file: $!");
+open(SCRIPTS, '>', "$dir/control-scripts");
 
 opendir(my $dirfd, "$dir/control");
 for my $file (readdir($dirfd)) {
     next if -l "$dir/control/$file" or not -f _;
-    open FILE, '<', "$dir/control/$file" or fail "cannot open control/$file: $!";
+    open(FILE, '<', "$dir/control/$file");
     if (read(FILE, $magic, 2) and $magic eq '#!') {
         $scriptpath = <FILE>;
         $scriptpath =~ s/^\s*(\S*).*/$1/s;
@@ -84,7 +81,7 @@ for my $file (readdir($dirfd)) {
     close(FILE);
 }
 closedir($dirfd);
-close(SCRIPTS) or fail("cannot write control-scripts file: $!");
+close(SCRIPTS);
 
 }
 
