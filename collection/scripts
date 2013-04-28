@@ -27,13 +27,13 @@ use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
-use Lintian::Util qw(fail strip);
+use Lintian::Util qw(strip);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
-open(SCRIPTS, '>', "$dir/scripts");
+open(my $scripts_fd, '>', "$dir/scripts");
 
 foreach my $file ($info->sorted_index) {
     next unless $info->index($file)->is_regular_file;
@@ -46,7 +46,7 @@ foreach my $file ($info->sorted_index) {
     my $copy_path = $scriptpath;
     $scriptpath =~ s/^\#.*//; # remove comments
     if ($scriptpath eq '') {
-        print SCRIPTS "$copy_path $file\n";
+        print {$scripts_fd} "$copy_path $file\n";
     } else {
         my $env = '';
         if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
@@ -54,12 +54,12 @@ foreach my $file ($info->sorted_index) {
         }
         # Remove everything after the first space (i.e. any options)
         $scriptpath =~ s/\s++ .++ \Z//xsm;
-        print SCRIPTS $env . "$scriptpath $file\n";
+        print {$scripts_fd} $env . "$scriptpath $file\n";
     }
 }
-close(SCRIPTS);
+close($scripts_fd);
 
-open(SCRIPTS, '>', "$dir/control-scripts");
+open(my $ctrl_fd, '>', "$dir/control-scripts");
 
 opendir(my $dirfd, "$dir/control");
 for my $file (readdir($dirfd)) {
@@ -73,10 +73,10 @@ for my $file (readdir($dirfd)) {
 
     # Remove everything after the first space (i.e. any options)
     $scriptpath =~ s/\s++ .++ \Z//xsm;
-    print SCRIPTS "$scriptpath $file\n"
+    print {$ctrl_fd} "$scriptpath $file\n"
 }
 closedir($dirfd);
-close(SCRIPTS);
+close($ctrl_fd);
 
 }
 
