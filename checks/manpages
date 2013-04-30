@@ -210,7 +210,7 @@ foreach my $file ($info->sorted_index) {
         # negatives. When man-db is fixed, this limitation should be
         # removed.
         if ($path =~ m,/man/man\d/,) {
-            my $pid = open LEXGROG, '-|';
+            my $pid = open(my $lexgrog_fd, '-|');
             if (not defined $pid) {
                 fail "fork (lexgrog) failed: $!";
             } elsif ($pid == 0) {
@@ -219,16 +219,16 @@ foreach my $file ($info->sorted_index) {
                 exec 'lexgrog', $path
                     or fail "exec lexgrog failed: $!";
             }
-            my $desc = <LEXGROG>;
+            my $desc = <$lexgrog_fd>;
             $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
             if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
                 tag 'manpage-has-useless-whatis-entry', $file;
             } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
                 tag 'manpage-is-dh_make-template', $file;
             }
-            1 while <LEXGROG>;
+            1 while <$lexgrog_fd>;
             eval {
-                close(LEXGROG);
+                close($lexgrog_fd);
             };
             if (my $err = $@) {
                 # Problem closing the pipe?

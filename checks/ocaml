@@ -22,6 +22,7 @@ package Lintian::ocaml;
 
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename;
 use Lintian::Collect::Binary ();
@@ -38,20 +39,19 @@ my ($pkg, undef, $info) = @_;
 
 # Collect information about .a files from ar-info dump
 my %provided_o;
-open ARINFO, '<', $info->lab_data_path ('ar-info')
-    or fail "opening ar-info: $!";
-while (<ARINFO>) {
-    chomp;
-    if (/^(?:\.\/)?([^:]+): (.*)$/) {
+open(my $fd, '<', $info->lab_data_path ('ar-info'));
+while (my $line = <$fd>) {
+    chomp($line);
+    if ($line =~ /^(?:\.\/)?([^:]+): (.*)$/) {
         my ($filename, $contents) = ($1, $2);
         my $dirname = dirname($filename);
-        foreach (split m/ /o, $contents) {
+        for my $entry (split m/ /o, $contents) {
             # Note: a .o may be legitimately in several different .a
-            $provided_o{"$dirname/$_"} = $filename;
+            $provided_o{"$dirname/$entry"} = $filename;
         }
     }
 }
-close ARINFO;
+close($fd);
 
 # is it a library package?
 my $is_lib_package = 0;

@@ -23,11 +23,12 @@
 package Lintian::watch_file;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Collect;
 use Lintian::Tags qw(tag);
 
-use Lintian::Util qw(fail is_ancestor_of);
+use Lintian::Util qw(is_ancestor_of);
 
 sub run {
 
@@ -64,10 +65,10 @@ if ($version =~ /(alpha|beta|rc)/i) {
 
 # Gather information from the watch file and look for problems we can
 # diagnose on the first time through.
-open(WATCH, '<', $wfile) or fail("cannot open watch file: $!");
+open(my $fd, '<', $wfile);
 local $_;
 my ($watchver, %dversions);
-while (<WATCH>) {
+while (<$fd>) {
     $template = 1 if m/^\s*\#\s*Example watch control file for uscan/io;
     next if /^\s*\#/;
     next if /^\s*$/;
@@ -77,8 +78,8 @@ while (<WATCH>) {
     chomp;
     if (s/(?<!\\)\\$//) {
         # This is caught by uscan.
-        last if eof(WATCH);
-        $_ .= <WATCH>;
+        last if eof($fd);
+        $_ .= <$fd>;
         goto CHOMP;
     }
 
@@ -151,7 +152,7 @@ while (<WATCH>) {
         }
     }
 }
-close WATCH;
+close($fd);
 
 tag 'debian-watch-contains-dh_make-template' if ($template);
 

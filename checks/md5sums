@@ -21,9 +21,9 @@
 package Lintian::md5sums;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
 
 sub run {
 
@@ -67,18 +67,17 @@ if (-z $control) {
 }
 
 # read in md5sums control file
-open(C, '<', $control)
-    or fail("cannot open md5sums control file $control: $!");
-while (<C>) {
-    chop;
-    next if m/^\s*$/;
-    if (m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
+open(my $fd, '<', $control);
+while (my $line = <$fd>) {
+    chop($line);
+    next if $line =~ m/^\s*$/;
+    if ($line =~ m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
         $control_entry{$2} = $1;
     } else {
         tag 'malformed-md5sums-control-file', "line $.";
     }
 }
-close(C);
+close($fd);
 
 for my $file (keys %control_entry) {
 
