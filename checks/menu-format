@@ -255,11 +255,11 @@ foreach my $menufile (@menufiles) {
     next if !is_ancestor_of($mdir, $menufile);
 
     my $menufile_line ='';
-    open (IN, '<', $menufile) or
+    open(my $fd, '<', $menufile) or
         fail("cannot open menu file $menufile for reading.");
     # line below is commented out in favour of the while loop
     # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
-    while (<IN>) {
+    while (<$fd>) {
         if (m/^\s*\#/ || m/^\s*$/) {
             next;
         } else {
@@ -271,11 +271,11 @@ foreach my $menufile (@menufiles) {
     # Check first line of file to see if it matches the old menu file format.
     if ($menufile_line =~ m/^(?!\?package\(.*\)).* .* .* .* "?.*"? .*$/o) {
         tag 'old-format-menu-file', $fullname;
-        close IN;
+        close($fd);
         next;
     } elsif ($menufile_line =~ m/^!C\s*menu-2/o) {
         # we can't parse that yet
-        close IN;
+        close($fd);
         next;
     }
 
@@ -296,10 +296,10 @@ foreach my $menufile (@menufiles) {
             verify_line($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
             $line='';
         }
-    } while ($menufile_line = <IN>);
+    } while ($menufile_line = <$fd>);
     verify_line($pkg, $info, $proc, $group, $type, $menufile, $fullname, $line, $lc);
 
-    close IN;
+    close($fd);
 }
 
 }
@@ -566,15 +566,15 @@ sub verify_icon {
         return;
     }
 
-    open (IN, '<', $iconfile) or fail "open $iconfile: $!";
+    open(my $fd, '<', $iconfile) or fail "open $iconfile: $!";
 
     my $parse = 'XPM header';
     my $line;
-    do { defined ($line = <IN>) or goto parse_error; }
+    do { defined ($line = <$fd>) or goto parse_error; }
     until ($line =~ /\/\*\s*XPM\s*\*\//);
 
     $parse = 'size line';
-    do { defined ($line = <IN>) or goto parse_error; }
+    do { defined ($line = <$fd>) or goto parse_error; }
     until ($line =~ /"\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*"/);
     my $width = $1 + 0;
     my $height = $2 + 0;
@@ -585,11 +585,11 @@ sub verify_icon {
         tag 'menu-icon-too-big', "$icon: ${width}x${height} > ${size}x${size}";
     }
 
-    close IN or die;
+    close($fd) or die;
     return;
 
 parse_error:
-    close IN or die;
+    close($fd) or die;
     tag 'menu-icon-cannot-be-parsed', "$icon: looking for $parse";
     return;
 }
@@ -599,11 +599,11 @@ parse_error:
 sub verify_desktop_file {
     my ($desktopfile, $file, $pkg, $info) = @_;
     my %vals;
-    open (DESKTOP, '<', $info->unpacked($file))
+    open(my $fd, '<', $info->unpacked($file))
         or fail("cannot open desktop file $file: $!");
     my ($line, $saw_first, $warned_cr);
     my @pending;
-    while (defined ($line = <DESKTOP>)) {
+    while (defined ($line = <$fd>)) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
         if ($line =~ s/\r//) {
@@ -648,7 +648,7 @@ sub verify_desktop_file {
             $vals{$tag} = $value;
         }
     }
-    close DESKTOP;
+    close($fd);
 
     # Now validate the data in the desktop file, but only if it's a known type.
     return unless ($vals{'Type'} and $known_desktop_types{$vals{'Type'}});

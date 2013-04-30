@@ -50,8 +50,8 @@ if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
 }
 
 if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
-    open(GITPATCHES, '<', "$dsrc/git-patches");
-    if (any { !/^\s*+#|^\s*+$/o} <GITPATCHES>) {
+    open(my $git_patches_fd, '<', "$dsrc/git-patches");
+    if (any { !/^\s*+#|^\s*+$/o} <$git_patches_fd>) {
         my $dpseries = $info->debfiles('patches/series');
         # gitpkg does not create series as a link, so this is most likely
         # a traversal attempt.
@@ -59,16 +59,16 @@ if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
             if (! -r $dpseries ) {
                 tag 'git-patches-not-exported';
             } else {
-                open(DEBSERIES, '<', $dpseries);
-                my $comment_line = <DEBSERIES>;
-                my $count = grep { !/^\s*+\#|^\s*+$/o } <DEBSERIES>;
+                open(my $series_fd, '<', $dpseries);
+                my $comment_line = <$series_fd>;
+                my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
                 tag 'git-patches-not-exported'
                     unless ($count && ($comment_line =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
-                close(DEBSERIES);
+                close($series_fd);
             }
         }
     }
-    close(GITPATCHES);
+    close($git_patches_fd);
 }
 
 if ( ! -l $dsrc && -d $dsrc ) {

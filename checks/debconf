@@ -118,9 +118,9 @@ my $ctrl_config = $info->control('config');
 my $ctrl_templates = $info->control('templates');
 
 if ( -f $preinst and not -l $preinst) {
-    open(PREINST, '<', $preinst)
+    open(my $fd, '<', $preinst)
         or fail "open preinst: $!";
-    while (<PREINST>) {
+    while (<$fd>) {
         s/\#.*//;    # Not perfect for Perl, but should be OK
         if (m,/usr/share/debconf/confmodule, or
                 m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
@@ -128,7 +128,7 @@ if ( -f $preinst and not -l $preinst) {
             last;
         }
     }
-    close PREINST;
+    close($fd);
 }
 
 $seenconfig=1 if -f $ctrl_config and not -l $ctrl_config;
@@ -367,20 +367,20 @@ for my $file (qw(config prerm postrm preinst postinst)) {
         my $isdefault='';
         my $usesseen='';
 
-        open(IN, '<', $path)
+        open(my $fd, '<', $path)
             or fail "open $file: $!";
         # Only check scripts.
-        my $fl = <IN>;
+        my $fl = <$fd>;
         unless ($fl && $fl =~ /^\#!/) {
-            close IN;
+            close($fd);
             next;
         }
 
-        while (<IN>) {
+        while (<$fd>) {
             s/#.*//;    # Not perfect for Perl, but should be OK
             next unless m/\S/;
             while (s%\\$%%) {
-                my $next = <IN>;
+                my $next = <$fd>;
                 last unless $next;
                 $_ .= $next;
             }
@@ -459,7 +459,7 @@ for my $file (qw(config prerm postrm preinst postinst)) {
             }
         }
 
-        close IN;
+        close($fd);
     } elsif ($file eq 'postinst') {
         tag 'postinst-does-not-load-confmodule'
             unless ($type eq 'udeb' || !$seenconfig);
@@ -518,8 +518,8 @@ if ($usespreinst) {
 return 0 if ($pkg eq 'debconf') || ($type eq 'udeb');
 
 foreach my $filename (sort keys %{$info->scripts}) {
-    open(IN, '<', $info->unpacked($filename)) or fail("cannot open $filename: $!");
-    while (<IN>) {
+    open(my $fd, '<', $info->unpacked($filename)) or fail("cannot open $filename: $!");
+    while (<$fd>) {
         s/#.*//;    # Not perfect for Perl, but should be OK
         if (m,/usr/share/debconf/confmodule, or
                 m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
@@ -527,7 +527,7 @@ foreach my $filename (sort keys %{$info->scripts}) {
             last;
         }
     }
-    close IN;
+    close($fd);
 }
 
 } # </run>

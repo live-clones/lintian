@@ -91,9 +91,9 @@ my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
 # read postinst control file
 if ( -f $postinst and not -l $postinst) {
-    open(IN, '<', $postinst)
+    open(my $fd, '<', $postinst)
         or fail "open postinst: $!";
-    while (<IN>) {
+    while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
@@ -108,14 +108,14 @@ if ( -f $postinst and not -l $postinst) {
             tag 'output-of-updaterc.d-not-redirected-to-dev-null', "$name postinst";
         }
     }
-    close(IN);
+    close($fd);
 }
 
 # read preinst control file
 if ( -f $preinst and not -l $preinst) {
-    open(IN, '<', $preinst)
+    open(my $fd, '<', $preinst)
         or fail "open preinst: $!";
-    while (<IN>) {
+    while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless m/update-rc\.d \s+
@@ -125,14 +125,14 @@ if ( -f $preinst and not -l $preinst) {
         next if $opt eq 'remove';
         tag 'preinst-calls-updaterc.d', $name;
     }
-    close(IN);
+    close($fd);
 }
 
 # read postrm control file
 if ( -f $postrm and not -l $postrm) {
-    open(IN, '<', $postrm)
+    open(my $fd, '<', $postrm)
         or fail "open postrm: $!";
-    while (<IN>) {
+    while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless m/update-rc\.d\s+($opts_r)*($INITD_NAME_REGEX)/o;
@@ -144,20 +144,20 @@ if ( -f $postrm and not -l $postrm) {
             tag 'output-of-updaterc.d-not-redirected-to-dev-null', "$2 postrm";
         }
     }
-    close(IN);
+    close($fd);
 }
 
 # read prerm control file
 if ( -f $prerm and not -l $prerm) {
-    open(IN, '<', $prerm)
+    open(my $fd, '<', $prerm)
         or fail "open prerm: $!";
-    while (<IN>) {
+    while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
         next unless m/update-rc\.d\s+($opts_r)*($INITD_NAME_REGEX)/o;
         tag 'prerm-calls-updaterc.d', $2;
     }
-    close(IN);
+    close($fd);
 }
 
 # init.d scripts have to be removed in postrm
@@ -238,12 +238,12 @@ sub check_init {
             return;
         }
     }
-    open IN, '<', $initd_path
+    open(my $fd, '<', $initd_path)
         or fail("cannot open init.d file $initd_file: $!");
     my (%tag, %lsb);
     my $in_file_test = 0;
     my %needs_fs = ('remote' => 0, 'local' => 0);
-    while (defined(my $l = <IN>)) {
+    while (defined(my $l = <$fd>)) {
         if ($. == 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
             tag 'init.d-script-uses-usr-interpreter', "etc/init.d/$initd_file $1";
         }
@@ -257,7 +257,7 @@ sub check_init {
 
             # We have an LSB keyword section.  Parse it and save the data
             # in %lsb for analysis.
-            while (defined(my $l = <IN>)) {
+            while (defined(my $l = <$fd>)) {
                 if ($l =~ /^\#\#\# END INIT INFO/) {
                     $lsb{END} = 1;
                     last;
@@ -300,7 +300,7 @@ sub check_init {
             $tag{$1} = 1;
         }
     }
-    close(IN);
+    close($fd);
 
     # Make sure all of the required keywords are present.
     if (not $lsb{BEGIN}) {

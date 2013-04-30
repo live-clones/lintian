@@ -348,14 +348,15 @@ foreach my $file ($info->sorted_index) {
         #----------------- /etc/php5/conf.d
         elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
             if ($index_info->is_file) {
-                open (PHPINI, '<', $info->unpacked($index_info)) or fail("cannot open .ini file: $!");
-                while (<PHPINI>) {
+                open(my $fd, '<', $info->unpacked($index_info))
+                    or fail("cannot open .ini file: $!");
+                while (<$fd>) {
                     next unless (m/^\s*#/);
                     tag 'obsolete-comments-style-in-php-ini', $file;
                     # only warn once per file:
                     last;
                 }
-                close(PHPINI);
+                close($fd);
             }
         }
         # ---------------- /etc/rc.d && /etc/rc?.d
@@ -796,13 +797,14 @@ foreach my $file ($info->sorted_index) {
     {
         my $dep = $info->relation('strong');
         if ($index_info->is_file && $file =~ m,\.pm$, && !$dep->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-            open (PM, '<', $info->unpacked($index_info)) or fail("cannot open .pm file: $!");
-            while (<PM>) {
+            open(my $fd, '<', $info->unpacked($index_info))
+                or fail("cannot open .pm file: $!");
+            while (<$fd>) {
                 if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
                     tag 'perl-module-uses-perl4-libs-without-dep', "$file:$. ${1}.pl";
                 }
             }
-            close(PM);
+            close($fd);
         }
     }
 
@@ -997,27 +999,29 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- embedded Feedparser library
         if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
-            open(FEEDPARSER, '<', $info->unpacked($index_info)) or fail("cannot open feedparser.py file: $!");
-            while (<FEEDPARSER>) {
+            open(my $fd, '<', $info->unpacked($index_info))
+                or fail("cannot open feedparser.py file: $!");
+            while (<$fd>) {
                 if (m,Universal feed parser,) {
                     tag 'embedded-feedparser-library', $file;
                     last;
                 }
             }
-            close(FEEDPARSER);
+            close($fd);
         }
 
         # ---------------- embedded PEAR modules
         foreach my $pearmodule (@pearmodules) {
             if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
-                open (PEAR, '<', $info->unpacked($index_info)) or fail("cannot open PHP file: $!");
-                while (<PEAR>) {
+                open(my $fd, '<', $info->unpacked($index_info))
+                    or fail("cannot open PHP file: $!");
+                while (<$fd>) {
                     if (m,/pear[/.],i) {
                         tag 'embedded-pear-module', $file;
                         last;
                     }
                 }
-                close(PEAR);
+                close($fd);
             }
         }
 

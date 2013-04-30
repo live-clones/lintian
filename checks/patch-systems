@@ -62,34 +62,34 @@ sub run {
             my $list_uses_cpp = 0;
             if (-f "$dpdir/00options"
                   && is_ancestor_of($droot, "$dpdir/00options")) {
-                open(OPTS, '<', "$dpdir/00options")
+                open(my $fd, '<', "$dpdir/00options")
                     or fail "open 00options: $!";
-                while(<OPTS>) {
+                while(<$fd>) {
                     if (/DPATCH_OPTION_CPP=1/) {
                         $list_uses_cpp = 1;
                         last;
                     }
                 }
-                close(OPTS);
+                close($fd);
             }
             foreach my $listfile (glob("$dpdir/00list*")) {
                 my @patches;
                 if ( -f $listfile and is_ancestor_of($droot, $listfile)) {
-                    open(IN, '<', $listfile)
+                    open(my $fd, '<', $listfile)
                         or fail "open $listfile: $!";
-                    while(<IN>) {
+                    while(<$fd>) {
                         chomp;
                         next if (/^\#/); #ignore comments or CPP directive
                         s%//.*%% if $list_uses_cpp; # remove C++ style comments
                         if ($list_uses_cpp && m%/\*%) {
                             # remove C style comments
-                            $_ .= <IN> while($_ !~ m%\*/%);
+                            $_ .= <$fd> while($_ !~ m%\*/%);
                             s%/\*[^*]*\*/%%g;
                         }
                         next if (/^\s*$/); #ignore blank lines
                         push @patches, split(' ', $_);
                     }
-                    close(IN);
+                    close($fd);
                 }
 
                 # Check each patch.
@@ -103,16 +103,16 @@ sub run {
                         tag 'dpatch-index-references-non-existent-patch', $patch_file;
                         next;
                     }
-                    if (open(PATCH_FILE, '<', "$dpdir/$patch_file")) {
+                    if (open(my $fd, '<', "$dpdir/$patch_file")) {
                         my $has_comment = 0;
-                        while (<PATCH_FILE>) {
+                        while (<$fd>) {
                             #stop if something looking like a patch starts:
                             last if /^---/;
                             #note comment if we find a proper one
                             $has_comment = 1 if (/^\#+\s*DP:\s*(\S.*)$/ && $1 !~ /^no description\.?$/i);
                             $has_comment = 1 if (/^\# (?:Description|Subject)/);
                         }
-                        close(PATCH_FILE);
+                        close($fd);
                         unless ($has_comment) {
                             tag 'dpatch-missing-description', $patch_file;
                         }
@@ -132,10 +132,10 @@ sub run {
         } elsif (! -r "$dpdir/series") {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
         } else {
-            if (open(IN, '<', "$dpdir/series")) {
+            if (open(my $series_fd, '<', "$dpdir/series")) {
                 my @patches;
                 my @badopts;
-                while (my $patch = <IN>) {
+                while (my $patch = <$series_fd>) {
                     strip ($patch); # Strip leading/trailing spaces
                     $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
                     next unless $patch;
@@ -148,7 +148,7 @@ sub run {
                     }
                     push @patches, $patch;
                 }
-                close(IN);
+                close($series_fd);
                 if (scalar(@badopts)) {
                     tag 'quilt-patch-with-non-standard-options', @badopts;
                 }
@@ -162,16 +162,16 @@ sub run {
                         tag 'quilt-series-references-non-existent-patch', $patch_file;
                         next;
                     }
-                    if (open(PATCH_FILE, '<', "$dpdir/$patch_file")) {
+                    if (open(my $patch_fd, '<', "$dpdir/$patch_file")) {
                         my $has_description = 0;
-                        while (<PATCH_FILE>) {
+                        while (<$patch_fd>) {
                             # stop if something looking like a patch starts:
                             last if /^---/;
                             next if /^\s*$/;
                             # Skip common "lead-in" lines
                             $has_description = 1 unless m{^(?:Index: |=+$|diff .+|index )};
                         }
-                        close(PATCH_FILE);
+                        close($patch_fd);
                         unless ($has_description) {
                             tag 'quilt-patch-missing-description', $patch_file;
                         }
@@ -227,13 +227,13 @@ sub run {
         tag 'more-than-one-patch-system';
     }
     my @direct;
-    open(STAT, '<', $info->diffstat) or fail("cannot open diffstat file: $!");
-    while (<STAT>) {
+    open(my $fd, '<', $info->diffstat) or fail("cannot open diffstat file: $!");
+    while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
              or fail("syntax error in diffstat file: $_");
         push (@direct, $file) if ($file !~ m,^debian/,);
     }
-    close (STAT) or fail("error reading diffstat file: $!");
+    close($fd) or fail("error reading diffstat file: $!");
     if (@direct) {
         my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
 

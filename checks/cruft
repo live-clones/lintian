@@ -203,9 +203,9 @@ for my $file (keys %ERRORS) {
     my $tag = $ERRORS{$file};
     my $path = $info->lab_data_path ($file);
     if (-s $path) {
-        open ERRORS, '<', $path or fail "cannot open $file: $!";
+        open(my $fd, '<', $path) or fail "cannot open $file: $!";
         local $_;
-        while (<ERRORS>) {
+        while (<$fd>) {
             chomp;
             s,^(?:[/\w]+/)?tar: ,,;
 
@@ -221,7 +221,7 @@ for my $file (keys %ERRORS) {
             next if /^Exiting with failure status due to previous errors/;
             tag $tag, $_;
         }
-        close ERRORS;
+        close($fd);
     }
 }
 
@@ -235,9 +235,9 @@ for my $file (keys %ERRORS) {
 sub check_diffstat {
     my ($diffstat, $warned) = @_;
     my $saw_file;
-    open(STAT, '<', $diffstat) or fail("cannot open $diffstat: $!");
+    open(my $fd, '<', $diffstat) or fail("cannot open $diffstat: $!");
     local $_;
-    while (<STAT>) {
+    while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
             or fail("syntax error in diffstat file: $_");
         $saw_file = 1;
@@ -281,7 +281,7 @@ sub check_diffstat {
             tag 'diff-contains-substvars', $file;
         }
     }
-    close(STAT) or fail("error reading diffstat file: $!");
+    close($fd) or fail("error reading diffstat file: $!");
 
     # If there was nothing in the diffstat output, there was nothing in the
     # diff, which is probably a mistake.
@@ -405,8 +405,8 @@ sub find_cruft {
             tag 'configure-generated-file-in-source', $name;
         }
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
-        open F, '<', $basename or fail "can't open $name: $!";
-        while (<F>) {
+        open(my $fd, '<', $basename) or fail "can't open $name: $!";
+        while (<$fd>) {
             last if $. > 10; # it's on the 6th line, but be a bit more lenient
             if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
                 my ($date, $year, $month) = ($1, $2, $3);
@@ -421,12 +421,12 @@ sub find_cruft {
                 }
             }
         }
-        close F;
+        close($fd);
     } elsif ($name =~ m,^(.+/)?ltconfig$, and not $ltinbd) {
         tag 'ancient-libtool', $name;
     } elsif ($name =~ m,^(.+/)?ltmain\.sh$, and not $ltinbd) {
-        open F, '<', $basename or fail "can't open $name: $!";
-        while (<F>) {
+        open(my $fd, '<', $basename) or fail "can't open $name: $!";
+        while (<$fd>) {
             if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                 my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
                 if ($major < 5 or ($major == 5 and $minor < 2)) {
@@ -440,7 +440,7 @@ sub find_cruft {
                 last;
             }
         }
-        close F;
+        close($fd);
     }
 
     next if $info->is_non_free; # (license issue does not apply to non-free)

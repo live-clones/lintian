@@ -119,16 +119,16 @@ for my $file ($info->sorted_index) {
             $local_file =~ s,^etc/menu-methods/,,;
             $menumethod_file = $file;
 
-            open MM, '<', $info->lab_data_path ("menu/methods/$local_file")
+            open(my $fd, '<', $info->lab_data_path ("menu/methods/$local_file"))
                 or fail "cannot open menu-method file $local_file: $!";
-            while (<MM>) {
+            while (<$fd>) {
                 chomp;
                 if (m,^!include menu.h,o) {
                     $menumethod_includes_menu_h = 1;
                     last;
                 }
             }
-            close MM;
+            close($fd);
             tag 'menu-method-should-include-menu-h', $file
                 unless $menumethod_includes_menu_h or $pkg eq 'menu';
         }
@@ -235,7 +235,7 @@ sub check_doc_base_file {
         tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
     }
 
-    open IN, '<', $dbpath
+    open(my $fd, '<', $dbpath)
         or fail "cannot open doc-base file doc-base/$dbfile for reading";
 
     my (@files, $field, @vals);
@@ -244,7 +244,7 @@ sub check_doc_base_file {
     my %sawfields   = (); # local for each section of control file
     my %sawformats  = (); # global for control file
 
-    while (<IN>) {
+    while (<$fd>) {
         chomp;
 
         # New field.  check previous field, if we have any.
@@ -307,7 +307,7 @@ sub check_doc_base_file {
     # Make sure we saw at least one format.
     tag 'doc-base-file-no-format-section', "$dbfile:$." unless %sawformats;
 
-    close IN;
+    close($fd);
 }
 
 # Checks one field of a doc-base control file.  $vals is array ref containing
@@ -574,9 +574,9 @@ sub check_script {
     # control files are regular files and not symlinks, pipes etc.
     return if -l $spath or not -f $spath;
 
-    open(IN, '<', $spath) or
+    open(my $fd, '<', $spath) or
         fail("cannot open maintainer script control/$script for reading: $!");
-    $interp = <IN>;
+    $interp = <$fd>;
     $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {
         $interp = 'sh';
@@ -595,7 +595,7 @@ sub check_script {
         }
     }
 
-    while (<IN>) {
+    while (<$fd>) {
         # skip comments
         s/\#.*$//o;
 
@@ -645,7 +645,7 @@ sub check_script {
             }
         }
     }
-    close IN;
+    close($fd);
 }
 
 1;

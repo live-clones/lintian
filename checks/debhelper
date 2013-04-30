@@ -90,10 +90,10 @@ if ( ! -f "$droot/rules" || !is_ancestor_of($droot, "$droot/rules")) {
     return;
 }
 
-open(RULES, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
+open(my $rules_fd, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
 
-while (<RULES>) {
-    while (s,\\$,, and defined (my $cont = <RULES>)) {
+while (<$rules_fd>) {
+    while (s,\\$,, and defined (my $cont = <$rules_fd>)) {
         $_ .= $cont;
     }
     if (/^ifn?(?:eq|def)\s/) {
@@ -219,7 +219,7 @@ while (<RULES>) {
         $inclcdbs = 1;
     }
 }
-close RULES;
+close($rules_fd);
 
 unless ($inclcdbs){
     my $bdepends = $info->relation('build-depends-all');
@@ -306,16 +306,16 @@ for my $file (sort(readdir($dirfd))) {
         # They need to have #DEBHELPER# in their scripts.  Search for scripts
         # that look like maintainer scripts and make sure the token is there.
         my $binpkg = $1 || '';
-        open(IN, '<', "$droot/$file")
+        open(my $fd, '<', "$droot/$file")
             or fail("Can't open debfiles/$file: $!");
         my $seentag = '';
-        while (<IN>) {
+        while (<$fd>) {
             if (m/\#DEBHELPER\#/) {
                 $seentag = 1;
                 last;
             }
         }
-        close IN;
+        close($fd);
         if (!$seentag) {
             my $binpkg_type = $info->binary_package_type ($binpkg);
             unless (($binpkg && defined $binpkg_type
@@ -370,10 +370,10 @@ for my $file (sort(readdir($dirfd))) {
             # do not allow any form for wildcards.
             next if $level < 3;
 
-            open (IN, '<', "$droot/$file")
+            open(my $fd, '<', "$droot/$file")
                 or fail("Can't open debfiles/$file: $!");
             local $_;
-            while (<IN>) {
+            while (<$fd>) {
                 next if /^\s*$/;
                 next if (/^\#/ and $level >= 5);
                 if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
@@ -382,7 +382,7 @@ for my $file (sort(readdir($dirfd))) {
                     last;
                 }
             }
-            close IN;
+            close($fd);
         }
     }
 }

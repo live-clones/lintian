@@ -45,18 +45,18 @@ for my $file (readdir($dirfd)) {
     if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
         if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
             push (@lang_templates, $file);
-            open(PO, '<', "$debfiles/$file")
+            open(my $fd, '<', "$debfiles/$file")
                 or fail("Can't open debfiles/$file file.");
-            while (<PO>) {
+            while (<$fd>) {
                 tag 'untranslatable-debconf-templates', "$file: $."
                     if (m/^Description: (.+)/i and $1 !~/for internal use/);
             }
-            close PO;
+            close($fd);
         } else {
-            open(PO, '<', "$debfiles/$file")
+            open(my $fd, '<', "$debfiles/$file")
                 or fail("Can't open debfiles/$file file.");
             my $in_template = 0;
-            while (<PO>) {
+            while (<$fd>) {
                 tag 'translated-default-field', "$file: $."
                     if (m{^_Default(?:Choice)?: [^\[]*$});
                 tag 'untranslatable-debconf-templates', "$file: $."
@@ -74,7 +74,7 @@ for my $file (readdir($dirfd)) {
                     $in_template = 0;
                 }
             }
-            close PO;
+            close($fd);
         }
     }
 }
@@ -103,9 +103,9 @@ for (@lang_templates) {
 my $missing_files = 0;
 
 if ( -f "$debfiles/po/POTFILES.in" and not -l "$debfiles/po/POTFILES.in") {
-    open(POTFILES, '<', "$debfiles/po/POTFILES.in")
+    open(my $fd, '<', "$debfiles/po/POTFILES.in")
         or fail("Can't open debfiles/po/POTFILES.in.");
-    while (<POTFILES>) {
+    while (<$fd>) {
         chomp;
         next if /^\s*\#/;
         s/.*\]\s*//;
@@ -116,7 +116,7 @@ if ( -f "$debfiles/po/POTFILES.in" and not -l "$debfiles/po/POTFILES.in") {
             $missing_files = 1;
         }
     }
-    close(POTFILES);
+    close($fd);
 } else {
     tag 'missing-potfiles-in';
     $missing_files = 1;
@@ -143,15 +143,15 @@ while (defined(my $file=readdir($po_dirfd))) {
     $_ = '';
     # skip suspicious "files"
     next if -l "$debfiles/po/$file" || ! -f "$debfiles/po/$file";
-    open(PO, '<', "$debfiles/po/$file")
+    open(my $fd, '<', "$debfiles/po/$file")
         or fail("Can't open debfiles/po/$file file.");
-    while (<PO>) {
+    while (<$fd>) {
         if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {
             tag 'debconf-translation-using-general-list', $file;
         }
         last if m/^msgstr/m;
     }
-    close(PO);
+    close($fd);
     unless ($_) {
         tag 'invalid-po-file', "debian/po/$file";
         next;

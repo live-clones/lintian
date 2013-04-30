@@ -349,13 +349,13 @@ for my $filename (sort keys %{$info->scripts}) {
     # Check for obsolete perl libraries
     if ($base eq 'perl' &&
              !$str_deps->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-        open(FH, '<', $path) or fail("could not open script $path");
-        while (<FH>) {
+        open(my $fd, '<', $path) or fail("could not open script $path");
+        while (<$fd>) {
             if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
                 tag 'script-uses-perl4-libs-without-dep', "$filename:$. ${1}.pl";
             }
         }
-        close(FH);
+        close($fd);
     }
 
     # If we found the interpreter and the script is executable, check
@@ -439,7 +439,7 @@ foreach (keys %executable) {
                  );
 }
 
-open SCRIPTS, '<', $info->lab_data_path ('control-scripts')
+open(my $ctrl_fd, '<', $info->lab_data_path('control-scripts'))
     or fail("cannot open lintian control-scripts file: $!");
 
 # Handle control scripts.  This is an edited version of the code for
@@ -449,7 +449,7 @@ open SCRIPTS, '<', $info->lab_data_path ('control-scripts')
 my %added_diversions;
 my %removed_diversions;
 my $expand_diversions = 0;
-while (<SCRIPTS>) {
+while (<$ctrl_fd>) {
     chop;
 
     m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
@@ -528,7 +528,7 @@ while (<SCRIPTS>) {
     }
 
     # now scan the file contents themselves
-    open (C, '<', $filename)
+    open(my $fd, '<', $filename)
         or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
@@ -536,7 +536,7 @@ while (<SCRIPTS>) {
     my $cat_string = '';
 
     my $previous_line = '';
-    while (<C>) {
+    while (<$fd>) {
         if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
             $saw_bange = 1;
         }
@@ -895,10 +895,10 @@ while (<SCRIPTS>) {
         }
     }
 
-    close C;
+    close($fd);
 
 }
-close(SCRIPTS);
+close($ctrl_fd);
 
 # If any of the maintainer scripts used a variable in the file or
 # diversion name normalise them all
@@ -1015,12 +1015,12 @@ for my $divert (keys %added_diversions) {
 sub script_is_evil_and_wrong {
     my ($filename) = @_;
     my $ret = 0;
-    open (IN, '<', $filename) or fail("cannot open $filename: $!");
+    open(my $fd, '<', $filename) or fail("cannot open $filename: $!");
     my $i = 0;
     my $var = '0';
     my $backgrounded = 0;
     local $_;
-    while (<IN>) {
+    while (<$fd>) {
         chomp;
         next if m/^#/o;
         next if m/^$/o;
@@ -1071,7 +1071,7 @@ sub script_is_evil_and_wrong {
             last;
         }
     }
-    close IN;
+    close($fd);
     return $ret;
 }
 
