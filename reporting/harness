@@ -141,15 +141,21 @@ unless ($opt{'dry-run'}) {
     if ($LINTIAN_GPG_CHECK) {
         foreach my $g (qw(gpg gpgv)) {
             if (-l "$LINTIAN_BIN_DIR/$g") {
-                unlink "$LINTIAN_BIN_DIR/$g";
+                unlink("$LINTIAN_BIN_DIR/$g")
+                    or Die("unlink $LINTIAN_BIN_DIR/$g: $!");
             } else {
-                rename "$LINTIAN_BIN_DIR/$g", "$LINTIAN_BIN_DIR/${g}.bkp";
+                rename("$LINTIAN_BIN_DIR/$g", "$LINTIAN_BIN_DIR/${g}.bkp")
+                    or Die("rename $LINTIAN_BIN_DIR/$g"
+                           . " $LINTIAN_BIN_DIR/${g}.bkp: $!");
             }
         }
     } else {
         foreach my $g (qw(gpg gpgv)) {
-            symlink '/bin/true', "$LINTIAN_BIN_DIR/$g"
-                unless -f "$LINTIAN_BIN_DIR/$g";
+            if (! -f "$LINTIAN_BIN_DIR/$g") {
+                symlink('/bin/true', "$LINTIAN_BIN_DIR/$g")
+                    or Die("symlink /bin/true $LINTIAN_BIN_DIR/$g: $!");
+            }
+
         }
         # Passed to coll/unpacked
         $ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'} = 1;
