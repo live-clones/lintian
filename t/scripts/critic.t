@@ -33,7 +33,7 @@ for my $check (@CHECKS) {
 critic_ok('t/runtests');
 
 subtest 'All scripts with correct shebang or extension' => sub {
-    all_critic_ok(qw(collection frontend lib private reporting t/scripts t/helper));
+    all_critic_ok(qw(collection frontend lib private reporting t/scripts t/helpers));
 };
 
 sub should_skip {
