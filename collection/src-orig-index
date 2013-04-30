@@ -23,6 +23,7 @@ package Lintian::coll::src_orig_index;
 
 use strict;
 use warnings;
+use autodie;
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -37,15 +38,13 @@ my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -f "$dir/orig-index.gz" ) {
-    unlink "$dir/orig-index.gz"
-        or fail "unlink orig-index.gz for $pkg failed: $!"
+    unlink("$dir/orig-index.gz");
 }
 
 # Nothing to do for native packages where the two indices are
 # identical.
 if ($info->native) {
-    link "$dir/index.gz", "$dir/orig-index.gz"
-        or fail "link index.gz orig-index.gz: $!";
+    link("$dir/index.gz", "$dir/orig-index.gz");
     return;
 }
 

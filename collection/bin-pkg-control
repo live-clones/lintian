@@ -23,6 +23,7 @@ package Lintian::coll::bin_pkg_control;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
@@ -35,12 +36,10 @@ my (@jobs, $job);
 if ( -e "$dir/control"){
     delete_dir ("$dir/control") or fail 'Cannot remove old control dir';
 }
-unlink "$dir/control-index" or fail "control-index: $!"
-    if -e "$dir/control-index";
-unlink "$dir/control-index.gz" or fail "control-index.gz: $!"
-    if -e "$dir/control-index.gz";
+unlink("$dir/control-index") if -e "$dir/control-index";
+unlink("$dir/control-index.gz") if -e "$dir/control-index.gz";
 
-mkdir ("$dir/control", 0777) or fail "mkdir control: $!";
+mkdir("$dir/control", 0777);
 
 # The following calls use knowledge of the .deb format for speed
 
@@ -70,7 +69,7 @@ spawn($job,
 reap(@jobs);
 undef @jobs;
 # clean up control.tar
-unlink "$dir/control.tar" or fail "unlink control.tar: $!";
+unlink("$dir/control.tar");
 
 # fix permissions
 spawn({ fail => 'error' },

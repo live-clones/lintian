@@ -27,29 +27,26 @@ package Lintian::coll::index;
 
 use strict;
 use warnings;
+use autodie;
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Cwd();
 use Lintian::Command qw(spawn reap);
 use Lintian::Processable::Package;
-use Lintian::Util qw(fail get_dsc_info);
+use Lintian::Util qw(get_dsc_info);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
 
-unlink "$dir/index" or fail "Could not unlink index: $!"
-    if -e "$dir/index";
-unlink "$dir/index.gz" or fail "Could not unlink index.gz: $!"
-    if -e "$dir/index.gz";
-unlink "$dir/index-errors" or fail "Could not unlink index-errors: $!"
-    if -e "$dir/index-errors";
+for my $file (qw(index index.gz index-errors)) {
+    unlink("$dir/$file") if -e "$dir/$file";
+}
 
 if ($type ne 'source') {
     index_deb ($dir);
 } else {
-    chdir "$dir/unpacked"
-        or fail "chdir $dir/unpacked: $!";
+    chdir("$dir/unpacked");
     spawn ({ fail => 'error', out => "$dir/index.gz" },
            ['find', '(',  '-type', 'l',
               # If symlink
@@ -70,9 +67,7 @@ sub index_deb {
     my ($dir) = @_;
     my (@jobs, $job);
 
-    foreach my $file (qw(index index-errors index-owner-id)) {
-        unlink "$dir/$file" or fail "$file: $!" if -f "$dir/$file";
-    }
+    unlink("$dir/index-owner-id") if -f "$dir/index-owner-id";
 
     $job = { fail => 'error',
              out  => "$dir/index.gz",

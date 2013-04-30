@@ -23,23 +23,22 @@ package Lintian::coll::md5sums;
 
 use strict;
 use warnings;
+use autodie;
 
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(fail);
 
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/md5sums" ) {
-    unlink "$dir/md5sums" or fail "unlink md5sums: $!";
+    unlink("$dir/md5sums");
 }
 
-chdir ("$dir/unpacked")
-    or fail("cannot chdir to unpacked directory: $!");
+chdir("$dir/unpacked");
 
 my %opts = ( pipe_in => FileHandle->new,
              out => "$dir/md5sums",
@@ -52,7 +51,7 @@ foreach my $file ($info->sorted_index) {
     printf {$opts{pipe_in}} "%s\0", $file;
 }
 
-close $opts{pipe_in};
+close($opts{pipe_in});
 reap(\%opts);
 }
 

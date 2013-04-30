@@ -23,6 +23,7 @@ package Lintian::coll::debian_readme;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file touch_file is_ancestor_of);
@@ -31,7 +32,7 @@ sub collect {
 my ($pkg, $type, $dir) = @_;
 
 if ( -f "$dir/README.Debian") {
-    unlink "$dir/README.Debian" or fail "Could not remove old README.Debian: $!";
+    unlink("$dir/README.Debian");
 }
 
 # Pick the first of these files that exists.
@@ -44,7 +45,8 @@ my @readmes = ("$dir/unpacked/usr/share/doc/$pkg/README.Debian.gz",
 if (-d "$dir/unpacked/usr/share/doc/$pkg"
       && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")) {
     # Unsafe path, stop here
-    touch_file("$dir/README.Debian");
+    touch_file("$dir/README.Debian")
+        or fail "touch $dir/README.debian failed: $!";
     return;
 }
 
@@ -58,12 +60,12 @@ for (@readmes) {
 
 if (not defined $file) {
     # no README found
-    touch_file ("$dir/README.Debian");
+    touch_file("$dir/README.Debian")
+        or fail "touch $dir/README.debian failed: $!";
 } elsif ($file =~ m/\.gz$/) {
     gunzip_file ($file, "$dir/README.Debian");
 } else {
-    link ($file, "$dir/README.Debian")
-        or fail("cannot link $file to README.Debian: $!");
+    link($file, "$dir/README.Debian");
 }
 
 }

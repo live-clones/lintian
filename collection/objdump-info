@@ -27,6 +27,7 @@ package Lintian::coll::objdump_info;
 
 use strict;
 use warnings;
+use autodie;
 
 use Cwd qw(realpath);
 use FileHandle;
@@ -34,7 +35,6 @@ use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(fail);
 
 my $helper = realpath (__FILE__ . '-helper');
 
@@ -43,15 +43,14 @@ my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/objdump-info" ) {
-    unlink "$dir/objdump-info" or fail "unlink objdump-info: $!"
+    unlink("$dir/objdump-info");
 }
 
 if ( -e "$dir/objdump-info.gz" ) {
-    unlink "$dir/objdump-info.gz" or fail "unlink objdump-info.gz: $!"
+    unlink("$dir/objdump-info.gz");
 }
 
-chdir ("$dir/unpacked")
-    or fail ("unable to chdir to unpacked: $!\n");
+chdir("$dir/unpacked");
 
 my %opts = ( pipe_in => FileHandle->new,
              out => "$dir/objdump-info.gz",
@@ -67,7 +66,7 @@ foreach my $bin ($info->sorted_index) {
     }
 }
 
-close $opts{pipe_in} or fail "cannot write objdump-info.gz: $!";
+close($opts{pipe_in});
 reap(\%opts);
 
 };

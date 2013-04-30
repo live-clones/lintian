@@ -24,6 +24,7 @@ package Lintian::coll::override_file;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file is_ancestor_of);
@@ -34,7 +35,7 @@ my ($pkg, $type, $dir) = @_;
 -d "$dir/unpacked" or fail 'override-file invoked with wrong dir argument';
 
 if ( -e "$dir/override"){
-    unlink "$dir/override" or fail "could not remove old override file: $!";
+    unlink("$dir/override");
 }
 
 # Pick the first of these files that exists.  Prefer source/lintian-overrides
@@ -64,8 +65,7 @@ if (not defined $file) {
 } elsif ($file =~ /\.gz$/) {
     gunzip_file ($file, "$dir/override");
 } else {
-    link ($file, "$dir/override")
-        or fail("cannot link $file to override: $!");
+    link($file, "$dir/override");
 }
 
 }

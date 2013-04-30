@@ -29,7 +29,6 @@ use lib "$ENV{LINTIAN_ROOT}/lib";
 use FileHandle;
 use Lintian::Collect;
 use Lintian::Command qw(spawn);
-use Lintian::Util qw(fail);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;

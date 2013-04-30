@@ -28,6 +28,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 my @sections;
 my @symbol_versions;
@@ -40,14 +41,11 @@ my $bin;
 # it would have been nice to do open '-|', "readelf ... 2>&1" but
 # then we have to escape the args and that puts us over the
 # argument limit in some cases...
-my $pid = open my $readelf, '-|';
+my $pid = open(my $readelf, '-|');
 
-if (not defined $pid) {
-    die "fork: $!";
-}
 if (not $pid) {
     # child - re-direct standerr and exec
-    open STDERR, '>&', STDOUT or die "redirect STDERR: $!";
+    open(STDERR, '>&', \*STDOUT);
     exec 'readelf', '-WltdVs', @ARGV;
 }
 
@@ -179,7 +177,7 @@ while ( my $line = <$readelf> ) {
 # Finish the last file
 finish_file ();
 
-close $readelf;
+close($readelf);
 
 exit 0;
 

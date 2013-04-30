@@ -44,7 +44,7 @@ my $ver;
 $data = get_dsc_info ("$dir/dsc");
 $ver = $data->{'version'};
 
-unlink "$dir/debian-patch" or fail "cannot unlink debian-patch: $!"
+unlink("$dir/debian-patch")
     if -e "$dir/debian-patch" or -l "$dir/debian-patch";
 
 $ver =~ s/^\d://; #Remove epoch for this

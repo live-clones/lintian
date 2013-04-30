@@ -24,6 +24,7 @@ package Lintian::coll::doc_base_files;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail is_ancestor_of);
@@ -39,14 +40,14 @@ if ( -e "$dir/doc-base") {
 if ( -d "$dir/unpacked/usr/share/doc-base") {
     if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc-base")) {
         # Unsafe
-        mkdir ("$dir/doc-base", 0777) or fail "cannot mkdir doc-base: $!";
+        mkdir("$dir/doc-base", 0777);
         return;
     }
     copy_dir ("$dir/unpacked/usr/share/doc-base", "$dir/doc-base")
         or fail('cannot copy directory unpacked/usr/share/doc-base');
 } else {
     # no doc-base directory
-    mkdir ("$dir/doc-base", 0777) or fail "cannot mkdir doc-base: $!";
+    mkdir("$dir/doc-base", 0777);
 }
 }
 

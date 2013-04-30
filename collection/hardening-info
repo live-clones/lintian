@@ -30,6 +30,7 @@ package Lintian::coll::hardening_info;
 
 use strict;
 use warnings;
+use autodie;
 
 use Cwd qw(realpath);
 use FileHandle;
@@ -46,12 +47,11 @@ my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
 
 if ( -e "$dir/hardening-info" ) {
-    unlink "$dir/hardening-info" or fail "unlink hardening-info: $!";
+    unlink("$dir/hardening-info");
 }
 
 # Prepare to examine the file tree.
-chdir ("$dir/unpacked")
-    or fail("unable to chdir to unpacked: $!");
+chdir("$dir/unpacked");
 
 my %opts;
 my $open_hardening_info = sub {
@@ -78,10 +78,11 @@ foreach my $bin ($info->sorted_index) {
 }
 
 if (%opts) {
-    close $opts{pipe_in};
+    close($opts{pipe_in});
     reap (\%opts);
 } else {
-    touch_file ("$dir/hardening-info");
+    touch_file("$dir/hardening-info")
+        or fail "touch $dir/hardening_info failed: $!";
 }
 
 }

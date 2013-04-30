@@ -23,6 +23,7 @@ package Lintian::coll::menu_files;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail is_ancestor_of);
@@ -35,7 +36,7 @@ if ( -e "$dir/menu") {
         or fail('cannot rm old menu directory');
 }
 
-mkdir ("$dir/menu", 0777) or fail ("cannot mkdir menu: $!");
+mkdir("$dir/menu", 0777);
 
 my %dirs;
 $dirs{'share'}   = 'usr/share/menu';
@@ -46,14 +47,14 @@ while (my ($shortn, $path) = each %dirs) {
     if (-d "$dir/unpacked/$path") {
         if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/$path")) {
             # Unsafe, skip
-            mkdir ("$dir/menu/$shortn", 0777) or fail ("cannot mkdir menu/$shortn: $!");
+            mkdir("$dir/menu/$shortn", 0777);
             next;
         }
          copy_dir ("$dir/unpacked/$path", "$dir/menu/$shortn")
             or fail("cannot copy unpacked/$path/ directory");
     } else {
         # no menu directory
-        mkdir ("$dir/menu/$shortn", 0777) or fail ("cannot mkdir menu/$shortn: $!");
+        mkdir("$dir/menu/$shortn", 0777);
     }
 }
 

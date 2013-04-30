@@ -23,13 +23,13 @@ package Lintian::coll::file_info;
 
 use strict;
 use warnings;
+use autodie;
 
 use Cwd qw(realpath);
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(fail);
 
 my $helper = realpath (__FILE__ . '-helper');
 
@@ -40,15 +40,14 @@ my $info = Lintian::Collect->new ($pkg, $type, $dir);
 my $outfile = "$dir/file-info.gz";
 
 if ( -e "$dir/file-info" ) {
-    unlink ("$dir/file-info") or fail "unlink file-info: $!";
+    unlink("$dir/file-info");
 }
 
 if ( -e $outfile ) {
-    unlink ($outfile) or fail "unlink file-info.gz: $!";
+    unlink($outfile);
 }
 
-chdir ("$dir/unpacked")
-    or fail("cannot chdir to unpacked directory: $!");
+chdir("$dir/unpacked");
 
 # We ignore failures from file because sometimes file returns a non-zero exit
 # status when it can't parse a file.  So far, the resulting output still
@@ -64,7 +63,7 @@ foreach my $file ($info->sorted_index) {
     printf {$opts{pipe_in}} "%s\0", $file;
 }
 
-close $opts{pipe_in};
+close($opts{pipe_in});
 reap(\%opts);
 
 }

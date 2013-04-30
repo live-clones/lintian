@@ -21,6 +21,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename qw(dirname);
 use IO::Handle;
@@ -42,7 +43,7 @@ while ( my $line = <STDIN> ) {
     if ($curfname ne $fname) {
         # new file, prepare for it.
         if ($out) {
-            close $out;
+            close($out);
             reap (\%opts);
         }
         my $dir = $strdir . '/' . dirname ($fname);
@@ -58,11 +59,11 @@ while ( my $line = <STDIN> ) {
 
         $curfname = $fname;
     }
-    print $out "$string\n";
+    print {$out} "$string\n";
 }
 
 if ($out) {
-    close $out;
+    close($out);
     reap (\%opts);
 }
 

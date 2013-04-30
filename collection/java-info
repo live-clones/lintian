@@ -23,6 +23,7 @@ package Lintian::coll::java_info;
 
 use strict;
 use warnings;
+use autodie;
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 use FileHandle;
@@ -42,10 +43,10 @@ unless ( -d "$dir/unpacked/") {
 }
 
 if ( -f "$dir/java-info" ) {
-    unlink "$dir/java-info" or fail "unlink $dir/java-info: $!";
+    unlink("$dir/java-info");
 }
 if ( -f "$dir/java-info.gz" ) {
-    unlink "$dir/java-info.gz" or fail "unlink $dir/java-info.gz: $!";
+    unlink("$dir/java-info.gz");
 }
 
 # We lazily start the gzip process to avoid creating the java-info.gz
@@ -65,8 +66,7 @@ my $errorhandler = sub {
     print {$opts{pipe_in}} "-- ERROR: $err\n";
 };
 
-chdir ("$dir/unpacked")
-    or fail "unable to chdir to unpacked: $!";
+chdir("$dir/unpacked");
 
 # Without this Archive::Zip will emit errors to standard error for
 # faulty zip files - but that is not what we want.  AFAICT, it is
@@ -137,7 +137,7 @@ foreach my $file ($info->sorted_index) {
 Archive::Zip::setErrorHandler ($oldhandler);
 
 if (%opts) {
-    close $opts{pipe_in} or fail "cannot write java-info.gz: $!";
+    close($opts{pipe_in});
     reap (\%opts);
 }
 

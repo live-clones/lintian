@@ -21,12 +21,12 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use FileHandle;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(fail);
 
 # To reduce the number of false-positives in hardening-check for
 # fortify-functions, we have to "double-check" its output in some
@@ -59,17 +59,16 @@ my %whitelisted_funcs = (
     'memmove' => 1,
 );
 
-pipe ($cread, $cwrite) or fail "pipe failed: $!";
+pipe($cread, $cwrite);
 $cpid = fork();
-fail "fork failed: $!" unless defined $cpid;
 if ($cpid) {
     # parent
-    close $cread; # read end not needed
+    close($cread); # read end not needed
     $in = \*STDIN;
     $out = $cwrite;
 } else {
     # child
-    close $cwrite; # write end not needed.
+    close($cwrite); # write end not needed.
     $in = $cread;
     $out = \*STDOUT;
 }
@@ -86,7 +85,7 @@ while (my $line = <$in>) {
         # End of "first pass" marker (for the child).
         last if $line eq '__VERBOSE__';
     }
-    print $out "$line\n";
+    print {$out} "$line\n";
 }
 
 
@@ -100,7 +99,7 @@ if (not $cpid) {
         # At this point we are reading "verbose" hardening-check output
         if ($line =~ m,^(\S.+):$,) {
             if ($emit) {
-                print $out "no-fortify-functions:$bin\n";
+                print {$out} "no-fortify-functions:$bin\n";
             }
             $bin = $1;
             $infsf = 0;
@@ -116,10 +115,10 @@ if (not $cpid) {
         }
     }
     if ($emit) {
-        print $out "no-fortify-functions:$bin\n";
+        print {$out} "no-fortify-functions:$bin\n";
     }
     # ensure $out is flushed before exiting.
-    close $out or fail "close output: $!";
+    close($out);
     require POSIX;
     POSIX::_exit (0);
 } elsif (@recheck) {
@@ -130,19 +129,19 @@ if (not $cpid) {
         fail => 'never'
     );
     # End the first pass for the child
-    print $out "__VERBOSE__\n";
+    print {$out} "__VERBOSE__\n";
     spawn(\%opts, ['xargs', '-0r', 'hardening-check', '--verbose', '--']);
     $opts{pipe_in}->blocking (1);
     foreach my $file (@recheck) {
         printf {$opts{pipe_in}} "%s\0", $file;
     }
-    close $opts{pipe_in};
+    close($opts{pipe_in});
     reap (\%opts);
 }
 
 # Close the out handle, else the child process will wait for
 # ever.
-close $out;
+close($out);
 # wait for the child process.
 wait();
 exit $?;

@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 while ( my $line = <> ) {
     my ($file, $type) = $line =~ (m/^(.*?)\x00(.*)$/o);
@@ -9,25 +10,24 @@ while ( my $line = <> ) {
         # While file could be right, it is unfortunately
         # regularly wrong here as well; double check the type
         my $text = '';
-        if (open(my $gzf, '<', $file)) {
-            my $buff;
-            # We need to read at least 9 bytes
-            if (sysread($gzf, $buff, 1024) >= 9) {
-                # translation of the unpack
-                #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read (in hex, network order)
-                #  $magic,  __ __ __ __, __ __, $comp  - variables
-                my ($magic, undef, undef, $comp) = unpack('nNnc', $buff);
-                if ($magic == 0x1f8b){ # the gzip file magic
-                    $text = 'gzip compressed data';
-                    # 2 for max compression; RFC1952 suggests this is a flag and not a value,
-                    # hench the bit and operation
-                    if (($comp & 2) == 2){
-                        $text = "$text, max compression";
-                    }
+        my $buff;
+        open(my $gzf, '<', $file);
+        # We need to read at least 9 bytes
+        if (sysread($gzf, $buff, 1024) >= 9) {
+            # translation of the unpack
+            #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read (in hex, network order)
+            #  $magic,  __ __ __ __, __ __, $comp  - variables
+            my ($magic, undef, undef, $comp) = unpack('nNnc', $buff);
+            if ($magic == 0x1f8b){ # the gzip file magic
+                $text = 'gzip compressed data';
+                # 2 for max compression; RFC1952 suggests this is a flag and not a value,
+                # hench the bit and operation
+                if (($comp & 2) == 2){
+                    $text = "$text, max compression";
                 }
             }
-            close($gzf);
         }
+        close($gzf);
         $type = "$type, $text" if $text;
     }
     printf "%s%c%s\n", $file , 0, $type;

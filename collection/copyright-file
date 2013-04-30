@@ -23,6 +23,7 @@ package Lintian::coll::copyright_file;
 
 use strict;
 use warnings;
+use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file is_ancestor_of touch_file);
@@ -33,14 +34,15 @@ sub collect {
 my ($pkg, $type, $dir) = @_;
 
 if ( -e "$dir/copyright" ) {
-    unlink "$dir/copyright" or fail "unlink copyright: $!";
+    unlink("$dir/copyright");
 }
 
 if (-d "$dir/unpacked/usr/share/doc/$pkg"
       && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")) {
     # if the parent dir is outside the package, just stop here before we
     # do something we will regret.
-    touch_file("$dir/copyright");
+    touch_file("$dir/copyright")
+        or fail "touch $dir/copyright failed: $!";
     return;
 }
 
@@ -50,20 +52,21 @@ my $file = "$dir/unpacked/usr/share/doc/$pkg/copyright";
 # to the symlink may leave a relative symlink into a directory we can't
 # unpack.  Be careful about what symlinks we allow, though.
 if (-l $file) {
-    my $link = readlink($file) or fail("cannot readlink $file: $!");
+    my $link = readlink($file);
     if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-        touch_file "$dir/copyright";
+        touch_file("$dir/copyright")
+            or fail "touch $dir/copyright: $!";
     } else {
         copy ($file, "$dir/copyright") or fail "cannot copy $file: $!";
     }
 } elsif (-f $file) {
-    link ($file, "$dir/copyright")
-        or fail("cannot link $file to copyright: $!");
+    link($file, "$dir/copyright");
 } elsif (-f "$file.gz") {
     gunzip_file ("$file.gz", "$dir/copyright");
 } else {
     # no copyright file found
-    touch_file ("$dir/copyright");
+    touch_file("$dir/copyright")
+        or fail "touch $dir/copyright failed: $!";
 }
 
 }

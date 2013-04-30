@@ -23,6 +23,7 @@ package Lintian::coll::strings;
 
 use strict;
 use warnings;
+use autodie;
 
 use Cwd qw(realpath);
 use FileHandle;
@@ -42,22 +43,19 @@ my $info = Lintian::Collect->new ($pkg, $type, $dir);
 my @manual = ();
 
 if ( -e "$dir/elf-index" ) {
-    unlink "$dir/elf-index" or fail "unlink elf-index: $!";
+    unlink("$dir/elf-index");
 }
 
 if ( -d "$dir/strings" ) {
     delete_dir ("$dir/strings") or fail "rmdir strings: $!";
 }
 
-open my $elf_fd, '>', "$dir/elf-index"
-    or fail "Could not open 'elf-index' for writing: $!";
+open(my $elf_fd, '>', "$dir/elf-index");
 
 # The directory is required, even if it would be empty.
-mkdir "$dir/strings" or
-    fail "mkdir $dir/strings: $!";
+mkdir("$dir/strings");
 
-chdir ("$dir/unpacked")
-    or fail("cannot chdir to unpacked directory: $!");
+chdir("$dir/unpacked");
 
 my %opts;
 my $open_strings_pipe = sub {
@@ -83,7 +81,7 @@ foreach my $bin ($info->sorted_index) {
 }
 
 if (%opts) {
-    close $opts{pipe_in};
+    close($opts{pipe_in});
     reap (\%opts);
 }
 
@@ -103,7 +101,7 @@ if (@manual) {
                ['strings', "$dir/unpacked/$file"], '|', ['gzip', '-9nc']);
     }
 }
-close $elf_fd or fail "cannot write elf-index file: $!";
+close($elf_fd);
 
 }
 
