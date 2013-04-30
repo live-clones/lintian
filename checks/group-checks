@@ -21,6 +21,7 @@
 package Lintian::group_checks;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Data;
 use Lintian::Relation;

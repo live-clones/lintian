@@ -22,6 +22,7 @@
 package Lintian::patch_systems;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail is_ancestor_of strip);
@@ -62,8 +63,7 @@ sub run {
             my $list_uses_cpp = 0;
             if (-f "$dpdir/00options"
                   && is_ancestor_of($droot, "$dpdir/00options")) {
-                open(my $fd, '<', "$dpdir/00options")
-                    or fail "open 00options: $!";
+                open(my $fd, '<', "$dpdir/00options");
                 while(<$fd>) {
                     if (/DPATCH_OPTION_CPP=1/) {
                         $list_uses_cpp = 1;
@@ -75,8 +75,7 @@ sub run {
             foreach my $listfile (glob("$dpdir/00list*")) {
                 my @patches;
                 if ( -f $listfile and is_ancestor_of($droot, $listfile)) {
-                    open(my $fd, '<', $listfile)
-                        or fail "open $listfile: $!";
+                    open(my $fd, '<', $listfile);
                     while(<$fd>) {
                         chomp;
                         next if (/^\#/); #ignore comments or CPP directive
@@ -103,8 +102,9 @@ sub run {
                         tag 'dpatch-index-references-non-existent-patch', $patch_file;
                         next;
                     }
-                    if (open(my $fd, '<', "$dpdir/$patch_file")) {
+                    if (-f "$dpdir/$patch_file") {
                         my $has_comment = 0;
+                        open(my $fd, '<', "$dpdir/$patch_file");
                         while (<$fd>) {
                             #stop if something looking like a patch starts:
                             last if /^---/;
@@ -132,9 +132,10 @@ sub run {
         } elsif (! -r "$dpdir/series") {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
         } else {
-            if (open(my $series_fd, '<', "$dpdir/series")) {
+            if (-f "$dpdir/series") {
                 my @patches;
                 my @badopts;
+                open(my $series_fd, '<', "$dpdir/series");
                 while (my $patch = <$series_fd>) {
                     strip ($patch); # Strip leading/trailing spaces
                     $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
@@ -162,8 +163,9 @@ sub run {
                         tag 'quilt-series-references-non-existent-patch', $patch_file;
                         next;
                     }
-                    if (open(my $patch_fd, '<', "$dpdir/$patch_file")) {
+                    if (-f "$dpdir/$patch_file") {
                         my $has_description = 0;
+                        open(my $patch_fd, '<', "$dpdir/$patch_file");
                         while (<$patch_fd>) {
                             # stop if something looking like a patch starts:
                             last if /^---/;
@@ -227,13 +229,13 @@ sub run {
         tag 'more-than-one-patch-system';
     }
     my @direct;
-    open(my $fd, '<', $info->diffstat) or fail("cannot open diffstat file: $!");
+    open(my $fd, '<', $info->diffstat);
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
              or fail("syntax error in diffstat file: $_");
         push (@direct, $file) if ($file !~ m,^debian/,);
     }
-    close($fd) or fail("error reading diffstat file: $!");
+    close($fd);
     if (@direct) {
         my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
 
@@ -254,15 +256,14 @@ sub check_patch {
     # in the debian/* directory, but as of 2010-01-01, all cases where the
     # first level of the patch path is "debian/" in the archive are false
     # positives.
-    open(my $fd, '-|', 'lsdiff', '--strip=1', "$dpdir/$patch_file")
-      or fail('cannot fork lsdiff');
+    open(my $fd, '-|', 'lsdiff', '--strip=1', "$dpdir/$patch_file");
     while (<$fd>) {
         chomp;
         if (m|^(?:\./)?debian/|o) {
             tag 'patch-modifying-debian-files', $patch_file, $_;
         }
     }
-    close($fd) or fail("cannot close pipe to lsdiff on $patch_file: $!");
+    close($fd);
 }
 
 1;

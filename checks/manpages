@@ -21,7 +21,7 @@
 package Lintian::manpages;
 use strict;
 use warnings;
-use autodie qw(open close chdir);
+use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none);
@@ -211,9 +211,7 @@ foreach my $file ($info->sorted_index) {
         # removed.
         if ($path =~ m,/man/man\d/,) {
             my $pid = open(my $lexgrog_fd, '-|');
-            if (not defined $pid) {
-                fail "fork (lexgrog) failed: $!";
-            } elsif ($pid == 0) {
+            if ($pid == 0) {
                 clean_env;
                 open(STDERR, '>&', \*STDOUT);
                 exec 'lexgrog', $path
@@ -252,11 +250,9 @@ foreach my $file ($info->sorted_index) {
             push @cmd, $path;
         }
         my ($read, $write);
-        pipe ($read, $write) or fail "pipe failed: $!";
-        my $pid = fork;
-        if (not defined $pid) {
-            fail "fork failed: $!";
-        } elsif ($pid == 0) {
+        pipe($read, $write);
+        my $pid = fork();
+        if ($pid == 0) {
             clean_env;
             close STDOUT;
             close $read;

@@ -21,10 +21,11 @@
 package Lintian::debconf;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail read_dpkg_control :constants $PKGNAME_REGEX);
+use Lintian::Util qw(read_dpkg_control :constants $PKGNAME_REGEX);
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.5.24.  Added indices for cdebconf (indicates sort order for
@@ -118,8 +119,7 @@ my $ctrl_config = $info->control('config');
 my $ctrl_templates = $info->control('templates');
 
 if ( -f $preinst and not -l $preinst) {
-    open(my $fd, '<', $preinst)
-        or fail "open preinst: $!";
+    open(my $fd, '<', $preinst);
     while (<$fd>) {
         s/\#.*//;    # Not perfect for Perl, but should be OK
         if (m,/usr/share/debconf/confmodule, or
@@ -367,8 +367,7 @@ for my $file (qw(config prerm postrm preinst postinst)) {
         my $isdefault='';
         my $usesseen='';
 
-        open(my $fd, '<', $path)
-            or fail "open $file: $!";
+        open(my $fd, '<', $path);
         # Only check scripts.
         my $fl = <$fd>;
         unless ($fl && $fl =~ /^\#!/) {
@@ -518,7 +517,7 @@ if ($usespreinst) {
 return 0 if ($pkg eq 'debconf') || ($type eq 'udeb');
 
 foreach my $filename (sort keys %{$info->scripts}) {
-    open(my $fd, '<', $info->unpacked($filename)) or fail("cannot open $filename: $!");
+    open(my $fd, '<', $info->unpacked($filename));
     while (<$fd>) {
         s/#.*//;    # Not perfect for Perl, but should be OK
         if (m,/usr/share/debconf/confmodule, or

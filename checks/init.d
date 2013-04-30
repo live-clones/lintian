@@ -21,14 +21,13 @@
 package Lintian::init_d;
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use File::Basename qw(dirname);
 use List::MoreUtils qw(any none);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
 
 # A list of valid LSB keywords.  The value is 0 if optional and 1 if required.
 my %lsb_keywords = (provides            => 1,
@@ -91,8 +90,7 @@ my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
 # read postinst control file
 if ( -f $postinst and not -l $postinst) {
-    open(my $fd, '<', $postinst)
-        or fail "open postinst: $!";
+    open(my $fd, '<', $postinst);
     while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -113,8 +111,7 @@ if ( -f $postinst and not -l $postinst) {
 
 # read preinst control file
 if ( -f $preinst and not -l $preinst) {
-    open(my $fd, '<', $preinst)
-        or fail "open preinst: $!";
+    open(my $fd, '<', $preinst);
     while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -130,8 +127,7 @@ if ( -f $preinst and not -l $preinst) {
 
 # read postrm control file
 if ( -f $postrm and not -l $postrm) {
-    open(my $fd, '<', $postrm)
-        or fail "open postrm: $!";
+    open(my $fd, '<', $postrm);
     while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -149,8 +145,7 @@ if ( -f $postrm and not -l $postrm) {
 
 # read prerm control file
 if ( -f $prerm and not -l $prerm) {
-    open(my $fd, '<', $prerm)
-        or fail "open prerm: $!";
+    open(my $fd, '<', $prerm);
     while (<$fd>) {
         next if /$exclude_r/o;
         s/\#.*$//o;
@@ -238,11 +233,10 @@ sub check_init {
             return;
         }
     }
-    open(my $fd, '<', $initd_path)
-        or fail("cannot open init.d file $initd_file: $!");
     my (%tag, %lsb);
     my $in_file_test = 0;
     my %needs_fs = ('remote' => 0, 'local' => 0);
+    open(my $fd, '<', $initd_path);
     while (defined(my $l = <$fd>)) {
         if ($. == 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
             tag 'init.d-script-uses-usr-interpreter', "etc/init.d/$initd_file $1";

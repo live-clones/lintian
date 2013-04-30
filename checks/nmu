@@ -21,6 +21,7 @@
 package Lintian::nmu;
 use strict;
 use warnings;
+use autodie;
 
 use List::MoreUtils qw(any);
 use List::Util qw(first);

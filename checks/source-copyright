@@ -22,13 +22,14 @@ package Lintian::source_copyright;
 
 use strict;
 use warnings;
+use autodie;
 
 use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(parse_dpkg_control slurp_entire_file fail);
+use Lintian::Util qw(parse_dpkg_control slurp_entire_file);
 
 my $dep5_last_normative_change = '0+svn~166';
 my $dep5_last_overhaul = '0+svn~148';
@@ -133,9 +134,9 @@ if ($contents =~ m{
                 # We are reasonably certain that we're dealing with an up-to-date
                 # DEP-5 format. Let's try to do more strict checks.
                 eval {
-                    open my $fd, '<', \$contents or fail "open <string>: $!";
+                    open(my $fd, '<', \$contents);
                     @dep5 = parse_dpkg_control ($fd, 0, \@lines);
-                    close $fd;
+                    close($fd);
                 };
                 if ($@) {
                     chomp $@;

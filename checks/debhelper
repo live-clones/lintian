@@ -21,12 +21,12 @@
 package Lintian::debhelper;
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of slurp_entire_file strip strip);
+use Lintian::Util qw(is_ancestor_of slurp_entire_file strip strip);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.
@@ -90,7 +90,7 @@ if ( ! -f "$droot/rules" || !is_ancestor_of($droot, "$droot/rules")) {
     return;
 }
 
-open(my $rules_fd, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
+open(my $rules_fd, '<', "$droot/rules");
 
 while (<$rules_fd>) {
     while (s,\\$,, and defined (my $cont = <$rules_fd>)) {
@@ -306,9 +306,8 @@ for my $file (sort(readdir($dirfd))) {
         # They need to have #DEBHELPER# in their scripts.  Search for scripts
         # that look like maintainer scripts and make sure the token is there.
         my $binpkg = $1 || '';
-        open(my $fd, '<', "$droot/$file")
-            or fail("Can't open debfiles/$file: $!");
         my $seentag = '';
+        open(my $fd, '<', "$droot/$file");
         while (<$fd>) {
             if (m/\#DEBHELPER\#/) {
                 $seentag = 1;
@@ -370,8 +369,7 @@ for my $file (sort(readdir($dirfd))) {
             # do not allow any form for wildcards.
             next if $level < 3;
 
-            open(my $fd, '<', "$droot/$file")
-                or fail("Can't open debfiles/$file: $!");
+            open(my $fd, '<', "$droot/$file");
             local $_;
             while (<$fd>) {
                 next if /^\s*$/;
@@ -499,9 +497,8 @@ sub _check_dh_exec {
         tag 'dh-exec-private-helper', $pkgpath;
     }
 
-    open (my $fd, '<', $fspath)
-        or fail ("Can't open $pkgpath: $!");
     my ($dhe_subst, $dhe_install) = (0, 0);
+    open(my $fd, '<', $fspath);
     while (<$fd>) {
         if (/\$\{([^\}]+)\}/) {
             my $sv = $1;
@@ -513,7 +510,7 @@ sub _check_dh_exec {
         }
         $dhe_install = 1 if / => /;
     }
-    close $fd;
+    close($fd);
 
     if ( ! ( $dhe_subst || $dhe_install ) ) {
         tag 'dh-exec-script-without-dh-exec-features', $pkgpath;
@@ -530,8 +527,8 @@ sub _shebang_cmd {
     my ($pkgpath, $fspath) = @_;
     my $magic;
     my $cmd = '';
-    open my $fd, '<', $fspath or fail "opening $pkgpath: $!";
-    if (read $fd, $magic, 2) {
+    open(my $fd, '<', $fspath);
+    if (read($fd, $magic, 2)) {
         if ($magic eq '#!') {
             $cmd = <$fd>;
 
@@ -543,7 +540,7 @@ sub _shebang_cmd {
             strip ($cmd);
         }
     }
-    close $fd;
+    close($fd);
 
 
     # We are not checking if it is an ELF executable.  While debhelper

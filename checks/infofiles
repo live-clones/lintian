@@ -22,6 +22,7 @@
 package Lintian::infofiles;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail open_gz);
@@ -89,7 +90,7 @@ foreach my $file ($info->sorted_index) {
             $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
             $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
         }
-        close $fd;
+        close($fd);
         tag 'info-document-missing-dir-section', $file unless $section;
         tag 'info-document-missing-dir-entry', $file unless $start && $end;
     }

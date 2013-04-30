@@ -21,6 +21,7 @@
 package Lintian::java;
 use strict;
 use warnings;
+use autodie;
 
 use List::MoreUtils qw(any none);
 

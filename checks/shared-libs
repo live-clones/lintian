@@ -21,6 +21,7 @@
 package Lintian::shared_libs;
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any none);
@@ -166,8 +167,7 @@ for my $cur_file ($info->sorted_index) {
         tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
     } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file_data->link) {
         local $_;
-        open(my $fd, '<', $info->unpacked($cur_file_data))
-            or fail("Could not open $cur_file for reading!");
+        open(my $fd, '<', $info->unpacked($cur_file_data));
         while(<$fd>) {
             next unless (m/^(libdir)='(.+?)'$/) or (m/^(dependency_libs)='(.+?)'$/);
             my ($field, $value) = ($1, $2);
@@ -337,8 +337,7 @@ if (-l $shlibsf) {
     } else {
         my %shlibs_control_used;
         my @shlibs_depends;
-        open(my $fd, '<', $shlibsf)
-            or fail("cannot open control/shlibs for reading: $!");
+        open(my $fd, '<', $shlibsf);
         while (<$fd>) {
             chop;
             next if m/^\s*$/ or /^#/;
@@ -416,7 +415,7 @@ if (-l $symbolsf) {
                 unless is_nss_plugin ($shlib);
         }
     }
-} elsif (open(my $fd, '<', $symbolsf)) {
+} elsif (-f $symbolsf) {
     my $version_wo_rev = $version;
     $version_wo_rev =~ s/^(.+)-([^-]+)$/$1/;
     my ($full_version_count, $full_version_sym) = (0, undef);
@@ -429,6 +428,7 @@ if (-l $symbolsf) {
     my $warned = 0;
     my $symbol_count = 0;
 
+    open(my $fd, '<', $symbolsf);
     while (<$fd>) {
         chomp;
         next if m/^\s*$/ or /^#/;

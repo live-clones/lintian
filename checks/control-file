@@ -21,6 +21,7 @@
 package Lintian::control_file;
 use strict;
 use warnings;
+use autodie;
 
 use List::MoreUtils qw(any);
 use List::Util qw(first);
@@ -28,7 +29,7 @@ use List::Util qw(first);
 use Lintian::Data ();
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail file_is_encoded_in_non_utf8 read_dpkg_control
+use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control
                      rstrip strip);
 
 # The list of libc packages, used for checking for a hard-coded dependency
@@ -55,8 +56,7 @@ if ($line) {
 
 # Nag about dh_make Vcs comment only once
 my $seen_vcs_comment = 0;
-open my $fd, '<', $dcontrol
-    or fail "Couldn't read debfiles/control: $!";
+open(my $fd, '<', $dcontrol);
 while (<$fd>) {
     s/\s*\n$//;
 
@@ -86,7 +86,7 @@ while (<$fd>) {
         }
     }
 }
-close $fd;
+close($fd);
 
 eval {
     # check we can parse it, but ignore the result - we will fetch

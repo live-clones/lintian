@@ -18,10 +18,10 @@
 package Lintian::deb_format;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
@@ -97,7 +97,7 @@ for my $file (keys %ERRORS) {
     my $tag = $ERRORS{$file};
     my $path = $info->lab_data_path ($file);
     if (-s $path) {
-        open my $fd, '<', $path or fail "cannot open $file: $!";
+        open(my $fd, '<', $path);
         while ( my $line = <$fd> ) {
             chomp ($line);
             $line =~ s,^(?:[/\w]+/)?tar: ,,;
@@ -111,7 +111,7 @@ for my $file (keys %ERRORS) {
             }
             tag $tag, $line;
         }
-        close $fd;
+        close($fd);
     }
 }
 

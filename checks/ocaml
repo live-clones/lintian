@@ -28,7 +28,6 @@ use File::Basename;
 use Lintian::Collect::Binary ();
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
 
 # The maximum number of *.cmi files to show individually.
 our $MAX_CMI = 3;

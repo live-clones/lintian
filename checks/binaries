@@ -22,6 +22,7 @@
 package Lintian::binaries;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Data;

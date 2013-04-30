@@ -21,6 +21,7 @@
 package Lintian::huge_usr_share;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
 

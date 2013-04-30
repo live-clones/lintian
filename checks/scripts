@@ -25,6 +25,7 @@
 package Lintian::scripts;
 use strict;
 use warnings;
+use autodie;
 
 use List::MoreUtils qw(any);
 
@@ -349,7 +350,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # Check for obsolete perl libraries
     if ($base eq 'perl' &&
              !$str_deps->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-        open(my $fd, '<', $path) or fail("could not open script $path");
+        open(my $fd, '<', $path);
         while (<$fd>) {
             if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
                 tag 'script-uses-perl4-libs-without-dep', "$filename:$. ${1}.pl";
@@ -439,8 +440,7 @@ foreach (keys %executable) {
                  );
 }
 
-open(my $ctrl_fd, '<', $info->lab_data_path('control-scripts'))
-    or fail("cannot open lintian control-scripts file: $!");
+open(my $ctrl_fd, '<', $info->lab_data_path('control-scripts'));
 
 # Handle control scripts.  This is an edited version of the code for
 # normal scripts above, because there were just enough differences to
@@ -528,8 +528,7 @@ while (<$ctrl_fd>) {
     }
 
     # now scan the file contents themselves
-    open(my $fd, '<', $filename)
-        or fail("cannot open maintainer script $filename for reading: $!");
+    open(my $fd, '<', $filename);
 
     my %warned;
     my ($saw_init, $saw_invoke, $saw_debconf, $saw_bange, $saw_sete, $has_code);
@@ -1015,10 +1014,10 @@ for my $divert (keys %added_diversions) {
 sub script_is_evil_and_wrong {
     my ($filename) = @_;
     my $ret = 0;
-    open(my $fd, '<', $filename) or fail("cannot open $filename: $!");
     my $i = 0;
     my $var = '0';
     my $backgrounded = 0;
+    open(my $fd, '<', $filename);
     local $_;
     while (<$fd>) {
         chomp;
@@ -1079,12 +1078,10 @@ sub script_is_evil_and_wrong {
 # -n option to check syntax, discarding output and returning the exit status.
 sub check_script_syntax {
     my ($interpreter, $script) = @_;
-    my $pid = fork;
-    if (!defined $pid) {
-        fail("cannot fork: $!");
-    } elsif ($pid == 0) {
-        open STDOUT, '>', '/dev/null' or fail("cannot reopen stdout: $!");
-        open STDERR, '>&STDOUT' or fail("cannot reopen stderr: $!");
+    my $pid = fork();
+    if ($pid == 0) {
+        open(STDOUT, '>', '/dev/null');
+        open(STDERR, '>&', \*STDOUT);
         exec $interpreter, '-n', $script
             or fail("cannot exec $interpreter: $!");
     } else {

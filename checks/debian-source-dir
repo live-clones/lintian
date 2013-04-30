@@ -21,7 +21,7 @@
 package Lintian::debian_source_dir;
 use strict;
 use warnings;
-use autodie qw(open opendir close closedir);
+use autodie;
 
 use List::MoreUtils qw(any);
 
@@ -43,7 +43,7 @@ if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
     open(my $fd, '<', "$dsrc/format");
     my $format = <$fd>;
     chomp $format;
-    close $fd;
+    close($fd);
     tag 'unknown-source-format', $format unless $KNOWN_FORMATS{$format};
 } else {
     tag 'missing-debian-source-format';

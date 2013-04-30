@@ -37,6 +37,7 @@
 package Lintian::version_substvars;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);

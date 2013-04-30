@@ -21,6 +21,7 @@
 package Lintian::duplicate_files;
 use strict;
 use warnings;
+use autodie;
 
 use List::MoreUtils qw(any);
 

@@ -21,6 +21,7 @@
 package Lintian::files;
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename;
 
@@ -348,8 +349,7 @@ foreach my $file ($info->sorted_index) {
         #----------------- /etc/php5/conf.d
         elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
             if ($index_info->is_file) {
-                open(my $fd, '<', $info->unpacked($index_info))
-                    or fail("cannot open .ini file: $!");
+                open(my $fd, '<', $info->unpacked($index_info));
                 while (<$fd>) {
                     next unless (m/^\s*#/);
                     tag 'obsolete-comments-style-in-php-ini', $file;
@@ -418,7 +418,7 @@ foreach my $file ($info->sorted_index) {
                         and $info->file_info ($file) =~ m/gzip compressed/) {
                     my $fd = open_gz ($info->unpacked($index_info)) or fail "open $file: $!";
                     my $f = <$fd>;
-                    close $fd;
+                    close($fd);
                     unless (defined $f and length $f) {
                         tag 'zero-byte-file-in-doc-directory', $file;
                     }
@@ -797,8 +797,7 @@ foreach my $file ($info->sorted_index) {
     {
         my $dep = $info->relation('strong');
         if ($index_info->is_file && $file =~ m,\.pm$, && !$dep->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-            open(my $fd, '<', $info->unpacked($index_info))
-                or fail("cannot open .pm file: $!");
+            open(my $fd, '<', $info->unpacked($index_info));
             while (<$fd>) {
                 if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
                     tag 'perl-module-uses-perl4-libs-without-dep', "$file:$. ${1}.pl";
@@ -999,8 +998,7 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- embedded Feedparser library
         if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
-            open(my $fd, '<', $info->unpacked($index_info))
-                or fail("cannot open feedparser.py file: $!");
+            open(my $fd, '<', $info->unpacked($index_info));
             while (<$fd>) {
                 if (m,Universal feed parser,) {
                     tag 'embedded-feedparser-library', $file;
@@ -1013,8 +1011,7 @@ foreach my $file ($info->sorted_index) {
         # ---------------- embedded PEAR modules
         foreach my $pearmodule (@pearmodules) {
             if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
-                open(my $fd, '<', $info->unpacked($index_info))
-                    or fail("cannot open PHP file: $!");
+                open(my $fd, '<', $info->unpacked($index_info));
                 while (<$fd>) {
                     if (m,/pear[/.],i) {
                         tag 'embedded-pear-module', $file;
@@ -1044,8 +1041,8 @@ foreach my $file ($info->sorted_index) {
             my $finfo = $info->file_info ($file) || '';
             if ($finfo =~ m/PostScript Type 1 font program data/) {
                my $path = $info->unpacked($index_info);
-               open my $t1pipe, '-|', 't1disasm', $path or fail "Can't pipe from t1disasm: $!";
                my $foundadobeline = 0;
+               open(my $t1pipe, '-|', 't1disasm', $path);
                while (my $line = <$t1pipe>) {
                     if ($foundadobeline) {
                        if ($line =~ m/^[%\s]*All\s*Rights\s*Reserved\.?\s*$/i) {
@@ -1066,7 +1063,7 @@ foreach my $file ($info->sorted_index) {
                         last;
                     }
                }
-               close $t1pipe or fail "could not close pipe: $! $?";
+               close($t1pipe);
             }
         }
 
@@ -1086,8 +1083,8 @@ foreach my $file ($info->sorted_index) {
                 tag 'gz-file-not-gzip', $file;
             } elsif ($isma_same && $file !~ m/\Q$arch\E/o) {
                 my $path = $info->unpacked($index_info);
-                open my $fd, '<', $path or fail "opening $file: $!";
                 my $buff;
+                open(my $fd, '<', $path);
                 # We need to read at least 8 bytes
                 if (sysread($fd, $buff, 1024) >= 8) {
                     # Extract the flags and the mtime.
@@ -1100,7 +1097,7 @@ foreach my $file ($info->sorted_index) {
                 } else {
                     fail "reading $file: $!";
                 }
-                close $fd;
+                close($fd);
             }
         }
 

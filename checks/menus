@@ -23,12 +23,12 @@
 package Lintian::menus;
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use Lintian::Check qw(check_spelling check_spelling_picky $known_shells_regex);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail file_is_encoded_in_non_utf8 strip);
+use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
 # Supported documentation formats for doc-base files.
 our %known_doc_base_formats = map { $_ => 1 }
@@ -119,8 +119,7 @@ for my $file ($info->sorted_index) {
             $local_file =~ s,^etc/menu-methods/,,;
             $menumethod_file = $file;
 
-            open(my $fd, '<', $info->lab_data_path ("menu/methods/$local_file"))
-                or fail "cannot open menu-method file $local_file: $!";
+            open(my $fd, '<', $info->lab_data_path("menu/methods/$local_file"));
             while (<$fd>) {
                 chomp;
                 if (m,^!include menu.h,o) {
@@ -142,7 +141,6 @@ for my $file ($info->sorted_index) {
         }
     }
 }
-close IN;
 
 # prerm scripts should not call update-menus
 if ($prerm{'calls-updatemenus'}) {
@@ -235,14 +233,13 @@ sub check_doc_base_file {
         tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
     }
 
-    open(my $fd, '<', $dbpath)
-        or fail "cannot open doc-base file doc-base/$dbfile for reading";
-
     my (@files, $field, @vals);
     my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;
     $line           = 0;  # global
     my %sawfields   = (); # local for each section of control file
     my %sawformats  = (); # global for control file
+
+    open(my $fd, '<', $dbpath);
 
     while (<$fd>) {
         chomp;
@@ -574,8 +571,7 @@ sub check_script {
     # control files are regular files and not symlinks, pipes etc.
     return if -l $spath or not -f $spath;
 
-    open(my $fd, '<', $spath) or
-        fail("cannot open maintainer script control/$script for reading: $!");
+    open(my $fd, '<', $spath);
     $interp = <$fd>;
     $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {

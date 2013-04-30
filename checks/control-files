@@ -21,6 +21,7 @@
 package Lintian::control_files;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
 

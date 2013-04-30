@@ -21,6 +21,7 @@
 package Lintian::filename_length;
 use strict;
 use warnings;
+use autodie;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);

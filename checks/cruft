@@ -25,6 +25,7 @@
 package Lintian::cruft;
 use strict;
 use warnings;
+use autodie;
 use v5.10;
 use feature qw(switch);
 
@@ -170,7 +171,7 @@ for my $file ($info->sorted_index) {
             my $path = $info->unpacked ($file);
             my $marker = 0;
             next unless -f $path and not -l $path;
-            open my $fd, '<', $path or fail "Opening $file: $!";
+            open(my $fd, '<', $path);
             while ( my $line = <$fd> ) {
                 next unless $line =~ m/^#/o;
                 if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
@@ -181,7 +182,7 @@ for my $file ($info->sorted_index) {
                 # We could probably stop here, but just in case
                 $marker = 0 if $line =~ m/^#<==/o;
             }
-            close $fd;
+            close($fd);
         }
         tag 'source-contains-waf-binary', $file unless $ok;
     }
@@ -203,7 +204,7 @@ for my $file (keys %ERRORS) {
     my $tag = $ERRORS{$file};
     my $path = $info->lab_data_path ($file);
     if (-s $path) {
-        open(my $fd, '<', $path) or fail "cannot open $file: $!";
+        open(my $fd, '<', $path);
         local $_;
         while (<$fd>) {
             chomp;
@@ -235,7 +236,7 @@ for my $file (keys %ERRORS) {
 sub check_diffstat {
     my ($diffstat, $warned) = @_;
     my $saw_file;
-    open(my $fd, '<', $diffstat) or fail("cannot open $diffstat: $!");
+    open(my $fd, '<', $diffstat);
     local $_;
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
@@ -281,7 +282,7 @@ sub check_diffstat {
             tag 'diff-contains-substvars', $file;
         }
     }
-    close($fd) or fail("error reading diffstat file: $!");
+    close($fd);
 
     # If there was nothing in the diffstat output, there was nothing in the
     # diff, which is probably a mistake.
@@ -405,7 +406,7 @@ sub find_cruft {
             tag 'configure-generated-file-in-source', $name;
         }
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
-        open(my $fd, '<', $basename) or fail "can't open $name: $!";
+        open(my $fd, '<', $basename);
         while (<$fd>) {
             last if $. > 10; # it's on the 6th line, but be a bit more lenient
             if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
@@ -425,7 +426,7 @@ sub find_cruft {
     } elsif ($name =~ m,^(.+/)?ltconfig$, and not $ltinbd) {
         tag 'ancient-libtool', $name;
     } elsif ($name =~ m,^(.+/)?ltmain\.sh$, and not $ltinbd) {
-        open(my $fd, '<', $basename) or fail "can't open $name: $!";
+        open(my $fd, '<', $basename);
         while (<$fd>) {
             if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                 my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
@@ -447,7 +448,7 @@ sub find_cruft {
 
     # test license problem is source file (only text file)
     if (-T $basename) {
-        open my $F, '<', $basename or fail "can't open $name: $!";
+        open(my $F, '<', $basename);
         binmode ($F);
 
         my @queue = ('', '');
@@ -457,7 +458,7 @@ sub find_cruft {
         # for efficiency.  We store two blocks in @queue and the whole
         # string to match in $block. Please emit license tags only once
         # per file
-        while (read ($F, my $window, BLOCKSIZE)) {
+        while (read($F, my $window, BLOCKSIZE)) {
             my $block;
             shift @queue;
             push @queue, $window;
@@ -519,7 +520,7 @@ sub find_cruft {
                 }
             }
         }
-        close $F or fail "can not close opened file $name: $!";
+        close($F);
     }
 }
 

@@ -21,6 +21,7 @@
 package Lintian::copyright_file;
 use strict;
 use warnings;
+use autodie;
 
 use Encode qw(decode);
 use List::MoreUtils qw(any);
@@ -28,7 +29,7 @@ use List::MoreUtils qw(any);
 use Lintian::Check qw(check_spelling);
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail slurp_entire_file file_is_encoded_in_non_utf8);
+use Lintian::Util qw(slurp_entire_file file_is_encoded_in_non_utf8);
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 

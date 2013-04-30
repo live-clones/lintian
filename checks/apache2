@@ -22,6 +22,7 @@ package Lintian::apache2;
 
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename;
 use Lintian::Collect::Binary ();
@@ -176,8 +177,7 @@ sub check_module_package {
 sub check_maintainer_scripts {
     my ($info) = @_;
 
-    open my $fd, '<', $info->lab_data_path ('control-scripts')
-        or fail "cannot open lintian control-scripts file: $!";
+    open(my $fd, '<', $info->lab_data_path('control-scripts'));
 
     while (<$fd>)
     {
@@ -191,7 +191,7 @@ sub check_maintainer_scripts {
         # Don't try to parse the file if it does not appear to be a shell script
         next if $interpreter !~ m/sh\b/;
 
-        open my $sfd, '<', $filename or fail "cannot open maintainer script $filename: $!";
+        open(my $sfd, '<', $filename);
         while (<$sfd>) {
             # skip comments
             next if substr ($_, 0, $-[0]) =~ /#/;
@@ -212,10 +212,10 @@ sub check_maintainer_scripts {
             # That's going to be complicated. Or not possible without grammar
             # parser.
         }
-        close $sfd;
+        close($sfd);
     }
 
-    close $fd;
+    close($fd);
 }
 
 
@@ -226,7 +226,7 @@ sub inspect_conf_file {
     my $filename =  $info->unpacked ($file);
     # Don't follow links
     return if -l $filename;
-    open my $fd, '<', $filename or fail "cannot open configuration file $filename: $!";
+    open(my $fd, '<', $filename);
     while (<$fd>)  {
 
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny', '<(|/)Limit.*?>', '<(|/)LimitExcept.*?>') {
@@ -249,7 +249,7 @@ sub inspect_conf_file {
         }
 
     }
-    close $fd;
+    close($fd);
 
 }
 

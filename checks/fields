@@ -25,6 +25,7 @@
 package Lintian::fields;
 use strict;
 use warnings;
+use autodie;
 
 use Dpkg::Version qw(version_check);
 use List::MoreUtils qw(any true);

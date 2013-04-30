@@ -23,6 +23,7 @@ package Lintian::standards_version;
 
 use strict;
 use warnings;
+use autodie;
 
 use POSIX qw(strftime);
 use List::Util qw(first);

@@ -21,10 +21,10 @@
 package Lintian::po_debconf;
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of system_env);
+use Lintian::Util qw(is_ancestor_of system_env);
 
 sub run {
 
@@ -45,16 +45,14 @@ for my $file (readdir($dirfd)) {
     if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
         if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
             push (@lang_templates, $file);
-            open(my $fd, '<', "$debfiles/$file")
-                or fail("Can't open debfiles/$file file.");
+            open(my $fd, '<', "$debfiles/$file");
             while (<$fd>) {
                 tag 'untranslatable-debconf-templates', "$file: $."
                     if (m/^Description: (.+)/i and $1 !~/for internal use/);
             }
             close($fd);
         } else {
-            open(my $fd, '<', "$debfiles/$file")
-                or fail("Can't open debfiles/$file file.");
+            open(my $fd, '<', "$debfiles/$file");
             my $in_template = 0;
             while (<$fd>) {
                 tag 'translated-default-field', "$file: $."
@@ -103,8 +101,7 @@ for (@lang_templates) {
 my $missing_files = 0;
 
 if ( -f "$debfiles/po/POTFILES.in" and not -l "$debfiles/po/POTFILES.in") {
-    open(my $fd, '<', "$debfiles/po/POTFILES.in")
-        or fail("Can't open debfiles/po/POTFILES.in.");
+    open(my $fd, '<', "$debfiles/po/POTFILES.in");
     while (<$fd>) {
         chomp;
         next if /^\s*\#/;
@@ -143,8 +140,7 @@ while (defined(my $file=readdir($po_dirfd))) {
     $_ = '';
     # skip suspicious "files"
     next if -l "$debfiles/po/$file" || ! -f "$debfiles/po/$file";
-    open(my $fd, '<', "$debfiles/po/$file")
-        or fail("Can't open debfiles/po/$file file.");
+    open(my $fd, '<', "$debfiles/po/$file");
     while (<$fd>) {
         if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {
             tag 'debconf-translation-using-general-list', $file;

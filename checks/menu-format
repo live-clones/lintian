@@ -35,14 +35,14 @@
 package Lintian::menu_format;
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use File::Basename;
 use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of);
+use Lintian::Util qw(is_ancestor_of);
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags=qw(needs section title command);
@@ -215,7 +215,7 @@ my @menufiles;
 for my $dir ("$mdir/lib", "$mdir/share") {
     opendir(my $dirfd, $dir);
     push(@menufiles, map { "$dir/$_" } readdir($dirfd));
-    close($dirfd);
+    closedir($dirfd);
 }
 
 # Find the desktop files in the package for verification.
@@ -255,8 +255,7 @@ foreach my $menufile (@menufiles) {
     next if !is_ancestor_of($mdir, $menufile);
 
     my $menufile_line ='';
-    open(my $fd, '<', $menufile) or
-        fail("cannot open menu file $menufile for reading.");
+    open(my $fd, '<', $menufile);
     # line below is commented out in favour of the while loop
     # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
     while (<$fd>) {
@@ -566,10 +565,11 @@ sub verify_icon {
         return;
     }
 
-    open(my $fd, '<', $iconfile) or fail "open $iconfile: $!";
-
     my $parse = 'XPM header';
     my $line;
+
+    open(my $fd, '<', $iconfile);
+
     do { defined ($line = <$fd>) or goto parse_error; }
     until ($line =~ /\/\*\s*XPM\s*\*\//);
 
@@ -599,10 +599,9 @@ parse_error:
 sub verify_desktop_file {
     my ($desktopfile, $file, $pkg, $info) = @_;
     my %vals;
-    open(my $fd, '<', $info->unpacked($file))
-        or fail("cannot open desktop file $file: $!");
     my ($line, $saw_first, $warned_cr);
     my @pending;
+    open(my $fd, '<', $info->unpacked($file));
     while (defined ($line = <$fd>)) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
