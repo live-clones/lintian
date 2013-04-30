@@ -189,8 +189,6 @@ for my $cur_file ($info->sorted_index) {
     }
 }
 
-close(IN);
-
 # 3rd step: check if shlib symlinks are present and in correct order
 for my $shlib_file (keys %SONAME) {
     # file found?
