@@ -4,6 +4,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + Added:
       - conffile-is-not-in-package
       - debconf-translation-using-general-list
+    + Removed:
+      - debhelper-maintscript-needs-versioned-build-depends
+      - debhelper-script-needs-versioned-build-depends
 
   * checks/*:
     + [NT] Use Lintian::Path objects as arguments to unpacked
@@ -31,6 +34,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
       (Closes: #706166)
     + [NT] Flag all absolute symlinks in source packages as
       "unsafe".  (Closes: #697164)
+  * checks/debhelper{,.desc}:
+    + [NT] Retire some tags that is no longer relevant in the
+      Jessie development cycle.
   * checks/description:
     + [NT] Skip extended-description-is-probably-too-short
       for -dbg packages.  Thanks to Paul Wise for the suggestion.

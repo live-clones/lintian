@@ -26,7 +26,7 @@ use autodie;
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of slurp_entire_file strip strip);
+use Lintian::Util qw(is_ancestor_of slurp_entire_file strip);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.
@@ -44,14 +44,6 @@ my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 my $dh_ver_deps = Lintian::Data->new ('debhelper/dh_commands-manual', qr/\|\|/o);
 my $dh_addons = Lintian::Data->new ('debhelper/dh_addons', '=');
 my $dh_addons_manual = Lintian::Data->new ('debhelper/dh_addons-manual', qr/\|\|/o);
-
-# The version at which debhelper commands were introduced.  Packages that use
-# one of these commands must have a dependency on that version of debhelper or
-# newer.
-my %versions = (
-    dh_installgsettings => '8.1.3~',
-    dh_ucf              => '8.1.5~',
-);
 
 my $MISC_DEPENDS = Lintian::Relation->new ('${misc:Depends}');
 
@@ -75,10 +67,8 @@ my %missingbdeps_addons;
 
 my $maybe_skipping;
 my $dhcompatvalue;
-my @versioncheck;
 my $inclcdbs = 0;
 
-my $seenmaintscript = 0;
 my $bdepends_noarch;
 my $bdepends;
 my $seen_dh = 0;
@@ -158,9 +148,6 @@ while (<$rules_fd>) {
             } elsif ($dh_commands_depends->known($dhcommand)) {
                 my $dep = $dh_commands_depends->value($dhcommand);
                 $missingbdeps{$dep} = $dhcommand;
-            }
-            if ($versions{$dhcommand}) {
-                push (@versioncheck, $dhcommand);
             }
         }
         $seencommand = 1;
@@ -334,8 +321,6 @@ for my $file (sort(readdir($dirfd))) {
         if ($file ne 'debhelper') {
             push(@indebfiles, $file);
         }
-    } elsif ($file =~ m/^(?:(.*)\.)?maintscript$/) {
-        $seenmaintscript = 1;
     } else {
         my $base = $file;
         $base =~ s/^.+\.//;
@@ -413,29 +398,6 @@ unless ($bdepends->implies("debhelper (>= $level~)")){
 
     tag $tagname, $level;
 }
-
-if (@versioncheck) {
-    my %seen;
-    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
-    for my $program (@versioncheck) {
-        my $required = $versions{$program};
-        my $needed = "debhelper (>= $required)";
-        unless ($bdepends->implies($needed)) {
-            tag 'debhelper-script-needs-versioned-build-depends',
-            $program, "(>= $required)";
-        }
-    }
-}
-
-if ($seenmaintscript) {
-    my $required = '8.1.0~';
-    my $needed = "debhelper (>= $required)";
-    unless ($bdepends->implies($needed)) {
-        tag 'debhelper-maintscript-needs-versioned-build-depends',
-        "(>= $required)";
-    }
-}
-
 
 if(scalar(@indebfiles)){
     my $f = pop(@indebfiles);

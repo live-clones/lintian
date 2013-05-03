@@ -1,5 +1,0 @@
-Testname: debhelper-maintscripts-depends
-Sequence: 6000
-Version: 1.0
-Description: Test dependency requirements for debhelper maintscripts
-Test-For: debhelper-maintscript-needs-versioned-build-depends

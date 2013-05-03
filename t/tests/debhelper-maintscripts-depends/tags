@@ -1,1 +1,0 @@
-W: debhelper-maintscripts-depends source: debhelper-maintscript-needs-versioned-build-depends (>= 8.1.0~)

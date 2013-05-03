@@ -1,1 +1,0 @@
-W: debhelper-dh-depends source: debhelper-script-needs-versioned-build-depends dh_ucf (>= 8.1.5~)

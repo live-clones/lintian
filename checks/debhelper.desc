@@ -186,33 +186,6 @@ Info: The source package appears to be using a dh addon but doesn't build
  depend on the package that actually provides it.  If it uses it, it must
  build depend on it.
 
-Tag: debhelper-script-needs-versioned-build-depends
-Severity: normal
-Certainty: certain
-Info: The given debhelper script was introduced in a later version of
- debhelper than the package Build-Depends on.  The package Build-Depends
- should be updated to require that version of debhelper.  Giving the
- version followed by <tt>~</tt> is recommended so that backports will
- satisfy the dependency.
- .
- etch was released with debhelper version 5.0.42, so every package that
- assumes a newer version should explicitly declare so for the sake of
- etch backports.
-
-Tag: debhelper-maintscript-needs-versioned-build-depends
-Severity: normal
-Certainty: certain
-Ref: dh(1)
-Info: The maintscript files used by this package was introduced in a later
- version of debhelper than the package Build-Depends on.  The package's
- Build-Depends should be updated to require at least debhelper 8.1.0.
- Giving the version followed by <tt>~</tt> is recommended so that
- backports will satisfy the dependency.
- .
- squeeze was released with debhelper version 8.0.0, so every package that
- assumes a newer version should explicitly declare so for the sake of
- squeeze backports.
-
 Tag: brace-expansion-in-debhelper-config-file
 Severity: normal
 Certainty: possible
