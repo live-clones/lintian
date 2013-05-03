@@ -50,7 +50,6 @@ our @GLOBAL_CLEAN_DEPENDS =
      [ debhelper => qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk' ],
      [ debhelper => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
      [ dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
-     [ 'dpkg-dev (>= 1.16.1~)' => qr'^include\s+/usr/share/dpkg/[\w-]+\.mk' ],
      [ 'gnome-pkg-tools' => qr'^include\s+/usr/share/gnome-pkg-tools/' ],
      [ quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
      [ dpatch => qr'^include\s+/usr/share/dpatch/' ],

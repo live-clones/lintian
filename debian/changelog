@@ -55,6 +55,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [RA] Add new check for a Language-Team field in a translation
       pointing to the debian-i18n mailing list.  Based on work by
       victory.  (Closes: #705197)
+  * checks/rules:
+    + [NT] Remove check for "dpkg-dev (>= 1.16.1~)" build-dependency,
+      since this is trivially satisfied in Wheezy and Jessie.
 
   * collection/debfiles:
     + [NT] Replace makeshift "is_ancestor_of" check with the
