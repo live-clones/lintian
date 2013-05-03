@@ -1,6 +1,6 @@
 E: debhelper-no-depends source: missing-build-dependency debhelper
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_clideps => cli-common-dev
-E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch (>= 2.0.32~)
+E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_gtkmodules => libgtk2.0-dev
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_lisp => dh-lisp
 E: debhelper-no-depends source: package-uses-debhelper-but-lacks-build-depends

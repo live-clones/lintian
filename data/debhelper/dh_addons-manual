@@ -4,13 +4,8 @@
 #
 # Please keep this sorted.
 
-dpatch||dpatch (>= 2.0.32~)
-gnome||gnome-pkg-tools (>= 0.17)
-jh_maven_repo_helper||maven-repo-helper (>= 1.6~)
-lv2config||lv2core (>= 4.0-2~)
-maven_repo_helper||maven-repo-helper (>= 1.5~)
+lv2config||lv2core
 python2||python | python-all | python-dev | python-all-dev
 python3||python3 | python3-all | python3-dev | python3-all-dev
 python_support||python-support
-sphinxdoc||python-sphinx (>= 1.0.7+dfsg) | python3-sphinx
-xsf||xserver-xorg-dev (>= 2:1.9.4)
+sphinxdoc||python-sphinx | python3-sphinx

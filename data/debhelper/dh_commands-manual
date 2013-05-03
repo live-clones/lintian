@@ -12,15 +12,10 @@
 #
 # Please keep this sorted.
 
-dh_dpatch_patch||dpatch (>= 2.0.32~)
-dh_dpatch_unpatch||dpatch (>= 2.0.32~)
-dh_haskell_extra_depends||haskell-devscripts (>= 0.8.8~)
-dh_lv2config||lv2core (>= 4.0-2~)
+dh_lv2config||lv2core
 dh_nativejava||gcj-native-helper | default-jdk-builddep
-dh_pyppd||pyppd (>= 0.4.9-3~)
-dh_python-ply||python-ply (>= 3.4)
 dh_python2||python | python-all | python-dev | python-all-dev
 dh_python3||python3 | python3-all | python3-dev | python3-all-dev
-dh_sphinxdoc||python-sphinx (>= 1.0.7+dfsg) | python3-sphinx
+dh_sphinxdoc||python-sphinx | python3-sphinx
 dh_xine||libxine-dev | libxine2-dev
-dh_xsf_substvars||xserver-xorg-dev (>= 2:1.9.4)
+
