@@ -22,6 +22,13 @@ use strict;
 use warnings;
 
 use Test::More import => ['done_testing'];
+
+BEGIN {
+    $ENV{'LINTIAN_ROOT'} //= '.';
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Test::Lintian;
 
 # Test that all checks can be loaded (except lintian.desc, which is

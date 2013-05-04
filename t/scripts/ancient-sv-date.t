@@ -29,6 +29,8 @@ plan skip_all => 'Only checked for UNRELEASED versions'
 
 plan tests => 2;
 
+$ENV{'LINTIAN_ROOT'} //= '.';
+
 my $check = "$ENV{'LINTIAN_ROOT'}/checks/standards-version";
 my $found = 0;
 open(my $fd, '<', $check);

@@ -20,6 +20,13 @@ use strict;
 use warnings;
 
 use Test::More;
+
+BEGIN {
+    $ENV{'LINTIAN_ROOT'} //= '.';
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Test::Lintian;
 
 # Exclude the following tags, which are handled specially and can't be

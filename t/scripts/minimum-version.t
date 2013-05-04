@@ -16,6 +16,8 @@ our $REQUIRED = 'v5.10.0';
 
 our @PATHS = qw(checks collection frontend lib reporting private);
 
+$ENV{'LINTIAN_ROOT'} //= '.';
+
 # It creates as many threads as elements in @PATHS
 for my $path (@PATHS) {
     threads->create(sub {

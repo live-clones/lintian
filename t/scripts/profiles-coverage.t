@@ -7,9 +7,15 @@
 use strict;
 use warnings;
 
+use File::Find;
 use Test::More;
 
-use File::Find;
+BEGIN {
+    $ENV{'LINTIAN_ROOT'} //= '.';
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
 use Lintian::Util qw(read_dpkg_control); # Test::More (also) exports fail
 
 my $root = $ENV{'LINTIAN_ROOT'};

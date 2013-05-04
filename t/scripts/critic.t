@@ -6,6 +6,7 @@ use autodie;
 
 use Test::More;
 
+$ENV{'LINTIAN_ROOT'} //= '.';
 
 chdir($ENV{'LINTIAN_ROOT'});
 
