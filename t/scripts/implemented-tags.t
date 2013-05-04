@@ -21,12 +21,6 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    $ENV{'LINTIAN_ROOT'} //= '.';
-}
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
 use Test::Lintian;
 
 # Exclude the following tags, which are handled specially and can't be
@@ -62,6 +56,8 @@ my $opts = {
     'exclude-pattern' => $EXCLUDE,
     'filter' => \&accept_filter,
 };
+
+$ENV{'LINTIAN_ROOT'} //= '.';
 
 test_tags_implemented ($opts, "$ENV{LINTIAN_ROOT}/checks");
 

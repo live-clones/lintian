@@ -21,14 +21,10 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    $ENV{'LINTIAN_ROOT'} //= '.';
-}
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
 use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
+
+$ENV{'LINTIAN_ROOT'} //= '.';
 
 # Find all of the desc files in either collection or checks.  We'll do one
 # check per description.

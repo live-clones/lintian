@@ -7,13 +7,9 @@ use warnings;
 
 use Test::More;
 
-BEGIN {
-    $ENV{'LINTIAN_ROOT'} //= '.';
-}
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
 use Test::Lintian;
+
+$ENV{'LINTIAN_ROOT'} //= '.';
 
 # We could use a plan, but then we had to update every time we added
 # or removed a profile...

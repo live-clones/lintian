@@ -23,12 +23,6 @@ use warnings;
 
 use Test::More import => ['done_testing'];
 
-BEGIN {
-    $ENV{'LINTIAN_ROOT'} //= '.';
-}
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-
 use Test::Lintian;
 
 # Test that all checks can be loaded (except lintian.desc, which is
@@ -40,6 +34,8 @@ sub accept_filter {
 my $opts = {
     'filter' => \&accept_filter,
 };
+
+$ENV{'LINTIAN_ROOT'} //= '.';
 
 test_load_checks ($opts, "$ENV{'LINTIAN_ROOT'}/checks");
 
