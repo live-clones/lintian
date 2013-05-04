@@ -29,8 +29,8 @@ allow-unsafe = 1
 [BuiltinFunctions::ProhibitBooleanGrep]
 
 [InputOutput::RequireCheckedSyscalls]
-functions = open opendir chdir read readline closedir sysopen sysread sysclose
-# possible TODO read readline readdir close closedir
+functions = open opendir chdir read readdir readline closedir sysopen sysread sysclose mkdir link pipe readlink unlink rename symlink fork
+# possible TODO close
 
 # Checks and collections blow up
 [-Modules::RequireFilenameMatchesPackage]
