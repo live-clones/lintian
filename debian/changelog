@@ -63,6 +63,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Replace makeshift "is_ancestor_of" check with the
       one from L::Util.
 
+  * data/changes-file/known-dists:
+    + [NT] Add jessie and remove lenny.
   * data/debhelper/dh_{addons,commands}-manual:
     + [NT] Remove entries/versions that are no longer relevant.
 
