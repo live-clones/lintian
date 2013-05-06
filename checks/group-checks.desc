@@ -63,7 +63,7 @@ Info: The debug package appear to be containing debug symbols for a
  .
  Making a debug package co-installable with itself is very trival,
  when installing the debug symbols beneath:
-   <tt>/usr/lib/debug/.build-id/&lt;XX&gt;/&ltrest-id&gt;.debug</tt>
+   <tt>/usr/lib/debug/.build-id/&lt;XX&gt;/&lt;rest-id&gt;.debug</tt>
  .
  dh_strip does this in debhelper compat 9.  Otherwise, the expected
  location of the debug symbols of a given ELF binary can be determined

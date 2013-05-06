@@ -49,6 +49,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
       to "Vcs-*" fields that the tags are based on a data list
       (and is not a result of a HTTP request while checking the
       package).
+  * checks/group-checks.desc:
+    + [NT] Add missing semi-colon in tag description.  Thanks to
+      Andrey Rahmatullin for the report.  (Closes: #706827)
   * checks/po-debconf{,.desc}:
     + [NT] Remove tests for commands that are provided by
       Lintian's dependencies.
