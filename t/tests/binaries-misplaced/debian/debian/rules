@@ -4,7 +4,7 @@ pkg=binaries-misplaced
 	dh $@
 
 override_dh_install:
-	mkdir debian/$(pkg)/etc/
+	mkdir -p debian/$(pkg)/etc/
 	cp -a /bin/true debian/$(pkg)/etc/foo
 	# explicitly call dh_shlibdeps since debhelper is being
 	# "smart" and not calling it in newer versons (8.9.something)
