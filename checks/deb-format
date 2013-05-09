@@ -83,7 +83,7 @@ if ($okay) {
     $opts = {};
     $success = spawn ($opts, ['ar', 'p', $deb, 'debian-binary']);
     if (not $success) {
-        tag 'malformed-deb-archive', "can't read debian-binary member";
+        tag 'malformed-deb-archive', 'cannot read debian-binary member';
     } elsif (${ $opts->{out} } !~ /^2\.\d+\n/) {
         my ($version) = split("\n", ${ $opts->{out} });
         tag 'malformed-deb-archive', "version $version not 2.0";

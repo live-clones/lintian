@@ -75,9 +75,9 @@ differ between package types.
 
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
-use constant BINLIST_FORMAT => "Lintian's list of binary packages in the archive--V5";
-use constant SRCLIST_FORMAT => "Lintian's list of source packages in the archive--V5";
-use constant CHGLIST_FORMAT => "Lintian's list of changes packages in the archive--V1";
+use constant BINLIST_FORMAT => q{Lintian's list of binary packages in the archive--V5};
+use constant SRCLIST_FORMAT => q{Lintian's list of source packages in the archive--V5};
+use constant CHGLIST_FORMAT => q{Lintian's list of changes packages in the archive--V1};
 
 # List of fields in the formats and the order they appear in
 #  - for internal usage to read and write the files

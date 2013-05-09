@@ -12,5 +12,5 @@ $map->add('A');
 $map->add('B', 'A');
 
 my @parents;
-ok(eval {@parents = $map->parents('B'); }, "Get B's parents");
-is_deeply(\@parents, ['A'], "B's parent is A");
+ok(eval {@parents = $map->parents('B'); }, q{Get B's parents});
+is_deeply(\@parents, ['A'], q{B's parent is A});

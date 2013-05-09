@@ -100,7 +100,7 @@ sub _make_xml_tag {
     my $empty = ($content//'') eq '' && (!defined $children || !@$children);
     my $output = $self->_open_xml_tag($tag, $attrs, $empty);
     if (!$empty) {
-        $output .= encode_entities($content,"<>&\"'") if $content;
+        $output .= encode_entities($content, q{<>&"'}) if $content;
         if (defined $children) {
             foreach my $child (@$children) {
                 $output .= "\n\t$child";

@@ -41,7 +41,7 @@ $map->add('A', 'B');
 $map->add('B');
 
 $map->unlink('B', 'soft');
-ok(!$map->satisfy('A'), "A can't be satisfied because it depends on the soft-unlinked B");
+ok(!$map->satisfy('A'), 'A cannot be satisfied because it depends on the soft-unlinked B');
 
 TODO: {
     local $TODO = 'When re-adding B there are still references to the old B, and old $B != new $B';
