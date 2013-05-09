@@ -81,8 +81,7 @@ if (%opts) {
     close($opts{pipe_in});
     reap (\%opts);
 } else {
-    touch_file("$dir/hardening-info")
-        or fail "touch $dir/hardening_info failed: $!";
+    touch_file("$dir/hardening-info");
 }
 
 }

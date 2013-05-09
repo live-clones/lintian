@@ -161,10 +161,9 @@ foreach my $file ($info->sorted_index) {
         my $path = $info->unpacked($index_info);
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
-            $fd = open_gz($path)
-                or fail "cannot open $file: $!";
+            $fd = open_gz($path);
         } else {
-            open $fd, '<', $path;
+            open($fd, '<', $path);
         }
         my @manfile = <$fd>;
         close $fd;

@@ -45,8 +45,7 @@ my @readmes = ("$dir/unpacked/usr/share/doc/$pkg/README.Debian.gz",
 if (-d "$dir/unpacked/usr/share/doc/$pkg"
       && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")) {
     # Unsafe path, stop here
-    touch_file("$dir/README.Debian")
-        or fail "touch $dir/README.debian failed: $!";
+    touch_file("$dir/README.Debian");
     return;
 }
 
@@ -60,8 +59,7 @@ for (@readmes) {
 
 if (not defined $file) {
     # no README found
-    touch_file("$dir/README.Debian")
-        or fail "touch $dir/README.debian failed: $!";
+    touch_file("$dir/README.Debian");
 } elsif ($file =~ m/\.gz$/) {
     gunzip_file ($file, "$dir/README.Debian");
 } else {

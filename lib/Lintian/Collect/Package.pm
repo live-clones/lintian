@@ -160,8 +160,7 @@ sub file_info {
     my %file_info;
     my $path = $self->lab_data_path ('file-info.gz');
     local $_;
-    my $idx = open_gz ($path)
-        or croak "cannot open $path: $!";
+    my $idx = open_gz($path);
     while (<$idx>) {
         chomp;
 
@@ -309,11 +308,9 @@ sub _fetch_index_data {
     my %rhlinks;
     my @sorted;
     local $_;
-    my $idx = open_gz ("$base_dir/${index}.gz")
-        or croak "cannot open index file $base_dir/${index}.gz: $!";
+    my $idx = open_gz("$base_dir/${index}.gz");
     if ($indexown) {
-        $num_idx = open_gz ("$base_dir/${indexown}.gz")
-            or croak "cannot open index file $base_dir/${indexown}.gz: $!";
+        $num_idx = open_gz("$base_dir/${indexown}.gz");
     }
     while (<$idx>) {
         chomp;

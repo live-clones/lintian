@@ -226,7 +226,7 @@ sub strings {
         open my $fd, '<', '/dev/null' or fail "open /dev/null: $!";
         return $fd;
     }
-    my $fd = open_gz ("$real.gz") or fail "open ${file}.gz: $!";
+    my $fd = open_gz("$real.gz");
     return $fd;
 }
 
@@ -343,8 +343,7 @@ sub objdump_info {
     my %objdump_info;
     my $file;
     local $_;
-    my $fd = open_gz ($objf)
-        or fail "cannot open $objf: $!";
+    my $fd = open_gz($objf);
     foreach my $pg (parse_dpkg_control ($fd)) {
         my %info = (
             'PH' => {},
@@ -489,8 +488,7 @@ sub java_info {
         $self->{java_info} = \%java_info;
         return $self->{java_info};
     }
-    my $idx = open_gz ($javaf)
-        or fail "cannot open $javaf: $!";
+    my $idx = open_gz($javaf);
     my $file;
     my $file_list;
     my $manifest = 0;

@@ -416,7 +416,7 @@ foreach my $file ($info->sorted_index) {
                 if ($file =~ m,.gz$, and $index_info->size <= 276
                         and $index_info->is_file
                         and $info->file_info ($file) =~ m/gzip compressed/) {
-                    my $fd = open_gz ($info->unpacked($index_info)) or fail "open $file: $!";
+                    my $fd = open_gz($info->unpacked($index_info));
                     my $f = <$fd>;
                     close($fd);
                     unless (defined $f and length $f) {

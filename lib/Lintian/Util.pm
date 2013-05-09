@@ -563,16 +563,16 @@ file.  If the file is empty, an empty list is returned.
 
 Otherwise, this behaves like:
 
- open my $fd, '<' FILE or die ...;
+ use autodie;
+ 
+ open(my $fd, '<', FILE);
  my @p = parse_dpkg_control($fd, FLAGS, LINES);
- close $fd;
+ close($fd);
  return @p;
 
 This goes without saying that may fail with any of the messages that
 L</parse_dpkg_control(HANDLE[, FLAGS[, LINES]])> do.  It can also emit
-the following error:
-
- "cannot open %s: %s"
+autodie exceptions if open or close fails.
 
 =cut
 
@@ -923,6 +923,8 @@ sub gunzip_file {
 
 Opens a handle that reads from the GZip compressed FILE.
 
+On failure, this sub emits a trappable error.
+
 Note: The handle may be a pipe from an external processes.
 
 =cut
@@ -931,16 +933,14 @@ Note: The handle may be a pipe from an external processes.
 # is available)
 sub __open_gz_pio {
     my ($file) = @_;
-    no autodie qw(open);
-    open my $fd, '<:gzip', $file or return;
+    open(my $fd, '<:gzip', $file);
     return $fd;
 }
 
 # Fallback implementation of open_gz
 sub __open_gz_ext {
     my ($file) = @_;
-    no autodie qw(open);
-    open my $fd, '-|', 'gzip', '-dc', $file or return;
+    open(my $fd, '-|', 'gzip', '-dc', $file);
     return $fd;
 }
 
@@ -949,34 +949,22 @@ sub __open_gz_ext {
 Updates the "mtime" of FILE.  If FILE does not exist, it will be
 created.
 
-Returns 1 on success and 0 on failure.  On failure, $! will contain
-the failure.
+On failure, this sub will emit a trappable error.
 
 =cut
 
 sub touch_file {
     my ($file) = @_;
 
-    # We have to return 0 if one of these fails and for "close",
-    # we don't always want its $! (i.e. if utime fails)
-    no autodie qw(open close);
-
     # We use '>>' because '>' truncates the file if it has contents
     # (which `touch file` doesn't).
-    open my $fd, '>>', $file or return 0;
-
+    open(my $fd, '>>', $file);
     # open with '>>' does not update the mtime if the file already
     # exists, so use utime to solve that.
-    if (!utime(undef, undef, $fd)) {
-        # utime failed.  Preserve the utime error in $! and
-        # always return 0
-        local $! = 0;
-        close($fd);
-        return 0;
-    }
+    utime(undef, undef, $fd);
+    close($fd);
 
-    # utime succeeded, then close decides the return code (and $!).
-    return close($fd);
+    return 1;
 }
 
 =item fail (MSG[, ...])
