@@ -359,7 +359,7 @@ sub find_cruft {
     }
     if (-l) {
         my $target = readlink($_);
-        my $dirname = dirname($_);
+        my $dirname = dirname($name);
         my $normalized;
         # If it is an absolute link, it escapes the root by default
         if ($target !~ m{\A / }xsm) {

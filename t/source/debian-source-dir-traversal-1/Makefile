@@ -11,6 +11,9 @@ all:
 	mkdir $(dir)/debian/source
 	echo 1.0 > $(dir)/debian/source/format
 	# link to index file for the lab entry
+	# - NB: This should not trigger source-contains-unsafe-symlink
+	#   because the link it self is not unsafe (i.e. it is safe
+	#   relative to unpacked, but unsafe relative to debfiles)
 	ln -s ../../index $(dir)/debian/source/git-patches
 	mkdir $(dir)/debian/patches
 	touch $(dir)/debian/patches/series

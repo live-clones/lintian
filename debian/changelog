@@ -34,6 +34,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
       (Closes: #706166)
     + [NT] Flag all absolute symlinks in source packages as
       "unsafe".  (Closes: #697164)
+    + [NT] Fix false-positive source-contains-unsafe-symlink
+      for symlinks ascending one or more levels without escaping
+      the package root.  Thanks to Michael Schutte for the
+      report and the patch.  (Closes: #707742)
   * checks/debhelper{,.desc}:
     + [NT] Retire some tags that is no longer relevant in the
       Jessie development cycle.
