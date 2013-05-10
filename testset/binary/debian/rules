@@ -72,7 +72,7 @@ binary-arch: build
 	echo boe > $(tmp)/usr/bar2
 	ln $(tmp)/usr/bar2 $(tmp)/usr/share/baz 
 
-	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=3000
+	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=4000
 
 	install -d debian/binary-data/DEBIAN
 	install -d debian/binary-data/usr/share/doc
