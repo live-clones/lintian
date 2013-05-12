@@ -85,17 +85,25 @@ for my $pkg (@core_packages) {
         my $name = $provides->{Name};
         # skip virtual-only packages
         next if (!$cache->{$name}{VersionList});
-        my $version = find_core_version($name);
-        next if !$version;
+        my $cpan_version = find_core_version($name);
 
-        # the underscore notates a CPAN development version;
-        # these may need special casing with some packages
-        $version =~ s/_/./g;
-        print "$name $version\n";
+        next if !$cpan_version;
+
+        # the number of digits is a pain
+        #  we use the current version in the Debian archive to determine
+        #  how many we need
+        # the epoch is easier, we just copy it
+
+        my ($epoch, $digits) = epoch_and_digits($name);
+        my $debian_version = cpan_version_to_deb($cpan_version, $epoch, $digits);
+
+        next if !$debian_version;
+
+        print "$name $debian_version\n";
     }
 }
 
-# look up the version of a package in the core
+# look up the CPAN version of a package in the core
 sub find_core_version {
     my $module = shift;
     my $ret;
@@ -116,6 +124,58 @@ sub find_core_version {
     }
 
     return $ret;
+}
+
+sub cpan_version_to_deb {
+        my $cpan_version = shift;
+        my $epoch = shift || '';
+        my $digits = shift;
+
+        # cpan_version
+        #         digits
+        #                result
+        # 1.15_02,  2 => 1.15.02
+        # 1.15_02,  4 => 1.1502
+        # 1.15_02,  0 => 1.15.02
+        #
+        # 1.15_021, 2 => 1.15.021
+        # 1.15_021, 4 => 1.1500.021
+        # 1.15_021, 0 => 1.15.021
+        #
+        # 1.15,     1 => 1.15
+        # 1.15,     2 => 1.15
+        # 1.15,     4 => 1.1500
+        # 1.15,     0 => 1.15
+
+        # split 1.15_02 to (1, 15, 02)
+        my ($major, $prefix, $suffix) = ($cpan_version =~ /^(\d+\.)(\d+)(?:_(\d+))?$/);
+        die("no match with $cpan_version?") if !$major;
+
+        $suffix ||= '';
+        if (length($suffix) + length($prefix) == $digits) {
+                $prefix .= $suffix;
+                $suffix = '';
+        }
+        if (length($suffix) + length($prefix) < $digits) {
+                $prefix .= '0' while length($prefix) < $digits;
+        }
+        $suffix = ".$suffix" if $suffix ne '';
+        $epoch.$major.$prefix.$suffix;
+}
+
+# Given a Debian binary package name, look up its latest version
+# and return its epoch (including the colon) if available, and
+# the number of digits in its decimal part
+sub epoch_and_digits {
+    my $p = shift;
+    return (0, 0) if !exists $cache->{$p};
+    return (0, 0) if !exists $cache->{$p}{VersionList}; # virtual package
+    my $latest = bin_latest($cache->{$p});
+    my $v = $latest->{VerStr};
+    $v =~ s/\+dfsg//;
+    my ($epoch, $major, $prefix, $suffix, $revision) =
+        ($v =~ /^(?:(\d+:))?((?:\d+\.))+(\d+)(?:_(\d+))?(-[^-]+)$/);
+    return ($epoch, length $prefix);
 }
 
 sub bin_latest {
