@@ -8,20 +8,20 @@
 # in the lintian source tree
 #
 # last updated for PERL_VERSION=5.014002
-libtime-piece-perl 1.20.01
+libsocket-perl 1.940
 libthreads-shared-perl 1.37
 libthreads-perl 1.83
 libsys-syslog-perl 0.27
 libio-compress-perl 2.033
+libio-compress-base-perl 2.033
 libencode-perl 2.42.01
 libdigest-sha-perl 5.61
 libdevel-dprof-perl 20110228.00
 libcompress-raw-zlib-perl 2.033
 libcompress-raw-bzip2-perl 2.033
 libversion-requirements-perl 0.101020
-libversion-perl 0.88
+libversion-perl 1:0.8800
 libunicode-collate-perl 0.73
-libtime-local-perl 1.2000
 libthread-queue-perl 2.12
 libtest-simple-perl 0.98
 libtest-harness-perl 3.23
@@ -29,22 +29,16 @@ libshell-perl 0.72.01
 libpod-simple-perl 3.16
 libperl-ostype-perl 1.002
 libparse-cpan-meta-perl 1.4401
-libparent-perl 0.225
-libmodule-pluggable-perl 3.9
 libmodule-metadata-perl 1.000004
 libmodule-load-conditional-perl 0.44
 libmodule-corelist-perl 2.49.02
-libmodule-build-perl 0.3800
+libmodule-build-perl 0.380000
 libmath-complex-perl 1.56
 libmath-bigint-perl 1.994
-liblocale-maketext-simple-perl 0.21
 libjson-pp-perl 2.27105
 libhttp-tiny-perl 0.012
-libfile-temp-perl 0.22
-libfile-spec-perl 3.33
-libfile-path-perl 2.08.01
-libextutils-parsexs-perl 2.2210
-libextutils-command-perl 1.17
+libfile-spec-perl 3.3300
+libextutils-parsexs-perl 2.221000
 libextutils-cbuilder-perl 0.280203
 libdigest-perl 1.16
 libcpan-meta-yaml-perl 0.003
