@@ -9,7 +9,7 @@ Package: {$srcpkg}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
  conflict-dep, gawk | awk, new-package | xbase-clients, {$srcpkg},
- gaim, emacs21, emacs22, makedev, libfile-temp-perl (>= 0.18),
+ gaim, emacs21, emacs22, makedev, libthreads-shared-perl (>= 1.29),
  packaging-dev, xfont-a
 Breaks: package-without-version, {$srcpkg} (<< 0.1),
  replaced-wo-version
