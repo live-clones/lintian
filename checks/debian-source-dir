@@ -72,14 +72,13 @@ if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
 }
 
 if ( ! -l $dsrc && -d $dsrc ) {
-    opendir(DEBSRC, $dsrc);
-    my $file;
-    while ($file = readdir(DEBSRC)) {
+    opendir(my $dirfd, $dsrc);
+    while (my $file = readdir($dirfd)) {
         next if $file eq '.' or $file eq '..';
         tag 'unknown-file-in-debian-source', $file
             unless $KNOWN_FILES->known($file);
     }
-    closedir(DEBSRC);
+    closedir($dirfd);
 }
 
 }
