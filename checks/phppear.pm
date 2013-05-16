@@ -32,11 +32,18 @@ sub run {
     # PEAR or PECL package
     my $package_xml = $info->index('package.xml');
     my $package2_xml = $info->index('package2.xml');
+    my $bdepends = $info->relation('build-depends');
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
-        my $bdepends = $info->relation('build-depends');
         if (!$bdepends->implies('pkg-php-tools')) {
             tag 'pear-package-without-pkg-php-tools-builddep';
+        }
+    }
+    # PEAR channel
+    my $channel_xml = $info->index('channel.xml');
+    if (defined($channel_xml)) {
+        if (!$bdepends->implies('pkg-php-tools')) {
+            tag 'pear-channel-without-pkg-php-tools-builddep';
         }
     }
     return;

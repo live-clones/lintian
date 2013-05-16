@@ -15,3 +15,12 @@ Info: The package contains an package.xml or package2.xml file but doesn't
  pkg-php-tools is the recommended tool for building PEAR and PECL packages. For
  more information, install it and read the included README.Debian.
 
+Tag: pear-channel-without-pkg-php-tools-builddep
+Severity: normal
+Certainty: possible
+Info: The package contains an channel.xml file but doesn't build-depend on
+ pkg-php-tools.
+ .
+ pkg-php-tools is the recommended tool for building PEAR and PECL packages. For
+ more information, install it and read the included README.Debian.
+
