@@ -37,6 +37,22 @@ sub run {
         # Checking source builddep
         if (!$bdepends->implies('pkg-php-tools')) {
             tag 'pear-package-without-pkg-php-tools-builddep';
+        } else {
+            # Checking first binary relations
+            my @binaries = $info->binaries;
+            my $binary = $binaries[0];
+            my $depends = $info->binary_relation($binary, 'depends');
+            my $recommends = $info->binary_relation($binary, 'recommends');
+            my $breaks = $info->binary_relation($binary, 'breaks');
+            if (!$depends->implies('${phppear:Debian-Depends}')) {
+                tag 'pear-package-but-missing-dependency', 'Depends';
+            }
+            if (!$recommends->implies('${phppear:Debian-Recommends}')) {
+                tag 'pear-package-but-missing-dependency', 'Recommends';
+            }
+            if (!$breaks->implies('${phppear:Debian-Breaks}')) {
+                tag 'pear-package-but-missing-dependency', 'Breaks';
+            }
         }
     }
     # PEAR channel
