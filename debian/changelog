@@ -89,6 +89,13 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Accept Lintian::Path objects to unpacked and control.
   * lib/Lintian/Path.pm:
     + [NT] Rename link_resolved to link_normalized.
+  * lib/Lintian/Unpacker.pm:
+    + [NT] On platform that support it, change the "name" of the
+      process running the collection.  This makes it easier to
+      see what collections are currently being run (like in the
+      versions prior to 2.5.12).  For platforms, where it is
+      not possible to change the name of a running process, the
+      unpack jobs will simply be named "lintian" like its parent.
   * lib/Lintian/Util.pm:
     + [NT] Fix a race condition in touch_file.
     + [NT] Add sanity check in perm2oct for bad permission

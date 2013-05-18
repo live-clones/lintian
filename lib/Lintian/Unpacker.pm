@@ -440,6 +440,13 @@ sub process_tasks {
                     my $ret = 0;
                     if ($cs->interface ne 'exec') {
                         # With a non-exec interface, let L::CollScript handle it
+
+                        # For platforms that support it, try to change our name to
+                        # the collection being run (like how it would be with the
+                        # exec case below).  For platforms that do not support,
+                        # the child process will just keep its name as "lintian".
+                        $0 = $coll;
+
                         eval {
                             $cs->collect ($pkg_name, $pkg_type, $base);
                         };
