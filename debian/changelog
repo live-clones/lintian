@@ -52,6 +52,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/group-checks.desc:
     + [NT] Add missing semi-colon in tag description.  Thanks to
       Andrey Rahmatullin for the report.  (Closes: #706827)
+  * checks/init.d:
+    + [NT] Add missing import of utility function that could cause
+      Lintian to crash in some cases.
   * checks/po-debconf{,.desc}:
     + [NT] Remove tests for commands that are provided by
       Lintian's dependencies.
