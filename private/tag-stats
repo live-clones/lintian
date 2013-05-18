@@ -70,7 +70,7 @@ for my $check (readdir($checkdir)) {
         push(@{$stats{type}{both}{$code}{$severity}{$certainty}}, $name);
 
         for my $need (@needs) {
-            $stats{needs}{$severity}{$certainty}{$_} = 1;
+            $stats{needs}{$severity}{$certainty}{$need} = 1;
         }
 
         $num_tags++;
