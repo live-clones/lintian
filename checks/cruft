@@ -488,9 +488,9 @@ sub find_cruft {
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
-                            when(m/with $s+ (?:the$s+)? no $s+ Invariant $s+ Sections,?
-                                        $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-Cover $s+ Texts,? $s+ and
-                                        $s+ (?:with$s+)? (?:the$s+)? no $s+ Back-Cover $s+ Texts/xiso) {
+                            when(m/with $s+ (?:the$s+)? no $s+ Invariant $s+ Sections?,?
+                                        $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-Cover $s+ Texts?,? $s+ and
+                                        $s+ (?:with$s+)? (?:the$s+)? no $s+ Back-Cover $s+ Texts?/xiso) {
                                 # no invariant
                             }
                             when(m/with $s+ the $s+ Invariant $s+ Sections $s+ being
