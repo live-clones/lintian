@@ -35,8 +35,7 @@ foreach my $check (glob ("$root/checks/*.desc")){
     my ($header, undef) = read_dpkg_control($check);
     my $cname = $header->{'check-script'};
     fail "$check missing check-script\n" unless defined $cname;
-    # FIXME, enable apache2 when apache2.4 is uploaded to sid.
-    push @checks, $cname unless $cname eq 'apache2';
+    push @checks, $cname;
 }
 
 @fatal = read_tags ('private/build-time-data/ftp-master-fatal');
@@ -55,11 +54,6 @@ generate_profile('debian/main', {
 generate_profile('debian/extra-hardening', {
     'Extends' => 'debian/main',
     'Enable-Tags' => ['hardening-no-stackprotector']
-    });
-
-generate_profile('debian/extra-apache2', {
-    'Extends' => 'debian/main',
-    'Enable-Tags-From-Check' => ['apache2'],
     });
 
 generate_profile('debian/ftp-master-auto-reject', {

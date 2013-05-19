@@ -116,9 +116,14 @@ lintian (2.5.13) UNRELEASED; urgency=low
       The latter has slightly different return values in some
       cases.
 
+  * profiles/debian/extra-apache2.profile:
+    + [NT] Removed, merged into debian/main.profile.
   * profiles/debian/ftp-master-auto-reject.profile:
     + [NT] Include md5sums-mismatch as an overridable tag.
       (See #688300)
+  * profiles/debian/main.profile:
+    + [NT] Include the apache2 check.  Thanks to Arno Töll for
+      the report.  (Closes: #708943)
 
   * reporting/harness:
     + [NT] Stop exporting ENV variables that lintian no longer
