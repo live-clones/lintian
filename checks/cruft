@@ -484,7 +484,16 @@ sub find_cruft {
                          A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
-                        my $s = '(?:\s|\@c|[%\*]|\n[-\+!<>]|\n\.\\\"|<br\s*/?>)';
+                        my $s = qr{(?:
+                          \s          |  # regular space(s)
+                          \@c         |  # Tex info comment
+                          [%\*\"]     |  # String, C-style comment/javadoc indent and quotes for strings
+                          \"\s*,      |  # String array (e.g. "line1",\n"line2")
+                          ,\s*\"      |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
+                          \n[-\+!<>]  |  # diff/patch lines
+                          \n\.\\\"    |  # man comments
+                          <br\s*/?>      # (X)HTML line breaks
+                        )}xiso;
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
