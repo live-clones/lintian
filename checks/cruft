@@ -485,21 +485,22 @@ sub find_cruft {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
                         my $s = qr{(?:
-                          \s          |  # regular space(s)
-                          \@c         |  # Tex info comment
-                          [%\*\"\|]   |  # String, C-style comment/javadoc indent, quotes for strings, pipe in some txt
-                          \"\s*,      |  # String array (e.g. "line1",\n"line2")
-                          ,\s*\"      |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
-                          \\n         |  # Verbatim \n in string array
-                          \n[-\+!<>]  |  # diff/patch lines
-                          \n\.\\\"    |  # man comments
-                          <br\s*/?>      # (X)HTML line breaks
+                          \s              |  # regular space(s)
+                          \@c             |  # Tex info comment
+                          [%\*\"\|]       |  # String, C-style comment/javadoc indent, quotes for strings, pipe in some txt
+                          \"\s*,          |  # String array (e.g. "line1",\n"line2")
+                          ,\s*\"          |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
+                          \\n             |  # Verbatim \n in string array
+                          \n[-\+!<>]      |  # diff/patch lines
+                          \n\.\\\"        |  # man comments
+                          <br\s*/?>       |  # (X)HTML line breaks
+                          \(\*note.*?::\) |  # info file note
                         )}xiso;
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
-                            when(m/no $s+ Invariant $s+ Sections?,?
-                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-$s*Cover $s+ Texts?,? $s+ (?:and$s+)?
+                            when(m/no $s* Invariant $s+ Sections? $s* ,?
+                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-$s*Cover $s+ Texts? $s* ,? $s+ (?:and$s+)?
                                        (?:with$s+)? (?:the$s+)? no $s+ Back-$s*Cover $s+ Texts?/xiso) {
                                 # no invariant
                             }
