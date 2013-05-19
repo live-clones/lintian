@@ -490,6 +490,7 @@ sub find_cruft {
                           [%\*\"\|]   |  # String, C-style comment/javadoc indent, quotes for strings, pipe in some txt
                           \"\s*,      |  # String array (e.g. "line1",\n"line2")
                           ,\s*\"      |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
+                          \\n         |  # Verbatim \n in string array
                           \n[-\+!<>]  |  # diff/patch lines
                           \n\.\\\"    |  # man comments
                           <br\s*/?>      # (X)HTML line breaks
