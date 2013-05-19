@@ -488,10 +488,15 @@ sub find_cruft {
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
-                            when(m/(?:the$s+)? no $s+ Invariant $s+ Sections?,?
-                                    $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-Cover $s+ Texts?,? $s+ (?:and$s+)?
-                                        (?:with$s+)? (?:the$s+)? no $s+ Back-Cover $s+ Texts?/xiso) {
+                            when(m/no $s+ Invariant $s+ Sections?,?
+                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-Cover $s+ Texts?,? $s+ (?:and$s+)?
+                                       (?:with$s+)? (?:the$s+)? no $s+ Back-Cover $s+ Texts?/xiso) {
                                 # no invariant
+                            }
+                            when(m/no $s+ Invariant $s+ Sections?,?
+                                      $s+ (?:no$s+)? Front-? $s+ or
+                                      $s+ (?:no$s+)? Back-Cover $s+ Texts?/xiso) {
+                                # no invariant variant (dict-foldoc)
                             }
                             when(m/with $s+ the $s+ Invariant $s+ Sections $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST $s+ THEIR $s+TITLES (?:\}|<\/var>)? $s* ,?
