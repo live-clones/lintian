@@ -487,7 +487,7 @@ sub find_cruft {
                         my $s = qr{(?:
                           \s          |  # regular space(s)
                           \@c         |  # Tex info comment
-                          [%\*\"]     |  # String, C-style comment/javadoc indent and quotes for strings
+                          [%\*\"\|]   |  # String, C-style comment/javadoc indent, quotes for strings, pipe in some txt
                           \"\s*,      |  # String array (e.g. "line1",\n"line2")
                           ,\s*\"      |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
                           \n[-\+!<>]  |  # diff/patch lines
