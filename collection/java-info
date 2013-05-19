@@ -78,7 +78,10 @@ FILE:
 foreach my $file ($info->sorted_index) {
     my $ftype = $info->index ($file);
     next unless $ftype->is_file;
-    next unless $info->file_info ($file) =~ m/Zip archive/o;
+    # Wheezy's version of file calls "jar files" for "Zip archive".
+    # Newer versions seem to call them "Java Jar file".
+    next unless $info->file_info($file) =~ m/Java Jar file|Zip archive/o;
+
     if ($file =~ m#\S+\.jar$#i) {
         my $has_manifest = 0;
         my $manifest;
