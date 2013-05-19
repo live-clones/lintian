@@ -1,5 +1,6 @@
 E: cruft-gfdl-invariants source: license-problem-gfdl-invariants src/frontback.html
 E: cruft-gfdl-invariants source: license-problem-gfdl-invariants src/frontback.texi
 E: cruft-gfdl-invariants source: license-problem-gfdl-invariants src/invariant.txt
+E: cruft-gfdl-invariants source: license-problem-gfdl-invariants src/oldmanpagesgfdlproblem.1
 I: cruft-gfdl-invariants source: license-problem-gfdl-invariants-empty src/empty.texi
 I: cruft-gfdl-invariants source: license-problem-gfdl-invariants-empty src/emptybis.texi
