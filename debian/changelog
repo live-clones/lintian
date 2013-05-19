@@ -59,6 +59,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/init.d:
     + [NT] Add missing import of utility function that could cause
       Lintian to crash in some cases.
+  * checks/menu-format:
+    + [NT] Fix use of uninitialized variable when menu file uses a
+      section of "/".  (Closes: #708755)
   * checks/po-debconf{,.desc}:
     + [NT] Remove tests for commands that are provided by
       Lintian's dependencies.

@@ -436,7 +436,8 @@ sub verify_line {
     # Sanitize the section tag
     my $section = $vals{'section'};
     $section =~ tr:/:/:s;       # eliminate duplicate slashes. # Hallo emacs ;;
-    $section =~ s:/$::;         # remove trailing slash.
+    $section =~ s:/$::          # remove trailing slash
+        unless $section eq '/'; # - except if $section is '/'
 
     # Be sure the command is provided by the package.
     my ($okay, $command) = verify_cmd($fullname, $linecount, $vals{'command'},
