@@ -484,7 +484,7 @@ sub find_cruft {
                          A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
-                        my $s = '(?:\s|\@c|%|\n[-\+!<>]|<br\s*/?>)';
+                        my $s = '(?:\s|\@c|%|\n[-\+!<>]|\n\.\\\"|<br\s*/?>)';
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
