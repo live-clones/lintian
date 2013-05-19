@@ -494,6 +494,7 @@ sub find_cruft {
                           \n[-\+!<>]      |  # diff/patch lines
                           \n\.\\\"        |  # man comments
                           <br\s*/?>       |  # (X)HTML line breaks
+                          </?link.*?>     |  # xml link
                           \(\*note.*?::\) |  # info file note
                         )}xiso;
                         # GFDL license, assume it is bad unless it
