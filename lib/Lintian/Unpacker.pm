@@ -445,7 +445,7 @@ sub process_tasks {
                         # the collection being run (like how it would be with the
                         # exec case below).  For platforms that do not support,
                         # the child process will just keep its name as "lintian".
-                        $0 = $coll;
+                        $0 = $coll;  ## no critic (Variables::RequireLocalizedPunctuationVars)
 
                         eval {
                             $cs->collect ($pkg_name, $pkg_type, $base);
