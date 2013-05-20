@@ -73,7 +73,7 @@ our $INITD_NAME_REGEX = qr/[\w\.\+][\w\-\.\+]*/;
 
 sub run {
 
-my (undef, undef, $info) = @_;
+my ($pkg, undef, $info) = @_;
 
 my $initd_dir = $info->lab_data_path ('init.d');
 
@@ -181,7 +181,7 @@ foreach my $initd_file (keys %initd_postinst) {
     # Check if file exists in package and check the script for other issues if
     # it was included in the package.
     if (-f $initd_path) {
-        check_init ($initd_file, $initd_path);
+        check_init($initd_file, $initd_path, $pkg);
     } elsif (not -l $initd_path) {
         tag 'init.d-script-not-included-in-package', "etc/init.d/$initd_file";
     }
@@ -210,7 +210,7 @@ for my $script (readdir($dirfd)) {
     # that we get more complete Lintian coverage in the first pass.
     unless ($initd_postinst{$script}) {
         tag $tagname, "etc/init.d/$script";
-        check_init ($script, $script_path) if -f $script_path;
+        check_init($script, $script_path, $pkg) if -f $script_path;
     }
 }
 closedir($dirfd);
@@ -218,7 +218,7 @@ closedir($dirfd);
 }
 
 sub check_init {
-    my ($initd_file, $initd_path) = @_;
+    my ($initd_file, $initd_path, $pkg) = @_;
 
     # In an upstart system, such as Ubuntu, init scripts are symlinks to
     # upstart-job.  It doesn't make sense to check the syntax of upstart-job,
@@ -290,6 +290,13 @@ sub check_init {
         # text and the arguments to echo, etc.
         $needs_fs{'remote'} = 1 if ($l =~ m,^[^\#]*/usr/,);
         $needs_fs{'local'}  = 1 if ($l =~ m,^[^\#]*/var/,);
+
+        # /lib/init/* scripts are only for use by init
+        if ($pkg ne 'initscripts') {
+            if ($l =~ m,^[^\#]*/lib/init/,) {
+                tag 'init.d-script-call-internal-API', "etc/init.d/${initd_file}";
+            }
+        }
 
         while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//o) {
             $tag{$1} = 1;

@@ -13,8 +13,6 @@ set -e
 # Description: The short description pretty much covers it.
 ### END INIT INFO
 
-. /lib/init/vars.sh
-
 case "$1" in
     start|stop|force-reload|restart|status|*)
 	echo hello world

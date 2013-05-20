@@ -70,9 +70,12 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/group-checks.desc:
     + [NT] Add missing semi-colon in tag description.  Thanks to
       Andrey Rahmatullin for the report.  (Closes: #706827)
-  * checks/init.d:
+  * checks/init.d{,.desc}:
     + [NT] Add missing import of utility function that could cause
       Lintian to crash in some cases.
+    + [NT] Add check for uses of /lib/init in maintainer scripts.
+      Thanks to Josh Triplett for the report and to Bastien
+      Roucariès for the patch.  (Closes: #670092)
   * checks/menu-format:
     + [NT] Fix use of uninitialized variable when menu file uses a
       section of "/".  (Closes: #708755)

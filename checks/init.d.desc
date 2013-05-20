@@ -366,3 +366,13 @@ Info: The given init script declares a dependency on a virtual facility
  If the dependency can not be satisfied upon the package's
  installation, insserv will refuse the activation of the init.d script.
 Ref: http://wiki.debian.org/LSBInitScripts
+
+Tag: init.d-script-call-internal-API
+Severity: normal
+Certainty: possible
+Info: The given init script call an internal API under
+ <tt>/lib/init</tt>.  <tt>/lib/init/rw</tt> has gone away, and the
+ scripts in <tt>/lib/init/*.sh</tt> represent internal implementation
+ details of initscripts.  They are not public API for other packages
+ to use.  Nonetheless, some packages incorrectly reference those
+ scripts, notably /lib/init/vars.sh.

@@ -10,8 +10,6 @@ set -e
 # Default-Stop: 0 6
 ### END INIT INFO
 
-. /lib/init/vars.sh
-
 case "$1" in
     start|stop|force-reload|restart|status|*)
 	echo hello world

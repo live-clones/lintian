@@ -43,3 +43,13 @@ Description: {$description} -- sourcing without test
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
+
+Package: {$srcpkg}-script-call-internal-api
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} -- sourcing internal API
+ Test a check for . /lib/init sourcing that is use of internal API
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
