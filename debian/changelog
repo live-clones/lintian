@@ -38,6 +38,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
       for symlinks ascending one or more levels without escaping
       the package root.  Thanks to Michael Schutte for the
       report and the patch.  (Closes: #707742)
+    + [NT] Add a series of patches from Bastien Roucariès to
+      reduce the number of false positives in the GDFL related
+      checks.  (Closes: #708957, #708881)
   * checks/debhelper{,.desc}:
     + [NT] Retire some tags that is no longer relevant in the
       Jessie development cycle.
