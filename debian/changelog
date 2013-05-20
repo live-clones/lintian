@@ -87,6 +87,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Add jessie and remove lenny.
   * data/debhelper/dh_{addons,commands}-manual:
     + [NT] Remove entries/versions that are no longer relevant.
+  * data/fields/perl-provides
+    + [NT] Refresh against sid.  (Closes: #708178)
   * data/spelling/corrections:
     + [NT] Add correction for unnecessarily.  Thanks to Guillem
       Jover for the suggestion.  (Closes: #706241)
@@ -121,6 +123,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Replace resolve_pkg_path with to normalize_pkg_path.
       The latter has slightly different return values in some
       cases.
+
+  * private/refresh-perl-provides:
+    + [NT] Apply patch from Niko Tyni to improve Lintian's
+      data file about Perl modules provided by perl-base.
 
   * profiles/debian/extra-apache2.profile:
     + [NT] Removed, merged into debian/main.profile.
