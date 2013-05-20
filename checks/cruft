@@ -528,6 +528,15 @@ sub find_cruft {
                                 tag 'license-problem-gfdl-invariants-empty', $name;
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
                             }
+                            # fix #708957 about FDL entities in template
+                            when(m/with $s+ \&FDLInvariantSections;, $s+ with $s+ \&FDLFrontCoverText;,
+                                        $s+ and $s+ with $s+ \&FDLBackCoverText;/xiso)
+                            {
+                                unless($name =~ m/\/customization\/[\w-]+\/entities\/[\w-]+\.docbook$/) {
+                                    tag 'license-problem-gfdl-invariants', $name;
+                                    $licenseproblemhash{'gfdl-invariants'} = 1;
+                                }
+                            }
                             default {
                                 tag 'license-problem-gfdl-invariants', $name;
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
