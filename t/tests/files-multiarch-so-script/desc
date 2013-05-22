@@ -1,7 +1,0 @@
-Testname: files-multiarch-so-script
-Sequence: 6000
-Version: 1.0
-Description: Multiarch-related tests with "so" script
-Architecture: i386 amd64
-Test-Against:
- missing-pre-dependency-on-multiarch-support

@@ -7,6 +7,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + Removed:
       - debhelper-maintscript-needs-versioned-build-depends
       - debhelper-script-needs-versioned-build-depends
+      - missing-pre-dependency-on-multiarch-support
 
   * checks/*:
     + [NT] Use Lintian::Path objects as arguments to unpacked
@@ -56,6 +57,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
       to "Vcs-*" fields that the tags are based on a data list
       (and is not a result of a HTTP request while checking the
       package).
+  * checks/files{,.desc}:
+    + [JW,NT] Drop missing-pre-dependency-on-multiarch-support
+      now that multiarch-support is in stable.  (Closes: #709121)
   * checks/group-checks.desc:
     + [NT] Add missing semi-colon in tag description.  Thanks to
       Andrey Rahmatullin for the report.  (Closes: #706827)

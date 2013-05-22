@@ -730,17 +730,6 @@ foreach my $file ($info->sorted_index) {
         }
     }
 
-    if ($type ne 'udeb' && !$index_info->is_symlink && $pkg !~ m/^libc[0-9]/o &&
-            $file =~ m,^(?:usr/)?lib/([^/]+)/lib[^/]+\.so(?:\.[^/]+)?$,o) {
-        my $subdir = $1;
-        # Skip if it not an ELF file (probably a .so script)
-        next unless ($info->file_info ($file)//'') =~ m/\bELF\b/o;
-        if ($TRIPLETS->known($subdir) && $arch eq $TRIPLETS->value($subdir)) {
-            my $dep = $info->relation('pre-depends');
-            tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
-        }
-    }
-
     # ---------------- .pyc/.pyo (compiled python files)
     #  skip any file installed inside a __pycache__ directory
     #  - we have a separate check for that directory.

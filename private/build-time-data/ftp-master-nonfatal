@@ -17,7 +17,6 @@ install-info-used-in-maintainer-script
 md5sum-mismatch
 missing-build-dependency
 missing-dependency-on-libc
-missing-pre-dependency-on-multiarch-support
 mknod-in-maintainer-script
 no-shlibs-control-file
 non-etc-file-marked-as-conffile

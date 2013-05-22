@@ -5,4 +5,3 @@ Description: Test of a correct multiarch package
 Architecture: i386 amd64
 Test-Against:
  triplet-dir-and-architecture-mismatch
- missing-pre-dependency-on-multiarch-support
