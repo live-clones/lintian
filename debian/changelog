@@ -87,7 +87,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Add jessie and remove lenny.
   * data/debhelper/dh_{addons,commands}-manual:
     + [NT] Remove entries/versions that are no longer relevant.
-  * data/fields/perl-provides
+  * data/fields/perl-provides:
     + [NT] Refresh against sid.  (Closes: #708178)
   * data/spelling/corrections:
     + [NT] Add correction for unnecessarily.  Thanks to Guillem
