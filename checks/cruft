@@ -464,6 +464,11 @@ sub find_cruft {
             push @queue, $window;
             $block =  join '', @queue;
 
+            # Remove formatting commonly added by pod2man
+            $block =~ s{ \\ & }{}gxsm;
+            $block =~ s{ \\s (?:0|-1) }{}gxsm;
+            $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+
             given ($block) {
                 # json evil license
                 when (m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/is) {
@@ -480,7 +485,7 @@ sub find_cruft {
                 # if the "redeeming" part is in the next block.
                 #
                 # See cruft-gfdl-fp-sliding-win for the test case
-                when(m/GNU (?:\s+|\s*<\/span>\s*|\s*\\s\d\s*|\s*\}\s+)? Free \s+ Documentation \s+ License (?'gfdlsections'.{0,1024})
+                when(m/GNU (?:\s+|\s*<\/span>\s*|\s*\}\s+)? Free \s+ Documentation \s+ License (?'gfdlsections'.{0,1024})
                          A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
