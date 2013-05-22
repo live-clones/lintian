@@ -103,6 +103,12 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Fix a number of spelling mistakes in the POD.
   * lib/Lintian/Collect/{Package,Binary}.pm:
     + [NT] Accept Lintian::Path objects to unpacked and control.
+  * lib/Lintian/Collect/Source.pm:
+    + [NT] Provide a "source" specific is_non_free method that reads
+      the "Section"-field from d/control instead of the .dsc.  This
+      fixes false-positives "problematic licenses" for non-free
+      packages.  Thanks to Bastien Roucariès for the report.
+      (Closes: #709041)
   * lib/Lintian/Path.pm:
     + [NT] Rename link_resolved to link_normalized.
   * lib/Lintian/Unpacker.pm:

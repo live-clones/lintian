@@ -619,6 +619,23 @@ sub index {
     return $self->_fetch_index_data('index', 'index', undef, $file);
 }
 
+=item is_non_free
+
+Returns a truth value if the package appears to be non-free (based on
+the section field; "non-free/*" and "restricted/*")
+
+Needs-Info requirements for using I<is_non_free>: L</source_field ([FIELD[, DEFAULT]])>
+
+=cut
+
+sub is_non_free {
+    my ($self) = @_;
+    return $self->{is_non_free} if exists $self->{is_non_free};
+    $self->{is_non_free} = 0;
+    $self->{is_non_free} = 1
+        if $self->source_field('section', 'main') =~ m,^(?:non-free|restricted|multiverse)/,;
+    return $self->{is_non_free};
+}
 
 =back
 
