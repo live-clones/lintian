@@ -480,7 +480,7 @@ sub find_cruft {
                 # if the "redeeming" part is in the next block.
                 #
                 # See cruft-gfdl-fp-sliding-win for the test case
-                when(m/GNU (?:\s+|\s*<\/span>\s*|\s*\\s\d\s*)? Free \s+ Documentation \s+ License (?'gfdlsections'.{0,1024})
+                when(m/GNU (?:\s+|\s*<\/span>\s*|\s*\\s\d\s*|\s*\}\s+)? Free \s+ Documentation \s+ License (?'gfdlsections'.{0,1024})
                          A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
