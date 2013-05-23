@@ -60,6 +60,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [JW,NT] Drop missing-pre-dependency-on-multiarch-support
       now that multiarch-support is in stable.  (Closes: #709121)
+    + [JW] Fix typo in a tag description.  (Closes: #709455)
   * checks/group-checks.desc:
     + [NT] Add missing semi-colon in tag description.  Thanks to
       Andrey Rahmatullin for the report.  (Closes: #706827)
