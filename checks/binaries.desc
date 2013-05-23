@@ -324,7 +324,7 @@ Ref: http://wiki.debian.org/Hardening
 
 Tag: hardening-no-fortify-functions
 Severity: normal
-Certainty: possible
+Certainty: wild-guess
 Info: This package provides an ELF binary that lacks the use of fortified
  libc functions. Either there are no potentially unfortified functions
  called by any routines, all unfortified calls have already been fully

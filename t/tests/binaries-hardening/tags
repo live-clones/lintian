@@ -1,3 +1,3 @@
+I: binaries-hardening: hardening-no-fortify-functions usr/bin/weak
 I: binaries-hardening: hardening-no-stackprotector usr/bin/weak
-W: binaries-hardening: hardening-no-fortify-functions usr/bin/weak
 W: binaries-hardening: hardening-no-relro usr/bin/weak

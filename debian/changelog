@@ -16,6 +16,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [RA] Do not complain about kernel modules with no shared
       library dependency information.  Patch from Guillem Jover.
       (Closes: #706242)
+    + [NT] Demote the certainty of hardening-no-fortify-functions
+      to "wild-guess".  (Closes: #709415)
   * checks/changes:
     + [NT] Recognise "<dist>-backports-sloppy" as a valid
       distribution.  Thanks to Romain Francoise for the
