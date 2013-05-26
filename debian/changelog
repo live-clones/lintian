@@ -50,7 +50,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Retire some tags that is no longer relevant in the
       Jessie development cycle.
     + [NT] Apply patch from Luca Falavigna to detect uses of the
-      depreacated tool, dh_python.  (Closes: #709615)
+      deprecated tool, dh_pysupport.  (Closes: #709615)
   * checks/description:
     + [NT] Skip extended-description-is-probably-too-short
       for -dbg packages.  Thanks to Paul Wise for the suggestion.
