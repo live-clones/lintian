@@ -11,8 +11,8 @@ use Test::More;
 eval 'use Test::MinimumVersion';
 plan skip_all => 'Test::MinimumVersion required to run this test' if $@;
 
-# sarge was released with 5.8.4, etch with 5.8.8, lenny with 5.10.0
-our $REQUIRED = 'v5.10.0';
+# squeeze => 5.10.1, Wheezy => 5.14.2
+our $REQUIRED = 'v5.14.2';
 
 our @PATHS = qw(checks collection frontend lib reporting private);
 
