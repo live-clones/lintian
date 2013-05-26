@@ -47,7 +47,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
       GDFL related checks.  (Closes: #708957, #708881, #709379,
       #709886)
   * checks/debhelper{,.desc}:
-    + [NT] Retire some tags that is no longer relevant in the
+    + [NT] Retire some tags that are no longer relevant in the
       Jessie development cycle.
     + [NT] Apply patch from Luca Falavigna to detect uses of the
       deprecated tool, dh_pysupport.  (Closes: #709615)
