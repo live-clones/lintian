@@ -104,6 +104,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Add correction for unnecessarily.  Thanks to Guillem
       Jover for the suggestion.  (Closes: #706241)
 
+  * debian/control:
+    + [NT] Remove irrelevant (versioned) dependencies that are now
+      trivially satisfied in stable.
   * debian/{postinst,prerm}:
     + [NT] Remove unused maintainer scripts now that stable's
       libc-bin provides a C.UTF-8.
