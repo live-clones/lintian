@@ -810,15 +810,6 @@ if ($debug) {
     $opt{'verbose'} = 0 unless defined $opt{'verbose'};
 }
 
-# Use our custom-generated locale for programs we call, if it's available.  We
-# first look in the Lintian root and then in /var/lib/lintian, which is the
-# standard location for the install-time-generated locale.
-if (-d "$opt{'LINTIAN_ROOT'}/locale/en_US.UTF-8") {
-    $ENV{LOCPATH} = "$opt{'LINTIAN_ROOT'}/locale";
-} elsif (-d '/var/lib/lintian/locale/en_US.UTF-8') {
-    $ENV{LOCPATH} = '/var/lib/lintian/locale';
-}
-
 $Lintian::Output::GLOBAL->verbosity_level ($opt{'verbose'});
 $Lintian::Output::GLOBAL->debug ($debug);
 $Lintian::Output::GLOBAL->color ($opt{'color'});

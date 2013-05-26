@@ -117,6 +117,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Add a section about how to avoid some common ways
       of introducing security issues.
 
+  * frontend/lintian:
+    + [NT] Ignore LINTIAN_ROOT/locale and /var/lib/lintian/locale.
+
   * lib/*:
     + [NT] Fix a number of spelling mistakes in the POD.
   * lib/Lintian/Collect/{Package,Binary}.pm:
@@ -147,6 +150,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Replace resolve_pkg_path with to normalize_pkg_path.
       The latter has slightly different return values in some
       cases.
+    + [NT] Avoid the LOCPATH dance to find the path to an UTF-8
+      locale now that stable's libc-bin provides C.UTF-8 for us.
 
   * private/refresh-perl-provides:
     + [NT] Apply patch from Niko Tyni to improve Lintian's

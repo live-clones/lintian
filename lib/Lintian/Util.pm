@@ -778,52 +778,21 @@ The list of whitelisted %ENV variables are:
  LOCPATH
  LC_ALL (*)
 
-(*) LC_ALL is a special case as clean_env will change its value using
-the following rules:
-
-
-If CLOC is given (and a truth value), clean_env will set LC_ALL to
-"C".
-
-Otherwise, clean_env sets LC_ALL to "C.UTF-8" or "en_US.UTF-8" by
-checking for the presence of the following paths (in preferred order):
-
- $ENV{LOCPATH}/C.UTF-8
- $ENV{LOCPATH}/en_US.UTF-8
- /usr/lib/locale/C.UTF-8
- /usr/lib/locale/en_US.UTF-8
-
-If none of these exists, LC_ALL is set to en_US.UTF-8 (as locales-all
-provides that locale without creating any paths in /usr/lib/locaale).
+(*) LC_ALL is a special case as clean_env will change its value to
+either "C.UTF-8" or "C" (if CLOC is given and a truth value).
 
 =cut
 
 sub clean_env {
     my ($cloc) = @_;
     my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
-    my @locales = qw(C.UTF-8 en_US.UTF-8);
     my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
     %ENV = %newenv;
+    $ENV{'LC_ALL'} = 'C.UTF-8';
 
     if ($cloc) {
         $ENV{LC_ALL} = 'C';
-        return;
     }
-
-    foreach my $locpath ($ENV{LOCPATH}, '/usr/lib/locale') {
-        if ($locpath && -d $locpath) {
-            foreach my $loc (@locales) {
-                if ( -d "$locpath/$loc" ) {
-                    $ENV{LC_ALL} = $loc;
-                    return;
-                }
-            }
-        }
-    }
-    # We could not find any valid locale so far - presumably we get our locales
-    # from "locales-all", so just set it to "en_US.UTF-8".
-    # (related bug: #663459)
-    $ENV{LC_ALL} = 'en_US.UTF-8';
 }
 
 =item perm2oct(PERM)

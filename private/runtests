@@ -53,31 +53,6 @@ fail(){
     exit 1
 }
 
-# In Wheezy (and newer) libc-bin provides a C.UTF-8 locale.
-# In Squeeze (and older) we either need locales-all or generate
-# an en_US.UTF-8 locale ourselves.
-if [ -e "/usr/lib/locale/C.UTF-8" ] ; then
-    echo "Using C.UTF-8 locale from /usr/lib/locale"
-    unset LOCPATH
-elif dpkg -l | grep -q ^"ii *locales-all " ; then
-    echo "Using en_US.UTF-8 locale from locales-all"
-    unset LOCPATH
-else
-    LOCPATH="$(pwd)/debian/test.locale"
-    export LOCPATH
-
-    # Apparently, it is not possible to generate a C.UTF-8 locale in
-    # Squeeze, so settle with an en_US.UTF-8 one.
-    if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
-        echo "Generating en_US.UTF-8 locale for the test suite"
-        mkdir -p "$LOCPATH"
-        localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias \
-            --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
-    else
-        echo "Using pre-generated en_US.UTF-8 locale in $LOCPATH"
-    fi
-fi
-
 if [ "${NEW_SUITE}" = 1 ] ; then
     t/runtests --dump-logs -k $PARALLEL_ARGS t "$TEST_WORK_DIR" "$@"
 fi
