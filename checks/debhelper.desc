@@ -98,6 +98,16 @@ Info: This package calls dh_pycentral in its <tt>debian/rules</tt> file.
  Lenny or older system, please ignore this warning.
 Ref: http://wiki.debian.org/Python/PyCentral2DhPython2
 
+Tag: dh_pysupport-is-obsolete
+Severity: normal
+Certainty: certain
+Info: This package calls dh_pysupport in its <tt>debian/rules</tt> file.
+ dh_pysupport is deprecated and has been replaced by dh_python2.
+ .
+ dh_python2 is available in Squeeze; if backporting the package to a
+ Lenny or older system, please ignore this warning.
+Ref: http://wiki.debian.org/Python/TransitionToDHPython2
+
 Tag: dh_installmanpages-is-obsolete
 Severity: normal
 Certainty: certain

@@ -4,6 +4,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + Added:
       - conffile-is-not-in-package
       - debconf-translation-using-general-list
+      - dh_pysupport-is-obsolete
     + Removed:
       - debhelper-maintscript-needs-versioned-build-depends
       - debhelper-script-needs-versioned-build-depends
@@ -48,6 +49,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * checks/debhelper{,.desc}:
     + [NT] Retire some tags that is no longer relevant in the
       Jessie development cycle.
+    + [NT] Apply patch from Luca Falavigna to detect uses of the
+      depreacated tool, dh_python.  (Closes: #709615)
   * checks/description:
     + [NT] Skip extended-description-is-probably-too-short
       for -dbg packages.  Thanks to Paul Wise for the suggestion.

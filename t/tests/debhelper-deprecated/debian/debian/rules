@@ -28,6 +28,7 @@ binary-indep:
 	-dh_python$(VERSION) # This should not
 	-dh_python-ply # neither should this
 	-dh_pycentral
+	-dh_pysupport
 # Check not warning about deprecated commands in optional portions, but
 # commands that have been toast for a long time are still warned about.
 ifneq "$(LENNY_BACKPORT)" "y"
