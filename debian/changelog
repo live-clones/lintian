@@ -43,7 +43,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
       report and the patch.  (Closes: #707742)
     + [NT] Add a series of patches from Bastien Roucariès to
       reduce the number of false positives and negatives in the
-      GDFL related checks.  (Closes: #708957, #708881, #709379)
+      GDFL related checks.  (Closes: #708957, #708881, #709379,
+      #709886)
   * checks/debhelper{,.desc}:
     + [NT] Retire some tags that is no longer relevant in the
       Jessie development cycle.

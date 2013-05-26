@@ -445,6 +445,7 @@ sub find_cruft {
     }
 
     return if $info->is_non_free; # (license issue does not apply to non-free)
+    return if $basename eq 'debian/changelog'; # (license string in debian/changelog are changelog)
 
     # test license problem is source file (only text file)
     if (-T $basename) {
