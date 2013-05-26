@@ -104,6 +104,13 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Add correction for unnecessarily.  Thanks to Guillem
       Jover for the suggestion.  (Closes: #706241)
 
+  * debian/{postinst,prerm}:
+    + [NT] Remove unused maintainer scripts now that stable's
+      libc-bin provides a C.UTF-8.
+  * debian/triggers:
+    + [NT] Remove unused trigger now that stable's libc-bin
+      provides a C.UTF-8.
+
   * doc/tutorial/**/*.pod:
     + [NT] Fix a number of spelling mistakes in the POD.
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
