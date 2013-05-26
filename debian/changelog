@@ -107,6 +107,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * debian/control:
     + [NT] Remove irrelevant (versioned) dependencies that are now
       trivially satisfied in stable.
+    + [NT] Recommend libautodie-perl (>= 2.18) and libperlio-gzip-perl
+      as these can greatly effect performance of Lintian.
   * debian/{postinst,prerm}:
     + [NT] Remove unused maintainer scripts now that stable's
       libc-bin provides a C.UTF-8.

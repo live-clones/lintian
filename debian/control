@@ -89,10 +89,11 @@ Depends: binutils,
          perl,
          t1utils,
          ${misc:Depends}
+Recommends: libautodie-perl (>= 2.18),
+            libperlio-gzip-perl,
 Suggests: binutils-multiarch,
           dpkg-dev,
           libhtml-parser-perl,
-          libperlio-gzip-perl,
           libtext-template-perl,
           xz-utils
 Multi-Arch: foreign
