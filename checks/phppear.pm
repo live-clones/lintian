@@ -68,6 +68,9 @@ sub run {
     if (defined($channel_xml)) {
         if (!$bdepends->implies('pkg-php-tools')) {
             tag 'pear-channel-without-pkg-php-tools-builddep';
+        } elsif (!$bdepends->implies('pkg-php-tools (>= 1.3~)')) {
+            tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                '(>= 1.3~)', 'for PEAR channels support';
         }
     }
     return;
