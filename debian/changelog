@@ -5,6 +5,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
       - conffile-is-not-in-package
       - debconf-translation-using-general-list
       - dh_pysupport-is-obsolete
+      - init.d-script-call-internal-API
     + Removed:
       - debhelper-maintscript-needs-versioned-build-depends
       - debhelper-script-needs-versioned-build-depends
