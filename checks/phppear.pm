@@ -53,6 +53,14 @@ sub run {
             if (!$breaks->implies('${phppear:Debian-Breaks}')) {
                 tag 'pear-package-but-missing-dependency', 'Breaks';
             }
+            # Checking overrides
+            my $overrides = $info->debfiles('pkg-php-tools-overrides');
+            if (-f $overrides) {
+                if (!$bdepends->implies('pkg-php-tools (>= 1~)')) {
+                    tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                        '(>= 1~)', 'for package name overrides';
+                }
+            }
         }
     }
     # PEAR channel
