@@ -655,7 +655,11 @@ $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 # {{{ Loading lintian's own libraries, parse config file and setup output
 
 # Include (only existsing) lib directories from @search_dirs in @INC
+# and LINTIAN_{INCLUDE,HELPER}_DIRS.
 
+$ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @search_dirs);
+$ENV{'LINTIAN_HELPER_DIRS'} = join(':',
+                                   grep { -d } map { "$_/helpers" } @search_dirs);
 unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
 
 require Lintian::Lab;

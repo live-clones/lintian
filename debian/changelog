@@ -124,6 +124,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [NT] Ignore LINTIAN_ROOT/locale and /var/lib/lintian/locale.
+    + [NT] Export LINTIAN_INCLUDE_DIRS and LINTIAN_HELPERS_DIR to
+      subprocesses.  These are ":"-separated lists of dirs used by
+      Lintian.  The first being a list of raw include dirs and the
+      second being a list of helpers dirs in these include dirs.
 
   * lib/*:
     + [NT] Fix a number of spelling mistakes in the POD.
@@ -157,6 +161,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
       cases.
     + [NT] Avoid the LOCPATH dance to find the path to an UTF-8
       locale now that stable's libc-bin provides C.UTF-8 for us.
+    + [NT] Add new function, locate_helper_tool, to find helper
+      tools.
 
   * private/refresh-perl-provides:
     + [NT] Apply patch from Niko Tyni to improve Lintian's

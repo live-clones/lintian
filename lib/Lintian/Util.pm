@@ -76,6 +76,7 @@ BEGIN {
                  normalize_pkg_path
                  parse_boolean
                  is_ancestor_of
+                 locate_helper_tool
                  $PKGNAME_REGEX),
                  @{ $EXPORT_TAGS{constants} }
     );
@@ -960,6 +961,47 @@ sub fail {
     }
     $! = 2; # set return code outside eval()
     croak $str;
+}
+
+=item locate_helper_tool(TOOLNAME)
+
+Given the name of a helper tool, returns the path to it.  The tool
+must be available in the "helpers" subdir of one of the "lintian root"
+directories used by Lintian.
+
+The tool name should follow the same rules as check names.
+Particularly, third-party checks should namespace their tools in the
+same way they namespace their checks.  E.g. "python/some-helper".
+
+If the tool cannot be found, this sub will cause a trappable error.
+
+=cut
+
+{
+    my %_CACHE = ();
+    sub locate_helper_tool {
+        my ($toolname) = @_;
+        if ($toolname =~ m{(?:\A|/) \.\. (?:\Z|/)}xsm) {
+            fail("$toolname is not a valid tool name");
+        }
+        return $_CACHE{$toolname} if exists $_CACHE{$toolname};
+
+        my $toolpath_str = $ENV{'LINTIAN_HELPER_DIRS'};
+        if (defined($toolpath_str)) {
+            # NB: We rely on LINTIAN_HELPER_DIRS to contain only
+            # absolute paths.  Otherwise we may return relative
+            # paths.
+            for my $dir (split(':', $toolpath_str)) {
+                my $tool = "$dir/$toolname";
+                next unless -f -x $tool;
+                $_CACHE{$toolname} = $tool;
+                return $tool;
+            }
+        }
+        $toolpath_str //= '<N/A>';
+        fail(sprintf('Cannot locate %s (search dirs: %s)',
+                     $toolname, $toolpath_str));
+    }
 }
 
 =item strip ([LINE])
