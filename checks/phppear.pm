@@ -23,6 +23,8 @@ package Lintian::phppear;
 use strict;
 use warnings;
 
+use autodie;
+
 use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
@@ -68,6 +70,29 @@ sub run {
         if (!$bdepends->implies('pkg-php-tools (>= 1.4~)')) {
             tag 'pear-package-feature-requires-newer-pkg-php-tools',
                 '(>= 1.4~)', 'for package2.xml';
+        }
+    }
+
+    if (defined($package_xml) && $package_xml->is_regular_file) {
+        # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
+        my $package_type = 'unknown';
+        open(my $package_xml_fd, '<', $info->unpacked($package_xml));
+        while (<$package_xml_fd>) {
+            if (/^\s*<(php|extsrc|extbin|zendextsrc|zendextbin)release\s*\/?>/ ){
+                $package_type = $1;
+                last;
+            }
+            if (/^\s*<bundle\s*\/?>/ ){
+                $package_type = 'bundle';
+                last;
+            }
+        }
+        close($package_xml_fd);
+        if ($package_type eq 'extsrc') { # PECL package
+            if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
+                tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                    '(>= 1.5~)', 'for PECL support';
+            }
         }
     }
     # PEAR channel

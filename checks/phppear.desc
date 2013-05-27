@@ -2,7 +2,7 @@ Check-Script: phppear
 Author: Mathieu Parent <sathieu@debian.org>
 Abbrev: phppear
 Type: source
-Needs-Info: index, debfiles
+Needs-Info: index, debfiles, unpacked
 Info: This script checks if the packages comply with various aspects of the
  debian PHP policy.
 
