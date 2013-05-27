@@ -63,6 +63,13 @@ sub run {
             }
         }
     }
+    # Checking package2.xml
+    if (defined($package2_xml)) {
+        if (!$bdepends->implies('pkg-php-tools (>= 1.4~)')) {
+            tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                '(>= 1.4~)', 'for package2.xml';
+        }
+    }
     # PEAR channel
     my $channel_xml = $info->index('channel.xml');
     if (defined($channel_xml)) {
