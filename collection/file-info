@@ -25,13 +25,13 @@ use strict;
 use warnings;
 use autodie;
 
-use Cwd qw(realpath);
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
+use Lintian::Util qw(locate_helper_tool);
 
-my $helper = realpath (__FILE__ . '-helper');
+my $helper = locate_helper_tool('coll/file-info-helper');
 
 sub collect {
 my ($pkg, $type, $dir) = @_;

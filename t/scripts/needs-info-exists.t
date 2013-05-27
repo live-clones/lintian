@@ -25,6 +25,7 @@ use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control);
 
 $ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_HELPER_DIRS'} = "$ENV{'LINTIAN_ROOT'}/helpers";
 
 # Find all of the desc files in collection.  We'll do one check per
 # description.  We don't check checks/*.desc because check-desc.t
