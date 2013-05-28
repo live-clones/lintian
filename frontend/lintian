@@ -1681,16 +1681,54 @@ sub _update_profile {
 # {{{ Exit handler.
 
 sub END {
-    # Prevent Lab->close from affecting the exit code.
-    local $?;
 
     $SIG{'INT'} = 'DEFAULT';
     $SIG{'QUIT'} = 'DEFAULT';
 
-    # Kill any remaining jobs.
-    $unpacker->kill_jobs if $unpacker;
+    # We have to ensure that our exit code is 0, 1 or 2.  Quote from
+    # "perldoc -f die":
+    #
+    # """
+    # If an uncaught exception results in interpreter exit, the exit
+    # code is determined from the values of $! and $? with this
+    # pseudocode:
+    #
+    #   exit $! if $!; # errno
+    #   exit $? >> 8 if $? >> 8; # child exit status
+    #   exit 255;
+    # """
+    #
+    # So, here in the END handler, we abuse the fact that we can alter
+    # the exit code by changing $?.  It is not a perfect solution
+    # (e.g.  if $! is 1, then we might still exit 1 instead of 2), but
+    # it is definitely better than exiting with undocumented exit codes.
+    if ($? != 0 && $? != 2) {
+        # If $? is not 1, then we definitely want $? to be 2.  If
+        # $exit_code != 1, then either we got an uncaught exception
+        # before the first policy violation or we already saw an
+        # internal error that we caught.  Either way, we want to
+        # exit with 2 in this case.
+        #
+        # Sadly, this is unreliable if we saw a policy violation and
+        # then cause an uncaught internal error (where e.g. $! is 1).
+        # In this case we will still exit 1 instead of 2 as we should.
+        # Nevertheless, this is probably a lot more reliable than
+        # Lintian <= 2.5.12 was.
+        if ($? != 1 || $exit_code != 1) {
+            $? = 2;
+        }
+    }
 
-    $LAB->close if $LAB;
+    if (1) {
+        # Prevent LAB->close and $unpacker->kill_jobs from affecting
+        # the exit code.
+        local $?;
+
+        # Kill any remaining jobs.
+        $unpacker->kill_jobs if $unpacker;
+
+        $LAB->close if $LAB;
+    };
 }
 
 sub interrupted {

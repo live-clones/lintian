@@ -136,6 +136,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
       subprocesses.  These are ":"-separated lists of dirs used by
       Lintian.  The first being a list of raw include dirs and the
       second being a list of helpers dirs in these include dirs.
+    + [NT] Fix a bug where the exit code from lintian would
+      sometimes be an undocumented value (>= 3).
 
   * helpers/coll:
     + [NT] New directory containing some helpers that used to be in
