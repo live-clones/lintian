@@ -106,6 +106,10 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Remove entries/versions that are no longer relevant.
   * data/fields/perl-provides:
     + [NT] Refresh against sid.  (Closes: #708178)
+  * data/scripts/interpreters:
+    + [NT] Add false as "known interpreters" due to widespread
+      use of it in #!-lines.  Thanks to Ryan Kavanagh for the
+      repoort.  (Closes:#710132)
   * data/spelling/corrections:
     + [NT] Add correction for unnecessarily.  Thanks to Guillem
       Jover for the suggestion.  (Closes: #706241)
