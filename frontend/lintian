@@ -24,6 +24,7 @@
 # {{{ libraries and such
 use strict;
 use warnings;
+use autodie;
 
 use Cwd qw(abs_path);
 use Getopt::Long;
@@ -272,8 +273,7 @@ sub record_check_tags {
 # Options: --tags-from-file
 sub record_check_tags_from_file {
     my ($option, $name) = @_;
-    open(my $file, '<', $name)
-        or die("failed to open $name: $!");
+    open(my $file, '<', $name);
     my @tags;
     for my $line (<$file>) {
         $line =~ s/^\s+//;
@@ -282,7 +282,7 @@ sub record_check_tags_from_file {
         next if $line =~ /^\#/;
         push(@tags, split(/\s*,\s*/, $line));
     }
-    close $file;
+    close($file);
     record_check_tags($option, join(',', @tags));
 }
 
@@ -299,8 +299,7 @@ sub record_suppress_tags {
 # Options: --suppress-tags-from-file
 sub record_suppress_tags_from_file {
     my ($option, $name) = @_;
-    open(my $file, '<', $name)
-        or die("failed to open $name: $!");
+    open(my $file, '<', $name);
     for my $line (<$file>) {
         chomp $line;
         $line =~ s/^\s+//;
@@ -308,7 +307,7 @@ sub record_suppress_tags_from_file {
         next unless $line;
         record_suppress_tags($option, $line);
     }
-    close $file;
+    close($file);
 }
 
 # Record Parts requested not to check
@@ -712,8 +711,7 @@ unless ($no_conf) {
 
 # read configuration file
 if ($opt{'LINTIAN_CFG'}) {
-    open my $fd, '<', $opt{'LINTIAN_CFG'}
-        or die("cannot open configuration file $opt{'LINTIAN_CFG'} for reading: $!");
+    open(my $fd, '<', $opt{'LINTIAN_CFG'});
     while (<$fd>) {
         chop;
         s/\#.*$//go;
@@ -770,7 +768,7 @@ if ($opt{'LINTIAN_CFG'}) {
             die "syntax error in configuration file: $_\n";
         }
     }
-    close $fd;
+    close($fd);
 }
 
 # check permitted values for --color / color
@@ -968,7 +966,7 @@ if ($check_everything) {
     if ($opt{'packages-from-file'} eq '-') {
         $fd = \*STDIN;
     } else {
-        open $fd, '<', $opt{'packages-from-file'} or die "opening $opt{'packages-from-file'}: $!";
+        open($fd, '<', $opt{'packages-from-file'});
     }
     while (my $file = <$fd>) {
         chomp $file;
@@ -981,7 +979,7 @@ if ($check_everything) {
     }
     # close unless it is STDIN (else we will see a lot of warnings
     # about STDIN being reopened as "output only")
-    close $fd unless $opt{'packages-from-file'} eq '-';
+    close($fd) unless $opt{'packages-from-file'} eq '-';
 }
 
 # }}}
@@ -1569,15 +1567,14 @@ sub _find_changes {
     push @archs, $ENV{'DEB_HOST_ARCH'} if exists $ENV{'DEB_HOST_ARCH'};
     if (system ('dpkg', '--assert-multi-arch') == 0) {
         # Maybe cross-built for something dpkg knows about...
-        open my $foreign, '-|', 'dpkg', '--print-foreign-architectures'
-            or die "dpkg --print-foreign-architectures: $!\n";
+        open(my $foreign, '-|', 'dpkg', '--print-foreign-architectures');
         while ( my $line = <$foreign> ) {
             chomp $line;
             # Skip already attempted architectures (e.g. via DEB_BUILD_ARCH)
             next if any { $_ eq $line } @archs;
             push @archs, $line;
         }
-        close $foreign;
+        close($foreign);
     }
     push @archs, qw(multi all source);
     foreach my $dir (@dirs) {
