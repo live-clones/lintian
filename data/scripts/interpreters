@@ -31,7 +31,6 @@ escript        => /usr/bin, erlang-base | erlang-base-hipe
 expect         => /usr/bin
 expectk        => /usr/bin
 falcon         => /usr/bin, falconpl
-false          => /bin, @NODEPS@
 fish           => /usr/bin
 fontforge      => /usr/bin, fontforge-nox | fontforge
 gawk           => /usr/bin
