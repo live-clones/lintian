@@ -188,8 +188,8 @@ lintian (2.5.13) UNRELEASED; urgency=low
   * profiles/debian/extra-apache2.profile:
     + [NT] Removed, merged into debian/main.profile.
   * profiles/debian/ftp-master-auto-reject.profile:
-    + [NT] Include md5sums-mismatch as an overridable tag.
-      (See #688300)
+    + [NT] Include md5sums-mismatch and non-standard-toplevel-dir
+      as an overridable tag.
   * profiles/debian/main.profile:
     + [NT] Include the apache2 check.  Thanks to Arno Töll for
       the report.  (Closes: #708943)
