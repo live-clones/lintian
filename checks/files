@@ -272,7 +272,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     my ($year) = ($index_info->date =~ /^(\d{4})/);
-    if ( $year <= 1984 ) { # value from dak CVS: Dinstall::PastCutOffYear
+    if ( $year <= 1975 ) { # value from dak CVS: Dinstall::PastCutOffYear
         tag 'package-contains-ancient-file', "$file " . $index_info->{date};
     }
 

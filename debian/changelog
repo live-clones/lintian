@@ -68,6 +68,9 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [JW,NT] Drop missing-pre-dependency-on-multiarch-support
       now that multiarch-support is in stable.  (Closes: #709121)
     + [JW] Fix typo in a tag description.  (Closes: #709455)
+    + [NT] Change the "ancient-file" cut-off date to 1975 from
+      1984.  Thanks to Ole Streicher and Ansgar Burchardt for the
+      report.  (Closes: #710086)
   * checks/group-checks.desc:
     + [NT] Add missing semi-colon in tag description.  Thanks to
       Andrey Rahmatullin for the report.  (Closes: #706827)
