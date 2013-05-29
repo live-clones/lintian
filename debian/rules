@@ -5,8 +5,7 @@ PERL ?= /usr/bin/perl
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
 profiles := profiles/debian/main.profile \
-	    profiles/debian/ftp-master-auto-reject.profile \
-	    profiles/debian/extra-apache2.profile
+	    profiles/debian/ftp-master-auto-reject.profile
 neededfiles := debian/rules frontend/lintian $(profiles)
 docsource := doc/lintian.xml doc/README.in man/lintian.pod.in \
 	     man/lintian-info.pod
