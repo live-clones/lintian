@@ -380,9 +380,13 @@ unless ($opt{'reports-only'}) {
         my $scs = $opt{'schedule-chuck-size'};
         my $round = 0;
         my $rounds = 1;
-        my $output = ">>$lintian_log 2>&1";
-        # truncate in full-mode
-        $output = ">$lintian_log 2>&1" if $opt{'full-mode'};
+        if ($opt{'full-mode'}) {
+            # truncate in full-mode
+            open(my $fd, '>', $lintian_log)
+                or Die("open/truncate $lintian_log failed: $!");
+            close($fd)
+                or Die("close $lintian_log failed: $!");
+        }
 
         if ($scs > 0) {
             # compute the number of rounds needed.
@@ -399,16 +403,15 @@ unless ($opt{'reports-only'}) {
             $len = $scs if $scs > 0 and $len > $scs;
 
             Log ("Running Lintian (round $round/$rounds) ...");
-            Log (" - cmd: $cmd $output");
+            Log (" - cmd: $cmd >>$lintian_log 2>&1");
             Log(' - Range: ' . $worklist[0] . q{ ... } . $worklist[$len - 1]);
 
             if ($opt{'dry-run'}) {
                 splice(@worklist, 0, $len);
-                $output = " >>$lintian_log 2>&1";
                 next;
             }
 
-            open(my $lintpipe, '|-', "$cmd $output")
+            open(my $lintpipe, '|-', "$cmd >>$lintian_log 2>&1")
                 or Die ("fork failed: $!");
             foreach my $query (splice(@worklist, 0, $len)) {
                 # Technically, we emit these items in reverse order to Lintian,
@@ -434,9 +437,6 @@ unless ($opt{'reports-only'}) {
                     @worklist = ();
                 }
             }
-
-            # In round 2+ (if present) we append to the log
-            $output = " >>$lintian_log 2>&1";
         }
     } else {
         $cmd = undef;
