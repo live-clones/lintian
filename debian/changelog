@@ -1,3 +1,10 @@
+lintian (2.5.14) UNRELEASED; urgency=low
+
+  * lib/Lintian/{Path,Util}.pm:
+    + [NT] Remove deprecated methods.
+
+ -- Niels Thykier <niels@thykier.net>  Thu, 30 May 2013 10:38:26 +0200
+
 lintian (2.5.13) unstable; urgency=low
 
   Upload to unstable.

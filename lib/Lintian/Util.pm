@@ -1128,30 +1128,7 @@ Examples:
   normalize_pkg_path('/usr/bin', '/../etc/passwd')
 
 
-The sub was named resolve_pkg_path in Lintian << 2.5.13~ and had its
-return value changed.
-
-=item resolve_pkg_path (CURDIR, DEST)
-
-Deprecated alias of normalize_pkg_path for << 2.5.13~.  This will go
-away in >= 2.5.14~.
-
-UPGRADING: resolve_pkg_path returns '.' for the root dir and C<q{}>
-for an "unsafe" path.  normalize_pkg_path returns C<q{}> for the root
-dir and C<undef> for an unsafe path (this is the same as
-L<link_resolved|Lintian::Path/link_resolved>.
-
 =cut
-
-sub resolve_pkg_path {
-    warnings::warnif('deprecated',
-                     'resolve_pkg_path was renamed to normalize_pkg_path');
-    my $ret = normalize_pkg_path(@_);
-    # Keep the old behaviour
-    return q{} unless defined($ret);
-    return q{.} if $ret eq q{};
-    return $ret;
-}
 
 sub normalize_pkg_path {
     my ($curdir, $dest) = @_;

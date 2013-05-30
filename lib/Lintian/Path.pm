@@ -228,11 +228,6 @@ sub is_dir { return $_[0]->_is_type ('d'); }
 sub is_file { return $_[0]->_is_type ('-') || $_[0]->_is_type ('h'); }
 sub is_regular_file  { return $_[0]->_is_type ('-'); }
 
-=item link_resolved
-
-Deprecated alias of link_normalized for << 2.5.13~.  This will go away
-in >= 2.5.14~.
-
 =item link_normalized
 
 Returns the target of the link normalized against it's directory name.
@@ -251,15 +246,7 @@ L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
 that.  If you must use this method, remember to check that the target
 is not a symlink (or if it is, that it can be resolved safely).
 
-This method was named link_resolved in Lintian << 2.5.13~.
-
 =cut
-
-sub link_resolved {
-    warnings::warnif('deprecated',
-                     'link_resolved was renamed to link_normalized');
-    goto \&link_normalized;
-}
 
 sub link_normalized {
     my ($self) = @_;
