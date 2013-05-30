@@ -49,6 +49,11 @@ my %module_name = (
     'libio-compress-zlib-perl' => 'IO::Compress::Gzip',
 );
 
+# special cases for where the code gets the prefix wrong
+my %manual_split = (
+    'libautodie-perl' => qr/\A (\d++\.) (\d{2}) (\d{2})? \Z/xsmo,
+);
+
 use Module::CoreList;
 my $versioning = $_system->versioning;
 
@@ -95,7 +100,7 @@ for my $pkg (@core_packages) {
         # the epoch is easier, we just copy it
 
         my ($epoch, $digits) = epoch_and_digits($name);
-        my $debian_version = cpan_version_to_deb($cpan_version, $epoch, $digits);
+        my $debian_version = cpan_version_to_deb($name, $cpan_version, $epoch, $digits);
 
         next if !$debian_version;
 
@@ -127,9 +132,8 @@ sub find_core_version {
 }
 
 sub cpan_version_to_deb {
-        my $cpan_version = shift;
-        my $epoch = shift || '';
-        my $digits = shift;
+        my ($pkg, $cpan_version, $epoch, $digits) = @_;
+        $epoch ||= '';
 
         # cpan_version
         #         digits
@@ -148,7 +152,9 @@ sub cpan_version_to_deb {
         # 1.15,     0 => 1.15
 
         # split 1.15_02 to (1, 15, 02)
-        my ($major, $prefix, $suffix) = ($cpan_version =~ /^(\d+\.)(\d+)(?:_(\d+))?$/);
+        my $regex = qr/^(\d+\.)(\d+)(?:_(\d+))?$/;
+        $regex = $manual_split{$pkg} if exists $manual_split{$pkg};
+        my ($major, $prefix, $suffix) = ($cpan_version =~ $regex);
         die("no match with $cpan_version?") if !$major;
 
         $suffix ||= '';

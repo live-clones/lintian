@@ -13,21 +13,15 @@ libthreads-shared-perl 1.37
 libthreads-perl 1.83
 libsys-syslog-perl 0.27
 libio-compress-perl 2.033
-libio-compress-base-perl 2.033
 libencode-perl 2.42.01
 libdigest-sha-perl 5.61
-libdevel-dprof-perl 20110228.00
 libcompress-raw-zlib-perl 2.033
 libcompress-raw-bzip2-perl 2.033
-libversion-requirements-perl 0.101020
 libversion-perl 1:0.8800
 libunicode-collate-perl 0.73
-libthread-queue-perl 2.12
 libtest-simple-perl 0.98
 libtest-harness-perl 3.23
-libshell-perl 0.72.01
 libpod-simple-perl 3.16
-libperl-ostype-perl 1.002
 libparse-cpan-meta-perl 1.4401
 libmodule-metadata-perl 1.000004
 libmodule-load-conditional-perl 0.44
@@ -43,4 +37,4 @@ libextutils-cbuilder-perl 0.280203
 libdigest-perl 1.16
 libcpan-meta-yaml-perl 0.003
 libcpan-meta-perl 2.110440
-libautodie-perl 2.1001
+libautodie-perl 2.10.01
