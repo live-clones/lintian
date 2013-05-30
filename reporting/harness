@@ -377,7 +377,6 @@ unless ($opt{'reports-only'}) {
 
     if (@worklist) {
         # incremental run cmd changes
-        my $lintpipe;
         my $scs = $opt{'schedule-chuck-size'};
         my $round = 0;
         my $rounds = 1;
@@ -394,7 +393,6 @@ unless ($opt{'reports-only'}) {
                       scalar @worklist, $rounds, $scs > 0 ? $scs : 'none'));
 
         while (@worklist) {
-            my $start = 0;
             my $len = scalar @worklist;
             $round++;
             # correct bounds to fit chuck size
@@ -402,17 +400,17 @@ unless ($opt{'reports-only'}) {
 
             Log ("Running Lintian (round $round/$rounds) ...");
             Log (" - cmd: $cmd $output");
-            Log (" - Range: $worklist[$start] ... " . $worklist[$start + $len - 1]);
+            Log(' - Range: ' . $worklist[0] . q{ ... } . $worklist[$len - 1]);
 
             if ($opt{'dry-run'}) {
-                splice @worklist, $start, $len;
+                splice(@worklist, 0, $len);
                 $output = " >>$lintian_log 2>&1";
                 next;
             }
 
-            open $lintpipe, '|-', "$cmd $output"
+            open(my $lintpipe, '|-', "$cmd $output")
                 or Die ("fork failed: $!");
-            foreach my $query (splice @worklist, $start, $len) {
+            foreach my $query (splice(@worklist, 0, $len)) {
                 # Technically, we emit these items in reverse order to Lintian,
                 # but Lintian sorts it anyway
                 print {$lintpipe} "!query: $query\n";
