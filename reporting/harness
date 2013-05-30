@@ -204,10 +204,6 @@ unless ($opt{'reports-only'}) {
     my %skip = ();
     my @worklist;
     my %dirty_groups = ();
-    # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
-    # but still...
-    my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
-        ' --exp-output=format=fullewi --packages-from-file -';
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
@@ -376,7 +372,8 @@ unless ($opt{'reports-only'}) {
     Log ('');
 
     if (@worklist) {
-        # incremental run cmd changes
+        my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
+            ' --exp-output=format=fullewi --packages-from-file -';
         my $scs = $opt{'schedule-chuck-size'};
         my $round = 0;
         my $rounds = 1;
@@ -439,7 +436,6 @@ unless ($opt{'reports-only'}) {
             }
         }
     } else {
-        $cmd = undef;
         Log ('Skipping Lintian run - nothing to do...');
     }
 }
