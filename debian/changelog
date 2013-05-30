@@ -1,4 +1,6 @@
-lintian (2.5.13) UNRELEASED; urgency=low
+lintian (2.5.13) unstable; urgency=low
+
+  Upload to unstable.
 
   * Summary of tag changes:
     + Added:
@@ -202,7 +204,7 @@ lintian (2.5.13) UNRELEASED; urgency=low
     + [NT] Add "saucy" as known Ubuntu distribution.  Thanks to
       Iain Lane for the report.
 
- -- Niels Thykier <niels@thykier.net>  Tue, 16 Apr 2013 18:24:45 +0200
+ -- Niels Thykier <niels@thykier.net>  Thu, 30 May 2013 08:53:02 +0200
 
 lintian (2.5.12) experimental; urgency=medium
 
