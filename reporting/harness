@@ -313,6 +313,7 @@ unless ($opt{'reports-only'}) {
             my @res = $LAB->lab_query ($query);
             if (@res) {
                 # Group is still in the Lab - reprocess it together
+                push(@worklist, $query);
                 foreach my $entry (@res) {
                     # Remove old log entry for all entries in this group
                     # NB: This part is unable to replace the update to %skip
@@ -321,7 +322,6 @@ unless ($opt{'reports-only'}) {
                     # but we will see each of the entries removed in the
                     # loop above.
                     $skip{$entry->identifier} = 1;
-                    push @worklist, $query;
                 }
             }
         }
