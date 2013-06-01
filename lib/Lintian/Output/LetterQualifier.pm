@@ -133,6 +133,7 @@ sub print_tag {
         $self->_print('', 'N', split("\n", $description));
         $self->_print('', 'N', '');
     }
+    return;
 }
 
 1;

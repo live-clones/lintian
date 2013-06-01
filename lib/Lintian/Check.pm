@@ -208,11 +208,12 @@ sub check_maintainer {
             }
         }
     }
+    return;
 }
 
 sub _tag {
     my @args = grep { defined($_) } @_;
-    tag(@args);
+    return tag(@args);
 }
 
 =item check_spelling(TAG, TEXT, FILENAME, EXCEPTION)

@@ -253,6 +253,7 @@ sub enable_tags {
         $self->{'enabled-tags'}->{$tag} = 1;
         $self->{'enabled-checks'}->{$ti->script}++;
     }
+    return;
 }
 
 =item $prof->disable_tags (@tags)
@@ -271,6 +272,7 @@ sub disable_tags {
         delete $self->{'enabled-checks'}->{$ti->script}
             unless --$self->{'enabled-checks'}->{$ti->script};
     }
+    return;
 }
 
 =item $prof->include_path ([$path])
@@ -377,6 +379,7 @@ sub _read_profile {
             $self->_read_profile_section($pname, $psection, $i++);
         }
     }
+    return;
 }
 
 
@@ -409,6 +412,7 @@ sub _read_profile_section {
             }
         }
     }
+    return;
 }
 
 # $self->_read_profile_tags($pname, $pheader)
@@ -452,6 +456,7 @@ sub _read_profile_tags{
     $self->_enable_tags_from_field($pname, $pheader, 'disable-tags-from-check', $tags_from_check_sub, 0);
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags', $tag_sub, 1);
     $self->_enable_tags_from_field($pname, $pheader, 'disable-tags', $tag_sub, 0);
+    return;
 }
 
 # $self->_enable_tags_from_field($pname, $pheader, $field, $code, $enable)
@@ -467,6 +472,7 @@ sub _enable_tags_from_field {
     return unless $pheader->{$field};
     @tags = map { $code->($field, $_) } $self->_split_comma_sep_field($pheader->{$field});
     $self->$method (@tags);
+    return;
 }
 
 
@@ -494,6 +500,7 @@ sub _check_duplicates{
             $dupmap{$element} = $field;
         }
     }
+    return;
 }
 
 # $self->_parse_boolean($bool, $def, $pname, $sno);
@@ -532,6 +539,7 @@ sub _check_for_invalid_fields {
         next if exists $known->{$field};
         croak "Unknown field \"$field\" in $pname ($paraname)";
     }
+    return;
 }
 
 sub _load_check {
@@ -545,7 +553,7 @@ sub _load_check {
         }
     }
     croak "$profile references unknown $check" unless defined $dir;
-    $self->_parse_check ($check, $dir);
+    return $self->_parse_check ($check, $dir);
 }
 
 sub _parse_check {
@@ -590,6 +598,7 @@ sub _load_checks {
         }
         closedir($dirfd);
     }
+    return;
 }
 
 sub _default_inc_path {

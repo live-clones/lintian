@@ -185,6 +185,7 @@ sub msg {
 
     return if $self->verbosity_level < 0;
     $self->_message(@args);
+    return;
 }
 
 sub v_msg {
@@ -192,6 +193,7 @@ sub v_msg {
 
     return unless $self->verbosity_level > 0;
     $self->_message(@args);
+    return;
 }
 
 sub debug_msg {
@@ -200,6 +202,7 @@ sub debug_msg {
     return unless $self->debug && ($self->debug >= $level);
 
     $self->_message(@args);
+    return;
 }
 
 =item C<warning(@args)>
@@ -214,6 +217,7 @@ sub warning {
 
     return if $self->verbosity_level < 0;
     $self->_warning(@args);
+    return;
 }
 
 =item C<delimiter()>
@@ -327,6 +331,7 @@ sub print_tag {
         $self->_print('', 'N', split("\n", $description));
         $self->_print('', 'N', '');
     }
+    return;
 }
 
 # Helper function to "print_tag" to decide the output format of the tag line.  Used by
@@ -360,6 +365,7 @@ sub print_start_pkg {
 
     $self->v_msg($self->delimiter,
                  "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}, arch $pkg_info->{arch}) ...");
+    return;
 }
 
 =item C<print_start_pkg($pkg_info)>
@@ -371,6 +377,7 @@ Lintian::Tags::file_end().
 =cut
 
 sub print_end_pkg {
+    return;
 }
 
 =back
@@ -400,6 +407,7 @@ sub _message {
     my ($self, @args) = @_;
 
     $self->_print('', 'N', @args);
+    return;
 }
 
 =item C<_warning(@args)>
@@ -412,6 +420,7 @@ sub _warning {
     my ($self, @args) = @_;
 
     $self->_print($self->stderr, 'warning', @args);
+    return;
 }
 
 =item C<_print($stream, $lead, @args)>
@@ -435,6 +444,7 @@ sub _print {
 
     my $output = $self->string($lead, @args);
     print {$stream} $output;
+    return;
 }
 
 =item C<_delimiter()>

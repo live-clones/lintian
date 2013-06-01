@@ -47,6 +47,7 @@ sub print_tag {
         $self->_quote_print ($information),
         $odata,
         );
+    return;
 }
 
 sub _delimiter {
@@ -59,6 +60,7 @@ sub _message {
     foreach (@args) {
         $self->_print('message', $_);
     }
+    return;
 }
 
 sub _warning {
@@ -67,6 +69,7 @@ sub _warning {
     foreach (@args) {
         $self->_print('warning', $_);
     }
+    return;
 }
 
 sub _print {
@@ -74,6 +77,7 @@ sub _print {
 
     my $output = $self->string(@args);
     print {$self->stdout} $output;
+    return;
 }
 
 sub string {

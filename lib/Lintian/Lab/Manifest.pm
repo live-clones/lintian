@@ -305,6 +305,7 @@ sub visit_all {
     }
 
     $self->_recurse_visit ($root, $visitor, scalar @$qf - 1, @keys);
+    return;
 }
 
 =item get (KEYS...)
@@ -390,6 +391,7 @@ sub set_transient_marker {
     return unless $entry;
     $self->{'_transient'} = 1 if $marker;
     delete $self->{'_transient'} unless $marker;
+    return;
 }
 
 =item delete (KEYS...)
@@ -515,6 +517,7 @@ sub diff {
 sub _mark_dirty {
     my ($self, $dirty) = @_;
     $self->{'dirty'} = $dirty;
+    return;
 }
 
 # $plist->_do_read_file($file, $header, $fields)
@@ -581,6 +584,7 @@ sub _make_alias_fields {
         $id .= '/' . $entry->{'architecture'} if $self->type ne 'source';
         $entry->{'identifier'} = $id;
     }
+    return;
 }
 
 sub _do_get {
@@ -671,6 +675,7 @@ sub _recurse_visit {
         # ... or is it the value to be visited?
         $visitor->($v, @keys, $k) if $visit;
     }
+    return;
 }
 
 =back

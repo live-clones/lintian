@@ -262,6 +262,7 @@ sub test_check_desc {
 
     $builder->cmp_ok ($tested, '>', 0, 'Tested at least one desc file')
         if @descs;
+    return;
 }
 
 =item test_load_profiles(ROOT, INC...)
@@ -310,6 +311,7 @@ sub test_load_profiles {
     };
 
     File::Find::find (\%opt, $absdir);
+    return;
 }
 
 =item test_load_checks([OPTS, ]DIR[, CHECKNAMES...])
@@ -423,6 +425,7 @@ sub test_load_checks {
             $builder->diag ("Error: $err\n") if $err;
         }
     }
+    return;
 }
 
 =item test_tags_implemented ([OPTS, ]DIR[, CHECKNAMES...])
@@ -566,6 +569,7 @@ sub test_tags_implemented {
         $builder->is_eq (join (', ', @missing), '',
                          "$cname has all tags implemented");
     }
+    return;
 }
 
 =item load_profile_for_test ([PROFNAME[, INC...]])
@@ -614,6 +618,7 @@ sub load_profile_for_test {
     Lintian::Data->set_vendor ($PROFILE);
     $ENV{'LINTIAN_HELPER_DIRS'} = join(':', map { "$_/helpers" } @inc);
     $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', @inc);
+    return;
 }
 
 

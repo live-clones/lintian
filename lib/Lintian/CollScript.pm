@@ -119,6 +119,7 @@ sub _parse_needs {
     $self->{'needs_info'}->{'min'} = \@min;
     $self->{'needs_info'}->{'type'} = \%typespec;
     $self->{'needs_info'}->{'max'} = \@max;
+    return;
 }
 
 =back
@@ -243,6 +244,7 @@ sub collect {
     } else {
         fail "Unknown interface: $iface";
     }
+    return;
 }
 
 sub _load_collector {
@@ -265,6 +267,7 @@ sub _load_collector {
     fail $self->name . ' does not have a collect function'
         unless defined $collector;
     $self->{'_collect_sub'} = $collector;
+    return;
 }
 
 =back

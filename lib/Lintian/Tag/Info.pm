@@ -317,6 +317,7 @@ sub set_severity{
     my ($self, $sev) = @_;
     croak "Unknown severity $sev.\n" unless exists $CODES{$sev};
     $self->{'effective-severity'} = $sev;
+    return;
 }
 
 =item script()

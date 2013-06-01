@@ -60,6 +60,7 @@ sub load_collections {
     }
 
     closedir($dir);
+    return;
 }
 
 # Return the default number of parallization to be used

@@ -248,6 +248,7 @@ sub clear_cache {
     my $lpkg = $self->lab_pkg;
     $lpkg->clear_cache if defined $lpkg;
     delete $self->{info};
+    return;
 }
 
 =back

@@ -794,6 +794,7 @@ sub clean_env {
     if ($cloc) {
         $ENV{LC_ALL} = 'C';
     }
+    return;
 }
 
 =item perm2oct(PERM)
@@ -878,7 +879,8 @@ sub copy_dir {
 =item gunzip_file (IN, OUT)
 
 Decompresses contents of the file IN and stores the contents in the
-file OUT.  IN is I<not> removed by this call.
+file OUT.  IN is I<not> removed by this call.  On error, this function
+will cause a trappable error.
 
 =cut
 
@@ -886,6 +888,7 @@ sub gunzip_file {
     my ($in, $out) = @_;
     spawn({out => $out, fail => 'error'},
           ['gzip', '-dc', $in]);
+    return;
 }
 
 
@@ -1039,39 +1042,39 @@ Like L<strip|/strip ([LINE])> but only strip trailing whitespace.
 =cut
 
 # prototype for default to $_
-sub strip (_) {
+sub strip (_) { ## no critic (Subroutines::RequireFinalReturn)
     if (defined wantarray) {
         # perl 5.14 s///r would have been useful here.
         my ($arg) = @_;
         $arg =~ s/^\s++|\s++$//g;
         return $arg;
-    } else {
-        $_[0] =~ s/^\s++|\s++$//g;
     }
+    $_[0] =~ s/^\s++|\s++$//g;
+    # void context, so no return needed here.
 }
 
 # prototype for default to $_
-sub lstrip (_) {
+sub lstrip (_) { ## no critic (Subroutines::RequireFinalReturn)
     if (defined wantarray) {
         # perl 5.14 s///r would have been useful here.
         my ($arg) = @_;
         $arg =~ s/^\s++//;
         return $arg;
-    } else {
-        $_[0] =~ s/^\s++//;
     }
+    $_[0] =~ s/^\s++//;
+    # void context, so no return needed here.
 }
 
 # prototype for default to $_
-sub rstrip (_) {
+sub rstrip (_) {  ## no critic (Subroutines::RequireFinalReturn)
     if (defined wantarray) {
         # perl 5.14 s///r would have been useful here.
         my ($arg) = @_;
         $arg =~ s/\s++$//g;
         return $arg;
-    } else {
-        $_[0] =~ s/\s++$//;
     }
+    $_[0] =~ s/\s++$//;
+    # void context, so no return needed here.
 }
 
 =item check_path (CMD)

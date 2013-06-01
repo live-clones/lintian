@@ -860,6 +860,7 @@ predicates).
 sub empty {
     my ($self) = @_;
     return 1 if $self->[0] eq 'AND' and not $self->[1];
+    return 0;
 }
 
 =back

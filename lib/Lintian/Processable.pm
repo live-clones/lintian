@@ -181,6 +181,7 @@ sub _make_identifier {
         $id .= "/$pkg_arch";
     }
     $self->{identifier} = $id;
+    return;
 }
 
 
@@ -268,7 +269,7 @@ overridden by sub-classes.
 =cut
 
 sub clear_cache {
-    my ($self) = @_;
+    return;
 }
 
 

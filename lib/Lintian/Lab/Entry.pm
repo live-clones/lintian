@@ -213,6 +213,7 @@ Overrides clear_cache from L<Lintian::Processable>.
 sub clear_cache {
     my ($self) = @_;
     delete $self->{info};
+    return;
 }
 
 =item remove
@@ -460,6 +461,7 @@ sub _init {
         my ($cname, $cver) = split m/\s*=\s*/, $c;
         $self->_mark_coll_finished ($cname, $cver);
     }
+    return;
 }
 
 =back

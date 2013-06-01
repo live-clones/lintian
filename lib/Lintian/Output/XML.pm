@@ -45,6 +45,7 @@ sub print_tag {
                  [ flags     => $flags ],
                  [ name      => $tag_info->tag ]);
     print { $self->stdout } $self->_make_xml_tag('tag', \@attrs, $self->_quote_print ($information), $comment), "\n";
+    return;
 }
 
 sub print_start_pkg {
@@ -54,11 +55,13 @@ sub print_start_pkg {
                  [ architecture => $pkg_info->{arch} ],
                  [ version      => $pkg_info->{version} ]);
     print { $self->stdout } $self->_open_xml_tag('package', \@attrs, 0), "\n";
+    return;
 }
 
 sub print_end_pkg {
     my ($self) = @_;
-    print { $self->stdout } "</package>\n"
+    print { $self->stdout } "</package>\n";
+    return;
 }
 
 sub _delimiter {
@@ -70,6 +73,7 @@ sub _print {
     $stream ||= $self->stderr;
     my $output = $self->string($lead, @args);
     print { $stream } $output;
+    return;
 }
 
 # Create a start tag (or a self-closed tag)

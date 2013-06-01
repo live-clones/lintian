@@ -72,6 +72,7 @@ sub new {
             $data{$type} = $dataset;
         }
         $self->{'data'} = $data{$type};
+        return;
     }
 }
 
@@ -81,6 +82,7 @@ sub new {
     sub set_vendor {
         my (undef, $vendor) = @_;
         $profile = $vendor;
+        return;
     }
 
     # Returns a listref of profile names
@@ -173,13 +175,15 @@ sub _parse_file {
         }
         $dataset->{$key} = $val;
     }
+    return;
 }
 
 sub _force_promise {
     my ($self) = @_;
     my $promise = $self->{promise};
     $self->_load_data (@$promise);
-    delete $self->{promise}
+    delete $self->{promise};
+    return;
 }
 
 # Query a data object for whether a particular keyword is valid.

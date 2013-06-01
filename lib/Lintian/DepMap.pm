@@ -157,7 +157,8 @@ sub add {
         $self->{'map'}{$node} = $self->{'nodes'}{$node};
     } elsif (exists $self->{'map'}{$node}) {
         delete $self->{'map'}{$node};
-    } else { 1; }
+    }
+    return 1;
 }
 
 =item addp(node[, prefix, dependency[, dependency[, ...]]])
@@ -237,6 +238,7 @@ sub satisfy {
 
     delete $self->{'map'}{$node};
     delete $self->{'nodes'}{$node};
+    return 1;
 }
 
 =item done(node)
@@ -420,6 +422,7 @@ sub selectAll {
     for my $node ($self->selectable()) {
         $self->select($node);
     }
+    return;
 }
 
 =item parents(node)

@@ -541,6 +541,7 @@ sub process_tasks {
                 if $finish_hook;
         }
     }
+    return;
 }
 
 =item reset_worklist
@@ -553,7 +554,8 @@ current worklist.
 sub reset_worklist {
     my ($self) = @_;
     $self->wait_for_jobs;
-    $self->{'worktable'} = {}
+    $self->{'worktable'} = {};
+    return;
 }
 
 =item wait_for_jobs
@@ -572,6 +574,7 @@ sub wait_for_jobs {
         }
         $self->{'running-jobs'} = {}
     }
+    return;
 }
 
 =item kill_jobs
@@ -587,8 +590,9 @@ sub kill_jobs {
     if (%{ $running }) {
         kill_all ($running);
         kill_all ($running, 'KILL') if %$running;
-        $self->{'running-jobs'} = {}
+        $self->{'running-jobs'} = {};
     }
+    return;
 }
 
 =item jobs

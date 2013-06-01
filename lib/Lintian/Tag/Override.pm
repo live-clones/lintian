@@ -163,6 +163,7 @@ sub _init  {
     } else {
         $self->{'is_pattern'} = 0;
     }
+    return;
 }
 
 =back

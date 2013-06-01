@@ -448,6 +448,7 @@ sub visit_packages {
         };
         $index->visit_all ($intv);
     }
+    return;
 }
 
 
@@ -836,6 +837,7 @@ sub _write_manifests {
         $plist->write_list ("$dir/info/${pkg_type}-packages")
             if $plist->dirty and exists $SUPPORTED_TYPES{$plist->type};
     }
+    return;
 }
 
 =item remove
@@ -924,6 +926,7 @@ sub _entry_removed {
     my $pkg_type = $entry->pkg_type;
     my $pf = $self->_get_lab_index ($pkg_type);
     $pf->delete ($entry);
+    return;
 }
 
 # event - triggered by Lintian::Lab::Entry
@@ -933,6 +936,7 @@ sub _entry_created {
     my $pf = $self->_get_lab_index ($pkg_type);
     $self->_new_entry ($entry) unless $pf->get ($entry);
     $pf->set_transient_marker (0, $entry);
+    return;
 }
 
 sub _new_entry {
@@ -1001,6 +1005,7 @@ sub _new_entry {
 
     $pf->set (\%data);
     $pf->set_transient_marker (1, $entry);
+    return;
 }
 
 =back

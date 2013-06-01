@@ -320,6 +320,7 @@ Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
 sub clear_cache {
     my ($self) = @_;
     delete $self->{info};
+    return;
 }
 
 =back

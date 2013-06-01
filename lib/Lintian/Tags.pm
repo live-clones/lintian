@@ -227,6 +227,7 @@ sub _record_stats {
     $stats->{severity}{$info->severity}++;
     $stats->{certainty}{$info->certainty}++;
     $stats->{types}{$code}++;
+    return;
 }
 
 sub tag {
@@ -260,6 +261,7 @@ sub tag {
     return unless $self->displayed($tag);
     my $file = $self->{info}{$self->{current}};
     $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $override);
+    return;
 }
 
 =back
@@ -377,6 +379,7 @@ sub display {
             $self->{display_level}{$s}{$c} = $status;
         }
     }
+    return;
 }
 
 =item show_experimental(BOOL)
@@ -389,6 +392,7 @@ false, configure experimental tags to not be shown.
 sub show_experimental {
     my ($self, $bool) = @_;
     $self->{show_experimental} = $bool ? 1 : 0;
+    return;
 }
 
 =item show_overrides(BOOL)
@@ -401,6 +405,7 @@ configure overridden tags to not be shown.
 sub show_overrides {
     my ($self, $bool) = @_;
     $self->{show_overrides} = $bool ? 1 : 0;
+    return;
 }
 
 =item sources([SOURCE [, ...]])
@@ -418,6 +423,7 @@ sub sources {
     for my $source (@sources) {
         $self->{display_source}{$source} = 1;
     }
+    return;
 }
 
 =item profile(PROFILE)
@@ -431,6 +437,7 @@ non-overridable.
 sub profile {
     my ($self, $profile) = @_;
     $self->{profile} = $profile;
+    return;
 }
 
 =back
@@ -481,6 +488,7 @@ sub file_start {
     }
     $self->{current} = $file;
     $Lintian::Output::GLOBAL->print_start_pkg($self->{info}{$file});
+    return;
 }
 
 =item file_overrides(OVERRIDE-FILE)
@@ -636,6 +644,7 @@ sub file_overrides {
         }
     }
     close($file);
+    return;
 }
 
 =item file_end()
@@ -652,6 +661,7 @@ sub file_end {
         $Lintian::Output::GLOBAL->print_end_pkg($info);
     }
     undef $self->{current};
+    return;
 }
 
 =back

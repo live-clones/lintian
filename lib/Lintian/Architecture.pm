@@ -130,6 +130,7 @@ sub _parse_arch {
         $ALT_ARCH_NAMES{$short} = $archstr;
         $ALT_ARCH_NAMES{$long} = $archstr;
     }
+    return 1;
 }
 
 my $ARCH_RAW = Lintian::Data->new ('common/architectures', qr/\s*+\Q||\E\s*+/o,
