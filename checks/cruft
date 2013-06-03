@@ -507,6 +507,15 @@ sub find_cruft {
                                       $s+ (?:no$s+)? Back(?:[\\]?-)?$s*Cover $s+ Texts?/xiso) {
                                 # no invariant variant (dict-foldoc)
                             }
+                            when(m/\A $s* (?: [\,\.;] $s* )? version $s+ \d+(?:\.\d+)? $s+
+                                   (?:or $s+ any $s+ later $s+ version $s+)?
+                                   published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
+                                   (?: [,\.;] $s*)?
+                                   There $s+ are $s+ no $s+ invariants? $s+ sections?
+                                   (?: [,\.;] $s*)? \Z
+                                   /xismo) {
+                                # no invariant libnss-pgsql version
+                            }
                             when(m/with $s+ the $s+ Invariant $s+ Sections $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST $s+ THEIR $s+TITLES (?:\}|<\/var>)? $s* ,?
                                         $s+ with $s+ the $s+ Front(?:[\\]?-)$s*Cover $s+ Texts $s+ being
