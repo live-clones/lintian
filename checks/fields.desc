@@ -1010,7 +1010,7 @@ Info: The VCS-* field contains an uncanonical URI. Please update to use
  and makes debcheckout work independent of the port forwarding and
  redirections properly working.
  .
- The definition of canoical used here is the URIs announced by the Alioth
+ The definition of canonical used here is the URIs announced by the Alioth
  admins (see reference).
  .
  Note that this check is based on a list of known URIs.  Lintian did not
