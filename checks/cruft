@@ -498,20 +498,20 @@ sub find_cruft {
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
                             when(m/no $s* Invariant $s+ Sections? $s* ,?
-                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front-$s*Cover $s+ Texts? $s* ,? $s+ (?:and$s+)?
-                                       (?:with$s+)? (?:the$s+)? no $s+ Back-$s*Cover $s+ Texts?/xiso) {
+                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front(?:\\?-)?$s*Cover $s+ Texts? $s* ,? $s+ (?:and$s+)?
+                                       (?:with$s+)? (?:the$s+)? no $s+ Back(?:\\?-)?$s*Cover $s+ Texts?/xiso) {
                                 # no invariant
                             }
                             when(m/no $s+ Invariant $s+ Sections?,?
-                                      $s+ (?:no$s+)? Front-? $s+ or
-                                      $s+ (?:no$s+)? Back-Cover $s+ Texts?/xiso) {
+                                      $s+ (?:no$s+)? Front(?:[\\]?-)? $s+ or
+                                      $s+ (?:no$s+)? Back(?:[\\]?-)?$s*Cover $s+ Texts?/xiso) {
                                 # no invariant variant (dict-foldoc)
                             }
                             when(m/with $s+ the $s+ Invariant $s+ Sections $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST $s+ THEIR $s+TITLES (?:\}|<\/var>)? $s* ,?
-                                        $s+ with $s+ the $s+ Front-Cover $s+ Texts $s+ being
+                                        $s+ with $s+ the $s+ Front(?:[\\]?-)$s*Cover $s+ Texts $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)? $s* ,?
-                                        $s+ and $s+ with $s+ the $s+ Back-Cover $s+ Texts $s+ being
+                                        $s+ and $s+ with $s+ the $s+ Back(?:[\\]?-)$s*Cover $s+ Texts $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xiso) {
                                 # verbatim text of license is ok
                             }
