@@ -21,6 +21,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Add final return to all subs in checks and ensure
       that the "run" sub complies with Lintian's own
       recommendation.
+  * checks/fields.pm:
+    + [NT] Apply patch from Niko Tyni to fix false-positive
+      package-superseded-by-perl for packages with epochs.
+      (Closes: #710919)
   * checks/manpages.{desc,pm}:
     + [NT] Apply patch from Bastien Roucariès to test for
       manpages named after their build path.

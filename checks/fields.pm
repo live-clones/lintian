@@ -239,7 +239,8 @@ if (not defined $info->field('version')) {
     my $dversion = Dpkg::Version->new($version);
 
     if ($dversion->is_valid) {
-        my ($upstream, $debian) = ($dversion->version, $dversion->revision);
+        my ($epoch, $upstream, $debian) =
+            ($dversion->epoch, $dversion->version, $dversion->revision);
         # Dpkg::Version sets the debian revision to 0 if there is no revision.
         # - so we need to check if the raw version ends with "-0".
         tag 'debian-revision-should-not-be-zero', $version
@@ -291,7 +292,7 @@ if (not defined $info->field('version')) {
 
         my $name = $info->field('package');
         if ($name && $PERL_CORE_PROVIDES->known($name) &&
-                perl_core_has_version($name, '>=', $upstream)) {
+                perl_core_has_version($name, '>=', "$epoch:$upstream")) {
             my $core_version = $PERL_CORE_PROVIDES->value($name);
             tag 'package-superseded-by-perl', "with $core_version"
         }

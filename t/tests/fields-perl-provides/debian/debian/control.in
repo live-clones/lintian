@@ -15,3 +15,12 @@ Description: {$description}
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: libversion-perl
+Section: perl
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: another {$description}
+ This is another test package, designed to exercise epoch handling
+ in the 'package-superseded-by-perl' check. It is part of the Lintian
+ test suite and may do very odd things.  It should not be installed like
+ a regular package.  It may be an empty package.
