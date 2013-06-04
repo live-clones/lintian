@@ -24,6 +24,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * coll/hardening-info:
     + [NT] Skip files in usr/lib/debug/.
 
+  * data/binaries/embedded-libs:
+    + [RG] Check for embedded copies of libraw.  (Closes: #711090)
+
   * lib/Lintian/CheckScript.pm:
     + [NT] Prefer loading checks with ".pm", but fall back to loading
       checks without the extension (with a deprecation warning).
