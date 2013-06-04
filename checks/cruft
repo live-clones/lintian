@@ -492,6 +492,7 @@ sub find_cruft {
                           <br\s*/?>       |  # (X)HTML line breaks
                           </?link.*?>     |  # xml link
                           </?a.*?>        |  # a link
+                          </?p.*?>        |  # html link
                           \(\*note.*?::\) |  # info file note
                         )}xiso;
                         # GFDL license, assume it is bad unless it
@@ -538,6 +539,18 @@ sub find_cruft {
                                         $s+ and $s+ with $s+ \&FDLBackCoverText;/xiso)
                             {
                                 unless($name =~ m/\/customization\/[\w-]+\/entities\/[\w-]+\.docbook$/) {
+                                    tag 'license-problem-gfdl-invariants', $name;
+                                    $licenseproblemhash{'gfdl-invariants'} = 1;
+                                }
+                            }
+                            # fix a false positive in maintain.texi
+                            when(m/\A $s* \. $s*
+                                   Following $s+ is $s+ an $s+ example $s+ of $s+ the $s+ license $s+ notice $s+
+                                   to $s+ use $s+ after $s+ the $s+ copyright $s+ line\(s\) $s+ using $s+ all $s+ the $s+
+                                   features $s+ of $s+ the $s+ GFDL/xismo)
+                            {
+                                # allow only one text
+                                unless($name =~ m/maintain/) {
                                     tag 'license-problem-gfdl-invariants', $name;
                                     $licenseproblemhash{'gfdl-invariants'} = 1;
                                 }
