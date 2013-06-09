@@ -5,3 +5,4 @@ Type: binary
 Needs-Info: unpacked, index
 Version: 1
 Interface: perl-coll
+Auto-Remove: yes

@@ -6,3 +6,4 @@ Type: binary, udeb
 Version: 2
 Interface: perl-coll
 Needs-Info: index, unpacked, file-info
+Auto-Remove: yes

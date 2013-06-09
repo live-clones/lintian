@@ -35,6 +35,11 @@ if ( -f "$dir/README.Debian") {
     unlink("$dir/README.Debian");
 }
 
+# If we are asked to only remove the files stop right here
+if ($type =~ m/^remove-/) {
+    return;
+}
+
 # Pick the first of these files that exists.
 my @readmes = ("$dir/unpacked/usr/share/doc/$pkg/README.Debian.gz",
                "$dir/unpacked/usr/share/doc/$pkg/README.Debian",

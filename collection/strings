@@ -38,7 +38,7 @@ my $helper = locate_helper_tool('coll/strings-helper');
 sub collect {
 
 my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
+my $info;
 my @manual = ();
 
 if ( -e "$dir/elf-index" ) {
@@ -48,6 +48,14 @@ if ( -e "$dir/elf-index" ) {
 if ( -d "$dir/strings" ) {
     delete_dir ("$dir/strings") or fail "rmdir strings: $!";
 }
+
+# If we are asked to only remove the files stop right here
+if ($type =~ m/^remove-/) {
+    return;
+}
+
+$info = Lintian::Collect->new ($pkg, $type, $dir);
+
 
 open(my $elf_fd, '>', "$dir/elf-index");
 
