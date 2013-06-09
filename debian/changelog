@@ -3,6 +3,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * checks/fields.desc:
     + [NT] Fix typo, thanks to Adrien Cunin.
 
+  * coll/hardening-info:
+    + [NT] Skip files in usr/lib/debug/.
+
   * lib/Lintian/{Path,Util}.pm:
     + [NT] Remove deprecated methods.
 
