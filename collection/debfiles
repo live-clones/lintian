@@ -31,8 +31,6 @@ use Lintian::Util qw(copy_dir delete_dir is_ancestor_of fail);
 sub collect {
 my ($pkg, $type, $dir) = @_;
 
--e "$dir/unpacked" or fail 'debfiles invoked with wrong dir argument';
-
 if ( -e "$dir/debfiles") {
     delete_dir ("$dir/debfiles")
         or fail('cannot rm old debfiles directory');
