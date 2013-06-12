@@ -148,8 +148,7 @@ if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
 my $uroot = $info->unpacked;
 my $abs = Cwd::abs_path ("$uroot/") or fail "abs_path $uroot: $!";
 $abs =~ s,/$,,; # remove the trailing slash if any
-my $wanted = sub { find_cruft($pkg, $info, qr/\Q$abs\E/, \%warned, $atdinbd, $ltinbd) };
-find($wanted, $abs);
+find_cruft($info, \%warned, $atdinbd, $ltinbd);
 
 # Look for cruft based on file's results, but allow cruft in test directories
 # where it may be part of a test suite.
@@ -323,127 +322,124 @@ sub check_debfiles {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    my ($pkg, $info, $root, $warned, $atdinbd, $ltinbd) = @_;
-    my $basename;
-    (my $name = $File::Find::name) =~ s,^$root/,,;
-
-    # Ignore the .pc directory and its contents, created as part of the
-    # unpacking of a 3.0 (quilt) source package.
-    if (-d and $_ eq '.pc') {
-        # NB: this catches all .pc dirs (regardless of depth).  If you
-        # change that, please check we have a
-        # "source-contains-quilt-control-dir" tag.
-        $File::Find::prune = 1;
-        return;
-    }
-
-    # Ignore files in test suites.  They may be part of the test.
-    if (-d and m,^t(?:est(?:s(?:et)?)?)?\z,) {
-        $File::Find::prune = 1;
-        return;
-    }
-
+    my ($info, $warned, $atdinbd, $ltinbd) = @_;
     my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
-    if (-d and not $warned->{$name}) {
-        for my $rule (@directory_checks) {
-            if ($name =~ /$rule->[0]/) {
-                tag "${prefix}-$rule->[1]", $name;
-            }
-        }
-    }
-    if (-l) {
-        my $target = readlink($_);
-        my $dirname = dirname($name);
-        my $normalized;
-        # If it is an absolute link, it escapes the root by default
-        if ($target !~ m{\A / }xsm) {
-            $normalized = normalize_pkg_path($dirname, $target);
-        }
-        if (not defined($normalized)) {
-            # skip unsafe symlinks too
-            tag 'source-contains-unsafe-symlink', $_;
-            return;
-        }
-        # This check may appear redundant, but it is not!
-        # normalize_pkg_path tells us that the link can "safely be
-        # normalized without escaping the root".  But it tells us
-        # nothing about the target of the link (which could be an
-        # unsafe symlink). Example
-        #
-        #  safe-symlink -> unsafe-symlink
-        #  unsafe-symlink -> ../../../../etc/passwd
-        #
-        # normalize_pkg_path would approve of "safe-symlink", but if we
-        # were to open it we would actually end up escaping the
-        # package root.
-        if ( ! -e || ! is_ancestor_of($info->unpacked, $_)) {
-            return;
-        }
-    }
-    -f or return; # we just need normal files for the rest
-    $basename = basename $name;
+    my @worklist;
 
-    unless ($warned->{$name}) {
-        for my $rule (@file_checks) {
-            next if ($rule->[2] and not $info->native);
-            if ($name =~ /$rule->[0]/) {
-                tag "${prefix}-$rule->[1]", $name;
-            }
-        }
-    }
+    push(@worklist, $info->index('')->children); # start with the top-level dirs
 
-    # Tests of autotools files are a special case.  Ignore debian/config.cache
-    # as anyone doing that probably knows what they're doing and is using it
-    # as part of the build.
-    if ($name =~ m,^(.+/)?config.(?:cache|log|status)$,) {
-        if ($name !~ m,^debian/config\.cache$,) {
-            tag 'configure-generated-file-in-source', $name;
+  ENTRY:
+    while ( my $entry = shift(@worklist) ) {
+        my $name = $entry->name;
+        my $basename = $entry->basename;
+        my $path;
+
+        if ($entry->is_dir) {
+            # Remove the trailing slash (historically we never included the slash
+            # for these tags and there is no particular reason to change that now).
+            $name = substr($name, 0, -1);
+            $basename = substr($basename, 0, -1);
+
+            # Ignore the .pc directory and its contents, created as part of the
+            # unpacking of a 3.0 (quilt) source package.
+
+            # NB: this catches all .pc dirs (regardless of depth).  If you
+            # change that, please check we have a
+            # "source-contains-quilt-control-dir" tag.
+            next if $basename eq '.pc';
+
+            # Ignore files in test suites.  They may be part of the test.
+            next if $basename =~ m{ \A t (?: est (?: s (?: et)?+ )?+ )?+ \Z}xsm;
+
+            if (not $warned->{$name}) {
+                for my $rule (@directory_checks) {
+                    if ($basename =~ /$rule->[0]/) {
+                        tag "${prefix}-$rule->[1]", $name;
+                        # At most one rule will match
+                        last;
+                    }
+                }
+            }
+
+            push(@worklist, $entry->children);
+            next ENTRY;
         }
-    } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
-        open(my $fd, '<', $basename);
-        while (<$fd>) {
-            last if $. > 10; # it's on the 6th line, but be a bit more lenient
-            if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
-                my ($date, $year, $month) = ($1, $2, $3);
-                if ($year < 2004) {
-                    tag 'ancient-autotools-helper-file', $name, $date;
-                } elsif (($year < 2012) or ($year == 2012 and $month < 4)) {
-                    # config.sub   >= 2012-04-18 (was bumped from 2012-02-10)
-                    # config.guess >= 2012-06-10 (was bumped from 2012-02-10)
-                    # Flagging anything earlier than 2012-04 as outdated
-                    # works, due to the "bumped from" dates.
-                    tag 'outdated-autotools-helper-file', $name, $date;
+        if ($entry->is_symlink) {
+            # An absolute link always escapes the root (of a source
+            # package).  For relative links, it escapes the root if we
+            # cannot normalize it.
+            if ($entry->link =~ m{\A / }xsm or not defined($entry->link_normalized)) {
+                tag 'source-contains-unsafe-symlink', $basename;
+            }
+            next ENTRY;
+        }
+        # we just need normal files for the rest
+        next ENTRY unless $entry->is_file;
+
+        unless ($warned->{$name}) {
+            for my $rule (@file_checks) {
+                next if ($rule->[2] and not $info->native);
+                if ($basename =~ /$rule->[0]/) {
+                    tag "${prefix}-$rule->[1]", $name;
                 }
             }
         }
-        close($fd);
-    } elsif ($name =~ m,^(.+/)?ltconfig$, and not $ltinbd) {
-        tag 'ancient-libtool', $name;
-    } elsif ($name =~ m,^(.+/)?ltmain\.sh$, and not $ltinbd) {
-        open(my $fd, '<', $basename);
-        while (<$fd>) {
-            if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
-                my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
-                if ($major < 5 or ($major == 5 and $minor < 2)) {
-                    tag 'ancient-libtool', $name, $version;
-                } elsif ($minor == 2 and (!$debian || $debian < 2)) {
-                    tag 'ancient-libtool', $name, $version;
-                } elsif ($minor < 24) {
-                    # not entirely sure whether that would be good idea
-#                    tag "outdated-libtool", $name, $version;
-                }
-                last;
+
+        # Tests of autotools files are a special case.  Ignore debian/config.cache
+        # as anyone doing that probably knows what they're doing and is using it
+        # as part of the build.
+        if ($basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
+            if ($entry->dirname ne 'debian') {
+                tag 'configure-generated-file-in-source', $name;
             }
+        } elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm and not $atdinbd) {
+            open(my $fd, '<', $info->unpacked($entry));
+            while (<$fd>) {
+                last if $. > 10; # it's on the 6th line, but be a bit more lenient
+                if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
+                    my ($date, $year, $month) = ($1, $2, $3);
+                    if ($year < 2004) {
+                        tag 'ancient-autotools-helper-file', $name, $date;
+                    } elsif (($year < 2012) or ($year == 2012 and $month < 4)) {
+                        # config.sub   >= 2012-04-18 (was bumped from 2012-02-10)
+                        # config.guess >= 2012-06-10 (was bumped from 2012-02-10)
+                        # Flagging anything earlier than 2012-04 as outdated
+                        # works, due to the "bumped from" dates.
+                        tag 'outdated-autotools-helper-file', $name, $date;
+                    }
+                }
+            }
+            close($fd);
+        } elsif ($basename eq 'ltconfig' and not $ltinbd) {
+            tag 'ancient-libtool', $name;
+        } elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
+            open(my $fd, '<', $info->unpacked($entry));
+            while (<$fd>) {
+                if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
+                    my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
+                    if ($major < 5 or ($major == 5 and $minor < 2)) {
+                        tag 'ancient-libtool', $name, $version;
+                    } elsif ($minor == 2 and (!$debian || $debian < 2)) {
+                        tag 'ancient-libtool', $name, $version;
+                    } elsif ($minor < 24) {
+                        # not entirely sure whether that would be good idea
+#                       tag "outdated-libtool", $name, $version;
+                    }
+                    last;
+                }
+            }
+            close($fd);
         }
-        close($fd);
-    }
 
-    return if $info->is_non_free; # (license issue does not apply to non-free)
-    return if $basename eq 'debian/changelog'; # (license string in debian/changelog are changelog)
+        next ENTRY if $info->is_non_free; # (license issue does not apply to non-free)
+        next ENTRY if $basename eq 'debian/changelog'; # (license string in debian/changelog are changelog)
 
-    # test license problem is source file (only text file)
-    if (-T $basename) {
-        open(my $F, '<', $basename);
+        $path = $info->unpacked($entry);
+
+        # test license problem is source file (only text file)
+        next ENTRY unless -T $path;
+
+        open(my $F, '<', $path);
         binmode ($F);
 
         my @queue = ('', '');
