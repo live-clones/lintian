@@ -141,7 +141,11 @@ sub unpacked {
 
 =item file_info (FILE)
 
-Returns the output of file(1) for FILE (if it exists) or C<undef>.
+Returns the output of file(1) -e ascii for FILE (if it exists) or
+C<undef>.
+
+B<CAVEAT>: As file(1) is passed "-e ascii", all text files will be
+considered "data" rather than "text", "Java code" etc.
 
 NB: The value may have been calibrated by Lintian.  A notorious example
 is gzip files, where file(1) can be unreliable at times (see #620289)

@@ -10,6 +10,10 @@ lintian (2.5.14) UNRELEASED; urgency=low
       reduce the "inode pressure" on lintian.d.o.
   * coll/debfiles:
     + [NT] Remove test of the presence of unpacked.
+  * coll/file-info{,.desc}:
+    + [NT] Disable "ascii" test in file(1).  For some packages this
+      may greatly reduce the overhead of running the file-info
+      collection.
   * coll/hardening-info:
     + [NT] Skip files in usr/lib/debug/.
 

@@ -56,7 +56,7 @@ chdir("$dir/unpacked");
 my %opts = ( pipe_in => FileHandle->new,
              out => $outfile,
              fail => 'never' );
-spawn(\%opts, ['xargs', '-0r', 'file', '-NF', '', '--print0', '--'], '|', [$helper], '|', ['gzip', '--best', '-c']);
+spawn(\%opts, ['xargs', '-0r', 'file', '-e', 'ascii', '-NF', '', '--print0', '--'], '|', [$helper], '|', ['gzip', '--best', '-c']);
 $opts{pipe_in}->blocking(1);
 
 foreach my $file ($info->sorted_index) {
