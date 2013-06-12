@@ -1,5 +1,7 @@
 lintian (2.5.14) UNRELEASED; urgency=low
 
+  * checks/cruft:
+    + [NT] Revise a few tests that relied on file(1) on text files.
   * checks/fields.desc:
     + [NT] Fix typo, thanks to Adrien Cunin.
 

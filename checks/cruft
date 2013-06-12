@@ -161,41 +161,35 @@ for my $file ($info->sorted_index) {
     } elsif ($file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/) {
         tag 'source-contains-prebuilt-windows-binary', $file;
     } elsif ($file =~ /\bwaf$/) {
-        my $ok = 1;
-        # If file believes this is data, then we trust that
-        $ok = 0 if $file_info =~ m/data/;
-        if ($ok) {
-            # Unfortunately file 5.04 (Squeeze) and 5.09 does not
-            # always agree, so manually check for the bz2 entry if
-            # file does not declare it as "data".
-            my $path = $info->unpacked ($file);
-            my $marker = 0;
-            next unless -f $path and not -l $path;
-            open(my $fd, '<', $path);
-            while ( my $line = <$fd> ) {
-                next unless $line =~ m/^#/o;
-                if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
-                    $ok = 0;
-                    last;
-                }
-                $marker = 1 if $line =~ m/^#==>/o;
-                # We could probably stop here, but just in case
-                $marker = 0 if $line =~ m/^#<==/o;
+        my $path = $info->unpacked($file);
+        my $marker = 0;
+        next unless -f $path and is_ancestor_of($uroot, $path);
+        open(my $fd, '<', $path);
+        while ( my $line = <$fd> ) {
+            next unless $line =~ m/^#/o;
+            if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
+                tag 'source-contains-waf-binary', $file;
+                last;
             }
-            close($fd);
+            $marker = 1 if $line =~ m/^#==>/o;
+            # We could probably stop here, but just in case
+            $marker = 0 if $line =~ m/^#<==/o;
         }
-        tag 'source-contains-waf-binary', $file unless $ok;
+        close($fd);
     }
 }
 
 for my $file (@EOL_TERMINATORS_FILES) {
-    $file = "debian/$file";
-    my $file_info = $info->file_info ($file);
-    next unless defined $file_info;
-
-
-    tag 'control-file-with-CRLF-EOLs', $file
-        if $file_info =~ m/\bCRLF\b/;
+    my $path = $info->debfiles($file);
+    next if not -f $path or not is_ancestor_of($droot, $path);
+    open(my $fd, '<', $path);
+    while (my $line = <$fd>) {
+        if ($line =~ m{ \r \n \Z}xsm) {
+            tag 'control-file-with-CRLF-EOLs', "debian/$file";
+            last;
+        }
+    }
+    close($fd);
 }
 
 # Report any error messages from tar while unpacking the source package if it
