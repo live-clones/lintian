@@ -448,17 +448,21 @@ sub find_cruft {
         while (read($F, my $window, BLOCKSIZE)) {
             my $block;
             shift @queue;
-            push @queue, $window;
+            push(@queue, lc($window));
             $block =  join '', @queue;
 
-            # Remove formatting commonly added by pod2man
-            $block =~ s{ \\ & }{}gxsm;
-            $block =~ s{ \\s (?:0|-1) }{}gxsm;
-            $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+            if (index($block, '\\') > -1) {
+                # Remove formatting commonly added by pod2man
+                $block =~ s{ \\ & }{}gxsm;
+                $block =~ s{ \\s (?:0|-1) }{}gxsm;
+                $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+            }
 
             given ($block) {
                 # json evil license
-                when (m/Software\s+shall\s+be\s+used\s+for\s+Good\s*,?\s*not\s+Evil/is) {
+                when (index($_, 'evil') > -1 && m/software \s++ shall \s++
+                        be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
+                        not \s++ evil/xsm) {
                     if(!exists $licenseproblemhash{'json-evil'}) {
                          tag 'license-problem-json-evil', $name;
                          $licenseproblemhash{'json-evil'} = 1;
@@ -472,8 +476,9 @@ sub find_cruft {
                 # if the "redeeming" part is in the next block.
                 #
                 # See cruft-gfdl-fp-sliding-win for the test case
-                when(m/GNU (?:\s+|\s*<\/span>\s*|\s*\}\s+)? Free \s+ Documentation \s+ License (?'gfdlsections'.{0,1024})
-                         A \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xis) {
+                when(index($_, 'license') > -1 && m/gnu (?:\s+|\s*<\/span>\s*|\s*\}\s+)? free \s+
+                         documentation \s+ license (?'gfdlsections'.{0,1024})
+                         a \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xsm) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
                         my $s = qr{(?:
@@ -490,7 +495,7 @@ sub find_cruft {
                           </?a.*?>        |  # a link
                           </?p.*?>        |  # html link
                           \(\*note.*?::\) |  # info file note
-                        )}xiso;
+                        )}xsmo;
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
