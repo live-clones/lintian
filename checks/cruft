@@ -101,7 +101,7 @@ our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 sub run {
 
-my ($pkg, undef, $info) = @_;
+my (undef, undef, $info) = @_;
 
 my $droot = $info->debfiles;
 
@@ -140,7 +140,7 @@ my $format = $info->field('format');
 #   that may not be present.
 $format = '3.0 (quilt)' unless defined $format;
 if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
-    my $wanted = sub { check_debfiles($pkg, $info, qr/\Q$droot\E/, \%warned) };
+    my $wanted = sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
     find($wanted, $droot);
 } elsif (not $info->native) {
     check_diffstat($info->diffstat, \%warned);
@@ -259,7 +259,7 @@ sub check_diffstat {
 # output.  Record any files we warn about in $warned so that we don't warn
 # again when checking the full unpacked source.
 sub check_debfiles {
-    my ($pkg, $info, $droot, $warned) = @_;
+    my ($info, $droot, $warned) = @_;
     (my $name = $File::Find::name) =~ s,^$droot/,,;
 
     # Check for unwanted directories and files.  This really duplicates the
