@@ -4,6 +4,8 @@ lintian (2.5.14) UNRELEASED; urgency=low
     + [NT] Revise a few tests that relied on file(1) on text files.
     + [NT] Apply patches from Bastien Roucariès to fix some false
       positives in the GDFL related checks.  (Closes: #711119)
+    + [NT] Show the full path with source-contains-unsafe-symlink
+      rather than just the "basename".
   * checks/fields.desc:
     + [NT] Fix typo, thanks to Adrien Cunin.
 

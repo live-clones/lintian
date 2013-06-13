@@ -341,7 +341,7 @@ sub find_cruft {
             # package).  For relative links, it escapes the root if we
             # cannot normalize it.
             if ($entry->link =~ m{\A / }xsm or not defined($entry->link_normalized)) {
-                tag 'source-contains-unsafe-symlink', $basename;
+                tag 'source-contains-unsafe-symlink', $name;
             }
             next ENTRY;
         }
