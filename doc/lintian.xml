@@ -1219,7 +1219,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
       </para>
       <para>
         Checks in Lintian consist of a description file (.desc) and a
-        Perl module implementing the actual check (no extension).  The
+        Perl module implementing the actual check (.pm).  The
         names of these checks must consist entirely of the lower case
         characters ([a-z]), digits ([0-9]), underscore (_), dash (-),
         period (.) and forward slashes (/).

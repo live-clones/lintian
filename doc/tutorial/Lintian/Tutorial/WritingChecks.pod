@@ -9,7 +9,7 @@ Lintian::Tutorial::WritingChecks -- Writing checks for Lintian
 This guide will quickly guide you through the basics of writing a
 Lintian check.  Most of the work is in writing the two files:
 
-  checks/<my-check>
+  checks/<my-check>.pm
   checks/<my-check>.desc
 
 And then either adding a Lintian profile or extending an existing

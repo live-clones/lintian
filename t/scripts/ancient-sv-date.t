@@ -31,7 +31,7 @@ plan tests => 2;
 
 $ENV{'LINTIAN_ROOT'} //= '.';
 
-my $check = "$ENV{'LINTIAN_ROOT'}/checks/standards-version";
+my $check = "$ENV{'LINTIAN_ROOT'}/checks/standards-version.pm";
 my $found = 0;
 open(my $fd, '<', $check);
 while ( my $line = <$fd> ) {

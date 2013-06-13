@@ -123,14 +123,18 @@ for my $module (@MODULES) {
 for my $desc (@DESCS) {
     my ($header) = read_dpkg_control($desc);
     my %needs = map { $_ => 1 } split(/\s*,\s*/, $header->{'needs-info'} || '');
+    my $codefile = substr($desc, 0, -5); # Strip ".desc"
 
     if ($desc =~ m/lintian\.desc$/) {
 	pass('lintian.desc has all required needs-info for Lintian::Collect');
 	next;
     }
 
-    my ($check) = split(/\.desc$/, $desc);
-    my $code =slurp_entire_file($check);
+    if ($codefile !~ m{ /collection/ }xsm) {
+        $codefile .= '.pm';
+    }
+
+    my $code =slurp_entire_file($codefile);
     my %subs;
     while ($code =~ s/\$info\s*->\s*(\w+)//) {
 	$subs{$1} = 1;

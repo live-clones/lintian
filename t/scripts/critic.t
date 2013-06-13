@@ -23,19 +23,17 @@ diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
 Test::Perl::Critic->import( -profile => '.perlcriticrc' );
 
+my @DIRS = (qw(t/runtests checks collection frontend lib private reporting t/scripts t/helpers));
 
-our @CHECKS = glob ('checks/*[!.]*[!c]');
-plan tests => scalar(@CHECKS)+2;
-
-for my $check (@CHECKS) {
-    critic_ok($check);
-}
+plan tests => scalar(@DIRS) + 1;
 
 critic_ok('t/runtests');
 
-subtest 'All scripts with correct shebang or extension' => sub {
-    all_critic_ok(qw(collection frontend lib private reporting t/scripts t/helpers));
-};
+for my $dir (@DIRS) {
+    subtest 'All scripts with correct shebang or extension' => sub {
+        all_critic_ok($dir);
+    };
+}
 
 sub should_skip {
     my $skip = 1;

@@ -1,6 +1,9 @@
 lintian (2.5.14) UNRELEASED; urgency=low
 
-  * checks/cruft:
+  * checks/*:
+    + [NT] Rename all checks to include the extension ".pm".
+      (Closes: #710405)
+  * checks/cruft.pm:
     + [NT] Revise a few tests that relied on file(1) on text files.
     + [NT] Apply patches from Bastien Roucariès to fix some false
       positives in the GDFL related checks.  (Closes: #711119)
@@ -21,6 +24,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * coll/hardening-info:
     + [NT] Skip files in usr/lib/debug/.
 
+  * lib/Lintian/CheckScript.pm:
+    + [NT] Prefer loading checks with ".pm", but fall back to loading
+      checks without the extension (with a deprecation warning).
   * lib/Lintian/{Path,Util}.pm:
     + [NT] Remove deprecated methods.
 

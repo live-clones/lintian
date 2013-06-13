@@ -45,6 +45,7 @@ my @l2refs = (
 for my $desc (@DESCS) {
     my ($header) = read_dpkg_control($desc);
     my @needs;
+    my $codefile = substr($desc, 0, -5); # Strip ".desc"
     if ($header->{'collector-script'}) {
         my $coll = Lintian::CollScript->new ($desc);
         @needs = $coll->needs_info;
@@ -57,9 +58,12 @@ for my $desc (@DESCS) {
 	next;
     }
 
+    if ($codefile !~ m{ /collection/ }xsm) {
+        $codefile .= '.pm';
+    }
+
     my %ninfo = map {$_ => 1} @needs;
-    my ($file) = split(/\.desc$/, $desc);
-    my $code = slurp_entire_file($file);
+    my $code = slurp_entire_file($codefile);
     my $requires_unpacked = 0;
 
     for my $l2ref (@l2refs) {

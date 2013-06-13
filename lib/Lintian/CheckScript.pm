@@ -92,7 +92,7 @@ sub new {
     $self->{'script_pkg'} =~ s,/,::,go;
     $self->{'script_pkg'} =~ s,[-.],_,go;
 
-    $self->{'script_path'} = $dir . '/' . $self->{'name'};
+    $self->{'script_path'} = $dir . '/' . $self->{'name'} . '.pm';
 
     $self->{'script_run'} = undef; # init'ed with $self->load_check later
 
@@ -208,6 +208,19 @@ sub load_check {
     my $cs_path = $self->{'script_path'};
     my $cs_pkg = $self->{'script_pkg'};
     my $run;
+
+    if (! -f $cs_path) {
+        # Try the "old" extensionless path (i.e. strip ".pm")
+        # - This can go away in 2.5.15 or later
+        my $alt_path = substr($cs_path, 0, -3);
+        if ( -f $alt_path ) {
+            my $name = $self->name;
+            warnings::warnif('deprecated',
+                             "[deprecated] Check module for $name missing \".pm\" extension"
+                             . " (should be: $cs_path)");
+            $self->{'script_path'} = $cs_path = $alt_path;
+        }
+    }
 
     require $cs_path;
 
