@@ -482,7 +482,7 @@ sub find_cruft {
                         # local space
                         my $s = qr{(?:
                           \s              |  # regular space(s)
-                          \@c             |  # Tex info comment
+                          \@c(?:omment)?  |  # Tex info comment
                           [%\*\"\|]       |  # String, C-style comment/javadoc indent, quotes for strings, pipe in some txt
                           \"\s*,          |  # String array (e.g. "line1",\n"line2")
                           ,\s*\"          |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
@@ -534,11 +534,11 @@ sub find_cruft {
                                         $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xiso) {
                                 # verbatim text of license is ok
                             }
-                            when(m/\A $s* (?:(?:\,|\.|;)$s*)? version $s+ \d+(?:\.\d+)? $s+
+                            when(m/\A $s* (?: [,\.;] $s*)? version $s+ \d+(?:\.\d+)? $s+
                                    (?:or $s+ any $s+ later $s+ version $s+)?
                                    published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
-                                   (?:(?:\,|\.|;)$s*)? \z
-                                   /xiso) {
+                                   (?: [,\.;] $s*)? \Z
+                                   /xismo) {
                                 # empty text is ambiguous
                                 tag 'license-problem-gfdl-invariants-empty', $name;
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
