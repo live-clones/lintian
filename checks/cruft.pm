@@ -477,7 +477,7 @@ sub find_cruft {
                 #
                 # See cruft-gfdl-fp-sliding-win for the test case
                 when(index($_, 'license') > -1 && m/gnu (?:\s+|\s*<\/span>\s*|\s*\}\s+)? free \s+
-                         documentation \s+ license (?'gfdlsections'.{0,1024})
+                         documentation \s+ license (?'gfdlsections'.{0,1024}?)
                          a \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xsm) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
