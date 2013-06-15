@@ -500,8 +500,8 @@ sub find_cruft {
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
                             when(m/no $s* Invariant $s+ Sections? $s* ,?
-                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front(?:\\?-)?$s*Cover $s+ Texts? $s* ,? $s+ (?:and$s+)?
-                                       (?:with$s+)? (?:the$s+)? no $s+ Back(?:\\?-)?$s*Cover $s+ Texts?/xiso) {
+                                   $s+ (?:with$s+)? (?:the$s+)? no $s+ Front(?:\\?-)?$s*Cover $s+ (?:Texts?)? $s* ,? $s+ (?:and$s+)?
+                                       (?:with$s+)? (?:the$s+)? no $s+ Back(?:\\?-)?$s*Cover/xiso) {
                                 # no invariant
                             }
                             when(m/no $s+ Invariant $s+ Sections?,?
