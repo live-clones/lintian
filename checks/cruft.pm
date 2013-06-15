@@ -484,7 +484,7 @@ sub find_cruft {
                         my $s = qr{(?:
                           \s              |  # regular space(s)
                           \@c(?:omment)?  |  # Tex info comment
-                          [%\*\"\|]       |  # String, C-style comment/javadoc indent, quotes for strings, pipe in some txt
+                          [%\*\"\|\\]     |  # String, C-style comment/javadoc indent, quotes for strings, pipe and antislash in some txt
                           \"\s*,          |  # String array (e.g. "line1",\n"line2")
                           ,\s*\"          |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
                           \\n             |  # Verbatim \n in string array
@@ -493,7 +493,7 @@ sub find_cruft {
                           <br\s*/?>       |  # (X)HTML line breaks
                           </?link.*?>     |  # xml link
                           </?a.*?>        |  # a link
-                          </?p.*?>        |  # html link
+                          </?p.*?>        |  # html paragraph
                           \(\*note.*?::\) |  # info file note
                         )}xsmo;
                         # GFDL license, assume it is bad unless it
@@ -517,6 +517,15 @@ sub find_cruft {
                                    (?: [,\.;] $s*)? \Z
                                    /xismo) {
                                 # no invariant libnss-pgsql version
+                            }
+                            when(m/\A $s* (?: [\,\.;] $s* )? version $s+ \d+(?:\.\d+)? $s+
+                                   (?:or $s+ any $s+ later $s+ version $s+)?
+                                   published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
+                                   (?: [,\.;] $s*)?
+                                   without $s+ any $s+ Invariant $s+ Sections $s*
+                                   (?: [,\.;] $s*)? \Z
+                                   /xismo) {
+                                # no invariant parsewiki version
                             }
                             when(m/(?: [,\.;] $s*)? version $s+ \d+(?:\.\d+)? $s+
                                    (?:or $s+ any $s+ later $s+ version $s+)?
