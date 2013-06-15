@@ -3,6 +3,10 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Rename all checks to include the extension ".pm".
       (Closes: #710405)
+  * checks/binaries.pm:
+    + [NT] Also check for the presence of "mcount" to detect
+      whether a binary was compiled with profiling.
+      (Closes: #712124)
   * checks/cruft.pm:
     + [NT] Revise a few tests that relied on file(1) on text files.
     + [NT] Apply patches from Bastien Roucariès to fix some false

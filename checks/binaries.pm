@@ -113,6 +113,7 @@ my $srcpkg = $proc->pkg_src;
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
     my $has_lfs = undef;
+    my $is_profiled = 0;
     # Only 32bit ELF binaries can lack LFS.
     $ARCH_32_REGEX = $ARCH_REGEX->value ('32') unless defined $ARCH_32_REGEX;
     $has_lfs = 1 unless $info->file_info ($file) =~ m/$ARCH_32_REGEX/o;
@@ -135,16 +136,20 @@ foreach my $file (sort keys %{$info->objdump_info}) {
                 $has_lfs = 0;
             }
         }
-        if ($arch ne 'hppa') {
+        next if $is_profiled;
+        # According to the binutils documentation[1], the profiling symbol
+        # can be named "mcount", "_mcount" or even "__mcount".
+        # [1] http://sourceware.org/binutils/docs/gprof/Implementation.html
+        if ( $sec =~ /^GLIBC_.*/ and $sym =~ m{\A _?+ _?+ mcount \Z}xsm ) {
+            $is_profiled = 1;
+        } elsif ($arch ne 'hppa') {
+            # This code was used to detect profiled code in Wheezy (and earlier)
             if ($foo eq '.text' and $sec eq 'Base' and
-                $sym eq '__gmon_start__') {
-                tag 'binary-compiled-with-profiling-enabled', $file;
-            }
-        } else {
-            if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
-                tag 'binary-compiled-with-profiling-enabled', $file;
+                    $sym eq '__gmon_start__') {
+                $is_profiled = 1;
             }
         }
+        tag 'binary-compiled-with-profiling-enabled', $file if $is_profiled;
     }
     tag 'binary-file-compressed-with-upx', $file if $objdump->{'UPX'};
     tag 'apparently-corrupted-elf-binary', $file if $objdump->{'ERRORS'};
