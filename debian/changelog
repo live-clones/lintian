@@ -30,6 +30,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
 
   * data/binaries/embedded-libs:
     + [RG] Check for embedded copies of libraw.  (Closes: #711090)
+  * data/scripts/interpreters:
+    + [NT] Add plackup (libplack-perl) as a known interpreter.  Thanks
+      to Robert James Clay for the report.  (Closes: #712405)
 
   * lib/Lintian/CheckScript.pm:
     + [NT] Prefer loading checks with ".pm", but fall back to loading
