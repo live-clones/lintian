@@ -240,9 +240,6 @@ if (not defined $info->field('version')) {
 
     if ($dversion->is_valid) {
         my ($upstream, $debian) = ($dversion->version, $dversion->revision);
-        if ($upstream !~ /^\d/i) {
-            tag 'upstream-version-not-numeric', $version;
-        }
         # Dpkg::Version sets the debian revision to 0 if there is no revision.
         # - so we need to check if the raw version ends with "-0".
         tag 'debian-revision-should-not-be-zero', $version

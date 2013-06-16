@@ -1,5 +1,9 @@
 lintian (2.5.14) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed:
+      - upstream-version-not-numeric
+
   * checks/*:
     + [NT] Rename all checks to include the extension ".pm".
       (Closes: #710405)
@@ -13,8 +17,11 @@ lintian (2.5.14) UNRELEASED; urgency=low
       positives in the GDFL related checks.  (Closes: #711119)
     + [NT] Show the full path with source-contains-unsafe-symlink
       rather than just the "basename".
-  * checks/fields.desc:
+  * checks/fields.{desc,pm}:
     + [NT] Fix typo, thanks to Adrien Cunin.
+    + [NT] Retire upstream-version-not-numeric which can no longer
+      be emitted.  Versions that would previously trigger this tag
+      will now trigger bad-version-number instead.
 
   * coll/*:
     + [NT] Set "Auto-Remove: yes" on several collections to

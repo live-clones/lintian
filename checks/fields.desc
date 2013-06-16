@@ -53,12 +53,6 @@ Certainty: certain
 Info: The version number fails one of the syntactic requirements of dpkg.
 Ref: policy 5.6.12
 
-Tag: upstream-version-not-numeric
-Severity: important
-Certainty: certain
-Info: The upstream version number should start with a digit. 
-Ref: policy 5.6.12
-
 Tag: debian-revision-not-well-formed
 Severity: normal
 Certainty: certain
