@@ -1,3 +1,2 @@
-E: fields-version-bad source: upstream-version-not-numeric unknown-.3
 E: fields-version-bad: debian-revision-should-not-be-zero 1.0-0
-W: fields-version-bad source: debian-revision-not-well-formed unknown-.3
+W: fields-version-bad source: debian-revision-not-well-formed 0-.3

@@ -1,9 +1,8 @@
 Testname: fields-version-bad
 Sequence: 6000
-Version: unknown-.3
+Version: 0-.3
 Description: Test for weird versions
 Type: non-native
 Test-For:
  debian-revision-not-well-formed
  debian-revision-should-not-be-zero
- upstream-version-not-numeric
