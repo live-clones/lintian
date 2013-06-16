@@ -1,5 +1,0 @@
-Testname: unpack-srcpkg-lzma
-Sequence: 6000
-Version: 1.0-1
-Type: non-native
-Description: Test package for lzma-compressed source packages

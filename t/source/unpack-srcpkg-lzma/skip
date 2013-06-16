@@ -1,8 +1,0 @@
-Currently fails with:
-
-unxz: (stdin): File format not recognized
-tar: This does not look like a tar archive
-tar: Exiting with failure status due to previous errors
-dpkg-source: error: tar --no-same-owner --no-same-permissions -xkf - gave error exit status 2
-
-because dpkg-source doesn't tell tar how to decompress the file.
