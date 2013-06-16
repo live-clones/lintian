@@ -601,18 +601,17 @@ sub generic_find_test_for_tag {
 # if the test is broken.
 sub generic_test_runner {
     my ($suite, $ext, $testdata) = @_;
+    my $testname = $testdata->{testname};
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
         msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
         return 1;
     }
 
-    my $test = $testdata->{testname};
+    msg_print "Running $testname... ";
 
-    msg_print "Running $test... ";
-
-    my $testdir = "$TESTSET/$suite/$test";
-    my $targetdir = "$RUNDIR/$test";
+    my $testdir = "$TESTSET/$suite/$testname";
+    my $targetdir = "$RUNDIR/$testname";
     my $tmpldir = "$TESTSET/templates/$suite/";
     if (-f "$testdir/skip") {
         msg_print "skipped.\n";
@@ -635,20 +634,20 @@ sub generic_test_runner {
     }
 
     msg_print 'building... ';
-    my $res = chdir_runcmd($targetdir, ['fakeroot', 'make'], "../build.$test");
+    my $res = chdir_runcmd($targetdir, ['fakeroot', 'make'], "../build.$testname");
     if ($res){
-        dump_log($test, "$RUNDIR/build.$test") if $DUMP_LOGS;
-        fail("cd $targetdir && fakeroot make >../build.$test 2>&1");
+        dump_log($testname, "$RUNDIR/build.$testname") if $DUMP_LOGS;
+        fail("cd $targetdir && fakeroot make >../build.$testname 2>&1");
     }
     my @matches = glob "$targetdir/*.$ext";
     my $file = shift @matches;
     unless ( $file && -e $file ) {
-        fail "$test did not produce any file matching \"$targetdir/*.$ext\" ($file)";
+        fail "$testname did not produce any file matching \"$targetdir/*.$ext\" ($file)";
     }
-    fail "$test produced more than one file matching \"$targetdir/*.$ext\"" if @matches;
+    fail "$testname produced more than one file matching \"$targetdir/*.$ext\"" if @matches;
 
-    run_lintian($testdata, $file, "$RUNDIR/tags.$test");
-    return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$test");
+    run_lintian($testdata, $file, "$RUNDIR/tags.$testname");
+    return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$testname");
 }
 
 sub _check_result {
