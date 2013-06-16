@@ -33,6 +33,7 @@ use autodie;
 use Cwd();
 
 use threads;
+use threads::shared;
 use Thread::Queue;
 
 use Data::Dumper;
@@ -183,7 +184,16 @@ STDOUT->autoflush;
 # 0 - success
 # 1 - one or more tests failed
 # 2 - an error prevented proper running of the tests
+# NB: Also locks $failed (as they are always updated together).
 my $status :shared = 0;
+
+# Tests that were skipped and why
+# - $suite => $testname => $reason
+my $skipped = shared_clone({});
+# Tests that failed
+# - Use $status as lock (since when $failed is updated,
+#   then $status is as well)
+my $failed = shared_clone([]);
 
 # If we don't run any tests, we'll want to warn that we couldn't find
 # anything.
@@ -324,6 +334,25 @@ if (!$tests_run) {
     } else {
         print "E: No tests run, did you specify a valid testset directory?\n";
     }
+} else {
+    if (%{$skipped}) {
+        print "\nSkipped/disabled tests:\n";
+        for my $suite (SUITES) {
+            if (exists($skipped->{$suite})) {
+                print "  [$suite]\n";
+                for my $testname (sort(keys(%{ $skipped->{$suite} }))) {
+                    my $reason = $skipped->{$suite}{$testname};
+                    print "    $testname: $reason\n";
+                }
+            }
+        }
+    }
+    if (my $number = @{$failed}) {
+        print "\nFailed tests ($number)\n";
+        for my $test (@{$failed}) {
+            print "    $test\n";
+        }
+    }
 }
 exit $status;
 
@@ -362,10 +391,10 @@ sub copy_template_dir {
 # the test passes and false if it fails.
 sub test_package {
     my ($suite, $testdata) = @_;
+    my $testname = $testdata->{testname};
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
-        msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
-        return 1;
+        return skip_test($suite, $testname, 'architecture mismatch');
     }
 
     msg_print "Running $testdata->{testname} $testdata->{version}... ";
@@ -373,7 +402,7 @@ sub test_package {
     my $pkg = $testdata->{srcpkg};
     my $pkgdir = "$pkg-$testdata->{version}";
     my $rundir = "$RUNDIR/$pkg";
-    my $origdir = "$TESTSET/$suite/$testdata->{testname}";
+    my $origdir = "$TESTSET/$suite/$testname";
     my $targetdir = "$rundir/$pkgdir";
     my $tmpldir = "$TESTSET/templates/$suite/";
 
@@ -383,8 +412,8 @@ sub test_package {
     my $origexp = $expected;
 
     if (-f "$origdir/skip") {
-        msg_print "skipped.\n";
-        return 1;
+        my $reason = skip_reason("$origdir/skip");
+        return skip_test($suite, $testname, "(disabled) $reason");
     }
 
     # Strip the Debian revision off of the name of the target directory and
@@ -519,13 +548,13 @@ sub run_lintian {
 # passes and false if it fails.
 sub test_changes {
     my ($testdata) = @_;
+    my $testname = $testdata->{testname};
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
-        msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
-        return 1;
+        return skip_test('changes', $testname, 'architecture mismatch');
     }
 
-    msg_print "Running $testdata->{testname} $testdata->{version}... ";
+    msg_print "Running $testname $testdata->{version}... ";
 
     my $test = $testdata->{srcpkg};
     my $testdir = "$TESTSET/changes";
@@ -604,8 +633,7 @@ sub generic_test_runner {
     my $testname = $testdata->{testname};
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
-        msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
-        return 1;
+        return skip_test($suite, $testname, 'architecture mismatch');
     }
 
     msg_print "Running $testname... ";
@@ -614,8 +642,8 @@ sub generic_test_runner {
     my $targetdir = "$RUNDIR/$testname";
     my $tmpldir = "$TESTSET/templates/$suite/";
     if (-f "$testdir/skip") {
-        msg_print "skipped.\n";
-        return 1;
+        my $reason = skip_reason("$testdir/skip");
+        return skip_test($suite, $testname, "(disabled) $reason");
     }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
@@ -789,8 +817,15 @@ sub run_tests{
                         print STDERR "$@\n";
                     }
                     exit 1 unless $run_all_tests;
-                    lock($status);
-                    $status = 1;
+                    my $name = $t;
+                    if (ref($t) eq 'HASH' && exists $t->{'testname'}) {
+                        $name = $t->{'testname'};
+                    }
+                    if (1) {
+                        lock($status);
+                        $status ||= 1;
+                        push(@{$failed}, $name);
+                    }
                 }
             }
         }); # treads->create( sub { ...
@@ -943,6 +978,32 @@ sub read_test_desc {
              . " instead of $expected_name");
     }
     return $testdata;
+}
+
+sub skip_test {
+    my ($suite, $testname, $reason) = @_;
+    msg_print "Skipped $testname.\n";
+    if (1) {
+        lock($skipped);
+        if (!exists($skipped->{$suite})) {
+            $skipped->{$suite} = shared_clone({});
+        }
+        $skipped->{$suite}->{$testname} = $reason;
+    }
+    return 1;
+}
+
+# Extracts the first line of a skip file and provides it as a reason
+# for the test being skipped.
+sub skip_reason {
+    my ($skipfile) = @_;
+    my $reason;
+    open(my $fd, '<', $skipfile);
+    $reason = <$fd>;
+    close($fd);
+    chomp($reason) if defined $reason;
+    $reason //= 'No reason given in "skip" file';
+    return $reason;
 }
 
 sub msg_flush {
