@@ -1,8 +1,8 @@
 # Hey emacs! This is a -*- Perl -*- script!
 # config -- configuration file for Lintian reporting harness
 
-$HOME = "/org/lintian.debian.org";
-$LINTIAN_ARCHIVEDIR = "/org/ftp.debian.org/ftp";
+$HOME = "/srv/lintian.debian.org";
+$LINTIAN_ARCHIVEDIR = "/srv/ftp.debian.org/ftp";
 $LINTIAN_MIRROR_NAME = "ftp-master.debian.org";
 $LINTIAN_DIST = "sid";
 $LINTIAN_AREA = "main";

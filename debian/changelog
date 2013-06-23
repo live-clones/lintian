@@ -48,6 +48,8 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * lib/Lintian/{Path,Util}.pm:
     + [NT] Remove deprecated methods.
 
+  * reporting/config:
+    + [NT] Replace /org with /srv.
   * reporting/harness:
     + [NT] Fix bug where harness might schedule the same group
       multiple times.  (Closes: #710380)
