@@ -61,7 +61,7 @@ Info: The debug package appear to be containing debug symbols for a
  symbols for all architecture variants of the binaries available
  at the same time.
  .
- Making a debug package co-installable with itself is very trival,
+ Making a debug package co-installable with itself is very trivial,
  when installing the debug symbols beneath:
    <tt>/usr/lib/debug/.build-id/&lt;XX&gt;/&lt;rest-id&gt;.debug</tt>
  .

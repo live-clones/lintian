@@ -209,7 +209,7 @@ Tag: weak-dependency-on-misc-depends
 Severity: normal
 Certainty: possible
 Ref: debhelper(7)
-Info: The source package declares a weak dependecy on ${misc:Depends} in
+Info: The source package declares a weak dependency on ${misc:Depends} in
  the given binary package's debian/control entry.  A stronger dependency, that
  is one that ensures the package's installation, is required so that the
  additional commands are available to the maintainer scripts when they are run.
@@ -266,7 +266,7 @@ Info: The source package declares a dependency on ${python3:Depends} in the
 Tag: package-file-is-executable
 Severity: normal
 Certainty: certain
-Info: The packaging file is marked exectuable.  For control, changelog and
+Info: The packaging file is marked executable.  For control, changelog and
  copyright there is no reason for them to be executable.
  .
  This tag is also emitted if a debhelper file is marked executable without
@@ -276,7 +276,7 @@ Info: The packaging file is marked exectuable.  For control, changelog and
 Tag: executable-debhelper-file-without-being-executable
 Severity: important
 Certainty: possible
-Info: The packaging file is marked exectuable, but it does not appear to be
+Info: The packaging file is marked executable, but it does not appear to be
  executable (e.g. it has no #! line).
  .
  If debhelper file is not supposed to be executable, please remove the
@@ -309,7 +309,7 @@ Info: The package uses dh-exec in at least one of its files, but does
 Tag: dh-exec-install-not-allowed-here
 Severity: important
 Certainty: possible
-Info: The package uses a dh-exec-install contruct in a non-.install
+Info: The package uses a dh-exec-install construct in a non-.install
  file.
  .
  The dh-exec-install constructs are only allowed in dh_install's
@@ -323,16 +323,16 @@ Info: The package uses a variable in one of its debhelper config
  .
  It is recommended to use a known subset of variables. If the package
  needs more than that, and makes sure the variable is exported through
- the build one way or the othern, then this tag can be safely ignored
+ the build one way or the other, then this tag can be safely ignored
  or overridden.
 
 Tag: debhelper-compat-file-is-missing
 Severity: normal
 Certainty: certain
 Info: The package uses debhelper but does not ship a compat file.
- This is deprecated and eventaully cause the package to FTBFS.
+ This is deprecated and eventually cause the package to FTBFS.
  .
- Please refer to the dehelper documentation on how to create the
+ Please refer to the debhelper documentation on how to create the
  compat file and the differences between each compat level.
 Ref: http://packages.qa.debian.org/d/debhelper/news/20120115T191738Z.html,
  debhelper(7)

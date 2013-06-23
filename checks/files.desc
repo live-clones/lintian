@@ -974,7 +974,7 @@ Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
  non free license of Adobe. In order to check if this tag is genuine
- please follow the proceedure described in the reference.
+ please follow the procedure described in the reference.
  .
  Should this be a false-positive, please override the tag.
 Ref: http://wiki.debian.org/qa.debian.org/type1nondfsg
@@ -984,7 +984,7 @@ Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
  non free license of Adobe. In order to check if this tag is genuine
- please follow the proceedure described in the reference.
+ please follow the procedure described in the reference.
  .
  Moreover the fragment was likely verbatim copied from black
  book without any credit to Adobe.

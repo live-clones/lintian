@@ -23,7 +23,7 @@ Info: The package is an Apache2 HTTPD server module but it depends on a real
  future.
  .
  In particular, module packages must not pull the full web server or any of its
- associated data packages as a depdendency. That's left to the user.
+ associated data packages as a dependency. That's left to the user.
 
 
 Tag: apache2-module-does-not-depend-on-apache2-api
@@ -58,7 +58,7 @@ Severity: normal
 Certainty: certain
 Info: The package appears to be a web application which is installing a
  configuration file for the Apache2 HTTPD server. To avoid name clashes, any file
- installed to <tt>/etc/apache2/{sites,conf}-availabe</tt> should match the binary package
+ installed to <tt>/etc/apache2/{sites,conf}-available</tt> should match the binary package
  name and must not start with <tt>local-</tt>.
 
 
@@ -98,7 +98,7 @@ Severity: normal
 Certainty: certain
 Info: The package is invoking apache2's init script in its maintainer script
  albeit it shouldn't do so. Reverse dependencies installing apache2
- configuration pieces should not restart the web server uncondtionally in
+ configuration pieces should not restart the web server unconditionally in
  maintainer scripts. Instead they should be using apache2-maintscript-helper
  which correctly obeys local policies.
 

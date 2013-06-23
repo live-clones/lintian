@@ -181,7 +181,7 @@ Info: The given package appears to be a shared library -dev package, but
  weaker dependency is warranted.  Something like <tt>(&gt;=
  ${source:Upstream-Version}), (&lt;&lt;
  ${source:Upstream-Version}+1~)</tt>, possibly using
- <tt>${source:Version}</tt> instead, is the right apprach.  The goal is to
+ <tt>${source:Version}</tt> instead, is the right approach.  The goal is to
  ensure that a new upstream version of the library package doesn't satisfy
  the -dev package dependency, since the minor version of the shared
  library may have changed, breaking the <tt>*.so</tt> links.
