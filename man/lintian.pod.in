@@ -232,7 +232,7 @@ If a tag is marked experimental, this means that the code that
 generates this message is not as well tested as the rest of Lintian,
 and might still give surprising results.  Feel free to ignore
 Experimental messages that do not seem to make sense, though of course
-bug reports are always welcomed (particularly if they include fixes).
+bug reports are always welcome (particularly if they include fixes).
 
 These options overrides the B<display-experimental> variable in the
 configuration file.
@@ -334,7 +334,7 @@ If the token I<{VENDOR}> appears in the profile name, B<lintian> will
 substitute the token with a vendor name to find the profile.
 B<lintian> uses L<Dpkg::Vendor> to determine the best vendor to use
 (the closer to the current vendor, the better).  This is mostly useful
-for people implementing their own checks ontop of Lintian.
+for people implementing their own checks on top of Lintian.
 
 If not specified, the default value is I<{VENDOR}/main>.
 
@@ -793,7 +793,7 @@ Used by pbuilder(1) and cowbuilder(1).
 =back
 
 In each directory, Lintian will attempt to find a I<.changes> file
-using the following values as architectecture (in order):
+using the following values as architecture (in order):
 
 =over 4
 

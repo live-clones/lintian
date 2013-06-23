@@ -42,6 +42,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
     + [NT] Add plackup (libplack-perl) as a known interpreter.  Thanks
       to Robert James Clay for the report.  (Closes: #712405)
 
+  * doc/{lintian.xml,README.in}:
+    + [JW] Fix typos.
+
   * lib/Lintian/CheckScript.pm:
     + [NT] Prefer loading checks with ".pm", but fall back to loading
       checks without the extension (with a deprecation warning).
@@ -52,6 +55,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
     + [NT] Remove deprecated methods.
   * lib/Lintian/Path.pm:
     + [NT] Overload some operators.
+
+  * man/lintian.pod.in:
+    + [JW] Fix typos.
 
   * reporting/config:
     + [NT] Replace /org with /srv.

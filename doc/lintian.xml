@@ -293,7 +293,7 @@
         </listitem>
         <listitem>
           <para>
-            Any feedback about Lintian is welcomed! Please send your
+            Any feedback about Lintian is welcome! Please send your
             comments to the lintian
             maintainers <email>lintian-maint@debian.org</email>.</para>
         </listitem>
@@ -436,7 +436,7 @@ $
               Lintian, and might still give surprising results.  Feel
               free to ignore Experimental messages that do not seem to
               make sense, though of course bug reports are always
-              welcomed.  They are not displayed unless
+              welcome.  They are not displayed unless
               the <option>-E</option> option is set.
             </para>
           </listitem>
