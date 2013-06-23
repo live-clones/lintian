@@ -7,7 +7,7 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Rename all checks to include the extension ".pm".
       (Closes: #710405)
-    + [JW] Fix typoes in several files.
+    + [JW] Fix typos in several files.
   * checks/binaries.pm:
     + [NT] Also check for the presence of "mcount" to detect
       whether a binary was compiled with profiling.
