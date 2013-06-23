@@ -47,6 +47,8 @@ lintian (2.5.14) UNRELEASED; urgency=low
       checks without the extension (with a deprecation warning).
   * lib/Lintian/{Path,Util}.pm:
     + [NT] Remove deprecated methods.
+  * lib/Lintian/Path.pm:
+    + [NT] Overload some operators.
 
   * reporting/config:
     + [NT] Replace /org with /srv.

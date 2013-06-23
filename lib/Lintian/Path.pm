@@ -20,8 +20,18 @@ package Lintian::Path;
 
 use strict;
 use warnings;
-
 use parent qw(Class::Accessor);
+use overload (
+    '""' => \&_as_string,
+    'qr' => \&_as_regex_ref,
+    'bool' => \&_bool,
+    '!' => \&_bool_not,
+    '.'  => \&_str_concat,
+    'cmp' => \&_str_cmp,
+    'eq' => \&_str_eq,
+    'ne' => \&_str_ne,
+    'fallback' => 0,
+);
 
 use Carp qw(croak);
 
@@ -260,6 +270,54 @@ sub link_normalized {
     my $target = normalize_pkg_path($dir, $link);
     $self->{'link_target'} = $target;
     return $target;
+}
+
+### OVERLOADED OVERATORS ###
+
+# overload apparently does not like the mk_ro_accessor, so use a level
+# of indirection
+
+sub _as_regex_ref {
+    my ($self) = @_;
+    my $name = $self->name;
+    return qr{ \Q $name \E }xsm;
+}
+
+sub _as_string {
+    my ($self) = @_;
+    return $self->name;
+}
+
+sub _bool {
+    # Always true (used in "if ($info->index('some/path')) {...}")
+    return 1;
+}
+
+sub _bool_not {
+    my ($self) = @_;
+    return !$self->_bool;
+}
+
+sub _str_cmp {
+    my ($self, $str, $swap) = @_;
+    return $str cmp $self->name if $swap;
+    return $self->name cmp $str;
+}
+
+sub _str_concat {
+    my ($self, $str, $swap) = @_;
+    return $str . $self->name if $swap;
+    return $self->name . $str;
+}
+
+sub _str_eq {
+    my ($self, $str) = @_;
+    return $self->name eq $str;
+}
+
+sub _str_ne {
+    my ($self, $str) = @_;
+    return $self->name ne $str;
 }
 
 =back
