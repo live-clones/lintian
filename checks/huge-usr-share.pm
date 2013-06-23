@@ -43,9 +43,9 @@ return 0 if $arch eq 'all';
 # in /usr/share.  Convert the totals to kilobytes.
 my ($size, $size_usrshare) = (0, 0);
 for my $file ($info->sorted_index) {
-    $size += $info->index ($file)->size;
+    $size += $file->size;
     if ($file =~ m,usr/share/,) {
-        $size_usrshare += $info->index ($file)->size;
+        $size_usrshare += $file->size;
     }
 }
 $size = int ($size / 1024);

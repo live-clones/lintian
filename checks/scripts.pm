@@ -204,12 +204,10 @@ my %scripts = ();
 # says not to depend on it.
 
 foreach my $file ($info->sorted_index) {
-    next if $file eq '';
     $ELF{$file} = 1 if $info->file_info ($file) =~ /^[^,]*\bELF\b/o;
 
-    my $index_info = $info->index ($file);
-    my $operm = $index_info->operm;
-    next unless $index_info->is_file and ($operm & 0111);
+    my $operm = $file->operm;
+    next unless $file->is_file and ($operm & 0111);
     $executable{$file} = 1;
 }
 

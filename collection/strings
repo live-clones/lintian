@@ -73,14 +73,15 @@ my $open_strings_pipe = sub {
 };
 
 foreach my $bin ($info->sorted_index) {
+    my $filename = $bin->name;
     my $finfo = $info->file_info ($bin);
     next unless $finfo =~ m/\bELF\b/o;
-    print {$elf_fd} "$bin\n";
+    printf {$elf_fd} "$filename\n";
 
     next if $bin =~ m,^usr/lib/debug/,;
     if ($bin =~ m/[:\n\r]/) {
         # Do these "interesting cases" manual
-        push @manual, $bin;
+        push @manual, $filename;
         next;
     }
     $open_strings_pipe->() unless %opts;

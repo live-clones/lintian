@@ -55,13 +55,12 @@ return 0 if $info->index ("usr/share/doc/$pkg") and
 # Modify the file_info by following symbolic links.
 for my $file ($info->sorted_index) {
     next unless $file =~ m/doc/o;
-    my $path = $info->index ($file);
 
     $file_info{$file} = $info->file_info ($file);
 
-    if ($path->is_symlink) {
+    if ($file->is_symlink) {
         # A symlink; use its target info if available.
-        my $target = $path->link_normalized;
+        my $target = $file->link_normalized;
         my $tinfo = $info->file_info ($target);
         $file_info{$file} = $tinfo if defined $tinfo;
     }
@@ -69,9 +68,8 @@ for my $file ($info->sorted_index) {
 
 # Read package contents....  Capitalization errors are dealt with later.
 foreach ($info->sorted_index) {
-    next unless length $_;
 
-    # we are only interested in files or symlinks in /usr/(share/)?doc/$pkg
+    # we are only interested in files or symlinks in /usr/share/doc/$pkg
     if (m,usr/share/doc/$ppkg/([^/\s]+), ) {
         my $file = $1;
         my $file1 = "usr/share/doc/$pkg/$file";

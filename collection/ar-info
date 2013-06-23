@@ -51,8 +51,7 @@ chdir("$dir/unpacked");
 
 
 foreach my $file ($info->sorted_index) {
-    next unless $file =~ m/\.a$/;
-    next unless -f $file and not -l $file;
+    next unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;
 
     my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
     spawn($opts, [ 'ar', 't', $file ]);

@@ -76,13 +76,11 @@ check_script($pkg, $info->control('postrm'), 'postrm', \%postrm);
 
 # read package contents
 for my $file ($info->sorted_index) {
-    next if $file eq '';
 
-    add_file_link_info ($info, $file, \%all_files, \%all_links);
-    my $index_info = $info->index ($file);
-    my $operm = $index_info->operm;
+    add_file_link_info($info, $file->name, \%all_files, \%all_links);
+    my $operm = $file->operm;
 
-    if ($index_info->is_file) { # file checks
+    if ($file->is_file) { # file checks
         # menu file?
         if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
             if ($operm & 0111) {

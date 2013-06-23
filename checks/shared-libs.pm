@@ -77,7 +77,6 @@ foreach my $file (sort keys %{$objdump}) {
 }
 
 foreach my $file ($info->sorted_index) {
-    next unless length $file;
     my $fileinfo = $info->file_info ($file);
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
         $sharedobject{$file} = 1;
@@ -97,17 +96,16 @@ if (%SONAME) {
 
 for my $cur_file ($info->sorted_index) {
     # shared library?
-    my $cur_file_data = $info->index ($cur_file);
 
     if (exists $SONAME{$cur_file} or
-        (defined $cur_file_data->link and exists $SONAME{abs_path(dirname($cur_file).'/'.$cur_file_data->link)})) {
+        (defined $cur_file->link and exists $SONAME{abs_path(dirname($cur_file).'/'.$cur_file->link)})) {
         # yes!!
         my ($real_file, $perm);
         if (exists $SONAME{$cur_file}) {
             $real_file = $cur_file;
-            $perm = $cur_file_data->operm;
+            $perm = $cur_file->operm;
         } else {
-            $real_file = abs_path (dirname ($cur_file) . '/' . $cur_file_data->link);
+            $real_file = abs_path(dirname($cur_file) . '/' . $cur_file->link);
             # perm not needed for this branch
         }
 
@@ -165,15 +163,16 @@ for my $cur_file ($info->sorted_index) {
     } elsif ($ldconfig_dirs->known(dirname($cur_file))
              && exists $sharedobject{$cur_file}) {
         tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
-    } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file_data->link) {
+    } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file->link) {
         local $_;
-        open(my $fd, '<', $info->unpacked($cur_file_data));
+        open(my $fd, '<', $info->unpacked($cur_file));
         while(<$fd>) {
             next unless (m/^(libdir)='(.+?)'$/) or (m/^(dependency_libs)='(.+?)'$/);
             my ($field, $value) = ($1, $2);
             if ($field eq 'libdir') {
+                # dirname with leading slash and without the trailing one.
+                my $expected = '/' . substr($cur_file->dirname, 0, -1);
                 $value =~ s,/+$,,;
-                my ($expected) = ("/$cur_file" =~ m,^(.+)/[^/]+$,);
 
                 # python-central is a special case since the libraries are moved
                 # at install time.

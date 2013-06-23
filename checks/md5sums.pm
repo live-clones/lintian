@@ -50,8 +50,8 @@ unless (-f $control) {
     my $only_conffiles = 1;
     foreach my $file ($info->sorted_index) {
         # Skip non-files, they will not appear in the md5sums file
-        next unless $info->index ($file)->is_regular_file;
-        unless ($info->is_conffile ($file)) {
+        next unless $file->is_regular_file;
+        unless ($info->is_conffile($file)) {
             $only_conffiles = 0;
             last;
         }

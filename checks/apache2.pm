@@ -42,11 +42,9 @@ sub run {
 
     if ($type eq 'binary') {
         foreach my $file ($info->sorted_index) {
-            next if $file eq '';
-            my $index_info = $info->index ($file);
 
             # File is probably not relevant to us, ignore it
-            next if $index_info->is_dir;
+            next if $file->is_dir;
             next if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
 
 

@@ -44,9 +44,8 @@ my %manpage;
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index ($file);
-    my $file_info = $info->file_info ($file);
-    my $link = $index_info->link || '';
+    my $file_info = $info->file_info($file);
+    my $link = $file->link || '';
     my ($fname, $path, $suffix) = fileparse($file);
 
     # Binary that wants a manual page?
@@ -54,7 +53,7 @@ foreach my $file ($info->sorted_index) {
     # It's tempting to check the section of the man page depending on the
     # location of the binary, but there are too many mismatches between
     # bin/sbin and 1/8 that it's not clear it's the right thing to do.
-    if (($index_info->is_symlink or $index_info->is_file) and
+    if (($file->is_symlink or $file->is_file) and
         (($path eq 'bin/') or
          ($path eq 'sbin/') or
          ($path eq 'usr/bin/') or
@@ -77,7 +76,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     # manual page?
-    next unless ($index_info->is_symlink or $index_info->is_file) and
+    next unless ($file->is_symlink or $file->is_file) and
         (($path =~ m,^usr/man(/\S+),o)
          or ($path =~ m,^usr/X11R6/man(/\S+),o)
          or ($path =~ m,^usr/share/man(/\S+),o) );
@@ -103,7 +102,7 @@ foreach my $file ($info->sorted_index) {
     if ($ext ne 'gz') {
         push @pieces, $ext;
         tag 'manpage-not-compressed', $file;
-    } elsif ($index_info->is_file) { # so it's .gz... files first; links later
+    } elsif ($file->is_file) { # so it's .gz... files first; links later
         if ($file_info !~ m/gzip compressed data/o) {
             tag 'manpage-not-compressed-with-gzip', $file;
         } elsif ($file_info !~ m/max compression/o) {
@@ -126,7 +125,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     # check symbolic links to other manual pages
-    if ($index_info->is_symlink) {
+    if ($file->is_symlink) {
         if ($link =~ m,(^|/)undocumented,o) {
             if ($path =~ m,^usr/share/man,o) {
                 # undocumented link in /usr/share/man -- possibilities
@@ -158,7 +157,7 @@ foreach my $file ($info->sorted_index) {
             }
         }
     } else { # not a symlink
-        my $path = $info->unpacked($index_info);
+        my $path = $info->unpacked($file);
         my $fd;
         if ($file_info =~ m/gzip compressed/) {
             $fd = open_gz($path);
@@ -168,7 +167,7 @@ foreach my $file ($info->sorted_index) {
         my @manfile = <$fd>;
         close $fd;
         # Is it a .so link?
-        if ($index_info->size < 256) {
+        if ($file->size < 256) {
             my ($i, $first) = (0, '');
             do {
                 $first = $manfile[$i++] || '';
@@ -352,11 +351,9 @@ foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
     # Find the manpages in our related dependencies
     my $depinfo = $depproc->info();
     foreach my $file ($depinfo->sorted_index){
-        next if $file eq '';
-        my $index_info = $depinfo->index ($file);
         my ($fname, $path, $suffix) = fileparse($file, qr,\..+$,o);
         my $lang = '';
-        next unless ($index_info->is_file or $index_info->is_symlink) and
+        next unless ($file->is_file or $file->is_symlink) and
             (($path =~ m,^usr/man/\S+,o)
              or ($path =~ m,^usr/X11R6/man/\S+,o)
              or ($path =~ m,^usr/share/man/\S+,o) );

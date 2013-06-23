@@ -218,15 +218,11 @@ tag 'package-name-doesnt-match-sonames', "@sonames"
     if @sonames && !$match_found;
 
 my %directories;
-foreach ($info->sorted_index) {
-    next unless length $_;
-    # create copy, don't modify the index
-    my $path = $_;
-
-    my $index_info = $info->index ($path);
-    next unless $index_info->is_dir || $index_info->is_symlink;
-    $path =~ s,/\z,,;
-    $directories{"/$path"}++;
+for my $file ($info->sorted_index) {
+    my $name = $file->name;
+    next unless $file->is_dir || $file->is_symlink;
+    $name =~ s,/\z,,;
+    $directories{"/$name"}++;
 }
 
 # process all files in package
@@ -408,7 +404,7 @@ foreach my $file ($info->sorted_index) {
         for $lib (@{$objdump->{NEEDED}}) {
             if ($lib =~ /^libc\.so\.(\d+.*)/) {
                 $needs_libc = "libc$1";
-                $needs_libc_file = $file unless $needs_libc_file;
+                $needs_libc_file = $file->name unless $needs_libc_file;
                 $needs_libc_count++;
                 $no_libc = 0;
             }

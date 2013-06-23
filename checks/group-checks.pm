@@ -131,18 +131,14 @@ sub _check_file_overlap {
 
 sub _overlap_check {
     my ($a_proc, $a_info, $b_proc, $b_info) = @_;
-    foreach my $raw ($a_info->sorted_index) {
-        my $file;
-        my $a_file;
+    foreach my $a_file ($a_info->sorted_index) {
+        my $name = $a_file->name;
         my $b_file;
-        next unless $raw;
-        $file = $raw; # copy, because we have to modifiy it
-        $file =~ s,/$,,o;
-        $b_file = $b_info->index ($file) // $b_info->index ("$file/");
+        $name =~ s,/$,,o;
+        $b_file = $b_info->index($name) // $b_info->index ("$name/");
         if ($b_file) {
-            $a_file = $a_info->index ($file) // $a_info->index ("$file/");
             next if $a_file->is_dir and $b_file->is_dir;
-            tag 'binaries-have-file-conflict', $a_proc->pkg_name, $b_proc->pkg_name, $file;
+            tag 'binaries-have-file-conflict', $a_proc->pkg_name, $b_proc->pkg_name, $name;
         }
     }
 }

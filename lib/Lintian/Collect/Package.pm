@@ -424,6 +424,7 @@ sub _fetch_index_data {
     $self->{$field} = \%idxh;
     # Remove the "top" dir in the sorted_index as it is hardly ever used.
     shift @sorted if scalar @sorted && $sorted[0] eq '';
+    @sorted = map { $idxh{$_} } @sorted;
     $self->{"sorted_$field"} = \@sorted;
     close($idx);
     close($num_idx) if $num_idx;

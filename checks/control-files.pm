@@ -42,8 +42,6 @@ my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
 
 # process control-index file
 foreach my $file ($info->sorted_control_index) {
-    next unless $file;
-    my $cindex_info = $info->control_index ($file);
     my $owner;
     my $operm;
     my $experm;
@@ -52,7 +50,7 @@ foreach my $file ($info->sorted_control_index) {
     # dir, but that /should/ the "empty file" case in the beginning of
     # the loop) In any event, allow directories just in case - the
     # check here is mostly to catch symlinks (and "devices" etc.)
-    if (not ($cindex_info->is_regular_file or $cindex_info->is_dir)) {
+    if (not ($file->is_regular_file or $file->is_dir)) {
         tag 'control-file-is-not-a-file', $file;
         # Doing further checks is probably not going to yield anything
         # remotely useful.
@@ -73,7 +71,7 @@ foreach my $file ($info->sorted_control_index) {
     $experm = $ctrl->value($file);
 
     # I'm not sure about the udeb case
-    if ($type ne 'udeb' and $cindex_info->size == 0) {
+    if ($type ne 'udeb' and $file->size == 0) {
         tag 'control-file-is-empty', $file;
     }
 
@@ -82,7 +80,7 @@ foreach my $file ($info->sorted_control_index) {
     # this file isn't installed on the systems anyways)
     next if $file eq 'control';
 
-    $operm = $cindex_info->operm;
+    $operm = $file->operm;
 
     # correct permissions?
     unless ($operm == $experm) {
@@ -90,7 +88,7 @@ foreach my $file ($info->sorted_control_index) {
             sprintf('%s %04o != %04o', $file, $operm, $experm);
     }
 
-    $owner = $cindex_info->owner . '/' . $cindex_info->group;
+    $owner = $file->owner . '/' . $file->group;
 
     # correct owner?
     unless ($owner eq 'root/root') {

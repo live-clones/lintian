@@ -243,18 +243,17 @@ if (!$is_dummy) {
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index ($file);
-    my $owner = $index_info->owner . '/' . $index_info->group;
-    my $operm = $index_info->operm;
-    my $link = $index_info->link;
+    my $owner = $file->owner . '/' . $file->group;
+    my $operm = $file->operm;
+    my $link = $file->link;
 
     $arch_dep_files = 1 if $file !~ m,^usr/share/,o && $file ne 'usr/';
 
-    if (!is_string_utf8_encoded($file)) {
+    if (!is_string_utf8_encoded($file->name)) {
         tag 'file-name-is-not-valid-UTF-8', $file;
     }
 
-    if ($index_info->is_hardlink) {
+    if ($file->is_hardlink) {
         my $link_target_dir = $link;
         $link_target_dir =~ s,[^/]*$,,;
 
@@ -271,16 +270,16 @@ foreach my $file ($info->sorted_index) {
                 or $file !~ m,^\Q$link_target_dir\E[^/]*$,;
     }
 
-    my ($year) = ($index_info->date =~ /^(\d{4})/);
+    my ($year) = ($file->date =~ /^(\d{4})/);
     if ( $year <= 1975 ) { # value from dak CVS: Dinstall::PastCutOffYear
-        tag 'package-contains-ancient-file', "$file " . $index_info->{date};
+        tag 'package-contains-ancient-file', $file, $file->date;
     }
 
-    if (!($index_info->uid < 100 || $index_info->uid == 65_534
-            || ($index_info->uid >= 60_000 && $index_info->uid < 65_000))
-            || !($index_info->gid < 100 || $index_info->gid == 65_534
-            || ($index_info->gid >= 60_000 && $index_info->gid < 65_000))) {
-        tag 'wrong-file-owner-uid-or-gid', $file, $index_info->uid . '/' . $index_info->gid;
+    if (!($file->uid < 100 || $file->uid == 65_534
+            || ($file->uid >= 60_000 && $file->uid < 65_000))
+            || !($file->gid < 100 || $file->gid == 65_534
+            || ($file->gid >= 60_000 && $file->gid < 65_000))) {
+        tag 'wrong-file-owner-uid-or-gid', $file, $file->uid . '/' . $file->gid;
     }
 
     # *.devhelp and *.devhelp2 files must be accessible from a directory in
@@ -314,7 +313,7 @@ foreach my $file ($info->sorted_index) {
             tag 'bad-permissions-for-etc-cron.d-script', sprintf('%s %04o != 0644',$file,$operm);
         }
         # ---------------- /etc/emacs.*
-        elsif ($file =~ m,^etc/emacs.*/\S, and $index_info->is_file
+        elsif ($file =~ m,^etc/emacs.*/\S, and $file->is_file
                and $operm != 0644) {
             tag 'bad-permissions-for-etc-emacs-script', sprintf('%s %04o != 0644',$file,$operm);
         }
@@ -326,7 +325,7 @@ foreach my $file ($info->sorted_index) {
         elsif ($file =~ m,^etc/init\.d/\S,
                and $file !~ m,^etc/init\.d/(?:README|skeleton)$,
                and $operm != 0755
-               and $index_info->is_file) {
+               and $file->is_file) {
             tag 'non-standard-file-permissions-for-etc-init.d-script',
                 sprintf('%s %04o != 0755',$file,$operm);
         }
@@ -335,7 +334,7 @@ foreach my $file ($info->sorted_index) {
             tag 'package-modifies-ld.so-search-path', $file;
         }
         #----------------- /etc/modprobe.d
-        elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and not $index_info->is_dir) {
+        elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and not $file->is_dir) {
             tag 'non-conf-file-in-modprobe.d', $file;
         }
         #---------------- /etc/opt
@@ -348,8 +347,8 @@ foreach my $file ($info->sorted_index) {
         }
         #----------------- /etc/php5/conf.d
         elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
-            if ($index_info->is_file) {
-                open(my $fd, '<', $info->unpacked($index_info));
+            if ($file->is_file) {
+                open(my $fd, '<', $info->unpacked($file));
                 while (<$fd>) {
                     next unless (m/^\s*#/);
                     tag 'obsolete-comments-style-in-php-ini', $file;
@@ -385,12 +384,12 @@ foreach my $file ($info->sorted_index) {
                 }
 
                 # file directly in /usr/share/doc ?
-                if ($index_info->is_file and $file =~ m,^usr/share/doc/[^/]+$,) {
+                if ($file->is_file and $file =~ m,^usr/share/doc/[^/]+$,) {
                     tag 'file-directly-in-usr-share-doc', $file;
                 }
 
                 # executable in /usr/share/doc ?
-                if ($index_info->is_file and
+                if ($file->is_file and
                     $file !~ m,^usr/share/doc/(?:[^/]+/)?examples/, and
                     ($operm & 0111)) {
                     if ($script{$file}) {
@@ -401,7 +400,7 @@ foreach my $file ($info->sorted_index) {
                 }
 
                 # zero byte file in /usr/share/doc/
-                if ($index_info->size == 0 and $index_info->is_regular_file) {
+                if ($file->size == 0 and $file->is_regular_file) {
                     # Exceptions: examples may contain empty files for various
                     # reasons, Doxygen generates empty *.map files, and Python
                     # uses __init__.py to mark module directories.
@@ -413,10 +412,10 @@ foreach my $file ($info->sorted_index) {
                 }
                 # gzipped zero byte files:
                 # 276 is 255 bytes (maximal length for a filename) + gzip overhead
-                if ($file =~ m,.gz$, and $index_info->size <= 276
-                        and $index_info->is_file
+                if ($file =~ m,.gz$, and $file->size <= 276
+                        and $file->is_file
                         and $info->file_info ($file) =~ m/gzip compressed/) {
-                    my $fd = open_gz($info->unpacked($index_info));
+                    my $fd = open_gz($info->unpacked($file));
                     my $f = <$fd>;
                     close($fd);
                     unless (defined $f and length $f) {
@@ -448,7 +447,7 @@ foreach my $file ($info->sorted_index) {
 
         #----------------- /usr/X11R6/
         elsif ($file =~ m,^usr/X11R6/, and
-               not $index_info->is_symlink) { #links to FHS locations are allowed
+               not $file->is_symlink) { #links to FHS locations are allowed
             tag 'package-installs-file-to-usr-x11r6', $file;
         }
 
@@ -460,7 +459,7 @@ foreach my $file ($info->sorted_index) {
                 $warned_debug_name = 1;
             }
 
-            if ($index_info->is_file &&
+            if ($file->is_file &&
                 $file =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o){
                 my $correct = "usr/lib/debug/usr/lib/pymodules/$1/$2";
                 tag 'python-debug-in-wrong-location', $file, $correct;
@@ -493,7 +492,7 @@ foreach my $file ($info->sorted_index) {
         }
         # ---------------- /usr/local
         elsif ($file =~ m,^usr/local/\S+,) {
-            if ($index_info->is_dir) {
+            if ($file->is_dir) {
                 tag 'dir-in-usr-local', $file;
             } else {
                 tag 'file-in-usr-local', $file;
@@ -508,10 +507,10 @@ foreach my $file ($info->sorted_index) {
             if ($type eq 'udeb') {
                 tag 'udeb-contains-documentation-file', $file;
             }
-            if ($index_info->is_dir) {
+            if ($file->is_dir) {
                 tag 'stray-directory-in-manpage-directory', $file
                     if ($file !~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,);
-            } elsif ($index_info->is_file and ($operm & 0111)) {
+            } elsif ($file->is_file and ($operm & 0111)) {
                 tag 'executable-manpage', $file;
             }
         }
@@ -553,13 +552,13 @@ foreach my $file ($info->sorted_index) {
         }
         # ---------------- /usr/share
         elsif ($file =~ m,^usr/share/[^/]+$,) {
-            if ($index_info->is_file) {
+            if ($file->is_file) {
                 tag 'file-directly-in-usr-share', $file;
             }
         }
         # ---------------- /usr/bin
         elsif ($file =~ m,^usr/bin/,) {
-            if ($index_info->is_dir and $file =~ m,^usr/bin/., and $file !~ m,^usr/bin/(?:X11|mh)/,) {
+            if ($file->is_dir and $file =~ m,^usr/bin/., and $file !~ m,^usr/bin/(?:X11|mh)/,) {
                 tag 'subdir-in-usr-bin', $file;
             }
         }
@@ -598,7 +597,7 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- non-games-specific data in games subdirectory
         elsif ($file =~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,
-               and not $index_info->is_dir) {
+               and not $file->is_dir) {
             tag 'global-data-in-games-directory', $file;
         }
     }
@@ -662,7 +661,7 @@ foreach my $file ($info->sorted_index) {
     }
     # ---------------- /bin
     elsif ($file =~ m,^bin/,) {
-        if ($index_info->is_dir and $file =~ m,^bin/.,) {
+        if ($file->is_dir and $file =~ m,^bin/.,) {
             tag 'subdir-in-bin', $file;
         }
     }
@@ -705,7 +704,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     # ---------------- any files
-    if (not $index_info->is_dir) {
+    if (not $file->is_dir) {
         unless ($type eq 'udeb'
                 or $file =~ m,^usr/(?:bin|dict|doc|games|
                                     include|info|lib(?:x?32|64)?|
@@ -738,7 +737,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     # ---------------- __pycache__ (directory for pyc/pyo files)
-    if ($index_info->is_dir && $file =~ m,/__pycache__/,o){
+    if ($file->is_dir && $file =~ m,/__pycache__/,o){
         tag 'package-installs-python-pycache-dir', $file;
     }
 
@@ -785,8 +784,8 @@ foreach my $file ($info->sorted_index) {
     # we do the same check on perl scripts in checks/scripts
     {
         my $dep = $info->relation('strong');
-        if ($index_info->is_file && $file =~ m,\.pm$, && !$dep->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-            open(my $fd, '<', $info->unpacked($index_info));
+        if ($file->is_file && $file =~ m,\.pm$, && !$dep->implies('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
+            open(my $fd, '<', $info->unpacked($file));
             while (<$fd>) {
                 if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
                     tag 'perl-module-uses-perl4-libs-without-dep', "$file:$. ${1}.pl";
@@ -914,10 +913,10 @@ foreach my $file ($info->sorted_index) {
     if ($file =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,) {
         my ($dwidth, $dheight) = ($1, $2);
         my $path;
-        if ($index_info->is_symlink) {
-            $path = $index_info->link_normalized;
+        if ($file->is_symlink) {
+            $path = $file->link_normalized;
         } else {
-            $path = $file;
+            $path = $file->name;
         }
         my $fileinfo = $info->file_info ($path);
         if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
@@ -934,7 +933,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     # ---------------- plain files
-    if ($index_info->is_file) {
+    if ($file->is_file) {
         # ---------------- backup files and autosave files
         if ($file =~ /~$/ or $file =~ m,\#[^/]+\#$, or $file =~ m,/\.[^/]+\.swp$,) {
             tag 'backup-file-in-package', $file;
@@ -987,7 +986,7 @@ foreach my $file ($info->sorted_index) {
 
         # ---------------- embedded Feedparser library
         if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
-            open(my $fd, '<', $info->unpacked($index_info));
+            open(my $fd, '<', $info->unpacked($file));
             while (<$fd>) {
                 if (m,Universal feed parser,) {
                     tag 'embedded-feedparser-library', $file;
@@ -1000,7 +999,7 @@ foreach my $file ($info->sorted_index) {
         # ---------------- embedded PEAR modules
         foreach my $pearmodule (@pearmodules) {
             if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
-                open(my $fd, '<', $info->unpacked($index_info));
+                open(my $fd, '<', $info->unpacked($file));
                 while (<$fd>) {
                     if (m,/pear[/.],i) {
                         tag 'embedded-pear-module', $file;
@@ -1029,7 +1028,7 @@ foreach my $file ($info->sorted_index) {
             }
             my $finfo = $info->file_info ($file) || '';
             if ($finfo =~ m/PostScript Type 1 font program data/) {
-               my $path = $info->unpacked($index_info);
+               my $path = $info->unpacked($file);
                my $foundadobeline = 0;
                open(my $t1pipe, '-|', 't1disasm', $path);
                while (my $line = <$t1pipe>) {
@@ -1071,7 +1070,7 @@ foreach my $file ($info->sorted_index) {
             if ($finfo !~ m/gzip compressed/) {
                 tag 'gz-file-not-gzip', $file;
             } elsif ($isma_same && $file !~ m/\Q$arch\E/o) {
-                my $path = $info->unpacked($index_info);
+                my $path = $info->unpacked($file);
                 my $buff;
                 open(my $fd, '<', $path);
                 # We need to read at least 8 bytes
@@ -1100,8 +1099,8 @@ foreach my $file ($info->sorted_index) {
         if ($operm & 06000) {
             my ($setuid, $setgid) = ('','');
             # get more info:
-            $setuid = $index_info->owner if $operm & 04000;
-            $setgid = $index_info->group if $operm & 02000;
+            $setuid = $file->owner if $operm & 04000;
+            $setgid = $file->group if $operm & 02000;
 
             # 1st special case: program is using svgalib:
             if (exists $linked_against_libvga{$file}) {
@@ -1184,7 +1183,7 @@ foreach my $file ($info->sorted_index) {
         }
     }
     # ---------------- directories
-    elsif ($index_info->is_dir) {
+    elsif ($file->is_dir) {
         # special cases first:
         # game directory with setgid bit
         if ($file =~ m,^var/(?:lib/)?games/\S+, and $operm == 02775
@@ -1253,7 +1252,7 @@ foreach my $file ($info->sorted_index) {
         }
     }
     # ---------------- symbolic links
-    elsif ($index_info->is_symlink) {
+    elsif ($file->is_symlink) {
         # link
 
         my $mylink = $link;

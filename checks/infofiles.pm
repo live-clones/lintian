@@ -35,11 +35,10 @@ my (undef, undef, $info) = @_;
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index ($file);
     my $file_info = $info->file_info ($file);
     my ($fname, $path) = fileparse($file);
 
-    next unless ($index_info->is_symlink or $index_info->is_file)
+    next unless ($file->is_symlink or $file->is_file)
             and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
     # Ignore dir files.  That's a different error which we already catch in
@@ -52,7 +51,7 @@ foreach my $file ($info->sorted_index) {
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
     if ($ext eq 'gz') { # ok!
-        if ($index_info->is_file) { # compressed with maximum compression rate?
+        if ($file->is_file) { # compressed with maximum compression rate?
             if ($file_info !~ m/gzip compressed data/o) {
                 tag 'info-document-not-compressed-with-gzip', $file;
             } else {
@@ -77,11 +76,11 @@ foreach my $file ($info->sorted_index) {
     # If this is the main info file (no numeric extension). make sure it has
     # appropriate dir entry information.
     if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
-        if ($index_info->is_symlink && !is_ancestor_of($info->unpacked, $file)) {
+        if ($file->is_symlink && !is_ancestor_of($info->unpacked, $file)) {
             # unsafe symlink, skip
             next;
         }
-        my $fd = open_gz($info->unpacked($index_info));
+        my $fd = open_gz($info->unpacked($file));
         local $_;
         my ($section, $start, $end);
         while (<$fd>) {

@@ -36,7 +36,7 @@ my $info = Lintian::Collect->new ($pkg, $type, $dir);
 open(my $scripts_fd, '>', "$dir/scripts");
 
 foreach my $file ($info->sorted_index) {
-    next unless $info->index($file)->is_regular_file;
+    next unless $file->is_regular_file;
     my $scriptpath = shebang_line($info->unpacked($file));
 
     next unless defined($scriptpath); # no shebang line => not a script

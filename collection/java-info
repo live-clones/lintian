@@ -76,23 +76,22 @@ my $oldhandler = Archive::Zip::setErrorHandler ($errorhandler);
 
 FILE:
 foreach my $file ($info->sorted_index) {
-    my $ftype = $info->index ($file);
-    next unless $ftype->is_file;
+    next unless $file->is_file;
     # Wheezy's version of file calls "jar files" for "Zip archive".
     # Newer versions seem to call them "Java Jar file".
     next unless $info->file_info($file) =~ m/Java Jar file|Zip archive/o;
 
     if ($file =~ m#\S+\.jar$#i) {
+        my $filename = $file->name;
         my $has_manifest = 0;
         my $manifest;
         my $azip = Archive::Zip->new;
 
         $open_java_info->() unless %opts;
         # This script needs unzip, there's no way around.
-        print {$opts{pipe_in}} "-- $file\n";
+        print {$opts{pipe_in}} "-- $filename\n";
 
-        # stringify or $azip will make a call back that fails.
-        $azip->read ("$file") == AZ_OK or next FILE;
+        $azip->read($filename) == AZ_OK or next FILE;
 
         # First, the file list:
         foreach my $member ($azip->members) {
@@ -116,7 +115,7 @@ foreach my $file ($info->sorted_index) {
         }
 
         if ($manifest) {
-            print {$opts{pipe_in}} "-- MANIFEST: $file\n";
+            print {$opts{pipe_in}} "-- MANIFEST: $filename\n";
 
             my ($contents, $zerr) = $manifest->contents;
             next FILE unless $zerr == AZ_OK;

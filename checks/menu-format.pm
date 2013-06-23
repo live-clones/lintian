@@ -221,12 +221,11 @@ for my $dir ("$mdir/lib", "$mdir/share") {
 # Find the desktop files in the package for verification.
 my @desktop_files;
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index ($file);
-    my $operm = $index_info->operm;
+    my $operm = $file->operm;
 
     tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
 
-    if ($index_info->is_file &&
+    if ($file->is_file &&
         $file =~ m,^usr/share/applications/.*\.desktop$,) {
 
         if ($operm & 0111) {
@@ -679,9 +678,9 @@ sub verify_desktop_file {
     # TODO:  Should check quoting and the check special field
     # codes in Exec for desktop files.
     if ($file =~ m,^usr/share/applications/, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
-        my ($okay, $command) = verify_cmd($file, undef, $vals{'Exec'}, $pkg,
+        my ($okay, $command) = verify_cmd($file->name, undef, $vals{'Exec'}, $pkg,
                                           $info);
-        tag 'desktop-command-not-in-package', "$file $command"
+        tag 'desktop-command-not-in-package', $file, $command
             unless $okay or $command eq 'kcmshell';
     }
 

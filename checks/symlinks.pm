@@ -35,13 +35,12 @@ my @brokenlinks;
 my @dindexes;
 
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index ($file);
-    if ($index_info->is_symlink){
-        my $target = $index_info->link//''; # the link target
+    if ($file->is_symlink){
+        my $target = $file->link//''; # the link target
         my $path; # the target (from the pkg root)
         # Should not happen (too often) - but just in case
         next unless $target;
-        $path = $index_info->link_normalized;
+        $path = $file->link_normalized;
         if (not defined $path) {
             # Unresolvable link
             tag 'package-contains-unsafe-symlink', $file;

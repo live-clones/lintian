@@ -84,11 +84,10 @@ if (-f $cf) {
 
 # Read package contents...
 foreach my $file ($info->sorted_index) {
-    my $index_info = $info->index($file);
-    if (not $index_info->is_file and exists $conffiles{$file}) {
+    if (not $file->is_file and exists $conffiles{$file}) {
         tag 'conffile-has-bad-file-type', $file;
     }
-    next unless $file =~ m{^ etc/ }xsm and $index_info->is_file;
+    next unless $file =~ m{^ etc/ }xsm and $file->is_file;
 
     # If there is a /etc/foo, it must be a conffile (with a few exceptions).
     if (not exists($conffiles{$file})
