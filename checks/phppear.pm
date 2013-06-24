@@ -105,6 +105,16 @@ sub run {
                 '(>= 1.3~)', 'for PEAR channels support';
         }
     }
+    # Composer package
+    my $composer_json = $info->index('composer.json');
+    if (!defined($package_xml) && !defined($package2_xml) && defined($composer_json)) {
+        if (!$bdepends->implies('pkg-php-tools')) {
+            tag 'composer-package-without-pkg-php-tools-builddep';
+        } elsif (!$bdepends->implies('pkg-php-tools (>= 1.7~)')) {
+            tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                '(>= 1.7~)', 'for Composer package support';
+        }
+    }
     return;
 }
 
