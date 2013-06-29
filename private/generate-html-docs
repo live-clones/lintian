@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Pod::Simple::HTMLBatch;
 use Pod::Simple::HTML;
@@ -14,7 +15,7 @@ $output = pop @ARGV;
 
 push @input, './lib', './doc/tutorial' unless @input;
 $output //= './doc/api.html';
-$version //= '<version>';
+$version = guess_version();
 
 if ( ! -d $output) {
     mkdir $output or die "could not create directory: $!";
@@ -37,5 +38,33 @@ sub header {
 <head><title>Lintian (v$version) API doc</title></head>
 <body class='contentspage'>
 <h1>Lintian (v$version) API doc</h1>
+<p><em>Note: </em>This API is not stable between releases.</p>
 EOF
+}
+
+sub guess_version {
+    my $version;
+    my $dist;
+    open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
+    while (my $line = <$fd>) {
+        $version = $1 if $line =~ m{\A Version: \s*+ (\S++) \s* \Z}xsm;
+        $dist = $1 if $line =~ m{\A Distribution: \s*+ (\S++) \s* \Z}xsm;
+    }
+    close($fd);
+    if ( (! defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
+        # For unreleased versions, git describe is probably a better
+        # choice when available.
+        my $guess;
+        require IPC::Run;
+        delete $ENV{'GITDIR'};
+        eval {
+            # Ignore git being missing (or even failing to work)
+            # - the version being incorrect for non-release cases is
+            #   not a major issue.
+            IPC::Run::run(['git', 'describe'], \undef, \$guess);
+            chomp $guess;
+            $version = $guess if $guess ne '' && $guess =~ m{\A \d+\. }xsm;
+        };
+    }
+    return $version;
 }

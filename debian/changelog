@@ -6,6 +6,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
 
   * debian/dirs:
     + [NT] Remove /var/lib/lintian, we no longer use it.
+  * debian/docs:
+    + [NT] Add auto-generated API documentation.
+  * debian/rules:
+    + [NT] Generate API documentation during build.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 21:11:09 +0200
 
