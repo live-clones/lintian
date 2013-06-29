@@ -41,7 +41,6 @@ if (-d "$dir/unpacked/usr/share/doc/$pkg"
       && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")) {
     # if the parent dir is outside the package, just stop here before we
     # do something we will regret.
-    touch_file("$dir/copyright");
     return;
 }
 
@@ -52,18 +51,13 @@ my $file = "$dir/unpacked/usr/share/doc/$pkg/copyright";
 # unpack.  Be careful about what symlinks we allow, though.
 if (-l $file) {
     my $link = readlink($file);
-    if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-        touch_file("$dir/copyright");
-    } else {
+    unless ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
         copy ($file, "$dir/copyright") or fail "cannot copy $file: $!";
     }
 } elsif (-f $file) {
     link($file, "$dir/copyright");
 } elsif (-f "$file.gz") {
     gunzip_file ("$file.gz", "$dir/copyright");
-} else {
-    # no copyright file found
-    touch_file("$dir/copyright");
 }
 
 }

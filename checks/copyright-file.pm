@@ -96,6 +96,7 @@ if (not $found) {
     # #522827: special exception for perl for now
     tag 'no-copyright-file'
       unless $pkg eq 'perl';
+    return;
 }
 
 my $dcopy = $info->lab_data_path ('copyright');
