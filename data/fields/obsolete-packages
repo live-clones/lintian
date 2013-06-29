@@ -68,3 +68,6 @@ libdigest-sha1-perl
 
 # Deprecated in Wheezy by maintainer (#646420)
 dpatch
+
+# Deprecated in Jessie (#710466)
+texi2html
