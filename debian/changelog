@@ -1,4 +1,4 @@
-lintian (2.5.14) UNRELEASED; urgency=low
+lintian (2.5.14) unstable; urgency=low
 
   * Summary of tag changes:
     + Removed:
@@ -81,7 +81,7 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * t/runtests:
     + [NT] Include a summary of all skipped and failed tests.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 30 May 2013 10:38:26 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 14:52:29 +0200
 
 lintian (2.5.13) unstable; urgency=low
 
