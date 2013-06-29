@@ -917,11 +917,10 @@ if ($type eq 'source') {
             push @arch_dep_pkgs, $binpkg;
         }
     }
-    my $dstr = join ('|', @arch_dep_pkgs);
+    my $dstr = join('|', map { quotemeta($_) } @arch_dep_pkgs);
     my $depregex = qr/^(?:$dstr)$/;
     foreach (@dbg_pkgs) {
-        my $deps = Lintian::Relation->and ($info->binary_relation ($_, 'pre-depends'),
-                                           $info->binary_relation ($_, 'depends'));
+        my $deps = $info->binary_relation($_, 'strong');
         tag 'dbg-package-missing-depends', $_
            unless $deps->matches ($depregex, VISIT_PRED_NAME);
     }

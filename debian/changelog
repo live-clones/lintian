@@ -23,6 +23,8 @@ lintian (2.5.14) UNRELEASED; urgency=low
     + [NT] Retire upstream-version-not-numeric which can no longer
       be emitted.  Versions that would previously trigger this tag
       will now trigger bad-version-number instead.
+    + [NT] Properly quote package names used in regular expressions.
+      Thanks to Mattias Ellert for the report.  (Closes: #714427)
 
   * coll/*:
     + [NT] Set "Auto-Remove: yes" on several collections to
