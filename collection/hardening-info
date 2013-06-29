@@ -78,8 +78,6 @@ foreach my $bin ($info->sorted_index) {
 if (%opts) {
     close($opts{pipe_in});
     reap (\%opts);
-} else {
-    touch_file("$dir/hardening-info");
 }
 
 }

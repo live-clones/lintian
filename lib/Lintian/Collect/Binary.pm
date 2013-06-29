@@ -421,20 +421,20 @@ sub hardening_info {
     return $self->{hardening_info} if exists $self->{hardening_info};
     my $hardf = $self->lab_data_path ('hardening-info');
     my %hardening_info;
-    my ($file);
-    local $_;
-    open(my $idx, '<', $hardf);
-    while (<$idx>) {
-        chomp;
+    if ( -e $hardf ) {
+        open(my $idx, '<', $hardf);
+        while (my $line = <$idx>) {
+            chomp($line);
 
-        if (m,^([^:]+):(?:\./)?(.*)$,) {
-            my ($tag, $file) = ($1, $2);
-            push(@{$hardening_info{$file}}, $tag);
+            if ($line =~ m,^([^:]+):(?:\./)?(.*)$,) {
+                my ($tag, $file) = ($1, $2);
+                push(@{$hardening_info{$file}}, $tag);
+            }
         }
+        close($idx);
     }
 
     $self->{hardening_info} = \%hardening_info;
-    close($idx);
     return $self->{hardening_info};
 }
 
