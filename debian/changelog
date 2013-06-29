@@ -4,6 +4,9 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Avoid creating an empty copyright file when it is
       not needed.
 
+  * debian/dirs:
+    + [NT] Remove /var/lib/lintian, we no longer use it.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 21:11:09 +0200
 
 lintian (2.5.14) unstable; urgency=low
