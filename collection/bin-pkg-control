@@ -25,6 +25,8 @@ use strict;
 use warnings;
 use autodie;
 
+use constant ERROR_FILES => qw(control-index-errors control-errors);
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(delete_dir fail);
@@ -36,8 +38,11 @@ my (@jobs, $job);
 if ( -e "$dir/control"){
     delete_dir ("$dir/control") or fail 'Cannot remove old control dir';
 }
-unlink("$dir/control-index") if -e "$dir/control-index";
-unlink("$dir/control-index.gz") if -e "$dir/control-index.gz";
+
+for my $file ('control-index.gz', ERROR_FILES) {
+    my $path = "$dir/$file";
+    unlink($path) if -e $path;
+}
 
 mkdir("$dir/control", 0777);
 
@@ -74,6 +79,12 @@ unlink("$dir/control.tar");
 # fix permissions
 spawn({ fail => 'error' },
       ['chmod', '-R', 'u+rX,o-w', "$dir/control"]);
+
+# Remove empty error files...
+for my $file (ERROR_FILES) {
+    my $path = "$dir/$file";
+    unlink($path) if -z $path;
+}
 
 }
 

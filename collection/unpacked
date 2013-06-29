@@ -87,6 +87,9 @@ if ($type eq 'source') {
             ['chmod', '-R', 'u+rwX,go-w', "$dir/unpacked"]);
 }
 
+# Remove the error file if it is empty
+unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
+
 }
 
 sub dump_errors {
