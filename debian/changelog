@@ -28,6 +28,9 @@ lintian (2.5.14) UNRELEASED; urgency=low
       will now trigger bad-version-number instead.
     + [NT] Properly quote package names used in regular expressions.
       Thanks to Mattias Ellert for the report.  (Closes: #714427)
+  * checks/menus.pm:
+    + [NT] Fix a bug in checking for symlinks that could possibly
+      make lintian follow an unsafe symlink.  (CVE-2013-1429)
 
   * coll/*:
     + [NT] Set "Auto-Remove: yes" on several collections to

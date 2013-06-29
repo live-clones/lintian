@@ -175,10 +175,11 @@ if ($docbase_file) {
     opendir(my $dirfd, $info->lab_data_path('doc-base'));
     my $dbfile;
     while (defined($dbfile = readdir($dirfd)) ) {
+        next if $dbfile eq '.' or $dbfile eq '..';
         my $dbpath = $info->lab_data_path ("doc-base/$dbfile");
         # don't try to parse executables, plus we already warned about it
         # - skip symlinks as well, unlikely to be used for real doc-base files.
-        next if -x $dbfile or -l $dbfile;
+        next if -x $dbpath or -l $dbpath or not -f $dbpath;
         check_doc_base_file ($dbfile, $dbpath, $pkg, \%all_files, \%all_links,
                              $group);
     }
