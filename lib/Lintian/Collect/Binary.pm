@@ -303,24 +303,25 @@ Needs-Info requirements for using I<scripts>: scripts
 sub scripts {
     my ($self) = @_;
     return $self->{scripts} if exists $self->{scripts};
-    my $scrf = $self->lab_data_path ('scripts');
+    my $scrf = $self->lab_data_path('scripts');
     my %scripts;
-    local $_;
-    open(my $fd, '<', $scrf);
-    while ( my $line = <$fd> ) {
-        my (%file, $name);
-        chomp ($line);
+    if ( -f $scrf ) {
+        open(my $fd, '<', $scrf);
+        while ( my $line = <$fd> ) {
+            my (%file, $name);
+            chomp ($line);
 
-        $line =~ m/^(env )?(\S*) (.*)$/o
-            or fail("bad line in scripts file: $_");
-        ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
+            $line =~ m/^(env )?(\S*) (.*)$/o
+                or fail("bad line in scripts file: $line");
+            ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
 
-        $name =~ s,^\./,,o;
-        $name =~ s,/+$,,o;
-        $file{name} = $name;
-        $scripts{$name} = \%file;
+            $name =~ s,^\./,,o;
+            $name =~ s,/+$,,o;
+            $file{name} = $name;
+            $scripts{$name} = \%file;
+        }
+        close($fd);
     }
-    close($fd);
     $self->{scripts} = \%scripts;
 
     return $self->{scripts};

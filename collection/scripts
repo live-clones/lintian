@@ -32,8 +32,7 @@ use Lintian::Util qw(strip);
 sub collect {
 my ($pkg, $type, $dir) = @_;
 my $info = Lintian::Collect->new ($pkg, $type, $dir);
-
-open(my $scripts_fd, '>', "$dir/scripts");
+my $scripts_fd; # We lazily open this FD.
 
 foreach my $file ($info->sorted_index) {
     next unless $file->is_regular_file;
@@ -45,6 +44,11 @@ foreach my $file ($info->sorted_index) {
                                       # #!#!#!
     my $copy_path = $scriptpath;
     $scriptpath =~ s/^\#.*//; # remove comments
+
+    if (!defined($scripts_fd)) {
+        open($scripts_fd, '>', "$dir/scripts");
+    }
+
     if ($scriptpath eq '') {
         print {$scripts_fd} "$copy_path $file\n";
     } else {
@@ -57,7 +61,7 @@ foreach my $file ($info->sorted_index) {
         print {$scripts_fd} $env . "$scriptpath $file\n";
     }
 }
-close($scripts_fd);
+close($scripts_fd) if defined($scripts_fd);
 
 open(my $ctrl_fd, '>', "$dir/control-scripts");
 
