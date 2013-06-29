@@ -35,8 +35,8 @@ lintian (2.5.14) UNRELEASED; urgency=low
   * coll/*:
     + [NT] Set "Auto-Remove: yes" on several collections to
       reduce the "inode pressure" on lintian.d.o.
-    + [NT] Reduce the number of inodes used by removing some files,
-      when these are empty.
+    + [NT] Reduce the number of inodes used by removing or not
+      creating some empty files and directories.
   * coll/debfiles:
     + [NT] Remove test of the presence of unpacked.
   * coll/file-info{,.desc}:

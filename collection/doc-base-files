@@ -40,14 +40,10 @@ if ( -e "$dir/doc-base") {
 if ( -d "$dir/unpacked/usr/share/doc-base") {
     if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc-base")) {
         # Unsafe
-        mkdir("$dir/doc-base", 0777);
         return;
     }
     copy_dir ("$dir/unpacked/usr/share/doc-base", "$dir/doc-base")
         or fail('cannot copy directory unpacked/usr/share/doc-base');
-} else {
-    # no doc-base directory
-    mkdir("$dir/doc-base", 0777);
 }
 }
 

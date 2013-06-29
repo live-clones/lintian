@@ -172,18 +172,21 @@ if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
 # check consistency
 # docbase file?
 if ($docbase_file) {
-    opendir(my $dirfd, $info->lab_data_path('doc-base'));
-    my $dbfile;
-    while (defined($dbfile = readdir($dirfd)) ) {
-        next if $dbfile eq '.' or $dbfile eq '..';
-        my $dbpath = $info->lab_data_path ("doc-base/$dbfile");
-        # don't try to parse executables, plus we already warned about it
-        # - skip symlinks as well, unlikely to be used for real doc-base files.
-        next if -x $dbpath or -l $dbpath or not -f $dbpath;
-        check_doc_base_file ($dbfile, $dbpath, $pkg, \%all_files, \%all_links,
-                             $group);
+    my $dbdir = $info->lab_data_path('doc-base');
+    if ( -d $dbdir) {
+        opendir(my $dirfd, $dbdir);
+        my $dbfile;
+        while (defined($dbfile = readdir($dirfd)) ) {
+            next if $dbfile eq '.' or $dbfile eq '..';
+            my $dbpath = "$dbdir/$dbfile";
+            # don't try to parse executables, plus we already warned about it
+            # - skip symlinks as well, unlikely to be used for real doc-base files.
+            next if -x $dbpath or -l $dbpath or not -f $dbpath;
+            check_doc_base_file($dbfile, $dbpath, $pkg, \%all_files, \%all_links,
+                                $group);
+        }
+        closedir($dirfd);
     }
-    closedir($dirfd);
 } elsif ($documentation) {
     if ($pkg =~ /^libghc6?-.*-doc$/) {
         # This is the library documentation for a haskell library. Haskell
