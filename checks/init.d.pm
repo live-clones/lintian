@@ -187,6 +187,8 @@ foreach my $initd_file (keys %initd_postinst) {
     }
 }
 
+return unless -d $initd_dir;
+
 # files actually installed in /etc/init.d should match our list :-)
 opendir(my $dirfd, $initd_dir);
 for my $script (readdir($dirfd)) {

@@ -29,25 +29,21 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail is_ancestor_of);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
+my (undef, undef, $dir) = @_;
 
 if (-e "$dir/init.d") {
-    delete_dir ("$dir/init.d")
+    delete_dir("$dir/init.d")
         or fail('cannot rm old init.d directory');
 }
 
 if (-d "$dir/unpacked/etc/init.d") {
     if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/etc/init.d")) {
         # Unsafe, stop
-        mkdir("$dir/init.d", 0777);
         return;
     }
 
     copy_dir("$dir/unpacked/etc/init.d", "$dir/init.d")
         or fail('cannot copy init.d directory');
-} else {
-    # no etc/init.d
-    mkdir("$dir/init.d", 0777);
 }
 }
 
