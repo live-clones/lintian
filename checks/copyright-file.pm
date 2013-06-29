@@ -46,8 +46,7 @@ if ($info->index ("$path/copyright.gz")) {
     $found = 1;
 }
 
-if ($info->index ("$path/copyright")) {
-    my $index_info = $info->index ("$path/copyright");
+if (my $index_info = $info->index("$path/copyright")) {
     $found = 1;
     if ($index_info->is_symlink) {
         tag 'copyright-file-is-symlink';
