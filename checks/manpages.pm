@@ -86,7 +86,7 @@ foreach my $file ($info->sorted_index) {
         tag 'manpage-in-wrong-directory', $file;
         next;
     }
-    my ($section,$name) = ($1,$fname);
+    my $section = $1;
     my $lang = '';
        $lang = $1 if $t =~ m,^/([^/]+)/man\d/$,o;
 
@@ -97,7 +97,7 @@ foreach my $file ($info->sorted_index) {
         tag 'manpage-locale-dir-country-specific', $file;
     }
 
-    my @pieces = split(/\./, $name);
+    my @pieces = split(/\./, $fname);
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
         push @pieces, $ext;
