@@ -249,6 +249,8 @@ sub check_spelling {
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
         next if ($word =~ /^[A-Z]{1,5}\z/);
+        # Some exceptions are based on case (e.g. "teH").
+        next if exists($exceptions->{$word});
         my $lcword = lc $word;
         if ($corrections->known($lcword) &&
                 !exists ($exceptions->{$lcword})) {

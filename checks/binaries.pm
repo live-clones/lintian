@@ -281,8 +281,12 @@ foreach my $file ($info->sorted_index) {
     }
 
     my $strings = slurp_entire_file ($info->strings ($file));
+    my $exceptions = {
+        %{ $group->info->spelling_exceptions },
+        'teH' => 1, # From #711207
+    };
     check_spelling('spelling-error-in-binary', $strings, $file,
-                   $group->info->spelling_exceptions);
+                   $exceptions);
 
     # stripped?
     if ($fileinfo =~ m,not stripped\s*$,o) {
