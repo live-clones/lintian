@@ -80,8 +80,12 @@ foreach my $file ($info->sorted_index) {
         (($path =~ m,^usr/man(/\S+),o)
          or ($path =~ m,^usr/X11R6/man(/\S+),o)
          or ($path =~ m,^usr/share/man(/\S+),o) );
-
     my $t = $1;
+
+    if( $file =~ m/_build_buildd/ or $file =~ /_tmp_buildd/) {
+        tag 'manpage-named-after-build-path', $file;
+    }
+
     if (not $t =~ m,^.*man(\d)/$,o) {
         tag 'manpage-in-wrong-directory', $file;
         next;

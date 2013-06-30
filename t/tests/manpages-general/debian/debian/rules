@@ -47,6 +47,9 @@ override_dh_auto_install:
 	pod2man --section 6 simple.pod | gzip -c --best > \
 		$(tmp)/usr/share/man/man6/simple.pod.gz
 
+	pod2man --section 6 simple.pod | gzip -c --best > \
+		$(tmp)/usr/share/man/man6/_build_buildd-openchangex_1.0-3-i386-mbKpOA_openchange-1.0_simple.6.gz
+
 	gzip -c9 < test.1p.de \
 	    > $(tmp)/usr/share/man/man1/test-latin1-chars.1p.gz
 	gzip -c9 < test.1p.de \

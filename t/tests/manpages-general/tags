@@ -8,6 +8,7 @@ E: manpages-general: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
 E: manpages-general: manpage-has-wrong-extension usr/share/man/man6/simple.pod.gz
 E: manpages-general: manpage-is-dh_make-template usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages-general: manpage-is-dh_make-template usr/share/man/man1/program.1.gz
+E: manpages-general: manpage-named-after-build-path usr/share/man/man6/_build_buildd-openchangex_1.0-3-i386-mbKpOA_openchange-1.0_simple.6.gz
 E: manpages-general: manpage-not-compressed usr/share/man/de/man1/binary-without-english-manpage.1
 E: manpages-general: manpage-not-compressed usr/share/man/man1/usr-bin-binary.1
 E: manpages-general: manpage-not-compressed-with-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz

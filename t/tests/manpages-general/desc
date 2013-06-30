@@ -17,6 +17,7 @@ Test-For:
  manpage-has-wrong-extension
  manpage-is-dh_make-template
  manpage-locale-dir-country-specific
+ manpage-named-after-build-path
  manpage-not-compressed
  manpage-not-compressed-with-gzip
  manpage-not-compressed-with-max-compression
