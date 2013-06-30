@@ -9,7 +9,6 @@ use Pod::Simple::HTML;
 
 my (@input, $output, $version);
 
-$version = pop @ARGV;
 $output = pop @ARGV;
 @input = @ARGV;
 

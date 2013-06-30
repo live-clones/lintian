@@ -38,7 +38,7 @@ $(profiles): $(allchecks) $(autoreject_data) private/generate-profiles.pl
 	private/generate-profiles.pl
 
 api-doc:
-	private/generate-html-docs
+	private/generate-html-docs doc/api.html
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
@@ -73,7 +73,7 @@ build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
 	LINTIAN_ROOT="" ./frontend/lintian --help \
 		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
-	private/generate-html-docs > /dev/null
+	private/generate-html-docs doc/api.html > /dev/null
 	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
 
 	# check that the static data about perl core modules is up to date
