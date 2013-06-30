@@ -25,20 +25,22 @@ package Lintian::systemd;
 
 use strict;
 use warnings;
+use autodie;
 
 use File::Basename;
+use List::MoreUtils qw(any);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of);
+use Lintian::Util qw(fail is_ancestor_of lstrip rstrip);
 
 sub run {
-    my ($pkg, $type, $info) = @_;
+    my (undef, undef, $info) = @_;
 
     # Figure out whether the maintainer of this package did any effort to
     # make the package work with systemd. If not, we will not warn in case
     # of an init script that has no systemd equivalent, for example.
-    my $ships_systemd_file = (scalar ( grep { m,/systemd/, } $info->sorted_index ) > 0);
+    my $ships_systemd_file = any { m,/systemd/, } $info->sorted_index;
 
     # An array of names which are provided by the service files.
     # This includes Alias= directives, so after parsing
@@ -54,8 +56,8 @@ sub run {
             tag 'systemd-service-file-outside-lib', $file;
         }
         if ($file =~ m,/systemd/system/.*\.service$,) {
-            check_systemd_service_file ($pkg, $info, $file);
-            for my $name (extract_service_file_names ($pkg, $info, $file)) {
+            check_systemd_service_file($info, $file);
+            for my $name (extract_service_file_names($info, $file)) {
                 push @systemd_targets, $name;
             }
         }
@@ -66,7 +68,7 @@ sub run {
     # Verify that each init script includes /lib/lsb/init-functions,
     # because that is where the systemd diversion happens.
     for my $init_script (@init_scripts) {
-        check_init_script ($pkg, $info, $init_script);
+        check_init_script($info, $init_script);
     }
 
     @init_scripts = map { basename($_) } @init_scripts;
@@ -74,16 +76,17 @@ sub run {
     if ($ships_systemd_file) {
         for my $init_script (@init_scripts) {
             tag 'systemd-no-service-for-init-script', $init_script
-                unless grep /\Q$init_script\E\.service/, @systemd_targets;
+                unless any { m/\Q$init_script\E\.service/ } @systemd_targets;
         }
     }
 
     check_maintainer_scripts ($info);
+    return;
 }
 
 sub check_init_script {
-    my ($pkg, $info, $file) = @_;
-    
+    my ($info, $file) = @_;
+
     my $lsb_source_seen;
     my $unpacked_file = $info->unpacked ($file);
     unless (-f $unpacked_file &&
@@ -91,10 +94,9 @@ sub check_init_script {
         tag 'init-script-is-not-a-file', $file;
         return;
     }
-    open(my $fh, '<', $info->unpacked ($file))
-        or fail "cannot open $file: $!";
+    open(my $fh, '<', $unpacked_file);
     while (<$fh>) {
-        s/^\s+//;
+        lstrip;
         next if /^#/;
         if (m,^(?:\.|source)\s+/lib/lsb/init-functions,) {
             $lsb_source_seen = 1;
@@ -106,22 +108,23 @@ sub check_init_script {
     if (!$lsb_source_seen) {
         tag 'init.d-script-does-not-source-init-functions', $file;
     }
+    return;
 }
 
 sub check_systemd_service_file {
-    my ($pkg, $info, $file) = @_;
+    my ($info, $file) = @_;
 
-    my @values = extract_service_file_values ($pkg, $info, $file, 'Unit', 'After');
+    my @values = extract_service_file_values($info, $file, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
     tag 'systemd-service-file-refers-to-obsolete-target', $file, $_ for @obsolete;
+    return;
 }
 
 sub service_file_lines {
-    my ($file, $path) = @_;
-    open(my $fh, '<', $path)
-        or fail "cannot open $file: $!";
+    my ($path) = @_;
     my @lines;
     my $continuation;
+    open(my $fh, '<', $path);
     while (<$fh>) {
         chomp;
 
@@ -136,8 +139,7 @@ sub service_file_lines {
             next;
         }
 
-        # equivalent of strstrip(l)
-        $_ =~ s,[ \t\n\r]+$,,g;
+        rstrip;
 
         next if $_ eq '';
 
@@ -152,7 +154,7 @@ sub service_file_lines {
 
 # Extracts the values of a specific Key from a .service file
 sub extract_service_file_values {
-    my ($pkg, $info, $file, $extract_section, $extract_key) = @_;
+    my ($info, $file, $extract_section, $extract_key) = @_;
 
     my @values;
     my $section;
@@ -164,7 +166,7 @@ sub extract_service_file_values {
         return;
     }
     my @lines = service_file_lines($file, $info->unpacked ($file));
-    while (grep { /^\.include / } @lines) {
+    if (any { /^\.include / } @lines) {
         @lines = map {
             if (/^\.include (.+)$/) {
 # XXX: edge case: what should we do when a service file .includes a file in another package? lintian will not have access and therefore cannot properly check the file.
@@ -194,9 +196,9 @@ sub extract_service_file_values {
             if ($value eq '') {
                 # Empty assignment resets the list
                 @values = ();
+            } else {
+                push(@values, shellwords($value));
             }
-
-            @values = (@values, shellwords ($value));
         }
     }
 
@@ -204,17 +206,16 @@ sub extract_service_file_values {
 }
 
 sub extract_service_file_names {
-    my ($pkg, $info, $file) = @_;
+    my ($info, $file) = @_;
 
-    my @aliases = extract_service_file_values ($pkg, $info, $file, 'Install', 'Alias');
+    my @aliases = extract_service_file_values($info, $file, 'Install', 'Alias');
     return (basename ($file), @aliases);
 }
 
 sub check_maintainer_scripts {
     my ($info) = @_;
 
-    open my $fd, '<', $info->lab_data_path('/control-scripts')
-        or fail "cannot open lintian control-scripts file: $!";
+    open(my $fd, '<', $info->lab_data_path('control-scripts'));
 
     while (<$fd>) {
         m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
@@ -227,7 +228,7 @@ sub check_maintainer_scripts {
         # Don't try to parse the file if it does not appear to be a shell script
         next if $interpreter !~ m/sh\b/;
 
-        open my $sfd, '<', $filename or fail "cannot open maintainer script $filename: $!";
+        open(my $sfd, '<', $filename);
         while (<$sfd>) {
             # skip comments
             next if substr ($_, 0, $-[0]) =~ /#/;
@@ -237,10 +238,11 @@ sub check_maintainer_scripts {
                 tag 'maintainer-script-calls-systemctl', $file;
             }
         }
-        close $sfd;
+        close($sfd);
     }
 
-    close $fd;
+    close($fd);
+    return;
 }
 
 1;

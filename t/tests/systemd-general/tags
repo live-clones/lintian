@@ -1,6 +1,7 @@
 E: systemd-general: systemd-no-service-for-init-script systemd-general
 E: systemd-general: systemd-service-file-outside-lib etc/systemd/system/test.service
 E: systemd-general: systemd-tmpfiles.d-outside-usr-lib etc/tmpfiles.d/test.conf
+W: systemd-general: init.d-script-call-internal-API etc/init.d/systemd-general
 W: systemd-general: init.d-script-does-not-source-init-functions etc/init.d/systemd-general
 W: systemd-general: maintainer-script-calls-systemctl postrm
 W: systemd-general: systemd-service-file-refers-to-obsolete-target etc/systemd/system/test.service syslog.target
