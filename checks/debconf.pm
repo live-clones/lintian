@@ -68,14 +68,8 @@ my $usespreinst='';
 my $usesmultiselect='';
 
 if ($type eq 'source') {
-    my $binaries = $info->field('binary');
-    # no binary field?  There is not much we can do about it here.
-    return unless defined $binaries;
-    # do not trust the contents of that field any further than we can
-    # throw it.
-    return unless $binaries =~ m{^$PKGNAME_REGEX (?:\s*+ , \s*+ $PKGNAME_REGEX)*+ $}xsm;
-    chomp $binaries;
-    my @files = map { "$_.templates" } split /,\s+/, $binaries;
+    my @binaries = sort($info->binaries);
+    my @files = map { "$_.templates" } @binaries;
     push @files, 'templates';
 
     foreach my $file (@files) {
@@ -84,8 +78,8 @@ if ($type eq 'source') {
         $binary =~ s/\.?templates$//;
         # Single binary package (so @files contains "templates" and
         # "binary.templates")?
-        if (!$binary && $#files == 1) {
-            $binary = $binaries;
+        if (!$binary && @files == 2) {
+            $binary = $binaries[0];
         }
 
         if (-f $templates_file) {
