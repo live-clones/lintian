@@ -45,6 +45,7 @@ Start with the template:
  
  sub run {
      my ($pkg, $type, $info, $proc, $group) = @_;
+     return;
  }
 
 This snippet above is a simple valid check that does "nothing at all".
@@ -132,6 +133,7 @@ The full example being:
      my ($pkg, $type, $info, $proc, $group) = @_;
      tag 'deb-pkg-check-works',
          "I was emitted for $pkg, which was a $type package";
+     return;
  }
 
 Assuming there is a tag called "deb-pkg-check-works" in your I<.desc>
@@ -173,6 +175,7 @@ in all lowercase letters (i.e. use "multi-arch", not "Multi-Arch").
      # Emit a "missing-multi-arch-field" for all packages without the
      # Multi-Arch field
      tag 'missing-multi-arch-field' unless defined($multiarch);
+     return;
  }
 
 This was the first half.  Lets look at checking the value.  Multi-arch
@@ -219,6 +222,7 @@ We will use the second here:
          # Multi-Arch field
          tag 'missing-multi-arch-field';
      }
+     return;
  }
 
 So far so good.
@@ -286,6 +290,7 @@ Inserted in the proper place, our check now looks like:
          # Multi-Arch field
          tag 'missing-multi-arch-field';
      }
+     return;
  }
 
 =head2 Using static data files
@@ -395,6 +400,7 @@ So the resulting check is:
          # Multi-Arch field
          tag 'missing-multi-arch-field';
      }
+     return;
  }
 
 =head2 Accessing contents of the package
