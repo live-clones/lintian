@@ -39,6 +39,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
       (Closes: #712932)
   * data/output/manual-references:
     + [NT] Refresh.
+  * data/scripts/interpreters:
+    + [NT] Apply patch from Bastien Roucariès to include gjs.
+      Thanks to Andreas Henriksson for the report.
+      (Closes: #712607)
 
   * debian/dirs:
     + [NT] Remove /var/lib/lintian, we no longer use it.

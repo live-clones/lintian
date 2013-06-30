@@ -39,6 +39,7 @@ gbr3           => /usr/bin, gambas3-runtime
 gbx            => /usr/bin, gambas-runtime
 gbx2           => /usr/bin, gambas2-runtime
 gforth         => /usr/bin
+gjs            => /usr/bin
 gnuplot        => /usr/bin
 gosh           => /usr/bin, gauche
 icmake         => /usr/bin, icmake
