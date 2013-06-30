@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2013-01-15
+# Last updated: 2013-06-30
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -93,12 +93,13 @@ devref::5.8.2::Responding to bugs::http://www.debian.org/doc/developers-referenc
 devref::5.8.3::Bug housekeeping::http://www.debian.org/doc/developers-reference/pkgs.html#bug-housekeeping
 devref::5.8.4::When bugs are closed by new uploads::http://www.debian.org/doc/developers-reference/pkgs.html#upload-bugfix
 devref::5.8.5::Handling security-related bugs::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security
-devref::5.9::Moving, removing, renaming, adopting, and orphaning packages::http://www.debian.org/doc/developers-reference/pkgs.html#archive-manip
+devref::5.9::Moving, removing, renaming, orphaning, adopting, and reintroducing packages::http://www.debian.org/doc/developers-reference/pkgs.html#archive-manip
 devref::5.9.1::Moving packages::http://www.debian.org/doc/developers-reference/pkgs.html#moving-pkgs
 devref::5.9.2::Removing packages::http://www.debian.org/doc/developers-reference/pkgs.html#removing-pkgs
 devref::5.9.3::Replacing or renaming packages::http://www.debian.org/doc/developers-reference/pkgs.html#s5.9.3
 devref::5.9.4::Orphaning a package::http://www.debian.org/doc/developers-reference/pkgs.html#orphaning
 devref::5.9.5::Adopting a package::http://www.debian.org/doc/developers-reference/pkgs.html#adopting
+devref::5.9.6::Reintroducing packages::http://www.debian.org/doc/developers-reference/pkgs.html#reintroducing-pkgs
 devref::5.10::Porting and being ported::http://www.debian.org/doc/developers-reference/pkgs.html#porting
 devref::5.10.1::Being kind to porters::http://www.debian.org/doc/developers-reference/pkgs.html#kind-to-porters
 devref::5.10.2::Guidelines for porter uploads::http://www.debian.org/doc/developers-reference/pkgs.html#porter-guidelines
@@ -476,6 +477,9 @@ lintian::2.6.2::Basic syntax of data files::http://lintian.debian.org/manual/sec
 lintian::3::Advanced usage::http://lintian.debian.org/manual/chapter-3.html
 lintian::3.1::How Lintian works::http://lintian.debian.org/manual/chapter-3.html#section-3.1
 lintian::3.2::The laboratory::http://lintian.debian.org/manual/section-3.2.html
+lintian::3.3::Writing your own Lintian checks::http://lintian.debian.org/manual/section-3.3.html
+lintian::3.3.1::Check description file::http://lintian.debian.org/manual/section-3.3.html#section-3.3.1
+lintian::3.3.2::Check Perl module file::http://lintian.debian.org/manual/section-3.3.html#section-3.3.2
 menu::::Debian Menu System::http://www.debian.org/doc/packaging-manuals/menu.html/
 menu::1::Introduction::http://www.debian.org/doc/packaging-manuals/menu.html/ch1.html
 menu::2::Menu from the viewpoint of a user::http://www.debian.org/doc/packaging-manuals/menu.html/ch2.html

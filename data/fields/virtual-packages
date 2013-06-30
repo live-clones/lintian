@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2012-06-14
+# Last updated: 2013-06-30
 
 # Keep: xserver-xorg-input, xserver-xorg-input-2, xserver-xorg-input-2.1
 # Keep: xserver-xorg-input-4
@@ -17,11 +17,9 @@
 
 ada-compiler
 aide-binary
-alsa
 alsaplayer-interface
 alsaplayer-output
 amora-server
-apache2-mpm
 aptitude-doc
 aspell-dictionary
 aspell6a-dictionary
@@ -31,9 +29,12 @@ audio-mixer
 automaken
 awk
 bacula-director
+bacula-director-dbg
 bacula-sd-tools
+bacula-sd-tools-dbg
 bochs-gui
 bogofilter-db
+boom-engine
 boom-wad
 c++-compiler
 c++abi2-dev
@@ -43,6 +44,7 @@ calligra-l10n
 chasen-dic
 childsplay-alphabet-sounds
 cl-sql-backend
+classpath-doc
 console-utilities
 cudf-solver
 d-compiler
@@ -90,10 +92,9 @@ gem-plugin-image
 gem-plugin-record
 gem-plugin-video
 geoclue-provider
-germlin-encoders
 gforge-mta
-gfxboot-theme
 gimp-help
+gmerlin-encoders
 gmt-gshhs-data
 gnome-www-browser
 gnumach-image
@@ -106,8 +107,14 @@ gstreamer0.10-audiosource
 gstreamer0.10-videosink
 gstreamer0.10-videosource
 gstreamer0.10-visualization
+gstreamer1.0-audiosink
+gstreamer1.0-audiosource
+gstreamer1.0-videosink
+gstreamer1.0-videosource
+gstreamer1.0-visualization
 guile
 gvim
+horde-bundle
 httpd
 httpd-cgi
 httpd-wsgi
@@ -117,7 +124,6 @@ hunspell-dictionary-en
 hunspell-dictionary-fr
 hunspell-dictionary-ru
 hyphen-hyphenation-patterns
-icedtea6-jre-cacao
 ident-server
 ike-server
 imap-client
@@ -155,6 +161,8 @@ kfreebsd-image-8
 kfreebsd-image-9
 kfreebsd-source
 ladspa-plugin
+lcl-gtk
+lcl-qt
 libblas-3gf.so
 libblas.so
 libblas.so.3
@@ -166,21 +174,21 @@ libcurl4-dev
 libdeps-renderer
 libdesktop-agnostic-cfg
 libdesktop-agnostic-fdo
-libdspam7-drv
 libedac
 libfcgi-ruby
 libfltk-dev
-libgd-dev
 libgd2
 libgdchart
 libgdchart-gd2-dev
-libgettext-ruby
-libggi-target
 libgl-dev
 libgl1
+libgtkdatabox-dev
+libgtkdatabox-glade
+libgtkdatabox-libglade
 libguile-dev
 libhdf5-1.8
 libhtml-wikiconverter-dialect
+libini-config
 libio-compress-base-perl
 libio-compress-bzip2-perl
 libio-compress-zlib-perl
@@ -194,28 +202,30 @@ liblapack.so.3gf
 libmp3splt0-plugin
 libmpich-dev
 libneon-dev
+libnora-ruby
 libode0-dev
+libopendbx1-backend
+libphobos-dev
+libprocps-dev
 libreadline-dbg
 libreoffice-grammarcheck
-libreoffice-help-3.5
-libreoffice-l10n-3.5
+libreoffice-help-4.0
+libreoffice-l10n-4.0
 libreoffice-style
-libserf-dbg
 libstdc++-dev
-libstlport-dev
+libtasn1-dev
 libvala-dev
 libxine-doc
 libzip-ruby
 libzookeeper-dev
-licq-plugin
+licq-plugin-ui
+lightdm-greeter
 linux-headers
 linux-image
 linux-initramfs-tool
 linux-kernel-log-daemon
-linux-manual
 lisp-compiler
 live-config-backend
-live-manual
 lua
 lv2-host
 lv2-plugin
@@ -235,7 +245,6 @@ myspell-dictionary-de
 myspell-dictionary-en
 myspell-dictionary-fr
 myspell-dictionary-pt
-mysql-server-core
 mythes-thesaurus
 mythes-thesaurus-de
 nes-emulator
@@ -252,12 +261,13 @@ openoffice.org-hyphenation
 openoffice.org-spellcheck-de-at
 openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
+pango1.0-multiarch-modver-1.8.0
 paw-binary
 pcsc-ifd-handler
 pdf-viewer
 pdns-backend
 phonon-backend
-phpapi-20100525+lfs
+phpapi-20121212
 pinentry
 pinentry-x11
 ping
@@ -265,15 +275,15 @@ plymouth-theme
 pop3-server
 postscript-viewer
 python-carquinyol
-python-jarabe
 python-pg
 python-pysvn
 python-sugar
 python-sugar-toolkit
-python2.6-setuptools
 python2.7-setuptools
 python3.2-gdbm
 python3.2-setuptools
+python3.3-gdbm
+python3.3-setuptools
 quantum-plugin
 radius-server
 ratbox-services
@@ -286,18 +296,14 @@ skkserv
 snd-gtk-alsa
 snort-rules
 ssh-server
-sugar
 sugar-artwork
 sugar-chat-activity
-sugar-emulator
 sugar-presence-service
-sugar-tools
-sugar-web-activity
 sword-comm
 sword-dict
 sword-frontend
 sword-text
-syslogd
+syslinux-theme
 system-log-daemon
 tads2-interpreter
 tads3-interpreter
@@ -316,8 +322,6 @@ vim-perl
 vim-python
 vim-ruby
 vim-tcl
-virtual-mysql-client
-virtual-mysql-server
 vnc-server
 vnc-viewer
 wicd-client
@@ -331,8 +335,12 @@ x-session-manager
 x-terminal-emulator
 x-window-manager
 xen-hypervisor
-xen-hypervisor-4.1
+xen-hypervisor-4.2
+xen-hypervisor-amd64
 xen-linux-system
+xen-system
+xen-utils
+xmlformat
 xmp-player
 xorg-driver-input
 xorg-driver-video

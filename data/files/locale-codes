@@ -3,7 +3,7 @@
 # If a language has 639-1 and 639-2 codes, the -2 code is also included
 # as a key to be mapped to the -1 code.
 #
-# Last updated: 2013-01-25
+# Last updated: 2013-06-30
 
 aa
 aaa
@@ -8165,6 +8165,7 @@ zeh
 zen
 zga
 zgb
+zgh
 zgm
 zgn
 zgr

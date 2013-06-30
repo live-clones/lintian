@@ -9,6 +9,13 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Avoid creating an empty copyright file when it is
       not needed.
 
+  * data/fields/virtual-packages:
+    + [NT] Refresh.
+  * data/files/{fonts,locale-codes}:
+    + [NT] Refresh.
+  * data/output/manual-references:
+    + [NT] Refresh.
+
   * debian/dirs:
     + [NT] Remove /var/lib/lintian, we no longer use it.
   * debian/docs:
