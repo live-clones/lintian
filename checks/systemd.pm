@@ -32,7 +32,9 @@ use List::MoreUtils qw(any);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of lstrip rstrip);
+use Lintian::Util qw(
+        fail is_ancestor_of normalize_pkg_path lstrip rstrip
+);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -165,14 +167,27 @@ sub extract_service_file_values {
         tag 'service-file-is-not-a-file', $file;
         return;
     }
-    my @lines = service_file_lines($file, $info->unpacked ($file));
+    my @lines = service_file_lines($unpacked_file);
     if (any { /^\.include / } @lines) {
         @lines = map {
             if (/^\.include (.+)$/) {
-# XXX: edge case: what should we do when a service file .includes a file in another package? lintian will not have access and therefore cannot properly check the file.
                 my $path = $1;
-                $path =~ s,^/,,;
-                service_file_lines(basename($path), $info->unpacked ($path));
+                my $normalized;
+                my $included;
+                if ($path =~ s,^/,,) {
+                    $normalized = normalize_pkg_path('/', $path);
+                } else {
+                    $normalized = normalize_pkg_path($file->dirname, $path);
+                }
+                $included = $info->unpacked($normalized)
+                    if defined($normalized);
+                if (defined($included) && -f $included
+                       && is_ancestor_of($info->unpacked, $included)) {
+                    service_file_lines($included);
+                } else {
+                    # doesn't exist, exists but not a file or "out-of-bounds"
+                    $_;
+                }
             } else {
                 $_;
             }
