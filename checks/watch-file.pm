@@ -190,6 +190,7 @@ if (defined $changes and %dversions) {
     }
 }
 
+return;
 }
 
 1;

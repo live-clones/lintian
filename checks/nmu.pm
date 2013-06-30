@@ -42,7 +42,7 @@ my $changelog_mentions_team_upload = 0;
 # symlink.
 if (-l $info->debfiles('changelog')) {
     tag 'changelog-is-symlink';
-    return 0;
+    return;
 }
 
 # Get some data from the changelog file.
@@ -120,6 +120,7 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
         if !$upload_is_nmu && $version_nmuness;
 }
 
+return;
 }
 
 # Canonicalize a maintainer address with respect to case.  E-mail addresses

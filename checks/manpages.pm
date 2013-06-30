@@ -375,6 +375,7 @@ for my $f (sort keys %binary) {
     }
 }
 
+return;
 }
 
 1;

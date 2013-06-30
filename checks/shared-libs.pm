@@ -661,6 +661,7 @@ if (-f $info->control('postrm') and not -l $info->control('postrm')) {
     }
 }
 
+return;
 }
 
 # make /tmp/baz/baz.txt from /tmp/foo/../bar/../baz/baz.txt

@@ -86,7 +86,7 @@ if ($len > FILENAME_LENGTH_LIMIT){
     tag 'source-package-component-has-long-file-name', "$len > " . FILENAME_LENGTH_LIMIT;
 }
 
-
+return;
 }
 
 1;

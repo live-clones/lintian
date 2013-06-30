@@ -115,6 +115,7 @@ for my $file (keys %ERRORS) {
     }
 }
 
+return;
 }
 
 1;

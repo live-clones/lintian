@@ -227,6 +227,7 @@ if (@dep5) {
     }
 }
 
+return;
 }
 
 sub split_licenses {

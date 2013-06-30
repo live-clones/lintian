@@ -65,7 +65,7 @@ $all_udeb = 0
 
 if (not defined $version) {
     tag 'no-standards-version-field' unless $all_udeb;
-    return 0;
+    return;
 }
 
 # Check basic syntax and strip off the fourth digit.  People are allowed to
@@ -74,7 +74,7 @@ if (not defined $version) {
 # field.
 unless ($version =~ m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
     tag 'invalid-standards-version', $version;
-    return 0;
+    return;
 }
 my $stdver = $1;
 my ($major, $minor, $patch) = $stdver =~ m/^(\d+)\.(\d+)\.(\d+)/;
@@ -115,7 +115,7 @@ if (not $STANDARDS->known($stdver)) {
     }
 } elsif ($stdver eq $CURRENT) {
     # Current standard.  Nothing more to check.
-    return 0;
+    return;
 } else {
     # Otherwise, we need to see if the standard that this package declares is
     # both new enough to not be ancient and was the current standard at the
@@ -132,7 +132,7 @@ if (not $STANDARDS->known($stdver)) {
         # can't find the changelog file, always issue the tag.
         if (not defined $changes) {
             tag 'out-of-date-standards-version', $tag;
-            return 0;
+            return;
         }
         my ($entry) = $changes->data;
         my $timestamp = ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
@@ -146,6 +146,7 @@ if (not $STANDARDS->known($stdver)) {
     }
 }
 
+return;
 }
 
 1;

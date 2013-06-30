@@ -109,6 +109,7 @@ foreach my $blink (@brokenlinks){
     }
 }
 
+return;
 }
 
 1;

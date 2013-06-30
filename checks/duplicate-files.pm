@@ -62,6 +62,7 @@ foreach my $hash (keys %hashmap){
     }
 }
 
+return;
 }
 
 1;

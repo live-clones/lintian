@@ -179,6 +179,7 @@ if ($is_dev_package) {
     }
 }
 
+return;
 }
 
 1;

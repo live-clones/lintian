@@ -54,6 +54,7 @@ my %implied_dependencies =
     (
      'mountall'   => '$local_fs',
      'mountnfs'   => '$remote_fs',
+
      'hwclock'    => '$time',
      'portmap'    => '$portmap',
      'named'      => '$named',
@@ -217,6 +218,7 @@ for my $script (readdir($dirfd)) {
 }
 closedir($dirfd);
 
+return;
 }
 
 sub check_init {
@@ -458,6 +460,8 @@ sub check_init {
         $tag{$option}
             or tag 'init.d-script-does-not-implement-optional-option', "etc/init.d/${initd_file} $option";
     }
+
+    return;
 }
 
 1;

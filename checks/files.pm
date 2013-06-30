@@ -1443,6 +1443,7 @@ if ($x11_font_dirs{misc} and keys (%x11_font_dirs) > 1) {
     tag 'package-mixes-misc-and-dpi-fonts';
 }
 
+return;
 }
 
 sub dir_counts {

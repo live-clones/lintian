@@ -446,11 +446,13 @@ if ($seen_dh and $seen_python3_helper != 1) {
     }
 }
 
+return;
 }
 
 sub _tag_if_executable {
     my ($file, $path) = @_;
     tag 'package-file-is-executable', "debian/$file" if -f $path && -x _;
+    return;
 }
 
 # Perform various checks on a dh-exec file.
@@ -485,6 +487,7 @@ sub _check_dh_exec {
     if ( $dhe_install && $base ne 'install') {
         tag 'dh-exec-install-not-allowed-here', $pkgpath;
     }
+    return;
 }
 
 # Return the command after the #! in the file (if any).

@@ -81,6 +81,7 @@ if ( ! -l $dsrc && -d $dsrc ) {
     closedir($dirfd);
 }
 
+return;
 }
 
 1;

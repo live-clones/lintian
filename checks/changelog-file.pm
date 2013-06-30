@@ -48,7 +48,7 @@ my @doc_files;
 my %file_info;
 
 # skip packages which have a /usr/share/doc/$pkg -> foo symlink
-return 0 if $info->index ("usr/share/doc/$pkg") and
+return if $info->index("usr/share/doc/$pkg") and
     $info->index ("usr/share/doc/$pkg")->is_symlink;
 
 
@@ -222,13 +222,13 @@ my $dchpath = $info->lab_data_path ('changelog');
 # such symlinks, so their profile will suppress this tag.
 if (-l $dchpath) {
     tag 'debian-changelog-file-is-a-symlink';
-    return 0;
+    return;
 }
 
 # Bail at this point if the changelog file doesn't exist.  We will have
 # already warned about this.
 unless (-f $dchpath) {
-    return 0;
+    return;
 }
 
 # check that changelog is UTF-8 encoded
@@ -378,6 +378,7 @@ if (@entries) {
                    $group->info->spelling_exceptions);
 }
 
+return;
 }
 
 # read the changelog itself and check for some issues we cannot find

@@ -265,6 +265,7 @@ for my $i (0 .. $#descriptions) {
     }
 }
 
+return;
 }
 
 
@@ -319,6 +320,7 @@ sub check_dev_depends {
             }
         }
     }
+    return;
 }
 
 # Checks for duplicates in a relation, for missing separators and
@@ -353,7 +355,7 @@ sub check_relation {
         tag 'obsolete-relation-form-in-source', 'in', $pkg,
             "$field: $1";
     }
-
+    return;
 }
 
 

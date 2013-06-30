@@ -86,10 +86,10 @@ if ( $has_template ) {
     }
     if ( ! -d "$debfiles/po" ) {
         tag 'not-using-po-debconf';
-        return 0;
+        return;
     }
 } else {
-    return 0;
+    return;
 }
 
 # If we got here, we're using po-debconf, so there shouldn't be any stray
@@ -171,6 +171,7 @@ closedir($po_dirfd);
 
 tag 'no-complete-debconf-translation' if !$full_translation;
 
+return;
 }
 
 1;

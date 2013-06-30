@@ -79,6 +79,7 @@ sub run {
             check_control_contents($info, $path);
         }
     }
+    return;
 }
 
 sub check_control_contents {
@@ -94,6 +95,7 @@ sub check_control_contents {
             check_control_paragraph($info, $paragraph);
         }
     }
+    return;
 }
 sub check_control_paragraph {
     my ($info, $paragraph) = @_;
@@ -135,7 +137,9 @@ sub check_control_paragraph {
             check_test_file ($info, $directory, $testname);
         }
     }
+    return;
 }
+
 sub check_test_file {
     my ($info, $directory, $name) = @_;
     my $path = "$directory/$name";
@@ -150,6 +154,7 @@ sub check_test_file {
         tag 'runtime-test-file-is-not-a-regular-file', $path;
     }
     # Test files are allowed not to be executable.
+    return;
 }
 
 1;

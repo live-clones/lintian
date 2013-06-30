@@ -41,7 +41,7 @@ return if -l $control;
 # Is there a md5sums control file?
 unless (-f $control) {
     # ignore if package contains no files
-    return 0 if -z $info->lab_data_path ('md5sums');
+    return if -z $info->lab_data_path ('md5sums');
 
     # check if package contains non-conffiles
     # debhelper doesn't create entries in md5sums
@@ -58,12 +58,12 @@ unless (-f $control) {
     }
 
     tag 'no-md5sums-control-file' unless $only_conffiles;
-    return 0;
+    return;
 }
 
 # Is it empty? Then skip it. Tag will be issued by control-files
 if (-z $control) {
-    return 0;
+    return;
 }
 
 # read in md5sums control file
@@ -96,6 +96,7 @@ for my $file (keys %{ $info->md5sums }) {
         unless ($info->is_conffile ($file) || $file =~ m%^var/lib/[ai]spell/.%o);
 }
 
+return;
 }
 
 1;

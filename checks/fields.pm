@@ -1050,6 +1050,7 @@ for my $field (keys %{$info->field}) {
         if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS->known ($field));
 }
 
+return;
 }
 
 # splits "foo:bar (>= 1.2.3) [!i386 ia64]" into
@@ -1109,6 +1110,7 @@ sub unfold {
         #  http://somewhere.com/$
         $$line=~s/^\s*+//;
     }
+    return;
 }
 
 1;

@@ -99,6 +99,7 @@ foreach my $file ($info->sorted_index) {
     }
 }
 
+return;
 }
 
 1;

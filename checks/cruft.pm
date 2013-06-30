@@ -190,6 +190,7 @@ for my $file (keys %ERRORS) {
     }
 }
 
+return;
 } # </run>
 
 # -----------------------------------
@@ -251,6 +252,7 @@ sub check_diffstat {
     # If there was nothing in the diffstat output, there was nothing in the
     # diff, which is probably a mistake.
     tag 'empty-debian-diff' unless $saw_file;
+    return;
 }
 
 # Check the debian directory for problems.  This is used for Format: 2.0 and
@@ -283,6 +285,7 @@ sub check_debfiles {
     if ($name =~ m@^(?:.+\.)?substvars$@o) {
         tag 'diff-contains-substvars', "debian/$name";
     }
+    return;
 }
 
 # Check each file in the source package for problems.  By the time we get to
@@ -586,6 +589,7 @@ sub find_cruft {
         }
         close($F);
     }
+    return;
 }
 
 1;

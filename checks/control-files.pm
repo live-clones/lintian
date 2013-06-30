@@ -97,7 +97,7 @@ foreach my $file ($info->sorted_control_index) {
 
 # for other maintainer scripts checks, see the scripts check
 }
-
+return;
 } # </run>
 
 1;

@@ -300,6 +300,7 @@ foreach my $menufile (@menufiles) {
     close($fd);
 }
 
+return;
 }
 
 # -----------------------------------
@@ -514,6 +515,7 @@ sub verify_line {
             tag 'menu-item-creates-new-section', "$vals{section} $fullname:$linecount";
         }
     }
+    return;
 }
 
 
@@ -717,6 +719,7 @@ sub verify_desktop_file {
             tag 'desktop-entry-limited-to-environments', $file;
         }
     }
+    return;
 }
 
 # Verify whether a command is shipped as part of the package.  Takes the full

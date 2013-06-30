@@ -244,6 +244,7 @@ sub run {
         tag 'direct-changes-in-diff-but-no-patch-system', $files
             if (not $uses_patch_system);
     }
+    return;
 }
 
 # Checks on patches common to all build systems.
@@ -264,6 +265,7 @@ sub check_patch {
         }
     }
     close($fd);
+    return;
 }
 
 1;

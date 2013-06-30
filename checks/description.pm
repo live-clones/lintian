@@ -42,8 +42,8 @@ my $description;
 # description?
 my $full_description = $info->field('description');
 unless (defined $full_description) {
-    tag 'package-has-no-description', '';
-    return 0;
+    tag 'package-has-no-description';
+    return;
 }
 
 $full_description =~ m/^([^\n]*)\n(.*)$/s;
@@ -201,6 +201,7 @@ if ($description) {
     check_spelling_picky('capitalization-error-in-description', $description);
 }
 
+return;
 }
 
 1;

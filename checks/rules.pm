@@ -116,7 +116,7 @@ my $rules = $info->debfiles('rules');
 # all the tests if we then can't read it.
 if (-l $rules) {
     tag 'debian-rules-is-symlink';
-    return 0 unless -f $rules and is_ancestor_of($info->debfiles, $rules);
+    return unless -f $rules and is_ancestor_of($info->debfiles, $rules);
 }
 
 my $architecture = $info->field('architecture') || '';
@@ -427,6 +427,7 @@ for my $package (keys %needed) {
     }
 }
 
+return;
 }
 
 1;

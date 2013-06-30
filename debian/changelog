@@ -1,5 +1,10 @@
 lintian (2.5.15) UNRELEASED; urgency=low
 
+  * checks/*.pm:
+    + [NT] Add final return to all subs in checks and ensure
+      that the "run" sub complies with Lintian's own
+      recommendation.
+
   * collection/copyright-file:
     + [NT] Avoid creating an empty copyright file when it is
       not needed.

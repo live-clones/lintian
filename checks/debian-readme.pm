@@ -55,6 +55,7 @@ if ($readme =~ m/$regex/io) {
 check_spelling('spelling-error-in-readme-debian', $readme, undef,
                $group->info->spelling_exceptions);
 
+return;
 }
 
 1;

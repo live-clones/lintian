@@ -88,6 +88,7 @@ sub run {
             check_maintainer_scripts ($info);
         }
     }
+    return;
 }
 
 sub check_web_application_package {
@@ -119,7 +120,7 @@ sub check_web_application_package {
     if (defined $info->index ($file)) {
         inspect_conf_file ($info, $pkgtype, $file);
     }
-
+    return;
 }
 
 sub check_module_package {
@@ -168,7 +169,7 @@ sub check_module_package {
     if (defined $info->index ($conf_file)) {
         inspect_conf_file ($info, 'mods', $conf_file);
     }
-
+    return;
 }
 
 
@@ -214,6 +215,7 @@ sub check_maintainer_scripts {
     }
 
     close($fd);
+    return;
 }
 
 
@@ -248,7 +250,7 @@ sub inspect_conf_file {
 
     }
     close($fd);
-
+    return;
 }
 
 1;

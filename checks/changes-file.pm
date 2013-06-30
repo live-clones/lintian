@@ -38,7 +38,7 @@ my ($pkg, undef, $info) = @_;
 # Tag the file and skip remaining processing.
 if (!$info->field('format')) {
     tag 'malformed-changes-file';
-    return 0;
+    return;
 }
 
 # Description is mandated by dak, but only makes sense if binary
@@ -134,6 +134,7 @@ foreach my $file (keys %$files) {
     }
 }
 
+return;
 }
 
 1;

@@ -37,7 +37,7 @@ my (undef, undef, $info) = @_;
 
 # Skip architecture-dependent packages.
 my $arch = $info->field('architecture') || '';
-return 0 if $arch eq 'all';
+return if $arch eq 'all';
 
 # Add up the space taken by the package and the space taken by just the files
 # in /usr/share.  Convert the totals to kilobytes.
@@ -58,6 +58,7 @@ if ($size_usrshare > $THRESHOLD_SIZE_SOFT) {
     }
 }
 
+return;
 }
 
 1;

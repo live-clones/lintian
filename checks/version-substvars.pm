@@ -112,6 +112,7 @@ foreach my $pkg1 (sort $info->binaries) {
     }
 }
 
+return;
 }
 
 1;

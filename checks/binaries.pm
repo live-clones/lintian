@@ -490,6 +490,7 @@ if ($uses_numpy_c_abi and $pkg ) {
             $pkg =~ m,^python3?-numpy$,;
 }
 
+return;
 }
 
 1;

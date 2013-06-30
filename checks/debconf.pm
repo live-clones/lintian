@@ -105,7 +105,7 @@ if ($type eq 'source') {
     }
 
     # The remainder of the checks are for binary packages, so we exit now
-    return 0;
+    return;
 }
 
 my $preinst = $info->control('preinst');
@@ -508,7 +508,7 @@ if ($usespreinst) {
 # the following checks is ignored if the package being checked is debconf
 # itself.
 
-return 0 if ($pkg eq 'debconf') || ($type eq 'udeb');
+return if ($pkg eq 'debconf') || ($type eq 'udeb');
 
 foreach my $filename (sort keys %{$info->scripts}) {
     open(my $fd, '<', $info->unpacked($filename));
@@ -523,6 +523,7 @@ foreach my $filename (sort keys %{$info->scripts}) {
     close($fd);
 }
 
+return;
 } # </run>
 
 # -----------------------------------

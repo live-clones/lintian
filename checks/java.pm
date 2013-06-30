@@ -221,6 +221,7 @@ if(! $has_public_jars && $pkg =~ /^lib[^\s,]+-java$/) {
     tag 'javalib-but-no-public-jars';
 }
 
+return;
 }
 1;
 

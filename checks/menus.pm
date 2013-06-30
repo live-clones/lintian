@@ -223,6 +223,7 @@ if ($anymenu_file) {
     }
 }
 
+return;
 }
 
 # -----------------------------------
@@ -307,6 +308,8 @@ sub check_doc_base_file {
     tag 'doc-base-file-no-format-section', "$dbfile:$." unless %sawformats;
 
     close($fd);
+
+    return;
 }
 
 # Checks one field of a doc-base control file.  $vals is array ref containing
@@ -463,6 +466,8 @@ sub check_doc_base_field {
                                  join (' ', @$vals), "$dbfile:$line");
         }
     }
+
+    return;
 }
 
 # Checks the section of the doc-base control file.  Tries to find required
@@ -485,6 +490,8 @@ sub check_doc_base_file_section {
         tag 'doc-base-file-lacks-required-field', "$dbfile:$line", $field
             if ($knownfields->{$field} == 1 && !$sawfields->{$field});
     }
+
+    return;
 }
 
 # Add file and link to $all_files and $all_links.  Note that both files and
@@ -517,6 +524,8 @@ sub add_file_link_info {
         }
         $all_links->{$file} = $link unless ($link eq $file);
     }
+
+    return;
 }
 
 
@@ -644,6 +653,7 @@ sub check_script {
         }
     }
     close($fd);
+    return;
 }
 
 1;

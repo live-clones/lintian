@@ -190,6 +190,7 @@ sub script_tag {
         if $filename and $filename =~ m,usr/share/doc/[^/]+/examples/,;
 
     tag( $tag, $filename, @rest );
+    return;
 }
 
 sub run {
@@ -1003,6 +1004,7 @@ for my $divert (keys %added_diversions) {
     }
 }
 
+return;
 }
 
 # -----------------------------------

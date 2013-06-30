@@ -75,7 +75,7 @@ foreach my $comp (@$sccs) {
     tag 'intra-source-package-circular-dependency', sort @$comp;
 }
 
-
+return;
 }
 
 # Check that $proc has a priority that is less than or equal to that
@@ -97,6 +97,7 @@ sub _check_priorities {
                     unless $prival <= $dprival;
         }
     }
+    return;
 }
 
 sub _check_file_overlap {
@@ -127,6 +128,7 @@ sub _check_file_overlap {
             _overlap_check ($proc, $pinfo, $other, $oinfo);
         }
     }
+    return;
 }
 
 sub _overlap_check {
@@ -141,6 +143,7 @@ sub _overlap_check {
             tag 'binaries-have-file-conflict', $a_proc->pkg_name, $b_proc->pkg_name, $name;
         }
     }
+    return;
 }
 
 sub _check_multiarch {
@@ -169,6 +172,7 @@ sub _check_multiarch {
             }
         }
     }
+    return;
 }
 
 ## Encapsulate Tarjan's algorithm in an class/object to keep
@@ -241,6 +245,7 @@ sub _tarjans_sc{
         } until $node eq $elem;
         push @$scc, $component;
     }
+    return;
 }
 
 1;

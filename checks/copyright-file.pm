@@ -296,6 +296,7 @@ if ($gpl || m,/usr/share/common-licenses/GPL,) {
     }
 }
 
+return;
 } # </run>
 
 # -----------------------------------
@@ -328,6 +329,7 @@ sub check_cross_link {
         # tell if it is foreign or not at this point.
         tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
     }
+    return;
 }
 
 1;
