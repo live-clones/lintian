@@ -45,43 +45,24 @@ my $ppkg = quotemeta($pkg);
 
 my @doc_files;
 
-my %file_info;
-
 # skip packages which have a /usr/share/doc/$pkg -> foo symlink
 return if $info->index("usr/share/doc/$pkg") and
     $info->index ("usr/share/doc/$pkg")->is_symlink;
 
+if (my $docdir = $info->index("usr/share/doc/$pkg/")) {
+    for my $path ($docdir->children) {
+        my $basename = $path->basename;
 
-# Modify the file_info by following symbolic links.
-for my $file ($info->sorted_index) {
-    next unless $file =~ m/doc/o;
+        next unless $path->is_file or $path->is_symlink;
 
-    $file_info{$file} = $info->file_info ($file);
-
-    if ($file->is_symlink) {
-        # A symlink; use its target info if available.
-        my $target = $file->link_normalized;
-        my $tinfo = $info->file_info ($target);
-        $file_info{$file} = $tinfo if defined $tinfo;
-    }
-}
-
-# Read package contents....  Capitalization errors are dealt with later.
-foreach ($info->sorted_index) {
-
-    # we are only interested in files or symlinks in /usr/share/doc/$pkg
-    if (m,usr/share/doc/$ppkg/([^/\s]+), ) {
-        my $file = $1;
-        my $file1 = "usr/share/doc/$pkg/$file";
-
-        push(@doc_files, $file);
+        push(@doc_files, $basename);
 
         # Check a few things about the NEWS.Debian file.
-        if ($file =~ /^NEWS.Debian(?:\.gz)?$/i) {
-            if (not $file =~ /\.gz$/) {
-                tag 'debian-news-file-not-compressed', $file1;
-            } elsif ($file ne 'NEWS.Debian.gz') {
-                tag 'wrong-name-for-debian-news-file', $file1;
+        if ($basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm) {
+            if ($basename !~ m{ \.gz \Z }xsm) {
+                tag 'debian-news-file-not-compressed', $path->name;
+            } elsif ($basename ne 'NEWS.Debian.gz') {
+                tag 'wrong-name-for-debian-news-file', $path->name;
             }
         }
 
@@ -89,28 +70,35 @@ foreach ($info->sorted_index) {
         # an open question here what we should do with a file named ChangeLog.
         # If there's also a changelog file, it might be a duplicate, or the
         # packager may have installed NEWS as changelog intentionally.
-        next unless $file =~ m/^changelog(?:\.html)?(?:\.gz)?$|changelog.Debian(?:\.gz)?$/;
+        next unless $basename =~ m{\A changelog(?:\.html|\.Debian)?(?:\.gz)? \Z}xsm;
 
-        if (not $file =~ m/\.gz$/) {
-            tag 'changelog-file-not-compressed', $file;
+        if ($basename !~ m{ \.gz \Z}xsm) {
+            tag 'changelog-file-not-compressed', $basename;
         } else {
             my $max_compressed = 0;
-            if (exists $file_info{$file1} && defined $file_info{$file1}) {
-                if ($file_info{$file1} =~ m/max compression/o) {
-                    $max_compressed = 1;
+            my $file_info = $info->file_info($path);
+            if ($path->is_symlink) {
+                my $normalized = $path->link_normalized;
+                if (defined($normalized)) {
+                    $file_info = $info->file_info($normalized);
                 }
             }
-            if (not $max_compressed and $file_info{$file1} =~ m/gzip compressed/) {
-                if (!$info->index ($file1)->is_symlink) {
-                    tag 'changelog-not-compressed-with-max-compression', $file;
+            if (defined($file_info)) {
+                if (index($file_info, 'max compression') != -1) {
+                    $max_compressed = 1;
+                }
+                if (not $max_compressed
+                        and index($file_info, 'gzip compressed') != -1) {
+                    tag 'changelog-not-compressed-with-max-compression',
+                        $basename;
                 }
             }
         }
 
-        if ($file =~ m/^changelog\.html(?:\.gz)?$/ ) {
+        if ($basename eq 'changelog.html'
+                or $basename eq 'changelog.html.gz') {
             $found_html = 1;
-        }
-        if ($file =~ m/^changelog(?:\.gz)?$/ ) {
+        } elsif ($basename eq 'changelog' or $basename eq 'changelog.gz') {
             $found_text = 1;
         }
     }
