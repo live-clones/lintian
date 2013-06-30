@@ -17,6 +17,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Refresh.
   * data/files/{fonts,locale-codes}:
     + [NT] Refresh.
+  * data/menu-format/add-categories:
+    + [NT] Apply patch from Bastien Roucariès to include newer
+      categories.  Thanks to Yves-Alexis Perez for the report.
+      (Closes: #712932)
   * data/output/manual-references:
     + [NT] Refresh.
 

@@ -6,6 +6,7 @@
 3DGraphics
 Accessibility
 ActionGame
+Adult
 AdventureGame
 Amusement
 ArcadeGame
@@ -45,6 +46,7 @@ Electronics
 Email
 Emulator
 Engineering
+Feed
 FileManager
 Filesystem
 FileTools
@@ -102,10 +104,11 @@ RevisionControl
 Robotics
 RolePlaying
 Scanning
-Science
 Security
 Sequencer
+Shooter
 Simulation
+Spirituality
 Sports
 SportsGame
 Spreadsheet
@@ -124,3 +127,4 @@ Viewer
 WebBrowser
 WebDevelopment
 WordProcessor
+XFCE
