@@ -13,3 +13,5 @@ set -e
 ### END INIT INFO
 
 # start stop force-reload restart status
+
+. /lib/lsb/init-functions

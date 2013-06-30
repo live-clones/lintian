@@ -10,6 +10,8 @@ set -e
 # Default-Stop: 0 6
 ### END INIT INFO
 
+. /lib/lsb/init-functions
+
 case "$1" in
     start|stop|force-reload|restart|status|*)
 	echo hello world

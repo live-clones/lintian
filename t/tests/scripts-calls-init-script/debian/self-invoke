@@ -8,6 +8,9 @@
 # Short-Description: Test init script
 # Description:       Test init script.
 ### END INIT INFO
+
+. /lib/lsb/init-functions
+
 case "$1" in
   start)
     :

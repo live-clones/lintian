@@ -12,6 +12,8 @@
 
 echo start stop reload restart force-reload status
 
+. /lib/lsb/init-functions
+
 . /etc/default/rcS
 
 [ ! -f /etc/default/foo ] || . /etc/default/foo

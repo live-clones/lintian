@@ -3,8 +3,10 @@ Sequence: 6000
 Version: 1.0
 Description: General systemd tests
 Test-For:
+ init-script-is-not-a-file
  init.d-script-does-not-source-init-functions
  maintainer-script-calls-systemctl
+ service-file-is-not-a-file
  systemd-service-file-outside-lib
  systemd-tmpfiles.d-outside-usr-lib
  systemd-service-file-refers-to-obsolete-target

@@ -2,6 +2,8 @@
 
 set -e
 
+. /lib/lsb/init-functions
+
 ### BEGIN INIT INFO
 # Provides:          init.d-general
 # Required-Start:

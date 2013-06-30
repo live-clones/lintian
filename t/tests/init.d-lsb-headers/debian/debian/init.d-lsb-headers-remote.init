@@ -13,6 +13,7 @@ set -e
 # Description: The short description pretty much covers it.
 ### END INIT INFO
 
+. /lib/lsb/init-functions
 . /usr/share/foo/lib.sh
 
 case "$1" in
