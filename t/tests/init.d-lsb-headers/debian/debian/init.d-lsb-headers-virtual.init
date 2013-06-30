@@ -13,6 +13,8 @@ set -e
 # Description: The short description pretty much covers it.
 ### END INIT INFO
 
+. /lib/lsb/init-functions
+
 case "$1" in
     start|stop|force-reload|restart|status|*)
 	echo hello world

@@ -1,0 +1,2 @@
+W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test.service dbus.target
+W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test2.service syslog.target

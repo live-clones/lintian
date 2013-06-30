@@ -1,0 +1,9 @@
+[Unit]
+After=network.target \
+syslog.target
+
+[Service]
+ExecStart=/usr/bin/test
+
+[Install]
+WantedBy=multi-user.target

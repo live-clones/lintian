@@ -3,7 +3,8 @@ E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/ini
 E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs restart
 E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs start
 E: init.d-general-bugs: init.d-script-does-not-implement-required-option etc/init.d/init.d-general-bugs stop
-E: init.d-general-sourcing-without-test: init.d-script-sourcing-without-test etc/init.d/init.d-general-sourcing-without-test:15 /etc/default/rcS
+E: init.d-general-sourcing-without-test: init.d-script-sourcing-without-test etc/init.d/init.d-general-sourcing-without-test:17 /etc/default/rcS
 I: init.d-general-bugs: init.d-script-does-not-implement-optional-option etc/init.d/init.d-general-bugs status
+W: init.d-general-interpreter-in-usr-dir: init.d-script-does-not-source-init-functions etc/init.d/init.d-general-interpreter-in-usr-dir
 W: init.d-general-interpreter-in-usr-dir: init.d-script-uses-usr-interpreter etc/init.d/init.d-general-interpreter-in-usr-dir /usr/bin/perl
 W: init.d-general-script-call-internal-api: init.d-script-call-internal-API etc/init.d/init.d-general-script-call-internal-api

@@ -72,6 +72,9 @@ W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script usr/bin/perl-bizarre-3
 W: scripts: init-d-script-stops-in-s-runlevel etc/init.d/lsb-broken
 W: scripts: init-d-script-stops-in-s-runlevel etc/init.d/skeleton
+W: scripts: init.d-script-does-not-source-init-functions etc/init.d/lsb-broken
+W: scripts: init.d-script-does-not-source-init-functions etc/init.d/lsb-other
+W: scripts: init.d-script-does-not-source-init-functions etc/init.d/no-lsb
 W: scripts: init.d-script-has-bad-lsb-line etc/init.d/lsb-broken:4
 W: scripts: init.d-script-has-bad-lsb-line etc/init.d/lsb-broken:9
 W: scripts: init.d-script-has-bad-stop-runlevel etc/init.d/lsb-broken X
