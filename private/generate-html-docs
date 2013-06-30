@@ -51,7 +51,7 @@ sub guess_version {
         $dist = $1 if $line =~ m{\A Distribution: \s*+ (\S++) \s* \Z}xsm;
     }
     close($fd);
-    if ( (! defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
+    if ( (not defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
         # For unreleased versions, git describe is probably a better
         # choice when available.
         my $guess;
