@@ -88,9 +88,15 @@ sub run {
 
 sub check_init_script {
     my ($info, $file) = @_;
-
+    my $basename = $file->basename;
     my $lsb_source_seen;
+
+    # Couple of special cases we don't care about...
+    return if $basename eq 'README' or $basename eq 'skeleton'
+        or $basename eq 'rc' or $basename eq 'rcS';
+
     my $unpacked_file = $info->unpacked ($file);
+
     unless (-f $unpacked_file &&
             is_ancestor_of ($info->unpacked, $unpacked_file)) {
         tag 'init-script-is-not-a-file', $file;
