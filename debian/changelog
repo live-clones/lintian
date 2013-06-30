@@ -11,6 +11,11 @@ lintian (2.5.15) UNRELEASED; urgency=low
   * debian/rules:
     + [NT] Generate API documentation during build.
 
+  * lib/Lintian/Collect/Source.pm:
+    + [NT] "binaries" and "binary_field" now only exposes data
+      about entries in d/control with a valid package name.
+    + [NT] Document that "binaries" return an unorderd list.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 21:11:09 +0200
 
 lintian (2.5.14) unstable; urgency=low

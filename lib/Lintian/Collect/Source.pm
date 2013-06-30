@@ -30,7 +30,7 @@ use Scalar::Util qw(blessed);
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(read_dpkg_control);
+use Lintian::Util qw(read_dpkg_control $PKGNAME_REGEX);
 
 =head1 NAME
 
@@ -178,7 +178,9 @@ sub native {
 =item binaries
 
 Returns a list of the binary and udeb packages listed in the
-F<debian/control>.
+F<debian/control>.  The list is unordered.
+
+I<Note>: Package names that are not valid are silently ignored.
 
 Needs-Info requirements for using I<binaries>: L<Same as binary_package_type|/binary_package_type (BINARY)>
 
@@ -381,14 +383,17 @@ sub _load_dctrl {
         # syntax-error-in-control-file in this case via
         # control-file).
         die $@ unless $@ =~ /syntax error/;
+        $self->{source_field} = {};
         $self->{binary_field} = {};
         return 0;
     }
     my $src = shift @control_data;
-    $self->{source_field} = $src;
+    # In theory you can craft a package such that d/control is empty.
+    $self->{source_field} = $src // {};
 
     foreach my $binary (@control_data) {
         my $pkg = $binary->{'package'};
+        next unless defined($pkg) and $pkg =~ m{\A $PKGNAME_REGEX \Z}xsmo;
         $packages{$pkg} = $binary;
     }
     $self->{binary_field} = \%packages;
