@@ -97,11 +97,20 @@ sub check_init_script {
 
     my $unpacked_file = $info->unpacked ($file);
 
-    unless (-f $unpacked_file &&
-            is_ancestor_of ($info->unpacked, $unpacked_file)) {
-        tag 'init-script-is-not-a-file', $file;
-        return;
+    if ($file->is_symlink) {
+        # We cannot test upstart-jobs
+        return if $file->link eq '/lib/init/upstart-job';
     }
+
+    if (!$file->is_regular_file) {
+        unless (-f $unpacked_file &&
+                is_ancestor_of($info->unpacked, $unpacked_file)) {
+            tag 'init-script-is-not-a-file', $file;
+            return;
+        }
+
+    }
+
     open(my $fh, '<', $unpacked_file);
     while (<$fh>) {
         lstrip;
