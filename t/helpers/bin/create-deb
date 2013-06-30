@@ -205,12 +205,13 @@ Note: This does not use dpkg-deb, so it can be used to generate deb
 files that dpkg-deb would (now or in the future) refuse to build.
 
 EOF
-
+    return;
 }
 
 sub runsystem {
     print "create-deb system:  @_\n";
     my $r = system @_;
     die "system @_ failed (exit status: " . (($r >> 8) & 0xff) .")\n" if $r;
+    return;
 }
 

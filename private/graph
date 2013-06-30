@@ -169,6 +169,7 @@ sub gen_depth_level {
     # Done - generate ranks and the graph
 
     @ranks = map { ['same', $_] } @levels;
+    return;
 }
 
 sub mark_longest_paths {
@@ -219,6 +220,7 @@ sub make_graph {
     }
     print "\n";
     _footer();
+    return;
 }
 
 sub is_marked {
@@ -264,6 +266,7 @@ sub gen_coll_check {
         }
     }
 
+    return;
 }
 
 sub _header {
@@ -275,6 +278,7 @@ digraph "lintian-collections" {
 
 EOF
 
+    return;
 }
 
 sub _footer {
@@ -287,6 +291,7 @@ sub _footer {
         print "\n";
     }
     print "}\n";
+    return;
 }
 
 sub usage {

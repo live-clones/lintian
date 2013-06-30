@@ -50,6 +50,7 @@ if ($info->native) {
 
 index_orig ($pkg, $dir, $info);
 
+return;
 }
 
 # returns all (orig) tarballs.

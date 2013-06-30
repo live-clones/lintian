@@ -384,6 +384,7 @@ sub copy_template_dir {
     runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs);
     runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/", @ext)
         if -d "$tsrc/";
+    return;
 }
 
 # Run a package test and show any diffs in the expected tags or any other
@@ -842,6 +843,7 @@ sub run_tests{
         }
     }
 
+    return;
 }
 
 sub dump_log{
@@ -862,6 +864,7 @@ sub runsystem {
     print "runsystem(@_)\n" if $DEBUG;
     system(@_) == 0
         or fail("failed: @_\n");
+    return;
 }
 
 sub runsystem_ok {
@@ -896,9 +899,10 @@ sub fill_in_tmpl {
     open(my $out, '>', $file);
 
     unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
-        fail("cannout create $file");
+        fail("cannot create $file");
     }
     close($out);
+    return;
 }
 
 sub check_test_is_sane {
@@ -1009,11 +1013,13 @@ sub skip_reason {
 sub msg_flush {
     my %msg = ( id => threads->tid() );
     $MSG_Q->enqueue(\%msg);
+    return;
 }
 
 sub msg_print {
     my %msg = ( id => threads->tid(), msg => "@_" );
     $MSG_Q->enqueue(\%msg);
+    return;
 }
 
 sub _flush {
@@ -1024,6 +1030,7 @@ sub _flush {
     }
     print "\n";
     delete $thrs->{$id};
+    return;
 }
 
 sub msg_queue_handler {
@@ -1083,6 +1090,8 @@ sub _msg_qh {
         printf "%-${length}s\r", $output;
         $length = length($output);
     }
+    # This should not be reachable, but perlcritic doesn't know that.
+    return;
 }
 
 # Local Variables:

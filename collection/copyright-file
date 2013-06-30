@@ -60,6 +60,7 @@ if (-l $file) {
     gunzip_file ("$file.gz", "$dir/copyright");
 }
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)copyright-file$,;

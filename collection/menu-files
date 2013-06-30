@@ -63,6 +63,7 @@ while (my ($shortn, $path) = each %dirs) {
     }
 }
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)menu-files$,;

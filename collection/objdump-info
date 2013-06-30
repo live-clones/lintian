@@ -69,6 +69,7 @@ foreach my $bin ($info->sorted_index) {
 close($opts{pipe_in});
 reap(\%opts);
 
+return;
 };
 
 collect (@ARGV) if $0 =~ m,(?:^|/)objdump-info$,;

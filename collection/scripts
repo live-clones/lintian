@@ -82,6 +82,7 @@ for my $file (readdir($dirfd)) {
 closedir($dirfd);
 close($ctrl_fd);
 
+return;
 }
 
 sub shebang_line {

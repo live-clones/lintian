@@ -175,6 +175,7 @@ sub write_data_line {
             push @{ $files{$filename}->{'lines'} }, $line;
         }
     }
+    return;
 }
 
 sub open_data_files {
@@ -204,6 +205,7 @@ sub open_data_files {
         }
         print $fd "\n";
     }
+    return;
 }
 
 sub add_data_file {
@@ -213,6 +215,7 @@ sub add_data_file {
     $data{'header'} //= '';
     $data{'keep'} //= 0;
     $files{$file} = \%data;
+    return;
 }
 
 sub close_and_rename {
@@ -229,5 +232,6 @@ sub close_and_rename {
         my $df = "$datapath/$filename";
         system ('mv', '-f', $tf, $df) == 0 or die "mv -f $tf $df failed.\n";
     }
+    return;
 }
 

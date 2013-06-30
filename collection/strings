@@ -111,6 +111,7 @@ if (@manual) {
 }
 close($elf_fd);
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)strings$,;

@@ -45,6 +45,8 @@ if (-d "$dir/unpacked/etc/init.d") {
     copy_dir("$dir/unpacked/etc/init.d", "$dir/init.d")
         or fail('cannot copy init.d directory');
 }
+
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)init\.d$,;

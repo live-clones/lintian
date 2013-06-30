@@ -131,6 +131,7 @@ if (-f $news) {
     }
 }
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)changelog-file$,;

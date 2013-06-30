@@ -226,4 +226,5 @@ sub finish_file {
     $section = '';
     %program_headers = ();
     $bin = '';
+    return;
 }

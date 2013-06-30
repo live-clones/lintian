@@ -738,6 +738,7 @@ sub output_template {
     $template->fill_in(OUTPUT => $fd, HASH => $data)
         or die "filling out $file failed: $Text::Template::ERROR\n";
     close($fd);
+    return;
 }
 
 # Sort function for sorting lists of tags.  Sort by package, version, area,

@@ -66,6 +66,8 @@ foreach my $file ($info->sorted_index) {
 }
 
 close($out_fd);
+
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)ar-info$,;

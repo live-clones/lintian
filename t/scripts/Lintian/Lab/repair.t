@@ -128,5 +128,5 @@ sub do_tests {
 
     $LAB_B->close;
 
-    done_testing;
+    return done_testing;
 }

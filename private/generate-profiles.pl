@@ -94,6 +94,7 @@ sub generate_profile {
         print $fd "\n";
     }
     close($fd) or die "$filename: $!";
+    return;
 }
 
 sub format_field {
@@ -112,6 +113,7 @@ sub format_field {
         }
     }
     print $fd "\n";
+    return;
 }
 
 sub read_tags {

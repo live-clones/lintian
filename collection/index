@@ -60,6 +60,7 @@ if ($type ne 'source') {
            '|', ['sort', '-k', '6'], '|', ['gzip', '-9c']);
 }
 
+return;
 }
 
 # Creates an index for binary packages

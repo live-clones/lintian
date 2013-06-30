@@ -45,6 +45,8 @@ if ( -d "$dir/unpacked/usr/share/doc-base") {
     copy_dir ("$dir/unpacked/usr/share/doc-base", "$dir/doc-base")
         or fail('cannot copy directory unpacked/usr/share/doc-base');
 }
+
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)doc-base-files$,;

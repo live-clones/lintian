@@ -103,14 +103,7 @@ sub parse_iso_xml {
     }
 
     close $fd;
-
-}
-
-sub translator {
-    return unless m/\bid=/;
-    # Skip "special" types (#692548, comment #10)
-    return if m/\btype=[\"\']S?[\"\']/;
-    s/^.*id="([^"]+)".*$/xxx $1 x/;
+    return;
 }
 
 sub parse_iso_query {
@@ -132,6 +125,7 @@ sub parse_iso_query {
         }
     }
     close $fd;
+    return;
 }
 
 sub check_requirements {

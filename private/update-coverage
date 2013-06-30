@@ -154,6 +154,7 @@ sub print_tags {
         }
         print {$out} "$file $tag\n";
     }
+    return;
 }
 
 # Local Variables:

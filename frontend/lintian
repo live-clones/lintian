@@ -232,6 +232,7 @@ sub record_action {
         die("too many actions specified: $_[0]");
     }
     $action = "$_[0]";
+    return;
 }
 
 # Record Parts requested for checking
@@ -248,6 +249,7 @@ sub record_check_part {
     }
     $action = 'check';
     $checks = "$_[1]";
+    return;
 }
 
 # Record Parts requested for checking
@@ -267,6 +269,7 @@ sub record_check_tags {
     }
     $action = 'check';
     $check_tags = "$_[1]";
+    return;
 }
 
 # Record Parts requested for checking
@@ -283,7 +286,7 @@ sub record_check_tags_from_file {
         push(@tags, split(/\s*,\s*/, $line));
     }
     close($file);
-    record_check_tags($option, join(',', @tags));
+    return record_check_tags($option, join(',', @tags));
 }
 
 # Record tags that should be suppressed.
@@ -293,6 +296,7 @@ sub record_suppress_tags {
     for my $tag (split(/\s*,\s*/, $tags)) {
         $suppress_tags{$tag} = 1;
     }
+    return;
 }
 
 # Record tags that should be suppressed from a file.
@@ -308,6 +312,7 @@ sub record_suppress_tags_from_file {
         record_suppress_tags($option, $line);
     }
     close($file);
+    return;
 }
 
 # Record Parts requested not to check
@@ -324,6 +329,7 @@ sub record_dont_check_part {
     }
     $action = 'check';
     $dont_check = "$_[1]";
+    return;
 }
 
 # Record what type of data is specified
@@ -332,6 +338,7 @@ sub record_pkgmode {
     $pkg_mode = 'binary' if $_[0] eq 'binary';
     $pkg_mode = 'source' if $_[0] eq 'source';
     $pkg_mode = 'udeb' if $_[0] eq 'udeb';
+    return;
 }
 
 # Process -L|--display-level flag
@@ -354,16 +361,19 @@ sub record_display_level {
         }
     }
     push(@display_level, [ $op, $rel, $severity, $certainty ]);
+    return;
 }
 
 # Process -I|--display-info flag
 sub display_infotags {
     push(@display_level, [ '+', '>=', 'wishlist' ]);
+    return;
 }
 
 # Process --pedantic flag
 sub display_pedantictags {
     push(@display_level, [ '+', '=', 'pedantic' ]);
+    return;
 }
 
 # Process --default-display-level flag
@@ -373,16 +383,19 @@ sub default_display_level {
          ['+', '>=', 'normal', 'possible'],
          ['+', '>=', 'minor', 'certain'],
         );
+    return;
 }
 
 # Process --display-source flag
 sub record_display_source {
     $display_source{$_[1]} = 1;
+    return;
 }
 
 # Process -q|--quite flag
 sub record_quiet {
     $opt{'verbose'} = -1;
+    return;
 }
 
 # Process display-info and display-level options in cfg files
@@ -422,7 +435,7 @@ sub cfg_display_level {
             record_display_level('display-level', $dl);
         }
     }
-
+    return;
 }
 
 # Processes quiet and verbose options in cfg files.
@@ -446,6 +459,7 @@ sub cfg_verbosity {
     # "feature".
     $val = -$val if $var eq 'quiet';
     $opt{'verbose'} = $val;
+    return;
 }
 
 # Process overrides option in the cfg files
@@ -454,6 +468,7 @@ sub cfg_override {
     return if defined $opt{'no-override'};
     # This option is inverted in the config file
     $opt{'no-override'} = !$val;
+    return;
 }
 
 # Hash used to process commandline options
@@ -1242,6 +1257,7 @@ sub post_pkg_process_overrides{
         $overrides{warnings} += $warnings;
         $overrides{info} += $info;
     }
+    return;
 }
 
 sub prep_unpack_error {
@@ -1276,6 +1292,7 @@ sub unpack_group {
     );
 
     $unpacker->process_tasks (\%hooks);
+    return;
 }
 
 sub finish_hook {
@@ -1297,6 +1314,7 @@ sub finish_hook {
             $changed->() if $ret;
         }
     }
+    return;
 }
 
 sub coll_hook {
@@ -1486,6 +1504,7 @@ sub handle_lab_query {
         warning ("cannot find binary, udeb or source package $orig in lab (skipping)");
         $exit_code = 2;
     }
+    return;
 }
 
 sub _find_cfg_file {
@@ -1674,6 +1693,7 @@ sub _update_profile {
     if (%$sup_tags and not $check_tags) {
         $profile->disable_tags (keys %$sup_tags);
     }
+    return;
 }
 
 # }}}

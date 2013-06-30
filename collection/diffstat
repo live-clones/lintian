@@ -68,6 +68,7 @@ while (<$in>) {
 close($out);
 close($in);
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)diffstat$,;

@@ -70,6 +70,7 @@ sub pretty_print {
         print "$line\n";
     }
     print "\n\n";
+    return;
 }
 
 sub extract_data {
@@ -100,6 +101,7 @@ sub extract_data {
         }
     }
     print "=back\n\n";
+    return;
 }
 
 # Local Variables:

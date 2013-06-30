@@ -90,6 +90,7 @@ if ($type eq 'source') {
 # Remove the error file if it is empty
 unlink("$dir/unpacked-errors") if -z "$dir/unpacked-errors";
 
+return;
 }
 
 sub dump_errors {
@@ -99,6 +100,7 @@ sub dump_errors {
         print STDERR $line;
     }
     close($fd);
+    return;
 }
 
 sub libdpkg_unpack_dsc {

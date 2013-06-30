@@ -86,6 +86,7 @@ for my $file (ERROR_FILES) {
     unlink($path) if -z $path;
 }
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)bin-pkg-control$,;

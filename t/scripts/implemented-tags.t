@@ -49,7 +49,7 @@ our $EXCLUDE =
 # Exclude "lintian.desc" as it does not have a perl module like other
 # checks.
 sub accept_filter {
-    !m,/lintian\.desc$,;
+    return !m,/lintian\.desc$,;
 }
 
 my $opts = {

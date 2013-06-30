@@ -8,7 +8,7 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax Modules:: BuiltinFunctions:: ClassHierarchies:: CommaSeparatedStatements QuotesAsQuotelikeOperatorDelimiters MixedBooleanOperators ProhibitBarewordFileHandles
+include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax Modules:: BuiltinFunctions:: ClassHierarchies:: CommaSeparatedStatements QuotesAsQuotelikeOperatorDelimiters MixedBooleanOperators ProhibitBarewordFileHandles ConditionalUseStatements
 #include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches ConditionalUseStatements QuotedWordLists
 
 exclude = RequireFilenameMatchesPackage RequireVersionVar ProhibitExcessMainComplexity ProhibitStringySplit ComplexMappings StringyEval
@@ -39,6 +39,9 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [-Modules::RequireVersionVar]
 # Maybe some day...
 [-Modules::ProhibitExcessMainComplexity]
+
+[Subroutines::RequireFinalReturn]
+terminal_funcs = CORE::exec fail Lintian::Util::fail Die
 
 [ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 

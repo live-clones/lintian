@@ -28,7 +28,7 @@ use Test::Lintian;
 # Test that all checks can be loaded (except lintian.desc, which is
 # a special case).
 sub accept_filter {
-    !m,/lintian\.desc$,;
+    return !m,/lintian\.desc$,;
 }
 
 my $opts = {

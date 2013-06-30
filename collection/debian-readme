@@ -71,6 +71,7 @@ if (not defined $file) {
     link($file, "$dir/README.Debian");
 }
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)debian-readme$,;

@@ -80,6 +80,7 @@ if (%opts) {
     reap (\%opts);
 }
 
+return;
 }
 
 collect (@ARGV) if $0 =~ m,(?:^|/)hardening-info$,;

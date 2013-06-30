@@ -472,6 +472,7 @@ exit 0;
 sub Log {
     print {$LOG_FD} $_[0],"\n";
     print $_[0], "\n" if $opt{'to-stdout'};
+    return;
 }
 
 sub run {
@@ -594,6 +595,7 @@ sub _parse_pkgs_pg {
     $data->{'timestamp'} = $ts;
 
     $manifest->set ($data);
+    return;
 }
 
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
@@ -626,6 +628,7 @@ sub _parse_srcs_pg {
 
     # $manifest strips redundant fields for us.
     $manifest->set ($data);
+    return;
 }
 
 # Local Variables:

@@ -166,7 +166,7 @@ sub cpan_version_to_deb {
                 $prefix .= '0' while length($prefix) < $digits;
         }
         $suffix = ".$suffix" if $suffix ne '';
-        $epoch.$major.$prefix.$suffix;
+        return $epoch.$major.$prefix.$suffix;
 }
 
 # Given a Debian binary package name, look up its latest version

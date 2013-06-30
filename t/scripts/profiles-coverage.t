@@ -45,6 +45,7 @@ sub parse_check {
         push @$list, $tag->{tag};
         $TAGS{$tag->{tag}} = 0;
     }
+    return;
 }
 
 sub trim_split {
@@ -85,13 +86,16 @@ sub parse_profile {
             die "Unknown tag ($tag) in $profile.\n" unless exists $TAGS{$tag};
         }
     }
+    return;
 }
 
 sub check_wanted {
     parse_check ($_) if -f && m/\.desc$/o;
+    return;
 }
 
 sub prof_wanted {
     parse_profile($_) if -f && m/\.profile$/o;
+    return;
 }
 
