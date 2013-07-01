@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use POSIX qw(strftime);
 
@@ -12,7 +13,7 @@ my @keeps = ();
 
 die "Usage: $0 path/to/lintian/data.\n" unless $datadir;
 
-open my $manpage, '-|', 'zcat', $man or die "zcat $man: $!";
+open(my $manpage, '-|', 'zcat', $man);
 while (<$manpage>) {
     next unless /^\.SH HARDWARE CAPABILITIES/;
     last;
@@ -27,11 +28,11 @@ while (<$manpage>) {
     chomp;
     $caps{$_} = 1 foreach split /,\s*/;
 }
-close $manpage or die "zcat: $!";
+close($manpage);
 
 my $path = "$datadir/shared-libs/hwcap-dirs";
 my $date = strftime '%Y-%m-%d', gmtime;
-open my $orig, '<', $path or die "Opening $path: $!";
+open(my $orig, '<', $path);
 while ( my $line = <$orig> ) {
     chomp $line;
     next unless $line =~ m/^#\s*Keep:\s*(.*\S)\s*$/o;
@@ -41,9 +42,9 @@ while ( my $line = <$orig> ) {
         $caps{$val} = 1;
     }
 }
-close $orig;
+close($orig);
 
-open my $fp, '>', $path or die "Opening $path: $!";
+open(my $fp, '>', $path);
 print $fp <<EOF ;
 # List of all known hwcap.
 #
@@ -61,7 +62,7 @@ print $fp "\n";
 foreach (sort keys %caps) {
     print $fp "$_\n";
 }
-close $fp or die "Closing $path: $!";
+close($fp);
 
 # Local Variables:
 # indent-tabs-mode: nil

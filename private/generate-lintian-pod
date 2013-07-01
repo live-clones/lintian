@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 # Find the lib directory of lintian-root (defaulting to ./lib/)
 BEGIN {
@@ -17,7 +18,7 @@ foreach my $kw (qw(conffiles shlibs Standards-Version)){
     push @keywords, [qr/$kw/, "B<$kw>"];
 }
 
-open my $file, '<', 'man/lintian.pod.in' or fail "man/lintian.pod.in: $!";
+open(my $file, '<', 'man/lintian.pod.in');
 
 while(my $line = <$file>){
     chomp($line);
@@ -29,7 +30,7 @@ while(my $line = <$file>){
         print "$line\n";
     }
 }
-close $file;
+close($file);
 
 sub pretty_print {
     my $text = shift;

@@ -20,6 +20,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use POSIX qw(strftime);
 
@@ -51,7 +52,7 @@ parse_iso_xml();
 
 $outfile = "$DATADIR/files/locale-codes.new";
 
-open my $out, '>', $outfile or die "open $outfile: $!";
+open(my $out, '>', $outfile);
 
 print {$out} <<EOF ;
 # List of locale codes.  This is derived from the ISO 639-1, ISO
@@ -70,7 +71,7 @@ foreach my $code (sort keys %CODES) {
     print {$out} "\n";
 }
 
-close $out or die "close $outfile: $!";
+close($out);
 
 rename $outfile, "$DATADIR/files/locale-codes"
     or die "rename $outfile -> $DATADIR/files/locale-codes: $!";
@@ -78,8 +79,7 @@ rename $outfile, "$DATADIR/files/locale-codes"
 exit 0;
 
 sub parse_iso_xml {
-    open my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml'
-        or die "open iso_639_3.xml: $!";
+    open(my $fd, '<', '/usr/share/xml/iso-codes/iso_639_3.xml');
     local $_;
     local $/ = '/>';
     while (<$fd>) {
@@ -102,13 +102,12 @@ sub parse_iso_xml {
         }
     }
 
-    close $fd;
+    close($fd);
     return;
 }
 
 sub parse_iso_query {
-    open my $fd, '-|', 'isoquery', '-i', '639'
-        or die "fork/exec isoquery: $!";
+    open(my $fd, '-|', 'isoquery', '-i', '639');
     local $_;
     while (<$fd>) {
         next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
@@ -124,7 +123,7 @@ sub parse_iso_query {
             $CODES{lc $iso2} = $iso1;
         }
     }
-    close $fd;
+    close($fd);
     return;
 }
 
