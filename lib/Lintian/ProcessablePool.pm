@@ -65,10 +65,8 @@ sub new {
     my ($class, $lab) = @_;
     my $self = {
         'lab' => $lab,
+        'groups' => {},
     };
-    foreach my $field (qw(binary changes groups source udeb)){
-        $self->{$field} = {};
-    }
     bless $self, $class;
     return $self;
 }
@@ -102,18 +100,14 @@ Adds a L<processable|Lintian::Processable> to the pool.
 
 sub add_proc {
     my ($self, $proc) = @_;
-    my $procid;
     my ($group, $groupid);
     my $pkg_type = $proc->pkg_type;
-    my $tmap = $self->{$pkg_type};
 
     if ($proc->tainted) {
         warn (sprintf ("warning: tainted %1\$s package '%2\$s', skipping\n",
              $pkg_type, $proc->pkg_name));
         return 0;
     }
-    $procid = $self->_get_proc_id ($proc);
-    return 0 if exists $tmap->{$procid};
     $groupid = $self->_get_group_id ($proc);
     $group = $self->{groups}->{$groupid};
     if (defined $group){
@@ -131,7 +125,6 @@ sub add_proc {
         $self->{groups}->{$groupid} = $group;
     }
     # add it to the "unprocessed"/"seen" map.
-    $tmap->{$procid} = $proc;
     return 1;
 }
 
@@ -198,27 +191,19 @@ sub _add_changes_file{
     my $ogroup = $self->{groups}->{$gid};
     if (defined($ogroup)){
         # Group already exists...
-        my $tmap = $self->{'changes'};
-        my $cid = $self->_get_proc_id($cproc);
         my $added = 0;
-        # duplicate changes file?
-        return 0 if (exists $tmap->{$cid});
         # Merge architectures/packages ...
         # Accept all new
+
         if (! defined $ogroup->get_source_processable()
             && defined $group->get_source_processable()){
                 $ogroup->add_processable($group->get_source_processable());
                 $added = 1;
         }
         foreach my $bin ($group->get_binary_processables()){
-            my $tbmap = $self->{$bin->pkg_type()};
-            my $procid = $self->_get_proc_id($bin);
-            if (! exists $tbmap->{$procid}){
-                # New binary package
-                $tbmap->{$procid} = $bin;
-                $ogroup->add_processable($bin);
-                $added = 1;
-            }
+            # New binary package ?
+            my $was_new = $ogroup->add_processable($bin);
+            $added ||= $was_new;
         }
         return $added;
     } else {
@@ -235,13 +220,6 @@ sub _get_group_id{
     my $id = $pkg->pkg_src;
     $id .= '/' . $pkg->pkg_src_version;
     return $id;
-}
-
-# Fetches the id of the processable; note this is different
-# than _get_group_id even for src processables.
-sub _get_proc_id {
-    my ($self, $pkg) = @_;
-    return $pkg->identifier;
 }
 
 =back
