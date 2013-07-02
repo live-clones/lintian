@@ -195,6 +195,11 @@ sub _add_changes_file{
         # Merge architectures/packages ...
         # Accept all new
 
+        if (!defined($ogroup->get_changes_processable)) {
+            $ogroup->add_processable($cproc);
+            $added = 1;
+        }
+
         if (! defined $ogroup->get_source_processable()
             && defined $group->get_source_processable()){
                 $ogroup->add_processable($group->get_source_processable());

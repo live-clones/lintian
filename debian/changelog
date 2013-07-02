@@ -55,6 +55,13 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] "binaries" and "binary_field" now only exposes data
       about entries in d/control with a valid package name.
     + [NT] Document that "binaries" return an unorderd list.
+  * lib/Lintian/ProcessablePool.pm:
+    + [NT] Fix a bug that could cause .changes files to be
+      silently skipped.  This only occured if a related package
+      was passed on the command line before the .changes file.
+      Thanks to Salvo Tomaselli for reporting the bug.
+      (Closes: #714437)
+
 
  -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 21:11:09 +0200
 
