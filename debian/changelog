@@ -30,7 +30,8 @@ lintian (2.5.15) UNRELEASED; urgency=low
       not needed.
 
   * data/fields/virtual-packages:
-    + [NT] Refresh.
+    + [NT] Refresh.  Thanks to Laurent Bigonville for the
+      reminder.  (Closes: #712641)
   * data/files/{fonts,locale-codes}:
     + [NT] Refresh.
   * data/menu-format/add-categories:
