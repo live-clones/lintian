@@ -63,6 +63,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
       Thanks to Salvo Tomaselli for reporting the bug.
       (Closes: #714437)
 
+  * reporting/harness:
+    + [NT] Clear some variables before running Lintian in the
+      hope it will reduce the memory pressure on "long runs".
+
 
  -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 21:11:09 +0200
 

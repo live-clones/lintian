@@ -371,6 +371,12 @@ unless ($opt{'reports-only'}) {
 
     Log ('');
 
+
+    # Clear some variables we no longer need, so Perl can reclaim
+    # the memory.
+    %dirty_groups = %skip = @diffs = @manifests = ();
+
+
     if (@worklist) {
         my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
             ' --exp-output=format=fullewi --packages-from-file -';
