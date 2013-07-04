@@ -180,21 +180,6 @@ sub new {
     return $self;
 }
 
-
-=back
-
-=head1 INSTANCE METHODS
-
-=over 4
-
-=item $proc->lab_pkg([$lpkg])
-
-Returns or sets the L<$lpkg|Lintian::Lab::Entry> element for this processable.
-
-=cut
-
-Lintian::Processable::Package->mk_accessors (qw(group lab_pkg));
-
 # _derive_name ($file, $ext)
 #
 # Derive the name from the file name
@@ -215,39 +200,6 @@ sub _derive_name {
 sub _ctrl_fields {
     my ($self) = @_;
     return $self->{'extra-fields'} if exists $self->{'extra-fields'};
-    return;
-}
-
-=item $proc->info
-
-Overrides info from L<Lintian::Processable>.
-
-=cut
-
-sub info {
-    my ($self) = @_;
-    my $info = $self->{info};
-    if (! defined $info) {
-        my $lpkg = $self->lab_pkg();
-        croak "Need a Lab package before creating a Lintian::Collect\n"
-            unless defined $lpkg;
-        $info = $lpkg->info;
-        $self->{info} = $info;
-    }
-    return $info;
-}
-
-=item $proc->clear_cache
-
-Overrides clear_cache from L<Lintian::Processable>.
-
-=cut
-
-sub clear_cache {
-    my ($self) = @_;
-    my $lpkg = $self->lab_pkg;
-    $lpkg->clear_cache if defined $lpkg;
-    delete $self->{info};
     return;
 }
 

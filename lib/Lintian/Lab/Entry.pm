@@ -168,19 +168,6 @@ sub from_lab {
     return refaddr $lab eq refaddr $self->{'lab'} ? 1 : 0;
 }
 
-=item lab_pkg
-
-Returns the instance itself.  This method is here to simplify using a
-L<Lintian::Lab::Entry> as a replacement for
-L<Lintian::Processable::Package>.
-
-=cut
-
-sub lab_pkg {
-    my ($self) = @_;
-    return $self;
-}
-
 =item info
 
 Returns the L<info|Lintian::Collect> object associated with this entry.
