@@ -250,6 +250,11 @@ sub is_non_free {
     return $self->{is_non_free};
 }
 
+# Internal sub for dumping the memory usage of this instance
+#
+# Used by the frontend (under debug level >= 4)
+#
+# sub _memory_usage Needs-Info none
 sub _memory_usage {
     my ($self, $calc_usage) = @_;
     my %usage;
