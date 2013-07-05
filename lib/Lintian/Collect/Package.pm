@@ -351,7 +351,7 @@ sub _fetch_index_data {
             ($name, $file{link}) = split ' -> ', $name, 2;
             $file{link} = _dequote_name ($file{link}, 0);
         }
-        $file{name} = $name = _dequote_name ($name);
+        $name = _dequote_name($name);
 
         $idxh{$name} = \%file;
 
@@ -360,8 +360,11 @@ sub _fetch_index_data {
         my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
         $parent = '' unless defined $parent;
         $base = '' unless defined $base;
-        $file{dirname} = $parent;
         $file{basename} = $base;
+        # Insert the dirname field later for all (non-root) entries as
+        # it allows us to better reuse memory.
+        $file{dirname} = '' if $base eq '';
+
         $children{$parent} = [] unless exists $children{$parent};
         # Ensure the "root" is not its own child.  It is not really helpful
         # from an analysis PoV and it creates ref cycles  (and by extension
@@ -417,8 +420,18 @@ sub _fetch_index_data {
         # Add them in reverse order - entries in a dir are made
         # objects before the dir itself.
         if ($idxh{$file}->{type} eq 'd') {
-            $idxh{$file}->{children} = [ map { $idxh{$_} } sort @{ $children{$file} } ];
+            my @children;
+            for my $cname (sort(@{ $children{$file} })) {
+                my $child = $idxh{$cname};
+                # Insert dirname here to share the same storage with
+                # the hash key
+                $child->{'dirname'} = $file;
+                push(@children, $child);
+            }
+            $idxh{$file}{children} = \@children;
         }
+        # Insert name here to share the same storage with the hash key
+        $idxh{$file}{'name'} = $file;
         $idxh{$file} = Lintian::Path->new ($idxh{$file});
     }
     $self->{$field} = \%idxh;
