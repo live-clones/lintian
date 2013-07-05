@@ -732,7 +732,7 @@ isolation.  As an example:
 =item VISIT_PRED_FULL
 
 Match REGEX against the full (normalized) predicate (i.e. including
-version and architecture).  Each predicate is testing in isolation.
+version and architecture).  Each predicate is tested in isolation.
 As an example:
 
  my $vrel = Lintian::Relation->new ('somepkg | pkg-0 (>= 1)');
