@@ -157,10 +157,11 @@ Needs-Info requirements for using I<file_info>: file-info
 sub file_info {
     my ($self, $file) = @_;
     if (exists $self->{file_info}) {
-        return $self->{file_info}->{$file}
+        return ${$self->{file_info}{$file}}
             if exists $self->{file_info}->{$file};
         return;
     }
+    my %interned;
     my %file_info;
     my $path = $self->lab_data_path ('file-info.gz');
     local $_;
@@ -171,15 +172,24 @@ sub file_info {
         m/^(.+?)\x00\s+(.*)$/o
             or croak "an error in the file pkg is preventing lintian from checking this package: $_";
         my ($file, $info) = ($1,$2);
+        my $ref = $interned{$info};
 
         $file =~ s,^\./,,o;
 
-        $file_info{$file} = $info;
+        if (!defined($ref)) {
+            # Store a ref to the info to avoid creating a new copy
+            # each time.  We just have to deref the reference on
+            # return.  TODO: Test if this will be obsolete by
+            # COW variables in Perl 5.20.
+            $interned{$info} = $ref = \$info;
+        }
+
+        $file_info{$file} = $ref;
     }
     close($idx);
     $self->{file_info} = \%file_info;
 
-    return $self->{file_info}->{$file}
+    return ${$self->{file_info}{$file}}
         if exists $self->{file_info}->{$file};
     return;
 }

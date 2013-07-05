@@ -58,8 +58,8 @@ lintian (2.5.15) UNRELEASED; urgency=low
       of the memory usage with -dddd.
 
   * lib/Lintian/Collect/Package.pm:
-    + [NT] Share some string values in index functions.  This
-      reduces memory usage a bit.
+    + [NT] Share some string values in the file_info and in
+      the (X_)index methods.  This reduces memory usage a bit.
   * lib/Lintian/Collect/Source.pm:
     + [NT] "binaries" and "binary_field" now only exposes data
       about entries in d/control with a valid package name.
