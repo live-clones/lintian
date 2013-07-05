@@ -120,6 +120,8 @@ my @auto_remove = ();
 my $start_timer = sub { 0; };
 my $finish_timer =  sub { ''; };
 
+my $memory_usage = sub { 'N/A'; };
+
 # }}}
 
 # {{{ Setup Code
@@ -821,6 +823,38 @@ if ($debug) {
             print "N: Cannot load Time::HiRes ($@)\n";
             print "N: Running times will not be timed.\n";
         }
+        if ($debug > 2) {
+            eval {
+                require Devel::Size;
+                import Devel::Size qw(total_size);
+                {
+                    no warnings qw(once);
+                    # Disable warnings about stuff Devel::Size cannot
+                    # give reliable sizes for.
+                    $Devel::Size::warn = 0;
+                }
+
+                $memory_usage = sub {
+                    my ($obj) = @_;
+                    my $size = total_size($obj);
+                    my $unit = 'B';
+                    if ($size > 1536) {
+                        $size /= 1024;
+                        $unit = 'kB';
+                        if ($size > 1536) {
+                            $size /= 1024;
+                            $unit = 'MB';
+                        }
+                    }
+                    return sprintf('%.2f %s', $size, $unit);
+                };
+                print "N: Using Devel::Size to debug memory usage\n";
+            };
+            if ($@) {
+                print "N: Cannot load Devel::Size ($@)\n";
+                print "N: Running memory usage will not be checked.\n";
+            }
+        }
     }
 } else {
     # Ensure verbose has a defined value
@@ -1408,6 +1442,18 @@ sub process_group {
         }
         post_pkg_process_overrides ($lpkg);
     } # end foreach my $lpkg ($group->get_processable)
+
+    if ($debug > 2) {
+        for my $lpkg ($group->get_processables) {
+            my $id = $lpkg->identifier;
+            my $usage = $memory_usage->($lpkg->info);
+            my $breakdown = $lpkg->info->_memory_usage($memory_usage);
+            debug_msg(3, "Memory usage [$id]: $usage");
+            for my $field (sort(keys(%{$breakdown}))) {
+                debug_msg(4, "  -- $field: $breakdown->{$field}");
+            }
+        }
+    }
 
     if (@auto_remove) {
         # Invoke auto-clean now that the group has been checked

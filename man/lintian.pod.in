@@ -141,6 +141,10 @@ Can be used multiple times to increase the debug information.  If
 passed twice or more, Lintian will emit approximate run times for
 collections and checks (if L<Time::HiRes> can be loaded).
 
+If passed 3 times (and if L<Devel::Size> can be loaded), Lintian will
+display memory usage for (some of its) data structures.  With 4 times,
+the memory usage will be more detailed.
+
 This option cannot be specified in the config file.  If used on the
 command line it will override the B<verbose> and the B<quiet> options
 in the config file.

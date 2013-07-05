@@ -250,6 +250,15 @@ sub is_non_free {
     return $self->{is_non_free};
 }
 
+sub _memory_usage {
+    my ($self, $calc_usage) = @_;
+    my %usage;
+    for my $field (keys(%{$self})) {
+        $usage{$field} = $calc_usage->($self->{$field});
+    }
+    return \%usage;
+}
+
 =back
 
 =head1 AUTHOR
