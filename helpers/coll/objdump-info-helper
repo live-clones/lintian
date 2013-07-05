@@ -164,7 +164,7 @@ while ( my $line = <$readelf> ) {
         # We (somtimes) need to read the "Version symbols section" first to
         # use this data and readelf tends to print after this section, so
         # save for later.
-        push @dyn_symbols, [$1, $2, $3, ''];
+        push(@dyn_symbols, [$1, $2, $3]);
 
     } elsif ($line =~ m/^There is no dynamic section in this file/
                  and exists $program_headers{DYNAMIC}) {
@@ -186,7 +186,8 @@ sub finish_file {
     if (@dyn_symbols) {
         print "Dynamic-Symbols:\n";
         foreach my $dynsym (@dyn_symbols) {
-            my ($symnum, $seg, $sym, $ver) = @$dynsym;
+            my ($symnum, $seg, $sym) = @{$dynsym};
+            my $ver;
 
             if ($sym =~ m/^(.*)@(.*) \(.*\)$/) {
                 $sym = $1;
