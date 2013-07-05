@@ -361,7 +361,10 @@ sub _fetch_index_data {
             ($name, $file{link}) = split ' -> ', $name, 2;
             $file{link} = _dequote_name ($file{link}, 0);
         }
-        $name = _dequote_name($name);
+        # We store the name here, but will replace it later.  The
+        # reason for storing it now is that we may need it during the
+        # "hard-link fixup"-phase.
+        $file{'name'} = $name = _dequote_name($name);
 
         $idxh{$name} = \%file;
 
