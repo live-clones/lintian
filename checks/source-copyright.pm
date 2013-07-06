@@ -158,25 +158,28 @@ if (@dep5) {
     for my $field (keys %{$first_para}) {
         my $renamed_to = $dep5_renamed_fields{$field};
         if (defined $renamed_to) {
-            tag 'obsolete-field-in-dep5-copyright', $field, $renamed_to, "(paragraph at line $lines[0])";
+            tag 'obsolete-field-in-dep5-copyright', $field,
+                $renamed_to, "(line $lines[0]{$field})";
         }
     }
     if (not defined $first_para->{'format'} and not defined $first_para->{'format-specification'}) {
-        tag 'missing-field-in-dep5-copyright', 'format', "(paragraph at line $lines[0])";
+        tag 'missing-field-in-dep5-copyright', 'format',
+            "(line $lines[0]{'format'})";
     }
     for my $license (split_licenses($first_para->{'license'})) {
         $required_standalone_licenses{$license} = 1;
     }
-    my $commas_in_files = 0;
+    my @commas_in_files;
     my $i = 0;
     for my $para (@dep5) {
         $i++;
+        my ($files_fname, $files) = get_field($para, 'files', $lines[$i]);
         my $license = get_field ($para, 'license', $lines[$i]);
-        my $files = get_field ($para, 'files', $lines[$i]);
         my $copyright = get_field ($para, 'copyright', $lines[$i]);
 
         if (not defined $files and defined $license and defined $copyright) {
-            tag 'ambiguous-paragraph-in-dep5-copyright', "paragraph at line $lines[$i]";
+            tag 'ambiguous-paragraph-in-dep5-copyright',
+                "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'}";
             # If it is the first paragraph, it might be an instance of
             # the (no-longer) optional "first Files-field".
             $files = '*' if $i == 1;
@@ -185,7 +188,9 @@ if (@dep5) {
         if (defined $license and not defined $files) {
             # Standalone license paragraph
             if (not $license =~ m/\n/) {
-                tag 'missing-license-text-in-dep5-copyright', lc $license, "(paragraph at line $lines[$i])";
+                tag 'missing-license-text-in-dep5-copyright',
+                    lc $license,
+                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
             ($license, undef) = split /\n/, $license, 2;
             for (split_licenses($license)) {
@@ -194,35 +199,45 @@ if (@dep5) {
         }
         elsif (defined $files) {
             # Files paragraph
-            $commas_in_files = $i if not $commas_in_files and $files =~ /,/;
+            if (not @commas_in_files and $files =~ /,/) {
+                @commas_in_files = ($i, $files_fname);
+            }
             if (defined $license) {
                 for (split_licenses($license)) {
                     $required_standalone_licenses{$_} = $i;
                 }
             }
             else {
-                tag 'missing-field-in-dep5-copyright', "license (paragraph at line $lines[$i])";
+                tag 'missing-field-in-dep5-copyright', 'license',
+                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
             if (not defined $copyright) {
-                tag 'missing-field-in-dep5-copyright', "copyright (paragraph at line $lines[$i])";
+                tag 'missing-field-in-dep5-copyright', 'copyright',
+                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
         }
         else {
-            tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line', $lines[$i];
+            tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line',
+                $lines[$i]{'START-OF-PARAGRAPH'};
         }
     }
-    if ($commas_in_files) {
-        tag 'comma-separated-files-in-dep5-copyright', 'paragraph at line', $lines[$commas_in_files]
-            unless any {m/,/} $info->sorted_index;
+    if (@commas_in_files) {
+        my ($paragraph_no, $field_name) = @commas_in_files;
+        if (not any { m/,/xsm } $info->sorted_index) {
+            tag 'comma-separated-files-in-dep5-copyright', 'paragraph at line',
+                $lines[$paragraph_no]{$field_name};
+        }
     }
     while ((my $license, $i) = each %required_standalone_licenses) {
         if (not defined $standalone_licenses{$license}) {
-            tag 'missing-license-paragraph-in-dep5-copyright', $license, "(paragraph at line $lines[$i])";
+            tag 'missing-license-paragraph-in-dep5-copyright', $license,
+                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }
     }
     while ((my $license, $i) = each %standalone_licenses) {
         if (not defined $required_standalone_licenses{$license}) {
-            tag 'unused-license-paragraph-in-dep5-copyright', $license, "(paragraph at line $lines[$i])";
+            tag 'unused-license-paragraph-in-dep5-copyright', $license,
+                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }
     }
 }
@@ -240,12 +255,17 @@ sub split_licenses {
 
 sub get_field {
     my ($para, $field, $line) = @_;
-    return $para->{$field} if exists $para->{$field};
+    if (exists $para->{$field}) {
+        return $para->{$field} unless wantarray;
+        return ($field, $para->{$field});
+    }
     # Fall back to a "likely misspelling" of the field.
     foreach my $f (sort keys %$para) {
         if (distance ($field, $f) < 3) {
-            tag 'field-name-typo-in-dep5-copyright', $f, '->', $field, "(paragraph at line $line)";
-            return $para->{$f};
+            tag 'field-name-typo-in-dep5-copyright', $f, '->', $field,
+                "(line $line->{$f})";
+            return $para->{$f} unless wantarray;
+            return ($f, $para->{$f});
         }
     }
     return;

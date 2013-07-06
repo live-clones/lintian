@@ -213,9 +213,12 @@ refer to L</CONSTANTS> for the list of constants and their meaning.
 The default value for FLAGS is 0.
 
 If LINES is given, it should be a reference to an empty list.  On
-return, LINES will be populated to the line numbers where a given
-paragraph "started" (i.e. the line number of first field in the
-paragraph).
+return, LINES will be populated with a hashref for each paragraph (in
+the same order as the returned list).  Each hashref will also have a
+special key "I<START-OF-PARAGRAPH>" that gives the line number of the
+first field in that paragraph.  These hashrefs will map the field name
+of the given paragraph to the line number where the field name
+appeared.
 
 This is a convenience sub around L</visit_dpkg_paragraph> and can
 therefore produce the same errors as it.  Please see
@@ -275,12 +278,13 @@ invoked as the following:
 
 =over 4
 
-=item CODE->(PARA, STARTLINE)
+=item CODE->(PARA, LINE_NUMBERS)
 
 The first argument, PARA, is a hashref to the most recent paragraph
-parsed.  The second argument, STARTLINE, is the line number where the
-paragraph "started" (i.e. the line number of first field in the
-paragraph).
+parsed.  The second argument, LINE_NUMBERS, is a hashref mapping each
+of the field names to the line number where the field name appeared.
+LINE_NUMBERS will also have a special key "I<START-OF-PARAGRAPH>" that
+gives the line number of the first field in that paragraph.
 
 The return value of CODE is ignored.
 
@@ -370,7 +374,7 @@ present.
 sub visit_dpkg_paragraph {
     my ($code, $CONTROL, $flags) = @_;
     $flags//=0;
-    my $sline = -1;
+    my $lines = {};
     my $section = {};
     my $open_section = 0;
     my $last_tag;
@@ -391,8 +395,9 @@ sub visit_dpkg_paragraph {
         if ((!$debconf && m/^\s*$/) or ($debconf && $_ eq '')) {
             if ($open_section) { # end of current section
                 # pass the current section to the handler
-                $code->($section, $sline);
+                $code->($section, $lines);
                 $section = {};
+                $lines = {};
                 $open_section = 0;
             }
         }
@@ -448,7 +453,7 @@ sub visit_dpkg_paragraph {
                     die "syntax error at line $.: Expected at most one signed message" .
                         " (previous at line $signed)\n"
                 }
-                if ($sline > -1) {
+                if ($last_tag) {
                     # NB: If you remove this, keep in mind that it may allow two paragraphs to
                     # merge.  Consider:
                     #
@@ -493,17 +498,18 @@ sub visit_dpkg_paragraph {
         }
         # new empty field?
         elsif (m/^([^: \t]+):\s*$/o) {
-            $sline = $. if not $open_section;
+            $lines->{'START-OF-PARAGRAPH'} = $. if not $open_section;
             $open_section = 1;
 
             my ($tag) = (lc $1);
             $section->{$tag} = '';
+            $lines->{$tag} = $.;
 
             $last_tag = $tag;
         }
         # new field?
         elsif (m/^([^: \t]+):\s*(.*)$/o) {
-            $sline = $. if not $open_section;
+            $lines->{'START-OF-PARAGRAPH'} = $. if not $open_section;
             $open_section = 1;
 
             # Policy: Horizontal whitespace (spaces and tabs) may occur
@@ -516,6 +522,7 @@ sub visit_dpkg_paragraph {
                 die "syntax error at line $.: Duplicate field $tag.\n";
             }
             $section->{$tag} = $value;
+            $lines->{$tag} = $.;
 
             $last_tag = $tag;
         }
@@ -544,7 +551,7 @@ sub visit_dpkg_paragraph {
         }
     }
     # pass the last section (if not already done).
-    $code->($section, $sline) if $open_section;
+    $code->($section, $lines) if $open_section;
 
     # Given the API, we cannot use this check to prevent any paragraphs from being
     # emitted to the code argument, so we might as well just do this last.

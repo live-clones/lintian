@@ -7,5 +7,5 @@ W: source-copyright-dep5-general source: missing-field-in-dep5-copyright license
 W: source-copyright-dep5-general source: missing-license-paragraph-in-dep5-copyright mit (paragraph at line 18)
 W: source-copyright-dep5-general source: missing-license-text-in-dep5-copyright bsd-3 (paragraph at line 22)
 W: source-copyright-dep5-general source: missing-license-text-in-dep5-copyright gpl-3 (paragraph at line 42)
-W: source-copyright-dep5-general source: obsolete-field-in-dep5-copyright upstream-maintainer upstream-contact (paragraph at line 1)
+W: source-copyright-dep5-general source: obsolete-field-in-dep5-copyright upstream-maintainer upstream-contact (line 3)
 W: source-copyright-dep5-general source: unknown-paragraph-in-dep5-copyright paragraph at line 6

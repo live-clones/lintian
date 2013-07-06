@@ -20,6 +20,9 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Apply patch from Bastien Roucariès to test for
       manpages named after their build path.
       (Closes: #713884)
+  * checks/source-copyright.pm:
+    + [NT] Some tags now refer to the line number of the field
+      with an issue instead of the line number of the paragraph.
   * checks/systemd.{desc,pm}:
     + [NT] New check for systemd related files.  Thanks to
       Michael Stapelberg for providing the check and the
@@ -72,6 +75,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
       was passed on the command line before the .changes file.
       Thanks to Salvo Tomaselli for reporting the bug.
       (Closes: #714437)
+  * lib/Lintian/Util.pm:
+    + [NT] Have parse_dpkg_control and visit_dpkg_control
+      give a more detailed line number information about
+      paragraphs.
 
   * reporting/harness:
     + [NT] Clear some variables before running Lintian in the
