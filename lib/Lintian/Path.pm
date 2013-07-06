@@ -280,7 +280,7 @@ sub link_normalized {
 sub _as_regex_ref {
     my ($self) = @_;
     my $name = $self->name;
-    return qr{ \Q $name \E }xsm;
+    return qr{ \Q$name\E }xsm;
 }
 
 sub _as_string {
