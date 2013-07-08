@@ -1,0 +1,7 @@
+Testname: phppear-general
+Sequence: 6000
+Version: 1.0-1
+Description: General phppear tests
+Test-For:
+ pear-package-without-pkg-php-tools-builddep
+Type: non-native

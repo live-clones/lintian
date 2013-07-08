@@ -1,0 +1,6 @@
+W: phppear-pear source: pear-package-but-missing-dependency Breaks
+W: phppear-pear source: pear-package-but-missing-dependency Depends
+W: phppear-pear source: pear-package-but-missing-dependency Recommends
+W: phppear-pear source: pear-package-feature-requires-newer-pkg-php-tools (>= 1.4~) for package2.xml
+W: phppear-pear source: pear-package-feature-requires-newer-pkg-php-tools (>= 1.5~) for PECL support
+W: phppear-pear source: pear-package-feature-requires-newer-pkg-php-tools (>= 1~) for package name overrides

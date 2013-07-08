@@ -1,0 +1,8 @@
+Testname: phppear-pear
+Sequence: 6000
+Version: 1.0-1
+Description: phppear tests for PEAR packages
+Test-For:
+ pear-package-but-missing-dependency
+ pear-package-feature-requires-newer-pkg-php-tools
+Type: non-native
