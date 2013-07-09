@@ -2,10 +2,15 @@ lintian (2.5.15) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - composer-package-without-pkg-php-tools-builddep
       - init-script-is-not-a-file
       - init.d-script-does-not-source-init-functions
       - maintainer-script-calls-systemctl
       - manpage-named-after-build-path
+      - pear-channel-without-pkg-php-tools-builddep
+      - pear-package-but-missing-dependency
+      - pear-package-feature-requires-newer-pkg-php-tools
+      - pear-package-without-pkg-php-tools-builddep
       - service-file-is-not-a-file
       - systemd-no-service-for-init-script
       - systemd-service-file-outside-lib
@@ -20,6 +25,9 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Apply patch from Bastien Roucariès to test for
       manpages named after their build path.
       (Closes: #713884)
+  * checks/phppear.{pm,desc}:
+    + [NT] New check based on patches from Mathieu Parent.
+      (Closes: #708551)
   * checks/source-copyright.pm:
     + [NT] Some tags now refer to the line number of the field
       with an issue instead of the line number of the paragraph.
