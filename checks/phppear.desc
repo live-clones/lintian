@@ -1,0 +1,45 @@
+Check-Script: phppear
+Author: Mathieu Parent <sathieu@debian.org>
+Abbrev: phppear
+Type: source
+Needs-Info: index, debfiles, unpacked
+Info: This script checks if the packages comply with various aspects of the
+ debian PHP policy.
+
+Tag: pear-package-without-pkg-php-tools-builddep
+Severity: normal
+Certainty: possible
+Info: The package contains an package.xml or package2.xml file but doesn't
+ build-depend on pkg-php-tools.
+ .
+ pkg-php-tools is the recommended tool for building PEAR and PECL packages. For
+ more information, install it and read the included README.PEAR.
+
+Tag: pear-channel-without-pkg-php-tools-builddep
+Severity: normal
+Certainty: possible
+Info: The package contains an channel.xml file but doesn't build-depend on
+ pkg-php-tools.
+ .
+ pkg-php-tools is the recommended tool for building PEAR and PECL packages. For
+ more information, install it and read the included README.PEAR.
+
+Tag: pear-package-but-missing-dependency
+Severity: normal
+Certainty: possible
+Info: The package is a PEAR package but its control file doesn't have
+ ${phppear:Debian-Depends} in Depends or ${phppear:Debian-Recommends}.
+
+Tag: pear-package-feature-requires-newer-pkg-php-tools
+Severity: normal
+Certainty: possible
+Info: The package requires a newer pkg-php-tools for a specific feature.
+
+Tag: composer-package-without-pkg-php-tools-builddep
+Severity: normal
+Certainty: possible
+Info: The package contains an composer.json file but doesn't build-depend on
+ pkg-php-tools.
+ .
+ pkg-php-tools is the recommended tool for building PHP Composer packages. For
+ more information, install it and read the included README.Composer.
