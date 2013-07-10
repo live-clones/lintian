@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Carp qw(croak);
 use Exporter qw(import);
 use List::MoreUtils qw(any);
 
@@ -244,7 +245,7 @@ sub tag {
     # $self->suppressed below if the tag is not enabled.
     my $info = $self->{profile}->get_tag ($tag, 1);
     unless ($info) {
-        die "tried to issue unknown tag $tag";
+        croak "tried to issue unknown tag $tag";
     }
     return if $self->suppressed($tag);
 

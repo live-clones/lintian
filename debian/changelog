@@ -87,6 +87,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
       was passed on the command line before the .changes file.
       Thanks to Salvo Tomaselli for reporting the bug.
       (Closes: #714437)
+  * lib/Lintian/Tags.pm:
+    + [NT] Use croak instead of die when a check emits an
+      unknown tag.  This gives the check writer a better chance
+      of finding where the problem occured.
   * lib/Lintian/Util.pm:
     + [NT] Have parse_dpkg_control and visit_dpkg_control
       give a more detailed line number information about
