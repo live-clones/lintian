@@ -1,6 +1,6 @@
-#!/usr/bin/perl
-
-# Copyright (C) 2012 Niels Thykier
+# my-vendor/another-check -- lintian example check script -*- perl -*-
+#
+# Copyright © 2013 Niels Thykier <niels@thykier.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,27 +18,20 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::my_vendor::another_check;
+
 use strict;
 use warnings;
 
-use Test::More import => ['done_testing'];
+use Lintian::Tags qw(tag);
 
-use Test::Lintian;
-
-# Test that all checks can be loaded (except lintian.desc, which is
-# a special case).
-sub accept_filter {
-    return !m,/lintian\.desc$,;
+sub run {
+    my ($pkg, undef, $info) = @_;
+    if (not $info->index("usr/share/doc/$pkg/important-file")) {
+        tag 'missing-some-important-file',
+            "usr/share/doc/$pkg/important-file";
+    }
+    return;
 }
 
-my $opts = {
-    'filter' => \&accept_filter,
-};
-
-$ENV{'LINTIAN_ROOT'} //= '.';
-
-test_load_checks($opts, "$ENV{'LINTIAN_ROOT'}/checks");
-test_load_checks("$ENV{'LINTIAN_ROOT'}/doc/examples/checks");
-
-done_testing;
-
+1;

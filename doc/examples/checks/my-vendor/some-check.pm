@@ -1,6 +1,6 @@
-#!/usr/bin/perl
-
-# Copyright (C) 2012 Niels Thykier
+# my-vendor/some-check -- lintian example check script -*- perl -*-
+#
+# Copyright © 2013 Niels Thykier <niels@thykier.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,27 +18,26 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Lintian::my_vendor::some_check;
+
 use strict;
 use warnings;
 
-use Test::More import => ['done_testing'];
+use Lintian::Tags qw(tag);
 
-use Test::Lintian;
+sub run {
+    my ($pkg, undef, $info) = @_;
 
-# Test that all checks can be loaded (except lintian.desc, which is
-# a special case).
-sub accept_filter {
-    return !m,/lintian\.desc$,;
+    # This check only applies to source packages that are named
+    # my-vendor-<something>
+    return unless $pkg =~ m{\A my-vendor-}xsm;
+    # Does not apply to the source "my-vendor-tools"
+    return if $pkg eq 'my-vendor-tools';
+
+    if (not $info->relation('build-depends')->implies('my-vendor-tools')) {
+        tag 'missing-build-depends-on-my-vendor-tools';
+    }
+    return;
 }
 
-my $opts = {
-    'filter' => \&accept_filter,
-};
-
-$ENV{'LINTIAN_ROOT'} //= '.';
-
-test_load_checks($opts, "$ENV{'LINTIAN_ROOT'}/checks");
-test_load_checks("$ENV{'LINTIAN_ROOT'}/doc/examples/checks");
-
-done_testing;
-
+1;

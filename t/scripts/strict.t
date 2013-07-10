@@ -15,7 +15,7 @@ plan skip_all => 'Test::Strict required to run this test' if $@;
 
 $ENV{'LINTIAN_ROOT'} //= '.';
 
-my @DIRS = map { "$ENV{'LINTIAN_ROOT'}/$_" } qw(lib private frontend helpers collection checks);
+my @DIRS = map { "$ENV{'LINTIAN_ROOT'}/$_" } qw(lib private frontend helpers collection checks doc/examples/checks);
 all_perl_files_ok(@DIRS);
 
 # html_reports loads ./config, so we have do chdir before checking it.

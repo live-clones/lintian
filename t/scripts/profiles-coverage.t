@@ -17,10 +17,12 @@ my %CHECKS;
 my %TAGS;
 
 File::Find::find(\&check_wanted, "$root/checks");
+File::Find::find(\&check_wanted, "$root/doc/examples/checks");
 
 plan tests => scalar (keys %TAGS);
 
 File::Find::find(\&prof_wanted, "$root/profiles");
+File::Find::find(\&prof_wanted, "$root/doc/examples/profiles");
 
 foreach my $tag (sort keys %TAGS){
     cmp_ok($TAGS{$tag}, '>', 0, $tag);

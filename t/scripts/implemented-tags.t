@@ -59,6 +59,7 @@ my $opts = {
 
 $ENV{'LINTIAN_ROOT'} //= '.';
 
-test_tags_implemented ($opts, "$ENV{LINTIAN_ROOT}/checks");
+test_tags_implemented($opts, "$ENV{LINTIAN_ROOT}/checks");
+test_tags_implemented("$ENV{LINTIAN_ROOT}/doc/examples/checks");
 
 done_testing;

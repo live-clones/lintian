@@ -28,6 +28,7 @@ $ENV{'LINTIAN_ROOT'} //= '.';
 
 # Find all of the desc files in checks.  We'll do one check per description.
 our @DESCS = (glob("$ENV{LINTIAN_ROOT}/checks/*.desc"),
+              glob("$ENV{LINTIAN_ROOT}/doc/examples/checks/my-vendor/*.desc"),
               glob("$ENV{LINTIAN_ROOT}/collection/*.desc"));
 our @MODULES = (glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm"),
 		glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect/*.pm"));

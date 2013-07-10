@@ -23,7 +23,9 @@ diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
 Test::Perl::Critic->import( -profile => '.perlcriticrc' );
 
-my @DIRS = (qw(checks collection frontend helpers lib private reporting t/scripts t/helpers));
+my @DIRS = (qw(checks collection frontend helpers lib private
+   reporting t/scripts t/helpers doc/examples/checks
+));
 
 plan tests => scalar(@DIRS) + 1;
 

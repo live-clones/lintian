@@ -33,6 +33,7 @@ my $opts = {
     'coll-dir' => "$ENV{'LINTIAN_ROOT'}/collection",
 };
 
-test_check_desc ($opts, "$ENV{'LINTIAN_ROOT'}/checks");
+test_check_desc($opts, "$ENV{'LINTIAN_ROOT'}/checks");
+test_check_desc($opts, "$ENV{'LINTIAN_ROOT'}/doc/examples/checks");
 
 done_testing;
