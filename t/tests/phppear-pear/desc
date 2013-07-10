@@ -5,4 +5,5 @@ Description: phppear tests for PEAR packages
 Test-For:
  pear-package-but-missing-dependency
  pear-package-feature-requires-newer-pkg-php-tools
+ pecl-package-requires-build-dependency
 Type: non-native

@@ -89,6 +89,12 @@ sub run {
         }
         close($package_xml_fd);
         if ($package_type eq 'extsrc') { # PECL package
+            if (!$bdepends->implies('php5-dev')) {
+                tag 'pecl-package-requires-build-dependency', 'php5-dev';
+            }
+            if (!$bdepends->implies('dh-php5')) {
+                tag 'pecl-package-requires-build-dependency', 'dh-php5';
+            }
             if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
                 tag 'pear-package-feature-requires-newer-pkg-php-tools',
                     '(>= 1.5~)', 'for PECL support';
