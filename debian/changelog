@@ -63,6 +63,10 @@ lintian (2.5.15) UNRELEASED; urgency=low
   * debian/rules:
     + [NT] Generate API documentation during build.
 
+  * doc/lintian.xml:
+    + [NT] Add small example vendor profile to the user
+      manual.
+
   * frontend/lintian:
     + [NT] Add information about memory usage with -ddd if
       Devel::Size is available.  A more detailed breakdown
