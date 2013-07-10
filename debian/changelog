@@ -66,7 +66,7 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Generate API documentation during build.
     + [NT] Call dh_installexamples.
 
-  * doc/examples/*
+  * doc/examples/*:
     + [NT] New example files.
   * doc/lintian.xml:
     + [NT] Add small example vendor profile to the user
