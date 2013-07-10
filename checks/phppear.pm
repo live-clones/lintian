@@ -55,6 +55,14 @@ sub run {
             if (!$breaks->implies('${phppear:Debian-Breaks}')) {
                 tag 'pear-package-but-missing-dependency', 'Breaks';
             }
+            # Checking description
+            my $description = $info->binary_field($binary, 'description');
+            if ($description !~ /\$\{phppear:summary\}/) {
+                tag 'pear-package-not-using-substvar', '${phppear:summary}'
+            }
+            if ($description !~ /\$\{phppear:description\}/) {
+                tag 'pear-package-not-using-substvar', '${phppear:description}'
+            }
             # Checking overrides
             my $overrides = $info->debfiles('pkg-php-tools-overrides');
             if (-f $overrides) {
