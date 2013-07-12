@@ -55,3 +55,23 @@ Info: The package contains an composer.json file but doesn't build-depend on
  .
  pkg-php-tools is the recommended tool for building PHP Composer packages. For
  more information, install it and read the included README.Composer.
+
+Tag: missing-pkg-php-tools-buildsystem
+Severity: normal
+Certainty: possible
+Info: The package uses pkg-php-tools but dh command is called without
+ --buildsystem=phppear
+ .
+ pkg-php-tools build system is the recommended tool for building PHP PEAR
+ packages. For more information, install it and read the included README.PEAR.
+
+Tag: missing-pkg-php-tools-addon
+Severity: normal
+Certainty: possible
+Info: The package uses pkg-php-tools but dh command is called without
+ --with phppear or --with phpcomposer. A PECL package should also have
+ --with php5.
+ .
+ pkg-php-tools db addons are the recommended tool for building PHP PEAR or
+ Composer packages. For more information, install it and read the included
+ README.PEAR or README.Composer.

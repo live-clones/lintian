@@ -1,2 +1,4 @@
+W: phppear-general source: missing-pkg-php-tools-addon phppear
+W: phppear-general source: missing-pkg-php-tools-buildsystem phppear
 W: phppear-general source: pear-channel-without-pkg-php-tools-builddep
 W: phppear-general source: pear-package-without-pkg-php-tools-builddep

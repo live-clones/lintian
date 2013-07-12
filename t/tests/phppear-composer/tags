@@ -1,1 +1,2 @@
 W: phppear-composer source: composer-package-without-pkg-php-tools-builddep
+W: phppear-composer source: missing-pkg-php-tools-addon phpcomposer

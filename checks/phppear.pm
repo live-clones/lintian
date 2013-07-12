@@ -32,6 +32,8 @@ sub run {
     my ($pkg, $type, $info) = @_;
 
     my $bdepends = $info->relation('build-depends');
+    my $package_type = 'unknown';
+
     # PEAR or PECL package
     my $package_xml = $info->index('package.xml');
     my $package2_xml = $info->index('package2.xml');
@@ -80,9 +82,8 @@ sub run {
             }
             if (defined($package_xml) && $package_xml->is_regular_file) {
                 # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
-                my $package_type = 'unknown';
-               open(my $package_xml_fd, '<', $info->unpacked($package_xml));
-               while (<$package_xml_fd>) {
+                open(my $package_xml_fd, '<', $info->unpacked($package_xml));
+                while (<$package_xml_fd>) {
                     if (/^\s*<(php|extsrc|extbin|zendextsrc|zendextbin)release\s*\/?>/ ){
                         $package_type = $1;
                         last;
@@ -126,6 +127,52 @@ sub run {
         } elsif (!$bdepends->implies('pkg-php-tools (>= 1.7~)')) {
             tag 'pear-package-feature-requires-newer-pkg-php-tools',
                 '(>= 1.7~)', 'for Composer package support';
+        }
+    }
+    # Check rules
+    if (defined($package_xml) || defined($package2_xml) || defined($channel_xml) || defined($composer_json)) {
+        my $rules = $info->debfiles('rules');
+        if (!-l $rules or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
+            my $has_buildsystem_phppear = 0;
+            my $has_addon_phppear = 0;
+            my $has_addon_phpcomposer= 0;
+            my $has_addon_php5= 0;
+            open(my $rules_fd, '<', $rules);
+            while (<$rules_fd>) {
+                while (s,\\$,, and defined (my $cont = <$rules_fd>)) {
+                    $_ .= $cont;
+                }
+                next if /^\s*\#/;
+                if ( m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear\s/ ) {
+                    $has_buildsystem_phppear = 1;
+                }
+                if ( m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear\s/ ) {
+                    $has_addon_phppear = 1;
+                }
+                if ( m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer\s/ ) {
+                    $has_addon_phpcomposer = 1;
+                }
+                if ( m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php5\s/ ) {
+                    $has_addon_php5 = 1;
+                }
+            }
+            close($rules_fd);
+            if (defined($package_xml) || defined($package2_xml) || defined($channel_xml)) {
+                if (!$has_buildsystem_phppear) {
+                    tag 'missing-pkg-php-tools-buildsystem', 'phppear'
+                }
+                if (!$has_addon_phppear) {
+                    tag 'missing-pkg-php-tools-addon', 'phppear'
+                }
+                if (($package_type eq 'extsrc') and !$has_addon_php5) {
+                    tag 'missing-pkg-php-tools-addon', 'php5'
+                }
+            }
+            if (!defined($package_xml) && !defined($package2_xml) && defined($composer_json)) {
+                if (!$has_addon_phpcomposer) {
+                    tag 'missing-pkg-php-tools-addon', 'phpcomposer'
+                }
+            }
         }
     }
     return;

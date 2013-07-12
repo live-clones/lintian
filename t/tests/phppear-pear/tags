@@ -1,3 +1,6 @@
+W: phppear-pear source: missing-pkg-php-tools-addon php5
+W: phppear-pear source: missing-pkg-php-tools-addon phppear
+W: phppear-pear source: missing-pkg-php-tools-buildsystem phppear
 W: phppear-pear source: pear-package-but-missing-dependency Breaks
 W: phppear-pear source: pear-package-but-missing-dependency Depends
 W: phppear-pear source: pear-package-but-missing-dependency Recommends
