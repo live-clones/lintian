@@ -31,10 +31,10 @@ use Lintian::Relation;
 sub run {
     my ($pkg, $type, $info) = @_;
 
+    my $bdepends = $info->relation('build-depends');
     # PEAR or PECL package
     my $package_xml = $info->index('package.xml');
     my $package2_xml = $info->index('package2.xml');
-    my $bdepends = $info->relation('build-depends');
     if (defined($package_xml) || defined($package2_xml)) {
         # Checking source builddep
         if (!$bdepends->implies('pkg-php-tools')) {
@@ -71,41 +71,40 @@ sub run {
                         '(>= 1~)', 'for package name overrides';
                 }
             }
-        }
-    }
-    # Checking package2.xml
-    if (defined($package2_xml)) {
-        if (!$bdepends->implies('pkg-php-tools (>= 1.4~)')) {
-            tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                '(>= 1.4~)', 'for package2.xml';
-        }
-    }
-
-    if (defined($package_xml) && $package_xml->is_regular_file) {
-        # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
-        my $package_type = 'unknown';
-        open(my $package_xml_fd, '<', $info->unpacked($package_xml));
-        while (<$package_xml_fd>) {
-            if (/^\s*<(php|extsrc|extbin|zendextsrc|zendextbin)release\s*\/?>/ ){
-                $package_type = $1;
-                last;
+            # Checking package2.xml
+            if (defined($package2_xml)) {
+                if (!$bdepends->implies('pkg-php-tools (>= 1.4~)')) {
+                    tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                        '(>= 1.4~)', 'for package2.xml';
+                }
             }
-            if (/^\s*<bundle\s*\/?>/ ){
-                $package_type = 'bundle';
-                last;
-            }
-        }
-        close($package_xml_fd);
-        if ($package_type eq 'extsrc') { # PECL package
-            if (!$bdepends->implies('php5-dev')) {
-                tag 'pecl-package-requires-build-dependency', 'php5-dev';
-            }
-            if (!$bdepends->implies('dh-php5')) {
-                tag 'pecl-package-requires-build-dependency', 'dh-php5';
-            }
-            if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
-                tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                    '(>= 1.5~)', 'for PECL support';
+            if (defined($package_xml) && $package_xml->is_regular_file) {
+                # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
+                my $package_type = 'unknown';
+               open(my $package_xml_fd, '<', $info->unpacked($package_xml));
+               while (<$package_xml_fd>) {
+                    if (/^\s*<(php|extsrc|extbin|zendextsrc|zendextbin)release\s*\/?>/ ){
+                        $package_type = $1;
+                        last;
+                    }
+                    if (/^\s*<bundle\s*\/?>/ ){
+                        $package_type = 'bundle';
+                        last;
+                    }
+                }
+                close($package_xml_fd);
+                if ($package_type eq 'extsrc') { # PECL package
+                    if (!$bdepends->implies('php5-dev')) {
+                        tag 'pecl-package-requires-build-dependency', 'php5-dev';
+                    }
+                    if (!$bdepends->implies('dh-php5')) {
+                        tag 'pecl-package-requires-build-dependency', 'dh-php5';
+                    }
+                    if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
+                        tag 'pear-package-feature-requires-newer-pkg-php-tools',
+                            '(>= 1.5~)', 'for PECL support';
+                    }
+                }
             }
         }
     }
