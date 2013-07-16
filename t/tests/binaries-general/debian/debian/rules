@@ -4,4 +4,4 @@
 	dh $@
 
 override_dh_strip:
-	dh_strip -X usr/lib/debug
+	dh_strip -X usr/lib/debug -X unstripped

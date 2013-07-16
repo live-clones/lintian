@@ -4,7 +4,9 @@ E: binaries-general: binary-or-shlib-defines-rpath usr/lib/foo/basiclibrpath /us
 E: binaries-general: binary-or-shlib-defines-rpath usr/share/foo/basic /usr/local/lib
 E: binaries-general: debug-symbols-directly-in-usr-lib-debug usr/lib/debug/basic
 E: binaries-general: library-in-debug-or-profile-should-not-be-stripped usr/lib/debug/usr/share/foo/basic
+E: binaries-general: unstripped-binary-or-object usr/bin/unstripped
 W: binaries-general: binary-compiled-with-profiling-enabled usr/share/foo/basic
+W: binaries-general: binary-without-manpage usr/bin/unstripped
 W: binaries-general: debug-file-should-use-detached-symbols usr/lib/debug/.build-id/de/deadbeefdeadbeef.debug
 W: binaries-general: debug-file-with-no-debug-symbols usr/lib/debug/usr/share/foo/basic
 W: binaries-general: debug-package-should-be-named-dbg usr/lib/debug/.build-id/

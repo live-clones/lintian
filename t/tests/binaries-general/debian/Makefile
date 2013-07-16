@@ -16,12 +16,15 @@ all:
 	$(COMPILE) -o basicdebug -g3 -Wl,--build-id basic.c
 
 install:
+	# according to local debian rules /usr/lib/debug is unstripped
 	install -d $(DESTDIR)/usr/share/foo/
-	install -m 755 -c basic $(DESTDIR)/usr/share/foo/basic
 	install -d $(DESTDIR)/usr/lib/debug/usr/share/foo/
+	install -d $(DESTDIR)/usr/lib/foo/
+	install -d $(DESTDIR)/usr/bin
+
+	install -m 755 -c basic $(DESTDIR)/usr/share/foo/basic
 	objcopy --only-keep-debug basic $(DESTDIR)/usr/lib/debug/usr/share/foo/basic
 	strip -s $(DESTDIR)/usr/lib/debug/usr/share/foo/basic
-	install -d $(DESTDIR)/usr/lib/foo/
 	install -m 755 -c basiclibrpath $(DESTDIR)/usr/lib/foo/basiclibrpath
 	install -m 755 -c basicshippedrpath $(DESTDIR)/usr/lib/foo/basicshippedrpath
 	objcopy --only-keep-debug basic $(DESTDIR)/usr/lib/debug/basic
@@ -34,9 +37,9 @@ install:
 	install -d "$(DESTDIR)/usr/lib/debug/.build-id/"`$(GETBUILDID) -s basicdebug`
 	objcopy --compress-debug-sections --only-keep-debug basicdebug \
 		"$(DESTDIR)/usr/lib/debug/.build-id/"`$(GETBUILDID) -s basicdebug`"/"`$(GETBUILDID) -f basicdebug`.debug
-	cp basic.static $(DESTDIR)/usr/lib/debug/
-	# dh_strip attempts to play the smart guy if the ELF obj is executable.
-	cd $(DESTDIR)/usr/lib/debug/ && chmod -x basic basic.static
+	install -m 755 -c basic.static $(DESTDIR)/usr/lib/debug/
+	# according to local debian rules unstripped in name avoid dh_strip to do the work
+	install -m 755 basicdebug $(DESTDIR)/usr/bin/unstripped
 
 clean distclean:
 	rm -f basic

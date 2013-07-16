@@ -11,3 +11,4 @@ Test-For:
  debug-file-should-use-detached-symbols
  debug-file-with-no-debug-symbols
  library-in-debug-or-profile-should-not-be-stripped
+ unstripped-binary-or-object
