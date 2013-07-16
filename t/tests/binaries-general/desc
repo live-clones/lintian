@@ -8,5 +8,6 @@ Test-For:
  binary-compiled-with-profiling-enabled
  binary-or-shlib-defines-rpath
  debug-symbols-directly-in-usr-lib-debug
+ debug-file-should-use-detached-symbols
  debug-file-with-no-debug-symbols
  library-in-debug-or-profile-should-not-be-stripped
