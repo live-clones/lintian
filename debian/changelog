@@ -36,7 +36,7 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Apply patch from Bastien Roucariès to test for
       manpages named after their build path.
       (Closes: #713884)
-  * checks/phppear.{pm,desc}:
+  * checks/phppear.{desc,pm}:
     + [NT] New check based on patches from Mathieu Parent.
       (Closes: #708551)
   * checks/source-copyright.pm:
