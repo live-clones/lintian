@@ -40,6 +40,7 @@ install:
 	install -m 755 -c basic.static $(DESTDIR)/usr/lib/debug/
 	# according to local debian rules unstripped in name avoid dh_strip to do the work
 	install -m 755 basicdebug $(DESTDIR)/usr/bin/unstripped
+	install -m 755 basic.static $(DESTDIR)/usr/bin/static
 
 clean distclean:
 	rm -f basic
