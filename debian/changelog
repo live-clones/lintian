@@ -21,6 +21,13 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Add final return to all subs in checks and ensure
       that the "run" sub complies with Lintian's own
       recommendation.
+  * checks/binary.pm:
+    + [NT] Apply patch from Bastien Roucariès to fix false-
+      negatives for debug files in usr/lib/debug/.build-id.
+      (Closes: #714191)
+    + [NT] Apply patch from Bastien Roucariès to fix false-
+      positive debug-file-with-no-debug-symbols for files
+      using compressed debug sections.
   * checks/fields.pm:
     + [NT] Apply patch from Niko Tyni to fix false-positive
       package-superseded-by-perl for packages with epochs.

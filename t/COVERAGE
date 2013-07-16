@@ -1,6 +1,6 @@
-Last generated 2013-06-16
-Coverage (Tags): 924/1001 (92.31%), w. legacy tests: 990/1001 (98.90%)
-Coverage (Checks): 34/42 (80.95%), w. legacy tests: 37/42 (88.10%)
+Last generated 2013-07-16
+Coverage (Tags): 941/1015 (92.71%), w. legacy tests: 1004/1015 (98.92%)
+Coverage (Checks): 36/44 (81.82%), w. legacy tests: 39/44 (88.64%)
 
 The following tags are not tested by the test suite:
 
@@ -24,9 +24,6 @@ The following tags are only tested by the legacy test suite:
 
 binaries binary-has-unneeded-section
 binaries binary-with-bad-dynamic-table
-binaries debug-file-should-use-detached-symbols
-binaries statically-linked-binary
-binaries unstripped-binary-or-object
 
 files desktop-file-in-wrong-dir
 files package-contains-devhelp-file-without-symlink
@@ -124,12 +121,10 @@ binary
   package-contains-upstream-install-documentation
   postinst-does-not-call-updatemenus
   postrm-does-not-call-updatemenus
-  statically-linked-binary
   su-to-root-with-usr-sbin
   su-wrapper-not-su-to-root
   su-wrapper-without--c
   unquoted-string-in-menu-item
-  unstripped-binary-or-object
 
 debconf
   newer-debconf-templates
@@ -138,7 +133,6 @@ debconf
 
 debug
   binary-with-bad-dynamic-table
-  debug-file-should-use-detached-symbols
   sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib
   symbols-declares-dependency-on-other-package
