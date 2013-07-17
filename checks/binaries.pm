@@ -361,7 +361,7 @@ foreach my $file ($info->sorted_index) {
     }
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
-    if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|.build-id)/,) {
+    if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/,) {
         if (scalar (@{ $objdump->{NEEDED} }) ) {
             tag 'debug-file-should-use-detached-symbols', $file;
         }
