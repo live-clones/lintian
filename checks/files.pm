@@ -156,8 +156,6 @@ sub run {
 my ($pkg, $type, $info, $proc) = @_;
 
 my $file;
-my $source_pkg;
-my $pkg_section;
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
@@ -165,12 +163,32 @@ my @nonbinary_perl_files_in_lib;
 
 my %linked_against_libvga;
 
-my $py_support_nver = undef;
+my $py_support_nver;
+
+my @devhelp;
+my @devhelp_links;
+
+# X11 bitmapped font directories under /usr/share/fonts/X11 in which we've
+# seen files.
+my %x11_font_dirs;
+
 
 my $arch_dep_files = 0;
-my $arch = $info->field ('architecture', '');
-my $isma_same = $info->field ('multi-arch', '') eq 'same';
+# Note: $proc->pkg_src never includes the source version.
+my $source_pkg = $proc->pkg_src;
+my $pkg_section = $info->field('section', '');
+my $arch = $info->field('architecture', '');
+my $isma_same = $info->field('multi-arch', '') eq 'same';
 my $ppkg = quotemeta ($pkg);
+
+# find out which files are scripts
+my %script = map {$_ => 1} (sort keys %{$info->scripts});
+
+# We only want to warn about these once.
+my $warned_debug_name = 0;
+
+# Check if package is empty
+my $is_dummy = $info->is_pkg_class ('any-meta');
 
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
@@ -183,33 +201,6 @@ foreach my $file (sort keys %{$info->objdump_info}) {
         }
     }
 }
-
-# Get source package name, if possible.
-#
-# Note: $proc->pkg_src never includes the source version.
-#
-# Otherwise set it to the empty string to avoid "unitialized value"
-# warnings if we end up using it a bit too carelessly.
-$source_pkg = $proc->pkg_src;
-
-# Get section if available.
-$pkg_section = $info->field ('section', '');
-
-# find out which files are scripts
-my %script = map {$_ => 1} (sort keys %{$info->scripts});
-
-# We only want to warn about these once.
-my $warned_debug_name = 0;
-
-my @devhelp;
-my @devhelp_links;
-
-# X11 bitmapped font directories under /usr/share/fonts/X11 in which we've
-# seen files.
-my %x11_font_dirs;
-
-# Check if package is empty
-my $is_dummy = $info->is_pkg_class ('any-meta');
 
 if (!$is_dummy) {
     my $is_empty = 1;
@@ -759,10 +750,8 @@ foreach my $file ($info->sorted_index) {
         # check if it's one of the Python proper packages
         unless (defined $is_python) {
             $is_python = 0;
-            if ($source_pkg) {
-                $is_python = 1 if $source_pkg =~ m/^python(?:\d\.\d)?$/
-                    or $source_pkg =~ m/^python\d?-(?:stdlib-extensions|profiler|old-doctools)$/;
-            }
+            $is_python = 1 if $source_pkg =~ m/^python(?:\d\.\d)?$/
+                or $source_pkg =~ m/^python\d?-(?:stdlib-extensions|profiler|old-doctools)$/;
         }
         tag 'third-party-package-in-python-dir', $file
             unless $is_python;
@@ -772,9 +761,7 @@ foreach my $file ($info->sorted_index) {
        # check if it's the "perl" package itself
        unless (defined $is_perl) {
            $is_perl = 0;
-           if ($source_pkg) {
-               $is_perl = 1 if $source_pkg eq 'perl';
-           }
+           $is_perl = 1 if $source_pkg eq 'perl';
        }
        tag 'perl-module-in-core-directory', $file
            unless $is_perl;
