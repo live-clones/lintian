@@ -783,7 +783,13 @@ foreach my $file ($info->sorted_index) {
     }
 
     # ---------------- license files
-    if ($file =~ m,(?:copying|licen[cs]e)(?:\.[^/]+)?$,i
+    if ($file->basename =~ m{ \A
+                # Look for commonly used names for license files
+                (?: copying | licen[cs]e | l?gpl | bsd | artistic )
+                # ... possibly followed by a version
+                [v0-9._-]*
+                (?:\. .* )? \Z
+                }xsmi
         # Ignore some common extensions for source or compiled extension files.
         # There was at least one file named "license.el".  These are probably
         # license-displaying code, not license files.  Also ignore executable
