@@ -723,19 +723,15 @@ sub unparse {
         }
         return $text;
     } elsif ($relation->[0] eq 'AND' || $relation->[0] eq 'OR') {
-        my $seperator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
-        my $text = '';
-        for my $element (@$relation[1 .. $#$relation]) {
-            $text .= $seperator if $text;
-            my $result = $self->unparse($element);
-            return unless defined($result);
-            $text .= $result;
-        }
-        return $text;
+        my $separator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
+        return join($separator, map {
+            $self->unparse($_);
+        } @$relation[1 .. $#$relation]);
     } elsif ($relation->[0] eq 'NOT') {
         return '! ' . $self->unparse($relation->[1]);
     } else {
-        return;
+        require Carp;
+        Carp::confess("Case $relation->[0] not implemented");
     }
 }
 
