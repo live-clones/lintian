@@ -47,7 +47,10 @@ Build-Depends: binutils,
                man-db,
                patchutils,
                perl,
-               pkg-php-tools (>= 1.5~),
+# pkg-php-tools is not available in Wheezy.  However, it is only used for
+# a test, so we can live with its absence in Wheezy.  The bash dependency
+# is just used as an "Wheezy indicator"-dependency.
+               pkg-php-tools (>= 1.5~) | bash (<< 4.2+dfsg-1~),
                python,
                python-all-dev,
                python-numpy,

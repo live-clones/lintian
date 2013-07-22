@@ -122,6 +122,13 @@ The value must match a directory name in the t/templates directory.  If
 this is a non-native package, there must also be a corresponding
 <skeleton>.upstream directory.
 
+Sometimes tests requires certain packages that are not available in the
+current stable.  In this case, you can use:
+
+    Test-Depends: <dpkg depends field>
+
+If any of the dependencies are unavailable, the test will be skipped.
+
 All other fields in the .desc file are optional and control the values
 filled into the template control and changelog files by the test suite
 harness.  The following additional fields are currently supported:

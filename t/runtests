@@ -38,6 +38,7 @@ use Thread::Queue;
 
 use Data::Dumper;
 use File::Basename qw(basename dirname);
+use File::Temp qw(tempfile);
 use Getopt::Long qw(GetOptions);
 use List::MoreUtils qw(none);
 use Text::Template;
@@ -62,7 +63,8 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Util qw(delete_dir fail read_dpkg_control rstrip slurp_entire_file);
+use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
+                     rstrip slurp_entire_file);
 
 # --- Global configuration
 
@@ -417,6 +419,13 @@ sub test_package {
         return skip_test($suite, $testname, "(disabled) $reason");
     }
 
+    if ($testdata->{'test-depends'}) {
+        my $missing = check_test_depends($testdata);
+        if ($missing) {
+            return skip_test($suite, $testname, "Missing Depends: $missing");
+        }
+    }
+
     # Strip the Debian revision off of the name of the target directory and
     # the *.orig.tar.gz file if the package is non-native.  Otherwise, it
     # confuses dpkg-source, which then fails to find the upstream tarball and
@@ -555,6 +564,15 @@ sub test_changes {
         return skip_test('changes', $testname, 'architecture mismatch');
     }
 
+    if ($testdata->{'test-depends'}) {
+        # Not sure this makes sense for .changes tests, but at least it
+        # makes it consistent.
+        my $missing = check_test_depends($testdata);
+        if ($missing) {
+            return skip_test('changes', $testname, "Missing Depends: $missing");
+        }
+    }
+
     msg_print "Running $testname $testdata->{version}... ";
 
     my $test = $testdata->{srcpkg};
@@ -645,6 +663,13 @@ sub generic_test_runner {
     if (-f "$testdir/skip") {
         my $reason = skip_reason("$testdir/skip");
         return skip_test($suite, $testname, "(disabled) $reason");
+    }
+
+    if ($testdata->{'test-depends'}) {
+        my $missing = check_test_depends($testdata);
+        if ($missing) {
+            return skip_test($suite, $testname, "Missing Depends: $missing");
+        }
     }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
@@ -925,7 +950,8 @@ sub check_test_is_sane {
     $data->{architecture} ||= 'all';
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;
-    $data->{sort} = ($data->{sort} and $data->{sort} eq 'no') ? 0 : 1;
+    $data->{sort} ||= 'yes';
+    $data->{sort} = parse_boolean($data->{sort});
     $data->{'output-format'} ||= 'EWI';
 
     $data->{'test-for'} ||= '';
@@ -934,6 +960,7 @@ sub check_test_is_sane {
     $data->{skeleton} ||= 'skel';
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
+    $data->{'test-depends'} //= '';
 
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;
@@ -982,6 +1009,46 @@ sub read_test_desc {
              . " instead of $expected_name");
     }
     return $testdata;
+}
+
+sub check_test_depends {
+    my ($testdata) = @_;
+    my ($missing, $pid, $fd, $err);
+    my ($test_fd, $test_file) = tempfile('bd-test-XXXXXXXXX',
+                                         TMPDIR => 1);
+
+    # dpkg-checkbuilddeps requires that the Source: field is present.
+    print {$test_fd} "Source: bd-test-pkg\n";
+    print {$test_fd} "Build-Depends: $testdata->{'test-depends'}\n";
+
+    $pid = open($fd, '-|');
+    if (!$pid) {
+        open(STDIN, '<', '/dev/null');
+        open(STDERR, '>&', \*STDOUT);
+        exec 'dpkg-checkbuilddeps', $test_file
+            or fail "exec dpkg-checkbuilddeps: $!";
+    }
+    $missing = slurp_entire_file($fd, 1);
+    eval {
+        close($fd);
+    };
+    $err = $@;
+    unlink($test_file);
+    if ($err) {
+        # Problem closing the pipe?
+        fail "close pipe: $err" if $err->errno;
+        # Else we presume that dpkg-checkbuilddeps concluded missing
+        # build-dependencies
+        $missing =~ s{\A dpkg-checkbuilddeps: [ ]
+                         Unmet [ ] build [ ] dependencies: \s* }{}xsm;
+        chomp($missing);
+        if ($missing =~ s{\n}{\\n}gxsm) {
+            # We expect exactly one line.
+            fail "Unexpected output from dpkg-checkbuilddeps: $missing";
+        }
+        return $missing;
+    }
+    return;
 }
 
 sub skip_test {
