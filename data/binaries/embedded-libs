@@ -48,7 +48,7 @@ libavdevice ||source=libav||Soundcard does not support 16 bit sample format\n
 libavfilter ||source=libav||Buffer video frames, and make them accessible to the filterchain\.
 libavformat ||source=libav||Format detected only with low score of %d, misdetection possible!\n
 libavutil   ||source=libav||AVOption type %d of option %s not implemented yet\n
-libgd2    ||gd-(?:png|jpeg:) error:
+libgd     ||source-regex=libgd2? ||gd-(?:png|jpeg:) error:
 libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
 libjsoncpp ||A valid JSON document must be either an array or an object value\.
 libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
