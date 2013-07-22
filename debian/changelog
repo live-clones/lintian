@@ -71,6 +71,8 @@ lintian (2.5.15) UNRELEASED; urgency=low
       Thanks to Andreas Henriksson for the report.
       (Closes: #712607)
 
+  * debian/control:
+    + [NT] Add Build-Depends on pkg-php-tools for a new test.
   * debian/dirs:
     + [NT] Remove /var/lib/lintian, we no longer use it.
   * debian/docs:
