@@ -15,7 +15,6 @@ $HTML_DIR = "$HOME/www";
 $HTML_TMP_DIR = "$HTML_DIR.new";
 $LINTIAN_CFG = "$LINTIAN_ROOT/reporting/lintian-dummy.cfg";  # this config file has to be empty!
 $LINTIAN_BIN_DIR = "$HOME/bin";
-$LINTIAN_GPG_CHECK = 0;
 
 # Link to the Lintian source code
 $LINTIAN_SOURCE = "http://anonscm.debian.org/gitweb/?p=lintian/lintian.git";

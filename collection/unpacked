@@ -50,8 +50,7 @@ if ($type eq 'source') {
         # Ignore STDOUT of the child process because older versions of
         # dpkg-source print things out even with -q.
         my $opts = { out => '/dev/null', err => "$dir/unpacked-errors" };
-        my @args = ('-q');
-        push @args, '--no-check' if $ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'};
+        my @args = ('-q', '--no-check');
         print "N: Using dpkg-source to unpack $pkg\n" if $ENV{'LINTIAN_DEBUG'};
         unless (spawn ($opts, ['dpkg-source', @args, '-x', "$dir/dsc", "$dir/unpacked"])) {
             dump_errors ("$dir/unpacked-errors");
@@ -106,8 +105,6 @@ sub dump_errors {
 sub libdpkg_unpack_dsc {
     my ($dsc, $target) = @_;
     my $opt = {
-        # This is used to make check_signature fatal
-        'require_valid_signature' => 1,
         'quiet' => 1
     };
     require Dpkg::Source::Package;
@@ -116,10 +113,6 @@ sub libdpkg_unpack_dsc {
     my $srcpkg = Dpkg::Source::Package->new(filename => $dsc, options => $opt);
 
     $srcpkg->check_checksums();
-
-    if ($srcpkg->is_signed() && !$ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'}) {
-        $srcpkg->check_signature();
-    }
 
     # Unpack the source package (delegated to Dpkg::Source::Package::*)
     $srcpkg->extract($target);

@@ -60,6 +60,9 @@ lintian (2.5.15) UNRELEASED; urgency=low
   * collection/copyright-file:
     + [NT] Avoid creating an empty copyright file when it is
       not needed.
+  * collection/unpacked:
+    + [NT] Skip signature checking of source packages.
+      (Closes: #707534)
 
   * data/fields/virtual-packages:
     + [NT] Refresh.  Thanks to Laurent Bigonville for the
@@ -127,6 +130,8 @@ lintian (2.5.15) UNRELEASED; urgency=low
   * reporting/harness:
     + [NT] Clear some variables before running Lintian in the
       hope it will reduce the memory pressure on "long runs".
+    + [NT] Remove support for "$LINTIAN_GPG_CHECK" config
+      variable.  Lintian no longer checks any signatures.
 
 
  -- Niels Thykier <niels@thykier.net>  Sat, 29 Jun 2013 21:11:09 +0200

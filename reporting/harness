@@ -98,7 +98,7 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
             $log_file $lintian_log $old_lintian_log
             $html_reports_log
             $LOG_DIR $statistics_file
-            $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR $LINTIAN_GPG_CHECK
+            $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR
             $LINTIAN_AREA);
 
 # export Lintian's configuration
@@ -135,34 +135,8 @@ unless ($opt{'dry-run'}) {
 }
 # From here on we can use Log() and Die().
 
-unless ($opt{'dry-run'}) {
-    system("mkdir -p -m 775 $LINTIAN_BIN_DIR") == 0 || die "$!";
-
-    if ($LINTIAN_GPG_CHECK) {
-        foreach my $g (qw(gpg gpgv)) {
-            if (-l "$LINTIAN_BIN_DIR/$g") {
-                unlink("$LINTIAN_BIN_DIR/$g")
-                    or Die("unlink $LINTIAN_BIN_DIR/$g: $!");
-            } else {
-                rename("$LINTIAN_BIN_DIR/$g", "$LINTIAN_BIN_DIR/${g}.bkp")
-                    or Die("rename $LINTIAN_BIN_DIR/$g"
-                           . " $LINTIAN_BIN_DIR/${g}.bkp: $!");
-            }
-        }
-    } else {
-        foreach my $g (qw(gpg gpgv)) {
-            if (! -f "$LINTIAN_BIN_DIR/$g") {
-                symlink('/bin/true', "$LINTIAN_BIN_DIR/$g")
-                    or Die("symlink /bin/true $LINTIAN_BIN_DIR/$g: $!");
-            }
-
-        }
-        # Passed to coll/unpacked
-        $ENV{'LINTIAN_COLL_UNPACKED_SKIP_SIG'} = 1;
-    }
-}
-
-$ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};
+$ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'}
+    if -d $LINTIAN_BIN_DIR;
 
 
 my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
