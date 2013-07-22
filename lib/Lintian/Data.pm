@@ -136,12 +136,12 @@ sub _parse_file {
     my ($self, $type, $fd, $dataset, $separator, $code, $vendors, $vno) = @_;
     my $filename = $type;
     $filename = $vendors->[$vno] . '/' . $type if $vno < scalar @$vendors;
-    local ($_, $.);
-    while (<$fd>) {
-        strip;
-        next if /^\#/ or $_ eq '';
-        if (s/^\@//) {
-            my ($op, $value) = split m/\s++/;
+    local $.;
+    while (my $line = <$fd>) {
+        strip($line);
+        next if $line =~ m{ \A \#}xsm or $line eq '';
+        if ($line =~ s/^\@//) {
+            my ($op, $value) = split(m{ \s++ }xsm, $line, 2);
             if ($op eq 'delete') {
                 croak "Missing key after \@delete in $filename at line $."
                     unless defined $value && length $value;
@@ -160,7 +160,7 @@ sub _parse_file {
 
         my ($key, $val);
         if (defined $separator) {
-            ($key, $val) = split(/$separator/, $_, 2);
+            ($key, $val) = split(/$separator/, $line, 2);
             if ($code) {
                 my $pval = $dataset->{$key};
                 $val = $code->($key, $val, $pval) if $code;
@@ -171,7 +171,7 @@ sub _parse_file {
                 }
             }
         } else {
-            ($key, $val) = ($_ => 1);
+            ($key, $val) = ($line => 1);
         }
         $dataset->{$key} = $val;
     }
