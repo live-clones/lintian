@@ -259,7 +259,16 @@ sub _memory_usage {
     my ($self, $calc_usage) = @_;
     my %usage;
     for my $field (keys(%{$self})) {
-        $usage{$field} = $calc_usage->($self->{$field});
+        next if ($field =~ m{ \A sorted_ }xsm);
+        if (exists($self->{"sorted_$field"})) {
+            # merge "index" and "sorted_index".  At the price of an extra
+            # list, we avoid overcounting all the L::Path objects so the
+            # produced result is a lot more accurate.
+            $usage{$field} = $calc_usage->([$self->{$field},
+                                            $self->{"sorted_$field"}]);
+        } else {
+            $usage{$field} = $calc_usage->($self->{$field});
+        }
     }
     return \%usage;
 }
