@@ -132,7 +132,7 @@ sub run {
     # Check rules
     if (defined($package_xml) || defined($package2_xml) || defined($channel_xml) || defined($composer_json)) {
         my $rules = $info->debfiles('rules');
-        if (!-l $rules or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
+        if (not -l $rules or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
             my $has_buildsystem_phppear = 0;
             my $has_addon_phppear = 0;
             my $has_addon_phpcomposer= 0;
@@ -164,7 +164,7 @@ sub run {
                 if (!$has_addon_phppear) {
                     tag 'missing-pkg-php-tools-addon', 'phppear'
                 }
-                if (($package_type eq 'extsrc') and !$has_addon_php5) {
+                if (($package_type eq 'extsrc') and not $has_addon_php5) {
                     tag 'missing-pkg-php-tools-addon', 'php5'
                 }
             }
