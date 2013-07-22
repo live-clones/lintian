@@ -40,6 +40,8 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] Apply patch from Bastien Roucariès to test for
       manpages named after their build path.
       (Closes: #713884)
+    + [NT] Skip some checks on empty manpages.
+      (Closes: #700502)
   * checks/phppear.{desc,pm}:
     + [NT] New check based on patches from Mathieu Parent.
       (Closes: #708551)

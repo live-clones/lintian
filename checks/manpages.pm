@@ -179,6 +179,7 @@ foreach my $file ($info->sorted_index) {
 
             unless ($first) {
                 tag 'empty-manual-page', $file;
+                next;
             } elsif ($first =~ /^\.so\s+(.+)?$/) {
                 my $dest = $1;
                 if ($dest =~ m,^([^/]+)/(.+)$,) {

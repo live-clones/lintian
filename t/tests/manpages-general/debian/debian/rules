@@ -33,8 +33,8 @@ override_dh_auto_install:
 	ln -s undocumented.7.gz $(tmp)/usr/share/man/man1/sbin-binary.1.gz
 	ln -s undocumented.3.gz $(tmp)/usr/share/man/man3/function.3.gz
 
-	touch $(tmp)/usr/share/man/man1/usr-bin-binary.1
-	chmod 644 $(tmp)/usr/share/man/man1/usr-bin-binary.1
+	install -m 0644 usr-bin-binary.1 \
+	    $(tmp)/usr/share/man/man1/usr-bin-binary.1
 	touch $(tmp)/usr/share/man/man1/usr-sbin-binary.1.gz
 	chmod 644 $(tmp)/usr/share/man/man1/usr-sbin-binary.1.gz
 	cd $(tmp)/usr/share/man/man1 \

@@ -2,7 +2,6 @@ E: manpages-general: bad-link-to-undocumented-manpage usr/share/man/man1/sbin-bi
 E: manpages-general: bad-so-link-within-manual-page usr/share/man/man1/bad-so.1.gz
 E: manpages-general: empty-manual-page usr/share/man/de/man1/binary-without-english-manpage.1
 E: manpages-general: empty-manual-page usr/share/man/man1/usr-bin-binary-alt.1.gz
-E: manpages-general: empty-manual-page usr/share/man/man1/usr-bin-binary.1
 E: manpages-general: empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages-general: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
 E: manpages-general: manpage-has-wrong-extension usr/share/man/man6/simple.pod.gz
@@ -34,10 +33,7 @@ W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages-general: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
 W: manpages-general: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
-W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
-W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
-W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 14: warning: macro `dep' not defined (possibly missing space after `de')
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man3/included.3.gz 6: warning: macro `zY' not defined
 W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:19
