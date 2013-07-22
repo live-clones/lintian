@@ -7,10 +7,14 @@ lintian (2.5.15) UNRELEASED; urgency=low
       - init.d-script-does-not-source-init-functions
       - maintainer-script-calls-systemctl
       - manpage-named-after-build-path
+      - missing-pkg-php-tools-addon
+      - missing-pkg-php-tools-buildsystem
       - pear-channel-without-pkg-php-tools-builddep
       - pear-package-but-missing-dependency
       - pear-package-feature-requires-newer-pkg-php-tools
+      - pear-package-not-using-substvar
       - pear-package-without-pkg-php-tools-builddep
+      - pecl-package-requires-build-dependency
       - service-file-is-not-a-file
       - systemd-no-service-for-init-script
       - systemd-service-file-outside-lib
