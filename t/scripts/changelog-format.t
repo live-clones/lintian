@@ -65,7 +65,7 @@ foreach (split /\n/,$changes) {
 	    ok(m/:$/, 'bullet item ends in colon')
 		or diag("line: $line");
 	} elsif ($line == 3) {
-	    ok(m/^[A-Z]/, 'line is the release header')
+	    ok(m/^[A-Z\"]/, 'line is the release header')
 		or diag("line: $line");
             $release_header = 1;
 	} else {
