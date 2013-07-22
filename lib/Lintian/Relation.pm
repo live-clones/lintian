@@ -118,17 +118,45 @@ sub parse_element {
     /x;
 
     my ($pkgname, $march, $relop, $relver, $bdarch) = ($1, $2, $3, $4, $5);
-    # If there's no version, we don't need to do any further processing.
-    # Otherwise, convert the legacy < and > relations to the current ones.
-    return ['PRED', $pkgname, undef, undef, $bdarch, $march] if not defined $relop;
-    if ($relop eq '<') {
-        $relop = '<<';
-    } elsif ($relop eq '>') {
-        $relop = '>>';
+    my @array;
+    if (not defined($relop)) {
+        # If there's no version, we don't need to do any further processing.
+        # Otherwise, convert the legacy < and > relations to the current ones.
+        @array = ('PRED', $pkgname, undef, undef, $bdarch, $march);
+    } else {
+        if ($relop eq '<') {
+            $relop = '<<';
+        } elsif ($relop eq '>') {
+            $relop = '>>';
+        }
+        @array = ('PRED', $pkgname, $relop, $relver, $bdarch, $march);
     }
-    return ['PRED', $pkgname, $relop, $relver, $bdarch, $march];
+
+    # Optimise the memory usage of the array.  Understanding this
+    # requires a bit of "Perl guts" knowledge.  Storing "undef" in an
+    # array (or hash) actually creates a new empty "undefined" scalar.
+    # This means that we pay the full overhead of Perl's SV struct for
+    # each undef value in this array.
+    #   Combine this with the fact that at least the BD-arch qualifier
+    # is rare (in fact, always undef for binary relations) and
+    # multi-arch qualifiers equally so (at least at the moment).
+    # On unversioned relations, we end up paying for 4 (unique) empty
+    # scalars.
+    #   This overhead accumuates to 0.44M for the binary relations of
+    # source:linux (on i386).
+    #
+    # Fortunately, perl allows us to do "out-of-bounds" access and
+    # will simply return undef in this case.  This means, we can
+    # basically get away with popping elements from the right hand
+    # side of the array "for free".
+    pop(@array) while (not defined($array[-1]));
+
+    return \@array;
 }
 
+# Singleton "empty-relation" object.  Since these objects are immutable,
+# there is no reason for having multiple "empty" objects.
+my $EMPTY_RELATION = bless(['AND'], 'Lintian::Relation');
 
 # Create a new Lintian::Relation object, parsing the argument into our
 # internal format.
@@ -148,6 +176,11 @@ sub new {
             push(@result, ['OR', @alternatives]);
         }
     }
+
+    if ($class eq 'Lintian::Relation') {
+        return $EMPTY_RELATION if not @result;
+    }
+
     my $self;
     if (@result == 1) {
         $self = $result[0];
@@ -208,6 +241,11 @@ sub and {
             push @result, $rel;
         }
     }
+
+    if ($class eq 'Lintian::Relation') {
+        return $EMPTY_RELATION if not @result;
+    }
+
     my $self;
     if (@result == 1) {
         $self = $result[0];
