@@ -84,7 +84,7 @@ lintian (2.5.15) UNRELEASED; urgency=low
   * debian/docs:
     + [NT] Add auto-generated API documentation.
   * debian/lintian.examples:
-    + [NT] New file to install examples.
+    + [NT] New file to install examples.  (Closes: #707906)
   * debian/rules:
     + [NT] Generate API documentation during build.
     + [NT] Call dh_installexamples.
