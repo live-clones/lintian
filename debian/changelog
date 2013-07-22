@@ -112,6 +112,8 @@ lintian (2.5.15) UNRELEASED; urgency=low
     + [NT] "binaries" and "binary_field" now only exposes data
       about entries in d/control with a valid package name.
     + [NT] Document that "binaries" return an unorderd list.
+    + [NT] relation and relation_noarch now recognises
+      "Build-Depends-Arch".
   * lib/Lintian/Path.pm:
     + [NT] Fix bug in the overloaded qr// operator.
   * lib/Lintian/ProcessablePool.pm:

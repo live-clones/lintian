@@ -470,11 +470,13 @@ following special field names are supported:
 
 =item build-depends-all
 
-The concatenation of Build-Depends and Build-Depends-Indep.
+The concatenation of Build-Depends, Build-Depends-Arch and
+Build-Depends-Indep.
 
 =item build-conflicts-all
 
-The concatenation of Build-Conflicts and Build-Conflicts-Indep.
+The concatenation of Build-Conflicts, Build-Conflicts-Arch and
+Build-Conflicts-Indep.
 
 =back
 
@@ -493,21 +495,17 @@ sub relation {
     my $result;
     if ($field =~ /^build-(depends|conflicts)-all$/) {
         my $type = $1;
-        my $merged;
-        for my $f ("build-$type", "build-$type-indep") {
-            my $value = $self->field($f);
-            $merged .= ', ' if (defined($merged) and defined($value));
-            $merged .= $value if defined($value);
-        }
-        $result = $merged;
-    } elsif ($field =~ /^build-(depends|conflicts)(-indep)?$/) {
+        my @fields = ("build-$type", "build-$type-indep" , "build-$type-arch");
+        $result = Lintian::Relation->and(
+            map { $self->relation($_) } @fields);
+    } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
         my $value = $self->field($field);
-        $result = $value if defined($value);
+        $result = Lintian::Relation->new($value);
     } else {
         croak("unknown relation field $field");
     }
-    $self->{relation}->{$field} = Lintian::Relation->new($result);
-    return $self->{relation}->{$field};
+    $self->{relation}{$field} = $result;
+    return $result;
 }
 
 =item relation_noarch (FIELD)
@@ -528,22 +526,17 @@ sub relation_noarch {
     my $result;
     if ($field =~ /^build-(depends|conflicts)-all$/) {
         my $type = $1;
-        my $merged;
-        for my $f ("build-$type", "build-$type-indep") {
-            my $value = $self->field($f);
-            $merged .= ', ' if (defined($merged) and defined($value));
-            $merged .= $value if defined($value);
-        }
-        $result = $merged;
-    } elsif ($field =~ /^build-(depends|conflicts)(-indep)?$/) {
+        my @fields = ("build-$type", "build-$type-indep" , "build-$type-arch");
+        $result = Lintian::Relation->and(
+            map { $self->relation_noarch($_) } @fields);
+    } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
         my $value = $self->field($field);
-        $result = $value if defined($value);
+        $result = Lintian::Relation->new_noarch($value);
     } else {
         croak("unknown relation field $field");
     }
-    $self->{relation_noarch}->{$field}
-        = Lintian::Relation->new_noarch($result);
-    return $self->{relation_noarch}->{$field};
+    $self->{relation_noarch}{$field} = $result;
+    return $result;
 }
 
 =item debfiles ([FILE])
