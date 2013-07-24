@@ -1187,7 +1187,6 @@ foreach my $gname (sort $pool->get_group_names()) {
 
 # Write the lab state to the disk, so it remembers the new packages
 $LAB->close;
-$TAGS->file_end();
 
 if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'}) {
     my $errors = $overrides{errors} || 0;
@@ -1267,19 +1266,6 @@ sub auto_clean_package {
 
 sub post_pkg_process_overrides{
     my ($lpkg) = @_;
-    # report unused overrides
-    if (not $opt{'no-override'}) {
-        my $pkg_overrides = $TAGS->overrides ($lpkg);
-
-        for my $tag (sort keys %$pkg_overrides) {
-            next if $TAGS->suppressed($tag);
-
-            for my $extra (sort keys %{$pkg_overrides->{$tag}}) {
-                next if $pkg_overrides->{$tag}{$extra};
-                tag ('unused-override', $tag, $extra);
-            }
-        }
-    }
 
     # Report override statistics.
     if (not $opt{'no-override'} and not $opt{'show-overrides'}) {
@@ -1400,11 +1386,9 @@ sub process_group {
 
         debug_msg(1, "Base directory in lab: $base");
 
-        unless ($opt{'no-override'}) {
-            if ($collmap->getp ('override-file') && -f "$base/override") {
-                debug_msg(1, 'Override file collected, loading it ...');
-                $TAGS->file_overrides("$base/override");
-            }
+        if (not $opt{'no-override'} and $collmap->getp('override-file')) {
+            debug_msg(1, 'Loading overrides file (if any) ...');
+            $TAGS->load_overrides;
         }
         foreach my $script (@scripts) {
             my $cs = $PROFILE->get_script ($script);
@@ -1442,6 +1426,8 @@ sub process_group {
         }
         post_pkg_process_overrides ($lpkg);
     } # end foreach my $lpkg ($group->get_processable)
+
+    $TAGS->file_end;
 
     if ($debug > 2) {
         for my $lpkg ($group->get_processables) {

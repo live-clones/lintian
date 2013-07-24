@@ -1,3 +1,14 @@
+lintian (2.5.16) UNRELEASED; urgency=low
+
+  * frontend/lintian:
+    + [NT] Move some handling of overrides to Lintian::Tags.
+
+  * lib/Lintian/Tags.pm:
+    + [NT] Take over some handling of overrides from the
+      frontend.
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 24 Jul 2013 10:30:01 +0200
+
 lintian (2.5.15) unstable; urgency=low
 
   "use less qw(memory);"

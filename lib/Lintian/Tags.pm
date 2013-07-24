@@ -648,17 +648,61 @@ sub file_overrides {
     return;
 }
 
+=item load_overrides
+
+Loads overrides for the current file.  This is basically a short-hand
+for finding the overrides file in the lab and calling
+L<files_overrides|/file_overrides(OVERRIDE-FILE)> on it if it is
+present.
+
+=cut
+
+sub load_overrides {
+    my ($self, $overrides) = @_;
+    my $current = $self->{current};
+    my $lpkg;
+    my $overrides_file;
+    unless (defined($current)) {
+        die 'no current file when loading overrides';
+    }
+    $lpkg = $self->{'info'}{$current}{'processable'};
+    $overrides_file = $lpkg->info->lab_data_path('override');
+    if ( -f $overrides_file ) {
+        $self->file_overrides($overrides_file);
+    }
+    return;
+}
+
 =item file_end()
 
-Ends processing of a file.  The main reason for this call is to, in turn,
-call Lintian::Output::print_end_pkg() to mark the end of the package.
+Ends processing of a file.
+
+This does two things.  First it emits "unused-override" tags for all
+unused overrides.  Secondly, it calls Lintian::Output::print_end_pkg
+to mark the end of the package.
+
+Note that this method is called by file_start if it detects another
+entry is already active.
 
 =cut
 
 sub file_end {
     my ($self) = @_;
-    if ($self->{current}) {
-        my $info = $self->{info}{$self->{current}};
+    if (my $current = $self->{current}) {
+        my $info = $self->{info}{$current};
+        my $pkg_overrides = $info->{overrides};
+
+        for my $tag (sort(keys %{$pkg_overrides} )) {
+            my $overrides;
+            next if $self->suppressed($tag);
+
+            $overrides = $pkg_overrides->{$tag};
+            for my $extra (sort(keys %{$overrides} )) {
+                next if $overrides->{$extra};
+                $self->tag('unused-override', $tag, $extra);
+            }
+        }
+
         $Lintian::Output::GLOBAL->print_end_pkg($info);
     }
     undef $self->{current};
