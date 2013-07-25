@@ -312,13 +312,17 @@ sub info {
 
 =item $group->clear_cache
 
-Discard the info element, so the memory used by it can be reclaimed.
-Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
+Discard the info element of all members of this group, so the memory
+used by it can be reclaimed.  Mostly useful when checking a lot of
+packages (e.g. on lintian.d.o).
 
 =cut
 
 sub clear_cache {
     my ($self) = @_;
+    for my $proc ($self->get_processables) {
+        $proc->clear_cache;
+    }
     delete $self->{info};
     return;
 }

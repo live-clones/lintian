@@ -1177,7 +1177,7 @@ foreach my $gname (sort $pool->get_group_names()) {
     unpack_group ($gname, $group);
     if ($action eq 'check'){
         process_group($group);
-        clear_group_cache($group);
+        $group->clear_cache;
         # Double check that no processes are running;  hopefully
         # it will catch regressions like 3bbcc3b earlier.
         fail ('Unreaped processes after running checks!?')
@@ -1458,19 +1458,6 @@ sub process_group {
 
     }
 
-    return 1;
-}
-
-
-# cleans the cache of all elements in this group - this avoids
-# memory being hogged by packages/groups that have been checked
-# and will not be checked again.
-sub clear_group_cache {
-    my ($group) = @_;
-    foreach my $proc ($group->get_processables()){
-        $proc->clear_cache;
-    }
-    $group->clear_cache;
     return 1;
 }
 
