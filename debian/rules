@@ -104,6 +104,9 @@ binary-indep: $(neededfiles) build
 	dh_install
 # some manual work
 	sed -i 's/my $$LINTIAN_VERSION = q{<VERSION>}/my $$LINTIAN_VERSION = q{$(VER)}/' $(tmp)/usr/bin/lintian
+	sed -i -e 's/my $$LINTIAN_VERSION;/my $$LINTIAN_VERSION = q{$(VER)};/;' \
+	     -e 's/my $$INIT_ROOT = .*/my $$INIT_ROOT = q{\/usr\/share\/lintian};/' \
+	    $(tmp)/usr/bin/dplint
 	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
 	dh_installdocs
 	dh_installchangelogs

@@ -1,0 +1,266 @@
+#!/usr/bin/perl -w
+#
+# dplint -- General purpose frontend for Debian package checker
+#
+# Copyright (C) 2013 Niels Thykier
+# - Based on lintian, which is/was:
+#   Copyright (C) 1998 Christian Schwarz, Richard Braakman (and others)
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+
+use Cwd qw(realpath);
+use File::Basename qw(dirname basename);
+use Getopt::Long();
+
+# The $INIT_ROOT line below is (to be) replaced at install time to the
+# actual root (i.e. '/usr/share/lintian').  The find_source_root call
+# is simply a placeholder to make the command work out of the box in
+# the source tree.
+my $INIT_ROOT = find_source_root();
+my $LINTIAN_VERSION;
+my @INCLUDE_DIRS;
+
+my %BUILTINS = (
+    'help' => \&builtin_help,
+    'version' => \&builtin_version,
+    'print-version' => \&builtin_version,
+);
+
+sub error {
+    my (@lines) = @_;
+    print STDERR join("\n", @lines), "\n";
+    exit(1);
+}
+
+sub run_tool {
+    my ($truename, $tool, @args) = @_;
+    for my $include_dir (@INCLUDE_DIRS) {
+        my $tool_path = "$include_dir/commands/${tool}";
+        if (-f $tool_path) {
+            if (!-x $tool_path) {
+                error("$tool ($tool_path) is present but not executable!");
+            }
+            {
+                # Scope here it to avoid a warning about exec not returning.
+                exec {$tool_path} $truename, @args;
+            }
+            local $" = ' ';
+            error(
+                "Running $tool failed!",
+                "  Command: $tool_path @args",
+                "  Error from exec: $!"
+            );
+        }
+    }
+    error("$tool is not available");
+}
+
+sub setup_env {
+    my ($user_dirs) = @_;
+
+    if ($user_dirs) {
+        my $data_home;
+
+        load_file_basedir();
+
+        if (exists($ENV{'HOME'}) or exists($ENV{'XDG_CONFIG_HOME'})) {
+            $data_home = data_home('lintian');
+        }
+        unshift(@INCLUDE_DIRS, $data_home)
+          if defined($data_home) && -d $data_home;
+        unshift(@INCLUDE_DIRS, '/etc/lintian')
+          if -d '/etc/lintian';
+    }
+
+    push(@INCLUDE_DIRS, $INIT_ROOT);
+
+    $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
+    $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @INCLUDE_DIRS);
+    $ENV{'LINTIAN_HELPER_DIRS'} = join(
+        ':',  grep { -d }
+          map { "$_/helpers" } @INCLUDE_DIRS
+    );
+    $ENV{'LINTIAN_DPLINT_CALLED_AS'} = $0;
+    $ENV{'LINTIAN_DPLINT_FRONTEND'} = realpath($0)
+      // error("Cannot resolve $0: $!");
+    return;
+}
+
+sub load_file_basedir {
+    # File::BaseDir sprews warnings if $ENV{'HOME'} is undef, so
+    # make sure it is defined when we load the module.  Though,
+    # we need to scope this, so $ENV{HOME} becomes undef again
+    # when we check for it later.
+    local $ENV{'HOME'} = $ENV{'HOME'} // '/nonexistent';
+    require File::BaseDir;
+    import File::BaseDir qw(config_home config_files data_home);
+    return;
+}
+
+sub cmd_add_include_dir {
+    my (undef, $dir) = @_;
+    my $abs_dir;
+    error("$dir is not a directory") unless -d $dir;
+    $abs_dir = realpath($dir) // error("Cannot resolve $dir: $!");
+    push(@INCLUDE_DIRS, $abs_dir);
+    return;
+}
+
+sub find_source_root {
+    # Determine the $INIT_ROOT in case we are run from the source tree
+    my $path = realpath(__FILE__) // error("realpath($0) failed: $!\n");
+    # .../lintian.git/frontend/dplint  => .../lintian.git
+    return dirname(dirname($path));
+}
+
+sub main {
+    my $user_dirs = 1;
+    my %opthash = (
+        'include-dir=s' => \&cmd_add_include_dir,
+        'user-dirs!' => $user_dirs,
+    );
+
+    # init commandline parser
+    Getopt::Long::config(
+        'bundling', 'no_getopt_compat',
+        'no_auto_abbrev', 'require_order',
+        'pass_through'
+    );
+
+    # process commandline options
+    Getopt::Long::GetOptions(%opthash)
+      or error("error parsing options\n");
+
+    setup_env($user_dirs);
+
+    my $called_as = basename($0);
+    my $truename;
+    my $cmd;
+
+    if ($called_as ne 'dplint') {
+        $truename = $0;
+        if ($called_as eq 'lintian-ng') {
+            $cmd = 'check';
+        } elsif ($called_as =~ m{\A (?:(?:lintian|dplint)-)? (.+) \Z}xsm) {
+            $cmd = $1;
+        } else {
+            error("Not sure what command $called_as was intended to be");
+        }
+    } else {
+        if (!defined($cmd)) {
+            $cmd = shift(@ARGV);
+        }
+
+        if (!defined($cmd)) {
+            $cmd = 'help';
+        }
+        if ($cmd =~ m/^-/) {
+            if ($cmd eq '--help' or $cmd eq '-h') {
+                $cmd = 'help';
+            } elsif ($cmd eq '--version' or $cmd eq '--print-version') {
+                $cmd = substr($cmd, 2);
+            } else {
+                error("Unknown option $cmd");
+            }
+            $truename //= 'dplint';
+        }
+    }
+    if (exists($BUILTINS{$cmd})) {
+        my $handler = $BUILTINS{$cmd};
+        error("Unimplemented built-in $cmd")
+          unless $handler;
+        # Re-configure Getopt::Long - builtins do not care about ordering
+        Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+        $handler->($truename, $cmd, @ARGV);
+        error("Built-in $cmd returned unexpectedly");
+    }
+    $truename //= $cmd;
+    run_tool($truename, $cmd, @ARGV);
+    error('run_tool returned unexpectedly');
+}
+
+sub builtin_version {
+    my ($truename, $cmd, @args) = @_;
+    $LINTIAN_VERSION = guess_version(__FILE__)
+      if not defined($LINTIAN_VERSION);
+    if ($cmd eq 'print-version') {
+        print "$LINTIAN_VERSION\n";
+    } else {
+        print "Lintian v$LINTIAN_VERSION\n";
+    }
+    exit(0);
+}
+
+sub builtin_help {
+    my ($truename, $cmd, @args) = @_;
+    my $me = basename($0);
+    $LINTIAN_VERSION = guess_version(__FILE__)
+      if not defined($LINTIAN_VERSION);
+    print <<"EOT";
+Lintian v$LINTIAN_VERSION
+Usage: $me [General options] <command> [options/arguments...]
+General options:
+  --include-dir DIR     include checks, libraries (etc.) from DIR
+  --[no-]user-dirs      whether to use files from user directories
+
+EOT
+
+    exit 0;
+}
+
+sub guess_version {
+    my $rootdir = find_source_root();
+    my $guess;
+
+    if (-d "$rootdir/.git") {
+        # Lets try git
+        eval {
+            # Disabling IPC::Run::Debug saves tons of useless calls.
+            $ENV{'IPCRUNDEBUG'} = 'none'
+              unless exists $ENV{'IPCRUNDEBUG'};
+            require IPC::Run;
+            IPC::Run::run(['git', "--git-dir=$rootdir/.git", 'describe'],
+                \undef, \$guess);
+            chomp($guess);
+        };
+        return $guess if $guess;
+    }
+    # git was not possible - maybe the changelog is available
+    if (-f "$rootdir/debian/changelog") {
+        require Parse::DebianChangelog;
+        eval {
+            my $changelog
+              = Parse::DebianChangelog->init(
+                { infile => "$rootdir/debian/changelog" });
+            $guess = $changelog->dpkg->{'Version'} if $changelog;
+        };
+        return $guess if $guess;
+    }
+    # Out of guesses ...
+    error('Unable to determine the version automatically!?');
+}
+
+main();
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
