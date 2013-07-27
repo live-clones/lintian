@@ -44,7 +44,7 @@ if (%added) {
     }
 }
 if (%removed) {
-    print "    + removed:\n";
+    print "    + Removed:\n";
     for my $tag (sort(keys(%removed))) {
         print "      - $tag\n";
     }
