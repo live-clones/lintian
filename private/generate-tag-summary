@@ -1,0 +1,51 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use autodie;
+
+my (%added, %removed);
+my ($commit_range) = @ARGV;
+die "Usage: $0 tag..HEAD\n"
+    unless $commit_range;
+
+open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'checks/*.desc');
+while ( my $line = <$fd>) {
+    chomp($line);
+    next unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;
+    my ($change, $tag) = ($1, $2);
+    if ($change eq '+') {
+        $added{$tag} = 1;
+    } else {
+        $removed{$tag} = 1;
+    }
+}
+close($fd);
+
+for my $tag (keys(%added)) {
+    if (exists($removed{$tag})) {
+        # Added and removed?  More likely, the tag was moved between
+        # two files.
+        delete($added{$tag});
+        delete($removed{$tag});
+    }
+}
+
+if (not %added and not %removed) {
+    print STDERR "No tags were added or removed\n";
+    exit(0);
+}
+
+print "  * Summary of tag changes:\n";
+if (%added) {
+    print "    + Added:\n";
+    for my $tag (sort(keys(%added))) {
+        print "      - $tag\n";
+    }
+}
+if (%removed) {
+    print "    + removed:\n";
+    for my $tag (sort(keys(%removed))) {
+        print "      - $tag\n";
+    }
+}
