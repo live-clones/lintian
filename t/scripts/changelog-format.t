@@ -51,8 +51,8 @@ foreach (split /\n/,$changes) {
 
     # Ignore the reminder to generate the tag summary
     if ($line < 10 && m/XXX: generate tag summary/) {
-        ok(!$is_release, "No TODO-marker in changelog for tag summary!")
-            or diag("Generate it with private/generate-tag-summary");
+        ok(!$is_release, 'No TODO-marker in changelog for tag summary!')
+            or diag('Generate it with private/generate-tag-summary');
         next;
     }
 
