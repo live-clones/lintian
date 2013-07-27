@@ -7,6 +7,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
       "AllowOverride".  Thanks to Jean-Michel Vourgère
       for the report and an initial patch.
       (Closes: #717621)
+  * checks/init.d.{desc,pm}:
+    + [NT] Revert init.d-script-call-internal-API for now.
+      Refer to #710559 for more information.
   * checks/scripts.pm:
     + [NT] Stop emitting package-uses-local-diversion for
       calls to dpkg-divert without --package as dpkg 1.16.0

@@ -8,4 +8,3 @@ Test-For:
  init.d-script-does-not-implement-required-option
  init.d-script-sourcing-without-test
  init.d-script-uses-usr-interpreter
- init.d-script-call-internal-API
