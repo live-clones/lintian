@@ -829,7 +829,7 @@ while (<$ctrl_fd>) {
             tag 'maintainer-script-uses-dpkg-status-directly', $file;
         }
         if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s, && ! /--(?:help|list|truename|version)/) {
-            if (/--local/ || !m/--package/) {
+            if (/--local/) {
                 tag 'package-uses-local-diversion', "$file:$.";
             }
             my $mode = /--remove/ ? 'remove' : 'add';

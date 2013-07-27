@@ -11,7 +11,7 @@ if [ install = "$1"  ]; then
     dpkg-divert --local --add --divert /usr/share/scripts/other-file.real \
         /usr/share/scripts/other-file
 
-    # This is also broken; the default is --local if --package isn't there.
+    # This was broken until dpkg 1.16.0 (Wheezy), see #679132
     dpkg-divert --add --divert /usr/share/scripts/another-file.real \
         /usr/share/scripts/another-file
 
