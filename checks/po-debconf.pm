@@ -54,11 +54,23 @@ for my $file (readdir($dirfd)) {
         } else {
             open(my $fd, '<', "$debfiles/$file");
             my $in_template = 0;
+            my $saw_tl_note = 0;
             while (<$fd>) {
                 tag 'translated-default-field', "$file: $."
-                    if (m{^_Default(?:Choice)?: [^\[]*$});
+                    if (m{^_Default(?:Choice)?: [^\[]*$}) && !$saw_tl_note;
                 tag 'untranslatable-debconf-templates', "$file: $."
                     if (m/^Description: (.+)/i and $1 !~/for internal use/);
+
+                if (/^#/) {
+                    # Is this a comment for the translators?
+                    $saw_tl_note = 1 if m/translators/i;
+                    next;
+                }
+
+                # If it is not a continuous comment immediately before the
+                # _Default(Choice) field, we don't care about it.
+                $saw_tl_note = 0;
+
                 if (/^Template: (\S+)/i) {
                     my $template = $1;
                     next if $template =~ m,^shared/packages-(wordlist|ispell)$,;

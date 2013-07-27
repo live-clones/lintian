@@ -10,6 +10,10 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * checks/init.d.{desc,pm}:
     + [NT] Revert init.d-script-call-internal-API for now.
       Refer to #710559 for more information.
+  * checks/po-debconf.{desc,pm}:
+    + [NT] Fix false-positive translated-default-field for
+      fields preceeded by a "true" Deb822 comment.  Thanks
+      to Ron Lee for the report.  (Closes: #637881)
   * checks/scripts.pm:
     + [NT] Stop emitting package-uses-local-diversion for
       calls to dpkg-divert without --package as dpkg 1.16.0
