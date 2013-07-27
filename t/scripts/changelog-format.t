@@ -33,6 +33,8 @@ my $changes = $changelog->dpkg()->{'Changes'};
 my $line = 0;
 my $prev_head = '';
 my $release_header = 0;
+my $is_release = 1;
+$is_release = 0 if $changelog->dpkg->{'Distribution'} eq 'UNRELEASED';
 
 foreach (split /\n/,$changes) {
     # Parse::DebianChangelog adds an empty line at the beginning:
@@ -44,6 +46,13 @@ foreach (split /\n/,$changes) {
 
     if (m/^\s*$/o) {
         $release_header = 0;
+        next;
+    }
+
+    # Ignore the reminder to generate the tag summary
+    if ($line < 10 && m/XXX: generate tag summary/) {
+        ok(!$is_release, "No TODO-marker in changelog for tag summary!")
+            or diag("Generate it with private/generate-tag-summary");
         next;
     }
 

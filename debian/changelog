@@ -1,5 +1,7 @@
 lintian (2.5.16) UNRELEASED; urgency=low
 
+  XXX: generate tag summary with private/generate-tag-summary
+
   * checks/apache2.pm:
     + [NT] Fix F-P apache2-deprecated-auth-config for
       "AllowOverride".  Thanks to Jean-Michel Vourgère
