@@ -229,8 +229,9 @@ sub inspect_conf_file {
     open(my $fd, '<', $filename);
     while (<$fd>)  {
 
-        for my $directive ('Order', 'Satisfy', 'Allow', 'Deny', '<(|/)Limit.*?>', '<(|/)LimitExcept.*?>') {
-            if (m/($directive)/) {
+        for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
+                           qr{</?Limit.*?>}xsm, qr{</?LimitExcept.*?>}xsm) {
+            if (m{\A \s* ($directive) (?:\s+|\Z)}xsm) {
                 tag 'apache2-deprecated-auth-config', $1;
             }
         }

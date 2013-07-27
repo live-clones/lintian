@@ -1,5 +1,11 @@
 lintian (2.5.16) UNRELEASED; urgency=low
 
+  * checks/apache2.pm:
+    + [NT] Fix F-P apache2-deprecated-auth-config for
+      "AllowOverride".  Thanks to Jean-Michel Vourgère
+      for the report and an initial patch.
+      (Closes: #717621)
+
   * frontend/lintian:
     + [NT] Move some handling of overrides to Lintian::Tags.
 
