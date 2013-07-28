@@ -165,6 +165,7 @@ sub run {
                     }
                     if (-f "$dpdir/$patch_file") {
                         my $has_description = 0;
+                        my $has_template_description = 0;
                         open(my $patch_fd, '<', "$dpdir/$patch_file");
                         while (<$patch_fd>) {
                             # stop if something looking like a patch starts:
@@ -172,10 +173,14 @@ sub run {
                             next if /^\s*$/;
                             # Skip common "lead-in" lines
                             $has_description = 1 unless m{^(?:Index: |=+$|diff .+|index )};
+                            $has_template_description = 1 if /TODO: Put a short summary on the line above and replace this paragraph/;
                         }
                         close($patch_fd);
                         unless ($has_description) {
                             tag 'quilt-patch-missing-description', $patch_file;
+                        }
+                        if ($has_template_description) {
+                            tag 'quilt-patch-using-template-description', $patch_file;
                         }
                     }
                     check_patch($dpdir, $patch_file);

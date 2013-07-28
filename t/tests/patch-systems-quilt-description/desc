@@ -3,4 +3,5 @@ Sequence: 6000
 Version: 1.0
 Description: Test for quilt patches which do not have accompanying descriptions
 Test-For: quilt-patch-missing-description
+          quilt-patch-using-template-description
 References: Debian Bug #498892

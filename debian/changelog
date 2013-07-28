@@ -23,6 +23,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * checks/init.d.{desc,pm}:
     + [NT] Revert init.d-script-call-internal-API for now.
       Refer to #710559 for more information.
+  * checks/patch-systems.{desc,pm}:
+    + [BR] Add tag for DEP-3 template descriptions.
+      (Closes: #717633)
   * checks/po-debconf.{desc,pm}:
     + [NT] Fix false-positive translated-default-field for
       fields preceeded by a "true" Deb822 comment.  Thanks
