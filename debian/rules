@@ -112,6 +112,7 @@ binary-indep: $(neededfiles) build
 	dh_installchangelogs
 	dh_installexamples
 	dh_installman
+	dh_link
 	dh_compress
 	dh_fixperms
 	dh_installdeb

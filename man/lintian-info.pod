@@ -72,6 +72,8 @@ these additional directories.
 This option may appear more than once; each time adding an additional
 directory.
 
+B<Note>: This option should be the very first if given.
+
 =item B<--profile> prof
 
 Use the severities from the vendor profile prof when displaying tags.
@@ -98,6 +100,8 @@ default can be disabled (and re-enabled) by using B<--no-user-dirs>
 
 These option can appear multiple times, in which case the of them
 to appear determines the result.
+
+B<Note>: This option should be the very first if given.
 
 =back
 
