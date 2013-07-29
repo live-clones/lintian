@@ -32,6 +32,7 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(slurp_entire_file file_is_encoded_in_non_utf8);
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
+our $KNOWN_COMMON_LICENSES =  Lintian::Data->new('copyright-file/common-licenses');
 
 sub run {
 
@@ -115,8 +116,11 @@ if (m,\r,) {
 
 my $wrong_directory_detected = 0;
 
-if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
-    tag 'copyright-refers-to-compressed-license', $1;
+if (m{ (usr/share/common-licenses/ ( [^ \t]*? ) \.gz) }xsm) {
+    my ($path, $license) = ($1, $2);
+    if ($KNOWN_COMMON_LICENSES->known($license)) {
+        tag 'copyright-refers-to-compressed-license', $path;
+    }
 }
 
 # Avoid complaining about referring to a versionless license file if the word
