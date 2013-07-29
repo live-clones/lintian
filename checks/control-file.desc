@@ -36,6 +36,15 @@ Info: The field on this line of <tt>debian/control</tt> has whitespace
  in the syntax of Debian control files, but as Policy says, it is
  conventional to put a single space after the colon.
 
+Tag: debian-control-repeats-field-name-in-value
+Severity: normal
+Certainty: possible
+Ref: policy 5.1
+Info: The field on this line of <tt>debian/control</tt> repeats
+ the field name in the value of the field.  As an example:
+ .
+   Maintainer: Maintainer: Some Name &lt;maintainer@mail.example.com&gt;
+
 Tag: binary-control-field-duplicates-source
 Severity: wishlist
 Certainty: certain

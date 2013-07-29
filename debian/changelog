@@ -7,6 +7,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
       "AllowOverride".  Thanks to Jean-Michel Vourgère
       for the report and an initial patch.
       (Closes: #717621)
+  * checks/control-file.{desc,pm}:
+    + [BR] Add check for field name being duplicated in
+      the value of the field.  (Closes: #711069)
   * checks/cruft.pm:
     + [NT] Skip d/README.Debian and d/README.source when
       checking for non-free licenses.  Mentions here are

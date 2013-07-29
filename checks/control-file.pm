@@ -84,6 +84,10 @@ while (<$fd>) {
         unless (/^\S+: \S/ || /^\S+:$/) {
             tag 'debian-control-has-unusual-field-spacing', "line $.";
         }
+        # something like "Maintainer: Maintainer: bad field"
+        if (/^\Q$field\E: \s* \Q$field\E \s* :/xsmi) {
+            tag 'debian-control-repeats-field-name-in-value', "line $.";
+        }
     }
 }
 close($fd);

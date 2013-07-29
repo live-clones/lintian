@@ -73,6 +73,16 @@ Description: {$description} (four)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: {$srcpkg}-5
+Section: {$section}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: Description: {$description}
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
 Package: {$srcpkg}-udeb
 Section: debian-installer
 Package-Type: udeb

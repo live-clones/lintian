@@ -6,6 +6,7 @@ Test-For:
  binary-control-field-duplicates-source
  build-info-in-binary-control-file-section
  control-file-contains-dh_make-vcs-comment
+ debian-control-repeats-field-name-in-value
  duplicate-long-description
  duplicate-short-description
  missing-separator-between-items
