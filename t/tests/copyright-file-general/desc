@@ -23,6 +23,7 @@ Test-For:
  copyright-refers-to-nonexistent-license-file
  copyright-refers-to-old-directory
  copyright-refers-to-problematic-php-license
+ copyright-should-refer-to-common-license-file-for-apache-2
  copyright-should-refer-to-common-license-file-for-gfdl
  copyright-should-refer-to-common-license-file-for-gpl
  copyright-should-refer-to-common-license-file-for-lgpl

@@ -183,6 +183,18 @@ Description: checks for perl packages not pointing to common-licenses
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: copyright-missing-apache2-license-pointer
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: checks for apache2 packages not pointing to common-licenses
+ Packages under the apache2-license should reference a
+ license in common-licenses.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
 Package: copyright-poor-common-licenses
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}

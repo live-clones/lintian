@@ -169,6 +169,20 @@ Info: If your package is released under the same terms as Perl itself,
  it should refer to the Artistic and GPL license files in the
  <tt>/usr/share/common-licenses</tt> directory.
 
+Tag: copyright-should-refer-to-common-license-file-for-apache-2
+Severity: important
+Certainty: possible
+Ref: policy 12.5
+Info: The strings "Apache License, Version" or "Apache-2" appear in the
+ copyright file for this package, but the copyright file does not
+ reference <tt>/usr/share/common-licenses</tt> as the location of the
+ Apache-2 on Debian systems.
+ .
+ If the package uses some other license that just mentions the Apache-2 and
+ that Lintian should detect as an exception, please file a Lintian bug.
+ If the copyright file must mention the Apache-2 for reasons other than
+ stating the license of the package, please add a Lintian override.
+
 Tag: copyright-should-refer-to-common-license-file-for-gpl
 Severity: important
 Certainty: possible

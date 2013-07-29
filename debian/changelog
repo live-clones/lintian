@@ -17,10 +17,13 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * checks/control-file.{desc,pm}:
     + [BR] Add check for field name being duplicated in
       the value of the field.  (Closes: #711069)
-  * checks/copyright-file.pm:
+  * checks/copyright-file.{desc,pm}:
     + [BR] Extend check for "reference to compressed
       common-license" to include all current
       common-licenses.
+    + [BR] Add check for use of Apache-2.0 in d/copyright
+      without references common-licenses.
+      (Closes: #713012)
   * checks/cruft.pm:
     + [NT] Skip d/README.Debian and d/README.source when
       checking for non-free licenses.  Mentions here are

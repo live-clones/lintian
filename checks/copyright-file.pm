@@ -224,7 +224,10 @@ if (m,/usr/share/common-licenses,
 } elsif (m/GNU General Public License/i or m/\bGPL\b/) {
     tag 'copyright-should-refer-to-common-license-file-for-gpl';
     $gpl = 1;
+} elsif (m/Apache License\s+,? Version 2\.0/i or m/\bApache-2(?:\.0)?\b/) {
+    tag 'copyright-should-refer-to-common-license-file-for-apache-2';
 }
+
 if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
     !m,usr/share/common-licenses/,) {
     tag 'copyright-file-lacks-pointer-to-perl-license';
