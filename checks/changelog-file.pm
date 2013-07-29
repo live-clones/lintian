@@ -289,11 +289,17 @@ if (@entries) {
 
     # Some checks should only be done against the most recent changelog entry.
     my $entry = $entries[0];
-    if (@entries == 1 and $entry->Version and $entry->Version =~ /-1$/) {
-        tag 'new-package-should-close-itp-bug'
-            unless @{ $entry->Closes };
-    }
     my $changes = $entry->Changes || '';
+
+    if (@entries == 1) {
+        if ($entry->Version and $entry->Version =~ /-1$/) {
+            tag 'new-package-should-close-itp-bug'
+                unless @{ $entry->Closes };
+        }
+        if ($changes =~ /(?:#?\s*)(?:\d|n)+ is the bug number of your ITP/i) {
+            tag 'changelog-is-dh_make-template';
+        }
+    }
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
         tag 'possible-missing-colon-in-closes', $1 if $1;
     }

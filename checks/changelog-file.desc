@@ -39,6 +39,17 @@ Info: NEWS.Debian files should be compressed using "gzip -9".  The file
  must always have the same name.
 Ref: devref 6.3.4
 
+Tag: changelog-is-dh_make-template
+Severity: important
+Certainty: certain
+Info: The changelog file has an instruction left by dh_make, which has
+ not been removed.  Example:
+ .
+   * Initial release (Closes: #nnnn)  &lt;nnnn is the bug number of your ITP%gt;
+ .
+ The "&lt;... is the bug number ...&gt;" part has not been removed from the
+ changelog.
+
 Tag: changelog-not-compressed-with-max-compression
 Severity: normal
 Certainty: certain

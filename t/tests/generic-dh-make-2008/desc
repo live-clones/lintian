@@ -8,6 +8,7 @@ Options: -IE --pedantic
 Test-For:
  ancient-standards-version
  bad-homepage
+ changelog-is-dh_make-template
  copyright-contains-dh_make-todo-boilerplate
  copyright-has-url-from-dh_make-boilerplate
  copyright-with-old-dh-make-debian-copyright

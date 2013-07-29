@@ -6,6 +6,7 @@ Version: 1-1
 Description: Generic dh_make template generated in 2005
 Test-For:
  ancient-standards-version
+ changelog-is-dh_make-template
  copyright-without-copyright-notice
  debian-rules-ignores-make-clean-error
  debian-rules-sets-DH_COMPAT

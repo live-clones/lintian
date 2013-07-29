@@ -7,6 +7,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
       "AllowOverride".  Thanks to Jean-Michel Vourgère
       for the report and an initial patch.
       (Closes: #717621)
+  * checks/changelog-file.{desc,pm}:
+    + [BR] Add check for dh-make reminder to insert the
+      bug number of the ITP bug.  (Closes: #690273)
   * checks/control-file.{desc,pm}:
     + [BR] Add check for field name being duplicated in
       the value of the field.  (Closes: #711069)
