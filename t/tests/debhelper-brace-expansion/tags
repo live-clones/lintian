@@ -1,1 +1,6 @@
-W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/install
+W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-1.install
+W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-2.install
+W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-3.install
+W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-4.install
+W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-5.install
+W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-6.install

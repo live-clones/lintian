@@ -19,6 +19,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * checks/debhelper.{desc,pm}:
     + [NT] Remove tag for dh_pycentral being obsolete.
       Thanks to Luca Falavigna for the report.
+    + [BR] Fix false-negative in the brace expansion check
+      when the comma was next to one of the braces.
+      (Closes: #708381)
   * checks/files.{desc,pm}:
     + [NT] Remove tag for missing dependency on
       python-central.  Thanks to Luca Falavigna for the

@@ -359,7 +359,7 @@ for my $file (sort(readdir($dirfd))) {
             while (<$fd>) {
                 next if /^\s*$/;
                 next if (/^\#/ and $level >= 5);
-                if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
+                if (m/(?<!\\)\{(?:[^\s\\\},]*?,)*[^\\\}\s,]+,*\}/) {
                     tag 'brace-expansion-in-debhelper-config-file',
                         "debian/$file";
                     last;
