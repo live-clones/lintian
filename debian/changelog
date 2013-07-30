@@ -19,6 +19,10 @@ lintian (2.5.16) UNRELEASED; urgency=low
       presumably just false-positives.  Thanks to
       Marcelo Jorge Vieira for the report and the initial
       patch.  (Closes: #718575)
+  * checks/deb-format.pm:
+    + [NT] Apply patch from Guillem Jover to fix a wrong
+      tag being emitted on lzma compressed udebs.
+      (Closes: #718337)
   * checks/debhelper.{desc,pm}:
     + [NT] Remove tag for dh_pycentral being obsolete.
       Thanks to Luca Falavigna for the report.

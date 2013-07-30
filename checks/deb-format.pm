@@ -53,6 +53,8 @@ if ($success) {
     } elsif ($members[1] ne 'control.tar.gz') {
         tag 'malformed-deb-archive',
             "second member $members[1] not control.tar.gz";
+    } elsif ($type eq 'udeb' && $members[2] !~ m/^data\.tar\.[gx]z$/) {
+        tag 'udeb-uses-unsupported-compression-for-data-tarball';
     } elsif ($members[2] eq 'data.tar.lzma') {
         # Ubuntu's archive allows lzma packages.
         tag 'lzma-deb-archive';
@@ -60,9 +62,6 @@ if ($success) {
         tag 'malformed-deb-archive',
             "third member $members[2] not data.tar.(gz|bz2|xz)";
     } else {
-        if ($type eq 'udeb' && $members[2] !~ m/^data\.tar\.[gx]z$/) {
-            tag 'udeb-uses-unsupported-compression-for-data-tarball';
-        }
         $okay = 1;
     }
 } else {
