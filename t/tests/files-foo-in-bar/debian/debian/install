@@ -3,6 +3,9 @@ bar etc/gconf/schemas/
 bar etc/rc.boot
 bar etc/rc.d
 bar etc/udev/rules.d
+bar lib32
+bar lib64
+bar libx32
 bar mnt/foo
 bar run/foo
 bar srv/foo
@@ -10,6 +13,9 @@ bar tmp/foo
 bar usr/bin/foo
 bar usr/foo
 bar usr/lib/debug/
+bar usr/lib32
+bar usr/lib64
+bar usr/libx32
 bar usr/lib/perl/
 bar usr/lib/python2.6/
 bar usr/lib/sgml

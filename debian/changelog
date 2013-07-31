@@ -18,6 +18,9 @@ lintian (2.5.17) UNRELEASED; urgency=low
       multi-arch paths but being installed in a non-multi-arch
       location.  Thanks to Ivo De Decker for the report.
       (Closes: #674469)
+    + [BR] Add check for using the old bi-arch directories
+      (/usr/lib64) instead of multi-arch dirs.  Thanks to
+      Kurt Roeckx for the report.  (Closes: #528975)
   * checks/md5sums.{desc,pm}:
     + [JW,NT] Rename a tag due to a typo in the tag name.
       The tag has no known overrides.

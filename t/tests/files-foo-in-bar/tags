@@ -56,6 +56,12 @@ W: files-foo-in-bar: file-in-unusual-dir var/lock/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/run/foo/bar
 W: files-foo-in-bar: file-in-usr-lib-sgml usr/lib/sgml/bar
 W: files-foo-in-bar: image-file-in-usr-lib usr/lib/files-foo-in-bar/bar.png
+W: files-foo-in-bar: non-multi-arch-lib-dir lib32/
+W: files-foo-in-bar: non-multi-arch-lib-dir lib64/
+W: files-foo-in-bar: non-multi-arch-lib-dir libx32/
+W: files-foo-in-bar: non-multi-arch-lib-dir usr/lib32/
+W: files-foo-in-bar: non-multi-arch-lib-dir usr/lib64/
+W: files-foo-in-bar: non-multi-arch-lib-dir usr/libx32/
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/
 W: files-foo-in-bar: package-installs-into-etc-gconf-schemas etc/gconf/schemas/bar
 W: files-foo-in-bar: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/Foo/Bar.pm

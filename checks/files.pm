@@ -651,11 +651,26 @@ sub run {
                 elsif (
                     $file !~ m,^usr/(?:X11R6|X386|
                                     bin|games|include|
-                                    lib|libx?32|lib64|
+                                    lib|
                                     local|sbin|share|
                                     src|spool|tmp)/,x
                   ) {
-                    tag 'non-standard-dir-in-usr', $file;
+                    if ($file =~ m,^usr/lib(?'libsuffix'64|x?32)/,) {
+                        my $libsuffix = $+{libsuffix};
+                        # eglibc exception is due to FHS. Other are
+                        # transitional, waiting for full
+                        # implementation of multi-arch.  Note that we
+                        # allow (e.g.) "lib64" packages to still use
+                        # these dirs, since their use appears to be by
+                        # intention.
+                        unless ($source_pkg eq 'eglibc'
+                            or $pkg =~ m/^lib$libsuffix/) {
+                            tag 'non-multi-arch-lib-dir', $file;
+                        }
+                    } else {
+                        tag 'non-standard-dir-in-usr', $file;
+                    }
+
                 }
 
                 # unless $file =~ m,^usr/[^/]+-linuxlibc1/,; was tied
@@ -767,7 +782,7 @@ sub run {
         elsif (
                 $file =~ m,^[^/]+/$,o
             and $file !~ m{\A (?:
-                  bin|boot|dev|etc|home|lib(?:64|x?32)?
+                  bin|boot|dev|etc|home|lib
                  |mnt|opt|root|run|sbin|selinux|srv|sys
                  |tmp|usr|var)  /
           }oxsm
@@ -777,15 +792,25 @@ sub run {
             # top-level directories for setting up the base system.
             # (Specifically, /cdrom, /floppy, /initrd, and /proc are
             # not mentioned in the FHS).
-            #
-            # Also make an exception for /emul, which is used for
-            # multiarch support in Debian at the moment.
-            tag 'non-standard-toplevel-dir', $file
-              unless $pkg eq 'base-files'
-              or $pkg eq 'hurd'
-              or $pkg eq 'hurd-udeb'
-              or $pkg =~ /^rootskel(?:-bootfloppy)?/
-              or $file =~ m,^emul/,;
+            if ($file =~ m,^lib(?'libsuffix'64|x?32)/,) {
+                my $libsuffix = $+{libsuffix};
+                # see comments for ^usr/lib(?'libsuffix'64|x?32)
+                unless ($source_pkg eq 'eglibc'
+                    or $pkg =~ m/^lib$libsuffix/) {
+                    tag 'non-multi-arch-lib-dir', $file;
+                }
+            } elsif ($file =~ m,^emul/,) {
+                # Make an exception for /emul, which is used for multi-arch
+                # support in Debian at the moment.
+            } else {
+                unless ($pkg eq 'base-files'
+                    or $pkg eq 'hurd'
+                    or $pkg eq 'hurd-udeb'
+                    or $pkg =~ /^rootskel(?:-bootfloppy)?/) {
+                    tag 'non-standard-toplevel-dir', $file;
+                }
+            }
+
         }
 
         # ---------------- compatibility symlinks should not be used

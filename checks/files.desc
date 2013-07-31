@@ -532,6 +532,14 @@ Info: The Filesystem Hierarchy Standard forbids the installation of new
  files or directories in the root directory.
 Ref: fhs therootfilesystem
 
+Tag: non-multi-arch-lib-dir
+Severity: normal
+Certainty: certain
+Info: The following library use an old path (like /lib64 or /lib32)
+ instead of using multi-arch path (like for instance
+ /lib/x86_64-linux-gnu/ or /lib/i386-linux-gnu/).
+Ref: https://wiki.debian.org/Multiarch
+
 Tag: subdir-in-bin
 Severity: serious
 Certainty: certain
