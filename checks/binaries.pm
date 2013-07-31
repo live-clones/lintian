@@ -225,6 +225,12 @@ for my $file ($info->sorted_index) {
     $directories{"/$name"}++;
 }
 
+my $src = $group->get_source_processable();
+my $built_with_golang;
+if (defined($src)) {
+    $built_with_golang = $src->info->relation('build-depends')->implies('golang-go');
+}
+
 # process all files in package
 foreach my $file ($info->sorted_index) {
     my $fileinfo = $info->file_info ($file);
@@ -393,6 +399,8 @@ foreach my $file ($info->sorted_index) {
             next if ($file =~ m%^boot/%);
             next if ($file =~ /[\.-]static$/);
             next if ($pkg =~ /-static$/);
+            # Binaries built by the Go compiler are statically linked by default.
+            next if ($built_with_golang);
             # klibc binaries appear to be static.
             next if (exists $objdump->{INTERP}
                      && $objdump->{INTERP} =~ m,/lib/klibc-\S+\.so,);
