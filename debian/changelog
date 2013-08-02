@@ -7,6 +7,12 @@ lintian (2.5.16) UNRELEASED; urgency=low
       "AllowOverride".  Thanks to Jean-Michel Vourgère
       for the report and an initial patch.
       (Closes: #717621)
+  * checks/cruft.pm:
+    + [NT] Skip d/README.Debian and d/README.source when
+      checking for non-free licenses.  Mentions here are
+      presumably just false-positives.  Thanks to
+      Marcelo Jorge Vieira for the report and the initial
+      patch.  (Closes: #718575)
   * checks/debhelper.{desc,pm}:
     + [NT] Remove tag for dh_pycentral being obsolete.
       Thanks to Luca Falavigna for the report.

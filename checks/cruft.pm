@@ -431,7 +431,12 @@ sub find_cruft {
         }
 
         next ENTRY if $info->is_non_free; # (license issue does not apply to non-free)
-        next ENTRY if $basename eq 'debian/changelog'; # (license string in debian/changelog are changelog)
+        next ENTRY if $name eq 'debian/changelog'; # (license string in debian/changelog are changelog)
+        # Ignore these strings in d/README.{Debian,source}.  If they
+        # appear there it is probably just "file XXX got removed
+        # because of license Y".
+        next ENTRY if $name eq 'debian/README.Debian'
+            or $name eq 'debian/README.source';
 
         $path = $info->unpacked($entry);
 
