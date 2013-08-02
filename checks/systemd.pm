@@ -177,8 +177,12 @@ sub extract_service_file_values {
     my $section;
 
     my $unpacked_file = $info->unpacked ($file);
-    unless (-f $unpacked_file &&
-            is_ancestor_of ($info->unpacked, $unpacked_file)) {
+    unless (
+          (   -f $unpacked_file
+            && is_ancestor_of($info->unpacked, $unpacked_file)
+          ) || ($file->is_symlink && $file->link eq '/dev/null')
+        )
+    {
         tag 'service-file-is-not-a-file', $file;
         return;
     }

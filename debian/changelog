@@ -19,6 +19,10 @@ lintian (2.5.16) UNRELEASED; urgency=low
       calls to dpkg-divert without --package as dpkg 1.16.0
       (Wheezy) handles this case correctly.  Thanks to
       Raphaël Hertzog for the report.  (Closes: #679132)
+  * checks/systemd.pm:
+    + [NT] Apply patch from Stig Sandbeck Mathisen to allow
+      systemd files being symlinks to /dev/null.
+      (Closes: #718563)
 
   * debian/changelog:
     + [NT] Correct some older tag summaries to include some
