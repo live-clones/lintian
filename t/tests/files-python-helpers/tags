@@ -1,2 +1,1 @@
-E: python-foo: missing-dependency-on-python-central
 E: python-foo: missing-dependency-on-python-support python-support (>= 0.90)

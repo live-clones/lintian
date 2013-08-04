@@ -849,11 +849,6 @@ foreach my $file ($info->sorted_index) {
     }
 
     # ---------------- pyshared-data
-    if ($file =~ m,^usr/share/pyshared-data/$ppkg$,){
-        my $dep = $info->relation('depends');
-        tag 'missing-dependency-on-python-central' unless ($dep->implies('python-central (>= 0.6)'));
-    }
-
     if ($file =~ m,^usr/share/python-support/$ppkg\.(?:public|private)$,){
         $py_support_nver = '(>= 0.90)';
     } elsif ($file =~ m,^usr/share/python-support/\S+,o && !$py_support_nver){

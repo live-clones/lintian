@@ -2,6 +2,4 @@ Testname: files-python-helpers
 Sequence: 6000
 Version: 1.0
 Description: Test tags for missing depends on python helpers
-Test-For:
- missing-dependency-on-python-central
- missing-dependency-on-python-support
+Test-For: missing-dependency-on-python-support

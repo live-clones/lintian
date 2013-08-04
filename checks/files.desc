@@ -728,16 +728,6 @@ Info: The package appears to be installing debug modules in
  should be installed in /usr/lib/debug/usr/lib/pymodules/pythonX.Y/
  instead.
 
-Tag: missing-dependency-on-python-central
-Severity: important
-Certainty: possible
-Ref: #592533
-Info: The package installs a file with the package name in
- /usr/share/pyshared-data/ without depending on python-central (&gt;= 0.6).
- .
- This can happen if ${python:Depends} was omitted from the Depends field
- in debian/control.
-
 Tag: missing-dependency-on-python-support
 Severity: important
 Certainty: possible
