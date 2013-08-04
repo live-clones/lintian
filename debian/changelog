@@ -40,6 +40,8 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * debian/changelog:
     + [NT] Correct some older tag summaries to include some
       missing tags in the entry for 2.5.11 and 2.5.12.
+  * debian/copyright:
+    + [NT] Add Bastien ROUCARIÈS to maintainers (as BR).
 
   * frontend/lintian:
     + [NT] Move some handling of overrides to Lintian::Tags.
