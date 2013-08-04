@@ -132,11 +132,10 @@ sub new {
         $self->{'extra-fields'} = $dinfo;
     } elsif ($pkg_type eq 'source'){
         my $dinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not valid dsc file";
-        my $pkg_name = $dinfo->{source};
+        my $pkg_name = $dinfo->{source} // '';
         my $pkg_version = $dinfo->{version};
-        unless ($pkg_name) {
-            $pkg_name = _derive_name ($pkg_path, 'dsc')
-                or croak "Cannot determine the name of $pkg_path";
+        if ($pkg_name eq '') {
+            croak "$pkg_path is missing Source field";
         }
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;

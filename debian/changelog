@@ -58,6 +58,11 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * frontend/lintian:
     + [NT] Move some handling of overrides to Lintian::Tags.
 
+  * lib/Lintian/Processable/Package.pm:
+    + [NT] Refuse to process .dsc files that are missing the
+      Source field.   This prevents some warnings about using
+      undefined values.  Thanks to Guillem Jover for the
+      report.  (Closes: #718351)
   * lib/Lintian/Tags.pm:
     + [NT] Take over some handling of overrides from the
       frontend.
