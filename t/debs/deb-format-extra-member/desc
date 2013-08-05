@@ -2,4 +2,4 @@ Testname: deb-format-extra-member
 Sequence: 6000
 Version: 1.0
 Description: Test package for an ar archive in the wrong order
-Test-For: malformed-deb-archive
+Test-For: misplaced-extra-member-in-deb

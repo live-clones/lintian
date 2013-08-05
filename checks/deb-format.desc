@@ -17,6 +17,13 @@ Info: The binary package is not a correctly constructed archive.  A binary
  of 2.
 Ref: deb(5)
 
+Tag: misplaced-extra-member-in-deb
+Severity: important
+Certainty: certain
+Info: The binary package contains an extra member that Lintian did not
+ expect or expected at a different position.
+Ref: deb(5)
+
 Tag: lzma-deb-archive
 Severity: serious
 Certainty: certain

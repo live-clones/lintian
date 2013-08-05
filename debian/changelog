@@ -16,7 +16,13 @@ lintian (2.5.18) UNRELEASED; urgency=low
       (Closes: #721252)
     + [BR] Extend tag description of the gfdl-invariants tag.
       (Closes: #722102)
-  * checks/files.{pm,desc}:
+  * checks/deb-format.{desc,pm}:
+    + [NT] Support (but tag) unofficial members after the
+      "debian-binary" member where allowed by dpkg.  These
+      members will trigger misplaced-extra-member-in-deb tag.
+      Thanks to Guillem Jover for the report and the feedback.
+      (Closes: #718349)
+  * checks/files.{desc,pm}:
     + [BR] Fix false-positive dir-or-file-in-build-tree for
       the sbuild source package.  (Closes: #720910)
     + [NT] Add check for empty udeb packages.  Thanks to Cyril

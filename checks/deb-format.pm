@@ -20,7 +20,10 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(first_index none);
+
 use Lintian::Command qw(spawn);
+use Lintian::Data;
 use Lintian::Tags qw(tag);
 
 # The files that contain error messages from tar, which we'll check and issue
@@ -33,6 +36,8 @@ our %ERRORS = (
     'unpacked-errors'      => 'tar-errors-from-data'
 );
 
+my $EXTRA_MEMBERS = Lintian::Data->new('deb-format/extra-members');
+
 sub run {
     my (undef, $type, $info) = @_;
     my $deb = $info->lab_data_path('deb');
@@ -43,25 +48,101 @@ sub run {
     my $success = spawn($opts, ['ar', 't', $deb]);
     if ($success) {
         my @members = split("\n", ${ $opts->{out} });
-        if (@members != 3) {
-            my $count = scalar(@members);
-            tag 'malformed-deb-archive',"found $count members instead of 3";
+        my $count = scalar(@members);
+        my ($ctrl_member, $data_member);
+        if ($count < 3) {
+            tag 'malformed-deb-archive',
+              "found only $count members instead of 3";
         } elsif ($members[0] ne 'debian-binary') {
             tag 'malformed-deb-archive',
               "first member $members[0] not debian-binary";
-        } elsif ($members[1] ne 'control.tar.gz') {
-            tag 'malformed-deb-archive',
-              "second member $members[1] not control.tar.gz";
-        } elsif ($type eq 'udeb' && $members[2] !~ m/^data\.tar\.[gx]z$/) {
-            tag 'udeb-uses-unsupported-compression-for-data-tarball';
-        } elsif ($members[2] eq 'data.tar.lzma') {
-            # Ubuntu's archive allows lzma packages.
-            tag 'lzma-deb-archive';
-        } elsif ($members[2] !~ /^data\.tar\.(?:gz|bz2|xz)\z/) {
-            tag 'malformed-deb-archive',
-              "third member $members[2] not data.tar.(gz|bz2|xz)";
+        } elsif (
+            $count == 3 and none {
+                substr($_, 0, 1) eq '_';
+            }
+            @members
+          ) {
+            # Fairly common case - if there are only 3 members without
+            # "_", we can trivially determine their (expected)
+            # positions.  We only use this case when there are no
+            # "extra" members, because they can trigger more tags
+            # (see below)
+            (undef, $ctrl_member, $data_member) = @members;
         } else {
+            my $ctrl_index
+              = first_index { substr($_, 0, 1) ne '_' } @members[1..$#members];
+            my $data_index;
+
+            if ($ctrl_index != -1) {
+                # Since we searched only a sublist of @members, we have to
+                # add 1 to $ctrl_index
+                $ctrl_index++;
+                $ctrl_member = $members[$ctrl_index];
+                $data_index = first_index { substr($_, 0, 1) ne '_' }
+                @members[$ctrl_index..$#members];
+                if ($data_index != -1) {
+                    # Since we searched only a sublist of @members, we
+                    # have to adjust $data_index
+                    $data_index += $ctrl_index + 1;
+                    $data_member = $members[$data_index];
+                }
+            }
+
+            # Extra members
+            for my $i (1..$#members) {
+                my $member = $members[$i];
+                my $actual_index = $i;
+                my ($expected, $text);
+                next if $i == $ctrl_index or $i == $data_index;
+                $expected = $EXTRA_MEMBERS->value($member);
+                if (defined($expected)) {
+                    next if $expected eq 'ANYWHERE';
+                    next if $expected == $actual_index;
+                    $text = "expected at position $expected, but appeared";
+                } else {
+                    $text = 'unexpected member';
+                }
+                tag 'misplaced-extra-member-in-deb',
+                  "$member ($text at position $actual_index)";
+            }
+        }
+        if (not defined($ctrl_member)) {
+            # Somehow I doubt we will ever get this far without a control
+            # file... :)
+            tag 'malformed-deb-archive', 'Missing control.tar.gz member';
+        } elsif ($ctrl_member ne 'control.tar.gz') {
+            tag 'malformed-deb-archive',
+              "second (official) member $ctrl_member not control.tar.gz";
+        } elsif (not defined($data_member)) {
+            # Somehow I doubt we will ever get this far without a data
+            # member (i.e. I suspect unpacked and index will fail), but
+            # mah
+            tag 'malformed-deb-archive', 'Missing data.tar member';
+        } else {
+            # Probably okay
             $okay = 1;
+            if (
+                $data_member !~ m/\A
+                     # NB: We deliberately do not allow "data.tar",
+                     # since various tools seems to be unable to cope
+                     # with them. (see  #718331)
+                     data\.tar\.(?:gz|bz2|xz|lzma)  \Z/xsm
+              ) {
+                # wasn't okay after all
+                $okay = 0;
+            } elsif ($type eq 'udeb'
+                && $data_member !~ m/^data\.tar\.[gx]z$/) {
+                tag 'udeb-uses-unsupported-compression-for-data-tarball';
+            } elsif ($data_member eq 'data.tar.lzma') {
+                # Ubuntu's archive allows lzma packages.
+                tag 'lzma-deb-archive';
+            }
+            if (not $okay) {
+                tag 'malformed-deb-archive',
+                  join(' ',
+                    "third (official) member $data_member",
+                    'not data.tar.(gz|bz2|xz)');
+            }
         }
     } else {
         # unpack will probably fail so we'll never get here, but may as well be

@@ -1,1 +1,1 @@
-E: deb-format-extra-member: malformed-deb-archive found 4 members instead of 3
+E: deb-format-extra-member: misplaced-extra-member-in-deb extra-stuff (unexpected member at position 3)
