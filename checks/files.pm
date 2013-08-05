@@ -1022,7 +1022,7 @@ foreach my $file ($info->sorted_index) {
                while (my $line = <$t1pipe>) {
                     if ($foundadobeline) {
                        if ($line =~ m/^[%\s]*All\s*Rights\s*Reserved\.?\s*$/i) {
-                          tag 'font-adobe-copyrighted-fragment', $file;
+                          tag 'license-problem-font-adobe-copyrighted-fragment', $file;
                           last;
                        } else {
                           $foundadobeline = 0;
@@ -1035,7 +1035,7 @@ foreach my $file ($info->sorted_index) {
                     # the only place where the startlock is documented is in the black book
                     # copyrighted fragment
                     if ($line =~ m/startlock\s*get\s*exec/) {
-                        tag 'font-adobe-copyrighted-fragment-no-credit', $file;
+                        tag 'license-problem-font-adobe-copyrighted-fragment-no-credit', $file;
                         last;
                     }
                }

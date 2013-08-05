@@ -959,7 +959,7 @@ Info: This package contains a *.ttf, *.otf, or *.pfb file, file
  the font should be packaged separately, since fonts are usually useful
  outside of the package that embeds them.
 
-Tag: font-adobe-copyrighted-fragment
+Tag: license-problem-font-adobe-copyrighted-fragment
 Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
@@ -969,7 +969,7 @@ Info: This type 1 font file includes some postscript fragment with a
  Should this be a false-positive, please override the tag.
 Ref: http://wiki.debian.org/qa.debian.org/type1nondfsg
 
-Tag: font-adobe-copyrighted-fragment-no-credit
+Tag: license-problem-font-adobe-copyrighted-fragment-no-credit
 Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a

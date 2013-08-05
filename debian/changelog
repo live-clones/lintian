@@ -44,6 +44,8 @@ lintian (2.5.16) UNRELEASED; urgency=low
     + [NT] Remove tag for missing dependency on
       python-central.  Thanks to Luca Falavigna for the
       report.  (Closes: #718690)
+    + [BR] Rename font-adobe-copyrighted-fragment tags.
+      (Closes: #718820)
   * checks/init.d.{desc,pm}:
     + [NT] Revert init.d-script-call-internal-API for now.
       Refer to #710559 for more information.

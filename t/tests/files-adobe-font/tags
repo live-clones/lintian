@@ -1,3 +1,3 @@
-E: fonts-files-adobe-font: font-adobe-copyrighted-fragment usr/share/lintian/fonts/bad.pfb
-E: fonts-files-adobe-font: font-adobe-copyrighted-fragment usr/share/lintian/fonts/badwithadobecode.pfb
-E: fonts-files-adobe-font: font-adobe-copyrighted-fragment-no-credit usr/share/lintian/fonts/badnocredit.pfb
+E: fonts-files-adobe-font: license-problem-font-adobe-copyrighted-fragment usr/share/lintian/fonts/bad.pfb
+E: fonts-files-adobe-font: license-problem-font-adobe-copyrighted-fragment usr/share/lintian/fonts/badwithadobecode.pfb
+E: fonts-files-adobe-font: license-problem-font-adobe-copyrighted-fragment-no-credit usr/share/lintian/fonts/badnocredit.pfb

@@ -3,5 +3,5 @@ Sequence: 6000
 Version: 1.0
 Description: Test for adobe font license issues
 Test-For:
- font-adobe-copyrighted-fragment
- font-adobe-copyrighted-fragment-no-credit
+ license-problem-font-adobe-copyrighted-fragment
+ license-problem-font-adobe-copyrighted-fragment-no-credit
