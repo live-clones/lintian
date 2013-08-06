@@ -1183,7 +1183,8 @@ sub normalize_pkg_path {
             pop @cc;
         } else {
             # usr/share + java -> usr/share/java
-            push @cc, $target;
+            # but usr/share + "." -> usr/share
+            push @cc, $target if $target ne '.';
         }
     }
     return q{} unless @cc;

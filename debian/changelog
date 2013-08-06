@@ -74,6 +74,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * lib/Lintian/Tags.pm:
     + [NT] Take over some handling of overrides from the
       frontend.
+  * lib/Lintian/Util.pm:
+    + [NT] Fix problem in normalize_pkg_path, where "."-entries
+      were not properly filtered out.
 
  -- Niels Thykier <niels@thykier.net>  Wed, 24 Jul 2013 10:30:01 +0200
 
