@@ -1115,8 +1115,7 @@ it assumes none of the path segments are symlinks.
 
 normalize_pkg_path will return C<q{}> (i.e. the empty string) if the
 target is the root dir and C<undef> if the path cannot be normalized
-without escaping the package root.  NB: These special cases are
-different than resolve_pkg_path.
+without escaping the package root.
 
 B<NOTE>: CURDIR is assumed to be normalized.  In particularly, it must
 not have any ".." path segments in it.
