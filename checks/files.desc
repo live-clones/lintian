@@ -958,6 +958,13 @@ Info: This package create a privacy breach by fetching some data from
   facebook like share or like buttons.
   Please remove these scripts or frames.
 
+Tag: privacy-breach-google-cse
+Severity: serious
+Certainty: possible
+Info: This package create a privacy breach by fetching some data from
+ google search engine and feed some private data to google. 
+ Please remove these scripts.
+
 Tag: privacy-breach-piwik
 Severity: serious
 Certainty: possible

@@ -11,6 +11,9 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/adsen
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchin.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinconstructor.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinloader.js
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacybreach/html/googlecse.css
+E: files-privacybreach: privacy-breach-google-cse usr/share/htmlfragment/googlecse.xml
+E: files-privacybreach: privacy-breach-google-cse usr/share/htmlfragment/googlecseform.xml
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwikvariant.html
 E: files-privacybreach: privacy-breach-statistics-website usr/share/htmlfragment/statcounter.xml

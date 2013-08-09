@@ -5,6 +5,7 @@ Description: Check for different html privacy breach
 Test-For:
  privacy-breach-generic
  privacy-breach-google-adsense
+ privacy-breach-google-cse
  privacy-breach-facebook
  privacy-breach-piwik
  privacy-breach-statistics-website
