@@ -48,7 +48,7 @@ Info: The package is a PECL package but its control file doesn't have
  php5-dev or dh-php5 as a build dependency.
 
 Tag: composer-package-without-pkg-php-tools-builddep
-Severity: normal
+Severity: wishlist
 Certainty: possible
 Info: The package contains an composer.json file but doesn't build-depend on
  pkg-php-tools.
