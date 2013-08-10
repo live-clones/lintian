@@ -56,6 +56,10 @@ lintian (2.5.16) UNRELEASED; urgency=low
     + [NT] Apply patch from Mathieu Parent to fix false
       positive missing-pkg-php-tools-addon.  Thanks to
       Thijs Kinkhorst for the report.  (Closes: #718167)
+    + [NT] Apply patch form Mathieu Parent to reduce the
+      severity of a "composer package" not using
+      pkg-php-tools to wishlist.  Thanks to Thijs
+      Kinkhorst for the report.  (Closes: #718862)
   * checks/po-debconf.{desc,pm}:
     + [NT] Fix false-positive translated-default-field for
       fields preceeded by a "true" Deb822 comment.  Thanks
