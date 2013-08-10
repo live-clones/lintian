@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0-1
 Description: Composer phppear tests
 Test-For:
- missing-pkg-php-tools-addon
  composer-package-without-pkg-php-tools-builddep
+Test-Against:
+ missing-pkg-php-tools-addon
 Type: non-native

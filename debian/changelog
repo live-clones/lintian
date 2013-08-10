@@ -52,6 +52,10 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * checks/patch-systems.{desc,pm}:
     + [BR] Add tag for DEP-3 template descriptions.
       (Closes: #717633)
+  * checks/phppear.pm:
+    + [NT] Apply patch from Mathieu Parent to fix false
+      positive missing-pkg-php-tools-addon.  Thanks to
+      Thijs Kinkhorst for the report.  (Closes: #718167)
   * checks/po-debconf.{desc,pm}:
     + [NT] Fix false-positive translated-default-field for
       fields preceeded by a "true" Deb822 comment.  Thanks

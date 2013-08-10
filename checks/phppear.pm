@@ -130,7 +130,7 @@ sub run {
         }
     }
     # Check rules
-    if (defined($package_xml) || defined($package2_xml) || defined($channel_xml) || defined($composer_json)) {
+    if ($bdepends->implies('pkg-php-tools') && (defined($package_xml) || defined($package2_xml) || defined($channel_xml) || defined($composer_json)) ) {
         my $rules = $info->debfiles('rules');
         if (not -l $rules or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
             my $has_buildsystem_phppear = 0;

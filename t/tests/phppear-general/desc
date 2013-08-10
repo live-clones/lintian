@@ -3,7 +3,8 @@ Sequence: 6000
 Version: 1.0-1
 Description: General phppear tests
 Test-For:
- missing-pkg-php-tools-buildsystem
  pear-channel-without-pkg-php-tools-builddep
  pear-package-without-pkg-php-tools-builddep
+Test-Against:
+ missing-pkg-php-tools-buildsystem
 Type: non-native
