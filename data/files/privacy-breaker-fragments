@@ -7,5 +7,6 @@
 #
 # Please keep this sorted by tag.
 privacy-breach-google-adsense     ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchinTracker\s*\(\s*\)\s*;)
+privacy-breach-facebook           ~~(?:facebook-jssdk|FB\.(?:Canvas|api|init|login|getLoginStatus|Event|ui|XFBML)|xmlns:fb\s*=\s*"https?://(?:www\.facebook\.com/20\d\d/fbml|ogp\.me/ns/fb\#?)"|</?fb:(?:activity|comments|friendpile|like|like-box|login-button|name|profile-pic|recommendations)\s+[^>]*>)
 privacy-breach-piwik              ~~(?:piwik_url\s*=|pkBaseURL\s*=|[\'"]piwik\.js[\'\"]|End\s+Piwik\h+(?:Tag|Code)|[\'\"]setTrackerUrl[\'\"])
 privacy-breach-statistics-website ~~(?:var\s+sc_project\s*=\s*\d+\s*;)

@@ -1853,6 +1853,7 @@ sub detect_privacy_breach {
 # audio(v5+), embed (v5+), iframe (v4), frame, img, input, script, source, track(v5), video (v5)
 # Add other tags with src due to some javascript code:
 # div due to div.js
+# div data-href due to jquery
 # css with @import
       EXTERNAL_TAG:
         while(
@@ -1863,6 +1864,10 @@ sub detect_privacy_breach {
                     (?'tagattr'div|embed|i?frame|img|input|script|source|track|video)
                     (?&ba)
                     src\s*=\s*(?'url'(?&loc))
+                  |
+                    (?'tagattr'div)
+                    (?&ba)
+                    data-href\s*=\s*(?'url'(?&loc))
                   |
                     (?'tagattr'applet|object)
                     (?&ba)
