@@ -56,7 +56,7 @@ my (%archs, %files);
 #
 
 add_data_file(
-    'filename' => 'binaries/multiarch-dirs',
+    'filename' => 'common/multiarch-dirs',
     'line-spec' => ['@DEB_HOST_ARCH@ @DEB_HOST_MULTIARCH@'],
     'header'  => <<EOF
 # List of "Multiarch dirs" relationships as provided by
