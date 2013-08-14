@@ -69,6 +69,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
       calls to dpkg-divert without --package as dpkg 1.16.0
       (Wheezy) handles this case correctly.  Thanks to
       Raphaël Hertzog for the report.  (Closes: #679132)
+    + [NT] Apply patch from Vincent Cheng to fix warning
+      for executable jar files.  Thanks to Matthew Johnson
+      for the report.  (Closes: #539315)
   * checks/systemd.pm:
     + [NT] Apply patch from Stig Sandbeck Mathisen to allow
       systemd files being symlinks to /dev/null.

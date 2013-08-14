@@ -436,6 +436,7 @@ foreach (keys %executable) {
                  or $scripts{$_}
                  or $_ =~ m,^usr(?:/X11R6)?/man/,
                  or $_ =~ m/\.exe$/ # mono convention
+                 or $_ =~ m/\.jar$/ # Debian Java policy 2.2
                  );
 }
 
