@@ -52,7 +52,7 @@ lintian (2.5.16) UNRELEASED; urgency=low
   * checks/patch-systems.{desc,pm}:
     + [BR] Add tag for DEP-3 template descriptions.
       (Closes: #717633)
-  * checks/phppear.pm:
+  * checks/phppear.{desc,pm}:
     + [NT] Apply patch from Mathieu Parent to fix false
       positive missing-pkg-php-tools-addon.  Thanks to
       Thijs Kinkhorst for the report.  (Closes: #718167)
@@ -60,6 +60,12 @@ lintian (2.5.16) UNRELEASED; urgency=low
       severity of a "composer package" not using
       pkg-php-tools to wishlist.  Thanks to Thijs
       Kinkhorst for the report.  (Closes: #718862)
+    + [NT] Apply patch from Vincent Bernat to downgrade
+      severity of not using phppear substvars for
+      description and synopsis plus explain that they
+      should not be used blindly.  Thanks to Mathieu
+      Parent for the review of the patch.
+      (Closes: #719788)
   * checks/po-debconf.{desc,pm}:
     + [NT] Fix false-positive translated-default-field for
       fields preceeded by a "true" Deb822 comment.  Thanks
