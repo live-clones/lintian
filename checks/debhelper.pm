@@ -101,10 +101,6 @@ while (<$rules_fd>) {
         if ($dhcommand eq 'dh_undocumented') {
             tag 'dh_undocumented-is-obsolete', "line $.";
         }
-        if ($dhcommand eq 'dh_python') {
-            tag 'dh_python-is-obsolete', "line $.";
-            $seen_python_helper = 1;
-        }
         if ($dhcommand eq 'dh_pysupport') {
             tag 'dh_pysupport-is-obsolete', "line $.";
             $seen_python_helper = 1;

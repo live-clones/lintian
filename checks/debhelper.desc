@@ -79,15 +79,6 @@ Info: This package calls dh_undocumented in its <tt>debian/rules</tt>
  it's former behavior of adding symlinks to the undocumented(7) man page
  is now obsolete.
 
-Tag: dh_python-is-obsolete
-Severity: normal
-Certainty: certain
-Info: This package calls dh_python in its <tt>debian/rules</tt> file.
- dh_python is deprecated and has been replaced by dh_python2.
- .
- dh_python2 is available in Squeeze; if backporting the package to a
- Lenny or older system, please ignore this warning.
-
 Tag: dh_pysupport-is-obsolete
 Severity: normal
 Certainty: certain

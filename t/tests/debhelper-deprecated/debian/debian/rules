@@ -24,8 +24,6 @@ binary-indep:
 	dh_installmanpages
 	dh_desktop
 	dh_scrollkeeper
-	-dh_python # Should trigger a tag
-	-dh_python$(VERSION) # This should not
 	-dh_python-ply # neither should this
 	-dh_pysupport
 # Check not warning about deprecated commands in optional portions, but

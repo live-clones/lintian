@@ -81,9 +81,9 @@ binary-indep:
 	echo "#!/bin/sh" > $(tmp)/usr/bin/test.sh
 	chmod 755 $(tmp)/usr/bin/test.sh
 
-# Should produce complaints about a missing debhelper dependency, but not a
-# missing Python dependency.
-	dh_python
+
+	dh_testroot # dummy to test missing debhelper dependency
+
 
 	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	install -m 644 debian/changelog $(tmp)/usr/share/doc/scripts/changelog.Debian

@@ -41,9 +41,6 @@ W: scripts source: debian-watch-file-declares-multiple-versions line 7
 W: scripts source: debian-watch-file-should-use-sf-redirector line 8
 W: scripts source: debian-watch-file-specifies-old-upstream-version 5 line 8
 W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method line 5
-W: scripts source: dh_python-is-obsolete line 86
-W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
-W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: patch-system-but-no-source-readme
 W: scripts source: source-nmu-has-incorrect-version-number 6ds-1ubuntu0.5.10.1
