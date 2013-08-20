@@ -13,6 +13,11 @@ lintian (2.5.17) UNRELEASED; urgency=low
   * checks/cruft.pm:
     + [NT] Avoid given/when which was demoted to an
       experimental feature.  (Closes: #720835)
+  * checks/files.{desc,pm}:
+    + [BR] Add check for architecture pkg-config files using
+      multi-arch paths but being installed in a non-multi-arch
+      location.  Thanks to Ivo De Decker for the report.
+      (Closes: #674469)
   * checks/md5sums.{desc,pm}:
     + [JW,NT] Rename a tag due to a typo in the tag name.
       The tag has no known overrides.

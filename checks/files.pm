@@ -34,6 +34,8 @@ my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
+my $MULTIARCH_DIRS= Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
+    sub { return { 'dir' => $_[1], 'match' => qr/\Q$_[1]\E/ } });
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
@@ -493,6 +495,24 @@ sub run {
                     }
 
                 }
+            }
+            # ---------------- arch-indep pkconfig
+            elsif ($file =~ m,^usr/(?:lib|share)/pkgconfig/[^/]+\.pc$,) {
+                open(my $fd, '<', $info->unpacked($file));
+              LINE:
+                while (my $line = <$fd>) {
+                    # check if pkgconfig file include path point to
+                    # arch specific dir
+                    foreach my $multiarch_dir ($MULTIARCH_DIRS->all) {
+                        my $regex
+                          = $MULTIARCH_DIRS->value($multiarch_dir)->{'match'};
+                        if ($line =~ m{$regex}) {
+                            tag 'pkg-config-multi-arch-wrong-dir',$file;
+                            last LINE;
+                        }
+                    }
+                }
+                close($fd);
             }
 
             #----------------- /usr/X11R6/

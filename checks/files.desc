@@ -1275,6 +1275,13 @@ Info: The gzip file contains a timestamp that will differ between
  .
  This can usually be fixed by passing -n to gzip.
 
+Tag: pkg-config-multi-arch-wrong-dir
+Severity: important
+Certainty: possible
+Info: The arch all pkg-config file contains reference to an multi-arch path.
+ .
+ This can be usually be fixed by moving this file to a multi-arch path.
+
 Tag: dir-or-file-in-home
 Severity: serious
 Certainty: certain
