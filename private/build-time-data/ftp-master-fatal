@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2013-05-29
+# Last updated: 2013-08-20
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -27,8 +27,11 @@ description-is-dh_make-template
 description-synopsis-is-empty
 dir-or-file-in-mnt
 dir-or-file-in-opt
+dir-or-file-in-run
 dir-or-file-in-srv
 dir-or-file-in-tmp
+dir-or-file-in-var-lock
+dir-or-file-in-var-run
 extended-description-is-empty
 file-in-etc-not-marked-as-conffile
 file-in-usr-marked-as-conffile
