@@ -46,6 +46,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
       report.  (Closes: #718690)
     + [BR] Rename font-adobe-copyrighted-fragment tags.
       (Closes: #718820)
+    + [NT] Fix false positive warning about embedded
+      feedparser for python3-feedparser.  Thanks to
+      Etienne Millon for the report.  (Closes: #719163)
   * checks/init.d.{desc,pm}:
     + [NT] Revert init.d-script-call-internal-API for now.
       Refer to #710559 for more information.

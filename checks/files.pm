@@ -973,7 +973,7 @@ foreach my $file ($info->sorted_index) {
         }
 
         # ---------------- embedded Feedparser library
-        if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
+        if ($file =~ m,/feedparser\.py$, and $source_pkg ne 'feedparser') {
             open(my $fd, '<', $info->unpacked($file));
             while (<$fd>) {
                 if (m,Universal feed parser,) {
