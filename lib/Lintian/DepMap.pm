@@ -154,9 +154,9 @@ sub add {
         $self->{'nodes'}{$node}->{'parents'}->{$parent} = $self->{'nodes'}{$parent};
     }
     unless ($parents || scalar %{$self->{'nodes'}{$node}->{'parents'}}) {
-        $self->{'map'}{$node} = $self->{'nodes'}{$node};
-    } elsif (exists $self->{'map'}{$node}) {
-        delete $self->{'map'}{$node};
+        $self->{'pending'}{$node} = 1;
+    } elsif (exists $self->{'pending'}{$node}) {
+        delete $self->{'pending'}{$node};
     }
     return 1;
 }
@@ -221,7 +221,7 @@ sub satisfy {
         fail("Attempted to mark node '$node' as satisfied but it is not ".
                     'reachable, perhaps you forgot to satisfy() its dependencies first?');
     }
-    return 0 unless (exists($self->{'map'}{$node}));
+    return 0 unless (exists($self->{'pending'}{$node}));
 
     delete $self->{'selected'}{$node}
         if exists($self->{'selected'}{$node});
@@ -232,11 +232,11 @@ sub satisfy {
         delete $self->{'nodes'}{$branch}->{'parents'}->{$node};
         delete $self->{'nodes'}{$node}->{'branches'}->{$branch};
         unless (scalar keys %{$self->{'nodes'}{$branch}->{'parents'}}) {
-            $self->{'map'}{$branch} = $self->{'nodes'}{$branch};
+            $self->{'pending'}{$branch} = 1;
         }
     }
 
-    delete $self->{'map'}{$node};
+    delete $self->{'pending'}{$node};
     delete $self->{'nodes'}{$node};
     return 1;
 }
@@ -299,8 +299,8 @@ sub unlink {
                     ', perhaps it has already been satisfied?');
     }
 
-    delete $self->{'map'}{$node}
-        if (exists($self->{'map'}{$node}));
+    delete $self->{'pending'}{$node}
+        if (exists($self->{'pending'}{$node}));
 
     delete $self->{'selected'}{$node}
         if (exists($self->{'selected'}{$node}));
@@ -344,7 +344,7 @@ sub select {
     my $self = shift;
     my $node = shift;
 
-    if (not exists($self->{'map'}{$node})) {
+    if (not exists($self->{'pending'}{$node})) {
         fail("Attempted to mark node '$node' as selected but it is not ".
                     'known, perhaps its parents are not yet satisfied?');
     }
@@ -370,9 +370,9 @@ sub selectable {
     my $self = shift;
     my $node = shift;
 
-    return (exists $self->{'map'}{$node} and not exists $self->{'selected'}{$node})
+    return (exists $self->{'pending'}{$node} and not exists $self->{'selected'}{$node})
         if (defined($node));
-    return grep {not exists $self->{'selected'}{$_}} keys %{$self->{'map'}};
+    return grep {not exists $self->{'selected'}{$_}} keys %{$self->{'pending'}};
 }
 
 =item selected([node])
@@ -464,7 +464,7 @@ Return the number of nodes that can or have already been selected. E.g.
 sub pending {
     my $self = shift;
 
-    return (scalar keys %{$self->{'map'}});
+    return (scalar keys %{$self->{'pending'}});
 }
 
 =item known()
