@@ -3,4 +3,6 @@ Sequence: 2500
 Version: 1.0
 Profile: debian/ftp-master-auto-reject
 Description: Test Lintian --ftp-master-rejects handling
-Test-For: dir-or-file-in-opt
+Test-For:
+ dir-or-file-in-opt
+ dir-or-file-in-var-lock

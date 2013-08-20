@@ -1,1 +1,2 @@
 E: lintian-ftp-rejects: dir-or-file-in-opt opt/lintian/
+E: lintian-ftp-rejects: dir-or-file-in-var-lock var/lock/lintian/
