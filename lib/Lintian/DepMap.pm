@@ -264,19 +264,17 @@ sub done {
     return exists $self->{'satisfied_nodes'}->{$node};
 }
 
-=item unlink(node[, 'soft'])
+=item unlink(node)
 
 Removes all references to the given C<node> except for the entry in the
 known() table.
 
 B<IMPORTANT>: since all references are deleted it is possible that a node
 that depended on C<node> may become available even when it was not expected
-to. To avoid this behaviour, the C<soft> option can be passed, which
-will make its branches unreachable.
+to.
 
 B<IMPORTANT>: this operation can B<not> be reversed by the means of
-initialise(). Re-adding a 'soft'ly removed node does not correct the
-references of the branches of the old node to the new node.
+initialise().
 
 E.g.
 
@@ -295,9 +293,6 @@ B<Note>: shall the requested node not exist this method die()s.
 sub unlink {
     my $self = shift;
     my $node = shift;
-    my $soft = shift;
-
-    $soft = (defined($soft) && $soft eq 'soft');
 
     if (not exists($self->{'nodes'}{$node})) {
         fail("Attempted to unlink node '$node' but it can not be found".
@@ -310,17 +305,15 @@ sub unlink {
     delete $self->{'selected'}{$node}
         if (exists($self->{'selected'}{$node}));
 
-    unless ($soft) {
-        for my $parent (keys %{$self->{'nodes'}{$node}->{'parents'}}) {
-            delete $self->{'nodes'}{$parent}{'branches'}{$node}
-                if exists $self->{'nodes'}{$parent}{'branches'}{$node};
-            delete $self->{'nodes'}{$node}{'parents'}{$parent};
-        }
+    for my $parent (keys %{$self->{'nodes'}{$node}->{'parents'}}) {
+        delete $self->{'nodes'}{$parent}{'branches'}{$node}
+           if exists $self->{'nodes'}{$parent}{'branches'}{$node};
+        delete $self->{'nodes'}{$node}{'parents'}{$parent};
+    }
 
-        for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
-            delete $self->{'nodes'}{$branch}{'parents'}{$node};
-            delete $self->{'nodes'}{$node}{'branches'}{$branch};
-        }
+    for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
+        delete $self->{'nodes'}{$branch}{'parents'}{$node};
+        delete $self->{'nodes'}{$node}{'branches'}{$branch};
     }
 
     delete $self->{'nodes'}{$node};
