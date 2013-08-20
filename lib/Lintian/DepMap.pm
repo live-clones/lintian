@@ -350,7 +350,7 @@ sub select {
     }
     return 0 if (exists($self->{'selected'}{$node}));
 
-    $self->{'selected'}{$node} = $self->{'nodes'}{$node};
+    $self->{'selected'}{$node} = 1;
 
     return 1;
 }
