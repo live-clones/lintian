@@ -24,6 +24,9 @@ use strict;
 use warnings;
 use autodie;
 
+use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
+  . ' the line above and replace this paragraph';
+
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail is_ancestor_of strip);
 use Cwd qw(realpath);
@@ -31,11 +34,12 @@ use Cwd qw(realpath);
 sub run {
     my (undef, undef, $info) = @_;
 
-    #Some (cruft) checks are valid for every patch system, so we need to record that:
+    # Some (cruft) checks are valid for every patch system, so we need
+    # to record that:
     my $uses_patch_system = 0;
 
-    #Get build deps so we can decide which build system the maintainer
-    #meant to use:
+    # Get build deps so we can decide which build system the
+    # maintainer meant to use:
     my $build_deps = $info->relation('build-depends-all');
     # Get source package format
     my $format = '';
@@ -55,14 +59,15 @@ sub run {
     if ($build_deps->implies('dpatch')) {
         $uses_patch_system++;
         #check for a debian/patches file:
-        if (-l "$dpdir/00list" and not is_ancestor_of($droot, "$dpdir/00list")) {
+        if (-l "$dpdir/00list" and not is_ancestor_of($droot, "$dpdir/00list"))
+        {
             # skip
-        } elsif (! -r "$dpdir/00list") {
+        } elsif (!-r "$dpdir/00list") {
             tag 'dpatch-build-dep-but-no-patch-list';
         } else {
             my $list_uses_cpp = 0;
             if (-f "$dpdir/00options"
-                  && is_ancestor_of($droot, "$dpdir/00options")) {
+                && is_ancestor_of($droot, "$dpdir/00options")) {
                 open(my $fd, '<', "$dpdir/00options");
                 while(<$fd>) {
                     if (/DPATCH_OPTION_CPP=1/) {
@@ -74,7 +79,7 @@ sub run {
             }
             foreach my $listfile (glob("$dpdir/00list*")) {
                 my @patches;
-                if ( -f $listfile and is_ancestor_of($droot, $listfile)) {
+                if (-f $listfile and is_ancestor_of($droot, $listfile)) {
                     open(my $fd, '<', $listfile);
                     while(<$fd>) {
                         chomp;
@@ -93,24 +98,30 @@ sub run {
 
                 # Check each patch.
                 foreach my $patch_file (@patches) {
-                    $patch_file .= '.dpatch' if -e "$dpdir/$patch_file.dpatch"
-                        and not -e "$dpdir/$patch_file";
-                    next if ( -l "$dpdir/$patch_file" );
+                    $patch_file .= '.dpatch'
+                      if -e "$dpdir/$patch_file.dpatch"
+                      and not -e "$dpdir/$patch_file";
+                    next if (-l "$dpdir/$patch_file");
                     next unless is_ancestor_of($droot, "$dpdir/$patch_file");
 
-                    if (! -r "$dpdir/$patch_file") {
-                        tag 'dpatch-index-references-non-existent-patch', $patch_file;
+                    if (!-r "$dpdir/$patch_file") {
+                        tag 'dpatch-index-references-non-existent-patch',
+                          $patch_file;
                         next;
                     }
                     if (-f "$dpdir/$patch_file") {
                         my $has_comment = 0;
                         open(my $fd, '<', "$dpdir/$patch_file");
                         while (<$fd>) {
-                            #stop if something looking like a patch starts:
+                            # stop if something looking like a patch
+                            # starts:
                             last if /^---/;
-                            #note comment if we find a proper one
-                            $has_comment = 1 if (/^\#+\s*DP:\s*(\S.*)$/ && $1 !~ /^no description\.?$/i);
-                            $has_comment = 1 if (/^\# (?:Description|Subject)/);
+                            # note comment if we find a proper one
+                            $has_comment = 1
+                              if (/^\#+\s*DP:\s*(\S.*)$/
+                                && $1 !~ /^no description\.?$/i);
+                            $has_comment = 1
+                              if (/^\# (?:Description|Subject)/);
                         }
                         close($fd);
                         unless ($has_comment) {
@@ -126,10 +137,11 @@ sub run {
     #----- quilt
     if ($build_deps->implies('quilt') or $quilt_format) {
         $uses_patch_system++;
-        #check for a debian/patches file:
-        if (-l "$dpdir/series" and not is_ancestor_of($droot, "$dpdir/series")) {
+        # check for a debian/patches file:
+        if (-l "$dpdir/series" and not is_ancestor_of($droot, "$dpdir/series"))
+        {
             # skip
-        } elsif (! -r "$dpdir/series") {
+        } elsif (!-r "$dpdir/series") {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
         } else {
             if (-f "$dpdir/series") {
@@ -137,7 +149,7 @@ sub run {
                 my @badopts;
                 open(my $series_fd, '<', "$dpdir/series");
                 while (my $patch = <$series_fd>) {
-                    strip ($patch); # Strip leading/trailing spaces
+                    strip($patch); # Strip leading/trailing spaces
                     $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
                     next unless $patch;
                     if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
@@ -156,11 +168,12 @@ sub run {
 
                 # Check each patch.
                 foreach my $patch_file (@patches) {
-                    next if ( -l "$dpdir/$patch_file" );
+                    next if (-l "$dpdir/$patch_file");
                     next unless is_ancestor_of($droot, "$dpdir/$patch_file");
 
-                    if (! -r "$dpdir/$patch_file") {
-                        tag 'quilt-series-references-non-existent-patch', $patch_file;
+                    if (!-r "$dpdir/$patch_file") {
+                        tag 'quilt-series-references-non-existent-patch',
+                          $patch_file;
                         next;
                     }
                     if (-f "$dpdir/$patch_file") {
@@ -172,15 +185,18 @@ sub run {
                             last if /^---/;
                             next if /^\s*$/;
                             # Skip common "lead-in" lines
-                            $has_description = 1 unless m{^(?:Index: |=+$|diff .+|index )};
-                            $has_template_description = 1 if /TODO: Put a short summary on the line above and replace this paragraph/;
+                            $has_description = 1
+                              unless m{^(?:Index: |=+$|diff .+|index )};
+                            $has_template_description = 1
+                              if index($_, PATCH_DESC_TEMPLATE) != -1;
                         }
                         close($patch_fd);
                         unless ($has_description) {
                             tag 'quilt-patch-missing-description', $patch_file;
                         }
                         if ($has_template_description) {
-                            tag 'quilt-patch-using-template-description', $patch_file;
+                            tag 'quilt-patch-using-template-description',
+                              $patch_file;
                         }
                     }
                     check_patch($dpdir, $patch_file);
@@ -206,23 +222,25 @@ sub run {
                     $ok = 0;
                 }
             }
-            if ($ok && -f $versioned_patch && ! -f $patch_header) {
+            if ($ok && -f $versioned_patch && !-f $patch_header) {
                 tag 'format-3.0-but-debian-changes-patch';
             }
         }
     } else {
-        if (-r "$dpdir/series" and
-            -f "$dpdir/series") {
-            # 3.0 (quilt) sources don't need quilt as dpkg-source will do the work
-            if (! -l "$dpdir/series" || is_ancestor_of($droot, "$dpdir/series")) {
+        if (    -r "$dpdir/series"
+            and -f "$dpdir/series") {
+            # 3.0 (quilt) sources don't need quilt as dpkg-source will
+            # do the work
+            if (!-l "$dpdir/series" || is_ancestor_of($droot, "$dpdir/series"))
+            {
                 tag 'quilt-series-but-no-build-dep' unless $quilt_format;
             }
         }
     }
 
     #----- look for README.source
-    if ($uses_patch_system && ! $quilt_format && ! -f "$droot/README.source") {
-        if (! -l "$droot/README.source") {
+    if ($uses_patch_system && !$quilt_format && !-f "$droot/README.source") {
+        if (!-l "$droot/README.source") {
             # tag, unless README.source was a symlink (which could be a
             # traversal attempt)
             tag 'patch-system-but-no-source-readme';
@@ -237,17 +255,17 @@ sub run {
     open(my $fd, '<', $info->diffstat);
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
-             or fail("syntax error in diffstat file: $_");
-        push (@direct, $file) if ($file !~ m,^debian/,);
+          or fail("syntax error in diffstat file: $_");
+        push(@direct, $file) if ($file !~ m,^debian/,);
     }
     close($fd);
     if (@direct) {
-        my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
+        my $files= (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
 
         tag 'patch-system-but-direct-changes-in-diff', $files
-            if ($uses_patch_system);
+          if ($uses_patch_system);
         tag 'direct-changes-in-diff-but-no-patch-system', $files
-            if (not $uses_patch_system);
+          if (not $uses_patch_system);
     }
     return;
 }
@@ -256,12 +274,12 @@ sub run {
 sub check_patch {
     my ($dpdir, $patch_file) = @_;
 
-    # Use --strip=1 to strip off the first layer of directory in case the parent
-    # directory in which the patches were generated was named "debian".
-    # This will produce false negatives for --strip=0 patches that modify files
-    # in the debian/* directory, but as of 2010-01-01, all cases where the
-    # first level of the patch path is "debian/" in the archive are false
-    # positives.
+    # Use --strip=1 to strip off the first layer of directory in case
+    # the parent directory in which the patches were generated was
+    # named "debian".  This will produce false negatives for --strip=0
+    # patches that modify files in the debian/* directory, but as of
+    # 2010-01-01, all cases where the first level of the patch path is
+    # "debian/" in the archive are false positives.
     open(my $fd, '-|', 'lsdiff', '--strip=1', "$dpdir/$patch_file");
     while (<$fd>) {
         chomp;

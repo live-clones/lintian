@@ -28,7 +28,8 @@ use Dpkg::Vendor;
 use Lintian::CollScript;
 use Lintian::Util qw(check_path fail);
 
-our @EXPORT_OK = qw(check_test_feature default_parallel load_collections split_tag);
+our @EXPORT_OK
+  = qw(check_test_feature default_parallel load_collections split_tag);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -55,7 +56,7 @@ sub load_collections {
     foreach my $file (readdir $dir) {
         next if $file =~ m/^\./;
         next unless $file =~ m/\.desc$/;
-        my $cs = Lintian::CollScript->new ("$dirname/$file");
+        my $cs = Lintian::CollScript->new("$dirname/$file");
         $visitor->($cs);
     }
 
@@ -67,8 +68,8 @@ sub load_collections {
 sub default_parallel {
     # check cpuinfo for the number of cores...
     my $cpus;
-    chomp ( $cpus = `nproc 2>&1` );
-    if ($? == 0 and $cpus =~ m/^\d+$/ ) {
+    chomp($cpus = `nproc 2>&1`);
+    if ($? == 0 and $cpus =~ m/^\d+$/) {
         # Running up to twice the number of cores usually gets the most out
         # of the CPUs and disks but it might be too aggresive to be the
         # default for -j. Only use <cores>+1 then.
@@ -90,9 +91,10 @@ sub default_parallel {
     #    1  222 3333  4444444   5555   666  777
     # -  T: pkg type (version) [arch]: tag [...]
     #           ^^^^^^^^^^^^^^^^^^^^^
-    # Where the marked part(s) are optional values.  The numbers above the example
-    # are the capture groups.
-    my $TAG_REGEX = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
+    # Where the marked part(s) are optional values.  The numbers above
+    # the example are the capture groups.
+    my $TAG_REGEX
+      = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
 
     sub split_tag {
         my ($tag_input) = @_;

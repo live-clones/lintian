@@ -25,7 +25,7 @@ use strict;
 use warnings;
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
+our @EXPORT_OK= qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 
 # requires wrap() function
 use Text::Wrap;
@@ -85,7 +85,7 @@ sub split_paragraphs {
         if (($t =~ s/^([ \t][^\n]*)\n?//o) or ($t =~ s/^()\n//o)) {
             #FLUSH;
             if ($l) {
-                strip ($l);
+                strip($l);
                 $l =~ s/\s++/ /go;
                 push(@o,$l);
                 undef $l;
@@ -104,7 +104,7 @@ sub split_paragraphs {
     }
     #FLUSH;
     if ($l) {
-        strip ($l);
+        strip($l);
         $l =~ s/\s++/ /go;
         push(@o,$l);
         undef $l;
@@ -119,8 +119,10 @@ sub dtml_to_html {
 
     my $pre=0;
     for $_ (@_) {
-        s,\&maint\;,<a href=\"mailto:lintian-maint\@debian.org\">Lintian maintainer</a>,o; # "
-        s,\&debdev\;,<a href=\"mailto:debian-devel\@lists.debian.org\">debian-devel</a>,o; # "
+        s{\&maint\;}
+          {<a href=\"mailto:lintian-maint\@debian.org\">Lintian maintainer</a>}xsmo;
+        s{\&debdev\;}
+          {<a href=\"mailto:debian-devel\@lists.debian.org\">debian-devel</a>}xsmo;
 
         # empty line?
         if (/^\s*$/o) {

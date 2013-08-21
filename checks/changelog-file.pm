@@ -34,345 +34,376 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8);
 
 sub run {
+    my ($pkg, undef, $info, undef, $group) = @_;
+    my $found_html = 0;
+    my $found_text = 0;
+    my $ppkg = quotemeta($pkg);
+    my ($native_pkg, $foreign_pkg, @doc_files);
 
-my ($pkg, undef, $info, undef, $group) = @_;
+    # skip packages which have a /usr/share/doc/$pkg -> foo symlink
+    return
+      if  $info->index("usr/share/doc/$pkg")
+      and $info->index("usr/share/doc/$pkg")->is_symlink;
 
-my $found_html=0;
-my $found_text=0;
-my $native_pkg;
-my $foreign_pkg;
-my $ppkg = quotemeta($pkg);
+    if (my $docdir = $info->index("usr/share/doc/$pkg/")) {
+        for my $path ($docdir->children) {
+            my $basename = $path->basename;
 
-my @doc_files;
+            next unless $path->is_file or $path->is_symlink;
 
-# skip packages which have a /usr/share/doc/$pkg -> foo symlink
-return if $info->index("usr/share/doc/$pkg") and
-    $info->index ("usr/share/doc/$pkg")->is_symlink;
+            push(@doc_files, $basename);
 
-if (my $docdir = $info->index("usr/share/doc/$pkg/")) {
-    for my $path ($docdir->children) {
-        my $basename = $path->basename;
-
-        next unless $path->is_file or $path->is_symlink;
-
-        push(@doc_files, $basename);
-
-        # Check a few things about the NEWS.Debian file.
-        if ($basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm) {
-            if ($basename !~ m{ \.gz \Z }xsm) {
-                tag 'debian-news-file-not-compressed', $path->name;
-            } elsif ($basename ne 'NEWS.Debian.gz') {
-                tag 'wrong-name-for-debian-news-file', $path->name;
-            }
-        }
-
-        # Check if changelog files are compressed with gzip -9.  It's a bit of
-        # an open question here what we should do with a file named ChangeLog.
-        # If there's also a changelog file, it might be a duplicate, or the
-        # packager may have installed NEWS as changelog intentionally.
-        next unless $basename =~ m{\A changelog(?:\.html|\.Debian)?(?:\.gz)? \Z}xsm;
-
-        if ($basename !~ m{ \.gz \Z}xsm) {
-            tag 'changelog-file-not-compressed', $basename;
-        } else {
-            my $max_compressed = 0;
-            my $file_info = $info->file_info($path);
-            if ($path->is_symlink) {
-                my $normalized = $path->link_normalized;
-                if (defined($normalized)) {
-                    $file_info = $info->file_info($normalized);
+            # Check a few things about the NEWS.Debian file.
+            if ($basename =~ m{\A NEWS\.Debian (?:\.gz)? \Z}ixsm) {
+                if ($basename !~ m{ \.gz \Z }xsm) {
+                    tag 'debian-news-file-not-compressed', $path->name;
+                } elsif ($basename ne 'NEWS.Debian.gz') {
+                    tag 'wrong-name-for-debian-news-file', $path->name;
                 }
             }
-            if (defined($file_info)) {
-                if (index($file_info, 'max compression') != -1) {
-                    $max_compressed = 1;
+
+            # Check if changelog files are compressed with gzip -9.
+            # It's a bit of an open question here what we should do
+            # with a file named ChangeLog.  If there's also a
+            # changelog file, it might be a duplicate, or the packager
+            # may have installed NEWS as changelog intentionally.
+            next
+              unless $basename =~ m{\A changelog (?:\.html|\.Debian)?
+                                       (?:\.gz)? \Z}xsm;
+
+            if ($basename !~ m{ \.gz \Z}xsm) {
+                tag 'changelog-file-not-compressed', $basename;
+            } else {
+                my $max_compressed = 0;
+                my $file_info = $info->file_info($path);
+                if ($path->is_symlink) {
+                    my $normalized = $path->link_normalized;
+                    if (defined($normalized)) {
+                        $file_info = $info->file_info($normalized);
+                    }
                 }
-                if (not $max_compressed
+                if (defined($file_info)) {
+                    if (index($file_info, 'max compression') != -1) {
+                        $max_compressed = 1;
+                    }
+                    if (not $max_compressed
                         and index($file_info, 'gzip compressed') != -1) {
-                    tag 'changelog-not-compressed-with-max-compression',
-                        $basename;
+                        tag 'changelog-not-compressed-with-max-compression',
+                          $basename;
+                    }
                 }
             }
-        }
 
-        if ($basename eq 'changelog.html'
+            if (   $basename eq 'changelog.html'
                 or $basename eq 'changelog.html.gz') {
-            $found_html = 1;
-        } elsif ($basename eq 'changelog' or $basename eq 'changelog.gz') {
-            $found_text = 1;
-        }
-    }
-}
-
-# Check a NEWS.Debian file if we have one.  Save the parsed version of the
-# flie for later checks against the changelog file.
-my $news;
-my $dnews = $info->lab_data_path ('NEWS.Debian');
-if (-f $dnews) {
-    my $line = file_is_encoded_in_non_utf8($dnews);
-    if ($line) {
-        tag 'debian-news-file-uses-obsolete-national-encoding', "at line $line"
-    }
-    my $changes = Parse::DebianChangelog->init( { infile => $dnews, quiet => 1 } );
-    if (my @errors = $changes->get_parse_errors) {
-        for (@errors) {
-            tag 'syntax-error-in-debian-news-file', "line $_->[1]", "\"$_->[2]\"";
-        }
-    }
-
-    # Some checks on the most recent entry.
-    if ($changes->data and defined (($changes->data)[0])) {
-        ($news) = $changes->data;
-        if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
-            tag 'debian-news-entry-has-strange-distribution', $news->Distribution;
-        }
-        check_spelling('spelling-error-in-news-debian', $news->Changes,
-                       undef, $group->info->spelling_exceptions);
-        if ($news->Changes =~ /^\s*\*\s/) {
-            tag 'debian-news-entry-uses-asterisk';
-        }
-    }
-}
-
-if ( $found_html && !$found_text ) {
-    tag 'html-changelog-without-text-version';
-}
-
-# is this a native Debian package?
-my $version;
-if (defined $info->field('version')) {
-    $version = $info->field('version');
-} else {
-    # We do not know, but we assume it to be non-native
-    # as that is most likely.
-    $version = '0-1';
-}
-
-$native_pkg  = $info->native;
-$foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
-# A version of 1.2.3-0.1 could be either, so in that
-# case, both vars are false
-
-if ($native_pkg) {
-    # native Debian package
-    if (any { m/^changelog(?:\.gz)?$/} @doc_files) {
-        # everything is fine
-    } elsif (my $chg = first { m/^changelog\.debian(?:\.gz)$/i} @doc_files) {
-        tag 'wrong-name-for-changelog-of-native-package', "usr/share/doc/$pkg/$chg";
-    } else {
-        tag 'changelog-file-missing-in-native-package';
-    }
-} else {
-    # non-native (foreign :) Debian package
-
-    # 1. check for upstream changelog
-    my $found_upstream_text_changelog = 0;
-    if (any { m/^changelog(\.html)?(?:\.gz)?$/ } @doc_files) {
-        $found_upstream_text_changelog = 1 unless $1;
-        # everything is fine
-    } else {
-        # search for changelogs with wrong file name
-        my $found = 0;
-        for (@doc_files) {
-            if (m/^change/i and not m/debian/i) {
-                tag 'wrong-name-for-upstream-changelog', "usr/share/doc/$pkg/$_";
-                $found = 1;
-                last;
-            }
-        }
-        if (not $found) {
-            tag 'no-upstream-changelog' unless $info->is_pkg_class ('transitional');
-        }
-    }
-
-    # 2. check for Debian changelog
-    if (any { m/^changelog\.Debian(?:\.gz)?$/ } @doc_files) {
-        # everything is fine
-    } elsif (my $chg = first { m/^changelog\.debian(?:\.gz)?$/i } @doc_files) {
-        tag 'wrong-name-for-debian-changelog-file', "usr/share/doc/$pkg/$chg";
-    } else {
-        if ($foreign_pkg && $found_upstream_text_changelog) {
-            tag 'debian-changelog-file-missing-or-wrong-name';
-        } elsif ($foreign_pkg) {
-            tag 'debian-changelog-file-missing';
-        }
-        # TODO: if uncertain whether foreign or native, either changelog.gz or
-        # changelog.debian.gz should exists though... but no tests catches
-        # this (extremely rare) border case... Keep in mind this is only
-        # happening if we have a -0.x version number... So not my priority to
-        # fix --Jeroen
-    }
-}
-
-my $dchpath = $info->lab_data_path ('changelog');
-# Everything below involves opening and reading the changelog file, so bail
-# with a warning at this point if all we have is a symlink.  Ubuntu permits
-# such symlinks, so their profile will suppress this tag.
-if (-l $dchpath) {
-    tag 'debian-changelog-file-is-a-symlink';
-    return;
-}
-
-# Bail at this point if the changelog file doesn't exist.  We will have
-# already warned about this.
-unless (-f $dchpath) {
-    return;
-}
-
-# check that changelog is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8($dchpath);
-if ($line) {
-    tag 'debian-changelog-file-uses-obsolete-national-encoding', "at line $line"
-}
-
-my $changelog = $info->changelog;
-if (my @errors = $changelog->get_parse_errors) {
-    foreach (@errors) {
-        tag 'syntax-error-in-debian-changelog', "line $_->[1]", "\"$_->[2]\"";
-    }
-}
-
-# Check for some things in the raw changelog file and compute the
-# "offset" to the first line of the first entry.  We use this to
-# report the line number of "too-long" lines.  (#657402)
-my $chloff = check_dch($dchpath);
-
-my @entries = $changelog->data;
-if (@entries) {
-    my %versions;
-    for my $entry (@entries) {
-        if ($entry->Maintainer) {
-            if ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
-                tag 'debian-changelog-file-contains-invalid-email-address', $1;
-            }
-        }
-        $versions{$entry->Version} = 1 if defined $entry->Version;
-    }
-
-    if (@entries > 1) {
-        my $first_timestamp = $entries[0]->Timestamp;
-        my $second_timestamp = $entries[1]->Timestamp;
-
-        if ($first_timestamp && $second_timestamp) {
-            tag 'latest-debian-changelog-entry-without-new-date'
-                unless (($first_timestamp - $second_timestamp) > 0
-                        or lc($entries[0]->Distribution) eq 'unreleased');
-        }
-
-        my $first_version = $entries[0]->Version;
-        my $second_version = $entries[1]->Version;
-        if ($first_version and $second_version) {
-            tag 'latest-debian-changelog-entry-without-new-version'
-                unless versions_gt($first_version, $second_version)
-                    or $entries[0]->Changes =~ /backport/i;
-            tag 'latest-debian-changelog-entry-changed-to-native'
-                if $native_pkg and $second_version =~ m/-/;
-        }
-
-        my $first_upstream = $first_version;
-        $first_upstream =~ s/-[^-]+$//;
-        my $second_upstream = $second_version;
-        $second_upstream =~ s/-[^-]+$//;
-        if ($first_upstream eq $second_upstream
-            and $entries[0]->Changes =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
-            tag 'possible-new-upstream-release-without-new-version';
-        }
-
-        my $first_dist = lc $entries[0]->Distribution;
-        my $second_dist = lc $entries[1]->Distribution;
-        if ($first_dist eq 'unstable' and $second_dist eq 'experimental') {
-            unless ($entries[0]->Changes =~ /\bto\s+unstable\b/) {
-                tag 'experimental-to-unstable-without-comment';
+                $found_html = 1;
+            } elsif ($basename eq 'changelog' or $basename eq 'changelog.gz') {
+                $found_text = 1;
             }
         }
     }
 
-    # Some checks should only be done against the most recent changelog entry.
-    my $entry = $entries[0];
-    my $changes = $entry->Changes || '';
-
-    if (@entries == 1) {
-        if ($entry->Version and $entry->Version =~ /-1$/) {
-            tag 'new-package-should-close-itp-bug'
-                unless @{ $entry->Closes };
+    # Check a NEWS.Debian file if we have one.  Save the parsed version of the
+    # flie for later checks against the changelog file.
+    my $news;
+    my $dnews = $info->lab_data_path('NEWS.Debian');
+    if (-f $dnews) {
+        my $line = file_is_encoded_in_non_utf8($dnews);
+        if ($line) {
+            tag 'debian-news-file-uses-obsolete-national-encoding',
+              "at line $line";
         }
-        if ($changes =~ /(?:#?\s*)(?:\d|n)+ is the bug number of your ITP/i) {
-            tag 'changelog-is-dh_make-template';
+        my $changes = Parse::DebianChangelog->init({
+                infile => $dnews,
+                quiet => 1,
+        });
+        if (my @errors = $changes->get_parse_errors) {
+            for (@errors) {
+                tag 'syntax-error-in-debian-news-file', "line $_->[1]",
+                  "\"$_->[2]\"";
+            }
+        }
+
+        # Some checks on the most recent entry.
+        if ($changes->data and defined(($changes->data)[0])) {
+            ($news) = $changes->data;
+            if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
+                tag 'debian-news-entry-has-strange-distribution',
+                  $news->Distribution;
+            }
+            check_spelling('spelling-error-in-news-debian',
+                $news->Changes,undef, $group->info->spelling_exceptions);
+            if ($news->Changes =~ /^\s*\*\s/) {
+                tag 'debian-news-entry-uses-asterisk';
+            }
         }
     }
-    while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
-        tag 'possible-missing-colon-in-closes', $1 if $1;
-    }
-    my $closes = $entry->Closes;
-    for my $bug (@$closes) {
-        tag 'improbable-bug-number-in-closes', $bug if ($bug < 100);
+
+    if ($found_html && !$found_text) {
+        tag 'html-changelog-without-text-version';
     }
 
-    # unstable, testing, and stable shouldn't be used in Debian version
-    # numbers.  unstable should get a normal version increment and testing and
-    # stable should get suite-specific versions.
-    #
-    # NMUs get a free pass because they need to work with the version number
-    # that was already there.
-    my $changelog_version;
-    if ($info->native) {
-        $changelog_version = $entry->Version || '';
+    # is this a native Debian package?
+    my $version;
+    if (defined $info->field('version')) {
+        $version = $info->field('version');
     } else {
-        if ($entry->Version) {
-            ($changelog_version) = (split('-', $entry->Version))[-1];
+        # We do not know, but we assume it to be non-native
+        # as that is most likely.
+        $version = '0-1';
+    }
+
+    $native_pkg  = $info->native;
+    $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
+    # A version of 1.2.3-0.1 could be either, so in that
+    # case, both vars are false
+
+    if ($native_pkg) {
+        # native Debian package
+        if (any { m/^changelog(?:\.gz)?$/} @doc_files) {
+            # everything is fine
+        } elsif (
+            my $chg = first {
+                m/^changelog\.debian(?:\.gz)$/i;
+            }
+            @doc_files
+          ) {
+            tag 'wrong-name-for-changelog-of-native-package',
+              "usr/share/doc/$pkg/$chg";
         } else {
-            $changelog_version = '';
+            tag 'changelog-file-missing-in-native-package';
         }
-    }
-    unless (not $info->native and $changelog_version =~ /\./) {
-        if ($info->native and $changelog_version =~ /testing|(?:un)?stable/i) {
-            tag 'version-refers-to-distribution', $entry->Version;
-        } elsif ($changelog_version =~ /woody|sarge|etch|lenny|squeeze/) {
-            my %unreleased_dists = map { $_ => 1 } qw(unstable experimental);
-            if (exists ($unreleased_dists{$entry->Distribution})) {
-                tag 'version-refers-to-distribution', $entry->Version;
+    } else {
+        # non-native (foreign :) Debian package
+
+        # 1. check for upstream changelog
+        my $found_upstream_text_changelog = 0;
+        if (any { m/^changelog(\.html)?(?:\.gz)?$/ } @doc_files) {
+            $found_upstream_text_changelog = 1 unless $1;
+            # everything is fine
+        } else {
+            # search for changelogs with wrong file name
+            my $found = 0;
+            for (@doc_files) {
+                if (m/^change/i and not m/debian/i) {
+                    tag 'wrong-name-for-upstream-changelog',
+                      "usr/share/doc/$pkg/$_";
+                    $found = 1;
+                    last;
+                }
             }
+            if (not $found) {
+                tag 'no-upstream-changelog'
+                  unless $info->is_pkg_class('transitional');
+            }
+        }
+
+        # 2. check for Debian changelog
+        if (any { m/^changelog\.Debian(?:\.gz)?$/ } @doc_files) {
+            # everything is fine
+        } elsif (
+            my $chg = first {
+                m/^changelog\.debian(?:\.gz)?$/i;
+            }
+            @doc_files
+          ) {
+            tag 'wrong-name-for-debian-changelog-file',
+              "usr/share/doc/$pkg/$chg";
+        } else {
+            if ($foreign_pkg && $found_upstream_text_changelog) {
+                tag 'debian-changelog-file-missing-or-wrong-name';
+            } elsif ($foreign_pkg) {
+                tag 'debian-changelog-file-missing';
+            }
+            # TODO: if uncertain whether foreign or native, either
+            # changelog.gz or changelog.debian.gz should exists
+            # though... but no tests catches this (extremely rare)
+            # border case... Keep in mind this is only happening if we
+            # have a -0.x version number... So not my priority to fix
+            # --Jeroen
         }
     }
 
-    # Compare against NEWS.Debian if available.
-    if ($news and $news->Version) {
-        if ($entry->Version eq $news->Version) {
-            for my $field (qw/Distribution Urgency/) {
-                if ($entry->$field ne $news->$field) {
-                    tag 'changelog-news-debian-mismatch', lc ($field),
-                        $entry->$field . ' != ' . $news->$field;
+    my $dchpath = $info->lab_data_path('changelog');
+    # Everything below involves opening and reading the changelog file, so bail
+    # with a warning at this point if all we have is a symlink.  Ubuntu permits
+    # such symlinks, so their profile will suppress this tag.
+    if (-l $dchpath) {
+        tag 'debian-changelog-file-is-a-symlink';
+        return;
+    }
+
+    # Bail at this point if the changelog file doesn't exist.  We will have
+    # already warned about this.
+    unless (-f $dchpath) {
+        return;
+    }
+
+    # check that changelog is UTF-8 encoded
+    my $line = file_is_encoded_in_non_utf8($dchpath);
+    if ($line) {
+        tag 'debian-changelog-file-uses-obsolete-national-encoding',
+          "at line $line";
+    }
+
+    my $changelog = $info->changelog;
+    if (my @errors = $changelog->get_parse_errors) {
+        foreach (@errors) {
+            tag 'syntax-error-in-debian-changelog', "line $_->[1]",
+              "\"$_->[2]\"";
+        }
+    }
+
+    # Check for some things in the raw changelog file and compute the
+    # "offset" to the first line of the first entry.  We use this to
+    # report the line number of "too-long" lines.  (#657402)
+    my $chloff = check_dch($dchpath);
+
+    my @entries = $changelog->data;
+    if (@entries) {
+        my %versions;
+        for my $entry (@entries) {
+            if ($entry->Maintainer) {
+                if ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
+                    tag 'debian-changelog-file-contains-invalid-email-address',
+                      $1;
+                }
+            }
+            $versions{$entry->Version} = 1 if defined $entry->Version;
+        }
+
+        if (@entries > 1) {
+            my $first_timestamp = $entries[0]->Timestamp;
+            my $second_timestamp = $entries[1]->Timestamp;
+
+            if ($first_timestamp && $second_timestamp) {
+                tag 'latest-debian-changelog-entry-without-new-date'
+                  unless (($first_timestamp - $second_timestamp) > 0
+                    or lc($entries[0]->Distribution) eq 'unreleased');
+            }
+
+            my $first_version = $entries[0]->Version;
+            my $second_version = $entries[1]->Version;
+            if ($first_version and $second_version) {
+                tag 'latest-debian-changelog-entry-without-new-version'
+                  unless versions_gt($first_version, $second_version)
+                  or $entries[0]->Changes =~ /backport/i;
+                tag 'latest-debian-changelog-entry-changed-to-native'
+                  if $native_pkg and $second_version =~ m/-/;
+            }
+
+            my $first_upstream = $first_version;
+            $first_upstream =~ s/-[^-]+$//;
+            my $second_upstream = $second_version;
+            $second_upstream =~ s/-[^-]+$//;
+            if (    $first_upstream eq $second_upstream
+                and $entries[0]->Changes
+                =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
+                tag 'possible-new-upstream-release-without-new-version';
+            }
+
+            my $first_dist = lc $entries[0]->Distribution;
+            my $second_dist = lc $entries[1]->Distribution;
+            if ($first_dist eq 'unstable' and $second_dist eq 'experimental') {
+                unless ($entries[0]->Changes =~ /\bto\s+unstable\b/) {
+                    tag 'experimental-to-unstable-without-comment';
                 }
             }
         }
-        unless ($versions{$news->Version}) {
-            tag 'debian-news-entry-has-unknown-version', $news->Version;
+
+        # Some checks should only be done against the most recent
+        # changelog entry.
+        my $entry = $entries[0];
+        my $changes = $entry->Changes || '';
+
+        if (@entries == 1) {
+            if ($entry->Version and $entry->Version =~ /-1$/) {
+                tag 'new-package-should-close-itp-bug'
+                  unless @{ $entry->Closes };
+            }
+            if ($changes=~ /(?:#?\s*)(?:\d|n)+ is the bug number of your ITP/i)
+            {
+                tag 'changelog-is-dh_make-template';
+            }
         }
+        while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
+            tag 'possible-missing-colon-in-closes', $1 if $1;
+        }
+        my $closes = $entry->Closes;
+        for my $bug (@$closes) {
+            tag 'improbable-bug-number-in-closes', $bug if ($bug < 100);
+        }
+
+        # unstable, testing, and stable shouldn't be used in Debian
+        # version numbers.  unstable should get a normal version
+        # increment and testing and stable should get suite-specific
+        # versions.
+        #
+        # NMUs get a free pass because they need to work with the
+        # version number that was already there.
+        my $changelog_version;
+        if ($info->native) {
+            $changelog_version = $entry->Version || '';
+        } else {
+            if ($entry->Version) {
+                ($changelog_version) = (split('-', $entry->Version))[-1];
+            } else {
+                $changelog_version = '';
+            }
+        }
+        unless (not $info->native and $changelog_version =~ /\./) {
+            if (    $info->native
+                and $changelog_version =~ /testing|(?:un)?stable/i) {
+                tag 'version-refers-to-distribution', $entry->Version;
+            } elsif ($changelog_version =~ /woody|sarge|etch|lenny|squeeze/) {
+                my %unreleased_dists
+                  = map { $_ => 1 } qw(unstable experimental);
+                if (exists($unreleased_dists{$entry->Distribution})) {
+                    tag 'version-refers-to-distribution', $entry->Version;
+                }
+            }
+        }
+
+        # Compare against NEWS.Debian if available.
+        if ($news and $news->Version) {
+            if ($entry->Version eq $news->Version) {
+                for my $field (qw/Distribution Urgency/) {
+                    if ($entry->$field ne $news->$field) {
+                        tag 'changelog-news-debian-mismatch', lc($field),
+                          $entry->$field . ' != ' . $news->$field;
+                    }
+                }
+            }
+            unless ($versions{$news->Version}) {
+                tag 'debian-news-entry-has-unknown-version', $news->Version;
+            }
+        }
+
+        # We have to decode into UTF-8 to get the right length for the
+        # length check.  For some reason, use open ':utf8' isn't
+        # sufficient.  If the changelog uses a non-UTF-8 encoding,
+        # this will mangle it, but it doesn't matter for the length
+        # check.
+        #
+        # Parse::DebianChangelog adds an additional space to the
+        # beginning of each line, so we have to adjust for that in the
+        # length check.
+        my @lines = split("\n", decode('utf-8', $changes));
+        for my $i (0 .. $#lines) {
+            if (length($lines[$i]) > 81
+                and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
+                tag 'debian-changelog-line-too-long', 'line ' . ($i + $chloff);
+            }
+        }
+
+        # Strip out all lines that contain the word spelling to avoid false
+        # positives on changelog entries for spelling fixes.
+        $changes =~ s/^.*spelling.*\n//gm;
+        check_spelling('spelling-error-in-changelog', $changes, undef,
+            $group->info->spelling_exceptions);
     }
 
-    # We have to decode into UTF-8 to get the right length for the length
-    # check.  For some reason, use open ':utf8' isn't sufficient.  If the
-    # changelog uses a non-UTF-8 encoding, this will mangle it, but it doesn't
-    # matter for the length check.
-    #
-    # Parse::DebianChangelog adds an additional space to the beginning of each
-    # line, so we have to adjust for that in the length check.
-    my @lines = split ("\n", decode ('utf-8', $changes));
-    for my $i (0 .. $#lines) {
-        if (length($lines[$i]) > 81
-            and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
-            tag 'debian-changelog-line-too-long', 'line ' . ($i + $chloff);
-        }
-    }
-
-    # Strip out all lines that contain the word spelling to avoid false
-    # positives on changelog entries for spelling fixes.
-    $changes =~ s/^.*spelling.*\n//gm;
-    check_spelling('spelling-error-in-changelog', $changes, undef,
-                   $group->info->spelling_exceptions);
-}
-
-return;
+    return;
 }
 
 # read the changelog itself and check for some issues we cannot find
@@ -399,10 +430,12 @@ sub check_dch {
             $tstart = 1 if m/^\s+\S/;
         }
 
-        if (/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/io
-            || /closes:\s*(?:bug)?\#?\s?\d+
+        if (
+               m/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/io
+            || m/closes:\s*(?:bug)?\#?\s?\d+
               (?:,\s*(?:bug)?\#?\s?\d+)*
-              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox) {
+              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox
+          ) {
             tag 'wrong-bug-number-in-closes', "l$.:$1" if $2;
         }
 
@@ -411,15 +444,15 @@ sub check_dch {
             $suffix = $2;
         }
         # emacs allows whitespace between prefix and variable, hence \s*
-        if (defined $prefix && defined $suffix
-               && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
+        if (   defined $prefix
+            && defined $suffix
+            && m/^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
             tag 'debian-changelog-file-contains-obsolete-user-emacs-settings';
         }
     }
     close($fd);
     return $lineno;
 }
-
 
 1;
 

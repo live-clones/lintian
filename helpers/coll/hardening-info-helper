@@ -48,11 +48,9 @@ use Lintian::Command qw(spawn reap);
 #
 # Implied by the above - the second pass is only done if needed.
 
-
 my ($in, $out);
 my ($cread, $cwrite);
-my $cpid;
-my @recheck = ();
+my ($cpid, @recheck);
 my %whitelisted_funcs = (
     'memcpy' => 1,
     'memset' => 1,
@@ -88,7 +86,6 @@ while (my $line = <$in>) {
     print {$out} "$line\n";
 }
 
-
 if (not $cpid) {
     # child's second pass
     my $bin;
@@ -120,7 +117,7 @@ if (not $cpid) {
     # ensure $out is flushed before exiting.
     close($out);
     require POSIX;
-    POSIX::_exit (0);
+    POSIX::_exit(0);
 } elsif (@recheck) {
     # (optionally) parent's second pass.
     my %opts = (
@@ -131,12 +128,12 @@ if (not $cpid) {
     # End the first pass for the child
     print {$out} "__VERBOSE__\n";
     spawn(\%opts, ['xargs', '-0r', 'hardening-check', '--verbose', '--']);
-    $opts{pipe_in}->blocking (1);
+    $opts{pipe_in}->blocking(1);
     foreach my $file (@recheck) {
         printf {$opts{pipe_in}} "%s\0", $file;
     }
     close($opts{pipe_in});
-    reap (\%opts);
+    reap(\%opts);
 }
 
 # Close the out handle, else the child process will wait for

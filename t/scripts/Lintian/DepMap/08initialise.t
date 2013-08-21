@@ -13,25 +13,24 @@ ok($obj->initialise(), 'Map can be initialised');
 $obj->add('A');
 $obj->select('A');
 $obj->initialise();
-is(join(', ', $obj->selectable()), 'A',
-    'A is selectable once again after being selected');
+is(join(', ', $obj->selectable),
+    'A','A is selectable once again after being selected');
 
 $obj->satisfy('A');
 $obj->initialise();
-is(join(', ', $obj->selectable()), 'A',
-    'A is selectable once again after being satisfied');
+is(join(', ', $obj->selectable),
+    'A','A is selectable once again after being satisfied');
 
 $obj->add('B');
 $obj->satisfy('B');
 $obj->initialise();
-is(join(', ', $obj->selectable()), 'A, B',
-    'A and B are selectable once again after being satisfied');
+is(join(', ', $obj->selectable),
+    'A, B','A and B are selectable once again after being satisfied');
 
 $obj->add('B', 'A');
 $obj->satisfy('A');
 $obj->initialise();
-is(join(', ', $obj->parents('B')), 'A',
-    'A is parent of B');
+is(join(', ', $obj->parents('B')), 'A','A is parent of B');
 
 $obj->add('Z', 'X');
 $obj->initialise();

@@ -139,7 +139,8 @@ sub files {
         next if $file =~ m,/,;
 
         $files{$file}{checksums}{md5} = {
-            'sum' => $md5sum, 'filesize' => $size,
+            'sum' => $md5sum,
+            'filesize' => $size,
         };
         $files{$file}{name} = $file;
         $files{$file}{size} = $size;
@@ -157,7 +158,8 @@ sub files {
             next if $file =~ m,/,;
 
             $files{$file}{checksums}{$alg} = {
-                'sum' => $checksum, 'filesize' => $size
+                'sum' => $checksum,
+                'filesize' => $size
             };
         }
     }

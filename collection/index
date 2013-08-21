@@ -37,30 +37,36 @@ use Lintian::Processable::Package;
 use Lintian::Util qw(get_dsc_info);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
+    my ($pkg, $type, $dir) = @_;
 
-for my $file (qw(index index.gz index-errors)) {
-    unlink("$dir/$file") if -e "$dir/$file";
-}
+    for my $file (qw(index index.gz index-errors)) {
+        unlink("$dir/$file") if -e "$dir/$file";
+    }
 
-if ($type ne 'source') {
-    index_deb ($dir);
-} else {
-    chdir("$dir/unpacked");
-    spawn ({ fail => 'error', out => "$dir/index.gz" },
-           ['find', '(',  '-type', 'l',
-              # If symlink
+    if ($type ne 'source') {
+        index_deb($dir);
+    } else {
+        chdir("$dir/unpacked");
+        spawn(
+            { fail => 'error', out => "$dir/index.gz" },
+            [
+                'find', '(',  '-type', 'l',
+                # If symlink
                 '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p -> %l\n', '-true',
-              # elif dir [needs trailing slash]
-              ')', '-o', '(',  '-type', 'd',
+                # elif dir [needs trailing slash]
+                ')', '-o', '(',  '-type', 'd',
                 '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p/\n', '-true',
-              # else (not dir and not symlink)
-              ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\n'],
-           # Sort and compress
-           '|', ['sort', '-k', '6'], '|', ['gzip', '-9c']);
-}
+                # else (not dir and not symlink)
+                ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\n'
+            ],
+            # Sort and compress
+            '|',
+            ['sort', '-k', '6'],
+            '|',
+            ['gzip', '-9c']);
+    }
 
-return;
+    return;
 }
 
 # Creates an index for binary packages
@@ -70,29 +76,36 @@ sub index_deb {
 
     unlink("$dir/index-owner-id") if -f "$dir/index-owner-id";
 
-    $job = { fail => 'error',
-             out  => "$dir/index.gz",
-             err  => "$dir/index-errors" };
+    $job = {
+        fail => 'error',
+        out  => "$dir/index.gz",
+        err  => "$dir/index-errors"
+    };
     push @jobs, $job;
     # (replaces dpkg-deb -c)
     # create index file for package
-    spawn($job,
-          ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
-          '|', ['tar', 'tfv', '-'],
-          '|', ['sort', '-k', '6'],
-          '|', ['gzip', '--best', '-c'], '&');
+    spawn(
+        $job, ['dpkg-deb', '--fsys-tarfile', "$dir/deb"],
+        '|', ['tar', 'tfv', '-'],
+        '|', ['sort', '-k', '6'],
+        '|', ['gzip', '--best', '-c'], '&'
+    );
 
-    $job = { fail => 'error',
-             out  => "$dir/index-owner-id.gz",
-             err  => '/dev/null' };
+    $job = {
+        fail => 'error',
+        out  => "$dir/index-owner-id.gz",
+        err  => '/dev/null'
+    };
     push @jobs, $job;
     # (replaces dpkg-deb -c)
     # create index file for package with owner IDs instead of names
-    spawn($job,
-          ['dpkg-deb', '--fsys-tarfile', "$dir/deb" ],
-          '|', ['tar', '--numeric-owner', '-tvf', '-'],
-          '|', ['sort', '-k', '6'],
-          '|', ['gzip', '--best', '-c'], '&');
+    spawn(
+        $job, ['dpkg-deb', '--fsys-tarfile', "$dir/deb"],
+        '|', ['tar', '--numeric-owner', '-tvf', '-'],
+        '|', ['sort', '-k', '6'],
+        '|', ['gzip', '--best', '-c'],
+        '&'
+    );
 
     reap(@jobs);
     undef @jobs;
@@ -103,7 +116,7 @@ sub index_deb {
     return 1;
 }
 
-collect (@ARGV) if $0 =~ m,(?:^|/)index$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)index$,;
 
 1;
 

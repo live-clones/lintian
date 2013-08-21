@@ -25,10 +25,10 @@ use Test::More;
 use Parse::DebianChangelog;
 
 my $changelog = Parse::DebianChangelog->init({ infile => 'debian/changelog' })
-		or BAIL_OUT('fatal error while loading parser');
+  or BAIL_OUT('fatal error while loading parser');
 
 plan skip_all => 'Only valid for regular Debian releases'
-    if should_skip($changelog);
+  if should_skip($changelog);
 my $changes = $changelog->dpkg()->{'Changes'};
 my $line = 0;
 my $prev_head = '';
@@ -52,14 +52,15 @@ foreach (split /\n/,$changes) {
     # Ignore the reminder to generate the tag summary
     if ($line < 10 && m/XXX: generate tag summary/) {
         ok(!$is_release, 'No TODO-marker in changelog for tag summary!')
-            or diag('Generate it with private/generate-tag-summary');
+          or diag('Generate it with private/generate-tag-summary');
         next;
     }
 
     my $spaces = 0;
     $spaces++ while (s/^\s//);
 
-    cmp_ok (($spaces + length), '<=', 75, "Changelog line is not too long: line $line");
+    cmp_ok(($spaces + length),
+        '<=', 75, "Changelog line is not too long: line $line");
 
 =meh
     # Disabled because Parse::DebianChangelog trims lines for us
@@ -69,15 +70,15 @@ foreach (split /\n/,$changes) {
 =cut
 
     if ($spaces == 2) {
-	if (m/^\*/) {
-	    pass('line is a bullet list item');
-	    ok(m/:$/, 'bullet item ends in colon')
-		or diag("line: $line");
-	} elsif ($line == 3) {
-	    ok(m/^[A-Z\"]/, 'line is the release header')
-		or diag("line: $line");
+        if (m/^\*/) {
+            pass('line is a bullet list item');
+            ok(m/:$/, 'bullet item ends in colon')
+              or diag("line: $line");
+        } elsif ($line == 3) {
+            ok(m/^[A-Z\"]/, 'line is the release header')
+              or diag("line: $line");
             $release_header = 1;
-	} else {
+        } else {
             # Unless this is a multi-line release header, it should
             # have been a bullet list.  Also limit the length of the
             # release header.
@@ -85,29 +86,29 @@ foreach (split /\n/,$changes) {
                 fail('line is a bullet list item');
                 diag("line: $line");
             }
-	}
+        }
     } elsif ($spaces == 4) {
-	ok(m/^\+/, 'line is a sub-item of a bullet-list item')
-	    or diag("line: $line");
+        ok(m/^\+/, 'line is a sub-item of a bullet-list item')
+          or diag("line: $line");
     } elsif ($spaces == 6) {
-	if ($prev_head eq '+') {
-	    ok(m/^[^+*]/, 'line is a continuation of change description')
-		or diag("line: $line");
-	} else {
-	    ok(m/^-/, 'line is a sub-item of tags summary')
-		or diag("line: $line");
-	}
+        if ($prev_head eq '+') {
+            ok(m/^[^+*]/, 'line is a continuation of change description')
+              or diag("line: $line");
+        } else {
+            ok(m/^-/, 'line is a sub-item of tags summary')
+              or diag("line: $line");
+        }
     } elsif ($spaces == 8) {
-	ok($prev_head eq '-', 'line is a continuation of tag change')
-	    or diag("line: $line");
+        ok($prev_head eq '-', 'line is a continuation of tag change')
+          or diag("line: $line");
     } else {
-	ok(m/^(:?\.|lintian.+)$/, 'line is an entry header')
-	    or diag("line: $line");
+        ok(m/^(:?\.|lintian.+)$/, 'line is an entry header')
+          or diag("line: $line");
     }
 
     if (m/\S\w\. (.)/) {
-	ok($1 eq ' ', 'two spaces after a full stop')
-	    or diag("line: $line");
+        ok($1 eq ' ', 'two spaces after a full stop')
+          or diag("line: $line");
     }
 
     if (m/^([*+-])/) {

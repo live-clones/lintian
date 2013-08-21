@@ -28,113 +28,117 @@ use Lintian::Check qw(check_maintainer);
 use Lintian::Data;
 use Lintian::Util qw(get_file_checksum);
 
-my $KNOWN_DISTS = Lintian::Data->new ('changes-file/known-dists');
+my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub run {
+    my ($pkg, undef, $info) = @_;
 
-my ($pkg, undef, $info) = @_;
+    # If we don't have a Format key, something went seriously wrong.
+    # Tag the file and skip remaining processing.
+    if (!$info->field('format')) {
+        tag 'malformed-changes-file';
+        return;
+    }
 
-# If we don't have a Format key, something went seriously wrong.
-# Tag the file and skip remaining processing.
-if (!$info->field('format')) {
-    tag 'malformed-changes-file';
+    # Description is mandated by dak, but only makes sense if binary
+    # packages are included.  Don't tag pure source uploads.
+    if (  !$info->field('description')
+        && $info->field('architecture', '') ne 'source') {
+        tag 'no-description-in-changes-file';
+    }
+
+    # check distribution field
+    if (defined $info->field('distribution')) {
+        my @distributions = split /\s+/o, $info->field('distribution');
+        for my $distribution (@distributions) {
+            if ($distribution eq 'UNRELEASED') {
+                # ignore
+            } else {
+                my $dist = $distribution;
+                if ($dist !~ m/^(?:sid|unstable|experimental)/) {
+                    # Strip common "extensions" for distributions
+                    # (except sid and experimental, where they would
+                    # make no sense)
+                    $dist =~ s/- (?:backports(?:-sloppy)?
+                                   |proposed(?:-updates)?
+                                   |updates
+                                   |security
+                                   |volatile)$//xsmo;
+                }
+                if (!$KNOWN_DISTS->known($dist)) {
+                    # bad distribution entry
+                    tag 'bad-distribution-in-changes-file', $distribution;
+                }
+            }
+        }
+
+        if ($#distributions > 0) {
+            tag 'multiple-distributions-in-changes-file',
+              $info->field('distribution');
+        }
+    }
+
+    # Urgency is only recommended by Policy.
+    if (!$info->field('urgency')) {
+        tag 'no-urgency-in-changes-file';
+    } else {
+        my $urgency = lc $info->field('urgency');
+        $urgency =~ s/ .*//o;
+        unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/o) {
+            tag 'bad-urgency-in-changes-file', $info->field('urgency');
+        }
+    }
+
+    # Changed-By is optional in Policy, but if set, must be
+    # syntactically correct.  It's also used by dak.
+    if ($info->field('changed-by')) {
+        check_maintainer($info->field('changed-by'), 'changed-by');
+    }
+
+    my $files = $info->files;
+    my $path = readlink($info->lab_data_path('changes'));
+    $path =~ s#/[^/]+$##;
+    foreach my $file (keys %$files) {
+        my $file_info = $files->{$file};
+
+        # check section
+        if (   ($file_info->{section} eq 'non-free')
+            or ($file_info->{section} eq 'contrib')) {
+            tag 'bad-section-in-changes-file', $file, $file_info->{section};
+        }
+
+        foreach my $alg (qw(sha1 sha256)) {
+            my $checksum_info = $file_info->{checksums}{$alg};
+            if (defined $checksum_info) {
+                if ($file_info->{size} != $checksum_info->{filesize}) {
+                    tag 'file-size-mismatch-in-changes-file', $file,
+                      $file_info->{size} . ' != ' .$checksum_info->{filesize};
+                }
+            }
+        }
+
+        # check size
+        my $filename = "$path/$file";
+        my $size = -s $filename;
+
+        if ($size ne $file_info->{size}) {
+            tag 'file-size-mismatch-in-changes-file', $file,
+              $file_info->{size} . " != $size";
+        }
+
+        # check checksums
+        foreach my $alg (qw(md5 sha1 sha256)) {
+            next unless exists $file_info->{checksums}{$alg};
+
+            my $real_checksum = get_file_checksum($alg, $filename);
+
+            if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
+                tag 'checksum-mismatch-in-changes-file', $alg, $file;
+            }
+        }
+    }
+
     return;
-}
-
-# Description is mandated by dak, but only makes sense if binary
-# packages are included.  Don't tag pure source uploads.
-if (!$info->field ('description') && $info->field ('architecture', '') ne 'source') {
-    tag 'no-description-in-changes-file';
-}
-
-# check distribution field
-if (defined $info->field('distribution')) {
-    my @distributions = split /\s+/o, $info->field('distribution');
-    for my $distribution (@distributions) {
-        if ($distribution eq 'UNRELEASED') {
-            # ignore
-        } else {
-            my $dist = $distribution;
-            if ($dist !~ m/^(?:sid|unstable|experimental)/) {
-                # Strip common "extensions" for distributions (except sid and
-                # experimental, where they would make no sense)
-                $dist =~ s/-(?:backports(?:-sloppy)?|proposed(?:-updates)?|updates|security|volatile)$//o;
-            }
-            if (! $KNOWN_DISTS->known ($dist)) {
-                # bad distribution entry
-                tag 'bad-distribution-in-changes-file', $distribution;
-            }
-        }
-    }
-
-    if ($#distributions > 0) {
-        tag 'multiple-distributions-in-changes-file',
-            $info->field('distribution');
-    }
-}
-
-# Urgency is only recommended by Policy.
-if (!$info->field('urgency')) {
-    tag 'no-urgency-in-changes-file';
-} else {
-    my $urgency = lc $info->field('urgency');
-    $urgency =~ s/ .*//o;
-    unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/io) {
-        tag 'bad-urgency-in-changes-file', $info->field('urgency');
-    }
-}
-
-# Changed-By is optional in Policy, but if set, must be
-# syntactically correct.  It's also used by dak.
-if ($info->field('changed-by')) {
-    check_maintainer($info->field('changed-by'), 'changed-by');
-}
-
-my $files = $info->files;
-my $path = readlink ($info->lab_data_path ('changes'));
-$path =~ s#/[^/]+$##;
-foreach my $file (keys %$files) {
-    my $file_info = $files->{$file};
-
-    # check section
-    if (($file_info->{section} eq 'non-free') or
-        ($file_info->{section} eq 'contrib')) {
-        tag 'bad-section-in-changes-file', $file, $file_info->{section};
-    }
-
-    foreach my $alg (qw(sha1 sha256)) {
-        my $checksum_info = $file_info->{checksums}{$alg};
-        if (defined $checksum_info) {
-            if ($file_info->{size} != $checksum_info->{filesize}) {
-                tag 'file-size-mismatch-in-changes-file', $file,
-                    $file_info->{size} . ' != ' .
-                    $checksum_info->{filesize};
-            }
-        }
-    }
-
-    # check size
-    my $filename = "$path/$file";
-    my $size = -s $filename;
-
-    if ($size ne $file_info->{size}) {
-        tag 'file-size-mismatch-in-changes-file', $file,
-             $file_info->{size} . " != $size";
-    }
-
-    # check checksums
-    foreach my $alg (qw(md5 sha1 sha256)) {
-        next unless exists $file_info->{checksums}{$alg};
-
-        my $real_checksum = get_file_checksum($alg, $filename);
-
-        if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
-            tag 'checksum-mismatch-in-changes-file', $alg, $file;
-        }
-    }
-}
-
-return;
 }
 
 1;

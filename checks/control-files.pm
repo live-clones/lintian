@@ -30,74 +30,72 @@ sub octify {
     return oct($val);
 }
 
-my $DEB_PERMISSIONS  = Lintian::Data->new('control-files/deb-permissions',  qr/\s++/o, \&octify);
-my $UDEB_PERMISSIONS = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
+my $DEB_PERMISSIONS
+  = Lintian::Data->new('control-files/deb-permissions',  qr/\s++/o, \&octify);
+my $UDEB_PERMISSIONS
+  = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
 
 sub run {
+    my (undef, $type, $info) = @_;
+    my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
+    my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
 
-my (undef, $type, $info) = @_;
+    # process control-index file
+    foreach my $file ($info->sorted_control_index) {
+        my ($owner, $operm, $experm);
 
-my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
-my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
-
-# process control-index file
-foreach my $file ($info->sorted_control_index) {
-    my $owner;
-    my $operm;
-    my $experm;
-
-    # the control.tar.gz should only contain files (and the "root"
-    # dir, but that /should/ the "empty file" case in the beginning of
-    # the loop) In any event, allow directories just in case - the
-    # check here is mostly to catch symlinks (and "devices" etc.)
-    if (not ($file->is_regular_file or $file->is_dir)) {
-        tag 'control-file-is-not-a-file', $file;
-        # Doing further checks is probably not going to yield anything
-        # remotely useful.
-        next;
-    }
-
-    # valid control file?
-    unless ( $ctrl->known($file) ) {
-        if ( $ctrl_alt->known($file) ) {
-            tag 'not-allowed-control-file', $file;
-            next;
-        } else {
-            tag 'unknown-control-file', $file;
+        # the control.tar.gz should only contain files (and the "root"
+        # dir, but that /should/ the "empty file" case in the beginning of
+        # the loop) In any event, allow directories just in case - the
+        # check here is mostly to catch symlinks (and "devices" etc.)
+        if (not($file->is_regular_file or $file->is_dir)) {
+            tag 'control-file-is-not-a-file', $file;
+            # Doing further checks is probably not going to yield anything
+            # remotely useful.
             next;
         }
+
+        # valid control file?
+        unless ($ctrl->known($file)) {
+            if ($ctrl_alt->known($file)) {
+                tag 'not-allowed-control-file', $file;
+                next;
+            } else {
+                tag 'unknown-control-file', $file;
+                next;
+            }
+        }
+
+        $experm = $ctrl->value($file);
+
+        # I'm not sure about the udeb case
+        if ($type ne 'udeb' and $file->size == 0) {
+            tag 'control-file-is-empty', $file;
+        }
+
+        # skip `control' control file (that's an exception: dpkg
+        # doesn't care and this file isn't installed on the systems
+        # anyways)
+        next if $file eq 'control';
+
+        $operm = $file->operm;
+
+        # correct permissions?
+        unless ($operm == $experm) {
+            tag 'control-file-has-bad-permissions',
+              sprintf('%s %04o != %04o', $file, $operm, $experm);
+        }
+
+        $owner = $file->owner . '/' . $file->group;
+
+        # correct owner?
+        unless ($owner eq 'root/root') {
+            tag 'control-file-has-bad-owner', "$file $owner != root/root";
+        }
+
+        # for other maintainer scripts checks, see the scripts check
     }
-
-    $experm = $ctrl->value($file);
-
-    # I'm not sure about the udeb case
-    if ($type ne 'udeb' and $file->size == 0) {
-        tag 'control-file-is-empty', $file;
-    }
-
-
-    # skip `control' control file (that's an exception: dpkg doesn't care and
-    # this file isn't installed on the systems anyways)
-    next if $file eq 'control';
-
-    $operm = $file->operm;
-
-    # correct permissions?
-    unless ($operm == $experm) {
-        tag 'control-file-has-bad-permissions',
-            sprintf('%s %04o != %04o', $file, $operm, $experm);
-    }
-
-    $owner = $file->owner . '/' . $file->group;
-
-    # correct owner?
-    unless ($owner eq 'root/root') {
-        tag 'control-file-has-bad-owner', "$file $owner != root/root";
-    }
-
-# for other maintainer scripts checks, see the scripts check
-}
-return;
+    return;
 } # </run>
 
 1;

@@ -47,9 +47,10 @@ die "Cannot retrieve $YAML_URL\n" unless $yaml;
 my @yaml = split(/\n+/, $yaml);
 shift @yaml while (@yaml and $yaml[0] =~ /^\s*$/);
 die "Unknown YAML file format (first line: $yaml[0])\n"
-    unless $yaml[0] =~ /^\s*lintian:\s*$/;
+  unless $yaml[0] =~ /^\s*lintian:\s*$/;
 shift @yaml;
 my (@nonfatal, @fatal, $current);
+
 for my $line (@yaml) {
     if ($line =~ /^\s*nonfatal:\s*$/) {
         $current = \@nonfatal;
@@ -57,7 +58,7 @@ for my $line (@yaml) {
         $current = \@fatal;
     } elsif ($line =~ /^\s*-\s+(\S+)\s*$/) {
         die "Tag listed outside of section\n" unless $current;
-        push (@$current, $1);
+        push(@$current, $1);
     } else {
         die "Unrecognized line: $line\n";
     }

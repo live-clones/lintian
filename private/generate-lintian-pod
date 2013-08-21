@@ -23,9 +23,9 @@ open(my $file, '<', 'man/lintian.pod.in');
 while(my $line = <$file>){
     chomp($line);
     if($line eq '@CHECKS@'){
-        extract_data ('checks', 'check-script', 'abbrev');
+        extract_data('checks', 'check-script', 'abbrev');
     } elsif($line eq '@COLLECTION@'){
-        extract_data ('collection', 'collector-script');
+        extract_data('collection', 'collector-script');
     } else {
         print "$line\n";
     }
@@ -39,8 +39,8 @@ sub pretty_print {
     $text =~ s@\n\s@\n@og;
     $text =~ s/\&([^;]+)\;/E<$1>/og;  # do &gt; -> E<gt>
     $text =~ s/(\S+\(\d+\))/L<$1>/og; # link to manpages
-    foreach my $line (split /\n/o, $text) {
-        if($line =~ m/^ /o){
+    foreach my $line (split(m/\n/o, $text)) {
+        if ($line =~ m/^ /o){
             if(!$inex){
                 # Start of an example.
                 $inex = 1;
@@ -50,7 +50,7 @@ sub pretty_print {
             # Example line
             print "$line\n";
             next;
-        } elsif($inex) {
+        } elsif ($inex) {
             # First line after an example.
             $inex = 0;
             $line = "\n\n$line";
@@ -77,8 +77,8 @@ sub pretty_print {
 sub extract_data {
     my ($folder, $fname, $abname) = @_;
     print "=over 4\n\n";
-    foreach my $file (glob ("$folder/*.desc")) {
-        my ($header, @ignore) = read_dpkg_control ($file);
+    foreach my $file (glob("$folder/*.desc")) {
+        my ($header, @ignore) = read_dpkg_control($file);
         my $name = $header->{$fname};
         my $abbr;
         my $desc;
@@ -94,11 +94,12 @@ sub extract_data {
         if ($abbr) {
             print "=item B<$name> (B<$abbr>)\n\n";
         } else {
-            print "=item B<$name>\n\n"
+            print "=item B<$name>\n\n";
         }
         pretty_print($desc);
-        if (lc ($header->{'auto-remove'}//'') eq 'yes') {
-            print "This collection is auto-removed by default in static labs.\n\n"
+        if (lc($header->{'auto-remove'}//'') eq 'yes') {
+            print
+              "This collection is auto-removed by default in static labs.\n\n";
         }
     }
     print "=back\n\n";

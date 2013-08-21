@@ -29,18 +29,18 @@ use Cwd qw(abs_path);
 use Exporter qw(import);
 
 use constant {
-  DCTRL_DEBCONF_TEMPLATE => 1,
-  DCTRL_NO_COMMENTS => 2,
+    DCTRL_DEBCONF_TEMPLATE => 1,
+    DCTRL_NO_COMMENTS => 2,
 };
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
 # otherwise.
 our (@EXPORT_OK, %EXPORT_TAGS);
+
 BEGIN {
-    %EXPORT_TAGS = (
-            constants => [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS)]
-    );
+    %EXPORT_TAGS
+      = (constants => [qw(DCTRL_DEBCONF_TEMPLATE DCTRL_NO_COMMENTS)]);
 
     eval { require PerlIO::gzip };
     if ($@) {
@@ -50,36 +50,35 @@ BEGIN {
     }
 
     @EXPORT_OK = (qw(
-                 visit_dpkg_paragraph
-                 parse_dpkg_control
-                 read_dpkg_control
-                 get_deb_info
-                 get_dsc_info
-                 get_file_checksum
-                 slurp_entire_file
-                 file_is_encoded_in_non_utf8
-                 is_string_utf8_encoded
-                 fail
-                 strip
-                 lstrip
-                 rstrip
-                 system_env
-                 delete_dir
-                 copy_dir
-                 gunzip_file
-                 open_gz
-                 touch_file
-                 perm2oct
-                 check_path
-                 clean_env
-                 resolve_pkg_path
-                 normalize_pkg_path
-                 parse_boolean
-                 is_ancestor_of
-                 locate_helper_tool
-                 $PKGNAME_REGEX),
-                 @{ $EXPORT_TAGS{constants} }
-    );
+          visit_dpkg_paragraph
+          parse_dpkg_control
+          read_dpkg_control
+          get_deb_info
+          get_dsc_info
+          get_file_checksum
+          slurp_entire_file
+          file_is_encoded_in_non_utf8
+          is_string_utf8_encoded
+          fail
+          strip
+          lstrip
+          rstrip
+          system_env
+          delete_dir
+          copy_dir
+          gunzip_file
+          open_gz
+          touch_file
+          perm2oct
+          check_path
+          clean_env
+          resolve_pkg_path
+          normalize_pkg_path
+          parse_boolean
+          is_ancestor_of
+          locate_helper_tool
+          $PKGNAME_REGEX),
+        @{ $EXPORT_TAGS{constants} });
 }
 
 use Encode ();
@@ -237,10 +236,9 @@ sub parse_dpkg_control {
         push @result, $para;
         push @$lines, $line if defined $lines;
     };
-    visit_dpkg_paragraph ($c, $handle, $flags);
+    visit_dpkg_paragraph($c, $handle, $flags);
     return @result;
 }
-
 
 =item visit_dpkg_paragraph (CODE, HANDLE[, FLAGS])
 
@@ -405,12 +403,17 @@ sub visit_dpkg_paragraph {
         # According to http://tools.ietf.org/html/rfc4880#section-6.2
         # The header MUST start at the beginning of the line and MUST NOT have
         # any other text (except whitespace) after the header.
-        elsif (m/^-----BEGIN PGP SIGNATURE-----\s*$/) { # skip until end of signature
+        elsif (m/^-----BEGIN PGP SIGNATURE-----\s*$/)
+        { # skip until end of signature
             my $saw_end = 0;
             if (not $signed or $signature) {
-                die "syntax error at line $.: PGP signature seen before start of signed message\n"
-                    if not $signed;
-                die "syntax error at line $.: Two PGP signatures (first one at line $signature)\n";
+                die join(q{ },
+                    "syntax error at line $.:",
+                    "PGP signature seen before start of signed message\n")
+                  if not $signed;
+                die join(q{ },
+                    "syntax error at line $.:",
+                    "Two PGP signatures (first one at line $signature)\n");
             }
             $signature = $.;
             while (<$CONTROL>) {
@@ -421,8 +424,10 @@ sub visit_dpkg_paragraph {
             }
             # The "at line X" may seem a little weird, but it keeps the
             # message format identical.
-            die "syntax error at line $.: End of file but expected a \"END PGP SIGNATURE\" header\n"
-                unless $saw_end;
+            die join(q{ },
+                "syntax error at line $.:",
+                qq{End of file but expected a "END PGP SIGNATURE" header\n})
+              unless $saw_end;
         }
         # other pgp control?
         elsif (m/^-----(?:BEGIN|END) PGP/) {
@@ -441,7 +446,8 @@ sub visit_dpkg_paragraph {
 
                 my $key = qr/(?:BEGIN|END) PGP (?:PUBLIC|PRIVATE) KEY BLOCK/;
                 my $msgpart = qr{BEGIN PGP MESSAGE, PART \d+(?:/\d+)?};
-                my $msg = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
+                my $msg
+                  = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
 
                 if (m/^-----($key|$msgpart|$msg)-----\s*$/o) {
                     die "syntax error at line $.: Unexpected $1 header\n";
@@ -450,12 +456,14 @@ sub visit_dpkg_paragraph {
                 }
             } else {
                 if ($signed) {
-                    die "syntax error at line $.: Expected at most one signed message" .
-                        " (previous at line $signed)\n"
+                    die join(q{ },
+                        "syntax error at line $.:",
+                        'Expected at most one signed message',
+                        "(previous at line $signed)\n");
                 }
                 if ($last_tag) {
-                    # NB: If you remove this, keep in mind that it may allow two paragraphs to
-                    # merge.  Consider:
+                    # NB: If you remove this, keep in mind that it may
+                    # allow two paragraphs to merge.  Consider:
                     #
                     # Field-P1: some-value
                     # -----BEGIN PGP SIGANTURE----
@@ -465,8 +473,10 @@ sub visit_dpkg_paragraph {
                     # At the time of writing: If $open_section is
                     # true, it will remain so until the empty line
                     # after the PGP header.
-                    die "syntax error at line $.: PGP MESSAGE header must be first" .
-                        " content if present\n";
+                    die join(q{ },
+                        "syntax error at line $.:",
+                        'PGP MESSAGE header must be first',
+                        "content if present\n");
                 }
                 $signed = $.;
             }
@@ -476,14 +486,14 @@ sub visit_dpkg_paragraph {
                 last if /^\s*$/o;
             }
         }
-        # did we see a signature already?  We allow all whitespace/comment lines
-        # outside the signature.
+       # did we see a signature already?  We allow all whitespace/comment lines
+       # outside the signature.
         elsif ($signature) {
             # Accept empty lines after the signature.
             next if m/^\s*$/;
 
-            #NB: If you remove this, keep in mind that it may allow two paragraphs to
-            # merge.  Consider:
+            # NB: If you remove this, keep in mind that it may allow
+            # two paragraphs to merge.  Consider:
             #
             # Field-P1: some-value
             # -----BEGIN PGP SIGANTURE----
@@ -491,9 +501,9 @@ sub visit_dpkg_paragraph {
             # -----END PGP SIGANTURE----
             # Field-P2: another value
             #
-            # At the time of writing: If $open_section is
-            # true, it will remain so until the empty line
-            # after the PGP header.
+            # At the time of writing: If $open_section is true, it
+            # will remain so until the empty line after the PGP
+            # header.
             die "syntax error at line $.: Data after the PGP SIGNATURE\n";
         }
         # new empty field?
@@ -515,7 +525,7 @@ sub visit_dpkg_paragraph {
             # Policy: Horizontal whitespace (spaces and tabs) may occur
             # immediately before or after the value and is ignored there.
             my ($tag,$value) = (lc $1,$2);
-            rstrip ($value);
+            rstrip($value);
             if (exists $section->{$tag}) {
                 # Policy: A paragraph must not contain more than one instance
                 # of a particular field name.
@@ -528,22 +538,27 @@ sub visit_dpkg_paragraph {
         }
         # continued field?
         elsif (m/^([ \t].*\S.*)$/o) {
-            $open_section or die "syntax error at line $.: Continuation line outside a paragraph.\n";
+            $open_section
+              or die join(q{ },
+                "syntax error at line $.:",
+                "Continuation line outside a paragraph.\n");
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
             # trailing spaces or tabs at the end of individual lines of a
             # field value are ignored.
-            my $value = rstrip ($1);
+            my $value = rstrip($1);
             $section->{$last_tag} .= "\n" . $value;
         }
         # None of the above => syntax error
         else {
             my $message = "syntax error at line $.";
             if (m/^\s+$/) {
-                $message .= ": Whitespace line not allowed (possibly missing a \".\").\n";
+                $message
+                  .= ": Whitespace line not allowed (possibly missing a \".\").\n";
             } else {
-                # Replace non-printables and non-space characters with "_"... just in case.
+                # Replace non-printables and non-space characters with
+                # "_" - just in case.
                 s/[^[:graph:][:space:]]/_/go;
                 $message .= ": Cannot parse line \"$_\"\n";
             }
@@ -553,12 +568,15 @@ sub visit_dpkg_paragraph {
     # pass the last section (if not already done).
     $code->($section, $lines) if $open_section;
 
-    # Given the API, we cannot use this check to prevent any paragraphs from being
-    # emitted to the code argument, so we might as well just do this last.
+    # Given the API, we cannot use this check to prevent any
+    # paragraphs from being emitted to the code argument, so we might
+    # as well just do this last.
     if ($signed and not $signature) {
         # The "at line X" may seem a little weird, but it keeps the
         # message format identical.
-        die "syntax error at line $.: End of file before \"BEGIN PGP SIGNATURE\"\n";
+        die join(q{ },
+            "syntax error at line $.:",
+            qq{End of file before "BEGIN PGP SIGNATURE"\n"});
     }
 }
 
@@ -621,10 +639,9 @@ sub get_deb_info {
 
     # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
     my $opts = { pipe_out => FileHandle->new };
-    spawn($opts,
-          ['ar', 'p', $file, 'control.tar.gz'],
-          '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
-        or die "cannot fork to unpack $file: $opts->{exception}\n";
+    spawn($opts, ['ar', 'p', $file, 'control.tar.gz'],
+        '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
+      or die "cannot fork to unpack $file: $opts->{exception}\n";
     my @data = parse_dpkg_control($opts->{pipe_out});
 
     # Consume all data before exiting so that we don't kill child processes
@@ -721,9 +738,7 @@ sub is_string_utf8_encoded {
         # ISO-2022
         return 0;
     }
-    eval {
-        Encode::decode('UTF-8', $str, Encode::FB_CROAK);
-    };
+    eval {Encode::decode('UTF-8', $str, Encode::FB_CROAK);};
     if ($@) {
         # fail
         return 0;
@@ -794,7 +809,8 @@ either "C.UTF-8" or "C" (if CLOC is given and a truth value).
 sub clean_env {
     my ($cloc) = @_;
     my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
-    my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
+    my %newenv
+      = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
     %ENV = %newenv;
     $ENV{'LC_ALL'} = 'C.UTF-8';
 
@@ -833,11 +849,13 @@ sub perm2oct {
     # Types:
     #  file (-), block/character device (b & c), directory (d),
     #  hardlink (h), symlink (l), named pipe (p).
-    if ($t !~ m/^   [-bcdhlp]                # file type
+    if (
+        $t !~ m/^   [-bcdhlp]                # file type
                     ([-r])([-w])([-xsS])     # user
                     ([-r])([-w])([-xsS])     # group
                     ([-r])([-w])([-xtT])     # other
-               /xsmo) {
+               /xsmo
+      ) {
         croak "$t does not appear to be a permission string";
     }
 
@@ -893,11 +911,9 @@ will cause a trappable error.
 
 sub gunzip_file {
     my ($in, $out) = @_;
-    spawn({out => $out, fail => 'error'},
-          ['gzip', '-dc', $in]);
+    spawn({out => $out, fail => 'error'}, ['gzip', '-dc', $in]);
     return;
 }
-
 
 =item open_gz (FILE)
 
@@ -961,7 +977,7 @@ stringified and used directly.
 sub fail {
     my $str = 'internal error: ';
     if (@_) {
-        $str .=  join ' ', @_;
+        $str .= join ' ', @_;
     } else {
         if ($!) {
             $str .= "$!";
@@ -989,6 +1005,7 @@ If the tool cannot be found, this sub will cause a trappable error.
 
 {
     my %_CACHE = ();
+
     sub locate_helper_tool {
         my ($toolname) = @_;
         if ($toolname =~ m{(?:\A|/) \.\. (?:\Z|/)}xsm) {
@@ -1009,8 +1026,11 @@ If the tool cannot be found, this sub will cause a trappable error.
             }
         }
         $toolpath_str //= '<N/A>';
-        fail(sprintf('Cannot locate %s (search dirs: %s)',
-                     $toolname, $toolpath_str));
+        fail(
+            sprintf(
+                'Cannot locate %s (search dirs: %s)',
+                $toolname, $toolpath_str
+            ));
     }
 }
 
@@ -1175,7 +1195,7 @@ sub normalize_pkg_path {
     # root (e.g. '/' + 'usr' + '..' -> '/'), this is
     # fine.
     while ($target = shift @dc) {
-        if($target eq '..') {
+        if ($target eq '..') {
             # are we out of bounds?
             return unless @cc;
             # usr/share/java + '..' -> usr/share
@@ -1234,10 +1254,9 @@ will cause a trappable error.
 
 sub is_ancestor_of {
     my ($ancestor, $file) = @_;
-    my $resolved_file = abs_path($file)
-        // croak("resolving $file failed: $!");
+    my $resolved_file = abs_path($file)// croak("resolving $file failed: $!");
     my $resolved_ancestor = abs_path($ancestor)
-        // croak("resolving $ancestor failed: $!");
+      // croak("resolving $ancestor failed: $!");
     my $len;
     return 1 if $resolved_ancestor eq $resolved_file;
     # add a slash, "path/some-dir" is not "path/some-dir-2" and this

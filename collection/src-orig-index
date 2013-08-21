@@ -34,48 +34,51 @@ use Lintian::Processable::Package;
 use Lintian::Util qw(fail);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
+    my ($pkg, $type, $dir) = @_;
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-if ( -f "$dir/orig-index.gz" ) {
-    unlink("$dir/orig-index.gz");
-}
+    if (-f "$dir/orig-index.gz") {
+        unlink("$dir/orig-index.gz");
+    }
 
-# Nothing to do for native packages where the two indices are
-# identical.
-if ($info->native) {
-    link("$dir/index.gz", "$dir/orig-index.gz");
+    # Nothing to do for native packages where the two indices are
+    # identical.
+    if ($info->native) {
+        link("$dir/index.gz", "$dir/orig-index.gz");
+        return;
+    }
+
+    index_orig($pkg, $dir, $info);
+
     return;
-}
-
-index_orig ($pkg, $dir, $info);
-
-return;
 }
 
 # returns all (orig) tarballs.
 sub gather_tarballs {
     my ($pkg, $dir, $info) = @_;
-    my $file = Cwd::realpath ("$dir/dsc");
+    my $file = Cwd::realpath("$dir/dsc");
     my $version;
     my @tarballs;
     my $base;
     my $baserev;
     my $proc;
     fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file."
-        unless $file and -e $file;
-    # Use Lintian::Processable::Package to determine source and version as handles missing fields
-    # for us to some extend.
-    $proc = Lintian::Processable::Package->new ($file, 'source');
+      unless $file and -e $file;
+
+    # Use Lintian::Processable::Package to determine source and
+    # version as handles missing fields for us to some extend.
+
+    $proc = Lintian::Processable::Package->new($file, 'source');
     #  Version handling is based on Dpkg::Version::parseversion.
     $version = $proc->pkg_src_version;
     if ($version =~ /:/) {
-        $version =~ s/^(?:\d+):(.+)/$1/ or fail "bad version number '$version'";
+        $version =~ s/^(?:\d+):(.+)/$1/
+          or fail "bad version number '$version'";
     }
     $baserev = $proc->pkg_src . '_' . $version;
     $version =~ s/(.+)-(?:.*)$/$1/;
     $base = $proc->pkg_src . '_' . $version;
-    for my $fs (split /\n/, $info->field ('files', '')) {
+    for my $fs (split /\n/, $info->field('files', '')) {
         $fs =~ s/^\s*//;
         next if $fs eq '';
         my @t = split /\s+/o, $fs;
@@ -84,7 +87,9 @@ sub gather_tarballs {
         #       or $pkg_$version.tar.$ext (native)
         #  - This deliberately does not look for the debian packaging
         #    even when this would be a tarball.
-        if ($t[2] =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/) {
+        if ($t[2]
+            =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/
+          ) {
             push @tarballs, [$t[2], $1//''];
         }
     }
@@ -95,16 +100,18 @@ sub gather_tarballs {
 # Creates an index of the orig tarballs the source package
 sub index_orig {
     my ($pkg, $dir, $info) = @_;
-    my @tarballs = gather_tarballs ($pkg, $dir, $info);
+    my @tarballs = gather_tarballs($pkg, $dir, $info);
     my @result;
     foreach my $tardata (@tarballs) {
         my ($tarball, $compname) = @$tardata;
         my @index;
-        # Collect a list of the files in the source package.  tar currently doesn't
-        # automatically recognize LZMA / XZ, so we need to add the option where it's
-        # needed.  Change hard link status (h) to regular files and remove a leading
-        # ./ prefix on filenames while we're reading the tar output.  We intentionally
-        # don't parallelize this job because we need to use the output below.
+        # Collect a list of the files in the source package.  tar
+        # currently doesn't automatically recognize LZMA / XZ, so we
+        # need to add the option where it's needed.  Change hard link
+        # status (h) to regular files and remove a leading ./ prefix
+        # on filenames while we're reading the tar output.  We
+        # intentionally don't parallelize this job because we need to
+        # use the output below.
         my @tar_options = ('-tvf');
         my $last = '';
         my $collect;
@@ -128,20 +135,28 @@ sub index_orig {
                 }
             }
         }; # End $collect = sub;
-        spawn ({ fail => 'never', out => $collect, err_append => "$dir/orig-index-errors" },
-              ['tar', @tar_options, "$dir/$tarball"]);
+        spawn({
+                fail => 'never',
+                out => $collect,
+                err_append => "$dir/orig-index-errors"
+            },
+            ['tar', @tar_options, "$dir/$tarball"]);
         if ($last) {
-            fail "tar output (for $tarball from $pkg) does not end in a newline";
+            fail
+              "tar output (for $tarball from $pkg) does not end in a newline";
         }
-        # We now need to see if all files in the tarball have a common prefix.  If so,
-        # we're going to strip that prefix off each file name.  We also remove lines
-        # that consist solely of the prefix.
+        # We now need to see if all files in the tarball have a common
+        # prefix.  If so, we're going to strip that prefix off each
+        # file name.  We also remove lines that consist solely of the
+        # prefix.
         my $prefix;
         for my $line (@index) {
             my ($filename) = ($line =~ /^(?:\S+\s+){5}(.*)/);
             $filename =~ s,^\./+,,o;
             my ($dirname) = ($filename =~ m,^([^/]+),);
-            if (defined $dirname and $dirname eq $filename and not $line =~ m/^d/o) {
+            if (    defined $dirname
+                and $dirname eq $filename
+                and not $line =~ m/^d/o) {
                 $prefix = '';
             } elsif (defined $dirname) {
                 if (not defined $prefix) {
@@ -180,20 +195,25 @@ sub index_orig {
             } elsif ($compname) {
                 # Prefix with the compname (because that is where they will be
                 # unpacked to.
-                @index = map { s,^((?:\S++\s++){5})(?:\./)?\Q$prefix\E(?:/+)?,$1$compname/, } @index;
+                @index = map {
+                    s{^((?:\S++\s++){5})(?:\./)?\Q$prefix\E(?:/+)?}
+                    {$1$compname/}
+                } @index;
             }
         }
         push @result, @index;
     }
-    # Now that we have the file names we want, write them out sorted to the index
-    # file.
-    spawn ({ fail => 'error', out => "$dir/orig-index.gz" },
-          sub { print @result }, '|', ['sort', '-k', '6'],
-          '|', ['gzip', '--best', '-c']);
+  # Now that we have the file names we want, write them out sorted to the index
+  # file.
+    spawn(
+        { fail => 'error', out => "$dir/orig-index.gz" },
+        sub { print @result },
+        '|', ['sort', '-k', '6'],
+        '|', ['gzip', '--best', '-c']);
     return 1;
 }
 
-collect (@ARGV) if $0 =~ m,(?:^|/)src-orig-index$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)src-orig-index$,;
 
 1;
 

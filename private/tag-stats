@@ -45,7 +45,7 @@ for my $check (readdir($checkdir)) {
 
     my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
     my $desc = $tags[0];
-    my @needs = ();
+    my @needs;
     if ($desc and exists $desc->{'needs-info'}) {
         @needs = split(/\s*,\s*/, $desc->{'needs-info'});
     }
@@ -60,7 +60,8 @@ for my $check (readdir($checkdir)) {
         $severity = 'unclassified' if not $severity;
         $certainty = 'unclassified' if not $certainty;
 
-        my $info = Lintian::Tag::Info->new($tag, $desc->{'check-script'}, $desc->{'type'});
+        my $info = Lintian::Tag::Info->new($tag, $desc->{'check-script'},
+            $desc->{'type'});
         my $code = $info->code;
 
         push(@{$stats{severity}{$severity}}, $name);
@@ -99,7 +100,7 @@ foreach my $s (@severities) {
         if (my $tags = $stats{both}{$s}{$c}) {
             print "  $s/$c: " . @{$tags} . "\n";
             print '    ' . join("\n    ", sort @{$tags}) . "\n"
-                if $verbose >= 2;
+              if $verbose >= 2;
         }
     }
 }
@@ -110,7 +111,7 @@ foreach my $t (@types) {
         if (my $tags = $stats{type}{severity}{$t}{$s}) {
             print "  $s: " . @{$tags} . "\n";
             print '    ' . join("\n    ", sort @{$tags}) . "\n"
-                if $verbose >= 2;
+              if $verbose >= 2;
         }
     }
 }
@@ -122,7 +123,7 @@ foreach my $t (@types) {
             if (my $tags = $stats{type}{both}{$t}{$s}{$c}) {
                 print "  $s/$c: " . @{$tags} . "\n";
                 print '    ' . join("\n    ", sort @{$tags}) . "\n"
-                    if $verbose >= 1;
+                  if $verbose >= 1;
             }
         }
     }
@@ -142,7 +143,7 @@ foreach my $s (@severities) {
 
 if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
     print "\nUnclassified tags\n";
-    print '  ' . join("\n  ", @{$stats{severity}{unclassified}}) . "\n"
+    print '  ' . join("\n  ", @{$stats{severity}{unclassified}}) . "\n";
 }
 
 # Local Variables:

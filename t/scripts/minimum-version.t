@@ -20,11 +20,14 @@ $ENV{'LINTIAN_ROOT'} //= '.';
 
 # It creates as many threads as elements in @PATHS
 for my $path (@PATHS) {
-    threads->create(sub {
-	my $p = shift;
-	$p = $ENV{'LINTIAN_ROOT'} . '/' . $p;
-	all_minimum_version_ok($REQUIRED, { paths => [$p] , no_plan => 1});
-    }, $path);
+    threads->create(
+        sub {
+            my $p = shift;
+            $p = $ENV{'LINTIAN_ROOT'} . '/' . $p;
+            all_minimum_version_ok($REQUIRED, { paths => [$p], no_plan => 1});
+        },
+        $path
+    );
 }
 
 for my $thr (threads->list()) {

@@ -30,48 +30,51 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file is_ancestor_of);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
+    my ($pkg, $type, $dir) = @_;
 
--d "$dir/unpacked" or fail 'override-file invoked with wrong dir argument';
+    -d "$dir/unpacked" or fail 'override-file invoked with wrong dir argument';
 
-if ( -e "$dir/override"){
-    unlink("$dir/override");
-}
-
-# Pick the first of these files that exists.  Prefer source/lintian-overrides
-# to source.lintian-overrides for source packages.
-my (@overrides, $file);
-if ($type eq 'source') {
-    @overrides = ("$dir/unpacked/debian/source/lintian-overrides",
-                  "$dir/unpacked/debian/source.lintian-overrides");
-} else {
-    @overrides = ("$dir/unpacked/usr/share/lintian/overrides/$pkg");
-}
-for my $override (@overrides) {
-    if (-f $override) {
-        $file = $override;
-    } elsif (-f "$override.gz") {
-        $file = "$override.gz";
+    if (-e "$dir/override"){
+        unlink("$dir/override");
     }
+
+    # Pick the first of these files that exists.  Prefer
+    # source/lintian-overrides to source.lintian-overrides for source
+    # packages.
+    my (@overrides, $file);
+    if ($type eq 'source') {
+        @overrides = (
+            "$dir/unpacked/debian/source/lintian-overrides",
+            "$dir/unpacked/debian/source.lintian-overrides"
+        );
+    } else {
+        @overrides = ("$dir/unpacked/usr/share/lintian/overrides/$pkg");
+    }
+    for my $override (@overrides) {
+        if (-f $override) {
+            $file = $override;
+        } elsif (-f "$override.gz") {
+            $file = "$override.gz";
+        }
+    }
+
+    if (defined $file and not is_ancestor_of("$dir/unpacked", $file)) {
+        # unsafe, pretend we didn't see it.
+        undef $file;
+    }
+
+    if (not defined $file) {
+        # no override found
+    } elsif ($file =~ /\.gz$/) {
+        gunzip_file($file, "$dir/override");
+    } else {
+        link($file, "$dir/override");
+    }
+
+    return;
 }
 
-if (defined $file and not is_ancestor_of("$dir/unpacked", $file)) {
-    # unsafe, pretend we didn't see it.
-    undef $file;
-}
-
-if (not defined $file) {
-    # no override found
-} elsif ($file =~ /\.gz$/) {
-    gunzip_file ($file, "$dir/override");
-} else {
-    link($file, "$dir/override");
-}
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)override-file$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)override-file$,;
 
 1;
 

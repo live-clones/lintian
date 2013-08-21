@@ -11,8 +11,7 @@ $ENV{'LINTIAN_ROOT'} //= '.';
 chdir($ENV{'LINTIAN_ROOT'});
 
 plan skip_all => 'Only UNRELEASED versions are criticised'
-    if should_skip();
-
+  if should_skip();
 
 eval 'use Test::Perl::Critic 1.00';
 plan skip_all => 'Test::Perl::Critic 1.00 required to run this test' if $@;
@@ -20,12 +19,12 @@ plan skip_all => 'Test::Perl::Critic 1.00 required to run this test' if $@;
 eval 'use PPIx::Regexp';
 diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
+Test::Perl::Critic->import(-profile => '.perlcriticrc');
 
-Test::Perl::Critic->import( -profile => '.perlcriticrc' );
-
-my @DIRS = (qw(checks collection frontend helpers lib private
-   reporting t/scripts t/helpers doc/examples/checks
-));
+my @DIRS = (
+    qw(checks collection frontend helpers lib private
+      reporting t/scripts t/helpers doc/examples/checks
+      ));
 
 plan tests => scalar(@DIRS) + 1;
 
@@ -43,7 +42,7 @@ sub should_skip {
     open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
 
     while (<$fd>) {
-	$skip = 0 if m/^Distribution: UNRELEASED$/;
+        $skip = 0 if m/^Distribution: UNRELEASED$/;
     }
 
     close($fd);

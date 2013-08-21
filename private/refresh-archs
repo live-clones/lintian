@@ -30,12 +30,11 @@ use Lintian::Util qw(parse_dpkg_control);
 
 my $datapath = shift;
 my %hardening = map { $_ => 1 } qw(
-    fortify
-    relro
-    stackprotector
+  fortify
+  relro
+  stackprotector
 );
-my %archs = ();
-my %files = ();
+my (%archs, %files);
 
 # Adding data files to be updated by this file is as simple as calling
 # add_data_file and give it a hash of the following:
@@ -56,7 +55,7 @@ my %files = ();
 # to minimize the diff.
 #
 
-add_data_file (
+add_data_file(
     'filename' => 'binaries/multiarch-dirs',
     'line-spec' => ['@DEB_HOST_ARCH@ @DEB_HOST_MULTIARCH@'],
     'header'  => <<EOF
@@ -65,7 +64,7 @@ add_data_file (
 EOF
 );
 
-add_data_file (
+add_data_file(
     'filename' => 'files/triplets',
     'line-spec' => ['@DEB_HOST_MULTIARCH@ @DEB_HOST_ARCH@'],
     'header' => <<EOF
@@ -74,19 +73,19 @@ add_data_file (
 EOF
 );
 
-add_data_file (
+add_data_file(
     'filename' => 'common/architectures',
-    'line-spec' => ['@DEB_HOST_ARCH@ || @DEB_HOST_ARCH_OS@ @DEB_HOST_ARCH_CPU@'],
+    'line-spec' =>
+      ['@DEB_HOST_ARCH@ || @DEB_HOST_ARCH_OS@ @DEB_HOST_ARCH_CPU@'],
     'header' => <<EOF
 # List of known architectures as provided by dpkg-architecture
 # (excluding "all" and "any", which are handled specially)
 EOF
 );
 
-add_data_file (
+add_data_file(
     'filename' => 'shared-libs/ldconfig-dirs',
-    'line-spec' => ['lib/@DEB_HOST_MULTIARCH@',
-                    'usr/lib/@DEB_HOST_MULTIARCH@'],
+    'line-spec' => ['lib/@DEB_HOST_MULTIARCH@','usr/lib/@DEB_HOST_MULTIARCH@'],
     'keep' => 1,
     'header' => <<EOF
 # The list of directories searched by default by the dynamic linker.
@@ -104,7 +103,7 @@ add_data_file (
 EOF
 );
 
-add_data_file (
+add_data_file(
     'filename' => 'binaries/hardening-tags',
     'line-spec' => ['@DEB_HOST_ARCH@ || @HARDENING@'],
     'header' => <<EOF
@@ -125,13 +124,12 @@ my $dver = `dpkg-architecture --version | head -n1`;
 chomp $dver;
 
 open(my $dlfd, '-|', 'dpkg-architecture', '-L');
-while ( my $archstr = <$dlfd> ) {
-    my @hardening;
-    my @htags;
+while (my $archstr = <$dlfd>) {
+    my (@hardening, @htags);
     delete $ENV{'DEB_HOST_ARCH'};
     chomp $archstr;
     open(my $dafd, '-|', 'dpkg-architecture', "-a$archstr");
-    while ( my $var = <$dafd> ) {
+    while (my $var = <$dafd>) {
         chomp $var;
         my ($key, $value) = split /=/, $var, 2;
         $archs{$archstr}{$key} = $value;
@@ -140,25 +138,25 @@ while ( my $archstr = <$dlfd> ) {
 
     $ENV{'DEB_HOST_ARCH'} = $archstr;
     open(my $dbfd, '-|', 'dpkg-buildflags', '--query-features', 'hardening');
-    @hardening = parse_dpkg_control ($dbfd);
+    @hardening = parse_dpkg_control($dbfd);
     close($dbfd);
     foreach my $paragraph (@hardening) {
         if (($paragraph->{'enabled'}//'no') eq 'yes') {
             my $tag = 'hardening-no-' . $paragraph->{'feature'};
             next if not exists $hardening{$paragraph->{'feature'}};
-            $tag = 'hardening-no-fortify-functions' if $tag eq 'hardening-no-fortify';
+            $tag = 'hardening-no-fortify-functions'
+              if $tag eq 'hardening-no-fortify';
             push @htags, $tag;
         }
     }
-    $archs{$archstr}{'HARDENING'} = join (', ', sort @htags);
+    $archs{$archstr}{'HARDENING'} = join(', ', sort @htags);
 }
 close($dlfd);
-
 
 open_data_files($dver);
 foreach my $archstr (sort keys %archs) {
     my $arch = $archs{$archstr};
-    write_data_line ($arch);
+    write_data_line($arch);
 }
 
 close_and_rename();
@@ -195,11 +193,11 @@ sub open_data_files {
         if ($files{$filename}->{'keep'}) {
             open(my $orig, '<', "$datapath/$filename");
             print $fd "#\n# Lines to always be include\n";
-            while ( my $line = <$orig> ) {
+            while (my $line = <$orig>) {
                 next unless $line =~ m/^#\s*Keep:\s*(.*\S)\s*$/io;
                 my $v = $1;
                 print $fd "# Keep: $v\n";
-                push @{ $files{$filename}->{'lines'} } , $v;
+                push @{ $files{$filename}->{'lines'} }, $v;
             }
             close($orig);
         }
@@ -230,8 +228,13 @@ sub close_and_rename {
     foreach my $filename (keys %files) {
         my $tf = $files{$filename}->{'temp-file'};
         my $df = "$datapath/$filename";
-        system ('mv', '-f', $tf, $df) == 0 or die "mv -f $tf $df failed.\n";
+        system('mv', '-f', $tf, $df) == 0 or die "mv -f $tf $df failed.\n";
     }
     return;
 }
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

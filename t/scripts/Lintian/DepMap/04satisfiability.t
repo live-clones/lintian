@@ -14,6 +14,8 @@ eval {$obj->satisfy('Z')};
 isnt($@, '', 'Nodes that were not added can not be satisfied');
 
 eval {$obj->satisfy('B')};
-isnt($@, '', 'Nodes that were not added and are missing() can not be satisfied');
+isnt($@, '',
+    'Nodes that were not added and are missing() can not be satisfied');
 
-ok(!$obj->satisfy('A'), 'Nodes can not be satisfied if they still have dependencies');
+ok(!$obj->satisfy('A'),
+    'Nodes can not be satisfied if they still have dependencies');

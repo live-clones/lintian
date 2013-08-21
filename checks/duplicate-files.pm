@@ -28,41 +28,39 @@ use List::MoreUtils qw(any);
 use Lintian::Tags qw(tag);
 
 sub run {
+    my (undef, undef, $info) = @_;
+    my %hashmap;
 
-my (undef, undef, $info) = @_;
-
-my %hashmap;
-
-foreach my $file ($info->sorted_index){
-    my $md5 = $info->md5sums->{$file};
-    my $fs;
-    next unless defined $md5;
-    next unless $info->index ($file)->is_regular_file;
-    # Ignore empty files; in some cases (e.g. python) a file is
-    # required even if it is empty and we are never looking at a
-    # substantial gain in such a case.  Also see #632789
-    next unless $info->index ($file)->size;
-    next unless $file =~ m@usr/share/doc/@o;
-    $fs = $hashmap{$md5};
-    unless (defined $fs){
-        $fs = [$file];
-        $hashmap{$md5} = $fs;
-    } else {
-        push @$fs, $file;
+    foreach my $file ($info->sorted_index){
+        my $md5 = $info->md5sums->{$file};
+        my $fs;
+        next unless defined $md5;
+        next unless $info->index($file)->is_regular_file;
+        # Ignore empty files; in some cases (e.g. python) a file is
+        # required even if it is empty and we are never looking at a
+        # substantial gain in such a case.  Also see #632789
+        next unless $info->index($file)->size;
+        next unless $file =~ m{\A usr/share/doc/}xsmo;
+        $fs = $hashmap{$md5};
+        unless (defined $fs){
+            $fs = [$file];
+            $hashmap{$md5} = $fs;
+        } else {
+            push @$fs, $file;
+        }
     }
-}
 
-foreach my $hash (keys %hashmap){
-    my @files = @{ $hashmap{$hash} };
-    next if scalar(@files) < 2;
-    if (any { m,changelog,io} @files) {
-        tag 'duplicate-changelog-files', sort @files;
-    } else {
-        tag 'duplicate-files', sort @files;
+    foreach my $hash (keys %hashmap){
+        my @files = @{ $hashmap{$hash} };
+        next if scalar(@files) < 2;
+        if (any { m,changelog,io} @files) {
+            tag 'duplicate-changelog-files', sort @files;
+        } else {
+            tag 'duplicate-files', sort @files;
+        }
     }
-}
 
-return;
+    return;
 }
 
 1;

@@ -35,25 +35,30 @@ sub print_tag {
         $flags .= ',' if $flags;
         $flags .= 'overridden';
         if (@{ $override->comments }) {
-            my $c = $self->_make_xml_tag ('comment', [],
-                                          join ("\n", @{ $override->comments }));
-            $comment = [ $c ];
+            my $c = $self->_make_xml_tag('comment', [],
+                join("\n", @{ $override->comments }));
+            $comment = [$c];
         }
     }
-    my @attrs = ([ severity  => $tag_info->severity ],
-                 [ certainty => $tag_info->certainty ],
-                 [ flags     => $flags ],
-                 [ name      => $tag_info->tag ]);
-    print { $self->stdout } $self->_make_xml_tag('tag', \@attrs, $self->_quote_print ($information), $comment), "\n";
+    my @attrs = (
+        [severity  => $tag_info->severity],
+        [certainty => $tag_info->certainty],
+        [flags     => $flags],
+        [name      => $tag_info->tag]);
+    print { $self->stdout }
+      $self->_make_xml_tag('tag', \@attrs, $self->_quote_print($information),
+        $comment),
+      "\n";
     return;
 }
 
 sub print_start_pkg {
     my ($self, $pkg_info) = @_;
-    my @attrs = ([ type         => $pkg_info->{type} ],
-                 [ name         => $pkg_info->{package} ],
-                 [ architecture => $pkg_info->{arch} ],
-                 [ version      => $pkg_info->{version} ]);
+    my @attrs = (
+        [type         => $pkg_info->{type}],
+        [name         => $pkg_info->{package}],
+        [architecture => $pkg_info->{arch}],
+        [version      => $pkg_info->{version}]);
     print { $self->stdout } $self->_open_xml_tag('package', \@attrs, 0), "\n";
     return;
 }
@@ -72,7 +77,7 @@ sub _print {
     my ($self, $stream, $lead, @args) = @_;
     $stream ||= $self->stderr;
     my $output = $self->string($lead, @args);
-    print { $stream } $output;
+    print {$stream} $output;
     return;
 }
 

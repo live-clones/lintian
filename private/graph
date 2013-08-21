@@ -21,20 +21,11 @@ my %opt = (
 );
 
 #  %needs + %rneeds - note keys and values are "$type-$name"
-my %needs;
-my %rneeds;
+my (%needs, %rneeds);
 # node -> "level" - also counts as "marker" in the BFS in gen_depth_level
-my %depth = ();
-my @levels;
-
-my %collmap = ();
-my @colls  = ();
-my @checks = ();
-my $cond = undef;
-
-my %nodes = ();
-my %edges = ();
-my @ranks = ();
+my %depth;
+my (@levels, %collmap, @colls, @checks, $cond);
+my (%nodes, %edges, @ranks);
 
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
@@ -51,15 +42,15 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
 # process commandline options
 GetOptions(%opthash)
-    or die("error parsing options\n");
+  or die("error parsing options\n");
 
 $opt{'dep-level'} = 1 if $opt{'longest-paths'};
 $cond = { 'type' => $opt{'pkg-type'} } if defined $opt{'pkg-type'};
 
-foreach my $collf (glob ("$LINTIAN_ROOT/collection/*.desc")) {
-    my $coll = Lintian::CollScript->new ($collf);
+foreach my $collf (glob("$LINTIAN_ROOT/collection/*.desc")) {
+    my $coll = Lintian::CollScript->new($collf);
     my $name = $coll->name;
-    my @needs = $coll->needs_info ($cond);
+    my @needs = $coll->needs_info($cond);
     push @colls, $name;
     $needs{"coll-$name"} = \@needs;
     $collmap{$name} = $coll;
@@ -69,12 +60,11 @@ foreach my $collf (glob ("$LINTIAN_ROOT/collection/*.desc")) {
 }
 
 if ($cond) {
-    my %newneeds = ();
-    my %newrneeds = ();
-    @colls = grep { $collmap{$_}->is_type ($opt{'pkg-type'}) } @colls;
+    my (%newneeds, %newrneeds);
+    @colls = grep { $collmap{$_}->is_type($opt{'pkg-type'}) } @colls;
     foreach my $cname (@colls) {
         my @oldneed = @{ $needs{"coll-$cname"} };
-        my $n = prune_needs ("coll-$cname", \%newrneeds, @oldneed);
+        my $n = prune_needs("coll-$cname", \%newrneeds, @oldneed);
         $newneeds{"coll-$cname"} = $n;
     }
     %needs = %newneeds;
@@ -82,15 +72,17 @@ if ($cond) {
 }
 
 if ($opt{'checks'}) {
-    foreach my $checkf (glob ("$LINTIAN_ROOT/checks/*.desc")) {
+    foreach my $checkf (glob("$LINTIAN_ROOT/checks/*.desc")) {
         my $cname = $checkf;
         $cname =~ s,^\Q$LINTIAN_ROOT\E/checks/(.+)\.desc$,$1,;
-        my $check = Lintian::CheckScript->new ("$LINTIAN_ROOT/checks", $cname);
+        my $check = Lintian::CheckScript->new("$LINTIAN_ROOT/checks", $cname);
         my $name = $check->name;
         my $n;
-        next if defined $opt{'pkg-type'} and not $check->is_check_type ($opt{'pkg-type'});
+        next
+          if defined $opt{'pkg-type'}
+          and not $check->is_check_type($opt{'pkg-type'});
         push @checks, $name;
-        $n = prune_needs ("check-$name", \%rneeds, $check->needs_info);
+        $n = prune_needs("check-$name", \%rneeds, $check->needs_info);
         $needs{"check-$name"} = $n;
     }
 }
@@ -103,16 +95,16 @@ exit 0;
 
 sub prune_needs {
     my ($name, $rneeds, @oldneed) = @_;
-    my %filtneeds = ();
-    my %seen = ();
+    my (%filtneeds, %seen);
     while (my $need = pop @oldneed) {
         $seen{$need} = 1;
-        if (not defined $opt{'pkg-type'} or $collmap{$need}->is_type ($opt{'pkg-type'}) ) {
+        if (not defined $opt{'pkg-type'}
+            or $collmap{$need}->is_type($opt{'pkg-type'})) {
             $filtneeds{$need} = 1;
             push @{ $rneeds->{"coll-$need"} }, $name;
         } else {
             push @oldneed,
-               grep { ! exists $seen{$_} } $collmap{$need}->needs_info ($cond);
+              grep { !exists $seen{$_} } $collmap{$need}->needs_info($cond);
         }
     }
     $rneeds->{$name} = [] unless exists $rneeds->{$name};
@@ -159,7 +151,8 @@ sub gen_depth_level {
             my $level = 0;
             if (@$needs) {
                 foreach my $dep (@$needs) {
-                    $level = $depth{"coll-$dep"} if $depth{"coll-$dep"} > $level;
+                    $level = $depth{"coll-$dep"}
+                      if $depth{"coll-$dep"} > $level;
                 }
                 $level++;
                 $depth{"check-$c"} = $level;
@@ -248,7 +241,8 @@ sub gen_coll_check {
         $nodes{"coll-$coll"} = "label=\"$coll\"";
         foreach my $dep (@{ $needs{"coll-$coll"} }) {
             my $s = $style;
-            $s = $mstyle if is_marked($marked_paths, "coll-$coll", "coll-$dep");
+            $s = $mstyle
+              if is_marked($marked_paths, "coll-$coll", "coll-$dep");
             $ed{"coll-$dep"} = ['->', $s];
         }
         $edges{"coll-$coll"} = \%ed;
@@ -260,7 +254,8 @@ sub gen_coll_check {
             $nodes{"check-$check"} = "label=\"$check\" shape=box color=blue";
             foreach my $dep (@{ $needs{"check-$check"} }) {
                 my $s = $style;
-                $s = $mstyle if is_marked($marked_paths, "check-$check", "coll-$dep");
+                $s = $mstyle
+                  if is_marked($marked_paths, "check-$check", "coll-$dep");
                 $ed{"coll-$dep"} = ['->', $s];
             }
             $edges{"check-$check"} = \%ed;

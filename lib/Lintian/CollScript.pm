@@ -60,7 +60,7 @@ Parse FILE as a collection desc file.
 
 sub new {
     my ($class, $file) = @_;
-    my $header = get_dsc_info ($file);
+    my $header = get_dsc_info($file);
     my $self;
     foreach my $field (qw(collector-script type version)) {
         if (($header->{$field}//'') eq '') {
@@ -77,16 +77,16 @@ sub new {
         'interface' => $header->{'interface'}//'exec',
         '_collect_sub' => undef,
     };
-    $self->{'script_path'} =  dirname ($file) . '/' . $self->{'name'};
+    $self->{'script_path'} = dirname($file) . '/' . $self->{'name'};
     $self->{'auto_remove'} = 1
-        if lc ($header->{'auto-remove'}//'') eq 'yes';
+      if lc($header->{'auto-remove'}//'') eq 'yes';
     for my $t (split /\s*,\s*/o, $self->{'type'}) {
         $self->{'type-table'}->{$t} = 1;
     }
 
     bless $self, $class;
 
-    $self->_parse_needs ($header->{'needs-info'});
+    $self->_parse_needs($header->{'needs-info'});
     $self->_load_collector;
 
     return $self;
@@ -109,7 +109,10 @@ sub _parse_needs {
                     push @{ $typespec{$type} }, $dep;
                 }
             } else {
-                croak "Unknown conditional dependency in coll $self->{'name'}: $part\n";
+                croak(
+                    join(q{ },
+                        'Unknown conditional dependency in coll',
+                        "$self->{'name'}: $part\n"));
             }
         } else {
             push @min, $part;
@@ -178,9 +181,10 @@ the "exec" interface (see above).
 
 =cut
 
-Lintian::CollScript->mk_ro_accessors (qw(name type version auto_remove
-    script_path interface
-));
+Lintian::CollScript->mk_ro_accessors(
+    qw(name type version auto_remove
+      script_path interface
+      ));
 
 =item needs_info ([COND])
 
@@ -211,7 +215,7 @@ sub needs_info {
         my @min = @{ $needs->{'min'} };
         my $type = $cond->{'type'};
         push @min, @{ $needs->{'type'}->{$type} }
-            if exists $needs->{'type'}->{$type};
+          if exists $needs->{'type'}->{$type};
         return @min;
     }
     return @{ $self->{'needs_info'}->{'max'} };
@@ -239,8 +243,8 @@ sub collect {
         my $collector = $self->{'_collect_sub'};
         $collector->($pkg_name, $task, $dir);
     } elsif ($iface eq 'exec') {
-        system ($self->script_path, $pkg_name, $task, $dir) == 0
-            or die 'Collection ' . $self->name . " for $pkg_name failed\n";
+        system($self->script_path, $pkg_name, $task, $dir) == 0
+          or die 'Collection ' . $self->name . " for $pkg_name failed\n";
     } else {
         fail "Unknown interface: $iface";
     }
@@ -262,10 +266,10 @@ sub _load_collector {
     {
         no strict 'refs';
         $collector = \&{'Lintian::coll::' . $ppkg . '::collect'}
-            if defined &{'Lintian::coll::' . $ppkg . '::collect'};
+          if defined &{'Lintian::coll::' . $ppkg . '::collect'};
     }
     fail $self->name . ' does not have a collect function'
-        unless defined $collector;
+      unless defined $collector;
     $self->{'_collect_sub'} = $collector;
     return;
 }

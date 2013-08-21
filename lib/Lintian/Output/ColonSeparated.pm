@@ -31,7 +31,8 @@ sub print_tag {
     my $odata = '';
     if ($override) {
         $odata = $override->tag;
-        $odata .= ' ' . $self->_quote_print ($override->extra) if $override->extra;
+        $odata .= ' ' . $self->_quote_print($override->extra)
+          if $override->extra;
     }
 
     $self->issued_tag($tag_info->tag);
@@ -40,13 +41,12 @@ sub print_tag {
         $tag_info->code,
         $tag_info->severity,
         $tag_info->certainty,
-        ($tag_info->experimental ? 'X' : '').
-        (defined($override) ? 'O' : ''),
+        ($tag_info->experimental ? 'X' : '') . (defined($override) ? 'O' : ''),
         @{$pkg_info}{'package','version','arch','type'},
         $tag_info->tag,
-        $self->_quote_print ($information),
+        $self->_quote_print($information),
         $odata,
-        );
+    );
     return;
 }
 
@@ -83,11 +83,11 @@ sub _print {
 sub string {
     my ($self, @args) = _global_or_object(@_);
 
-    return join(':', _quote_char( ':', @args))."\n";
+    return join(':', _quote_char(':', @args))."\n";
 }
 
 sub _quote_char {
-    my ( $char, @items ) = @_;
+    my ($char, @items) = @_;
 
     foreach (@items) {
         s/\\/\\\\/go;

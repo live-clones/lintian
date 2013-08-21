@@ -30,96 +30,102 @@ use Lintian::Util qw(fail open_gz normalize_pkg_path);
 use File::Basename qw(fileparse);
 
 sub run {
+    my (undef, undef, $info) = @_;
 
-my (undef, undef, $info) = @_;
+    # Read package contents...
+    foreach my $file ($info->sorted_index) {
+        my $file_info = $info->file_info($file);
+        my ($fname, $path) = fileparse($file);
 
-# Read package contents...
-foreach my $file ($info->sorted_index) {
-    my $file_info = $info->file_info ($file);
-    my ($fname, $path) = fileparse($file);
+        next
+          unless ($file->is_symlink or $file->is_file)
+          and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
-    next unless ($file->is_symlink or $file->is_file)
-            and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
+        # Ignore dir files.  That's a different error which we already catch in
+        # the files check.
+        next if $fname =~ /^dir(?:\.old)?(?:\.gz)?/;
 
-    # Ignore dir files.  That's a different error which we already catch in
-    # the files check.
-    next if $fname =~ /^dir(?:\.old)?(?:\.gz)?/;
-
-    # Analyze the file names making sure the documents are named properly.
-    # Note that Emacs 22 added support for images in info files, so we have to
-    # accept those and ignore them.  Just ignore .png files for now.
-    my @fname_pieces = split /\./, $fname;
-    my $ext = pop @fname_pieces;
-    if ($ext eq 'gz') { # ok!
-        if ($file->is_file) { # compressed with maximum compression rate?
-            if ($file_info !~ m/gzip compressed data/o) {
-                tag 'info-document-not-compressed-with-gzip', $file;
-            } else {
-                if ($file_info !~ m/max compression/o) {
-                    tag 'info-document-not-compressed-with-max-compression', $file;
+        # Analyze the file names making sure the documents are named
+        # properly.  Note that Emacs 22 added support for images in
+        # info files, so we have to accept those and ignore them.
+        # Just ignore .png files for now.
+        my @fname_pieces = split /\./, $fname;
+        my $ext = pop @fname_pieces;
+        if ($ext eq 'gz') { # ok!
+            if ($file->is_file) {
+                # compressed with maximum compression rate?
+                if ($file_info !~ m/gzip compressed data/o) {
+                    tag 'info-document-not-compressed-with-gzip', $file;
+                } else {
+                    if ($file_info !~ m/max compression/o) {
+                        tag
+                          'info-document-not-compressed-with-max-compression',
+                          $file;
+                    }
                 }
             }
-        }
-    } elsif ($ext eq 'png') {
-        next;
-    } else {
-        push (@fname_pieces, $ext);
-        tag 'info-document-not-compressed', $file;
-    }
-    my $infoext = pop @fname_pieces;
-    unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
-        unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
-            tag 'info-document-has-wrong-extension', $file;
-        }
-    }
-
-    # If this is the main info file (no numeric extension). make sure it has
-    # appropriate dir entry information.
-    if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
-        if ($file->is_symlink && !is_ancestor_of($info->unpacked, $file)) {
-            # unsafe symlink, skip
+        } elsif ($ext eq 'png') {
             next;
+        } else {
+            push(@fname_pieces, $ext);
+            tag 'info-document-not-compressed', $file;
         }
-        my $fd = open_gz($info->unpacked($file));
-        local $_;
-        my ($section, $start, $end);
-        while (<$fd>) {
-            $section = 1 if /^INFO-DIR-SECTION\s+\S/;
-            $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
-            $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
-        }
-        close($fd);
-        tag 'info-document-missing-dir-section', $file unless $section;
-        tag 'info-document-missing-dir-entry', $file unless $start && $end;
-    }
-
-    # Check each [image src=""] form in the info files.  The src filename
-    # should be in the package.  As of Texinfo 5 it will be something.png or
-    # something.jpg, but that's not enforced.
-    #
-    # See Texinfo manual (info "(texinfo)Info Format Image") for details of
-    # the [image] form.  Bytes \x00,\x08 introduce it (and distinguishes it
-    # from [image] appearing as plain text).
-    #
-    # String src="..." part has \" for literal " and \\ for literal \,
-    # though that would be unlikely in filenames.  For the tag() message
-    # show $src unbackslashed since that's the filename sought.
-    #
-    if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
-        my $fd = open_gz($info->unpacked($file));
-        while (my $line = <$fd>) {
-            while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
-                my $src = $1;
-                $src =~ s/\\(.)/$1/g;   # unbackslash
-                $info->index(normalize_pkg_path('usr/share/info', $src))
-                    or tag 'info-document-missing-image-file', $file, $src;
+        my $infoext = pop @fname_pieces;
+        unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
+            unless (!@fname_pieces) {
+                # it's not foo{,-{1,2,3,...}}
+                tag 'info-document-has-wrong-extension', $file;
             }
         }
-        close($fd);
-    }
-}
 
-return;
+        # If this is the main info file (no numeric extension). make
+        # sure it has appropriate dir entry information.
+        if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
+            if ($file->is_symlink && !is_ancestor_of($info->unpacked, $file)) {
+                # unsafe symlink, skip
+                next;
+            }
+            my $fd = open_gz($info->unpacked($file));
+            local $_;
+            my ($section, $start, $end);
+            while (<$fd>) {
+                $section = 1 if /^INFO-DIR-SECTION\s+\S/;
+                $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
+                $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
+            }
+            close($fd);
+            tag 'info-document-missing-dir-section', $file unless $section;
+            tag 'info-document-missing-dir-entry', $file unless $start && $end;
+        }
+
+        # Check each [image src=""] form in the info files.  The src
+        # filename should be in the package.  As of Texinfo 5 it will
+        # be something.png or something.jpg, but that's not enforced.
+        #
+        # See Texinfo manual (info "(texinfo)Info Format Image") for
+        # details of the [image] form.  Bytes \x00,\x08 introduce it
+        # (and distinguishes it from [image] appearing as plain text).
+        #
+        # String src="..." part has \" for literal " and \\ for
+        # literal \, though that would be unlikely in filenames.  For
+        # the tag() message show $src unbackslashed since that's the
+        # filename sought.
+        #
+        if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
+            my $fd = open_gz($info->unpacked($file));
+            while (my $line = <$fd>) {
+                while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
+                    my $src = $1;
+                    $src =~ s/\\(.)/$1/g;   # unbackslash
+                    $info->index(normalize_pkg_path('usr/share/info', $src))
+                      or tag 'info-document-missing-image-file', $file, $src;
+                }
+            }
+            close($fd);
+        }
+    }
+
+    return;
 }
 
 1;

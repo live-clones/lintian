@@ -10,7 +10,7 @@ my $map = Lintian::DepMap->new();
 
 $map->add('pA');
 $map->add('pB', 'pA');
-ok( eval {$map->addp('foo', 'p', 'A')}, 'Add foo depending on "p"+"A"');
+ok(eval {$map->addp('foo', 'p', 'A')}, 'Add foo depending on "p"+"A"');
 
 $map->satisfy('pA');
 

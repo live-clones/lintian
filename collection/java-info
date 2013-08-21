@@ -34,119 +34,121 @@ use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(fail rstrip);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
+    my ($pkg, $type, $dir) = @_;
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-# Sanity check
-unless ( -d "$dir/unpacked/") {
-    fail 'java-info called with the wrong dir argument';
-}
+    # Sanity check
+    unless (-d "$dir/unpacked/") {
+        fail 'java-info called with the wrong dir argument';
+    }
 
-if ( -f "$dir/java-info" ) {
-    unlink("$dir/java-info");
-}
-if ( -f "$dir/java-info.gz" ) {
-    unlink("$dir/java-info.gz");
-}
+    if (-f "$dir/java-info") {
+        unlink("$dir/java-info");
+    }
+    if (-f "$dir/java-info.gz") {
+        unlink("$dir/java-info.gz");
+    }
 
-# We lazily start the gzip process to avoid creating the java-info.gz
-# file when there are no jar files in the package.
-my %opts;
-my $open_java_info = sub {
-    %opts = ( pipe_in => FileHandle->new,
-              out => "$dir/java-info.gz",
-              fail => 'error' );
-    spawn(\%opts, ['gzip', '-9c'] );
-    $opts{pipe_in}->blocking(1);
-};
-my $errorhandler = sub {
-    my ($err) = @_;
-    $err =~ s/\r?\n/ /g;
-    rstrip ($err);
-    print {$opts{pipe_in}} "-- ERROR: $err\n";
-};
+    # We lazily start the gzip process to avoid creating the java-info.gz
+    # file when there are no jar files in the package.
+    my %opts;
+    my $open_java_info = sub {
+        %opts = (
+            pipe_in => FileHandle->new,
+            out => "$dir/java-info.gz",
+            fail => 'error'
+        );
+        spawn(\%opts, ['gzip', '-9c']);
+        $opts{pipe_in}->blocking(1);
+    };
+    my $errorhandler = sub {
+        my ($err) = @_;
+        $err =~ s/\r?\n/ /g;
+        rstrip($err);
+        print {$opts{pipe_in}} "-- ERROR: $err\n";
+    };
 
-chdir("$dir/unpacked");
+    chdir("$dir/unpacked");
 
-# Without this Archive::Zip will emit errors to standard error for
-# faulty zip files - but that is not what we want.  AFAICT, it is
-# the only way to get a textual error as well, so (ab)use it for
-# this purpose while we are at it.
-my $oldhandler = Archive::Zip::setErrorHandler ($errorhandler);
+    # Without this Archive::Zip will emit errors to standard error for
+    # faulty zip files - but that is not what we want.  AFAICT, it is
+    # the only way to get a textual error as well, so (ab)use it for
+    # this purpose while we are at it.
+    my $oldhandler = Archive::Zip::setErrorHandler($errorhandler);
 
-FILE:
-foreach my $file ($info->sorted_index) {
-    next unless $file->is_file;
-    # Wheezy's version of file calls "jar files" for "Zip archive".
-    # Newer versions seem to call them "Java Jar file".
-    next unless $info->file_info($file) =~ m/Java Jar file|Zip archive/o;
+  FILE:
+    foreach my $file ($info->sorted_index) {
+        next unless $file->is_file;
+        # Wheezy's version of file calls "jar files" for "Zip archive".
+        # Newer versions seem to call them "Java Jar file".
+        next unless $info->file_info($file) =~ m/Java Jar file|Zip archive/o;
 
-    if ($file =~ m#\S+\.jar$#i) {
-        my $filename = $file->name;
-        my $has_manifest = 0;
-        my $manifest;
-        my $azip = Archive::Zip->new;
+        if ($file =~ m#\S+\.jar$#i) {
+            my $filename = $file->name;
+            my $has_manifest = 0;
+            my $manifest;
+            my $azip = Archive::Zip->new;
 
-        $open_java_info->() unless %opts;
-        # This script needs unzip, there's no way around.
-        print {$opts{pipe_in}} "-- $filename\n";
+            $open_java_info->() unless %opts;
+            # This script needs unzip, there's no way around.
+            print {$opts{pipe_in}} "-- $filename\n";
 
-        $azip->read($filename) == AZ_OK or next FILE;
+            $azip->read($filename) == AZ_OK or next FILE;
 
-        # First, the file list:
-        foreach my $member ($azip->members) {
-            my $name = $member->fileName;
-            my $jversion;
-            next if $member->isDirectory;
-            $manifest = $member if $name =~ m@^META-INF/MANIFEST.MF$@oi;
-            if ($name =~ m/\.class$/o) {
-                # Collect the Major version of the class file.
-                my ($contents, $zerr) = $member->contents;
+            # First, the file list:
+            foreach my $member ($azip->members) {
+                my $name = $member->fileName;
+                my $jversion;
+                next if $member->isDirectory;
+                $manifest = $member if $name =~ m@^META-INF/MANIFEST.MF$@oi;
+                if ($name =~ m/\.class$/o) {
+                    # Collect the Major version of the class file.
+                    my ($contents, $zerr) = $member->contents;
+                    next FILE unless $zerr == AZ_OK;
+
+                    # translation of the unpack
+                    #  NN NN NN NN, nn nn, nn nn   - bytes read
+                    #     $magic  , __ __, $major  - variables
+                    my ($magic, undef, $major) = unpack('Nnn', $contents);
+                    $jversion = $major if $magic == 0xCAFEBABE;
+                }
+                $jversion //= '-';
+                print {$opts{pipe_in}} $name, ": $jversion\n";
+            }
+
+            if ($manifest) {
+                print {$opts{pipe_in}} "-- MANIFEST: $filename\n";
+
+                my ($contents, $zerr) = $manifest->contents;
                 next FILE unless $zerr == AZ_OK;
-
-                # translation of the unpack
-                #  NN NN NN NN, nn nn, nn nn   - bytes read (in hex, network order)
-                #     $magic  , __ __, $major  - variables
-                my ($magic, undef, $major) = unpack ('Nnn', $contents);
-                $jversion = $major if $magic == 0xCAFEBABE;
-            }
-            $jversion //= '-';
-            print {$opts{pipe_in}} $name, ": $jversion\n";
-        }
-
-        if ($manifest) {
-            print {$opts{pipe_in}} "-- MANIFEST: $filename\n";
-
-            my ($contents, $zerr) = $manifest->contents;
-            next FILE unless $zerr == AZ_OK;
-            my $first = 1;
-            foreach my $line (split m/\n/, $contents) {
-                $line =~ s/\r//go;
-                if($line =~ m/^(\S+:)\s*(.*)/o) {
-                    print {$opts{pipe_in}} "\n" unless $first;
-                    $first = 0;
-                    print {$opts{pipe_in}} "  $1 $2";
+                my $first = 1;
+                foreach my $line (split m/\n/, $contents) {
+                    $line =~ s/\r//go;
+                    if ($line =~ m/^(\S+:)\s*(.*)/o) {
+                        print {$opts{pipe_in}} "\n" unless $first;
+                        $first = 0;
+                        print {$opts{pipe_in}} "  $1 $2";
+                    }
+                    if ($line =~ m/^ /o) {
+                        print {$opts{pipe_in}} substr $line, 1;
+                    }
                 }
-                if($line =~ m/^ /o) {
-                    print {$opts{pipe_in}} substr $line, 1;
-                }
+                print {$opts{pipe_in}} "\n" unless $first;
             }
-            print {$opts{pipe_in}} "\n" unless $first;
         }
     }
+
+    Archive::Zip::setErrorHandler($oldhandler);
+
+    if (%opts) {
+        close($opts{pipe_in});
+        reap(\%opts);
+    }
+
+    return;
 }
 
-Archive::Zip::setErrorHandler ($oldhandler);
-
-if (%opts) {
-    close($opts{pipe_in});
-    reap (\%opts);
-}
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)java-info$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)java-info$,;
 1;
 
 # Local Variables:

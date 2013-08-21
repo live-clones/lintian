@@ -2,17 +2,17 @@
 # scripts -- lintian collection script
 
 # Copyright (C) 1998 Richard Braakman
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -30,59 +30,60 @@ use Lintian::Collect;
 use Lintian::Util qw(strip);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
-my $scripts_fd; # We lazily open this FD.
+    my ($pkg, $type, $dir) = @_;
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
+    my $scripts_fd; # We lazily open this FD.
 
-foreach my $file ($info->sorted_index) {
-    next unless $file->is_regular_file;
-    my $scriptpath = shebang_line($info->unpacked($file));
+    foreach my $file ($info->sorted_index) {
+        next unless $file->is_regular_file;
+        my $scriptpath = shebang_line($info->unpacked($file));
 
-    next unless defined($scriptpath); # no shebang line => not a script
+        next unless defined($scriptpath); # no shebang line => not a script
 
-    next if ($scriptpath =~ m/^\#!/); # skip lincity data files
-                                      # #!#!#!
-    my $copy_path = $scriptpath;
-    $scriptpath =~ s/^\#.*//; # remove comments
+        # skip lincity data files
+        # magic: #!#!#!
+        next if ($scriptpath =~ m/^\#!/);
+        my $copy_path = $scriptpath;
+        $scriptpath =~ s/^\#.*//; # remove comments
 
-    if (!defined($scripts_fd)) {
-        open($scripts_fd, '>', "$dir/scripts");
-    }
-
-    if ($scriptpath eq '') {
-        print {$scripts_fd} "$copy_path $file\n";
-    } else {
-        my $env = '';
-        if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
-            $env = 'env ';
+        if (!defined($scripts_fd)) {
+            open($scripts_fd, '>', "$dir/scripts");
         }
+
+        if ($scriptpath eq '') {
+            print {$scripts_fd} "$copy_path $file\n";
+        } else {
+            my $env = '';
+            if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
+                $env = 'env ';
+            }
+            # Remove everything after the first space (i.e. any options)
+            $scriptpath =~ s/\s++ .++ \Z//xsm;
+            print {$scripts_fd} $env . "$scriptpath $file\n";
+        }
+    }
+    close($scripts_fd) if defined($scripts_fd);
+
+    open(my $ctrl_fd, '>', "$dir/control-scripts");
+
+    opendir(my $dirfd, "$dir/control");
+    for my $file (readdir($dirfd)) {
+        next if $file =~ m{\A \. \.? \Z}xsm;
+        my $path = $info->control($file);
+        my $scriptpath;
+
+        next if -l $path or not -f _;
+        $scriptpath = shebang_line($path);
+        next unless defined($scriptpath);
+
         # Remove everything after the first space (i.e. any options)
         $scriptpath =~ s/\s++ .++ \Z//xsm;
-        print {$scripts_fd} $env . "$scriptpath $file\n";
+        print {$ctrl_fd} "$scriptpath $file\n";
     }
-}
-close($scripts_fd) if defined($scripts_fd);
+    closedir($dirfd);
+    close($ctrl_fd);
 
-open(my $ctrl_fd, '>', "$dir/control-scripts");
-
-opendir(my $dirfd, "$dir/control");
-for my $file (readdir($dirfd)) {
-    next if $file =~ m{\A \. \.? \Z}xsm;
-    my $path = $info->control($file);
-    my $scriptpath;
-
-    next if -l $path or not -f _;
-    $scriptpath = shebang_line($path);
-    next unless defined($scriptpath);
-
-    # Remove everything after the first space (i.e. any options)
-    $scriptpath =~ s/\s++ .++ \Z//xsm;
-    print {$ctrl_fd} "$scriptpath $file\n"
-}
-closedir($dirfd);
-close($ctrl_fd);
-
-return;
+    return;
 }
 
 sub shebang_line {
@@ -98,7 +99,7 @@ sub shebang_line {
     return $scriptpath;
 }
 
-collect (@ARGV) if $0 =~ m,(?:^|/)scripts$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)scripts$,;
 
 1;
 

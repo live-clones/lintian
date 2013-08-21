@@ -18,7 +18,6 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-
 package Lintian::Lab::Entry;
 
 =head1 NAME
@@ -56,7 +55,6 @@ methods from L<Lintian::Lab>.
 
 =cut
 
-
 use strict;
 use warnings;
 
@@ -88,19 +86,19 @@ sub new_from_metadata {
     my $self;
     my $pkg_path;
     $pkg_path = $metadata->{'pkg_path'}
-        if exists $metadata->{'pkg_path'};
+      if exists $metadata->{'pkg_path'};
     {
         # Create a phony pkg_path if missing
         local $metadata->{'pkg_path'} = '<PLACEHOLDER>'
-            unless exists $metadata->{'pkg_path'};
-        $self = $type->SUPER::new_from_metadata ($pkg_type, $metadata);
+          unless exists $metadata->{'pkg_path'};
+        $self = $type->SUPER::new_from_metadata($pkg_type, $metadata);
     }
     $self->{lab}      = $lab;
     $self->{info}     = undef; # load on demand.
     $self->{coll}     = {};
     $self->{base_dir} = $base_dir;
     $self->{pkg_path} = $pkg_path; # Could be undef, _init will fix that
-    $self->_init ();
+    $self->_init();
 
     return $self;
 }
@@ -120,6 +118,7 @@ sub _new_from_proc {
     $self->{lab}             = $lab;
     $self->{info}            = undef; # load on demand.
     $self->{coll}            = {};
+
     if ($self->pkg_type ne 'source') {
         $self->{pkg_arch} = $proc->pkg_arch;
     } else {
@@ -128,16 +127,17 @@ sub _new_from_proc {
 
     $self->{base_dir} = $base_dir;
 
-    $self->_init (1);
+    $self->_init(1);
     $self->_make_identifier;
 
-    if ($proc->isa ('Lintian::Processable::Package')) {
+    if ($proc->isa('Lintian::Processable::Package')) {
         my $ctrl = $proc->_ctrl_fields;
         if ($ctrl) {
             # The processable has already loaded the fields, cache them to save
             # info from doing it later...
-            $self->{info} = Lintian::Collect->new ($self->pkg_name, $self->pkg_type,
-                                                   $self->base_dir, $ctrl);
+            $self->{info}
+              = Lintian::Collect->new($self->pkg_name, $self->pkg_type,
+                $self->base_dir, $ctrl);
         }
     }
     return $self;
@@ -155,7 +155,7 @@ Returns the base directory of this package inside the lab.
 
 =cut
 
-Lintian::Lab::Entry->mk_ro_accessors (qw(base_dir));
+Lintian::Lab::Entry->mk_ro_accessors(qw(base_dir));
 
 =item from_lab (LAB)
 
@@ -181,13 +181,13 @@ sub info {
     my $info;
     croak 'Cannot load info, extry does not exist' unless $self->exists;
     $info = $self->{info};
-    if ( ! defined $info ) {
-        $info = Lintian::Collect->new ($self->pkg_name, $self->pkg_type, $self->base_dir);
+    if (!defined $info) {
+        $info = Lintian::Collect->new($self->pkg_name, $self->pkg_type,
+            $self->base_dir);
         $self->{info} = $info;
     }
     return $info;
 }
-
 
 =item clear_cache
 
@@ -213,12 +213,12 @@ value if successful.
 sub remove {
     my ($self) = @_;
     my $basedir = $self->{base_dir};
-    return 1 if( ! -e $basedir);
+    return 1 if(!-e $basedir);
     $self->clear_cache;
     unless(delete_dir($basedir)) {
         return 0;
     }
-    $self->{lab}->_entry_removed ($self);
+    $self->{lab}->_entry_removed($self);
     return 1;
 }
 
@@ -269,8 +269,8 @@ sub create {
     unless (-d $base_dir) {
         # In the pool we may have to create multiple directories. On
         # error we only remove the "top dir" and that is enough.
-        system ('mkdir', '-p', $base_dir) == 0
-            or croak "mkdir -p $base_dir failed";
+        system('mkdir', '-p', $base_dir) == 0
+          or croak "mkdir -p $base_dir failed";
         $madedir = 1;
     }
     if ($pkg_type eq 'changes'){
@@ -282,7 +282,7 @@ sub create {
     } else {
         croak "create cannot handle $pkg_type";
     }
-    unless (symlink ($pkg_path, $link)){
+    unless (symlink($pkg_path, $link)){
         my $err = $!;
         # "undo" the mkdir if the symlink fails.
         rmdir $base_dir  if $madedir;
@@ -294,16 +294,16 @@ sub create {
         #  - else unpacked will fail or we would need a separate
         #    collection for the symlinking.
         my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
-        for my $fs (split(m/\n/o, $self->info->field ('files'))) {
-            strip ($fs);
+        for my $fs (split(m/\n/o, $self->info->field('files'))) {
+            strip($fs);
             next if $fs eq '';
             my @t = split(/\s+/o,$fs);
             next if ($t[2] =~ m,/,o);
             symlink("$dir/$t[2]", "$base_dir/$t[2]")
-                or croak("cannot symlink file $t[2]: $!");
+              or croak("cannot symlink file $t[2]: $!");
         }
     }
-    $lab->_entry_created ($self);
+    $lab->_entry_created($self);
     return 1;
 }
 
@@ -336,7 +336,7 @@ finished.
 
 sub is_coll_finished {
     my ($self, $coll, $version) = @_;
-    my $c = $self->coll_version ($coll);
+    my $c = $self->coll_version($coll);
     return 0 if $c eq '';
     return $c >= $version;
 }
@@ -378,7 +378,7 @@ sub update_status_file {
         return 0;
     }
 
-    $file = $self->base_dir () . '/.lintian-status';
+    $file = $self->base_dir() . '/.lintian-status';
     open my $sfd, '>', $file or return 0;
     print $sfd 'Lab-Entry-Format: ' . LAB_ENTRY_FORMAT . "\n";
     # Basic package meta-data - this is redundant, but having it may
@@ -387,15 +387,16 @@ sub update_status_file {
     print $sfd 'Version: ' . $self->pkg_version, "\n";
     # Add Source{,-Version} if it is different from Package/Version
     print $sfd 'Source: ' . $self->pkg_src, "\n"
-        unless $self->pkg_src eq $self->pkg_name;
+      unless $self->pkg_src eq $self->pkg_name;
     print $sfd 'Source-Version: ' . $self->pkg_src_version, "\n"
-        unless $self->pkg_src_version eq $self->pkg_version;
-    print $sfd 'Architecture: ' . $self->pkg_arch, "\n" if $self->pkg_type ne 'source';
+      unless $self->pkg_src_version eq $self->pkg_version;
+    print $sfd 'Architecture: ' . $self->pkg_arch, "\n"
+      if $self->pkg_type ne 'source';
     print $sfd 'Package-Type: ' . $self->pkg_type, "\n";
 
     @sc = sort keys %{ $self->{coll} };
     print $sfd "Collections: \n";
-    print $sfd ' ' . join (",\n ", map { "$_=$self->{coll}->{$_}" } @sc);
+    print $sfd ' ' . join(",\n ", map { "$_=$self->{coll}->{$_}" } @sc);
     print $sfd "\n\n";
     close $sfd or return 0;
     return 1;
@@ -425,28 +426,30 @@ sub _init {
 
         croak "Unknown package type $pkg_type" unless $link;
         if (not $self->pkg_path) {
-            # This case shouldn't happen unless the entry is missing from the metadata.
+            # This case shouldn't happen unless the entry is missing
+            # from the metadata.
             my $linkp = "$base_dir/$link";
             # Resolve the link if possible, but else just fall back to the link
             # - this is not safe in case of a "delete and create", but if
             #   abs_path fails odds are the package cannot be read anyway.
-            $self->{pkg_path} = Cwd::abs_path ("$base_dir/$link") // "$base_dir/$link";
+            $self->{pkg_path} = Cwd::abs_path("$base_dir/$link")
+              // "$base_dir/$link";
         }
     }
 
     return unless $exists;
     return unless -e "$base_dir/.lintian-status";
-    @data = read_dpkg_control ("$base_dir/.lintian-status");
+    @data = read_dpkg_control("$base_dir/.lintian-status");
     $head = $data[0];
 
     # Check that we know the format.
-    return unless (LAB_ENTRY_FORMAT eq ($head->{'lab-entry-format'}//'') );
+    return unless (LAB_ENTRY_FORMAT eq ($head->{'lab-entry-format'}//''));
 
     $coll = $head->{'collections'}//'';
     $coll =~ s/\n/ /go;
-    foreach my $c (split m/\s*,\s*+/o, strip ($coll)) {
+    foreach my $c (split m/\s*,\s*+/o, strip($coll)) {
         my ($cname, $cver) = split m/\s*=\s*/, $c;
-        $self->_mark_coll_finished ($cname, $cver);
+        $self->_mark_coll_finished($cname, $cver);
     }
     return;
 }

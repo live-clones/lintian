@@ -10,11 +10,11 @@ my ($size, $sha1, $sha2, $md5);
 my ($tarfile) = @ARGV;
 
 $size = (stat $tarfile)[7];
-$sha1 = get_file_checksum ('sha1', $tarfile);
-$sha2 = get_file_checksum ('sha256', $tarfile);
-$md5  = get_file_checksum ('md5', $tarfile);
+$sha1 = get_file_checksum('sha1', $tarfile);
+$sha2 = get_file_checksum('sha256', $tarfile);
+$md5  = get_file_checksum('md5', $tarfile);
 
-while ( <STDIN> ) {
+while (<STDIN>) {
     s/\@SIZE\@/$size/g;
     s/\@MD5\@/$md5/g;
     s/\@SHA256\@/$sha2/g;

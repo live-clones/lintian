@@ -14,9 +14,9 @@ $obj->add('A');
 $obj->add('B', 'A');
 $obj->satisfy('A');
 $obj->initialise();
-is(join(', ', $obj->selectable()), 'A',
-    'Only A is selectable after reinitialising');
+is(join(', ', $obj->selectable),
+    'A','Only A is selectable after reinitialising');
 
 $obj->satisfy('A');
-is(join(', ', $obj->selectable()), 'B',
-    'B is selectable after A has been satisfied');
+is(join(', ', $obj->selectable),
+    'B','B is selectable after A has been satisfied');

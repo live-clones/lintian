@@ -82,13 +82,13 @@ sub new {
     my $object;
     if ($type eq 'source') {
         require Lintian::Collect::Source;
-        $object = Lintian::Collect::Source->new ($pkg);
+        $object = Lintian::Collect::Source->new($pkg);
     } elsif ($type eq 'binary' or $type eq 'udeb') {
         require Lintian::Collect::Binary;
-        $object = Lintian::Collect::Binary->new ($pkg);
+        $object = Lintian::Collect::Binary->new($pkg);
     } elsif ($type eq 'changes') {
         require Lintian::Collect::Changes;
-        $object = Lintian::Collect::Changes->new ($pkg);
+        $object = Lintian::Collect::Changes->new($pkg);
     } else {
         croak("Undefined type: $type");
     }
@@ -193,7 +193,7 @@ Needs-Info requirements for using I<field>: none
 
 sub field {
     my ($self, $field, $def) = @_;
-    return $self->_get_field ($field, $def);
+    return $self->_get_field($field, $def);
 }
 
 # $self->_get_field([$name[, $def]])
@@ -218,7 +218,8 @@ sub _get_field {
             $fields = get_dsc_info("$base_dir/$file");
         } elsif ($type eq 'binary' or $type eq 'udeb'){
             # (ab)use the unpacked control dir if it is present
-            if ( -f "$base_dir/control/control" && -s "$base_dir/control/control") {
+            if (   -f "$base_dir/control/control"
+                && -s "$base_dir/control/control") {
                 $fields = get_dsc_info("$base_dir/control/control");
             } else {
                 $fields = (get_deb_info("$base_dir/deb"));
@@ -246,7 +247,8 @@ sub is_non_free {
     return $self->{is_non_free} if exists $self->{is_non_free};
     $self->{is_non_free} = 0;
     $self->{is_non_free} = 1
-        if $self->field ('section', 'main') =~ m,^(?:non-free|restricted|multiverse)/,;
+      if $self->field('section', 'main')
+      =~ m,^(?:non-free|restricted|multiverse)/,;
     return $self->{is_non_free};
 }
 
@@ -264,8 +266,8 @@ sub _memory_usage {
             # merge "index" and "sorted_index".  At the price of an extra
             # list, we avoid overcounting all the L::Path objects so the
             # produced result is a lot more accurate.
-            $usage{$field} = $calc_usage->([$self->{$field},
-                                            $self->{"sorted_$field"}]);
+            $usage{$field}
+              = $calc_usage->([$self->{$field},$self->{"sorted_$field"}]);
         } else {
             $usage{$field} = $calc_usage->($self->{$field});
         }

@@ -75,71 +75,41 @@ differ between package types.
 
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
-use constant BINLIST_FORMAT => q{Lintian's list of binary packages in the archive--V5};
-use constant SRCLIST_FORMAT => q{Lintian's list of source packages in the archive--V5};
-use constant CHGLIST_FORMAT => q{Lintian's list of changes packages in the archive--V1};
+use constant BINLIST_FORMAT =>
+  q{Lintian's list of binary packages in the archive--V5};
+use constant SRCLIST_FORMAT =>
+  q{Lintian's list of source packages in the archive--V5};
+use constant CHGLIST_FORMAT =>
+  q{Lintian's list of changes packages in the archive--V1};
 
 # List of fields in the formats and the order they appear in
 #  - for internal usage to read and write the files
 
 # source package lists
 my @SRC_FILE_FIELDS = (
-    'source',
-    'version',
-    'maintainer',
-    'uploaders',
-    'area',
-    'binary',
-    'file',
-    'timestamp',
+    'source','version','maintainer','uploaders',
+    'area','binary','file','timestamp',
 );
 
 # binary/udeb package lists
 my @BIN_FILE_FIELDS = (
-    'package',
-    'version',
-    'source',
-    'source-version',
-    'architecture',
-    'file',
-    'timestamp',
-    'area',
+    'package','version','source','source-version',
+    'architecture','file','timestamp','area',
 );
 
 # changes packages lists
-my @CHG_FILE_FIELDS = (
-    'source',
-    'version',
-    'architecture',
-    'file',
-    'timestamp',
-);
+my @CHG_FILE_FIELDS = ('source','version','architecture','file','timestamp',);
 
 # List of fields (in order) of fields used to look up the package in the
 # manifest.  The field names matches those used in the list above.
 
-my @SRC_QUERY = (
-    'source',
-    'version',
-);
+my @SRC_QUERY = ('source','version',);
 
-my @GROUP_QUERY = (
-    'source',
-    'version',
-    'identifier',
-);
+my @GROUP_QUERY = ('source','version','identifier',);
 
-my @BIN_QUERY = (
-    'package',
-    'version',
-    'architecture',
-);
+my @BIN_QUERY = ('package','version','architecture',);
 
-my @CHG_QUERY = (
-    'source',
-    'version',
-    'architecture',
-);
+my @CHG_QUERY = ('source','version','architecture',);
 
 =item new (TYPE[, GROUPING])
 
@@ -221,7 +191,8 @@ sub read_list {
 
     # Accept a scalar (as an "in-memory file") - write_list does the same
     if (my $r = ref $file) {
-        croak 'Attempt to pass non-scalar ref to read_list' unless $r eq 'SCALAR';
+        croak 'Attempt to pass non-scalar ref to read_list'
+          unless $r eq 'SCALAR';
     } else {
         # FIXME: clear the manifest if -s $file
         return unless -s $file;
@@ -251,7 +222,6 @@ sub write_list {
     my ($header, $fields, undef) = $self->_type_to_fields;
     my $visitor;
 
-
     open(my $fd, '>', $file);
     print $fd "$header\n";
 
@@ -262,7 +232,7 @@ sub write_list {
         print $fd join(';', @values{@$fields}) . "\n";
     };
 
-    $self->visit_all ($visitor);
+    $self->visit_all($visitor);
 
     close($fd);
     $self->_mark_dirty(0);
@@ -292,7 +262,7 @@ sub visit_all {
     my (undef, undef, $qf) = $self->_type_to_fields;
 
     if (@keys) {
-        $root = $self->_do_get ($self->{'state'}, @keys);
+        $root = $self->_do_get($self->{'state'}, @keys);
         return unless $root;
         if (scalar @$qf == scalar @keys) {
             # If we are given an exact match, just visit that and
@@ -304,7 +274,7 @@ sub visit_all {
         $root = $self->{'state'};
     }
 
-    $self->_recurse_visit ($root, $visitor, scalar @$qf - 1, @keys);
+    $self->_recurse_visit($root, $visitor, scalar @$qf - 1, @keys);
     return;
 }
 
@@ -332,8 +302,8 @@ except for source packages
 
 sub get {
     my ($self, @keys) = @_;
-    @keys = $self->_make_keys ($keys[0]) if scalar @keys == 1;
-    return $self->_do_get ($self->{'state'}, @keys);
+    @keys = $self->_make_keys($keys[0]) if scalar @keys == 1;
+    return $self->_do_get($self->{'state'}, @keys);
 }
 
 sub _make_keys {
@@ -355,7 +325,7 @@ to ENTRY will not affect the data in the manifest.
 sub set {
     my ($self, $entry) = @_;
     croak 'Cannot alter a GROUP manifest directly'
-        if $self->type eq 'GROUP';
+      if $self->type eq 'GROUP';
     my %pdata;
     my (undef, $fields, $qf) = $self->_type_to_fields;
 
@@ -367,9 +337,9 @@ sub set {
         $val =~ tr/;\n/_ /;
         $pdata{$field} = $val;
     }
-    $self->_make_alias_fields (\%pdata);
+    $self->_make_alias_fields(\%pdata);
 
-    $self->_do_set ($self->{'state'}, $qf, \%pdata);
+    $self->_do_set($self->{'state'}, $qf, \%pdata);
     $self->_mark_dirty(1);
     return 1;
 }
@@ -387,7 +357,7 @@ By default all entries are persistent.
 
 sub set_transient_marker {
     my ($self, $marker, @keys) = @_;
-    my $entry = $self->get (@keys);
+    my $entry = $self->get(@keys);
     return unless $entry;
     $self->{'_transient'} = 1 if $marker;
     delete $self->{'_transient'} unless $marker;
@@ -425,13 +395,13 @@ See L</get (KEYS...)> for the key names.
 sub delete {
     my ($self, @keys) = @_;
     croak 'Cannot alter a GROUP manifest directly'
-        if $self->type eq 'GROUP';
-    return $self->_do_delete (@keys);
+      if $self->type eq 'GROUP';
+    return $self->_do_delete(@keys);
 }
 
 sub _do_delete {
     my ($self, @keys) = @_;
-    @keys = $self->_make_keys ($keys[0]) if scalar @keys == 1;
+    @keys = $self->_make_keys($keys[0]) if scalar @keys == 1;
     # last key, that is what we will remove :)
     my $lk = pop @keys;
     my $hash;
@@ -439,7 +409,7 @@ sub _do_delete {
     return 0 unless defined $lk;
 
     if (@keys) {
-        $hash = $self->_do_get ($self->{'state'}, @keys);
+        $hash = $self->_do_get($self->{'state'}, @keys);
     } else {
         $hash = $self->{'state'};
     }
@@ -448,9 +418,11 @@ sub _do_delete {
         my $entry = delete $hash->{$lk};
         $self->_mark_dirty(1);
         if (my $grouping = $self->{'grouping'}) {
-            my @keys = ($entry->{'source'}, $entry->{'source-version'},
-                        $entry->{'identifier'});
-            $grouping->_do_delete  (@keys);
+            my @keys = (
+                $entry->{'source'},
+                $entry->{'source-version'},
+                $entry->{'identifier'});
+            $grouping->_do_delete(@keys);
         }
         return 1;
     }
@@ -485,28 +457,28 @@ sub diff {
 
     $visitor = sub {
         my ($ov, @keys) = @_;
-        my $sv = $copy->get (@keys);
+        my $sv = $copy->get(@keys);
         unless (defined $sv) {
             push @added, \@keys;
             return;
         }
-        if ($sv->{'version'} ne $ov->{'version'} ||
-            $sv->{'timestamp'} ne $ov->{'timestamp'}) {
+        if (  $sv->{'version'} ne $ov->{'version'}
+            ||$sv->{'timestamp'} ne $ov->{'timestamp'}) {
             push @changed, \@keys;
         }
         # Remove the entry from $copy
-        $copy->delete (@keys);
+        $copy->delete(@keys);
     }; # End of visitor sub
 
     # Find all the added and changed entries - since $visitor removes
     # all entries it finds from $copy, $copy will contain the elements
     # that are only in $self after this call.
-    $other->visit_all ($visitor);
+    $other->visit_all($visitor);
     # Thus we can just add all of these entries to @removed.  :)
-    $copy->visit_all (sub { my (undef, @keys) = @_; push @removed, \@keys; });
+    $copy->visit_all(sub { my (undef, @keys) = @_; push @removed, \@keys; });
 
-    return Lintian::Lab::ManifestDiff->_new ($self->{'type'}, $other, $self,
-                                             \@added, \@removed, \@changed);
+    return Lintian::Lab::ManifestDiff->_new($self->{'type'}, $other, $self,
+        \@added, \@removed, \@changed);
 }
 
 ### Internal methods ###
@@ -541,7 +513,7 @@ sub _do_read_file {
         croak "Unknown/unsupported file format ($hd)";
     }
 
-    while ( my $line = <$fd> ) {
+    while (my $line = <$fd>) {
         chop($line);
         next if $line =~ m/^\s*+$/o;
         my (@values) = split m/\;/o, $line, $count;
@@ -551,13 +523,13 @@ sub _do_read_file {
             # "ignore" errors from close
             no autodie qw(close);
             close($fd);
-            croak "Invalid line in $file at line $. ($_)"
+            croak "Invalid line in $file at line $. ($_)";
         }
-        for ( my $i = 0 ; $i < $count ; $i++) {
+        for (my $i = 0 ; $i < $count ; $i++) {
             $entry->{$fields->[$i]} = $values[$i]//'';
         }
-        $self->_make_alias_fields ($entry);
-        $self->_do_set ($root, $qf, $entry);
+        $self->_make_alias_fields($entry);
+        $self->_do_set($root, $qf, $entry);
     }
     close($fd);
     return $root;
@@ -569,11 +541,11 @@ sub _make_alias_fields {
     # define source-version as alias of version for
     # source packages.
     $entry->{'source-version'} = $entry->{'version'}
-        unless defined $entry->{'source-version'};
+      unless defined $entry->{'source-version'};
     # For compat with Lintian::Processable->new_from_metadata
     $entry->{'pkg_path'} = $entry->{'file'};
     $entry->{'package'} = $entry->{'source'}
-        unless defined $entry->{'package'};
+      unless defined $entry->{'package'};
 
     $entry->{'pkg_type'} = $self->type;
 
@@ -611,7 +583,7 @@ sub _do_set {
     # - The basic structure is "$root->{key1}->...->{keyN-1}->{keyN} = $entry"
     # - This loop is supposed to find the "n-1"th hash and save that in $cur.
     # - After the loop, a simple "$cur->{$keyN} = $entry" inserts the element.
-    for ( my $i = 0 ; $i < $qfl ; $i++) {
+    for (my $i = 0 ; $i < $qfl ; $i++) {
         # Current key
         my $curk = $entry->{$qf->[$i]};
         my $element = $cur->{$curk};
@@ -624,11 +596,10 @@ sub _do_set {
     $k = $entry->{$qf->[$qfl]};
     $cur->{$k} = $entry;
     if (my $grouping = $self->{'grouping'}) {
-        $grouping->_do_set ($grouping->{'state'}, \@GROUP_QUERY, $entry);
+        $grouping->_do_set($grouping->{'state'}, \@GROUP_QUERY, $entry);
     }
     return 1;
 }
-
 
 # Returns ($header, $fields, $qf) - their value is based on $self->type.
 # - $header is XXXLIST_FORMAT
@@ -671,7 +642,7 @@ sub _recurse_visit {
     foreach my $k (sort keys %$hash) {
         my $v = $hash->{$k};
         # Should we recurse into $v?
-        $self->_recurse_visit ($v, $visitor, $vdep, @keys, $k) unless $visit;
+        $self->_recurse_visit($v, $visitor, $vdep, @keys, $k) unless $visit;
         # ... or is it the value to be visited?
         $visitor->($v, @keys, $k) if $visit;
     }

@@ -7,10 +7,10 @@ use autodie;
 my (%added, %removed);
 my ($commit_range) = @ARGV;
 die "Usage: $0 tag..HEAD\n"
-    unless $commit_range;
+  unless $commit_range;
 
 open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'checks/*.desc');
-while ( my $line = <$fd>) {
+while (my $line = <$fd>) {
     chomp($line);
     next unless $line =~ m{ \A ([\+-]) Tag: \s*+ ([^ ]++) \s*+ \Z}xsm;
     my ($change, $tag) = ($1, $2);

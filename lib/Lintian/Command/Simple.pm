@@ -71,7 +71,7 @@ sub rundir {
         $res = -1;
     } elsif ($pid > 0) {
         # parent
-        waitpid ($pid, 0);
+        waitpid($pid, 0);
         $res = $? >> 8;
     } else {
         # child
@@ -230,7 +230,7 @@ sub kill_all {
     }
 
     foreach my $pid (@jobs) {
-        if (waitpid ($pid, 0) == $pid) {
+        if (waitpid($pid, 0) == $pid) {
             $count++;
             delete $jobs->{$pid};
         }

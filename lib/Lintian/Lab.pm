@@ -31,17 +31,15 @@ use Cwd();
 use File::Temp qw(tempdir); # For temporary labs
 use Scalar::Util qw(blessed);
 
-
 use constant {
-# Lab format Version Number increased whenever incompatible changes
-# are done to the lab so that all packages are re-unpacked
+    # Lab format Version Number increased whenever incompatible changes
+    # are done to the lab so that all packages are re-unpacked
     LAB_FORMAT      => 11,
-# Constants to avoid semantic errors due to typos in the $lab->{'mode'}
-# field values.
+    # Constants to avoid semantic errors due to typos in the $lab->{'mode'}
+    # field values.
     LAB_MODE_STATIC => 'static',
     LAB_MODE_TEMP   => 'temporary',
 };
-
 
 # A private table of suported types.
 my %SUPPORTED_TYPES = (
@@ -51,9 +49,7 @@ my %SUPPORTED_TYPES = (
     'udeb'    => 1,
 );
 
-my %SUPPORTED_VIEWS = (
-    'GROUP' => 1,
-);
+my %SUPPORTED_VIEWS = ('GROUP' => 1,);
 
 use Lintian::Collect;
 use Lintian::Lab::Entry;
@@ -114,7 +110,7 @@ sub new {
     my $dok = 1;
     if (defined $dir) {
         $mode = LAB_MODE_STATIC;
-        $absdir = Cwd::abs_path ($dir);
+        $absdir = Cwd::abs_path($dir);
         if (!$absdir) {
             if ($dir =~ m,^/,o) {
                 $absdir = $dir;
@@ -126,9 +122,7 @@ sub new {
     } else {
         $absdir = ''; #Ensure it is defined.
     }
-    my $state = {
-        'GROUP' => Lintian::Lab::Manifest->new ('GROUP'),
-    };
+    my $state = {'GROUP' => Lintian::Lab::Manifest->new('GROUP'),};
     my $self = {
         # Must be absolute (frontend/lintian depends on it)
         #  - also $self->dir promises this
@@ -169,7 +163,7 @@ closed then the lab may or may not exist (see L</exists>).
 
 =cut
 
-Lintian::Lab->mk_ro_accessors (qw(dir is_open));
+Lintian::Lab->mk_ro_accessors(qw(dir is_open));
 
 =item exists
 
@@ -181,16 +175,17 @@ the lab is closed (see L</is_open>).
 =cut
 
 sub exists {
-    my ( $self ) = @_;
+    my ($self) = @_;
     my $dir = $self->dir;
     return unless $dir;
     # New style lab?
     return 1 if -d "$dir/info" && -d "$dir/pool";
     # 10-style lab?
-    return -d "$dir/binary"
-        && -d "$dir/udeb"
-        && -d "$dir/source"
-        && -d "$dir/info";
+    return
+         -d "$dir/binary"
+      && -d "$dir/udeb"
+      && -d "$dir/source"
+      && -d "$dir/info";
 }
 
 =item get_package (NAME, TYPE[, EXTRA]), get_package (PROC)
@@ -253,8 +248,8 @@ sub get_package {
     # the same entry twice with different instances.  Problem being
     # circular references (and weaken may be un-available)
 
-    if (blessed $pkg && $pkg->isa ('Lintian::Processable')) {
-        if ($pkg->isa ('Lintian::Lab::Entry') and $pkg->from_lab ($self)) {
+    if (blessed $pkg && $pkg->isa('Lintian::Processable')) {
+        if ($pkg->isa('Lintian::Lab::Entry') and $pkg->from_lab($self)) {
             # Shouldn't happen too often, but ...
             return $pkg;
         }
@@ -265,40 +260,45 @@ sub get_package {
         $proc = $pkg;
     } else {
         $pkg_name = $pkg;
-        croak 'Package name and type must be defined' unless $pkg_name && $pkg_type;
+        croak 'Package name and type must be defined'
+          unless $pkg_name && $pkg_type;
     }
 
     # get_package only works with "real" types (and not views).
     croak "Not a supported type ($pkg_type)"
-        unless exists $SUPPORTED_TYPES{$pkg_type};
+      unless exists $SUPPORTED_TYPES{$pkg_type};
 
-    $index = $self->_get_lab_index ($pkg_type);
+    $index = $self->_get_lab_index($pkg_type);
 
     if ($proc) {
         my $pkg_src = $proc->pkg_src;
-        my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-        my $entry = Lintian::Lab::Entry->_new_from_proc ($proc, $self, $dir);
+        my $dir
+          = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
+            $pkg_arch);
+        my $entry = Lintian::Lab::Entry->_new_from_proc($proc, $self, $dir);
         push @entries, $entry;
-        if (not $index->get ($proc)) {
+        if (not $index->get($proc)) {
             # Add the entry to the index
             # Ignore errors - happens if $proc does not have the extra fields
             # we need.
-            eval {
-                $self->_new_entry ($entry, $proc);
-            };
+            eval {$self->_new_entry($entry, $proc);};
         }
-    } elsif (defined $pkg_version && (defined $pkg_arch || $pkg_type eq 'source')) {
+    } elsif (defined $pkg_version
+        && (defined $pkg_arch || $pkg_type eq 'source')) {
         # We know everything - just do a regular look up
         my $dir;
         my @keys = ($pkg_name, $pkg_version);
         my $entry;
         my $pkg_src;
         push @keys, $pkg_arch if $pkg_type ne 'source';
-        $entry = $index->get (@keys);
+        $entry = $index->get(@keys);
         return unless $entry;
         $pkg_src = $entry->{'source'};
-        $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-        push @entries, Lintian::Lab::Entry->new_from_metadata ($pkg_type, $entry, $self, $dir);
+        $dir = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
+            $pkg_arch);
+        push @entries,
+          Lintian::Lab::Entry->new_from_metadata($pkg_type, $entry, $self,
+            $dir);
     } else {
         # clear $pkg_arch if it is a source package - it simplifies
         # the search code below
@@ -310,12 +310,16 @@ sub get_package {
             # We do not have to check version - if we have a specific
             # version, only entries with that version will be visited.
             return if defined $pkg_arch && $a ne $pkg_arch;
-            $dir = $self->_pool_path ($entry->{'source'}, $pkg_type, $pkg_name, $v, $a);
-            push @entries,  Lintian::Lab::Entry->new_from_metadata ($pkg_type, $entry, $self, $dir);
+            $dir
+              = $self->_pool_path($entry->{'source'}, $pkg_type, $pkg_name, $v,
+                $a);
+            push @entries,
+              Lintian::Lab::Entry->new_from_metadata($pkg_type, $entry, $self,
+                $dir);
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
-        $index->visit_all ($searcher, @sk);
+        $index->visit_all($searcher, @sk);
     }
 
     return wantarray ? @entries : $entries[0];
@@ -362,9 +366,9 @@ sub lab_query {
 
     if ($query =~ s/^([a-z]++)://i) {
         $type = $1;
-        unless (exists $SUPPORTED_TYPES{$type} or
-                exists $SUPPORTED_VIEWS{$type} or
-                $type eq 'ALL') {
+        unless (exists $SUPPORTED_TYPES{$type}
+            or exists $SUPPORTED_VIEWS{$type}
+            or$type eq 'ALL') {
             croak "Unknown/unsupported type ($type) in lab query";
         }
     }
@@ -376,11 +380,13 @@ sub lab_query {
 
     # arch is not supposed to have "/" => bad query.
     croak "$query_orig is not a valid Lab query"
-        if defined $arch and $arch =~ m,/, ;
+      if defined $arch and $arch =~ m,/,;
     # if $name is empty/undef, ".", ".." or contains "_" or ":" it is
     # a bad query as well.
     croak "$query_orig is not a valid Lab query"
-        if not defined $name or $name =~ m|^\.?\.?$| or $name =~ m,[_:],;
+      if not defined $name
+      or $name =~ m|^\.?\.?$|
+      or $name =~ m,[_:],;
 
     # At this point we "probably" have a reasonable query.
 
@@ -392,13 +398,13 @@ sub lab_query {
         foreach my $t (keys %SUPPORTED_TYPES) {
             if (not exists $self->{'state'}->{$t}) {
                 # force load
-                $self->_get_lab_index ($t);
+                $self->_get_lab_index($t);
             }
         }
     }
 
     foreach my $t (@types) {
-        my $index = $self->_get_lab_index ($t);
+        my $index = $self->_get_lab_index($t);
         my @keys = ($name);
         my $searcher = sub {
             my ($entry) = @_;
@@ -408,15 +414,16 @@ sub lab_query {
             if (defined $arch and $entry_type ne 'source') {
                 return unless $entry->{'architecture'} eq $arch;
             }
-            $dir = $self->_pool_path ($entry->{'source'}, $entry_type,
-                                      $entry->{'package'}, $entry->{'version'},
-                                      $entry->{'architecture'});
-            push @result, Lintian::Lab::Entry->new_from_metadata (
-                    $entry_type, $entry, $self, $dir
-                );
+            $dir
+              = $self->_pool_path($entry->{'source'}, $entry_type,
+                $entry->{'package'}, $entry->{'version'},
+                $entry->{'architecture'});
+            push @result,
+              Lintian::Lab::Entry->new_from_metadata($entry_type, $entry,
+                $self, $dir);
         };
         push @keys, $version if defined $version;
-        $index->visit_all ($searcher, @keys)
+        $index->visit_all($searcher, @keys);
     }
     return @result;
 }
@@ -438,28 +445,31 @@ sub visit_packages {
     push @types, $type if $type;
     @types = keys %SUPPORTED_TYPES unless $type;
     foreach my $pkg_type (@types) {
-        my $index = $self->_get_lab_index ($pkg_type);
+        my $index = $self->_get_lab_index($pkg_type);
         my $intv = sub {
             my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
             my $pkg_src = $me->{'source'}//$pkg_name;
-            my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-            my $lentry = Lintian::Lab::Entry->new_from_metadata ($pkg_type, $me, $self, $dir);
+            my $dir
+              = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
+                $pkg_arch);
+            my $lentry
+              = Lintian::Lab::Entry->new_from_metadata($pkg_type, $me, $self,
+                $dir);
             $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
         };
-        $index->visit_all ($intv);
+        $index->visit_all($intv);
     }
     return;
 }
-
 
 # Non-API method used by reporting to look up the manifest data via the Lab
 # rather than bypassing it.
 sub _get_lab_manifest_data {
     my ($self, $pkg_name, $pkg_type, @keys) = @_;
-    my $index = $self->_get_lab_index ($pkg_type);
+    my $index = $self->_get_lab_index($pkg_type);
     if (scalar @keys >= 2 || (scalar @keys >= 1 && $pkg_type eq 'source')) {
         # All we need to know
-        return $index->get ($pkg_name, @keys);
+        return $index->get($pkg_name, @keys);
     } else {
         # Time to guess (or hope)
         my @result = ();
@@ -467,7 +477,7 @@ sub _get_lab_manifest_data {
             my ($v) = @_;
             push @result, $v;
         }; # end searcher
-        $index->visit_all ($searcher, $pkg_name, @keys);
+        $index->visit_all($searcher, $pkg_name, @keys);
         return $result[0] if @result;
     }
     # Nothing so far, then it does not exist
@@ -481,16 +491,18 @@ sub _get_lab_index {
     my ($self, $pkg_type) = @_;
     croak 'Undefined (or empty) package type' unless $pkg_type;
     croak "Unknown package type $pkg_type"
-        unless $SUPPORTED_TYPES{$pkg_type} or $SUPPORTED_VIEWS{$pkg_type};
+      unless $SUPPORTED_TYPES{$pkg_type}
+      or $SUPPORTED_VIEWS{$pkg_type};
 
     # Fetch (or load) the index of that type
-    return $self->{'state'}->{$pkg_type} if exists $self->{'state'}->{$pkg_type};
+    return $self->{'state'}->{$pkg_type}
+      if exists $self->{'state'}->{$pkg_type};
 
     my $dir = $self->dir;
-    my $manifest = Lintian::Lab::Manifest->new ($pkg_type,
-                                                $self->{'state'}->{'GROUP'});
+    my $manifest
+      = Lintian::Lab::Manifest->new($pkg_type,$self->{'state'}->{'GROUP'});
     my $lif = "$dir/info/${pkg_type}-packages";
-    $manifest->read_list ($lif);
+    $manifest->read_list($lif);
     $self->{'state'}->{$pkg_type} = $manifest;
     return $manifest;
 }
@@ -536,12 +548,12 @@ sub generate_diffs {
     my $labdir = $self->dir;
     my @diffs;
     croak "$labdir is not a valid lab (run lintian --setup-lab first?).\n"
-        unless $self->is_open;
+      unless $self->is_open;
     foreach my $list (@lists) {
         my $type = $list->type;
         my $lab_list;
-        $lab_list = $self->_get_lab_index ($type);
-        push @diffs, $lab_list->diff ($list);
+        $lab_list = $self->_get_lab_index($type);
+        push @diffs, $lab_list->diff($list);
     }
     return @diffs;
 }
@@ -568,22 +580,26 @@ sub repair {
     my $updates = 0;
     croak 'Lab is not open' unless $self->is_open;
     foreach my $pkg_type (keys %SUPPORTED_TYPES) {
-        my $index = $self->_get_lab_index ($pkg_type);
+        my $index = $self->_get_lab_index($pkg_type);
         my $visitor = sub {
             my ($metadata, @keys) = @_;
             my ($pkg_name, $pkg_version, $pkg_arch) = @keys;
             my $pkg_src = $metadata->{'source'}//$pkg_name;
             my $pkg_src_version = $metadata->{'source-version'};
-            my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
+            my $dir
+              = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
+                $pkg_arch);
             my $entry;
-            unless ( -d $dir) {
+            unless (-d $dir) {
                 # The entry is clearly not here, remove it from the metadata
-                $index->delete (@keys);
+                $index->delete(@keys);
                 $updates++;
                 return;
             }
             eval {
-                $entry = Lintian::Lab::Entry->new_from_metadata ($pkg_type, $metadata, $self, $dir);
+                $entry
+                  = Lintian::Lab::Entry->new_from_metadata($pkg_type,
+                    $metadata, $self, $dir);
             };
             unless ($entry && $entry->exists) {
                 # We either cannot load the entry or it does not
@@ -597,12 +613,13 @@ sub repair {
                 } else {
                     # The entry is not here to clean up, lets purge it
                     # the good old fashioned way.
-                    delete_dir ($dir);
+                    delete_dir($dir);
                 }
-                $index->delete (@keys);
+                $index->delete(@keys);
                 $updates++;
             } else {
-                unless (-f "$dir/.lintian-status" or $entry->update_status_file) {
+                unless (-f "$dir/.lintian-status"
+                    or $entry->update_status_file) {
                     # if we cannot write the status file, scrap the entry.
                     $entry->remove;
                     $updates++;
@@ -610,7 +627,7 @@ sub repair {
             }
         };
 
-        $index->visit_all ($visitor);
+        $index->visit_all($visitor);
     }
 
     # FIXME: scan the pool for entries not in the metadata.
@@ -671,9 +688,9 @@ sub create {
     if (not $dir or $self->is_temp) {
         if ($self->is_temp) {
             my $keep = $opts->{'keep-lab'}//0;
-            my %topts = ( 'CLEANUP' => !$keep, 'TMPDIR' => 1 );
-            my $t = tempdir ('temp-lintian-lab-XXXXXXXXXX', %topts);
-            $dir = Cwd::abs_path ($t);
+            my %topts = ('CLEANUP' => !$keep, 'TMPDIR' => 1);
+            my $t = tempdir('temp-lintian-lab-XXXXXXXXXX', %topts);
+            $dir = Cwd::abs_path($t);
             croak "Could not resolve $t: $!" unless $dir;
             $self->{'dir'} = $dir;
             $self->{'keep-lab'} = $keep;
@@ -692,7 +709,7 @@ sub create {
         # This happens if $dir has been created in this call.
         # Until now we have been unable to fully resolve the path,
         # so we try now.
-        my $absdir = Cwd::abs_path ($dir);
+        my $absdir = Cwd::abs_path($dir);
         croak "Cannot resolve $dir: $!" unless $absdir;
         delete $self->{'_correct_dir'};
         $dir = $absdir;
@@ -725,7 +742,8 @@ sub create {
     # $lab->remove
     my $ok = 0;
     eval {
-        open my $lfd, '>', "$dir/info/lab-info" or croak "opening $dir/info/lab-info: $!";
+        open my $lfd, '>', "$dir/info/lab-info"
+          or croak "opening $dir/info/lab-info: $!";
 
         print $lfd 'Lab-Format: ' . LAB_FORMAT . "\n";
         print $lfd "Layout: pool\n";
@@ -763,7 +781,7 @@ sub open {
     my ($self) = @_;
     my $dir;
     my $msg = 'Open Lab failed';
-    croak ('Lab is already open') if $self->is_open;
+    croak('Lab is already open') if $self->is_open;
     if ($self->is_temp) {
         $self->create unless $self->exists;
         $dir = $self->dir;
@@ -775,8 +793,8 @@ sub open {
         }
     }
 
-    unless ( -e "$dir/info/lab-info") {
-        if ( $self->exists ) {
+    unless (-e "$dir/info/lab-info") {
+        if ($self->exists) {
             croak "$msg: The Lab format is not supported";
         }
         croak "$msg: Lab is corrupt - $dir/info/lab-info does not exist";
@@ -784,7 +802,7 @@ sub open {
 
     # Check the lab-format - this ought to be redundant for temp labs, but
     # it's simpler to do it for them anyway.
-    my $header = get_dsc_info ("$dir/info/lab-info");
+    my $header = get_dsc_info("$dir/info/lab-info");
     my $format = $header->{'lab-format'}//'';
     my $layout = $header->{'layout'}//'pool';
     unless ($format && $format eq LAB_FORMAT) {
@@ -832,10 +850,10 @@ sub close {
 sub _write_manifests {
     my ($self) = @_;
     my $dir = $self->dir;
-    while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
+    while (my ($pkg_type, $plist) = (each %{ $self->{'state'} })) {
         # write_list croaks on error, so no need for "or croak/die"
-        $plist->write_list ("$dir/info/${pkg_type}-packages")
-            if $plist->dirty and exists $SUPPORTED_TYPES{$plist->type};
+        $plist->write_list("$dir/info/${pkg_type}-packages")
+          if $plist->dirty and exists $SUPPORTED_TYPES{$plist->type};
     }
     return;
 }
@@ -883,7 +901,7 @@ sub remove {
 
     unless ($empty) {
         # looks ok.
-        if ( -d "$dir/pool") {
+        if (-d "$dir/pool") {
             # New lab style
             @subdirs = qw/pool info/;
         } else {
@@ -891,7 +909,7 @@ sub remove {
             @subdirs = qw/binary source udeb info/;
             push @subdirs, 'changes' if -d "$dir/changes";
         }
-        unless (delete_dir( map { "$dir/$_" } @subdirs )) {
+        unless (delete_dir(map { "$dir/$_" } @subdirs)) {
             croak "delete_dir (\$contents): $!";
         }
     }
@@ -924,8 +942,8 @@ sub is_temp {
 sub _entry_removed {
     my ($self, $entry) = @_;
     my $pkg_type = $entry->pkg_type;
-    my $pf = $self->_get_lab_index ($pkg_type);
-    $pf->delete ($entry);
+    my $pf = $self->_get_lab_index($pkg_type);
+    $pf->delete($entry);
     return;
 }
 
@@ -933,9 +951,9 @@ sub _entry_removed {
 sub _entry_created {
     my ($self, $entry) = @_;
     my $pkg_type = $entry->pkg_type;
-    my $pf = $self->_get_lab_index ($pkg_type);
-    $self->_new_entry ($entry) unless $pf->get ($entry);
-    $pf->set_transient_marker (0, $entry);
+    my $pf = $self->_get_lab_index($pkg_type);
+    $self->_new_entry($entry) unless $pf->get($entry);
+    $pf->set_transient_marker(0, $entry);
     return;
 }
 
@@ -946,7 +964,7 @@ sub _new_entry {
     my $pkg_version = $entry->pkg_version;
     my $pkg_path    = $entry->pkg_path;
     my $ts = 0;
-    my $pf = $self->_get_lab_index ($pkg_type);
+    my $pf = $self->_get_lab_index($pkg_type);
     my %data = (
         'file'    => $pkg_path,
         'version' => $pkg_version,
@@ -954,8 +972,8 @@ sub _new_entry {
     my $field = sub {
         my ($f) = @_;
         my $v;
-        return $proc->get_field ($f) if $proc;
-        return $entry->info->field ($f, '');
+        return $proc->get_field($f) if $proc;
+        return $entry->info->field($f, '');
     };
 
     if (my @stat = stat $pkg_path) {
@@ -972,11 +990,11 @@ sub _new_entry {
 
         if ($up) {
             $up =~ s/\n/ /og;
-            $up = join (', ', split (m/\s*,\s*/o, $up));
+            $up = join(', ', split(m/\s*,\s*/o, $up));
         }
         if ($bin) {
             $bin   =~ s/\n\s*//og;
-            $bin = join (', ', split (m/\s*,\s*/o, $bin));
+            $bin = join(', ', split(m/\s*,\s*/o, $bin));
         }
 
         $maint =~ s/\n\s*//og if $maint;
@@ -1003,8 +1021,8 @@ sub _new_entry {
         croak "Unknown package type: $pkg_type";
     }
 
-    $pf->set (\%data);
-    $pf->set_transient_marker (1, $entry);
+    $pf->set(\%data);
+    $pf->set_transient_marker(1, $entry);
     return;
 }
 

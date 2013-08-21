@@ -173,9 +173,10 @@ NB: Returns the empty string for the "root" dir.
 
 =cut
 
-Lintian::Path->mk_ro_accessors (qw(name owner group link type uid gid
-  size date operm dirname basename
-));
+Lintian::Path->mk_ro_accessors(
+    qw(name owner group link type uid gid
+      size date operm dirname basename
+      ));
 
 =item children
 
@@ -232,11 +233,11 @@ symlinks, even if the symlink points to a file.
 
 =cut
 
-sub is_symlink { return $_[0]->_is_type ('l'); }
-sub is_hardlink { return $_[0]->_is_type ('h'); }
-sub is_dir { return $_[0]->_is_type ('d'); }
-sub is_file { return $_[0]->_is_type ('-') || $_[0]->_is_type ('h'); }
-sub is_regular_file  { return $_[0]->_is_type ('-'); }
+sub is_symlink { return $_[0]->_is_type('l'); }
+sub is_hardlink { return $_[0]->_is_type('h'); }
+sub is_dir { return $_[0]->_is_type('d'); }
+sub is_file { return $_[0]->_is_type('-') || $_[0]->_is_type('h'); }
+sub is_regular_file  { return $_[0]->_is_type('-'); }
 
 =item link_normalized
 

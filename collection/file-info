@@ -34,42 +34,47 @@ use Lintian::Util qw(locate_helper_tool);
 my $helper = locate_helper_tool('coll/file-info-helper');
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
+    my ($pkg, $type, $dir) = @_;
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-my $outfile = "$dir/file-info.gz";
+    my $outfile = "$dir/file-info.gz";
 
-if ( -e "$dir/file-info" ) {
-    unlink("$dir/file-info");
+    if (-e "$dir/file-info") {
+        unlink("$dir/file-info");
+    }
+
+    if (-e $outfile) {
+        unlink($outfile);
+    }
+
+    chdir("$dir/unpacked");
+
+    # We ignore failures from file because sometimes file returns a
+    # non-zero exit status when it can't parse a file.  So far, the
+    # resulting output still appears to be usable (although will
+    # contain "ERROR" strings, which Lintian doesn't care about), and
+    # the only problem was the exit status.
+    my %opts = (
+        pipe_in => FileHandle->new,
+        out => $outfile,
+        fail => 'never'
+    );
+    spawn(\%opts,
+        ['xargs', '-0r', 'file', '-e', 'ascii', '-NF', '', '--print0', '--'],
+        '|', [$helper], '|', ['gzip', '--best', '-c']);
+    $opts{pipe_in}->blocking(1);
+
+    foreach my $file ($info->sorted_index) {
+        printf {$opts{pipe_in}} "%s\0", $file;
+    }
+
+    close($opts{pipe_in});
+    reap(\%opts);
+
+    return;
 }
 
-if ( -e $outfile ) {
-    unlink($outfile);
-}
-
-chdir("$dir/unpacked");
-
-# We ignore failures from file because sometimes file returns a non-zero exit
-# status when it can't parse a file.  So far, the resulting output still
-# appears to be usable (although will contain "ERROR" strings, which Lintian
-# doesn't care about), and the only problem was the exit status.
-my %opts = ( pipe_in => FileHandle->new,
-             out => $outfile,
-             fail => 'never' );
-spawn(\%opts, ['xargs', '-0r', 'file', '-e', 'ascii', '-NF', '', '--print0', '--'], '|', [$helper], '|', ['gzip', '--best', '-c']);
-$opts{pipe_in}->blocking(1);
-
-foreach my $file ($info->sorted_index) {
-    printf {$opts{pipe_in}} "%s\0", $file;
-}
-
-close($opts{pipe_in});
-reap(\%opts);
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)file-info$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)file-info$,;
 
 1;
 

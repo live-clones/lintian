@@ -72,14 +72,14 @@ Parses the $file as a check desc file.
 
 sub new {
     my ($class, $basedir, $checkname) = @_;
-    my ($header, @tags) = read_dpkg_control ("$basedir/${checkname}.desc");
+    my ($header, @tags) = read_dpkg_control("$basedir/${checkname}.desc");
     my $self;
     my $dir;
     unless ($header->{'check-script'}) {
         croak "Missing Check-Script field in $basedir/${checkname}.desc";
     }
-    $dir = realpath ($basedir)
-        or croak "Cannot resolve $basedir: $!";
+    $dir = realpath($basedir)
+      or croak "Cannot resolve $basedir: $!";
 
     $self = {
         'name' => $header->{'check-script'},
@@ -106,7 +106,7 @@ sub new {
     for my $pg (@tags) {
         my $ti;
         croak "Missing Tag field for tag in $basedir/${checkname}.desc"
-            unless $pg->{'tag'};
+          unless $pg->{'tag'};
         $ti = Lintian::Tag::Info->new($pg, $self->{'name'}, $self->{'type'});
         $self->{'tag-table'}->{$ti->tag} = $ti;
     }
@@ -140,7 +140,7 @@ Returns the (expected) path to the script implementing this check.
 
 =cut
 
-Lintian::CheckScript->mk_ro_accessors (qw(name type abbrev script_path));
+Lintian::CheckScript->mk_ro_accessors(qw(name type abbrev script_path));
 
 =item needs_info
 
@@ -209,15 +209,15 @@ sub load_check {
     my $cs_pkg = $self->{'script_pkg'};
     my $run;
 
-    if (! -f $cs_path) {
+    if (!-f $cs_path) {
         # Try the "old" extensionless path (i.e. strip ".pm")
         # - This can go away in 2.5.15 or later
         my $alt_path = substr($cs_path, 0, -3);
-        if ( -f $alt_path ) {
+        if (-f $alt_path) {
             my $name = $self->name;
             warnings::warnif('deprecated',
-                             "[deprecated] Check module for $name missing \".pm\" extension"
-                             . " (should be: $cs_path)");
+                "[deprecated] Check module for $name missing \".pm\" extension"
+                  . " (should be: $cs_path)");
             $self->{'script_path'} = $cs_path = $alt_path;
         }
     }
@@ -228,10 +228,10 @@ sub load_check {
         # minimal "no strict refs" scope.
         no strict 'refs';
         $run = \&{'Lintian::' . $cs_pkg . '::run'}
-            if defined &{'Lintian::' . $cs_pkg . '::run'};
+          if defined &{'Lintian::' . $cs_pkg . '::run'};
     }
     die "$cs_path does not have a run-sub.\n"
-        unless defined $run;
+      unless defined $run;
     $self->{'script_run'} = $run;
     return;
 }
@@ -259,11 +259,7 @@ sub run_check {
     my ($self, $proc, $group) = @_;
     # Special-case: has no perl module
     return if $self->name eq 'lintian';
-    my @args = ($proc->pkg_name,
-                $proc->pkg_type,
-                $proc->info,
-                $proc,
-                $group);
+    my @args = ($proc->pkg_name,$proc->pkg_type,$proc->info,$proc,$group);
     my $cs_run = $self->{'script_run'};
     unless (defined $cs_run) {
         $self->load_check;

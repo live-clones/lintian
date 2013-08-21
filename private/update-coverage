@@ -38,13 +38,10 @@ unless (-f 't/runtests') {
 }
 
 # Gather a list of all tags.
-my %tags;
-my %checks;
-my $total;
-my $check_total;
-my ($tc, $ltc);
-my ($ctc, $cltc);
-for my $desc (glob ('checks/*.desc')) {
+my (%tags, %checks, $total, $check_total);
+my ($tc, $ltc, $ctc, $cltc);
+
+for my $desc (glob('checks/*.desc')) {
     for my $data (read_dpkg_control($desc)) {
         $desc =~ s,.*/,,;
         $desc =~ s/\.desc$//;
@@ -57,10 +54,14 @@ for my $desc (glob ('checks/*.desc')) {
 $total = scalar keys %tags;
 $check_total = scalar keys %checks;
 
-
 # Parse all test configuration files from the new test suite looking for
 # Test-For configuration options and remove those from the %tags hash.
-for my $desc (glob ('t/tests/*/desc t/changes/*.desc t/debs/*/desc t/source/*/desc')) {
+for my $desc (
+    glob(
+        join(q{ },
+            't/tests/*/desc', 't/changes/*.desc',
+            't/debs/*/desc', 't/source/*/desc'))
+  ) {
     my ($data) = read_dpkg_control($desc);
     if (exists $data->{'test-for'}) {
         for my $tag (split(' ', $data->{'test-for'})) {
@@ -79,7 +80,7 @@ $ctc = $check_total - scalar keys %checks;
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
 my (%legacy, %legacy_test);
-for my $tagfile (glob ('testset/tags.*')) {
+for my $tagfile (glob('testset/tags.*')) {
     next if $tagfile =~ /\.sed$/;
     my $case = $tagfile;
     $case =~ s/.*tags\.//;
@@ -94,7 +95,7 @@ for my $tagfile (glob ('testset/tags.*')) {
                 delete $checks{$check} unless --$checks{$check};
                 $legacy{$tag} = $tags{$tag};
                 delete $tags{$tag};
-                push (@{ $legacy_test{$case} }, $tag);
+                push(@{ $legacy_test{$case} }, $tag);
             }
         }
     }
@@ -106,13 +107,21 @@ $cltc = $check_total - scalar keys %checks;
 
 my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : '';
 my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : '';
-my $ctcr = $check_total ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100 : '';
-my $cltcr = $check_total ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100 : '';
+my $ctcr
+  = $check_total
+  ? sprintf ' (%.02f%%)', ($ctc / $check_total) * 100
+  : '';
+my $cltcr
+  = $check_total
+  ? sprintf ' (%.02f%%)', ($cltc / $check_total) * 100
+  : '';
 # Open COVERAGE and print out a date stamp.
 open(my $coverage, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
-print {$coverage} 'Last generated ', strftime ('%Y-%m-%d', gmtime), "\n";
-print {$coverage} "Coverage (Tags): $tc/$total$tcr, w. legacy tests: $ltc/$total$ltcr\n";
-print {$coverage} "Coverage (Checks): $ctc/$check_total$ctcr, w. legacy tests: $cltc/$check_total$cltcr\n\n";
+print {$coverage} 'Last generated ', strftime('%Y-%m-%d', gmtime), "\n";
+print {$coverage} "Coverage (Tags): $tc/$total$tcr, ",
+  "w. legacy tests: $ltc/$total$ltcr\n";
+print {$coverage} "Coverage (Checks): $ctc/$check_total$ctcr, ",
+  "w. legacy tests: $cltc/$check_total$cltcr\n\n";
 
 # Whatever is left in the %tags hash are untested.  Print them out sorted by
 # checks file.
@@ -120,12 +129,14 @@ print {$coverage} "The following tags are not tested by the test suite:\n";
 print_tags(\%tags, $coverage);
 
 # The contents of the %legacy hash are only tested by the legacy test suite.
-print {$coverage} "\nThe following tags are only tested by the legacy test suite:\n";
+print {$coverage}
+  "\nThe following tags are only tested by the legacy test suite:\n";
 print_tags(\%legacy, $coverage);
 
 # Print out a breakdown of the tags that are only tested by the legacy test
 # suite, sorted by legacy test case.
-print {$coverage} "\nBreakdown of remaining tags in legacy test suite by test case:\n";
+print {$coverage}
+  "\nBreakdown of remaining tags in legacy test suite by test case:\n";
 for my $package (sort keys %legacy_test) {
     print {$coverage} "\n$package\n";
     for my $tag (sort @{ $legacy_test{$package} }) {
@@ -142,7 +153,7 @@ sub print_tags {
     my ($tags, $out) = @_;
     my @untested;
     for my $tag (keys %$tags) {
-        push (@untested, [ $tags->{$tag}, $tag ]);
+        push(@untested, [$tags->{$tag}, $tag]);
     }
     @untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
     my $last = '';

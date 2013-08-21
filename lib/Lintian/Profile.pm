@@ -73,14 +73,14 @@ my %MAIN_FIELDS = (
     'disable-tags-from-check' => 1,
     'enable-tags'             => 1,
     'disable-tags'            => 1,
-    );
+);
 
 # List of fields in secondary profile paragraphs
 my %SEC_FIELDS = (
     'tags'        => 1,
     'overridable' => 1,
     'severity'    => 1,
-    );
+);
 
 =item Lintian::Profile->new ([$profname[, $ipath[, $extra]]])
 
@@ -101,7 +101,7 @@ sub new {
     my @full_inc_path;
     if (!defined $ipath) {
         # Temporary fix (see _safe_include_path)
-        @full_inc_path = [_default_inc_path ()] unless $ipath;
+        @full_inc_path = [_default_inc_path()] unless $ipath;
         if (defined $ENV{'LINTIAN_ROOT'}) {
             $ipath = [$ENV{'LINTIAN_ROOT'}];
         } else {
@@ -119,29 +119,35 @@ sub new {
         'profile_list'         => [],
         'include-path'         => \@full_inc_path,
         'safe-include-path'    => $ipath,
-        'enabled-tags'         => {}, # "set" of tags enabled (value is largely ignored)
-        'enabled-checks'       => {}, # maps script to the number of tags enabled (0 if disabled)
+        # "set" of tags enabled (value is largely ignored)
+        'enabled-tags'         => {},
+        # maps script to the number of tags enabled (0 if disabled)
+        'enabled-checks'       => {},
         'non-overridable-tags' => {},
-        'check-scripts'        => {}, # maps script name to Lintian::CheckScript
-        'known-tags'           => {}, # maps tag name to Lintian::Tag::Info
+        # maps script name to Lintian::CheckScript
+        'check-scripts'        => {},
+        # maps tag name to Lintian::Tag::Info
+        'known-tags'           => {},
     };
     $self = bless $self, $type;
     if (not defined $name) {
         ($profile, $name) = $self->_find_vendor_profile;
     } else {
         croak "Illegal profile name \"$name\""
-            if $name =~ m,^/,o or $name =~ m/\./o;
-        ($profile, undef) = $self->_find_vendor_profile ($name);
+          if $name =~ m,^/,o
+          or $name =~ m/\./o;
+        ($profile, undef) = $self->_find_vendor_profile($name);
     }
-    croak "Cannot find profile $name (in " . join(', ', map { "$_/profiles" } @$ipath).')'
-        unless $profile;
+    croak "Cannot find profile $name (in "
+      . join(', ', map { "$_/profiles" } @$ipath).')'
+      unless $profile;
 
     # Implementation detail: Ensure that the "lintian" check is always
     # loaded to avoid "attempt to emit unknown tags" caused by
     # the frontend or L::Tags.  Also default to enabling the Lintian
     # tags as they are helpful (e.g. for debugging overrides files)
-    my $c = $self->_load_check ($self->name, 'lintian');
-    $self->enable_tags ($c->tags);
+    my $c = $self->_load_check($self->name, 'lintian');
+    $self->enable_tags($c->tags);
 
     $self->_read_profile($profile);
     return $self;
@@ -162,7 +168,7 @@ to create this instance of the profile (e.g. due to symlinks).
 
 =cut
 
-Lintian::Profile->mk_ro_accessors (qw(profile_list name));
+Lintian::Profile->mk_ro_accessors(qw(profile_list name));
 
 =item $prof->tags([$known])
 
@@ -204,7 +210,7 @@ Returns a false value if the tag has been marked as
 
 sub is_overridable {
     my ($self, $tag) = @_;
-    return ! exists $self->{'non-overridable-tags'}->{$tag};
+    return !exists $self->{'non-overridable-tags'}->{$tag};
 }
 
 =item $prof->get_tag ($tag[, $known])
@@ -270,7 +276,7 @@ sub disable_tags {
         next unless exists $self->{'enabled-tags'}->{$tag};
         delete $self->{'enabled-tags'}->{$tag};
         delete $self->{'enabled-checks'}->{$ti->script}
-            unless --$self->{'enabled-checks'}->{$ti->script};
+          unless --$self->{'enabled-checks'}->{$ti->script};
     }
     return;
 }
@@ -324,12 +330,11 @@ sub _find_profile {
     # $vendor is short for $vendor/main
     $pname = "$pname/main" unless $pname =~ m,/,o;
     $pfile = "$pname.profile";
-    foreach my $path ($self->include_path ('profiles')) {
+    foreach my $path ($self->include_path('profiles')) {
         return "$path/$pfile" if -e "$path/$pfile";
     }
     return '';
 }
-
 
 # $self->_read_profile($pfile)
 #
@@ -345,26 +350,27 @@ sub _read_profile {
     @pdata = read_dpkg_control($pfile, 0);
     $pheader = shift @pdata;
     croak "Profile field is missing from $pfile"
-        unless defined $pheader && $pheader->{'profile'};
+      unless defined $pheader && $pheader->{'profile'};
     $pname = $pheader->{'profile'};
     croak "Invalid Profile field in $pfile"
-            if $pname =~ m,^/,o or $pname =~ m/\./o;
+      if $pname =~ m,^/,o
+      or $pname =~ m/\./o;
 
     # Normalize the profile name
     $pname .= '/main' unless $pname =~m,/,;
 
     croak "Recursive definition of $pname"
-        if exists $pmap->{$pname};
+      if exists $pmap->{$pname};
     $pmap->{$pname} = 0; # Mark as being loaded.
     $self->{'name'} = $pname unless exists $self->{'name'};
-    if (exists $pheader->{'extends'} ){
+    if (exists $pheader->{'extends'}){
         my $parent = $pheader->{'extends'};
         my $parentf;
         croak "Invalid Extends field in $pfile"
-            unless $parent && $parent !~ m/\./o;
-        ($parentf, undef) = $self->_find_vendor_profile ($parent);
+          unless $parent && $parent !~ m/\./o;
+        ($parentf, undef) = $self->_find_vendor_profile($parent);
         croak "Cannot find $parent, which $pname extends"
-            unless $parentf;
+          unless $parentf;
         $self->_read_profile($parentf);
     }
 
@@ -382,7 +388,6 @@ sub _read_profile {
     return;
 }
 
-
 # $self->_read_profile_section($pname, $section, $sno)
 #
 # Parses and applies the effects of $section (a paragraph
@@ -392,19 +397,30 @@ sub _read_profile {
 sub _read_profile_section {
     my ($self, $pname, $section, $sno) = @_;
     my @tags = $self->_split_comma_sep_field($section->{'tags'});
-    my $overridable = $self->_parse_boolean($section->{'overridable'}, -1, $pname, $sno);
+    my $overridable
+      = $self->_parse_boolean($section->{'overridable'}, -1, $pname, $sno);
     my $severity = $section->{'severity'}//'';
     my $noover = $self->{'non-overridable-tags'};
-    $self->_check_for_invalid_fields($section, \%SEC_FIELDS, $pname, "section $sno");
-    croak "Profile \"$pname\" is missing Tags field (or it is empty) in section $sno" unless @tags;
-    croak "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno"
-        if $severity && !$SEVERITIES{$severity};
+    $self->_check_for_invalid_fields($section, \%SEC_FIELDS, $pname,
+        "section $sno");
+    croak(
+        join(q{ },
+            qq{Profile "$pname" is missing Tags field},
+            "(or it is empty) in section $sno")) unless @tags;
+    croak(
+        join(q{ },
+            qq{Profile "$pname" contains invalid severity},
+            qq{"$severity" in section $sno}))
+
+      if $severity && !$SEVERITIES{$severity};
+
     foreach my $tag (@tags) {
-        croak "Unknown check $tag in $pname (section $sno)" unless $self->{'known-tags'}->{$tag};
+        croak "Unknown check $tag in $pname (section $sno)"
+          unless $self->{'known-tags'}->{$tag};
         if ($severity) {
-            $self->{'known-tags'}->{$tag}->set_severity ($severity);
+            $self->{'known-tags'}->{$tag}->set_severity($severity);
         }
-        if ( $overridable != -1 ) {
+        if ($overridable != -1) {
             if ($overridable) {
                 delete $noover->{$tag};
             } else {
@@ -426,14 +442,16 @@ sub _read_profile_section {
 #  parents).
 sub _read_profile_tags{
     my ($self, $pname, $pheader) = @_;
-    $self->_check_for_invalid_fields($pheader, \%MAIN_FIELDS, $pname, 'profile header');
-    $self->_check_duplicates($pname, $pheader, 'load-checks', 'enable-tags-from-check', 'disable-tags-from-check');
+    $self->_check_for_invalid_fields($pheader, \%MAIN_FIELDS, $pname,
+        'profile header');
+    $self->_check_duplicates($pname, $pheader, 'load-checks',
+        'enable-tags-from-check', 'disable-tags-from-check');
     $self->_check_duplicates($pname, $pheader, 'enable-tags', 'disable-tags');
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
 
         unless (exists $self->{'check-scripts'}->{$check}) {
-            $self->_load_check ($pname, $check);
+            $self->_load_check($pname, $check);
         }
         return $self->{'check-scripts'}->{$check}->tags;
     };
@@ -442,20 +460,25 @@ sub _read_profile_tags{
         unless (exists $self->{'known-tags'}->{$tag}) {
             $self->_load_checks;
             croak "Unknown tag \"$tag\" in profile \"$pname\""
-                unless exists $self->{'known-tags'}->{$tag};
+              unless exists $self->{'known-tags'}->{$tag};
         }
         return $tag;
     };
     if ($pheader->{'load-checks'}) {
-        foreach my $check ($self->_split_comma_sep_field ($pheader->{'load-checks'})) {
-            $self->_load_check ($pname, $check)
-                unless exists $self->{'check-scripts'}->{$check};
+        for
+          my $check ($self->_split_comma_sep_field($pheader->{'load-checks'})){
+            $self->_load_check($pname, $check)
+              unless exists $self->{'check-scripts'}->{$check};
         }
     }
-    $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check', $tags_from_check_sub, 1);
-    $self->_enable_tags_from_field($pname, $pheader, 'disable-tags-from-check', $tags_from_check_sub, 0);
-    $self->_enable_tags_from_field($pname, $pheader, 'enable-tags', $tag_sub, 1);
-    $self->_enable_tags_from_field($pname, $pheader, 'disable-tags', $tag_sub, 0);
+    $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check',
+        $tags_from_check_sub, 1);
+    $self->_enable_tags_from_field($pname, $pheader, 'disable-tags-from-check',
+        $tags_from_check_sub, 0);
+    $self->_enable_tags_from_field($pname, $pheader, 'enable-tags', $tag_sub,
+        1);
+    $self->_enable_tags_from_field($pname, $pheader, 'disable-tags', $tag_sub,
+        0);
     return;
 }
 
@@ -470,11 +493,11 @@ sub _enable_tags_from_field {
     my @tags;
     $method = \&disable_tags unless $enable;
     return unless $pheader->{$field};
-    @tags = map { $code->($field, $_) } $self->_split_comma_sep_field($pheader->{$field});
-    $self->$method (@tags);
+    @tags = map { $code->($field, $_) }
+      $self->_split_comma_sep_field($pheader->{$field});
+    $self->$method(@tags);
     return;
 }
-
 
 # $self->_check_duplicates($name, $map, @fields)
 #
@@ -493,9 +516,15 @@ sub _check_duplicates{
         foreach my $element (split m/\s*+,\s*+/o, $map->{$field}){
             if (exists $dupmap{$element}){
                 my $other = $dupmap{$element};
-                croak "\"$element\" appears in both \"$field\" and \"$other\" in profile \"$name\""
-                    unless $other eq $field;
-                croak "\"$element\" appears twice in the field \"$field\" in profile \"$name\"";
+                croak(
+                    join(q{ },
+                        qq{"$element" appears in both "$field"},
+                        qq{and "$other" in profile "$name"})
+                ) unless $other eq $field;
+                croak(
+                    join(q{ },
+                        qq{"$element" appears twice in the field},
+                        qq{"$field" in profile "$name"}));
             }
             $dupmap{$element} = $field;
         }
@@ -512,9 +541,9 @@ sub _parse_boolean {
     my ($self, $bool, $def, $pname, $sno) = @_;
     my $val;
     return $def unless defined $bool;
-    eval { $val = parse_boolean ($bool); };
+    eval { $val = parse_boolean($bool); };
     croak "\"$bool\" is not a boolean value in $pname (section $sno)"
-        if $@;
+      if $@;
     return $val;
 }
 
@@ -525,7 +554,7 @@ sub _parse_boolean {
 sub _split_comma_sep_field {
     my ($self, $data) = @_;
     return () unless defined $data;
-    return split m/\s*,\s*/o, strip ($data);
+    return split m/\s*,\s*/o, strip($data);
 }
 
 # $self->_check_for_invalid_fields($para, $known, $pname, $paraname)
@@ -547,13 +576,13 @@ sub _load_check {
     my $dir = undef;
     foreach my $checkdir ($self->_safe_include_path('checks')) {
         my $cf = "$checkdir/${check}.desc";
-        if ( -f $cf ) {
+        if (-f $cf) {
             $dir = $checkdir;
             last;
         }
     }
     croak "$profile references unknown $check" unless defined $dir;
-    return $self->_parse_check ($check, $dir);
+    return $self->_parse_check($check, $dir);
 }
 
 sub _parse_check {
@@ -561,9 +590,9 @@ sub _parse_check {
     # Have we already tried to load this before?  Possibly via an alias
     # or symlink
     return $self->{'check-scripts'}->{$gcname}
-        if exists $self->{'check-scripts'}->{$gcname};
+      if exists $self->{'check-scripts'}->{$gcname};
 
-    my $c = Lintian::CheckScript->new ($dir, $gcname);
+    my $c = Lintian::CheckScript->new($dir, $gcname);
     my $cname = $c->name;
     if (exists $self->{'check-scripts'}->{$cname}) {
         # We have loaded the check under a different name
@@ -580,7 +609,7 @@ sub _parse_check {
             my $ocn = $self->{'known-tags'}->{$tn}->script;
             croak "$cname redefined tag $tn which was defined by $ocn";
         }
-        $self->{'known-tags'}->{$tn} = $c->get_tag ($tn);
+        $self->{'known-tags'}->{$tn} = $c->get_tag($tn);
     }
     return $c;
 }
@@ -593,8 +622,9 @@ sub _load_checks {
         for my $desc (sort readdir $dirfd) {
             my $cname = $desc;
             next unless $cname =~ s/\.desc$//o;
-            # _parse_check ignores duplicates, so we don't have to check for it.
-            $self->_parse_check ($cname, $checkdir);
+            # _parse_check ignores duplicates, so we don't have to
+            # check for it.
+            $self->_parse_check($cname, $checkdir);
         }
         closedir($dirfd);
     }
@@ -604,7 +634,7 @@ sub _load_checks {
 sub _default_inc_path {
     my @path = ();
     push @path, "$ENV{'HOME'}/.lintian"
-        if exists $ENV{'HOME'} and defined $ENV{'HOME'};
+      if exists $ENV{'HOME'} and defined $ENV{'HOME'};
     push @path, '/etc/lintian';
     # ENV{LINTIAN_ROOT} replaces /usr/share/lintian if present.
     push @path, $ENV{'LINTIAN_ROOT'} if defined $ENV{'LINTIAN_ROOT'};
@@ -618,31 +648,32 @@ sub _find_vendor_profile {
 
     if (defined $prof and $prof !~ m/[{}]/) {
         # no substitution required...
-        return ($self->_find_profile ($prof), $prof);
+        return ($self->_find_profile($prof), $prof);
     } elsif (defined $prof) {
         my $cpy = $prof;
         # Check for unknown (or broken) subst.
         $cpy =~ s/\Q{VENDOR}\E//g;
         croak "Unknown substitution \"$1\" (in \"$prof\")"
-            if $cpy =~ m/\{([^ \}]+)\}/;
+          if $cpy =~ m/\{([^ \}]+)\}/;
         croak "Bad, broken or empty subtitution marker in \"$prof\""
-            if $cpy =~ m/[{}]/;
+          if $cpy =~ m/[{}]/;
     }
 
     $prof //= '{VENDOR}/main';
 
-    @vendors = @{ $self->{'_vendor_cache'} } if exists $self->{'_vendor_cache'};
+    @vendors = @{ $self->{'_vendor_cache'} }
+      if exists $self->{'_vendor_cache'};
     unless (@vendors) {
-        my $vendor = Dpkg::Vendor::get_current_vendor ();
+        my $vendor = Dpkg::Vendor::get_current_vendor();
         croak 'Could not determine the current vendor'
-            unless $vendor;
+          unless $vendor;
         push @vendors, lc $vendor;
         while ($vendor) {
-            my $info = Dpkg::Vendor::get_vendor_info ($vendor);
+            my $info = Dpkg::Vendor::get_vendor_info($vendor);
             # Cannot happen atm, but in case Dpkg::Vendor changes its internals
             #  or our code changes
             croak "Could not look up the parent vendor of $vendor"
-                unless $info;
+              unless $info;
             $vendor = $info->{'Parent'};
             push @vendors, lc $vendor if $vendor;
         }
@@ -653,11 +684,14 @@ sub _find_vendor_profile {
         my $profname = $prof;
         $profname =~ s/\Q{VENDOR}\E/$vendor/g;
 
-        $file = $self->_find_profile ($profname);
+        $file = $self->_find_profile($profname);
 
         return ($file, $profname) if $file;
     }
-    croak "Could not find a profile matching \"$prof\" for vendor $vendors[0]";
+    croak(
+        join(q{ },
+            'Could not find a profile matching',
+            qq{"$prof" for vendor $vendors[0]}));
 }
 
 =back

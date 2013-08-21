@@ -42,207 +42,219 @@ my %dep5_renamed_fields = (
 );
 
 sub run {
+    my (undef, undef, $info) = @_;
+    my $copyright_filename = $info->debfiles('copyright');
 
-my (undef, undef, $info) = @_;
+    if (-l $copyright_filename) {
+        tag 'debian-copyright-is-symlink';
+        return;
+    }
 
-my $copyright_filename = $info->debfiles('copyright');
-
-if (-l $copyright_filename) {
-    tag 'debian-copyright-is-symlink';
-    return;
-}
-
-if (not -f $copyright_filename) {
-    my @pkgs = $info->binaries;
-    tag 'no-debian-copyright';
-    $copyright_filename = undef;
-    if (scalar @pkgs == 1) {
-        # If debian/copyright doesn't exist, and the only a single binary
-        # package is built, there's a good chance that the copyright file is
-        # available as debian/<pkgname>.copyright.
-        $copyright_filename = $info->debfiles ($pkgs[0] . '.copyright');
-        if (not -f $copyright_filename or -l $copyright_filename) {
-            $copyright_filename = undef;
+    if (not -f $copyright_filename) {
+        my @pkgs = $info->binaries;
+        tag 'no-debian-copyright';
+        $copyright_filename = undef;
+        if (scalar @pkgs == 1) {
+            # If debian/copyright doesn't exist, and the only a single
+            # binary package is built, there's a good chance that the
+            # copyright file is available as
+            # debian/<pkgname>.copyright.
+            $copyright_filename = $info->debfiles($pkgs[0] . '.copyright');
+            if (not -f $copyright_filename or -l $copyright_filename) {
+                $copyright_filename = undef;
+            }
         }
     }
-}
 
-return unless defined $copyright_filename;
+    return unless defined $copyright_filename;
 
-my $contents = slurp_entire_file ($copyright_filename);
-study $contents;
+    my $contents = slurp_entire_file($copyright_filename);
+    my (@dep5, @lines);
 
-my @dep5;
-my @lines;
+    if (
+        $contents =~ m{
+               (^ | \n)
+               (?i: format(:|[-\s]spec) )
+               (?: . | \n\s+ )*
+               (?: /dep[5s]?\b | \bDEP-?5\b
+                 | [Mm]achine-readable\s(?:license|copyright)
+                 | /copyright-format/ | CopyrightFormat
+                 | VERSIONED_FORMAT_URL
+               ) }x
+      ) {
+        # Before trying to parse the copyright as Debian control file, try to
+        # determine the format URI.
+        my $first_para = $contents;
+        $first_para =~ s,^#.*,,mg;
+        $first_para =~ s,[ \t]+$,,mg;
+        $first_para =~ s,^\n+,,g;
+        $first_para =~ s,\n\n.*,\n,s; #;; hi emacs
+        $first_para =~ s,\n?[ \t]+, ,g;
+        $first_para =~ m,^Format(?:-Specification)?:\s*(.*),mi;
+        my $uri = $1;
+        $uri =~ s/^([^#\s]+)#/$1/ if defined $uri; # strip fragment identifier
 
-if ($contents =~ m{
-    (^ | \n)
-    (?i: format(:|[-\s]spec) )
-    (?: . | \n\s+ )*
-    (?: /dep[5s]?\b | \bDEP-?5\b | [Mm]achine-readable\s(?:license|copyright) | /copyright-format/ | CopyrightFormat | VERSIONED_FORMAT_URL )
-}x)
-{
-    # Before trying to parse the copyright as Debian control file, try to
-    # determine the format URI.
-    my $first_para = $contents;
-    $first_para =~ s,^#.*,,mg;
-    $first_para =~ s,[ \t]+$,,mg;
-    $first_para =~ s,^\n+,,g;
-    $first_para =~ s,\n\n.*,\n,s; #;; hi emacs
-    $first_para =~ s,\n?[ \t]+, ,g;
-    $first_para =~ m,^Format(?:-Specification)?:\s*(.*),mi;
-    my $uri = $1;
-    $uri =~ s/^([^#\s]+)#/$1/ if defined $uri; # strip fragment identifier
-    if (defined $uri) {
-        my $original_uri = $uri;
-        my $version;
-        if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
-            tag 'boilerplate-copyright-format-uri', $uri;
-        }
-        elsif ($uri =~ s,http://wiki\.debian\.org/Proposals/CopyrightFormat\b,,) {
-            $version = '0~wiki';
-            $uri =~ m,^\?action=recall&rev=(\d+)$, and $version = "$version~$1";
-        }
-        elsif ($uri =~ m,^http://dep\.debian\.net/deps/dep5/?$,) {
-            $version = '0+svn';
-        }
-        elsif ($uri =~ s,^http://svn\.debian\.org/wsvn/dep/web/deps/dep5\.mdwn\b,,) {
-            $version = '0+svn';
-            $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$, and $version = "$version~$1";
-        }
-        elsif ($uri =~ s,^http://(?:svn|anonscm)\.debian\.org/viewvc/dep/web/deps/dep5\.mdwn\b,,) {
-            $version = '0+svn';
-            $uri =~ m,^\?(?:\S+[&;])?(?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?$, and $version = "$version~$1";
-        }
-        elsif ($uri =~ m,^http://www\.debian\.org/doc/(?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?$,) {
-            $version = $1;
-        }
-        else {
-            tag 'unknown-copyright-format-uri', $original_uri;
-        }
-        if (defined $version) {
-            if ($version =~ m,wiki,) {
+        if (defined $uri) {
+            my $original_uri = $uri;
+            my $version;
+            if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
+                tag 'boilerplate-copyright-format-uri', $uri;
+            } elsif (
+                $uri =~ s{ http://wiki\.debian\.org/
+                                Proposals/CopyrightFormat\b}{}xsm
+              ) {
+                $version = '0~wiki';
+                $uri =~ m,^\?action=recall&rev=(\d+)$,
+                  and $version = "$version~$1";
+            } elsif ($uri =~ m,^http://dep\.debian\.net/deps/dep5/?$,) {
+                $version = '0+svn';
+            } elsif (
+                $uri =~ s{\A http://svn\.debian\.org/
+                                  wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
+              ) {
+                $version = '0+svn';
+                $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
+                  and $version = "$version~$1";
+            } elsif (
+                $uri =~ s{ \A http://(?:svn|anonscm)\.debian\.org/
+                                    viewvc/dep/web/deps/dep5\.mdwn\b}{}xsm
+              ) {
+                $version = '0+svn';
+                $uri =~ m{\A \? (?:\S+[&;])?
+                             (?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?
+                          \Z}xsm
+                  and $version = "$version~$1";
+            } elsif (
+                $uri =~ m{ \A
+                       http://www\.debian\.org/doc/
+                       (?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?
+                   \Z}xsm
+              ) {
+                $version = $1;
+            } else {
+                tag 'unknown-copyright-format-uri', $original_uri;
+            }
+            if (defined $version) {
+                if ($version =~ m,wiki,) {
                     tag 'wiki-copyright-format-uri', $original_uri;
-            }
-            elsif ($version =~ m,svn$,) {
-                tag 'unversioned-copyright-format-uri', $original_uri;
-            }
-            elsif (versions_compare $version, '<<', $dep5_last_normative_change) {
-                tag 'out-of-date-copyright-format-uri', $original_uri;
-            }
-            if (versions_compare $version, '>=', $dep5_last_overhaul) {
-                # We are reasonably certain that we're dealing with an up-to-date
-                # DEP-5 format. Let's try to do more strict checks.
-                eval {
-                    open(my $fd, '<', \$contents);
-                    @dep5 = parse_dpkg_control ($fd, 0, \@lines);
-                    close($fd);
-                };
-                if ($@) {
-                    chomp $@;
-                    $@ =~ s/^syntax error at //;
-                    tag 'syntax-error-in-dep5-copyright', $@;
+                } elsif ($version =~ m,svn$,) {
+                    tag 'unversioned-copyright-format-uri', $original_uri;
+                } elsif (versions_compare $version,
+                    '<<', $dep5_last_normative_change) {
+                    tag 'out-of-date-copyright-format-uri', $original_uri;
+                }
+                if (versions_compare $version, '>=', $dep5_last_overhaul) {
+                    # We are reasonably certain that we're dealing
+                    # with an up-to-date DEP-5 format. Let's try to do
+                    # more strict checks.
+                    eval {
+                        open(my $fd, '<', \$contents);
+                        @dep5 = parse_dpkg_control($fd, 0, \@lines);
+                        close($fd);
+                    };
+                    if ($@) {
+                        chomp $@;
+                        $@ =~ s/^syntax error at //;
+                        tag 'syntax-error-in-dep5-copyright', $@;
+                    }
                 }
             }
+        } else {
+            tag 'unknown-copyright-format-uri';
         }
     }
-    else {
-        tag 'unknown-copyright-format-uri';
-    }
-}
 
-if (@dep5) {
-    my $first_para = shift @dep5;
-    my %standalone_licenses;
-    my %required_standalone_licenses;
-    for my $field (keys %{$first_para}) {
-        my $renamed_to = $dep5_renamed_fields{$field};
-        if (defined $renamed_to) {
-            tag 'obsolete-field-in-dep5-copyright', $field,
-                $renamed_to, "(line $lines[0]{$field})";
-        }
-    }
-    if (not defined $first_para->{'format'} and not defined $first_para->{'format-specification'}) {
-        tag 'missing-field-in-dep5-copyright', 'format',
-            "(line $lines[0]{'format'})";
-    }
-    for my $license (split_licenses($first_para->{'license'})) {
-        $required_standalone_licenses{$license} = 1;
-    }
-    my @commas_in_files;
-    my $i = 0;
-    for my $para (@dep5) {
-        $i++;
-        my ($files_fname, $files) = get_field($para, 'files', $lines[$i]);
-        my $license = get_field ($para, 'license', $lines[$i]);
-        my $copyright = get_field ($para, 'copyright', $lines[$i]);
-
-        if (not defined $files and defined $license and defined $copyright) {
-            tag 'ambiguous-paragraph-in-dep5-copyright',
-                "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'}";
-            # If it is the first paragraph, it might be an instance of
-            # the (no-longer) optional "first Files-field".
-            $files = '*' if $i == 1;
-        }
-
-        if (defined $license and not defined $files) {
-            # Standalone license paragraph
-            if (not $license =~ m/\n/) {
-                tag 'missing-license-text-in-dep5-copyright',
-                    lc $license,
-                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
-            }
-            ($license, undef) = split /\n/, $license, 2;
-            for (split_licenses($license)) {
-                $standalone_licenses{$_} = $i;
+    if (@dep5) {
+        my $first_para = shift @dep5;
+        my %standalone_licenses;
+        my %required_standalone_licenses;
+        for my $field (keys %{$first_para}) {
+            my $renamed_to = $dep5_renamed_fields{$field};
+            if (defined $renamed_to) {
+                tag 'obsolete-field-in-dep5-copyright', $field,
+                  $renamed_to, "(line $lines[0]{$field})";
             }
         }
-        elsif (defined $files) {
-            # Files paragraph
-            if (not @commas_in_files and $files =~ /,/) {
-                @commas_in_files = ($i, $files_fname);
+        if (    not defined $first_para->{'format'}
+            and not defined $first_para->{'format-specification'}) {
+            tag 'missing-field-in-dep5-copyright', 'format',
+              "(line $lines[0]{'format'})";
+        }
+        for my $license (split_licenses($first_para->{'license'})) {
+            $required_standalone_licenses{$license} = 1;
+        }
+        my @commas_in_files;
+        my $i = 0;
+        for my $para (@dep5) {
+            $i++;
+            my ($files_fname, $files) = get_field($para, 'files', $lines[$i]);
+            my $license = get_field($para, 'license', $lines[$i]);
+            my $copyright = get_field($para, 'copyright', $lines[$i]);
+
+            if (not defined $files and defined $license and defined $copyright)
+            {
+                tag 'ambiguous-paragraph-in-dep5-copyright',
+                  "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'}";
+                # If it is the first paragraph, it might be an instance of
+                # the (no-longer) optional "first Files-field".
+                $files = '*' if $i == 1;
             }
-            if (defined $license) {
+
+            if (defined $license and not defined $files) {
+                # Standalone license paragraph
+                if (not $license =~ m/\n/) {
+                    tag 'missing-license-text-in-dep5-copyright',lc $license,
+                      "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                }
+                ($license, undef) = split /\n/, $license, 2;
                 for (split_licenses($license)) {
-                    $required_standalone_licenses{$_} = $i;
+                    $standalone_licenses{$_} = $i;
                 }
+            } elsif (defined $files) {
+                # Files paragraph
+                if (not @commas_in_files and $files =~ /,/) {
+                    @commas_in_files = ($i, $files_fname);
+                }
+                if (defined $license) {
+                    for (split_licenses($license)) {
+                        $required_standalone_licenses{$_} = $i;
+                    }
+                } else {
+                    tag 'missing-field-in-dep5-copyright', 'license',
+                      "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                }
+                if (not defined $copyright) {
+                    tag 'missing-field-in-dep5-copyright', 'copyright',
+                      "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                }
+            } else {
+                tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line',
+                  $lines[$i]{'START-OF-PARAGRAPH'};
             }
-            else {
-                tag 'missing-field-in-dep5-copyright', 'license',
-                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+        }
+        if (@commas_in_files) {
+            my ($paragraph_no, $field_name) = @commas_in_files;
+            if (not any { m/,/xsm } $info->sorted_index) {
+                tag 'comma-separated-files-in-dep5-copyright',
+                  'paragraph at line',
+                  $lines[$paragraph_no]{$field_name};
             }
-            if (not defined $copyright) {
-                tag 'missing-field-in-dep5-copyright', 'copyright',
-                    "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+        }
+        while ((my $license, $i) = each %required_standalone_licenses) {
+            if (not defined $standalone_licenses{$license}) {
+                tag 'missing-license-paragraph-in-dep5-copyright', $license,
+                  "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
         }
-        else {
-            tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line',
-                $lines[$i]{'START-OF-PARAGRAPH'};
+        while ((my $license, $i) = each %standalone_licenses) {
+            if (not defined $required_standalone_licenses{$license}) {
+                tag 'unused-license-paragraph-in-dep5-copyright', $license,
+                  "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            }
         }
     }
-    if (@commas_in_files) {
-        my ($paragraph_no, $field_name) = @commas_in_files;
-        if (not any { m/,/xsm } $info->sorted_index) {
-            tag 'comma-separated-files-in-dep5-copyright', 'paragraph at line',
-                $lines[$paragraph_no]{$field_name};
-        }
-    }
-    while ((my $license, $i) = each %required_standalone_licenses) {
-        if (not defined $standalone_licenses{$license}) {
-            tag 'missing-license-paragraph-in-dep5-copyright', $license,
-                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
-        }
-    }
-    while ((my $license, $i) = each %standalone_licenses) {
-        if (not defined $required_standalone_licenses{$license}) {
-            tag 'unused-license-paragraph-in-dep5-copyright', $license,
-                "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
-        }
-    }
-}
 
-return;
+    return;
 }
 
 sub split_licenses {
@@ -261,9 +273,9 @@ sub get_field {
     }
     # Fall back to a "likely misspelling" of the field.
     foreach my $f (sort keys %$para) {
-        if (distance ($field, $f) < 3) {
+        if (distance($field, $f) < 3) {
             tag 'field-name-typo-in-dep5-copyright', $f, '->', $field,
-                "(line $line->{$f})";
+              "(line $line->{$f})";
             return $para->{$f} unless wantarray;
             return ($f, $para->{$f});
         }

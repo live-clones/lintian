@@ -32,64 +32,66 @@ use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(delete_dir fail);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my (@jobs, $job);
+    my ($pkg, $type, $dir) = @_;
+    my (@jobs, $job);
 
-if ( -e "$dir/control"){
-    delete_dir ("$dir/control") or fail 'Cannot remove old control dir';
+    if (-e "$dir/control"){
+        delete_dir("$dir/control") or fail 'Cannot remove old control dir';
+    }
+
+    for my $file ('control-index.gz', ERROR_FILES) {
+        my $path = "$dir/$file";
+        unlink($path) if -e $path;
+    }
+
+    mkdir("$dir/control", 0777);
+
+    # The following calls use knowledge of the .deb format for speed
+
+    # (replaces dpkg-deb -e)
+    # extract control files' tarball
+    spawn(
+        { fail => 'error', out => "$dir/control.tar" },
+        ['ar', 'p', "$dir/deb", 'control.tar.gz'],
+        '|', ['gzip', '-dc']);
+
+    $job = { fail => 'error', err => "$dir/control-errors" };
+    push @jobs, $job;
+    # extract the tarball's contents
+    spawn($job, ['tar', 'xf', "$dir/control.tar", '-C', "$dir/control", '&']);
+
+    $job = {
+        fail => 'error',
+        out  => "$dir/control-index.gz",
+        err  => "$dir/control-index-errors"
+    };
+
+    push @jobs, $job;
+    # create index of control.tar.gz
+    spawn(
+        $job, ['tar', 'tvf', "$dir/control.tar"],
+        '|', ['sort', '-k', '6'],
+        '|', ['gzip', '--best', '-c'], '&'
+    );
+
+    reap(@jobs);
+    undef @jobs;
+    # clean up control.tar
+    unlink("$dir/control.tar");
+
+    # fix permissions
+    spawn({ fail => 'error' }, ['chmod', '-R', 'u+rX,o-w', "$dir/control"]);
+
+    # Remove empty error files...
+    for my $file (ERROR_FILES) {
+        my $path = "$dir/$file";
+        unlink($path) if -z $path;
+    }
+
+    return;
 }
 
-for my $file ('control-index.gz', ERROR_FILES) {
-    my $path = "$dir/$file";
-    unlink($path) if -e $path;
-}
-
-mkdir("$dir/control", 0777);
-
-# The following calls use knowledge of the .deb format for speed
-
-# (replaces dpkg-deb -e)
-# extract control files' tarball
-spawn ({ fail => 'error', out => "$dir/control.tar" },
-      ['ar', 'p', "$dir/deb", 'control.tar.gz'],
-      '|', ['gzip', '-dc']);
-
-$job = { fail => 'error', err => "$dir/control-errors" };
-push @jobs, $job;
-# extract the tarball's contents
-spawn($job,
-      ['tar', 'xf', "$dir/control.tar", '-C', "$dir/control", '&']);
-
-$job = { fail => 'error',
-         out  => "$dir/control-index.gz",
-         err  => "$dir/control-index-errors" };
-
-push @jobs, $job;
-# create index of control.tar.gz
-spawn($job,
-      ['tar', 'tvf', "$dir/control.tar"],
-      '|', ['sort', '-k', '6'],
-      '|', ['gzip', '--best', '-c'], '&');
-
-reap(@jobs);
-undef @jobs;
-# clean up control.tar
-unlink("$dir/control.tar");
-
-# fix permissions
-spawn({ fail => 'error' },
-      ['chmod', '-R', 'u+rX,o-w', "$dir/control"]);
-
-# Remove empty error files...
-for my $file (ERROR_FILES) {
-    my $path = "$dir/$file";
-    unlink($path) if -z $path;
-}
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)bin-pkg-control$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)bin-pkg-control$,;
 
 1;
 

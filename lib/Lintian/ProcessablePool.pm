@@ -83,13 +83,13 @@ sub add_file {
     my ($self, $file) = @_;
     if ($file =~ m/\.changes$/o){
         croak "$file does not exist" unless -f $file;
-        my $pkg_path = Cwd::abs_path ($file);
+        my $pkg_path = Cwd::abs_path($file);
         croak "Cannot resolve $file: $!" unless $pkg_path;
-        return $self->_add_changes_file ($pkg_path);
+        return $self->_add_changes_file($pkg_path);
     }
 
-    my $proc = Lintian::Processable::Package->new ($file);
-    return $self->add_proc ($proc);
+    my $proc = Lintian::Processable::Package->new($file);
+    return $self->add_proc($proc);
 }
 
 =item $pool->add_proc ($proc)
@@ -104,11 +104,14 @@ sub add_proc {
     my $pkg_type = $proc->pkg_type;
 
     if ($proc->tainted) {
-        warn (sprintf ("warning: tainted %1\$s package '%2\$s', skipping\n",
-             $pkg_type, $proc->pkg_name));
+        warn(
+            sprintf(
+                "warning: tainted %1\$s package '%2\$s', skipping\n",
+                $pkg_type, $proc->pkg_name
+            ));
         return 0;
     }
-    $groupid = $self->_get_group_id ($proc);
+    $groupid = $self->_get_group_id($proc);
     $group = $self->{groups}->{$groupid};
     if (defined $group){
         if ($pkg_type eq 'source'){
@@ -117,10 +120,10 @@ sub add_proc {
             return 0 if defined $group->get_source_processable;
         }
         # else add the binary/udeb proc to the group
-        return $group->add_processable ($proc);
+        return $group->add_processable($proc);
     } else {
         # Create a new group
-        $group = Lintian::ProcessableGroup->new ($self->{'lab'});
+        $group = Lintian::ProcessableGroup->new($self->{'lab'});
         $group->add_processable($proc);
         $self->{groups}->{$groupid} = $group;
     }
@@ -185,7 +188,7 @@ sub empty{
 
 sub _add_changes_file{
     my ($self, $pkg_path) = @_;
-    my $group = Lintian::ProcessableGroup->new ($self->{'lab'}, $pkg_path);
+    my $group = Lintian::ProcessableGroup->new($self->{'lab'}, $pkg_path);
     my $cproc = $group->get_changes_processable();
     my $gid = $self->_get_group_id($cproc);
     my $ogroup = $self->{groups}->{$gid};
@@ -200,10 +203,10 @@ sub _add_changes_file{
             $added = 1;
         }
 
-        if (! defined $ogroup->get_source_processable()
+        if (  !defined $ogroup->get_source_processable()
             && defined $group->get_source_processable()){
-                $ogroup->add_processable($group->get_source_processable());
-                $added = 1;
+            $ogroup->add_processable($group->get_source_processable());
+            $added = 1;
         }
         foreach my $bin ($group->get_binary_processables()){
             # New binary package ?

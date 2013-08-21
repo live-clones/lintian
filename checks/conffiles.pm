@@ -28,78 +28,74 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
 sub run {
+    my (undef, undef, $info) = @_;
 
-my (undef, undef, $info) = @_;
+    my $cf = $info->control('conffiles');
+    my %conffiles = ();
 
-my $cf = $info->control('conffiles');
+    # Stop if conffiles is a link; no real package uses links in
+    # control.tar.gz.
+    return if -l $cf;
 
+    if (-f $cf) {
+        open(my $fd, '<', $cf);
+        while (my $filename = <$fd>) {
+            # dpkg strips whitespace (using isspace) from the right hand
+            # side of the file name.
+            rstrip($filename);
 
-my %conffiles = ();
+            next if $filename eq q{};
 
-# Stop if conffiles is a link; no real package uses links in
-# control.tar.gz.
-return if -l $cf;
-
-if (-f $cf) {
-
-    open(my $fd, '<', $cf);
-    while (my $filename = <$fd>) {
-        # dpkg strips whitespace (using isspace) from the right hand
-        # side of the file name.
-        rstrip($filename);
-
-        next if $filename eq q{};
-
-        if ($filename !~ m{^ / }xsm) {
-            tag 'relative-conffile', $filename;
-        } else {
-            # strip the leading slash from here.
-            $filename =~ s{^ /++ }{}xsm;
-        }
-        $conffiles{$filename}++;
-
-        if ($conffiles{$filename} > 1) {
-            tag 'duplicate-conffile', $filename;
-            next;
-        }
-
-        if (not defined($info->index($filename))) {
-            tag 'conffile-is-not-in-package', $filename;
-        }
-
-        if ($filename =~ m{^ usr/ }xsm) {
-            tag 'file-in-usr-marked-as-conffile', $filename;
-        } else {
-            if ($filename !~ m{^ etc/ }xsm) {
-                tag 'non-etc-file-marked-as-conffile', $filename;
-            } elsif ($filename =~ m{^ etc/rc.\.d/ }xsm) {
-                tag 'file-in-etc-rc.d-marked-as-conffile', $filename;
+            if ($filename !~ m{^ / }xsm) {
+                tag 'relative-conffile', $filename;
+            } else {
+                # strip the leading slash from here.
+                $filename =~ s{^ /++ }{}xsm;
             }
+            $conffiles{$filename}++;
+
+            if ($conffiles{$filename} > 1) {
+                tag 'duplicate-conffile', $filename;
+                next;
+            }
+
+            if (not defined($info->index($filename))) {
+                tag 'conffile-is-not-in-package', $filename;
+            }
+
+            if ($filename =~ m{^ usr/ }xsm) {
+                tag 'file-in-usr-marked-as-conffile', $filename;
+            } else {
+                if ($filename !~ m{^ etc/ }xsm) {
+                    tag 'non-etc-file-marked-as-conffile', $filename;
+                } elsif ($filename =~ m{^ etc/rc.\.d/ }xsm) {
+                    tag 'file-in-etc-rc.d-marked-as-conffile', $filename;
+                }
+            }
+
         }
+        close($fd);
 
     }
-    close($fd);
 
-}
+    # Read package contents...
+    foreach my $file ($info->sorted_index) {
+        if (not $file->is_file and exists $conffiles{$file}) {
+            tag 'conffile-has-bad-file-type', $file;
+        }
+        next unless $file =~ m{\A etc/ }xsm and $file->is_file;
 
-# Read package contents...
-foreach my $file ($info->sorted_index) {
-    if (not $file->is_file and exists $conffiles{$file}) {
-        tag 'conffile-has-bad-file-type', $file;
-    }
-    next unless $file =~ m{^ etc/ }xsm and $file->is_file;
-
-    # If there is a /etc/foo, it must be a conffile (with a few exceptions).
-    if (not exists($conffiles{$file})
+       # If there is a /etc/foo, it must be a conffile (with a few exceptions).
+        if (    not exists($conffiles{$file})
             and $file !~ m{ /README $}xsm
             and $file ne 'etc/init.d/skeleton'
             and $file ne 'etc/init.d/rc'
             and $file ne 'etc/init.d/rcS') {
-        tag 'file-in-etc-not-marked-as-conffile', $file;
+            tag 'file-in-etc-not-marked-as-conffile', $file;
+        }
     }
-}
 
-return;
+    return;
 }
 
 1;

@@ -33,7 +33,7 @@ use Text::ParseWords qw(shellwords);
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(
-        fail is_ancestor_of normalize_pkg_path lstrip rstrip
+  fail is_ancestor_of normalize_pkg_path lstrip rstrip
 );
 
 sub run {
@@ -78,11 +78,11 @@ sub run {
     if ($ships_systemd_file) {
         for my $init_script (@init_scripts) {
             tag 'systemd-no-service-for-init-script', $init_script
-                unless any { m/\Q$init_script\E\.service/ } @systemd_targets;
+              unless any { m/\Q$init_script\E\.service/ } @systemd_targets;
         }
     }
 
-    check_maintainer_scripts ($info);
+    check_maintainer_scripts($info);
     return;
 }
 
@@ -92,10 +92,13 @@ sub check_init_script {
     my $lsb_source_seen;
 
     # Couple of special cases we don't care about...
-    return if $basename eq 'README' or $basename eq 'skeleton'
-        or $basename eq 'rc' or $basename eq 'rcS';
+    return
+         if $basename eq 'README'
+      or $basename eq 'skeleton'
+      or $basename eq 'rc'
+      or $basename eq 'rcS';
 
-    my $unpacked_file = $info->unpacked ($file);
+    my $unpacked_file = $info->unpacked($file);
 
     if ($file->is_symlink) {
         # We cannot test upstart-jobs
@@ -103,8 +106,8 @@ sub check_init_script {
     }
 
     if (!$file->is_regular_file) {
-        unless (-f $unpacked_file &&
-                is_ancestor_of($info->unpacked, $unpacked_file)) {
+        unless (-f $unpacked_file
+            && is_ancestor_of($info->unpacked, $unpacked_file)) {
             tag 'init-script-is-not-a-file', $file;
             return;
         }
@@ -133,7 +136,8 @@ sub check_systemd_service_file {
 
     my @values = extract_service_file_values($info, $file, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
-    tag 'systemd-service-file-refers-to-obsolete-target', $file, $_ for @obsolete;
+    tag 'systemd-service-file-refers-to-obsolete-target', $file, $_
+      for @obsolete;
     return;
 }
 
@@ -176,13 +180,10 @@ sub extract_service_file_values {
     my @values;
     my $section;
 
-    my $unpacked_file = $info->unpacked ($file);
+    my $unpacked_file = $info->unpacked($file);
     unless (
-          (   -f $unpacked_file
-            && is_ancestor_of($info->unpacked, $unpacked_file)
-          ) || ($file->is_symlink && $file->link eq '/dev/null')
-        )
-    {
+        (-f $unpacked_file&& is_ancestor_of($info->unpacked, $unpacked_file))
+        || ($file->is_symlink && $file->link eq '/dev/null')) {
         tag 'service-file-is-not-a-file', $file;
         return;
     }
@@ -199,9 +200,10 @@ sub extract_service_file_values {
                     $normalized = normalize_pkg_path($file->dirname, $path);
                 }
                 $included = $info->unpacked($normalized)
-                    if defined($normalized);
-                if (defined($included) && -f $included
-                       && is_ancestor_of($info->unpacked, $included)) {
+                  if defined($normalized);
+                if (   defined($included)
+                    && -f $included
+                    && is_ancestor_of($info->unpacked, $included)) {
                     service_file_lines($included);
                 } else {
                     # doesn't exist, exists but not a file or "out-of-bounds"
@@ -225,8 +227,8 @@ sub extract_service_file_values {
         }
 
         my ($key, $value) = ($_ =~ m,^(.*)=(.*)$,);
-        if ($section eq $extract_section &&
-            $key eq $extract_key) {
+        if (   $section eq $extract_section
+            && $key eq $extract_key) {
             if ($value eq '') {
                 # Empty assignment resets the list
                 @values = ();
@@ -242,8 +244,8 @@ sub extract_service_file_values {
 sub extract_service_file_names {
     my ($info, $file) = @_;
 
-    my @aliases = extract_service_file_values($info, $file, 'Install', 'Alias');
-    return (basename ($file), @aliases);
+    my @aliases= extract_service_file_values($info, $file, 'Install', 'Alias');
+    return (basename($file), @aliases);
 }
 
 sub check_maintainer_scripts {
@@ -255,17 +257,18 @@ sub check_maintainer_scripts {
         m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
-        my $filename = $info->control ($file);
+        my $filename = $info->control($file);
 
         # Don't follow links
         next if -l $filename;
-        # Don't try to parse the file if it does not appear to be a shell script
+        # Don't try to parse the file if it does not appear to be a
+        # shell script
         next if $interpreter !~ m/sh\b/;
 
         open(my $sfd, '<', $filename);
         while (<$sfd>) {
             # skip comments
-            next if substr ($_, 0, $-[0]) =~ /#/;
+            next if substr($_, 0, $-[0]) =~ /#/;
 
             # systemctl should not be called in maintainer scripts at all,
             # except for systemctl --daemon-reload calls.

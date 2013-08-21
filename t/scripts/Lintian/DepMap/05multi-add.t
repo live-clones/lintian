@@ -15,7 +15,11 @@ $map->add('D');
 $map->add('D', 'A');
 $map->add('D', 'B', 'C');
 
-is_deeply([$map->selectable()], ['A', 'C', 'B'], 'D has dependencies, not selectable');
+is_deeply(
+    [$map->selectable],
+    ['A', 'C', 'B'],
+    'D has dependencies, not selectable'
+);
 
 $map->satisfy('A');
 is_deeply([$map->selectable()], ['C', 'B'], 'A satisfied, B and C selectable');

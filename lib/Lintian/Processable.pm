@@ -73,10 +73,10 @@ from the required fields according to the Policy Manual.
 =cut
 
 my %KEEP = map { $_ => 1 } qw(
-    pkg_name pkg_version pkg_src pkg_src_version pkg_type pkg_path pkg_arch
+  pkg_name pkg_version pkg_src pkg_src_version pkg_type pkg_path pkg_arch
 );
 my %KEEP_EXTRA = map { $_ => 1} qw(
-    section binary uploaders maintainer area
+  section binary uploaders maintainer area
 );
 
 sub new_from_metadata {
@@ -91,7 +91,7 @@ sub new_from_metadata {
             $self->{$newn} = $default;
         }
         croak "Required field $oldn is missing or empty"
-            unless defined $self->{$newn} and $self->{$newn} ne '';
+          unless defined $self->{$newn} and $self->{$newn} ne '';
     };
     $self->{'pkg_type'} = $pkg_type;
     $rename_field->('package', 'pkg_name');
@@ -104,15 +104,16 @@ sub new_from_metadata {
             $self->{'pkg_src'} = $1;
             $self->{'pkg_src_version'} = $2;
             croak 'Two source-versions given (source + source-version)'
-                if exists $self->{'source-version'};
+              if exists $self->{'source-version'};
         } else {
-            $rename_field->('source-version', 'pkg_src_version',
-                            $self->pkg_version);
+            $rename_field->(
+                'source-version', 'pkg_src_version', $self->pkg_version
+            );
         }
         if (not exists $self->{'pkg_path'}) {
             my $fn = delete $self->{'filename'};
             croak 'Missing required "filename" field'
-                unless defined $fn;
+              unless defined $fn;
             $self->{'pkg_path'} = "$basepath/$fn";
         }
     } elsif ($pkg_type eq 'source') {
@@ -125,7 +126,7 @@ sub new_from_metadata {
             $dir .= '/' if defined $dir;
             $dir //= '';
             foreach my $f (split m/\n/, $fn) {
-                strip ($f);
+                strip($f);
                 next unless $f && $f =~ m/\.dsc$/;
                 my (undef, undef, $file) = split m/\s++/, $f;
                 # $dir should end with a slash if it is non-empty.
@@ -133,7 +134,7 @@ sub new_from_metadata {
                 last;
             }
             croak 'dsc file not listed in "Files"'
-                unless defined $self->{'pkg_path'};
+              unless defined $self->{'pkg_path'};
         }
     } elsif ($pkg_type eq 'changes') {
         # This case is basically for L::Lab::Manifest entries...
@@ -141,7 +142,7 @@ sub new_from_metadata {
         $self->{'pkg_src_version'} = $self->pkg_version;
         $rename_field->('architecture', 'pkg_arch');
         croak '.changes file must have pkg_path set'
-                unless defined $self->{'pkg_path'};
+          unless defined $self->{'pkg_path'};
     } else {
         croak "Unsupported type $pkg_type";
     }
@@ -183,7 +184,6 @@ sub _make_identifier {
     $self->{identifier} = $id;
     return;
 }
-
 
 =item $proc->pkg_name()
 
@@ -230,7 +230,9 @@ based on the type, name, version and architecture of the package.
 
 =cut
 
-Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted identifier));
+Lintian::Processable->mk_ro_accessors(
+    qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted identifier)
+);
 
 =item $proc->group([$group])
 
@@ -241,7 +243,7 @@ Can also be used to set the group of this processable.
 
 =cut
 
-Lintian::Processable->mk_accessors (qw(group));
+Lintian::Processable->mk_accessors(qw(group));
 
 =item $proc->info
 
@@ -272,7 +274,6 @@ sub clear_cache {
     return;
 }
 
-
 =item $proc->get_field ($field[, $def])
 
 Optional method to access a field in the underlying data set.
@@ -294,8 +295,9 @@ NB: This is mostly an optimization used by L<Lintian::Lab> to avoid
 
 sub get_field {
     my ($self, $field, $def) = @_;
-    return $def unless exists $self->{'extra-fields'} and
-        exists $self->{'extra-fields'}->{$field};
+    return $def
+      unless exists $self->{'extra-fields'}
+      and exists $self->{'extra-fields'}->{$field};
     return $self->{'extra-fields'}->{$field}//$def;
 }
 

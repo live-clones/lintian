@@ -21,4 +21,5 @@ ok($map->add('P2', 'P1'), 'Nodes can be added without properties');
 
 ok(eval {$map->satisfy('P1');}, 'Nodes can be satisfied');
 
-ok($map->addp('foo', 'P', '1', '2', {name => 'test'}), 'Nodes can be added with prefix');
+ok($map->addp('foo', 'P', '1', '2', {name => 'test'}),
+    'Nodes can be added with prefix');

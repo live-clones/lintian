@@ -30,12 +30,12 @@ use Exporter qw(import);
 # depend on us and the sequencing can cause things not to be exported
 # otherwise.
 our (%EXPORT_TAGS, @EXPORT_OK);
+
 BEGIN {
-    %EXPORT_TAGS = ( messages => [qw(msg v_msg warning debug_msg delimiter)],
-                     util => [qw(_global_or_object)]);
-    @EXPORT_OK = (@{$EXPORT_TAGS{messages}},
-                  @{$EXPORT_TAGS{util}},
-                  'string');
+    %EXPORT_TAGS = (
+        messages => [qw(msg v_msg warning debug_msg delimiter)],
+        util => [qw(_global_or_object)]);
+    @EXPORT_OK = (@{$EXPORT_TAGS{messages}},@{$EXPORT_TAGS{util}},'string');
 }
 
 =head1 NAME
@@ -127,18 +127,24 @@ Hash containing the names of tags which have been issued.
 
 =cut
 
-Lintian::Output->mk_accessors(qw(verbosity_level debug color colors stdout
-    stderr showdescription issuedtags));
+Lintian::Output->mk_accessors(
+    qw(verbosity_level debug color colors stdout
+      stderr showdescription issuedtags)
+);
 
 # for the non-OO interface
-my %default_colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan',
-                       'P' => 'green' );
+my %default_colors = (
+    'E' => 'red',
+    'W' => 'yellow',
+    'I' => 'cyan',
+    'P' => 'green'
+);
 
 our $GLOBAL = Lintian::Output->new;
 
 sub new {
     my ($class, %options) = @_;
-    my $self = { %options };
+    my $self = {%options};
 
     bless($self, $class);
 
@@ -148,8 +154,8 @@ sub new {
     $self->issuedtags({});
 
     # Set defaults to avoid "uninitialized" warnings
-    $self->verbosity_level (0);
-    $self->color ('never');
+    $self->verbosity_level(0);
+    $self->color('never');
     return $self;
 }
 
@@ -293,10 +299,11 @@ Lintian::Tags::tag().
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
-    $information = ' ' . $self->_quote_print ($information) if $information ne '';
+    $information = ' ' . $self->_quote_print($information)
+      if $information ne '';
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
-    my $fpkg_info = $self->_format_pkg_info ($pkg_info, $tag_info, $override);
+    my $fpkg_info = $self->_format_pkg_info($pkg_info, $tag_info, $override);
 
     my $tag;
     if ($self->_do_color) {
@@ -305,7 +312,7 @@ sub print_tag {
             $escaped =~ s/&/&amp;/g;
             $escaped =~ s/</&lt;/g;
             $escaped =~ s/>/&gt;/g;
-            $tag .= qq(<span style="color: $tag_color">$escaped</span>)
+            $tag .= qq(<span style="color: $tag_color">$escaped</span>);
         } else {
             $tag .= Term::ANSIColor::colored($tag_info->tag, $tag_color);
         }
@@ -315,7 +322,7 @@ sub print_tag {
 
     if ($override && @{ $override->comments }) {
         foreach my $c (@{ $override->comments }) {
-            $self->msg( $self->_quote_print ($c) );
+            $self->msg($self->_quote_print($c));
         }
     }
 
@@ -347,7 +354,6 @@ sub _format_pkg_info {
     return "$code: $pkg_info->{package}$type";
 }
 
-
 =item C<print_start_pkg($pkg_info)>
 
 Called before lintian starts to handle each package.  The version in
@@ -363,8 +369,11 @@ sub print_start_pkg {
         $object = 'file';
     }
 
-    $self->v_msg($self->delimiter,
-                 "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}, arch $pkg_info->{arch}) ...");
+    $self->v_msg(
+        $self->delimiter,
+        join(q{ },
+            "Processing $pkg_info->{type} $object $pkg_info->{package}",
+            "(version $pkg_info->{version}, arch $pkg_info->{arch}) ..."));
     return;
 }
 
@@ -467,9 +476,11 @@ output.
 sub _do_color {
     my ($self) = @_;
 
-    return ($self->color eq 'always' || $self->color eq 'html'
-            || ($self->color eq 'auto'
-                && -t $self->stdout));
+    return (
+             $self->color eq 'always'
+          || $self->color eq 'html'
+          || ($self->color eq 'auto'
+            && -t $self->stdout));
 }
 
 =item C<_quote_print($string)>

@@ -28,7 +28,7 @@ use Exporter qw(import);
 
 BEGIN {
     our @EXPORT_OK = qw(versions_equal versions_lte versions_gte versions_lt
-                        versions_gt versions_compare versions_comparator);
+      versions_gt versions_compare versions_comparator);
     our %EXPORT_TAGS = ('all' => \@EXPORT_OK);
 }
 
@@ -155,10 +155,10 @@ C<<< << >>>, or C<<< >> >>>, and false otherwise.
 sub versions_compare {
     my ($p, $op, $q) = @_;
     if    ($op eq  '=') { return versions_equal($p, $q) }
-    elsif ($op eq '<=') { return versions_lte  ($p, $q) }
-    elsif ($op eq '>=') { return versions_gte  ($p, $q) }
-    elsif ($op eq '<<') { return versions_lt   ($p, $q) }
-    elsif ($op eq '>>') { return versions_gt   ($p, $q) }
+    elsif ($op eq '<=') { return versions_lte($p, $q) }
+    elsif ($op eq '>=') { return versions_gte($p, $q) }
+    elsif ($op eq '<<') { return versions_lt($p, $q) }
+    elsif ($op eq '>>') { return versions_gt($p, $q) }
     else { croak("unknown operator $op") }
 }
 
@@ -178,7 +178,7 @@ versions:
 
 sub versions_comparator ($$) {
     my ($p, $q) = @_;
-    return $versioning->compare ($p, $q);
+    return $versioning->compare($p, $q);
 }
 
 =back

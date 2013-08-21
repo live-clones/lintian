@@ -23,7 +23,7 @@ use warnings;
 BEGIN {
     # Disabling IPC::Run::Debug saves tons of useless calls.
     $ENV{'IPCRUNDEBUG'} = 'none'
-        unless exists $ENV{'IPCRUNDEBUG'};
+      unless exists $ENV{'IPCRUNDEBUG'};
 }
 
 use Exporter qw(import);
@@ -213,8 +213,6 @@ sub spawn {
         }
     }
 
-#    use Data::Dumper;
-#    print STDERR Dumper($opts, \@cmds);
     eval {
         if (@cmds == 1) {
             my $cmd = pop @cmds;
@@ -248,20 +246,19 @@ sub spawn {
         $opts->{success} = 0;
         $opts->{exception} = $@;
     } elsif ($opts->{fail} eq 'error'
-             and not $opts->{success}) {
+        and not $opts->{success}) {
         require Lintian::Util;
         if ($opts->{description}) {
-            Lintian::Util::fail("$opts->{description} failed with error code ".
-                       $opts->{harness}->result);
+            Lintian::Util::fail("$opts->{description} failed with error code "
+                  . $opts->{harness}->result);
         } elsif (@cmds == 1) {
-            Lintian::Util::fail("$cmds[0][0] failed with error code ".
-                       $opts->{harness}->result);
+            Lintian::Util::fail("$cmds[0][0] failed with error code "
+                  . $opts->{harness}->result);
         } else {
-            Lintian::Util::fail('command failed with error code '.
-                       $opts->{harness}->result);
+            Lintian::Util::fail(
+                'command failed with error code ' . $opts->{harness}->result);
         }
     }
-#    print STDERR Dumper($opts, \@cmds);
     return $opts->{success};
 }
 
@@ -300,23 +297,22 @@ sub reap {
     while (my $opts = shift @_) {
         next unless defined($opts->{harness});
 
-        eval {
-            $opts->{success} = $opts->{harness}->finish;
-        };
+        eval {$opts->{success} = $opts->{harness}->finish;};
         if ($@) {
             require Lintian::Util;
             Lintian::Util::fail($@) if $opts->{fail} ne 'never';
             $opts->{success} = 0;
             $opts->{exception} = $@;
         } elsif ($opts->{fail} eq 'error'
-                 and not $opts->{success}) {
+            and not $opts->{success}) {
             require Lintian::Util;
             if ($opts->{description}) {
-                Lintian::Util::fail("$opts->{description} failed with error code ".
-                           $opts->{harness}->result);
+                Lintian::Util::fail(
+                    "$opts->{description} failed with error code "
+                      . $opts->{harness}->result);
             } else {
-                Lintian::Util::fail('command failed with error code '.
-                           $opts->{harness}->result);
+                Lintian::Util::fail('command failed with error code '
+                      . $opts->{harness}->result);
             }
         }
         $status &&= $opts->{success};

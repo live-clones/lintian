@@ -32,12 +32,12 @@ use constant {
 use Exporter qw(import);
 our (@EXPORT_OK, %EXPORT_TAGS);
 %EXPORT_TAGS = (
-    constants => [qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL
-                     VISIT_STOP_FIRST_MATCH)],
+    constants => [
+        qw(VISIT_PRED_NAME VISIT_PRED_FULL VISIT_OR_CLAUSE_FULL
+          VISIT_STOP_FIRST_MATCH)
+    ],
 );
-@EXPORT_OK = (
-    @{ $EXPORT_TAGS{constants} }
-);
+@EXPORT_OK = (@{ $EXPORT_TAGS{constants} });
 
 use Lintian::Relation::Version qw(:all);
 
@@ -211,7 +211,6 @@ sub new_noarch {
     return $class->new($relation);
 }
 
-
 =item and(RELATION, ...)
 
 Creates a new Lintian::Relation object produced by AND'ing all the
@@ -232,7 +231,7 @@ sub and {
         unless ($arg && ref $arg eq 'Lintian::Relation') {
             # Optimize out empty entries.
             next unless $arg;
-            $rel = Lintian::Relation->new ($arg);
+            $rel = Lintian::Relation->new($arg);
         }
         if ($rel->[0] eq 'AND') {
             my @r = @$rel;
@@ -252,7 +251,7 @@ sub and {
     } else {
         $self = ['AND', @result];
     }
-    bless ($self, $class);
+    bless($self, $class);
     return $self;
 }
 
@@ -320,9 +319,7 @@ sub duplicates {
     # dependencies, just in case that helps the user find the problems,
     # despite the fact we're using a hash.
     return map {
-        [ $_,
-          sort { $dups{$_}->{$a} <=> $dups{$_}->{$b} } keys %{ $dups{$_} }
-        ]
+        [$_, sort { $dups{$_}{$a} <=> $dups{$_}{$b} } keys %{ $dups{$_} }]
     } keys %dups;
 }
 
@@ -724,9 +721,8 @@ sub unparse {
         return $text;
     } elsif ($relation->[0] eq 'AND' || $relation->[0] eq 'OR') {
         my $separator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
-        return join($separator, map {
-            $self->unparse($_);
-        } @$relation[1 .. $#$relation]);
+        return join($separator,
+            map {$self->unparse($_);} @$relation[1 .. $#$relation]);
     } elsif ($relation->[0] eq 'NOT') {
         return '! ' . $self->unparse($relation->[1]);
     } else {
@@ -807,7 +803,7 @@ sub matches {
     my ($self, $regex, $what, $partial) = @_;
     my $relation = $partial // $self;
     $what //= VISIT_PRED_NAME;
-    return $self->visit ( sub { m/$regex/ }, $what | VISIT_STOP_FIRST_MATCH);
+    return $self->visit(sub { m/$regex/ }, $what | VISIT_STOP_FIRST_MATCH);
 }
 
 =item visit (CODE[, FLAGS])
@@ -853,7 +849,6 @@ relation).
 
 =cut
 
-
 # The last argument is not part of the public API.  It's a partial
 # relation that's not a blessed object and is used by visit()
 # internally so that it can recurse.
@@ -864,18 +859,19 @@ sub visit {
     $flags //= 0;
     if ($relation->[0] eq 'PRED') {
         my $against = $relation->[1];
-        $against = $self->unparse ($relation) if $flags & VISIT_PRED_FULL;
+        $against = $self->unparse($relation) if $flags & VISIT_PRED_FULL;
         local $_ = $against;
         return $code->($against);
-    } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL and
-             $relation->[0] eq 'OR') {
-        my $against = $self->unparse ($relation);
+    } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL
+        and $relation->[0] eq 'OR') {
+        my $against = $self->unparse($relation);
         local $_ = $against;
         return $code->($against);
-    } elsif ($relation->[0] eq 'AND' or $relation->[0] eq 'OR' or
-             $relation->[0] eq 'NOT') {
+    } elsif ($relation->[0] eq 'AND'
+        or $relation->[0] eq 'OR'
+        or $relation->[0] eq 'NOT') {
         for my $rel (@$relation[1 .. $#$relation]) {
-            my $ret = $self->visit ($code, $flags, $rel);
+            my $ret = $self->visit($code, $flags, $rel);
             if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
                 return $ret;
             }

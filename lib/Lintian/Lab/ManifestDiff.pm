@@ -111,7 +111,8 @@ copied and may have been changed since the diff has been created.
 
 =cut
 
-Lintian::Lab::ManifestDiff->mk_ro_accessors (qw(added removed changed type nlist olist));
+Lintian::Lab::ManifestDiff->mk_ro_accessors(
+    qw(added removed changed type nlist olist));
 
 =back
 

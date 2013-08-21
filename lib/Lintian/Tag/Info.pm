@@ -25,7 +25,8 @@ use warnings;
 use Carp qw(croak);
 
 use Lintian::Data;
-use Lintian::Tag::TextUtil qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
+use Lintian::Tag::TextUtil
+  qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 use Lintian::Tags qw();
 use Lintian::Util qw(fail);
 
@@ -34,11 +35,12 @@ use Lintian::Util qw(fail);
 # when formatting references to manual pages into HTML to provide a link
 # to the manual page.
 our $MANURL
-    = 'http://manpages.debian.net/cgi-bin/man.cgi?query=NAME&amp;sektion=SECTION';
+  = 'http://manpages.debian.net/cgi-bin/man.cgi?query=NAME&amp;sektion=SECTION';
 
 # Stores the parsed manual reference data.  Loaded the first time info()
 # is called.
-our $MANUALS = Lintian::Data->new ('output/manual-references', qr/::/, \&_load_manual_data);
+our $MANUALS
+  = Lintian::Data->new('output/manual-references', qr/::/,\&_load_manual_data);
 
 # Map severity/certainty levels to tag codes.
 our %CODES = (
@@ -93,11 +95,13 @@ sub new {
     croak "Missing Severity field for $tagname" unless $self->{'severity'};
     croak "Missing Certainty field for $tagname" unless $self->{'certainty'};
     croak "Tag $tagname has invalid severity ($self->{'severity'}):"
-          . ' Must be one of ' . join (', ', @Lintian::Tags::SEVERITIES)
-        unless exists $CODES{$self->{'severity'}};
+      . ' Must be one of '
+      . join(', ', @Lintian::Tags::SEVERITIES)
+      unless exists $CODES{$self->{'severity'}};
     croak "Tag $tagname has invalid certainty ($self->{'certainty'}):"
-          . ' Must be one of ' . join (', ', @Lintian::Tags::CERTAINTIES)
-        unless exists $CODES{$self->{'severity'}}{$self->{'certainty'}};
+      . ' Must be one of '
+      . join(', ', @Lintian::Tags::CERTAINTIES)
+      unless exists $CODES{$self->{'severity'}}{$self->{'certainty'}};
     $self->{'info'} = '' unless $self->{'info'};
     $self->{'script'} = $sn;
     $self->{'script-type'} = $st;
@@ -173,9 +177,9 @@ sub _load_manual_data {
 # argument isn't a known manual.
 sub _manual_reference {
     my ($manual, $section) = @_;
-    return '' unless $MANUALS->known ($manual);
+    return '' unless $MANUALS->known($manual);
 
-    my $man = $MANUALS->value ($manual);
+    my $man = $MANUALS->value($manual);
     # Start with the reference to the overall manual.
     my $title = $man->{''}{title};
     my $url   = $man->{''}{url};
@@ -193,7 +197,10 @@ sub _manual_reference {
     if ($section and exists $man->{$section}) {
         my $sec_title = $man->{$section}{title};
         my $sec_url   = $man->{$section}{url};
-        $text .= $sec_url ? qq[ (<a href="$sec_url">$sec_title</a>)] : qq[ ($sec_title)];
+        $text.=
+          $sec_url
+          ? qq[ (<a href="$sec_url">$sec_title</a>)]
+          : qq[ ($sec_title)];
     }
 
     return $text;
@@ -223,7 +230,7 @@ sub _format_reference {
             my $url = qq(http://bugs.debian.org/$1);
             $text = qq(<a href="$url">$url</a>);
         }
-        push (@refs, $text) if $text;
+        push(@refs, $text) if $text;
     }
 
     # Now build an English list of the results with appropriate commas and
@@ -264,12 +271,13 @@ sub description {
         push(@text, '', "Check: $script, Type: $stype");
     }
     if ($self->experimental) {
-        push(@text, '',
-             'This tag is marked experimental, which means that the code that'
-             . ' generates it is not as well-tested as the rest of Lintian'
-             . ' and might still give surprising results.  Feel free to'
-             . ' ignore experimental tags that do not seem to make sense,'
-             . ' though of course bug reports are always welcome.');
+        push(@text,
+            '',
+            'This tag is marked experimental, which means that the code that'
+              . ' generates it is not as well-tested as the rest of Lintian'
+              . ' and might still give surprising results.  Feel free to'
+              . ' ignore experimental tags that do not seem to make sense,'
+              . ' though of course bug reports are always welcome.');
     }
 
     # Format and return the output.

@@ -29,10 +29,10 @@ use Getopt::Long;
 STDOUT->autoflush;
 
 BEGIN {
-  # determine LINTIAN_ROOT
-  my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '/usr/share/lintian';
-  $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT
-    unless exists $ENV{'LINTIAN_ROOT'};
+    # determine LINTIAN_ROOT
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '/usr/share/lintian';
+    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT
+      unless exists $ENV{'LINTIAN_ROOT'};
 }
 
 # import perl libraries
@@ -41,11 +41,10 @@ use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 
-my %already_displayed = ();
 my ($annotate, $tags, $help, $prof);
-my $user_dirs = 1; # Allow user dirs ($HOME/.lintian and /etc/lintian) by default
-my $profile;
-my @dirs = ();
+my (%already_displayed, $profile, @dirs);
+# Allow user dirs ($HOME/.lintian and /etc/lintian) by default
+my $user_dirs = 1;
 
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
@@ -84,9 +83,9 @@ if ($user_dirs) {
 push @dirs, $ENV{'LINTIAN_ROOT'} if exists $ENV{'LINTIAN_ROOT'};
 push @dirs, '/usr/share/lintian' unless exists $ENV{'LINTIAN_ROOT'};
 
-$profile = Lintian::Profile->new ($prof, \@dirs);
+$profile = Lintian::Profile->new($prof, \@dirs);
 
-Lintian::Data->set_vendor ($profile);
+Lintian::Data->set_vendor($profile);
 
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,
@@ -94,7 +93,7 @@ Lintian::Data->set_vendor ($profile);
 my $unknown;
 if ($tags) {
     for my $tag (@ARGV) {
-        my $info = $profile->get_tag ($tag, 1);
+        my $info = $profile->get_tag($tag, 1);
         if ($info) {
             print $info->code . ": $tag\n";
             print "N:\n";
@@ -107,7 +106,7 @@ if ($tags) {
         }
         print "N:\n";
     }
-    exit ($unknown ? 1 : 0);
+    exit($unknown ? 1 : 0);
 }
 
 my $type_re = qr/(?:binary|changes|source|udeb)/o;
@@ -135,12 +134,12 @@ while (<>) {
         $tagdata = $1;
         ($tag, undef) = split m/ /o, $tagdata, 2;
     } else {
-        my @parts = split_tag ($_);
+        my @parts = split_tag($_);
         next unless @parts;
         $tag = $parts[5];
     }
     next if $already_displayed{$tag}++;
-    my $info = $profile->get_tag ($tag, 1);
+    my $info = $profile->get_tag($tag, 1);
     next unless $info;
     print "N:\n";
     print $info->description('text', 'N:   ');

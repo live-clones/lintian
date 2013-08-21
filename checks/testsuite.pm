@@ -25,27 +25,27 @@ use autodie;
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(
-    file_is_encoded_in_non_utf8
-    read_dpkg_control
+  file_is_encoded_in_non_utf8
+  read_dpkg_control
 );
 
 my @MANDATORY_FIELDS = qw(
-    tests
+  tests
 );
 my %KNOWN_FIELDS = map { $_ => 1 } qw(
-    tests
-    restrictions
-    features
-    depends
-    tests-directory
+  tests
+  restrictions
+  features
+  depends
+  tests-directory
 );
 my %KNOWN_FEATURES = map { $_ => 1 } qw(
 );
 my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
-    breaks-testbed
-    build-needed
-    needs-root
-    rw-build-tree
+  breaks-testbed
+  build-needed
+  needs-root
+  rw-build-tree
 );
 
 sub run {
@@ -74,7 +74,8 @@ sub run {
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
 
             if ($not_utf8_line) {
-                tag 'debian-tests-control-uses-national-encoding', "at line $not_utf8_line";
+                tag 'debian-tests-control-uses-national-encoding',
+                  "at line $not_utf8_line";
             }
             check_control_contents($info, $path);
         }
@@ -97,6 +98,7 @@ sub check_control_contents {
     }
     return;
 }
+
 sub check_control_paragraph {
     my ($info, $paragraph) = @_;
 
@@ -134,7 +136,7 @@ sub check_control_paragraph {
             $directory = $paragraph->{'tests-directory'};
         }
         for my $testname (split(' ', $paragraph->{'tests'})) {
-            check_test_file ($info, $directory, $testname);
+            check_test_file($info, $directory, $testname);
         }
     }
     return;

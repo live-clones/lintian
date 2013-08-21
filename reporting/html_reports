@@ -36,17 +36,20 @@ use Text::Template ();
 
 # These have no default and must be set in the configuration file.
 # FIXME: $statistics_file should be in all caps as well.
-our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
-     $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
-     $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE,
-     $GRAPHS_RANGE_DAYS, $GRAPHS, $LINTIAN_MIRROR_NAME);
+our (
+    $LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR,
+    $LINTIAN_DIST,$LINTIAN_ARCH, $HTML_TMP_DIR,
+    $statistics_file,$LINTIAN_AREA, $HISTORY,
+    $HISTORY_DIR, $LINTIAN_SOURCE,$GRAPHS_RANGE_DAYS,
+    $GRAPHS, $LINTIAN_MIRROR_NAME
+);
 
 # Read the configuration.
 BEGIN { require './config'; } ## no critic (Modules::RequireBarewordIncludes)
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP
-    = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
+  = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
 
 # Import Lintian Perl libraries.
 use lib "$LINTIAN_ROOT/lib";
@@ -57,19 +60,16 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
-my $profile = Lintian::Profile->new (undef,
-                                     [$LINTIAN_ROOT]);
+my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
 
-Lintian::Data->set_vendor ($profile);
-
+Lintian::Data->set_vendor($profile);
 
 # Set the Lintian version, current timestamp, and archive timestamp.
 our $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`;
 our $timestamp = `date -u --rfc-822`;
 our $mirror_timestamp = slurp_entire_file($LINTIAN_TIMESTAMP);
-chomp ($LINTIAN_VERSION, $timestamp);
+chomp($LINTIAN_VERSION, $timestamp);
 $mirror_timestamp =~ s/\n.*//s;
-
 
 # ------------------------------
 # Initialize templates
@@ -80,22 +80,22 @@ our $TEMPLATES = "$LINTIAN_ROOT/reporting/templates";
 # This only has to be done once, so do it at the start and then reuse the same
 # templates throughout.
 our %templates;
-for my $template (qw/head foot clean index maintainer maintainers packages tag
-                     tags tags-severity tag-not-seen tags-all/) {
+for my $template (
+    qw/head foot clean index maintainer maintainers packages tag
+    tags tags-severity tag-not-seen tags-all/
+  ) {
     my %options = (TYPE => 'FILE', SOURCE => "$TEMPLATES/$template.tmpl");
-    $templates{$template} = Text::Template->new (%options)
-        or die "cannot load template $template: $Text::Template::ERROR\n";
+    $templates{$template} = Text::Template->new(%options)
+      or die "cannot load template $template: $Text::Template::ERROR\n";
 }
-
 
 # ------------------------------
 # Main routine
 
-my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
+my $LAB = Lintian::Lab->new($LINTIAN_LAB);
 my $source_info;
 $LAB->open;
-$source_info = $LAB->_get_lab_index ('source');
-
+$source_info = $LAB->_get_lab_index('source');
 
 # Create output directories.
 mkdir($HTML_TMP_DIR, 0777);
@@ -106,14 +106,15 @@ symlink('.', "$HTML_TMP_DIR/reports");
 symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
 if ($ARGV[0]) {
     symlink($ARGV[0], "$HTML_TMP_DIR/lintian.log");
-    system("gzip --best -c > \"$HTML_TMP_DIR/lintian.log.gz\" < \"$ARGV[0]\"")  == 0
-        or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";
+    system("gzip --best -c > \"$HTML_TMP_DIR/lintian.log.gz\" < \"$ARGV[0]\"")
+      == 0
+      or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";
 }
 copy("$LINTIAN_ROOT/reporting/lintian.css", "$HTML_TMP_DIR/lintian.css")
-    or die "cannot copy lintian.css to $HTML_TMP_DIR: $!\n";
+  or die "cannot copy lintian.css to $HTML_TMP_DIR: $!\n";
 for my $image (qw/ico.png l.png logo-small.png/) {
     copy("$LINTIAN_ROOT/reporting/images/$image", "$HTML_TMP_DIR/$image")
-        or die "cannot copy images/$image to $HTML_TMP_DIR: $!\n";
+      or die "cannot copy images/$image to $HTML_TMP_DIR: $!\n";
 }
 
 # %statistics accumulates global statistics.  For tags: errors, warnings,
@@ -180,7 +181,7 @@ my (%seen, %saw_maintainer);
 while (<>) {
     my @parts;
     chomp;
-    @parts = split_tag ($_);
+    @parts = split_tag($_);
     next unless @parts;
     my ($code, $package, $type, $pver, $parch, $tag, $extra) = @parts;
     $type = 'binary' unless (defined $type);
@@ -188,7 +189,7 @@ while (<>) {
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
     # Ignore unknown tags - happens if we removed a tag that is still present
     # in the log file.
-    next unless $profile->get_tag ($tag, 1);
+    next unless $profile->get_tag($tag, 1);
 
     # Update statistics.
     my $key = {
@@ -211,7 +212,7 @@ while (<>) {
     # pulling information from a binary package or udeb of the same name if
     # there is any.
     my ($source, $version, $area, $source_version, $maintainer, $uploaders);
-    my $pkg_data = $LAB->_get_lab_manifest_data ($package, $type, $pver, $parch);
+    my $pkg_data= $LAB->_get_lab_manifest_data($package, $type, $pver, $parch);
     if ($type eq 'source') {
         $source = $package;
         if (defined $pkg_data) {
@@ -231,7 +232,8 @@ while (<>) {
             $area = $pkg_data->{area};
             $source = $pkg_data->{source}//$package;
             $source_version = $pkg_data->{'source-version'}//$version;
-            $src_data = $LAB->_get_lab_manifest_data ($source, 'source', $source_version);
+            $src_data = $LAB->_get_lab_manifest_data($source, 'source',
+                $source_version);
         } else {
             $version = $pver;
         }
@@ -243,9 +245,9 @@ while (<>) {
             $parch//='N/A';
             if (defined $pkg_data) {
                 warn "source for package $package/$pver/$parch"
-                    . " ($source/$source_version) not found!\n";
+                  . " ($source/$source_version) not found!\n";
             } else {
-                warn "data for package $package/$pver/$parch not found!\n"
+                warn "data for package $package/$pver/$parch not found!\n";
             }
             $maintainer = undef;
             $uploaders = undef;
@@ -255,13 +257,13 @@ while (<>) {
     $area ||= 'main';
     $source ||= '';
     $version = 'unknown'
-        unless (defined ($version) and length ($version) > 0);
+      unless (defined($version) and length($version) > 0);
     $source_version = $version
-        unless (defined ($source_version) and length ($source_version) > 0);
+      unless (defined($source_version) and length($source_version) > 0);
 
     # Check if we've seen the URL for this maintainer before and, if so, map
     # them to the same person as the previous one.
-    $maintainer = map_maintainer ($maintainer);
+    $maintainer = map_maintainer($maintainer);
     $saw_maintainer{$maintainer} = 1;
 
     # Update maintainer statistics.
@@ -275,16 +277,17 @@ while (<>) {
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
     my $info = {
-        code      => html_quote ($code),
-        package   => html_quote ($package),
-        version   => html_quote ($version),
-        area      => html_quote ($area),
-        type      => html_quote ($type),
-        tag       => html_quote ($tag),
-        severity  => html_quote ($profile->get_tag ($tag, 1)->severity),
-        certainty => html_quote ($profile->get_tag ($tag, 1)->certainty),
-        extra     => html_quote ($extra),
-        xref      => maintainer_url ($maintainer) . "#${source}_${source_version}"
+        code      => html_quote($code),
+        package   => html_quote($package),
+        version   => html_quote($version),
+        area      => html_quote($area),
+        type      => html_quote($type),
+        tag       => html_quote($tag),
+        severity  => html_quote($profile->get_tag($tag, 1)->severity),
+        certainty => html_quote($profile->get_tag($tag, 1)->certainty),
+        extra     => html_quote($extra),
+        xref      => maintainer_url($maintainer)
+          . "#${source}_${source_version}"
     };
     $by_maint{$maintainer}{$source}{$source_version} ||= [];
     push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
@@ -294,13 +297,13 @@ while (<>) {
     # If the package had uploaders listed, also add the information to
     # %by_uploaders (still sharing the data between hashes).
     if ($uploaders) {
-        my @uploaders = split (/>\K\s*,\s*/, $uploaders);
+        my @uploaders = split(/>\K\s*,\s*/, $uploaders);
         for (@uploaders) {
-            my $uploader = map_maintainer ($_);
+            my $uploader = map_maintainer($_);
             next if $uploader eq $maintainer;
             $saw_maintainer{$uploader} = 1;
             $by_uploader{$uploader}{$source}{$source_version} ||= [];
-            push(@{ $by_uploader{$uploader}{$source}{$source_version} }, $info);
+            push(@{ $by_uploader{$uploader}{$source}{$source_version} },$info);
         }
     }
 }
@@ -309,18 +312,18 @@ while (<>) {
 # this later to generate stub pages for maintainers whose packages are all
 # Lintian-clean.
 my %clean;
-$source_info->visit_all (sub {
-    my ($srcdata) = @_;
-    my $maintainer = $srcdata->{maintainer};
-    my $id = maintainer_url ($maintainer);
-    $clean{$id} = $maintainer;
-});
+$source_info->visit_all(
+    sub {
+        my ($srcdata) = @_;
+        my $maintainer = $srcdata->{maintainer};
+        my $id = maintainer_url($maintainer);
+        $clean{$id} = $maintainer;
+    });
 
 # Done with the lab and its metadata
 $LAB->close;
 undef $LAB;
 undef $source_info;
-
 
 # Now, walk through the tags by source package (sorted by maintainer).  Output
 # a summary page of errors and warnings for each maintainer, output a full
@@ -330,11 +333,11 @@ my (%qa, %maintainers, %sources);
 my @maintainers;
 {
     my %unique;
-    @maintainers =
-        sort grep { !$unique{$_}++ } keys (%by_maint), keys (%by_uploader);
+    @maintainers=sort grep { !$unique{$_}++ } keys(%by_maint),
+      keys(%by_uploader);
 }
 for my $maintainer (@maintainers) {
-    my $id = maintainer_url ($maintainer);
+    my $id = maintainer_url($maintainer);
     delete $clean{$id};
 
     # For each of this maintainer's packages, add statistical information
@@ -344,7 +347,9 @@ for my $maintainer (@maintainers) {
     # double-counting.
     for my $source (keys %{ $by_maint{$maintainer} }) {
         my %count;
-        for my $version (sort versions_comparator keys %{ $by_maint{$maintainer}{$source} }) {
+        for my $version (
+            sort versions_comparator keys %{ $by_maint{$maintainer}{$source} })
+        {
             my $tags = $by_maint{$maintainer}{$source}{$version};
             for my $tag (@$tags) {
                 $count{$tag->{code}}++;
@@ -364,11 +369,11 @@ for my $maintainer (@maintainers) {
     # will be grouped, which produces better HTML output.
     my $error_clean = 1;
     for my $source (keys %{ $by_maint{$maintainer} },
-                    keys %{ $by_uploader{$maintainer} }) {
+        keys %{ $by_uploader{$maintainer} }) {
         my $versions = $by_maint{$maintainer}{$source}
-            || $by_uploader{$maintainer}{$source};
+          || $by_uploader{$maintainer}{$source};
         for my $version (keys %$versions) {
-            $versions->{$version} = [ sort by_tag @{ $versions->{$version} } ];
+            $versions->{$version} = [sort by_tag @{ $versions->{$version} }];
             my $tags = $versions->{$version};
             for my $tag (@$tags) {
                 $error_clean = 0 if ($tag->{code} eq 'E');
@@ -389,11 +394,11 @@ for my $maintainer (@maintainers) {
     # full maintainer page (all tags, including overrides and info tags).
     print "Generating page for $id\n";
     my %data = (
-        email      => html_quote (uri_escape ($email)),
+        email      => html_quote(uri_escape($email)),
         errors     => 1,
         id         => $id,
-        maintainer => html_quote ($maintainer),
-        name       => html_quote ($name),
+        maintainer => html_quote($maintainer),
+        name       => html_quote($name),
         packages   => $by_maint{$maintainer},
         uploads    => $by_uploader{$maintainer},
     );
@@ -403,20 +408,18 @@ for my $maintainer (@maintainers) {
     } else {
         $template = $templates{maintainer};
     }
-    output_template ($regular, $template, \%data);
+    output_template($regular, $template, \%data);
     $template = $templates{maintainer};
     $data{errors} = 0;
-    output_template ($full, $template, \%data);
+    output_template($full, $template, \%data);
 
     # Add this maintainer to the hash of maintainer to URL mappings.
     $maintainers{$maintainer} = $id;
 }
 
 # Write out the maintainer index.
-my %data = (
-    maintainers => \%maintainers,
-);
-output_template ('maintainers.html', $templates{maintainers}, \%data);
+my %data = (maintainers => \%maintainers,);
+output_template('maintainers.html', $templates{maintainers}, \%data);
 
 mkdir("$HTML_TMP_DIR/lookup-tables");
 open(my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages");
@@ -424,7 +427,7 @@ open(my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages");
 my %table_seen = ();
 foreach my $source (sort keys %sources) {
     my $first = 1;
-    foreach my $version (sort versions_comparator keys %{ $sources{$source} }) {
+    for my $version (sort versions_comparator keys %{ $sources{$source} }) {
         my $xref = $sources{$source}{$version};
         print {$table} "$source full/$xref\n" if $first;
         print {$table} "$source/$version full/$xref\n";
@@ -455,20 +458,20 @@ for my $id (keys %clean) {
     $email = 'unknown' unless $email;
     my %maint_data = (
         id         => $id,
-        email      => html_quote (uri_escape ($email)),
-        maintainer => html_quote ($maintainer),
-        name       => html_quote ($name),
+        email      => html_quote(uri_escape($email)),
+        maintainer => html_quote($maintainer),
+        name       => html_quote($name),
         clean      => 1,
     );
     print "Generating clean page for $id\n";
-    output_template ("maintainer/$id", $templates{clean}, \%maint_data);
-    output_template ("full/$id", $templates{clean}, \%maint_data);
+    output_template("maintainer/$id", $templates{clean}, \%maint_data);
+    output_template("full/$id", $templates{clean}, \%maint_data);
 }
 
 # Create the pages for each tag.  Each page shows the extended description for
 # the tag and all the packages for which that tag was issued.
-for my $tag (sort $profile->tags (1)) {
-    my $info = $profile->get_tag ($tag, 1);
+for my $tag (sort $profile->tags(1)) {
+    my $info = $profile->get_tag($tag, 1);
     my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
     my %seen_tags;
@@ -490,13 +493,13 @@ for my $tag (sort $profile->tags (1)) {
 
     my %maint_data = (
         description => $description,
-        tag         => html_quote ($tag),
+        tag         => html_quote($tag),
         code        => $info->code,
         tags        => $by_tag{$tag},
         graphs      => $GRAPHS,
         graphs_days => $GRAPHS_RANGE_DAYS,
     );
-    output_template ("tags/$tag.html", $templates{$tmpl}, \%maint_data);
+    output_template("tags/$tag.html", $templates{$tmpl}, \%maint_data);
 }
 
 # Create the general tag indices.
@@ -505,9 +508,9 @@ for my $tag (sort $profile->tags (1)) {
     stats      => \%tag_statistics,
     profile    => \$profile,
 );
-output_template ('tags.html', $templates{tags}, \%data);
-output_template ('tags-severity.html', $templates{'tags-severity'}, \%data);
-output_template ('tags-all.html', $templates{'tags-all'}, \%data);
+output_template('tags.html', $templates{tags}, \%data);
+output_template('tags-severity.html', $templates{'tags-severity'}, \%data);
+output_template('tags-all.html', $templates{'tags-all'}, \%data);
 
 # Generate the package lists.  These are huge, so we break them into four
 # separate pages.
@@ -525,14 +528,12 @@ for my $package (sort keys %sources) {
     elsif ($first le 'R') { push(@{ $list{'M-R'} },      $package) }
     else                  { push(@{ $list{'S-Z'} },      $package) }
 }
-%data = (
-    sources => \%sources,
-);
+%data = (sources => \%sources,);
 my $i = 1;
 for my $section (sort keys %list) {
     $data{section} = $section;
     $data{list} = $list{$section};
-    output_template ("packages_$i.html", $templates{packages}, \%data);
+    output_template("packages_$i.html", $templates{packages}, \%data);
     $i++;
 }
 
@@ -544,12 +545,12 @@ if (-f $statistics_file) {
 }
 my %delta;
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
-               errors warnings info experimental pedantic overridden);
+  errors warnings info experimental pedantic overridden);
 for my $attr (@attrs) {
     my $old = $old_statistics->{$attr} || 0;
     $statistics{$attr} ||= 0;
-    $delta{$attr} = sprintf('%d (%+d)', $statistics{$attr},
-                            $statistics{$attr} - $old);
+    $delta{$attr}
+      = sprintf('%d (%+d)', $statistics{$attr},$statistics{$attr} - $old);
 }
 
 # Update the statistics file.
@@ -573,7 +574,7 @@ close($stats_fd);
     graphs       => $GRAPHS,
     graphs_days  => $GRAPHS_RANGE_DAYS,
 );
-output_template ('index.html', $templates{index}, \%data);
+output_template('index.html', $templates{index}, \%data);
 
 exit 0 if (not $HISTORY);
 
@@ -583,9 +584,9 @@ my $graph_dir = "$HTML_TMP_DIR/graphs";
 my $commonf = "$graph_dir/common.gpi";
 my $unix_time = time();
 mkdir("$HISTORY_DIR")
-    if (not -d "$HISTORY_DIR");
+  if (not -d "$HISTORY_DIR");
 mkdir("$HISTORY_DIR/tags")
-    if (not -d "$HISTORY_DIR/tags");
+  if (not -d "$HISTORY_DIR/tags");
 
 my $history_file = "$HISTORY_DIR/statistics.dat";
 my $stats = '';
@@ -597,7 +598,7 @@ print {$hist_fd} "$unix_time $LINTIAN_VERSION$stats\n";
 
 if ($GRAPHS) {
     seek($hist_fd, 0, SEEK_SET);
-    while ( <$hist_fd> ) {
+    while (<$hist_fd>) {
         my @fields = split();
         $versions{$fields[1]} = $fields[0] if not exists $versions{$fields[1]};
     }
@@ -608,30 +609,31 @@ if ($GRAPHS) {
     mkdir("$graph_dir", 0777);
     mkdir("$graph_dir/tags", 0777);
 
-    my $date_min = strftime ('%s', localtime ($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
-    my $date_max = strftime ('%s', localtime ($unix_time));
+    my $date_min
+      = strftime('%s', localtime($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
+    my $date_max = strftime('%s', localtime($unix_time));
 
     # Generate loadable Gnuplot file with common variables and labels/arrows
     # for Lintian versions.
     open(my $common, '>', $commonf);
-    print { $common } "history_dir='$HISTORY_DIR'\n";
-    print { $common } "graph_dir='$graph_dir'\n";
-    print { $common } "date_min='$date_min'\n";
-    print { $common } "date_max='$date_max'\n";
+    print {$common} "history_dir='$HISTORY_DIR'\n";
+    print {$common} "graph_dir='$graph_dir'\n";
+    print {$common} "date_min='$date_min'\n";
+    print {$common} "date_max='$date_max'\n";
     my $last_version = 0;
     for my $v (sort { $versions{$a} <=> $versions{$b} } keys %versions) {
         next unless $versions{$v} > $date_min;
 
-        print { $common } "set arrow from '$versions{$v}',graph 0 to ",
-            "'$versions{$v}',graph 1 nohead lw 0.4\n";
+        print {$common} "set arrow from '$versions{$v}',graph 0 to ",
+          "'$versions{$v}',graph 1 nohead lw 0.4\n";
 
         # Skip label if previous release is too close; graphs can't display
         # more than ~32 labels.
         my $min_spacing = 3600 * 24 * $GRAPHS_RANGE_DAYS / 32;
         if ($versions{$v} - $last_version > $min_spacing) {
             (my $label = $v) =~ s/\-[\w\d]+$//;
-            print { $common } "set label '$label' at '$versions{$v}',graph ",
-                "1.04 rotate by 90 font ',8'\n"
+            print {$common} "set label '$label' at '$versions{$v}',graph ",
+              "1.04 rotate by 90 font ',8'\n";
         }
 
         $last_version = $versions{$v};
@@ -639,22 +641,28 @@ if ($GRAPHS) {
     close($common);
 
     print "Plotting global statistics...\n";
-    chdir_system ($graph_dir, ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
-        or die "gnuplot died with $?\n";
+    chdir_system($graph_dir,
+        ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
+      or die "gnuplot died with $?\n";
 }
 
 for my $tag (sort keys %tag_statistics) {
     $history_file = "$HISTORY_DIR/tags/$tag.dat";
     $stats = $tag_statistics{$tag};
     open(my $tag_fd, '>>', $history_file);
-    print {$tag_fd} "$unix_time $stats->{'count'} $stats->{'overrides'} " .
-               "$stats->{'packages'}\n";
+    print {$tag_fd} "$unix_time $stats->{'count'} $stats->{'overrides'} "
+      ."$stats->{'packages'}\n";
     close($tag_fd);
     if ($GRAPHS) {
         print "Plotting $tag statistics...\n";
-        chdir_system ($graph_dir, ['gnuplot', '-e', "tag='$tag'",
-                                   "$LINTIAN_ROOT/reporting/graphs/tags.gpi"]) == 0
-            or die "gnuplot died with $?\n";
+        chdir_system(
+            $graph_dir,
+            [
+                'gnuplot', '-e',
+                "tag='$tag'","$LINTIAN_ROOT/reporting/graphs/tags.gpi"
+            ]
+          ) == 0
+          or die "gnuplot died with $?\n";
     }
 }
 
@@ -695,14 +703,15 @@ sub maintainer_url {
 ## no critic (ControlStructures::ProhibitUnreachableCode)
 {
     my (%urlmap, %warned);
+
     sub map_maintainer {
         my ($maintainer) = @_;
-        my $url = maintainer_url ($maintainer);
+        my $url = maintainer_url($maintainer);
         if ($urlmap{$url} && $urlmap{$url} ne $maintainer) {
             warn "$maintainer has the same page as $urlmap{$url}\n"
-                unless ($warned{$maintainer}
-                        || lc ($maintainer) eq lc ($urlmap{$url})
-                        || $maintainer =~ /\@lists\.(alioth\.)?debian\.org>/);
+              unless ($warned{$maintainer}
+                || lc($maintainer) eq lc($urlmap{$url})
+                || $maintainer =~ /\@lists\.(alioth\.)?debian\.org>/);
             $warned{$maintainer}++;
             $maintainer = $urlmap{$url};
         } else {
@@ -729,14 +738,24 @@ sub output_template {
     $data->{version} ||= $LINTIAN_VERSION;
     $data->{timestamp} ||= $timestamp;
     $data->{by_version} ||= \&versions_comparator;
-    $data->{head} ||= sub { $templates{head}->fill_in (HASH => { page_title => $_[0],
-                                                                 path_prefix => '../' x ($_[1]||0),
-                                                                 %$data }) };
-    $data->{foot} ||= sub { $templates{foot}->fill_in (HASH => { LINTIAN_SOURCE => $LINTIAN_SOURCE,
-                                                                 %$data }) };
+    $data->{head} ||= sub {
+        $templates{head}->fill_in(
+            HASH => {
+                page_title => $_[0],
+                path_prefix => '../' x ($_[1]||0),
+                %{$data},
+            });
+    };
+    $data->{foot} ||= sub {
+        $templates{foot}->fill_in(
+            HASH => {
+                LINTIAN_SOURCE => $LINTIAN_SOURCE,
+                %{$data},
+            });
+    };
     open(my $fd, '>', "$HTML_TMP_DIR/$file");
     $template->fill_in(OUTPUT => $fd, HASH => $data)
-        or die "filling out $file failed: $Text::Template::ERROR\n";
+      or die "filling out $file failed: $Text::Template::ERROR\n";
     close($fd);
     return;
 }
@@ -752,25 +771,26 @@ sub by_tag {
         return -1 if $a->{type} eq 'source';
         return  1 if $b->{type} eq 'source';
     }
-    return $a->{package} cmp $b->{package}
-        || $a->{version} cmp $b->{version}
-        || $a->{area}    cmp $b->{area}
-        || $a->{type}    cmp $b->{type}
-        || $a->{tag}     cmp $b->{tag}
-        || $a->{extra}   cmp $b->{extra};
+    return
+         $a->{package} cmp $b->{package}
+      || $a->{version} cmp $b->{version}
+      || $a->{area}    cmp $b->{area}
+      || $a->{type}    cmp $b->{type}
+      || $a->{tag}     cmp $b->{tag}
+      || $a->{extra}   cmp $b->{extra};
 }
 
 sub chdir_system {
     my ($dir, $cmd) = @_;
     my $pid = fork();
     if ($pid) {
-        waitpid ($pid, 0) == $pid or die "waitpid failed: $!\n";
+        waitpid($pid, 0) == $pid or die "waitpid failed: $!\n";
         return $?;
     }
 
     chdir($dir);
     exec @$cmd
-        or die "exec failed: $!";
+      or die "exec failed: $!";
 }
 
 # Local Variables:

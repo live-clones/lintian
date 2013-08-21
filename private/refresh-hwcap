@@ -8,8 +8,7 @@ use POSIX qw(strftime);
 
 my $datadir = shift;
 my $man = shift // '/usr/share/man/man8/ld.so.8.gz';
-my %caps;
-my @keeps = ();
+my (%caps, @keeps);
 
 die "Usage: $0 path/to/lintian/data.\n" unless $datadir;
 
@@ -33,7 +32,7 @@ close($manpage);
 my $path = "$datadir/shared-libs/hwcap-dirs";
 my $date = strftime '%Y-%m-%d', gmtime;
 open(my $orig, '<', $path);
-while ( my $line = <$orig> ) {
+while (my $line = <$orig>) {
     chomp $line;
     next unless $line =~ m/^#\s*Keep:\s*(.*\S)\s*$/o;
     my $keep = $1;

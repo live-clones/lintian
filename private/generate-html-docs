@@ -16,16 +16,17 @@ push @input, './lib', './doc/tutorial' unless @input;
 $output //= './doc/api.html';
 $version = guess_version();
 
-if ( ! -d $output) {
+if (!-d $output) {
     mkdir $output or die "could not create directory: $!";
 }
 
-$Pod::Simple::HTML::Content_decl = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >};
+$Pod::Simple::HTML::Content_decl
+  = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >};
 
 my $convert = Pod::Simple::HTMLBatch->new;
-$convert->html_render_class ('Pod::Simple::HTML');
-$convert->contents_page_start( header() );
-$convert->batch_convert (\@input, $output);
+$convert->html_render_class('Pod::Simple::HTML');
+$convert->contents_page_start(header());
+$convert->batch_convert(\@input, $output);
 
 print "HTML version available at $output/index.html\n";
 
@@ -50,7 +51,7 @@ sub guess_version {
         $dist = $1 if $line =~ m{\A Distribution: \s*+ (\S++) \s* \Z}xsm;
     }
     close($fd);
-    if ( (not defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
+    if ((not defined($dist) or $dist eq 'UNRELEASED') and -d '.git') {
         # For unreleased versions, git describe is probably a better
         # choice when available.
         my $guess;

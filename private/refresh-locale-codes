@@ -25,25 +25,24 @@ use autodie;
 use POSIX qw(strftime);
 
 BEGIN {
-  # determine LINTIAN_ROOT
+    # determine LINTIAN_ROOT
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '.';
     $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT
-        unless exists $ENV{'LINTIAN_ROOT'};
-};
+      unless exists $ENV{'LINTIAN_ROOT'};
+}
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(check_path);
 
 my ($DATADIR) = @ARGV;
-my %CODES;
-my $outfile;
+my (%CODES, $outfile);
 
 die "Usage: $0 <path-to-data-dir>\n"
-    unless defined $DATADIR and -d $DATADIR;
+  unless defined $DATADIR and -d $DATADIR;
 
 check_requirements();
 
-my $date = strftime ('%Y-%m-%d', gmtime);
+my $date = strftime('%Y-%m-%d', gmtime);
 
 $ENV{LC_ALL} = 'C';
 
@@ -74,7 +73,7 @@ foreach my $code (sort keys %CODES) {
 close($out);
 
 rename $outfile, "$DATADIR/files/locale-codes"
-    or die "rename $outfile -> $DATADIR/files/locale-codes: $!";
+  or die "rename $outfile -> $DATADIR/files/locale-codes: $!";
 
 exit 0;
 
@@ -130,13 +129,19 @@ sub parse_iso_query {
 sub check_requirements {
     my @missing;
     push @missing, 'isoquery in PATH'
-        unless check_path ('isoquery');
+      unless check_path('isoquery');
     push @missing, 'The file /usr/share/xml/iso-codes/iso_639_3.xml'
-        unless -f '/usr/share/xml/iso-codes/iso_639_3.xml';
+      unless -f '/usr/share/xml/iso-codes/iso_639_3.xml';
 
     return unless @missing;
 
     print STDERR "Missing requirements:\n";
-    print STDERR "\t", join ("\n\t", @missing), "\n";
+    print STDERR "\t", join("\n\t", @missing), "\n";
     exit 1;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

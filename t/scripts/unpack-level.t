@@ -28,15 +28,14 @@ $ENV{'LINTIAN_ROOT'} //= '.';
 
 # Find all of the desc files in either collection or checks.  We'll do one
 # check per description.
-our @DESCS = (glob("$ENV{LINTIAN_ROOT}/collection/*.desc>"),
-              glob("$ENV{LINTIAN_ROOT}/checks/*.desc"));
+our @DESCS = (
+    glob("$ENV{LINTIAN_ROOT}/collection/*.desc>"),
+    glob("$ENV{LINTIAN_ROOT}/checks/*.desc"));
 plan tests => scalar(@DESCS);
 
 my @l2refs = (
-        qr|->unpacked|,
-	qr<unpacked/>,
-	qr<unpacked-errors>,
-	qr<chdir\s*\(?\s*["'](?:\$dir/)?unpacked/?['"]\s*\)?>,
+    qr|->unpacked|,qr<unpacked/>,qr<unpacked-errors>,
+    qr<chdir\s*\(?\s*["'](?:\$dir/)?unpacked/?['"]\s*\)?>,
 );
 
 # For each desc file, load the first stanza of the file and check that if
@@ -47,15 +46,15 @@ for my $desc (@DESCS) {
     my @needs;
     my $codefile = substr($desc, 0, -5); # Strip ".desc"
     if ($header->{'collector-script'}) {
-        my $coll = Lintian::CollScript->new ($desc);
+        my $coll = Lintian::CollScript->new($desc);
         @needs = $coll->needs_info;
     } else {
         @needs = split(/\s*,\s*/, $header->{'needs-info'} || '');
     }
 
     if ($desc =~ m/lintian\.desc$/) {
-	ok(1, 'lintian.desc has valid needs-info for unpack level');
-	next;
+        ok(1, 'lintian.desc has valid needs-info for unpack level');
+        next;
     }
 
     if ($codefile !~ m{ /collection/ }xsm) {
@@ -67,10 +66,10 @@ for my $desc (@DESCS) {
     my $requires_unpacked = 0;
 
     for my $l2ref (@l2refs) {
-	if ($code =~ m/$l2ref/) {
-	    $requires_unpacked = 1;
-	    last;
-	}
+        if ($code =~ m/$l2ref/) {
+            $requires_unpacked = 1;
+            last;
+        }
     }
     my $short = $desc;
     $short =~ s,^\Q$ENV{LINTIAN_ROOT}\E/?,,;
@@ -78,6 +77,10 @@ for my $desc (@DESCS) {
     # it is ok that collection/unpacked doesn't depend on itself :)
     $requires_unpacked = 0 if ($short eq 'collection/unpacked.desc');
 
-    ok($requires_unpacked? defined($ninfo{'unpacked'}) : !defined($ninfo{'unpacked'}),
-	"$short has valid needs-info for unpack level");
+    ok(
+        $requires_unpacked
+        ? defined($ninfo{'unpacked'})
+        : !defined($ninfo{'unpacked'}),
+        "$short has valid needs-info for unpack level"
+    );
 }

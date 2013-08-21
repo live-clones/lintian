@@ -32,9 +32,8 @@ use Lintian::Tags qw(tag);
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
 our @EXPORT_OK = qw(check_maintainer check_spelling check_spelling_picky
-                    $known_shells_regex
+  $known_shells_regex
 );
-
 
 =head1 NAME
 
@@ -159,7 +158,7 @@ sub check_maintainer {
         $malformed = 1;
     }
     tag "$field-address-looks-weird", $maintainer
-        if (not $del and $name and $mail);
+      if (not $del and $name and $mail);
 
     if (not $name) {
         tag "$field-name-missing", $maintainer;
@@ -183,7 +182,7 @@ sub check_maintainer {
                 #   can be dropped when the fix is in stable.
                 my $copy = $mail;
                 $copy =~ s/^0/1/;
-                $malformed = 0 if Email::Valid->address ($copy);
+                $malformed = 0 if Email::Valid->address($copy);
             }
             tag "$field-address-malformed", $maintainer if $malformed;
         }
@@ -191,20 +190,25 @@ sub check_maintainer {
             tag "$field-address-is-on-localhost", $maintainer;
         }
 
-        if (($field ne 'changed-by') and
-            ($mail =~ /\@packages\.(?:qa\.)?debian\.org/i or $KNOWN_BOUNCE_ADDRESSES->known($mail))) {
-            tag "$field-address-causes-mail-loops-or-bounces", $maintainer
+        if (
+            ($field ne 'changed-by')
+            and (  $mail =~ /\@packages\.(?:qa\.)?debian\.org/i
+                or $KNOWN_BOUNCE_ADDRESSES->known($mail))
+          ) {
+            tag "$field-address-causes-mail-loops-or-bounces", $maintainer;
         }
-
 
         # Some additional checks that we only do for maintainer fields.
         if ($field eq 'maintainer') {
-            if (($mail eq 'debian-qa@lists.debian.org') or
-                ($name =~ /\bdebian\s+qa\b/i and $mail ne 'packages@qa.debian.org')) {
+            if (
+                ($mail eq 'debian-qa@lists.debian.org')
+                or (    $name =~ /\bdebian\s+qa\b/i
+                    and $mail ne 'packages@qa.debian.org')
+              ) {
                 tag 'wrong-debian-qa-address-set-as-maintainer', $maintainer;
             } elsif ($mail eq 'packages@qa.debian.org') {
                 tag 'wrong-debian-qa-group-name', $maintainer
-                    if ($name ne 'Debian QA Group');
+                  if ($name ne 'Debian QA Group');
             }
         }
     }
@@ -238,8 +242,8 @@ sub check_spelling {
     my %seen = ();
     my $counter = 0;
     my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
-    my $corrections_multiword =
-        Lintian::Data->new('spelling/corrections-multiword', '\|\|');
+    my $corrections_multiword
+      = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
 
     $text =~ s/[()\[\]]//g;
     $text =~ s/(\w-)\s*\n\s*/$1/;
@@ -252,8 +256,8 @@ sub check_spelling {
         # Some exceptions are based on case (e.g. "teH").
         next if exists($exceptions->{$word});
         my $lcword = lc $word;
-        if ($corrections->known($lcword) &&
-                !exists ($exceptions->{$lcword})) {
+        if ($corrections->known($lcword)
+            &&!exists($exceptions->{$lcword})) {
             $counter++;
             my $correction = $corrections->value($lcword);
             if ($word =~ /^[A-Z]+$/) {
@@ -280,7 +284,7 @@ sub check_spelling {
             $counter++;
             next if $seen{lc $word}++;
             _tag($tag, $filename, $word, $correction)
-                if defined $tag;
+              if defined $tag;
         }
     }
 
@@ -305,15 +309,15 @@ sub check_spelling_picky {
 
     my %seen = ();
     my $counter = 0;
-    my $corrections_case =
-        Lintian::Data->new('spelling/corrections-case', '\|\|');
+    my $corrections_case
+      = Lintian::Data->new('spelling/corrections-case', '\|\|');
 
     # Check this first in case it's contained in square brackets and
     # removed below.
     if ($text =~ m,meta\s+package,) {
         $counter++;
         _tag($tag, $filename, 'meta package', 'metapackage')
-            if defined $tag;
+          if defined $tag;
     }
 
     # Exclude text enclosed in square brackets as it could be a package list
@@ -326,7 +330,7 @@ sub check_spelling_picky {
             $counter++;
             next if $seen{$word}++;
             _tag($tag, $filename, $word, $corrections_case->value($word))
-                if defined $tag;
+              if defined $tag;
             next;
         }
     }

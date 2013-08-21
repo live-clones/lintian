@@ -112,7 +112,8 @@ Returns a truth value if the extra is a pattern.
 
 =cut
 
-Lintian::Tag::Override->mk_ro_accessors (qw(tag arch comments extra is_pattern));
+Lintian::Tag::Override->mk_ro_accessors(
+    qw(tag arch comments extra is_pattern));
 
 =item $override->overrides($extra)
 

@@ -63,12 +63,10 @@ will be stored as a L<lab entry|Lintian::Lab::Entry> from LAB.
 
 sub new {
     my ($class, $lab, $changes) = @_;
-    my $self = {
-        'lab' => $lab,
-    };
+    my $self = {'lab' => $lab,};
     bless $self, $class;
     $self->_init_group_from_changes($changes)
-        if defined $changes;
+      if defined $changes;
     return $self;
 }
 
@@ -76,9 +74,10 @@ sub new {
 sub _lab_proc {
     my ($self, $proc) = @_;
     return $proc unless $self->{'lab'};
-    return $proc if $proc->isa ('Lintian::Lab::Entry') and
-        not $proc->from_lab ($self->{'lab'});
-    return $self->{'lab'}->get_package ($proc);
+    return $proc
+      if $proc->isa('Lintian::Lab::Entry')
+      and not $proc->from_lab($self->{'lab'});
+    return $self->{'lab'}->get_package($proc);
 }
 
 # Internal initialization sub
@@ -87,11 +86,11 @@ sub _init_group_from_changes {
     my ($self, $changes) = @_;
     my ($cinfo, $cdir);
     fail "$changes does not exist" unless -e $changes;
-    $cinfo = get_dsc_info ($changes) or
-        fail "$changes is not a valid changes file";
-    $self->add_new_processable ($changes, 'changes');
+    $cinfo = get_dsc_info($changes)
+      or fail "$changes is not a valid changes file";
+    $self->add_new_processable($changes, 'changes');
     $cdir = $changes;
-    if ( $changes =~ m,^/+[^/]++$,o){
+    if ($changes =~ m,^/+[^/]++$,o){
         # it is "/files.changes?"
         #  - In case you were wondering, we were told not to ask :)
         #   See #624149
@@ -100,10 +99,10 @@ sub _init_group_from_changes {
         # it is "<something>/files.changes"
         $cdir =~ s,(.+)/[^/]+$,$1,;
     }
-    foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
+    for my $line (split(/\n/o, $cinfo->{'files'}//'')) {
         my ($file);
         next unless defined $line;
-        strip ($line);
+        strip($line);
         next if $line eq '';
         # Ignore files that may lead to path traversal issues.
 
@@ -126,7 +125,7 @@ sub _init_group_from_changes {
             next;
         }
 
-        $self->add_new_processable ("$cdir/$file");
+        $self->add_new_processable("$cdir/$file");
 
     }
     return 1;
@@ -147,7 +146,7 @@ This is short hand for:
 sub add_new_processable {
     my ($self, $pkg_path, $pkg_type) = @_;
     return $self->add_processable(
-        Lintian::Processable::Package->new ($pkg_path, $pkg_type));
+        Lintian::Processable::Package->new($pkg_path, $pkg_type));
 }
 
 =item $group->add_processable($proc)
@@ -168,15 +167,15 @@ sub add_processable{
 
     if ($pkg_type eq 'changes'){
         fail 'Cannot add another changes file' if (exists $self->{changes});
-        $self->{changes} = $self->_lab_proc ($processable);
+        $self->{changes} = $self->_lab_proc($processable);
     } elsif ($pkg_type eq 'source'){
         fail 'Cannot add another source package' if (exists $self->{source});
-        $self->{source} = $self->_lab_proc ($processable);
+        $self->{source} = $self->_lab_proc($processable);
     } else {
         my $phash;
         my $id = $processable->identifier;
         fail "Unknown type $pkg_type"
-            unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
+          unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
         $phash = $self->{$pkg_type};
         if (!defined $phash){
             $phash = {};
@@ -184,7 +183,7 @@ sub add_processable{
         }
         # duplicate ?
         return 0 if (exists $phash->{$id});
-        $phash->{$id} = $self->_lab_proc ($processable);
+        $phash->{$id} = $self->_lab_proc($processable);
     }
     $processable->group($self);
     return 1;
@@ -212,7 +211,9 @@ sub get_processables {
         if ($type eq 'changes' or $type eq 'source'){
             return $self->{$type}  if defined $self->{$type};
         }
-        return values %{$self->{$type}} if $type eq 'binary' or $type eq 'udeb';
+        return values %{$self->{$type}}
+          if $type eq 'binary'
+          or $type eq 'udeb';
         fail "Unknown type of processable: $type";
     }
     # We return changes, dsc, debs and udebs in that order,
@@ -293,7 +294,6 @@ sub get_binary_processables {
     return @result;
 }
 
-
 =item $group->info
 
 Returns L<$info|Lintian::Collect::Group> element for this group.
@@ -303,8 +303,8 @@ Returns L<$info|Lintian::Collect::Group> element for this group.
 sub info {
     my ($self) = @_;
     my $info = $self->{info};
-    if (! defined $info) {
-        $info = Lintian::Collect::Group->new ($self);
+    if (!defined $info) {
+        $info = Lintian::Collect::Group->new($self);
         $self->{info} = $info;
     }
     return $info;

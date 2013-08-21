@@ -61,9 +61,7 @@ L<$group|Lintian::ProcessableGroup>.
 
 sub new {
     my ($class, $group) = @_;
-    my $self = {
-        'group' => $group,
-    };
+    my $self = {'group' => $group,};
     return bless $self, $class;
 }
 
@@ -86,8 +84,8 @@ sub direct_dependencies {
     my $deps = $self->{'direct-dependencies'};
     unless ($deps) {
         my $group = $self->{'group'};
-        my @procs = $group->get_processables ('binary');
-        push @procs, $group->get_processables ('udeb');
+        my @procs = $group->get_processables('binary');
+        push @procs, $group->get_processables('udeb');
         $deps = {};
         foreach my $proc (@procs) {
             my $pname = $proc->pkg_name;
@@ -136,10 +134,10 @@ Example: Package alot-doc (#687464)
 sub spelling_exceptions {
     my ($self) = @_;
     return $self->{'spelling_exceptions'}
-        if exists $self->{'spelling_exceptions'};
+      if exists $self->{'spelling_exceptions'};
     my %except = ();
     my $group = $self->{'group'};
-    foreach my $proc ($group->get_processables ('binary')) {
+    foreach my $proc ($group->get_processables('binary')) {
         foreach my $name ($proc->pkg_name, $proc->pkg_src) {
             $except{$name} = 1;
             $except{$_} = 1 for split m/-/, $name;

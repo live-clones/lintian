@@ -243,7 +243,7 @@ sub tag {
     # says to display it.
     # Note, we get the known as it will be suppressed by
     # $self->suppressed below if the tag is not enabled.
-    my $info = $self->{profile}->get_tag ($tag, 1);
+    my $info = $self->{profile}->get_tag($tag, 1);
     unless ($info) {
         croak "tried to issue unknown tag $tag";
     }
@@ -535,26 +535,36 @@ sub file_overrides {
         my $override = $_;
         # The override looks like the following:
         # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
-        # - Note we do a strict package name check here because parsing overrides
-        #   is a bit ambigious (see #699628)
-        if ($override =~ m/^(?:                     # start optional part
+        # - Note we do a strict package name check here because
+        #   parsing overrides is a bit ambigious (see #699628)
+        if (
+            $override =~ m/\A (?:                   # start optional part
                   (\Q$info->{package}\E)?           # optionally starts with package name -> $1
                   (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
                   (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
                 :\s++)?                             # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x){  # <tag-name> [extra] -> $4
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)       # <tag-name> [extra] -> $4
+                   \Z/xsm
+          ) {
             # Valid - so far at least
-            my ($opkg_name, $archlist, $opkg_type, $tagdata) = ($1, $2, $3, $4);
+            my ($opkg_name, $archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
             my $tagover;
             my $data;
             if ($opkg_type and $opkg_type ne $info->{type}) {
-                tag 'malformed-override',
-                    "Override of $tag for package type $opkg_type (expecting $info->{type}) at line $.";
+                tag(
+                    'malformed-override',
+                    join(q{ },
+                        "Override of $tag for package type $opkg_type",
+                        "(expecting $info->{type}) at line $."));
                 next;
             }
             if ($info->{arch} eq 'all' && $archlist) {
-                tag 'malformed-override', "Architecture list for arch:all package at line $. (for tag $tag)";
+                tag(
+                    'malformed-override',
+                    join(q{ },
+                        'Architecture list for arch:all package',
+                        "at line $. (for tag $tag)"));
                 next;
             }
             if ($archlist) {
@@ -564,18 +574,27 @@ sub file_overrides {
                 my $found = 0;
                 foreach my $a (@archs){
                     $negated++ if $a =~ s/^!//o;
-                    if (is_arch_wildcard ($a)) {
-                        $found = 1 if wildcard_includes_arch ($a, $info->{arch});
-                    } elsif (is_arch ($a)) {
+                    if (is_arch_wildcard($a)) {
+                        $found = 1
+                          if wildcard_includes_arch($a, $info->{arch});
+                    } elsif (is_arch($a)) {
                         $found = 1 if $a eq $info->{arch};
                     } else {
-                        tag 'malformed-override', "Unknown architecture \"$a\" at line $. (for tag $tag)";
+                        tag(
+                            'malformed-override',
+                            join(q{ },
+                                "Unknown architecture \"$a\"",
+                                "at line $. (for tag $tag)"));
                         next OVERRIDE;
                     }
                 }
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
-                    tag 'malformed-override', "Inconsistent architecture negation at line $. (for tag $tag)";
+                    tag(
+                        'malformed-override',
+                        join(q{ },
+                            'Inconsistent architecture negation',
+                            "at line $. (for tag $tag)"));
                     next;
                 }
                 # missing wildcard checks and sanity checking archs $arch
@@ -584,7 +603,7 @@ sub file_overrides {
                 }
                 next unless $found;
             }
-            if ( $profile && !$profile->is_overridable ($tag) ) {
+            if ($profile && !$profile->is_overridable($tag)) {
                 $self->{ignored_overrides}{$tag}++;
                 next;
             }
@@ -599,7 +618,7 @@ sub file_overrides {
                 $comments = $last_over->comments;
             }
             $extra = '' unless defined $extra;
-            $data =  {
+            $data = {
                 'extra' => $extra,
                 'comments' => $comments,
             };
@@ -609,8 +628,8 @@ sub file_overrides {
             $info->{overrides}{$tag}{$extra} = 0;
             $last_over = $tagover;
         } else {
-            # We know this to be a bad override; check if it might be an override for
-            # a different package.
+            # We know this to be a bad override; check if it might be
+            # an override for a different package.
             if ($override !~ m/^\Q$info->{package}\E[\s:\[]/) {
                 # So, we got an override that does not start with the
                 # package name - cases include:
@@ -627,13 +646,19 @@ sub file_overrides {
                 $override =~ s/([^:\[]+)?\[[^\]]+\]([^:]*):/$1 $2:/;
                 $override =~ s/\s\s++/ /g;
 
-                if ($override =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/o) {
+                if ($override
+                    =~ m/^($PKGNAME_REGEX)?(?: (?:binary|changes|source|udeb))? ?:/o
+                  ) {
                     my $opkg = $1;
                     # Looks like a wrong package name - technically,
                     # $opkg could be a tag if the tag information is
                     # present, but it is very unlikely.
-                    tag 'malformed-override',
-                        "Possibly wrong package in override at line $. (got $opkg, expected $info->{package})";
+                    tag(
+                        'malformed-override',
+                        join(q{ },
+                            'Possibly wrong package in override',
+                            "at line $. (got $opkg, expected $info->{package})"
+                        ));
                     next;
                 }
             }
@@ -667,7 +692,7 @@ sub load_overrides {
     }
     $lpkg = $self->{'info'}{$current}{'processable'};
     $overrides_file = $lpkg->info->lab_data_path('override');
-    if ( -f $overrides_file ) {
+    if (-f $overrides_file) {
         $self->file_overrides($overrides_file);
     }
     return;
@@ -692,12 +717,12 @@ sub file_end {
         my $info = $self->{info}{$current};
         my $pkg_overrides = $info->{overrides};
 
-        for my $tag (sort(keys %{$pkg_overrides} )) {
+        for my $tag (sort(keys %{$pkg_overrides})) {
             my $overrides;
             next if $self->suppressed($tag);
 
             $overrides = $pkg_overrides->{$tag};
-            for my $extra (sort(keys %{$overrides} )) {
+            for my $extra (sort(keys %{$overrides})) {
                 next if $overrides->{$extra};
                 $self->tag('unused-override', $tag, $extra);
             }
@@ -736,9 +761,8 @@ sub overrides {
     my ($self, $proc) = @_;
     if ($proc and $self->{info}{$proc->pkg_path}) {
         return $self->{info}{$proc->pkg_path}{overrides};
-    } else {
-        return;
     }
+    return;
 }
 
 =item statistics([PROC])
@@ -782,7 +806,7 @@ sub displayed {
     my ($self, $tag) = @_;
     # Note, we get the known as it will be suppressed by
     # $self->suppressed below if the tag is not enabled.
-    my $info = $self->{profile}->get_tag ($tag, 1);
+    my $info = $self->{profile}->get_tag($tag, 1);
     return 0 if ($info->experimental and not $self->{show_experimental});
     return 0 if $self->suppressed($tag);
     my $severity = $info->severity;
@@ -815,7 +839,7 @@ Tags are suppressed via profile().
 
 sub suppressed {
     my ($self, $tag) = @_;
-    return 1 if $self->{profile} and not $self->{profile}->get_tag ($tag);
+    return 1 if $self->{profile} and not $self->{profile}->get_tag($tag);
     return;
 }
 

@@ -34,59 +34,59 @@ use constant FILENAME_LENGTH_LIMIT => 80;
 use constant LONGEST_ARCHITECTURE => length 'kfreebsd-amd64';
 
 sub run {
+    my ($pkg, $type, $info, $proc) = @_;
 
-my ($pkg, $type, $info, $proc) = @_;
+    # pkg_version(_arch)?.type
+    # - here we pay for length of "name_version"
+    my $len = length($pkg) + length($proc->pkg_version) + 1;
+    my $extra;
 
-# pkg_version(_arch)?.type
-# - here we pay for length of "name_version"
-my $len = length($pkg) + length($proc->pkg_version) + 1;
-my $extra;
-
-if ($type eq 'binary' || $type eq 'source'){
-    # Here we add length .deb / .dsc (in both cases +4)
-    $len += 4;
-} else {
-    # .udeb, thats a +5
-    $len += 5;
-}
-
-if ($type ne 'source') {
-    # non-src pkgs have architecture as well
-    if ($proc->pkg_arch ne 'all'){
-        my $real = $len + 1 + length($proc->pkg_arch);
-        $len  += 1 + LONGEST_ARCHITECTURE;
-        $extra = "$real ($len)";
-    } else {
-        # _all has length 4
+    if ($type eq 'binary' || $type eq 'source'){
+        # Here we add length .deb / .dsc (in both cases +4)
         $len += 4;
+    } else {
+        # .udeb, thats a +5
+        $len += 5;
     }
-}
-$extra = $len unless defined $extra;
 
-tag 'package-has-long-file-name', "$extra > ". FILENAME_LENGTH_LIMIT
-    if $len > FILENAME_LENGTH_LIMIT;
+    if ($type ne 'source') {
+        # non-src pkgs have architecture as well
+        if ($proc->pkg_arch ne 'all'){
+            my $real = $len + 1 + length($proc->pkg_arch);
+            $len  += 1 + LONGEST_ARCHITECTURE;
+            $extra = "$real ($len)";
+        } else {
+            # _all has length 4
+            $len += 4;
+        }
+    }
+    $extra = $len unless defined $extra;
 
-return if $type ne 'source';
+    tag 'package-has-long-file-name', "$extra > ". FILENAME_LENGTH_LIMIT
+      if $len > FILENAME_LENGTH_LIMIT;
 
-# Reset to work with elements of the dsc file.
-$len = 0;
+    return if $type ne 'source';
 
-foreach my $entry (split m/\n/o, $info->field ('files', '')){
-    my $filename;
-    my $flen;
-    strip ($entry);
-    next unless $entry;
-    (undef, undef, $filename) = split m/\s++/o, $entry;
-    next unless $filename;
-    $flen = length($filename);
-    $len = $flen if ($flen > $len);
-}
+    # Reset to work with elements of the dsc file.
+    $len = 0;
 
-if ($len > FILENAME_LENGTH_LIMIT){
-    tag 'source-package-component-has-long-file-name', "$len > " . FILENAME_LENGTH_LIMIT;
-}
+    foreach my $entry (split m/\n/o, $info->field('files', '')){
+        my $filename;
+        my $flen;
+        strip($entry);
+        next unless $entry;
+        (undef, undef, $filename) = split m/\s++/o, $entry;
+        next unless $filename;
+        $flen = length($filename);
+        $len = $flen if ($flen > $len);
+    }
 
-return;
+    if ($len > FILENAME_LENGTH_LIMIT){
+        tag 'source-package-component-has-long-file-name',
+          "$len > " . FILENAME_LENGTH_LIMIT;
+    }
+
+    return;
 }
 
 1;

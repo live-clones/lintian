@@ -125,8 +125,8 @@ Needs-Info requirements for using I<changelog>: changelog-file
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->lab_data_path ('changelog');
-    if (-l $dch || ! -f $dch) {
+    my $dch = $self->lab_data_path('changelog');
+    if (-l $dch || !-f $dch) {
         $self->{changelog} = undef;
     } else {
         my %opts = (infile => $dch, quiet => 1);
@@ -182,8 +182,8 @@ Needs-Info requirements for using I<control_index>: bin-pkg-control
 
 sub control_index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data ('control-index', 'control-index',
-                                     undef, $file);
+    return $self->_fetch_index_data('control-index', 'control-index',
+        undef, $file);
 }
 
 =item sorted_control_index
@@ -203,7 +203,7 @@ sub sorted_control_index {
     my ($self) = @_;
     # control_index does all our work for us, so call it if
     # sorted_control_index has not been created yet.
-    $self->control_index ('') unless exists $self->{'sorted_control-index'};
+    $self->control_index('') unless exists $self->{'sorted_control-index'};
     return @{ $self->{'sorted_control-index'} };
 }
 
@@ -221,8 +221,8 @@ Needs-Info requirements for using I<strings>: strings
 
 sub strings {
     my ($self, $file) = @_;
-    my $real = $self->_fetch_extracted_dir ('strings', 'strings', $file);
-    if ( not -f "${real}.gz" ) {
+    my $real = $self->_fetch_extracted_dir('strings', 'strings', $file);
+    if (not -f "${real}.gz") {
         open my $fd, '<', '/dev/null' or fail "open /dev/null: $!";
         return $fd;
     }
@@ -243,7 +243,7 @@ Needs-Info requirements for using I<md5sums>: md5sums
 sub md5sums {
     my ($self) = @_;
     return $self->{md5sums} if exists $self->{md5sums};
-    my $md5f = $self->lab_data_path ('md5sums');
+    my $md5f = $self->lab_data_path('md5sums');
     my $result = {};
 
     # read in md5sums info file
@@ -252,7 +252,7 @@ sub md5sums {
         chop($line);
         next if $line =~ m/^\s*$/o;
         $line =~ m/^(\S+)\s*(\S.*)$/o
-            or fail "syntax error in $md5f info file: $line";
+          or fail "syntax error in $md5f info file: $line";
         my $zzsum = $1;
         my $zzfile = $2;
         $zzfile =~ s,^(?:\./)?,,o;
@@ -305,14 +305,14 @@ sub scripts {
     return $self->{scripts} if exists $self->{scripts};
     my $scrf = $self->lab_data_path('scripts');
     my %scripts;
-    if ( -f $scrf ) {
+    if (-f $scrf) {
         open(my $fd, '<', $scrf);
-        while ( my $line = <$fd> ) {
+        while (my $line = <$fd>) {
             my (%file, $name);
-            chomp ($line);
+            chomp($line);
 
             $line =~ m/^(env )?(\S*) (.*)$/o
-                or fail("bad line in scripts file: $line");
+              or fail("bad line in scripts file: $line");
             ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
 
             $name =~ s,^\./,,o;
@@ -340,12 +340,12 @@ Needs-Info requirements for using I<objdump_info>: objdump-info
 sub objdump_info {
     my ($self) = @_;
     return $self->{objdump_info} if exists $self->{objdump_info};
-    my $objf = $self->lab_data_path ('objdump-info.gz');
+    my $objf = $self->lab_data_path('objdump-info.gz');
     my %objdump_info;
     my $file;
     local $_;
     my $fd = open_gz($objf);
-    foreach my $pg (parse_dpkg_control ($fd)) {
+    foreach my $pg (parse_dpkg_control($fd)) {
         my %info = (
             'PH' => {},
             'SH' => {},
@@ -355,16 +355,17 @@ sub objdump_info {
             'SONAME' => [],
             'TEXTREL' => 0,
         );
-        $info{'ERRORS'} = lc ($pg->{'broken'}//'no') eq 'yes' ? 1 : 0;
-        $info{'UPX'} = lc ($pg->{'upx'}//'no') eq 'yes' ? 1 : 0;
-        $info{'BAD-DYNAMIC-TABLE'} = lc ($pg->{'bad-dynamic-table'}//'no') eq 'yes' ? 1 : 0;
+        $info{'ERRORS'} = lc($pg->{'broken'}//'no') eq 'yes' ? 1 : 0;
+        $info{'UPX'} = lc($pg->{'upx'}//'no') eq 'yes' ? 1 : 0;
+        $info{'BAD-DYNAMIC-TABLE'}
+          = lc($pg->{'bad-dynamic-table'}//'no') eq 'yes' ? 1 : 0;
         foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {
             next unless $symd;
             if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
                 # $ver is not always there
                 my ($sec, $ver, $sym) = ($1, $2, $3);
                 $ver //= '';
-                push @{ $info{'SYMBOLS'} }, [ $sec, $ver, $sym ];
+                push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
             }
         }
         foreach my $data (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
@@ -420,9 +421,9 @@ Needs-Info requirements for using I<hardening_info>: hardening-info
 sub hardening_info {
     my ($self) = @_;
     return $self->{hardening_info} if exists $self->{hardening_info};
-    my $hardf = $self->lab_data_path ('hardening-info');
+    my $hardf = $self->lab_data_path('hardening-info');
     my %hardening_info;
-    if ( -e $hardf ) {
+    if (-e $hardf) {
         open(my $idx, '<', $hardf);
         while (my $line = <$idx>) {
             chomp($line);
@@ -481,9 +482,9 @@ Needs-Info requirements for using I<java_info>: java-info
 sub java_info {
     my ($self) = @_;
     return $self->{java_info} if exists $self->{java_info};
-    my $javaf = $self->lab_data_path ('java-info.gz');
+    my $javaf = $self->lab_data_path('java-info.gz');
     my %java_info;
-    if ( ! -f $javaf ) {
+    if (!-f $javaf) {
         # no java-info.gz => no jar files to collect data.  Just
         # return an empty hash ref.
         $self->{java_info} = \%java_info;
@@ -505,18 +506,15 @@ sub java_info {
             $java_info{$file}->{manifest} = {};
             $manifest = $java_info{$file}->{manifest};
             $file_list = 0;
-        }
-        elsif (m#^-- (?:\./)?(.+)$#o) {
+        } elsif (m#^-- (?:\./)?(.+)$#o) {
             $file = $1;
             $java_info{$file}->{files} = {};
             $file_list = $java_info{$file}->{files};
             $manifest = 0;
-        }
-        else {
-            if($manifest && m#^  (\S+):\s(.*)$#o) {
+        } else {
+            if ($manifest && m#^  (\S+):\s(.*)$#o) {
                 $manifest->{$1} = $2;
-            }
-            elsif ($file_list) {
+            } elsif ($file_list) {
                 my ($fname, $clmajor) = (m#^([^-].*):\s*([-\d]+)$#);
                 $file_list->{$fname} = $clmajor;
             }
@@ -562,21 +560,21 @@ sub relation {
     $field = lc $field;
     return $self->{relation}->{$field} if exists $self->{relation}->{$field};
 
-    my %special = (all    => [ qw(pre-depends depends recommends suggests) ],
-                   strong => [ qw(pre-depends depends) ],
-                   weak   => [ qw(recommends suggests) ]);
+    my %special = (
+        all    => [qw(pre-depends depends recommends suggests)],
+        strong => [qw(pre-depends depends)],
+        weak   => [qw(recommends suggests)]);
     my $result;
     if ($special{$field}) {
-        $result = Lintian::Relation->and (
-            map { $self->relation ($_) } @{ $special{$field} }
-        );
+        $result = Lintian::Relation->and(map { $self->relation($_) }
+              @{ $special{$field} });
     } else {
         my %known = map { $_ => 1 }
-            qw(pre-depends depends recommends suggests enhances breaks
-               conflicts provides replaces);
+          qw(pre-depends depends recommends suggests enhances breaks
+          conflicts provides replaces);
         croak("unknown relation field $field") unless $known{$field};
         my $value = $self->field($field);
-        $result = Lintian::Relation->new ($value);
+        $result = Lintian::Relation->new($value);
     }
     $self->{relation}->{$field} = $result;
     return $self->{relation}->{$field};
@@ -616,15 +614,16 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
 {
     # Regexes to try against the package description to find metapackages or
     # transitional packages.
-    my $METAPKG_REGEX = qr/meta[ -]?package|dummy|(?:dependency|empty|virtual) package/;
+    my $METAPKG_REGEX
+      = qr/meta[ -]?package|dummy|(?:dependency|empty|virtual) package/;
 
     sub is_pkg_class {
         my ($self, $pkg_class) = @_;
-        my $desc = $self->field ('description', '');
+        my $desc = $self->field('description', '');
         $pkg_class //= 'any-meta';
         return 1 if $desc =~ m/transitional package/;
         if ($pkg_class eq 'any-meta') {
-            my ($section) = $self->field ('section', '');
+            my ($section) = $self->field('section', '');
             return 1 if $desc =~ m/$METAPKG_REGEX/o;
             # Section "tasks" or "metapackages" qualifies as well
             return 1 if $section =~ m,(?:^|/)(?:tasks|metapackages)$,;
@@ -655,14 +654,14 @@ sub is_conffile {
         return 1 if exists $self->{'conffiles'}->{$file};
         return;
     }
-    my $cf = $self->control ('conffiles');
+    my $cf = $self->control('conffiles');
     my %conffiles = ();
     $self->{'conffiles'} = \%conffiles;
     # No real packages use links in their control.tar.gz and conffiles
     # must be a file.
     return if -l $cf or not -f $cf;
     open(my $fd, '<', $cf);
-    while ( my $line = <$fd> ) {
+    while (my $line = <$fd>) {
         chomp $line;
         next if $line =~ m/^\s*$/;
         # Look up happens with a relative path (e.g. etc/file.conf).

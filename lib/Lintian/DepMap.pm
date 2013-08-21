@@ -94,6 +94,7 @@ E.g.
     print $map->selectable();
 
 =cut
+
 #'
 sub initialise {
     my $self = shift;
@@ -130,16 +131,17 @@ sub add {
     my ($node, @parents) = @_;
     my $parents = 0;
 
-    if (exists($self->{'unknown'}{$node}) && defined($self->{'unknown'}{$node})) {
+    if (exists($self->{'unknown'}{$node})
+        && defined($self->{'unknown'}{$node})) {
         $self->{'known'}{$node} = $self->{'unknown'}{$node};
         delete $self->{'unknown'}{$node};
     }
     $self->{'known'}{$node}++;
 
     $self->{'nodes'}{$node}->{'branches'} = {}
-        unless(exists($self->{'nodes'}{$node}->{'branches'}));
+      unless(exists($self->{'nodes'}{$node}->{'branches'}));
     $self->{'nodes'}{$node}->{'parents'} = {}
-        unless(exists($self->{'nodes'}{$node}->{'parents'}));
+      unless(exists($self->{'nodes'}{$node}->{'parents'}));
 
     while (my $parent = pop @parents) {
         $parents = 1;
@@ -150,8 +152,10 @@ sub add {
             $self->{'unknown'}{$parent}++;
         }
 
-        $self->{'nodes'}{$parent}->{'branches'}->{$node} = $self->{'nodes'}{$node};
-        $self->{'nodes'}{$node}->{'parents'}->{$parent} = $self->{'nodes'}{$parent};
+        $self->{'nodes'}{$parent}->{'branches'}->{$node}
+          = $self->{'nodes'}{$node};
+        $self->{'nodes'}{$node}->{'parents'}->{$parent}
+          = $self->{'nodes'}{$parent};
     }
     unless ($parents || scalar %{$self->{'nodes'}{$node}->{'parents'}}) {
         $self->{'pending'}{$node} = 1;
@@ -214,19 +218,21 @@ sub satisfy {
     my $node = shift;
 
     if (any {$_ eq $node} $self->missing()) {
-        fail("Attempted to mark node '$node' as satisfied but it is not ".
-                    'reachable, perhaps you forgot to add() it first?');
+        fail(  "Attempted to mark node '$node' as satisfied but it is not "
+              .'reachable, perhaps you forgot to add() it first?');
     }
     if (not exists($self->{'nodes'}{$node})) {
-        fail("Attempted to mark node '$node' as satisfied but it is not ".
-                    'reachable, perhaps you forgot to satisfy() its dependencies first?');
+        fail(  "Attempted to mark node '$node' as satisfied but it is not "
+              .'reachable, perhaps you forgot to satisfy() its dependencies first?'
+        );
     }
     return 0 unless (exists($self->{'pending'}{$node}));
 
     delete $self->{'selected'}{$node}
-        if exists($self->{'selected'}{$node});
+      if exists($self->{'selected'}{$node});
 
-    $self->{'satisfied_nodes'}{$node} = [ keys %{$self->{'nodes'}{$node}{'branches'}} ];
+    $self->{'satisfied_nodes'}{$node}
+      = [keys %{$self->{'nodes'}{$node}{'branches'}}];
 
     for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
         delete $self->{'nodes'}{$branch}->{'parents'}->{$node};
@@ -256,7 +262,6 @@ E.g.
         if ($map->done('A'));
 
 =cut
-
 
 sub done {
     my $self = shift;
@@ -295,19 +300,19 @@ sub unlink {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-        fail("Attempted to unlink node '$node' but it can not be found".
-                    ', perhaps it has already been satisfied?');
+        fail(  "Attempted to unlink node '$node' but it can not be found"
+              .', perhaps it has already been satisfied?');
     }
 
     delete $self->{'pending'}{$node}
-        if (exists($self->{'pending'}{$node}));
+      if (exists($self->{'pending'}{$node}));
 
     delete $self->{'selected'}{$node}
-        if (exists($self->{'selected'}{$node}));
+      if (exists($self->{'selected'}{$node}));
 
     for my $parent (keys %{$self->{'nodes'}{$node}->{'parents'}}) {
         delete $self->{'nodes'}{$parent}{'branches'}{$node}
-           if exists $self->{'nodes'}{$parent}{'branches'}{$node};
+          if exists $self->{'nodes'}{$parent}{'branches'}{$node};
         delete $self->{'nodes'}{$node}{'parents'}{$parent};
     }
 
@@ -345,8 +350,8 @@ sub select {
     my $node = shift;
 
     if (not exists($self->{'pending'}{$node})) {
-        fail("Attempted to mark node '$node' as selected but it is not ".
-                    'known, perhaps its parents are not yet satisfied?');
+        fail(  "Attempted to mark node '$node' as selected but it is not "
+              .'known, perhaps its parents are not yet satisfied?');
     }
     return 0 if (exists($self->{'selected'}{$node}));
 
@@ -370,9 +375,11 @@ sub selectable {
     my $self = shift;
     my $node = shift;
 
-    return (exists $self->{'pending'}{$node} and not exists $self->{'selected'}{$node})
-        if (defined($node));
-    return grep {not exists $self->{'selected'}{$_}} keys %{$self->{'pending'}};
+    return (exists $self->{'pending'}{$node}
+          and not exists $self->{'selected'}{$node})
+      if (defined($node));
+    return
+      grep {not exists $self->{'selected'}{$_}} keys %{$self->{'pending'}};
 }
 
 =item selected([node])
@@ -399,7 +406,7 @@ sub selected {
     my $node = shift;
 
     return exists $self->{'selected'}{$node}
-        if (defined($node));
+      if (defined($node));
     return keys %{$self->{'selected'}};
 }
 
@@ -438,8 +445,8 @@ sub parents {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-        fail("Attempted to get the parents of node '$node' but it is not".
-                    'known, perhaps you forgot to add() it first?');
+        fail(  "Attempted to get the parents of node '$node' but it is not"
+              .'known, perhaps you forgot to add() it first?');
     }
 
     return keys %{$self->{'nodes'}{$node}{'parents'}};
@@ -543,7 +550,8 @@ sub circular {
 
     if ($deep) {
         my @nodes;
-        my ($prev_satisfied, $prev_selected) = ($self->{'satisfied_nodes'}, $self->{'selected'});
+        my ($prev_satisfied, $prev_selected)
+          = ($self->{'satisfied_nodes'}, $self->{'selected'});
         while(@nodes = $self->selectable()) {
             for my $node (@nodes) {
                 $self->satisfy($node);
@@ -559,7 +567,7 @@ sub circular {
         for my $node (keys %{$self->{'nodes'}}) {
             my $node_p = $self->{'nodes'}{$node}->{'parents'};
             my $node_b = $self->{'nodes'}{$node}->{'branches'};
-            push @circ, grep { exists $node_p->{$_} } keys %{$node_p}
+            push @circ, grep { exists $node_p->{$_} } keys %{$node_p};
         }
     }
 

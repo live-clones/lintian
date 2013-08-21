@@ -2,17 +2,17 @@
 # md5sums -- lintian collection script
 
 # Copyright (C) 1998 Richard Braakman
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -31,33 +31,35 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
+    my ($pkg, $type, $dir) = @_;
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-if ( -e "$dir/md5sums" ) {
-    unlink("$dir/md5sums");
+    if (-e "$dir/md5sums") {
+        unlink("$dir/md5sums");
+    }
+
+    chdir("$dir/unpacked");
+
+    my %opts = (
+        pipe_in => FileHandle->new,
+        out => "$dir/md5sums",
+        fail => 'error'
+    );
+    spawn(\%opts, ['xargs', '-0r', 'md5sum']);
+    $opts{pipe_in}->blocking(1);
+
+    foreach my $file ($info->sorted_index) {
+        next unless $file->is_file;
+        printf {$opts{pipe_in}} "%s\0", $file;
+    }
+
+    close($opts{pipe_in});
+    reap(\%opts);
+
+    return;
 }
 
-chdir("$dir/unpacked");
-
-my %opts = ( pipe_in => FileHandle->new,
-             out => "$dir/md5sums",
-             fail => 'error' );
-spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
-$opts{pipe_in}->blocking(1);
-
-foreach my $file ($info->sorted_index) {
-    next unless $file->is_file;
-    printf {$opts{pipe_in}} "%s\0", $file;
-}
-
-close($opts{pipe_in});
-reap(\%opts);
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)md5sums$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)md5sums$,;
 1;
 
 # Local Variables:

@@ -27,35 +27,34 @@ use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
 
 sub run {
+    my ($pkg, undef, $info, undef, $group) = @_;
+    my $readme = '';
 
-my ($pkg, undef, $info, undef, $group) = @_;
-
-my $readme = '';
-
-open(my $fd, '<', $info->lab_data_path ('README.Debian'));
-while (my $line = <$fd>) {
-    if ($line =~ m,/usr/doc\b,) {
-        tag 'readme-debian-mentions-usr-doc', "line $.";
+    open(my $fd, '<', $info->lab_data_path('README.Debian'));
+    while (my $line = <$fd>) {
+        if ($line =~ m,/usr/doc\b,) {
+            tag 'readme-debian-mentions-usr-doc', "line $.";
+        }
+        $readme .= $line;
     }
-    $readme .= $line;
-}
-close($fd);
+    close($fd);
 
-my @template =
-    ('Comments regarding the Package',
-     'So far nothing to say',
-     '<possible notes regarding this package - if none, delete this file>');
-my $regex = join ('|', @template);
-if ($readme =~ m/$regex/io) {
-    tag 'readme-debian-contains-debmake-template';
-} elsif ($readme =~ m/^\s*-- [^<]*<([^> ]+.\@[^>.]*)>/m) {
-    tag 'readme-debian-contains-invalid-email-address', $1;
-}
+    my @template =(
+        'Comments regarding the Package',
+        'So far nothing to say',
+        '<possible notes regarding this package - if none, delete this file>'
+    );
+    my $regex = join('|', @template);
+    if ($readme =~ m/$regex/io) {
+        tag 'readme-debian-contains-debmake-template';
+    } elsif ($readme =~ m/^\s*-- [^<]*<([^> ]+.\@[^>.]*)>/m) {
+        tag 'readme-debian-contains-invalid-email-address', $1;
+    }
 
-check_spelling('spelling-error-in-readme-debian', $readme, undef,
-               $group->info->spelling_exceptions);
+    check_spelling('spelling-error-in-readme-debian',
+        $readme, undef,$group->info->spelling_exceptions);
 
-return;
+    return;
 }
 
 1;

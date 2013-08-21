@@ -31,9 +31,7 @@ sub accept_filter {
     return !m,/lintian\.desc$,;
 }
 
-my $opts = {
-    'filter' => \&accept_filter,
-};
+my $opts = {'filter' => \&accept_filter,};
 
 $ENV{'LINTIAN_ROOT'} //= '.';
 

@@ -29,98 +29,100 @@ use List::Util qw(first);
 use Lintian::Tags qw(tag);
 
 sub run {
+    my (undef, undef, $info) = @_;
+    my $changelog_mentions_nmu = 0;
+    my $changelog_mentions_local = 0;
+    my $changelog_mentions_qa = 0;
+    my $changelog_mentions_team_upload = 0;
 
-my (undef, undef, $info) = @_;
+    # This isn't really an NMU check, but right now no other check
+    # looks at debian/changelog in source packages.  Catch a
+    # debian/changelog file that's a symlink.
+    if (-l $info->debfiles('changelog')) {
+        tag 'changelog-is-symlink';
+        return;
+    }
 
-my $changelog_mentions_nmu = 0;
-my $changelog_mentions_local = 0;
-my $changelog_mentions_qa = 0;
-my $changelog_mentions_team_upload = 0;
+    # Get some data from the changelog file.
+    my ($entry) = $info->changelog->data;
+    my $uploader = canonicalize($entry->Maintainer);
+    my $changes = $entry->Changes;
+    $changes =~ s/^(\s*\n)+//;
+    my $firstline = first { /^\s*\*/ } split('\n', $changes);
 
-# This isn't really an NMU check, but right now no other check looks at
-# debian/changelog in source packages.  Catch a debian/changelog file that's a
-# symlink.
-if (-l $info->debfiles('changelog')) {
-    tag 'changelog-is-symlink';
-    return;
-}
-
-# Get some data from the changelog file.
-my ($entry) = $info->changelog->data;
-my $uploader = canonicalize($entry->Maintainer);
-my $changes = $entry->Changes;
-$changes =~ s/^(\s*\n)+//;
-my $firstline = first { /^\s*\*/ } split ('\n', $changes);
-
-# Check the first line for QA, NMU or team upload mentions.
-if ($firstline) {
-    local $_ = $firstline;
-    if (/\bnmu\b/i or /non-maintainer upload/i or m/LowThresholdNMU/io) {
-        unless (/(?:ackno|\back\b|confir|incorporat).*(?:\bnmu\b|non-maintainer)/i) {
-            $changelog_mentions_nmu = 1;
+    # Check the first line for QA, NMU or team upload mentions.
+    if ($firstline) {
+        local $_ = $firstline;
+        if (/\bnmu\b/i or /non-maintainer upload/i or m/LowThresholdNMU/io) {
+            unless (
+                m/
+                        (?:ackno|\back\b|confir|incorporat).*
+                        (?:\bnmu\b|non-maintainer)/xi
+              ) {
+                $changelog_mentions_nmu = 1;
+            }
         }
+        $changelog_mentions_local = 1 if /\blocal\s+package\b/i;
+        $changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
+        $changelog_mentions_team_upload = 1 if /team upload/i;
     }
-    $changelog_mentions_local = 1 if /\blocal\s+package\b/i;
-    $changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
-    $changelog_mentions_team_upload = 1 if /team upload/i;
-}
 
-my $version = $info->field('version');
-my $maintainer = canonicalize ($info->field ('maintainer', ''));
-my $uploaders = $info->field('uploaders');
+    my $version = $info->field('version');
+    my $maintainer = canonicalize($info->field('maintainer', ''));
+    my $uploaders = $info->field('uploaders');
 
-my $version_nmuness = 0;
-my $version_local = 0;
+    my $version_nmuness = 0;
+    my $version_local = 0;
 
-# If the version field is missing, assume it to be a native,
-# maintainer upload as it is probably the most likely case.
-$version = '0-1' unless defined $version;
+    # If the version field is missing, assume it to be a native,
+    # maintainer upload as it is probably the most likely case.
+    $version = '0-1' unless defined $version;
 
-if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
-    $version_nmuness = 1 if defined $1;
-    $version_nmuness = 2 if defined $2;
-}
-if ($version =~ /\+nmu\d+$/) {
-    $version_nmuness = 1;
-}
-if ($version =~ /\+b\d+$/) {
-    $version_nmuness = 2;
-}
-if ($version =~ /local/i) {
-    $version_local = 1;
-}
-
-my $upload_is_nmu = $uploader ne $maintainer;
-if (defined $uploaders) {
-    my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/, $uploaders;
-    $upload_is_nmu = 0 if any { /^\s*\Q$uploader\E\s*$/ } @uploaders;
-}
-
-if ($maintainer =~ /packages\@qa.debian.org/) {
-    tag 'orphaned-package-should-not-have-uploaders'
-        if defined $uploaders;
-    tag 'qa-upload-has-incorrect-version-number', $version
-        if $version_nmuness == 1;
-    tag 'changelog-should-mention-qa'
-        if !$changelog_mentions_qa;
-} elsif ($changelog_mentions_team_upload) {
-    tag 'team-upload-has-incorrect-version-number', $version
-        if $version_nmuness == 1;
-} else {
-    # Local packages may be either NMUs or not.
-    unless ($changelog_mentions_local || $version_local) {
-        tag 'changelog-should-mention-nmu'
-            if !$changelog_mentions_nmu && $upload_is_nmu;
-        tag 'source-nmu-has-incorrect-version-number', $version
-            if $upload_is_nmu && $version_nmuness != 1;
+    if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
+        $version_nmuness = 1 if defined $1;
+        $version_nmuness = 2 if defined $2;
     }
-    tag 'changelog-should-not-mention-nmu'
-        if $changelog_mentions_nmu && !$upload_is_nmu;
-    tag 'maintainer-upload-has-incorrect-version-number', $version
-        if !$upload_is_nmu && $version_nmuness;
-}
+    if ($version =~ /\+nmu\d+$/) {
+        $version_nmuness = 1;
+    }
+    if ($version =~ /\+b\d+$/) {
+        $version_nmuness = 2;
+    }
+    if ($version =~ /local/i) {
+        $version_local = 1;
+    }
 
-return;
+    my $upload_is_nmu = $uploader ne $maintainer;
+    if (defined $uploaders) {
+        my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/,$uploaders;
+        $upload_is_nmu = 0 if any { /^\s*\Q$uploader\E\s*$/ } @uploaders;
+    }
+
+    if ($maintainer =~ /packages\@qa.debian.org/) {
+        tag 'orphaned-package-should-not-have-uploaders'
+          if defined $uploaders;
+        tag 'qa-upload-has-incorrect-version-number', $version
+          if $version_nmuness == 1;
+        tag 'changelog-should-mention-qa'
+          if !$changelog_mentions_qa;
+    } elsif ($changelog_mentions_team_upload) {
+        tag 'team-upload-has-incorrect-version-number', $version
+          if $version_nmuness == 1;
+    } else {
+        # Local packages may be either NMUs or not.
+        unless ($changelog_mentions_local || $version_local) {
+            tag 'changelog-should-mention-nmu'
+              if !$changelog_mentions_nmu && $upload_is_nmu;
+            tag 'source-nmu-has-incorrect-version-number', $version
+              if $upload_is_nmu && $version_nmuness != 1;
+        }
+        tag 'changelog-should-not-mention-nmu'
+          if $changelog_mentions_nmu && !$upload_is_nmu;
+        tag 'maintainer-upload-has-incorrect-version-number', $version
+          if !$upload_is_nmu && $version_nmuness;
+    }
+
+    return;
 }
 
 # Canonicalize a maintainer address with respect to case.  E-mail addresses

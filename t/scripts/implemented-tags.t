@@ -25,26 +25,26 @@ use Test::Lintian;
 
 # Exclude the following tags, which are handled specially and can't be
 # detected by this script.
-our $EXCLUDE =
-    join('|', qw(.*-script-but-no-.*-dep$
-                 .*-contains-.*-control-dir$
-                 ^maintainer-script-needs-depends-on.*
-                 .*-contains-.*-file$
-                 .*-contains-cvs-conflict-copy$
-                 .*-does-not-load-confmodule$
-                 .*-name-missing$
-                 .*-address-missing$
-                 .*-address-malformed$
-                 .*-address-looks-weird$
-                 .*-address-is-on-localhost$
-                 .*-address-causes-mail-loops-or-bounces$
-                 ^wrong-debian-qa-address-set-as-maintainer$
-                 ^wrong-debian-qa-group-name$
-                 ^example.*interpreter.*
-                 ^example-script-.*$
-                 ^example-shell-script-.*$
-                 ^hardening-.*$
-                ));
+our $EXCLUDE =join(
+    '|', qw(.*-script-but-no-.*-dep$
+      .*-contains-.*-control-dir$
+      ^maintainer-script-needs-depends-on.*
+      .*-contains-.*-file$
+      .*-contains-cvs-conflict-copy$
+      .*-does-not-load-confmodule$
+      .*-name-missing$
+      .*-address-missing$
+      .*-address-malformed$
+      .*-address-looks-weird$
+      .*-address-is-on-localhost$
+      .*-address-causes-mail-loops-or-bounces$
+      ^wrong-debian-qa-address-set-as-maintainer$
+      ^wrong-debian-qa-group-name$
+      ^example.*interpreter.*
+      ^example-script-.*$
+      ^example-shell-script-.*$
+      ^hardening-.*$
+      ));
 
 # Exclude "lintian.desc" as it does not have a perl module like other
 # checks.

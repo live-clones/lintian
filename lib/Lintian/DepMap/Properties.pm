@@ -63,6 +63,7 @@ E.g.
     $map->add('foo', {name => 'John Doe', age => 20});
 
 =cut
+
 #'
 
 sub add {
@@ -120,6 +121,7 @@ E.g.
     print $map->getp('foo')->{'name'};
 
 =cut
+
 #'
 
 sub getp {

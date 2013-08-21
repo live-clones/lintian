@@ -89,11 +89,11 @@ sub new {
     }
 
     croak "$file does not exists"
-        unless -f $file;
+      unless -f $file;
 
-    $pkg_path = realpath ($file);
+    $pkg_path = realpath($file);
     croak "Cannot resolve $file: $!"
-        unless $pkg_path;
+      unless $pkg_path;
 
     $self = {
         pkg_type => $pkg_type,
@@ -102,8 +102,8 @@ sub new {
     };
 
     if ($pkg_type eq 'binary' or $pkg_type eq 'udeb'){
-        my $dinfo = get_deb_info ($pkg_path) or
-            croak "could not read control data in $pkg_path: $!";
+        my $dinfo = get_deb_info($pkg_path)
+          or croak "could not read control data in $pkg_path: $!";
         my $pkg_name = $dinfo->{package};
         my $pkg_src = $dinfo->{source};
         my $pkg_version = $dinfo->{version};
@@ -112,12 +112,12 @@ sub new {
         unless ($pkg_name) {
             my $type = $pkg_type;
             $type = 'deb' if $type eq 'binary';
-            $pkg_name = _derive_name ($pkg_path, $type)
-                or croak "Cannot determine the name of $pkg_path";
+            $pkg_name = _derive_name($pkg_path, $type)
+              or croak "Cannot determine the name of $pkg_path";
         }
 
         # Source may be left out if it is the same as $pkg_name
-        $pkg_src = $pkg_name unless ( defined $pkg_src && length $pkg_src );
+        $pkg_src = $pkg_name unless (defined $pkg_src && length $pkg_src);
 
         # Source may contain the version (in parentheses)
         if ($pkg_src =~ m/(\S++)\s*\(([^\)]+)\)/o){
@@ -131,7 +131,8 @@ sub new {
         $self->{pkg_src_version} = $pkg_src_version;
         $self->{'extra-fields'} = $dinfo;
     } elsif ($pkg_type eq 'source'){
-        my $dinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not valid dsc file";
+        my $dinfo = get_dsc_info($pkg_path)
+          or croak "$pkg_path is not valid dsc file";
         my $pkg_name = $dinfo->{source} // '';
         my $pkg_version = $dinfo->{version};
         if ($pkg_name eq '') {
@@ -144,12 +145,13 @@ sub new {
         $self->{pkg_src_version} = $pkg_version;
         $self->{'extra-fields'} = $dinfo;
     } elsif ($pkg_type eq 'changes'){
-        my $cinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not a valid changes file";
+        my $cinfo = get_dsc_info($pkg_path)
+          or croak "$pkg_path is not a valid changes file";
         my $pkg_version = $cinfo->{version};
         my $pkg_name = $cinfo->{source}//'';
         unless ($pkg_name) {
-            $pkg_name = _derive_name ($pkg_path, 'changes')
-                or croak "Cannot determine the name of $pkg_path";
+            $pkg_name = _derive_name($pkg_path, 'changes')
+              or croak "Cannot determine the name of $pkg_path";
         }
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;
@@ -165,7 +167,7 @@ sub new {
     $self->{pkg_src_version} = '' unless (defined $self->{pkg_src_version});
     $self->{pkg_arch}        = '' unless (defined $self->{pkg_arch});
     # make sure none of the fields can cause traversal.
-    foreach my $field (qw(pkg_name pkg_version pkg_src pkg_src_version pkg_arch)) {
+    for my $field (qw(pkg_name pkg_version pkg_src pkg_src_version pkg_arch)) {
         if ($self->{$field} =~ m,${\EVIL_CHARACTERS},o){
             # None of these fields are allowed to contain a these
             # characters.  This package is most likely crafted to

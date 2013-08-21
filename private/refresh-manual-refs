@@ -58,11 +58,14 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 # of the manual.
 
 my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
-my $link_re = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
-my $index_re = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
-my $fields = [ [ 'url' ], [ 'section' ], [ 'title' ] ];
-my $dbk_index_re = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
-my $dbk_fields = [ [ 'section' ], [ 'url' ], [ 'title' ] ];
+my $link_re
+  = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
+my $index_re
+  = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
+my $fields = [['url'], ['section'], ['title']];
+my $dbk_index_re
+  = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
+my $dbk_fields = [['section'], ['url'], ['title']];
 
 my %manuals = (
     'policy' => [
@@ -88,12 +91,14 @@ my %manuals = (
     'java-policy' => [
         '/usr/share/doc/java-common/debian-java-policy/index.html',
         'http://www.debian.org/doc/packaging-manuals/java-policy/',
-        $dbk_index_re, $dbk_fields
+        $dbk_index_re,
+        $dbk_fields
     ],
     'vim-policy' => [
         '/usr/share/doc/vim-doc/vim-policy.html/index.html',
         'http://pkg-vim.alioth.debian.org/vim-policy.html/',
-        $dbk_index_re, $dbk_fields
+        $dbk_index_re,
+        $dbk_fields
     ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
@@ -103,8 +108,14 @@ my %manuals = (
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
         'http://www.debian.org/doc/developers-reference/',
-        $index_re, $fields,
-        qr/<h[45] class="title"><a id="(.+?)"><\/a>([\d\.]+?)\.? ([\w\s[:punct:]]+?)<\/h[45]>/
+        $index_re,
+        $fields,
+#<<< no perl tidy
+# breaking this regex up with x should work, but for some reason it
+# trips a false positive in the minimum-version (thinking it requires
+# perl5.17 for some bizarre reason).
+        qr{<h[45] class="title"><a id="(.+?)"></a>([\d\.]+?)\.? ([\w\s[:punct:]]+?)</h[45]>},
+#>>>
     ],
     'menu' => [
         '/usr/share/doc/menu/html/index.html',
@@ -117,15 +128,17 @@ my %manuals = (
     ],
     'debconf-spec' => [
         '/usr/share/doc/debian-policy/debconf_specification.html',
-        'http://www.debian.org/doc/packaging-manuals/debconf_specification.html',
+        join(q{/},
+            'http://www.debian.org',
+            'doc/packaging-manuals/debconf_specification.html'),
         qr/<a href="(#.+?)">([\w\s[:punct:]]+?)<\/a>/,
-        [ [ 'section', 'url' ], [ 'title' ] ]
+        [['section', 'url'], ['title']]
     ],
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
         'http://www.pathname.com/fhs/pub/fhs-2.3.html',
         qr/<a\s*href="(#.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
-        [ [ 'section', 'url' ], [ 'title' ] ]
+        [['section', 'url'], ['title']]
     ],
 );
 
@@ -134,8 +147,9 @@ my %manuals = (
     my $ok = 1;
     foreach my $manual (sort keys %manuals) {
         my ($index, undef) = @{$manuals{$manual}};
-        unless ( -f $index ) {
-            print STDERR "Manual \"$manual\" not available (missing: $index)\n";
+        unless (-f $index) {
+            print STDERR
+              "Manual \"$manual\" not available (missing: $index)\n";
             $ok = 0;
         }
     }
@@ -161,7 +175,7 @@ sub extract_refs {
     while (<$page_fd>) {
         if (not $title and m/$title_re/) {
             $title = 1;
-            my @out = ( $manual, '', $1, $url );
+            my @out = ($manual, '', $1, $url);
             print $fh join('::', @out) . "\n";
         }
 
@@ -191,7 +205,7 @@ sub extract_refs {
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;
 
-            my @out = ( $manual, $ref{section}, $ref{title}, $ref{url} );
+            my @out = ($manual, $ref{section}, $ref{title}, $ref{url});
             print {$fh} join('::', @out) . "\n";
         }
     }
@@ -203,7 +217,7 @@ sub extract_refs {
 
 # Create a new reference file.
 open(my $ref_fd, '>', 'data/output/manual-references.new')
-    or die "Cannot create data/output/manual-references.new: $!\n";
+  or die "Cannot create data/output/manual-references.new: $!\n";
 my $date = strftime('%Y-%m-%d', localtime);
 print {$ref_fd} <<"HEADER";
 # Data about titles, sections, and URLs of manuals, used to expand references
@@ -224,7 +238,7 @@ for my $manual (sort keys %manuals) {
 
     # Extract references from the index.
     my @subpages
-        = extract_refs($ref_fd, $manual, 0, $index, $url, $ref_re, $fields);
+      = extract_refs($ref_fd, $manual, 0, $index, $url, $ref_re, $fields);
 
     # Extract additional subsection references if not available in the index.
     next if not $sub_re;
@@ -236,8 +250,7 @@ for my $manual (sort keys %manuals) {
 
 # Replace the old reference file.
 close($ref_fd);
-rename('data/output/manual-references.new',
-       'data/output/manual-references');
+rename('data/output/manual-references.new', 'data/output/manual-references');
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -27,11 +27,13 @@ use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 $ENV{'LINTIAN_ROOT'} //= '.';
 
 # Find all of the desc files in checks.  We'll do one check per description.
-our @DESCS = (glob("$ENV{LINTIAN_ROOT}/checks/*.desc"),
-              glob("$ENV{LINTIAN_ROOT}/doc/examples/checks/my-vendor/*.desc"),
-              glob("$ENV{LINTIAN_ROOT}/collection/*.desc"));
-our @MODULES = (glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm"),
-		glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect/*.pm"));
+our @DESCS = (
+    glob("$ENV{LINTIAN_ROOT}/checks/*.desc"),
+    glob("$ENV{LINTIAN_ROOT}/doc/examples/checks/my-vendor/*.desc"),
+    glob("$ENV{LINTIAN_ROOT}/collection/*.desc"));
+our @MODULES = (
+    glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect.pm"),
+    glob("$ENV{LINTIAN_ROOT}/lib/Lintian/Collect/*.pm"));
 
 plan tests => scalar(@DESCS)+scalar(@MODULES);
 
@@ -52,117 +54,128 @@ for my $module (@MODULES) {
     open(my $fd, '<', $module);
     my (%seen_subs, %seen_needsinfo, @errors, @warnings);
     while (<$fd>) {
-	if (m/^\s*sub\s+(\w+)/) {
-	    $seen_subs{$1} = 1;
-	}
-	# We use "# sub X Needs-Info Y" for "internal" methods and
-	# the "Needs-Info requirements for using X: Y" for "public"
-	# methods.  The latter will appear in generated/processed
-	# documentations.
-	if (m/^\s*\#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/ or
-		m/^\s*Needs-Info\s+requirements\s+for\s+using\s+I\<(\w+)\>\s*:\s*(.*)\s*$/) {
-	    my ($sub, $all_info) = ($1, $2);
-	    $seen_needsinfo{$sub} = 1;
-	    # Allow some L<> linking - it makes the generated
-	    # api-doc's a bit better than just reading the source.
+        if (m/^\s*sub\s+(\w+)/) {
+            $seen_subs{$1} = 1;
+        }
+        # We use "# sub X Needs-Info Y" for "internal" methods and
+        # the "Needs-Info requirements for using X: Y" for "public"
+        # methods.  The latter will appear in generated/processed
+        # documentations.
+        if (
+               m/^\s*\#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/
+            or m/^\s*Needs-Info\s+requirements\s+for\s+using\s+
+                  I\<(\w+)\>\s*:\s*(.*)\s*$/x
+          ) {
+            my ($sub, $all_info) = ($1, $2);
+            $seen_needsinfo{$sub} = 1;
+            # Allow some L<> linking - it makes the generated
+            # api-doc's a bit better than just reading the source.
             $all_info =~ s,L\<[^\>]*/([A-Z0-9a-z_])+[^\>]*>,:$1,g;
 
-	    $all_info =~ s/\s//g;
-	    $all_info =~ s/,,/,/g;
+            $all_info =~ s/\s//g;
+            $all_info =~ s/,,/,/g;
 
-	    if ($all_info =~ m/[A-Z]\</) {
-		push @errors, "$sub has an (unknown/supported) POD formatting instruction\n";
-		next;
-	    }
-	    if (!$all_info) {
-		push @errors, "$sub has empty needs-info\n";
-		next;
-	    }
-	    # While "none" technically is a valid name for a
-	    # collection, anyone reading:
-	    #
-	    #    Needs-Info requirements for using X: none"
-	    #
-	    #  (or "sub X Needs-Info none" for that matter)
-	    #
-	    # will almost certainly understand that as "there are no
-	    # dependencies".  Also "none" is more human-readable than
-	    # "<>" (which was used previously).
-	    $all_info = '' if $all_info eq 'none';
-	    if (exists($needs_info{$sub})) {
-		if ($all_info ne $needs_info{$sub}) {
-		    $needs_info{$sub} .= " or $all_info";
-		}
-	    } else {
-		$needs_info{$sub} = $all_info;
-	    }
-	}
+            if ($all_info =~ m/[A-Z]\</) {
+                push @errors,
+                  join(q{ },
+                    "$sub has an (unknown/supported) POD",
+                    "formatting instruction\n");
+                next;
+            }
+            if (!$all_info) {
+                push @errors, "$sub has empty needs-info\n";
+                next;
+            }
+            # While "none" technically is a valid name for a
+            # collection, anyone reading:
+            #
+            #    Needs-Info requirements for using X: none"
+            #
+            #  (or "sub X Needs-Info none" for that matter)
+            #
+            # will almost certainly understand that as "there are no
+            # dependencies".  Also "none" is more human-readable than
+            # "<>" (which was used previously).
+            $all_info = '' if $all_info eq 'none';
+            if (exists($needs_info{$sub})) {
+                if ($all_info ne $needs_info{$sub}) {
+                    $needs_info{$sub} .= " or $all_info";
+                }
+            } else {
+                $needs_info{$sub} = $all_info;
+            }
+        }
     }
     close($fd);
     if (scalar(@errors)) {
-	ok(0, "$pretty_module has per-method needs-info") or diag(@errors);
-	diag("\n", @warnings) if (@warnings);
-	next;
+        ok(0, "$pretty_module has per-method needs-info") or diag(@errors);
+        diag("\n", @warnings) if (@warnings);
+        next;
     }
     for my $sub (keys %seen_subs) {
-	if (exists($seen_needsinfo{$sub})) {
-	    delete $seen_needsinfo{$sub};
-	    delete $seen_subs{$sub};
-	}
+        if (exists($seen_needsinfo{$sub})) {
+            delete $seen_needsinfo{$sub};
+            delete $seen_subs{$sub};
+        }
     }
 
     delete $seen_subs{'new'};
 
-    is(scalar(keys(%seen_subs)) + scalar(keys(%seen_needsinfo)), 0,
-	"$pretty_module has per-method needs-info") or
-	diag('Subs missing info: ', join(', ', keys(%seen_subs)), "\n",
-	     'Info for unknown subs: ', join(', ', keys(%seen_needsinfo)),"\n");
+    is(scalar(keys(%seen_subs)) + scalar(keys(%seen_needsinfo)),
+        0,"$pretty_module has per-method needs-info")
+      or diag(
+        'Subs missing info: ',
+        join(', ', keys(%seen_subs)),
+        "\n",
+        'Info for unknown subs: ',
+        join(', ', keys(%seen_needsinfo)),"\n"
+      );
 
     diag("\n", @warnings) if @warnings;
 }
 
 for my $desc (@DESCS) {
     my ($header) = read_dpkg_control($desc);
-    my %needs = map { $_ => 1 } split(/\s*,\s*/, $header->{'needs-info'} || '');
+    my %needs= map { $_ => 1 } split(/\s*,\s*/, $header->{'needs-info'} || '');
     my $codefile = substr($desc, 0, -5); # Strip ".desc"
 
     if ($desc =~ m/lintian\.desc$/) {
-	pass('lintian.desc has all required needs-info for Lintian::Collect');
-	next;
+        pass('lintian.desc has all required needs-info for Lintian::Collect');
+        next;
     }
 
     if ($codefile !~ m{ /collection/ }xsm) {
         $codefile .= '.pm';
     }
 
-    my $code =slurp_entire_file($codefile);
+    my $code = slurp_entire_file($codefile);
     my %subs;
     while ($code =~ s/\$info\s*->\s*(\w+)//) {
-	$subs{$1} = 1;
+        $subs{$1} = 1;
     }
 
     my @warnings;
     my $missing = 0;
 
     for my $sub (keys %subs) {
-	if (exists($needs_info{$sub})) {
-            my @miss = find_missing (\%needs, $needs_info{$sub});
+        if (exists($needs_info{$sub})) {
+            my @miss = find_missing(\%needs, $needs_info{$sub});
             if (@miss) {
                 $missing++;
                 foreach my $needed (@miss) {
                     push @warnings, "$sub needs $needed\n";
                 }
-	    }
-	} else {
-	    push @warnings, "Unknown method \$info->$sub\n";
-	}
+            }
+        } else {
+            push @warnings, "Unknown method \$info->$sub\n";
+        }
     }
 
     my $short = $desc;
     $short =~ s,^\Q$ENV{LINTIAN_ROOT}/,,;
     $short =~ s,^collection/,coll/,;
-    is($missing, 0, "$short has all required needs-info for Lintian::Collect") or
-	diag(@warnings);
+    is($missing, 0, "$short has all required needs-info for Lintian::Collect")
+      or diag(@warnings);
 }
 
 sub find_missing {
@@ -182,7 +195,7 @@ sub find_missing {
                 # symbolic dependency ?
                 if ($dep =~ s/^://) {
                     # Handle with recursion
-                    if (find_missing ($declared, $needs_info{$dep})) {
+                    if (find_missing($declared, $needs_info{$dep})) {
                         # cannot satisfy this part of the relation
                         next ORDEP;
                     }

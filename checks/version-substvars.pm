@@ -44,75 +44,94 @@ use Lintian::Tags qw(tag);
 
 sub run {
 
-my (undef, undef, $info) = @_;
+    my (undef, undef, $info) = @_;
 
-my @dep_fields = qw(depends pre-depends recommends suggests conflicts replaces);
+    my @dep_fields
+      = qw(depends pre-depends recommends suggests conflicts replaces);
 
-foreach my $pkg1 (sort $info->binaries) {
-    my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
+    foreach my $pkg1 (sort $info->binaries) {
+        my ($pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
-    $pkg1_is_any = ($info->binary_field($pkg1, 'architecture', '') ne 'all');
+        $pkg1_is_any
+          = ($info->binary_field($pkg1, 'architecture', '') ne 'all');
 
-    foreach my $field (@dep_fields) {
-        next unless $info->binary_field ($pkg1, $field);
-        my $rel = $info->binary_relation ($pkg1, $field);
-        my $svid = 0;
-        my $visitor = sub {
-            if (m/\${Source-Version}/o and not $svid) {
-                $svid++;
-                tag 'substvar-source-version-is-deprecated', $pkg1;
-            }
-            if (m/(\S+)\s*\(\s*[\>\<]?[=\>\<]\s*\${(?:Source-|source:|binary:)Version}/x) {
-                my $other = $1;
-                # We can't test dependencies on packages whose names are
-                # formed via substvars expanded during the build.  Assume
-                # those maintainers know what they're doing.
-                tag 'version-substvar-for-external-package', "$pkg1 -> $other"
-                    unless $info->binary_field ($other, 'architecture') or
-                           $other =~ /\$\{\S+\}/;
-            }
-        };
-        $rel->visit ($visitor, VISIT_PRED_FULL);
-    }
-
-    foreach (split (m/,/, ($info->binary_field($pkg1, 'pre-depends', '').', '.
-               $info->binary_field ($pkg1, 'depends', '')))) {
-        next unless m/(\S+)\s*\(\s*(\>)?=\s*\${((?:Source-|source:|binary:)Version)}/x;
-
-        my $gt = $2//'';
-        $pkg2 = $1;
-        $substvar_strips_binNMU = ($3 eq 'source:Version');
-
-        if (not $info->binary_field($pkg2, 'architecture')) {
-            # external relation or subst var package - either way, handled above.
-            next;
-        }
-        $pkg2_is_any = ($info->binary_field($pkg2, 'architecture', '') ne 'all');
-
-        if ($pkg1_is_any) {
-            if ($pkg2_is_any and $substvar_strips_binNMU) {
-                unless ($gt) {
-                    # (b1) any -> any (= ${source:Version})
-                    tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
-                } else {
-                    # any -> any (= ${source:Version})
-                    # technically this can be "binNMU'ed", though it is
-                    # a bit weird.
-                    1;
+        foreach my $field (@dep_fields) {
+            next unless $info->binary_field($pkg1, $field);
+            my $rel = $info->binary_relation($pkg1, $field);
+            my $svid = 0;
+            my $visitor = sub {
+                if (m/\${Source-Version}/o and not $svid) {
+                    $svid++;
+                    tag 'substvar-source-version-is-deprecated', $pkg1;
                 }
-            } elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
-                # (b2) any -> all ( = ${binary:Version}) [or S-V]
-                # or  -- same --  (>= ${binary:Version}) [or S-V]
-                tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
+                if (
+                    m/ (\S+) \s*                               # pkg-name $1
+                       \(\s*[\>\<]?[=\>\<]\s*                  # REL 
+                        \${(?:Source-|source:|binary:)Version} # {subvar}
+                     /x
+                  ) {
+                    my $other = $1;
+                    # We can't test dependencies on packages whose names are
+                    # formed via substvars expanded during the build.  Assume
+                    # those maintainers know what they're doing.
+                    tag 'version-substvar-for-external-package',
+                      "$pkg1 -> $other"
+                      unless $info->binary_field($other, 'architecture')
+                      or $other =~ /\$\{\S+\}/;
+                }
+            };
+            $rel->visit($visitor, VISIT_PRED_FULL);
+        }
+
+        foreach (
+            split(
+                m/,/,
+                (
+                        $info->binary_field($pkg1, 'pre-depends', '').', '
+                      . $info->binary_field($pkg1, 'depends', '')))
+          ) {
+            next
+              unless m/(\S+) \s*                                # pkg-name
+                       \(\s*(\>)?=\s*                           # rel
+                       \${((?:Source-|source:|binary:)Version)} # subvar
+                      /x;
+
+            my $gt = $2//'';
+            $pkg2 = $1;
+            $substvar_strips_binNMU = ($3 eq 'source:Version');
+
+            if (not $info->binary_field($pkg2, 'architecture')) {
+                # external relation or subst var package - either way,
+                # handled above.
+                next;
             }
-        } elsif ($pkg2_is_any && !$gt) {
-            # (b3) all -> any (= ${either-of-them})
-            tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
+            $pkg2_is_any
+              = ($info->binary_field($pkg2, 'architecture', '') ne 'all');
+
+            if ($pkg1_is_any) {
+                if ($pkg2_is_any and $substvar_strips_binNMU) {
+                    unless ($gt) {
+                        # (b1) any -> any (= ${source:Version})
+                        tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
+                    } else {
+                        # any -> any (= ${source:Version})
+                        # technically this can be "binNMU'ed", though it is
+                        # a bit weird.
+                        1;
+                    }
+                } elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
+                    # (b2) any -> all ( = ${binary:Version}) [or S-V]
+                    # or  -- same --  (>= ${binary:Version}) [or S-V]
+                    tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
+                }
+            } elsif ($pkg2_is_any && !$gt) {
+                # (b3) all -> any (= ${either-of-them})
+                tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
+            }
         }
     }
-}
 
-return;
+    return;
 }
 
 1;

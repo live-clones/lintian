@@ -36,7 +36,7 @@ plan tests => scalar(@DESCS);
 # For each desc file, load the first stanza of the file and check that all of
 # its Needs-Info script references exist.
 for my $desc (@DESCS) {
-    my $coll = Lintian::CollScript->new ($desc);
+    my $coll = Lintian::CollScript->new($desc);
     my $name = $coll->name;
     my @needs = $coll->needs_info;
     my @missing;
@@ -46,5 +46,5 @@ for my $desc (@DESCS) {
             push @missing, $coll;
         }
     }
-    is (join (', ', @missing), '', "$name has valid needs-info");
+    is(join(', ', @missing), '', "$name has valid needs-info");
 }

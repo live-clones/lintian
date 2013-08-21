@@ -32,33 +32,32 @@ my $THRESHOLD_SIZE_HARD = 4096;
 my $THRESHOLD_PERC = 50;
 
 sub run {
+    my (undef, undef, $info) = @_;
+    # Skip architecture-dependent packages.
+    my $arch = $info->field('architecture', '');
+    return if $arch eq 'all';
 
-my (undef, undef, $info) = @_;
-
-# Skip architecture-dependent packages.
-my $arch = $info->field('architecture') || '';
-return if $arch eq 'all';
-
-# Add up the space taken by the package and the space taken by just the files
-# in /usr/share.  Convert the totals to kilobytes.
-my ($size, $size_usrshare) = (0, 0);
-for my $file ($info->sorted_index) {
-    $size += $file->size;
-    if ($file =~ m,usr/share/,) {
-        $size_usrshare += $file->size;
+    # Add up the space taken by the package and the space taken by
+    # just the files in /usr/share.  Convert the totals to kilobytes.
+    my ($size, $size_usrshare) = (0, 0);
+    for my $file ($info->sorted_index) {
+        $size += $file->size;
+        if ($file =~ m,usr/share/,) {
+            $size_usrshare += $file->size;
+        }
     }
-}
-$size = int ($size / 1024);
-$size_usrshare = int ($size_usrshare / 1024);
+    $size = int($size / 1024);
+    $size_usrshare = int($size_usrshare / 1024);
 
-if ($size_usrshare > $THRESHOLD_SIZE_SOFT) {
-    my $perc = int (100 * $size_usrshare / $size);
-    if ($size_usrshare > $THRESHOLD_SIZE_HARD || $perc > $THRESHOLD_PERC) {
-        tag 'arch-dep-package-has-big-usr-share', "${size_usrshare}kB $perc%";
+    if ($size_usrshare > $THRESHOLD_SIZE_SOFT) {
+        my $perc = int(100 * $size_usrshare / $size);
+        if ($size_usrshare > $THRESHOLD_SIZE_HARD || $perc > $THRESHOLD_PERC) {
+            tag 'arch-dep-package-has-big-usr-share',
+              "${size_usrshare}kB $perc%";
+        }
     }
-}
 
-return;
+    return;
 }
 
 1;

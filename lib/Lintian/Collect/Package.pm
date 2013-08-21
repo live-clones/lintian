@@ -158,19 +158,22 @@ sub file_info {
     my ($self, $file) = @_;
     if (exists $self->{file_info}) {
         return ${$self->{file_info}{$file}}
-            if exists $self->{file_info}->{$file};
+          if exists $self->{file_info}->{$file};
         return;
     }
     my %interned;
     my %file_info;
-    my $path = $self->lab_data_path ('file-info.gz');
+    my $path = $self->lab_data_path('file-info.gz');
     local $_;
     my $idx = open_gz($path);
     while (<$idx>) {
         chomp;
 
         m/^(.+?)\x00\s+(.*)$/o
-            or croak "an error in the file pkg is preventing lintian from checking this package: $_";
+          or croak(
+            join(q{ },
+                'an error in the file pkg is preventing',
+                "lintian from checking this package: $_"));
         my ($file, $info) = ($1,$2);
         my $ref = $interned{$info};
 
@@ -190,7 +193,7 @@ sub file_info {
     $self->{file_info} = \%file_info;
 
     return ${$self->{file_info}{$file}}
-        if exists $self->{file_info}->{$file};
+      if exists $self->{file_info}->{$file};
     return;
 }
 
@@ -237,7 +240,7 @@ sub sorted_index {
     my ($self) = @_;
     # index does all our work for us, so call it if sorted_index has
     # not been created yet.
-    $self->index ('') unless exists $self->{sorted_index};
+    $self->index('') unless exists $self->{sorted_index};
     return @{ $self->{sorted_index} };
 }
 
@@ -249,8 +252,8 @@ sub _fetch_extracted_dir {
     my $dir = $self->{$field};
     my $filename = '';
     my $normalized = 0;
-    if ( not defined $dir ) {
-        $dir = $self->lab_data_path ($dirname);
+    if (not defined $dir) {
+        $dir = $self->lab_data_path($dirname);
         croak "$field ($dirname) is not available" unless -d "$dir/";
         $self->{$field} = $dir;
     }
@@ -276,10 +279,11 @@ sub _fetch_extracted_dir {
 
     if ($filename ne '') {
         if (!$normalized) {
-            # strip leading ./ - if that leaves something, return the path there
+            # strip leading ./ - if that leaves something, return the
+            # path there
             if ($filename =~ s,^(?:\.?/)++,,go) {
                 warnings::warnif('Lintian::Collect',
-                                 qq{Argument to $field had leading "/" or "./"});
+                    qq{Argument to $field had leading "/" or "./"});
             }
             if ($filename =~ m{(?: ^|/ ) \.\. (?: /|$ )}xsm) {
                 # possible traversal - double check it and (if needed)
@@ -313,7 +317,7 @@ sub _fetch_index_data {
     my ($self, $field, $index, $indexown, $file) = @_;
     if (exists $self->{$index}) {
         return $self->{$field}->{$file}
-            if exists $self->{$index}->{$file};
+          if exists $self->{$index}->{$file};
         return;
     }
     my $base_dir = $self->base_dir;
@@ -323,6 +327,7 @@ sub _fetch_index_data {
     my @sorted;
     local $_;
     my $idx = open_gz("$base_dir/${index}.gz");
+
     if ($indexown) {
         $num_idx = open_gz("$base_dir/${indexown}.gz");
     }
@@ -330,8 +335,8 @@ sub _fetch_index_data {
         chomp;
 
         my (%file, $perm, $owner, $name);
-        ($perm,$owner,$file{size},$file{date},$file{time},$name) =
-            split(' ', $_, 6);
+        ($perm,$owner,$file{size},$file{date},$file{time},$name)
+          =split(' ', $_, 6);
         $file{operm} = perm2oct($perm);
         $file{type} = substr $perm, 0, 1;
 
@@ -342,7 +347,7 @@ sub _fetch_index_data {
             croak 'cannot read index file $indexown' unless defined $numeric;
             my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
             croak "mismatching contents of index files: $name $name_chk"
-                if $name ne $name_chk;
+              if $name ne $name_chk;
             ($file{uid}, $file{gid}) = split '/', $owner_id, 2;
         }
 
@@ -352,14 +357,14 @@ sub _fetch_index_data {
         $file{group} = 'root' if $file{group} eq '0';
 
         if ($name =~ s/ link to (.*)//) {
-            my $target = _dequote_name ($1);
+            my $target = _dequote_name($1);
             $file{type} = 'h';
             $file{link} = $target;
 
-            push @{$rhlinks{$target}}, _dequote_name ($name);
+            push @{$rhlinks{$target}}, _dequote_name($name);
         } elsif ($file{type} eq 'l') {
             ($name, $file{link}) = split ' -> ', $name, 2;
-            $file{link} = _dequote_name ($file{link}, 0);
+            $file{link} = _dequote_name($file{link}, 0);
         }
         # We store the name here, but will replace it later.  The
         # reason for storing it now is that we may need it during the
@@ -394,7 +399,7 @@ sub _fetch_index_data {
             my @check = ($e->{name});
             my @sorted;
             my $target;
-            while ( my $current = pop @check) {
+            while (my $current = pop @check) {
                 $candidates{$current} = 1;
                 foreach my $rdep (@{$rhlinks{$current}}) {
                     # There should not be any cicles, but just in case
@@ -445,7 +450,7 @@ sub _fetch_index_data {
         }
         # Insert name here to share the same storage with the hash key
         $idxh{$file}{'name'} = $file;
-        $idxh{$file} = Lintian::Path->new ($idxh{$file});
+        $idxh{$file} = Lintian::Path->new($idxh{$file});
     }
     $self->{$field} = \%idxh;
     # Remove the "top" dir in the sorted_index as it is hardly ever used.

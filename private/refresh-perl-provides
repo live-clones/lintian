@@ -28,7 +28,6 @@ use AptPkg::System '$_system';
 use AptPkg::Cache;
 use List::MoreUtils qw(none);
 
-
 (my $self = $0) =~ s#.*/##;
 
 # initialise the global config object with the default values and
@@ -50,9 +49,8 @@ my %module_name = (
 );
 
 # special cases for where the code gets the prefix wrong
-my %manual_split = (
-    'libautodie-perl' => qr/\A (\d++\.) (\d{2}) (\d{2})? \Z/xsmo,
-);
+my %manual_split
+  = ('libautodie-perl' => qr/\A (\d++\.) (\d{2}) (\d{2})? \Z/xsmo,);
 
 use Module::CoreList;
 my $versioning = $_system->versioning;
@@ -61,12 +59,18 @@ my $versioning = $_system->versioning;
 my @core_packages = (qw(perl-base perl perl-modules));
 
 # check we have a cache of Debian sid packages available
-warn('Warning: this list should only be updated on a system with an up to date APT cache of the Debian unstable distribution')
-    if none { defined $_->{Origin} &&
-               defined $_->{Archive} &&
-               $_->{Origin} eq 'Debian' &&
-               $_->{Archive} eq 'unstable' }
-       @{$cache->files};
+warn(
+    join(q{ },
+        'Warning: this list should only be updated on a system',
+        'with an up to date APT cache of the Debian unstable distribution'))
+  if (
+    none {
+             defined $_->{Origin}
+          && defined $_->{Archive}
+          && $_->{Origin} eq 'Debian'
+          && $_->{Archive} eq 'unstable';
+    }
+    @{$cache->files});
 
 print <<EOF;
 # virtual packages provided by the Perl core packages that also have a
@@ -83,7 +87,7 @@ EOF
 
 for my $pkg (@core_packages) {
     my $cached_versions = $cache->{$pkg}
-        or die("no such binary package found in the APT cache: $pkg");
+      or die("no such binary package found in the APT cache: $pkg");
     my $latest = bin_latest($cached_versions);
 
     for my $provides (@{$latest->{ProvidesList}}) {
@@ -100,7 +104,8 @@ for my $pkg (@core_packages) {
         # the epoch is easier, we just copy it
 
         my ($epoch, $digits) = epoch_and_digits($name);
-        my $debian_version = cpan_version_to_deb($name, $cpan_version, $epoch, $digits);
+        my $debian_version
+          = cpan_version_to_deb($name, $cpan_version, $epoch, $digits);
 
         next if !$debian_version;
 
@@ -132,41 +137,41 @@ sub find_core_version {
 }
 
 sub cpan_version_to_deb {
-        my ($pkg, $cpan_version, $epoch, $digits) = @_;
-        $epoch ||= '';
+    my ($pkg, $cpan_version, $epoch, $digits) = @_;
+    $epoch ||= '';
 
-        # cpan_version
-        #         digits
-        #                result
-        # 1.15_02,  2 => 1.15.02
-        # 1.15_02,  4 => 1.1502
-        # 1.15_02,  0 => 1.15.02
-        #
-        # 1.15_021, 2 => 1.15.021
-        # 1.15_021, 4 => 1.1500.021
-        # 1.15_021, 0 => 1.15.021
-        #
-        # 1.15,     1 => 1.15
-        # 1.15,     2 => 1.15
-        # 1.15,     4 => 1.1500
-        # 1.15,     0 => 1.15
+    # cpan_version
+    #         digits
+    #                result
+    # 1.15_02,  2 => 1.15.02
+    # 1.15_02,  4 => 1.1502
+    # 1.15_02,  0 => 1.15.02
+    #
+    # 1.15_021, 2 => 1.15.021
+    # 1.15_021, 4 => 1.1500.021
+    # 1.15_021, 0 => 1.15.021
+    #
+    # 1.15,     1 => 1.15
+    # 1.15,     2 => 1.15
+    # 1.15,     4 => 1.1500
+    # 1.15,     0 => 1.15
 
-        # split 1.15_02 to (1, 15, 02)
-        my $regex = qr/^(\d+\.)(\d+)(?:_(\d+))?$/;
-        $regex = $manual_split{$pkg} if exists $manual_split{$pkg};
-        my ($major, $prefix, $suffix) = ($cpan_version =~ $regex);
-        die("no match with $cpan_version?") if !$major;
+    # split 1.15_02 to (1, 15, 02)
+    my $regex = qr/^(\d+\.)(\d+)(?:_(\d+))?$/;
+    $regex = $manual_split{$pkg} if exists $manual_split{$pkg};
+    my ($major, $prefix, $suffix) = ($cpan_version =~ $regex);
+    die("no match with $cpan_version?") if !$major;
 
-        $suffix ||= '';
-        if (length($suffix) + length($prefix) == $digits) {
-                $prefix .= $suffix;
-                $suffix = '';
-        }
-        if (length($suffix) + length($prefix) < $digits) {
-                $prefix .= '0' while length($prefix) < $digits;
-        }
-        $suffix = ".$suffix" if $suffix ne '';
-        return $epoch.$major.$prefix.$suffix;
+    $suffix ||= '';
+    if (length($suffix) + length($prefix) == $digits) {
+        $prefix .= $suffix;
+        $suffix = '';
+    }
+    if (length($suffix) + length($prefix) < $digits) {
+        $prefix .= '0' while length($prefix) < $digits;
+    }
+    $suffix = ".$suffix" if $suffix ne '';
+    return $epoch.$major.$prefix.$suffix;
 }
 
 # Given a Debian binary package name, look up its latest version
@@ -179,8 +184,8 @@ sub epoch_and_digits {
     my $latest = bin_latest($cache->{$p});
     my $v = $latest->{VerStr};
     $v =~ s/\+dfsg//;
-    my ($epoch, $major, $prefix, $suffix, $revision) =
-        ($v =~ /^(?:(\d+:))?((?:\d+\.))+(\d+)(?:_(\d+))?(-[^-]+)$/);
+    my ($epoch, $major, $prefix, $suffix, $revision)
+      = ($v =~ /^(?:(\d+:))?((?:\d+\.))+(\d+)(?:_(\d+))?(-[^-]+)$/);
     return ($epoch, length $prefix);
 }
 

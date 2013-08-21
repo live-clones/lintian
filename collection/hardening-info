@@ -42,48 +42,50 @@ use Lintian::Util qw(fail touch_file locate_helper_tool);
 my $helper = locate_helper_tool('coll/hardening-info-helper');
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
-my $info = Lintian::Collect->new ($pkg, $type, $dir);
+    my ($pkg, $type, $dir) = @_;
+    my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-if ( -e "$dir/hardening-info" ) {
-    unlink("$dir/hardening-info");
+    if (-e "$dir/hardening-info") {
+        unlink("$dir/hardening-info");
+    }
+
+    # Prepare to examine the file tree.
+    chdir("$dir/unpacked");
+
+    my %opts;
+    my $open_hardening_info = sub {
+        # Use xargs to keep processing times of packages like linux-image
+        # reasonble.
+
+        %opts = (
+            pipe_in => FileHandle->new,
+            out => "$dir/hardening-info",
+            fail => 'error'
+        );
+        spawn(\%opts, ['xargs', '-0r', 'hardening-check', '--lintian', '--'],
+            '|', [$helper]);
+        $opts{pipe_in}->blocking(1);
+    };
+
+    foreach my $bin ($info->sorted_index) {
+        next unless $info->index($bin)->is_file;
+        # Skip kernel modules and debug files
+        next if $bin =~ m/\.ko$/o or $bin =~ m{\A usr/lib/debug/ }xsm;
+        my $finfo = $info->file_info($bin);
+        next unless $finfo =~ m/\bELF\b/o;
+        $open_hardening_info->() unless %opts;
+        printf {$opts{pipe_in}} "%s\0", $bin;
+    }
+
+    if (%opts) {
+        close($opts{pipe_in});
+        reap(\%opts);
+    }
+
+    return;
 }
 
-# Prepare to examine the file tree.
-chdir("$dir/unpacked");
-
-my %opts;
-my $open_hardening_info = sub {
-    # Use xargs to keep processing times of packages like linux-image
-    # reasonble.
-
-    %opts = ( pipe_in => FileHandle->new,
-              out => "$dir/hardening-info",
-              fail => 'error' );
-    spawn (\%opts, ['xargs', '-0r', 'hardening-check', '--lintian', '--'], '|',
-           [$helper]);
-    $opts{pipe_in}->blocking(1);
-};
-
-foreach my $bin ($info->sorted_index) {
-    next unless $info->index ($bin)->is_file;
-    # Skip kernel modules and debug files
-    next if $bin =~ m/\.ko$/o or $bin =~ m{\A usr/lib/debug/ }xsm;
-    my $finfo = $info->file_info ($bin);
-    next unless $finfo =~ m/\bELF\b/o;
-    $open_hardening_info->() unless %opts;
-    printf {$opts{pipe_in}} "%s\0", $bin;
-}
-
-if (%opts) {
-    close($opts{pipe_in});
-    reap (\%opts);
-}
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)hardening-info$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)hardening-info$,;
 1;
 
 # Local Variables:

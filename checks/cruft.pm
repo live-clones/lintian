@@ -47,35 +47,37 @@ use Lintian::Util qw(fail is_ancestor_of normalize_pkg_path);
 # thrilled with having the automake exception as well, but people do depend on
 # autoconf and automake and then use autoreconf to update config.guess and
 # config.sub, and automake depends on autotools-dev.
-our $AUTOTOOLS = Lintian::Relation->new (join (' | ',
-    Lintian::Data->new ('cruft/autotools')->all));
+our $AUTOTOOLS = Lintian::Relation->new(
+    join(' | ',Lintian::Data->new('cruft/autotools')->all));
 
-our $LIBTOOL = Lintian::Relation->new ('libtool | dh-autoreconf');
+our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
-our %ERRORS = ('index-errors'    => 'tar-errors-from-source',
-               'unpacked-errors' => 'tar-errors-from-source');
+our %ERRORS = (
+    'index-errors'    => 'tar-errors-from-source',
+    'unpacked-errors' => 'tar-errors-from-source'
+);
 
 # Directory checks.  These regexes match a directory that shouldn't be in the
 # source package and associate it with a tag (minus the leading
 # source-contains or diff-contains).  Note that only one of these regexes
 # should trigger for any single directory.
-my @directory_checks =
-    ([ qr,^(.+/)?CVS$,        => 'cvs-control-dir'  ],
-     [ qr,^(.+/)?\.svn$,      => 'svn-control-dir'  ],
-     [ qr,^(.+/)?\.bzr$,      => 'bzr-control-dir'  ],
-     [ qr,^(.+/)?\{arch\}$,   => 'arch-control-dir' ],
-     [ qr,^(.+/)?\.arch-ids$, => 'arch-control-dir' ],
-     [ qr!^(.+/)?,,.+$!       => 'arch-control-dir' ],
-     [ qr,^(.+/)?\.git$,      => 'git-control-dir'  ],
-     [ qr,^(.+/)?\.hg$,       => 'hg-control-dir'   ],
-     [ qr,^(.+/)?\.be$,       => 'bts-control-dir'  ],
-     [ qr,^(.+/)?\.ditrack$,  => 'bts-control-dir'  ],
+my @directory_checks = (
+    [qr,^(.+/)?CVS$,        => 'cvs-control-dir'],
+    [qr,^(.+/)?\.svn$,      => 'svn-control-dir'],
+    [qr,^(.+/)?\.bzr$,      => 'bzr-control-dir'],
+    [qr,^(.+/)?\{arch\}$,   => 'arch-control-dir'],
+    [qr,^(.+/)?\.arch-ids$, => 'arch-control-dir'],
+    [qr!^(.+/)?,,.+$!       => 'arch-control-dir'],
+    [qr,^(.+/)?\.git$,      => 'git-control-dir'],
+    [qr,^(.+/)?\.hg$,       => 'hg-control-dir'],
+    [qr,^(.+/)?\.be$,       => 'bts-control-dir'],
+    [qr,^(.+/)?\.ditrack$,  => 'bts-control-dir'],
 
-     # Special case (can only be triggered for diffs)
-     [ qr,^(.+/)?\.pc$,       => 'quilt-control-dir'  ],
-    );
+    # Special case (can only be triggered for diffs)
+    [qr,^(.+/)?\.pc$,       => 'quilt-control-dir'],
+);
 
 # File checks.  These regexes match files that shouldn't be in the source
 # package and associate them with a tag (minus the leading source-contains or
@@ -83,114 +85,115 @@ my @directory_checks =
 # given file.  If the third column is a true value, don't issue this tag
 # unless the file is included in the diff; it's too common in source packages
 # and not important enough to worry about.
-my @file_checks =
-    ([ qr,^(.+/)?svn-commit\.(.+\.)?tmp$, => 'svn-commit-file'        ],
-     [ qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'        ],
-     [ qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'    ],
-     [ qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'           ],
-     [ qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'      ],
-     [ qr,^(.+/)?(.+?)\.(r\d+)$,          => 'svn-conflict-file'      ],
-     [ qr,\.(orig|rej)$,                  => 'patch-failure-file',  1 ],
-     [ qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1 ],
-    );
+my @file_checks = (
+    [qr,^(.+/)?svn-commit\.(.+\.)?tmp$, => 'svn-commit-file'],
+    [qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'],
+    [qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'],
+    [qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'],
+    [qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'],
+    [qr,^(.+/)?(.+?)\.(r\d+)$,          => 'svn-conflict-file'],
+    [qr,\.(orig|rej)$,                  => 'patch-failure-file',  1],
+    [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1],
+);
 
 # List of files to check for a LF-only end of line terminator, relative
 # to the debian/ source directory
 our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 sub run {
+    my (undef, undef, $info) = @_;
+    my $droot = $info->debfiles;
 
-my (undef, undef, $info) = @_;
-
-my $droot = $info->debfiles;
-
-if (-e "$droot/files" and not -z "$droot/files") {
-    tag 'debian-files-list-in-source';
-}
-
-# This doens't really belong here, but there isn't a better place at the
-# moment to put this check.
-my $version = $info->field('version');
-# If the version field is missing, assume it to be a native,
-# maintainer upload as it is probably the most likely case.
-$version = '0-1' unless defined $version;
-if ($info->native) {
-    if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
-        tag 'native-package-with-dash-version';
+    if (-e "$droot/files" and not -z "$droot/files") {
+        tag 'debian-files-list-in-source';
     }
-} else {
-    if ($version !~ /-/) {
-        tag 'non-native-package-with-native-version';
-    }
-}
 
-# Check if the package build-depends on autotools-dev, automake, or libtool.
-my $atdinbd = $info->relation ('build-depends-all')->implies ($AUTOTOOLS);
-my $ltinbd  = $info->relation ('build-depends-all')->implies ($LIBTOOL);
-
-# Create a closure so that we can pass our lexical variables into the find
-# wanted function.  We don't want to make them global because we'll then leak
-# that data across packages in a large Lintian run.
-my %warned;
-my $format = $info->field('format');
-# Assume the package to be non-native if the field is not present.
-# - while 1.0 is more likely in this case, Lintian will probably get
-#   better results by checking debfiles/ rather than looking for a diffstat
-#   that may not be present.
-$format = '3.0 (quilt)' unless defined $format;
-if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
-    my $wanted = sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
-    find($wanted, $droot);
-} elsif (not $info->native) {
-    check_diffstat($info->diffstat, \%warned);
-}
-my $uroot = $info->unpacked;
-my $abs = Cwd::abs_path ("$uroot/") or fail "abs_path $uroot: $!";
-$abs =~ s,/$,,; # remove the trailing slash if any
-find_cruft($info, \%warned, $atdinbd, $ltinbd);
-
-for my $file (@EOL_TERMINATORS_FILES) {
-    my $path = $info->debfiles($file);
-    next if not -f $path or not is_ancestor_of($droot, $path);
-    open(my $fd, '<', $path);
-    while (my $line = <$fd>) {
-        if ($line =~ m{ \r \n \Z}xsm) {
-            tag 'control-file-with-CRLF-EOLs', "debian/$file";
-            last;
+    # This doens't really belong here, but there isn't a better place at the
+    # moment to put this check.
+    my $version = $info->field('version');
+    # If the version field is missing, assume it to be a native,
+    # maintainer upload as it is probably the most likely case.
+    $version = '0-1' unless defined $version;
+    if ($info->native) {
+        if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
+            tag 'native-package-with-dash-version';
+        }
+    } else {
+        if ($version !~ /-/) {
+            tag 'non-native-package-with-native-version';
         }
     }
-    close($fd);
-}
 
-# Report any error messages from tar while unpacking the source package if it
-# isn't just tar cruft.
-for my $file (keys %ERRORS) {
-    my $tag = $ERRORS{$file};
-    my $path = $info->lab_data_path ($file);
-    if (-s $path) {
+    # Check if the package build-depends on autotools-dev, automake,
+    # or libtool.
+    my $atdinbd = $info->relation('build-depends-all')->implies($AUTOTOOLS);
+    my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);
+
+    # Create a closure so that we can pass our lexical variables into
+    # the find wanted function.  We don't want to make them global
+    # because we'll then leak that data across packages in a large
+    # Lintian run.
+    my %warned;
+    my $format = $info->field('format');
+    # Assume the package to be non-native if the field is not present.
+    # - while 1.0 is more likely in this case, Lintian will probably get
+    #   better results by checking debfiles/ rather than looking for a diffstat
+    #   that may not be present.
+    $format = '3.0 (quilt)' unless defined $format;
+    if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
+        my $wanted = sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
+        find($wanted, $droot);
+    } elsif (not $info->native) {
+        check_diffstat($info->diffstat, \%warned);
+    }
+    my $uroot = $info->unpacked;
+    my $abs = Cwd::abs_path("$uroot/") or fail "abs_path $uroot: $!";
+    $abs =~ s,/$,,; # remove the trailing slash if any
+    find_cruft($info, \%warned, $atdinbd, $ltinbd);
+
+    for my $file (@EOL_TERMINATORS_FILES) {
+        my $path = $info->debfiles($file);
+        next if not -f $path or not is_ancestor_of($droot, $path);
         open(my $fd, '<', $path);
-        local $_;
-        while (<$fd>) {
-            chomp;
-            s,^(?:[/\w]+/)?tar: ,,;
-
-            # Record size errors are harmless.  Skipping to next header
-            # apparently comes from star files.  Ignore all GnuPG noise from
-            # not having a valid GnuPG configuration directory.  Also ignore
-            # the tar "exiting with failure status" message, since it comes
-            # after some other error.
-            next if /^Record size =/;
-            next if /^Skipping to next header/;
-            next if /^gpgv?: /;
-            next if /^secmem usage: /;
-            next if /^Exiting with failure status due to previous errors/;
-            tag $tag, $_;
+        while (my $line = <$fd>) {
+            if ($line =~ m{ \r \n \Z}xsm) {
+                tag 'control-file-with-CRLF-EOLs', "debian/$file";
+                last;
+            }
         }
         close($fd);
     }
-}
 
-return;
+    # Report any error messages from tar while unpacking the source
+    # package if it isn't just tar cruft.
+    for my $file (keys %ERRORS) {
+        my $tag = $ERRORS{$file};
+        my $path = $info->lab_data_path($file);
+        if (-s $path) {
+            open(my $fd, '<', $path);
+            local $_;
+            while (<$fd>) {
+                chomp;
+                s,^(?:[/\w]+/)?tar: ,,;
+
+                # Record size errors are harmless.  Skipping to next
+                # header apparently comes from star files.  Ignore all
+                # GnuPG noise from not having a valid GnuPG
+                # configuration directory.  Also ignore the tar
+                # "exiting with failure status" message, since it
+                # comes after some other error.
+                next if /^Record size =/;
+                next if /^Skipping to next header/;
+                next if /^gpgv?: /;
+                next if /^secmem usage: /;
+                next if /^Exiting with failure status due to previous errors/;
+                tag $tag, $_;
+            }
+            close($fd);
+        }
+    }
+
+    return;
 } # </run>
 
 # -----------------------------------
@@ -205,13 +208,14 @@ sub check_diffstat {
     local $_;
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
-            or fail("syntax error in diffstat file: $_");
+          or fail("syntax error in diffstat file: $_");
         $saw_file = 1;
 
         # Check for CMake cache files.  These embed the source path and hence
         # will cause FTBFS on buildds, so they should never be touched in the
         # diff.
-        if ($file =~ m,(?:^|/)CMakeCache.txt\z, and $file !~ m,(?:^|/)debian/,) {
+        if ($file =~ m,(?:^|/)CMakeCache.txt\z, and $file !~ m,(?:^|/)debian/,)
+        {
             tag 'diff-contains-cmake-cache-file', $file;
         }
 
@@ -273,7 +277,9 @@ sub check_debfiles {
             }
         }
     }
+
     -f or return;
+
     for my $rule (@file_checks) {
         if ($name =~ /$rule->[0]/) {
             tag "diff-contains-$rule->[1]", "debian/$name";
@@ -300,23 +306,25 @@ sub find_cruft {
     my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
     my @worklist;
 
-    push(@worklist, $info->index('')->children); # start with the top-level dirs
+    # start with the top-level dirs
+    push(@worklist, $info->index('')->children);
 
   ENTRY:
-    while ( my $entry = shift(@worklist) ) {
+    while (my $entry = shift(@worklist)) {
         my $name = $entry->name;
         my $basename = $entry->basename;
         my $path;
         my $file_info;
 
         if ($entry->is_dir) {
-            # Remove the trailing slash (historically we never included the slash
-            # for these tags and there is no particular reason to change that now).
+            # Remove the trailing slash (historically we never
+            # included the slash for these tags and there is no
+            # particular reason to change that now).
             $name = substr($name, 0, -1);
             $basename = substr($basename, 0, -1);
 
-            # Ignore the .pc directory and its contents, created as part of the
-            # unpacking of a 3.0 (quilt) source package.
+            # Ignore the .pc directory and its contents, created as
+            # part of the unpacking of a 3.0 (quilt) source package.
 
             # NB: this catches all .pc dirs (regardless of depth).  If you
             # change that, please check we have a
@@ -324,7 +332,8 @@ sub find_cruft {
             next if $basename eq '.pc';
 
             # Ignore files in test suites.  They may be part of the test.
-            next if $basename =~ m{ \A t (?: est (?: s (?: et)?+ )?+ )?+ \Z}xsm;
+            next
+              if $basename =~ m{ \A t (?: est (?: s (?: et)?+ )?+ )?+ \Z}xsm;
 
             if (not $warned->{$name}) {
                 for my $rule (@directory_checks) {
@@ -343,7 +352,8 @@ sub find_cruft {
             # An absolute link always escapes the root (of a source
             # package).  For relative links, it escapes the root if we
             # cannot normalize it.
-            if ($entry->link =~ m{\A / }xsm or not defined($entry->link_normalized)) {
+            if ($entry->link =~ m{\A / }xsm
+                or not defined($entry->link_normalized)) {
                 tag 'source-contains-unsafe-symlink', $name;
             }
             next ENTRY;
@@ -355,13 +365,14 @@ sub find_cruft {
 
         if ($file_info =~ m/\bELF\b/) {
             tag 'source-contains-prebuilt-binary', $name;
-        } elsif ($file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/) {
+        } elsif (
+            $file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/) {
             tag 'source-contains-prebuilt-windows-binary', $name;
         } elsif ($basename =~ /\bwaf$/) {
             my $path = $info->unpacked($entry);
             my $marker = 0;
             open(my $fd, '<', $path);
-            while ( my $line = <$fd> ) {
+            while (my $line = <$fd>) {
                 next unless $line =~ m/^#/o;
                 if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
                     tag 'source-contains-waf-binary', $name;
@@ -374,7 +385,6 @@ sub find_cruft {
             close($fd);
         }
 
-
         unless ($warned->{$name}) {
             for my $rule (@file_checks) {
                 next if ($rule->[2] and not $info->native);
@@ -384,26 +394,29 @@ sub find_cruft {
             }
         }
 
-        # Tests of autotools files are a special case.  Ignore debian/config.cache
-        # as anyone doing that probably knows what they're doing and is using it
-        # as part of the build.
+        # Tests of autotools files are a special case.  Ignore
+        # debian/config.cache as anyone doing that probably knows what
+        # they're doing and is using it as part of the build.
         if ($basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
             if ($entry->dirname ne 'debian') {
                 tag 'configure-generated-file-in-source', $name;
             }
-        } elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm and not $atdinbd) {
+        } elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm
+            and not $atdinbd) {
             open(my $fd, '<', $info->unpacked($entry));
             while (<$fd>) {
-                last if $. > 10; # it's on the 6th line, but be a bit more lenient
+                last
+                  if $. > 10; # it's on the 6th line, but be a bit more lenient
                 if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
                     my ($date, $year, $month) = ($1, $2, $3);
                     if ($year < 2004) {
                         tag 'ancient-autotools-helper-file', $name, $date;
-                    } elsif (($year < 2012) or ($year == 2012 and $month < 4)) {
-                        # config.sub   >= 2012-04-18 (was bumped from 2012-02-10)
-                        # config.guess >= 2012-06-10 (was bumped from 2012-02-10)
-                        # Flagging anything earlier than 2012-04 as outdated
-                        # works, due to the "bumped from" dates.
+                    } elsif (($year < 2012) or ($year == 2012 and $month < 4)){
+                        # config.sub   >= 2012-04-18 (was 2012-02-10)
+                        # config.guess >= 2012-06-10 (was 2012-02-10)
+                        # Flagging anything earlier than 2012-04 as
+                        # outdated works, due to the "bumped from"
+                        # dates.
                         tag 'outdated-autotools-helper-file', $name, $date;
                     }
                 }
@@ -420,9 +433,6 @@ sub find_cruft {
                         tag 'ancient-libtool', $name, $version;
                     } elsif ($minor == 2 and (!$debian || $debian < 2)) {
                         tag 'ancient-libtool', $name, $version;
-                    } elsif ($minor < 24) {
-                        # not entirely sure whether that would be good idea
-#                       tag "outdated-libtool", $name, $version;
                     }
                     last;
                 }
@@ -430,13 +440,18 @@ sub find_cruft {
             close($fd);
         }
 
-        next ENTRY if $info->is_non_free; # (license issue does not apply to non-free)
-        next ENTRY if $name eq 'debian/changelog'; # (license string in debian/changelog are changelog)
+        # license issues do not apply to non-free
+        next ENTRY
+          if $info->is_non_free;
+        # license string in debian/changelog are probably just changes
+        next ENTRY
+          if $name eq 'debian/changelog';
         # Ignore these strings in d/README.{Debian,source}.  If they
         # appear there it is probably just "file XXX got removed
         # because of license Y".
-        next ENTRY if $name eq 'debian/README.Debian'
-            or $name eq 'debian/README.source';
+        next ENTRY
+          if $name eq 'debian/README.Debian'
+          or $name eq 'debian/README.source';
 
         $path = $info->unpacked($entry);
 
@@ -444,7 +459,7 @@ sub find_cruft {
         next ENTRY unless -T $path;
 
         open(my $F, '<', $path);
-        binmode ($F);
+        binmode($F);
 
         my @queue = ('', '');
         my %licenseproblemhash = ();
@@ -468,12 +483,15 @@ sub find_cruft {
 
             given ($block) {
                 # json evil license
-                when (index($_, 'evil') > -1 && m/software \s++ shall \s++
+                when (
+                    index($_, 'evil') > -1
+                      && m/software \s++ shall \s++
                         be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
-                        not \s++ evil/xsm) {
+                        not \s++ evil/xsm
+                  ) {
                     if(!exists $licenseproblemhash{'json-evil'}) {
-                         tag 'license-problem-json-evil', $name;
-                         $licenseproblemhash{'json-evil'} = 1;
+                        tag 'license-problem-json-evil', $name;
+                        $licenseproblemhash{'json-evil'} = 1;
                     }
                     continue;
                 }
@@ -484,9 +502,12 @@ sub find_cruft {
                 # if the "redeeming" part is in the next block.
                 #
                 # See cruft-gfdl-fp-sliding-win for the test case
-                when(index($_, 'license') > -1 && m/gnu (?:\s+|\s*<\/span>\s*|\s*\}\s+)? free \s+
+                when(
+                    index($_, 'license') > -1
+                      && m/gnu (?:\s+|\s*<\/span>\s*|\s*\}\s+)? free \s+
                          documentation \s+ license (?'gfdlsections'.{0,1024}?)
-                         a \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xsm) {
+                         a \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xsm
+                  ) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                         # local space
                         my $s = qr{(?:
@@ -507,78 +528,105 @@ sub find_cruft {
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
                         given($+{gfdlsections}) {
-                            when(m/no $s* Invariant $s+ Sections? $s* ,?
+                            when(
+                                m/no $s* Invariant $s+ Sections? $s* ,?
                                    $s+ (?:with$s+)? (?:the$s+)? no $s+ Front(?:\\?-)?$s*Cover $s+ (?:Texts?)? $s* ,? $s+ (?:and$s+)?
-                                       (?:with$s+)? (?:the$s+)? no $s+ Back(?:\\?-)?$s*Cover/xiso) {
+                                       (?:with$s+)? (?:the$s+)? no $s+ Back(?:\\?-)?$s*Cover/xiso
+                              ) {
                                 # no invariant
                             }
-                            when(m/no $s+ Invariant $s+ Sections?,?
+                            when(
+                                m/no $s+ Invariant $s+ Sections?,?
                                       $s+ (?:no$s+)? Front(?:[\\]?-)? $s+ or
-                                      $s+ (?:no$s+)? Back(?:[\\]?-)?$s*Cover $s+ Texts?/xiso) {
+                                      $s+ (?:no$s+)? Back(?:[\\]?-)?$s*Cover $s+ Texts?/xiso
+                              ) {
                                 # no invariant variant (dict-foldoc)
                             }
-                            when(m/\A $s* (?: [\,\.;] $s* )? version $s+ \d+(?:\.\d+)? $s+
+                            when(
+                                m/
+                                \A $s* (?: [\,\.;] $s* )? version $s+ \d+(?:\.\d+)? $s+
                                    (?:or $s+ any $s+ later $s+ version $s+)?
                                    published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
                                    (?: [,\.;] $s*)?
                                    There $s+ are $s+ no $s+ invariants? $s+ sections?
                                    (?: [,\.;] $s*)? \Z
-                                   /xismo) {
+                                   /xismo
+                              ) {
                                 # no invariant libnss-pgsql version
                             }
-                            when(m/\A $s* (?: [\,\.;] $s* )? version $s+ \d+(?:\.\d+)? $s+
+                            when(
+                                m/
+                                \A $s* (?: [\,\.;] $s* )? version $s+ \d+(?:\.\d+)? $s+
                                    (?:or $s+ any $s+ later $s+ version $s+)?
                                    published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
                                    (?: [,\.;] $s*)?
                                    without $s+ any $s+ Invariant $s+ Sections $s*
                                    (?: [,\.;] $s*)? \Z
-                                   /xismo) {
+                                   /xismo
+                              ) {
                                 # no invariant parsewiki version
                             }
-                            when(m/(?: [,\.;] $s*)? version $s+ \d+(?:\.\d+)? $s+
+                            when(
+                                m/
+                                   (?: [,\.;] $s*)? version $s+ \d+(?:\.\d+)? $s+
                                    (?:or $s+ any $s+ later $s+ version $s+)?
                                    published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
                                    (?: [,\.;] $s*)?
                                    with $s+ no $s+ invariants? $s+ sections?
                                    (?: [,\.;] $s*)? \Z
-                                   /xismo) {
+                                   /xismo
+                              ) {
                                 # no invariant lilypond version
                             }
-                            when(m/with $s+ the $s+ Invariant $s+ Sections $s+ being
+                            when(
+                                m/
+                                   with $s+ the $s+ Invariant $s+ Sections $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST $s+ THEIR $s+TITLES (?:\}|<\/var>)? $s* ,?
                                         $s+ with $s+ the $s+ Front(?:[\\]?-)$s*Cover $s+ Texts $s+ being
                                         $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)? $s* ,?
                                         $s+ and $s+ with $s+ the $s+ Back(?:[\\]?-)$s*Cover $s+ Texts $s+ being
-                                        $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xiso) {
+                                        $s+ (?:\@var\{|<var>)? LIST (?:\}|<\/var>)?/xiso
+                              ) {
                                 # verbatim text of license is ok
                             }
-                            when(m/\A $s* (?: [,\.;] $s*)? version $s+ \d+(?:\.\d+)? $s+
+                            when(
+                                m/
+                                \A $s* (?: [,\.;] $s*)? version $s+ \d+(?:\.\d+)? $s+
                                    (?:or $s+ any $s+ later $s+ version $s+)?
                                    published $s+ by $s+ the $s+ Free $s+ Software $s+ Foundation $s*
                                    (?: [,\.;] $s*)? \Z
-                                   /xismo) {
+                                   /xismo
+                              ) {
                                 # empty text is ambiguous
-                                tag 'license-problem-gfdl-invariants-empty', $name;
+                                tag 'license-problem-gfdl-invariants-empty',
+                                  $name;
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
                             }
                             # fix #708957 about FDL entities in template
-                            when(m/with $s+ \&FDLInvariantSections;, $s+ with $s+ \&FDLFrontCoverText;,
-                                        $s+ and $s+ with $s+ \&FDLBackCoverText;/xiso)
-                            {
-                                unless($name =~ m/\/customization\/[\w-]+\/entities\/[\w-]+\.docbook$/) {
-                                    tag 'license-problem-gfdl-invariants', $name;
+                            when(
+                                m/
+                                   with $s+ \&FDLInvariantSections;, $s+ with $s+ \&FDLFrontCoverText;,
+                                        $s+ and $s+ with $s+ \&FDLBackCoverText;/xiso
+                              ){
+                                unless($name
+                                    =~ m/\/customization\/[\w-]+\/entities\/[\w-]+\.docbook$/
+                                  ) {
+                                    tag 'license-problem-gfdl-invariants',
+                                      $name;
                                     $licenseproblemhash{'gfdl-invariants'} = 1;
                                 }
                             }
                             # fix a false positive in maintain.texi
-                            when(m/\A $s* \. $s*
+                            when(
+                                m/\A $s* \. $s*
                                    Following $s+ is $s+ an $s+ example $s+ of $s+ the $s+ license $s+ notice $s+
                                    to $s+ use $s+ after $s+ the $s+ copyright $s+ line\(s\) $s+ using $s+ all $s+ the $s+
-                                   features $s+ of $s+ the $s+ GFDL/xismo)
-                            {
+                                   features $s+ of $s+ the $s+ GFDL/xismo
+                              ){
                                 # allow only one text
                                 unless($name =~ m/maintain/) {
-                                    tag 'license-problem-gfdl-invariants', $name;
+                                    tag 'license-problem-gfdl-invariants',
+                                      $name;
                                     $licenseproblemhash{'gfdl-invariants'} = 1;
                                 }
                             }

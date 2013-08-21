@@ -33,7 +33,7 @@ sub new {
     my $data;
     croak 'no data type specified' unless $type;
     bless $self, $class;
-    $data = $self->_get_data ($type);
+    $data = $self->_get_data($type);
     if ($data) {
         # We already loaded this data file - just pull from cache
         $self->{'data'} = $data;
@@ -56,18 +56,20 @@ sub new {
 # what dataset, stored in %data, it is supposed to act on.
 {
     my %data;
+
     sub _get_data {
         my ($self, $type) = @_;
         return $data{$type};
     }
+
     sub _load_data {
         my ($self, $type, $separator, $code) = @_;
         unless (exists $data{$type}) {
             my $vendors = $self->_get_vendor_names;
             my $dataset = {};
-            my ($fd, $vno) = $self->_open_data_file ($type, $vendors, 0);
-            $self->_parse_file ($type, $fd, $dataset, $separator, $code,
-                                $vendors, $vno);
+            my ($fd, $vno) = $self->_open_data_file($type, $vendors, 0);
+            $self->_parse_file($type, $fd, $dataset, $separator, $code,
+                $vendors, $vno);
             close($fd);
             $data{$type} = $dataset;
         }
@@ -105,18 +107,18 @@ sub new {
         my $file;
         my $cur = $start;
 
-        OUTER: for (; $cur < scalar @$vendors ; $cur++) {
+      OUTER: for (; $cur < scalar @$vendors ; $cur++) {
             my $vendorpart = "vendors/$vendors->[$cur]/data/$type";
-            foreach my $datafile ($profile->include_path ($vendorpart)) {
-                if ( -f $datafile) {
+            foreach my $datafile ($profile->include_path($vendorpart)) {
+                if (-f $datafile) {
                     $file = $datafile;
                     last OUTER;
                 }
             }
         }
         if (not defined $file and $cur == scalar @$vendors) {
-            foreach my $datafile ($profile->include_path ("data/$type")) {
-                if ( -f $datafile) {
+            foreach my $datafile ($profile->include_path("data/$type")) {
+                if (-f $datafile) {
                     $file = $datafile;
                     last;
                 }
@@ -144,13 +146,13 @@ sub _parse_file {
             my ($op, $value) = split(m{ \s++ }xsm, $line, 2);
             if ($op eq 'delete') {
                 croak "Missing key after \@delete in $filename at line $."
-                    unless defined $value && length $value;
+                  unless defined $value && length $value;
                 delete $dataset->{$value};
             } elsif ($op eq 'include-parent') {
-                my ($pfd, $pvo) = $self->_open_data_file ($type, $vendors,
-                                                          $vno +1);
-                $self->_parse_file ($type, $pfd, $dataset, $separator,
-                                    $code, $vendors, $pvo);
+                my ($pfd, $pvo)
+                  = $self->_open_data_file($type, $vendors,$vno +1);
+                $self->_parse_file($type, $pfd, $dataset, $separator,
+                    $code, $vendors, $pvo);
                 close($pfd);
             } else {
                 croak "Unknown operation \@$op in $filename at line $.";
@@ -164,7 +166,7 @@ sub _parse_file {
             if ($code) {
                 my $pval = $dataset->{$key};
                 $val = $code->($key, $val, $pval) if $code;
-                next if ! defined $val && defined $pval;
+                next if !defined $val && defined $pval;
                 unless (defined $val) {
                     next if defined $pval;
                     croak "undefined value for $key (type: $type)";
@@ -181,7 +183,7 @@ sub _parse_file {
 sub _force_promise {
     my ($self) = @_;
     my $promise = $self->{promise};
-    $self->_load_data (@$promise);
+    $self->_load_data(@$promise);
     delete $self->{promise};
     return;
 }

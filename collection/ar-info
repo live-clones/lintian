@@ -34,43 +34,42 @@ sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info;
 
-if ( -e "$dir/ar-info" ) {
-    unlink("$dir/ar-info");
-}
+    if (-e "$dir/ar-info") {
+        unlink("$dir/ar-info");
+    }
 
-# If we are asked to only remove the files stop right here
-if ($type =~ m/^remove-/) {
+    # If we are asked to only remove the files stop right here
+    if ($type =~ m/^remove-/) {
+        return;
+    }
+
+    $info  = Lintian::Collect->new($pkg, $type, $dir);
+
+    open(my $out_fd, '>', "$dir/ar-info");
+
+    chdir("$dir/unpacked");
+
+    foreach my $file ($info->sorted_index) {
+        next unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;
+
+        my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
+        spawn($opts, ['ar', 't', $file]);
+        print {$out_fd} "$file:";
+        while (defined($_ = readline($opts->{pipe_out}))) {
+            chomp;
+            print {$out_fd} " $_";
+        }
+        close($opts->{pipe_out});
+        print {$out_fd} "\n";
+        $opts->{harness}->finish;
+    }
+
+    close($out_fd);
+
     return;
 }
 
-$info  = Lintian::Collect->new ($pkg, $type, $dir);
-
-open(my $out_fd, '>', "$dir/ar-info");
-
-chdir("$dir/unpacked");
-
-
-foreach my $file ($info->sorted_index) {
-    next unless $file->is_regular_file && $file =~ m{ \. a \Z }xsm;
-
-    my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
-    spawn($opts, [ 'ar', 't', $file ]);
-    print {$out_fd} "$file:";
-    while (defined($_ = readline($opts->{pipe_out}))) {
-        chomp;
-        print {$out_fd} " $_";
-    }
-    close($opts->{pipe_out});
-    print {$out_fd} "\n";
-    $opts->{harness}->finish;
-}
-
-close($out_fd);
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)ar-info$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)ar-info$,;
 1;
 
 # Local Variables:

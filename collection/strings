@@ -32,89 +32,88 @@ use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
 use Lintian::Util qw(delete_dir fail locate_helper_tool);
 
-
 my $helper = locate_helper_tool('coll/strings-helper');
 
 sub collect {
+    my ($pkg, $type, $dir) = @_;
+    my ($info, @manual, %opts);
 
-my ($pkg, $type, $dir) = @_;
-my $info;
-my @manual = ();
+    if (-e "$dir/elf-index") {
+        unlink("$dir/elf-index");
+    }
 
-if ( -e "$dir/elf-index" ) {
-    unlink("$dir/elf-index");
-}
+    if (-d "$dir/strings") {
+        delete_dir("$dir/strings") or fail "rmdir strings: $!";
+    }
 
-if ( -d "$dir/strings" ) {
-    delete_dir ("$dir/strings") or fail "rmdir strings: $!";
-}
+    # If we are asked to only remove the files stop right here
+    if ($type =~ m/^remove-/) {
+        return;
+    }
 
-# If we are asked to only remove the files stop right here
-if ($type =~ m/^remove-/) {
+    $info = Lintian::Collect->new($pkg, $type, $dir);
+
+    open(my $elf_fd, '>', "$dir/elf-index");
+
+    # The directory is required, even if it would be empty.
+    mkdir("$dir/strings");
+
+    chdir("$dir/unpacked");
+
+    my $open_strings_pipe = sub {
+        %opts = (
+            pipe_in => FileHandle->new,
+            fail => 'error'
+        );
+        spawn(\%opts, ['xargs', '-0r', 'strings', '-f', '--'],
+            '|', [$helper, "$dir/strings"]);
+        $opts{pipe_in}->blocking(1);
+    };
+
+    foreach my $bin ($info->sorted_index) {
+        my $filename = $bin->name;
+        my $finfo = $info->file_info($bin);
+        next unless $finfo =~ m/\bELF\b/o;
+        printf {$elf_fd} "$filename\n";
+
+        next if $bin =~ m,^usr/lib/debug/,;
+        if ($bin =~ m/[:\n\r]/) {
+            # Do these "interesting cases" manual
+            push @manual, $filename;
+            next;
+        }
+        $open_strings_pipe->() unless %opts;
+        printf {$opts{pipe_in}} "%s\0", $bin;
+    }
+
+    if (%opts) {
+        close($opts{pipe_in});
+        reap(\%opts);
+    }
+
+    # Fall back to the safe but slower method for files with "special"
+    # names.
+    if (@manual) {
+        require File::Basename;
+        foreach my $file (@manual) {
+            my $strdir = $dir . '/strings/' . File::Basename::dirname($file);
+            # create the dir if needed.
+            unless (-d $strdir) {
+                system('mkdir', '-p', $strdir) == 0
+                  or fail "mkdir -p $strdir failed " . (($? >> 8) & 256), "\n";
+            }
+            spawn(
+                {out => "$dir/strings/${file}.gz", fail => 'fail'},
+                ['strings', "$dir/unpacked/$file"],
+                '|', ['gzip', '-9nc']);
+        }
+    }
+    close($elf_fd);
+
     return;
 }
 
-$info = Lintian::Collect->new ($pkg, $type, $dir);
-
-
-open(my $elf_fd, '>', "$dir/elf-index");
-
-# The directory is required, even if it would be empty.
-mkdir("$dir/strings");
-
-chdir("$dir/unpacked");
-
-my %opts;
-my $open_strings_pipe = sub {
-    %opts = ( pipe_in => FileHandle->new,
-              fail => 'error' );
-    spawn (\%opts, ['xargs', '-0r', 'strings', '-f', '--'], '|', [$helper, "$dir/strings"]);
-    $opts{pipe_in}->blocking(1);
-};
-
-foreach my $bin ($info->sorted_index) {
-    my $filename = $bin->name;
-    my $finfo = $info->file_info ($bin);
-    next unless $finfo =~ m/\bELF\b/o;
-    printf {$elf_fd} "$filename\n";
-
-    next if $bin =~ m,^usr/lib/debug/,;
-    if ($bin =~ m/[:\n\r]/) {
-        # Do these "interesting cases" manual
-        push @manual, $filename;
-        next;
-    }
-    $open_strings_pipe->() unless %opts;
-    printf {$opts{pipe_in}} "%s\0", $bin;
-}
-
-if (%opts) {
-    close($opts{pipe_in});
-    reap (\%opts);
-}
-
-
-# Fall back to the safe but slower method for files with "special"
-# names.
-if (@manual) {
-    require File::Basename;
-    foreach my $file (@manual) {
-        my $strdir = $dir . '/strings/' . File::Basename::dirname ($file);
-        # create the dir if needed.
-        unless ( -d $strdir) {
-            system ('mkdir', '-p', $strdir) == 0
-                or fail "mkdir -p $strdir failed " . (($? >> 8) & 256), "\n";
-        }
-        spawn ({out => "$dir/strings/${file}.gz", fail => 'fail'},
-               ['strings', "$dir/unpacked/$file"], '|', ['gzip', '-9nc']);
-    }
-}
-close($elf_fd);
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)strings$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)strings$,;
 
 1;
 

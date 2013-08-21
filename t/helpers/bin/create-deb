@@ -35,6 +35,7 @@ my %TAR_OPTIONS = (
     'gz' => ['-z'],
     'bz2' => ['-j'],
     'lzma' => ['-I', 'lzma'],
+    'xz' => ['-I', 'xz'],
 );
 
 # Permissions
@@ -68,29 +69,32 @@ my %opts = (
     'package-version=s' => \$val{'package-version'},
 );
 
-my $cwd;
-my $data;
-my @taropt = ();
+my ($cwd, $data, @taropt);
 
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
 GetOptions(%opts)
-    or die "error parsing options\n";
+  or die "error parsing options\n";
 
 die "Missing --out-file option\n" unless $val{'out-file'};
 
-die "Needs either --root option or --auto-build-data\n" unless $val{'root'} || $val{'auto-build-data'};
+die "Needs either --root option or --auto-build-data\n"
+  unless $val{'root'} || $val{'auto-build-data'};
 
-die "Unknown compression \"$val{'compression'}\"\n" unless exists $TAR_OPTIONS{$val{'compression'}};
+die "Unknown compression \"$val{'compression'}\"\n"
+  unless exists $TAR_OPTIONS{$val{'compression'}};
 
 $val{'auto-build-data'} = 0 if $val{'root'};
 
 if ($val{'auto-build-data'}) {
-    die "Cannot find ./control.\n" unless ($val{'package-name'} && defined $val{'package-version'}) || -e './control';
+    die "Cannot find ./control.\n"
+      unless ($val{'package-name'} && defined $val{'package-version'})
+      || -e './control';
 }
 
 # default to "on" unless we are given an md5sums file explicitly
-$val{'md5sums'} = 1 unless defined $val{'md5sums'} || any { $_ eq 'md5sums'} @ARGV;
+$val{'md5sums'} = 1
+  unless defined $val{'md5sums'} || any { $_ eq 'md5sums'} @ARGV;
 
 $cwd = Cwd::cwd();
 
@@ -100,10 +104,17 @@ if ($val{'auto-build-data'}) {
     my $ver = $val{'package-version'};
     my $dch = 'changelog';
     unless ($pkg) {
-        $pkg = $data->{'package'} || die "Cannot read package name from ./control or missing --package-name <name>.\n";
+        $pkg = $data->{'package'}
+          || die join(q{ },
+            'Cannot read package name from ./control',
+            "or missing --package-name <name>.\n");
     }
     unless (defined $ver) {
-        $ver = $data->{'version'} // die "Cannot read package version from ./control or missing --package-version <v>.\n";
+        $ver = $data->{'version'};
+        die join(q{ },
+            'Cannot read package version from ./control',
+            "or missing --package-version <v>.\n")
+          unless defined $ver;
     }
     # handle non-native package
     $dch = 'changelog.Debian' if $ver =~ m/-/o;
@@ -112,15 +123,22 @@ if ($val{'auto-build-data'}) {
     foreach my $file ('copyright', $dch) {
         my $src = $file;
         $src = 'changelog' if $file eq 'changelog.Debian';
-        runsystem('install', '-m', '0644', $src,  "root/usr/share/doc/$pkg/$file") if -e $src;
+        runsystem('install', '-m', '0644', $src,
+            "root/usr/share/doc/$pkg/$file")
+          if -e $src;
     }
-    runsystem('gzip', '-n', '--best', "root/usr/share/doc/$pkg/$dch") if -e "root/usr/share/doc/$pkg/$dch";
+    runsystem('gzip', '-n', '--best', "root/usr/share/doc/$pkg/$dch")
+      if -e "root/usr/share/doc/$pkg/$dch";
     # set root so it works for later :)
     $val{'root'} = 'root/';
 }
 
 if ($val{'md5sums'}) {
-    runsystem("cd $val{'root'} && find -type f -a -! -ipath etc/ -print0 | xargs -0 md5sum >> $cwd/md5sums");
+    runsystem(
+        join(q{ },
+            "cd $val{'root'}",
+            '&& find -type f -a -! -ipath etc/ -print0',
+            "| xargs -0 md5sum >> $cwd/md5sums"));
     push @ARGV, 'md5sums' if -s 'md5sums'; # only add if it is not empty.
 }
 
@@ -128,12 +146,13 @@ if ($val{'md5sums'}) {
 $data = "data.tar.$val{'compression'}";
 @taropt = split m/\s++/o, $val{'tar-opts'} if defined $val{'tar-opts'};
 
-runsystem('tar', '-C', $val{'root'}, @taropt, @{ $TAR_OPTIONS{$val{'compression'}} },
-          '-cf', "$cwd/$data", '.');
+runsystem('tar', '-C', $val{'root'}, @taropt,
+    @{ $TAR_OPTIONS{$val{'compression'}} },
+    '-cf', "$cwd/$data", '.');
 
 # control.tar.gz
 
-unless ( -e 'control.tar.gz' ) {
+unless (-e 'control.tar.gz') {
     if ($val{'fix-perm'}) {
         chown 0, 0,  @ARGV;
         foreach my $f (@ARGV) {
@@ -151,7 +170,8 @@ print $bv "2.0\n";
 close $bv or die "closing debian-binary: $!";
 
 # ar the deb file
-runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', 'control.tar.gz', $data);
+runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', 'control.tar.gz',
+    $data);
 
 exit 0;
 

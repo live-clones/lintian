@@ -2,17 +2,17 @@
 # debian-readme -- lintian collector script
 
 # Copyright (C) 1998 Richard Braakman
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -29,52 +29,54 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file touch_file is_ancestor_of);
 
 sub collect {
-my ($pkg, $type, $dir) = @_;
+    my ($pkg, $type, $dir) = @_;
 
-if ( -f "$dir/README.Debian") {
-    unlink("$dir/README.Debian");
-}
+    if (-f "$dir/README.Debian") {
+        unlink("$dir/README.Debian");
+    }
 
-# If we are asked to only remove the files stop right here
-if ($type =~ m/^remove-/) {
-    return;
-}
+    # If we are asked to only remove the files stop right here
+    if ($type =~ m/^remove-/) {
+        return;
+    }
 
-# Pick the first of these files that exists.
-my @readmes = ("$dir/unpacked/usr/share/doc/$pkg/README.Debian.gz",
-               "$dir/unpacked/usr/share/doc/$pkg/README.Debian",
-               "$dir/unpacked/usr/share/doc/$pkg/README.debian.gz",
-               "$dir/unpacked/usr/share/doc/$pkg/README.debian",
+    # Pick the first of these files that exists.
+    my @readmes = (
+        "$dir/unpacked/usr/share/doc/$pkg/README.Debian.gz",
+        "$dir/unpacked/usr/share/doc/$pkg/README.Debian",
+        "$dir/unpacked/usr/share/doc/$pkg/README.debian.gz",
+        "$dir/unpacked/usr/share/doc/$pkg/README.debian",
     );
 
-if (-d "$dir/unpacked/usr/share/doc/$pkg"
-      && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")) {
-    # Unsafe path, stop here
-    touch_file("$dir/README.Debian");
+    if (-d "$dir/unpacked/usr/share/doc/$pkg"
+        && !is_ancestor_of("$dir/unpacked", "$dir/unpacked/usr/share/doc/$pkg")
+      ) {
+        # Unsafe path, stop here
+        touch_file("$dir/README.Debian");
+        return;
+    }
+
+    my $file;
+    for (@readmes) {
+        if (-f $_) {
+            $file = $_;
+            last;
+        }
+    }
+
+    if (not defined $file) {
+        # no README found
+        touch_file("$dir/README.Debian");
+    } elsif ($file =~ m/\.gz$/) {
+        gunzip_file($file, "$dir/README.Debian");
+    } else {
+        link($file, "$dir/README.Debian");
+    }
+
     return;
 }
 
-my $file;
-for (@readmes) {
-    if (-f $_) {
-        $file = $_;
-        last;
-    }
-}
-
-if (not defined $file) {
-    # no README found
-    touch_file("$dir/README.Debian");
-} elsif ($file =~ m/\.gz$/) {
-    gunzip_file ($file, "$dir/README.Debian");
-} else {
-    link($file, "$dir/README.Debian");
-}
-
-return;
-}
-
-collect (@ARGV) if $0 =~ m,(?:^|/)debian-readme$,;
+collect(@ARGV) if $0 =~ m,(?:^|/)debian-readme$,;
 
 1;
 

@@ -64,7 +64,7 @@ BEGIN {
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
-                     rstrip slurp_entire_file);
+  rstrip slurp_entire_file);
 
 # --- Global configuration
 
@@ -74,8 +74,10 @@ our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
 $LINTIAN = $ENV{'LINTIAN_FRONTEND'} if exists $ENV{'LINTIAN_FRONTEND'};
 $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
 
-our @DPKG_BUILDPACKAGE_CMD = (qw(dpkg-buildpackage -rfakeroot -us -uc -d),
-    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING));
+our @DPKG_BUILDPACKAGE_CMD = (
+    qw(dpkg-buildpackage -rfakeroot -us -uc -d),
+    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING)
+);
 if (`dpkg-source --help` =~ m,\s--commit\s,) {
     # dpkg (>= 1.16.1) doesn't automatically create patches anymore, unless
     # explicitly asked to do so:
@@ -125,12 +127,15 @@ our $DUMP_LOGS = '';
 
 my ($run_all_tests, $tag);
 Getopt::Long::Configure('bundling');
-GetOptions('d|debug'      => \$DEBUG,
-           'j|jobs:i'     => \$JOBS,
-           'k|keep-going' => \$run_all_tests,
-           't|tag=s'      => \$tag,
-           'dump-logs!'   => \$DUMP_LOGS,
-           'v|verbose'    => \$VERBOSE) or usage;
+GetOptions(
+    'd|debug'      => \$DEBUG,
+    'j|jobs:i'     => \$JOBS,
+    'k|keep-going' => \$run_all_tests,
+    't|tag=s'      => \$tag,
+    'dump-logs!'   => \$DUMP_LOGS,
+    'v|verbose'    => \$VERBOSE
+) or usage;
+
 if ($#ARGV < 1 || $#ARGV > 2) {
     usage;
 }
@@ -146,7 +151,7 @@ unless (-d $TESTSET) {
     fail("test set directory $TESTSET does not exist");
 }
 
-if ( -d "$TESTSET/helpers/bin") {
+if (-d "$TESTSET/helpers/bin") {
     # Add the test helpers to PATH
     my $tpath = Cwd::abs_path("$TESTSET/helpers/bin");
     fail "Cannot resolve $TESTSET/helpers/bin: $!" unless $tpath;
@@ -201,10 +206,7 @@ my $failed = shared_clone([]);
 # anything.
 my $tests_run = 0;
 
-my %suites = ();
-
-my @tests;
-my $prev;
+my (%suites, @tests, $prev);
 
 my $q = Thread::Queue->new();
 our $MSG_Q = Thread::Queue->new();
@@ -242,7 +244,7 @@ if ($singletest) {
     if (-f $script) {
         @tests = ($script);
     }
-} elsif (! $tag && $suites{'scripts'}) {
+} elsif (!$tag && $suites{'scripts'}) {
     unless (-d "$TESTSET/scripts") {
         fail("cannot find $TESTSET/scripts: $!");
     }
@@ -251,7 +253,9 @@ if ($singletest) {
 
 if (@tests) {
     print "Test scripts:\n";
-    if (system('prove', '-j', $JOBS, '-r', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
+    if (
+        system('prove', '-j', $JOBS, '-r', '-I', "$LINTIAN_ROOT/lib", @tests)
+        != 0) {
         exit 1 unless $run_all_tests;
         $status = 1;
     }
@@ -287,9 +291,19 @@ run_tests(\&test_changes, @tests);
 $tests_run += scalar(@tests);
 msg_flush;
 
-foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('debs', 'deb', @_) } ],
-                 ['source', "$TESTSET/source/*/desc", sub { generic_test_runner('source', 'dsc', @_) } ],
-                 ['tests', "$TESTSET/tests/*/desc", sub { test_package('tests', @_) } ]) {
+my @test_suite_info = ([
+        'debs', "$TESTSET/debs/*/desc",
+        sub { generic_test_runner('debs', 'deb', @_) }
+    ],
+    [
+        'source', "$TESTSET/source/*/desc",
+        sub { generic_test_runner('source', 'dsc', @_) }
+    ],
+    ['tests', "$TESTSET/tests/*/desc", sub { test_package('tests', @_) }]
+
+);
+
+foreach my $tsi (@test_suite_info) {
     my ($tdir, $globstr, $runner) = @$tsi;
     $prev = $prev || scalar(@tests);
     @tests = ();
@@ -298,7 +312,8 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
         if (-d "$TESTSET/$tdir/$test") {
             push @tests, read_test_desc("$TESTSET/$tdir/$test/desc");
         } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
-            @tests = map { read_test_desc($_) } glob("$TESTSET/$tdir/$singletest-*/desc");
+            @tests = map { read_test_desc($_) }
+              glob("$TESTSET/$tdir/$singletest-*/desc");
         }
     } elsif ($tag) {
         @tests = find_tests_for_tag($tag, $globstr);
@@ -309,7 +324,7 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
         @tests = map { read_test_desc($_) } glob($globstr);
     }
     @tests = sort {
-        $a->{sequence} <=> $b->{sequence}
+             $a->{sequence} <=> $b->{sequence}
           || $a->{testname} cmp $b->{testname}
     } @tests;
     print "\n" if ($prev and @tests);
@@ -324,7 +339,6 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
     $tests_run += scalar(@tests);
     msg_flush;
 }
-
 
 # --- Check whether we ran any tests
 
@@ -365,17 +379,19 @@ exit $status;
 # the end.
 sub find_tests_for_tag {
     my ($tag, $glob) = @_;
-    return generic_find_test_for_tag($tag, $glob, sub {
-        my ($tag, $desc) = @_;
-        my $data = read_test_desc($desc);
-        my $tagnames = $data->{'test-for'}//'';
-        $tagnames .= ' ' . $data->{'test-against'} if $data->{'test-against'};
-        my %table = map { $_ => 1 } split(m/\s++/o, $tagnames);
-        return $data if $table{$tag};
-        return 0;
-    });
+    return generic_find_test_for_tag(
+        $tag, $glob,
+        sub {
+            my ($tag, $desc) = @_;
+            my $data = read_test_desc($desc);
+            my $tagnames = $data->{'test-for'}//'';
+            $tagnames .= ' ' . $data->{'test-against'}
+              if $data->{'test-against'};
+            my %table = map { $_ => 1 } split(m/\s++/o, $tagnames);
+            return $data if $table{$tag};
+            return 0;
+        });
 }
-
 
 sub copy_template_dir {
     my ($skel, $tsrc, $targetdir, $exskel, $extsrc) = @_;
@@ -385,7 +401,7 @@ sub copy_template_dir {
     @ext = @$extsrc if $extsrc;
     runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs);
     runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/", @ext)
-        if -d "$tsrc/";
+      if -d "$tsrc/";
     return;
 }
 
@@ -442,23 +458,26 @@ sub test_package {
     runsystem_ok('mkdir', '-p', $rundir);
     my $skel = $testdata->{skeleton};
     unless ($is_native) {
-        copy_template_dir("$tmpldir/${skel}.upstream", "$origdir/upstream/", $targetdir);
+        copy_template_dir("$tmpldir/${skel}.upstream", "$origdir/upstream/",
+            $targetdir);
         unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
         if (-x "$origdir/pre_upstream") {
             msg_print 'running pre_upstream hook... ' if $VERBOSE;
             runsystem("$origdir/pre_upstream", $targetdir);
         }
-        chdir_runcmd ($rundir, ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-        if ( -f "$origdir/debian/debian/source/format" ) {
-            my $format = slurp_entire_file ("$origdir/debian/debian/source/format");
+        chdir_runcmd($rundir,
+            ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
+        if (-f "$origdir/debian/debian/source/format") {
+            my $format
+              = slurp_entire_file("$origdir/debian/debian/source/format");
             chomp $format;
             if ($format =~ m/^3.\d+ \(quilt\)$/) {
-                delete_dir ("$targetdir/debian/");
+                delete_dir("$targetdir/debian/");
             }
         }
     }
     copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
-                      ['--exclude=debian/changelog']);
+        ['--exclude=debian/changelog']);
 
     foreach my $tfile (@{ $TEMPLATES{$suite} }) {
         unless (-e "$targetdir/$tfile") {
@@ -479,20 +498,23 @@ sub test_package {
         runsystem("$origdir/pre_build", $targetdir);
     }
 
-    my $file = _builder_tests($testdata, "$rundir/$pkgdir", "$rundir/build.$pkg");
+    my $file
+      = _builder_tests($testdata, "$rundir/$pkgdir", "$rundir/build.$pkg");
 
     run_lintian($testdata, $file, "$rundir/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
     runsystem_ok('sed', '-ri', '-f', "$origdir/post_test", "$rundir/tags.$pkg")
-        if -e "$origdir/post_test";
+      if -e "$origdir/post_test";
 
-    if ( -x "$origdir/test_calibration" ) {
+    if (-x "$origdir/test_calibration") {
         my $calibrated = "$rundir/expected.$pkg.calibrated";
         msg_print 'running test_calibration hook... ' if $VERBOSE;
-        runsystem_ok ("$origdir/test_calibration", $expected,
-                      "$rundir/tags.$pkg", $calibrated);
+        runsystem_ok(
+            "$origdir/test_calibration", $expected,
+            "$rundir/tags.$pkg", $calibrated
+        );
         $expected = $calibrated if -e $calibrated;
     }
 
@@ -503,7 +525,7 @@ sub _builder_tests {
     my ($testdata, $testdir, $log) = @_;
     my $pkg = $testdata->{srcpkg};
     msg_print 'building... ';
-    my $res = chdir_runcmd ($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
+    my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
     if ($res){
         dump_log($pkg, $log) if $DUMP_LOGS;
         fail("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
@@ -519,14 +541,13 @@ sub run_lintian {
     msg_print 'testing... ';
     my @options = split(' ', $testdata->{options}//'');
     unshift @options, '--allow-root', '--no-cfg', '--no-user-dirs';
-    unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
+    unshift(@options, '--profile', $testdata->{profile})
+      if $testdata->{profile};
     my $pid = open(my $in, '-|');
     if ($pid) {
         my @data = <$in>;
         my $status = 0;
-        eval {
-            close($in);
-        };
+        eval {close($in);};
         if (my $err = $@) {
             fail("close pipe: $!") if $err->errno;
             $status = ($? >> 8) & 255;
@@ -569,7 +590,7 @@ sub test_changes {
         # makes it consistent.
         my $missing = check_test_depends($testdata);
         if ($missing) {
-            return skip_test('changes', $testname, "Missing Depends: $missing");
+            return skip_test('changes', $testname,"Missing Depends: $missing");
         }
     }
 
@@ -579,7 +600,7 @@ sub test_changes {
     my $testdir = "$TESTSET/changes";
     my $file = "$testdir/$test.changes";
     # Check if we need to copy these files over.
-    if ( ! -e $file && -e "$file.in" ) {
+    if (!-e $file && -e "$file.in") {
         my @files;
         msg_print 'building... ';
         # copy all files but "tags" and desc.  Usually this will only
@@ -593,7 +614,8 @@ sub test_changes {
 
     run_lintian($testdata, $file, "$RUNDIR/tags.changes-$test");
 
-    return _check_result($testdata, "$testdir/$test.tags", "$RUNDIR/tags.changes-$test");
+    return _check_result($testdata, "$testdir/$test.tags",
+        "$RUNDIR/tags.changes-$test");
 }
 
 # --------------
@@ -602,7 +624,7 @@ sub test_changes {
 sub unquote {
     my ($string) = @_;
     $string =~ s/^:( {0,7}|\t)//gm;
-    return $string
+    return $string;
 }
 
 # generic_find_test_for_tag($tag, $globstr[, $tcode])
@@ -679,7 +701,7 @@ sub generic_test_runner {
     my $skel = $testdata->{skeleton};
 
     copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
-                      ['--exclude=changelog'], ['--exclude=desc']);
+        ['--exclude=changelog'], ['--exclude=desc']);
 
     foreach my $tfile (@{ $TEMPLATES{$suite} }) {
         unless (-e "$targetdir/$tfile") {
@@ -688,17 +710,21 @@ sub generic_test_runner {
     }
 
     msg_print 'building... ';
-    my $res = chdir_runcmd($targetdir, ['fakeroot', 'make'], "../build.$testname");
+    my $res
+      = chdir_runcmd($targetdir, ['fakeroot', 'make'], "../build.$testname");
     if ($res){
         dump_log($testname, "$RUNDIR/build.$testname") if $DUMP_LOGS;
         fail("cd $targetdir && fakeroot make >../build.$testname 2>&1");
     }
     my @matches = glob "$targetdir/*.$ext";
     my $file = shift @matches;
-    unless ( $file && -e $file ) {
-        fail "$testname did not produce any file matching \"$targetdir/*.$ext\" ($file)";
+    unless ($file && -e $file) {
+        fail join(q{ },
+            "$testname did not produce any file matching",
+            "\"$targetdir/*.$ext\" ($file)");
     }
-    fail "$testname produced more than one file matching \"$targetdir/*.$ext\"" if @matches;
+    fail "$testname produced more than one file matching \"$targetdir/*.$ext\""
+      if @matches;
 
     run_lintian($testdata, $file, "$RUNDIR/tags.$testname");
     return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$testname");
@@ -730,7 +756,9 @@ sub _check_result {
     # since in that case we probably have non-standard output.
     my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
     my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
-    if (not %test_for and not %test_against and $testdata->{'output-format'} ne 'EWI') {
+    if (    not %test_for
+        and not %test_against
+        and $testdata->{'output-format'} ne 'EWI') {
         if ($testdata->{'todo'} eq 'yes') {
             msg_print "E: marked as TODO but succeeded.\n";
             return;
@@ -742,18 +770,19 @@ sub _check_result {
         open(my $etags, '<', $actual);
         while (<$etags>) {
             next if m/^N: /;
-            # Some of the traversal tests are skipped; accept that in the output
+            # Some of the traversal tests creates packages that are
+            # skipped; accept that in the output
             next if m/tainted/o && m/skipping/o;
             # Looks for "$code: $package[ $type]: $tag"
             if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+                msg_print(($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
                 msg_print ": Invalid line:\n$_";
                 $okay = 0;
                 next;
             }
             my $tag = $1;
             if ($test_against{$tag}) {
-                msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+                msg_print(($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
                 msg_print ": Tag $tag seen but listed in Test-Against\n";
                 $okay = 0;
                 # Warn only once about each "test-against" tag
@@ -769,12 +798,14 @@ sub _check_result {
                 # binaries-hardening on some architectures).
                 open(my $oe, '<', $expected);
                 my %cp_tf = %test_for;
-                while ( <$oe> ) {
+                while (<$oe>) {
                     next if m/^N: /;
-                    # Some of the traversal tests are skipped; accept that in the output
+                    # Some of the traversal tests creates packages that are
+                    # skipped; accept that in the output
                     next if m/tainted/o && m/skipping/o;
                     if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-                        msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+                        msg_print(
+                            ($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
                         msg_print ": Invalid line:\n$_";
                         $okay = 0;
                         next;
@@ -789,7 +820,7 @@ sub _check_result {
                 }
             }
             for my $tag (sort keys %test_for) {
-                msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+                msg_print(($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
                 msg_print ": Tag $tag listed in Test-For but not found\n";
                 $okay = 0;
             }
@@ -834,27 +865,28 @@ sub run_tests{
     my ($code, @tsts) = @_;
     $q->enqueue(@tsts);
     for (my $i = 0; $i < $JOBS; $i++) {
-        threads->create(sub {
-            while (my $t = $q->dequeue_nb()) {
-                my $okay = eval { $code->($t); };
-                if (!$okay || $@) {
-                    if ($@) {
-                        msg_print "FAILED\n";
-                        print STDERR "$@\n";
-                    }
-                    exit 1 unless $run_all_tests;
-                    my $name = $t;
-                    if (ref($t) eq 'HASH' && exists $t->{'testname'}) {
-                        $name = $t->{'testname'};
-                    }
-                    if (1) {
-                        lock($status);
-                        $status ||= 1;
-                        push(@{$failed}, $name);
+        threads->create(
+            sub {
+                while (my $t = $q->dequeue_nb()) {
+                    my $okay = eval { $code->($t); };
+                    if (!$okay || $@) {
+                        if ($@) {
+                            msg_print "FAILED\n";
+                            print STDERR "$@\n";
+                        }
+                        exit 1 unless $run_all_tests;
+                        my $name = $t;
+                        if (ref($t) eq 'HASH' && exists $t->{'testname'}) {
+                            $name = $t->{'testname'};
+                        }
+                        if (1) {
+                            lock($status);
+                            $status ||= 1;
+                            push(@{$failed}, $name);
+                        }
                     }
                 }
-            }
-        }); # treads->create( sub { ...
+            }); # treads->create( sub { ...
     } # for loop
 
     # wait for the results;
@@ -888,15 +920,16 @@ sub dump_log{
 sub runsystem {
     print "runsystem(@_)\n" if $DEBUG;
     system(@_) == 0
-        or fail("failed: @_\n");
+      or fail("failed: @_\n");
     return;
 }
 
 sub runsystem_ok {
     print "runsystem_ok(@_)\n" if $DEBUG;
     my $errcode = system(@_);
-    $errcode == 0 or $errcode == (1 << 8)
-        or fail("failed: @_\n");
+    $errcode == 0
+      or $errcode == (1 << 8)
+      or fail("failed: @_\n");
     return $errcode == 0;
 }
 
@@ -946,7 +979,7 @@ sub check_test_is_sane {
     $data->{date} ||= $DATE;
     $data->{distribution} ||= 'unstable';
     $data->{description} ||= 'No Description Available';
-    $data->{author} ||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
+    $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{architecture} ||= 'all';
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;
@@ -990,7 +1023,7 @@ sub read_test_desc {
     my $testdata;
     my $expected_name;
     if (scalar(@paragraphs) != 1) {
-        fail("$filename does not have exactly one paragraph")
+        fail("$filename does not have exactly one paragraph");
     }
     $testdata = $paragraphs[0];
     if ($filename =~ m{/desc$}) {
@@ -1005,8 +1038,8 @@ sub read_test_desc {
         fail("$filename is missing Testname field");
     }
     if ($expected_name ne $testdata->{'testname'}) {
-        fail("$filename is called $testdata->{'testname'}"
-             . " instead of $expected_name");
+        fail(   "$filename is called $testdata->{'testname'}"
+              . " instead of $expected_name");
     }
     return $testdata;
 }
@@ -1014,8 +1047,7 @@ sub read_test_desc {
 sub check_test_depends {
     my ($testdata) = @_;
     my ($missing, $pid, $fd, $err);
-    my ($test_fd, $test_file) = tempfile('bd-test-XXXXXXXXX',
-                                         TMPDIR => 1);
+    my ($test_fd, $test_file) = tempfile('bd-test-XXXXXXXXX', TMPDIR => 1);
 
     # dpkg-checkbuilddeps requires that the Source: field is present.
     print {$test_fd} "Source: bd-test-pkg\n";
@@ -1026,12 +1058,10 @@ sub check_test_depends {
         open(STDIN, '<', '/dev/null');
         open(STDERR, '>&', \*STDOUT);
         exec 'dpkg-checkbuilddeps', $test_file
-            or fail "exec dpkg-checkbuilddeps: $!";
+          or fail "exec dpkg-checkbuilddeps: $!";
     }
     $missing = slurp_entire_file($fd, 1);
-    eval {
-        close($fd);
-    };
+    eval {close($fd);};
     $err = $@;
     unlink($test_file);
     if ($err) {
@@ -1078,20 +1108,20 @@ sub skip_reason {
 }
 
 sub msg_flush {
-    my %msg = ( id => threads->tid() );
+    my %msg = (id => threads->tid);
     $MSG_Q->enqueue(\%msg);
     return;
 }
 
 sub msg_print {
-    my %msg = ( id => threads->tid(), msg => "@_" );
+    my %msg = (id => threads->tid, msg => "@_");
     $MSG_Q->enqueue(\%msg);
     return;
 }
 
 sub _flush {
     my ($thrs, $id, $length) = @_;
-    print (' 'x$length,"\r");
+    print(' 'x$length,"\r");
     while (my $m = shift @{$thrs->{$id}}) {
         print $m;
     }
@@ -1102,9 +1132,7 @@ sub _flush {
 
 sub msg_queue_handler {
     # if _msg_qh fails
-    eval {
-        _msg_qh();
-    };
+    eval {_msg_qh();};
     die "Error (msg_queue_handler): $@\n" if $@;
     die "_msg_qh returned!?\n";
 }
@@ -1127,7 +1155,7 @@ sub _msg_qh {
                 $length = 0;
             } elsif (exists($msg->{'msg'})) {
                 $thrs{$id} = []
-                    unless (exists($thrs{$id}));
+                  unless (exists($thrs{$id}));
 
                 my $flush = 0;
                 # We split by line. Every time a newline is found the
@@ -1149,7 +1177,7 @@ sub _msg_qh {
         my @output;
         for my $tid (keys %thrs) {
             my $p = $thrs{$tid}[-1];
-            rstrip ($p);
+            rstrip($p);
 
             push @output, $p;
         }

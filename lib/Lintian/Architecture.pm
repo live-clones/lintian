@@ -28,11 +28,11 @@ use Lintian::Data;
 our (@EXPORT_OK, %EXPORT_TAGS);
 
 @EXPORT_OK = (qw(
-    is_arch_wildcard
-    is_arch
-    is_arch_or_wildcard
-    expand_arch_wildcard
-    wildcard_includes_arch
+      is_arch_wildcard
+      is_arch
+      is_arch_or_wildcard
+      expand_arch_wildcard
+      wildcard_includes_arch
 ));
 
 %EXPORT_TAGS = (all => \@EXPORT_OK);
@@ -133,8 +133,8 @@ sub _parse_arch {
     return 1;
 }
 
-my $ARCH_RAW = Lintian::Data->new ('common/architectures', qr/\s*+\Q||\E\s*+/o,
-                                   \&_parse_arch);
+my $ARCH_RAW = Lintian::Data->new('common/architectures', qr/\s*+\Q||\E\s*+/o,
+    \&_parse_arch);
 
 =item is_arch_wildcard ($wc)
 
@@ -146,7 +146,7 @@ Note: 'any' is considered a wildcard and not an architecture.
 
 sub is_arch_wildcard {
     my ($wc) = @_;
-    $ARCH_RAW->known ('any') unless %ARCH_WILDCARDS;
+    $ARCH_RAW->known('any') unless %ARCH_WILDCARDS;
     return exists $ARCH_WILDCARDS{$wc} ? 1 : 0;
 }
 
@@ -161,9 +161,10 @@ architecture wildcards (including "any") and unknown architectures.
 sub is_arch {
     my ($arch) = @_;
     return 0 if $arch eq 'any';
-    return 1 if $arch eq 'all'
-        or $ARCH_RAW->known ($arch)
-        or exists $ALT_ARCH_NAMES{$arch};
+    return 1
+      if $arch eq 'all'
+      or $ARCH_RAW->known($arch)
+      or exists $ALT_ARCH_NAMES{$arch};
     return 0;
 }
 
@@ -201,7 +202,7 @@ so the returned list may use (e.g.) "amd64" for "linux-amd64".
 sub expand_arch_wildcard {
     my ($wc) = @_;
     # Load the wildcards if it has not been done yet.
-    $ARCH_RAW->known ('any') unless %ARCH_WILDCARDS;
+    $ARCH_RAW->known('any') unless %ARCH_WILDCARDS;
     return () unless exists $ARCH_WILDCARDS{$wc};
     return keys %{ $ARCH_WILDCARDS{$wc} };
 }
@@ -223,7 +224,7 @@ aliases.
 sub wildcard_includes_arch {
     my ($wc, $arch) = @_;
     # Load the wildcards if it has not been done yet.
-    $ARCH_RAW->known ('any') unless %ARCH_WILDCARDS;
+    $ARCH_RAW->known('any') unless %ARCH_WILDCARDS;
     $arch = $ALT_ARCH_NAMES{$arch} if exists $ALT_ARCH_NAMES{$arch};
     return exists $ARCH_WILDCARDS{$wc}->{$arch} ? 1 : 0;
 }

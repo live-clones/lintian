@@ -33,10 +33,10 @@ my ($strdir) = @ARGV;
 my $curfname = '';
 my $curdir = '';
 
-my %opts = ( fail => 'error' );
+my %opts = (fail => 'error');
 my $out = undef;
 
-while ( my $line = <STDIN> ) {
+while (my $line = <STDIN>) {
     my ($fname, $string);
     chomp $line;
     ($fname, $string) = ($line =~ m/^([^:]++): (.++)$/o);
@@ -44,17 +44,17 @@ while ( my $line = <STDIN> ) {
         # new file, prepare for it.
         if ($out) {
             close($out);
-            reap (\%opts);
+            reap(\%opts);
         }
-        my $dir = $strdir . '/' . dirname ($fname);
+        my $dir = $strdir . '/' . dirname($fname);
         if ($dir ne $curdir) {
-            system ('mkdir', '-p', $dir) == 0 or
-                die "mkdir -p $dir failed: " . (($? >> 8) & 256), "\n";
+            system('mkdir', '-p', $dir) == 0
+              or die "mkdir -p $dir failed: " . (($? >> 8) & 256), "\n";
             $curdir = $dir;
         }
         $opts{out} = "$strdir/${fname}.gz";
         $out = $opts{pipe_in} = IO::Handle->new;
-        spawn (\%opts, ['gzip', '-9nc']);
+        spawn(\%opts, ['gzip', '-9nc']);
         $opts{pipe_in}->blocking(1);
 
         $curfname = $fname;
@@ -64,7 +64,7 @@ while ( my $line = <STDIN> ) {
 
 if ($out) {
     close($out);
-    reap (\%opts);
+    reap(\%opts);
 }
 
 exit 0;

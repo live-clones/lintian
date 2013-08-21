@@ -113,7 +113,6 @@ changed with the L</jobs> method later.  If omitted, it defaults to
 
 =cut
 
-
 sub new {
     my ($class, $collmap, $options) = @_;
     my $ccmap = $collmap->clone;
@@ -137,7 +136,7 @@ sub new {
     if (defined $profile) {
         $req_table = {};
         foreach my $cname ($profile->scripts) {
-            my $check = $profile->get_script ($cname);
+            my $check = $profile->get_script($cname);
             $req_table->{$_} = 1 for $check->needs_info;
         }
         if ($extra) {
@@ -157,19 +156,18 @@ sub new {
         #  to do anything because "files" is "binary, udeb"-only.
         my %needed = ();
         my @check = keys %$req_table;
-        while ( my $coll = pop @check ) {
+        while (my $coll = pop @check) {
             $needed{$coll} = 1;
-            push @check,
-                grep { ! exists $needed{$_} } $ccmap->parents ($coll);
+            push @check,grep { !exists $needed{$_} } $ccmap->parents($coll);
         }
         # remove unneeded nodes in our copy
         foreach my $node ($collmap->known) {
             next if $needed{$node};
-            $ccmap->unlink ($node);
+            $ccmap->unlink($node);
         }
         # ccmap should not be inconsistent by this change.
         fail 'Inconsistent collmap after deletion'
-            if $ccmap->missing;
+          if $ccmap->missing;
     }
     $self->{'extra-coll'} = $extra;
 
@@ -227,9 +225,7 @@ sub prepare_tasks {
             # It already exists, do nothing.
             1;
         } elsif (not $lpkg->create){
-            eval {
-                $errorhandler->($lpkg);
-            };
+            eval {$errorhandler->($lpkg);};
             if ($@) {
                 # The error handler croaked; attempt to write status
                 # files for entries we created.
@@ -250,7 +246,7 @@ sub prepare_tasks {
             $changed = 1;
         }
 
-        ($cmap, $needed) = $self->_requested_colls ($lpkg, $changed);
+        ($cmap, $needed) = $self->_requested_colls($lpkg, $changed);
 
         next unless $cmap; # nothing to do
 
@@ -273,8 +269,8 @@ sub _gen_type_coll {
     my $cond = { 'type' => $pkg_type };
 
     foreach my $node ($collmap->known) {
-        my $coll = $collmap->getp ($node);
-        $cmap->add ($node, $coll->needs_info ($cond), $coll);
+        my $coll = $collmap->getp($node);
+        $cmap->add($node, $coll->needs_info($cond), $coll);
     }
 
     $cmap->initialise;
@@ -293,7 +289,7 @@ sub _requested_colls {
     my @check;
 
     unless (exists $self->{'cache'}->{$pkg_type}) {
-        $cmap = $self->_gen_type_coll ($pkg_type);
+        $cmap = $self->_gen_type_coll($pkg_type);
     } else {
         $cmap = $self->{'cache'}->{$pkg_type}->clone;
     }
@@ -304,23 +300,23 @@ sub _requested_colls {
     if ($profile) {
         my %tmp = ();
         foreach my $cname ($profile->scripts) {
-            my $check = $profile->get_script ($cname);
-            next unless $check->is_check_type ($pkg_type);
+            my $check = $profile->get_script($cname);
+            next unless $check->is_check_type($pkg_type);
             $tmp{$_} = 1 for $check->needs_info;
         }
         @check = keys %tmp;
-        push @check, grep { ! exists $tmp{$_} } keys %$extra
-            if defined $extra;
+        push @check, grep { !exists $tmp{$_} } keys %$extra
+          if defined $extra;
     } else {
         @check = $cmap->known;
     }
     while (my $cname = pop @check) {
-        my $coll = $cmap->getp ($cname);
+        my $coll = $cmap->getp($cname);
         # Skip collections not relevant to us (they will never
         # be finished and we do not want to use their
         # dependencies if they are the only ones using them)
-        next unless $coll->is_type ($pkg_type);
-        next if $lpkg->is_coll_finished ($cname, $coll->version);
+        next unless $coll->is_type($pkg_type);
+        next if $lpkg->is_coll_finished($cname, $coll->version);
         $needed{$cname} = 1;
         push @check, $coll->needs_info;
     }
@@ -409,47 +405,51 @@ sub process_tasks {
             my $pkg_type = $lpkg->pkg_type;
             my $base = $lpkg->base_dir;
             foreach my $coll (@todo) {
-                my $cs = $colls->getp ($coll);
+                my $cs = $colls->getp($coll);
 
                 # current type?
-                unless ($cs->is_type ($pkg_type)) {
-                    $cmap->satisfy ($coll);
+                unless ($cs->is_type($pkg_type)) {
+                    $cmap->satisfy($coll);
                     next;
                 }
 
                 # check if it has been run previously
-                if ($lpkg->is_coll_finished ($coll, $cs->version)) {
-                    $cmap->satisfy ($coll);
+                if ($lpkg->is_coll_finished($coll, $cs->version)) {
+                    $cmap->satisfy($coll);
                     next;
                 }
 
                 # Check if its actually on our TODO list.
                 if (defined $needed and not exists $needed->{$coll}) {
-                    $cmap->satisfy ($coll);
+                    $cmap->satisfy($coll);
                     next;
                 }
                 # Not run before (or out of date)
                 $lpkg->_clear_coll_status($coll);
 
                 # collect info
-                $cmap->select ($coll);
+                $cmap->select($coll);
                 $wlist->{'changed'} = 1;
                 my $pid = fork//-1;
                 if (not $pid) {
                     # child
                     my $ret = 0;
                     if ($cs->interface ne 'exec') {
-                        # With a non-exec interface, let L::CollScript handle it
+                       # With a non-exec interface, let L::CollScript handle it
 
-                        # For platforms that support it, try to change our name to
-                        # the collection being run (like how it would be with the
-                        # exec case below).  For platforms that do not support,
-                        # the child process will just keep its name as "lintian".
+                        # For platforms that support it, try to change
+                        # our name to the collection being run (like
+                        # how it would be with the exec case below).
+                        # For platforms that do not support, the child
+                        # process will just keep its name as
+                        # "lintian".
+
+#<<<
+                        # no Perltidy (breaks the no-critic)
                         $0 = $coll;  ## no critic (Variables::RequireLocalizedPunctuationVars)
+#>>>
 
-                        eval {
-                            $cs->collect ($pkg_name, $pkg_type, $base);
-                        };
+                        eval {$cs->collect($pkg_name, $pkg_type, $base);};
                         if ($@) {
                             print STDERR $@;
                             $ret = 2;
@@ -457,13 +457,14 @@ sub process_tasks {
                     } else {
                         # Its fork + exec - invoke that directly (saves a fork)
                         exec $cs->script_path, $pkg_name, $pkg_type, $base
-                            or die "exec $cs->script_path: $!";
+                          or die "exec $cs->script_path: $!";
                     }
-                    POSIX::_exit ($ret);
+                    POSIX::_exit($ret);
                 }
                 $coll_hook->($lpkg, 'start', $cs, $pid) if $coll_hook;
                 if ($pid < 0) {
-                    # failed - Lets not start any more jobs for this processable
+                    # failed - Lets not start any more jobs for this
+                    # processable
                     $failed{$lpkg->identifier} = 1;
                     delete $active{$lpkg->identifier};
                     last;
@@ -478,13 +479,13 @@ sub process_tasks {
         # wait until a job finishes to run its branches, if any, or skip
         # this package if any of the jobs failed.
 
-        while (my ($pid, $job_data) = wait_any ($running_jobs, $nohang)) {
+        while (my ($pid, $job_data) = wait_any($running_jobs, $nohang)) {
             my $status = $?;
             my ($cs, $cmap, $lpkg) = @$job_data;
             my $procid = $lpkg->identifier;
 
             $coll_hook->($lpkg, 'finish', $cs, $pid, $status)
-                if $coll_hook;
+              if $coll_hook;
 
             if ($status) {
                 # failed ...
@@ -495,8 +496,8 @@ sub process_tasks {
 
             my $coll = $cs->name;
             # The collection was success
-            $lpkg->_mark_coll_finished ($coll, $cs->version);
-            $cmap->satisfy ($coll);
+            $lpkg->_mark_coll_finished($coll, $cs->version);
+            $cmap->satisfy($coll);
             # If the entry is marked as failed, don't break the loop
             # for it.
             next if exists $failed{$procid};
@@ -531,14 +532,14 @@ sub process_tasks {
         $state = 'changed' if $changed;
         $state = 'failed' if exists $failed{$procid};
         $finish_hook->($lpkg, $state, sub { $changed = 1 })
-            if $finish_hook;
+          if $finish_hook;
         if ($changed) {
             $state = 'sf-error';
             if ($lpkg->update_status_file) {
                 $state = 'sf-success';
             }
             $finish_hook->($lpkg, $state)
-                if $finish_hook;
+              if $finish_hook;
         }
     }
     return;
@@ -568,11 +569,11 @@ needed unless process_tasks was interrupted somehow.
 sub wait_for_jobs {
     my ($self) = @_;
     my $running = $self->{'running-jobs'};
-    if (%{ $running }) {
-        while (my ($key, undef) = wait_any ($running)) {
+    if (%{$running}) {
+        while (my ($key, undef) = wait_any($running)) {
             delete $running->{$key};
         }
-        $self->{'running-jobs'} = {}
+        $self->{'running-jobs'} = {};
     }
     return;
 }
@@ -587,9 +588,9 @@ unless process_tasks was interrupted somehow.
 sub kill_jobs {
     my ($self) = @_;
     my $running = $self->{'running-jobs'};
-    if (%{ $running }) {
-        kill_all ($running);
-        kill_all ($running, 'KILL') if %$running;
+    if (%{$running}) {
+        kill_all($running);
+        kill_all($running, 'KILL') if %$running;
         $self->{'running-jobs'} = {};
     }
     return;
@@ -604,7 +605,7 @@ jobs.
 
 =cut
 
-Lintian::Unpacker->mk_accessors (qw(jobs));
+Lintian::Unpacker->mk_accessors(qw(jobs));
 
 =back
 
@@ -619,7 +620,6 @@ lintian(1), Lintian::CollScript(3), Lintian::Lab::Entry(3)
 =cut
 
 1;
-
 
 # Local Variables:
 # indent-tabs-mode: nil

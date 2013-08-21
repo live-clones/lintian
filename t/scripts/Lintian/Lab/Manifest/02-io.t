@@ -17,29 +17,32 @@ if ($DATADIR) {
 }
 
 plan skip_all => 'Data files not available'
-    unless -d $DATADIR;
+  unless -d $DATADIR;
 
 plan tests => 9;
 
-my $plist = Lintian::Lab::Manifest->new ('changes');
-my $olist = Lintian::Lab::Manifest->new ('changes');
+my $plist = Lintian::Lab::Manifest->new('changes');
+my $olist = Lintian::Lab::Manifest->new('changes');
 $plist->read_list("$DATADIR/changes1-info");
 my @all;
 my $inmemdata;
 
-$plist->visit_all (sub { push @all, $_[1] });
+$plist->visit_all(sub { push @all, $_[1] });
 
-is( @all, 3, 'Read 3 elements from the data file');
-for ( my $i = 0; $i < scalar @all; $i++) {
+is(@all, 3, 'Read 3 elements from the data file');
+for (my $i = 0; $i < scalar @all; $i++) {
     my $no = $i + 1;
     is($all[$i], "pkg$no", "Element $no is pkg$no");
 }
 
-ok( eval {
-    $plist->write_list(\$inmemdata);
-    $olist->read_list(\$inmemdata);
-    1;
-}, 'Wrote and read the data');
+ok(
+    eval {
+        $plist->write_list(\$inmemdata);
+        $olist->read_list(\$inmemdata);
+        1;
+    },
+    'Wrote and read the data'
+);
 
 SKIP: {
     my @pkeys;
@@ -51,13 +54,13 @@ SKIP: {
         diag("Write/Read issue: $@");
         skip 'Write test failed; the rest of the tests will not work', 4;
     }
-    $plist->visit_all ($pv);
-    $olist->visit_all ($ov);
+    $plist->visit_all($pv);
+    $olist->visit_all($ov);
     is_deeply(\@pval, \@oval, 'The lists contents the same elements');
-    for ( my $i = 0 ; $i < scalar @pkeys ; $i++) {
+    for (my $i = 0 ; $i < scalar @pkeys ; $i++) {
         my $no = $i + 1;
-        my $e  = $plist->get (@{ $pkeys[$i] });
-        my $oe = $olist->get (@{ $pkeys[$i] });
+        my $e  = $plist->get(@{ $pkeys[$i] });
+        my $oe = $olist->get(@{ $pkeys[$i] });
         is_deeply($e, $oe, "Element no. $no are identical");
     }
 }

@@ -60,35 +60,39 @@ sub run {
             # Checking description
             my $description = $info->binary_field($binary, 'description');
             if ($description !~ /\$\{phppear:summary\}/) {
-                tag 'pear-package-not-using-substvar', '${phppear:summary}'
+                tag 'pear-package-not-using-substvar', '${phppear:summary}';
             }
             if ($description !~ /\$\{phppear:description\}/) {
-                tag 'pear-package-not-using-substvar', '${phppear:description}'
+                tag 'pear-package-not-using-substvar','${phppear:description}';
             }
             # Checking overrides
             my $overrides = $info->debfiles('pkg-php-tools-overrides');
             if (-f $overrides) {
                 if (!$bdepends->implies('pkg-php-tools (>= 1~)')) {
                     tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                        '(>= 1~)', 'for package name overrides';
+                      '(>= 1~)', 'for package name overrides';
                 }
             }
             # Checking package2.xml
             if (defined($package2_xml)) {
                 if (!$bdepends->implies('pkg-php-tools (>= 1.4~)')) {
                     tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                        '(>= 1.4~)', 'for package2.xml';
+                      '(>= 1.4~)', 'for package2.xml';
                 }
             }
             if (defined($package_xml) && $package_xml->is_regular_file) {
-                # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
+          # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
                 open(my $package_xml_fd, '<', $info->unpacked($package_xml));
                 while (<$package_xml_fd>) {
-                    if (/^\s*<(php|extsrc|extbin|zendextsrc|zendextbin)release\s*\/?>/ ){
+                    if (
+                        m{\A \s* <
+                           (php|extsrc|extbin|zendextsrc|zendextbin)
+                           release \s* /? > }xsm
+                      ) {
                         $package_type = $1;
                         last;
                     }
-                    if (/^\s*<bundle\s*\/?>/ ){
+                    if (/^\s*<bundle\s*\/?>/){
                         $package_type = 'bundle';
                         last;
                     }
@@ -96,14 +100,16 @@ sub run {
                 close($package_xml_fd);
                 if ($package_type eq 'extsrc') { # PECL package
                     if (!$bdepends->implies('php5-dev')) {
-                        tag 'pecl-package-requires-build-dependency', 'php5-dev';
+                        tag 'pecl-package-requires-build-dependency',
+                          'php5-dev';
                     }
                     if (!$bdepends->implies('dh-php5')) {
-                        tag 'pecl-package-requires-build-dependency', 'dh-php5';
+                        tag 'pecl-package-requires-build-dependency','dh-php5';
                     }
                     if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
-                        tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                            '(>= 1.5~)', 'for PECL support';
+                        tag
+                          'pear-package-feature-requires-newer-pkg-php-tools',
+                          '(>= 1.5~)', 'for PECL support';
                     }
                 }
             }
@@ -116,61 +122,74 @@ sub run {
             tag 'pear-channel-without-pkg-php-tools-builddep';
         } elsif (!$bdepends->implies('pkg-php-tools (>= 1.3~)')) {
             tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                '(>= 1.3~)', 'for PEAR channels support';
+              '(>= 1.3~)', 'for PEAR channels support';
         }
     }
     # Composer package
     my $composer_json = $info->index('composer.json');
-    if (!defined($package_xml) && !defined($package2_xml) && defined($composer_json)) {
+    if (   !defined($package_xml)
+        && !defined($package2_xml)
+        && defined($composer_json)) {
         if (!$bdepends->implies('pkg-php-tools')) {
             tag 'composer-package-without-pkg-php-tools-builddep';
         } elsif (!$bdepends->implies('pkg-php-tools (>= 1.7~)')) {
             tag 'pear-package-feature-requires-newer-pkg-php-tools',
-                '(>= 1.7~)', 'for Composer package support';
+              '(>= 1.7~)', 'for Composer package support';
         }
     }
     # Check rules
-    if ($bdepends->implies('pkg-php-tools') && (defined($package_xml) || defined($package2_xml) || defined($channel_xml) || defined($composer_json)) ) {
+    if (
+        $bdepends->implies('pkg-php-tools')
+        && (   defined($package_xml)
+            || defined($package2_xml)
+            || defined($channel_xml)
+            || defined($composer_json))
+      ) {
         my $rules = $info->debfiles('rules');
-        if (not -l $rules or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
+        if (not -l $rules
+            or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
             my $has_buildsystem_phppear = 0;
             my $has_addon_phppear = 0;
             my $has_addon_phpcomposer= 0;
-            my $has_addon_php5= 0;
+            my $has_addon_php5 = 0;
             open(my $rules_fd, '<', $rules);
             while (<$rules_fd>) {
-                while (s,\\$,, and defined (my $cont = <$rules_fd>)) {
+                while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
                     $_ .= $cont;
                 }
                 next if /^\s*\#/;
-                if ( m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear\s/ ) {
+                if (m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear\s/) {
                     $has_buildsystem_phppear = 1;
                 }
-                if ( m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear\s/ ) {
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear\s/) {
                     $has_addon_phppear = 1;
                 }
-                if ( m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer\s/ ) {
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer\s/) {
                     $has_addon_phpcomposer = 1;
                 }
-                if ( m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php5\s/ ) {
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php5\s/) {
                     $has_addon_php5 = 1;
                 }
             }
             close($rules_fd);
-            if (defined($package_xml) || defined($package2_xml) || defined($channel_xml)) {
+            if (   defined($package_xml)
+                || defined($package2_xml)
+                || defined($channel_xml)) {
                 if (!$has_buildsystem_phppear) {
-                    tag 'missing-pkg-php-tools-buildsystem', 'phppear'
+                    tag 'missing-pkg-php-tools-buildsystem', 'phppear';
                 }
                 if (!$has_addon_phppear) {
-                    tag 'missing-pkg-php-tools-addon', 'phppear'
+                    tag 'missing-pkg-php-tools-addon', 'phppear';
                 }
                 if (($package_type eq 'extsrc') and not $has_addon_php5) {
-                    tag 'missing-pkg-php-tools-addon', 'php5'
+                    tag 'missing-pkg-php-tools-addon', 'php5';
                 }
             }
-            if (!defined($package_xml) && !defined($package2_xml) && defined($composer_json)) {
+            if (   !defined($package_xml)
+                && !defined($package2_xml)
+                && defined($composer_json)) {
                 if (!$has_addon_phpcomposer) {
-                    tag 'missing-pkg-php-tools-addon', 'phpcomposer'
+                    tag 'missing-pkg-php-tools-addon', 'phpcomposer';
                 }
             }
         }
@@ -179,3 +198,9 @@ sub run {
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -26,77 +26,74 @@ use autodie;
 use Lintian::Tags qw(tag);
 
 sub run {
+    my (undef, undef, $info) = @_;
+    my $control = $info->control('md5sums');
+    my (%control_entry, %info_entry);
 
-my (undef, undef, $info) = @_;
+    # The md5sums file should not be a symlink.  If it is, the best
+    # we can do is to leave it alone.
+    return if -l $control;
 
-my $control = $info->control('md5sums');
+    # Is there a md5sums control file?
+    unless (-f $control) {
+        # ignore if package contains no files
+        return if -z $info->lab_data_path('md5sums');
 
-my %control_entry;
-my %info_entry;
+        # check if package contains non-conffiles
+        # debhelper doesn't create entries in md5sums
+        # for conffiles since this information would
+        # be redundant
+        my $only_conffiles = 1;
+        foreach my $file ($info->sorted_index) {
+            # Skip non-files, they will not appear in the md5sums file
+            next unless $file->is_regular_file;
+            unless ($info->is_conffile($file)) {
+                $only_conffiles = 0;
+                last;
+            }
+        }
 
-# The md5sums file should not be a symlink.  If it is, the best
-# we can do is to leave it alone.
-return if -l $control;
+        tag 'no-md5sums-control-file' unless $only_conffiles;
+        return;
+    }
 
-# Is there a md5sums control file?
-unless (-f $control) {
-    # ignore if package contains no files
-    return if -z $info->lab_data_path ('md5sums');
+    # Is it empty? Then skip it. Tag will be issued by control-files
+    if (-z $control) {
+        return;
+    }
 
-    # check if package contains non-conffiles
-    # debhelper doesn't create entries in md5sums
-    # for conffiles since this information would
-    # be redundant
-    my $only_conffiles = 1;
-    foreach my $file ($info->sorted_index) {
-        # Skip non-files, they will not appear in the md5sums file
-        next unless $file->is_regular_file;
-        unless ($info->is_conffile($file)) {
-            $only_conffiles = 0;
-            last;
+    # read in md5sums control file
+    open(my $fd, '<', $control);
+    while (my $line = <$fd>) {
+        chop($line);
+        next if $line =~ m/^\s*$/;
+        if ($line =~ m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
+            $control_entry{$2} = $1;
+        } else {
+            tag 'malformed-md5sums-control-file', "line $.";
         }
     }
+    close($fd);
 
-    tag 'no-md5sums-control-file' unless $only_conffiles;
-    return;
-}
+    for my $file (keys %control_entry) {
 
-# Is it empty? Then skip it. Tag will be issued by control-files
-if (-z $control) {
-    return;
-}
+        my $md5sum = $info->md5sums->{$file};
+        if (not defined $md5sum) {
+            tag 'md5sums-lists-nonexisting-file', $file;
+        } elsif ($md5sum ne $control_entry{$file}) {
+            tag 'md5sum-mismatch', $file;
+        }
 
-# read in md5sums control file
-open(my $fd, '<', $control);
-while (my $line = <$fd>) {
-    chop($line);
-    next if $line =~ m/^\s*$/;
-    if ($line =~ m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
-        $control_entry{$2} = $1;
-    } else {
-        tag 'malformed-md5sums-control-file', "line $.";
+        delete $info_entry{$file};
     }
-}
-close($fd);
-
-for my $file (keys %control_entry) {
-
-    my $md5sum = $info->md5sums->{$file};
-    if (not defined $md5sum) {
-        tag 'md5sums-lists-nonexisting-file', $file;
-    } elsif ($md5sum ne $control_entry{$file}) {
-        tag 'md5sum-mismatch', $file;
+    for my $file (keys %{ $info->md5sums }) {
+        next if $control_entry{$file};
+        tag 'file-missing-in-md5sums', $file
+          unless ($info->is_conffile($file)
+            || $file =~ m%^var/lib/[ai]spell/.%o);
     }
 
-    delete $info_entry{$file};
-}
-for my $file (keys %{ $info->md5sums }) {
-    next if $control_entry{$file};
-    tag 'file-missing-in-md5sums', $file
-        unless ($info->is_conffile ($file) || $file =~ m%^var/lib/[ai]spell/.%o);
-}
-
-return;
+    return;
 }
 
 1;

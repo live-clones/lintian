@@ -102,8 +102,8 @@ Needs-Info requirements for using I<changelog>: L<Same as debfiles|/debfiles ([F
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->debfiles ('changelog');
-    if (-l $dch || ! -f $dch) {
+    my $dch = $self->debfiles('changelog');
+    if (-l $dch || !-f $dch) {
         $self->{changelog} = undef;
     } else {
         my %opts = (infile => $dch, quiet => 1);
@@ -126,7 +126,7 @@ Needs-Info requirements for using I<diffstat>: diffstat
 sub diffstat {
     my ($self) = @_;
     return $self->{diffstat} if exists $self->{diffstat};
-    my $dstat = $self->lab_data_path ('diffstat');
+    my $dstat = $self->lab_data_path('diffstat');
     $dstat = '/dev/null' unless -e $dstat;
     $self->{diffstat} = $dstat;
     return $dstat;
@@ -155,7 +155,8 @@ sub native {
     return $self->{native} if exists $self->{native};
     my $format = $self->field('format');
     $format = '1.0' unless defined $format;
-    if ($format =~ m/^\s*2\.0\s*$/o or $format =~ m/^\s*3\.0\s+\(quilt\)\s*$/o) {
+    if ($format =~ m/^\s*2\.0\s*$/o or $format =~ m/^\s*3\.0\s+\(quilt\)\s*$/o)
+    {
         $self->{native} = 0;
     } elsif ($format =~ m/^\s*3\.0\s+\(native\)\s*$/o) {
         $self->{native} = 1;
@@ -165,7 +166,8 @@ sub native {
         if (defined $version) {
             $version =~ s/^\d+://;
             my $name = $self->{name};
-            $self->{native} = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
+            $self->{native}
+              = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
         } else {
             # We do not know, but assume it to non-native as it is
             # the most likely case.
@@ -189,7 +191,7 @@ Needs-Info requirements for using I<binaries>: L<Same as binary_package_type|/bi
 sub binaries {
     my ($self) = @_;
     # binary_package_type does all the work for us.
-    $self->binary_package_type ('') unless exists $self->{binaries};
+    $self->binary_package_type('') unless exists $self->{binaries};
     return keys %{ $self->{binaries} };
 }
 
@@ -210,16 +212,16 @@ sub binary_package_type {
     my ($self, $binary) = @_;
     if (exists $self->{binaries}) {
         return $self->{binaries}->{$binary}
-            if exists $self->{binaries}->{$binary};
+          if exists $self->{binaries}->{$binary};
         return;
     }
     # we need the binary fields for this.
     $self->_load_dctrl unless exists $self->{binary_field};
 
     my %binaries;
-    foreach my $pkg (keys %{ $self->{binary_field} } ) {
-        my $type = $self->binary_field ($pkg, 'package-type');
-        $type ||= $self->binary_field ($pkg, 'xc-package-type') || 'deb';
+    foreach my $pkg (keys %{ $self->{binary_field} }) {
+        my $type = $self->binary_field($pkg, 'package-type');
+        $type ||= $self->binary_field($pkg, 'xc-package-type') || 'deb';
         $binaries{$pkg} = lc $type;
     }
 
@@ -277,7 +279,8 @@ Needs-Info requirements for using I<orig_index>: src-orig-index
 
 sub orig_index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data ('orig-index', 'src-orig-index', undef, $file);
+    return $self->_fetch_index_data('orig-index', 'src-orig-index', undef,
+        $file);
 }
 
 =item sorted_orig_index
@@ -301,7 +304,7 @@ sub sorted_orig_index {
     my ($self) = @_;
     # orig_index does all our work for us, so call it if
     # sorted_orig_index has not been created yet.
-    $self->orig_index ('') unless exists $self->{'sorted_orig-index'};
+    $self->orig_index('') unless exists $self->{'sorted_orig-index'};
     return @{ $self->{'sorted_orig-index'} };
 }
 
@@ -351,9 +354,9 @@ sub _load_dctrl {
     # Load the fields from d/control
     my $dctrl = $self->debfiles('control');
     my $ok = 0;
-    if ( -l $dctrl ) {
+    if (-l $dctrl) {
         # hmmm - this smells of trouble...
-        if ( -e $dctrl ) {
+        if (-e $dctrl) {
             # it exists, but what does it point to?
             my $droot = Cwd::abs_path($self->debfiles);
             my $target = Cwd::abs_path($dctrl);
@@ -375,9 +378,7 @@ sub _load_dctrl {
     my @control_data;
     my %packages;
 
-    eval {
-        @control_data = read_dpkg_control($dctrl);
-    };
+    eval {@control_data = read_dpkg_control($dctrl);};
     if ($@) {
         # If it is a syntax error, ignore it (we emit
         # syntax-error-in-control-file in this case via
@@ -438,23 +439,24 @@ sub binary_relation {
     my ($self, $package, $field) = @_;
     $field = lc $field;
     return $self->{binary_relation}->{$package}->{$field}
-        if exists $self->{binary_relation}->{$package}->{$field};
+      if exists $self->{binary_relation}->{$package}->{$field};
 
-    my %special = (all    => [ qw(pre-depends depends recommends suggests) ],
-                   strong => [ qw(pre-depends depends) ],
-                   weak   => [ qw(recommends suggests) ]);
+    my %special = (
+        all    => [qw(pre-depends depends recommends suggests)],
+        strong => [qw(pre-depends depends)],
+        weak   => [qw(recommends suggests)]);
     my $result;
     if ($special{$field}) {
-        $result = Lintian::Relation->and (
-            map { $self->binary_relation ($package, $_) } @{ $special{$field} }
-        );
+        $result
+          = Lintian::Relation->and(map { $self->binary_relation($package, $_) }
+              @{ $special{$field} });
     } else {
         my %known = map { $_ => 1 }
-            qw(pre-depends depends recommends suggests enhances breaks
-               conflicts provides replaces);
+          qw(pre-depends depends recommends suggests enhances breaks
+          conflicts provides replaces);
         croak("unknown relation field $field") unless $known{$field};
         my $value = $self->binary_field($package, $field);
-        $result = Lintian::Relation->new ($value);
+        $result = Lintian::Relation->new($value);
     }
     $self->{binary_relation}->{$package}->{$field} = $result;
     return $result;
@@ -495,9 +497,8 @@ sub relation {
     my $result;
     if ($field =~ /^build-(depends|conflicts)-all$/) {
         my $type = $1;
-        my @fields = ("build-$type", "build-$type-indep" , "build-$type-arch");
-        $result = Lintian::Relation->and(
-            map { $self->relation($_) } @fields);
+        my @fields = ("build-$type", "build-$type-indep", "build-$type-arch");
+        $result = Lintian::Relation->and(map { $self->relation($_) } @fields);
     } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
         my $value = $self->field($field);
         $result = Lintian::Relation->new($value);
@@ -521,14 +522,14 @@ sub relation_noarch {
     my ($self, $field) = @_;
     $field = lc $field;
     return $self->{relation_noarch}->{$field}
-        if exists $self->{relation_noarch}->{$field};
+      if exists $self->{relation_noarch}->{$field};
 
     my $result;
     if ($field =~ /^build-(depends|conflicts)-all$/) {
         my $type = $1;
-        my @fields = ("build-$type", "build-$type-indep" , "build-$type-arch");
-        $result = Lintian::Relation->and(
-            map { $self->relation_noarch($_) } @fields);
+        my @fields = ("build-$type", "build-$type-indep", "build-$type-arch");
+        $result
+          = Lintian::Relation->and(map { $self->relation_noarch($_) } @fields);
     } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
         my $value = $self->field($field);
         $result = Lintian::Relation->new_noarch($value);
@@ -631,7 +632,8 @@ sub is_non_free {
     return $self->{is_non_free} if exists $self->{is_non_free};
     $self->{is_non_free} = 0;
     $self->{is_non_free} = 1
-        if $self->source_field('section', 'main') =~ m,^(?:non-free|restricted|multiverse)/,;
+      if $self->source_field('section', 'main')
+      =~ m,^(?:non-free|restricted|multiverse)/,;
     return $self->{is_non_free};
 }
 

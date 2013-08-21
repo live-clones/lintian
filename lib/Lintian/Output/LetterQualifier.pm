@@ -101,7 +101,6 @@ sub new {
     return $self;
 }
 
-
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $override) = @_;
 
@@ -118,7 +117,8 @@ sub print_tag {
 
     my $tag = $tag_info->tag;
 
-    $information = ' ' . $self->_quote_print ($information) if $information ne '';
+    $information = ' ' . $self->_quote_print($information)
+      if $information ne '';
 
     if ($self->_do_color) {
         my $color = $self->colors->{$sev}{$cer};
