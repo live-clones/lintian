@@ -1,3 +1,9 @@
+lintian (2.5.17) UNRELEASED; urgency=low
+
+  XXX: generate tag summary with private/generate-tag-summary
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:58:05 +0200
+
 lintian (2.5.16) unstable; urgency=low
 
   * Summary of tag changes:
