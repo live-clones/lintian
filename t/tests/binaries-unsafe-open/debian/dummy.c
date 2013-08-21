@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 static void
 hardening_trigger(char *p, int i, void (*f)(char *))
@@ -12,6 +13,7 @@ hardening_trigger(char *p, int i, void (*f)(char *))
 int
 main(void)
 {
-    printf("hello world\n");
+    printf("Hello world!\n");
     hardening_trigger(NULL, 0, NULL);
+    return 0;
 }

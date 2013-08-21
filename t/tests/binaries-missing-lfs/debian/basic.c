@@ -1,8 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
 
 static void
 hardening_trigger(char *p, int i, void (*f)(char *))
@@ -18,6 +18,7 @@ lib_interface(void)
 {
     printf("Hello world!\n");
     hardening_trigger(NULL, 0, NULL);
+    return 0;
 }
 
 int

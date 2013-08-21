@@ -1,5 +1,7 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
+#include <stdio.h>
+#include <string.h>
 
 static void
 hardening_trigger(char *p, int i, void (*f)(char *))
@@ -12,6 +14,6 @@ hardening_trigger(char *p, int i, void (*f)(char *))
 
 void do_import_array(void)
 {
-	import_array();
-	hardening_trigger(NULL, 0, NULL);
+    import_array();
+    hardening_trigger(NULL, 0, NULL);
 }

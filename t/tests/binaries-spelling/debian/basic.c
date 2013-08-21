@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 static void
 hardening_trigger(char *p, int i, void (*f)(char *))
@@ -13,5 +14,6 @@ int
 main(void)
 {
     printf("I iz an exprimental speling error!\n");
-    hardening_trigger(NULL, 0,NULL);
+    hardening_trigger(NULL, 0, NULL);
+    return 0;
 }
