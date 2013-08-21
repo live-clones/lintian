@@ -50,6 +50,9 @@ lintian (2.5.16) UNRELEASED; urgency=low
     + [NT] Fix false positive warning about embedded
       feedparser for python3-feedparser.  Thanks to
       Etienne Millon for the report.  (Closes: #719163)
+  * checks/infofiles.{desc,pm}:
+    + [NT] Apply patches from Kevin Ryde to find info files
+      references non-existent images.  (Closes: #719450)
   * checks/init.d.{desc,pm}:
     + [NT] Revert init.d-script-call-internal-API for now.
       Refer to #710559 for more information.

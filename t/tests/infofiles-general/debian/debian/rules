@@ -18,6 +18,9 @@ override_dh_auto_install:
 	install -m 644 bar.info $(tmp)/usr/share/info/bar.newinfo
 	gzip -9 $(tmp)/usr/share/info/bar.newinfo
 
+	install -m 644 w-image.info $(tmp)/usr/share/info/w-image.info
+	gzip -9 $(tmp)/usr/share/info/w-image.info
+
 override_dh_installinfo:
 
 override_dh_compress:

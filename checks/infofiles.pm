@@ -25,7 +25,7 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail open_gz);
+use Lintian::Util qw(fail open_gz normalize_pkg_path);
 
 use File::Basename qw(fileparse);
 
@@ -91,6 +91,31 @@ foreach my $file ($info->sorted_index) {
         close($fd);
         tag 'info-document-missing-dir-section', $file unless $section;
         tag 'info-document-missing-dir-entry', $file unless $start && $end;
+    }
+
+    # Check each [image src=""] form in the info files.  The src filename
+    # should be in the package.  As of Texinfo 5 it will be something.png or
+    # something.jpg, but that's not enforced.
+    #
+    # See Texinfo manual (info "(texinfo)Info Format Image") for details of
+    # the [image] form.  Bytes \x00,\x08 introduce it (and distinguishes it
+    # from [image] appearing as plain text).
+    #
+    # String src="..." part has \" for literal " and \\ for literal \,
+    # though that would be unlikely in filenames.  For the tag() message
+    # show $src unbackslashed since that's the filename sought.
+    #
+    if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
+        my $fd = open_gz($info->unpacked($file));
+        while (my $line = <$fd>) {
+            while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
+                my $src = $1;
+                $src =~ s/\\(.)/$1/g;   # unbackslash
+                $info->index(normalize_pkg_path('usr/share/info', $src))
+                    or tag 'info-document-missing-image-file', $file, $src;
+            }
+        }
+        close($fd);
     }
 }
 

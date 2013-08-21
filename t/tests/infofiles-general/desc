@@ -6,6 +6,7 @@ Test-For:
  info-document-has-wrong-extension
  info-document-missing-dir-entry
  info-document-missing-dir-section
+ info-document-missing-image-file
  info-document-not-compressed
  info-document-not-compressed-with-gzip
  info-document-not-compressed-with-max-compression
