@@ -1,6 +1,22 @@
-lintian (2.5.16) UNRELEASED; urgency=low
+lintian (2.5.16) unstable; urgency=low
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - changelog-is-dh_make-template
+      - copyright-should-refer-to-common-license-file-for-apache-2
+      - debian-control-repeats-field-name-in-value
+      - info-document-missing-image-file
+      - license-problem-font-adobe-copyrighted-fragment
+      - license-problem-font-adobe-copyrighted-fragment-no-credit
+      - missing-dependency-on-libstdc++
+      - quilt-patch-using-template-description
+    + Removed:
+      - dh_pycentral-is-obsolete
+      - dh_python-is-obsolete
+      - font-adobe-copyrighted-fragment
+      - font-adobe-copyrighted-fragment-no-credit
+      - init.d-script-call-internal-API
+      - missing-dependency-on-python-central
 
   * checks/apache2.pm:
     + [NT] Fix F-P apache2-deprecated-auth-config for
@@ -84,7 +100,7 @@ lintian (2.5.16) UNRELEASED; urgency=low
       (Closes: #719788)
   * checks/po-debconf.{desc,pm}:
     + [NT] Fix false-positive translated-default-field for
-      fields preceeded by a "true" Deb822 comment.  Thanks
+      fields preceded by a "true" Deb822 comment.  Thanks
       to Ron Lee for the report.  (Closes: #637881)
   * checks/scripts.pm:
     + [NT] Stop emitting package-uses-local-diversion for
@@ -124,7 +140,7 @@ lintian (2.5.16) UNRELEASED; urgency=low
     + [NT] Refresh with new tags.  Thanks to Gregor Herrmann
       for the reminder.
 
- -- Niels Thykier <niels@thykier.net>  Wed, 24 Jul 2013 10:30:01 +0200
+ -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:30:07 +0200
 
 lintian (2.5.15) unstable; urgency=low
 
