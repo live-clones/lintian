@@ -1,1 +1,2 @@
-E: libbasic2: missing-dependency-on-libc needed by usr/lib/libbasic.so.2
+E: libbasic2: missing-dependency-on-libc needed by usr/lib/libbasic++.so.2 and 1 others
+X: libbasic2: missing-dependency-on-libstdc++ needed by usr/lib/libbasic++.so.2

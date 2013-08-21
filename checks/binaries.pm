@@ -97,8 +97,11 @@ my $gnu_triplet_re;
 my $ruby_triplet_re;
 my $dynsyms = 0;
 my $needs_libc = '';
+my $needs_libcxx = '';
 my $needs_libc_file;
+my $needs_libcxx_file;
 my $needs_libc_count = 0;
+my $needs_libcxx_count = 0;
 my $needs_depends_line = 0;
 my $has_perl_lib = 0;
 my $has_php_ext = 0;
@@ -411,20 +414,31 @@ foreach my $file ($info->sorted_index) {
             tag 'statically-linked-binary', $file;
         }
     } else {
-        my $lib;
         my $no_libc = 1;
+        my $is_shared = 0;
         $needs_depends_line = 1;
-        for $lib (@{$objdump->{NEEDED}}) {
+        $is_shared = 1 if index($fileinfo, 'shared object') != -1;
+        for my $lib (@{$objdump->{NEEDED}}) {
             if ($lib =~ /^libc\.so\.(\d+.*)/) {
                 $needs_libc = "libc$1";
                 $needs_libc_file = $file->name unless $needs_libc_file;
                 $needs_libc_count++;
                 $no_libc = 0;
             }
+            if ($lib =~ m{\A libstdc\+\+\.so\.(\d+) \Z}xsm) {
+                $needs_libcxx = "libstdc++$1";
+                $needs_libcxx_file = $file->name unless $needs_libcxx_file;
+                $needs_libcxx_count++;
+            }
         }
         if ($no_libc and not $file =~ m,/libc\b,) {
-            if ($fileinfo =~ m/shared object/) {
-                tag 'library-not-linked-against-libc', $file;
+            # If there is no libc dependency, then it is most likely a
+            # bug.  The major exception is that some C++ libraries,
+            # but these tend to link against libstdc++ instead.  (see
+            # #719806)
+            if ($is_shared) {
+                tag 'library-not-linked-against-libc', $file
+                    unless $needs_libcxx ne '';
             } else {
                 tag 'program-not-linked-against-libc', $file;
             }
@@ -452,17 +466,32 @@ my $depends = $info->relation ('strong');
 if ($needs_depends_line) {
     if ($depends->empty) {
         tag 'missing-depends-line';
-    } elsif ($needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
-        # Match libcXX or libcXX-*, but not libc3p0.
-        my $re = qr/^\Q$needs_libc\E\b/;
-        if (!$depends->matches ($re)) {
-            my $others = '';
-            $needs_libc_count--;
-            if ($needs_libc_count > 0) {
-                $others = " and $needs_libc_count others";
+    } else {
+        if ($needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
+            # Match libcXX or libcXX-*, but not libc3p0.
+            my $re = qr/^\Q$needs_libc\E\b/;
+            if (!$depends->matches($re)) {
+                my $others = '';
+                $needs_libc_count--;
+                if ($needs_libc_count > 0) {
+                    $others = " and $needs_libc_count others";
+                }
+                tag 'missing-dependency-on-libc',
+                    "needed by $needs_libc_file$others";
             }
-            tag 'missing-dependency-on-libc',
-                "needed by $needs_libc_file$others";
+        }
+        if ($needs_libcxx ne '') {
+            # Match libstdc++XX or libcstdc++XX-*
+            my $re = qr/^\Q$needs_libcxx\E\b/;
+            if (!$depends->matches($re)) {
+                my $others = '';
+                $needs_libcxx_count--;
+                if ($needs_libcxx_count > 0) {
+                    $others = " and $needs_libcxx_count others";
+                }
+                tag 'missing-dependency-on-libstdc++',
+                    "needed by $needs_libcxx_file$others";
+            }
         }
     }
 }

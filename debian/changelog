@@ -11,6 +11,15 @@ lintian (2.5.16) UNRELEASED; urgency=low
     + [NT] Apply patch from Michael Stapelberg to exempt
       golang-go binaries from statically-linked-binary
       tag.  (Closes: #718404)
+    + [NT] Permit shared libraries to not link against
+      libc as long as they link against libstdc++.  This
+      fixes a lot of false positive warnings for some c++
+      libraries when the linker (with --as-needed)
+      determines that the libc link is superfluous.
+      Thanks to Maximiliano Curia for the report.
+      (This is a partial fix for #719806)
+    + [NT] Add experimental tag for missing dependency
+      on libstdc++.
   * checks/changelog-file.{desc,pm}:
     + [BR] Add check for dh-make reminder to insert the
       bug number of the ITP bug.  (Closes: #690273)

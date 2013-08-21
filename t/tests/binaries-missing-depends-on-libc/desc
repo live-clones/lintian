@@ -3,4 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test for missing libc depends
 Architecture: any
-Test-For: missing-dependency-on-libc
+Test-For:
+ missing-dependency-on-libc
+ missing-dependency-on-libstdc++
