@@ -7,6 +7,7 @@ use Getopt::Long;
 
 BEGIN {
     my $root = $ENV{'LINTIAN_ROOT'}//'.';
+    $ENV{'LINTIAN_HELPER_DIRS'} = "$root/helpers";
     $ENV{'LINTIAN_ROOT'} = $root;
 }
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -185,7 +186,7 @@ sub mark_longest_paths {
 
     my $path_marks = {};
     my @c = @{ $levels[-1] };
-    for my $i ($#levels..0) {
+    for my $i (reverse(0..$#levels)) {
         my $next = $i - 1;
         my @nc = ();
         foreach my $node (@c) {
