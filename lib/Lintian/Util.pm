@@ -72,7 +72,6 @@ BEGIN {
           perm2oct
           check_path
           clean_env
-          resolve_pkg_path
           normalize_pkg_path
           parse_boolean
           is_ancestor_of
