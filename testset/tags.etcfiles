@@ -5,7 +5,7 @@ E: etcfiles: file-in-etc-not-marked-as-conffile etc/improper
 E: etcfiles: file-in-etc-not-marked-as-conffile etc/improper-link
 E: etcfiles: malformed-md5sums-control-file line 7
 E: etcfiles: md5sum-mismatch etc/improper
-E: etcfiles: md5sums-lists-nonexisting-file usr/bin/foo
+E: etcfiles: md5sums-lists-nonexistent-file usr/bin/foo
 E: etcfiles: no-copyright-file
 E: etcfiles: non-etc-file-marked-as-conffile var/lib/foo
 E: only-etcfiles: extended-description-is-empty

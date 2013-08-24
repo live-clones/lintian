@@ -118,7 +118,7 @@ Info: The package is installing an Apache2 configuration but that file does not
  files except module '<tt>.load</tt>' files need that suffix or are ignored otherwise.
 
 
-Tag: apache2-unparseable-dependency
+Tag: apache2-unparsable-dependency
 Severity: normal
 Certainty: certain
 Info: The package is declaring a module dependency within an Apache

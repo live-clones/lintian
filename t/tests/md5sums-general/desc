@@ -6,4 +6,4 @@ Test-For:
  file-missing-in-md5sums
  malformed-md5sums-control-file
  md5sum-mismatch
- md5sums-lists-nonexisting-file
+ md5sums-lists-nonexistent-file

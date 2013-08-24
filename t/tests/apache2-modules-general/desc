@@ -10,4 +10,4 @@ Test-For:
  apache2-reverse-dependency-ships-file-in-not-allowed-directory
  apache2-reverse-dependency-calls-wrapper-script
  apache2-configuration-files-need-conf-suffix
- apache2-unparseable-dependency
+ apache2-unparsable-dependency

@@ -280,7 +280,7 @@ sub check_doc_base_file {
 
             # Sections' separator.
         } elsif (/^(\s*)$/) {
-            tag 'doc-base-file-separator-extra-whitespaces', "$dbfile:$."
+            tag 'doc-base-file-separator-extra-whitespace', "$dbfile:$."
               if $1;
             next unless $field; # skip successive empty lines
 
@@ -462,7 +462,7 @@ sub check_doc_base_field {
                 tag 'doc-base-abstract-field-is-template', "$dbfile:$line"
                   unless $pkg eq 'doc-base';
             } elsif (/^(\s+)\.(\s*)$/o and ($1 ne ' ' or $2)) {
-                tag 'doc-base-abstract-field-separator-extra-whitespaces',
+                tag 'doc-base-abstract-field-separator-extra-whitespace',
                   "$dbfile:" . ($line - $#{$vals} + $idx);
             } elsif (!$leadsp && /^(\s+)(\S)/o) {
                 # The regexp should always match.
@@ -476,7 +476,7 @@ sub check_doc_base_field {
             }
         }
         unless ($leadsp_ok) {
-            tag 'doc-base-abstract-might-contain-extra-leading-whitespaces',
+            tag 'doc-base-abstract-might-contain-extra-leading-whitespace',
               "$dbfile:$line";
         }
 

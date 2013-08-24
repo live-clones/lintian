@@ -1,4 +1,4 @@
 E: md5sums-general: malformed-md5sums-control-file line 7
 E: md5sums-general: md5sum-mismatch usr/share/lintian/data-file1
-E: md5sums-general: md5sums-lists-nonexisting-file usr/share/lintian/data-file5
+E: md5sums-general: md5sums-lists-nonexistent-file usr/share/lintian/data-file5
 W: md5sums-general: file-missing-in-md5sums usr/share/lintian/data-file2

@@ -90,7 +90,7 @@ W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.des
 W: binary: desktop-entry-file-has-crs usr/share/applications/hello.desktop:7
 W: binary: desktop-entry-invalid-category WeirdStuff usr/share/applications/goodbye.desktop
 W: binary: desktop-entry-uses-reserved-category Screensaver usr/share/applications/goodbye.desktop
-W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:7
+W: binary: doc-base-abstract-field-separator-extra-whitespace binary:7
 W: binary: doc-base-file-unknown-format binary:20 esp
 W: binary: doc-base-unknown-section binary:11 Non/Existant
 W: binary: executable-not-elf-or-script usr/bin/iminusrbin

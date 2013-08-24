@@ -11,5 +11,5 @@ Test-For:
  apache2-reverse-dependency-uses-obsolete-directory
  apache2-configuration-files-need-conf-suffix
  apache2-unsupported-dependency
- apache2-unparseable-dependency
+ apache2-unparsable-dependency
  apache2-deprecated-auth-config

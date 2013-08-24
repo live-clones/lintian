@@ -246,7 +246,7 @@ sub inspect_conf_file {
               if $field eq 'Conflicts' and $conftype ne 'mods';
             my @dependencies = split(/[\n\s]+/, $value);
             foreach my $dep (@dependencies) {
-                tag 'apache2-unparseable-dependency', $file, $dep
+                tag 'apache2-unparsable-dependency', $file, $dep
                   if $dep =~ m/\W/
                   or $dep =~ /^mod\_/
                   or $dep =~ m/\.(?:conf|load)/;

@@ -240,7 +240,7 @@ Info: The Abstract field of doc-base contains a "manage online manuals"
  phrase, which was copied verbatim from an example control file found in
  section 2.3.1 of the Debian doc-base Manual.
 
-Tag: doc-base-abstract-might-contain-extra-leading-whitespaces
+Tag: doc-base-abstract-might-contain-extra-leading-whitespace
 Severity: normal
 Certainty: possible
 Info: Continuation lines of the Abstract field of doc-base control file
@@ -248,7 +248,7 @@ Info: Continuation lines of the Abstract field of doc-base control file
  verbatim by frontends.
 Ref: doc-base 2.3.2
 
-Tag: doc-base-abstract-field-separator-extra-whitespaces
+Tag: doc-base-abstract-field-separator-extra-whitespace
 Severity: normal
 Certainty: certain
 Info: Unnecessary spaces were found in the paragraph separator line of the
@@ -278,7 +278,7 @@ Certainty: certain
 Info: Lintian found a syntax error in the doc-base control file.
 Ref: doc-base 2.3.2.2
 
-Tag: doc-base-file-separator-extra-whitespaces
+Tag: doc-base-file-separator-extra-whitespace
 Severity: normal
 Certainty: certain
 Info: Unnecessary spaces were found in the doc-base file sections'

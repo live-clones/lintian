@@ -2,10 +2,20 @@ lintian (2.5.17) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/apache2.{desc,pm}:
+    + [JW,NT] Rename a tag for consistent spelling of
+      "unparsable" in tag names.  The tag has no known
+      overrides.
   * checks/automake.{desc,pm}:
     + [NT] Apply patch from Gautier Minster to detect
       usage of configure.in with automake.  Thanks to
       Paul Wise for the report.  (Closes: #708482)
+  * checks/md5sums.{desc,pm}:
+    + [JW,NT] Rename a tag due to a typo in the tag name.
+      The tag has no known overrides.
+  * checks/menus.{desc,pm}:
+    + [JW,NT] Rename tags due to a typo in their tag name.
+      These tags have no known overrides.
 
   * debian/control:
     + [NT] Add Build-Depends on aspell, aspell-en and

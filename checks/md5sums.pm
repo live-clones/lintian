@@ -79,7 +79,7 @@ sub run {
 
         my $md5sum = $info->md5sums->{$file};
         if (not defined $md5sum) {
-            tag 'md5sums-lists-nonexisting-file', $file;
+            tag 'md5sums-lists-nonexistent-file', $file;
         } elsif ($md5sum ne $control_entry{$file}) {
             tag 'md5sum-mismatch', $file;
         }

@@ -5,11 +5,11 @@ Description: Test some doc-base related tags
 Test-Against: doc-base-unknown-section
 Test-For:
  doc-base-abstract-field-is-template
- doc-base-abstract-field-separator-extra-whitespaces
- doc-base-abstract-might-contain-extra-leading-whitespaces
+ doc-base-abstract-field-separator-extra-whitespace
+ doc-base-abstract-might-contain-extra-leading-whitespace
  doc-base-document-field-not-in-first-line
  doc-base-file-duplicated-field
- doc-base-file-separator-extra-whitespaces
+ doc-base-file-separator-extra-whitespace
  doc-base-file-syntax-error
  doc-base-uses-applications-section
 References: Debian Bug#495836
