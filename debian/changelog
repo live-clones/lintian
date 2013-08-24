@@ -7,6 +7,10 @@ lintian (2.5.17) UNRELEASED; urgency=low
       usage of configure.in with automake.  Thanks to
       Paul Wise for the report.  (Closes: #708482)
 
+  * debian/control:
+    + [NT] Add Build-Depends on aspell, aspell-en and
+      libtest-spelling-perl.
+
  -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:58:05 +0200
 
 lintian (2.5.16) unstable; urgency=low
