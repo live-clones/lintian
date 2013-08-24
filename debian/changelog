@@ -25,6 +25,10 @@ lintian (2.5.17) UNRELEASED; urgency=low
     + [NT] Prefer paths without leading slash in the
       documentation for normalize_pkg_path.  Thanks to
       Kevin Ryde for spotting this inconsistency.
+    + [NT] The first argument argument of normalize_pkg_path
+      is now unconditionally normalized.  Furthermore, allow
+      the function to be called with only one argument like
+      Cwd::realpath.
 
  -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:58:05 +0200
 

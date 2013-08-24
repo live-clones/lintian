@@ -1121,23 +1121,38 @@ sub check_path {
     return 0;
 }
 
-=item normalize_pkg_path(CURDIR, DEST)
+=item normalize_pkg_path(PATH)
 
-Using CURDIR as current directory relative to the package root,
-resolve DEST and return (the absolute) path to the destination.
-Note that the result will never start with a slash, even if
-CURDIR or DEST does. Nor will it end with a slash.
+Normalize PATH by removing superfluous path segments.  PATH is assumed
+to be relative the package root.  Note that the result will never
+start nor end with a slash, even if PATH does.
 
 As the name suggests, this is a path "normalization" rather than a
 true path resolution (for that use Cwd::realpath).  Particularly,
 it assumes none of the path segments are symlinks.
 
+normalize_pkg_path will return C<q{}> (i.e. the empty string) if PATH
+is normalized to the root dir and C<undef> if the path cannot be
+normalized without escaping the package root.
+
+Examples:
+  normalize_pkg_path('usr/share/java/../../../usr/share/ant/file')
+    eq 'usr/share/ant/file'
+  normalize_pkg_path('usr/..') eq q{};
+
+ The following will return C<undef>:
+  normalize_pkg_path('usr/bin/../../../../etc/passwd')
+
+=item normalize_pkg_path(CURDIR, LINK_TARGET)
+
+Normalize the path obtained by following a link with LINK_TARGET as
+its target from CURDIR as the current directory.  CURDIR is assumed to
+be relative to the package root.  Note that the result will never
+start nor end with a slash, even if CURDIR or DEST does.
+
 normalize_pkg_path will return C<q{}> (i.e. the empty string) if the
 target is the root dir and C<undef> if the path cannot be normalized
 without escaping the package root.
-
-B<NOTE>: CURDIR is assumed to be normalized.  In particularly, it must
-not have any ".." path segments in it.
 
 B<CAVEAT>: This function is I<not always sufficient> to test if it is
 safe to open a given symlink.  Use
@@ -1149,7 +1164,9 @@ Examples:
 
   normalize_pkg_path('usr/share/java', '../ant/file') eq 'usr/share/ant/file'
   normalize_pkg_path('usr/share/java', '../../../usr/share/ant/file')
+  normalize_pkg_path('usr/share/java', '/usr/share/ant/file')
     eq 'usr/share/ant/file'
+  normalize_pkg_path('/usr/share/java', '/') eq q{};
   normalize_pkg_path('/', 'usr/..') eq q{};
 
  The following will return C<undef>:
@@ -1159,54 +1176,48 @@ Examples:
 =cut
 
 sub normalize_pkg_path {
-    my ($curdir, $dest) = @_;
-    my (@cc, @dc);
-    my $target;
-    $dest =~ s,//++,/,go;
-    # short curcuit $dest eq '/' case.
-    return q{} if $dest eq '/';
-    # remove any initial ./ and trailing slashes.
-    $dest =~ s,^\./,,o;
-    $dest =~ s,/$,,o;
-    if ($dest =~ m,^/,o){
-        # absolute path, strip leading slashes and resolve
-        # as relative to the root.
-        $dest =~ s,^/,,o;
-        return normalize_pkg_path('/', $dest);
+    my ($path, $dest) = @_;
+    my (@normalised, @queue);
+
+    if (@_ == 2) {
+        # We are doing CURDIR + LINK_TARGET
+        if (substr($dest, 0, 1) eq '/') {
+            # Link is absolute
+            # short curcuit $dest eq '/' case.
+            return q{} if $dest eq '/';
+            $path = $dest;
+        } else {
+            # link is relative
+            $path = join('/', $path, $dest);
+        }
     }
 
-    # clean up $curdir (as well)
-    $curdir =~ s,//++,/,go;
-    $curdir =~ s,/$,,o;
-    $curdir =~ s,^/,,o;
-    $curdir =~ s,^\./,,o;
-    # Short circuit the '.' (or './' -> '') case.
-    if ($dest eq '.' or $dest eq q{}) {
-        $curdir =~ s,^/,,o;
-        return $curdir;
-    }
-    # Relative path from src
-    @dc = split(m,/,o, $dest);
-    @cc = split(m,/,o, $curdir);
+    $path =~ s,//++,/,go;
+    $path =~ s,/$,,o;
+    $path =~ s,^/,,o;
+
+    # Add all segments to the queue
+    @queue = split(m,/,o, $path);
+
     # Loop through @dc and modify @cc so that in the
     # end of the loop, @cc will contain the path that
     # - note that @cc will be empty if we end in the
     # root (e.g. '/' + 'usr' + '..' -> '/'), this is
     # fine.
-    while ($target = shift @dc) {
+    while (my $target = shift(@queue)) {
         if ($target eq '..') {
             # are we out of bounds?
-            return unless @cc;
+            return unless @normalised;
             # usr/share/java + '..' -> usr/share
-            pop @cc;
+            pop(@normalised);
         } else {
             # usr/share + java -> usr/share/java
             # but usr/share + "." -> usr/share
-            push @cc, $target if $target ne '.';
+            push(@normalised, $target) if $target ne '.';
         }
     }
-    return q{} unless @cc;
-    return join '/', @cc;
+    return q{} unless @normalised;
+    return join('/', @normalised);
 }
 
 =item parse_boolean (STR)
