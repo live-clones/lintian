@@ -78,7 +78,7 @@ linux whitelisted blacklisted shaX sha rstrip lstrip parsers
 customisation ALGO CLOC CMD DEBFILE DEST DSCFILE FOH NOCLOSE PARENTDIR
 PGP STARTLINE STR UTF bitmask cp debconf rw proccessable severities
 AND'ing # ' # this is getting old
-superset YYYY dirname operm username Whitespaces whitespace
+superset YYYY dirname operm username whitespace
 Whitespace udebs multiword recognised eqv testsuite methodx multi
 multiarch relationA relationB Multi natively unordered arg CVE autodie
 hashrefs namespace subdir
