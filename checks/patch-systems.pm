@@ -29,7 +29,6 @@ use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail is_ancestor_of strip);
-use Cwd qw(realpath);
 
 sub run {
     my (undef, undef, $info) = @_;

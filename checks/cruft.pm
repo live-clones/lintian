@@ -29,7 +29,7 @@ use autodie;
 use v5.10;
 use feature qw(switch);
 
-use Cwd;
+use Cwd();
 use File::Find;
 
 # Half of the size used in the "sliding window" for detecting bad
