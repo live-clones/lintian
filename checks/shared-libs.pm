@@ -29,7 +29,7 @@ use List::MoreUtils qw(any none);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail slurp_entire_file);
+use Lintian::Util qw(fail normalize_pkg_path slurp_entire_file);
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
@@ -88,12 +88,15 @@ sub run {
     for my $cur_file ($info->sorted_index) {
         # shared library?
 
+        my $normalized_target;
+        $normalized_target
+          = normalize_pkg_path(join('/', dirname($cur_file), $cur_file->link))
+          if defined $cur_file->link;
+
         if (
             exists $SONAME{$cur_file}
             or (defined $cur_file->link
-                and
-                exists $SONAME{abs_path(dirname($cur_file).'/'.$cur_file->link)
-                })
+                and exists $SONAME{$normalized_target})
           ) {
             # yes!!
             my ($real_file, $perm);
@@ -101,8 +104,7 @@ sub run {
                 $real_file = $cur_file;
                 $perm = $cur_file->operm;
             } else {
-                $real_file
-                  = abs_path(dirname($cur_file) . '/' . $cur_file->link);
+                $real_file = $normalized_target;
                 # perm not needed for this branch
             }
 
@@ -684,13 +686,6 @@ sub run {
     }
 
     return;
-}
-
-# make /tmp/baz/baz.txt from /tmp/foo/../bar/../baz/baz.txt
-sub abs_path {
-    my $path = shift;
-    while($path =~ s!/[^/]*/\.\./!/!g){1}
-    return $path;
 }
 
 # Extract the library name and the version from an SONAME and return them
