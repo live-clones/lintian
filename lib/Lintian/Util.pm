@@ -101,9 +101,9 @@ Lintian::Util - Lintian utility functions
     # ...
  }
 
- my $path = normalize_pkg_path('/usr/bin/', '../lib/git-core/git-pull');
- if (-e $path) {
-    # ....
+ my $path = normalize_pkg_path('usr/bin/', '../lib/git-core/git-pull');
+ if (defined $path) {
+    # ...
  }
  
  my (@paragraphs);
@@ -1124,7 +1124,7 @@ sub check_path {
 
 =item normalize_pkg_path(CURDIR, DEST)
 
-Using CURDIR as current directory from the (package) root,
+Using CURDIR as current directory relative to the package root,
 resolve DEST and return (the absolute) path to the destination.
 Note that the result will never start with a slash, even if
 CURDIR or DEST does. Nor will it end with a slash.
@@ -1148,14 +1148,14 @@ target is not a symlink (or if it is, that it can be resolved safely).
 
 Examples:
 
-  normalize_pkg_path('/usr/share/java', '../ant/file') eq  'usr/share/ant/file'
-  normalize_pkg_path('/usr/share/java', '../../../usr/share/ant/file') eq  'usr/share/ant/file'
+  normalize_pkg_path('usr/share/java', '../ant/file') eq 'usr/share/ant/file'
+  normalize_pkg_path('usr/share/java', '../../../usr/share/ant/file')
+    eq 'usr/share/ant/file'
   normalize_pkg_path('/', 'usr/..') eq q{};
 
  The following will return C<undef>:
-  normalize_pkg_path('/usr/bin', '../../../../etc/passwd')
-  normalize_pkg_path('/usr/bin', '/../etc/passwd')
-
+  normalize_pkg_path('usr/bin', '../../../../etc/passwd')
+  normalize_pkg_path('usr/bin', '/../etc/passwd')
 
 =cut
 

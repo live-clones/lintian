@@ -21,6 +21,11 @@ lintian (2.5.17) UNRELEASED; urgency=low
     + [NT] Add Build-Depends on aspell, aspell-en and
       libtest-spelling-perl.
 
+  * lib/Lintian/Util.pm:
+    + [NT] Prefer paths without leading slash in the
+      documentation for normalize_pkg_path.  Thanks to
+      Kevin Ryde for spotting this inconsistency.
+
  -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:58:05 +0200
 
 lintian (2.5.16) unstable; urgency=low
