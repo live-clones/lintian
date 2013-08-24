@@ -95,7 +95,7 @@ sub run {
 
         if (
             exists $SONAME{$cur_file}
-            or (defined $cur_file->link
+            or (defined $normalized_target
                 and exists $SONAME{$normalized_target})
           ) {
             # yes!!
