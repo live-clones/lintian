@@ -24,7 +24,7 @@ is(join(', ', $obj->selectable),
 $obj->add('B');
 $obj->satisfy('B');
 $obj->initialise();
-is(join(', ', $obj->selectable),
+is(join(', ', sort($obj->selectable)),
     'A, B','A and B are selectable once again after being satisfied');
 
 $obj->add('B', 'A');
