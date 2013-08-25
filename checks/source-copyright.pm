@@ -258,11 +258,11 @@ sub run {
 }
 
 sub split_licenses {
-    my ($_) = @_;
-    return () unless defined;
-    return () if /\n/;
-    s/[(),]//;
-    return map { "\L$_" } (split /\s++(?:and|or)\s++/);
+    my ($license) = @_;
+    return () unless defined($license);
+    return () if $license =~ /\n/;
+    $license =~ s/[(),]//;
+    return map { "\L$_" } (split(m/\s++(?:and|or)\s++/, $license));
 }
 
 sub get_field {
