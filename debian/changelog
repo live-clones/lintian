@@ -10,12 +10,17 @@ lintian (2.5.17) UNRELEASED; urgency=low
     + [NT] Apply patch from Gautier Minster to detect
       usage of configure.in with automake.  Thanks to
       Paul Wise for the report.  (Closes: #708482)
+  * checks/cruft.pm:
+    + [NT] Avoid given/when which was demoted to an
+      experimental feature.  (Closes: #720835)
   * checks/md5sums.{desc,pm}:
     + [JW,NT] Rename a tag due to a typo in the tag name.
       The tag has no known overrides.
   * checks/menus.{desc,pm}:
     + [JW,NT] Rename tags due to a typo in their tag name.
       These tags have no known overrides.
+  * checks/source-copyright.pm:
+    + [NT] Avoid accidental use of an experimental feature.
 
   * debian/control:
     + [NT] Add Build-Depends on aspell, aspell-en and
@@ -29,6 +34,9 @@ lintian (2.5.17) UNRELEASED; urgency=low
       is now unconditionally normalized.  Furthermore, allow
       the function to be called with only one argument like
       Cwd::realpath.
+
+  * t/*:
+    + [NT] Adapt several tests to work under perl 5.18.
 
  -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:58:05 +0200
 
