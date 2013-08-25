@@ -27,6 +27,7 @@ E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/bar
 E: files-foo-in-bar: file-in-usr-local usr/local/foo/bar
 E: files-foo-in-bar: nested-examples-directory usr/share/doc/files-foo-in-bar/examples/examples/
 E: files-foo-in-bar: non-standard-dir-in-var var/foo/
+E: files-foo-in-bar: non-standard-toplevel-dir emul/
 E: files-foo-in-bar: package-contains-xvpics-dir usr/share/doc/files-foo-in-bar/.xvpics/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
@@ -48,6 +49,7 @@ E: files-foo-in-bar: udev-rule-in-etc etc/udev/rules.d/bar
 W: files-foo-in-bar: debug-package-should-be-named-dbg usr/lib/debug/bar
 W: files-foo-in-bar: executable-not-elf-or-script bin/foo/bar
 W: files-foo-in-bar: executable-not-elf-or-script usr/bin/foo/bar
+W: files-foo-in-bar: file-in-unusual-dir emul/bar
 W: files-foo-in-bar: file-in-unusual-dir usr/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir usr/local/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/cache/pbuilder/build/bar

@@ -799,9 +799,6 @@ sub run {
                     or $pkg =~ m/^lib$libsuffix/) {
                     tag 'non-multi-arch-lib-dir', $file;
                 }
-            } elsif ($file =~ m,^emul/,) {
-                # Make an exception for /emul, which is used for multi-arch
-                # support in Debian at the moment.
             } else {
                 unless ($pkg eq 'base-files'
                     or $pkg eq 'hurd'

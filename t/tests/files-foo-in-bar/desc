@@ -21,6 +21,7 @@ Test-For:
  file-in-usr-local
  image-file-in-usr-lib
  non-multi-arch-lib-dir
+ non-standard-toplevel-dir
  package-contains-xvpics-dir
  package-installs-file-to-usr-x11r6
  package-installs-into-etc-gconf-schemas

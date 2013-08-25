@@ -1,4 +1,5 @@
 bar bin/foo
+bar emul
 bar etc/gconf/schemas/
 bar etc/rc.boot
 bar etc/rc.d
