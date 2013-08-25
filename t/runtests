@@ -719,6 +719,7 @@ sub generic_test_runner {
     my @matches = glob "$targetdir/*.$ext";
     my $file = shift @matches;
     unless ($file && -e $file) {
+        $file //= '<N/A>';
         fail join(q{ },
             "$testname did not produce any file matching",
             "\"$targetdir/*.$ext\" ($file)");
