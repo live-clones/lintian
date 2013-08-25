@@ -24,7 +24,7 @@ my @GOOD_WORDS = grep {$_ ne ''} map {
 
 add_stopwords(@GOOD_WORDS);
 
-chdir($ENV{'LINTIAN_ROOT'})
+chdir($ENV{'LINTIAN_ROOT'}//'.')
   or die("fatal error: could not chdir to $ENV{LINTIAN_ROOT}: $!");
 
 my @CHECKS = glob('checks/*[!.]*[!c]');
