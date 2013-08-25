@@ -40,4 +40,4 @@ W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.
 W: manpages-general: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages-general: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
 W: manpages-general: manpage-section-mismatch usr/X11R6/man/man1/rstartd.1x.gz:5 1x != 1
-W: manpages-general: manpage-section-mismatch usr/share/man/man6/simple.pod.gz:127 pod != 6
+W: manpages-general: manpage-section-mismatch usr/share/man/man6/simple.pod.gz:LINE pod != 6
