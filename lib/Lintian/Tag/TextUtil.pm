@@ -200,6 +200,10 @@ sub wrap_paragraphs {
     }
 
     my $o;
+    # Tell Text::Wrap that very long "words" (e.g. URLs) should rather
+    # "overflow" the column width than be broken into multiple lines.
+    # (#719769)
+    local $Text::Wrap::huge = 'overflow';
     for my $t (split_paragraphs(@_)) {
         # empty or indented line?
         if ($t eq '' or $t =~ /^\s/) {

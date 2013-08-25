@@ -35,6 +35,10 @@ lintian (2.5.17) UNRELEASED; urgency=low
     + [NT] Add Build-Depends on aspell, aspell-en and
       libtest-spelling-perl.
 
+  * lib/Lintian/Tag/TextUtil.pm:
+    + [NT] Prevent very long URLs from being split into two
+      lines.  Thanks to Jari Aalto for the report.
+      (Closes: #719769)
   * lib/Lintian/Util.pm:
     + [NT] Prefer paths without leading slash in the
       documentation for normalize_pkg_path.  Thanks to
