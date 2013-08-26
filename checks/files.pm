@@ -776,7 +776,9 @@ sub run {
         elsif ($file =~ m,^var/cache/pbuilder/build/.,
             or $file =~ m,^var/lib/sbuild/.,
             or $file =~ m,^var/lib/buildd/.,) {
-            tag 'dir-or-file-in-build-tree', $file;
+            unless ($source_pkg eq 'sbuild') {
+                tag 'dir-or-file-in-build-tree', $file;
+            }
         }
         # ---------------- FHS directory?
         elsif (
