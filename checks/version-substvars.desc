@@ -48,6 +48,10 @@ Info: The first package has a relation on the second package using a
  the relation.  However the second package is not built from this
  source package.  Usually this means there is a mistake in the package
  name in this dependency.
+ .
+ Note that this warning can occur if the package name used in the
+ relation contains a typo.  In this case, correcting the typo should
+ remove the warning.
 
 Tag: substvar-source-version-is-deprecated
 Severity: normal

@@ -2,6 +2,12 @@ lintian (2.5.18) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/version-substvars.desc:
+    + [NT] Mention that version-substvar-for-external-package
+      can happen if the package name used in the relation has
+      a typo.  Thanks to Joachim Reichel for reporting this.
+      (Closes: #708576)
+
  -- Niels Thykier <niels@thykier.net>  Mon, 26 Aug 2013 08:19:50 +0200
 
 lintian (2.5.17) unstable; urgency=low
