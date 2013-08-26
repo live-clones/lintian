@@ -114,7 +114,7 @@ sub run {
                         # (b1) any -> any (= ${source:Version})
                         tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
                     } else {
-                        # any -> any (= ${source:Version})
+                        # any -> any (>= ${source:Version})
                         # technically this can be "binNMU'ed", though it is
                         # a bit weird.
                         1;
