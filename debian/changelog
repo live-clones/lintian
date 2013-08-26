@@ -1,6 +1,21 @@
-lintian (2.5.17) UNRELEASED; urgency=low
+lintian (2.5.17) unstable; urgency=low
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - apache2-unparsable-dependency
+      - deprecated-configure-filename
+      - doc-base-abstract-field-separator-extra-whitespace
+      - doc-base-abstract-might-contain-extra-leading-whitespace
+      - doc-base-file-separator-extra-whitespace
+      - md5sums-lists-nonexistent-file
+      - non-multi-arch-lib-dir
+      - pkg-config-multi-arch-wrong-dir
+    + Removed:
+      - apache2-unparseable-dependency
+      - doc-base-abstract-field-separator-extra-whitespaces
+      - doc-base-abstract-might-contain-extra-leading-whitespaces
+      - doc-base-file-separator-extra-whitespaces
+      - md5sums-lists-nonexisting-file
 
   * checks/apache2.{desc,pm}:
     + [JW,NT] Rename a tag for consistent spelling of
@@ -51,7 +66,7 @@ lintian (2.5.17) UNRELEASED; urgency=low
   * t/*:
     + [NT] Adapt several tests to work under perl 5.18.
 
- -- Niels Thykier <niels@thykier.net>  Wed, 21 Aug 2013 12:58:05 +0200
+ -- Niels Thykier <niels@thykier.net>  Mon, 26 Aug 2013 07:49:21 +0200
 
 lintian (2.5.16) unstable; urgency=low
 
