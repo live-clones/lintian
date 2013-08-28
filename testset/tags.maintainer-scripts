@@ -35,6 +35,7 @@ E: maintainer-scripts: read-in-maintainer-script prerm:64
 E: maintainer-scripts: read-in-maintainer-script prerm:65
 E: maintainer-scripts: read-in-maintainer-script prerm:66
 E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
+I: maintainer-scripts source: debian-rules-missing-good-practice-target-dfsg get-orig-source
 I: maintainer-scripts source: missing-debian-source-format
 I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm

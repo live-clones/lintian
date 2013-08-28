@@ -98,10 +98,12 @@ my @RULE_CLEAN_DEPENDS =(
 my %required = map { $_ => 'required' } qw(build binary binary-arch binary-indep clean);
 
 # The following targets are recommended per Policy.
-my %recommended = map { $_ => 'recommended' } qw(build-arch build-indep);
+my %recommendedbuild = map { $_ => 'recommended_allindep' } qw(build-arch build-indep);
 
-# The following rules are required or recommanded per policy
-my %policyrules = ( %required, %recommended);
+my %goodpracticedfsg = map { $_ => 'goodpractice_dfsg' } qw(get-orig-source);
+
+# The following rules are required or recommended per policy
+my %policyrules = ( %required, %recommendedbuild, %goodpracticedfsg);
 
 # Rules about required debhelper command ordering.  Each command is put into a
 # class and the tag is issued if they're called in the wrong order for the
@@ -129,6 +131,9 @@ sub run {
     }
 
     my $architecture = $info->field('architecture', '');
+    my $version = $info->field('version');
+    # If the version field is missing, we assume a neutral non-native one.
+    $version = '0-1' unless defined $version;
 
     open(my $rules_fd, '<', $rules);
 
@@ -359,22 +364,26 @@ sub run {
     close($rules_fd);
 
     unless ($includes) {
-        my $rec = 0;
+        my $rec_allindep = 0;
         # Make sure all the required rules were seen.
         for my $target (sort keys %policyrules) {
             unless ($seen{$target}) {
                 if($policyrules{$target} eq 'required') {
                     tag 'debian-rules-missing-required-target', $target;
-                } elsif ($policyrules{$target} eq 'recommended') {
+                } elsif ($policyrules{$target} eq 'recommended_allindep') {
                     tag 'debian-rules-missing-recommended-target', $target;
-                    $rec++;
+                    $rec_allindep++;
+                } elsif ($policyrules{$target} eq 'goodpractice_dfsg') {
+                    if ($version =~ /(dfsg|debian|ds)/) {
+                        tag 'debian-rules-missing-good-practice-target-dfsg', $target;
+                    }
                 } else {
                     croak 'unknown type of policy rules';
                 }
             }
         }
 
-        if ($rec) {
+        if ($rec_allindep) {
             my $all = 0;
             my $notall = 0;
             foreach my $p ($group->get_processables) {

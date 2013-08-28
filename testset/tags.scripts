@@ -19,6 +19,7 @@ E: scripts: python-script-but-no-python-dep usr/bin/pyfoo
 E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
 E: scripts: wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
 E: scripts: wrong-path-for-interpreter usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)
+I: scripts source: debian-rules-missing-good-practice-target-dfsg get-orig-source
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
