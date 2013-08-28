@@ -34,6 +34,7 @@ our $ANYPYTHON_DEPEND
 
 my $KNOWN_MAKEFILES = Lintian::Data->new('rules/known-makefiles', '\|\|');
 my $DEPRECATED_MAKEFILES = Lintian::Data->new('rules/deprecated-makefiles');
+my $POLICYRULES = Lintian::Data->new('rules/policy-rules', qr/\s++/);
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
@@ -93,17 +94,6 @@ my @RULE_CLEAN_DEPENDS =(
     ],
     [quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s'],
 );
-
-# The following targets are required per Policy.
-my %required = map { $_ => 'required' } qw(build binary binary-arch binary-indep clean);
-
-# The following targets are recommended per Policy.
-my %recommendedbuild = map { $_ => 'recommended_allindep' } qw(build-arch build-indep);
-
-my %goodpracticedfsg = map { $_ => 'goodpractice_dfsg' } qw(get-orig-source);
-
-# The following rules are required or recommended per policy
-my %policyrules = ( %required, %recommendedbuild, %goodpracticedfsg);
 
 # Rules about required debhelper command ordering.  Each command is put into a
 # class and the tag is issued if they're called in the wrong order for the
@@ -176,7 +166,7 @@ sub run {
             my $targets = $KNOWN_MAKEFILES->value($makefile);
             if (defined $targets){
                 foreach my $target (split m/\s*+,\s*+/o, $targets){
-                    $seen{$target}++ if $policyrules{$target};
+                    $seen{$target}++ if $POLICYRULES->known($target);
                 }
             } else {
                 $includes = 1;
@@ -265,13 +255,13 @@ sub run {
                         # we ought to "delay" it was a "=" variable rather
                         # than ":=" or "+=".
                         for (split m/\s++/o, rstrip($val)) {
-                            $seen{$_}++ if $policyrules{$_};
+                            $seen{$_}++ if $POLICYRULES->known($_);
                         }
                         last;
                     }
                     # We don't know, so just mark the target as seen.
                 }
-                $seen{$_}++ if $policyrules{$_};
+                $seen{$_}++ if $POLICYRULES->known($_);
             }
             next; #.PHONY implies the rest will not match
         }
@@ -288,8 +278,8 @@ sub run {
                 if ($target =~ m/%/o) {
                     my $pattern = quotemeta $target;
                     $pattern =~ s/\\%/.*/g;
-                    for my $policyrules (keys %policyrules) {
-                        $seen{$policyrules}++ if $policyrules =~ m/$pattern/;
+                    for my $rulebypolicy ($POLICYRULES->all) {
+                        $seen{$rulebypolicy}++ if $rulebypolicy =~ m/$pattern/;
                     }
                 } else {
                     # Is it $(VAR) ?
@@ -302,13 +292,13 @@ sub run {
                             # than ":=" or "+=".
                             local $_;
                             for (split m/\s++/o, rstrip($val)) {
-                                $seen{$_}++ if $policyrules{$_};
+                                $seen{$_}++ if $POLICYRULES->known($_);
                             }
                             last;
                         }
                         # We don't know, so just mark the target as seen.
                     }
-                    $seen{$target}++ if $policyrules{$target};
+                    $seen{$target}++ if $POLICYRULES->known($target);
                 }
                 if (any { $target =~ /$_/ } @arch_rules) {
                     push(@arch_rules, @depends);
@@ -366,19 +356,25 @@ sub run {
     unless ($includes) {
         my $rec_allindep = 0;
         # Make sure all the required rules were seen.
-        for my $target (sort keys %policyrules) {
+        for my $target ($POLICYRULES->all) {
             unless ($seen{$target}) {
-                if($policyrules{$target} eq 'required') {
+                my $typerule = $POLICYRULES->value($target);
+                if($typerule eq 'required') {
                     tag 'debian-rules-missing-required-target', $target;
-                } elsif ($policyrules{$target} eq 'recommended_allindep') {
+                } elsif ($typerule eq 'recommended_allindep') {
                     tag 'debian-rules-missing-recommended-target', $target;
                     $rec_allindep++;
-                } elsif ($policyrules{$target} eq 'goodpractice_dfsg') {
+                } elsif ($typerule eq 'goodpractice_dfsg') {
                     if ($version =~ /(dfsg|debian|ds)/) {
-                        tag 'debian-rules-missing-good-practice-target-dfsg', $target;
+                        tag 'debian-rules-missing-good-practice-target-dfsg',
+                          $target;
                     }
                 } else {
-                    croak 'unknown type of policy rules';
+                    $typerule ||= '<N/A>';
+                    croak(
+                        join(' ',
+                            'unknown type of policy rules:',
+                            "$typerule (target: $target)"));
                 }
             }
         }
