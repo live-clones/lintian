@@ -17,6 +17,7 @@ package Lintian::rules;
 use strict;
 use warnings;
 use autodie;
+use Carp qw(croak);
 
 use List::MoreUtils qw(any);
 
@@ -94,10 +95,13 @@ my @RULE_CLEAN_DEPENDS =(
 );
 
 # The following targets are required per Policy.
-my %required = map { $_ => 1 } qw(build binary binary-arch binary-indep clean);
+my %required = map { $_ => 'required' } qw(build binary binary-arch binary-indep clean);
 
 # The following targets are recommended per Policy.
-my %recommended = map { $_ => 1 } qw(build-arch build-indep);
+my %recommended = map { $_ => 'recommended' } qw(build-arch build-indep);
+
+# The following rules are required or recommanded per policy
+my %policyrules = ( %required, %recommended);
 
 # Rules about required debhelper command ordering.  Each command is put into a
 # class and the tag is issued if they're called in the wrong order for the
@@ -167,8 +171,7 @@ sub run {
             my $targets = $KNOWN_MAKEFILES->value($makefile);
             if (defined $targets){
                 foreach my $target (split m/\s*+,\s*+/o, $targets){
-                    $seen{$target}++ if $required{$target};
-                    $seen{$target}++ if $recommended{$target};
+                    $seen{$target}++ if $policyrules{$target};
                 }
             } else {
                 $includes = 1;
@@ -257,15 +260,13 @@ sub run {
                         # we ought to "delay" it was a "=" variable rather
                         # than ":=" or "+=".
                         for (split m/\s++/o, rstrip($val)) {
-                            $seen{$_}++ if $required{$_};
-                            $seen{$_}++ if $recommended{$_};
+                            $seen{$_}++ if $policyrules{$_};
                         }
                         last;
                     }
                     # We don't know, so just mark the target as seen.
                 }
-                $seen{$_}++ if $required{$_};
-                $seen{$_}++ if $recommended{$_};
+                $seen{$_}++ if $policyrules{$_};
             }
             next; #.PHONY implies the rest will not match
         }
@@ -282,11 +283,8 @@ sub run {
                 if ($target =~ m/%/o) {
                     my $pattern = quotemeta $target;
                     $pattern =~ s/\\%/.*/g;
-                    for my $required (keys %required) {
-                        $seen{$required}++ if $required =~ m/$pattern/;
-                    }
-                    for my $recommended (keys %recommended) {
-                        $seen{$recommended}++ if $recommended =~ m/$pattern/;
+                    for my $policyrules (keys %policyrules) {
+                        $seen{$policyrules}++ if $policyrules =~ m/$pattern/;
                     }
                 } else {
                     # Is it $(VAR) ?
@@ -299,15 +297,13 @@ sub run {
                             # than ":=" or "+=".
                             local $_;
                             for (split m/\s++/o, rstrip($val)) {
-                                $seen{$_}++ if $required{$_};
-                                $seen{$_}++ if $recommended{$_};
+                                $seen{$_}++ if $policyrules{$_};
                             }
                             last;
                         }
                         # We don't know, so just mark the target as seen.
                     }
-                    $seen{$target}++ if $required{$target};
-                    $seen{$target}++ if $recommended{$target};
+                    $seen{$target}++ if $policyrules{$target};
                 }
                 if (any { $target =~ /$_/ } @arch_rules) {
                     push(@arch_rules, @depends);
@@ -365,14 +361,16 @@ sub run {
     unless ($includes) {
         my $rec = 0;
         # Make sure all the required rules were seen.
-        for my $target (sort keys %required) {
-            tag 'debian-rules-missing-required-target', $target
-              unless $seen{$target};
-        }
-        for my $target (sort keys %recommended) {
+        for my $target (sort keys %policyrules) {
             unless ($seen{$target}) {
-                tag 'debian-rules-missing-recommended-target', $target;
-                $rec++;
+                if($policyrules{$target} eq 'required') {
+                    tag 'debian-rules-missing-required-target', $target;
+                } elsif ($policyrules{$target} eq 'recommended') {
+                    tag 'debian-rules-missing-recommended-target', $target;
+                    $rec++;
+                } else {
+                    croak 'unknown type of policy rules';
+                }
             }
         }
 
