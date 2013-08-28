@@ -42,6 +42,7 @@ my %KNOWN_FIELDS = map { $_ => 1 } qw(
 my %KNOWN_FEATURES = map { $_ => 1 } qw(
 );
 my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
+  allow-stderr
   breaks-testbed
   build-needed
   needs-root

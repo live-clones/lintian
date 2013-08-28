@@ -8,6 +8,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * checks/files.pm:
     + [BR] Fix false-positive dir-or-file-in-build-tree for
       the sbuild source package.  (Closes: #720910)
+  * checks/testsuite.pm:
+    + [NT] Add "allow-stderr" as known autopkgtest "restriction".
+      Thanks to Jérémy Bobbio for the report and the initial
+      patch.  (Closes: #721179)
   * checks/version-substvars.desc:
     + [NT] Mention that version-substvar-for-external-package
       can happen if the package name used in the relation has
