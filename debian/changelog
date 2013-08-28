@@ -10,6 +10,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
       the sbuild source package.  (Closes: #720910)
     + [NT] Add check for empty udeb packages.  Thanks to Cyril
       Brulebois for the suggestion.  (Closes: #672664)
+  * checks/menu-format.desc:
+    + [BR] Rewrite description of the tag for desktop files
+      without a keywords entry based on a wording from Gaudenz
+      Steinlin.  (Closes: #706966)
   * checks/rules.{desc,pm}:
     + [BR] Refactor the check for known targets in d/rules.
     + [BR] Add check for missing for recommended "get-orig-source"

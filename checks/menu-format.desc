@@ -320,9 +320,13 @@ Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 Tag: desktop-entry-lacks-keywords-entry
 Severity: wishlist
 Certainty: certain
-Info: The categories for this desktop entry do not contain any
- Keywords. Keywords should not be redundant with the values of Name
- or GenericName.
+Info: This .desktop file does either not contain a "Keywords" entry or it does
+ not contain any keywords not already present in the "Name" or
+ "GenericName" entries.
+ .
+ .desktop files are organized in key/value pairs (similar to .ini files).
+ "Keywords" is the name of the entry/key in the .desktop file containing
+ keywords relevant for this .desktop file.
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
