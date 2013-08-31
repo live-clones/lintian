@@ -12,6 +12,7 @@ build-depends-indep
 checksums-md5
 checksums-sha1
 checksums-sha256
+dgit
 dm-upload-allowed
 files
 format

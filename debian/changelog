@@ -11,6 +11,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
       a typo.  Thanks to Joachim Reichel for reporting this.
       (Closes: #708576)
 
+  * data/common/source-fields:
+    + [NT] Allow the "Dgit" field in source packages.  Thanks
+      to Ian Jackson for the report.  (Closes: #721205)
   * data/scripts/{,versioned-}interpreters:
     + [NT] Apply patch from Gunnar Wolf to update which package
       is providing "rackup".  (Closes: #721268)
