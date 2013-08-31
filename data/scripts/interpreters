@@ -71,6 +71,7 @@ python         => /usr/bin, python | python-minimal
 pforth         => /usr/bin
 racket         => /usr/bin
 r              => /usr/bin, littler
+rackup         => /usr/bin, ruby-rack
 rc             => /usr/bin
 regina         => /usr/bin, regina-rexx
 rep            => /usr/bin

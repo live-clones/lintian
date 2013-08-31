@@ -11,6 +11,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
       a typo.  Thanks to Joachim Reichel for reporting this.
       (Closes: #708576)
 
+  * data/scripts/{,versioned-}interpreters:
+    + [NT] Apply patch from Gunnar Wolf to update which package
+      is providing "rackup".  (Closes: #721268)
+
  -- Niels Thykier <niels@thykier.net>  Mon, 26 Aug 2013 08:19:50 +0200
 
 lintian (2.5.17) unstable; urgency=low
