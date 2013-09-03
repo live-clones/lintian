@@ -506,7 +506,7 @@ sub find_cruft {
                 index($block, 'license') > -1
                 && $block =~ m/gnu (?:\s+|\s*<\/span>\s*|\s*\}\s+)? free \s+
                      documentation \s+ license (?'rawgfdlsections'.{0,1024}?)
-                     a \s+ copy \s+ of \s+ the \s+ license \s+ is \s+ included/xsm
+                     a \s+ copy \s+ of \s+ the \s+ license \s+ is/xsm
               ) {
                 if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                     my $rawgfdlsections = $+{rawgfdlsections};
