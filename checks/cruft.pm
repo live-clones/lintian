@@ -623,6 +623,20 @@ sub find_cruft {
                             tag 'license-problem-gfdl-invariants',$name;
                             $licenseproblemhash{'gfdl-invariants'} = 1;
                         }
+                    } elsif (
+                        $gfdlsections =~ m{
+                            \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
+                            being \s list \s their \s titles \s?[,\.;]?\s?
+                            with \s the \s? <_: \s* link-\d+ \s? /> \s?
+                            being \s list \s?[,\.;]?\s?
+                            (?:and\s)? with \s the \s? <_:\s link-\d+ \s? /> \s?
+                            being \s list \Z}xiso
+                      ) {
+                        # fix a false positive in .po file
+                        unless ($name =~ m,\.po$,) {
+                            tag 'license-problem-gfdl-invariants', $name;
+                            $licenseproblemhash{'gfdl-invariants'} = 1;
+                        }
                     } else {
                         tag 'license-problem-gfdl-invariants', $name;
                         $licenseproblemhash{'gfdl-invariants'} = 1;
