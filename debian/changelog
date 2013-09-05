@@ -21,6 +21,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Apply patch from Gunnar Wolf to update which package
       is providing "rackup".  (Closes: #721268)
 
+  * reporting/harness:
+    + [NT] Fix bug that caused harness to not remove old log
+      entries on incremental runs.
+
  -- Niels Thykier <niels@thykier.net>  Mon, 26 Aug 2013 08:19:50 +0200
 
 lintian (2.5.17) unstable; urgency=low
