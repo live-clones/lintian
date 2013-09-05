@@ -514,23 +514,24 @@ sub find_cruft {
 
                     # replace some common comment-marker/markup with space
                     $gfdlsections =~ s{(?:
-                      ^[-\+!<>]       |  # diff/patch lines
-                      ^\.\\\"         |  # man comments
-                      \@c(?:omment)?  |  # Tex info comment
-                      \@var\{         |  # Tex info emphasis
-                      \}              |  # Tex info end tag (could be more clever but brute force is fast)
-                      \"\s*,          |  # String array (e.g. "line1",\n"line2")
-                      ,\s*\"          |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
-                      <br\s*/?>       |  # (X)HTML line breaks
-                      </?link[^>]*?>  |  # xml link
-                      </?a[^>]*?>     |  # a link
-                      </?p[^>]*?>     |  # html paragraph
-                      </?var[^>]*?>   |  # var tag used by html from texinfo
-                      \(\*note.*?::\) |  # info file note
-                      \\n             |  # Verbatim \n in string array
-                      \s*[,\.;]\s*\Z  |  # final punctuation
-                      \A\s*[,\.;]\s*  |  # punctuation at the beginning
-                      [%\*\"\|\\]        # String, C-style comment/javadoc indent, quotes for strings, pipe and antislash in some txt
+                      ^[-\+!<>]            |  # diff/patch lines
+                      ^\.\\\"              |  # man comments
+                      \@c(?:omment)?       |  # Tex info comment
+                      \@var\{              |  # Tex info emphasis
+                      \}                   |  # Tex info end tag (could be more clever but brute force is fast)
+                      \"\s*,               |  # String array (e.g. "line1",\n"line2")
+                      ,\s*\"               |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
+                      <br\s*/?>            |  # (X)HTML line breaks
+                      </?link[^>]*?>       |  # xml link
+                      </?a[^>]*?>          |  # a link
+                      </?citetitle[^>]*?>  |  # citation title in docbook
+                      </?p[^>]*?>          |  # html paragraph
+                      </?var[^>]*?>        |  # var tag used by html from texinfo
+                      \(\*note.*?::\)      |  # info file note
+                      \\n                  |  # Verbatim \n in string array
+                      \s*[,\.;]\s*\Z       |  # final punctuation
+                      \A\s*[,\.;]\s*       |  # punctuation at the beginning
+                      [%\*\"\|\\]             # String, C-style comment/javadoc indent, quotes for strings, pipe and antislash in some txt
                     )}{ }gxms;
 
                     # delete double spacing now and normalize spacing
@@ -629,7 +630,7 @@ sub find_cruft {
                             being \s list \s their \s titles \s?[,\.;]?\s?
                             with \s the \s? <_: \s* link-\d+ \s? /> \s?
                             being \s list \s?[,\.;]?\s?
-                            (?:and\s)? with \s the \s? <_:\s link-\d+ \s? /> \s?
+                            (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s?
                             being \s list \Z}xiso
                       ) {
                         # fix a false positive in .po file
