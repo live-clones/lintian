@@ -255,7 +255,10 @@ sub run {
                 }
             }
         }
-        tag 'empty-binary-package' if ($is_empty && $type ne 'udeb');
+        if ($is_empty) {
+            tag 'empty-binary-package' if ($type ne 'udeb');
+            tag 'empty-udeb-package' if ($type eq 'udeb');
+        }
     }
 
     # Read package contents...

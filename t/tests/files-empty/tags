@@ -1,1 +1,2 @@
 W: files-empty: empty-binary-package
+X: files-empty-udeb udeb: empty-udeb-package
