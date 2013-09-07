@@ -463,6 +463,7 @@ sub find_cruft {
 
         my @queue = ('', '');
         my %licenseproblemhash = ();
+        my $blocknumber = 0;
 
         # we try to read this file in block and use a sliding window
         # for efficiency.  We store two blocks in @queue and the whole
@@ -516,50 +517,57 @@ sub find_cruft {
                  (?:<span\s*[^>]>)?\s*gnu\s*</span\s*[^>]*?>  | # html span
                  (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}               # Tex info cmd
                 }{ gnu }gxms;
+                # classical gfdl matching pattern
+                my $normalgfdlpattern = qr/
+                 (?'contextbefore'(?:
+                    (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
+                    (?:\s+ copy \s+ of \s+ the \s+ license \s+ is.{0,1024}?)))
+                 gnu \s+ free \s+ documentation \s+ license
+                 (?'rawgfdlsections'(?:(?!gnu \s+ free \s+ documentation \s+ license).){0,1024}?)
+                 a \s+ copy \s+ of \s+ the \s+ license \s+ is
+                /xsmo;
 
-                if (
-                    $cleanedblock =~ m/gnu \s+ free \s+
-                     documentation \s+ license (?'rawgfdlsections'.{0,1024}?)
-                     a \s+ copy \s+ of \s+ the \s+ license \s+ is/xsm
-                  ) {
+                # for first block we get context from the beginning
+                my $firstblockgfdlpattern = qr/
+                 (?'rawcontextbefore'(?:
+                    (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
+                  \A(?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){0,1024}|
+                    (?:\s+ copy \s+ of \s+ the \s+ license \s+ is.{0,1024}?)
+                  )
+                 )
+                 gnu \s+ free \s+ documentation \s+ license
+                 (?'rawgfdlsections'(?:(?!gnu \s+ free \s+ documentation \s+ license).){0,1024}?)
+                 a \s+ copy \s+ of \s+ the \s+ license \s+ is
+                 /xsmo;
+
+                my $gfdlpattern
+                  = $blocknumber ? $normalgfdlpattern :
+                    $firstblockgfdlpattern;
+
+                if ($cleanedblock =~ $gfdlpattern) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
-                        my $rawgfdlsections = $+{rawgfdlsections};
-                        my $gfdlsections = $rawgfdlsections;
+                        my $rawgfdlsections = $+{rawgfdlsections} || '';
+                        my $rawcontextbefore = $+{rawcontextbefore} || '';
 
                         # replace some common comment-marker/markup with space
-                        $gfdlsections =~ s{(?:
-                      ^[-\+!<>]            |  # diff/patch lines
-                      ^\.\\\"              |  # man comments
-                      \@c(?:omment)?       |  # Tex info comment
-                      \@var\{              |  # Tex info emphasis
-                      \}                   |  # Tex info end tag (could be more clever but brute force is fast)
-                      \"\s*,               |  # String array (e.g. "line1",\n"line2")
-                      ,\s*\"               |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
-                      <br\s*/?>            |  # (X)HTML line breaks
-                      </?link[^>]*?>       |  # xml link
-                      </?a[^>]*?>          |  # a link
-                      </?citetitle[^>]*?>  |  # citation title in docbook
-                      </?p[^>]*?>          |  # html paragraph
-                      </?var[^>]*?>        |  # var tag used by html from texinfo
-                      \(\*note.*?::\)      |  # info file note
-                      \\n                  |  # Verbatim \n in string array
-                      \s*[,\.;]\s*\Z       |  # final punctuation
-                      \A\s*[,\.;]\s*       |  # punctuation at the beginning
-                      [%\*\"\|\\]             # String, C-style comment/javadoc indent, quotes for strings, pipe and antislash in some txt
-                    )}{ }gxms;
+                        my $gfdlsections = _clean_block($rawgfdlsections);
+                        my $contextbefore = _clean_block($rawcontextbefore);
 
-                        # delete double spacing now and normalize spacing
-                        # to space character
-                        $gfdlsections =~ s{\s++}{ }gsm;
-                        strip($gfdlsections);
+                        # remove classical and without meaning part of
+                        # matched string
+                        $gfdlsections =~ s{
+                          \A version \s \d+(?:\.\d+)? \s
+                           (?:or \s any \s later \s version \s)?
+                           published \s by \s the \s Free \s Software \s Foundation
+                           \s?[,\.;]?\s?}{}xismo;
+                        $contextbefore =~ s{
+                          \s? (:?[,\.;]? \s?)?
+                           permission \s is \s granted \s to \s copy \s?[,\.;]?\s?
+                           distribute \s?[,\.;]?\s? and\s?/?\s?or \s modify \s
+                           this \s document \s under \s the \s terms \s of \s the\Z}
+                        {}xismo;
 
-                        # remove version information
-                        $gfdlsections =~ s/
-                            \A version \s \d+(?:\.\d+)? \s
-                            (?:or \s any \s later \s version \s)?
-                            published \s by \s the \s Free \s Software \s Foundation
-                            (?: \s? [,\.;])? \s?
-                            //xism;
+
 
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
@@ -627,18 +635,6 @@ sub find_cruft {
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
                             }
                         } elsif (
-                            # fix a false positive in maintain.texi
-                            $gfdlsections =~ m/\A
-                            Following \s is \s an \s example \s of \s the \s license \s notice \s
-                            to \s use \s after \s the \s copyright \s line\(s\) \s using \s all \s the \s
-                            features \s of \s the \s GFDL/xiso
-                          ) {
-                            # allow only one text
-                            unless ($name =~ m/maintain/) {
-                                tag 'license-problem-gfdl-invariants',$name;
-                                $licenseproblemhash{'gfdl-invariants'} = 1;
-                            }
-                        } elsif (
                             $gfdlsections =~ m{
                             \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
                             being \s list \s their \s titles \s?[,\.;]?\s?
@@ -653,16 +649,69 @@ sub find_cruft {
                                 $licenseproblemhash{'gfdl-invariants'} = 1;
                             }
                         } else {
-                            tag 'license-problem-gfdl-invariants', $name;
-                            $licenseproblemhash{'gfdl-invariants'} = 1;
+                            if (
+                                $contextbefore =~ m/
+                                  Following \s is \s an \s example
+                                  (:?\s of \s the \s license \s notice \s to \s use
+                                    (?:\s after \s+ the copyright (?:line\(s\))?
+                                      (?:using all the features? of the GFDL)?
+                                    )?
+                                  )? \s? [,:]?/xiso
+                              ) {
+                                # it is an example
+                            } else {
+                                tag 'license-problem-gfdl-invariants', $name;
+                                $licenseproblemhash{'gfdl-invariants'} = 1;
+                            }
                         }
                     }
                 }
             }
+            $blocknumber++;
         }
         close($F);
     }
     return;
+}
+
+sub _clean_block {
+    my ($text) = @_;
+
+    # replace some common comment-marker/markup with space
+    $text =~ s{(?:
+                  ^\.\\\"                      |  # man comments
+                  \@c(?:omment)?\s+            |  # Tex info comment
+                  \@var\{                      |  # Tex info emphasis
+                  \@(?:small)?example\s+       |  # Tex info example
+                  \@end\h+(?:small)example\s+  |  # Tex info end small example tag
+                  \@group\s+                   |  # Tex info group
+                  \@end\h+group\s+             |  # Tex info end group
+                  \}                           |  # Tex info end tag (could be more clever but brute force is fast)
+                  \"\s*,                       |  # String array (e.g. "line1",\n"line2")
+                  ,\s*\"                       |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
+                  <br\s*/?>                    |  # (X)HTML line breaks
+                  </?link[^>]*?>               |  # xml link
+                  </?a[^>]*?>                  |  # a link
+                  </?citetitle[^>]*?>          |  # citation title in docbook
+                  </?div[^>]*?>                |  # html style
+                  </?p[^>]*?>                  |  # html paragraph
+                  </?var[^>]*?>                |  # var tag used by html from texinfo
+                  ^[-\+!<>]                    |  # diff/patch lines (should be after html tag)
+                  \(\*note.*?::\)              |  # info file note
+                  \\n                          |  # Verbatim \n in string array
+                  \s*[,\.;]\s*\Z               |  # final punctuation
+                  \A\s*[,\.;]\s*               |  # punctuation at the beginning
+                  (?:``|'')                    |  # quote like
+                  [%\*\"\|\\]                     # String, C-style comment/javadoc indent,
+                                                  # quotes for strings, pipe and antislash in some txt
+           )}{ }gxms;
+
+    # delete double spacing now and normalize spacing
+    # to space character
+    $text =~ s{\s++}{ }gsm;
+    strip($text);
+
+    return $text;
 }
 
 1;
