@@ -702,8 +702,9 @@ sub _clean_block {
                   \s*[,\.;]\s*\Z               |  # final punctuation
                   \A\s*[,\.;]\s*               |  # punctuation at the beginning
                   (?:``|'')                    |  # quote like
-                  [%\*\"\|\\]                     # String, C-style comment/javadoc indent,
+                  [%\*\"\|\\\#]                   # String, C-style comment/javadoc indent,
                                                   # quotes for strings, pipe and antislash in some txt
+                                                  # shell or po file comments
            )}{ }gxms;
 
     # delete double spacing now and normalize spacing
