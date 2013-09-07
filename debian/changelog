@@ -10,6 +10,11 @@ lintian (2.5.18) UNRELEASED; urgency=low
       the sbuild source package.  (Closes: #720910)
     + [NT] Add check for empty udeb packages.  Thanks to Cyril
       Brulebois for the suggestion.  (Closes: #672664)
+  * checks/rules.{desc,pm}:
+    + [BR] Refactor the check for known targets in d/rules.
+    + [BR] Add check for missing for recommended "get-orig-source"
+      target in d/rules for packages that look like they have been
+      repacked.  (Closes: #460174)
   * checks/testsuite.pm:
     + [NT] Add "allow-stderr" as known autopkgtest "restriction".
       Thanks to Jérémy Bobbio for the report and the initial
@@ -23,6 +28,8 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * data/common/source-fields:
     + [NT] Allow the "Dgit" field in source packages.  Thanks
       to Ian Jackson for the report.  (Closes: #721205)
+  * data/rules/policy-rules:
+    + [BR] New file.
   * data/scripts/{,versioned-}interpreters:
     + [NT] Apply patch from Gunnar Wolf to update which package
       is providing "rackup".  (Closes: #721268)
