@@ -2,9 +2,11 @@ lintian (2.5.18) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * checks/cruft.pm:
+  * checks/cruft.{desc,pm}:
     + [BR] Fix false-postive for license-problem-gfdl-invariants.
       (Closes: #721252)
+    + [BR] Extend tag description of the gfdl-invariants tag.
+      (Closes: #722102)
   * checks/files.{pm,desc}:
     + [BR] Fix false-positive dir-or-file-in-build-tree for
       the sbuild source package.  (Closes: #720910)
