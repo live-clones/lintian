@@ -105,7 +105,8 @@ mkdir("$HTML_TMP_DIR/tags", 0777);
 symlink('.', "$HTML_TMP_DIR/reports");
 symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
 if ($ARGV[0]) {
-    symlink($ARGV[0], "$HTML_TMP_DIR/lintian.log");
+    copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")
+        or die "cannot copy $ARGV[0] to $HTML_TMP_DIR/lintian.log: $!");
     system("gzip --best -c > \"$HTML_TMP_DIR/lintian.log.gz\" < \"$ARGV[0]\"")
       == 0
       or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";

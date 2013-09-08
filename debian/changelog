@@ -48,6 +48,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * reporting/harness:
     + [NT] Fix bug that caused harness to not remove old log
       entries on incremental runs.
+  * reporting/html_reports:
+    + [NT] Copy (rather than symlink) the lintian.log to the
+      generated website.
 
   * vendors/ubuntu/main/data/{common,fields}/*:
     + [NT] Retire now redundant files.
