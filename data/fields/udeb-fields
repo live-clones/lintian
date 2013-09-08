@@ -23,3 +23,10 @@ installer-menu-item
 bugs
 origin
 built-using
+
+# Special-case, original-maintainer is not ok in Debian, but we allow
+# it in any non-Debian profile by default.
+#
+# NB: Do not rely on @if-vendor-is-not in your data files; it may
+# disappear without notice
+@if-vendor-is-not debian original-maintainer

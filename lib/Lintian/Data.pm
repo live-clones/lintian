@@ -154,6 +154,23 @@ sub _parse_file {
                 $self->_parse_file($type, $pfd, $dataset, $separator,
                     $code, $vendors, $pvo);
                 close($pfd);
+            } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
+                my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
+                my $actual_name;
+                my $negative_test = 0;
+                $negative_test = 1 if $op eq 'if-vendor-is-not';
+                croak "Missing vendor name after \@$op"
+                  unless $desired_name;
+                croak "Missing command after vendor name for \@$op"
+                  unless $remain;
+                $actual_name = (split('/', $vendors->[0], 2))[0];
+                if ($op eq 'if-vendor-is') {
+                    next if $actual_name ne $desired_name;
+                } else {
+                    next if $actual_name eq $desired_name;
+                }
+                $line = $remain;
+                redo;
             } else {
                 croak "Unknown operation \@$op in $filename at line $.";
             }

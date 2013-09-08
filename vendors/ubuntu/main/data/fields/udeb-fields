@@ -1,9 +1,0 @@
-# Vendor data file for Ubuntu
-
-# Include everything from the parent profile (at the time of
-# writing debian/main)
-@include-parent
-
-# Include Ubuntu specific fields here
-original-maintainer
-
