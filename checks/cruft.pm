@@ -541,8 +541,9 @@ sub find_cruft {
                  /xsmo;
 
                 my $gfdlpattern
-                  = $blocknumber ? $normalgfdlpattern :
-                    $firstblockgfdlpattern;
+                  = $blocknumber
+                  ? $normalgfdlpattern
+                  : $firstblockgfdlpattern;
 
                 if ($cleanedblock =~ $gfdlpattern) {
                     if (!exists $licenseproblemhash{'gfdl-invariants'}) {
@@ -566,8 +567,6 @@ sub find_cruft {
                            distribute \s?[,\.;]?\s? and\s?/?\s?or \s modify \s
                            this \s document \s under \s the \s terms \s of \s the\Z}
                         {}xismo;
-
-
 
                         # GFDL license, assume it is bad unless it
                         # explicitly states it has no "bad sections".
