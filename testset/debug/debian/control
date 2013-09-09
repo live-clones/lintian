@@ -7,7 +7,7 @@ Build-Depends-Indep: not-debhelper (>= 0.4.3)
 Standards-Version: 3.7.0
 
 Package: hello
-Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information
  Lintian regression test for external debugging file handling.  This test
@@ -20,7 +20,7 @@ Description: Test for external debugging information
 Package: hello-dbg
 Priority: extra
 Section: debug
-Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
+Architecture: any
 Depends: hello (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information (symbols)
  Lintian regression test for external debugging file handling.  This test
@@ -32,7 +32,7 @@ Description: Test for external debugging information (symbols)
 
 Package: libhello0
 Section: libs
-Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
+Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information (library)
  Lintian regression test for external debugging file handling.  This test
@@ -45,7 +45,7 @@ Description: Test for external debugging information (library)
 Package: libhello0-dbg
 Section: debug
 Priority: extra
-Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
+Architecture: any
 Depends: libhello (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information (library symbols)
  Lintian regression test for external debugging file handling.  This test

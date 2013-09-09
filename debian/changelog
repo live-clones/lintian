@@ -52,6 +52,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Copy (rather than symlink) the lintian.log to the
       generated website.
 
+  * testset/debug/debian/control:
+    + [NT] Mark some packages "arch:any" to avoid test failures
+      on kfreebsd-amd64.  (Closes: #688524)
+
   * vendors/ubuntu/main/data/{common,fields}/*:
     + [NT] Retire now redundant files.
 
