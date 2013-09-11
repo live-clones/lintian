@@ -19,8 +19,8 @@ Description: {$description}
 Package: program-data
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         foreign-pkg (= $\{Source-Version\})
-Replaces: other-foreign-pkg (<< $\{binary:Version\})
+         foreign-pkg:any (= $\{Source-Version\})
+Replaces: other-foreign-pkg:any (<< $\{binary:Version\})
 Description: {$description} - data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -32,7 +32,7 @@ Description: {$description} - data
 Package: program-utils
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         program-bin (= $\{source:Version\}),
+         program-bin:any (= $\{source:Version\}),
          program-data (>= $\{binary:Version\})
 Description: {$description} - extra utils
  This is a test package designed to exercise some feature or tag of
@@ -45,7 +45,7 @@ Description: {$description} - extra utils
 Package: program-data-extra
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         program-bin (= $\{binary:Version\}),
+         program-bin:any (= $\{binary:Version\}),
 Description: {$description} - extra data
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

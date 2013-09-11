@@ -41,6 +41,7 @@ use autodie;
 
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
+use Lintian::Util qw($PKGNAME_REGEX);
 
 sub run {
 
@@ -65,7 +66,7 @@ sub run {
                     tag 'substvar-source-version-is-deprecated', $pkg1;
                 }
                 if (
-                    m/ (\S+) \s*                               # pkg-name $1
+                    m/ ($PKGNAME_REGEX)(?: :any)? \s*           # pkg-name $1
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
                         \${(?:Source-|source:|binary:)Version} # {subvar}
                      /x
@@ -91,7 +92,7 @@ sub run {
                       . $info->binary_field($pkg1, 'depends', '')))
           ) {
             next
-              unless m/(\S+) \s*                                # pkg-name
+              unless m/($PKGNAME_REGEX)(?: :any)? \s*           # pkg-name
                        \(\s*(\>)?=\s*                           # rel
                        \${((?:Source-|source:|binary:)Version)} # subvar
                       /x;
