@@ -154,16 +154,21 @@ are also listed here.
 =head3 Running lintian from the git repository
 
 Lintian was designed to be run directly from the git repository.  This
-allows you to quickly test your changes on a live package.  The following
-shell snippet can be used for this purpose:
+allows you to quickly test your changes on a live package.  In Lintian
+2.5.18, the frontends will automatically detect when they are being
+run from a source checkout and do the right thing.  Earlier versions
+need LINTIAN_ROOT (or --root).  The following shell snippet can be
+used for 2.5.17 and earlier:
 
  #!/bin/sh
+ # ONLY FOR << 2.5.18~ OR EARLIER.  Lintian (>= 2.5.18~) will DTRT.
  LINTIAN_ROOT="<INSERT PATH TO LINTIAN GIT DIR>"
  export LINTIAN_ROOT
  exec "$LINTIAN_ROOT/frontend/lintian" "$@"
 
-Beware of two things: If LINTIAN_ROOT is not set, Lintian will attempt to
-use the code from the installed version (in /usr/share/lintian).
+Beware of two things: If LINTIAN_ROOT is not set, Lintian (<< 2.5.18~)
+will attempt to use the code from the installed version (in
+/usr/share/lintian).
 
 The other issue is that Lintian needs a C.UTF-8 (or an en_US.UTF-8)
 locale.  If this is absent, it may trigger some issues with some

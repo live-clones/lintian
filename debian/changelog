@@ -57,6 +57,11 @@ lintian (2.5.18) UNRELEASED; urgency=low
       dplint and lintian.
     + [NT] Invoke dh_link.
 
+  * doc/README.developers:
+    + [NT] Update the section on running Lintian from a source
+      tree to mention that setting LINTIAN_ROOT is no longer
+      needed.
+
   * frontend/dplint:
     + [NT] New file.
   * frontend/lintian:
