@@ -33,6 +33,12 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Ignore ":any" qualifiers in dependencies.  Thanks to
       Scott Ritchie for the report.  (Closes: #658320)
 
+  * commands/info:
+    + [NT] New file (replacing lintian-info).
+    + [NT] Emit a deprecation warning for --include-dir
+      and --[no-]user-dirs when they are not the first
+      arguments and called as lintian-info.
+
   * data/common/source-fields:
     + [NT] Allow the "Dgit" field in source packages.  Thanks
       to Ian Jackson for the report.  (Closes: #721205)
@@ -41,6 +47,21 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * data/scripts/{,versioned-}interpreters:
     + [NT] Apply patch from Gunnar Wolf to update which package
       is providing "rackup".  (Closes: #721268)
+
+  * debian/lintian.install:
+    + [NT] Install dplint and commands/*.
+  * debian/lintian.links:
+    + [NT] New file.
+  * debian/rules:
+    + [NT] Add code for substituting some placeholder values in
+      dplint.
+    + [NT] Invoke dh_link.
+
+  * frontend/dplint:
+    + [NT] New file.
+  * frontend/lintian-info:
+    + [NT] Replace with symlink to dplint.  The implementation of
+      lintian-info is now handled by commands/info.
 
   * lib/Lintian/Data.pm:
     + [NT] Make a special case to allow "original-maintainer" by
