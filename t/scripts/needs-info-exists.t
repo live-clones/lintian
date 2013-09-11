@@ -24,13 +24,15 @@ use Test::More;
 use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control);
 
-$ENV{'LINTIAN_ROOT'} //= '.';
-$ENV{'LINTIAN_HELPER_DIRS'} = "$ENV{'LINTIAN_ROOT'}/helpers";
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+# collections rely on LINTIAN_ROOT being set...
+$ENV{'LINTIAN_ROOT'} = $ENV{'LINTIAN_TEST_ROOT'};
+$ENV{'LINTIAN_HELPER_DIRS'} = "$ENV{'LINTIAN_TEST_ROOT'}/helpers";
 
 # Find all of the desc files in collection.  We'll do one check per
 # description.  We don't check checks/*.desc because check-desc.t
 # handles that.
-our @DESCS = (glob("$ENV{LINTIAN_ROOT}/collection/*.desc"));
+our @DESCS = (glob("$ENV{LINTIAN_TEST_ROOT}/collection/*.desc"));
 plan tests => scalar(@DESCS);
 
 # For each desc file, load the first stanza of the file and check that all of
@@ -42,7 +44,7 @@ for my $desc (@DESCS) {
     my @missing;
 
     for my $coll (@needs) {
-        unless (-f "$ENV{LINTIAN_ROOT}/collection/$coll") {
+        unless (-f "$ENV{LINTIAN_TEST_ROOT}/collection/$coll") {
             push @missing, $coll;
         }
     }

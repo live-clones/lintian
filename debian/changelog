@@ -54,11 +54,19 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] New file.
   * debian/rules:
     + [NT] Add code for substituting some placeholder values in
-      dplint.
+      dplint and lintian.
     + [NT] Invoke dh_link.
 
   * frontend/dplint:
     + [NT] New file.
+  * frontend/lintian:
+    + [NT] Automatically determine the LINTIAN_ROOT when run from
+      the extracted source dir.
+    + [NT] Deprecate --root and LINTIAN_ROOT.  These are largely
+      obsolete as Lintian can now automatically determine the
+      proper LINTIAN_ROOT.  To avoid surprises, lintian will
+      now exit with an error if requested to use a different
+      LINTIAN_ROOT than the one lintian expected to use.
   * frontend/lintian-info:
     + [NT] Replace with symlink to dplint.  The implementation of
       lintian-info is now handled by commands/info.
@@ -71,6 +79,7 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * reporting/harness:
     + [NT] Fix bug that caused harness to not remove old log
       entries on incremental runs.
+    + [NT] Clear LINTIAN_ROOT environment variable if set.
   * reporting/html_reports:
     + [NT] Copy (rather than symlink) the lintian.log to the
       generated website.

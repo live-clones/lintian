@@ -576,8 +576,8 @@ profile has been loaded, 'debian/main' will be loaded.
 
 INC is a list of extra "include dirs" (or Lintian "roots") to be used
 for finding the profile.  If not specified, it defaults to
-I<$ENV{'LINTIAN_ROOT'}> and I</usr/share/lintian> (in order).  INC
-is ignored if a profile has already been loaded.
+I<$ENV{'LINTIAN_TEST_ROOT'}> and I</usr/share/lintian> (in order).
+INC is ignored if a profile has already been loaded.
 
 CAVEAT: Only one profile can be loaded in a given test.  Once a
 profile has been loaded, it is not possible to replace it with another
@@ -602,7 +602,7 @@ sub load_profile_for_test {
     $profname ||= 'debian/main';
 
     unless (@inc) {
-        push @inc, $ENV{'LINTIAN_ROOT'} if $ENV{'LINTIAN_ROOT'};
+        push @inc, $ENV{'LINTIAN_TEST_ROOT'} if $ENV{'LINTIAN_TEST_ROOT'};
         push @inc, '/usr/share/lintian' if -d '/usr/share/lintian';
     }
 

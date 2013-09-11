@@ -27,7 +27,7 @@ use Getopt::Long;
 use Cwd();
 use List::MoreUtils qw(any);
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 use Lintian::Util qw(get_dsc_info);
 
 # known compression styles

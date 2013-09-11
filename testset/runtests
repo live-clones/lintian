@@ -93,12 +93,10 @@ if ($#ARGV == 0) {
 }
 
 # --- Set and unset environment variables that lintian is sensitive to
+my $LINTIAN_ROOT;
 BEGIN {
-    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-    if (not $LINTIAN_ROOT) {
-        use Cwd ();
-        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
-    }
+    $LINTIAN_ROOT = $ENV{'LINTIAN_TEST_ROOT'};
+    $LINTIAN_ROOT = Cwd::cwd() if not $LINTIAN_ROOT;
     delete $ENV{'LINTIAN_CFG'};
     delete $ENV{'LINTIAN_LAB'};
     delete $ENV{'LINTIAN_DIST'};
@@ -110,9 +108,8 @@ BEGIN {
     umask(022);
 }
 
-my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use lib "$LINTIAN_ROOT/lib";
 use Lintian::Util qw(fail);
 
 # --- Set the ways to call lintian and dpkg-buildpackage

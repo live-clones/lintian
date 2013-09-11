@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 use Lintian::Util qw(get_file_checksum);
 
 my ($size, $sha1, $sha2, $md5);

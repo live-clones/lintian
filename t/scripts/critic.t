@@ -6,9 +6,9 @@ use autodie;
 
 use Test::More;
 
-$ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-chdir($ENV{'LINTIAN_ROOT'});
+chdir($ENV{'LINTIAN_TEST_ROOT'});
 
 plan skip_all => 'Only UNRELEASED versions are criticised'
   if should_skip();

@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use lib "$ENV{'LINTIAN_TEST_ROOT'}/lib";
 use Lintian::Util qw(visit_dpkg_paragraph :constants);
 
 print <<EOF ;

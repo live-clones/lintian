@@ -33,10 +33,11 @@ sub accept_filter {
 
 my $opts = {'filter' => \&accept_filter,};
 
-$ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-test_load_checks($opts, "$ENV{'LINTIAN_ROOT'}/checks");
-test_load_checks("$ENV{'LINTIAN_ROOT'}/doc/examples/checks");
+load_profile_for_test('debian/main', $ENV{'LINTIAN_TEST_ROOT'});
+test_load_checks($opts, "$ENV{'LINTIAN_TEST_ROOT'}/checks");
+test_load_checks("$ENV{'LINTIAN_TEST_ROOT'}/doc/examples/checks");
 
 done_testing;
 

@@ -45,12 +45,11 @@ use Text::Template;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
+our $LINTIAN_ROOT;
+
 BEGIN {
-    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-    if (not $LINTIAN_ROOT) {
-        require Cwd;
-        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
-    }
+    $LINTIAN_ROOT = $ENV{'LINTIAN_TEST_ROOT'};
+    $LINTIAN_ROOT = Cwd::cwd() if not $LINTIAN_ROOT;
     delete $ENV{'LINTIAN_CFG'};
     delete $ENV{'LINTIAN_LAB'};
     delete $ENV{'LINTIAN_DIST'};
@@ -61,15 +60,12 @@ BEGIN {
     umask(022);
 }
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use lib "$LINTIAN_ROOT/lib";
 
 use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
   rstrip slurp_entire_file);
 
 # --- Global configuration
-
-our $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-
 our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
 $LINTIAN = $ENV{'LINTIAN_FRONTEND'} if exists $ENV{'LINTIAN_FRONTEND'};
 $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;

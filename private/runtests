@@ -4,10 +4,10 @@ set -e
 
 if [ "$LINTIAN_TEST_INSTALLED" = "yes" ]; then
     LINTIAN_FRONTEND="/usr/bin/lintian"
-    LINTIAN_ROOT="/usr/share/lintian"
+    LINTIAN_TEST_ROOT="/usr/share/lintian"
 else
     unset LINTIAN_FRONTEND
-    LINTIAN_ROOT=""
+    LINTIAN_TEST_ROOT="$(pwd)"
 fi
 
 if [ "$1" = "-j" ] ; then
@@ -44,7 +44,7 @@ unset HOME
 
 export LC_ALL
 export LINTIAN_FRONTEND
-export LINTIAN_ROOT
+export LINTIAN_TEST_ROOT
 export LINTIAN_PROFILE
 export NO_PKG_MANGLE
 

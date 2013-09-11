@@ -12,7 +12,7 @@ use Test::More;
 
 use Lintian::Util qw(read_dpkg_control); # Test::More (also) exports fail
 
-my $root = $ENV{'LINTIAN_ROOT'} // '.';
+my $root = $ENV{'LINTIAN_TEST_ROOT'} // '.';
 my %CHECKS;
 my %TAGS;
 

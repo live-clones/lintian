@@ -100,9 +100,10 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
   $LINTIAN_AREA);
 
 # export Lintian's configuration
-$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 $ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
 $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
+# delete LINTIAN_ROOT in case it is set.
+delete($ENV{'LINTIAN_ROOT'});
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";

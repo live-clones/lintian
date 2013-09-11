@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib "$ENV{LINTIAN_ROOT}/lib";
+use lib "$ENV{LINTIAN_TEST_ROOT}/lib";
 
 use Lintian::Data;
 use Lintian::Profile;
@@ -14,7 +14,7 @@ sub _split_hash {
     return $hash;
 }
 my $PROFILE = Lintian::Profile->new ('debian/main',
-                                     [$ENV{'LINTIAN_ROOT'}]);
+                                     [$ENV{'LINTIAN_TEST_ROOT'}]);
 
 Lintian::Data->set_vendor ($PROFILE);
 

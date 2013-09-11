@@ -16,14 +16,14 @@ our $REQUIRED = 'v5.14.2';
 
 our @PATHS = qw(checks collection frontend lib reporting private);
 
-$ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
 # It creates as many threads as elements in @PATHS
 for my $path (@PATHS) {
     threads->create(
         sub {
             my $p = shift;
-            $p = $ENV{'LINTIAN_ROOT'} . '/' . $p;
+            $p = $ENV{'LINTIAN_TEST_ROOT'} . '/' . $p;
             all_minimum_version_ok($REQUIRED, { paths => [$p], no_plan => 1});
         },
         $path

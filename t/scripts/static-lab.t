@@ -5,9 +5,9 @@ use warnings;
 use File::Temp qw(tempdir);
 use Test::Simple tests => 4;
 
-$ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-my $lintian_path = "$ENV{LINTIAN_ROOT}/frontend/lintian";
+my $lintian_path = "$ENV{LINTIAN_TEST_ROOT}/frontend/lintian";
 my $labdir = tempdir(CLEANUP => 1);
 
 $lintian_path = $ENV{'LINTIAN_FRONTEND'} if exists($ENV{'LINTIAN_FRONTEND'});

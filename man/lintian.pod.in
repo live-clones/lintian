@@ -416,7 +416,7 @@ Ignore all environment variables starting with I<LINTIAN_>.
 
 This option is mostly useful for applications running B<lintian> for
 checking packages and do not want the invoking user to affect the
-result (by setting LINTIAN_ROOT, LINTIAN_PROFILE etc.).
+result (by setting LINTIAN_PROFILE etc.).
 
 Note it does I<not> cause B<lintian> to ignore the entire environment
 like I<TMPDIR> or I<DEB_VENDOR>.  The latter can affect the default
@@ -441,7 +441,7 @@ command line.
 
 The additional directories will be checked I<after> the user
 directories (though see B<--no-user-dirs>) and I<before> the core
-LINTIAN_ROOT (e.g. B<--root>).
+LINTIAN_ROOT.
 
 =item B<-j> [X], B<--jobs>[=X]
 
@@ -463,15 +463,17 @@ of the same name.
 
 =item B<--root> rootdir
 
-Look for B<lintian>'s support files (such as check scripts and
-collection scripts) in rootdir.  This overrides the B<LINTIAN_ROOT>
-environment variable.  The default location is I</usr/share/lintian>.
+Deprecated in 2.5.18 and will be removed in a later release.
 
-This option is mostly useful for development or testing of B<lintian>.
-To add additional support files (e.g. extra checks), consider using
-B<--include-dir> instead.
+This option used to control what directory was used as the
+B<LINTIAN_ROOT>.  It's primary purpose was to use Lintian directly
+from a source tree.  However, since 2.5.18 Lintian has logic for
+automatically configuring itself without any assistance making this
+option largely obsolete.  Note if passed, then the chosen root dir
+must match the actual LINTIAN_ROOT used by Lintian.
 
-This option implies B<--no-user-dirs>.
+This option implies B<--no-user-dirs> for backwards compatbility with
+previous versions of Lintian.
 
 =item B<--user-dirs>, B<--no-user-dirs>
 
@@ -614,11 +616,6 @@ Supporting data used by Lintian checks and for output formatting.
 Utility scripts used by the other lintian scripts.
 
 =back
-
-The I</usr/share/lintian> directory can be overridden with the
-B<LINTIAN_ROOT> environment variable or the B<--root> option.  Note
-that setting the B<LINTIAN_ROOT> environment variable will imply
-B<--no-user-dirs>.
 
 For binary packages, Lintian looks for overrides in a file named
 I<usr/share/lintian/overrides/E<lt>packageE<gt>> inside the binary

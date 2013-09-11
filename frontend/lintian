@@ -31,6 +31,27 @@ use Getopt::Long;
 use List::MoreUtils qw(any);
 use POSIX qw(:sys_wait_h);
 
+my $INIT_ROOT;
+
+BEGIN {
+    if (not defined($INIT_ROOT)) {
+        require File::Basename;
+        import File::Basename qw(dirname);
+        my $path = abs_path(__FILE__);
+        if (not defined($path)) {
+            print STDERR "realpath($0) failed: $!\n";
+            exit(2);
+        }
+        # .../lintian.git/frontend/lintian  => .../lintian.git
+        $INIT_ROOT = dirname(dirname($path));
+    }
+
+    if (-d "$INIT_ROOT/lib") {
+        require lib;
+        import lib "$INIT_ROOT/lib";
+    }
+}
+
 # }}}
 
 # {{{ Application Variables
@@ -55,17 +76,17 @@ my @ENV_VARS = (
 
 ### "Normal" application variables
 
-# Version number - Is replaced during build with sed, see d/rules
-# - use q{} here because we use '' in the snippet to replace the
-#   the string (and escaping it would be a pain...)
-my $LINTIAN_VERSION = q{<VERSION>};      #External Version number
-if ($LINTIAN_VERSION eq '<VERSION>') {
-    # For some reason the version above has not be substituted.
+# Version number - Is inserted during build with sed, see d/rules
+my $LINTIAN_VERSION;
+if (not defined($LINTIAN_VERSION)) {
+    # For some reason the version above has not been inserted.
     # Most likely this means we are a git clone or an unpacked
     # source package.  If so, we will use a version that best
     # describes our situation...
-    my $guess = _guess_version(__FILE__);
+    my $guess = _guess_version();
     $LINTIAN_VERSION = $guess if $guess;
+    # Use a placeholder if we cannot determine our version.
+    $LINTIAN_VERSION //= '<VERSION>';
 }
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 
@@ -99,7 +120,7 @@ my $experimental_output_opts;
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($pool, $action, $checks, $check_tags, $dont_check);
-my (@unpack_info, $LAB, %extra_unpack, %unpack_options),my @auto_remove;
+my (@unpack_info, $LAB, %extra_unpack, %unpack_options, @auto_remove);
 my $exit_code = 0;
 
 # Timer handling (by default to nothing)
@@ -189,7 +210,6 @@ Configuration options:
     --include-dir DIR         include checks, libraries (etc.) from DIR
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
-    --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
     --[no-]user-dirs          whether to use files from user directories
 Package selection options:
     -a, --all                 process all packages in distribution
@@ -515,6 +535,7 @@ my %opthash = (
     'no-cfg' => \$no_conf,
     'lab=s' => \$opt{'LINTIAN_LAB'},
     'profile=s' => \$opt{'LINTIAN_PROFILE'},
+    # (NB: --root is deprecated)
     'root=s' => \$opt{'LINTIAN_ROOT'},
 
     'jobs|j:i' => \$opt{'jobs'},
@@ -572,28 +593,37 @@ if ($opt{'ignore-lintian-env'}) {
 
 # {{{ Read important environment
 
-# determine LINTIAN_ROOT if it was not set with --root.
-$opt{'LINTIAN_ROOT'} = $ENV{'LINTIAN_ROOT'}
-  unless (defined($opt{'LINTIAN_ROOT'}));
-if (defined $opt{'LINTIAN_ROOT'}) {
-    unless ($opt{'LINTIAN_ROOT'} =~ m,^/,) {
-        my $resolved = abs_path($opt{'LINTIAN_ROOT'});
-        unless (defined $resolved) {
-            print STDERR "Cannot resolve $opt{'LINTIAN_ROOT'}: $!\n";
-            exit 2;
-        }
-        $opt{'LINTIAN_ROOT'} = $resolved;
+if (defined($opt{'LINTIAN_ROOT'}) or defined($ENV{'LINTIAN_ROOT'})) {
+    my $desired_root = $opt{'LINTIAN_ROOT'} // $ENV{'LINTIAN_ROOT'};
+    my $ok = 0;
+    my $abs = abs_path($desired_root);
+    die("Cannot resolve $desired_root: $!\n")
+      unless defined($abs);
+    $ok = 1 if $abs eq $INIT_ROOT;
+    print STDERR "warning: LINTIAN_ROOT/--root is deprecated.\n";
+    print STDERR "  Perhaps you wanted --include-dir instead?\n";
+    print STDERR "If you are using this option to run lintian from a\n";
+    print STDERR "checkout, then Lintian 2.5.18 should just work out\n";
+    print STDERR "of the box without this option/ENV variable.\n";
+    print STDERR "  (You may want to replace it with --no-user-dirs)\n";
+
+    if (not $ok) {
+        print STDERR "Error: Cannot use $desired_root as LINTIAN_ROOT\n";
+        print STDERR "  (only valid value is $INIT_ROOT)\n";
+        exit(2);
     }
-    # --root/$ENV{LINTIAN_ROOT} implies --no-user-dirs (but allow
-    # the users to explicitly override that if they so desire)
+    delete($opt{'LINTIAN_ROOT'});
+    # --root/LINTIAN_ROOT used to imply --no-user-dirs unless
+    # --user-dirs was explicitly given.  Keep this behaviour as long
+    # as we accept --root.
     $opt{'user-dirs'} //= 0;
 } else {
-    $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
     # Enable user dirs by default
     $opt{'user-dirs'} //= 1;
 }
-# exported for collections, which are run as an external process.
-$ENV{'LINTIAN_ROOT'} = $opt{'LINTIAN_ROOT'};
+
+# Set LINTIAN_ROOT to the actual root.
+$ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
 
 # Filter out non-existent paths and resolve the rest.
 # - as we will add them to @INC, make sure they are resolved
@@ -622,8 +652,6 @@ if ($opt{'user-dirs'} and not $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
     unshift @restricted_search_dirs, "$ENV{HOME}/.lintian"
       if defined $ENV{HOME};
 }
-
-push @search_dirs, $opt{'LINTIAN_ROOT'};
 
 # environment variables overwrite settings in conf file, so load them now
 # assuming they were not set by cmd-line options
@@ -680,11 +708,15 @@ $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 
 # Include (only existsing) lib directories from @search_dirs in @INC
 # and LINTIAN_{INCLUDE,HELPER}_DIRS.
+# NB: Add INIT_ROOT to @search_dirs after updating @INC as we already
+# added it in BEGIN{} if needed.
+unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
+
+push(@search_dirs, $INIT_ROOT);
 
 $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @search_dirs);
 $ENV{'LINTIAN_HELPER_DIRS'}
   = join(':',grep { -d } map { "$_/helpers" } @search_dirs);
-unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
 
 require Lintian::Lab;
 
@@ -890,7 +922,7 @@ $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 debug_msg(
     1,
     $BANNER,
-    "Lintian root directory: $opt{'LINTIAN_ROOT'}",
+    "Lintian root directory: $INIT_ROOT",
     "Configuration file: $opt{'LINTIAN_CFG'}",
     'Laboratory: ' . ($opt{'LINTIAN_LAB'} // '<N/A>'),
     delimiter(),
@@ -1103,7 +1135,7 @@ my $collmap = Lintian::DepMap::Properties->new();
         push @auto_remove, $coll if $cs->auto_remove;
     };
 
-    load_collections($load_coll, "$opt{'LINTIAN_ROOT'}/collection");
+    load_collections($load_coll, "$INIT_ROOT/collection");
 }
 
 for my $c (@scripts) {
@@ -1678,34 +1710,28 @@ sub _find_changes {
 }
 
 sub _guess_version {
-    require File::Basename;
-    my ($frontend) = @_;
     my $guess;
-    my $absfront = abs_path($frontend);
-    my $rootdir;
-    return '' unless $absfront;
-    $rootdir = File::Basename::dirname(File::Basename::dirname($absfront));
 
-    if (-d "$rootdir/.git") {
+    if (-d "$INIT_ROOT/.git") {
         # Lets try git
         eval {
             # Disabling IPC::Run::Debug saves tons of useless calls.
             $ENV{'IPCRUNDEBUG'} = 'none'
               unless exists $ENV{'IPCRUNDEBUG'};
             require IPC::Run;
-            IPC::Run::run(['git', "--git-dir=$rootdir/.git", 'describe'],
+            IPC::Run::run(['git', "--git-dir=$INIT_ROOT/.git", 'describe'],
                 \undef, \$guess);
             chomp $guess;
         };
         return $guess if $guess;
     }
     # git was not possible - maybe the changelog is available
-    if (-f "$rootdir/debian/changelog") {
+    if (-f "$INIT_ROOT/debian/changelog") {
         require Parse::DebianChangelog;
         eval {
             my $changelog
               = Parse::DebianChangelog->init(
-                { infile => "$rootdir/debian/changelog" });
+                { infile => "$INIT_ROOT/debian/changelog" });
             $guess = $changelog->dpkg()->{'Version'} if $changelog;
         };
         return $guess if $guess;

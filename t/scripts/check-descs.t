@@ -25,13 +25,13 @@ use Test::More import => ['done_testing'];
 
 use Test::Lintian;
 
-$ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-load_profile_for_test('debian/main', $ENV{'LINTIAN_ROOT'});
+load_profile_for_test('debian/main', $ENV{'LINTIAN_TEST_ROOT'});
 
-my $opts = {'coll-dir' => "$ENV{'LINTIAN_ROOT'}/collection",};
+my $opts = {'coll-dir' => "$ENV{'LINTIAN_TEST_ROOT'}/collection",};
 
-test_check_desc($opts, "$ENV{'LINTIAN_ROOT'}/checks");
-test_check_desc($opts, "$ENV{'LINTIAN_ROOT'}/doc/examples/checks");
+test_check_desc($opts, "$ENV{'LINTIAN_TEST_ROOT'}/checks");
+test_check_desc($opts, "$ENV{'LINTIAN_TEST_ROOT'}/doc/examples/checks");
 
 done_testing;

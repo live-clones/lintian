@@ -24,13 +24,13 @@ use Test::More;
 use Lintian::CollScript;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
-$ENV{'LINTIAN_ROOT'} //= '.';
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
 # Find all of the desc files in either collection or checks.  We'll do one
 # check per description.
 our @DESCS = (
-    glob("$ENV{LINTIAN_ROOT}/collection/*.desc>"),
-    glob("$ENV{LINTIAN_ROOT}/checks/*.desc"));
+    glob("$ENV{LINTIAN_TEST_ROOT}/collection/*.desc>"),
+    glob("$ENV{LINTIAN_TEST_ROOT}/checks/*.desc"));
 plan tests => scalar(@DESCS);
 
 my @l2refs = (
@@ -72,7 +72,7 @@ for my $desc (@DESCS) {
         }
     }
     my $short = $desc;
-    $short =~ s,^\Q$ENV{LINTIAN_ROOT}\E/?,,;
+    $short =~ s,^\Q$ENV{LINTIAN_TEST_ROOT}\E/?,,;
 
     # it is ok that collection/unpacked doesn't depend on itself :)
     $requires_unpacked = 0 if ($short eq 'collection/unpacked.desc');
