@@ -356,3 +356,15 @@ Info: The Debian portion of the package version contains a reference to a
  version number and may cause annoying version sequencing issues if the
  package doesn't change before the next release cycle starts.
 Ref: devref 5.13.3
+
+Tag: debian-changelog-has-wrong-weekday
+Severity: normal
+Certainty: certain
+Info: The date in the changelog entry is not consistent with the actual
+ weekday.  Either the date is wrong or the weekday is wrong.
+ .
+ To avoid problems like this, consider using a tool like dch(1) or
+ date(1) to generate the date.  Example:
+ .
+   $ date -R -ud '2013-11-05 23:59:59'
+   Tue, 05 Nov 2013 23:59:59 +0000

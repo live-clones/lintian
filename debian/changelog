@@ -2,6 +2,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/changelog.{desc,pm}:
+    + [NT] Check that the weekday of the latest changelog entry
+      is consistent with the date.  Thanks to Raphael Champeimont
+      for the report.  (Closes: #703407)
   * checks/cruft.{desc,pm}:
     + [BR] Fix false-postive for license-problem-gfdl-invariants.
       (Closes: #721252)
@@ -96,7 +100,7 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * vendors/ubuntu/main/data/{common,fields}/*:
     + [NT] Retire now redundant files.
 
- -- Niels Thykier <niels@thykier.net>  Mon, 26 Aug 2013 08:19:50 +0200
+ -- Niels Thykier <niels@thykier.net>  Tue, 26 Aug 2013 08:19:50 +0200
 
 lintian (2.5.17) unstable; urgency=low
 

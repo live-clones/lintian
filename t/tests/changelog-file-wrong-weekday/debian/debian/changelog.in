@@ -2,7 +2,9 @@
 
   * Lintian Test Suite.
   * Test: {$testname}
-
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
 
- -- {$author}  Thu, 15 Mar 2001 07:00:00 +0000
+  * A bit of wishful thinking that the date below was a Friday.
+
+ -- {$author}  Fri, 12 Sep 2013 14:45:00 +0000
+

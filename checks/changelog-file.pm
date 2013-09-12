@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Date::Format qw(time2str);
 use Encode qw(decode);
 use List::Util qw(first);
 use List::MoreUtils qw(any);
@@ -31,7 +32,7 @@ use Parse::DebianChangelog;
 use Lintian::Check qw(check_spelling);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(file_is_encoded_in_non_utf8);
+use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
 sub run {
     my ($pkg, undef, $info, undef, $group) = @_;
@@ -262,6 +263,7 @@ sub run {
     my @entries = $changelog->data;
     if (@entries) {
         my %versions;
+        my $first_timestamp = $entries[0]->Timestamp;
         for my $entry (@entries) {
             if ($entry->Maintainer) {
                 if ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
@@ -272,8 +274,24 @@ sub run {
             $versions{$entry->Version} = 1 if defined $entry->Version;
         }
 
+        if ($first_timestamp) {
+            my $dch_date = $entries[0]->Date;
+            my ($weekday_declared, $date) = split(m/,\s*/, $dch_date, 2);
+            my ($tz, $weekday_actual);
+
+            if ($date =~ m/[ ]+ ([^ ]+)\Z/xsm) {
+                $tz = $1;
+                $weekday_actual = time2str('%a', $first_timestamp, $tz);
+            }
+            if ($tz and $weekday_declared ne $weekday_actual) {
+                my $real_weekday = time2str('%A', $first_timestamp, $tz);
+                my $short_date = time2str('%Y-%m-%d', $first_timestamp, $tz);
+                tag 'debian-changelog-has-wrong-weekday',
+                  "$short_date is a $real_weekday";
+            }
+        }
+
         if (@entries > 1) {
-            my $first_timestamp = $entries[0]->Timestamp;
             my $second_timestamp = $entries[1]->Timestamp;
 
             if ($first_timestamp && $second_timestamp) {
