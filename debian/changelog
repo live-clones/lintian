@@ -20,6 +20,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [BR] Rewrite description of the tag for desktop files
       without a keywords entry based on a wording from Gaudenz
       Steinlin.  (Closes: #706966)
+    + [NT] Apply patch from Lucas Nussbaum to add an additional
+      reference to the desktop-entry-lacks-keywords-entry tag.
+      (Closes: #722582)
   * checks/rules.{desc,pm}:
     + [BR] Refactor the check for known targets in d/rules.
     + [BR] Add check for missing for recommended "get-orig-source"

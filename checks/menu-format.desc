@@ -331,7 +331,7 @@ Info: This .desktop file does either not contain a "Keywords" entry or it does
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s05.html,
- #693918
+ #693918, https://wiki.gnome.org/GnomeGoals/DesktopFileKeywords
 
 Tag: desktop-entry-uses-reserved-category
 Severity: normal
