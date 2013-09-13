@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: devel
 Maintainer: {$author}
@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 9), bd-conflict, revision-1 (>= 1.0-1),
  packaging-dev, libdb5.1++-dev, libdb5.1-java-dev
 Build-Conflicts: bd-conflict
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

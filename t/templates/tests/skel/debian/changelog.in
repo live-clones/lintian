@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) {$distribution}; urgency=low
+{$source} ({$version}) {$distribution}; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}

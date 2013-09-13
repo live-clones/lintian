@@ -1,7 +1,7 @@
 Format: 1.8
 Date: {$date}
-Source: {$srcpkg}
-Binary: {$srcpkg}
+Source: {$source}
+Binary: {$source}
 Architecture: source all
 Version: {$version}
 Distribution: unstable
@@ -9,4 +9,4 @@ Urgency: low
 Maintainer: {$author}
 Changed-By: Foo<bar> Baz
 Description:
- {$srcpkg} - {$description}
+ {$source} - {$description}

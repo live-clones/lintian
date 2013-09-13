@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: devel
 Maintainer: Debian QA Group <debian-qa@lists.debian.org>
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: all
 Depends: $\{misc:Depends\},
 Description: {$description}

@@ -1,5 +1,5 @@
-Source: {$srcpkg}
+Source: {$source}
 Maintainer: a
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}

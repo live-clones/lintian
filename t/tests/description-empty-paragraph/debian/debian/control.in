@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: package to test empty first paragraph
@@ -14,7 +14,7 @@ Description: package to test empty first paragraph
  of this description
  is empty. It is also an empty package.
 
-Package: {$srcpkg}-2
+Package: {$source}-2
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: package to test empty last paragraph
@@ -26,7 +26,7 @@ Description: package to test empty last paragraph
  seems to get stripped out already before it is handed over.
  .
 
-Package: {$srcpkg}-3
+Package: {$source}-3
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: package to test empty paragraph in the middle

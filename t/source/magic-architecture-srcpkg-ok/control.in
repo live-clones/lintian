@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Section: {$section}
 Priority: optional
 Maintainer: {$author}

@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: devel
 Maintainer: {$author}
@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9)
 Bugs: debbugs://bugs.debian.org/
 Origin: debian
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}

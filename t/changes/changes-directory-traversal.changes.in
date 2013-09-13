@@ -1,7 +1,7 @@
 Format: 1.8
 Date: {$date}
-Source: {$srcpkg}
-Binary: {$srcpkg}
+Source: {$source}
+Binary: {$source}
 Architecture: source all
 Version: {$version}
 Distribution: unstable
@@ -9,6 +9,6 @@ Urgency: low
 Maintainer: {$author}
 Changed-By: {$author}
 Description:
- {$srcpkg} - {$description}
+ {$source} - {$description}
 Files:
  12345678901234567890123456789012 123 admin optional ../foo-bar-moo

@@ -1,11 +1,11 @@
-{$srcpkg} ({$version}) unstable; urgency=low
+{$source} ({$version}) unstable; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}
 
  -- {$author}  {$date}
 
-{$srcpkg} (0.1-2) unstable; urgency=low
+{$source} (0.1-2) unstable; urgency=low
 
   * An earlier non-native version.
 

@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: devel
 Maintainer: {$author}
@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 Build-Depends-Indep: some-package
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: any
 Depends: $\{misc:Depends\},
 Description: {$description}

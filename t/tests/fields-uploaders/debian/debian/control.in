@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: devel
 Maintainer: {$author}
@@ -11,7 +11,7 @@ Uploaders: Mrs. Localhost <user@localhost>,
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

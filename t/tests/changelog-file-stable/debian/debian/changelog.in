@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) stable-proposed-updates; urgency=low
+{$source} ({$version}) stable-proposed-updates; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}

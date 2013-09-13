@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) unstable; urgency=low
+{$source} ({$version}) unstable; urgency=low
 
   * New upstream release.
   * Lintian Test Suite.
@@ -7,7 +7,7 @@
 
  -- {$author}  {$date}
 
-{$srcpkg} (1.0-1) unstable; urgency=low
+{$source} (1.0-1) unstable; urgency=low
 
   * An earlier non-native version.
 

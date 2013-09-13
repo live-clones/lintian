@@ -1,4 +1,4 @@
-Package: {$srcpkg}
+Package: {$source}
 Version: {$version}
 Architecture: {$architecture}
 Maintainer: {$author}

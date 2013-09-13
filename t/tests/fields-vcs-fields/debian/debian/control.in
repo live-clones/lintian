@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -12,7 +12,7 @@ Vcs-Git: git://anonscm.debian.org/users/djpig/foobar.git -b master
 Vcs-Cvs: :pserver:anonymous@anonscm.debian.org:/cvs/foobar module
 Vcs-Bzr: nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}

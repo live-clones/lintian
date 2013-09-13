@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: 5.15.0.0
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

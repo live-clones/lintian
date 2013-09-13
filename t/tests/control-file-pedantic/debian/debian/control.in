@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 Homepage: http://lintian.debian.org/
 
-Package: {$srcpkg}-udeb
+Package: {$source}-udeb
 Section: debian-installer
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}

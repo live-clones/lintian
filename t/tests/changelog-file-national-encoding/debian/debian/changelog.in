@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) UNRELEASED; urgency=low
+{$source} ({$version}) UNRELEASED; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}

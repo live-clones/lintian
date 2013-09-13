@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: <lintian-maint@debian.org>
@@ -10,7 +10,7 @@ Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

@@ -414,7 +414,7 @@ sub test_package {
 
     msg_print "Running $testdata->{testname} $testdata->{version}... ";
 
-    my $pkg = $testdata->{srcpkg};
+    my $pkg = $testdata->{source};
     my $pkgdir = "$pkg-$testdata->{version}";
     my $rundir = "$RUNDIR/$pkg";
     my $origdir = "$TESTSET/$suite/$testname";
@@ -519,7 +519,7 @@ sub test_package {
 
 sub _builder_tests {
     my ($testdata, $testdir, $log) = @_;
-    my $pkg = $testdata->{srcpkg};
+    my $pkg = $testdata->{source};
     msg_print 'building... ';
     my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
     if ($res){
@@ -592,7 +592,7 @@ sub test_changes {
 
     msg_print "Running $testname $testdata->{version}... ";
 
-    my $test = $testdata->{srcpkg};
+    my $test = $testdata->{source};
     my $testdir = "$TESTSET/changes";
     my $file = "$testdir/$test.changes";
     # Check if we need to copy these files over.
@@ -971,7 +971,7 @@ sub check_test_is_sane {
         fail('Name or Version missing');
     }
 
-    $data->{srcpkg} ||= $data->{testname};
+    $data->{source} ||= $data->{testname};
     $data->{type} ||= 'native';
     $data->{date} ||= $DATE;
     $data->{distribution} ||= 'unstable';

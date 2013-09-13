@@ -1,4 +1,4 @@
-name = {$srcpkg}
+name = {$source}
 
 all: fix-perm
 	create-deb --package-name $(name) --package-version {$version} -o $(name).deb control

@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Maintainer: {$author}
 Standards-Version: {$standards_version}
@@ -10,17 +10,17 @@ Build-Depends: debhelper (>= 9),
  sparc i386 amd64
  ]
 Build-Depends-Indep: perl (> 5.8)
-XS-Vcs-Svn: svn://svn.example.com/{$srcpkg}/trunk
+XS-Vcs-Svn: svn://svn.example.com/{$source}/trunk
 #Vcs-Git: git://git.debian.org/collab-maint/<pkg>.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/<pkg>.git;a=summary
 
 
-Package: {$srcpkg}
+Package: {$source}
 Section: {$section}
 Maintainer: {$author}
 Build-Conflicts: foo
 Architecture: {$architecture}
-Depends: {$srcpkg}, foo, baz, $\{shlibs:Depends\} $\{some:Depends\}, $\{misc:Depends\}
+Depends: {$source}, foo, baz, $\{shlibs:Depends\} $\{some:Depends\}, $\{misc:Depends\}
 Recommends: foo, bar, no-match$\{lintian:Foo\}, match$\{lintian:Match\}, no-match$\{lintian:Bar\}-foo
 Suggests: bar | baz, no-match$\{lintian:Bar\}, match$\{lintian:Match\}
 Description: {$description}
@@ -29,7 +29,7 @@ Description: {$description}
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-1
+Package: {$source}-1
 Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
@@ -40,7 +40,7 @@ Description: {$description}
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-2
+Package: {$source}-2
 Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
@@ -50,7 +50,7 @@ Description: {$description} (two)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-3
+Package: {$source}-3
 Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo (>= 1),
@@ -62,7 +62,7 @@ Description: {$description} (three)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-4
+Package: {$source}-4
 Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo |
@@ -73,7 +73,7 @@ Description: {$description} (four)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-5
+Package: {$source}-5
 Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
@@ -83,7 +83,7 @@ Description: Description: {$description}
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-udeb
+Package: {$source}-udeb
 Section: debian-installer
 Package-Type: udeb
 Architecture: {$architecture}

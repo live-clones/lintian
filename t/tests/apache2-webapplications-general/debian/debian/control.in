@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Section: web
 Priority: extra
 Maintainer:  Big Kahuna <kahuna@example.com>

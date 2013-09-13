@@ -1,14 +1,14 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}-both
+Package: {$source}-both
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Conflicts: {$srcpkg}-good, {$srcpkg}-wrong, {$srcpkg}-no-games
+Conflicts: {$source}-good, {$source}-wrong, {$source}-no-games
 Description: {$description} (both)
  Package has both regular binaries and games.
  .
@@ -16,7 +16,7 @@ Description: {$description} (both)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-good
+Package: {$source}-good
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (good)
@@ -26,7 +26,7 @@ Description: {$description} (good)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-no-games
+Package: {$source}-no-games
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (no games)
@@ -36,11 +36,11 @@ Description: {$description} (no games)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-wrong
+Package: {$source}-wrong
 Section: devel
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Conflicts: {$srcpkg}-good
+Conflicts: {$source}-good
 Description: {$description} (wrong)
  Games package in wrong section.
  .

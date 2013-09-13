@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: contrib/{$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: all
 Section: contrib/dveel
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
@@ -17,7 +17,7 @@ Description: {$description} (typo)
  .
  This package has a typo in its section fields.
 
-Package: {$srcpkg}-main
+Package: {$source}-main
 Architecture: all
 Section: {$section}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}

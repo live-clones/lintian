@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9),
  cli-common-dev (>= 0.5.7) [i386 sparc amd64 ia64]
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
@@ -13,7 +13,7 @@ Description: {$description}
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-parsing
+Package: {$source}-parsing
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- headers parsing
@@ -21,7 +21,7 @@ Description: {$description} -- headers parsing
  by Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-remote
+Package: {$source}-remote
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- using /usr files
@@ -29,7 +29,7 @@ Description: {$description} -- using /usr files
  by Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-length
+Package: {$source}-length
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- breaking length assumptions
@@ -37,7 +37,7 @@ Description: {$description} -- breaking length assumptions
  scripts by Lintian.  It is part of the Lintian test suite and may do
  very odd things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-local
+Package: {$source}-local
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- using /var files
@@ -45,7 +45,7 @@ Description: {$description} -- using /var files
  scripts by Lintian.  It is part of the Lintian test suite and may do
  very odd things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-missing
+Package: {$source}-missing
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- missing runlevels
@@ -53,7 +53,7 @@ Description: {$description} -- missing runlevels
  init scripts by Lintian.  It is part of the Lintian test suite and may
  do very odd things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-virtual
+Package: {$source}-virtual
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- virtual facilities

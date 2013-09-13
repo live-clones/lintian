@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: java
 Maintainer: {$author}
@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 XS-Python-Version: 2.5 2.6
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: all
 Depends: $\{misc:Depends\}
 Description: {$description}

@@ -1,14 +1,14 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$srcpkg} is a package which tests lintian's description checks.
+Description: {$source} is a package which tests lintian's description checks.
  missing
  The the synopsis should not start with the package's name. Moreover,
  the long	description
@@ -23,7 +23,7 @@ Description: {$srcpkg} is a package which tests lintian's description checks.
  .
  No, not really... (dummy)
 
-Package: {$srcpkg}-2
+Package: {$source}-2
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: Don't use tabs	in the synopsis and restrict yourself to less than 80 characters, otherwise Lintian will complain
@@ -33,7 +33,7 @@ Description: Don't use tabs	in the synopsis and restrict yourself to less than 8
  - unfortunately
  - not correctly indented. (dummy)
 
-Package: {$srcpkg}-3
+Package: {$source}-3
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description:
@@ -44,7 +44,7 @@ Description:
  And the old man said "he he is the one!"
  "No, I am am not", he replied (dummy)
 
-Package: {$srcpkg}-4
+Package: {$source}-4
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: some Lintian test package
@@ -54,7 +54,7 @@ Description: some Lintian test package
  .
  Homepage: <http://lintian.debian.org/>
 
-Package: {$srcpkg}-ends-etc
+Package: {$source}-ends-etc
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: This description ends, etc.
@@ -66,19 +66,19 @@ Description: This description ends, etc.
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-dummy
+Package: {$source}-dummy
 Section: oldlibs
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package (transitional package)
  Transitional packages can have short long descriptions.
 
-Package: {$srcpkg}-empty
+Package: {$source}-empty
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with empty extended description (dummy)
 
-Package: {$srcpkg}-utf8-long
+Package: {$source}-utf8-long
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with UTF-8 description (“héhé”“héhé”“héhé”“héhé”)
@@ -89,7 +89,7 @@ Description: test package with UTF-8 description (“héhé”“héhé”“hé
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-not-dup
+Package: {$source}-not-dup
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with duplicated words that aren't
@@ -106,7 +106,7 @@ Description: test package with duplicated words that aren't
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-syn-article
+Package: {$source}-syn-article
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: the synopsis starts with an article

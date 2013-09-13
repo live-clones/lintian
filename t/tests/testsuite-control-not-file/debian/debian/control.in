@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 XS-Testsuite: autopkgtest
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

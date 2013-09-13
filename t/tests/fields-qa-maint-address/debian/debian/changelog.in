@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) unstable; urgency=low
+{$source} ({$version}) unstable; urgency=low
 
   * Orphaned.
   * Lintian Test Suite.

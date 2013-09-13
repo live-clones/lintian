@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9)
 # Whoops, typo
 Homepage: ttp://lintian.debian.org/
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}

@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 Homepage: http://lintian.debian.org/
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
@@ -16,10 +16,10 @@ Description: {$description}
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: ttf-{$srcpkg}
+Package: ttf-{$source}
 Architecture: {$architecture}
 # Due to file-conflict
-Conflicts: {$srcpkg}
+Conflicts: {$source}
 Depends: $\{misc:Depends\}
 Description: {$description} (okay)
  Font package containing fonts.

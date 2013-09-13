@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9), pkg-php-tools, php5-dev, dh-php5
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}, $\{phppear:Debian-Depends\}
 Recommends: $\{phppear:Debian-Recommends\}

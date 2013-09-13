@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
@@ -14,9 +14,9 @@ Description: {$description}
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-helper
+Package: {$source}-helper
 Architecture: {$architecture}
-Depends: {$srcpkg} (= {$version}), $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: {$source} (= {$version}), $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (symlink)
  Helper package with a legitimate /usr/share/doc symlink.
  .
@@ -25,9 +25,9 @@ Description: {$description} (symlink)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: {$srcpkg}-weak
+Package: {$source}-weak
 Architecture: {$architecture}
-Depends: {$srcpkg}, $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: {$source}, $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (weak)
  Helper package with a /usr/share/doc symlink but an insufficiently
  strong dependency.  Lintian intentionally doesn't diagnose this.

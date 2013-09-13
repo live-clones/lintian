@@ -1,11 +1,11 @@
-{$srcpkg} ({$version}) unstable; urgency=low
+{$source} ({$version}) unstable; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}
 
  -- {$author}  {$date}
 
-{$srcpkg} (0.1) experimental; urgency=low
+{$source} (0.1) experimental; urgency=low
 
   * First upload to experimental.
 

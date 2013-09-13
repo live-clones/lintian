@@ -1,11 +1,11 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
@@ -13,7 +13,7 @@ Description: {$description}
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-bugs
+Package: {$source}-bugs
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- bugs
@@ -23,7 +23,7 @@ Description: {$description} -- bugs
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-interpreter-in-usr-dir
+Package: {$source}-interpreter-in-usr-dir
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- bad script interpreter
@@ -33,7 +33,7 @@ Description: {$description} -- bad script interpreter
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: {$srcpkg}-sourcing-without-test
+Package: {$source}-sourcing-without-test
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- sourcing without test

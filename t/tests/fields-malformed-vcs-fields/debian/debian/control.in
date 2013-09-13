@@ -1,4 +1,4 @@
-Source: {$srcpkg}
+Source: {$source}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
@@ -8,7 +8,7 @@ Vcs-Browser: svn.debian.org/wsvn/foobar/trunk
 Vcs-Svn: svn+ssh://svn.debian.org/svn/foobar/trunk
 Vcs-Git: git://anonscm.debian.org/test/test.git --branch wrong
 
-Package: {$srcpkg}
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}

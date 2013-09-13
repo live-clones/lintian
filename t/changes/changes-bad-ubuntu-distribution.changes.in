@@ -1,7 +1,7 @@
 Format: 1.8
 Date: {$date}
-Source: {$srcpkg}
-Binary: {$srcpkg}
+Source: {$source}
+Binary: {$source}
 Architecture: source all
 Version: {$version}
 Distribution: wispy
@@ -9,4 +9,4 @@ Urgency: low
 Maintainer: {$author}
 Changed-By: {$author}
 Description:
- {$srcpkg} - {$description}
+ {$source} - {$description}

@@ -1,11 +1,11 @@
-{$srcpkg} ({$version}) UNRELEASED; urgency=low
+{$source} ({$version}) UNRELEASED; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}
 
  -- {$author}  {$date}
 
-{$srcpkg} (1.0) unstable; urgency=low
+{$source} (1.0) unstable; urgency=low
 
   * An older changelog entry to test suppression of errors about the
     changelog entry having the same date as the previous one.

@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) unstable; urgency=low
+{$source} ({$version}) unstable; urgency=low
 
 
   * Test: {$testname}
@@ -16,13 +16,13 @@
 
  -- {$author}  {$date}
 
-{$srcpkg} ({$version}) unstable; urgency=low
+{$source} ({$version}) unstable; urgency=low
 
   * Duplicate changelog entry to trigger tags.
 
  -- Unknown <unknown@unknown>  {$date}
 
-{$srcpkg} () unstable; urgency=low
+{$source} () unstable; urgency=low
 
   * Syntax error here.
 
