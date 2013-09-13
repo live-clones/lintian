@@ -1,0 +1,5 @@
+Testname: legacy-filenames
+Source: filenames
+Sequence: 9999
+Version: 1:12-0.1
+Description: Legacy test "filenames"

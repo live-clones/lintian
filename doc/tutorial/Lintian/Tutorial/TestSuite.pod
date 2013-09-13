@@ -14,10 +14,8 @@ up development, there are various options to limit the tests to run.
 =head1 DESCRIPTION
 
 The Lintian test suite is an extensive collection of various test
-cases.  The test suite consists of a "legacy" and a "new" part.  The
-latter is further divided into 5 "sub-suites".  The majority of all
-tests are currently located in the "tests" sub-suite (of the new
-part).
+cases.  The test suite is divided into 5 "sub-suites".  The majority
+of all tests are currently located in the "tests" sub-suite.
 
 To run the full suite in all of its glory, simply invoke:
 
@@ -37,9 +35,6 @@ runner, the first of them is the "coordinator"-thread (which will
 generally be waiting when the workers are active) and the second one
 is the "output"-thread (which handles the fancy output).
 
-Note: the legacy test suite only runs a single test at a time regardless
-of this setting.
-
 =head2 Running a subset of the tests
 
 The following options are available:
@@ -52,13 +47,6 @@ To run a single test by its name, use:
 
  $ debian/rules runtests onlyrun=$name
 
-The legacy test suite supports this.
-
-Note: if the name does not match any test you will see up to two
-warnings about the test could not be found.  If the test only exists
-in one of the suites (which is usually the case), you will see a
-warning from the other suite.
-
 =item Running all tests for a check
 
 To run all tests for a given check, use:
@@ -66,15 +54,11 @@ To run all tests for a given check, use:
  $ debian/rules runtests onlyrun=$check
 
 $check must be the name of a check (it will test for
-checks/$check.desc).  This will run all tests that starts with
-"$check-".
+checks/$check.desc) or "legacy".  This will run all tests that starts
+with "$check-".
 
 Note: The "changes" sub-suite in the new test suite does not support
 this.
-
-If the name of the check clashes with the name of a test in the legacy
-test suite, then that test will also be run.  Otherwise a warning will
-be printed from the legacy test suite.
 
 =item Running all tests in a sub-suite
 
@@ -97,17 +81,6 @@ tag, use:
 Alternatively:
 
  $ debian/rules check-tag tag=$tag
-
-The legacy test suite will not be run in this case.
-
-=item Running only the legacy test suite
-
-To run only the tests in legacy test suite use:
-
- $ debian/rules runtests onlyrun=--legacy-only
-
-The new test suite will not be run in this case, but it is not possible
-to select specific tests to run.
 
 =back
 

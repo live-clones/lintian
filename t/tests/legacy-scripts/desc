@@ -1,0 +1,6 @@
+Testname: legacy-scripts
+Source: scripts
+Sequence: 9999
+Version: 6ds-1ubuntu0.5.10.1
+Type: non-native
+Description: Legacy test "scripts"

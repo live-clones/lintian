@@ -1,0 +1,5 @@
+Testname: legacy-debconf
+Source: debconf
+Sequence: 9999
+Version: 1~rc1
+Description: Legacy test "debconf"

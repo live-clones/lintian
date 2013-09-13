@@ -14,7 +14,6 @@ E: foo++: debian-changelog-file-uses-obsolete-national-encoding at line 11
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 I: foo++ source: duplicate-short-description foo++ foo++-helper
-I: foo++ source: missing-debian-source-format
 I: foo++: no-md5sums-control-file
 W: foo++ source: ancient-standards-version 3.1.1 (current is 3.9.4)
 W: foo++ source: debian-watch-file-in-native-package

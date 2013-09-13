@@ -35,7 +35,6 @@ E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-65535:65
 E: more-filename-games: no-copyright-file
 I: filename-games: no-md5sums-control-file
 I: filename-games: package-contains-empty-directory usr/games/
-I: filenames source: missing-debian-source-format
 I: filenames: duplicated-compressed-file usr/share/filenames/prototype.js.gz
 I: filenames: no-md5sums-control-file
 I: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
@@ -61,7 +60,6 @@ W: filenames source: diff-contains-svk-commit-file files/svk-commitsEr9P.tmp
 W: filenames source: diff-contains-svn-commit-file files/svn-commit.tmp
 W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-control-dir .svn
-W: filenames source: no-debian-copyright
 W: filenames source: no-section-field-for-source
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2

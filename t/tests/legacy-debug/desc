@@ -1,0 +1,5 @@
+Testname: legacy-debug
+Source: debug
+Sequence: 9999
+Version: 1.0
+Description: Legacy test "debug"

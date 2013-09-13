@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DIR="$1"
+
+rm -f "$DIR/debian/compat"

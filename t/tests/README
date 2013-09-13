@@ -37,7 +37,8 @@ Number ranges:
 4000 - 4999	Tests for collection/[4500]
 5000 - 6999	Tests for checks/    [6000]
 7000 - 8999	<unused>
-9000 - 9999	Tests for reporting/ [9500]
+9000 - 9998	Tests for reporting/ [9500]
+9999            Tests from the old legacy test suite
 
 The desc file
 -------------

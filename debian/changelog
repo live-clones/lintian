@@ -65,11 +65,18 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Add code for substituting some placeholder values in
       dplint and lintian.
     + [NT] Invoke dh_link.
+  * debian/tests/control:
+    + [NT] Remove reference to testsuite-legacy.
+  * debian/tests/testsuite-legacy:
+    + [NT] Removed; no longer useful.
 
   * doc/README.developers:
     + [NT] Update the section on running Lintian from a source
       tree to mention that setting LINTIAN_ROOT is no longer
       needed.
+    + [NT] Remove references to the legacy testsuite.
+  * doc/tutorial/Lintian/Tutorial/TestSuite.pod:
+    + [NT] Remove references to the legacy testsuite.
 
   * frontend/dplint:
     + [NT] New file.
@@ -98,9 +105,13 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Copy (rather than symlink) the lintian.log to the
       generated website.
 
-  * testset/debug/debian/control:
+  * t/tests/legacy-debug/debian/debian/control:
     + [NT] Mark some packages "arch:any" to avoid test failures
       on kfreebsd-amd64.  (Closes: #688524)
+
+  * testset/*:
+    + [NT] All tests moved to t/tests/legacy-* and the test
+      runner removed.
 
   * vendors/ubuntu/main/data/{common,fields}/*:
     + [NT] Retire now redundant files.

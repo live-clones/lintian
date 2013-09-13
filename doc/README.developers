@@ -85,10 +85,6 @@ tools/code for the lintian.d.o setup
 
 the new test suite
 
-=item testset
-
-the legacy test suite
-
 =item vendors
 
 Per vendor data sets used by checks (and Lintian::Architecture) via

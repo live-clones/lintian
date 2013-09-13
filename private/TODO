@@ -86,15 +86,11 @@ reporting:
 
 t:
 
-- Move all remaining test cases from testset into t/tests as a separate
-  legacy class of test cases.  Requires fix to private/update-coverage to
-  keep those tags separated out since we still want to do the next thing.
-
 - Write new-style test cases for everything tested by the old test suite
   and retire the old test suite.
 
-- Go through testset/libbaz/debian/rules and make sure all TODO's are
-  lintian-detected.
+- Go through t/tests/legacy-libbaz/debian/debian/rules and make sure
+  all TODO's are lintian-detected.
 
 - t/runtests has a lot of duplicate code and could stand some
   restructuring and factoring of common code.

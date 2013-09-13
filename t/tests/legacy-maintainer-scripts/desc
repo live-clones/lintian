@@ -1,0 +1,5 @@
+Testname: legacy-maintainer-scripts
+Source: maintainer-scripts
+Sequence: 9999
+Version: 7+dfsg-0.1
+Description: Legacy test "maintainer-scripts"

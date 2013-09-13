@@ -307,7 +307,8 @@ foreach my $tsi (@test_suite_info) {
         my $test = $singletest;
         if (-d "$TESTSET/$tdir/$test") {
             push @tests, read_test_desc("$TESTSET/$tdir/$test/desc");
-        } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
+        } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"
+            || $singletest eq 'legacy') {
             @tests = map { read_test_desc($_) }
               glob("$TESTSET/$tdir/$singletest-*/desc");
         }

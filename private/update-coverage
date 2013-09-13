@@ -40,6 +40,7 @@ unless (-f 't/runtests') {
 # Gather a list of all tags.
 my (%tags, %checks, $total, $check_total);
 my ($tc, $ltc, $ctc, $cltc);
+my @legacy_in_new;
 
 for my $desc (glob('checks/*.desc')) {
     for my $data (read_dpkg_control($desc)) {
@@ -63,7 +64,13 @@ for my $desc (
             't/debs/*/desc', 't/source/*/desc'))
   ) {
     my ($data) = read_dpkg_control($desc);
-    if (exists $data->{'test-for'}) {
+    my $testname = $data->{'testname'};
+    if ($testname =~ s{\A legacy- }{}xsm) {
+        my $tagfile = $desc;
+        $tagfile =~ s{ /desc \Z}{/tags}xsm;
+        push(@legacy_in_new, [$testname, $tagfile]);
+
+    } elsif (exists $data->{'test-for'}) {
         for my $tag (split(' ', $data->{'test-for'})) {
             my $check = $tags{$tag};
             delete $tags{$tag};
@@ -80,26 +87,15 @@ $ctc = $check_total - scalar keys %checks;
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
 my (%legacy, %legacy_test);
+for my $deferred (@legacy_in_new) {
+    my ($testname, $tagfile) = @{$deferred};
+    add_legacy_tags($testname, $tagfile);
+}
 for my $tagfile (glob('testset/tags.*')) {
     next if $tagfile =~ /\.sed$/;
     my $case = $tagfile;
     $case =~ s/.*tags\.//;
-    $legacy_test{$case} ||= [];
-    open(my $tag_fd, '<', $tagfile);
-    local $_;
-    while (<$tag_fd>) {
-        if (/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/) {
-            my $tag = $1;
-            if (exists $tags{$tag}) {
-                my $check = $tags{$tag};
-                delete $checks{$check} unless --$checks{$check};
-                $legacy{$tag} = $tags{$tag};
-                delete $tags{$tag};
-                push(@{ $legacy_test{$case} }, $tag);
-            }
-        }
-    }
-    close($tag_fd);
+    add_legacy_tags($case, $tagfile);
 }
 
 $ltc = $total - scalar keys %tags;
@@ -165,6 +161,28 @@ sub print_tags {
         }
         print {$out} "$file $tag\n";
     }
+    return;
+}
+
+sub add_legacy_tags {
+    my ($testname, $tagfile) = @_;
+
+    $legacy_test{$testname} ||= [];
+
+    open(my $tag_fd, '<', $tagfile);
+    while (my $line = <$tag_fd>) {
+        if ($line =~ /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/) {
+            my $tag = $1;
+            if (exists $tags{$tag}) {
+                my $check = $tags{$tag};
+                delete $checks{$check} unless --$checks{$check};
+                $legacy{$tag} = $tags{$tag};
+                delete $tags{$tag};
+                push(@{ $legacy_test{$testname} }, $tag);
+            }
+        }
+    }
+    close($tag_fd);
     return;
 }
 

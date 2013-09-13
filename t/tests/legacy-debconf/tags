@@ -15,7 +15,6 @@ E: debconf-test: no-template-type debconf/language
 E: debconf-test: unknown-debconf-priority config:10 LOW
 E: debconf-test: unknown-debconf-priority config:11 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
-I: debconf source: missing-debian-source-format
 I: debconf source: no-complete-debconf-translation
 I: debconf-test-noscripts: unused-debconf-template debconf/test
 I: debconf-test: unused-debconf-template debconf/1st-person
