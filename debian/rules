@@ -77,7 +77,7 @@ build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
 
 	# check that the static data about perl core modules is up to date
-	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n(which needs the libapt-pkg-perl package)\n} . q{*}x60 . qq{\n}' $(perlprovides)
+	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
 
 	touch $@
 
