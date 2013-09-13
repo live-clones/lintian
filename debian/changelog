@@ -49,6 +49,8 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * data/common/source-fields:
     + [NT] Allow the "Dgit" field in source packages.  Thanks
       to Ian Jackson for the report.  (Closes: #721205)
+  * data/fields/perl-provides:
+    + [NT] Refresh against perl 5.18.
   * data/rules/policy-rules:
     + [BR] New file.
   * data/scripts/{,versioned-}interpreters:
