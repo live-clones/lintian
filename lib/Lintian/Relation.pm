@@ -433,7 +433,12 @@ sub implies_element {
         # Assume the identity to hold
         return unless defined $$q[5] and $$p[5] eq $$q[5];
     } elsif (defined $$q[5]) {
-        return;
+        return unless $$q[5] eq 'any';
+        # pkg:any implies pkg (but the reverse is not true).
+        #
+        # TODO: Review this case.  Are there cases where Q cannot
+        # disprove P due to the ":any"-qualifier?  For now, we
+        # assume there are no such cases.
     }
 
     # Now, down to version.  The implication is true if p's clause is stronger

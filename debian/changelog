@@ -101,6 +101,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Make a special case to allow "original-maintainer" by
       default in all non-"Debian" profiles.  Thanks to Nick
       Black for the report.  (Closes: #697565)
+  * lib/Lintian/Relation.pm:
+    + [NT] Allow "pkg" to imply "pkg:any", but without permitting
+      "pkg:any" to imply "pkg".
 
   * reporting/harness:
     + [NT] Fix bug that caused harness to not remove old log
