@@ -58,6 +58,12 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Refresh against perl 5.18.
   * data/rules/policy-rules:
     + [BR] New file.
+  * data/scripts/interpreters:
+    + [NT] Use "python:any | python-minimal:any" as dependency
+      for python scripts.  This fixes a false-positive for
+      python-script-but-no-python-dep when dh_python2 generates
+      a dependency of "python:any".  Thanks to Francois Gouget
+      for the report.  (Closes: #711988)
   * data/scripts/{,versioned-}interpreters:
     + [NT] Apply patch from Gunnar Wolf to update which package
       is providing "rackup".  (Closes: #721268)
