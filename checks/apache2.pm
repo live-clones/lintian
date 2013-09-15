@@ -133,7 +133,9 @@ sub check_module_package {
 
     # We want packages to be follow our naming scheme. Modules should be named
     # libapache2-mod-<foo> if it ships a mod_foo.so
-    my $expected_name = 'libapache2-' . $module;
+    # NB: Some modules have uppercase letters in them (e.g. Ruwsgi), but
+    # obviously the package should be in all lowercase.
+    my $expected_name = 'libapache2-' . lc($module);
 
     # Package depends on apache2-api-YYYYMMDD
     my $seen_api_dependency = 0;

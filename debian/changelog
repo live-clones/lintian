@@ -2,6 +2,11 @@ lintian (2.5.18) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/apache2.pm:
+    + [NT] Fix false-positive warning about non-standard package
+      name when the Apache2 module contained uppercase letters.
+      Thanks to Jonas Smedegaard for the report.
+      (Closes: #723003)
   * checks/changelog.{desc,pm}:
     + [NT] Check that the weekday of the latest changelog entry
       is consistent with the date.  Thanks to Raphael Champeimont
