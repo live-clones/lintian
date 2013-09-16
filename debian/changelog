@@ -51,6 +51,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
       and --[no-]user-dirs when they are not the first
       arguments and called as lintian-info.
 
+  * doc/README.in:
+    + [NT] Replaced by top-level README.
+
   * data/common/source-fields:
     + [NT] Allow the "Dgit" field in source packages.  Thanks
       to Ian Jackson for the report.  (Closes: #721205)
@@ -68,6 +71,8 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Apply patch from Gunnar Wolf to update which package
       is providing "rackup".  (Closes: #721268)
 
+  * debian/docs:
+    + [NT] Install "README" instead "doc/README"
   * debian/lintian.install:
     + [NT] Install dplint and commands/*.
   * debian/lintian.links:
@@ -76,6 +81,7 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Add code for substituting some placeholder values in
       dplint and lintian.
     + [NT] Invoke dh_link.
+    + [NT] Remove code for auto-generating README from README.in
   * debian/tests/control:
     + [NT] Remove reference to testsuite-legacy.
   * debian/tests/testsuite-legacy:
@@ -110,6 +116,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * lib/Lintian/Relation.pm:
     + [NT] Allow "pkg" to imply "pkg:any", but without permitting
       "pkg:any" to imply "pkg".
+
+  * README:
+    + [NT] New file for basic information about Lintian and
+      where to find more information.
 
   * reporting/harness:
     + [NT] Fix bug that caused harness to not remove old log

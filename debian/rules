@@ -7,7 +7,7 @@ tmp := $(CURDIR)/debian/lintian
 profiles := profiles/debian/main.profile \
 	    profiles/debian/ftp-master-auto-reject.profile
 neededfiles := debian/rules frontend/lintian $(profiles)
-docsource := doc/lintian.xml doc/README.in man/lintian.pod.in \
+docsource := doc/lintian.xml README man/lintian.pod.in \
 	     man/lintian-info.pod
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
@@ -71,10 +71,7 @@ build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	private/generate-lintian-pod | \
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
 	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
-	LINTIAN_ROOT="" ./frontend/lintian --help \
-		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
 	private/generate-html-docs doc/api.html > /dev/null
-	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
 
 	# check that the static data about perl core modules is up to date
 	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
@@ -86,12 +83,10 @@ clean: $(neededfiles)
 	dh_testdir
 	dh_testroot
 	rm -f runtests build-stamp
-	rm -f doc/help.tmp doc/README
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf doc/api.html
 	rm -rf "$(TEST_WORK_DIR)"
 	rm -rf man/man1/
-	rm -fr debian/test.locale
 	dh_clean
 
 binary-indep: $(neededfiles) build
