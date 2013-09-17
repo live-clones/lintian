@@ -100,7 +100,7 @@ binary-indep: $(neededfiles) build
 # some manual work
 	perl -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
 	     -e 's@my \$$INIT_ROOT(\s*=.*)?;@my \$$INIT_ROOT = q{/usr/share/lintian};@;' \
-	    $(tmp)/usr/bin/lintian $(tmp)/usr/bin/dplint
+	    $(tmp)/usr/bin/lintian $(tmp)/usr/share/lintian/frontend/dplint
 	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
 	dh_installdocs
 	dh_installchangelogs
