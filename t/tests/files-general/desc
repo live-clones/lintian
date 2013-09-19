@@ -14,6 +14,7 @@ Test-For:
  executable-manpage
  file-in-unusual-dir
  file-name-ends-in-whitespace
+ file-name-in-PATH-is-not-ASCII
  file-name-is-not-valid-UTF-8
  global-data-in-games-directory
  icon-size-and-directory-name-mismatch

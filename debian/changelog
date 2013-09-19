@@ -24,6 +24,8 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Remove exception for "/selinux" top-level directory.
       Thanks to Laurent Bigonville for the report.
       (Closes: #723730)
+    + [NT] Add a check for files in PATH being representable
+      using only ASCII characters.  (Closes: #723732)
   * checks/menu-format.desc:
     + [BR] Rewrite description of the tag for desktop files
       without a keywords entry based on a wording from Gaudenz

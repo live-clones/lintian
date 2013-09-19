@@ -178,6 +178,9 @@ my @flash_nonfree = (
     #    qr,(?i)xspf_jukebox\.swf$,
 );
 
+my %PATH_DIRECTORIES = map { $_ => 1 } qw(
+  bin/ sbin/ usr/bin/ usr/sbin usr/games/ );
+
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.
 my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
@@ -269,7 +272,10 @@ sub run {
 
         $arch_dep_files = 1 if $file !~ m,^usr/share/,o && $file ne 'usr/';
 
-        if (!is_string_utf8_encoded($file->name)) {
+        if (exists($PATH_DIRECTORIES{$file->dirname})) {
+            tag 'file-name-in-PATH-is-not-ASCII', $file
+              if $file->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
+        } elsif (!is_string_utf8_encoded($file->name)) {
             tag 'file-name-is-not-valid-UTF-8', $file;
         }
 

@@ -1324,3 +1324,13 @@ Info: The file name does not appear to be valid UTF-8.  This may become
  .
  Note that Lintian may be unable to display the filename accurately.
  Unprintable characters may have been replaced.
+
+Tag: file-name-in-PATH-is-not-ASCII
+Severity: normal
+Certainty: certain
+Ref: #723732
+Info: The given file is in PATH but consists of non-ASCII characters.
+ This may become a requirement in future Policy versions.
+ .
+ Note that Lintian may be unable to display the filename accurately.
+ Unprintable characters may have been replaced.

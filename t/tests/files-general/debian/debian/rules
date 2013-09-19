@@ -9,6 +9,16 @@ override_dh_install:
 	dh_install
 	echo "#fake conf file" > $(tmp)/etc/pam.conf
 	echo "Back-up file" > $(tmp)/usr/share/foo/file~
+	# The name of the "binary" is "Tori no Uta"
+	# If it is ever messed up, it can be restored by
+	# using something like:
+	#  perl -pe 's/\@FILE\@/\xe9\xb3\xa5\xe3\x81\xae\xe8\xa9\xa9\x0a/'
+	echo "#!/bin/sh" > $(tmp)/usr/bin/鳥の詩
+	chmod +x $(tmp)/usr/bin/鳥の詩
+	# Copy the manpage to its correct name so dh_installman can
+	# find it.
+	# - d/clean will remove it again
+	cp -a tnu.1 鳥の詩.1
 	touch $(tmp)/usr/doc/FSSTND
 	touch $(tmp)/usr/share/foo/'*'
 	touch $(tmp)/usr/share/foo/'ws '
