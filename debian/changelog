@@ -21,6 +21,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
       the sbuild source package.  (Closes: #720910)
     + [NT] Add check for empty udeb packages.  Thanks to Cyril
       Brulebois for the suggestion.  (Closes: #672664)
+    + [NT] Remove exception for "/selinux" top-level directory.
+      Thanks to Laurent Bigonville for the report.
+      (Closes: #723730)
   * checks/menu-format.desc:
     + [BR] Rewrite description of the tag for desktop files
       without a keywords entry based on a wording from Gaudenz

@@ -788,7 +788,7 @@ sub run {
                 $file =~ m,^[^/]+/$,o
             and $file !~ m{\A (?:
                   bin|boot|dev|etc|home|lib
-                 |mnt|opt|root|run|sbin|selinux|srv|sys
+                 |mnt|opt|root|run|sbin|srv|sys
                  |tmp|usr|var)  /
           }oxsm
           ) {
