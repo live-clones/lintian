@@ -381,7 +381,11 @@ sub _fetch_index_data {
         $file{basename} = $base;
         # Insert the dirname field later for all (non-root) entries as
         # it allows us to better reuse memory.
-        $file{dirname} = '' if $base eq '';
+        # - actually, insert the name now and then replace it later.
+        #   This is a temporary work around for an ood behaviour seen
+        #   under perl5.18 where the "usr/" for some reason does not
+        #   have a "dirname" in the deb-format-wrong-order test.
+        $file{dirname} = $parent;
 
         $children{$parent} = [] unless exists $children{$parent};
         # Ensure the "root" is not its own child.  It is not really helpful
