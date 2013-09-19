@@ -652,10 +652,10 @@ sub find_cruft {
                                 $contextbefore =~ m/
                                   Following \s is \s an \s example
                                   (:?\s of \s the \s license \s notice \s to \s use
-                                    (?:\s after \s+ the copyright (?:line\(s\))?
-                                      (?:using all the features? of the GFDL)?
+                                    (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
+                                      (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
                                     )?
-                                  )? \s? [,:]?/xiso
+                                  )? \s? [,:]? \Z/xiso
                               ) {
                                 # it is an example
                             } else {
