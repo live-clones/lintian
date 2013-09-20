@@ -36,7 +36,6 @@ use threads;
 use threads::shared;
 use Thread::Queue;
 
-use Data::Dumper;
 use File::Basename qw(basename dirname);
 use File::Temp qw(tempfile);
 use Getopt::Long qw(GetOptions);
@@ -141,6 +140,11 @@ unless (-d $RUNDIR) {
 }
 unless (-d $TESTSET) {
     fail("test set directory $TESTSET does not exist");
+}
+
+if ($DEBUG) {
+    require Data::Dumper;
+    import Data::Dumper;
 }
 
 if (-d "$TESTSET/helpers/bin") {
