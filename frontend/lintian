@@ -207,16 +207,18 @@ Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
     --ignore-lintian-env      ignore LINTIAN_* env variables
-    --include-dir DIR         include checks, libraries (etc.) from DIR
+    --include-dir DIR         include checks, libraries (etc.) from DIR (*)
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
     --lab LABDIR              use LABDIR as permanent laboratory
-    --[no-]user-dirs          whether to use files from user directories
+    --[no-]user-dirs          whether to use files from user directories (*)
 Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
     --packages-from-file  X   process the packages in a file (if "-" use stdin)
     -s, --source              process only source packages
     --udeb                    process only udeb packages
+
+Options marked with (*) should be the first options if given at all.
 EOT-EOT-EOT
 
     exit 0;
@@ -414,6 +416,37 @@ sub record_quiet {
     return;
 }
 
+{
+    my $warned = 0;
+
+    sub warn_late_options {
+        print STDERR join(q{ },
+            'Warning: --include-dir and --[no-]user-dirs',
+            "should be the first option(s) if given\n");
+        return;
+    }
+
+    # Process --include-dir (late)
+    sub record_include_dir_late {
+        my (undef, $dir) = @_;
+        push(@search_dirs, $dir);
+        if (not $warned++) {
+            warn_late_options();
+        }
+        return;
+    }
+
+    # Process --[no-]user-dirs (late)
+    sub record_user_dirs_late {
+        my (undef, $value) = @_;
+        $opt{'user-dirs'} = $value;
+        if (not $warned++) {
+            warn_late_options();
+        }
+        return;
+    }
+}
+
 # Process display-info and display-level options in cfg files
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
@@ -540,8 +573,8 @@ my %opthash = (
 
     'jobs|j:i' => \$opt{'jobs'},
     'ignore-lintian-env' => \$opt{'ignore-lintian-env'},
-    'include-dir=s' => \@search_dirs,
-    'user-dirs!' => \$opt{'user-dirs'},
+    'include-dir=s' => \&record_include_dir_late,
+    'user-dirs!' => \&record_user_dirs_late,
 
     # ------------------ package selection options
     'all|a' => \$check_everything,
@@ -569,6 +602,18 @@ my %cfghash = (
     'show-overrides'       => \$opt{'show-overrides'},
     'verbose'              => \&cfg_verbosity,
 );
+
+# Parse --include-dir and --[no-]user-dirs early
+Getopt::Long::config(
+    'bundling', 'no_getopt_compat',
+    'no_auto_abbrev', 'require_order',
+    'pass_through'
+);
+
+Getopt::Long::GetOptions(
+    'include-dir=s' => \@search_dirs,
+    'user-dirs!' => \$opt{'user-dirs'},
+) or error("error parsing options\n");
 
 # init commandline parser
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');

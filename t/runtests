@@ -550,8 +550,9 @@ sub run_lintian {
     my ($testdata, $file, $out) = @_;
     msg_print 'testing... ';
     my @options = split(' ', $testdata->{options}//'');
-    unshift @options, '--allow-root', '--no-cfg', '--no-user-dirs';
+    unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile});
+    unshift(@options, '--no-user-dirs');
     my $pid = open(my $in, '-|');
     if ($pid) {
         my @data = <$in>;

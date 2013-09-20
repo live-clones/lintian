@@ -110,6 +110,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
       proper LINTIAN_ROOT.  To avoid surprises, lintian will
       now exit with an error if requested to use a different
       LINTIAN_ROOT than the one lintian expected to use.
+    + [NT] Emit a deprecation warning for --include-dir
+      and --[no-]user-dirs when they are not the first
+      arguments and called as lintian-info.
   * frontend/lintian-info:
     + [NT] Replace with symlink to dplint.  The implementation of
       lintian-info is now handled by commands/info.

@@ -443,6 +443,8 @@ The additional directories will be checked I<after> the user
 directories (though see B<--no-user-dirs>) and I<before> the core
 LINTIAN_ROOT.
 
+B<Note>: This option should be the very first if given.
+
 =item B<-j> [X], B<--jobs>[=X]
 
 Set the limit for how many unpacking jobs Lintian will run in
@@ -500,6 +502,8 @@ B<--ignore-lintian-env>.
 If for some reason B<--no-user-dirs> cannot be used, then consider
 unsetting I<$HOME> and all the I<$XDG_*> variables (not just the
 I<$XDG_*_HOME> ones).
+
+B<Note>: This option should be the very first if given.
 
 =back
 
