@@ -44,7 +44,7 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf "$(TEST_WORK_DIR)"
 	mkdir "$(TEST_WORK_DIR)"
-	private/runtests $(PAR_ARGS) $(onlyrun)
+	t/runtests --dump-logs -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
 # Like runtests but only runs tests affecting a particular tag.  That tag

@@ -44,15 +44,32 @@ use Text::Template;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
-our $LINTIAN_ROOT;
+our ($LINTIAN_ROOT, $LINTIAN);
 
 BEGIN {
-    $LINTIAN_ROOT = $ENV{'LINTIAN_TEST_ROOT'};
-    $LINTIAN_ROOT = Cwd::cwd() if not $LINTIAN_ROOT;
+    if (($ENV{'LINTIAN_TEST_INSTALLED'}//'no') eq 'yes') {
+        $LINTIAN_ROOT = '/usr/share/lintian';
+        $LINTIAN = '/usr/bin/lintian';
+    } else {
+        $LINTIAN_ROOT = Cwd::cwd();
+        $LINTIAN = "$LINTIAN_ROOT/frontend/lintian";
+    }
+    $ENV{'LINTIAN_TEST_ROOT'} = $LINTIAN_ROOT;
+    $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
+
     delete $ENV{'LINTIAN_CFG'};
     delete $ENV{'LINTIAN_LAB'};
-    delete $ENV{'LINTIAN_DIST'};
-    $ENV{'LC_COLLATE'} = 'C';
+    delete($ENV{'LINTIAN_PROFILE'});
+    # Some of the tests don't cope too well with "-j" in MAKEFLAGS
+    delete($ENV{'MAKEFLAGS'});
+    # Ensure Lintian works without $ENV{HOME}
+    delete($ENV{'HOME'});
+    # Ubuntu auto-builders run pkg-mangle which messes with our
+    # test packages, so ask it not to do so by default.
+    $ENV{'NO_PKG_MANGLE'} = 'true'
+      unless exists($ENV{'NO_PKG_MANGLE'});
+
+    $ENV{'LC_ALL'} = 'C';
 
     # Set standard umask because many of the test packages rely on this
     # when creating files from the debian/rules script.
@@ -65,10 +82,6 @@ use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
   rstrip slurp_entire_file);
 
 # --- Global configuration
-our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
-$LINTIAN = $ENV{'LINTIAN_FRONTEND'} if exists $ENV{'LINTIAN_FRONTEND'};
-$ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
-
 our @DPKG_BUILDPACKAGE_CMD = (
     qw(dpkg-buildpackage -rfakeroot -us -uc -d),
     qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
@@ -538,8 +551,7 @@ sub run_lintian {
     msg_print 'testing... ';
     my @options = split(' ', $testdata->{options}//'');
     unshift @options, '--allow-root', '--no-cfg', '--no-user-dirs';
-    unshift(@options, '--profile', $testdata->{profile})
-      if $testdata->{profile};
+    unshift(@options, '--profile', $testdata->{profile});
     my $pid = open(my $in, '-|');
     if ($pid) {
         my @data = <$in>;
@@ -999,6 +1011,7 @@ sub check_test_is_sane {
     $data->{description} ||= 'No Description Available';
     $data->{author}||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{architecture} ||= 'all';
+    $data->{profile} ||= 'debian';
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;
     $data->{sort} ||= 'yes';
