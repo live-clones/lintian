@@ -176,6 +176,9 @@ To get a list of entries in the control.tar.gz, see
 L</sorted_control_index>.  To actually access the underlying file
 (e.g. the contents), use L</control ([FILE])>.
 
+Note that the "root directory" (denoted by the empty string) will
+always be present, even if the underlying tarball omits it.
+
 Needs-Info requirements for using I<control_index>: bin-pkg-control
 
 =cut

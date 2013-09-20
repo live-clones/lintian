@@ -31,6 +31,20 @@ use Scalar::Util qw(blessed);
 use Lintian::Path;
 use Lintian::Util qw(open_gz perm2oct normalize_pkg_path);
 
+my %ROOT_INDEX_TEMPLATE = (
+    'name'     => '',
+    'type'     => 'd',
+    'basename' => '',
+    'dirname'  => '',
+    'owner'    => 'root',
+    'group'    => 'root',
+    'size'     => 0,
+    # Pick a "random" (but fixed) date
+    # - hint, it's a good read.  :)
+    'date'     => '1998-01-25',
+    'time'     => '22:55:34',
+);
+
 =head1 NAME
 
 Lintian::Collect::Package - Lintian base interface to binary and source package data collection
@@ -212,6 +226,9 @@ To get a list of entries in the package, see L</sorted_index>.  To
 actually access the underlying file (e.g. the contents), use
 L</unpacked ([FILE])>.
 
+Note that the "root directory" (denoted by the empty string) will
+always be present, even if the underlying tarball omits it.
+
 Needs-Info requirements for using I<index>: index
 
 =cut
@@ -381,17 +398,24 @@ sub _fetch_index_data {
         $file{basename} = $base;
         # Insert the dirname field later for all (non-root) entries as
         # it allows us to better reuse memory.
-        # - actually, insert the name now and then replace it later.
-        #   This is a temporary work around for an ood behaviour seen
-        #   under perl5.18 where the "usr/" for some reason does not
-        #   have a "dirname" in the deb-format-wrong-order test.
-        $file{dirname} = $parent;
+        $file{dirname} = '' if $base eq '';
 
         $children{$parent} = [] unless exists $children{$parent};
         # Ensure the "root" is not its own child.  It is not really helpful
         # from an analysis PoV and it creates ref cycles  (and by extension
         # leaks like #695866).
         push @{ $children{$parent} }, $name unless $parent eq $name;
+    }
+    if (!exists($idxh{''})) {
+        # The index did not include a "root" dir, so fake one.
+        # Note we have to do a copy here, since we will eventually
+        # add a "children" field.
+        my %cpy = %ROOT_INDEX_TEMPLATE;
+        if ($num_idx) {
+            $cpy{'uid'} = 0;
+            $cpy{'gid'} = 0;
+        }
+        $idxh{''} = \%cpy;
     }
     if (%rhlinks) {
         foreach my $file (sort keys %rhlinks) {
@@ -457,8 +481,12 @@ sub _fetch_index_data {
         $idxh{$file} = Lintian::Path->new($idxh{$file});
     }
     $self->{$field} = \%idxh;
-    # Remove the "top" dir in the sorted_index as it is hardly ever used.
-    shift @sorted if scalar @sorted && $sorted[0] eq '';
+    # Remove the "top" dir in the sorted_index as it is hardly ever
+    # used.
+    # - Note this will always be present as we create it if it is
+    #   missing.  It will always be the first entry since we sorted
+    #   the list.
+    shift @sorted;
     @sorted = map { $idxh{$_} } @sorted;
     $self->{"sorted_$field"} = \@sorted;
     close($idx);

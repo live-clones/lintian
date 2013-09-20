@@ -114,6 +114,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Replace with symlink to dplint.  The implementation of
       lintian-info is now handled by commands/info.
 
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] If the index file does not include a "root" directory,
+      then create a fake one.
   * lib/Lintian/Data.pm:
     + [NT] Make a special case to allow "original-maintainer" by
       default in all non-"Debian" profiles.  Thanks to Nick
