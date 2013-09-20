@@ -72,13 +72,9 @@ $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
 
 our @DPKG_BUILDPACKAGE_CMD = (
     qw(dpkg-buildpackage -rfakeroot -us -uc -d),
-    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING)
+    qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
+    qw(--source-option=--auto-commit),
 );
-if (`dpkg-source --help` =~ m,\s--commit\s,) {
-    # dpkg (>= 1.16.1) doesn't automatically create patches anymore, unless
-    # explicitly asked to do so:
-    push @DPKG_BUILDPACKAGE_CMD, '--source-option=--auto-commit';
-}
 our $STANDARDS_VERSION = '3.9.4';
 our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $ARCHITECTURE;

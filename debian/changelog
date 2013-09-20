@@ -137,6 +137,8 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [NT] Copy (rather than symlink) the lintian.log to the
       generated website.
 
+  * t/runtests:
+    + [NT] Assume dpkg (>= 1.16.1) is present.
   * t/tests/legacy-debug/debian/debian/control:
     + [NT] Mark some packages "arch:any" to avoid test failures
       on kfreebsd-amd64.  (Closes: #688524)
