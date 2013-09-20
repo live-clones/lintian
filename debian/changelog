@@ -139,6 +139,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
 
   * t/runtests:
     + [NT] Assume dpkg (>= 1.16.1) is present.
+    + [NT] Work around bug in Perl (#723805) when using "glob"
+      within threads.  Thanks to Brian "hugmeir" Fraser for
+      finding the underlying cause.
   * t/tests/legacy-debug/debian/debian/control:
     + [NT] Mark some packages "arch:any" to avoid test failures
       on kfreebsd-amd64.  (Closes: #688524)

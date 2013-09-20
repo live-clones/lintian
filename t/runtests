@@ -603,7 +603,11 @@ sub test_changes {
         # copy all files but "tags" and desc.  Usually this will only
         # be ".changes.in", but in rare cases we have "other files"
         # as well.
-        @files = grep { !/\.(?:desc|tags)$/o } glob "$testdir/$test.*";
+        #
+        # the _glob-call emulates glob("$testdir/$test.*")
+        # (see #723805)
+        @files
+          = grep { !/\.(?:desc|tags)$/o } _glob($testdir, qr/\Q$test.\E.*/);
         runsystem('cp', '-f', @files, "$RUNDIR/");
         $file = "$RUNDIR/${test}.changes";
         fill_in_tmpl($file, $testdata);
@@ -713,7 +717,9 @@ sub generic_test_runner {
         dump_log($testname, "$RUNDIR/build.$testname") if $DUMP_LOGS;
         fail("cd $targetdir && fakeroot make >../build.$testname 2>&1");
     }
-    my @matches = glob "$targetdir/*.$ext";
+    # The _glob call emulates glob("$targetdir/*.$ext")
+    # (see #723805)
+    my @matches = _glob($targetdir, qr/.*\.\Q$ext\E/);
     my $file = shift @matches;
     unless ($file && -e $file) {
         $file //= '<N/A>';
@@ -726,6 +732,20 @@ sub generic_test_runner {
 
     run_lintian($testdata, $file, "$RUNDIR/tags.$testname");
     return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$testname");
+}
+
+# Makeshift replacement for "glob" to work around #723805
+sub _glob {
+    my ($dir, $pattern) = @_;
+    my @matches;
+    opendir(my $dirfd, $dir);
+    for my $file (readdir($dirfd)) {
+        next if $file eq '.' or $file eq '..';
+        push(@matches, "$dir/$file")
+          if $file =~ m{\A $pattern \Z}xsm;
+    }
+    closedir($dirfd);
+    return @matches;
 }
 
 sub _check_result {
