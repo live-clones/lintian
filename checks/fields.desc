@@ -1019,10 +1019,10 @@ Certainty: certain
 Info: The VCS-* field uses an address which no longer works.  Please
  update it to use the current canonical URI instead.
  .
- Note that this check is based on a list of known URIs.  Lintian did not
- send a HTTP request to the URI to test this.  Should the URI actually
- work, please file a bug against Lintian so the check can be updated
- accordingly.
+ Note that this check is based on a list of known URIs or/and
+ patterns.  Lintian did not send a HTTP request to the URI to test
+ this.  Should the URI actually work, please file a bug against
+ Lintian so the check can be updated accordingly.
 
 Tag: vcs-git-uses-invalid-user-uri
 Severity: normal

@@ -129,6 +129,14 @@ my %VCS_CANONIFY = (
                   {http://anonscm.debian.org/gitweb/?p=};
         $_[0] =~ s{\Qhttp://bzr.debian.org/loggerhead/\E}
                   {http://anonscm.debian.org/loggerhead/};
+        if ($_[0] =~ m{\Qhttp://anonscm.debian.org/viewvc/\E}xsm) {
+            if ($_[0] =~ s{\?(.*[;\&])?op=log(?:[;\&](.*))?\Z}{}xsm) {
+                my (@keep) = ($1, $2, $3);
+                my $final = join('', grep {defined} @keep);
+                $_[0] .= '?' . $final if ($final ne '');
+                $_[1] = 'vcs-field-bitrotted';
+            }
+        }
     },
     cvs      => sub {
         if (

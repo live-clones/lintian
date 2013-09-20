@@ -22,6 +22,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
       members will trigger misplaced-extra-member-in-deb tag.
       Thanks to Guillem Jover for the report and the feedback.
       (Closes: #718349)
+  * checks/fields.{desc,pm}:
+    + [NT] Warn about "?op=log" in svn.d.o brower links.  Thanks
+      to Paul Wise for the report.  (Closes: #707700)
   * checks/files.{desc,pm}:
     + [BR] Fix false-positive dir-or-file-in-build-tree for
       the sbuild source package.  (Closes: #720910)
