@@ -27,7 +27,7 @@ lintian (2.5.18) UNRELEASED; urgency=low
       to Paul Wise for the report.  (Closes: #707700)
     + [NT] Fix false-positive dbg-package-missing-depends for
       transitional dbg packages.  Thanks to Paul Wise for the
-      report.  (Closes: #677366)
+      report.  (Closes: #665694)
     + [NT] Remind people that packages named gir1.2-foo-X.Y
       should be in the introspection section.  Thanks to Michael
       Biebl for the report  (part of #695345)
