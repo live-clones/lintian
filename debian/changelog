@@ -1,6 +1,12 @@
-lintian (2.5.18) UNRELEASED; urgency=low
+lintian (2.5.18) unstable; urgency=low
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - debian-changelog-has-wrong-weekday
+      - debian-rules-missing-good-practice-target-dfsg
+      - empty-udeb-package
+      - file-name-in-PATH-is-not-ASCII
+      - misplaced-extra-member-in-deb
 
   * checks/apache2.pm:
     + [NT] Fix false-positive warning about non-standard package
@@ -182,7 +188,7 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * vendors/ubuntu/main/data/{common,fields}/*:
     + [NT] Retire now redundant files.
 
- -- Niels Thykier <niels@thykier.net>  Tue, 26 Aug 2013 08:19:50 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 21 Sep 2013 23:23:10 +0200
 
 lintian (2.5.17) unstable; urgency=low
 
