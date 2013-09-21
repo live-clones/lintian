@@ -146,9 +146,6 @@ sub run {
     } elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
-    my $uroot = $info->unpacked;
-    my $abs = Cwd::abs_path("$uroot/") or fail "abs_path $uroot: $!";
-    $abs =~ s,/$,,; # remove the trailing slash if any
     find_cruft($info, \%warned, $atdinbd, $ltinbd);
 
     for my $file (@EOL_TERMINATORS_FILES) {
