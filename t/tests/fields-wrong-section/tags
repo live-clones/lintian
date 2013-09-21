@@ -2,6 +2,7 @@ I: libfields-wrong-section-java: javalib-but-no-public-jars
 W: fields-wrong-section-contrib-doc: wrong-section-according-to-package-name fields-wrong-section-contrib-doc => contrib/doc
 W: fields-wrong-section-dbg: wrong-section-according-to-package-name fields-wrong-section-dbg => debug
 W: fields-wrong-section-doc: wrong-section-according-to-package-name fields-wrong-section-doc => doc
+W: gir1.2-fields-wrong-section-0.1: wrong-section-according-to-package-name gir1.2-fields-wrong-section-0.1 => introspection
 W: libfields-wrong-section-cil: wrong-section-according-to-package-name libfields-wrong-section-cil => cli-mono
 W: libfields-wrong-section-dev: wrong-section-according-to-package-name libfields-wrong-section-dev => libdevel
 W: libfields-wrong-section-java: wrong-section-according-to-package-name libfields-wrong-section-java => java

@@ -171,3 +171,14 @@ Description: {$description} (contrib docs)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: gir1.2-{$source}-0.1
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (gir1.2-pkg)
+ Test for gir1.2 packages.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
