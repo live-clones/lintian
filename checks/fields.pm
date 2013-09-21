@@ -223,7 +223,7 @@ our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
 sub run {
-    my ($pkg, $type, $info, $proc) = @_;
+    my ($pkg, $type, $info, $proc, $group) = @_;
     my ($version, $arch_indep);
 
     #---- Format
@@ -1059,9 +1059,10 @@ sub run {
         }
 
         my (@arch_dep_pkgs, @dbg_pkgs);
-        foreach my $binpkg (@binpkgs) {
+        foreach my $gproc ($group->get_binary_processables) {
+            my $binpkg = $gproc->pkg_name;
             if ($binpkg =~ m/-dbg$/) {
-                push @dbg_pkgs, $binpkg;
+                push(@dbg_pkgs, $gproc);
             } elsif ($info->binary_field($binpkg, 'architecture', '') ne 'all')
             {
                 push @arch_dep_pkgs, $binpkg;
@@ -1069,10 +1070,18 @@ sub run {
         }
         my $dstr = join('|', map { quotemeta($_) } @arch_dep_pkgs);
         my $depregex = qr/^(?:$dstr)$/;
-        foreach (@dbg_pkgs) {
-            my $deps = $info->binary_relation($_, 'strong');
-            tag 'dbg-package-missing-depends', $_
-              unless $deps->matches($depregex, VISIT_PRED_NAME);
+        for my $dbg_proc (@dbg_pkgs) {
+            my $deps = $info->binary_relation($dbg_proc->pkg_name, 'strong');
+            my $missing = 1;
+            $missing = 0 if $deps->matches($depregex, VISIT_PRED_NAME);
+            if ($missing and $dbg_proc->info->is_pkg_class('transitional')) {
+                # If it is a transitional package, allow it to depend
+                # on another -dbg instead.
+                $missing = 0
+                  if $deps->matches(qr/-dbg \Z/xsm, VISIT_PRED_NAME);
+            }
+            tag 'dbg-package-missing-depends', $dbg_proc->pkg_name
+              if $missing;
         }
 
         # Check for a python*-dev build dependency in source packages that

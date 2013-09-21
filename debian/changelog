@@ -25,6 +25,9 @@ lintian (2.5.18) UNRELEASED; urgency=low
   * checks/fields.{desc,pm}:
     + [NT] Warn about "?op=log" in svn.d.o brower links.  Thanks
       to Paul Wise for the report.  (Closes: #707700)
+    + [NT] Fix false-positive dbg-package-missing-depends for
+      transitional dbg packages.  Thanks to Paul Wise for the
+      report.  (Closes: #677366)
   * checks/files.{desc,pm}:
     + [BR] Fix false-positive dir-or-file-in-build-tree for
       the sbuild source package.  (Closes: #720910)
