@@ -47,6 +47,10 @@ lintian (2.5.18) UNRELEASED; urgency=low
     + [BR] Add check for missing for recommended "get-orig-source"
       target in d/rules for packages that look like they have been
       repacked.  (Closes: #460174)
+  * checks/scripts.desc:
+    + [NT] Demote the certainty of shell-script-fails-syntax-check
+      due to "extglob" in bash.  Thanks To Trent W. Buck for the
+      report.  (Closes: #699410)
   * checks/testsuite.pm:
     + [NT] Add "allow-stderr" as known autopkgtest "restriction".
       Thanks to Jérémy Bobbio for the report and the initial

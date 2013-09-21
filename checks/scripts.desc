@@ -298,23 +298,29 @@ Info: Packages that include tclsh scripts must depend on the virtual
 
 Tag: shell-script-fails-syntax-check
 Severity: important
-Certainty: certain
+Certainty: possible
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors.  The most common cause of
  this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
  a system using dash as <tt>/bin/sh</tt>.
  .
  Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
+ .
+ Note this can have false-positives, for an example with bash scripts
+ using "extglob".
 
 Tag: example-shell-script-fails-syntax-check
 Severity: pedantic
-Certainty: certain
+Certainty: possible
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors.  The most common cause of
  this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
  a system using dash as <tt>/bin/sh</tt>.
  .
  Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
+ .
+ Note this can have false-positives, for an example with bash scripts
+ using "extglob".
 
 Tag: maintainer-shell-script-fails-syntax-check
 Severity: serious
