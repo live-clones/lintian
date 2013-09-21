@@ -18,7 +18,7 @@ bar usr/lib32
 bar usr/lib64
 bar usr/libx32
 bar usr/lib/perl/
-bar usr/lib/python2.6/
+bar usr/lib/python2.7/
 bar usr/lib/sgml
 bar usr/lib/site-python/foo
 bar usr/local/foo

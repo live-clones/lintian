@@ -2,7 +2,7 @@ bin-env                 usr/bin/
 csh-shell               usr/bin/
 no-interpreter          usr/bin/
 not-absolute            usr/bin/
-python2.6               usr/bin/
+python2.7               usr/bin/
 syntax                  usr/bin/
 unusual                 usr/bin/
 unversioned-pike        usr/bin/
