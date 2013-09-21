@@ -7,5 +7,5 @@ W: changelog-file-general: debian-changelog-line-too-long line 7
 W: changelog-file-general: improbable-bug-number-in-closes 12
 W: changelog-file-general: latest-debian-changelog-entry-without-new-date
 W: changelog-file-general: latest-debian-changelog-entry-without-new-version
-W: changelog-file-general: syntax-error-in-debian-changelog line 25 "badly formatted heading line"
-W: changelog-file-general: syntax-error-in-debian-changelog line 27 "found change data where expected next heading or eof"
+W: changelog-file-general: syntax-error-in-debian-changelog line 29 "badly formatted heading line"
+W: changelog-file-general: syntax-error-in-debian-changelog line 31 "found change data where expected next heading or eof"

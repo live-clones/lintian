@@ -14,6 +14,10 @@
     certain program would report its line number correctly.  Especially since,
     we have an extra empty line in the start of the entry.
 
+  * Below is another very long line (UTF-8), which should have a "visual" width
+    of ~75 characters, but consists of over 200 bytes.
+    üüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüü
+
  -- {$author}  {$date}
 
 {$source} ({$version}) unstable; urgency=low
