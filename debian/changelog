@@ -9,6 +9,10 @@ lintian (2.5.19) UNRELEASED; urgency=low
     + [NT] Correct the name of the multiarch-dirs data file,
       which was renamed in 2.5.17.
 
+  * lib/{Test/Lintian,Lintian/Data}.pm:
+    + [NT] Load data files eagerly during tests to ensure
+      missing or typo'ed data files are spotted earlier.
+
   * debian/changelog:
     + [NT] Mention in the 2.5.17 entry that multiarch-dirs
       data file was renamed.

@@ -26,6 +26,8 @@ use Carp qw(croak);
 
 use Lintian::Util qw(strip);
 
+our $LAZY_LOAD = 1;
+
 sub new {
     my ($class, @args) = @_;
     my $type = $args[0];
@@ -41,6 +43,7 @@ sub new {
         # Pretend we loaded this data file, but leave a "reminder" to
         # do it later.
         $self->{'promise'} = \@args;
+        $self->_force_promise if not $LAZY_LOAD;
     }
     return $self;
 }

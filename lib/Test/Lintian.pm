@@ -75,6 +75,10 @@ use Lintian::Tag::Info;
 use Lintian::Tags;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file);
 
+# We want data files loaded early to avoid problems with missing data
+# files ending up in releases (like in 2.5.17 and 2.5.18).
+$Lintian::Data::LAZY_LOAD = 0;
+
 my %severities = map { $_ => 1 } @Lintian::Tags::SEVERITIES;
 my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
 my %check_types = map { $_ => 1 } qw(binary changes source udeb);
@@ -339,10 +343,12 @@ the call itself does on additional check.  So if CHECKNAMES contains
 10 elements, then 21 tests will be done (2 * 10 + 1).  Filtered out
 checks will I<not> be counted.
 
-NB: This will load a profile if one hasn't been loaded already.  This
-is done to avoid issues loading L<data files|Lintian::Data> in the
-package scope of the checks.  (see
-L</load_profile_for_test ([PROFNAME[, INC...]])>)
+All data files created at compile time or in the file scope will be
+loaded immediately (instead of lazily as done during the regular
+runs).  This is done to spot missing data files or typos in their
+names.  Therefore, this sub will load a profile if one hasn't been
+loaded already.  (see L</load_profile_for_test ([PROFNAME[,
+INC...]])>)
 
 OPTS may contain the following key/value pairs:
 
