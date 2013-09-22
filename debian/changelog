@@ -10,6 +10,9 @@ lintian (2.5.19) UNRELEASED; urgency=low
       configurable.
     + [NT] Replace LINTIAN_CFG with passing "--no-cfg" to
       lintian.
+    + [NT] Replace $lintian_cmd config option with a
+      @EXTRA_LINTIAN_OPTIONS.  Also stop forking a shell to
+      run lintian.
   * reporting/lintian-dummy.cfg:
     + [NT] Remove file as it is now obsolete.
 

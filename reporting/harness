@@ -91,8 +91,7 @@ die "Cannot use other modes with reports only.\n"
 # read configuration
 require './config'; ## no critic (Modules::RequireBarewordIncludes)
 use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
-  $LINTIAN_ARCH
-  $lintian_cmd
+  $LINTIAN_ARCH @EXTRA_LINTIAN_OPTIONS
   $LOG_DIR $statistics_file
   $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR
   $LINTIAN_AREA);
@@ -108,6 +107,12 @@ my ($log_file, $list_file, $lintian_log, $html_reports_log)
   = map {"$LOG_DIR/$_" }
   qw(harness.log changed-packages.list lintian.log html_reports.log);
 my $old_lintian_log = $lintian_log . '.old';
+my @lintian_cmd = (
+    "$LINTIAN_ROOT/frontend/lintian",
+    @EXTRA_LINTIAN_OPTIONS,
+    qw(--no-cfg -I -E --pedantic -v --show-overrides),
+    qw(--exp-output=format=fullewi --packages-from-file -),
+);
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
@@ -364,9 +369,6 @@ unless ($opt{'reports-only'}) {
     %dirty_groups = %skip = @diffs = @manifests = ();
 
     if (@worklist) {
-        my $cmd
-          ="$lintian_cmd --no-cfg -I -E --pedantic -v --show-overrides"
-          .' -U changelog-file --exp-output=format=fullewi --packages-from-file -';
         my $scs = $opt{'schedule-chuck-size'};
         my $round = 0;
         my $rounds = 1;
@@ -390,6 +392,7 @@ unless ($opt{'reports-only'}) {
                 $rounds, $scs > 0 ? $scs : 'none'
             ));
 
+        Log('Command line used: ' . join(q{ }, @lintian_cmd));
         while (@worklist) {
             my $len = scalar @worklist;
             $round++;
@@ -397,7 +400,6 @@ unless ($opt{'reports-only'}) {
             $len = $scs if $scs > 0 and $len > $scs;
 
             Log("Running Lintian (round $round/$rounds) ...");
-            Log(" - cmd: $cmd >>$lintian_log 2>&1");
             Log(' - Range: ' . $worklist[0] . q{ ... } . $worklist[$len - 1]);
 
             if ($opt{'dry-run'}) {
@@ -405,8 +407,16 @@ unless ($opt{'reports-only'}) {
                 next;
             }
 
-            open(my $lintpipe, '|-', "$cmd >>$lintian_log 2>&1")
-              or Die("fork failed: $!");
+            my $pid = open(my $lintpipe, '|-') // Die("fork failed: $!");
+            if (not $pid) {
+                # child => reopen STD{OUT,ERR} and exec lintian
+                open(STDOUT, '>>', $lintian_log)
+                  or die("re-open STDOUT failed: $!");
+                open(STDERR, '>&', *STDOUT)
+                  or die("re-open STDERR failed: $!");
+                exec(@lintian_cmd)
+                  or die("exec @lintian_cmd failed: $!");
+            }
             foreach my $query (splice(@worklist, 0, $len)) {
                 # Technically, we emit these items in reverse order to Lintian,
                 # but Lintian sorts it anyway
