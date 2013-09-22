@@ -5,6 +5,13 @@ lintian (2.5.19) UNRELEASED; urgency=low
   * checks/files.pm:
     + [NT] Only open .pc files if they are regular files.
       This fixes a possible DoS introduced in 2.5.17.
+  * checks/shared-libs.pm:
+    + [NT] Correct the name of the multiarch-dirs data file,
+      which was renamed in 2.5.17.
+
+  * debian/changelog:
+    + [NT] Mention in the 2.5.17 entry that multiarch-dirs
+      data file was renamed.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 21 Sep 2013 23:36:46 +0200
 
@@ -247,6 +254,10 @@ lintian (2.5.17) unstable; urgency=low
       These tags have no known overrides.
   * checks/source-copyright.pm:
     + [NT] Avoid accidental use of an experimental feature.
+
+  * data/{binaries => common}/multiarch-dirs:
+    + [BR] Moved multiarch-dirs from binaries to common, since
+      it is used from multiple checks.
 
   * debian/control:
     + [NT] Add Build-Depends on aspell, aspell-en and

@@ -50,7 +50,7 @@ my %stack_arches = map { $_ => 1 }qw(
 );
 
 my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
-my $MA_DIRS = Lintian::Data->new('binaries/multiarch-dirs', qr/\s++/);
+my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
