@@ -16,6 +16,7 @@ lintian (2.5.19) UNRELEASED; urgency=low
   * debian/changelog:
     + [NT] Mention in the 2.5.17 entry that multiarch-dirs
       data file was renamed.
+    + [NT] Consistently spell "typos" without an "e".
 
  -- Niels Thykier <niels@thykier.net>  Sat, 21 Sep 2013 23:36:46 +0200
 
@@ -7205,7 +7206,7 @@ lintian (2.2.0) unstable; urgency=low
   * checks/debhelper{,.desc}:
     + [ADB] Remove no longer required "Type" fields from a couple of
       entries.  Thanks, Raphael Geissert.
-    + [ADB] Fix a couple of typoes.  Thanks, Raphael Geissert.
+    + [ADB] Fix a couple of typos.  Thanks, Raphael Geissert.
     + [RA] Allow ${misc:Depends} in Pre-Depends and warn of
       ${misc:Depends} in Recommends or Suggests.  Patch from Raphael
       Geissert.  (Closes: #512478)
@@ -7972,7 +7973,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       - package-needs-python-policy-debhelper
   
   * checks/*.desc:
-    + [ADB] Fix a number of spelling mistakes and typoes.
+    + [ADB] Fix a number of spelling mistakes and typos.
   * checks/changelog-file{,.desc}:
     + [RA] Warn about closing a bug number less than 100; this is likely
       a typo or placeholder.  Thanks, Raphael Geissert.  (Closes: #497350)
@@ -8400,7 +8401,7 @@ lintian (1.24.2) unstable; urgency=low
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
     + [ADB] Update and add some Policy and DevRef references and fix some
-      typoes.  Thanks Jordà Polo.
+      typos.  Thanks Jordà Polo.
     + [RA] Recognize and do not warn about Ubuntu security update version
       numbers for multiple releases.  (Closes: #489222)
   * checks/files{,.desc}:
