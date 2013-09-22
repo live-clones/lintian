@@ -506,7 +506,8 @@ sub run {
                 }
             }
             # ---------------- arch-indep pkconfig
-            elsif ($file =~ m,^usr/(?:lib|share)/pkgconfig/[^/]+\.pc$,) {
+            elsif ($file->is_regular_file
+                && $file =~ m,^usr/(?:lib|share)/pkgconfig/[^/]+\.pc$,) {
                 open(my $fd, '<', $info->unpacked($file));
               LINE:
                 while (my $line = <$fd>) {
