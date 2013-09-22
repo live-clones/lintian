@@ -1645,13 +1645,14 @@ sub run {
     # be empty
     if ($pkg ne 'base-files') {
         foreach my $dir ($info->sorted_index) {
-            next if $dir eq '' or not $info->index($dir)->is_dir;
-            next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
-            if (dir_counts($info, $dir) == 0) {
-                if (    $dir ne 'usr/lib/perl5/'
-                    and $dir ne 'usr/share/perl5/'
-                    and $dir !~ m;^usr/share/python-support/;) {
-                    tag 'package-contains-empty-directory', $dir;
+            next if not $dir->is_dir;
+            my $dirname = $dir->name;
+            next if ($dirname =~ m{^var/} or $dirname =~ m{^etc/});
+            if (scalar($dir->children) == 0) {
+                if (    $dirname ne 'usr/lib/perl5/'
+                    and $dirname ne 'usr/share/perl5/'
+                    and $dirname !~ m;^usr/share/python-support/;) {
+                    tag 'package-contains-empty-directory', $dirname;
                 }
             }
         }
@@ -1687,16 +1688,6 @@ sub run {
     }
 
     return;
-}
-
-sub dir_counts {
-    my ($info, $dir) = @_;
-
-    if (defined $info->index($dir)) {
-        return scalar $info->index($dir)->children;
-    } else {
-        return 0;
-    }
 }
 
 1;
