@@ -1,6 +1,4 @@
-lintian (2.5.19) UNRELEASED; urgency=low
-
-  XXX: generate tag summary with private/generate-tag-summary
+lintian (2.5.18.1) unstable; urgency=low
 
   * checks/files.pm:
     + [NT] Only open .pc files if they are regular files.
@@ -18,7 +16,7 @@ lintian (2.5.19) UNRELEASED; urgency=low
       data file was renamed.
     + [NT] Consistently spell "typos" without an "e".
 
- -- Niels Thykier <niels@thykier.net>  Sat, 21 Sep 2013 23:36:46 +0200
+ -- Niels Thykier <niels@thykier.net>  Sun, 22 Sep 2013 10:51:29 +0200
 
 lintian (2.5.18) unstable; urgency=low
 
