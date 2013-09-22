@@ -29,13 +29,7 @@ $GRAPHS = 1;
 #   [today() - $GRAPHS_RANGE_DAYS ; now()]
 $GRAPHS_RANGE_DAYS = 240;
 
-$log_file = "$LOG_DIR/harness.log";
-$changes_file = "$LOG_DIR/setup-lab.log";
-$list_file = "$LOG_DIR/changed-packages.list";
-$lintian_log = "$LOG_DIR/lintian.log";
-$old_lintian_log = "$LOG_DIR/lintian.log.old";
 $lintian_cmd = "$LINTIAN_ROOT/frontend/lintian";
-$html_reports_log = "$LOG_DIR/html_reports.log";
 $statistics_file = "$LOG_DIR/statistics";
 
 1;
