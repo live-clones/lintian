@@ -91,16 +91,16 @@ die "Cannot use other modes with reports only.\n"
 # read configuration
 require './config'; ## no critic (Modules::RequireBarewordIncludes)
 use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
-  $LINTIAN_ARCH $LINTIAN_CFG
+  $LINTIAN_ARCH
   $lintian_cmd
   $LOG_DIR $statistics_file
   $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR
   $LINTIAN_AREA);
 
 # export Lintian's configuration
-$ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
 $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
-# delete LINTIAN_ROOT in case it is set.
+# delete LINTIAN_{CFG,ROOT} in case they are set.
+delete($ENV{'LINTIAN_CFG'});
 delete($ENV{'LINTIAN_ROOT'});
 
 my $html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
@@ -365,8 +365,8 @@ unless ($opt{'reports-only'}) {
 
     if (@worklist) {
         my $cmd
-          ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file"
-          .' --exp-output=format=fullewi --packages-from-file -';
+          ="$lintian_cmd --no-cfg -I -E --pedantic -v --show-overrides"
+          .' -U changelog-file --exp-output=format=fullewi --packages-from-file -';
         my $scs = $opt{'schedule-chuck-size'};
         my $round = 0;
         my $rounds = 1;

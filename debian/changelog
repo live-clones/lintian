@@ -8,6 +8,10 @@ lintian (2.5.19) UNRELEASED; urgency=low
     + [NT] Stop allowing config script to name individual
       log files.  The directory in which they are put is still
       configurable.
+    + [NT] Replace LINTIAN_CFG with passing "--no-cfg" to
+      lintian.
+  * reporting/lintian-dummy.cfg:
+    + [NT] Remove file as it is now obsolete.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 22 Sep 2013 11:10:30 +0200
 
