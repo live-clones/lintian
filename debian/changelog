@@ -2,6 +2,10 @@ lintian (2.5.19) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * reporting/{config,harness}:
+    + [NT] Determine the html_reports command automatically
+      instead of allowing it to be configurable.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 22 Sep 2013 11:10:30 +0200
 
 lintian (2.5.18.1) unstable; urgency=low

@@ -35,7 +35,6 @@ $list_file = "$LOG_DIR/changed-packages.list";
 $lintian_log = "$LOG_DIR/lintian.log";
 $old_lintian_log = "$LOG_DIR/lintian.log.old";
 $lintian_cmd = "$LINTIAN_ROOT/frontend/lintian";
-$html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
 $html_reports_log = "$LOG_DIR/html_reports.log";
 $statistics_file = "$LOG_DIR/statistics";
 
