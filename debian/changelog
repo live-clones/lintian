@@ -13,6 +13,8 @@ lintian (2.5.19) UNRELEASED; urgency=low
     + [NT] Replace $lintian_cmd config option with a
       @EXTRA_LINTIAN_OPTIONS.  Also stop forking a shell to
       run lintian.
+    + [NT] Remove LINTIAN_BIN_DIR; it is no longer used to
+      avoid signature checking.
   * reporting/lintian-dummy.cfg:
     + [NT] Remove file as it is now obsolete.
 

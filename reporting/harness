@@ -93,7 +93,7 @@ require './config'; ## no critic (Modules::RequireBarewordIncludes)
 use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
   $LINTIAN_ARCH @EXTRA_LINTIAN_OPTIONS
   $LOG_DIR $statistics_file
-  $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR
+  $HTML_DIR $HTML_TMP_DIR
   $LINTIAN_AREA);
 
 # export Lintian's configuration
@@ -142,9 +142,6 @@ unless ($opt{'dry-run'}) {
     Log('Running in dry-run mode');
 }
 # From here on we can use Log() and Die().
-
-$ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'}
-  if -d $LINTIAN_BIN_DIR;
 
 my $LAB = Lintian::Lab->new($LINTIAN_LAB);
 
