@@ -14,7 +14,7 @@ plan skip_all => 'Test::MinimumVersion required to run this test' if $@;
 # squeeze => 5.10.1, Wheezy => 5.14.2
 our $REQUIRED = 'v5.14.2';
 
-our @PATHS = qw(checks collection frontend lib reporting private);
+our @PATHS = qw(checks collection commands frontend lib reporting private);
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
