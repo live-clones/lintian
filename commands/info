@@ -105,8 +105,8 @@ if (compat) {
         # would have parsed them for us.  So the fact that we see their
         # values implies they appeared after some other option.
         print STDERR join(q{ },
-                          'Warning: --include-dir and --[no-]user-dirs',
-                          "should be the first option(s) if given\n");
+            'Warning: --include-dir and --[no-]user-dirs',
+            "should be the first option(s) if given\n");
         fixup_include_dirs();
     }
 }
@@ -174,21 +174,22 @@ while (<>) {
     print "N:\n";
 }
 
-exit 0;
-
 {
     my $backwards_compat;
+
     sub compat() {
         return $backwards_compat if defined($backwards_compat);
         $backwards_compat = 0;
         if (exists($ENV{'LINTIAN_DPLINT_CALLED_AS'})) {
             my $called_as = $ENV{'LINTIAN_DPLINT_CALLED_AS'};
             $backwards_compat = 1
-                if $called_as =~ m{ (?: \A | /) lintian-info \Z}xsm;
+              if $called_as =~ m{ (?: \A | /) lintian-info \Z}xsm;
         }
         return $backwards_compat;
     }
 }
+
+exit 0;
 
 sub _load_file_basedir {
     # File::BaseDir sprews warnings if $ENV{'HOME'} is undef, so
@@ -198,6 +199,7 @@ sub _load_file_basedir {
     local $ENV{'HOME'} = $ENV{'HOME'} // '/nonexistent';
     require File::BaseDir;
     import File::BaseDir qw(config_home config_files data_home);
+    return;
 }
 
 sub fixup_include_dirs {
@@ -216,8 +218,7 @@ sub fixup_include_dirs {
 
     # Then remove the user dirs from the original include path (they will
     # always be the "first" entries in a predictable order)
-    $user_dir_regex = join(q{},
-                           map { "(?:$_:)?" } map { quotemeta } @user_dirs);
+    $user_dir_regex= join(q{},map { "(?:$_:)?" } map { quotemeta } @user_dirs);
     $ENV{'LINTIAN_INCLUDE_DIRS'} =~ s{\A $user_dir_regex}{}xsmg;
     # now, rebuild @INCLUDE_DIRS
     @INCLUDE_DIRS = split(':', $ENV{'LINTIAN_INCLUDE_DIRS'});
