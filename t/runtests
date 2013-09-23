@@ -252,6 +252,8 @@ if ($singletest) {
     my $script = "$TESTSET/scripts/$singletest.t";
     if (-f $script) {
         @tests = ($script);
+    } elsif (-d "$TESTSET/scripts/$singletest") {
+        @tests = ("$TESTSET/scripts/$singletest");
     }
 } elsif (!$tag && $suites{'scripts'}) {
     unless (-d "$TESTSET/scripts") {
