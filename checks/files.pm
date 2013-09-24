@@ -1690,6 +1690,14 @@ sub run {
     return;
 }
 
+sub dir_counts {
+    my ($info, $filename) = @_;
+    if (my $file = $info->index($filename)) {
+        return scalar($file->children);
+    }
+    return 0;
+}
+
 1;
 
 # Local Variables:
