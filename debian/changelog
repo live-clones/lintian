@@ -2,6 +2,10 @@ lintian (2.5.19) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/files.pm:
+    + [NT] Apply patch from Samuel Thibault to fix a
+      false-positive non-standard-toplevel-dir for the
+      directories /hurd and /servers.  (Closes: #724524)
   * checks/testsuite.pm:
     + [NT] Allow uppercase letters in the names of DEP-8
       tests, now that the DEP-8 officially "tolerates" them.

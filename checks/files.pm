@@ -753,9 +753,9 @@ sub run {
         # ---------------- /opt
         elsif ($file =~ m,^opt/.,) {
             tag 'dir-or-file-in-opt', $file;
-        } elsif ($file =~ m,^hurd/.,) {
+        } elsif ($file =~ m,^hurd/,) {
             next;
-        } elsif ($file =~ m,^servers/.,) {
+        } elsif ($file =~ m,^servers/,) {
             next;
         }
         # -------------- /home
