@@ -148,7 +148,7 @@ sub check_test_file {
     my $path = "$directory/$name";
     my $index = $info->index($path);
 
-    if ($name !~ m{^ [ [:digit:] [:lower:] \+ \- \. / ]++ $}xsm) {
+    if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
         tag 'illegal-runtime-test-name', $name;
     }
     if (not defined($index)) {
