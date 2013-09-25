@@ -26,8 +26,10 @@ use autodie;
 use File::Basename;
 
 use Lintian::Data;
+use Lintian::Output qw(warning);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz);
+use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
+  signal_number2name);
 
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
@@ -1272,7 +1274,41 @@ sub run {
                         }
                     }
                     drain_pipe($t1pipe);
-                    close($t1pipe);
+                    eval {close($t1pipe);};
+                    if (my $err = $@) {
+                        # check if we hit #724571 (t1disasm
+                        # seg. faults on files).
+                        my $exit_code_raw = $?;
+                        fail("closing t1disasm $file: $!") if $err->errno;
+                        my $code = ($exit_code_raw >> 8) & 0xff;
+                        my $sig = $exit_code_raw & 0xff;
+                        fail("t1disasm $file exited $code") if $code;
+                        if ($sig) {
+                            my $signame = signal_number2name($sig);
+                            fail("t1disasm $file killed with signal $signame")
+                              unless $signame eq 'SEGV'
+                              or $signame eq 'BUS';
+                            # This is #724571.  The problem is that it
+                            # causes the FTP masters to Lintian
+                            # auto-reject to trigger (and lintian.d.o
+                            # to re-check packages daily if the have a
+                            # file triggering this).
+                            # Technically, t1disasm has only triggered
+                            # a SEGV so far, but it we assume it can
+                            # also get hit by a BUS.
+                            warning(
+                                join(q{ },
+                                    "t1disasm $file died with a",
+                                    'segmentation fault or bus error'),
+                                'This may hide a license-problem warning.'
+                            );
+                        } else {
+                            fail(
+                                join(q{ },
+                                    "t1disasm $file died with raw",
+                                    "exit code $exit_code_raw"));
+                        }
+                    }
                 }
             }
 
@@ -1301,7 +1337,7 @@ sub run {
                         #  __ __  __ __,    $mtime    - variables
                         my (undef, $mtime) = unpack('NN', $buff);
                         if ($mtime){
-                            tag 'gzip-file-is-not-multi-arch-same-safe', $file;
+                            tag 'gzip-file-is-not-multi-arch-same-safe',$file;
                         }
                     } else {
                         fail "reading $file: $!";
@@ -1476,7 +1512,8 @@ sub run {
                           $INCORRECT_LOCALE_CODES->value($lwccode);
                     } elsif ($INCORRECT_LOCALE_CODES->known($lcode)) {
                         tag 'incorrect-locale-code',
-                          "$lcode ->", $INCORRECT_LOCALE_CODES->value($lcode);
+                          "$lcode ->",
+                          $INCORRECT_LOCALE_CODES->value($lcode);
                     } elsif (!$LOCALE_CODES->known($lcode)) {
                         tag 'unknown-locale-code', $lcode;
                     } elsif ($LOCALE_CODES->known($lcode)
@@ -1535,7 +1572,7 @@ sub run {
                 my $linkcomponent = undef;
                 while ($linkcomponent = shift @linkcomponents) {
                     if ($linkcomponent eq '.') {
-                        tag 'symlink-contains-spurious-segments', "$file $link"
+                        tag 'symlink-contains-spurious-segments',"$file $link"
                           unless $mylink eq '.';
                         next;
                     }
@@ -1543,7 +1580,7 @@ sub run {
                     if (@filecomponents) {
                         $lastpop = pop @filecomponents;
                     } else {
-                        tag 'symlink-has-too-many-up-segments', "$file $link";
+                        tag 'symlink-has-too-many-up-segments',"$file $link";
                         goto NEXT_LINK;
                     }
                 }
@@ -1600,7 +1637,8 @@ sub run {
     }
 
     if (!$is_dummy && !$arch_dep_files && $arch ne 'all') {
-        tag 'package-contains-no-arch-dependent-files' unless $type eq 'udeb';
+        tag 'package-contains-no-arch-dependent-files'
+          unless $type eq 'udeb';
     }
 
     # python-support check

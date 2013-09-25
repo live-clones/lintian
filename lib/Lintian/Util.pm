@@ -77,6 +77,7 @@ BEGIN {
           is_ancestor_of
           locate_helper_tool
           drain_pipe
+          signal_number2name
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -1144,6 +1145,38 @@ sub check_path {
         return 1 if -f "$element/$command" and -x _;
     }
     return 0;
+}
+
+=item signal_number2name(NUM)
+
+Given a number, returns the name of the signal (without leading
+"SIG").  Example:
+
+    signal_number2name(2) eq 'INT'
+
+=cut
+
+{
+    my @signame;
+
+    sub signal_number2name {
+        my ($number) = @_;
+        if (not @signame) {
+            require Config;
+            # Doubt this happens for Lintian, but the code might
+            # Cargo-cult-copied or copy-wasted into another project.
+            # Speaking of which, thanks to
+            #  http://www.ccsf.edu/Pub/Perl/perlipc/Signals.html
+            defined($Config::Config{sig_name})
+              or die "Signals not available\n";
+            my $i = 0;
+            for my $name (split(' ', $Config::Config{sig_name})) {
+                $signame[$i] = $name;
+                $i++;
+            }
+        }
+        return $signame[$number];
+    }
 }
 
 =item normalize_pkg_path(PATH)

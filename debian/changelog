@@ -6,6 +6,11 @@ lintian (2.5.19) UNRELEASED; urgency=low
     + [NT] Apply patch from Samuel Thibault to fix a
       false-positive non-standard-toplevel-dir for the
       directories /hurd and /servers.  (Closes: #724524)
+    + [NT] Work around bug #724571 in t1disasm by ignoring
+      failures caused by segementation faults and bus errors.
+      Though, Lintian will emit a warning when such an error
+      occurs.  Thanks to Ansgar Burchardt for the report.
+      (Closes: #724319)
   * checks/testsuite.pm:
     + [NT] Allow uppercase letters in the names of DEP-8
       tests, now that the DEP-8 officially "tolerates" them.
