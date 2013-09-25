@@ -29,7 +29,7 @@ use Text::ParseWords ();
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env fail open_gz);
+use Lintian::Util qw(clean_env drain_pipe fail open_gz);
 
 sub run {
     my ($pkg, undef, $info, $proc, $group) = @_;
@@ -233,7 +233,7 @@ sub run {
                 } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
                     tag 'manpage-is-dh_make-template', $file;
                 }
-                1 while <$lexgrog_fd>;
+                drain_pipe($lexgrog_fd);
                 eval {close($lexgrog_fd);};
                 if (my $err = $@) {
                     # Problem closing the pipe?

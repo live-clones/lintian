@@ -27,7 +27,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_string_utf8_encoded open_gz);
+use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz);
 
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
@@ -1271,6 +1271,7 @@ sub run {
                             last;
                         }
                     }
+                    drain_pipe($t1pipe);
                     close($t1pipe);
                 }
             }

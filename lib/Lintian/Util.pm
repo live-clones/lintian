@@ -76,6 +76,7 @@ BEGIN {
           parse_boolean
           is_ancestor_of
           locate_helper_tool
+          drain_pipe
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -646,7 +647,7 @@ sub get_deb_info {
     # Consume all data before exiting so that we don't kill child processes
     # with SIGPIPE.  This will normally only be an issue with malformed
     # control files.
-    1 while readline $opts->{pipe_out};
+    drain_pipe($opts->{pipe_out});
     close($opts->{pipe_out});
     $opts->{harness}->finish();
     return $data[0];
@@ -697,6 +698,30 @@ sub slurp_entire_file {
     local $_ = <$fd>;
     close($fd) unless $noclose && openhandle($file);
     return $_;
+}
+
+=item drain_pipe(FD)
+
+Reads and discards any remaining contents from FD, which is assumed to
+be a pipe.  This is mostly done to avoid having the "write"-end die
+with a SIGPIPE due to a "broken pipe" (which can happen if you just
+close the pipe).
+
+May cause an exception if there are issues reading from the pipe.
+
+Caveat: This will block until the pipe is closed from the "write"-end,
+so only use it with pipes where the "write"-end will eventually close
+their end by themselves (or something else will make them close it).
+
+=cut
+
+sub drain_pipe {
+    my ($fd) = @_;
+    my $buffer;
+
+    1 while (read($fd, $buffer, 4096) > 0);
+
+    return 1;
 }
 
 =item get_file_checksum (ALGO, FILE)

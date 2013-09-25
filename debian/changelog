@@ -11,6 +11,9 @@ lintian (2.5.19) UNRELEASED; urgency=low
       tests, now that the DEP-8 officially "tolerates" them.
       (see #711844)
 
+  * lib/Lintian/Util.pm:
+    + [NT] Add drain_pipe(FD).
+
   * reporting/{config,harness}:
     + [NT] Determine the html_reports command automatically
       instead of allowing it to be configurable.

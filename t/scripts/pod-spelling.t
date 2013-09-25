@@ -81,7 +81,7 @@ AND'ing # ' # this is getting old
 superset YYYY dirname operm username whitespace
 Whitespace udebs multiword recognised eqv testsuite methodx multi
 multiarch relationA relationB Multi natively unordered arg CVE autodie
-hashrefs namespace subdir
+hashrefs namespace subdir SIGPIPE
 
 __END__
 
