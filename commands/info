@@ -23,7 +23,7 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
+use Getopt::Long();
 
 # turn file buffering off:
 STDOUT->autoflush;
@@ -70,7 +70,7 @@ if (compat) {
 }
 
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-GetOptions(%opthash) or die("error parsing options\n");
+Getopt::Long::GetOptions(%opthash) or die("error parsing options\n");
 
 # help
 if ($help) {

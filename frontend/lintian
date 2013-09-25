@@ -27,7 +27,7 @@ use warnings;
 use autodie;
 
 use Cwd qw(abs_path);
-use Getopt::Long;
+use Getopt::Long();
 use List::MoreUtils qw(any);
 use POSIX qw(:sys_wait_h);
 
@@ -619,7 +619,7 @@ Getopt::Long::GetOptions(
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
 # process commandline options
-GetOptions(%opthash)
+Getopt::Long::GetOptions(%opthash)
   or die("error parsing options\n");
 
 # root permissions?
