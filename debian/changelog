@@ -2,6 +2,11 @@ lintian (2.5.19) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/fields.{desc,pm}:
+    + [NT] Add check for "Homepage"-field missing in the
+      source, when one of the binary packages has the
+      field.  Thanks to Ricardo Mones for the bug report.
+      (Closes: #693117)
   * checks/files.pm:
     + [NT] Apply patch from Samuel Thibault to fix a
       false-positive non-standard-toplevel-dir for the

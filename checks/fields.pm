@@ -617,8 +617,21 @@ sub run {
         {
             tag 'homepage-for-cpan-package-contains-version', $orig;
         }
-    } elsif ($type eq 'binary' and not $info->native) {
-        tag 'no-homepage-field';
+    } elsif (not $info->native) {
+        if ($type eq 'source') {
+            my $binary_has_homepage_field = 0;
+            for my $binary ($info->binaries) {
+                if (defined $info->binary_field($binary, 'homepage')) {
+                    $binary_has_homepage_field = 1;
+                    last;
+                }
+            }
+            if ($binary_has_homepage_field) {
+                tag 'homepage-in-binary-package';
+            }
+        } elsif ($type eq 'binary') {
+            tag 'no-homepage-field';
+        }
     }
 
     #---- Installer-Menu-Item (udeb)

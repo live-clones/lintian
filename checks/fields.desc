@@ -390,6 +390,20 @@ Info: This non-native package lacks a <tt>Homepage</tt> field.  If the
  field to <tt>debian/control</tt>.
 Ref: policy 5.6.23
 
+Tag: homepage-in-binary-package
+Severity: wishlist
+Certainty: possible
+Info: This non-native source package produces at least one binary package
+ with a <tt>Homepage</tt> field.  However, the source package itself has
+ no <tt>Homepage</tt> field.  Unfortunately, this results in some
+ source-based tools/services (e.g. the PTS) not linking to the homepage
+ of the upstream project.
+ .
+ Note that you can just move the <tt>Homepage</tt> field to the source
+ paragraph in <tt>debian/control</tt> and all binary packages from this
+ source will inherit the value by default.
+Ref: policy 5.6.23
+
 Tag: homepage-for-cpan-package-contains-version
 Severity: minor
 Certainty: certain
