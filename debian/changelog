@@ -1,6 +1,8 @@
-lintian (2.5.19) UNRELEASED; urgency=low
+lintian (2.5.19) unstable; urgency=low
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - homepage-in-binary-package
 
   * checks/fields.{desc,pm}:
     + [NT] Add check for "Homepage"-field missing in the
@@ -43,7 +45,7 @@ lintian (2.5.19) UNRELEASED; urgency=low
   * reporting/lintian-dummy.cfg:
     + [NT] Remove file as it is now obsolete.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 22 Sep 2013 11:10:30 +0200
+ -- Niels Thykier <niels@thykier.net>  Thu, 26 Sep 2013 09:06:22 +0200
 
 lintian (2.5.18.1) unstable; urgency=low
 
