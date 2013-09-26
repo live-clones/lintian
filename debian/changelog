@@ -37,6 +37,9 @@ lintian (2.5.19) UNRELEASED; urgency=low
       run lintian.
     + [NT] Remove LINTIAN_BIN_DIR; it is no longer used to
       avoid signature checking.
+    + [NT] Fix a bug where harness would not remove entries in
+      the Lintian log for removed packages if no packages were
+      to be processed.
   * reporting/lintian-dummy.cfg:
     + [NT] Remove file as it is now obsolete.
 

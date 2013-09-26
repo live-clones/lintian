@@ -321,8 +321,11 @@ unless ($opt{'reports-only'}) {
     # Throw away the lab to avoid it hogging memory.
     $LAB = undef;
 
-    if (@worklist and $opt{'incremental-mode'}) {
+    if ($opt{'incremental-mode'}) {
         # Extra work for the incremental run
+        # - do this regardless of @worklist, since we could in theory
+        #   have an "only removals"-run.  In that case, their entries
+        #   should still be removed from the log.
 
         die "Old Lintian log file $lintian_log not found!\n"
           unless -f $lintian_log;
