@@ -315,6 +315,8 @@ unless ($opt{'reports-only'}) {
     #   the lab actually was modified, then this will at least keep
     #   the lab metadata consistent with the actual contents.
     $LAB->close;
+    # Throw away the lab to avoid it hogging memory.
+    $LAB = undef;
 
     if (@worklist and $opt{'incremental-mode'}) {
         # Extra work for the incremental run
