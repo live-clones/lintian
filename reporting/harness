@@ -531,14 +531,15 @@ sub local_mirror_manifests {
                 my $binsub = sub {
                     _parse_pkgs_pg($active_srcs, $binman, $mirdir, $area, @_);
                 };
-                my $upkgfd = _open_data_file($upkgs);
+                my $upkgfd;
                 my $udebsub = sub {
                     _parse_pkgs_pg($active_srcs, $udebman, $mirdir, $area, @_);
                 };
                 visit_dpkg_paragraph($binsub, $pkgfd);
+                close($pkgfd);
+                $upkgfd = _open_data_file($upkgs);
                 visit_dpkg_paragraph($udebsub, $upkgfd);
-                close $pkgfd;
-                close $upkgfd;
+                close($upkgfd);
             }
             $srcfd = _open_data_file($srcs);
             $srcsub
