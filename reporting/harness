@@ -176,6 +176,7 @@ if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
 
 unless ($opt{'reports-only'}) {
     $LAB->open;
+    Log('Processing mirror index files');
     my @manifests = local_mirror_manifests(
         $LINTIAN_ARCHIVEDIR, [_trim_split($LINTIAN_DIST)],
         [_trim_split($LINTIAN_AREA)], [_trim_split($LINTIAN_ARCH)]);
@@ -274,6 +275,8 @@ unless ($opt{'reports-only'}) {
     # If we just "blindly" run the packages from case 1, then binaries
     # from group 2 will not be procesed with their (full) group
     # (particularly without the source package).
+
+    Log('Computing grouping...');
 
     if ($opt{'full-mode'}) {
         # for full run, just replace %dirty_groups with "<all groups in lab>".
