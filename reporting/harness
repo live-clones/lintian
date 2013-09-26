@@ -122,7 +122,7 @@ require Lintian::Processable;
 require Lintian::Relation::Version;
 import Lintian::Relation::Version qw(versions_lt);
 require Lintian::Util;
-import Lintian::Util qw(strip visit_dpkg_paragraph);
+import Lintian::Util qw(open_gz strip visit_dpkg_paragraph);
 
 # turn file buffering off
 STDOUT->autoflush;
@@ -565,13 +565,8 @@ sub _open_data_file {
         open my $fd, '<', $file or Die "opening $file: $!";
         return $fd;
     }
-    foreach my $com (['gz', ['gzip', '-dc']]){
-        my ($ext, $cmd) = @$com;
-        if (-e "$file.$ext") {
-            open my $c, '-|', @$cmd, "$file.$ext"
-              or Die "running @$cmd $file.$ext";
-            return $c;
-        }
+    if (-e "$file.gz") {
+        return open_gz("$file.gz");
     }
     Die "Cannot find $file";
 }
