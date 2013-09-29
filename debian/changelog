@@ -2,6 +2,10 @@ lintian (2.5.20) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/cruft.{desc,pm}:
+    + [BR] Check files for under a non-distributable Nvidia
+      license.  (Closes: #724930)
+
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
 

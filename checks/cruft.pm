@@ -437,9 +437,6 @@ sub find_cruft {
             close($fd);
         }
 
-        # license issues do not apply to non-free
-        next ENTRY
-          if $info->is_non_free;
         # license string in debian/changelog are probably just changes
         next ENTRY
           if $name eq 'debian/changelog';
@@ -466,6 +463,7 @@ sub find_cruft {
         # for efficiency.  We store two blocks in @queue and the whole
         # string to match in $block. Please emit license tags only once
         # per file
+      BLOCK:
         while (read($F, my $window, BLOCKSIZE)) {
             my $block;
             shift @queue;
@@ -477,6 +475,32 @@ sub find_cruft {
                 $block =~ s{ \\ & }{}gxsm;
                 $block =~ s{ \\s (?:0|-1) }{}gxsm;
                 $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+            }
+
+            if (   index($block, 'intellectual') > -1
+                && index($block, 'property') > -1
+                && index($block, 'all') > -1) {
+
+                # nvdia opencv infamous license
+                # non-distributable
+                if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
+                    my $cleanedblock = _clean_block($block);
+                    if (
+                        $cleanedblock =~ m/retain \s+ all \s+ intellectual \s+
+                          property \s+ and \s+ proprietary \s+ rights \s+ in \s+
+                          and \s+ to \s+ this \s+ software \s+ and \s+
+                          related \s+ documentation/xism
+                      ) {
+                        tag 'license-problem-nvidia-intellectual', $name;
+                        $licenseproblemhash{'nvidia-intellectual'} = 1;
+                    }
+                }
+            }
+
+            # some license issues do not apply to non-free
+            # because these file are distribuable
+            if ($info->is_non_free) {
+                next BLOCK;
             }
 
             if (

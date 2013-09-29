@@ -326,7 +326,7 @@ Info: The Debian diff or native package contains a file ending in
 Tag: diff-contains-substvars
 Severity: normal
 Certainty: certain
-Info: Lintian found a substvars file in the Debian diff for this source 
+Info: Lintian found a substvars file in the Debian diff for this source
  package. The debian/substvars (or debian/<tt>package</tt>.substvars) file
  is usually generated and modified dynamically by debian/rules targets, in
  which case it must be removed by the clean target.
@@ -513,6 +513,23 @@ Info: The given source file is licensed under GFDL, but without any
  .
 Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
  http://www.debian.org/vote/2006/vote_001
+
+Tag: license-problem-nvidia-intellectual
+Severity: serious
+Certainty: possible
+Info: The given source file include part license under a
+ non-distributable license from NVIDIA.  Therefore, it is
+ not even possible to ship this in non-free.
+ .
+ Please re-package the package without the file (if possible)
+ or ask the ftp-masters to remove the package.
+ .
+ If the package has been uploaded to Debian before, please
+ remember to also notify snapshot.debian.org about this
+ package containing a non-distributable file.
+ .
+ Should this be a false-positive, please report a bug
+ against lintian.
 
 Tag: source-contains-unsafe-symlink
 Severity: serious
