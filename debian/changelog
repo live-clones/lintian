@@ -51,6 +51,12 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       slowly reprocess groups processed by an other version of
       Lintian than the current.
 
+  * t:
+    + [NT] Apply patch from Adam Conrad to fix issue with a test
+      when run in an Ubuntu environment.  Also thanks to Benjamin
+      Drung for forwarding the patch to the Debian BTS.
+      (Closes: #725139)
+
  -- Niels Thykier <niels@thykier.net>  Sat, 21 Dec 2013 10:44:43 +0100
 
 lintian (2.5.20) unstable; urgency=low
