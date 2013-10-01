@@ -61,7 +61,7 @@ libmysqlclient ||source-regex=mysql(?:-\d.*)? ||MySQL client ran out of memory
 libpcap   ||(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)
 libpng    ||(?m)^Potential overflow in png_zalloc
 libraw    ||Unsupported file format or not RAW file
-libpostproc ||source=libav||using npp filters 0x%X/0x%X\n
+libpostproc ||source=lib(?:av|postproc)||using npp filters 0x%X/0x%X\n
 libswscale  ||source=libav||Exactly one scaler algorithm must be chosen\n
 
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
