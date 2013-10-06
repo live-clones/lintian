@@ -451,95 +451,104 @@ sub find_cruft {
 
         # test license problem is source file (only text file)
         next ENTRY unless -T $path;
+        license_check($info, $name, $path);
+    }
+    return;
+}
 
-        open(my $F, '<', $path);
-        binmode($F);
+# do basic license check against well known offender
+# note that it does not replace licensecheck(1) 
+# and is only used for autoreject by ftp-master
+sub license_check {
+    my ($info, $name, $path) = @_;
+    open(my $F, '<', $path);
+    binmode($F);
 
-        my @queue = ('', '');
-        my %licenseproblemhash = ();
-        my $blocknumber = 0;
+    my @queue = ('', '');
+    my %licenseproblemhash = ();
+    my $blocknumber = 0;
 
-        # we try to read this file in block and use a sliding window
-        # for efficiency.  We store two blocks in @queue and the whole
-        # string to match in $block. Please emit license tags only once
-        # per file
-      BLOCK:
-        while (read($F, my $window, BLOCKSIZE)) {
-            my $block;
-            shift @queue;
-            push(@queue, lc($window));
-            $block =  join '', @queue;
+    # we try to read this file in block and use a sliding window
+    # for efficiency.  We store two blocks in @queue and the whole
+    # string to match in $block. Please emit license tags only once
+    # per file
+  BLOCK:
+    while (read($F, my $window, BLOCKSIZE)) {
+        my $block;
+        shift @queue;
+        push(@queue, lc($window));
+        $block =  join '', @queue;
 
-            if (index($block, '\\') > -1) {
-                # Remove formatting commonly added by pod2man
-                $block =~ s{ \\ & }{}gxsm;
-                $block =~ s{ \\s (?:0|-1) }{}gxsm;
-                $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
-            }
+        if (index($block, '\\') > -1) {
+            # Remove formatting commonly added by pod2man
+            $block =~ s{ \\ & }{}gxsm;
+            $block =~ s{ \\s (?:0|-1) }{}gxsm;
+            $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+        }
 
-            if (   index($block, 'intellectual') > -1
-                && index($block, 'property') > -1
-                && index($block, 'all') > -1) {
+        if (   index($block, 'intellectual') > -1
+            && index($block, 'property') > -1
+            && index($block, 'all') > -1) {
 
-                # nvdia opencv infamous license
-                # non-distributable
-                if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
-                    my $cleanedblock = _clean_block($block);
-                    if (
-                        $cleanedblock =~ m/retain \s+ all \s+ intellectual \s+
+            # nvdia opencv infamous license
+            # non-distributable
+            if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
+                my $cleanedblock = _clean_block($block);
+                if (
+                    $cleanedblock =~ m/retain \s+ all \s+ intellectual \s+
                           property \s+ and \s+ proprietary \s+ rights \s+ in \s+
                           and \s+ to \s+ this \s+ software \s+ and \s+
                           related \s+ documentation/xism
-                      ) {
-                        tag 'license-problem-nvidia-intellectual', $name;
-                        $licenseproblemhash{'nvidia-intellectual'} = 1;
-                    }
+                  ) {
+                    tag 'license-problem-nvidia-intellectual', $name;
+                    $licenseproblemhash{'nvidia-intellectual'} = 1;
                 }
             }
+        }
 
-            # some license issues do not apply to non-free
-            # because these file are distribuable
-            if ($info->is_non_free) {
-                next BLOCK;
-            }
+        # some license issues do not apply to non-free
+        # because these file are distribuable
+        if ($info->is_non_free) {
+            next BLOCK;
+        }
 
-            if (
-                index($block, 'evil') > -1
-                && $block =~ m/software \s++ shall \s++
+        if (
+            index($block, 'evil') > -1
+            && $block =~ m/software \s++ shall \s++
                      be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
                      not \s++ evil/xsm
-              ) {
-                # json evil license
+          ) {
+            # json evil license
 
-                if (!exists $licenseproblemhash{'json-evil'}) {
-                    tag 'license-problem-json-evil', $name;
-                    $licenseproblemhash{'json-evil'} = 1;
-                }
+            if (!exists $licenseproblemhash{'json-evil'}) {
+                tag 'license-problem-json-evil', $name;
+                $licenseproblemhash{'json-evil'} = 1;
             }
+        }
 
-            # check GFDL block - The ".{0,1024}"-part in the regex
-            # will contain the "no invariants etc."  part if
-            # it is a good use of the license.  We include it
-            # here to ensure that we do not emit a false positive
-            # if the "redeeming" part is in the next block.
-            #
-            # See cruft-gfdl-fp-sliding-win for the test case
-            if (   index($block, 'license') > -1
-                && index($block, 'documentation') > -1
-                && index($block, 'gnu') > -1
-                && index($block, 'copy') > -1) {
+        # check GFDL block - The ".{0,1024}"-part in the regex
+        # will contain the "no invariants etc."  part if
+        # it is a good use of the license.  We include it
+        # here to ensure that we do not emit a false positive
+        # if the "redeeming" part is in the next block.
+        #
+        # See cruft-gfdl-fp-sliding-win for the test case
+        if (   index($block, 'license') > -1
+            && index($block, 'documentation') > -1
+            && index($block, 'gnu') > -1
+            && index($block, 'copy') > -1) {
 
-                my $cleanedblock = $block;
+            my $cleanedblock = $block;
 
-                # gnu word is often highlighted
-                # do a minimal replace in order to do the hard work
-                # only in case of positively matched GFDL
-                $cleanedblock =~ s{
+            # gnu word is often highlighted
+            # do a minimal replace in order to do the hard work
+            # only in case of positively matched GFDL
+            $cleanedblock =~ s{
                  (?:<span\s*[^>]>)?\s*gnu\s*</span\s*[^>]*?>  | # html span
                  (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}               # Tex info cmd
                 }{ gnu }gxms;
-                # classical gfdl matching pattern
-                my $normalgfdlpattern = qr/
+            # classical gfdl matching pattern
+            my $normalgfdlpattern = qr/
                  (?'contextbefore'(?:
                     (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
                     (?:\s+ copy \s+ of \s+ the \s+ license \s+ is.{0,1024}?)))
@@ -548,8 +557,8 @@ sub find_cruft {
                  a \s+ copy \s+ of \s+ the \s+ license \s+ is
                 /xsmo;
 
-                # for first block we get context from the beginning
-                my $firstblockgfdlpattern = qr/
+            # for first block we get context from the beginning
+            my $firstblockgfdlpattern = qr/
                  (?'rawcontextbefore'(?:
                     (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
                   \A(?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){0,1024}|
@@ -561,137 +570,135 @@ sub find_cruft {
                  a \s+ copy \s+ of \s+ the \s+ license \s+ is
                  /xsmo;
 
-                my $gfdlpattern
-                  = $blocknumber
-                  ? $normalgfdlpattern
-                  : $firstblockgfdlpattern;
+            my $gfdlpattern
+              = $blocknumber
+              ? $normalgfdlpattern
+              : $firstblockgfdlpattern;
 
-                if ($cleanedblock =~ $gfdlpattern) {
-                    if (!exists $licenseproblemhash{'gfdl-invariants'}) {
-                        my $rawgfdlsections = $+{rawgfdlsections} || '';
-                        my $rawcontextbefore = $+{rawcontextbefore} || '';
+            if ($cleanedblock =~ $gfdlpattern) {
+                if (!exists $licenseproblemhash{'gfdl-invariants'}) {
+                    my $rawgfdlsections = $+{rawgfdlsections} || '';
+                    my $rawcontextbefore = $+{rawcontextbefore} || '';
 
-                        # replace some common comment-marker/markup with space
-                        my $gfdlsections = _clean_block($rawgfdlsections);
-                        my $contextbefore = _clean_block($rawcontextbefore);
+                    # replace some common comment-marker/markup with space
+                    my $gfdlsections = _clean_block($rawgfdlsections);
+                    my $contextbefore = _clean_block($rawcontextbefore);
 
-                        # remove classical and without meaning part of
-                        # matched string
-                        $gfdlsections =~ s{
+                    # remove classical and without meaning part of
+                    # matched string
+                    $gfdlsections =~ s{
                           \A version \s \d+(?:\.\d+)? \s
                            (?:or \s any \s later \s version \s)?
                            published \s by \s the \s Free \s Software \s Foundation
                            \s?[,\.;]?\s?}{}xismo;
-                        $contextbefore =~ s{
+                    $contextbefore =~ s{
                           \s? (:?[,\.;]? \s?)?
                            permission \s is \s granted \s to \s copy \s?[,\.;]?\s?
                            distribute \s?[,\.;]?\s? and\s?/?\s?or \s modify \s
                            this \s document \s under \s the \s terms \s of \s the\Z}
                         {}xismo;
 
-                        # GFDL license, assume it is bad unless it
-                        # explicitly states it has no "bad sections".
-                        if (
-                            $gfdlsections =~ m/
+                    # GFDL license, assume it is bad unless it
+                    # explicitly states it has no "bad sections".
+                    if (
+                        $gfdlsections =~ m/
                             no \s? Invariant \s+ Sections? \s? [,\.;]?
                                \s? (?:with\s)? (?:the\s)? no \s
                                Front(?:\s?\\?-)?\s?Cover (?:\s Texts?)? \s? [,\.;]? \s? (?:and\s)?
                                (?:with\s)? (?:the\s)? no
                                \s Back(?:\s?\\?-)?\s?Cover/xiso
-                          ) {
-                            # no invariant
-                        } elsif (
-                            $gfdlsections =~ m/
+                      ) {
+                        # no invariant
+                    } elsif (
+                        $gfdlsections =~ m/
                             no \s Invariant \s Sections? \s? [,\.;]?
                                \s? (?:no\s)? Front(?:\s?[\\]?-)? \s or
                                \s (?:no\s)? Back(?:\s?[\\]?-)?\s?Cover \s Texts?/xiso
-                          ) {
-                            # no invariant variant (dict-foldoc)
-                        } elsif (
-                            $gfdlsections =~ m/
+                      ) {
+                        # no invariant variant (dict-foldoc)
+                    } elsif (
+                        $gfdlsections =~ m/
                             \A There \s are \s no \s invariants? \s sections? \Z
                           /xiso
-                          ) {
-                            # no invariant libnss-pgsql version
-                        } elsif (
-                            $gfdlsections =~ m/
+                      ) {
+                        # no invariant libnss-pgsql version
+                    } elsif (
+                        $gfdlsections =~ m/
                             \A without \s any \s Invariant \s Sections? \Z
                           /xiso
-                          ) {
-                            # no invariant parsewiki version
-                        } elsif (
-                            $gfdlsections=~ m/
+                      ) {
+                        # no invariant parsewiki version
+                    } elsif (
+                        $gfdlsections=~ m/
                             \A with \s no \s invariants? \s sections? \Z
                          /xiso
-                          ) {
-                            # no invariant lilypond version
-                        } elsif (
-                            $gfdlsections =~ m/\A
+                      ) {
+                        # no invariant lilypond version
+                    } elsif (
+                        $gfdlsections =~ m/\A
                             with \s the \s Invariant \s Sections \s being \s
                             LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
                             with \s the \s Front(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
                             LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
                             (?:and\s)? with \s the \s Back(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
                             LIST (?:\s THEIR \s TITLES)? \Z/xiso
-                          ) {
-                            # verbatim text of license is ok
-                        } elsif ($gfdlsections eq '') {
-                            # empty text is ambiguous
-                            tag 'license-problem-gfdl-invariants-empty',$name;
-                            $licenseproblemhash{'gfdl-invariants'} = 1;
-                        } elsif (
-                            $gfdlsections =~ m/
+                      ) {
+                        # verbatim text of license is ok
+                    } elsif ($gfdlsections eq '') {
+                        # empty text is ambiguous
+                        tag 'license-problem-gfdl-invariants-empty',$name;
+                        $licenseproblemhash{'gfdl-invariants'} = 1;
+                    } elsif (
+                        $gfdlsections =~ m/
                             with \s \&FDLInvariantSections; \s? [,\.;]? \s?
                             with \s+\&FDLFrontCoverText; \s? [,\.;]? \s?
                             and \s with \s \&FDLBackCoverText;/xiso
-                          ) {
-                            # fix #708957 about FDL entities in template
-                            unless (
-                                $name =~ m{
+                      ) {
+                        # fix #708957 about FDL entities in template
+                        unless (
+                            $name =~ m{
                                 /customization/[^/]+/entities/[^/]+\.docbook \Z
                               }xsm
-                              ) {
-                                tag 'license-problem-gfdl-invariants',$name;
-                                $licenseproblemhash{'gfdl-invariants'} = 1;
-                            }
-                        } elsif (
-                            $gfdlsections =~ m{
+                          ) {
+                            tag 'license-problem-gfdl-invariants',$name;
+                            $licenseproblemhash{'gfdl-invariants'} = 1;
+                        }
+                    } elsif (
+                        $gfdlsections =~ m{
                             \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
                             being \s list \s their \s titles \s?[,\.;]?\s?
                             with \s the \s? <_: \s* link-\d+ \s? /> \s?
                             being \s list \s?[,\.;]?\s?
                             (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s?
                             being \s list \Z}xiso
-                          ) {
-                            # fix a false positive in .po file
-                            unless ($name =~ m,\.po$,) {
-                                tag 'license-problem-gfdl-invariants', $name;
-                                $licenseproblemhash{'gfdl-invariants'} = 1;
-                            }
-                        } else {
-                            if (
-                                $contextbefore =~ m/
+                      ) {
+                        # fix a false positive in .po file
+                        unless ($name =~ m,\.po$,) {
+                            tag 'license-problem-gfdl-invariants', $name;
+                            $licenseproblemhash{'gfdl-invariants'} = 1;
+                        }
+                    } else {
+                        if (
+                            $contextbefore =~ m/
                                   Following \s is \s an \s example
                                   (:?\s of \s the \s license \s notice \s to \s use
                                     (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
                                       (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
                                     )?
                                   )? \s? [,:]? \Z/xiso
-                              ) {
-                                # it is an example
-                            } else {
-                                tag 'license-problem-gfdl-invariants', $name;
-                                $licenseproblemhash{'gfdl-invariants'} = 1;
-                            }
+                          ) {
+                            # it is an example
+                        } else {
+                            tag 'license-problem-gfdl-invariants', $name;
+                            $licenseproblemhash{'gfdl-invariants'} = 1;
                         }
                     }
                 }
             }
-            $blocknumber++;
         }
-        close($F);
+        $blocknumber++;
     }
-    return;
+    close($F);
 }
 
 sub _clean_block {
