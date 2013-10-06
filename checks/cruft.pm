@@ -41,6 +41,7 @@ use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail is_ancestor_of normalize_pkg_path strip);
+use Lintian::SlidingWindow;
 
 # All the packages that may provide config.{sub,guess} during the build, used
 # to suppress warnings about outdated autotools helper files.  I'm not
@@ -461,24 +462,16 @@ sub find_cruft {
 # and is only used for autoreject by ftp-master
 sub license_check {
     my ($info, $name, $path) = @_;
-    open(my $F, '<', $path);
-    binmode($F);
 
-    my @queue = ('', '');
+    my $sfd = Lintian::SlidingWindow->new('<', $path, sub { $_=lc($_); });
     my %licenseproblemhash = ();
-    my $blocknumber = 0;
 
     # we try to read this file in block and use a sliding window
     # for efficiency.  We store two blocks in @queue and the whole
     # string to match in $block. Please emit license tags only once
     # per file
   BLOCK:
-    while (read($F, my $window, BLOCKSIZE)) {
-        my $block;
-        shift @queue;
-        push(@queue, lc($window));
-        $block =  join '', @queue;
-
+    while (my $block = $sfd->readwindow()) {
         if (index($block, '\\') > -1) {
             # Remove formatting commonly added by pod2man
             $block =~ s{ \\ & }{}gxsm;
@@ -571,7 +564,7 @@ sub license_check {
                  /xsmo;
 
             my $gfdlpattern
-              = $blocknumber
+              = $sfd->blocknumber()
               ? $normalgfdlpattern
               : $firstblockgfdlpattern;
 
@@ -696,9 +689,7 @@ sub license_check {
                 }
             }
         }
-        $blocknumber++;
     }
-    close($F);
 }
 
 sub _clean_block {
