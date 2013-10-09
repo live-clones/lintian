@@ -71,3 +71,12 @@ dpatch
 
 # Deprecated in Jessie (#710466)
 texi2html
+
+# Deprecated versions of automake
+automake1.4
+automake1.5
+automake1.6
+automake1.7
+automake1.8
+automake1.9
+automake1.10

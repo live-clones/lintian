@@ -8,6 +8,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
+  * data/fields/obsolete-packages:
+    + [NT] Apply patch from Eric Dorland to mark various versions
+      of automake as obsolete.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 26 Sep 2013 09:35:27 +0200
 
