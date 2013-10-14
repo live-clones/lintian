@@ -11,6 +11,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * data/fields/obsolete-packages:
     + [NT] Apply patch from Eric Dorland to mark various versions
       of automake as obsolete.
+  * data/fields/virtual-packages:
+    + [NT] Refresh against sid.  Thanks to Nicholas Breen for the
+      reminder.  (Closes: #724866)
 
  -- Niels Thykier <niels@thykier.net>  Thu, 26 Sep 2013 09:35:27 +0200
 
