@@ -15,7 +15,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [NT] Refresh against sid.  Thanks to Nicholas Breen for the
       reminder.  (Closes: #724866)
   * data/spelling/corrections:
-    + [RG] Detect some typos of "establishment".
+    + [RG] Detect some typos of "establishment" and "contains."
 
   * lib/Lintian/Check.pm:
     + [RG] Detect a few more spelling mistakes by removing some
