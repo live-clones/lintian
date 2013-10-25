@@ -42,6 +42,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
       suffixes before looking them up in the list of spelling mistakes.
     + [BR] Add a list of global exception for spelling mistakes.
       (Closes: #730715)
+  * lib/Lintian/Collect/Binary.pm:
+    + [GN] Add support for multi-component RPATHs. (Closes: #727683)
   * lib/Lintian/Collect/Package.pm:
     + [BR] Globally replace \\ by \ in _dequote_name(). This bug was
       masked by old buggy tar (Closes: #727665).

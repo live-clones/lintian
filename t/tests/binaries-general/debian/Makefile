@@ -10,6 +10,8 @@ all:
 	$(COMPILE) -o basiclibrpath basic.c -Wl,--rpath,/usr/lib
 	# non-special rpath shipped in the package
 	$(COMPILE) -o basicshippedrpath basic.c -Wl,--rpath,/usr/share/foo
+	# special rpath shipped in the package, multiple paths
+	$(COMPILE) -o basicshippedrpathmore basic.c -Wl,--rpath,/usr/lib/binaries-general:/usr/lib/binaries-general/bar
 	# static version of basic for debugging checks
 	$(COMPILE) -static -o basic.static basic.c
 	# version with debug
@@ -27,6 +29,7 @@ install:
 	strip -s $(DESTDIR)/usr/lib/debug/usr/share/foo/basic
 	install -m 755 -c basiclibrpath $(DESTDIR)/usr/lib/foo/basiclibrpath
 	install -m 755 -c basicshippedrpath $(DESTDIR)/usr/lib/foo/basicshippedrpath
+	install -m 744 -c basicshippedrpathmore $(DESTDIR)/usr/lib/foo/basicshippedrpathmore
 	objcopy --only-keep-debug basic $(DESTDIR)/usr/lib/debug/basic
 	install -d "$(DESTDIR)/usr/lib/debug/.build-id/"`$(GETBUILDID) -s basicdebug`
 	install -m 755 -c basicdebug $(DESTDIR)/usr/share/foo/basicdebug
