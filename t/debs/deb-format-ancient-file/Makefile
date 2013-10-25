@@ -9,7 +9,7 @@ all:
 
 	chown 0:0 control
 	chmod 644 control
-	env TZ=GMT touch -t 197001010000 control
+	env TZ=GMT touch -d@-1 control
 
 	# Use --no-fix-perm to avoid it messing with the
 	# our created "mod-times"

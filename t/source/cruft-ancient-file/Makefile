@@ -4,7 +4,7 @@ dir  = $(name)-1.0
 all:
 	mkdir $(dir)
 	echo 'Some upstream README' > $(dir)/README
-	env TZ=GMT touch -t 197001010000 $(dir)/README
+	env TZ=GMT touch -d@-1 $(dir)/README
 	tar -c -f $(name)_1.0.orig.tar.gz -z $(dir)
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
