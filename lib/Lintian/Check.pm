@@ -251,7 +251,7 @@ sub check_spelling {
     $exceptions = {} unless (defined($exceptions));
 
     for my $word (split(/\s+/, $text)) {
-	my $correction;
+        my $correction;
         $word =~ s/[.,;:?!]+$//;
         next if ($word =~ /^[A-Z]{1,5}\z/);
         # Some exceptions are based on case (e.g. "teH").
@@ -259,15 +259,19 @@ sub check_spelling {
         my $lcword = lc $word;
         if ($corrections->known($lcword)
             &&!exists($exceptions->{$lcword})) {
-	    $correction = $corrections->value($lcword);
-	} elsif ($lcword =~ m/^(.+?)(ment|ing|s|ly)$/) {
-	    my ($suffixless, $suffix) = ($1, $2);
-	    if ($corrections->known($suffixless)
-		&& !exists($exceptions->{$suffixless})) {
-		$correction = $corrections->value($suffixless) . $suffix;
-	    }
-	}
-	if ($correction) {
+            $correction = $corrections->value($lcword);
+        } elsif ($lcword =~ m/^(.+?)(ment|ing|s|ly)$/) {
+            my ($suffixless, $suffix) = ($1, $2);
+            # Ignore this case for words ending with "ss".
+            # (e.g. process - we have a correction for "proces", which
+            # have will cause a false-positive)
+            if (   ($suffix ne 's' || $suffixless !~ m/s\Z/xsm)
+                && $corrections->known($suffixless)
+                && !exists($exceptions->{$suffixless})) {
+                $correction = $corrections->value($suffixless) . $suffix;
+            }
+        }
+        if ($correction) {
             $counter++;
             if ($word =~ /^[A-Z]+$/) {
                 $correction = uc $correction;
