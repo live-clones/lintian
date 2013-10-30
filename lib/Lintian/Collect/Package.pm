@@ -324,7 +324,7 @@ sub _dequote_name {
     $slsd = 1 unless defined $slsd; # Remove initial ./ by default
     $name =~ s,^\.?/,, if $slsd;
     $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $name =~ s/\\\\/\\/;
+    $name =~ s/\\\\/\\/g;
     return $name;
 }
 

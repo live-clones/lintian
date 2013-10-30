@@ -100,6 +100,7 @@ W: filenames: file-in-usr-lib-sgml usr/lib/sgml/package
 W: filenames: file-name-ends-in-whitespace files/'\ 
 W: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm?l
 W: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm\?l
+W: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm\\?l
 W: filenames: gz-file-not-gzip usr/share/filenames/prototype.js.gz
 W: filenames: macos-ds-store-file-in-package usr/share/doc/filenames/.DS_Store
 W: filenames: macos-resource-fork-file-in-package usr/share/doc/filenames/._NEWS.Debian
