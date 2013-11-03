@@ -32,7 +32,7 @@ I: scripts: init.d-script-missing-lsb-short-description etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
-W: scripts source: ancient-standards-version 3.2.1 (current is 3.9.4)
+W: scripts source: ancient-standards-version 3.2.1 (current is CURRENT)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: changelog-should-mention-nmu
 W: scripts source: debhelper-but-no-misc-depends scripts

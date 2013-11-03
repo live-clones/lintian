@@ -48,7 +48,7 @@ I: filenames: using-first-person-in-description line 1: I
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game
 W: filename-games: no-priority-field
-W: filenames source: ancient-standards-version 3.1.1 (current is 3.9.4)
+W: filenames source: ancient-standards-version 3.1.1 (current is CURRENT)
 W: filenames source: diff-contains-arch-control-dir .arch-ids
 W: filenames source: diff-contains-arch-control-dir {arch}
 W: filenames source: diff-contains-arch-inventory-file files/.arch-inventory

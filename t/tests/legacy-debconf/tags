@@ -30,7 +30,7 @@ I: debconf-test: unused-debconf-template debconf/testmulti-escape
 I: debconf-test: unused-debconf-template debconf/testnote
 I: debconf-test: unused-debconf-template debconf/teststring
 I: debconf-test: unused-debconf-template debconf/translate
-W: debconf source: ancient-standards-version 3.7.2 (current is 3.9.4)
+W: debconf source: ancient-standards-version 3.7.2 (current is CURRENT)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 56)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 60)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3

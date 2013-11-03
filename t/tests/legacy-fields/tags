@@ -7,7 +7,7 @@ E: fields source: package-uses-debhelper-but-lacks-build-depends
 E: fields: debian-changelog-file-missing-or-wrong-name
 E: fields: depends-on-python-minimal depends
 E: fields: no-copyright-file
-W: fields source: ancient-standards-version 3.9.2 (current is 3.9.4)
+W: fields source: ancient-standards-version 3.9.2 (current is CURRENT)
 W: fields source: changelog-should-mention-nmu
 W: fields source: debhelper-but-no-misc-depends another-version
 W: fields source: debhelper-but-no-misc-depends fields

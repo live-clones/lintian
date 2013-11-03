@@ -38,7 +38,7 @@ E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.o
 I: maintainer-scripts source: debian-rules-missing-good-practice-target-dfsg get-orig-source
 I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm
-W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is 3.9.4)
+W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is CURRENT)
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: debhelper-but-no-misc-depends maintainer-scripts
 W: maintainer-scripts source: debhelper-compat-file-is-missing
