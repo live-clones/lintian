@@ -5,8 +5,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * checks/cruft.{desc,pm}:
     + [BR] Check files for under a non-distributable Nvidia
       license.  (Closes: #724930)
-    + Abstract sliding window algorithm and use it for license 
-      check.
+    + Abstract sliding window algorithm and use it for license
+      check.  (Closes: #720348)
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
