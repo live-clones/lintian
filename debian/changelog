@@ -5,6 +5,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * checks/cruft.{desc,pm}:
     + [BR] Check files for under a non-distributable Nvidia
       license.  (Closes: #724930)
+    + Abstract sliding window algorithm and use it for license 
+      check.
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
@@ -25,6 +27,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * lib/Lintian/Check.pm:
     + [RG] Detect a few more spelling mistakes by removing some
       suffixes before looking them up in the list of spelling mistakes.
+  * lib/Lintian/Collect/Package.pm:
+    + [BR] Globally replace \\ by \ in _dequote_name(). This bug
+           was masked by old buggy tar (Closes: #727665).
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Add "trusty".  Thanks to Stéphane Graber for the
