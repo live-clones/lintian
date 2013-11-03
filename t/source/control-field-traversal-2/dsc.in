@@ -4,7 +4,7 @@ Binary: ../../control-field-traversal-2
 Architecture: all
 Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 7)
 Checksums-Sha1:
  @SHA1@ @SIZE@ control-field-traversal-2_1.tar.gz

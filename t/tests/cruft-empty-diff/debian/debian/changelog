@@ -5,4 +5,4 @@ cruft-empty-diff (1.0-1) unstable; urgency=low
 
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Thu, 27 Sep 2012 14:45:00 +0100
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 03 Nov 2013 19:50:00 +0000

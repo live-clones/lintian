@@ -16,6 +16,11 @@ lintian (2.5.20) UNRELEASED; urgency=low
       reminder.  (Closes: #724866)
   * data/spelling/corrections:
     + [RG] Detect some typos of "establishment" and "contains."
+  * data/standards-version/release-dates:
+    + [NT] Add release date for 3.9.5.
+
+  * debian/control:
+    + [NT] Bump Standards-Versions to 3.9.5 - no changes required.
 
   * lib/Lintian/Check.pm:
     + [RG] Detect a few more spelling mistakes by removing some

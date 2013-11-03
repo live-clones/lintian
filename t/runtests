@@ -87,7 +87,7 @@ our @DPKG_BUILDPACKAGE_CMD = (
     qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
     qw(--source-option=--auto-commit),
 );
-our $STANDARDS_VERSION = '3.9.4';
+our $STANDARDS_VERSION = '3.9.5';
 our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $ARCHITECTURE;
 
