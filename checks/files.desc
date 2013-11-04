@@ -1303,6 +1303,10 @@ Certainty: possible
 Info: The arch all pkg-config file contains reference to an multi-arch path.
  .
  This can be usually be fixed by moving this file to a multi-arch path.
+ .
+ Another likely cause is using debhelper 9 or newer (thus enabling
+ multi-arch paths by default) on a non multi-arched package.
+ The usual cure is in this case to render your package multi-arch.
 
 Tag: dir-or-file-in-home
 Severity: serious
