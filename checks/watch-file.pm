@@ -181,6 +181,13 @@ sub run {
     tag 'debian-watch-contains-dh_make-template' if ($template);
     tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
+    if ($withgpgverification) {
+         my $pgpfile = $info->debfiles('upstream-signing-key.pgp');
+         if (!-f $pgpfile) {
+             tag 'debian-watch-file-pubkey-file-is-missing';
+         }
+    }
+
     my $changes = $info->changelog;
     if (defined $changes and %dversions) {
         my $data = $changes->data;

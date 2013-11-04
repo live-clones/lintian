@@ -13,6 +13,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
       cause (Closes: #723886).
   * checks/watch.{desc,pm}:
     + [BR] Detect lack of uscan support for gpg signature.
+      (Closes: #711553).
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
