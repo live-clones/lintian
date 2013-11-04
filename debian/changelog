@@ -11,6 +11,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Improve description of pkg-config-multi-arch-wrong-dir
       tag. Add debhelper > 9 on non multi-arched package as a likely
       cause (Closes: #723886).
+  * checks/watch.{desc,pm}:
+    + [BR] Detect lack of uscan support for gpg signature.
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)

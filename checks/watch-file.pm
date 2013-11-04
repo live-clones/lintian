@@ -31,6 +31,7 @@ use Lintian::Util qw(is_ancestor_of);
 sub run {
     my (undef, undef, $info) = @_;
     my $template = 0;
+    my $withgpgverification = 0;
     my $wfile = $info->debfiles('watch');
 
     if (-l $wfile) {
@@ -104,21 +105,21 @@ sub run {
                 || s/^opt(?:ion)?s=(\S+)\s+//) {
                 $opts = $1;
                 @opts = split(',', $opts);
-                if (defined $repack or defined $prerelease) {
-                    for (@opts) {
-                        $repack_mangle = 1
-                          if defined $repack
-                          and /^[ud]?versionmangle\s*=.*$repack/;
-                        $repack_dmangle = 1
-                          if defined $repack
-                          and /^dversionmangle\s*=.*$repack/;
-                        $prerelease_mangle = 1
-                          if defined $prerelease
-                          and /^[ud]?versionmangle\s*=.*$prerelease/;
-                        $prerelease_umangle = 1
-                          if defined $prerelease
-                          and /^uversionmangle\s*=.*$prerelease/;
-                    }
+                for (@opts) {
+                    $repack_mangle = 1
+                        if defined $repack
+                        and /^[ud]?versionmangle\s*=.*$repack/;
+                    $repack_dmangle = 1
+                        if defined $repack
+                        and /^dversionmangle\s*=.*$repack/;
+                    $prerelease_mangle = 1
+                        if defined $prerelease
+                        and /^[ud]?versionmangle\s*=.*$prerelease/;
+                    $prerelease_umangle = 1
+                        if defined $prerelease
+                        and /^uversionmangle\s*=.*$prerelease/;
+                    $withgpgverification = 1
+                        if /^pgpsigurlmangle\s*=\s*/;
                 }
             }
             if (m%qa\.debian\.org/watch/sf\.php\?%) {
@@ -178,6 +179,7 @@ sub run {
     close($fd);
 
     tag 'debian-watch-contains-dh_make-template' if ($template);
+    tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
     my $changes = $info->changelog;
     if (defined $changes and %dversions) {

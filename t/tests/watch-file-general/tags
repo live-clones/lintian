@@ -1,4 +1,5 @@
 I: watch-file-general source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
+P: watch-file-general source: debian-watch-may-check-gpg-signature
 W: watch-file-general source: debian-watch-file-declares-multiple-versions line 18
 W: watch-file-general source: debian-watch-file-declares-multiple-versions line 7
 W: watch-file-general source: debian-watch-file-should-mangle-version line 12

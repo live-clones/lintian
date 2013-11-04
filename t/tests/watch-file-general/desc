@@ -3,8 +3,11 @@ Sequence: 6000
 Type: non-native
 Version: 2.0.ds1-1
 Description: General watch file checks
+Options: -I -E --pedantic
+Skeleton: pedantic
 Test-For:
  debian-watch-file-declares-multiple-versions
+ debian-watch-may-check-gpg-signature
  debian-watch-file-should-dversionmangle-not-uversionmangle
  debian-watch-file-should-mangle-version
  debian-watch-file-should-use-sf-redirector

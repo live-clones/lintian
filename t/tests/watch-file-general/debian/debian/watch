@@ -19,3 +19,6 @@ version=42
 
 # Specifies the same version number as the package.
 http://example.com/ foo([\d.]+)\.tar\.gz 2.0.ds1-1 uupdate
+
+
+# without any pgpsigurlmangle
