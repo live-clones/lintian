@@ -30,6 +30,7 @@ use Lintian::Output qw(warning);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
   signal_number2name);
+use Lintian::SlidingWindow;
 
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
@@ -1242,9 +1243,12 @@ sub run {
                     tag 'embedded-php-library', $file;
                 }
             }
-
+            # ---------------- html/javascript
+            if ($file =~ m,\.(?:x?html?|js|xht|xml|css)$,i) {
+                detect_privacy_breach($info,$file);
+            }
             # ---------------- fonts
-            if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
+            elsif ($file =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
                 my $font = lc $1;
                 if ($FONT_PACKAGES->known($font)) {
                     tag 'duplicate-font-file', "$file also in",
@@ -1757,6 +1761,84 @@ sub dir_counts {
         return scalar($file->children);
     }
     return 0;
+}
+
+sub is_localhost {
+    my ($urlshort) = @_;
+    if(    $urlshort =~ m!^(?:[^/]+@)?localhost(?:[:][^/]+)?/!i
+        || $urlshort =~ m!^(?:[^/]+@)?::1(?:[:][^/]+)?/!i
+        || $urlshort =~ m!^(?:[^/]+@)?127(?:\.\d{1,3}){3}(?:[:][^/]+)?/!i) {
+        return 1;
+    }else {
+        return 0;
+    }
+}
+
+sub detect_privacy_breach {
+    my ($info, $file) = @_;
+    my %privacybreachhash = ();
+
+    my $sfd = Lintian::SlidingWindow->new(
+        '<',
+        $info->unpacked($file),
+        sub { $_=lc($_); });
+
+    while (my $block = $sfd->readwindow()) {
+# According to html norm src attribute is used by tags:
+# audio(v5+), embed (v5+), iframe (v4), frame, img, input, script, source, track(v5), video (v5)
+# Add other tags with src due to some javascript code:
+# div due to div.js
+# css with @import
+      EXTERNAL_TAG:
+        while(
+            $block=~ m,
+                (?:
+                 <\s*
+                  (?:
+                    (?'tagattr'div|embed|i?frame|img|input|script|source|track|video)
+                    (?&ba)
+                    src\s*=\s*(?'url'(?&loc))
+                  |
+                    (?'tagattr'applet|object)
+                    (?&ba)
+                    codebase\s*=\s*(?'url'(?&loc))
+                  |
+                    (?'tagattr'object)
+                    (?&ba)
+                    data\s*=\s*(?'url'(?&loc))
+                  |
+                    (?'tagattr'video)
+                    (?&ba)
+                    poster\s*=\s*(?'url'(?&loc))
+                  )
+                 [^>]*?
+                 >
+                |
+                 (?'tagattr'[@]import)
+                 \s+ url \s* \( \s*
+                     (?'url'(?&loc))
+                 \s* \) \s* ;
+                )
+                 (?(DEFINE)
+                   (?<ba>(?:\s+[^>]+)? \s+)
+                   (?<loc>"(?:http|ftp)s?://[^"\r\n]*?")
+                 ),xismog
+          ) {
+            my $url=$+{url};
+            my $tagattr=$+{tagattr};
+            my $website = $url;
+            $website =~ s,^"(?:http|ftp)s?://,,;
+            $website =~ s/"$//;
+
+            if (is_localhost($website)){
+                next EXTERNAL_TAG;
+            }
+            unless (exists $privacybreachhash{'tag-generic-'.$website}) {
+                tag 'privacy-breach-generic', $file, $website;
+                $privacybreachhash{'tag-generic-'.$website} = 1;
+            }
+        }
+    }
 }
 
 1;

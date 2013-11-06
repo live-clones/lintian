@@ -928,6 +928,14 @@ Info: This package contains an embedded copy of JavaScript libraries
  package and symlink the library into the appropriate location.
 Ref: policy 4.13
 
+Tag: privacy-breach-generic
+Severity: important
+Certainty: wild-guess
+Experimental: yes
+Info: This package create a privacy breach by fetching some data from
+ an external website. Please remove these script or external html 
+ ressources.
+
 Tag: embedded-feedparser-library
 Severity: normal
 Certainty: certain
