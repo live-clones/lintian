@@ -17,7 +17,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
       tag. Add debhelper > 9 on non multi-arched package as a likely
       cause (Closes: #723886).
     + [BR] Add a generic check for obsolete path.
-    + [BR] Detect privacy break html/css files.  (Closes: #637580).
+    + [BR] Detect privacy breaker html/css files (Closes: #637580)
+      particularly Google Adsense (Closes: #718427).
   * checks/scripts.{desc,pm}:
     + [BR] Detect update-alternatives --set in maintainer scripts.
       (Closes: #643602).

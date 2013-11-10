@@ -40,6 +40,14 @@ my $INCORRECT_LOCALE_CODES
 my $MULTIARCH_DIRS= Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
     sub { return { 'dir' => $_[1], 'match' => qr/\Q$_[1]\E/ } });
 
+my $PRIVACY_BREAKER_WEBSITES
+  = Lintian::Data->new('files/privacy-breaker-websites',
+    qr/\s*\~\~/o,sub { return qr/$_[1]/ism });
+
+my $PRIVACY_BREAKER_FRAGMENTS
+  = Lintian::Data->new('files/privacy-breaker-fragments',
+    qr/\s*\~\~/o,sub { return qr/$_[1]/ism });
+
 # A list of known packaged Javascript libraries
 # and the packages providing them
 my @jslibraries = (
@@ -1784,7 +1792,18 @@ sub detect_privacy_breach {
         sub { $_=lc($_); });
 
     while (my $block = $sfd->readwindow()) {
+        # try generic fragment tagging
+        foreach my $breaker_tag ($PRIVACY_BREAKER_FRAGMENTS->all) {
+            my $regex = $PRIVACY_BREAKER_FRAGMENTS->value($breaker_tag);
+            if ($block =~ m{$regex}) {
+                unless (exists $privacybreachhash{'tag-'.$breaker_tag}) {
+                    $privacybreachhash{'tag-'.$breaker_tag} = 1;
+                    tag $breaker_tag, $file;
+                }
+            }
+        }
 # According to html norm src attribute is used by tags:
+#
 # audio(v5+), embed (v5+), iframe (v4), frame, img, input, script, source, track(v5), video (v5)
 # Add other tags with src due to some javascript code:
 # div due to div.js
@@ -1831,9 +1850,23 @@ sub detect_privacy_breach {
             $website =~ s/"$//;
 
             if (is_localhost($website)){
+                # do nothing ok
                 next EXTERNAL_TAG;
             }
-            unless (exists $privacybreachhash{'tag-generic-'.$website}) {
+            # track well known site
+            foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
+                my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
+                if ($website =~ m{$regex}) {
+                    unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
+                        $privacybreachhash{'tag-'.$breaker_tag}= 1;
+                        tag $breaker_tag, $file;
+                    }
+                    # do not go to generic case
+                    next EXTERNAL_TAG;
+                }
+            }
+            # generic case
+            unless (exists $privacybreachhash{'tag-generic-'.$website}){
                 tag 'privacy-breach-generic', $file, $website;
                 $privacybreachhash{'tag-generic-'.$website} = 1;
             }

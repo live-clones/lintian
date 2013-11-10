@@ -1,5 +1,10 @@
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/adsense.html pagead2.googlesyndication.com/pagead/show_ads.js
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/adsenseonlyadds.html pagead2.googlesyndication.com/pagead/show_ads.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacybreach/html/adsense.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacybreach/html/adsenseonlyadds.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/htmlfragment/urchinfragment.xml
+E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/adsenseonlyvar.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchin.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinconstructor.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinloader.js
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/applet.html 1984.os/trackme
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/div.html trackme.1984/index-2.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/embed.html 1984.os/givemydata.swf

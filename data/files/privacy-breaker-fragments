@@ -1,0 +1,9 @@
+# Manually maintained table of well known privacy breakers html/js fragment
+# syntax:
+#   key ~~regex
+#
+# Note spaces on the right hand side of ~~ are assumed to be a part
+# of the regex.
+#
+# Please keep this sorted by tag.
+privacy-breach-google-adsense  ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchinTracker\s*\(\s*\)\s*;)
