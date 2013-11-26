@@ -974,6 +974,11 @@ sub run {
                               $d_pkg;
                         }
 
+                        if (   $d_pkg =~ m/^java-compiler$/o){
+                            tag 'build-depends-on-an-obsolete-java-package',
+                              $d_pkg;
+                        }
+
                         if (    $d_pkg =~ m/^libdb\d+\.\d+.*-dev$/o
                             and &$is_dep_field($field)) {
                             tag 'build-depends-on-versioned-berkeley-db',

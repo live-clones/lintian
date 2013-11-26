@@ -1,4 +1,8 @@
+E: fields-java source: build-depends-on-obsolete-package build-depends: openjdk-6-jdk
 I: libfields-java-java: javalib-but-no-public-jars
+I: libfields-java-java: ored-depends-on-obsolete-package depends: openjdk-6-jre
+W: fields-java source: build-depends-on-an-obsolete-java-package java-compiler
 W: fields-java source: build-depends-on-specific-java-doc-package openjdk-6-doc
+W: fields-java source: virtual-package-depends-without-real-package-depends build-depends: java-compiler
 W: libfields-java-java-doc: depends-on-specific-java-doc-package recommends
 W: libfields-java-java: needless-dependency-on-jre

@@ -587,6 +587,13 @@ Info: The package declares a build-depends on an essential package, e.g. dpkg,
  is if you need a particular version of that package, in which case the
  version should be given in the dependency.
 
+Tag: build-depends-on-an-obsolete-java-package
+Severity: normal
+Certainty: certain
+Ref: java policy 2.2
+Info: The package build-depends on an obsolete java dependency
+ It should built-depends on default-jdk instead.
+
 Tag: build-depends-on-non-build-package
 Severity: important
 Certainty: certain

@@ -80,3 +80,8 @@ automake1.7
 automake1.8
 automake1.9
 automake1.10
+
+# Deprecated in Jessie (#720911)
+openjdk-6-jdk
+openjdk-6-jre
+openjdk-6-jre-headless
