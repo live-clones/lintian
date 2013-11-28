@@ -24,7 +24,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [NT] Refresh against sid.  Thanks to Nicholas Breen for the
       reminder.  (Closes: #724866)
   * data/spelling/corrections:
-    + [RG] Detect some typos of "establishment" and "contains."
+    + [RG] Detect some typos of "establishment" and "contains".
+    + [SL] Detect some typos of "suppress".
   * data/standards-version/release-dates:
     + [NT] Add release date for 3.9.5.
 

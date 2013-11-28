@@ -35,7 +35,7 @@ use List::MoreUtils qw(none);
 $_config->init;
 $_system = $_config->system;
 
-# supress cache building messages
+# suppress cache building messages
 $_config->{quiet} = 2;
 
 # set up the cache
