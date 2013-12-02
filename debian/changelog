@@ -9,7 +9,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
       license check.  (Closes: #720348)
   * checks/fields.pm:
     + [SL] Returns a warning when a package build-deps on java-compiler
-      instead of default-jdk.
+      instead of default-jdk.  (Closes: #730714)
   * checks/files.desc
     + [BR] Improve description of pkg-config-multi-arch-wrong-dir
       tag. Add debhelper > 9 on non multi-arched package as a likely
@@ -24,7 +24,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [NT] Apply patch from Eric Dorland to mark various versions
       of automake as obsolete.
     + [SL] Tag openjdk-6-jdk, openjdk-6-jre and openjdk-6-jre-headless
-      as obsolete (See ##720911)
+      as obsolete (See ##720911).  (Closes: #730714)
   * data/fields/virtual-packages:
     + [NT] Refresh against sid.  Thanks to Nicholas Breen for the
       reminder.  (Closes: #724866)
