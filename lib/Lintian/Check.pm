@@ -244,6 +244,7 @@ sub check_spelling {
     my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
     my $corrections_multiword
       = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
+    my $global_exceptions = Lintian::Data->new('spelling/exceptions');
 
     $text =~ s/[()\[\]]//g;
     $text =~ s/(\w-)\s*\n\s*/$1/;
@@ -257,6 +258,8 @@ sub check_spelling {
         # Some exceptions are based on case (e.g. "teH").
         next if exists($exceptions->{$word});
         my $lcword = lc $word;
+        # global exception are case insentive
+        next if $global_exceptions->known($lcword);
         if ($corrections->known($lcword)
             &&!exists($exceptions->{$lcword})) {
             $correction = $corrections->value($lcword);
