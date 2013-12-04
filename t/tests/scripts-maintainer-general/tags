@@ -26,3 +26,4 @@ W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-xml-core postinst
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
 W: scripts-maintainer-general: start-stop-daemon-in-maintainer-script postinst:78
+W: scripts-maintainer-general: update-alternatives-set-called-in-maintainer-script postinst:129

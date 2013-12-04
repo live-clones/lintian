@@ -920,6 +920,9 @@ sub run {
                     }
                 }
             }
+            if (m,update\-alternatives \-\-(?:set|set\-selections|config),) {
+                tag 'update-alternatives-set-called-in-maintainer-script', "$file:$.";
+            }
             if (m,\bgconftool(?:-2)?(?:\s|\Z),) {
                 tag 'gconftool-used-in-maintainer-script', "$file:$.";
             }

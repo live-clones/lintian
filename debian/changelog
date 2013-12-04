@@ -14,6 +14,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Improve description of pkg-config-multi-arch-wrong-dir
       tag. Add debhelper > 9 on non multi-arched package as a likely
       cause (Closes: #723886).
+  * checks/scripts.{desc,pm}:
+    + [BR] Detect update-alternatives --set in maintainer scripts.
+      (Closes: #643602).
   * checks/watch.{desc,pm}:
     + [BR] Detect lack of uscan support for gpg signature.
       (Closes: #711553).

@@ -125,4 +125,6 @@ if false ; then
     mknod some thing
 fi
 
+# Calling update alternative --set see #643602
+update-alternatives --set editor /usr/bin/nano
 #DEBHELPER#

@@ -25,6 +25,7 @@ Test-For:
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script
+ update-alternatives-set-called-in-maintainer-script
  start-stop-daemon-in-maintainer-script
  suidregister-used-in-maintainer-script
 References: Debian Bug#532984

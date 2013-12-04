@@ -470,6 +470,19 @@ Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  instead.
 Ref: policy F, update-alternatives(8)
 
+Tag: update-alternatives-set-called-in-maintainer-script
+Severity: normal
+Certainty: certain
+Info: <tt>update-alternatives --set &lt;alternative&gt; foo</tt> or
+ <tt>update-alternatives --config &lt;alternative&gt;</tt> or
+ <tt>update-alternatives --set-selections</tt>
+ called in maitainer script. Thus it's impossible to distinguish
+ between an alternative that's manually set because the user set it,
+ vs. one that's manually set because the package set it.
+Ref: update-alternatives(8)
+
+
+
 Tag: deprecated-chown-usage
 Severity: normal
 Certainty: certain
