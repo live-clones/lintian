@@ -1,0 +1,11 @@
+# complain (tag) when we encounters some commands on maintainer script
+# format is:
+# tag~~regexp
+# 
+# Please alpha sort
+gconftool-used-in-maintainer-script                 ~~\bgconftool(?:-2)?(?:\s|\Z)
+install-info-used-in-maintainer-script              ~~\binstall-info\b
+update-alternatives-set-called-in-maintainer-script ~~\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
+suidregister-used-in-maintainer-script              ~~\bsuidregister\b
+
+

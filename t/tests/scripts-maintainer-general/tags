@@ -10,7 +10,7 @@ E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly posti
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
-E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst
+E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst:101
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:91 /usr/bin/baz

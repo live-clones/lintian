@@ -17,6 +17,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * checks/scripts.{desc,pm}:
     + [BR] Detect update-alternatives --set in maintainer scripts.
       (Closes: #643602).
+    + [BR] Use Lintian::Data for bad shell construction in maintainer
+      scripts.
   * checks/watch.{desc,pm}:
     + [BR] Detect lack of uscan support for gpg signature.
       (Closes: #711553).

@@ -81,6 +81,11 @@ my $VERSIONED_INTERPRETERS
   = Lintian::Data->new('scripts/versioned-interpreters',
     qr/\s*=\>\s*/o,\&_parse_versioned_interpreters);
 
+#forbidden command in maintenair scripts
+my $BAD_MAINT_CMD = Lintian::Data->new('scripts/maintainer-script-bad-command', 
+    qr/\s*\~\~/,
+    sub { return qr/$_[1]/ism });
+
 # Any of the following packages can satisfy an update-inetd dependency.
 my $update_inetd = join(
     ' | ', qw(update-inetd inet-superserver openbsd-inetd
@@ -795,9 +800,11 @@ sub run {
                       ) {
                         tag 'deprecated-chown-usage', "$file:$. \'$1\'";
                     }
+
                     if (/invoke-rc.d.*\|\| exit 0/) {
                         tag 'maintainer-script-hides-init-failure', "$file:$.";
                     }
+
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
                     }
@@ -888,9 +895,6 @@ sub run {
                     }
                 }
             }
-            if (m,\bsuidregister\b,) {
-                tag 'suidregister-used-in-maintainer-script', $file;
-            }
             if ($file eq 'postrm') {
                 if (m,update\-alternatives \-\-remove,) {
                     tag 'update-alternatives-remove-called-in-postrm';
@@ -920,19 +924,18 @@ sub run {
                     }
                 }
             }
-            if (m,update\-alternatives \-\-(?:set|set\-selections|config),) {
-                tag 'update-alternatives-set-called-in-maintainer-script', "$file:$.";
+            # try generic bad maintainer script command tagging
+            foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
+                my $regex = $BAD_MAINT_CMD->value($bad_cmd_tag);
+                if (m{$regex}) {
+                    tag $bad_cmd_tag, "$file:$.";
+                }
             }
-            if (m,\bgconftool(?:-2)?(?:\s|\Z),) {
-                tag 'gconftool-used-in-maintainer-script', "$file:$.";
-            }
+
             if (m,\binstall-sgmlcatalog\b,
                 && !(m,--remove, && ($file eq 'prerm' || $file eq 'postinst')))
             {
                 tag 'install-sgmlcatalog-deprecated', "$file:$.";
-            }
-            if (m,\binstall-info\b,) {
-                tag 'install-info-used-in-maintainer-script', "$file:$.";
             }
             if (   m,/var/lib/dpkg/status\b,
                 && $pkg ne 'base-files'
