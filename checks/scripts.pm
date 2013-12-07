@@ -82,9 +82,19 @@ my $VERSIONED_INTERPRETERS
     qr/\s*=\>\s*/o,\&_parse_versioned_interpreters);
 
 #forbidden command in maintenair scripts
-my $BAD_MAINT_CMD = Lintian::Data->new('scripts/maintainer-script-bad-command', 
+my $BAD_MAINT_CMD = Lintian::Data->new(
+    'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
-    sub { return qr/$_[1]/ism });
+    sub {
+        my $regexp;
+        my $incat;
+        ($incat,$regexp) = split(/\s*\~\~/, $_[1], 2);
+        return {
+            # use not not to normalize boolean
+            'in_cat_string' => not(not(strip($incat))),
+            'regexp' => qr/$regexp/x,
+        };
+    });
 
 # Any of the following packages can satisfy an update-inetd dependency.
 my $update_inetd = join(
@@ -788,6 +798,8 @@ sub run {
                     }
                 }
                 if (!$cat_string) {
+                    generic_check_bad_command($_, $file, $., 0);
+
                     if (/^\s*start-stop-daemon\s+/ && !/\s--stop\b/) {
                         tag 'start-stop-daemon-in-maintainer-script',
                           "$file:$.";
@@ -799,10 +811,6 @@ sub run {
                          }xsm
                       ) {
                         tag 'deprecated-chown-usage', "$file:$. \'$1\'";
-                    }
-
-                    if (/invoke-rc.d.*\|\| exit 0/) {
-                        tag 'maintainer-script-hides-init-failure', "$file:$.";
                     }
 
                     if (m,/usr/share/debconf/confmodule,) {
@@ -924,13 +932,8 @@ sub run {
                     }
                 }
             }
-            # try generic bad maintainer script command tagging
-            foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
-                my $regex = $BAD_MAINT_CMD->value($bad_cmd_tag);
-                if (m{$regex}) {
-                    tag $bad_cmd_tag, "$file:$.";
-                }
-            }
+
+            generic_check_bad_command($_, $file, $., 1);
 
             if (m,\binstall-sgmlcatalog\b,
                 && !(m,--remove, && ($file eq 'prerm' || $file eq 'postinst')))
@@ -1134,6 +1137,21 @@ sub run {
 }
 
 # -----------------------------------
+
+# try generic bad maintainer script command tagging
+sub generic_check_bad_command {
+    my ($line, $file, $lineno, $findincatstring) = @_;
+    # try generic bad maintainer script command tagging
+    foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
+        my $incat = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_cat_string'};
+        if ($incat == $findincatstring) {
+            my $regex= $BAD_MAINT_CMD->value($bad_cmd_tag)->{'regexp'};
+            if (m{$regex}) {
+                tag $bad_cmd_tag, "$file:$.";
+            }
+        }
+    }
+}
 
 # Returns non-zero if the given file is not actually a shell script,
 # just looks like one.

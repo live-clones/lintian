@@ -1,11 +1,18 @@
 # complain (tag) when we encounters some commands on maintainer script
 # format is:
-# tag~~regexp
+# tag ~~in cat string ~~ regexp
 # 
-# Please alpha sort
-gconftool-used-in-maintainer-script                 ~~\bgconftool(?:-2)?(?:\s|\Z)
-install-info-used-in-maintainer-script              ~~\binstall-info\b
-update-alternatives-set-called-in-maintainer-script ~~\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
-suidregister-used-in-maintainer-script              ~~\bsuidregister\b
+# Where:
+#   - tag is the tag to emit
+#   - when in cat string is true check in HERE document
+#   - regexp is the regexp to check
+#
+# Please alpha sort by tag
+#
+gconftool-used-in-maintainer-script                 ~~ 1 ~~\bgconftool(?:-2)?(?:\s|\Z)
+install-info-used-in-maintainer-script              ~~ 1 ~~\binstall-info\b
+maintainer-script-hides-init-failure                ~~ 0 ~~invoke-rc.d.*\|\| \s+ exit \s+ 0
+update-alternatives-set-called-in-maintainer-script ~~ 1 ~~\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
+suidregister-used-in-maintainer-script              ~~ 1 ~~\bsuidregister\b
 
 
