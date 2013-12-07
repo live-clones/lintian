@@ -5,13 +5,15 @@
 # Where:
 #   - tag is the tag to emit
 #   - when in cat string is true check in HERE document
-#   - regexp is the regexp to check
+#   - regexp is the regexp to check. First group ($1) will be printed if found as extra tag info
 #
 # Please alpha sort by tag
 #
+deprecated-chown-usage                              ~~ 0 ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
 gconftool-used-in-maintainer-script                 ~~ 1 ~~\bgconftool(?:-2)?(?:\s|\Z)
 install-info-used-in-maintainer-script              ~~ 1 ~~\binstall-info\b
 maintainer-script-hides-init-failure                ~~ 0 ~~invoke-rc.d.*\|\| \s+ exit \s+ 0
+maintainer-script-modifies-netbase-managed-file     ~~ 0 ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)(/etc/(?:services|protocols|rpc))\s*(?:\s|\Z)
 update-alternatives-set-called-in-maintainer-script ~~ 1 ~~\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
 suidregister-used-in-maintainer-script              ~~ 1 ~~\bsuidregister\b
 

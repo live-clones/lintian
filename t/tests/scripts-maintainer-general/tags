@@ -3,9 +3,9 @@ E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:67
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:68
 E: scripts-maintainer-general: maintainer-script-modifies-ld-so-conf postinst:108
 E: scripts-maintainer-general: maintainer-script-modifies-ld-so-conf postinst:110
-E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:59 /etc/services
-E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:60 /etc/protocols
-E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:61 /etc/rpc
+E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:59 '/etc/services'
+E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:60 '/etc/protocols'
+E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:61 '/etc/rpc'
 E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly postinst
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125

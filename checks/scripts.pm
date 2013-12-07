@@ -804,14 +804,6 @@ sub run {
                         tag 'start-stop-daemon-in-maintainer-script',
                           "$file:$.";
                     }
-                    # Don't use chown foo.bar
-                    if (
-                        m{(chown(?:\s+--?[A-Za-z-]+)*\s+
-                          [-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
-                         }xsm
-                      ) {
-                        tag 'deprecated-chown-usage', "$file:$. \'$1\'";
-                    }
 
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
@@ -829,18 +821,7 @@ sub run {
                               "$file:$.";
                         }
                     }
-                    if (m,>\s*(/etc/(?:services|protocols|rpc))(?:\s|\Z),) {
-                        tag 'maintainer-script-modifies-netbase-managed-file',
-                          "$file:$. $1";
-                    }
-                    if (
-                        m{\A \s*(?:cp|mv) \s .* 
-                                (/etc/(?:services|protocols|rpc))
-                         \s*\Z}xsm
-                      ) {
-                        tag 'maintainer-script-modifies-netbase-managed-file',
-                          "$file:$. $1";
-                    }
+
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
                         tag 'maintainer-script-modifies-inetd-conf', "$file:$."
                           unless $info->relation('provides')
@@ -1147,7 +1128,8 @@ sub generic_check_bad_command {
         if ($incat == $findincatstring) {
             my $regex= $BAD_MAINT_CMD->value($bad_cmd_tag)->{'regexp'};
             if (m{$regex}) {
-                tag $bad_cmd_tag, "$file:$.";
+                my $extrainfo = defined($1) ? "\'$1\'" : '';
+                tag $bad_cmd_tag, "$file:$.", $extrainfo;
             }
         }
     }
