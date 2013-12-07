@@ -6,6 +6,7 @@ E: scripts-maintainer-general: maintainer-script-modifies-ld-so-conf postinst:11
 E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:59 '/etc/services'
 E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:60 '/etc/protocols'
 E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file postinst:61 '/etc/rpc'
+E: scripts-maintainer-general: maintainer-script-removes-device-files postinst:141 '/dev/null'
 E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly postinst
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
@@ -25,5 +26,6 @@ W: scripts-maintainer-general: maintainer-script-needs-depends-on-gconf2 postins
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-xml-core postinst
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
+W: scripts-maintainer-general: start-stop-daemon-in-maintainer-script postinst:138
 W: scripts-maintainer-general: start-stop-daemon-in-maintainer-script postinst:78
 W: scripts-maintainer-general: update-alternatives-set-called-in-maintainer-script postinst:129

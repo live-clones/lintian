@@ -800,26 +800,11 @@ sub run {
                 if (!$cat_string) {
                     generic_check_bad_command($_, $file, $., 0);
 
-                    if (/^\s*start-stop-daemon\s+/ && !/\s--stop\b/) {
-                        tag 'start-stop-daemon-in-maintainer-script',
-                          "$file:$.";
-                    }
-
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
                     }
                     if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
                         tag 'read-in-maintainer-script', "$file:$.";
-                    }
-                    if (m,^\s*rm\s+(?:[^>]*\s)?/dev/([^/ ]+),) {
-                        my $f = $1//'';
-                        if ($f ne 'shm' && $f !~ m,^\.[^.]+,) {
-                            # Ignore /dev/shm (initscripts) and
-                            # dot-files (which are probably not a
-                            # dev).
-                            tag 'maintainer-script-removes-device-files',
-                              "$file:$.";
-                        }
                     }
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {

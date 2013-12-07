@@ -127,4 +127,21 @@ fi
 
 # Calling update alternative --set see #643602
 update-alternatives --set editor /usr/bin/nano
+
+# false positive
+start-stop-daemon--stop --quiet --name foo --startas /usr/bin/foo
+
+# false positive
+start-stop-daemon --quiet --stop --name foo --startas /usr/bin/foo
+
+# false negative 
+start-stop-daemon --quiet --start --name foo --startas /usr/bin/foo
+
+# remove device file
+rm /dev/null
+
+# false positive
+rm /dev/shm/test
+rm /dev/.hiddenfile
+
 #DEBHELPER#

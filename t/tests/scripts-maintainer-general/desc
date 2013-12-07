@@ -20,6 +20,7 @@ Test-For:
  maintainer-script-needs-depends-on-gconf2
  maintainer-script-needs-depends-on-ucf
  maintainer-script-needs-depends-on-xml-core
+ maintainer-script-removes-device-files
  maintainer-script-uses-dpkg-status-directly
  maintainer-shell-script-fails-syntax-check
  mknod-in-maintainer-script
