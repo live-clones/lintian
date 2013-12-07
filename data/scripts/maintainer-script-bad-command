@@ -5,11 +5,20 @@
 # Where:
 #   - tag is the tag to emit
 #   - when in cat string is true check in HERE document
-#   - regexp is the regexp to check. First group ($1) will be printed if found as extra tag info
+#   - regexp is the regexp to check. First group ($1) will be printed if found as extra tag info/
+#     You could use the special variable ${LEADIN} if needed (see below).
+#
+# ${LEADIN}:
+# When detecting commands inside shell scripts, use this regex to match the
+# beginning of the command rather than checking whether the command is at the
+# beginning of a line.
 #
 # Please alpha sort by tag
 #
+ancient-dpkg-epoch-check                            ~~ 0 ~~${LEADIN}dpkg\s+--assert-working-epoch\b
+ancient-dpkg-multi-conrep-check                     ~~ 0 ~~${LEADIN}dpkg\s+--assert-multi-conrep\b
 deprecated-chown-usage                              ~~ 0 ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
+fc-cache-used-in-maintainer-script                  ~~ 0 ~~${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
 gconftool-used-in-maintainer-script                 ~~ 1 ~~\bgconftool(?:-2)?(?:\s|\Z)
 install-info-used-in-maintainer-script              ~~ 1 ~~\binstall-info\b
 maintainer-script-hides-init-failure                ~~ 0 ~~invoke-rc.d.*\|\| \s+ exit \s+ 0

@@ -81,7 +81,14 @@ my $VERSIONED_INTERPRETERS
   = Lintian::Data->new('scripts/versioned-interpreters',
     qr/\s*=\>\s*/o,\&_parse_versioned_interpreters);
 
-#forbidden command in maintenair scripts
+# When detecting commands inside shell scripts, use this regex to match the
+# beginning of the command rather than checking whether the command is at the
+# beginning of a line.
+my $LEADINSTR = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
+my $LEADIN = qr/$LEADINSTR/;
+
+
+#forbidden command in maintainer scripts
 my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
@@ -89,6 +96,7 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
         my $regexp;
         my $incat;
         ($incat,$regexp) = split(/\s*\~\~/, $_[1], 2);
+        $regexp =~ s/\${LEADIN}/$LEADINSTR/;
         return {
             # use not not to normalize boolean
             'in_cat_string' => not(not(strip($incat))),
@@ -113,11 +121,6 @@ my @depends_needed = (
     [ucf           => '\bucf\s'],
     ['xml-core'    => '\bupdate-xmlcatalog\s'],
 );
-
-# When detecting commands inside shell scripts, use this regex to match the
-# beginning of the command rather than checking whether the command is at the
-# beginning of a line.
-my $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 
 my @bashism_single_quote_regexs = (
     $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[abcEfnrtv0])+.*?[\']',
@@ -824,19 +827,6 @@ sub run {
                     if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/ld\.so\.conf\s*$,) {
                         tag 'maintainer-script-modifies-ld-so-conf', "$file:$."
                           unless $pkg =~ /^libc/;
-                    }
-
-                    # Ancient dpkg feature tests.
-                    if (m/${LEADIN}dpkg\s+--assert-working-epoch\b/) {
-                        tag 'ancient-dpkg-epoch-check', "$file:$.";
-                    }
-                    if (m/${LEADIN}dpkg\s+--assert-multi-conrep\b/) {
-                        tag 'ancient-dpkg-multi-conrep-check', "$file:$.";
-                    }
-
-                    # Commands that should not be used in maintainer scripts.
-                    if (m,${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z),) {
-                        tag 'fc-cache-used-in-maintainer-script', "$file:$.";
                     }
 
                     # Check for running commands with a leading path.
