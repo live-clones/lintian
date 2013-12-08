@@ -92,17 +92,23 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
     sub {
-        my ($incat,$exceptinpackage,$regexp) = split(/\s*\~\~/, $_[1], 3);
+        my ($incat,$exceptinpackage,$inscript,$regexp) = split(/\s*\~\~/, $_[1], 4);
         $regexp =~ s/\${LEADIN}/$LEADINSTR/;
         # allow empty $exceptinpackage and set it synonymous to check in all package
         $exceptinpackage = defined($exceptinpackage) ? strip($exceptinpackage) : '';
         if (length($exceptinpackage) == 0) {
             $exceptinpackage = '\a\Z';
         }
+        # allow empty $inscript and set to synonymous to check in all script
+        $inscript = defined($inscript) ? strip($inscript) : '';
+        if (length($inscript) == 0) {
+            $inscript = '.*';
+        }
         return {
             # use not not to normalize boolean
             'in_cat_string' => not(not(strip($incat))),
             'in_package' => qr/$exceptinpackage/x,
+            'in_script' => qr/$inscript/x,
             'regexp' => qr/$regexp/x,
         };
     });
@@ -854,11 +860,7 @@ sub run {
                     }
                 }
             }
-            if ($file eq 'postrm') {
-                if (m,update\-alternatives \-\-remove,) {
-                    tag 'update-alternatives-remove-called-in-postrm';
-                }
-            } else {
+            unless ($file eq 'postrm') {
                 for my $rule (@depends_needed) {
                     my ($package, $regex) = @$rule;
                     if (    $pkg ne $package
@@ -885,12 +887,6 @@ sub run {
             }
 
             generic_check_bad_command($_, $file, $., $pkg, 1);
-
-            if (m,\binstall-sgmlcatalog\b,
-                && !(m,--remove, && ($file eq 'prerm' || $file eq 'postinst')))
-            {
-                tag 'install-sgmlcatalog-deprecated', "$file:$.";
-            }
 
             if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
                 && !/--(?:help|list|truename|version)/) {
@@ -1089,9 +1085,14 @@ sub run {
 sub generic_check_bad_command {
     my ($line, $file, $lineno, $pkg, $findincatstring) = @_;
     # try generic bad maintainer script command tagging
+  BAD_CMD: 
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
         my $incat = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_cat_string'};
         my $inpackage = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_package'};
+        my $inscript = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_script'};
+        if ($file !~ m{$inscript}) {
+            next BAD_CMD;
+        }
         if ($incat == $findincatstring) {
             my $regex= $BAD_MAINT_CMD->value($bad_cmd_tag)->{'regexp'};
             if ($line =~ m{$regex}) {

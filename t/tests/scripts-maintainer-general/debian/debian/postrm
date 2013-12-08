@@ -3,4 +3,7 @@
 
 echo "ok" > /dev/null
 
+# not allowed
+update-alternatives --remove foo
+
 #DEBHELPER#
