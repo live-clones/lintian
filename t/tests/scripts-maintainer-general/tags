@@ -22,6 +22,7 @@ W: scripts-maintainer-general: gconftool-used-in-maintainer-script postinst:44
 W: scripts-maintainer-general: install-info-used-in-maintainer-script postinst:105
 W: scripts-maintainer-general: maintainer-script-has-unexpanded-debhelper-token postinst
 W: scripts-maintainer-general: maintainer-script-hides-init-failure postinst:31
+W: scripts-maintainer-general: maintainer-script-ignores-errors postrm
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-gconf2 postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-xml-core postinst

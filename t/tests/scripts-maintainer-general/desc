@@ -14,6 +14,7 @@ Test-For:
  install-sgmlcatalog-deprecated
  maintainer-script-has-unexpanded-debhelper-token
  maintainer-script-hides-init-failure
+ maintainer-script-ignores-errors
  maintainer-script-modifies-inetd-conf
  maintainer-script-modifies-ld-so-conf
  maintainer-script-modifies-netbase-managed-file
