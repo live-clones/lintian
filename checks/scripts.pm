@@ -87,19 +87,22 @@ my $VERSIONED_INTERPRETERS
 my $LEADINSTR = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 my $LEADIN = qr/$LEADINSTR/;
 
-
 #forbidden command in maintainer scripts
 my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
     sub {
-        my $regexp;
-        my $incat;
-        ($incat,$regexp) = split(/\s*\~\~/, $_[1], 2);
+        my ($incat,$exceptinpackage,$regexp) = split(/\s*\~\~/, $_[1], 3);
         $regexp =~ s/\${LEADIN}/$LEADINSTR/;
+        # allow empty $exceptinpackage and set it synonymous to check in all package
+        $exceptinpackage = defined($exceptinpackage) ? strip($exceptinpackage) : '';
+        if (length($exceptinpackage) == 0) {
+            $exceptinpackage = '\a\Z';
+        }
         return {
             # use not not to normalize boolean
             'in_cat_string' => not(not(strip($incat))),
+            'in_package' => qr/$exceptinpackage/x,
             'regexp' => qr/$regexp/x,
         };
     });
@@ -801,7 +804,7 @@ sub run {
                     }
                 }
                 if (!$cat_string) {
-                    generic_check_bad_command($_, $file, $., 0);
+                    generic_check_bad_command($_, $file, $., $pkg, 0);
 
                     if (m,/usr/share/debconf/confmodule,) {
                         $saw_debconf = 1;
@@ -819,14 +822,6 @@ sub run {
                         tag 'maintainer-script-modifies-inetd-conf', "$file:$."
                           unless $info->relation('provides')
                           ->implies('inet-superserver');
-                    }
-                    if (m,>\s*/etc/ld\.so\.conf(?:\s|\Z),) {
-                        tag 'maintainer-script-modifies-ld-so-conf', "$file:$."
-                          unless $pkg =~ /^libc/;
-                    }
-                    if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/ld\.so\.conf\s*$,) {
-                        tag 'maintainer-script-modifies-ld-so-conf', "$file:$."
-                          unless $pkg =~ /^libc/;
                     }
 
                     # Check for running commands with a leading path.
@@ -889,18 +884,14 @@ sub run {
                 }
             }
 
-            generic_check_bad_command($_, $file, $., 1);
+            generic_check_bad_command($_, $file, $., $pkg, 1);
 
             if (m,\binstall-sgmlcatalog\b,
                 && !(m,--remove, && ($file eq 'prerm' || $file eq 'postinst')))
             {
                 tag 'install-sgmlcatalog-deprecated', "$file:$.";
             }
-            if (   m,/var/lib/dpkg/status\b,
-                && $pkg ne 'base-files'
-                && $pkg ne 'dpkg') {
-                tag 'maintainer-script-uses-dpkg-status-directly', $file;
-            }
+
             if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s,
                 && !/--(?:help|list|truename|version)/) {
                 if (/--local/) {
@@ -1096,15 +1087,18 @@ sub run {
 
 # try generic bad maintainer script command tagging
 sub generic_check_bad_command {
-    my ($line, $file, $lineno, $findincatstring) = @_;
+    my ($line, $file, $lineno, $pkg, $findincatstring) = @_;
     # try generic bad maintainer script command tagging
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
         my $incat = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_cat_string'};
+        my $inpackage = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_package'};
         if ($incat == $findincatstring) {
             my $regex= $BAD_MAINT_CMD->value($bad_cmd_tag)->{'regexp'};
-            if (m{$regex}) {
+            if ($line =~ m{$regex}) {
                 my $extrainfo = defined($1) ? "\'$1\'" : '';
-                tag $bad_cmd_tag, "$file:$.", $extrainfo;
+                unless($pkg =~ m{$inpackage}) {
+                    tag $bad_cmd_tag, "$file:$.", $extrainfo;
+                }
             }
         }
     }
