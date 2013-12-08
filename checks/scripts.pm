@@ -92,7 +92,11 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
     'scripts/maintainer-script-bad-command',
     qr/\s*\~\~/,
     sub {
-        my ($incat,$exceptinpackage,$inscript,$regexp) = split(/\s*\~\~/, $_[1], 4);
+        my @sliptline = split(/\s*\~\~/, $_[1], 4);
+        if(scalar(@sliptline) != 4) {
+            fail 'Syntax error in scripts/maintainer-script-bad-command:', $.;
+        }
+        my ($incat,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\${LEADIN}/$LEADINSTR/;
         # allow empty $exceptinpackage and set it synonymous to check in all package
         $exceptinpackage = defined($exceptinpackage) ? strip($exceptinpackage) : '';

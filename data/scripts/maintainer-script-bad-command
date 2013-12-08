@@ -9,7 +9,7 @@
 #     Use empty string for checking in all package.
 #   - only in file is a regexp for checking only in some maintainer script
 #     Empty means check in all files.
-#   - regexp is the regexp to check. First group ($1) will be printed if found as extra tag info.
+#   - regexp is the regexp to check. First group ($1) will be printed if found as extra tag info
 #     You could use the special variable ${LEADIN} if needed (see below).
 #
 # ${LEADIN}:
