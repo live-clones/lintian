@@ -1,3 +1,5 @@
+E: scripts-maintainer-general: adduser-system-without-home postinst:148
+E: scripts-maintainer-general: adduser-system-without-home postinst:149
 E: scripts-maintainer-general: install-sgmlcatalog-deprecated postinst:74
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:67
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:68
@@ -23,6 +25,7 @@ W: scripts-maintainer-general: install-info-used-in-maintainer-script postinst:1
 W: scripts-maintainer-general: maintainer-script-has-unexpanded-debhelper-token postinst
 W: scripts-maintainer-general: maintainer-script-hides-init-failure postinst:31
 W: scripts-maintainer-general: maintainer-script-ignores-errors postrm
+W: scripts-maintainer-general: maintainer-script-needs-depends-on-adduser postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-gconf2 postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-xml-core postinst

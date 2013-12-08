@@ -19,6 +19,7 @@
 #
 # Please alpha sort by tag
 #
+adduser-system-without-home                         ~~ 1 ~~                    ~~                   ~~adduser\s+--system(?=\s)(?!.*\s--home\s+/(?!home/))
 ancient-dpkg-epoch-check                            ~~ 0 ~~                    ~~                   ~~${LEADIN}dpkg\s+--assert-working-epoch\b
 ancient-dpkg-multi-conrep-check                     ~~ 0 ~~                    ~~                   ~~${LEADIN}dpkg\s+--assert-multi-conrep\b
 deprecated-chown-usage                              ~~ 0 ~~                    ~~                   ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+

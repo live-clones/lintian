@@ -596,6 +596,17 @@ Info: The maintainer script apparently runs install-sgmlcatalog with flags
  earlier packages.  Given how long ago this transition was, consider
  removing it entirely.
 
+Tag: adduser-system-without-home
+Severity: serious
+Certainty: certain
+Info: The maintainer script apparently runs adduser --system
+ without specifying --home option outside /home/.
+ The FHS says "/home is a fairly standard concept, but it
+ is clearly a site-specific filesystem. The setup will differ
+ from host to host. Therefore, no program should rely on this
+ location."
+Ref: fhs HOMEUSERHOMEDIRECTORIES
+
 Tag: maintainer-script-empty
 Severity: minor
 Certainty: certain

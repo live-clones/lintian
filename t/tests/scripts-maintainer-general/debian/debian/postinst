@@ -144,4 +144,10 @@ rm /dev/null
 rm /dev/shm/test
 rm /dev/.hiddenfile
 
+# adduser system
+adduser --system foo
+adduser --system foo2 --home /home/foo2
+adduser --system bar --home /var/lib/bar
+
+
 #DEBHELPER#

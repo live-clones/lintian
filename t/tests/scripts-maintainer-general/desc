@@ -6,6 +6,7 @@ Profile: ubuntu/main
 Distribution: precise
 Description: Check general problems in maintainer scripts
 Test-For:
+ adduser-system-without-home
  command-with-path-in-maintainer-script
  deprecated-chown-usage
  fc-cache-used-in-maintainer-script
@@ -18,6 +19,7 @@ Test-For:
  maintainer-script-modifies-inetd-conf
  maintainer-script-modifies-ld-so-conf
  maintainer-script-modifies-netbase-managed-file
+ maintainer-script-needs-depends-on-adduser
  maintainer-script-needs-depends-on-gconf2
  maintainer-script-needs-depends-on-ucf
  maintainer-script-needs-depends-on-xml-core
