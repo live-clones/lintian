@@ -708,6 +708,8 @@ sub _clean_block {
                   \"\s*,                       |  # String array (e.g. "line1",\n"line2")
                   ,\s*\"                       |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
                   <br\s*/?>                    |  # (X)HTML line breaks
+                  <!--                         |  # XML comment
+                  -->                          |  # end XML comment
                   </?link[^>]*?>               |  # xml link
                   </?a[^>]*?>                  |  # a link
                   </?citetitle[^>]*?>          |  # citation title in docbook

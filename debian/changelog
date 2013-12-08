@@ -7,6 +7,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
       license.  (Closes: #724930)
     + [BR] Abstract sliding window algorithm and use it for
       license check.  (Closes: #720348)
+    + [BR] Filter (x?ht|x)ml comments for license check.
+      (Closes: #729226).
   * checks/fields.pm:
     + [SL] Returns a warning when a package build-deps on java-compiler
       instead of default-jdk.  (Closes: #730714)
