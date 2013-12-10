@@ -41,6 +41,7 @@ bar etc/opt
 bar var/cache/pbuilder/build
 bar var/lib/sbuild
 bar var/lib/buildd
+bar etc/dhcp3
 
 Bar.pm usr/lib/perl5/Foo
 bar.png usr/lib/files-foo-in-bar

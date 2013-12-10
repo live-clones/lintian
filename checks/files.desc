@@ -73,6 +73,12 @@ Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
  which is obsolete.  See rc.boot(5) for details.
 Ref: policy 9.3.4
 
+Tag: package-install-into-obsolete-dir
+Severity: normal
+Certainty: certain
+Info: The package installs files in an obsolete dir. You
+ should consider to move to newer path.
+
 Tag: non-standard-file-permissions-for-etc-init.d-script
 Severity: important
 Certainty: certain

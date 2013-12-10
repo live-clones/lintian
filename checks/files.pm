@@ -187,6 +187,18 @@ my %PATH_DIRECTORIES = map { $_ => 1 } qw(
 # consider the package non-empty.
 my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
 
+# Obsolete path
+my $OBSOLETE_PATHS = Lintian::Data->new(
+    'files/obsolete-paths',
+    qr/\s*\->\s*/,
+    sub {
+        return {
+            'newdir' => $_[1],
+            'match' => qr/$_[0]/x,
+            'olddir' => $_[0],
+        };
+    });
+
 sub run {
     my ($pkg, $type, $info, $proc) = @_;
     my ($is_python, $is_perl, $has_binary_perl_file);
@@ -336,6 +348,16 @@ sub run {
                 $blessed = "$base/$blessed";
             }
             push(@devhelp_links, $blessed);
+        }
+
+        # check for generic obsolete path
+        foreach my $obsolete_path ($OBSOLETE_PATHS->all) {
+            my $oldpathmatch = $OBSOLETE_PATHS->value($obsolete_path)->{'match'};
+            if ($file =~ m{$oldpathmatch}) {
+                my $oldpath = $OBSOLETE_PATHS->value($obsolete_path)->{'olddir'};
+                my $newpath = $OBSOLETE_PATHS->value($obsolete_path)->{'newdir'};
+                tag 'package-install-into-obsolete-dir', "$file : $oldpath -> $newpath";
+            }
         }
 
         # ---------------- /etc

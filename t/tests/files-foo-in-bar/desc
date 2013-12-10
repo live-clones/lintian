@@ -27,6 +27,7 @@ Test-For:
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d
+ package-install-into-obsolete-dir
  package-installs-nonbinary-perl-in-usr-lib-perl5
  package-installs-perllocal-pod
  perl-module-in-core-directory

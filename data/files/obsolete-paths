@@ -1,0 +1,2 @@
+# obsolete path (regexp) -> newer path
+^etc/dhcp3/.+ -> etc/dhcp

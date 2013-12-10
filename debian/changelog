@@ -16,6 +16,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Improve description of pkg-config-multi-arch-wrong-dir
       tag. Add debhelper > 9 on non multi-arched package as a likely
       cause (Closes: #723886).
+    + [BR] Add a generic check for obsolete path.
   * checks/scripts.{desc,pm}:
     + [BR] Detect update-alternatives --set in maintainer scripts.
       (Closes: #643602).
@@ -29,6 +30,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
+  * data/files/obsolete-paths:
+    + [BR] Add this this file to generically check obsolete path.
+    + [BR] Check obsolete /etc/dhcp3 path.  (Closes: #673029)
   * data/fields/obsolete-packages:
     + [NT] Apply patch from Eric Dorland to mark various versions
       of automake as obsolete.
