@@ -54,16 +54,16 @@ sub readwindow {
     }
 
     if(defined($self->{'_blocksub'})) {
-	local $_ = $window;
-	$self->{'_blocksub'}->();
-	$window = $_;
+        local $_ = $window;
+        $self->{'_blocksub'}->();
+        $window = $_;
     }
 
     $self->{'_blocknumber'}++;
 
     my $block;
     shift @{$self->{'_queue'}};
-    push (@{$self->{'_queue'}}, $window);
+    push(@{$self->{'_queue'}}, $window);
     $block =  join '', @{$self->{'_queue'}};
     return $block;
 }
@@ -71,14 +71,14 @@ sub readwindow {
 sub blocknumber {
     my ($self) = @_;
     if($self->{'_blocknumber'} == -1) {
-	return undef;
+        return;
     }
     return $self->{'_blocknumber'};
 }
 
 =head1 NAME
 
-Lintian::Sliding - Lintian interface to sliding window match
+Lintian::SlidingWindow - Lintian interface to sliding window match
 
 =head1 SYNOPSIS
 
@@ -90,7 +90,7 @@ Lintian::Sliding - Lintian interface to sliding window match
                  m/software \s++ shall \s++
                    be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
                    not \s++ evil/xsim) {
-              tag 'license-problem-json-evil';
+              # do something like : tag 'license-problem-json-evil';
            }
        }
     }
@@ -107,7 +107,7 @@ file in memory.
 
 =item new(mode,file,[blocksub])
 
-Create a new sliding window for file file using mode mode. Optionnaly run blocksub against
+Create a new sliding window for file file using mode mode. Optionally run blocksub against
 each block. Note that blocksub should apply transform byte by byte and does not depend of context.
 
 =back
@@ -136,7 +136,7 @@ return the number of block read by the instance. Return undef if no block has be
 
 =head1 AUTHOR
 
-Originally written by Bastien ROUCARIÈS for Lintian.
+Originally written by Bastien ROUCARIES for Lintian.
 
 =head1 SEE ALSO
 

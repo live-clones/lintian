@@ -1,6 +1,7 @@
 E: scripts-maintainer-general: adduser-system-without-home postinst:148
 E: scripts-maintainer-general: adduser-system-without-home postinst:149
 E: scripts-maintainer-general: install-sgmlcatalog-deprecated postinst:74
+E: scripts-maintainer-general: install-sgmlcatalog-deprecated postinst:75
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:67
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:68
 E: scripts-maintainer-general: maintainer-script-modifies-ld-so-conf postinst:108

@@ -361,11 +361,15 @@ sub run {
 
         # check for generic obsolete path
         foreach my $obsolete_path ($OBSOLETE_PATHS->all) {
-            my $oldpathmatch = $OBSOLETE_PATHS->value($obsolete_path)->{'match'};
+            my $oldpathmatch
+              = $OBSOLETE_PATHS->value($obsolete_path)->{'match'};
             if ($file =~ m{$oldpathmatch}) {
-                my $oldpath = $OBSOLETE_PATHS->value($obsolete_path)->{'olddir'};
-                my $newpath = $OBSOLETE_PATHS->value($obsolete_path)->{'newdir'};
-                tag 'package-install-into-obsolete-dir', "$file : $oldpath -> $newpath";
+                my $oldpath
+                  = $OBSOLETE_PATHS->value($obsolete_path)->{'olddir'};
+                my $newpath
+                  = $OBSOLETE_PATHS->value($obsolete_path)->{'newdir'};
+                tag 'package-install-into-obsolete-dir',
+                  "$file : $oldpath -> $newpath";
             }
         }
 
@@ -1872,6 +1876,7 @@ sub detect_privacy_breach {
             }
         }
     }
+    return;
 }
 
 1;

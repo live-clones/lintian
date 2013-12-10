@@ -7,7 +7,8 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
            Russ Allbery <rra@debian.org>,
            Adam D. Barratt <adam@adam-barratt.org.uk>,
            Raphael Geissert <geissert@debian.org>,
-           Niels Thykier <niels@thykier.net>
+           Niels Thykier <niels@thykier.net>,
+	   Bastien Roucariès <roucaries.bastien+debian@gmail.com>
 Build-Depends: aspell,
                aspell-en,
                binutils,

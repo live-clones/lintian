@@ -98,8 +98,9 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
         }
         my ($incat,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\${LEADIN}/$LEADINSTR/;
-        # allow empty $exceptinpackage and set it synonymous to check in all package
-        $exceptinpackage = defined($exceptinpackage) ? strip($exceptinpackage) : '';
+   # allow empty $exceptinpackage and set it synonymous to check in all package
+        $exceptinpackage
+          = defined($exceptinpackage) ? strip($exceptinpackage) : '';
         if (length($exceptinpackage) == 0) {
             $exceptinpackage = '\a\Z';
         }
@@ -1089,7 +1090,7 @@ sub run {
 sub generic_check_bad_command {
     my ($line, $file, $lineno, $pkg, $findincatstring) = @_;
     # try generic bad maintainer script command tagging
-  BAD_CMD: 
+  BAD_CMD:
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
         my $incat = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_cat_string'};
         my $inpackage = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_package'};
@@ -1107,6 +1108,7 @@ sub generic_check_bad_command {
             }
         }
     }
+    return;
 }
 
 # Returns non-zero if the given file is not actually a shell script,

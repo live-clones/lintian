@@ -94,7 +94,7 @@ cp /etc/inetd.conf.new /etc/inetd.conf
 # But this is fine.
 cp /etc/inetd.conf /srv/chroot/etc/inetd.conf
 
-# Deprecated and not allowed except the second one.
+# Deprecated
 install-sgmlcatalog --install package
 install-sgmlcatalog --remove package
 

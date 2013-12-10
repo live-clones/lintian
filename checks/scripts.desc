@@ -604,7 +604,7 @@ Info: The maintainer script apparently runs adduser --system
  is clearly a site-specific filesystem. The setup will differ
  from host to host. Therefore, no program should rely on this
  location."
-Ref: fhs HOMEUSERHOMEDIRECTORIES
+Ref: fhs homeuserhomedirectories
 
 Tag: maintainer-script-empty
 Severity: minor

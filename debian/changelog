@@ -1,6 +1,16 @@
-lintian (2.5.20) UNRELEASED; urgency=low
+lintian (2.5.20) unstable; urgency=low
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - adduser-system-without-home
+      - build-depends-on-an-obsolete-java-package
+      - debian-watch-file-pubkey-file-is-missing
+      - debian-watch-may-check-gpg-signature
+      - license-problem-nvidia-intellectual
+      - package-install-into-obsolete-dir
+      - privacy-breach-generic
+      - privacy-breach-google-adsense
+      - update-alternatives-set-called-in-maintainer-script
 
   * checks/cruft.{desc,pm}:
     + [BR] Check files for under a non-distributable Nvidia
@@ -12,9 +22,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * checks/fields.pm:
     + [SL] Returns a warning when a package build-deps on java-compiler
       instead of default-jdk.  (Closes: #730714)
-  * checks/files.desc
+  * checks/files.desc:
     + [BR] Improve description of pkg-config-multi-arch-wrong-dir
-      tag. Add debhelper > 9 on non multi-arched package as a likely
+      tag.  Add debhelper > 9 on non multi-arched package as a likely
       cause (Closes: #723886).
     + [BR] Add a generic check for obsolete path.
     + [BR] Detect privacy breaker html/css files (Closes: #637580)
@@ -53,6 +63,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
 
   * debian/control:
     + [NT] Bump Standards-Versions to 3.9.5 - no changes required.
+    + [BR] Add myself as uploader.
 
   * lib/Lintian/Check.pm:
     + [RG] Detect a few more spelling mistakes by removing some
@@ -60,7 +71,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Add a list of global exception for spelling mistakes.
       (Closes: #730715)
   * lib/Lintian/Collect/Binary.pm:
-    + [GN] Add support for multi-component RPATHs. (Closes: #727683)
+    + [GN] Add support for multi-component RPATHs.  (Closes: #727683)
   * lib/Lintian/Collect/Package.pm:
     + [BR] Globally replace \\ by \ in _dequote_name(). This bug was
       masked by old buggy tar (Closes: #727665).
@@ -69,7 +80,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [NT] Add "trusty".  Thanks to Stéphane Graber for the
       reminder.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 26 Sep 2013 09:35:27 +0200
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Wed, 11 Dec 2013 15:45:23 +0100
 
 lintian (2.5.19) unstable; urgency=low
 

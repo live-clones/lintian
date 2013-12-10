@@ -458,7 +458,7 @@ sub find_cruft {
 }
 
 # do basic license check against well known offender
-# note that it does not replace licensecheck(1) 
+# note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub license_check {
     my ($info, $name, $path) = @_;
@@ -690,6 +690,7 @@ sub license_check {
             }
         }
     }
+    return;
 }
 
 sub _clean_block {

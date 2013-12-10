@@ -13,6 +13,7 @@ O[P?]: lintian-output-letter: no-upstream-changelog
 P[P ]: lintian-output-letter: example-unusual-interpreter usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
 P[P ]: lintian-output-letter: no-homepage-field
 P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 11
+P[P!]: lintian-output-letter source: debian-watch-may-check-gpg-signature
 P[P!]: lintian-output-letter source: direct-changes-in-diff-but-no-patch-system Changes
 W[N ]: lintian-output-letter: binary-without-manpage usr/bin/script
 W[N!]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1

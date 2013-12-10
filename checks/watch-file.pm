@@ -107,19 +107,19 @@ sub run {
                 @opts = split(',', $opts);
                 for (@opts) {
                     $repack_mangle = 1
-                        if defined $repack
-                        and /^[ud]?versionmangle\s*=.*$repack/;
+                      if defined $repack
+                      and /^[ud]?versionmangle\s*=.*$repack/;
                     $repack_dmangle = 1
-                        if defined $repack
-                        and /^dversionmangle\s*=.*$repack/;
+                      if defined $repack
+                      and /^dversionmangle\s*=.*$repack/;
                     $prerelease_mangle = 1
-                        if defined $prerelease
-                        and /^[ud]?versionmangle\s*=.*$prerelease/;
+                      if defined $prerelease
+                      and /^[ud]?versionmangle\s*=.*$prerelease/;
                     $prerelease_umangle = 1
-                        if defined $prerelease
-                        and /^uversionmangle\s*=.*$prerelease/;
+                      if defined $prerelease
+                      and /^uversionmangle\s*=.*$prerelease/;
                     $withgpgverification = 1
-                        if /^pgpsigurlmangle\s*=\s*/;
+                      if /^pgpsigurlmangle\s*=\s*/;
                 }
             }
             if (m%qa\.debian\.org/watch/sf\.php\?%) {
@@ -182,10 +182,10 @@ sub run {
     tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
     if ($withgpgverification) {
-         my $pgpfile = $info->debfiles('upstream-signing-key.pgp');
-         if (!-f $pgpfile) {
-             tag 'debian-watch-file-pubkey-file-is-missing';
-         }
+        my $pgpfile = $info->debfiles('upstream-signing-key.pgp');
+        if (!-f $pgpfile) {
+            tag 'debian-watch-file-pubkey-file-is-missing';
+        }
     }
 
     my $changes = $info->changelog;

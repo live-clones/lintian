@@ -46,7 +46,7 @@ E: binary: su-wrapper-without--c usr/lib/menu/binary:2 su-to-root
 E: binary: su-wrapper-without--c usr/lib/menu/binary:3 sux
 E: binary: su-wrapper-without--c usr/share/menu/binary:2 su-to-root
 E: binary: su-wrapper-without--c usr/share/menu/binary:3 sux
-E: binary: suidregister-used-in-maintainer-script postinst
+E: binary: suidregister-used-in-maintainer-script postinst:5
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: unstripped-binary-or-object usr/bin/hello
 I: binary source: binary-control-field-duplicates-source field "vcs-svn" in package binary

@@ -393,7 +393,10 @@ sub objdump_info {
             # Here we just need RPATH and NEEDS, so ignore the rest for now
             my ($header, $val) = split m/\s++/, $data;
             if ($header eq 'RPATH') {
-                map {$info{$header}->{$_} = 1;} split m/:/, $val;
+                # RPATH is like PATH
+                foreach my $rpathcomponent (split(m/:/,$val)) {
+                    $info{$header}->{$rpathcomponent} = 1;
+                }
             } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
                 push @{ $info{$header} }, $val;
             } elsif ($header eq 'TEXTREL') {

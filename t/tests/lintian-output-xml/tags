@@ -11,6 +11,7 @@
 <tag severity="normal" certainty="possible" name="binary-without-manpage">usr/bin/script</tag>
 <tag severity="normal" certainty="wild-guess" name="desktop-entry-limited-to-environments">usr/share/applications/script.desktop</tag>
 <tag severity="pedantic" certainty="certain" name="debian-control-has-unusual-field-spacing">line 11</tag>
+<tag severity="pedantic" certainty="certain" name="debian-watch-may-check-gpg-signature" />
 <tag severity="pedantic" certainty="certain" name="direct-changes-in-diff-but-no-patch-system">Changes</tag>
 <tag severity="pedantic" certainty="possible" name="example-unusual-interpreter">usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>
 <tag severity="pedantic" certainty="possible" name="no-homepage-field" />

@@ -590,7 +590,7 @@ Info: The package declares a build-depends on an essential package, e.g. dpkg,
 Tag: build-depends-on-an-obsolete-java-package
 Severity: normal
 Certainty: certain
-Ref: java policy 2.2
+Ref: java-policy 2.2
 Info: The package build-depends on an obsolete java dependency
  It should built-depends on default-jdk instead.
 

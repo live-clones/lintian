@@ -7,17 +7,19 @@ E: maintainer-scripts: debian-changelog-file-contains-invalid-email-address jero
 E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package etc/init.d/foo
 E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:98
+E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:99
 E: maintainer-scripts: install-sgmlcatalog-deprecated postrm:47
+E: maintainer-scripts: install-sgmlcatalog-deprecated prerm:58
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:55
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:91
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:92
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:83 /etc/services
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:84 /etc/protocols
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:85 /etc/rpc
-E: maintainer-scripts: maintainer-script-removes-device-files postrm:40
-E: maintainer-scripts: maintainer-script-removes-device-files postrm:41
-E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst
-E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly preinst
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:83 '/etc/services'
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:84 '/etc/protocols'
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:85 '/etc/rpc'
+E: maintainer-scripts: maintainer-script-removes-device-files postrm:40 '/dev/device'
+E: maintainer-scripts: maintainer-script-removes-device-files postrm:41 '/dev/device1'
+E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst:80
+E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly preinst:12
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls etc/init.d/bar
@@ -164,4 +166,4 @@ W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
 W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:159
-W: maintainer-scripts: update-alternatives-remove-called-in-postrm
+W: maintainer-scripts: update-alternatives-remove-called-in-postrm postrm:4

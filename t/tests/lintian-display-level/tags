@@ -7,6 +7,7 @@ I: lintian-display-level: description-synopsis-might-not-be-phrased-properly
 I: lintian-display-level: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I: lintian-display-level: package-contains-empty-directory usr/local/share/lintian/
 P: lintian-display-level source: debian-control-has-unusual-field-spacing line 11
+P: lintian-display-level source: debian-watch-may-check-gpg-signature
 P: lintian-display-level source: direct-changes-in-diff-but-no-patch-system Changes
 P: lintian-display-level: example-unusual-interpreter usr/share/doc/lintian-display-level/examples/example #!/usr/bin/foo
 P: lintian-display-level: no-homepage-field
