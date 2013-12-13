@@ -944,12 +944,12 @@ Info: This package create a privacy breach by using Google Adsense.
  content sites to serve automatic advertisement. Unfortunately, it means
  tracking and breaching privacy of our users.
  .
- This tag track also tracks the use of related obsolete privacy breaker 
+ This tag track also tracks the use of related obsolete privacy breaker
  software Urchin WebAnalytics.
  .
  Note that using Google Adsense in local webpage copy is a violation
- of Google Adsense term of use and thus a serious bug. This violation
- renders not distribuable the whole package.
+ of Google Adsense terms of use and thus a serious bug. This violation
+ renders this package not distribuable.
 
 
 Tag: embedded-feedparser-library
