@@ -1,5 +1,0 @@
-Testname: spelling-suffix
-Sequence: 6000
-Version: 1.0
-Description: Suffix-removal for spelling mistake detection
-Test-For: spelling-error-in-description

@@ -65,9 +65,6 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [NT] Bump Standards-Versions to 3.9.5 - no changes required.
     + [BR] Add myself as uploader.
 
-  * lib/Lintian/Check.pm:
-    + [RG] Detect a few more spelling mistakes by removing some
-      suffixes before looking them up in the list of spelling mistakes.
   * lib/Lintian/Collect/Binary.pm:
     + [GN] Add support for multi-component RPATHs.  (Closes: #727683)
   * lib/Lintian/Collect/Package.pm:
