@@ -520,7 +520,7 @@ Certainty: possible
 Info: This script apparently runs gconftool or gconftool-2.  It should
  probably be calling gconf-schemas or update-gconf-defaults instead.
 
-Tag: fc-cache-used-in-maintainer-script
+Tag: maintainer-script-should-not-use-fc-cache
 Severity: normal
 Certainty: possible
 Info: This script apparently runs fc-cache.  Updating of the fontconfig

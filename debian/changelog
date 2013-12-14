@@ -41,6 +41,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Rename gconftool-used-in-maintainer-script to
       maintainer-script-should-not-use-gconftool.  Add gconf\d package
       to exception list.
+    + [BR] Rename fc-cache-used-in-maintainer-script to
+      maintainer-script-should-not-use-fc-cache.  Add fontconfig
+      package to exception list.
   * checks/standards-version:
     + [BR] Use Lintian::Data for ancient date check.
   * checks/watch.{desc,pm}:

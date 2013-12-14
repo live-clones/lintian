@@ -21,7 +21,6 @@ W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:1
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
 W: scripts-maintainer-general: deprecated-chown-usage postinst:14 'chown root.root'
 W: scripts-maintainer-general: deprecated-chown-usage postinst:84 'chown -R root.root'
-W: scripts-maintainer-general: fc-cache-used-in-maintainer-script postinst:95
 W: scripts-maintainer-general: install-info-used-in-maintainer-script postinst:105
 W: scripts-maintainer-general: maintainer-script-has-unexpanded-debhelper-token postinst
 W: scripts-maintainer-general: maintainer-script-hides-init-failure postinst:31
@@ -30,6 +29,7 @@ W: scripts-maintainer-general: maintainer-script-needs-depends-on-adduser postin
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-gconf2 postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-ucf postinst
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-xml-core postinst
+W: scripts-maintainer-general: maintainer-script-should-not-use-fc-cache postinst:95
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:153
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:44
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
