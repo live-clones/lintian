@@ -8,7 +8,6 @@ Description: Check general problems in maintainer scripts
 Test-For:
  command-with-path-in-maintainer-script
  install-info-used-in-maintainer-script
- install-sgmlcatalog-deprecated
  maintainer-script-has-unexpanded-debhelper-token
  maintainer-script-hides-init-failure
  maintainer-script-ignores-errors
@@ -26,6 +25,7 @@ Test-For:
  maintainer-script-should-not-use-deprecated-chown-usage
  maintainer-script-should-not-use-fc-cache
  maintainer-script-should-not-use-gconftool
+ maintainer-script-should-not-use-install-sgmlcatalog
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script

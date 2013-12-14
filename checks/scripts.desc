@@ -584,7 +584,7 @@ Info: This package appears to modify <tt>/etc/ld.so.conf</tt> and does not
  packages may cause random segfaults and difficult-to-debug problems
  instead of conflicts in the package manager.
 
-Tag: install-sgmlcatalog-deprecated
+Tag: maintainer-script-should-not-use-install-sgmlcatalog
 Severity: important
 Certainty: certain
 Info: The maintainer script apparently runs install-sgmlcatalog.

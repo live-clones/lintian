@@ -37,7 +37,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Detect use of adduser --system without --home or with
       --home inside /home.  (Closes: #730456).
     + [BR] install-sgmlcatalog is deprecated for a long time.  Warn
-      now in all use case.
+      now in all use case.  Rename the tag to
+      maintainer-script-should-not-use-install-sgmlcatalog
     + [BR] Rename gconftool-used-in-maintainer-script to
       maintainer-script-should-not-use-gconftool.  Add gconf\d package
       to exception list.
