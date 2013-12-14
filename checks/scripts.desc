@@ -481,9 +481,7 @@ Info: <tt>update-alternatives --set &lt;alternative&gt; foo</tt> or
  vs. one that's manually set because the package set it.
 Ref: update-alternatives(8)
 
-
-
-Tag: deprecated-chown-usage
+Tag: maintainer-script-should-not-use-deprecated-chown-usage
 Severity: normal
 Certainty: certain
 Info: <tt>chown user.group</tt> is called in one of the maintainer

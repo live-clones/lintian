@@ -19,7 +19,6 @@
 #
 # Please alpha sort by tag
 #
-deprecated-chown-usage                                          ~~ 0 ~~                    ~~          ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
 install-info-used-in-maintainer-script                          ~~ 1 ~~                    ~~          ~~\binstall-info\b
 install-sgmlcatalog-deprecated                                  ~~ 1 ~~                    ~~          ~~\binstall-sgmlcatalog\b
 maintainer-script-hides-init-failure                            ~~ 0 ~~                    ~~          ~~invoke-rc.d.*\|\| \s+ exit \s+ 0
@@ -30,6 +29,7 @@ maintainer-script-uses-dpkg-status-directly                     ~~ 1 ~~^(base-fi
 maintainer-script-should-not-use-adduser-system-without-home    ~~ 1 ~~                    ~~          ~~adduser\s+--system(?=\s)(?!.*\s--home\s+/(?!home/))
 maintainer-script-should-not-use-ancient-dpkg-epoch-check       ~~ 0 ~~                    ~~          ~~${LEADIN}dpkg\s+--assert-working-epoch\b
 maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check~~ 0 ~~                    ~~          ~~${LEADIN}dpkg\s+--assert-multi-conrep\b
+maintainer-script-should-not-use-deprecated-chown-usage         ~~ 0 ~~                    ~~          ~~(chown(?:\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+
 maintainer-script-should-not-use-fc-cache                       ~~ 0 ~~^(fontconfig)$      ~~          ~~${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
 maintainer-script-should-not-use-gconftool                      ~~ 1 ~~^(gconf\d)$         ~~          ~~(?:/usr/bin/)?gconftool(?:-\d)?(?:\s|\Z)
 update-alternatives-remove-called-in-postrm                     ~~ 1 ~~                    ~~^postrm$  ~~\b update\-alternatives\s+\-\-remove\b
