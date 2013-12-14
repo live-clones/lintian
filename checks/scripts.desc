@@ -490,7 +490,7 @@ Info: <tt>chown user.group</tt> is called in one of the maintainer
  as a system uses the "." in user or group names.
 Ref: chown(1)
 
-Tag: maintainer-script-hides-init-failure
+Tag: maintainer-script-should-not-hide-init-failure
 Severity: normal
 Certainty: certain
 Info: This script calls invoke-rc.d to run an init script but then, if the

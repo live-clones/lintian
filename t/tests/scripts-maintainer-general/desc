@@ -9,7 +9,6 @@ Test-For:
  command-with-path-in-maintainer-script
  install-info-used-in-maintainer-script
  maintainer-script-has-unexpanded-debhelper-token
- maintainer-script-hides-init-failure
  maintainer-script-ignores-errors
  maintainer-script-modifies-inetd-conf
  maintainer-script-modifies-ld-so-conf
@@ -21,6 +20,7 @@ Test-For:
  maintainer-script-removes-device-files
  maintainer-script-uses-dpkg-status-directly
  maintainer-shell-script-fails-syntax-check
+ maintainer-script-should-not-hide-init-failure
  maintainer-script-should-not-use-adduser-system-without-home
  maintainer-script-should-not-use-deprecated-chown-usage
  maintainer-script-should-not-use-fc-cache

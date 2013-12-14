@@ -21,11 +21,11 @@
 #
 # ftpmaster auto reject so do not rename
 install-info-used-in-maintainer-script                          ~~ 1 ~~                    ~~          ~~\binstall-info\b
-maintainer-script-hides-init-failure                            ~~ 0 ~~                    ~~          ~~invoke-rc.d.*\|\| \s+ exit \s+ 0
 maintainer-script-modifies-ld-so-conf                           ~~ 0 ~~^libc               ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)/etc/ld\.so\.conf\s*(?:\s|\Z)
 maintainer-script-modifies-netbase-managed-file                 ~~ 0 ~~                    ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)(/etc/(?:services|protocols|rpc))\s*(?:\s|\Z)
 maintainer-script-removes-device-files                          ~~ 0 ~~                    ~~          ~~^\s*rm\s+(?:[^>]*\s)?(/dev/(?!(?:shm/|\.[^.]+))[^/ ]+)
 maintainer-script-uses-dpkg-status-directly                     ~~ 1 ~~^(base-files|dpkg)$ ~~          ~~/var/lib/dpkg/status\b
+maintainer-script-should-not-hide-init-failure                  ~~ 0 ~~                    ~~          ~~invoke-rc.d.*\|\| \s+ exit \s+ 0
 maintainer-script-should-not-use-adduser-system-without-home    ~~ 1 ~~                    ~~          ~~adduser\s+--system(?=\s)(?!.*\s--home\s+/(?!home/))
 maintainer-script-should-not-use-ancient-dpkg-epoch-check       ~~ 0 ~~                    ~~          ~~${LEADIN}dpkg\s+--assert-working-epoch\b
 maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check~~ 0 ~~                    ~~          ~~${LEADIN}dpkg\s+--assert-multi-conrep\b
