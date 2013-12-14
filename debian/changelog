@@ -36,8 +36,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
       scripts.
     + [BR] Detect use of adduser --system without --home or with
       --home inside /home.  (Closes: #730456).
-    + [BR] install-sgmlcatalog is deprecated for a long time. Warn now
-      in all use case.
+    + [BR] install-sgmlcatalog is deprecated for a long time.  Warn
+      now in all use case.
   * checks/watch.{desc,pm}:
     + [BR] Detect lack of uscan support for gpg signature.
       (Closes: #711553).
