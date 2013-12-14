@@ -595,7 +595,7 @@ Info: The maintainer script apparently runs install-sgmlcatalog.
  Given how long ago this transition was, consider removing it
  entirely.
 
-Tag: adduser-system-without-home
+Tag: maintainer-script-should-not-use-adduser-system-without-home
 Severity: serious
 Certainty: certain
 Info: The maintainer script apparently runs adduser --system

@@ -1,5 +1,3 @@
-E: scripts-maintainer-general: adduser-system-without-home postinst:148
-E: scripts-maintainer-general: adduser-system-without-home postinst:149
 E: scripts-maintainer-general: install-sgmlcatalog-deprecated postinst:74
 E: scripts-maintainer-general: install-sgmlcatalog-deprecated postinst:75
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:67
@@ -12,6 +10,8 @@ E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file p
 E: scripts-maintainer-general: maintainer-script-removes-device-files postinst:141 '/dev/null'
 E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:148
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:149
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
 E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst:101
