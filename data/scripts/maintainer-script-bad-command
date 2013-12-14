@@ -19,6 +19,7 @@
 #
 # Please alpha sort by tag
 #
+# Please use maintainer-script-should-not- for tag name
 
 # ftpmaster auto reject so do not rename
 install-info-used-in-maintainer-script                          ~~ 1 ~~                    ~~          ~~\binstall-info\b

@@ -526,7 +526,7 @@ Info: This script apparently runs fc-cache.  Updating of the fontconfig
  from maintainer scripts is no longer necessary.
 
 Tag: install-info-used-in-maintainer-script
-Severity: normal
+Severity: serious
 Certainty: possible
 Info: This script apparently runs <tt>install-info</tt>.  Updating the
  <tt>/usr/share/info/dir</tt> file is now handled automatically by

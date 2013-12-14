@@ -1,16 +1,41 @@
-lintian (2.5.20) UNRELEASED; urgency=low
+lintian (2.5.20) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
-      - adduser-system-without-home
       - build-depends-on-an-obsolete-java-package
       - debian-watch-file-pubkey-file-is-missing
       - debian-watch-may-check-gpg-signature
       - license-problem-nvidia-intellectual
+      - maintainer-script-should-not-hide-init-failure
+      - maintainer-script-should-not-modify-ld-so-conf
+      - maintainer-script-should-not-modify-netbase-managed-file
+      - maintainer-script-should-not-use-adduser-system-without-home
+      - maintainer-script-should-not-use-ancient-dpkg-epoch-check
+      - maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
+      - maintainer-script-should-not-use-deprecated-chown-usage
+      - maintainer-script-should-not-use-dpkg-status-directly
+      - maintainer-script-should-not-use-fc-cache
+      - maintainer-script-should-not-use-gconftool
+      - maintainer-script-should-not-use-install-sgmlcatalog
+      - maintainer-script-should-not-use-start-stop-daemon
+      - maintainer-script-should-not-use-update-alternatives-remove
+      - maintainer-script-should-not-use-update-alternatives-set
       - package-install-into-obsolete-dir
       - privacy-breach-generic
       - privacy-breach-google-adsense
-      - update-alternatives-set-called-in-maintainer-script
+    + Removed:
+      - ancient-dpkg-epoch-check
+      - ancient-dpkg-multi-conrep-check
+      - deprecated-chown-usage
+      - fc-cache-used-in-maintainer-script
+      - gconftool-used-in-maintainer-script
+      - install-sgmlcatalog-deprecated
+      - maintainer-script-hides-init-failure
+      - maintainer-script-modifies-ld-so-conf
+      - maintainer-script-modifies-netbase-managed-file
+      - maintainer-script-uses-dpkg-status-directly
+      - start-stop-daemon-in-maintainer-script
+      - update-alternatives-remove-called-in-postrm
 
   * checks/cruft.{desc,pm}:
     + [BR] Check files for under a non-distributable Nvidia
@@ -101,7 +126,7 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [NT] Add "trusty".  Thanks to Stéphane Graber for the
       reminder.
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Wed, 11 Dec 2013 15:45:23 +0100
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Sat, 14 Dec 2013 16:15:52 +0100
 
 lintian (2.5.19) unstable; urgency=low
 

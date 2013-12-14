@@ -6,20 +6,21 @@ E: maintainer-scripts: debconf-config-not-executable
 E: maintainer-scripts: debian-changelog-file-contains-invalid-email-address jeroen@mordor
 E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package etc/init.d/foo
-E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:98
-E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:99
-E: maintainer-scripts: install-sgmlcatalog-deprecated postrm:47
-E: maintainer-scripts: install-sgmlcatalog-deprecated prerm:58
+E: maintainer-scripts: install-info-used-in-maintainer-script postinst:28
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:55
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:91
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:92
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:83 '/etc/services'
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:84 '/etc/protocols'
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:85 '/etc/rpc'
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:40 '/dev/device'
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:41 '/dev/device1'
-E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst:80
-E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly preinst:12
+E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:83 '/etc/services'
+E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:84 '/etc/protocols'
+E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:85 '/etc/rpc'
+E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly postinst:80
+E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly preinst:12
+E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:98
+E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:99
+E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postrm:47
+E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog prerm:58
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls etc/init.d/bar
@@ -52,23 +53,24 @@ W: maintainer-scripts source: dfsg-version-in-native-package 7+dfsg-0.1
 W: maintainer-scripts source: dm-upload-allowed-is-obsolete
 W: maintainer-scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
-W: maintainer-scripts: ancient-dpkg-epoch-check preinst:8
-W: maintainer-scripts: ancient-dpkg-multi-conrep-check preinst:10
 W: maintainer-scripts: command-with-path-in-maintainer-script postinst:171 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep
 W: maintainer-scripts: config-does-not-load-confmodule
-W: maintainer-scripts: deprecated-chown-usage postinst:165 'chown -R root.root'
-W: maintainer-scripts: deprecated-chown-usage postinst:33 'chown root.root'
-W: maintainer-scripts: gconftool-used-in-maintainer-script postinst:68
 W: maintainer-scripts: init.d-script-not-marked-as-conffile etc/init.d/foo
-W: maintainer-scripts: install-info-used-in-maintainer-script postinst:28
 W: maintainer-scripts: maintainer-script-empty config
-W: maintainer-scripts: maintainer-script-hides-init-failure postinst:55
 W: maintainer-scripts: maintainer-script-ignores-errors postrm
 W: maintainer-scripts: maintainer-script-ignores-errors preinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-gconf2 postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-ucf postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-xml-core postinst
+W: maintainer-scripts: maintainer-script-should-not-hide-init-failure postinst:55
+W: maintainer-scripts: maintainer-script-should-not-use-ancient-dpkg-epoch-check preinst:8
+W: maintainer-scripts: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check preinst:10
+W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:165 'chown -R root.root'
+W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:33 'chown root.root'
+W: maintainer-scripts: maintainer-script-should-not-use-gconftool postinst:68
+W: maintainer-scripts: maintainer-script-should-not-use-start-stop-daemon postinst:159
+W: maintainer-scripts: maintainer-script-should-not-use-update-alternatives-remove postrm:4
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:108 '${H[@]}'
@@ -165,5 +167,3 @@ W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-scr
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
-W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:159
-W: maintainer-scripts: update-alternatives-remove-called-in-postrm postrm:4

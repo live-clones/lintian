@@ -1,3 +1,4 @@
+E: scripts-maintainer-general: install-info-used-in-maintainer-script postinst:105
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:67
 E: scripts-maintainer-general: maintainer-script-modifies-inetd-conf postinst:68
 E: scripts-maintainer-general: maintainer-script-removes-device-files postinst:141 '/dev/null'
@@ -19,7 +20,6 @@ W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:1
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:153 /usr/bin/gconftool-2
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
-W: scripts-maintainer-general: install-info-used-in-maintainer-script postinst:105
 W: scripts-maintainer-general: maintainer-script-has-unexpanded-debhelper-token postinst
 W: scripts-maintainer-general: maintainer-script-ignores-errors postrm
 W: scripts-maintainer-general: maintainer-script-needs-depends-on-adduser postinst
