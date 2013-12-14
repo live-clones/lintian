@@ -38,6 +38,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
       --home inside /home.  (Closes: #730456).
     + [BR] install-sgmlcatalog is deprecated for a long time.  Warn
       now in all use case.
+  * checks/standards-version:
+    + [BR] Use Lintian::Data for ancient date check.
   * checks/watch.{desc,pm}:
     + [BR] Detect lack of uscan support for gpg signature.
       (Closes: #711553).
@@ -58,6 +60,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [RG] Detect some typos of "establishment" and "contains".
     + [SL] Detect some typos of "suppress".
+  * data/standards-version/ancient-date:
+    + [BR] Set ancient date to 14 Jan 2012.
   * data/standards-version/release-dates:
     + [NT] Add release date for 3.9.5.
 

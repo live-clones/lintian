@@ -31,16 +31,16 @@ plan tests => 2;
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-my $check = "$ENV{'LINTIAN_TEST_ROOT'}/checks/standards-version.pm";
+my $check = "$ENV{'LINTIAN_TEST_ROOT'}/data/standards-version/ancient-date";
 my $found = 0;
 open(my $fd, '<', $check);
 while (my $line = <$fd>) {
     # We are looking for:
-    #   my $ANCIENT_DATE = str2time('20 Aug 2009')
+    #   my $ANCIENT_DATE < '20 Aug 2009')
     $line =~ s,\#.*+,,o;
     if (
-        $line =~ m/ANCIENT_DATE \s* = \s* str2time\s*\(\s*
-                  [\'\"]([^\'\"]+)[\'\"]/ox
+        $line =~ m/ANCIENT \s* < \s*
+                  ([\s\w]+)/ox
       ) {
         my $date = $1;
         my $and = str2time($date)

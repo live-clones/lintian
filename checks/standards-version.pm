@@ -34,8 +34,16 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 
 # Any Standards Version released before this day is "ancient"
-my $ANCIENT_DATE = str2time('20 Oct 2011')
-  or fail "Cannot parse ANCIENT_DATE: $!";
+my $ANCIENT_DATE_DATA = Lintian::Data->new(
+    'standards-version/ancient-date',
+    qr{\s*<\s*},
+    sub {
+        my $date =  str2time($_[1]) or fail "Cannot parse ANCIENT_DATE: $!";
+        return $date;
+    });
+
+my $ANCIENT_DATE = $ANCIENT_DATE_DATA->value('ANCIENT')
+  or fail 'Cannot get ANCIENT_DATE';
 
 my $STANDARDS= Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 
