@@ -651,14 +651,14 @@ Info: The indicated program run in a maintainer script has a prepended
  workarounds in the developer's reference can be used.
 Ref: policy 6.1, devref 6.4
 
-Tag: ancient-dpkg-epoch-check
+Tag: maintainer-script-should-not-use-ancient-dpkg-epoch-check
 Severity: minor
 Certainty: certain
 Info: The package calls dpkg --assert-working-epoch in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.4.0.7, released 1997-01-25.
 
-Tag: ancient-dpkg-multi-conrep-check
+Tag: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
 Severity: minor
 Certainty: certain
 Info: The package calls dpkg --assert-multi-conrep in a maintainer

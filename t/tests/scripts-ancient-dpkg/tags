@@ -1,2 +1,2 @@
-W: scripts-ancient-dpkg: ancient-dpkg-epoch-check postinst:4
-W: scripts-ancient-dpkg: ancient-dpkg-multi-conrep-check postinst:8
+W: scripts-ancient-dpkg: maintainer-script-should-not-use-ancient-dpkg-epoch-check postinst:4
+W: scripts-ancient-dpkg: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check postinst:8

@@ -3,6 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Tests for ancient dpkg stuff
 Test-For:
- ancient-dpkg-epoch-check
- ancient-dpkg-multi-conrep-check
+ maintainer-script-should-not-use-ancient-dpkg-epoch-check
+ maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
 
