@@ -11,8 +11,6 @@ Test-For:
  maintainer-script-has-unexpanded-debhelper-token
  maintainer-script-ignores-errors
  maintainer-script-modifies-inetd-conf
- maintainer-script-modifies-ld-so-conf
- maintainer-script-modifies-netbase-managed-file
  maintainer-script-needs-depends-on-adduser
  maintainer-script-needs-depends-on-gconf2
  maintainer-script-needs-depends-on-ucf
@@ -27,6 +25,7 @@ Test-For:
  maintainer-script-should-not-use-gconftool
  maintainer-script-should-not-use-install-sgmlcatalog
  maintainer-script-should-not-modify-ld-so-conf
+ maintainer-script-should-not-modify-netbase-managed-file
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script

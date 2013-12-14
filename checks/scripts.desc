@@ -550,7 +550,7 @@ Info: The file /var/lib/dpkg/status is internal to dpkg, may disappear or
  instead.
 Ref: http://wiki.debian.org/DpkgConffileHandling
 
-Tag: maintainer-script-modifies-netbase-managed-file
+Tag: maintainer-script-should-not-modify-netbase-managed-file
 Severity: serious
 Certainty: certain
 Info: The maintainer script modifies at least one of the files
