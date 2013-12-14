@@ -21,7 +21,6 @@
 #
 # ftpmaster auto reject so do not rename
 install-info-used-in-maintainer-script                          ~~ 1 ~~                    ~~          ~~\binstall-info\b
-maintainer-script-modifies-ld-so-conf                           ~~ 0 ~~^libc               ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)/etc/ld\.so\.conf\s*(?:\s|\Z)
 maintainer-script-modifies-netbase-managed-file                 ~~ 0 ~~                    ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)(/etc/(?:services|protocols|rpc))\s*(?:\s|\Z)
 maintainer-script-removes-device-files                          ~~ 0 ~~                    ~~          ~~^\s*rm\s+(?:[^>]*\s)?(/dev/(?!(?:shm/|\.[^.]+))[^/ ]+)
 maintainer-script-uses-dpkg-status-directly                     ~~ 1 ~~^(base-files|dpkg)$ ~~          ~~/var/lib/dpkg/status\b
@@ -33,6 +32,7 @@ maintainer-script-should-not-use-deprecated-chown-usage         ~~ 0 ~~         
 maintainer-script-should-not-use-fc-cache                       ~~ 0 ~~^(fontconfig)$      ~~          ~~${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
 maintainer-script-should-not-use-gconftool                      ~~ 1 ~~^(gconf\d)$         ~~          ~~(?:/usr/bin/)?gconftool(?:-\d)?(?:\s|\Z)
 maintainer-script-should-not-use-install-sgmlcatalog            ~~ 1 ~~                    ~~          ~~\binstall-sgmlcatalog\b
+maintainer-script-should-not-modify-ld-so-conf                  ~~ 0 ~~^libc               ~~          ~~(?:\A\s*(?:cp|mv)\s+.*\s+|>\s*)/etc/ld\.so\.conf\s*(?:\s|\Z)
 update-alternatives-remove-called-in-postrm                     ~~ 1 ~~                    ~~^postrm$  ~~\b update\-alternatives\s+\-\-remove\b
 update-alternatives-set-called-in-maintainer-script             ~~ 1 ~~                    ~~          ~~\b update\-alternatives\s+\-\-(?:set|set\-selections|config)\b
 start-stop-daemon-in-maintainer-script                          ~~ 0 ~~                    ~~          ~~\s*start-stop-daemon(?=\s)(?!.*\s--stop\b)

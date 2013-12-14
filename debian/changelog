@@ -50,6 +50,8 @@ lintian (2.5.20) UNRELEASED; urgency=low
       maintainer-script-should-not-use-$1.
     + [BR] Rename maintainer-script-hides-init-failure to
       maintainer-script-should-not-hide-init-failure.
+    + [BR] Rename maintainer-script-modifies-ld-so-conf to
+      maintainer-script-should-not-modify-ld-so-conf
   * checks/standards-version:
     + [BR] Use Lintian::Data for ancient date check.
   * checks/watch.{desc,pm}:

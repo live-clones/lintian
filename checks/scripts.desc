@@ -567,7 +567,7 @@ Info: The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.
  <tt>update-inetd</tt> script or the <tt>DebianNet.pm</tt> Perl module.
 Ref: policy 11.2
 
-Tag: maintainer-script-modifies-ld-so-conf
+Tag: maintainer-script-should-not-modify-ld-so-conf
 Severity: important
 Certainty: possible
 Info: This package appears to modify <tt>/etc/ld.so.conf</tt> and does not
