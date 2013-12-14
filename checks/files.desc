@@ -934,7 +934,7 @@ Certainty: wild-guess
 Experimental: yes
 Info: This package create a privacy breach by fetching some data from
  an external website. Please remove these scripts or external html
- ressources.
+ resources.
 
 Tag: privacy-breach-google-adsense
 Severity: serious
