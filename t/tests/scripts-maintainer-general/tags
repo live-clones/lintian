@@ -8,9 +8,9 @@ E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-manag
 E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-managed-file postinst:61 '/etc/rpc'
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:148
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:149
+E: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:74
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:75
-E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10

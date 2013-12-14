@@ -51,9 +51,11 @@ lintian (2.5.20) UNRELEASED; urgency=low
     + [BR] Rename maintainer-script-hides-init-failure to
       maintainer-script-should-not-hide-init-failure.
     + [BR] Rename maintainer-script-modifies-ld-so-conf to
-      maintainer-script-should-not-modify-ld-so-conf
+      maintainer-script-should-not-modify-ld-so-conf.
     + [BR] Rename maintainer-script-modifies-netbase-managed-file to
-      maintainer-script-should-not-modify-netbase-managed-file
+      maintainer-script-should-not-modify-netbase-managed-file.
+    + [BR] Rename maintainer-script-uses-dpkg-status-directly to
+      maintainer-script-should-not-use-dpkg-status-directly.
   * checks/standards-version:
     + [BR] Use Lintian::Data for ancient date check.
   * checks/watch.{desc,pm}:

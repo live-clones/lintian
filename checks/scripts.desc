@@ -536,7 +536,7 @@ Info: This script apparently runs <tt>install-info</tt>.  Updating the
  If debhelper generated the maintainer script fragment, rebuilding the
  package with debhelper 7.2.17 or later will fix this problem.
 
-Tag: maintainer-script-uses-dpkg-status-directly
+Tag: maintainer-script-should-not-use-dpkg-status-directly
 Severity: important
 Certainty: certain
 Info: The file /var/lib/dpkg/status is internal to dpkg, may disappear or

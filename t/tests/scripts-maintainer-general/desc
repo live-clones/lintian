@@ -16,11 +16,11 @@ Test-For:
  maintainer-script-needs-depends-on-ucf
  maintainer-script-needs-depends-on-xml-core
  maintainer-script-removes-device-files
- maintainer-script-uses-dpkg-status-directly
  maintainer-shell-script-fails-syntax-check
  maintainer-script-should-not-hide-init-failure
  maintainer-script-should-not-use-adduser-system-without-home
  maintainer-script-should-not-use-deprecated-chown-usage
+ maintainer-script-should-not-use-dpkg-status-directly
  maintainer-script-should-not-use-fc-cache
  maintainer-script-should-not-use-gconftool
  maintainer-script-should-not-use-install-sgmlcatalog
