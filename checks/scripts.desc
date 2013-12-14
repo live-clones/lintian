@@ -453,7 +453,7 @@ Info: This script calls update-xmlcatalog, which comes from the xml-core
  dh_installxmlcatalogs, add a dependency on ${misc:Depends} and
  dh_installxmlcatalogs will take care of this for you.
 
-Tag: update-alternatives-remove-called-in-postrm
+Tag: maintainer-script-should-not-use-update-alternatives-remove
 Severity: normal
 Certainty: certain
 Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
@@ -470,7 +470,7 @@ Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  instead.
 Ref: policy F, update-alternatives(8)
 
-Tag: update-alternatives-set-called-in-maintainer-script
+Tag: maintainer-script-should-not-use-update-alternatives-set
 Severity: normal
 Certainty: certain
 Info: <tt>update-alternatives --set &lt;alternative&gt; foo</tt> or

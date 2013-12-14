@@ -32,8 +32,9 @@ W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown
 W: scripts-maintainer-general: maintainer-script-should-not-use-fc-cache postinst:95
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:153
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:44
+W: scripts-maintainer-general: maintainer-script-should-not-run-update-alternatives-remove-postrm postrm:7
+W: scripts-maintainer-general: maintainer-script-should-not-run-update-alternatives-set postinst:129
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
 W: scripts-maintainer-general: start-stop-daemon-in-maintainer-script postinst:138
 W: scripts-maintainer-general: start-stop-daemon-in-maintainer-script postinst:78
-W: scripts-maintainer-general: update-alternatives-remove-called-in-postrm postrm:7
-W: scripts-maintainer-general: update-alternatives-set-called-in-maintainer-script postinst:129
+

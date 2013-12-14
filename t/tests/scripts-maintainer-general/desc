@@ -26,6 +26,8 @@ Test-For:
  maintainer-script-should-not-use-install-sgmlcatalog
  maintainer-script-should-not-modify-ld-so-conf
  maintainer-script-should-not-modify-netbase-managed-file
+ maintainer-script-should-not-run-update-alternatives-remove-postrm
+ maintainer-script-should-not-run-update-alternatives-set
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script
