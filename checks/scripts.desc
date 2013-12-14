@@ -514,7 +514,7 @@ Info: This script apparently runs an init script directly rather than
  available.
 Ref: policy 9.3.3.2
 
-Tag: gconftool-used-in-maintainer-script
+Tag: maintainer-script-should-not-use-gconftool
 Severity: normal
 Certainty: possible
 Info: This script apparently runs gconftool or gconftool-2.  It should

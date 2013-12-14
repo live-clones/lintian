@@ -38,6 +38,9 @@ lintian (2.5.20) UNRELEASED; urgency=low
       --home inside /home.  (Closes: #730456).
     + [BR] install-sgmlcatalog is deprecated for a long time.  Warn
       now in all use case.
+    + [BR] Rename gconftool-used-in-maintainer-script to
+      maintainer-script-should-not-use-gconftool.  Add gconf\d package
+      to exception list.
   * checks/standards-version:
     + [BR] Use Lintian::Data for ancient date check.
   * checks/watch.{desc,pm}:

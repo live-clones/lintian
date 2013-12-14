@@ -149,5 +149,7 @@ adduser --system foo
 adduser --system foo2 --home /home/foo2
 adduser --system bar --home /var/lib/bar
 
+# other test case for gconftool
+/usr/bin/gconftool-2 --makefile-install-rule foo.schema
 
 #DEBHELPER#
