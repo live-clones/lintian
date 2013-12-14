@@ -82,7 +82,9 @@ Lintian::SlidingWindow - Lintian interface to sliding window match
 
 =head1 SYNOPSIS
 
-    my $sfd = Lintian::SlidingWindow->new('<','someevilfile.c', sub locallc { $_ = lc($_); });
+    use Lintian::SlidingWindow;
+
+    my $sfd = Lintian::SlidingWindow->new('<','someevilfile.c', sub { $_ = lc($_); });
     my $window;
     while ($window = $sfd->readwindow()) {
        if (index($window, 'evil') > -1) {
