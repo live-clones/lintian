@@ -47,6 +47,7 @@ Brockschmidt
 Geissert
 Lichtenheld
 Niels Thykier
+Bastien ROUCARIES
 
 lintian Lintian Lintian's # ' # hi emacs
 dpkg
@@ -57,6 +58,10 @@ debian Debian DEBIAN
 md
 # 'soft'ly which was parsed as soft'ly.
 soft'ly # ' # hi emacs
+
+# "util" is import tag ":util" from Lintian::Output, where aspell
+# dropped the ":".
+util
 
 # This is wrong in general, but it happens to be a package name that
 # we use as an example.
@@ -81,7 +86,7 @@ AND'ing # ' # this is getting old
 superset YYYY dirname operm username whitespace
 Whitespace udebs multiword recognised eqv testsuite methodx multi
 multiarch relationA relationB Multi natively unordered arg CVE autodie
-hashrefs namespace subdir SIGPIPE SIG
+hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
 
 __END__
 
