@@ -359,7 +359,7 @@ Info: Maintainer scripts must not create device files directly.  They
  If <tt>mknod</tt> is being used to create a FIFO (named pipe), use
  <tt>mkfifo</tt> instead to avoid triggering this tag.
 
-Tag: start-stop-daemon-in-maintainer-script
+Tag: maintainer-script-should-not-use-start-stop-daemon
 Severity: normal
 Certainty: certain
 Info: The maintainer script seems to call <tt>start-stop-daemon</tt>

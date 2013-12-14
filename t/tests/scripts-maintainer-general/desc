@@ -26,13 +26,11 @@ Test-For:
  maintainer-script-should-not-use-install-sgmlcatalog
  maintainer-script-should-not-modify-ld-so-conf
  maintainer-script-should-not-modify-netbase-managed-file
- maintainer-script-should-not-run-update-alternatives-remove-postrm
- maintainer-script-should-not-run-update-alternatives-set
+ maintainer-script-should-not-use-start-stop-daemon
+ maintainer-script-should-not-use-update-alternatives-remove
+ maintainer-script-should-not-use-update-alternatives-set
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script
- update-alternatives-remove-called-in-postrm
- update-alternatives-set-called-in-maintainer-script
- start-stop-daemon-in-maintainer-script
  suidregister-used-in-maintainer-script
 References: Debian Bug#532984

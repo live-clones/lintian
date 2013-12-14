@@ -56,6 +56,10 @@ lintian (2.5.20) UNRELEASED; urgency=low
       maintainer-script-should-not-modify-netbase-managed-file.
     + [BR] Rename maintainer-script-uses-dpkg-status-directly to
       maintainer-script-should-not-use-dpkg-status-directly.
+    + [BR] Rename update-alternatives detection in maintainer script to
+      aintainer-script-should-not-use convention.
+    + [BR] Rename start-stop-daemon-in-maintainer-script to
+      maintainer-script-should-not-use-start-stop-daemon
   * checks/standards-version:
     + [BR] Use Lintian::Data for ancient date check.
   * checks/watch.{desc,pm}:

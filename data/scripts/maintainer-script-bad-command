@@ -36,9 +36,10 @@ maintainer-script-should-not-use-dpkg-status-directly           ~~ 1 ~~^(base-fi
 maintainer-script-should-not-use-fc-cache                       ~~ 0 ~~^(fontconfig)$      ~~          ~~${LEADIN}(?:/usr/bin/)?fc-cache(?:\s|\Z)
 maintainer-script-should-not-use-gconftool                      ~~ 1 ~~^(gconf\d)$         ~~          ~~(?:/usr/bin/)?gconftool(?:-\d)?(?:\s|\Z)
 maintainer-script-should-not-use-install-sgmlcatalog            ~~ 1 ~~                    ~~          ~~\binstall-sgmlcatalog\b
+maintainer-script-should-not-use-start-stop-daemon              ~~ 0 ~~                    ~~          ~~\bstart-stop-daemon(?=\s)(?!.*\s--stop\b)
 maintainer-script-should-not-use-update-alternatives-remove     ~~ 1 ~~                    ~~^postrm$  ~~\b update\-alternatives\s+\-\-remove\b
 maintainer-script-should-not-use-update-alternatives-set        ~~ 1 ~~                    ~~          ~~\b update\-alternatives\s+\-\-(?:set|set\-selections|config)\b
-start-stop-daemon-in-maintainer-script                          ~~ 0 ~~                    ~~          ~~\s*start-stop-daemon(?=\s)(?!.*\s--stop\b)
+# sendmail use override do not change it now
 suidregister-used-in-maintainer-script                          ~~ 1 ~~                    ~~          ~~\bsuidregister\b
 
 
