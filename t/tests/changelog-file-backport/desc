@@ -1,0 +1,7 @@
+Testname: changelog-file-backport
+Sequence: 6000
+Version: 1.0
+Description: Check backport
+Skeleton: pedantic
+Options: --pedantic -I -E
+Test-For: backports-upload-has-incorrect-version-number

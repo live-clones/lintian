@@ -122,3 +122,20 @@ Certainty: certain
 Info: The Changed-By address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
+
+Tag: backports-changes-missing
+Severity: serious
+# if there are no false positives, this could possibly be increased
+Certainty: possible
+Info: The changes file only has changelog entries from a single version. For
+ backports, all changes since (old)stable or the previous backport should be
+ listed (usually by adding the '-v' option to the build).
+Ref: http://backports.debian.org/Contribute/
+
+Tag: backports-upload-has-incorrect-version-number
+Severity: serious
+Certainty: certain
+Info: The version number doesn't comply with the standard backport version
+ rules. It should end in ~bpoXX+N, where XX refers to the version number of
+ the base distribution.
+Ref: http://backports.debian.org/Contribute/

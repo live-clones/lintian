@@ -2,9 +2,12 @@ lintian (2.5.26) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * cruft/cruft.{desc,pm}:
+  * checks/cruft.{desc,pm}:
     + [BR] Use license checking framework for checking php license.
       (Closes: #752540).
+  * checks/changes-file.{desc,pm}:
+    + [BR] Add patch from Ivo De Decker, add check for
+      backports changes file.  (Closes: #732225).
 
   * data/debhelper/dh_commands:
     + [BR] Add patch from  Piotr Ożarowski, dh-python2

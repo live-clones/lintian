@@ -64,6 +64,56 @@ sub run {
                                    |updates
                                    |security
                                    |volatile)$//xsmo;
+
+                    if ($distribution =~ /backports/) {
+                        my $bpo1 = 1;
+                        if ($info->field('version') =~ m/~bpo(\d+)\+(\d+)$/) {
+                            my $distnumber = $1;
+                            my $bpoversion = $2;
+                            if (
+                                  ($dist eq "squeeze" && $distnumber ne "60")
+                                ||($dist eq "wheezy" && $distnumber ne "70")
+                                # TODO version number for jessie?
+                                ||($dist eq "jessie" && $distnumber !~ /^8\d*/)
+                              ) {
+                                tag
+                                  'backports-upload-has-incorrect-version-number',
+                                  $info->field('version'),
+                                  $distribution;
+                            }
+                            $bpo1 = 0 if ($bpoversion > 1);
+                        } else {
+                            tag
+                              'backports-upload-has-incorrect-version-number',
+                              $info->field('version');
+                        }
+                        # for a ~bpoXX+2 or greater version, there
+                        # probably will be only a single changelog entry
+                        if ($bpo1) {
+                            my $changes_versions = 0;
+                            foreach my $change_line (
+                                split("\n", $info->field('changes'))) {
+                      # from Parse/DebianChangelog.pm
+                      # the changelog entries in the changes file are in a
+                      # different format than in the changelog, so the standard
+                      # parsers don't work. We just need to know if there is
+                      # info for more than 1 entry, so we just copy part of the
+                      # parse code here
+                                if ($change_line
+                                    =~ m/^\s*(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-+0-9a-z.]+)+)\;\s*(?<kv>.*)$/i
+                                  ) {
+                                    $changes_versions++;
+                                }
+                            }
+                            # only complain if there is a single entry,
+                            # if we didn't find any changelog entry, there is
+                            # probably something wrong with the parsing, so we
+                            # don't emit a tag
+                            if ($changes_versions == 1) {
+                                tag 'backports-changes-missing';
+                            }
+                        }
+                    }
                 }
                 if (!$KNOWN_DISTS->known($dist)) {
                     # bad distribution entry
