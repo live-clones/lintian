@@ -122,11 +122,17 @@ lintian (2.5.20) unstable; urgency=low
     + [BR] Globally replace \\ by \ in _dequote_name(). This bug was
       masked by old buggy tar (Closes: #727665).
 
+  * t/debs/deb-format-wrong-order/.*:
+    + [BR] Recent dpkg detect this error and bail out.  Do not run with
+      dpkg >= 1.17.2.  See dpkg git commit
+      cb8ed03bbffe892165620ed1ddf753a6b0c1ee62
+      and 547dca4c3ff23df5dfa554f1943b371cd7056ee4.
+
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Add "trusty".  Thanks to Stéphane Graber for the
       reminder.
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Sat, 14 Dec 2013 16:15:52 +0100
+ -- Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>  Sun, 15 Dec 2013 19:52:24 +0100
 
 lintian (2.5.19) unstable; urgency=low
 

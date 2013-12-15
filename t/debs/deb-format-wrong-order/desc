@@ -3,3 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test package for an ar archive in the wrong order
 Test-For: malformed-deb-archive
+# dpkg 1.17.2 Do not allow deb packages with control
+# and data members swapped
+Test-Depends: dpkg (<< 1.17.2)
