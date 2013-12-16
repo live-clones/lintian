@@ -132,7 +132,7 @@ lintian (2.5.20) unstable; urgency=low
     + [NT] Add "trusty".  Thanks to Stéphane Graber for the
       reminder.
 
- -- Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>  Sun, 15 Dec 2013 19:52:24 +0100
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Sun, 15 Dec 2013 19:52:24 +0100
 
 lintian (2.5.19) unstable; urgency=low
 
