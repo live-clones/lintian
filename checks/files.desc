@@ -932,14 +932,14 @@ Tag: privacy-breach-generic
 Severity: important
 Certainty: wild-guess
 Experimental: yes
-Info: This package create a privacy breach by fetching some data from
+Info: This package creates a privacy breach by fetching some data from
  an external website. Please remove these scripts or external html
  resources.
 
 Tag: privacy-breach-google-adsense
 Severity: serious
 Certainty: possible
-Info: This package create a privacy breach by using Google Adsense.
+Info: This package creates a privacy breach by using Google Adsense.
  Google Adsense is a program run by Google that allows publishers of
  content sites to serve automatic advertisement. Unfortunately, it means
  tracking and breaching privacy of our users.
