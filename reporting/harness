@@ -23,6 +23,9 @@
 use strict;
 use warnings;
 
+use constant BACKLOG_PROCESSING_GROUP_LIMIT => 1024;
+use constant BACKLOG_PROCESSING_TIME_LIMIT => 4 * 3600; # 4hours
+
 use Errno qw(ENOENT);
 use File::Temp qw(tempfile);
 use Getopt::Long;
@@ -119,6 +122,8 @@ my @lintian_cmd = (
 );
 my $LINTIAN_VERSION = qx($LINTIAN_ROOT/frontend/lintian --print-version);
 my $STATE_DIR = $HARNESS_STATE_DIR;
+my $START_TIME = time();
+my $state;
 chomp($LINTIAN_VERSION);
 
 # import perl libraries
@@ -127,7 +132,7 @@ require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable;
 require Lintian::Relation::Version;
-import Lintian::Relation::Version qw(versions_lt);
+import Lintian::Relation::Version qw(versions_comparator versions_lt);
 require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph);
 
@@ -410,9 +415,37 @@ unless ($opt{'reports-only'}) {
             close($fd)
               or Die("close $lintian_log failed: $!");
         }
-        process_worklist(\@worklist, $lintian_log, $STATE_DIR, $scs);
+        $state = process_worklist(\@worklist, $lintian_log, $STATE_DIR, $scs);
     } else {
         Log('Skipping Lintian run - nothing to do...');
+    }
+}
+
+if (defined($state) and time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
+    my $scs = $opt{'schedule-chunk-size'};
+    my @worklist = find_backlog($state);
+
+    if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
+        @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
+    }
+
+    Log('Processing backlog...') if @worklist;
+
+    while (@worklist and $state) {
+        my @slice;
+        if (time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
+            Log('No more time for processing backlogs');
+            last;
+        }
+
+        if ($scs > -1 and $scs < @worklist) {
+            @slice = splice(@worklist, 0, $scs);
+        } else {
+            @slice = @worklist;
+            undef(@worklist);
+        }
+
+        $state = process_worklist(\@slice, $lintian_log, $STATE_DIR, -1);
     }
 }
 
@@ -583,6 +616,7 @@ sub process_worklist {
     my $rounds = 1;
     my @worklist = @{$worklist_ref};
     my $all_ok = 1;
+    my $state;
 
 
     if ($schedule_chunk_size > 0) {
@@ -600,7 +634,6 @@ sub process_worklist {
 
     Log('Command line used: ' . join(q{ }, @lintian_cmd));
     while (@worklist) {
-        my $state;
         my $len = scalar @worklist;
         my @work_splice;
         $round++;
@@ -652,7 +685,7 @@ sub process_worklist {
                 # don't start the next round.
                 #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
                 Log(' - skipping the rest of the worklist');
-                return 0;
+                return;
             }
         }
         $state = load_state_cache($STATE_DIR);
@@ -661,7 +694,7 @@ sub process_worklist {
         }
         save_state_cache($STATE_DIR, $state);
     }
-    return 1;
+    return $state;
 }
 
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
@@ -750,6 +783,22 @@ sub save_state_cache {
         Die($@);
     }
     return 1;
+}
+
+sub find_backlog {
+    my ($state) = @_;
+    my (@list, @sorted);
+    for my $group_id (keys(%{$state})) {
+        my $last_version = '0';
+        if (exists($state->{$group_id}{'last-processed-by'})) {
+            $last_version = $state->{$group_id}{'last-processed-by'};
+        }
+        push(@list, [$group_id, $last_version]);
+    }
+    @sorted = map { $_->[0] }
+      sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
+      @list;
+    return @sorted;
 }
 
 # Local Variables:
