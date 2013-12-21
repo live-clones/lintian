@@ -363,39 +363,7 @@ unless ($opt{'reports-only'}) {
 
         # update lintian.log
         Log('Updating lintian.log...');
-        my $nfd;
-        if ($opt{'dry-run'}) {
-            open $nfd, '>', '/dev/null'
-              or Die("cannot open lintian.log /dev/null for writing: $!");
-        } else {
-            rename $lintian_log, $old_lintian_log
-              or Die("cannot rename lintian.log to $old_lintian_log: $!");
-            open $nfd, '>', $lintian_log
-              or Die("cannot open lintian.log $lintian_log for writing: $!");
-        }
-        open my $ofd, '<', $old_lintian_log
-          or
-          Die("cannot open old lintian.log $old_lintian_log for reading: $!");
-        my $copy_mode = 1;
-        while (<$ofd>) {
-            if (
-                m/^N: [ ] Processing [ ] (binary|udeb|source) [ ]
-                       package [ ] (\S+) [ ] \(version [ ] (\S+), [ ]
-                       arch [ ] (\S+)\)[ ]\.\.\./oxsm
-              ) {
-                my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
-                my $k = "$type:$pkg/$ver";
-                $k .= "/$arch" if $type ne 'source';
-                $copy_mode = 1;
-                $copy_mode = 0 if exists $skip{$k};
-            }
-            if ($copy_mode) {
-                print $nfd $_;
-            }
-        }
-        print $nfd "N: ---end-of-old-lintian-log-file---\n";
-        close $nfd or Die("Close $lintian_log: $!");
-        close $ofd; # Ignore (read-only handle)
+        rewrite_lintian_log($lintian_log, \%skip);
     }
 
     Log('');
@@ -782,6 +750,40 @@ sub save_state_cache {
     }
     return 1;
 }
+
+sub rewrite_lintian_log {
+    my ($lintian_log, $filter_set) = @_;
+    return if ($opt{'dry-run'});
+
+    rename($lintian_log, $old_lintian_log)
+      or Die("cannot rename lintian.log to $old_lintian_log: $!");
+    open(my $nfd, '>', $lintian_log)
+      or Die("cannot open lintian.log $lintian_log for writing: $!");
+    open(my $ofd, '<', $old_lintian_log)
+      or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
+    my $copy_mode = 1;
+    while (<$ofd>) {
+        if (
+            m/^N: [ ] Processing [ ] (binary|udeb|source) [ ]
+                   package [ ] (\S+) [ ] \(version [ ] (\S+), [ ]
+                   arch [ ] (\S+)\)[ ]\.\.\./oxsm
+          ) {
+            my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
+            my $k = "$type:$pkg/$ver";
+            $k .= "/$arch" if $type ne 'source';
+            $copy_mode = 1;
+            $copy_mode = 0 if exists $filter_set->{$k};
+        }
+        if ($copy_mode) {
+            print {$nfd} $_;
+        }
+    }
+    print {$nfd} "N: ---end-of-old-lintian-log-file---\n";
+    close($nfd) or Die("Close $lintian_log: $!");
+    close($ofd); # Ignore (read-only handle)
+    return 1;
+}
+
 
 sub find_backlog {
     my ($state) = @_;
