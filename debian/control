@@ -48,6 +48,7 @@ Build-Depends: aspell,
                libtext-template-perl,
                libtimedate-perl,
                liburi-perl,
+               libyaml-perl,
                man-db,
                patchutils,
                perl,
@@ -103,6 +104,7 @@ Suggests: binutils-multiarch,
           dpkg-dev,
           libhtml-parser-perl,
           libtext-template-perl,
+          libyaml-perl,
           xz-utils
 Multi-Arch: foreign
 Description: Debian package checker

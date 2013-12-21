@@ -2,6 +2,10 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * debian/control:
+    + [NT] Add relevant relations on libyaml-perl, which is
+      now used by harness.
+
   * reporting/harness:
     + [NT] Fix typo in --schedule-chunk-size command-line argument.
     + [NT] Require a new configuration variable $HARNESS_STATE_DIR.
