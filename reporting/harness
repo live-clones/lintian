@@ -131,7 +131,8 @@ require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable;
 require Lintian::Relation::Version;
-import Lintian::Relation::Version qw(versions_comparator versions_lt);
+import Lintian::Relation::Version
+  qw(versions_comparator versions_equal versions_lt);
 require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph);
 
@@ -828,7 +829,8 @@ sub find_backlog {
         if (exists($state->{$group_id}{'last-processed-by'})) {
             $last_version = $state->{$group_id}{'last-processed-by'};
         }
-        push(@list, [$group_id, $last_version]);
+        push(@list, [$group_id, $last_version])
+          if not versions_equal($last_version, $LINTAIN_VERSION);
     }
     @sorted = map { $_->[0] }
       sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
