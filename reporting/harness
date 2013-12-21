@@ -31,7 +31,6 @@ use File::Temp qw(tempfile);
 use Getopt::Long;
 use YAML::Any();
 
-
 sub usage {
     print <<END;
 Lintian reporting harness
@@ -159,10 +158,9 @@ if (not defined($STATE_DIR)) {
     Die(q{Missing required config option: $HARNESS_STATE_DIR});
 } elsif (not -d $STATE_DIR) {
     system('mkdir', '-p', $STATE_DIR) == 0
-        or Die("mkdir -p $STATE_DIR failed");
+      or Die("mkdir -p $STATE_DIR failed");
     Log("Created cache dir: $STATE_DIR");
 }
-
 
 my $LAB = Lintian::Lab->new($LINTIAN_LAB);
 
@@ -421,7 +419,7 @@ unless ($opt{'reports-only'}) {
     }
 }
 
-if (defined($state) and time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
+if (defined($state) and time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
     my $scs = $opt{'schedule-chunk-size'};
     my @worklist = find_backlog($state);
 
@@ -618,7 +616,6 @@ sub process_worklist {
     my $all_ok = 1;
     my $state;
 
-
     if ($schedule_chunk_size > 0) {
         # compute the number of rounds needed.
         my $size_up = scalar @worklist + ($schedule_chunk_size - 1);
@@ -648,8 +645,10 @@ sub process_worklist {
         if ($len == 1) {
             Log(' - Single group: ' . $work_splice[0]);
         } else {
-            Log(' - Range: GROUP:' . $work_splice[0]
-                . q{ ... GROUP:} . $work_splice[-1]);
+            Log(    ' - Range: GROUP:'
+                  . $work_splice[0]
+                  . q{ ... GROUP:}
+                  . $work_splice[-1]);
         }
 
         next if ($opt{'dry-run'});
@@ -658,11 +657,11 @@ sub process_worklist {
         if (not $pid) {
             # child => reopen STD{OUT,ERR} and exec lintian
             open(STDOUT, '>>', $lintian_log)
-                or die("re-open STDOUT failed: $!");
+              or die("re-open STDOUT failed: $!");
             open(STDERR, '>&', *STDOUT)
-                or die("re-open STDERR failed: $!");
+              or die("re-open STDERR failed: $!");
             exec(@lintian_cmd)
-                  or die("exec @lintian_cmd failed: $!");
+              or die("exec @lintian_cmd failed: $!");
         }
         foreach my $group_id (@work_splice) {
             # Technically, we emit these items in reverse order to Lintian,
@@ -761,8 +760,7 @@ sub load_state_cache {
 sub save_state_cache {
     my ($state_dir, $state) = @_;
     my $state_file = "$state_dir/state-cache";
-    my ($tmp_fd, $tmp_path) = tempfile('state-cache-XXXXXX',
-                                       DIR => $state_dir);
+    my ($tmp_fd, $tmp_path)= tempfile('state-cache-XXXXXX', DIR => $state_dir);
 
     # atomic replacement of the state file; not a substitute for
     # proper locking, but it will at least ensure that the file
@@ -773,12 +771,12 @@ sub save_state_cache {
         close($tmp_fd) or die("close $tmp_path: $!");
 
         rename($tmp_path, $state_file)
-            or die("rename $tmp_path -> $state_file: $!");
+          or die("rename $tmp_path -> $state_file: $!");
     };
     if (my $err = $@) {
-        if ( -e $tmp_path) {
+        if (-e $tmp_path) {
             unlink($tmp_path)
-                or Log("unlink $tmp_path failed: $!");
+              or Log("unlink $tmp_path failed: $!");
         }
         Die($@);
     }
