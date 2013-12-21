@@ -297,6 +297,7 @@ unless ($opt{'reports-only'}) {
     # (particularly without the source package).
 
     Log('Computing grouping...');
+    $state = load_state_cache($STATE_DIR);
 
     if ($opt{'full-mode'}) {
         # for full run, just replace %dirty_groups with "<all groups in lab>".
@@ -305,11 +306,20 @@ unless ($opt{'reports-only'}) {
                 my ($entry) = @_;
                 $dirty_groups{$entry->pkg_src}->{$entry->pkg_src_version} = 1;
             });
+    } elsif (not %{$state}) {
+        # New/empty state file
+        Log('Populating state file... ');
+        $LAB->visit_packages(
+            sub {
+                my ($entry) = @_;
+                my $group_id
+                  = join('/', $entry->pkg_src, $entry->pkg_src_version);
+                $state->{$group_id} = {};
+            });
     }
 
     # Sort so that the worklist is also sorted (makes it easier to review).
     my $comparator = sub { versions_lt($a, $b) ? -1 : 1; };
-    my $state = load_state_cache($STATE_DIR);
     foreach my $gname (sort keys %dirty_groups) {
         my $dver = $dirty_groups{$gname};
         foreach my $gversion (sort $comparator keys %$dver) {
@@ -317,11 +327,11 @@ unless ($opt{'reports-only'}) {
             my $query = "GROUP:${group_id}";
             my @res = $LAB->lab_query($query);
 
-            # Clear the "processed by" flag, so it will be reprocessed if
-            # lintian is interrupted for some reason.
-            delete($state->{$group_id}{'last-processed-by'});
-
             if (@res) {
+                # Clear the "processed by" flag, so it will be reprocessed if
+                # lintian is interrupted for some reason.
+                delete($state->{$group_id}{'last-processed-by'});
+
                 # Group is still in the Lab - reprocess it together
                 push(@worklist, $group_id);
                 foreach my $entry (@res) {
