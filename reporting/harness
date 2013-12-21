@@ -398,7 +398,7 @@ if (defined($state) and time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
     Log('Processing backlog...') if @worklist;
 
     while (@worklist and $state) {
-        my @slice;
+        my (@slice, $filter_set);
         if (time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
             Log('No more time for processing backlogs');
             last;
@@ -410,6 +410,9 @@ if (defined($state) and time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
             @slice = @worklist;
             undef(@worklist);
         }
+
+        $filter_set = generate_log_filter($LINTIAN_LAB, \@slice);
+        rewrite_lintian_log($lintian_log, $filter_set);
 
         $state = process_worklist(\@slice, $lintian_log, $STATE_DIR, -1);
     }
@@ -784,6 +787,28 @@ sub rewrite_lintian_log {
     return 1;
 }
 
+sub generate_log_filter {
+    my ($lintian_lab_path, $worklist_ref) = @_;
+    my $lab = Lintian::Lab->new($lintian_lab_path);
+    my %filter;
+    $lab->open;
+    for my $group_id (@{$worklist_ref}) {
+        my @res = $lab->lab_query("GROUP:${group_id}");
+        if (@res) {
+            foreach my $entry (@res) {
+                # Remove old log entry for all entries in this group
+                # NB: This part is unable to replace the update to %filter
+                # in the "foreach removed-entry in diff" above.  In case
+                # the entire group is removed, we will enter this loop,
+                # but we will see each of the entries removed in the
+                # loop above.
+                $filter{$entry->identifier} = 1;
+            }
+        }
+    }
+    $lab->close;
+    return \%filter;
+}
 
 sub find_backlog {
     my ($state) = @_;
