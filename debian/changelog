@@ -2,6 +2,16 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * reporting/harness:
+    + [NT] Fix typo in --schedule-chunk-size command-line argument.
+    + [NT] Require a new configuration variable $HARNESS_STATE_DIR.
+      This variable tells harness where it can store state
+      information and caches.
+    + [NT] Track which version of lintian a given package group
+      was processed by.  Using this information, harness will now
+      slowly reprocess groups processed by an other version of
+      Lintian than the current.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 21 Dec 2013 10:44:43 +0100
 
 lintian (2.5.20) unstable; urgency=low
