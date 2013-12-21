@@ -1,0 +1,43 @@
+This document describes the basic release process/work flow for
+Lintian.
+
+
+Preparing and doing a release
+=============================
+
+Run the full test suite while the distribution is still set to
+UNRELEASED to ensure everything and all tests are green.  Once
+complete, replace the placeholder in the changelog with the
+actual tags changed.  This two line script may be helpful:
+
+  $ LAST_VERSION_RELEASED=2.5.20
+  $ perl -p -i -e \
+   "s,\s+XXX: generate tag summary with private/generate-tag-summary\Z,$(private/generate-tag-summary $LAST_VERSION_RELEASED..HEAD)" \
+    debian/changelog
+
+Then set the distribution (e.g. via dch -r) and run the "scripts" test
+suite again.  This may appear redundant at first, but some of the
+tests react differently when the distribution is not UNRELEASED
+(e.g. changelog-format checks that you remembered the step above).
+
+Build the package and run lintian on itself, cleaning up or overriding
+issues that have not been fixed during development.  If you do code
+changes, remember to set the distribution back to UNRELEASED!
+Otherwise, some checks on the code will be skipped (e.g. critic).
+
+Sign and upload upload the package.  Historically, the Lintian
+maintainers have included the (unsigned) changes file in the signed
+git tag (see e.g. the 2.4.3 tag or the 2.5.19 tag).  If/When doing
+this, it may be prudent to wait for the upload to be accepted before
+pushing the new tag (so that the checksums in the signed tag match
+those of the uploaded files).
+
+Once the upload has been accepted and the commit has been tagged, you
+may want to "open" the next entry in the changelog.  The rationale for
+this is that it makes tests go back to "regular" development mode.  At
+the same time, the "tag-summary" reminder can be re-added.  See commit
+a9c67f2 as an example of how it is done.
+
+
+To update lintian on lintian.debian.org, please see the README in
+/srv/lintian.debian.org on lintian.debian.org.
