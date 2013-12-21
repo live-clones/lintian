@@ -398,7 +398,7 @@ unless ($opt{'reports-only'}) {
     }
 }
 
-if (defined($state) and time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
+if (defined($state) and time() <= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
     my $scs = $opt{'schedule-chunk-size'};
     my @worklist = find_backlog($state);
 
@@ -830,7 +830,7 @@ sub find_backlog {
             $last_version = $state->{$group_id}{'last-processed-by'};
         }
         push(@list, [$group_id, $last_version])
-          if not versions_equal($last_version, $LINTAIN_VERSION);
+          if not versions_equal($last_version, $LINTIAN_VERSION);
     }
     @sorted = map { $_->[0] }
       sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
