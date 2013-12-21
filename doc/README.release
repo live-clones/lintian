@@ -40,4 +40,7 @@ a9c67f2 as an example of how it is done.
 
 
 To update lintian on lintian.debian.org, please see the README in
-/srv/lintian.debian.org on lintian.debian.org.
+/srv/lintian.debian.org on lintian.debian.org.  NOTE: if Lintian has
+obtained any new dependencies, these must be installed by DSA before
+updating lintian.debian.org (send a patch to DSA for their metapackge
+for lintian.debian.org).
