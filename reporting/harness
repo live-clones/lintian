@@ -375,8 +375,6 @@ unless ($opt{'reports-only'}) {
 
     if (@worklist) {
         my $scs = $opt{'schedule-chuck-size'};
-        my $round = 0;
-        my $rounds = 1;
         if ($opt{'full-mode'}) {
             # truncate in full-mode
             open(my $fd, '>', $lintian_log)
@@ -384,69 +382,7 @@ unless ($opt{'reports-only'}) {
             close($fd)
               or Die("close $lintian_log failed: $!");
         }
-
-        if ($scs > 0) {
-            # compute the number of rounds needed.
-            $rounds = int((scalar @worklist + ($scs -1)) / $scs);
-        }
-
-        Log(
-            sprintf(
-                'Groups to process %d will take %d round(s) [round limit: %s]',
-                scalar @worklist,
-                $rounds, $scs > 0 ? $scs : 'none'
-            ));
-
-        Log('Command line used: ' . join(q{ }, @lintian_cmd));
-        while (@worklist) {
-            my $len = scalar @worklist;
-            $round++;
-            # correct bounds to fit chuck size
-            $len = $scs if $scs > 0 and $len > $scs;
-
-            Log("Running Lintian (round $round/$rounds) ...");
-            Log(' - Range: ' . $worklist[0] . q{ ... } . $worklist[$len - 1]);
-
-            if ($opt{'dry-run'}) {
-                splice(@worklist, 0, $len);
-                next;
-            }
-
-            my $pid = open(my $lintpipe, '|-') // Die("fork failed: $!");
-            if (not $pid) {
-                # child => reopen STD{OUT,ERR} and exec lintian
-                open(STDOUT, '>>', $lintian_log)
-                  or die("re-open STDOUT failed: $!");
-                open(STDERR, '>&', *STDOUT)
-                  or die("re-open STDERR failed: $!");
-                exec(@lintian_cmd)
-                  or die("exec @lintian_cmd failed: $!");
-            }
-            foreach my $query (splice(@worklist, 0, $len)) {
-                # Technically, we emit these items in reverse order to Lintian,
-                # but Lintian sorts it anyway
-                print {$lintpipe} "!query: $query\n";
-            }
-            $! = 0;
-            close $lintpipe;
-            Die("Closing pipe failed: $!") if $!;
-            if ($?) {
-                # exit 1 (policy violations) happens all the time (sadly)
-                # exit 2 (broken packages) also happens all the time...
-                my $res = ($? >> 8) & 0xff;
-                my $sig = $? & 0xff;
-                if ($res != 1 and $res != 0) {
-                    Log("warning: executing lintian returned $res");
-                } elsif ($sig) {
-                    Log("Lintian terminated by signal: $sig");
-                    # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
-                    # don't start the next round.
-                    #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
-                    Log(' - skipping the rest of the worklist');
-                    @worklist = ();
-                }
-            }
-        }
+        process_worklist(\@worklist, $lintian_log, $scs);
     } else {
         Log('Skipping Lintian run - nothing to do...');
     }
@@ -611,6 +547,86 @@ sub _parse_pkgs_pg {
 
     $manifest->set($data);
     return;
+}
+
+sub process_worklist {
+    my ($worklist_ref, $output_file, $schedule_chuck_size) = @_;
+    my $round = 0;
+    my $rounds = 1;
+    my @worklist = @{$worklist_ref};
+    my $all_ok = 1;
+
+
+    if ($schedule_chuck_size > 0) {
+        # compute the number of rounds needed.
+        my $size_up = scalar @worklist + ($schedule_chuck_size - 1);
+        $rounds = int($size_up / $schedule_chuck_size);
+    }
+
+    Log(
+        sprintf(
+            'Groups to process %d will take %d round(s) [round limit: %s]',
+            scalar @worklist,
+            $rounds, $schedule_chuck_size > 0 ? $schedule_chuck_size : 'none'
+        ));
+
+    Log('Command line used: ' . join(q{ }, @lintian_cmd));
+    while (@worklist) {
+        my $len = scalar @worklist;
+        $round++;
+        # correct bounds to fit chuck size
+        if ($schedule_chuck_size > 0 and $len > $schedule_chuck_size) {
+            $len = $schedule_chuck_size;
+        }
+
+        Log("Running Lintian (round $round/$rounds) ...");
+        if ($len == 1) {
+            Log(' - Single group: ' . $worklist[0]);
+        } else {
+            Log(' - Range: ' . $worklist[0] . q{ ... } . $worklist[$len - 1]);
+        }
+
+        if ($opt{'dry-run'}) {
+            splice(@worklist, 0, $len);
+            next;
+        }
+
+        my $pid = open(my $lintpipe, '|-') // Die("fork failed: $!");
+        if (not $pid) {
+            # child => reopen STD{OUT,ERR} and exec lintian
+            open(STDOUT, '>>', $lintian_log)
+                or die("re-open STDOUT failed: $!");
+            open(STDERR, '>&', *STDOUT)
+                or die("re-open STDERR failed: $!");
+            exec(@lintian_cmd)
+                  or die("exec @lintian_cmd failed: $!");
+        }
+        foreach my $query (splice(@worklist, 0, $len)) {
+            # Technically, we emit these items in reverse order to Lintian,
+            # but Lintian sorts it anyway
+            print {$lintpipe} "!query: $query\n";
+        }
+        $! = 0;
+        close $lintpipe;
+        Die("Closing pipe failed: $!") if $!;
+        if ($?) {
+            # exit 1 (policy violations) happens all the time (sadly)
+            # exit 2 (broken packages) also happens all the time...
+            my $res = ($? >> 8) & 0xff;
+            my $sig = $? & 0xff;
+            if ($res != 1 and $res != 0) {
+                Log("warning: executing lintian returned $res");
+            } elsif ($sig) {
+                Log("Lintian terminated by signal: $sig");
+                # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
+                # don't start the next round.
+                #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
+                Log(' - skipping the rest of the worklist');
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
