@@ -1385,7 +1385,7 @@ sub run {
             }
 
             # --------------- compressed + uncompressed files
-            if ($file =~ m,^(.+)\.(?:gz|bz2)$,) {
+            if ($file =~ m,^(.+)\.(?:gz|bz2|xz|zip)$,) {
                 tag 'duplicated-compressed-file', $file
                   if $info->file_info($1);
             }
@@ -1658,7 +1658,7 @@ sub run {
             }
           NEXT_LINK:
 
-            if ($link =~ m,\.(gz|[zZ]|bz|bz2|tgz|zip)\s*$,) {
+            if ($link =~ m,\.(gz|[zZ]|bz|bz2|tgz|zip|xz)\s*$,) {
                 # symlink is pointing to a compressed file
 
                 # symlink has correct extension?

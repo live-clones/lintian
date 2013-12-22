@@ -7,6 +7,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       Thanks to Gregor Herrmann for the bug report and patch
       (Closes: #732799).
 
+  * checks/files.{desc.pm}:
+    + [BR] Add xz and zip to duplicated-compressed-file regexp.
+
   * debian/control:
     + [NT] Add relevant relations on libyaml-perl, which is
       now used by harness.
