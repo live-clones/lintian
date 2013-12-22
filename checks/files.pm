@@ -50,7 +50,7 @@ my $PRIVACY_BREAKER_FRAGMENTS
 
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
-    qr/s++/,sub { return qr/\Q$_[0]\E/ });
+    qr/\s++/,sub { return qr/\Q$_[0]\E/ });
 
 # an OR (|) regex of all compressed extension
 my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/$_[0]/ }
