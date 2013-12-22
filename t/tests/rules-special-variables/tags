@@ -1,1 +1,1 @@
-W: rules-special-variables source: debian-rules-uses-or-modifies-user-only-variable line 3
+W: rules-special-variables source: debian-rules-should-not-use-or-modify-user-only-variable line 3

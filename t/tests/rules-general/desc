@@ -4,6 +4,6 @@ Version: 1.0
 Description: Test various debian/rules checks
 Test-For:
  clean-should-be-satisfied-by-build-depends
- debian-rules-automatically-updates-control
- debian-rules-uses-DEB_BUILD_OPTS
- debian-rules-uses-pwd
+ debian-rules-should-not-automatically-update-control
+ debian-rules-should-not-use-DEB_BUILD_OPTS
+ debian-rules-should-not-use-pwd

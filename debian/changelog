@@ -16,6 +16,14 @@ lintian (2.5.21) UNRELEASED; urgency=medium
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
       file.
+    + [BR] Rename debian-rules-automatically-updates-control to
+      debian-rules-should-not-automatically-update-control.
+    + [BR] Rename debian-rules-uses-pwd to
+      debian-rules-should-not-use-pwd.
+    + [BR] Rename debian-rules-uses-DEB_BUILD_OPTS to
+      debian-rules-should-not-use-DEB_BUILD_OPTS.
+    + [BR] Rename debian-rules-uses-or-modifies-user-only-variable
+      to debian-rules-should-not-use-or-modify-user-only-variable.
 
   * debian/control:
     + [NT] Add relevant relations on libyaml-perl, which is
