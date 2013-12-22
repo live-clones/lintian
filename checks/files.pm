@@ -68,6 +68,20 @@ my $DUPLICATED_COMPRESSED_FILE_REGEX
 my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
   = qr/\.($COMPRESS_FILE_EXTENSIONS_OR_ALL)\s*$/;
 
+# vcs control files
+my $VCS_FILES = Lintian::Data->new(
+    'files/vcs-control-files',
+    qr/\s++/,
+    sub {
+        my $regexp = $_[0];
+        $regexp =~ s/\${COMPRESS_EXT}/$COMPRESS_FILE_EXTENSIONS_OR_ALL/g;
+        return qr/(:?$regexp)/x;
+    });
+
+# an OR (|) regex of all vcs files
+my $VCS_FILES_OR_ALL = sub { qr/$_[0]/ }
+  ->(join('|',map($VCS_FILES->value($_),$VCS_FILES->all)));
+
 # A list of known packaged Javascript libraries
 # and the packages providing them
 my @jslibraries = (
@@ -1189,12 +1203,7 @@ sub run {
             }
 
             # ---------------- vcs control files
-            if (
-                $file =~ m{ \.(?:
-                         (?:cvs|git|hg)ignore|arch-inventory
-                           |hgtags|hg_archival
-                         \.txt)\Z}xsm
-              ) {
+            if ($file =~ m,$VCS_FILES_OR_ALL,) {
                 tag 'package-contains-vcs-control-file', $file;
             }
 
