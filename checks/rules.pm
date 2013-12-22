@@ -36,6 +36,11 @@ my $KNOWN_MAKEFILES = Lintian::Data->new('rules/known-makefiles', '\|\|');
 my $DEPRECATED_MAKEFILES = Lintian::Data->new('rules/deprecated-makefiles');
 my $POLICYRULES = Lintian::Data->new('rules/policy-rules', qr/\s++/);
 
+# forbidden construct in rules
+my $BAD_CONSTRUCT_IN_RULES
+  = Lintian::Data->new('rules/rules-should-not-use', qr/\s*~~\s*/,
+    sub { return qr/$_[1]/xs });
+
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
 # rule.  (See Policy 7.6.)  The following is a list of package dependencies;
@@ -160,6 +165,8 @@ sub run {
         while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
             $_ .= $cont;
         }
+        my $line = $_;
+
         next if /^\s*\#/;
         if (m/^\s*[s-]?include\s+(\S++)/o){
             my $makefile = $1;
@@ -186,9 +193,6 @@ sub run {
         }
 
         # Check for problems that can occur anywhere in debian/rules.
-        if (/\$[\(\{]PWD[\)\}]/) {
-            tag 'debian-rules-uses-pwd', "line $.";
-        }
         if (   m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s
             || m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-(\w*)i.*(?:dist)?clean/s
           ) {
@@ -197,15 +201,15 @@ sub run {
                 tag 'debian-rules-ignores-make-clean-error', "line $.";
             }
         }
-        if (/\$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
-            tag 'debian-rules-uses-DEB_BUILD_OPTS', "line $.";
+
+        # check generic problem
+        foreach my $bad_construct ($BAD_CONSTRUCT_IN_RULES->all) {
+            my $badregex = $BAD_CONSTRUCT_IN_RULES->value($bad_construct);
+            if ($line =~ m/$badregex/) {
+                tag $bad_construct, "line $.";
+            }
         }
-        if (/^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes/) {
-            tag 'debian-rules-automatically-updates-control', "line $.";
-        }
-        if (m/\bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b/o) {
-            tag 'debian-rules-uses-or-modifies-user-only-variable', "line $.";
-        }
+
         if ($uses_makefile_pl && m/install.*PREFIX/s && !/DESTDIR/) {
             tag 'debian-rules-makemaker-prefix-is-deprecated', "line $.";
         }

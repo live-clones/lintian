@@ -1,0 +1,10 @@
+# a list of fordidden construct in debian/rules
+# format is 
+#   tag ~~ regex (\x\s)
+# Please sort by alphabetic sort of tags
+#
+debian-rules-automatically-updates-control       ~~ ^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes
+debian-rules-uses-DEB_BUILD_OPTS                 ~~ \$[\(\{]DEB_BUILD_OPTS[\)\}]
+debian-rules-uses-or-modifies-user-only-variable ~~ \bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b
+debian-rules-uses-pwd                            ~~ \$[\(\{]PWD[\)\}]
+
