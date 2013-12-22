@@ -10,7 +10,8 @@ lintian (2.5.21) UNRELEASED; urgency=medium
   * checks/files.{desc.pm}:
     + [BR] Add xz and zip to duplicated-compressed-file regexp.
     + [BR] Use Lintian::Data for compressed file extension.
-    + [BR] Use Lintian::Data for vcs files list.
+    + [BR] Use Lintian::Data for vcs files list.  Add a few more VCS 
+      files (Closes: #731904).
 
   * debian/control:
     + [NT] Add relevant relations on libyaml-perl, which is

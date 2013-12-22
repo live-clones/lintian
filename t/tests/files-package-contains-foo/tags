@@ -6,6 +6,10 @@ W: files-package-contains-foo: package-contains-readme-for-other-platform-or-dis
 W: files-package-contains-foo: package-contains-readme-for-other-platform-or-distro usr/share/doc/files-package-contains-foo/README.windows
 W: files-package-contains-foo: package-contains-vcs-control-dir usr/share/files-package-contains-foo/.git/
 W: files-package-contains-foo: package-contains-vcs-control-dir usr/share/files-package-contains-foo/.svn/
+W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files-package-contains-foo/.git_ignore
 W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files-package-contains-foo/.gitignore
+W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files-package-contains-foo/sub-git1/.gitattributes
+W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files-package-contains-foo/sub-git1/.gitignore.gz
+W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files-package-contains-foo/sub-git1/.gitmodules
 W: files-package-contains-foo: svk-commit-file-in-package usr/share/files-package-contains-foo/svk-commit-yeehaa.tmp
 W: files-package-contains-foo: svn-commit-file-in-package usr/share/files-package-contains-foo/svn-commit-yeehaa.tmp

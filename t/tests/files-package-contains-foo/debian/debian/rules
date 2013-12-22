@@ -17,6 +17,12 @@ override_dh_install:
 	touch $(DATA)/.svn/file
 	touch $(DATA)/.git/file
 	touch $(DATA)/.gitignore
+	touch $(DATA)/.git_ignore
+	mkdir $(DATA)/sub-git1/
+	echo '*.old' | gzip -9n > $(DATA)/sub-git1/.gitignore.gz
+	touch $(DATA)/sub-git1/.gitattributes
+	touch $(DATA)/sub-git1/.gitmodules
+
 	touch $(DATA)/svn-commit-yeehaa.tmp
 	touch $(DATA)/svk-commit-yeehaa.tmp
 
