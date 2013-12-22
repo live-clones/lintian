@@ -2,6 +2,11 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/watch.{desc,pm}:
+    + [BR] Fix the description of debian-watch-may-check-gpg-signature tag.
+      Thanks to Gregor Herrmann for the bug report and patch
+      (Closes: #732799).
+
   * debian/control:
     + [NT] Add relevant relations on libyaml-perl, which is
       now used by harness.
