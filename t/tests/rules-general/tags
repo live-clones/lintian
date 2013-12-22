@@ -1,4 +1,5 @@
 E: rules-general source: clean-should-be-satisfied-by-build-depends debhelper
 E: rules-general source: debian-rules-should-not-automatically-update-control line 3
-W: rules-general source: debian-rules-should-not-use-DEB_BUILD_OPTS line 10
-W: rules-general source: debian-rules-should-not-use-pwd line 10
+E: rules-general source: debian-rules-should-not-use-dh-with-autotools-dash-dev line 7
+W: rules-general source: debian-rules-should-not-use-DEB_BUILD_OPTS line 12
+W: rules-general source: debian-rules-should-not-use-pwd line 12

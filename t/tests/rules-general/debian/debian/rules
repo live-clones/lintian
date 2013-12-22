@@ -3,7 +3,9 @@
 DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes
 
 %:
-	dh $@
+	# hide dh error but allow this check to run
+	if false; then dh --with autotools-dev $@ ;fi;
+	dh $@ --with autotools_dev
 
 clean:
 	dh_clean

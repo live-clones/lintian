@@ -11,6 +11,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
 	   Bastien Roucariès <roucaries.bastien+debian@gmail.com>
 Build-Depends: aspell,
                aspell-en,
+	       autotools-dev,
                binutils,
                bzip2,
                cdbs,

@@ -24,6 +24,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       debian-rules-should-not-use-DEB_BUILD_OPTS.
     + [BR] Rename debian-rules-uses-or-modifies-user-only-variable
       to debian-rules-should-not-use-or-modify-user-only-variable.
+    + [BR] Warn about the wrong dh --with autotools-dev (Closes: #731248).
 
   * debian/control:
     + [NT] Add relevant relations on libyaml-perl, which is
