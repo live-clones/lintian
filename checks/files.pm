@@ -37,7 +37,7 @@ my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
-my $MULTIARCH_DIRS= Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
+my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
     sub { return { 'dir' => $_[1], 'match' => qr/\Q$_[1]\E/ } });
 
 my $PRIVACY_BREAKER_WEBSITES
@@ -47,6 +47,26 @@ my $PRIVACY_BREAKER_WEBSITES
 my $PRIVACY_BREAKER_FRAGMENTS
   = Lintian::Data->new('files/privacy-breaker-fragments',
     qr/\s*\~\~/o,sub { return qr/$_[1]/ism });
+
+my $COMPRESS_FILE_EXTENSIONS
+  = Lintian::Data->new('files/compressed-file-extensions',
+    qr/s++/,sub { return qr/\Q$_[0]\E/ });
+
+# an OR (|) regex of all compressed extension
+my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/$_[0]/ }
+  ->(
+    join(
+        '|',
+        map($COMPRESS_FILE_EXTENSIONS->value($_),
+            $COMPRESS_FILE_EXTENSIONS->all)));
+
+# see tag duplicated-compressed-file
+my $DUPLICATED_COMPRESSED_FILE_REGEX
+  = qr/^(.+)\.(?:$COMPRESS_FILE_EXTENSIONS_OR_ALL)$/;
+
+# see tag compressed-symlink-with-wrong-ext
+my $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX
+  = qr/\.($COMPRESS_FILE_EXTENSIONS_OR_ALL)\s*$/;
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
@@ -1385,7 +1405,7 @@ sub run {
             }
 
             # --------------- compressed + uncompressed files
-            if ($file =~ m,^(.+)\.(?:gz|bz2|xz|zip)$,) {
+            if ($file =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
                 tag 'duplicated-compressed-file', $file
                   if $info->file_info($1);
             }
@@ -1658,7 +1678,7 @@ sub run {
             }
           NEXT_LINK:
 
-            if ($link =~ m,\.(gz|[zZ]|bz|bz2|tgz|zip|xz)\s*$,) {
+            if ($link =~ $COMPRESSED_SYMLINK_POINTING_TO_COMPRESSED_REGEX) {
                 # symlink is pointing to a compressed file
 
                 # symlink has correct extension?
