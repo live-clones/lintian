@@ -222,14 +222,6 @@ Info: The rules files appear to be reading or modifying a variable not
  can be used by users, who wants to re-compile debian packages with
  special (or non-standard) build flags.
 
-Tag: debian-rules-should-not-use-dh-with-autotools-dash-dev
-Severity: serious
-Certainty: possible
-Info: The rules file appears to use dh --with autotool-dev $@ instead
- of dh --with autotool_dev $@.
- .
- dh --with autotool-dev is a nop and thus could lead to FTBFS.
-
 Tag: debian-rules-should-not-use-underscore-variable
 Severity: normal
 Certainty: possible
