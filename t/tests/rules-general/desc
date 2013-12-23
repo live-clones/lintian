@@ -7,3 +7,4 @@ Test-For:
  debian-rules-should-not-automatically-update-control
  debian-rules-should-not-use-DEB_BUILD_OPTS
  debian-rules-should-not-use-pwd
+ debian-rules-should-not-use-underscore-variable

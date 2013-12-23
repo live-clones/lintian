@@ -230,6 +230,21 @@ Info: The rules file appears to use dh --with autotool-dev $@ instead
  .
  dh --with autotool-dev is a nop and thus could lead to FTBFS.
 
+Tag: debian-rules-should-not-use-underscore-variable
+Severity: normal
+Certainty: possible
+Ref: policy 4.9
+Info: The rules file use the make variable $(_).
+ .
+ According to Policy 4.9, "invoking either of `make -f debian/rules
+ _args..._' or `./debian/rules _args..._' must result in identical
+ behavior." One way to inadvertently violate this policy is to use the $_
+ variable.
+ .
+ If rules file uses $(dir $(_)) to discover directory containing
+ source package (presumably in order to implement get-orig-source
+ target), please replace it by $(dir $(firstword $(MAKEFILE_LIST))).
+
 Tag: package-would-benefit-from-build-arch-targets
 Severity: normal
 Certainty: certain

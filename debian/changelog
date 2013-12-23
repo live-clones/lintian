@@ -25,6 +25,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Rename debian-rules-uses-or-modifies-user-only-variable
       to debian-rules-should-not-use-or-modify-user-only-variable.
     + [BR] Warn about the wrong dh --with autotools-dev (Closes: #731248).
+  
+  * data/rules/rules-should-not-use:
+    + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).
 
   * data/scripts/maintainer-script-bad-command:
     + [BR] Service is reserved to system admin (Closes: #656229).

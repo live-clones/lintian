@@ -8,4 +8,5 @@ debian-rules-should-not-use-DEB_BUILD_OPTS               ~~ \$[\(\{]DEB_BUILD_OP
 debian-rules-should-not-use-dh-with-autotools-dash-dev   ~~ dh.*\s+--with(?=\s).*\s+autotools-dev\b
 debian-rules-should-not-use-or-modify-user-only-variable ~~ \bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b
 debian-rules-should-not-use-pwd                          ~~ \$[\(\{]PWD[\)\}]
+debian-rules-should-not-use-underscore-variable          ~~ \$[\(\{]_[\)\}]
 
