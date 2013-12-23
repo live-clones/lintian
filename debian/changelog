@@ -26,6 +26,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       to debian-rules-should-not-use-or-modify-user-only-variable.
     + [BR] Warn about the wrong dh --with autotools-dev (Closes: #731248).
 
+  * data/scripts/maintainer-script-bad-command:
+    + [BR] Service is reserved to system admin (Closes: #656229).
+
   * debian/control:
     + [NT] Add relevant relations on libyaml-perl, which is
       now used by harness.

@@ -27,6 +27,7 @@ Test-For:
  maintainer-script-should-not-modify-ld-so-conf
  maintainer-script-should-not-modify-netbase-managed-file
  maintainer-script-should-not-use-start-stop-daemon
+ maintainer-script-should-not-use-service
  maintainer-script-should-not-use-update-alternatives-remove
  maintainer-script-should-not-use-update-alternatives-set
  mknod-in-maintainer-script

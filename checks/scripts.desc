@@ -593,6 +593,14 @@ Info: The maintainer script apparently runs install-sgmlcatalog.
  Given how long ago this transition was, consider removing it
  entirely.
 
+Tag: maintainer-script-should-not-use-service
+Severity: important
+Certainty: certain
+Experimental: yes
+Info: The maintainer script apparently runs service command.
+ This command is reserved for local
+ administrators and must never be used by a Debian package.
+
 Tag: maintainer-script-should-not-use-adduser-system-without-home
 Severity: serious
 Certainty: certain

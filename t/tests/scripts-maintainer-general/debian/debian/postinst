@@ -152,4 +152,7 @@ adduser --system bar --home /var/lib/bar
 # other test case for gconftool
 /usr/bin/gconftool-2 --makefile-install-rule foo.schema
 
+# service
+service apache2 start
+
 #DEBHELPER#
