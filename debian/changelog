@@ -25,6 +25,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Rename debian-rules-uses-or-modifies-user-only-variable
       to debian-rules-should-not-use-or-modify-user-only-variable.
 
+  * data/files/privacy-breaker-website
+    + [BR] Add w3c website valid x?html icons.
+
   * data/rules/rules-should-not-use:
     + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).
 

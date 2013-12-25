@@ -5,6 +5,7 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/adsen
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchin.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinconstructor.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinloader.js
+E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacybreach/html/htmlvalid.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/applet.html 1984.os/trackme
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/div.html trackme.1984/index-2.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/embed.html 1984.os/givemydata.swf

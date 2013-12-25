@@ -5,3 +5,4 @@ Description: Check for different html privacy breach
 Test-For:
  privacy-breach-generic
  privacy-breach-google-adsense
+ privacy-breach-w3c-valid-html

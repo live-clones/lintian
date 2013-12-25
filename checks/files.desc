@@ -951,6 +951,21 @@ Info: This package creates a privacy breach by using Google Adsense.
  of Google Adsense terms of use and thus a serious bug. This violation
  renders this package not distribuable.
 
+Tag: privacy-breach-w3c-valid-html
+Severity: serious
+Certainty: possible
+Ref: http://validator.w3.org/docs/help.html#icon,
+     http://www.w3.org/Consortium/Legal/logo-usage-20000308
+Info: This package creates a privacy breach by w3c valid documents icons.
+ .
+ To show readers that one has taken some care to create an interoperable
+ Web page, a "W3C valid" badge may be displayed on any page that validates.
+ .
+ Unfortunatly it means phoning home and download image from w3c website,
+ and thus allowing to track users.
+ .
+ Note that these icons are non free and must not be copied
+ inside the package. You could safely delete this "W3C valid" badge.
 
 Tag: embedded-feedparser-library
 Severity: normal
