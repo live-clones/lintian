@@ -1,0 +1,5 @@
+Testname: cruft-non-free-rfc
+Sequence: 6000
+Version: 1.0
+Description: Check for the rfc
+Test-For: license-problem-non-free-rfc

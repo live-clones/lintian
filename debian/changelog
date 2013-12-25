@@ -2,10 +2,8 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * checks/watch.{desc,pm}:
-    + [BR] Fix the description of debian-watch-may-check-gpg-signature tag.
-      Thanks to Gregor Herrmann for the bug report and patch
-      (Closes: #732799).
+  * checks/cruft.{desc,pm}:
+    + [BR] Detect non free rfc (Closes: #365213).
 
   * checks/files.{desc,pm}:
     + [BR] Add xz and zip to duplicated-compressed-file regexp.
@@ -24,6 +22,11 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       debian-rules-should-not-use-DEB_BUILD_OPTS.
     + [BR] Rename debian-rules-uses-or-modifies-user-only-variable
       to debian-rules-should-not-use-or-modify-user-only-variable.
+
+  * checks/watch.{desc,pm}:
+    + [BR] Fix the description of debian-watch-may-check-gpg-signature tag.
+      Thanks to Gregor Herrmann for the bug report and patch
+      (Closes: #732799).
 
   * data/files/privacy-breaker-website
     + [BR] Add w3c website valid x?html icons.

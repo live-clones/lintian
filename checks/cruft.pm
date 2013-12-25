@@ -519,6 +519,42 @@ sub license_check {
             }
         }
 
+        # non free rfc
+        if (
+               index($block, 'copyrights') > -1
+            && index($block, 'purpose') > -1
+            && index($block, 'translate') > -1
+            && $block =~ m/this \s document \s itself \s may \s not \s
+                           be \s modified \s in \s any \s way\s?,\s?
+                           such \s as \s by \s removing \s the \s copyright \s
+                           notice \s or \s references \s
+                           to \s .{0,256}
+                           \s? except \s as \s needed \s for \s
+                           the \s purpose \s of \s developing \s  .{0,128}
+                           \s? in \s which \s case \s the \s procedures \s
+                           for \s copyrights \s defined \s in \s
+                           the \s .{0,128} \s? process \s must \s be \s
+                           followed\s?,\s? or \s as \s required \s to \s
+                           translate \s it \s into \s languages \s other \s than/xism
+          ) {
+            if (!exists $licenseproblemhash{'non-free-rfc'}) {
+                tag 'license-problem-non-free-rfc', $name;
+                $licenseproblemhash{'rfc'} = 1;
+            }
+        }
+        if (
+            index($block, 'bcp') > -1
+            && $block =~ m/This \s document \s is \s subject \s to \s
+                              (?:the \s rights\s?, \s licenses \s
+                                 and \s restrictions \s contained \s in)?
+                               \s BCP \s 78/xism
+          ) {
+            if (!exists $licenseproblemhash{'non-free-rfc'}) {
+                tag 'license-problem-non-free-rfc', $name;
+                $licenseproblemhash{'rfc'} = 1;
+            }
+        }
+
         # check GFDL block - The ".{0,1024}"-part in the regex
         # will contain the "no invariants etc."  part if
         # it is a good use of the license.  We include it

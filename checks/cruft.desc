@@ -502,6 +502,21 @@ Info: The given source file is licensed under GFDL with invariant
 Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
  http://www.debian.org/vote/2006/vote_001
 
+Tag: license-problem-non-free-rfc
+Severity: serious
+Certainty: possible
+Info: The given source file is licensed under the newer RFC
+ license
+ .
+ The majority of IETF documents, such as RFCs, are not licensed
+ under DFSG-free terms, and should thus not be included in Debian's main.
+ .
+ Should this file be multi-licensed, please override the tag.
+ .
+ Should this be a false-positive, please report a bug.
+Ref: https://wiki.debian.org/NonFreeIETFDocuments
+
+
 Tag: license-problem-gfdl-invariants-empty
 Severity: minor
 Certainty: possible
