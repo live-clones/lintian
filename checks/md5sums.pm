@@ -27,7 +27,6 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 
-
 #forbidden files
 my $FORBIDDEN_FILES = Lintian::Data->new(
     'md5sums/forbidden-files',
@@ -131,15 +130,17 @@ sub run {
             my $name = $FORBIDDEN_FILES->value($md5sum)->{'name'};
             my $reason = $FORBIDDEN_FILES->value($md5sum)->{'reason'};
             my $link = $FORBIDDEN_FILES->value($md5sum)->{'link'};
-            tag 'md5sums-forbidden-file', $file, "usual name is $name.", "$reason", "See also $link."
+            tag 'md5sums-forbidden-file', $file, "usual name is $name.",
+              "$reason", "See also $link.";
         }
         unless($info->is_non_free) {
             if ($NON_FREE_FILES->known($md5sum)) {
                 my $name = $NON_FREE_FILES->value($md5sum)->{'name'};
                 my $reason = $NON_FREE_FILES->value($md5sum)->{'reason'};
                 my $link = $NON_FREE_FILES->value($md5sum)->{'link'};
-                tag 'md5sums-non-free-file', $file, "usual name is $name.", "$reason", "See also $link."
-        }
+                tag 'md5sums-non-free-file', $file, "usual name is $name.",
+                  "$reason", "See also $link.";
+            }
         }
         delete $info_entry{$file};
     }

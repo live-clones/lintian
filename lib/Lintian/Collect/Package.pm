@@ -29,7 +29,7 @@ use Carp qw(croak);
 use Scalar::Util qw(blessed);
 
 use Lintian::Path;
-use Lintian::Util qw(open_gz perm2oct normalize_pkg_path);
+use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path);
 
 my %ROOT_INDEX_TEMPLATE = (
     'name'     => '',
@@ -210,6 +210,40 @@ sub file_info {
       if exists $self->{file_info}->{$file};
     return;
 }
+
+=item md5sums
+
+Returns a hashref mapping a FILE to its md5sum.  The md5sum is
+computed by Lintian during extraction and is not guaranteed to match
+the md5sum in the "md5sums" control file.
+
+Needs-Info requirements for using I<md5sums>: md5sums
+
+=cut
+
+sub md5sums {
+    my ($self) = @_;
+    return $self->{md5sums} if exists $self->{md5sums};
+    my $md5f = $self->lab_data_path('md5sums');
+    my $result = {};
+
+    # read in md5sums info file
+    open(my $fd, '<', $md5f);
+    while (my $line = <$fd>) {
+        chop($line);
+        next if $line =~ m/^\s*$/o;
+        $line =~ m/^(\S+)\s*(\S.*)$/o
+          or fail "syntax error in $md5f info file: $line";
+        my $zzsum = $1;
+        my $zzfile = $2;
+        $zzfile =~ s,^(?:\./)?,,o;
+        $result->{$zzfile} = $zzsum;
+    }
+    close($fd);
+    $self->{md5sums} = $result;
+    return $result;
+}
+
 
 =item index (FILE)
 

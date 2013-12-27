@@ -45,6 +45,7 @@ sub collect {
         out => "$dir/md5sums",
         fail => 'error'
     );
+
     spawn(\%opts, ['xargs', '-0r', 'md5sum']);
     $opts{pipe_in}->blocking(1);
 

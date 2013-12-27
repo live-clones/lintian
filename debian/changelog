@@ -4,6 +4,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   * checks/cruft.{desc,pm}:
     + [BR] Detect non free rfc (Closes: #365213).
+    + [BR] Check md5sums on source package.
 
   * checks/files.{desc,pm}:
     + [BR] Add xz and zip to duplicated-compressed-file regexp.

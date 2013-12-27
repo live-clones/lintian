@@ -53,6 +53,47 @@ our $AUTOTOOLS = Lintian::Relation->new(
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
+
+# forbidden files
+my $FORBIDDEN_FILES = Lintian::Data->new(
+    'md5sums/forbidden-files',
+    qr/\s*\~\~\s*/,
+    sub {
+        my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
+        if(scalar(@sliptline) != 5) {
+            fail 'Syntax error in md5sums/forbidden-files', $.;
+        }
+        my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
+        return {
+            # use not not to normalize boolean
+            'sha1' => $sha1,
+            'sha256' => $sha256,
+            'name' => $name,
+            'reason' => $reason,
+            'link' => $link,
+        };
+    });
+
+# non free files
+my $NON_FREE_FILES = Lintian::Data->new(
+    'md5sums/non-free-files',
+    qr/\s*\~\~\s*/,
+    sub {
+        my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
+        if(scalar(@sliptline) != 5) {
+            fail 'Syntax error in md5sums/forbidden-files', $.;
+        }
+        my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
+        return {
+            # use not not to normalize boolean
+            'sha1' => $sha1,
+            'sha256' => $sha256,
+            'name' => $name,
+            'reason' => $reason,
+            'link' => $link,
+        };
+    });
+
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
 our %ERRORS = (
@@ -358,6 +399,23 @@ sub find_cruft {
         }
         # we just need normal files for the rest
         next ENTRY unless $entry->is_file;
+
+        # check non free file
+        my $md5sum = $info->md5sums->{$name};
+        if ($FORBIDDEN_FILES->known($md5sum)) {
+            my $name = $FORBIDDEN_FILES->value($md5sum)->{'name'};
+            my $reason = $FORBIDDEN_FILES->value($md5sum)->{'reason'};
+            my $link = $FORBIDDEN_FILES->value($md5sum)->{'link'};
+            tag 'cruft-forbidden-file', $name, "usual name is $name.", "$reason", "See also $link."
+        }
+        unless($info->is_non_free) {
+            if ($NON_FREE_FILES->known($md5sum)) {
+                my $name = $NON_FREE_FILES->value($md5sum)->{'name'};
+                my $reason = $NON_FREE_FILES->value($md5sum)->{'reason'};
+                my $link = $NON_FREE_FILES->value($md5sum)->{'link'};
+                tag 'cruft-non-free-file', $name, "usual name is $name.", "$reason", "See also $link."
+        }
+        }
 
         $file_info = $info->file_info($name);
 
