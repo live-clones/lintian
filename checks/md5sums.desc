@@ -27,6 +27,21 @@ Info: The indicated line of the md5sums control file for this package was
  checksum, some whitespace, and then the path to the file corresponding to
  that checksum.
 
+Tag: md5sums-forbidden-file
+Severity: serious
+Certainty: certain
+Info: The following file is not distribuable even in non free archive.
+ .
+ Please re-package the package without the file (if possible)
+ or ask the ftp-masters to remove the package.
+ .
+ If the package has been uploaded to Debian before, please
+ remember to also notify snapshot.debian.org about this
+ package containing a non-distributable file.
+ .
+ Should this be a false-positive, please report a bug
+ against lintian.
+
 Tag: md5sum-mismatch
 Severity: important
 Certainty: certain

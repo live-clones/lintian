@@ -22,8 +22,31 @@ package Lintian::md5sums;
 use strict;
 use warnings;
 use autodie;
+use Lintian::Data;
 
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(fail);
+
+
+#forbidden command in maintainer scripts
+my $FORBIDDEN_FILES = Lintian::Data->new(
+    'md5sums/forbidden-files',
+    qr/\s*\~\~\s*/,
+    sub {
+        my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
+        if(scalar(@sliptline) != 5) {
+            fail 'Syntax error in md5sums/forbidden-files', $.;
+        }
+        my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
+        return {
+            # use not not to normalize boolean
+            'sha1' => $sha1,
+            'sha256' => $sha256,
+            'name' => $name,
+            'reason' => $reason,
+            'link' => $link,
+        };
+    });
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -84,6 +107,12 @@ sub run {
             tag 'md5sum-mismatch', $file;
         }
 
+        if ($FORBIDDEN_FILES->known($md5sum)) {
+            my $name = $FORBIDDEN_FILES->value($md5sum)->{'name'};
+            my $reason = $FORBIDDEN_FILES->value($md5sum)->{'reason'};
+            my $link = $FORBIDDEN_FILES->value($md5sum)->{'link'};
+            tag 'md5sums-forbidden-file', $file, "usual name is $name.", "$reason", "See also $link."
+        }
         delete $info_entry{$file};
     }
     for my $file (keys %{ $info->md5sums }) {

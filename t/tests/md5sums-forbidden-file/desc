@@ -1,0 +1,6 @@
+Testname: md5sums-forbidden-file
+Sequence: 6000
+Version: 1.0
+Description: Test of md5sums forbidden-file
+Test-For:
+ md5sums-forbidden-file

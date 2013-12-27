@@ -1,0 +1,11 @@
+# this file are forbidden in main and contrib
+# format is
+# md5sum ~~ sha1 ~~ sha256 ~~ current name ~~ reason ~~ official reference
+#
+# current name is the usual name of the file
+# reason is human description of the problem
+# official reference is a link to the license/official source
+#
+# Please sort by md5sum
+2ab371cb4a67747aaa7835ebb22cb0d5 ~~ a396330a335b055c5b8cb81299921c356286e6a7 ~~ 8e058aa0b336cd2b0bd0dc14db9e7d225ca34d3324652e2ea06eb48462f020f1 ~~ data-forbidden-lintian-files ~~ This is part of lintian test suite, used for testing this tag ~~ http://lintian.debian.org
+
