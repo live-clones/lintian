@@ -28,7 +28,7 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail);
 
 #forbidden files
-my $FORBIDDEN_FILES = Lintian::Data->new(
+our $FORBIDDEN_FILES = Lintian::Data->new(
     'md5sums/forbidden-files',
     qr/\s*\~\~\s*/,
     sub {
@@ -48,13 +48,13 @@ my $FORBIDDEN_FILES = Lintian::Data->new(
     });
 
 #forbidden files
-my $NON_FREE_FILES = Lintian::Data->new(
+our $NON_FREE_FILES = Lintian::Data->new(
     'md5sums/non-free-files',
     qr/\s*\~\~\s*/,
     sub {
         my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
         if(scalar(@sliptline) != 5) {
-            fail 'Syntax error in md5sums/forbidden-files', $.;
+            fail 'Syntax error in md5sums/non-free-files', $.;
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {

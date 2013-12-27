@@ -81,7 +81,7 @@ my $NON_FREE_FILES = Lintian::Data->new(
     sub {
         my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
         if(scalar(@sliptline) != 5) {
-            fail 'Syntax error in md5sums/forbidden-files', $.;
+            fail 'Syntax error in md5sums/non-free-files', $.;
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {
