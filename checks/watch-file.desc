@@ -143,7 +143,7 @@ Severity: pedantic
 Certainty: certain
 Ref: uscan(1)
 Info: This watch file does not include a means to verify
- the upstream tar using crytpographic signature.
+ the upstream tar using cryptographic signature.
  .
  If upstream distributions provide such signatures please
  use the pgpsigurlmangle options in this watch file
