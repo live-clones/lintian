@@ -70,7 +70,7 @@ Tag: package-installs-into-etc-rc.boot
 Severity: serious
 Certainty: certain
 Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
- which is obsolete.  See rc.boot(5) for details.
+ which is obsolete.
 Ref: policy 9.3.4
 
 Tag: package-install-into-obsolete-dir

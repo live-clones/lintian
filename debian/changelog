@@ -10,6 +10,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Use Lintian::Data for compressed file extension.
     + [BR] Use Lintian::Data for vcs files list.  Add a few more VCS 
       files (Closes: #731904).
+    + [BR] Remove long obsolete reference to rc.boot(5) manpage
+      in package-installs-into-etc-rc.boot description.
+      Thanks to Jakub Wilk (Closes: #729034).
 
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
