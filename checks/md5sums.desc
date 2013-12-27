@@ -42,6 +42,20 @@ Info: The following file is not distribuable even in non free archive.
  Should this be a false-positive, please report a bug
  against lintian.
 
+Tag: md5sums-non-free-file
+Severity: serious
+Certainty: certain
+Info: The following file is not suitable for main or contrib.
+ .
+ Please re-package the package without the file (if possible)
+ or ask the ftp-masters to remove the package.
+ .
+ You could also split this package and move this file in the
+ non free archive.
+ .
+ Should this be a false-positive, please report a bug
+ against lintian.
+
 Tag: md5sum-mismatch
 Severity: important
 Certainty: certain

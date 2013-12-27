@@ -1,4 +1,2 @@
-E: md5sums-general: malformed-md5sums-control-file line 7
-E: md5sums-general: md5sum-mismatch usr/share/lintian/data-file1
-E: md5sums-general: md5sums-lists-nonexistent-file usr/share/lintian/data-file5
-W: md5sums-general: file-missing-in-md5sums usr/share/lintian/data-file2
+E: md5sums-forbidden-file: md5sums-forbidden-file usr/share/lintian/data-forbidden-lintian-files usual name is data-forbidden-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.
+E: md5sums-forbidden-file: md5sums-non-free-file usr/share/lintian/data-non-free-lintian-files usual name is data-non-free-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.

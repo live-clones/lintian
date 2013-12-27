@@ -15,7 +15,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       Thanks to Jakub Wilk (Closes: #729034).
 
   * check/md5sums.{desc,pm}:
-    + [BR] Check non free files by using md5sums.
+    + [BR] Check non free/non distribuable files by using md5sums.
 
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules

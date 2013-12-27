@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test of md5sums forbidden-file
 Test-For:
  md5sums-forbidden-file
+ md5sums-non-free-file
