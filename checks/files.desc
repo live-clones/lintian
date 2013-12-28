@@ -1085,9 +1085,8 @@ Severity: important
 Certainty: certain
 Ref: http://lists.debian.org/debian-devel/2009/03/msg00119.html
 Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
- <tt>.conf</tt>.  modprobe currently warns about files which do not match
- this convention and at some point in the future the files will no longer
- be processed.
+ <tt>.conf</tt>. modprobe silently ignores all files which do not match
+ this convention.
  .
  If the file is an example containing only comments, consider installing
  it in another location as files in <tt>/etc/modprobe.d</tt> are

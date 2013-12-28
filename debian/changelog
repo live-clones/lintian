@@ -15,6 +15,8 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       in package-installs-into-etc-rc.boot description.
       Thanks to Jakub Wilk (Closes: #729034).
     + [BR] Add a moreinfo field to obsolete path.
+    + [BR] Fix non-conf-file-in-modprobe.d description
+      (Closes: #729037).
 
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
