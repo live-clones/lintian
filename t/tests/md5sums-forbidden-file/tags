@@ -1,4 +1,0 @@
-E: md5sums-forbidden-file source: cruft-forbidden-file data-forbidden-lintian-files usual name is data-forbidden-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.
-E: md5sums-forbidden-file source: cruft-non-free-file data-non-free-lintian-files usual name is data-non-free-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.
-E: md5sums-forbidden-file: md5sums-forbidden-file usr/share/lintian/data-forbidden-lintian-files usual name is data-forbidden-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.
-E: md5sums-forbidden-file: md5sums-non-free-file usr/share/lintian/data-non-free-lintian-files usual name is data-non-free-lintian-files. This is part of lintian test suite, used for testing this tag See also http://lintian.debian.org.

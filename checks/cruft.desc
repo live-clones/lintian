@@ -546,7 +546,7 @@ Info: The given source file include part license under a
  Should this be a false-positive, please report a bug
  against lintian.
 
-Tag: cruft-forbidden-file
+Tag: license-problem-md5sum-non-distribuable-file
 Severity: serious
 Certainty: certain
 Info: The following file is not distribuable even in non free archive.
@@ -561,7 +561,7 @@ Info: The following file is not distribuable even in non free archive.
  Should this be a false-positive, please report a bug
  against lintian.
 
-Tag: cruft-non-free-file
+Tag: license-problem-md5sum-non-free-file
 Severity: serious
 Certainty: certain
 Info: The following file is not suitable for main or contrib.

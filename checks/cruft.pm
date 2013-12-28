@@ -49,48 +49,47 @@ use Lintian::SlidingWindow;
 # autoconf and automake and then use autoreconf to update config.guess and
 # config.sub, and automake depends on autotools-dev.
 our $AUTOTOOLS = Lintian::Relation->new(
-    join(' | ',Lintian::Data->new('cruft/autotools')->all));
+    join(' | ', Lintian::Data->new('cruft/autotools')->all));
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
-
 # forbidden files
-my $FORBIDDEN_FILES = Lintian::Data->new(
-    'md5sums/forbidden-files',
+my $NON_DISTRIBUABLE_FILES = Lintian::Data->new(
+    'cruft/non-distribuable-files',
     qr/\s*\~\~\s*/,
     sub {
         my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
-        if(scalar(@sliptline) != 5) {
-            fail 'Syntax error in md5sums/forbidden-files', $.;
+        if (scalar(@sliptline) != 5) {
+            fail 'Syntax error in cruft/non-distribuable-files', $.;
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {
             # use not not to normalize boolean
-            'sha1' => $sha1,
+            'sha1'   => $sha1,
             'sha256' => $sha256,
-            'name' => $name,
+            'name'   => $name,
             'reason' => $reason,
-            'link' => $link,
+            'link'   => $link,
         };
     });
 
 # non free files
 my $NON_FREE_FILES = Lintian::Data->new(
-    'md5sums/non-free-files',
+    'cruft/non-free-files',
     qr/\s*\~\~\s*/,
     sub {
         my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
-        if(scalar(@sliptline) != 5) {
-            fail 'Syntax error in md5sums/non-free-files', $.;
+        if (scalar(@sliptline) != 5) {
+            fail 'Syntax error in cruft/non-free-files', $.;
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {
             # use not not to normalize boolean
-            'sha1' => $sha1,
+            'sha1'   => $sha1,
             'sha256' => $sha256,
-            'name' => $name,
+            'name'   => $name,
             'reason' => $reason,
-            'link' => $link,
+            'link'   => $link,
         };
     });
 
@@ -118,7 +117,7 @@ my @directory_checks = (
     [qr,^(.+/)?\.ditrack$,  => 'bts-control-dir'],
 
     # Special case (can only be triggered for diffs)
-    [qr,^(.+/)?\.pc$,       => 'quilt-control-dir'],
+    [qr,^(.+/)?\.pc$, => 'quilt-control-dir'],
 );
 
 # File checks.  These regexes match files that shouldn't be in the source
@@ -134,8 +133,8 @@ my @file_checks = (
     [qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'],
     [qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'],
     [qr,^(.+/)?(.+?)\.(r\d+)$,          => 'svn-conflict-file'],
-    [qr,\.(orig|rej)$,                  => 'patch-failure-file',  1],
-    [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1],
+    [qr,\.(orig|rej)$,                  => 'patch-failure-file', 1],
+    [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file', 1],
 );
 
 # List of files to check for a LF-only end of line terminator, relative
@@ -153,6 +152,7 @@ sub run {
     # This doens't really belong here, but there isn't a better place at the
     # moment to put this check.
     my $version = $info->field('version');
+
     # If the version field is missing, assume it to be a native,
     # maintainer upload as it is probably the most likely case.
     $version = '0-1' unless defined $version;
@@ -160,7 +160,7 @@ sub run {
         if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
             tag 'native-package-with-dash-version';
         }
-    } else {
+    }else {
         if ($version !~ /-/) {
             tag 'non-native-package-with-native-version';
         }
@@ -177,6 +177,7 @@ sub run {
     # Lintian run.
     my %warned;
     my $format = $info->field('format');
+
     # Assume the package to be non-native if the field is not present.
     # - while 1.0 is more likely in this case, Lintian will probably get
     #   better results by checking debfiles/ rather than looking for a diffstat
@@ -185,7 +186,7 @@ sub run {
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
         my $wanted = sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
         find($wanted, $droot);
-    } elsif (not $info->native) {
+    }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
     find_cruft($info, \%warned, $atdinbd, $ltinbd);
@@ -206,7 +207,7 @@ sub run {
     # Report any error messages from tar while unpacking the source
     # package if it isn't just tar cruft.
     for my $file (keys %ERRORS) {
-        my $tag = $ERRORS{$file};
+        my $tag  = $ERRORS{$file};
         my $path = $info->lab_data_path($file);
         if (-s $path) {
             open(my $fd, '<', $path);
@@ -233,7 +234,7 @@ sub run {
     }
 
     return;
-} # </run>
+}    # </run>
 
 # -----------------------------------
 
@@ -253,8 +254,8 @@ sub check_diffstat {
         # Check for CMake cache files.  These embed the source path and hence
         # will cause FTBFS on buildds, so they should never be touched in the
         # diff.
-        if ($file =~ m,(?:^|/)CMakeCache.txt\z, and $file !~ m,(?:^|/)debian/,)
-        {
+        if (    $file =~ m,(?:^|/)CMakeCache.txt\z,
+            and $file !~ m,(?:^|/)debian/,){
             tag 'diff-contains-cmake-cache-file', $file;
         }
 
@@ -350,16 +351,17 @@ sub find_cruft {
 
   ENTRY:
     while (my $entry = shift(@worklist)) {
-        my $name = $entry->name;
+        my $name     = $entry->name;
         my $basename = $entry->basename;
         my $path;
         my $file_info;
 
         if ($entry->is_dir) {
+
             # Remove the trailing slash (historically we never
             # included the slash for these tags and there is no
             # particular reason to change that now).
-            $name = substr($name, 0, -1);
+            $name     = substr($name,     0, -1);
             $basename = substr($basename, 0, -1);
 
             # Ignore the .pc directory and its contents, created as
@@ -378,6 +380,7 @@ sub find_cruft {
                 for my $rule (@directory_checks) {
                     if ($basename =~ /$rule->[0]/) {
                         tag "${prefix}-$rule->[1]", $name;
+
                         # At most one rule will match
                         last;
                     }
@@ -388,44 +391,52 @@ sub find_cruft {
             next ENTRY;
         }
         if ($entry->is_symlink) {
+
             # An absolute link always escapes the root (of a source
             # package).  For relative links, it escapes the root if we
             # cannot normalize it.
             if ($entry->link =~ m{\A / }xsm
-                or not defined($entry->link_normalized)) {
+                or not defined($entry->link_normalized)){
                 tag 'source-contains-unsafe-symlink', $name;
             }
             next ENTRY;
         }
+
         # we just need normal files for the rest
         next ENTRY unless $entry->is_file;
 
         # check non free file
         my $md5sum = $info->md5sums->{$name};
-        if ($FORBIDDEN_FILES->known($md5sum)) {
-            my $name = $FORBIDDEN_FILES->value($md5sum)->{'name'};
-            my $reason = $FORBIDDEN_FILES->value($md5sum)->{'reason'};
-            my $link = $FORBIDDEN_FILES->value($md5sum)->{'link'};
-            tag 'cruft-forbidden-file', $name, "usual name is $name.", "$reason", "See also $link."
+        if ($NON_DISTRIBUABLE_FILES->known($md5sum)) {
+            my $name   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'name'};
+            my $reason = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'reason'};
+            my $link   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'link'};
+            tag 'license-problem-md5sum-non-distribuable-file', $name,
+              "usual name is $name.", "$reason", "See also $link.";
+
+            # should be stripped so pass other test
+            next ENTRY;
         }
-        unless($info->is_non_free) {
+        unless ($info->is_non_free) {
             if ($NON_FREE_FILES->known($md5sum)) {
-                my $name = $NON_FREE_FILES->value($md5sum)->{'name'};
+                my $name   = $NON_FREE_FILES->value($md5sum)->{'name'};
                 my $reason = $NON_FREE_FILES->value($md5sum)->{'reason'};
-                my $link = $NON_FREE_FILES->value($md5sum)->{'link'};
-                tag 'cruft-non-free-file', $name, "usual name is $name.", "$reason", "See also $link."
-        }
+                my $link   = $NON_FREE_FILES->value($md5sum)->{'link'};
+                tag 'license-problem-md5sum-non-free-file', $name,
+                  "usual name is $name.", "$reason",
+                  "See also $link.";
+            }
         }
 
         $file_info = $info->file_info($name);
 
         if ($file_info =~ m/\bELF\b/) {
             tag 'source-contains-prebuilt-binary', $name;
-        } elsif (
-            $file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/) {
+        }elsif (
+            $file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/){
             tag 'source-contains-prebuilt-windows-binary', $name;
-        } elsif ($basename =~ /\bwaf$/) {
-            my $path = $info->unpacked($entry);
+        }elsif ($basename =~ /\bwaf$/) {
+            my $path   = $info->unpacked($entry);
             my $marker = 0;
             open(my $fd, '<', $path);
             while (my $line = <$fd>) {
@@ -435,6 +446,7 @@ sub find_cruft {
                     last;
                 }
                 $marker = 1 if $line =~ m/^#==>/o;
+
                 # We could probably stop here, but just in case
                 $marker = 0 if $line =~ m/^#<==/o;
             }
@@ -457,17 +469,18 @@ sub find_cruft {
             if ($entry->dirname ne 'debian') {
                 tag 'configure-generated-file-in-source', $name;
             }
-        } elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm
-            and not $atdinbd) {
+        }elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm
+            and not $atdinbd){
             open(my $fd, '<', $info->unpacked($entry));
             while (<$fd>) {
                 last
-                  if $. > 10; # it's on the 6th line, but be a bit more lenient
+                  if $.> 10;  # it's on the 6th line, but be a bit more lenient
                 if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
                     my ($date, $year, $month) = ($1, $2, $3);
                     if ($year < 2004) {
                         tag 'ancient-autotools-helper-file', $name, $date;
-                    } elsif (($year < 2012) or ($year == 2012 and $month < 4)){
+                    }elsif (($year < 2012)
+                        or ($year == 2012 and $month < 4)){
                         # config.sub   >= 2012-04-18 (was 2012-02-10)
                         # config.guess >= 2012-06-10 (was 2012-02-10)
                         # Flagging anything earlier than 2012-04 as
@@ -478,16 +491,16 @@ sub find_cruft {
                 }
             }
             close($fd);
-        } elsif ($basename eq 'ltconfig' and not $ltinbd) {
+        }elsif ($basename eq 'ltconfig' and not $ltinbd) {
             tag 'ancient-libtool', $name;
-        } elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
+        }elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
             open(my $fd, '<', $info->unpacked($entry));
             while (<$fd>) {
                 if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
-                    my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
+                    my ($version, $major, $minor, $debian) =($1, $2, $3, $4);
                     if ($major < 5 or ($major == 5 and $minor < 2)) {
                         tag 'ancient-libtool', $name, $version;
-                    } elsif ($minor == 2 and (!$debian || $debian < 2)) {
+                    }elsif ($minor == 2 and (!$debian || $debian < 2)) {
                         tag 'ancient-libtool', $name, $version;
                     }
                     last;
@@ -499,6 +512,7 @@ sub find_cruft {
         # license string in debian/changelog are probably just changes
         next ENTRY
           if $name eq 'debian/changelog';
+
         # Ignore these strings in d/README.{Debian,source}.  If they
         # appear there it is probably just "file XXX got removed
         # because of license Y".
@@ -521,7 +535,7 @@ sub find_cruft {
 sub license_check {
     my ($info, $name, $path) = @_;
 
-    my $sfd = Lintian::SlidingWindow->new('<', $path, sub { $_=lc($_); });
+    my $sfd = Lintian::SlidingWindow->new('<', $path, sub { $_ = lc($_); });
     my %licenseproblemhash = ();
 
     # we try to read this file in block and use a sliding window
@@ -531,6 +545,7 @@ sub license_check {
   BLOCK:
     while (my $block = $sfd->readwindow()) {
         if (index($block, '\\') > -1) {
+
             # Remove formatting commonly added by pod2man
             $block =~ s{ \\ & }{}gxsm;
             $block =~ s{ \\s (?:0|-1) }{}gxsm;
@@ -539,7 +554,7 @@ sub license_check {
 
         if (   index($block, 'intellectual') > -1
             && index($block, 'property') > -1
-            && index($block, 'all') > -1) {
+            && index($block, 'all') > -1){
 
             # nvdia opencv infamous license
             # non-distributable
@@ -550,7 +565,7 @@ sub license_check {
                           property \s+ and \s+ proprietary \s+ rights \s+ in \s+
                           and \s+ to \s+ this \s+ software \s+ and \s+
                           related \s+ documentation/xism
-                  ) {
+                  ){
                     tag 'license-problem-nvidia-intellectual', $name;
                     $licenseproblemhash{'nvidia-intellectual'} = 1;
                 }
@@ -568,7 +583,7 @@ sub license_check {
             && $block =~ m/software \s++ shall \s++
                      be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
                      not \s++ evil/xsm
-          ) {
+          ){
             # json evil license
 
             if (!exists $licenseproblemhash{'json-evil'}) {
@@ -594,7 +609,7 @@ sub license_check {
                            the \s .{0,128} \s? process \s must \s be \s
                            followed\s?,\s? or \s as \s required \s to \s
                            translate \s it \s into \s languages \s other \s than/xism
-          ) {
+          ){
             if (!exists $licenseproblemhash{'non-free-rfc'}) {
                 tag 'license-problem-non-free-rfc', $name;
                 $licenseproblemhash{'rfc'} = 1;
@@ -606,7 +621,7 @@ sub license_check {
                               (?:the \s rights\s?, \s licenses \s
                                  and \s restrictions \s contained \s in)?
                                \s BCP \s 78/xism
-          ) {
+          ){
             if (!exists $licenseproblemhash{'non-free-rfc'}) {
                 tag 'license-problem-non-free-rfc', $name;
                 $licenseproblemhash{'rfc'} = 1;
@@ -623,7 +638,7 @@ sub license_check {
         if (   index($block, 'license') > -1
             && index($block, 'documentation') > -1
             && index($block, 'gnu') > -1
-            && index($block, 'copy') > -1) {
+            && index($block, 'copy') > -1){
 
             my $cleanedblock = $block;
 
@@ -634,6 +649,7 @@ sub license_check {
                  (?:<span\s*[^>]>)?\s*gnu\s*</span\s*[^>]*?>  | # html span
                  (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}               # Tex info cmd
                 }{ gnu }gxms;
+
             # classical gfdl matching pattern
             my $normalgfdlpattern = qr/
                  (?'contextbefore'(?:
@@ -658,17 +674,17 @@ sub license_check {
                  /xsmo;
 
             my $gfdlpattern
-              = $sfd->blocknumber()
+              =$sfd->blocknumber()
               ? $normalgfdlpattern
               : $firstblockgfdlpattern;
 
             if ($cleanedblock =~ $gfdlpattern) {
                 if (!exists $licenseproblemhash{'gfdl-invariants'}) {
-                    my $rawgfdlsections = $+{rawgfdlsections} || '';
+                    my $rawgfdlsections  = $+{rawgfdlsections}  || '';
                     my $rawcontextbefore = $+{rawcontextbefore} || '';
 
                     # replace some common comment-marker/markup with space
-                    my $gfdlsections = _clean_block($rawgfdlsections);
+                    my $gfdlsections  = _clean_block($rawgfdlsections);
                     my $contextbefore = _clean_block($rawcontextbefore);
 
                     # remove classical and without meaning part of
@@ -694,34 +710,34 @@ sub license_check {
                                Front(?:\s?\\?-)?\s?Cover (?:\s Texts?)? \s? [,\.;]? \s? (?:and\s)?
                                (?:with\s)? (?:the\s)? no
                                \s Back(?:\s?\\?-)?\s?Cover/xiso
-                      ) {
+                      ){
                         # no invariant
-                    } elsif (
+                    }elsif (
                         $gfdlsections =~ m/
                             no \s Invariant \s Sections? \s? [,\.;]?
                                \s? (?:no\s)? Front(?:\s?[\\]?-)? \s or
                                \s (?:no\s)? Back(?:\s?[\\]?-)?\s?Cover \s Texts?/xiso
-                      ) {
+                      ){
                         # no invariant variant (dict-foldoc)
-                    } elsif (
+                    }elsif (
                         $gfdlsections =~ m/
                             \A There \s are \s no \s invariants? \s sections? \Z
                           /xiso
-                      ) {
+                      ){
                         # no invariant libnss-pgsql version
-                    } elsif (
+                    }elsif (
                         $gfdlsections =~ m/
                             \A without \s any \s Invariant \s Sections? \Z
                           /xiso
-                      ) {
+                      ){
                         # no invariant parsewiki version
-                    } elsif (
-                        $gfdlsections=~ m/
+                    }elsif (
+                        $gfdlsections =~ m/
                             \A with \s no \s invariants? \s sections? \Z
                          /xiso
-                      ) {
+                      ){
                         # no invariant lilypond version
-                    } elsif (
+                    }elsif (
                         $gfdlsections =~ m/\A
                             with \s the \s Invariant \s Sections \s being \s
                             LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
@@ -729,28 +745,29 @@ sub license_check {
                             LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
                             (?:and\s)? with \s the \s Back(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
                             LIST (?:\s THEIR \s TITLES)? \Z/xiso
-                      ) {
+                      ){
                         # verbatim text of license is ok
-                    } elsif ($gfdlsections eq '') {
+                    }elsif ($gfdlsections eq '') {
+
                         # empty text is ambiguous
-                        tag 'license-problem-gfdl-invariants-empty',$name;
+                        tag 'license-problem-gfdl-invariants-empty', $name;
                         $licenseproblemhash{'gfdl-invariants'} = 1;
-                    } elsif (
+                    }elsif (
                         $gfdlsections =~ m/
                             with \s \&FDLInvariantSections; \s? [,\.;]? \s?
                             with \s+\&FDLFrontCoverText; \s? [,\.;]? \s?
                             and \s with \s \&FDLBackCoverText;/xiso
-                      ) {
+                      ){
                         # fix #708957 about FDL entities in template
                         unless (
                             $name =~ m{
                                 /customization/[^/]+/entities/[^/]+\.docbook \Z
                               }xsm
-                          ) {
-                            tag 'license-problem-gfdl-invariants',$name;
+                          ){
+                            tag 'license-problem-gfdl-invariants', $name;
                             $licenseproblemhash{'gfdl-invariants'} = 1;
                         }
-                    } elsif (
+                    }elsif (
                         $gfdlsections =~ m{
                             \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
                             being \s list \s their \s titles \s?[,\.;]?\s?
@@ -758,13 +775,13 @@ sub license_check {
                             being \s list \s?[,\.;]?\s?
                             (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s?
                             being \s list \Z}xiso
-                      ) {
+                      ){
                         # fix a false positive in .po file
                         unless ($name =~ m,\.po$,) {
                             tag 'license-problem-gfdl-invariants', $name;
                             $licenseproblemhash{'gfdl-invariants'} = 1;
                         }
-                    } else {
+                    }else {
                         if (
                             $contextbefore =~ m/
                                   Following \s is \s an \s example
@@ -773,9 +790,9 @@ sub license_check {
                                       (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
                                     )?
                                   )? \s? [,:]? \Z/xiso
-                          ) {
+                          ){
                             # it is an example
-                        } else {
+                        }else {
                             tag 'license-problem-gfdl-invariants', $name;
                             $licenseproblemhash{'gfdl-invariants'} = 1;
                         }

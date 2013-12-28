@@ -15,9 +15,6 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       in package-installs-into-etc-rc.boot description.
       Thanks to Jakub Wilk (Closes: #729034).
 
-  * check/md5sums.{desc,pm}:
-    + [BR] Check non free/non distribuable files by using md5sums.
-
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
       file.
@@ -35,11 +32,11 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       Thanks to Gregor Herrmann for the bug report and patch
       (Closes: #732799).
 
+  * data/cruft/non-free-files:
+    + [BR] Add sRGB.icm to non free files (Closes: #699369).
+
   * data/files/privacy-breaker-website
     + [BR] Add w3c website valid x?html icons.
-
-  * data/md5sums/non-free-files:
-    + [BR] Add sRGB.icm to non free files (Closes: #699369).
 
   * data/rules/rules-should-not-use:
     + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).
