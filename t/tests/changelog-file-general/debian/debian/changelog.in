@@ -2,6 +2,7 @@
 
 
   * Test: {$testname}
+  * Upload to experimental.
   * improbable-bug-number-in-closes (Closes: #12)
   * Another bug closer without a colon (Closes #555555)
   * This line is too long since it contains words and words and words but doesn't

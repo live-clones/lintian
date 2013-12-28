@@ -342,6 +342,13 @@ Info: The latest entries in the Debian changelog file and NEWS.Debian file
  changelog information is canonical and the NEWS.Debian information is
  ignored, but it may be confusing to users to have them be different.
 
+Tag: bad-intended-distibution
+Severity: normal
+Certainty: wild-guess
+Experimental: yes
+Info: The last changelog entry is intended to be uploaded
+ to a particular distribution, whereas the changelog said otherwise.
+
 Tag: version-refers-to-distribution
 Severity: minor
 Certainty: certain

@@ -347,6 +347,23 @@ sub run {
         while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
             tag 'possible-missing-colon-in-closes', $1 if $1;
         }
+
+        # check for bad intented distribution
+        if (
+            $changes =~ /uploads? \s+ to \s+
+                            (?'intended'testing|unstable|experimental|sid)/xi
+          ){
+            my $intended = $+{intended};
+            if($intended eq 'sid') {
+                $intended = 'unstable';
+            }
+            my $uploaded = $entry->Distribution;
+            unless($uploaded eq $intended) {
+                tag 'bad-intended-distibution',
+                  "intended to $intended but uploaded to $uploaded";
+            }
+        }
+
         my $closes = $entry->Closes;
         for my $bug (@$closes) {
             tag 'improbable-bug-number-in-closes', $bug if ($bug < 100);

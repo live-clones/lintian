@@ -6,6 +6,10 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Detect non free rfc (Closes: #365213).
     + [BR] Check md5sums on source package.
 
+  * checks/changelog-file.{desc,pm}:
+    + [BR] Warn when an upload erroneously targetted at distribution that
+      is not intended (Closes: #661990).
+
   * checks/fields.{desc,pm}:
     + [BR] Increase severity of vcs-field-uses-not-recommended-uri-format
       (Closes: #670323).
