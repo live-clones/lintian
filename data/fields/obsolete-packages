@@ -62,6 +62,8 @@ default-jdk-builddep
 
 # Last seen in Wheezy
 fuse-utils
+ruby1.8
+libruby1.8
 
 # See: http://wiki.debian.org/Teams/DebianPerlGroup/OpenTasks/Transitions/DigestSHA1ToDigestSHA
 libdigest-sha1-perl
