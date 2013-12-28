@@ -25,6 +25,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Add a moreinfo field to obsolete path.
     + [BR] Fix non-conf-file-in-modprobe.d description
       (Closes: #729037).
+    + [BR] Check privacy breach only in regular file.
 
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules

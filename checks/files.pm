@@ -1827,6 +1827,11 @@ sub detect_privacy_breach {
     my ($info, $file) = @_;
     my %privacybreachhash = ();
 
+    # detect only in regular file
+    unless($file->is_regular_file) {
+        return;
+    }
+
     my $sfd = Lintian::SlidingWindow->new(
         '<',
         $info->unpacked($file),
