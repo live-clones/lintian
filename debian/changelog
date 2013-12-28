@@ -6,6 +6,10 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Detect non free rfc (Closes: #365213).
     + [BR] Check md5sums on source package.
 
+  * checks/fields.{desc,pm}:
+    + [BR] Increase severity of vcs-field-uses-not-recommended-uri-format
+      (Closes: #670323).
+
   * checks/files.{desc,pm}:
     + [BR] Add xz and zip to duplicated-compressed-file regexp.
     + [BR] Use Lintian::Data for compressed file extension.

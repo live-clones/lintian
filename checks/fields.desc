@@ -995,13 +995,15 @@ Info: This package is also provided by one of the Perl core packages
 Ref: policy 7.5
 
 Tag: vcs-field-uses-not-recommended-uri-format
-Severity: minor
+Severity: normal
 Certainty: possible
 Info: The VCS-* field uses an URI which doesn't match the recommended
  format, but still looks valid. Examples for not recommended URI formats
  are protocols that require authentication (like SSH). Instead where
  possible you should provide an URI that is accessible for everyone
  without authentication.
+ .
+ This renders debcheckout(1) unusable in these cases.
 
 Tag: vcs-field-uses-unknown-uri-format
 Severity: normal
