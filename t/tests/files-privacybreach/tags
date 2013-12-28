@@ -7,6 +7,8 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchi
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinloader.js
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwikvariant.html
+E: files-privacybreach: privacy-breach-statistics-website usr/share/htmlfragment/statcounter.xml
+E: files-privacybreach: privacy-breach-statistics-website usr/share/javascript/statcounter2.js
 E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacybreach/html/htmlvalid.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/applet.html 1984.os/trackme
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/div.html trackme.1984/index-2.html

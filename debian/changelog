@@ -53,9 +53,11 @@ lintian (2.5.21) UNRELEASED; urgency=medium
   * data/files/obsolete-paths:
     + [BR] Add /etc/X11/fonts/X11R7 as obsolete path (Closes: #646872).
 
-  * data/files/privacy-breaker-website
+  * data/files/privacy-breaker-{fragments,websites}
     + [BR] Add w3c website valid x?html icons.
     + [BR] Add piwik detection.
+    + [BR] Add detection of well known statistics websites.
+    
 
   * data/rules/rules-should-not-use:
     + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).

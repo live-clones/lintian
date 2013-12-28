@@ -42,11 +42,11 @@ my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
 
 my $PRIVACY_BREAKER_WEBSITES
   = Lintian::Data->new('files/privacy-breaker-websites',
-    qr/\s*\~\~/o,sub { return qr/$_[1]/ism });
+    qr/\s*\~\~/o,sub { return qr/$_[1]/xism });
 
 my $PRIVACY_BREAKER_FRAGMENTS
   = Lintian::Data->new('files/privacy-breaker-fragments',
-    qr/\s*\~\~/o,sub { return qr/$_[1]/ism });
+    qr/\s*\~\~/o,sub { return qr/$_[1]/xism });
 
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',

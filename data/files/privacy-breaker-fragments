@@ -1,10 +1,11 @@
 # Manually maintained table of well known privacy breakers html/js fragment
 # syntax:
-#   key ~~regex
+#   key ~~regex (xism)
 #
 # Note spaces on the right hand side of ~~ are assumed to be a part
 # of the regex.
 #
 # Please keep this sorted by tag.
-privacy-breach-google-adsense  ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchinTracker\s*\(\s*\)\s*;)
-privacy-breach-piwik           ~~(?:piwik_url\s*=|pkBaseURL\s*=|[\'"]piwik\.js[\'\"]|End\s+Piwik\h+(?:Tag|Code)|[\'\"]setTrackerUrl[\'\"])
+privacy-breach-google-adsense     ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchinTracker\s*\(\s*\)\s*;)
+privacy-breach-piwik              ~~(?:piwik_url\s*=|pkBaseURL\s*=|[\'"]piwik\.js[\'\"]|End\s+Piwik\h+(?:Tag|Code)|[\'\"]setTrackerUrl[\'\"])
+privacy-breach-statistics-website ~~(?:var\s+sc_project\s*=\s*\d+\s*;)
