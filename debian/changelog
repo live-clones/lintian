@@ -46,6 +46,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
   * data/cruft/non-free-files:
     + [BR] Add sRGB.icm to non free files (Closes: #699369).
     + [BR] Add a few non free font files (Closes: #298545).
+    + [BR] Add non free w3c valid icons.
 
   * data/fields/obsolete-packages:
     + [BR] Apply patch from Jonas Genannt to render obsolete ruby 1.8.
@@ -57,7 +58,6 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Add w3c website valid x?html icons.
     + [BR] Add piwik detection.
     + [BR] Add detection of well known statistics websites.
-    
 
   * data/rules/rules-should-not-use:
     + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).
