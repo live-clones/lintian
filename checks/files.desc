@@ -951,6 +951,15 @@ Info: This package creates a privacy breach by using Google Adsense.
  Google Adsense terms of use. This violation renders this package not
  distributable in Debian, and thus a serious bug.
 
+Tag: privacy-breach-piwik
+Severity: important
+Certainty: possible
+Info: This package creates a privacy breach by using piwik.
+ Piwik is a free and open source web analytics application.
+ .
+ Even if piwik is free and respect the "do not track" browser
+ option, it is nevertheless a breach on our user privacy.
+
 Tag: privacy-breach-w3c-valid-html
 Severity: serious
 Certainty: possible

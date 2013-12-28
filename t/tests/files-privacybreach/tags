@@ -5,6 +5,8 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/adsen
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchin.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinconstructor.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinloader.js
+E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwik.html
+E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwikvariant.html
 E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacybreach/html/htmlvalid.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/applet.html 1984.os/trackme
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/div.html trackme.1984/index-2.html
@@ -16,7 +18,6 @@ X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/htm
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/importcss.html trackme.css/track.css
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/input.html 1984.os/hiddentrackme.png
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/object.html 1984.os/hellotrackme.swf
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/piwik.html apps.sourceforge.net/piwik/matplotlib/piwik.php?idsite=1
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/source.html 1984.os/tracking.mp3
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/track.html 1984.os/notracking.vtt
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/video.html 1984.os/tuxistrackingme.ogg

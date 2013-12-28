@@ -7,3 +7,4 @@
 #
 # Please keep this sorted by tag.
 privacy-breach-google-adsense  ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchinTracker\s*\(\s*\)\s*;)
+privacy-breach-piwik           ~~(?:piwik_url\s*=|pkBaseURL\s*=|[\'"]piwik\.js[\'\"]|End\s+Piwik\h+(?:Tag|Code)|[\'\"]setTrackerUrl[\'\"])

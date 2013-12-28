@@ -55,6 +55,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   * data/files/privacy-breaker-website
     + [BR] Add w3c website valid x?html icons.
+    + [BR] Add piwik detection.
 
   * data/rules/rules-should-not-use:
     + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).

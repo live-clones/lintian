@@ -7,4 +7,5 @@
 #
 # Please keep this sorted by tag.
 privacy-breach-google-adsense	~~^(?:[^\./]+\.)?(?:googlesyndication\.com/pagead/show_ads\.js|google-analytics\.com/(?:ga|urchin)\.js)
+privacy-breach-piwik            ~~/piwik\.php\?
 privacy-breach-w3c-valid-html   ~~^(?:[^\./]+\.)?w3.org/Icons/valid-(?:[^/]+)?$
