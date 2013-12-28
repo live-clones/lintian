@@ -235,8 +235,14 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
     'files/obsolete-paths',
     qr/\s*\->\s*/,
     sub {
+        my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
+        if (scalar(@sliptline) != 2) {
+            fail 'Syntax error in files/obsolete-paths', $.;
+        }
+        my ($newdir, $moreinfo) =  @sliptline;
         return {
-            'newdir' => $_[1],
+            'newdir' => $newdir,
+            'moreinfo' => $moreinfo,
             'match' => qr/$_[0]/x,
             'olddir' => $_[0],
         };
@@ -402,8 +408,10 @@ sub run {
                   = $OBSOLETE_PATHS->value($obsolete_path)->{'olddir'};
                 my $newpath
                   = $OBSOLETE_PATHS->value($obsolete_path)->{'newdir'};
+                my $moreinfo
+                  = $OBSOLETE_PATHS->value($obsolete_path)->{'moreinfo'};
                 tag 'package-install-into-obsolete-dir',
-                  "$file : $oldpath -> $newpath";
+                  "$file : $oldpath -> $newpath (see also $moreinfo)";
             }
         }
 

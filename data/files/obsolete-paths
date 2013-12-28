@@ -1,2 +1,5 @@
-# obsolete path (regexp) -> newer path
-^etc/dhcp3/.+ -> etc/dhcp
+# obsolete path (regexp) -> newer path ~~ Reference
+#
+# Please alpha sort
+^etc/dhcp3/               -> etc/dhcp       ~~ http://bugs.debian.org/673029
+^etc/X11/fonts/X11R7/     -> etc/X11/fonts  ~~ http://bugs.debian.org/364530#24
