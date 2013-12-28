@@ -35,6 +35,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   * data/cruft/non-free-files:
     + [BR] Add sRGB.icm to non free files (Closes: #699369).
+    + [BR] Add a few non free font files (Closes: #298545).
 
   * data/files/obsolete-paths:
     + [BR] Add /etc/X11/fonts/X11R7 as obsolete path (Closes: #646872).
