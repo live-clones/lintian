@@ -1875,6 +1875,10 @@ sub detect_privacy_breach {
                     (?'tagattr'video)
                     (?&ba)
                     poster\s*=\s*(?'url'(?&loc))
+                  |
+                    (?'tagattr'link)
+                    (?&ba)
+                    href\s*=\s*(?'url'(?&loc))
                   )
                  [^>]*?
                  >

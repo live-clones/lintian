@@ -25,3 +25,4 @@ X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/htm
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/video.html 1984.os/tuxistrackingme.ogg
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/videoposter.html 1984.os/tuxistrackingme.ogg
 X: files-privacybreach: privacy-breach-generic usr/share/htmlfragment/externalimg.xml 1984.ow/bigbrotheriswatchingyou.png
+X: files-privacybreach: privacy-breach-generic usr/share/htmlfragment/link.xml 1984.org/style.css
