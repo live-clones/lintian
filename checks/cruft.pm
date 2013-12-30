@@ -64,7 +64,6 @@ my $NON_DISTRIBUABLE_FILES = Lintian::Data->new(
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {
-            # use not not to normalize boolean
             'sha1'   => $sha1,
             'sha256' => $sha256,
             'name'   => $name,
@@ -84,7 +83,6 @@ my $NON_FREE_FILES = Lintian::Data->new(
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {
-            # use not not to normalize boolean
             'sha1'   => $sha1,
             'sha256' => $sha256,
             'name'   => $name,
