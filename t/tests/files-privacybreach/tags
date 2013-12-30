@@ -6,6 +6,7 @@ E: files-privacybreach: privacy-breach-facebook usr/share/htmlfragment/facebookh
 E: files-privacybreach: privacy-breach-facebook usr/share/htmlfragment/facebookxfbmllike20130810.xml
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacybreach/html/adsense.html
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacybreach/html/adsenseonlyadds.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/htmlfragment/adsenseimagemagick.xml
 E: files-privacybreach: privacy-breach-google-adsense usr/share/htmlfragment/urchinfragment.xml
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/adsenseonlyvar.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchin.js
@@ -14,6 +15,7 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchi
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacybreach/html/googlecse.css
 E: files-privacybreach: privacy-breach-google-cse usr/share/htmlfragment/googlecse.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/htmlfragment/googlecseform.xml
+E: files-privacybreach: privacy-breach-google-cse usr/share/javascript/googlecseimagemagick.js
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwikvariant.html
 E: files-privacybreach: privacy-breach-statistics-website usr/share/htmlfragment/statcounter.xml
