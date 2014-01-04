@@ -506,23 +506,7 @@ sub find_cruft {
             }
             close($fd);
         }
-
-        # license string in debian/changelog are probably just changes
-        next ENTRY
-          if $name eq 'debian/changelog';
-
-        # Ignore these strings in d/README.{Debian,source}.  If they
-        # appear there it is probably just "file XXX got removed
-        # because of license Y".
-        next ENTRY
-          if $name eq 'debian/README.Debian'
-          or $name eq 'debian/README.source';
-
-        $path = $info->unpacked($entry);
-
-        # test license problem is source file (only text file)
-        next ENTRY unless -T $path;
-        license_check($info, $name, $path);
+        license_check($info, $name, $info->unpacked($entry));
     }
     return;
 }
@@ -532,6 +516,21 @@ sub find_cruft {
 # and is only used for autoreject by ftp-master
 sub license_check {
     my ($info, $name, $path) = @_;
+
+    # license string in debian/changelog are probably just change
+    # Ignore these strings in d/README.{Debian,source}.  If they
+    # appear there it is probably just "file XXX got removed
+    # because of license Y".
+    if (   $name eq 'debian/changelog'
+        or $name eq 'debian/README.Debian'
+        or $name eq 'debian/README.source') {
+        return;
+    }
+
+    # allow to check only text file
+    unless(-T $path) {
+        return;
+    }
 
     my $sfd = Lintian::SlidingWindow->new('<', $path, sub { $_ = lc($_); });
     my %licenseproblemhash = ();
