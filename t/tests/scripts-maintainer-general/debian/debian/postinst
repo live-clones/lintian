@@ -155,4 +155,10 @@ adduser --system bar --home /var/lib/bar
 # service
 service apache2 start
 
+# adduser through variable
+DEVNULL=/dev/null
+adduser --system bar1 --home $DEVNULL
+adduser --system bar2 --home ${DEVNULL}
+
+
 #DEBHELPER#
