@@ -432,6 +432,14 @@ Info: The source tarball contains a prebuilt ELF object.  They are usually
  directory first.  You may want to report this as an upstream bug, in case
  there is no sign that this was intended.
 
+Tag: source-contains-prebuilt-java-object
+Severity: pedantic
+Certainty: possible
+Info: The source tarball contains a prebuilt java object.  They are usually
+ left by mistake when generating the tarball by not cleaning the source
+ directory first.  You may want to report this as an upstream bug, in case
+ there is no sign that this was intended.
+
 Tag: source-contains-prebuilt-windows-binary
 Severity: pedantic
 Certainty: certain

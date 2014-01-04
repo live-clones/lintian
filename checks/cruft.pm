@@ -433,7 +433,11 @@ sub find_cruft {
         }elsif (
             $file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/){
             tag 'source-contains-prebuilt-windows-binary', $name;
-        }elsif ($basename =~ /\bwaf$/) {
+        } elsif ($file_info =~ m/^Zip archive data/) {
+            if ($name =~ m/\.jar$/i) {
+                tag 'source-contains-prebuilt-java-object', $name;
+            }
+        } elsif ($basename =~ /\bwaf$/) {
             my $path   = $info->unpacked($entry);
             my $marker = 0;
             open(my $fd, '<', $path);
