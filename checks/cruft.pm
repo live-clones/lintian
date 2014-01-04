@@ -441,7 +441,10 @@ sub find_cruft {
                     tag 'source-contains-prebuilt-silverlight-object', $name;
                 }
             }
-        } elsif ($basename =~ /\bwaf$/) {
+        } elsif ($file_info =~ /^Macromedia Flash/) {
+            tag 'source-contains-prebuilt-flash-object', $name;
+        }
+        elsif ($basename =~ /\bwaf$/) {
             my $path   = $info->unpacked($entry);
             my $marker = 0;
             open(my $fd, '<', $path);

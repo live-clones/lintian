@@ -16,6 +16,7 @@ Test-For:
  source-contains-git-control-dir
  source-contains-hg-control-dir
  source-contains-hg-tags-file
+ source-contains-prebuilt-flash-object
  source-contains-prebuilt-java-object
  source-contains-prebuilt-silverlight-object
  source-contains-prebuilt-windows-binary

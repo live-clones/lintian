@@ -34,3 +34,5 @@ echo 'configure-generated-file-in-source' > "${dir}/config.cache"
 printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3c" > "${dir}/fake-win32-bin.exe"
 printf "PK\003\004" > "${dir}/fake.jar"
 printf "PK\003\004" > "${dir}/fakesilverlight.xac"
+printf "CWS\011" > "${dir}/fakeflash.swf"
+

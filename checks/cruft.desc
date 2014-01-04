@@ -432,6 +432,17 @@ Info: The source tarball contains a prebuilt ELF object.  They are usually
  directory first.  You may want to report this as an upstream bug, in case
  there is no sign that this was intended.
 
+Tag: source-contains-prebuilt-flash-object
+Severity: pedantic
+Certainty: possible
+Info: The source tarball contains a prebuilt flash object.  They are usually
+ left by mistake when generating the tarball by not cleaning the source
+ directory first.  You may want to report this as an upstream bug, in case
+ there is no sign that this was intended. An exception is multimedia files.
+ .
+ Please also ensure that flash object is under the preferred form 
+ of modification.
+
 Tag: source-contains-prebuilt-java-object
 Severity: pedantic
 Certainty: possible
