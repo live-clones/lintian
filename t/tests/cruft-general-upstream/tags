@@ -1,3 +1,4 @@
+E: cruft-general-upstream source: source-contains-prebuilt-silverlight-object fakesilverlight.xac
 P: cruft-general-upstream source: debian-watch-may-check-gpg-signature
 P: cruft-general-upstream source: source-contains-arch-control-dir {arch}
 P: cruft-general-upstream source: source-contains-arch-inventory-file .arch-inventory

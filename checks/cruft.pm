@@ -436,6 +436,10 @@ sub find_cruft {
         } elsif ($file_info =~ m/^Zip archive data/) {
             if ($name =~ m/\.jar$/i) {
                 tag 'source-contains-prebuilt-java-object', $name;
+            } elsif ($name =~ m/\.xac$/i) {
+                unless ($info->is_non_free) {
+                    tag 'source-contains-prebuilt-silverlight-object', $name;
+                }
             }
         } elsif ($basename =~ /\bwaf$/) {
             my $path   = $info->unpacked($entry);

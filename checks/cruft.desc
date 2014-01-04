@@ -440,6 +440,13 @@ Info: The source tarball contains a prebuilt java object.  They are usually
  directory first.  You may want to report this as an upstream bug, in case
  there is no sign that this was intended.
 
+Tag: source-contains-prebuilt-silverlight-object
+Severity: serious
+Certainty: possible
+Info: The source tarball contains a prebuilt silverlight object.
+ This file are not buildable under debian and need non free
+ dependencies. This must be completely removed.
+
 Tag: source-contains-prebuilt-windows-binary
 Severity: pedantic
 Certainty: certain
