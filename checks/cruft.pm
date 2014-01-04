@@ -406,22 +406,22 @@ sub find_cruft {
         # check non free file
         my $md5sum = $info->md5sums->{$name};
         if ($NON_DISTRIBUABLE_FILES->known($md5sum)) {
-            my $name   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'name'};
+            my $usualname   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'name'};
             my $reason = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'reason'};
             my $link   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'link'};
             tag 'license-problem-md5sum-non-distribuable-file', $name,
-              "usual name is $name.", "$reason", "See also $link.";
+              "usual name is $usualname.", "$reason", "See also $link.";
 
             # should be stripped so pass other test
             next ENTRY;
         }
         unless ($info->is_non_free) {
             if ($NON_FREE_FILES->known($md5sum)) {
-                my $name   = $NON_FREE_FILES->value($md5sum)->{'name'};
+                my $usualname   = $NON_FREE_FILES->value($md5sum)->{'name'};
                 my $reason = $NON_FREE_FILES->value($md5sum)->{'reason'};
                 my $link   = $NON_FREE_FILES->value($md5sum)->{'link'};
                 tag 'license-problem-md5sum-non-free-file', $name,
-                  "usual name is $name.", "$reason",
+                  "usual name is $usualname.", "$reason",
                   "See also $link.";
             }
         }
