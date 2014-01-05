@@ -50,6 +50,7 @@ our $EXCLUDE =join(
       ^maintainer-script-removes-device-files$
       ^suidregister-used-in-maintainer-script$
       ^debian-rules-should-not-.*$
+      ^source-contains-prebuilt-.*$
       ));
 
 # Exclude "lintian.desc" as it does not have a perl module like other

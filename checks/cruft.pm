@@ -91,6 +91,28 @@ my $NON_FREE_FILES = Lintian::Data->new(
         };
     });
 
+# prebuilt-file or forbidden file type
+my $WARN_FILE_TYPE =  Lintian::Data->new(
+    'cruft/warn-file-type',
+    qr/\s*\~\~\s*/,
+    sub {
+        my @sliptline = split(/\s*\~\~\s*/, $_[1], 2);
+        unless (scalar(@sliptline) == 1 or scalar(@sliptline) == 2) {
+            fail 'Syntax error in cruft/warn-file-type', $.;
+        }
+        my ($regtype, $regname) = @sliptline;
+
+        # allow empty regname
+        $regname = defined($regname) ? strip($regname) : '';
+        if (length($regname) == 0) {
+            $regname = '.*';
+        }
+        return {
+            'regtype'   => qr/$regtype/x,
+            'regname' => qr/$regname/x,
+        };
+    });
+
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
 our %ERRORS = (
@@ -428,31 +450,19 @@ sub find_cruft {
 
         $file_info = $info->file_info($name);
 
-        if ($file_info =~ m/\bELF\b/) {
-            tag 'source-contains-prebuilt-binary', $name;
-        }elsif (
-            $file_info =~ m/\b(?:PE(?:32|64)|(?:MS-DOS|COFF) executable)\b/){
-            tag 'source-contains-prebuilt-windows-binary', $name;
-        } elsif ($file_info =~ m/^Zip archive data/) {
-            if ($name =~ m/\.jar$/i) {
-                tag 'source-contains-prebuilt-java-object', $name;
-            } elsif ($name =~ m/\.xac$/i) {
-                unless ($info->is_non_free) {
-                    tag 'source-contains-prebuilt-silverlight-object', $name;
+        # warn by file type
+        foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
+            my $regtype = $WARN_FILE_TYPE->value($tag_filetype)->{'regtype'};
+            my $regname = $WARN_FILE_TYPE->value($tag_filetype)->{'regname'};
+            if($file_info =~ m{$regtype}) {
+                if($name =~ m{$regname}) {
+                    tag $tag_filetype, $name;
                 }
             }
-        } elsif ($file_info =~ /^Macromedia Flash/) {
-            tag 'source-contains-prebuilt-flash-object', $name;
-        } elsif ($file_info =~ /^Composite Document File/) {
-            if ($name =~ m/\.fla$/i) {
-                tag 'source-contains-prebuilt-flash-object', $name;
-            }
-            # [BR] believe that is clever but it will get office document
-            # else {
-            #    tag 'source-contains-prebuilt-windows-binary', $name;
-            #}
         }
-        elsif ($basename =~ /\bwaf$/) {
+
+        # waf is not allowed
+        if ($basename =~ /\bwaf$/) {
             my $path   = $info->unpacked($entry);
             my $marker = 0;
             open(my $fd, '<', $path);
