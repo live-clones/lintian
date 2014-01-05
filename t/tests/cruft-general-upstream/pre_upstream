@@ -38,6 +38,7 @@ printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 printf "PK\003\004" > "${dir}/fake.jar"
 printf "PK\003\004" > "${dir}/fakesilverlight.XAC"
 printf "CWS\011" > "${dir}/fakeflash.swf"
+echo '//comment' > "${dir}/fake.min.js"
 
 # need to pad
 printf "\320\317\021\340\241\261\032\341" > "${dir}/fakefla.fla"

@@ -54,6 +54,10 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Add a few non free font files (Closes: #298545).
     + [BR] Add non free w3c valid icons.
 
+  * data/cruft/warn-file-type:
+    + [BR] Add this file.
+    + [BR] Detect minified javascript (by extension).
+
   * data/fields/obsolete-packages:
     + [BR] Apply patch from Jonas Genannt to render obsolete ruby 1.8.
 

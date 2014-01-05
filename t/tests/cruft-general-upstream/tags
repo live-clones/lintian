@@ -1,4 +1,4 @@
-E: cruft-general-upstream source: source-contains-prebuilt-silverlight-object fakesilverlight.xac
+E: cruft-general-upstream source: source-contains-prebuilt-silverlight-object fakesilverlight.XAC
 P: cruft-general-upstream source: debian-watch-may-check-gpg-signature
 P: cruft-general-upstream source: source-contains-arch-control-dir {arch}
 P: cruft-general-upstream source: source-contains-arch-inventory-file .arch-inventory
@@ -9,9 +9,10 @@ P: cruft-general-upstream source: source-contains-cvs-control-dir CVS
 P: cruft-general-upstream source: source-contains-git-control-dir .git
 P: cruft-general-upstream source: source-contains-hg-control-dir .hg
 P: cruft-general-upstream source: source-contains-hg-tags-file .hgtags
-P: cruft-general-upstream source: source-contains-prebuilt-flash-object fakefla.fla
 P: cruft-general-upstream source: source-contains-prebuilt-flash-object fakeflash.swf
+P: cruft-general-upstream source: source-contains-prebuilt-flash-project fakefla.fla
 P: cruft-general-upstream source: source-contains-prebuilt-java-object fake.jar
+P: cruft-general-upstream source: source-contains-prebuilt-javascript-object fake.min.js
 P: cruft-general-upstream source: source-contains-prebuilt-windows-binary fake-win32-bin.exe
 P: cruft-general-upstream source: source-contains-svk-commit-file svk-commit444.tmp
 P: cruft-general-upstream source: source-contains-svn-commit-file svn-commit.tmp
