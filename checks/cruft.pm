@@ -443,6 +443,14 @@ sub find_cruft {
             }
         } elsif ($file_info =~ /^Macromedia Flash/) {
             tag 'source-contains-prebuilt-flash-object', $name;
+        } elsif ($file_info =~ /^Composite Document File/) {
+            if ($name =~ m/\.fla$/i) {
+                tag 'source-contains-prebuilt-flash-object', $name;
+            }
+            # [BR] believe that is clever but it will get office document
+            # else {
+            #    tag 'source-contains-prebuilt-windows-binary', $name;
+            #}
         }
         elsif ($basename =~ /\bwaf$/) {
             my $path   = $info->unpacked($entry);

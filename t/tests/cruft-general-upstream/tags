@@ -9,6 +9,7 @@ P: cruft-general-upstream source: source-contains-cvs-control-dir CVS
 P: cruft-general-upstream source: source-contains-git-control-dir .git
 P: cruft-general-upstream source: source-contains-hg-control-dir .hg
 P: cruft-general-upstream source: source-contains-hg-tags-file .hgtags
+P: cruft-general-upstream source: source-contains-prebuilt-flash-object fakefla.fla
 P: cruft-general-upstream source: source-contains-prebuilt-flash-object fakeflash.swf
 P: cruft-general-upstream source: source-contains-prebuilt-java-object fake.jar
 P: cruft-general-upstream source: source-contains-prebuilt-windows-binary fake-win32-bin.exe

@@ -7,6 +7,9 @@
 set -e
 dir="$1"
 
+
+EMPTY_OLE_OBJECT='\320\317\021\340\241\261\032\341'
+
 mkdir "${dir}/CVS"
 echo 'source-contains-cvs-control-dir' > "${dir}/CVS/Entries"
 mkdir "${dir}/.svn"
@@ -35,4 +38,8 @@ printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 printf "PK\003\004" > "${dir}/fake.jar"
 printf "PK\003\004" > "${dir}/fakesilverlight.xac"
 printf "CWS\011" > "${dir}/fakeflash.swf"
+
+# need to pad
+printf "\320\317\021\340\241\261\032\341" > "${dir}/fakefla.fla"
+dd if=/dev/zero of="${dir}/fakefla.fla" count=1 bs=1 seek=2047 > /dev/null 2> /dev/null
 
