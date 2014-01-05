@@ -440,7 +440,7 @@ Info: The source tarball contains a prebuilt flash object.  They are usually
  directory first.  You may want to report this as an upstream bug, in case
  there is no sign that this was intended. An exception is multimedia files.
  .
- Please also ensure that flash object is under the preferred form 
+ Please also ensure that flash object is under the preferred form
  of modification.
 
 Tag: source-contains-prebuilt-java-object
