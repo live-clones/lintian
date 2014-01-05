@@ -57,6 +57,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
   * data/cruft/warn-file-type:
     + [BR] Add this file.
     + [BR] Detect minified javascript (by extension).
+    + [BR] Detect python prebuilt object (Closes: #734280).
 
   * data/fields/obsolete-packages:
     + [BR] Apply patch from Jonas Genannt to render obsolete ruby 1.8.

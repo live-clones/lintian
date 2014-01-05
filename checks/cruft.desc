@@ -467,6 +467,14 @@ Info: The source tarball contains a prebuilt javascript object.  They are
  source directory first.  You may want to report this as an upstream bug,
  in case there is no sign that this was intended.
 
+Tag: source-contains-prebuilt-python-object
+Severity: pedantic
+Certainty: possible
+Info: The source tarball contains a prebuilt python object.  They are
+ usually left by mistake when generating the tarball by not cleaning the
+ source directory first.  You may want to report this as an upstream bug,
+ in case there is no sign that this was intended.
+
 Tag: source-contains-prebuilt-silverlight-object
 Severity: serious
 Certainty: possible

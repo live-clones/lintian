@@ -19,6 +19,7 @@ Test-For:
  source-contains-prebuilt-flash-object
  source-contains-prebuilt-java-object
  source-contains-prebuilt-javascript-object
+ source-contains-prebuilt-python-object
  source-contains-prebuilt-silverlight-object
  source-contains-prebuilt-windows-binary
  source-contains-svk-commit-file
