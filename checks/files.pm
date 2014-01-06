@@ -53,12 +53,11 @@ my $COMPRESS_FILE_EXTENSIONS
     qr/\s++/,sub { return qr/\Q$_[0]\E/ });
 
 # an OR (|) regex of all compressed extension
-my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/$_[0]/ }
+my $COMPRESS_FILE_EXTENSIONS_OR_ALL = sub { qr/(:?$_[0])/ }
   ->(
-    join(
-        '|',
-        map($COMPRESS_FILE_EXTENSIONS->value($_),
-            $COMPRESS_FILE_EXTENSIONS->all)));
+    join('|',
+        map {$COMPRESS_FILE_EXTENSIONS->value($_) }
+          $COMPRESS_FILE_EXTENSIONS->all));
 
 # see tag duplicated-compressed-file
 my $DUPLICATED_COMPRESSED_FILE_REGEX
@@ -79,8 +78,8 @@ my $VCS_FILES = Lintian::Data->new(
     });
 
 # an OR (|) regex of all vcs files
-my $VCS_FILES_OR_ALL = sub { qr/$_[0]/ }
-  ->(join('|',map($VCS_FILES->value($_),$VCS_FILES->all)));
+my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
+  ->(join('|', map { $VCS_FILES->value($_) } $VCS_FILES->all));
 
 # A list of known packaged Javascript libraries
 # and the packages providing them

@@ -609,10 +609,10 @@ Info:  The maintainer script apparently runs 'adduser --system'
  but hardcodes a path under '/home' for the '--home' option or
  do not use the '--home' option.
  .
- The FHS says: <q>/home is a fairly standard concept, but it
+ The FHS says: /home is a fairly standard concept, but it
  is clearly a site-specific filesystem. The setup will differ
  from host to host. Therefore, no program should rely on this
- location.</q>
+ location.
 Ref: fhs homeuserhomedirectories
 
 Tag: maintainer-script-empty

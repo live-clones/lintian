@@ -30,7 +30,8 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       (Closes: #729037).
     + [BR] Check privacy breach only in regular file.
     + [BR] Add link tag as potential privacy breaker.
-    + [BR] Add <div data-href="http://website" to potential privacy breaker.
+    + [BR] Add <div data-href="http://website" to potential privacy 
+      breaker.
 
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
@@ -65,7 +66,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
   * data/files/obsolete-paths:
     + [BR] Add /etc/X11/fonts/X11R7 as obsolete path (Closes: #646872).
 
-  * data/files/privacy-breaker-{fragments,websites}
+  * data/files/privacy-breaker-{fragments,websites}:
     + [BR] Add w3c website valid x?html icons.
     + [BR] Add piwik detection.
     + [BR] Add detection of well known statistics websites.
