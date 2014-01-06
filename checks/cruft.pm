@@ -428,7 +428,7 @@ sub find_cruft {
         # check non free file
         my $md5sum = $info->md5sums->{$name};
         if ($NON_DISTRIBUTABLE_FILES->known($md5sum)) {
-            my $usualname   = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'name'};
+            my $usualname= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'name'};
             my $reason = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'reason'};
             my $link   = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'link'};
             tag 'license-problem-md5sum-non-distributable-file', $name,

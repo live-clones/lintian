@@ -244,7 +244,6 @@ sub md5sums {
     return $result;
 }
 
-
 =item index (FILE)
 
 Returns a L<path object|Lintian::Path> to FILE in the package.  FILE
