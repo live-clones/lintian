@@ -46,7 +46,7 @@ sub collect {
         fail => 'error'
     );
 
-    spawn(\%opts, ['xargs', '-0r', 'md5sum']);
+    spawn(\%opts, ['xargs', '-0r', 'md5sum','--']);
     $opts{pipe_in}->blocking(1);
 
     foreach my $file ($info->sorted_index) {
