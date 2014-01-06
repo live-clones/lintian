@@ -28,6 +28,7 @@ use warnings;
 use autodie;
 use v5.10;
 use feature qw(switch);
+use Carp qw(croak confess);
 
 use Cwd();
 use File::Find;
@@ -42,6 +43,7 @@ use Lintian::Relation ();
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail is_ancestor_of normalize_pkg_path strip);
 use Lintian::SlidingWindow;
+
 
 # All the packages that may provide config.{sub,guess} during the build, used
 # to suppress warnings about outdated autotools helper files.  I'm not

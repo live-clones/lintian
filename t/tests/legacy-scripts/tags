@@ -4,6 +4,7 @@ E: scripts source: dpatch-index-references-non-existent-patch 01_some_other_patc
 E: scripts source: missing-build-dependency debhelper
 E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: copyright-file-lacks-pointer-to-perl-license
+E: scripts: depends-on-obsolete-package depends: ruby1.8
 E: scripts: duplicate-updaterc.d-calls-in-postrm lsb-other
 E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-broken force-reload
 E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-broken restart

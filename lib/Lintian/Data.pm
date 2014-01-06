@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Carp qw(croak);
+use Carp qw(croak confess);
 
 use Lintian::Util qw(strip);
 
@@ -211,6 +211,9 @@ sub _force_promise {
 # Query a data object for whether a particular keyword is valid.
 sub known {
     my ($self, $keyword) = @_;
+    if(!defined($keyword)) {
+        confess "keywork in not defined";
+    }
     $self->_force_promise unless exists $self->{data};
     return (exists $self->{data}{$keyword}) ? 1 : undef;
 }
