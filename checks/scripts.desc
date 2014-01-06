@@ -473,12 +473,13 @@ Ref: policy F, update-alternatives(8)
 Tag: maintainer-script-should-not-use-update-alternatives-set
 Severity: normal
 Certainty: certain
-Info: <tt>update-alternatives --set &lt;alternative&gt; foo</tt> or
- <tt>update-alternatives --config &lt;alternative&gt;</tt> or
- <tt>update-alternatives --set-selections</tt>
- called in maitainer script. Thus it's impossible to distinguish
- between an alternative that's manually set because the user set it,
- vs. one that's manually set because the package set it.
+Info: The maintainer script calls <tt>update-alternatives --set
+ &lt;alternative&gt; foo</tt> or <tt>update-alternatives --config
+ &lt;alternative&gt;</tt> or <tt>update-alternatives --set-selections</tt>.
+ .
+ This makes it impossible to distinguish between an alternative that's
+ manually set because the user set it and one that's manually set because
+ the package set it.
 Ref: update-alternatives(8)
 
 Tag: maintainer-script-should-not-use-deprecated-chown-usage
@@ -597,19 +598,21 @@ Tag: maintainer-script-should-not-use-service
 Severity: important
 Certainty: certain
 Experimental: yes
-Info: The maintainer script apparently runs service command.
+Info: The maintainer script apparently runs the service command.
  This command is reserved for local
  administrators and must never be used by a Debian package.
 
 Tag: maintainer-script-should-not-use-adduser-system-without-home
 Severity: serious
 Certainty: certain
-Info: The maintainer script apparently runs adduser --system
- without specifying --home option outside /home/.
- The FHS says "/home is a fairly standard concept, but it
+Info:  The maintainer script apparently runs 'adduser --system'
+ but hardcodes a path under '/home' for the '--home' option or
+ do not use the '--home' option.
+ .
+ The FHS says: <q>/home is a fairly standard concept, but it
  is clearly a site-specific filesystem. The setup will differ
  from host to host. Therefore, no program should rely on this
- location."
+ location.</q>
 Ref: fhs homeuserhomedirectories
 
 Tag: maintainer-script-empty

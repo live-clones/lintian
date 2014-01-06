@@ -143,29 +143,27 @@ Severity: pedantic
 Certainty: certain
 Ref: uscan(1)
 Info: This watch file does not include a means to verify
- the upstream tar using cryptographic signature.
+ the upstream tarball using cryptographic signature.
  .
- If upstream distributions provide such signatures please
- use the pgpsigurlmangle options in this watch file
- opts= to generate the upstream URL of an GPG signature.
+ If upstream distributions provide such signatures, please
+ use the pgpsigurlmangle options in this watch file's
+ opts= to generate the URL of an upstream GPG signature.
  This signature is automatically downloaded and verified
  against a keyring stored in debian/upstream-signing-key.pgp
  .
- Of course, not all upstream distributions provide such
- signatures but you could try to request such signatures
- from upstream and thus verifying that not a third party
- modified the code after the release against the will
- of upstream. We all know the phpmyadmin, unrealircd
- or proftpd security bugs (only to mention some of
- them). This would at least make it a lot harder for an
- attacker to get such code to a wider audience through
- distributions like Debian.
+ Of course, not all upstreams provide such signatures, but
+ you could request them as a way of verifying that no third
+ party has modified the code against their wishes after the
+ release. We have all heard of the phpmyadmin, unrealircd, or
+ proftpd security bugs (to mention only a few). This would at
+ least make it a lot harder for an attacker to get such code
+ to a wider audience via distributions like Debian.
 
 Tag: debian-watch-file-pubkey-file-is-missing
 Severity: important
 Certainty: certain
 Ref: uscan(1)
-Info: This watch file verify cryptographic signature but
+Info: This watch file verifies a cryptographic signature but
  the upstream public key is missing.
  .
  Please add upstream public keys in debian/upstream-signing-key.pgp.

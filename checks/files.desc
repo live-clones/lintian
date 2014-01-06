@@ -36,7 +36,7 @@ Info: This file is reserved by a specific package.  Please email the
 Tag: FSSTND-dir-in-usr
 Severity: serious
 Certainty: certain
-Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.  
+Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
  .
  Instead, the Filesystem Hierarchy Standard (FHS), version 2.3, is
  used. You can find it in /usr/share/doc/debian-policy/fhs/ .
@@ -45,7 +45,7 @@ Ref: policy 9.1.1
 Tag: FSSTND-dir-in-var
 Severity: serious
 Certainty: certain
-Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.  
+Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
  .
  Instead, the Filesystem Hierarchy Standard (FHS), version 2.3, is
  used. You can find it in /usr/share/doc/debian-policy/fhs/ .
@@ -76,8 +76,8 @@ Ref: policy 9.3.4
 Tag: package-install-into-obsolete-dir
 Severity: normal
 Certainty: certain
-Info: The package installs files in an obsolete dir. You
- should consider to move to newer path.
+Info: The package installs files to an obsolete directory.
+ Please use a newer path.
 
 Tag: non-standard-file-permissions-for-etc-init.d-script
 Severity: important
@@ -784,7 +784,7 @@ Severity: normal
 Certainty: certain
 Ref: policy 8.4
 Info: Ada Library Information (*.ali) files are required to be read-only
- (mode 0444) by GNAT. 
+ (mode 0444) by GNAT.
  .
  If at least one user can write the *.ali file, GNAT considers whether
  or not to recompile the corresponding source file.  Such recompilation
@@ -797,8 +797,8 @@ Severity: normal
 Certainty: certain
 Info: package contains a README.(platform) file that contains instructions
  specific to a platform or distribution other than Debian and thus can
- most likely be removed.  If it contains information that pertains to 
- Debian, please consider renaming it, or including it in an already 
+ most likely be removed.  If it contains information that pertains to
+ Debian, please consider renaming it, or including it in an already
  existing README file.
 
 Tag: desktop-file-in-wrong-dir
@@ -932,100 +932,105 @@ Tag: privacy-breach-generic
 Severity: important
 Certainty: wild-guess
 Experimental: yes
-Info: This package creates a privacy breach by fetching some data from
- an external website. Please remove these scripts or external html
- resources.
+Info: This package creates a potential privacy breach by fetching data
+ from an external website at runtime. Please remove these scripts or
+ external HTML resources.
 
 Tag: privacy-breach-google-adsense
 Severity: serious
 Certainty: possible
-Info: This package creates a privacy breach by using Google Adsense.
- Google Adsense is a service run by Google that allows publishers of web
- sites to automatically serve advertisements. Unfortunately, it requires
- tracking and breaching privacy of our users.
+Info: This package creates a privacy breach by using Google AdSense.
+ Google AdSense is a service run by Google that allows publishers
+ of websites to automatically serve advertisements. Unfortunately, it
+ requires tracking and breaching the privacy of web users.
  .
- This tag can also indicate the use of related obsolete privacy breaker
- software, Urchin WebAnalytics.
+ This tag can also indicate the use of the related obsolete privacy
+ breaching software, Urchin WebAnalytics.
  .
- Note that using Google Adsense in a local copy of a page is a violation of
- Google Adsense terms of use. This violation renders this package not
- distributable in Debian, and thus a serious bug.
+ Note that using Google AdSense in a local copy of a page is a violation of
+ the Google AdSense terms of use. This violation renders this package not
+ distributable in Debian, and is thus a serious bug.
 
 Tag: privacy-breach-donation
 Severity: serious
 Certainty: possible
 Ref: https://wiki.debian.org/UpstreamMetadata
-Info: This package create a privacy breach by fetching some data from
- a donation website.
+Info: This package create a potential privacy breach by fetching data
+ from a donation website at runtime.
  .
- Please remove these privacy problem and add a note on debian/upstream
- file using the donation field.
+ Please remove this privacy problem and add a note to the
+ debian/upstream file using the donation field.
 
 Tag: privacy-breach-logo
 Severity: serious
 Certainty: possible
-Info: This package phone home by retrieving some logo.
+Info: This package creates a potential privacy breach by fetching a
+ logo at runtime.
  .
- Before using a local copy you should be sure that the corresponding
- logo is suitable for main. Ask debian-legal for advices.
+ Before using a local copy you should check that the logo is suitable
+ for main. Ask debian-legal for advice.
 
 Tag: privacy-breach-facebook
 Severity: serious
 Certainty: possible
-Info: This package create a privacy breach by fetching some data from
-  facebook like share or like buttons.
-  Please remove these scripts or frames.
+Info:  This package creates a privacy breach by exchanging data with
+ Facebook at runtime via plugins such as "Share" or "Like" buttons.
+ .
+ Please remove these scripts or frames.
 
 Tag: privacy-breach-google-cse
 Severity: serious
 Certainty: possible
-Info: This package create a privacy breach by fetching some data from
- google search engine and feed some private data to google. 
+Info: This package creates a potential privacy breach by fetching
+ data from Google at runtime, and may feed private data to Google via
+ Custom Search Engine queries.
+ .
  Please remove these scripts.
 
 Tag: privacy-breach-piwik
 Severity: serious
 Certainty: possible
-Info: This package creates a privacy breach by using piwik.
- Piwik is a free and open source web analytics application.
+Info: This package creates a privacy breach by using Piwik.
+ Piwik is a free and open source web analytics application, designed to
+ allow publishers of websites to track visitors.
  .
- Even if piwik is free and respect the "do not track" browser
- option, it is nevertheless a breach on our user privacy.
+ Even though Piwik is free and respects the "Do Not Track" browser
+ option, it is nevertheless a breach of the privacy of web users.
 
 Tag: privacy-breach-statistics-website
 Severity: important
 Certainty: possible
-Info: This package creates a privacy breach by fetching some
- data from external website in order to made visitor statistics.
+Info: This package creates a privacy breach by fetching data from
+ an external website in order to compile visitor statistics.
  .
- Please remove these scripts from the local copy of the page.
+ Please remove these scripts.
  .
- Please ask upstream to use free software piwik that respect
- "do not track" browser option.
+ Please ask upstream to use the free software web analytics engine
+ Piwik, which respects the "Do Not Track" browser option.
  .
- This tag include the following website:
- - cruel-carlota.pagodabox.com
- - linkexchange.com (defunct)
- - nedstatbasic.net
- - statcounter.com
- - sitemeter.com
- - webstats.motigo.com
+ This tag covers the following websites:
+ * cruel-carlota.pagodabox.com
+ * linkexchange.com (defunct)
+ * nedstatbasic.net
+ * statcounter.com
+ * sitemeter.com
+ * webstats.motigo.com
 
 Tag: privacy-breach-w3c-valid-html
 Severity: serious
 Certainty: possible
 Ref: http://validator.w3.org/docs/help.html#icon,
      http://www.w3.org/Consortium/Legal/logo-usage-20000308
-Info: This package creates a privacy breach by w3c valid documents icons.
+Info: This package creates a potential privacy breach by fetching W3C
+ validation icons.
  .
- To show readers that one has taken some care to create an interoperable
- Web page, a "W3C valid" badge may be displayed on any page that validates.
+ These badges may be displayed to tell readers that care has been
+ taken to make a page compliant with W3C standards. Unfortunately,
+ downloading the image from www.w3.org might expose the reader's IP
+ address to potential tracking.
  .
- Unfortunatly it means phoning home and download image from w3c website,
- and thus allowing to track users.
- .
- Note that these icons are non free and must not be copied
- inside the package. You could safely delete this "W3C valid" badge.
+ Note that these icons are non-free and must not be copied into the
+ package. You could safely delete this W3C validation badge.
 
 Tag: embedded-feedparser-library
 Severity: normal
@@ -1404,13 +1409,13 @@ Info: The gzip file contains a timestamp that will differ between
 Tag: pkg-config-multi-arch-wrong-dir
 Severity: important
 Certainty: possible
-Info: The arch all pkg-config file contains reference to an multi-arch path.
+Info: The arch all pkg-config file contains a reference to a multi-arch path.
  .
  This can be usually be fixed by moving this file to a multi-arch path.
  .
  Another likely cause is using debhelper 9 or newer (thus enabling
- multi-arch paths by default) on a non multi-arched package.
- The usual cure is in this case to render your package multi-arch.
+ multi-arch paths by default) on a package without multi-arch support.
+ The usual cure in this case is to update it for multi-arch.
 
 Tag: dir-or-file-in-home
 Severity: serious

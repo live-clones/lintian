@@ -54,13 +54,13 @@ our $AUTOTOOLS = Lintian::Relation->new(
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
 # forbidden files
-my $NON_DISTRIBUABLE_FILES = Lintian::Data->new(
-    'cruft/non-distribuable-files',
+my $NON_DISTRIBUTABLE_FILES = Lintian::Data->new(
+    'cruft/non-distributable-files',
     qr/\s*\~\~\s*/,
     sub {
         my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
         if (scalar(@sliptline) != 5) {
-            fail 'Syntax error in cruft/non-distribuable-files', $.;
+            fail 'Syntax error in cruft/non-distributable-files', $.;
         }
         my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
         return {
@@ -427,11 +427,11 @@ sub find_cruft {
 
         # check non free file
         my $md5sum = $info->md5sums->{$name};
-        if ($NON_DISTRIBUABLE_FILES->known($md5sum)) {
-            my $usualname   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'name'};
-            my $reason = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'reason'};
-            my $link   = $NON_DISTRIBUABLE_FILES->value($md5sum)->{'link'};
-            tag 'license-problem-md5sum-non-distribuable-file', $name,
+        if ($NON_DISTRIBUTABLE_FILES->known($md5sum)) {
+            my $usualname   = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'name'};
+            my $reason = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'reason'};
+            my $link   = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'link'};
+            tag 'license-problem-md5sum-non-distributable-file', $name,
               "usual name is $usualname.", "$reason", "See also $link.";
 
             # should be stripped so pass other test

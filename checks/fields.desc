@@ -399,9 +399,9 @@ Info: This non-native source package produces at least one binary package
  source-based tools/services (e.g. the PTS) not linking to the homepage
  of the upstream project.
  .
- Note that you can just move the <tt>Homepage</tt> field to the source
- paragraph in <tt>debian/control</tt> and all binary packages from this
- source will inherit the value by default.
+ If you move the <tt>Homepage</tt> field to the source paragraph in
+ <tt>debian/control</tt> then all binary packages from this source
+ will inherit the value by default.
 Ref: policy 5.6.23
 
 Tag: homepage-for-cpan-package-contains-version
@@ -591,8 +591,8 @@ Tag: build-depends-on-an-obsolete-java-package
 Severity: normal
 Certainty: certain
 Ref: java-policy 2.2
-Info: The package build-depends on an obsolete java dependency
- It should built-depends on default-jdk instead.
+Info: The package build-depends on an obsolete Java dependency.
+ It should build-depend on default-jdk instead.
 
 Tag: build-depends-on-non-build-package
 Severity: important
@@ -997,10 +997,10 @@ Ref: policy 7.5
 Tag: vcs-field-uses-not-recommended-uri-format
 Severity: normal
 Certainty: possible
-Info: The VCS-* field uses an URI which doesn't match the recommended
+Info: The VCS-* field uses a URI which doesn't match the recommended
  format, but still looks valid. Examples for not recommended URI formats
  are protocols that require authentication (like SSH). Instead where
- possible you should provide an URI that is accessible for everyone
+ possible you should provide a URI that is accessible for everyone
  without authentication.
  .
  This renders debcheckout(1) unusable in these cases.

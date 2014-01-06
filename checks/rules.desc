@@ -228,13 +228,13 @@ Certainty: possible
 Ref: policy 4.9
 Info: The rules file use the make variable $(_).
  .
- According to Policy 4.9, "invoking either of `make -f debian/rules
- _args..._' or `./debian/rules _args..._' must result in identical
- behavior." One way to inadvertently violate this policy is to use the $_
- variable.
+ According to Policy 4.9, <q>invoking either of <tt>make -f debian/rules
+ &lt;args&hellip;&gt;</tt> or <tt>./debian/rules
+ &lt;args&hellip;&gt;</b>' must result in identical behavior.</q>
+ One way to inadvertently violate this policy is to use the $_ variable.
  .
- If rules file uses $(dir $(_)) to discover directory containing
- source package (presumably in order to implement get-orig-source
+ If the rules file uses $(dir $(_)) to discover the directory containing
+ the source package (presumably in order to implement the get-orig-source
  target), please replace it by $(dir $(firstword $(MAKEFILE_LIST))).
 
 Tag: package-would-benefit-from-build-arch-targets

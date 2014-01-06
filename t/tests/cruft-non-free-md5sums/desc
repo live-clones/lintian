@@ -3,5 +3,5 @@ Sequence: 6000
 Version: 1.0
 Description: Test of md5sums forbidden-file
 Test-For:
- license-problem-md5sum-non-distribuable-file
+ license-problem-md5sum-non-distributable-file
  license-problem-md5sum-non-free-file

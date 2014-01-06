@@ -435,13 +435,18 @@ Info: The source tarball contains a prebuilt ELF object.  They are usually
 Tag: source-contains-prebuilt-flash-object
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt flash object.  They are usually
- left by mistake when generating the tarball by not cleaning the source
- directory first.  You may want to report this as an upstream bug, in case
- there is no sign that this was intended. An exception is multimedia files.
+Info: The source tarball contains a prebuilt file in the Shockwave Flash (SWF)
+ or Flash Video (FLV) format.  These are often included by mistake when
+ developers generate a tarball without cleaning the source directory
+ first.  An exception is simple video files, which are their own
+ source.
  .
- Please also ensure that flash object is under the preferred form
- of modification.
+ If there is no sign this was intended, consider reporting it as an
+ upstream bug.
+ .
+ If the Flash file is not meant to be modified directly, please make
+ sure the package includes the source for the file and that the
+ packaging rebuilds it.
 
 Tag: source-contains-prebuilt-flash-project
 Severity: pedantic
@@ -454,10 +459,10 @@ Info: The source tarball contains a prebuilt flash project.  They are usually
 Tag: source-contains-prebuilt-java-object
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt java object.  They are usually
- left by mistake when generating the tarball by not cleaning the source
- directory first.  You may want to report this as an upstream bug, in case
- there is no sign that this was intended.
+Info: The source tarball contains a prebuilt Java class file.  These are often
+ included by mistake when developers generate a tarball without cleaning
+ the source directory first.  If there is no sign this was intended,
+ consider reporting it as an upstream bug.
 
 Tag: source-contains-prebuilt-javascript-object
 Severity: pedantic
@@ -478,9 +483,10 @@ Info: The source tarball contains a prebuilt python object.  They are
 Tag: source-contains-prebuilt-silverlight-object
 Severity: serious
 Certainty: possible
-Info: The source tarball contains a prebuilt silverlight object.
- This file are not buildable under debian and need non free
- dependencies. This must be completely removed.
+Info: The source tarball contains a prebuilt Silverlight control.
+ Unfortunately, the tools used to build such files have non-free
+ dependencies and are not present in Debian.  This file must be
+ completely removed.
 
 Tag: source-contains-prebuilt-windows-binary
 Severity: pedantic
@@ -556,14 +562,14 @@ Tag: license-problem-non-free-rfc
 Severity: serious
 Certainty: possible
 Info: The given source file is licensed under the newer RFC
- license
+ license.
  .
  The majority of IETF documents, such as RFCs, are not licensed
  under DFSG-free terms, and should thus not be included in Debian's main.
  .
- Should this file be multi-licensed, please override the tag.
+ If this file is multi-licensed, please override the tag.
  .
- Should this be a false-positive, please report a bug.
+ If this is a false-positive, please report a bug against Lintian.
 Ref: https://wiki.debian.org/NonFreeIETFDocuments
 
 
@@ -582,34 +588,34 @@ Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
 Tag: license-problem-nvidia-intellectual
 Severity: serious
 Certainty: possible
-Info: The given source file include part license under a
- non-distributable license from NVIDIA.  Therefore, it is
+Info: The following source files include material under a
+ non-distributable license from Nvidia. Therefore, it is
  not even possible to ship this in non-free.
  .
  Please re-package the package without the file (if possible)
- or ask the ftp-masters to remove the package.
+ or ask the FTP-masters to remove the package.
  .
  If the package has been uploaded to Debian before, please
  remember to also notify snapshot.debian.org about this
  package containing a non-distributable file.
  .
- Should this be a false-positive, please report a bug
- against lintian.
+ If this is a false-positive, please report a bug against Lintian.
+Ref: http://bugs.debian.org/724930#27
 
-Tag: license-problem-md5sum-non-distribuable-file
+Tag: license-problem-md5sum-non-distributable-file
 Severity: serious
 Certainty: certain
-Info: The following file is not distribuable even in non free archive.
+Info:  The following file is not distributable even in the non-free
+ archive.
  .
  Please re-package the package without the file (if possible)
- or ask the ftp-masters to remove the package.
+ or ask the FTP-masters to remove the package.
  .
  If the package has been uploaded to Debian before, please
  remember to also notify snapshot.debian.org about this
  package containing a non-distributable file.
  .
- Should this be a false-positive, please report a bug
- against lintian.
+ If this is a false-positive, please report a bug against Lintian.
 
 Tag: license-problem-md5sum-non-free-file
 Severity: serious
@@ -617,13 +623,12 @@ Certainty: certain
 Info: The following file is not suitable for main or contrib.
  .
  Please re-package the package without the file (if possible)
- or ask the ftp-masters to remove the package.
+ or ask the FTP-masters to remove the package.
  .
- You could also split this package and move this file in the
- non free archive.
+ You could also split this package and move this file into the
+ non-free archive.
  .
- Should this be a false-positive, please report a bug
- against lintian.
+ If this is a false-positive, please report a bug against Lintian.
 
 Tag: source-contains-unsafe-symlink
 Severity: serious
