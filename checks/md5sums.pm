@@ -24,6 +24,7 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(dequote_name);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -64,13 +65,27 @@ sub run {
 
     # read in md5sums control file
     open(my $fd, '<', $control);
+  LINE:
     while (my $line = <$fd>) {
         chop($line);
-        next if $line =~ m/^\s*$/;
-        if ($line =~ m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
-            $control_entry{$2} = $1;
+        next LINE if $line =~ m/^\s*$/;
+        if ($line
+            =~ m{^(?'escaped'\\)?(?'md5sum'[a-f0-9]+)\s*(?:\./)?(?'name'\S.*)$}
+          ) {
+            my $md5sum = $+{'md5sum'};
+            if(length($md5sum) != 32) {
+                tag 'malformed-md5sums-control-file', "line $.";
+                next LINE;
+            }
+            my $name = $+{'name'};
+            my $escaped = $+{'escaped'};
+            if ($escaped) {
+                $name = dequote_name($name);
+            }
+            $control_entry{$name} = $md5sum;
         } else {
             tag 'malformed-md5sums-control-file', "line $.";
+            next LINE;
         }
     }
     close($fd);

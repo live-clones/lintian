@@ -29,7 +29,7 @@ use Carp qw(croak);
 use Scalar::Util qw(blessed);
 
 use Lintian::Path;
-use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path);
+use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path dequote_name);
 
 my %ROOT_INDEX_TEMPLATE = (
     'name'     => '',
@@ -238,7 +238,7 @@ sub md5sums {
         my $zzescaped = defined($+{'escaped'});
         my $zzfile = $+{'file'};
         if($zzescaped) {
-            $zzfile = _dequote_name($zzfile);
+            $zzfile = dequote_name($zzfile);
         }
         $zzfile =~ s,^(?:\./)?,,o;
         $result->{$zzfile} = $zzsum;
@@ -352,19 +352,6 @@ sub _fetch_extracted_dir {
     return $dir;
 }
 
-# Strip an extra layer quoting in index file names and optionally
-# remove an initial "./" if any.
-#
-# sub _dequote_name Needs-Info none
-sub _dequote_name {
-    my ($name, $slsd) = @_;
-    $slsd = 1 unless defined $slsd; # Remove initial ./ by default
-    $name =~ s,^\.?/,, if $slsd;
-    $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $name =~ s/\\\\/\\/g;
-    return $name;
-}
-
 # Backing method for index and others; this is not a part of the API.
 # sub _fetch_index_data Needs-Info none
 sub _fetch_index_data {
@@ -411,19 +398,19 @@ sub _fetch_index_data {
         $file{group} = 'root' if $file{group} eq '0';
 
         if ($name =~ s/ link to (.*)//) {
-            my $target = _dequote_name($1);
+            my $target = dequote_name($1);
             $file{type} = 'h';
             $file{link} = $target;
 
-            push @{$rhlinks{$target}}, _dequote_name($name);
+            push @{$rhlinks{$target}}, dequote_name($name);
         } elsif ($file{type} eq 'l') {
             ($name, $file{link}) = split ' -> ', $name, 2;
-            $file{link} = _dequote_name($file{link}, 0);
+            $file{link} = dequote_name($file{link}, 0);
         }
         # We store the name here, but will replace it later.  The
         # reason for storing it now is that we may need it during the
         # "hard-link fixup"-phase.
-        $file{'name'} = $name = _dequote_name($name);
+        $file{'name'} = $name = dequote_name($name);
 
         $idxh{$name} = \%file;
 

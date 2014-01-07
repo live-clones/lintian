@@ -78,6 +78,7 @@ BEGIN {
           locate_helper_tool
           drain_pipe
           signal_number2name
+          dequote_name
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -1145,6 +1146,24 @@ sub check_path {
         return 1 if -f "$element/$command" and -x _;
     }
     return 0;
+}
+
+=item dequote_name(STR, removeleadingslash)
+
+Strip an extra layer quoting in index file names and optionally
+remove an initial "./" if any.
+
+Remove initial ./ by default
+
+=cut
+
+sub dequote_name {
+    my ($name, $slsd) = @_;
+    $slsd = 1 unless defined $slsd;
+    $name =~ s,^\.?/,, if $slsd;
+    $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+    $name =~ s/\\\\/\\/g;
+    return $name;
 }
 
 =item signal_number2name(NUM)
