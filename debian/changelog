@@ -2,21 +2,19 @@ lintian (2.5.21) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+
+  * checks/changelog-file.{desc,pm}:
+    + [BR] Warn when an upload erroneously targetted at distribution that
+      is not intended (Closes: #661990).
   * checks/cruft.{desc,pm}:
     + [BR] Detect non free rfc (Closes: #365213).
     + [BR] Check md5sums on source package.
     + [BR] Detect prebuilt jar file.
     + [BR] Detect prebuilt silverlight file.
     + [BR] Detect prebuilt flash file (Closes: #733883).
-
-  * checks/changelog-file.{desc,pm}:
-    + [BR] Warn when an upload erroneously targetted at distribution that
-      is not intended (Closes: #661990).
-
   * checks/fields.{desc,pm}:
     + [BR] Increase severity of vcs-field-uses-not-recommended-uri-format
       (Closes: #670323).
-
   * checks/files.{desc,pm}:
     + [BR] Add xz and zip to duplicated-compressed-file regexp.
     + [BR] Use Lintian::Data for compressed file extension.
@@ -32,12 +30,10 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Add link tag as potential privacy breaker.
     + [BR] Add <div data-href="http://website" to potential privacy 
       breaker.
-
   * checks/md5sums.pm:
     + [BR] In case of strange filename md5sum prefix the md5sum by
       backslash and escape the name using backslash encoding.
       Fix this case.
-
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
       file.
@@ -49,7 +45,6 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       debian-rules-should-not-use-DEB_BUILD_OPTS.
     + [BR] Rename debian-rules-uses-or-modifies-user-only-variable
       to debian-rules-should-not-use-or-modify-user-only-variable.
-
   * checks/watch.{desc,pm}:
     + [BR] Fix the description of debian-watch-may-check-gpg-signature tag.
       Thanks to Gregor Herrmann for the bug report and patch
@@ -59,28 +54,22 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Add sRGB.icm to non free files (Closes: #699369).
     + [BR] Add a few non free font files (Closes: #298545).
     + [BR] Add non free w3c valid icons.
-
   * data/cruft/warn-file-type:
     + [BR] Add this file.
     + [BR] Detect minified javascript (by extension).
     + [BR] Detect python prebuilt object (Closes: #734280).
-
   * data/fields/obsolete-packages:
     + [BR] Apply patch from Jonas Genannt to render obsolete ruby 1.8.
-
   * data/files/obsolete-paths:
     + [BR] Add /etc/X11/fonts/X11R7 as obsolete path (Closes: #646872).
-
   * data/files/privacy-breaker-{fragments,websites}:
     + [BR] Add w3c website valid x?html icons.
     + [BR] Add piwik detection.
     + [BR] Add detection of well known statistics websites.
     + [BR] Detect facebook.
     + [BR] Detect google custom search engine.
-
   * data/rules/rules-should-not-use:
     + [BR] Detect use of $(_) variable in debian/rules (Closes: #585495).
-
   * data/scripts/maintainer-script-bad-command:
     + [BR] Service is reserved to system admin (Closes: #656229).
     + [BR] Fix false positive for
