@@ -212,7 +212,7 @@ sub _force_promise {
 sub known {
     my ($self, $keyword) = @_;
     if(!defined($keyword)) {
-        confess "keywork in not defined";
+        return;
     }
     $self->_force_promise unless exists $self->{data};
     return (exists $self->{data}{$keyword}) ? 1 : undef;
