@@ -31,9 +31,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
     + [BR] Add <div data-href="http://website" to potential privacy 
       breaker.
   * checks/md5sums.pm:
-    + [BR] In case of strange filename md5sum prefix the md5sum by
-      backslash and escape the name using backslash encoding.
-      Fix this case.
+    + [BR] In case of strange filename, md5sum(1) prefix the md5sum
+      by backslash and escape the name using backslash encoding.
+      Handle this case properly.
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules
       file.
@@ -51,9 +51,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       (Closes: #732799).
 
   * data/cruft/non-free-files:
-    + [BR] Add sRGB.icm to non free files (Closes: #699369).
-    + [BR] Add a few non free font files (Closes: #298545).
-    + [BR] Add non free w3c valid icons.
+    + [BR] Add sRGB.icm to non-free files (Closes: #699369).
+    + [BR] Add a few non-free font files (Closes: #298545).
+    + [BR] Add non-free w3c valid icons.
   * data/cruft/warn-file-type:
     + [BR] Add this file.
     + [BR] Detect minified javascript (by extension).
