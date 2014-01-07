@@ -346,8 +346,8 @@ Tag: bad-intended-distibution
 Severity: normal
 Certainty: wild-guess
 Experimental: yes
-Info: The last changelog entry is intended to be uploaded
- to a particular distribution, whereas the changelog said otherwise.
+Info: The last changelog entry implies this version is not for release.
+    Instead it should specify the distribution it is to be uploaded to.
 
 Tag: version-refers-to-distribution
 Severity: minor

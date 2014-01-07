@@ -451,10 +451,17 @@ Info: The source tarball contains a prebuilt file in the Shockwave Flash (SWF)
 Tag: source-contains-prebuilt-flash-project
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt flash project.  They are usually
- left by mistake when generating the tarball by not cleaning the source
- directory first.  You may want to report this as an upstream bug, in case
- there is no sign that this was intended.
+Info: The source tarball contains a prebuilt file in the Shockwave Flash 
+ project (FLA) format.  These are often included by mistake when
+ developers generate a tarball without cleaning the source directory
+ first.
+ .
+ If there is no sign this was intended, consider reporting it as an
+ upstream bug.
+ .
+ If the Flash file is not meant to be modified directly, please make
+ sure the package includes the source for the file and that the
+ packaging rebuilds it.
 
 Tag: source-contains-prebuilt-java-object
 Severity: pedantic
@@ -467,15 +474,15 @@ Info: The source tarball contains a prebuilt Java class file.  These are often
 Tag: source-contains-prebuilt-javascript-object
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt javascript object.  They are
- usually left by mistake when generating the tarball by not cleaning the
- source directory first.  You may want to report this as an upstream bug,
- in case there is no sign that this was intended.
+Info: The source tarball contains a prebuilt (minified) JavaScript object.
+ They are usually left by mistake when generating the tarball by not
+ cleaning the source directory first.  You may want to report this as 
+ an upstream bug, in case there is no sign that this was intended.
 
 Tag: source-contains-prebuilt-python-object
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt python object.  They are
+Info: The source tarball contains a prebuilt Python object.  They are
  usually left by mistake when generating the tarball by not cleaning the
  source directory first.  You may want to report this as an upstream bug,
  in case there is no sign that this was intended.
@@ -558,14 +565,14 @@ Info: The given source file is licensed under GFDL with invariant
 Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
  http://www.debian.org/vote/2006/vote_001
 
-Tag: license-problem-non-free-rfc
+Tag: license-problem-non-free-RFC
 Severity: serious
 Certainty: possible
 Info: The given source file is licensed under the newer RFC
  license.
  .
  The majority of IETF documents, such as RFCs, are not licensed
- under DFSG-free terms, and should thus not be included in Debian's main.
+ under DFSG-free terms, and should thus not be included in Debian main.
  .
  If this file is multi-licensed, please override the tag.
  .
@@ -605,7 +612,7 @@ Ref: http://bugs.debian.org/724930#27
 Tag: license-problem-md5sum-non-distributable-file
 Severity: serious
 Certainty: certain
-Info:  The following file is not distributable even in the non-free
+Info: The following file is not distributable even in the non-free
  archive.
  .
  Please re-package the package without the file (if possible)
