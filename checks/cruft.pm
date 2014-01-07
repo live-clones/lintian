@@ -639,7 +639,7 @@ sub license_check {
           ){
             if (!exists $licenseproblemhash{'non-free-RFC'}) {
                 tag 'license-problem-non-free-RFC', $name;
-                $licenseproblemhash{'rfc'} = 1;
+                $licenseproblemhash{'non-free-RFC'} = 1;
             }
         }
         if (
@@ -649,9 +649,9 @@ sub license_check {
                                  and \s restrictions \s contained \s in)?
                                \s BCP \s 78/xism
           ){
-            if (!exists $licenseproblemhash{'non-free-rfc'}) {
-                tag 'license-problem-non-free-rfc', $name;
-                $licenseproblemhash{'rfc'} = 1;
+            if (!exists $licenseproblemhash{'non-free-RFC'}) {
+                tag 'license-problem-non-free-RFC', $name;
+                $licenseproblemhash{'non-free-RFC'} = 1;
             }
         }
 
