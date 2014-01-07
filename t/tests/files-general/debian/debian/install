@@ -16,3 +16,4 @@ types usr/share/mime
 mimeinfo.cache usr/share/applications
 file-in-new-top-level-dir new-top-level-dir/
 sudotest etc/sudoers.d/
+strangename usr/share/strangename

@@ -2,6 +2,7 @@ etc
 usr/bin
 usr/doc
 usr/share/foo
+usr/share/strangename
 usr/share/man/man1/random
 var/catman
 var/lock/lintian

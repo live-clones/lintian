@@ -2,6 +2,8 @@ Testname: files-general
 Sequence: 6000
 Version: 1.0
 Description: Test tags for file paths, names, and modes
+# tar -t is buggy and does not list \\\ filename
+Test-Depends: tar (>= 1.27)
 Test-For:
  FSSTND-dir-in-usr
  FSSTND-dir-in-var
