@@ -87,6 +87,7 @@ superset YYYY dirname operm username whitespace
 Whitespace udebs multiword recognised eqv testsuite methodx multi
 multiarch relationA relationB Multi natively unordered arg CVE autodie
 hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
+REMOVESLASH
 
 __END__
 

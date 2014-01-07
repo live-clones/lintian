@@ -1148,7 +1148,7 @@ sub check_path {
     return 0;
 }
 
-=item dequote_name(STR, removeleadingslash)
+=item dequote_name(STR, REMOVESLASH)
 
 Strip an extra layer quoting in index file names and optionally
 remove an initial "./" if any.

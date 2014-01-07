@@ -34,9 +34,9 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       breaker.
 
   * checks/md5sums.pm:
-    + [BR] In case of strange filename md5sum prefix the md5sum by \
-       and escape the name using backslash encoding.
-       Fix this case.
+    + [BR] In case of strange filename md5sum prefix the md5sum by
+      backslash and escape the name using backslash encoding.
+      Fix this case.
 
   * checks/rules.{desc,pm}:
     + [BR] Use Lintian::Data for forbidden construct in rules

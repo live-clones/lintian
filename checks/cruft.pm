@@ -637,8 +637,8 @@ sub license_check {
                            followed\s?,\s? or \s as \s required \s to \s
                            translate \s it \s into \s languages \s other \s than/xism
           ){
-            if (!exists $licenseproblemhash{'non-free-rfc'}) {
-                tag 'license-problem-non-free-rfc', $name;
+            if (!exists $licenseproblemhash{'non-free-RFC'}) {
+                tag 'license-problem-non-free-RFC', $name;
                 $licenseproblemhash{'rfc'} = 1;
             }
         }
