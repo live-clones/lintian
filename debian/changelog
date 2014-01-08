@@ -1,7 +1,35 @@
-lintian (2.5.21) UNRELEASED; urgency=medium
+lintian (2.5.21) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
-
+  * Summary of tag changes:
+    + Added:
+      - bad-intended-distibution
+      - debian-rules-should-not-automatically-update-control
+      - debian-rules-should-not-use-DEB_BUILD_OPTS
+      - debian-rules-should-not-use-or-modify-user-only-variable
+      - debian-rules-should-not-use-pwd
+      - debian-rules-should-not-use-underscore-variable
+      - license-problem-md5sum-non-distributable-file
+      - license-problem-md5sum-non-free-file
+      - license-problem-non-free-RFC
+      - maintainer-script-should-not-use-service
+      - privacy-breach-donation
+      - privacy-breach-facebook
+      - privacy-breach-google-cse
+      - privacy-breach-logo
+      - privacy-breach-piwik
+      - privacy-breach-statistics-website
+      - privacy-breach-w3c-valid-html
+      - source-contains-prebuilt-flash-object
+      - source-contains-prebuilt-flash-project
+      - source-contains-prebuilt-java-object
+      - source-contains-prebuilt-javascript-object
+      - source-contains-prebuilt-python-object
+      - source-contains-prebuilt-silverlight-object
+    + Removed:
+      - debian-rules-automatically-updates-control
+      - debian-rules-uses-DEB_BUILD_OPTS
+      - debian-rules-uses-or-modifies-user-only-variable
+      - debian-rules-uses-pwd
 
   * checks/changelog-file.{desc,pm}:
     + [BR] Warn when an upload erroneously targetted at distribution that
@@ -96,7 +124,7 @@ lintian (2.5.21) UNRELEASED; urgency=medium
       Drung for forwarding the patch to the Debian BTS.
       (Closes: #725139)
 
- -- Niels Thykier <niels@thykier.net>  Sat, 21 Dec 2013 10:44:43 +0100
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Wed, 08 Jan 2014 19:35:22 +0100
 
 lintian (2.5.20) unstable; urgency=low
 
