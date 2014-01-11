@@ -32,7 +32,7 @@ lintian (2.5.21) unstable; urgency=medium
       - debian-rules-uses-pwd
 
   * checks/changelog-file.{desc,pm}:
-    + [BR] Warn when an upload erroneously targetted at distribution that
+    + [BR] Warn when an upload erroneously targeted at distribution that
       is not intended (Closes: #661990).
   * checks/cruft.{desc,pm}:
     + [BR] Detect non free rfc (Closes: #365213).
@@ -115,7 +115,7 @@ lintian (2.5.21) unstable; urgency=medium
       information and caches.
     + [NT] Track which version of lintian a given package group
       was processed by.  Using this information, harness will now
-      slowly reprocess groups processed by an other version of
+      slowly reprocess groups processed by another version of
       Lintian than the current.
 
   * t:
