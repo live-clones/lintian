@@ -106,8 +106,8 @@ foreach (split /\n/,$changes) {
           or diag("line: $line");
     }
 
-    if (m/\S\w\. (.)/) {
-        ok($1 eq ' ', 'two spaces after a full stop')
+    if (m/(\S\w)\. (.)/) {
+        ok($2 eq ' ' && $1 !~ '/^\.[ge]$/', 'two spaces after a full stop')
           or diag("line: $line");
     }
 
