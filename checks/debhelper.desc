@@ -59,7 +59,7 @@ Tag: dh-make-template-in-source
 Severity: normal
 Certainty: possible
 Info: This package contains debian/*.ex and/or debian/ex.* files
- installed by dh_make. These are intended to be filled in with the
+ installed by dh_make.  These are intended to be filled in with the
  package's details and renamed for use by various debhelper commands.
  If they are not being used, they should be removed.
 
@@ -126,8 +126,8 @@ Tag: debhelper-compat-file-is-empty
 Severity: important
 Certainty: certain
 Ref: debhelper(7)
-Info: The source package has an empty debian/compat file. This is an error,
- the compat level of debhelper should be in there. Note that only the first
+Info: The source package has an empty debian/compat file.  This is an error,
+ the compat level of debhelper should be in there.  Note that only the first
  line of the file is relevant.
 
 Tag: declares-possibly-conflicting-debhelper-compat-versions
@@ -136,7 +136,7 @@ Certainty: certain
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
  both in the <tt>debian/compat</tt> file and in the <tt>debian/rules</tt>
- file. If these ever get out of synchronisation, the package may not build
+ file.  If these ever get out of synchronisation, the package may not build
  as expected.
 
 Tag: package-uses-deprecated-debhelper-compat-version
@@ -144,7 +144,7 @@ Severity: normal
 Certainty: certain
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
- as deprecated by the debhelper developer. You should really consider
+ as deprecated by the debhelper developer.  You should really consider
  using a newer compatibility version.
  .
  The compatibility version can be set in (preferred)
@@ -216,7 +216,7 @@ Severity: important
 Certainty: certain
 Ref: dh_clean(1)
 Info: The package contains temporary debhelper files, which are normally
- removed by <tt>dh_clean</tt>. The most common cause for this is that a
+ removed by <tt>dh_clean</tt>.  The most common cause for this is that a
  binary package has been renamed or removed without cleaning the build
  directory first.
 
@@ -302,7 +302,7 @@ Certainty: wild-guess
 Info: The package uses a variable in one of its debhelper config
  files, but the variable is not one known to dpkg-architecture.
  .
- It is recommended to use a known subset of variables. If the package
+ It is recommended to use a known subset of variables.  If the package
  needs more than that, and makes sure the variable is exported through
  the build one way or the other, then this tag can be safely ignored
  or overridden.

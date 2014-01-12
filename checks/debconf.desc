@@ -35,7 +35,7 @@ Tag: malformed-template-name
 Severity: important
 Certainty: certain
 Info: The "Template:" field should contain more than one component, each
- separated by a slash ("/"). Each component may only consist of the
+ separated by a slash ("/").  Each component may only consist of the
  alphanumeric characters, "+", "-", and ".".
 
 Tag: no-template-type
@@ -47,14 +47,14 @@ Tag: unknown-template-type
 Severity: important
 Certainty: certain
 Info: A "Type:" field in a templates file provided by this package uses an
- unknown data type. Valid types are currently "string", "boolean", "select",
+ unknown data type.  Valid types are currently "string", "boolean", "select",
  "multiselect", "note", "text", and "password".
 
 Tag: empty-translated-choices
 Severity: important
 Certainty: possible
 Info: When the translation of a Choices: field is empty, the whole question
- is skipped (and nothing is selected). Please verify that the translation
+ is skipped (and nothing is selected).  Please verify that the translation
  you're using is valid.
 
 Tag: mismatch-translated-choices
@@ -81,7 +81,7 @@ Tag: boolean-template-has-bogus-default
 Severity: important
 Certainty: certain
 Info: The "boolean" type in a debconf template, can have only two values: true
- and false. The default has been set to something different.
+ and false.  The default has been set to something different.
 Ref: debconf-spec aen45, debconf-devel(7)
 
 Tag: no-template-description
@@ -94,7 +94,7 @@ Tag: duplicate-long-description-in-template
 Severity: minor
 Certainty: certain
 Info: The long description of one of the templates provided by this package
- is a duplicate of the short description. If you cannot provide a good
+ is a duplicate of the short description.  If you cannot provide a good
  extended description, it is better to leave it blank.
 
 Tag: config-does-not-load-confmodule
@@ -106,7 +106,7 @@ Tag: postinst-uses-db-input
 Severity: normal
 Certainty: possible
 Info: It is generally not a good idea for postinst scripts to use debconf
- commands like <tt>db_input</tt>. Typically, they should restrict themselves
+ commands like <tt>db_input</tt>.  Typically, they should restrict themselves
  to <tt>db_get</tt> to request previously acquired information, and have the
  config script do the actual prompting.
 
@@ -114,7 +114,7 @@ Tag: postinst-does-not-load-confmodule
 Severity: normal
 Certainty: certain
 Info: Even if your postinst does not involve debconf, you currently need to
- make sure it loads one of the debconf libraries. This will be changed in
+ make sure it loads one of the debconf libraries.  This will be changed in
  the future.
 
 Tag: loads-obsolete-confmodule
@@ -129,20 +129,20 @@ Tag: postrm-does-not-purge-debconf
 Severity: normal
 Certainty: certain
 Info: Packages using debconf should call <tt>db_purge</tt> or its equivalent
- in their postrm. If the package uses debhelper, dh_installdebconf(1) should
+ in their postrm.  If the package uses debhelper, dh_installdebconf(1) should
  take care of this.
 
 Tag: isdefault-flag-is-deprecated
 Severity: normal
 Certainty: possible
 Info: The "isdefault" flag on debconf questions is deprecated as of debconf
- 0.5.00, and has been replaced by "seen" with the inverse meaning. From
+ 0.5.00, and has been replaced by "seen" with the inverse meaning.  From
  debconf 0.5 onwards there should be very few reasons to use isdefault/seen
- anyway, as backing up works much better now. See
+ anyway, as backing up works much better now.  See
  /usr/share/doc/debconf-doc/changelog.gz for more information.
  .
  The misuse of isdefault often leads to questions being asked twice in one
- installation run, or, worse, on every upgrade. Please test your package
+ installation run, or, worse, on every upgrade.  Please test your package
  carefully to make sure this does not happen.
 
 Tag: debconf-config-not-executable
@@ -155,14 +155,14 @@ Tag: no-debconf-config
 Severity: important
 Certainty: possible
 Info: The package contains a "templates" file in its control area but has no
- corresponding "config" script. This is occasionally OK, but is usually an
+ corresponding "config" script.  This is occasionally OK, but is usually an
  error.
 
 Tag: no-debconf-templates
 Severity: normal
 Certainty: possible
 Info: The package contains a "config" script in its control area but has no
- corresponding "templates" file. This is occasionally OK, but is usually an
+ corresponding "templates" file.  This is occasionally OK, but is usually an
  error.
 
 Tag: debconf-is-not-a-registry
@@ -187,7 +187,7 @@ Tag: malformed-prompt-in-templates
 Severity: normal
 Certainty: certain
 Info: The short description of a select, multiselect, string and password
- debconf template is a prompt and not a title. Avoid question style
+ debconf template is a prompt and not a title.  Avoid question style
  prompts ("IP Address?") in favour of "opened" prompts ("IP address:").
  The use of colons is recommended.
  .
@@ -208,7 +208,7 @@ Severity: normal
 Certainty: certain
 Info: The short description of a boolean debconf template should be
  phrased in the form of a question which should be kept short and should
- generally end with a question mark. Terse writing style is permitted and
+ generally end with a question mark.  Terse writing style is permitted and
  even encouraged if the question is rather long.
  .
  If this template is only used internally by the package and not displayed
@@ -229,7 +229,7 @@ Tag: using-imperative-form-in-templates
 Severity: normal
 Certainty: certain
 Info: Do not use useless imperative constructions such as "Please choose...",
- "Enter...". The interface will make it obvious that the user needs to
+ "Enter...".  The interface will make it obvious that the user needs to
  choose or enter something.
 Ref: devref 6.5.4.2
 
@@ -237,8 +237,8 @@ Tag: using-first-person-in-templates
 Severity: normal
 Certainty: possible
 Info: You should avoid the use of first person ("I will do this..." or
- "We recommend..."). The computer is not a person and the Debconf
- templates do not speak for the Debian developers. You should use neutral
+ "We recommend...").  The computer is not a person and the Debconf
+ templates do not speak for the Debian developers.  You should use neutral
  construction and often the passive form.
  .
  If this template is only used internally by the package and not displayed
@@ -249,7 +249,7 @@ Tag: making-assumptions-about-interfaces-in-templates
 Severity: normal
 Certainty: possible
 Info: Template text should not make reference to widgets belonging to
- some debconf interfaces. Sentences like "If you answer Yes..." have no
+ some debconf interfaces.  Sentences like "If you answer Yes..." have no
  meaning for users of graphical interfaces which use checkboxes for
  boolean questions.
 Ref: devref 6.5.2.4
@@ -258,7 +258,7 @@ Tag: too-long-short-description-in-templates
 Severity: normal
 Certainty: certain
 Info: The short description should be kept short (50 characters or so) so
- that it may be accommodated by most debconf interfaces. Keeping it short
+ that it may be accommodated by most debconf interfaces.  Keeping it short
  also helps translators, as usually translations tend to end up being
  longer than the original.
 Ref: devref 6.5.3.2
@@ -294,7 +294,7 @@ Info: Debconf notes should be used only for important notes that the
  it somewhere else in the inline documentation, for example in a
  README.Debian file for notes about package usability or NEWS.Debian for
  changes in the package behavior, or to simply drop it if it is not
- needed (e.g. "welcome" notes). Changing the templates type to "error"
+ needed (e.g. "welcome" notes).  Changing the templates type to "error"
  can also be appropriate, such as for input validation errors.
 Ref: policy 3.9.1
 

@@ -1025,12 +1025,12 @@ Info: This package creates a potential privacy breach by fetching W3C
  validation icons.
  .
  These badges may be displayed to tell readers that care has been
- taken to make a page compliant with W3C standards. Unfortunately,
+ taken to make a page compliant with W3C standards.  Unfortunately,
  downloading the image from www.w3.org might expose the reader's IP
  address to potential tracking.
  .
  Note that these icons are non-free and must not be copied into the
- package. You could safely delete this W3C validation badge.
+ package.  You could safely delete this W3C validation badge.
 
 Tag: embedded-feedparser-library
 Severity: normal
@@ -1081,7 +1081,7 @@ Tag: license-problem-font-adobe-copyrighted-fragment
 Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
- non free license of Adobe. In order to check if this tag is genuine
+ non free license of Adobe.  In order to check if this tag is genuine
  please follow the procedure described in the reference.
  .
  Should this be a false-positive, please override the tag.
@@ -1091,7 +1091,7 @@ Tag: license-problem-font-adobe-copyrighted-fragment-no-credit
 Severity: serious
 Certainty: possible
 Info: This type 1 font file includes some postscript fragment with a
- non free license of Adobe. In order to check if this tag is genuine
+ non free license of Adobe.  In order to check if this tag is genuine
  please follow the procedure described in the reference.
  .
  Moreover the fragment was likely verbatim copied from black
@@ -1150,7 +1150,7 @@ Severity: important
 Certainty: certain
 Ref: http://lists.debian.org/debian-devel/2009/03/msg00119.html
 Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
- <tt>.conf</tt>. modprobe silently ignores all files which do not match
+ <tt>.conf</tt>.  modprobe silently ignores all files which do not match
  this convention.
  .
  If the file is an example containing only comments, consider installing
@@ -1392,8 +1392,8 @@ Tag: perl-module-uses-perl4-libs-without-dep
 Severity: normal
 Certainty: possible
 Info: This package includes perl modules using obsoleted perl 4-era
- libraries. These libraries have been deprecated in perl in 5.14, and
- are likely to be removed from the core in perl 5.16. Please either
+ libraries.  These libraries have been deprecated in perl in 5.14, and
+ are likely to be removed from the core in perl 5.16.  Please either
  remove references to these libraries, or add a dependency on
  <tt>libperl4-corelibs-perl | perl (&lt;&lt; 5.12.3-7)</tt> to this package.
 

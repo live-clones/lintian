@@ -21,7 +21,7 @@ Tag: html-changelog-without-text-version
 Severity: important
 Certainty: certain
 Info: If the upstream changelog file is HTML formatted, a text version
- should also be accessible as "changelog.gz". (This can be created by
+ should also be accessible as "changelog.gz".  (This can be created by
  "lynx -dump -nolist")
 Ref: policy 12.7
 
@@ -69,7 +69,7 @@ Tag: changelog-file-missing-in-native-package
 Severity: important
 Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
- directory) has to install a changelog file. Since this package seems
+ directory) has to install a changelog file.  Since this package seems
  to be a native Debian package (i.e., there is no upstream source),
  the file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.gz
