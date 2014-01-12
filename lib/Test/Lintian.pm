@@ -250,6 +250,10 @@ sub test_check_desc {
             $builder->is_eq(check_spelling(undef, $info),
                 0,"$cname: $tag has no spelling errors");
 
+            $builder->ok($info !~ /(?:^| )(?:[Ww]e|I)\b/,
+                'Tag info does not speak of "I", or "we"')
+              or $builder->diag("$cname: $tag\n");
+
             # Check the tag info for unescaped <> or for unknown tags (which
             # probably indicate the same thing).
             while ($info =~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s) {
