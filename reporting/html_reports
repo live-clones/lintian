@@ -41,7 +41,7 @@ our (
     $LINTIAN_DIST,$LINTIAN_ARCH, $HTML_TMP_DIR,
     $statistics_file,$LINTIAN_AREA, $HISTORY,
     $HISTORY_DIR, $LINTIAN_SOURCE,$GRAPHS_RANGE_DAYS,
-    $GRAPHS, $LINTIAN_MIRROR_NAME
+    $GRAPHS, $LINTIAN_MIRROR_NAME, $HARNESS_STATE_DIR,
 );
 
 # Read the configuration.
@@ -58,7 +58,7 @@ use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
-use Lintian::Util qw(read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache);
 
 my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
 
@@ -119,6 +119,8 @@ for my $image (qw/ico.png l.png logo-small.png/) {
     copy("$LINTIAN_ROOT/reporting/images/$image", "$HTML_TMP_DIR/$image")
       or die "cannot copy images/$image to $HTML_TMP_DIR: $!\n";
 }
+
+my $STATE_CACHE = load_state_cache($HARNESS_STATE_DIR);
 
 # %statistics accumulates global statistics.  For tags: errors, warnings,
 # experimental, overridden, and info are the keys holding the count of tags of
@@ -216,6 +218,7 @@ while (<>) {
     # there is any.
     my ($source, $version, $area, $source_version, $maintainer, $uploaders);
     my $pkg_data= $LAB->_get_lab_manifest_data($package, $type, $pver, $parch);
+    my $state_data;
     if ($type eq 'source') {
         $source = $package;
         if (defined $pkg_data) {
@@ -256,6 +259,12 @@ while (<>) {
             $uploaders = undef;
         }
     }
+    if ($type eq 'source' and $source and ($version//'') ne '') {
+        my $group_id = "$source/$version";
+        if (exists($STATE_CACHE->{$group_id})) {
+            $state_data = $STATE_CACHE->{$group_id};
+        }
+    }
     $maintainer ||= '(unknown)';
     $area ||= 'main';
     $source ||= '';
@@ -292,6 +301,9 @@ while (<>) {
         xref      => maintainer_url($maintainer)
           . "#${source}_${source_version}"
     };
+    if ($type eq 'source') {
+        $info->{'state_data'} = $state_data // {};
+    }
     $by_maint{$maintainer}{$source}{$source_version} ||= [];
     push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
     $by_tag{$tag} ||= [];
