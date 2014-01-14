@@ -26,6 +26,7 @@ use autodie;
 
 use Carp qw(croak);
 use Cwd qw(abs_path);
+use Errno qw(ENOENT);
 use Exporter qw(import);
 
 use constant {
@@ -79,6 +80,7 @@ BEGIN {
           drain_pipe
           signal_number2name
           dequote_name
+          load_state_cache
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -1358,6 +1360,41 @@ sub is_ancestor_of {
         return 1;
     }
     return 0;
+}
+
+=item load_state_cache(STATE_DIR)
+
+[Reporting tools only] Load the state cache from STATE_DIR.
+
+=cut
+
+sub load_state_cache {
+    my ($state_dir) = @_;
+    my $state_file = "$state_dir/state-cache";
+    my $state = {};
+    if (open(my $fd, '<', $state_file)) {
+        require YAML::Any;
+        eval {$state = YAML::Any::Load(slurp_entire_file($fd, 1));};
+        # Not sure what Load does in case of issues; perldoc YAML says
+        # very little about it.  Based on YAML::Error, I guess it will
+        # write stuff to STDERR and use die/croak, but it remains a
+        # guess.
+        if (my $err = $@) {
+            die("$state_file was invalid; please fix or remove it.\n$err");
+        }
+        $state //= {};
+
+        if (ref($state) ne 'HASH') {
+            die("$state_file was invalid; please fix or remove it.");
+        }
+        close($fd);
+    } elsif ($! != ENOENT) {
+        # Present, but unreadable for some reason
+        die("open $state_file failed: $!");
+    } else {
+        # Not present; presume empty
+    }
+    return $state;
 }
 
 =back

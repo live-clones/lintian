@@ -134,7 +134,8 @@ require Lintian::Relation::Version;
 import Lintian::Relation::Version
   qw(versions_comparator versions_equal versions_lt);
 require Lintian::Util;
-import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph);
+import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
+  load_state_cache);
 
 # turn file buffering off
 STDOUT->autoflush;
@@ -298,7 +299,10 @@ unless ($opt{'reports-only'}) {
     # (particularly without the source package).
 
     Log('Computing grouping...');
-    $state = load_state_cache($STATE_DIR);
+    eval {$state = load_state_cache($STATE_DIR);};
+    if ($@) {
+        Die($@);
+    }
 
     if ($opt{'full-mode'}) {
         # for full run, just replace %dirty_groups with "<all groups in lab>".
@@ -669,7 +673,10 @@ sub process_worklist {
                 return;
             }
         }
-        $state = load_state_cache($STATE_DIR);
+        eval {$state = load_state_cache($STATE_DIR);};
+        if ($@) {
+            Die($@);
+        }
         for my $group_id (@work_splice) {
             $state->{$group_id}{'last-processed-by'} = $LINTIAN_VERSION;
         }
@@ -709,34 +716,6 @@ sub _parse_srcs_pg {
     # $manifest strips redundant fields for us.
     $manifest->set($data);
     return;
-}
-
-sub load_state_cache {
-    my ($state_dir) = @_;
-    my $state_file = "$state_dir/state-cache";
-    my $state = {};
-    if (open(my $fd, '<', $state_file)) {
-        eval {$state = YAML::Any::Load(slurp_entire_file($fd, 1));};
-        # Not sure what Load does in case of issues; perldoc YAML says
-        # very little about it.  Based on YAML::Error, I guess it will
-        # write stuff to STDERR and use die/croak, but it remains a
-        # guess.
-        if (my $err = $@) {
-            Die("$state_file was invalid; please fix or remove it.\n$err");
-        }
-        $state //= {};
-
-        if (ref($state) ne 'HASH') {
-            Die("$state_file was invalid; please fix or remove it.");
-        }
-        close($fd) or Die("close $state_file: $!");
-    } elsif ($! != ENOENT) {
-        # Present, but unreadable for some reason
-        Die("open $state_file failed: $!");
-    } else {
-        # Not present; presume empty
-    }
-    return $state;
 }
 
 sub save_state_cache {
