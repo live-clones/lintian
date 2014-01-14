@@ -254,12 +254,14 @@ sub test_check_desc {
                 'Tag info does not speak of "I", or "we"')
               or $builder->diag("$cname: $tag\n");
 
-	    $builder->ok($info !~ /(\S\w)\. [^ ]/ || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
-		'Tag info uses two spaces after a full stop')
-              or $builder->diag("$cname: $tag\n");
+            $builder->ok(
+                $info !~ /(\S\w)\. [^ ]/
+                  || $1 =~ '/^\.[ge]$/', # for 'e.g.'/'i.e.'
+                'Tag info uses two spaces after a full stop'
+            ) or $builder->diag("$cname: $tag\n");
 
-	    $builder->ok($info !~ /(\S\w\.   )/,
-		'Tag info uses only two spaces after a full stop')
+            $builder->ok($info !~ /(\S\w\.   )/,
+                'Tag info uses only two spaces after a full stop')
               or $builder->diag("$cname: $tag ($1)\n");
 
             # Check the tag info for unescaped <> or for unknown tags (which
