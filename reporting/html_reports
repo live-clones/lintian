@@ -104,6 +104,8 @@ mkdir("$HTML_TMP_DIR/maintainer", 0777);
 mkdir("$HTML_TMP_DIR/tags", 0777);
 symlink('.', "$HTML_TMP_DIR/reports");
 symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
+symlink("$LINTIAN_ROOT/doc/api.html", "$HTML_TMP_DIR/library-api");
+
 if ($ARGV[0]) {
     copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")
       or die("cannot copy $ARGV[0] to $HTML_TMP_DIR/lintian.log: $!");

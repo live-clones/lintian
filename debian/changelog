@@ -7,6 +7,10 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
 
+  * reporting/html_reports:
+    + [NT] Link to the library API docs from the index page.
+      (Closes: #639974)
+
  -- Niels Thykier <niels@thykier.net>  Tue, 14 Jan 2014 21:18:15 +0100
 
 lintian (2.5.21) unstable; urgency=medium
