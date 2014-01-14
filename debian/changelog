@@ -7,6 +7,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
 
+  * reporting/config:
+    + [NT] Fix typo of HARNESS_STATE_DIR config variable.
   * reporting/html_reports:
     + [NT] Link to the library API docs from the index page.
       (Closes: #639974)
