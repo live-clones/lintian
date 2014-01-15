@@ -218,7 +218,7 @@ while (<>) {
     # there is any.
     my ($source, $version, $area, $source_version, $maintainer, $uploaders);
     my $pkg_data= $LAB->_get_lab_manifest_data($package, $type, $pver, $parch);
-    my $state_data;
+    my $state_data = {};
     if ($type eq 'source') {
         $source = $package;
         if (defined $pkg_data) {
@@ -301,9 +301,7 @@ while (<>) {
         xref      => maintainer_url($maintainer)
           . "#${source}_${source_version}"
     };
-    if ($type eq 'source') {
-        $info->{'state_data'} = $state_data // {};
-    }
+    $info->{'state_data'} = $state_data;
     $by_maint{$maintainer}{$source}{$source_version} ||= [];
     push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
     $by_tag{$tag} ||= [];
