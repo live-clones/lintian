@@ -661,6 +661,16 @@ if ($GRAPHS) {
       or die "gnuplot died with $?\n";
 }
 
+my $gnuplot_fd;
+if ($GRAPHS) {
+    my $pid = open($gnuplot_fd, '|-');
+    if (not $pid) {
+        chdir($graph_dir);
+        exec('gnuplot', '-')
+          or die("exec \"gnuplot -\" failed: $!");
+    }
+}
+
 for my $tag (sort keys %tag_statistics) {
     $history_file = "$HISTORY_DIR/tags/$tag.dat";
     $stats = $tag_statistics{$tag};
@@ -670,18 +680,13 @@ for my $tag (sort keys %tag_statistics) {
     close($tag_fd);
     if ($GRAPHS) {
         print "Plotting $tag statistics...\n";
-        chdir_system(
-            $graph_dir,
-            [
-                'gnuplot', '-e',
-                "tag='$tag'","$LINTIAN_ROOT/reporting/graphs/tags.gpi"
-            ]
-          ) == 0
-          or die "gnuplot died with $?\n";
+        print {$gnuplot_fd}
+          qq{call "$LINTIAN_ROOT/reporting/graphs/tags.gpi" "$tag"\n};
     }
 }
 
 if ($GRAPHS) {
+    close($gnuplot_fd);
     unlink($commonf);
 }
 

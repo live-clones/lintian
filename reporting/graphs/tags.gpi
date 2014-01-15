@@ -1,3 +1,4 @@
+tag=$0
 # set terminal png truecolor small size 600,300
 set terminal svg size 640,375 font "Sans,11"
 
