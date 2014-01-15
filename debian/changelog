@@ -12,6 +12,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * reporting/html_reports:
     + [NT] Link to the library API docs from the index page.
       (Closes: #639974)
+    + [NT] Optimise the graph generation by only calling
+      gnuplot twice (rather than once plus once per tag).
 
  -- Niels Thykier <niels@thykier.net>  Tue, 14 Jan 2014 21:18:15 +0100
 
