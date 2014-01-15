@@ -96,6 +96,7 @@
                 my $area = ($info->{area} eq 'main') ? '' : "; $info->{area}";
                 $firstarea = $info->{area} unless $firstarea;
                 if ($first) {
+                    my $state = $info->{'state_data'};
                     $OUT .= qq(  <div class="source-header">\n);
                     $OUT .= qq(   <h2 id="${source}_${version}">);
                     $OUT .= "$source ($version$area)";
@@ -110,11 +111,8 @@
                     $OUT .= qq(    <a href="http://packages.debian.org/src:$source">Info</a>\n);
                     $OUT .= qq(    <a href="http://packages.qa.debian.org/$source">PTS</a>\n);
                     $OUT .= qq(    <a href="http://bugs.debian.org/src:$source">Bugs</a>\n);
-                    if ($info->{type} eq 'source') {
-                        my $state = $info->{'state_data'};
-                        if (exists($state->{'last-processed-by'})) {
-                            $OUT .= qq[  (last processed by Lintian/$state->{'last-processed-by'})];
-                        }
+                    if (exists($state->{'last-processed-by'})) {
+                        $OUT .= qq[  (last processed by Lintian/$state->{'last-processed-by'})];
                     }
                     $OUT .= qq(   </p>\n  </div>\n);
                     $OUT .= qq(  <ul class="report">\n) unless $is_binary;

@@ -259,7 +259,7 @@ while (<>) {
             $uploaders = undef;
         }
     }
-    if ($type eq 'source' and $source and ($version//'') ne '') {
+    if ($source and ($version//'') ne '') {
         my $group_id = "$source/$version";
         if (exists($STATE_CACHE->{$group_id})) {
             $state_data = $STATE_CACHE->{$group_id};
