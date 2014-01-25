@@ -2,6 +2,10 @@ lintian (2.5.22) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * check/menu-format.desc:
+    + [NT] Apply patch from Charles Plessy to correct an URL
+      in a tag reference.
+
   * data:
     + [NT] Refresh several architecture data files against
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
