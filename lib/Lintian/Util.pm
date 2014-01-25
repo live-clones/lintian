@@ -86,12 +86,14 @@ BEGIN {
         @{ $EXPORT_TAGS{constants} });
 }
 
-use Encode ();
-use FileHandle;
-use Lintian::Command qw(spawn);
 use Digest::MD5;
 use Digest::SHA;
+use Encode ();
+use FileHandle;
 use Scalar::Util qw(openhandle);
+
+use Lintian::Command qw(spawn);
+use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 =head1 NAME
 

@@ -563,7 +563,7 @@ $statistics{'groups-backlog'}
 
 my %delta;
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
-  errors warnings info experimental pedantic overridden groups-knowns
+  errors warnings info experimental pedantic overridden groups-known
   groups-backlog);
 for my $attr (@attrs) {
     my $old = $old_statistics->{$attr} || 0;
