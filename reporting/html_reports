@@ -58,7 +58,8 @@ use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
-use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache);
+use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
+  find_backlog);
 
 my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
 
@@ -556,9 +557,14 @@ my $old_statistics;
 if (-f $statistics_file) {
     ($old_statistics) = read_dpkg_control($statistics_file);
 }
+$statistics{'groups-known'} = scalar(keys(%{$STATE_CACHE}));
+$statistics{'groups-backlog'}
+  = scalar(find_backlog($LINTIAN_VERSION,$STATE_CACHE));
+
 my %delta;
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
-  errors warnings info experimental pedantic overridden);
+  errors warnings info experimental pedantic overridden groups-knowns
+  groups-backlog);
 for my $attr (@attrs) {
     my $old = $old_statistics->{$attr} || 0;
     $statistics{$attr} ||= 0;
@@ -672,12 +678,10 @@ for my $tag (sort keys %tag_statistics) {
       ."$stats->{'packages'}\n";
     close($tag_fd);
     if ($GRAPHS) {
-        print {$gnuplot_fd}
-          qq{print 'Plotting $tag statistics...'\n};
+        print {$gnuplot_fd} qq{print 'Plotting $tag statistics...'\n};
         print {$gnuplot_fd}
           qq{call '$LINTIAN_ROOT/reporting/graphs/tags.gpi' '$tag'\n};
-        print {$gnuplot_fd}
-          qq{reset\n};
+        print {$gnuplot_fd} qq{reset\n};
     }
 }
 

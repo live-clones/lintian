@@ -81,6 +81,7 @@ BEGIN {
           signal_number2name
           dequote_name
           load_state_cache
+          find_backlog
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -1398,6 +1399,32 @@ sub load_state_cache {
     }
     close($fd);
     return $state;
+}
+
+=item find_backlog(LINTIAN_VERSION, STATE)
+
+[Reporting tools only] Given the current lintian version and the
+harness state, return a list of group ids that are part of the
+backlog.  The list is sorted based on what version of Lintian
+processed the package.
+
+=cut
+
+sub find_backlog {
+    my ($lintian_version, $state) = @_;
+    my (@list, @sorted);
+    for my $group_id (keys(%{$state})) {
+        my $last_version = '0';
+        if (exists($state->{$group_id}{'last-processed-by'})) {
+            $last_version = $state->{$group_id}{'last-processed-by'};
+        }
+        push(@list, [$group_id, $last_version])
+          if not versions_equal($last_version, $lintian_version);
+    }
+    @sorted = map { $_->[0] }
+      sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
+      @list;
+    return @sorted;
 }
 
 =back

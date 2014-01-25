@@ -135,7 +135,7 @@ import Lintian::Relation::Version
   qw(versions_comparator versions_equal versions_lt);
 require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
-  load_state_cache);
+  load_state_cache find_backlog);
 
 # turn file buffering off
 STDOUT->autoflush;
@@ -404,7 +404,7 @@ unless ($opt{'reports-only'}) {
 
 if (defined($state) and time() <= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
     my $scs = $opt{'schedule-chunk-size'};
-    my @worklist = find_backlog($state);
+    my @worklist = find_backlog($LINTIAN_VERSION, $state);
 
     if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
         @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
@@ -798,23 +798,6 @@ sub generate_log_filter {
     }
     $lab->close;
     return \%filter;
-}
-
-sub find_backlog {
-    my ($state) = @_;
-    my (@list, @sorted);
-    for my $group_id (keys(%{$state})) {
-        my $last_version = '0';
-        if (exists($state->{$group_id}{'last-processed-by'})) {
-            $last_version = $state->{$group_id}{'last-processed-by'};
-        }
-        push(@list, [$group_id, $last_version])
-          if not versions_equal($last_version, $LINTIAN_VERSION);
-    }
-    @sorted = map { $_->[0] }
-      sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
-      @list;
-    return @sorted;
 }
 
 # Local Variables:
