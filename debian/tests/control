@@ -1,2 +1,4 @@
 Tests: testsuite
-Depends: @builddeps@
+Depends: @builddeps@,
+         build-essential,
+         lintian
