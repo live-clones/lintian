@@ -11,6 +11,10 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
 
+  * debian/tests/control:
+    + [NT] Use the new @builddeps@ from autopkgtest/2.5.5
+      instead of duplicating the values.
+
   * reporting/config:
     + [NT] Fix typo of HARNESS_STATE_DIR config variable.
   * reporting/html_reports:
