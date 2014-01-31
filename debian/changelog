@@ -13,6 +13,9 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Refresh several architecture data files against
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
+  * data/cruft/non-free-files:
+    + [BR] "id3v22-tda.mp3 considered non-free", thanks to Charlie
+      Smotherman (Closes: #736203).
 
   * debian/tests/control:
     + [NT] Use the new @builddeps@ from autopkgtest/2.5.5
@@ -28,7 +31,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Show the number of package groups and the size
       of the harness backlog on the index page.
 
- -- Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>  Fri, 31 Jan 2014 22:48:58 +0100
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 31 Jan 2014 23:05:01 +0100
 
 lintian (2.5.21) unstable; urgency=medium
 
