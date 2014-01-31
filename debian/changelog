@@ -6,7 +6,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.
   * check/watch-file.{desc,pm}:
-    + [BR] Allow debian/upstream-signing-key.asc
+    + [BR] Allow debian/upstream-signing-key.asc,
+      thanks to Nicolas Boulenguez (Closes: #736711).
 
   * data:
     + [NT] Refresh several architecture data files against
@@ -27,7 +28,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Show the number of package groups and the size
       of the harness backlog on the index page.
 
- -- Niels Thykier <niels@thykier.net>  Tue, 14 Jan 2014 21:18:15 +0100
+ -- Bastien ROUCARIÈS <roucaries.bastien+debian@gmail.com>  Fri, 31 Jan 2014 22:48:58 +0100
 
 lintian (2.5.21) unstable; urgency=medium
 
