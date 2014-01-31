@@ -1,48 +1,48 @@
-E: files-privacybreach: privacy-breach-donation usr/share/files-privacybreach/html/flattr.html
-E: files-privacybreach: privacy-breach-donation usr/share/files-privacybreach/html/flattrrender.html
-E: files-privacybreach: privacy-breach-donation usr/share/htmlfragment/flattrbuttonhtml4.xml
-E: files-privacybreach: privacy-breach-donation usr/share/htmlfragment/flattrbuttonhtml5.xml
-E: files-privacybreach: privacy-breach-donation usr/share/htmlfragment/flattrrender.xml
-E: files-privacybreach: privacy-breach-donation usr/share/htmlfragment/flattrrenderonload.xml
-E: files-privacybreach: privacy-breach-donation usr/share/javascript/flattrload.js
-E: files-privacybreach: privacy-breach-donation usr/share/javascript/flattrloadmanual.js
-E: files-privacybreach: privacy-breach-facebook usr/share/files-privacybreach/html/facebookfbmlbody2008.html
-E: files-privacybreach: privacy-breach-facebook usr/share/files-privacybreach/html/facebookfbmlbody2013.html
-E: files-privacybreach: privacy-breach-facebook usr/share/htmlfragment/facebook.xml
-E: files-privacybreach: privacy-breach-facebook usr/share/htmlfragment/facebookhtml5like20130810.xml
-E: files-privacybreach: privacy-breach-facebook usr/share/htmlfragment/facebookhtml5likebody20130810.xml
-E: files-privacybreach: privacy-breach-facebook usr/share/htmlfragment/facebookxfbmllike20130810.xml
-E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacybreach/html/adsense.html
-E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacybreach/html/adsenseonlyadds.html
-E: files-privacybreach: privacy-breach-google-adsense usr/share/htmlfragment/adsenseimagemagick.xml
-E: files-privacybreach: privacy-breach-google-adsense usr/share/htmlfragment/urchinfragment.xml
-E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/adsenseonlyvar.js
-E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchin.js
-E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinconstructor.js
-E: files-privacybreach: privacy-breach-google-adsense usr/share/javascript/urchinloader.js
-E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacybreach/html/googlecse.css
-E: files-privacybreach: privacy-breach-google-cse usr/share/htmlfragment/googlecse.xml
-E: files-privacybreach: privacy-breach-google-cse usr/share/htmlfragment/googlecseform.xml
-E: files-privacybreach: privacy-breach-google-cse usr/share/javascript/googlecseimagemagick.js
-E: files-privacybreach: privacy-breach-logo usr/share/htmlfragment/logosourceforge.xml
-E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwik.html
-E: files-privacybreach: privacy-breach-piwik usr/share/files-privacybreach/html/piwikvariant.html
-E: files-privacybreach: privacy-breach-statistics-website usr/share/htmlfragment/statcounter.xml
-E: files-privacybreach: privacy-breach-statistics-website usr/share/javascript/statcounter2.js
-E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacybreach/html/htmlvalid.html
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/applet.html 1984.os/trackme
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/div.html trackme.1984/index-2.html
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/embed.html 1984.os/givemydata.swf
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/frame.html 1984.os/trackme_frame_c.htm
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/genericwebsite.html www.example.com/trackme.js
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/iframe.html 1984.ow/bigbrotheriswatchingyou.html
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/import.css 1984.wo/importtracking.css
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/importcss.html trackme.css/track.css
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/input.html 1984.os/hiddentrackme.png
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/object.html 1984.os/hellotrackme.swf
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/source.html 1984.os/tracking.mp3
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/track.html 1984.os/notracking.vtt
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/video.html 1984.os/tuxistrackingme.ogg
-X: files-privacybreach: privacy-breach-generic usr/share/files-privacybreach/html/videoposter.html 1984.os/tuxistrackingme.ogg
-X: files-privacybreach: privacy-breach-generic usr/share/htmlfragment/externalimg.xml 1984.ow/bigbrotheriswatchingyou.png
-X: files-privacybreach: privacy-breach-generic usr/share/htmlfragment/link.xml 1984.org/style.css
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattr.html
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrbuttonhtml4.xml
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrbuttonhtml5.xml
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrload.js
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrloadmanual.js
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrrender.html
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrrender.xml
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrrenderonload.xml
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebook.xml
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookfbmlbody2008.html
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookfbmlbody2013.html
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookhtml5like20130810.xml
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookhtml5likebody20130810.xml
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookxfbmllike20130810.xml
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsense.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseimagemagick.xml
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyadds.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyvar.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchin.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinconstructor.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinfragment.xml
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinloader.js
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.css
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.xml
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseform.xml
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseimagemagick.js
+E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/logosourceforge.xml
+E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwik.html
+E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwikvariant.html
+E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter.xml
+E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter2.js
+E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacy-breach/privacy-breach-w3c-valid-html/htmlvalid.html
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/applet.html 1984.os/trackme
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/div.html trackme.1984/index-2.html
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/embed.html 1984.os/givemydata.swf
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/externalimg.xml 1984.ow/bigbrotheriswatchingyou.png
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/frame.html 1984.os/trackme_frame_c.htm
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/genericwebsite.html www.example.com/trackme.js
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/iframe.html 1984.ow/bigbrotheriswatchingyou.html
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/import.css 1984.wo/importtracking.css
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/importcss.html trackme.css/track.css
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/input.html 1984.os/hiddentrackme.png
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/link.xml 1984.org/style.css
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/object.html 1984.os/hellotrackme.swf
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/source.html 1984.os/tracking.mp3
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/track.html 1984.os/notracking.vtt
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/video.html 1984.os/tuxistrackingme.ogg
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/videoposter.html 1984.os/tuxistrackingme.ogg

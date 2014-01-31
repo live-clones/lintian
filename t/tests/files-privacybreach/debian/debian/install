@@ -1,4 +1,1 @@
-src/*.js /usr/share/javascript/
-src/*.xml /usr/share/htmlfragment/
-src/*.html /usr/share/files-privacybreach/html/
-src/*.css /usr/share/files-privacybreach/html/
+src/* /usr/share/files-privacy-breach/
