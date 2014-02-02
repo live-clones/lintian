@@ -1857,7 +1857,7 @@ sub detect_privacy_breach {
       EXTERNAL_TAG:
         while(
             $block=~ m,
-                (?:
+                (?'fulltag'
                  <\s*
                   (?:
                     (?'tagattr'div|embed|i?frame|img|input|script|source|track|video)
@@ -1899,6 +1899,7 @@ sub detect_privacy_breach {
           ) {
             my $url=$+{url};
             my $tagattr=$+{tagattr};
+            my $fulltag=$+{fulltag};
             my $website = $url;
             $website =~ s,^"(?:http|ftp)s?://,,;
             $website =~ s/"$//;
@@ -1907,6 +1908,21 @@ sub detect_privacy_breach {
                 # do nothing ok
                 next EXTERNAL_TAG;
             }
+            # reparse fulltag for rel
+            if($tagattr eq 'link') {
+                $fulltag =~ m,<\s* link
+                                   (?:\s+[^>]+)? \s+
+                                   rel \s* = \s* "(?'relcontent'[^"\r\n]*?)"
+                                   [^>]*?
+                              >,xismog;
+                if (defined($+{relcontent})) {
+                    my $relcontent = $+{relcontent};
+                    if ($relcontent eq 'schema.dct') {
+                        next EXTERNAL_TAG;
+                    }
+                }
+            }
+
             # track well known site
             foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
                 my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
