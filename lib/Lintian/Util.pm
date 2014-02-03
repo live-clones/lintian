@@ -391,13 +391,13 @@ sub visit_dpkg_paragraph {
     while (<$CONTROL>) {
         chomp;
 
-        if (/^\#/) {
+        if (substr($_, 0, 1) eq '#') {
             next unless $flags & DCTRL_NO_COMMENTS;
             die "syntax error at line $.: Comments are not allowed.\n";
         }
 
         # empty line?
-        if ((!$debconf && m/^\s*$/) or ($debconf && $_ eq '')) {
+        if ($_ eq '' || (!$debconf && m/^\s*$/)) {
             if ($open_section) { # end of current section
                 # pass the current section to the handler
                 $code->($section, $lines);
