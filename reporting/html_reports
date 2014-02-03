@@ -747,9 +747,18 @@ sub maintainer_url {
 sub html_quote {
     my ($text) = @_;
     $text ||= '';
-    $text =~ s/&/\&amp;/g;
-    $text =~ s/</\&lt;/g;
-    $text =~ s/>/\&gt;/g;
+    # Use index to do a quick check before we bother requesting a
+    # subst.  On average, this is cheaper than blindly s///'ing, since
+    # we rarely subst (all) of the characters below.
+    if (index($text, '&') > -1) {
+        $text =~ s/&/\&amp;/g;
+    }
+    if (index($text, '<') > -1) {
+        $text =~ s/</\&lt;/g;
+    }
+    if (index($text, '>') > -1) {
+        $text =~ s/>/\&gt;/g;
+    }
     return $text;
 }
 
