@@ -290,14 +290,17 @@ while (<>) {
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
     my $info = {
-        code      => html_quote($code),
+        # split_tags ensures that $code is a single upper case letter
+        code      => $code,
         package   => html_quote($package),
         version   => html_quote($version),
         area      => html_quote($area),
         type      => html_quote($type),
         tag       => html_quote($tag),
-        severity  => html_quote($profile->get_tag($tag, 1)->severity),
-        certainty => html_quote($profile->get_tag($tag, 1)->certainty),
+        # severity and certainty follows a fixed whitelist of
+        # HTML-safe keywords
+        severity  => $profile->get_tag($tag, 1)->severity,
+        certainty => $profile->get_tag($tag, 1)->certainty,
         extra     => html_quote($extra),
         xref      => maintainer_url($maintainer)
           . "#${source}_${source_version}"
