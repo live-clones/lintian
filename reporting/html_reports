@@ -283,8 +283,10 @@ while (<>) {
     $statistics{maintainers}++ unless defined $by_maint{$maintainer};
 
     # Sanitize, just out of paranoia.
-    $source =~ s/[^a-zA-Z0-9.+-]/_/g;
-    $version =~ s/[^a-zA-Z0-9.+:~-]/_/g;
+    $package =~ tr/a-zA-Z0-9.+-/_/c;
+    $source =~ tr/a-zA-Z0-9.+-/_/c;
+    $version =~ tr/a-zA-Z0-9.+:~-/_/c;
+    $source_version =~ tr/a-zA-Z0-9.+:~-/_/c;
 
     # Add the tag information to our hashes.  Share the data between the
     # hashes to save space (which means we can't later do destructive tricks
@@ -292,8 +294,8 @@ while (<>) {
     my $info = {
         # split_tags ensures that $code is a single upper case letter
         code      => $code,
-        package   => html_quote($package),
-        version   => html_quote($version),
+        package   => $package,
+        version   => $version,
         area      => html_quote($area),
         type      => html_quote($type),
         tag       => html_quote($tag),
