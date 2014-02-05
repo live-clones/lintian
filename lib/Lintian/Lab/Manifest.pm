@@ -262,7 +262,7 @@ sub visit_all {
     my (undef, undef, $qf) = $self->_type_to_fields;
 
     if (@keys) {
-        $root = $self->_do_get($self->{'state'}, @keys);
+        $root = $self->_do_get(@keys);
         return unless $root;
         if (scalar @$qf == scalar @keys) {
             # If we are given an exact match, just visit that and
@@ -303,7 +303,7 @@ except for source packages
 sub get {
     my ($self, @keys) = @_;
     @keys = $self->_make_keys($keys[0]) if scalar @keys == 1;
-    return $self->_do_get($self->{'state'}, @keys);
+    return $self->_do_get(@keys);
 }
 
 sub _make_keys {
@@ -339,7 +339,7 @@ sub set {
     }
     $self->_make_alias_fields(\%pdata);
 
-    $self->_do_set($self->{'state'}, $qf, \%pdata);
+    $self->_do_set($qf, \%pdata);
     $self->_mark_dirty(1);
     return 1;
 }
@@ -409,7 +409,7 @@ sub _do_delete {
     return 0 unless defined $lk;
 
     if (@keys) {
-        $hash = $self->_do_get($self->{'state'}, @keys);
+        $hash = $self->_do_get(@keys);
     } else {
         $hash = $self->{'state'};
     }
@@ -529,7 +529,7 @@ sub _do_read_file {
             $entry->{$fields->[$i]} = $values[$i]//'';
         }
         $self->_make_alias_fields($entry);
-        $self->_do_set($root, $qf, $entry);
+        $self->_do_set($qf, $entry, $root);
     }
     close($fd);
     return $root;
@@ -560,8 +560,8 @@ sub _make_alias_fields {
 }
 
 sub _do_get {
-    my ($self, $root, @keys) = @_;
-    my $cur = $root;
+    my ($self, @keys) = @_;
+    my $cur = $self->{'state'};
     my (undef, undef, $qf) = $self->_type_to_fields;
     my $max = scalar @$qf;
     $max = scalar @keys if scalar @keys < $max;
@@ -574,9 +574,9 @@ sub _do_get {
 }
 
 sub _do_set {
-    my ($self, $root, $qf, $entry) = @_;
+    my ($self, $qf, $entry, $root) = @_;
     my $qfl = scalar @$qf - 1; # exclude the last element (see below)
-    my $cur = $root;
+    my $cur = $root // $self->{'state'};
     my $k;
 
     # Find the hash where the entry should be stored
@@ -596,7 +596,7 @@ sub _do_set {
     $k = $entry->{$qf->[$qfl]};
     $cur->{$k} = $entry;
     if (my $grouping = $self->{'grouping'}) {
-        $grouping->_do_set($grouping->{'state'}, \@GROUP_QUERY, $entry);
+        $grouping->_do_set(\@GROUP_QUERY, $entry);
     }
     return 1;
 }
