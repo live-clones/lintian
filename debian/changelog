@@ -14,7 +14,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
   * data/binary/embedded-libs:
-    + [RG] Detect embedded copies of liblivemedia.
+    + [RG] Detect embedded copies of liblivemedia and libgadu.
   * data/cruft/non-free-files:
     + [BR] "id3v22-tda.mp3 considered non-free", thanks to Charlie
       Smotherman (Closes: #736203).

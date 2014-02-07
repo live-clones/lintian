@@ -49,6 +49,7 @@ libavfilter ||source=libav||Buffer video frames, and make them accessible to the
 libavformat ||source=libav||Format detected only with low score of %d, misdetection possible!\n
 libavutil   ||source=libav||AVOption type %d of option %s not implemented yet\n
 libgd     ||source-regex=libgd2? ||gd-(?:png|jpeg:) error:
+libgadu     ||Gadu-Gadu Client Build
 libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
 libjsoncpp ||A valid JSON document must be either an array or an object value\.
 liblivemedia||(?:Received incoming RTSP request:|LIVE555 Streaming Media v)
