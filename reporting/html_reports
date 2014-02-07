@@ -196,7 +196,8 @@ while (<>) {
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
     # Ignore unknown tags - happens if we removed a tag that is still present
     # in the log file.
-    next unless $profile->get_tag($tag, 1);
+    my $tag_info = $profile->get_tag($tag, 1);
+    next unless $tag_info;
 
     # Update statistics.
     my $key = {
@@ -292,14 +293,15 @@ while (<>) {
     # Add the tag information to our hashes.  Share the data between the
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
-    my $tag_info = $profile->get_tag($tag, 1);
     my $info = {
         # split_tags ensures that $code is a single upper case letter
         code      => $code,
         package   => $package,
         version   => $version,
         area      => html_quote($area),
-        type      => html_quote($type),
+        # There is a check for type being in a fixed whitelist of
+        # HTML-safe keywords in the start of the loop.
+        type      => $type,
         tag       => html_quote($tag),
         # severity and certainty follows a fixed whitelist of
         # HTML-safe keywords
