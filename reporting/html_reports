@@ -184,6 +184,14 @@ my (%by_maint, %by_uploader, %by_tag);
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
 my (%seen, %saw_maintainer);
+my %expanded_code = (
+    E => 'errors',
+    W => 'warnings',
+    I => 'info',
+    X => 'experimental',
+    O => 'overridden',
+    P => 'pedantic',
+);
 
 while (<>) {
     my @parts;
@@ -200,14 +208,7 @@ while (<>) {
     next unless $tag_info;
 
     # Update statistics.
-    my $key = {
-        E => 'errors',
-        W => 'warnings',
-        I => 'info',
-        X => 'experimental',
-        O => 'overridden',
-        P => 'pedantic',
-    }->{$code};
+    my $key = $expanded_code{$code};
     $statistics{$key}++;
     unless ($seen{"$package $type"}) {
         $statistics{"$type-packages"}++;
