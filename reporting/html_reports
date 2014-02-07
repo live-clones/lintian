@@ -291,6 +291,7 @@ while (<>) {
     # Add the tag information to our hashes.  Share the data between the
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
+    my $tag_info = $profile->get_tag($tag, 1);
     my $info = {
         # split_tags ensures that $code is a single upper case letter
         code      => $code,
@@ -301,8 +302,8 @@ while (<>) {
         tag       => html_quote($tag),
         # severity and certainty follows a fixed whitelist of
         # HTML-safe keywords
-        severity  => $profile->get_tag($tag, 1)->severity,
-        certainty => $profile->get_tag($tag, 1)->certainty,
+        severity  => $tag_info->severity,
+        certainty => $tag_info->certainty,
         extra     => html_quote($extra),
         xref      => maintainer_url($maintainer)
           . "#${source}_${source_version}"
