@@ -183,7 +183,7 @@ my (%by_maint, %by_uploader, %by_tag);
 # each other's pages.  If we find two maintainers who map to the same URL,
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
-my (%seen, %saw_maintainer);
+my (%seen);
 my %expanded_code = (
     E => 'errors',
     W => 'warnings',
@@ -280,7 +280,6 @@ while (<>) {
     # Check if we've seen the URL for this maintainer before and, if so, map
     # them to the same person as the previous one.
     $maintainer = map_maintainer($maintainer);
-    $saw_maintainer{$maintainer} = 1;
 
     # Update maintainer statistics.
     $statistics{maintainers}++ unless defined $by_maint{$maintainer};
@@ -325,7 +324,6 @@ while (<>) {
         for (@uploaders) {
             my $uploader = map_maintainer($_);
             next if $uploader eq $maintainer;
-            $saw_maintainer{$uploader} = 1;
             $by_uploader{$uploader}{$source}{$source_version} ||= [];
             push(@{ $by_uploader{$uploader}{$source}{$source_version} },$info);
         }
