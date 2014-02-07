@@ -709,10 +709,8 @@ exit 0;
 # this without coordinating with QA.
 sub maintainer_url {
     my ($maintainer) = @_;
-    my ($email) = ($maintainer =~ /<([^>]+)>/);
-    my ($regular, $full);
-    if ($email) {
-        my $id = $email;
+    if ($maintainer =~ m/<([^>]+)>/) {
+        my $id = $1;
         $id =~ tr/a-zA-Z0-9_.@=+-/_/c;
         return "$id.html";
     } else {
