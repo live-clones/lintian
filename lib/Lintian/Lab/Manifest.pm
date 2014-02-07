@@ -262,7 +262,7 @@ sub visit_all {
     my (undef, undef, $qf) = $self->_type_to_fields;
 
     if (@keys) {
-        $root = $self->_do_get(@keys);
+        $root = $self->get(@keys);
         return unless $root;
         if (scalar @$qf == scalar @keys) {
             # If we are given an exact match, just visit that and
@@ -302,8 +302,18 @@ except for source packages
 
 sub get {
     my ($self, @keys) = @_;
-    @keys = $self->_make_keys($keys[0]) if scalar @keys == 1;
-    return $self->_do_get(@keys);
+    my $cur = $self->{'state'};
+    my (undef, undef, $qf) = $self->_type_to_fields;
+    my $max = scalar @$qf;
+    @keys = $self->_make_keys($keys[0])
+      if scalar(@keys) == 1 && ref($keys[0]);
+    $max = scalar @keys if scalar @keys < $max;
+    for (my $i = 0 ; $i < $max ; $i++) {
+        my $key = $keys[$i];
+        $cur = $cur->{$key};
+        return unless defined $cur;
+    }
+    return $cur;
 }
 
 sub _make_keys {
@@ -409,7 +419,7 @@ sub _do_delete {
     return 0 unless defined $lk;
 
     if (@keys) {
-        $hash = $self->_do_get(@keys);
+        $hash = $self->get(@keys);
     } else {
         $hash = $self->{'state'};
     }
@@ -557,20 +567,6 @@ sub _make_alias_fields {
         $entry->{'identifier'} = $id;
     }
     return;
-}
-
-sub _do_get {
-    my ($self, @keys) = @_;
-    my $cur = $self->{'state'};
-    my (undef, undef, $qf) = $self->_type_to_fields;
-    my $max = scalar @$qf;
-    $max = scalar @keys if scalar @keys < $max;
-    for (my $i = 0 ; $i < $max ; $i++) {
-        my $key = $keys[$i];
-        $cur = $cur->{$key};
-        return unless defined $cur;
-    }
-    return $cur;
 }
 
 sub _do_set {
