@@ -395,8 +395,9 @@ sub lab_query {
 
     if ($type eq 'GROUP') {
         # Ensure all indices have been loaded
+        my $state = $self->{'state'};
         foreach my $t (keys %SUPPORTED_TYPES) {
-            if (not exists $self->{'state'}->{$t}) {
+            if (not exists $state->{$t}) {
                 # force load
                 $self->_get_lab_index($t);
             }
@@ -494,16 +495,15 @@ sub _get_lab_index {
       unless $SUPPORTED_TYPES{$pkg_type}
       or $SUPPORTED_VIEWS{$pkg_type};
 
+    my $state = $self->{'state'};
     # Fetch (or load) the index of that type
-    return $self->{'state'}->{$pkg_type}
-      if exists $self->{'state'}->{$pkg_type};
+    return $state->{$pkg_type} if exists $state->{$pkg_type};
 
     my $dir = $self->dir;
-    my $manifest
-      = Lintian::Lab::Manifest->new($pkg_type,$self->{'state'}->{'GROUP'});
+    my $manifest= Lintian::Lab::Manifest->new($pkg_type, $state->{'GROUP'});
     my $lif = "$dir/info/${pkg_type}-packages";
     $manifest->read_list($lif);
-    $self->{'state'}->{$pkg_type} = $manifest;
+    $state->{$pkg_type} = $manifest;
     return $manifest;
 }
 
