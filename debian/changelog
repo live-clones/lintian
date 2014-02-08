@@ -2,10 +2,12 @@ lintian (2.5.22) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * check/menu-format.desc:
+  * checks/*.desc:
+    + [NT] Avoid using "I" or "we" in tag descriptions.
+  * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.
-  * check/watch-file.{desc,pm}:
+  * checks/watch-file.{desc,pm}:
     + [BR] Allow debian/upstream-signing-key.asc,
       thanks to Nicolas Boulenguez (Closes: #736711).
 

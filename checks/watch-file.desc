@@ -154,10 +154,8 @@ Info: This watch file does not include a means to verify
  Of course, not all upstreams provide such signatures, but
  you could request them as a way of verifying that no third
  party has modified the code against their wishes after the
- release. We have all heard of the phpmyadmin, unrealircd, or
- proftpd security bugs (to mention only a few). This would at
- least make it a lot harder for an attacker to get such code
- to a wider audience via distributions like Debian.
+ release. Projects such as phpmyadmin, unrealircd, and
+ proftpd have suffered from this kind of attack.
 
 Tag: debian-watch-file-pubkey-file-is-missing
 Severity: important

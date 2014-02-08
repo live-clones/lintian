@@ -10,10 +10,10 @@ Certainty: certain
 Info: The package ships a systemd service file outside
  <tt>/lib/systemd/system/</tt>
  .
- System administrators should have the possibility to overwrite a service file
- (or parts of it, in newer systemd versions) by placing a file in
- <tt>/etc/systemd/system</tt>, so the canonical location we use for service
- files is <tt>/lib/systemd/system/</tt>.
+ System administrators should have the possibility to overwrite a
+ service file (or parts of it, in newer systemd versions) by placing a
+ file in <tt>/etc/systemd/system</tt>, so the canonical location used
+ for service files is <tt>/lib/systemd/system/</tt>.
 
 Tag: systemd-tmpfiles.d-outside-usr-lib
 Severity: serious

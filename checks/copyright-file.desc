@@ -108,10 +108,11 @@ Severity: minor
 Certainty: possible
 Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
  in your package. This means that <i>pkg1</i> and <i>pkg2</i> must
- both come from the same source package. I can't check this right now
- however since I'm only checking a binary package and I only can check
- this when I'm checking both the binary and the corresponding source
- package.
+ both come from the same source package. Lintian cannot check this right now
+ however.
+ .
+ Please reprocess this binary together with its source package to avoid
+ this tag.
 
 Tag: old-fsf-address-in-copyright-file
 Severity: normal
