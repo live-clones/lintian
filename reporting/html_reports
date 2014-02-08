@@ -325,7 +325,7 @@ while (<>) {
             # needing HTML-escaping is (next to) 0.
             $info->{tag} = html_quote($tag);
             $info->{severity}  = $tag_info->severity;
-            $info->{certainty} = $tag_info->certainty,
+            $info->{certainty} = $tag_info->certainty;
         }
         # saves a map_maintainer call
         $maintainer = $last_maintainer;
@@ -359,24 +359,27 @@ while (<>) {
               . "#${source}_${source_version}",
             'state_data' => $state_data,
         };
-        $by_maint{$maintainer}{$source}{$source_version} ||= [];
+        if (!$by_maint{$maintainer}{$source}{$source_version}) {
+            my $list_ref = [];
+            $by_maint{$maintainer}{$source}{$source_version} = $list_ref;
+            # If the package had uploaders listed, also add the
+            # information to %by_uploaders (still sharing the data
+            # between hashes).
+            if ($uploaders) {
+                my @uploaders
+                  = map { map_maintainer($_) } split(/>\K\s*,\s*/, $uploaders);
+                for my $uploader (@uploaders) {
+                    next if $uploader eq $maintainer;
+                    $by_uploader{$uploader}{$source}{$source_version} = $list_ref;
+                }
+            }
+        }
     }
 
     push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
     $by_tag{$tag} ||= [];
     push(@{ $by_tag{$tag} }, $info);
 
-    # If the package had uploaders listed, also add the information to
-    # %by_uploaders (still sharing the data between hashes).
-    if ($uploaders) {
-        my @uploaders = split(/>\K\s*,\s*/, $uploaders);
-        for (@uploaders) {
-            my $uploader = map_maintainer($_);
-            next if $uploader eq $maintainer;
-            $by_uploader{$uploader}{$source}{$source_version} ||= [];
-            push(@{ $by_uploader{$uploader}{$source}{$source_version} },$info);
-        }
-    }
 }
 
 # Build a hash of all maintainers, not just those with Lintian tags.  We use
