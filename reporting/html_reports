@@ -451,7 +451,6 @@ output_template('maintainers.html', $templates{maintainers}, \%data);
 mkdir("$HTML_TMP_DIR/lookup-tables");
 open(my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages");
 
-my %table_seen = ();
 foreach my $source (sort keys %sources) {
     my $first = 1;
     for my $version (sort versions_comparator keys %{ $sources{$source} }) {
