@@ -111,7 +111,6 @@ my @BIN_QUERY = ('package','version','architecture',);
 
 my @CHG_QUERY = ('source','version','architecture',);
 
-
 my %TYPE2INFO = (
     'source' => {
         'file-fields'  => \@SRC_FILE_FIELDS,
@@ -138,7 +137,6 @@ my %TYPE2INFO = (
 # udeb behave exactly like binary, so share the underlying table
 #  \o/  ~50 bytes saved!
 $TYPE2INFO{'udeb'} = $TYPE2INFO{'binary'};
-
 
 =item new (TYPE[, GROUPING])
 
@@ -225,9 +223,8 @@ sub read_list {
         return unless -s $file;
     }
 
-    my ($header, $fields, $qf) = @{$TYPE2INFO{$type}}{
-        'file-header', 'file-fields', 'query-fields'
-    };
+    my ($header, $fields, $qf)
+      = @{$TYPE2INFO{$type}}{'file-header', 'file-fields', 'query-fields'};
 
     $self->{'state'} = $self->_do_read_file($file, $header, $fields, $qf);
     $self->_mark_dirty(0);
