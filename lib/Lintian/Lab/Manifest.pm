@@ -111,6 +111,35 @@ my @BIN_QUERY = ('package','version','architecture',);
 
 my @CHG_QUERY = ('source','version','architecture',);
 
+
+my %TYPE2INFO = (
+    'source' => {
+        'file-fields'  => \@SRC_FILE_FIELDS,
+        'file-header'  => SRCLIST_FORMAT,
+        'query-fields' => \@SRC_QUERY
+    },
+    'binary' => {
+        'file-fields'  => \@BIN_FILE_FIELDS,
+        'file-header'  => BINLIST_FORMAT,
+        'query-fields' => \@BIN_QUERY
+    },
+    'changes' => {
+        'file-fields'  => \@CHG_FILE_FIELDS,
+        'file-header'  => CHGLIST_FORMAT,
+        'query-fields' => \@CHG_QUERY
+    },
+    'GROUP' => {
+        'file-fields'  => undef, # Never written to disk
+        'file-header'  => undef, # Never written to disk
+        'query-fields' => \@SRC_QUERY
+    },
+);
+
+# udeb behave exactly like binary, so share the underlying table
+#  \o/  ~50 bytes saved!
+$TYPE2INFO{'udeb'} = $TYPE2INFO{'binary'};
+
+
 =item new (TYPE[, GROUPING])
 
 Creates a new packages list for a certain type of packages.  This type
@@ -184,10 +213,8 @@ croak.
 
 sub read_list {
     my ($self, $file) = @_;
-    croak 'Cannot read a GROUP manifest' if $self->type eq 'GROUP';
-    my $header;
-    my $fields;
-    my $qf;
+    my $type = $self->type;
+    croak 'Cannot read a GROUP manifest' if $type eq 'GROUP';
 
     # Accept a scalar (as an "in-memory file") - write_list does the same
     if (my $r = ref $file) {
@@ -198,7 +225,9 @@ sub read_list {
         return unless -s $file;
     }
 
-    ($header, $fields, $qf) = $self->_type_to_fields;
+    my ($header, $fields, $qf) = @{$TYPE2INFO{$type}}{
+        'file-header', 'file-fields', 'query-fields'
+    };
 
     $self->{'state'} = $self->_do_read_file($file, $header, $fields, $qf);
     $self->_mark_dirty(0);
@@ -218,8 +247,9 @@ On error, the contents of FILE are undefined.
 
 sub write_list {
     my ($self, $file) = @_;
-    croak 'Cannot write a GROUP manifest' if $self->type eq 'GROUP';
-    my ($header, $fields, undef) = $self->_type_to_fields;
+    my $type = $self->type;
+    croak 'Cannot write a GROUP manifest' if $type eq 'GROUP';
+    my ($header, $fields) = @{$TYPE2INFO{$type}}{'file-header', 'file-fields'};
     my $visitor;
 
     open(my $fd, '>', $file);
@@ -259,7 +289,7 @@ sub visit_all {
     my ($self, $visitor, @keys) = @_;
     my $root;
     my $type = $self->type;
-    my (undef, undef, $qf) = $self->_type_to_fields;
+    my $qf = $TYPE2INFO{$type}{'query-fields'};
 
     if (@keys) {
         $root = $self->get(@keys);
@@ -303,7 +333,8 @@ except for source packages
 sub get {
     my ($self, @keys) = @_;
     my $cur = $self->{'state'};
-    my (undef, undef, $qf) = $self->_type_to_fields;
+    my $type = $self->type;
+    my $qf = $TYPE2INFO{$type}{'query-fields'};
     my $max = scalar @$qf;
     @keys = $self->_make_keys($keys[0])
       if scalar(@keys) == 1 && ref($keys[0]);
@@ -334,10 +365,11 @@ to ENTRY will not affect the data in the manifest.
 
 sub set {
     my ($self, $entry) = @_;
+    my $type = $self->type;
     croak 'Cannot alter a GROUP manifest directly'
-      if $self->type eq 'GROUP';
+      if $type eq 'GROUP';
     my %pdata;
-    my (undef, $fields, $qf) = $self->_type_to_fields;
+    my ($fields, $qf) = @{$TYPE2INFO{$type}}{'file-fields', 'query-fields'};
 
     # Copy the relevant fields - ensuring all fields are defined.
     foreach my $field (@$fields) {
@@ -595,39 +627,6 @@ sub _do_set {
         $grouping->_do_set(\@GROUP_QUERY, $entry);
     }
     return 1;
-}
-
-# Returns ($header, $fields, $qf) - their value is based on $self->type.
-# - $header is XXXLIST_FORMAT
-# - $fields is \@XXX_FILE_FIELDS
-# - $qf     is \@XXX_QUERY
-sub _type_to_fields {
-    my ($self) = @_;
-    my $header;
-    my $fields;
-    my $qf;
-    my $type = $self->{'type'};
-
-    if ($type eq 'source') {
-        $fields = \@SRC_FILE_FIELDS;
-        $qf = \@SRC_QUERY;
-        $header = SRCLIST_FORMAT;
-    } elsif ($type eq 'binary' || $type eq 'udeb') {
-        $fields = \@BIN_FILE_FIELDS;
-        $qf = \@BIN_QUERY;
-        $header = BINLIST_FORMAT;
-    } elsif ($type eq 'changes') {
-        $fields = \@CHG_FILE_FIELDS;
-        $qf = \@CHG_QUERY;
-        $header = CHGLIST_FORMAT;
-    } elsif ($type eq 'GROUP') {
-        $fields = undef; #N/A
-        $qf = \@GROUP_QUERY;
-        $header = undef; #N/A
-    } else {
-        croak "Unknown type $type";
-    }
-    return ($header, $fields, $qf);
 }
 
 # Self-recursing method powering visit_all
