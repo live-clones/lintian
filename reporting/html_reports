@@ -183,7 +183,7 @@ my (%by_maint, %by_uploader, %by_tag);
 # each other's pages.  If we find two maintainers who map to the same URL,
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
-my (%seen);
+my (%seen, $last_info);
 my %expanded_code = (
     E => 'errors',
     W => 'warnings',
@@ -276,13 +276,6 @@ while (<>) {
     $source_version = $version
       unless (defined($source_version) and length($source_version) > 0);
 
-    # Check if we've seen the URL for this maintainer before and, if so, map
-    # them to the same person as the previous one.
-    $maintainer = map_maintainer($maintainer);
-
-    # Update maintainer statistics.
-    $statistics{maintainers}++ unless defined $by_maint{$maintainer};
-
     # Sanitize, just out of paranoia.
     $package =~ tr/a-zA-Z0-9.+-/_/c;
     $source =~ tr/a-zA-Z0-9.+-/_/c;
@@ -298,30 +291,71 @@ while (<>) {
         $extra = '';
     }
 
+    # Check if we've seen the URL for this maintainer before and, if so, map
+    # them to the same person as the previous one.
+
+    $maintainer = map_maintainer($maintainer);
+
+    my $info;
+
     # Add the tag information to our hashes.  Share the data between the
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
-    my $info = {
-        # split_tags ensures that $code is a single upper case letter
-        code      => $code,
-        package   => $package,
-        version   => $version,
-        area      => html_quote($area),
-        # There is a check for type being in a fixed whitelist of
-        # HTML-safe keywords in the start of the loop.
-        type      => $type,
-        tag       => html_quote($tag),
-        # severity and certainty follows a fixed whitelist of
-        # HTML-safe keywords
-        severity  => $tag_info->severity,
-        certainty => $tag_info->certainty,
-        # extra is unsafe in general, but we already quote it above.
-        extra     => $extra,
-        xref      => maintainer_url($maintainer)
-          . "#${source}_${source_version}"
-    };
-    $info->{'state_data'} = $state_data;
-    $by_maint{$maintainer}{$source}{$source_version} ||= [];
+    if (   $last_info
+        && $last_info->{type} eq $type
+        && $last_info->{package} eq $package
+        && $last_info->{version} eq $version) {
+
+        # There are something like 622k tags emitted on lintian.d.o,
+        # but only "some" 90k unique package+version(+arch) pairs.
+        # Therefore, we can conclude that the average package will
+        # have ~6 tags and optimise for that case.  Indeed, this path
+        # seems to be taken about 90% of the time (561k/624k).
+        # - In fact, we see less than "90k" package+version(+arch)
+        #   pairs here, since entries without tags never this far down
+        #   in this loop (i.e. they are filtered out by split_tag
+        #   above).
+
+        # Copy the last info and then change the bits that can change
+        $info = {%{$last_info}};
+        # Code depends on whether the given tag was overridden or not
+        $info->{code} = $code;
+        $info->{extra} = $extra;
+        if ($info->{tag} ne $tag) {
+            # Technically we ought to html_quote when doing the
+            # comparison; but then, the number of tags with characters
+            # needing HTML-escaping is (next to) 0.
+            $info->{tag} = html_quote($tag);
+            $info->{severity}  = $tag_info->severity;
+            $info->{certainty} = $tag_info->certainty,
+        }
+    } else {
+        # Update maintainer statistics.
+        $statistics{maintainers}++ unless defined $by_maint{$maintainer};
+
+        $last_info = $info = {
+            # split_tags ensures that $code is a single upper case letter
+            code         => $code,
+            package      => $package,
+            version      => $version,
+            area         => html_quote($area),
+            # There is a check for type being in a fixed whitelist of
+            # HTML-safe keywords in the start of the loop.
+            type         => $type,
+            tag          => html_quote($tag),
+            # severity and certainty follows a fixed whitelist of
+            # HTML-safe keywords
+            severity     => $tag_info->severity,
+            certainty    => $tag_info->certainty,
+            # extra is unsafe in general, but we already quote it above.
+            extra        => $extra,
+            xref         => maintainer_url($maintainer)
+              . "#${source}_${source_version}",
+            'state_data' => $state_data,
+        };
+        $by_maint{$maintainer}{$source}{$source_version} ||= [];
+    }
+
     push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
     $by_tag{$tag} ||= [];
     push(@{ $by_tag{$tag} }, $info);
