@@ -200,7 +200,6 @@ while (<>) {
     next unless @parts;
     my ($code, $package, $type, $pver, $parch, $tag, $extra) = @parts;
     $type = 'binary' unless (defined $type);
-    $extra = '' unless (defined $extra);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
     # Ignore unknown tags - happens if we removed a tag that is still present
     # in the log file.
@@ -290,6 +289,15 @@ while (<>) {
     $version =~ tr/a-zA-Z0-9.+:~-/_/c;
     $source_version =~ tr/a-zA-Z0-9.+:~-/_/c;
 
+    # Conditionally call html_quote if needed.  On average, 11-13% of
+    # all tags (emitted on lintan.d.o) have no "extra".  That would be
+    # tags like "no-upstream-changelog".
+    if (defined($extra)) {
+        $extra = html_quote($extra);
+    } else {
+        $extra = '';
+    }
+
     # Add the tag information to our hashes.  Share the data between the
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
@@ -307,7 +315,8 @@ while (<>) {
         # HTML-safe keywords
         severity  => $tag_info->severity,
         certainty => $tag_info->certainty,
-        extra     => html_quote($extra),
+        # extra is unsafe in general, but we already quote it above.
+        extra     => $extra,
         xref      => maintainer_url($maintainer)
           . "#${source}_${source_version}"
     };
