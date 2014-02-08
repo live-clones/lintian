@@ -182,8 +182,8 @@ sub run {
     tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
     if ($withgpgverification) {
-        if (    !-f $info->debfiles('upstream-signing-key.pgp')
-            and !-f $info->debfiles('upstream-signing-key.asc')) {
+        if (   !-f $info->debfiles('upstream-signing-key.pgp')
+            && !-f $info->debfiles('upstream-signing-key.asc')) {
             tag 'debian-watch-file-pubkey-file-is-missing';
         }
     }

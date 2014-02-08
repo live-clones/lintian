@@ -1909,14 +1909,14 @@ sub detect_privacy_breach {
                 next EXTERNAL_TAG;
             }
             # reparse fulltag for rel
-            if($tagattr eq 'link') {
+            if ($tagattr eq 'link') {
                 $fulltag =~ m,<\s* link
                                    (?:\s+[^>]+)? \s+
-                                   rel \s* = \s* "(?'relcontent'[^"\r\n]*?)"
+                                   rel \s* = \s* "([^"\r\n]*?)"
                                    [^>]*?
                               >,xismog;
-                if (defined($+{relcontent})) {
-                    my $relcontent = $+{relcontent};
+                my $relcontent = $1;
+                if (defined($relcontent)) {
                     if ($relcontent eq 'schema.dct') {
                         next EXTERNAL_TAG;
                     }
