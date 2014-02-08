@@ -370,7 +370,8 @@ while (<>) {
                   = map { map_maintainer($_) } split(/>\K\s*,\s*/, $uploaders);
                 for my $uploader (@uploaders) {
                     next if $uploader eq $maintainer;
-                    $by_uploader{$uploader}{$source}{$source_version} = $list_ref;
+                    $by_uploader{$uploader}{$source}{$source_version}
+                      = $list_ref;
                 }
             }
         }
