@@ -183,7 +183,10 @@ my (%by_maint, %by_uploader, %by_tag);
 # each other's pages.  If we find two maintainers who map to the same URL,
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
-my (%seen, $last_info);
+#
+# The "last_*" are optimizations to avoid computing the same things
+# over and over again when a package have multiple tags.
+my (%seen, $last_info, $last_maintainer);
 my %expanded_code = (
     E => 'errors',
     W => 'warnings',
@@ -291,11 +294,6 @@ while (<>) {
         $extra = '';
     }
 
-    # Check if we've seen the URL for this maintainer before and, if so, map
-    # them to the same person as the previous one.
-
-    $maintainer = map_maintainer($maintainer);
-
     my $info;
 
     # Add the tag information to our hashes.  Share the data between the
@@ -329,7 +327,15 @@ while (<>) {
             $info->{severity}  = $tag_info->severity;
             $info->{certainty} = $tag_info->certainty,
         }
+        # saves a map_maintainer call
+        $maintainer = $last_maintainer;
     } else {
+
+       # Check if we've seen the URL for this maintainer before and, if so, map
+       # them to the same person as the previous one.
+
+        $last_maintainer = $maintainer = map_maintainer($maintainer);
+
         # Update maintainer statistics.
         $statistics{maintainers}++ unless defined $by_maint{$maintainer};
 
