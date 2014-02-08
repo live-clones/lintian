@@ -354,7 +354,8 @@ unless ($opt{'reports-only'}) {
             }
         }
     }
-    save_state_cache($STATE_DIR, $state);
+    save_state_cache($STATE_DIR, $state)
+        if not $opt{'dry-run'};
 
     # Flushes the changed manifest to the file system - croaks on
     # error

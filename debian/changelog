@@ -25,6 +25,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
 
   * reporting/config:
     + [NT] Fix typo of HARNESS_STATE_DIR config variable.
+  * reporting/harness:
+    + [NT] Avoid writing state-cache during dry-run.
   * reporting/html_reports:
     + [NT] Link to the library API docs from the index page.
       (Closes: #639974)
