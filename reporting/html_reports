@@ -568,6 +568,11 @@ for my $tag (sort $profile->tags(1)) {
         tags        => $by_tag{$tag},
         graphs      => $GRAPHS,
         graphs_days => $GRAPHS_RANGE_DAYS,
+        statistics  => {
+            count       => $count,
+            overrides   => $overrides,
+            total       => $count + $overrides,
+        },
     );
     output_template("tags/$tag.html", $templates{$tmpl}, \%maint_data);
 }

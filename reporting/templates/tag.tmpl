@@ -19,7 +19,9 @@
         $OUT .= qq(    src="../graphs/tags/$tag.svg" alt="History of $tag"\n);
         $OUT .= qq(    /></div>\n);
     }
-    '';
+    $OUT .= qq(<p>Emitted (non-overridden): $statistics{count}, );
+    $OUT .= qq(overridden: $statistics{overrides}, );
+    $OUT .= qq(total: $statistics{total}</p>);
 }
 
   <p>
