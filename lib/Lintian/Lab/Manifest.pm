@@ -130,7 +130,7 @@ my %TYPE2INFO = (
     'GROUP' => {
         'file-fields'  => undef, # Never written to disk
         'file-header'  => undef, # Never written to disk
-        'query-fields' => \@SRC_QUERY
+        'query-fields' => \@GROUP_QUERY
     },
 );
 
