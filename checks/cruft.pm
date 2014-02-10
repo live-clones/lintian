@@ -667,14 +667,14 @@ sub license_check {
             && index($block, 'gnu') > -1
             && index($block, 'copy') > -1){
 
-            my $cleanedblock = $block;
+            my $trimmed_block = $block;
 
             # gnu word is often highlighted
             # do a minimal replace in order to do the hard work
             # only in case of positively matched GFDL
-            $cleanedblock =~ s{
-                 (?:<span\s*[^>]>)?\s*gnu\s*</span\s*[^>]*?>  | # html span
-                 (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}               # Tex info cmd
+            $trimmed_block =~ s{
+                 (?:<span(?:\s[^>]*)?>)?\s*gnu\s*</span\s*[^>]*?> | # html span
+                 (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
                 }{ gnu }gxms;
 
             # classical gfdl matching pattern
@@ -705,7 +705,15 @@ sub license_check {
               ? $normalgfdlpattern
               : $firstblockgfdlpattern;
 
-            if ($cleanedblock =~ $gfdlpattern) {
+            # We need an "unclean" block for the $gfdlpattern as _clean_block
+            # is a bit too efficient at removing stuff we look for.  On the
+            # other hand, cleaning the block and using index to look for
+            # "gnu free documentation license" is vastly cheaper than running
+            # $gfdlpattern on the unclean block.
+            my $cleanedblock = _clean_block($trimmed_block);
+
+            if (   index($cleanedblock, 'gnu free documentation license') > -1
+                && $trimmed_block =~ $gfdlpattern) {
                 if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                     my $rawgfdlsections  = $+{rawgfdlsections}  || '';
                     my $rawcontextbefore = $+{rawcontextbefore} || '';
