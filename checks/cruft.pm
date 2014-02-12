@@ -712,7 +712,7 @@ sub license_check {
             # $gfdlpattern on the unclean block.
             my $cleanedblock = _clean_block($trimmed_block);
 
-            if (   index($cleanedblock, 'gnu free documentation license') > -1
+            if (index($cleanedblock, 'gnu free documentation license') > -1
                 && $trimmed_block =~ $gfdlpattern) {
                 if (!exists $licenseproblemhash{'gfdl-invariants'}) {
                     my $rawgfdlsections  = $+{rawgfdlsections}  || '';
