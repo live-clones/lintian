@@ -312,7 +312,7 @@ Where %d is the line number of the issue and %s is one of:
 
 The field appeared twice in the paragraph.
 
-=item Continuation line outside a paragraph
+=item Continuation line outside a paragraph (maybe line %d should be " .")
 
 A continuation line appears outside a paragraph - usually caused by an
 unintended empty line before it.
@@ -548,7 +548,8 @@ sub visit_dpkg_paragraph {
             $open_section
               or die join(q{ },
                 "syntax error at line $.:",
-                "Continuation line outside a paragraph.\n");
+                'Continuation line outside a paragraph (maybe line',
+                ($. - 1), qq{should be " .").\n});
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
