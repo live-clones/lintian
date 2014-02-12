@@ -35,7 +35,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * reporting/{html_reports,templates/tag.tmpl}:
     + [NT] Show the same statistics on the tag page as shown
       on the tag index pages.  Thanks to Guillem Jover for
-      the suggestion. (Closes: #738349)
+      the suggestion.  (Closes: #738349)
   * reporting/html_reports:
     + [NT] Link to the library API docs from the index page.
       (Closes: #639974)
