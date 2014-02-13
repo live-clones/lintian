@@ -28,6 +28,10 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Use the new @builddeps@ from autopkgtest/2.5.5
       instead of duplicating the values.
 
+  * frontend/lintian:
+    + [NT] Fix a regression in argument handling after the first
+      non-option.  This problem was introduced in 2.5.18.
+
   * lib/Lintian/Util.pm:
     + [NT] Extend the "Continuation line outside a paragraph" parse
       error on Deb822 files with a possible suggestion for fixing
