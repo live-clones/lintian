@@ -29,6 +29,7 @@ use constant BACKLOG_PROCESSING_TIME_LIMIT => 4 * 3600; # 4hours
 use Errno qw(ENOENT);
 use File::Temp qw(tempfile);
 use Getopt::Long;
+use POSIX qw(strftime);
 use YAML::Any();
 
 sub usage {
@@ -465,8 +466,10 @@ exit 0;
 # -------------------------------
 
 sub Log {
-    print {$LOG_FD} $_[0],"\n";
-    print $_[0], "\n" if $opt{'to-stdout'};
+    my ($msg) = @_;
+    my $ts = strftime('[%FT%T]: ', localtime())
+    print {$LOG_FD} $ts, $msg,"\n";
+    print $ts, $msg, "\n" if $opt{'to-stdout'};
     return;
 }
 

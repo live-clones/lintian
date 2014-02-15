@@ -41,6 +41,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Fix typo of HARNESS_STATE_DIR config variable.
   * reporting/harness:
     + [NT] Avoid writing state-cache during dry-run.
+    + [NT] Add timestamps to the log output.
   * reporting/{html_reports,templates/tag.tmpl}:
     + [NT] Show the same statistics on the tag page as shown
       on the tag index pages.  Thanks to Guillem Jover for
