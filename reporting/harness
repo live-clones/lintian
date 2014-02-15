@@ -467,7 +467,7 @@ exit 0;
 
 sub Log {
     my ($msg) = @_;
-    my $ts = strftime('[%FT%T]: ', localtime())
+    my $ts = strftime('[%FT%T]: ', localtime());
     print {$LOG_FD} $ts, $msg,"\n";
     print $ts, $msg, "\n" if $opt{'to-stdout'};
     return;
