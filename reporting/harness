@@ -204,9 +204,7 @@ unless ($opt{'reports-only'}) {
         $LINTIAN_ARCHIVEDIR, [_trim_split($LINTIAN_DIST)],
         [_trim_split($LINTIAN_AREA)], [_trim_split($LINTIAN_ARCH)]);
     my @diffs = $LAB->generate_diffs(@manifests);
-    my %skip = ();
-    my @worklist;
-    my %dirty_groups = ();
+    my (%skip, @worklist, %dirty_groups);
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
@@ -215,8 +213,7 @@ unless ($opt{'reports-only'}) {
         Log("Removing old or changed $type packages from the lab");
         foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
             my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
-            my $entry;
-            my ($pkg_src, $pkg_src_version);
+            my ($entry, $pkg_src, $pkg_src_version);
             my $sk = "$type:$pkg_name/$pkg_version";
             $sk .= "/$pkg_arch" if $pkg_arch;
             $skip{$sk} = 1; # For log-cleaning (incremental runs)
@@ -511,8 +508,7 @@ sub local_mirror_manifests {
     foreach my $dist (@$dists) {
         foreach my $area (@$areas) {
             my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
-            my $srcfd;
-            my $srcsub;
+            my ($srcfd, $srcsub);
             # Binaries have a "per arch" file.
             # - we check those first and then include the source packages that
             #   are referred to by these binaries.
