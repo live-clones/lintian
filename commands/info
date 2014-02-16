@@ -118,8 +118,8 @@ Lintian::Data->set_vendor($profile);
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,
 # although that would be nice.)
-my $unknown;
 if ($tags) {
+    my $unknown = 0;
     for my $tag (@ARGV) {
         my $info = $profile->get_tag($tag, 1);
         if ($info) {
