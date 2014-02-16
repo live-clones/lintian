@@ -48,7 +48,7 @@ sub new {
 
 sub readwindow {
     my ($self) = @_;
-    my $window;
+    my ($window, $queue);
     unless(read($self->{'_handle'}, $window, $self->{'_blocksize'})) {
         return;
     }
@@ -61,11 +61,10 @@ sub readwindow {
 
     $self->{'_blocknumber'}++;
 
-    my $block;
-    shift @{$self->{'_queue'}};
-    push(@{$self->{'_queue'}}, $window);
-    $block =  join '', @{$self->{'_queue'}};
-    return $block;
+    $queue = $self->{'_queue'};
+    shift(@{$queue});
+    push(@{$queue}, $window);
+    return join('', @{$queue});
 }
 
 sub blocknumber {
