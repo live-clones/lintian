@@ -1105,10 +1105,12 @@ sub strip (_) { ## no critic (Subroutines::RequireFinalReturn)
     if (defined wantarray) {
         # perl 5.14 s///r would have been useful here.
         my ($arg) = @_;
-        $arg =~ s/^\s++|\s++$//g;
-        return $arg;
+        $arg =~ s/^\s++//;
+        # unpack 'A*' is faster than s/\s++$//
+        return unpack('A*', $arg);
     }
-    $_[0] =~ s/^\s++|\s++$//g;
+    $_[0] =~ s/^\s++//;
+    $_[0] = unpack('A*', $_[0]);
     # void context, so no return needed here.
 }
 
@@ -1127,12 +1129,10 @@ sub lstrip (_) { ## no critic (Subroutines::RequireFinalReturn)
 # prototype for default to $_
 sub rstrip (_) {  ## no critic (Subroutines::RequireFinalReturn)
     if (defined wantarray) {
-        # perl 5.14 s///r would have been useful here.
-        my ($arg) = @_;
-        $arg =~ s/\s++$//g;
-        return $arg;
+        # unpack 'A*' is faster than s/\s++$//
+        return unpack('A*', $_[0]);
     }
-    $_[0] =~ s/\s++$//;
+    $_[0] = unpack('A*', $_[0]);
     # void context, so no return needed here.
 }
 
