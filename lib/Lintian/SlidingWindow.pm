@@ -28,22 +28,18 @@ use Lintian::Util qw(strip);
 
 sub new {
     my ($class, $mode, $file, $blocksub) = @_;
-    my $self = {};
-
-    my $block = '';
-
     open(my $handle, $mode, $file);
     binmode($handle);
 
-    $self->{'_handle'} = $handle;
-    $self->{'_queue'} = ['', ''];
-    $self->{'_block'} = '';
-    $self->{'_blocksize'} = 4096;
-    $self->{'_blocksub'} = defined($blocksub) ? $blocksub : undef;
-    $self->{'_blocknumber'} = -1;
+    my $self = {
+        '_handle'      => $handle,
+        '_queue'       => [q{}, q{}],
+        '_blocksize'   => 4096,
+        '_blocksub'    => $blocksub,
+        '_blocknumber' => -1,
+    };
 
-    bless($self, $class);
-    return $self;
+    return bless($self, $class);
 }
 
 sub readwindow {
