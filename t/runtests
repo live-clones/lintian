@@ -78,6 +78,7 @@ BEGIN {
 
 use lib "$LINTIAN_ROOT/lib";
 
+use Lintian::Internal::FrontendUtil qw(default_parallel);
 use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
   rstrip slurp_entire_file);
 
@@ -107,9 +108,9 @@ sub usage {
 :              $0 [-dkv] [-j [<jobs>]] [-t <tag>] <testset-directory> <testing-directory>
 :
 :         -d          Display additional debugging information
-:         -j [<jobs>] Run up to <jobs> jobs in parallel. Defaults to two.
+:         -j [<jobs>] Run up to <jobs> jobs in parallel.
 :                     If -j is passed without specifying <jobs>, the number
-:                     of jobs started is <cpu cores>+1 if /proc/cpuinfo is readable.
+:                     of jobs started is <nproc>+1.
 :         -k          Do not stop after one failed test
 :         -t <tag>    Run only tests for or against <tag>
 :         -v          Be more verbose
@@ -168,27 +169,12 @@ if (-d "$TESTSET/helpers/bin") {
 }
 
 # Getopt::Long assigns 0 as default value if none was specified
-if ($JOBS == 0 && -r '/proc/cpuinfo') {
-    open(my $fd, '<', '/proc/cpuinfo');
-    while (<$fd>) {
-        next unless m/^cpu cores\s*:\s*(\d+)/;
-        $JOBS += $1;
-    }
-    close($fd);
-
-    print "Apparent number of cores: $JOBS\n" if $DEBUG;
-
-    # Running up to twice the number of cores usually gets the most out
-    # of the CPUs and disks but it might be too aggresive to be the
-    # default for -j. Only use <cores>+1 then.
-    $JOBS++;
-}
-
-# No decent number of jobs? set a default
-# Above $JOBS should be set to -1 so that this condition is always met,
-# therefore avoiding duplication.
+# (i.e. "-j").  Otherwise, $JOBS can also be -1 if "-j" was not
+# specified at all.
 if ($JOBS <= 0) {
-    $JOBS = 2;
+    $JOBS = default_parallel();
+
+    print "Doing up to $JOBS concurrent builds/tests\n" if $DEBUG;
 }
 
 # --- Display output immediately
