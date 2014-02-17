@@ -3,6 +3,10 @@ use strict;
 use warnings;
 
 use Test::More;
+
+plan skip_all => 'Not needed for coverage of Lintian'
+  if $ENV{'LINTIAN_COVERAGE'};
+
 use Test::Lintian;
 
 BEGIN {

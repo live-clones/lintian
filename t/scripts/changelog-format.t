@@ -22,6 +22,8 @@ use strict;
 use warnings;
 
 use Test::More;
+plan skip_all => 'Not needed for coverage of Lintian'
+  if $ENV{'LINTIAN_COVERAGE'};
 use Parse::DebianChangelog;
 
 my $changelog = Parse::DebianChangelog->init({ infile => 'debian/changelog' })

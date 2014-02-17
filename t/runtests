@@ -44,7 +44,7 @@ use Text::Template;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
-our ($LINTIAN_ROOT, $LINTIAN);
+our ($LINTIAN_ROOT, $LINTIAN, @LINTIAN_CMD);
 
 BEGIN {
     if (($ENV{'LINTIAN_TEST_INSTALLED'}//'no') eq 'yes') {
@@ -56,10 +56,12 @@ BEGIN {
     }
     $ENV{'LINTIAN_TEST_ROOT'} = $LINTIAN_ROOT;
     $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
+    @LINTIAN_CMD = ($LINTIAN);
 
     delete $ENV{'LINTIAN_CFG'};
     delete $ENV{'LINTIAN_LAB'};
     delete($ENV{'LINTIAN_PROFILE'});
+    delete($ENV{'LINTIAN_COVERAGE'});
     # Some of the tests don't cope too well with "-j" in MAKEFLAGS
     delete($ENV{'MAKEFLAGS'});
     # Ensure Lintian works without $ENV{HOME}
@@ -130,7 +132,7 @@ our $TESTSET;
 our $JOBS = -1;
 our $DUMP_LOGS = '';
 
-my ($run_all_tests, $tag);
+my ($run_all_tests, $tag, $coverage);
 Getopt::Long::Configure('bundling');
 GetOptions(
     'd|debug'      => \$DEBUG,
@@ -138,7 +140,8 @@ GetOptions(
     'k|keep-going' => \$run_all_tests,
     't|tag=s'      => \$tag,
     'dump-logs!'   => \$DUMP_LOGS,
-    'v|verbose'    => \$VERBOSE
+    'v|verbose'    => \$VERBOSE,
+    'coverage:s'   => \$coverage,
 ) or usage;
 
 if ($#ARGV < 1 || $#ARGV > 2) {
@@ -154,6 +157,16 @@ unless (-d $RUNDIR) {
 }
 unless (-d $TESTSET) {
     fail("test set directory $TESTSET does not exist");
+}
+
+if (defined($coverage)) {
+    my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
+    my $coverage_arg = '-MDevel::Cover=-silent,1,-ignore,^(.*/)?t/scripts/.+';
+    $coverage_arg .= ',' . $coverage if $coverage ne '';
+    $ENV{'LINTIAN_COVERAGE'} = 1;
+    $harness_perl_switches .= ' ' . $coverage_arg;
+    $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
+    unshift(@LINTIAN_CMD, 'perl', $coverage_arg);
 }
 
 if ($DEBUG) {
@@ -556,7 +569,7 @@ sub run_lintian {
                 #NB: $line has trailing newline.
                 msg_print "$testdata->{testname}: $line";
             }
-            fail "$LINTIAN @options $file exited with status $status";
+            fail "@LINTIAN_CMD @options $file exited with status $status";
         } else {
             @data = sort @data if $testdata->{sort};
             open(my $fd, '>', $out);
@@ -565,7 +578,8 @@ sub run_lintian {
         }
     } else {
         open(STDERR, '>&', \*STDOUT);
-        exec {$LINTIAN} $LINTIAN, @options, $file or fail "exec failed: $!";
+        exec {$LINTIAN_CMD[0]} @LINTIAN_CMD, @options, $file
+          or fail "exec failed: $!";
     }
     return 1;
 }

@@ -4,6 +4,8 @@ use strict;
 use warnings;
 
 use Test::More;
+plan skip_all => 'Not needed for coverage of Lintian'
+  if $ENV{'LINTIAN_COVERAGE'};
 eval 'use Test::Pod::Coverage';
 plan skip_all => 'Test::Pod::Coverage is required for testing POD coverage'
   if $@;

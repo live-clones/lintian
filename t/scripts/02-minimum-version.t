@@ -8,6 +8,8 @@ use warnings;
 use threads;
 
 use Test::More;
+plan skip_all => 'Not needed for coverage of Lintian'
+  if $ENV{'LINTIAN_COVERAGE'};
 eval 'use Test::MinimumVersion';
 plan skip_all => 'Test::MinimumVersion required to run this test' if $@;
 

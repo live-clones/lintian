@@ -7,6 +7,10 @@
 use strict;
 use warnings;
 
+use
+  if $ENV{'LINTIAN_COVERAGE'}, 'Test::More',
+  'skip_all' => 'Not needed for coverage of Lintian';
+
 use Cwd qw(realpath);
 use File::Basename qw(dirname);
 
