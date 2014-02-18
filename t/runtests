@@ -161,7 +161,7 @@ unless (-d $TESTSET) {
 
 if (defined($coverage)) {
     my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
-    my $coverage_arg = '-MDevel::Cover=-silent,1,-ignore,^(.*/)?t/scripts/.+';
+    my $coverage_arg = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
     $coverage_arg .= ',' . $coverage if $coverage ne '';
     $ENV{'LINTIAN_COVERAGE'} = 1;
     $harness_perl_switches .= ' ' . $coverage_arg;
