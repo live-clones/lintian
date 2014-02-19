@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2013-12-28
+# Last updated: 2014-02-19
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -12,6 +12,7 @@ bad-version-number
 binary-file-compressed-with-upx
 binary-in-etc
 build-info-in-binary-control-file-section
+conflicting-negation-in-source-relation
 control-file-has-bad-owner
 control-file-has-bad-permissions
 control-file-is-not-a-file
@@ -25,6 +26,9 @@ debian-rules-missing-required-target
 debian-rules-not-a-makefile
 description-is-dh_make-template
 description-synopsis-is-empty
+dir-or-file-in-build-tree
+dir-or-file-in-etc-opt
+dir-or-file-in-home
 dir-or-file-in-mnt
 dir-or-file-in-opt
 dir-or-file-in-run
@@ -37,6 +41,8 @@ file-in-etc-not-marked-as-conffile
 file-in-usr-marked-as-conffile
 forbidden-postrm-interpreter
 library-in-debug-or-profile-should-not-be-stripped
+license-problem-md5sum-non-distributable-file
+license-problem-md5sum-non-free-file
 magic-arch-in-arch-list
 maintainer-address-is-on-localhost
 maintainer-address-malformed

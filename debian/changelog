@@ -45,6 +45,9 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       error on Deb822 files with a possible suggestion for fixing
       the problem.
 
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [BR] Refresh with new tags.
+
   * reporting/config:
     + [NT] Fix typo of HARNESS_STATE_DIR config variable.
   * reporting/harness:
