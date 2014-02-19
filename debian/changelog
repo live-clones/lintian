@@ -23,6 +23,11 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       (Closes: #735348).
     + [BR] Detect missing sources for minified javascript, flash project,
       flash files, and elf binary.
+  * checks/files.desc:
+    + [BR] Raise file-name-in-PATH-is-not-ASCII and
+      file-name-in-PATH-is-not-ASCII to error
+      (see policy 10.10), thanks to Helmut Grohne.
+      (Closes: #739347)
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.  (Closes: #738454)
