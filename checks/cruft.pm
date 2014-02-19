@@ -580,8 +580,7 @@ sub license_check {
         }
 
         if (   index($block, 'intellectual') > -1
-            && index($block, 'property') > -1
-            && index($block, 'all') > -1){
+            && index($block, 'property') > -1){
 
             # nvdia opencv infamous license
             # non-distributable
