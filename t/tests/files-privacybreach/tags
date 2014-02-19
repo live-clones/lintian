@@ -23,7 +23,9 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-br
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.css
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseform.xml
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseformtracking.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseimagemagick.js
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecsejs.xml
 E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/logosourceforge.xml
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwikvariant.html
