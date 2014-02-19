@@ -26,6 +26,11 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * data/files/privacy*:
     + [BR] Improve detection of privacy-breach-google-cse, thanks to
       Paul Wise (Closes: #739247).
+  * data/scripts/maintainer-script-bad-command:
+    + [BR] Fix false positive
+      maintainer-script-should-not-use-adduser-system-without-home
+      due to quoting, thanks to Andreas Beckmann <anbe@debian.org>
+      (Closes: #739109).
 
   * debian/tests/control:
     + [NT] Use the new @builddeps@ from autopkgtest/2.5.5

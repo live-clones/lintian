@@ -160,5 +160,10 @@ DEVNULL=/dev/null
 adduser --system bar1 --home $DEVNULL
 adduser --system bar2 --home ${DEVNULL}
 
+# this is a false positive due to quoting
+adduser --system bar2 --home "${DEVNULL}"
+adduser --system --ingroup smmta --home "/var/lib/sendmail" \
+        --disabled-password \
+        --quiet --gecos 'Mail Transfer Agent' smmta;
 
 #DEBHELPER#
