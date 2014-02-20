@@ -9,7 +9,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       cases (e.g. the linux source).  (Closes: #738342)
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
-      in a tag reference.  (Closes: #612610)
+      in a tag reference.  (Closes: #738454)
   * checks/watch-file.{desc,pm}:
     + [BR] Allow debian/upstream-signing-key.asc,
       thanks to Nicolas Boulenguez (Closes: #736711).
