@@ -183,7 +183,8 @@ sub run {
 
     if ($withgpgverification) {
         if (   !-f $info->debfiles('upstream-signing-key.pgp')
-            && !-f $info->debfiles('upstream-signing-key.asc')) {
+            && !-f $info->debfiles('upstream/signing-key.pgp')
+            && !-f $info->debfiles('upstream/signing-key.asc')) {
             tag 'debian-watch-file-pubkey-file-is-missing';
         }
     }

@@ -164,7 +164,9 @@ Ref: uscan(1)
 Info: This watch file verifies a cryptographic signature but
  the upstream public key is missing.
  .
- Please add upstream public keys in debian/upstream-signing-key.asc.
+ Please add upstream public keys in either
+ debian/upstream/signing-key.asc or
+ debian/upstream/signing-key.pgp.
 
 Tag: debian-watch-contains-dh_make-template
 Severity: wishlist

@@ -13,6 +13,9 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * checks/watch-file.{desc,pm}:
     + [BR] Allow debian/upstream-signing-key.asc,
       thanks to Nicolas Boulenguez (Closes: #736711).
+    + [NT] Apply patch from Daniel Kahn Gillmor to check for
+      the upstream signing key in debian/upstream.  Thanks to
+      Hideki Yamane for the bug report.  (Closes: #738597)
 
   * collection/java-info:
     + [NT] Update the conditional using file(1) to cope with
