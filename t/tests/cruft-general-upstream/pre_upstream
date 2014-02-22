@@ -37,8 +37,14 @@ echo 'configure-generated-file-in-source' > "${dir}/config.cache"
 printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3c" > "${dir}/fake-win32-bin.exe"
 printf "CWS\011" > "${dir}/fakeflash.swf"
 echo '//comment' > "${dir}/fake.min.js"
-printf "\154\014\015\012" > "${dir}/fake.pyo"
-printf "\154\014\015\012" > "${dir}/fake.pyc"
+# Make python generate python bytecode files
+# - more reliable than crafting them ourselves
+echo '' > "${dir}/fake.py"
+echo 'import fake' > "${dir}/main.py"
+unset PYTHONDONTWRITEBYTECODE
+PYTHONPATH="${dir}" python "${dir}/main.py" > /dev/null
+PYTHONPATH="${dir}" python -O "${dir}/main.py"  > /dev/null
+rm -f "${dir}"/main.py*
 
 zip -q "${dir}/fake.jar" "${dir}/fake.min.js"
 cp "${dir}/fake.jar" "${dir}/fakesilverlight.XAC"
