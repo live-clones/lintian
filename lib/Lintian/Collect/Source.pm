@@ -191,8 +191,8 @@ Needs-Info requirements for using I<binaries>: L<Same as binary_package_type|/bi
 sub binaries {
     my ($self) = @_;
     # binary_package_type does all the work for us.
-    $self->binary_package_type('') unless exists $self->{binaries};
-    return keys %{ $self->{binaries} };
+    $self->_load_dctrl unless exists $self->{binary_names};
+    return @{ $self->{binary_names} };
 }
 
 =item binary_package_type (BINARY)
@@ -369,6 +369,7 @@ sub _load_dctrl {
         $ok = 1 if -e $dctrl;
     }
 
+    $self->{binary_names} = [];
     unless ($ok) {
         # Bad file, assume the package and field does not exist.
         $self->{binary_field} = {};
@@ -396,6 +397,7 @@ sub _load_dctrl {
         my $pkg = $binary->{'package'};
         next unless defined($pkg) and $pkg =~ m{\A $PKGNAME_REGEX \Z}xsmo;
         $packages{$pkg} = $binary;
+        push(@{$self->{binary_names} }, $pkg);
     }
     $self->{binary_field} = \%packages;
 
