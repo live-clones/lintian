@@ -562,7 +562,7 @@ sub license_check {
         return;
     }
 
-    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, sub { $_ = lc($_); });
+    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, \&lc_block);
     my %licenseproblemhash = ();
 
     # we try to read this file in block and use a sliding window
@@ -879,6 +879,10 @@ sub _clean_block {
     strip($text);
 
     return $text;
+}
+
+sub lc_block {
+    return $_ = lc($_);
 }
 
 1;
