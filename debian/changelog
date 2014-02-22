@@ -14,6 +14,10 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [BR] Allow debian/upstream-signing-key.asc,
       thanks to Nicolas Boulenguez (Closes: #736711).
 
+  * collection/java-info:
+    + [NT] Update the conditional using file(1) to cope with
+      the new output for JAR files.
+
   * data:
     + [NT] Refresh several architecture data files against
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.

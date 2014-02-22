@@ -81,7 +81,11 @@ sub collect {
         next unless $file->is_file;
         # Wheezy's version of file calls "jar files" for "Zip archive".
         # Newer versions seem to call them "Java Jar file".
-        next unless $info->file_info($file) =~ m/Java Jar file|Zip archive/o;
+        # Jessie also introduced "Java archive data (JAR)"...
+        next unless $info->file_info($file) =~ m/
+                     Java [ ] (?:Jar [ ] file|archive [ ] data)
+                   | Zip [ ] archive
+                   | JAR /xo;
 
         if ($file =~ m#\S+\.jar$#i) {
             my $filename = $file->name;
