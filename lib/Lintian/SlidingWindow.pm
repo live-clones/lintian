@@ -29,7 +29,6 @@ use Lintian::Util qw(strip);
 sub new {
     my ($class, $mode, $file, $blocksub) = @_;
     open(my $handle, $mode, $file);
-    binmode($handle);
 
     my $self = {
         '_handle'      => $handle,

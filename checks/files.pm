@@ -1832,7 +1832,7 @@ sub detect_privacy_breach {
     }
 
     my $sfd = Lintian::SlidingWindow->new(
-        '<',
+        '<:raw',
         $info->unpacked($file),
         sub { $_=lc($_); });
 
