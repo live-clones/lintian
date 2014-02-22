@@ -168,7 +168,7 @@ sub run {
                         next
                           if $target =~ m,^usr/share/java/[^/]+.jar$,o
                           and @java_lib_depends;
-                        $tinfo = $info->{index}->{$target};
+                        $tinfo = $info->index($target);
                         # Points to file or link in this package,
                         #  which is sometimes easier than
                         #  re-writing the classpath.
