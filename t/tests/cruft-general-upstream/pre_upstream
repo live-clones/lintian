@@ -35,12 +35,13 @@ echo 'source-contains-svn-conflict-file' > "${dir}/foo.r1352"
 echo 'configure-generated-file-in-source' > "${dir}/config.cache"
 
 printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3c" > "${dir}/fake-win32-bin.exe"
-printf "PK\003\004" > "${dir}/fake.jar"
-printf "PK\003\004" > "${dir}/fakesilverlight.XAC"
 printf "CWS\011" > "${dir}/fakeflash.swf"
 echo '//comment' > "${dir}/fake.min.js"
 printf "\154\014\015\012" > "${dir}/fake.pyo"
 printf "\154\014\015\012" > "${dir}/fake.pyc"
+
+zip -q "${dir}/fake.jar" "${dir}/fake.min.js"
+cp "${dir}/fake.jar" "${dir}/fakesilverlight.XAC"
 
 # need to pad
 printf "\320\317\021\340\241\261\032\341" > "${dir}/fakefla.fla"
