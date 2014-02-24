@@ -1167,8 +1167,12 @@ sub dequote_name {
     my ($name, $slsd) = @_;
     $slsd = 1 unless defined $slsd;
     $name =~ s,^\.?/,, if $slsd;
-    $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
-    $name =~ s/\\\\/\\/g;
+    # Optimise for the case where the filename does not contain
+    # backslashes.  It is a fairly rare to see that in practise.
+    if (index($name, '\\') > -1) {
+        $name =~ s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
+        $name =~ s/\\\\/\\/g;
+    }
     return $name;
 }
 
