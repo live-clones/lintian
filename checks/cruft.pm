@@ -573,6 +573,7 @@ sub license_check {
     while (my $block = $sfd->readwindow()) {
         if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
             if (   index($block, 'intellectual') > -1
+                && index($block, 'retain') > -1
                 && index($block, 'property') > -1){
                 # nvdia opencv infamous license
                 # non-distributable
