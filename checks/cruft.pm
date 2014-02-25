@@ -586,10 +586,10 @@ sub license_check {
                 # non-distributable
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $cleanedblock =~ m/retain \s+ all \s+ intellectual \s+
-                          property \s+ and \s+ proprietary \s+ rights \s+ in \s+
-                          and \s+ to \s+ this \s+ software \s+ and \s+
-                          related \s+ documentation/xism
+                    $cleanedblock =~ m/retain \s all \s intellectual \s
+                          property \s and \s proprietary \s rights \s in \s
+                          and \s to \s this \s software \s and \s
+                          related \s documentation/xism
                   ){
                     tag 'license-problem-nvidia-intellectual', $name;
                     $licenseproblemhash{'nvidia-intellectual'} = 1;
@@ -608,9 +608,9 @@ sub license_check {
                 && index($block, 'good') > -1) {
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $block =~ m/software \s++ shall \s++
-                     be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
-                     not \s++ evil/xsm
+                    $block =~ m/software \s shall \s
+                     be \s used \s for \s good \s* ,? \s*
+                     not \s evil/xsm
                   ){
                     # json evil license
                     tag 'license-problem-json-evil', $name;
