@@ -642,7 +642,8 @@ sub license_check {
             if (index($block, 'bcp') > -1){
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $block =~ m/This \s document \s is \s subject \s to \s
+                    $cleanedblock =~ m/This \s document \s is \s subject
+                       \s to \s
                               (?:the \s rights\s?, \s licenses \s
                                  and \s restrictions \s contained \s in)?
                                \s BCP \s 78/xism
