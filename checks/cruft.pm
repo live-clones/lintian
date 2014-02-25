@@ -704,9 +704,9 @@ sub license_check {
                     my $rawgfdlsections  = $+{rawgfdlsections}  || '';
                     my $rawcontextbefore = $+{rawcontextbefore} || '';
 
-                    # replace some common comment-marker/markup with space
-                    my $gfdlsections  = _clean_block($rawgfdlsections);
-                    my $contextbefore = _clean_block($rawcontextbefore);
+                    # strip puntuation
+                    my $gfdlsections  = _strip_punct($rawgfdlsections);
+                    my $contextbefore = _strip_punct($rawcontextbefore);
 
                     # remove classical and without meaning part of
                     # matched string
@@ -865,13 +865,28 @@ sub _clean_block {
                   \\n                          |  # Verbatim \n in string array
                   \\&                          |  # pod2man formating
                   \\s(?:0|-1)                  |  # pod2man formating
-                  \s*[,\.;]\s*\Z               |  # final punctuation
-                  \A\s*[,\.;]\s*               |  # punctuation at the beginning
                   (?:``|'')                    |  # quote like
                   [%\*\"\|\\\#]                   # String, C-style comment/javadoc indent,
                                                   # quotes for strings, pipe and antislash in some txt
                                                   # shell or po file comments
            )}{ }gxms;
+
+    # delete double spacing now and normalize spacing
+    # to space character
+    $text =~ s{\s++}{ }gsm;
+    strip($text);
+
+    return $text;
+}
+
+# strip punctuation at both ends
+sub _strip_punct() {
+    my ($text) = @_;
+    # replace final punctuation
+    $text =~ s{(?:
+        \s*[,\.;]\s*\Z               |  # final punctuation
+        \A\s*[,\.;]\s*                  # punctuation at the beginning
+    )}{ }gxms;
 
     # delete double spacing now and normalize spacing
     # to space character
