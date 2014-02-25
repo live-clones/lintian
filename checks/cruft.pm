@@ -579,12 +579,11 @@ sub license_check {
             $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
         }
 
-        if (   index($block, 'intellectual') > -1
-            && index($block, 'property') > -1){
-
-            # nvdia opencv infamous license
-            # non-distributable
-            if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
+        if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
+            if (   index($block, 'intellectual') > -1
+                && index($block, 'property') > -1){
+                # nvdia opencv infamous license
+                # non-distributable
                 my $cleanedblock = _clean_block($block);
                 if (
                     $cleanedblock =~ m/retain \s+ all \s+ intellectual \s+
@@ -604,26 +603,26 @@ sub license_check {
             next BLOCK;
         }
 
-        if (
-            index($block, 'evil') > -1
-            && $block =~ m/software \s++ shall \s++
+        if (!exists $licenseproblemhash{'json-evil'}) {
+            if (
+                index($block, 'evil') > -1
+                && $block =~ m/software \s++ shall \s++
                      be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
                      not \s++ evil/xsm
-          ){
-            # json evil license
-
-            if (!exists $licenseproblemhash{'json-evil'}) {
+              ){
+                # json evil license
                 tag 'license-problem-json-evil', $name;
                 $licenseproblemhash{'json-evil'} = 1;
             }
         }
 
         # non free rfc
-        if (
-               index($block, 'copyrights') > -1
-            && index($block, 'purpose') > -1
-            && index($block, 'translate') > -1
-            && $block =~ m/this \s document \s itself \s may \s not \s
+        if (!exists $licenseproblemhash{'non-free-RFC'}) {
+            if (
+                   index($block, 'copyrights') > -1
+                && index($block, 'purpose') > -1
+                && index($block, 'translate') > -1
+                && $block =~ m/this \s document \s itself \s may \s not \s
                            be \s modified \s in \s any \s way\s?,\s?
                            such \s as \s by \s removing \s the \s copyright \s
                            notice \s or \s references \s
@@ -635,20 +634,19 @@ sub license_check {
                            the \s .{0,128} \s? process \s must \s be \s
                            followed\s?,\s? or \s as \s required \s to \s
                            translate \s it \s into \s languages \s other \s than/xism
-          ){
-            if (!exists $licenseproblemhash{'non-free-RFC'}) {
+              ){
                 tag 'license-problem-non-free-RFC', $name;
                 $licenseproblemhash{'non-free-RFC'} = 1;
             }
         }
-        if (
-            index($block, 'bcp') > -1
-            && $block =~ m/This \s document \s is \s subject \s to \s
+        if (!exists $licenseproblemhash{'non-free-RFC'}) {
+            if (
+                index($block, 'bcp') > -1
+                && $block =~ m/This \s document \s is \s subject \s to \s
                               (?:the \s rights\s?, \s licenses \s
                                  and \s restrictions \s contained \s in)?
                                \s BCP \s 78/xism
-          ){
-            if (!exists $licenseproblemhash{'non-free-RFC'}) {
+              ){
                 tag 'license-problem-non-free-RFC', $name;
                 $licenseproblemhash{'non-free-RFC'} = 1;
             }
@@ -661,23 +659,24 @@ sub license_check {
         # if the "redeeming" part is in the next block.
         #
         # See cruft-gfdl-fp-sliding-win for the test case
-        if (   index($block, 'license') > -1
-            && index($block, 'documentation') > -1
-            && index($block, 'gnu') > -1
-            && index($block, 'copy') > -1){
+        if (!exists $licenseproblemhash{'gfdl-invariants'}) {
+            if (   index($block, 'license') > -1
+                && index($block, 'documentation') > -1
+                && index($block, 'gnu') > -1
+                && index($block, 'copy') > -1){
 
-            my $trimmed_block = $block;
+                my $trimmed_block = $block;
 
-            # gnu word is often highlighted
-            # do a minimal replace in order to do the hard work
-            # only in case of positively matched GFDL
-            $trimmed_block =~ s{
+                # gnu word is often highlighted
+                # do a minimal replace in order to do the hard work
+                # only in case of positively matched GFDL
+                $trimmed_block =~ s{
                  (?:<span(?:\s[^>]*)?>)?\s*gnu\s*</span\s*[^>]*?> | # html span
                  (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
                 }{ gnu }gxms;
 
-            # classical gfdl matching pattern
-            my $normalgfdlpattern = qr/
+                # classical gfdl matching pattern
+                my $normalgfdlpattern = qr/
                  (?'contextbefore'(?:
                     (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
                     (?:\s+ copy \s+ of \s+ the \s+ license \s+ is.{0,1024}?)))
@@ -686,8 +685,8 @@ sub license_check {
                  a \s+ copy \s+ of \s+ the \s+ license \s+ is
                 /xsmo;
 
-            # for first block we get context from the beginning
-            my $firstblockgfdlpattern = qr/
+                # for first block we get context from the beginning
+                my $firstblockgfdlpattern = qr/
                  (?'rawcontextbefore'(?:
                     (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
                   \A(?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){0,1024}|
@@ -699,21 +698,20 @@ sub license_check {
                  a \s+ copy \s+ of \s+ the \s+ license \s+ is
                  /xsmo;
 
-            my $gfdlpattern
-              =$sfd->blocknumber()
-              ? $normalgfdlpattern
-              : $firstblockgfdlpattern;
+                my $gfdlpattern
+                  =$sfd->blocknumber()
+                  ? $normalgfdlpattern
+                  : $firstblockgfdlpattern;
 
-            # We need an "unclean" block for the $gfdlpattern as _clean_block
-            # is a bit too efficient at removing stuff we look for.  On the
-            # other hand, cleaning the block and using index to look for
-            # "gnu free documentation license" is vastly cheaper than running
-            # $gfdlpattern on the unclean block.
-            my $cleanedblock = _clean_block($trimmed_block);
+              # We need an "unclean" block for the $gfdlpattern as _clean_block
+              # is a bit too efficient at removing stuff we look for.  On the
+              # other hand, cleaning the block and using index to look for
+              # "gnu free documentation license" is vastly cheaper than running
+              # $gfdlpattern on the unclean block.
+                my $cleanedblock = _clean_block($trimmed_block);
 
-            if (index($cleanedblock, 'gnu free documentation license') > -1
-                && $trimmed_block =~ $gfdlpattern) {
-                if (!exists $licenseproblemhash{'gfdl-invariants'}) {
+                if (index($cleanedblock, 'gnu free documentation license') > -1
+                    && $trimmed_block =~ $gfdlpattern) {
                     my $rawgfdlsections  = $+{rawgfdlsections}  || '';
                     my $rawcontextbefore = $+{rawcontextbefore} || '';
 
