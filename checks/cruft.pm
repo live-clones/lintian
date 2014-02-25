@@ -601,7 +601,7 @@ sub license_check {
                 && index($block, 'good') > -1) {
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $block =~ m/software \s shall \s
+                    $cleanedblock =~ m/software \s shall \s
                      be \s used \s for \s good \s* ,? \s*
                      not \s evil/xsm
                   ){
@@ -619,7 +619,8 @@ sub license_check {
                 && index($block, 'translate') > -1) {
                 my $cleanedblock = _clean_block($block);
                 if(
-                    $block =~ m/this \s document \s itself \s may \s not \s
+                    $cleanedblock =~ m/this \s document \s itself \s
+                           may \s not \s
                            be \s modified \s in \s any \s way\s?,\s?
                            such \s as \s by \s removing \s the \s copyright \s
                            notice \s or \s references \s
