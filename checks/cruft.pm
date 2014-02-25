@@ -27,7 +27,6 @@ use strict;
 use warnings;
 use autodie;
 use v5.10;
-use feature qw(switch);
 use Carp qw(croak confess);
 
 use Cwd();
