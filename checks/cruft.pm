@@ -743,6 +743,12 @@ sub _check_gfdl_license_problem {
                            this \s document \s under \s the \s terms \s of \s the\Z}
                         {}xismo;
 
+    # Treat ambiguous empty text
+    if ($gfdlsections eq '') {
+        tag 'license-problem-gfdl-invariants-empty', $name;
+        return 1;
+    }
+
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
     if (
@@ -789,10 +795,6 @@ sub _check_gfdl_license_problem {
                             LIST (?:\s THEIR \s TITLES)? \Z/xiso
       ){
         # verbatim text of license is ok
-    }elsif ($gfdlsections eq '') {
-        # empty text is ambiguous
-        tag 'license-problem-gfdl-invariants-empty', $name;
-        return 1;
     }elsif (
         $gfdlsections =~ m/
                             with \s \&FDLInvariantSections; \s? [,\.;]? \s?
