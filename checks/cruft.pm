@@ -606,10 +606,10 @@ sub license_check {
                 # non-distributable
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $cleanedblock =~ m/retain \s all \s intellectual \s
-                          property \s and \s proprietary \s rights \s in \s
-                          and \s to \s this \s software \s and \s
-                          related \s documentation/xism
+                    $cleanedblock =~ m/retain [ ] all [ ] intellectual [ ]
+                          property [ ] and [ ] proprietary [ ] rights [ ] in
+                          [ ] and [ ] to [ ] this [ ] software [ ] and [ ]
+                          related [ ] documentation/xism
                   ){
                     tag 'license-problem-nvidia-intellectual', $name;
                     $licenseproblemhash{'nvidia-intellectual'} = 1;
@@ -628,9 +628,9 @@ sub license_check {
                 && index($block, 'good') > -1) {
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $cleanedblock =~ m/software \s shall \s
-                     be \s used \s for \s good \s* ,? \s*
-                     not \s evil/xsm
+                    $cleanedblock =~ m/software [ ] shall [ ]
+                     be [ ] used [ ] for [ ] good [ ]? ,? [ ]?
+                     not [ ] evil/xsm
                   ){
                     # json evil license
                     tag 'license-problem-json-evil', $name;
@@ -646,19 +646,18 @@ sub license_check {
                 && index($block, 'translate') > -1) {
                 my $cleanedblock = _clean_block($block);
                 if(
-                    $cleanedblock =~ m/this \s document \s itself \s
-                           may \s not \s
-                           be \s modified \s in \s any \s way\s?,\s?
-                           such \s as \s by \s removing \s the \s copyright \s
-                           notice \s or \s references \s
-                           to \s .{0,256}
-                           \s? except \s as \s needed \s for \s
-                           the \s purpose \s of \s developing \s  .{0,128}
-                           \s? in \s which \s case \s the \s procedures \s
-                           for \s copyrights \s defined \s in \s
-                           the \s .{0,128} \s? process \s must \s be \s
-                           followed\s?,\s? or \s as \s required \s to \s
-                           translate \s it \s into \s languages \s other \s than/xism
+                    $cleanedblock =~ m/this [ ] document [ ] itself [ ]
+                        may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ]
+                        way [ ]?, [ ]? such [ ] as [ ] by [ ] removing [ ]
+                        the [ ] copyright [ ] notice [ ] or [ ] references
+                        [ ] to [ ] .{0,256} [ ]? except [ ] as [ ] needed
+                        [ ] for [ ] the [ ] purpose [ ] of [ ] developing
+                        [ ] .{0,128} [ ]? in [ ] which [ ] case [ ] the
+                        [ ] procedures [ ] for [ ] copyrights [ ] defined
+                        [ ] in [ ] the [ ] .{0,128} [ ]? process [ ] must
+                        [ ] be [ ] followed[ ]?,[ ]? or [ ] as [ ] required
+                        [ ] to [ ] translate [ ] it [ ] into [ ] languages
+                        [ ] other [ ] than/xsm
                   ){
                     tag 'license-problem-non-free-RFC', $name;
                     $licenseproblemhash{'non-free-RFC'} = 1;
@@ -669,11 +668,11 @@ sub license_check {
             if (index($block, 'bcp') > -1){
                 my $cleanedblock = _clean_block($block);
                 if (
-                    $cleanedblock =~ m/This \s document \s is \s subject
-                       \s to \s
-                              (?:the \s rights\s?, \s licenses \s
-                                 and \s restrictions \s contained \s in)?
-                               \s BCP \s 78/xism
+                    $cleanedblock =~ m/this [ ] document [ ] is [ ] subject
+                      [ ] to [ ]
+                      (?:the [ ] rights [ ]?, [ ] licenses [ ]
+                         and [ ]restrictions [ ] contained [ ] in [ ])?
+                      bcp [ ] 78/xsm
                   ){
                     tag 'license-problem-non-free-RFC', $name;
                     $licenseproblemhash{'non-free-RFC'} = 1;
@@ -697,24 +696,24 @@ sub license_check {
                 # classical gfdl matching pattern
                 my $normalgfdlpattern = qr/
                  (?'rawcontextbefore'(?:
-                    (?:(?!a \s copy \s of \s the \s license \s is).){1024}|
-                    (?:\s copy \s of \s the \s license \s is.{0,1024}?)))
-                 gnu \s free \s documentation \s license
-                 (?'rawgfdlsections'(?:(?!gnu \s free \s documentation \s license).){0,1024}?)
-                 a \s copy \s of \s the \s license \s is
+                    (?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
+                    (?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?)))
+                 gnu [ ] free [ ] documentation [ ] license
+                 (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?)
+                 a [ ] copy [ ] of [ ] the [ ] license [ ] is
                 /xsmo;
 
                 # for first block we get context from the beginning
                 my $firstblockgfdlpattern = qr/
                  (?'rawcontextbefore'(?:
-                    (?:(?!a \s copy \s of \s the \s license \s is).){1024}|
-                  \A(?:(?!a \s copy \s of \s the \s license \s is).){0,1024}|
-                    (?:\s copy \s of \s the \s license \s is.{0,1024}?)
+                    (?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
+                  \A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|
+                    (?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?)
                   )
                  )
-                 gnu \s free \s documentation \s license
-                 (?'rawgfdlsections'(?:(?!gnu \s free \s documentation \s license).){0,1024}?)
-                 a \s copy \s of \s the \s license \s is
+                 gnu [ ] free [ ] documentation [ ] license
+                 (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?)
+                 a [ ] copy [ ] of [ ] the [ ] license [ ] is
                  /xsmo;
 
                 my $gfdlpattern
