@@ -672,37 +672,27 @@ sub license_check {
                 && index($block, 'gnu') > -1
                 && index($block, 'copy') > -1){
 
-                my $trimmed_block = $block;
-
-                # gnu word is often highlighted
-                # do a minimal replace in order to do the hard work
-                # only in case of positively matched GFDL
-                $trimmed_block =~ s{
-                 (?:<span(?:\s[^>]*)?>)?\s*gnu\s*</span\s*[^>]*?> | # html span
-                 (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
-                }{ gnu }gxms;
-
                 # classical gfdl matching pattern
                 my $normalgfdlpattern = qr/
                  (?'contextbefore'(?:
-                    (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
-                    (?:\s+ copy \s+ of \s+ the \s+ license \s+ is.{0,1024}?)))
-                 gnu \s+ free \s+ documentation \s+ license
-                 (?'rawgfdlsections'(?:(?!gnu \s+ free \s+ documentation \s+ license).){0,1024}?)
-                 a \s+ copy \s+ of \s+ the \s+ license \s+ is
+                    (?:(?!a \s copy \s of \s the \s license \s is).){1024}|
+                    (?:\s copy \s of \s the \s license \s is.{0,1024}?)))
+                 gnu \s free \s documentation \s license
+                 (?'rawgfdlsections'(?:(?!gnu \s free \s documentation \s license).){0,1024}?)
+                 a \s copy \s of \s the \s license \s is
                 /xsmo;
 
                 # for first block we get context from the beginning
                 my $firstblockgfdlpattern = qr/
                  (?'rawcontextbefore'(?:
-                    (?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){1024}|
-                  \A(?:(?!a \s+ copy \s+ of \s+ the \s+ license \s+ is).){0,1024}|
-                    (?:\s+ copy \s+ of \s+ the \s+ license \s+ is.{0,1024}?)
+                    (?:(?!a \s copy \s of \s the \s license \s is).){1024}|
+                  \A(?:(?!a \s copy \s of \s the \s license \s is).){0,1024}|
+                    (?:\s copy \s of \s the \s license \s is.{0,1024}?)
                   )
                  )
-                 gnu \s+ free \s+ documentation \s+ license
-                 (?'rawgfdlsections'(?:(?!gnu \s+ free \s+ documentation \s+ license).){0,1024}?)
-                 a \s+ copy \s+ of \s+ the \s+ license \s+ is
+                 gnu \s free \s documentation \s license
+                 (?'rawgfdlsections'(?:(?!gnu \s free \s documentation \s license).){0,1024}?)
+                 a \s copy \s of \s the \s license \s is
                  /xsmo;
 
                 my $gfdlpattern
@@ -715,10 +705,10 @@ sub license_check {
               # other hand, cleaning the block and using index to look for
               # "gnu free documentation license" is vastly cheaper than running
               # $gfdlpattern on the unclean block.
-                my $cleanedblock = _clean_block($trimmed_block);
+                my $cleanedblock = _clean_block($block);
 
                 if (index($cleanedblock, 'gnu free documentation license') > -1
-                    && $trimmed_block =~ $gfdlpattern) {
+                    && $cleanedblock =~ $gfdlpattern) {
                     my $rawgfdlsections  = $+{rawgfdlsections}  || '';
                     my $rawcontextbefore = $+{rawcontextbefore} || '';
 
@@ -846,10 +836,17 @@ sub license_check {
 sub _clean_block {
     my ($text) = @_;
 
+    # be paranoiac replace gnu with texinfo by gnu
+    $text =~ s{
+                 (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
+             }{ gnu }gxms;
+
     # replace some common comment-marker/markup with space
     $text =~ s{(?:
                   ^\.\\\"                      |  # man comments
                   \@c(?:omment)?\s+            |  # Tex info comment
+                  \@(?:b|i|r|t)\{              |  # Tex info bold, italic, roman, fixed width
+                  \@(?:sansserif|slanted)\{    |  # Tex info sans serif/slanted
                   \@var\{                      |  # Tex info emphasis
                   \@(?:small)?example\s+       |  # Tex info example
                   \@end\h+(?:small)example\s+  |  # Tex info end small example tag
@@ -866,6 +863,7 @@ sub _clean_block {
                   </?citetitle[^>]*?>          |  # citation title in docbook
                   </?div[^>]*?>                |  # html style
                   </?p[^>]*?>                  |  # html paragraph
+                  </?span[^>]*?>               |  # span tag
                   </?var[^>]*?>                |  # var tag used by html from texinfo
                   ^[-\+!<>]                    |  # diff/patch lines (should be after html tag)
                   \(\*note.*?::\)              |  # info file note
