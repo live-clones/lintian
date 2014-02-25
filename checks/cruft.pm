@@ -604,25 +604,29 @@ sub license_check {
         }
 
         if (!exists $licenseproblemhash{'json-evil'}) {
-            if (
-                index($block, 'evil') > -1
-                && $block =~ m/software \s++ shall \s++
+            if (   index($block, 'evil') > -1
+                && index($block, 'good') > -1) {
+                my $cleanedblock = _clean_block($block);
+                if (
+                    $block =~ m/software \s++ shall \s++
                      be \s++ used \s++ for \s++ good \s*+ ,?+ \s*+
                      not \s++ evil/xsm
-              ){
-                # json evil license
-                tag 'license-problem-json-evil', $name;
-                $licenseproblemhash{'json-evil'} = 1;
+                  ){
+                    # json evil license
+                    tag 'license-problem-json-evil', $name;
+                    $licenseproblemhash{'json-evil'} = 1;
+                }
             }
         }
 
         # non free rfc
         if (!exists $licenseproblemhash{'non-free-RFC'}) {
-            if (
-                   index($block, 'copyrights') > -1
+            if (   index($block, 'copyrights') > -1
                 && index($block, 'purpose') > -1
-                && index($block, 'translate') > -1
-                && $block =~ m/this \s document \s itself \s may \s not \s
+                && index($block, 'translate') > -1) {
+                my $cleanedblock = _clean_block($block);
+                if(
+                    $block =~ m/this \s document \s itself \s may \s not \s
                            be \s modified \s in \s any \s way\s?,\s?
                            such \s as \s by \s removing \s the \s copyright \s
                            notice \s or \s references \s
@@ -634,21 +638,24 @@ sub license_check {
                            the \s .{0,128} \s? process \s must \s be \s
                            followed\s?,\s? or \s as \s required \s to \s
                            translate \s it \s into \s languages \s other \s than/xism
-              ){
-                tag 'license-problem-non-free-RFC', $name;
-                $licenseproblemhash{'non-free-RFC'} = 1;
+                  ){
+                    tag 'license-problem-non-free-RFC', $name;
+                    $licenseproblemhash{'non-free-RFC'} = 1;
+                }
             }
         }
         if (!exists $licenseproblemhash{'non-free-RFC'}) {
-            if (
-                index($block, 'bcp') > -1
-                && $block =~ m/This \s document \s is \s subject \s to \s
+            if (index($block, 'bcp') > -1){
+                my $cleanedblock = _clean_block($block);
+                if (
+                    $block =~ m/This \s document \s is \s subject \s to \s
                               (?:the \s rights\s?, \s licenses \s
                                  and \s restrictions \s contained \s in)?
                                \s BCP \s 78/xism
-              ){
-                tag 'license-problem-non-free-RFC', $name;
-                $licenseproblemhash{'non-free-RFC'} = 1;
+                  ){
+                    tag 'license-problem-non-free-RFC', $name;
+                    $licenseproblemhash{'non-free-RFC'} = 1;
+                }
             }
         }
 
