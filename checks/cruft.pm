@@ -669,7 +669,7 @@ sub license_check {
 
                 # classical gfdl matching pattern
                 my $normalgfdlpattern = qr/
-                 (?'contextbefore'(?:
+                 (?'rawcontextbefore'(?:
                     (?:(?!a \s copy \s of \s the \s license \s is).){1024}|
                     (?:\s copy \s of \s the \s license \s is.{0,1024}?)))
                  gnu \s free \s documentation \s license
@@ -704,128 +704,141 @@ sub license_check {
 
                 if (index($cleanedblock, 'gnu free documentation license') > -1
                     && $cleanedblock =~ $gfdlpattern) {
-                    my $rawgfdlsections  = $+{rawgfdlsections}  || '';
-                    my $rawcontextbefore = $+{rawcontextbefore} || '';
-
-                    # strip puntuation
-                    my $gfdlsections  = _strip_punct($rawgfdlsections);
-                    my $contextbefore = _strip_punct($rawcontextbefore);
-
-                    # remove classical and without meaning part of
-                    # matched string
-                    $gfdlsections =~ s{
-                          \A version \s \d+(?:\.\d+)? \s
-                           (?:or \s any \s later \s version \s)?
-                           published \s by \s the \s Free \s Software \s Foundation
-                           \s?[,\.;]?\s?}{}xismo;
-                    $contextbefore =~ s{
-                          \s? (:?[,\.;]? \s?)?
-                           permission \s is \s granted \s to \s copy \s?[,\.;]?\s?
-                           distribute \s?[,\.;]?\s? and\s?/?\s?or \s modify \s
-                           this \s document \s under \s the \s terms \s of \s the\Z}
-                        {}xismo;
-
-                    # GFDL license, assume it is bad unless it
-                    # explicitly states it has no "bad sections".
-                    if (
-                        $gfdlsections =~ m/
-                            no \s? Invariant \s+ Sections? \s? [,\.;]?
-                               \s? (?:with\s)? (?:the\s)? no \s
-                               Front(?:\s?\\?-)?\s?Cover (?:\s Texts?)? \s? [,\.;]? \s? (?:and\s)?
-                               (?:with\s)? (?:the\s)? no
-                               \s Back(?:\s?\\?-)?\s?Cover/xiso
-                      ){
-                        # no invariant
-                    }elsif (
-                        $gfdlsections =~ m/
-                            no \s Invariant \s Sections? \s? [,\.;]?
-                               \s? (?:no\s)? Front(?:\s?[\\]?-)? \s or
-                               \s (?:no\s)? Back(?:\s?[\\]?-)?\s?Cover \s Texts?/xiso
-                      ){
-                        # no invariant variant (dict-foldoc)
-                    }elsif (
-                        $gfdlsections =~ m/
-                            \A There \s are \s no \s invariants? \s sections? \Z
-                          /xiso
-                      ){
-                        # no invariant libnss-pgsql version
-                    }elsif (
-                        $gfdlsections =~ m/
-                            \A without \s any \s Invariant \s Sections? \Z
-                          /xiso
-                      ){
-                        # no invariant parsewiki version
-                    }elsif (
-                        $gfdlsections =~ m/
-                            \A with \s no \s invariants? \s sections? \Z
-                         /xiso
-                      ){
-                        # no invariant lilypond version
-                    }elsif (
-                        $gfdlsections =~ m/\A
-                            with \s the \s Invariant \s Sections \s being \s
-                            LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
-                            with \s the \s Front(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
-                            LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
-                            (?:and\s)? with \s the \s Back(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
-                            LIST (?:\s THEIR \s TITLES)? \Z/xiso
-                      ){
-                        # verbatim text of license is ok
-                    }elsif ($gfdlsections eq '') {
-
-                        # empty text is ambiguous
-                        tag 'license-problem-gfdl-invariants-empty', $name;
+                    my %matchedhash = %+;
+                    if(
+                        _check_gfdl_license_problem(
+                            $name,$cleanedblock,%matchedhash
+                        )
+                      ) {
                         $licenseproblemhash{'gfdl-invariants'} = 1;
-                    }elsif (
-                        $gfdlsections =~ m/
-                            with \s \&FDLInvariantSections; \s? [,\.;]? \s?
-                            with \s+\&FDLFrontCoverText; \s? [,\.;]? \s?
-                            and \s with \s \&FDLBackCoverText;/xiso
-                      ){
-                        # fix #708957 about FDL entities in template
-                        unless (
-                            $name =~ m{
-                                /customization/[^/]+/entities/[^/]+\.docbook \Z
-                              }xsm
-                          ){
-                            tag 'license-problem-gfdl-invariants', $name;
-                            $licenseproblemhash{'gfdl-invariants'} = 1;
-                        }
-                    }elsif (
-                        $gfdlsections =~ m{
-                            \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
-                            being \s list \s their \s titles \s?[,\.;]?\s?
-                            with \s the \s? <_: \s* link-\d+ \s? /> \s?
-                            being \s list \s?[,\.;]?\s?
-                            (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s?
-                            being \s list \Z}xiso
-                      ){
-                        # fix a false positive in .po file
-                        unless ($name =~ m,\.po$,) {
-                            tag 'license-problem-gfdl-invariants', $name;
-                            $licenseproblemhash{'gfdl-invariants'} = 1;
-                        }
-                    }else {
-                        if (
-                            $contextbefore =~ m/
-                                  Following \s is \s an \s example
-                                  (:?\s of \s the \s license \s notice \s to \s use
-                                    (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
-                                      (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
-                                    )?
-                                  )? \s? [,:]? \Z/xiso
-                          ){
-                            # it is an example
-                        }else {
-                            tag 'license-problem-gfdl-invariants', $name;
-                            $licenseproblemhash{'gfdl-invariants'} = 1;
-                        }
                     }
                 }
             }
         }
     }
     return;
+}
+
+# return True in case of license problem
+sub _check_gfdl_license_problem {
+    my ($name,$cleanedblock,%matchedhash) = @_;
+    my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
+    my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
+
+    # strip puntuation
+    my $gfdlsections  = _strip_punct($rawgfdlsections);
+    my $contextbefore = _strip_punct($rawcontextbefore);
+
+    # remove classical and without meaning part of
+    # matched string
+    $gfdlsections =~ s{
+                          \A version \s \d+(?:\.\d+)? \s
+                           (?:or \s any \s later \s version \s)?
+                           published \s by \s the \s Free \s Software \s Foundation
+                           \s?[,\.;]?\s?}{}xismo;
+    $contextbefore =~ s{
+                          \s? (:?[,\.;]? \s?)?
+                           permission \s is \s granted \s to \s copy \s?[,\.;]?\s?
+                           distribute \s?[,\.;]?\s? and\s?/?\s?or \s modify \s
+                           this \s document \s under \s the \s terms \s of \s the\Z}
+                        {}xismo;
+
+    # GFDL license, assume it is bad unless it
+    # explicitly states it has no "bad sections".
+    if (
+        $gfdlsections =~ m/
+                            no \s? Invariant \s+ Sections? \s? [,\.;]?
+                               \s? (?:with\s)? (?:the\s)? no \s
+                               Front(?:\s?\\?-)?\s?Cover (?:\s Texts?)? \s? [,\.;]? \s? (?:and\s)?
+                               (?:with\s)? (?:the\s)? no
+                               \s Back(?:\s?\\?-)?\s?Cover/xiso
+      ){
+        # no invariant
+    }elsif (
+        $gfdlsections =~ m/
+                            no \s Invariant \s Sections? \s? [,\.;]?
+                               \s? (?:no\s)? Front(?:\s?[\\]?-)? \s or
+                               \s (?:no\s)? Back(?:\s?[\\]?-)?\s?Cover \s Texts?/xiso
+      ){
+        # no invariant variant (dict-foldoc)
+    }elsif (
+        $gfdlsections =~ m/
+                            \A There \s are \s no \s invariants? \s sections? \Z
+                          /xiso
+      ){
+        # no invariant libnss-pgsql version
+    }elsif (
+        $gfdlsections =~ m/
+                            \A without \s any \s Invariant \s Sections? \Z
+                          /xiso
+      ){
+        # no invariant parsewiki version
+    }elsif (
+        $gfdlsections =~ m/
+                            \A with \s no \s invariants? \s sections? \Z
+                         /xiso
+      ){
+        # no invariant lilypond version
+    }elsif (
+        $gfdlsections =~ m/\A
+                            with \s the \s Invariant \s Sections \s being \s
+                            LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
+                            with \s the \s Front(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
+                            LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
+                            (?:and\s)? with \s the \s Back(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
+                            LIST (?:\s THEIR \s TITLES)? \Z/xiso
+      ){
+        # verbatim text of license is ok
+    }elsif ($gfdlsections eq '') {
+        # empty text is ambiguous
+        tag 'license-problem-gfdl-invariants-empty', $name;
+        return 1;
+    }elsif (
+        $gfdlsections =~ m/
+                            with \s \&FDLInvariantSections; \s? [,\.;]? \s?
+                            with \s+\&FDLFrontCoverText; \s? [,\.;]? \s?
+                            and \s with \s \&FDLBackCoverText;/xiso
+      ){
+        # fix #708957 about FDL entities in template
+        unless (
+            $name =~ m{
+                                /customization/[^/]+/entities/[^/]+\.docbook \Z
+                              }xsm
+          ){
+            tag 'license-problem-gfdl-invariants', $name;
+            return 1;
+        }
+    }elsif (
+        $gfdlsections =~ m{
+                            \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
+                            being \s list \s their \s titles \s?[,\.;]?\s?
+                            with \s the \s? <_: \s* link-\d+ \s? /> \s?
+                            being \s list \s?[,\.;]?\s?
+                            (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s?
+                            being \s list \Z}xiso
+      ){
+        # fix a false positive in .po file
+        unless ($name =~ m,\.po$,) {
+            tag 'license-problem-gfdl-invariants', $name;
+            return 1;
+        }
+    }else {
+        if (
+            $contextbefore =~ m/
+                                  Following \s is \s an \s example
+                                  (:?\s of \s the \s license \s notice \s to \s use
+                                    (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
+                                      (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
+                                    )?
+                                  )? \s? [,:]? \Z/xiso
+          ){
+            # it is an example
+        }else {
+            tag 'license-problem-gfdl-invariants', $name;
+            return 1;
+        }
+    }
+    return 0;
 }
 
 sub _clean_block {
