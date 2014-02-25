@@ -192,12 +192,6 @@ sub children {
     return @{ $self->{'children'} };
 }
 
-# Backing method implementing the is_X tests
-sub _is_type {
-    my ($self, $t) = @_;
-    return $self->type eq $t;
-}
-
 =item is_symlink
 
 Returns a truth value if this entry is a symlink.
@@ -233,11 +227,11 @@ symlinks, even if the symlink points to a file.
 
 =cut
 
-sub is_symlink { return $_[0]->_is_type('l'); }
-sub is_hardlink { return $_[0]->_is_type('h'); }
-sub is_dir { return $_[0]->_is_type('d'); }
-sub is_file { return $_[0]->_is_type('-') || $_[0]->_is_type('h'); }
-sub is_regular_file  { return $_[0]->_is_type('-'); }
+sub is_symlink { return $_[0]->type eq 'l'; }
+sub is_hardlink { return $_[0]->type eq 'h'; }
+sub is_dir { return $_[0]->type eq 'd'; }
+sub is_file { return $_[0]->type eq '-' || $_[0]->type eq 'h'; }
+sub is_regular_file  { return $_[0]->type eq '-'; }
 
 =item link_normalized
 
