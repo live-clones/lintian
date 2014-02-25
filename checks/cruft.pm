@@ -466,10 +466,10 @@ sub find_cruft {
             next ENTRY;
         }
         unless ($info->is_non_free) {
-            if ($NON_FREE_FILES->known($md5sum)) {
-                my $usualname= $NON_FREE_FILES->value($md5sum)->{'name'};
-                my $reason = $NON_FREE_FILES->value($md5sum)->{'reason'};
-                my $link   = $NON_FREE_FILES->value($md5sum)->{'link'};
+            if (my $non_free_data = $NON_FREE_FILES->value($md5sum)) {
+                my $usualname   = $non_free_data->{'name'};
+                my $reason = $non_free_data->{'reason'};
+                my $link   = $non_free_data->{'link'};
                 tag 'license-problem-md5sum-non-free-file', $name,
                   "usual name is $usualname.", "$reason",
                   "See also $link.";
@@ -480,9 +480,10 @@ sub find_cruft {
 
         # warn by file type
         foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
-            my $regtype= $WARN_FILE_TYPE->value($tag_filetype)->{'regtype'};
-            my $regname= $WARN_FILE_TYPE->value($tag_filetype)->{'regname'};
+            my $warn_data = $WARN_FILE_TYPE->value($tag_filetype);
+            my $regtype = $warn_data->{'regtype'};
             if($file_info =~ m{$regtype}) {
+                my $regname = $warn_data->{'regname'};
                 if($name =~ m{$regname}) {
                     tag $tag_filetype, $name;
                 }
@@ -790,11 +791,10 @@ sub _check_gfdl_license_problem {
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
     foreach my $gfdl_fragment ($GFDL_FRAGMENTS->all) {
-        my $gfdlsectionsregex
-          = $GFDL_FRAGMENTS->value($gfdl_fragment)->{'gfdlsectionsregex'};
-        my $acceptonlyinfile
-          = $GFDL_FRAGMENTS->value($gfdl_fragment)->{'acceptonlyinfile'};
+        my $gfdl_data = $GFDL_FRAGMENTS->value($gfdl_fragment);
+        my $gfdlsectionsregex = $gfdl_data->{'gfdlsectionsregex'};
         if ($gfdlsections =~ m{$gfdlsectionsregex}) {
+            my $acceptonlyinfile = $gfdl_data->{'acceptonlyinfile'};
             if ($name =~ m{$acceptonlyinfile}) {
                 return 0;
             }else {
