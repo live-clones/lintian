@@ -45,6 +45,18 @@ my %ROOT_INDEX_TEMPLATE = (
     'time'     => '22:55:34',
 );
 
+# A cache for (probably) the 5 most common permission strings seen in
+# the wild.
+# It may seem obscene, but it has an extreme "hit-ratio" and it is
+# cheaper vastly than perm2oct.
+my %PERM_CACHE = map { $_ => perm2oct($_) } (
+    '-rw-r--r--', # standard (non-executable) file
+    '-rwxr-xr-x', # standard executable file
+    'drwxr-xr-x', # standard dir perm
+    'drwxr-sr-x', # standard dir perm with suid (lintian-lab on lintian.d.o)
+    'lrwxrwxrwx', # symlinks
+);
+
 =head1 NAME
 
 Lintian::Collect::Package - Lintian base interface to binary and source package data collection
@@ -378,7 +390,16 @@ sub _fetch_index_data {
         my (%file, $perm, $owner, $name);
         ($perm,$owner,$file{size},$file{date},$file{time},$name)
           =split(' ', $_, 6);
-        $file{operm} = perm2oct($perm);
+        # This may appear to be obscene, but the call overhead of
+        # perm2oct is measurable on (e.g.) chromium-browser.  With
+        # the cache we go from ~1.5s to ~0.1s.
+        #   Of the 115363 paths here, only 306 had an "uncached"
+        # permission string (chromium-browser/32.0.1700.123-2).
+        if (exists($PERM_CACHE{$perm})) {
+            $file{operm} = $PERM_CACHE{$perm};
+        } else {
+            $file{operm} = perm2oct($perm);
+        }
         $file{type} = substr $perm, 0, 1;
 
         if ($num_idx) {
