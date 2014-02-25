@@ -571,14 +571,6 @@ sub license_check {
     # per file
   BLOCK:
     while (my $block = $sfd->readwindow()) {
-        if (index($block, '\\') > -1) {
-
-            # Remove formatting commonly added by pod2man
-            $block =~ s{ \\ & }{}gxsm;
-            $block =~ s{ \\s (?:0|-1) }{}gxsm;
-            $block =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
-        }
-
         if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
             if (   index($block, 'intellectual') > -1
                 && index($block, 'property') > -1){
@@ -841,6 +833,9 @@ sub _clean_block {
                  (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
              }{ gnu }gxms;
 
+    # pod2man formating
+    $text =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+
     # replace some common comment-marker/markup with space
     $text =~ s{(?:
                   ^\.\\\"                      |  # man comments
@@ -868,6 +863,8 @@ sub _clean_block {
                   ^[-\+!<>]                    |  # diff/patch lines (should be after html tag)
                   \(\*note.*?::\)              |  # info file note
                   \\n                          |  # Verbatim \n in string array
+                  \\&                          |  # pod2man formating
+                  \\s(?:0|-1)                  |  # pod2man formating
                   \s*[,\.;]\s*\Z               |  # final punctuation
                   \A\s*[,\.;]\s*               |  # punctuation at the beginning
                   (?:``|'')                    |  # quote like
