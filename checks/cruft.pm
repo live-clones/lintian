@@ -599,13 +599,15 @@ sub license_check {
     # per file
   BLOCK:
     while (my $block = $sfd->readwindow()) {
+        my $cleanedblock;
         if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
             if (   index($block, 'intellectual') > -1
                 && index($block, 'retain') > -1
                 && index($block, 'property') > -1){
                 # nvdia opencv infamous license
                 # non-distributable
-                my $cleanedblock = _clean_block($block);
+                $cleanedblock = _clean_block($block)
+                  if not defined($cleanedblock);
                 if (
                     $cleanedblock =~ m/retain [ ] all [ ] intellectual [ ]
                           property [ ] and [ ] proprietary [ ] rights [ ] in
@@ -627,7 +629,8 @@ sub license_check {
         if (!exists $licenseproblemhash{'json-evil'}) {
             if (   index($block, 'evil') > -1
                 && index($block, 'good') > -1) {
-                my $cleanedblock = _clean_block($block);
+                $cleanedblock = _clean_block($block)
+                  if not defined($cleanedblock);
                 if (
                     $cleanedblock =~ m/software [ ] shall [ ]
                      be [ ] used [ ] for [ ] good [ ]? ,? [ ]?
@@ -645,7 +648,8 @@ sub license_check {
             if (   index($block, 'copyrights') > -1
                 && index($block, 'purpose') > -1
                 && index($block, 'translate') > -1) {
-                my $cleanedblock = _clean_block($block);
+                $cleanedblock = _clean_block($block)
+                  if not defined($cleanedblock);
                 if(
                     $cleanedblock =~ m/this [ ] document [ ] itself [ ]
                         may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ]
@@ -667,7 +671,8 @@ sub license_check {
         }
         if (!exists $licenseproblemhash{'non-free-RFC'}) {
             if (index($block, 'bcp') > -1){
-                my $cleanedblock = _clean_block($block);
+                $cleanedblock = _clean_block($block)
+                  if not defined($cleanedblock);
                 if (
                     $cleanedblock =~ m/this [ ] document [ ] is [ ] subject
                       [ ] to [ ]
@@ -722,12 +727,8 @@ sub license_check {
                   ? $normalgfdlpattern
                   : $firstblockgfdlpattern;
 
-              # We need an "unclean" block for the $gfdlpattern as _clean_block
-              # is a bit too efficient at removing stuff we look for.  On the
-              # other hand, cleaning the block and using index to look for
-              # "gnu free documentation license" is vastly cheaper than running
-              # $gfdlpattern on the unclean block.
-                my $cleanedblock = _clean_block($block);
+                $cleanedblock = _clean_block($block)
+                  if not defined($cleanedblock);
 
                 if (index($cleanedblock, 'gnu free documentation license')> -1
                     && $cleanedblock =~ $gfdlpattern) {
