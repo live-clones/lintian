@@ -170,9 +170,9 @@ Needs-Info requirements for using I<file_info>: file-info
 
 sub file_info {
     my ($self, $file) = @_;
-    if (exists $self->{file_info}) {
-        return ${$self->{file_info}{$file}}
-          if exists $self->{file_info}->{$file};
+    if (my $cache = $self->{file_info}) {
+        return ${$cache->{$file}}
+          if exists $cache->{$file};
         return;
     }
     my %interned;
@@ -356,9 +356,9 @@ sub _fetch_extracted_dir {
 # sub _fetch_index_data Needs-Info none
 sub _fetch_index_data {
     my ($self, $field, $index, $indexown, $file) = @_;
-    if (exists $self->{$index}) {
-        return $self->{$field}->{$file}
-          if exists $self->{$index}->{$file};
+    if (my $cache = $self->{$field}) {
+        return $cache->{$file}
+          if exists $cache->{$file};
         return;
     }
     my $base_dir = $self->base_dir;
