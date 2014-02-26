@@ -44,8 +44,16 @@ sub new {
 sub readwindow {
     my ($self) = @_;
     my ($window, $queue);
-    unless(read($self->{'_handle'}, $window, $self->{'_blocksize'})) {
-        return;
+    {
+        # This path is too hot for autodie at its current performance
+        # (at the time of writing, that would be autodie/2.23).
+        # - Benchmark chromium-browser/32.0.1700.123-2/source
+        no autodie qw(read);
+        my $res = read($self->{'_handle'}, $window, $self->{'_blocksize'});
+        if (not $res) {
+            die "read failed: $!\n" if not defined($res);
+            return;
+        }
     }
 
     if(defined($self->{'_blocksub'})) {
