@@ -114,6 +114,33 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         };
     });
 
+my $GFDL_FRAGMENTS = Lintian::Data->new(
+    'cruft/gfdl-license-fragments-checks',
+    qr/\s*\~\~\s*/,
+    sub {
+        my ($gfdlsectionsregex,$acceptonlyinfile) = @_;
+
+        # allow empty parameters
+        $gfdlsectionsregex
+          = defined($gfdlsectionsregex) ? strip($gfdlsectionsregex) : '';
+        $acceptonlyinfile
+          = defined($acceptonlyinfile) ? strip($acceptonlyinfile) : '';
+
+        # empty first field is everything
+        if (length($gfdlsectionsregex) == 0) {
+            $gfdlsectionsregex = '.*';
+        }
+        # empty regname is none
+        if (length($acceptonlyinfile) == 0) {
+            $acceptonlyinfile = '.*';
+        }
+
+        return {
+            'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
+            'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
+        };
+    });
+
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
 our %ERRORS = (
@@ -189,7 +216,7 @@ sub run {
 
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
-    my $atdinbd = $info->relation('build-depends-all')->implies($AUTOTOOLS);
+    my $atdinbd= $info->relation('build-depends-all')->implies($AUTOTOOLS);
     my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);
 
     # Create a closure so that we can pass our lexical variables into
@@ -205,7 +232,7 @@ sub run {
     #   that may not be present.
     $format = '3.0 (quilt)' unless defined $format;
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
-        my $wanted = sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
+        my $wanted= sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
         find($wanted, $droot);
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
@@ -247,7 +274,8 @@ sub run {
                 next if /^Skipping to next header/;
                 next if /^gpgv?: /;
                 next if /^secmem usage: /;
-                next if /^Exiting with failure status due to previous errors/;
+                next
+                  if /^Exiting with failure status due to previous errors/;
                 tag $tag, $_;
             }
             close($fd);
@@ -395,7 +423,7 @@ sub find_cruft {
 
             # Ignore files in test suites.  They may be part of the test.
             next
-              if $basename =~ m{ \A t (?: est (?: s (?: et)?+ )?+ )?+ \Z}xsm;
+              if $basename=~ m{ \A t (?: est (?: s (?: et)?+ )?+ )?+ \Z}xsm;
 
             if (not $warned->{$name}) {
                 for my $rule (@directory_checks) {
@@ -430,8 +458,8 @@ sub find_cruft {
         my $md5sum = $info->md5sums->{$name};
         if ($NON_DISTRIBUTABLE_FILES->known($md5sum)) {
             my $usualname= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'name'};
-            my $reason = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'reason'};
-            my $link   = $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'link'};
+            my $reason= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'reason'};
+            my $link= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'link'};
             tag 'license-problem-md5sum-non-distributable-file', $name,
               "usual name is $usualname.", "$reason", "See also $link.";
 
@@ -440,7 +468,7 @@ sub find_cruft {
         }
         unless ($info->is_non_free) {
             if ($NON_FREE_FILES->known($md5sum)) {
-                my $usualname   = $NON_FREE_FILES->value($md5sum)->{'name'};
+                my $usualname= $NON_FREE_FILES->value($md5sum)->{'name'};
                 my $reason = $NON_FREE_FILES->value($md5sum)->{'reason'};
                 my $link   = $NON_FREE_FILES->value($md5sum)->{'link'};
                 tag 'license-problem-md5sum-non-free-file', $name,
@@ -453,8 +481,8 @@ sub find_cruft {
 
         # warn by file type
         foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
-            my $regtype = $WARN_FILE_TYPE->value($tag_filetype)->{'regtype'};
-            my $regname = $WARN_FILE_TYPE->value($tag_filetype)->{'regname'};
+            my $regtype= $WARN_FILE_TYPE->value($tag_filetype)->{'regtype'};
+            my $regname= $WARN_FILE_TYPE->value($tag_filetype)->{'regname'};
             if($file_info =~ m{$regtype}) {
                 if($name =~ m{$regname}) {
                     tag $tag_filetype, $name;
@@ -525,7 +553,7 @@ sub find_cruft {
             open(my $fd, '<', $info->unpacked($entry));
             while (<$fd>) {
                 if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
-                    my ($version, $major, $minor, $debian) =($1, $2, $3, $4);
+                    my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
                     if ($major < 5 or ($major == 5 and $minor < 2)) {
                         tag 'ancient-libtool', $name, $version;
                     }elsif ($minor == 2 and (!$debian || $debian < 2)) {
@@ -702,7 +730,7 @@ sub license_check {
               # $gfdlpattern on the unclean block.
                 my $cleanedblock = _clean_block($block);
 
-                if (index($cleanedblock, 'gnu free documentation license') > -1
+                if (index($cleanedblock, 'gnu free documentation license')> -1
                     && $cleanedblock =~ $gfdlpattern) {
                     my %matchedhash = %+;
                     if(
@@ -749,98 +777,38 @@ sub _check_gfdl_license_problem {
         return 1;
     }
 
+    # example are ok
+    if (
+        $contextbefore =~ m/Following \s is \s an \s example
+                           (:?\s of \s the \s license \s notice \s to \s use
+                            (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
+                             (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
+                            )?
+                           )? \s? [,:]? \Z/xiso
+      ){
+        return 0;
+    }
+
     # GFDL license, assume it is bad unless it
     # explicitly states it has no "bad sections".
-    if (
-        $gfdlsections =~ m/
-                            no \s? Invariant \s+ Sections? \s? [,\.;]?
-                               \s? (?:with\s)? (?:the\s)? no \s
-                               Front(?:\s?\\?-)?\s?Cover (?:\s Texts?)? \s? [,\.;]? \s? (?:and\s)?
-                               (?:with\s)? (?:the\s)? no
-                               \s Back(?:\s?\\?-)?\s?Cover/xiso
-      ){
-        # no invariant
-    }elsif (
-        $gfdlsections =~ m/
-                            no \s Invariant \s Sections? \s? [,\.;]?
-                               \s? (?:no\s)? Front(?:\s?[\\]?-)? \s or
-                               \s (?:no\s)? Back(?:\s?[\\]?-)?\s?Cover \s Texts?/xiso
-      ){
-        # no invariant variant (dict-foldoc)
-    }elsif (
-        $gfdlsections =~ m/
-                            \A There \s are \s no \s invariants? \s sections? \Z
-                          /xiso
-      ){
-        # no invariant libnss-pgsql version
-    }elsif (
-        $gfdlsections =~ m/
-                            \A without \s any \s Invariant \s Sections? \Z
-                          /xiso
-      ){
-        # no invariant parsewiki version
-    }elsif (
-        $gfdlsections =~ m/
-                            \A with \s no \s invariants? \s sections? \Z
-                         /xiso
-      ){
-        # no invariant lilypond version
-    }elsif (
-        $gfdlsections =~ m/\A
-                            with \s the \s Invariant \s Sections \s being \s
-                            LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
-                            with \s the \s Front(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
-                            LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s?
-                            (?:and\s)? with \s the \s Back(?:\s?[\\]?-)\s?Cover \s Texts \s being \s
-                            LIST (?:\s THEIR \s TITLES)? \Z/xiso
-      ){
-        # verbatim text of license is ok
-    }elsif (
-        $gfdlsections =~ m/
-                            with \s \&FDLInvariantSections; \s? [,\.;]? \s?
-                            with \s+\&FDLFrontCoverText; \s? [,\.;]? \s?
-                            and \s with \s \&FDLBackCoverText;/xiso
-      ){
-        # fix #708957 about FDL entities in template
-        unless (
-            $name =~ m{
-                                /customization/[^/]+/entities/[^/]+\.docbook \Z
-                              }xsm
-          ){
-            tag 'license-problem-gfdl-invariants', $name;
-            return 1;
-        }
-    }elsif (
-        $gfdlsections =~ m{
-                            \A with \s the \s? <_: \s? link-\d+ \s? /> \s?
-                            being \s list \s their \s titles \s?[,\.;]?\s?
-                            with \s the \s? <_: \s* link-\d+ \s? /> \s?
-                            being \s list \s?[,\.;]?\s?
-                            (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s?
-                            being \s list \Z}xiso
-      ){
-        # fix a false positive in .po file
-        unless ($name =~ m,\.po$,) {
-            tag 'license-problem-gfdl-invariants', $name;
-            return 1;
-        }
-    }else {
-        if (
-            $contextbefore =~ m/
-                                  Following \s is \s an \s example
-                                  (:?\s of \s the \s license \s notice \s to \s use
-                                    (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
-                                      (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
-                                    )?
-                                  )? \s? [,:]? \Z/xiso
-          ){
-            # it is an example
-        }else {
-            tag 'license-problem-gfdl-invariants', $name;
-            return 1;
+    foreach my $gfdl_fragment ($GFDL_FRAGMENTS->all) {
+        my $gfdlsectionsregex
+          = $GFDL_FRAGMENTS->value($gfdl_fragment)->{'gfdlsectionsregex'};
+        my $acceptonlyinfile
+          = $GFDL_FRAGMENTS->value($gfdl_fragment)->{'acceptonlyinfile'};
+        if ($gfdlsections =~ m{$gfdlsectionsregex}) {
+            if ($name =~ m{$acceptonlyinfile}) {
+                return 0;
+            }else {
+                tag 'license-problem-gfdl-invariants', $name;
+                return 1;
+            }
         }
     }
-    return 0;
+
+    # catch all clause
+    tag 'license-problem-gfdl-invariants', $name;
+    return 1;
 }
 
 sub _clean_block {
