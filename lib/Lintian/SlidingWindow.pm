@@ -44,12 +44,19 @@ sub new {
 sub readwindow {
     my ($self) = @_;
     my ($window, $queue);
+    my $first = $self->{'_blocknumber'} < 0;
     {
         # This path is too hot for autodie at its current performance
         # (at the time of writing, that would be autodie/2.23).
         # - Benchmark chromium-browser/32.0.1700.123-2/source
         no autodie qw(read);
-        my $res = read($self->{'_handle'}, $window, $self->{'_blocksize'});
+        my $blocksize = $self->{'_blocksize'};
+        # Read twice the amount in the first window and split that
+        # into "two parts".  That way we avoid half a block followed
+        # by a full block with the first half being identical to the
+        # previous one.
+        $blocksize *= 2 if $first;
+        my $res = read($self->{'_handle'}, $window, $blocksize);
         if (not $res) {
             die "read failed: $!\n" if not defined($res);
             return;
@@ -65,6 +72,17 @@ sub readwindow {
     $self->{'_blocknumber'}++;
 
     $queue = $self->{'_queue'};
+    if ($first && $self->{'_blocksize'} < length($window)) {
+        # Split the first block into two windows.  We assume here that
+        # if the two halves are not of equal length, then it is
+        # because the file is shorter than 2*blocksize.  In this case,
+        # make the second half the shorter (it shouldn't matter and it
+        # is easier to do this way).
+        my $blocksize = $self->{'_blocksize'};
+        $queue->[0] = substr($window, 0, $blocksize);
+        $queue->[1] = substr($window, $blocksize);
+        return $window;
+    }
     shift(@{$queue});
     push(@{$queue}, $window);
     return join('', @{$queue});
