@@ -7,6 +7,11 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR,NT] Optimise the GFDL check considerably in some
       cases (e.g. the linux source).  (Closes: #738342)
+    + [BR] Factorize GFDL detection. Detect non official
+      wordings of GFDL invariant section.  (Closes: #717916).
+    + [BR] Add opentoken non official wording for GFDL
+      invariant section, thanks to Nicolas Boulenguez.
+      (Closes: #740183).
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.  (Closes: #738454)

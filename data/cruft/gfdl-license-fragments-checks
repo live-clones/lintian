@@ -8,9 +8,9 @@
 
 # variant are tagged not official
 # official text variations
-no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Cover ~~ ~~ license-problem-gfdl-non-official-text
+\A (?:with[ ])? (?:the[ ])? no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Covers? (?:[ ] Texts?)? \Z ~~ ~~ license-problem-gfdl-non-official-text
 # (dict fold)
-no [ ] Invariant [ ] Sections? [ ]? [,\.;]? [ ]? (?:no[ ])? Front(?:[ ]?-?[ ]?|[ ]) or [ ] (?:no[ ])? Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts? ~~ ~~ license-problem-gfdl-non-official-text
+\A (?:with[ ])? no [ ] Invariant [ ] Sections? [ ]? [,\.;]? [ ]? (?:no[ ])? Front[ ]?-?[ ]? (?:cover[ ])? (?:Texts?[ ])? or [ ] (?:no[ ])? Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts?\Z ~~ ~~ license-problem-gfdl-non-official-text
 # (libnss-pgsql)
 \A There [ ] are [ ] no [ ] invariants? [ ] sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
 # (parsewiki)
