@@ -1,20 +1,23 @@
 # this data file check gfdl
 # first field is known good gfdl section (regex)
 # if second field is present it is good only for these files (regexp). By default ok for all file
+# if third field is present tag with the parameters if the two previous field match
 
 # verbatim text used in the license
 \A with [ ] the [ ] Invariant [ ] Sections [ ] being [ ] LIST (?:[ ] THEIR [ ] TITLES)? [ ]? [,\.;]? [ ]? with [ ] the [ ] Front(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts [ ] being [ ] LIST (?:[ ] THEIR [ ] TITLES)? [ ]? [,\.;]? [ ]? (?:and[ ])? with [ ] the [ ] Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts [ ] being [ ] LIST (?:[ ] THEIR [ ] TITLES)? \Z ~~
-# variant will be tagged in future
+
+# variant are tagged not official
 # official text variations
-no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Cover ~~
+no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Cover ~~ ~~ license-problem-gfdl-non-official-text
 # (dict fold)
-no [ ] Invariant [ ] Sections? [ ]? [,\.;]? [ ]? (?:no[ ])? Front(?:[ ]?-?[ ]?|[ ]) or [ ] (?:no[ ])? Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts? ~~
+no [ ] Invariant [ ] Sections? [ ]? [,\.;]? [ ]? (?:no[ ])? Front(?:[ ]?-?[ ]?|[ ]) or [ ] (?:no[ ])? Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts? ~~ ~~ license-problem-gfdl-non-official-text
 # (libnss-pgsql)
-\A There [ ] are [ ] no [ ] invariants? [ ] sections? \Z ~~
+\A There [ ] are [ ] no [ ] invariants? [ ] sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
 # (parsewiki)
-\A without [ ] any [ ] Invariant [ ] Sections? \Z ~~
+\A without [ ] any [ ] Invariant [ ] Sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
 # (lilypond)
-\A with [ ] no [ ] invariants? [ ] sections? \Z ~~
+\A with [ ] no [ ] invariants? [ ] sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
+
 #
 # Conditionnaly ok
 #

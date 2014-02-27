@@ -2,5 +2,7 @@ Testname: cruft-gfdl-invariants
 Sequence: 6000
 Version: 1.0
 Description: Check for GFDL invariants sections
+Options: -I -E --pedantic
+Skeleton: pedantic
 Test-For: license-problem-gfdl-invariants
  license-problem-gfdl-invariants-empty

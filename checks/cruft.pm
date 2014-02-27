@@ -117,13 +117,18 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
     'cruft/gfdl-license-fragments-checks',
     qr/\s*\~\~\s*/,
     sub {
-        my ($gfdlsectionsregex,$acceptonlyinfile) = @_;
+        my ($gfdlsectionsregex,$secondpart) = @_;
 
         # allow empty parameters
         $gfdlsectionsregex
           = defined($gfdlsectionsregex) ? strip($gfdlsectionsregex) : '';
+
+        $secondpart //= '';
+        my ($acceptonlyinfile,$applytag) = split(/\s*\~\~\s*/, $secondpart, 2);
+
         $acceptonlyinfile
           = defined($acceptonlyinfile) ? strip($acceptonlyinfile) : '';
+        $applytag =defined($applytag) ? strip($applytag) : '';
 
         # empty first field is everything
         if (length($gfdlsectionsregex) == 0) {
@@ -134,10 +139,15 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
             $acceptonlyinfile = '.*';
         }
 
-        return {
+        my %ret = (
             'gfdlsectionsregex'   => qr/$gfdlsectionsregex/xis,
             'acceptonlyinfile' => qr/$acceptonlyinfile/xs,
-        };
+        );
+        unless ($applytag eq '') {
+            $ret{'tag'} = $applytag;
+        }
+
+        return \%ret;
     });
 
 # The files that contain error messages from tar, which we'll check and issue
@@ -782,7 +792,7 @@ sub _check_gfdl_license_problem {
     if(
         $gfdlsections =~ m/\A
                           with [ ] no [ ] invariant [ ] sections[ ]?,
-                          [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] texts[ ]?,
+                          [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] texts[ ]?,?
                           [ ]? and [ ] no [ ] back(?:[ ]?-?[ ]?|[ ])cover [ ] texts
                           \Z/xso
       ) {
@@ -809,6 +819,12 @@ sub _check_gfdl_license_problem {
         if ($gfdlsections =~ m{$gfdlsectionsregex}) {
             my $acceptonlyinfile = $gfdl_data->{'acceptonlyinfile'};
             if ($name =~ m{$acceptonlyinfile}) {
+                my $applytag = $gfdl_data->{'tag'};
+                if(defined($applytag)) {
+                    # lie will allow to check more block
+                    tag $applytag, $name;
+                    return 0;
+                }
                 return 0;
             }else {
                 tag 'license-problem-gfdl-invariants', $name;

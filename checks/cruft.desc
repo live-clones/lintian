@@ -592,6 +592,15 @@ Info: The given source file is licensed under GFDL, but without any
 Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
  http://www.debian.org/vote/2006/vote_001
 
+Tag: license-problem-gfdl-non-official-text
+Severity: pedantic
+Certainty: possible
+Info: The given source file is licensed under GFDL, but using a non
+ official text for the no invariant part.
+ .
+ Please ask upstream to always use (case insensitive):
+ with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+
 Tag: license-problem-nvidia-intellectual
 Severity: serious
 Certainty: possible
