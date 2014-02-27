@@ -53,43 +53,34 @@ our $AUTOTOOLS = Lintian::Relation->new(
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
+# load data for md5sums based check
+sub _md5sum_based_lintian_data {
+    my ($filename) = @_;
+    return Lintian::Data->new(
+        $filename,
+        qr/\s*\~\~\s*/,
+        sub {
+            my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
+            if (scalar(@sliptline) != 5) {
+                fail "Syntax error in $filename", $.;
+            }
+            my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
+            return {
+                'sha1'   => $sha1,
+                'sha256' => $sha256,
+                'name'   => $name,
+                'reason' => $reason,
+                'link'   => $link,
+            };
+        });
+}
+
 # forbidden files
-my $NON_DISTRIBUTABLE_FILES = Lintian::Data->new(
-    'cruft/non-distributable-files',
-    qr/\s*\~\~\s*/,
-    sub {
-        my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
-        if (scalar(@sliptline) != 5) {
-            fail 'Syntax error in cruft/non-distributable-files', $.;
-        }
-        my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
-        return {
-            'sha1'   => $sha1,
-            'sha256' => $sha256,
-            'name'   => $name,
-            'reason' => $reason,
-            'link'   => $link,
-        };
-    });
+my $NON_DISTRIBUTABLE_FILES
+  = _md5sum_based_lintian_data('cruft/non-distributable-files');
 
 # non free files
-my $NON_FREE_FILES = Lintian::Data->new(
-    'cruft/non-free-files',
-    qr/\s*\~\~\s*/,
-    sub {
-        my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
-        if (scalar(@sliptline) != 5) {
-            fail 'Syntax error in cruft/non-free-files', $.;
-        }
-        my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
-        return {
-            'sha1'   => $sha1,
-            'sha256' => $sha256,
-            'name'   => $name,
-            'reason' => $reason,
-            'link'   => $link,
-        };
-    });
+my $NON_FREE_FILES = _md5sum_based_lintian_data('cruft/non-free-files');
 
 # prebuilt-file or forbidden file type
 my $WARN_FILE_TYPE =  Lintian::Data->new(
@@ -113,6 +104,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         };
     });
 
+# get usual datas about admissible/not admissible GFDL invariant part of license
 my $GFDL_FRAGMENTS = Lintian::Data->new(
     'cruft/gfdl-license-fragments-checks',
     qr/\s*\~\~\s*/,
@@ -465,25 +457,17 @@ sub find_cruft {
 
         # check non free file
         my $md5sum = $info->md5sums->{$name};
-        if ($NON_DISTRIBUTABLE_FILES->known($md5sum)) {
-            my $usualname= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'name'};
-            my $reason= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'reason'};
-            my $link= $NON_DISTRIBUTABLE_FILES->value($md5sum)->{'link'};
-            tag 'license-problem-md5sum-non-distributable-file', $name,
-              "usual name is $usualname.", "$reason", "See also $link.";
-
-            # should be stripped so pass other test
+        if(
+            _md5sum_based_check(
+                $name, $md5sum, $NON_DISTRIBUTABLE_FILES,
+                'license-problem-md5sum-non-distributable-file'
+            )
+          ) {
             next ENTRY;
         }
         unless ($info->is_non_free) {
-            if (my $non_free_data = $NON_FREE_FILES->value($md5sum)) {
-                my $usualname   = $non_free_data->{'name'};
-                my $reason = $non_free_data->{'reason'};
-                my $link   = $non_free_data->{'link'};
-                tag 'license-problem-md5sum-non-free-file', $name,
-                  "usual name is $usualname.", "$reason",
-                  "See also $link.";
-            }
+            _md5sum_based_check($name, $md5sum, $NON_FREE_FILES,
+                'license-problem-md5sum-non-free-file');
         }
 
         $file_info = $info->file_info($name);
@@ -763,7 +747,6 @@ sub _tag_gfdl {
     tag $applytag, $name, 'invariant part is:', $gfdlsections;
 }
 
-
 # return True in case of license problem
 sub _check_gfdl_license_problem {
     my ($name,$cleanedblock,%matchedhash) = @_;
@@ -833,7 +816,8 @@ sub _check_gfdl_license_problem {
                 }
                 return 0;
             }else {
-                _tag_gfdl('license-problem-gfdl-invariants', $name, $gfdlsections);
+                _tag_gfdl('license-problem-gfdl-invariants',
+                    $name, $gfdlsections);
                 return 1;
             }
         }
@@ -918,6 +902,23 @@ sub _strip_punct() {
 
 sub lc_block {
     return $_ = lc($_);
+}
+
+# check based on md5sums
+sub _md5sum_based_check {
+    my ($name, $md5sum, $data, $tag) = @_;
+    if ($data->known($md5sum)) {
+        my $datavalue = $data->value($md5sum);
+        my $usualname= $datavalue->{'name'};
+        my $reason= $datavalue->{'reason'};
+        my $link= $datavalue->{'link'};
+        tag $tag, $name,
+          'usual name is', "$usualname.", "$reason", "See also $link.";
+
+        # should be stripped so pass other test
+        return 1;
+    }
+    return 0;
 }
 
 1;
