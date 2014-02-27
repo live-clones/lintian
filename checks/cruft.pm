@@ -758,6 +758,12 @@ sub license_check {
     return;
 }
 
+sub _tag_gfdl {
+    my ($applytag, $name, $gfdlsections) = @_;
+    tag $applytag, $name, 'invariant part is:', $gfdlsections;
+}
+
+
 # return True in case of license problem
 sub _check_gfdl_license_problem {
     my ($name,$cleanedblock,%matchedhash) = @_;
@@ -822,19 +828,19 @@ sub _check_gfdl_license_problem {
                 my $applytag = $gfdl_data->{'tag'};
                 if(defined($applytag)) {
                     # lie will allow to check more block
-                    tag $applytag, $name;
+                    _tag_gfdl($applytag, $name, $gfdlsections);
                     return 0;
                 }
                 return 0;
             }else {
-                tag 'license-problem-gfdl-invariants', $name;
+                _tag_gfdl('license-problem-gfdl-invariants', $name, $gfdlsections);
                 return 1;
             }
         }
     }
 
     # catch all clause
-    tag 'license-problem-gfdl-invariants', $name;
+    _tag_gfdl('license-problem-gfdl-invariants', $name, $gfdlsections);
     return 1;
 }
 
