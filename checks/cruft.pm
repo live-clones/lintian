@@ -760,15 +760,15 @@ sub _check_gfdl_license_problem {
     # remove classical and without meaning part of
     # matched string
     $gfdlsections =~ s{
-                          \A version \s \d+(?:\.\d+)? \s
-                           (?:or \s any \s later \s version \s)?
-                           published \s by \s the \s Free \s Software \s Foundation
-                           \s?[,\.;]?\s?}{}xismo;
+                          \A version [ ] \d+(?:\.\d+)? [ ]
+                           (?:or [ ] any [ ] later [ ] version [ ])?
+                           published [ ] by [ ] the [ ] free [ ] software [ ] foundation
+                           [ ]?[,\.;]?[ ]?}{}xismo;
     $contextbefore =~ s{
-                          \s? (:?[,\.;]? \s?)?
-                           permission \s is \s granted \s to \s copy \s?[,\.;]?\s?
-                           distribute \s?[,\.;]?\s? and\s?/?\s?or \s modify \s
-                           this \s document \s under \s the \s terms \s of \s the\Z}
+                          [ ]? (:?[,\.;]? [ ]?)?
+                           permission [ ] is [ ] granted [ ] to [ ] copy [ ]?[,\.;]?[ ]?
+                           distribute [ ]?[,\.;]?[ ]? and[ ]?/?[ ]?or [ ] modify [ ]
+                           this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}
                         {}xismo;
 
     # Treat ambiguous empty text
@@ -779,12 +779,12 @@ sub _check_gfdl_license_problem {
 
     # example are ok
     if (
-        $contextbefore =~ m/Following \s is \s an \s example
-                           (:?\s of \s the \s license \s notice \s to \s use
-                            (?:\s after \s the \s copyright \s (?:line(?:\(s\)|s)?)?
-                             (?:\s using \s all \s the \s features? \s of \s the \s GFDL)?
+        $contextbefore =~ m/following [ ] is [ ] an [ ] example
+                           (:?[ ] of [ ] the [ ] license [ ] notice [ ] to [ ] use
+                            (?:[ ] after [ ] the [ ] copyright [ ] (?:line(?:\(s\)|s)?)?
+                             (?:[ ] using [ ] all [ ] the [ ] features? [ ] of [ ] the [ ] gfdl)?
                             )?
-                           )? \s? [,:]? \Z/xiso
+                           )? [ ]? [,:]? \Z/xso
       ){
         return 0;
     }
