@@ -2,21 +2,21 @@
 # first field is known good gfdl section (regex)
 # if second field is present it is good only for these files (regexp). By default ok for all file
 
-# official text (no invariant)
-no \s? Invariant \s+ Sections? \s? [,\.;]? \s? (?:with\s)? (?:the\s)? no \s Front(?:\s?\\?-)?\s?Cover (?:\s Texts?)? \s? [,\.;]? \s? (?:and\s)? (?:with\s)? (?:the\s)? no \s Back(?:\s?\\?-)?\s?Cover ~~
 # verbatim text used in the license
-\A with \s the \s Invariant \s Sections \s being \s LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s? with \s the \s Front(?:\s?[\\]?-)\s?Cover \s Texts \s being \s LIST (?:\s THEIR \s TITLES)? \s? [,\.;]? \s? (?:and\s)? with \s the \s Back(?:\s?[\\]?-)\s?Cover \s Texts \s being \s LIST (?:\s THEIR \s TITLES)? \Z ~~
+\A with [ ] the [ ] Invariant [ ] Sections [ ] being [ ] LIST (?:[ ] THEIR [ ] TITLES)? [ ]? [,\.;]? [ ]? with [ ] the [ ] Front(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts [ ] being [ ] LIST (?:[ ] THEIR [ ] TITLES)? [ ]? [,\.;]? [ ]? (?:and[ ])? with [ ] the [ ] Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts [ ] being [ ] LIST (?:[ ] THEIR [ ] TITLES)? \Z ~~
 # variant will be tagged in future
+# official text variations
+no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Cover ~~
 # (dict fold)
-no \s Invariant \s Sections? \s? [,\.;]? \s? (?:no\s)? Front(?:\s?[\\]?-)? \s or \s (?:no\s)? Back(?:\s?[\\]?-)?\s?Cover \s Texts? ~~
+no [ ] Invariant [ ] Sections? [ ]? [,\.;]? [ ]? (?:no[ ])? Front(?:[ ]?-?[ ]?|[ ]) or [ ] (?:no[ ])? Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts? ~~
 # (libnss-pgsql)
-\A There \s are \s no \s invariants? \s sections? \Z ~~
+\A There [ ] are [ ] no [ ] invariants? [ ] sections? \Z ~~
 # (parsewiki)
-\A without \s any \s Invariant \s Sections? \Z ~~
+\A without [ ] any [ ] Invariant [ ] Sections? \Z ~~
 # (lilypond)
-\A with \s no \s invariants? \s sections? \Z ~~
+\A with [ ] no [ ] invariants? [ ] sections? \Z ~~
 #
 # Conditionnaly ok
 #
-with \s \&FDLInvariantSections; \s? [,\.;]? \s? with \s+\&FDLFrontCoverText; \s? [,\.;]? \s? and \s with \s \&FDLBackCoverText; ~~ /customization/[^/]+/entities/[^/]+\.docbook\Z
-\A with \s the \s? <_: \s? link-\d+ \s? /> \s? being \s list \s their \s titles \s?[,\.;]?\s? with \s the \s? <_: \s* link-\d+ \s? /> \s? being \s list \s?[,\.;]?\s? (?:and\s)? with \s the \s? <_:\s? link-\d+ \s? /> \s? being \s list \Z ~~ .po\Z
+with [ ] \&FDLInvariantSections; [ ]? [,\.;]? [ ]? with [ ]+\&FDLFrontCoverText; [ ]? [,\.;]? [ ]? and [ ] with [ ] \&FDLBackCoverText; ~~ /customization/[^/]+/entities/[^/]+\.docbook\Z
+\A with [ ] the [ ]? <_: [ ]? link-\d+ [ ]? /> [ ]? being [ ] list [ ] their [ ] titles [ ]?[,\.;]?[ ]? with [ ] the [ ]? <_: [ ]* link-\d+ [ ]? /> [ ]? being [ ] list [ ]?[,\.;]?[ ]? (?:and[ ])? with [ ] the [ ]? <_:[ ]? link-\d+ [ ]? /> [ ]? being [ ] list \Z ~~ .po\Z

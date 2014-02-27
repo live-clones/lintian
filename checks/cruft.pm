@@ -600,6 +600,7 @@ sub license_check {
   BLOCK:
     while (my $block = $sfd->readwindow()) {
         my $cleanedblock;
+
         if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
             if (   index($block, 'intellectual') > -1
                 && index($block, 'retain') > -1
@@ -777,6 +778,17 @@ sub _check_gfdl_license_problem {
         return 1;
     }
 
+    # official wording
+    if(
+        $gfdlsections =~ m/\A
+                          with [ ] no [ ] invariant [ ] sections[ ]?,
+                          [ ]? no [ ] front(?:[ ]?-[ ]?|[ ])cover [ ] texts[ ]?,
+                          [ ]? and [ ] no [ ] back(?:[ ]?-?[ ]?|[ ])cover [ ] texts
+                          \Z/xso
+      ) {
+        return 0;
+    }
+
     # example are ok
     if (
         $contextbefore =~ m/following [ ] is [ ] an [ ] example
@@ -820,6 +832,7 @@ sub _clean_block {
 
     # pod2man formating
     $text =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
+    $text =~ s{ \\ -}{-}gxsm;
 
     # replace some common comment-marker/markup with space
     $text =~ s{(?:
@@ -864,7 +877,7 @@ sub _clean_block {
     return $text;
 }
 
-# strip punctuation at both ends
+# do not use space arround punctuation
 sub _strip_punct() {
     my ($text) = @_;
     # replace final punctuation
