@@ -437,7 +437,6 @@ sub test_package {
     my $rundir = "$RUNDIR/$suite/$pkg";
     my $origdir = "$TESTSET/$suite/$testname";
     my $targetdir = "$rundir/$pkgdir";
-    my $tmpldir = "$TESTSET/templates/$suite/";
 
     my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
@@ -471,10 +470,12 @@ sub test_package {
     }
 
     if (not up_to_date($stampfile, $origdir)) {
+        my $tmpldir = "$TESTSET/templates/$suite/";
+        my $skel = $testdata->{skeleton};
+
         print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
         runsystem_ok('rm', '-rf', $rundir);
         runsystem_ok('mkdir', '-p', $rundir);
-        my $skel = $testdata->{skeleton};
         unless ($is_native) {
             copy_template_dir("$tmpldir/${skel}.upstream",
                 "$origdir/upstream/",$targetdir);
