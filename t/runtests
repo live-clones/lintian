@@ -464,7 +464,7 @@ sub test_package {
     # confuses dpkg-source, which then fails to find the upstream tarball and
     # builds a native package.
     unless ($is_native) {
-        for ($orig_version, $pkgdir, $targetdir) {
+        for ($orig_version, $pkgdir, $targetdir, $epochless_version) {
             s/-[^-]+$//;
             s/(-|^)(\d+):/$1/;
         }
