@@ -708,9 +708,16 @@ sub _check_gfdl_license_problem {
                         {}xismo;
 
     # Treat ambiguous empty text
-    if ($gfdlsections eq '') {
-        tag 'license-problem-gfdl-invariants-empty', $name;
-        return 1;
+    unless(
+        defined(
+            $licenseproblemhash->{'license-problem-gfdl-invariants-empty'})
+      ) {
+        if ($gfdlsections eq '') {
+            # lie in order to check more part
+            tag 'license-problem-gfdl-invariants-empty', $name;
+            $licenseproblemhash->{'license-problem-gfdl-invariants-empty'} = 1;
+            return 0;
+        }
     }
 
     # official wording
@@ -746,9 +753,12 @@ sub _check_gfdl_license_problem {
             if ($name =~ m{$acceptonlyinfile}) {
                 my $applytag = $gfdl_data->{'tag'};
                 if(defined($applytag)) {
-                    # lie will allow to check more block
-                    _tag_gfdl($applytag, $name, $gfdlsections);
-                    return 0;
+                    unless(defined($licenseproblemhash->{$applytag})) {
+                        # lie will allow to check more block
+                        _tag_gfdl($applytag, $name, $gfdlsections);
+                        $licenseproblemhash->{$applytag} = 1;
+                        return 0;
+                    }
                 }
                 return 0;
             }else {
@@ -901,8 +911,8 @@ sub _license_check {
 
         if(defined($licenseproblemdata->{'callsub'})) {
             my $subresult= $licenseproblemdata->{'callsub'}->(
-                $name, $block,$blocknumber,$matchedkeyword,
-                $licenseproblemhash,$$cleanedblock, %+
+                $name, $block,$blocknumber,$cleanedblock,$matchedkeyword,
+                $licenseproblemhash,%+
             );
             if($subresult) {
                 $licenseproblemhash->{$licenseproblem} = 1;
