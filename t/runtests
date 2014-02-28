@@ -37,9 +37,12 @@ use threads::shared;
 use Thread::Queue;
 
 use File::Basename qw(basename dirname);
+use File::Find qw(find);
+use File::stat;
 use File::Temp qw(tempfile);
 use Getopt::Long qw(GetOptions);
 use List::MoreUtils qw(none);
+use POSIX qw(ENOENT);
 use Text::Template;
 
 use constant SUITES => qw(scripts changes debs source tests);
@@ -82,7 +85,7 @@ use lib "$LINTIAN_ROOT/lib";
 
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
-  rstrip slurp_entire_file);
+  rstrip slurp_entire_file touch_file);
 
 # --- Global configuration
 our @DPKG_BUILDPACKAGE_CMD = (
@@ -431,7 +434,7 @@ sub test_package {
 
     my $pkg = $testdata->{source};
     my $pkgdir = "$pkg-$testdata->{version}";
-    my $rundir = "$RUNDIR/$pkg";
+    my $rundir = "$RUNDIR/$suite/$pkg";
     my $origdir = "$TESTSET/$suite/$testname";
     my $targetdir = "$rundir/$pkgdir";
     my $tmpldir = "$TESTSET/templates/$suite/";
@@ -440,6 +443,9 @@ sub test_package {
     my $orig_version = $testdata->{version};
     my $expected = "$origdir/tags";
     my $origexp = $expected;
+    my $stampfile = "$rundir/build-stamp";
+    my $epochless_version = $orig_version;
+    $epochless_version =~ s/^\d+://;
 
     if (-f "$origdir/skip") {
         my $reason = skip_reason("$origdir/skip");
@@ -464,55 +470,59 @@ sub test_package {
         }
     }
 
-    print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
-    runsystem_ok('rm', '-rf', $rundir);
-    runsystem_ok('mkdir', '-p', $rundir);
-    my $skel = $testdata->{skeleton};
-    unless ($is_native) {
-        copy_template_dir("$tmpldir/${skel}.upstream", "$origdir/upstream/",
-            $targetdir);
-        unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
-        if (-x "$origdir/pre_upstream") {
-            msg_print 'running pre_upstream hook... ' if $VERBOSE;
-            runsystem("$origdir/pre_upstream", $targetdir);
-        }
-        chdir_runcmd($rundir,
-            ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
-        if (-f "$origdir/debian/debian/source/format") {
-            my $format
-              = slurp_entire_file("$origdir/debian/debian/source/format");
-            chomp $format;
-            if ($format =~ m/^3.\d+ \(quilt\)$/) {
-                delete_dir("$targetdir/debian/");
+    if (not up_to_date($stampfile, $origdir)) {
+        print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
+        runsystem_ok('rm', '-rf', $rundir);
+        runsystem_ok('mkdir', '-p', $rundir);
+        my $skel = $testdata->{skeleton};
+        unless ($is_native) {
+            copy_template_dir("$tmpldir/${skel}.upstream",
+                "$origdir/upstream/",$targetdir);
+            unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
+            if (-x "$origdir/pre_upstream") {
+                msg_print 'running pre_upstream hook... ' if $VERBOSE;
+                runsystem("$origdir/pre_upstream", $targetdir);
+            }
+            chdir_runcmd($rundir,
+                ['tar', 'czf', "${pkg}_${orig_version}.orig.tar.gz", $pkgdir]);
+            if (-f "$origdir/debian/debian/source/format") {
+                my $format
+                  = slurp_entire_file("$origdir/debian/debian/source/format");
+                chomp $format;
+                if ($format =~ m/^3.\d+ \(quilt\)$/) {
+                    delete_dir("$targetdir/debian/");
+                }
             }
         }
-    }
-    copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
-        ['--exclude=debian/changelog']);
+        copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
+            ['--exclude=debian/changelog']);
 
-    foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-        unless (-e "$targetdir/$tfile") {
-            fill_in_tmpl("$targetdir/$tfile", $testdata);
+        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+            unless (-e "$targetdir/$tfile") {
+                fill_in_tmpl("$targetdir/$tfile", $testdata);
+            }
         }
+
+        unless ($is_native || -e "$targetdir/debian/watch") {
+            my $f = "$targetdir/debian/watch";
+            # Create a watch file with "content" as lintian checks for
+            # non-zero file size.
+            open(my $fd, '>', $f);
+            print {$fd} "# Empty watch file\n";
+            close($fd);
+        }
+        if (-x "$origdir/pre_build") {
+            msg_print 'running pre_build hook... ' if $VERBOSE;
+            runsystem("$origdir/pre_build", $targetdir);
+        }
+        _builder_tests($testdata, "$rundir/$pkgdir", "$rundir/build.$pkg");
+        touch_file($stampfile);
+    } else {
+        msg_print 'building (cached)... ';
     }
 
-    unless ($is_native || -e "$targetdir/debian/watch") {
-        my $f = "$targetdir/debian/watch";
-        # Create a watch file with "content" as lintian checks for
-        # non-zero file size.
-        open(my $fd, '>', $f);
-        print {$fd} "# Empty watch file\n";
-        close($fd);
-    }
-    if (-x "$origdir/pre_build") {
-        msg_print 'running pre_build hook... ' if $VERBOSE;
-        runsystem("$origdir/pre_build", $targetdir);
-    }
-
-    my $file
-      = _builder_tests($testdata, "$rundir/$pkgdir", "$rundir/build.$pkg");
-
-    run_lintian($testdata, $file, "$rundir/tags.$pkg");
+    my $file = "${pkg}_${epochless_version}_${ARCHITECTURE}.changes";
+    run_lintian($testdata, "$rundir/$file", "$rundir/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
@@ -534,17 +544,15 @@ sub test_package {
 
 sub _builder_tests {
     my ($testdata, $testdir, $log) = @_;
-    my $pkg = $testdata->{source};
     msg_print 'building... ';
     my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
     if ($res){
+        my $pkg = $testdata->{source};
         dump_log($pkg, $log) if $DUMP_LOGS;
         fail("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
     }
-    my $version = $testdata->{version};
-    $version =~ s/^(\d+)://;
 
-    return "$testdir/../${pkg}_${version}_${ARCHITECTURE}.changes";
+    return;
 }
 
 sub run_lintian {
@@ -747,6 +755,29 @@ sub generic_test_runner {
 
     run_lintian($testdata, $file, "$RUNDIR/tags.$testname");
     return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$testname");
+}
+
+sub up_to_date {
+    my ($stampfile, $dir) = @_;
+    my $newest = 0;
+    my $stamp_stat = stat($stampfile);
+    if (not defined($stamp_stat)) {
+        die("stat $stampfile: $!")
+          if $! != ENOENT;
+        # Missing file implies "out-of-date"
+        return 0;
+    }
+    my $tester = sub {
+        my $path = $File::Find::name;
+        my $st = stat($path) // die "stat $path: $!";
+        $newest = $st->mtime if (-f _ && $st->mtime > $newest);
+    };
+    my %options = (
+        'wanted' => $tester,
+        'no_chdir' => 1,
+    );
+    find(\%options, $dir);
+    return $stamp_stat->mtime >= $newest;
 }
 
 # Makeshift replacement for "glob" to work around #723805
