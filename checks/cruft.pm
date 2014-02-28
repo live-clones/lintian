@@ -104,6 +104,62 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         };
     });
 
+sub _get_license_check_file {
+    my ($filename) = @_;
+    my $data = Lintian::Data->new(
+        $filename,
+        qr/\s*\~\~\s*/,
+        sub {
+            my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
+            if(scalar(@splitline) > 5 or scalar(@splitline) <2) {
+                fail 'Syntax error in cruft/warn-file-type', $.;
+            }
+            my ($keywords, $sentence, $regex, $firstregex, $callsub)
+              = @splitline;
+            $keywords = defined($keywords) ? strip($keywords) : '';
+            $sentence = defined($sentence) ? strip($sentence) : '';
+            $regex = defined($regex) ? strip($regex) : '';
+            $firstregex = defined($firstregex) ? strip($firstregex) : '';
+            $callsub = defined($callsub) ? strip($callsub) : '';
+
+            my @keywordlist = split(/\s*\&\&\s*/, $keywords);
+            if(scalar(@keywordlist) < 1) {
+                fail 'Syntax error in cruft/warn-file-type. No keywords line',
+                  $.;
+            }
+            if($regex eq '') {
+                $regex = '.*';
+            }
+            if($firstregex eq '') {
+                $firstregex = $regex;
+            }
+            my %ret = (
+                'keywords' =>  \@keywordlist,
+                'sentence' => $sentence,
+                'regex' => qr/$regex/xsm,
+                'firstregex' => qr/$firstregex/xsm,
+            );
+            unless($callsub eq '') {
+                if($callsub eq '_check_gfdl_license_problem') {
+                    $ret{'callsub'} = \&_check_gfdl_license_problem;
+                }else {
+                    fail 'Syntax error in cruft/warn-file-type. Unknown sub',
+                      $.;
+                }
+            }
+            return \%ret;
+        });
+    return $data;
+}
+
+# get usual non distribuable license
+my $NON_DISTRIBUTABLE_LICENSES
+  = _get_license_check_file('cruft/non-distributable-license');
+
+# get non free license
+# get usual non distribuable license
+my $NON_FREE_LICENSES = _get_license_check_file('cruft/non-free-license');
+
 # get usual datas about admissible/not admissible GFDL invariant part of license
 my $GFDL_FRAGMENTS = Lintian::Data->new(
     'cruft/gfdl-license-fragments-checks',
@@ -594,25 +650,17 @@ sub license_check {
   BLOCK:
     while (my $block = $sfd->readwindow()) {
         my $cleanedblock;
+        my %matchedkeyword;
 
-        if (!exists $licenseproblemhash{'nvidia-intellectual'}) {
-            if (   index($block, 'intellectual') > -1
-                && index($block, 'retain') > -1
-                && index($block, 'property') > -1){
-                # nvdia opencv infamous license
-                # non-distributable
-                $cleanedblock = _clean_block($block)
-                  if not defined($cleanedblock);
-                if (
-                    $cleanedblock =~ m/retain [ ] all [ ] intellectual [ ]
-                          property [ ] and [ ] proprietary [ ] rights [ ] in
-                          [ ] and [ ] to [ ] this [ ] software [ ] and [ ]
-                          related [ ] documentation/xism
-                  ){
-                    tag 'license-problem-nvidia-intellectual', $name;
-                    $licenseproblemhash{'nvidia-intellectual'} = 1;
-                }
-            }
+        if(
+            _license_check(
+                $name, $NON_DISTRIBUTABLE_LICENSES,
+                $block,  $sfd->blocknumber(),
+                \$cleanedblock, \%matchedkeyword,
+                \%licenseproblemhash
+            )
+          ){
+            return;
         }
 
         # some license issues do not apply to non-free
@@ -621,123 +669,9 @@ sub license_check {
             next BLOCK;
         }
 
-        if (!exists $licenseproblemhash{'json-evil'}) {
-            if (   index($block, 'evil') > -1
-                && index($block, 'good') > -1) {
-                $cleanedblock = _clean_block($block)
-                  if not defined($cleanedblock);
-                if (
-                    $cleanedblock =~ m/software [ ] shall [ ]
-                     be [ ] used [ ] for [ ] good [ ]? ,? [ ]?
-                     not [ ] evil/xsm
-                  ){
-                    # json evil license
-                    tag 'license-problem-json-evil', $name;
-                    $licenseproblemhash{'json-evil'} = 1;
-                }
-            }
-        }
-
-        # non free rfc
-        if (!exists $licenseproblemhash{'non-free-RFC'}) {
-            if (   index($block, 'copyrights') > -1
-                && index($block, 'purpose') > -1
-                && index($block, 'translate') > -1) {
-                $cleanedblock = _clean_block($block)
-                  if not defined($cleanedblock);
-                if(
-                    $cleanedblock =~ m/this [ ] document [ ] itself [ ]
-                        may [ ] not [ ] be [ ] modified [ ] in [ ] any [ ]
-                        way [ ]?, [ ]? such [ ] as [ ] by [ ] removing [ ]
-                        the [ ] copyright [ ] notice [ ] or [ ] references
-                        [ ] to [ ] .{0,256} [ ]? except [ ] as [ ] needed
-                        [ ] for [ ] the [ ] purpose [ ] of [ ] developing
-                        [ ] .{0,128} [ ]? in [ ] which [ ] case [ ] the
-                        [ ] procedures [ ] for [ ] copyrights [ ] defined
-                        [ ] in [ ] the [ ] .{0,128} [ ]? process [ ] must
-                        [ ] be [ ] followed[ ]?,[ ]? or [ ] as [ ] required
-                        [ ] to [ ] translate [ ] it [ ] into [ ] languages
-                        [ ] other [ ] than/xsm
-                  ){
-                    tag 'license-problem-non-free-RFC', $name;
-                    $licenseproblemhash{'non-free-RFC'} = 1;
-                }
-            }
-        }
-        if (!exists $licenseproblemhash{'non-free-RFC'}) {
-            if (index($block, 'bcp') > -1){
-                $cleanedblock = _clean_block($block)
-                  if not defined($cleanedblock);
-                if (
-                    $cleanedblock =~ m/this [ ] document [ ] is [ ] subject
-                      [ ] to [ ]
-                      (?:the [ ] rights [ ]?, [ ] licenses [ ]
-                         and [ ]restrictions [ ] contained [ ] in [ ])?
-                      bcp [ ] 78/xsm
-                  ){
-                    tag 'license-problem-non-free-RFC', $name;
-                    $licenseproblemhash{'non-free-RFC'} = 1;
-                }
-            }
-        }
-
-        # check GFDL block - The ".{0,1024}"-part in the regex
-        # will contain the "no invariants etc."  part if
-        # it is a good use of the license.  We include it
-        # here to ensure that we do not emit a false positive
-        # if the "redeeming" part is in the next block.
-        #
-        # See cruft-gfdl-fp-sliding-win for the test case
-        if (!exists $licenseproblemhash{'gfdl-invariants'}) {
-            if (   index($block, 'license') > -1
-                && index($block, 'documentation') > -1
-                && index($block, 'gnu') > -1
-                && index($block, 'copy') > -1){
-
-                # classical gfdl matching pattern
-                my $normalgfdlpattern = qr/
-                 (?'rawcontextbefore'(?:
-                    (?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
-                    (?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?)))
-                 gnu [ ] free [ ] documentation [ ] license
-                 (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?)
-                 a [ ] copy [ ] of [ ] the [ ] license [ ] is
-                /xsmo;
-
-                # for first block we get context from the beginning
-                my $firstblockgfdlpattern = qr/
-                 (?'rawcontextbefore'(?:
-                    (?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|
-                  \A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|
-                    (?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?)
-                  )
-                 )
-                 gnu [ ] free [ ] documentation [ ] license
-                 (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?)
-                 a [ ] copy [ ] of [ ] the [ ] license [ ] is
-                 /xsmo;
-
-                my $gfdlpattern
-                  =$sfd->blocknumber()
-                  ? $normalgfdlpattern
-                  : $firstblockgfdlpattern;
-
-                $cleanedblock = _clean_block($block)
-                  if not defined($cleanedblock);
-
-                if (index($cleanedblock, 'gnu free documentation license')> -1
-                    && $cleanedblock =~ $gfdlpattern) {
-                    my %matchedhash = %+;
-                    if(
-                        _check_gfdl_license_problem(
-                            $name,$cleanedblock,%matchedhash
-                        )
-                      ) {
-                        $licenseproblemhash{'gfdl-invariants'} = 1;
-                    }
-                }
-            }
-        }
+        _license_check($name, $NON_FREE_LICENSES,
+            $block,  $sfd->blocknumber(),\$cleanedblock, \%matchedkeyword,
+            \%licenseproblemhash);
     }
     return;
 }
@@ -749,7 +683,9 @@ sub _tag_gfdl {
 
 # return True in case of license problem
 sub _check_gfdl_license_problem {
-    my ($name,$cleanedblock,%matchedhash) = @_;
+    my ($name,$block,$blocknumber,$cleanedblock,$matchedkeyword,
+        $licenseproblemhash,%matchedhash)
+      = @_;
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
 
@@ -919,6 +855,68 @@ sub _md5sum_based_check {
         return 1;
     }
     return 0;
+}
+
+# check bad license
+sub _license_check {
+    my ($name, $licensesdatas, $block, $blocknumber, $cleanedblock,
+        $matchedkeyword, $licenseproblemhash)
+      = @_;
+    my $ret = 0;
+  LICENSE:
+    foreach my $licenseproblem ($licensesdatas->all) {
+        my $licenseproblemdata = $licensesdatas->value($licenseproblem);
+        if(defined($licenseproblemhash->{$licenseproblem})) {
+            next LICENSE;
+        }
+        # do fast keyword search
+        my @keywordslist = @{$licenseproblemdata->{'keywords'}};
+        foreach my  $keyword (@keywordslist) {
+            my $thiskeyword = $matchedkeyword->{$keyword};
+            if(not defined($thiskeyword)) {
+                if(index($block, $keyword) > -1) {
+                    $matchedkeyword->{$keyword} = 1;
+                }else {
+                    $matchedkeyword->{$keyword} = 0;
+                    next LICENSE;
+                }
+            } elsif ($thiskeyword == 0) {
+                next LICENSE;
+            }
+        }
+        # clean block now in order to normalise space and check a sentence
+        unless(defined($$cleanedblock)) {
+            $$cleanedblock = _clean_block($block);
+        }
+        unless(index($$cleanedblock,$licenseproblemdata->{'sentence'}) > -1){
+            next LICENSE;
+        }
+        my $regex
+          = $blocknumber
+          ? $licenseproblemdata->{'regex'}
+          : $licenseproblemdata->{'firstregex'};
+        unless($$cleanedblock =~ $regex) {
+            next LICENSE;
+        }
+
+        if(defined($licenseproblemdata->{'callsub'})) {
+            my $subresult= $licenseproblemdata->{'callsub'}->(
+                $name, $block,$blocknumber,$matchedkeyword,
+                $licenseproblemhash,$$cleanedblock, %+
+            );
+            if($subresult) {
+                $licenseproblemhash->{$licenseproblem} = 1;
+                $ret = 1;
+                next LICENSE;
+            }
+        }else {
+            tag $licenseproblem, $name;
+            $licenseproblemhash->{$licenseproblem} = 1;
+            $ret = 1;
+            next LICENSE;
+        }
+    }
+    return $ret;
 }
 
 1;
