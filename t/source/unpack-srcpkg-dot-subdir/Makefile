@@ -1,7 +1,7 @@
 name = unpack-srcpkg-dot-subdir
 
 all:
-	mkdir $(name)
+	mkdir -p $(name)
 	echo 'Some upstream README' > $(name)/README
 	echo '/* some C program */' > $(name)/foo.c
 	echo '/* some header */' > $(name)/foo.h

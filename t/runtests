@@ -705,8 +705,9 @@ sub generic_test_runner {
     msg_print "Running $testname... ";
 
     my $testdir = "$TESTSET/$suite/$testname";
-    my $targetdir = "$RUNDIR/$testname";
-    my $tmpldir = "$TESTSET/templates/$suite/";
+    my $targetdir = "$RUNDIR/$suite/$testname";
+    my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
+
     if (-f "$testdir/skip") {
         my $reason = skip_reason("$testdir/skip");
         return skip_test($suite, $testname, "(disabled) $reason");
@@ -719,27 +720,34 @@ sub generic_test_runner {
         }
     }
 
-    print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
-    runsystem_ok('rm', '-rf', $targetdir);
-    runsystem('cp', '-rp', $testdir, $targetdir);
+    if (not up_to_date($stampfile, $testdir)) {
+        my $skel = $testdata->{skeleton};
+        my $tmpldir = "$TESTSET/templates/$suite/";
 
-    my $skel = $testdata->{skeleton};
+        print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
+        runsystem_ok('rm', '-rf', $targetdir);
+        runsystem_ok('mkdir', '-p', $targetdir);
+        runsystem('cp', '-rp', $testdir, $targetdir);
 
-    copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
-        ['--exclude=changelog'], ['--exclude=desc']);
+        copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
+            ['--exclude=changelog'], ['--exclude=desc']);
 
-    foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-        unless (-e "$targetdir/$tfile") {
-            fill_in_tmpl("$targetdir/$tfile", $testdata);
+        foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+            unless (-e "$targetdir/$tfile") {
+                fill_in_tmpl("$targetdir/$tfile", $testdata);
+            }
         }
-    }
 
-    msg_print 'building... ';
-    my $res
-      = chdir_runcmd($targetdir, ['fakeroot', 'make'], "../build.$testname");
-    if ($res){
-        dump_log($testname, "$RUNDIR/build.$testname") if $DUMP_LOGS;
-        fail("cd $targetdir && fakeroot make >../build.$testname 2>&1");
+        msg_print 'building... ';
+        my $res= chdir_runcmd($targetdir, ['fakeroot', 'make'],
+            "../build.$testname");
+        if ($res){
+            dump_log($testname, "$RUNDIR/build.$testname") if $DUMP_LOGS;
+            fail("cd $targetdir && fakeroot make >../build.$testname 2>&1");
+        }
+        touch_file($stampfile);
+    } else {
+        msg_print 'building (cached)...';
     }
     # The _glob call emulates glob("$targetdir/*.$ext")
     # (see #723805)
