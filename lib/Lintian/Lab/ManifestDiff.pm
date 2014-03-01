@@ -23,7 +23,7 @@ package Lintian::Lab::ManifestDiff;
 use strict;
 use warnings;
 
-use parent qw(Class::Accessor);
+use parent qw(Class::Accessor::Fast);
 
 =head1 NAME
 

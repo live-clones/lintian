@@ -58,7 +58,7 @@ methods from L<Lintian::Lab>.
 use strict;
 use warnings;
 
-use parent qw(Lintian::Processable Class::Accessor);
+use parent qw(Lintian::Processable Class::Accessor::Fast);
 
 use Carp qw(croak);
 use Cwd();

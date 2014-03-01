@@ -19,7 +19,7 @@
 ## Represents something Lintian can process (e.g. a deb, dsc or a changes)
 package Lintian::Processable;
 
-use parent qw(Class::Accessor);
+use parent qw(Class::Accessor::Fast);
 
 use strict;
 use warnings;
@@ -158,8 +158,8 @@ sub new_from_metadata {
     return $self;
 }
 
-# Shadow Class::Accessor - otherwise you get some very "funny" errors
-# from Class::Accessor if you get the constructor wrong.
+# Shadow Class::Accessor::Fast - otherwise you get some very "funny" errors
+# from Class::Accessor::Fast if you get the constructor wrong.
 sub new { croak 'Not implemented'; }
 
 =back

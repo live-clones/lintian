@@ -21,7 +21,7 @@ package Lintian::Tag::Override;
 use strict;
 use warnings;
 
-use parent qw(Class::Accessor);
+use parent qw(Class::Accessor::Fast);
 
 =head1 NAME
 

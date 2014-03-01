@@ -19,7 +19,7 @@
 ## Represents a Lintian profile
 package Lintian::Profile;
 
-use parent qw(Class::Accessor);
+use parent qw(Class::Accessor::Fast);
 
 use strict;
 use warnings;

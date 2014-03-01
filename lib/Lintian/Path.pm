@@ -20,7 +20,7 @@ package Lintian::Path;
 
 use strict;
 use warnings;
-use parent qw(Class::Accessor);
+use parent qw(Class::Accessor::Fast);
 use overload (
     '""' => \&_as_string,
     'qr' => \&_as_regex_ref,

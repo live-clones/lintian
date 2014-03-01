@@ -24,7 +24,7 @@ use strict;
 use warnings;
 use autodie;
 
-use parent qw(Class::Accessor Clone);
+use parent qw(Class::Accessor::Fast Clone);
 
 use Carp qw(croak);
 
@@ -186,7 +186,7 @@ Returns the type of packages that this manifest has information about.
 
 # For some reason these getters seem to just return "undef", so they
 # have been added manually below.  (not sure if this is a usage error
-# or a bug in Class::Accessor)
+# or a bug in Class::Accessor::Fast)
 #Lintian::Lab::Manifest->mk_ro_accessors (qw(dirty type));
 
 sub dirty {
