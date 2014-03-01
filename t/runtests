@@ -615,6 +615,9 @@ sub test_changes {
         }
     }
 
+    mkdir("$RUNDIR/changes")
+      if not -d "$RUNDIR/changes";
+
     msg_print "Running $testname $testdata->{version}... ";
 
     my $test = $testdata->{source};
@@ -632,15 +635,15 @@ sub test_changes {
         # (see #723805)
         @files
           = grep { !/\.(?:desc|tags)$/o } _glob($testdir, qr/\Q$test.\E.*/);
-        runsystem('cp', '-f', @files, "$RUNDIR/");
-        $file = "$RUNDIR/${test}.changes";
+        runsystem('cp', '-f', @files, "$RUNDIR/changes");
+        $file = "$RUNDIR/changes/${test}.changes";
         fill_in_tmpl($file, $testdata);
     }
 
-    run_lintian($testdata, $file, "$RUNDIR/tags.changes-$test");
+    run_lintian($testdata, $file, "$RUNDIR/changes/tags.$test");
 
     return _check_result($testdata, "$testdir/$test.tags",
-        "$RUNDIR/tags.changes-$test");
+        "$RUNDIR/changes/tags.$test");
 }
 
 # --------------
