@@ -433,12 +433,8 @@ sub test_package {
     msg_print "Running $testdata->{testname} $testdata->{version}... ";
 
     my $pkg = $testdata->{source};
-    my $pkgdir = "$pkg-$testdata->{version}";
     my $rundir = "$RUNDIR/$suite/$pkg";
     my $origdir = "$TESTSET/$suite/$testname";
-    my $targetdir = "$rundir/$pkgdir";
-
-    my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
     my $expected = "$origdir/tags";
     my $origexp = $expected;
@@ -458,20 +454,24 @@ sub test_package {
         }
     }
 
-    # Strip the Debian revision off of the name of the target directory and
-    # the *.orig.tar.gz file if the package is non-native.  Otherwise, it
-    # confuses dpkg-source, which then fails to find the upstream tarball and
-    # builds a native package.
-    unless ($is_native) {
-        for ($orig_version, $pkgdir, $targetdir) {
-            s/-[^-]+$//;
-            s/(-|^)(\d+):/$1/;
-        }
-    }
-
     if (not up_to_date($stampfile, $origdir)) {
         my $tmpldir = "$TESTSET/templates/$suite/";
         my $skel = $testdata->{skeleton};
+        my $is_native = ($testdata->{type} eq 'native');
+        my $pkgdir = "$pkg-$testdata->{version}";
+        my $targetdir = "$rundir/$pkgdir";
+
+        # Strip the Debian revision off of the name of the target
+        # directory and the *.orig.tar.gz file if the package is
+        # non-native.  Otherwise, it confuses dpkg-source, which then
+        # fails to find the upstream tarball and builds a native
+        # package.
+        unless ($is_native) {
+            for ($orig_version, $pkgdir, $targetdir) {
+                s/-[^-]+$//;
+                s/(-|^)(\d+):/$1/;
+            }
+        }
 
         print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
         runsystem_ok('rm', '-rf', $rundir);
