@@ -765,8 +765,9 @@ sub generic_test_runner {
     fail "$testname produced more than one file matching \"$targetdir/*.$ext\""
       if @matches;
 
-    run_lintian($testdata, $file, "$RUNDIR/tags.$testname");
-    return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$testname");
+    run_lintian($testdata, $file, "$RUNDIR/$suite/tags.$testname");
+    return _check_result($testdata, "$testdir/tags",
+        "$RUNDIR/$suite/tags.$testname");
 }
 
 sub up_to_date {
