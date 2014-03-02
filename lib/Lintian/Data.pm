@@ -76,8 +76,7 @@ sub new {
             close($fd);
             $data{$type} = $dataset;
         }
-        $self->{'data'} = $data{$type};
-        return;
+        return $self->{'data'} = $data{$type};
     }
 }
 
@@ -203,9 +202,9 @@ sub _parse_file {
 sub _force_promise {
     my ($self) = @_;
     my $promise = $self->{promise};
-    $self->_load_data(@$promise);
+    my $data = $self->_load_data(@$promise);
     delete $self->{promise};
-    return;
+    return $data;
 }
 
 # Query a data object for whether a particular keyword is valid.
@@ -214,22 +213,22 @@ sub known {
     if(!defined($keyword)) {
         return;
     }
-    $self->_force_promise unless exists $self->{data};
-    return (exists $self->{data}{$keyword}) ? 1 : undef;
+    my $data = $self->{data} || $self->_force_promise;
+    return (exists $data->{$keyword}) ? 1 : undef;
 }
 
 # Return all known keywords (in no particular order).
 sub all {
     my ($self) = @_;
-    $self->_force_promise unless exists $self->{data};
-    return keys(%{ $self->{data} });
+    my $data = $self->{data} || $self->_force_promise;
+    return keys(%{ $data });
 }
 
 # Query a data object for the value attached to a particular keyword.
 sub value {
     my ($self, $keyword) = @_;
-    $self->_force_promise unless exists $self->{data};
-    return (exists $self->{data}{$keyword}) ? $self->{data}{$keyword} : undef;
+    my $data = $self->{data} || $self->_force_promise;
+    return (exists $data->{$keyword}) ? $data->{$keyword} : undef;
 }
 
 1;
