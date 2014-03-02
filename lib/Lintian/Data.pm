@@ -159,8 +159,6 @@ sub _parse_file {
             } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
                 my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
                 my $actual_name;
-                my $negative_test = 0;
-                $negative_test = 1 if $op eq 'if-vendor-is-not';
                 croak "Missing vendor name after \@$op"
                   unless $desired_name;
                 croak "Missing command after vendor name for \@$op"
