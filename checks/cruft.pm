@@ -853,8 +853,7 @@ sub lc_block {
 # check based on md5sums
 sub _md5sum_based_check {
     my ($name, $md5sum, $data, $tag) = @_;
-    if ($data->known($md5sum)) {
-        my $datavalue = $data->value($md5sum);
+    if (my $datavalue = $data->value($md5sum)) {
         my $usualname= $datavalue->{'name'};
         my $reason= $datavalue->{'reason'};
         my $link= $datavalue->{'link'};
