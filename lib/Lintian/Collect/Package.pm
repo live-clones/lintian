@@ -244,11 +244,9 @@ sub md5sums {
     while (my $line = <$fd>) {
         chop($line);
         next if $line =~ m/^\s*$/o;
-        $line =~ m/^(?'escaped'\\)?(?'md5sum'\S+)\s*(?'file'\S.*)$/o
+        $line =~ m/^(\\)?(\S+)\s*(\S.*)$/o
           or fail "syntax error in $md5f info file: $line";
-        my $zzsum = $+{'md5sum'};
-        my $zzescaped = defined($+{'escaped'});
-        my $zzfile = $+{'file'};
+        my ($zzescaped, $zzsum, $zzfile) = ($1, $2, $3);
         if($zzescaped) {
             $zzfile = dequote_name($zzfile);
         }
