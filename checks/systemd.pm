@@ -226,7 +226,7 @@ sub extract_service_file_values {
             next;
         }
 
-        my ($key, $value) = ($_ =~ m,^(.*)=(.*)$,);
+        my ($key, $value) = ($_ =~ m,^(.*)\s*=\s*(.*)$,);
         if (   $section eq $extract_section
             && $key eq $extract_key) {
             if ($value eq '') {
