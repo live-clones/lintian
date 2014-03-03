@@ -25,12 +25,21 @@ use autodie;
 
 use File::Basename qw(dirname);
 use Lintian::Tags qw(tag);
+use Lintian::Data;
+
+my $WELL_KNOWN_SYMLINKS_TARGET = Lintian::Data->new(
+    'symlinks/well-known-symlinks-target',
+    qr/\s*\~\~\s*/,
+    sub {
+        return qr/$_[0]/x;
+    });
 
 sub run {
     my ($pkg, undef, $info, $proc, $group) = @_;
     my $ginfo = $group->info;
     my (@brokenlinks, @dindexes);
 
+  FILE:
     foreach my $file ($info->sorted_index) {
         if ($file->is_symlink){
             my $target = $file->link//''; # the link target
@@ -59,14 +68,13 @@ sub run {
             # Ignore links pointing to common things that may exist
             # even if they are not shipped by any binary from this
             # source package.
-            next
-              if $path =~ m@man/man\d/undocumented@o
-              or $path =~ m@^etc/alternatives/@o
-              or $path =~ m@^usr/share/javascript/(?:[^/]++/)++[^/]+\.js$@o
-              or $path =~ m@^usr/share/fonts/[^/]++/.++$@o
-              # link to font dir or a font file
-              or $path =~ m@^usr/share/java/[^/]+\.jar$@o
-              or $path eq 'lib/init/upstart-job';
+            foreach my $wellknowntarget ($WELL_KNOWN_SYMLINKS_TARGET->all) {
+                my $regex
+                  = $WELL_KNOWN_SYMLINKS_TARGET->value($wellknowntarget);
+                if($path =~ m{$regex}) {
+                    next FILE;
+                }
+            }
 
             # Skip langpack links (used in Ubuntu) - after we check that
             # it appears to be consistent.

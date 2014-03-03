@@ -1,0 +1,11 @@
+# well known symlink target without leading / 
+# please use regex with x modifier
+man/man\d/undocumented
+^etc/alternatives/
+^usr/share/fonts/[^/]++/.++$
+^usr/share/java/[^/]+\.jar$
+^usr/share/javascript/(?:[^/]++/)++[^/]+\.js$
+^lib/init/upstart-job$
+^dev/null$
+^dev/zeros$
+

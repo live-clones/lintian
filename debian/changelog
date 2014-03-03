@@ -15,6 +15,9 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.  (Closes: #738454)
+  * checks/symlinks.pm:
+    + [BR] Use Lintian::Data for safe symlinks list. Add
+      /dev/null to this list.  (Closes: #740339).
   * checks/watch-file.{desc,pm}:
     + [BR] Allow debian/upstream-signing-key.asc,
       thanks to Nicolas Boulenguez (Closes: #736711).
