@@ -637,6 +637,68 @@ Info: The architecture string in this source relation has some
  negated.  This is not permitted by Policy.  Either all architectures must
  be negated or none of them may be.
 
+Tag: invalid-restriction-term-in-source-relation
+Severity: important
+Certainty: certain
+Info: The restriction list in the source relation includes a term which
+ does not contain exactly one dot separating restriction namespace and label.
+ A term in a restriction list is of the form "namespace.label" (without the
+ quotes).
+
+Tag: invalid-restriction-namespace-in-source-relation
+Severity: important
+Certainty: possible
+Info: The restriction list in the source relation includes a term with
+ an unknown namespace. The only allowed namespace is "profile" (without the
+ quotes).
+
+Tag: invalid-restriction-label-in-source-relation
+Severity: important
+Certainty: possible
+Info: The restriction list in the source relation includes a term with
+ an unknown label. The only allowed labels are "stage1", "stage2", "notest"
+ and "cross".
+
+Tag: restriction-list-without-versioned-dpkg-dev-dependency
+Severity: normal
+Certainty: certain
+Info: If a restriction list appears in the build dependencies, then the
+ source package has to build depend on dpkg-dev (>= 1.17.2) for minimal
+ restriction list support.
+
+Tag: restriction-list-with-versioned-dpkg-dev-conflict
+Severity: normal
+Certainty: certain
+Info: If a restriction list appears in the build dependencies, then the
+ source package has to build depend on dpkg-dev (>= 1.17.2) for minimal
+ restriction list support. It must not conflict with version 1.17.2.
+
+Tag: restriction-list-with-debhelper-without-debhelper-version
+Severity: normal
+Certainty: certain
+Info: If a restriction list appears in the build dependencies and the
+ package uses debhelper, then the source package has to depend on at least
+ debhelper 9.20140227.
+
+Tag: restriction-list-with-debhelper-with-conflicting-debhelper-version
+Severity: normal
+Certainty: certain
+Info: If a restriction list appears in the build dependencies and the
+ package uses debhelper, then the source package has to depend on at least
+ debhelper 9.20140227. It must not conflict with version 9.20140227.
+
+Tag: stageX-profile-used-but-no-binary-package-dropped
+Severity: normal
+Certainty: certain
+Info: You used a stage1 or stage2 build profile restriction in the build
+ dependencies but you did not mark any binary packages as not being built with
+ the used profile activated. Using a stage1 or stage2 build profile restriction
+ means that you intend to change the build process in a way such that some of
+ the build results will be different or not generated at all. All binary
+ packages which would provide different functionality, would be empty or not be
+ built at all under the stage1 or stage2 profiles must be marked as not being
+ generated with the Build-Profiles field.
+
 Tag: depends-on-build-essential-package-without-using-version
 Severity: important
 Certainty: certain

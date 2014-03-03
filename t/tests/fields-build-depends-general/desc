@@ -16,5 +16,13 @@ Test-For:
  depends-on-build-essential-package-without-using-version
  depends-on-packaging-dev
  invalid-arch-string-in-source-relation
+ invalid-restriction-label-in-source-relation
+ invalid-restriction-namespace-in-source-relation
+ invalid-restriction-term-in-source-relation
  ored-build-depends-on-obsolete-package
+ restriction-list-with-debhelper-with-conflicting-debhelper-version
+ restriction-list-with-debhelper-without-debhelper-version
+ restriction-list-with-versioned-dpkg-dev-conflict
+ restriction-list-without-versioned-dpkg-dev-dependency
+ stageX-profile-used-but-no-binary-package-dropped
 References: Debian Bug#540594, Debian Bug#551793

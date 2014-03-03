@@ -46,6 +46,9 @@ our $known_build_essential
   = Lintian::Data->new('fields/build-essential-packages');
 our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
 our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
+our $KNOWN_DEPENDENCY_RESTRICTIONS
+  = Lintian::Data->new('fields/dependency-restrictions',
+      qr/\./, \&_load_dependency_restrictions);
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
@@ -730,7 +733,7 @@ sub run {
                     && $known_obsolete_emacs{$alternatives[0]->[0]});
 
                 for my $part_d (@alternatives) {
-                    my ($d_pkg, $d_march, $d_version, $d_arch, $rest,
+                    my ($d_pkg, $d_march, $d_version, $d_arch, undef, $rest,
                         $part_d_orig)
                       = @$part_d;
 
@@ -937,6 +940,7 @@ sub run {
             any { $_ eq $_[0] } qw(build-depends build-depends-indep);
         };
 
+        my $restrictions_used = 0;
         my %depend;
         for my $field (
             qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)
@@ -958,7 +962,7 @@ sub run {
                         && &$is_dep_field($field));
 
                     for my $part_d (@alternatives) {
-                        my ($d_pkg, $d_march, $d_version, $d_arch, $rest,
+                        my ($d_pkg, $d_march, $d_version, $d_arch, $d_restr, $rest,
                             $part_d_orig)
                           = @$part_d;
 
@@ -967,6 +971,30 @@ sub run {
                             if ($arch eq 'all' || !is_arch_or_wildcard($arch)){
                                 tag 'invalid-arch-string-in-source-relation',
                                   "$arch [$field: $part_d_orig]";
+                            }
+                        }
+
+                        if (scalar @{$d_restr} >= 1) {
+                            $restrictions_used = 1;
+                        }
+
+                        for my $restr (@{$d_restr}) {
+                            my $dotcount = $restr =~ tr/.//;
+                            if ($dotcount != 1) {
+                                tag 'invalid-restriction-term-in-source-relation',
+                                  "$restr [$field: $part_d_orig]";
+                                next;
+                            }
+                            $restr =~ s/^!//;
+                            my ($ns, $label) = split(/\./, $restr, 2);
+                            if ($KNOWN_DEPENDENCY_RESTRICTIONS->known($ns)) {
+                                tag 'invalid-restriction-label-in-source-relation',
+                                  "$label [$field: $part_d_orig]"
+                                  unless any { $_ eq $label }
+                                  @{$KNOWN_DEPENDENCY_RESTRICTIONS->value($ns)};
+                            } else {
+                                tag 'invalid-restriction-namespace-in-source-relation',
+                                  "$ns [$field: $part_d_orig]";
                             }
                         }
 
@@ -1076,6 +1104,24 @@ sub run {
                 if ($build_all->implies($conflict)) {
                     tag 'build-conflicts-with-build-dependency', $conflict;
                 }
+            }
+        }
+
+        # if restrictions are found in the build-depends/conflicts, then 
+        # package must build-depend on dpkg (>= 1.17.2)
+        if ($restrictions_used) {
+            my $build_conflicts_all = $info->relation('build-conflicts-all');
+            tag 'restriction-list-without-versioned-dpkg-dev-dependency'
+              unless ($build_all->implies('dpkg-dev (>= 1.17.2)'));
+            tag 'restriction-list-with-versioned-dpkg-dev-conflict'
+              if ($build_conflicts_all->implies_inverse('dpkg-dev (<< 1.17.2)'));
+            # if the package uses debhelper then it must require and not
+            # conflict with version >= 9.20140227
+            if ($build_all->implies('debhelper')) {
+                tag 'restriction-list-with-debhelper-without-debhelper-version'
+                  unless ($build_all->implies('debhelper (>= 9.20140227)'));
+                tag 'restriction-list-with-debhelper-with-conflicting-debhelper-version'
+                  if ($build_conflicts_all->implies_inverse('debhelper (<< 9.20140227)'));
             }
         }
 
@@ -1240,16 +1286,16 @@ sub run {
     return;
 }
 
-# splits "foo:bar (>= 1.2.3) [!i386 ia64]" into
-# ( "foo", "bar", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], "" )
-#                                                         ^^^   ^^
-#                     count of negated arches, if ! was given   ||
-#                  rest (should always be "" for valid dependencies)
+# splits "foo:bar (>= 1.2.3) [!i386 ia64] <!profile.stage1 !profile.notest>" into
+# ( "foo", "bar", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], [ "!profile.stage1" "!profile.notest" ], "" )
+#                                                         ^^^                                            ^^
+#                     count of negated arches, if ! was given                                            ||
+#                                                           rest (should always be "" for valid dependencies)
 sub _split_dep {
     my $dep = shift;
-    my ($pkg, $dmarch, $version, $darch) = ('', '', ['',''], [[], 0]);
+    my ($pkg, $dmarch, $version, $darch, $restr) = ('', '', ['',''], [[], 0], []);
 
-    my $pkgname = $1 if $dep =~ s/^\s*([^\s\[\(]+)\s*//;
+    my $pkgname = $1 if $dep =~ s/^\s*([^<\s\[\(]+)\s*//;
     if (defined $pkgname) {
         ($pkg, $dmarch) = split /:/, $pkgname, 2;
         $dmarch //= '';  # Ensure it is defined (in case there is no ":")
@@ -1269,9 +1315,23 @@ sub _split_dep {
             }
             $darch->[1] = $negated;
         }
+        if ($dep && $dep =~ s/\s*<([^>]+)>\s*//) {
+            my $t = $1;
+            $restr = [split /\s+/, $t];
+        }
     }
 
-    return ($pkg, $dmarch, $version, $darch, $dep);
+    return ($pkg, $dmarch, $version, $darch, $restr, $dep);
+}
+
+sub _load_dependency_restrictions {
+    my ($key, $value, $pval) = @_;
+    my $ret = undef;
+    if (not defined $pval) {
+        $ret = $pval = [];
+    }
+    push @{$pval}, $value;
+    return $ret;
 }
 
 sub perl_core_has_version {

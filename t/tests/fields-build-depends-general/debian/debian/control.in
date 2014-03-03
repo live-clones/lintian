@@ -8,8 +8,13 @@ Build-Depends: debhelper (>= 9), bd-conflict, revision-1 (>= 1.0-1),
  xorg-dev, java-propose-classpath, python3.2-dev, foo [all],
  bar [i386 any], baz [source i3!86], baz [i386 !amd64],
  other-pkg [kfreebsd-any], yet-another [any-powerpc],
+ big <profile.stage1>, bpfail1 <foobar>,
+ bpfail2 <foo.bar>, bpfail3 <profile.bar>,
  packaging-dev, libdb5.1++-dev, libdb5.1-java-dev
-Build-Conflicts: bd-conflict
+Build-Conflicts:
+ bd-conflict,
+ dpkg-dev (>= 1.17.2),
+ debhelper (>= 9.20140227)
 
 Package: {$source}
 Architecture: {$architecture}

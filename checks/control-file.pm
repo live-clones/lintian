@@ -292,6 +292,52 @@ sub run {
         }
     }
 
+    # check the Build-Profiles field
+    # this has to checked here because the Build-Profiles field does not appear
+    # in DEBIAN/control and even if it should in the future, some binary
+    # packages might never be built in the first place because of build
+    # profiles
+
+    # check which profile names are supposedly supported according to the build
+    # dependencies
+    my %used_profiles=();
+    for my $field (
+        qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)
+    ) {
+        if (defined $info->source_field($field)) {
+            for my $dep (split /\s*,\s*/, $info->source_field($field)) {
+                for my $alt (split /\s*\|\s*/, $dep) {
+                    while ($alt =~ /<([^>]+)>/g) {
+                        for my $restr (split /\s+/, $1) {
+                            if ($restr =~ m/^!?profile\.(.*)/) {
+                                $used_profiles{$1} = 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # find those packages that do not get built because of a certain build
+    # profile
+    for my $bin (@package_names) {
+        my $raw = $info->binary_field($bin, "build-profiles");
+        next unless $raw;
+        for my $prof (split /\s+/, $raw) {
+            if ($prof =~ s/^!//) {
+                $used_profiles{$prof} = 1;
+            }
+        }
+    }
+
+    # find out if the developer forgot to mark binary packages as not being
+    # built
+    while (my ($k, $v) = each(%used_profiles)) {
+        tag 'stageX-profile-used-but-no-binary-package-dropped'
+          if (($k eq "stage1" || $k eq "stage2") && $v == 0);
+    }
+
     return;
 }
 

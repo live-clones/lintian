@@ -115,21 +115,26 @@ sub parse_element {
          \s* (.*?)                      # architectures (5)
          \s* \]                         # closing bracket
         )?                              # end of optional architecture
+        (?:                             # start of optional restriction
+          \s* <                         # open bracket for restriction
+          \s* (.*?)                     # don't parse restrictions now
+          \s* >                         # closing bracket
+        )?                              # end of optional restriction
     /x;
 
-    my ($pkgname, $march, $relop, $relver, $bdarch) = ($1, $2, $3, $4, $5);
+    my ($pkgname, $march, $relop, $relver, $bdarch, $restr) = ($1, $2, $3, $4, $5, $6);
     my @array;
     if (not defined($relop)) {
         # If there's no version, we don't need to do any further processing.
         # Otherwise, convert the legacy < and > relations to the current ones.
-        @array = ('PRED', $pkgname, undef, undef, $bdarch, $march);
+        @array = ('PRED', $pkgname, undef, undef, $bdarch, $march, $restr);
     } else {
         if ($relop eq '<') {
             $relop = '<<';
         } elsif ($relop eq '>') {
             $relop = '>>';
         }
-        @array = ('PRED', $pkgname, $relop, $relver, $bdarch, $march);
+        @array = ('PRED', $pkgname, $relop, $relver, $bdarch, $march, $restr);
     }
 
     # Optimise the memory usage of the array.  Understanding this
@@ -191,25 +196,36 @@ sub new {
     return $self;
 }
 
-=item new_noarch(RELATION)
+=item new_norestriction(RELATION)
 
 Creates a new Lintian::Relation object corresponding to the parsed
-relationship RELATION, ignoring architecture restrictions.  This should be
-used in cases where we only care if a dependency is present in some cases
-and we don't want to require that the architectures match (such as when
-checking for proper build dependencies, since if there are architecture
-constraints the maintainer is doing something beyond Lintian's ability to
-analyze).  RELATION may be C<undef> or the empty string, in which case the
-returned Lintian::Relation object is empty (always satisfied).
+relationship RELATION, ignoring architecture restrictions and restriction
+lists. This should be used in cases where we only care if a dependency is
+present in some cases and we don't want to require that the architectures
+match (such as when checking for proper build dependencies, since if there
+are architecture constraints the maintainer is doing something beyond
+Lintian's ability to analyze) or that the restrictions list match (Lintian
+can't handle dependency implications with build profiles yet).  RELATION
+may be C<undef> or the empty string, in which case the returned
+Lintian::Relation object is empty (always satisfied).
 
 =cut
 
-sub new_noarch {
+sub new_norestriction {
     my ($class, $relation) = @_;
     $relation = '' unless defined($relation);
     $relation =~ s/\[[^\]]*\]//g;
+    $relation =~ s/<[^>]*>//g;
     return $class->new($relation);
 }
+
+=item new_noarch(RELATION)
+
+An alias for new_norestriction.
+
+=cut
+
+*new_noarch = \&new_norestriction;
 
 =item and(RELATION, ...)
 
@@ -350,6 +366,13 @@ sub implies_element {
     $$p[1] = '' unless defined $$p[1];
     $$q[1] = '' unless defined $$q[1];
     return if $$p[1] ne $$q[1];
+
+    # Since the restriction list is not a set (as the architecture list) there
+    # is no way to calculate a superset or subset of one another. Furthermore,
+    # the evaluation depends on which build profiles are currently activated.
+    # With n being the number of possible build profiles, 2^n checks would
+    # have to be done. We decide not to do that (yet).
+    return if defined $$p[6] or defined $$q[6];
 
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
