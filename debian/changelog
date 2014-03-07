@@ -38,6 +38,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       (Closes: #735266)
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of liblivemedia and libgadu.
+    + [RG] Adjust the detection of embedded copies of libmagic.
   * data/cruft/non-free-files:
     + [BR] "id3v22-tda.mp3 considered non-free", thanks to Charlie
       Smotherman (Closes: #736203).
