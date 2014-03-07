@@ -38,7 +38,7 @@
 bzip2     ||(?m)^This is a bug in bzip2
 curl      ||A libcurl function was given a bad argument
 expat     ||(?m)^requested feature requires XML_DTD support in Expat
-file      ||(?m)^could not find any magic files
+file      ||(?m)^could not find any (?:valid )?magic files
 ftgl      ||FTGlyphContainer
 gl2ps     ||\(C\) 1999-2009 C\. Geuzaine
 glee      ||Extension name exceeds 1023 characters\.
