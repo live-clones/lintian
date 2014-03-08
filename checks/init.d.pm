@@ -73,6 +73,10 @@ our $VIRTUAL_FACILITIES = Lintian::Data->new('init.d/virtual_facilities');
 # update-rc.d does not allow this).
 our $INITD_NAME_REGEX = qr/[\w\.\+][\w\-\.\+]*/;
 
+my $OPTS_R = qr/-\S+\s*/;
+my $ACTION_R = qr/\w+/;
+my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
+
 sub run {
     my (undef, undef, $info) = @_;
     my $initd_dir = $info->lab_data_path('init.d');
@@ -81,19 +85,16 @@ sub run {
     my $postrm = $info->control('postrm');
     my $prerm = $info->control('prerm');
 
-    my $opts_r = qr/-\S+\s*/;
-    my $action_r = qr/\w+/;
-    my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
     my (%initd_postinst, %initd_postrm);
 
     # read postinst control file
     if (-f $postinst and not -l $postinst) {
         open(my $fd, '<', $postinst);
         while (<$fd>) {
-            next if /$exclude_r/o;
+            next if /$EXCLUDE_R/o;
             s/\#.*$//o;
             next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
-            (?:$opts_r)*($INITD_NAME_REGEX)\s+($action_r)/xo;
+            (?:$OPTS_R)*($INITD_NAME_REGEX)\s+($ACTION_R)/xo;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             if ($initd_postinst{$name}++ == 1) {
@@ -112,11 +113,11 @@ sub run {
     if (-f $preinst and not -l $preinst) {
         open(my $fd, '<', $preinst);
         while (<$fd>) {
-            next if /$exclude_r/o;
+            next if /$EXCLUDE_R/o;
             s/\#.*$//o;
             next unless m/update-rc\.d \s+
-                       (?:$opts_r)*($INITD_NAME_REGEX) \s+
-                       ($action_r)/ox;
+                       (?:$OPTS_R)*($INITD_NAME_REGEX) \s+
+                       ($ACTION_R)/ox;
             my ($name,$opt) = ($1,$2);
             next if $opt eq 'remove';
             tag 'preinst-calls-updaterc.d', $name;
@@ -128,9 +129,9 @@ sub run {
     if (-f $postrm and not -l $postrm) {
         open(my $fd, '<', $postrm);
         while (<$fd>) {
-            next if /$exclude_r/o;
+            next if /$EXCLUDE_R/o;
             s/\#.*$//o;
-            next unless m/update-rc\.d\s+($opts_r)*($INITD_NAME_REGEX)/o;
+            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/o;
             if ($initd_postrm{$2}++ == 1) {
                 tag 'duplicate-updaterc.d-calls-in-postrm', $2;
                 next;
@@ -147,9 +148,9 @@ sub run {
     if (-f $prerm and not -l $prerm) {
         open(my $fd, '<', $prerm);
         while (<$fd>) {
-            next if /$exclude_r/o;
+            next if /$EXCLUDE_R/o;
             s/\#.*$//o;
-            next unless m/update-rc\.d\s+($opts_r)*($INITD_NAME_REGEX)/o;
+            next unless m/update-rc\.d\s+($OPTS_R)*($INITD_NAME_REGEX)/o;
             tag 'prerm-calls-updaterc.d', $2;
         }
         close($fd);
