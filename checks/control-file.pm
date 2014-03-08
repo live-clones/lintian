@@ -108,7 +108,7 @@ sub run {
         return;
     }
 
-    my @package_names = sort $info->binaries;
+    my @package_names = $info->binaries;
 
     foreach my $bin (@package_names) {
         my $bfields = $info->binary_field($bin);

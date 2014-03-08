@@ -68,7 +68,7 @@ sub run {
     my $usesmultiselect='';
 
     if ($type eq 'source') {
-        my @binaries = sort($info->binaries);
+        my @binaries = $info->binaries;
         my @files = map { "$_.templates" } @binaries;
         push @files, 'templates';
 

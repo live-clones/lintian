@@ -2,8 +2,12 @@ lintian (2.5.22) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * checks/*.desc:
+  * checks/*:
     + [NT] Avoid using "I" or "we" in tag descriptions.
+    + [NT] When looping over the names of binary packages,
+      prefer the order they are listed in the control file.
+      Previously they were either sorted by name or ordered
+      by Perl's hash iterator.
   * checks/cruft.pm:
     + [BR,NT] Optimise the GFDL check considerably in some
       cases (e.g. the linux source).  (Closes: #738342)
@@ -59,6 +63,10 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Fix a regression in argument handling after the first
       non-option.  This problem was introduced in 2.5.18.
 
+  * lib/Lintian/Collect/Source.pm:
+    + [NT] Apply patch from Mathieu Parent to make "binaries" return
+      the package name in the same order as they are listed in the
+      control file.  (Closes: #739671)
   * lib/Lintian/Util.pm:
     + [NT] Extend the "Continuation line outside a paragraph" parse
       error on Deb822 files with a possible suggestion for fixing
