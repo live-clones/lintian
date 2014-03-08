@@ -1092,16 +1092,18 @@ sub generic_check_bad_command {
     # try generic bad maintainer script command tagging
   BAD_CMD:
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
-        my $incat = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_cat_string'};
-        my $inpackage = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_package'};
-        my $inscript = $BAD_MAINT_CMD->value($bad_cmd_tag)->{'in_script'};
+        my $bad_cmd_data = $BAD_MAINT_CMD->value($bad_cmd_tag);
+        my $inscript = $bad_cmd_data->{'in_script'};
+        my $incat; 
         if ($file !~ m{$inscript}) {
             next BAD_CMD;
         }
+        $incat = $bad_cmd_data->{'in_cat_string'};
         if ($incat == $findincatstring) {
-            my $regex= $BAD_MAINT_CMD->value($bad_cmd_tag)->{'regexp'};
+            my $regex = $bad_cmd_data->{'regexp'};
             if ($line =~ m{$regex}) {
                 my $extrainfo = defined($1) ? "\'$1\'" : '';
+                my $inpackage = $bad_cmd_data->{'in_package'};
                 unless($pkg =~ m{$inpackage}) {
                     tag $bad_cmd_tag, "$file:$.", $extrainfo;
                 }
