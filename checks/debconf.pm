@@ -62,10 +62,7 @@ my $ANY_DEBCONF = Lintian::Relation->new(
 
 sub run {
     my ($pkg, $type, $info) = @_;
-    my $seenconfig='';
-    my $seentemplates='';
-    my $usespreinst='';
-    my $usesmultiselect='';
+    my ($seenconfig, $seentemplates, $usespreinst);
 
     if ($type eq 'source') {
         my @binaries = $info->binaries;
@@ -218,7 +215,6 @@ sub run {
             $isselect = 1;
         } elsif ($template->{type} eq 'multiselect') {
             $isselect = 1;
-            $usesmultiselect = 1;
         } elsif ($template->{type} eq 'boolean') {
             tag 'boolean-template-has-bogus-default',
               "$template->{template} $template->{default}"
