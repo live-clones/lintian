@@ -180,7 +180,8 @@ sub native {
 =item binaries
 
 Returns a list of the binary and udeb packages listed in the
-F<debian/control>.  The list is unordered.
+F<debian/control>.  Package names appear the same order in the
+returned list as they do in the control file.
 
 I<Note>: Package names that are not valid are silently ignored.
 
