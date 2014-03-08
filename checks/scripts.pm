@@ -1094,7 +1094,7 @@ sub generic_check_bad_command {
     foreach my $bad_cmd_tag ($BAD_MAINT_CMD->all) {
         my $bad_cmd_data = $BAD_MAINT_CMD->value($bad_cmd_tag);
         my $inscript = $bad_cmd_data->{'in_script'};
-        my $incat; 
+        my $incat;
         if ($file !~ m{$inscript}) {
             next BAD_CMD;
         }
