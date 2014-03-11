@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist in the diff so that we can
+# trigger all the tags.
+
+set -e
+dir="$1"
+jsdir="$1/usr/share/javascript/"
+srcdir="$1"
+json="$srcdir/json.js"
+
+mkdir -p "$jsdir"
+mkdir -p "$jsdir/minwithoutsource"
+mkdir -p "$jsdir/jswithoutminext"
+# create a js file
+uglifyjs -o "$jsdir/jswithoutminext/json.js" "$json"
+uglifyjs -o "$jsdir/minwithoutsource/notsourced.min.js" "$json"
+
+
+
+
+
