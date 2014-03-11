@@ -27,13 +27,15 @@ use Carp qw(croak);
 use Lintian::Util qw(strip);
 
 sub new {
-    my ($class, $mode, $file, $blocksub) = @_;
+    my ($class, $mode, $file, $blocksub, $blocksize) = @_;
     open(my $handle, $mode, $file);
+
+    $blocksize //= 4096;
 
     my $self = {
         '_handle'      => $handle,
         '_queue'       => [q{}, q{}],
-        '_blocksize'   => 4096,
+        '_blocksize'   => $blocksize,
         '_blocksub'    => $blocksub,
         '_blocknumber' => -1,
     };
@@ -127,7 +129,7 @@ file in memory.
 
 =over 4
 
-=item new(mode,file,[blocksub])
+=item new(mode,file,[blocksub], [block size])
 
 Create a new sliding window for file file using mode mode. Optionally run blocksub against
 each block. Note that blocksub should apply transform byte by byte and does not depend of context.

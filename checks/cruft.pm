@@ -614,7 +614,7 @@ sub find_cruft {
             }
             close($fd);
         }
-        license_check($info, $name, $info->unpacked($entry));
+        full_text_check($info, $name, $info->unpacked($entry));
     }
     return;
 }
@@ -622,8 +622,10 @@ sub find_cruft {
 # do basic license check against well known offender
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
-sub license_check {
+sub full_text_check {
     my ($info, $name, $path) = @_;
+
+    my $isjsfile = ($name =~ m/\.js/) ? 1 : 0;
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
@@ -640,8 +642,10 @@ sub license_check {
         return;
     }
 
-    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, \&lc_block);
+    # some js file comments are really really long
+    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, \&lc_block, $isjsfile ? 8092 : 4096);
     my %licenseproblemhash = ();
+    my $cleanjsblock = '';
 
     # we try to read this file in block and use a sliding window
     # for efficiency.  We store two blocks in @queue and the whole
@@ -651,11 +655,12 @@ sub license_check {
     while (my $block = $sfd->readwindow()) {
         my $cleanedblock;
         my %matchedkeyword;
+        my $blocknumber = $sfd->blocknumber();
 
         if(
             _license_check(
                 $name, $NON_DISTRIBUTABLE_LICENSES,
-                $block,  $sfd->blocknumber(),
+                $block,  $blocknumber,
                 \$cleanedblock, \%matchedkeyword,
                 \%licenseproblemhash
             )
@@ -670,8 +675,30 @@ sub license_check {
         }
 
         _license_check($name, $NON_FREE_LICENSES,
-            $block,  $sfd->blocknumber(),\$cleanedblock, \%matchedkeyword,
+            $block,  $blocknumber,\$cleanedblock, \%matchedkeyword,
             \%licenseproblemhash);
+
+
+        # check javascript  problem
+        if($isjsfile) {
+            if($blocknumber == 0) {
+                my $strip = $block;
+                # from perl faq strip comments
+                $strip =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
+                # strip empty line
+                $strip =~ s/^\s*\n//mg;
+                # remove last \n
+                $strip =~ s/\n\Z//m;
+                # compute now means line length
+                my $total = length($strip);
+                if($total > 0) {
+                    my $linelength = $total/($strip =~ tr/\n// + 1);
+                    if($linelength > 255) {
+                        tag 'source-contains-prebuilt-javascript-object', 'line length is about', $linelength, 'characters';
+                    }
+                }
+            }
+        }
     }
     return;
 }
