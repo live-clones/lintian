@@ -71,6 +71,7 @@ libtheora ||Xiph.Org libtheora\s
 libxml2   ||root and DTD name do not match
 ltdl      ||source=libtool ||(?m)^library already shutdown
 ncurses   ||Not enough memory to create terminal structure
+nss       ||(?m)^My Encrytion Test Data
 openjpeg  ||tcd_decode: incomplete bistream
 openssl   ||You need to read the OpenSSL FAQ
 pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
