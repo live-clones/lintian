@@ -80,7 +80,7 @@ poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing
 sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
 t1lib     ||t1lib is copyright \(c\) Rainer Menzner
 tiff      ||source-regex=tiff\d* ||No space for PixarLog state block
-tinyxml   ||Error when TiXmlDocument added to document
+tinyxml   ||(?m)^(?:Error when TiXmlDocument added to document|Error null \(0\) or unexpected EOF found in input stream\.)
 
 # We exclude version strings starting with "4 " since that's a mark of the
 # Pascal implementation, which is not what this tag is designed to detect.
