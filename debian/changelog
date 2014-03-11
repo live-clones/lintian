@@ -16,6 +16,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [BR] Add opentoken non official wording for GFDL
       invariant section, thanks to Nicolas Boulenguez.
       (Closes: #740183).
+    + [BR] Detect minified js based on line length.
+      (Closes: #735348).
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.  (Closes: #738454)
