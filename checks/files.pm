@@ -697,6 +697,15 @@ sub run {
             elsif ($fname =~ m,^usr/share/mime/[^/]+$,) {
                 tag 'package-contains-mime-cache-file', $file;
             }
+            # ---------------- /usr/share/p11-kit/modules
+            elsif (
+                   $fname =~ m{^usr/share/p11-kit/modules/.}
+                && $fname !~ m{\A usr/share/p11-kit/modules/
+                                  [[:alnum:]][[:alnum:]_.-]*\.module\Z
+                              }xsm
+              ) {
+                tag 'incorrect-naming-of-pkcs11-module', $file;
+            }
             # ---------------- /usr/share/vim
             elsif ($fname =~ m,^usr/share/vim/vim(?:current|\d{2})/([^/]++),){
                 my $is_vimhelp = $1 eq 'doc' && $pkg =~ m,^vimhelp-\w++$,;

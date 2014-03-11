@@ -1528,3 +1528,15 @@ Info: The given file is in PATH but consists of non-ASCII characters.
  .
  Note that Lintian may be unable to display the filename accurately.
  Unprintable characters may have been replaced.
+
+Tag: incorrect-naming-of-pkcs11-module
+Severity: important
+Certainty: certain
+Info: This package ships a PKCS#11 module configuration file under
+ <tt>/usr/share/p11-kit/modules</tt>, but its naming doesn't conform
+ to what <tt>p11-kit</tt> expects.  Files in that directory should
+ respect the following convention, case insensitive:
+  [a-z0-9][a-z0-9_.-]*.module
+ .
+ p11-kit currently warns on every file that does not follow the
+ convention and may ignore them in the future.
