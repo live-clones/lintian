@@ -104,6 +104,12 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         };
     });
 
+# get javascript name
+sub _minified_javascript_name_regexp {
+    my $jsv = $WARN_FILE_TYPE->value('source-contains-prebuilt-javascript-object');
+    return defined($jsv) ? $jsv->{'regname'} : qr/(?i)[\.-](?:min|pack(?:ed)?)\.js$/;
+}
+
 sub _get_license_check_file {
     my ($filename) = @_;
     my $data = Lintian::Data->new(
@@ -626,6 +632,10 @@ sub full_text_check {
     my ($info, $name, $path) = @_;
 
     my $isjsfile = ($name =~ m/\.js/) ? 1 : 0;
+    if($isjsfile) {
+        my $minjsregexp =  _minified_javascript_name_regexp();
+        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
+    }
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
@@ -694,7 +704,7 @@ sub full_text_check {
                 if($total > 0) {
                     my $linelength = $total/($strip =~ tr/\n// + 1);
                     if($linelength > 255) {
-                        tag 'source-contains-prebuilt-javascript-object', 'line length is about', $linelength, 'characters';
+                        tag 'source-contains-prebuilt-javascript-object', $name, 'means line length is about', $linelength, 'characters';
                     }
                 }
             }
