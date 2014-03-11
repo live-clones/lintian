@@ -1,4 +1,17 @@
-/* lintian.css -- Style sheet for lintian.debian.org pages. */
+{{{
+    # NOTE - in this file, perl code must be within three braces rather than
+    # the usual single brace.  This was done because a single brace is rather
+    # common in .css-files. NB: The braces cannot be escaped - see "DELIMITERS"
+    # in Text::Template.
+    #
+    # To refer to a resource, use:
+    #   {{{resource_path('basename.png')}}}
+    # NB: The path will be relative to the .css file.  Usually something like
+    #   "../resources/<checksum>.png"
+    #
+    # To refer to a file name relative to the .css file, use:
+    #   {{{$path_prefix}}}path/from/HTML_ROOT
+}}}/* lintian.css -- Style sheet for lintian.debian.org pages. */
 
 /*
  # Table of Contents:
@@ -87,8 +100,7 @@ hr {
 #header {
     margin: 0 0 28px 0;
     padding: 5px 20px;
-    /* TODO: Needs full path or url... */
-    background: #F3F3F3 url('logo-small.png') no-repeat right;
+    background: #F3F3F3 url("{{{resource_path('logo-small.png')}}}") no-repeat right;
     border-bottom: 1px solid #AAA;
 }
 
@@ -159,7 +171,7 @@ hr {
 #info {
     margin: 25px 0;
     padding: 20px;
-    background: #EFF4F8 url(l.png) no-repeat left;
+    background: #EFF4F8 url("{{{resource_path('l.png')}}}") no-repeat left;
     border: 1px solid #DFE4E8;
 }
 
