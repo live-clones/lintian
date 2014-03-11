@@ -10,13 +10,13 @@
       </p>
 
       <p>
-        For more information, see the <a href="manual/index.html">User
+        For more information, see the <a href="{$path_prefix}manual/index.html">User
         Manual</a>.
       </p>
 
       <p>
         Auto-generated documentation of the Lintian Perl Library API can
-        be found <a href="library-api/index.html">here</a>.
+        be found <a href="{$path_prefix}library-api/index.html">here</a>.
       </p>
 
 
@@ -32,19 +32,19 @@
     <h2>Indices</h2>
 
     <ul>
-      <li><a href="maintainers.html">Maintainers</a></li>
-      <li><a href="tags.html">Emitted tags sorted alphabetically</a></li>
-      <li><a href="tags-severity.html">Emitted tags by severity and certainty</a></li>
-      <li><a href="tags-all.html">All tags sorted alphabetically</a></li>
+      <li><a href="{$path_prefix}maintainers.html">Maintainers</a></li>
+      <li><a href="{$path_prefix}tags.html">Emitted tags sorted alphabetically</a></li>
+      <li><a href="{$path_prefix}tags-severity.html">Emitted tags by severity and certainty</a></li>
+      <li><a href="{$path_prefix}tags-all.html">All tags sorted alphabetically</a></li>
       <li>Packages that have names starting with:
         <ul>
-          <li><a href="packages_1.html">0-9, A-F</a></li>
-          <li><a href="packages_2.html">G-L</a></li>
-          <li><a href="packages_3.html">M-R</a></li>
-          <li><a href="packages_4.html">S-Z</a></li>
+          <li><a href="{$path_prefix}packages_1.html">0-9, A-F</a></li>
+          <li><a href="{$path_prefix}packages_2.html">G-L</a></li>
+          <li><a href="{$path_prefix}packages_3.html">M-R</a></li>
+          <li><a href="{$path_prefix}packages_4.html">S-Z</a></li>
         </ul>
       </li>
-      <li><a href="lintian.log">Raw log</a> (warning: very large) [<a href="lintian.log.gz">Gzip'd</a>]</li>
+      <li><a href="{$path_prefix}lintian.log">Raw log</a> (warning: very large) [<a href="{$path_prefix}lintian.log.gz">Gzip'd</a>]</li>
     </ul>
   </div> <!-- index -->
 
@@ -100,7 +100,7 @@
         $OUT .= qq(    Evolution of Lintian tags over the past\n);
         $OUT .= qq(    $graphs_days days:</p>\n);
         $OUT .= qq(  <div class="graph"><img\n);
-        $OUT .= qq(    src="graphs/statistics.svg" alt="History of Lintian\n);
+        $OUT .= qq(    src="${path_prefix}graphs/statistics.svg" alt="History of Lintian\n);
         $OUT .= qq(    tags" /></div>\n);
     }
     '';

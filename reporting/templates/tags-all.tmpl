@@ -19,7 +19,7 @@
         } else {
             $text = 'Not emitted';
         }
-        $OUT .= qq(    <li><a href="tags/$tag.html">$tag</a>)
+        $OUT .= qq(    <li><a href="${path_prefix}tags/$tag.html">$tag</a>)
             . " ($text)"
             . "</li>\n";
     }

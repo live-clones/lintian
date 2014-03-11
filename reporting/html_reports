@@ -825,14 +825,21 @@ sub html_quote {
 # that data hash and output the results to the file.
 sub output_template {
     my ($file, $template, $data) = @_;
+    my $path_prefix = $data->{path_prefix};
+    if (not defined($path_prefix)) {
+        $path_prefix = '';
+        if (index($file, '/') > -1) {
+            $path_prefix = '../' x ($file =~ tr|/||);
+        }
+    }
     $data->{version} ||= $LINTIAN_VERSION;
     $data->{timestamp} ||= $timestamp;
     $data->{by_version} ||= \&versions_comparator;
+    $data->{path_prefix} ||= $path_prefix;
     $data->{head} ||= sub {
         $templates{head}->fill_in(
             HASH => {
                 page_title => $_[0],
-                path_prefix => '../' x ($_[1]||0),
                 %{$data},
             });
     };

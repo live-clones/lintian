@@ -1,4 +1,4 @@
-{ head("Lintian Tag: $tag", 1) }
+{ head("Lintian Tag: $tag") }
   <h1><span class="type-{$code}">{$code}</span> {$tag}</h1>
 
   <p>
@@ -16,7 +16,7 @@
         $OUT .= qq(    Evolution of the $tag Lintian tag over the past\n);
         $OUT .= qq(    $graphs_days days:</p>\n);
         $OUT .= qq(  <div class="graph"><img\n);
-        $OUT .= qq(    src="../graphs/tags/$tag.svg" alt="History of $tag"\n);
+        $OUT .= qq(    src="${path_prefix}graphs/tags/$tag.svg" alt="History of $tag"\n);
         $OUT .= qq(    /></div>\n);
     }
     $OUT .= qq(<p>Emitted (non-overridden): $statistics{count}, );
@@ -40,7 +40,7 @@
             or "$info->{package} $info->{type} $info->{version}" ne "$last->{package} $last->{type} $last->{version}") {
             if ($last) {
                 my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
-                $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
+                $OUT .= qq(  <h2 class="tag"><a href="${path_prefix}full/$last->{xref}">);
                 $OUT .= "$last->{package} $last->{version}</a> ($last->{type})$overridden</h2>\n";
                 if ($tag) {
                     $OUT .= qq(  <ul class="tag">\n);
@@ -62,7 +62,7 @@
         }
     }
     my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
-    $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
+    $OUT .= qq(  <h2 class="tag"><a href="${path_prefix}full/$last->{xref}">);
     $OUT .= "$last->{package} $last->{version}</a> ($last->{type})$overridden</h2>\n";
     if ($tag) {
         $OUT .= qq(  <ul class="tag">\n);

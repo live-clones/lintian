@@ -1,4 +1,4 @@
-{ head("Lintian Report for $name", 1) }
+{ head("Lintian Report for $name") }
   <h1>{$name}</h1>
 
   <p>
@@ -7,10 +7,10 @@
     package.
 {
     if ($errors) {
-        qq(    See also the <a href="../full/$id">full report</a>, including)
+        qq(    See also the <a href="${path_prefix}full/$id">full report</a>, including)
            . " info, experimental and overridden tags.";
     } else {
-        qq(    See also the <a href="../maintainer/$id">report showing)
+        qq(    See also the <a href="${path_prefix}maintainer/$id">report showing)
            . " only errors and warnings</a>.";
     }
 }
@@ -141,7 +141,7 @@
                     $OUT .= "    <li$class>\n";
                     $OUT .= qq(      <span class="type-$info->{code}">);
                     $OUT .= "$info->{code}</span> ";
-                    $OUT .= qq(<a href="../tags/$info->{tag}.html">);
+                    $OUT .= qq(<a href="${path_prefix}tags/$info->{tag}.html">);
                     $OUT .= "$info->{tag}</a>\n";
                     $OUT .= qq(      <ul class="extra">);
                 }

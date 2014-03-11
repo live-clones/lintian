@@ -37,8 +37,8 @@
                     . $letter . "</a></h2>\n\n  <p>\n";
             }
         }
-        $OUT .= qq(    <a href="maintainer/$url">$maintainer</a>)
-            . qq{ (<a href="full/$url">full report</a>)<br />\n};
+        $OUT .= qq(    <a href="${path_prefix}maintainer/$url">$maintainer</a>)
+            . qq{ (<a href="${path_prefix}full/$url">full report</a>)<br />\n};
     }
 }  </p>
 { foot() }

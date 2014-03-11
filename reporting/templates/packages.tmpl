@@ -10,10 +10,10 @@
   </p>
 
   <p>
-      <a href="packages_1.html">0-9, A-F</a>
-    | <a href="packages_2.html">G-L</a>
-    | <a href="packages_3.html">M-R</a>
-    | <a href="packages_4.html">S-Z</a>
+      <a href="{$path_prefix}packages_1.html">0-9, A-F</a>
+    | <a href="{$path_prefix}packages_2.html">G-L</a>
+    | <a href="{$path_prefix}packages_3.html">M-R</a>
+    | <a href="{$path_prefix}packages_4.html">S-Z</a>
   </p>
 
 {
@@ -28,7 +28,7 @@
             $letter = $first;
         }
         foreach my $version (sort by_version keys %{ $sources{$package} }) {
-            $OUT .= qq(    <a href="full/$sources{$package}{$version}">$package ($version)</a>\n);
+            $OUT .= qq(    <a href="${path_prefix}full/$sources{$package}{$version}">$package ($version)</a>\n);
         }
     }
 }  </p>
