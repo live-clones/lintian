@@ -50,6 +50,7 @@ Build-Depends: aspell,
                liburi-perl,
                libyaml-perl,
                man-db,
+               node-uglify,
                patchutils,
                perl,
 # pkg-php-tools is not available in Wheezy.  However, it is only used for
