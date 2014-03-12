@@ -63,7 +63,7 @@ libpcap   ||(?:pcap_activate: The "any" device isn\'t supported|corrupted frame 
 libpng    ||(?m)^Potential overflow in png_zalloc
 libraw    ||Unsupported file format or not RAW file
 libpostproc ||source-regex=lib(?:av|postproc)||using npp filters 0x%X/0x%X\n
-libssh2   ||Invalid descriptor passed to libssh2_poll
+libssh2     ||Invalid descriptor passed to libssh2_poll
 libswscale  ||source=libav||Exactly one scaler algorithm must be chosen\n
 
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
