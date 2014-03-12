@@ -72,6 +72,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Apply patch from Mathieu Parent to make "binaries" return
       the package name in the same order as they are listed in the
       control file.  (Closes: #739671)
+  * lib/Lintian/Reporting/ResourceManager.pm:
+    + [NT] New file.
   * lib/Lintian/Util.pm:
     + [NT] Extend the "Continuation line outside a paragraph" parse
       error on Deb822 files with a possible suggestion for fixing
@@ -85,10 +87,17 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * reporting/harness:
     + [NT] Avoid writing state-cache during dry-run.
     + [NT] Add timestamps to the log output.
-  * reporting/{html_reports,templates/tag.tmpl}:
+  * reporting/{html_reports,templates/*.tmpl}:
     + [NT] Show the same statistics on the tag page as shown
       on the tag index pages.  Thanks to Guillem Jover for
       the suggestion.  (Closes: #738349)
+    + [NT] Remove the second argument to the "head" sub in
+      the templates.  Its value is now computed automatically
+      by html_reports based on the name of the output file.
+    + [NT] Install "lintian.css" and all files in
+      "reporting/images" and "reporting/resources" into
+      "HTML_DIR/resources".  These will be named after their
+      content to allow more aggressive public caching.
   * reporting/html_reports:
     + [NT] Link to the library API docs from the index page.
       (Closes: #639974)
@@ -96,6 +105,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       gnuplot twice (rather than once plus once per tag).
     + [NT] Show the number of package groups and the size
       of the harness backlog on the index page.
+  * reporting/{lintian.css => templates/lintian.css.tmpl}:
+    + [NT] Rename file and make it a template.
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 31 Jan 2014 23:05:01 +0100
 
