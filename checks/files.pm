@@ -394,15 +394,12 @@ sub run {
 
         # check for generic obsolete path
         foreach my $obsolete_path ($OBSOLETE_PATHS->all) {
-            my $oldpathmatch
-              = $OBSOLETE_PATHS->value($obsolete_path)->{'match'};
+            my $obs_data = $OBSOLETE_PATHS->value($obsolete_path);
+            my $oldpathmatch = $obs_data->{'match'};
             if ($fname =~ m{$oldpathmatch}) {
-                my $oldpath
-                  = $OBSOLETE_PATHS->value($obsolete_path)->{'olddir'};
-                my $newpath
-                  = $OBSOLETE_PATHS->value($obsolete_path)->{'newdir'};
-                my $moreinfo
-                  = $OBSOLETE_PATHS->value($obsolete_path)->{'moreinfo'};
+                my $oldpath  = $obs_data->{'olddir'};
+                my $newpath  = $obs_data->{'newdir'};
+                my $moreinfo = $obs_data->{'moreinfo'};
                 tag 'package-install-into-obsolete-dir',
                   "$file : $oldpath -> $newpath (see also $moreinfo)";
             }
