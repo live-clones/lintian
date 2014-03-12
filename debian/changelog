@@ -43,8 +43,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
   * data/binary/embedded-libs:
-    + [RG] Detect embedded copies of liblivemedia, libgadu, freetype,
-      nss, and nspr.
+    + [RG] Detect embedded copies of liblivemedia, libgadu, libssh,
+      libssh2, freetype, nss, and nspr.
     + [RG] Adjust the detection of embedded copies of libmagic.
     + [RG] Detect embedded copies of an ancient tinyxml.  Thanks to
       Andreas Rönnquist for the report.  (Closes: #733318)
