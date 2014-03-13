@@ -108,8 +108,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
 sub _minified_javascript_name_regexp {
     my $jsv
       = $WARN_FILE_TYPE->value('source-contains-prebuilt-javascript-object');
-    return
-      defined($jsv)
+    return defined($jsv)
       ? $jsv->{'regname'}
       : qr/(?i)[\.-](?:min|pack(?:ed)?)\.js$/;
 }
@@ -723,6 +722,7 @@ sub full_text_check {
 sub _tag_gfdl {
     my ($applytag, $name, $gfdlsections) = @_;
     tag $applytag, $name, 'invariant part is:', $gfdlsections;
+    return;
 }
 
 # return True in case of license problem
