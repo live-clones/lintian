@@ -47,6 +47,11 @@ our $EXCLUDE =join(
       ^privacy-breach-.*$
       ^maintainer-script-should-not-.*$
       ^install-info-used-in-maintainer-script$
+      ^license-problem-json-evil$
+      ^license-problem-non-free-RFC$
+      ^license-problem-non-free-RFC-BCP78$
+      ^license-problem-nvidia-intellectual$
+      ^license-problem-gfdl-non-official-text$
       ^maintainer-script-removes-device-files$
       ^suidregister-used-in-maintainer-script$
       ^debian-rules-should-not-.*$
