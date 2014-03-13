@@ -106,8 +106,12 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
 
 # get javascript name
 sub _minified_javascript_name_regexp {
-    my $jsv = $WARN_FILE_TYPE->value('source-contains-prebuilt-javascript-object');
-    return defined($jsv) ? $jsv->{'regname'} : qr/(?i)[\.-](?:min|pack(?:ed)?)\.js$/;
+    my $jsv
+      = $WARN_FILE_TYPE->value('source-contains-prebuilt-javascript-object');
+    return
+      defined($jsv)
+      ? $jsv->{'regname'}
+      : qr/(?i)[\.-](?:min|pack(?:ed)?)\.js$/;
 }
 
 sub _get_license_check_file {
@@ -653,7 +657,8 @@ sub full_text_check {
     }
 
     # some js file comments are really really long
-    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, \&lc_block, $isjsfile ? 8092 : 4096);
+    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, \&lc_block,
+        $isjsfile ? 8092 : 4096);
     my %licenseproblemhash = ();
     my $cleanjsblock = '';
 
@@ -688,13 +693,13 @@ sub full_text_check {
             $block,  $blocknumber,\$cleanedblock, \%matchedkeyword,
             \%licenseproblemhash);
 
-
         # check javascript  problem
         if($isjsfile) {
             if($blocknumber == 0) {
                 my $strip = $block;
                 # from perl faq strip comments
-                $strip =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
+                $strip
+                  =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
                 # strip empty line
                 $strip =~ s/^\s*\n//mg;
                 # remove last \n
@@ -704,7 +709,9 @@ sub full_text_check {
                 if($total > 0) {
                     my $linelength = $total/($strip =~ tr/\n// + 1);
                     if($linelength > 255) {
-                        tag 'source-contains-prebuilt-javascript-object', $name, 'means line length is about', $linelength, 'characters';
+                        tag 'source-contains-prebuilt-javascript-object',
+                          $name, 'means line length is about', $linelength,
+                          'characters';
                     }
                 }
             }

@@ -219,7 +219,7 @@ sub known {
 sub all {
     my ($self) = @_;
     my $data = $self->{data} || $self->_force_promise;
-    return keys(%{ $data });
+    return keys(%{$data});
 }
 
 # Query a data object for the value attached to a particular keyword.
