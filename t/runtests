@@ -539,6 +539,16 @@ sub run_lintian {
             fail("close pipe: $!") if $err->errno;
             $status = ($? >> 8) & 255;
         }
+        if (defined($coverage)) {
+            # Devel::Cover causes some annoying deep recursion
+            # warnings.  Filter them out, but only during coverage.
+            # - This is not flawless, but it gets most of them
+            @data = grep {
+                !m{^Deep [ ] recursion [ ] on [ ] subroutine [ ]
+                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+                   \d+}xsm
+            } @data;
+        }
         unless ($status == 0 or $status == 1) {
             msg_print "FAILED\n";
             for my $line (@data) {
