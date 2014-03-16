@@ -434,8 +434,13 @@ sub process_tasks {
                 if (not $pid) {
                     # child
                     my $ret = 0;
-                    if ($cs->interface ne 'exec') {
-                       # With a non-exec interface, let L::CollScript handle it
+                    if ($cs->interface ne 'exec' && not $ENV{'LINTIAN_COVERAGE'}) {
+                        # With a non-exec interface, let L::CollScript
+                        # handle it.  Note that when run under
+                        # Devel::Cover, we never take this route.
+                        # This is because Devel::Cover relies on the
+                        # END handler so all collections would get
+                        # (more or less) 0 coverage in this case.
 
                         # For platforms that support it, try to change
                         # our name to the collection being run (like
