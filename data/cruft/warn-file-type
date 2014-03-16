@@ -1,6 +1,6 @@
 # warn about a file type
 #format is
-# tag (unique) ~~ type regex (x) [~~ name regex (x) optional empty means .*]
+# tag (unique) ~~ type regex (x) [~~ name regex (x) optional empty means .*] ~~ bool check missing source ~~ missing source transform regex
 #
 # File should match both "type regex" and "name regex"
 #
