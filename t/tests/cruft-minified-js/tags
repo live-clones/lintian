@@ -2,3 +2,4 @@ E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutso
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/json/json.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminext/json.js means line is about NUMBER characters
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/minwithoutsource/notsourced.min.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/sourced/sourced.min.js

@@ -14,6 +14,7 @@ mkdir -p "$jsdir"
 mkdir -p "$jsdir/minwithoutsource"
 mkdir -p "$jsdir/jswithoutminext"
 mkdir -p "$jsdir/json"
+mkdir -p "$jsdir/sourced"
 
 # create a js file
 uglifyjs -o "$uglyjson" "$json"
@@ -21,6 +22,10 @@ uglifyjs -o "$uglyjson" "$json"
 cp "$uglyjson" "$jsdir/jswithoutminext/json.js"
 # fake not sourced
 cp "$uglyjson" "$jsdir/minwithoutsource/notsourced.min.js"
+# fake source and min alon
+cp "$uglyjson" "$jsdir/sourced/sourced.min.js"
+cp "$json" "$jsdir/sourced/sourced.js"
+
 
 
 
