@@ -31,7 +31,6 @@ use autodie;
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Cwd();
 use Lintian::Command qw(spawn reap);
 use Lintian::Processable::Package;
 use Lintian::Util qw(get_dsc_info);
