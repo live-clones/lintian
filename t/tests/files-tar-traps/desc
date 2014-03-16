@@ -1,0 +1,8 @@
+Testname: files-tar-traps
+Sequence: 6000
+Version: 1.0
+Description: Test tags for tar common bugs
+# tar -t is buggy and does not list \\\ filename
+Test-Depends: tar (>= 1.27)
+Test-For:
+ non-standard-toplevel-dir
