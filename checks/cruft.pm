@@ -106,7 +106,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         my @transformpairs = ();
         if(scalar(@transforms) > 0) {
             foreach my $transform (@transforms) {
-                $transform = '^s/([^/]*?)/([^/]/$';
+                $transform =~ '^s/([^/]*?)/([^/]*?)/$';
                 unless(defined($1) and defined($2)) {
                     fail 'Syntax error in cruft/warn-file-type in transform regex', $.;
                 }
@@ -651,16 +651,16 @@ sub find_cruft {
 
 # try to check if source is missing
 sub check_missing_source {
-    my ($file, $info, $replacementsref) = @_;
-    my @replacements;
-    if(defined($replacementsref)) {
-        @replacements = @{$replacementsref};
+    my ($file, $info, $replacementspairref) = @_;
+    my @replacementspair;
+    if(defined($replacementspairref)) {
+        @replacementspair = @{$replacementspairref};
     }
     else {
-        @replacements = ();
+        @replacementspair = ();
     }
     # add do no nothing replacement
-    unshift(@replacements, 's///');
+    unshift(@replacementspair, { 'match' => '' , 'replace' => '' });
 
     unless ($file->is_regular_file) {
         return;
@@ -674,10 +674,11 @@ sub check_missing_source {
     unshift(@listpath,$dirname);
 
     # try to find in current dir
-    foreach my $replacement (@replacements) {
+    foreach my $replacementpair (@replacementspair) {
         my $newbasename = $basename;
-        my ($search1,$replace) = 
-        $newbasename =~ $replacement;
+        my $match = $replacementpair->{'match'};
+        my $replace = $replacementpair->{'replace'};
+        $newbasename =~ s/$match/$replace/;
         # now try for each path
       PATH:
         foreach my $path (@listpath) {

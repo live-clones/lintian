@@ -7,14 +7,20 @@ set -e
 dir="$1"
 jsdir="$1/usr/share/javascript/"
 srcdir="$1"
-json="$srcdir/json.js"
+json="$srcdir/debian/missing-sources/json.js"
+uglyjson="$jsdir/json/json.min.js"
 
 mkdir -p "$jsdir"
 mkdir -p "$jsdir/minwithoutsource"
 mkdir -p "$jsdir/jswithoutminext"
+mkdir -p "$jsdir/json"
+
 # create a js file
-uglifyjs -o "$jsdir/jswithoutminext/json.js" "$json"
-uglifyjs -o "$jsdir/minwithoutsource/notsourced.min.js" "$json"
+uglifyjs -o "$uglyjson" "$json"
+# fake install
+cp "$uglyjson" "$jsdir/jswithoutminext/json.js"
+# fake not sourced
+cp "$uglyjson" "$jsdir/minwithoutsource/notsourced.min.js"
 
 
 

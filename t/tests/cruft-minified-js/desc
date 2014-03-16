@@ -7,3 +7,4 @@ Options: --pedantic -I -E
 Architecture: any
 Test-For:
  source-contains-prebuilt-javascript-object
+ source-is-missing
