@@ -36,14 +36,8 @@ use threads;
 use threads::shared;
 use Thread::Queue;
 
-use File::Basename qw(basename dirname);
-use File::Find qw(find);
-use File::stat;
-use File::Temp qw(tempfile);
 use Getopt::Long qw(GetOptions);
 use List::MoreUtils qw(none);
-use POSIX qw(ENOENT);
-use Text::Template;
 
 use constant SUITES => qw(scripts changes debs source tests);
 
@@ -84,8 +78,12 @@ BEGIN {
 use lib "$LINTIAN_ROOT/lib";
 
 use Lintian::Internal::FrontendUtil qw(default_parallel);
-use Lintian::Util qw(delete_dir fail parse_boolean read_dpkg_control
+use Lintian::Util qw(delete_dir fail parse_boolean
   rstrip slurp_entire_file touch_file);
+
+use Test::Lintian::Harness qw(chdir_runcmd check_test_depends
+  copy_template_dir fill_in_tmpl find_tests_for_tag
+  read_test_desc runsystem runsystem_ok skip_reason up_to_date);
 
 # --- Global configuration
 our @DPKG_BUILDPACKAGE_CMD = (
@@ -388,37 +386,6 @@ exit $status;
 
 # --- Full package testing
 
-# Find all tests that check a particular tag, either for its presence or
-# absence.  Returns a list of names of the *.desc files, without the *.desc at
-# the end.
-sub find_tests_for_tag {
-    my ($tag, $glob) = @_;
-    return generic_find_test_for_tag(
-        $tag, $glob,
-        sub {
-            my ($tag, $desc) = @_;
-            my $data = read_test_desc($desc);
-            my $tagnames = $data->{'test-for'}//'';
-            $tagnames .= ' ' . $data->{'test-against'}
-              if $data->{'test-against'};
-            my %table = map { $_ => 1 } split(m/\s++/o, $tagnames);
-            return $data if $table{$tag};
-            return 0;
-        });
-}
-
-sub copy_template_dir {
-    my ($skel, $tsrc, $targetdir, $exskel, $extsrc) = @_;
-    my @exs = ();
-    my @ext = ();
-    @exs = @$exskel if $exskel;
-    @ext = @$extsrc if $extsrc;
-    runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs);
-    runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/", @ext)
-      if -d "$tsrc/";
-    return;
-}
-
 # Run a package test and show any diffs in the expected tags or any other
 # errors detected.  Takes the description data for the test.  Returns true if
 # the test passes and false if it fails.
@@ -655,40 +622,6 @@ sub unquote {
     return $string;
 }
 
-# generic_find_test_for_tag($tag, $globstr[, $tcode])
-#
-# Looks for $tag in all files returned by using glob on $globstr.
-# $tcode is called for each file with $tag as first argument and the filename
-# as second argument.  $tcode is expected to return a truth value that if the
-# test should be run.  If $tcode returns something that is not just a raw
-# truth value (e.g. a list ref), this will be taken as the "test", otherwise
-# this sub will attempt to guess the test name from the file.
-#
-# If $tcode is omitted, \&is_tag_in_file will be used.
-#
-# Returns a list of values returned by $tcode or guessed test names (as per
-# above)
-sub generic_find_test_for_tag {
-    my ($tag, $globstr, $tcode) = @_;
-    my @tests;
-    $tcode = \&is_tag_in_file unless defined $tcode;
-    for my $file (glob $globstr){
-        my $res = $tcode->($tag, $file);
-        my $testname;
-        next unless $res;
-
-        if (not ref $res and $res =~ m/^\d+$/o){
-            # returned a truth value; use the regex to deduce the test name
-            ($testname) = ($file =~ m,.*/([^/]+)[/\.]tags$,);
-        } else {
-            # The code returned the test name or test data for us
-            $testname = $res;
-        }
-        push @tests, $testname;
-    }
-    return @tests;
-}
-
 # generic_test_runner($dir, $ext, $test)
 #
 # Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
@@ -768,29 +701,6 @@ sub generic_test_runner {
     run_lintian($testdata, $file, "$RUNDIR/$suite/tags.$testname");
     return _check_result($testdata, "$testdir/tags",
         "$RUNDIR/$suite/tags.$testname");
-}
-
-sub up_to_date {
-    my ($stampfile, $dir) = @_;
-    my $newest = 0;
-    my $stamp_stat = stat($stampfile);
-    if (not defined($stamp_stat)) {
-        die("stat $stampfile: $!")
-          if $! != ENOENT;
-        # Missing file implies "out-of-date"
-        return 0;
-    }
-    my $tester = sub {
-        my $path = $File::Find::name;
-        my $st = stat($path) // die "stat $path: $!";
-        $newest = $st->mtime if (-f _ && $st->mtime > $newest);
-    };
-    my %options = (
-        'wanted' => $tester,
-        'no_chdir' => 1,
-    );
-    find(\%options, $dir);
-    return $stamp_stat->mtime >= $newest;
 }
 
 # Makeshift replacement for "glob" to work around #723805
@@ -911,21 +821,6 @@ sub _check_result {
     }
 }
 
-sub is_tag_in_file {
-    my ($tag, $file) = @_;
-    my $res = 0;
-    open(my $tags, '<', $file);
-    while (my $line = <$tags>){
-        next if $line =~ m/^N: /;
-        next unless ($line =~ m/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/);
-        next unless $1 eq $tag;
-        $res = 1;
-        last;
-    }
-    close($tags);
-    return $res;
-}
-
 # run_tests(&subref, @tests)
 #
 # Runs all the tests by passing them (one at the time) to &subref;
@@ -994,52 +889,6 @@ sub dump_log{
     return 1;
 }
 
-sub runsystem {
-    print "runsystem(@_)\n" if $DEBUG;
-    system(@_) == 0
-      or fail("failed: @_\n");
-    return;
-}
-
-sub runsystem_ok {
-    print "runsystem_ok(@_)\n" if $DEBUG;
-    my $errcode = system(@_);
-    $errcode == 0
-      or $errcode == (1 << 8)
-      or fail("failed: @_\n");
-    return $errcode == 0;
-}
-
-sub chdir_runcmd {
-    my ($dir, $cmd, $log) = @_;
-    my $pid = fork();
-    if ($pid) {
-        waitpid $pid, 0;
-        return $?;
-    } else {
-        $log //= '/dev/null';
-        chdir($dir);
-        open(STDIN, '<', '/dev/null');
-        open(STDOUT, '>', $log);
-        open(STDERR, '>&', \*STDOUT);
-        exec { $cmd->[0] } @$cmd or fail 'exec ' . @$cmd . " failed: $!";
-    }
-}
-
-sub fill_in_tmpl {
-    my ($file, $data) = @_;
-    my $tmpl = "$file.in";
-
-    my $template = Text::Template->new(TYPE => 'FILE',  SOURCE => $tmpl);
-    open(my $out, '>', $file);
-
-    unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
-        fail("cannot create $file");
-    }
-    close($out);
-    return;
-}
-
 sub check_test_is_sane {
     my ($dir, $data) = @_;
 
@@ -1095,70 +944,6 @@ sub check_test_is_sane {
     return 1;
 }
 
-sub read_test_desc {
-    my ($filename) = @_;
-    my @paragraphs = read_dpkg_control($filename);
-    my $testdata;
-    my $expected_name;
-    if (scalar(@paragraphs) != 1) {
-        fail("$filename does not have exactly one paragraph");
-    }
-    $testdata = $paragraphs[0];
-    if ($filename =~ m{/desc$}) {
-        # t/<suite>/<testname>/desc
-        $expected_name = basename(dirname($filename));
-    } else {
-        # t/changes/<testname>.desc
-        $expected_name = basename($filename, '.desc');
-    }
-
-    if (!exists $testdata->{'testname'}) {
-        fail("$filename is missing Testname field");
-    }
-    if ($expected_name ne $testdata->{'testname'}) {
-        fail(   "$filename is called $testdata->{'testname'}"
-              . " instead of $expected_name");
-    }
-    return $testdata;
-}
-
-sub check_test_depends {
-    my ($testdata) = @_;
-    my ($missing, $pid, $fd, $err);
-    my ($test_fd, $test_file) = tempfile('bd-test-XXXXXXXXX', TMPDIR => 1);
-
-    # dpkg-checkbuilddeps requires that the Source: field is present.
-    print {$test_fd} "Source: bd-test-pkg\n";
-    print {$test_fd} "Build-Depends: $testdata->{'test-depends'}\n";
-
-    $pid = open($fd, '-|');
-    if (!$pid) {
-        open(STDIN, '<', '/dev/null');
-        open(STDERR, '>&', \*STDOUT);
-        exec 'dpkg-checkbuilddeps', $test_file
-          or fail "exec dpkg-checkbuilddeps: $!";
-    }
-    $missing = slurp_entire_file($fd, 1);
-    eval {close($fd);};
-    $err = $@;
-    unlink($test_file);
-    if ($err) {
-        # Problem closing the pipe?
-        fail "close pipe: $err" if $err->errno;
-        # Else we presume that dpkg-checkbuilddeps concluded missing
-        # build-dependencies
-        $missing =~ s{\A dpkg-checkbuilddeps: [ ]
-                         Unmet [ ] build [ ] dependencies: \s* }{}xsm;
-        chomp($missing);
-        if ($missing =~ s{\n}{\\n}gxsm) {
-            # We expect exactly one line.
-            fail "Unexpected output from dpkg-checkbuilddeps: $missing";
-        }
-        return $missing;
-    }
-    return;
-}
-
 sub skip_test {
     my ($suite, $testname, $reason) = @_;
     msg_print "Skipped $testname.\n";
@@ -1170,19 +955,6 @@ sub skip_test {
         $skipped->{$suite}->{$testname} = $reason;
     }
     return 1;
-}
-
-# Extracts the first line of a skip file and provides it as a reason
-# for the test being skipped.
-sub skip_reason {
-    my ($skipfile) = @_;
-    my $reason;
-    open(my $fd, '<', $skipfile);
-    $reason = <$fd>;
-    close($fd);
-    chomp($reason) if defined $reason;
-    $reason //= 'No reason given in "skip" file';
-    return $reason;
 }
 
 sub msg_flush {

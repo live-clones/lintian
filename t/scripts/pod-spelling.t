@@ -91,7 +91,7 @@ superset YYYY dirname operm username whitespace
 Whitespace udebs multiword recognised eqv testsuite methodx multi
 multiarch relationA relationB Multi natively unordered arg CVE autodie
 hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
-REMOVESLASH
+REMOVESLASH STAMPFILE TAGNAME TCODE TESTDATA
 
 __END__
 
