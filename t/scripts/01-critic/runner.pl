@@ -6,29 +6,79 @@
 
 use strict;
 use warnings;
+use autodie;
+
+use POSIX qw(ENOENT);
 
 use
   if $ENV{'LINTIAN_COVERAGE'}, 'Test::More',
   'skip_all' => 'Not needed for coverage of Lintian';
 
-use Cwd qw(realpath);
-use File::Basename qw(basename dirname);
+use Test::Lintian;
+use Test::More;
 
-my ($dir, $basename);
+plan skip_all => 'Only UNRELEASED versions are criticised'
+  if should_skip();
 
-BEGIN {
-    my $me = realpath($0) // die("realpath($0): $!");
+eval 'use Test::Perl::Critic 1.00';
+plan skip_all => 'Test::Perl::Critic 1.00 required to run this test' if $@;
 
-    # We need the basename before resolving the path (because
-    # afterwards it is "runner.pl" and we want it to be e.g.
-    # "checks.t" or "collections.t").
-    $basename = basename($0, '.t');
-    $dir = dirname($me);
-}
-use lib $dir;
-use critic qw(run_critic);
+eval 'use PPIx::Regexp';
+diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
-run_critic($basename);
+my @test_paths = program_name_to_perl_paths($0);
+$ENV{'LINTIAN_TEST_ROOT'} //= '.';
+my $critic_profile = "$ENV{'LINTIAN_TEST_ROOT'}/.perlcriticrc";
+Test::Perl::Critic->import(-profile => $critic_profile);
+
+run_critic(@test_paths);
 
 exit(0);
+
+sub run_critic {
+    my (@args) = @_;
+    plan tests => scalar(@args);
+    for my $arg (@args) {
+        if (-d $arg) {
+
+            # all_critic_ok emits its own plan, so run it in a subtest
+            # so we can just count it as "one" test.
+            subtest "Critic all code in $arg" => sub {
+                all_critic_ok($arg);
+            };
+        }elsif (-f _ ) {
+            critic_ok($arg);
+        }else {
+            print STDERR "N: $arg\n";
+            die "$arg does not exists\n" if not -e _;
+            die "$arg is of an unsupported file type\n";
+        }
+    }
+    # For some reason, perltidy has started to leave behind a
+    # "perltidy.LOG" which is rather annoying.  Lets have the tests
+    # unconditionally kill those.
+    eval { unlink('perltidy.LOG'); };
+    if (my $err = $@) {
+        # Since this test is run in parallel, there is an
+        # race-condition between checking for the file and actually
+        # deleting.  So just remove the file and ignore ENOENT
+        # problems.
+        die($err) if $err->errno != ENOENT;
+    }
+    return 1;
+}
+
+sub should_skip {
+    my $skip = 1;
+
+    open(my $fd, '-|', 'dpkg-parsechangelog', '-c0');
+
+    while (<$fd>) {
+        $skip = 0 if m/^Distribution: UNRELEASED$/;
+    }
+
+    close($fd);
+
+    return $skip;
+}
 

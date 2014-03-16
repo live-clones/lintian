@@ -61,12 +61,15 @@ our @EXPORT = qw(
   test_load_checks
   test_load_profiles
   test_tags_implemented
+
+  program_name_to_perl_paths
 );
 
 use parent 'Test::Builder::Module';
 
-use File::Find ();
 use Cwd qw(realpath);
+use File::Basename qw(basename);
+use File::Find ();
 
 use Lintian::Check qw(check_spelling);
 use Lintian::Data;
@@ -723,6 +726,56 @@ sub _find_check {
     }
 
     return ($input);
+}
+
+=item program_name_to_perl_paths(PROGNAME)
+
+Map the program name (e.g. C<$0>) to a list of directories or/and
+files that should be processed.
+
+This helper sub is mostly useful for splitting up slow tests run over
+all Perl scripts/modules in Lintian.  This allows better use of
+multiple cores.  Example:
+
+
+  t/scripts/my-test/
+   runner.pl
+   checks.t -> runner.pl
+   collection.t -> runner.pl
+   ...
+
+And then in runner.pl:
+
+  use Test::Lintian;
+  
+  my @paths = program_name_to_perl_paths($0);
+  # test all files/dirs listed in @paths
+
+For a more concrete example, see t/scripts/01-critic/ and the
+files/symlinks beneath it.
+
+=cut
+
+{
+
+    my %SPECIAL_PATHS = (
+        'docs-examples' => ['doc/examples/checks'],
+        'test-scripts' => [qw(t/scripts t/helpers t/runtests)],
+    );
+
+    sub program_name_to_perl_paths {
+        my ($program) = @_;
+        # We need the basename before resolving the path (because
+        # afterwards it is "runner.pl" and we want it to be e.g.
+        # "checks.t" or "collections.t").
+        my $basename = basename($program, '.t');
+
+        if (exists($SPECIAL_PATHS{$basename})) {
+            return @{$SPECIAL_PATHS{$basename}};
+        }
+
+        return ($basename);
+    }
 }
 
 =back
