@@ -792,7 +792,8 @@ sub run {
                         && $d_pkg ne 'xfonts-utils'
                         && $d_pkg ne 'xfonts-encodings');
 
-                    tag 'depends-on-packaging-dev', $field
+                    tag 'depends-on-packaging-dev',
+                      $field
                       if ((
                                $field =~ /^(?:pre-)?depends$/
                             || $field eq 'recommends'
@@ -843,7 +844,8 @@ sub run {
                     # classpath-doc) to be useful; other packages
                     # should depend on default-jdk-doc if they want
                     # the Java Core API.
-                    tag 'depends-on-specific-java-doc-package', $field
+                    tag 'depends-on-specific-java-doc-package',
+                      $field
                       if (
                            &$is_dep_field($field)
                         && $pkg ne 'default-jdk-doc'

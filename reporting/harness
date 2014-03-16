@@ -439,7 +439,7 @@ Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
 if (!$opt{'dry-run'} && -f $statistics_file) {
-    system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
+    system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`")== 0
       or Log('warning: could not rotate the statistics file');
 }
 

@@ -451,8 +451,8 @@ sub verify_line {
       unless ($okay
         or not $command
         or ($tested_packages >= 2)
-        or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):)
-      );
+        or
+        ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
     if (exists($vals{'icon'})) {
         verify_icon($info, $proc, $group, $menufile, $fullname, $linecount,

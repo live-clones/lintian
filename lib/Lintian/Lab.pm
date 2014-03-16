@@ -311,7 +311,7 @@ sub get_package {
             # version, only entries with that version will be visited.
             return if defined $pkg_arch && $a ne $pkg_arch;
             $dir
-              = $self->_pool_path($entry->{'source'}, $pkg_type, $pkg_name, $v,
+              = $self->_pool_path($entry->{'source'}, $pkg_type, $pkg_name,$v,
                 $a);
             push @entries,
               Lintian::Lab::Entry->new_from_metadata($pkg_type, $entry, $self,

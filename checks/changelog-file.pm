@@ -115,8 +115,8 @@ sub run {
               "at line $line";
         }
         my $changes = Parse::DebianChangelog->init({
-                infile => $dnews,
-                quiet => 1,
+            infile => $dnews,
+            quiet => 1,
         });
         if (my @errors = $changes->get_parse_errors) {
             for (@errors) {

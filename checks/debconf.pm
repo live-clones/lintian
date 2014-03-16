@@ -434,7 +434,8 @@ sub run {
                     if ($priority !~ /^\$\S+$/) {
                         tag 'unknown-debconf-priority', "$file:$. $1"
                           unless ($valid_priorities{$priority});
-                        tag 'possible-debconf-note-abuse', "$file:$. $template"
+                        tag 'possible-debconf-note-abuse',
+                          "$file:$. $template"
                           if (
                             $potential_db_abuse{$template}
                             and (

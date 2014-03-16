@@ -825,12 +825,12 @@ sub run {
                     }
 
                     if (m,>\s*/etc/inetd\.conf(?:\s|\Z),) {
-                        tag 'maintainer-script-modifies-inetd-conf', "$file:$."
+                        tag 'maintainer-script-modifies-inetd-conf',"$file:$."
                           unless $info->relation('provides')
                           ->implies('inet-superserver');
                     }
                     if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
-                        tag 'maintainer-script-modifies-inetd-conf', "$file:$."
+                        tag 'maintainer-script-modifies-inetd-conf',"$file:$."
                           unless $info->relation('provides')
                           ->implies('inet-superserver');
                     }
