@@ -87,20 +87,38 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
     'cruft/warn-file-type',
     qr/\s*\~\~\s*/,
     sub {
-        my @sliptline = split(/\s*\~\~\s*/, $_[1], 2);
-        unless (scalar(@sliptline) == 1 or scalar(@sliptline) == 2) {
+        my @sliptline = split(/\s*\~\~\s*/, $_[1], 4);
+        if (scalar(@sliptline) < 1 or scalar(@sliptline) > 4) {
             fail 'Syntax error in cruft/warn-file-type', $.;
         }
-        my ($regtype, $regname) = @sliptline;
+        my ($regtype, $regname, $checkmissing,$transformlist) = @sliptline;
 
         # allow empty regname
         $regname = defined($regname) ? strip($regname) : '';
         if (length($regname) == 0) {
             $regname = '.*';
         }
+
+        $checkmissing //= 0;
+        # build transform pair
+        $transformlist //= '';
+        my @transforms = split(/\s*\&\&\s*/, $transformlist);
+        my @transformpairs = ();
+        if(scalar(@transforms) > 0) {
+            foreach my $transform (@transforms) {
+                $transform = '^s/([^/]*?)/([^/]/$';
+                unless(defined($1) and defined($2)) {
+                    fail 'Syntax error in cruft/warn-file-type in transform regex', $.;
+                }
+                push(@transformpairs,{ 'match' => $1, 'replace' => $2 });        
+            }
+        }
+
         return {
             'regtype'   => qr/$regtype/x,
             'regname' => qr/$regname/x,
+            'checkmissing' => $checkmissing,
+            'transform' => \@transformpairs,
         };
     });
 
@@ -545,6 +563,9 @@ sub find_cruft {
                 my $regname = $warn_data->{'regname'};
                 if($name =~ m{$regname}) {
                     tag $tag_filetype, $name;
+                    if($warn_data->{'checkmissing'}) {
+                        check_missing_source($entry,$info,$warn_data->{'transform'});
+                    }
                 }
             }
         }
@@ -627,6 +648,62 @@ sub find_cruft {
     }
     return;
 }
+
+# try to check if source is missing
+sub check_missing_source {
+    my ($file, $info, $replacementsref) = @_;
+    my @replacements;
+    if(defined($replacementsref)) {
+        @replacements = @{$replacementsref};
+    }
+    else {
+        @replacements = ();
+    }
+    # add do no nothing replacement
+    unshift(@replacements, 's///');
+
+    unless ($file->is_regular_file) {
+        return;
+    }
+
+    my $basename = $file->basename;
+    my $dirname = $file->dirname;
+    my $name = $file->name;
+    
+    my @listpath = ('debian/','debian/missing-sources/');
+    unshift(@listpath,$dirname);
+
+    # try to find in current dir
+    foreach my $replacement (@replacements) {
+        my $newbasename = $basename;
+        my ($search1,$replace) = 
+        $newbasename =~ $replacement;
+        # now try for each path
+      PATH:
+        foreach my $path (@listpath) {
+            # try to search locally then to add dirname
+            my @variants = ('');
+            unless ($path eq $dirname) {
+                unshift(@variants,$dirname);
+            }
+
+            foreach my $variant (@variants) {
+                # add basename to list of source path
+                my $newpath = $path.$variant.$newbasename;
+                if ($newpath eq $name) {
+                    next;
+                }
+                # found source return
+                if($info->index($newpath)) {
+                    return;
+                }
+            }
+        }
+    }
+    tag 'source-is-missing', $name;
+    return;
+}
+
 
 # do basic license check against well known offender
 # note that it does not replace licensecheck(1)

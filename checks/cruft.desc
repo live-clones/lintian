@@ -672,3 +672,15 @@ Info: The source contains an unsafe symlink.  If followed, the link
  .
  If it is a part of the package's testsuite, Lintian may have failed
  to recognise it as a test.  In that case, please override the tag.
+
+
+Tag: source-is-missing
+Severity: serious
+Certainty: possible
+Info: The source of the following file is missing. Lintian checked a few
+ possible path to found the source, and do not find it.
+ .
+ Please repack your package to include the source or add it to
+ debian/missing-sources dir.
+ .
+ If this is a false-positive, please report a bug against Lintian.
