@@ -8,6 +8,9 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       prefer the order they are listed in the control file.
       Previously they were either sorted by name or ordered
       by Perl's hash iterator.
+  * checks/control-files.pm:
+    + [NT] Remove special case for udebs on empty control
+      files.  Thanks to Cyril Brulebois for testing it.
   * checks/cruft.pm:
     + [BR,NT] Optimise the GFDL check considerably in some
       cases (e.g. the linux source).  (Closes: #738342)

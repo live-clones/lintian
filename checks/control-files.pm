@@ -68,8 +68,7 @@ sub run {
 
         $experm = $ctrl->value($file);
 
-        # I'm not sure about the udeb case
-        if ($type ne 'udeb' and $file->size == 0) {
+        if ($file->size == 0) {
             tag 'control-file-is-empty', $file;
         }
 
