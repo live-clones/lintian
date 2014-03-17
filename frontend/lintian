@@ -97,10 +97,8 @@ my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 # Variables used to record commandline options
 # Commented out variables have "defined" checks somewhere to determine if
 # they were set via commandline or environment variables
-my $pkg_mode = 'auto';          # auto -- automatically search for
 # binary and source pkgs
 my $debug = 0;
-my $check_everything = 0;       #flag for -a|--all switch
 my $ftpmaster_tags = 0;         #flag for -F|--ftp-master-rejects switch
 my $allow_root = 0;             #flag for --allow-root switch
 my $keep_lab = 0;               #flag for --keep-lab switch
@@ -239,16 +237,11 @@ Developer/Special usage options:
     -d, --debug               turn Lintian\'s debug messages on (repeatable)
     --keep-lab                keep lab after run, even if temporary
     --lab LABDIR              use LABDIR as permanent laboratory
+    --packages-from-file  X   process the packages in a file (if "-" use stdin)
     --perf-debug              turn on performance debugging
     --perf-output X           send performance logging to file (or fd w. \&X)
     --status-log X            send status logging to file (or fd w. \&X) [internal use only]
     -U X, --unpack-info X     specify which info should be collected
-Package selection options:
-    -a, --all                 process all packages in distribution
-    -b, --binary              process only binary packages
-    --packages-from-file  X   process the packages in a file (if "-" use stdin)
-    -s, --source              process only source packages
-    --udeb                    process only udeb packages
 EOT-EOT-EOT
     }
 
@@ -382,15 +375,6 @@ sub record_dont_check_part {
     }
     record_action('check');
     $dont_check = "$_[1]";
-    return;
-}
-
-# Record what type of data is specified
-# Options: -b|--binary, -s|--source, --udeb
-sub record_pkgmode {
-    $pkg_mode = 'binary' if $_[0] eq 'binary';
-    $pkg_mode = 'source' if $_[0] eq 'source';
-    $pkg_mode = 'udeb' if $_[0] eq 'udeb';
     return;
 }
 
@@ -590,10 +574,6 @@ my %opthash = (
     'user-dirs!' => \&record_option_too_late,
 
     # ------------------ package selection options
-    'all|a' => \$check_everything,
-    'binary|b' => \&record_pkgmode,
-    'source|s' => \&record_pkgmode,
-    'udeb' => \&record_pkgmode,
     'packages-from-file=s' => \$opt{'packages-from-file'},
 
     # ------------------ experimental
@@ -699,12 +679,11 @@ foreach my $var (@ENV_VARS) {
 # {{{ Sanity check command-line options (that are unaffected by the configuration file)
 
 # option --all and packages specified at the same time?
-if (($check_everything or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
+if ($opt{'packages-from-file'} and $#ARGV+1 > 0) {
     print STDERR join(q{ },
-        'warning: options -a and --packages-from-file',
+        'warning: option --packages-from-file',
         "cannot be mixed with package parameters!\n");
-    print STDERR "(will ignore -a or/and --packages-from-file option)\n";
-    undef $check_everything;
+    print STDERR "(will ignore --packages-from-file option)\n";
     delete $opt{'packages-from-file'};
 }
 
@@ -890,7 +869,6 @@ if (my $status_log = $opt{'status-log'}) {
 # check for arguments
 if (    $action =~ /^(?:check|unpack|remove)$/
     and $#ARGV == -1
-    and not $check_everything
     and not $opt{'packages-from-file'}) {
     my $ok = 0;
     if ($action eq 'check' or $action eq 'unpack') {
@@ -1059,15 +1037,7 @@ while (my $arg = shift) {
     }
 }
 
-if ($check_everything) {
-    my $t = $pkg_mode;
-    my $visitor = sub {
-        my ($lpkg) = @_;
-        $pool->add_proc($lpkg);
-    };
-    $t = undef if $pkg_mode eq 'auto';
-    $LAB->visit_packages($visitor, $t);
-} elsif ($opt{'packages-from-file'}){
+if ($opt{'packages-from-file'}){
     my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
     while (my $file = <$fd>) {
         chomp $file;
@@ -1595,9 +1565,7 @@ sub process_group {
 
 sub handle_lab_query {
     my ($query) = @_;
-    my @res;
-    my $type = undef;
-    my ($pkg, $version, $arch);
+    my ($type, $pkg, $version, $arch, @res);
     my $orig = $query; # Save for the error message later
 
     # "britney"-like format - note this catches the old style, where
@@ -1623,18 +1591,9 @@ sub handle_lab_query {
         exit 2;
     }
 
-    if (not defined $type and $pkg_mode ne 'auto') {
-        # No type specified and "auto" is not the default so we
-        # pre-append the default type.
-        $query = "$pkg_mode:$query";
-        $type = $pkg_mode;
-    } else {
-        # Type specified or no type and "auto" being the default.  In
-        # this case we just process the original query.
-        $query = $orig;
-    }
-
-    eval {@res = $LAB->lab_query($query);};
+    # Pass the original query ($query has been mangled for error
+    # checking and debugging purposes)
+    eval {@res = $LAB->lab_query($orig);};
     if (my $err = $@) {
         $err =~ s/ at .*? line \d+\s*$//;
         warning("Bad lab-query: $orig");
@@ -1651,7 +1610,7 @@ sub handle_lab_query {
         my $tuple = join(', ', map { $_//'*'} ($type, $pkg, $version, $arch));
         debug_msg(
             1,
-            "Did not find a match for $orig (pkg_mode = $pkg_mode)",
+            "Did not find a match for $orig",
             " - Search tuple: ($tuple)"
         );
         warning(

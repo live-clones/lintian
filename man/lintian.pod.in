@@ -46,11 +46,11 @@ If you specify a I<.changes> file, Lintian will process all packages
 listed in that file.  This is convenient when checking a new package
 before uploading it.
 
-If you specify packages to be checked or use one of the options
-B<--all> or B<--packages-from-file>, the packages requested will be
-processed.  Otherwise, if I<debian/changelog> exists, it is parsed to
-determine the name of the .changes file to look for in the parent
-directory (when using the actions B<--check> or B<--unpack>).  See
+If you specify packages to be checked or use the option
+B<--packages-from-file>, the packages requested will be processed.
+Otherwise, if I<debian/changelog> exists, it is parsed to determine
+the name of the .changes file to look for in the parent directory
+(when using the actions B<--check> or B<--unpack>).  See
 L</CHECKING LAST BUILD> for more information.
 
 
@@ -474,6 +474,16 @@ information about the packages it checks.  This option overrides the
 B<LINTIAN_LAB> environment variable and the configuration file entry
 of the same name.
 
+=item B<--packages-from-file> X
+
+Process the packages listed in X.  If the line starts with "!query:",
+then the rest of that line is processed as a lab query (see L</LAB QUERY>).
+
+Otherwise the line is read as the path to a file to process (all
+whitespace is included!).
+
+If X is "-", Lintian will read the packages from STDIN.
+
 =item B<--perf-debug>
 
 Enable performance related debug logging.
@@ -535,52 +545,6 @@ two lines of arguments are semantically equivalent:
 
  -U info1 -U info2
  -U info1,info2
-
-=back
-
-Package selection options:
-
-=over 4
-
-=item B<-a>, B<--all>
-
-Check all packages in the laboratory.
-
-Note: If B<--binary>, B<--udeb> or B<--source> is specified, then only
-packages of that type is considered.
-
-=item B<-b>, B<--binary>
-
-The lab-queries listed on the command line are by default binary
-packages.
-
-With B<--all> this means check all binary packages in the lab.
-
-=item B<--packages-from-file> X
-
-Process the packages listed in X.  If the line starts with "!query:",
-then the rest of that line is processed as a lab query (see L</LAB QUERY>).
-
-Otherwise the line is read as the path to a file to process (all
-whitespace is included!).
-
-If X is "-", Lintian will read the packages from STDIN.
-
-=item B<-s>, B<--source>
-
-The lab-queries listed on the command line are by default source
-packages.
-
-With B<--all> this means check all source packages in the lab.
-
-The following packages listed on the command line are source packages.
-
-=item B<--udeb>
-
-The lab-queries listed on the command line are by default udeb
-packages.
-
-With B<--all> this means check all udeb packages in the lab.
 
 =back
 
