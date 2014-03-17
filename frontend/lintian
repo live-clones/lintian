@@ -451,35 +451,11 @@ sub record_quiet {
     return;
 }
 
-{
-    my $warned = 0;
-
-    sub warn_late_options {
-        print STDERR join(q{ },
-            'Warning: --include-dir and --[no-]user-dirs',
-            "should be the first option(s) if given\n");
-        return;
-    }
-
-    # Process --include-dir (late)
-    sub record_include_dir_late {
-        my (undef, $dir) = @_;
-        push(@search_dirs, $dir);
-        if (not $warned++) {
-            warn_late_options();
-        }
-        return;
-    }
-
-    # Process --[no-]user-dirs (late)
-    sub record_user_dirs_late {
-        my (undef, $value) = @_;
-        $opt{'user-dirs'} = $value;
-        if (not $warned++) {
-            warn_late_options();
-        }
-        return;
-    }
+sub record_option_too_late {
+    print STDERR join(q{ },
+        'Warning: --include-dir and --[no-]user-dirs',
+        "should be the first option(s) if given\n");
+    exit(2);
 }
 
 # Process display-info and display-level options in cfg files
@@ -610,8 +586,8 @@ my %opthash = (
 
     'jobs|j:i' => \$opt{'jobs'},
     'ignore-lintian-env' => \$opt{'ignore-lintian-env'},
-    'include-dir=s' => \&record_include_dir_late,
-    'user-dirs!' => \&record_user_dirs_late,
+    'include-dir=s' => \&record_option_too_late,
+    'user-dirs!' => \&record_option_too_late,
 
     # ------------------ package selection options
     'all|a' => \$check_everything,
