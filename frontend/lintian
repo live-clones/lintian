@@ -613,7 +613,7 @@ Getopt::Long::config(
 Getopt::Long::GetOptions(
     'include-dir=s' => \@search_dirs,
     'user-dirs!' => \$opt{'user-dirs'},
-) or error("error parsing options\n");
+) or die("error parsing options\n");
 
 # init commandline parser
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev',
