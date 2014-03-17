@@ -434,7 +434,7 @@ sub process_tasks {
                 if (not $pid) {
                     # child
                     my $ret = 0;
-                    if ($cs->interface ne 'exec' && not $ENV{'LINTIAN_COVERAGE'}) {
+                    if ($cs->interface ne 'exec' and not $ENV{'LINTIAN_COVERAGE'}) {
                         # With a non-exec interface, let L::CollScript
                         # handle it.  Note that when run under
                         # Devel::Cover, we never take this route.
