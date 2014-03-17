@@ -72,7 +72,6 @@ BEGIN {
 # L::Internal::FrontendUtil (!)
 my @ENV_VARS = (
     # LINTIAN_CFG  - handled manually
-    # LINTIAN_ROOT - handled manually
     qw(
       LINTIAN_PROFILE
       LINTIAN_LAB
@@ -608,8 +607,6 @@ my %opthash = (
     'no-cfg' => \$no_conf,
     'lab=s' => \$opt{'LINTIAN_LAB'},
     'profile=s' => \$opt{'LINTIAN_PROFILE'},
-    # (NB: --root is deprecated)
-    'root=s' => \$opt{'LINTIAN_ROOT'},
 
     'jobs|j:i' => \$opt{'jobs'},
     'ignore-lintian-env' => \$opt{'ignore-lintian-env'},
@@ -679,34 +676,8 @@ if ($opt{'ignore-lintian-env'}) {
 
 # {{{ Read important environment
 
-if (defined($opt{'LINTIAN_ROOT'}) or defined($ENV{'LINTIAN_ROOT'})) {
-    my $desired_root = $opt{'LINTIAN_ROOT'} // $ENV{'LINTIAN_ROOT'};
-    my $ok = 0;
-    my $abs = abs_path($desired_root);
-    die("Cannot resolve $desired_root: $!\n")
-      unless defined($abs);
-    $ok = 1 if $abs eq $INIT_ROOT;
-    print STDERR "warning: LINTIAN_ROOT/--root is deprecated.\n";
-    print STDERR "  Perhaps you wanted --include-dir instead?\n";
-    print STDERR "If you are using this option to run lintian from a\n";
-    print STDERR "checkout, then Lintian 2.5.18 should just work out\n";
-    print STDERR "of the box without this option/ENV variable.\n";
-    print STDERR "  (You may want to replace it with --no-user-dirs)\n";
-
-    if (not $ok) {
-        print STDERR "Error: Cannot use $desired_root as LINTIAN_ROOT\n";
-        print STDERR "  (only valid value is $INIT_ROOT)\n";
-        exit(2);
-    }
-    delete($opt{'LINTIAN_ROOT'});
-    # --root/LINTIAN_ROOT used to imply --no-user-dirs unless
-    # --user-dirs was explicitly given.  Keep this behaviour as long
-    # as we accept --root.
-    $opt{'user-dirs'} //= 0;
-} else {
-    # Enable user dirs by default
-    $opt{'user-dirs'} //= 1;
-}
+# Enable user dirs by default
+$opt{'user-dirs'} //= 1;
 
 # Set LINTIAN_ROOT to the actual root.
 $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
