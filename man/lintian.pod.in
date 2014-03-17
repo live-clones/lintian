@@ -47,11 +47,11 @@ listed in that file.  This is convenient when checking a new package
 before uploading it.
 
 If you specify packages to be checked or use one of the options
-B<--all>, B<--packages-from-file> or B<--packages-file>, the packages
-requested will be processed.  Otherwise, if I<debian/changelog>
-exists, it is parsed to determine the name of the .changes file to
-look for in the parent directory (when using the actions B<--check> or
-B<--unpack>).  See L</CHECKING LAST BUILD> for more information.
+B<--all> or B<--packages-from-file>, the packages requested will be
+processed.  Otherwise, if I<debian/changelog> exists, it is parsed to
+determine the name of the .changes file to look for in the parent
+directory (when using the actions B<--check> or B<--unpack>).  See
+L</CHECKING LAST BUILD> for more information.
 
 
 =head1 OPTIONS
