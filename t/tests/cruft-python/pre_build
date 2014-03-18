@@ -5,10 +5,9 @@
 
 set -e
 dir="$1"
-srcdir="$1"
-fake="$srcdir/debian/missing-sources/fake.py"
+fake="$dir/debian/missing-sources/fake.py"
 
-cp $fake $1
+cp "$fake" "$dir"
 echo 'import fake' > "${dir}/main.py"
 unset PYTHONDONTWRITEBYTECODE
 PYTHONPATH="${dir}" python "${dir}/main.py" > /dev/null
@@ -17,7 +16,7 @@ PYTHONPATH="${dir}" python -O "${dir}/main.py"  > /dev/null
 rm -f "${dir}"/main.py
 rm -f "${dir}"/fake.py
 
-cp $fake $1/fake2.py
+cp "$fake" "$dir/fake2.py"
 echo 'import fake2' > "${dir}/main.py"
 unset PYTHONDONTWRITEBYTECODE
 PYTHONPATH="${dir}" python "${dir}/main.py" > /dev/null
