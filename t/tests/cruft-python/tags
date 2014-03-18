@@ -1,0 +1,6 @@
+E: cruft-python source: source-is-missing fake2.pyc
+E: cruft-python source: source-is-missing fake2.pyo
+P: cruft-python source: source-contains-prebuilt-python-object fake.pyc
+P: cruft-python source: source-contains-prebuilt-python-object fake.pyo
+P: cruft-python source: source-contains-prebuilt-python-object fake2.pyc
+P: cruft-python source: source-contains-prebuilt-python-object fake2.pyo

@@ -9,6 +9,6 @@ source-contains-prebuilt-flash-object       ~~ ^Macromedia \s Flash
 source-contains-prebuilt-flash-project      ~~ ^Composite \s Document \s File                 ~~ (?i)\.fla$
 source-contains-prebuilt-java-object        ~~ (?: Java [ ] (?:Jar [ ] file|archive [ ] data) | Zip [ ] archive | JAR)   ~~ (?i)\.jar$
 source-contains-prebuilt-javascript-object  ~~ .*                                             ~~ (?i)[\.-](?:min|pack(?:ed)?)\.js$ ~~ 1 ~~ s/(?i)[\.-](?:min|pack(?:ed)?)(?=\.js$)//
-source-contains-prebuilt-python-object      ~~ ^python \s \d(\.\d+)? \s byte-compiled
+source-contains-prebuilt-python-object      ~~ ^python \s \d(\.\d+)? \s byte-compiled ~~ .* ~~ 1 ~~ s/(?i)(?<=\.py)[co]$//
 source-contains-prebuilt-silverlight-object ~~ ^Zip \s archive \s data                        ~~ (?i)\.xac$
 source-contains-prebuilt-windows-binary     ~~ \b(?:PE(?:32|64)|(?:MS-DOS|COFF)\s executable)\b

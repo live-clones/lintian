@@ -1,0 +1,10 @@
+Testname: cruft-python
+Sequence: 6000
+Version: 1.0
+Description: Misc errors related to python
+Skeleton: pedantic
+Options: --pedantic -I -E
+Architecture: any
+Test-For:
+ source-contains-prebuilt-python-object
+ source-is-missing

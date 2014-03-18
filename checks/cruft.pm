@@ -108,9 +108,11 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
             foreach my $transform (@transforms) {
                 $transform =~ '^s/([^/]*?)/([^/]*?)/$';
                 unless(defined($1) and defined($2)) {
-                    fail 'Syntax error in cruft/warn-file-type in transform regex', $.;
+                    fail
+'Syntax error in cruft/warn-file-type in transform regex',
+                      $.;
                 }
-                push(@transformpairs,{ 'match' => $1, 'replace' => $2 });        
+                push(@transformpairs,{ 'match' => $1, 'replace' => $2 });
             }
         }
 
@@ -564,7 +566,8 @@ sub find_cruft {
                 if($name =~ m{$regname}) {
                     tag $tag_filetype, $name;
                     if($warn_data->{'checkmissing'}) {
-                        check_missing_source($entry,$info,$warn_data->{'transform'});
+                        check_missing_source($entry,$info,
+                            $warn_data->{'transform'});
                     }
                 }
             }
@@ -655,12 +658,12 @@ sub check_missing_source {
     my @replacementspair;
     if(defined($replacementspairref)) {
         @replacementspair = @{$replacementspairref};
-    }
-    else {
+    }else {
         @replacementspair = ();
     }
+
     # add do no nothing replacement
-    unshift(@replacementspair, { 'match' => '' , 'replace' => '' });
+    unshift(@replacementspair, { 'match' => '', 'replace' => '' });
 
     unless ($file->is_regular_file) {
         return;
@@ -669,16 +672,25 @@ sub check_missing_source {
     my $basename = $file->basename;
     my $dirname = $file->dirname;
     my $name = $file->name;
-    
+
     my @listpath = ('debian/','debian/missing-sources/');
     unshift(@listpath,$dirname);
 
     # try to find in current dir
+  REPLACEMENT:
     foreach my $replacementpair (@replacementspair) {
         my $newbasename = $basename;
         my $match = $replacementpair->{'match'};
         my $replace = $replacementpair->{'replace'};
-        $newbasename =~ s/$match/$replace/;
+        if($match eq '') {
+            $newbasename = $basename;
+        } else {
+            $newbasename =~ s/$match/$replace/;
+        }
+        # next but we may be return an error
+        if($newbasename eq '') {
+            next REPLACEMENT;
+        }
         # now try for each path
       PATH:
         foreach my $path (@listpath) {
@@ -691,8 +703,9 @@ sub check_missing_source {
             foreach my $variant (@variants) {
                 # add basename to list of source path
                 my $newpath = $path.$variant.$newbasename;
+                # ok we get same name => next
                 if ($newpath eq $name) {
-                    next;
+                    next PATH;
                 }
                 # found source return
                 if($info->index($newpath)) {
@@ -704,7 +717,6 @@ sub check_missing_source {
     tag 'source-is-missing', $name;
     return;
 }
-
 
 # do basic license check against well known offender
 # note that it does not replace licensecheck(1)
