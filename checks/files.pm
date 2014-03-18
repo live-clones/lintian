@@ -1825,10 +1825,9 @@ sub detect_privacy_breach {
         return;
     }
 
-    my $sfd = Lintian::SlidingWindow->new(
-        '<:raw',
-        $info->unpacked($file),
-        sub { $_=lc($_); });
+    open(my $fd, '<:raw', $info->unpacked($file));
+
+    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
 
     while (my $block = $sfd->readwindow()) {
         # try generic fragment tagging
@@ -1936,6 +1935,7 @@ sub detect_privacy_breach {
             }
         }
     }
+    close($fd);
     return;
 }
 

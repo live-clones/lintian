@@ -27,8 +27,7 @@ use Carp qw(croak);
 use Lintian::Util qw(strip);
 
 sub new {
-    my ($class, $mode, $file, $blocksub, $blocksize) = @_;
-    open(my $handle, $mode, $file);
+    my ($class, $handle, $blocksub, $blocksize) = @_;
 
     $blocksize //= 4096;
 
@@ -129,10 +128,14 @@ file in memory.
 
 =over 4
 
-=item new(mode,file,[blocksub], [block size])
+=item new(HANDLE[, BLOCKSUB[, BLOCKSIZE]])
 
-Create a new sliding window for file file using mode mode. Optionally run blocksub against
-each block. Note that blocksub should apply transform byte by byte and does not depend of context.
+Create a new sliding window by reading from a given HANDLE, which must
+be open for reading. Optionally run BLOCKSUB against each block. Note
+that BLOCKSUB should apply transform byte by byte and does not depend
+of context.
+
+Each window consists of up to two blocks of BLOCKSIZE characters.
 
 =back
 

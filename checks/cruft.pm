@@ -740,14 +740,16 @@ sub full_text_check {
         return;
     }
 
+    open(my $fd, '<:raw', $path);
     # allow to check only text file
-    unless(-T $path) {
+    unless (-T $fd) {
+        close($fd);
         return;
     }
 
     # some js file comments are really really long
-    my $sfd = Lintian::SlidingWindow->new('<:raw', $path, \&lc_block,
-        $isjsfile ? 8092 : 4096);
+    my $sfd
+      = Lintian::SlidingWindow->new($fd, \&lc_block,$isjsfile ? 8092 : 4096);
     my %licenseproblemhash = ();
     my $cleanjsblock = '';
 
@@ -806,6 +808,7 @@ sub full_text_check {
             }
         }
     }
+    close($fd);
     return;
 }
 
