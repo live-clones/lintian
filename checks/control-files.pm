@@ -45,10 +45,8 @@ sub run {
         my ($owner, $operm, $experm);
 
         # the control.tar.gz should only contain files (and the "root"
-        # dir, but that /should/ the "empty file" case in the beginning of
-        # the loop) In any event, allow directories just in case - the
-        # check here is mostly to catch symlinks (and "devices" etc.)
-        if (not($file->is_regular_file or $file->is_dir)) {
+        # dir, but that is excluded from the index)
+        if (not $file->is_regular_file) {
             tag 'control-file-is-not-a-file', $file;
             # Doing further checks is probably not going to yield anything
             # remotely useful.
