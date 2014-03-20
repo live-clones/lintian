@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}//0);
+
 use File::Basename;
 use List::MoreUtils qw(any none);
 use Text::ParseWords ();
@@ -277,6 +279,13 @@ sub run {
                 close $write;
             }
             while (<$read>) {
+                # Devel::Cover causes some annoying deep recursion
+                # warnings and sometimes in our child process.
+                # Filter them out, but only during coverage.
+                next if LINTIAN_COVERAGE and m{
+                    \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
+                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+                   \d+}xsm;
                 # ignore progress information from man
                 next if /^Reformatting/;
                 next if /^\s*$/;
