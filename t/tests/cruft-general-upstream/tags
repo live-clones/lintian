@@ -1,5 +1,7 @@
 E: cruft-general-upstream source: source-contains-prebuilt-silverlight-object fakesilverlight.XAC
 E: cruft-general-upstream source: source-is-missing fake.min.js
+E: cruft-general-upstream source: source-is-missing fakefla.fla
+E: cruft-general-upstream source: source-is-missing fakeflash.swf
 P: cruft-general-upstream source: debian-watch-may-check-gpg-signature
 P: cruft-general-upstream source: source-contains-arch-control-dir {arch}
 P: cruft-general-upstream source: source-contains-arch-inventory-file .arch-inventory
@@ -12,6 +14,7 @@ P: cruft-general-upstream source: source-contains-hg-control-dir .hg
 P: cruft-general-upstream source: source-contains-hg-tags-file .hgtags
 P: cruft-general-upstream source: source-contains-prebuilt-flash-object fakeflash.swf
 P: cruft-general-upstream source: source-contains-prebuilt-flash-project fakefla.fla
+P: cruft-general-upstream source: source-contains-prebuilt-flash-project fakeflasourced.fla
 P: cruft-general-upstream source: source-contains-prebuilt-java-object fake.jar
 P: cruft-general-upstream source: source-contains-prebuilt-javascript-object fake.min.js
 P: cruft-general-upstream source: source-contains-prebuilt-python-object fake.pyc

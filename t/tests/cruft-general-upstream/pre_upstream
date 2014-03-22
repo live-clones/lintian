@@ -52,4 +52,5 @@ cp "${dir}/fake.jar" "${dir}/fakesilverlight.XAC"
 # need to pad
 printf "\320\317\021\340\241\261\032\341" > "${dir}/fakefla.fla"
 dd if=/dev/zero of="${dir}/fakefla.fla" count=1 bs=1 seek=2047 > /dev/null 2> /dev/null
-
+cp "${dir}/fakefla.fla" "${dir}/fakeflasourced.fla"
+printf '//fake .as flash' > "${dir}/fakeflasourced.as"

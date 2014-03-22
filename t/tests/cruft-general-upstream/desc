@@ -26,3 +26,4 @@ Test-For:
  source-contains-svn-commit-file
  source-contains-svn-conflict-file
  source-contains-svn-control-dir
+ source-is-missing
