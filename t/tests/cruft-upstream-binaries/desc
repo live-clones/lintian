@@ -6,3 +6,4 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Description: Check for binaries in the upstream tarball
 Test-For: source-contains-prebuilt-binary
+ source-is-missing

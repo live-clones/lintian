@@ -21,7 +21,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       (Closes: #740183).
     + [BR] Detect minified js based on line length.
       (Closes: #735348).
-    + [BR] Detect missing sources for minified javascript.
+    + [BR] Detect missing sources for minified javascript, flash project,
+      flash files, and elf binary.
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.  (Closes: #738454)

@@ -91,7 +91,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         if (scalar(@sliptline) < 1 or scalar(@sliptline) > 4) {
             fail 'Syntax error in cruft/warn-file-type', $.;
         }
-        my ($regtype, $regname, $checkmissing,$transformlist) = @sliptline;
+        my ($regtype, $regname, $transformlist) = @sliptline;
 
         # allow empty regname
         $regname = defined($regname) ? strip($regname) : '';
@@ -99,27 +99,53 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
             $regname = '.*';
         }
 
-        $checkmissing //= 0;
         # build transform pair
         $transformlist //= '';
-        my @transforms = split(/\s*\&\&\s*/, $transformlist);
+        $transformlist = strip($transformlist);
+
+        my $syntaxerror = 'Syntax error in cruft/warn-file-type';
         my @transformpairs = ();
-        if(scalar(@transforms) > 0) {
-            foreach my $transform (@transforms) {
-                $transform =~ '^s/([^/]*?)/([^/]*?)/$';
-                unless(defined($1) and defined($2)) {
-                    fail
-'Syntax error in cruft/warn-file-type in transform regex',
-                      $.;
+        unless($transformlist eq '') {
+            my @transforms = split(/\s*\&\&\s*/, $transformlist);
+            if(scalar(@transforms) > 0) {
+                foreach my $transform (@transforms) {
+                    # regex transform
+                    if($transform =~ m'^s/') {
+                        $transform =~ m'^s/([^/]*?)/([^/]*?)/$';
+                        unless(defined($1) and defined($2)) {
+                            fail $syntaxerror, 'in transform regex',$.
+
+                        }
+                        push(@transformpairs,
+                            { 'match' => $1, 'replace' => $2 });
+                    } elsif ($transform =~ m'^map\s*{') {
+                        $transform
+                          =~ m#^map \s* { \s* 's/([^/]*?)/\'.\$_.'/' \s* } \s* qw\(([^\)]*)\)#x;
+                        unless(defined($1) and defined($2)) {
+                            fail $syntaxerror,'in map transform regex',$.;
+                        }
+                        my $words = $2;
+                        my $match = $1;
+                        my @wordarray = split(/\s+/,$words);
+                        if(scalar(@wordarray) == 0) {
+                            fail $syntaxerror,
+                              'in map transform regex : no qw arg',$.;
+                        }
+                        foreach my $word (@wordarray) {
+                            push(@transformpairs,
+                                { 'match' => $match, 'replace' => $word });
+                        }
+                    } else {
+                        fail $syntaxerror,'in last field',$.;
+                    }
                 }
-                push(@transformpairs,{ 'match' => $1, 'replace' => $2 });
             }
         }
 
         return {
             'regtype'   => qr/$regtype/x,
             'regname' => qr/$regname/x,
-            'checkmissing' => $checkmissing,
+            'checkmissing' => (not not scalar(@transformpairs)),
             'transform' => \@transformpairs,
         };
     });
@@ -156,7 +182,8 @@ sub _get_license_check_file {
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
             if(scalar(@keywordlist) < 1) {
-                fail 'Syntax error in cruft/warn-file-type. No keywords line',
+                fail
+                  'Syntax error in cruft/warn-file-type. No keywords line',
                   $.;
             }
             if($regex eq '') {
@@ -204,7 +231,7 @@ my $GFDL_FRAGMENTS = Lintian::Data->new(
           = defined($gfdlsectionsregex) ? strip($gfdlsectionsregex) : '';
 
         $secondpart //= '';
-        my ($acceptonlyinfile,$applytag) = split(/\s*\~\~\s*/, $secondpart, 2);
+        my ($acceptonlyinfile,$applytag)= split(/\s*\~\~\s*/, $secondpart, 2);
 
         $acceptonlyinfile
           = defined($acceptonlyinfile) ? strip($acceptonlyinfile) : '';
@@ -658,15 +685,18 @@ sub find_cruft {
 # try to check if source is missing
 sub check_missing_source {
     my ($file, $info, $replacementspairref) = @_;
+
+    # do not check missing source for non free
+    if($info->is_non_free) {
+        return;
+    }
+
     my @replacementspair;
     if(defined($replacementspairref)) {
         @replacementspair = @{$replacementspairref};
     }else {
         @replacementspair = ();
     }
-
-    # add do no nothing replacement
-    unshift(@replacementspair, { 'match' => '', 'replace' => '' });
 
     unless ($file->is_regular_file) {
         return;
@@ -678,10 +708,11 @@ sub check_missing_source {
 
     # try to find for each replacement
   REPLACEMENT:
-    foreach my $replacementpair (@replacementspair) {
+    foreach my $pair (@replacementspair) {
         my $newbasename = $basename;
-        my $match = $replacementpair->{'match'};
-        my $replace = $replacementpair->{'replace'};
+        my $match = $pair->{'match'};
+        my $replace = $pair->{'replace'};
+
         if($match eq '') {
             $newbasename = $basename;
         } else {
@@ -809,8 +840,9 @@ sub full_text_check {
                         tag 'source-contains-prebuilt-javascript-object',
                           $name, 'means line length is about', $linelength,
                           'characters';
-                        # now check for missing source
-                        check_missing_source($entry,$info);
+# now check for missing source it will check for the same file in well know directory
+                        my @replacement= ({ 'match' => '', 'replace' => '' });
+                        check_missing_source($entry,$info,\@replacement);
                     }
                 }
             }
@@ -860,7 +892,7 @@ sub _check_gfdl_license_problem {
         if ($gfdlsections eq '') {
             # lie in order to check more part
             tag 'license-problem-gfdl-invariants-empty', $name;
-            $licenseproblemhash->{'license-problem-gfdl-invariants-empty'} = 1;
+            $licenseproblemhash->{'license-problem-gfdl-invariants-empty'}= 1;
             return 0;
         }
     }
