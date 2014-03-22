@@ -124,6 +124,9 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         };
     });
 
+my $MISSING_DIR_SEARCH_PATH
+  =  Lintian::Data->new('cruft/missing-dir-search-path');
+
 # get javascript name
 sub _minified_javascript_name_regexp {
     my $jsv
@@ -673,10 +676,7 @@ sub check_missing_source {
     my $dirname = $file->dirname;
     my $name = $file->name;
 
-    my @listpath = ('debian/','debian/missing-sources/');
-    unshift(@listpath,$dirname);
-
-    # try to find in current dir
+    # try to find for each replacement
   REPLACEMENT:
     foreach my $replacementpair (@replacementspair) {
         my $newbasename = $basename;
@@ -693,24 +693,30 @@ sub check_missing_source {
         }
         # now try for each path
       PATH:
-        foreach my $path (@listpath) {
-            # try to search locally then to add dirname
-            my @variants = ('');
-            unless ($path eq $dirname) {
-                unshift(@variants,$dirname);
+        foreach my $path ($MISSING_DIR_SEARCH_PATH->all) {
+            my $newpath;
+            # first replace dir name
+            $path =~ s/\$dirname/$dirname/g;
+            # absolute path
+            if(substr($path,0,1) eq '/') {
+                $path =~ s,^/+,,g;
+                $newpath = normalize_pkg_path($path.'/'.$newbasename);
             }
-
-            foreach my $variant (@variants) {
-                # add basename to list of source path
-                my $newpath = $path.$variant.$newbasename;
-                # ok we get same name => next
-                if ($newpath eq $name) {
-                    next PATH;
-                }
-                # found source return
-                if($info->index($newpath)) {
-                    return;
-                }
+            # relative path
+            else {
+                $newpath = normalize_pkg_path($dirname.'/'.$newbasename);
+            }
+            # ok we get same name => next
+            if($newpath eq $name) {
+                next PATH;
+            }
+            # do not check empty
+            if($newpath eq '') {
+                next PATH;
+            }
+            # found source return
+            if($info->index($newpath)) {
+                return;
             }
         }
     }

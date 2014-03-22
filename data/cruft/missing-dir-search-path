@@ -1,0 +1,13 @@
+# where we could find missing source leading / means relative to root package
+# $dirname will be replaced by path of current
+
+# likely in current dir
+./
+# for binary object build by libtools
+../
+# libtool
+/.libs/
+# for missing source set in debian
+/debian/
+/debian/missing-sources/
+/debian/missing-sources/$dirname
