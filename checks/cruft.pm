@@ -647,7 +647,7 @@ sub find_cruft {
             }
             close($fd);
         }
-        full_text_check($info, $name, $info->unpacked($entry));
+        full_text_check($entry, $info, $name, $info->unpacked($entry));
     }
     return;
 }
@@ -722,7 +722,7 @@ sub check_missing_source {
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub full_text_check {
-    my ($info, $name, $path) = @_;
+    my ($entry, $info, $name, $path) = @_;
 
     my $isjsfile = ($name =~ m/\.js/) ? 1 : 0;
     if($isjsfile) {
@@ -803,6 +803,8 @@ sub full_text_check {
                         tag 'source-contains-prebuilt-javascript-object',
                           $name, 'means line length is about', $linelength,
                           'characters';
+                        # now check for missing source
+                        check_missing_source($entry,$info);
                     }
                 }
             }
