@@ -72,6 +72,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * frontend/lintian:
     + [NT] Fix a regression in argument handling after the first
       non-option.  This problem was introduced in 2.5.18.
+    + [NT] Let --color default to "auto".
 
   * lib/Lintian/Collect/Source.pm:
     + [NT] Apply patch from Mathieu Parent to make "binaries" return

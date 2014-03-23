@@ -880,9 +880,9 @@ if ($opt{'LINTIAN_CFG'}) {
 }
 
 # check permitted values for --color / color
-#  - We set the default to 'never' here; because we cannot do
+#  - We set the default to 'auto' here; because we cannot do
 #    it before the config check.
-$opt{'color'} = 'never' unless defined $opt{'color'};
+$opt{'color'} = 'auto' unless defined $opt{'color'};
 if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
     die join(q{ },
         'The color value must be one of',
