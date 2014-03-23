@@ -14,21 +14,28 @@ up development, there are various options to limit the tests to run.
 =head1 DESCRIPTION
 
 The Lintian test suite is an extensive collection of various test
-cases.  The test suite is divided into 5 "sub-suites".  The majority
+cases.  The test suite is divided into 4 "sub-suites".  The majority
 of all tests are currently located in the "tests" sub-suite.
 
 To run the full suite in all of its glory, simply invoke:
 
  $ debian/rules runtests
 
+ OR
+
+ $ mkdir -p debian/test-out
+ $ t/runtests -k --dump-logs t debian/test-out
+
 But while writing a new tag (or check) you probably only want to run a
 particular (subset of the) test(s).  See L</Running a subset of the
 tests> for the available options.
 
-The test suite respects the "DEB_BUILD_OPTIONS=parallel=n", though "n"
-denotes the amount of "worker" threads.  The test runner will
-generally have 2 threads more than that.  Also each "worker" will run
-lintian, which runs multiple unpacking jobs in parallel as well.
+When run via I<debian/rules>, the test suite respects the
+"DEB_BUILD_OPTIONS=parallel=N". When using I<t/runtests> directly, use
+I<-jN> to choose the number of threads.  Note that "N" denotes the
+amount of "worker" threads.  The test runner will generally have 2
+threads more than that.  Also each "worker" will run lintian, which
+runs multiple unpacking jobs in parallel as well.
 
 In case you are wondering about the 2 extra threads in the test
 runner, the first of them is the "coordinator"-thread (which will
@@ -47,11 +54,19 @@ To run a single test by its name, use:
 
  $ debian/rules runtests onlyrun=$name
 
+ OR
+
+ $ t/runtests --dump-logs t debian/test-out $name
+
 =item Running all tests for a check
 
 To run all tests for a given check, use:
 
  $ debian/rules runtests onlyrun=$check
+
+ OR
+
+ $ t/runtests --dump-logs -k t debian/test-out $check
 
 $check must be the name of a check (it will test for
 checks/$check.desc) or "legacy".  This will run all tests that starts
@@ -66,6 +81,10 @@ To run all tests in a given sub-suite, use:
 
  $ debian/rules runtests onlyrun=suite:$suites
 
+ OR
+
+ $ t/runtests --dump-logs -k t debian/test-out suite:$suites
+
 $suites is a comma-separated list of names of sub-suites to run.
 
 Note: this cannot be used to influence the order, in which the sub-suites
@@ -78,11 +97,51 @@ tag, use:
 
  $ debian/rules runtests onlyrun=tag:$tag
 
-Alternatively:
+ OR
 
- $ debian/rules check-tag tag=$tag
+ $ t/runtests --dump-logs -k t debian/test-out tag:$tag
 
 =back
+
+=head2 Running tests under coverage
+
+It is possible to run most of the tests under L<Devel::Cover>.  This is
+done by passing I<--coverage> to I<t/runtests>.  Example:
+
+  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out
+
+Please note that L<Devel::Cover> does not seem to handle multiple
+threads too well.  You may see spurious warnings/errors if you run the
+tests with 2 or more active worker threads.
+
+B<Caveat> 1: Coverage for collections (i.e. programs in I<collection/>)
+does not seem to work at the moment. Therefore, they often end up with
+(next to) zero coverage in the generated reports.
+
+B<Caveat> 2: L<Devel::Cover> sometimes changes the output of Lintian
+or tools called by Lintian. Obviously, this leads to test
+failures. Therefore, you may see weird test failures (or warnings)
+when running under coverage.
+
+=head3 Collecting the coverage you want in a reasonable time
+
+Collecting coverage is excruciatingly slow.  This is not helped by the
+fact that it becomes unreliable when run under 2 or more threads.
+
+Fortunately, L<Devel::Cover> "appends" to its cover database.  This
+allows you to "slowly" build up the coverage database over multiple
+runs. Example:
+
+  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:scripts
+  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:debs
+  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out suite:source
+  ...
+
+Or:
+
+  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out $check
+  $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out legacy
+
 
 =cut
 
