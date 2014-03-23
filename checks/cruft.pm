@@ -690,8 +690,6 @@ sub check_missing_source {
     my @replacementspair;
     if(defined($replacementspairref)) {
         @replacementspair = @{$replacementspairref};
-    }else {
-        @replacementspair = ();
     }
 
     unless ($file->is_regular_file) {
@@ -704,11 +702,10 @@ sub check_missing_source {
 
     # try to find for each replacement
   REPLACEMENT:
-    foreach my $pair (0..@replacementspair-1) {
+    foreach my $pair (@replacementspair) {
         my $newbasename = $basename;
 
-        my $match = $replacementspair[$pair][0];
-        my $replace = $replacementspair[$pair][1];
+        my ($match, $replace) = @{$pair};
 
         if($match eq '') {
             $newbasename = $basename;
