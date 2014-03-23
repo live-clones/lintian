@@ -109,7 +109,6 @@ sub usage {
     my ($exitcode) = @_;
     print unquote(<<"END");
 :       Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test-selection>]
-:              $0 [options] [-j [<jobs>]] [-t <tag>] <testset-directory> <testing-directory>
 :
 :         --coverage  Run Lintian under Devel::Cover (Warning: painfully slow)
 :         -d          Display additional debugging information
@@ -118,7 +117,6 @@ sub usage {
 :                     If -j is passed without specifying <jobs>, the number
 :                     of jobs started is <nproc>+1.
 :         -k          Do not stop after one failed test
-:         -t <tag>    Run only tests for or against <tag>
 :         -v          Be more verbose
 :         --help, -h  Print this help and exit
 :
@@ -167,7 +165,6 @@ GetOptions(
     'd|debug'      => \$DEBUG,
     'j|jobs:i'     => \$JOBS,
     'k|keep-going' => \$run_all_tests,
-    't|tag=s'      => \$tag,
     'dump-logs!'   => \$DUMP_LOGS,
     'v|verbose'    => \$VERBOSE,
     'coverage:s'   => \$coverage,
@@ -179,9 +176,6 @@ if ($#ARGV < 1 || $#ARGV > 2) {
 }
 my $singletest;
 ($TESTSET, $RUNDIR, $singletest) = @ARGV;
-if ($tag and $singletest) {
-    usage;
-}
 if (-d $RUNDIR) {
     my $abs = Cwd::abs_path($RUNDIR);
     fail("Cannot resolve $RUNDIR: $!")
