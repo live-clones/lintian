@@ -8,6 +8,8 @@ E: filenames: dir-or-file-in-srv srv/foo/
 E: filenames: dir-or-file-in-srv srv/foo/bar
 E: filenames: dir-or-file-in-var-www var/www/foo
 E: filenames: file-in-etc-not-marked-as-conffile etc/gconf/schemas/test.schema
+E: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm?l
+E: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm\?l
 E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 E: filenames: no-copyright-file
@@ -98,9 +100,6 @@ W: filenames: file-in-unusual-dir files/svk-commitsEr9P.tmp
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: file-in-usr-lib-sgml usr/lib/sgml/package
 W: filenames: file-name-ends-in-whitespace files/'\ 
-W: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm?l
-W: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm\?l
-W: filenames: file-name-is-not-valid-UTF-8 usr/share/doc/filenames/bokm\\?l
 W: filenames: gz-file-not-gzip usr/share/filenames/prototype.js.gz
 W: filenames: macos-ds-store-file-in-package usr/share/doc/filenames/.DS_Store
 W: filenames: macos-resource-fork-file-in-package usr/share/doc/filenames/._NEWS.Debian

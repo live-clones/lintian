@@ -94,10 +94,8 @@ binary-indep:
 
 	echo foo > debian/tmp/usr/share/doc/filenames/bokmÃ¥l
 	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\Ã¥l
-	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\\\Ã¥l
 	echo foo > debian/tmp/usr/share/doc/filenames/bokmål
 	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\ål
-	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\\\ål
 
 	echo foo > debian/tmp/usr/share/doc/filenames/Thumbs.db
 	echo foo > debian/tmp/usr/share/doc/filenames/.DS_Store
