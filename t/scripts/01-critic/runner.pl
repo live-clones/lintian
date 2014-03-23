@@ -23,6 +23,11 @@ plan skip_all => 'Only UNRELEASED versions are criticised'
 eval 'use Test::Perl::Critic 1.00';
 plan skip_all => 'Test::Perl::Critic 1.00 required to run this test' if $@;
 
+eval 'use Perl::Tidy 20130922';
+# Actually we could just disable the perltidy check, but I am not
+# sure how to do that without making it ignore our perlcriticrc file.
+plan skip_all => 'Perl::Tidy 20130922 required to run this test' if $@;
+
 eval 'use PPIx::Regexp';
 diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
