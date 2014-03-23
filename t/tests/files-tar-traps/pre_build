@@ -1,0 +1,15 @@
+#!/bin/sh
+dir="$1/strangename"
+mkdir -p "$dir"
+
+# All file names are quoted twice, once for the shell and once for tar
+# (-T)
+
+# File named <quote><backslash><space>
+echo "foo" > "$dir/'\\ "
+# File named <backslash>
+echo "bar" > "$dir/\\"
+# File named <backslash><backslash>
+# - causes md5sums-lists-nonexistent-file
+#   (TODO: debug why, but for now leave it out)
+#echo "bar" > "$dir/\\\\"
