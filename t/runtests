@@ -153,9 +153,15 @@ my $singletest;
 if ($tag and $singletest) {
     usage;
 }
-unless (-d $RUNDIR) {
+if (-d $RUNDIR) {
+    my $abs = Cwd::abs_path($RUNDIR);
+    fail("Cannot resolve $RUNDIR: $!")
+      if not defined($abs);
+    $RUNDIR = $abs;
+} else {
     fail("test directory $RUNDIR does not exist");
 }
+
 unless (-d $TESTSET) {
     fail("test set directory $TESTSET does not exist");
 }
