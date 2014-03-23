@@ -54,7 +54,7 @@ can find the Lintian User's Manual in:
     $ less /usr/share/doc/lintian/lintian.txt.gz
 
 Alternatively, Debian provides an on-line version of the manual on
-the [Lintian Web site][online-manual].
+the [Lintian web site][online-manual].
 
 [online-manual]: http://lintian.debian.org/manual/index.html
 
@@ -100,6 +100,12 @@ From there, you might want to start with "Lintian::Tutorial".  If you
 prefer to use perldoc (or want to improve the tutorials), you can find
 the source files for the tutorial in doc/tutorial.
 
+There is also an online copy on the [Lintian web site][online-api-docs].
+Note that the online copy does not necessarily reflect the API of the
+current development version of Lintian.  Instead, it is the API of
+Lintian when it was last updated on the Lintian web site.
+
+[online-api-docs]: http://lintian.debian.org/library-api/index.html
 
 Feedback
 ========
