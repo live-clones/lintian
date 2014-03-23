@@ -787,8 +787,7 @@ sub full_text_check {
     # some js file comments are really really long
     my $sfd
       = Lintian::SlidingWindow->new($fd, \&lc_block,$isjsfile ? 8092 : 4096);
-    my %licenseproblemhash = ();
-    my $cleanjsblock = '';
+    my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window
     # for efficiency.  We store two blocks in @queue and the whole
@@ -796,8 +795,7 @@ sub full_text_check {
     # per file
   BLOCK:
     while (my $block = $sfd->readwindow()) {
-        my $cleanedblock;
-        my %matchedkeyword;
+        my ($cleanedblock, %matchedkeyword);
         my $blocknumber = $sfd->blocknumber();
 
         if(
