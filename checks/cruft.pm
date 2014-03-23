@@ -116,8 +116,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
                             fail $syntaxerror, 'in transform regex',$.
 
                         }
-                        push(@transformpairs,
-                            { 'match' => $1, 'replace' => $2 });
+                        push(@transformpairs,[$1,$2]);
                     } elsif ($transform =~ m'^map\s*{') {
                         $transform
                           =~ m#^map \s* { \s* 's/([^/]*?)/\'.\$_.'/' \s* } \s* qw\(([^\)]*)\)#x;
@@ -132,8 +131,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
                               'in map transform regex : no qw arg',$.;
                         }
                         foreach my $word (@wordarray) {
-                            push(@transformpairs,
-                                { 'match' => $match, 'replace' => $word });
+                            push(@transformpairs,[$match, $word]);
                         }
                     } else {
                         fail $syntaxerror,'in last field',$.;
@@ -169,8 +167,9 @@ sub _get_license_check_file {
         qr/\s*\~\~\s*/,
         sub {
             my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
+            my $syntaxerror = 'Syntax error in '.$filename;
             if(scalar(@splitline) > 5 or scalar(@splitline) <2) {
-                fail 'Syntax error in cruft/warn-file-type', $.;
+                fail $syntaxerror, $.;
             }
             my ($keywords, $sentence, $regex, $firstregex, $callsub)
               = @splitline;
@@ -182,9 +181,7 @@ sub _get_license_check_file {
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
             if(scalar(@keywordlist) < 1) {
-                fail
-                  'Syntax error in cruft/warn-file-type. No keywords line',
-                  $.;
+                fail $syntaxerror, 'No keywords line', $.;
             }
             if($regex eq '') {
                 $regex = '.*';
@@ -202,8 +199,7 @@ sub _get_license_check_file {
                 if($callsub eq '_check_gfdl_license_problem') {
                     $ret{'callsub'} = \&_check_gfdl_license_problem;
                 }else {
-                    fail 'Syntax error in cruft/warn-file-type. Unknown sub',
-                      $.;
+                    fail $syntaxerror, 'Unknown sub', $.;
                 }
             }
             return \%ret;
@@ -708,10 +704,11 @@ sub check_missing_source {
 
     # try to find for each replacement
   REPLACEMENT:
-    foreach my $pair (@replacementspair) {
+    foreach my $pair (0..@replacementspair-1) {
         my $newbasename = $basename;
-        my $match = $pair->{'match'};
-        my $replace = $pair->{'replace'};
+
+        my $match = $replacementspair[$pair][0];
+        my $replace = $replacementspair[$pair][1];
 
         if($match eq '') {
             $newbasename = $basename;
@@ -840,8 +837,7 @@ sub full_text_check {
                           'characters';
                         # Check for missing source.  It will check
                         # for the source file in well known directories
-                        my @replacement= ({ 'match' => '', 'replace' => '' });
-                        check_missing_source($entry,$info,\@replacement);
+                        check_missing_source($entry,$info,[['','']]);
                     }
                 }
             }
