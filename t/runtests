@@ -103,6 +103,8 @@ my %TEMPLATES = (
 my $DATE = `date -R`;
 chomp $DATE;
 
+my $output_is_tty = -t STDOUT;
+
 # --- Usage information
 
 sub usage {
@@ -1072,7 +1074,9 @@ sub _msg_qh {
             push @output, $p;
         }
         my $output = join(' || ', @output);
-        printf "%-${length}s\r", $output;
+        # Only use \r (etc.) if the output seems to be a terminal
+        # - This is to make build logs more readable.
+        printf "%-${length}s\r", $output if $output_is_tty;
         $length = length($output);
     }
     # This should not be reachable, but perlcritic doesn't know that.
