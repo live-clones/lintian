@@ -116,6 +116,12 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * reporting/{lintian.css => templates/lintian.css.tmpl}:
     + [NT] Rename file and make it a template.
 
+  * t/runtests:
+    + [NT] Cache test artifacts and reuse them in subsequent
+      runs.  This removes the majority of the runtime
+      overhead of running the test suite on subsequent runs.
+      (Closes: #699083)
+
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 31 Jan 2014 23:05:01 +0100
 
 lintian (2.5.21) unstable; urgency=medium
