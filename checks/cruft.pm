@@ -838,7 +838,8 @@ sub full_text_check {
                         tag 'source-contains-prebuilt-javascript-object',
                           $name, 'means line length is about', $linelength,
                           'characters';
-# now check for missing source it will check for the same file in well know directory
+                        # Check for missing source.  It will check
+                        # for the source file in well known directories
                         my @replacement= ({ 'match' => '', 'replace' => '' });
                         check_missing_source($entry,$info,\@replacement);
                     }
