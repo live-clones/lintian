@@ -28,6 +28,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       file-name-in-PATH-is-not-ASCII to error
       (see policy 10.10), thanks to Helmut Grohne.
       (Closes: #739347)
+    + [BR] Improve privacy-breach tags wording, thanks to Paul Wise.
+      (Closes: #738176)
   * checks/menu-format.desc:
     + [NT] Apply patch from Charles Plessy to correct an URL
       in a tag reference.  (Closes: #738454)

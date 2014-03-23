@@ -935,6 +935,13 @@ Experimental: yes
 Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-google-adsense
 Severity: serious
@@ -950,6 +957,13 @@ Info: This package creates a privacy breach by using Google AdSense.
  Note that using Google AdSense in a local copy of a page is a violation of
  the Google AdSense terms of use. This violation renders this package not
  distributable in Debian, and is thus a serious bug.
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-donation
 Severity: serious
@@ -959,7 +973,14 @@ Info: This package create a potential privacy breach by fetching data
  from a donation website at runtime.
  .
  Please remove this privacy problem and add a note to the
- debian/upstream file using the donation field.
+ debian/upstream/metadata file using the donation field.
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-logo
 Severity: serious
@@ -969,6 +990,13 @@ Info: This package creates a potential privacy breach by fetching a
  .
  Before using a local copy you should check that the logo is suitable
  for main. Ask debian-legal for advice.
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-facebook
 Severity: serious
@@ -976,7 +1004,12 @@ Certainty: possible
 Info:  This package creates a privacy breach by exchanging data with
  Facebook at runtime via plugins such as "Share" or "Like" buttons.
  .
- Please remove these scripts or frames.
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-google-cse
 Severity: serious
@@ -985,25 +1018,38 @@ Info: This package creates a potential privacy breach by fetching
  data from Google at runtime, and may feed private data to Google via
  Custom Search Engine queries.
  .
- Please remove these scripts.
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-piwik
 Severity: serious
 Certainty: possible
-Info: This package creates a privacy breach by using Piwik.
+Info: This package creates a privacy breach by using an online 
+ Piwik module.
+ .
  Piwik is a free and open source web analytics application, designed to
  allow publishers of websites to track visitors.
  .
  Even though Piwik is free and respects the "Do Not Track" browser
- option, it is nevertheless a breach of the privacy of web users.
+ option, it is nevertheless a breach of the privacy of web users,
+ by fetching data from internet.
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-statistics-website
-Severity: important
+Severity: serious
 Certainty: possible
 Info: This package creates a privacy breach by fetching data from
  an external website in order to compile visitor statistics.
- .
- Please remove these scripts.
  .
  Please ask upstream to use the free software web analytics engine
  Piwik, which respects the "Do Not Track" browser option.
@@ -1016,6 +1062,13 @@ Info: This package creates a privacy breach by fetching data from
  * statcounter.com
  * sitemeter.com
  * webstats.motigo.com
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-w3c-valid-html
 Severity: serious
