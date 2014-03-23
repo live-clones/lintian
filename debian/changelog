@@ -16,6 +16,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       cases (e.g. the linux source).  (Closes: #738342)
     + [BR] Factorize GFDL detection. Detect non official
       wordings of GFDL invariant section.  (Closes: #717916).
+      Fix some old false positives.
+      (Closes: #742260, #741212).
     + [BR] Add opentoken non official wording for GFDL
       invariant section, thanks to Nicolas Boulenguez.
       (Closes: #740183).
