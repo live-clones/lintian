@@ -106,22 +106,50 @@ chomp $DATE;
 # --- Usage information
 
 sub usage {
+    my ($exitcode) = @_;
     print unquote(<<"END");
-:       Usage: $0 [-dkv] [-j [<jobs>]] <testset-directory> <testing-directory> [<test>]
-:              $0 [-dkv] [-j [<jobs>]] [-t <tag>] <testset-directory> <testing-directory>
+:       Usage: $0 [options] [-j [<jobs>]] <testset-directory> <testing-directory> [<test-selection>]
+:              $0 [options] [-j [<jobs>]] [-t <tag>] <testset-directory> <testing-directory>
 :
+:         --coverage  Run Lintian under Devel::Cover (Warning: painfully slow)
 :         -d          Display additional debugging information
+:         --dump-logs Print build log to STDOUT, if a build fails.
 :         -j [<jobs>] Run up to <jobs> jobs in parallel.
 :                     If -j is passed without specifying <jobs>, the number
 :                     of jobs started is <nproc>+1.
 :         -k          Do not stop after one failed test
 :         -t <tag>    Run only tests for or against <tag>
 :         -v          Be more verbose
+:         --help, -h  Print this help and exit
 :
-:       The optional 3rd parameter causes runtests to only run that particular
-:       test.
+:       The optional 3rd parameter causes runtests to only run tests that match
+:       the particular selection.  This parameter can be one of:
+:
+:          * <testname>
+:            - Run the test(s) named exactly <testname>.  Note that each suite
+:              can reuse the name of the test, so this may run more than one
+:              test.
+:          * <dir-in-scripts-suite>
+:            - Run all "scripts"-tests within a given dir.  E.g. "01-critic"
+:              will run all tests in "t/scripts/01-critic/".
+:          * <check-name>
+:            - Run all tests related to the given check.  This is based on the
+:              name of the test (i.e. it must start with "<check-name>-").
+:          * legacy
+:            - Run all "legacy" tests (i.e. t/tests/legacy-*), which were
+:              imported from the old test suite.
+:          * suite:<suite>[,<suite...>]
+:            - Run all tests in the listed suites.
+:          * tag:<tag-name>
+:            - Run any test that lists <tag-name> in "Test-For" or
+:              "Test-Against".
+:
+:
+:       Test artifacts are cached in <testing-directory> and will be reused if
+:       deemed "up-to-date".  This cache can greatly reduce the run time of the
+:       test suite.
 END
-    exit 2;
+    exit($exitcode//2);
 }
 
 # --- Parse options and arguments
@@ -143,6 +171,7 @@ GetOptions(
     'dump-logs!'   => \$DUMP_LOGS,
     'v|verbose'    => \$VERBOSE,
     'coverage:s'   => \$coverage,
+    'help|h'       => sub {usage(0); },
 ) or usage;
 
 if ($#ARGV < 1 || $#ARGV > 2) {
