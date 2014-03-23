@@ -446,7 +446,8 @@ sub test_package {
     if ($testdata->{'test-depends'}) {
         my $missing = check_test_depends($testdata);
         if ($missing) {
-            return skip_test($suite, $testname, "Missing Depends: $missing");
+            return skip_test($suite, $testname,
+                "Unsatisified Depends: $missing");
         }
     }
 
