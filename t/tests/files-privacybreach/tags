@@ -34,6 +34,8 @@ E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/priv
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwikvariant.html
 E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter.xml
 E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter2.js
+E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/awstat.xml
+E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/official.js
 E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacy-breach/privacy-breach-w3c-valid-html/htmlvalid.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/applet.html 1984.os/trackme
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/div.html trackme.1984/index-2.html

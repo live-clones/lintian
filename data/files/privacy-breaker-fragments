@@ -13,3 +13,4 @@ privacy-breach-donation           ~~(?:api\.flattr\.com/js/\d(\.\d)?/load\.js|<a
 privacy-breach-facebook           ~~(?:facebook-jssdk|FB\.(?:Canvas|api|init|login|getLoginStatus|Event|ui|XFBML)|xmlns:fb\s*=\s*"https?://(?:www\.facebook\.com/20\d\d/fbml|ogp\.me/ns/fb\#?)"|</?fb:(?:activity|comments|friendpile|like|like-box|login-button|name|profile-pic|recommendations)\s+[^>]*>)
 privacy-breach-piwik              ~~(?:piwik_url\s*=|pkBaseURL\s*=|[\'"]piwik\.js[\'\"]|End\s+Piwik\h+(?:Tag|Code)|[\'\"]setTrackerUrl[\'\"])
 privacy-breach-statistics-website ~~(?:var\s+sc_project\s*=\s*\d+\s*;)
+privacy-breach-twitter            ~~(?:src\s*=\s*["']https?|[+]\s*['"])://platform\.twitter\.com/widgets\.js['"]

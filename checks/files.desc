@@ -1015,7 +1015,7 @@ Tag: privacy-breach-google-plus
 Severity: serious
 Certainty: possible
 Info: This package creates a potential privacy breach by 
- exchanging data with Facebook at runtime via plugins such
+ exchanging data with google+ at runtime via plugins such
  as "+1" buttons.
  .
  Please replace any scripts, images or other remote resources with
@@ -1039,6 +1039,18 @@ Info: This package creates a potential privacy breach by fetching
  that the remote resources are suitable for Debian main before making
  local copies of them.
 
+Tag: privacy-breach-twitter
+Severity: serious
+Certainty: possible
+Info: This package creates a potential privacy breach by
+ exchanging data with twitter at runtime via plugins.
+ .
+ Please replace any scripts, images or other remote resources with
+ non-remote resources. It is preferrable to replace them with text and
+ links but local copies of the remote resources are also acceptable as
+ long as they don't also make calls to remote services. Please ensure
+ that the remote resources are suitable for Debian main before making
+ local copies of them.
 
 Tag: privacy-breach-piwik
 Severity: serious
