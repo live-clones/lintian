@@ -1,4 +1,5 @@
-dh_config_model_upgrade
+dh_apache2
+dh_cme_upgrade
 dh_dkms
 dh_gconf
 dh_gtkmodules
@@ -6,7 +7,6 @@ dh_installcatalogs
 dh_installdebconf
 dh_installdocs
 dh_installgsettings
-dh_installinfo
 dh_installlisting
 dh_installtex
 dh_installxfonts
@@ -15,6 +15,8 @@ dh_linktree
 dh_lisp
 dh_nativejava
 dh_pangomodules
+dh_php5
 dh_pidgin
 dh_pyppd
+dh_systemd_enable
 dh_ucf

@@ -56,6 +56,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Refresh several architecture data files against
       dpkg 1.17.5.  Thanks to James Hunt for the reminder.
       (Closes: #735266)
+    + [NT] Refresh several data files with data from sid.
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of liblivemedia, libgadu, libssh,
       libssh2, freetype, nss, and nspr.

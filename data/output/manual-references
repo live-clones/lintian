@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2013-06-30
+# Last updated: 2014-03-23
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -15,7 +15,7 @@ debconf-spec::aen30::Configuration Data::http://www.debian.org/doc/packaging-man
 debconf-spec::aen45::Templates::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN45
 debconf-spec::aen101::Configuration frontends::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN101
 debconf-spec::aen106::Communication with the frontend::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN106
-debconf-spec::aen275::Debian install-time configuration::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN275
+debconf-spec::aen283::Debian install-time configuration::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN283
 devref::::Debian Developer's Reference::http://www.debian.org/doc/developers-reference/
 devref::1::Scope of This Document::http://www.debian.org/doc/developers-reference/scope.html
 devref::2::Applying to Become a Maintainer::http://www.debian.org/doc/developers-reference/new-maintainer.html
@@ -445,15 +445,16 @@ fhs::scope::Scope::http://www.pathname.com/fhs/pub/fhs-2.3.html#SCOPE
 fhs::acknowledgments::Acknowledgments::http://www.pathname.com/fhs/pub/fhs-2.3.html#ACKNOWLEDGMENTS
 fhs::contributors::Contributors::http://www.pathname.com/fhs/pub/fhs-2.3.html#CONTRIBUTORS
 java-policy::::Debian policy for Java::http://www.debian.org/doc/packaging-manuals/java-policy/
-java-policy::1::Background::http://www.debian.org/doc/packaging-manuals/java-policy/c35.html
-java-policy::2::Policy::http://www.debian.org/doc/packaging-manuals/java-policy/c43.html
-java-policy::2.1::Virtual machines::http://www.debian.org/doc/packaging-manuals/java-policy/c43.html#policy-vm
-java-policy::2.2::Java programs::http://www.debian.org/doc/packaging-manuals/java-policy/x85.html
-java-policy::2.3::Java libraries::http://www.debian.org/doc/packaging-manuals/java-policy/x104.html
-java-policy::2.4::Native Java Bytecode (gcj packages)::http://www.debian.org/doc/packaging-manuals/java-policy/x145.html
-java-policy::2.5::Main, contrib or non-free::http://www.debian.org/doc/packaging-manuals/java-policy/x169.html
-java-policy::3::Issues to discuss::http://www.debian.org/doc/packaging-manuals/java-policy/c180.html
-java-policy::4::Advices to Java packagers::http://www.debian.org/doc/packaging-manuals/java-policy/c208.html
+java-policy::1::Background::http://www.debian.org/doc/packaging-manuals/java-policy/c42.html
+java-policy::2::Policy::http://www.debian.org/doc/packaging-manuals/java-policy/c50.html
+java-policy::2.1::Virtual machines::http://www.debian.org/doc/packaging-manuals/java-policy/c50.html#policy-vm
+java-policy::2.2::Building Java packages::http://www.debian.org/doc/packaging-manuals/java-policy/x84.html
+java-policy::2.3::Java programs::http://www.debian.org/doc/packaging-manuals/java-policy/x95.html
+java-policy::2.4::Java libraries::http://www.debian.org/doc/packaging-manuals/java-policy/x110.html
+java-policy::2.5::Native Java Bytecode (gcj packages)::http://www.debian.org/doc/packaging-manuals/java-policy/x155.html
+java-policy::2.6::Main, contrib or non-free::http://www.debian.org/doc/packaging-manuals/java-policy/x179.html
+java-policy::3::Issues to discuss::http://www.debian.org/doc/packaging-manuals/java-policy/c186.html
+java-policy::4::Advices to Java packagers::http://www.debian.org/doc/packaging-manuals/java-policy/c213.html
 lintian::::Lintian User's Manual::http://lintian.debian.org/manual/
 lintian::1::Introduction::http://lintian.debian.org/manual/chapter-1.html
 lintian::1.1::About Lintian::http://lintian.debian.org/manual/chapter-1.html#section-1.1
@@ -604,6 +605,7 @@ policy::5.4::Debian source control files -- .dsc::http://www.debian.org/doc/debi
 policy::5.5::Debian changes files -- .changes::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-debianchangesfiles
 policy::5.6::List of fields::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlfieldslist
 policy::5.7::User-defined fields::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s5.7
+policy::5.8::Obsolete fields::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-obsolete-control-data-fields
 policy::6.1::Introduction to package maintainer scripts::http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s6.1
 policy::6.2::Maintainer scripts idempotency::http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-idempotency
 policy::6.3::Controlling terminal for maintainer scripts::http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-controllingterminal
@@ -646,6 +648,7 @@ policy::10.6::Device files::http://www.debian.org/doc/debian-policy/ch-files.htm
 policy::10.7::Configuration files::http://www.debian.org/doc/debian-policy/ch-files.html#s-config-files
 policy::10.8::Log files::http://www.debian.org/doc/debian-policy/ch-files.html#s10.8
 policy::10.9::Permissions and owners::http://www.debian.org/doc/debian-policy/ch-files.html#s-permissions-owners
+policy::10.10::File names::http://www.debian.org/doc/debian-policy/ch-files.html#s-filenames
 policy::11.1::Architecture specification strings::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-arch-spec
 policy::11.2::Daemons::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.2
 policy::11.3::Using pseudo-ttys and modifying wtmp, utmp and lastlog::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.3
@@ -708,8 +711,12 @@ policy::5.6.21::Files::http://www.debian.org/doc/debian-policy/ch-controlfields.
 policy::5.6.22::Closes::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Closes
 policy::5.6.23::Homepage::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Homepage
 policy::5.6.24::Checksums-Sha1 and Checksums-Sha256::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Checksums
-policy::5.6.25::DM-Upload-Allowed::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-DM-Upload-Allowed
+policy::5.6.25::DM-Upload-Allowed::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s5.6.25
 policy::5.6.26::Version Control System (VCS) fields::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-VCS-fields
+policy::5.6.27::Package-List::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Package-List
+policy::5.6.28::Package-Type::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Package-Type
+policy::5.6.29::Dgit::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Dgit
+policy::5.8.1::DM-Upload-Allowed::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-DM-Upload-Allowed
 policy::7.6.1::Overwriting files in other packages::http://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.1
 policy::7.6.2::Replacing whole packages, forcing their removal::http://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.2
 policy::8.1.1::ldconfig::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-ldconfig
