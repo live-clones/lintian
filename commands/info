@@ -74,10 +74,12 @@ Getopt::Long::GetOptions(%opthash) or die("error parsing options\n");
 
 # help
 if ($help) {
-    print <<'EOT';
-Usage: lintian-info [log-file...] ...
-       lintian-info --annotate [overrides ...]
-       lintian-info --tags tag ...
+    my $me = 'dplint info';
+    $me = 'lintian-info' if compat;
+    print <<"EOT";
+Usage: $me [log-file...] ...
+       $me --annotate [overrides ...]
+       $me --tags tag ...
 
 Options:
     -a, --annotate    display descriptions of tags in Lintian overrides
