@@ -26,6 +26,9 @@ E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseformtracking.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseimagemagick.js
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecsejs.xml
+E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/asyncload.html
+E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/explicitload.html
+E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/simplebutton.xml
 E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/logosourceforge.xml
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwikvariant.html
@@ -48,3 +51,5 @@ X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/pr
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/track.html 1984.os/notracking.vtt
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/video.html 1984.os/tuxistrackingme.ogg
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/videoposter.html 1984.os/tuxistrackingme.ogg
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-google-plus/asyncload.html www.example.com
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-google-plus/explicitload.html www.example.com

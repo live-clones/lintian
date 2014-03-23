@@ -68,6 +68,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
   * data/files/privacy*:
     + [BR] Improve detection of privacy-breach-google-cse, thanks to
       Paul Wise (Closes: #739247).
+    + [BR] Detect google+, thanks to Paul Wise.
+      (Closes: #738175).
   * data/scripts/maintainer-script-bad-command:
     + [BR] Fix false positive
       maintainer-script-should-not-use-adduser-system-without-home
