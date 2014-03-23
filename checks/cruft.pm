@@ -761,12 +761,6 @@ sub check_missing_source {
 sub full_text_check {
     my ($entry, $info, $name, $path) = @_;
 
-    my $isjsfile = ($name =~ m/\.js/) ? 1 : 0;
-    if($isjsfile) {
-        my $minjsregexp =  _minified_javascript_name_regexp();
-        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
-    }
-
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
     # appear there it is probably just "file XXX got removed
@@ -775,6 +769,12 @@ sub full_text_check {
         or $name eq 'debian/README.Debian'
         or $name eq 'debian/README.source') {
         return;
+    }
+
+    my $isjsfile = ($name =~ m/\.js/) ? 1 : 0;
+    if($isjsfile) {
+        my $minjsregexp =  _minified_javascript_name_regexp();
+        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
     }
 
     open(my $fd, '<:raw', $path);
