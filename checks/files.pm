@@ -1168,27 +1168,27 @@ sub run {
               if (@correction);
         }
 
+        if ($fname =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){
+            my ($dwidth, $dheight) = ($1, $2);
+            my $path;
+            if ($file->is_symlink) {
+                $path = $file->link_normalized;
+            } else {
+                $path = $fname;
+            }
+            my $fileinfo = $info->file_info($path);
+            if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
+                my ($fwidth, $fheight) = ($1, $2);
+                my $width_delta = abs($dwidth - $fwidth);
+                my $height_delta = abs($dheight - $fheight);
+                tag 'icon-size-and-directory-name-mismatch', $file,
+                  $fwidth.'x'.$fheight
+                  unless ($width_delta <= 2 && $height_delta <= 2);
+            }
+        }
+
         # ---------------- plain files
         if ($file->is_file) {
-
-            if ($fname =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){
-                my ($dwidth, $dheight) = ($1, $2);
-                my $path;
-                if ($file->is_symlink) {
-                    $path = $file->link_normalized;
-                } else {
-                    $path = $fname;
-                }
-                my $fileinfo = $info->file_info($path);
-                if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
-                    my ($fwidth, $fheight) = ($1, $2);
-                    my $width_delta = abs($dwidth - $fwidth);
-                    my $height_delta = abs($dheight - $fheight);
-                    tag 'icon-size-and-directory-name-mismatch', $file,
-                      $fwidth.'x'.$fheight
-                      unless ($width_delta <= 2 && $height_delta <= 2);
-                }
-            }
 
             if ($fname =~ m,/icons/[^/]+/scalable/.*\.(?:png|xpm)$,) {
                 tag 'raster-image-in-scalable-directory', $file;
