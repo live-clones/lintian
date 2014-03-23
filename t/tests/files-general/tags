@@ -5,6 +5,8 @@ E: files-general: config-file-reserved etc/pam.conf by libpam-runtime
 E: files-general: dir-or-file-in-var-lock var/lock/lintian/
 E: files-general: dir-or-file-in-var-run var/run/lintian/
 E: files-general: executable-manpage usr/share/man/man5/foo.5.gz
+E: files-general: file-name-in-PATH-is-not-ASCII usr/bin/?????????
+E: files-general: file-name-is-not-valid-UTF-8 usr/share/foo/bokm?l
 E: files-general: global-data-in-games-directory usr/share/games/icons/hicolor/22x22/lintian-22x22.png
 E: files-general: lengthy-symlink usr/share/doc/bar/star ../bar/foo
 E: files-general: non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
@@ -22,8 +24,6 @@ W: files-general: executable-not-elf-or-script usr/share/man/man5/foo.5.gz
 W: files-general: file-in-unusual-dir new-top-level-dir/file-in-new-top-level-dir
 W: files-general: file-in-unusual-dir var/catman/do
 W: files-general: file-name-ends-in-whitespace usr/share/foo/ws 
-W: files-general: file-name-in-PATH-is-not-ASCII usr/bin/?????????
-W: files-general: file-name-is-not-valid-UTF-8 usr/share/foo/bokm?l
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/22x22/lintian-16x16.png 16x16
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/64x64/lintian-64x64.png 22x22
 W: files-general: icon-size-and-directory-name-mismatch usr/share/icons/hicolor/22x22/apps/lintian-16x16.png 16x16
