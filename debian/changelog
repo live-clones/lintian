@@ -87,6 +87,9 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT] Fix a regression in argument handling after the first
       non-option.  This problem was introduced in 2.5.18.
     + [NT] Let --color default to "auto".
+    + [NT] Discard STDERR when running git describe to guess the
+      version of Lintian.  Avoids a warning from git tags are
+      absent from the repository.
 
   * lib/Lintian/Collect/Source.pm:
     + [NT] Apply patch from Mathieu Parent to make "binaries" return
