@@ -884,9 +884,9 @@ sub run_tests{
                 while (my $t = $q->dequeue_nb()) {
                     my $okay = eval { $code->($t); };
                     if (!$okay || $@) {
-                        if ($@) {
+                        if (my $err = $@) {
                             msg_print "FAILED\n";
-                            print STDERR "$@\n";
+                            print STDERR "$err\n";
                         }
                         exit 1 unless $run_all_tests;
                         my $name = $t;
