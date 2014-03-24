@@ -3,5 +3,8 @@ Sequence: 6000
 Version: 1.0-1
 Description: Test a 3.0 (quilt) package which has a debian-changes-XXX patch
 Type: non-native
+# dpkg-dev in Ubuntu Precise re-writes the patch header and thereby
+# triggers another tag.
+Test-Depends: dpkg-dev (>= 1.16.5~)
 Test-For:
  format-3.0-but-debian-changes-patch
