@@ -193,7 +193,12 @@ unless (-d $TESTSET) {
 
 if (defined($coverage)) {
     my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
+    # Only collect coverage for stuff that D::NYTProf and
+    # Test::Pod::Coverage cannot do for us.  This makes cover use less
+    # RAM in the other end.
+    my @criteria = qw(statement branch condition path subroutine);
     my $coverage_arg = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
+    $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
     $coverage_arg .= ',' . $coverage if $coverage ne '';
     $ENV{'LINTIAN_COVERAGE'} = 1;
     $harness_perl_switches .= ' ' . $coverage_arg;
