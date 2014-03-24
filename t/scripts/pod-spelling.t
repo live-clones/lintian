@@ -1,11 +1,15 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use autodie;
 
 use Test::More;
 
 plan skip_all => 'Not needed for coverage of Lintian'
   if $ENV{'LINTIAN_COVERAGE'};
+
+plan skip_all => 'Need newer version of aspell-en (>= 7.1)'
+  if not check_aspell();
 
 use Test::Lintian;
 
@@ -36,6 +40,25 @@ my @DIRS
   = qw(collection doc/tutorial frontend lib private reporting t/scripts t/helpers);
 
 all_pod_files_spelling_ok(@CHECKS, @DIRS, 't/runtests');
+
+sub check_aspell {
+    # Ubuntu Precise has an old aspell-en, which does not recogise
+    # "basic" stuff like "indices" or "extendable".
+    my $ok = 0;
+    open(my $fd, '-|', 'dpkg', '-l');
+    while (my $line = <$fd>) {
+        if ($line =~ m/^.i \s+ aspell-en \s+ (\S+) \s/xsm) {
+            my $version = $1;
+            require Lintian::Relation::Version;
+            import Lintian::Relation::Version qw(versions_gte);
+            # Print the version of aspell-en if it is not new enough
+            $ok = versions_gte($version, '7.1-0~') ||
+               diag("Found aspell-en $version, want 7.1-0~ or newer");
+        }
+    }
+    close($fd);
+    return $ok;
+}
 
 __DATA__
 # List of extra words that aspell doesn't know, but we need it to know
