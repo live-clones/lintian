@@ -936,8 +936,8 @@ Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -975,8 +975,8 @@ Info: This package create a potential privacy breach by fetching data
  Please remove this privacy problem and add a note to the
  debian/upstream/metadata file using the donation field.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -991,8 +991,8 @@ Info: This package creates a potential privacy breach by fetching a
  Before using a local copy you should check that the logo is suitable
  for main. Ask debian-legal for advice.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1004,8 +1004,8 @@ Certainty: possible
 Info:  This package creates a privacy breach by exchanging data with
  Facebook at runtime via plugins such as "Share" or "Like" buttons.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1015,11 +1015,11 @@ Tag: privacy-breach-google-plus
 Severity: serious
 Certainty: possible
 Info: This package creates a potential privacy breach by 
- exchanging data with google+ at runtime via plugins such
+ exchanging data with Google+ at runtime via plugins such
  as "+1" buttons.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1032,8 +1032,8 @@ Info: This package creates a potential privacy breach by fetching
  data from Google at runtime, and may feed private data to Google via
  Custom Search Engine queries.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1043,10 +1043,10 @@ Tag: privacy-breach-twitter
 Severity: serious
 Certainty: possible
 Info: This package creates a potential privacy breach by
- exchanging data with twitter at runtime via plugins.
+ exchanging data with Twitter at runtime via plugins.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1062,11 +1062,11 @@ Info: This package creates a privacy breach by using an online
  allow publishers of websites to track visitors.
  .
  Even though Piwik is free and respects the "Do Not Track" browser
- option, it is nevertheless a breach of the privacy of web users,
+ option, it is nevertheless breaches the privacy of local users
  by fetching data from internet.
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1090,8 +1090,8 @@ Info: This package creates a privacy breach by fetching data from
  * sitemeter.com
  * webstats.motigo.com
  .
- Please replace any scripts, images or other remote resources with
- non-remote resources. It is preferrable to replace them with text and
+ Please replace any scripts, images, or other remote resources with
+ non-remote resources. It is preferable to replace them with text and
  links but local copies of the remote resources are also acceptable as
  long as they don't also make calls to remote services. Please ensure
  that the remote resources are suitable for Debian main before making
@@ -1111,7 +1111,7 @@ Info: This package creates a potential privacy breach by fetching W3C
  address to potential tracking.
  .
  Note that these icons are non-free and must not be copied into the
- package.  You could safely delete this W3C validation badge.
+ package. You could safely delete this W3C validation badge.
 
 Tag: embedded-feedparser-library
 Severity: normal
