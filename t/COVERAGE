@@ -1,6 +1,6 @@
-Last generated 2013-07-16
-Coverage (Tags): 941/1015 (92.71%), w. legacy tests: 1004/1015 (98.92%)
-Coverage (Checks): 36/44 (81.82%), w. legacy tests: 39/44 (88.64%)
+Last generated 2014-03-25
+Coverage (Tags): 1000/1071 (93.37%), w. legacy tests: 1060/1071 (98.97%)
+Coverage (Checks): 38/45 (84.44%), w. legacy tests: 40/45 (88.89%)
 
 The following tags are not tested by the test suite:
 
@@ -82,10 +82,6 @@ menus postrm-does-not-call-updatemenus
 po-debconf newer-debconf-templates
 po-debconf unknown-encoding-in-po-file
 
-scripts maintainer-script-ignores-errors
-scripts maintainer-script-removes-device-files
-scripts update-alternatives-remove-called-in-postrm
-
 shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
@@ -159,14 +155,11 @@ libbaz
 maintainer-scripts
   init.d-script-not-included-in-package
   init.d-script-not-marked-as-conffile
-  maintainer-script-ignores-errors
-  maintainer-script-removes-device-files
   output-of-updaterc.d-not-redirected-to-dev-null
   postrm-contains-additional-updaterc.d-calls
   postrm-does-not-call-updaterc.d-for-init.d-script
   preinst-calls-updaterc.d
   prerm-calls-updaterc.d
-  update-alternatives-remove-called-in-postrm
 
 relations
 
