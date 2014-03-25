@@ -2,6 +2,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * data/binary/embedded-libs:
+    + [RG] Detect embedded copies of libmpg123.
   * data/spelling/corrections:
     + [RG] Add "functiosn" to the list of spelling mistakes.
 
