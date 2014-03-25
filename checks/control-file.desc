@@ -209,3 +209,15 @@ Certainty: certain
 Info: The control file contains commented-out VCS-* lines, most
  probably a result of dh_make. These URLs should either be valid and
  uncommented, or removed.
+
+Tag: stageX-profile-used-but-no-binary-package-dropped
+Severity: normal
+Certainty: certain
+Info: You used a stage1 or stage2 build profile restriction in the build
+ dependencies but you did not mark any binary packages as not being built with
+ the used profile activated. Using a stage1 or stage2 build profile restriction
+ means that you intend to change the build process in a way such that some of
+ the build results will be different or not generated at all. All binary
+ packages which would provide different functionality, would be empty or not be
+ built at all under the stage1 or stage2 profiles must be marked as not being
+ generated with the Build-Profiles field.
