@@ -1,6 +1,20 @@
-lintian (2.5.22) UNRELEASED; urgency=medium
+lintian (2.5.22) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - invalid-restriction-label-in-source-relation
+      - invalid-restriction-namespace-in-source-relation
+      - invalid-restriction-term-in-source-relation
+      - license-problem-gfdl-non-official-text
+      - license-problem-non-free-RFC-BCP78
+      - privacy-breach-google-plus
+      - privacy-breach-twitter
+      - restriction-list-with-debhelper-with-conflicting-debhelper-version
+      - restriction-list-with-debhelper-without-debhelper-version
+      - restriction-list-with-versioned-dpkg-dev-conflict
+      - restriction-list-without-versioned-dpkg-dev-dependency
+      - source-is-missing
+      - stageX-profile-used-but-no-binary-package-dropped
 
   * checks/*:
     + [NT] Avoid using "I" or "we" in tag descriptions.
@@ -149,7 +163,7 @@ lintian (2.5.22) UNRELEASED; urgency=medium
     + [NT,BR] Fix test suite issues caused by a regression
       in tar 1.27.  (Closes: #739744)
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 31 Jan 2014 23:05:01 +0100
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Tue, 25 Mar 2014 22:02:50 +0100
 
 lintian (2.5.21) unstable; urgency=medium
 
