@@ -52,8 +52,8 @@ sub check_aspell {
             require Lintian::Relation::Version;
             import Lintian::Relation::Version qw(versions_gte);
             # Print the version of aspell-en if it is not new enough
-            $ok = versions_gte($version, '7.1-0~') ||
-               diag("Found aspell-en $version, want 7.1-0~ or newer");
+            $ok = versions_gte($version, '7.1-0~')
+              ||diag("Found aspell-en $version, want 7.1-0~ or newer");
         }
     }
     close($fd);
