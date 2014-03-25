@@ -122,7 +122,8 @@ sub parse_element {
         )?                              # end of optional restriction
     /x;
 
-    my ($pkgname, $march, $relop, $relver, $bdarch, $restr) = ($1, $2, $3, $4, $5, $6);
+    my ($pkgname, $march, $relop, $relver, $bdarch, $restr)
+      = ($1, $2, $3, $4, $5, $6);
     my @array;
     if (not defined($relop)) {
         # If there's no version, we don't need to do any further processing.

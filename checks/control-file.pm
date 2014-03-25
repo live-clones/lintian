@@ -303,7 +303,7 @@ sub run {
     my %used_profiles=();
     for my $field (
         qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)
-    ) {
+      ) {
         if (defined $info->source_field($field)) {
             for my $dep (split /\s*,\s*/, $info->source_field($field)) {
                 for my $alt (split /\s*\|\s*/, $dep) {
@@ -322,7 +322,7 @@ sub run {
     # find those packages that do not get built because of a certain build
     # profile
     for my $bin (@package_names) {
-        my $raw = $info->binary_field($bin, "build-profiles");
+        my $raw = $info->binary_field($bin, 'build-profiles');
         next unless $raw;
         for my $prof (split /\s+/, $raw) {
             if ($prof =~ s/^!//) {
@@ -335,7 +335,7 @@ sub run {
     # built
     while (my ($k, $v) = each(%used_profiles)) {
         tag 'stageX-profile-used-but-no-binary-package-dropped'
-          if (($k eq "stage1" || $k eq "stage2") && $v == 0);
+          if (($k eq 'stage1' || $k eq 'stage2') && $v == 0);
     }
 
     return;
