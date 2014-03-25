@@ -300,12 +300,16 @@ sub run {
 
     # check which profile names are supposedly supported according to the build
     # dependencies
-    my %used_profiles=();
+    my %used_profiles;
     for my $field (
         qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)
       ) {
-        if (defined $info->source_field($field)) {
-            for my $dep (split /\s*,\s*/, $info->source_field($field)) {
+        if (my $value = $info->source_field($field)) {
+            # If the field does not contain "profile." then skip this
+            # part.  They rarely do, so this is just a little
+            # "common-case" optimisation.
+            next if index($value, 'profile.') < 0;
+            for my $dep (split /\s*,\s*/, $value) {
                 for my $alt (split /\s*\|\s*/, $dep) {
                     while ($alt =~ /<([^>]+)>/g) {
                         for my $restr (split /\s+/, $1) {
