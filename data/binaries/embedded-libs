@@ -72,6 +72,7 @@ libtheora ||Xiph.Org libtheora\s
 
 libxml2   ||root and DTD name do not match
 ltdl      ||source=libtool ||(?m)^library already shutdown
+mpg123    ||Warning: Encountered more data after announced end of track
 ncurses   ||Not enough memory to create terminal structure
 nspr      ||(?m)^Unable to create nspr log file
 nss       ||(?m)^My Encrytion Test Data
