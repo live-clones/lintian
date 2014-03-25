@@ -663,14 +663,14 @@ Tag: restriction-list-without-versioned-dpkg-dev-dependency
 Severity: normal
 Certainty: certain
 Info: If a restriction list appears in the build dependencies, then the
- source package has to build depend on dpkg-dev (>= 1.17.2) for minimal
+ source package has to build depend on dpkg-dev (&gt;= 1.17.2) for minimal
  restriction list support.
 
 Tag: restriction-list-with-versioned-dpkg-dev-conflict
 Severity: normal
 Certainty: certain
 Info: If a restriction list appears in the build dependencies, then the
- source package has to build depend on dpkg-dev (>= 1.17.2) for minimal
+ source package has to build depend on dpkg-dev (&gt;= 1.17.2) for minimal
  restriction list support. It must not conflict with version 1.17.2.
 
 Tag: restriction-list-with-debhelper-without-debhelper-version
