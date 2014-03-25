@@ -85,6 +85,8 @@ lintian (2.5.22) UNRELEASED; urgency=medium
       due to quoting, thanks to Andreas Beckmann <anbe@debian.org>
       (Closes: #739109).
 
+  * debian/source/lintian-overrides:
+    + [NT] Override false-positive for license checks.
   * debian/tests/control:
     + [NT] Use the new @builddeps@ from autopkgtest/2.5.5
       instead of duplicating the values.

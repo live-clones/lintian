@@ -9,3 +9,5 @@ lintian source: build-depends-on-python-dev-with-no-arch-any
 # That is a comment reference to the license statement in a tag
 # description (and not the license itself).
 lintian source: license-problem-json-evil checks/cruft.desc
+# This is caused by a regex that happens to match itself.
+lintian source: license-problem-nvidia-intellectual data/cruft/non-distributable-license
