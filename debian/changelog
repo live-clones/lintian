@@ -2,6 +2,9 @@ lintian (2.5.23) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * data/spelling/corrections:
+    + [RG] Add "functiosn" to the list of spelling mistakes.
+
  -- Niels Thykier <niels@thykier.net>  Tue, 25 Mar 2014 22:51:16 +0100
 
 lintian (2.5.22) unstable; urgency=medium
