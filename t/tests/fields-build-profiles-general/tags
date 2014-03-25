@@ -1,0 +1,8 @@
+E: fields-build-profiles-general source: invalid-restriction-label-in-source-relation bar [build-depends: bpfail3 <profile.bar>]
+E: fields-build-profiles-general source: invalid-restriction-namespace-in-source-relation foo [build-depends: bpfail2 <foo.bar>]
+E: fields-build-profiles-general source: invalid-restriction-term-in-source-relation foobar [build-depends: bpfail1 <foobar>]
+W: fields-build-profiles-general source: restriction-list-with-debhelper-with-conflicting-debhelper-version
+W: fields-build-profiles-general source: restriction-list-with-debhelper-without-debhelper-version
+W: fields-build-profiles-general source: restriction-list-with-versioned-dpkg-dev-conflict
+W: fields-build-profiles-general source: restriction-list-without-versioned-dpkg-dev-dependency
+W: fields-build-profiles-general source: stageX-profile-used-but-no-binary-package-dropped

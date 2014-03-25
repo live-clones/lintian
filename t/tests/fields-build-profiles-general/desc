@@ -1,0 +1,16 @@
+Testname: fields-build-profiles-general
+Sequence: 6000
+Version: 1.0
+Description: General tests for build profiles
+# Build-profiles requires dpkg 1.17.2
+Test-Depends: dpkg (>= 1.17.2~)
+Test-For:
+ invalid-restriction-label-in-source-relation
+ invalid-restriction-namespace-in-source-relation
+ invalid-restriction-term-in-source-relation
+ restriction-list-with-debhelper-with-conflicting-debhelper-version
+ restriction-list-with-debhelper-without-debhelper-version
+ restriction-list-with-versioned-dpkg-dev-conflict
+ restriction-list-without-versioned-dpkg-dev-dependency
+ stageX-profile-used-but-no-binary-package-dropped
+References: Debian Bug#540594, Debian Bug#551793
