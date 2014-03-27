@@ -5,6 +5,7 @@
 # Copyright (C) 2000 Sean 'Shaleh' Perry
 # Copyright (C) 2002 Josip Rodin
 # Copyright (C) 2007 Russ Allbery
+# Copyright (C) 2013-2014 Bastien ROUCARIÈS
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
