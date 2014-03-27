@@ -1766,7 +1766,7 @@ sub _guess_version {
               unless exists $ENV{'IPCRUNDEBUG'};
             require IPC::Run;
             IPC::Run::run(['git', "--git-dir=$INIT_ROOT/.git", 'describe'],
-                \undef, \$guess, \undef);
+                \undef, \$guess, '2>/dev/null');
             chomp $guess;
         };
         return $guess if $guess;
