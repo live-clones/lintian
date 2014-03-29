@@ -1,0 +1,38 @@
+Subject: [Package] Some sources are not included in your package
+Package: package
+user: debian-qa@lists.debian.org
+usertags: source-is-missing
+severity: serious
+
+Hi,
+
+Your package seems to include some files that lacks source 
+in prefered forms of modification.
+
+{list of files}
+
+According to Debian Free Software Guidelines [1] (DFSG) §2: 
+ "The program must include source code, and must allow distribution 
+  in source code as well as compiled form.".
+
+This could also constitute a license violation for some copyleft licenses such as the GNU GPL.
+
+In order to solve this problem, you could:
+1. repack the origin tarball adding the missing source to it.
+2  add the source files to "debian/missing-sources" directory
+
+Both way satisfies the requirement that we ship the source. Second option
+might be preferable due to the following reasons [2]:
+ - Upstream can do it too and you could even supply a patch to them, thus full filling our social contract [3], see particularly §2.
+ - If source and non-source are in different locations, ftpmasters may
+   miss the source and (needlessly) reject the package.
+ - The source isn't duplicated in every .diff.gz/.debian.tar.* (though
+   this only really matters for larger sources).
+
+If this is a false-positive, please report a bug against Lintian.
+
+You could also ask debian-qa for more guidance.
+
+[1] https://www.debian.org/social_contract.en.html#guidelines
+[2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=736873#8
+[3] https://www.debian.org/social_contract
