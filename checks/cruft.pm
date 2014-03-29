@@ -766,7 +766,7 @@ sub full_text_check {
         return;
     }
 
-    my $isjsfile = ($name =~ m/\.js/) ? 1 : 0;
+    my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
     if($isjsfile) {
         my $minjsregexp =  _minified_javascript_name_regexp();
         $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
@@ -817,6 +817,13 @@ sub full_text_check {
         # check javascript  problem
         if($isjsfile) {
             if($blocknumber == 0) {
+                # avoid a few false positive
+                if($block =~ m/^\s* Search.setIndex \s* \( \s* { \s* objects \s* : \s * {\s*}/xms) {
+                    if($entry->basename eq 'searchindex\.js') {  
+                        tag 'source-contains-prebuilt-sphinx-documentation',$entry->dirname;
+                        return;
+                    }
+                }
                 my $strip = $block;
                 # from perl faq strip comments
                 $strip
