@@ -167,6 +167,9 @@ sub _get_license_check_file {
         $filename,
         qr/\s*\~\~\s*/,
         sub {
+            my %LICENSE_CHECK_DISPATCH_TABLE
+              = ('license-problem-gfdl-invariants' =>
+                  \&_check_gfdl_license_problem,);
             my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
             my $syntaxerror = 'Syntax error in '.$filename;
             if(scalar(@splitline) > 5 or scalar(@splitline) <2) {
@@ -197,8 +200,8 @@ sub _get_license_check_file {
                 'firstregex' => qr/$firstregex/xsm,
             );
             unless($callsub eq '') {
-                if($callsub eq '_check_gfdl_license_problem') {
-                    $ret{'callsub'} = \&_check_gfdl_license_problem;
+                if(defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
+                    $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
                 }else {
                     fail $syntaxerror, 'Unknown sub', $.;
                 }
@@ -817,13 +820,6 @@ sub full_text_check {
         # check javascript  problem
         if($isjsfile) {
             if($blocknumber == 0) {
-                # avoid a few false positive
-                if($block =~ m/^\s* Search.setIndex \s* \( \s* { \s* objects \s* : \s * {\s*}/xms) {
-                    if($entry->basename eq 'searchindex\.js') {  
-                        tag 'source-contains-prebuilt-sphinx-documentation',$entry->dirname;
-                        return;
-                    }
-                }
                 my $strip = $block;
                 # from perl faq strip comments
                 $strip

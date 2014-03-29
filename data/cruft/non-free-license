@@ -4,6 +4,7 @@
 # fourth field is a regex to use to match the license, use lower case and [ ] for space.
 # 5th field is a regex to use for the first block (by default equal to 4th field)
 # 6th field is a function to call if the field 2th to 5th match.
+# (see dispatch table %LICENSE_CHECK_DISPATCH_TABLE
 
 # json license
 license-problem-json-evil ~~ software && evil && good ~~ software shall be used for good ~~ software [ ] shall [ ] be [ ] used [ ] for [ ] good [ ]? ,? [ ]? not [ ] evil
@@ -16,4 +17,4 @@ license-problem-non-free-RFC-BCP78 ~~ license && document && bcp && restriction 
 # here to ensure that we do not emit a false positive
 # if the "redeeming" part is in the next block
 # keyword document is here in order to benefit for other license keyword and a shortcut for documentation
-license-problem-gfdl-invariants ~~ license && document && gnu && copy && documentation && included ~~ gnu free documentation license ~~ (?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ] documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?) a [ ] copy [ ] of [ ] the [ ] license [ ] is ~~ (?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|\A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ] documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?) a [ ] copy [ ] of [ ] the [ ] license [ ] is ~~ _check_gfdl_license_problem
+license-problem-gfdl-invariants ~~ license && document && gnu && copy && documentation && included ~~ gnu free documentation license ~~ (?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ] documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?) a [ ] copy [ ] of [ ] the [ ] license [ ] is ~~ (?'rawcontextbefore'(?:(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){1024}|\A(?:(?!a [ ] copy [ ] of [ ] the [ ] license [ ] is).){0,1024}|(?:[ ] copy [ ] of [ ] the [ ] license [ ] is.{0,1024}?))) gnu [ ] free [ ] documentation [ ] license (?'rawgfdlsections'(?:(?!gnu [ ] free [ ] documentation [ ] license).){0,1024}?) a [ ] copy [ ] of [ ] the [ ] license [ ] is ~~ license-problem-gfdl-invariants
