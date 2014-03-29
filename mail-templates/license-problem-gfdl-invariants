@@ -1,0 +1,26 @@
+Subject: [Package] Non free files under GFDL with invariant or front-cover or back-cover texts
+Package: Package
+Version: Version
+user: debian-qa@lists.debian.org
+usertags: gfdl-invariant
+severity: serious
+
+Hi,
+
+Your package include some files (see below) licenced under GFDL with invariant or front-cover or back-cover texts.
+
+{list of files}
+
+Per General Resolution [1] GFDL with invariant or front-cover or back-cover text is considered non-free.
+
+You could solve this problem by (see also [2]):
+- contact upstream to relicense.
+- rip the file and add it to non free (like gcc-doc).
+
+You could also ask debian-qa for more guidance.
+
+Thanks
+
+
+[1] https://www.debian.org/vote/2006/vote_001
+[2] https://wiki.debian.org/qa.debian.org/gfdlinvariant
