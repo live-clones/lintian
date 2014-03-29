@@ -834,7 +834,7 @@ sub full_text_check {
                     my $linelength = $total/($strip =~ tr/\n// + 1);
                     if($linelength > 255) {
                         tag 'source-contains-prebuilt-javascript-object',
-                          $name, 'means line length is about', int($linelength),
+                          $name, 'mean line length is about', int($linelength),
                           'characters';
                         # Check for missing source.  It will check
                         # for the source file in well known directories
