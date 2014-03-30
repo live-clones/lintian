@@ -1,3 +1,9 @@
+lintian (2.5.22.2) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary with private/generate-tag-summary
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 30 Mar 2014 22:12:06 +0200
+
 lintian (2.5.22.1) unstable; urgency=medium
 
   * checks/ocaml.{desc,pm}:
