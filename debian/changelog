@@ -15,6 +15,11 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       command-line argument "--packages-from-file", when
       the file was "-".
 
+  * lib/Lintian/Relation.pm:
+    + [JW,NT] Fix dependency-testing issues caused by too
+      greedy regular expressions in the dependency parser.
+      (Closes: #742989)
+
  -- Niels Thykier <niels@thykier.net>  Tue, 25 Mar 2014 22:51:16 +0100
 
 lintian (2.5.22) unstable; urgency=medium

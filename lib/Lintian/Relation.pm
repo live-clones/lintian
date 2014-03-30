@@ -107,17 +107,17 @@ sub parse_element {
         (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part
          \s* (<<|<=|=|>=|>>|<|>)        # relation part (3)
-         \s* (.*?)                      # version (4)
+         \s* ([^\)]+)                   # version (4)
          \s* \)                         # closing parenthesis
         )?                              # end of optional version
         (?:                             # start of optional architecture
          \s* \[                         # open bracket for architecture
-         \s* (.*?)                      # architectures (5)
+         \s* ([^\]]+)                   # architectures (5)
          \s* \]                         # closing bracket
         )?                              # end of optional architecture
         (?:                             # start of optional restriction
           \s* <                         # open bracket for restriction
-          \s* (.*?)                     # don't parse restrictions now
+          \s* ([^>,]+)                  # don't parse restrictions now
           \s* >                         # closing bracket
         )?                              # end of optional restriction
     /x;
@@ -215,8 +215,8 @@ Lintian::Relation object is empty (always satisfied).
 sub new_norestriction {
     my ($class, $relation) = @_;
     $relation = '' unless defined($relation);
-    $relation =~ s/\[[^\]]*\]//g;
-    $relation =~ s/<[^>]*>//g;
+    $relation =~ s/\[[^,\]]*\]//g;
+    $relation =~ s/<[^>,]*>//g;
     return $class->new($relation);
 }
 
