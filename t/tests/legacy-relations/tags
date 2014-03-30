@@ -60,6 +60,5 @@ W: relations: depends-on-old-emacs recommends: emacs21
 W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: redundant-bugs-field
 W: relations: redundant-origin-field
-W: relations: versioned-dependency-satisfied-by-perl depends: libthreads-shared-perl (>= 1.29)
 W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent
 W: relations: virtual-package-depends-without-real-package-depends pre-depends: awk
