@@ -1,1 +1,1 @@
-s/means line length is about [0-9]+ characters$/means line is about NUMBER characters/
+s/mean line length is about [0-9]+ characters$/mean line is about NUMBER characters/
