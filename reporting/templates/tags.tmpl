@@ -12,10 +12,21 @@
     for my $tag (sort keys %stats) {
         my $packages = $stats{$tag}{'packages'};
         my $count = $stats{$tag}{'count'};
+        my $packages_str = $packages != 1 ?
+               "$packages packages" :
+               "$packages package";
+        my $count_str = $count != 1 ? "$count tags" : "$count tag";
         my $overrides = $stats{$tag}{'overrides'};
+        my $overrides_str = '';
+        if ($overrides) {
+            if ($overrides == 1) {
+                $overrides_str = ", plus $overrides override";
+            } else {
+                $overrides_str = ", plus $overrides overrides";
+            }
+        }
         $OUT .= qq(    <li><a href="${path_prefix}tags/$tag.html">$tag</a>)
-            . " ($packages packages, $count tags"
-            . ($overrides > 0 ? ", plus $overrides overrides" : "")
+            . " ($packages_str, ${count_str}${overrides_str}"
             . ")</li>\n";
     }
 }  </ul>
