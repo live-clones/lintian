@@ -87,11 +87,10 @@ sub run {
     my $has_meta = 0;
 
     foreach my $file ($info->sorted_index) {
-        my $fileinfo = $info->file_info($file);
 
         # For each .cmxa file, there must be a matching .a file (#528367)
         $_ = $file;
-        if (s/\.cmxa$/.a/ && !$info->file_info($_)) {
+        if (s/\.cmxa$/.a/ && !$info->index($_)) {
             tag 'ocaml-dangling-cmxa', $file;
         }
 
@@ -100,8 +99,8 @@ sub run {
         if ($is_lib_package) {
             $_ = $file;
             if (   s/\.cmxs$/.cm/
-                && !$info->file_info("${_}a")
-                && !$info->file_info("${_}o")) {
+                && !$info->index("${_}a")
+                && !$info->index("${_}o")) {
                 tag 'ocaml-dangling-cmxs', $file;
             }
         }
@@ -111,7 +110,7 @@ sub run {
         # .a file in the same directory
         $_ = $file;
         if (   s/\.cmx$/.o/
-            && !$info->file_info($_)
+            && !$info->index($_)
             && !(exists $provided_o{$_})) {
             tag 'ocaml-dangling-cmx', $file;
         }
@@ -120,8 +119,8 @@ sub run {
         $_ = $file;
         if (   $is_dev_package
             && s/\.cmi$/.ml/
-            && !$info->file_info("${_}i")
-            && !$info->file_info($_)) {
+            && !$info->index("${_}i")
+            && !$info->index($_)) {
             $cmi_number++;
             if ($cmi_number <= $MAX_CMI) {
                 tag 'ocaml-dangling-cmi', $file;
@@ -140,7 +139,7 @@ sub run {
 
         # $somename.cmo should usually not be shipped with $somename.cma
         $_ = $file;
-        if (s/\.cma$/.cmo/ && $info->file_info($_)) {
+        if (s/\.cma$/.cmo/ && $info->index($_)) {
             tag 'ocaml-stray-cmo', $file;
         }
 
