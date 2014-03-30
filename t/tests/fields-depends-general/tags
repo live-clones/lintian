@@ -17,5 +17,5 @@ W: fields-depends-general: depends-on-old-emacs depends: emacs21
 W: fields-depends-general: depends-on-old-emacs depends: emacs22
 W: fields-depends-general: depends-on-packaging-dev depends
 W: fields-depends-general: package-relation-with-self breaks: fields-depends-general (<< 0.1)
-W: fields-depends-general: versioned-dependency-satisfied-by-perl depends: libthreads-shared-perl (>= 1.29)
+W: fields-depends-general: versioned-dependency-satisfied-by-perl depends: libtest-simple-perl (>= 0.98)
 W: libfields-depends-general: lib-recommends-documentation recommends: debconf-doc

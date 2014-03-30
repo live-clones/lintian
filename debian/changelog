@@ -7,6 +7,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of libmpg123.
+  * data/fields/perl-provides:
+    + [NT] Refresh against Perl 5.18.2.
   * data/spelling/corrections:
     + [RG] Add "functiosn" to the list of spelling mistakes.
 
