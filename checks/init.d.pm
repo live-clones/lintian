@@ -464,6 +464,10 @@ sub check_init {
                   "etc/init.d/${initd_file}", $dependency
                   unless ($VIRTUAL_FACILITIES->known($dependency));
             }
+            if ($dependency =~ m/^\$all$/) {
+                tag 'init.d-script-depends-on-all-virtual-facility',
+                  "etc/init.d/${initd_file}", "$keyword";
+            }
         }
     }
 

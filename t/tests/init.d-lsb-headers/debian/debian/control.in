@@ -60,3 +60,12 @@ Description: {$description} -- virtual facilities
  Test package to exercise the virtual facilities in init.d scripts
  checks by lintian.  It is part of the Lintian test suite and may
  do very odd things.  It should not be installed like a regular package.
+
+Package: {$source}-all
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} -- all virtual facilities
+ Test package designed to exercise the checking of virtual all facilities
+ in init.d scripts checks by lintian.
+ It is part of the Lintian test suite and may
+ do very odd things.  It should not be installed like a regular package.

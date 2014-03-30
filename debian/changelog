@@ -1,8 +1,13 @@
 lintian (2.5.22.2) UNRELEASED; urgency=medium
 
+  [ Niels Thykier ]
   XXX: generate tag summary with private/generate-tag-summary
+  * checks/init.d.{desc,pm}:
+    + [BR] Detect $all virtual dependency in legacy
+    init scripts, thanks to Holger Levsen
+    (Closes: #737867).
 
- -- Niels Thykier <niels@thykier.net>  Sun, 30 Mar 2014 22:12:06 +0200
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Mon, 31 Mar 2014 18:52:04 +0200
 
 lintian (2.5.22.1) unstable; urgency=medium
 

@@ -366,3 +366,15 @@ Info: The given init script declares a dependency on a virtual facility
  If the dependency can not be satisfied upon the package's
  installation, insserv will refuse the activation of the init.d script.
 Ref: http://wiki.debian.org/LSBInitScripts
+
+Tag: init.d-script-depends-on-all-virtual-facility
+Severity: serious
+Certainty: possible
+Info: The given init script declares a dependency on $all 
+ virtual facility.
+ .
+ This virtual facility is reserved to local script.
+ .
+ Moreover using $all in more than one init.d script is
+ not totally broken.
+Ref: http://wiki.debian.org/LSBInitScripts
