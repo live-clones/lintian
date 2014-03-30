@@ -1,6 +1,4 @@
-lintian (2.5.23) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary with private/generate-tag-summary
+lintian (2.5.22.1) unstable; urgency=medium
 
   * checks/ocaml.{desc,pm}:
     + [NT] Replace unnecessary uses of file_info with index.
@@ -26,7 +24,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [JW,NT] Fix grammatical error in a template.
       (Closes: #742985)
 
- -- Niels Thykier <niels@thykier.net>  Tue, 25 Mar 2014 22:51:16 +0100
+ -- Niels Thykier <niels@thykier.net>  Sun, 30 Mar 2014 20:55:52 +0200
 
 lintian (2.5.22) unstable; urgency=medium
 
