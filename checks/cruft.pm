@@ -518,6 +518,7 @@ sub find_cruft {
     while (my $entry = shift(@worklist)) {
         my $name     = $entry->name;
         my $basename = $entry->basename;
+        my $dirname = $entry->dirname;
         my $path;
         my $file_info;
 
@@ -596,8 +597,8 @@ sub find_cruft {
                 if($name =~ m{$regname}) {
                     tag $tag_filetype, $name;
                     if($warn_data->{'checkmissing'}) {
-                        check_missing_source($entry,$info,
-                            $warn_data->{'transform'});
+                        check_missing_source($entry,$info,$name, $basename,
+                            $dirname,$warn_data->{'transform'});
                     }
                 }
             }
@@ -635,7 +636,7 @@ sub find_cruft {
         # debian/config.cache as anyone doing that probably knows what
         # they're doing and is using it as part of the build.
         if ($basename =~ m{\A config.(?:cache|log|status) \Z}xsm) {
-            if ($entry->dirname ne 'debian') {
+            if ($dirname ne 'debian') {
                 tag 'configure-generated-file-in-source', $name;
             }
         }elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm
@@ -677,14 +678,15 @@ sub find_cruft {
             }
             close($fd);
         }
-        full_text_check($entry, $info, $name, $info->unpacked($entry));
+        full_text_check($entry, $info, $name, $basename, $dirname,
+            $info->unpacked($entry));
     }
     return;
 }
 
 # try to check if source is missing
 sub check_missing_source {
-    my ($file, $info, $replacementspairref) = @_;
+    my ($file, $info, $name, $basename, $dirname,$replacementspairref) = @_;
 
     # do not check missing source for non free
     if($info->is_non_free) {
@@ -699,10 +701,6 @@ sub check_missing_source {
     unless ($file->is_regular_file) {
         return;
     }
-
-    my $basename = $file->basename;
-    my $dirname = $file->dirname;
-    my $name = $file->name;
 
     # try to find for each replacement
   REPLACEMENT:
@@ -757,7 +755,7 @@ sub check_missing_source {
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub full_text_check {
-    my ($entry, $info, $name, $path) = @_;
+    my ($entry, $info, $name, $basename, $dirname, $path) = @_;
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
@@ -769,12 +767,6 @@ sub full_text_check {
         return;
     }
 
-    my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
-    if($isjsfile) {
-        my $minjsregexp =  _minified_javascript_name_regexp();
-        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
-    }
-
     open(my $fd, '<:raw', $path);
     # allow to check only text file
     unless (-T $fd) {
@@ -784,7 +776,8 @@ sub full_text_check {
 
     # some js file comments are really really long
     my $sfd
-      = Lintian::SlidingWindow->new($fd, \&lc_block,$isjsfile ? 8092 : 4096);
+      = Lintian::SlidingWindow->new($fd, \&lc_block,
+        _is_javasript_but_not_minified($name) ? 8092 : 4096);
     my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window
@@ -817,35 +810,70 @@ sub full_text_check {
             $block,  $blocknumber,\$cleanedblock, \%matchedkeyword,
             \%licenseproblemhash);
 
-        # check javascript  problem
-        if($isjsfile) {
-            if($blocknumber == 0) {
-                my $strip = $block;
-                # from perl faq strip comments
-                $strip
-                  =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
-                # strip empty line
-                $strip =~ s/^\s*\n//mg;
-                # remove last \n
-                $strip =~ s/\n\Z//m;
-                # compute now means line length
-                my $total = length($strip);
-                if($total > 0) {
-                    my $linelength = $total/($strip =~ tr/\n// + 1);
-                    if($linelength > 255) {
-                        tag 'source-contains-prebuilt-javascript-object',
-                          $name, 'mean line length is about', int($linelength),
-                          'characters';
-                        # Check for missing source.  It will check
-                        # for the source file in well known directories
-                        check_missing_source($entry,$info,[['','']]);
-                    }
-                }
-            }
+        # check only in block 0
+        if($blocknumber == 0) {
+            _search_in_block0($entry, $info, $name, $basename, $dirname,
+                $path, $block);
         }
     }
     close($fd);
     return;
+}
+
+# check if file is javascript but not minified
+sub _is_javasript_but_not_minified {
+    my ($name) = @_;
+    my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
+    if($isjsfile) {
+        my $minjsregexp =  _minified_javascript_name_regexp();
+        $isjsfile = ($name =~ m{$minjsregexp}) ? 0 : 1;
+    }
+    return $isjsfile;
+}
+
+# search something in block $0
+sub _search_in_block0 {
+    my ($entry, $info, $name, $basename, $dirname, $path, $block) = @_;
+
+    if(_is_javasript_but_not_minified($name)) {
+        # exception sphinx documentation
+        if($basename eq 'searchindex.js') {
+            if($block =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
+                tag 'source-contains-prebuilt-sphinx-documentation', $dirname;
+                return;
+            }
+        }
+        # now search hidden minified
+        _linelength_test($entry, $info, $name, $basename, $dirname,
+            $path, $block);
+    }
+}
+
+# try to detect non human source based on line length
+sub _linelength_test {
+    my ($entry, $info, $name, $basename, $dirname, $path, $block) = @_;
+    my $strip = $block;
+    # from perl faq strip comments
+    $strip
+      =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
+    # strip empty line
+    $strip =~ s/^\s*\n//mg;
+    # remove last \n
+    $strip =~ s/\n\Z//m;
+    # compute now means line length
+    my $total = length($strip);
+    if($total > 0) {
+        my $linelength = $total/($strip =~ tr/\n// + 1);
+        if($linelength > 255) {
+            tag 'source-contains-prebuilt-javascript-object',
+              $name, 'mean line length is about', int($linelength),
+              'characters';
+            # Check for missing source.  It will check
+            # for the source file in well known directories
+            check_missing_source($entry,$info,$name,$basename,$dirname,
+                [['','']]);
+        }
+    }
 }
 
 sub _tag_gfdl {

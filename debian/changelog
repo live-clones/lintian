@@ -2,6 +2,11 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
 
   [ Niels Thykier ]
   XXX: generate tag summary with private/generate-tag-summary
+
+  * checks/cruft.{desc,pm}:
+    + [BR] Detect sphinx generated documentation and avoid
+      a false positive for minified javascript and missing sources.
+      (Closes: #742693).
   * checks/init.d.{desc,pm}:
     + [BR] Detect $all virtual dependency in legacy
     init scripts, thanks to Holger Levsen

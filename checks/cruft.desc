@@ -479,6 +479,16 @@ Info: The source tarball contains a prebuilt (minified) JavaScript object.
  cleaning the source directory first.  You may want to report this as 
  an upstream bug, in case there is no sign that this was intended.
 
+Tag: source-contains-prebuilt-sphinx-documentation
+Severity: pedantic
+Certainty: possible
+Info: The source tarball contains a prebuilt sphinx documentation.
+ They are usually left by mistake when generating the tarball by not
+ cleaning the source directory first.  You may want to report this as
+ an upstream bug, in case there is no sign that this was intended.
+ .
+ It is preferable to rebuilt documentation directly from source.
+
 Tag: source-contains-prebuilt-python-object
 Severity: pedantic
 Certainty: possible
