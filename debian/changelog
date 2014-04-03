@@ -13,6 +13,9 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [BR] Detect $all virtual dependency in legacy
     init scripts, thanks to Holger Levsen
     (Closes: #737867).
+  * checks/java.{desc,pm}:
+    + [SL] Do not trigger a warning when a jar is not in /usr/share/java and
+    the package name matches lib.*maven.*plugin.*java
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Mon, 31 Mar 2014 18:52:04 +0200
 

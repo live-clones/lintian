@@ -3,6 +3,7 @@ E: libtesta-java: missing-dep-on-jarwrapper
 I: libmanifestless-java: missing-manifest usr/share/java/manifestless-1.0.jar
 I: libtestc-java: javalib-but-no-public-jars
 W: libcodeless-java: codeless-jar usr/share/java/codeless-1.0.jar
+W: libtest-maven-plugin-java: maven-plugin-in-usr-share-java usr/share/java/testb.jar
 W: libtesta-java: binary-without-manpage usr/bin/testc.jar
 W: libtesta-java: jar-not-in-usr-share usr/lib/testb.jar
 W: unparsable: zip-parse-error usr/share/unparsable/unparsable.jar: format error: can't find EOCD signature

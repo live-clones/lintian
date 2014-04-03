@@ -43,6 +43,15 @@ Description: {$description} - part C
  .
  This package should not be installed.
 
+Package: libtest-maven-plugin-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description} - part D
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. Fourth part.
+ .
+ This package should not be installed.
+
 Package: unparsable
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}

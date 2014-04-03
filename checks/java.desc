@@ -37,6 +37,12 @@ Info: The classpath listed in some of the files references files outside
  files are not accepted by the application, then please override this
  tag.
 
+Tag: maven-plugin-in-usr-share-java
+Severity: normal
+Certainty: possible
+Info: A maven plugin is incorrectly installed in /usr/share/java.
+ Maven plugin should be installed in /usr/share/maven-repo
+
 Tag: executable-jar-without-main-class
 Severity: serious
 Certainty: certain
