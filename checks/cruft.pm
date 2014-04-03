@@ -854,7 +854,6 @@ sub _linelength_test {
     my ($entry, $info, $name, $basename, $dirname, $path, $block) = @_;
     my $strip = $block;
     # from perl faq strip comments
-    #$strip =~ s#//[^\n]$//g
     $strip
       =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?(?=\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
     # strip empty line

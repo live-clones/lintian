@@ -7,6 +7,8 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [BR] Detect sphinx generated documentation and avoid
       a false positive for minified javascript and missing sources.
       (Closes: #742693).
+    + [BR] Do not remove newline with c++ comments. Fix a false 
+      positive.
   * checks/init.d.{desc,pm}:
     + [BR] Detect $all virtual dependency in legacy
     init scripts, thanks to Holger Levsen
