@@ -1018,7 +1018,7 @@ sub msg_print {
 
 sub _flush {
     my ($thrs, $id, $length) = @_;
-    print(' 'x$length,"\r");
+    print(' 'x$length,"\r") if $output_is_tty;
     while (my $m = shift @{$thrs->{$id}}) {
         print $m;
     }
