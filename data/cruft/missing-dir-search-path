@@ -5,6 +5,8 @@
 ./
 # for binary object build by libtools
 ../
+# maybe in src subdir
+./src/
 # libtool
 /.libs/
 /.libs/$dirname/
