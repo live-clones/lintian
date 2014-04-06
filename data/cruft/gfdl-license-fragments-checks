@@ -8,7 +8,7 @@
 
 # variant are tagged not official
 # official text variations
-\A (?:with[ ])? (?:the[ ])? no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Covers? (?:[ ] Texts?)? \Z ~~ ~~ license-problem-gfdl-non-official-text
+\A (?:with[ ])? (?:the[ ])? no [ ]? Invariant [ ]+ Sections? [ ]? [,\.;]? [ ]? (?:with[ ])? (?:the[ ])? no [ ] Front[ ]?-?[ ]?Cover (?:[ ] Texts?)? [ ]? [,\.;]? [ ]? (?:and[ ])? (?:with[ ])? (?:the[ ])? no [ ] Back[ ]?-?[ ]?Covers? (?:[ ] Texts?)?\Z ~~ ~~ license-problem-gfdl-non-official-text
 # (dict fold)
 \A (?:with[ ])? no [ ] Invariant [ ] Sections? [ ]? [,\.;]? [ ]? (?:no[ ])? Front[ ]?-?[ ]? (?:cover[ ])? (?:Texts?[ ])? or [ ] (?:no[ ])? Back(?:[ ]?-?[ ]?|[ ])Cover [ ] Texts?\Z ~~ ~~ license-problem-gfdl-non-official-text
 # (libnss-pgsql)
@@ -17,7 +17,8 @@
 \A without [ ] any [ ] Invariant [ ] Sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
 # (lilypond)
 \A with [ ] no [ ] invariants? [ ] sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
-
+# jedit
+\A with [ ] no [ ] invariant [ ] sections?[ ]?,?[ ]? front[ ]?-?[ ]?cover [ ] texts? [ ] or [ ] back[ ]?-?[ ]?cover [ ] texts?[ ]?,?[ ]?each [ ] as [ ] defined [ ] in [ ] the [ ] license \Z ~~ ~~ license-problem-gfdl-non-official-text
 #
 # Conditionnaly ok
 #

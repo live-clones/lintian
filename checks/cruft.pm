@@ -1032,6 +1032,7 @@ sub _clean_block {
     $text =~ s{</?i[^>]*?>}{ }gxms;           # italic
     $text =~ s{</?link[^>]*?>}{ }gxms;        # xml link
     $text =~ s{</?p[^>]*?>}{ }gxms;           # html paragraph
+    $text =~ s{</?quote[^>]*?>}{ }gxms;       # xml quote
     $text =~ s{</?span[^>]*?>}{ }gxms;        # span tag
     $text =~ s{</?ulink[^>]*?>}{ }gxms;       # ulink docbook
     $text =~ s{</?var[^>]*?>}{ }gxms;         # var used by texinfo2html
