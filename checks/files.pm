@@ -83,76 +83,14 @@ my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
-my @jslibraries = (
-    [qr,(?i)mochikit\.js(\.gz)?$, => qr'libjs-mochikit'],
-    [
-        qr,(?i)mootools((\.v|-)[\d\.]+)?
-          (-((core(-server)?)|more)(-(yc|jm|nc))?)?\.js(\.gz)?$,xsm
-          => qr'libjs-mootools'
-    ],
-    [qr,(?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$, => qr'libjs-jquery'],
-    [qr,(?i)prototype(-[\d\.]+)?\.js(\.gz)?$, => qr'libjs-prototype'],
-    [qr,(?i)scriptaculous\.js(\.gz)?$, => qr'libjs-scriptaculous'],
-    [qr,(?i)fckeditor\.js(\.gz)?$, => qr'fckeditor'],
-    [qr,(?i)ckeditor\.js(\.gz)?$, => qr'ckeditor'],
-    [qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => qr'libjs-cropper'],
-    [qr,(?i)(yahoo|yui)-(dom-event|min)\.js(\.gz)?$, => qr'libjs-yui'],
-    [qr,(?i)jquery\.cookie(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-cookie'],
-    [qr,(?i)jquery\.form(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-form'],
-    [
-        qr,(?i)jquery\.mousewheel(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-mousewheel'
-    ],
-    [qr,(?i)jquery\.easing(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-easing'],
-    [
-        qr,(?i)jquery\.event\.drag(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-event-drag'
-    ],
-    [
-        qr,(?i)jquery\.event\.drop(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-event-drop'
-    ],
-    [qr,(?i)jquery\.fancybox(\.min)?\.js(\.gz)?$, =>qr'libjs-jquery-fancybox'],
-    [
-        qr,(?i)jquery\.galleriffic(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-galleriffic'
-    ],
-    [qr,(?i)jquery\.jfeed(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-jfeed'],
-    [qr,(?i)jquery\.history(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-history'],
-    [qr,(?i)jquery\.jush(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-jush'],
-    [qr,(?i)jquery\.meiomask(\.min)?\.js(\.gz)?$, =>qr'libjs-jquery-meiomask'],
-    [
-        qr,(?i)jquery\.opacityrollover(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-opacityrollover'
-    ],
-    [qr,(?i)jquery\.tipsy(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-tipsy'],
-    [qr,(?i)jquery\.metadata(\.min)?\.js(\.gz)?$, =>qr'libjs-jquery-metadata'],
-    [
-        qr,(?i)jquery\.tablesorter(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-tablesorter'
-    ],
-    [
-        qr,(?i)jquery\.livequery(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-livequery'
-    ],
-    [
-        qr,(?i)jquery\.treetable(\.min)?\.js(\.gz)?$, =>
-          qr'libjs-jquery-treetable'
-    ],
-    # Disabled due to false positives.  Needs a content check adding to verify
-    # that the file being checked is /the/ yahoo.js
-    #    [ qr,(?i)yahoo\.js(\.gz)?$, => qr'libjs-yui' ],
-    [qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => qr'libjs-jac'],
-    [qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => qr'jsmath'],
-    [qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?'],
-    [qr,(?i)dojo\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+'],
-    [qr,(?i)dijit\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+'],
-    [qr,(?i)strophe(\.min)?\.js(\.gz)?$, => qr'libjs-strophe'],
-    [qr,(?i)swfobject(?:\.min)?\.js(?:\.gz)?$, => qr'libjs-swfobject'],
-    [qr,(?i)underscore(\.min)?\.js(\.gz)?$, => qr'libjs-underscore'],
-    # not yet available in unstable:
-    #    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => qr'xinha' ],
-);
+my $JS_LIBRARIES = Lintian::Data->new(
+    'files/js-libraries',
+    qr/\s*\~\~\s*/,
+    sub {
+        my $pkg_regexp = qr/^$_[0]$/x;
+        my $file_regexp = qr/$_[1]/x;
+        return { 'main_pkg' => $pkg_regexp, 'match' => $file_regexp };
+    });
 
 # A list of known packaged PEAR modules
 # and the packages providing them
@@ -1245,9 +1183,12 @@ sub run {
             }
 
             # ---------------- embedded Javascript libraries
-            foreach my $jslibrary (@jslibraries) {
-                if (    $fname =~ m,/$jslibrary->[0],
-                    and $pkg !~ m,^$jslibrary->[1]$,) {
+            foreach my $jslibrary ($JS_LIBRARIES->all) {
+                my $jslibrary_data = $JS_LIBRARIES->value($jslibrary);
+                my $mainre = $jslibrary_data->{'main_pkg'};
+                my $filere = $jslibrary_data->{'match'};
+                if (    $fname =~ m,$filere,
+                    and $pkg !~ m,$mainre,) {
                     tag 'embedded-javascript-library', $file;
                 }
             }
