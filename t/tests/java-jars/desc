@@ -10,6 +10,7 @@ Test-For:
  executable-jar-without-main-class
  jar-not-in-usr-share
  javalib-but-no-public-jars
+ maven-plugin-in-usr-share-java
  missing-dep-on-jarwrapper
  missing-manifest
  zip-parse-error
