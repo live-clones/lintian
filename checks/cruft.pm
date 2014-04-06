@@ -306,7 +306,8 @@ my @file_checks = (
 our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 sub run {
-    my (undef, undef, $info) = @_;
+    my (undef, undef, $info, $proc) = @_;
+    my $source_pkg = $proc->pkg_src;
     my $droot = $info->debfiles;
 
     if (-e "$droot/files" and not -z "$droot/files") {
@@ -353,7 +354,7 @@ sub run {
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
-    find_cruft($info, \%warned, $atdinbd, $ltinbd);
+    find_cruft($source_pkg, $info, \%warned, $atdinbd, $ltinbd);
 
     for my $file (@EOL_TERMINATORS_FILES) {
         my $path = $info->debfiles($file);
@@ -507,7 +508,7 @@ sub check_debfiles {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    my ($info, $warned, $atdinbd, $ltinbd) = @_;
+    my ($source_pkg, $info, $warned, $atdinbd, $ltinbd) = @_;
     my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
     my @worklist;
 
@@ -678,7 +679,7 @@ sub find_cruft {
             }
             close($fd);
         }
-        full_text_check($entry, $info, $name, $basename, $dirname,
+        full_text_check($source_pkg, $entry, $info, $name, $basename, $dirname,
             $info->unpacked($entry));
     }
     return;
@@ -755,7 +756,7 @@ sub check_missing_source {
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub full_text_check {
-    my ($entry, $info, $name, $basename, $dirname, $path) = @_;
+    my ($source_pkg, $entry, $info, $name, $basename, $dirname, $path) = @_;
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
@@ -791,9 +792,8 @@ sub full_text_check {
 
         if(
             _license_check(
-                $name, $NON_DISTRIBUTABLE_LICENSES,
-                $block,  $blocknumber,
-                \$cleanedblock, \%matchedkeyword,
+                $source_pkg, $name,$NON_DISTRIBUTABLE_LICENSES,$block,
+                $blocknumber,\$cleanedblock,\%matchedkeyword,
                 \%licenseproblemhash
             )
           ){
@@ -806,7 +806,7 @@ sub full_text_check {
             next BLOCK;
         }
 
-        _license_check($name, $NON_FREE_LICENSES,
+        _license_check($source_pkg, $name, $NON_FREE_LICENSES,
             $block,  $blocknumber,\$cleanedblock, \%matchedkeyword,
             \%licenseproblemhash);
 
@@ -1109,10 +1109,15 @@ sub _md5sum_based_check {
 
 # check bad license
 sub _license_check {
-    my ($name, $licensesdatas, $block, $blocknumber, $cleanedblock,
-        $matchedkeyword, $licenseproblemhash)
+    my ($source_pkg, $name, $licensesdatas, $block, $blocknumber,
+        $cleanedblock,$matchedkeyword, $licenseproblemhash)
       = @_;
     my $ret = 0;
+
+    # avoid to check lintian
+    if($source_pkg eq 'lintian') {
+        return $ret;
+    }
   LICENSE:
     foreach my $licenseproblem ($licensesdatas->all) {
         my $licenseproblemdata = $licensesdatas->value($licenseproblem);
