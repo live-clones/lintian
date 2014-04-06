@@ -897,9 +897,9 @@ sub _check_gfdl_license_problem {
     # remove classical and without meaning part of
     # matched string
     $gfdlsections =~ s{
-                          \A version [ ] \d+(?:\.\d+)? [ ]
-                           (?:or [ ] any [ ] later [ ] version [ ])?
-                           published [ ] by [ ] the [ ] free [ ] software [ ] foundation
+                          \A version [ ] \d+(?:\.\d+)?
+                           (?:[ ] or [ ] any [ ] later [ ] version)?
+                           (?:[ ] published [ ] by [ ] the [ ] free [ ] software [ ] foundation)?
                            [ ]?[,\.;]?[ ]?}{}xismo;
     $contextbefore =~ s{
                           [ ]? (:?[,\.;]? [ ]?)?

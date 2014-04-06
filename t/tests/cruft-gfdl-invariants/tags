@@ -23,5 +23,6 @@ P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldf
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/partedvariant.txt invariant part is: with the no invariant sections, with the no front-cover texts, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/patch-c0.diff invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/texignu.texi invariant part is: with no invariant sections, with no front-cover texts and with no back-cover texts
+P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/texlive.tex invariant part is: with no invariant sections, with no front-cover texts, and no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/variantdictfold.txt invariant part is: with no invariant sections, front- or back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/zeroisnotplural.texi invariant part is: with no invariant section, no front-cover text and no back-cover text
