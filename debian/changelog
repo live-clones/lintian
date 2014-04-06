@@ -10,6 +10,7 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
       positive.
     + [BR] Fix a GFDL detection false positive in texlive.  Thanks
       to Norbert Preining.  (Closes: #743754).
+    + [BR] Fix another false positives in GFDL detection.
 
   * checks/init.d.{desc,pm}:
     + [BR] Detect $all virtual dependency in legacy init scripts.

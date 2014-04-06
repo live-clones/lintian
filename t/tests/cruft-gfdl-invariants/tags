@@ -5,6 +5,7 @@ E: cruft-gfdl-invariants source: license-problem-gfdl-invariants src/invariant.t
 E: cruft-gfdl-invariants source: license-problem-gfdl-invariants src/oldmanpagesgfdlproblem.1 invariant part is: with the invariant sections being (l gnu general public license (r and (l funding free software (r the front-cover texts being (a) (see below), and with the back-cover texts being (b) (see below)
 I: cruft-gfdl-invariants source: license-problem-gfdl-invariants-empty src/empty.texi
 I: cruft-gfdl-invariants source: license-problem-gfdl-invariants-empty src/emptybis.texi
+P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/clisp.txt invariant part is: with no invariant sections, with no front-cover text, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/comments.po invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/findsutilsokinlinenewline.c invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/findutilsok.c invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
@@ -13,6 +14,7 @@ P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldf
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/gnashfalsepositive.info invariant part is: with noinvariant sections , with no front-cover texts , and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/gnashfalsepositive.xml invariant part is: with no invariant sections , with no front-cover texts , and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/hyphen-used-as-minus-sign.diff invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
+P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/latexurl.tex invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/libnss-pgsql.xml invariant part is: there are no invariant sections
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/lilypond.texi invariant part is: with no invariant sections
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/mailutils.texi invariant part is: with no invariant sections, no front-cover, and no back-cover texts

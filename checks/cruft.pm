@@ -896,11 +896,16 @@ sub _check_gfdl_license_problem {
 
     # remove classical and without meaning part of
     # matched string
-    $gfdlsections =~ s{
-                          \A version [ ] \d+(?:\.\d+)?
-                           (?:[ ] or [ ] any [ ] later [ ] version)?
-                           (?:[ ] published [ ] by [ ] the [ ] free [ ] software [ ] foundation)?
-                           [ ]?[,\.;]?[ ]?}{}xismo;
+    $gfdlsections =~ s{ \A \(?[ ]? g?fdl [ ]?\)?[ ]? [,\.;]?[ ]?}{}xismo;
+    $gfdlsections =~ s{ \A (?:either[ ])?
+                           version [ ] \d+(?:\.\d+)? [ ]?}{}xismo;
+    $gfdlsections =~ s{ \A of [ ] the [ ] license [ ]?[,\.;][ ]?}{}xismo;
+    $gfdlsections =~ s{ \A or (?:[ ]\(?[ ]? at [ ] your [ ] option [ ]?\)?)?
+                           [ ] any [ ] later [ ] version[ ]?}{}xismo;
+    $gfdlsections =~ s{ \A published [ ] by [ ]
+                           the [ ] free [ ] software [ ] foundation[ ]?}{}xismo;
+    $gfdlsections =~ s{\(?[ ]?FSF[ ]?\)?[ ]?}{}xismo;
+    $gfdlsections =~ s{[,\.;]?[ ]?}{}xismo;
     $contextbefore =~ s{
                           [ ]? (:?[,\.;]? [ ]?)?
                            permission [ ] is [ ] granted [ ] to [ ] copy [ ]?[,\.;]?[ ]?
@@ -989,37 +994,45 @@ sub _clean_block {
 
     # replace some common comment-marker/markup with space
     $text =~ s{(?:
-                  ^\.\\\"                      |  # man comments
-                  \@c(?:omment)?\s+            |  # Tex info comment
-                  \@(?:b|i|r|t)\{              |  # Tex info bold, italic, roman, fixed width
-                  \@(?:sansserif|slanted)\{    |  # Tex info sans serif/slanted
-                  \@var\{                      |  # Tex info emphasis
-                  \@(?:small)?example\s+       |  # Tex info example
-                  \@end\h+(?:small)example\s+  |  # Tex info end small example tag
-                  \@group\s+                   |  # Tex info group
-                  \@end\h+group\s+             |  # Tex info end group
-                  \}                           |  # Tex info end tag (could be more clever but brute force is fast)
-                  \"\s*,                       |  # String array (e.g. "line1",\n"line2")
-                  ,\s*\"                       |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
-                  <br\s*/?>                    |  # (X)HTML line breaks
-                  <!--                         |  # XML comment
-                  -->                          |  # end XML comment
-                  </?link[^>]*?>               |  # xml link
-                  </?a[^>]*?>                  |  # a link
-                  </?citetitle[^>]*?>          |  # citation title in docbook
-                  </?div[^>]*?>                |  # html style
-                  </?p[^>]*?>                  |  # html paragraph
-                  </?span[^>]*?>               |  # span tag
-                  </?var[^>]*?>                |  # var tag used by html from texinfo
-                  ^[-\+!<>]                    |  # diff/patch lines (should be after html tag)
-                  \(\*note.*?::\)              |  # info file note
-                  \\n                          |  # Verbatim \n in string array
-                  \\&                          |  # pod2man formating
-                  \\s(?:0|-1)                  |  # pod2man formating
-                  (?:``|'')                    |  # quote like
-                  [%\*\"\|\\\#]                   # String, C-style comment/javadoc indent,
-                                                  # quotes for strings, pipe and antislash in some txt
-                                                  # shell or po file comments
+                  ^\.\\\"                            |  # man comments
+                  \\url{[^\}]*?}                     |  # (la)?tex url
+                  \\emph\{                           |  # (la)?tex emph
+                  \@c(?:omment)?\s+ end \s+ ifman\s+ |  # Tex info comment with end section
+                  \@c(?:omment)?\s+ noman\s+         |  # Tex info comment no manual
+                  \@c(?:omment)?\s+                  |  # Tex info comment
+                  \@(?:b|i|r|t)\{                    |  # Tex info bold, italic, roman, fixed width
+                  \@(?:sansserif|slanted)\{          |  # Tex info sans serif/slanted
+                  \@var\{                            |  # Tex info emphasis
+                  \@(?:small)?example\s+             |  # Tex info example
+                  \@end\h+(?:small)example\s+        |  # Tex info end small example tag
+                  \@group\s+                         |  # Tex info group
+                  \@end\h+group\s+                   |  # Tex info end group
+                  \}                                 |  # Tex info end tag (could be more clever but brute force is fast)
+                  \"\s*,                             |  # String array (e.g. "line1",\n"line2")
+                  ,\s*\"                             |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
+                  <br\s*/?>                          |  # (X)HTML line breaks
+                  <!--                               |  # XML comment
+                  -->                                |  # end XML comment
+                  </?link[^>]*?>                     |  # xml link
+                  </?a[^>]*?>                        |  # a link
+                  </?citetitle[^>]*?>                |  # citation title in docbook
+                  </?div[^>]*?>                      |  # html style
+                  </?font[^>]*?>                     |  # font
+                  </?i[^>]*?>                        |  # italic
+                  </?p[^>]*?>                        |  # html paragraph
+                  </?span[^>]*?>                     |  # span tag
+                  </?ulink[^>]*?>                    |  # ulink docbook
+                  </?var[^>]*?>                      |  # var tag used by html from texinfo
+                  ^[-\+!<>]                          |  # diff/patch lines (should be after html tag)
+                  \(\*note.*?::\)                    |  # info file note
+                  \\n                                |  # Verbatim \n in string array
+                  \&[lr]dquo;                        |  # html rquote
+                  \\&                                |  # pod2man formating
+                  \\s(?:0|-1)                        |  # pod2man formating
+                  (?:``|'')                          |  # quote like
+                  [%\*\"\|\\\#]                         # String, C-style comment/javadoc indent,
+                                                        # quotes for strings, pipe and antislash in some txt
+                                                        # shell or po file comments
            )}{ }gxms;
 
     # delete double spacing now and normalize spacing
