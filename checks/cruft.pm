@@ -993,48 +993,75 @@ sub _clean_block {
     $text =~ s{ \\ -}{-}gxsm;
 
     # replace some common comment-marker/markup with space
-    $text =~ s{(?:
-                  ^\.\\\"                            |  # man comments
-                  \\url{[^\}]*?}                     |  # (la)?tex url
-                  \\emph\{                           |  # (la)?tex emph
-                  \@c(?:omment)?\s+ end \s+ ifman\s+ |  # Tex info comment with end section
-                  \@c(?:omment)?\s+ noman\s+         |  # Tex info comment no manual
-                  \@c(?:omment)?\s+                  |  # Tex info comment
-                  \@(?:b|i|r|t)\{                    |  # Tex info bold, italic, roman, fixed width
-                  \@(?:sansserif|slanted)\{          |  # Tex info sans serif/slanted
-                  \@var\{                            |  # Tex info emphasis
-                  \@(?:small)?example\s+             |  # Tex info example
-                  \@end\h+(?:small)example\s+        |  # Tex info end small example tag
-                  \@group\s+                         |  # Tex info group
-                  \@end\h+group\s+                   |  # Tex info end group
-                  \}                                 |  # Tex info end tag (could be more clever but brute force is fast)
-                  \"\s*,                             |  # String array (e.g. "line1",\n"line2")
-                  ,\s*\"                             |  # String array (e.g. "line1"\n ,"line2"), seen in findutils
-                  <br\s*/?>                          |  # (X)HTML line breaks
-                  <!--                               |  # XML comment
-                  -->                                |  # end XML comment
-                  </?link[^>]*?>                     |  # xml link
-                  </?a[^>]*?>                        |  # a link
-                  </?citetitle[^>]*?>                |  # citation title in docbook
-                  </?div[^>]*?>                      |  # html style
-                  </?font[^>]*?>                     |  # font
-                  </?i[^>]*?>                        |  # italic
-                  </?p[^>]*?>                        |  # html paragraph
-                  </?span[^>]*?>                     |  # span tag
-                  </?ulink[^>]*?>                    |  # ulink docbook
-                  </?var[^>]*?>                      |  # var tag used by html from texinfo
-                  ^[-\+!<>]                          |  # diff/patch lines (should be after html tag)
-                  \(\*note.*?::\)                    |  # info file note
-                  \\n                                |  # Verbatim \n in string array
-                  \&[lr]dquo;                        |  # html rquote
-                  \\&                                |  # pod2man formating
-                  \\s(?:0|-1)                        |  # pod2man formating
-                  (?:``|'')                          |  # quote like
-                  [%\*\"\|\\\#]                         # String, C-style comment/javadoc indent,
-                                                        # quotes for strings, pipe and antislash in some txt
-                                                        # shell or po file comments
-           )}{ }gxms;
+    $text =~ s{^\.\\\"}{ }gxms;               # man comments
 
+    $text =~ s/\\url{[^}]*?}/ /gxms;          # (la)?tex url
+    $text =~ s/\emph{/ /gxms;                 # (la)?tex emph
+
+    # Tex info comment with end section
+    $text =~ s/\@c(?:omment)?\h+
+                end \h+ ifman\s+/ /gxms;
+    $text =~ s/\@c(?:omment)?\s+
+                noman\s+/ /gxms;              # Tex info comment no manual
+
+    $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
+
+    $text =~ s/\@(?:b|i|r|t){/ /gxms
+      ;         # Tex info bold,italic, roman, fixed width
+    $text =~ s/\@sansserif{/ /gxms;           # Tex info sans serif
+    $text =~ s/\@slanted{/ /gxms;             # Tex info slanted
+    $text =~ s/\@var{/ /gxms;                 # Tex info emphasis
+
+    $text =~ s/\@(?:small)?example\s+/ /gxms; # Tex info example
+    $text =~ s/\@end \h+
+               (?:small)example\s+/ /gxms;    # Tex info end example tag
+    $text =~ s/\@group\s+/ /gxms;             # Tex info group
+    $text =~ s/\@end\h+group\s+/ /gxms;       # Tex info end group
+
+    $text =~ s/<!--/ /gxms;                   # XML comments
+    $text =~ s/-->/ /gxms;                    # end XML comment
+
+    $text =~ s{</?a[^>]*?>}{ }gxms;           # a link
+    $text =~ s{<br\s*/?>}{ }gxms;             # (X)?HTML line
+    # breaks
+    $text =~ s{</?citetitle[^>]*?>}{ }gxms;   # docbook citation title
+    $text =~ s{</?div[^>]*?>}{ }gxms;         # html style
+    $text =~ s{</?font[^>]*?>}{ }gxms;        # font
+    $text =~ s{</?i[^>]*?>}{ }gxms;           # italic
+    $text =~ s{</?link[^>]*?>}{ }gxms;        # xml link
+    $text =~ s{</?p[^>]*?>}{ }gxms;           # html paragraph
+    $text =~ s{</?span[^>]*?>}{ }gxms;        # span tag
+    $text =~ s{</?ulink[^>]*?>}{ }gxms;       # ulink docbook
+    $text =~ s{</?var[^>]*?>}{ }gxms;         # var used by texinfo2html
+
+    $text =~ s{\&[lr]dquo;}{ }gxms;           # html rquote
+
+    $text =~ s{\(\*note.*?::\)}{ }gxms;       # info file note
+
+    # String array (e.g. "line1",\n"line2")
+    $text =~ s/\"\s*,/ /gxms;
+    # String array (e.g. "line1"\n ,"line2"),
+    $text =~ s/,\s*\"/ /gxms;
+    $text =~ s/\\n/ /gxms;                    # Verbatim \n in string array
+
+    $text =~ s/\\&/ /gxms;                    # pod2man formating
+    $text =~ s/\\s(?:0|-1)/ /gxms;            # pod2man formating
+
+    $text =~ s/(?:``|'')/ /gxms;              # quote like
+
+    # diff/patch lines (should be after html tag)
+    $text =~ s/^[-\+!<>]/ /gxms;
+    $text =~ s/\@\@ \s*
+               [-+] \d+,\d+ \s+
+               [-+] \d+,\d+ \s*
+               \@\@/ /gxms;                   # patch line
+
+    # Tex info end tag (could be more clever but brute force is fast)
+    $text =~ s/}/ /gxms;
+    # single char at end
+    # String, C-style comment/javadoc indent,
+    # quotes for strings, pipe and antislash in some txt
+    $text =~ s,[%\*\"\|\\\#], ,gxms;
     # delete double spacing now and normalize spacing
     # to space character
     $text =~ s{\s++}{ }gsm;
