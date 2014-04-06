@@ -188,12 +188,13 @@ sub run {
               if @relative;
         }
 
-        if ($has_public_jars && $pkg =~ /^lib.*maven.*plugin.*/ && $jar_file !~ m#^usr/share/maven-repo/.*\.jar#) {
+        if (   $has_public_jars
+            && $pkg =~ /^lib.*maven.*plugin.*/
+            && $jar_file !~ m#^usr/share/maven-repo/.*\.jar#) {
             # Trigger a warning when a maven plugin lib is installed in
             # /usr/share/java/
             tag 'maven-plugin-in-usr-share-java', $jar_file;
         }
-
 
     }
 

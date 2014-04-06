@@ -847,6 +847,7 @@ sub _search_in_block0 {
         _linelength_test($entry, $info, $name, $basename, $dirname,
             $path, $block);
     }
+    return;
 }
 
 # try to detect non human source based on line length
@@ -874,6 +875,7 @@ sub _linelength_test {
                 [['','']]);
         }
     }
+    return;
 }
 
 sub _tag_gfdl {
