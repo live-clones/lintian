@@ -1297,8 +1297,8 @@ sub run {
     return;
 }
 
-# splits "foo:bar (>= 1.2.3) [!i386 ia64] <!profile.stage1 !profile.notest>" into
-# ( "foo", "bar", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], [ "!profile.stage1" "!profile.notest" ], "" )
+# splits "foo:bar (>= 1.2.3) [!i386 ia64] <!profile.stage1 !profile.nocheck>" into
+# ( "foo", "bar", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], [ "!profile.stage1" "!profile.nocheck" ], "" )
 #                                                         ^^^                                            ^^
 #                     count of negated arches, if ! was given                                            ||
 #                                                           rest (should always be "" for valid dependencies)

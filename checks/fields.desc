@@ -656,7 +656,7 @@ Tag: invalid-restriction-label-in-source-relation
 Severity: important
 Certainty: possible
 Info: The restriction list in the source relation includes a term with
- an unknown label. The only allowed labels are "stage1", "stage2", "notest"
+ an unknown label. The only allowed labels are "stage1", "stage2", "nocheck"
  and "cross".
 
 Tag: restriction-list-without-versioned-dpkg-dev-dependency
