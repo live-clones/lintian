@@ -83,12 +83,20 @@ my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
+my $JS_EXT = '(?:(?i)[\.-]?(?:lite|min|pack(?:ed)?)?\.js(?:\.gz)?)$';
+my $JS_EXT_RE = qr/$JS_EXT/;
 my $JS_LIBRARIES = Lintian::Data->new(
     'files/js-libraries',
     qr/\s*\~\~\s*/,
     sub {
         my $pkg_regexp = qr/^$_[0]$/x;
-        my $file_regexp = qr/$_[1]/x;
+        my $file_regexp;
+        if($_[1] =~ /[\$]$/) {
+            $file_regexp = qr/$_[1]/x;
+        } else {
+            my $fullregex = $_[1].$JS_EXT;
+            $file_regexp = qr/$fullregex/x;
+        }
         return { 'main_pkg' => $pkg_regexp, 'match' => $file_regexp };
     });
 
@@ -1183,13 +1191,14 @@ sub run {
             }
 
             # ---------------- embedded Javascript libraries
-            foreach my $jslibrary ($JS_LIBRARIES->all) {
-                my $jslibrary_data = $JS_LIBRARIES->value($jslibrary);
-                my $mainre = $jslibrary_data->{'main_pkg'};
-                my $filere = $jslibrary_data->{'match'};
-                if (    $fname =~ m,$filere,
-                    and $pkg !~ m,$mainre,) {
-                    tag 'embedded-javascript-library', $file;
+            if ($fname =~ m/$JS_EXT_RE/) {
+                foreach my $jslibrary ($JS_LIBRARIES->all) {
+                    my $jslibrary_data = $JS_LIBRARIES->value($jslibrary);
+                    my $mainre = $jslibrary_data->{'main_pkg'};
+                    my $filere = $jslibrary_data->{'match'};
+                    if ($fname =~ m,$filere, and $pkg !~ m,$mainre,) {
+                        tag 'embedded-javascript-library', $file;
+                    }
                 }
             }
 

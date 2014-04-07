@@ -1,4 +1,5 @@
 W: files-embedded: embedded-feedparser-library usr/share/php/feedparser.py
 W: files-embedded: embedded-javascript-library usr/share/php/jquery.js
+W: files-embedded: embedded-javascript-library usr/share/php/jquery.min.js
 W: files-embedded: embedded-php-library usr/share/php/rss_parse.php
 X: files-embedded: embedded-pear-module usr/share/php/IPv4.php

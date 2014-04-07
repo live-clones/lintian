@@ -1,43 +1,48 @@
 # list of js-libraries included in package
-# format is main package regexp ~~ regexp (x modifier)
+# format is main package regexp ~~ basename without extension
+#                                  regexp (x modifier)
 # 
+# Note: + we automatically add ^ and $ for main package name
+#       + we automatically add a bunch of js extension at the end
+#         of the basename regexp. If you want exact match add $ at the
+#         end of regexp
 # Please alpha sort by package 
-ckeditor                     ~~ (?i)ckeditor\.js(\.gz)?$
-fckeditor                    ~~ (?i)fckeditor\.js(\.gz)?$
-libjs-cropper                ~~ (?i)cropper(\.uncompressed)?\.js(\.gz)?$
-libjs-dojo-\w+               ~~ (?i)(?:dojo|dijit)\.js(\.uncompressed\.js)?(\.gz)?$
-libjs-jac                    ~~ (?i)jsjac(\.packed)?\.js(\.gz)?$
-libjs-jquery                 ~~ (?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$
-libjs-jquery-cookie          ~~ (?i)jquery\.cookie(\.min)?\.js(\.gz)?$
-libjs-jquery-easing          ~~ (?i)jquery\.easing(\.min)?\.js(\.gz)?$
-libjs-jquery-event-drag      ~~ (?i)jquery\.event\.drop(\.min)?\.js(\.gz)?$
-libjs-jquery-event-drop      ~~ (?i)jquery\.event\.drop(\.min)?\.js(\.gz)?$
-libjs-jquery-fancybox        ~~ (?i)jquery\.fancybox(\.min)?\.js(\.gz)?$
-libjs-jquery-form            ~~ (?i)jquery\.form(\.min)?\.js(\.gz)?$
-libjs-jquery-galleriffic     ~~ (?i)jquery\.galleriffic(\.min)?\.js(\.gz)?$
-libjs-jquery-history         ~~ (?i)jquery\.jfeed(\.min)?\.js(\.gz)?$
-libjs-jquery-jfeed           ~~ (?i)jquery\.jfeed(\.min)?\.js(\.gz)?$
-libjs-jquery-jush            ~~ (?i)jquery\.jush(\.min)?\.js(\.gz)?$
-libjs-jquery-livequery       ~~ (?i)jquery\.livequery(\.min)?\.js(\.gz)?$
-libjs-jquery-meiomask        ~~ (?i)jquery\.meiomask(\.min)?\.js(\.gz)?$
-libjs-jquery-metadata        ~~ (?i)jquery\.metadata(\.min)?\.js(\.gz)?$
-libjs-jquery-mousewheel      ~~ (?i)jquery\.mousewheel(\.min)?\.js(\.gz)?$
-libjs-jquery-opacityrollover ~~ (?i)jquery\.opacityrollover(\.min)?\.js(\.gz)?$
-libjs-jquery-tablesorter     ~~ (?i)jquery\.tablesorter(\.min)?\.js(\.gz)?$
-libjs-jquery-tipsy           ~~ (?i)jquery\.tipsy(\.min)?\.js(\.gz)?$
-libjs-jquery-treetable       ~~ (?i)jquery\.treetable(\.min)?\.js(\.gz)?$
-libjs-mochikit               ~~ (?i)mochikit\.js(\.gz)?$
-libjs-mootools               ~~ (?i)mootools((\.v|-)[\d\.]+)?(-((core(-server)?)|more)(-(yc|jm|nc))?)?\.js(\.gz)?$
-libjs-prototype              ~~ (?i)prototype(-[\d\.]+)?\.js(\.gz)?$
-libjs-scriptaculous          ~~ (?i)scriptaculous\.js(\.gz)?$
-libjs-strophe                ~~ (?i)strophe(\.min)?\.js(\.gz)?$
-libjs-underscore             ~~ (?i)underscore(\.min)?\.js(\.gz)?$
-libjs-yui                    ~~ (?i)(yahoo|yui)-(dom-event|min)\.js(\.gz)?$
+ckeditor                     ~~ (?i)ckeditor
+fckeditor                    ~~ (?i)fckeditor
+libjs-cropper                ~~ (?i)cropper(?:\.uncompressed)?
+libjs-dojo-\w+               ~~ (?i)(?:dojo|dijit)
+libjs-jac                    ~~ (?i)jsjac
+libjs-jquery                 ~~ (?i)jquery
+libjs-jquery-cookie          ~~ (?i)jquery\.cookie
+libjs-jquery-easing          ~~ (?i)jquery\.easing
+libjs-jquery-event-drag      ~~ (?i)jquery\.event\.drap
+libjs-jquery-event-drop      ~~ (?i)jquery\.event\.drop
+libjs-jquery-fancybox        ~~ (?i)jquery\.fancybox
+libjs-jquery-form            ~~ (?i)jquery\.form
+libjs-jquery-galleriffic     ~~ (?i)jquery\.galleriffic
+libjs-jquery-history         ~~ (?i)jquery\.jfeed
+libjs-jquery-jfeed           ~~ (?i)jquery\.jfeed
+libjs-jquery-jush            ~~ (?i)jquery\.jush
+libjs-jquery-livequery       ~~ (?i)jquery\.livequery
+libjs-jquery-meiomask        ~~ (?i)jquery\.meiomask
+libjs-jquery-metadata        ~~ (?i)jquery\.metadata
+libjs-jquery-mousewheel      ~~ (?i)jquery\.mousewheel
+libjs-jquery-opacityrollover ~~ (?i)jquery\.opacityrollover
+libjs-jquery-tablesorter     ~~ (?i)jquery\.tablesorter
+libjs-jquery-tipsy           ~~ (?i)jquery\.tipsy
+libjs-jquery-treetable       ~~ (?i)jquery\.treetable
+libjs-mochikit               ~~ (?i)mochikit
+libjs-mootools               ~~ (?i)mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?
+libjs-prototype              ~~ (?i)prototype(?:-[\d\.]+)?
+libjs-scriptaculous          ~~ (?i)scriptaculous
+libjs-strophe                ~~ (?i)strophe
+libjs-underscore             ~~ (?i)underscore
+libjs-yui                    ~~ (?i)(?:yahoo|yui)-(?:dom-event)?
 # Disabled due to false positives.  Needs a content check adding to verify
 # that the file being checked is /the/ yahoo.js
 # libjs-yui                  ~~ (?i)yahoo\.js(\.gz)?$
-jsmath                       ~~ (?i)jsMath(-fallback-\w+)?\.js(\.gz)?$
-tinymce2?                    ~~ (?i)tiny_mce(_(popup|src))?\.js(\.gz)?$
+jsmath                       ~~ (?i)jsMath(?:-fallback-\w+)?
+tinymce2?                    ~~ (?i)tiny_mce(?:_(?:popup|src))?
 # not yet available in unstable:
 # xinha                      ~~ (?i)(htmlarea|Xinha(Loader|Core))\.js$
 
