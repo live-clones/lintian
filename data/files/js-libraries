@@ -7,42 +7,42 @@
 #         of the basename regexp. If you want exact match add $ at the
 #         end of regexp
 # Please alpha sort by package 
-ckeditor                     ~~ (?i)ckeditor
-fckeditor                    ~~ (?i)fckeditor
-libjs-cropper                ~~ (?i)cropper(?:\.uncompressed)?
-libjs-dojo-\w+               ~~ (?i)(?:dojo|dijit)
-libjs-jac                    ~~ (?i)jsjac
-libjs-jquery                 ~~ (?i)jquery
-libjs-jquery-cookie          ~~ (?i)jquery\.cookie
-libjs-jquery-easing          ~~ (?i)jquery\.easing
-libjs-jquery-event-drag      ~~ (?i)jquery\.event\.drap
-libjs-jquery-event-drop      ~~ (?i)jquery\.event\.drop
-libjs-jquery-fancybox        ~~ (?i)jquery\.fancybox
-libjs-jquery-form            ~~ (?i)jquery\.form
-libjs-jquery-galleriffic     ~~ (?i)jquery\.galleriffic
-libjs-jquery-history         ~~ (?i)jquery\.jfeed
-libjs-jquery-jfeed           ~~ (?i)jquery\.jfeed
-libjs-jquery-jush            ~~ (?i)jquery\.jush
-libjs-jquery-livequery       ~~ (?i)jquery\.livequery
-libjs-jquery-meiomask        ~~ (?i)jquery\.meiomask
-libjs-jquery-metadata        ~~ (?i)jquery\.metadata
-libjs-jquery-mousewheel      ~~ (?i)jquery\.mousewheel
-libjs-jquery-opacityrollover ~~ (?i)jquery\.opacityrollover
-libjs-jquery-tablesorter     ~~ (?i)jquery\.tablesorter
-libjs-jquery-tipsy           ~~ (?i)jquery\.tipsy
-libjs-jquery-treetable       ~~ (?i)jquery\.treetable
-libjs-mochikit               ~~ (?i)mochikit
-libjs-mootools               ~~ (?i)mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?
-libjs-prototype              ~~ (?i)prototype(?:-[\d\.]+)?
-libjs-scriptaculous          ~~ (?i)scriptaculous
-libjs-strophe                ~~ (?i)strophe
-libjs-underscore             ~~ (?i)underscore
-libjs-yui                    ~~ (?i)(?:yahoo|yui)-(?:dom-event)?
+ckeditor                     ~~ (?i)/ckeditor
+fckeditor                    ~~ (?i)/fckeditor
+libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?
+libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)
+libjs-jac                    ~~ (?i)/jsjac
+libjs-jquery                 ~~ (?i)/jquery
+libjs-jquery-cookie          ~~ (?i)/jquery\.cookie
+libjs-jquery-easing          ~~ (?i)/jquery\.easing
+libjs-jquery-event-drag      ~~ (?i)/jquery\.event\.drap
+libjs-jquery-event-drop      ~~ (?i)/jquery\.event\.drop
+libjs-jquery-fancybox        ~~ (?i)/jquery\.fancybox
+libjs-jquery-form            ~~ (?i)/jquery\.form
+libjs-jquery-galleriffic     ~~ (?i)/jquery\.galleriffic
+libjs-jquery-history         ~~ (?i)/jquery\.jfeed
+libjs-jquery-jfeed           ~~ (?i)/jquery\.jfeed
+libjs-jquery-jush            ~~ (?i)/jquery\.jush
+libjs-jquery-livequery       ~~ (?i)/jquery\.livequery
+libjs-jquery-meiomask        ~~ (?i)/jquery\.meiomask
+libjs-jquery-metadata        ~~ (?i)/jquery\.metadata
+libjs-jquery-mousewheel      ~~ (?i)/jquery\.mousewheel
+libjs-jquery-opacityrollover ~~ (?i)/jquery\.opacityrollover
+libjs-jquery-tablesorter     ~~ (?i)/jquery\.tablesorter
+libjs-jquery-tipsy           ~~ (?i)/jquery\.tipsy
+libjs-jquery-treetable       ~~ (?i)/jquery\.treetable
+libjs-mochikit               ~~ (?i)/mochikit
+libjs-mootools               ~~ (?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?
+libjs-prototype              ~~ (?i)/prototype(?:-[\d\.]+)?
+libjs-scriptaculous          ~~ (?i)/scriptaculous
+libjs-strophe                ~~ (?i)/strophe
+libjs-underscore             ~~ (?i)/underscore
+libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?
 # Disabled due to false positives.  Needs a content check adding to verify
 # that the file being checked is /the/ yahoo.js
-# libjs-yui                  ~~ (?i)yahoo\.js(\.gz)?$
-jsmath                       ~~ (?i)jsMath(?:-fallback-\w+)?
-tinymce2?                    ~~ (?i)tiny_mce(?:_(?:popup|src))?
+# libjs-yui                  ~~ (?i)/yahoo\.js(\.gz)?$
+jsmath                       ~~ (?i)/jsMath(?:-fallback-\w+)?
+tinymce2?                    ~~ (?i)/tiny_mce(?:_(?:popup|src))?
 # not yet available in unstable:
-# xinha                      ~~ (?i)(htmlarea|Xinha(Loader|Core))\.js$
+# xinha                      ~~ (?i)/(htmlarea|Xinha(Loader|Core))
 
