@@ -83,22 +83,36 @@ my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
+sub _load_file_package_list_mapping {
+    my ($datafile,$ext,$tagname) = @_;
+    my $mapping = Lintian::Data->new(
+        $datafile,
+        qr/\s*\~\~\s*/,
+        sub {
+            my $pkg_regexp = qr/^$_[0]$/x;
+            my $file_regexp;
+            if($_[1] =~ /[\$]$/) {
+                $file_regexp = qr/$_[1]/x;
+            } else {
+                my $fullregex = $_[1].$ext;
+                $file_regexp = qr/$fullregex/x;
+            }
+            return { 'main_pkg' => $pkg_regexp, 'match' => $file_regexp };
+        });
+    return {
+        'ext_regexp' => qr/$ext/x,
+        'mapping' => $mapping,
+        'ext' => $ext,
+        'tag' => $tagname,
+    };
+}
+
 my $JS_EXT = '(?:(?i)[\.-]?(?:lite|min|pack(?:ed)?)?\.js(?:\.gz)?)$';
-my $JS_EXT_RE = qr/$JS_EXT/;
-my $JS_LIBRARIES = Lintian::Data->new(
-    'files/js-libraries',
-    qr/\s*\~\~\s*/,
-    sub {
-        my $pkg_regexp = qr/^$_[0]$/x;
-        my $file_regexp;
-        if($_[1] =~ /[\$]$/) {
-            $file_regexp = qr/$_[1]/x;
-        } else {
-            my $fullregex = $_[1].$JS_EXT;
-            $file_regexp = qr/$fullregex/x;
-        }
-        return { 'main_pkg' => $pkg_regexp, 'match' => $file_regexp };
-    });
+my @FILE_PACKAGE_MAPPING = (
+    _load_file_package_list_mapping(
+        'files/js-libraries',$JS_EXT,'embedded-javascript-library'
+    ),
+);
 
 # A list of known packaged PEAR modules
 # and the packages providing them
@@ -135,7 +149,9 @@ my @phplibraries = (
     [qr,(?i)Smarty(_Compiler)?\.class\.php$, => qr'smarty3?'],
     [qr,(?i)class\.phpmailer(\.(php|inc))+$, => qr'libphp-phpmailer'],
     [qr,(?i)phpsysinfo\.dtd$, => qr'phpsysinfo'],
-    [qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => qr'phpsysinfo'],
+    [
+        qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, =>qr'phpsysinfo'
+    ],
     [qr,Auth/(OpenID|Yadis/Yadis)\.php$, => qr'php-openid'],
     [qr,(?i)Snoopy\.class\.(php|inc)$, => qr'libphp-snoopy'],
     [qr,(?i)markdown\.php$, => qr'libmarkdown-php'],
@@ -302,7 +318,7 @@ sub run {
             #
             # TODO: actually, policy says 'conffile', not '/etc' ->
             # extend!
-            tag 'package-contains-hardlink', join(' -> ', sort($fname, $link))
+            tag 'package-contains-hardlink',join(' -> ', sort($fname, $link))
               if $fname =~ m,^etc/,
               or $link =~ m,^etc/,
               or $fname !~ m,^\Q$link_target_dir\E[^/]*$,;
@@ -387,7 +403,7 @@ sub run {
                   sprintf('%s %04o != 0755',$file,$operm);
             }
             #----------------- /etc/ld.so.conf.d
-            elsif ($fname =~ m,^etc/ld\.so\.conf\.d/.+$, and $pkg !~ /^libc/) {
+            elsif ($fname =~ m,^etc/ld\.so\.conf\.d/.+$, and $pkg !~ /^libc/){
                 tag 'package-modifies-ld.so-search-path', $file;
             }
             #----------------- /etc/modprobe.d
@@ -446,7 +462,8 @@ sub run {
                     }
 
                     # file directly in /usr/share/doc ?
-                    if ($file->is_file and $fname =~ m,^usr/share/doc/[^/]+$,){
+                    if (    $file->is_file
+                        and $fname =~ m,^usr/share/doc/[^/]+$,){
                         tag 'file-directly-in-usr-share-doc', $file;
                     }
 
@@ -469,7 +486,8 @@ sub run {
                      # uses __init__.py to mark module directories.
                         unless (
                                $fname =~ m,^usr/share/doc/(?:[^/]+/)?examples/,
-                            or $fname=~ m,^usr/share/doc/(?:.+/)?html/.*\.map$,
+                            or $fname
+                            =~ m,^usr/share/doc/(?:.+/)?html/.*\.map$,
                             or $fname
                             =~ m,^usr/share/doc/(?:.+/)?__init__\.py$,){
                             tag 'zero-byte-file-in-doc-directory', $file;
@@ -491,8 +509,9 @@ sub run {
                     }
 
                     # contains an INSTALL file?
-                    if ($fname =~ m,^usr/share/doc/$ppkg/INSTALL(?:\..+)*$,) {
-                        tag 'package-contains-upstream-install-documentation',
+                    if ($fname =~ m,^usr/share/doc/$ppkg/INSTALL(?:\..+)*$,){
+                        tag
+                          'package-contains-upstream-install-documentation',
                           $file;
                     }
 
@@ -598,7 +617,7 @@ sub run {
             }
             # ---------------- /usr/share/applications
             elsif (
-                $fname =~ m,^usr/share/applications/mimeinfo.cache(?:\.gz)?$,){
+                $fname=~ m,^usr/share/applications/mimeinfo.cache(?:\.gz)?$,){
                 tag 'package-contains-mimeinfo.cache-file', $file;
             }
             # ---------------- /usr/share/man and /usr/X11R6/man
@@ -647,7 +666,7 @@ sub run {
                 tag 'package-contains-mime-cache-file', $file;
             }
             # ---------------- /usr/share/vim
-            elsif ($fname =~ m,^usr/share/vim/vim(?:current|\d{2})/([^/]++),) {
+            elsif ($fname =~ m,^usr/share/vim/vim(?:current|\d{2})/([^/]++),){
                 my $is_vimhelp = $1 eq 'doc' && $pkg =~ m,^vimhelp-\w++$,;
                 my $is_vim = $source_pkg =~ m,vim,;
                 tag 'vim-addon-within-vim-runtime-path', $file
@@ -671,7 +690,7 @@ sub run {
             # ---------------- /usr subdirs
             elsif ($type ne 'udeb' and $fname =~ m,^usr/[^/]+/$,)
             { # FSSTND dirs
-                if ($fname =~ m,^usr/(?:dict|doc|etc|info|man|adm|preserve)/,){
+                if ($fname=~ m,^usr/(?:dict|doc|etc|info|man|adm|preserve)/,){
                     tag 'FSSTND-dir-in-usr', $file;
                 }
                 # FHS dirs
@@ -911,8 +930,7 @@ sub run {
 
         # ---------------- pythonX.Y extensions
         if ($fname =~ m,^usr/lib/python\d\.\d/\S,
-            and not $fname =~ m,^usr/lib/python\d\.\d/(?:site|dist)-packages/,)
-        {
+            and not $fname=~ m,^usr/lib/python\d\.\d/(?:site|dist)-packages/,){
             # check if it's one of the Python proper packages
             unless (defined $is_python) {
                 $is_python = 0;
@@ -1005,7 +1023,7 @@ sub run {
                    el|[ch]|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm
                   |png|jpe?g|gif|svg|dtd|ui|pc
                ) \Z}xsm
-            and not $fname =~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
+            and not $fname=~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
             and not $fname =~ m,/under\S+License\.docbook$,
             and not $fname =~ m,^usr/share/doc/[^/]+/examples/,
             # liblicense has a manpage called license
@@ -1050,7 +1068,7 @@ sub run {
         }
 
         # ---------------- pyshared-data
-        if ($fname =~ m,^usr/share/python-support/$ppkg\.(?:public|private)$,){
+        if ($fname=~ m,^usr/share/python-support/$ppkg\.(?:public|private)$,){
             $py_support_nver = '(>= 0.90)';
         } elsif ($fname =~ m,^usr/share/python-support/\S+,o
             && !$py_support_nver){
@@ -1191,19 +1209,25 @@ sub run {
             }
 
             # ---------------- embedded Javascript libraries
-            if ($fname =~ m/$JS_EXT_RE/) {
-                foreach my $jslibrary ($JS_LIBRARIES->all) {
-                    my $jslibrary_data = $JS_LIBRARIES->value($jslibrary);
-                    my $mainre = $jslibrary_data->{'main_pkg'};
-                    my $filere = $jslibrary_data->{'match'};
-                    if ($fname =~ m,$filere, and $pkg !~ m,$mainre,) {
-                        tag 'embedded-javascript-library', $file;
+            foreach my $type (@FILE_PACKAGE_MAPPING) {
+                my $typere =  $type->{'ext_regexp'};
+                if($fname =~ m/$typere/) {
+                    my $mapping = $type->{'mapping'};
+                    my $typetag = $type->{'tag'};
+                    foreach my $library ($mapping->all) {
+                        my $library_data = $mapping->value($library);
+                        my $mainre = $library_data->{'main_pkg'};
+                        my $filere = $library_data->{'match'};
+                        if ($fname =~ m,$filere, and $pkg !~ m,$mainre,) {
+                            tag $typetag, $file;
+                        }
                     }
                 }
             }
 
             # ---------------- embedded Feedparser library
-            if ($fname =~ m,/feedparser\.py$, and $source_pkg ne 'feedparser'){
+            if (    $fname =~ m,/feedparser\.py$,
+                and $source_pkg ne 'feedparser'){
                 open(my $fd, '<', $info->unpacked($file));
                 while (<$fd>) {
                     if (m,Universal feed parser,) {
@@ -1589,7 +1613,8 @@ sub run {
                 my $linkcomponent = undef;
                 while ($linkcomponent = shift @linkcomponents) {
                     if ($linkcomponent eq '.') {
-                        tag 'symlink-contains-spurious-segments',"$fname $link"
+                        tag 'symlink-contains-spurious-segments',
+                          "$fname $link"
                           unless $mylink eq '.';
                         next;
                     }
