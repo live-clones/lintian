@@ -161,50 +161,9 @@ our $TESTSET;
 our $JOBS = -1;
 our $DUMP_LOGS = '';
 
-my ($run_all_tests, $tag, $coverage);
-Getopt::Long::Configure('bundling');
-GetOptions(
-    'd|debug'      => \$DEBUG,
-    'j|jobs:i'     => \$JOBS,
-    'k|keep-going' => \$run_all_tests,
-    'dump-logs!'   => \$DUMP_LOGS,
-    'v|verbose'    => \$VERBOSE,
-    'coverage:s'   => \$coverage,
-    'help|h'       => sub {usage(0); },
-) or usage;
+my ($run_all_tests, $tag, $coverage, $singletest, %suites, @tests, $prev);
 
-if ($#ARGV < 1 || $#ARGV > 2) {
-    usage;
-}
-my $singletest;
-($TESTSET, $RUNDIR, $singletest) = @ARGV;
-if (-d $RUNDIR) {
-    my $abs = Cwd::abs_path($RUNDIR);
-    fail("Cannot resolve $RUNDIR: $!")
-      if not defined($abs);
-    $RUNDIR = $abs;
-} else {
-    fail("test directory $RUNDIR does not exist");
-}
-
-unless (-d $TESTSET) {
-    fail("test set directory $TESTSET does not exist");
-}
-
-if (defined($coverage)) {
-    my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
-    # Only collect coverage for stuff that D::NYTProf and
-    # Test::Pod::Coverage cannot do for us.  This makes cover use less
-    # RAM in the other end.
-    my @criteria = qw(statement branch condition path subroutine);
-    my $coverage_arg = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
-    $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
-    $coverage_arg .= ',' . $coverage if $coverage ne '';
-    $ENV{'LINTIAN_COVERAGE'} = 1;
-    $harness_perl_switches .= ' ' . $coverage_arg;
-    $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
-    unshift(@LINTIAN_CMD, 'perl', $coverage_arg);
-}
+parse_args();
 
 if ($DEBUG) {
     require Data::Dumper;
@@ -216,15 +175,6 @@ if (-d "$TESTSET/helpers/bin") {
     my $tpath = Cwd::abs_path("$TESTSET/helpers/bin");
     fail "Cannot resolve $TESTSET/helpers/bin: $!" unless $tpath;
     $ENV{'PATH'} = "$tpath:$ENV{'PATH'}";
-}
-
-# Getopt::Long assigns 0 as default value if none was specified
-# (i.e. "-j").  Otherwise, $JOBS can also be -1 if "-j" was not
-# specified at all.
-if ($JOBS <= 0) {
-    $JOBS = default_parallel();
-
-    print "Doing up to $JOBS concurrent builds/tests\n" if $DEBUG;
 }
 
 # --- Display output immediately
@@ -250,8 +200,6 @@ my $failed = shared_clone([]);
 # If we don't run any tests, we'll want to warn that we couldn't find
 # anything.
 my $tests_run = 0;
-
-my (%suites, @tests, $prev);
 
 my $q = Thread::Queue->new();
 our $MSG_Q = Thread::Queue->new();
@@ -419,6 +367,64 @@ if (!$tests_run) {
     }
 }
 exit $status;
+
+sub parse_args {
+    Getopt::Long::Configure('bundling');
+    GetOptions(
+        'd|debug'      => \$DEBUG,
+        'j|jobs:i'     => \$JOBS,
+        'k|keep-going' => \$run_all_tests,
+        'dump-logs!'   => \$DUMP_LOGS,
+        'v|verbose'    => \$VERBOSE,
+        'coverage:s'   => \$coverage,
+        'help|h'       => sub {usage(0); },
+    ) or usage;
+
+    if (@ARGV < 2 || @ARGV > 3) {
+        usage;
+    }
+
+    ($TESTSET, $RUNDIR, $singletest) = @ARGV;
+
+    if (-d $RUNDIR) {
+        my $abs = Cwd::abs_path($RUNDIR);
+        fail("Cannot resolve $RUNDIR: $!")
+          if not defined($abs);
+        $RUNDIR = $abs;
+    } else {
+        fail("test directory $RUNDIR does not exist");
+    }
+
+    unless (-d $TESTSET) {
+        fail("test set directory $TESTSET does not exist");
+    }
+
+    if (defined($coverage)) {
+        my $harness_perl_switches = $ENV{'HARNESS_PERL_SWITCHES'}//'';
+        # Only collect coverage for stuff that D::NYTProf and
+        # Test::Pod::Coverage cannot do for us.  This makes cover use less
+        # RAM in the other end.
+        my @criteria = qw(statement branch condition path subroutine);
+        my $coverage_arg = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
+        $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
+        $coverage_arg .= ',' . $coverage if $coverage ne '';
+        $ENV{'LINTIAN_COVERAGE'} = 1;
+        $harness_perl_switches .= ' ' . $coverage_arg;
+        $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
+        unshift(@LINTIAN_CMD, 'perl', $coverage_arg);
+    }
+
+    # Getopt::Long assigns 0 as default value if none was specified
+    # (i.e. "-j").  Otherwise, $JOBS can also be -1 if "-j" was not
+    # specified at all.
+    if ($JOBS <= 0) {
+        $JOBS = default_parallel();
+
+        print "Doing up to $JOBS concurrent builds/tests\n" if $DEBUG;
+    }
+
+    return;
+}
 
 # --- Full package testing
 
