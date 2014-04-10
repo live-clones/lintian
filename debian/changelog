@@ -11,6 +11,8 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [BR] Fix a GFDL detection false positive in texlive.  Thanks
       to Norbert Preining.  (Closes: #743754).
     + [BR] Fix another false positives in GFDL detection.
+  * checks/files.pm:
+    + [BR] Use Lintian::Data for detecting embedded library.
   * checks/fields.{desc,pm}:
     + [NT] Apply patch from Johannes Schauer to rename "notest"
       build-profile to "nocheck".  (Closes: #743840)
