@@ -84,7 +84,10 @@ my $VCS_FILES_OR_ALL = sub { qr/(?:$_[0])/ }
 # A list of known packaged Javascript libraries
 # and the packages providing them
 sub _load_file_package_list_mapping {
-    my ($datafile,$ext,$tagname) = @_;
+    my ($datafile,$ext,$tagname,$reinside) = @_;
+    unless(defined($reinside)) {
+        $reinside = undef;
+    }
     my $mapping = Lintian::Data->new(
         $datafile,
         qr/\s*\~\~\s*/,
@@ -99,6 +102,7 @@ sub _load_file_package_list_mapping {
         'mapping' => $mapping,
         'ext' => $ext,
         'tag' => $tagname,
+        'reinside' => $reinside,
     };
 }
 
@@ -111,55 +115,62 @@ my @FILE_PACKAGE_MAPPING = (
     _load_file_package_list_mapping(
         'files/php-libraries',$PHP_EXT,'embedded-php-library'
     ),
+    _load_file_package_list_mapping(
+        'files/pear-modules','(?i)\.php$',
+        'embedded-pear-module',qr,pear[/.],
+    ),
 );
 
 sub _detect_embeded_libraries {
-    my ($fname, $file, $pkg) = @_;
+    my ($fname, $file, $pkg,$info) = @_;
+
+    # detect only in regular file
+    unless($file->is_regular_file) {
+        return;
+    }
 
     foreach my $type (@FILE_PACKAGE_MAPPING) {
         my $typere =  $type->{'ext_regexp'};
         if($fname =~ m/$typere/) {
             my $mapping = $type->{'mapping'};
             my $typetag = $type->{'tag'};
+            my $reinside = $type->{'reinside'};
+          LIBRARY:
             foreach my $library ($mapping->all) {
                 my $library_data = $mapping->value($library);
                 my $mainre = $library_data->{'main_pkg'};
                 my $filere = $library_data->{'match'};
-                if ($fname =~ m,$filere, and $pkg !~ m,$mainre,) {
-                    tag $typetag, $file;
+                unless ($fname =~ m,$filere,) {
+                    next LIBRARY;
                 }
+                unless ($pkg !~ m,$mainre,) {
+                    next LIBRARY;
+                }
+                if(defined($reinside)) {
+                    my $foundre = 0;
+                    open(my $fd, '<:raw', $info->unpacked($file));
+
+                    my $sfd
+                      = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
+
+                  READWINDOW:
+                    while (my $block = $sfd->readwindow()) {
+                        if ($block =~ m{$reinside}) {
+                            $foundre = 1;
+                            last READWINDOW;
+                        }
+                    }
+                    close($fd);
+                    unless($foundre) {
+                        next LIBRARY;
+                    }
+                }
+                tag $typetag, $file;
             }
         }
     }
+    return;
 }
-
-# A list of known packaged PEAR modules
-# and the packages providing them
-my @pearmodules = (
-    [qr,(?<!Auth/)HTTP\.php$, => 'php-http'],
-    [qr,Auth\.php$, => 'php-auth'],
-    [qr,Auth/HTTP\.php$, => 'php-auth-http'],
-    [qr,Benchmark/(Timer|Profiler|Iterate)\.php$, => 'php-benchmark'],
-    [qr,Cache\.php$, => 'php-cache'],
-    [qr,Cache/Lite\.php$, => 'php-cache-lite'],
-    [qr,Compat\.php$, => 'php-compat'],
-    [qr,Config\.php$, => 'php-config'],
-    [qr,CBC\.php$, => 'php-crypt-cbc'],
-    [qr,Date\.php$, => 'php-date'],
-    [qr,(?<!Container)/DB\.php$, => 'php-db'],
-    [qr,(?<!Container)/File\.php$, => 'php-file'],
-    [qr,Log\.php$, => 'php-log'],
-    [qr,Log/(file|error_log|null|syslog|sql\w*)\.php$, => 'php-log'],
-    [qr,Mail\.php$, => 'php-mail'],
-    [qr,(?i)mime(Part)?\.php$, => 'php-mail-mime'],
-    [qr,mimeDecode\.php$, => 'php-mail-mimedecode'],
-    [qr,FTP\.php$, => 'php-net-ftp'],
-    [qr,(?<!Container/)IMAP\.php$, => 'php-net-imap'],
-    [qr,SMTP\.php$, => 'php-net-smtp'],
-    [qr,(?<!FTP/)Socket\.php$, => 'php-net-socket'],
-    [qr,IPv4\.php$, => 'php-net-ipv4'],
-    [qr,(?<!Container/)LDAP\.php$, => 'php-net-ldap'],
-);
 
 # A list of known non-free flash executables
 my @flash_nonfree = (
@@ -1195,7 +1206,7 @@ sub run {
             }
 
             # ---------------- embedded libraries
-            _detect_embeded_libraries($fname, $file, $pkg);
+            _detect_embeded_libraries($fname, $file, $pkg, $info);
 
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
@@ -1208,21 +1219,6 @@ sub run {
                     }
                 }
                 close($fd);
-            }
-
-            # ---------------- embedded PEAR modules
-            foreach my $pearmodule (@pearmodules) {
-                if (    $fname =~ m,/$pearmodule->[0],
-                    and $pkg ne $pearmodule->[1]){
-                    open(my $fd, '<', $info->unpacked($file));
-                    while (<$fd>) {
-                        if (m,/pear[/.],i) {
-                            tag 'embedded-pear-module', $file;
-                            last;
-                        }
-                    }
-                    close($fd);
-                }
             }
 
             # ---------------- html/javascript
