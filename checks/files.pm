@@ -29,7 +29,7 @@ use Lintian::Data;
 use Lintian::Output qw(warning);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
-  signal_number2name);
+  signal_number2name strip);
 use Lintian::SlidingWindow;
 
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
@@ -90,14 +90,9 @@ sub _load_file_package_list_mapping {
         qr/\s*\~\~\s*/,
         sub {
             my $pkg_regexp = qr/^$_[0]$/x;
-            my $file_regexp;
-            if($_[1] =~ /[\$]$/) {
-                $file_regexp = qr/$_[1]/x;
-            } else {
-                my $fullregex = $_[1].$ext;
-                $file_regexp = qr/$fullregex/x;
-            }
-            return { 'main_pkg' => $pkg_regexp, 'match' => $file_regexp };
+            my $file_regexp = strip($_[1]);
+            $file_regexp =~ s/\$EXT/$ext/g;
+            return { 'main_pkg' => $pkg_regexp, 'match' => qr/$file_regexp/ };
         });
     return {
         'ext_regexp' => qr/$ext/x,
@@ -149,9 +144,7 @@ my @phplibraries = (
     [qr,(?i)Smarty(_Compiler)?\.class\.php$, => qr'smarty3?'],
     [qr,(?i)class\.phpmailer(\.(php|inc))+$, => qr'libphp-phpmailer'],
     [qr,(?i)phpsysinfo\.dtd$, => qr'phpsysinfo'],
-    [
-        qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, =>qr'phpsysinfo'
-    ],
+    [qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, =>qr'phpsysinfo'],
     [qr,Auth/(OpenID|Yadis/Yadis)\.php$, => qr'php-openid'],
     [qr,(?i)Snoopy\.class\.(php|inc)$, => qr'libphp-snoopy'],
     [qr,(?i)markdown\.php$, => qr'libmarkdown-php'],
