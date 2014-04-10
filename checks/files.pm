@@ -113,6 +113,26 @@ my @FILE_PACKAGE_MAPPING = (
     ),
 );
 
+sub _detect_embeded_libraries {
+    my ($fname, $file, $pkg) = @_;
+
+    foreach my $type (@FILE_PACKAGE_MAPPING) {
+        my $typere =  $type->{'ext_regexp'};
+        if($fname =~ m/$typere/) {
+            my $mapping = $type->{'mapping'};
+            my $typetag = $type->{'tag'};
+            foreach my $library ($mapping->all) {
+                my $library_data = $mapping->value($library);
+                my $mainre = $library_data->{'main_pkg'};
+                my $filere = $library_data->{'match'};
+                if ($fname =~ m,$filere, and $pkg !~ m,$mainre,) {
+                    tag $typetag, $file;
+                }
+            }
+        }
+    }
+}
+
 # A list of known packaged PEAR modules
 # and the packages providing them
 my @pearmodules = (
@@ -1174,22 +1194,8 @@ sub run {
                 tag 'macos-resource-fork-file-in-package', $file;
             }
 
-            # ---------------- embedded Javascript libraries
-            foreach my $type (@FILE_PACKAGE_MAPPING) {
-                my $typere =  $type->{'ext_regexp'};
-                if($fname =~ m/$typere/) {
-                    my $mapping = $type->{'mapping'};
-                    my $typetag = $type->{'tag'};
-                    foreach my $library ($mapping->all) {
-                        my $library_data = $mapping->value($library);
-                        my $mainre = $library_data->{'main_pkg'};
-                        my $filere = $library_data->{'match'};
-                        if ($fname =~ m,$filere, and $pkg !~ m,$mainre,) {
-                            tag $typetag, $file;
-                        }
-                    }
-                }
-            }
+            # ---------------- embedded libraries
+            _detect_embeded_libraries($fname, $file, $pkg);
 
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
