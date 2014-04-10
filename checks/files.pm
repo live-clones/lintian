@@ -103,9 +103,13 @@ sub _load_file_package_list_mapping {
 }
 
 my $JS_EXT = '(?:(?i)[\.-]?(?:lite|min|pack(?:ed)?)?\.js(?:\.gz)?)$';
+my $PHP_EXT = '(?i)\.(?:php|inc|dtd)$';
 my @FILE_PACKAGE_MAPPING = (
     _load_file_package_list_mapping(
         'files/js-libraries',$JS_EXT,'embedded-javascript-library'
+    ),
+    _load_file_package_list_mapping(
+        'files/php-libraries',$PHP_EXT,'embedded-php-library'
     ),
 );
 
@@ -135,37 +139,6 @@ my @pearmodules = (
     [qr,(?<!FTP/)Socket\.php$, => 'php-net-socket'],
     [qr,IPv4\.php$, => 'php-net-ipv4'],
     [qr,(?<!Container/)LDAP\.php$, => 'php-net-ldap'],
-);
-
-# A list of known packaged php (!PEAR) libraries
-# and the packages providing them
-my @phplibraries = (
-    [qr,(?i)adodb\.inc\.php$, => qr'libphp-adodb'],
-    [qr,(?i)Smarty(_Compiler)?\.class\.php$, => qr'smarty3?'],
-    [qr,(?i)class\.phpmailer(\.(php|inc))+$, => qr'libphp-phpmailer'],
-    [qr,(?i)phpsysinfo\.dtd$, => qr'phpsysinfo'],
-    [qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, =>qr'phpsysinfo'],
-    [qr,Auth/(OpenID|Yadis/Yadis)\.php$, => qr'php-openid'],
-    [qr,(?i)Snoopy\.class\.(php|inc)$, => qr'libphp-snoopy'],
-    [qr,(?i)markdown\.php$, => qr'libmarkdown-php'],
-    [qr,(?i)geshi\.php$, => qr'php-geshi'],
-    [qr,(?i)(class[.-])?pclzip\.(inc|lib)?\.php$, => qr'libphp-pclzip'],
-    [qr,(?i).*layersmenu.*/(lib/)?PHPLIB\.php$, => qr'libphp-phplayersmenu'],
-    [qr,(?i)phpSniff\.(class|core)\.php$, => qr'libphp-phpsniff'],
-    [qr,(?i)(class\.)?jabber\.php$, => qr'libphp-jabber'],
-    [qr,(?i)(class[\.-])?simplepie(\.(php|inc))+$, => qr'libphp-simplepie'],
-    [qr,(?i)jpgraph\.php$, => qr'libphp-jpgraph'],
-    [qr,(?i)fpdf\.php$, => qr'php-fpdf'],
-    [qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => qr'php-getid3'],
-    [qr,(?i)streams\.php$, => qr'php-gettext'],
-    [qr,(?i)rss_parse\.(php|inc)$, => qr'libphp-magpierss'],
-    [qr,(?i)unit_tester\.php$, => qr'php-simpletest'],
-    [qr,(?i)Sparkline\.php$, => qr'libsparkline-php'],
-    [qr,(?i)(?:class\.)?nusoap\.(?:php|inc)$, => qr'libnusoap-php'],
-    [qr,(?i)HTMLPurifier\.php$, => qr'php-htmlpurifier'],
-    # not yet available in unstable:,
-    #    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => qr'libphp-ixr' ],
-    #    [ qr,(?i)(class\.)?kses\.php$, => qr'libphp-kses' ],
 );
 
 # A list of known non-free flash executables
@@ -1246,13 +1219,6 @@ sub run {
                 }
             }
 
-            # ---------------- embedded php libraries
-            foreach my $phplibrary (@phplibraries) {
-                if (    $fname =~ m,/$phplibrary->[0],
-                    and $pkg !~ m,^$phplibrary->[1]$,) {
-                    tag 'embedded-php-library', $file;
-                }
-            }
             # ---------------- html/javascript
             if ($fname =~ m,\.(?:x?html?|js|xht|xml|css)$,i) {
                 detect_privacy_breach($info,$file);
