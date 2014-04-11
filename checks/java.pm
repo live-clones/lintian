@@ -24,9 +24,12 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(any none);
+use Lintian::Data ();
 
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(normalize_pkg_path);
+
+our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
 
 sub run {
     my ($pkg, undef, $info) = @_;
@@ -81,11 +84,13 @@ sub run {
             my $mver = $files->{$class};
             $classes = 1;
             next if $class =~ m/\.clj$/;
-            # .class but no major version?
+            # .class but no major evrsion?
             next if $mver eq '-';
-            if ($mver <= 44 or $mver >= 52) {
+            if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1
+                or $mver
+                >= $MAX_BYTECODE->value('max-bytecode-existing-version')) {
                 # First public major version was 45 (Java1), latest
-                # version is 51 (Java7).
+                # version is 52 (Java8).
                 tag 'unknown-java-class-version', $jar_file,
                   "($class -> $mver)";
                 # Skip the rest of this Jar.
@@ -205,10 +210,13 @@ sub run {
         #  45-49 -> Java1 - Java5 (Always ok)
         #     50 -> Java6
         #     51 -> Java7
+        #     52 -> Java8
         my $bad = 0;
 
         # If the lowest version used is:
-        $bad = 1 if $jmajlow == 51; # Java7 - consider bad per request.
+        $bad = 1
+          if $jmajlow == $MAX_BYTECODE->value('max-bytecode-version')
+          + 1; # Java7 - consider bad per request.
 
        # Technically we ought to do some checks with Java6 class files and
        # dependencies/package types, but for now just skip that.  (See #673276)

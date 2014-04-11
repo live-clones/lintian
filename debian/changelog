@@ -23,6 +23,9 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [SL] Do not trigger a warning when a jar is not in
       /usr/share/java and the package name matches
       lib.*maven.*plugin.*java.
+    + [SL] Catch uses of Java8 byte code
+  * data/java/constants:
+    + [SL] introduce this file to specify JDK values
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Mon, 31 Mar 2014 18:52:04 +0200
 
