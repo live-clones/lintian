@@ -92,10 +92,15 @@ sub _load_file_package_list_mapping {
         $datafile,
         qr/\s*\~\~\s*/,
         sub {
-            my $pkg_regexp = qr/^$_[0]$/x;
+            my $pkg = strip($_[0]);
+            my $pkg_regexp = qr/^$pkg$/x;
             my $file_regexp = strip($_[1]);
             $file_regexp =~ s/\$EXT/$ext/g;
-            return { 'main_pkg' => $pkg_regexp, 'match' => qr/$file_regexp/ };
+            return {
+                'pkg_re' => $pkg_regexp,
+                'pkg' => $pkg,
+                'match' => qr/$file_regexp/,
+            };
         });
     return {
         'ext_regexp' => qr/$ext/x,
@@ -138,7 +143,8 @@ sub _detect_embeded_libraries {
           LIBRARY:
             foreach my $library ($mapping->all) {
                 my $library_data = $mapping->value($library);
-                my $mainre = $library_data->{'main_pkg'};
+                my $mainre = $library_data->{'pkg_re'};
+                my $mainpkg = $library_data->{'pkg'};
                 my $filere = $library_data->{'match'};
                 unless ($fname =~ m,$filere,) {
                     next LIBRARY;
@@ -165,7 +171,7 @@ sub _detect_embeded_libraries {
                         next LIBRARY;
                     }
                 }
-                tag $typetag, $file;
+                tag $typetag, $file, 'please use', $mainpkg;
             }
         }
     }
