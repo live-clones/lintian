@@ -6,7 +6,7 @@
 #
 # File should match both "type regex" and "name regex"
 #
-source-contains-prebuilt-binary             ~~ \bELF\b                                                                   ~~                                   ~~ map { 's/(?i)(?:[\.-](?:bin|elf|hs|linux\d+|oo?|out|so(?:\.\d+)*)|static)?$/'.$_.'/'} qw(.asm .c .cpp .cxx .f .F .S)
+source-contains-prebuilt-binary             ~~ \bELF\b                                                                   ~~                                   ~~ map { 's/(?i)(?:[\.-](?:bin|elf|hs|linux\d+|oo?|out|so(?:\.\d+)*)|static)?$/'.$_.'/'} qw(.asm .c .cc .cpp .cxx .f .F .S)
 source-contains-prebuilt-flash-object       ~~ ^Macromedia \s Flash                                                      ~~                                   ~~ s/(?i)\.swf$/.as/
 source-contains-prebuilt-flash-project      ~~ ^Composite \s Document \s File                                            ~~ (?i)\.fla$                        ~~ s/(?i)\.fla$/.as/
 source-contains-prebuilt-java-object        ~~ (?: Java [ ] (?:Jar [ ] file|archive [ ] data) | Zip [ ] archive | JAR)   ~~ (?i)\.jar$
