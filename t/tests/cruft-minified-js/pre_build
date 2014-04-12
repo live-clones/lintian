@@ -15,6 +15,7 @@ mkdir -p "$jsdir/minwithoutsource"
 mkdir -p "$jsdir/jswithoutminext"
 mkdir -p "$jsdir/json"
 mkdir -p "$jsdir/sourced"
+mkdir -p "$jsdir/sourced_variant"
 mkdir -p "$jsdir/jswithoutminextwithoutsource/"
 
 # create a js file
@@ -28,6 +29,8 @@ cp "$uglyjson" "$jsdir/jswithoutminextwithoutsource/jsonnotsourced.js"
 # fake source and min alon
 cp "$uglyjson" "$jsdir/sourced/sourced.min.js"
 cp "$json" "$jsdir/sourced/sourced.js"
+cp "$uglyjson" "$jsdir/sourced_variant/sourced.min.js"
+cp "$json" "$jsdir/sourced_variant/sourced_orig.js"
 
 
 
