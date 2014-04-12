@@ -11,6 +11,8 @@ Depends: $\{misc:Depends\},
          default-jre-headless | java-runtime-headless |
          java2-runtime-headless | kaffe | gcj-jdk |
          openjdk-6-jre | gcj-4.5-jre
+Suggests: libservlet2.5-java
+Recommends: libservlet3.0-java
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

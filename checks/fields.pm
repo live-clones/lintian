@@ -804,6 +804,10 @@ sub run {
                         && $d_pkg eq 'packaging-dev'
                         && !$info->is_pkg_class('any-meta'));
 
+                    tag 'needless-suggest-recommend-libservlet-java', "$d_pkg"
+                      if (($field eq 'recommends' || $field eq 'suggests')
+                        && $d_pkg =~ m/libservlet[\d\.]+-java/);
+
                     tag 'needlessly-depends-on-awk', $field
                       if ( $d_pkg eq 'awk'
                         && !$d_version->[0]

@@ -6,3 +6,5 @@ W: fields-java source: build-depends-on-specific-java-doc-package openjdk-6-doc
 W: fields-java source: virtual-package-depends-without-real-package-depends build-depends: java-compiler
 W: libfields-java-java-doc: depends-on-specific-java-doc-package recommends
 W: libfields-java-java: needless-dependency-on-jre
+W: libfields-java-java: needless-suggest-recommend-libservlet-java libservlet2.5-java
+W: libfields-java-java: needless-suggest-recommend-libservlet-java libservlet3.0-java
