@@ -6,8 +6,8 @@ severity: serious
 
 Hi,
 
-Your package seems to include some files that lacks source 
-in prefered forms of modification.
+Your package seems to include some files that lack sources
+in prefered forms of modification:
 
 {list of files}
 
@@ -28,8 +28,6 @@ might be preferable due to the following reasons [2]:
    miss the source and (needlessly) reject the package.
  - The source isn't duplicated in every .diff.gz/.debian.tar.* (though
    this only really matters for larger sources).
-
-If this is a false-positive, please report a bug against Lintian.
 
 You could also ask debian-qa for more guidance.
 
