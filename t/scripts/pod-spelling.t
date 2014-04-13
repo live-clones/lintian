@@ -115,6 +115,7 @@ Whitespace udebs multiword recognised eqv testsuite methodx multi
 multiarch relationA relationB Multi natively unordered arg CVE autodie
 hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
 REMOVESLASH STAMPFILE TAGNAME TCODE TESTDATA BLOCKSIZE jN
+POSIX
 
 __END__
 
