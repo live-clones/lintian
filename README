@@ -107,6 +107,77 @@ Lintian when it was last updated on the Lintian web site.
 
 [online-api-docs]: http://lintian.debian.org/library-api/index.html
 
+Translating Lintian
+===================
+
+Translations are done using [GNU Gettext "po"-files][gnu-po-files].
+Currently, it is only possible to translate descriptions of Lintian
+tags.
+
+If there exists a translation for your language, you can update/alter
+it by editing "po4a/po/checks/<language-code>.po" using an editor that
+supports PO-files (e.g. poedit or emacs).
+
+There are some tests of the resulting translation, which can be
+executed by the following commands:
+
+    $ debian/rules runtests-translation
+
+Please note that this *may* regenerate the "po" file; this is an
+artifact of how one of the underlying tools (po4a) work.  You can
+also explicit request a regeneration of the "po" file by running:
+
+    $ debian/rules update-po
+
+This also updates the resulting translation files, so Lintian can use
+them.
+
+You can also view the result of your translation by using
+lintian-info.  This shows you how other people will see the resulting
+translation, when they use Lintian.  E.g.
+
+    $ debian/rules update-po
+    $ LC_ALL=<lang-code> frontend/lintian-info -t <tag>
+
+
+Where <lang-code> is the language code of the language for which your
+are translating and <tag> is the name of the tag, whose description
+you have translated. A concrete example:
+
+    $ debian/rules update-po
+    $ LC_ALL=da frontend/lintian-info -t \
+         package-depends-on-lower-priority-package
+
+Please note that during testing, the threshold for translations is
+reduced to ease testing and help with review.  But for releases, at
+least 80% of all tags in a given file must have been translated,
+before the translations are used.
+
+[gnu-po-files]: https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html
+
+Translating for a new language
+------------------------------
+
+You can start translating tag descriptions for a new language by
+creating a new po-file for it.  Assuming you have gettext installed,
+this can be done by running:
+
+    $ msginit -i po4a/po/checks/checks.pot -l <lang-code> \
+      -o po4a/po/checks/<lang-code>.po
+
+(Where <lang-code> is replaced by the language code, e.g. "da")
+
+Open the newly created "po4a/po/checks/<lang-code>.po" in your favorite
+editor and translate as above.
+
+
+Submitting (updated) translations
+---------------------------------
+
+Updated translations can be submitted to Lintian as a bug report (see
+the Feedback section).  Accepted formats include attached patches,
+references to public git branches or the resulting "po" file.
+
 Feedback
 ========
 
