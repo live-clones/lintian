@@ -1,16 +1,18 @@
+LINKER_FLAGS := -Wl,--no-copy-dt-needed-entries,--no-as-needed
+
 all: basic basic.1 libbasic-nodeps libbasic-nolibc
 
 basic.1: basic.pod
 	pod2man --section 1 < $< > $@
 
 basic: basic.o
-	ld -o$@ $< -lm $(LFLAGS)
+	gcc -nostdlib -o$@ $< $(LINKER_FLAGS) -lm $(LFLAGS)
 
 libbasic-nodeps: basic.o
-	ld --shared -o$@ $<
+	gcc -nostdlib --shared -o$@ $<
 
 libbasic-nolibc: basic.o
-	ld --shared -o$@ $< -lm
+	gcc -nostdlib --shared -o$@ $< $(LINKER_FLAGS) -lm
 
 install:
 	install -d $(DESTDIR)/usr/bin
