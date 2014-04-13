@@ -70,17 +70,17 @@ W: filenames: binary-without-manpage usr/bin/mh/read
 W: filenames: debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian
 W: filenames: desktop-file-in-wrong-dir usr/share/gnome/apps/System/foo.desktop
 W: filenames: embedded-feedparser-library files/feedparser.py
-W: filenames: embedded-javascript-library usr/share/filenames/jquery.js
-W: filenames: embedded-javascript-library usr/share/filenames/jquery.lite.js
-W: filenames: embedded-javascript-library usr/share/filenames/jquery.min.js
-W: filenames: embedded-javascript-library usr/share/filenames/jquery.pack.js
-W: filenames: embedded-javascript-library usr/share/filenames/mochikit.js
-W: filenames: embedded-javascript-library usr/share/filenames/prototype-1.2.3.4.js
-W: filenames: embedded-javascript-library usr/share/filenames/prototype.js
-W: filenames: embedded-javascript-library usr/share/filenames/prototype.js.gz
-W: filenames: embedded-javascript-library usr/share/filenames/scriptaculous.js
-W: filenames: embedded-javascript-library usr/share/filenames/yahoo-dom-event.js
-W: filenames: embedded-javascript-library usr/share/filenames/yahoo-min.js
+W: filenames: embedded-javascript-library usr/share/filenames/jquery.js please use libjs-jquery
+W: filenames: embedded-javascript-library usr/share/filenames/jquery.lite.js please use libjs-jquery
+W: filenames: embedded-javascript-library usr/share/filenames/jquery.min.js please use libjs-jquery
+W: filenames: embedded-javascript-library usr/share/filenames/jquery.pack.js please use libjs-jquery
+W: filenames: embedded-javascript-library usr/share/filenames/mochikit.js please use libjs-mochikit
+W: filenames: embedded-javascript-library usr/share/filenames/prototype-1.2.3.4.js please use libjs-prototype
+W: filenames: embedded-javascript-library usr/share/filenames/prototype.js please use libjs-prototype
+W: filenames: embedded-javascript-library usr/share/filenames/prototype.js.gz please use libjs-prototype
+W: filenames: embedded-javascript-library usr/share/filenames/scriptaculous.js please use libjs-scriptaculous
+W: filenames: embedded-javascript-library usr/share/filenames/yahoo-dom-event.js please use libjs-yui
+W: filenames: embedded-javascript-library usr/share/filenames/yahoo-min.js please use libjs-yui
 W: filenames: executable-not-elf-or-script usr/bin/bin/bad
 W: filenames: executable-not-elf-or-script usr/bin/mh/read
 W: filenames: extra-license-file usr/share/pixmaps/COPYING
