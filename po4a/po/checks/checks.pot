@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-04-13 13:33+0200\n"
+"POT-Creation-Date: 2014-04-13 19:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3740,6 +3740,91 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: malformed-deb-archive
+#. type: Lintian tag description
+#: checks/deb-format.desc:19
+#, no-wrap
+msgid ""
+"The binary package is not a correctly constructed archive.  A binary\n"
+"Debian package must be an ar archive with exactly three members:\n"
+"<tt>debian-binary</tt>, <tt>control.tar.gz</tt>, and one of\n"
+"<tt>data.tar.gz</tt>, <tt>data.tar.bz2</tt> or <tt>data.tar.xz</tt>\n"
+"in exactly that order.  The <tt>debian-binary</tt> member must start\n"
+"with a single line containing the version number, with a major revision\n"
+"of 2."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: misplaced-extra-member-in-deb
+#. type: Lintian tag description
+#: checks/deb-format.desc:26
+#, no-wrap
+msgid ""
+"The binary package contains an extra member that Lintian did not\n"
+"expect or expected at a different position."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: lzma-deb-archive
+#. type: Lintian tag description
+#: checks/deb-format.desc:33
+#, no-wrap
+msgid ""
+"The data portion of this binary package is compressed with lzma.\n"
+"This is supported by dpkg but not yet permitted in the Debian archive.\n"
+"Such a package will be rejected by DAK."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: tar-errors-from-control
+#. type: Lintian tag description
+#: checks/deb-format.desc:41
+#, no-wrap
+msgid ""
+"tar produced an error while listing the contents of the\n"
+"<tt>control.tar.gz</tt> member of this package.  This probably means\n"
+"there's something broken or at least strange about the way the package\n"
+"was constructed."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: tar-errors-from-data
+#. type: Lintian tag description
+#: checks/deb-format.desc:48
+#, no-wrap
+msgid ""
+"tar produced an error while listing the contents of the data\n"
+"member of this package.  This probably means there's something broken or\n"
+"at least strange about the way the package was constructed."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: udeb-uses-unsupported-compression-for-data-tarball
+#. type: Lintian tag description
+#: checks/deb-format.desc:58
+#, no-wrap
+msgid ""
+"The data tarball of this udeb package is not compressed in format\n"
+"that udpkg (debian-installer's dpkg equivalent) does not support.  Thus\n"
+"the udeb is likely to be uninstallable and could break daily or weekly\n"
+"d-i images.\n"
+"\n"
+"Currently, udpkg supports .gz and .xz compressed tarballs."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: missing-debconf-dependency
 #. type: Lintian tag description
 #: checks/debconf.desc:13
@@ -4298,91 +4383,6 @@ msgid ""
 "\n"
 "This issue may hide other issues as Lintian skips some checks on the\n"
 "file in this case.\n"
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: malformed-deb-archive
-#. type: Lintian tag description
-#: checks/deb-format.desc:19
-#, no-wrap
-msgid ""
-"The binary package is not a correctly constructed archive.  A binary\n"
-"Debian package must be an ar archive with exactly three members:\n"
-"<tt>debian-binary</tt>, <tt>control.tar.gz</tt>, and one of\n"
-"<tt>data.tar.gz</tt>, <tt>data.tar.bz2</tt> or <tt>data.tar.xz</tt>\n"
-"in exactly that order.  The <tt>debian-binary</tt> member must start\n"
-"with a single line containing the version number, with a major revision\n"
-"of 2."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: misplaced-extra-member-in-deb
-#. type: Lintian tag description
-#: checks/deb-format.desc:26
-#, no-wrap
-msgid ""
-"The binary package contains an extra member that Lintian did not\n"
-"expect or expected at a different position."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: lzma-deb-archive
-#. type: Lintian tag description
-#: checks/deb-format.desc:33
-#, no-wrap
-msgid ""
-"The data portion of this binary package is compressed with lzma.\n"
-"This is supported by dpkg but not yet permitted in the Debian archive.\n"
-"Such a package will be rejected by DAK."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: tar-errors-from-control
-#. type: Lintian tag description
-#: checks/deb-format.desc:41
-#, no-wrap
-msgid ""
-"tar produced an error while listing the contents of the\n"
-"<tt>control.tar.gz</tt> member of this package.  This probably means\n"
-"there's something broken or at least strange about the way the package\n"
-"was constructed."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: tar-errors-from-data
-#. type: Lintian tag description
-#: checks/deb-format.desc:48
-#, no-wrap
-msgid ""
-"tar produced an error while listing the contents of the data\n"
-"member of this package.  This probably means there's something broken or\n"
-"at least strange about the way the package was constructed."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: udeb-uses-unsupported-compression-for-data-tarball
-#. type: Lintian tag description
-#: checks/deb-format.desc:58
-#, no-wrap
-msgid ""
-"The data tarball of this udeb package is not compressed in format\n"
-"that udpkg (debian-installer's dpkg equivalent) does not support.  Thus\n"
-"the udeb is likely to be uninstallable and could break daily or weekly\n"
-"d-i images.\n"
-"\n"
-"Currently, udpkg supports .gz and .xz compressed tarballs."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for

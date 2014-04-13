@@ -6,5 +6,5 @@ cp -f "$CFG".in "$CFG"
 #  [type: lintian] checks/CHECK.desc \$lang:l10n/checks/CHECK_\$lang.desc
 #
 # sort is not strictly necessary, but it makes it easier to review.
-find checks/ -name '*.desc' | sort | \
+find checks/ -name '*.desc' | LC_ALL=C.UTF-8 sort | \
    perl -ne 'chomp; $file = $_; s{^checks/(.+)\.desc$}{$1}; print "[type: lintian] $file \$lang:l10n/checks/${_}_\$lang.desc\n";' >> "$CFG";
