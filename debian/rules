@@ -65,7 +65,7 @@ update-po: $(po4acheckcfg)
 
 update-po-release: $(po4acheckcfg)
 	rm -rf l10n
-	PERL5LIB=lib/ --keep 80 po4a $<
+	PERL5LIB=lib/ po4a --keep 80 $<
 
 po4a/%.cfg: po4a/%.cfg.in private/gen-po4a-conf
 	private/gen-po4a-conf $@
