@@ -141,7 +141,10 @@ STDOUT->autoflush;
 $SIG{PIPE} = 'IGNORE';
 
 # reset locale definition (necessary for tar)
+# - but store LC_ALL because we need it later
+$ENV{'ORIG_LC_ALL'} = $ENV{'LC_ALL'} if exists($ENV{'LC_ALL'});
 $ENV{'LC_ALL'} = 'C';
+
 # reset timezone definition (also for tar)
 $ENV{'TZ'}     = '';
 
@@ -772,7 +775,8 @@ require Lintian::Data;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Internal::FrontendUtil;
-import Lintian::Internal::FrontendUtil qw(default_parallel load_collections);
+import Lintian::Internal::FrontendUtil qw(
+  default_parallel load_collections determine_locale);
 require Lintian::ProcessablePool;
 require Lintian::Profile;
 require Lintian::Tags;
@@ -980,10 +984,20 @@ $TAGS->show_experimental($opt{'display-experimental'});
 $TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
 
-$PROFILE
-  = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@search_dirs,
-    { 'restricted-search-dirs' => \@restricted_search_dirs },
-  );
+{
+    # Temporarily restore LC_ALL before calling determine_locale
+    local $ENV{'LC_ALL'} = $ENV{'ORIG_LC_ALL'};
+    if (!exists($ENV{'ORIG_LC_ALL'})) {
+        delete($ENV{'LC_ALL'});
+    }
+    my $locale = determine_locale();
+    my %profile_opts = (
+        'restricted-search-dirs' => \@restricted_search_dirs,
+        'language' => $locale,
+    );
+    $PROFILE = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@search_dirs,
+        \%profile_opts);
+}
 # Ensure $opt{'LINTIAN_PROFILE'} is defined
 $opt{'LINTIAN_PROFILE'} = $PROFILE->name
   unless defined $opt{'LINTIAN_PROFILE'};
