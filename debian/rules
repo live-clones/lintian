@@ -63,16 +63,12 @@ update-po: $(po4acheckcfg)
 	rm -rf l10n
 	PERL5LIB=lib/ po4a --keep 0.001 $<
 
-update-po-release: $(po4acheckcfg)
-	rm -rf l10n
-	PERL5LIB=lib/ po4a --keep 80 $<
-
 po4a/%.cfg: po4a/%.cfg.in private/gen-po4a-conf
 	private/gen-po4a-conf $@
 
 
 build-arch build-indep build: build-stamp
-build-stamp: $(neededfiles) $(docsource) $(testtarget) update-po-release
+build-stamp: $(neededfiles) $(docsource) $(testtarget) $(po4acheckcfg)
 	@echo .... running build ....
 	dh_testdir
 	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
@@ -82,6 +78,8 @@ build-stamp: $(neededfiles) $(docsource) $(testtarget) update-po-release
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
 	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
 	private/generate-html-docs doc/api.html > /dev/null
+
+	PERL5LIB=lib/ po4a -f --keep 80 $(po4acheckcfg)
 
 	# check that the static data about perl core modules is up to date
 	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
@@ -97,7 +95,7 @@ clean: $(neededfiles)
 	rm -rf doc/api.html
 	rm -rf "$(TEST_WORK_DIR)"
 	rm -rf man/man1/
-	rm -fr $(po4acheckcfg) l10n/
+	rm -fr l10n/
 	dh_clean
 
 binary-indep: $(neededfiles) build
@@ -129,5 +127,5 @@ binary-arch:
 
 binary:	binary-indep binary-arch
 
-.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides update-po update-po-release
+.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides update-po
 .DELETE_ON_ERROR: runtests
