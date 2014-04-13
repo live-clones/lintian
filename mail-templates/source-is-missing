@@ -11,7 +11,7 @@ in prefered forms of modification:
 
 {list of files}
 
-According to Debian Free Software Guidelines [1] (DFSG) §2: 
+According to Debian Free Software Guidelines [1] (DFSG) #2:
  "The program must include source code, and must allow distribution 
   in source code as well as compiled form.".
 
@@ -29,7 +29,8 @@ might be preferable due to the following reasons [2]:
  - The source isn't duplicated in every .diff.gz/.debian.tar.* (though
    this only really matters for larger sources).
 
-You could also ask debian-qa for more guidance.
+You could also ask debian-qa@lists.debian.org or #debian-qa for more
+guidance.
 
 [1] https://www.debian.org/social_contract.en.html#guidelines
 [2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=736873#8
