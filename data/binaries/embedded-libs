@@ -80,6 +80,7 @@ openjpeg  ||tcd_decode: incomplete bistream
 openssl   ||You need to read the OpenSSL FAQ
 pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
 poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing anyway\)|PDF file is damaged - attempting to reconstruct xref table\.\.\.)
+polarssl  ||(?m)^(?:ASN1 - Actual length differs from expected length|SSL - The connection indicated an EOF)
 sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
 t1lib     ||t1lib is copyright \(c\) Rainer Menzner
 tiff      ||source-regex=tiff\d* ||No space for PixarLog state block
