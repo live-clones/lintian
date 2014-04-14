@@ -28,6 +28,8 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [SL] Warn that the suggests/recommends on libservlet[\d\.]+-java is
       needless (Closes: #743453)
 
+  * data/binary/embedded-libs:
+    + [RG] Detect embedded copies of polarssl.
   * data/java/constants:
     + [SL] introduce this file to specify JDK values
 
