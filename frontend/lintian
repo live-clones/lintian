@@ -97,7 +97,6 @@ my $pkg_mode = 'auto';          # auto -- automatically search for
 # binary and source pkgs
 my $debug = 0;
 my $check_everything = 0;       #flag for -a|--all switch
-my $lintian_info = 0;           #flag for -i|--info switch
 my $ftpmaster_tags = 0;         #flag for -F|--ftp-master-rejects switch
 my $allow_root = 0;             #flag for --allow-root switch
 my $keep_lab = 0;               #flag for --keep-lab switch
