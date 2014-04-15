@@ -168,12 +168,12 @@ sub run {
                 }
             }
         } else { # not a symlink
-            my $path = $info->unpacked($file);
+            my $fs_path = $info->unpacked($file);
             my $fd;
             if ($file_info =~ m/gzip compressed/) {
-                $fd = open_gz($path);
+                $fd = open_gz($fs_path);
             } else {
-                open($fd, '<', $path);
+                open($fd, '<', $fs_path);
             }
             my @manfile = <$fd>;
             close $fd;
@@ -225,7 +225,7 @@ sub run {
                 if ($pid == 0) {
                     clean_env;
                     open(STDERR, '>&', \*STDOUT);
-                    exec 'lexgrog', $path
+                    exec('lexgrog', $fs_path)
                       or fail "exec lexgrog failed: $!";
                 }
                 my $desc = <$lexgrog_fd>;
@@ -252,11 +252,11 @@ sub run {
             # pages with .so but aren't simple links; rbash, for instance.)
             my @cmd = qw(man --warnings -E UTF-8 -l -Tutf8 -Z);
             my $dir;
-            if ($path =~ m,^(.*)/(man\d/.*)$,) {
+            if ($fs_path =~ m,^(.*)/(man\d/.*)$,) {
                 $dir = $1;
                 push @cmd, $2;
             } else {
-                push @cmd, $path;
+                push(@cmd, $fs_path);
             }
             my ($read, $write);
             pipe($read, $write);
