@@ -260,10 +260,7 @@ sub record_check_part {
                 'both -C or --check-part and -X',
                 'or --dont-check-part options not allowed'));
     }
-    if ($action) {
-        die("too many actions specified: $_[0]");
-    }
-    $action = 'check';
+    record_action('check');
     $checks = "$_[1]";
     return;
 }
@@ -281,10 +278,7 @@ sub record_check_tags {
         die('both -T or --tags and -X or --dont-check-part options not allowed'
         );
     }
-    if ($action) {
-        die("too many actions specified: $_[0]");
-    }
-    $action = 'check';
+    record_action('check');
     $check_tags = "$_[1]";
     return;
 }
@@ -345,10 +339,7 @@ sub record_dont_check_part {
                 'both -C or --check-part and',
                 '-X or --dont-check-part options not allowed'));
     }
-    if ($action) {
-        die("too many actions specified: $_[0]");
-    }
-    $action = 'check';
+    record_action('check');
     $dont_check = "$_[1]";
     return;
 }
