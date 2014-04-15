@@ -58,7 +58,7 @@ libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
 libmng    ||TERM misplaced during creation of MNG stream
 libmsn    ||The MSN server has terminated the connection with an unknown reason code\.
 libmikmod ||APUN \(APlayer\) and UNI \(MikMod\)
-libmysqlclient ||source-regex=mysql(?:-\d.*)? ||MySQL client ran out of memory
+libmysqlclient ||source-regex=(?:mysql|mariadb)(?:-\d.*)? ||MySQL client ran out of memory
 libpcap   ||(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)
 libpng    ||(?m)^Potential overflow in png_zalloc
 libraw    ||Unsupported file format or not RAW file

@@ -30,6 +30,7 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of polarssl.
+    + [RG] Don't detect mariadb as embedder of mysql.
   * data/java/constants:
     + [SL] introduce this file to specify JDK values
 
