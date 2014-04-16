@@ -636,7 +636,9 @@ sub test_changes {
         }
     }
 
-    mkdir("$RUNDIR/changes")
+    # Use mkdir -p to avoid a race condition where two threads tries
+    # to create the same dir and then have one of them error out.
+    runsystem_ok('mkdir', '-p', "$RUNDIR/changes")
       if not -d "$RUNDIR/changes";
 
     msg_print "Running $testname $testdata->{version}... ";
