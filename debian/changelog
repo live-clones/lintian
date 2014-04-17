@@ -42,8 +42,11 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [NT] Add Build-Depends on po4a.
   * debian/lintian.install:
     + [NT] Install translations.
+  * debian/{lintian.,source/}lintian-overrides:
+    + [NT] Add overrides for using hardening-includes.
   * debian/rules:
     + [NT] Add rules for handling translations.
+    + [NT] Run dh_lintian during binary-indep target.
 
   * frontend/lintian{,-info}:
     + [NT] Use localized version of tag descriptions.
