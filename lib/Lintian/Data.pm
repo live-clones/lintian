@@ -30,12 +30,12 @@ our $LAZY_LOAD = 1;
 
 sub new {
     my ($class, @args) = @_;
-    my $type = $args[0];
+    my $data_name = $args[0];
     my $self = {};
     my $data;
-    croak 'no data type specified' unless $type;
+    croak 'no data type specified' unless $data_name;
     bless $self, $class;
-    $data = $self->_get_data($type);
+    $data = $self->_get_data($data_name);
     if ($data) {
         # We already loaded this data file - just pull from cache
         $self->{'data'} = $data;
@@ -61,22 +61,22 @@ sub new {
     my %data;
 
     sub _get_data {
-        my ($self, $type) = @_;
-        return $data{$type};
+        my ($self, $data_name) = @_;
+        return $data{$data_name};
     }
 
     sub _load_data {
-        my ($self, $type, $separator, $code) = @_;
-        unless (exists $data{$type}) {
+        my ($self, $data_name, $separator, $code) = @_;
+        unless (exists($data{$data_name})) {
             my $vendors = $self->_get_vendor_names;
             my $dataset = {};
-            my ($fd, $vno) = $self->_open_data_file($type, $vendors, 0);
-            $self->_parse_file($type, $fd, $dataset, $separator, $code,
+            my ($fd, $vno) = $self->_open_data_file($data_name, $vendors, 0);
+            $self->_parse_file($data_name, $fd, $dataset, $separator, $code,
                 $vendors, $vno);
             close($fd);
-            $data{$type} = $dataset;
+            $data{$data_name} = $dataset;
         }
-        return $self->{'data'} = $data{$type};
+        return $self->{'data'} = $data{$data_name};
     }
 }
 
@@ -100,17 +100,17 @@ sub new {
 
     # Open the (next) data file
     #
-    # $self->_open_data_file ($type, $vendors, $start)
-    # - $type is the data file (e.g. "common/architectures")
+    # $self->_open_data_file ($data_name, $vendors, $start)
+    # - $data_name is the data file (e.g. "common/architectures")
     # - $vendors is the listref return by _get_vendor_names
     # - $start is an index into $vendors (the first $vendor to try)
     sub _open_data_file {
-        my ($self, $type, $vendors, $start) = @_;
+        my ($self, $data_name, $vendors, $start) = @_;
         my $file;
         my $cur = $start;
 
       OUTER: for (; $cur < scalar @$vendors ; $cur++) {
-            my $vendorpart = "vendors/$vendors->[$cur]/data/$type";
+            my $vendorpart = "vendors/$vendors->[$cur]/data/$data_name";
             foreach my $datafile ($profile->include_path($vendorpart)) {
                 if (-f $datafile) {
                     $file = $datafile;
@@ -119,7 +119,7 @@ sub new {
             }
         }
         if (not defined $file and $cur == scalar @$vendors) {
-            foreach my $datafile ($profile->include_path("data/$type")) {
+            foreach my $datafile ($profile->include_path("data/$data_name")) {
                 if (-f $datafile) {
                     $file = $datafile;
                     last;
@@ -128,7 +128,7 @@ sub new {
             $cur++;
         }
         if (not defined $file) {
-            croak "Unknown data file: $type" unless $start;
+            croak "Unknown data file: $data_name" unless $start;
             croak "No parent data file for $vendors->[$start]";
         }
         open(my $fd, '<', "$file");
@@ -137,9 +137,10 @@ sub new {
 }
 
 sub _parse_file {
-    my ($self, $type, $fd, $dataset, $separator, $code, $vendors, $vno) = @_;
-    my $filename = $type;
-    $filename = $vendors->[$vno] . '/' . $type if $vno < scalar @$vendors;
+    my ($self, $data_name, $fd, $dataset, $separator, $code, $vendors, $vno)
+      = @_;
+    my $filename = $data_name;
+    $filename = $vendors->[$vno] . '/' . $data_name if $vno < scalar @$vendors;
     local $.;
     while (my $line = <$fd>) {
         strip($line);
@@ -152,8 +153,8 @@ sub _parse_file {
                 delete $dataset->{$value};
             } elsif ($op eq 'include-parent') {
                 my ($pfd, $pvo)
-                  = $self->_open_data_file($type, $vendors,$vno +1);
-                $self->_parse_file($type, $pfd, $dataset, $separator,
+                  = $self->_open_data_file($data_name, $vendors,$vno +1);
+                $self->_parse_file($data_name, $pfd, $dataset, $separator,
                     $code, $vendors, $pvo);
                 close($pfd);
             } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
@@ -186,7 +187,7 @@ sub _parse_file {
                 next if !defined $val && defined $pval;
                 unless (defined $val) {
                     next if defined $pval;
-                    croak "undefined value for $key (type: $type)";
+                    croak "undefined value for $key (data-name: $data_name)";
                 }
             }
         } else {
