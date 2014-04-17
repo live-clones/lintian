@@ -95,28 +95,33 @@ sub run {
         $uri =~ s/^([^#\s]+)#/$1/ if defined $uri; # strip fragment identifier
 
         if (defined $uri) {
+            # Note that we allow people to use "https://" even the
+            # policy says it must be "http://".  It might be
+            # pedantically wrong, but it is not worth arguing over On
+            # the plus side, it gives security to people blindly
+            # copy-wasting the URLs using "https://".
             my $original_uri = $uri;
             my $version;
             if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
                 tag 'boilerplate-copyright-format-uri', $uri;
             } elsif (
-                $uri =~ s{ http://wiki\.debian\.org/
+                $uri =~ s{ https?://wiki\.debian\.org/
                                 Proposals/CopyrightFormat\b}{}xsm
               ) {
                 $version = '0~wiki';
                 $uri =~ m,^\?action=recall&rev=(\d+)$,
                   and $version = "$version~$1";
-            } elsif ($uri =~ m,^http://dep\.debian\.net/deps/dep5/?$,) {
+            } elsif ($uri =~ m,^https?://dep\.debian\.net/deps/dep5/?$,) {
                 $version = '0+svn';
             } elsif (
-                $uri =~ s{\A http://svn\.debian\.org/
+                $uri =~ s{\A https?://svn\.debian\.org/
                                   wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
               ) {
                 $version = '0+svn';
                 $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
                   and $version = "$version~$1";
             } elsif (
-                $uri =~ s{ \A http://(?:svn|anonscm)\.debian\.org/
+                $uri =~ s{ \A https?://(?:svn|anonscm)\.debian\.org/
                                     viewvc/dep/web/deps/dep5\.mdwn\b}{}xsm
               ) {
                 $version = '0+svn';
@@ -126,7 +131,7 @@ sub run {
                   and $version = "$version~$1";
             } elsif (
                 $uri =~ m{ \A
-                       http://www\.debian\.org/doc/
+                       https?://www\.debian\.org/doc/
                        (?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?
                    \Z}xsm
               ) {

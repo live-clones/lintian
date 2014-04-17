@@ -28,6 +28,10 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [SL] Catch uses of Java8 byte code.  (Closes: #743384).
     + [SL] Warn that the suggests/recommends on libservlet[\d\.]+-java is
       needless (Closes: #743453)
+  * checks/source-copyright.pm:
+    + [NT] Permit the use of "https://" in DEP-5 format URIs even
+      if the policy suggests that they have to use "http://".
+      (Closes: #744981)
 
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of polarssl.
