@@ -6,6 +6,13 @@
 # Each list of packages should be tagged with the last Debian release in
 # which the package appeared so that we can remove long-obsolete entries
 # that are no longer worth checking for.
+#
+# It is possible to specify a replacement (which need not be a package).
+# Examples:
+#   # Obsolete with no replacement
+#   <pkgX>
+#   # pkgY is replaced by <replacement>
+#   <pkgY> => <replacement>
 
 # Last seen in sarge.
 xlibs-dev
@@ -87,3 +94,7 @@ automake1.10
 openjdk-6-jdk
 openjdk-6-jre
 openjdk-6-jre-headless
+
+# Deprecated in Jessie (#711193)
+hardening-wrapper => use dpkg-buildflags instead
+hardening-includes => use dpkg-buildflags instead

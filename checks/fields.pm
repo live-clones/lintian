@@ -222,7 +222,8 @@ our $PYTHON_DEV = join(' | ',
     map { "python$_-dev" } qw(2.7 3 3.2));
 
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
-our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
+our $OBSOLETE_PACKAGES
+  = Lintian::Data->new('fields/obsolete-packages',qr/\s*=>\s*/);
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
@@ -871,12 +872,17 @@ sub run {
                 }
 
                 for my $pkg (@seen_obsolete_packages) {
+                    my $replacement = $OBSOLETE_PACKAGES->value($pkg) // '';
+                    $replacement = ' => ' . $replacement
+                      if $replacement ne '';
                     if ($pkg eq $alternatives[0]->[0]
                         or scalar @seen_obsolete_packages
                         == scalar @alternatives) {
-                        tag 'depends-on-obsolete-package', "$field: $pkg";
+                        tag 'depends-on-obsolete-package',
+                          "$field: $pkg${replacement}";
                     } else {
-                        tag 'ored-depends-on-obsolete-package', "$field: $pkg";
+                        tag 'ored-depends-on-obsolete-package',
+                          "$field: $pkg${replacement}";
                     }
                 }
 
@@ -1087,13 +1093,16 @@ sub run {
                     $all_obsolete = 1
                       if scalar @seen_obsolete_packages == @alternatives;
                     for my $pkg (@seen_obsolete_packages) {
+                        my $replacement = $OBSOLETE_PACKAGES->value($pkg)// '';
+                        $replacement = ' => ' . $replacement
+                          if $replacement ne '';
                         if (   $pkg eq $alternatives[0]->[0]
                             or $all_obsolete) {
                             tag 'build-depends-on-obsolete-package',
-                              "$field: $pkg";
+                              "$field: $pkg${replacement}";
                         } else {
                             tag 'ored-build-depends-on-obsolete-package',
-                              "$field: $pkg";
+                              "$field: $pkg${replacement}";
                         }
                     }
                 }
