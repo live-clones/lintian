@@ -66,12 +66,13 @@ sub new {
     }
 
     sub _load_data {
-        my ($self, $data_name, $separator, $code) = @_;
+        my ($self, $data_spec) = @_;
+        my $data_name = $data_spec->[0];
         unless (exists($data{$data_name})) {
             my $vendors = $self->_get_vendor_names;
             my $dataset = {};
             my ($fd, $vno) = $self->_open_data_file($data_name, $vendors, 0);
-            $self->_parse_file($data_name, $fd, $dataset, $separator, $code,
+            $self->_parse_file($data_name, $fd, $dataset, $data_spec,
                 $vendors, $vno);
             close($fd);
             $data{$data_name} = $dataset;
@@ -137,8 +138,8 @@ sub new {
 }
 
 sub _parse_file {
-    my ($self, $data_name, $fd, $dataset, $separator, $code, $vendors, $vno)
-      = @_;
+    my ($self, $data_name, $fd, $dataset, $data_spec, $vendors, $vno)= @_;
+    my (undef, $separator, $code) = @{$data_spec};
     my $filename = $data_name;
     $filename = $vendors->[$vno] . '/' . $data_name if $vno < scalar @$vendors;
     local $.;
@@ -154,8 +155,8 @@ sub _parse_file {
             } elsif ($op eq 'include-parent') {
                 my ($pfd, $pvo)
                   = $self->_open_data_file($data_name, $vendors,$vno +1);
-                $self->_parse_file($data_name, $pfd, $dataset, $separator,
-                    $code, $vendors, $pvo);
+                $self->_parse_file($data_name, $pfd, $dataset, $data_spec,
+                    $vendors, $pvo);
                 close($pfd);
             } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
                 my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
@@ -201,7 +202,7 @@ sub _parse_file {
 sub _force_promise {
     my ($self) = @_;
     my $promise = $self->{promise};
-    my $data = $self->_load_data(@$promise);
+    my $data = $self->_load_data($promise);
     delete $self->{promise};
     return $data;
 }
