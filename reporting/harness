@@ -670,7 +670,10 @@ sub process_worklist {
                 Log(' - skipping the rest of the worklist');
                 return;
             }
+        } else {
+            Log('Lintian finished successfully');
         }
+        Log('Updating harness state cache');
         eval {$state = load_state_cache($STATE_DIR);};
         if ($@) {
             Die($@);
