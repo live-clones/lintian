@@ -84,7 +84,7 @@ sub run {
             my $mver = $files->{$class};
             $classes = 1;
             next if $class =~ m/\.clj$/;
-            # .class but no major evrsion?
+            # .class but no major version?
             next if $mver eq '-';
             if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1
                 or $mver
