@@ -11,6 +11,8 @@ lintian (2.5.22.2) UNRELEASED; urgency=medium
     + [BR] Fix a GFDL detection false positive in texlive.  Thanks
       to Norbert Preining.  (Closes: #743754).
     + [BR] Fix another false positives in GFDL detection.
+    + [BR] Fix a false positive for source-is-missing for
+      deployJava.js.  (Closes: #745152).
   * checks/files.pm:
     + [BR] Use Lintian::Data for detecting embedded library.
     + [BR] Add context in embedded lib tagging.

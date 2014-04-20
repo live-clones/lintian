@@ -843,6 +843,14 @@ sub _search_in_block0 {
                 return;
             }
         }
+        # see #745152
+        # Be robust check also .js
+        if($basename eq 'deployJava.js') {
+            if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
+                check_missing_source($entry,$info,$name,$basename,$dirname,
+                    [['(?i)\.js$','.txt'],['','']]);
+            }
+        }
         # now search hidden minified
         _linelength_test($entry, $info, $name, $basename, $dirname,
             $path, $block);

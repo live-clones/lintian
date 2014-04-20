@@ -1,3 +1,4 @@
+E: cruft-minified-js source: source-is-missing deployJava/deployJava.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/json/json.min.js
