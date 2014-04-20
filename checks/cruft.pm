@@ -999,6 +999,12 @@ sub _clean_block {
 
     $text =~ s/\\url{[^}]*?}/ /gxms;          # (la)?tex url
     $text =~ s/\emph{/ /gxms;                 # (la)?tex emph
+    $text =~ s/\\href{[^}]*?}
+                     {([^}]*?)}/ $1 /gxms;    # (la)?tex href
+    $text =~ s/\\hyperlink
+                 {[^}]*?}{([^}]*?)}/ $1 /gxms;# (la)?tex hyperlink
+    $text =~ s,-\\/,-,gxms;                   # tex strange hyphen
+    $text =~ s,\\char, ,gxms;                 # tex  char command
 
     # Tex info comment with end section
     $text =~ s/\@c(?:omment)?\h+
@@ -1008,8 +1014,8 @@ sub _clean_block {
 
     $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
 
-    $text =~ s/\@(?:b|i|r|t){/ /gxms
-      ;         # Tex info bold,italic, roman, fixed width
+    $text =~ s/\@(?:b|i|r|t){
+              / /gxms;                        # Tex info bold,italic, roman, fixed width
     $text =~ s/\@sansserif{/ /gxms;           # Tex info sans serif
     $text =~ s/\@slanted{/ /gxms;             # Tex info slanted
     $text =~ s/\@var{/ /gxms;                 # Tex info emphasis
