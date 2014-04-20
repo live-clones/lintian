@@ -1015,7 +1015,8 @@ sub _clean_block {
     $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
 
     $text =~ s/\@(?:b|i|r|t){
-              / /gxms;                        # Tex info bold,italic, roman, fixed width
+              / /gxms
+      ;                        # Tex info bold,italic, roman, fixed width
     $text =~ s/\@sansserif{/ /gxms;           # Tex info sans serif
     $text =~ s/\@slanted{/ /gxms;             # Tex info slanted
     $text =~ s/\@var{/ /gxms;                 # Tex info emphasis
