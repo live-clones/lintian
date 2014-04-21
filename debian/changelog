@@ -38,6 +38,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of polarssl.
     + [RG] Don't detect mariadb as embedder of mysql.
+    + [BR] Detect libidn*.
   * data/fields/obsolete-packages:
     + [NT] Add hardening-includes and hardening-wrapper on request of
       Thijs Kinkhorst.  (Closes: #711193)
