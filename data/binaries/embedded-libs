@@ -67,6 +67,7 @@ libraw    ||Unsupported file format or not RAW file
 libpostproc ||source-regex=lib(?:av|postproc)||using npp filters 0x%X/0x%X\n
 libssh2     ||Invalid descriptor passed to libssh2_poll
 libssh      ||Error allocating memory for ssh_scp
+libsrtp0    ||srtp: in stream 0x%x:
 libswscale  ||source=libav||Exactly one scaler algorithm must be chosen\n
 
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
