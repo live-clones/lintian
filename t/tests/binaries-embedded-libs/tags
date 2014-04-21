@@ -1,3 +1,4 @@
+E: binaries-embedded-libs: embedded-library usr/bin/gmp: gmp
 E: binaries-embedded-libs: embedded-library usr/bin/libbz2: bzip2
 E: binaries-embedded-libs: embedded-library usr/bin/libexpat: expat
 E: binaries-embedded-libs: embedded-library usr/bin/libjpeg: libjpeg
@@ -9,4 +10,5 @@ E: binaries-embedded-libs: embedded-library usr/bin/libpng: libpng
 E: binaries-embedded-libs: embedded-library usr/bin/libsqlite: sqlite
 E: binaries-embedded-libs: embedded-library usr/bin/libtiff: tiff
 E: binaries-embedded-libs: embedded-library usr/bin/libxml2: libxml2
+E: binaries-embedded-libs: embedded-library usr/bin/mpfr: mpfr
 E: binaries-embedded-libs: embedded-library usr/bin/zlib: zlib

@@ -44,6 +44,7 @@ ftgl      ||FTGlyphContainer
 gl2ps     ||\(C\) 1999-2009 C\. Geuzaine
 glee      ||Extension name exceeds 1023 characters\.
 glew      ||Missing GL version
+gmp       ||GNU MP: Cannot allocate memory
 lcms      ||cmsCreateTransform: intent mismatch
 lcms2     ||Unsupported number of channels for VCGT
 libavcodec  ||source=libav||insufficient thread locking around avcodec_open/close\(\)\n
@@ -80,6 +81,7 @@ libupnp   ||source-regex=libupnp\d?||(?m)(?:SSDP_LIB: New Request Handler:Error|
 libxml2   ||root and DTD name do not match
 libyaml   ||(?m)^did not find expected <stream-start>
 ltdl      ||source=libtool ||(?m)^library already shutdown
+mpfr      ||source=mpfr4 ||MPFR: Can't allocate memory
 mpg123    ||Warning: Encountered more data after announced end of track
 ncurses   ||Not enough memory to create terminal structure
 nspr      ||(?m)^Unable to create nspr log file

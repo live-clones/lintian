@@ -1,5 +1,5 @@
 BINARIES :=  zlib libpng libjpeg libopenjpeg libtiff libpcre3 libbz2 libxml2 \
-		libmagic libexpat libsqlite libm
+		libmagic libexpat libsqlite libm gmp mpfr
 MANPAGES := $(patsubst %,%.1,$(BINARIES))
 
 all: $(BINARIES) $(MANPAGES)
