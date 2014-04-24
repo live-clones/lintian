@@ -1,1 +1,2 @@
 E: deb-format-lzma: lzma-deb-archive
+E: deb-format-lzma: uses-deprecated-compression-for-data-tarball lzma

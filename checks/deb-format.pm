@@ -134,8 +134,11 @@ sub run {
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
                 tag 'udeb-uses-unsupported-compression-for-data-tarball';
             } elsif ($data_member eq 'data.tar.lzma') {
+                tag 'uses-deprecated-compression-for-data-tarball', 'lzma';
                 # Ubuntu's archive allows lzma packages.
                 tag 'lzma-deb-archive';
+            } elsif ($data_member eq 'data.tar.bz2') {
+                tag 'uses-deprecated-compression-for-data-tarball', 'bzip2';
             }
             if (not $okay) {
                 tag 'malformed-deb-archive',
