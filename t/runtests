@@ -701,7 +701,6 @@ sub create_child {
     $child_out_ch  = IO::Async::Channel->new;
 
     $routine = IO::Async::Routine->new(
-        model => 'fork',
         channels_in  => [$child_in_ch],
         channels_out => [$child_out_ch],
 
