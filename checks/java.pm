@@ -137,6 +137,8 @@ sub run {
                 if ((
                            $bsname !~ m/\.source$/o
                         && $jar_file!~ m#^usr/share/maven-repo/.*-javadoc\.jar#
+                        && $jar_file!~m#\.doc(?:\.(?:user|isv))?_[^/]+.jar#
+                        && $jar_file!~m#\.source_[^/]+.jar#
                     )
                     || $cp
                   ) {
