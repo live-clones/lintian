@@ -57,7 +57,7 @@ libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too c
 libjsoncpp ||A valid JSON document must be either an array or an object value\.
 liblivemedia||(?:Received incoming RTSP request:|LIVE555 Streaming Media v)
 libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
-libmms    ||failed to read new ASF header
+libmms    ||source-regex=(?:libmms|xine-lib)||failed to read new ASF header
 libmng    ||TERM misplaced during creation of MNG stream
 libmsn    ||The MSN server has terminated the connection with an unknown reason code\.
 libmikmod ||APUN \(APlayer\) and UNI \(MikMod\)
