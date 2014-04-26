@@ -39,6 +39,9 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       if the policy suggests that they have to use "http://".
       (Closes: #744981)
 
+  * data/cruft/non-distributable-files:
+    + [BR] Add a file comes from the Novell libc Software Development
+      Kit.  (Closes: #745802)
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of polarssl.
     + [RG] Don't detect mariadb as embedder of mysql.

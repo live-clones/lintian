@@ -8,4 +8,6 @@
 #
 # Please sort by md5sum
 2ab371cb4a67747aaa7835ebb22cb0d5 ~~ a396330a335b055c5b8cb81299921c356286e6a7 ~~ 8e058aa0b336cd2b0bd0dc14db9e7d225ca34d3324652e2ea06eb48462f020f1 ~~ data-forbidden-lintian-files ~~ This is part of lintian test suite, used for testing this tag ~~ http://lintian.debian.org
+90c983b1d401c770bb28b03ad8791f9d ~~ 241278e1b032954bdff6405b3c963c8f0208ad51 ~~ 3db379a515ed0abd0dc74a149e1b7039b9b2978e61470c8021b1cebb02750145 ~~ libcpre.gcc.o ~~  This file comes from the Novell libc Software Development Kit ~~ https://lists.debian.org/debian-legal/2014/04/msg00025.html
+
 
