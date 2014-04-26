@@ -1022,7 +1022,7 @@ sub _clean_block {
 
     $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
 
-    $text =~ s/\@(?:b|i|r|t){
+    $text =~ s/\@[birt]{
               / /gxms
       ;                        # Tex info bold,italic, roman, fixed width
     $text =~ s/\@sansserif{/ /gxms;           # Tex info sans serif
