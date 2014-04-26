@@ -1,16 +1,17 @@
 # Manually maintained table of well known privacy breakers html/js fragment
 # syntax:
-#   key ~~regex (xism)
+#   key ~~regex (xsm)
 #
 # Note spaces on the right hand side of ~~ are assumed to be a part
-# of the regex.
+# of the regex.  Also note that the regex will be applied to a string
+# in all lowercase.
 #
 # Please keep this sorted by tag.
-privacy-breach-google-adsense     ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchinTracker\s*\(\s*\)\s*;|</?\s*adsense\s*>)
-privacy-breach-google-cse         ~~(?:googleSearchDomain\s*=|<div\s+class="cse-branding-(?:logo|form)"\s*>|google\.search\.CustomSearchControl\s*\(\s*'|google\.load\s*\(\s*'search'|</?\s*CustomSearchEngine\s*>|value\s*=\s*"partner-pub-\d+:?\d+")
-privacy-breach-google-plus        ~~(?:<g:plusone|google\.com/js/plusone\.js\?onload=onLoadCallback|src\s*=\s*'https?://apis\.google\.com/js/plusone\.js')
-privacy-breach-donation           ~~(?:api\.flattr\.com/js/\d(\.\d)?/load\.js|<a\s+class\s*=\s*"FlattrButton"|data-flattr-uid\s*=|FlattrLoader\.(?:setup\s*\(\)|render\s*\(|addLoadEvent\s*\())
-privacy-breach-facebook           ~~(?:facebook-jssdk|FB\.(?:Canvas|api|init|login|getLoginStatus|Event|ui|XFBML)|xmlns:fb\s*=\s*"https?://(?:www\.facebook\.com/20\d\d/fbml|ogp\.me/ns/fb\#?)"|</?fb:(?:activity|comments|friendpile|like|like-box|login-button|name|profile-pic|recommendations)\s+[^>]*>)
-privacy-breach-piwik              ~~(?:piwik_url\s*=|pkBaseURL\s*=|[\'"]piwik\.js[\'\"]|End\s+Piwik\h+(?:Tag|Code)|[\'\"]setTrackerUrl[\'\"])
+privacy-breach-google-adsense     ~~(?:google_ad_client\s*=|[\"\']\.?google-analytics.com/ga.js[\"\']|urchintracker\s*\(\s*\)\s*;|</?\s*adsense\s*>)
+privacy-breach-google-cse         ~~(?:googlesearchdomain\s*=|<div\s+class="cse-branding-(?:logo|form)"\s*>|google\.search\.customsearchcontrol\s*\(\s*'|google\.load\s*\(\s*'search'|</?\s*customsearchengine\s*>|value\s*=\s*"partner-pub-\d+:?\d+")
+privacy-breach-google-plus        ~~(?:<g:plusone|google\.com/js/plusone\.js\?onload=onloadcallback|src\s*=\s*'https?://apis\.google\.com/js/plusone\.js')
+privacy-breach-donation           ~~(?:api\.flattr\.com/js/\d(\.\d)?/load\.js|<a\s+class\s*=\s*"flattrbutton"|data-flattr-uid\s*=|flattrloader\.(?:setup\s*\(\)|render\s*\(|addloadevent\s*\())
+privacy-breach-facebook           ~~(?:facebook-jssdk|fb\.(?:canvas|api|init|login|getloginstatus|event|ui|xfbml)|xmlns:fb\s*=\s*"https?://(?:www\.facebook\.com/20\d\d/fbml|ogp\.me/ns/fb\#?)"|</?fb:(?:activity|comments|friendpile|like|like-box|login-button|name|profile-pic|recommendations)\s+[^>]*>)
+privacy-breach-piwik              ~~(?:piwik_url\s*=|pkbaseurl\s*=|[\'"]piwik\.js[\'\"]|end\s+piwik\h+(?:tag|code)|[\'\"]settrackerurl[\'\"])
 privacy-breach-statistics-website ~~(?:var\s+sc_project\s*=\s*\d+\s*;)
 privacy-breach-twitter            ~~(?:src\s*=\s*["']https?|[+]\s*['"])://platform\.twitter\.com/widgets\.js['"]

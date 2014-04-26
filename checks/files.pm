@@ -46,7 +46,7 @@ my $PRIVACY_BREAKER_WEBSITES
 
 my $PRIVACY_BREAKER_FRAGMENTS
   = Lintian::Data->new('files/privacy-breaker-fragments',
-    qr/\s*\~\~/o,sub { return qr/$_[1]/xism });
+    qr/\s*\~\~/o,sub { return qr/$_[1]/xsm });
 
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
