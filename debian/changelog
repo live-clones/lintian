@@ -38,6 +38,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [NT] Permit the use of "https://" in DEP-5 format URIs even
       if the policy suggests that they have to use "http://".
       (Closes: #744981)
+  * checks/testsuite.pm:
+    + [JW] Add new restrictions for DEP-8 tests.  (Closes: #746305)
 
   * data/cruft/non-distributable-files:
     + [BR] Add a file comes from the Novell libc Software Development

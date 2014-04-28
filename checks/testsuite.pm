@@ -45,6 +45,9 @@ my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
   allow-stderr
   breaks-testbed
   build-needed
+  isolation-container
+  isolation-machine
+  needs-recommends
   needs-root
   rw-build-tree
 );
