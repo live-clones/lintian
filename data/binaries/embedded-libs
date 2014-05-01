@@ -60,6 +60,7 @@ libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
 libmms    ||source-regex=(?:libmms|xine-lib)||failed to read new ASF header
 libmng    ||TERM misplaced during creation of MNG stream
 libmsn    ||The MSN server has terminated the connection with an unknown reason code\.
+libminiupnpc||source=miniupnpc||Miniupnpc Invalid Arguments
 libmikmod ||APUN \(APlayer\) and UNI \(MikMod\)
 libmysqlclient ||source-regex=(?:mysql|mariadb)(?:-\d.*)? ||MySQL client ran out of memory
 libpcap   ||(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)
