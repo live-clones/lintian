@@ -51,7 +51,7 @@ libavformat ||source=libav||Format detected only with low score of %d, misdetect
 libavutil   ||source=libav||AVOption type %d of option %s not implemented yet\n
 libgd     ||source-regex=libgd2? ||gd-(?:png|jpeg:) error:
 libgadu     ||Gadu-Gadu Client Build
-libidn1     ||Punycode failed
+libidn      ||(?m)^Punycode failed
 libidn2-0   ||punycode conversion resulted in overflow
 libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
 libjsoncpp ||A valid JSON document must be either an array or an object value\.
@@ -68,7 +68,6 @@ libraw    ||Unsupported file format or not RAW file
 libpostproc ||source-regex=lib(?:av|postproc)||using npp filters 0x%X/0x%X\n
 libssh2     ||Invalid descriptor passed to libssh2_poll
 libssh      ||Error allocating memory for ssh_scp
-libsrtp0    ||srtp: in stream 0x%x:
 libswscale  ||source=libav||Exactly one scaler algorithm must be chosen\n
 
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
@@ -85,6 +84,7 @@ openssl   ||You need to read the OpenSSL FAQ
 pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
 poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing anyway\)|PDF file is damaged - attempting to reconstruct xref table\.\.\.)
 polarssl  ||(?m)^(?:ASN1 - Actual length differs from expected length|SSL - The connection indicated an EOF)
+srtp      ||srtp: in stream 0x%x:
 sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
 t1lib     ||t1lib is copyright \(c\) Rainer Menzner
 tiff      ||source-regex=tiff\d* ||No space for PixarLog state block
