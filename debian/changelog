@@ -45,7 +45,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [BR] Add a file comes from the Novell libc Software Development
       Kit.  (Closes: #745802)
   * data/binary/embedded-libs:
-    + [RG] Detect embedded copies of polarssl.
+    + [RG] Detect embedded copies of polarssl, and libmms.
     + [RG] Don't detect mariadb as embedder of mysql.
     + [BR] Detect libidn*.
     + [BR] Detect libsrtp.
