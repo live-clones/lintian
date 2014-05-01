@@ -73,6 +73,7 @@ libswscale  ||source=libav||Exactly one scaler algorithm must be chosen\n
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
 libtheora ||Xiph.Org libtheora\s
 
+libupnp   ||source-regex=libupnp\d?||(?m)(?:SSDP_LIB: New Request Handler:Error|^mserv start: Error in IPv4 listen)
 libxml2   ||root and DTD name do not match
 ltdl      ||source=libtool ||(?m)^library already shutdown
 mpg123    ||Warning: Encountered more data after announced end of track
