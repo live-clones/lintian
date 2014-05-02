@@ -5,3 +5,4 @@
 
 override_jh_build:
 	jh_build --javacopts='-target 1.4' --javacopts='-source 1.4'
+	cp cp-missing.jar cp-missing-2.jar

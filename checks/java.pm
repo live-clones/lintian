@@ -231,7 +231,7 @@ sub run {
         }
     }
 
-    if ($has_jars && $need_cp) {
+    if ($has_jars && $need_cp && $pkg =~ /^lib[^\s,]+-java$/) {
         # Only tag if there is at least one jar file and one strong
         # java dependency and no classpath/osgi.  Technically there
         # should be no reason to have a strong relation with a java

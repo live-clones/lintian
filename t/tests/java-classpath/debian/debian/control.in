@@ -24,3 +24,14 @@ Description: {$description} - relative
  installed.
  .
  Test for relative classpaths.
+
+
+Package: binary-using-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}, libdepends-java
+Description: {$description} - binary
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. This package should not be
+ installed.
+ .
+ Test for classpaths in binary.

@@ -30,6 +30,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [SL] Catch uses of Java8 byte code.  (Closes: #743384).
     + [SL] Warn that the suggests/recommends on libservlet[\d\.]+-java is
       needless (Closes: #743453)
+    + [SL] missing-classpath should be disabled on Java binaries
     + [NT] Exclude some jar files from "codeless-jar" tag based
       on the basename of the jar file.  This is intended to
       reduce the number of codeless jars for source/doc jars in
