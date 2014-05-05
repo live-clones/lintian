@@ -25,7 +25,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       Thanks to Holger Levsen.  (Closes: #737867).
   * checks/java.{desc,pm}:
     + [SL] Do not trigger a warning when a jar is not in
-      /usr/share/java and the package name matches
+      /usr/share/java and the package name matches.  (Closes: #746744).
       lib.*maven.*plugin.*java.  (Closes: #743446).
     + [SL] Catch uses of Java8 byte code.  (Closes: #743384).
     + [SL] Warn that the suggests/recommends on libservlet[\d\.]+-java is
