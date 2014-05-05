@@ -75,6 +75,14 @@ Info: The package contains a debian/patches/series file usually used by
  If you don't need quilt during build but only during maintenance work,
  then you can override this warning.
 
+Tag: quilt-series-without-trailing-newline
+Severity: serious
+Certainty: possible
+Info: The package contains a debian/patches/series file
+ that doesn't end with a newline. dpkg-source may silently
+ corrupt this file.
+Ref: https://bugs.debian.org/584233
+
 Tag: quilt-patch-with-non-standard-options
 Severity: normal
 Certainty: certain

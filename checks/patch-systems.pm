@@ -148,10 +148,14 @@ sub run {
                 my @badopts;
                 open(my $series_fd, '<', "$dpdir/series");
                 while (my $patch = <$series_fd>) {
-                    strip($patch); # Strip leading/trailing spaces
+                    my $hastrailingnewline = 0;
                     $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
                     next unless $patch;
-                    if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
+                    if (rindex($patch,"\n") < 0) {
+                        tag 'quilt-series-without-trailing-newline';
+                    }
+                    strip($patch); # Strip leading/trailing spaces
+                    if ($patch =~ m{^(\S+)\s+(\S.*)\n\Z}) {
                         my $patch_options;
                         ($patch, $patch_options) = ($1, $2);
                         if ($patch_options ne '-p1') {

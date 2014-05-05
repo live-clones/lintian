@@ -35,6 +35,9 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       on the basename of the jar file.  This is intended to
       reduce the number of codeless jars for source/doc jars in
       eclipse(-based) packages.
+  * checks/patch-systems.{desc,pm}:
+    + [BR] Warn against trailing newline in debian/patches/series.
+      (Closes: #746362).
   * checks/source-copyright.pm:
     + [NT] Permit the use of "https://" in DEP-5 format URIs even
       if the policy suggests that they have to use "http://".
