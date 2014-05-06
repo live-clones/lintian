@@ -16,6 +16,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [BR] Use Lintian::Data for detecting embedded library.
     + [BR] Add context in embedded lib tagging.
+    + [BR] Avoid to warn on bookmark link.  (Closes: #746656).
   * checks/fields.{desc,pm}:
     + [NT] Apply patch from Johannes Schauer to rename "notest"
       build-profile to "nocheck".  (Closes: #743840)

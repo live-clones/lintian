@@ -1853,6 +1853,11 @@ sub detect_privacy_breach {
                 my $relcontent = $1;
                 if (defined($relcontent)) {
                     if ($relcontent eq 'schema.dct') {
+                        # see #736992
+                        next EXTERNAL_TAG;
+
+                    } elsif  ($relcontent eq 'bookmark') {
+                        # see #746656
                         next EXTERNAL_TAG;
                     }
                 }
