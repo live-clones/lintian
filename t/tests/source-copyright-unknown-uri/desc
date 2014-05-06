@@ -1,7 +1,7 @@
 Testname: source-copyright-unknown-uri
 Sequence: 6000
 Version: 1.0
-Description: Test for unkown DEP-5-like URI
+Description: Test for unknown DEP-5-like URI
 Options: -I -E --pedantic
 Test-For:
  unknown-copyright-format-uri

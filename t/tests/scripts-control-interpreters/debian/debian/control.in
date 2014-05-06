@@ -41,7 +41,7 @@ Description: {$description} (unknown)
 Package: {$source}-python
 Architecture: {$architecture}
 Depends: python, $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (python)
+Description: {$description} (Python)
  Python control interpreters with depends.
  .
  This is a test package designed to exercise some feature or tag of
@@ -53,7 +53,7 @@ Package: {$source}-prepython
 Architecture: {$architecture}
 Pre-Depends: python
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (python preinst)
+Description: {$description} (Python preinst)
  Python control interpreters with pre-depends.
  .
  This is a test package designed to exercise some feature or tag of

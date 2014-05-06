@@ -202,6 +202,13 @@ sub run {
         }
     }
 
+    if ($synopsis) {
+        check_spelling('spelling-error-in-description-synopsis',
+            $synopsis,undef, $group->info->spelling_exceptions);
+        check_spelling_picky('capitalization-error-in-description-synopsis',
+            $synopsis);
+    }
+
     if ($description) {
         check_spelling('spelling-error-in-description',
             $description,undef, $group->info->spelling_exceptions);

@@ -1,7 +1,7 @@
 Testname: cruft-python
 Sequence: 6000
 Version: 1.0
-Description: Misc errors related to python
+Description: Misc errors related to Python
 Skeleton: pedantic
 Options: --pedantic -I -E
 Architecture: any

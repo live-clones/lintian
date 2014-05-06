@@ -1,7 +1,7 @@
 Testname: files-python-general
 Sequence: 6000
 Version: 1.0
-Description: Test general python related tags
+Description: Test general Python related tags
 References: Debian Bug#608810, Debian Bug#756005
 Test-For:
  compressed-objects.inv

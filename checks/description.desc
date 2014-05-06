@@ -136,6 +136,23 @@ Info: The first line of the extended Description: should not repeat the
  or that the extended description has been wrongly copied and pasted.
 Ref: policy 3.4.2
 
+Tag: spelling-error-in-description-synopsis
+Severity: minor
+Certainty: certain
+Info: Lintian found a spelling error in the package synopsis.  Lintian
+ has a list of common misspellings that it looks for.  It does not have a
+ dictionary like a spelling checker does.  It is particularly picky about
+ spelling and capitalization in package descriptions since they're very
+ visible to end users.
+
+Tag: capitalization-error-in-description-synopsis
+Severity: minor
+Certainty: wild-guess
+Info: Lintian found a possible capitalization error in the package
+ synopsis.  Lintian has a list of common capitalization errors,
+ primarily of upstream projects, that it looks for.  It does not have a
+ dictionary like a spelling checker does.
+
 Tag: extended-description-line-too-long
 Severity: normal
 Certainty: certain

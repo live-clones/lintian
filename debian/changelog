@@ -3,8 +3,11 @@ lintian (2.5.25) UNRELEASED; urgency=medium
   XXX: generate tag summary with private/generate-tag-summary
 
   * checks/cruft.{desc,pm}:
-    + [BR] Add a forgotten return statement, and avoid 
+    + [BR] Add a forgotten return statement, and avoid
       false positive for deployJava.js (Closes: #745152).
+  * checks/description.{desc,pm}:
+    + [NT] Apply patch from Anders Jonsson to check spelling
+      of the package synopsis.  (Closes: #747266)
 
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
