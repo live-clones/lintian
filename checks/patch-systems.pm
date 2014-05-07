@@ -155,7 +155,7 @@ sub run {
                         tag 'quilt-series-without-trailing-newline';
                     }
                     strip($patch); # Strip leading/trailing spaces
-                    if ($patch =~ m{^(\S+)\s+(\S.*)\n\Z}) {
+                    if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
                         my $patch_options;
                         ($patch, $patch_options) = ($1, $2);
                         if ($patch_options ne '-p1') {
