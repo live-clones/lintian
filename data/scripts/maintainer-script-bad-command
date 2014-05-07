@@ -40,7 +40,7 @@ maintainer-script-should-not-use-install-sgmlcatalog            ~~ 1 ~~         
 maintainer-script-should-not-use-service                        ~~ 1 ~~                    ~~          ~~${LEADIN}service\b
 maintainer-script-should-not-use-start-stop-daemon              ~~ 0 ~~                    ~~          ~~\bstart-stop-daemon(?=\s)(?!.*\s--stop\b)
 maintainer-script-should-not-use-update-alternatives-remove     ~~ 1 ~~                    ~~^postrm$  ~~\b update\-alternatives\s+\-\-remove\b
-maintainer-script-should-not-use-update-alternatives-set        ~~ 1 ~~                    ~~          ~~\b update\-alternatives\s+\-\-(?:set|set\-selections|config)\b
+maintainer-script-should-not-use-update-alternatives-set        ~~ 1 ~~                    ~~          ~~^(?!\s*echo\s+["'][^'"]*)\bupdate\-alternatives\s+\-\-(?:set|set\-selections|config)\b
 # sendmail use override do not change it now
 suidregister-used-in-maintainer-script                          ~~ 1 ~~                    ~~          ~~\bsuidregister\b
 

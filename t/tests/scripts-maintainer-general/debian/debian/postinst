@@ -166,4 +166,8 @@ adduser --system --ingroup smmta --home "/var/lib/sendmail" \
         --disabled-password \
         --quiet --gecos 'Mail Transfer Agent' smmta;
 
+# false positive
+echo "You can use update-alternatives --config runsystem to select"
+echo "the runsystem to use."
+
 #DEBHELPER#
