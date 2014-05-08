@@ -13,6 +13,9 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [BR] Fix another false positives in GFDL detection.
     + [BR] Fix a false positive for source-is-missing for
       deployJava.js.  (Closes: #745152).
+  * checks/changelog-file.pm:
+    + [BR] Allow to sid for experimental to unstable comment.
+      (Closes: #747407).
   * checks/files.pm:
     + [BR] Use Lintian::Data for detecting embedded library.
     + [BR] Add context in embedded lib tagging.
