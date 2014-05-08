@@ -323,7 +323,8 @@ sub run {
             my $first_dist = lc $entries[0]->Distribution;
             my $second_dist = lc $entries[1]->Distribution;
             if ($first_dist eq 'unstable' and $second_dist eq 'experimental') {
-                unless ($entries[0]->Changes =~ /\bto\s+(?:unstable|sid)\b/im) {
+                unless ($entries[0]->Changes =~ /\bto\s+(?:unstable|sid)\b/im)
+                {
                     tag 'experimental-to-unstable-without-comment';
                 }
             }
