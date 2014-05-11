@@ -54,6 +54,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       Kit.  (Closes: #745802)
   * data/cruft/non-free-files:
     + [BR] Add all profiles from icc-profiles non free package.
+    + [BR] add icc profiles from adobe.
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of lcms, lcms2, libmms, libminiupnpc,
       libupnp, and libyaml, polarssl.
