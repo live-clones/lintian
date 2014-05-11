@@ -57,7 +57,10 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [BR] Add icc profiles from Adobe.
     + [BR] Add icc profiles from http://www.color.org/srgbprofiles.xalter.
     + [BR] Add Apple icc profile: Color LCD Calibrated, Copyright
-       Apple Computer, Inc., 2003
+      Apple Computer, Inc., 2003
+    + [BR] Add old srgb profile from HP: IEC 61966-2.1 Default RGB
+      colour space - sRGB, Copyright (c) 1998 Hewlett-Packard Company
+
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of lcms, lcms2, libmms, libminiupnpc,
       libupnp, and libyaml, polarssl.
