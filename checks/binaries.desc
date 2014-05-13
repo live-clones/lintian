@@ -317,7 +317,9 @@ Info: The given debugging symbols-only object is installed directly in
  subdirectory.  For example, debug symbols of a binary in
  <tt>/usr/bin</tt> should be placed in <tt>/usr/lib/debug/usr/bin</tt>.
  gdb, when looking for debugging symbols, prepends <tt>/usr/lib/debug</tt>
- to the path of the original binary.
+ to whatever path it finds in the .gnu_debuglink section, which when using
+ dh_strip(1) is either the path to your binary/library or a build-id based
+ path.
 
 Tag: ocaml-custom-executable
 Severity: normal
