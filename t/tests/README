@@ -113,13 +113,13 @@ test or the bug that you're testing for.  This should be one of "Debian
 Bug#nnnn" for a bug report, a URL into the debian-lint-maint mailing list
 archives, or a message ID for the message to the list.
 
-By default, templates/skel and templates/skel.upstream are used as the
-test skeleton and then the files in the specific test directory are
+By default, templates/tests/skel and templates/tests/skel.upstream are used
+as the test skeleton and then the files in the specific test directory are
 overlaid.  To start from a different skeleton, use:
 
     Skeleton: <skeleton to start from>
 
-The value must match a directory name in the t/templates directory.  If
+The value must match a directory name in the t/templates/tests directory.  If
 this is a non-native package, there must also be a corresponding
 <skeleton>.upstream directory.
 
