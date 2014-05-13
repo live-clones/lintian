@@ -38,7 +38,7 @@ Info: This info document has no INFO-DIR-SECTION line.
  <tt>install-info</tt> will be unable to determine the section into which
  this info page should be put.  The best solution is to add a line like:
  .
-   @dircategory Development
+   @dircategory Software development
  .
  to the texinfo source so that the generated info file will contain a
  section.  See <tt>/usr/share/info/dir</tt> for sections to choose from.
@@ -53,6 +53,7 @@ Info: This info document has no directory entry.  This is text between
  the <tt>dir</tt> file in <tt>/usr/share/info</tt> by
  <tt>install-info</tt>.  The best solution is to add lines like:
  .
+   @dircategory Software development
    @direntry
    * foo: (foo).                Foo creator and editor
    @end direntry
