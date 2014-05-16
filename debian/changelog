@@ -80,6 +80,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * data/fields/obsolete-packages:
     + [NT] Add hardening-includes and hardening-wrapper on request of
       Thijs Kinkhorst.  (Closes: #711193)
+    + [NT] Add python-support on request of Luca Falavigna.
+      (Closes: #746563)
   * data/java/constants:
     + [SL] introduce this file to specify JDK values
   * data/scripts/maintainer-script-bad-command:

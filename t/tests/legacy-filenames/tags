@@ -2,6 +2,7 @@ E: filename-games: no-copyright-file
 E: filename-games: package-section-games-but-contains-no-game
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 E: filenames: bad-menu-file-name usr/share/menu/menu
+E: filenames: depends-on-obsolete-package depends: python-support => use dh_python2 instead
 E: filenames: dir-or-file-in-opt opt/foo/
 E: filenames: dir-or-file-in-opt opt/foo/bar
 E: filenames: dir-or-file-in-srv srv/foo/

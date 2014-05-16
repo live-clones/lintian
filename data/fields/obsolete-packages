@@ -98,3 +98,5 @@ openjdk-6-jre-headless
 # Deprecated in Jessie (#711193)
 hardening-wrapper => use dpkg-buildflags instead
 hardening-includes => use dpkg-buildflags instead
+# Deprecated in Jessie (#746563)
+python-support => use dh_python2 instead

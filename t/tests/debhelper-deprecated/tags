@@ -1,3 +1,4 @@
+E: debhelper-deprecated source: build-depends-on-obsolete-package build-depends: python-support => use dh_python2 instead
 W: debhelper-deprecated source: dh_desktop-is-deprecated line 25
 W: debhelper-deprecated source: dh_installmanpages-is-obsolete line 24
 W: debhelper-deprecated source: dh_pysupport-is-obsolete line 28
