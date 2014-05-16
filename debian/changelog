@@ -31,6 +31,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * checks/infofiles.desc:
     + [NT] Apply patch from Samuel Bronson to imrpove some o
       the examples.
+    + [NT] Apply patch from Don Armstrong to ignore jpg/jpeg images
+      beneath /usr/share/info.  (Closes: #748167)
   * checks/init.d.{desc,pm}:
     + [BR] Detect $all virtual dependency in legacy init scripts.
       Thanks to Holger Levsen.  (Closes: #737867).

@@ -64,7 +64,7 @@ sub run {
                     }
                 }
             }
-        } elsif ($ext eq 'png') {
+        } elsif ($ext =~ m/^(?:png|jpe?g)$/) {
             next;
         } else {
             push(@fname_pieces, $ext);
