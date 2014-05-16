@@ -3,8 +3,8 @@ E: fields-build-depends-general source: build-depends-on-build-essential build-d
 E: fields-build-depends-general source: build-depends-on-essential-package-without-using-version build-depends: bash
 E: fields-build-depends-general source: build-depends-on-metapackage build-depends: xorg-dev
 E: fields-build-depends-general source: build-depends-on-non-build-package build-depends: java-propose-classpath
-E: fields-build-depends-general source: build-depends-on-obsolete-package build-depends: hardening-wrapper => use dpkg-buildflags instead
-E: fields-build-depends-general source: build-depends-on-obsolete-package build-depends: x-dev
+E: fields-build-depends-general source: build-depends-on-obsolete-package build-depends: hardening-wrapper (>= 2.2) => use dpkg-buildflags instead
+E: fields-build-depends-general source: build-depends-on-obsolete-package build-depends: x-dev (>= 1.0)
 E: fields-build-depends-general source: conflicting-negation-in-source-relation build-depends: baz [i386 !amd64]
 E: fields-build-depends-general source: depends-on-build-essential-package-without-using-version make [build-depends: make]
 E: fields-build-depends-general source: invalid-arch-string-in-source-relation all [build-depends: foo [all]]

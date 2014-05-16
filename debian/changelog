@@ -28,6 +28,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [NT] Apply patch from Johannes Schauer to rename "notest"
       build-profile to "nocheck".  (Closes: #743840)
     + [NT] Support giving replacements for obsolete packages.
+    + [NT] Fix a bug with versioned dependencies on obsolete
+      packages with non-obsolete alternatives.
   * checks/infofiles.desc:
     + [NT] Apply patch from Samuel Bronson to improve some of
       the examples.

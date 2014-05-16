@@ -8,8 +8,8 @@ Build-Depends: debhelper (>= 9), libmodule-build-perl (>= 0.360700)
 Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
- conflict-dep, gawk | awk, new-package | xbase-clients, {$source},
- gaim, emacs21, emacs22, makedev, libtest-simple-perl (>= 0.98),
+ conflict-dep, gawk | awk, new-package | xbase-clients (>= 0.1), {$source},
+ gaim (>= 0.1), emacs21, emacs22, makedev, libtest-simple-perl (>= 0.98),
  packaging-dev, xfont-a
 Breaks: package-without-version, {$source} (<< 0.1),
  replaced-wo-version

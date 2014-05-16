@@ -769,7 +769,7 @@ sub run {
                     tag 'bad-relation', "$field: $part_d_orig"
                       if $rest;
 
-                    push @seen_obsolete_packages, $part_d_orig
+                    push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
                       if ( $OBSOLETE_PACKAGES->known($d_pkg)
                         && &$is_dep_field($field));
 
@@ -871,18 +871,20 @@ sub run {
                     }
                 }
 
-                for my $pkg (@seen_obsolete_packages) {
-                    my $replacement = $OBSOLETE_PACKAGES->value($pkg) // '';
+                for my $d (@seen_obsolete_packages) {
+                    my ($dep, $pkg_name) = @{$d};
+                    my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
+                      // '';
                     $replacement = ' => ' . $replacement
                       if $replacement ne '';
-                    if ($pkg eq $alternatives[0]->[0]
+                    if ($pkg_name eq $alternatives[0]->[0]
                         or scalar @seen_obsolete_packages
                         == scalar @alternatives) {
                         tag 'depends-on-obsolete-package',
-                          "$field: $pkg${replacement}";
+                          "$field: $dep${replacement}";
                     } else {
                         tag 'ored-depends-on-obsolete-package',
-                          "$field: $pkg${replacement}";
+                          "$field: $dep${replacement}";
                     }
                 }
 
@@ -1057,7 +1059,7 @@ sub run {
                           if ( $KNOWN_ESSENTIAL->known($d_pkg)
                             && !$d_version->[0]
                             && $d_pkg ne 'dash');
-                        push @seen_obsolete_packages, $part_d_orig
+                        push @seen_obsolete_packages, [$part_d_orig, $d_pkg]
                           if ( $OBSOLETE_PACKAGES->known($d_pkg)
                             && &$is_dep_field($field));
 
@@ -1092,17 +1094,19 @@ sub run {
                     my $all_obsolete = 0;
                     $all_obsolete = 1
                       if scalar @seen_obsolete_packages == @alternatives;
-                    for my $pkg (@seen_obsolete_packages) {
-                        my $replacement = $OBSOLETE_PACKAGES->value($pkg)// '';
+                    for my $d (@seen_obsolete_packages) {
+                        my ($dep, $pkg_name) = @{$d};
+                        my $replacement = $OBSOLETE_PACKAGES->value($pkg_name)
+                          // '';
                         $replacement = ' => ' . $replacement
                           if $replacement ne '';
-                        if (   $pkg eq $alternatives[0]->[0]
+                        if (   $pkg_name eq $alternatives[0]->[0]
                             or $all_obsolete) {
                             tag 'build-depends-on-obsolete-package',
-                              "$field: $pkg${replacement}";
+                              "$field: $dep${replacement}";
                         } else {
                             tag 'ored-build-depends-on-obsolete-package',
-                              "$field: $pkg${replacement}";
+                              "$field: $dep${replacement}";
                         }
                     }
                 }
