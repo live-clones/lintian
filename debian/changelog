@@ -2,6 +2,10 @@ lintian (2.5.23) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/binaries.desc:
+    + [NT] Apply patch from Samuel Bronson to improve the
+      description of the debug-symbols-directly-in-usr-lib-debug
+      tag.
   * checks/cruft.{desc,pm}:
     + [BR] Detect sphinx generated documentation and avoid
       a false positive for minified javascript and missing sources.
@@ -24,6 +28,9 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [NT] Apply patch from Johannes Schauer to rename "notest"
       build-profile to "nocheck".  (Closes: #743840)
     + [NT] Support giving replacements for obsolete packages.
+  * checks/infofiles.desc:
+    + [NT] Apply patch from Samuel Bronson to imrpove some o
+      the examples.
   * checks/init.d.{desc,pm}:
     + [BR] Detect $all virtual dependency in legacy init scripts.
       Thanks to Holger Levsen.  (Closes: #737867).
@@ -60,12 +67,12 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       Apple Computer, Inc., 2003
     + [BR] Add old srgb profile from HP: IEC 61966-2.1 Default RGB
       colour space - sRGB, Copyright (c) 1998 Hewlett-Packard Company
-
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of lcms, lcms2, libmms, libminiupnpc,
       libupnp, and libyaml, polarssl.
     + [RG] Don't detect mariadb as embedder of mysql.
     + [BR] Detect libidn*, and libsrtp.
+    + [NT] Apply patch from Samuel Bronson to detect mpfr and gmp.
   * data/fields/obsolete-packages:
     + [NT] Add hardening-includes and hardening-wrapper on request of
       Thijs Kinkhorst.  (Closes: #711193)
