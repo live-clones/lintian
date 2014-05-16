@@ -6,6 +6,9 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [NT] Apply patch from Samuel Bronson to improve the
       description of the debug-symbols-directly-in-usr-lib-debug
       tag.
+  * checks/changelog-file.pm:
+    + [BR] Allow to sid for experimental to unstable comment.
+      (Closes: #747407).
   * checks/cruft.{desc,pm}:
     + [BR] Detect sphinx generated documentation and avoid
       a false positive for minified javascript and missing sources.
@@ -17,9 +20,6 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [BR] Fix another false positives in GFDL detection.
     + [BR] Fix a false positive for source-is-missing for
       deployJava.js.  (Closes: #745152).
-  * checks/changelog-file.pm:
-    + [BR] Allow to sid for experimental to unstable comment.
-      (Closes: #747407).
   * checks/files.pm:
     + [BR] Use Lintian::Data for detecting embedded library.
     + [BR] Add context in embedded lib tagging.
@@ -29,7 +29,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       build-profile to "nocheck".  (Closes: #743840)
     + [NT] Support giving replacements for obsolete packages.
   * checks/infofiles.desc:
-    + [NT] Apply patch from Samuel Bronson to imrpove some o
+    + [NT] Apply patch from Samuel Bronson to improve some of
       the examples.
     + [NT] Apply patch from Don Armstrong to ignore jpg/jpeg images
       beneath /usr/share/info.  (Closes: #748167)
@@ -58,6 +58,12 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * checks/testsuite.pm:
     + [JW] Add new restrictions for DEP-8 tests.  (Closes: #746305)
 
+  * data/binary/embedded-libs:
+    + [RG] Detect embedded copies of lcms, lcms2, libmms, libminiupnpc,
+      libupnp, and libyaml, polarssl.
+    + [RG] Don't detect mariadb as embedder of mysql.
+    + [BR] Detect libidn*, and libsrtp.
+    + [NT] Apply patch from Samuel Bronson to detect mpfr and gmp.
   * data/cruft/non-distributable-files:
     + [BR] Add a file comes from the Novell libc Software Development
       Kit.  (Closes: #745802)
@@ -69,12 +75,6 @@ lintian (2.5.23) UNRELEASED; urgency=medium
       Apple Computer, Inc., 2003
     + [BR] Add old srgb profile from HP: IEC 61966-2.1 Default RGB
       colour space - sRGB, Copyright (c) 1998 Hewlett-Packard Company
-  * data/binary/embedded-libs:
-    + [RG] Detect embedded copies of lcms, lcms2, libmms, libminiupnpc,
-      libupnp, and libyaml, polarssl.
-    + [RG] Don't detect mariadb as embedder of mysql.
-    + [BR] Detect libidn*, and libsrtp.
-    + [NT] Apply patch from Samuel Bronson to detect mpfr and gmp.
   * data/fields/obsolete-packages:
     + [NT] Add hardening-includes and hardening-wrapper on request of
       Thijs Kinkhorst.  (Closes: #711193)
