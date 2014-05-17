@@ -713,7 +713,7 @@ sub check_missing_source {
         if($match eq '') {
             $newbasename = $basename;
         } else {
-            $newbasename =~ s/$match/$replace/g;
+            $newbasename =~ s/$match/$replace/;
         }
         # next but we may be return an error
         if($newbasename eq '') {
