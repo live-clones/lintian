@@ -74,7 +74,7 @@ my $VCS_FILES = Lintian::Data->new(
     sub {
         my $regexp = $_[0];
         $regexp =~ s/\${COMPRESS_EXT}/$COMPRESS_FILE_EXTENSIONS_OR_ALL/g;
-        return qr/(:?$regexp)/x;
+        return qr/(?:$regexp)/x;
     });
 
 # an OR (|) regex of all vcs files
