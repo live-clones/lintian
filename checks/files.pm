@@ -1793,33 +1793,33 @@ sub detect_privacy_breach {
         while(
             $block=~ m,
                 (?'fulltag'
-                 <\s*
+                 <
                   (?:
                     (?'tagattr'div|embed|i?frame|img|input|script|source|track|video)
                     (?&ba)
-                    src\s*=\s*(?'url'(?&loc))
+                    src=(?'url'(?&loc))
                   |
                     (?'tagattr'div)
                     (?&ba)
-                    data-href\s*=\s*(?'url'(?&loc))
+                    data-href=(?'url'(?&loc))
                   |
                     (?'tagattr'applet|object)
                     (?&ba)
-                    codebase\s*=\s*(?'url'(?&loc))
+                    codebase=(?'url'(?&loc))
                   |
                     (?'tagattr'object)
                     (?&ba)
-                    data\s*=\s*(?'url'(?&loc))
+                    data=(?'url'(?&loc))
                   |
                     (?'tagattr'video)
                     (?&ba)
-                    poster\s*=\s*(?'url'(?&loc))
+                    poster=(?'url'(?&loc))
                   |
                     (?'tagattr'link)
                     (?&ba)
-                    href\s*=\s*(?'url'(?&loc))
+                    href=(?'url'(?&loc))
                   )
-                 [^>]*?
+                 [^>]*
                  >
                 |
                  (?'tagattr'[@]import)
@@ -1828,15 +1828,15 @@ sub detect_privacy_breach {
                  \s* \) \s* ;
                 )
                  (?(DEFINE)
-                   (?<ba>(?:\s+[^>]+)? \s+)
-                   (?<loc>"(?:http|ftp)s?://[^"\r\n]*?")
+                   (?<ba>(?:\s[^>]+)? \s+)
+                   (?<loc>"(?:ht|f)tps?://[^"\r\n]*")
                  ),xismog
           ) {
             my $url=$+{url};
             my $tagattr=$+{tagattr};
             my $fulltag=$+{fulltag};
             my $website = $url;
-            $website =~ s,^"(?:http|ftp)s?://,,;
+            $website =~ s,^"(?:ht|f)tps?://,,;
             $website =~ s/"$//;
 
             if (is_localhost($website)){
@@ -1845,10 +1845,10 @@ sub detect_privacy_breach {
             }
             # reparse fulltag for rel
             if ($tagattr eq 'link') {
-                $fulltag =~ m,<\s* link
-                                   (?:\s+[^>]+)? \s+
-                                   rel \s* = \s* "([^"\r\n]*?)"
-                                   [^>]*?
+                $fulltag =~ m,<link
+                                   (?:\s[^>]+)? \s+
+                                   rel="([^"\r\n]*)"
+                                   [^>]*
                               >,xismog;
                 my $relcontent = $1;
                 if (defined($relcontent)) {
