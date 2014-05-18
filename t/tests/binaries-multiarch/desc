@@ -3,5 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test of a correct multiarch package
 Architecture: i386 amd64
+Options: --pedantic -I -E
 Test-Against:
  triplet-dir-and-architecture-mismatch

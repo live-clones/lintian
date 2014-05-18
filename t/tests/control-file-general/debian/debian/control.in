@@ -20,6 +20,7 @@ Section: {$section}
 Maintainer: {$author}
 Build-Conflicts: foo
 Architecture: {$architecture}
+Pre-depends: $\{misc:Pre-depends\}, multiarch-support
 Depends: {$source}, foo, baz, $\{shlibs:Depends\} $\{some:Depends\}, $\{misc:Depends\}
 Recommends: foo, bar, no-match$\{lintian:Foo\}, match$\{lintian:Match\}, no-match$\{lintian:Bar\}-foo
 Suggests: bar | baz, no-match$\{lintian:Bar\}, match$\{lintian:Match\}

@@ -221,3 +221,13 @@ Info: You used a stage1 or stage2 build profile restriction in the build
  packages which would provide different functionality, would be empty or not be
  built at all under the stage1 or stage2 profiles must be marked as not being
  generated with the Build-Profiles field.
+
+Tag: pre-depends-directly-on-multiarch-support
+Severity: pedantic
+Certainty: possible
+Info: The control file mentions multiarch-support in a Pre-Depends line.
+ Usually multiarch-support is inserted into Pre-Depends via ${misc:Pre-Depends}
+ by dh_makeshlibs. In order to be able to remove the multiarch-support package
+ from glibc without updating every package, Pre-Depends: ${misc:Pre-Depends}
+ should be used instead. Then multiarch-support can be removed by a change
+ in debhelper followed by a binNMU of all affected packages.

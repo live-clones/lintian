@@ -9,6 +9,10 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * checks/changelog-file.pm:
     + [BR] Allow to sid for experimental to unstable comment.
       (Closes: #747407).
+  * checks/control.{desc,pm}:
+    + [BR] Apply patch from Helmut Grohne to warn about
+      Pre-Depends: multiarch-support in debian/control.
+      (Closes: #747439).
   * checks/cruft.{desc,pm}:
     + [BR] Detect sphinx generated documentation and avoid
       a false positive for minified javascript and missing sources.

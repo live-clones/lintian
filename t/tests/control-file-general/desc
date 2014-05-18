@@ -2,6 +2,7 @@ Testname: control-file-general
 Sequence: 6000
 Version: 1.0
 Description: Various problems with debian/control
+Options: --pedantic -I -E
 Test-For:
  binary-control-field-duplicates-source
  build-info-in-binary-control-file-section
@@ -13,6 +14,7 @@ Test-For:
  no-section-field-for-source
  obsolete-relation-form-in-source
  package-depends-on-itself
+ pre-depends-directly-on-multiarch-support
  stronger-dependency-implies-weaker
  xs-vcs-header-in-debian-control
 References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706,
