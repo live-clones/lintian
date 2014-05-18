@@ -1,4 +1,5 @@
 E: files-tar-traps: non-standard-toplevel-dir strangename/
 W: files-tar-traps: file-in-unusual-dir strangename/strangename/'\ 
 W: files-tar-traps: file-in-unusual-dir strangename/strangename/\
+W: files-tar-traps: file-in-unusual-dir strangename/strangename/\\
 W: files-tar-traps: file-name-ends-in-whitespace strangename/strangename/'\ 

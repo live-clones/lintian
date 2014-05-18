@@ -7,6 +7,6 @@ Description: Test tags for tar common bugs
 #
 # See #740199 and
 # http://lists.gnu.org/archive/html/bug-tar/2014-03/msg00001.html
-Test-Depends: tar (<< 1.27~) | tar (>= 1.27.1~)
+Test-Depends: tar (>= 1.27.1~), dpkg (>= 1.17.7)
 Test-For:
  non-standard-toplevel-dir

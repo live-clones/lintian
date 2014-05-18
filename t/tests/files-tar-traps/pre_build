@@ -12,4 +12,4 @@ echo "bar" > "$dir/\\"
 # File named <backslash><backslash>
 # - causes md5sums-lists-nonexistent-file
 #   (TODO: debug why, but for now leave it out)
-#echo "bar" > "$dir/\\\\"
+echo "bar" > "$dir/\\\\"
