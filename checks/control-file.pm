@@ -344,12 +344,14 @@ sub run {
 
     # find binary packages that Pre-Depend on multiarch-support without going
     # via ${misc:Pre-Depends}
-    if ($info->source_field('build-depends') =~ /debhelper/) {
-        for my $bin (@package_names) {
-            my $raw = $info->binary_field($bin, 'pre-depends');
-            next unless $raw;
-            if($raw =~ /multiarch-support/) {
-                tag 'pre-depends-directly-on-multiarch-support',$bin;
+    if ($info->source_field('build-depends')) {
+        if ($info->source_field('build-depends') =~ /debhelper/) {
+            for my $bin (@package_names) {
+                my $raw = $info->binary_field($bin, 'pre-depends');
+                next unless $raw;
+                if($raw =~ /multiarch-support/) {
+                    tag 'pre-depends-directly-on-multiarch-support',$bin;
+                }
             }
         }
     }
