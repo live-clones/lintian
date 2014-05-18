@@ -1005,6 +1005,9 @@ sub _clean_block {
     # replace some common comment-marker/markup with space
     $text =~ s{^\.\\\"}{ }gxms;               # man comments
 
+    # po comment may include html tag
+    $text =~ s/\"\s?\v\#~\s?\"//gxms;
+
     $text =~ s/\\url{[^}]*?}/ /gxms;          # (la)?tex url
     $text =~ s/\emph{/ /gxms;                 # (la)?tex emph
     $text =~ s/\\href{[^}]*?}
@@ -1022,9 +1025,8 @@ sub _clean_block {
 
     $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
 
-    $text =~ s/\@[birt]{
-              / /gxms
-      ;                        # Tex info bold,italic, roman, fixed width
+    # Tex info bold,italic, roman, fixed width
+    $text =~ s/\@[birt]{/ /gxms;
     $text =~ s/\@sansserif{/ /gxms;           # Tex info sans serif
     $text =~ s/\@slanted{/ /gxms;             # Tex info slanted
     $text =~ s/\@var{/ /gxms;                 # Tex info emphasis
@@ -1078,8 +1080,8 @@ sub _clean_block {
     $text =~ s/}/ /gxms;
     # single char at end
     # String, C-style comment/javadoc indent,
-    # quotes for strings, pipe and antislash in some txt
-    $text =~ s,[%\*\"\|\\\#], ,gxms;
+    # quotes for strings, pipe and antislash, tilde in some txt
+    $text =~ s,[%\*\"\|\\\#~], ,gxms;
     # delete double spacing now and normalize spacing
     # to space character
     $text =~ s{\s++}{ }gsm;

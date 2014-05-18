@@ -20,6 +20,8 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [BR] Fix another false positives in GFDL detection.
     + [BR] Fix a false positive for source-is-missing for
       deployJava.js.  (Closes: #745152).
+    + [BR] Fix a false positive for GFDL detection in
+      soundjuicer.  (Closes: #748375).
     + [BR] Fix a false positive for source-is-missing in e2fsprogs.
       (Closes: #748421).
   * checks/files.pm:
