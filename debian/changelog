@@ -2,7 +2,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * checks/binaries.desc:
+  * checks/binaries.{desc,pm}:
     + [NT] Apply patch from Samuel Bronson to improve the
       description of the debug-symbols-directly-in-usr-lib-debug
       tag.
