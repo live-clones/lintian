@@ -712,7 +712,7 @@ sub run {
                         # allow (e.g.) "lib64" packages to still use
                         # these dirs, since their use appears to be by
                         # intention.
-                        unless ($source_pkg eq 'eglibc'
+                        unless ($source_pkg =~ m/^e?glibc$/
                             or $pkg =~ m/^lib$libsuffix/) {
                             tag 'non-multi-arch-lib-dir', $file;
                         }
@@ -846,7 +846,7 @@ sub run {
             if ($fname =~ m,^lib(?'libsuffix'64|x?32)/,) {
                 my $libsuffix = $+{libsuffix};
                 # see comments for ^usr/lib(?'libsuffix'64|x?32)
-                unless ($source_pkg eq 'eglibc'
+                unless ($source_pkg =~ m/^e?glibc$/
                     or $pkg =~ m/^lib$libsuffix/) {
                     tag 'non-multi-arch-lib-dir', $file;
                 }

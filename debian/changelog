@@ -6,6 +6,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [NT] Apply patch from Samuel Bronson to improve the
       description of the debug-symbols-directly-in-usr-lib-debug
       tag.
+    + [BR] Extend eglibc whitelist to glibc.  (Closes: #748881).
   * checks/changelog-file.pm:
     + [BR] Allow to sid for experimental to unstable comment.
       (Closes: #747407).
