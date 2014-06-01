@@ -75,6 +75,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
     + [RG] Don't detect mariadb as embedder of mysql.
     + [BR] Detect libidn*, and libsrtp.
     + [NT] Apply patch from Samuel Bronson to detect mpfr and gmp.
+    + [BR] Extend eglibc whitelist to glibc.
   * data/cruft/non-distributable-files:
     + [BR] Add a file comes from the Novell libc Software Development
       Kit.  (Closes: #745802)

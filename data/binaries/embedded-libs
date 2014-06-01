@@ -59,7 +59,7 @@ libidn2-0   ||punycode conversion resulted in overflow
 libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
 libjsoncpp ||A valid JSON document must be either an array or an object value\.
 liblivemedia||(?:Received incoming RTSP request:|LIVE555 Streaming Media v)
-libm      ||source=eglibc ||neg\*\*non-integral: DOMAIN error
+libm      ||source-regex=e?glibc ||neg\*\*non-integral: DOMAIN error
 libmms    ||source-regex=(?:libmms|xine-lib)||failed to read new ASF header
 libmng    ||TERM misplaced during creation of MNG stream
 libmsn    ||The MSN server has terminated the connection with an unknown reason code\.
