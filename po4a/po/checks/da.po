@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po 4a\n"
-"POT-Creation-Date: 2014-04-13 19:25+0000\n"
+"POT-Creation-Date: 2014-06-17 20:03+0000\n"
 "PO-Revision-Date: 2012-03-08 19:10+0100\n"
 "Last-Translator: Niels Thykier <niels@thykier.net>\n"
 "Language-Team: Danish\n"
@@ -669,11 +669,12 @@ msgid ""
 "changes on the system version of the library."
 msgstr ""
 
+#
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: debug-symbols-directly-in-usr-lib-debug
 #. type: Lintian tag description
-#: checks/binaries.desc:321
+#: checks/binaries.desc:323
 #, no-wrap
 msgid ""
 "The given debugging symbols-only object is installed directly in\n"
@@ -681,14 +682,16 @@ msgid ""
 "subdirectory.  For example, debug symbols of a binary in\n"
 "<tt>/usr/bin</tt> should be placed in <tt>/usr/lib/debug/usr/bin</tt>.\n"
 "gdb, when looking for debugging symbols, prepends <tt>/usr/lib/debug</tt>\n"
-"to the path of the original binary."
+"to whatever path it finds in the .gnu_debuglink section, which when using\n"
+"dh_strip(1) is either the path to your binary/library or a build-id based\n"
+"path."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: ocaml-custom-executable
 #. type: Lintian tag description
-#: checks/binaries.desc:329
+#: checks/binaries.desc:331
 #, no-wrap
 msgid ""
 "This package provides an OCaml bytecode executable linked with a\n"
@@ -701,7 +704,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: hardening-no-stackprotector
 #. type: Lintian tag description
-#: checks/binaries.desc:340
+#: checks/binaries.desc:342
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the stack protector\n"
@@ -716,7 +719,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: hardening-no-fortify-functions
 #. type: Lintian tag description
-#: checks/binaries.desc:354
+#: checks/binaries.desc:356
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the use of fortified\n"
@@ -734,7 +737,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: hardening-no-relro
 #. type: Lintian tag description
-#: checks/binaries.desc:364
+#: checks/binaries.desc:366
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the \"read-only\n"
@@ -748,7 +751,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: debug-file-with-no-debug-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:374
+#: checks/binaries.desc:376
 #, no-wrap
 msgid ""
 "The binary is installed as a detached \"debug symbols\" ELF file,\n"
@@ -762,7 +765,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: binary-file-built-without-LFS-support
 #. type: Lintian tag description
-#: checks/binaries.desc:396
+#: checks/binaries.desc:398
 #, no-wrap
 msgid ""
 "The listed ELF binary appears to be (partially) built without\n"
@@ -1904,7 +1907,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: stageX-profile-used-but-no-binary-package-dropped
 #. type: Lintian tag description
-#: checks/control-file.desc:223
+#: checks/control-file.desc:224
 #, no-wrap
 msgid ""
 "You used a stage1 or stage2 build profile restriction in the build\n"
@@ -1914,7 +1917,23 @@ msgid ""
 "the build results will be different or not generated at all. All binary\n"
 "packages which would provide different functionality, would be empty or not be\n"
 "built at all under the stage1 or stage2 profiles must be marked as not being\n"
-"generated with the Build-Profiles field.\n"
+"generated with the Build-Profiles field."
+msgstr ""
+
+#
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#. Tag: pre-depends-directly-on-multiarch-support
+#. type: Lintian tag description
+#: checks/control-file.desc:233
+#, no-wrap
+msgid ""
+"The control file mentions multiarch-support in a Pre-Depends line.\n"
+"Usually multiarch-support is inserted into Pre-Depends via ${misc:Pre-Depends}\n"
+"by dh_makeshlibs. In order to be able to remove the multiarch-support package\n"
+"from glibc without updating every package, Pre-Depends: ${misc:Pre-Depends}\n"
+"should be used instead. Then multiarch-support can be removed by a change\n"
+"in debhelper followed by a binNMU of all affected packages.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -9269,6 +9288,7 @@ msgstr ""
 msgid "The info document has an extension other than info*.gz."
 msgstr ""
 
+#
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: info-document-missing-dir-section
@@ -9280,7 +9300,7 @@ msgid ""
 "<tt>install-info</tt> will be unable to determine the section into which\n"
 "this info page should be put.  The best solution is to add a line like:\n"
 "\n"
-"  @dircategory Development\n"
+"  @dircategory Software development\n"
 "\n"
 "to the texinfo source so that the generated info file will contain a\n"
 "section.  See <tt>/usr/share/info/dir</tt> for sections to choose from.\n"
@@ -9288,11 +9308,12 @@ msgid ""
 "rather than using ones built by upstream."
 msgstr ""
 
+#
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: info-document-missing-dir-entry
 #. type: Lintian tag description
-#: checks/infofiles.desc:63
+#: checks/infofiles.desc:64
 #, no-wrap
 msgid ""
 "This info document has no directory entry.  This is text between\n"
@@ -9300,6 +9321,7 @@ msgid ""
 "the <tt>dir</tt> file in <tt>/usr/share/info</tt> by\n"
 "<tt>install-info</tt>.  The best solution is to add lines like:\n"
 "\n"
+"  @dircategory Software development\n"
 "  @direntry\n"
 "  * foo: (foo).                Foo creator and editor\n"
 "  @end direntry\n"
@@ -9314,7 +9336,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: info-document-missing-image-file
 #. type: Lintian tag description
-#: checks/infofiles.desc:82
+#: checks/infofiles.desc:83
 #, no-wrap
 msgid ""
 "This info document contains an \"[image]\" but the image file it\n"
@@ -11934,11 +11956,24 @@ msgid ""
 "then you can override this warning."
 msgstr ""
 
+#
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#. Tag: quilt-series-without-trailing-newline
+#. type: Lintian tag description
+#: checks/patch-systems.desc:85
+#, no-wrap
+msgid ""
+"The package contains a debian/patches/series file\n"
+"that doesn't end with a newline. dpkg-source may silently\n"
+"corrupt this file."
+msgstr ""
+
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: quilt-patch-with-non-standard-options
 #. type: Lintian tag description
-#: checks/patch-systems.desc:90
+#: checks/patch-systems.desc:98
 #, no-wrap
 msgid ""
 "The quilt series file contains non-standard options to apply some of\n"
@@ -11956,7 +11991,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: quilt-series-references-non-existent-patch
 #. type: Lintian tag description
-#: checks/patch-systems.desc:96
+#: checks/patch-systems.desc:104
 #, no-wrap
 msgid ""
 "In the series file listing all your quilt patches, you referenced a\n"
@@ -11967,7 +12002,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: quilt-patch-missing-description
 #. type: Lintian tag description
-#: checks/patch-systems.desc:113
+#: checks/patch-systems.desc:121
 #, no-wrap
 msgid ""
 "quilt patch files should start with a description of patch.  All\n"
@@ -11988,7 +12023,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: patch-modifying-debian-files
 #. type: Lintian tag description
-#: checks/patch-systems.desc:125
+#: checks/patch-systems.desc:133
 #, no-wrap
 msgid ""
 "A patch stored in debian/patches/ should never modify files\n"
@@ -12005,7 +12040,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: patch-system-but-direct-changes-in-diff
 #. type: Lintian tag description
-#: checks/patch-systems.desc:136
+#: checks/patch-systems.desc:144
 #, no-wrap
 msgid ""
 "The package uses a patch system, but the Debian diff.gz contains\n"
@@ -12021,7 +12056,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: format-3.0-but-debian-changes-patch
 #. type: Lintian tag description
-#: checks/patch-systems.desc:149
+#: checks/patch-systems.desc:157
 #, no-wrap
 msgid ""
 "This package declares source format 3.0 (quilt), but the Debian\n"
@@ -12039,7 +12074,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: more-than-one-patch-system
 #. type: Lintian tag description
-#: checks/patch-systems.desc:159
+#: checks/patch-systems.desc:167
 #, no-wrap
 msgid ""
 "Either the build-dependencies list more than one patch system or the\n"
@@ -12054,7 +12089,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: direct-changes-in-diff-but-no-patch-system
 #. type: Lintian tag description
-#: checks/patch-systems.desc:173
+#: checks/patch-systems.desc:181
 #, no-wrap
 msgid ""
 "The Debian diff.gz contains changes to files or creation of additional\n"
@@ -12073,7 +12108,7 @@ msgstr ""
 #. "verbatim" or shell commands (specially formatted in output).
 #. Tag: patch-system-but-no-source-readme
 #. type: Lintian tag description
-#: checks/patch-systems.desc:187
+#: checks/patch-systems.desc:195
 #, no-wrap
 msgid ""
 "This package build-depends on a patch system such as dpatch or\n"
