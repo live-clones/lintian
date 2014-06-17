@@ -1,6 +1,13 @@
-lintian (2.5.23) UNRELEASED; urgency=medium
+lintian (2.5.23) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - init.d-script-depends-on-all-virtual-facility
+      - maven-plugin-in-usr-share-java
+      - needless-suggest-recommend-libservlet-java
+      - pre-depends-directly-on-multiarch-support
+      - quilt-series-without-trailing-newline
+      - source-contains-prebuilt-sphinx-documentation
 
   * checks/binaries.{desc,pm}:
     + [NT] Apply patch from Samuel Bronson to improve the
@@ -125,7 +132,7 @@ lintian (2.5.23) UNRELEASED; urgency=medium
   * README:
     + [NT] Document how to make and contribute translations.
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Mon, 31 Mar 2014 18:52:04 +0200
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Tue, 17 Jun 2014 21:57:58 +0200
 
 lintian (2.5.22.1) unstable; urgency=medium
 
