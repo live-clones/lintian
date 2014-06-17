@@ -7,3 +7,4 @@ Test-For:
  build-depends-on-an-obsolete-java-package
  depends-on-specific-java-doc-package
  needless-dependency-on-jre
+ needless-suggest-recommend-libservlet-java
