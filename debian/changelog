@@ -1,5 +1,7 @@
 lintian (2.5.23.1) UNRELEASED; urgency=medium
 
+  * debian/rules:
+    + [NT] Avoid regenerating po4a files if not needed.
   * debian/source/lintian.overrides:
     + [NT] Add overrides for false-positive "evil JSON" license
       problem, which is triggered by the current Lintian on the
