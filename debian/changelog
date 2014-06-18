@@ -1,4 +1,4 @@
-lintian (2.5.23.1) UNRELEASED; urgency=medium
+lintian (2.5.23.1) unstable; urgency=medium
 
   * debian/rules:
     + [NT] Avoid regenerating po4a files if not needed.
@@ -7,7 +7,7 @@ lintian (2.5.23.1) UNRELEASED; urgency=medium
       problem, which is triggered by the current Lintian on the
       FTP master host.
 
- -- Niels Thykier <niels@thykier.net>  Wed, 18 Jun 2014 06:32:34 +0200
+ -- Niels Thykier <niels@thykier.net>  Wed, 18 Jun 2014 06:39:15 +0200
 
 lintian (2.5.23) unstable; urgency=medium
 
