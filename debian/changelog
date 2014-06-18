@@ -1,3 +1,12 @@
+lintian (2.5.23.1) UNRELEASED; urgency=medium
+
+  * debian/source/lintian.overrides:
+    + [NT] Add overrides for false-positive "evil JSON" license
+      problem, which is triggered by the current Lintian on the
+      FTP master host.
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 18 Jun 2014 06:32:34 +0200
+
 lintian (2.5.23) unstable; urgency=medium
 
   * Summary of tag changes:
