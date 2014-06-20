@@ -44,9 +44,17 @@ my $PRIVACY_BREAKER_WEBSITES
   = Lintian::Data->new('files/privacy-breaker-websites',
     qr/\s*\~\~/o,sub { return qr/$_[1]/xism });
 
-my $PRIVACY_BREAKER_FRAGMENTS
-  = Lintian::Data->new('files/privacy-breaker-fragments',
-    qr/\s*\~\~/o,sub { return qr/$_[1]/xsm });
+my $PRIVACY_BREAKER_FRAGMENTS= Lintian::Data->new(
+    'files/privacy-breaker-fragments',
+    qr/\s*\~\~/o,
+    sub {
+        my ($regex, $tag) = split(/\s*\~\~\s*/, $_[1], 2);
+        return {
+            'keyword' => $_[0],
+            'regex' => qr/$regex/xsm,
+            'tag' => $tag,
+        };
+    });
 
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
@@ -1773,12 +1781,16 @@ sub detect_privacy_breach {
 
     while (my $block = $sfd->readwindow()) {
         # try generic fragment tagging
-        foreach my $breaker_tag ($PRIVACY_BREAKER_FRAGMENTS->all) {
-            my $regex = $PRIVACY_BREAKER_FRAGMENTS->value($breaker_tag);
-            if ($block =~ m{$regex}) {
-                unless (exists $privacybreachhash{'tag-'.$breaker_tag}) {
-                    $privacybreachhash{'tag-'.$breaker_tag} = 1;
-                    tag $breaker_tag, $file;
+        foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
+            if(index($block,$keyword) > -1) {
+                my $keyvalue = $PRIVACY_BREAKER_FRAGMENTS->value($keyword);
+                my $regex = $keyvalue->{'regex'};
+                if ($block =~ m{$regex}) {
+                    my $breaker_tag = $keyvalue->{'tag'};
+                    unless (exists $privacybreachhash{'tag-'.$breaker_tag}) {
+                        $privacybreachhash{'tag-'.$breaker_tag} = 1;
+                        tag $breaker_tag, $file;
+                    }
                 }
             }
         }
