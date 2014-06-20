@@ -1766,34 +1766,6 @@ sub is_localhost {
     }
 }
 
-sub detect_privacy_breach {
-    my ($info, $file) = @_;
-    my %privacybreachhash = ();
-
-    # detect only in regular file
-    unless($file->is_regular_file) {
-        return;
-    }
-
-    open(my $fd, '<:raw', $info->unpacked($file));
-
-    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
-
-    while (my $block = $sfd->readwindow()) {
-        # try generic fragment tagging
-        foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
-            if(index($block,$keyword) > -1) {
-                my $keyvalue = $PRIVACY_BREAKER_FRAGMENTS->value($keyword);
-                my $regex = $keyvalue->{'regex'};
-                if ($block =~ m{$regex}) {
-                    my $breaker_tag = $keyvalue->{'tag'};
-                    unless (exists $privacybreachhash{'tag-'.$breaker_tag}) {
-                        $privacybreachhash{'tag-'.$breaker_tag} = 1;
-                        tag $breaker_tag, $file;
-                    }
-                }
-            }
-        }
 # According to html norm src attribute is used by tags:
 #
 # audio(v5+), embed (v5+), iframe (v4), frame, img, input, script, source, track(v5), video (v5)
@@ -1801,9 +1773,12 @@ sub detect_privacy_breach {
 # div due to div.js
 # div data-href due to jquery
 # css with @import
-      EXTERNAL_TAG:
-        while(
-            $block=~ m,
+sub detect_generic_privacy_breach {
+    my ($block, $privacybreachhash, $file) = @_;
+
+  EXTERNAL_TAG:
+    while(
+        $block=~ m,
                 (?'fulltag'
                  <
                   (?:
@@ -1843,56 +1818,101 @@ sub detect_privacy_breach {
                    (?<ba>(?:\s[^>]+)? \s+)
                    (?<loc>"(?:ht|f)tps?://[^"\r\n]*")
                  ),xismog
-          ) {
-            my $url=$+{url};
-            my $tagattr=$+{tagattr};
-            my $fulltag=$+{fulltag};
-            my $website = $url;
-            $website =~ s,^"(?:ht|f)tps?://,,;
-            $website =~ s/"$//;
+      ) {
+        my $url=$+{url};
+        my $tagattr=$+{tagattr};
+        my $fulltag=$+{fulltag};
+        my $website = $url;
+        $website =~ s,^"(?:ht|f)tps?://,,;
+        $website =~ s/"$//;
 
-            if (is_localhost($website)){
-                # do nothing ok
-                next EXTERNAL_TAG;
-            }
-            # reparse fulltag for rel
-            if ($tagattr eq 'link') {
-                $fulltag =~ m,<link
+        if (is_localhost($website)){
+            # do nothing ok
+            next EXTERNAL_TAG;
+        }
+        # reparse fulltag for rel
+        if ($tagattr eq 'link') {
+            $fulltag =~ m,<link
                                    (?:\s[^>]+)? \s+
                                    rel="([^"\r\n]*)"
                                    [^>]*
                               >,xismog;
-                my $relcontent = $1;
-                if (defined($relcontent)) {
-                    if ($relcontent eq 'schema.dct') {
-                        # see #736992
-                        next EXTERNAL_TAG;
+            my $relcontent = $1;
+            if (defined($relcontent)) {
+                if ($relcontent eq 'schema.dct') {
+                    # see #736992
+                    next EXTERNAL_TAG;
 
-                    } elsif  ($relcontent eq 'bookmark') {
-                        # see #746656
-                        next EXTERNAL_TAG;
-                    }
-                }
-            }
-
-            # track well known site
-            foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
-                my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
-                if ($website =~ m{$regex}) {
-                    unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
-                        $privacybreachhash{'tag-'.$breaker_tag}= 1;
-                        tag $breaker_tag, $file;
-                    }
-                    # do not go to generic case
+                } elsif  ($relcontent eq 'bookmark') {
+                    # see #746656
                     next EXTERNAL_TAG;
                 }
             }
-            # generic case
-            unless (exists $privacybreachhash{'tag-generic-'.$website}){
-                tag 'privacy-breach-generic', $file, $website;
-                $privacybreachhash{'tag-generic-'.$website} = 1;
+        }
+
+        # track well known site
+        foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
+            my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
+            if ($website =~ m{$regex}) {
+                unless (exists $privacybreachhash->{'tag-'.$breaker_tag}){
+                    $privacybreachhash->{'tag-'.$breaker_tag}= 1;
+                    tag $breaker_tag, $file;
+                }
+                # do not go to generic case
+                next EXTERNAL_TAG;
             }
         }
+        # generic case
+        unless (exists $privacybreachhash->{'tag-generic-'.$website}){
+            tag 'privacy-breach-generic', $file, $website;
+            $privacybreachhash->{'tag-generic-'.$website} = 1;
+        }
+    }
+}
+
+sub detect_privacy_breach {
+    my ($info, $file) = @_;
+    my %privacybreachhash = ();
+
+    # detect only in regular file
+    unless($file->is_regular_file) {
+        return;
+    }
+
+    open(my $fd, '<:raw', $info->unpacked($file));
+
+    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
+
+    while (my $block = $sfd->readwindow()) {
+        # try generic fragment tagging
+        foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
+            if(index($block,$keyword) > -1) {
+                my $keyvalue = $PRIVACY_BREAKER_FRAGMENTS->value($keyword);
+                my $regex = $keyvalue->{'regex'};
+                if ($block =~ m{$regex}) {
+                    my $breaker_tag = $keyvalue->{'tag'};
+                    unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
+                        $privacybreachhash{'tag-'.$breaker_tag} = 1;
+                        tag $breaker_tag, $file;
+                    }
+                }
+            }
+        }
+        if(   index($block,'src="http') > -1
+            ||index($block,'src="ftp') > -1
+            ||index($block,'data-href="http') > -1
+            ||index($block,'data-href="ftp') > -1
+            ||index($block,'codebase="http') > -1
+            ||index($block,'codebase="ftp') > -1
+            ||index($block,'data="http') > -1
+            ||index($block,'data="ftp') > -1
+            ||index($block,'poster="http') > -1
+            ||index($block,'poster="ftp') > -1
+            ||index($block,'<link') > -1
+            ||index($block,'@import') > -1) {
+            detect_generic_privacy_breach($block,\%privacybreachhash,$file);
+        }
+
     }
     close($fd);
     return;
