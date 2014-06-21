@@ -2,7 +2,7 @@
 #
 # Last updated: 2012-02-19
 
-# doo not warn here for $all
+# do not warn here for $all
 $all
 $local_fs
 $mail-transport-agent

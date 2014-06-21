@@ -2,6 +2,12 @@ lintian (2.5.25) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * data/init.d/virtual_facilities:
+    + [NT] Apply patch from Guillem Jover to fix a typo.
+  * data/symlinks/well-known-symlinks-target:
+    + [NT] Apply patch from Guillem Jover to fix a typo in
+      a regex.  (Closes: #752229)
+
   * debian/control:
     + [NT] Add Breaks/Replaces for funny-manpages due to a
       bug in funny-manpages before 1.3-5.1.  Thanks to Adrian

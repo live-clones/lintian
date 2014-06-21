@@ -7,5 +7,5 @@ man/man\d/undocumented
 ^usr/share/javascript/(?:[^/]++/)++[^/]+\.js$
 ^lib/init/upstart-job$
 ^dev/null$
-^dev/zeros$
+^dev/zero$
 
