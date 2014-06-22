@@ -1819,7 +1819,7 @@ sub _check_tag_url_privacy_breach {
         if ($website =~ m{$regex}) {
             unless (exists $privacybreachhash->{'tag-'.$breaker_tag}){
                 $privacybreachhash->{'tag-'.$breaker_tag}= 1;
-                tag $breaker_tag, $file;
+                tag $breaker_tag, $file, $url;
             }
             # do not go to generic case
             return;

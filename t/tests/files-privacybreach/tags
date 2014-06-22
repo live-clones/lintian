@@ -1,4 +1,4 @@
-E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattr.html
+E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattr.html http://tools.flattr.net/widgets/thing.html?thing=947300;noheader=1
 E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrbuttonhtml4.xml
 E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrbuttonhtml5.xml
 E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrload.js
@@ -6,37 +6,37 @@ E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/p
 E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrrender.html
 E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrrender.xml
 E: files-privacybreach: privacy-breach-donation usr/share/files-privacy-breach/privacy-breach-donation/flattrrenderonload.xml
-E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebook.xml
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebook.xml http://www.facebook.com/plugins/likebox.php?href=http%3a%2f%2fwww.facebook.com%2fpages%2fpstoedit%2f260606183958062&amp;width=329&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=false&amp;header=false&amp;height=62
 E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookfbmlbody2008.html
 E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookfbmlbody2013.html
-E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookhtml5like20130810.xml
+E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookhtml5like20130810.xml http://developers.facebook.com/docs/reference/plugins/like
 E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookhtml5likebody20130810.xml
 E: files-privacybreach: privacy-breach-facebook usr/share/files-privacy-breach/privacy-breach-facebook/facebookxfbmllike20130810.xml
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsense.html
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseimagemagick.xml
-E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyadds.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyadds.html http://pagead2.googlesyndication.com/pagead/show_ads.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyvar.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchin.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinconstructor.js
-E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinfragment.xml
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinfragment.xml http://www.google-analytics.com/urchin.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinloader.js
-E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.css
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.css http://www.google.com/cse/api/branding.css
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecse.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseform.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseformtracking.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseimagemagick.js
-E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecsejs.xml
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecsejs.xml http://www.google.fr/coop/cse/brand?form=cse-search-box&amp;lang=en
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/asyncload.html
-E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/explicitload.html
+E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/explicitload.html https://apis.google.com/js/plusone.js
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/simplebutton.xml
-E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/logosourceforge.xml
+E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/logosourceforge.xml http://sflogo.sourceforge.net/sflogo.php?group_id=2319&type=15
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwikvariant.html
 E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter.xml
 E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter2.js
 E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/awstat.xml
 E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/official.js
-E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacy-breach/privacy-breach-w3c-valid-html/htmlvalid.html
+E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacy-breach/privacy-breach-w3c-valid-html/htmlvalid.html http://www.w3.org/icons/valid-xhtml10
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/applet.html http://1984.os/trackme
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/div.html http://trackme.1984/index-2.html
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/embed.html http://1984.os/givemydata.swf

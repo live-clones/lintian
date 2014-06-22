@@ -10,6 +10,7 @@ lintian (2.5.24) UNRELEASED; urgency=medium
       encoded in compiled python file name (Closes: #752218).
     + [BR] Add another suffix to source-is-missing for javascript
       file.
+    + [BR] Add url if possible for privacy breach.
   * checks/changelog-file.pm:
     + [BR] Use lower case for bad intended distribution.
   * checks/deb-format.{desc,pm}:
