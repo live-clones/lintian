@@ -1868,6 +1868,7 @@ sub detect_generic_privacy_breach {
             $privacybreachhash->{'tag-generic-'.$website} = 1;
         }
     }
+    return;
 }
 
 sub detect_privacy_breach {
