@@ -218,7 +218,7 @@ sub run {
         tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
 
         if (   $file->is_file
-            && $file =~ m,^usr/share/applications/.*\.desktop$,) {
+            && $file =~ m,^usr/share/(?:applications|xsessions)/.*\.desktop$,){
 
             if ($operm & 0111) {
                 tag 'executable-desktop-file', sprintf('%s %04o',$file,$operm);

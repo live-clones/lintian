@@ -6,6 +6,9 @@ lintian (2.5.24) UNRELEASED; urgency=medium
     + [NT] Apply patch from Guillem Jover to check for
       deprecated compressions on data.tar-members.
       (Closes: #745740)
+  * checks/menu-format.pm:
+    + [JW] Also validate desktop files in usr/share/xessions.
+      (Closes: #746402)
 
   * debian/rules:
     + [NT] Extract some tasks from the build-stamp target,
