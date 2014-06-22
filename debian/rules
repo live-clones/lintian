@@ -82,7 +82,7 @@ generate-docs-stamp: $(docsource)
 rebuild-lintian.debian.org: api-doc generate-docs-stamp
 
 build-arch build-indep build: build-stamp
-build-stamp: $(neededfiles) generate-docs-stamp update-po-release $(testtarget)
+build-stamp: $(neededfiles) generate-docs-stamp $(testtarget)
 	dh_testdir
 
 	PERL5LIB=lib/ po4a --keep 80 $(po4acheckcfg)
