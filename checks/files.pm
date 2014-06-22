@@ -1882,7 +1882,7 @@ sub detect_generic_privacy_breach {
         }
         my $regex = $keyvalue->{'regex'};
         while($block=~m{$regex}g){
-            _check_tag_url_privacy_breach($&, $1, $2,$privacybreachhash,$file);
+            _check_tag_url_privacy_breach($1, $2, $3,$privacybreachhash,$file);
         }
     }
     return;
