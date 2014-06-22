@@ -1,6 +1,8 @@
-lintian (2.5.24) UNRELEASED; urgency=medium
+lintian (2.5.24) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - uses-deprecated-compression-for-data-tarball
 
   * checks/file.pm:
     + [BR] Speed-up privacy check (Closes: #745877).
@@ -40,7 +42,7 @@ lintian (2.5.24) UNRELEASED; urgency=medium
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Add utopic as valid Ubuntu distribution.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 21 Jun 2014 08:48:13 +0200
+ -- Niels Thykier <niels@thykier.net>  Sun, 22 Jun 2014 22:04:20 +0200
 
 lintian (2.5.23.1) unstable; urgency=medium
 
