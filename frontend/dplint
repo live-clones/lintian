@@ -187,8 +187,11 @@ sub main {
         error("Unimplemented built-in $cmd")
           unless $handler;
         # Re-configure Getopt::Long - builtins do not care about ordering
-        Getopt::Long::config('permute', 'bundling', 'no_getopt_compat',
-            'no_auto_abbrev');
+        Getopt::Long::config(
+            'default', 'permute',
+            'bundling','no_getopt_compat',
+            'no_auto_abbrev'
+        );
         $handler->($truename, $cmd, @ARGV);
         error("Built-in $cmd returned unexpectedly");
     }

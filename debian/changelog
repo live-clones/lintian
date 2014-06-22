@@ -17,6 +17,12 @@ lintian (2.5.24) UNRELEASED; urgency=medium
       only (re-)builds/regenerates the needed parts for the
       lintian.debian.org checkout.  (Closes: #751926)
 
+  * frontend/{dplint,lintian}:
+    + [NT] Fix a bug in command-line parsing, where "--"
+      was interpreted as a literal file-name rather than
+      the "end of options" marker.  Thanks to Luca
+      Falavigna for spotting it.  (Closes: #746790)
+
  -- Niels Thykier <niels@thykier.net>  Sat, 21 Jun 2014 08:48:13 +0200
 
 lintian (2.5.23.1) unstable; urgency=medium

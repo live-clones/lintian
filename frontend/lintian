@@ -609,8 +609,8 @@ Getopt::Long::GetOptions(
 ) or die("error parsing options\n");
 
 # init commandline parser
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev',
-    'permute');
+Getopt::Long::config('default', 'bundling', 'no_getopt_compat',
+    'no_auto_abbrev', 'permute');
 
 # process commandline options
 Getopt::Long::GetOptions(%opthash)
