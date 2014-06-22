@@ -2,6 +2,8 @@ lintian (2.5.24) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/file.pm:
+    + [BR] Speed-up privacy check (Closes: #745877).
   * checks/deb-format.{desc,pm}:
     + [NT] Apply patch from Guillem Jover to check for
       deprecated compressions on data.tar-members.
