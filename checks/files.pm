@@ -56,6 +56,24 @@ my $PRIVACY_BREAKER_FRAGMENTS= Lintian::Data->new(
         };
     });
 
+my $PRIVACY_BREAKER_TAG_ATTR= Lintian::Data->new(
+    'files/privacy-breaker-tag-attr',
+    qr/\s*\~\~\s*/o,
+    sub {
+        my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
+        $regex =~ s/&URL/(?:ht|f)tps?:\/\/[^"\r\n]*/g;
+        my @keywordlist = ();
+        my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
+        foreach my $keywordor (@keywordsorraw) {
+            my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
+            push(@keywordlist, \@keywordsandraw);
+        }
+        return {
+            'keywords' => \@keywordlist,
+            'regex' => qr/$regex/xsm,
+        };
+    });
+
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
     qr/\s++/,sub { return qr/\Q$_[0]\E/ });
@@ -1766,6 +1784,55 @@ sub is_localhost {
     }
 }
 
+sub _check_tag_url_privacy_breach {
+    my ($fulltag, $tagattr, $url,$privacybreachhash, $file) = @_;
+    my $website = $url;
+    $website =~ s,^"?(?:ht|f)tps?://,,;
+    $website =~ s/"?$//;
+
+    if (is_localhost($website)){
+        # do nothing ok
+        return;
+    }
+    # reparse fulltag for rel
+    if ($tagattr eq 'link') {
+        $fulltag =~ m,<link
+                      (?:\s[^>]+)? \s+
+                      rel="([^"\r\n]*)"
+                      [^>]*
+                      >,xismog;
+        my $relcontent = $1;
+        if (defined($relcontent)) {
+            if ($relcontent eq 'schema.dct') {
+                # see #736992
+                return;
+            } elsif  ($relcontent eq 'bookmark') {
+                # see #746656
+                return;
+            }
+        }
+    }
+
+    # track well known site
+    foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
+        my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
+        if ($website =~ m{$regex}) {
+            unless (exists $privacybreachhash->{'tag-'.$breaker_tag}){
+                $privacybreachhash->{'tag-'.$breaker_tag}= 1;
+                tag $breaker_tag, $file;
+            }
+            # do not go to generic case
+            return;
+        }
+    }
+    # generic case
+    unless (exists $privacybreachhash->{'tag-generic-'.$website}){
+        tag 'privacy-breach-generic', $file, $website;
+        $privacybreachhash->{'tag-generic-'.$website} = 1;
+    }
+    return;
+}
+
 # According to html norm src attribute is used by tags:
 #
 # audio(v5+), embed (v5+), iframe (v4), frame, img, input, script, source, track(v5), video (v5)
@@ -1775,97 +1842,47 @@ sub is_localhost {
 # css with @import
 sub detect_generic_privacy_breach {
     my ($block, $privacybreachhash, $file) = @_;
+    my %matchedkeyword = ();
 
-  EXTERNAL_TAG:
-    while(
-        $block=~ m,
-                (?'fulltag'
-                 <
-                  (?:
-                    (?'tagattr'div|embed|i?frame|img|input|script|source|track|video)
-                    (?&ba)
-                    src=(?'url'(?&loc))
-                  |
-                    (?'tagattr'div)
-                    (?&ba)
-                    data-href=(?'url'(?&loc))
-                  |
-                    (?'tagattr'applet|object)
-                    (?&ba)
-                    codebase=(?'url'(?&loc))
-                  |
-                    (?'tagattr'object)
-                    (?&ba)
-                    data=(?'url'(?&loc))
-                  |
-                    (?'tagattr'video)
-                    (?&ba)
-                    poster=(?'url'(?&loc))
-                  |
-                    (?'tagattr'link)
-                    (?&ba)
-                    href=(?'url'(?&loc))
-                  )
-                 [^>]*
-                 >
-                |
-                 (?'tagattr'[@]import)
-                 \s+ url \s* \( \s*
-                     (?'url'(?&loc))
-                 \s* \) \s* ;
-                )
-                 (?(DEFINE)
-                   (?<ba>(?:\s[^>]+)? \s+)
-                   (?<loc>"(?:ht|f)tps?://[^"\r\n]*")
-                 ),xismog
-      ) {
-        my $url=$+{url};
-        my $tagattr=$+{tagattr};
-        my $fulltag=$+{fulltag};
-        my $website = $url;
-        $website =~ s,^"(?:ht|f)tps?://,,;
-        $website =~ s/"$//;
+    # now check generic tag
+  TYPE:
+    foreach my $type ($PRIVACY_BREAKER_TAG_ATTR->all) {
+        my $keyvalue = $PRIVACY_BREAKER_TAG_ATTR->value($type);
+        my $keywords =  $keyvalue->{'keywords'};
 
-        if (is_localhost($website)){
-            # do nothing ok
-            next EXTERNAL_TAG;
-        }
-        # reparse fulltag for rel
-        if ($tagattr eq 'link') {
-            $fulltag =~ m,<link
-                                   (?:\s[^>]+)? \s+
-                                   rel="([^"\r\n]*)"
-                                   [^>]*
-                              >,xismog;
-            my $relcontent = $1;
-            if (defined($relcontent)) {
-                if ($relcontent eq 'schema.dct') {
-                    # see #736992
-                    next EXTERNAL_TAG;
-
-                } elsif  ($relcontent eq 'bookmark') {
-                    # see #746656
-                    next EXTERNAL_TAG;
+        my $orblockok = 0;
+      ORBLOCK:
+        foreach my $keywordor (@$keywords) {
+          ANDBLOCK:
+            foreach my $keyword (@$keywordor) {
+                my $thiskeyword = $matchedkeyword{$keyword};
+                if(!defined($thiskeyword)) {
+                    if(index($block,$keyword) > -1) {
+                        $matchedkeyword{$keyword} = 1;
+                        $orblockok = 1;
+                    }else {
+                        $matchedkeyword{$keyword} = 0;
+                        $orblockok = 0;
+                        next ORBLOCK;
+                    }
+                }
+                if($matchedkeyword{$keyword} == 0) {
+                    $orblockok = 0;
+                    next ORBLOCK;
+                }else {
+                    $orblockok = 1;
                 }
             }
-        }
-
-        # track well known site
-        foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
-            my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
-            if ($website =~ m{$regex}) {
-                unless (exists $privacybreachhash->{'tag-'.$breaker_tag}){
-                    $privacybreachhash->{'tag-'.$breaker_tag}= 1;
-                    tag $breaker_tag, $file;
-                }
-                # do not go to generic case
-                next EXTERNAL_TAG;
+            if($orblockok == 1) {
+                last ORBLOCK;
             }
         }
-        # generic case
-        unless (exists $privacybreachhash->{'tag-generic-'.$website}){
-            tag 'privacy-breach-generic', $file, $website;
-            $privacybreachhash->{'tag-generic-'.$website} = 1;
+        if($orblockok == 0) {
+            next TYPE;
+        }
+        my $regex = $keyvalue->{'regex'};
+        while($block=~m{$regex}g){
+            _check_tag_url_privacy_breach($&, $1, $2,$privacybreachhash,$file);
         }
     }
     return;
@@ -1910,10 +1927,9 @@ sub detect_privacy_breach {
             ||index($block,'poster="http') > -1
             ||index($block,'poster="ftp') > -1
             ||index($block,'<link') > -1
-            ||index($block,'@import') > -1) {
+            ||index($block,'@import') > -1){
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);
         }
-
     }
     close($fd);
     return;
