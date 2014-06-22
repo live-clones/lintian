@@ -6,6 +6,8 @@ lintian (2.5.24) UNRELEASED; urgency=medium
     + [BR] Speed-up privacy check (Closes: #745877).
     + [BR] Fix false positive for detecting minified
       javascript (Closes: #745877).
+    + [BR] Fix false positive due to cpython name
+      encoded in compiled python file name (Closes: #752218).
   * checks/deb-format.{desc,pm}:
     + [NT] Apply patch from Guillem Jover to check for
       deprecated compressions on data.tar-members.
