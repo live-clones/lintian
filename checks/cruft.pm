@@ -158,7 +158,7 @@ sub _minified_javascript_name_regexp {
       = $WARN_FILE_TYPE->value('source-contains-prebuilt-javascript-object');
     return defined($jsv)
       ? $jsv->{'regname'}
-      : qr/(?i)[\.-](?:min|pack(?:ed)?)\.js$/;
+      : qr/(?i)[-._](?:min|pack(?:ed)?)\.js$/;
 }
 
 sub _get_license_check_file {

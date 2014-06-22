@@ -11,7 +11,7 @@ source-contains-prebuilt-flash-object       ~~ ^Macromedia \s Flash             
 source-contains-prebuilt-flash-project      ~~ ^Composite \s Document \s File                                            ~~ (?i)\.fla$                        ~~ s/(?i)\.fla$/.as/
 source-contains-prebuilt-java-object        ~~ (?: Java [ ] (?:Jar [ ] file|archive [ ] data) | Zip [ ] archive | JAR)   ~~ (?i)\.jar$
 # do not forget to change also $JS_EXT in file.pm
-source-contains-prebuilt-javascript-object  ~~ .*                                                                        ~~ (?i)[\.-_](?:compiled|lite|min|pack(?:ed)?)\.js$ ~~ map{'s/(?i)[\.-_](?:compiled|lite|min|pack(?:ed)?)\.js$/'.$_.'/'} qw(.js _orig.js)
+source-contains-prebuilt-javascript-object  ~~ .*                                                                        ~~ (?i)[-._](?:compiled|lite|min|pack(?:ed)?)\.js$ ~~ map{'s/(?i)[\.-_](?:compiled|lite|min|pack(?:ed)?)\.js$/'.$_.'/'} qw(.js _orig.js)
 source-contains-prebuilt-python-object      ~~ ^python \s \d(\.\d+)? \s byte-compiled                                    ~~ .*                                ~~ s/(?i)(?<=\.py)[co]$//
 source-contains-prebuilt-silverlight-object ~~ ^Zip \s archive \s data                                                   ~~ (?i)\.xac$
 source-contains-prebuilt-windows-binary     ~~ \b(?:PE(?:32|64)|(?:MS-DOS|COFF)\s executable)\b
