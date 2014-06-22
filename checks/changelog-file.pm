@@ -353,7 +353,7 @@ sub run {
             $changes =~ /uploads? \s+ to \s+
                             (?'intended'testing|unstable|experimental|sid)/xi
           ){
-            my $intended = $+{intended};
+            my $intended = lc($+{intended});
             if($intended eq 'sid') {
                 $intended = 'unstable';
             }
