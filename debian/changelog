@@ -37,6 +37,9 @@ lintian (2.5.24) UNRELEASED; urgency=medium
       the "end of options" marker.  Thanks to Luca
       Falavigna for spotting it.  (Closes: #746790)
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [NT] Add utopic as valid Ubuntu distribution.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 21 Jun 2014 08:48:13 +0200
 
 lintian (2.5.23.1) unstable; urgency=medium
