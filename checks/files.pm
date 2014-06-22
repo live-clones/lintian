@@ -1827,7 +1827,7 @@ sub _check_tag_url_privacy_breach {
     }
     # generic case
     unless (exists $privacybreachhash->{'tag-generic-'.$website}){
-        tag 'privacy-breach-generic', $file, $website;
+        tag 'privacy-breach-generic', $file, $url;
         $privacybreachhash->{'tag-generic-'.$website} = 1;
     }
     return;
