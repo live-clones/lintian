@@ -8,10 +8,10 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UseStrict UseWarnings UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax Modules:: BuiltinFunctions:: ClassHierarchies:: CommaSeparatedStatements QuotesAsQuotelikeOperatorDelimiters MixedBooleanOperators ProhibitBarewordFileHandles ConditionalUseStatements Tidy
+include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax Modules:: BuiltinFunctions:: ClassHierarchies:: CommaSeparatedStatements QuotesAsQuotelikeOperatorDelimiters MixedBooleanOperators ProhibitBarewordFileHandles ConditionalUseStatements Tidy
 #include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches ConditionalUseStatements QuotedWordLists
 
-exclude = RequireFilenameMatchesPackage RequireVersionVar ProhibitExcessMainComplexity ProhibitStringySplit ComplexMappings StringyEval
+exclude = RequireFilenameMatchesPackage RequireVersionVar ProhibitExcessMainComplexity ProhibitStringySplit ComplexMappings StringyEval Documentation::PodSpell
 
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
