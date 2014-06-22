@@ -66,18 +66,24 @@ update-po: $(po4acheckcfg)
 po4a/%.cfg: po4a/%.cfg.in private/gen-po4a-conf
 	private/gen-po4a-conf $@
 
-
-build-arch build-indep build: build-stamp
-build-stamp: $(neededfiles) $(docsource) $(testtarget) $(po4acheckcfg)
-	@echo .... running build ....
+generate-docs: generate-docs-stamp
+generate-docs-stamp: $(docsource)
 	dh_testdir
 	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
 	cd doc && LC_ALL=C jw -b txt lintian.xml
-	mkdir man/man1/
+	mkdir -p man/man1/
 	private/generate-lintian-pod | \
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
 	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
 	private/generate-html-docs doc/api.html > /dev/null
+	touch $@
+
+# Target for updating things on lintian.d.o
+rebuild-lintian.debian.org: api-doc generate-docs-stamp
+
+build-arch build-indep build: build-stamp
+build-stamp: $(neededfiles) generate-docs-stamp update-po-release $(testtarget)
+	dh_testdir
 
 	PERL5LIB=lib/ po4a --keep 80 $(po4acheckcfg)
 
@@ -128,5 +134,5 @@ binary-arch:
 
 binary:	binary-indep binary-arch
 
-.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides update-po
+.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides update-po update-lintian.debian.org generate-docs
 .DELETE_ON_ERROR: runtests

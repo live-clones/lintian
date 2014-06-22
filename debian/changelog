@@ -1,3 +1,14 @@
+lintian (2.5.23.2) UNRELEASED; urgency=medium
+
+  * debian/rules:
+    + [NT] Extract some tasks from the build-stamp target,
+      so they can be run independently.
+    + [NT] Create a "rebuild-lintian.debian.org" target that
+      only (re-)builds/regenerates the needed parts for the
+      lintian.debian.org checkout.  (Closes: #751926)
+
+ -- Niels Thykier <niels@thykier.net>  Sat, 21 Jun 2014 08:48:13 +0200
+
 lintian (2.5.23.1) unstable; urgency=medium
 
   * debian/rules:
