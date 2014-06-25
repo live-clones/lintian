@@ -33,6 +33,4 @@ $GRAPHS_RANGE_DAYS = 240;
 #   (e.g. --cfg will be ignored)
 @EXTRA_LINTIAN_OPTIONS = ('-U', 'changelog-file');
 
-$statistics_file = "$LOG_DIR/statistics";
-
 1;

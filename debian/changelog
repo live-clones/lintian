@@ -2,6 +2,8 @@ lintian (2.5.25) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * reporting/config:
+    + [NT] Remove "$statistics_file" from the sample config.
   * reporting/html_reports:
     + [NT] Move the statistics file to the harness state cache
       dir.  It only contains information about the last run and
