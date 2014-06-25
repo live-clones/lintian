@@ -184,20 +184,7 @@ Returns the type of packages that this manifest has information about.
 
 =cut
 
-# For some reason these getters seem to just return "undef", so they
-# have been added manually below.  (not sure if this is a usage error
-# or a bug in Class::Accessor::Fast)
-#Lintian::Lab::Manifest->mk_ro_accessors (qw(dirty type));
-
-sub dirty {
-    my ($self) = @_;
-    return $self->{'dirty'};
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{'type'};
-}
+Lintian::Lab::Manifest->mk_ro_accessors(qw(dirty type));
 
 =item read_list (FILE)
 
