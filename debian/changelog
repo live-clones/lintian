@@ -1,3 +1,15 @@
+lintian (2.5.25) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary with private/generate-tag-summary
+
+  * reporting/html_reports:
+    + [NT] Move the statistics file to the harness state cache
+      dir.  It only contains information about the last run and
+      is re-generated as needed.  If the file exists, it will
+      be moved to its new location if possible.
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 25 Jun 2014 21:29:02 +0200
+
 lintian (2.5.24) unstable; urgency=medium
 
   * Summary of tag changes:

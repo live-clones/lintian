@@ -36,7 +36,8 @@ use Text::Template ();
 # Global variables and configuration
 
 # These have no default and must be set in the configuration file.
-# FIXME: $statistics_file should be in all caps as well.
+# TODO: $statistics_file should no longer be defined in ./config
+#   after the 2.5.25 release.
 our (
     $LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR,
     $LINTIAN_DIST,$LINTIAN_ARCH, $HTML_TMP_DIR,
@@ -63,9 +64,27 @@ use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
   find_backlog);
 
+my $old_statistics;
 my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
 my $RESOURCE_MANAGER
   = Lintian::Reporting::ResourceManager->new('html_dir' => $HTML_TMP_DIR,);
+
+if (defined($statistics_file)) {
+    if (-f $statistics_file) {
+        my $new_location = "$HARNESS_STATE_DIR/statistics";
+        if (system('mv', '-f', $statistics_file, $new_location) != 0) {
+            warn("Could not relocate $statistics_file\n");
+            # Fall back assuming the run is not interrupted / fails...
+            ($old_statistics) = read_dpkg_control($statistics_file);
+            unlink($statistics_file);
+        } else {
+            print "Relocated old statistics file\n";
+        }
+    } else {
+        print "Ignoring old value of \$statistics_file; it can be removed\n";
+    }
+}
+$statistics_file = "$HARNESS_STATE_DIR/statistics";
 
 Lintian::Data->set_vendor($profile);
 
@@ -637,7 +656,7 @@ for my $section (sort keys %list) {
 
 # Finally, we can start creating the index page.  First, read in the old
 # statistics file so that we can calculate deltas for all of our statistics.
-my $old_statistics;
+
 if (-f $statistics_file) {
     ($old_statistics) = read_dpkg_control($statistics_file);
 }
