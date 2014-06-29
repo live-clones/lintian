@@ -732,6 +732,10 @@ sub save_state_cache {
 
         close($tmp_fd) or die("close $tmp_path: $!");
 
+        # There is no secret in this.  Set it to 0644, so it does not
+        # require sudo access on lintian.d.o to read the file.
+        chmod(0644, $tmp_path);
+
         rename($tmp_path, $state_file)
           or die("rename $tmp_path -> $state_file: $!");
     };
