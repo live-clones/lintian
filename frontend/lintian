@@ -809,68 +809,7 @@ unless ($no_conf) {
 
 # read configuration file
 if ($opt{'LINTIAN_CFG'}) {
-    open(my $fd, '<', $opt{'LINTIAN_CFG'});
-    while (<$fd>) {
-        chop;
-        s/\#.*$//go;
-        s/\"//go;
-        next if m/^\s*$/o;
-
-        # substitute some special variables
-        s,\$HOME/,$ENV{'HOME'}/,go;
-        s,\~/,$ENV{'HOME'}/,go;
-
-        my $found = 0;
-        foreach my $var (@ENV_VARS) {
-            if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
-                if (exists $conf_opt{$var}){
-                    print STDERR
-                      "Configuration variable $var appears more than once\n";
-                    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
-                      " - Using the first value!\n";
-                    next;
-                }
-                $opt{$var} = $1 unless defined $opt{$var};
-                $conf_opt{$var} = 1;
-                $found = 1;
-                last;
-            }
-        }
-        unless ($found) {
-            # check if it is a config option
-            if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
-                my ($var, $val) = ($1, $2);
-                my $ref = $cfghash{$var};
-                die "Unknown configuration variable $var at line: ${.}.\n"
-                  unless $ref;
-                if (exists $conf_opt{$var}){
-                    print STDERR
-                      "Configuration variable $var appears more than once\n";
-                    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
-                      " - Using the first value!\n";
-                    next;
-                }
-                $conf_opt{$var} = 1;
-                $found = 1;
-                # Translate boolean strings to "0" or "1"; ignore
-                # errors as not all values are (intended to be)
-                # booleans.
-                eval { $val = parse_boolean($val); };
-                if (ref $ref eq 'SCALAR'){
-                    # Check it was already set
-                    next if defined $$ref;
-                    $$ref = $val;
-                } elsif (ref $ref eq 'CODE'){
-                    $ref->($var, $val);
-                }
-
-            }
-        }
-        unless ($found) {
-            die "syntax error in configuration file: $_\n";
-        }
-    }
-    close($fd);
+    parse_config_file($opt{'LINTIAN_CFG'});
 }
 
 # check permitted values for --color / color
@@ -1687,6 +1626,90 @@ sub _find_cfg_file {
     }
 
     return; # None found
+}
+
+sub parse_config_file {
+    my ($config_file) = @_;
+
+    # Options that can appear in the config file
+    my %cfghash = (
+        'color'                => \$opt{'color'},
+        'display-experimental' => \$opt{'display-experimental'},
+        'display-info'         => \&cfg_display_level,
+        'display-level'        => \&cfg_display_level,
+        'fail-on-warnings'     => \$opt{'fail-on-warnings'},
+        'info'                 => \$opt{'info'},
+        'jobs'                 => \$opt{'jobs'},
+        'pedantic'             => \&cfg_display_level,
+        'quiet'                => \&cfg_verbosity,
+        'override'             => \&cfg_override,
+        'show-overrides'       => \$opt{'show-overrides'},
+        'verbose'              => \&cfg_verbosity,
+    );
+
+    open(my $fd, '<', $opt{'LINTIAN_CFG'});
+    while (<$fd>) {
+        chomp;
+        s/\#.*$//go;
+        s/\"//go;
+        next if m/^\s*$/o;
+
+        # substitute some special variables
+        s,\$HOME/,$ENV{'HOME'}/,go;
+        s,\~/,$ENV{'HOME'}/,go;
+
+        my $found = 0;
+        foreach my $var (@ENV_VARS) {
+            if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
+                if (exists $conf_opt{$var}){
+                    print STDERR
+                      "Configuration variable $var appears more than once\n";
+                    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
+                      " - Using the first value!\n";
+                    next;
+                }
+                $opt{$var} = $1 unless defined $opt{$var};
+                $conf_opt{$var} = 1;
+                $found = 1;
+                last;
+            }
+        }
+        unless ($found) {
+            # check if it is a config option
+            if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
+                my ($var, $val) = ($1, $2);
+                my $ref = $cfghash{$var};
+                die "Unknown configuration variable $var at line: ${.}.\n"
+                  unless $ref;
+                if (exists $conf_opt{$var}){
+                    print STDERR
+                      "Configuration variable $var appears more than once\n";
+                    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
+                      " - Using the first value!\n";
+                    next;
+                }
+                $conf_opt{$var} = 1;
+                $found = 1;
+                # Translate boolean strings to "0" or "1"; ignore
+                # errors as not all values are (intended to be)
+                # booleans.
+                eval { $val = parse_boolean($val); };
+                if (ref $ref eq 'SCALAR'){
+                    # Check it was already set
+                    next if defined $$ref;
+                    $$ref = $val;
+                } elsif (ref $ref eq 'CODE'){
+                    $ref->($var, $val);
+                }
+
+            }
+        }
+        unless ($found) {
+            die "syntax error in configuration file: $_\n";
+        }
+    }
+    close($fd);
+    return;
 }
 
 sub _find_changes {
