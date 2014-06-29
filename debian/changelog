@@ -2,6 +2,10 @@ lintian (2.5.25) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * data/files/js-libraries:
+    + [NT] Apply patch from Marcelo Jorge Vieira to correct
+      a regular expression for finding embedded copies of
+      libjs-jquery-history.  (Closes: #753077)
   * data/init.d/virtual_facilities:
     + [NT] Apply patch from Guillem Jover to fix a typo.
   * data/scripts/interpreters:

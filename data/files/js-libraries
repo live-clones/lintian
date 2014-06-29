@@ -21,7 +21,7 @@ libjs-jquery-event-drop      ~~ (?i)/jquery\.event\.drop$EXT
 libjs-jquery-fancybox        ~~ (?i)/jquery\.fancybox$EXT
 libjs-jquery-form            ~~ (?i)/jquery\.form$EXT
 libjs-jquery-galleriffic     ~~ (?i)/jquery\.galleriffic$EXT
-libjs-jquery-history         ~~ (?i)/jquery\.jfeed$EXT
+libjs-jquery-history         ~~ (?i)/jquery\.history$EXT
 libjs-jquery-jfeed           ~~ (?i)/jquery\.jfeed$EXT
 libjs-jquery-jush            ~~ (?i)/jquery\.jush$EXT
 libjs-jquery-livequery       ~~ (?i)/jquery\.livequery$EXT
