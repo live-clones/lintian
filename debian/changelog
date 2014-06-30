@@ -2,6 +2,11 @@ lintian (2.5.25) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * debian/control:
+    + [NT] Add Breaks/Replaces for funny-manpages due to a
+      bug in funny-manpages before 1.3-5.1.  Thanks to Adrian
+      Bunk for reporting.  (Closes: #753165)
+
   * reporting/config:
     + [NT] Remove "$statistics_file" from the sample config.
   * reporting/harness:

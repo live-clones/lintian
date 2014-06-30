@@ -108,6 +108,8 @@ Suggests: binutils-multiarch,
           libtext-template-perl,
           libyaml-perl,
           xz-utils
+Breaks: funny-manpages (<< 1.3-5.1)
+Replaces: funny-manpages (<< 1.3-5.1)
 Multi-Arch: foreign
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
