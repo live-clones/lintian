@@ -7,7 +7,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
   * data/scripts/interpreters:
     + [NT] The texlua binary is now provided by
       texlive-binaries (>= 2014.20140512.33982) instead of
-      luatex.  Thanks to Nobert Preining for reporting this.
+      luatex.  Thanks to Norbert Preining for reporting this.
       (Closes: #752611)
   * data/symlinks/well-known-symlinks-target:
     + [NT] Apply patch from Guillem Jover to fix a typo in
