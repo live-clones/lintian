@@ -849,6 +849,7 @@ sub _search_in_block0 {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
                 check_missing_source($entry,$info,$name,$basename,$dirname,
                     [['(?i)\.js$','.txt'],['','']]);
+                return;
             }
         }
         # now search hidden minified
