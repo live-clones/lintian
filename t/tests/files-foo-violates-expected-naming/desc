@@ -1,0 +1,7 @@
+Testname: files-foo-violates-expected-naming
+Sequence: 6000
+Version: 1.0
+Description: Test naming conventions not being followed
+Test-For:
+ incorrect-naming-of-pkcs11-module
+ run-parts-cron-filename-contains-illegal-chars

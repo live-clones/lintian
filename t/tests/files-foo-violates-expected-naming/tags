@@ -1,0 +1,2 @@
+E: files-foo-violates-expected-naming: incorrect-naming-of-pkcs11-module usr/share/p11-kit/modules/_bad-pkcs11.module
+W: files-foo-violates-expected-naming: run-parts-cron-filename-contains-illegal-chars etc/cron.hourly/cron-script.hourly

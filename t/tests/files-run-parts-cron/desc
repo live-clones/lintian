@@ -1,6 +1,0 @@
-Testname: files-run-parts-cron
-Sequence: 6000
-Version: 1.0
-Description: Test for cron scripts with dots in them
-Test-For:
-  run-parts-cron-filename-contains-illegal-chars
