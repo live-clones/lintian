@@ -72,6 +72,10 @@ my $PRIVACY_BREAKER_TAG_ATTR= Lintian::Data->new(
         };
     });
 
+my $PKG_CONFIG_BAD_REGEX
+  = Lintian::Data->new('files/pkg-config-bad-regex',qr/~~~~~/,
+    sub { return  qr/$_[0]/xsm;});
+
 my $COMPRESS_FILE_EXTENSIONS
   = Lintian::Data->new('files/compressed-file-extensions',
     qr/\s++/,sub { return qr/\Q$_[0]\E/ });
@@ -578,6 +582,8 @@ sub run {
                 my $sfd = Lintian::SlidingWindow->new($fd);
               BLOCK:
                 while (my $block = $sfd->readwindow()) {
+                    # remove continuation line
+                    $block =~ s,\\\n, ,gxsm;
                     # check if pkgconfig file include path point to
                     # arch specific dir
                   MULTI_ARCH_DIR:
@@ -592,7 +598,16 @@ sub run {
                             tag 'pkg-config-multi-arch-wrong-dir',$file,
                               'full text contains architecture specific dir',
                               $pkgconfig_dir;
-                            last BLOCK;
+                            last MULTI_ARCH_DIR;
+                        }
+                    }
+                  PKG_CONFIG_TABOO:
+                    foreach my $taboo ($PKG_CONFIG_BAD_REGEX->all) {
+                        my $regex = $PKG_CONFIG_BAD_REGEX->value($taboo);
+                        if ($block =~ m{$regex}xms) {
+                            my $extra = $1 // '';
+                            $extra =~ s/\s+/ /g;
+                            tag 'pkg-config-bad-directive', $file, $extra;
                         }
                     }
                 }
