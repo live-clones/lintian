@@ -569,26 +569,35 @@ sub run {
             }
             # ---------------- arch-indep pkconfig
             elsif ($file->is_regular_file
-                && $fname =~ m,^usr/(?:lib|share)/pkgconfig/[^/]+\.pc$,) {
+                && $fname
+                =~ m,^usr/(?:lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,) {
+                my $pkg_config_arch = $1 // '';
+                $pkg_config_arch =~ s,\A/,,ms;
+
                 open(my $fd, '<:raw', $info->unpacked($file));
                 my $sfd = Lintian::SlidingWindow->new($fd);
-
               BLOCK:
                 while (my $block = $sfd->readwindow()) {
                     # check if pkgconfig file include path point to
                     # arch specific dir
+                  MULTI_ARCH_DIR:
                     foreach my $multiarch_dir ($MULTIARCH_DIRS->all) {
-                        my $regex
-                          = $MULTIARCH_DIRS->value($multiarch_dir)->{'match'};
+                        my $value =  $MULTIARCH_DIRS->value($multiarch_dir);
+                        my $pkgconfig_dir = $value->{'dir'};
+                        my $regex = $value->{'match'};
+                        if ($pkg_config_arch eq $pkgconfig_dir) {
+                            next MULTI_ARCH_DIR;
+                        }
                         if ($block =~ m{$regex}) {
-                            tag 'pkg-config-multi-arch-wrong-dir',$file;
+                            tag 'pkg-config-multi-arch-wrong-dir',$file,
+                              'full text contains architecture specific dir',
+                              $pkgconfig_dir;
                             last BLOCK;
                         }
                     }
                 }
                 close($fd);
             }
-           
 
             #----------------- /usr/X11R6/
             # links to FHS locations are allowed

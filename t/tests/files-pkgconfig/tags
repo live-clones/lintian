@@ -1,1 +1,2 @@
-E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch.pc
+E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch.pc full text contains architecture specific dir ARCH
+E: pkgconfig-any: pkg-config-multi-arch-wrong-dir usr/lib/x86_64-linux-gnu/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH

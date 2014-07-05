@@ -1499,6 +1499,11 @@ Info: The arch all pkg-config file contains a reference to a multi-arch path.
  Another likely cause is using debhelper 9 or newer (thus enabling
  multi-arch paths by default) on a package without multi-arch support.
  The usual cure in this case is to update it for multi-arch.
+ .
+ Last but not least, this file could contains a reference to a cross
+ architecture. Like for instance a x86_64-linux-gnu pkg-config file
+ referencing a i386-linux-gnu file. In this case the usual cure is to
+ fix this path.
 
 Tag: dir-or-file-in-home
 Severity: serious
