@@ -778,7 +778,7 @@ sub full_text_check {
     # some js file comments are really really long
     my $sfd
       = Lintian::SlidingWindow->new($fd, \&lc_block,
-        _is_javasript_but_not_minified($name) ? 8092 : 4096);
+        _is_javascript_but_not_minified($name) ? 8092 : 4096);
     my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window
@@ -821,7 +821,7 @@ sub full_text_check {
 }
 
 # check if file is javascript but not minified
-sub _is_javasript_but_not_minified {
+sub _is_javascript_but_not_minified {
     my ($name) = @_;
     my $isjsfile = ($name =~ m/\.js$/) ? 1 : 0;
     if($isjsfile) {
@@ -835,7 +835,7 @@ sub _is_javasript_but_not_minified {
 sub _search_in_block0 {
     my ($entry, $info, $name, $basename, $dirname, $path, $block) = @_;
 
-    if(_is_javasript_but_not_minified($name)) {
+    if(_is_javascript_but_not_minified($name)) {
         # exception sphinx documentation
         if($basename eq 'searchindex.js') {
             if($block =~ m/\A\s*search\.setindex\s* \s* \(\s*\{/xms) {
