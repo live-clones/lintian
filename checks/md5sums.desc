@@ -37,8 +37,8 @@ Info: The md5sum listed for the file does not match the actual file
  <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
  is run.
  .
- Font files regenerated at post-install time by t1c2pfb
- should be overriden.
+ Font files regenerated at post-install time by <tt>t1c2pfb</tt>
+ should be overridden.
 
 Tag: md5sums-lists-nonexistent-file
 Severity: important
