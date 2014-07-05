@@ -67,4 +67,4 @@ Info: The data portion of this binary package uses a deprecated compression
  .
  For lzma, xz is the direct replacement.  For bzip2 either gzip or xz can
  be used as a substitute, depending on the wanted properties, gzip for
- maxium compatibility and speed, and xz for maximum compression ratio.
+ maximum compatibility and speed, and xz for maximum compression ratio.
