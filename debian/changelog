@@ -8,6 +8,9 @@ lintian (2.5.25) UNRELEASED; urgency=medium
   * checks/description.{desc,pm}:
     + [NT] Apply patch from Anders Jonsson to check spelling
       of the package synopsis.  (Closes: #747266)
+  * checks/files.{desc,pm}:
+    + [RG,NT] Check for invalid named p11-kit modules in
+      /usr/share/p11-kit modules.  (Closes: #741346)
 
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
