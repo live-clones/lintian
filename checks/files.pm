@@ -23,8 +23,6 @@ use strict;
 use warnings;
 use autodie;
 
-use File::Basename;
-
 use Lintian::Data;
 use Lintian::Output qw(warning);
 use Lintian::Tags qw(tag);
