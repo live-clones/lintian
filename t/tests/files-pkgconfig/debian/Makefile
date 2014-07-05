@@ -1,7 +1,12 @@
 ARCH=$(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+ifeq ($(ARCH), x86_64-linux-gnu)
+ ARCH_CROSS=i386-linux-gnu
+else
+ ARCH_CROSS=x86_64-linux-gnu
+endif
 
 all:
-	find generated -name '*.pc.in' -exec sh -c 'echo "build" {} && sed s/\$$\(ARCH\)/$(ARCH)/ {} > `echo {} | sed s/\.pc\.in$$/\.pc/g`' \;
+	find generated -name '*.pc.in' -exec sh -c 'echo "build" {} && cat {} | sed s/\$$\(ARCH\)/$(ARCH)/g | sed s/\$$\(ARCH_CROSS\)/$(ARCH_CROSS)/g > `echo {} | sed s/\.pc\.in$$/\.pc/g`' \;
 
 install:
 	install -d $(DESTDIR)/usr/lib/pkgconfig/
