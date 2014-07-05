@@ -1,0 +1,48 @@
+Subject: [{Package}] Source package contains non-free IETF RFC/I-D
+Severity: serious
+Package: {Package}
+Version: {Version}
+User: debian-release@lists.debian.org
+Usertags: nonfree-doc rfc
+X-Debbugs-CC: ftpmaster@debian.org
+
+Hi!
+
+This source package contains the following files from the
+IETF under non-free license terms:
+
+{list of files}
+
+The license on RFC/I-Ds is not DFSG-free, see:
+
+ * http://wiki.debian.org/NonFreeIETFDocuments
+ * http://bugs.debian.org/199810
+
+According to the squeeze/wheezy release policy, source packages must be
+DFSG-free, see:
+
+ * http://release.debian.org/squeeze/rc_policy.txt
+ * http://release.debian.org/wheezy/rc_policy.txt
+
+The severity is serious, because this violates the Debian policy:
+
+ * http://www.debian.org/doc/debian-policy/ch-archive.html#s-dfsg
+
+There are (at least) three ways to fix this problem.  In order of
+preference:
+
+1. Ask the author of the RFC to re-license the RFC under a free
+   license.  A template for this e-mail request can be found at
+   http://wiki.debian.org/NonFreeIETFDocuments
+
+2. Remove the non-free material from the source, e.g., by re-packaging
+   the upstream archive and adding 'dfsg' to the Debian package
+   version name.
+
+3. Move the package to non-free.
+
+General discussions are kindly requested to take place on debian-legal
+or debian-devel in the thread with Subject: "Non-free IETF RFC/I-Ds in
+source packages".
+
+Thanks

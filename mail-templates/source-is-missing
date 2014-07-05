@@ -1,7 +1,7 @@
-Subject: [Package] Some sources are not included in your package
-Package: package
-Version: version
-user: debian-qa@lists.debian.org
+Subject: [{Package}] Some sources are not included in your package
+Package: {Package}
+Version: {Version}
+user: lintian-maint@debian.org
 usertags: source-is-missing
 severity: serious
 X-Debbugs-CC: ftpmaster@debian.org

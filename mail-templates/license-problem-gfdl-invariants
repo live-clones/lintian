@@ -1,7 +1,7 @@
-Subject: [Package] Non free files under GFDL with invariant or front-cover or back-cover texts
-Package: Package
-Version: Version
-user: debian-qa@lists.debian.org
+Subject:  [{Package}] Non free files under GFDL with invariant or front-cover or back-cover texts
+Package: {Package}
+Version: {Version}
+user: lintian-maint@debian.org
 usertags: gfdl-invariant
 severity: serious
 
