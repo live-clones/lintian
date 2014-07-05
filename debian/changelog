@@ -11,6 +11,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
   * checks/files.{desc,pm}:
     + [RG,NT] Check for invalid named p11-kit modules in
       /usr/share/p11-kit modules.  (Closes: #741346)
+    + [BR] Detect cross architecture pkg-config file.
 
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
