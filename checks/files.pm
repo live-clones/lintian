@@ -582,6 +582,8 @@ sub run {
                 my $sfd = Lintian::SlidingWindow->new($fd);
               BLOCK:
                 while (my $block = $sfd->readwindow()) {
+                    # remove comment line
+                    $block =~ s,\#\V*,,gsm;
                     # remove continuation line
                     $block =~ s,\\\n, ,gxsm;
                     # check if pkgconfig file include path point to
@@ -604,7 +606,7 @@ sub run {
                   PKG_CONFIG_TABOO:
                     foreach my $taboo ($PKG_CONFIG_BAD_REGEX->all) {
                         my $regex = $PKG_CONFIG_BAD_REGEX->value($taboo);
-                        if ($block =~ m{$regex}xms) {
+                        while($block =~ m{$regex}xmsg) {
                             my $extra = $1 // '';
                             $extra =~ s/\s+/ /g;
                             tag 'pkg-config-bad-directive', $file, $extra;
