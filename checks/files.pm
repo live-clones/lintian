@@ -572,22 +572,25 @@ sub run {
             # ---------------- arch-indep pkconfig
             elsif ($file->is_regular_file
                 && $fname =~ m,^usr/(?:lib|share)/pkgconfig/[^/]+\.pc$,) {
-                open(my $fd, '<', $info->unpacked($file));
-              LINE:
-                while (my $line = <$fd>) {
+                open(my $fd, '<:raw', $info->unpacked($file));
+                my $sfd = Lintian::SlidingWindow->new($fd);
+
+              BLOCK:
+                while (my $block = $sfd->readwindow()) {
                     # check if pkgconfig file include path point to
                     # arch specific dir
                     foreach my $multiarch_dir ($MULTIARCH_DIRS->all) {
                         my $regex
                           = $MULTIARCH_DIRS->value($multiarch_dir)->{'match'};
-                        if ($line =~ m{$regex}) {
+                        if ($block =~ m{$regex}) {
                             tag 'pkg-config-multi-arch-wrong-dir',$file;
-                            last LINE;
+                            last BLOCK;
                         }
                     }
                 }
                 close($fd);
             }
+           
 
             #----------------- /usr/X11R6/
             # links to FHS locations are allowed
