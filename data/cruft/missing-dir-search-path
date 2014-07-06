@@ -10,6 +10,8 @@
 # libtool
 /.libs/
 /.libs/$dirname/
+# mathjax
+/unpacked/
 # for missing source set in debian
 /debian/
 /debian/missing-sources/

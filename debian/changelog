@@ -15,6 +15,9 @@ lintian (2.5.25) UNRELEASED; urgency=medium
     + [BR] Add a sanity check for pkg-config files.
       (Closes: #676803).
 
+  * data/cruft/missing-dir-search-path:
+    + [BR] Close false positive for mathjax, search under
+      /unpacked.
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
       a regular expression for finding embedded copies of
