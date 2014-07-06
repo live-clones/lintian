@@ -87,7 +87,7 @@ Info: This package calls dh_pysupport in its <tt>debian/rules</tt> file.
  .
  dh_python2 is available in Squeeze; if backporting the package to a
  Lenny or older system, please ignore this warning.
-Ref: http://wiki.debian.org/Python/TransitionToDHPython2
+Ref: https://wiki.debian.org/Python/TransitionToDHPython2
 
 Tag: dh_installmanpages-is-obsolete
 Severity: normal
@@ -315,5 +315,5 @@ Info: The package uses debhelper but does not ship a compat file.
  .
  Please refer to the debhelper documentation on how to create the
  compat file and the differences between each compat level.
-Ref: http://packages.qa.debian.org/d/debhelper/news/20120115T191738Z.html,
+Ref: https://packages.qa.debian.org/d/debhelper/news/20120115T191738Z.html,
  debhelper(7)

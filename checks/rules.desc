@@ -123,7 +123,7 @@ Certainty: possible
 Info: DEB_AUTO_UPDATE_DEBIAN_CONTROL appears to be set to <tt>yes</tt> in
  the <tt>debian/rules</tt> file.  This activates a feature of CDBS which
  may not be used in packages uploaded to the Debian archive.
-Ref: http://ftp-master.debian.org/REJECT-FAQ.html
+Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 
 Tag: debian-rules-sets-DH_COMPAT
 Severity: normal

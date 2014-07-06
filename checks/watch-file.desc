@@ -51,7 +51,7 @@ Info: The <tt>debian/watch</tt> file in this package doesn't start a
 Tag: debian-watch-file-should-mangle-version
 Severity: normal
 Certainty: certain
-Ref: uscan(1), http://wiki.debian.org/DEHS
+Ref: uscan(1), https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt>, which normally indicates that the upstream source
  has been repackaged to comply with the Debian Free Software Guidelines
@@ -64,7 +64,7 @@ Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
 Tag: debian-watch-file-should-dversionmangle-not-uversionmangle
 Severity: wishlist
 Certainty: certain
-Ref: http://wiki.debian.org/DEHS
+Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt>, but a misleading upstream version mangling occurs in
  the <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not
@@ -76,7 +76,7 @@ Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
 Tag: debian-watch-file-should-uversionmangle-not-dversionmangle
 Severity: wishlist
 Certainty: certain
-Ref: http://wiki.debian.org/DEHS
+Ref: https://wiki.debian.org/DEHS
 Info: The version of this package contains <tt>alpha</tt>, <tt>beta</tt>,
  or <tt>rc</tt>, but a misleading Debian version mangling occurs in
  the <tt>debian/watch</tt> file.  You should use the uversionmangle
@@ -86,7 +86,7 @@ Info: The version of this package contains <tt>alpha</tt>, <tt>beta</tt>,
 Tag: debian-watch-file-in-native-package
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/DEHS
+Ref: https://wiki.debian.org/DEHS
 Info: The package ships a watch file although it is a Debian native
  package.  DEHS does not process watch files in native packages based on
  the reasoning that native packages do not have upstreams to check for new

@@ -33,7 +33,7 @@ Info: The source package refers to a Standards-Version which is
 Tag: ancient-standards-version
 Severity: normal
 Certainty: certain
-Ref: http://www.debian.org/doc/debian-policy/upgrading-checklist
+Ref: https://www.debian.org/doc/debian-policy/upgrading-checklist
 Info: The source package refers to a Standards-Version that has been
  obsolete for more than two years.  Please update your package to latest
  Policy and set this control field appropriately.
@@ -50,7 +50,7 @@ Info: The source package refers to a Standards-Version that has been
 Tag: out-of-date-standards-version
 Severity: normal
 Certainty: certain
-Ref: http://www.debian.org/doc/debian-policy/upgrading-checklist
+Ref: https://www.debian.org/doc/debian-policy/upgrading-checklist
 Info: The source package refers to a Standards-Version older than the one
  that was current at the time the package was created (according to the
  timestamp of the latest <tt>debian/changelog</tt> entry).  Please

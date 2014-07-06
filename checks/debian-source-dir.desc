@@ -23,7 +23,7 @@ Info: Explicitly selecting a source format by putting the format in
  problems with the 3.0 format, the dpkg maintainers are interested in
  hearing, at debian-dpkg@lists.debian.org, the (technical) reasons why the
  new formats do not suit you.
-Ref: dpkg-source(1), http://wiki.debian.org/Projects/DebSrc3.0
+Ref: dpkg-source(1), https://wiki.debian.org/Projects/DebSrc3.0
 
 Tag: unknown-source-format
 Severity: serious

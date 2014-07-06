@@ -72,7 +72,7 @@ Info: The <tt>/etc/init.d</tt> scripts have to support the following
 Tag: init.d-script-does-not-implement-optional-option
 Severity: wishlist
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: The <tt>/etc/init.d</tt> script does not implement the status
  option.  This is not required by the Policy, but often requested by
  users.
@@ -107,7 +107,7 @@ Info: The package installs an upstart-job in <tt>/etc/init.d</tt>
 Tag: init.d-script-has-duplicate-lsb-section
 Severity: important
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has more than one LSB keyword
  section.  These sections start with <tt>### BEGIN INIT INFO</tt> and end
  with <tt>### END INIT INFO</tt>.  There should be only one such section
@@ -116,7 +116,7 @@ Info: This <tt>/etc/init.d</tt> script has more than one LSB keyword
 Tag: init.d-script-has-unterminated-lsb-section
 Severity: important
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has an LSB keyword section starting
  with <tt>### BEGIN INIT INFO</tt> but either has no matching <tt>### END
  INIT INFO</tt> or has lines between those two markers that are not
@@ -128,7 +128,7 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section starting
 Tag: init.d-script-has-duplicate-lsb-keyword
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given keyword was set twice in the LSB keyword section in this
  <tt>/etc/init.d</tt> script.  This is probably a mistake; the behavior of
  setting the same keyword twice is undefined.
@@ -136,7 +136,7 @@ Info: The given keyword was set twice in the LSB keyword section in this
 Tag: init.d-script-has-unknown-lsb-keyword
 Severity: minor
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given keyword was set in the LSB keyword section in this
  <tt>/etc/init.d</tt> script but isn't one of the known LSB keywords and
  doesn't begin with <tt>X-</tt>.  One of the standard keywords may have
@@ -145,7 +145,7 @@ Info: The given keyword was set in the LSB keyword section in this
 Tag: init.d-script-has-bad-lsb-line
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This line in the LSB keyword section of an <tt>/etc/init.d</tt>
  script doesn't match the required formatting of that section.  Note that
  keyword settings must start with <tt>#</tt>, a single space, the keyword,
@@ -156,7 +156,7 @@ Info: This line in the LSB keyword section of an <tt>/etc/init.d</tt>
 Tag: init.d-script-missing-lsb-section
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script does not have an LSB keyword
  section (or the <tt>### BEGIN INIT INFO</tt> tag is incorrect).  This
  section provides description and runlevel information in a standard
@@ -166,7 +166,7 @@ Info: This <tt>/etc/init.d</tt> script does not have an LSB keyword
 Tag: init.d-script-missing-lsb-keyword
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
  is missing the given required LSB keyword.  If the value of this keyword
  should be empty, please still include it in the LSB keyword section with
@@ -175,7 +175,7 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
 Tag: init.d-script-missing-lsb-short-description
 Severity: wishlist
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
  is missing a Short-Description LSB keyword.  This field isn't directly
  used currently, but adding it is still a good idea for documentation
@@ -184,7 +184,7 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
 Tag: init.d-script-missing-lsb-description
 Severity: wishlist
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but
  it is missing a Description LSB keyword.  This field isn't directly
  used currently, but adding it is still a good idea for documentation
@@ -193,7 +193,7 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but
 Tag: init.d-script-has-bad-start-runlevel
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given runlevel specified in the Default-Start keyword of the LSB
  keyword section of this <tt>/etc/init.d</tt> script isn't one of the
  recognized standard runlevels (S, 0, 1, 2, 3, 4, 5, and 6).
@@ -201,7 +201,7 @@ Info: The given runlevel specified in the Default-Start keyword of the LSB
 Tag: init.d-script-has-bad-stop-runlevel
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given runlevel specified in the Default-Stop keyword of the LSB
  keyword section of this <tt>/etc/init.d</tt> script isn't one of the
  recognized standard runlevels (0, 1, 2, 3, 4, 5, and 6).
@@ -209,7 +209,7 @@ Info: The given runlevel specified in the Default-Stop keyword of the LSB
 Tag: init.d-script-has-conflicting-start-stop
 Severity: normal
 Certainty: certain
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 Info: The given runlevel was included in both the Default-Start and
  Default-Stop keywords of the LSB keyword section of this
  <tt>/etc/init.d</tt> script.  Since it doesn't make sense to both start
@@ -278,7 +278,7 @@ Info: This <tt>/etc/init.d</tt> script indicates in its LSB headers that
  .
  to declare that the named init script provides the named virtual
  facility.
-Ref: http://wiki.debian.org/LSBInitScripts/DebianVirtualFacilities
+Ref: https://wiki.debian.org/LSBInitScripts/DebianVirtualFacilities
 
 Tag: init.d-script-does-not-provide-itself
 Severity: minor
@@ -288,7 +288,7 @@ Info: This <tt>/etc/init.d</tt> script indicates it provides one or
  the init script.  In certain cases, it may be necessary to not follow
  that convention, but normally init scripts should always provide a
  facility matching the name of the init script.
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 
 Tag: init.d-script-should-depend-on-virtual-facility
 Severity: important
@@ -343,7 +343,7 @@ Info: The given init script seems to refer to <tt>/usr</tt>, possibly
  available.  Required-Start or Required-Stop should be used instead.
  Also, please note that $all should not be used in Required-Stop, only
  Required-Start.
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 
 Tag: init.d-script-missing-dependency-on-local_fs
 Severity: important
@@ -356,7 +356,7 @@ Info: The given init script seems to refer to <tt>/var</tt>, possibly
  Using Should-Start or Should-Stop to declare the dependency is
  conceptually incorrect since the $local_fs facility is always
  available.  Required-Start or Required-Stop should be used instead.
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 
 Tag: init.d-script-depends-on-unknown-virtual-facility
 Severity: serious
@@ -365,16 +365,17 @@ Info: The given init script declares a dependency on a virtual facility
  that is not known to be provided by any init.d script in the archive.
  If the dependency can not be satisfied upon the package's
  installation, insserv will refuse the activation of the init.d script.
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
 
 Tag: init.d-script-depends-on-all-virtual-facility
 Severity: serious
 Certainty: possible
-Info: The given init script declares a dependency on $all
- virtual facility.
+Info: The given init script declares a dependency on the
+ virtual facility "$all".
  .
- This virtual facility is reserved to local script.
+ This virtual facility is reserved for local scripts.
  .
- Moreover using $all in more than one init.d script is
+ Moreover, using $all in more than one init.d script is
  totally broken.
-Ref: http://wiki.debian.org/LSBInitScripts
+Ref: https://wiki.debian.org/LSBInitScripts
+

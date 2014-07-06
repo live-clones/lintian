@@ -67,7 +67,7 @@ Info: The package installs a binary which is not dynamically linked
 Tag: binary-or-shlib-defines-rpath
 Severity: serious
 Certainty: possible
-Ref: http://wiki.debian.org/RpathIssue
+Ref: https://wiki.debian.org/RpathIssue
 Info: The binary or shared library sets RPATH.  This overrides the normal
  library search path, possibly interfering with local policy and causing
  problems for multilib, among other issues.
@@ -338,7 +338,7 @@ Info: This package provides an ELF binary that lacks the stack protector
  default Debian compiler flags defined by <tt>dpkg-buildflags</tt>. If built
  using <tt>dpkg-buildflags</tt> directly, be sure to import <tt>CFLAGS</tt>
  and/or <tt>CXXFLAGS</tt>.
-Ref: http://wiki.debian.org/Hardening
+Ref: https://wiki.debian.org/Hardening
 
 Tag: hardening-no-fortify-functions
 Severity: normal
@@ -352,7 +352,7 @@ Info: This package provides an ELF binary that lacks the use of fortified
  .
  NB: Due to false-positives, Lintian ignores some unprotected functions
  (e.g. memcpy).
-Ref: http://wiki.debian.org/Hardening, #673112
+Ref: https://wiki.debian.org/Hardening, #673112
 
 Tag: hardening-no-relro
 Severity: normal
@@ -362,7 +362,7 @@ Info: This package provides an ELF binary that lacks the "read-only
  default Debian compiler flags defined by <tt>dpkg-buildflags</tt>.
  If built using <tt>dpkg-buildflags</tt> directly, be sure to import
  <tt>LDFLAGS</tt>.
-Ref: http://wiki.debian.org/Hardening
+Ref: https://wiki.debian.org/Hardening
 
 Tag: debug-file-with-no-debug-symbols
 Severity: normal

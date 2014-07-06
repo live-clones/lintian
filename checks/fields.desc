@@ -958,7 +958,7 @@ Info: The Python-Version control field is not in one of the valid
 Tag: malformed-dm-upload-allowed
 Severity: important
 Certainty: certain
-Ref: http://www.debian.org/vote/2007/vote_003
+Ref: https://www.debian.org/vote/2007/vote_003
 Info: The Dm-Upload-Allowed field in this package is set to something
  other than "yes".  The only standardized value for this field in the
  Debian GR is "yes" and other values (including capitalization variants)
@@ -1160,7 +1160,7 @@ Info: The package appear to be a Java library and depending on one
  .
  If there is otherwise a valid reason for this dependency, please override
  the tag.
-Ref: http://packages.qa.debian.org/j/java-common/news/20100405T221415Z.html,
+Ref: https://packages.qa.debian.org/j/java-common/news/20100405T221415Z.html,
  #227587
 
 Tag: documentation-package-not-architecture-independent

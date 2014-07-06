@@ -214,7 +214,7 @@ Info: This manual page seems to contain a hyphen where a minus sign was
  intend a hyphen (normally you don't), write it as "\(hy" to emphasise
  that fact.  See groff(7) and especially groff_char(7) for details, and
  also the thread starting with
- http://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
+ https://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
  .
  If you use some tool that converts your documentation to groff format,
  this tag may indicate a bug in the tool.  Some tools convert dashes of

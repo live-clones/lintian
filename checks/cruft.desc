@@ -482,12 +482,12 @@ Info: The source tarball contains a prebuilt (minified) JavaScript object.
 Tag: source-contains-prebuilt-sphinx-documentation
 Severity: pedantic
 Certainty: possible
-Info: The source tarball contains a prebuilt sphinx documentation.
- They are usually left by mistake when generating the tarball by not
- cleaning the source directory first.  You may want to report this as
- an upstream bug, in case there is no sign that this was intended.
+Info: The source tarball contains prebuilt Sphinx documentation.
+ This is usually left by mistake when generating the tarball without
+ first cleaning the source directory.  You may want to report this as
+ an upstream bug, if there is no sign that this was intended.
  .
- It is preferable to rebuilt documentation directly from source.
+ It is preferable to rebuild documentation directly from source.
 
 Tag: source-contains-prebuilt-python-object
 Severity: pedantic
@@ -528,8 +528,8 @@ Info: The source tarball contains a waf binary. This file is a Python
  provided unpacked instead, or completely removed, if possible.
  .
  You might want to follow these guidelines to obtain an unpacked waf:
- http://wiki.debian.org/UnpackWaf
-Ref: http://wiki.debian.org/UnpackWaf, #654523
+ https://wiki.debian.org/UnpackWaf
+Ref: https://wiki.debian.org/UnpackWaf, #654523
 
 Tag: tar-errors-from-source
 Severity: normal
@@ -558,7 +558,7 @@ Certainty: possible
 Info: The given source file is copyrighted under the non free
  license of json and the infamous clause:
  The Software shall be used for Good, not Evil.
-Ref: http://wiki.debian.org/qa.debian.org/jsonevil
+Ref: https://wiki.debian.org/qa.debian.org/jsonevil
 
 Tag: license-problem-gfdl-invariants
 Severity: serious
@@ -572,8 +572,8 @@ Info: The given source file is licensed under GFDL with invariant
  Should this file be multi-licensed, please override the tag.
  .
  Should this be a false-positive, please report a bug.
-Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
- http://www.debian.org/vote/2006/vote_001
+Ref: https://wiki.debian.org/qa.debian.org/gfdlinvariant,
+ https://www.debian.org/vote/2006/vote_001
 
 Tag: license-problem-non-free-RFC
 Severity: serious
@@ -612,8 +612,8 @@ Info: The given source file is licensed under GFDL, but without any
  .
  GFDL license explicitly requests you to document this non presence.
  .
-Ref: http://wiki.debian.org/qa.debian.org/gfdlinvariant,
- http://www.debian.org/vote/2006/vote_001
+Ref: https://wiki.debian.org/qa.debian.org/gfdlinvariant,
+ https://www.debian.org/vote/2006/vote_001
 
 Tag: license-problem-gfdl-non-official-text
 Severity: pedantic
@@ -639,7 +639,7 @@ Info: The following source files include material under a
  package containing a non-distributable file.
  .
  If this is a false-positive, please report a bug against Lintian.
-Ref: http://bugs.debian.org/724930#27
+Ref: https://bugs.debian.org/724930#27
 
 Tag: license-problem-md5sum-non-distributable-file
 Severity: serious

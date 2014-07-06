@@ -1168,7 +1168,7 @@ Info: This type 1 font file includes some postscript fragment with a
  please follow the procedure described in the reference.
  .
  Should this be a false-positive, please override the tag.
-Ref: http://wiki.debian.org/qa.debian.org/type1nondfsg
+Ref: https://wiki.debian.org/qa.debian.org/type1nondfsg
 
 Tag: license-problem-font-adobe-copyrighted-fragment-no-credit
 Severity: serious
@@ -1181,7 +1181,7 @@ Info: This type 1 font file includes some postscript fragment with a
  book without any credit to Adobe.
  .
  Should this be a false-positive, please override the tag.
-Ref: http://wiki.debian.org/qa.debian.org/type1nondfsg
+Ref: https://wiki.debian.org/qa.debian.org/type1nondfsg
 
 Tag: duplicate-font-file
 Severity: normal
@@ -1231,7 +1231,7 @@ Info: The given Flash file has a filename which suggests that it may be
 Tag: non-conf-file-in-modprobe.d
 Severity: important
 Certainty: certain
-Ref: http://lists.debian.org/debian-devel/2009/03/msg00119.html
+Ref: https://lists.debian.org/debian-devel/2009/03/msg00119.html
 Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
  <tt>.conf</tt>.  modprobe silently ignores all files which do not match
  this convention.
@@ -1500,9 +1500,9 @@ Info: The arch all pkg-config file contains a reference to a multi-arch path.
  multi-arch paths by default) on a package without multi-arch support.
  The usual cure in this case is to update it for multi-arch.
  .
- Last but not least, this file could contains a reference to a cross
- architecture. Like for instance a x86_64-linux-gnu pkg-config file
- referencing a i386-linux-gnu file. In this case the usual cure is to
+ Last but not least, this file could contain a reference to a cross
+ architecture (like for instance a x86_64-linux-gnu pkg-config file
+ referencing a i386-linux-gnu file). In this case the usual cure is to
  fix this path.
 
 Tag: pkg-config-bad-directive
@@ -1510,7 +1510,7 @@ Severity: serious
 Certainty: possible
 Info: The pkg-config file contains a wrong directive.
  .
- The following file include a wrong directive. This could lead to
+ The following file includes a wrong directive. This could lead to
  FTBFS or leak private compile flags to another package.
 
 Tag: dir-or-file-in-home

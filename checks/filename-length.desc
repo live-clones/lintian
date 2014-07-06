@@ -16,7 +16,7 @@ Info: The package has a very long filename.  This may complicate
  current architecture.
  .
  This length will be written in brackets after the actual length.
-Ref: http://lists.debian.org/debian-devel/2011/03/msg00943.html
+Ref: https://lists.debian.org/debian-devel/2011/03/msg00943.html
 
 Tag: source-package-component-has-long-file-name
 Severity: normal
@@ -27,5 +27,5 @@ Info: The source package has a component with a very long filename.
  .
  Lintian only checks emits this tag once per source package based
  on the component with the longest filename.
-Ref: http://lists.debian.org/debian-devel/2011/03/msg00943.html
+Ref: https://lists.debian.org/debian-devel/2011/03/msg00943.html
 

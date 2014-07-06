@@ -25,7 +25,7 @@ Ref: policy 7.2
 Tag: package-depends-on-lower-priority-package
 Severity: normal
 Certainty: certain
-Ref: policy 2.5, http://qa.debian.org/debcheck.php
+Ref: policy 2.5, https://qa.debian.org/debcheck.php
 Info: The package depends on a package with lower priority than
  itself.
  .

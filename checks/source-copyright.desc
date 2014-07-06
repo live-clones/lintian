@@ -42,27 +42,27 @@ Info: Format URI of the machine-readable copyright file contains
 Tag: wiki-copyright-format-uri
 Severity: pedantic
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file refers to Debian Wiki.
  .
  Debian Wiki is not used for the format development anymore.  Please use
- <tt>http://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
+ <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
  as the format URI instead.
 
 Tag: unversioned-copyright-format-uri
 Severity: pedantic
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file is not versioned.
  .
  Please use
- <tt>http://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
+ <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
  as the format URI instead.
 
 Tag: out-of-date-copyright-format-uri
 Severity: pedantic
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: A newer version of the machine-readable copyright file specification,
  than the one referenced by the copyright file, is available.
  .
@@ -71,7 +71,7 @@ Info: A newer version of the machine-readable copyright file specification,
 Tag: syntax-error-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The machine-readable copyright file didn't pass Debian control file
  syntax check.
  .
@@ -81,7 +81,7 @@ Info: The machine-readable copyright file didn't pass Debian control file
 Tag: obsolete-field-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The machine-readable copyright file uses a field, that used to be defined
  by the specification, but has been renamed since then.
  .
@@ -94,7 +94,7 @@ Info: The machine-readable copyright file uses a field, that used to be defined
 Tag: comma-separated-files-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: A list of files in the machine-readable copyright format appears to be
  separated by commas.  The file list should be whitespace separated instead.
  .
@@ -103,28 +103,28 @@ Info: A list of files in the machine-readable copyright format appears to be
 Tag: missing-field-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph in the machine readable copyright file is missing a field
  that is required by the specification.
 
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The files paragraph in the machine readable copyright file references a
  license, for which no standalone license paragraph exists.
 
 Tag: missing-license-text-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The standalone license header contains only short license name, but not
  the license text.
 
 Tag: unused-license-paragraph-in-dep5-copyright
 Severity: minor
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The license paragraph in the machine-readable copyright file is not
  referenced by any files paragraph.  It could be a typo in the license name or
  the license paragraph is simply not needed and can be removed.
@@ -132,7 +132,7 @@ Info: The license paragraph in the machine-readable copyright file is not
 Tag: unknown-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The machine-readable copyright file contains a paragraph that is neither
  a standalone license paragraph nor a files paragraph.
 
@@ -152,7 +152,7 @@ Info: The listed field name is a likely misspelling of one of the documented
 Tag: ambiguous-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible
-Ref: #652380, http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: #652380, https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph has a "License" and a "Copyright" field, but no
  "Files" field.  Technically, this is a valid paragraph per the DEP-5
  specification.  However, it is mostly likely a mistake.

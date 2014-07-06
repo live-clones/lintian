@@ -292,7 +292,7 @@ Info: This package appears to be covered by version 2.x of the PHP license,
  .
  Note that PEAR modules are not a part of the PHP interpreter and cannot
  use this license.
-Ref: http://ftp-master.debian.org/REJECT-FAQ.html, #616436
+Ref: https://ftp-master.debian.org/REJECT-FAQ.html, #616436
 
 Tag: copyright-refers-to-problematic-php-license
 Severity: serious
@@ -300,12 +300,12 @@ Certainty: wild-guess
 Info: This package appears to be covered by version 3.0 (exactly) of the
  PHP license.  This license is not applicable to anything that is not PHP
  and has no contributions from the PHP Group.
-Ref: http://ftp-master.debian.org/REJECT-FAQ.html
+Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 
 Tag: copyright-without-copyright-notice
 Severity: normal
 Certainty: certain
-Ref: http://ftp-master.debian.org/REJECT-FAQ.html
+Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 Info: The copyright file for this package does not appear to contain a
  copyright notice.  You should copy the copyright notice from the upstream
  source (or add one of your own for a native package).  A copyright notice

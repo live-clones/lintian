@@ -41,7 +41,7 @@ Tag: maven-plugin-in-usr-share-java
 Severity: normal
 Certainty: possible
 Info: A maven plugin is incorrectly installed in /usr/share/java.
- Maven plugin should be installed in /usr/share/maven-repo
+ Maven plugins should be installed in /usr/share/maven-repo
 
 Tag: executable-jar-without-main-class
 Severity: serious
@@ -108,7 +108,7 @@ Info: The package contains a Jar file with Java class files compiled for an
  for a newer version of Java than Lintian knows about.  In the latter case,
  please file a bug against Lintian.
  .
- Latest class version known by Lintian is Java8 (Major version 52).
+ The latest class version known by Lintian is Java8 (Major version 52).
 
 Tag: zip-parse-error
 Severity: normal

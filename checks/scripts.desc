@@ -549,7 +549,7 @@ Info: The file /var/lib/dpkg/status is internal to dpkg, may disappear or
   dpkg-query -W -f='${Conffiles}' &lt;package&gt;
  .
  instead.
-Ref: http://wiki.debian.org/DpkgConffileHandling
+Ref: https://wiki.debian.org/DpkgConffileHandling
 
 Tag: maintainer-script-should-not-modify-netbase-managed-file
 Severity: serious

@@ -39,7 +39,7 @@ Info: The package is a PEAR package but its control file doesn't have
  Those substitution variables should only be used if the description
  included in PEAR package is of sufficient quality and respect Debian
  packaging best practices.
-Ref: http://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html#bpp-desc-basics
+Ref: https://www.debian.org/doc/manuals/developers-reference/best-pkging-practices.html#bpp-desc-basics
 
 Tag: pear-package-feature-requires-newer-pkg-php-tools
 Severity: normal
