@@ -12,6 +12,8 @@
 /.libs/$dirname/
 # mathjax
 /unpacked/
+# emscripten
+./flash-src/src/net/gimite/websocket
 # for missing source set in debian
 /debian/
 /debian/missing-sources/

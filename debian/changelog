@@ -18,6 +18,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
   * data/cruft/missing-dir-search-path:
     + [BR] Close false positive for mathjax, search under
       /unpacked.
+    + [BR] Fix another false positive for emscripten.
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
       a regular expression for finding embedded copies of
