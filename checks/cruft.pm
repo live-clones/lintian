@@ -1010,7 +1010,7 @@ sub _clean_block {
     $text =~ s/\"\s?\v\#~\s?\"//gxms;
 
     $text =~ s/\\url{[^}]*?}/ /gxms;          # (la)?tex url
-    $text =~ s/\emph{/ /gxms;                 # (la)?tex emph
+    $text =~ s/\\emph{/ /gxms;                 # (la)?tex emph
     $text =~ s/\\href{[^}]*?}
                      {([^}]*?)}/ $1 /gxms;    # (la)?tex href
     $text =~ s/\\hyperlink
