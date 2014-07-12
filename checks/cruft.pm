@@ -149,6 +149,14 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         };
     });
 
+# prebuilt-file or forbidden file type
+my $RFC_WHITELIST =  Lintian::Data->new(
+    'cruft/rfc-whitelist',
+    qr/\s*\~\~\s*/,
+    sub {
+        return qr/$_[0]/xms;
+    });
+
 my $MISSING_DIR_SEARCH_PATH
   =  Lintian::Data->new('cruft/missing-dir-search-path');
 
@@ -167,9 +175,11 @@ sub _get_license_check_file {
         $filename,
         qr/\s*\~\~\s*/,
         sub {
-            my %LICENSE_CHECK_DISPATCH_TABLE
-              = ('license-problem-gfdl-invariants' =>
-                  \&_check_gfdl_license_problem,);
+            my %LICENSE_CHECK_DISPATCH_TABLE= (
+                'license-problem-gfdl-invariants' =>
+                  \&_check_gfdl_license_problem,
+                'rfc-whitelist-filename' =>\&_rfc_whitelist_filename,
+            );
             my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
             my $syntaxerror = 'Syntax error in '.$filename;
             if(scalar(@splitline) > 5 or scalar(@splitline) <2) {
@@ -792,8 +802,10 @@ sub full_text_check {
 
         if(
             _license_check(
-                $source_pkg, $name,$NON_DISTRIBUTABLE_LICENSES,$block,
-                $blocknumber,\$cleanedblock,\%matchedkeyword,
+                $source_pkg, $name,
+                $basename,$NON_DISTRIBUTABLE_LICENSES,
+                $block,$blocknumber,
+                \$cleanedblock,\%matchedkeyword,
                 \%licenseproblemhash
             )
           ){
@@ -806,9 +818,11 @@ sub full_text_check {
             next BLOCK;
         }
 
-        _license_check($source_pkg, $name, $NON_FREE_LICENSES,
-            $block,  $blocknumber,\$cleanedblock, \%matchedkeyword,
-            \%licenseproblemhash);
+        _license_check(
+            $source_pkg, $name, $basename,
+            $NON_FREE_LICENSES,$block,  $blocknumber,
+            \$cleanedblock, \%matchedkeyword,\%licenseproblemhash
+        );
 
         # check only in block 0
         if($blocknumber == 0) {
@@ -895,9 +909,11 @@ sub _tag_gfdl {
 
 # return True in case of license problem
 sub _check_gfdl_license_problem {
-    my ($name,$block,$blocknumber,$cleanedblock,$matchedkeyword,
-        $licenseproblemhash,%matchedhash)
-      = @_;
+    my (
+        $name,$basename,$block,
+        $blocknumber,$cleanedblock,$matchedkeyword,
+        $licenseproblemhash,$licenseproblem,%matchedhash
+    )= @_;
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
 
@@ -914,7 +930,7 @@ sub _check_gfdl_license_problem {
         $gfdlsections =~ s{ \A (?:either[ ])?
                            version [ ] \d+(?:\.\d+)? [ ]?}{}xsmo;
         $gfdlsections =~ s{ \A of [ ] the [ ] license [ ]?[,\.;][ ]?}{}xsmo;
-        $gfdlsections =~ s{ \A or (?:[ ]\(?[ ]? at [ ] your [ ] option [ ]?\)?)?
+        $gfdlsections=~ s{ \A or (?:[ ]\(?[ ]? at [ ] your [ ] option [ ]?\)?)?
                            [ ] any [ ] later [ ] version[ ]?}{}xsmo;
         $gfdlsections =~ s{ \A (as[ ])? published [ ] by [ ]
                            the [ ] free [ ] software [ ] foundation[ ]?}{}xsmo;
@@ -991,6 +1007,25 @@ sub _check_gfdl_license_problem {
 
     # catch all clause
     _tag_gfdl('license-problem-gfdl-invariants', $name, $gfdlsections);
+    return 1;
+}
+
+# whitelist good rfc
+sub _rfc_whitelist_filename {
+    my (
+        $name,$basename,$block,
+        $blocknumber,$cleanedblock,$matchedkeyword,
+        $licenseproblemhash,$licenseproblem,%matchedhash
+    )= @_;
+    my $lcname = lc($basename);
+
+    foreach my $rfc_regexp ($RFC_WHITELIST->all) {
+        my $regex = $RFC_WHITELIST->value($rfc_regexp);
+        if($lcname =~ m/$regex/xms) {
+            return 0;
+        }
+    }
+    tag $licenseproblem, $name;
     return 1;
 }
 
@@ -1133,9 +1168,11 @@ sub _md5sum_based_check {
 
 # check bad license
 sub _license_check {
-    my ($source_pkg, $name, $licensesdatas, $block, $blocknumber,
-        $cleanedblock,$matchedkeyword, $licenseproblemhash)
-      = @_;
+    my (
+        $source_pkg, $name, $basename,
+        $licensesdatas, $block, $blocknumber,
+        $cleanedblock,$matchedkeyword, $licenseproblemhash
+    )= @_;
     my $ret = 0;
 
     # avoid to check lintian
@@ -1180,8 +1217,9 @@ sub _license_check {
 
         if(defined($licenseproblemdata->{'callsub'})) {
             my $subresult= $licenseproblemdata->{'callsub'}->(
-                $name, $block,$blocknumber,$cleanedblock,$matchedkeyword,
-                $licenseproblemhash,%+
+                $name, $basename, $block,
+                $blocknumber,$cleanedblock,$matchedkeyword,
+                $licenseproblemhash,$licenseproblem,%+
             );
             if($subresult) {
                 $licenseproblemhash->{$licenseproblem} = 1;
