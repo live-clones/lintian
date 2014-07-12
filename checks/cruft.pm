@@ -905,25 +905,28 @@ sub _check_gfdl_license_problem {
     my $gfdlsections  = _strip_punct($rawgfdlsections);
     my $contextbefore = _strip_punct($rawcontextbefore);
 
+    my $oldgfdlsections;
     # remove classical and without meaning part of
     # matched string
-    $gfdlsections =~ s{ \A \(?[ ]? g?fdl [ ]?\)?[ ]? [,\.;]?[ ]?}{}xismo;
-    $gfdlsections =~ s{ \A (?:either[ ])?
+    do {
+        $oldgfdlsections = $gfdlsections;
+        $gfdlsections =~ s{ \A \(?[ ]? g?fdl [ ]?\)?[ ]? [,\.;]?[ ]?}{}xismo;
+        $gfdlsections =~ s{ \A (?:either[ ])?
                            version [ ] \d+(?:\.\d+)? [ ]?}{}xismo;
-    $gfdlsections =~ s{ \A of [ ] the [ ] license [ ]?[,\.;][ ]?}{}xismo;
-    $gfdlsections =~ s{ \A or (?:[ ]\(?[ ]? at [ ] your [ ] option [ ]?\)?)?
+        $gfdlsections =~ s{ \A of [ ] the [ ] license [ ]?[,\.;][ ]?}{}xismo;
+        $gfdlsections =~ s{ \A or (?:[ ]\(?[ ]? at [ ] your [ ] option [ ]?\)?)?
                            [ ] any [ ] later [ ] version[ ]?}{}xismo;
-    $gfdlsections =~ s{ \A published [ ] by [ ]
+        $gfdlsections =~ s{ \A (as[ ])? published [ ] by [ ]
                            the [ ] free [ ] software [ ] foundation[ ]?}{}xismo;
-    $gfdlsections =~ s{\(?[ ]?FSF[ ]?\)?[ ]?}{}xismo;
-    $gfdlsections =~ s{[,\.;]?[ ]?}{}xismo;
-    $contextbefore =~ s{
-                          [ ]? (:?[,\.;]? [ ]?)?
-                           permission [ ] is [ ] granted [ ] to [ ] copy [ ]?[,\.;]?[ ]?
-                           distribute [ ]?[,\.;]?[ ]? and[ ]?/?[ ]?or [ ] modify [ ]
-                           this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}
-                        {}xismo;
+        $gfdlsections =~ s{\(?[ ]?FSF[ ]?\)?[ ]?}{}xismo;
+        $gfdlsections =~ s{[,\.;]?[ ]?}{}xismo;
+    } while ($oldgfdlsections ne $gfdlsections);
 
+    $contextbefore =~ s{
+                       [ ]? (:?[,\.;]? [ ]?)?
+                       permission [ ] is [ ] granted [ ] to [ ] copy [ ]?[,\.;]?[ ]?
+                       distribute [ ]?[,\.;]?[ ]? and[ ]?/?[ ]?or [ ] modify [ ]
+                       this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}{}xismo;
     # Treat ambiguous empty text
     unless(
         defined(

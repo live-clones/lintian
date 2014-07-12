@@ -5,6 +5,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
   * checks/cruft.{desc,pm}:
     + [BR] Add a forgotten return statement, and avoid
       false positive for deployJava.js (Closes: #745152).
+    + [BR] Fix another false positive in GFDL detection.
   * checks/description.{desc,pm}:
     + [NT] Apply patch from Anders Jonsson to check spelling
       of the package synopsis.  (Closes: #747266)
