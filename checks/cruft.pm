@@ -919,7 +919,7 @@ sub _check_gfdl_license_problem {
         $gfdlsections =~ s{ \A (as[ ])? published [ ] by [ ]
                            the [ ] free [ ] software [ ] foundation[ ]?}{}xsmo;
         $gfdlsections =~ s{\(?[ ]? fsf [ ]?\)?[ ]?}{}xsmo;
-        $gfdlsections =~ s{[,\.;]?[ ]?}{}xsmo;
+        $gfdlsections =~ s{\A [ ]? [,\.;]? [ ]?}{}xsmo;
     } while ($oldgfdlsections ne $gfdlsections);
 
     $contextbefore =~ s{
