@@ -14,6 +14,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
     + [RG,NT] Check for invalid named p11-kit modules in
       /usr/share/p11-kit modules.  (Closes: #741346)
     + [BR] Detect cross architecture pkg-config file.
+      (Closes: #539225).
     + [BR] Add a sanity check for pkg-config files.
       (Closes: #676803).
 
