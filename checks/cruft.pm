@@ -910,23 +910,23 @@ sub _check_gfdl_license_problem {
     # matched string
     do {
         $oldgfdlsections = $gfdlsections;
-        $gfdlsections =~ s{ \A \(?[ ]? g?fdl [ ]?\)?[ ]? [,\.;]?[ ]?}{}xismo;
+        $gfdlsections =~ s{ \A \(?[ ]? g?fdl [ ]?\)?[ ]? [,\.;]?[ ]?}{}xsmo;
         $gfdlsections =~ s{ \A (?:either[ ])?
-                           version [ ] \d+(?:\.\d+)? [ ]?}{}xismo;
-        $gfdlsections =~ s{ \A of [ ] the [ ] license [ ]?[,\.;][ ]?}{}xismo;
+                           version [ ] \d+(?:\.\d+)? [ ]?}{}xsmo;
+        $gfdlsections =~ s{ \A of [ ] the [ ] license [ ]?[,\.;][ ]?}{}xsmo;
         $gfdlsections =~ s{ \A or (?:[ ]\(?[ ]? at [ ] your [ ] option [ ]?\)?)?
-                           [ ] any [ ] later [ ] version[ ]?}{}xismo;
+                           [ ] any [ ] later [ ] version[ ]?}{}xsmo;
         $gfdlsections =~ s{ \A (as[ ])? published [ ] by [ ]
-                           the [ ] free [ ] software [ ] foundation[ ]?}{}xismo;
-        $gfdlsections =~ s{\(?[ ]?FSF[ ]?\)?[ ]?}{}xismo;
-        $gfdlsections =~ s{[,\.;]?[ ]?}{}xismo;
+                           the [ ] free [ ] software [ ] foundation[ ]?}{}xsmo;
+        $gfdlsections =~ s{\(?[ ]? fsf [ ]?\)?[ ]?}{}xsmo;
+        $gfdlsections =~ s{[,\.;]?[ ]?}{}xsmo;
     } while ($oldgfdlsections ne $gfdlsections);
 
     $contextbefore =~ s{
                        [ ]? (:?[,\.;]? [ ]?)?
                        permission [ ] is [ ] granted [ ] to [ ] copy [ ]?[,\.;]?[ ]?
                        distribute [ ]?[,\.;]?[ ]? and[ ]?/?[ ]?or [ ] modify [ ]
-                       this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}{}xismo;
+                       this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}{}xsmo;
     # Treat ambiguous empty text
     unless(
         defined(
