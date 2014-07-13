@@ -1,6 +1,13 @@
-lintian (2.5.25) UNRELEASED; urgency=medium
+lintian (2.5.25) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - capitalization-error-in-description-synopsis
+      - incorrect-naming-of-pkcs11-module
+      - package-contains-thumbnails-dir
+      - pkg-config-bad-directive
+      - source-contains-prebuilt-ms-help-file
+      - spelling-error-in-description-synopsis
 
   * checks/*.desc:
     + [NT] Replaced "index" with "unpacked" in Needs-Info.
@@ -74,7 +81,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
       is re-generated as needed.  If the file exists, it will
       be moved to its new location if possible.
 
- -- Niels Thykier <niels@thykier.net>  Wed, 25 Jun 2014 21:29:02 +0200
+ -- Niels Thykier <niels@thykier.net>  Sun, 13 Jul 2014 20:36:30 +0200
 
 lintian (2.5.24) unstable; urgency=medium
 
