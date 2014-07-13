@@ -423,7 +423,7 @@ you can use something like:
  }
 
 Keep in mind that using the "index" or "sorted_index" method will
-require that you put "index" in Needs-Info.  See L</Keeping Needs-Info
+require that you put "unpacked" in Needs-Info.  See L</Keeping Needs-Info
 up to date>.
 
 =head3 Accessing contents of a file in a package

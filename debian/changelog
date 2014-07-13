@@ -6,6 +6,10 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Add patch from  Piotr Ożarowski, dh-python2
       moved to dh-python package (Closes: #740161).
 
+  * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
+    + [NT] Correct tutorial now that the "index" collection
+      is gone.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 13 Jul 2014 21:04:57 +0200
 
 lintian (2.5.25) unstable; urgency=medium
