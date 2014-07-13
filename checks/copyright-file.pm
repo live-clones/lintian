@@ -294,15 +294,6 @@ sub run {
     if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,io) {
         tag 'copyright-with-old-dh-make-debian-copyright';
     }
-
-    # Bad licenses.
-    if (m/The\s+PHP\s+Licen[cs]e,?\s+version\s+2/si) {
-        tag 'copyright-refers-to-bad-php-license';
-    }
-    if (m/The\s+PHP\s+Licen[cs]e,?\s+version\s+3\.0[^\d]/si) {
-        tag 'copyright-refers-to-problematic-php-license';
-    }
-
     # Other flaws in the copyright phrasing or contents.
 
     if (

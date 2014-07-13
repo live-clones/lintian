@@ -179,6 +179,7 @@ sub _get_license_check_file {
                 'license-problem-gfdl-invariants' =>
                   \&_check_gfdl_license_problem,
                 'rfc-whitelist-filename' =>\&_rfc_whitelist_filename,
+                'php-source-whitelist' => \&_php_source_whitelist,
             );
             my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
             my $syntaxerror = 'Syntax error in '.$filename;
@@ -910,9 +911,10 @@ sub _tag_gfdl {
 # return True in case of license problem
 sub _check_gfdl_license_problem {
     my (
-        $name,$basename,$block,
-        $blocknumber,$cleanedblock,$matchedkeyword,
-        $licenseproblemhash,$licenseproblem,%matchedhash
+        $source_pkg, $name,$basename,
+        $block,$blocknumber,$cleanedblock,
+        $matchedkeyword,$licenseproblemhash,$licenseproblem,
+        %matchedhash
     )= @_;
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
@@ -1013,9 +1015,10 @@ sub _check_gfdl_license_problem {
 # whitelist good rfc
 sub _rfc_whitelist_filename {
     my (
-        $name,$basename,$block,
-        $blocknumber,$cleanedblock,$matchedkeyword,
-        $licenseproblemhash,$licenseproblem,%matchedhash
+        $source_pkg, $name, $basename,
+        $block,$blocknumber, $cleanedblock,
+        $matchedkeyword,$licenseproblemhash, $licenseproblem,
+        %matchedhash
     )= @_;
     my $lcname = lc($basename);
 
@@ -1024,6 +1027,22 @@ sub _rfc_whitelist_filename {
         if($lcname =~ m/$regex/xms) {
             return 0;
         }
+    }
+    tag $licenseproblem, $name;
+    return 1;
+}
+
+# whitelist php source
+sub _php_source_whitelist {
+    my (
+        $source_pkg, $name, $basename,
+        $block,$blocknumber, $cleanedblock,
+        $matchedkeyword,$licenseproblemhash, $licenseproblem,
+        %matchedhash
+    )= @_;
+
+    if($source_pkg =~ m,^php\d*(?:\.\d+)?$,xms) {
+        return 0;
     }
     tag $licenseproblem, $name;
     return 1;
@@ -1217,9 +1236,10 @@ sub _license_check {
 
         if(defined($licenseproblemdata->{'callsub'})) {
             my $subresult= $licenseproblemdata->{'callsub'}->(
-                $name, $basename, $block,
-                $blocknumber,$cleanedblock,$matchedkeyword,
-                $licenseproblemhash,$licenseproblem,%+
+                $source_pkg, $name, $basename,
+                $block,$blocknumber,$cleanedblock,
+                $matchedkeyword,$licenseproblemhash,$licenseproblem,
+                %+
             );
             if($subresult) {
                 $licenseproblemhash->{$licenseproblem} = 1;

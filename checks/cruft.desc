@@ -577,6 +577,25 @@ Info: The given source file is copyrighted under the non free
  The Software shall be used for Good, not Evil.
 Ref: https://wiki.debian.org/qa.debian.org/jsonevil
 
+Tag: license-problem-bad-php-license
+Severity: serious
+Certainty: possible
+Info: This package appears to be covered by version 2.x of the PHP license,
+ which is not appropriate for anything other than the PHP interpreter
+ itself.
+ .
+ Note that PEAR modules are not a part of the PHP interpreter and cannot
+ use this license.
+Ref: https://ftp-master.debian.org/REJECT-FAQ.html, #616436
+
+Tag: license-problem-php-license
+Severity: serious
+Certainty: possible
+Info: This package appears to be covered by version 3.0 (exactly) of the
+ PHP license.  This license is not applicable to anything that is not PHP
+ and has no contributions from the PHP Group.
+Ref: https://ftp-master.debian.org/REJECT-FAQ.html
+
 Tag: license-problem-gfdl-invariants
 Severity: serious
 Certainty: possible

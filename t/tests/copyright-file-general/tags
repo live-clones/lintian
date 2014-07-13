@@ -1,4 +1,6 @@
 E: copyright-compressed: copyright-file-compressed
+E: copyright-file-general source: license-problem-bad-php-license debian/copyright-php.copyright
+E: copyright-file-general source: license-problem-php-license debian/copyright-php.copyright
 E: copyright-full-apache-2: copyright-file-contains-full-apache-2-license
 E: copyright-full-apache-2: copyright-should-refer-to-common-license-file-for-apache-2
 E: copyright-full-gfdl: copyright-file-contains-full-gfdl-license
@@ -18,8 +20,6 @@ E: copyright-missing-apache2-license-pointer: copyright-should-refer-to-common-l
 E: copyright-missing-perl-license-pointer: copyright-file-lacks-pointer-to-perl-license
 E: copyright-old-style: FSSTND-dir-in-usr usr/doc/
 E: copyright-old-style: no-copyright-file
-E: copyright-php: copyright-refers-to-bad-php-license
-E: copyright-php: copyright-refers-to-problematic-php-license
 E: copyright-poor-common-licenses: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-symlink: copyright-file-is-symlink
 P: copyright-crln: copyright-has-crs

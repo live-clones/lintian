@@ -1,0 +1,7 @@
+Testname: cruft-bad-php
+Sequence: 6000
+Version: 1.0
+Description: Check for the bad php license
+Test-For:
+ license-problem-php-license
+ license-problem-bad-php-license

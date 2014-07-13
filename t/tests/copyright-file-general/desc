@@ -16,13 +16,11 @@ Test-For:
  copyright-file-lacks-pointer-to-perl-license
  copyright-has-crs
  copyright-has-url-from-dh_make-boilerplate
- copyright-refers-to-bad-php-license
  copyright-refers-to-compressed-license
  copyright-refers-to-deprecated-bsd-license-file
  copyright-refers-to-incorrect-directory
  copyright-refers-to-nonexistent-license-file
  copyright-refers-to-old-directory
- copyright-refers-to-problematic-php-license
  copyright-should-refer-to-common-license-file-for-apache-2
  copyright-should-refer-to-common-license-file-for-gfdl
  copyright-should-refer-to-common-license-file-for-gpl
