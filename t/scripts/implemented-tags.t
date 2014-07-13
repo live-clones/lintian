@@ -51,6 +51,8 @@ our $EXCLUDE =join(
       ^license-problem-non-free-RFC$
       ^license-problem-non-free-RFC-BCP78$
       ^license-problem-nvidia-intellectual$
+      ^license-problem-bad-php-license$
+      ^license-problem-php-license$
       ^license-problem-gfdl-non-official-text$
       ^maintainer-script-removes-device-files$
       ^suidregister-used-in-maintainer-script$
