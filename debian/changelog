@@ -2,6 +2,8 @@ lintian (2.5.25) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/*.desc:
+    + [NT] Replaced "index" with "unpacked" in Needs-Info.
   * checks/cruft.{desc,pm}:
     + [BR] Add a forgotten return statement, and avoid
       false positive for deployJava.js (Closes: #745152).
@@ -20,6 +22,15 @@ lintian (2.5.25) UNRELEASED; urgency=medium
     + [BR] Add a sanity check for pkg-config files.
       (Closes: #676803, #657699).
     + [BR] Detect .thumbnails dir (Closes: #660797).
+
+  * collection/*.desc:
+    + [NT] Replace "index" with "unpacked" in Needs-Info.
+  * collection/index{,.desc}:
+    + [NT] Removed file.
+  * collection/unpacked{,.desc}:
+    + [NT] Have unpacked create indices when the package is
+      being unpacked.  This is done using a pipeline to avoid
+      decompressing the data.tar file multiple times.
 
   * data/cruft/missing-dir-search-path:
     + [BR] Close false positive for mathjax, search under
@@ -48,6 +59,10 @@ lintian (2.5.25) UNRELEASED; urgency=medium
     + [NT] Add Breaks/Replaces for funny-manpages due to a
       bug in funny-manpages before 1.3-5.1.  Thanks to Adrian
       Bunk for reporting.  (Closes: #753165)
+
+  * lib/Lintian/Collect{,/*}.pm:
+    + [NT] Replace "index" with "unpacked" in Needs-Info
+      requirements.
 
   * reporting/config:
     + [NT] Remove "$statistics_file" from the sample config.
