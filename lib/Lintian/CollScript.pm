@@ -94,10 +94,7 @@ sub new {
 
 sub _parse_needs {
     my ($self, $needs) = @_;
-    my @min = ();
-    my %typespec = ();
-    my %seen = ();
-    my @max = ();
+    my (@min, @max, %typespec, %seen);
 
     foreach my $part (split /\s*,\s*/, $needs//'') {
         if ($part =~ m/^ \s* (\S+) \s*  \[ \s* ( [^]]+ ) \s* \] \s*$/x) {
