@@ -480,7 +480,7 @@ Info: The source tarball contains a prebuilt (minified) JavaScript object.
  an upstream bug, in case there is no sign that this was intended.
 
 Tag: source-contains-prebuilt-ms-help-file
-Severity: pedantic
+Severity: serious
 Certainty: possible
 Info: The source tarball contains a prebuilt microsoft precompiled help
  file (CHM file).  These are often included by mistake when developers generate
