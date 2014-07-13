@@ -34,7 +34,9 @@ our @DESCS = (
 plan tests => scalar(@DESCS);
 
 my @l2refs = (
-    qr|->unpacked|,qr<unpacked/>,qr<unpacked-errors>,
+    qr|->unpacked|,qr<unpacked/>,
+    qr<unpacked-errors>,qr|->index|,
+    qr|->sorted_index|,qr<index-errors>,
     qr<chdir\s*\(?\s*["'](?:\$dir/)?unpacked/?['"]\s*\)?>,
 );
 

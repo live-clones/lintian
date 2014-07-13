@@ -2,7 +2,7 @@ Check-Script: conffiles
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: cnf
 Type: binary
-Needs-Info: bin-pkg-control, index
+Needs-Info: bin-pkg-control, unpacked
 Info: This script checks if the conffiles control file of a binary
  package is correct.
 

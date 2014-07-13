@@ -3,5 +3,5 @@ Author: Vincent Fourmond <fourmond@debian.org>
 Info: This script extracts information from manifests of JAR files
 Type: binary
 Version: 3
-Needs-Info: index, file-info, unpacked
+Needs-Info: file-info, unpacked
 Interface: perl-coll

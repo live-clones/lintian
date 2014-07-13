@@ -276,7 +276,7 @@ L</unpacked ([FILE])>.
 Note that the "root directory" (denoted by the empty string) will
 always be present, even if the underlying tarball omits it.
 
-Needs-Info requirements for using I<index>: index
+Needs-Info requirements for using I<index>: unpacked
 
 =cut
 

@@ -3,7 +3,7 @@ Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: scr
 Type: binary
 Info: This script checks the #! lines of scripts in a package.
-Needs-Info: unpacked, file-info, scripts, bin-pkg-control, index
+Needs-Info: unpacked, file-info, scripts, bin-pkg-control
 
 Tag: script-without-interpreter
 Severity: important

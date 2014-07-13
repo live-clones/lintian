@@ -2,7 +2,7 @@ Check-Script: my-vendor/another-check
 Author: Niels Thykier <niels@thykier.net>
 Type: binary
 Info: An example binary check
-Needs-Info: index
+Needs-Info: unpacked
 
 Tag: missing-some-important-file
 Severity: serious

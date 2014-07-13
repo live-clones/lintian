@@ -2,7 +2,7 @@ Check-Script: manpages
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: man
 Type: binary
-Needs-Info: unpacked, file-info, index
+Needs-Info: unpacked, file-info
 Info: This script checks if a binary package conforms to manual page policy.
 
 Tag: bad-link-to-undocumented-manpage

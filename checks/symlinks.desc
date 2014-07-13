@@ -2,7 +2,7 @@ Check-Script: symlinks
 Author: Niels Thykier <niels@thykier.net>
 Abbrev: sym
 Type: binary, udeb
-Needs-Info: index
+Needs-Info: unpacked
 Info: This script checks for broken symlinks.
 
 Tag: package-contains-broken-symlink

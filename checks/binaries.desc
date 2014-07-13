@@ -2,7 +2,7 @@ Check-Script: binaries
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: bin
 Type: binary, udeb
-Needs-Info: hardening-info, objdump-info, file-info, strings, index
+Needs-Info: hardening-info, objdump-info, file-info, strings, unpacked
 Info: This script checks binaries and object files for bugs.
 
 Tag: arch-independent-package-contains-binary-or-object

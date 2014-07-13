@@ -612,7 +612,7 @@ question).
 Third, hardlinking information is lost and no attempt has been made
 to restore it.
 
-Needs-Info requirements for using I<index>: index
+Needs-Info requirements for using I<index>: unpacked
 
 =cut
 

@@ -4,7 +4,7 @@ Abbrev: men
 Type: binary
 Info: Check if a binary package conforms to policy with respect to
  <b>menu</b> and <b>doc-base</b> files.
-Needs-Info: doc-base-files, menu-files, bin-pkg-control, index
+Needs-Info: doc-base-files, menu-files, bin-pkg-control, unpacked
 
 Tag: maintainer-script-does-not-check-for-existence-of-updatemenus
 Severity: important

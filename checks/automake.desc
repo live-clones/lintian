@@ -2,7 +2,7 @@ Check-Script: automake
 Author: Gautier Minster <gautier+debian@minster.io>
 Abbrev: autom
 Type: source
-Needs-Info: index
+Needs-Info: unpacked
 Info: Checks for erroneous, missing or deprecated automake files
 
 Tag: deprecated-configure-filename

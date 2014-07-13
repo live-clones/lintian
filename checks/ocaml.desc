@@ -3,7 +3,7 @@ Author: Stephane Glondu <steph@glondu.net>
 Abbrev: ocaml
 Type: binary
 Info: This looks for common mistakes in OCaml binary packages.
-Needs-Info: ar-info, index
+Needs-Info: ar-info, unpacked
 
 Tag: ocaml-dangling-cmxa
 Severity: serious

@@ -2,7 +2,7 @@ Check-Script: md5sums
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: md5
 Type: binary
-Needs-Info: md5sums, bin-pkg-control, index
+Needs-Info: md5sums, bin-pkg-control, unpacked
 Info: This script checks if md5sum control files are valid, if they are
  provided by a binary package.
 

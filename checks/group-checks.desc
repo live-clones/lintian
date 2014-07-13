@@ -3,6 +3,7 @@ Author: Niels Thykier <niels@thykier.net>
 Abbrev: gchck
 # This is a source check, so we only run it once per group
 Type: source
+Needs-info: unpacked
 Info: This script checks for some issues that may appear in packages
  built from the same source.  This includes intra-source circular
  dependencies and intra-source priority checks.

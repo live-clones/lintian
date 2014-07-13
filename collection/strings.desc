@@ -5,5 +5,5 @@ Info: This script runs the strings(1) command over all files of a binary
 Type: binary, udeb
 Version: 2
 Interface: perl-coll
-Needs-Info: index, unpacked, file-info
+Needs-Info: unpacked, file-info
 Auto-Remove: yes
