@@ -1,18 +1,14 @@
-Last generated 2014-06-22
-Coverage (Tags): 1005/1078 (93.23%), w. legacy tests: 1065/1078 (98.79%)
-Coverage (Checks): 37/45 (82.22%), w. legacy tests: 38/45 (84.44%)
+Last generated 2014-07-13
+Coverage (Tags): 1014/1084 (93.54%), w. legacy tests: 1073/1084 (98.99%)
+Coverage (Checks): 38/45 (84.44%), w. legacy tests: 40/45 (88.89%)
 
 The following tags are not tested by the test suite:
 
 binaries binary-file-compressed-with-upx
 binaries ocaml-custom-executable
 
-cruft source-contains-prebuilt-sphinx-documentation
-
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
-
-init.d init.d-script-depends-on-all-virtual-facility
 
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-needs-dwww
@@ -36,7 +32,6 @@ files package-installs-packlist
 files script-in-usr-share-doc
 files script-with-language-extension
 files use-of-compat-symlink
-files windows-thumbnail-database-in-package
 files wrong-file-owner-uid-or-gid
 
 init.d duplicate-updaterc.d-calls-in-postrm
@@ -149,7 +144,6 @@ filenames
   package-contains-devhelp-file-without-symlink
   package-installs-packlist
   use-of-compat-symlink
-  windows-thumbnail-database-in-package
   wrong-file-owner-uid-or-gid
 
 foo++

@@ -8,6 +8,7 @@ E: description-general: description-is-debmake-template
 E: description-general: description-starts-with-package-name
 I: description-general-3: using-first-person-in-description line 5: I
 I: description-general-4: capitalization-error-in-description debian Debian
+I: description-general-syn-spelling: capitalization-error-in-description-synopsis debian Debian
 I: description-general: description-synopsis-might-not-be-phrased-properly
 W: description-general-2: description-starts-with-leading-spaces
 W: description-general-2: description-too-long
@@ -16,6 +17,7 @@ W: description-general-3: extended-description-line-too-long
 W: description-general-4: description-contains-homepage
 W: description-general-4: spelling-error-in-description mroe more
 W: description-general-syn-article: description-synopsis-starts-with-article
+W: description-general-syn-spelling: spelling-error-in-description-synopsis developement development
 W: description-general: description-contains-dh-make-perl-template
 W: description-general: description-contains-duplicated-word All all all
 W: description-general: description-contains-duplicated-word The the

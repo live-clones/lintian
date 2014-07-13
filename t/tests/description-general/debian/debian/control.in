@@ -117,3 +117,11 @@ Description: the synopsis starts with an article
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: {$source}-syn-spelling
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: test for spelling - debian developement
+ Some Lintian test package.
+ .
+ Some more stuff about this Debian test package. (dummy)

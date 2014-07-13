@@ -4,6 +4,7 @@ Version: 1.0
 Description: Tests of various description tags
 Test-For:
  capitalization-error-in-description
+ capitalization-error-in-description-synopsis
  description-contains-dh-make-perl-template
  description-contains-duplicated-word
  description-contains-homepage
@@ -21,4 +22,5 @@ Test-For:
  extended-description-line-too-long
  possible-unindented-list-in-extended-description
  spelling-error-in-description
+ spelling-error-in-description-synopsis
  using-first-person-in-description
