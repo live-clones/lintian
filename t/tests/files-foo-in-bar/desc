@@ -23,6 +23,7 @@ Test-For:
  non-multi-arch-lib-dir
  non-standard-toplevel-dir
  package-contains-xvpics-dir
+ package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot

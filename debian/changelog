@@ -7,6 +7,8 @@ lintian (2.5.25) UNRELEASED; urgency=medium
       false positive for deployJava.js (Closes: #745152).
     + [BR] Fix another false positive in GFDL detection.
     + [BR] Use whitelist for know good RFC (Closes: #753970).
+    + [BR]  Detect and warn about *.chm file
+      (MS Windows HtmlHelp Data).  (Closes: #653910).
   * checks/description.{desc,pm}:
     + [NT] Apply patch from Anders Jonsson to check spelling
       of the package synopsis.  (Closes: #747266)
@@ -17,8 +19,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
       (Closes: #539225).
     + [BR] Add a sanity check for pkg-config files.
       (Closes: #676803, #657699).
-    + [BR]  Detect and warn about *.chm file
-      (MS Windows HtmlHelp Data).  (Closes: #653910).
+    + [BR] Detect .thumbnails dir (Closes: #660797).
 
   * data/cruft/missing-dir-search-path:
     + [BR] Close false positive for mathjax, search under

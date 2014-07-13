@@ -25,6 +25,7 @@ bar usr/local/foo
 bar usr/share
 bar usr/share/doc
 bar usr/share/doc/files-foo-in-bar/.xvpics/
+bar usr/share/doc/files-foo-in-bar/.thumbnails/
 bar usr/share/doc/files-foo-in-bar/examples/examples
 bar usr/share/perl/
 bar usr/share/vim/vimcurrent/

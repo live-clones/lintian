@@ -1565,6 +1565,9 @@ sub run {
             if ($fname =~ m,/\.xvpics/?$,) {
                 tag 'package-contains-xvpics-dir', $file;
             }
+            if ($fname =~ m,/\.thumbnails/?$,) {
+                tag 'package-contains-thumbnails-dir', $file;
+            }
             if ($fname =~ m,usr/share/doc/[^/]+/examples/examples/?$,) {
                 tag 'nested-examples-directory', $file;
             }
