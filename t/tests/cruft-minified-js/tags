@@ -1,6 +1,14 @@
 E: cruft-minified-js source: source-is-missing deployJava/deployJava.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compiled.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-lite.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-min.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-pack.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-packed.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-yc.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test.min.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test_min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/json/json.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminext/json.js mean line is about NUMBER characters
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js mean line is about NUMBER characters
