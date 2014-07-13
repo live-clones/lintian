@@ -16,7 +16,7 @@ lintian (2.5.25) UNRELEASED; urgency=medium
     + [BR] Detect cross architecture pkg-config file.
       (Closes: #539225).
     + [BR] Add a sanity check for pkg-config files.
-      (Closes: #676803).
+      (Closes: #676803, #657699).
     + [BR]  Detect and warn about *.chm file
       (MS Windows HtmlHelp Data).  (Closes: #653910).
 
