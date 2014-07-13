@@ -34,6 +34,9 @@ override_dh_install:
 	touch $(DATA)/.DS_Store
 	touch $(DATA)/._stuff
 
+	# windows
+	touch $(DATA)/Thumbs.db
+
 	# Foreign READMEs
 	echo "Hallo World Mac" > $(DOC)/README.mac
 	echo "Hallo World Win" > $(DOC)/README.windows

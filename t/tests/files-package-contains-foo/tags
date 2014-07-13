@@ -13,3 +13,4 @@ W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files
 W: files-package-contains-foo: package-contains-vcs-control-file usr/share/files-package-contains-foo/sub-git1/.gitmodules
 W: files-package-contains-foo: svk-commit-file-in-package usr/share/files-package-contains-foo/svk-commit-yeehaa.tmp
 W: files-package-contains-foo: svn-commit-file-in-package usr/share/files-package-contains-foo/svn-commit-yeehaa.tmp
+W: files-package-contains-foo: windows-thumbnail-database-in-package usr/share/files-package-contains-foo/Thumbs.db

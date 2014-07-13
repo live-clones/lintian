@@ -12,3 +12,4 @@ Test-For:
  package-contains-vcs-control-file
  svk-commit-file-in-package
  svn-commit-file-in-package
+ windows-thumbnail-database-in-package
