@@ -35,7 +35,8 @@ echo 'source-contains-svn-conflict-file' > "${dir}/foo.r1352"
 echo 'configure-generated-file-in-source' > "${dir}/config.cache"
 
 printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x3c" > "${dir}/fake-win32-bin.exe"
-printf "ITSF\003\000\000\000\140\000\000\000" > "${dir}/fake-help-file.chm"
+# use old magic \001\000\000\000 part is optionnal but needed with old file
+printf "ITSF\003\000\000\000\140\000\000\000\001\000\000\000" > "${dir}/fake-help-file.chm"
 
 printf "CWS\011" > "${dir}/fakeflash.swf"
 echo '//comment' > "${dir}/fake.min.js"
