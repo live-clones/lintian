@@ -139,7 +139,7 @@ sub _load_file_package_list_mapping {
     };
 }
 
-my $JS_EXT = '(?:(?i)[-._]?(?:compiled|lite|min|pack(?:ed)?)?\.js(?:\.gz)?)$';
+my $JS_EXT = '(?:(?i)[-._]?(?:compiled|lite|min|pack(?:ed)?|yc)?\.js(?:\.gz)?)$';
 my $PHP_EXT = '(?i)\.(?:php|inc|dtd)$';
 my @FILE_PACKAGE_MAPPING = (
     _load_file_package_list_mapping(
