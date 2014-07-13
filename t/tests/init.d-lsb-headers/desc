@@ -19,3 +19,4 @@ Test-For:
  init.d-script-provides-virtual-facility
  init.d-script-should-depend-on-virtual-facility
  init.d-script-starts-in-stop-runlevel
+ init.d-script-depends-on-all-virtual-facility
