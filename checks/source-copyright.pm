@@ -92,6 +92,7 @@ sub _check_dep5_copyright {
         tag 'no-dep5-copyright';
         return;
     }
+
     # Before trying to parse the copyright as Debian control file, try to
     # determine the format URI.
     my $first_para = $contents;
@@ -105,7 +106,10 @@ sub _check_dep5_copyright {
     $uri =~ s/^([^#\s]+)#/$1/
       if defined $uri;   # strip fragment identifier
 
-    if (defined $uri) {
+    if (!defined $uri) {
+        tag 'unknown-copyright-format-uri';
+        return;
+    }
         # Note that we allow people to use "https://" even the
         # policy says it must be "http://".  It might be
         # pedantically wrong, but it is not worth arguing over On
@@ -184,10 +188,6 @@ sub _check_dep5_copyright {
                 return;
             }
         }
-    }else {
-        tag 'unknown-copyright-format-uri';
-        return;
-    }
 
     if (@dep5) {
         _parse_dep5($info,\@dep5,\@lines);
