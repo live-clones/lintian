@@ -67,8 +67,14 @@ sub run {
         }
     }
 
-    return unless defined $copyright_filename;
+    if(defined($copyright_filename)) {
+        _check_dep5_copyright($info,$copyright_filename);
+    }
+    return;
+}
 
+sub _check_dep5_copyright {
+    my ($info,$copyright_filename) = @_;
     my $contents = slurp_entire_file($copyright_filename);
     my (@dep5, @lines);
 
@@ -186,8 +192,6 @@ sub run {
     }else {
         tag 'no-dep5-copyright';
     }
-
-    return;
 }
 
 sub _parse_dep5 {
