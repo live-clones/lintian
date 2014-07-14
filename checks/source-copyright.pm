@@ -41,6 +41,7 @@ my %dep5_renamed_fields        = (
     'name'                 => 'upstream-name',
 );
 
+
 sub run {
     my (undef, undef, $info) = @_;
     my $copyright_filename = $info->debfiles('copyright');
@@ -182,7 +183,20 @@ sub run {
     }
 
     if (@dep5) {
-        my $first_para = shift @dep5;
+        _parse_dep5($info,\@dep5,\@lines);
+    }else {
+        tag 'no-dep5-copyright';
+    }
+
+    return;
+}
+
+
+sub _parse_dep5 {
+    my ($info,$dep5ref,$linesref) = @_;
+    my @dep5 = @$dep5ref;
+    my @lines = @$linesref;
+    my $first_para = shift @dep5;
         my %standalone_licenses;
         my %required_standalone_licenses;
         for my $field (keys %{$first_para}) {
@@ -274,11 +288,6 @@ sub run {
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
         }
-    }else {
-        tag 'no-dep5-copyright';
-    }
-
-    return;
 }
 
 sub split_licenses {
