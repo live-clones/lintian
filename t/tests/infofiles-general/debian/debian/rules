@@ -8,7 +8,7 @@ tmp = $(CURDIR)/debian/$(shell dh_listpackages)
 override_dh_auto_install:
 	install -d $(tmp)/usr/share/info
 	install -m 644 foo.info $(tmp)/usr/share/info/foo.info
-	gzip -9 $(tmp)/usr/share/info/foo.info
+	gzip -n -9 $(tmp)/usr/share/info/foo.info
 	install -m 644 foo.info $(tmp)/usr/share/info/foo
 	install -m 644 foo.info $(tmp)/usr/share/info/foo-nogz.gz
 	install -m 644 foo.info $(tmp)/usr/share/info/foo-nomax
