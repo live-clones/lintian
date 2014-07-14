@@ -158,16 +158,16 @@ sub run {
                     $_ .= $cont;
                 }
                 next if /^\s*\#/;
-                if (m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear\s/) {
+                if (m/^\t\s*dh\s.*--buildsystem(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/) {
                     $has_buildsystem_phppear = 1;
                 }
-                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear\s/) {
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phppear(?:,\S+)*\s/) {
                     $has_addon_phppear = 1;
                 }
-                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer\s/) {
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/) {
                     $has_addon_phpcomposer = 1;
                 }
-                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php5\s/) {
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php5(?:,\S+)*\s/) {
                     $has_addon_php5 = 1;
                 }
             }
