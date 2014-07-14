@@ -1,14 +1,19 @@
-This is the Debian package of Lintian, the Debian package checker.
-The latest version of Lintian can always be found at:
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: lintian
+Upstream-Contact: <debian-lint-maint@lists.debian.org>
+Source: http://lintian.debian.org/
+Comment:
+ This is the Debian package of Lintian, the Debian package checker.
+ The latest version of Lintian can always be found at:
 	http://lintian.debian.org/
-
-Lintian was designed and written by Christian Schwarz and Richard Braakman.
-The package was previously maintained by Darren Benham,
-Sean 'Shaleh' Perry and Josip Rodin.
-
-It is now maintained by a group of people, with changes noted by initials
-in the changelog.  Key to frequent committers:
-
+ .
+ Lintian was designed and written by Christian Schwarz and Richard Braakman.
+ The package was previously maintained by Darren Benham,
+ Sean 'Shaleh' Perry and Josip Rodin.
+ .
+ It is now maintained by a group of people, with changes noted by initials
+ in the changelog.  Key to frequent committers:
+ .
  JvW == Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
  FL  == Frank Lichtenheld <djpig@debian.org>
  HE  == Marc 'HE' Brockschmidt <he@debian.org>
@@ -22,48 +27,49 @@ in the changelog.  Key to frequent committers:
  NT  == Niels Thykier <niels@thykier.net>
  JW  == Jakub Wilk <jwilk@debian.org>
  BR  == Bastien ROUCARIÈS <roucaries.bastien@gmail.com>
-
-Contact address is <lintian-maint@debian.org>.
-
-Lintian is maintained in git.  The current development version may
-be checked out from:
+ .
+ Lintian is maintained in git.  The current development version may
+ be checked out from:
 	git://git.debian.org/git/lintian/lintian.git
 
-Copyright (C) 1998 Christian Schwarz and Richard Braakman
-Portions Copyright (C) 1998-1999 Joey Hess
-Portions Copyright (C) 1999 Darren Benham
-Portions Copyright (C) 2000 Sean 'Shaleh' Perry
-Portions Copyright (C) 2001-2008 Colin Watson
-Portions Copyright (C) 2001-2003 Josip Rodin
-Portions Copyright (C) 2002-2004 Denis Barbier
-Portions Copyright (C) 2004-2008 Marc Brockschmidt
-Portions Copyright (C) 2004-2008 Frank Lichtenheld
-Portions Copyright (C) 2004-2006 Jeroen van Wolffelaar
-Portions Copyright (C) 2005 René van Bevern
-Portions Copyright (C) 2006 Adeodato Simó
-Portions Copyright (C) 2007-2010 Russ Allbery
-Portions Copyright (C) 2008 Patrick Schoenfeld
-Portions Copyright (C) 2008 Niko Tyni
-Portions Copyright (C) 2008-2010 Raphael Geissert
-Portions Copyright (C) 2008-2010 Adam D. Barratt
-Portions Copyright (C) 2009 Stéphane Glondu
-Portions Copyright (C) 2010 Raphaël Hertzog
-Portions Copyright (C) 2010-2011 Niels Thykier
-Portions Copyright (C) 2011 Gerfried Fuchs
-Portions Copyright (C) 2011 Jakub Wilk
-
-This program is free software; you may redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This is distributed in the hope that it will be useful, but without
-any warranty; without even the implied warranty of merchantability or
-fitness for a particular purpose. See the GNU General Public License
-for more details.
-
-A copy of the GNU General Public License version 2 is available as
-/usr/share/common-licenses/GPL-2 in the Debian GNU/Linux distribution
-or at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
-You can also obtain it by writing to the Free Software Foundation, Inc.,
-51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+Files: *
+Copyright: 1998, Christian Schwarz
+           1998, Richard Braakman
+           1998-1999, Joey Hess
+           1999, Darren Benham
+           2000, Sean 'Shaleh' Perry
+           2001-2008, Colin Watson
+           2001-2003, Josip Rodin
+	   2002-2004, Denis Barbier
+	   2004-2008, Marc Brockschmidt
+	   2004-2008, Frank Lichtenheld
+	   2004-2006, Jeroen van Wolffelaar
+	   2005, René van Bevern
+	   2006, Adeodato Simó
+	   2007-2010, Russ Allbery
+	   2008, Patrick Schoenfeld
+	   2008, Niko Tyni
+	   2008-2010, Raphael Geissert
+	   2008-2010, Adam D. Barratt
+	   2009, Stéphane Glondu
+	   2010, Raphaël Hertzog
+	   2010-2014, Niels Thykier
+	   2011, Gerfried Fuchs
+	   2011, Jakub Wilk
+	   2013-2014, Bastien ROUCARIÈS
+License: GPL-2+
+ This program is free software; you may redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2, or (at your option)
+ any later version.
+ .
+ This is distributed in the hope that it will be useful, but without
+ any warranty; without even the implied warranty of merchantability or
+ fitness for a particular purpose. See the GNU General Public License
+ for more details.
+ .
+ A copy of the GNU General Public License version 2 is available as
+ /usr/share/common-licenses/GPL-2 in the Debian GNU/Linux distribution
+ or at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html.
+ You can also obtain it by writing to the Free Software Foundation, Inc.,
+ 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
