@@ -1397,23 +1397,28 @@ sub run {
                 my $finfo = $info->file_info($file) || '';
                 if ($finfo !~ m/gzip compressed/) {
                     tag 'gz-file-not-gzip', $file;
-                } elsif ($isma_same && $fname !~ m/\Q$arch\E/o) {
+                } else {
                     my $path = $info->unpacked($file);
                     my $buff;
+                    my $mtime;
                     open(my $fd, '<', $path);
                     # We need to read at least 8 bytes
                     if (sysread($fd, $buff, 1024) >= 8) {
                         # Extract the flags and the mtime.
                         #  NN NN  NN NN, NN NN NN NN  - bytes read
                         #  __ __  __ __,    $mtime    - variables
-                        my (undef, $mtime) = unpack('NN', $buff);
-                        if ($mtime){
-                            tag 'gzip-file-is-not-multi-arch-same-safe',$file;
-                        }
+                        (undef, $mtime) = unpack('NN', $buff);
                     } else {
                         fail "reading $file: $!";
                     }
                     close($fd);
+                    if ($mtime != 0) {
+                        if ($isma_same && $file !~ m/\Q$arch\E/o) {
+                            tag 'gzip-file-is-not-multi-arch-same-safe', $file;
+                        } else {
+                            tag 'package-contains-timestamped-gzip', $file;
+                        }
+                    }
                 }
             }
 
