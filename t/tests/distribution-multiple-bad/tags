@@ -1,3 +1,5 @@
+E: distribution-multiple-bad changes: backports-changes-missing
+E: distribution-multiple-bad changes: backports-upload-has-incorrect-version-number 1.0
 E: distribution-multiple-bad changes: bad-distribution-in-changes-file bar
 E: distribution-multiple-bad changes: bad-distribution-in-changes-file foo
 E: distribution-multiple-bad changes: bad-distribution-in-changes-file foo-backportss

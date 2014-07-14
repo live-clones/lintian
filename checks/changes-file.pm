@@ -71,13 +71,13 @@ sub run {
                             my $distnumber = $1;
                             my $bpoversion = $2;
                             if (
-                                  ($dist eq "squeeze" && $distnumber ne "60")
-                                ||($dist eq "wheezy" && $distnumber ne "70")
+                                  ($dist eq 'squeeze' && $distnumber ne '60')
+                                ||($dist eq 'wheezy' && $distnumber ne '70')
                                 # TODO version number for jessie?
-                                ||($dist eq "jessie" && $distnumber !~ /^8\d*/)
+                                ||($dist eq 'jessie' && $distnumber !~ /^8\d*/)
                               ) {
                                 tag
-                                  'backports-upload-has-incorrect-version-number',
+'backports-upload-has-incorrect-version-number',
                                   $info->field('version'),
                                   $distribution;
                             }
@@ -100,7 +100,7 @@ sub run {
                       # info for more than 1 entry, so we just copy part of the
                       # parse code here
                                 if ($change_line
-                                    =~ m/^\s*(?<Source>\w[-+0-9a-z.]*) \((?<Version>[^\(\) \t]+)\)(?<Distribution>(?:\s+[-+0-9a-z.]+)+)\;\s*(?<kv>.*)$/i
+                                    =~ m/^\s*(?:\w[-+0-9a-z.]*) \((?:[^\(\) \t]+)\)(?:(?:\s+[-+0-9a-z.]+)+)\;\s*(?:.*)$/i
                                   ) {
                                     $changes_versions++;
                                 }
