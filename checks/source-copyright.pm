@@ -79,7 +79,7 @@ sub _check_dep5_copyright {
     my (@dep5, @lines);
 
     if (
-        $contents =~ m{
+        $contents !~ m{
                (^ | \n)
                (?i: format(:|[-\s]spec) )
                (?: . | \n\s+ )*
@@ -89,6 +89,9 @@ sub _check_dep5_copyright {
                  | VERSIONED_FORMAT_URL
                ) }x
       ){
+        tag 'no-dep5-copyright';
+        return;
+       }
         # Before trying to parse the copyright as Debian control file, try to
         # determine the format URI.
         my $first_para = $contents;
@@ -185,11 +188,10 @@ sub _check_dep5_copyright {
             tag 'unknown-copyright-format-uri';
             return;
         }
-    }
 
     if (@dep5) {
         _parse_dep5($info,\@dep5,\@lines);
-    }else {
+    } else {
         tag 'no-dep5-copyright';
     }
 }
