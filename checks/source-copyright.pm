@@ -91,103 +91,103 @@ sub _check_dep5_copyright {
       ){
         tag 'no-dep5-copyright';
         return;
-       }
-        # Before trying to parse the copyright as Debian control file, try to
-        # determine the format URI.
-        my $first_para = $contents;
-        $first_para =~ s,^#.*,,mg;
-        $first_para =~ s,[ \t]+$,,mg;
-        $first_para =~ s,^\n+,,g;
-        $first_para =~ s,\n\n.*,\n,s;    #;; hi emacs
-        $first_para =~ s,\n?[ \t]+, ,g;
-        $first_para =~ m,^Format(?:-Specification)?:\s*(.*),mi;
-        my $uri = $1;
-        $uri =~ s/^([^#\s]+)#/$1/
-          if defined $uri;   # strip fragment identifier
+    }
+    # Before trying to parse the copyright as Debian control file, try to
+    # determine the format URI.
+    my $first_para = $contents;
+    $first_para =~ s,^#.*,,mg;
+    $first_para =~ s,[ \t]+$,,mg;
+    $first_para =~ s,^\n+,,g;
+    $first_para =~ s,\n\n.*,\n,s;    #;; hi emacs
+    $first_para =~ s,\n?[ \t]+, ,g;
+    $first_para =~ m,^Format(?:-Specification)?:\s*(.*),mi;
+    my $uri = $1;
+    $uri =~ s/^([^#\s]+)#/$1/
+      if defined $uri;   # strip fragment identifier
 
-        if (defined $uri) {
-            # Note that we allow people to use "https://" even the
-            # policy says it must be "http://".  It might be
-            # pedantically wrong, but it is not worth arguing over On
-            # the plus side, it gives security to people blindly
-            # copy-wasting the URLs using "https://".
-            my $original_uri = $uri;
-            my $version;
-            if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
-                tag 'boilerplate-copyright-format-uri', $uri;
-                return;
-            }
+    if (defined $uri) {
+        # Note that we allow people to use "https://" even the
+        # policy says it must be "http://".  It might be
+        # pedantically wrong, but it is not worth arguing over On
+        # the plus side, it gives security to people blindly
+        # copy-wasting the URLs using "https://".
+        my $original_uri = $uri;
+        my $version;
+        if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
+            tag 'boilerplate-copyright-format-uri', $uri;
+            return;
+        }
 
-            if (
-                $uri =~ s{ https?://wiki\.debian\.org/
+        if (
+            $uri =~ s{ https?://wiki\.debian\.org/
                                 Proposals/CopyrightFormat\b}{}xsm
-              ){
-                $version = '0~wiki';
-                $uri =~ m,^\?action=recall&rev=(\d+)$,
-                  and $version = "$version~$1";
-            }elsif ($uri =~ m,^https?://dep\.debian\.net/deps/dep5/?$,) {
-                $version = '0+svn';
-            }elsif (
-                $uri =~ s{\A https?://svn\.debian\.org/
+          ){
+            $version = '0~wiki';
+            $uri =~ m,^\?action=recall&rev=(\d+)$,
+              and $version = "$version~$1";
+        }elsif ($uri =~ m,^https?://dep\.debian\.net/deps/dep5/?$,) {
+            $version = '0+svn';
+        }elsif (
+            $uri =~ s{\A https?://svn\.debian\.org/
                                   wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
-              ){
-                $version = '0+svn';
-                $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
-                  and $version = "$version~$1";
-            }elsif (
-                $uri =~ s{ \A https?://(?:svn|anonscm)\.debian\.org/
+          ){
+            $version = '0+svn';
+            $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
+              and $version = "$version~$1";
+        }elsif (
+            $uri =~ s{ \A https?://(?:svn|anonscm)\.debian\.org/
                                     viewvc/dep/web/deps/dep5\.mdwn\b}{}xsm
-              ){
-                $version = '0+svn';
-                $uri =~ m{\A \? (?:\S+[&;])?
+          ){
+            $version = '0+svn';
+            $uri =~ m{\A \? (?:\S+[&;])?
                              (?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?
                           \Z}xsm
-                  and $version = "$version~$1";
-            }elsif (
-                $uri =~ m{ \A
+              and $version = "$version~$1";
+        }elsif (
+            $uri =~ m{ \A
                        https?://www\.debian\.org/doc/
                        (?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?
                    \Z}xsm
-              ){
-                $version = $1;
-            }else {
-                tag 'unknown-copyright-format-uri', $original_uri;
-                return;
-            }
-
-            if (defined $version) {
-                if ($version =~ m,wiki,) {
-                    tag 'wiki-copyright-format-uri', $original_uri;
-                }elsif ($version =~ m,svn$,) {
-                    tag 'unversioned-copyright-format-uri', $original_uri;
-                }elsif (versions_compare $version,
-                    '<<', $dep5_last_normative_change){
-                    tag 'out-of-date-copyright-format-uri', $original_uri;
-                }
-                if (versions_compare $version, '>=', $dep5_last_overhaul) {
-
-                    # We are reasonably certain that we're dealing
-                    # with an up-to-date DEP-5 format. Let's try to do
-                    # more strict checks.
-                    eval {
-                        open(my $fd, '<', \$contents);
-                        @dep5 = parse_dpkg_control($fd, 0, \@lines);
-                        close($fd);
-                    };
-                    if ($@) {
-                        chomp $@;
-                        $@ =~ s/^syntax error at //;
-                        tag 'syntax-error-in-dep5-copyright', $@;
-                        return;
-                    }
-                }else {
-                    return;
-                }
-            }
+          ){
+            $version = $1;
         }else {
-            tag 'unknown-copyright-format-uri';
+            tag 'unknown-copyright-format-uri', $original_uri;
             return;
         }
+
+        if (defined $version) {
+            if ($version =~ m,wiki,) {
+                tag 'wiki-copyright-format-uri', $original_uri;
+            }elsif ($version =~ m,svn$,) {
+                tag 'unversioned-copyright-format-uri', $original_uri;
+            }elsif (versions_compare $version,
+                '<<', $dep5_last_normative_change){
+                tag 'out-of-date-copyright-format-uri', $original_uri;
+            }
+            if (versions_compare $version, '>=', $dep5_last_overhaul) {
+
+                # We are reasonably certain that we're dealing
+                # with an up-to-date DEP-5 format. Let's try to do
+                # more strict checks.
+                eval {
+                    open(my $fd, '<', \$contents);
+                    @dep5 = parse_dpkg_control($fd, 0, \@lines);
+                    close($fd);
+                };
+                if ($@) {
+                    chomp $@;
+                    $@ =~ s/^syntax error at //;
+                    tag 'syntax-error-in-dep5-copyright', $@;
+                    return;
+                }
+            }else {
+                return;
+            }
+        }
+    }else {
+        tag 'unknown-copyright-format-uri';
+        return;
+    }
 
     if (@dep5) {
         _parse_dep5($info,\@dep5,\@lines);
