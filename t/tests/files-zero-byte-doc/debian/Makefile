@@ -22,8 +22,8 @@ install:
 	touch $(ROOT)/htmlfoo.map
 	mkdir -p $(ROOT)/manual
 	touch $(ROOT)/manual/foo.map
-	gzip -9 $(ROOT)/manual/foo.map
+	gzip -n -9 $(ROOT)/manual/foo.map
 	touch $(ROOT)/some-really-long-file-name-to-make-the-gzip-file-larger
-	gzip -9 $(ROOT)/some-really-long-file-name-to-make-the-gzip-file-larger
+	gzip -n -9 $(ROOT)/some-really-long-file-name-to-make-the-gzip-file-larger
 
 .PHONY: clean distclean realclean install check test

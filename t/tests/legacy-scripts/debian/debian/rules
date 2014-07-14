@@ -87,7 +87,7 @@ binary-indep:
 
 	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	install -m 644 debian/changelog $(tmp)/usr/share/doc/scripts/changelog.Debian
-	gzip -9 $(tmp)/usr/share/doc/scripts/changelog.Debian
+	gzip -n -9 $(tmp)/usr/share/doc/scripts/changelog.Debian
 	install -m 644 debian/copyright $(tmp)/usr/share/doc/scripts/copyright
 
 	install -m 644 debian/scripts.conffiles $(tmp)/DEBIAN/conffiles

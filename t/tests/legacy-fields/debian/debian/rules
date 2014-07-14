@@ -14,7 +14,7 @@ binary-indep:
 	install -d $(tmp)/usr/share/doc/fields
 	install -m 644 debian/changelog \
 	  $(tmp)/usr/share/doc/fields/changelog
-	gzip -9 $(tmp)/usr/share/doc/fields/changelog
+	gzip -n -9 $(tmp)/usr/share/doc/fields/changelog
 	dh_md5sums -pfields -P$(tmp)
 	dpkg-gencontrol -pfields -P$(tmp)
 	dpkg --build $(tmp) ..

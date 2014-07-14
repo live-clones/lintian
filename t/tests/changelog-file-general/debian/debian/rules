@@ -7,4 +7,4 @@ pkg = $(shell dh_listpackages)
 override_dh_installchangelogs:
 	install -c -m 644 debian/changelog \
 	    debian/$(pkg)/usr/share/doc/$(pkg)/changelog.Debian
-	gzip -1 debian/$(pkg)/usr/share/doc/$(pkg)/changelog.Debian
+	gzip -1 -n debian/$(pkg)/usr/share/doc/$(pkg)/changelog.Debian

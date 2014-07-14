@@ -49,10 +49,10 @@ binary-arch: build
 	touch '$(tmp)/usr/share/doc-base/space '
 	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/binary
 	install -m 644 debian/NEWS.Debian $(tmp)/usr/share/doc/binary
-	gzip -9 $(tmp)/usr/share/doc/binary/NEWS.Debian
+	gzip -n -9 $(tmp)/usr/share/doc/binary/NEWS.Debian
 	install -m 644 debian/copyright $(tmp)/usr/share/doc/binary
 	install -m 644 debian/changelog $(tmp)/usr/share/doc/binary
-	#gzip -9 $(tmp)/usr/share/doc/binary/changelog
+	#gzip -n -9 $(tmp)/usr/share/doc/binary/changelog
 	install -d $(tmp)/DEBIAN
 	install -m 755 debian/postinst $(tmp)/DEBIAN
 	install -m 644 debian/conffiles $(tmp)/DEBIAN

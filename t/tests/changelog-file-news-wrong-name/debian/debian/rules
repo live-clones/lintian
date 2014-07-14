@@ -8,4 +8,4 @@ DOC=debian/$(PKG)/usr/share/doc/$(PKG)
 
 override_dh_installchangelogs:
 	dh_installchangelogs
-	gzip -9c < debian/package-news > $(DOC)/news.debian.gz
+	gzip -n -9c < debian/package-news > $(DOC)/news.debian.gz

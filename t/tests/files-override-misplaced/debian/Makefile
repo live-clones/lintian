@@ -9,7 +9,7 @@ install:
 	    > $(DESTDIR)/usr/share/doc/files-override-misplaced/override.lintian
 	echo 'files-override-misplaced: some-override' \
 	    > $(DESTDIR)/usr/share/doc/files-override-misplaced/override.Lintian
-	gzip -9 $(DESTDIR)/usr/share/doc/files-override-misplaced/override.Lintian
+	gzip -n -9 $(DESTDIR)/usr/share/doc/files-override-misplaced/override.Lintian
 	mkdir -p $(DESTDIR)/usr/share/lintian/overrides/files-override-misplaced
 	touch $(DESTDIR)/usr/share/lintian/overrides/files-override-misplaced/some-override
 

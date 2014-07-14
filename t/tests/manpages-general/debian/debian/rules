@@ -20,13 +20,13 @@ override_dh_auto_install:
 	    > $(tmp)/usr/bin/binary-without-english-manpage
 	chmod 755 $(tmp)/usr/bin/binary-without-english-manpage
 
-	gzip -c9 < test.1p > $(tmp)/usr/share/man/man1/test.1p.gz
-	gzip -c9 < test.3p > $(tmp)/usr/share/man/man3/test.3p.gz
-	gzip -c9 < true.1 > $(tmp)/usr/share/man/man1/true.1.gz
-	gzip -c9 < program.1 > $(tmp)/usr/share/man/man1/program.1.gz
+	gzip -n -c9 < test.1p > $(tmp)/usr/share/man/man1/test.1p.gz
+	gzip -n -c9 < test.3p > $(tmp)/usr/share/man/man3/test.3p.gz
+	gzip -n -c9 < true.1 > $(tmp)/usr/share/man/man1/true.1.gz
+	gzip -n -c9 < program.1 > $(tmp)/usr/share/man/man1/program.1.gz
 
 	ln -s ../X11R6/bin/rstartd $(tmp)/usr/bin/rstartd
-	gzip -c9 < program.1 > $(tmp)/usr/X11R6/man/man1/rstartd.1x.gz
+	gzip -n -c9 < program.1 > $(tmp)/usr/X11R6/man/man1/rstartd.1x.gz
 
 	ln -s ../man7/undocumented.7.gz \
 	     $(tmp)/usr/share/man/man1/bin-binary.1.gz
@@ -41,29 +41,29 @@ override_dh_auto_install:
 	    && ln usr-sbin-binary.1.gz usr-bin-binary-alt.1.gz
 	touch $(tmp)/usr/share/man/man6/usr-games-binary.6
 	chmod 644 $(tmp)/usr/share/man/man6/usr-games-binary.6
-	gzip -1 $(tmp)/usr/share/man/man6/usr-games-binary.6
+	gzip -n -1 $(tmp)/usr/share/man/man6/usr-games-binary.6
 	touch $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
 
-	pod2man --section 6 simple.pod | gzip -c --best > \
+	pod2man --section 6 simple.pod | gzip -n -c --best > \
 		$(tmp)/usr/share/man/man6/simple.pod.gz
 
-	pod2man --section 6 simple.pod | gzip -c --best > \
+	pod2man --section 6 simple.pod | gzip -n -c --best > \
 		$(tmp)/usr/share/man/man6/_build_buildd-openchangex_1.0-3-i386-mbKpOA_openchange-1.0_simple.6.gz
 
-	gzip -c9 < test.1p.de \
+	gzip -n -c9 < test.1p.de \
 	    > $(tmp)/usr/share/man/man1/test-latin1-chars.1p.gz
-	gzip -c9 < test.1p.de \
+	gzip -n -c9 < test.1p.de \
 	    > $(tmp)/usr/share/man/de/man1/test-latin1-chars.1p.gz
 	install -d $(tmp)/usr/share/man/de_DE/man1
-	gzip -c9 < test.1p.utf-8 \
+	gzip -n -c9 < test.1p.utf-8 \
 	    > $(tmp)/usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
-	gzip -c9 < bad-so.1 > $(tmp)/usr/share/man/man1/bad-so.1.gz
+	gzip -n -c9 < bad-so.1 > $(tmp)/usr/share/man/man1/bad-so.1.gz
 
-	gzip -c9 <include.3 >$(tmp)/usr/share/man/man3/include.3.gz
-	gzip -c9 <included.3 >$(tmp)/usr/share/man/man3/included.3.gz
+	gzip -n -c9 <include.3 >$(tmp)/usr/share/man/man3/include.3.gz
+	gzip -n -c9 <included.3 >$(tmp)/usr/share/man/man3/included.3.gz
 
 override_dh_fixperms:
 override_dh_installman:
 
 override_dh_compress:
-	gzip -9 $(tmp)/usr/share/doc/manpages-general/changelog
+	gzip -n -9 $(tmp)/usr/share/doc/manpages-general/changelog

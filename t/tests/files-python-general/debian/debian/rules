@@ -15,4 +15,4 @@ override_dh_compress:
 	dh_compress
 	# Manually compress it, since debhelper will fix #608907
 	# in the "near" future.
-	[ -f "$(DOCS)/objects.inv.gz" ] || gzip --best "$(DOCS)/objects.inv"
+	[ -f "$(DOCS)/objects.inv.gz" ] || gzip -n --best "$(DOCS)/objects.inv"

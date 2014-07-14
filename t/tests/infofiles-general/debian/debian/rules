@@ -12,16 +12,16 @@ override_dh_auto_install:
 	install -m 644 foo.info $(tmp)/usr/share/info/foo
 	install -m 644 foo.info $(tmp)/usr/share/info/foo-nogz.gz
 	install -m 644 foo.info $(tmp)/usr/share/info/foo-nomax
-	gzip -1 $(tmp)/usr/share/info/foo-nomax
+	gzip -n -1 $(tmp)/usr/share/info/foo-nomax
 	install -m 644 bar.info $(tmp)/usr/share/info/bar.info
-	gzip -9 $(tmp)/usr/share/info/bar.info
+	gzip -n -9 $(tmp)/usr/share/info/bar.info
 	install -m 644 bar.info $(tmp)/usr/share/info/bar.newinfo
-	gzip -9 $(tmp)/usr/share/info/bar.newinfo
+	gzip -n -9 $(tmp)/usr/share/info/bar.newinfo
 
 	install -m 644 w-image.info $(tmp)/usr/share/info/w-image.info
-	gzip -9 $(tmp)/usr/share/info/w-image.info
+	gzip -n -9 $(tmp)/usr/share/info/w-image.info
 
 override_dh_installinfo:
 
 override_dh_compress:
-	gzip -9 $(tmp)/usr/share/doc/infofiles-general/changelog
+	gzip -n -9 $(tmp)/usr/share/doc/infofiles-general/changelog

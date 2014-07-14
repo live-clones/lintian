@@ -1,2 +1,3 @@
+I: files-gzip: package-contains-timestamped-gzip etc/good.gz
 W: files-gzip: gz-file-not-gzip etc/bad.gz
 W: files-gzip: gz-file-not-gzip usr/share/doc/files-gzip/changelog.gz
