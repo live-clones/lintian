@@ -143,7 +143,7 @@ sub _check_dep5_copyright {
 
     if (
         $contents !~ m{
-               (^ | \n)
+               (?:^ | \n)
                (?i: format(:|[-\s]spec) )
                (?: . | \n\s+ )*
                (?: /dep[5s]?\b | \bDEP-?5\b
