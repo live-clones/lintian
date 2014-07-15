@@ -115,6 +115,8 @@ Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph in the machine readable copyright file is missing a field
  that is required by the specification.
+ .
+ This warning could also be raised by an empty required field.
 
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: normal

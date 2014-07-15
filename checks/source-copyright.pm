@@ -254,18 +254,23 @@ sub _parse_dep5 {
         }
 
         if (defined $license and not defined $files) {
-
             # Standalone license paragraph
             if (not $license =~ m/\n/) {
                 tag 'missing-license-text-in-dep5-copyright', lc $license,
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            } elsif($license =~ m/\A\s*\n/xms) {
+                tag 'missing-field-in-dep5-copyright', 'license',
+                  "(empty line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
             ($license, undef) = split /\n/, $license, 2;
             for (split_licenses($license)) {
                 $standalone_licenses{$_} = $i;
             }
         }elsif (defined $files) {
-
+            if ($files =~ m/\A\s*\Z/mxs) {
+                tag 'missing-field-in-dep5-copyright', 'files',
+                  "(empty paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            }
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
                 @commas_in_files = ($i, $files_fname);
@@ -281,7 +286,11 @@ sub _parse_dep5 {
             if (not defined $copyright) {
                 tag 'missing-field-in-dep5-copyright', 'copyright',
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            } elsif ($copyright =~ m/\A\s*\Z/mxs) {
+                tag 'missing-field-in-dep5-copyright', 'copyright',
+                  "(empty paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
+
         }else {
             tag 'unknown-paragraph-in-dep5-copyright', 'paragraph at line',
               $lines[$i]{'START-OF-PARAGRAPH'};

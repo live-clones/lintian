@@ -17,7 +17,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       missing-pkg-php-tools-addon phpcomposer, thanks to
       David Prévot (Closes: #754738).
   * checks/source-copyright.{desc,pm}:
-    + [BR] Pedantic warn about non dep-5 debian/copyright.
+    + [BR] Add a pedantic warning about non dep-5 debian/copyright.
+    + [BR] Detect empty required fields.  (Closes: #748452).
 
   * data/cruft/warn-file-type:
     + [BR] add debug source suffix for detecting javascript
