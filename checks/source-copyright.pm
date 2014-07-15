@@ -207,6 +207,8 @@ sub _check_dep5_copyright {
     return if (!@dep5);
 
     _parse_dep5($info,\@dep5,\@lines);
+
+    return;
 }
 
 sub _parse_dep5 {
