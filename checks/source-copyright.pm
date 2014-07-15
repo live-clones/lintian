@@ -73,6 +73,69 @@ sub run {
     return;
 }
 
+# Note that we allow people to use "https://" even the
+# policy says it must be "http://".  It might be
+# pedantically wrong, but it is not worth arguing over On
+# the plus side, it gives security to people blindly
+# copy-wasting the URLs using "https://".
+# return undef is not dep5 and '' if unknown version
+sub _find_dep5_version {
+    my ($original_uri) = @_;
+    my $uri = $original_uri;
+    my $version;
+
+    if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
+        tag 'boilerplate-copyright-format-uri', $uri;
+        return;
+    }
+
+    if (
+        $uri =~ s{ https?://wiki\.debian\.org/
+                                Proposals/CopyrightFormat\b}{}xsm
+      ){
+        $version = '0~wiki';
+        $uri =~ m,^\?action=recall&rev=(\d+)$,
+          and $version = "$version~$1";
+        return $version;
+    }
+    if ($uri =~ m,^https?://dep\.debian\.net/deps/dep5/?$,) {
+        $version = '0+svn';
+        return $version;
+    }
+    if (
+        $uri =~ s{\A https?://svn\.debian\.org/
+                                  wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
+      ){
+        $version = '0+svn';
+        $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
+          and $version = "$version~$1";
+        return $version;
+    }
+    if (
+        $uri =~ s{ \A https?://(?:svn|anonscm)\.debian\.org/
+                                    viewvc/dep/web/deps/dep5\.mdwn\b}{}xsm
+      ){
+        $version = '0+svn';
+        $uri =~ m{\A \? (?:\S+[&;])?
+                             (?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?
+                          \Z}xsm
+          and $version = "$version~$1";
+        return $version;
+    }
+    if (
+        $uri =~ m{ \A
+                       https?://www\.debian\.org/doc/
+                       (?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?
+                   \Z}xsm
+      ){
+        $version = $1;
+        return $version;
+    }
+
+    tag 'unknown-copyright-format-uri', $original_uri;
+    return;
+}
+
 sub _check_dep5_copyright {
     my ($info,$copyright_filename) = @_;
     my $contents = slurp_entire_file($copyright_filename);
@@ -110,89 +173,40 @@ sub _check_dep5_copyright {
         tag 'unknown-copyright-format-uri';
         return;
     }
-    # Note that we allow people to use "https://" even the
-    # policy says it must be "http://".  It might be
-    # pedantically wrong, but it is not worth arguing over On
-    # the plus side, it gives security to people blindly
-    # copy-wasting the URLs using "https://".
-    my $original_uri = $uri;
-    my $version;
-    if ($uri =~ m,\b(?:rev=REVISION|VERSIONED_FORMAT_URL)\b,) {
-        tag 'boilerplate-copyright-format-uri', $uri;
+
+    my $version =  _find_dep5_version($uri);
+
+    return if !defined($version);
+    if ($version =~ m,wiki,) {
+        tag 'wiki-copyright-format-uri', $uri;
+    }elsif ($version =~ m,svn$,) {
+        tag 'unversioned-copyright-format-uri', $uri;
+    }elsif (versions_compare $version,'<<', $dep5_last_normative_change){
+        tag 'out-of-date-copyright-format-uri', $uri;
+    }
+
+    if (versions_compare $version, '<<', $dep5_last_overhaul) {
         return;
     }
 
-    if (
-        $uri =~ s{ https?://wiki\.debian\.org/
-                                Proposals/CopyrightFormat\b}{}xsm
-      ){
-        $version = '0~wiki';
-        $uri =~ m,^\?action=recall&rev=(\d+)$,
-          and $version = "$version~$1";
-    }elsif ($uri =~ m,^https?://dep\.debian\.net/deps/dep5/?$,) {
-        $version = '0+svn';
-    }elsif (
-        $uri =~ s{\A https?://svn\.debian\.org/
-                                  wsvn/dep/web/deps/dep5\.mdwn\b}{}xsm
-      ){
-        $version = '0+svn';
-        $uri =~ m,^\?(?:\S+[&;])?rev=(\d+)(?:[&;]\S+)?$,
-          and $version = "$version~$1";
-    }elsif (
-        $uri =~ s{ \A https?://(?:svn|anonscm)\.debian\.org/
-                                    viewvc/dep/web/deps/dep5\.mdwn\b}{}xsm
-      ){
-        $version = '0+svn';
-        $uri =~ m{\A \? (?:\S+[&;])?
-                             (?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?
-                          \Z}xsm
-          and $version = "$version~$1";
-    }elsif (
-        $uri =~ m{ \A
-                       https?://www\.debian\.org/doc/
-                       (?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?
-                   \Z}xsm
-      ){
-        $version = $1;
-    }else {
-        tag 'unknown-copyright-format-uri', $original_uri;
+    # We are reasonably certain that we're dealing
+    # with an up-to-date DEP-5 format. Let's try to do
+    # more strict checks.
+    eval {
+        open(my $fd, '<', \$contents);
+        @dep5 = parse_dpkg_control($fd, 0, \@lines);
+        close($fd);
+    };
+    if ($@) {
+        chomp $@;
+        $@ =~ s/^syntax error at //;
+        tag 'syntax-error-in-dep5-copyright', $@;
         return;
     }
 
-    if (defined $version) {
-        if ($version =~ m,wiki,) {
-            tag 'wiki-copyright-format-uri', $original_uri;
-        }elsif ($version =~ m,svn$,) {
-            tag 'unversioned-copyright-format-uri', $original_uri;
-        }elsif (versions_compare $version,'<<', $dep5_last_normative_change){
-            tag 'out-of-date-copyright-format-uri', $original_uri;
-        }
-        if (versions_compare $version, '>=', $dep5_last_overhaul) {
+    return if (!@dep5);
 
-            # We are reasonably certain that we're dealing
-            # with an up-to-date DEP-5 format. Let's try to do
-            # more strict checks.
-            eval {
-                open(my $fd, '<', \$contents);
-                @dep5 = parse_dpkg_control($fd, 0, \@lines);
-                close($fd);
-            };
-            if ($@) {
-                chomp $@;
-                $@ =~ s/^syntax error at //;
-                tag 'syntax-error-in-dep5-copyright', $@;
-                return;
-            }
-        }else {
-            return;
-        }
-    }
-
-    if (@dep5) {
-        _parse_dep5($info,\@dep5,\@lines);
-    } else {
-        tag 'no-dep5-copyright';
-    }
+    _parse_dep5($info,\@dep5,\@lines);
 }
 
 sub _parse_dep5 {
