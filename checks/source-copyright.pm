@@ -144,7 +144,7 @@ sub _check_dep5_copyright {
     if (
         $contents !~ m{
                (?:^ | \n)
-               (?i: format(:|[-\s]spec) )
+               (?i: format(?: [:] |[-\s]spec) )
                (?: . | \n\s+ )*
                (?: /dep[5s]?\b | \bDEP-?5\b
                  | [Mm]achine-readable\s(?:license|copyright)
