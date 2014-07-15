@@ -1434,13 +1434,12 @@ sub process_group {
     my ($group) = @_;
   PROC:
     foreach my $lpkg ($group->get_processables){
-        my $pkg_name = $lpkg->pkg_name;
         my $pkg_type = $lpkg->pkg_type;
-        my $base = $lpkg->base_dir();
+        my $procid = $lpkg->identifier;
 
         $TAGS->file_start($lpkg);
 
-        debug_msg(1, "Base directory in lab: $base");
+        debug_msg(1, 'Base directory in lab: ' . $lpkg->base_dir);
 
         if (not $opt{'no-override'} and $collmap->getp('override-file')) {
             debug_msg(1, 'Loading overrides file (if any) ...');
@@ -1456,19 +1455,19 @@ sub process_group {
             # package.
             next if !$cs->is_check_type($pkg_type);
 
-            debug_msg(1, "Running check: $check ...");
+            debug_msg(1, "Running check: $check on $procid  ...");
             eval {$cs->run_check($lpkg, $group);};
             my $err = $@;
             my $tres = $finish_timer->($timer);
             if ($err) {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
-                  " on package $pkg_name\n";
-                warning("skipping $action of $pkg_type package $pkg_name");
+                  " on package $procid\n";
+                warning("skipping check of $procid");
                 $exit_code = 2;
                 next PROC;
             }
-            debug_msg(1, "Finished check: $check$tres");
+            debug_msg(1, "Check script $check for $procid done$tres");
         }
 
         unless ($exit_code) {
