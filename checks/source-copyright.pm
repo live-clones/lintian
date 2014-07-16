@@ -258,28 +258,33 @@ sub _parse_dep5 {
             if (not $license =~ m/\n/) {
                 tag 'missing-license-text-in-dep5-copyright', lc $license,
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
-            } elsif($license =~ m/\A\s*\n/xms) {
+            } elsif ($license =~ m/\A\s*\n/xms) {
                 tag 'missing-field-in-dep5-copyright', 'license',
-                  "(empty line $lines[$i]{'START-OF-PARAGRAPH'})";
+"( empty field, paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
             ($license, undef) = split /\n/, $license, 2;
             for (split_licenses($license)) {
                 $standalone_licenses{$_} = $i;
             }
-        }elsif (defined $files) {
+        } elsif (defined $files) {
             if ($files =~ m/\A\s*\Z/mxs) {
                 tag 'missing-field-in-dep5-copyright', 'files',
-                  "(empty paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+"(empty field, paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
                 @commas_in_files = ($i, $files_fname);
             }
             if (defined $license) {
-                for (split_licenses($license)) {
-                    $required_standalone_licenses{$_} = $i;
+                if ($license =~ m/\A\s*\n/xms) {
+                    tag 'missing-field-in-dep5-copyright', 'license',
+"(empty field, paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                } else {
+                    for (split_licenses($license)) {
+                        $required_standalone_licenses{$_} = $i;
+                    }
                 }
-            }else {
+            } else {
                 tag 'missing-field-in-dep5-copyright', 'license',
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
@@ -288,7 +293,7 @@ sub _parse_dep5 {
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             } elsif ($copyright =~ m/\A\s*\Z/mxs) {
                 tag 'missing-field-in-dep5-copyright', 'copyright',
-                  "(empty paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+"(empty field, paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
 
         }else {
