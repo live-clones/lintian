@@ -115,8 +115,14 @@ Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The paragraph in the machine readable copyright file is missing a field
  that is required by the specification.
- .
- This warning could also be raised by an empty required field.
+
+Tag: empty-short-license-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The short license field in the machine readable copyright file
+ is empty.
+
 
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: normal

@@ -234,8 +234,7 @@ sub _parse_dep5 {
     if (defined($first_para->{'license'})) {
         my $license = $first_para->{'license'};
         if ($license =~ m/\A\s*(\n|\Z)/xms) {
-            tag 'missing-field-in-dep5-copyright', 'license',
-              '(empty short license header paragraph)';
+            tag 'empty-short-license-in-dep5-copyright','(header paragraph)';
         } else {
             for my $license (split_licenses($first_para->{'license'})) {
                 $required_standalone_licenses{$license} = 1;
@@ -268,9 +267,8 @@ sub _parse_dep5 {
                 tag 'missing-license-text-in-dep5-copyright', lc $license,
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             } elsif ($license =~ m/\A\s*\n/xms) {
-                tag 'missing-field-in-dep5-copyright', 'license',
-                  '(empty short license,',
-                  "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                tag 'empty-short-license-in-dep5-copyright',
+                  "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             } else {
                 ($license, undef) = split /\n/, $license, 2;
                 for (split_licenses($license)) {
@@ -289,9 +287,8 @@ sub _parse_dep5 {
             }
             if (defined $license) {
                 if ($license =~ m/\A\s*(\n|\Z)/xms) {
-                    tag 'missing-field-in-dep5-copyright', 'license',
-                      '(empty short license,',
-                      "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                    tag 'empty-short-license-in-dep5-copyright',
+                      "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
                 } else {
                     for (split_licenses($license)) {
                         $required_standalone_licenses{$_} = $i;
