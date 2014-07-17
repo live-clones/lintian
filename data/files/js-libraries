@@ -12,6 +12,7 @@ ckeditor                     ~~ (?i)/ckeditor$EXT
 fckeditor                    ~~ (?i)/fckeditor$EXT
 libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
+libjs-excanvas               ~~ (?i)/excanvas(?:-r[0-9]+)?$EXT
 libjs-jac                    ~~ (?i)/jsjac$EXT
 libjs-jquery                 ~~ (?i)/jquery$EXT
 libjs-jquery-cookie          ~~ (?i)/jquery\.cookie$EXT

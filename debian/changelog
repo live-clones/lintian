@@ -24,6 +24,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] add debug source suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
       false postive in mono.
+  * data/files/js-libraries:
+    + [BR] Apply patch from Paul Wise for detection of
+      libjs-excanvas.
   * data/debhelper/dh_commands:
     + [BR] Add patch from  Piotr Ożarowski, dh-python2
       moved to dh-python package (Closes: #740161).
