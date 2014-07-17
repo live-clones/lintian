@@ -21,7 +21,7 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect empty required fields.  (Closes: #748452).
 
   * data/cruft/warn-file-type:
-    + [BR] add debug source suffix for detecting javascript
+    + [BR] Add debug source suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
       false postive in mono.
   * data/files/js-libraries:
