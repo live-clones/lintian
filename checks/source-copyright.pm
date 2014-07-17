@@ -230,8 +230,17 @@ sub _parse_dep5 {
         tag 'missing-field-in-dep5-copyright', 'format',
           "(line $lines[0]{'format'})";
     }
-    for my $license (split_licenses($first_para->{'license'})) {
-        $required_standalone_licenses{$license} = 1;
+
+    if (defined($first_para->{'license'})) {
+        my $license = $first_para->{'license'};
+        if ($license =~ m/\A\s*(\n|\Z)/xms) {
+            tag 'missing-field-in-dep5-copyright', 'license',
+              '(empty short license header paragraph)';
+        } else {
+            for my $license (split_licenses($first_para->{'license'})) {
+                $required_standalone_licenses{$license} = 1;
+            }
+        }
     }
     my @commas_in_files;
     my $i = 0;
@@ -262,10 +271,11 @@ sub _parse_dep5 {
                 tag 'missing-field-in-dep5-copyright', 'license',
                   '(empty short license,',
                   "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
-            }
-            ($license, undef) = split /\n/, $license, 2;
-            for (split_licenses($license)) {
-                $standalone_licenses{$_} = $i;
+            } else {
+                ($license, undef) = split /\n/, $license, 2;
+                for (split_licenses($license)) {
+                    $standalone_licenses{$_} = $i;
+                }
             }
         } elsif (defined $files) {
             if ($files =~ m/\A\s*\Z/mxs) {
@@ -278,7 +288,7 @@ sub _parse_dep5 {
                 @commas_in_files = ($i, $files_fname);
             }
             if (defined $license) {
-                if ($license =~ m/\A\s*\n/xms) {
+                if ($license =~ m/\A\s*(\n|\Z)/xms) {
                     tag 'missing-field-in-dep5-copyright', 'license',
                       '(empty short license,',
                       "paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
