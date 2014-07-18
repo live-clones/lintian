@@ -218,6 +218,8 @@ sub _parse_dep5 {
     my $first_para = shift @dep5;
     my %standalone_licenses;
     my %required_standalone_licenses;
+    my %short_licenses_seen;
+
     for my $field (keys %{$first_para}) {
         my $renamed_to = $dep5_renamed_fields{$field};
         if (defined $renamed_to) {
@@ -233,8 +235,9 @@ sub _parse_dep5 {
 
     my ($found_license_header, undef, undef, @short_licenses_header)
       = parse_license($first_para->{'license'},1);
-    for my $license (@short_licenses_header) {
-        $required_standalone_licenses{$license} = 1;
+    for my $short_license (@short_licenses_header) {
+        $required_standalone_licenses{$short_license} = 1;
+        $short_licenses_seen{$short_license} = 1;
     }
 
     my @commas_in_files;
@@ -269,6 +272,7 @@ sub _parse_dep5 {
             } else {
                 for (@short_licenses) {
                     $standalone_licenses{$_} = $i;
+                    $short_licenses_seen{$short_license} = 1;
                 }
             }
         } elsif (defined $files) {
@@ -285,8 +289,9 @@ sub _parse_dep5 {
             my ($found_license, $full_license, $short_license, @short_licenses)
               = parse_license($license,$current_line);
             if ($found_license) {
-                if (not defined($full_license)) {
-                    for (@short_licenses) {
+                for (@short_licenses) {
+                    $short_licenses_seen{$short_license} = 1;
+                    if (not defined($full_license)) {
                         $required_standalone_licenses{$_} = $i;
                     }
                 }
