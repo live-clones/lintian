@@ -54,6 +54,7 @@ our $EXCLUDE =join(
       ^license-problem-bad-php-license$
       ^license-problem-php-license$
       ^license-problem-gfdl-non-official-text$
+      ^license-problem-undefined-license$
       ^maintainer-script-removes-device-files$
       ^suidregister-used-in-maintainer-script$
       ^debian-rules-should-not-.*$

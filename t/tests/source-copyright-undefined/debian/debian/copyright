@@ -1,0 +1,31 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Doohickey
+Upstream-Contact: J. Random Hacker <j.r.hacker@example.com>
+Source: http://examples.com/doohickey/source/
+
+Files: *
+Copyright: 2014, somebody1
+License: Fixme
+ Fixme
+
+
+Files: debian/*
+Copyright: 2014, somebody2
+License: unknown
+ Fixme
+
+Files: debian/a*
+Copyright: 2014, somebody2
+License: unknow
+ Fixme
+
+Files: debian/b*
+Copyright: 2014, somebody2
+License: todo
+ Fixme
+
+Files: debian/c*
+Copyright: 2014, somebody2
+License: undefined
+ Fixme
+

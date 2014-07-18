@@ -30,6 +30,17 @@ use Text::Levenshtein qw(distance);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(parse_dpkg_control slurp_entire_file);
+use Lintian::Data;
+
+my $BAD_SHORT_LICENSES =  Lintian::Data->new(
+    'source-copyright/bad-short-licenses',
+    qr/\s*\~\~\s*/,
+    sub {
+        return {
+            'regex'=>  qr/$_[0]/xms,
+            'tag' => $_[1],
+        };
+    });
 
 my $dep5_last_normative_change = '0+svn~166';
 my $dep5_last_overhaul         = '0+svn~148';
@@ -267,12 +278,12 @@ sub _parse_dep5 {
               = parse_license($license,$current_line);
             # Standalone license paragraph
             if(not defined($full_license)) {
-                tag 'missing-license-text-in-dep5-copyright', lc $license,
+                tag 'missing-license-text-in-dep5-copyright', $license,
                   "(paragraph at line $current_line)";
             } else {
                 for (@short_licenses) {
                     $standalone_licenses{$_} = $i;
-                    $short_licenses_seen{$short_license} = 1;
+                    $short_licenses_seen{$short_license} = $i;
                 }
             }
         } elsif (defined $files) {
@@ -290,7 +301,7 @@ sub _parse_dep5 {
               = parse_license($license,$current_line);
             if ($found_license) {
                 for (@short_licenses) {
-                    $short_licenses_seen{$short_license} = 1;
+                    $short_licenses_seen{$short_license} = $i;
                     if (not defined($full_license)) {
                         $required_standalone_licenses{$_} = $i;
                     }
@@ -334,6 +345,16 @@ sub _parse_dep5 {
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }
     }
+    while ((my $license, $i) = each %short_licenses_seen) {
+        foreach my $bad_short_license ($BAD_SHORT_LICENSES->all) {
+            my $value = $BAD_SHORT_LICENSES->value($bad_short_license);
+            my $regex = $value->{'regex'};
+            if ($license =~ m/$regex/x) {
+                tag $value->{'tag'},  $license,
+                  "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+            }
+        }
+    }
     return;
 }
 
@@ -354,6 +375,7 @@ sub parse_license {
           "(paragraph at line $line)";
         return 1, $full_license, '';
     }
+    $short_license = lc($short_license);
     my @licenses
       = map { "\L$_" } (split(m/\s++(?:and|or)\s++/, $short_license));
     return 1, $full_license, $short_license, @licenses;

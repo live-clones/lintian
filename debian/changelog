@@ -19,6 +19,7 @@ lintian (2.5.26) UNRELEASED; urgency=medium
   * checks/source-copyright.{desc,pm}:
     + [BR] Add a pedantic warning about non dep-5 debian/copyright.
     + [BR] Detect empty required fields.  (Closes: #748452).
+    + [BR] Detect undefined license.  (Closes: #733659).
 
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript
