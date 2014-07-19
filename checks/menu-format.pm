@@ -87,61 +87,14 @@ my $MENU_SECTIONS
 my @req_desktop_keys = qw(Type Name);
 
 # This is a list of all known keys.
-my %known_desktop_keys = map { $_ => 1 } qw(
-  Type
-  Version
-  Name
-  GenericName
-  NoDisplay
-  Comment
-  Icon
-  Hidden
-  Keywords
-  OnlyShowIn
-  NotShowIn
-  TryExec
-  Exec
-  Path
-  Terminal
-  MimeType
-  Categories
-  MimeType
-  Categories
-  StartupNotify
-  StartupWMClass
-  URL
-);
+my $KNOWN_DESKTOP_KEYS =  Lintian::Data->new('menu-format/known-desktop-keys');
 
-my %deprecated_desktop_keys = map { $_ => 1 } qw(
-  Encoding
-  MiniIcon
-  TerminalOptions
-  Protocols
-  Extensions
-  BinaryPattern
-  MapNotify
-  SwallowTitle
-  SwallowExec
-  SortOrder
-  FilePattern
-);
+my $DEPRECATED_DESKTOP_KEYS
+  = Lintian::Data->new('menu-format/deprecated-desktop-keys');
 
 # KDE uses some additional keys that should start with X-KDE but don't for
-# historical reasons.  Actions will in theory be in a later version of the
-# standard (it's not mentioned in the current standard, but is implemented by
-# KDE and widely used).
-my %kde_desktop_keys = map { $_ => 1 } qw(
-  ServiceTypes
-  DocPath
-  Keywords
-  InitialPreference
-  Dev
-  FSType
-  MountPoint
-  ReadOnly
-  UnmountIcon
-  Actions
-);
+# historical reasons.
+my $KDE_DESKTOP_KEYS = Lintian::Data->new('menu-format/kde-desktop-keys');
 
 # Known types of desktop entries.
 # http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
@@ -648,7 +601,7 @@ sub verify_desktop_file {
             my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
             if (exists $vals{$tag}) {
                 tag 'duplicated-key-in-desktop-entry', "$file:$. $tag";
-            } elsif ($deprecated_desktop_keys{$basetag}) {
+            } elsif ($DEPRECATED_DESKTOP_KEYS->known($basetag)) {
                 if ($basetag eq 'Encoding') {
                     push(
                         @pending,
@@ -664,8 +617,8 @@ sub verify_desktop_file {
                             "$file:$. $tag"
                         ]);
                 }
-            } elsif (not $known_desktop_keys{$basetag}
-                and not $kde_desktop_keys{$basetag}
+            } elsif (not $KNOWN_DESKTOP_KEYS->known($basetag)
+                and not $KDE_DESKTOP_KEYS->known($basetag)
                 and not $basetag =~ /^X-/) {
                 push(@pending,
                     ['desktop-entry-contains-unknown-key', "$file:$. $tag"]);

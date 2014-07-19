@@ -14,6 +14,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       backports changes file.  (Closes: #732225).
     + [BR] Apply patch from Tomasz Bucher, add check for
       for timestamped gzip files.  (Closes: #738591).
+  * checks/menu-format.pm:
+    + [BR] Add new desktop keys files. Move key list to data.
+      (Closes: #755266).
   * checks/phppear.pm:
     + [BR] Fix a false positive for
       missing-pkg-php-tools-addon phpcomposer, thanks to
