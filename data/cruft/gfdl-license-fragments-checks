@@ -16,7 +16,7 @@
 # (parsewiki)
 \A without [ ] any [ ] Invariant [ ] Sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
 # (lilypond)
-\A with [ ] no [ ] invariants? [ ] sections? \Z ~~ ~~ license-problem-gfdl-non-official-text
+\A with [ ] no [ ] invariants? [ ] sections? (?:[ ]?[,\.;][ ]? and [ ] no [ ] covers? [ ] texts?)?\Z ~~ ~~ license-problem-gfdl-non-official-text
 # jedit
 \A with [ ] no [ ] invariant [ ] sections?[ ]?,?[ ]? front[ ]?-?[ ]?cover [ ] texts? [ ] or [ ] back[ ]?-?[ ]?cover [ ] texts?[ ]?,?[ ]?each [ ] as [ ] defined [ ] in [ ] the [ ] license \Z ~~ ~~ license-problem-gfdl-non-official-text
 #

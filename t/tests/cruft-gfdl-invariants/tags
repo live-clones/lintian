@@ -24,6 +24,7 @@ P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldf
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/parsewiki.txt invariant part is: without any invariant sections
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/partedvariant.txt invariant part is: with the no invariant sections, with the no front-cover texts, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/patch-c0.diff invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
+P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/php-elisp.texi invariant part is: with no invariant sections, and no cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/quoteswithasdefined.xml invariant part is: with no invariant sections , front-cover texts or back-cover texts , each as defined in the license
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/texignu.texi invariant part is: with no invariant sections, with no front-cover texts and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/texlive.tex invariant part is: with no invariant sections, with no front-cover texts, and no back-cover texts
