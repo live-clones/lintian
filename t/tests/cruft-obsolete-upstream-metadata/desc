@@ -1,0 +1,5 @@
+Testname: cruft-obsolete-upstream-metadata
+Sequence: 6000
+Version: 1.0
+Description: Check for obsolete path for debian/upstream/metadata
+Test-For: debian-upstream-obsolete-path

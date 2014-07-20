@@ -9,6 +9,7 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       C++.
     + [BR] Fix another false positive for gfdl invariants in
       php-elisp.
+    + [BR] Detect old path for upstream metadata.
   * checks/changes-file.{desc,pm}:
     + [BR] Add patch from Ivo De Decker, add check for
       backports changes file.  (Closes: #732225).
