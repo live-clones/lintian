@@ -635,6 +635,13 @@ sub find_cruft {
             close($fd);
         }
 
+        # here we check old upstream specification
+        # debian/upstream should be a directory
+        if (   $name eq 'debian/upstream'
+            || $name eq 'debian/upstream-metadata.yaml') {
+            tag 'debian-upstream-obsolete-path', $name;
+        }
+
         unless ($warned->{$name}) {
             for my $rule (@file_checks) {
                 next if ($rule->[2] and not $info->native);

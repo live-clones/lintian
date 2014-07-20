@@ -348,6 +348,23 @@ Info: The Debian diff of this non-native package appears to be completely
  package updates in Debian (files can't be removed from the
  <tt>debian</tt> directory via the diff, for example).
 
+Tag: debian-upstream-obsolete-path
+Severity: important
+Certainty: certain
+Info: Upstream metadata is stored under an obsolete path.
+ .
+ Upstream MEtadata GAthered with YAml (UMEGAYA) an effort to collect
+ meta-information about upstream projects in a file called
+ <tt>debian/upstream/metadata</tt> in the source packages
+ maintained in a publicly accessible version control system (VCS).
+ .
+ Older version of this specification used
+ <tt>debian/upstream-metadata.yaml</tt> and <tt>debian/upstream</tt>
+ as file storage of meta-information.
+ .
+ You should move these file to <tt>debian/upstream/metadata</tt>.
+
+
 Tag: configure-generated-file-in-source
 Severity: normal
 Certainty: possible
