@@ -40,7 +40,22 @@ my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
 
 my $PRIVACY_BREAKER_WEBSITES
   = Lintian::Data->new('files/privacy-breaker-websites',
-    qr/\s*\~\~/o,sub { return qr/$_[1]/xism });
+    qr/\s*\~\~/o,
+    sub { 
+        my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
+        $tag = defined($tag) ? strip($tag) : '';
+        if (length($tag) == 0) {
+            $tag = $_[0];
+        }
+        my %ret = (
+            'tag' => $tag,
+            'regexp' => qr/$_[1]/xism,
+        );
+        if (defined($suggest)) {
+            $ret{'suggest'} = $suggest;
+        }
+        return \%ret;
+    });
 
 my $PRIVACY_BREAKER_FRAGMENTS= Lintian::Data->new(
     'files/privacy-breaker-fragments',
@@ -1859,12 +1874,14 @@ sub _check_tag_url_privacy_breach {
     }
 
     # track well known site
-    foreach my $breaker_tag ($PRIVACY_BREAKER_WEBSITES->all) {
-        my $regex= $PRIVACY_BREAKER_WEBSITES->value($breaker_tag);
+    foreach my $breaker ($PRIVACY_BREAKER_WEBSITES->all) {
+        my $value = $PRIVACY_BREAKER_WEBSITES->value($breaker);
+        my $regex = $value->{'regexp'};
         if ($website =~ m{$regex}) {
-            unless (exists $privacybreachhash->{'tag-'.$breaker_tag}){
-                $privacybreachhash->{'tag-'.$breaker_tag}= 1;
-                tag $breaker_tag, $file, $url;
+            unless (exists $privacybreachhash->{'tag-'.$breaker}) {
+                my $tag =  $value->{'tag'};
+                $privacybreachhash->{'tag-'.$breaker}= 1;
+                tag $tag, $file, $url;
             }
             # do not go to generic case
             return;
