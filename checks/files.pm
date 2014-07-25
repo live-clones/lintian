@@ -597,7 +597,7 @@ sub run {
                         if ($pkg_config_arch eq $pkgconfig_dir) {
                             next MULTI_ARCH_DIR;
                         }
-                        if ($block =~ m{$regex}) {
+                        if ($block =~ m{\W$regex(\W|$)}xms) {
                             tag 'pkg-config-multi-arch-wrong-dir',$file,
                               'full text contains architecture specific dir',
                               $pkgconfig_dir;

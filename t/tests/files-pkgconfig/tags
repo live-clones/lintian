@@ -20,5 +20,7 @@ E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc
 E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc -pedantic
 E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc @SOME_FLAGS@
 E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc Cflags: -I/usr/local/somewhere -D__linux__ -D__x86_64__ -D__OSVERSION__=2 -g -D_FORTIFY_SOURCE=2 -O2 -Wall -fvisibility=hidden -fPIE -fstack-protector --param=ssp-buffer-size=2 -frounding-math -lmath
-E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch.pc full text contains architecture specific dir ARCH
+E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-1.pc full text contains architecture specific dir ARCH
+E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-2.pc full text contains architecture specific dir ARCH
+E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-3.pc full text contains architecture specific dir ARCH
 E: pkgconfig-any: pkg-config-multi-arch-wrong-dir usr/lib/x86_64-linux-gnu/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH
