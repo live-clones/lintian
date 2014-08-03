@@ -10,6 +10,10 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Fix another false positive for gfdl invariants in
       php-elisp.
     + [BR] Detect old path for upstream metadata.
+  * checks/fields.pm:
+    + [NT] Apply patch from Salvatore Bonaccorso to recommend the
+      new cgit URLs for anonscm.debian.org over the webgit URLs.
+      (Closes: #756940)
   * checks/files.pm:
     + [BR] Fix false positive in detection of cross arch pkgconfig.
       (Closes: #755902).

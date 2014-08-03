@@ -130,7 +130,7 @@ my %VCS_CANONIFY = (
         $_[0] =~ s{https?://svn\.debian\.org/wsvn/}
                   {http://anonscm.debian.org/viewvc/};
         $_[0] =~ s{\Qhttp://git.debian.org/?p=\E}
-                  {http://anonscm.debian.org/gitweb/?p=};
+                  {https://anonscm.debian.org/cgit/};
         $_[0] =~ s{\Qhttp://bzr.debian.org/loggerhead/\E}
                   {http://anonscm.debian.org/loggerhead/};
         if ($_[0] =~ m{\Qhttp://anonscm.debian.org/viewvc/\E}xsm) {
