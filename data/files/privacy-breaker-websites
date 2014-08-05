@@ -17,4 +17,5 @@ privacy-breach-piwik                             ~~/piwik\.php\?
 privacy-breach-statistics-website                ~~^(?:(?:[^\./]+\.)?(?:cruel-carlota\.pagodabox\.com|linkexchange\.com|nedstatbasic\.net|onestat\.com|sitemeter\.com|statcounter\.com|webstats\.motigo\.com)(?:/|\Z)|/count(?:er)?\.cgi\?[^/]*\Z)
 privacy-breach-w3c-valid-html                   ~~^(?:(?:[^\./]+\.)?w3.org/(?:icons/valid-|css-validator/images/)(?:[^/]+)?$|validator\.w3\.org(?:/|\Z))
 # already packaged under debian
-privacy-breach-may-use-debian-package-jquery    ~~(?:(?!doxygen.*)jquery(?:-(?:\d\.?)+)?(?:\.min)\.js\Z) ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-jquery package
+privacy-breach-may-use-debian-package-jquery    ~~(?:(?!doxygen.*)/jquery(?:-(?:\d\.?)+)?(?:\.min)\.js\Z) ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-jquery package.
+privacy-breach-may-use-debian-package-mathjax   ~~ /mathjax\.js(\Z|\?)                                    ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-mathjax package.

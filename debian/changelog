@@ -43,6 +43,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       libjs-excanvas.
   * data/files/privacy-breaker-website:
     + [BR] Improve detection of sourceforge logos.
+    + [BR] Detect libjs-jquery use.
+    + [BR] Detect libjs-mathjax use.
   * data/debhelper/dh_commands:
     + [BR] Add patch from  Piotr Ożarowski, dh-python2
       moved to dh-python package (Closes: #740161).
