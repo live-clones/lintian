@@ -13,6 +13,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [BR] Fix false positive in detection of cross arch pkgconfig.
       (Closes: #755902).
+    + [BR] Detect privacy breach fixable by using existing debian
+      package.
   * checks/changes-file.{desc,pm}:
     + [BR] Add patch from Ivo De Decker, add check for
       backports changes file.  (Closes: #732225).

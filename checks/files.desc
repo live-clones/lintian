@@ -950,6 +950,15 @@ Info: This package creates a potential privacy breach by fetching data
  that the remote resources are suitable for Debian main before making
  local copies of them.
 
+Tag: privacy-breach-may-use-debian-package
+Severity: important
+Certainty: possible
+Info: This package creates a potential privacy breach by fetching data
+ from an external website at runtime. Please remove these scripts or
+ external HTML resources.
+ .
+ You may use if compatible the debian package indicated in the hint.
+
 Tag: privacy-breach-google-adsense
 Severity: serious
 Certainty: possible

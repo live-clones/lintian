@@ -38,10 +38,10 @@ my $INCORRECT_LOCALE_CODES
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
     sub { return { 'dir' => $_[1], 'match' => qr/\Q$_[1]\E/ } });
 
-my $PRIVACY_BREAKER_WEBSITES
-  = Lintian::Data->new('files/privacy-breaker-websites',
+my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
+    'files/privacy-breaker-websites',
     qr/\s*\~\~/o,
-    sub { 
+    sub {
         my ($regex, $tag, $suggest) = split(/\s*\~\~\s*/, $_[1], 3);
         $tag = defined($tag) ? strip($tag) : '';
         if (length($tag) == 0) {
@@ -49,7 +49,7 @@ my $PRIVACY_BREAKER_WEBSITES
         }
         my %ret = (
             'tag' => $tag,
-            'regexp' => qr/$_[1]/xism,
+            'regexp' => qr/$regex/xsm,
         );
         if (defined($suggest)) {
             $ret{'suggest'} = $suggest;
@@ -1877,11 +1877,12 @@ sub _check_tag_url_privacy_breach {
     foreach my $breaker ($PRIVACY_BREAKER_WEBSITES->all) {
         my $value = $PRIVACY_BREAKER_WEBSITES->value($breaker);
         my $regex = $value->{'regexp'};
-        if ($website =~ m{$regex}) {
+        if ($website =~ m{$regex}mxs) {
             unless (exists $privacybreachhash->{'tag-'.$breaker}) {
                 my $tag =  $value->{'tag'};
+                my $suggest = $value->{'suggest'} // '';
                 $privacybreachhash->{'tag-'.$breaker}= 1;
-                tag $tag, $file, $url;
+                tag $tag, $file, $suggest, "($url)";
             }
             # do not go to generic case
             return;

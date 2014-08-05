@@ -1,18 +1,20 @@
 # Manually maintained table of well known privacy breakers site
 # syntax:
-#   key ~~regex (xism)
+#   key ~~regex (xsm) ~~ tag (optionnal assumed to be key) ~~ hint (optionnal)
 #
+# please always use lowercase for regex
 # Note spaces on the right hand side of ~~ are assumed to be a part
 # of the regex.
 #
 # Please keep this sorted by tag.
-privacy-breach-google-adsense	  ~~^(?:[^\./]+\.)?(?:googlesyndication\.com/pagead/show_ads\.js|google-analytics\.com/(?:ga|urchin)\.js)
-privacy-breach-google-cse         ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/(:?afsonline/show_afs_search\.js|cse/api/branding\.css|coop/cse/brand\?[^/]+)$
-privacy-breach-google-plus        ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/js/plusone\.[^\./]+
-privacy-breach-donation           ~~(?:(?:donate|paypal|support)\.(gif|jpe?g|png|svg)$|^(?:[^\./]+\.)?(?:flattr\.(?:com|net)|paypal(?:objects)?\.com)/)
-privacy-breach-facebook           ~~^(?:[^\./]+\.)?facebook\.com(?:/|\Z)
-privacy-breach-logo               ~~(?:^(?:sflogo\.)?sourceforge\.net/sflogo\.php\?|(?:acrobat|clanlib|(?:fav|github-)?icons?|logos?\d*)\.(gif|ico|jpe?g|png|svg)$)
-privacy-breach-piwik              ~~/piwik\.php\?
-privacy-breach-statistics-website ~~^(?:(?:[^\./]+\.)?(?:cruel-carlota\.pagodabox\.com|linkexchange\.com|nedstatbasic\.net|onestat\.com|sitemeter\.com|statcounter\.com|webstats\.motigo\.com)(?:/|\Z)|/count(?:er)?\.cgi\?[^/]*\Z)
-privacy-breach-w3c-valid-html     ~~^(?:(?:[^\./]+\.)?w3.org/(?:Icons/valid-|css-validator/images/)(?:[^/]+)?$|validator\.w3\.org(?:/|\Z))
-
+privacy-breach-google-adsense	                 ~~^(?:[^\./]+\.)?(?:googlesyndication\.com/pagead/show_ads\.js|google-analytics\.com/(?:ga|urchin)\.js)
+privacy-breach-google-cse                        ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/(:?afsonline/show_afs_search\.js|cse/api/branding\.css|coop/cse/brand\?[^/]+)$
+privacy-breach-google-plus                       ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/js/plusone\.[^\./]+
+privacy-breach-donation                          ~~(?:(?:donate|paypal|support)\.(gif|jpe?g|png|svg)$|^(?:[^\./]+\.)?(?:flattr\.(?:com|net)|paypal(?:objects)?\.com)/)
+privacy-breach-facebook                          ~~^(?:[^\./]+\.)?facebook\.com(?:/|\Z)
+privacy-breach-logo                              ~~(?:^(?:sflogo\.)?sourceforge\.net/sflogo\.php\?|(?:acrobat|clanlib|(?:fav|github-)?icons?|logos?\d*)\.(gif|ico|jpe?g|png|svg)$)
+privacy-breach-piwik                             ~~/piwik\.php\?
+privacy-breach-statistics-website                ~~^(?:(?:[^\./]+\.)?(?:cruel-carlota\.pagodabox\.com|linkexchange\.com|nedstatbasic\.net|onestat\.com|sitemeter\.com|statcounter\.com|webstats\.motigo\.com)(?:/|\Z)|/count(?:er)?\.cgi\?[^/]*\Z)
+privacy-breach-w3c-valid-html                   ~~^(?:(?:[^\./]+\.)?w3.org/(?:icons/valid-|css-validator/images/)(?:[^/]+)?$|validator\.w3\.org(?:/|\Z))
+# already packaged under debian
+privacy-breach-may-use-debian-package-jquery    ~~(?:(?!doxygen.*)jquery(?:-(?:\d\.?)+)?(?:\.min)\.js\Z) ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-jquery package
