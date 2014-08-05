@@ -1869,6 +1869,9 @@ sub _check_tag_url_privacy_breach {
             } elsif  ($relcontent eq 'bookmark') {
                 # see #746656
                 return;
+            } elsif ($relcontent eq 'generator-home') {
+                # generator-home is used by texinfo
+                return;
             }
         }
     }

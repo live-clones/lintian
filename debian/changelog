@@ -15,6 +15,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       (Closes: #755902).
     + [BR] Detect privacy breach fixable by using existing debian
       package.
+    + [BR] Whitelist <link rel="generator-home"...> in privacy breach
+      checker.
   * checks/changes-file.{desc,pm}:
     + [BR] Add patch from Ivo De Decker, add check for
       backports changes file.  (Closes: #732225).
