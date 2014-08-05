@@ -50,6 +50,7 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Add count.digitalpoint.com to statistics website.
     + [BR] Add xoom.com to privacy-breach-donation (used by
       freesci-doc package).
+    + [BR] Detect libjs-jquery-ui use.
   * data/debhelper/dh_commands:
     + [BR] Add patch from  Piotr Ożarowski, dh-python2
       moved to dh-python package (Closes: #740161).
