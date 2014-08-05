@@ -12,7 +12,7 @@ privacy-breach-google-cse                        ~~^(?:[^\./]+\.)?google\.[^\./]
 privacy-breach-google-plus                       ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/js/plusone\.[^\./]+
 privacy-breach-donation                          ~~(?:(?:donate|paypal|support)\.(gif|jpe?g|png|svg)$|^(?:[^\./]+\.)?(?:flattr\.(?:com|net)|paypal(?:objects)?\.com|pledgie\.com|xoom\.com)/)
 privacy-breach-facebook                          ~~^(?:[^\./]+\.)?facebook\.com(?:/|\Z)
-privacy-breach-logo                              ~~(?:^(?:sflogo\.)?sourceforge\.[^\./]+/sflogo\.php\?|(?:acrobat|clanlib|(?:fav|github-)?icons?|logos?_?(?:\d+|small)?)\.(gif|ico|jpe?g|png|svg)$)
+privacy-breach-logo                              ~~(?:^(?:sflogo\.)?(?:sourceforge|sf)\.[^\./]+/sflogo\.php\?|(?:acrobat|clanlib|(?:fav|github-)?icons?|logos?_?(?:\d+|small)?)\.(gif|ico|jpe?g|png|svg)$)
 privacy-breach-piwik                             ~~/piwik\.php\?
 privacy-breach-statistics-website                ~~^(?:(?:[^\./]+\.)?(?:count\.digitalpoint\.com|cruel-carlota\.pagodabox\.com|linkexchange\.com|nedstatbasic\.net|onestat\.com|sitemeter\.com|statcounter\.com|webstats\.motigo\.com)(?:/|\Z)|/count(?:er)?\.cgi\?[^/]*\Z)
 privacy-breach-w3c-valid-html                   ~~^(?:(?:[^\./]+\.)?w3.org/(?:icons/valid-|css-validator/images/)(?:[^/]+)?$|validator\.w3\.org(?:/|\Z))
