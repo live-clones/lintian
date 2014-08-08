@@ -1,0 +1,9 @@
+Testname: source-copyright-wildcard-matching
+Sequence: 6000
+Version: 1.0
+Description: Test whether the Files wildcards match all files in the source
+Test-For:
+ invalid-escape-sequence-in-dep5-copyright
+ wildcard-matches-nothing-in-dep5-copyright
+ file-without-copyright-information
+ unused-file-paragraph-in-dep5-copyright

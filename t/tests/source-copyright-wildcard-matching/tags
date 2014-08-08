@@ -1,0 +1,5 @@
+I: source-copyright-wildcard-matching source: unused-file-paragraph-in-dep5-copyright paragraph at line 14
+I: source-copyright-wildcard-matching source: unused-file-paragraph-in-dep5-copyright paragraph at line 6
+I: source-copyright-wildcard-matching source: wildcard-matches-nothing-in-dep5-copyright i-do-not-exist (paragraph at line 14)
+W: source-copyright-wildcard-matching source: file-without-copyright-information i-have-no-copyright-information
+W: source-copyright-wildcard-matching source: invalid-escape-sequence-in-dep5-copyright \n (paragraph at line 19)

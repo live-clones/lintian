@@ -3,3 +3,8 @@ E: source-copyright-undefined source: license-problem-undefined-license todo (pa
 E: source-copyright-undefined source: license-problem-undefined-license undefined (paragraph at line 27)
 E: source-copyright-undefined source: license-problem-undefined-license unknow (paragraph at line 17)
 E: source-copyright-undefined source: license-problem-undefined-license unknown (paragraph at line 12)
+I: source-copyright-undefined source: unused-file-paragraph-in-dep5-copyright paragraph at line 17
+I: source-copyright-undefined source: unused-file-paragraph-in-dep5-copyright paragraph at line 22
+I: source-copyright-undefined source: unused-file-paragraph-in-dep5-copyright paragraph at line 6
+I: source-copyright-undefined source: wildcard-matches-nothing-in-dep5-copyright debian/a* (paragraph at line 17)
+I: source-copyright-undefined source: wildcard-matches-nothing-in-dep5-copyright debian/b* (paragraph at line 22)

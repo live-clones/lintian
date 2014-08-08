@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use autodie;
 
+use File::Find qw();
+
 use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
@@ -251,9 +253,11 @@ sub _parse_dep5 {
         $short_licenses_seen{$short_license}          = 1;
     }
 
-    my @commas_in_files;
-    my $i            = 0;
+    my (@commas_in_files, %file_para_coverage);
+    my %file_coverage = map { $_ => 0 } get_all_files($info);
+    my $i = 0;
     my $current_line = 0;
+    my $commas_in_files = any { m/,/xsm } $info->sorted_index;
     for my $para (@dep5) {
         $i++;
         $current_line = $lines[$i]{'START-OF-PARAGRAPH'};
@@ -303,7 +307,35 @@ sub _parse_dep5 {
                 @commas_in_files = ($i, $files_fname);
             }
 
-            my ($found_license, $full_license, $short_license,@short_licenses)
+            # only attempt to evaluate globbing if commas could be legal
+            if (not @commas_in_files or $commas_in_files) {
+                my @wildcards = split /[\n\t ]+/, $files;
+                for my $wildcard (@wildcards) {
+                    my ($regex, $wildcard_error)= wildcard_to_regex($wildcard);
+                    if (defined $wildcard_error) {
+                        tag 'invalid-escape-sequence-in-dep5-copyright',
+                          substr($wildcard_error, 0, 2)
+                          . " (paragraph at line $current_line)";
+                        next;
+                    }
+
+                    my $used = 0;
+                    $file_para_coverage{$current_line} = 0;
+                    for my $srcfile (keys %file_coverage) {
+                        if ($srcfile =~ $regex) {
+                            $used = 1;
+                            $file_coverage{$srcfile} = $current_line;
+                            $file_para_coverage{$current_line} = 1;
+                        }
+                    }
+                    if (not $used) {
+                        tag 'wildcard-matches-nothing-in-dep5-copyright',
+                          "$wildcard (paragraph at line $current_line)";
+                    }
+                }
+            }
+
+            my ($found_license, $full_license, $short_license, @short_licenses)
               = parse_license($license, $current_line);
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
                 tag 'pipe-symbol-used-as-license-disjunction', $short_license,
@@ -335,12 +367,22 @@ sub _parse_dep5 {
               $current_line;
         }
     }
-    if (@commas_in_files) {
+    if (@commas_in_files and not $commas_in_files) {
         my ($paragraph_no, $field_name) = @commas_in_files;
-        if (not any { m/,/xsm } $info->sorted_index) {
-            tag 'comma-separated-files-in-dep5-copyright',
-              'paragraph at line',
-              $lines[$paragraph_no]{$field_name};
+        tag 'comma-separated-files-in-dep5-copyright',
+          'paragraph at line',
+          $lines[$paragraph_no]{$field_name};
+    } else {
+        foreach my $srcfile (sort keys %file_coverage) {
+            my $i = $file_coverage{$srcfile};
+            if (not $i) {
+                tag 'file-without-copyright-information', $srcfile;
+            }
+            delete $file_para_coverage{$i};
+        }
+        foreach my $i (sort keys %file_para_coverage) {
+            tag 'unused-file-paragraph-in-dep5-copyright',
+              "paragraph at line $i";
         }
     }
     while ((my $license, $i) = each %required_standalone_licenses) {
@@ -408,6 +450,58 @@ sub get_field {
         }
     }
     return;
+}
+
+sub wildcard_to_regex {
+    my ($regex) = @_;
+    $regex =~ s,^\./+,,;
+    $regex =~ s,//+,/,g;
+    my $error;
+    eval {
+        $regex =~ s{
+            (\*) |
+            (\?) |
+            ([^*?\\]+) |
+            (\\[\\*?]) |
+            (.+)
+        }{
+            if (defined $1) {
+                '.*';
+            } elsif (defined $2) {
+                '.'
+            } elsif (defined $3) {
+                quotemeta($3);
+            } elsif (defined $4) {
+                $4;
+            } else {
+                $error = $5;
+                die;
+            }
+        }egx;
+    };
+    if ($@) {
+        return (undef, $error);
+    } else {
+        return (qr/^(?:$regex)$/, undef);
+    }
+}
+
+sub get_all_files {
+    my ($info) = @_;
+    # files with a trailing slash are directories
+    my @all_files = grep { not m,/$, } $info->sorted_index;
+    my $debfiles_root = $info->debfiles;
+    File::Find::find({
+            wanted => sub {
+                return unless -f $_;
+                my $dir = $File::Find::dir;
+                $dir =~ s,^\Q$debfiles_root\E(?:(?=/)|$),debian,;
+                push @all_files, "$dir/$_";
+            },
+        },
+        $debfiles_root
+    );
+    return @all_files;
 }
 
 1;

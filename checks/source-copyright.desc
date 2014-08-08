@@ -214,3 +214,40 @@ Info: In contrast to package dependencies, the pipe symbol or vertical
  bar does not indicate a logical disjunction or OR-relationship
  between two license short names. Instead, the keyword "or" between
  two license names indicates the dual licensing.
+
+Tag: invalid-escape-sequence-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The only allowed escape sequences are "\*", "\?" and "\\" (without
+ quotes) to produce a literal star, question mark and backslash, respectively.
+ Without the escaping backslash, the star and question mark take the role of
+ globbing operators similar to shell globs which is why they have to be
+ escaped. No other escapable characters than "*", "?" and "\" exist.
+
+Tag: wildcard-matches-nothing-in-dep5-copyright
+Severity: minor
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The wildcard that was specified matches no file in the source tree.
+ This either indicates that you should fix the wildcard so that it matches
+ the intended file or that you can remove the wildcard. Notice that in
+ contrast to shell globs, the "*" (star or asterisk) matches slashes and
+ leading dots.
+
+Tag: file-without-copyright-information
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The source tree contains a file which was not matched by any of
+ the <tt>Files</tt> paragraphs in debian/copyright. Either adjust existing
+ wildcards to match that file or add a new <tt>Files</tt> paragraph.
+
+Tag: unused-file-paragraph-in-dep5-copyright
+Severity: minor
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The <tt>Files</tt> paragraph in debian/copyright is superfluous as it is
+ never used to match any files. You should be able to safely remove it.
+
+
