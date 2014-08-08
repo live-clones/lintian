@@ -35,6 +35,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect undefined license.  (Closes: #733659).
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
+  * checks/description.{desc,pm}:
+    + [SL] Check for one word short description.  (Closes: #756643).
 
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript

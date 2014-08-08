@@ -66,6 +66,15 @@ Description: This description ends, etc.
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: {$source}-short
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: Short
+ The description is too short. One word is not enough.
+ Second line to avoid the warning.
+ .
+ And a third. (dummy)
+
 Package: {$source}-dummy
 Section: oldlibs
 Architecture: {$architecture}

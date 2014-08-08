@@ -40,6 +40,7 @@ sub run {
     my $unindented_list = 0;
     my $synopsis;
     my $description;
+    my $wordcount;
 
     # description?
     my $full_description = $info->field('description');
@@ -76,6 +77,9 @@ sub run {
             tag 'description-is-debmake-template' unless $template++;
         } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
             tag 'description-is-dh_make-template' unless $template++;
+        }
+        if (($wordcount = $synopsis =~ s/((^|\s)\S)/$1/g) == 1) {
+            tag 'description-too-short';
         }
 
         # We have to decode into UTF-8 to get the right length for the

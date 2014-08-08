@@ -18,6 +18,7 @@ Test-For:
  description-synopsis-might-not-be-phrased-properly
  description-synopsis-starts-with-article
  description-too-long
+ description-too-short
  extended-description-is-empty
  extended-description-line-too-long
  possible-unindented-list-in-extended-description
