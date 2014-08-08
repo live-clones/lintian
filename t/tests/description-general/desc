@@ -11,6 +11,7 @@ Test-For:
  description-contains-invalid-control-statement
  description-contains-tabs
  description-is-debmake-template
+ description-is-pkg-name
  description-starts-with-leading-spaces
  description-starts-with-package-name
  description-synopsis-is-duplicated

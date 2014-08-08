@@ -82,8 +82,12 @@ sub run {
             tag 'description-too-short';
         }
         my $pkg_fmt = lc $pkg;
-        $pkg_fmt =~ s/[-_]/ /g;
-        if ($pkg_fmt eq $synopsis) {
+        my $synopsis_fmt = lc $synopsis;
+        # made a fuzzy match
+        $pkg_fmt =~ s,[-_], ,g;
+        $synopsis_fmt =~ s,[-_/\\], ,g;
+        $synopsis_fmt =~ s,\s+, ,g;
+        if ($pkg_fmt eq $synopsis_fmt) {
             tag 'description-is-pkg-name', $synopsis;
         }
 
