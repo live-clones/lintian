@@ -81,6 +81,12 @@ sub run {
         if (($wordcount = $synopsis =~ s/((^|\s)\S)/$1/g) == 1) {
             tag 'description-too-short';
         }
+        my $pkg_fmt = lc $pkg;
+        $pkg_fmt =~ s/[-_]/ /g;
+        if ($pkg_fmt eq $synopsis) {
+            tag 'description-is-pkg-name', $synopsis;
+        }
+
 
         # We have to decode into UTF-8 to get the right length for the
         # length check.  If the changelog uses a non-UTF-8 encoding,

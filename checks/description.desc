@@ -38,6 +38,13 @@ Ref: devref 6.2.2
 Info: The description contains only a single word. It is likely that the
  description won't be very clear for the user.
 
+Tag: description-is-pkg-name
+Severity: serious
+Certainty: certain
+Ref: devref 6.2.2
+Info: The description is the same the package name. A better description should
+ be provided for the user.
+
 Tag: extended-description-is-probably-too-short
 Severity: minor
 Certainty: possible

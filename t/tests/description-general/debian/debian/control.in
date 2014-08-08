@@ -75,6 +75,24 @@ Description: Short
  .
  And a third. (dummy)
 
+Package: foo-duplicate
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: foo duplicate
+ The description is the same as the package name.
+ A real description would be appreciated
+ .
+ And a third. (dummy)
+
+Package: foo-bar-duplicate
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: foo bar duplicate
+ The description is the same as the package name.
+ A real description would be appreciated
+ .
+ And a third. (dummy)
+
 Package: {$source}-dummy
 Section: oldlibs
 Architecture: {$architecture}

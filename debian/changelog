@@ -37,6 +37,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Update ref url.  (Closes: #755275).
   * checks/description.{desc,pm}:
     + [SL] Check for one word short description.  (Closes: #756643).
+    + [SL] Check if the short description is the same as the 
+      package name.  (Closes: #757398).
 
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript

@@ -7,6 +7,9 @@ E: description-general: description-contains-invalid-control-statement
 E: description-general: description-contains-tabs
 E: description-general: description-is-debmake-template
 E: description-general: description-starts-with-package-name
+E: foo-bar-duplicate: description-is-pkg-name foo bar duplicate
+E: foo-duplicate: description-is-pkg-name foo duplicate
+I: description-general source: duplicate-long-description foo-duplicate foo-bar-duplicate
 I: description-general-3: using-first-person-in-description line 5: I
 I: description-general-4: capitalization-error-in-description debian Debian
 I: description-general-syn-spelling: capitalization-error-in-description-synopsis debian Debian
