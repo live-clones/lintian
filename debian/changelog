@@ -2,6 +2,11 @@ lintian (2.5.26) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/changes-file.{desc,pm}:
+    + [BR] Add patch from Ivo De Decker, add check for
+      backports changes file.  (Closes: #732225).
+    + [BR] Apply patch from Tomasz Bucher, add check for
+      for timestamped gzip files.  (Closes: #738591).
   * checks/cruft.{desc,pm}:
     + [BR] Use license checking framework for checking php license.
       (Closes: #752540).
@@ -10,6 +15,10 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Fix another false positive for gfdl invariants in
       php-elisp.
     + [BR] Detect old path for upstream metadata.
+  * checks/description.{desc,pm}:
+    + [SL] Check for one word short description.  (Closes: #756643).
+    + [SL] Check if the short description is the same as the
+      package name.  (Closes: #757398).
   * checks/fields.pm:
     + [NT] Apply patch from Salvatore Bonaccorso to recommend the
       new cgit URLs for anonscm.debian.org over the webgit URLs.
@@ -21,11 +30,6 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       package.
     + [BR] Whitelist <link rel="generator-home"...> in privacy breach
       checker.
-  * checks/changes-file.{desc,pm}:
-    + [BR] Add patch from Ivo De Decker, add check for
-      backports changes file.  (Closes: #732225).
-    + [BR] Apply patch from Tomasz Bucher, add check for
-      for timestamped gzip files.  (Closes: #738591).
   * checks/menu-format.pm:
     + [BR] Add new desktop keys files. Move key list to data.
       (Closes: #755266).
@@ -42,15 +46,21 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect undefined license.  (Closes: #733659).
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
-  * checks/description.{desc,pm}:
-    + [SL] Check for one word short description.  (Closes: #756643).
-    + [SL] Check if the short description is the same as the
-      package name.  (Closes: #757398).
 
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
       false postive in mono.
+  * data/debhelper/dh_commands:
+    + [BR] Add patch from  Piotr Ożarowski, dh-python2
+      moved to dh-python package (Closes: #740161).
+  * data/debhelper/dh_commands-manual:
+    + [JW] Add dh_apache2 relations to avoid a false-positive.
+      Thanks to Axel Beckert for reporting the issue.
+      (Closes: #748688)
+  * data/fields/obsolete-packages:
+    + [NT] Add ruby1.9.1, ruby1.9.1-dev and libruby1.9.1 per
+      request of the Ruby team.
   * data/files/js-libraries:
     + [BR] Apply patch from Paul Wise for detection of
       libjs-excanvas.
@@ -63,16 +73,6 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       freesci-doc package).
     + [BR] Detect libjs-jquery-ui use.
     + [BR] Detect pledgie.com as a donation website.
-  * data/debhelper/dh_commands:
-    + [BR] Add patch from  Piotr Ożarowski, dh-python2
-      moved to dh-python package (Closes: #740161).
-  * data/debhelper/dh_commands-manual:
-    + [JW] Add dh_apache2 relations to avoid a false-positive.
-      Thanks to Axel Beckert for reporting the issue.
-      (Closes: #748688)
-  * data/fields/obsolete-packages:
-    + [NT] Add ruby1.9.1, ruby1.9.1-dev and libruby1.9.1 per
-      request of the Ruby team.
 
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Correct tutorial now that the "index" collection
