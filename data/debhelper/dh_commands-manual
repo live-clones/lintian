@@ -12,6 +12,7 @@
 #
 # Please keep this sorted.
 
+dh_apache2||dh-apache2 | apache2-dev
 dh_lv2config||lv2core
 dh_nativejava||gcj-native-helper | default-jdk-builddep
 dh_python2||python | python-all | python-dev | python-all-dev
