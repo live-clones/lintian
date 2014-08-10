@@ -704,7 +704,8 @@ sub verify_desktop_file {
     # Check that the Exec tag specifies how to pass a filename if MimeType
     # tags are present.
     if ($file =~ m,^usr/share/applications/, and defined $vals{'MimeType'}) {
-        unless(defined $vals{'Exec'} and $vals{'Exec'} =~ m,(^|[^%])%[fFuU]/,) {
+        unless(defined $vals{'Exec'}
+            and $vals{'Exec'} =~ m,(?:^|[^%])%[fFuU]/,){
             tag 'desktop-mime-but-no-exec-code', $file;
         }
     }
