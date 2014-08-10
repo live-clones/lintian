@@ -78,6 +78,11 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [NT] Correct tutorial now that the "index" collection
       is gone.
 
+  * reporting/{config,html_reports}:
+    + [NT] Add support for copying the documentation rather than
+      symlinking to it.  Thanks to Nicolas Sévelin-Radiguet for
+      reporting the issue.  (Closes: #756301)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 13 Jul 2014 21:04:57 +0200
 
 lintian (2.5.25) unstable; urgency=medium

@@ -44,6 +44,7 @@ our (
     $statistics_file,$LINTIAN_AREA, $HISTORY,
     $HISTORY_DIR, $LINTIAN_SOURCE,$GRAPHS_RANGE_DAYS,
     $GRAPHS, $LINTIAN_MIRROR_NAME, $HARNESS_STATE_DIR,
+    $COPY_DOCS,
 );
 
 # Read the configuration.
@@ -62,7 +63,7 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
-  find_backlog);
+  find_backlog copy_dir);
 
 my $old_statistics;
 my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
@@ -133,8 +134,13 @@ mkdir("$HTML_TMP_DIR/full", 0777);
 mkdir("$HTML_TMP_DIR/maintainer", 0777);
 mkdir("$HTML_TMP_DIR/tags", 0777);
 symlink('.', "$HTML_TMP_DIR/reports");
-symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
-symlink("$LINTIAN_ROOT/doc/api.html", "$HTML_TMP_DIR/library-api");
+if ($COPY_DOCS) {
+    copy_dir("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
+    copy_dir("$LINTIAN_ROOT/doc/api.html", "$HTML_TMP_DIR/library-api");
+} else {
+    symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
+    symlink("$LINTIAN_ROOT/doc/api.html", "$HTML_TMP_DIR/library-api");
+}
 
 if ($ARGV[0]) {
     copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")

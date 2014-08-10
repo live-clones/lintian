@@ -14,6 +14,7 @@ $LOG_DIR = "$HOME/logs";
 $HTML_DIR = "$HOME/www";
 $HTML_TMP_DIR = "$HTML_DIR.new";
 $HARNESS_STATE_DIR = "$HOME/harness-state";
+$COPY_DOCS = 0;
 
 # Link to the Lintian source code
 $LINTIAN_SOURCE = "http://anonscm.debian.org/gitweb/?p=lintian/lintian.git";
