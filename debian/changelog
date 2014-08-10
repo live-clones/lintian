@@ -29,6 +29,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
   * checks/menu-format.pm:
     + [BR] Add new desktop keys files. Move key list to data.
       (Closes: #755266).
+    + [NT] Apply patch from Niklas Fiekas to check for desktop files
+      with MimeType-field but no format code in the Exec-field.
+      (Closes: #757383)
   * checks/phppear.pm:
     + [BR] Fix a false positive for
       missing-pkg-php-tools-addon phpcomposer, thanks to

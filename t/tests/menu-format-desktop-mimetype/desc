@@ -2,5 +2,7 @@ Testname: menu-format-desktop-mimetype
 Sequence: 6000
 Version: 1.0
 Section: doc
-Description: Check update-desktop-database and MimeType *.desktop
-References: Debian Bug#488832, Debian Bug#525133
+Description: Check mime-related issues in desktop files
+References: Debian Bug#488832, Debian Bug#525133, #757383
+Test-For:
+ desktop-mime-but-no-exec-code
