@@ -63,6 +63,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [JW] Add dh_apache2 relations to avoid a false-positive.
       Thanks to Axel Beckert for reporting the issue.
       (Closes: #748688)
+  * data/fields/obsolete-packages:
+    + [NT] Add ruby1.9.1, ruby1.9.1-dev and libruby1.9.1 per
+      request of the Ruby team.
 
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Correct tutorial now that the "index" collection

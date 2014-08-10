@@ -100,3 +100,8 @@ hardening-wrapper => use dpkg-buildflags instead
 hardening-includes => use dpkg-buildflags instead
 # Deprecated in Jessie (#746563)
 python-support => use dh_python2 instead
+
+# Deprecated in Jessie (#722084)
+ruby1.9.1
+ruby1.9.1-dev
+libruby1.9.1
