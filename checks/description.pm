@@ -31,6 +31,7 @@ use Encode qw(decode);
 
 use Lintian::Check qw(check_spelling check_spelling_picky);
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(strip);
 
 sub run {
     my ($pkg, $type, $info, undef, $group) = @_;
@@ -40,7 +41,6 @@ sub run {
     my $unindented_list = 0;
     my $synopsis;
     my $description;
-    my $wordcount;
 
     # description?
     my $full_description = $info->field('description');
@@ -52,7 +52,11 @@ sub run {
     $full_description =~ m/^([^\n]*)\n(.*)$/s;
     ($synopsis, $description) = ($1, $2);
     unless (defined $synopsis) {
-        $synopsis = $full_description;
+        # The first line will always be completely stripped but
+        # continuations may have leading whitespace.  Therefore we
+        # have to strip $full_description to restore this property,
+        # when we use it as a fall-back value of the synopsis.
+        $synopsis = strip($full_description);
         $description = '';
     }
 
@@ -78,7 +82,7 @@ sub run {
         } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
             tag 'description-is-dh_make-template' unless $template++;
         }
-        if (($wordcount = $synopsis =~ s/((^|\s)\S)/$1/g) == 1) {
+        if ($synopsis !~ m/\s/) {
             tag 'description-too-short';
         }
         my $pkg_fmt = lc $pkg;
