@@ -205,3 +205,12 @@ Info: The paragraph has a "License" and a "Copyright" field, but no
  Lintian will attempt to guess what you intended and continue based on
  its guess.  If the guess is wrong, you may see spurious tags related
  to this paragraph.
+
+Tag: pipe-symbol-used-as-license-disjunction
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: In contrast to package dependencies, the pipe symbol or vertical
+ bar does not indicate a logical disjunction or OR-relationship
+ between two license short names. Instead, the keyword "or" between
+ two license names indicates the dual licensing.

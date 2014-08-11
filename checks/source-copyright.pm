@@ -277,6 +277,10 @@ sub _parse_dep5 {
             my ($found_license, $full_license, $short_license, @short_licenses)
               = parse_license($license,$current_line);
             # Standalone license paragraph
+            if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
+                tag 'pipe-symbol-used-as-license-disjunction', $short_license,
+                  "(paragraph at line $current_line)";
+            }
             if(not defined($full_license)) {
                 tag 'missing-license-text-in-dep5-copyright', $license,
                   "(paragraph at line $current_line)";
@@ -299,6 +303,10 @@ sub _parse_dep5 {
 
             my ($found_license, $full_license, $short_license, @short_licenses)
               = parse_license($license,$current_line);
+            if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
+                tag 'pipe-symbol-used-as-license-disjunction', $short_license,
+                  "(paragraph at line $current_line)";
+            }
             if ($found_license) {
                 for (@short_licenses) {
                     $short_licenses_seen{$short_license} = $i;
