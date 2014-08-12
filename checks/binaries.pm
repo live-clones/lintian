@@ -391,7 +391,7 @@ sub run {
         next if $type eq 'udeb';
 
         # Perl library?
-        if ($file =~ m,^usr/lib/perl5/.*\.so$,) {
+        if ($file =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.so$,) {
             $has_perl_lib = 1;
         }
 

@@ -666,9 +666,9 @@ sub run {
             # ---------------- .packlist files
             elsif ($fname =~ m,^usr/lib/perl.*/.packlist$,) {
                 tag 'package-installs-packlist', $file;
-            }elsif ($fname =~ m,^usr/lib/perl5/.*\.(?:pl|pm)$,) {
+            }elsif ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.(?:pl|pm)$,) {
                 push @nonbinary_perl_files_in_lib, $file;
-            }elsif ($fname =~ m,^usr/lib/perl5/.*\.(?:bs|so)$,) {
+            }elsif ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$,) {
                 $has_binary_perl_file = 1;
             }
            # ---------------- /usr/lib -- needs to go after the other usr/lib/*
@@ -1784,7 +1784,7 @@ sub run {
             my $dirname = $dir->name;
             next if ($dirname =~ m{^var/} or $dirname =~ m{^etc/});
             if (scalar($dir->children) == 0) {
-                if (    $dirname ne 'usr/lib/perl5/'
+                if (    $dirname !~ m;^usr/lib/(?:[^/]+/)?perl5/$;
                     and $dirname ne 'usr/share/perl5/'
                     and $dirname !~ m;^usr/share/python-support/;) {
                     tag 'package-contains-empty-directory', $dirname;

@@ -715,7 +715,7 @@ Tag: package-installs-nonbinary-perl-in-usr-lib-perl5
 Severity: normal
 Certainty: certain
 Info: Architecture-independent Perl code should be placed in
- <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>
+ <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/.../perl5</tt>
  unless there is at least one architecture-dependent file
  in the module.
 Ref: perl-policy 2.3

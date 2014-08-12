@@ -611,7 +611,7 @@ msgstr ""
 #: checks/binaries.desc:226
 #, no-wrap
 msgid ""
-"This package includes a *.so file in <tt>/usr/lib/perl5</tt>,\n"
+"This package includes a *.so file in <tt>/usr/lib/.../perl5</tt>,\n"
 "normally indicating that it includes a binary Perl module.  Binary Perl\n"
 "modules must depend on perlapi-$Config{version} (from the Config module).\n"
 "If the package is using debhelper, this problem is usually due to a\n"
@@ -8622,7 +8622,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "Architecture-independent Perl code should be placed in\n"
-"<tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>\n"
+"<tt>/usr/share/perl5</tt>, not <tt>/usr/lib/.../perl5</tt>\n"
 "unless there is at least one architecture-dependent file\n"
 "in the module."
 msgstr ""
