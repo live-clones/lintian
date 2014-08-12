@@ -18,6 +18,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+VENDORARCH := $(shell perl -MConfig -wE'say substr($$Config{vendorarch},1)')
+
 clean:
 	mkdir -p .svn CVS "{arch}" .arch-ids .bzr
 	touch files/.cvsignore files/svn-commit.tmp files/svk-commitsEr9P.tmp
@@ -53,25 +55,25 @@ binary-indep:
 	touch debian/tmp/usr/share/menu/menu
 	chmod 644 debian/tmp/usr/lib/menu/*
 
-	install -d debian/tmp/usr/lib/perl5/foo
-	mkdir debian/tmp/usr/lib/perl5/.svn
-	mkdir debian/tmp/usr/lib/perl5/CVS
-	mkdir "debian/tmp/usr/lib/perl5/{arch}"
-	mkdir debian/tmp/usr/lib/perl5/.arch-ids
-	mkdir debian/tmp/usr/lib/perl5/.bzr
-	mkdir debian/tmp/usr/lib/perl5/.be
-	mkdir debian/tmp/usr/lib/perl5/.ditrack
+	install -d debian/tmp/$(VENDORARCH)/foo
+	mkdir debian/tmp/$(VENDORARCH)/.svn
+	mkdir debian/tmp/$(VENDORARCH)/CVS
+	mkdir "debian/tmp/$(VENDORARCH)/{arch}"
+	mkdir debian/tmp/$(VENDORARCH)/.arch-ids
+	mkdir debian/tmp/$(VENDORARCH)/.bzr
+	mkdir debian/tmp/$(VENDORARCH)/.be
+	mkdir debian/tmp/$(VENDORARCH)/.ditrack
 	install -d debian/tmp/usr/share/perl5
-	echo foo > debian/tmp/usr/lib/perl5/foo/.gitignore
-	echo foo > debian/tmp/usr/lib/perl5/foo/.hgignore
-	echo foo > debian/tmp/usr/lib/perl5/foo/.hgtags
-	echo foo > debian/tmp/usr/lib/perl5/foo/.hg_archival.txt
+	echo foo > debian/tmp/$(VENDORARCH)/foo/.gitignore
+	echo foo > debian/tmp/$(VENDORARCH)/foo/.hgignore
+	echo foo > debian/tmp/$(VENDORARCH)/foo/.hgtags
+	echo foo > debian/tmp/$(VENDORARCH)/foo/.hg_archival.txt
 
-	touch debian/tmp/usr/lib/perl5/foo/.packlist
-	chmod 644 debian/tmp/usr/lib/perl5/foo/.packlist
-	touch debian/tmp/usr/lib/perl5/foo/bar.pm
-	touch -t 197501010101 debian/tmp/usr/lib/perl5/foo/ancient.pm
-	chmod 644 debian/tmp/usr/lib/perl5/foo/bar.pm
+	touch debian/tmp/$(VENDORARCH)/foo/.packlist
+	chmod 644 debian/tmp/$(VENDORARCH)/foo/.packlist
+	touch debian/tmp/$(VENDORARCH)/foo/bar.pm
+	touch -t 197501010101 debian/tmp/$(VENDORARCH)/foo/ancient.pm
+	chmod 644 debian/tmp/$(VENDORARCH)/foo/bar.pm
 
 	install -d debian/tmp/usr/share/pixmaps
 	install -d debian/tmp/usr/share/pixmaps/foo

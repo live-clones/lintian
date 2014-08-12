@@ -6,6 +6,8 @@ dev_tmp=debian/tmp-dev
 LIB=libbaz1
 DEV=libbaz1-dev
 
+VENDORARCH := $(shell perl -MConfig -wE'say substr($$Config{vendorarch},1)')
+
 build-arch:
 	$(MAKE)
 
@@ -74,9 +76,9 @@ binary-arch: build-arch binary-correct
 	install -m644 libbaz.so $(lib_tmp)/usr/lib/libbaz.so
 	strip --remove-section=.comment --strip-unneeded $(lib_tmp)/usr/lib/libbaz.so
 	# Pretend to be a Perl module to test a lack of Perl dependencies.
-	install -d $(lib_tmp)/usr/lib/perl5/auto/Foo
-	install -m 644 libbaz2.so.1.0.3b $(lib_tmp)/usr/lib/perl5/auto/Foo/Foo.so
-	strip $(lib_tmp)/usr/lib/perl5/auto/Foo/Foo.so
+	install -d $(lib_tmp)/$(VENDORARCH)/auto/Foo
+	install -m 644 libbaz2.so.1.0.3b $(lib_tmp)/$(VENDORARCH)/auto/Foo/Foo.so
+	strip $(lib_tmp)/$(VENDORARCH)/auto/Foo/Foo.so
 
 	install -d $(lib_tmp)/usr/share/doc/$(LIB)
 	install -m 644 debian/copyright $(lib_tmp)/usr/share/doc/$(LIB)
@@ -100,9 +102,9 @@ binary-arch: build-arch binary-correct
 	# and fuck up permission (TODO)
 	chmod a+x $(lib_tmp)/usr/lib/*.a
 	# Pretend to be a Perl module to test a lack of Perl dependencies.
-	install -d $(dev_tmp)/usr/lib/perl5/auto/Foo
-	install -m 644 libbaz2.so.1.0.3b $(dev_tmp)/usr/lib/perl5/auto/Foo/Foo.so
-	strip $(dev_tmp)/usr/lib/perl5/auto/Foo/Foo.so
+	install -d $(dev_tmp)/$(VENDORARCH)/auto/Foo
+	install -m 644 libbaz2.so.1.0.3b $(dev_tmp)/$(VENDORARCH)/auto/Foo/Foo.so
+	strip $(dev_tmp)/$(VENDORARCH)/auto/Foo/Foo.so
 	install -d $(dev_tmp)/usr/share/doc
 	ln -s $(LIB) $(dev_tmp)/usr/share/doc/$(DEV) 
 	install -d $(dev_tmp)/DEBIAN

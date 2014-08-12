@@ -3,7 +3,7 @@ Maintainer: Lintian Maintainer <lintian-maint@debian.org>
 Standards-Version: 3.1.1
 
 Package: filenames
-Architecture: all
+Architecture: any
 Depends: test, python-support
 Description: see how lintian reacts to weird filenames
  This package contains files with the most evil names I could find,

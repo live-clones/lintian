@@ -1,6 +1,6 @@
 E: libbaz source: not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
 E: libbaz source: weak-library-dev-dependency libbaz1-dev on libbaz1 (= ${source:Version})
-E: libbaz1-dev: missing-dependency-on-libc needed by usr/lib/perl5/auto/Foo/Foo.so
+E: libbaz1-dev: missing-dependency-on-libc needed by usr/lib/ma-dir/perl/version/auto/Foo/Foo.so
 E: libbaz1: control-file-has-bad-permissions shlibs 0755 != 0644
 E: libbaz1: control-file-has-bad-permissions symbols 0755 != 0644
 E: libbaz1: debian-changelog-file-missing-or-wrong-name
@@ -24,10 +24,10 @@ E: libbaz2-dbg: debian-changelog-file-missing
 E: libbaz2-dev: changelog-file-not-compressed changelog
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
-I: libbaz1-dev: binary-has-unneeded-section usr/lib/perl5/auto/Foo/Foo.so .comment
+I: libbaz1-dev: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1-dev: package-contains-empty-directory usr/include/
-I: libbaz1: binary-has-unneeded-section usr/lib/perl5/auto/Foo/Foo.so .comment
+I: libbaz1: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
 I: libbaz2-dbg: no-md5sums-control-file
 I: libbaz2-dev: no-md5sums-control-file
@@ -35,7 +35,7 @@ I: libbaz2: no-md5sums-control-file
 I: libbaz2: no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
 N: 4 tags overridden (4 warnings)
 W: libbaz source: ancient-standards-version 3.2.1 (current is CURRENT)
-W: libbaz source: binaries-have-file-conflict libbaz1 libbaz1-dev usr/lib/perl5/auto/Foo/Foo.so
+W: libbaz source: binaries-have-file-conflict libbaz1 libbaz1-dev usr/lib/ma-dir/perl/version/auto/Foo/Foo.so
 W: libbaz source: binaries-have-file-conflict libbaz1 libbaz2-dev usr/lib/libbaz2.a
 W: libbaz source: changelog-should-mention-nmu
 W: libbaz source: debhelper-but-no-misc-depends libbaz1

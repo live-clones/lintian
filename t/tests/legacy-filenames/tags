@@ -15,12 +15,11 @@ E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symli
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 E: filenames: no-copyright-file
 E: filenames: non-standard-toplevel-dir files/
-E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
+E: filenames: package-contains-ancient-file usr/lib/ma-dir/perl/version/foo/ancient.pm 1975-01-01
 E: filenames: package-contains-unsafe-symlink usr/lib/filenames/symlink2wrong
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
 E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2
-E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
 E: filenames: postinst-does-not-call-updatemenus usr/share/menu/menu
 E: filenames: subdir-in-usr-bin usr/bin/bin/
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
@@ -40,13 +39,13 @@ I: filename-games: no-md5sums-control-file
 I: filename-games: package-contains-empty-directory usr/games/
 I: filenames: duplicated-compressed-file usr/share/filenames/prototype.js.gz
 I: filenames: no-md5sums-control-file
-I: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
-I: filenames: package-contains-empty-directory usr/lib/perl5/.be/
-I: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
-I: filenames: package-contains-empty-directory usr/lib/perl5/.ditrack/
-I: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
-I: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
-I: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.arch-ids/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.be/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.bzr/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.ditrack/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.svn/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/CVS/
+I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/{arch}/
 I: filenames: using-first-person-in-description line 1: I
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game
@@ -108,25 +107,25 @@ W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
 W: filenames: no-priority-field
 W: filenames: no-section-field
 W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
-W: filenames: package-contains-bts-control-dir usr/lib/perl5/.be/
-W: filenames: package-contains-bts-control-dir usr/lib/perl5/.ditrack/
+W: filenames: package-contains-bts-control-dir usr/lib/ma-dir/perl/version/.be/
+W: filenames: package-contains-bts-control-dir usr/lib/ma-dir/perl/version/.ditrack/
 W: filenames: package-contains-devhelp-file-without-symlink usr/share/doc/filenames/bad-devhelp/c.devhelp.gz
 W: filenames: package-contains-linda-override usr/share/linda/overrides/filenames
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
-W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.arch-ids/
-W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.bzr/
-W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.svn/
-W: filenames: package-contains-vcs-control-dir usr/lib/perl5/CVS/
-W: filenames: package-contains-vcs-control-dir usr/lib/perl5/{arch}/
+W: filenames: package-contains-vcs-control-dir usr/lib/ma-dir/perl/version/.arch-ids/
+W: filenames: package-contains-vcs-control-dir usr/lib/ma-dir/perl/version/.bzr/
+W: filenames: package-contains-vcs-control-dir usr/lib/ma-dir/perl/version/.svn/
+W: filenames: package-contains-vcs-control-dir usr/lib/ma-dir/perl/version/CVS/
+W: filenames: package-contains-vcs-control-dir usr/lib/ma-dir/perl/version/{arch}/
 W: filenames: package-contains-vcs-control-file files/.arch-inventory
 W: filenames: package-contains-vcs-control-file files/.cvsignore
-W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.gitignore
-W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hg_archival.txt
-W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hgignore
-W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hgtags
+W: filenames: package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.gitignore
+W: filenames: package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.hg_archival.txt
+W: filenames: package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.hgignore
+W: filenames: package-contains-vcs-control-file usr/lib/ma-dir/perl/version/foo/.hgtags
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
-W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
-W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/ma-dir/perl/version/foo/ancient.pm
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/ma-dir/perl/version/foo/bar.pm
 W: filenames: script-not-executable files/feedparser.py
 W: filenames: svk-commit-file-in-package files/svk-commitsEr9P.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
