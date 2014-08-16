@@ -30,6 +30,7 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       package.
     + [BR] Whitelist <link rel="generator-home"...> in privacy breach
       checker.
+    + [BR] Fix FTBFS on !amd64.  (Closes: #757802).
   * checks/menu-format.pm:
     + [BR] Add new desktop keys files. Move key list to data.
       (Closes: #755266).
