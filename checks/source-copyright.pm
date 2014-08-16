@@ -32,13 +32,13 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(parse_dpkg_control slurp_entire_file);
 use Lintian::Data;
 
-my $BAD_SHORT_LICENSES =  Lintian::Data->new(
+my $BAD_SHORT_LICENSES = Lintian::Data->new(
     'source-copyright/bad-short-licenses',
     qr/\s*\~\~\s*/,
     sub {
         return {
-            'regex'=>  qr/$_[0]/xms,
-            'tag' => $_[1],
+            'regex' => qr/$_[0]/xms,
+            'tag'   => $_[1],
         };
     });
 
@@ -78,8 +78,8 @@ sub run {
         }
     }
 
-    if(defined($copyright_filename)) {
-        _check_dep5_copyright($info,$copyright_filename);
+    if (defined($copyright_filename)) {
+        _check_dep5_copyright($info, $copyright_filename);
     }
     return;
 }
@@ -148,7 +148,7 @@ sub _find_dep5_version {
 }
 
 sub _check_dep5_copyright {
-    my ($info,$copyright_filename) = @_;
+    my ($info, $copyright_filename) = @_;
     my $contents = slurp_entire_file($copyright_filename);
     my (@dep5, @lines);
 
@@ -178,21 +178,21 @@ sub _check_dep5_copyright {
     $first_para =~ m,^Format(?:-Specification)?:\s*(.*),mi;
     my $uri = $1;
     $uri =~ s/^([^#\s]+)#/$1/
-      if defined $uri;   # strip fragment identifier
+      if defined $uri;               # strip fragment identifier
 
     if (!defined $uri) {
         tag 'unknown-copyright-format-uri';
         return;
     }
 
-    my $version =  _find_dep5_version($uri);
+    my $version = _find_dep5_version($uri);
 
     return if !defined($version);
     if ($version =~ m,wiki,) {
         tag 'wiki-copyright-format-uri', $uri;
     }elsif ($version =~ m,svn$,) {
         tag 'unversioned-copyright-format-uri', $uri;
-    }elsif (versions_compare $version,'<<', $dep5_last_normative_change){
+    }elsif (versions_compare $version, '<<', $dep5_last_normative_change) {
         tag 'out-of-date-copyright-format-uri', $uri;
     }
 
@@ -217,15 +217,15 @@ sub _check_dep5_copyright {
 
     return if (!@dep5);
 
-    _parse_dep5($info,\@dep5,\@lines);
+    _parse_dep5($info, \@dep5, \@lines);
 
     return;
 }
 
 sub _parse_dep5 {
-    my ($info,$dep5ref,$linesref) = @_;
-    my @dep5 = @$dep5ref;
-    my @lines = @$linesref;
+    my ($info, $dep5ref, $linesref) = @_;
+    my @dep5       = @$dep5ref;
+    my @lines      = @$linesref;
     my $first_para = shift @dep5;
     my %standalone_licenses;
     my %required_standalone_licenses;
@@ -245,14 +245,14 @@ sub _parse_dep5 {
     }
 
     my ($found_license_header, undef, undef, @short_licenses_header)
-      = parse_license($first_para->{'license'},1);
+      =parse_license($first_para->{'license'}, 1);
     for my $short_license (@short_licenses_header) {
         $required_standalone_licenses{$short_license} = 1;
-        $short_licenses_seen{$short_license} = 1;
+        $short_licenses_seen{$short_license}          = 1;
     }
 
     my @commas_in_files;
-    my $i = 0;
+    my $i            = 0;
     my $current_line = 0;
     for my $para (@dep5) {
         $i++;
@@ -274,35 +274,37 @@ sub _parse_dep5 {
         }
 
         if (defined $license and not defined $files) {
-            my ($found_license, $full_license, $short_license, @short_licenses)
-              = parse_license($license,$current_line);
+            my ($found_license, $full_license, $short_license,@short_licenses)
+              = parse_license($license, $current_line);
+
             # Standalone license paragraph
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
                 tag 'pipe-symbol-used-as-license-disjunction', $short_license,
                   "(paragraph at line $current_line)";
             }
-            if(not defined($full_license)) {
+            if (not defined($full_license)) {
                 tag 'missing-license-text-in-dep5-copyright', $license,
                   "(paragraph at line $current_line)";
-            } else {
+            }else {
                 for (@short_licenses) {
-                    $standalone_licenses{$_} = $i;
+                    $standalone_licenses{$_}             = $i;
                     $short_licenses_seen{$short_license} = $i;
                 }
             }
-        } elsif (defined $files) {
+        }elsif (defined $files) {
             if ($files =~ m/\A\s*\Z/mxs) {
                 tag 'missing-field-in-dep5-copyright', 'files',
                   '(empty field,',
                   "paragraph at line $current_line)";
             }
+
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
                 @commas_in_files = ($i, $files_fname);
             }
 
-            my ($found_license, $full_license, $short_license, @short_licenses)
-              = parse_license($license,$current_line);
+            my ($found_license, $full_license, $short_license,@short_licenses)
+              = parse_license($license, $current_line);
             if (defined($short_license) and $short_license =~ /\s++\|\s++/) {
                 tag 'pipe-symbol-used-as-license-disjunction', $short_license,
                   "(paragraph at line $current_line)";
@@ -314,7 +316,7 @@ sub _parse_dep5 {
                         $required_standalone_licenses{$_} = $i;
                     }
                 }
-            } else {
+            }else {
                 tag 'missing-field-in-dep5-copyright', 'license',
                   "(paragraph at line $current_line)";
             }
@@ -322,7 +324,7 @@ sub _parse_dep5 {
             if (not defined $copyright) {
                 tag 'missing-field-in-dep5-copyright', 'copyright',
                   "(paragraph at line $current_line)";
-            } elsif ($copyright =~ m/\A\s*\Z/mxs) {
+            }elsif ($copyright =~ m/\A\s*\Z/mxs) {
                 tag 'missing-field-in-dep5-copyright', 'copyright',
                   '(empty field,',
                   "paragraph at line $current_line)";
@@ -358,7 +360,7 @@ sub _parse_dep5 {
             my $value = $BAD_SHORT_LICENSES->value($bad_short_license);
             my $regex = $value->{'regex'};
             if ($license =~ m/$regex/x) {
-                tag $value->{'tag'},  $license,
+                tag $value->{'tag'}, $license,
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
             }
         }
@@ -368,13 +370,13 @@ sub _parse_dep5 {
 
 # parse a license block
 sub parse_license {
-    my ($license_block,$line) = @_;
-    my $full_license = undef;
+    my ($license_block, $line) = @_;
+    my $full_license  = undef;
     my $short_license = undef;
     return 0 unless defined($license_block);
     if ($license_block =~ m/\n/) {
         ($short_license, $full_license) = split /\n/, $license_block, 2;
-    } else {
+    }else {
         $short_license = $license_block;
     }
     $short_license =~ s/[(),]//;
@@ -385,7 +387,7 @@ sub parse_license {
     }
     $short_license = lc($short_license);
     my @licenses
-      = map { "\L$_" } (split(m/\s++(?:and|or)\s++/, $short_license));
+      =map { "\L$_" } (split(m/\s++(?:and|or)\s++/, $short_license));
     return 1, $full_license, $short_license, @licenses;
 }
 
