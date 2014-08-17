@@ -8,6 +8,8 @@
 #
 # Please sort by md5sum
 2ab371cb4a67747aaa7835ebb22cb0d5 ~~ a396330a335b055c5b8cb81299921c356286e6a7 ~~ 8e058aa0b336cd2b0bd0dc14db9e7d225ca34d3324652e2ea06eb48462f020f1 ~~ data-forbidden-lintian-files ~~ This is part of lintian test suite, used for testing this tag ~~ http://lintian.debian.org
+3752999d8a4142d93eed4c8c97f0997c ~~ 4a8b9c9207de05db6b26604083202f05419e9afc ~~ 1f24a4dd0b5dbddf247f935b10b50665191943c813ff81f4b808fcffdbe422f1 ~~ lena.tif ~~ Lenna test image ~~ https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=758442
 90c983b1d401c770bb28b03ad8791f9d ~~ 241278e1b032954bdff6405b3c963c8f0208ad51 ~~ 3db379a515ed0abd0dc74a149e1b7039b9b2978e61470c8021b1cebb02750145 ~~ libcpre.gcc.o ~~  This file comes from the Novell libc Software Development Kit ~~ https://lists.debian.org/debian-legal/2014/04/msg00025.html
+bcb76439e9848b22830ee44973664084 ~~ 658b1ca8c82055e2f8d57773b7dbcdead0af6c14 ~~ d4268e35d21def2ba215607d202fc52501c91fda5f7a67c5bd0e2942f9afbcb6 ~~ lena.mat ~~ Lenna test image ~~ https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=758442
 
 

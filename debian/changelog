@@ -47,7 +47,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect undefined license.  (Closes: #733659).
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
-
+  
+  * data/cruft/non-distributable-file:
+    + [BR] Detect play boy Lenna test image.
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
