@@ -48,8 +48,11 @@ lintian (2.5.26) UNRELEASED; urgency=medium
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
   
-  * data/cruft/non-distributable-file:
+  * data/cruft/non-distributable-files:
     + [BR] Detect play boy Lenna test image.
+  * data/cruft/non-free-files:
+    + [BR] Add non free icc profile HP5000_UVDuraImageGlossMaxQ.icc
+      from nips2 package.
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
