@@ -1,4 +1,3 @@
-I: testsuite-general source: inconsistent-testsuite-field
 I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/fifo
 P: testsuite-general source: unknown-runtime-tests-feature unknownfeature
 P: testsuite-general source: unknown-runtime-tests-field comment
