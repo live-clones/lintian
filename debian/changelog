@@ -33,7 +33,6 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       package.
     + [BR] Whitelist <link rel="generator-home"...> in privacy breach
       checker.
-    + [BR] Fix FTBFS on !amd64.  (Closes: #757802).
     + [NT] Apply patch from Damyan Ivanov to handle the new
       Perl5 library path location.  (Closes: #757921)
   * checks/menu-format.pm:
@@ -93,6 +92,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [NT] Add support for copying the documentation rather than
       symlinking to it.  Thanks to Nicolas Sévelin-Radiguet for
       reporting the issue.  (Closes: #756301)
+
+  * t:
+    + [BR] Fix FTBFS on !amd64.  (Closes: #757802).
 
  -- Niels Thykier <niels@thykier.net>  Sun, 13 Jul 2014 21:04:57 +0200
 
