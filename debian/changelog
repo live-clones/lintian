@@ -68,6 +68,11 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [JW] Add dh_apache2 relations to avoid a false-positive.
       Thanks to Axel Beckert for reporting the issue.
       (Closes: #748688)
+    + [NT] Add ":any" to all python related dependencies.  Thanks
+      to Matthias Klose for reporting the issue.  (Closes: #733733)
+  * data/debhelper/*:
+    + [NT] Refresh against sid.  Thanks to Christian Marillat for
+      reporting the out of date data.  (Closes: #758891)
   * data/fields/obsolete-packages:
     + [NT] Add ruby1.9.1, ruby1.9.1-dev and libruby1.9.1 per
       request of the Ruby team.
@@ -147,8 +152,6 @@ lintian (2.5.25) unstable; urgency=medium
     + [BR] add yc suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
       false postive in libdevel-nytprof-perl.
-  * data/debhelper/*:
-    + [NT] Refresh against sid.  (Closes: #758891)
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
       a regular expression for finding embedded copies of
