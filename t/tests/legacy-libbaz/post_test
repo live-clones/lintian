@@ -1,3 +1,3 @@
 /: hardening-.*/ d
 s/\(current is ([0-9]+\.)+[0-9]\)/(current is CURRENT)/
-s,usr/lib/[^\/]*/perl[0-9]*/[0-9]*\.[0-9]*/,usr/lib/ma-dir/perl/version/,g
+s,usr/lib/([^\/]*)?/perl[0-9]*(/[0-9]*\.[0-9]*)?/,usr/lib/ma-dir/perl/version/,g
