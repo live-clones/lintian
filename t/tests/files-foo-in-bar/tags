@@ -42,6 +42,7 @@ E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/bar.1.gz
 E: files-foo-in-bar: package-installs-into-etc-rc.boot etc/rc.boot/bar
 E: files-foo-in-bar: package-installs-into-etc-rc.d etc/rc.d/bar
+E: files-foo-in-bar: package-installs-packlist usr/lib/perl5/.packlist
 E: files-foo-in-bar: perl-module-in-core-directory usr/lib/perl/bar
 E: files-foo-in-bar: perl-module-in-core-directory usr/share/perl/bar
 E: files-foo-in-bar: subdir-in-bin bin/foo/

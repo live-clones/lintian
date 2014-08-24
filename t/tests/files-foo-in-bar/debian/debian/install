@@ -48,3 +48,4 @@ Bar.pm usr/lib/perl5/Foo
 bar.png usr/lib/files-foo-in-bar
 
 perllocal.pod usr/lib/perl-foo
+.packlist usr/lib/perl5
