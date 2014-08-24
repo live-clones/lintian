@@ -117,8 +117,12 @@ sub check_init_script {
     open(my $fh, '<', $unpacked_file);
     while (<$fh>) {
         lstrip;
+        if ($. == 1 and m{\A [#]! \s*/lib/init/init-d-script}xsm) {
+            $lsb_source_seen = 1;
+            last;
+        }
         next if /^#/;
-        if (m,^(?:\.|source)\s+/lib/lsb/init-functions,) {
+        if (m,(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script),){
             $lsb_source_seen = 1;
             last;
         }

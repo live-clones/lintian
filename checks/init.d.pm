@@ -247,9 +247,15 @@ sub check_init {
     my %needs_fs = ('remote' => 0, 'local' => 0);
     open(my $fd, '<', $initd_path);
     while (defined(my $l = <$fd>)) {
-        if ($. == 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
-            tag 'init.d-script-uses-usr-interpreter',
-              "etc/init.d/$initd_file $1";
+        if ($. == 1) {
+            if ($l =~ m,^\#!\s*(/usr/[^\s]+),) {
+                tag 'init.d-script-uses-usr-interpreter',
+                  "etc/init.d/$initd_file $1";
+            } elsif ($l =~ m{^ [#]! \s* /lib/init/init-d-script}xsm) {
+                for my $arg (qw(start stop restart force-reload status)) {
+                    $tag{$arg} = 1;
+                }
+            }
         }
         if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
             if ($lsb{BEGIN}) {
@@ -302,6 +308,14 @@ sub check_init {
         {
             tag 'init.d-script-sourcing-without-test',
               "etc/init.d/${initd_file}:$. $1";
+        }
+
+        if ($l =~ m{\. /lib/init/init-d-script}) {
+            # Some init.d scripts source init-d-script, since (e.g.)
+            # kFreeBSD does not allow shell scripts as interpreters.
+            for my $arg (qw(start stop restart force-reload status)) {
+                $tag{$arg} = 1;
+            }
         }
 
         # This should be more sophisticated: ignore heredocs, ignore quoted

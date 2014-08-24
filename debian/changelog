@@ -35,6 +35,10 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       checker.
     + [NT] Apply patch from Damyan Ivanov to handle the new
       Perl5 library path location.  (Closes: #757921)
+  * checks/init.d.pm:
+    + [NT] Allow usage of /lib/init/init-d-scripts as alternative to
+      implementing init.d targets in the script itself.  Thanks to
+      Yaroslav Halchenko for the report.  (Closes: #758236)
   * checks/menu-format.pm:
     + [BR] Add new desktop keys files. Move key list to data.
       (Closes: #755266).
@@ -49,6 +53,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Add a pedantic warning about non dep-5 debian/copyright.
     + [BR] Detect empty required fields.  (Closes: #748452, #656801).
     + [BR] Detect undefined license.  (Closes: #733659).
+  * checks/systemd.pm:
+    + [NT] Allow usage of /lib/init/init-d-scripts as alternative to
+      sourcing /lib/lsb/init-functions.
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
   
