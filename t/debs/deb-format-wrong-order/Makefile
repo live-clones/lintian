@@ -6,7 +6,7 @@ all:
 	echo '2.0' > debian-binary
 	mkdir -p usr/share/doc/$(name)
 	install -m 0644 copyright changelog usr/share/doc/$(name)
-	gzip -9 usr/share/doc/$(name)/changelog
+	gzip -9n usr/share/doc/$(name)/changelog
 	tar cfz data.tar.gz usr
 	chown 0:0 control
 	chmod 644 control
