@@ -12,6 +12,7 @@ dh-autoreconf
 dh-buildinfo
 dh-consoledata
 dh-di
+dh-dist-zilla
 dh-golang
 dh-kpatches
 dh-linktree
@@ -45,7 +46,7 @@ libgstreamer0.10-dev
 libgtk2.0-dev
 libimager-perl
 libpango1.0-dev
-libxine-dev
+libxine2-dev
 mozilla-devscripts
 parrot-devel
 pdl
@@ -69,6 +70,5 @@ swi-prolog-nox
 tex-common
 xml-core
 xserver-xorg-dev
-xulrunner-dev
 yorick-dev
 zope-debhelper

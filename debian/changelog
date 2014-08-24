@@ -147,6 +147,8 @@ lintian (2.5.25) unstable; urgency=medium
     + [BR] add yc suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
       false postive in libdevel-nytprof-perl.
+  * data/debhelper/*:
+    + [NT] Refresh against sid.  (Closes: #758891)
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
       a regular expression for finding embedded copies of
