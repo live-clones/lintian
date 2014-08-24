@@ -2,6 +2,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/binaries.{desc,pm}:
+    + [NT] Apply patch from Damyan Ivanov to handle the new
+      Perl5 library path location.
   * checks/changes-file.{desc,pm}:
     + [BR] Add patch from Ivo De Decker, add check for
       backports changes file.  (Closes: #732225).
@@ -31,6 +34,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Whitelist <link rel="generator-home"...> in privacy breach
       checker.
     + [BR] Fix FTBFS on !amd64.  (Closes: #757802).
+    + [NT] Apply patch from Damyan Ivanov to handle the new
+      Perl5 library path location.  (Closes: #757921)
   * checks/menu-format.pm:
     + [BR] Add new desktop keys files. Move key list to data.
       (Closes: #755266).
