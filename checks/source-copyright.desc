@@ -151,6 +151,13 @@ Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The license header contains a short name observed to be a
  misspelling of one of the standard short names.
 
+Tag: space-in-std-shortname-in-dep5-copyright
+Severity: minor
+Certainty: certain
+Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The license header contains a short name with a space, which
+ does not conform to the specification.
+
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible

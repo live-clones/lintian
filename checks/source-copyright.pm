@@ -399,6 +399,10 @@ sub _parse_dep5 {
     }
   LICENSE:
     while ((my $license, $i) = each %short_licenses_seen) {
+        if ($license =~ m,\s,) {
+            tag 'space-in-std-shortname-in-dep5-copyright', $license,
+              "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+        }
         foreach my $bad_short_license ($BAD_SHORT_LICENSES->all) {
             my $value = $BAD_SHORT_LICENSES->value($bad_short_license);
             my $regex = $value->{'regex'};

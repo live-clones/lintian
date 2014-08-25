@@ -8,6 +8,11 @@ Copyright: 2014, somebody1
 License: gplv1
  something
 
+Files: space
+Copyright: 2014, somebody1
+License: some space license
+ something
+
 Files: debian/*
 Copyright: 2014, somebody1
 License: bsd
