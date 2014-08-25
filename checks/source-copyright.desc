@@ -144,6 +144,13 @@ Info: Your copyright file references a license that is not defined.
  remember to also notify snapshot.debian.org about this
  package containing a non-distributable file.
 
+Tag: invalid-short-name-in-dep5-copyright
+Severity: minor
+Certainty: certain
+Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The license header contains a short name observed to be a
+ misspelling of one of the standard short names.
+
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible

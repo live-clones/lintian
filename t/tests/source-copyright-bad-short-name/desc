@@ -1,0 +1,6 @@
+Testname: source-copyright-bad-short-name
+Sequence: 6000
+Version: 1.0
+Description: Test for bad short name
+Test-For:
+ invalid-short-name-in-dep5-copyright

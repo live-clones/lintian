@@ -397,6 +397,7 @@ sub _parse_dep5 {
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }
     }
+  LICENSE:
     while ((my $license, $i) = each %short_licenses_seen) {
         foreach my $bad_short_license ($BAD_SHORT_LICENSES->all) {
             my $value = $BAD_SHORT_LICENSES->value($bad_short_license);
@@ -404,6 +405,7 @@ sub _parse_dep5 {
             if ($license =~ m/$regex/x) {
                 tag $value->{'tag'}, $license,
                   "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+                next LICENSE;
             }
         }
     }
