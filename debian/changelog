@@ -53,6 +53,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Add a pedantic warning about non dep-5 debian/copyright.
     + [BR] Detect empty required fields.  (Closes: #748452, #656801).
     + [BR] Detect undefined license.  (Closes: #733659).
+    + [BR] Apply patch from Johannes Schauer in order
+      to warn if the pipe symbol is used in license.
+      (Closes: #757583).
   * checks/systemd.pm:
     + [NT] Allow usage of /lib/init/init-d-scripts as alternative to
       sourcing /lib/lsb/init-functions.
