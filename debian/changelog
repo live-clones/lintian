@@ -101,6 +101,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       freesci-doc package).
     + [BR] Detect libjs-jquery-ui use.
     + [BR] Detect pledgie.com as a donation website.
+  * data/source-copyright/bad-short-licenses:
+    + [BR] Add unspecified and - as bad license.
 
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Correct tutorial now that the "index" collection

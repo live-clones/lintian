@@ -1,7 +1,9 @@
 # regex ~~ tag
 # please alpha short by tag then regex
 # note license is alway lower case
+\b-\b             ~~ license-problem-undefined-license
 \bfixme\b         ~~ license-problem-undefined-license
 \btodos?\b        ~~ license-problem-undefined-license
 \bundefined\b     ~~ license-problem-undefined-license
 \bunknown?\b      ~~ license-problem-undefined-license
+\bunspecified\b   ~~ license-problem-undefined-license
