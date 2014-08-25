@@ -56,6 +56,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Apply patch from Johannes Schauer in order
       to warn if the pipe symbol is used in license.
       (Closes: #757583).
+    + [BR] Apply patch from Johannes Schauer in order to
+      check if DEP-5 debian/copyright covers all files
+      in the unpacked sources. (Closes: #757551).
   * checks/systemd.pm:
     + [NT] Allow usage of /lib/init/init-d-scripts as alternative to
       sourcing /lib/lsb/init-functions.
