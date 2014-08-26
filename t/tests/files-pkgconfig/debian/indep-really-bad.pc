@@ -27,6 +27,9 @@ Cflags: \
     -fno-check-new \
     -fno-inline \
     -Wl,z,relro \
+    -pie \
+    -fno-strict-aliasing -fwrapv -fexcess-precision=standard \
+    -ffast-math -funsafe-math-optimizations -fsigned-zeros -fno-trapping-math -fassociative-math -freciprocal-math -fsignaling-math -fno-errno-math -ffp-contract -fassociative-math -ffinite-math-only \
     @SOME_FLAGS@
 #False positive
 Fflags: \

@@ -14,7 +14,6 @@
 # found in dolfin.pc
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?stack-protector) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (--param=ssp-buffer-size=\d+) \s
-^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?rounding-math) \s
 # found in clam_core.pc
 [:=\h](-[IL](?:/usr/local/|/var/cache/pbuilder/build/|/var/lib/s?buildd?/)\S*)\s
 # found in scilab.pc
@@ -29,6 +28,17 @@
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-[DU]NEW_STDCPP) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?check-new) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?inline) \s
+# found in postgres sql see 687208
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-pie) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?strict-aliasing) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?wrapv) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-fexcess-precision=\w+) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?unsafe-math-optimizations) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?signed-zeros) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?fp-contract) \s
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?finite-math-only) \s
+# generic math
+^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f\S+math) \s
 # found in libbt.pc
 ^(?:[lL]ibs\h*:|LDFLAGS\h*=) (?:\V*\h)? (-Wl,z,relro) \s
 # not replace automake variable
