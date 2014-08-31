@@ -106,8 +106,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect pledgie.com as a donation website.
   * data/source-copyright/bad-short-licenses:
     + [BR] Add unspecified and - as bad license.
-    + [BR] Detect some invalid short name. Thanks to 
-       Johannes Schauer.
+    + [BR] Detect some invalid short name. Thanks to
+      Johannes Schauer.
 
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Correct tutorial now that the "index" collection
