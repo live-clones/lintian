@@ -1,6 +1,6 @@
 Last generated 2014-09-01
-Coverage (Tags): 1033/1103 (93.65%), w. legacy tests: 1091/1103 (98.91%)
-Coverage (Checks): 37/45 (82.22%), w. legacy tests: 39/45 (86.67%)
+Coverage (Tags): 1034/1103 (93.74%), w. legacy tests: 1092/1103 (99.00%)
+Coverage (Checks): 38/45 (84.44%), w. legacy tests: 40/45 (88.89%)
 
 The following tags are not tested by the test suite:
 
@@ -19,8 +19,6 @@ menus executable-in-usr-share-docbase
 menus executable-menu-file
 
 shared-libs shlib-without-PT_GNU_STACK-section
-
-testsuite inconsistent-testsuite-field
 
 The following tags are only tested by the legacy test suite:
 
