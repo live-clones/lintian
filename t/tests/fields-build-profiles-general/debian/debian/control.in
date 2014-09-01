@@ -4,16 +4,30 @@ Section: devel
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9),
- big <profile.stage1>, bpfail1 <foobar>,
- bpfail2 <foo.bar>, bpfail3 <profile.bar>,
+ big <stage1>, bpfail1 <foobar>, bpcomplicated <stage1 nocheck> <cross>
 Build-Conflicts:
- dpkg-dev (>= 1.17.2),
- debhelper (>= 9.20140227)
+ dpkg-dev (>= 1.17.14),
+ debhelper (>= 9.20141010)
 
-Package: {$source}
+Package: {$source}-wrong-syntax
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Build-Profiles: !stage1
+Description: {$description} (wrong syntax)
+ Check the syntax of the Build-Profiles field
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: {$source}-unknown-profile
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Build-Profiles: <!stage1 !nocheck> <!unknown>
+Description: {$description} (unknown profile)
+ Check for unknown profile names
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

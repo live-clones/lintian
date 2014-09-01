@@ -1,8 +1,11 @@
-E: fields-build-profiles-general source: invalid-restriction-label-in-source-relation bar [build-depends: bpfail3 <profile.bar>]
-E: fields-build-profiles-general source: invalid-restriction-namespace-in-source-relation foo [build-depends: bpfail2 <foo.bar>]
-E: fields-build-profiles-general source: invalid-restriction-term-in-source-relation foobar [build-depends: bpfail1 <foobar>]
-W: fields-build-profiles-general source: restriction-list-with-debhelper-with-conflicting-debhelper-version
-W: fields-build-profiles-general source: restriction-list-with-debhelper-without-debhelper-version
-W: fields-build-profiles-general source: restriction-list-with-versioned-dpkg-dev-conflict
-W: fields-build-profiles-general source: restriction-list-without-versioned-dpkg-dev-dependency
-W: fields-build-profiles-general source: stageX-profile-used-but-no-binary-package-dropped
+E: fields-build-profiles-general source: invalid-profile-name-in-build-profiles-field unknown fields-build-profiles-general-unknown-profile
+E: fields-build-profiles-general source: invalid-profile-name-in-source-relation foobar [build-depends: bpfail1 <foobar>]
+E: fields-build-profiles-general source: invalid-restriction-formula-in-build-profiles-field !stage1 fields-build-profiles-general-wrong-syntax
+W: fields-build-profiles-general source: restriction-formula-with-debhelper-with-conflicting-version
+W: fields-build-profiles-general source: restriction-formula-with-debhelper-with-conflicting-version
+W: fields-build-profiles-general source: restriction-formula-with-debhelper-without-debhelper-version
+W: fields-build-profiles-general source: restriction-formula-with-debhelper-without-debhelper-version
+W: fields-build-profiles-general source: restriction-formula-with-versioned-dpkg-dev-conflict
+W: fields-build-profiles-general source: restriction-formula-with-versioned-dpkg-dev-conflict
+W: fields-build-profiles-general source: restriction-formula-without-versioned-dpkg-dev-dependency
+W: fields-build-profiles-general source: restriction-formula-without-versioned-dpkg-dev-dependency

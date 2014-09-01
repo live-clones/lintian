@@ -210,18 +210,6 @@ Info: The control file contains commented-out VCS-* lines, most
  probably a result of dh_make. These URLs should either be valid and
  uncommented, or removed.
 
-Tag: stageX-profile-used-but-no-binary-package-dropped
-Severity: normal
-Certainty: certain
-Info: You used a stage1 or stage2 build profile restriction in the build
- dependencies but you did not mark any binary packages as not being built with
- the used profile activated. Using a stage1 or stage2 build profile restriction
- means that you intend to change the build process in a way such that some of
- the build results will be different or not generated at all. All binary
- packages which would provide different functionality, would be empty or not be
- built at all under the stage1 or stage2 profiles must be marked as not being
- generated with the Build-Profiles field.
-
 Tag: pre-depends-directly-on-multiarch-support
 Severity: pedantic
 Certainty: possible
@@ -231,3 +219,17 @@ Info: The control file mentions multiarch-support in a Pre-Depends line.
  from glibc without updating every package, Pre-Depends: ${misc:Pre-Depends}
  should be used instead. Then multiarch-support can be removed by a change
  in debhelper followed by a binNMU of all affected packages.
+
+Tag: invalid-restriction-formula-in-build-profiles-field
+Severity: important
+Certainty: certain
+Info: The restriction formula in the Build-Profiles field must have the same
+ format as the restriction formula in the Build-Depends field with angle
+ brackets.
+
+Tag: invalid-profile-name-in-build-profiles-field
+Severity: important
+Certainty: possible
+Info: The restriction formula in Build-Profiles field includes an unknown build
+ profile. The only allowed build profiles are "stage1", "stage2", "nocheck",
+ "nodoc", "nobiarch" and "cross".

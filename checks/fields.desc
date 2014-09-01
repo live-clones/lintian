@@ -651,55 +651,44 @@ Info: The architecture string in this source relation has some
  negated.  This is not permitted by Policy.  Either all architectures must
  be negated or none of them may be.
 
-Tag: invalid-restriction-term-in-source-relation
-Severity: important
-Certainty: certain
-Info: The restriction list in the source relation includes a term which
- does not contain exactly one dot separating restriction namespace and label.
- A term in a restriction list is of the form "namespace.label" (without the
- quotes).
-
-Tag: invalid-restriction-namespace-in-source-relation
+Tag: invalid-profile-name-in-source-relation
 Severity: important
 Certainty: possible
-Info: The restriction list in the source relation includes a term with
- an unknown namespace. The only allowed namespace is "profile" (without the
- quotes).
+Info: The restriction formula in the source relation includes an unknown build
+ profile. The only allowed build profiles are "stage1", "stage2", "nocheck",
+ "nodoc", "nobiarch" and "cross".
 
-Tag: invalid-restriction-label-in-source-relation
-Severity: important
-Certainty: possible
-Info: The restriction list in the source relation includes a term with
- an unknown label. The only allowed labels are "stage1", "stage2", "nocheck"
- and "cross".
-
-Tag: restriction-list-without-versioned-dpkg-dev-dependency
+Tag: restriction-formula-without-versioned-dpkg-dev-dependency
 Severity: normal
 Certainty: certain
-Info: If a restriction list appears in the build dependencies, then the
- source package has to build depend on dpkg-dev (&gt;= 1.17.2) for minimal
- restriction list support.
+Info: If a restriction formula appears in the source relation or if the
+ Build-Profiles field is used in a binary package stanza then the source
+ package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal
+ restriction formula support.
 
-Tag: restriction-list-with-versioned-dpkg-dev-conflict
+Tag: restriction-formula-with-versioned-dpkg-dev-conflict
 Severity: normal
 Certainty: certain
-Info: If a restriction list appears in the build dependencies, then the
- source package has to build depend on dpkg-dev (&gt;= 1.17.2) for minimal
- restriction list support. It must not conflict with version 1.17.2.
+Info: If a restriction formula appears in the build dependencies or if the
+ Build-Profiles field is used in a binary package stanza then the source
+ package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal
+ restriction formula support. It must not conflict with version 1.17.14.
 
-Tag: restriction-list-with-debhelper-without-debhelper-version
+Tag: restriction-formula-with-debhelper-without-debhelper-version
 Severity: normal
 Certainty: certain
-Info: If a restriction list appears in the build dependencies and the
- package uses debhelper, then the source package has to depend on at least
- debhelper 9.20140227.
+Info: If a restriction formula appears in the build dependencies or if the
+ Build-Profiles field is used in a binary package stanza and the package uses
+ debhelper, then the source package has to depend on at least debhelper
+ 9.20141010.
 
-Tag: restriction-list-with-debhelper-with-conflicting-debhelper-version
+Tag: restriction-formula-with-debhelper-with-conflicting-version
 Severity: normal
 Certainty: certain
-Info: If a restriction list appears in the build dependencies and the
- package uses debhelper, then the source package has to depend on at least
- debhelper 9.20140227. It must not conflict with version 9.20140227.
+Info: If a restriction formula appears in the build dependencies or if the
+ Build-Profiles field is used in a binary package stanza and the package uses
+ debhelper, then the source package has to depend on at least debhelper
+ 9.20141010. It must not conflict with version 9.20141010.
 
 Tag: depends-on-build-essential-package-without-using-version
 Severity: important

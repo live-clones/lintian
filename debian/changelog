@@ -2,6 +2,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/{control-file,fields}.{desc,pm}:
+    + [NT] Apply patch from Johannes Schauer to support the
+      new build profile syntax.  (Closes: #763773)
   * checks/dbus.{desc,pm}:
     + [NT] New check by Simon McVittie to discover some dbus
       related issues.  (Closes: #762609)

@@ -118,7 +118,7 @@ sub parse_element {
         )?                              # end of optional architecture
         (?:                             # start of optional restriction
           \s* <                         # open bracket for restriction
-          \s* ([^>,]+)                  # don't parse restrictions now
+          \s* ([^,]+)                   # don't parse restrictions now
           \s* >                         # closing bracket
         )?                              # end of optional restriction
     \s* $/x
@@ -223,7 +223,10 @@ sub new_norestriction {
     my ($class, $relation) = @_;
     $relation = '' unless defined($relation);
     $relation =~ s/\[[^,\]]*\]//g;
-    $relation =~ s/<[^>,]*>//g;
+    # we have to make sure that the following does not match the less than
+    # sign from a version comparison. We do this by doing a negative lookahead
+    # and a negative lookbehind for the "opening" triangular bracket
+    $relation =~ s/(?<!<)<(?![<=])[^,]*>//g;
     return $class->new($relation);
 }
 
@@ -376,11 +379,24 @@ sub implies_element {
     # If the names don't match, there is no relationship between them.
     return if $$p[1] ne $$q[1];
 
-    # Since the restriction list is not a set (as the architecture list) there
-    # is no way to calculate a superset or subset of one another. Furthermore,
-    # the evaluation depends on which build profiles are currently activated.
-    # With n being the number of possible build profiles, 2^n checks would
-    # have to be done. We decide not to do that (yet).
+    # the restriction formula forms a disjunctive normal form expression one
+    # way to check whether A <dnf1> implies A <dnf2> is to check:
+    #
+    # if dnf1 == dnf1 OR dnf2:
+    #     the second dependency is superfluous because the first dependency
+    #     applies in all cases the second one applies
+    #
+    # an easy way to check for equivalence of the two dnf expressions would be
+    # to construct the truth table for both expressions ("dnf1" and "dnf1 OR
+    # dnf2") for all involved profiles and then comparing whether they are
+    # equal
+    #
+    # the size of the truth tables grows with 2 to the power of the amount of
+    # involved profile names but since there currently only exist six possible
+    # profile names (see data/fields/build-profiles) that should be okay
+    #
+    # FIXME: we are not doing this check yet so if we encounter a dependency
+    # with build profiles we assume that one does not imply the other:
     return if defined $$p[6] or defined $$q[6];
 
     # If the names match, then the only difference is in the architecture or
@@ -763,6 +779,9 @@ sub unparse {
         }
         if (defined $relation->[4]) {
             $text .= " [$relation->[4]]";
+        }
+        if (defined $relation->[6]) {
+            $text .= " <$relation->[6]>";
         }
         return $text;
     } elsif ($rel_type eq 'AND' || $rel_type eq 'OR') {

@@ -37,6 +37,7 @@ use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control
 my @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
 my $LIBCS = Lintian::Relation->new(join(' | ', @LIBCS));
 my $src_fields = Lintian::Data->new('common/source-fields');
+my $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
 
 sub run {
     my ($pkg, undef, $info) = @_;
@@ -304,48 +305,72 @@ sub run {
     # packages might never be built in the first place because of build
     # profiles
 
-    # check which profile names are supposedly supported according to the build
-    # dependencies
-    my %used_profiles;
-    for my $field (
-        qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)
-      ) {
-        if (my $value = $info->source_field($field)) {
-            # If the field does not contain "profile." then skip this
-            # part.  They rarely do, so this is just a little
-            # "common-case" optimisation.
-            next if index($value, 'profile.') < 0;
-            for my $dep (split /\s*,\s*/, $value) {
-                for my $alt (split /\s*\|\s*/, $dep) {
-                    while ($alt =~ /<([^>]+)>/g) {
-                        for my $restr (split /\s+/, $1) {
-                            if ($restr =~ m/^!?profile\.(.*)/) {
-                                $used_profiles{$1} = 0;
-                            }
-                        }
-                    }
+    my $profiles_used = 0;
+
+    # check the syntax of the Build-Profiles field
+    for my $bin (@package_names) {
+        my $raw = $info->binary_field($bin, 'build-profiles');
+        next unless $raw;
+        $profiles_used = 1;
+        if (
+            $raw!~ m{^\s*              # skip leading whitespace
+                     <                 # first list start
+                       !?[a-z0-9]+     # (possibly negated) term
+                       (?:             # any additional terms
+                         \s+           # start with a space
+                         !?[a-z0-9]+   # (possibly negated) term
+                       )*              # zero or more additional terms
+                     >                 # first list end
+                     (?:               # any additional restriction lists
+                       \s+             # start with a space
+                       <               # additional list start
+                         !?[a-z0-9]+   # (possibly negated) term
+                         (?:           # any additional terms
+                           \s+         # start with a space
+                           !?[a-z0-9]+ # (possibly negated) term
+                         )*            # zero or more additional terms
+                       >               # additional list end
+                     )*                # zero or more additional lists
+                     \s*$              # trailing spaces at the end
+              }x
+          ) {
+            tag 'invalid-restriction-formula-in-build-profiles-field', $raw,
+              $bin;
+        } else {
+            # parse the field and check the profile names
+            $raw =~ s/^\s*<(.*)>\s*$/$1/;
+            for my $restrlist (split />\s+</, $raw) {
+                for my $profile (split /\s+/, $restrlist) {
+                    $profile =~ s/^!//;
+                    tag 'invalid-profile-name-in-build-profiles-field',
+                      $profile, $bin
+                      unless $KNOWN_BUILD_PROFILES->known($profile);
                 }
             }
         }
     }
 
-    # find those packages that do not get built because of a certain build
-    # profile
-    for my $bin (@package_names) {
-        my $raw = $info->binary_field($bin, 'build-profiles');
-        next unless $raw;
-        for my $prof (split /\s+/, $raw) {
-            if ($prof =~ s/^!//) {
-                $used_profiles{$prof} = 1;
-            }
+    # if a Build-Profiles field was used, then the package must depend on the
+    # correct dpkg (and optionally debhelper) versions
+    if ($profiles_used) {
+        my $build_all = $info->relation('build-depends-all');
+        my $build_conflicts_all = $info->relation('build-conflicts-all');
+        tag 'restriction-formula-without-versioned-dpkg-dev-dependency'
+          unless ($build_all->implies('dpkg-dev (>= 1.17.14)'));
+        tag 'restriction-formula-with-versioned-dpkg-dev-conflict'
+          if ($build_conflicts_all->implies_inverse('dpkg-dev (<< 1.17.14)'));
+        # if the package uses debhelper then it must require and not
+        # conflict with version >= 9.20141010
+        if ($build_all->implies('debhelper')) {
+            tag 'restriction-formula-with-debhelper-without-debhelper-version'
+              unless ($build_all->implies('debhelper (>= 9.20141010)'));
+            #<<< no tidy, tag name too long
+            tag 'restriction-formula-with-debhelper-with-conflicting-version'
+            #>>>
+              if (
+                $build_conflicts_all->implies_inverse(
+                    'debhelper (<< 9.20141010)'));
         }
-    }
-
-    # find out if the developer forgot to mark binary packages as not being
-    # built
-    while (my ($k, $v) = each(%used_profiles)) {
-        tag 'stageX-profile-used-but-no-binary-package-dropped'
-          if (($k eq 'stage1' || $k eq 'stage2') && $v == 0);
     }
 
     # find binary packages that Pre-Depend on multiarch-support without going
