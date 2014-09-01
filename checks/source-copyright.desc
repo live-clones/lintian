@@ -129,12 +129,12 @@ Certainty: possible
 Ref: https://ftp-master.debian.org/REJECT-FAQ.html
 Info: Your copyright file references a license that is not defined.
  Due to copyright law or treaties, files that are not available under
- a defined license are non-free and non-re-distributable. 
+ a defined license are non-free and non-re-distributable.
  .
- Referencing an undefined license could mean the file cannot be 
- distributed in Debian or it could simply mean that the existing 
+ Referencing an undefined license could mean the file cannot be
+ distributed in Debian or it could simply mean that the existing
  license needs to be documented. In both cases,
- the copyright file should be updated to reflect reality. 
+ the copyright file should be updated to reflect reality.
  .
  Please re-package the package without the file (if possible)
  or ask the FTP-masters to remove the package.
@@ -263,5 +263,3 @@ Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The <tt>Files</tt> paragraph in debian/copyright is superfluous as it is
  never used to match any files. You should be able to safely remove it.
-
-
