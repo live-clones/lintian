@@ -61,7 +61,7 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       in the unpacked sources. (Closes: #757551).
     + [BR] Detect bad short name and space in license.
       Thanks to Clint Adams and Johannes Schauer.
-      (Closes: #747248).
+      (Closes: #747248, #757615).
   * checks/systemd.pm:
     + [NT] Allow usage of /lib/init/init-d-scripts as alternative to
       sourcing /lib/lsb/init-functions.
