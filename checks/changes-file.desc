@@ -136,6 +136,6 @@ Tag: backports-upload-has-incorrect-version-number
 Severity: serious
 Certainty: certain
 Info: The version number doesn't comply with the standard backport version
- rules. It should end in ~bpoXX+N, where XX refers to the version number of
- the base distribution.
+ rules. It should end in ~bpoX+N, where X is the release version number of
+ the target distribution.
 Ref: http://backports.debian.org/Contribute/

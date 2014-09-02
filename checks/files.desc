@@ -957,7 +957,8 @@ Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.
  .
- You may use if compatible the debian package indicated in the hint.
+ Instead you can use the Debian package indicated in the hint, if it is
+ compatible.
 
 Tag: privacy-breach-google-adsense
 Severity: serious
@@ -1573,7 +1574,7 @@ Info: This package ships a PKCS#11 module configuration file under
 Tag: package-contains-timestamped-gzip
 Severity: wishlist
 Certainty: certain
-Info: The package contains a gzip'ed file that has timestamps.
+Info: The package contains a gzip-compressed file that has timestamps.
  Such files make the packages unreproducible, because their
  contents depend on the time when the package was built.
  .

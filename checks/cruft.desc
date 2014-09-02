@@ -353,17 +353,16 @@ Severity: important
 Certainty: certain
 Info: Upstream metadata is stored under an obsolete path.
  .
- Upstream MEtadata GAthered with YAml (UMEGAYA) an effort to collect
- meta-information about upstream projects in a file called
- <tt>debian/upstream/metadata</tt> in the source packages
- maintained in a publicly accessible version control system (VCS).
+ Upstream MEtadata GAthered with YAml (UMEGAYA) is an effort to collect
+ meta-information about upstream projects from any source package
+ with a publicly accessible VCS via a file called
+ <tt>debian/upstream/metadata</tt>.
  .
- Older version of this specification used
- <tt>debian/upstream-metadata.yaml</tt> and <tt>debian/upstream</tt>
- as file storage of meta-information.
+ Older versions of this specification used
+ <tt>debian/upstream-metadata.yaml</tt> or <tt>debian/upstream</tt>
+ as meta-information storage file.
  .
- You should move these file to <tt>debian/upstream/metadata</tt>.
-
+ You should move any such file to <tt>debian/upstream/metadata</tt>.
 
 Tag: configure-generated-file-in-source
 Severity: normal
@@ -499,11 +498,13 @@ Info: The source tarball contains a prebuilt (minified) JavaScript object.
 Tag: source-contains-prebuilt-ms-help-file
 Severity: serious
 Certainty: possible
-Info: The source tarball contains a prebuilt microsoft precompiled help
+Info: The source tarball contains a prebuilt Microsoft precompiled help
  file (CHM file).  These are often included by mistake when developers generate
  a tarball without cleaning the source directory first.
+ .
  CHM files are mainly produced by proprietary, Windows-specific software.
- They are also mainly consumed by Windows internal HTML Help Workshop.
+ They are also mainly consumed by the Microsoft HTML Help Workshop.
+ .
  There is Linux software to read them and an incomplete
  FreePascal related project to create them,
  but any examples in source packages are likely to be created

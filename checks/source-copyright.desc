@@ -25,10 +25,10 @@ Info: Every package must include the file <tt>/usr/share/doc/<i>pkg</i>/copyrigh
 
 Tag: no-dep5-copyright
 Severity: pedantic
-Certainty: possible
-Info: This package does not use Machine-readable debian/copyright file.
+Certainty: certain
+Info: This package does not use a machine-readable debian/copyright file.
  .
- This format help to review license problem and could be easily parsed
+ This format makes it easier to review licenses and can be easily parsed
  by Lintian.
 Ref: https://dep.debian.net/deps/dep5/
 
