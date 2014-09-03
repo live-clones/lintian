@@ -1071,6 +1071,9 @@ sub _clean_block {
     $text =~ s{\(&fdl;\)}{ }gxsm;
     $text =~ s{&fsf;}{free software foundation}gxsm;
 
+    # non breaking space
+    $text =~ s{&nbsp;}{ }gxsm;
+
     # replace some common comment-marker/markup with space
     $text =~ s{^\.\\\"}{ }gxms;               # man comments
 
