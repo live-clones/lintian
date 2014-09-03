@@ -68,6 +68,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
   
+  * data/cruft/gfdl-license-fragments-checks:
+    + [BR] Add tla false positive for gfdl license text.
   * data/cruft/non-distributable-files:
     + [BR] Detect play boy Lenna test image.
   * data/cruft/non-free-files:

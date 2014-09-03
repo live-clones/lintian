@@ -19,6 +19,8 @@
 \A with [ ] no [ ] invariants? [ ] sections? (?:[ ]?[,\.;][ ]? and [ ] no [ ] covers? [ ] texts?)?\Z ~~ ~~ license-problem-gfdl-non-official-text
 # jedit
 \A with [ ] no [ ] invariant [ ] sections?[ ]?,?[ ]? front[ ]?-?[ ]?cover [ ] texts? [ ] or [ ] back[ ]?-?[ ]?cover [ ] texts?[ ]?,?[ ]?each [ ] as [ ] defined [ ] in [ ] the [ ] license \Z ~~ ~~ license-problem-gfdl-non-official-text
+# tla
+\A with [ ] the [ ] front[ ]?-?[ ]?cover [ ] texts? [ ] being [ ] \(none\) [ ] and [ ] with [ ] the [ ] back[ ]?-?[ ]?cover [ ] texts [ ] being [ ] \(none\) \Z ~~ ~~ license-problem-gfdl-non-official-text
 #
 # Conditionnaly ok
 #
