@@ -1067,6 +1067,10 @@ sub _clean_block {
     $text =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
     $text =~ s{ \\ -}{-}gxsm;
 
+    # replace some shortcut (clisp)
+    $text =~ s{\(&fdl;\)}{ }gxsm;
+    $text =~ s{&fsf;}{free software foundation}gxsm;
+
     # replace some common comment-marker/markup with space
     $text =~ s{^\.\\\"}{ }gxms;               # man comments
 
