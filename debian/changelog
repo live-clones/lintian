@@ -62,6 +62,8 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect bad short name and space in license.
       Thanks to Clint Adams and Johannes Schauer.
       (Closes: #747248, #757615).
+    + [BR] Avoid to raise file-without-copyright-information
+      for .pc directory.
   * checks/systemd.pm:
     + [NT] Allow usage of /lib/init/init-d-scripts as alternative to
       sourcing /lib/lsb/init-functions.

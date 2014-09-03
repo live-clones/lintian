@@ -375,6 +375,9 @@ sub _parse_dep5 {
     } else {
         foreach my $srcfile (sort keys %file_coverage) {
             my $i = $file_coverage{$srcfile};
+            if ($srcfile =~ '^\.pc/') {
+                next;
+            }
             if (not $i) {
                 tag 'file-without-copyright-information', $srcfile;
             }
