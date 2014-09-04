@@ -54,7 +54,7 @@ sub check_test_feature{
 #
 sub determine_locale {
     for my $var (qw(LC_ALL LC_MESSAGES LANG)) {
-        return $ENV{$var} if exists($ENV{$var});
+        return $ENV{$var} if exists($ENV{$var}) and $ENV{$var} ne '';
     }
     return 'C.UTF-8';
 }

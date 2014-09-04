@@ -117,6 +117,10 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [NT] Correct tutorial now that the "index" collection
       is gone.
 
+  * lib/Lintian/Internal/FrontendUtil.pm:
+    + [NT] Ignore set, but empty locale environment variables.
+      Thanks to Michael Prokop for the report.  (Closes: #759726)
+
   * reporting/{config,html_reports}:
     + [NT] Add support for copying the documentation rather than
       symlinking to it.  Thanks to Nicolas Sévelin-Radiguet for
