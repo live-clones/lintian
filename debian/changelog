@@ -69,7 +69,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
       sourcing /lib/lsb/init-functions.
   * checks/testsuite.desc:
     + [BR] Update ref url.  (Closes: #755275).
-  
+
+  * data:
+    + [NT] Refresh several data files against sid.
   * data/cruft/gfdl-license-fragments-checks:
     + [BR] Add tla false positive for gfdl license text.
   * data/cruft/non-distributable-files:

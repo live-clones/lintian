@@ -8,14 +8,13 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2014-03-23
+# Last updated: 2014-09-06
 
 # Keep: xserver-xorg-input, xserver-xorg-input-2, xserver-xorg-input-2.1
 # Keep: xserver-xorg-input-4
 # Keep: xserver-xorg-video, xserver-xorg-video-1.0, xserver-xorg-video-1.9
 # Keep: xserver-xorg-video-2, xserver-xorg-video-4, xserver-xorg-video-5
 
-ada-compiler
 aide-binary
 alsaplayer-interface
 alsaplayer-output
@@ -45,6 +44,7 @@ calligra-l10n
 chasen-dic
 childsplay-alphabet-sounds
 cl-sql-backend
+conquest-dicom-server
 cron-daemon
 cudf-solver
 d-compiler
@@ -67,6 +67,7 @@ dyndns-client
 editor
 emacsen
 erlang-abi-15.b
+erlang-abi-17.0
 ettercap
 exim4-localscanapi-1.0
 exim4-localscanapi-1.1
@@ -77,6 +78,7 @@ firebird-dbg
 firebird-server
 firebird-udf
 firebird-utils
+fizmo
 fonts-japanese-gothic
 fonts-japanese-mincho
 fortran95-compiler
@@ -94,14 +96,15 @@ gem-plugin-image
 gem-plugin-record
 gem-plugin-video
 geoclue-provider
+gforge-db
 gforge-mta
-gfortran-mod-10
+gfortran-mod-12
 gimp-help
 gmerlin-encoders
 gmt-gshhs-data
 gnome-www-browser
 gnumach-image
-gnustep-back0.20-alt
+gnustep-back0.24-alt
 gnutls-dev
 go-compiler
 gsettings-backend
@@ -163,6 +166,7 @@ kfreebsd-image-10
 kfreebsd-image-9
 kfreebsd-source
 ladspa-plugin
+lha
 libblas.so
 libblas.so.3
 libblas.so.3gf
@@ -179,11 +183,6 @@ libgdchart-gd2-dev
 libgl-dev
 libgl1
 libguile-dev
-libhd12-doc
-libhd13-doc
-libhd14-doc
-libhd15-doc
-libhd16-doc
 libhtml-wikiconverter-dialect
 libio-compress-base-perl
 libio-compress-bzip2-perl
@@ -197,32 +196,34 @@ liblapack.so.3
 liblapack.so.3gf
 libmp3splt0-plugin
 libneon-dev
-libnora-ruby
 libode0-dev
 libopendbx1-backend
 libopenide-util-java
 libopenni-sensor
 libopenni-sensor-dev
-libppl-c-dev
 libreadline-dbg
+libreoffice-avmedia-backend
 libreoffice-grammarcheck
-libreoffice-help-4.1
-libreoffice-l10n-4.1
+libreoffice-help-4.3
+libreoffice-l10n-4.3
 libreoffice-style
 libstdc++-dev
 libtcl
 libtk
 libvala-dev
-libxine-doc
 libzookeeper-dev
 licq-plugin-ui
 lightdm-greeter
 linux-initramfs-tool
 linux-kernel-log-daemon
+linux-latest-image-dbg
 lisp-compiler
+live-config-backend
 lua
 lv2-host
 lv2-plugin
+lzh-archiver
+lzip-alternative
 mail-reader
 mail-transport-agent
 mailx
@@ -249,6 +250,7 @@ neutron-plugin
 news-reader
 news-transport-system
 nova-compute-hypervisor
+nslcd-2
 ntrack-module-0
 objc++-compiler
 objc-compiler
@@ -269,15 +271,17 @@ php5-user-cache
 pinentry
 pinentry-x11
 ping
-plymouth-theme
 pop3-server
+postgresql-plperl
 postgresql-plpython
 postgresql-plpython3
 postgresql-pltcl
 postscript-viewer
 python-carquinyol
 python-jarabe
+python-oslo-config
 python-pg
+python-pynast
 python-pysvn
 python-sugar
 python-sugar-toolkit
@@ -291,11 +295,8 @@ readline-editor
 roaraudio-server
 root-db-client
 root-fitter
-ruby-interpreter
-ruby-rails
 sip-router
 skkserv
-skytools-modules
 snd-gtk-alsa
 snort-rules
 ssh-server
@@ -322,6 +323,7 @@ time-daemon
 tkdoc
 turn-server
 ups-monitor
+va-driver
 vala-doc
 vala-utils
 vim-lua
@@ -330,7 +332,10 @@ vim-python
 vim-ruby
 vim-tcl
 virtual-mysql-client
+virtual-mysql-client-core
 virtual-mysql-server
+virtual-mysql-server-core
+virtual-mysql-testsuite
 vnc-server
 vnc-viewer
 wicd-client
@@ -344,6 +349,7 @@ x-session-manager
 x-terminal-emulator
 x-window-manager
 xmlformat
+xmms2-plugin-output
 xorg-driver-input
 xorg-driver-video
 xserver
