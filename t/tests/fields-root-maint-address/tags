@@ -1,3 +1,4 @@
 E: fields-root-maint-address changes: changed-by-address-is-root-user root <someone@debian.org>
 E: fields-root-maint-address source: maintainer-address-is-root-user root <someone@debian.org>
+E: fields-root-maint-address source: uploader-address-is-root-user John Doe <root@debian.org>
 E: fields-root-maint-address: maintainer-address-is-root-user root <someone@debian.org>
