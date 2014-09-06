@@ -292,7 +292,7 @@ sub _parse_dep5 {
             }else {
                 for (@short_licenses) {
                     $standalone_licenses{$_}             = $i;
-                    $short_licenses_seen{$short_license} = $i;
+                    $short_licenses_seen{$_} = $i;
                 }
             }
         }elsif (defined $files) {
@@ -343,7 +343,7 @@ sub _parse_dep5 {
             }
             if ($found_license) {
                 for (@short_licenses) {
-                    $short_licenses_seen{$short_license} = $i;
+                    $short_licenses_seen{$_} = $i;
                     if (not defined($full_license)) {
                         $required_standalone_licenses{$_} = $i;
                     }

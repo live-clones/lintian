@@ -2,6 +2,10 @@ lintian (2.5.27) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/source-copyright.pm:
+    + [BR] Fix False positive for space-in-std-shortname-in-dep5-copyright
+      with alternative licenses.  (Closes: #760642).
+
  -- Niels Thykier <niels@thykier.net>  Sat, 06 Sep 2014 11:03:11 +0200
 
 lintian (2.5.26) unstable; urgency=medium
