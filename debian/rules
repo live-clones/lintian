@@ -85,6 +85,7 @@ build-arch build-indep build: build-stamp
 build-stamp: $(neededfiles) generate-docs-stamp $(testtarget)
 	dh_testdir
 
+	mkdir -p l10n
 	PERL5LIB=lib/ po4a --keep 80 $(po4acheckcfg)
 
 	# check that the static data about perl core modules is up to date
@@ -117,6 +118,8 @@ binary-indep: $(neededfiles) build
 	     -e 's@my \$$INIT_ROOT(\s*=.*)?;@my \$$INIT_ROOT = q{/usr/share/lintian};@;' \
 	    $(tmp)/usr/bin/lintian $(tmp)/usr/share/lintian/frontend/dplint
 	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
+	# Remove the l10n dir, if empty - happens if there are no translations
+	rmdir --ignore-fail-on-non-empty $(tmp)/usr/share/lintian/l10n
 	dh_installdocs
 	dh_installchangelogs
 	dh_installexamples

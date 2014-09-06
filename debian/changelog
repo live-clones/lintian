@@ -118,6 +118,9 @@ lintian (2.5.26) UNRELEASED; urgency=medium
   * debian/control:
     + [NT] Update recommendation on libautodie-perl to
       include perl 5.20 as alternative.
+  * debian/rules:
+    + [NT] Gracefully handle the case where there are no
+      translations of tag descriptions.
 
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Correct tutorial now that the "index" collection
