@@ -115,6 +115,10 @@ lintian (2.5.26) UNRELEASED; urgency=medium
     + [BR] Detect some invalid short name. Thanks to
       Johannes Schauer.
 
+  * debian/control:
+    + [NT] Update recommendation on libautodie-perl to
+      include perl 5.20 as alternative.
+
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Correct tutorial now that the "index" collection
       is gone.

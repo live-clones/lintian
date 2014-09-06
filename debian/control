@@ -100,7 +100,7 @@ Depends: binutils,
          perl,
          t1utils,
          ${misc:Depends}
-Recommends: libautodie-perl (>= 2.18),
+Recommends: perl (>= 5.20) | libautodie-perl (>= 2.18),
             libperlio-gzip-perl,
 Suggests: binutils-multiarch,
           dpkg-dev,
