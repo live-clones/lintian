@@ -123,6 +123,13 @@ Info: The Changed-By address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
 
+Tag: changed-by-address-is-root-user
+Severity: important
+Certainty: certain
+Info: The Changed-By address includes root user, which is
+ invalid. This might idicate that the package
+ was not built in a sane environment.
+
 Tag: backports-changes-missing
 Severity: serious
 # if there are no false positives, this could possibly be increased

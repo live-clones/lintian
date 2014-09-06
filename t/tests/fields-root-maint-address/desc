@@ -1,0 +1,7 @@
+Testname: fields-root-maint-address
+Sequence: 6000
+Version: 1.0
+Description: Test for root in Maintainer field
+Test-For:
+ maintainer-address-is-root-user
+ uploader-address-is-root-user

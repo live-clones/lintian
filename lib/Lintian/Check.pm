@@ -83,6 +83,10 @@ the tags below will be replaced with the value of FIELD.
 The e-mail address portion of MAINTAINER is at C<localhost> or some other
 similar domain.
 
+= item %s-address-is-root-user
+
+The user (from email or username) of MAINTAINER is root.
+
 =item %s-address-causes-mail-loops-or-bounces
 
 The e-mail address portion of MAINTAINER or UPLOADER refers to the PTS
@@ -162,6 +166,10 @@ sub check_maintainer {
 
     if (not $name) {
         tag "$field-name-missing", $maintainer;
+    } else {
+        if ($name eq 'root') {
+            tag "$field-address-is-root-user", $maintainer;
+        }
     }
 
     # Don't issue the malformed tag twice if we already saw problems.
@@ -189,6 +197,9 @@ sub check_maintainer {
         if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
             tag "$field-address-is-on-localhost", $maintainer;
         }
+        if ($mail =~ /^root@/) {
+            tag "$field-address-is-root-user", $maintainer;
+        }
 
         if (
             ($field ne 'changed-by')
@@ -205,7 +216,7 @@ sub check_maintainer {
                 or (    $name =~ /\bdebian\s+qa\b/i
                     and $mail ne 'packages@qa.debian.org')
               ) {
-                tag 'wrong-debian-qa-address-set-as-maintainer', $maintainer;
+                tag 'wrong-debian-qa-address-set-as-maintainer',$maintainer;
             } elsif ($mail eq 'packages@qa.debian.org') {
                 tag 'wrong-debian-qa-group-name', $maintainer
                   if ($name ne 'Debian QA Group');

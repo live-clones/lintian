@@ -5,9 +5,14 @@ lintian (2.5.27) UNRELEASED; urgency=medium
   * checks/source-copyright.pm:
     + [BR] Fix False positive for space-in-std-shortname-in-dep5-copyright
       with alternative licenses.  (Closes: #760642).
+
   * data/fields/metapackages:
     + [BR] Add qt4-default and qt5-default as metapackage.
       (Closes: #756158).
+
+  * lib/Lintian/Check.pm:
+    + [BR] Detect package being built as user root.
+      (Closes: #612583).
 
  -- Niels Thykier <niels@thykier.net>  Sat, 06 Sep 2014 11:03:11 +0200
 

@@ -37,6 +37,7 @@ our $EXCLUDE =join(
       .*-address-malformed$
       .*-address-looks-weird$
       .*-address-is-on-localhost$
+      .*-address-is-root-user$
       .*-address-causes-mail-loops-or-bounces$
       ^wrong-debian-qa-address-set-as-maintainer$
       ^wrong-debian-qa-group-name$
