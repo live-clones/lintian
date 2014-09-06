@@ -2,6 +2,8 @@ lintian (2.5.27) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/cruft.pm:
+    + [BR] Fix a few false positive is for javascript source-is-missing.
   * checks/source-copyright.pm:
     + [BR] Fix False positive for space-in-std-shortname-in-dep5-copyright
       with alternative licenses.  (Closes: #760642).

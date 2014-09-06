@@ -903,7 +903,7 @@ sub _linelength_test {
             # Check for missing source.  It will check
             # for the source file in well known directories
             check_missing_source($entry,$info,$name,$basename,$dirname,
-                [['','']]);
+                [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']]);
         }
     }
     return;

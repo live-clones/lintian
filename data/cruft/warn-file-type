@@ -11,7 +11,7 @@ source-contains-prebuilt-flash-object       ~~ ^Macromedia \s Flash             
 source-contains-prebuilt-flash-project      ~~ ^Composite \s Document \s File                                            ~~ (?i)\.fla$                        ~~ s/(?i)\.fla$/.as/
 source-contains-prebuilt-java-object        ~~ (?: Java [ ] (?:Jar [ ] file|archive [ ] data) | Zip [ ] archive | JAR)   ~~ (?i)\.jar$
 # do not forget to change also $JS_EXT in file.pm
-source-contains-prebuilt-javascript-object  ~~ .*                                                                        ~~ (?i)[-._](?:compiled|lite|min|pack(?:ed)?|yc)\.js$ ~~ map{'s/(?i)[-._](?:compiled|lite|min|pack(?:ed)?|yc)\.js$/'.$_.'/'} qw(.js _orig.js .js.orig .src.js .debug.js -debug.js)
+source-contains-prebuilt-javascript-object  ~~ .*                                                                        ~~ (?i)[-._](?:compiled|compressed|lite|min|pack(?:ed)?|yc)\.js$ ~~ map{'s/(?i)(?:[-._](?:compiled|compressed|lite|min|pack(?:ed)?|yc))?\.js$/'.$_.'/'} qw(.js _orig.js .js.orig .src.js .debug.js -debug.js)
 # ok chm could be created from docbook or texi
 source-contains-prebuilt-ms-help-file       ~~ ^MS \s Windows \s Html \s? Help \s Data ~~  (?i)\.chm$
 source-contains-prebuilt-python-object      ~~ ^python \s \d(\.\d+)? \s byte-compiled                                    ~~ .*                                ~~ s/(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$/.py/
