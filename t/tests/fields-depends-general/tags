@@ -9,7 +9,7 @@ E: py-fields-depends-general: depends-on-python-minimal depends
 I: fields-depends-general: conflicts-with-version package-with-version (<< 3.0)
 I: fields-depends-general: ored-depends-on-obsolete-package depends: xbase-clients (>= 0.1)
 W: fields-depends-general source: package-depends-on-itself fields-depends-general depends
-W: fields-depends-general source: versioned-dependency-satisfied-by-perl build-depends: libmodule-build-perl (>= 0.360700)
+W: fields-depends-general source: versioned-dependency-satisfied-by-perl build-depends: libencode-perl (>= 2.4)
 W: fields-depends-general-doc: doc-package-depends-on-main-package depends
 W: fields-depends-general: breaks-without-version package-without-version
 W: fields-depends-general: depends-exclusively-on-makedev depends
