@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-07-13 18:33+0000\n"
+"POT-Creation-Date: 2014-09-06 08:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1624,11 +1624,38 @@ msgstr ""
 #
 #. Tag: changed-by-address-is-on-localhost
 #. type: Lintian tag description
-#: checks/changes-file.desc:124
+#: checks/changes-file.desc:125
 #, no-wrap
 msgid ""
 "The Changed-By address includes localhost(.localdomain), which is\n"
-"an invalid e-mail address.\n"
+"an invalid e-mail address."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: backports-changes-missing
+#. type: Lintian tag description
+#: checks/changes-file.desc:134
+#, no-wrap
+msgid ""
+"The changes file only has changelog entries from a single version. For\n"
+"backports, all changes since (old)stable or the previous backport should "
+"be\n"
+"listed (usually by adding the '-v' option to the build)."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: backports-upload-has-incorrect-version-number
+#. type: Lintian tag description
+#: checks/changes-file.desc:141
+#, no-wrap
+msgid ""
+"The version number doesn't comply with the standard backport version\n"
+"rules. It should end in ~bpoX+N, where X is the release version number of\n"
+"the target distribution.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -2588,38 +2615,9 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: copyright-refers-to-bad-php-license
-#. type: Lintian tag description
-#: checks/copyright-file.desc:296
-#, no-wrap
-msgid ""
-"This package appears to be covered by version 2.x of the PHP license,\n"
-"which is not appropriate for anything other than the PHP interpreter\n"
-"itself.\n"
-"\n"
-"Note that PEAR modules are not a part of the PHP interpreter and cannot\n"
-"use this license."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: copyright-refers-to-problematic-php-license
-#. type: Lintian tag description
-#: checks/copyright-file.desc:304
-#, no-wrap
-msgid ""
-"This package appears to be covered by version 3.0 (exactly) of the\n"
-"PHP license.  This license is not applicable to anything that is not PHP\n"
-"and has no contributions from the PHP Group."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
 #. Tag: copyright-without-copyright-notice
 #. type: Lintian tag description
-#: checks/copyright-file.desc:327
+#: checks/copyright-file.desc:308
 #, no-wrap
 msgid ""
 "The copyright file for this package does not appear to contain a\n"
@@ -2647,7 +2645,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-copyright
 #. type: Lintian tag description
-#: checks/copyright-file.desc:336
+#: checks/copyright-file.desc:317
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the copyright file.  Lintian has a\n"
@@ -2662,7 +2660,7 @@ msgstr ""
 #
 #. Tag: possible-gpl-code-linked-with-openssl
 #. type: Lintian tag description
-#: checks/copyright-file.desc:351
+#: checks/copyright-file.desc:332
 #, no-wrap
 msgid ""
 "This package appears to be covered by the GNU GPL but depends on\n"
@@ -2683,7 +2681,7 @@ msgstr ""
 #
 #. Tag: copyright-refers-to-symlink-license
 #. type: Lintian tag description
-#: checks/copyright-file.desc:373
+#: checks/copyright-file.desc:354
 #, no-wrap
 msgid ""
 "The copyright file refers to the versionless symlink in\n"
@@ -2711,7 +2709,7 @@ msgstr ""
 #
 #. Tag: copyright-refers-to-versionless-license-file
 #. type: Lintian tag description
-#: checks/copyright-file.desc:391
+#: checks/copyright-file.desc:372
 #, no-wrap
 msgid ""
 "The copyright file refers to the versionless symlink in\n"
@@ -2735,7 +2733,7 @@ msgstr ""
 #
 #. Tag: copyright-refers-to-nonexistent-license-file
 #. type: Lintian tag description
-#: checks/copyright-file.desc:399
+#: checks/copyright-file.desc:380
 #, no-wrap
 msgid ""
 "The copyright file refers to a license in\n"
@@ -2749,7 +2747,7 @@ msgstr ""
 #
 #. Tag: copyright-refers-to-deprecated-bsd-license-file
 #. type: Lintian tag description
-#: checks/copyright-file.desc:413
+#: checks/copyright-file.desc:394
 #, no-wrap
 msgid ""
 "The copyright file refers to\n"
@@ -2768,7 +2766,7 @@ msgstr ""
 #
 #. Tag: copyright-has-crs
 #. type: Lintian tag description
-#: checks/copyright-file.desc:422
+#: checks/copyright-file.desc:403
 #, no-wrap
 msgid ""
 "The copyright file has lines ending in CRLF instead of just LF.\n"
@@ -3266,9 +3264,31 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: debian-upstream-obsolete-path
+#. type: Lintian tag description
+#: checks/cruft.desc:366
+#, no-wrap
+msgid ""
+"Upstream metadata is stored under an obsolete path.\n"
+"\n"
+"Upstream MEtadata GAthered with YAml (UMEGAYA) is an effort to collect\n"
+"meta-information about upstream projects from any source package\n"
+"with a publicly accessible VCS via a file called\n"
+"<tt>debian/upstream/metadata</tt>.\n"
+"\n"
+"Older versions of this specification used\n"
+"<tt>debian/upstream-metadata.yaml</tt> or <tt>debian/upstream</tt>\n"
+"as meta-information storage file.\n"
+"\n"
+"You should move any such file to <tt>debian/upstream/metadata</tt>."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: configure-generated-file-in-source
 #. type: Lintian tag description
-#: checks/cruft.desc:368
+#: checks/cruft.desc:384
 #, no-wrap
 msgid ""
 "Leaving config.cache/status causes autobuilders problems.\n"
@@ -3292,7 +3312,7 @@ msgstr ""
 #
 #. Tag: ancient-autotools-helper-file
 #. type: Lintian tag description
-#: checks/cruft.desc:384
+#: checks/cruft.desc:400
 #, no-wrap
 msgid ""
 "The referenced file has a time stamp older than year 2004 and the\n"
@@ -3314,7 +3334,7 @@ msgstr ""
 #
 #. Tag: outdated-autotools-helper-file
 #. type: Lintian tag description
-#: checks/cruft.desc:401
+#: checks/cruft.desc:417
 #, no-wrap
 msgid ""
 "The referenced file has a time stamp older than April of 2012 and the\n"
@@ -3337,7 +3357,7 @@ msgstr ""
 #
 #. Tag: ancient-libtool
 #. type: Lintian tag description
-#: checks/cruft.desc:426
+#: checks/cruft.desc:442
 #, no-wrap
 msgid ""
 "The referenced file seems to be from a libtool version older than\n"
@@ -3368,7 +3388,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-binary
 #. type: Lintian tag description
-#: checks/cruft.desc:434
+#: checks/cruft.desc:450
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt ELF object.  They are usually\n"
@@ -3382,7 +3402,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-flash-object
 #. type: Lintian tag description
-#: checks/cruft.desc:450
+#: checks/cruft.desc:466
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt file in the Shockwave Flash (SWF)\n"
@@ -3404,7 +3424,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-flash-project
 #. type: Lintian tag description
-#: checks/cruft.desc:465
+#: checks/cruft.desc:481
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt file in the Shockwave Flash\n"
@@ -3425,7 +3445,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-java-object
 #. type: Lintian tag description
-#: checks/cruft.desc:473
+#: checks/cruft.desc:489
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt Java class file.  These are often\n"
@@ -3439,7 +3459,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-javascript-object
 #. type: Lintian tag description
-#: checks/cruft.desc:481
+#: checks/cruft.desc:497
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt (minified) JavaScript object.\n"
@@ -3453,15 +3473,17 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-ms-help-file
 #. type: Lintian tag description
-#: checks/cruft.desc:498
+#: checks/cruft.desc:516
 #, no-wrap
 msgid ""
-"The source tarball contains a prebuilt microsoft precompiled help\n"
+"The source tarball contains a prebuilt Microsoft precompiled help\n"
 "file (CHM file).  These are often included by mistake when developers "
 "generate\n"
 "a tarball without cleaning the source directory first.\n"
+"\n"
 "CHM files are mainly produced by proprietary, Windows-specific software.\n"
-"They are also mainly consumed by Windows internal HTML Help Workshop.\n"
+"They are also mainly consumed by the Microsoft HTML Help Workshop.\n"
+"\n"
 "There is Linux software to read them and an incomplete\n"
 "FreePascal related project to create them,\n"
 "but any examples in source packages are likely to be created\n"
@@ -3477,7 +3499,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-sphinx-documentation
 #. type: Lintian tag description
-#: checks/cruft.desc:508
+#: checks/cruft.desc:526
 #, no-wrap
 msgid ""
 "The source tarball contains prebuilt Sphinx documentation.\n"
@@ -3493,7 +3515,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-python-object
 #. type: Lintian tag description
-#: checks/cruft.desc:516
+#: checks/cruft.desc:534
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt Python object.  They are\n"
@@ -3507,7 +3529,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-silverlight-object
 #. type: Lintian tag description
-#: checks/cruft.desc:524
+#: checks/cruft.desc:542
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt Silverlight control.\n"
@@ -3521,7 +3543,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-windows-binary
 #. type: Lintian tag description
-#: checks/cruft.desc:535
+#: checks/cruft.desc:553
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt binary for Microsoft Windows.\n"
@@ -3538,7 +3560,7 @@ msgstr ""
 #
 #. Tag: source-contains-waf-binary
 #. type: Lintian tag description
-#: checks/cruft.desc:550
+#: checks/cruft.desc:568
 #, no-wrap
 msgid ""
 "The source tarball contains a waf binary. This file is a Python\n"
@@ -3558,7 +3580,7 @@ msgstr ""
 #
 #. Tag: tar-errors-from-source
 #. type: Lintian tag description
-#: checks/cruft.desc:558
+#: checks/cruft.desc:576
 #, no-wrap
 msgid ""
 "tar produced an error while unpacking this source package.  This\n"
@@ -3572,7 +3594,7 @@ msgstr ""
 #
 #. Tag: control-file-with-CRLF-EOLs
 #. type: Lintian tag description
-#: checks/cruft.desc:571
+#: checks/cruft.desc:589
 #, no-wrap
 msgid ""
 "The given control file uses <tt>CRLF</tt> as line terminator\n"
@@ -3591,7 +3613,7 @@ msgstr ""
 #
 #. Tag: license-problem-json-evil
 #. type: Lintian tag description
-#: checks/cruft.desc:579
+#: checks/cruft.desc:597
 #, no-wrap
 msgid ""
 "The given source file is copyrighted under the non free\n"
@@ -3602,9 +3624,38 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: license-problem-bad-php-license
+#. type: Lintian tag description
+#: checks/cruft.desc:608
+#, no-wrap
+msgid ""
+"This package appears to be covered by version 2.x of the PHP license,\n"
+"which is not appropriate for anything other than the PHP interpreter\n"
+"itself.\n"
+"\n"
+"Note that PEAR modules are not a part of the PHP interpreter and cannot\n"
+"use this license."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: license-problem-php-license
+#. type: Lintian tag description
+#: checks/cruft.desc:616
+#, no-wrap
+msgid ""
+"This package appears to be covered by version 3.0 (exactly) of the\n"
+"PHP license.  This license is not applicable to anything that is not PHP\n"
+"and has no contributions from the PHP Group."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: license-problem-gfdl-invariants
 #. type: Lintian tag description
-#: checks/cruft.desc:594
+#: checks/cruft.desc:631
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL with invariant\n"
@@ -3623,7 +3674,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-RFC
 #. type: Lintian tag description
-#: checks/cruft.desc:608
+#: checks/cruft.desc:645
 #, no-wrap
 msgid ""
 "The given source file is licensed under the newer RFC\n"
@@ -3642,7 +3693,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-RFC-BCP78
 #. type: Lintian tag description
-#: checks/cruft.desc:622
+#: checks/cruft.desc:659
 #, no-wrap
 msgid ""
 "The given source file is licensed under the non-free RFC\n"
@@ -3661,7 +3712,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-invariants-empty
 #. type: Lintian tag description
-#: checks/cruft.desc:634
+#: checks/cruft.desc:671
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL, but without any\n"
@@ -3676,7 +3727,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-non-official-text
 #. type: Lintian tag description
-#: checks/cruft.desc:643
+#: checks/cruft.desc:680
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL, but using a\n"
@@ -3691,7 +3742,7 @@ msgstr ""
 #
 #. Tag: license-problem-nvidia-intellectual
 #. type: Lintian tag description
-#: checks/cruft.desc:660
+#: checks/cruft.desc:697
 #, no-wrap
 msgid ""
 "The following source files include material under a\n"
@@ -3713,7 +3764,7 @@ msgstr ""
 #
 #. Tag: license-problem-md5sum-non-distributable-file
 #. type: Lintian tag description
-#: checks/cruft.desc:675
+#: checks/cruft.desc:712
 #, no-wrap
 msgid ""
 "The following file is not distributable even in the non-free\n"
@@ -3734,7 +3785,7 @@ msgstr ""
 #
 #. Tag: license-problem-md5sum-non-free-file
 #. type: Lintian tag description
-#: checks/cruft.desc:688
+#: checks/cruft.desc:725
 #, no-wrap
 msgid ""
 "The following file is not suitable for main or contrib.\n"
@@ -3753,7 +3804,7 @@ msgstr ""
 #
 #. Tag: source-contains-unsafe-symlink
 #. type: Lintian tag description
-#: checks/cruft.desc:699
+#: checks/cruft.desc:736
 #, no-wrap
 msgid ""
 "The source contains an unsafe symlink.  If followed, the link\n"
@@ -3770,7 +3821,7 @@ msgstr ""
 #
 #. Tag: source-is-missing
 #. type: Lintian tag description
-#: checks/cruft.desc:710
+#: checks/cruft.desc:748
 #, no-wrap
 msgid ""
 "The source of the following file is missing. Lintian checked a few\n"
@@ -3779,7 +3830,25 @@ msgid ""
 "Please repack your package to include the source or add it to\n"
 "\"debian/missing-sources\" directory.\n"
 "\n"
-"If this is a false-positive, please report a bug against Lintian.\n"
+"If this is a false-positive, please report a bug against Lintian."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: source-contains-autogenerated-visual-c++-file
+#. type: Lintian tag description
+#: checks/cruft.desc:759
+#, no-wrap
+msgid ""
+"The following file is autogenerated by Microsoft Visual C++.\n"
+"\n"
+"They are usually provided for the convenience of users.  These files\n"
+"usually just take up space in the tarball and are of no use in Debian.\n"
+"\n"
+"Check if upstream also provides source-only tarballs that you can use as\n"
+"the upstream distribution instead.  If not, you may want to ask upstream\n"
+"to provide source-only tarballs.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -5143,9 +5212,33 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: description-too-short
+#. type: Lintian tag description
+#: checks/description.desc:40
+#, no-wrap
+msgid ""
+"The description contains only a single word. It is likely that the\n"
+"description won't be very clear for the user."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: description-is-pkg-name
+#. type: Lintian tag description
+#: checks/description.desc:47
+#, no-wrap
+msgid ""
+"The description is the same as the package name.\n"
+"A better description should be provided for the user."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: extended-description-is-probably-too-short
 #. type: Lintian tag description
-#: checks/description.desc:44
+#: checks/description.desc:58
 #, no-wrap
 msgid ""
 "The extended description (the lines after the first line of the\n"
@@ -5161,7 +5254,7 @@ msgstr ""
 #
 #. Tag: description-contains-invalid-control-statement
 #. type: Lintian tag description
-#: checks/description.desc:51
+#: checks/description.desc:65
 #, no-wrap
 msgid ""
 "The description contains a line starting with a dot (.). This is\n"
@@ -5173,7 +5266,7 @@ msgstr ""
 #
 #. Tag: description-too-long
 #. type: Lintian tag description
-#: checks/description.desc:57
+#: checks/description.desc:71
 #, no-wrap
 msgid "The first line of the \"Description:\" must not exceed 80 characters."
 msgstr ""
@@ -5183,7 +5276,7 @@ msgstr ""
 #
 #. Tag: description-starts-with-package-name
 #. type: Lintian tag description
-#: checks/description.desc:65
+#: checks/description.desc:79
 #, no-wrap
 msgid ""
 "The first line of the \"Description:\" should not start with the\n"
@@ -5196,7 +5289,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-starts-with-article
 #. type: Lintian tag description
-#: checks/description.desc:76
+#: checks/description.desc:90
 #, no-wrap
 msgid ""
 "The first line of the \"Description:\" should omit any initial indefinite\n"
@@ -5213,7 +5306,7 @@ msgstr ""
 #
 #. Tag: description-contains-tabs
 #. type: Lintian tag description
-#: checks/description.desc:82
+#: checks/description.desc:96
 #, no-wrap
 msgid "The package \"Description:\" must not contain tab characters."
 msgstr ""
@@ -5223,7 +5316,7 @@ msgstr ""
 #
 #. Tag: description-starts-with-leading-spaces
 #. type: Lintian tag description
-#: checks/description.desc:89
+#: checks/description.desc:103
 #, no-wrap
 msgid ""
 "The package \"Description:\" starts with leading spaces. Usually,\n"
@@ -5236,7 +5329,7 @@ msgstr ""
 #
 #. Tag: possible-unindented-list-in-extended-description
 #. type: Lintian tag description
-#: checks/description.desc:98
+#: checks/description.desc:112
 #, no-wrap
 msgid ""
 "The package \"Description:\" contains an unindented line which\n"
@@ -5250,7 +5343,7 @@ msgstr ""
 #
 #. Tag: description-is-debmake-template
 #. type: Lintian tag description
-#: checks/description.desc:104
+#: checks/description.desc:118
 #, no-wrap
 msgid ""
 "The synopsis or the extended description just says \"Missing\",\n"
@@ -5262,7 +5355,7 @@ msgstr ""
 #
 #. Tag: description-is-dh_make-template
 #. type: Lintian tag description
-#: checks/description.desc:110
+#: checks/description.desc:124
 #, no-wrap
 msgid ""
 "The synopsis or the extended description has not been changed\n"
@@ -5274,7 +5367,7 @@ msgstr ""
 #
 #. Tag: description-contains-dh-make-perl-template
 #. type: Lintian tag description
-#: checks/description.desc:118
+#: checks/description.desc:132
 #, no-wrap
 msgid ""
 "The extended description contains the statement that it was\n"
@@ -5288,7 +5381,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-might-not-be-phrased-properly
 #. type: Lintian tag description
-#: checks/description.desc:130
+#: checks/description.desc:144
 #, no-wrap
 msgid ""
 "The synopsis (first line in the package \"Description:\" field, the\n"
@@ -5306,7 +5399,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-is-duplicated
 #. type: Lintian tag description
-#: checks/description.desc:138
+#: checks/description.desc:152
 #, no-wrap
 msgid ""
 "The first line of the extended Description: should not repeat the\n"
@@ -5319,7 +5412,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-description-synopsis
 #. type: Lintian tag description
-#: checks/description.desc:147
+#: checks/description.desc:161
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the package synopsis.  Lintian\n"
@@ -5334,7 +5427,7 @@ msgstr ""
 #
 #. Tag: capitalization-error-in-description-synopsis
 #. type: Lintian tag description
-#: checks/description.desc:155
+#: checks/description.desc:169
 #, no-wrap
 msgid ""
 "Lintian found a possible capitalization error in the package\n"
@@ -5348,7 +5441,7 @@ msgstr ""
 #
 #. Tag: extended-description-line-too-long
 #. type: Lintian tag description
-#: checks/description.desc:164
+#: checks/description.desc:178
 #, no-wrap
 msgid ""
 "One or more lines in the extended part of the \"Description:\" field\n"
@@ -5362,7 +5455,7 @@ msgstr ""
 #
 #. Tag: description-contains-homepage
 #. type: Lintian tag description
-#: checks/description.desc:173
+#: checks/description.desc:187
 #, no-wrap
 msgid ""
 "The extended description contains a \"Homepage:\" pseudo-header\n"
@@ -5377,7 +5470,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-description
 #. type: Lintian tag description
-#: checks/description.desc:182
+#: checks/description.desc:196
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the package description.  Lintian\n"
@@ -5392,7 +5485,7 @@ msgstr ""
 #
 #. Tag: capitalization-error-in-description
 #. type: Lintian tag description
-#: checks/description.desc:195
+#: checks/description.desc:209
 #, no-wrap
 msgid ""
 "Lintian found a possible capitalization error in the package\n"
@@ -5411,7 +5504,7 @@ msgstr ""
 #
 #. Tag: description-contains-duplicated-word
 #. type: Lintian tag description
-#: checks/description.desc:201
+#: checks/description.desc:215
 #, no-wrap
 msgid ""
 "The description contains a duplicated word.  Usually this is a\n"
@@ -5423,7 +5516,7 @@ msgstr ""
 #
 #. Tag: using-first-person-in-description
 #. type: Lintian tag description
-#: checks/description.desc:214
+#: checks/description.desc:228
 #, no-wrap
 msgid ""
 "You should avoid the use of first person (\"I will do this...\" or\n"
@@ -5442,7 +5535,7 @@ msgstr ""
 #
 #. Tag: description-possibly-contains-homepage
 #. type: Lintian tag description
-#: checks/description.desc:221
+#: checks/description.desc:235
 #, no-wrap
 msgid ""
 "This package has no Homepage field but has a URL in the description\n"
@@ -8985,9 +9078,25 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: privacy-breach-may-use-debian-package
+#. type: Lintian tag description
+#: checks/files.desc:962
+#, no-wrap
+msgid ""
+"This package creates a potential privacy breach by fetching data\n"
+"from an external website at runtime. Please remove these scripts or\n"
+"external HTML resources.\n"
+"\n"
+"Instead you can use the Debian package indicated in the hint, if it is\n"
+"compatible."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: privacy-breach-google-adsense
 #. type: Lintian tag description
-#: checks/files.desc:974
+#: checks/files.desc:984
 #, no-wrap
 msgid ""
 "This package creates a privacy breach by using Google AdSense.\n"
@@ -9015,7 +9124,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-donation
 #. type: Lintian tag description
-#: checks/files.desc:991
+#: checks/files.desc:1001
 #, no-wrap
 msgid ""
 "This package create a potential privacy breach by fetching data\n"
@@ -9037,7 +9146,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-logo
 #. type: Lintian tag description
-#: checks/files.desc:1009
+#: checks/files.desc:1019
 #, no-wrap
 msgid ""
 "This package creates a potential privacy breach by fetching a\n"
@@ -9061,7 +9170,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-facebook
 #. type: Lintian tag description
-#: checks/files.desc:1022
+#: checks/files.desc:1032
 #, no-wrap
 msgid ""
 " This package creates a privacy breach by exchanging data with\n"
@@ -9080,7 +9189,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-google-plus
 #. type: Lintian tag description
-#: checks/files.desc:1036
+#: checks/files.desc:1046
 #, no-wrap
 msgid ""
 "This package creates a potential privacy breach by \n"
@@ -9100,7 +9209,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-google-cse
 #. type: Lintian tag description
-#: checks/files.desc:1050
+#: checks/files.desc:1060
 #, no-wrap
 msgid ""
 "This package creates a potential privacy breach by fetching\n"
@@ -9120,7 +9229,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-twitter
 #. type: Lintian tag description
-#: checks/files.desc:1063
+#: checks/files.desc:1073
 #, no-wrap
 msgid ""
 "This package creates a potential privacy breach by\n"
@@ -9139,7 +9248,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-piwik
 #. type: Lintian tag description
-#: checks/files.desc:1083
+#: checks/files.desc:1093
 #, no-wrap
 msgid ""
 "This package creates a privacy breach by using an online \n"
@@ -9165,7 +9274,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-statistics-website
 #. type: Lintian tag description
-#: checks/files.desc:1108
+#: checks/files.desc:1118
 #, no-wrap
 msgid ""
 "This package creates a privacy breach by fetching data from\n"
@@ -9196,7 +9305,7 @@ msgstr ""
 #
 #. Tag: privacy-breach-w3c-valid-html
 #. type: Lintian tag description
-#: checks/files.desc:1124
+#: checks/files.desc:1134
 #, no-wrap
 msgid ""
 "This package creates a potential privacy breach by fetching W3C\n"
@@ -9216,7 +9325,7 @@ msgstr ""
 #
 #. Tag: embedded-feedparser-library
 #. type: Lintian tag description
-#: checks/files.desc:1132
+#: checks/files.desc:1142
 #, no-wrap
 msgid ""
 "This package contains an embedded copy of Mark Pilgrim's Universal\n"
@@ -9229,7 +9338,7 @@ msgstr ""
 #
 #. Tag: embedded-pear-module
 #. type: Lintian tag description
-#: checks/files.desc:1141
+#: checks/files.desc:1151
 #, no-wrap
 msgid ""
 "This package appears to contain an embedded copy of a PEAR module.\n"
@@ -9242,7 +9351,7 @@ msgstr ""
 #
 #. Tag: embedded-php-library
 #. type: Lintian tag description
-#: checks/files.desc:1149
+#: checks/files.desc:1159
 #, no-wrap
 msgid ""
 "This package appears to contain an embedded copy of a PHP library.\n"
@@ -9255,7 +9364,7 @@ msgstr ""
 #
 #. Tag: windows-devel-file-in-package
 #. type: Lintian tag description
-#: checks/files.desc:1157
+#: checks/files.desc:1167
 #, no-wrap
 msgid ""
 "This package appears to contain development files only meaningful to\n"
@@ -9271,7 +9380,7 @@ msgstr ""
 #
 #. Tag: font-in-non-font-package
 #. type: Lintian tag description
-#: checks/files.desc:1169
+#: checks/files.desc:1179
 #, no-wrap
 msgid ""
 "This package contains a *.ttf, *.otf, or *.pfb file, file\n"
@@ -9289,7 +9398,7 @@ msgstr ""
 #
 #. Tag: license-problem-font-adobe-copyrighted-fragment
 #. type: Lintian tag description
-#: checks/files.desc:1179
+#: checks/files.desc:1189
 #, no-wrap
 msgid ""
 "This type 1 font file includes some postscript fragment with a\n"
@@ -9304,7 +9413,7 @@ msgstr ""
 #
 #. Tag: license-problem-font-adobe-copyrighted-fragment-no-credit
 #. type: Lintian tag description
-#: checks/files.desc:1192
+#: checks/files.desc:1202
 #, no-wrap
 msgid ""
 "This type 1 font file includes some postscript fragment with a\n"
@@ -9322,7 +9431,7 @@ msgstr ""
 #
 #. Tag: duplicate-font-file
 #. type: Lintian tag description
-#: checks/files.desc:1209
+#: checks/files.desc:1219
 #, no-wrap
 msgid ""
 "This package appears to include a font file that is already provided\n"
@@ -9345,7 +9454,7 @@ msgstr ""
 #
 #. Tag: icon-size-and-directory-name-mismatch
 #. type: Lintian tag description
-#: checks/files.desc:1216
+#: checks/files.desc:1226
 #, no-wrap
 msgid ""
 "The icon has a size that differs from the size specified by the name\n"
@@ -9358,7 +9467,7 @@ msgstr ""
 #
 #. Tag: raster-image-in-scalable-directory
 #. type: Lintian tag description
-#: checks/files.desc:1222
+#: checks/files.desc:1232
 #, no-wrap
 msgid ""
 "The given raster image was installed into a \"scalable\" icon directory.\n"
@@ -9370,7 +9479,7 @@ msgstr ""
 #
 #. Tag: gz-file-not-gzip
 #. type: Lintian tag description
-#: checks/files.desc:1231
+#: checks/files.desc:1241
 #, no-wrap
 msgid ""
 "The given file ends with <tt>.gz</tt>, which normally indicates it\n"
@@ -9385,7 +9494,7 @@ msgstr ""
 #
 #. Tag: non-free-flash
 #. type: Lintian tag description
-#: checks/files.desc:1237
+#: checks/files.desc:1247
 #, no-wrap
 msgid ""
 "The given Flash file has a filename which suggests that it may be\n"
@@ -9397,7 +9506,7 @@ msgstr ""
 #
 #. Tag: non-conf-file-in-modprobe.d
 #. type: Lintian tag description
-#: checks/files.desc:1249
+#: checks/files.desc:1259
 #, no-wrap
 msgid ""
 "Files in <tt>/etc/modprobe.d</tt> should use filenames ending in\n"
@@ -9414,7 +9523,7 @@ msgstr ""
 #
 #. Tag: file-in-discouraged-x11-font-directory
 #. type: Lintian tag description
-#: checks/files.desc:1260
+#: checks/files.desc:1270
 #, no-wrap
 msgid ""
 "For historical reasons, use of <tt>PEX</tt>, <tt>CID</tt>,\n"
@@ -9430,7 +9539,7 @@ msgstr ""
 #
 #. Tag: file-in-unknown-x11-font-directory
 #. type: Lintian tag description
-#: checks/files.desc:1270
+#: checks/files.desc:1280
 #, no-wrap
 msgid ""
 "Subdirectories of <tt>/usr/share/fonts/X11</tt> other than\n"
@@ -9445,7 +9554,7 @@ msgstr ""
 #
 #. Tag: package-contains-multiple-dpi-fonts
 #. type: Lintian tag description
-#: checks/files.desc:1280
+#: checks/files.desc:1290
 #, no-wrap
 msgid ""
 "This package contains both 100dpi and 75dpi bitmapped fonts.  Both\n"
@@ -9460,7 +9569,7 @@ msgstr ""
 #
 #. Tag: package-mixes-misc-and-dpi-fonts
 #. type: Lintian tag description
-#: checks/files.desc:1289
+#: checks/files.desc:1299
 #, no-wrap
 msgid ""
 "This package contains both bitmapped fonts for a specific DPI\n"
@@ -9474,7 +9583,7 @@ msgstr ""
 #
 #. Tag: package-contains-info-dir-file
 #. type: Lintian tag description
-#: checks/files.desc:1300
+#: checks/files.desc:1310
 #, no-wrap
 msgid ""
 "This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,\n"
@@ -9491,7 +9600,7 @@ msgstr ""
 #
 #. Tag: package-contains-mime-cache-file
 #. type: Lintian tag description
-#: checks/files.desc:1310
+#: checks/files.desc:1320
 #, no-wrap
 msgid ""
 "This package contains a cache file generated automatically by\n"
@@ -9507,7 +9616,7 @@ msgstr ""
 #
 #. Tag: package-contains-mimeinfo.cache-file
 #. type: Lintian tag description
-#: checks/files.desc:1321
+#: checks/files.desc:1331
 #, no-wrap
 msgid ""
 "This package contains a file named <tt>mimeinfo.cache</tt>,\n"
@@ -9524,7 +9633,7 @@ msgstr ""
 #
 #. Tag: package-modifies-ld.so-search-path
 #. type: Lintian tag description
-#: checks/files.desc:1337
+#: checks/files.desc:1347
 #, no-wrap
 msgid ""
 "This package installs a file in <tt>/etc/ld.so.conf.d</tt>,\n"
@@ -9545,7 +9654,7 @@ msgstr ""
 #
 #. Tag: global-data-in-games-directory
 #. type: Lintian tag description
-#: checks/files.desc:1352
+#: checks/files.desc:1362
 #, no-wrap
 msgid ""
 "This package contains files under <tt>/usr/share/games</tt>, such as\n"
@@ -9566,7 +9675,7 @@ msgstr ""
 #
 #. Tag: duplicated-compressed-file
 #. type: Lintian tag description
-#: checks/files.desc:1360
+#: checks/files.desc:1370
 #, no-wrap
 msgid ""
 "The given, apparently compressed, file is shipped in the package\n"
@@ -9580,7 +9689,7 @@ msgstr ""
 #
 #. Tag: udev-rule-in-etc
 #. type: Lintian tag description
-#: checks/files.desc:1368
+#: checks/files.desc:1378
 #, no-wrap
 msgid ""
 "This package ships a udev rule and installs it under\n"
@@ -9593,7 +9702,7 @@ msgstr ""
 #
 #. Tag: obsolete-comments-style-in-php-ini
 #. type: Lintian tag description
-#: checks/files.desc:1378
+#: checks/files.desc:1388
 #, no-wrap
 msgid ""
 "This package ships a <tt>.ini</tt> file used to configure php but\n"
@@ -9609,7 +9718,7 @@ msgstr ""
 #
 #. Tag: triplet-dir-and-architecture-mismatch
 #. type: Lintian tag description
-#: checks/files.desc:1388
+#: checks/files.desc:1398
 #, no-wrap
 msgid ""
 "This package contains a directory under <tt>/lib</tt> or\n"
@@ -9624,7 +9733,7 @@ msgstr ""
 #
 #. Tag: empty-binary-package
 #. type: Lintian tag description
-#: checks/files.desc:1401
+#: checks/files.desc:1411
 #, no-wrap
 msgid ""
 "This binary package appears to be empty, and its description does\n"
@@ -9643,7 +9752,7 @@ msgstr ""
 #
 #. Tag: empty-udeb-package
 #. type: Lintian tag description
-#: checks/files.desc:1415
+#: checks/files.desc:1425
 #, no-wrap
 msgid ""
 "This udeb package appears to be empty, and its description does\n"
@@ -9663,7 +9772,7 @@ msgstr ""
 #
 #. Tag: star-file
 #. type: Lintian tag description
-#: checks/files.desc:1422
+#: checks/files.desc:1432
 #, no-wrap
 msgid ""
 "The given file is literally installed as <tt>*</tt> (star\n"
@@ -9676,7 +9785,7 @@ msgstr ""
 #
 #. Tag: incorrect-locale-code
 #. type: Lintian tag description
-#: checks/files.desc:1435
+#: checks/files.desc:1445
 #, no-wrap
 msgid ""
 "The package appears to ship locales for a language but uses an\n"
@@ -9695,7 +9804,7 @@ msgstr ""
 #
 #. Tag: unknown-locale-code
 #. type: Lintian tag description
-#: checks/files.desc:1449
+#: checks/files.desc:1459
 #, no-wrap
 msgid ""
 "The package appears to ship locales for a language but uses an\n"
@@ -9714,7 +9823,7 @@ msgstr ""
 #
 #. Tag: compressed-objects.inv
 #. type: Lintian tag description
-#: checks/files.desc:1461
+#: checks/files.desc:1471
 #, no-wrap
 msgid ""
 "The package appears to ship a gzip compressed objects.inv file\n"
@@ -9732,7 +9841,7 @@ msgstr ""
 #
 #. Tag: package-contains-no-arch-dependent-files
 #. type: Lintian tag description
-#: checks/files.desc:1472
+#: checks/files.desc:1482
 #, no-wrap
 msgid ""
 "The package is not marked architecture all, but all the files it\n"
@@ -9747,7 +9856,7 @@ msgstr ""
 #
 #. Tag: vim-addon-within-vim-runtime-path
 #. type: Lintian tag description
-#: checks/files.desc:1480
+#: checks/files.desc:1490
 #, no-wrap
 msgid ""
 "Vim addons should not be installed directly under a directory contained\n"
@@ -9760,7 +9869,7 @@ msgstr ""
 #
 #. Tag: perl-module-uses-perl4-libs-without-dep
 #. type: Lintian tag description
-#: checks/files.desc:1489
+#: checks/files.desc:1499
 #, no-wrap
 msgid ""
 "This package includes perl modules using obsoleted perl 4-era\n"
@@ -9775,7 +9884,7 @@ msgstr ""
 #
 #. Tag: gzip-file-is-not-multi-arch-same-safe
 #. type: Lintian tag description
-#: checks/files.desc:1498
+#: checks/files.desc:1508
 #, no-wrap
 msgid ""
 "The gzip file contains a timestamp that will differ between\n"
@@ -9790,7 +9899,7 @@ msgstr ""
 #
 #. Tag: pkg-config-multi-arch-wrong-dir
 #. type: Lintian tag description
-#: checks/files.desc:1514
+#: checks/files.desc:1524
 #, no-wrap
 msgid ""
 "The arch all pkg-config file contains a reference to a multi-arch path.\n"
@@ -9812,7 +9921,7 @@ msgstr ""
 #
 #. Tag: pkg-config-bad-directive
 #. type: Lintian tag description
-#: checks/files.desc:1522
+#: checks/files.desc:1532
 #, no-wrap
 msgid ""
 "The pkg-config file contains a wrong directive.\n"
@@ -9826,7 +9935,7 @@ msgstr ""
 #
 #. Tag: dir-or-file-in-home
 #. type: Lintian tag description
-#: checks/files.desc:1528
+#: checks/files.desc:1538
 #, no-wrap
 msgid ""
 "Debian packages should not install into <tt>/home</tt>, because it\n"
@@ -9838,7 +9947,7 @@ msgstr ""
 #
 #. Tag: dir-or-file-in-build-tree
 #. type: Lintian tag description
-#: checks/files.desc:1533
+#: checks/files.desc:1543
 #, no-wrap
 msgid "Your package install file in our build tree."
 msgstr ""
@@ -9848,7 +9957,7 @@ msgstr ""
 #
 #. Tag: file-name-is-not-valid-UTF-8
 #. type: Lintian tag description
-#: checks/files.desc:1542
+#: checks/files.desc:1552
 #, no-wrap
 msgid ""
 "The file name does not appear to be valid UTF-8.\n"
@@ -9862,7 +9971,7 @@ msgstr ""
 #
 #. Tag: file-name-in-PATH-is-not-ASCII
 #. type: Lintian tag description
-#: checks/files.desc:1551
+#: checks/files.desc:1561
 #, no-wrap
 msgid ""
 "The given file is in PATH but consists of non-ASCII characters.\n"
@@ -9876,7 +9985,7 @@ msgstr ""
 #
 #. Tag: incorrect-naming-of-pkcs11-module
 #. type: Lintian tag description
-#: checks/files.desc:1562
+#: checks/files.desc:1573
 #, no-wrap
 msgid ""
 "This package ships a PKCS#11 module configuration file under\n"
@@ -9886,7 +9995,22 @@ msgid ""
 " [a-z0-9][a-z0-9_.-]*.module\n"
 "\n"
 "p11-kit currently warns on every file that does not follow the\n"
-"convention and may ignore them in the future.\n"
+"convention and may ignore them in the future."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: package-contains-timestamped-gzip
+#. type: Lintian tag description
+#: checks/files.desc:1582
+#, no-wrap
+msgid ""
+"The package contains a gzip-compressed file that has timestamps.\n"
+"Such files make the packages unreproducible, because their\n"
+"contents depend on the time when the package was built.\n"
+"\n"
+"Please consider passing the \"-n\" flag to gzip to avoid this.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -11982,9 +12106,25 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: desktop-mime-but-no-exec-code
+#. type: Lintian tag description
+#: checks/menu-format.desc:390
+#, no-wrap
+msgid ""
+"The desktop entry lists support for at least one mime type, but does not\n"
+"provide codes like %f, %F, %u or %U for the Exec key.\n"
+"\n"
+"If the application can indeed handle files of the listed mime types, it "
+"should\n"
+"specify a way to pass the filenames as parameters."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: deprecated-kdelnk-file
 #. type: Lintian tag description
-#: checks/menu-format.desc:389
+#: checks/menu-format.desc:398
 #, no-wrap
 msgid ""
 "kdelnk files were used by KDE 1 and since KDE 2 desktop files are used\n"
@@ -11997,7 +12137,7 @@ msgstr ""
 #
 #. Tag: desktop-entry-limited-to-environments
 #. type: Lintian tag description
-#: checks/menu-format.desc:400
+#: checks/menu-format.desc:409
 #, no-wrap
 msgid ""
 "This desktop entry uses OnlyShowIn to limit the environments in\n"
@@ -15624,9 +15764,23 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: unknown-copyright-format-uri
+#. Tag: no-dep5-copyright
 #. type: Lintian tag description
 #: checks/source-copyright.desc:34
+#, no-wrap
+msgid ""
+"This package does not use a machine-readable debian/copyright file.\n"
+"\n"
+"This format makes it easier to review licenses and can be easily parsed\n"
+"by Lintian."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: unknown-copyright-format-uri
+#. type: Lintian tag description
+#: checks/source-copyright.desc:43
 #, no-wrap
 msgid ""
 "The copyright file appears to intended as machine-readable, but lintian\n"
@@ -15642,7 +15796,7 @@ msgstr ""
 #
 #. Tag: boilerplate-copyright-format-uri
 #. type: Lintian tag description
-#: checks/source-copyright.desc:41
+#: checks/source-copyright.desc:50
 #, no-wrap
 msgid ""
 "Format URI of the machine-readable copyright file contains\n"
@@ -15656,7 +15810,7 @@ msgstr ""
 #
 #. Tag: wiki-copyright-format-uri
 #. type: Lintian tag description
-#: checks/source-copyright.desc:51
+#: checks/source-copyright.desc:60
 #, no-wrap
 msgid ""
 "Format URI of the machine-readable copyright file refers to Debian Wiki.\n"
@@ -15671,7 +15825,7 @@ msgstr ""
 #
 #. Tag: unversioned-copyright-format-uri
 #. type: Lintian tag description
-#: checks/source-copyright.desc:61
+#: checks/source-copyright.desc:70
 #, no-wrap
 msgid ""
 "Format URI of the machine-readable copyright file is not versioned.\n"
@@ -15686,7 +15840,7 @@ msgstr ""
 #
 #. Tag: out-of-date-copyright-format-uri
 #. type: Lintian tag description
-#: checks/source-copyright.desc:70
+#: checks/source-copyright.desc:79
 #, no-wrap
 msgid ""
 "A newer version of the machine-readable copyright file specification,\n"
@@ -15700,7 +15854,7 @@ msgstr ""
 #
 #. Tag: syntax-error-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:80
+#: checks/source-copyright.desc:89
 #, no-wrap
 msgid ""
 "The machine-readable copyright file didn't pass Debian control file\n"
@@ -15715,7 +15869,7 @@ msgstr ""
 #
 #. Tag: obsolete-field-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:93
+#: checks/source-copyright.desc:102
 #, no-wrap
 msgid ""
 "The machine-readable copyright file uses a field, that used to be defined\n"
@@ -15734,7 +15888,7 @@ msgstr ""
 #
 #. Tag: comma-separated-files-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:102
+#: checks/source-copyright.desc:111
 #, no-wrap
 msgid ""
 "A list of files in the machine-readable copyright format appears to be\n"
@@ -15749,7 +15903,7 @@ msgstr ""
 #
 #. Tag: missing-field-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:109
+#: checks/source-copyright.desc:118
 #, no-wrap
 msgid ""
 "The paragraph in the machine readable copyright file is missing a field\n"
@@ -15759,9 +15913,71 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: empty-short-license-in-dep5-copyright
+#. type: Lintian tag description
+#: checks/source-copyright.desc:125
+#, no-wrap
+msgid ""
+"The short license field in the machine readable copyright file\n"
+"is empty."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: license-problem-undefined-license
+#. type: Lintian tag description
+#: checks/source-copyright.desc:146
+#, no-wrap
+msgid ""
+"Your copyright file references a license that is not defined.\n"
+"Due to copyright law or treaties, files that are not available under\n"
+"a defined license are non-free and non-re-distributable.\n"
+"\n"
+"Referencing an undefined license could mean the file cannot be\n"
+"distributed in Debian or it could simply mean that the existing\n"
+"license needs to be documented. In both cases,\n"
+"the copyright file should be updated to reflect reality.\n"
+"\n"
+"Please re-package the package without the file (if possible)\n"
+"or ask the FTP-masters to remove the package.\n"
+"\n"
+"If the package has been uploaded to Debian before, and if\n"
+"affected files cannot be distributed in Debian please\n"
+"remember to also notify snapshot.debian.org about this\n"
+"package containing a non-distributable file."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: invalid-short-name-in-dep5-copyright
+#. type: Lintian tag description
+#: checks/source-copyright.desc:153
+#, no-wrap
+msgid ""
+"The license header contains a short name observed to be a\n"
+"misspelling of one of the standard short names."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: space-in-std-shortname-in-dep5-copyright
+#. type: Lintian tag description
+#: checks/source-copyright.desc:160
+#, no-wrap
+msgid ""
+"The license header contains a short name with a space, which\n"
+"does not conform to the specification."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: missing-license-paragraph-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:116
+#: checks/source-copyright.desc:167
 #, no-wrap
 msgid ""
 "The files paragraph in the machine readable copyright file references a\n"
@@ -15773,7 +15989,7 @@ msgstr ""
 #
 #. Tag: missing-license-text-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:123
+#: checks/source-copyright.desc:174
 #, no-wrap
 msgid ""
 "The standalone license header contains only short license name, but not\n"
@@ -15785,7 +16001,7 @@ msgstr ""
 #
 #. Tag: unused-license-paragraph-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:131
+#: checks/source-copyright.desc:182
 #, no-wrap
 msgid ""
 "The license paragraph in the machine-readable copyright file is not\n"
@@ -15799,7 +16015,7 @@ msgstr ""
 #
 #. Tag: unknown-paragraph-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:138
+#: checks/source-copyright.desc:189
 #, no-wrap
 msgid ""
 "The machine-readable copyright file contains a paragraph that is neither\n"
@@ -15811,7 +16027,7 @@ msgstr ""
 #
 #. Tag: field-name-typo-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:151
+#: checks/source-copyright.desc:202
 #, no-wrap
 msgid ""
 "The listed field name is a likely misspelling of one of the documented\n"
@@ -15831,7 +16047,7 @@ msgstr ""
 #
 #. Tag: ambiguous-paragraph-in-dep5-copyright
 #. type: Lintian tag description
-#: checks/source-copyright.desc:170
+#: checks/source-copyright.desc:222
 #, no-wrap
 msgid ""
 "The paragraph has a \"License\" and a \"Copyright\" field, but no\n"
@@ -15848,7 +16064,79 @@ msgid ""
 "\n"
 "Lintian will attempt to guess what you intended and continue based on\n"
 "its guess.  If the guess is wrong, you may see spurious tags related\n"
-"to this paragraph.\n"
+"to this paragraph."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: pipe-symbol-used-as-license-disjunction
+#. type: Lintian tag description
+#: checks/source-copyright.desc:231
+#, no-wrap
+msgid ""
+"In contrast to package dependencies, the pipe symbol or vertical\n"
+"bar does not indicate a logical disjunction or OR-relationship\n"
+"between two license short names. Instead, the keyword \"or\" between\n"
+"two license names indicates the dual licensing."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: invalid-escape-sequence-in-dep5-copyright
+#. type: Lintian tag description
+#: checks/source-copyright.desc:241
+#, no-wrap
+msgid ""
+"The only allowed escape sequences are \"\\*\", \"\\?\" and \"\\\\\" "
+"(without\n"
+"quotes) to produce a literal star, question mark and backslash, "
+"respectively.\n"
+"Without the escaping backslash, the star and question mark take the role "
+"of\n"
+"globbing operators similar to shell globs which is why they have to be\n"
+"escaped. No other escapable characters than \"*\", \"?\" and \"\\\" exist."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: wildcard-matches-nothing-in-dep5-copyright
+#. type: Lintian tag description
+#: checks/source-copyright.desc:251
+#, no-wrap
+msgid ""
+"The wildcard that was specified matches no file in the source tree.\n"
+"This either indicates that you should fix the wildcard so that it matches\n"
+"the intended file or that you can remove the wildcard. Notice that in\n"
+"contrast to shell globs, the \"*\" (star or asterisk) matches slashes and\n"
+"leading dots."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: file-without-copyright-information
+#. type: Lintian tag description
+#: checks/source-copyright.desc:259
+#, no-wrap
+msgid ""
+"The source tree contains a file which was not matched by any of\n"
+"the <tt>Files</tt> paragraphs in debian/copyright. Either adjust existing\n"
+"wildcards to match that file or add a new <tt>Files</tt> paragraph."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: unused-file-paragraph-in-dep5-copyright
+#. type: Lintian tag description
+#: checks/source-copyright.desc:265
+#, no-wrap
+msgid ""
+"The <tt>Files</tt> paragraph in debian/copyright is superfluous as it is\n"
+"never used to match any files. You should be able to safely remove it.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
