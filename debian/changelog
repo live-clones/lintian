@@ -13,6 +13,7 @@ lintian (2.5.27) UNRELEASED; urgency=medium
   * checks/testsuite.{desc,pm}:
     + [BR] Fix false positive missing-runtime-tests-field.
       (Closes: #760714).
+    + [BR] Print line in case of error.
 
   * data/fields/metapackages:
     + [BR] Add qt4-default and qt5-default as metapackage.

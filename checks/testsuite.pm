@@ -93,46 +93,53 @@ sub check_control_contents {
     my ($info, $path) = @_;
 
     my @paragraphs;
-    if (not eval { @paragraphs = read_dpkg_control($path); }) {
+    my @lines = ();
+    if (not eval { @paragraphs = read_dpkg_control($path, 0, \@lines); }) {
         chomp $@;
         $@ =~ s/^syntax error at //;
         tag 'syntax-error-in-debian-tests-control', $@;
     } else {
-        for my $paragraph (@paragraphs) {
-            check_control_paragraph($info, $paragraph);
+        while (my ($index, $paragraph) = each(@paragraphs)) {
+            check_control_paragraph($info, $paragraph,
+                $lines[$index]->{'START-OF-PARAGRAPH'});
         }
     }
     return;
 }
 
 sub check_control_paragraph {
-    my ($info, $paragraph) = @_;
+    my ($info, $paragraph, $line) = @_;
 
     for my $fieldname (@MANDATORY_FIELDS) {
         if (not exists $paragraph->{$fieldname}) {
-            tag 'missing-runtime-tests-field', $fieldname;
+            tag 'missing-runtime-tests-field', $fieldname,
+              'paragraph starting at line', $line;
         }
     }
 
     unless (exists $paragraph->{'tests'}
         || exists $paragraph->{'test-command'}) {
-        tag 'missing-runtime-tests-field', 'tests || test-command';
+        tag 'missing-runtime-tests-field', 'tests || test-command',
+          'paragraph starting at line', $line;
     }
     if (   exists $paragraph->{'tests'}
         && exists $paragraph->{'test-command'}) {
-        tag 'exclusive-runtime-tests-field', 'tests, test-command';
+        tag 'exclusive-runtime-tests-field', 'tests, test-command',
+          'paragraph starting at line', $line;
     }
 
     for my $fieldname (sort(keys(%{$paragraph}))) {
         if (not exists $KNOWN_FIELDS{$fieldname}) {
-            tag 'unknown-runtime-tests-field', $fieldname;
+            tag 'unknown-runtime-tests-field', $fieldname,
+              'paragraph starting at line', $line;
         }
     }
 
     if (exists $paragraph->{'features'}) {
         for my $feature (split(' ', $paragraph->{'features'})) {
             if (not exists $KNOWN_FEATURES{$feature}) {
-                tag 'unknown-runtime-tests-feature', $feature;
+                tag 'unknown-runtime-tests-feature', $feature,
+                  'paragraph starting at line', $line;
             }
         }
     }
@@ -140,7 +147,8 @@ sub check_control_paragraph {
     if (exists $paragraph->{'restrictions'}) {
         for my $restriction (split ' ', $paragraph->{'restrictions'}) {
             if (not exists $KNOWN_RESTRICTIONS{$restriction}) {
-                tag 'unknown-runtime-tests-restriction', $restriction;
+                tag 'unknown-runtime-tests-restriction', $restriction,
+                  'paragraph starting at line', $line;
             }
         }
     }
@@ -151,22 +159,24 @@ sub check_control_paragraph {
             $directory = $paragraph->{'tests-directory'};
         }
         for my $testname (split(' ', $paragraph->{'tests'})) {
-            check_test_file($info, $directory, $testname);
+            check_test_file($info, $directory, $testname, $line);
         }
     }
     return;
 }
 
 sub check_test_file {
-    my ($info, $directory, $name) = @_;
+    my ($info, $directory, $name, $line) = @_;
     my $path = "$directory/$name";
     my $index = $info->index($path);
 
     if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {
-        tag 'illegal-runtime-test-name', $name;
+        tag 'illegal-runtime-test-name', $name,
+          'paragraph starting at line', $line;
     }
     if (not defined($index)) {
-        tag 'missing-runtime-test-file', $path;
+        tag 'missing-runtime-test-file', $path,
+          'paragraph starting at line', $line;
     } elsif (not $index->is_regular_file) {
         tag 'runtime-test-file-is-not-a-regular-file', $path;
     }
