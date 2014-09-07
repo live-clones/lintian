@@ -4,6 +4,9 @@ lintian (2.5.27) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Fix a few false positives is for javascript source-is-missing.
+  * checks/manpages.desc:
+    + [BR] Improve documentation of manpage-has-errors-from-man.
+      (Closes: #757068).
   * checks/menu-format.pm:
     + [BR] Fix a false positive in desktop-mime-but-no-exec-code.
       (Closes: #760677).

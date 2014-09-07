@@ -142,7 +142,8 @@ Info: This man page provokes warnings or errors from man.
  "cannot adjust" or "can't break" are trouble with paragraph filling,
  usually related to long lines.  Adjustment can be helped by left
  justifying, breaks can be helped with hyphenation, see "Manipulating
- Filling and Adjusting" and "Manipulating Hyphenation" in the manual.
+ Filling and Adjusting" and "Manipulating Hyphenation" in the groff
+ manual (see info groff).
  .
  "can't find numbered character" usually means latin1 etc in the input, and
  this warning indicates characters will be missing from the output.  You can
@@ -169,6 +170,7 @@ Info: This man page provokes warnings or errors from man.
  To test this for yourself you can use the following command:
   LC_ALL=en_US.UTF-8 MANROFFSEQ='' MANWIDTH=80 \
          man --warnings -E UTF-8 -l -Tutf8 -Z &lt;file&gt; &gt;/dev/null
+Ref: groff_man(7), groff_mdoc(7)
 
 Tag: manpage-has-errors-from-pod2man
 Severity: normal
