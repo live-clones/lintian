@@ -14,5 +14,12 @@ Depends: @
 Features:
 Tests-Directory: subdir
 
+Test-Command: /bin/true
+Depends: @
+
+Tests: test-2
+Test-Command: /bin/true
+Depends: @
+
 Features: unknownfeature
 Restrictions: unknownrestriction

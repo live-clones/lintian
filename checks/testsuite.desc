@@ -50,6 +50,13 @@ Info: A mandatory field is missing in some paragraph of the
  debian/tests/control file.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
 
+Tag: exclusive-runtime-tests-field
+Severity: normal
+Certainty: certain
+Info: Exclusive field are specified in some paragraph of the
+ debian/tests/control file.
+Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
+
 Tag: missing-runtime-test-file
 Severity: normal
 Certainty: possible

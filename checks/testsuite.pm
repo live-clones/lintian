@@ -29,15 +29,17 @@ use Lintian::Util qw(
   read_dpkg_control
 );
 
+# empty because it is test xor test-command
 my @MANDATORY_FIELDS = qw(
-  tests
 );
+
 my %KNOWN_FIELDS = map { $_ => 1 } qw(
   tests
   restrictions
   features
   depends
   tests-directory
+  test-command
 );
 my %KNOWN_FEATURES = map { $_ => 1 } qw(
 );
@@ -110,6 +112,15 @@ sub check_control_paragraph {
         if (not exists $paragraph->{$fieldname}) {
             tag 'missing-runtime-tests-field', $fieldname;
         }
+    }
+
+    unless (exists $paragraph->{'tests'}
+        || exists $paragraph->{'test-command'}) {
+        tag 'missing-runtime-tests-field', 'tests || test-command';
+    }
+    if (   exists $paragraph->{'tests'}
+        && exists $paragraph->{'test-command'}) {
+        tag 'exclusive-runtime-tests-field', 'tests, test-command';
     }
 
     for my $fieldname (sort(keys(%{$paragraph}))) {
