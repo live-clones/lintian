@@ -14,8 +14,9 @@ lintian (2.5.27) UNRELEASED; urgency=medium
     + [BR] Fix a false positive in desktop-mime-but-no-exec-code.
       (Closes: #760677).
   * checks/source-copyright.pm:
-    + [BR] Fix False positive for space-in-std-shortname-in-dep5-copyright
+    + [BR] Fix false positive for space-in-std-shortname-in-dep5-copyright
       with alternative licenses.  (Closes: #760642).
+    + [BR] Fix false positive for with exception syntax.
   * checks/testsuite.{desc,pm}:
     + [BR] Fix false positive missing-runtime-tests-field.
       (Closes: #760714).

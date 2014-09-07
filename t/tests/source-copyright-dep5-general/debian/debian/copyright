@@ -24,7 +24,11 @@ License: BSD-3
 Copyright: 2010 J. Random Hacker <j.r.hacker@example.com>
 
 Files: debian/*
-License: GPL-2 or GPL-3
+License: GPL-2 or GPL-3 with Font
+Copyright: 2010 J. Random Hacker <j.r.hacker@example.com>
+
+Files: debian/copyright
+License: GPL-2 or GPL-3 with Font exception
 Copyright: 2010 J. Random Hacker <j.r.hacker@example.com>
 
 
@@ -43,6 +47,42 @@ License: GPL-2
  .
  On Debian systems, the full text of the GNU General Public License version 2
  can be found in the file `/usr/share/common-licenses/GPL-2'.
+
+License: GPL-3 with Font
+ This package is free software; you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free Software
+ Foundation; version 2 dated June, 1991.
+ .
+ This package is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along with
+ this package; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ St, Fifth Floor, Boston, MA 02110-1301, USA.
+ .
+ On Debian systems, the full text of the GNU General Public License version 2
+ can be found in the file `/usr/share/common-licenses/GPL-2'.
+ .
+ A fake font exception.
+ 
+License: GPL-3 with Font exception
+ This package is free software; you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free Software
+ Foundation; version 2 dated June, 1991.
+ .
+ This package is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License along with
+ this package; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ St, Fifth Floor, Boston, MA 02110-1301, USA.
+ .
+ On Debian systems, the full text of the GNU General Public License version 2
+ can be found in the file `/usr/share/common-licenses/GPL-2'.
+ .
+ Fake font exception.
 
 License: GPL-3
 

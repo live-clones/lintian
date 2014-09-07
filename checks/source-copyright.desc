@@ -158,6 +158,17 @@ Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The license header contains a short name with a space, which
  does not conform to the specification.
 
+Tag: bad-exception-format-in-dep5-copyright
+Severity: minor
+Certainty: certain
+Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: The license header contains a short name with a bad exception
+ format. According to specification format of exception is:
+ shortlicename with exceptionname exception.
+ .
+ If more than one exception applies to a single license,
+ an arbitrary short name must be used instead.
+
 Tag: missing-license-paragraph-in-dep5-copyright
 Severity: normal
 Certainty: possible
