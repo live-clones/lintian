@@ -1,0 +1,9 @@
+Testname: cruft-doxygen-documentation
+Sequence: 6000
+Version: 1.0
+Description: Detect doxygen documentation
+Skeleton: pedantic
+Options: --pedantic -I -E
+Architecture: any
+Test-For:
+ source-contains-prebuilt-doxygen-documentation

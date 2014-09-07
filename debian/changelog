@@ -4,6 +4,9 @@ lintian (2.5.27) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Fix a few false positives is for javascript source-is-missing.
+    + [BR] Detect prebuilt doxygen documentation.
+  * checks/files.pm:
+    + [BR] Detect useless doxygen generated file.  (Closes:  #751945)
   * checks/manpages.desc:
     + [BR] Improve documentation of manpage-has-errors-from-man.
       (Closes: #757068).
