@@ -1,8 +1,0 @@
-#!/bin/sh
-#
-# This script is here without a debhelper token so that dh_desktop won't
-# add the update-desktop-database call whose absence we're checking for.
-# Also check that the above comment doesn't fool us.
-
-set -e
-run something

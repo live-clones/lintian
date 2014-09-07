@@ -1,2 +1,1 @@
-W: menu-format-desktop-mimetype source: maintainer-script-lacks-debhelper-token debian/postinst
-W: menu-format-desktop-mimetype: desktop-mime-but-no-exec-code usr/share/applications/foo.desktop
+W: menu-mime: desktop-mime-but-no-exec-code usr/share/applications/foo.desktop
