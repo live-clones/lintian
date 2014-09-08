@@ -642,8 +642,8 @@ sub find_cruft {
             tag 'debian-upstream-obsolete-path', $name;
         }
 
-        if ($basename eq 'doxygen.png' or
-            $basename eq 'doxygen.sty') {
+        if (   $basename eq 'doxygen.png'
+            or $basename eq 'doxygen.sty') {
             unless ($source_pkg eq 'doxygen') {
                 tag 'source-contains-prebuilt-doxygen-documentation', $dirname;
             }
