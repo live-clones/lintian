@@ -189,11 +189,6 @@ An alternative route is using a table like:
 
   my %VALID_MULTI_ARCH_VALUES = map { $_ => 1} qw(no same foreign allowed);
 
-Notice that Lintian automatically strips leading and trailing spaces
-on the I<first> line in a field.  It also strips trailing spaces from
-all other lines, but leading spaces and the " ."-continuation markers
-are kept as is.
-
 We will use the second here:
 
  # deb/pkg-check is loaded as Lintian::deb::pkg_check
@@ -226,7 +221,11 @@ We will use the second here:
      return;
  }
 
-So far so good.
+
+Notice that Lintian automatically strips leading and trailing spaces
+on the I<first> line in a field.  It also strips trailing spaces from
+all other lines, but leading spaces and the " ."-continuation markers
+are kept as is.
 
 =head2 Checking dependencies
 
@@ -241,7 +240,7 @@ L<< $info->relation|Lintian::Collect::Binary/relation (FIELD) >> method for
 this.
 
 The $info->relation returns an instance of L<Lintian::Relation>.  This
-object as an "implies" method that can be used to check if a package
+object has an "implies" method that can be used to check if a package
 has an explicit dependency.  Note that "implies" actually checks if
 one relations "implies" another (i.e. if you satisfied relationA then
 you definitely also satisfied relationB).
@@ -418,9 +417,11 @@ do this for you.  If you are looking for a specific file (or dir), a
 call to "index" will be much faster.  For the contents of a specific dir,
 you can use something like:
 
- foreach my $elem ($info->index('path/to/dir/')->children) {
-     print $elem->name . " is a file" if $elem->is_file;
-     # ...
+ if (my $dir = $info->index('path/to/dir/')) {
+     foreach my $elem ($dir->children) {
+         print $elem->name . " is a file" if $elem->is_file;
+         # ...
+     }
  }
 
 Keep in mind that using the "index" or "sorted_index" method will
