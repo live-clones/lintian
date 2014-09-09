@@ -73,7 +73,7 @@ do not apply equally to all package types being processed.
 Generally it is advisable to do check only binaries ("binary" and
 "udeb"), sources or changes in a given check.  But in rare cases, it
 makes sense to lump multiple types together in the same check and this
-arguments help you do that.
+argument helps you do that.
 
 (Current it is always identical to $proc->pkg_type)
 
@@ -96,8 +96,9 @@ L<Lintian::Collect::Source>.
 =item $proc - Basic metadata about the package
 
 This is an instance of L<Lintian::Processable> and is useful for
-trivially obtaining very basic package metadata.  Particularly, name
-of source package and version of source package readily available.
+trivially obtaining very basic package metadata.  Particularly, the
+name of source package and version of source package are readily
+available through this object..
 
 =item $group - Group of processables from the same source
 
