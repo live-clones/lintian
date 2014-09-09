@@ -183,7 +183,7 @@ This was the first half.  Lets look at checking the value.  Multi-arch
 fields can (currently) be one of "no", "same", "foreign" or "allowed".
 One way of checking this would be using the regex:
 
-  /^no|same|foreign|allowed$/
+  /^(?:no|same|foreign|allowed)$/
 
 An alternative route is using a table like:
 
