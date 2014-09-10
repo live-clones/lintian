@@ -311,6 +311,10 @@ sub _parse_dep5 {
             if (not @commas_in_files or $commas_in_files) {
                 my @wildcards = split /[\n\t ]+/, $files;
                 for my $wildcard (@wildcards) {
+                    $wildcard =~ s/^\s+|\s+$//g;
+                    if ($wildcard eq '') {
+                        next;
+                    }
                     my ($regex, $wildcard_error)= wildcard_to_regex($wildcard);
                     if (defined $wildcard_error) {
                         tag 'invalid-escape-sequence-in-dep5-copyright',

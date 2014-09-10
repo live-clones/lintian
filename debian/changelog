@@ -17,6 +17,8 @@ lintian (2.5.27) UNRELEASED; urgency=medium
     + [BR] Fix false positive for space-in-std-shortname-in-dep5-copyright
       with alternative licenses.  (Closes: #760642).
     + [BR] Fix false positive for with exception syntax.
+    + [BR] Fix false positive of 
+      wildcard-matches-nothing-in-dep5-copyright.  (Closes: 761125)
   * checks/testsuite.{desc,pm}:
     + [BR] Fix false positive missing-runtime-tests-field.
       (Closes: #760714).

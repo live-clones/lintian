@@ -26,8 +26,10 @@ Copyright: 2014, somebody1
 License: mylicense
  Fixme
 
-Files: file,with,commas
+Files:
+ file,with,commas 
 Copyright: 2014, somebody1
+Comment: this paragraph starts with a newline and ends with a space
 License: mylicense
  Fixme
 
