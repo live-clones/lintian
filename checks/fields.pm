@@ -354,7 +354,7 @@ sub run {
         my $march = $info->field('multi-arch');
         unfold('multi-arch', \$march);
         tag 'unknown-multi-arch-value', $pkg, $march
-          unless $march =~ m/^no|foreign|allowed|same$/o;
+          unless $march =~ m/^(?:no|foreign|allowed|same)$/o;
         if (   $march eq 'same'
             && $type eq 'binary'
             && defined $info->field('architecture')) {
@@ -368,7 +368,7 @@ sub run {
     if ($type eq 'binary'){
         if ($pkg =~ /^fonts-/) {
             tag 'font-package-not-multi-arch-foreign'
-              unless $info->field('multi-arch', 'no') =~ m/^foreign|allowed$/o;
+              unless $info->field('multi-arch', 'no') =~ m/^(?:foreign|allowed)$/o;
         }
     }
 
@@ -613,7 +613,7 @@ sub run {
         my $uri = URI->new($homepage);
 
         # not an absolute URI or (most likely) an invalid protocol
-        unless ($uri->scheme && $uri->scheme =~ m/^ftp|https?|gopher$/o) {
+        unless ($uri->scheme && $uri->scheme =~ m/^(?:ftp|https?|gopher)$/o) {
             tag 'bad-homepage', $orig;
         }
 
