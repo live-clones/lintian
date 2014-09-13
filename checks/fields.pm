@@ -368,7 +368,8 @@ sub run {
     if ($type eq 'binary'){
         if ($pkg =~ /^fonts-/) {
             tag 'font-package-not-multi-arch-foreign'
-              unless $info->field('multi-arch', 'no') =~ m/^(?:foreign|allowed)$/o;
+              unless $info->field('multi-arch', 'no')
+              =~ m/^(?:foreign|allowed)$/o;
         }
     }
 
