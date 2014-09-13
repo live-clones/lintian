@@ -10,6 +10,7 @@
 # Please alpha sort by package 
 ckeditor                     ~~ (?i)/ckeditor$EXT
 fckeditor                    ~~ (?i)/fckeditor$EXT
+libjs-async                  ~~ (?i)/async$EXT
 libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
 libjs-excanvas               ~~ (?i)/excanvas(?:-r[0-9]+)?$EXT
