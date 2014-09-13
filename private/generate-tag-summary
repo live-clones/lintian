@@ -4,7 +4,24 @@ use strict;
 use warnings;
 use autodie;
 
-my (%added, %removed);
+use Getopt::Long;
+
+my $RE = qr{
+    \A [ ] [ ]  XXX: [ ] generate [ ] tag [ ] summary
+    [ ] with [ ] private/generate-tag-summary \n \Z
+}xsm;
+my (%added, %removed, %opt);
+
+my %opthash = ('in-place|i' => \$opt{'in-place'},);
+
+# init commandline parser
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev',
+    'permute');
+
+# process commandline options
+Getopt::Long::GetOptions(%opthash)
+  or die("error parsing options\n");
+
 my ($commit_range) = @ARGV;
 if (not $commit_range) {
     my $describe = qx{git describe};
@@ -43,19 +60,41 @@ for my $tag (keys(%added)) {
 
 if (not %added and not %removed) {
     print STDERR "No tags were added or removed\n";
-    exit(0);
 }
 
-print "  * Summary of tag changes:\n";
-if (%added) {
-    print "    + Added:\n";
-    for my $tag (sort(keys(%added))) {
-        print "      - $tag\n";
+if ($opt{'in-place'}) {
+    open(my $in_fd, '<', 'debian/changelog');
+    open(my $out_fd, '>', 'debian/changelog.tmp');
+    while (my $line = <$in_fd>) {
+        if ($line =~ m/$RE/o) {
+            emit_tag_summary($out_fd);
+        } else {
+            print {$out_fd} $line;
+        }
     }
+    close($out_fd);
+    close($in_fd);
+    rename('debian/changelog.tmp', 'debian/changelog');
+    print "Updated debian/changelog\n";
+} else {
+    emit_tag_summary(\*STDOUT);
 }
-if (%removed) {
-    print "    + Removed:\n";
-    for my $tag (sort(keys(%removed))) {
-        print "      - $tag\n";
+
+sub emit_tag_summary {
+    my ($fd) = @_;
+
+    print {$fd} "  * Summary of tag changes:\n";
+    if (%added) {
+        print {$fd} "    + Added:\n";
+        for my $tag (sort(keys(%added))) {
+            print {$fd} "      - $tag\n";
+        }
     }
+    if (%removed) {
+        print {$fd} "    + Removed:\n";
+        for my $tag (sort(keys(%removed))) {
+            print {$fd} "      - $tag\n";
+        }
+    }
+    return;
 }
