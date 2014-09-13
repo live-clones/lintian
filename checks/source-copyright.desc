@@ -164,7 +164,7 @@ Certainty: certain
 Ref: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The license header contains a short name with a bad exception
  format. According to specification format of exception is:
- shortlicename with exceptionname exception.
+ shortlicencename with exceptionname exception.
  .
  If more than one exception applies to a single license,
  an arbitrary short name must be used instead.
