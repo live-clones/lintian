@@ -6,8 +6,18 @@ use autodie;
 
 my (%added, %removed);
 my ($commit_range) = @ARGV;
-die "Usage: $0 tag..HEAD\n"
-  unless $commit_range;
+if (not $commit_range) {
+    my $describe = qx{git describe};
+    if ($? != 0) {
+        die 'git describe failed with code ' . (($? >> 8) & 0xff);
+    }
+    chomp($describe);
+    if (not $describe) {
+        die "git describe did not return anything.\n";
+    }
+    $describe =~ s/-\d+-g[0-9a-fA-F]{7}$//;
+    $commit_range = "${describe}..HEAD";
+}
 
 open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'checks/*.desc');
 while (my $line = <$fd>) {
