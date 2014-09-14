@@ -2,6 +2,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * lib/Lintian/Command.pm:
+    + [NT] Add support for running a sub in the child before
+      it calls exec.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 14 Sep 2014 08:55:45 +0200
 
 lintian (2.5.27) unstable; urgency=medium

@@ -139,6 +139,13 @@ with a non-zero error code.  If exceptions should be handled by the caller,
 setting it to 'never' will cause it to store the exception in the
 C<exception> key instead.
 
+=item child_before_exec
+
+Run the given subroutine in each of the children before they run
+"exec".
+
+This is passed to L<IPC::Run/harness> as the I<init> keyword.
+
 =back
 
 The following additional keys will be set during the execution of spawn():
@@ -174,7 +181,7 @@ sub spawn {
     $opts->{fail} ||= 'exception';
 
     my ($out, $background);
-    my (@out, @in, @err);
+    my (@out, @in, @err, @kwargs);
     if ($opts->{pipe_in}) {
         @in = ('<pipe', $opts->{pipe_in});
         $background = 1;
@@ -211,6 +218,19 @@ sub spawn {
             $opts->{err} ||= \*STDERR;
             @err = ('2>', $opts->{err});
         }
+    }
+
+    if ($opts->{'child_before_exec'}) {
+        push(@kwargs, 'init', $opts->{'child_before_exec'});
+        @cmds = map {
+            # The init handler has to be injected after each
+            # command but (presumably) before the '|' or '&'.
+            if (ref($_) eq 'ARRAY') {
+                ($_, @kwargs);
+            } else {
+                $_;
+            }
+        } @cmds;
     }
 
     eval {
