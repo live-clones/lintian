@@ -23,6 +23,9 @@ use strict;
 use warnings;
 use autodie;
 
+use Cwd qw(realpath);
+use File::Temp();
+
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(is_ancestor_of system_env clean_env);
@@ -139,13 +142,51 @@ sub run {
     }
 
     if ($missing_files == 0) {
-#<<< No tidy - though we should rewrite this to avoid writing during checks (#699022)
-        $ENV{'INTLTOOL_EXTRACT'} = '/usr/share/intltool-debian/intltool-extract';
-        system_env("cd \Q$debfiles/po\E && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
-        system_env("/usr/bin/msgcmp --use-untranslated \Q$debfiles/po/test.pot\E \Q$debfiles/po/templates.pot\E >/dev/null 2>&1"
-              . "&& /usr/bin/msgcmp --use-untranslated \Q$debfiles/po/templates.pot\E \Q$debfiles/po/test.pot\E >/dev/null 2>&1"
-          ) == 0 or tag 'newer-debconf-templates';
-#>>>
+        my $temp_obj = File::Temp->newdir('lintian-po-debconf-XXXXXX',
+            DIR => $ENV{'TEMPDIR'}//'/tmp');
+        my $abs_tempdir = realpath($temp_obj->dirname)
+          or croak('Cannot resolve ' . $temp_obj->dirname . ": $!");
+        # We need an extra level of dirs, as intltool (in)directly
+        # tries to use files in ".." if they exist
+        # (e.g. ../templates.h).
+        my $tempdir = "$abs_tempdir/po";
+        my $test_pot = "$tempdir/test.pot";
+        my %msgcmp_opts = (
+            'out' => '/dev/null',
+            'err' => '/dev/null',
+            'fail' => 'never',
+        );
+        my @msgcmp = ('msgcmp', '--use-untranslated');
+        my %intltool_opts = (
+            'child_before_exec' => sub {
+                $ENV{'INTLTOOL_EXTRACT'}
+                  = '/usr/share/intltool-debian/intltool-extract';
+                $ENV{'srcdir'} = "$debfiles/po";
+                chdir($tempdir);
+            },
+            'fail' => 'error',
+            'out' => \*STDOUT,
+        );
+
+        # Create our extra level
+        mkdir($tempdir);
+
+        # Generate a "test.pot" (in a tempdir)
+        spawn(
+            \%intltool_opts,
+            [
+                '/usr/share/intltool-debian/intltool-update',
+                '--gettext-package=test','--pot'
+            ]);
+
+        # Compare our "test.pot" with the existing "templates.pot"
+        (
+            spawn(\%msgcmp_opts,
+                [@msgcmp, $test_pot, "$debfiles/po/templates.pot"])
+              and spawn(
+                \%msgcmp_opts,
+                [@msgcmp, "$debfiles/po/templates.pot", $test_pot])
+        ) or tag 'newer-debconf-templates';
     }
 
     opendir(my $po_dirfd, "$debfiles/po");

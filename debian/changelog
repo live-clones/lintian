@@ -2,6 +2,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/po-debconf.pm:
+    + [NT] Avoid writing test.pot to the unpacked package.
+      (Closes: #699022)
+
   * lib/Lintian/Command.pm:
     + [NT] Add support for running a sub in the child before
       it calls exec.
