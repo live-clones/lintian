@@ -146,7 +146,8 @@ STDOUT->autoflush;
 
 unless ($opt{'dry-run'}) {
     # rotate log files
-    system("savelog $log_file $html_reports_log >/dev/null") == 0
+    my %opt = ('out' => '/dev/null',);
+    spawn(\%opt, ['savelog', $log_file, $html_reports_log])
       or die "Cannot rotate log files.\n";
 
     # create new log file
@@ -436,21 +437,28 @@ if (defined($state) and time() <= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
 
 # create html reports
 Log('Creating HTML reports...');
-run("$html_reports_cmd $lintian_log >$html_reports_log 2>&1")
+Log("Executing $html_reports_cmd $lintian_log");
+my %html_reports_opts = (
+    'out' => $html_reports_log,
+    'err' => '&2',
+);
+spawn(\%html_reports_opts, [$html_reports_cmd, $lintian_log])
   or
   Log("warning: executing $html_reports_cmd returned " . (($? >> 8) & 0xff));
 Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
 if (!$opt{'dry-run'} && -f $statistics_file) {
-    system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`")== 0
+    my $date = time2str('%Y%m%d', time());
+    my $dest = "$LOG_DIR/stats/statistics-${date}";
+    system('cp', $statistics_file, $dest) == 0
       or Log('warning: could not rotate the statistics file');
 }
 
 # install new html directory
 Log('Installing HTML reports...');
 unless ($opt{'dry-run'}) {
-    system("rm -rf $HTML_DIR") == 0
+    system('rm', '-rf', $HTML_DIR) == 0
       or Die("error removing $HTML_DIR");
     # a tiny bit of race right here
     rename($HTML_TMP_DIR,$HTML_DIR)
@@ -470,12 +478,6 @@ sub Log {
     print {$LOG_FD} $ts, $msg,"\n";
     print $ts, $msg, "\n" if $opt{'to-stdout'};
     return;
-}
-
-sub run {
-    Log("Executing $_[0]");
-    return 1 if $opt{'dry-run'};
-    return (system($_[0]) == 0);
 }
 
 sub Die {

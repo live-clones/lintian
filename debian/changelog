@@ -17,6 +17,12 @@ lintian (2.5.28) UNRELEASED; urgency=medium
     + [NT] Add safe_qx sub for replacing qx() that supports
       most of the features of spawn().
 
+  * reporting/*:
+    + [NT] Avoid forking a shell when invoking commands.  This
+      has the side effect of allowing some paths from the
+      configuration to contain spaces (among other), where it
+      previously would not work.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 14 Sep 2014 08:55:45 +0200
 
 lintian (2.5.27) unstable; urgency=medium
