@@ -77,6 +77,7 @@ BEGIN {
 
 use lib "$LINTIAN_ROOT/lib";
 
+use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
 use Lintian::Util qw(delete_dir fail parse_boolean
   rstrip slurp_entire_file touch_file);
@@ -92,7 +93,7 @@ our @DPKG_BUILDPACKAGE_CMD = (
     qw(--source-option=--auto-commit),
 );
 our $STANDARDS_VERSION = '3.9.5';
-our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
+our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 chomp $ARCHITECTURE;
 
 my %TEMPLATES = (
@@ -100,7 +101,7 @@ my %TEMPLATES = (
     'debs'   => ['changelog', 'control', 'Makefile'],
     'source' => ['changelog', 'control'],
 );
-my $DATE = `date -R`;
+my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
 
 my $output_is_tty = -t STDOUT;
