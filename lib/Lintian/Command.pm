@@ -414,7 +414,7 @@ If $opts is given, caller must ensure that the output is captured as a
 scalar reference in C<$opts->{out}> (possibly by omitting the "out"
 and "out_append" keys).
 
-Futhermore, the commands should not be backgrounded, so they cannot
+Furthermore, the commands should not be backgrounded, so they cannot
 use '&' nor (e.g. C<$opts->{pipe_in}>).
 
 If needed C<$?> will be set after the call like for C<qx()>.
