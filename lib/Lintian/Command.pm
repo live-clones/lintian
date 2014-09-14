@@ -27,7 +27,7 @@ BEGIN {
 }
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(spawn reap kill);
+our @EXPORT_OK = qw(spawn reap kill safe_qx);
 
 use IPC::Run qw(harness kill_kill);
 
@@ -393,7 +393,47 @@ sub done {
     }
 }
 
+=head2 C<safe_qx([$opts,] @cmds)>
+
+Variant of spawn that emulates the C<qx()> operator by returning the
+captured output.
+
+It takes the same arguments as C<spawn> and they have the same
+semantics except that the initial $opts is optional.  If $opts is
+given, caller must ensure that the output is captured as a scalar
+reference in C<$opts->{out}> (possibly by omitting the "out" and
+"out_append" keys).
+
+If needed C<$?> will be set after the call like for C<qx()>.
+
+Examples:
+
+  # Capture the output of some pipeline
+  safe_qx(['grep', 'some-pattern', 'path/to/file'], '|',
+          ['head', '-n1'])
+
+  # Call nproc and capture stdout and stderr interleaved
+  safe_qx({ 'err' => '&1'}, ['nproc'])
+
+Possible known issue: It might not possible to discard stdout and
+capture stderr instead.
+
+
+=cut
+
+sub safe_qx {
+    my $opts;
+    if (ref($_[0]) eq 'HASH') {
+        $opts = shift;
+    } else {
+        $opts = {};
+    }
+    spawn($opts, @_);
+    return ${$opts->{out}};
+}
+
 1;
+
 __END__
 
 =head1 EXPORTS

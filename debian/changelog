@@ -11,6 +11,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
       it calls exec.
     + [NT] Add support for shell-like (e.g. &2) redirects of
       stdout and stderr.
+    + [NT] Add safe_qx sub for replacing qx() that supports
+      most of the features of spawn().
 
  -- Niels Thykier <niels@thykier.net>  Sun, 14 Sep 2014 08:55:45 +0200
 
