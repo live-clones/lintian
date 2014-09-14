@@ -11,6 +11,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * data/cruft/non-free-license:
     + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).
 
+  * debian/postrm:
+    + [NT] Remove the "changes" folder when purging the
+      Lintian lab in /var/spool/lintian.
+
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Mention "safe_qx" as alternative to qx/`` in the
       tutorial.
