@@ -123,7 +123,6 @@ my @lintian_cmd = (
 my $STATE_DIR = $HARNESS_STATE_DIR;
 my $START_TIME = time();
 my $state;
-chomp($LINTIAN_VERSION);
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
@@ -140,6 +139,7 @@ import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
 
 my $LINTIAN_VERSION
   = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
+chomp($LINTIAN_VERSION);
 
 # turn file buffering off
 STDOUT->autoflush;
