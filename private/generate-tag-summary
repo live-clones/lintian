@@ -6,6 +6,12 @@ use autodie;
 
 use Getopt::Long;
 
+BEGIN {
+    $ENV{'LINTIAN_ROOT'} //= '.';
+};
+use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Lintian::Command qw(safe_qx);
+
 my $RE = qr{
     \A [ ] [ ]  XXX: [ ] generate [ ] tag [ ] summary
     [ ] with [ ] private/generate-tag-summary \n \Z
@@ -24,7 +30,7 @@ Getopt::Long::GetOptions(%opthash)
 
 my ($commit_range) = @ARGV;
 if (not $commit_range) {
-    my $describe = qx{git describe};
+    my $describe = safe_qx(qw(git describe));
     if ($? != 0) {
         die 'git describe failed with code ' . (($? >> 8) & 0xff);
     }

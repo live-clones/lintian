@@ -25,7 +25,12 @@ use autodie;
 use File::Temp qw(tempfile);
 use POSIX qw (strftime);
 
+BEGIN {
+    $ENV{'LINTIAN_ROOT'} //= '.';
+};
+
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
+use Lintian::Command qw(safe_qx);
 use Lintian::Util qw(parse_dpkg_control);
 
 my $datapath = shift;
@@ -120,7 +125,7 @@ unless ($datapath) {
 
 $ENV{'LC_ALL'} = 'C';
 
-my $dver = `dpkg-architecture --version | head -n1`;
+my $dver = safe_qx([qw(dpkg-architecture --version)], '|', [qw(head -n1)]);
 chomp $dver;
 
 open(my $dlfd, '-|', 'dpkg-architecture', '-L');
