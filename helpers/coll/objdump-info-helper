@@ -30,6 +30,9 @@ use strict;
 use warnings;
 use autodie;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Command qw(spawn);
+
 my (@sections, @symbol_versions);
 my @dyn_symbols;
 my %program_headers;
@@ -57,8 +60,10 @@ if (scalar @ARGV == 1) {
     $bin = $ARGV[0];
     print "Filename: $bin\n";
 
-    system("head \Q$bin\E | grep -q 'packed.*with.*UPX'");
-    print "UPX: yes\n" if $? == 0;
+    if (spawn(undef, ['head', $bin], '|', ['grep', '-q', 'packed.*with.*UPX']))
+    {
+        print "UPX: yes\n";
+    }
 }
 
 while (my $line = <$readelf>) {
@@ -72,8 +77,13 @@ while (my $line = <$readelf>) {
         $bin = $file;
         print "Filename: $bin\n";
 
-        system("head \Q$bin\E | grep -q 'packed.*with.*UPX'");
-        print "UPX: yes\n" if $? == 0;
+        if (
+            spawn(
+                undef, ['head', $bin],
+                '|', ['grep', '-q', 'packed.*with.*UPX'])
+          ) {
+            print "UPX: yes\n";
+        }
     } elsif (
         $line =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
         or $line
