@@ -217,15 +217,15 @@ sub run {
         }
         tag 'unknown-encoding-in-po-file', "debian/po/$file"
           unless length($charset);
+        my $stats;
         my %opts = (
-            'child_before_exec' => sub { clean_env(1); },
-            'err' => '/dev/null',
+            'child_before_exec' => sub {
+                clean_env(1);
+            },
+            'err' => \$stats,
         );
-        spawn(\%opts, ['msgfmt', '-o/dev/null', "$debfiles/po/$file"])
+        spawn(\%opts, ['msgfmt', '-o', '/dev/null', '--statistics', "$debfiles/po/$file"])
           or tag 'invalid-po-file', "debian/po/$file";
-
-        my $stats
-          = `LC_ALL=C msgfmt -o /dev/null --statistics \Q$debfiles/po/$file\E 2>&1`;
         if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
             $full_translation = 1;
         }
