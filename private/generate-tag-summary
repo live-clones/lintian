@@ -8,7 +8,7 @@ use Getopt::Long;
 
 BEGIN {
     $ENV{'LINTIAN_ROOT'} //= '.';
-};
+}
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Command qw(safe_qx);
 

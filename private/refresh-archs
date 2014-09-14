@@ -27,7 +27,7 @@ use POSIX qw (strftime);
 
 BEGIN {
     $ENV{'LINTIAN_ROOT'} //= '.';
-};
+}
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Command qw(safe_qx);
