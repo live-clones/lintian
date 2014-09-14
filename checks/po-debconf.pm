@@ -23,8 +23,9 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of system_env);
+use Lintian::Util qw(is_ancestor_of system_env clean_env);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -175,8 +176,11 @@ sub run {
         }
         tag 'unknown-encoding-in-po-file', "debian/po/$file"
           unless length($charset);
-        system_env(
-            'msgfmt -o /dev/null'. " \Q$debfiles/po/$file\E 2>/dev/null") == 0
+        my %opts = (
+            'child_before_exec' => sub { clean_env(1); },
+            'err' => '/dev/null',
+        );
+        spawn(\%opts, ['msgfmt', '-o/dev/null', "$debfiles/po/$file"])
           or tag 'invalid-po-file', "debian/po/$file";
 
         my $stats
