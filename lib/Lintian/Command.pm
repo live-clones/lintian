@@ -399,21 +399,44 @@ Variant of spawn that emulates the C<qx()> operator by returning the
 captured output.
 
 It takes the same arguments as C<spawn> and they have the same
-semantics except that the initial $opts is optional.  If $opts is
-given, caller must ensure that the output is captured as a scalar
-reference in C<$opts->{out}> (possibly by omitting the "out" and
-"out_append" keys).
+basic semantics with the following exceptions:
+
+=over 4
+
+=item The initial $opts is optional.
+
+=item If only a single command is to be run, the surrounding list
+reference can be omitted (see the examples below).
+
+=back
+
+If $opts is given, caller must ensure that the output is captured as a
+scalar reference in C<$opts->{out}> (possibly by omitting the "out"
+and "out_append" keys).
+
+Futhermore, the commands should not be backgrounded, so they cannot
+use '&' nor (e.g. C<$opts->{pipe_in}>).
 
 If needed C<$?> will be set after the call like for C<qx()>.
 
 Examples:
+
+  # Capture the output of a simple command
+  # - Both are eqv.
+  safe_qx('grep', 'some-pattern', 'path/to/file');
+  safe_qx(['grep', 'some-pattern', 'path/to/file']);
 
   # Capture the output of some pipeline
   safe_qx(['grep', 'some-pattern', 'path/to/file'], '|',
           ['head', '-n1'])
 
   # Call nproc and capture stdout and stderr interleaved
-  safe_qx({ 'err' => '&1'}, ['nproc'])
+  safe_qx({ 'err' => '&1'}, 'nproc')
+
+  #  WRONG: Runs grep with 5 arguments including a literal "|" and
+  # "-n1", which will generally fail with bad arguments.
+  safe_qx('grep', 'some-pattern', 'path/to/file', '|',
+          'head', '-n1')
 
 Possible known issue: It might not possible to discard stdout and
 capture stderr instead.
@@ -422,13 +445,18 @@ capture stderr instead.
 =cut
 
 sub safe_qx {
-    my $opts;
+    my ($opts, @args);
     if (ref($_[0]) eq 'HASH') {
         $opts = shift;
     } else {
         $opts = {};
     }
-    spawn($opts, @_);
+    if (ref($_[0]) eq 'ARRAY') {
+        @args = @_;
+    } else {
+        @args = [@_];
+    }
+    spawn($opts, @args);
     return ${$opts->{out}};
 }
 
