@@ -9,6 +9,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * data/cruft/non-free-license:
     + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).
 
+  * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
+    + [NT] Mention "safe_qx" as alternative to qx/`` in the
+      tutorial.
+
   * lib/Lintian/Command.pm:
     + [NT] Add support for running a sub in the child before
       it calls exec.

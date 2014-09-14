@@ -524,7 +524,8 @@ CVE-2009-4014).
 
 Usually 3-arg open and the non-shell variant of system/exec are
 enough.  When you actually need a shell pipeline, consider using
-L<Lintian::Command>.
+L<Lintian::Command>.  It also provides a I<safe_qx> command to assist
+with capturing stdout as alternative to `$cmd` (or qx/$cmd/).
 
 =item * Do not trust field values.
 
