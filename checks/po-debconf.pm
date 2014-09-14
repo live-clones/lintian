@@ -28,7 +28,7 @@ use File::Temp();
 
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of system_env clean_env);
+use Lintian::Util qw(is_ancestor_of clean_env);
 
 sub run {
     my (undef, undef, $info) = @_;
