@@ -120,7 +120,6 @@ my @lintian_cmd = (
     qw(--no-cfg -I -E --pedantic -v --show-overrides),
     qw(--exp-output=format=fullewi --packages-from-file -),
 );
-my $LINTIAN_VERSION = qx($LINTIAN_ROOT/frontend/lintian --print-version);
 my $STATE_DIR = $HARNESS_STATE_DIR;
 my $START_TIME = time();
 my $state;
@@ -128,6 +127,8 @@ chomp($LINTIAN_VERSION);
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
+require Lintian::Command;
+import Lintian::Command qw(safe_qx);
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable;
@@ -136,6 +137,9 @@ import Lintian::Relation::Version qw(versions_comparator);
 require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
   load_state_cache find_backlog);
+
+my $LINTIAN_VERSION
+  = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
 
 # turn file buffering off
 STDOUT->autoflush;
