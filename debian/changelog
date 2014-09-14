@@ -9,6 +9,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * lib/Lintian/Command.pm:
     + [NT] Add support for running a sub in the child before
       it calls exec.
+    + [NT] Add support for shell-like (e.g. &2) redirects of
+      stdout and stderr.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 14 Sep 2014 08:55:45 +0200
 

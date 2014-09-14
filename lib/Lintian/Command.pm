@@ -102,6 +102,8 @@ STDOUT of the last forked child.  Will be set to a newly created
 scalar reference by default which can be used to retrieve the output
 after the call.
 
+Can be '&N' (e.g. &2) to redirect it to (numeric) file descriptor.
+
 =item out_append
 
 STDOUT of all forked children, cannot be used with out and should only be
@@ -117,6 +119,8 @@ process to end properly.
 =item err
 
 STDERR of all forked children.  Defaults to STDERR of the parent.
+
+Can be '&N' (e.g. &1) to redirect it to (numeric) file descriptor.
 
 =item err_append
 
@@ -203,7 +207,11 @@ sub spawn {
     } else {
         if (!exists $opts->{out} && defined $opts->{out_append}){
             @out = ('>>', $opts->{out_append});
+        } elsif ($opts->{out} && substr($opts->{out}, 0, 1) eq '&') {
+            # >&2 redirects must be a single string
+            @err = ('>' . $opts->{out});
         } else {
+            # Generic redirect to files, scalar refs or open fds
             $opts->{out} ||= \$out;
             @out = ('>', $opts->{out});
         }
@@ -214,7 +222,11 @@ sub spawn {
     } else {
         if (!exists $opts->{err} && defined $opts->{err_append}){
             @err = ('2>>', $opts->{err_append});
+        } elsif ($opts->{err} && substr($opts->{err}, 0, 1) eq '&') {
+            # 2>&1 redirects must be a single string
+            @err = ('2>' . $opts->{err});
         } else {
+            # Generic redirect to files, scalar refs or open fds
             $opts->{err} ||= \*STDERR;
             @err = ('2>', $opts->{err});
         }
