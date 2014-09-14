@@ -224,7 +224,8 @@ sub run {
             },
             'err' => \$stats,
         );
-        spawn(\%opts, ['msgfmt', '-o', '/dev/null', '--statistics', "$debfiles/po/$file"])
+        spawn(\%opts,
+            ['msgfmt', '-o', '/dev/null', '--statistics',"$debfiles/po/$file"])
           or tag 'invalid-po-file', "debian/po/$file";
         if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
             $full_translation = 1;
