@@ -11,6 +11,11 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * data/cruft/non-free-license:
     + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).
 
+  * debian/dirs:
+    + [NT] Stop installing /var/spool/lintian
+  * debian/postinst:
+    + [NT] Remove empty Lintian labs in /var/spool/lintian on
+      upgrade.
   * debian/postrm:
     + [NT] Remove the "changes" folder when purging the
       Lintian lab in /var/spool/lintian.
