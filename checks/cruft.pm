@@ -180,6 +180,7 @@ sub _get_license_check_file {
                   \&_check_gfdl_license_problem,
                 'rfc-whitelist-filename' =>\&_rfc_whitelist_filename,
                 'php-source-whitelist' => \&_php_source_whitelist,
+                #'print-group'          => sub { print($1)},
             );
             my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
             my $syntaxerror = 'Syntax error in '.$filename;

@@ -6,6 +6,9 @@ lintian (2.5.28) UNRELEASED; urgency=medium
     + [NT] Avoid writing test.pot to the unpacked package.
       (Closes: #699022)
 
+  * data/cruft/non-free-license:
+    + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).
+
   * lib/Lintian/Command.pm:
     + [NT] Add support for running a sub in the child before
       it calls exec.

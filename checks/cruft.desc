@@ -605,6 +605,12 @@ Info: The given source file is copyrighted under the non free
  The Software shall be used for Good, not Evil.
 Ref: https://wiki.debian.org/qa.debian.org/jsonevil
 
+Tag: license-problem-cc-by-nc-sa
+Severity: serious
+Certainty: possible
+Info: The given source file is copyrighted under the non free
+ license creative commons non commercial share alike.
+
 Tag: license-problem-bad-php-license
 Severity: serious
 Certainty: possible

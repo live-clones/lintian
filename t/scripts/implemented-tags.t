@@ -48,6 +48,7 @@ our $EXCLUDE =join(
       ^privacy-breach-.*$
       ^maintainer-script-should-not-.*$
       ^install-info-used-in-maintainer-script$
+      ^license-problem-cc-by-nc-sa$
       ^license-problem-json-evil$
       ^license-problem-non-free-RFC$
       ^license-problem-non-free-RFC-BCP78$
