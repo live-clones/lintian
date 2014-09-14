@@ -26,6 +26,7 @@ use Exporter qw(import);
 use Dpkg::Vendor;
 
 use Lintian::CollScript;
+use Lintian::Command qw(safe_qx);
 use Lintian::Util qw(check_path fail);
 
 our @EXPORT_OK
@@ -84,8 +85,8 @@ sub load_collections {
 # Return the default number of parallization to be used
 sub default_parallel {
     # check cpuinfo for the number of cores...
-    my $cpus;
-    chomp($cpus = `nproc 2>&1`);
+    my %opts = ('err' => '&1');
+    my $cpus = safe_qx(['nproc']);
     if ($? == 0 and $cpus =~ m/^\d+$/) {
         # Running up to twice the number of cores usually gets the most out
         # of the CPUs and disks but it might be too aggresive to be the
