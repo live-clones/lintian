@@ -717,25 +717,6 @@ if (($check_everything or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
 # check specified action
 $action = 'check' unless $action;
 
-# check for arguments
-if (    $action =~ /^(?:check|unpack|remove)$/
-    and $#ARGV == -1
-    and not $check_everything
-    and not $opt{'packages-from-file'}) {
-    my $ok = 0;
-    if ($action eq 'check' or $action eq 'unpack') {
-        # If debian/changelog exists, assume an implied
-        # "../<source>_<version>_<arch>.changes" (or
-        # "../<source>_<version>_source.changes").
-        if (-f 'debian/changelog') {
-            my $file = _find_changes();
-            push @ARGV, $file;
-            $ok = 1;
-        }
-    }
-    syntax() unless $ok;
-}
-
 die "Cannot use profile together with --ftp-master-rejects.\n"
   if $opt{'LINTIAN_PROFILE'} and $ftpmaster_tags;
 # --ftp-master-rejects is implemented in a profile
@@ -757,11 +738,12 @@ $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @search_dirs);
 $ENV{'LINTIAN_HELPER_DIRS'}
   = join(':',grep { -d } map { "$_/helpers" } @search_dirs);
 
-require Lintian::Lab;
-
+require Lintian::Command;
+import Lintian::Command qw(safe_qx);
 require Lintian::DepMap;
 require Lintian::DepMap::Properties;
 require Lintian::Data;
+require Lintian::Lab;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Internal::FrontendUtil;
@@ -891,6 +873,25 @@ $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
 $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->color($opt{'color'});
 $Lintian::Output::GLOBAL->showdescription($opt{'info'});
+
+# check for arguments
+if (    $action =~ /^(?:check|unpack|remove)$/
+    and $#ARGV == -1
+    and not $check_everything
+    and not $opt{'packages-from-file'}) {
+    my $ok = 0;
+    if ($action eq 'check' or $action eq 'unpack') {
+        # If debian/changelog exists, assume an implied
+        # "../<source>_<version>_<arch>.changes" (or
+        # "../<source>_<version>_source.changes").
+        if (-f 'debian/changelog') {
+            my $file = _find_changes();
+            push @ARGV, $file;
+            $ok = 1;
+        }
+    }
+    syntax() unless $ok;
+}
 
 # }}}
 
@@ -1750,7 +1751,9 @@ sub _find_changes {
     if (exists $ENV{'DEB_BUILD_ARCH'}) {
         push @archs, $ENV{'DEB_BUILD_ARCH'};
     } else {
-        chomp(my $arch = `dpkg --print-architecture 2>/dev/null`);
+        my %opts = ('err' => '&2',);
+        my $arch = safe_qx(\%opts, 'dpkg', '--print-architecture');
+        chomp($arch);
         push @archs, $arch if $arch ne '';
     }
     push @archs, $ENV{'DEB_HOST_ARCH'} if exists $ENV{'DEB_HOST_ARCH'};
