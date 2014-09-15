@@ -83,7 +83,7 @@ sub run {
             tag 'description-is-dh_make-template' unless $template++;
         }
         if ($synopsis !~ m/\s/) {
-            tag 'description-too-short';
+            tag 'description-too-short', $synopsis;
         }
         my $pkg_fmt = lc $pkg;
         my $synopsis_fmt = lc $synopsis;

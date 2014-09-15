@@ -2,6 +2,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/description.pm:
+    + [SL] show the actual description when it is too short.
   * checks/po-debconf.pm:
     + [NT] Avoid writing test.pot to the unpacked package.
       (Closes: #699022)

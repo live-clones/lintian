@@ -2,7 +2,7 @@ E: description-general-2: description-contains-tabs
 E: description-general-3: description-synopsis-is-empty
 E: description-general-4: description-synopsis-is-duplicated
 E: description-general-empty: extended-description-is-empty
-E: description-general-short: description-too-short
+E: description-general-short: description-too-short Short
 E: description-general: description-contains-invalid-control-statement
 E: description-general: description-contains-tabs
 E: description-general: description-is-debmake-template
