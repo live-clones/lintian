@@ -145,9 +145,7 @@ if ($COPY_DOCS) {
 }
 
 if ($ARGV[0]) {
-    my %opts = (
-        'in' => $ARGV[0],
-    );
+    my %opts = ('in' => $ARGV[0],);
     copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")
       or die("cannot copy $ARGV[0] to $HTML_TMP_DIR/lintian.log: $!");
     spawn(\%opts, ['gzip', '-9c', "$HTML_TMP_DIR/lintian.log.gz"])
