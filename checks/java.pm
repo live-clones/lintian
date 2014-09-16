@@ -158,7 +158,7 @@ sub run {
               && any { m,^META-INF/maven/plugin.xml$,io } keys %$files;
         } else {
             # Only run the tests when a classpath is present
-            my @relative = ();
+            my @relative;
             my @paths = split(m/\s++/o, $cp);
             $need_cp = 0;
             for my $p (@paths) {

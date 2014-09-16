@@ -628,7 +628,7 @@ sub is_conffile {
         return;
     }
     my $cf = $self->control('conffiles');
-    my %conffiles = ();
+    my %conffiles;
     $self->{'conffiles'} = \%conffiles;
     # No real packages use links in their control.tar.gz and conffiles
     # must be a file.

@@ -512,7 +512,7 @@ sub file_overrides {
     }
     my $info = $self->{info}{$self->{current}};
     my $comments = [];
-    my $last_over = undef;
+    my $last_over;
     open(my $file, '<', $overrides);
     local $_;
   OVERRIDE:

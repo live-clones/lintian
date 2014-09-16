@@ -245,11 +245,11 @@ sub check_doc_base_file {
         tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
     }
 
-    my (@files, $field, @vals);
     my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;
+    my (@files, $field, @vals);
+    my %sawfields;        # local for each section of control file
+    my %sawformats;       # global for control file
     $line           = 0;  # global
-    my %sawfields   = (); # local for each section of control file
-    my %sawformats  = (); # global for control file
 
     open(my $fd, '<', $dbpath);
 
@@ -451,8 +451,8 @@ sub check_doc_base_field {
         #  ||Abstract:  This is "Ding"
         #  ||  * a dictionary lookup program for Unix,
         #  ||  * DIctionary Nice Grep,
-        my $leadsp    = undef; # string with leading spaces from second line
-        my $charafter = undef; # first non-whitespace char of second line
+        my $leadsp;            # string with leading spaces from second line
+        my $charafter;         # first non-whitespace char of second line
         my $leadsp_ok = 1;     # are spaces OK?
 
         # Intentionally skipping the first line.
@@ -568,7 +568,7 @@ sub delink {
 
     my $p1 = '';
     my $p2 = $file;
-    my %used_links = ();
+    my %used_links;
 
     # In the loop below we split $file into two parts on each '/' until
     # there's no remaining slashes.  We try substituting the first part with

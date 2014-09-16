@@ -53,7 +53,7 @@ use strict;
 use warnings;
 
 my $CLASS = __PACKAGE__;
-my $PROFILE = undef;
+my $PROFILE;
 our @EXPORT = qw(
   load_profile_for_test
 
@@ -92,7 +92,7 @@ my %known_html_tags = map { $_ => 1 } qw(a em i tt);
 # a manual ref.
 my $MANUALS = $Lintian::Tag::Info::MANUALS;
 # lazy-load this (so loading a profile can affect it)
-my %URLS = ();
+my %URLS;
 
 =head1 FUNCTIONS
 
@@ -225,7 +225,7 @@ sub test_check_desc {
             $builder->skip("Special case, $reason");
             $builder->skip("Special case, $reason");
         } elsif ($builder->isnt_eq($ctype, '', "$cname has a type")) {
-            my @bad = ();
+            my @bad;
             # new lines are not allowed, map them to "\\n" for readability.
             $ctype =~ s/\n/\\n/go;
             foreach my $type (split m/\s*+,\s*+/o, $ctype) {
@@ -246,7 +246,7 @@ sub test_check_desc {
                 $builder->is_eq('', $needs,
                     "Translations for $cname ". 'should not have Needs-Info');
             } else {
-                my @bad = ();
+                my @bad;
                 foreach my $need (split m/\s*+,\s*+/o, $needs) {
                     push @bad, $need unless -f "$colldir/$need.desc";
                 }
@@ -620,7 +620,7 @@ sub test_tags_implemented {
     }
 
     foreach my $checkname (@checknames) {
-        my $cs;
+        my ($cs, @tags, $codestr, @missing);
         eval {$cs = Lintian::CheckScript->new($dir, $checkname);};
         if (my $err = $@) {
             $err =~ s/ at .*? line \d+\s*\n//;
@@ -630,9 +630,6 @@ sub test_tags_implemented {
         }
         my $cname = $cs->name;
         my $check = $cs->script_path;
-        my @tags = ();
-        my $codestr;
-        my @missing;
 
         @tags = $cs->tags unless defined $pattern;
         @tags = grep { !m/$pattern/ } $cs->tags
@@ -707,7 +704,7 @@ sub load_profile_for_test {
 
 sub _check_reference {
     my ($refdata) = @_;
-    my @issues = ();
+    my @issues;
 
     unless (%URLS) {
         $MANUALS->known(''); # force it to load the manual refs
@@ -764,8 +761,7 @@ sub _find_check {
     }
 
     if (-d $input) {
-        my @result = ();
-        my $regex = undef;
+        my (@result, $regex);
         if ($find_opt->{'want-check-name'}) {
             $regex = qr,^\Q$input\E/*,;
         }

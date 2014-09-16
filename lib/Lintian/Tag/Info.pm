@@ -162,7 +162,7 @@ formatted output.
 sub _load_manual_data {
     my ($key, $rawvalue, $pval) = @_;
     my ($section, $title, $url) = split m/::/, $rawvalue, 3;
-    my $ret = undef;
+    my $ret;
     if (not defined $pval) {
         $ret = $pval = {};
     }

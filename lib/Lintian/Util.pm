@@ -1037,7 +1037,7 @@ If the tool cannot be found, this sub will cause a trappable error.
 =cut
 
 {
-    my %_CACHE = ();
+    my %_CACHE;
 
     sub locate_helper_tool {
         my ($toolname) = @_;

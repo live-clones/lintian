@@ -250,7 +250,7 @@ sub check_spelling {
     my ($tag, $text, $filename, $exceptions) = @_;
     return unless $text;
 
-    my %seen = ();
+    my %seen;
     my $counter = 0;
     my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
     my $corrections_multiword
@@ -318,7 +318,7 @@ Returns the number of spelling mistakes found in TEXT.
 sub check_spelling_picky {
     my ($tag, $text, $filename) = @_;
 
-    my %seen = ();
+    my %seen;
     my $counter = 0;
     my $corrections_case
       = Lintian::Data->new('spelling/corrections-case', '\|\|');

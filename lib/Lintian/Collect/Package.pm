@@ -466,10 +466,8 @@ sub _fetch_index_data {
             # is still there.
             next unless exists $rhlinks{$file};
             my $e = $idxh{$file};
-            my %candidates = ();
             my @check = ($e->{name});
-            my @sorted;
-            my $target;
+            my (%candidates, @sorted, $target);
             while (my $current = pop @check) {
                 $candidates{$current} = 1;
                 foreach my $rdep (@{$rhlinks{$current}}) {

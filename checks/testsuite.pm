@@ -92,8 +92,7 @@ sub run {
 sub check_control_contents {
     my ($info, $path) = @_;
 
-    my @paragraphs;
-    my @lines = ();
+    my (@paragraphs, @lines);
     if (not eval { @paragraphs = read_dpkg_control($path, 0, \@lines); }) {
         chomp $@;
         $@ =~ s/^syntax error at //;

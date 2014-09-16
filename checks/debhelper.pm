@@ -279,7 +279,7 @@ sub run {
 
     # Check the files in the debian directory for various debhelper-related
     # things.
-    my @indebfiles = ();
+    my @indebfiles;
     opendir(my $dirfd, $droot);
     for my $file (sort(readdir($dirfd))) {
         next if $file eq 'rules' or not -f "$droot/$file";
@@ -420,7 +420,7 @@ sub run {
         $seen_python_helper = 0;
     }
     if ($seen_dh and $seen_python_helper != 1) {
-        my %python_depends = ();
+        my %python_depends;
         for my $binpkg (@pkgs) {
             if ($info->binary_relation($binpkg, 'all')
                 ->implies('${python:Depends}')) {
@@ -439,7 +439,7 @@ sub run {
         }
     }
     if ($seen_dh and $seen_python3_helper != 1) {
-        my %python3_depends = ();
+        my %python3_depends;
         for my $binpkg (@pkgs) {
             if ($info->binary_relation($binpkg, 'all')
                 ->implies('${python3:Depends}')) {

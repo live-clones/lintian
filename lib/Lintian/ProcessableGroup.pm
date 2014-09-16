@@ -205,7 +205,7 @@ returned.
 
 sub get_processables {
     my ($self, $type) = @_;
-    my @result = ();
+    my @result;
     if (defined $type){
         # We only want $type
         if ($type eq 'changes' or $type eq 'source'){
@@ -287,7 +287,7 @@ returned.
 
 sub get_binary_processables {
     my ($self) = @_;
-    my @result = ();
+    my @result;
     foreach my $type (qw(binary udeb)){
         push @result, values %{$self->{$type}} if (exists $self->{$type});
     }

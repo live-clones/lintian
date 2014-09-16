@@ -105,7 +105,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
         $transformlist = strip($transformlist);
 
         my $syntaxerror = 'Syntax error in cruft/warn-file-type';
-        my @transformpairs = ();
+        my @transformpairs;
         unless($transformlist eq '') {
             my @transforms = split(/\s*\&\&\s*/, $transformlist);
             if(scalar(@transforms) > 0) {

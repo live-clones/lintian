@@ -70,7 +70,7 @@ my @needs_tag_vals = qw(x11 text vc);
 
 sub _menu_sections {
     my ($key, $val, $cur) = @_;
-    my $ret = undef;
+    my $ret;
     $ret = $cur = {} unless defined $cur;
     # $val is empty if this is just a root section
     $cur->{$val} = 1 if $val;

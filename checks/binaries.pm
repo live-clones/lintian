@@ -121,7 +121,7 @@ sub run {
 
     foreach my $file (sort keys %{$info->objdump_info}) {
         my $objdump = $info->objdump_info->{$file};
-        my $has_lfs = undef;
+        my $has_lfs;
         my $is_profiled = 0;
         # Only 32bit ELF binaries can lack LFS.
         $ARCH_32_REGEX = $ARCH_REGEX->value('32')

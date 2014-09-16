@@ -434,8 +434,7 @@ sub _parse_dep5 {
 # parse a license block
 sub parse_license {
     my ($license_block, $line) = @_;
-    my $full_license  = undef;
-    my $short_license = undef;
+    my ($full_license, $short_license);
     return 0 unless defined($license_block);
     if ($license_block =~ m/\n/) {
         ($short_license, $full_license) = split /\n/, $license_block, 2;

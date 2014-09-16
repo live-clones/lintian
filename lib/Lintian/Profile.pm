@@ -578,7 +578,7 @@ sub _check_for_invalid_fields {
 
 sub _load_check {
     my ($self, $profile, $check) = @_;
-    my $dir = undef;
+    my $dir;
     foreach my $checkdir ($self->_safe_include_path('checks')) {
         my $cf = "$checkdir/${check}.desc";
         if (-f $cf) {
@@ -636,7 +636,7 @@ sub _load_checks {
 }
 
 sub _default_inc_path {
-    my @path = ();
+    my @path;
     push @path, "$ENV{'HOME'}/.lintian"
       if exists $ENV{'HOME'} and defined $ENV{'HOME'};
     push @path, '/etc/lintian';

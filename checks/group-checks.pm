@@ -40,9 +40,7 @@ sub run {
     ## are made - only that there exists at least 1 circle.
 
     # The packages a.k.a. nodes
-    my @nodes = ();
-    my %edges = ();
-    my $sccs;
+    my (@nodes, %edges, $sccs);
     my $ginfo = $group->info;
     my @procs = $group->get_processables('binary');
 

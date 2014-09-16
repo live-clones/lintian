@@ -675,7 +675,7 @@ sub run {
     if (($type eq 'binary') || ($type eq 'udeb')) {
         my $javalib = 0;
         my $replaces = $info->relation('replaces');
-        my %nag_once = ();
+        my %nag_once;
         $javalib = 1 if($pkg =~ m/^lib.*-java$/o);
         for my $field (
             qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)
@@ -1356,7 +1356,7 @@ sub _split_dep {
 
 sub _load_dependency_restrictions {
     my ($key, $value, $pval) = @_;
-    my $ret = undef;
+    my $ret;
     if (not defined $pval) {
         $ret = $pval = [];
     }

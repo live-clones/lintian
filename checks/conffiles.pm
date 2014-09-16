@@ -31,7 +31,7 @@ sub run {
     my (undef, undef, $info) = @_;
 
     my $cf = $info->control('conffiles');
-    my %conffiles = ();
+    my %conffiles;
 
     # Stop if conffiles is a link; no real package uses links in
     # control.tar.gz.

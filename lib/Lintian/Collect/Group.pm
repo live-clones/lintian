@@ -135,7 +135,7 @@ sub spelling_exceptions {
     my ($self) = @_;
     return $self->{'spelling_exceptions'}
       if exists $self->{'spelling_exceptions'};
-    my %except = ();
+    my %except;
     my $group = $self->{'group'};
     foreach my $proc ($group->get_processables('binary')) {
         foreach my $name ($proc->pkg_name, $proc->pkg_src) {

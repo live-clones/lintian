@@ -49,7 +49,7 @@ Lintian::Unpacker -- Job handler to unpack collections
  
  while (1) {
      my $errhandler = sub {}; # Insert hook
-     my @lpkgs = (); # List of Lintian::Lab::Entry instances
+     my @lpkgs; # List of Lintian::Lab::Entry instances
      $unpacker->reset_worklist;
      next unless $unpacker->prepare_tasks ($errhandler, @lpkgs);
  
@@ -116,9 +116,7 @@ changed with the L</jobs> method later.  If omitted, it defaults to
 sub new {
     my ($class, $collmap, $options) = @_;
     my $ccmap = $collmap->clone;
-    my $req_table = undef;
-    my $profile = undef;
-    my $extra = undef;
+    my ($req_table, $profile, $extra);
     my $jobs = 0;
     if ($options) {
         $extra = $options->{'extra-coll'} if exists $options->{'extra-coll'};
@@ -154,7 +152,7 @@ sub new {
         #
         #  Known issue: "lintian -oC files some.dsc" should not need
         #  to do anything because "files" is "binary, udeb"-only.
-        my %needed = ();
+        my %needed;
         my @check = keys %$req_table;
         while (my $coll = pop @check) {
             $needed{$coll} = 1;
@@ -215,7 +213,7 @@ sub prepare_tasks {
     my $collmap = $self->{'collmap'};
     my $extra = $self->{'extra-coll'};
     my $profile = $self->{'profile'};
-    my %worklists = ();
+    my %worklists;
     foreach my $lpkg (@lpkgs) {
         my $changed = 0;
         my $cmap;
@@ -282,11 +280,9 @@ sub _gen_type_coll {
 sub _requested_colls {
     my ($self, $lpkg, $new) = @_;
     my $profile = $self->{'profile'};
-    my $cmap;
     my $extra = $self->{'extra-coll'};
     my $pkg_type = $lpkg->pkg_type;
-    my %needed = ();
-    my @check;
+    my ($cmap, %needed, @check);
 
     unless (exists $self->{'cache'}->{$pkg_type}) {
         $cmap = $self->_gen_type_coll($pkg_type);
@@ -298,7 +294,7 @@ sub _requested_colls {
     # of collections.  So lets extra early.
     return ($cmap, undef) if $new and not $profile;
     if ($profile) {
-        my %tmp = ();
+        my %tmp;
         foreach my $cname ($profile->scripts) {
             my $check = $profile->get_script($cname);
             next unless $check->is_check_type($pkg_type);
@@ -385,7 +381,7 @@ sub process_tasks {
     $hooks //= {};
     my $coll_hook = $hooks->{'coll-hook'};
     my $finish_hook = $hooks->{'finish-hook'};
-    my %failed = ();
+    my %failed;
     my %active = map { $_ => 1 } keys %$worklists;
 
     while (1) {

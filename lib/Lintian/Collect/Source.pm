@@ -377,8 +377,7 @@ sub _load_dctrl {
         $self->{source_field} = {};
         return;
     }
-    my @control_data;
-    my %packages;
+    my (@control_data, %packages);
 
     eval {@control_data = read_dpkg_control($dctrl);};
     if ($@) {

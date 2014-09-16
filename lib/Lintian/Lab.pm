@@ -360,9 +360,7 @@ sub lab_query {
     my ($self, $query_orig) = @_;
     my $query = $query_orig;
     my $type = 'ALL';
-    my @types = ();
-    my @result;
-    my ($name, $version, $arch);
+    my ($name, $version, $arch, @types, @result);
 
     if ($query =~ s/^([a-z]++)://i) {
         $type = $1;
@@ -473,7 +471,7 @@ sub _get_lab_manifest_data {
         return $index->get($pkg_name, @keys);
     } else {
         # Time to guess (or hope)
-        my @result = ();
+        my @result;
         my $searcher = sub {
             my ($v) = @_;
             push @result, $v;
@@ -881,7 +879,7 @@ return a truth value.
 sub remove {
     my ($self) = @_;
     my $dir = $self->dir;
-    my @subdirs = ();
+    my @subdirs;
     my $empty = 0;
 
     return 1 unless $dir && -d $dir;

@@ -93,10 +93,10 @@ The following methods are exportable:
 # Setup code
 
 # Valid architecture wildcards.
-my %ARCH_WILDCARDS = ();
+my %ARCH_WILDCARDS;
 # Maps aliases to the "original" arch name.
 # (e.g. "linux-amd64" => "amd64")
-my %ALT_ARCH_NAMES = ();
+my %ALT_ARCH_NAMES;
 
 sub _parse_arch {
     my ($archstr, $raw) = @_;

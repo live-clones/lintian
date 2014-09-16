@@ -75,7 +75,7 @@ my $PRIVACY_BREAKER_TAG_ATTR= Lintian::Data->new(
     sub {
         my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
         $regex =~ s/&URL/(?:ht|f)tps?:\/\/[^"\r\n]*/g;
-        my @keywordlist = ();
+        my @keywordlist;
         my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
         foreach my $keywordor (@keywordsorraw) {
             my @keywordsandraw = split(/\s*&&\s*/,$keywordor);
@@ -1186,7 +1186,7 @@ sub run {
           ){
             my ($debug, $pyver, $loc, $rest) = ($1, $2, $3, $4);
             my ($pmaj, $pmin) = split(m/\./o, $pyver, 2);
-            my @correction = ();
+            my @correction;
             $pmin = 0 unless (defined $pmin);
             $debug = '' unless (defined $debug);
             next if ($pmaj < 2 or $pmaj > 3); # Not python 2 or 3
@@ -1670,8 +1670,7 @@ sub run {
                 my @linkcomponents = split('/', $mylink);
 
                 # handle `../' at beginning of $link
-                my $lastpop = undef;
-                my $linkcomponent = undef;
+                my ($lastpop, $linkcomponent);
                 while ($linkcomponent = shift @linkcomponents) {
                     if ($linkcomponent eq '.') {
                         tag 'symlink-contains-spurious-segments',
@@ -1916,7 +1915,7 @@ sub _check_tag_url_privacy_breach {
 # css with @import
 sub detect_generic_privacy_breach {
     my ($block, $privacybreachhash, $file) = @_;
-    my %matchedkeyword = ();
+    my %matchedkeyword;
 
     # now check generic tag
   TYPE:
@@ -1964,7 +1963,7 @@ sub detect_generic_privacy_breach {
 
 sub detect_privacy_breach {
     my ($info, $file) = @_;
-    my %privacybreachhash = ();
+    my %privacybreachhash;
 
     # detect only in regular file
     unless($file->is_regular_file) {

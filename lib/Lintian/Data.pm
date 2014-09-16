@@ -94,7 +94,7 @@ sub new {
     sub _get_vendor_names {
         my ($self) = @_;
         croak 'No vendor given' unless $profile;
-        my @vendors = ();
+        my @vendors;
         push @vendors, reverse @{ $profile->profile_list };
         return \@vendors;
     }
