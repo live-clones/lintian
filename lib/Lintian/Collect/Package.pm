@@ -282,7 +282,8 @@ Needs-Info requirements for using I<index>: unpacked
 
 sub index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data('index', 'index', 'index-owner-id', $file);
+    return $self->_fetch_index_data('index', 'index', 'index-owner-id',
+        'unpacked', $file);
 }
 
 =item sorted_index
@@ -365,7 +366,7 @@ sub _fetch_extracted_dir {
 # Backing method for index and others; this is not a part of the API.
 # sub _fetch_index_data Needs-Info none
 sub _fetch_index_data {
-    my ($self, $field, $index, $indexown, $file) = @_;
+    my ($self, $field, $index, $indexown, $path_sub, $file) = @_;
     if (my $cache = $self->{$field}) {
         return $cache->{$file}
           if exists $cache->{$file};
@@ -519,7 +520,7 @@ sub _fetch_index_data {
         }
         # Insert name here to share the same storage with the hash key
         $idxh{$file}{'name'} = $file;
-        $idxh{$file} = Lintian::Path->new($idxh{$file});
+        $idxh{$file} = Lintian::Path->new($idxh{$file}, $self, $path_sub);
     }
     $self->{$field} = \%idxh;
     # Remove the "top" dir in the sorted_index as it is hardly ever

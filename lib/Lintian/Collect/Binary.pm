@@ -186,7 +186,7 @@ Needs-Info requirements for using I<control_index>: bin-pkg-control
 sub control_index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data('control-index', 'control-index',
-        undef, $file);
+        undef, 'control', $file);
 }
 
 =item sorted_control_index

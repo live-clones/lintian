@@ -33,9 +33,10 @@ use overload (
     'fallback' => 0,
 );
 
-use Carp qw(croak);
+use Carp qw(croak confess);
+use Scalar::Util qw(weaken);
 
-use Lintian::Util qw(normalize_pkg_path);
+use Lintian::Util qw(is_ancestor_of normalize_pkg_path parse_dpkg_control);
 
 =head1 NAME
 
@@ -77,12 +78,19 @@ Argument is a hash containing the data read from the index file.
 =cut
 
 sub new {
-    my ($type, $data) = @_;
+    my ($type, $data, $collect, $path_sub) = @_;
     my $self = {
         # copy the data into $self
         %$data,
     };
-    return bless $self, $type;
+    weaken($self->{'_collect'} = $collect);
+    $self->{'_collect_path_sub'} = $path_sub;
+    bless($self, $type);
+    if ($self->is_file or $self->is_dir) {
+        $self->{'_is_open_ok'} = $self->is_file;
+        $self->{'_valid_path'} = 1;
+    }
+    return $self;
 }
 
 =item name
@@ -265,6 +273,161 @@ sub link_normalized {
     my $target = normalize_pkg_path($dir, $link);
     $self->{'link_target'} = $target;
     return $target;
+}
+
+=item fs_path
+
+Returns the path to this object on the file system.
+
+This may fail if the object is dangling symlink or traverses a symlink
+outside the package root.
+
+To test if this is safe to call, use L</is_valid_path>.
+
+B<CAVEAT>: This does I<not> validate that the file object is generally
+safe to work with.  If you intend to open the file object, you should
+use L</open> instead or at least test it with L</is_open_ok>.
+
+=cut
+
+sub fs_path {
+    my ($self) = @_;
+    my $path = $self->_collect_path($self);
+    $self->_check_access($path);
+    return $path;
+}
+
+=item is_open_ok
+
+Returns a truth value if it is safe to attempt open a read handle to
+the underlying file object.
+
+Returns a truth value if the path may be opened.
+
+=cut
+
+sub is_open_ok {
+    my ($self) = @_;
+    return $self->{'_is_open_ok'} if exists($self->{'_is_open_ok'});
+    eval {
+        my $path = $self->_collect_path($self);
+        $self->_check_open($path);
+    };
+    return if $@;
+    return 1;
+}
+
+=item is_valid_path
+
+Returns a truth value if the path is contained with the package root.
+
+=cut
+
+sub is_valid_path {
+    my ($self) = @_;
+    return $self->{'_valid_path'} if exists($self->{'_valid_path'});
+    eval {$self->fs_path;};
+    return if $@;
+    return 1;
+}
+
+sub _collect_path {
+    my ($self, $path) = @_;
+    my $collect = $self->{'_collect'};
+    my $collect_sub = $self->{'_collect_path_sub'};
+    if (not defined($collect_sub)) {
+        confess($self->name . ' does not have an underlying FS object');
+    }
+    return $collect->$collect_sub($path) if $path;
+    return $collect->$collect_sub();
+}
+
+sub _check_access {
+    my ($self, $path) = @_;
+    my $safe = 1;
+    if (exists($self->{'_valid_path'})) {
+        $safe = $self->{'_valid_path'};
+    } else {
+        my $root_path = $self->_collect_path;
+        if (!-e $path || !is_ancestor_of($root_path, $path)) {
+            $safe = 0;
+        }
+    }
+    if (not $safe) {
+        $self->{'_valid_path'} = $self->{'_is_open_ok'} = 0;
+        # NB: We are deliberately vague here to avoid suggesting
+        # whether $path exists.  In some cases (e.g. lintian.d.o)
+        # the output is readily available to wider public.
+        confess('Attempt to access through broken or unsafe symlink:'. ' '
+              . $self->name);
+    }
+    $self->{'_valid_path'} = 1;
+    return 1;
+}
+
+sub _check_open {
+    my ($self, $path) = @_;
+    $self->_check_access($path);
+    # Symlinks can point to a "non-file" object inside the
+    # package root
+    if ($self->is_file or ($self->is_symlink and -f $path)) {
+        $self->{'_is_open_ok'} = 1;
+        return 1;
+    }
+    $self->{'_is_open_ok'} = 0;
+    confess("Attempt to open non-file (e.g. dir or pipe): $self");
+}
+
+sub _do_open {
+    my ($self, $open_sub) = @_;
+    my $path = $self->_collect_path($self);
+    $self->_check_open($path);
+    return $open_sub->($path);
+}
+
+=item open
+
+Open and return a read handle to the file.
+
+Beyond regular issues with opening a file, this method may fail if:
+
+=over
+
+=item The object is not a file-like object (e.g. a directory or a named pipe).
+
+=item If the object is dangling symlink or the path traverses a symlink
+outside the package root.
+
+=back
+
+It is possible to test for these by using L</is_open_ok>.
+
+=cut
+
+sub open {
+    my ($self) = @_;
+    # Scoped autodie in here to avoid it overwriting our
+    # method "open"
+    my $opener = sub {
+        use autodie qw(open);
+        open(my $fd, '<', $_[0]);
+        return $fd;
+    };
+    return $self->_do_open($opener);
+}
+
+=item open_gz
+
+Open a read handle to the file and decompress it as a GZip compressed
+file.  This method may fail for the same reasons as L</open>.
+
+The returned handle may be a pipe from an external process.
+
+=cut
+
+sub open_gz {
+    my ($self) = @_;
+    return $self->_do_open(\&Lintian::Util::open_gz);
 }
 
 ### OVERLOADED OVERATORS ###

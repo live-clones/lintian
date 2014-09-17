@@ -281,7 +281,7 @@ Needs-Info requirements for using I<orig_index>: src-orig-index
 sub orig_index {
     my ($self, $file) = @_;
     return $self->_fetch_index_data('orig-index', 'src-orig-index', undef,
-        $file);
+        undef, $file);
 }
 
 =item sorted_orig_index
@@ -617,7 +617,7 @@ Needs-Info requirements for using I<index>: unpacked
 
 sub index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data('index', 'index', undef, $file);
+    return $self->_fetch_index_data('index', 'index', undef, 'unpacked',$file);
 }
 
 =item is_non_free
