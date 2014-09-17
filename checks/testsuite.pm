@@ -76,7 +76,7 @@ sub run {
             # that the file itself is not a symlink.  These two facts
             # _combined_ means we can skip the is_ancestor_of check
             # here.
-            my $path = $info->unpacked($control);
+            my $path = $control->fs_path;
             my $not_utf8_line = file_is_encoded_in_non_utf8($path);
 
             if ($not_utf8_line) {

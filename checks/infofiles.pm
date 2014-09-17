@@ -81,11 +81,13 @@ sub run {
         # If this is the main info file (no numeric extension). make
         # sure it has appropriate dir entry information.
         if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
-            if ($file->is_symlink && !is_ancestor_of($info->unpacked, $file)) {
-                # unsafe symlink, skip
+            if (!$file->is_valid_path) {
+                # unsafe symlink, skip.  Actually, this should never
+                # be true as "$file_info" for symlinks will not be
+                # "gzip compressed data".  But for good measure.
                 next;
             }
-            my $fd = open_gz($info->unpacked($file));
+            my $fd = $file->open_gz;
             local $_;
             my ($section, $start, $end);
             while (<$fd>) {
@@ -112,7 +114,7 @@ sub run {
         # filename sought.
         #
         if ($file->is_file && $fname =~ /\.info(?:-\d+)?\.gz$/) {
-            my $fd = open_gz($info->unpacked($file));
+            my $fd = $file->open_gz;
             while (my $line = <$fd>) {
                 while ($line =~ /[\0][\b]\[image src="((?:\\.|[^\"])+)"/smg) {
                     my $src = $1;
