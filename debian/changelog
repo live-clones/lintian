@@ -13,6 +13,9 @@ lintian (2.5.28) UNRELEASED; urgency=medium
 
   * debian/dirs:
     + [NT] Stop installing /var/spool/lintian
+  * debian/lintian.install:
+    + [NT] Install Lintian::Tutorial POD documents into
+      /usr/share/perl5.  (Closes: #761930)
   * debian/postinst:
     + [NT] Remove empty Lintian labs in /var/spool/lintian on
       upgrade.

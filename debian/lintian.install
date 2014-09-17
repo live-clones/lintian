@@ -4,6 +4,7 @@ checks			usr/share/lintian
 collection		usr/share/lintian
 commands                usr/share/lintian
 data		  	usr/share/lintian
+doc/tutorial/Lintian    usr/share/perl5
 helpers 		usr/share/lintian
 l10n		  	usr/share/lintian
 lib/Lintian		usr/share/perl5
