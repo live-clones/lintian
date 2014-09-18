@@ -122,9 +122,7 @@ sub check_web_application_package {
         tag 'web-application-should-not-depend-unconditionally-on-apache2';
     }
 
-    if (defined $info->index($file)) {
-        inspect_conf_file($info, $pkgtype, $file);
-    }
+    inspect_conf_file($pkgtype, $file);
     return;
 }
 
@@ -168,14 +166,14 @@ sub check_module_package {
     $load_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.load#;
     $conf_file =~ s#^mod.(.*)$#etc/apache2/mods-available/$1.conf#;
 
-    if (defined $info->index($load_file)) {
-        inspect_conf_file($info, 'mods', $load_file);
+    if (my $f = $info->index($load_file)) {
+        inspect_conf_file('mods', $f);
     } else {
         tag 'apache2-module-does-not-ship-load-file', $load_file;
     }
 
-    if (defined $info->index($conf_file)) {
-        inspect_conf_file($info, 'mods', $conf_file);
+    if (my $f = $info->index($conf_file)) {
+        inspect_conf_file('mods', $f);
     }
     return;
 }
@@ -227,12 +225,11 @@ sub check_maintainer_scripts {
 }
 
 sub inspect_conf_file {
-    my ($info, $conftype, $file) = @_;
+    my ($conftype, $file) = @_;
 
-    my $filename = $info->unpacked($file);
-    # Don't follow links
-    return if -l $filename;
-    open(my $fd, '<', $filename);
+    # Don't follow unsafe links
+    return if not $file->is_open_ok;
+    my $fd = $file->open;
     while (<$fd>)  {
 
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
