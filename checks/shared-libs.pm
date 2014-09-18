@@ -89,9 +89,8 @@ sub run {
         # shared library?
 
         my $normalized_target;
-        $normalized_target
-          = normalize_pkg_path(join('/', dirname($cur_file), $cur_file->link))
-          if defined $cur_file->link;
+        $normalized_target = $cur_file->link_normalized
+          if defined($cur_file->link);
 
         if (
             exists $SONAME{$cur_file}
@@ -168,7 +167,7 @@ sub run {
             tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
         } elsif ($cur_file =~ m/\.la$/ and not defined $cur_file->link) {
             local $_;
-            open(my $fd, '<', $info->unpacked($cur_file));
+            my $fd = $cur_file->open;
             while(<$fd>) {
                 next
                   unless (m/^(libdir)='(.+?)'$/)

@@ -98,23 +98,20 @@ sub check_init_script {
       or $basename eq 'rc'
       or $basename eq 'rcS';
 
-    my $unpacked_file = $info->unpacked($file);
-
     if ($file->is_symlink) {
         # We cannot test upstart-jobs
         return if $file->link eq '/lib/init/upstart-job';
     }
 
     if (!$file->is_regular_file) {
-        unless (-f $unpacked_file
-            && is_ancestor_of($info->unpacked, $unpacked_file)) {
+        unless ($file->is_open_ok) {
             tag 'init-script-is-not-a-file', $file;
             return;
         }
 
     }
 
-    open(my $fh, '<', $unpacked_file);
+    my $fh = $file->open;
     while (<$fh>) {
         lstrip;
         if ($. == 1 and m{\A [#]! \s*/lib/init/init-d-script}xsm) {
@@ -181,8 +178,7 @@ sub service_file_lines {
 sub extract_service_file_values {
     my ($info, $file, $extract_section, $extract_key) = @_;
 
-    my @values;
-    my $section;
+    my (@values, $section);
 
     my $unpacked_file = $info->unpacked($file);
     unless (

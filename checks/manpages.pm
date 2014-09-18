@@ -168,12 +168,12 @@ sub run {
                 }
             }
         } else { # not a symlink
-            my $fs_path = $info->unpacked($file);
+            my $fs_path = $file->fs_path;
             my $fd;
             if ($file_info =~ m/gzip compressed/) {
-                $fd = open_gz($fs_path);
+                $fd = $file->open_gz;
             } else {
-                open($fd, '<', $fs_path);
+                $fd = $file->open;
             }
             my @manfile = <$fd>;
             close $fd;

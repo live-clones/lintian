@@ -82,7 +82,7 @@ sub run {
             }
             if (defined($package_xml) && $package_xml->is_regular_file) {
           # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
-                open(my $package_xml_fd, '<', $info->unpacked($package_xml));
+                my $package_xml_fd = $package_xml->open;
                 while (<$package_xml_fd>) {
                     if (
                         m{\A \s* <
