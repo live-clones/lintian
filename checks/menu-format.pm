@@ -184,7 +184,7 @@ sub run {
 
     # Verify all the desktop files.
     for my $desktop_file (@desktop_files) {
-        verify_desktop_file($desktop_file, $desktop_file, $pkg, $info);
+        verify_desktop_file($desktop_file, $pkg, $info);
     }
 
     # Now all the menu files.
@@ -564,12 +564,10 @@ sub verify_icon {
 
 # Syntax-checks a .desktop file.
 sub verify_desktop_file {
-    my ($desktopfile, $file, $pkg, $info) = @_;
-    my ($line, $saw_first, $warned_cr);
-    my %vals;
-    my @pending;
-    open(my $fd, '<', $info->unpacked($file));
-    while (defined($line = <$fd>)) {
+    my ($file, $pkg, $info) = @_;
+    my ($saw_first, $warned_cr, %vals, @pending);
+    my $fd = $file->open;
+    while (my $line = <$fd>) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
         if ($line =~ s/\r//) {
