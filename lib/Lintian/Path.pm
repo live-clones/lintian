@@ -286,7 +286,7 @@ To test if this is safe to call, use L</is_valid_path>.
 
 B<CAVEAT>: This does I<not> validate that the file object is generally
 safe to work with.  If you intend to open the file object, you should
-use L</open> instead or at least test it with L</is_open_ok>.
+use L</open([LAYER])> instead or at least test it with L</is_open_ok>.
 
 =cut
 
@@ -385,9 +385,11 @@ sub _do_open {
     return $open_sub->($path);
 }
 
-=item open
+=item open([LAYER])
 
-Open and return a read handle to the file.
+Open and return a read handle to the file.  It optionally accepts the
+LAYER argument.  If given it should specify the layer/discipline to
+use when opening the file including the initial colon (e.g. ':raw').
 
 Beyond regular issues with opening a file, this method may fail if:
 
@@ -405,12 +407,13 @@ It is possible to test for these by using L</is_open_ok>.
 =cut
 
 sub open {
-    my ($self) = @_;
+    my ($self, $layer) = @_;
     # Scoped autodie in here to avoid it overwriting our
     # method "open"
+    $layer //= '';
     my $opener = sub {
         use autodie qw(open);
-        open(my $fd, '<', $_[0]);
+        open(my $fd, "<${layer}", $_[0]);
         return $fd;
     };
     return $self->_do_open($opener);
@@ -419,7 +422,7 @@ sub open {
 =item open_gz
 
 Open a read handle to the file and decompress it as a GZip compressed
-file.  This method may fail for the same reasons as L</open>.
+file.  This method may fail for the same reasons as L</open([LAYER])>.
 
 The returned handle may be a pipe from an external process.
 
