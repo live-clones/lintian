@@ -198,7 +198,7 @@ sub _detect_embeded_libraries {
                 }
                 if(defined($reinside)) {
                     my $foundre = 0;
-                    open(my $fd, '<:raw', $info->unpacked($file));
+                    my $fd = $file->open(':raw');
 
                     my $sfd
                       = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
@@ -470,7 +470,7 @@ sub run {
             #----------------- /etc/php5/conf.d
             elsif ($fname =~ m,^etc/php5/conf.d/.+\.ini$,) {
                 if ($file->is_file) {
-                    open(my $fd, '<', $info->unpacked($file));
+                    my $fd = $file->open;
                     while (<$fd>) {
                         next unless (m/^\s*#/);
                         tag 'obsolete-comments-style-in-php-ini', $file;
@@ -547,7 +547,7 @@ sub run {
                         and $file->size <= 276
                         and $file->is_file
                         and $info->file_info($file) =~ m/gzip compressed/) {
-                        my $fd = open_gz($info->unpacked($file));
+                        my $fd = $file->open_gz;
                         my $f = <$fd>;
                         close($fd);
                         unless (defined $f and length $f) {
@@ -594,7 +594,7 @@ sub run {
                 my $pkg_config_arch = $1 // '';
                 $pkg_config_arch =~ s,\A/,,ms;
 
-                open(my $fd, '<:raw', $info->unpacked($file));
+                my $fd = $file->open(':raw');
                 my $sfd = Lintian::SlidingWindow->new($fd);
               BLOCK:
                 while (my $block = $sfd->readwindow()) {
@@ -1042,7 +1042,7 @@ sub run {
                 && $fname =~ m,\.pm$,
                 && !$dep->implies(
                     'libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
-                open(my $fd, '<', $info->unpacked($file));
+                my $fd = $file->open;
                 while (<$fd>) {
                     if (
                         m{ (?:do|require)\s+(?:'|") # do/require
@@ -1303,7 +1303,7 @@ sub run {
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
                 and $source_pkg ne 'feedparser'){
-                open(my $fd, '<', $info->unpacked($file));
+                my $fd = $file->open;
                 while (<$fd>) {
                     if (m,Universal feed parser,) {
                         tag 'embedded-feedparser-library', $file;
@@ -1328,7 +1328,7 @@ sub run {
                 }
                 my $finfo = $info->file_info($file) || '';
                 if ($finfo =~ m/PostScript Type 1 font program data/) {
-                    my $path = $info->unpacked($file);
+                    my $path = $file->fs_path;
                     my $foundadobeline = 0;
                     open(my $t1pipe, '-|', 't1disasm', $path);
                     while (my $line = <$t1pipe>) {
@@ -1421,10 +1421,8 @@ sub run {
                 if ($finfo !~ m/gzip compressed/) {
                     tag 'gz-file-not-gzip', $file;
                 } else {
-                    my $path = $info->unpacked($file);
-                    my $buff;
-                    my $mtime;
-                    open(my $fd, '<', $path);
+                    my ($buff, $mtime);
+                    my $fd = $file->open;
                     # We need to read at least 8 bytes
                     if (sysread($fd, $buff, 1024) >= 8) {
                         # Extract the flags and the mtime.
@@ -1970,7 +1968,7 @@ sub detect_privacy_breach {
         return;
     }
 
-    open(my $fd, '<:raw', $info->unpacked($file));
+    my $fd = $file->open(':raw');
 
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
 
