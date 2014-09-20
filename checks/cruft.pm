@@ -532,7 +532,6 @@ sub find_cruft {
         my $name     = $entry->name;
         my $basename = $entry->basename;
         my $dirname = $entry->dirname;
-        my $path;
         my $file_info;
 
         if ($entry->is_dir) {
@@ -619,9 +618,8 @@ sub find_cruft {
 
         # waf is not allowed
         if ($basename =~ /\bwaf$/) {
-            my $path   = $info->unpacked($entry);
             my $marker = 0;
-            open(my $fd, '<', $path);
+            my $fd = $entry->open;
             while (my $line = <$fd>) {
                 next unless $line =~ m/^#/o;
                 if ($marker && $line =~ m/^#BZ[h0][0-9]/o) {
@@ -668,7 +666,7 @@ sub find_cruft {
             }
         }elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm
             and not $atdinbd){
-            open(my $fd, '<', $info->unpacked($entry));
+            my $fd = $entry->open;
             while (<$fd>) {
                 last
                   if $.> 10;  # it's on the 6th line, but be a bit more lenient
@@ -691,7 +689,7 @@ sub find_cruft {
         }elsif ($basename eq 'ltconfig' and not $ltinbd) {
             tag 'ancient-libtool', $name;
         }elsif ($basename eq 'ltmain.sh', and not $ltinbd) {
-            open(my $fd, '<', $info->unpacked($entry));
+            my $fd = $entry->open;
             while (<$fd>) {
                 if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                     my ($version, $major, $minor, $debian)=($1, $2, $3, $4);
@@ -705,8 +703,7 @@ sub find_cruft {
             }
             close($fd);
         }
-        full_text_check($source_pkg, $entry, $info, $name, $basename, $dirname,
-            $info->unpacked($entry));
+        full_text_check($source_pkg, $entry, $info, $name, $basename,$dirname);
     }
     return;
 }
@@ -782,7 +779,7 @@ sub check_missing_source {
 # note that it does not replace licensecheck(1)
 # and is only used for autoreject by ftp-master
 sub full_text_check {
-    my ($source_pkg, $entry, $info, $name, $basename, $dirname, $path) = @_;
+    my ($source_pkg, $entry, $info, $name, $basename, $dirname) = @_;
 
     # license string in debian/changelog are probably just change
     # Ignore these strings in d/README.{Debian,source}.  If they
@@ -794,7 +791,7 @@ sub full_text_check {
         return;
     }
 
-    open(my $fd, '<:raw', $path);
+    my $fd = $entry->open(':raw');
     # allow to check only text file
     unless (-T $fd) {
         close($fd);
@@ -843,7 +840,7 @@ sub full_text_check {
         # check only in block 0
         if($blocknumber == 0) {
             _search_in_block0($entry, $info, $name, $basename, $dirname,
-                $path, $block);
+                $block);
         }
     }
     close($fd);
@@ -863,7 +860,7 @@ sub _is_javascript_but_not_minified {
 
 # search something in block $0
 sub _search_in_block0 {
-    my ($entry, $info, $name, $basename, $dirname, $path, $block) = @_;
+    my ($entry, $info, $name, $basename, $dirname, $block) = @_;
 
     if(_is_javascript_but_not_minified($name)) {
         # exception sphinx documentation
@@ -883,15 +880,14 @@ sub _search_in_block0 {
             }
         }
         # now search hidden minified
-        _linelength_test($entry, $info, $name, $basename, $dirname,
-            $path, $block);
+        _linelength_test($entry, $info, $name, $basename, $dirname,$block);
     }
     return;
 }
 
 # try to detect non human source based on line length
 sub _linelength_test {
-    my ($entry, $info, $name, $basename, $dirname, $path, $block) = @_;
+    my ($entry, $info, $name, $basename, $dirname, $block) = @_;
     my $strip = $block;
     # from perl faq strip comments
     $strip
