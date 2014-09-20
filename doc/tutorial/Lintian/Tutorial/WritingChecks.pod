@@ -428,25 +428,51 @@ Keep in mind that using the "index" or "sorted_index" method will
 require that you put "unpacked" in Needs-Info.  See L</Keeping Needs-Info
 up to date>.
 
+There is also a pair of methods for accessing the control files of a
+binary package.  These are
+L<< $info->control_index|Lintian::Collect::Package/control_index (FILE) >> and
+L<< $info->sorted_control_index|Lintian::Collect::Package/sorted_control_index >>.
+
 =head3 Accessing contents of a file in a package
 
 When you actually want to see the contents of a file, you can use
-L<unpacked ('I<pathE<sol>toE<sol>file>')|Lintian::Collect::Package/unpacked ([FILE])>.
-This will give you access to the raw contents of the package, which can
-be a blessing and a curse!
+L<open|Lintian::Path/open> (or L<open_gz|Lintian::Path/open_gz>) on
+an object returned by e.g.
+L<< $info->index|Lintian::Collect::Package/index (FILE) >>.  These
+methods will open the underlying file for reading (the latter
+applying a gzip decompression).
 
-The major caveat here is that there is no fail-safes for you here!
-When you use unpacked, keep things like
-"../../../../../etc/passwd"-symlink and "fifo" pipes in mind.  This
-caveat applies equally well to use of
-L<control ('pathE<sol>toE<sol>file')|Lintian::Collect::Binary/control ([FILE])>
-and L<debfiles ('pathE<sol>toE<sol>file')|Lintian::Collect::Source/debfiles ([FILE])>.
+However, please do assert that file is safe to read by calling
+L<is_open_ok|Lintian::Path/is_open_ok> first.  Generally, it will
+only be true for files or safely resolvable symlinks pointing to
+files.  Should you attempt to open a path that does not satisfy
+those criteria, L<Lintian::Path> will raise a trappable error at
+runtime.
 
-It is generally a good idea to use L<Lintian::Path> first to check if
-it is a regular file before opening a given path.  If you must open a
-file (or a dir) from the underlying package, be sure to test that will
-not escape the package root.  The following snippet may be useful for
-this.
+Alternatively, if you access to the underlying file object, you can
+use the L<fs_path|Lintian::Path/fs_path> method.  Usually, you will
+want to test either L<is_open_ok|Lintian::Path/is_open_ok> or
+L<is_valid_path|Lintian::Path/is_valid_path> first to ensure you do
+not follow unsafe symlinks.  The "is_open_ok" check will also assert
+that it is not (e.g.) a named pipe and such.
+
+Should you call L<fs_path|Lintian::Path/fs_path> on a symlink that
+escape the package root, the method will throw a trappable error at
+runtime.  Once the path is returned, there are no more built-in
+fail-safes.  When you use the returned path, keep things like
+"../../../../../etc/passwd"-symlink and "fifo" pipes in mind.
+
+
+In some cases, you may even need to access the file system objects
+I<without> using L<Lintian::Path>.  This is, of course, discouraged
+and suffers from the same issues above (all checking must be done
+manually by you).  Here you have to use the "unpacked", "debfiles" or
+"control" methods from L<Lintian::Collect> or its subclasses.
+
+
+
+The following snippet may be useful for testing that a given path does
+not escape the root.
 
  use Lintian::Util qw(is_ancestor_of);
  
@@ -460,9 +486,6 @@ this.
  } else {
     # not a file or an unsafe path
  }
-
-Using the "unpacked" method requires that the "unpacked" collection is
-listed in Needs-Info.  See L</Keeping Needs-Info up to date>.
 
 =head2 Keeping Needs-Info up to date
 
@@ -533,14 +556,18 @@ This is especially true if you intend to use the value as part of a
 file name.  Verify that field contains what you expect before you use
 it.
 
-=item * Use is_ancestor_of with $info->unpacked('path/to/file')
+=item * Use L<Lintian::Path> (or, failing that, is_ancestor_of)
 
 You might be tempted to think that the following code is safe:
 
+ use autodie;
+ 
  my $filename = 'some/file';
  my $ufile = $info->unpacked($filename);
  if ( ! -l $ufile) {
     # Looks safe, but isn't in general
+    open(my $fd, '<', $ufile);
+    ...;
  }
 
 This is definitely unsafe if "$filename" contains at least one
@@ -549,18 +576,36 @@ L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> to
 verify that the requested file is indeed the file you think it is.  A
 better version of the above would be:
 
+ use autodie,
  use Lintian::Util qw(is_ancestor_of);
  [...]
  my $filename = 'some/file';
  my $ufile = $info->unpacked($filename);
  if ( ! -l $ufile && -f $ufile && is_ancestor_of($info->unpacked, $ufile)) {
     # $ufile is a file and it is contained within the package root.
+    open(m $fd, '<', $ufile);
+    ...;
  }
 
 In some cases you can even drop the "! -l $ufile" part.
 
-For more information, see
+Of course, it is much easier to use the L<Lintian::Path> object
+(whenever possible).
+ 
+ my $filename = 'some/file';
+ my $ufile = $info->index($filename);
+ if ( $ufile && $ufile->is_file && $ufile->is_open_ok) {
+     my $fd = $ufile->open;
+     ...;
+ }
+
+Here you can drop the " && $ufile->is_file" if you want to permit
+safe-symlinks.
+
+
+For more information on the is_ancestor_of check, see
 L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)>
+
 
 =back
 
