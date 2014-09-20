@@ -66,10 +66,10 @@ sub run {
     my $anymenu_file;
     my $documentation;
 
-    check_script($pkg, $info->control('preinst'), 'preinst', \%preinst);
-    check_script($pkg, $info->control('postinst'), 'postinst', \%postinst);
-    check_script($pkg, $info->control('prerm'), 'prerm', \%prerm);
-    check_script($pkg, $info->control('postrm'), 'postrm', \%postrm);
+    check_script($pkg, scalar $info->control_index('preinst'), \%preinst);
+    check_script($pkg, scalar $info->control_index('postinst'), \%postinst);
+    check_script($pkg, scalar $info->control_index('prerm'), \%prerm);
+    check_script($pkg, scalar $info->control_index('postrm'), \%postrm);
 
     # read package contents
     for my $file ($info->sorted_index) {
@@ -605,13 +605,13 @@ sub delink {
 }
 
 sub check_script {
-    my ($pkg, $spath, $script, $pres) = @_;
+    my ($pkg, $spath, $pres) = @_;
     my ($no_check_menu, $no_check_installdocs, $interp);
 
     # control files are regular files and not symlinks, pipes etc.
-    return if -l $spath or not -f $spath;
+    return if not $spath or $spath->is_symlink or not $spath->is_open_ok;
 
-    open(my $fd, '<', $spath);
+    my $fd = $spath->open;
     $interp = <$fd>;
     $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {
@@ -663,7 +663,7 @@ sub check_script {
                 #<<< no perltidy - tag name too long
                 tag 'maintainer-script-does-not-check-for-existence-of-updatemenus',
                 #>>>
-                  "$script:$."
+                  "$spath:$."
                   unless $no_check_menu++;
             }
         }
@@ -693,7 +693,7 @@ sub check_script {
                 #<<< no perltidy - tag name too long
                 tag 'maintainer-script-does-not-check-for-existence-of-installdocs',
                 #>>>
-                  $script
+                  $spath
                   unless $no_check_installdocs++;
             }
         }

@@ -28,15 +28,11 @@ use Lintian::Util qw(dequote_name);
 
 sub run {
     my (undef, undef, $info) = @_;
-    my $control = $info->control('md5sums');
+    my $control = $info->control_index('md5sums');
     my (%control_entry, %info_entry);
 
-    # The md5sums file should not be a symlink.  If it is, the best
-    # we can do is to leave it alone.
-    return if -l $control;
-
     # Is there a md5sums control file?
-    unless (-f $control) {
+    if (not $control) {
         # ignore if package contains no files
         return if -z $info->lab_data_path('md5sums');
 
@@ -58,13 +54,15 @@ sub run {
         return;
     }
 
+    # The md5sums file should not be a symlink.  If it is, the best
+    # we can do is to leave it alone.
+    return if -l $control->is_symlink or not $control->is_open_ok;
+
     # Is it empty? Then skip it. Tag will be issued by control-files
-    if (-z $control) {
-        return;
-    }
+    return if $control->size == 0;
 
     # read in md5sums control file
-    open(my $fd, '<', $control);
+    my $fd = $control->open;
   LINE:
     while (my $line = <$fd>) {
         chop($line);

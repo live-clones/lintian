@@ -312,9 +312,13 @@ sub run {
     $version = '0-1' unless defined $version;
     $provides = Lintian::Relation->and($info->relation('provides'), $provides);
 
-    my $shlibsf = $info->control('shlibs');
-    my $symbolsf = $info->control('symbols');
+    my $shlibsf = $info->control_index('shlibs');
+    my $symbolsf = $info->control_index('symbols');
     my (%shlibs_control, %symbols_control);
+
+    # control files are not symlinks (or other "weird" things).
+    $shlibsf = undef if $shlibsf and not $shlibsf->is_file;
+    $symbolsf = undef if $symbolsf and not $symbolsf->is_file;
 
     # Libraries with no version information can't be represented by
     # the shlibs format (but can be represented by symbols).  We want
@@ -332,17 +336,15 @@ sub run {
     }
     @shlibs = grep { !$unversioned_shlibs{$_} } keys %SONAME;
 
-    if (-l $shlibsf) {
-        # control files are not symlinks, skip this part.
-    } elsif ($#shlibs == -1) {
+    if ($#shlibs == -1) {
         # no shared libraries included in package, thus shlibs control
         # file should not be present
-        if (-f $shlibsf) {
+        if ($shlibsf) {
             tag 'pkg-has-shlibs-control-file-but-no-actual-shared-libs';
         }
     } else {
         # shared libraries included, thus shlibs control file has to exist
-        if (not -f $shlibsf) {
+        if (not $shlibsf) {
             if ($type ne 'udeb') {
                 for my $shlib (@shlibs) {
                     # skip it if it's not a public shared library
@@ -351,9 +353,9 @@ sub run {
                       unless is_nss_plugin($shlib);
                 }
             }
-        } else {
+        } elsif ($shlibsf->is_open_ok) {
             my (%shlibs_control_used, @shlibs_depends);
-            open(my $fd, '<', $shlibsf);
+            my $fd = $shlibsf->open;
             while (<$fd>) {
                 chop;
                 next if m/^\s*$/ or /^#/;
@@ -416,15 +418,13 @@ sub run {
 
     # 5th step: check symbols control file.  Add back in the unversioned shared
     # libraries, since they can still have symbols files.
-    if (-l $symbolsf) {
-        # control files are not symlinks, skip this part.
-    } elsif ($#shlibs == -1 and not %unversioned_shlibs) {
+    if ($#shlibs == -1 and not %unversioned_shlibs) {
         # no shared libraries included in package, thus symbols
         # control file should not be present
-        if (-f $symbolsf) {
+        if ($symbolsf) {
             tag 'pkg-has-symbols-control-file-but-no-shared-libs';
         }
-    } elsif (not -f $symbolsf) {
+    } elsif (not $symbolsf) {
         if ($type ne 'udeb') {
             for my $shlib (@shlibs, keys %unversioned_shlibs) {
                 # skip it if it's not a public shared library
@@ -433,7 +433,7 @@ sub run {
                   unless is_nss_plugin($shlib);
             }
         }
-    } elsif (-f $symbolsf) {
+    } elsif ($symbolsf->is_open_ok) {
         my $version_wo_rev = $version;
         $version_wo_rev =~ s/^(.+)-([^-]+)$/$1/;
         my ($full_version_count, $full_version_sym) = (0, undef);
@@ -446,7 +446,7 @@ sub run {
         my $warned = 0;
         my $symbol_count = 0;
 
-        open(my $fd, '<', $symbolsf);
+        my $fd = $symbolsf->open;
         while (<$fd>) {
             chomp;
             next if m/^\s*$/ or /^#/;

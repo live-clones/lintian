@@ -108,12 +108,12 @@ sub run {
         return;
     }
 
-    my $preinst = $info->control('preinst');
-    my $ctrl_config = $info->control('config');
-    my $ctrl_templates = $info->control('templates');
+    my $preinst = $info->control_index('preinst');
+    my $ctrl_config = $info->control_index('config');
+    my $ctrl_templates = $info->control_index('templates');
 
-    if (-f $preinst and not -l $preinst) {
-        open(my $fd, '<', $preinst);
+    if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
+        my $fd = $preinst->open;
         while (<$fd>) {
             s/\#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,
@@ -125,8 +125,8 @@ sub run {
         close($fd);
     }
 
-    $seenconfig = 1 if -f $ctrl_config and not -l $ctrl_config;
-    $seentemplates = 1 if -f $ctrl_templates and not -l $ctrl_templates;
+    $seenconfig = 1 if $ctrl_config and $ctrl_config->is_file;
+    $seentemplates = 1 if $ctrl_templates and $ctrl_templates->is_file;
 
     # This still misses packages that use debconf only in the postrm.
     # Packages that ask debconf questions in the postrm should load
@@ -169,7 +169,7 @@ sub run {
 
     # $seenconfig will be false if $ctrl_config is a symlink or if it was
     # not a file, so we do not have to check with -f/-l here again.
-    if ($seenconfig and not -x $ctrl_config) {
+    if ($seenconfig and not -x $ctrl_config->fs_path) {
         tag 'debconf-config-not-executable';
     }
 
@@ -183,7 +183,8 @@ sub run {
             # symlink or not a file, so this should be safe without
             # (re-checking) with -f/-l.
             @templates
-              = read_dpkg_control($ctrl_templates, DCTRL_DEBCONF_TEMPLATE);
+              = read_dpkg_control($ctrl_templates->fs_path,
+                DCTRL_DEBCONF_TEMPLATE);
         };
         if ($@) {
             chomp $@;
@@ -372,15 +373,11 @@ sub run {
     my (%templates_used, %template_aliases);
     for my $file (qw(config prerm postrm preinst postinst)) {
         my $potential_makedev = {};
-        my $path = $info->control($file);
-        if (-f $path and not -l $path) {
-            my $usesconfmodule='';
-            my $obsoleteconfmodule='';
-            my $db_input='';
-            my $isdefault='';
-            my $usesseen='';
+        my $path = $info->control_index($file);
+        if ($path and $path->is_file and $path->is_open_ok) {
+            my ($usesconfmodule, $obsoleteconfmodule, $db_input, $isdefault);
 
-            open(my $fd, '<', $path);
+            my $fd = $path->open;
             # Only check scripts.
             my $fl = <$fd>;
             unless ($fl && $fl =~ /^\#!/) {

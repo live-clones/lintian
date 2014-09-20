@@ -30,15 +30,13 @@ use Lintian::Util qw(rstrip);
 sub run {
     my (undef, undef, $info) = @_;
 
-    my $cf = $info->control('conffiles');
+    my $cf = $info->control_index('conffiles');
     my %conffiles;
 
-    # Stop if conffiles is a link; no real package uses links in
-    # control.tar.gz.
-    return if -l $cf;
-
-    if (-f $cf) {
-        open(my $fd, '<', $cf);
+    # Read conffiles if it exists and is a file; no real package uses
+    # e.g. links in control.tar.gz.
+    if ($cf and $cf->is_file and $cf->is_open_ok) {
+        my $fd = $cf->open;
         while (my $filename = <$fd>) {
             # dpkg strips whitespace (using isspace) from the right hand
             # side of the file name.

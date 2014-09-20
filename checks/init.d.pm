@@ -80,16 +80,16 @@ my $EXCLUDE_R = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 sub run {
     my (undef, undef, $info) = @_;
     my $initd_dir = $info->lab_data_path('init.d');
-    my $postinst = $info->control('postinst');
-    my $preinst = $info->control('preinst');
-    my $postrm = $info->control('postrm');
-    my $prerm = $info->control('prerm');
+    my $postinst = $info->control_index('postinst');
+    my $preinst = $info->control_index('preinst');
+    my $postrm = $info->control_index('postrm');
+    my $prerm = $info->control_index('prerm');
 
     my (%initd_postinst, %initd_postrm);
 
     # read postinst control file
-    if (-f $postinst and not -l $postinst) {
-        open(my $fd, '<', $postinst);
+    if ($postinst and $postinst->is_file and $postinst->is_open_ok) {
+        my $fd = $postinst->open;
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -110,8 +110,8 @@ sub run {
     }
 
     # read preinst control file
-    if (-f $preinst and not -l $preinst) {
-        open(my $fd, '<', $preinst);
+    if ($preinst and $preinst->is_file and $preinst->is_open_ok) {
+        my $fd = $preinst->open;
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -126,8 +126,8 @@ sub run {
     }
 
     # read postrm control file
-    if (-f $postrm and not -l $postrm) {
-        open(my $fd, '<', $postrm);
+    if ($postrm and $postrm->is_file and $postrm->is_open_ok) {
+        my $fd = $postrm->open;
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
@@ -145,8 +145,8 @@ sub run {
     }
 
     # read prerm control file
-    if (-f $prerm and not -l $prerm) {
-        open(my $fd, '<', $prerm);
+    if ($prerm and $prerm->is_file and $prerm->is_open_ok) {
+        my $fd = $prerm->open;
         while (<$fd>) {
             next if /$EXCLUDE_R/o;
             s/\#.*$//o;
