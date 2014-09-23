@@ -89,6 +89,11 @@ sub new {
     if ($self->is_file or $self->is_dir) {
         $self->{'_is_open_ok'} = $self->is_file;
         $self->{'_valid_path'} = 1;
+        if ($self->is_dir) {
+            for my $child ($self->children) {
+                $child->_set_parent_dir($self);
+            }
+        }
     }
     return $self;
 }
@@ -162,6 +167,13 @@ NB: This is only well defined for file entries that are subject to
 permissions (e.g. files).  Particularly, the value is not well defined
 for symlinks.
 
+=item parent_dir
+
+Returns the parent directory entry of this entry as a
+L<Lintian::Path>.
+
+NB: Returns C<undef> for the "root" dir.
+
 =item dirname
 
 Returns the "directory" part of the name, similar to dirname(1) or
@@ -183,7 +195,7 @@ NB: Returns the empty string for the "root" dir.
 
 Lintian::Path->mk_ro_accessors(
     qw(name owner group link type uid gid
-      size date operm dirname basename
+      size date operm parent_dir dirname basename
       ));
 
 =item children
@@ -458,6 +470,27 @@ The returned handle may be a pipe from an external process.
 sub open_gz {
     my ($self) = @_;
     return $self->_do_open(\&Lintian::Util::open_gz);
+}
+
+=item root_dir
+
+Return the root dir entry of this the path entry.
+
+=cut
+
+sub root_dir {
+    my ($self) = @_;
+    my $current = $self;
+    while (my $next = $current->parent_dir) {
+        $current = $next;
+    }
+    return $current;
+}
+
+sub _set_parent_dir {
+    my ($self, $parent) = @_;
+    weaken($self->{'parent_dir'} = $parent);
+    return 1;
 }
 
 ### OVERLOADED OVERATORS ###
