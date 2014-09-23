@@ -197,7 +197,34 @@ NB: Returns the empty list for non-dir entries.
 
 sub children {
     my ($self) = @_;
-    return @{ $self->{'children'} };
+    return sort(values(%{ $self->{'children'} })) if wantarray;
+    return values(%{ $self->{'children'} });
+}
+
+=item child(BASENAME)
+
+Returns the child named BASENAME if it is a child of this directory.
+Otherwise, this method returns C<undef>.
+
+For non-dirs, this method always returns C<undef>.
+
+=cut
+
+sub child {
+    my ($self, $basename) = @_;
+    my $children = $self->{'children'};
+    my ($child, $had_trailing_slash);
+
+    # Remove the trailing slash (for dirs)
+    if (substr($basename, -1, 1) eq '/') {
+        $basename = substr($basename, 0, -1);
+        $had_trailing_slash = 1;
+    }
+    return if not $children or not exists($children->{$basename});
+    $child = $children->{$basename};
+    # Only directories are allowed to be fetched with trailing slash.
+    return if $had_trailing_slash and not $child->is_dir;
+    return $child;
 }
 
 =item is_symlink

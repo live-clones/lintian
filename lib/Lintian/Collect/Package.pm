@@ -508,15 +508,19 @@ sub _fetch_index_data {
         # Add them in reverse order - entries in a dir are made
         # objects before the dir itself.
         if ($idxh{$file}->{type} eq 'd') {
-            my @children;
+            my %child_table;
             for my $cname (sort(@{ $children{$file} })) {
                 my $child = $idxh{$cname};
+                my $basename = $child->basename;
                 # Insert dirname here to share the same storage with
                 # the hash key
                 $child->{'dirname'} = $file;
-                push(@children, $child);
+                if (substr($basename, -1, 1) eq '/') {
+                    $basename = substr($basename, 0, -1);
+                }
+                $child_table{$basename} = $child;
             }
-            $idxh{$file}{children} = \@children;
+            $idxh{$file}{children} = \%child_table;
         }
         # Insert name here to share the same storage with the hash key
         $idxh{$file}{'name'} = $file;
