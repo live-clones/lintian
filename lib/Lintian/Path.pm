@@ -493,6 +493,108 @@ sub _set_parent_dir {
     return 1;
 }
 
+=item resolve_path([PATH])
+
+Resolve PATH relative to this path entry.  If PATH starts with a slash
+it will instead be resolved relatively to the root dir.
+
+If PATH is omitted, then the entry is resolved and the target is
+returned if it is valid.  Except for symlinks, all entries always
+resolve to themselves.  NB: hardlinks also resolve as themselves.
+
+It is an error to attempt to resolve a PATH against a non-directory
+and non-symlink entry - as such resolution would always fail
+(i.e. foo.txt/../bar is an invalid assuming foo.txt is a file).
+
+
+The resolution takes symlinks into account and following them provided
+that the target path is valid (and can be followed safely).  If the
+path is invalid or circular (symlinks), escapes the root directory or
+follows an unsafe symlink, the method returns C<undef>.  Otherwise, it
+returns the path entry that denotes the target path.
+
+
+If PATH contains at least one path segment and ends with a slash, then
+the resolved path will end in a directory (or fail).  Otherwise, the
+resolved PATH can end in any entry I<except> a symlink.
+
+=cut
+
+sub resolve_path {
+    my ($self, $path_str) = @_;
+    my $current = $self;
+    my (@queue, %traversed_links, $had_trailing_slash);
+
+    $path_str //= '';
+
+    if (not $self->is_dir and not $self->is_symlink) {
+        return $self if $path_str eq '';
+        croak("Path \"$self\" is not a directory or a symlink");
+    }
+
+    $path_str =~ s{//++}{/}g;
+    $had_trailing_slash = $path_str =~ s{/\z}{};
+
+    if ($path_str =~ s{^/}{} or ($path_str eq q{} and $had_trailing_slash)) {
+        # Find the root entry
+        $current = $self->root_dir;
+        return $current if $path_str eq q{};
+    }
+    if ($path_str eq q{} or $path_str eq q{.}) {
+        if (not $current->is_symlink) {
+            return $current if ($current->is_dir or not $had_trailing_slash);
+            return;
+        }
+    } else {
+        # Add all segments to the queue
+        @queue = split(m{/}, $path_str);
+    }
+
+    if ($had_trailing_slash) {
+        # If there is a trailing slash, then the final path segment
+        # must be a directory.
+        push(@queue, q{.});
+    } else {
+        # If it is a symlink (or ends with a symlink), we resolve the
+        # final symlink as well.
+        # NB: The "/resolve-symlink" segment is a pseudo
+        # "resolve-symlink" segment
+        push(@queue, q{/resolve-symlink});
+    }
+
+    while (my $target = shift(@queue)) {
+        if ($target eq q{..}) {
+            $current = $current->parent_dir;
+            return unless $current;
+        } else {
+            if ($current->is_symlink) {
+                # Stop if we already traversed this link.
+                return if $traversed_links{$current->name}++;
+                my $link_text = $current->link;
+                $link_text =~ s{//++}{/}g;
+                if ($link_text eq q{/} or $link_text =~ s{^/}{}) {
+                    $current = $current->root_dir;
+                } else {
+                    $current = $current->parent_dir;
+                }
+                $link_text =~ s{/\z}{};
+                return if $link_text eq q{};
+                unshift(@queue, split(m@/@, $link_text));
+            }
+            # The "/resolve-symlink" target is a pseudo
+            # "resolve-symlink" target.  It cannot occur natually,
+            # as segments cannot have a slash.
+            if ($target ne q{/resolve-symlink}) {
+                # if there is a "." segment, then the current path
+                # must be a directory.
+                return if $target eq q{.} and not $current->is_dir;
+                $current = $current->child($target) if $target ne q{.};
+            }
+        }
+    }
+    return $current;
+}
+
 ### OVERLOADED OVERATORS ###
 
 # overload apparently does not like the mk_ro_accessor, so use a level
