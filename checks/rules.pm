@@ -113,16 +113,20 @@ my %debhelper_order = (
 
 sub run {
     my (undef, undef, $info, undef, $group) = @_;
-    my $rules = $info->debfiles('rules');
+    my $debian_dir = $info->index_resolved_path('debian');
+    my $rules;
+    $rules = $debian_dir->child('rules') if $debian_dir;
+
+    return if not $rules;
 
     # Policy could be read as allowing debian/rules to be a symlink to
     # some other file, and in a native Debian package it could be a
     # symlink to a file that we didn't unpack.  Warn if it's a symlink
     # (dpkg-source does as well) and skip all the tests if we then
     # can't read it.
-    if (-l $rules) {
+    if ($rules->is_symlink) {
         tag 'debian-rules-is-symlink';
-        return unless -f $rules and is_ancestor_of($info->debfiles, $rules);
+        return unless $rules->is_open_ok;
     }
 
     my $architecture = $info->field('architecture', '');
@@ -130,7 +134,7 @@ sub run {
     # If the version field is missing, we assume a neutral non-native one.
     $version = '0-1' unless defined $version;
 
-    open(my $rules_fd, '<', $rules);
+    my $rules_fd = $rules->open;
 
     # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
     # strict reading of Policy doesn't allow either, but they seem harmless.
