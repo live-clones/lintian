@@ -309,6 +309,27 @@ sub sorted_orig_index {
     return @{ $self->{'sorted_orig-index'} };
 }
 
+=item orig_index_resolved_path(PATH)
+
+Resolve PATH (relative to the root of the package) and return the
+L<entry|Lintian::Path> denoting the resolved path.
+
+The resolution is done using
+L<resolve_path|Lintian::Path/resolve_path>.
+
+NB: If orig_index_resolved_path includes a debian packaging, it is was
+contained in upstream part of the source package (or the package is
+native).
+
+Needs-Info requirements for using I<orig_index_resolved_path>: L<Same as orig_index|/orig_index (FILE)>
+
+=cut
+
+sub orig_index_resolved_path {
+    my ($self, $path) = @_;
+    return $self->orig_index('')->resolve_path($path);
+}
+
 =item binary_field (PACKAGE[, FIELD[, DEFAULT]])
 
 Returns the content of the field FIELD for the binary package PACKAGE

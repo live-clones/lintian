@@ -210,6 +210,23 @@ sub sorted_control_index {
     return @{ $self->{'sorted_control-index'} };
 }
 
+=item control_index_resolved_path(PATH)
+
+Resolve PATH (relative to the root of the package) and return the
+L<entry|Lintian::Path> denoting the resolved path.
+
+The resolution is done using
+L<resolve_path|Lintian::Path/resolve_path>.
+
+Needs-Info requirements for using I<control_index_resolved_path>: L<Same as control_index|/control_index (FILE)>
+
+=cut
+
+sub control_index_resolved_path {
+    my ($self, $path) = @_;
+    return $self->control_index('')->resolved_path($path);
+}
+
 =item strings (FILE)
 
 Returns an open handle, which will read the data from coll/strings for
