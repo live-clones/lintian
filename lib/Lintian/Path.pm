@@ -554,41 +554,37 @@ sub resolve_path {
         # If there is a trailing slash, then the final path segment
         # must be a directory.
         push(@queue, q{.});
-    } else {
-        # If it is a symlink (or ends with a symlink), we resolve the
-        # final symlink as well.
-        # NB: The "/resolve-symlink" segment is a pseudo
-        # "resolve-symlink" segment
-        push(@queue, q{/resolve-symlink});
     }
 
-    while (my $target = shift(@queue)) {
+    while (1) {
+        my $target;
+        if ($current->is_symlink) {
+            # Stop if we already traversed this link.
+            return if $traversed_links{$current->name}++;
+            my $link_text = $current->link;
+            $link_text =~ s{//++}{/}g;
+            if ($link_text eq q{/} or $link_text =~ s{^/}{}) {
+                $current = $current->root_dir;
+            } else {
+                $current = $current->parent_dir;
+            }
+            $link_text =~ s{/\z}{};
+            return if $link_text eq q{};
+            unshift(@queue, split(m@/@, $link_text));
+        }
+        last if not @queue;
+        $target = shift(@queue);
+
         if ($target eq q{..}) {
             $current = $current->parent_dir;
             return unless $current;
         } else {
-            if ($current->is_symlink) {
-                # Stop if we already traversed this link.
-                return if $traversed_links{$current->name}++;
-                my $link_text = $current->link;
-                $link_text =~ s{//++}{/}g;
-                if ($link_text eq q{/} or $link_text =~ s{^/}{}) {
-                    $current = $current->root_dir;
-                } else {
-                    $current = $current->parent_dir;
-                }
-                $link_text =~ s{/\z}{};
-                return if $link_text eq q{};
-                unshift(@queue, split(m@/@, $link_text));
-            }
-            # The "/resolve-symlink" target is a pseudo
-            # "resolve-symlink" target.  It cannot occur natually,
-            # as segments cannot have a slash.
-            if ($target ne q{/resolve-symlink}) {
-                # if there is a "." segment, then the current path
-                # must be a directory.
-                return if $target eq q{.} and not $current->is_dir;
-                $current = $current->child($target) if $target ne q{.};
+            # if there is segment (even a "."), then the current path
+            # must be a directory.
+            return if not $current->is_dir;
+            if ($target ne q{.}) {
+                $current = $current->child($target);
+                return if not $current;
             }
         }
     }
