@@ -40,14 +40,20 @@ my $src_fields = Lintian::Data->new('common/source-fields');
 
 sub run {
     my ($pkg, undef, $info) = @_;
-    my $dcontrol = $info->debfiles('control');
+    my $debian_dir = $info->index_resolved_path('debian/');
+    my $dcontrol;
+    $dcontrol = $debian_dir->child('control') if $debian_dir;
 
-    if (-l $dcontrol) {
+    # Unlikely, but assume nothing...
+    return if not $dcontrol;
+
+    if ($dcontrol->is_symlink) {
         tag 'debian-control-file-is-a-symlink';
     }
+    return if not $dcontrol->is_open_ok;
 
     # check that control is UTF-8 encoded
-    my $line = file_is_encoded_in_non_utf8($dcontrol);
+    my $line = file_is_encoded_in_non_utf8($dcontrol->fs_path);
     if ($line) {
         tag 'debian-control-file-uses-obsolete-national-encoding',
           "at line $line";
@@ -55,7 +61,7 @@ sub run {
 
     # Nag about dh_make Vcs comment only once
     my $seen_vcs_comment = 0;
-    open(my $fd, '<', $dcontrol);
+    my $fd = $dcontrol->open;
     while (<$fd>) {
         s/\s*\n$//;
 
@@ -98,7 +104,7 @@ sub run {
     eval {
         # check we can parse it, but ignore the result - we will fetch
         # the fields we need from $info.
-        read_dpkg_control($dcontrol);
+        read_dpkg_control($dcontrol->fs_path);
     };
     if ($@) {
         chomp $@;
