@@ -3,7 +3,7 @@ Author: Colin Watson <cjwatson@debian.org>
 Abbrev: dc
 Type: binary, udeb, source
 Info: This looks for common mistakes in packages using debconf.
-Needs-Info: bin-pkg-control, debfiles, unpacked, scripts
+Needs-Info: bin-pkg-control, unpacked, scripts
 
 Tag: missing-debconf-dependency
 Severity: normal

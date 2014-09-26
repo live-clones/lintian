@@ -242,13 +242,10 @@ If FIELD is not given, return a hashref mapping field names to their
 values (in this case DEFAULT is ignored).  This hashref should not be
 modified.
 
-The debfiles collection script must have been run to make the
-F<debfiles/control> file available.
-
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as debfiles|/debfiles ([FILE])>
+Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Colect::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -345,10 +342,7 @@ modified.
 If PACKAGE is not a binary built from this source, this returns
 C<undef> regardless of FIELD and DEFAULT.
 
-The debfiles collection script must have been run to make the
-F<debfiles/control> file available.
-
-Needs-Info requirements for using I<binary_field>: L<Same as debfiles|/debfiles ([FILE])>
+Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Colect::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -369,28 +363,14 @@ sub binary_field {
 }
 
 # Internal method to load binary and source fields from
-# debfiles/control
-# sub _load_dctrl Needs-Info debfiles
+# debian/control
+# sub _load_dctrl Needs-Info unpacked
 sub _load_dctrl {
     my ($self) = @_;
     # Load the fields from d/control
-    my $dctrl = $self->debfiles('control');
+    my $dctrl = $self->index_resolved_path('debian/control');
     my $ok = 0;
-    if (-l $dctrl) {
-        # hmmm - this smells of trouble...
-        if (-e $dctrl) {
-            # it exists, but what does it point to?
-            my $droot = Cwd::abs_path($self->debfiles);
-            my $target = Cwd::abs_path($dctrl);
-            if ($droot && $target && $target =~ m,^$droot/,) {
-                # does not escape $droot, so it could work.
-                $ok = 1;
-            }
-        }
-    } else {
-        $ok = 1 if -e $dctrl;
-    }
-
+    $ok = 1 if $dctrl and $dctrl->is_open_ok;
     $self->{binary_names} = [];
     unless ($ok) {
         # Bad file, assume the package and field does not exist.
@@ -399,8 +379,8 @@ sub _load_dctrl {
         return;
     }
     my (@control_data, %packages);
-
-    eval {@control_data = read_dpkg_control($dctrl);};
+    my $fs_path = $dctrl->fs_path;
+    eval {@control_data = read_dpkg_control($fs_path);};
     if ($@) {
         # If it is a syntax error, ignore it (we emit
         # syntax-error-in-control-file in this case via
