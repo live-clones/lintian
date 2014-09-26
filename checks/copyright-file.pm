@@ -316,12 +316,11 @@ sub run {
     if ($gpl || m,/usr/share/common-licenses/GPL,) {
         unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,) {
             my @depends;
-            if (defined $info->field('depends')) {
-                @depends = split(/\s*,\s*/, scalar $info->field('depends'));
+            if (my $field = $info->field('depends')) {
+                @depends = split(/\s*,\s*/, $field);
             }
-            if (defined $info->field('pre-depends')) {
-                push @depends,
-                  split(/\s*,\s*/, scalar $info->field('pre-depends'));
+            if (my $field = $info->field('pre-depends')) {
+                push(@depends, split(/\s*,\s*/, $field));
             }
             if (any { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ } @depends) {
                 tag 'possible-gpl-code-linked-with-openssl';
