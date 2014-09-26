@@ -70,7 +70,8 @@ sub run {
         push @files, 'templates';
 
         foreach my $file (@files) {
-            my $templates_file = $info->debfiles($file);
+            my $dfile = "debian/$file";
+            my $templates_file = $info->index_resolved_path($dfile);
             my $binary = $file;
             $binary =~ s/\.?templates$//;
             # Single binary package (so @files contains "templates" and
@@ -79,11 +80,11 @@ sub run {
                 $binary = $binaries[0];
             }
 
-            if (-f $templates_file) {
+            if ($templates_file and $templates_file->is_open_ok) {
                 my @templates;
                 eval {
                     @templates
-                      = read_dpkg_control($templates_file,
+                      = read_dpkg_control($templates_file->fs_path,
                         DCTRL_DEBCONF_TEMPLATE);
                 };
                 if ($@) {
