@@ -38,6 +38,7 @@ lintian (2.5.28) UNRELEASED; urgency=medium
     + [NT] Add support for fetching and (where it makes sense)
       opening the underlying file system object.  It also adds
       a few minor safety guards to common issues with symlinks.
+      (Closes: #698930)
 
   * reporting/*:
     + [NT] Avoid forking a shell when invoking commands.  This
