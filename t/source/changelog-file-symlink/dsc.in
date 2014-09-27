@@ -5,7 +5,7 @@ Architecture: all
 Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Standards-Version: 3.9.5
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 9)
 Checksums-Sha1:
  @SHA1@ @SIZE@ changelog-file-symlink_1.tar.gz
 Checksums-Sha256:

@@ -1,8 +1,0 @@
-changelog-file-symlink (1) unstable; urgency=low
-
-  * Lintian Test Suite.
-  * Test: changelog-file-symlink
-
-  * Suppress "should close ITP bug" messages.  (Closes: #123456)
-
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Mon, 28 Jun 2010 01:01:01 -0001
