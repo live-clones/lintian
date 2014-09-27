@@ -81,7 +81,7 @@ sub run {
         # If this is the main info file (no numeric extension). make
         # sure it has appropriate dir entry information.
         if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
-            if (!$file->is_valid_path) {
+            if (!$file->is_open_ok) {
                 # unsafe symlink, skip.  Actually, this should never
                 # be true as "$file_info" for symlinks will not be
                 # "gzip compressed data".  But for good measure.
