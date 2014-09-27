@@ -2,7 +2,7 @@ Check-Script: source-copyright
 Author: Jakub Wilk <jwilk@debian.org>
 Abbrev: scpy
 Type: source
-Needs-Info: debfiles, unpacked
+Needs-Info: unpacked
 Info: This script checks if a source package conforms to policy
  with regard to copyright files.
  .

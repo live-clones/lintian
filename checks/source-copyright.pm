@@ -54,32 +54,27 @@ my %dep5_renamed_fields        = (
 
 sub run {
     my (undef, undef, $info) = @_;
-    my $copyright_filename = $info->debfiles('copyright');
+    my $debian_dir = $info->index_resolved_path('debian/');
+    return if not $debian_dir;
+    my $copyright_path = $debian_dir->child('copyright');
 
-    if (-l $copyright_filename) {
-        tag 'debian-copyright-is-symlink';
-        return;
-    }
-
-    if (not -f $copyright_filename) {
+    if (not $copyright_path) {
         my @pkgs = $info->binaries;
         tag 'no-debian-copyright';
-        $copyright_filename = undef;
         if (scalar @pkgs == 1) {
-
             # If debian/copyright doesn't exist, and the only a single
             # binary package is built, there's a good chance that the
             # copyright file is available as
             # debian/<pkgname>.copyright.
-            $copyright_filename = $info->debfiles($pkgs[0] . '.copyright');
-            if (not -f $copyright_filename or -l $copyright_filename) {
-                $copyright_filename = undef;
-            }
+            $copyright_path = $debian_dir->child($pkgs[0] . '.copyright');
         }
+        return if not $copyright_path;
+    } elsif ($copyright_path->is_symlink) {
+        tag 'debian-copyright-is-symlink';
     }
 
-    if (defined($copyright_filename)) {
-        _check_dep5_copyright($info, $copyright_filename);
+    if ($copyright_path->is_open_ok) {
+        _check_dep5_copyright($info, $copyright_path);
     }
     return;
 }
@@ -148,8 +143,8 @@ sub _find_dep5_version {
 }
 
 sub _check_dep5_copyright {
-    my ($info, $copyright_filename) = @_;
-    my $contents = slurp_entire_file($copyright_filename);
+    my ($info, $copyright_path) = @_;
+    my $contents = $copyright_path->file_contents;
     my (@dep5, @lines);
 
     if (
