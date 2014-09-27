@@ -32,13 +32,10 @@ sub run {
     my (undef, undef, $info) = @_;
     my $template = 0;
     my $withgpgverification = 0;
-    my $wfile = $info->debfiles('watch');
+    my $wfile = $info->index_resolved_path('debian/watch');
+    my ($repack, $prerelease, $watchver, %dversions);
 
-    if (-l $wfile) {
-        return unless is_ancestor_of($info->debfiles, $wfile);
-    }
-
-    if (!-f $wfile) {
+    if (not $wfile or not $wfile->is_open_ok) {
         tag 'debian-watch-file-is-missing' unless ($info->native);
         return;
     }
@@ -48,23 +45,20 @@ sub run {
 
     # Check if the Debian version contains anything that resembles a repackaged
     # source package sign, for fine grained version mangling check
-    my $version = $info->field('version');
-    my $repack;
     # If the version field is missing, we assume a neutral non-native one.
+    my $version = $info->field('version', '0-1');
     $version = '0-1' unless defined $version;
     if ($version =~ /(dfsg|debian|ds)/) {
         $repack = $1;
     }
-    my $prerelease;
     if ($version =~ /(alpha|beta|rc)/i) {
         $prerelease = $1;
     }
 
     # Gather information from the watch file and look for problems we can
     # diagnose on the first time through.
-    open(my $fd, '<', $wfile);
+    my $fd = $wfile->open;
     local $_;
-    my ($watchver, %dversions);
     while (<$fd>) {
         $template = 1 if m/^\s*\#\s*Example watch control file for uscan/io;
         next if /^\s*\#/;
@@ -182,9 +176,19 @@ sub run {
     tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
     if ($withgpgverification) {
-        if (   !-f $info->debfiles('upstream-signing-key.pgp')
-            && !-f $info->debfiles('upstream/signing-key.pgp')
-            && !-f $info->debfiles('upstream/signing-key.asc')) {
+        my @key_names = (
+            qw(upstream-signing-key.pgp upstream/signing-key.pgp
+              upstream/signing-key.asc)
+        );
+        my $found = 0;
+        for my $key_name (@key_names) {
+            my $path = $info->index_resolved_path("debian/$key_name");
+            if ($path and $path->is_file) {
+                $found = 1;
+                last;
+            }
+        }
+        if (not $found) {
             tag 'debian-watch-file-pubkey-file-is-missing';
         }
     }
