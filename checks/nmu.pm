@@ -34,14 +34,17 @@ sub run {
     my $changelog_mentions_local = 0;
     my $changelog_mentions_qa = 0;
     my $changelog_mentions_team_upload = 0;
+    my $debian_dir = $info->index_resolved_path('debian/');
+    my $chf;
+    $chf = $debian_dir->child('changelog') if $debian_dir;
 
     # This isn't really an NMU check, but right now no other check
     # looks at debian/changelog in source packages.  Catch a
     # debian/changelog file that's a symlink.
-    if (-l $info->debfiles('changelog')) {
+    if ($chf and $chf->is_symlink) {
         tag 'changelog-is-symlink';
-        return;
     }
+    return if not $info->changelog;
 
     # Get some data from the changelog file.
     my ($entry) = $info->changelog->data;

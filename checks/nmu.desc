@@ -2,7 +2,7 @@ Check-Script: nmu
 Author: Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
 Abbrev: nmu
 Type: source
-Needs-Info: debfiles, unpacked
+Needs-Info: unpacked
 Info: This script checks if a source package is consistent about its NMU-ness.
 
 Tag: orphaned-package-should-not-have-uploaders
