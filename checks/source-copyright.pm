@@ -24,8 +24,6 @@ use strict;
 use warnings;
 use autodie;
 
-use File::Find qw();
-
 use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
@@ -508,20 +506,7 @@ sub wildcard_to_regex {
 
 sub get_all_files {
     my ($info) = @_;
-    # files with a trailing slash are directories
-    my @all_files = grep { not m,/$, } $info->sorted_index;
-    my $debfiles_root = $info->debfiles;
-    File::Find::find({
-            wanted => sub {
-                return unless -f $_;
-                my $dir = $File::Find::dir;
-                $dir =~ s,^\Q$debfiles_root\E(?:(?=/)|$),debian,;
-                push @all_files, "$dir/$_";
-            },
-        },
-        $debfiles_root
-    );
-    return @all_files;
+    return grep { $_->is_file } $info->sorted_index;
 }
 
 1;
