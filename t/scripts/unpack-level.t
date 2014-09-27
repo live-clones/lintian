@@ -33,12 +33,7 @@ our @DESCS = (
     glob("$ENV{LINTIAN_TEST_ROOT}/checks/*.desc"));
 plan tests => scalar(@DESCS);
 
-my @l2refs = (
-    qr|->unpacked|,qr<unpacked/>,
-    qr<unpacked-errors>,qr|->index|,
-    qr|->sorted_index|,qr<index-errors>,
-    qr<chdir\s*\(?\s*["'](?:\$dir/)?unpacked/?['"]\s*\)?>,
-);
+my @l2refs = (qr<unpacked-errors>,qr<index-errors>,);
 
 # For each desc file, load the first stanza of the file and check that if
 # the unpack level is one no reference to unpack/ should be made, and if
@@ -80,9 +75,7 @@ for my $desc (@DESCS) {
     $requires_unpacked = 0 if ($short eq 'collection/unpacked.desc');
 
     ok(
-        $requires_unpacked
-        ? defined($ninfo{'unpacked'})
-        : !defined($ninfo{'unpacked'}),
+        !$requires_unpacked|| defined($ninfo{'unpacked'}),
         "$short has valid needs-info for unpack level"
     );
 }
