@@ -70,7 +70,7 @@ for my $module (@MODULES) {
             $seen_needsinfo{$sub} = 1;
             # Allow some L<> linking - it makes the generated
             # api-doc's a bit better than just reading the source.
-            $all_info =~ s,L\<[^\>]*/([A-Z0-9a-z_])+[^\>]*>,:$1,g;
+            $all_info =~ s,L\<[^\>]*/([A-Z0-9a-z_]+)[^\>]*>,:$1,g;
 
             $all_info =~ s/\s//g;
             $all_info =~ s/,,/,/g;
