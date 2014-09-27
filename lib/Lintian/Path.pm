@@ -36,7 +36,8 @@ use overload (
 use Carp qw(croak confess);
 use Scalar::Util qw(weaken);
 
-use Lintian::Util qw(is_ancestor_of normalize_pkg_path parse_dpkg_control);
+use Lintian::Util
+  qw(is_ancestor_of normalize_pkg_path parse_dpkg_control slurp_entire_file);
 
 =head1 NAME
 
@@ -470,6 +471,20 @@ The returned handle may be a pipe from an external process.
 sub open_gz {
     my ($self) = @_;
     return $self->_do_open(\&Lintian::Util::open_gz);
+}
+
+=item file_contents
+
+Return the file contents as a scalar.
+
+This method may fail for the same reasons as L</open([LAYER])>.
+
+=cut
+
+sub file_contents {
+    my ($self) = @_;
+    my $fd = $self->open;
+    return slurp_entire_file($fd);
 }
 
 =item root_dir
