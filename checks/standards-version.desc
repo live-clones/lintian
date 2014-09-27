@@ -4,7 +4,7 @@ Abbrev: std
 Type: source
 Info: This script checks if a source package contains a valid
  Standards-Version field.
-Needs-Info: debfiles, unpacked
+Needs-Info: unpacked
 
 Tag: no-standards-version-field
 Severity: important
