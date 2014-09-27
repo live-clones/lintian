@@ -2,7 +2,7 @@ Check-Script: version-substvars
 Author: Adeodato Simó <dato@net.com.org.es>
 Abbrev: v-s
 Type: source
-Needs-Info: debfiles
+Needs-Info: unpacked
 Info: This script checks for correct use of the various
  <tt>*Version</tt> substvars, e.g. deprecated substvars,
  or usage that can cause un-binNMUability

@@ -3,7 +3,7 @@ Author: Joey Hess <joeyh@debian.org>
 Abbrev: dh
 Type: source
 Info: This looks for common mistakes in debhelper source packages.
-Needs-Info: debfiles
+Needs-Info: debfiles, unpacked
 
 Tag: maintainer-script-lacks-debhelper-token
 Severity: normal
