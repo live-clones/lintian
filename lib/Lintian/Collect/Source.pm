@@ -24,7 +24,6 @@ use warnings;
 use parent 'Lintian::Collect::Package';
 
 use Carp qw(croak);
-use Cwd();
 use Scalar::Util qw(blessed);
 
 use Lintian::Relation;
@@ -91,23 +90,21 @@ modules are also available.
 =item changelog
 
 Returns the changelog of the source package as a Parse::DebianChangelog
-object, or C<undef> if the changelog is a symlink or doesn't exist.  The
-debfiles collection script must have been run to create the changelog
-file, which this method expects to find in F<debfiles/changelog>.
+object, or C<undef> if the changelog cannot be resolved safely.
 
-Needs-Info requirements for using I<changelog>: L<Same as debfiles|/debfiles ([FILE])>
+Needs-Info requirements for using I<changelog>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
 
 =cut
 
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    my $dch = $self->debfiles('changelog');
-    if (-l $dch || !-f $dch) {
-        $self->{changelog} = undef;
-    } else {
-        my %opts = (infile => $dch, quiet => 1);
+    my $dch = $self->index_resolved_path('debian/changelog');
+    if ($dch and $dch->is_open_ok) {
+        my %opts = (infile => $dch->fs_path, quiet => 1);
         $self->{changelog} = Parse::DebianChangelog->init(\%opts);
+    } else {
+        $self->{changelog} = undef;
     }
     return $self->{changelog};
 }
@@ -245,7 +242,7 @@ modified.
 NB: If a field from the "dsc" file itself is desired, please use
 L<field|Lintian::Collect/field> instead.
 
-Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Colect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<source_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
 
 =cut
 
@@ -342,7 +339,7 @@ modified.
 If PACKAGE is not a binary built from this source, this returns
 C<undef> regardless of FIELD and DEFAULT.
 
-Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Colect::Package/index_resolved_path(PATH)>
+Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
 
 =cut
 
