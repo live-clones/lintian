@@ -32,36 +32,43 @@ use Lintian::Util qw(is_ancestor_of clean_env);
 
 sub run {
     my (undef, undef, $info) = @_;
+    my $has_template = my $has_depends = my $has_config = 0;
+    my @lang_templates;
     my $full_translation = 0;
-    my $debfiles = $info->debfiles;
+    my $debian_dir = $info->index_resolved_path('debian/');
+    return if not $debian_dir;
+    my $debian_po_dir = $debian_dir->resolve_path('po');
+    my ($templ_pot_path, $potfiles_in_path);
+
+    if ($debian_po_dir and $debian_po_dir->is_dir) {
+        $templ_pot_path = $debian_po_dir->resolve_path('templates.pot');
+        $potfiles_in_path = $debian_po_dir->resolve_path('POTFILES.in');
+    }
 
     # First, check wether this package seems to use debconf but not
     # po-debconf.  Read the templates file and look at the template
     # names it provides, since some shared templates aren't
     # translated.
-    opendir(my $dirfd, $debfiles);
-
-    my $has_template = my $has_depends = my $has_config = 0;
-    my @lang_templates;
-    for my $file (readdir($dirfd)) {
-        next if -d "$debfiles/$file";
-        if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
-            if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
-                push(@lang_templates, $file);
-                open(my $fd, '<', "$debfiles/$file");
+    for my $path ($debian_dir->children) {
+        next if not $path->is_open_ok;
+        my $basename = $path->basename;
+        if ($basename =~ m/^(.+\.)?templates(\..+)?$/) {
+            if ($basename =~ m/templates\.\w\w(_\w\w)?$/) {
+                push(@lang_templates, $basename);
+                my $fd = $path->open;
                 while (<$fd>) {
-                    tag 'untranslatable-debconf-templates', "$file: $."
+                    tag 'untranslatable-debconf-templates', "$basename: $."
                       if (m/^Description: (.+)/i and $1 !~/for internal use/);
                 }
                 close($fd);
             } else {
-                open(my $fd, '<', "$debfiles/$file");
+                my $fd = $path->open;
                 my $in_template = 0;
                 my $saw_tl_note = 0;
                 while (<$fd>) {
-                    tag 'translated-default-field', "$file: $."
+                    tag 'translated-default-field', "$basename: $."
                       if (m{^_Default(?:Choice)?: [^\[]*$}) && !$saw_tl_note;
-                    tag 'untranslatable-debconf-templates', "$file: $."
+                    tag 'untranslatable-debconf-templates', "$basename: $."
                       if (m/^Description: (.+)/i and $1 !~/for internal use/);
 
                     if (/^#/) {
@@ -93,16 +100,10 @@ sub run {
             }
         }
     }
-    closedir($dirfd);
 
     #TODO: check whether all templates are named in TEMPLATES.pot
     if ($has_template) {
-        if (-l "$debfiles/po"
-            and not is_ancestor_of($debfiles, "$debfiles/po")) {
-            # debian/po is an unsafe symlink - lets stop here.
-            return;
-        }
-        if (!-d "$debfiles/po") {
+        if (not $debian_po_dir or not $debian_po_dir->is_dir) {
             tag 'not-using-po-debconf';
             return;
         }
@@ -118,15 +119,16 @@ sub run {
 
     my $missing_files = 0;
 
-    if (-f "$debfiles/po/POTFILES.in" and not -l "$debfiles/po/POTFILES.in") {
-        open(my $fd, '<', "$debfiles/po/POTFILES.in");
+    if ($potfiles_in_path and $potfiles_in_path->is_open_ok) {
+        my $fd = $potfiles_in_path->open;
         while (<$fd>) {
             chomp;
             next if /^\s*\#/;
             s/.*\]\s*//;
             #  Cannot check files which are not under debian/
-            next if m,^\.\./, or $_ eq '';
-            unless (-f "$debfiles/$_") {
+            next if $_ eq ''; #m,^\.\./, or
+            my $po_path = $debian_dir->resolve_path($_);
+            unless ($po_path and $po_path->is_file) {
                 tag 'missing-file-from-potfiles-in', $_;
                 $missing_files = 1;
             }
@@ -136,7 +138,10 @@ sub run {
         tag 'missing-potfiles-in';
         $missing_files = 1;
     }
-    if (!-f "$debfiles/po/templates.pot" && !-l "$debfiles/po/templates.pot") {
+    if (not $templ_pot_path or not $templ_pot_path->is_open_ok) {
+        # We use is_open_ok here, because if it is present, we will
+        # (have a subprocess) open it if the POTFILES.in file also
+        # existed.
         tag 'missing-templates-pot';
         $missing_files = 1;
     }
@@ -161,7 +166,9 @@ sub run {
             'child_before_exec' => sub {
                 $ENV{'INTLTOOL_EXTRACT'}
                   = '/usr/share/intltool-debian/intltool-extract';
-                $ENV{'srcdir'} = "$debfiles/po";
+                # satify of $debian_po is implied by us having
+                # accessed two of its children by now.
+                $ENV{'srcdir'} = $debian_po_dir->fs_path;
                 chdir($tempdir);
             },
             'fail' => 'error',
@@ -181,33 +188,34 @@ sub run {
 
         # Compare our "test.pot" with the existing "templates.pot"
         (
-            spawn(\%msgcmp_opts,
-                [@msgcmp, $test_pot, "$debfiles/po/templates.pot"])
+            spawn(
+                \%msgcmp_opts,[@msgcmp, $test_pot, $templ_pot_path->fs_path])
               and spawn(
-                \%msgcmp_opts,
-                [@msgcmp, "$debfiles/po/templates.pot", $test_pot])
+                \%msgcmp_opts,[@msgcmp, $templ_pot_path->fs_path, $test_pot])
         ) or tag 'newer-debconf-templates';
     }
 
-    opendir(my $po_dirfd, "$debfiles/po");
-    while (defined(my $file=readdir($po_dirfd))) {
-        next unless $file =~ m/\.po$/;
-        tag 'misnamed-po-file', "debian/po/$file"
-          unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
+    return unless $debian_po_dir;
+
+    for my $po_path ($debian_po_dir->children) {
+        my $basename = $po_path->basename;
+        next unless $basename =~ m/\.po$/;
+        tag 'misnamed-po-file', $po_path
+          unless ($basename =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
+        next unless $po_path->is_open_ok;
         local ($/) = "\n\n";
         $_ = '';
-        # skip suspicious "files"
-        next if -l "$debfiles/po/$file" || !-f "$debfiles/po/$file";
-        open(my $fd, '<', "$debfiles/po/$file");
+        my $fd = $po_path->open;
         while (<$fd>) {
+
             if (/Language\-Team:.*debian-i18n\@lists\.debian\.org/i) {
-                tag 'debconf-translation-using-general-list', $file;
+                tag 'debconf-translation-using-general-list', $basename;
             }
             last if m/^msgstr/m;
         }
         close($fd);
         unless ($_) {
-            tag 'invalid-po-file', "debian/po/$file";
+            tag 'invalid-po-file', $po_path;
             next;
         }
         s/"\n"//g;
@@ -215,7 +223,7 @@ sub run {
         if (m/charset=(.*?)\\n/) {
             $charset = ($1 eq 'CHARSET' ? '' : $1);
         }
-        tag 'unknown-encoding-in-po-file', "debian/po/$file"
+        tag 'unknown-encoding-in-po-file', $po_path
           unless length($charset);
         my $stats;
         my %opts = (
@@ -225,13 +233,12 @@ sub run {
             'err' => \$stats,
         );
         spawn(\%opts,
-            ['msgfmt', '-o', '/dev/null', '--statistics',"$debfiles/po/$file"])
-          or tag 'invalid-po-file', "debian/po/$file";
+            ['msgfmt', '-o', '/dev/null', '--statistics', $po_path->fs_path])
+          or tag 'invalid-po-file', $po_path;
         if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
             $full_translation = 1;
         }
     }
-    closedir($po_dirfd);
 
     tag 'no-complete-debconf-translation' if !$full_translation;
 

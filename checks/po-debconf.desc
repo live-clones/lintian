@@ -3,7 +3,7 @@ Author: Denis Barbier <barbier@linuxfr.org>
 Abbrev: pd
 Type: source
 Info: This looks for common mistakes in packages using po-debconf(7).
-Needs-Info: debfiles
+Needs-Info: unpacked
 
 Tag: not-using-po-debconf
 Severity: serious
