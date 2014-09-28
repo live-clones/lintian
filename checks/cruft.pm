@@ -37,7 +37,7 @@ use constant BLOCKSIZE => 4096;
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of normalize_pkg_path strip);
+use Lintian::Util qw(fail normalize_pkg_path strip);
 use Lintian::SlidingWindow;
 
 # All the packages that may provide config.{sub,guess} during the build, used
@@ -316,19 +316,16 @@ our @EOL_TERMINATORS_FILES = qw(control changelog);
 sub run {
     my (undef, undef, $info, $proc) = @_;
     my $source_pkg = $proc->pkg_src;
-    my $droot = $info->debfiles;
+    my $d_files = $info->index_resolved_path('debian/files');
 
-    if (-e "$droot/files" and not -z "$droot/files") {
+    if ($d_files and $d_files->is_file and $d_files->size != 0) {
         tag 'debian-files-list-in-source';
     }
 
     # This doens't really belong here, but there isn't a better place at the
     # moment to put this check.
-    my $version = $info->field('version');
+    my $version = $info->field('version', '0-1');
 
-    # If the version field is missing, assume it to be a native,
-    # maintainer upload as it is probably the most likely case.
-    $version = '0-1' unless defined $version;
     if ($info->native) {
         if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
             tag 'native-package-with-dash-version';
@@ -352,19 +349,19 @@ sub run {
     #   that may not be present.
     $format = '3.0 (quilt)' unless defined $format;
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
-        check_debfiles($info, \%warned);
+        check_debian_dir($info, \%warned);
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
     find_cruft($source_pkg, $info, \%warned, $atdinbd, $ltinbd);
 
     for my $file (@EOL_TERMINATORS_FILES) {
-        my $path = $info->debfiles($file);
-        next if not -f $path or not is_ancestor_of($droot, $path);
-        open(my $fd, '<', $path);
+        my $path = $info->index_resolved_path("debian/$file");
+        next if not $path or not $path->is_open_ok;
+        my $fd = $path->open;
         while (my $line = <$fd>) {
             if ($line =~ m{ \r \n \Z}xsm) {
-                tag 'control-file-with-CRLF-EOLs', "debian/$file";
+                tag 'control-file-with-CRLF-EOLs', $path;
                 last;
             }
         }
@@ -471,7 +468,7 @@ sub check_diffstat {
 # 3.0 (quilt) packages where there is no Debian diff and hence no diffstat
 # output.  Record any files we warn about in $warned so that we don't warn
 # again when checking the full unpacked source.
-sub check_debfiles {
+sub check_debian_dir {
     my ($info, $warned) = @_;
     my $droot = $info->index_resolved_path('debian/');
     return if not $droot;

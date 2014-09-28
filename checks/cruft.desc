@@ -3,7 +3,7 @@ Author: Sean 'Shaleh' Perry <shaleh@debian.org>
 Abbrev: deb
 Type: source
 Info: This looks for cruft in Debian packaging or upstream source
-Needs-Info: unpacked, debfiles, diffstat, file-info, md5sums
+Needs-Info: unpacked, diffstat, file-info, md5sums
 
 Tag: native-package-with-dash-version
 Severity: normal
