@@ -315,6 +315,32 @@ sub link_normalized {
     return $target;
 }
 
+=item is_readable
+
+Returns a truth value if the permission bits of this entry have
+at least one bit denoting readability set (bitmask 0444).
+
+=item is_writable
+
+Returns a truth value if the permission bits of this entry have
+at least one bit denoting writability set (bitmask 0222).
+
+=item is_executable
+
+Returns a truth value if the permission bits of this entry have
+at least one bit denoting executability set (bitmask 0111).
+
+=cut
+
+sub _any_bit_in_operm {
+    my ($self, $bitmask) = @_;
+    return ($self->operm & $bitmask) ? 1 : 0;
+}
+
+sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
+sub is_writable   { return $_[0]->_any_bit_in_operm(0222); }
+sub is_executable { return $_[0]->_any_bit_in_operm(0111); }
+
 =item fs_path
 
 Returns the path to this object on the file system.
