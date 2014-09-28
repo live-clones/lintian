@@ -162,6 +162,13 @@ sub control {
     ## no critic (Subroutines::RequireArgUnpacking)
     # - see L::Collect::unpacked for why
     my $self = shift(@_);
+
+    warnings::warnif(
+        'deprecated',
+        '[deprecated] The control method is deprecated.  '
+          . "Consider using \$info->control_index_resolved_path('$_[0]') instead."
+          . '  Called' # warnif appends " at <...>"
+    );
     return $self->_fetch_extracted_dir('control', 'control', @_);
 }
 

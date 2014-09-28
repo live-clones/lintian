@@ -404,8 +404,16 @@ sub _collect_path {
     if (not defined($collect_sub)) {
         confess($self->name . ' does not have an underlying FS object');
     }
-    return $collect->$collect_sub($path) if $path;
-    return $collect->$collect_sub();
+    {
+        # Disable the deprecation warning from (e.g.) control.  It is
+        # not meant for this call.
+        no warnings qw(deprecated);
+        return $collect->$collect_sub($path) if $path;
+        return $collect->$collect_sub();
+    };
+    # Perl Critic is too blind to realise that this is unreachable,
+    # so we need an additional return here.
+    return;
 }
 
 sub _check_access {

@@ -3,7 +3,7 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   XXX: generate tag summary with private/generate-tag-summary
 
   * checks/*:
-    + [NT] Remove all uses of "debfiles".
+    + [NT] Remove all uses of "debfiles" and "control".
   * checks/description.pm:
     + [SL] show the actual description when it is too short.
   * checks/patch-systems.pm:
@@ -14,6 +14,9 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * checks/po-debconf.pm:
     + [NT] Avoid writing test.pot to the unpacked package.
       (Closes: #699022)
+
+  * collection/*:
+    + [NT] Remove all uses of "debfiles" and "control".
 
   * data/cruft/non-free-license:
     + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).
@@ -35,11 +38,13 @@ lintian (2.5.28) UNRELEASED; urgency=medium
       tutorial.
 
   * lib/Lintian/Collect{,/*}.pm:
-    + [NT] Deprecate the use of "debfiles".  Consumers are
-      recommended to use index_resolved_path instead.
+    + [NT] Deprecate the use of "debfiles" and "control".
+      Consumers are recommended to use index_resolved_path
+      and control_index_resolved_path instead.
     + [NT] Remove all uses of debfiles (both the method and
       the collection).  All methods (except "debfiles") now
       depend on "unpacked" instead.
+    + [NT] Remove all uses of the "control" method.
   * lib/Lintian/Command.pm:
     + [NT] Add support for running a sub in the child before
       it calls exec.
