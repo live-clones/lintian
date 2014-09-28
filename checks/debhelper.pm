@@ -50,7 +50,8 @@ my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
 sub run {
     my (undef, undef, $info) = @_;
-    my $droot = $info->debfiles;
+    my $droot = $info->index_resolved_path('debian/');
+    my $drules;
 
     my $seencommand = '';
     my $needbuilddepends = '';
@@ -74,12 +75,11 @@ sub run {
     my $seen_python_helper = 0;
     my $seen_python3_helper = 0;
 
-    if (!-f "$droot/rules" || !is_ancestor_of($droot, "$droot/rules")) {
-        # unsafe symlink
-        return;
-    }
+    $drules = $droot->child('rules') if $droot;
 
-    open(my $rules_fd, '<', "$droot/rules");
+    return unless $drules and $drules->is_open_ok;
+
+    my $rules_fd = $drules->open;
 
     while (<$rules_fd>) {
         while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
@@ -231,11 +231,12 @@ sub run {
     }
 
     my $compatnan = 0;
+    my $compat_file = $droot->child('compat');
     # Check the compat file.  Do this separately from looping over all
     # of the other files since we use the compat value when checking
     # for brace expansion.
-    if (-f "$droot/compat") {
-        my $compat_file = slurp_entire_file("$droot/compat");
+    if ($compat_file and $compat_file->is_open_ok) {
+        my $compat_file = $compat_file->file_contents;
         ($compat) = split(/\n/, $compat_file);
         strip($compat);
         if ($compat ne '') {
@@ -280,19 +281,20 @@ sub run {
     # Check the files in the debian directory for various debhelper-related
     # things.
     my @indebfiles;
-    opendir(my $dirfd, $droot);
-    for my $file (sort(readdir($dirfd))) {
-        next if $file eq 'rules' or not -f "$droot/$file";
-        if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
+    for my $file ($droot->children) {
+        next if not $file->is_symlink and not $file->is_file;
+        next if $file->name eq $drules->name;
+        my $basename = $file->basename;
+        if ($basename =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
             next unless $needtomodifyscripts;
-            next unless is_ancestor_of($droot, "$droot/$file");
+            next unless $file->is_open_ok;
 
             # They need to have #DEBHELPER# in their scripts.  Search
             # for scripts that look like maintainer scripts and make
             # sure the token is there.
             my $binpkg = $1 || '';
             my $seentag = '';
-            open(my $fd, '<', "$droot/$file");
+            my $fd = $file->open;
             while (<$fd>) {
                 if (m/\#DEBHELPER\#/) {
                     $seentag = 1;
@@ -306,41 +308,44 @@ sub run {
                 $is_udeb = 1 if $binpkg and $binpkg_type eq 'udeb';
                 $is_udeb = 1 if not $binpkg and $single_pkg eq 'udeb';
                 if (not $is_udeb) {
-                    tag 'maintainer-script-lacks-debhelper-token',
-                      "debian/$file";
+                    tag 'maintainer-script-lacks-debhelper-token',$file;
                 }
             }
-        } elsif ($file eq 'control'
-            or $file =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/o) {
+        } elsif ($basename eq 'control'
+            or $basename =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/o) {
             # Handle "control", [<pkg>.]copyright, [<pkg>.]changelog
             # and [<pkg>.]NEWS
-            _tag_if_executable($file, "$droot/$file");
-        } elsif ($file =~ m/^ex\.|\.ex$/i) {
-            tag 'dh-make-template-in-source', "debian/$file";
-        } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
+            _tag_if_executable($file);
+        } elsif ($basename =~ m/^ex\.|\.ex$/i) {
+            tag 'dh-make-template-in-source', $file;
+        } elsif ($basename =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
             # The regex matches "debhelper", but debhelper/Dh_Lib does not
             # make those, so skip it.
-            if ($file ne 'debhelper') {
-                push(@indebfiles, $file);
+            if ($basename ne 'debhelper') {
+                push(@indebfiles, $basename);
             }
         } else {
-            my $base = $file;
+            my $base = $basename;
             $base =~ s/^.+\.//;
 
             # Check whether this is a debhelper config file that takes
             # a list of filenames.
             if ($filename_configs->known($base)) {
-                next unless is_ancestor_of($droot, "$droot/$file");
+                next unless $file->is_open_ok;
                 if ($level < 9) {
                     # debhelper only use executable files in compat 9
-                    _tag_if_executable($file, "$droot/$file");
+                    _tag_if_executable($file);
                 } else {
-                    if (-x "$droot/$file") {
-                        my $cmd=  _shebang_cmd("debian/$file", "$droot/$file");
+                    # Permissions are not really well defined for
+                    # symlinks.  Resolve unconditionally, so we are
+                    # certain it is not a symlink.
+                    my $actual = $file->resolve_path;
+                    if ($actual and $actual->is_executable) {
+                        my $cmd = _shebang_cmd($file);
                         unless ($cmd) {
                             #<<< perltidy doesn't handle this too well
                             tag 'executable-debhelper-file-without-being-executable',
-                              "debian/$file";
+                              $file;
                             #>>>
                         }
 
@@ -349,8 +354,7 @@ sub run {
                         # script.
                         if ($cmd =~ /dh-exec/) {
                             $needdhexecbuilddepends = 1;
-                            _check_dh_exec($cmd, $base, "debian/$file",
-                                "$droot/$file");
+                            _check_dh_exec($cmd, $base, $file);
                         }
                         next;
                     }
@@ -360,14 +364,13 @@ sub run {
                 # do not allow any form for wildcards.
                 next if $level < 3;
 
-                open(my $fd, '<', "$droot/$file");
+                my $fd = $file->open;
                 local $_;
                 while (<$fd>) {
                     next if /^\s*$/;
                     next if (/^\#/ and $level >= 5);
                     if (m/(?<!\\)\{(?:[^\s\\\},]*?,)*[^\\\}\s,]+,*\}/) {
-                        tag 'brace-expansion-in-debhelper-config-file',
-                          "debian/$file";
+                        tag 'brace-expansion-in-debhelper-config-file',$file;
                         last;
                     }
                 }
@@ -375,7 +378,6 @@ sub run {
             }
         }
     }
-    closedir($dirfd);
 
     $bdepends_noarch = $info->relation_noarch('build-depends-all');
     $bdepends = $info->relation('build-depends-all');
@@ -456,23 +458,27 @@ sub run {
 }
 
 sub _tag_if_executable {
-    my ($file, $path) = @_;
-    tag 'package-file-is-executable', "debian/$file" if -f $path && -x _;
+    my ($path) = @_;
+    # The permissions of symlinks are not really defined, so resolve
+    # $path to ensure we are not dealing with a symlink.
+    my $actual = $path->resolve_path;
+    tag 'package-file-is-executable', $path
+      if $actual and $actual->is_executable;
     return;
 }
 
 # Perform various checks on a dh-exec file.
 sub _check_dh_exec {
-    my ($cmd, $base, $pkgpath, $fspath) = @_;
+    my ($cmd, $base, $path) = @_;
 
     # Only /usr/bin/dh-exec is allowed, even if
     # /usr/lib/dh-exec/dh-exec-subst works too.
     if ($cmd =~ m,/usr/lib/dh-exec/,) {
-        tag 'dh-exec-private-helper', $pkgpath;
+        tag 'dh-exec-private-helper', $path;
     }
 
     my ($dhe_subst, $dhe_install) = (0, 0);
-    open(my $fd, '<', $fspath);
+    my $fd = $path->open;
     while (<$fd>) {
         if (/\$\{([^\}]+)\}/) {
             my $sv = $1;
@@ -485,7 +491,7 @@ sub _check_dh_exec {
                       |GNU_ (?:CPU|SYSTEM|TYPE)|MULTIARCH
              ) \Z}xsm
               ) {
-                tag 'dh-exec-subst-unknown-variable', $pkgpath, $sv;
+                tag 'dh-exec-subst-unknown-variable', $path, $sv;
             }
         }
         $dhe_install = 1 if / => /;
@@ -493,11 +499,11 @@ sub _check_dh_exec {
     close($fd);
 
     if (!($dhe_subst || $dhe_install)) {
-        tag 'dh-exec-script-without-dh-exec-features', $pkgpath;
+        tag 'dh-exec-script-without-dh-exec-features', $path;
     }
 
     if ($dhe_install && $base ne 'install') {
-        tag 'dh-exec-install-not-allowed-here', $pkgpath;
+        tag 'dh-exec-install-not-allowed-here', $path;
     }
     return;
 }
@@ -505,10 +511,10 @@ sub _check_dh_exec {
 # Return the command after the #! in the file (if any).
 # - if there is no command or no #! line, the empty string is returned.
 sub _shebang_cmd {
-    my ($pkgpath, $fspath) = @_;
+    my ($path) = @_;
     my $magic;
     my $cmd = '';
-    open(my $fd, '<', $fspath);
+    my $fd = $path->open;
     if (read($fd, $magic, 2)) {
         if ($magic eq '#!') {
             $cmd = <$fd>;
@@ -525,7 +531,7 @@ sub _shebang_cmd {
 
     # We are not checking if it is an ELF executable.  While debhelper
     # allows this (i.e. it also checks for <pkg>.<file>.<arch>), it is
-    # no cross-compilation safe.  This is because debhelper uses
+    # not cross-compilation safe.  This is because debhelper uses
     # "HOST" (and not "BUILD") arch, despite its documentation and
     # code (incorrectly) suggests it is using "build".
     #
