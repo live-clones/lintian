@@ -35,10 +35,13 @@ our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 
 sub run {
     my (undef, undef, $info) = @_;
-    my $dsrc = $info->debfiles('source');
+    my $dsrc = $info->index_resolved_path('debian/source/');
+    return if not $dsrc;
+    my $format_file = $dsrc->child('format');
+    my $git_pfile = $dsrc->child('git-patches');
 
-    if (!-l "$dsrc/format" && -e "$dsrc/format") {
-        open(my $fd, '<', "$dsrc/format");
+    if ($format_file and $format_file->is_open_ok) {
+        my $fd = $format_file->open;
         my $format = <$fd>;
         chomp $format;
         close($fd);
@@ -47,17 +50,17 @@ sub run {
         tag 'missing-debian-source-format';
     }
 
-    if (!-l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
-        open(my $git_patches_fd, '<', "$dsrc/git-patches");
+    if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
+        my $git_patches_fd = $git_pfile->open;
         if (any { !/^\s*+#|^\s*+$/o} <$git_patches_fd>) {
-            my $dpseries = $info->debfiles('patches/series');
+            my $dpseries = $info->index_resolved_path('debian/patches/series');
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
-            if (!-l $dpseries) {
-                if (!-r $dpseries) {
+            if (1) { #<-- will remove in next commit
+                if (not $dpseries or not $dpseries->is_open_ok) {
                     tag 'git-patches-not-exported';
                 } else {
-                    open(my $series_fd, '<', $dpseries);
+                    my $series_fd = $dpseries->open;
                     my $comment_line = <$series_fd>;
                     my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
                     tag 'git-patches-not-exported'
@@ -72,14 +75,10 @@ sub run {
         close($git_patches_fd);
     }
 
-    if (!-l $dsrc && -d $dsrc) {
-        opendir(my $dirfd, $dsrc);
-        while (my $file = readdir($dirfd)) {
-            next if $file eq '.' or $file eq '..';
-            tag 'unknown-file-in-debian-source', $file
-              unless $KNOWN_FILES->known($file);
-        }
-        closedir($dirfd);
+    for my $path ($dsrc->children) {
+        my $file = $path->basename;
+        tag 'unknown-file-in-debian-source', $file
+            unless $KNOWN_FILES->known($file);
     }
 
     return;

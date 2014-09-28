@@ -3,7 +3,7 @@ Author: Raphaël Hertzog <hertzog@debian.org>
 Abbrev: dsd
 Type: source
 Info: This script looks for mistakes in debian/source/* files.
-Needs-Info: debfiles
+Needs-Info: unpacked
 
 Tag: missing-debian-source-format
 Severity: wishlist
