@@ -66,8 +66,9 @@ sub run {
                 tag 'pear-package-not-using-substvar','${phppear:description}';
             }
             # Checking overrides
-            my $overrides = $info->debfiles('pkg-php-tools-overrides');
-            if (-f $overrides) {
+            my $overrides
+              = $info->index_resolved_path('debian/pkg-php-tools-overrides');
+            if ($overrides and $overrides->is_file) {
                 if (!$bdepends->implies('pkg-php-tools (>= 1~)')) {
                     tag 'pear-package-feature-requires-newer-pkg-php-tools',
                       '(>= 1~)', 'for package name overrides';
@@ -81,7 +82,8 @@ sub run {
                 }
             }
             if (defined($package_xml) && $package_xml->is_regular_file) {
-          # Wild guess package type as in PEAR_PackageFile_v2::getPackageType()
+                # Wild guess package type as in
+                # PEAR_PackageFile_v2::getPackageType()
                 my $package_xml_fd = $package_xml->open;
                 while (<$package_xml_fd>) {
                     if (
@@ -145,14 +147,13 @@ sub run {
             || defined($channel_xml)
             || defined($composer_json))
       ) {
-        my $rules = $info->debfiles('rules');
-        if (not -l $rules
-            or (-f $rules and is_ancestor_of($info->debfiles, $rules))) {
+        my $rules = $info->index_resolved_path('debian/rules');
+        if ($rules and $rules->is_open_ok) {
             my $has_buildsystem_phppear = 0;
             my $has_addon_phppear = 0;
             my $has_addon_phpcomposer= 0;
             my $has_addon_php5 = 0;
-            open(my $rules_fd, '<', $rules);
+            my $rules_fd = $rules->open;
             while (<$rules_fd>) {
                 while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
                     $_ .= $cont;
