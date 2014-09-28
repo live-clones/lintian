@@ -566,6 +566,13 @@ sub debfiles {
     if (defined($_[0]) && blessed($_[0])) {
         croak('debfiles does not accept blessed objects');
     }
+    warnings::warnif(
+        'deprecated',
+        '[deprecated] The debfiles method is deprecated.  '
+          . "Consider using \$info->index_resolved_path(\"debian/$_[0]\") instead."
+          . '  Called' # warnif appends " at <...>"
+    );
+
     return $self->_fetch_extracted_dir('debfiles', 'debfiles', @_);
 }
 
