@@ -257,15 +257,15 @@ sub check_maintainer_scripts {
         m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
-        my $filename = $info->control($file);
+        my $path = $info->control_index_resolved_path($file);
 
-        # Don't follow links
-        next if -l $filename;
+        # Don't follow unsafe links
+        next if not $path or not $path->is_open_ok;
         # Don't try to parse the file if it does not appear to be a
         # shell script
         next if $interpreter !~ m/sh\b/;
 
-        open(my $sfd, '<', $filename);
+        my $sfd = $path->open;
         while (<$sfd>) {
             # skip comments
             next if substr($_, 0, $-[0]) =~ /#/;

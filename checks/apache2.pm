@@ -187,15 +187,14 @@ sub check_maintainer_scripts {
         m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
-        my $filename = $info->control($file);
+        my $path = $info->control_index_resolved_path($file);
 
-        # Don't follow links
-        next if -l $filename;
+        next if not $path or not $path->is_open_ok;
         # Don't try to parse the file if it does not appear to be a
         # shell script
         next if $interpreter !~ m/sh\b/;
 
-        open(my $sfd, '<', $filename);
+        my $sfd = $path->open;
         while (<$sfd>) {
             # skip comments
             next if substr($_, 0, $-[0]) =~ /#/;
@@ -203,13 +202,13 @@ sub check_maintainer_scripts {
             # Do not allow reverse dependencies to call "a2enmod" and friends
             # directly
             if (m/\b(a2(?:en|dis)(?:conf|site|mod))\b/) {
-                tag 'apache2-reverse-dependency-calls-wrapper-script', $file,
+                tag 'apache2-reverse-dependency-calls-wrapper-script', $path,
                   $1;
             }
 
             # Do not allow reverse dependencies to call "invoke-rc.d apache2
             if (m/invoke-rc\.d\s+apache2/) {
-                tag 'apache2-reverse-dependency-calls-invoke-rc.d', $file;
+                tag 'apache2-reverse-dependency-calls-invoke-rc.d', $path;
             }
 
             # XXX: Check whether apache2-maintscript-helper is used

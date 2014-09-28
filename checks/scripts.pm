@@ -327,7 +327,8 @@ sub run {
             and $filename !~ m,^etc/csh/login\.d/,)
           and not $in_docs;
 
-        $path = $info->unpacked($filename);
+        $path = $info->index_resolved_path($filename);
+        next if not $path or not $path->is_open_ok;
         # Syntax-check most shell scripts, but don't syntax-check
         # scripts that end in .dpatch.  bash -n doesn't stop checking
         # at exit 0 and goes on to blow up on the patch itself.
@@ -394,7 +395,7 @@ sub run {
             &&!$str_deps->implies(
                 'libperl4-corelibs-perl | perl (<< 5.12.3-7)')
           ) {
-            open(my $fd, '<', $path);
+            my $fd = $path->open;
             while (<$fd>) {
                 if (
                     m{ (?:do|require)\s+(?:'|") # do/require
@@ -519,7 +520,7 @@ sub run {
         m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
-        my $filename = $info->control($file);
+        my $path = $info->control_index_resolved_path($file);
 
         $interpreter =~ m|([^/]*)$|;
         my $base = $1;
@@ -584,6 +585,8 @@ sub run {
         tag 'csh-considered-harmful', "control/$file"
           if ($base eq 'csh' or $base eq 'tcsh');
 
+        next if not $path or not $path->is_open_ok;
+
         my $shellscript = $base =~ /^$known_shells_regex$/ ? 1 : 0;
 
         # Only syntax-check scripts we can check with bash.
@@ -591,14 +594,14 @@ sub run {
         if ($shellscript) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
             if ($base eq 'sh' or $base eq 'bash') {
-                if (check_script_syntax('/bin/bash', $filename)) {
+                if (check_script_syntax('/bin/bash', $path)) {
                     tag 'maintainer-shell-script-fails-syntax-check', $file;
                 }
             }
         }
 
         # now scan the file contents themselves
-        open(my $fd, '<', $filename);
+        my $fd = $path->open;
 
         my (
             $saw_init, $saw_invoke, $saw_debconf,
@@ -1116,12 +1119,12 @@ sub generic_check_bad_command {
 # Returns non-zero if the given file is not actually a shell script,
 # just looks like one.
 sub script_is_evil_and_wrong {
-    my ($filename) = @_;
+    my ($path) = @_;
     my $ret = 0;
     my $i = 0;
     my $var = '0';
     my $backgrounded = 0;
-    open(my $fd, '<', $filename);
+    my $fd = $path->open;
     local $_;
     while (<$fd>) {
         chomp;
@@ -1188,12 +1191,13 @@ sub script_is_evil_and_wrong {
 # Given an interpretor and a file, run the interpretor on that file with the
 # -n option to check syntax, discarding output and returning the exit status.
 sub check_script_syntax {
-    my ($interpreter, $script) = @_;
+    my ($interpreter, $path) = @_;
+    my $fs_path = $path->fs_path;
     my $pid = fork();
     if ($pid == 0) {
         open(STDOUT, '>', '/dev/null');
         open(STDERR, '>&', \*STDOUT);
-        exec $interpreter, '-n', $script
+        exec $interpreter, '-n', $fs_path
           or fail("cannot exec $interpreter: $!");
     } else {
         waitpid $pid, 0;
