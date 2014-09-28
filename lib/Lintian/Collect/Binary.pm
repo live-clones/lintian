@@ -137,6 +137,10 @@ sub changelog {
 
 =item control ([FILE])
 
+B<This method is deprecated>.  Consider using
+L</control_index_resolved_path(PATH)> instead, which returns
+L<Lintian::Path> objects.
+
 Returns the path to FILE in the control.tar.gz.  FILE must be either a
 L<Lintian::Path> object (>= 2.5.13~) or a string denoting the
 requested path.  In the latter case, the path must be relative to the
