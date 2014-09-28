@@ -563,13 +563,14 @@ sub debfiles {
     ## no critic (Subroutines::RequireArgUnpacking)
     # - see L::Collect::unpacked for why
     my $self = shift(@_);
+    my $f = $_[0] // '';
     if (defined($_[0]) && blessed($_[0])) {
         croak('debfiles does not accept blessed objects');
     }
     warnings::warnif(
         'deprecated',
         '[deprecated] The debfiles method is deprecated.  '
-          . "Consider using \$info->index_resolved_path(\"debian/$_[0]\") instead."
+          . "Consider using \$info->index_resolved_path(\"debian/$f\") instead."
           . '  Called' # warnif appends " at <...>"
     );
 
