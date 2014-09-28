@@ -224,7 +224,7 @@ Needs-Info requirements for using I<control_index_resolved_path>: L<Same as cont
 
 sub control_index_resolved_path {
     my ($self, $path) = @_;
-    return $self->control_index('')->resolved_path($path);
+    return $self->control_index('')->resolve_path($path);
 }
 
 =item strings (FILE)
