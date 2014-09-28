@@ -35,8 +35,8 @@ sub collect {
     my $scripts_fd; # We lazily open this FD.
 
     foreach my $file ($info->sorted_index) {
-        next unless $file->is_regular_file;
-        my $scriptpath = shebang_line($info->unpacked($file));
+        next unless $file->is_regular_file and $file->is_open_ok;
+        my $scriptpath = shebang_line($file);
 
         next unless defined($scriptpath); # no shebang line => not a script
 
@@ -65,32 +65,24 @@ sub collect {
     close($scripts_fd) if defined($scripts_fd);
 
     open(my $ctrl_fd, '>', "$dir/control-scripts");
-
-    opendir(my $dirfd, "$dir/control");
-    for my $file (readdir($dirfd)) {
-        next if $file =~ m{\A \. \.? \Z}xsm;
-        my $path = $info->control($file);
-        my $scriptpath;
-
-        next if -l $path or not -f _;
-        $scriptpath = shebang_line($path);
+    for my $path ($info->control_index('')->children) {
+        next unless $path->is_open_ok;
+        my $scriptpath = shebang_line($path);
         next unless defined($scriptpath);
 
         # Remove everything after the first space (i.e. any options)
         $scriptpath =~ s/\s++ .++ \Z//xsm;
-        print {$ctrl_fd} "$scriptpath $file\n";
+        print {$ctrl_fd} "$scriptpath $path\n";
     }
-    closedir($dirfd);
     close($ctrl_fd);
 
     return;
 }
 
 sub shebang_line {
-    my ($filename) = @_;
-    my $scriptpath;
-    my $magic;
-    open(my $fd, '<', $filename);
+    my ($path) = @_;
+    my ($scriptpath, $magic);
+    my $fd = $path->open;
     if (read($fd, $magic, 2) and $magic eq '#!' and not eof($fd)) {
         $scriptpath = <$fd>;
         strip($scriptpath);
