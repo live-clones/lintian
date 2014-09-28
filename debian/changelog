@@ -4,6 +4,11 @@ lintian (2.5.28) UNRELEASED; urgency=medium
 
   * checks/description.pm:
     + [SL] show the actual description when it is too short.
+  * checks/patch-systems.pm:
+    + [NT] Rewrite using index rather than debfiles to analyse
+      the package.  A side-effect of that means that Lintian
+      can now check patches stored in the upstream part of the
+      packages.  (Closes: #563773)
   * checks/po-debconf.pm:
     + [NT] Avoid writing test.pot to the unpacked package.
       (Closes: #699022)

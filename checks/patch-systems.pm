@@ -47,27 +47,28 @@ sub run {
     }
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
-    my $droot = $info->debfiles;
-    my $dpdir = "$droot/patches";
-    if (!is_ancestor_of($droot, $dpdir)) {
-        # Bad symlink
-        return;
-    }
+    my $droot = $info->index_resolved_path('debian/');
+    return if not $droot;
+    my $dpdir = $droot->resolve_path('patches');
+    my $patch_series;
+
+    $patch_series = $dpdir->resolve_path('series') if $dpdir;
 
     #----- dpatch
     if ($build_deps->implies('dpatch')) {
+        my $list_file = $dpdir->resolve_path('00list');
         $uses_patch_system++;
         #check for a debian/patches file:
-        if (-l "$dpdir/00list" and not is_ancestor_of($droot, "$dpdir/00list"))
-        {
-            # skip
-        } elsif (!-r "$dpdir/00list") {
+        if (not $list_file or not $list_file->is_file) {
             tag 'dpatch-build-dep-but-no-patch-list';
         } else {
             my $list_uses_cpp = 0;
-            if (-f "$dpdir/00options"
-                && is_ancestor_of($droot, "$dpdir/00options")) {
-                open(my $fd, '<', "$dpdir/00options");
+            my $opt_file = $dpdir->resolve_path('00options');
+            my @list_files
+              = grep {$_->basename =~ m/^00list.*/ and $_->is_open_ok;}
+              $dpdir->children;
+            if ($opt_file and $opt_file->is_open_ok) {
+                my $fd = $opt_file->open;
                 while(<$fd>) {
                     if (/DPATCH_OPTION_CPP=1/) {
                         $list_uses_cpp = 1;
@@ -76,58 +77,53 @@ sub run {
                 }
                 close($fd);
             }
-            foreach my $listfile (glob("$dpdir/00list*")) {
+            for my $list_file (@list_files) {
                 my @patches;
-                if (-f $listfile and is_ancestor_of($droot, $listfile)) {
-                    open(my $fd, '<', $listfile);
-                    while(<$fd>) {
-                        chomp;
-                        next if (/^\#/); #ignore comments or CPP directive
-                        s%//.*%% if $list_uses_cpp; # remove C++ style comments
-                        if ($list_uses_cpp && m%/\*%) {
-                            # remove C style comments
-                            $_ .= <$fd> while($_ !~ m%\*/%);
-                            s%/\*[^*]*\*/%%g;
-                        }
-                        next if (/^\s*$/); #ignore blank lines
-                        push @patches, split(' ', $_);
+                my $fd = $list_file->open;
+                while(<$fd>) {
+                    chomp;
+                    next if (/^\#/); #ignore comments or CPP directive
+                    s%//.*%% if $list_uses_cpp; # remove C++ style comments
+                    if ($list_uses_cpp && m%/\*%) {
+                        # remove C style comments
+                        $_ .= <$fd> while($_ !~ m%\*/%);
+                        s%/\*[^*]*\*/%%g;
                     }
-                    close($fd);
+                    next if (/^\s*$/); #ignore blank lines
+                    push @patches, split(' ', $_);
                 }
+                close($fd);
 
                 # Check each patch.
-                foreach my $patch_file (@patches) {
-                    $patch_file .= '.dpatch'
-                      if -e "$dpdir/$patch_file.dpatch"
-                      and not -e "$dpdir/$patch_file";
-                    next if (-l "$dpdir/$patch_file");
-                    next unless is_ancestor_of($droot, "$dpdir/$patch_file");
-
-                    if (!-r "$dpdir/$patch_file") {
+                foreach my $patch_name (@patches) {
+                    my $patch_file = $dpdir->child($patch_name);
+                    $patch_file = $dpdir->child("${patch_name}.dpatch")
+                      if not $patch_file;
+                    if (not $patch_file) {
                         tag 'dpatch-index-references-non-existent-patch',
-                          $patch_file;
+                          $patch_name;
                         next;
                     }
-                    if (-f "$dpdir/$patch_file") {
-                        my $has_comment = 0;
-                        open(my $fd, '<', "$dpdir/$patch_file");
-                        while (<$fd>) {
-                            # stop if something looking like a patch
-                            # starts:
-                            last if /^---/;
-                            # note comment if we find a proper one
-                            $has_comment = 1
-                              if (/^\#+\s*DP:\s*(\S.*)$/
-                                && $1 !~ /^no description\.?$/i);
-                            $has_comment = 1
-                              if (/^\# (?:Description|Subject)/);
-                        }
-                        close($fd);
-                        unless ($has_comment) {
-                            tag 'dpatch-missing-description', $patch_file;
-                        }
+                    next unless $patch_file->is_open_ok;
+
+                    my $has_comment = 0;
+                    my $fd = $patch_file->open;
+                    while (<$fd>) {
+                        # stop if something looking like a patch
+                        # starts:
+                        last if /^---/;
+                        # note comment if we find a proper one
+                        $has_comment = 1
+                          if (/^\#+\s*DP:\s*(\S.*)$/
+                            && $1 !~ /^no description\.?$/i);
+                        $has_comment = 1
+                          if (/^\# (?:Description|Subject)/);
                     }
-                    check_patch($dpdir, $patch_file);
+                    close($fd);
+                    unless ($has_comment) {
+                        tag 'dpatch-missing-description', $patch_name;
+                    }
+                    check_patch($patch_file);
                 }
             }
         }
@@ -137,117 +133,88 @@ sub run {
     if ($build_deps->implies('quilt') or $quilt_format) {
         $uses_patch_system++;
         # check for a debian/patches file:
-        if (-l "$dpdir/series" and not is_ancestor_of($droot, "$dpdir/series"))
-        {
-            # skip
-        } elsif (!-r "$dpdir/series") {
+        if (not $patch_series or not $patch_series->is_open_ok) {
             tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
         } else {
-            if (-f "$dpdir/series") {
-                my @patches;
-                my @badopts;
-                open(my $series_fd, '<', "$dpdir/series");
-                while (my $patch = <$series_fd>) {
-                    my $hastrailingnewline = 0;
-                    $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
-                    next unless $patch;
-                    if (rindex($patch,"\n") < 0) {
-                        tag 'quilt-series-without-trailing-newline';
-                    }
-                    strip($patch); # Strip leading/trailing spaces
-                    if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
-                        my $patch_options;
-                        ($patch, $patch_options) = ($1, $2);
-                        if ($patch_options ne '-p1') {
-                            push @badopts, $patch;
-                        }
-                    }
-                    push @patches, $patch;
+            my (@patches, @badopts);
+            my $series_fd = $patch_series->open;
+            while (my $patch = <$series_fd>) {
+                $patch =~ s/(?:^|\s+)#.*$//; # Strip comment
+                if (rindex($patch,"\n") < 0) {
+                    tag 'quilt-series-without-trailing-newline';
                 }
-                close($series_fd);
-                if (scalar(@badopts)) {
-                    tag 'quilt-patch-with-non-standard-options', @badopts;
+                strip($patch); # Strip leading/trailing spaces
+                next if $patch eq '';
+                if ($patch =~ m{^(\S+)\s+(\S.*)$}) {
+                    my $patch_options;
+                    ($patch, $patch_options) = ($1, $2);
+                    if ($patch_options ne '-p1') {
+                        push(@badopts, $patch);
+                    }
                 }
+                push(@patches, $patch);
+            }
+            close($series_fd);
+            if (scalar(@badopts)) {
+                tag 'quilt-patch-with-non-standard-options', @badopts;
+            }
 
-                # Check each patch.
-                foreach my $patch_file (@patches) {
-                    next if (-l "$dpdir/$patch_file");
-                    next unless is_ancestor_of($droot, "$dpdir/$patch_file");
-
-                    if (!-r "$dpdir/$patch_file") {
-                        tag 'quilt-series-references-non-existent-patch',
-                          $patch_file;
-                        next;
-                    }
-                    if (-f "$dpdir/$patch_file") {
-                        my $has_description = 0;
-                        my $has_template_description = 0;
-                        open(my $patch_fd, '<', "$dpdir/$patch_file");
-                        while (<$patch_fd>) {
-                            # stop if something looking like a patch starts:
-                            last if /^---/;
-                            next if /^\s*$/;
-                            # Skip common "lead-in" lines
-                            $has_description = 1
-                              unless m{^(?:Index: |=+$|diff .+|index )};
-                            $has_template_description = 1
-                              if index($_, PATCH_DESC_TEMPLATE) != -1;
-                        }
-                        close($patch_fd);
-                        unless ($has_description) {
-                            tag 'quilt-patch-missing-description', $patch_file;
-                        }
-                        if ($has_template_description) {
-                            tag 'quilt-patch-using-template-description',
-                              $patch_file;
-                        }
-                    }
-                    check_patch($dpdir, $patch_file);
+            # Check each patch.
+            foreach my $patch_filename (@patches) {
+                my $patch = $dpdir->resolve_path($patch_filename);
+                if (not $patch or not $patch->is_file) {
+                    tag 'quilt-series-references-non-existent-patch',
+                      $patch_filename;
+                    next;
                 }
+                next if not $patch->is_open_ok;
+                my $has_description = 0;
+                my $has_template_description = 0;
+                my $patch_fd = $patch->open;
+                while (<$patch_fd>) {
+                    # stop if something looking like a patch starts:
+                    last if /^---/;
+                    next if /^\s*$/;
+                    # Skip common "lead-in" lines
+                    $has_description = 1
+                      unless m{^(?:Index: |=+$|diff .+|index )};
+                    $has_template_description = 1
+                      if index($_, PATCH_DESC_TEMPLATE) != -1;
+                }
+                close($patch_fd);
+                unless ($has_description) {
+                    tag 'quilt-patch-missing-description', $patch_filename;
+                }
+                if ($has_template_description) {
+                    tag 'quilt-patch-using-template-description',
+                      $patch_filename;
+                }
+                check_patch($patch);
             }
         }
         if ($quilt_format) { # 3.0 (quilt) specific checks
             # Format 3.0 packages may generate a debian-changes-$version patch
             my $version = $info->field('version');
-            my $versioned_patch = "$dpdir/debian-changes-$version";
-            my $patch_header = "$droot/source/patch-header";
-            my $ok = 1;
-            if (-l "$droot/source" or -l $patch_header) {
-                # possible issue
-                if (!is_ancenstor_of($droot, $patch_header)) {
-                    $ok = 0;
+            my $versioned_patch
+              = $dpdir->resolve_path("debian-changes-$version");
+            my $patch_header = $droot->resolve_path('source/patch-header');
+            if ($versioned_patch and $versioned_patch->is_file) {
+                if (not $patch_header or not $patch_header->is_file) {
+                    tag 'format-3.0-but-debian-changes-patch';
                 }
             }
-            # $dpdir is known to be safe at this point, so only check
-            # the patch itself
-            if ($ok and -l $versioned_patch) {
-                if (!is_ancenstor_of($droot, $versioned_patch)) {
-                    $ok = 0;
-                }
-            }
-            if ($ok && -f $versioned_patch && !-f $patch_header) {
-                tag 'format-3.0-but-debian-changes-patch';
-            }
         }
-    } else {
-        if (    -r "$dpdir/series"
-            and -f "$dpdir/series") {
-            # 3.0 (quilt) sources don't need quilt as dpkg-source will
-            # do the work
-            if (!-l "$dpdir/series" || is_ancestor_of($droot, "$dpdir/series"))
-            {
-                tag 'quilt-series-but-no-build-dep' unless $quilt_format;
-            }
-        }
+    } elsif ($patch_series and $patch_series->is_file) {
+        # 3.0 (quilt) sources don't need quilt as dpkg-source will
+        # do the work
+        tag 'quilt-series-but-no-build-dep' unless $quilt_format;
     }
 
     #----- look for README.source
-    if ($uses_patch_system && !$quilt_format && !-f "$droot/README.source") {
-        if (!-l "$droot/README.source") {
-            # tag, unless README.source was a symlink (which could be a
-            # traversal attempt)
-            tag 'patch-system-but-no-source-readme';
-        }
+    if ($uses_patch_system && !$quilt_format) {
+        my $readme = $droot->resolve_path('README.source');
+        tag 'patch-system-but-no-source-readme'
+          if not $readme;
     }
 
     #----- general cruft checking:
@@ -275,7 +242,9 @@ sub run {
 
 # Checks on patches common to all build systems.
 sub check_patch {
-    my ($dpdir, $patch_file) = @_;
+    my ($patch_file) = @_;
+
+    return if not $patch_file->is_open_ok;
 
     # Use --strip=1 to strip off the first layer of directory in case
     # the parent directory in which the patches were generated was
@@ -283,11 +252,11 @@ sub check_patch {
     # patches that modify files in the debian/* directory, but as of
     # 2010-01-01, all cases where the first level of the patch path is
     # "debian/" in the archive are false positives.
-    open(my $fd, '-|', 'lsdiff', '--strip=1', "$dpdir/$patch_file");
+    open(my $fd, '-|', 'lsdiff', '--strip=1', $patch_file->fs_path);
     while (<$fd>) {
         chomp;
         if (m|^(?:\./)?debian/|o) {
-            tag 'patch-modifying-debian-files', $patch_file, $_;
+            tag 'patch-modifying-debian-files', $patch_file->basename, $_;
         }
     }
     close($fd);

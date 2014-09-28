@@ -3,7 +3,7 @@ Author: Marc Brockschmidt <he@debian.org>
 Abbrev: pat
 Type: source
 Info: This script checks for various possible problems when using patch systems
-Needs-Info: debfiles, diffstat
+Needs-Info: unpacked, diffstat
 
 Tag: dpatch-build-dep-but-no-patch-list
 Severity: normal

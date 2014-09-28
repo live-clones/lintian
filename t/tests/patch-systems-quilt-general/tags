@@ -1,5 +1,6 @@
 E: patch-systems-quilt-general source: build-depends-on-obsolete-package build-depends: dpatch
 E: patch-systems-quilt-general source: patch-modifying-debian-files some-file debian/some-file
+E: patch-systems-quilt-general source: quilt-series-references-non-existent-patch ../../debian-patch
 E: patch-systems-quilt-general source: quilt-series-references-non-existent-patch some-nonexistent-patch
 W: patch-systems-quilt-general source: dpatch-build-dep-but-no-patch-list
 W: patch-systems-quilt-general source: more-than-one-patch-system
