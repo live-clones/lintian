@@ -28,10 +28,6 @@ use strict;
 use warnings;
 use autodie;
 use v5.10;
-use Carp qw(croak confess);
-
-use Cwd();
-use File::Find;
 
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.
@@ -281,19 +277,19 @@ our %ERRORS = (
 # source-contains or diff-contains).  Note that only one of these regexes
 # should trigger for any single directory.
 my @directory_checks = (
-    [qr,^(.+/)?CVS$,        => 'cvs-control-dir'],
-    [qr,^(.+/)?\.svn$,      => 'svn-control-dir'],
-    [qr,^(.+/)?\.bzr$,      => 'bzr-control-dir'],
-    [qr,^(.+/)?\{arch\}$,   => 'arch-control-dir'],
-    [qr,^(.+/)?\.arch-ids$, => 'arch-control-dir'],
-    [qr!^(.+/)?,,.+$!       => 'arch-control-dir'],
-    [qr,^(.+/)?\.git$,      => 'git-control-dir'],
-    [qr,^(.+/)?\.hg$,       => 'hg-control-dir'],
-    [qr,^(.+/)?\.be$,       => 'bts-control-dir'],
-    [qr,^(.+/)?\.ditrack$,  => 'bts-control-dir'],
+    [qr,^(.+/)?CVS/?$,        => 'cvs-control-dir'],
+    [qr,^(.+/)?\.svn/?$,      => 'svn-control-dir'],
+    [qr,^(.+/)?\.bzr/?$,      => 'bzr-control-dir'],
+    [qr,^(.+/)?\{arch\}/?$,   => 'arch-control-dir'],
+    [qr,^(.+/)?\.arch-ids/?$, => 'arch-control-dir'],
+    [qr!^(.+/)?,,.+/?$!       => 'arch-control-dir'],
+    [qr,^(.+/)?\.git/?$,      => 'git-control-dir'],
+    [qr,^(.+/)?\.hg/?$,       => 'hg-control-dir'],
+    [qr,^(.+/)?\.be/?$,       => 'bts-control-dir'],
+    [qr,^(.+/)?\.ditrack/?$,  => 'bts-control-dir'],
 
     # Special case (can only be triggered for diffs)
-    [qr,^(.+/)?\.pc$, => 'quilt-control-dir'],
+    [qr,^(.+/)?\.pc/?$, => 'quilt-control-dir'],
 );
 
 # File checks.  These regexes match files that shouldn't be in the source
@@ -347,11 +343,6 @@ sub run {
     # or libtool.
     my $atdinbd= $info->relation('build-depends-all')->implies($AUTOTOOLS);
     my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);
-
-    # Create a closure so that we can pass our lexical variables into
-    # the find wanted function.  We don't want to make them global
-    # because we'll then leak that data across packages in a large
-    # Lintian run.
     my %warned;
     my $format = $info->field('format');
 
@@ -361,8 +352,7 @@ sub run {
     #   that may not be present.
     $format = '3.0 (quilt)' unless defined $format;
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
-        my $wanted= sub { check_debfiles($info, qr/\Q$droot\E/, \%warned) };
-        find($wanted, $droot);
+        check_debfiles($info, \%warned);
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
@@ -482,32 +472,48 @@ sub check_diffstat {
 # output.  Record any files we warn about in $warned so that we don't warn
 # again when checking the full unpacked source.
 sub check_debfiles {
-    my ($info, $droot, $warned) = @_;
-    (my $name = $File::Find::name) =~ s,^$droot/,,;
+    my ($info, $warned) = @_;
+    my $droot = $info->index_resolved_path('debian/');
+    return if not $droot;
 
-    # Check for unwanted directories and files.  This really duplicates the
-    # find_cruft function and we should find a way to combine them.
-    if (-d) {
-        for my $rule (@directory_checks) {
-            if ($name =~ /$rule->[0]/) {
-                tag "diff-contains-$rule->[1]", "debian/$name";
-                $warned->{"debian/$name"} = 1;
+    my @worklist = $droot->children;
+
+    # Check for unwanted directories and files.  This really
+    # duplicates the find_cruft function and we should find a way to
+    # combine them.
+
+  ENTRY:
+    while (my $entry = shift(@worklist)) {
+        my $name     = $entry->name;
+
+        if ($entry->is_dir) {
+            # Remove the trailing slash (historically we never
+            # included the slash for these tags and there is no
+            # particular reason to change that now).
+            $name     = substr($name,     0, -1);
+
+            for my $rule (@directory_checks) {
+                if ($name =~ /$rule->[0]/) {
+                    tag "diff-contains-$rule->[1]", $name;
+                    $warned->{$name} = 1;
+                }
+            }
+            push(@worklist, $entry->children);
+        } else {
+
+            for my $rule (@file_checks) {
+                if ($name =~ /$rule->[0]/) {
+                    tag "diff-contains-$rule->[1]", $entry;
+                    $warned->{$name} = 1;
+                }
+            }
+
+            # Additional special checks only for the diff, not the
+            # full source.
+            if ($name =~ m@^debian/(?:.+\.)?substvars$@o) {
+                tag 'diff-contains-substvars', $entry;
             }
         }
-    }
-
-    -f or return;
-
-    for my $rule (@file_checks) {
-        if ($name =~ /$rule->[0]/) {
-            tag "diff-contains-$rule->[1]", "debian/$name";
-            $warned->{"debian/$name"} = 1;
-        }
-    }
-
-    # Additional special checks only for the diff, not the full source.
-    if ($name =~ m@^(?:.+\.)?substvars$@o) {
-        tag 'diff-contains-substvars', "debian/$name";
     }
     return;
 }
