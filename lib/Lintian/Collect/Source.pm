@@ -309,7 +309,7 @@ Resolve PATH (relative to the root of the package) and return the
 L<entry|Lintian::Path> denoting the resolved path.
 
 The resolution is done using
-L<resolve_path|Lintian::Path/resolve_path>.
+L<resolve_path|Lintian::Path/resolve_path([PATH])>.
 
 NB: If orig_index_resolved_path includes a debian packaging, it is was
 contained in upstream part of the source package (or the package is

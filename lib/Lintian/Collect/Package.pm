@@ -315,7 +315,7 @@ Resolve PATH (relative to the root of the package) and return the
 L<entry|Lintian::Path> denoting the resolved path.
 
 The resolution is done using
-L<resolve_path|Lintian::Path/resolve_path>.
+L<resolve_path|Lintian::Path/resolve_path([PATH])>.
 
 NB: For source packages, please see the
 L<"index"-caveat|Lintian::Collect::Source/index (FILE)>.
