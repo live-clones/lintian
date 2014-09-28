@@ -634,7 +634,7 @@ Note that FILE should be the filename relative to the package root
 file does relative paths, they are assumed to be relative to the
 package root as well (and used without warning).
 
-Needs-Info requirements for using I<is_conffile>: L<Same as control|/control ([FILE])>
+Needs-Info requirements for using I<is_conffile>: L<Same as control_index_resolved_path|/control_index_resolved_path(PATH)>
 
 =cut
 
@@ -644,13 +644,11 @@ sub is_conffile {
         return 1 if exists $self->{'conffiles'}->{$file};
         return;
     }
-    my $cf = $self->control('conffiles');
+    my $cf = $self->control_index_resolved_path('conffiles');
     my %conffiles;
     $self->{'conffiles'} = \%conffiles;
-    # No real packages use links in their control.tar.gz and conffiles
-    # must be a file.
-    return if -l $cf or not -f $cf;
-    open(my $fd, '<', $cf);
+    return if not $cf or not $cf->is_open_ok;
+    my $fd = $cf->open;
     while (my $line = <$fd>) {
         chomp $line;
         next if $line =~ m/^\s*$/;
