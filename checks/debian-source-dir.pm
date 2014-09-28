@@ -56,20 +56,18 @@ sub run {
             my $dpseries = $info->index_resolved_path('debian/patches/series');
             # gitpkg does not create series as a link, so this is most likely
             # a traversal attempt.
-            if (1) { #<-- will remove in next commit
-                if (not $dpseries or not $dpseries->is_open_ok) {
-                    tag 'git-patches-not-exported';
-                } else {
-                    my $series_fd = $dpseries->open;
-                    my $comment_line = <$series_fd>;
-                    my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
-                    tag 'git-patches-not-exported'
-                      unless (
-                        $count
-                        && ($comment_line
-                            =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
-                    close($series_fd);
-                }
+            if (not $dpseries or not $dpseries->is_open_ok) {
+                tag 'git-patches-not-exported';
+            } else {
+                my $series_fd = $dpseries->open;
+                my $comment_line = <$series_fd>;
+                my $count = grep { !/^\s*+\#|^\s*+$/o } <$series_fd>;
+                tag 'git-patches-not-exported'
+                  unless (
+                    $count
+                    && ($comment_line
+                        =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
+                close($series_fd);
             }
         }
         close($git_patches_fd);
@@ -78,7 +76,7 @@ sub run {
     for my $path ($dsrc->children) {
         my $file = $path->basename;
         tag 'unknown-file-in-debian-source', $file
-            unless $KNOWN_FILES->known($file);
+          unless $KNOWN_FILES->known($file);
     }
 
     return;
