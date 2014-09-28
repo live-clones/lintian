@@ -168,9 +168,7 @@ sub run {
         tag 'no-debconf-config';
     }
 
-    # $seenconfig will be false if $ctrl_config is a symlink or if it was
-    # not a file, so we do not have to check with -f/-l here again.
-    if ($seenconfig and not -x $ctrl_config->fs_path) {
+    if ($seenconfig and not $ctrl_config->is_executable) {
         tag 'debconf-config-not-executable';
     }
 
