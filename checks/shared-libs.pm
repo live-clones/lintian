@@ -29,7 +29,7 @@ use List::MoreUtils qw(any none);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail normalize_pkg_path slurp_entire_file);
+use Lintian::Util qw(fail);
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
@@ -617,20 +617,21 @@ sub run {
     }
 
     # 6th step: check pre- and post- control files
-    if (-f $info->control('preinst') and not -l $info->control('preinst')) {
-        local $_ = slurp_entire_file($info->control('preinst'));
-        if (/^[^\#]*\bldconfig\b/m) {
-            tag 'preinst-calls-ldconfig';
+    if (my $preinst = $info->control_index_resolved_path('preinst')) {
+        if ($preinst->is_open_ok) {
+            if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
+                tag 'preinst-calls-ldconfig';
+            }
         }
     }
 
     my $we_call_postinst=0;
-    if (-f $info->control('postinst') and not -l $info->control('postinst')) {
-        local $_ = slurp_entire_file($info->control('postinst'));
-
-        # Decide if we call ldconfig
-        if (/^[^\#]*\bldconfig\b/m) {
-            $we_call_postinst=1;
+    if (my $postinst = $info->control_index_resolved_path('postinst')) {
+        if ($postinst->is_open_ok) {
+            # Decide if we call ldconfig
+            if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
+                $we_call_postinst=1;
+            }
         }
     }
 
@@ -649,38 +650,41 @@ sub run {
         tag 'shlib-in-multi-arch-foreign-package', $must_call_ldconfig;
     }
 
-    if (-f $info->control('prerm') and not -l $info->control('prerm')) {
-        local $_ = slurp_entire_file($info->control('prerm'));
-        if (/^[^\#]*\bldconfig\b/m) {
-            tag 'prerm-calls-ldconfig';
+    if (my $prerm = $info->control_index_resolved_path('prerm')) {
+        if ($prerm->is_open_ok) {
+            if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
+                tag 'prerm-calls-ldconfig';
+            }
         }
     }
 
-    if (-f $info->control('postrm') and not -l $info->control('postrm')) {
-        local $_ = slurp_entire_file($info->control('postrm'));
+    if (my $postrm = $info->control_index_resolved_path('postrm')) {
+        if ($postrm->is_open_ok) {
+            my $contents = $postrm->file_contents;
 
-        # Decide if we call ldconfig
-        if (/^[^\#]*\bldconfig\b/m) {
-            tag 'postrm-has-useless-call-to-ldconfig',
-              unless $must_call_ldconfig;
-        } else {
-            tag 'postrm-should-call-ldconfig', $must_call_ldconfig
-              if $must_call_ldconfig;
-        }
+            # Decide if we call ldconfig
+            if ($contents =~ m/^[^\#]*\bldconfig\b/m) {
+                tag 'postrm-has-useless-call-to-ldconfig',
+                  unless $must_call_ldconfig;
+            } else {
+                tag 'postrm-should-call-ldconfig', $must_call_ldconfig
+                  if $must_call_ldconfig;
+            }
 
-        # Decide if we do it safely
-        s/\bldconfig\b/BldconfigB/g;
-        s/[ \t]//g;
-        # this one matches code from debhelper
-        s/^if\["\$1"=.?remove.?\];?\n*then\n*BldconfigB//gm;
-        # variations...
-        s/^if\[.?remove.?="\$1"\];?\n*then\n*BldconfigB//gm;
-        s/^\["\$1"=.?remove.?\]\&&BldconfigB//gm;
-        s/^\[.?remove.?="\$1"\]&&BldconfigB//gm;
-        s/remove(?:\|[^)]+)*\).*?BldconfigB.*?(?:;;|esac)//s;
+            # Decide if we do it safely
+            $contents =~ s/\bldconfig\b/BldconfigB/g;
+            $contents =~ s/[ \t]//g;
+            # this one matches code from debhelper
+            $contents =~ s/^if\["\$1"=.?remove.?\];?\n*then\n*BldconfigB//gm;
+            # variations...
+            $contents =~ s/^if\[.?remove.?="\$1"\];?\n*then\n*BldconfigB//gm;
+            $contents =~ s/^\["\$1"=.?remove.?\]\&&BldconfigB//gm;
+            $contents =~ s/^\[.?remove.?="\$1"\]&&BldconfigB//gm;
+            $contents =~ s/remove(?:\|[^)]+)*\).*?BldconfigB.*?(?:;;|esac)//s;
 
-        if (/^[^\#]*BldconfigB/m) {
-            tag 'postrm-unsafe-ldconfig';
+            if ($contents =~ m/^[^\#]*BldconfigB/m) {
+                tag 'postrm-unsafe-ldconfig';
+            }
         }
     }
 
