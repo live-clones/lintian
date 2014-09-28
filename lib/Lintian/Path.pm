@@ -217,9 +217,17 @@ sub children {
 =item child(BASENAME)
 
 Returns the child named BASENAME if it is a child of this directory.
-Otherwise, this method returns C<undef>.
+Otherwise, this method returns C<undef>.  Note if BASENAME has a
+trailing slash, the child entry must be a directory.  If the child
+exist, but is not a directory, C<undef> will be returned instead.
 
 For non-dirs, this method always returns C<undef>.
+
+Example:
+
+  $dir_entry->child('foo') => $entry OR undef
+
+  $dir_entry->child('foo/') => $dir_entry OR undef
 
 =cut
 
@@ -566,6 +574,18 @@ returns the path entry that denotes the target path.
 If PATH contains at least one path segment and ends with a slash, then
 the resolved path will end in a directory (or fail).  Otherwise, the
 resolved PATH can end in any entry I<except> a symlink.
+
+Examples:
+
+  $symlink_entry->resolve_path => $nonsymlink_entry OR undef
+
+  $x->resolve_path => $x
+
+  For directory or symlink entries (dol), you can also resolve a path:
+
+  $dol_entry->resolve_path('some/../where') => $nonsymlink_entry OR undef
+
+  $dol_entry->resolve_path('some/../where/') => $dir_entry OR undef
 
 =cut
 
