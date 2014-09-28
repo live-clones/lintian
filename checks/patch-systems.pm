@@ -56,8 +56,9 @@ sub run {
 
     #----- dpatch
     if ($build_deps->implies('dpatch')) {
-        my $list_file = $dpdir->resolve_path('00list');
+        my $list_file;
         $uses_patch_system++;
+        $list_file = $dpdir->resolve_path('00list') if $dpdir;
         #check for a debian/patches file:
         if (not $list_file or not $list_file->is_file) {
             tag 'dpatch-build-dep-but-no-patch-list';
@@ -195,9 +196,10 @@ sub run {
         if ($quilt_format) { # 3.0 (quilt) specific checks
             # Format 3.0 packages may generate a debian-changes-$version patch
             my $version = $info->field('version');
-            my $versioned_patch
-              = $dpdir->resolve_path("debian-changes-$version");
             my $patch_header = $droot->resolve_path('source/patch-header');
+            my $versioned_patch;
+            $versioned_patch = $dpdir->resolve_path("debian-changes-$version")
+              if $dpdir;
             if ($versioned_patch and $versioned_patch->is_file) {
                 if (not $patch_header or not $patch_header->is_file) {
                     tag 'format-3.0-but-debian-changes-patch';
