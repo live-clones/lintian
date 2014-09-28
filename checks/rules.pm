@@ -23,7 +23,7 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of rstrip);
+use Lintian::Util qw(rstrip);
 
 our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev';
 our $PYTHON3_DEPEND = 'python3 | python3-dev | python3-all | python3-all-dev';

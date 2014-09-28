@@ -28,7 +28,7 @@ use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail is_ancestor_of strip);
+use Lintian::Util qw(fail strip);
 
 sub run {
     my (undef, undef, $info) = @_;

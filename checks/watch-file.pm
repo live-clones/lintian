@@ -26,7 +26,6 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of);
 
 sub run {
     my (undef, undef, $info) = @_;

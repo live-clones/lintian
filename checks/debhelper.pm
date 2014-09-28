@@ -26,7 +26,7 @@ use autodie;
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of slurp_entire_file strip);
+use Lintian::Util qw(strip);
 
 # If compat is less than or equal to this, then a missing version
 # for this level is only a pedantic issue.
