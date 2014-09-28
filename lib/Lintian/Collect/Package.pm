@@ -69,13 +69,13 @@ Lintian::Collect::Package - Lintian base interface to binary and source package 
     my ($name, $type, $dir) = ('foobar', 'source', '/path/to/lab-entry');
     my $info = Lintian::Collect->new ($name, $type, $dir);
     my $filename = "etc/conf.d/$name.conf";
-    my $file = $info->index($filename);
-    if ($file && $file->is_regular_file) {
-        open(my $fd, '<', $info->unpacked($file));
+    my $file = $info->index_resolved_path($filename);
+    if ($file and $file->is_open_ok) {
+        my $fd = $info->open;
         # Use $fd ...
         close($fd);
     } elsif ($file) {
-        print "$file is available, but not a regular file\n";
+        print "$file is available, but is not a file or unsafe to open\n";
     } else {
         print "$file is missing\n";
     }
