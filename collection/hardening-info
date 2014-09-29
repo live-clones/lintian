@@ -68,7 +68,7 @@ sub collect {
     };
 
     foreach my $bin ($info->sorted_index) {
-        next unless $info->index($bin)->is_file;
+        next unless $bin->is_file;
         # Skip kernel modules and debug files
         next if $bin =~ m/\.ko$/o or $bin =~ m{\A usr/lib/debug/ }xsm;
         my $finfo = $info->file_info($bin);
