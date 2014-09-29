@@ -505,30 +505,23 @@ sub verify_icon {
     }
 
     # Try the explicit location, and if that fails, try the standard path.
-    my $pkgroot = $info->unpacked;
-    my $iconfile = $info->unpacked($icon);
-    if (!-f $iconfile) {
-        $iconfile = $info->unpacked("usr/share/pixmaps/$icon");
-        if (!-f $iconfile) {
+    my $iconfile = $info->index_resolved_path($icon);
+    if (not $iconfile) {
+        $iconfile = $info->index_resolved_path("usr/share/pixmaps/$icon");
+        if (not $iconfile) {
             my $ginfo = $group->info;
             foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
                 my $dinfo = $depproc->info;
-                $pkgroot = $dinfo->unpacked;
-                $iconfile = $dinfo->unpacked($icon);
-                last if -f $iconfile;
-                $iconfile = $info->unpacked("usr/share/pixmaps/$icon");
-                last if -f $iconfile;
+                $iconfile = $dinfo->index_resolved_path($icon);
+                last if $iconfile;
+                $iconfile
+                  = $dinfo->index_resolved_path("usr/share/pixmaps/$icon");
+                last if $iconfile;
             }
         }
     }
 
-    # Last stat is a -f from above, reuse it
-    if (-e _) {
-        if (!is_ancestor_of($pkgroot, $iconfile)) {
-            # unsafe symlink
-            return;
-        }
-    } else {
+    if (not $iconfile or not $iconfile->is_open_ok) {
         tag 'menu-icon-missing', $icon;
         return;
     }
@@ -536,7 +529,7 @@ sub verify_icon {
     my $parse = 'XPM header';
     my $line;
 
-    open(my $fd, '<', $iconfile);
+    my $fd = $iconfile->open;
 
     do { defined($line = <$fd>) or goto parse_error; }
       until ($line =~ /\/\*\s*XPM\s*\*\//);

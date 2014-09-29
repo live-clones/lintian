@@ -542,7 +542,9 @@ sub run {
     return if ($pkg eq 'debconf') || ($type eq 'udeb');
 
     foreach my $filename (sort keys %{$info->scripts}) {
-        open(my $fd, '<', $info->unpacked($filename));
+        my $path = $info->index_resolved_path($filename);
+        next if not $path or not $path->is_open_ok;
+        my $fd = $path->open;
         while (<$fd>) {
             s/#.*//;    # Not perfect for Perl, but should be OK
             if (   m,/usr/share/debconf/confmodule,

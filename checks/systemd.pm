@@ -32,9 +32,7 @@ use List::MoreUtils qw(any);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(
-  fail is_ancestor_of normalize_pkg_path lstrip rstrip
-);
+use Lintian::Util qw(fail lstrip rstrip);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -144,9 +142,10 @@ sub check_systemd_service_file {
 
 sub service_file_lines {
     my ($path) = @_;
-    my @lines;
-    my $continuation;
-    open(my $fh, '<', $path);
+    my (@lines, $continuation);
+    return if $path->is_symlink and $path->link eq '/dev/null';
+
+    my $fh = $path->open;
     while (<$fh>) {
         chomp;
 
@@ -180,31 +179,20 @@ sub extract_service_file_values {
 
     my (@values, $section);
 
-    my $unpacked_file = $info->unpacked($file);
-    unless (
-        (-f $unpacked_file&& is_ancestor_of($info->unpacked, $unpacked_file))
+    unless ($file->is_open_ok
         || ($file->is_symlink && $file->link eq '/dev/null')) {
         tag 'service-file-is-not-a-file', $file;
         return;
     }
-    my @lines = service_file_lines($unpacked_file);
+    my @lines = service_file_lines($file);
     if (any { /^\.include / } @lines) {
+        my $parent_dir = $file->parent_dir;
         @lines = map {
             if (/^\.include (.+)$/) {
-                my $path = $1;
-                my $normalized;
-                my $included;
-                if ($path =~ s,^/,,) {
-                    $normalized = normalize_pkg_path('/', $path);
-                } else {
-                    $normalized = normalize_pkg_path($file->dirname, $path);
-                }
-                $included = $info->unpacked($normalized)
-                  if defined($normalized);
-                if (   defined($included)
-                    && -f $included
-                    && is_ancestor_of($info->unpacked, $included)) {
-                    service_file_lines($included);
+                my $path = $parent_dir->resolve_path($1);
+                if (defined($path)
+                    && $path->is_open_ok) {
+                    service_file_lines($path);
                 } else {
                     # doesn't exist, exists but not a file or "out-of-bounds"
                     $_;
