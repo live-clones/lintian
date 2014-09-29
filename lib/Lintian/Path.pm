@@ -346,23 +346,40 @@ sub is_executable { return $_[0]->_any_bit_in_operm(0111); }
 
 =item fs_path
 
-Returns the path to this object on the file system.
+Returns the path to this object on the file system, which must be a
+regular file, a hardlink or a directory.
 
-This may fail if the object is dangling symlink or traverses a symlink
+This method may fail if:
+
+=over 4
+
+=item * The object is neither a directory or a file-like object (e.g. a
+named pipe).
+
+=item * If the object is dangling symlink or the path traverses a symlink
 outside the package root.
 
-To test if this is safe to call, use L</is_valid_path>.
+=back
 
-B<CAVEAT>: This does I<not> validate that the file object is generally
-safe to work with.  If you intend to open the file object, you should
-use L</open([LAYER])> instead or at least test it with L</is_open_ok>.
+To test if this is safe to call, if the target is (supposed) to be a:
+
+=over 4
+
+=item * file or hardlink then test with L</is_open_ok>.
+
+=item * dir then assert L<resolve_path|/resolve_path([PATH])> returns a
+defined entry, for which L</is_dir> returns a truth value.
+
+=back
 
 =cut
 
 sub fs_path {
     my ($self) = @_;
-    my $path = $self->_collect_path($self);
+    my $path = $self->_collect_path();
     $self->_check_access($path);
+    return $path if $self->resolve_path->is_dir;
+    $self->_check_open($path);
     return $path;
 }
 
@@ -379,23 +396,9 @@ sub is_open_ok {
     my ($self) = @_;
     return $self->{'_is_open_ok'} if exists($self->{'_is_open_ok'});
     eval {
-        my $path = $self->_collect_path($self);
+        my $path = $self->_collect_path();
         $self->_check_open($path);
     };
-    return if $@;
-    return 1;
-}
-
-=item is_valid_path
-
-Returns a truth value if the path is contained with the package root.
-
-=cut
-
-sub is_valid_path {
-    my ($self) = @_;
-    return $self->{'_valid_path'} if exists($self->{'_valid_path'});
-    eval {$self->fs_path;};
     return if $@;
     return 1;
 }
@@ -441,7 +444,7 @@ sub _check_open {
 
 sub _do_open {
     my ($self, $open_sub) = @_;
-    my $path = $self->_collect_path($self);
+    my $path = $self->_collect_path();
     $self->_check_open($path);
     return $open_sub->($path);
 }
