@@ -163,6 +163,15 @@ sub unpacked {
     #    (and duplicate said check in ::Binary::control and
     #    ::Source::debfiles).
     my $self = shift(@_);
+    my $f = $_[0] // '';
+
+    warnings::warnif(
+        'deprecated',
+        '[deprecated] The unpacked method is deprecated.  '
+          . "Consider using \$info->index_resolved_path('$f') instead."
+          . '  Called' # warnif appends " at <...>"
+    );
+
     return $self->_fetch_extracted_dir('unpacked', 'unpacked', @_);
 }
 

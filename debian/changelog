@@ -3,7 +3,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   XXX: generate tag summary with private/generate-tag-summary
 
   * checks/*:
-    + [NT] Remove all uses of "debfiles" and "control".
+    + [NT] Remove all uses of "control", "debfiles" and
+      "unpacked".
   * checks/description.pm:
     + [SL] show the actual description when it is too short.
   * checks/patch-systems.pm:
@@ -38,13 +39,15 @@ lintian (2.5.28) UNRELEASED; urgency=medium
       tutorial.
 
   * lib/Lintian/Collect{,/*}.pm:
-    + [NT] Deprecate the use of "debfiles" and "control".
-      Consumers are recommended to use index_resolved_path
-      and control_index_resolved_path instead.
+    + [NT] Deprecate the use of "control", "debfiles" and
+      "unpacked".  Consumers are recommended to use
+      index_resolved_path and control_index_resolved_path
+      instead.
     + [NT] Remove all uses of debfiles (both the method and
       the collection).  All methods (except "debfiles") now
       depend on "unpacked" instead.
-    + [NT] Remove all uses of the "control" method.
+    + [NT] Remove all uses of the "control" and the "unpacked"
+      method.
   * lib/Lintian/Command.pm:
     + [NT] Add support for running a sub in the child before
       it calls exec.
