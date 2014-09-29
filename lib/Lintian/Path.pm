@@ -79,13 +79,11 @@ Argument is a hash containing the data read from the index file.
 =cut
 
 sub new {
-    my ($type, $data, $collect, $path_sub) = @_;
+    my ($type, $data) = @_;
     my $self = {
         # copy the data into $self
         %$data,
     };
-    weaken($self->{'_collect'} = $collect);
-    $self->{'_collect_path_sub'} = $path_sub;
     bless($self, $type);
     if ($self->is_file or $self->is_dir) {
         $self->{'_is_open_ok'} = $self->is_file;
@@ -406,22 +404,8 @@ sub is_valid_path {
 }
 
 sub _collect_path {
-    my ($self, $path) = @_;
-    my $collect = $self->{'_collect'};
-    my $collect_sub = $self->{'_collect_path_sub'};
-    if (not defined($collect_sub)) {
-        confess($self->name . ' does not have an underlying FS object');
-    }
-    {
-        # Disable the deprecation warning from (e.g.) control.  It is
-        # not meant for this call.
-        no warnings qw(deprecated);
-        return $collect->$collect_sub($path) if $path;
-        return $collect->$collect_sub();
-    };
-    # Perl Critic is too blind to realise that this is unreachable,
-    # so we need an additional return here.
-    return;
+    my ($self) = @_;
+    return $self->{'_fs_info'}->_underlying_fs_path($self);
 }
 
 sub _check_access {
@@ -591,6 +575,7 @@ sub resolve_path {
     my ($self, $path_str) = @_;
     my $current = $self;
     my (@queue, %traversed_links, $had_trailing_slash);
+    my $fs_info = $self->{'_fs_info'};
 
     $path_str //= '';
 
@@ -604,6 +589,7 @@ sub resolve_path {
 
     if ($path_str =~ s{^/}{} or ($path_str eq q{} and $had_trailing_slash)) {
         # Find the root entry
+        return if not $fs_info->has_anchored_root_dir;
         $current = $self->root_dir;
         return $current if $path_str eq q{};
     }
@@ -631,6 +617,7 @@ sub resolve_path {
             my $link_text = $current->link;
             $link_text =~ s{//++}{/}g;
             if ($link_text eq q{/} or $link_text =~ s{^/}{}) {
+                return if not $fs_info->has_anchored_root_dir;
                 $current = $current->root_dir;
             } else {
                 $current = $current->parent_dir;

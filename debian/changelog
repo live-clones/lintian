@@ -57,6 +57,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
       opening the underlying file system object.  It also adds
       a few minor safety guards to common issues with symlinks.
       (Closes: #698930)
+  * lib/Lintian/Path/FSInfo.pm:
+    + [NT] New file.
 
   * reporting/*:
     + [NT] Avoid forking a shell when invoking commands.  This

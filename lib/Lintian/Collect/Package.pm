@@ -29,6 +29,7 @@ use Carp qw(croak);
 use Scalar::Util qw(blessed);
 
 use Lintian::Path;
+use Lintian::Path::FSInfo;
 use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path dequote_name);
 
 my %ROOT_INDEX_TEMPLATE = (
@@ -399,6 +400,11 @@ sub _fetch_index_data {
     my @sorted;
     local $_;
     my $idx = open_gz("$base_dir/${index}.gz");
+    my $fs_info = Lintian::Path::FSInfo->new(
+        '_collect' => $self,
+        '_collect_path_sub' => $path_sub,
+        'has_anchored_root_dir' => 1,
+    );
 
     if ($indexown) {
         $num_idx = open_gz("$base_dir/${indexown}.gz");
@@ -451,6 +457,7 @@ sub _fetch_index_data {
         # reason for storing it now is that we may need it during the
         # "hard-link fixup"-phase.
         $file{'name'} = $name = dequote_name($name);
+        $file{'_fs_info'} = $fs_info;
 
         $idxh{$name} = \%file;
 
@@ -479,6 +486,7 @@ sub _fetch_index_data {
             $cpy{'uid'} = 0;
             $cpy{'gid'} = 0;
         }
+        $cpy{'_fs_info'} = $fs_info;
         $idxh{''} = \%cpy;
     }
     if (%rhlinks) {
@@ -544,7 +552,7 @@ sub _fetch_index_data {
         }
         # Insert name here to share the same storage with the hash key
         $idxh{$file}{'name'} = $file;
-        $idxh{$file} = Lintian::Path->new($idxh{$file}, $self, $path_sub);
+        $idxh{$file} = Lintian::Path->new($idxh{$file});
     }
     $self->{$field} = \%idxh;
     # Remove the "top" dir in the sorted_index as it is hardly ever
