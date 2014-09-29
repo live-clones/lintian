@@ -274,8 +274,21 @@ Needs-Info requirements for using I<orig_index>: src-orig-index
 
 sub orig_index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data('orig-index', 'src-orig-index', undef,
-        undef, $file);
+    if (my $cache = $self->{'orig_index'}) {
+        return $cache->{$file}
+          if exists($cache->{$file});
+        return;
+    }
+    my $load_info = {
+        'field' => 'orig_index',
+        'index_file' => 'src-orig-index',
+        'index_owner_file' => undef,
+        'fs_root_sub' => undef,
+        # source packages do not have anchored roots as they can be
+        # unpacked anywhere...
+        'has_anchored_root_dir' => 1,
+    };
+    return $self->_fetch_index_data($load_info, $file);
 }
 
 =item sorted_orig_index
@@ -299,8 +312,8 @@ sub sorted_orig_index {
     my ($self) = @_;
     # orig_index does all our work for us, so call it if
     # sorted_orig_index has not been created yet.
-    $self->orig_index('') unless exists $self->{'sorted_orig-index'};
-    return @{ $self->{'sorted_orig-index'} };
+    $self->orig_index('') unless exists($self->{'sorted_orig_index'});
+    return @{ $self->{'sorted_orig_index'} };
 }
 
 =item orig_index_resolved_path(PATH)
@@ -627,7 +640,21 @@ Needs-Info requirements for using I<index>: unpacked
 
 sub index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data('index', 'index', undef, 'unpacked',$file);
+    if (my $cache = $self->{'index'}) {
+        return $cache->{$file}
+          if exists($cache->{$file});
+        return;
+    }
+    my $load_info = {
+        'field' => 'index',
+        'index_file' => 'index',
+        'index_owner_file' => undef,
+        'fs_root_sub' => 'unpacked',
+        # source packages do not have anchored roots as they can be
+        # unpacked anywhere...
+        'has_anchored_root_dir' => 0,
+    };
+    return $self->_fetch_index_data($load_info, $file);
 }
 
 =item is_non_free

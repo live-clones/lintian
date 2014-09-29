@@ -283,8 +283,19 @@ Needs-Info requirements for using I<index>: unpacked
 
 sub index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data('index', 'index', 'index-owner-id',
-        'unpacked', $file);
+    if (my $cache = $self->{'index'}) {
+        return $cache->{$file}
+          if exists($cache->{$file});
+        return;
+    }
+    my $load_info = {
+        'field' => 'index',
+        'index_file' => 'index',
+        'index_owner_file' => 'index-owner-id',
+        'fs_root_sub' => 'unpacked',
+        'has_anchored_root_dir' => 1,
+    };
+    return $self->_fetch_index_data($load_info, $file);
 }
 
 =item sorted_index
@@ -387,23 +398,19 @@ sub _fetch_extracted_dir {
 # Backing method for index and others; this is not a part of the API.
 # sub _fetch_index_data Needs-Info none
 sub _fetch_index_data {
-    my ($self, $field, $index, $indexown, $path_sub, $file) = @_;
-    if (my $cache = $self->{$field}) {
-        return $cache->{$file}
-          if exists $cache->{$file};
-        return;
-    }
+    my ($self, $load_info, $file) = @_;
+
+    my (%idxh, %children, $num_idx, %rhlinks, @sorted);
     my $base_dir = $self->base_dir;
-    my (%idxh, %children);
-    my $num_idx;
-    my %rhlinks;
-    my @sorted;
     local $_;
+    my $field = $load_info->{'field'};
+    my $index = $load_info->{'index_file'};
+    my $indexown = $load_info->{'index_owner_file'};
     my $idx = open_gz("$base_dir/${index}.gz");
     my $fs_info = Lintian::Path::FSInfo->new(
         '_collect' => $self,
-        '_collect_path_sub' => $path_sub,
-        'has_anchored_root_dir' => 1,
+        '_collect_path_sub' => $load_info->{'fs_root_sub'},
+        'has_anchored_root_dir' => $load_info->{'as_anchored_root_dir'},
     );
 
     if ($indexown) {

@@ -197,8 +197,21 @@ Needs-Info requirements for using I<control_index>: bin-pkg-control
 
 sub control_index {
     my ($self, $file) = @_;
-    return $self->_fetch_index_data('control-index', 'control-index',
-        undef, 'control', $file);
+    if (my $cache = $self->{'control_index'}) {
+        return $cache->{$file}
+          if exists($cache->{$file});
+        return;
+    }
+    my $load_info = {
+        'field' => 'control_index',
+        'index_file' => 'control-index',
+        'index_owner_file' => undef,
+        'fs_root_sub' => 'control',
+        # Control files are not installed relative to the system root.
+        # Accordingly, we forbit absolute paths and symlinks..
+        'has_anchored_root_dir' => 0,
+    };
+    return $self->_fetch_index_data($load_info, $file);
 }
 
 =item sorted_control_index
@@ -218,8 +231,8 @@ sub sorted_control_index {
     my ($self) = @_;
     # control_index does all our work for us, so call it if
     # sorted_control_index has not been created yet.
-    $self->control_index('') unless exists $self->{'sorted_control-index'};
-    return @{ $self->{'sorted_control-index'} };
+    $self->control_index('') unless exists($self->{'sorted_control_index'});
+    return @{ $self->{'sorted_control_index'} };
 }
 
 =item control_index_resolved_path(PATH)
