@@ -36,8 +36,7 @@ use overload (
 use Carp qw(croak confess);
 use Scalar::Util qw(weaken);
 
-use Lintian::Util
-  qw(is_ancestor_of normalize_pkg_path parse_dpkg_control slurp_entire_file);
+use Lintian::Util qw(normalize_pkg_path slurp_entire_file);
 
 =head1 NAME
 
@@ -299,11 +298,9 @@ root dir of the package.
 Only available on "links" (i.e. symlinks or hardlinks).  On non-links
 this will croak.
 
-B<CAVEAT>: This method is I<not always sufficient> to test if it is
-safe to open a given symlink.  Use
-L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> for
-that.  If you must use this method, remember to check that the target
-is not a symlink (or if it is, that it can be resolved safely).
+I<Symlinks only>: If you want the symlink target as a L<Lintian::Path>
+object, use the L<resolve_path|/resolve_path([PATH])> method with no
+arguments instead.
 
 =cut
 
@@ -459,9 +456,9 @@ Beyond regular issues with opening a file, this method may fail if:
 
 =over
 
-=item The object is not a file-like object (e.g. a directory or a named pipe).
+=item * The object is not a file-like object (e.g. a directory or a named pipe).
 
-=item If the object is dangling symlink or the path traverses a symlink
+=item * If the object is dangling symlink or the path traverses a symlink
 outside the package root.
 
 =back
@@ -534,8 +531,12 @@ sub _set_parent_dir {
 
 =item resolve_path([PATH])
 
-Resolve PATH relative to this path entry.  If PATH starts with a slash
-it will instead be resolved relatively to the root dir.
+Resolve PATH relative to this path entry.
+
+If PATH starts with a slash and the file hierarchy has a well-defined
+root directory, then PATH will instead be resolved relatively to the
+root dir.  If the file hierarchy does not have a well-defined root dir
+(e.g. for source packages), this method will return C<undef>.
 
 If PATH is omitted, then the entry is resolved and the target is
 returned if it is valid.  Except for symlinks, all entries always
@@ -543,7 +544,8 @@ resolve to themselves.  NB: hardlinks also resolve as themselves.
 
 It is an error to attempt to resolve a PATH against a non-directory
 and non-symlink entry - as such resolution would always fail
-(i.e. foo.txt/../bar is an invalid assuming foo.txt is a file).
+(i.e. foo/../bar is an invalid path unless foo is a directory or a
+symlink to a dir).
 
 
 The resolution takes symlinks into account and following them provided
@@ -567,6 +569,7 @@ Examples:
 
   $dol_entry->resolve_path('some/../where') => $nonsymlink_entry OR undef
 
+  # Note the trailing slash
   $dol_entry->resolve_path('some/../where/') => $dir_entry OR undef
 
 =cut
