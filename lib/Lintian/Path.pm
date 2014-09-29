@@ -430,10 +430,8 @@ sub _check_access {
     if (exists($self->{'_valid_path'})) {
         $safe = $self->{'_valid_path'};
     } else {
-        my $root_path = $self->_collect_path;
-        if (!-e $path || !is_ancestor_of($root_path, $path)) {
-            $safe = 0;
-        }
+        my $resolvable = $self->resolve_path;
+        $safe = 0 if not $resolvable;
     }
     if (not $safe) {
         $self->{'_valid_path'} = $self->{'_is_open_ok'} = 0;
