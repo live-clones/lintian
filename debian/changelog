@@ -6,8 +6,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
     + [NT] Remove all uses of "control", "debfiles" and
       "unpacked".
   * checks/*:
-    + [NT] Remove all uses of the "init.d" and "menu-files"
-      collections.
+    + [NT] Remove all uses of the "doc-base-files", "init.d"
+      and "menu-files" collections.
   * checks/description.pm:
     + [SL] show the actual description when it is too short.
   * checks/patch-systems.pm:
@@ -21,11 +21,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
 
   * collection/*:
     + [NT] Remove all uses of "debfiles" and "control".
-  * collection/init.d{,.desc}:
+  * collection/{doc-base-files,init.d,menu-files}{,.desc}:
     + [NT] Deprecated, will be removed in a future release.
-      Futhermore, it is now auto-removed.
-  * collection/menu-files{,.desc}:
-    + [NT] Deprecated, will be removed in a future release.
+      They will now be now auto-removed at the end of the
+      processing if they have been collected previously.
 
   * data/cruft/non-free-license:
     + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).

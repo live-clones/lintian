@@ -60,7 +60,6 @@ sub run {
     my %prerm;
     my %postrm;
 
-    my $docbase_file;
     my $menu_file;
     my $menumethod_file;
     my $anymenu_file;
@@ -97,14 +96,6 @@ sub run {
                     and $pkg ne 'menu') {
                     tag 'bad-menu-file-name', $file;
                 }
-            }
-            # doc-base file?
-            elsif ($file =~ m,^usr/share/doc-base/\S,o){ # correct permissions?
-                if ($operm & 0111) {
-                    tag 'executable-in-usr-share-docbase', $file,
-                      sprintf('%04o', $operm);
-                }
-                $docbase_file = $file;
             }
             #menu-methods file?
             elsif ($file =~ m,^etc/menu-methods/\S,o) {
@@ -177,22 +168,15 @@ sub run {
 
     # check consistency
     # docbase file?
-    if ($docbase_file) {
-        my $dbdir = $info->lab_data_path('doc-base');
-        if (-d $dbdir) {
-            opendir(my $dirfd, $dbdir);
-            my $dbfile;
-            while (defined($dbfile = readdir($dirfd))) {
-                next if $dbfile eq '.' or $dbfile eq '..';
-                my $dbpath = "$dbdir/$dbfile";
-                # don't try to parse executables, plus we already
-                # warned about it.  Skip symlinks as well, unlikely to
-                # be used for real doc-base files.
-                next if -x $dbpath or -l $dbpath or not -f $dbpath;
-                check_doc_base_file($dbfile, $dbpath, $pkg, \%all_files,
-                    \%all_links, $group);
+    if (my $db_dir = $info->index_resolved_path('usr/share/doc-base/')) {
+        for my $dbpath ($db_dir->children) {
+            next if not $dbpath->is_open_ok;
+            if ($dbpath->resolve_path->is_executable) {
+                tag 'executable-in-usr-share-docbase', $dbpath,
+                  sprintf('%04o', $dbpath->operm);
+                next;
             }
-            closedir($dirfd);
+            check_doc_base_file($dbpath, $pkg, \%all_files,\%all_links,$group);
         }
     } elsif ($documentation) {
         if ($pkg =~ /^libghc6?-.*-doc$/) {
@@ -237,9 +221,10 @@ sub run {
 # -----------------------------------
 
 sub check_doc_base_file {
-    my ($dbfile, $dbpath, $pkg, $all_files, $all_links, $group) = @_;
+    my ($dbpath, $pkg, $all_files, $all_links, $group) = @_;
 
-    my $line = file_is_encoded_in_non_utf8($dbpath);
+    my $dbfile = $dbpath->basename;
+    my $line = file_is_encoded_in_non_utf8($dbpath->fs_path);
     if ($line) {
         tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
     }
@@ -250,7 +235,7 @@ sub check_doc_base_file {
     my %sawformats;       # global for control file
     $line           = 0;  # global
 
-    open(my $fd, '<', $dbpath);
+    my $fd = $dbpath->open;
 
     while (<$fd>) {
         chomp;
