@@ -42,7 +42,6 @@ use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(is_ancestor_of);
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags = qw(needs section title command);
@@ -157,10 +156,10 @@ sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
     my $mdir = $info->lab_data_path('menu');
     my @menufiles;
-    for my $dir ("$mdir/lib", "$mdir/share") {
-        opendir(my $dirfd, $dir);
-        push(@menufiles, map { "$dir/$_" } readdir($dirfd));
-        closedir($dirfd);
+    for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
+        if (my $dir = $info->index_resolved_path($dirname)) {
+            push(@menufiles, $dir->children);
+        }
     }
 
     # Find the desktop files in the package for verification.
@@ -189,18 +188,15 @@ sub run {
 
     # Now all the menu files.
     foreach my $menufile (@menufiles) {
-        next if -x $menufile; # don't try to parse executables
+        # Do not try to parse executables
+        next if $menufile->is_executable or not $menufile->is_open_ok;
 
-        my $basename = basename $menufile;
-        my $fullname = "usr/share/menu/$basename";
-        $fullname = "usr/lib/menu/$basename"
-          if $menufile =~ m,^\Q$mdir\E/lib/,;
+        my $fullname = $menufile->name;
 
-        next if $basename eq 'README'; # README is a special case
-        next if !is_ancestor_of($mdir, $menufile);
-
+        # README is a special case
+        next if $menufile->basename eq 'README';
         my $menufile_line ='';
-        open(my $fd, '<', $menufile);
+        my $fd = $menufile->open;
         # line below is commented out in favour of the while loop
         # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
         while (<$fd>) {

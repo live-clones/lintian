@@ -113,20 +113,19 @@ sub run {
                 # the menu manual
 
                 my $menumethod_includes_menu_h = 0;
-                my $local_file = $file;
-                $local_file =~ s,^etc/menu-methods/,,;
                 $menumethod_file = $file;
 
-                open(my $fd, '<',
-                    $info->lab_data_path("menu/methods/$local_file"));
-                while (<$fd>) {
-                    chomp;
-                    if (m,^!include menu.h,o) {
-                        $menumethod_includes_menu_h = 1;
-                        last;
+                if ($file->is_open_ok) {
+                    my $fd = $file->open;
+                    while (<$fd>) {
+                        chomp;
+                        if (m,^!include menu.h,o) {
+                            $menumethod_includes_menu_h = 1;
+                            last;
+                        }
                     }
+                    close($fd);
                 }
-                close($fd);
                 tag 'menu-method-should-include-menu-h', $file
                   unless $menumethod_includes_menu_h
                   or $pkg eq 'menu';
