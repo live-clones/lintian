@@ -36,6 +36,11 @@ sub collect {
           or fail('cannot rm old init.d directory');
     }
 
+    # If we are asked to only remove the files stop right here
+    if ($type =~ m/^remove-/) {
+        return;
+    }
+
     if (-d "$dir/unpacked/etc/init.d") {
         if (!is_ancestor_of("$dir/unpacked", "$dir/unpacked/etc/init.d")) {
             # Unsafe, stop
