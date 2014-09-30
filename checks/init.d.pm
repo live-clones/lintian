@@ -207,7 +207,7 @@ sub run {
     for my $script ($initd_dir->children) {
         my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
         my $basename = $script->basename;
-        next if any {$basename eq $_} qw(. .. README skeleton rc rcS);
+        next if any {$basename eq $_} qw(README skeleton rc rcS);
 
         # In an upstart system, such as Ubuntu, init scripts are symlinks to
         # upstart-job which are not registered with update-rc.d.
