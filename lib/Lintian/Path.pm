@@ -583,6 +583,10 @@ sub resolve_path {
     my (@queue, %traversed_links, $had_trailing_slash);
     my $fs_info = $self->{'_fs_info'};
 
+    if (defined($path_str) and ref($path_str) ne q{}) {
+        croak('resolve_path only accepts string arguments');
+    }
+
     $path_str //= '';
 
     if (not $self->is_dir and not $self->is_symlink) {
