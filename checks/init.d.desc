@@ -4,7 +4,7 @@ Abbrev: ini
 Type: binary
 Info: Check if a binary package conforms to policy with respect to
  scripts in /etc/init.d.
-Needs-Info: init.d, bin-pkg-control
+Needs-Info: bin-pkg-control, unpacked
 
 Tag: duplicate-updaterc.d-calls-in-postinst
 Severity: important
