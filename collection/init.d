@@ -29,7 +29,7 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(copy_dir delete_dir fail is_ancestor_of);
 
 sub collect {
-    my (undef, undef, $dir) = @_;
+    my (undef, $type, $dir) = @_;
 
     if (-e "$dir/init.d") {
         delete_dir("$dir/init.d")
