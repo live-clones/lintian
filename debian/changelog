@@ -85,6 +85,9 @@ lintian (2.5.28) UNRELEASED; urgency=medium
       has the side effect of allowing some paths from the
       configuration to contain spaces (among other), where it
       previously would not work.
+  * reporting/templates/maintainer.tmpl:
+    + [NT] Use https:// in links to other resources/sites and
+      add link to tracker.debian.org.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 14 Sep 2014 08:55:45 +0200
 
