@@ -56,7 +56,7 @@ our $LINTIAN_TIMESTAMP
 
 # Import Lintian Perl libraries.
 use lib "$LINTIAN_ROOT/lib";
-use Lintian::Command qw(safe_qx);
+use Lintian::Command qw(safe_qx spawn);
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
@@ -145,7 +145,10 @@ if ($COPY_DOCS) {
 }
 
 if ($ARGV[0]) {
-    my %opts = ('in' => $ARGV[0],);
+    my %opts = (
+        'in' => $ARGV[0],
+        'out' => "$HTML_TMP_DIR/lintian.log.gz",
+    );
     copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")
       or die("cannot copy $ARGV[0] to $HTML_TMP_DIR/lintian.log: $!");
     spawn(\%opts, ['gzip', '-9c', "$HTML_TMP_DIR/lintian.log.gz"])
