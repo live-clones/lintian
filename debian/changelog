@@ -10,6 +10,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
       and "menu-files" collections.
   * checks/description.pm:
     + [SL] show the actual description when it is too short.
+  * checks/files.pm:
+    + [NT] Only flag the Doxygen generated "md5" file as
+      useless.  Thanks to Mathieu Malaterre for reporting.
+      (Closes: #762660)
   * checks/patch-systems.pm:
     + [NT] Rewrite using index rather than debfiles to analyse
       the package.  A side-effect of that means that Lintian
