@@ -6,12 +6,5 @@ lintian source: patch-system-but-no-source-readme
 lintian source: unused-build-dependency-on-cdbs
 # We build-depend on python-dev for the test suite
 lintian source: build-depends-on-python-dev-with-no-arch-any
-# That is a comment reference to the license statement in a tag
-# description (and not the license itself).
-lintian source: license-problem-json-evil checks/cruft.desc
-lintian source: license-problem-json-evil po4a/po/checks/checks.pot
-lintian source: license-problem-json-evil po4a/po/checks/*.po
-# This is caused by a regex that happens to match itself.
-lintian source: license-problem-nvidia-intellectual data/cruft/non-distributable-license
 # We use hardening-includes for the hardening-check binary
 lintian source: build-depends-on-obsolete-package build-depends: hardening-includes => use dpkg-buildflags instead

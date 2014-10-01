@@ -50,6 +50,8 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * debian/postrm:
     + [NT] Remove the "changes" folder when purging the
       Lintian lab in /var/spool/lintian.
+  * debian/source/lintian-overrides:
+    + [NT] Remove obsolete lintian overrides.
 
   * doc/tutorial/Lintian/Tutorial/WritingChecks.pod:
     + [NT] Mention "safe_qx" as alternative to qx/`` in the
