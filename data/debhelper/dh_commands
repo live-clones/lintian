@@ -146,6 +146,7 @@ dh_sip=python-sip-dev
 dh_sodeps=pkg-kde-tools
 dh_sphinxdoc=sphinx-common
 dh_strip=debhelper
+dh_strip_nondeterminism=dh-strip-nondeterminism
 dh_suidregister=debhelper
 dh_swi_prolog=swi-prolog-nox
 dh_systemd_enable=dh-systemd

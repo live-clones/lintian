@@ -24,6 +24,7 @@ dh-ocaml
 dh-php5
 dh-python
 dh-rebar
+dh-strip-nondeterminism
 dh-systemd
 dh-virtualenv
 dh-xsp

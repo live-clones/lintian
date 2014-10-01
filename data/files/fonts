@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf-,
 # otf-, t1-, xfonts- and fonts- are searched for fonts.
 #
-# Last updated: 2014-09-06
+# Last updated: 2014-10-01
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -738,6 +738,9 @@ grudge2.ttf ttf-aenigma
 gubbi.ttf fonts-gubbi
 gulim.ttf fonts-baekmuk
 guseul.ttf ttf-alee
+gwmonospace.ttf fonts-georgewilliams
+gwmonospacebold.ttf fonts-georgewilliams
+gwmonospaceoblique.ttf fonts-georgewilliams
 gyneric.ttf ttf-aenigma
 gyneric3.ttf ttf-aenigma
 gyroresh.ttf ttf-aenigma
@@ -1221,9 +1224,6 @@ mobilize.ttf ttf-aenigma
 mona.ttf fonts-mona
 monapo.ttf fonts-monapo
 monkphon.ttf ttf-aenigma
-monospace.ttf fonts-georgewilliams
-monospacebold.ttf fonts-georgewilliams
-monospaceoblique.ttf fonts-georgewilliams
 monou___.ttf fonts-uralic
 moronmis.ttf ttf-aenigma
 mplus-1c-black.ttf fonts-mplus
@@ -1637,6 +1637,7 @@ stixsizetwosym-bold.otf fonts-stix
 stixsizetwosym-regular.otf fonts-stix
 stixvariants-bold.otf fonts-stix
 stixvariants-regular.otf fonts-stix
+stmary10.ttf fonts-lyx
 strande2.ttf ttf-aenigma
 summersby.ttf ttf-summersby
 supragc.ttf ttf-aenigma
