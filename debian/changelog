@@ -8,6 +8,10 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * checks/*:
     + [NT] Remove all uses of the "doc-base-files", "init.d"
       and "menu-files" collections.
+  * checks/changes-file.pm:
+    + [NT] Add "-lts" as common suffix for distribution,
+      which makes "squeeze-lts" a valid distribution.  Thanks
+      to Holger Levsen for the report.  (Closes: #763339)
   * checks/description.pm:
     + [SL] show the actual description when it is too short.
   * checks/files.pm:

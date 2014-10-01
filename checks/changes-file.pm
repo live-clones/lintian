@@ -60,6 +60,7 @@ sub run {
                     # (except sid and experimental, where they would
                     # make no sense)
                     $dist =~ s/- (?:backports(?:-sloppy)?
+                                   |lts
                                    |proposed(?:-updates)?
                                    |updates
                                    |security
