@@ -109,8 +109,7 @@
                     $OUT .= "</h2>\n";
                     $OUT .= qq(   <p class="info-links">\n);
                     $OUT .= qq(    <a href="https://packages.debian.org/src:$source">Info</a>\n);
-                    $OUT .= qq(    <a href="https://packages.qa.debian.org/$source">PTS</a>\n);
-                    $OUT .= qq(    <a href="https://tracker.debian.org/$source">Tracker.d.o</a>\n);
+                    $OUT .= qq(    <a href="https://tracker.debian.org/$source">Package Tracker</a>\n);
                     $OUT .= qq(    <a href="https://bugs.debian.org/src:$source">Bugs</a>\n);
                     if (exists($state->{'last-processed-by'})) {
                         my $status = 'up-to-date';
