@@ -765,19 +765,24 @@ Returns a truth value if STRING can be decoded as valid UTF-8.
 
 =cut
 
-sub is_string_utf8_encoded {
-    my ($str) = @_;
-    if ($str =~ m,\e[-!"\$%()*+./],) {
-        # ISO-2022
-        return 0;
+{
+    my $decoder = Encode::find_encoding('UTF-8');
+    die('No UTF-8 decoder !?') unless ref($decoder);
+
+    sub is_string_utf8_encoded {
+        my ($str) = @_;
+        if ($str =~ m,\e[-!"\$%()*+./],) {
+            # ISO-2022
+            return 0;
+        }
+        eval {$decoder->decode($str, Encode::FB_CROAK);};
+        if ($@) {
+            # fail
+            return 0;
+        }
+        # pass
+        return 1;
     }
-    eval {Encode::decode('UTF-8', $str, Encode::FB_CROAK);};
-    if ($@) {
-        # fail
-        return 0;
-    }
-    # pass
-    return 1;
 }
 
 =item file_is_encoded_in_non_utf8 (...)
