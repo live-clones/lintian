@@ -10,7 +10,7 @@ override_jh_build:
 	zip -r manifestless.jar org/
 	printf "PK\003\004Watch the fireworks begin :>" > unparsable.jar
 
-override_jh_manifest override_jh_depends:
+override_jh_manifest override_jh_depends override_dh_strip_nondeterminism:
 	# Skip - it chokes on "unparsable.jar" and we don't need it
 
 override_dh_auto_clean:

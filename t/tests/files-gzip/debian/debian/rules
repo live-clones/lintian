@@ -6,3 +6,6 @@ pkg=files-gzip
 override_dh_installdocs:
 	dh_installdocs
 	echo "Hello world :)" > debian/$(pkg)/usr/share/doc/$(pkg)/changelog.gz
+
+override_dh_strip_nondeterminism:
+	# Skip, it messes with our test
