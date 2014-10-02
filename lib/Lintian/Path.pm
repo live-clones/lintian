@@ -84,13 +84,14 @@ sub new {
         %$data,
     };
     bless($self, $type);
-    if ($self->is_file or $self->is_dir) {
-        $self->{'_is_open_ok'} = $self->is_file;
+    if ($self->is_file) {
+        $self->{'_is_open_ok'} = 1;
         $self->{'_valid_path'} = 1;
-        if ($self->is_dir) {
-            for my $child ($self->children) {
-                $child->_set_parent_dir($self);
-            }
+    } elsif ($self->is_dir) {
+        $self->{'_is_open_ok'} = 0;
+        $self->{'_valid_path'} = 1;
+        for my $child ($self->children) {
+            $child->_set_parent_dir($self);
         }
     }
     return $self;
@@ -207,8 +208,7 @@ NB: Returns the empty list for non-dir entries.
 
 sub children {
     my ($self) = @_;
-    return sort(values(%{ $self->{'children'} })) if wantarray;
-    return values(%{ $self->{'children'} });
+    return @{$self->{'_sorted_children'} };
 }
 
 =item child(BASENAME)
