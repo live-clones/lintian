@@ -54,16 +54,26 @@ my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
   rw-build-tree
 );
 
+my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
+  autopkgtest
+  autopkgtest-pkg-perl
+  autopkgtest-pkg-ruby
+);
+
 sub run {
     my ($pkg, $type, $info) = @_;
-    my $testsuite = $info->field('testsuite');
+    my $testsuites = $info->field('testsuite', '');
     my $control = $info->index('debian/tests/control');
+    my $needs_control = 0;
 
-    if (defined($testsuite) xor defined($control)) {
-        tag 'inconsistent-testsuite-field';
+    for my $testsuite (split(m/\s*,\s*/o, $testsuites)) {
+        if (not exists($KNOWN_TESTSUITES{$testsuite})) {
+            tag 'unknown-testsuite', $testsuite;
+        }
+        $needs_control = 1 if $testsuite eq 'autopkgtest';
     }
-    if (defined($testsuite) and $testsuite ne 'autopkgtest') {
-        tag 'unknown-testsuite', $testsuite;
+    if ($needs_control xor defined($control)) {
+        tag 'inconsistent-testsuite-field';
     }
 
     if (defined($control)) {

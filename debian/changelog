@@ -26,6 +26,11 @@ lintian (2.5.28) UNRELEASED; urgency=medium
   * checks/po-debconf.pm:
     + [NT] Avoid writing test.pot to the unpacked package.
       (Closes: #699022)
+  * checks/testsuite.pm:
+    + [NT] Recognise autopkgtest-pkg-{perl,ruby} values for
+      the "Testsuite" field.  Extended validation is not
+      implemented though.  Thanks to Niko Tyni for reporting
+      the issue.  (Closes: #762177)
 
   * collection/*:
     + [NT] Remove all uses of "debfiles" and "control".
