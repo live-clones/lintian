@@ -283,8 +283,7 @@ sub check_spelling {
 
     # Special case for correcting multi-word strings.
     for my $oregex ($corrections_multiword->all) {
-        my $regex = qr($oregex);
-        if ($text =~ m,\b($regex)\b,) {
+        if ($text =~ m,\b($oregex)\b,) {
             my $word = $1;
             my $correction = $corrections_multiword->value($oregex);
             if ($word =~ /^[A-Z]+$/) {
