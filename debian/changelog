@@ -1,6 +1,8 @@
-lintian (2.5.28) UNRELEASED; urgency=medium
+lintian (2.5.28) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - license-problem-cc-by-nc-sa
 
   * checks/*:
     + [NT] Remove all uses of "control", "debfiles" and
@@ -101,7 +103,7 @@ lintian (2.5.28) UNRELEASED; urgency=medium
     + [NT] Use https:// in links to other resources/sites and
       add link to tracker.debian.org.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 14 Sep 2014 08:55:45 +0200
+ -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 19:27:09 +0200
 
 lintian (2.5.27) unstable; urgency=medium
 
