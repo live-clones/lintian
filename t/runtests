@@ -92,8 +92,9 @@ our @DPKG_BUILDPACKAGE_CMD = (
     qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
     qw(--source-option=--auto-commit),
 );
-our $STANDARDS_VERSION = '3.9.5';
+our $STANDARDS_VERSION = '3.9.6';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
+my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 my %TEMPLATES = (
@@ -466,7 +467,7 @@ sub test_package {
         }
     }
 
-    if (not up_to_date($stampfile, $origdir)) {
+    if (not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
         my $tmpldir = "$TESTSET/templates/$suite/";
         my $skel = $testdata->{skeleton};
         my $is_native = ($testdata->{type} eq 'native');
@@ -713,7 +714,7 @@ sub generic_test_runner {
         }
     }
 
-    if (not up_to_date($stampfile, $testdir)) {
+    if (not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
         my $skel = $testdata->{skeleton};
         my $tmpldir = "$TESTSET/templates/$suite/";
 

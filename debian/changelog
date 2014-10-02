@@ -38,7 +38,12 @@ lintian (2.5.28) UNRELEASED; urgency=medium
     + [NT] Refresh some of the data against unstable.
   * data/cruft/non-free-license:
     + [BR] Detect cc-by-nc-sa license.  (Closes:  #749768).
+  * data/standards-version/release-dates:
+    + [NT] Add 3.9.6.  (Closes: #762460)
 
+  * debian/control:
+    + [NT] Bump Standards-Versions to 3.9.6 - no changes
+      required.
   * debian/dirs:
     + [NT] Stop installing /var/spool/lintian
   * debian/lintian.install:

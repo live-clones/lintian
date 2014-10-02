@@ -138,10 +138,12 @@ sub runsystem_ok {
     return $errcode == 0;
 }
 
-=item up_to_date(STAMPFILE, DIR)
+=item up_to_date(STAMPFILE, DIR[, RUNNER_TS])
 
 Returns true if the mtime of STAMPFILE is greater than or equal to the
-mtime of all files in DIR.
+mtime of all files in DIR.  If RUNNER_TS is given, then the mtime of
+STAMPFILE must also be greater than or equal to the value of
+RUNNER_TS.
 
 If STAMPFILE does not exist, this function returns false
 unconditionally.
@@ -149,13 +151,16 @@ unconditionally.
 =cut
 
 sub up_to_date {
-    my ($stampfile, $dir) = @_;
+    my ($stampfile, $dir, $runner_ts) = @_;
     my $newest = 0;
     my $stamp_stat = stat($stampfile);
     if (not defined($stamp_stat)) {
         die("stat $stampfile: $!")
           if $! != ENOENT;
         # Missing file implies "out-of-date"
+        return 0;
+    }
+    if (defined($runner_ts) and $runner_ts > $stamp_stat->mtime) {
         return 0;
     }
     my $tester = sub {
