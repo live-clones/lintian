@@ -114,7 +114,7 @@
                     if (exists($state->{'last-processed-by'})) {
                         my $status = 'up-to-date';
                         $status = '<i>outdated</i>'
-                            if $data->{'version'} ne $state->{'last-processed-by'};
+                            if $version ne $state->{'last-processed-by'};
                         $OUT .= qq[  (${status}, last processed by Lintian/$state->{'last-processed-by'})];
                     }
                     $OUT .= qq(   </p>\n  </div>\n);
