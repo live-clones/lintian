@@ -127,7 +127,7 @@ my $state;
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Lintian::Command;
-import Lintian::Command qw(safe_qx);
+import Lintian::Command qw(spawn safe_qx);
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable;
