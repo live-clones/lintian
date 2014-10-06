@@ -2,6 +2,12 @@ lintian (2.5.29) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * collection/{bin-pkg-control,unpacked}:
+    + [NT] Pass "-m" to tar to make it avoid "correcting" the
+      timestamp of the extracted files.  Lintian does not need
+      it for correctness, so it can make tar save a few syscalls
+      here.
+
  -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 22:22:31 +0200
 
 lintian (2.5.28) unstable; urgency=medium

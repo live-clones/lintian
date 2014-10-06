@@ -1,2 +1,1 @@
 E: deb-format-ancient-file: package-contains-ancient-file usr/share/doc/deb-format-ancient-file/changelog.gz 1970-01-01
-E: deb-format-ancient-file: tar-errors-from-control control: implausibly old time stamp 1969-12-31 23:59:59
