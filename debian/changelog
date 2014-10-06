@@ -7,6 +7,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       timestamp of the extracted files.  Lintian does not need
       it for correctness, so it can make tar save a few syscalls
       here.
+    + [NT] Explicitly pass tar options to make it extract files
+      as the current user and applying the users umask.  This is
+      mostly to be explicit about how things are extracted.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 22:22:31 +0200
 

@@ -58,7 +58,12 @@ sub collect {
     $job = { fail => 'error', err => "$dir/control-errors" };
     push @jobs, $job;
     # extract the tarball's contents
-    spawn($job, ['tar', '-mxf', "$dir/control.tar", '-C', "$dir/control", '&']);
+    spawn(
+        $job,
+        [
+            'tar', '--no-same-owner','--no-same-permissions', '-mxf',
+            "$dir/control.tar", '-C',"$dir/control", '&'
+        ]);
 
     $job = {
         fail => 'error',

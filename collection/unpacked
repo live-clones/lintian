@@ -157,7 +157,11 @@ sub extract_and_index_deb {
         @jobs,
         {
             'fail' => 'error',
-            '_pipeline' => [['tar', '-mxf', '-', '-C', "$dir/unpacked"]],
+            '_pipeline' => [[
+                    'tar', '--no-same-owner', '--no-same-permissions', '-mxf',
+                    '-', '-C', "$dir/unpacked"
+                ]
+            ],
             'pipe_in' => FileHandle->new,
             'err' => "$dir/unpacked-errors",
         });
