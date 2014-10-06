@@ -11,6 +11,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       as the current user and applying the users umask.  This is
       mostly to be explicit about how things are extracted.
 
+  * lib/Lintian/Util.pm:
+    + [NT] Purge even more ENV variables in clean_env.
+
  -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 22:22:31 +0200
 
 lintian (2.5.28) unstable; urgency=medium

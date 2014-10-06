@@ -835,8 +835,6 @@ selected few whitelisted variables.
 The list of whitelisted %ENV variables are:
 
  PATH
- INTLTOOL_EXTRACT
- LOCPATH
  LC_ALL (*)
 
 (*) LC_ALL is a special case as clean_env will change its value to
@@ -846,9 +844,9 @@ either "C.UTF-8" or "C" (if CLOC is given and a truth value).
 
 sub clean_env {
     my ($cloc) = @_;
-    my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
+    my @whitelist = qw(PATH);
     my %newenv
-      = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist, @_);
+      = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist);
     %ENV = %newenv;
     $ENV{'LC_ALL'} = 'C.UTF-8';
 
