@@ -11,6 +11,12 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       as the current user and applying the users umask.  This is
       mostly to be explicit about how things are extracted.
 
+  * frontend/lintian:
+    + [NT] Aggressively reset the environment a well-defined
+      state at start up.  Only ENV variables starting with
+      "LINTIAN_" (and a select few well known variables) are
+      preserved.
+
   * lib/Lintian/Util.pm:
     + [NT] Purge even more ENV variables in clean_env.
 

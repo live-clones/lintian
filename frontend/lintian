@@ -65,6 +65,10 @@ BEGIN {
 # and ENV has a value.
 #
 # NB: Variables listed here are not always exported.
+#
+# CAVEAT: If it does not start with "LINTIAN_", then it should
+# probably be listed in %PRESERVE_ENV in
+# L::Internal::FrontendUtil (!)
 my @ENV_VARS = (
     # LINTIAN_CFG  - handled manually
     # LINTIAN_ROOT - handled manually
@@ -138,19 +142,6 @@ STDOUT->autoflush;
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
 $SIG{PIPE} = 'IGNORE';
-
-# reset locale definition (necessary for tar)
-# - but store LC_ALL because we need it later
-$ENV{'ORIG_LC_ALL'} = $ENV{'LC_ALL'} if exists($ENV{'LC_ALL'});
-$ENV{'LC_ALL'} = 'C';
-
-# reset timezone definition (also for tar)
-$ENV{'TZ'}     = '';
-
-# When run in some automated ways, Lintian may not have a PATH, but we assume
-# we can call standard utilities without their full path.  If PATH is
-# completely unset, add something basic.
-$ENV{PATH} = '/bin:/usr/bin' unless $ENV{PATH};
 
 # }}}
 
@@ -748,7 +739,8 @@ require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Internal::FrontendUtil;
 import Lintian::Internal::FrontendUtil qw(
-  default_parallel load_collections determine_locale);
+  default_parallel load_collections determine_locale
+  sanitize_environment);
 require Lintian::ProcessablePool;
 require Lintian::Profile;
 require Lintian::Tags;
@@ -756,6 +748,8 @@ import Lintian::Tags qw(tag);
 require Lintian::Unpacker;
 require Lintian::Util;
 import Lintian::Util qw(fail parse_boolean strip);
+
+sanitize_environment();
 
 if (defined $experimental_output_opts) {
     my %opts = map { split(/=/) } split(/,/, $experimental_output_opts);

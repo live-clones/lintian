@@ -31,7 +31,7 @@ use Lintian::Util qw(check_path fail);
 
 our @EXPORT_OK
   = qw(check_test_feature default_parallel load_collections split_tag
-  determine_locale);
+  determine_locale sanitize_environment);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -42,6 +42,40 @@ sub check_test_feature{
         return 1 if($env =~ m/$feat/);
     }
     return 0;
+}
+
+{
+    # sanitize_environment
+    #
+    # Reset the environment to a known and well-defined state.
+    #
+    # We trust nothing but "LINTIAN_*" variables and a select few
+    # variables.  This is mostly to ensure we know what state tools
+    # (e.g. tar) start in.  In particular, we do not want to inherit
+    # some random "TAR_OPTIONS" or "GZIP" values.
+    my %PRESERVE_ENV = map { $_ => 1 } qw(PATH TMPDIR LC_ALL LC_MESSAGES LANG);
+
+    sub sanitize_environment {
+        for my $key (keys(%ENV)) {
+            delete $ENV{$key}
+              if not exists($PRESERVE_ENV{$key})
+              and $key !~ m/^LINTIAN_/;
+        }
+        # reset locale definition (necessary for tar) - but store
+        # LC_ALL because we need it later
+        $ENV{'ORIG_LC_ALL'} = $ENV{'LC_ALL'} if exists($ENV{'LC_ALL'});
+        $ENV{'LC_ALL'} = 'C';
+
+        # reset timezone definition (also for tar)
+        $ENV{'TZ'} = '';
+
+        # When run in some automated ways, Lintian may not have a
+        # PATH, but we assume we can call standard utilities without
+        # their full path.  If PATH is completely unset, add something
+        # basic.
+        $ENV{'PATH'} = '/bin:/usr/bin' unless exists($ENV{'PATH'});
+        return;
+    }
 }
 
 # determine_locale
