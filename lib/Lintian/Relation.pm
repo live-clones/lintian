@@ -89,11 +89,11 @@ satisfied).
 # the unparsed debian/control file.
 sub parse_element {
     my ($class, $element) = @_;
-    $element =~ /
+    return if not $element =~ /
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
          (?:                            #  start of the name
-          [a-zA-Z0-9][a-zA-Z0-9+.-]+    #   start of a package name
+          [a-zA-Z0-9][a-zA-Z0-9+.-]*    #   start of a package name
           |                             #   or
           \$\{[a-zA-Z0-9:-]+\}          #   substvar
          )                              #  end of start of the name
@@ -174,7 +174,9 @@ sub new {
         next if $element eq '';
         my @alternatives;
         for my $alternative (split(/\s*\|\s*/o, $element)) {
-            push(@alternatives, $class->parse_element($alternative));
+            my $dep = $class->parse_element($alternative);
+            next if not $dep;
+            push(@alternatives, $dep);
         }
         if (@alternatives == 1) {
             push(@result, @alternatives);
