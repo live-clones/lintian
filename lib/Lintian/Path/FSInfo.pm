@@ -73,6 +73,12 @@ that it represents.
 
 sub _underlying_fs_path {
     my ($self, $path) = @_;
+    my $fs_root;
+    my $fname = $path->name;
+    if ($fs_root = $self->{'_root_fs_path'}) {
+        return join('/', $fs_root, $fname) if $fname ne q{};
+        return $fs_root;
+    }
     my $collect = $self->{'_collect'};
     my $collect_sub = $self->{'_collect_path_sub'};
     if (not defined($collect_sub)) {
@@ -82,11 +88,11 @@ sub _underlying_fs_path {
         # Disable the deprecation warning from (e.g.) control.  It is
         # not meant for this call.
         no warnings qw(deprecated);
-        return $collect->$collect_sub($path);
+        $fs_root = $collect->$collect_sub();
     };
-    # Perl Critic is too blind to realise that this is unreachable,
-    # so we need an additional return here.
-    return;
+    $self->{'_root_fs_path'} = $fs_root;
+    return join('/', $fs_root, $fname) if $fname ne q{};
+    return $fs_root;
 }
 
 =item has_anchored_root_dir
