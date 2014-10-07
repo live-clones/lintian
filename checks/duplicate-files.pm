@@ -35,11 +35,11 @@ sub run {
         my $md5 = $info->md5sums->{$file};
         my $fs;
         next unless defined $md5;
-        next unless $info->index($file)->is_regular_file;
+        next unless $file->is_regular_file;
         # Ignore empty files; in some cases (e.g. python) a file is
         # required even if it is empty and we are never looking at a
         # substantial gain in such a case.  Also see #632789
-        next unless $info->index($file)->size;
+        next unless $file->size;
         next unless $file =~ m{\A usr/share/doc/}xsmo;
         $fs = $hashmap{$md5};
         unless (defined $fs){
