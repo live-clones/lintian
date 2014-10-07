@@ -549,7 +549,8 @@ sub _fetch_index_data {
     foreach my $file (reverse @sorted) {
         # Add them in reverse order - entries in a dir are made
         # objects before the dir itself.
-        if ($idxh{$file}->{type} eq 'd') {
+        my $entry = $idxh{$file};
+        if ($entry->{'type'} eq 'd') {
             my (%child_table, @sorted_children);
             for my $cname (sort(@{ $children{$file} })) {
                 my $child = $idxh{$cname};
@@ -564,12 +565,12 @@ sub _fetch_index_data {
                 push(@sorted_children, $child);
             }
             @sorted_children = reverse(@sorted_children);
-            $idxh{$file}{_sorted_children} = \@sorted_children;
-            $idxh{$file}{children} = \%child_table;
+            $entry->{'_sorted_children'} = \@sorted_children;
+            $entry->{'children'} = \%child_table;
         }
         # Insert name here to share the same storage with the hash key
-        $idxh{$file}{'name'} = $file;
-        $idxh{$file} = Lintian::Path->new($idxh{$file});
+        $entry->{'name'} = $file;
+        $idxh{$file} = Lintian::Path->new($entry);
     }
     $self->{$field} = \%idxh;
     # Remove the "top" dir in the sorted_index as it is hardly ever
