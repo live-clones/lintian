@@ -345,6 +345,26 @@ sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
 sub is_writable   { return $_[0]->_any_bit_in_operm(0222); }
 sub is_executable { return $_[0]->_any_bit_in_operm(0111); }
 
+=item file_info
+
+Return the data from L<file(1)> if it has been collected.
+
+Note this is only defined for files as Lintian only runs L<file(1)> on
+files.
+
+=cut
+
+sub file_info {
+    my ($self) = @_;
+    my $file_info;
+    if (my $file_info = $self->{'_file_info'}) {
+        return $file_info;
+    }
+    $file_info = $self->{'_fs_info'}->_file_info($self);
+    $self->{'_file_info'} = $file_info;
+    return $file_info;
+}
+
 =item fs_path
 
 Returns the path to this object on the file system, which must be a

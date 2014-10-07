@@ -95,6 +95,24 @@ sub _underlying_fs_path {
     return $fs_root;
 }
 
+=item _file_info(PATH)
+
+Given PATH, a L<Lintian::Path>, obtain the output from file(1) about
+the file, if it has been collected.  Throws an error if it not
+available.
+
+=cut
+
+sub _file_info {
+    my ($self, $path) = @_;
+    my $collect = $self->{'_collect'};
+    my $collect_sub = $self->{'_collect_file_info_sub'};
+    if (not defined($collect_sub)) {
+        confess($path->name . ' has not had collected file(1) info');
+    }
+    return $collect->$collect_sub($path->name);
+}
+
 =item has_anchored_root_dir
 
 Returns a truth value if the "root" directory is anchored and is

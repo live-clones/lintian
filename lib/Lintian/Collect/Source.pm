@@ -653,6 +653,7 @@ sub index {
         # source packages do not have anchored roots as they can be
         # unpacked anywhere...
         'has_anchored_root_dir' => 0,
+        'file_info_sub' => 'file_info',
     };
     return $self->_fetch_index_data($load_info, $file);
 }

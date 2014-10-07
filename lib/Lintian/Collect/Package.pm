@@ -302,6 +302,7 @@ sub index {
         'index_owner_file' => 'index-owner-id',
         'fs_root_sub' => 'unpacked',
         'has_anchored_root_dir' => 1,
+        'file_info_sub' => 'file_info',
     };
     return $self->_fetch_index_data($load_info, $file);
 }
@@ -417,6 +418,7 @@ sub _fetch_index_data {
     my $fs_info = Lintian::Path::FSInfo->new(
         '_collect' => $self,
         '_collect_path_sub' => $load_info->{'fs_root_sub'},
+        '_collect_file_info_sub' => $load_info->{'file_info_sub'},
         'has_anchored_root_dir' => $load_info->{'as_anchored_root_dir'},
     );
 
