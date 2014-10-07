@@ -76,11 +76,11 @@ sub run {
                 tag 'changelog-file-not-compressed', $basename;
             } else {
                 my $max_compressed = 0;
-                my $file_info = $info->file_info($path);
+                my $file_info = $path->file_info;
                 if ($path->is_symlink) {
                     my $normalized = $path->link_normalized;
                     if (defined($normalized)) {
-                        $file_info = $info->file_info($normalized);
+                        $file_info = $path->file_info;
                     }
                 }
                 if (defined($file_info)) {

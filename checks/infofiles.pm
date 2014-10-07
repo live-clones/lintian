@@ -34,7 +34,7 @@ sub run {
 
     # Read package contents...
     foreach my $file ($info->sorted_index) {
-        my $file_info = $info->file_info($file);
+        my $file_info = $file->file_info;
         my ($fname, $path) = fileparse($file);
 
         next

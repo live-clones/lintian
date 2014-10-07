@@ -261,11 +261,14 @@ sub run {
 
         next if not $file->is_file;
 
-        $fileinfo = $info->file_info($fname);
+        $fileinfo = $file->file_info;
+
         # binary or object file?
         next
           unless ($fileinfo =~ m/^[^,]*\bELF\b/)
           or ($fileinfo =~ m/\bcurrent ar archive\b/);
+
+        $objdump = $info->objdump_info->{$file};
 
         # Warn about Architecture: all packages that contain shared libraries.
         if ($arch eq 'all') {

@@ -69,7 +69,7 @@ sub run {
 
     foreach my $file ($info->sorted_index) {
         next if not $file->is_file;
-        my $fileinfo = $info->file_info($file);
+        my $fileinfo = $file->file_info;
         if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
             $sharedobject{$file} = 1;
         }

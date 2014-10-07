@@ -601,7 +601,7 @@ sub find_cruft {
                 'license-problem-md5sum-non-free-file');
         }
 
-        $file_info = $info->file_info($name);
+        $file_info = $entry->file_info;
 
         # warn by file type
         foreach my $tag_filetype ($WARN_FILE_TYPE->all) {

@@ -546,7 +546,7 @@ sub run {
                     if (    $fname =~ m,.gz$,
                         and $file->size <= 276
                         and $file->is_file
-                        and $info->file_info($file) =~ m/gzip compressed/) {
+                        and $file->file_info =~ m/gzip compressed/) {
                         my $fd = $file->open_gz;
                         my $f = <$fd>;
                         close($fd);
@@ -581,7 +581,7 @@ sub run {
                     # sphinx-generated documentation?
                     if ($fname
                         =~ m,^usr/share/doc/$ppkg/(?:[^/]+/)+objects\.inv\.gz$,
-                        and $info->file_info($file) =~ m/gzip compressed/) {
+                        and $file->file_info =~ m/gzip compressed/) {
                         tag 'compressed-objects.inv', $file;
                     }
 
@@ -1117,7 +1117,7 @@ sub run {
             # okay, we cannot rule it out based on file name; but if
             # it is an elf or a static library, we also skip it.  (In
             # case you hadn't guessed; liblicense)
-            my $fileinfo = $info->file_info($file);
+            my $fileinfo = $file->file_info;
             tag 'extra-license-file', $file
               unless $fileinfo and ($fileinfo =~ m/^[^,]*\bELF\b/)
               or ($fileinfo =~ m/\bcurrent ar archive\b/);
@@ -1222,14 +1222,8 @@ sub run {
 
         if ($fname =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){
             my ($dwidth, $dheight) = ($1, $2);
-            my $path;
-            if ($file->is_symlink) {
-                $path = $file->link_normalized;
-            } else {
-                $path = $fname;
-            }
-            my $fileinfo = $info->file_info($path);
-            if ($fileinfo && $fileinfo =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
+            my $path = $file->resolve_path;
+            if ($path && $path->file_info =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/) {
                 my ($fwidth, $fheight) = ($1, $2);
                 my $width_delta = abs($dwidth - $fwidth);
                 my $height_delta = abs($dheight - $fheight);
@@ -1325,7 +1319,7 @@ sub run {
                 } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
                     tag 'font-in-non-font-package', $file;
                 }
-                my $finfo = $info->file_info($file) || '';
+                my $finfo = $file->file_info;
                 if ($finfo =~ m/PostScript Type 1 font program data/) {
                     my $path = $file->fs_path;
                     my $foundadobeline = 0;
@@ -1416,7 +1410,7 @@ sub run {
 
             # ---------------- .gz files
             if ($fname =~ m/\.gz$/) {
-                my $finfo = $info->file_info($file) || '';
+                my $finfo = $file->file_info;
                 if ($finfo !~ m/gzip compressed/) {
                     tag 'gz-file-not-gzip', $file;
                 } else {
@@ -1445,7 +1439,7 @@ sub run {
             # --------------- compressed + uncompressed files
             if ($fname =~ $DUPLICATED_COMPRESSED_FILE_REGEX) {
                 tag 'duplicated-compressed-file', $file
-                  if $info->file_info($1);
+                  if $info->index($1);
             }
 
             # ---------------- general: setuid/setgid files!

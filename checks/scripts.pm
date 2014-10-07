@@ -237,8 +237,8 @@ sub run {
 
     foreach my $file ($info->sorted_index) {
         next if not $file->is_file;
-        $ELF{$file} = 1 if $info->file_info($file) =~ /^[^,]*\bELF\b/o;
-        next if not ($file->operm & 0111);
+        $ELF{$file} = 1 if $file->file_info =~ /^[^,]*\bELF\b/o;
+        next unless $file->operm & 0111;
         $executable{$file} = 1;
     }
 
