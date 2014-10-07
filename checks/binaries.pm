@@ -256,8 +256,9 @@ sub run {
 
     # process all files in package
     foreach my $file ($info->sorted_index) {
-        my $fileinfo = $info->file_info($file);
-        my $objdump = $info->objdump_info->{$file};
+        my $fname = $file->name;
+        my $fileinfo = $info->file_info($fname);
+        my $objdump;
 
         # binary or object file?
         next
@@ -269,16 +270,16 @@ sub run {
             tag 'arch-independent-package-contains-binary-or-object',$file;
         }
 
-        if ($file =~ m,^etc/,) {
+        if ($fname =~ m,^etc/,) {
             tag 'binary-in-etc', $file;
         }
 
-        if ($file =~ m,^usr/share/,) {
+        if ($fname =~ m,^usr/share/,) {
             tag 'arch-dependent-file-in-usr-share', $file;
         }
 
         if ($multiarch eq 'same') {
-            unless ($file
+            unless ($fname
                 =~ m,\b$gnu_triplet_re\b|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,
               ) {
                 tag 'arch-dependent-file-not-in-arch-specific-directory',$file;
@@ -287,6 +288,8 @@ sub run {
 
         # ELF?
         next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
+
+        $objdump = $info->objdump_info->{$fname};
 
         if ($arch eq 'all' or not $ARCH_REGEX->known($arch)) {
             # arch:all or unknown architecture - not much we can say here
@@ -297,13 +300,13 @@ sub run {
             if ($fileinfo =~ m/$archre/) {
                 # If it matches the architecture regex, it is good
                 $bad = 0;
-            } elsif ($file =~ m,(?:^|/)lib(x?\d{2})/,
-                or $file =~ m,^emul/ia(\d{2}),) {
+            } elsif ($fname =~ m,(?:^|/)lib(x?\d{2})/,
+                or $fname =~ m,^emul/ia(\d{2}),) {
                 my $bitre = $ARCH_REGEX->value($1);
                 # Special case - "old" multi-arch dirs
                 $bad = 0 if $bitre and $fileinfo =~ m/$bitre/;
             } elsif ($ARCH_64BIT_EQUIVS->known($arch)
-                && $file =~ m,^lib/modules/,) {
+                && $fname =~ m,^lib/modules/,) {
                 my $arch64re
                   = $ARCH_REGEX->value($ARCH_64BIT_EQUIVS->value($arch));
                 # Allow amd64 kernel modules to be installed on i386.
@@ -328,11 +331,11 @@ sub run {
             # Is it an object file (which generally can not be
             # stripped), a kernel module, debugging symbols, or
             # perhaps a debugging package?
-            unless ($file =~ m,\.k?o$,
+            unless ($fname =~ m,\.k?o$,
                 or $pkg =~ m/-dbg$/
                 or $pkg =~ m/debug/
-                or $file =~ m,/lib/debug/,
-                or $file =~ m,\.gox$,o) {
+                or $fname =~ m,/lib/debug/,
+                or $fname =~ m,\.gox$,o) {
                 if (    $fileinfo =~ m/executable/
                     and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
                     # Check for OCaml custom executables (#498138)
@@ -343,13 +346,13 @@ sub run {
             }
         } else {
             # stripped but a debug or profiling library?
-            if (($file =~ m,/lib/debug/,o) or ($file =~ m,/lib/profile/,o)){
+            if (($fname =~ m,/lib/debug/,o) or ($fname =~ m,/lib/profile/,o)){
                 tag 'library-in-debug-or-profile-should-not-be-stripped',$file;
             } else {
                 # appropriately stripped, but is it stripped enough?
                 foreach my $sect ('.note', '.comment') {
                     if (exists $objdump->{'SH'}->{$sect}) {
-                        tag 'binary-has-unneeded-section', "$file $sect";
+                        tag 'binary-has-unneeded-section', $file, $sect;
                     }
                 }
             }
@@ -368,7 +371,7 @@ sub run {
                 next
                   if $directories{$rpath}
                   and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
-                tag 'binary-or-shlib-defines-rpath', "$file $rpath";
+                tag 'binary-or-shlib-defines-rpath', $file, $rpath;
             }
         }
 
@@ -380,7 +383,7 @@ sub run {
                 next if $proc->pkg_src eq $ldata->{'source'};
             }
             if ($strings =~ $ldata->{'match'}) {
-                tag 'embedded-library', "$file: $ldata->{'libname'}";
+                tag 'embedded-library', "$fname: $ldata->{'libname'}";
             }
         }
 
@@ -391,19 +394,19 @@ sub run {
         next if $type eq 'udeb';
 
         # Perl library?
-        if ($file =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.so$,) {
+        if ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.so$,) {
             $has_perl_lib = 1;
         }
 
         # PHP extension?
-        if ($file =~ m,^usr/lib/php\d/.*\.so(?:\.\d+)*$,) {
+        if ($fname =~ m,^usr/lib/php\d/.*\.so(?:\.\d+)*$,) {
             $has_php_ext = 1;
         }
 
         # Python extension using Numpy C ABI?
         if (
-            $file =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$,
-            or(     $file =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$,
+            $fname =~ m,usr/lib/(?:pyshared/)?python2\.\d+/.*(?<!_d)\.so$,
+            or(     $fname =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$,
                 and $1 !~ /d/)
           ) {
             if (index($strings, NUMPY_STRING) != -1) {
@@ -413,7 +416,7 @@ sub run {
 
         # Something other than detached debugging symbols in
         # /usr/lib/debug paths.
-        if ($file
+        if ($fname
             =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/,)
         {
             if (scalar(@{ $objdump->{NEEDED} })) {
@@ -425,7 +428,7 @@ sub run {
         }
 
         # Detached debugging symbols directly in /usr/lib/debug.
-        if ($file =~ m,^usr/lib/debug/[^/]+$,) {
+        if ($fname =~ m,^usr/lib/debug/[^/]+$,) {
             unless (scalar(@{ $objdump->{NEEDED} })
                 || $fileinfo =~ m/statically linked/) {
                 tag 'debug-symbols-directly-in-usr-lib-debug', $file;
@@ -438,17 +441,17 @@ sub run {
                 # Some exceptions: kernel modules, detached debugging
                 # information and the dynamic loader (which itself has
                 # no dependencies).
-                next if ($file =~ m%^lib/modules/%);
-                next if ($file =~ m%^usr/lib/debug/%);
+                next if ($fname =~ m%^lib/modules/%);
+                next if ($fname =~ m%^usr/lib/debug/%);
                 next
-                  if ($file =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
+                  if ($fname =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
                 tag 'shared-lib-without-dependency-information', $file;
             } else {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
                 # named *-static or *.static, or *-static as
                 # package-name.
-                next if ($file =~ m%^boot/%);
-                next if ($file =~ /[\.-]static$/);
+                next if ($fname =~ m%^boot/%);
+                next if ($fname =~ /[\.-]static$/);
                 next if ($pkg =~ /-static$/);
                 # Binaries built by the Go compiler are statically
                 # linked by default.
@@ -458,9 +461,9 @@ sub run {
                   if (exists $objdump->{INTERP}
                     && $objdump->{INTERP} =~ m,/lib/klibc-\S+\.so,);
                 # Location of debugging symbols.
-                next if ($file =~ m%^usr/lib/debug/%);
+                next if ($fname =~ m%^usr/lib/debug/%);
                 # ldconfig must be static.
-                next if ($file eq 'sbin/ldconfig');
+                next if ($fname eq 'sbin/ldconfig');
                 tag 'statically-linked-binary', $file;
             }
         } else {
@@ -471,18 +474,18 @@ sub run {
             for my $lib (@{$objdump->{NEEDED}}) {
                 if ($lib =~ /^libc\.so\.(\d+.*)/) {
                     $needs_libc = "libc$1";
-                    $needs_libc_file = $file->name unless $needs_libc_file;
+                    $needs_libc_file = $fname unless $needs_libc_file;
                     $needs_libc_count++;
                     $no_libc = 0;
                 }
                 if ($lib =~ m{\A libstdc\+\+\.so\.(\d+) \Z}xsm) {
                     $needs_libcxx = "libstdc++$1";
-                    $needs_libcxx_file = $file->name
+                    $needs_libcxx_file = $fname
                       unless $needs_libcxx_file;
                     $needs_libcxx_count++;
                 }
             }
-            if ($no_libc and not $file =~ m,/libc\b,) {
+            if ($no_libc and not $fname =~ m,/libc\b,) {
                 # If there is no libc dependency, then it is most likely a
                 # bug.  The major exception is that some C++ libraries,
                 # but these tend to link against libstdc++ instead.  (see
@@ -498,10 +501,10 @@ sub run {
             # Check for missing hardening characteristics. This currently
             # handles the following checks:
             # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
-            if (exists($info->hardening_info->{$file})) {
+            if (exists($info->hardening_info->{$fname})) {
                 my $flags = $HARDENING->value($arch);
                 if ($flags) {
-                    foreach my $t (@{$info->hardening_info->{$file}}) {
+                    foreach my $t (@{$info->hardening_info->{$fname}}) {
                         my $tag = "hardening-$t";
                         tag $tag, $file if $flags->{$tag};
                     }
