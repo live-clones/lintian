@@ -200,12 +200,11 @@ sub file_info {
     my %interned;
     my %file_info;
     my $path = $self->lab_data_path('file-info.gz');
-    local $_;
     my $idx = open_gz($path);
-    while (<$idx>) {
-        chomp;
+    while (my $line = <$idx>) {
+        chomp($line);
 
-        m/^(.+?)\x00\s+(.*)$/o
+        $line =~ m/^(.+?)\x00\s+(.*)$/o
           or croak(
             join(q{ },
                 'an error in the file pkg is preventing',
@@ -411,7 +410,6 @@ sub _fetch_index_data {
 
     my (%idxh, %children, $num_idx, %rhlinks, @sorted);
     my $base_dir = $self->base_dir;
-    local $_;
     my $field = $load_info->{'field'};
     my $index = $load_info->{'index_file'};
     my $indexown = $load_info->{'index_owner_file'};
@@ -425,12 +423,12 @@ sub _fetch_index_data {
     if ($indexown) {
         $num_idx = open_gz("$base_dir/${indexown}.gz");
     }
-    while (<$idx>) {
-        chomp;
+    while (my $line = <$idx>) {
+        chomp($line);
 
         my (%file, $perm, $owner, $name);
         ($perm,$owner,$file{size},$file{date},$file{time},$name)
-          =split(' ', $_, 6);
+          =split(' ', $line, 6);
         # This may appear to be obscene, but the call overhead of
         # perm2oct is measurable on (e.g.) chromium-browser.  With
         # the cache we go from ~1.5s to ~0.1s.
