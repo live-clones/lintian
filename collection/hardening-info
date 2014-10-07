@@ -69,12 +69,13 @@ sub collect {
 
     foreach my $bin ($info->sorted_index) {
         next unless $bin->is_file;
+        my $name = $bin->name;
         # Skip kernel modules and debug files
-        next if $bin =~ m/\.ko$/o or $bin =~ m{\A usr/lib/debug/ }xsm;
-        my $finfo = $info->file_info($bin);
+        next if $name =~ m/\.ko$/o or $name =~ m{\A usr/lib/debug/ }xsm;
+        my $finfo = $info->file_info($name);
         next unless $finfo =~ m/\bELF\b/o;
         $open_hardening_info->() unless %opts;
-        printf {$opts{pipe_in}} "%s\0", $bin;
+        printf {$opts{pipe_in}} "%s\0", $name;
     }
 
     if (%opts) {

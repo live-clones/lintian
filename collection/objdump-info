@@ -62,10 +62,11 @@ sub collect {
 
     foreach my $bin ($info->sorted_index) {
         next if not $bin->is_file;
-        my $finfo = $info->file_info($bin);
+        my $fname = $bin->name;
+        my $finfo = $info->file_info($fname);
 
         if ($finfo =~ m/\bELF\b/) {
-            printf {$opts{pipe_in}} "%s\0", $bin;
+            printf {$opts{pipe_in}} "%s\0", $fname;
         }
     }
 

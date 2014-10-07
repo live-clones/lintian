@@ -79,16 +79,17 @@ sub collect {
   FILE:
     foreach my $file ($info->sorted_index) {
         next unless $file->is_file;
+        my $filename = $file->name;
+
         # Wheezy's version of file calls "jar files" for "Zip archive".
         # Newer versions seem to call them "Java Jar file".
         # Jessie also introduced "Java archive data (JAR)"...
-        next unless $info->file_info($file) =~ m/
+        next unless $info->file_info($filename) =~ m/
                      Java [ ] (?:Jar [ ] file|archive [ ] data)
                    | Zip [ ] archive
                    | JAR /xo;
 
-        if ($file =~ m#\S+\.jar$#i) {
-            my $filename = $file->name;
+        if ($filename =~ m#\S+\.jar$#i) {
             my $has_manifest = 0;
             my $manifest;
             my $azip = Archive::Zip->new;

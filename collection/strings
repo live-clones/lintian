@@ -72,14 +72,16 @@ sub collect {
         my $filename = $bin->name;
         my $finfo;
         next if not $bin->is_file or $filename =~ m,^usr/lib/debug/,;
-        next unless $info->file_info($bin) =~ m/\bELF\b/o;
+        $finfo = $info->file_info($filename);
+        next unless $finfo =~ m/\bELF\b/o;
+
         if ($bin =~ m/[:\n\r]/) {
             # Do these "interesting cases" manual
             push @manual, $filename;
             next;
         }
         $open_strings_pipe->() unless %opts;
-        printf {$opts{pipe_in}} "%s\0", $bin;
+        printf {$opts{pipe_in}} "%s\0", $filename;
     }
 
     if (%opts) {
