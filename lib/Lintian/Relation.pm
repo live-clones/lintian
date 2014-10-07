@@ -313,12 +313,15 @@ sub duplicates {
     # new one.
     my (%dups, %seen);
     for (my $i = 1; $i < @$self; $i++) {
+        my $self_i = $self->[$i];
         for (my $j = $i + 1; $j < @$self; $j++) {
-            my $forward = $self->implies_array($self->[$i], $self->[$j]);
-            my $reverse = $self->implies_array($self->[$j], $self->[$i]);
+            my $self_j = $self->[$j];
+            my $forward = $self->implies_array($self_i, $self_j);
+            my $reverse = $self->implies_array($self_j, $self_i);
+
             if ($forward or $reverse) {
-                my $first = $self->unparse($self->[$i]);
-                my $second = $self->unparse($self->[$j]);
+                my $first = $self->unparse($self_i);
+                my $second = $self->unparse($self_j);
                 if ($seen{$first}) {
                     $dups{$seen{$first}}->{$second} = $j;
                     $seen{$second} = $seen{$first};
@@ -366,8 +369,6 @@ sub implies_element {
     my ($self, $p, $q) = @_;
 
     # If the names don't match, there is no relationship between them.
-    $$p[1] = '' unless defined $$p[1];
-    $$q[1] = '' unless defined $$q[1];
     return if $$p[1] ne $$q[1];
 
     # Since the restriction list is not a set (as the architecture list) there
@@ -553,32 +554,34 @@ sub implies_element {
 sub implies_array {
     my ($self, $p, $q) = @_;
     my $i;
-    if ($q->[0] eq 'PRED') {
-        if ($p->[0] eq 'PRED') {
+    my $q0 = $q->[0];
+    my $p0 = $p->[0];
+    if ($q0 eq 'PRED') {
+        if ($p0 eq 'PRED') {
             return $self->implies_element($p, $q);
-        } elsif ($p->[0] eq 'AND') {
+        } elsif ($p0 eq 'AND') {
             $i = 1;
             while ($i < @$p) {
                 return 1 if $self->implies_array($p->[$i++], $q);
             }
             return 0;
-        } elsif ($p->[0] eq 'OR') {
+        } elsif ($p0 eq 'OR') {
             $i = 1;
             while ($i < @$p) {
                 return 0 if not $self->implies_array($p->[$i++], $q);
             }
             return 1;
-        } elsif ($p->[0] eq 'NOT') {
+        } elsif ($p0 eq 'NOT') {
             return $self->implies_array_inverse($p->[1], $q);
         }
-    } elsif ($q->[0] eq 'AND') {
+    } elsif ($q0 eq 'AND') {
         # Each of q's clauses must be deduced from p.
         $i = 1;
         while ($i < @$q) {
             return 0 if not $self->implies_array($p, $q->[$i++]);
         }
         return 1;
-    } elsif ($q->[0] eq 'OR') {
+    } elsif ($q0 eq 'OR') {
         # If p is something other than OR, p needs to satisfy one of the
         # clauses of q.  If p is an AND clause, q is satisfied if any of the
         # clauses of p satisfy it.
@@ -592,19 +595,19 @@ sub implies_array {
         # Simple logic that requires that p satisfy at least one of the
         # clauses of q considered in isolation will miss that a|b satisfies
         # a|b|c, since a|b doesn't satisfy any of a, b, or c in isolation.
-        if ($p->[0] eq 'PRED') {
+        if ($p0 eq 'PRED') {
             $i = 1;
             while ($i < @$q) {
                 return 1 if $self->implies_array($p, $q->[$i++]);
             }
             return 0;
-        } elsif ($p->[0] eq 'AND') {
+        } elsif ($p0 eq 'AND') {
             $i = 1;
             while ($i < @$p) {
                 return 1 if $self->implies_array($p->[$i++], $q);
             }
             return 0;
-        } elsif ($p->[0] eq 'OR') {
+        } elsif ($p0 eq 'OR') {
             for ($i = 1; $i < @$p; $i++) {
                 my $j = 1;
                 my $satisfies = 0;
@@ -620,8 +623,8 @@ sub implies_array {
         } elsif ($p->[0] eq 'NOT') {
             return $self->implies_array_inverse($p->[1], $q);
         }
-    } elsif ($q->[0] eq 'NOT') {
-        if ($p->[0] eq 'NOT') {
+    } elsif ($q0 eq 'NOT') {
+        if ($p0 eq 'NOT') {
             return $self->implies_array($q->[1], $p->[1]);
         }
         return $self->implies_array_inverse($p, $q->[1]);
@@ -672,41 +675,43 @@ sub implies_element_inverse {
 sub implies_array_inverse {
     my ($self, $p, $q) = @_;
     my $i;
-    if ($$q[0] eq 'PRED') {
-        if ($$p[0] eq 'PRED') {
+    my $q0 = $q->[0];
+    my $p0 = $p->[0];
+    if ($q0 eq 'PRED') {
+        if ($p0 eq 'PRED') {
             return $self->implies_element_inverse($p, $q);
-        } elsif ($$p[0] eq 'AND') {
+        } elsif ($p0 eq 'AND') {
             # q's falsehood can be deduced from any of p's clauses
             $i = 1;
             while ($i < @$p) {
                 return 1 if $self->implies_array_inverse($$p[$i++], $q);
             }
             return 0;
-        } elsif ($$p[0] eq 'OR') {
+        } elsif ($p0 eq 'OR') {
             # q's falsehood must be deduced from each of p's clauses
             $i = 1;
             while ($i < @$p) {
                 return 0 if not $self->implies_array_inverse($$p[$i++], $q);
             }
             return 1;
-        } elsif ($$p[0] eq 'NOT') {
+        } elsif ($p0 eq 'NOT') {
             return $self->implies_array($q, $$p[1]);
         }
-    } elsif ($$q[0] eq 'AND') {
+    } elsif ($q0 eq 'AND') {
         # Any of q's clauses must be falsified by p.
         $i = 1;
         while ($i < @$q) {
             return 1 if $self->implies_array_inverse($p, $$q[$i++]);
         }
         return 0;
-    } elsif ($$q[0] eq 'OR') {
+    } elsif ($q0 eq 'OR') {
         # Each of q's clauses must be falsified by p.
         $i = 1;
         while ($i < @$q) {
             return 0 if not $self->implies_array_inverse($p, $$q[$i++]);
         }
         return 1;
-    } elsif ($$q[0] eq 'NOT') {
+    } elsif ($q0 eq 'NOT') {
         return $self->implies_array($p, $$q[1]);
     }
 }
