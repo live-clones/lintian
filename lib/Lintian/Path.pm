@@ -79,15 +79,16 @@ Argument is a hash containing the data read from the index file.
 
 sub new {
     my ($type, $data) = @_;
-    my $self = {
-        # copy the data into $self
-        %$data,
-    };
+    my $self = $data;
+    my $ftype = $data->{'type'};
     bless($self, $type);
-    if ($self->is_file) {
+    # Use $data->{type} directly here.  The constructor is called
+    # often enough for this to take up a (small) measure amount of
+    # runtime.
+    if ($ftype eq '-' or $ftype eq 'h') {
         $self->{'_is_open_ok'} = 1;
         $self->{'_valid_path'} = 1;
-    } elsif ($self->is_dir) {
+    } elsif ($ftype eq 'd') {
         $self->{'_is_open_ok'} = 0;
         $self->{'_valid_path'} = 1;
         for my $child ($self->children) {
