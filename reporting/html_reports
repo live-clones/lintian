@@ -384,6 +384,14 @@ while (<>) {
         $maintainer = $last_maintainer;
     } else {
 
+        my $anchor = "${source}_${source_version}";
+        # Apparently "+" are not allowed in ids and I am guessing
+        # ":" is not either
+        if (index($anchor, '+') > -1 or index($anchor, ':') > -1) {
+            $anchor =~ s/[+]/_x2b/g;
+            $anchor =~ s/[:]/_x3a/g;
+        }
+
        # Check if we've seen the URL for this maintainer before and, if so, map
        # them to the same person as the previous one.
 
@@ -408,8 +416,10 @@ while (<>) {
             certainty    => $tag_info->certainty,
             # extra is unsafe in general, but we already quote it above.
             extra        => $extra,
+            # should be safe
+            anchor       => $anchor,
             xref         => maintainer_url($maintainer)
-              . "#${source}_${source_version}",
+              . "#${anchor}",
             'state_data' => $state_data,
         };
         if (!$by_maint{$maintainer}{$source}{$source_version}) {

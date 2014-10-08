@@ -34,13 +34,16 @@
 
             if (!$errors) {
                 # Full report, so include the package
-                @interesting = sort by_version keys %$versions
+                @interesting = sort by_version keys %$versions;
+                @interesting = map {
+                    [$_, $versions->{$_}[0]{anchor}]
+                } @interesting;
             } else {
                 for my $version (sort by_version keys %$versions) {
                     my $tags = $versions->{$version};
                     for my $tag (@$tags) {
                         if (($tag->{code} eq 'E') or ($tag->{code} eq 'W')) {
-                            push @interesting, $version;
+                            push(@interesting, [$version, $tag->{anchor}]);
                             last;
                         }
                     }
@@ -50,14 +53,16 @@
             if (@interesting) {
                 if (scalar @interesting > 1) {
                     $OUT .= qq(      <li>$source<ul>\n);
-                    foreach my $version (@interesting) {
-                        $OUT .= '            ' .
-                            qq(<li><a href="#${source}_${version}">$version</a></li>\n);
+                    foreach my $vdata (@interesting) {
+                        my ($version, $anchor) = @{$vdata};
+                        $OUT .= q{            } .
+                            qq(<li><a href="#${anchor}">$version</a></li>\n);
                     }
                     $OUT .= qq(      </ul></li>\n);
                 } else {
-                    my ($version) = @interesting;
-                    $OUT .= qq(      <li><a href="#${source}_${version}">$source</a> ($version)</li>\n);
+                    my ($vdata) = @interesting;
+                    my ($version, $anchor) = @{$vdata};
+                    $OUT .= qq(      <li><a href="#${anchor}">$source</a> ($version)</li>\n);
                 }
             }
         }
@@ -104,7 +109,7 @@
                 if ($first) {
                     my $state = $info->{'state_data'};
                     $OUT .= qq(  <div class="source-header">\n);
-                    $OUT .= qq(   <h2 id="${source}_${version}">);
+                    $OUT .= qq(   <h2 id="$info->{anchor}">);
                     $OUT .= "$source ($version$area)";
                     $OUT .= " [Uploader]" if $upload;
                     if ($first_version) {
