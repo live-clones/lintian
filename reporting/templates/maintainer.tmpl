@@ -80,16 +80,18 @@
             $upload = 1;
         }
         for my $version (sort by_version keys %$data) {
-            my $tags = $data->{$version};
+            my @tags = @{$data->{$version}};
             my $first = 1;
             my $binary = '';
             my $tag = '';
             my $firstarea = '';
-            for my $info (@$tags) {
-                if ($errors) {
-                    next unless $info->{code} eq 'E' or $info->{code} eq 'W';
-                }
 
+            if ($errors) {
+                @tags = grep { $_->{code} eq 'E' or $_->{code} eq 'W' } @tags;
+                next if not @tags;
+            }
+
+            for my $info (@tags) {
                 my $is_binary = ($info->{type} eq "binary" or $info->{type} eq "udeb");
                 my $new_binary = $info->{package} ne $binary if $is_binary;
 
