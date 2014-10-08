@@ -418,8 +418,7 @@ while (<>) {
             extra        => $extra,
             # should be safe
             anchor       => $anchor,
-            xref         => maintainer_url($maintainer)
-              . "#${anchor}",
+            xref         => maintainer_url($maintainer). "#${anchor}",
             'state_data' => $state_data,
         };
         if (!$by_maint{$maintainer}{$source}{$source_version}) {
