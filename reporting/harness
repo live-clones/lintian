@@ -99,7 +99,7 @@ die "Cannot use other modes with reports only.\n"
 require './config'; ## no critic (Modules::RequireBarewordIncludes)
 use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
   $LINTIAN_ARCH @EXTRA_LINTIAN_OPTIONS
-  $LOG_DIR $statistics_file
+  $LOG_DIR
   $HTML_DIR $HTML_TMP_DIR
   $LINTIAN_AREA $HARNESS_STATE_DIR);
 
@@ -448,10 +448,10 @@ spawn(\%html_reports_opts, [$html_reports_cmd, $lintian_log])
 Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
-if (!$opt{'dry-run'} && -f $statistics_file) {
+if (!$opt{'dry-run'} && -f "$HARNESS_STATE_DIR/statistics") {
     my $date = time2str('%Y%m%d', time());
     my $dest = "$LOG_DIR/stats/statistics-${date}";
-    system('cp', $statistics_file, $dest) == 0
+    system('cp', "$HARNESS_STATE_DIR/statistics", $dest) == 0
       or Log('warning: could not rotate the statistics file');
 }
 
