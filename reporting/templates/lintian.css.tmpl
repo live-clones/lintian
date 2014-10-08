@@ -179,6 +179,23 @@ hr {
     margin-left: 130px;
 }
 
+/* For smaller devices, we leave out the "icon" - it is fairly wide with
+ * little added value.
+ */
+@media (max-width: 700px) {
+
+  #info {
+      margin: 25px 0;
+      padding: 20px;
+      background: #EFF4F8;
+      border: 1px solid #DFE4E8;
+  }
+
+  #info p {
+      margin-left: 5%;
+  }
+}
+
 #stats table {
     border-collapse: collapse;
 }
