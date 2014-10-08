@@ -85,6 +85,10 @@
             my $binary = '';
             my $tag = '';
             my $firstarea = '';
+            # Tracks whether we have opened an "<ul>"-list for the tag "extra".
+            # We only do this if the tags have "extra" info to avoid an empty
+            # "<ul></ul>" (which is forbidden by XHTML 1.0 strict).
+            my $has_extra = 0;
 
             if ($errors) {
                 @tags = grep { $_->{code} eq 'E' or $_->{code} eq 'W' } @tags;
@@ -129,10 +133,17 @@
                     $bin_version = " ($info->{version}; $info->{area})";
                 }
 
-                if ($new_binary) {
-                    $OUT .= "</ul>\n    </li>\n  </ul>\n" unless $first;
-                    $OUT .= qq(  <h3>$info->{package}$bin_version</h3>\n);
-                    $OUT .= qq(  <ul class="report">\n);
+                if ($tag ne $info->{tag} or $new_binary) {
+                    # Close the '<ul class="extra">' HTML tag if it is open
+                    $OUT .= "</ul>\n" if $has_extra;
+                    # Reset has_extra; if the tag has an "extra", we will check
+                    # for it later.
+                    $has_extra = 0;
+                    if ($new_binary) {
+                        $OUT .= "    </li>\n  </ul>\n" unless $first;
+                        $OUT .= qq(  <h3>$info->{package}$bin_version</h3>\n);
+                        $OUT .= qq(  <ul class="report">\n);
+                    }
                 }
 
                 my $class = '';
@@ -142,16 +153,20 @@
 
                 # Display tag name only once.
                 if ($tag ne $info->{tag} or $new_binary) {
-                    $OUT .= "</ul>\n    </li>\n" unless $first or $new_binary;
+                    $OUT .= "    </li>\n" unless $first or $new_binary;
                     $OUT .= "    <li$class>\n";
                     $OUT .= qq(      <span class="type-$info->{code}">);
                     $OUT .= "$info->{code}</span> ";
                     $OUT .= qq(<a href="${path_prefix}tags/$info->{tag}.html">);
                     $OUT .= "$info->{tag}</a>\n";
-                    $OUT .= qq(      <ul class="extra">);
                 }
 
                 if ($info->{extra}) {
+                    if (not $has_extra) {
+                        # Open a list for the "extra" info.
+                        $has_extra = 1;
+                        $OUT .= qq(      <ul class="extra">);
+                    }
                     $OUT .= "<li>$info->{extra}</li>";
                 }
 
@@ -159,7 +174,9 @@
                 $binary = $info->{package} if $is_binary;
                 $tag = $info->{tag};
             }
-            $OUT .= "</ul>\n    </li>\n  </ul>\n";
+            # Close the "extra" info-list (if present) and the current setup
+            $OUT .= "</ul>\n" if $has_extra;
+            $OUT .= "    </li>\n  </ul>\n";
         }
     }
 }
