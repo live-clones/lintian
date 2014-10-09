@@ -26,6 +26,7 @@ use warnings;
 use constant BACKLOG_PROCESSING_GROUP_LIMIT => 1024;
 use constant BACKLOG_PROCESSING_TIME_LIMIT => 4 * 3600; # 4hours
 
+use Date::Format qw(time2str);
 use Errno qw(ENOENT);
 use File::Temp qw(tempfile);
 use Getopt::Long;
