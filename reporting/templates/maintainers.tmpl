@@ -3,7 +3,7 @@
 
   <p>
     Maintainers are listed sorted case-insensitively by package maintainer
-    string.  This is an unsophisticated sort that doesn't take into
+    string.  This is an unsophisticated sort that does not take into
     account any national collating sequence, only Unicode strings, so
     maintainers whose names start with non-ASCII characters will sort at
     the end of this page.
@@ -11,9 +11,11 @@
 
   <p>
     Jump to: { join (' ', map { qq(<a href="#$_">$_</a>) } 'A'..'Z') }
-  </p>
-
 {
+    # !!NB!! We are deliberately leaving out the closing "</p>" here.
+    # It will be added by the loop below, which can (due to this)
+    # unconditionally emit a "</p>" at the start of each new letter.
+
     # Put headings before each new initial letter and add anchors, except
     # for non-ASCII initial characters.  For those, since we can't be
     # assured we'll get combining characters right, just accumulate them
@@ -28,9 +30,6 @@
             $first = 'Other';
         }
         if ($first ne $letter) {
-            unless ($letter) {
-                $OUT .= "  </p>\n\n";
-            }
             $letter = $first;
             if ($letter eq 'Other') {
                 $OUT .= qq(  </p>\n\n  <h2>Other</h2>\n\n  <p>\n);
