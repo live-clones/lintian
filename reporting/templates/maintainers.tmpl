@@ -19,9 +19,11 @@
     # assured we'll get combining characters right, just accumulate them
     # under a heading of Other.
     my $letter = '';
-    for my $maintainer (sort { lc ($a) cmp lc ($b) } keys %maintainers) {
-        my ($url) = $maintainers{$maintainer};
-        my $first = uc substr($maintainer, 0, 1);
+    for my $key (sort { lc ($a) cmp lc ($b) } keys %maintainers) {
+        my $maint_data = $maintainers{$key};
+        my $url = $maint_data->{url};
+        my $maintainer = $maint_data->{name};
+        my $first = uc substr($key, 0, 1);
         if ($first lt 'A' || $first gt 'Z') {
             $first = 'Other';
         }

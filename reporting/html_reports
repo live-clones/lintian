@@ -466,7 +466,7 @@ undef $source_info;
 # a summary page of errors and warnings for each maintainer, output a full
 # page that includes info, experimental, and overriden tags, and assemble the
 # maintainer index and the QA package list as we go.
-my (%qa, %maintainers, %sources);
+my (%qa, %maintainer_table, %sources);
 my @maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
 
 for my $maintainer (@maintainers) {
@@ -526,12 +526,13 @@ for my $maintainer (@maintainers) {
     # Create the regular maintainer page (only errors and warnings) and the
     # full maintainer page (all tags, including overrides and info tags).
     print "Generating page for $id\n";
+    my $q_name = html_quote($name);
     my %data = (
         email      => html_quote(uri_escape($email)),
         errors     => 1,
         id         => $id,
         maintainer => html_quote($maintainer),
-        name       => html_quote($name),
+        name       => $q_name,
         packages   => $by_maint{$maintainer},
         uploads    => $by_uploader{$maintainer},
     );
@@ -546,12 +547,13 @@ for my $maintainer (@maintainers) {
     $data{errors} = 0;
     output_template($full, $template, \%data);
 
+    my %index_data = (url => $id, name => $q_name);
     # Add this maintainer to the hash of maintainer to URL mappings.
-    $maintainers{$maintainer} = $id;
+    $maintainer_table{$maintainer} = \%index_data;
 }
 
 # Write out the maintainer index.
-my %data = (maintainers => \%maintainers,);
+my %data = (maintainers => \%maintainer_table,);
 output_template('maintainers.html', $templates{maintainers}, \%data);
 
 mkdir("$HTML_TMP_DIR/lookup-tables");
