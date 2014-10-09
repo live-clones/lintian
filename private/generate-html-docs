@@ -20,8 +20,12 @@ if (!-d $output) {
     mkdir $output or die "could not create directory: $!";
 }
 
+$Pod::Simple::HTML::Doctype_decl
+  = qq{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+         "http://www.w3.org/TR/html4/loose.dtd">\n};
+
 $Pod::Simple::HTML::Content_decl
-  = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >};
+  = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">};
 
 my $convert = Pod::Simple::HTMLBatch->new;
 $convert->html_render_class('Pod::Simple::HTML');
@@ -33,9 +37,13 @@ print "HTML version available at $output/index.html\n";
 sub header {
 
     return <<EOF;
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head><title>Lintian (v$version) API doc</title></head>
+<head>
+  <title>Lintian (v$version) API doc</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
 <body class='contentspage'>
 <h1>Lintian (v$version) API doc</h1>
 <p><em>Note: </em>This API is not stable between releases.</p>
