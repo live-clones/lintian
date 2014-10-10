@@ -54,3 +54,34 @@ Info: The package contains D-Bus policy configuration that uses
  unintended effects on other services.
 Ref: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html
 Experimental: yes
+
+Tag: dbus-session-service-wrong-name
+Severity: wishlist
+Certainty: certain
+Info: The package contains a D-Bus session service whose filename
+ does not match the <tt>Name</tt> field found in the file.
+ This makes it possible that two non-conflicting packages could
+ provide the same service name with the same search-path priority
+ (i.e. in the same directory). dbus-daemon will arbitrarily choose
+ one of them, which is unlikely to be the desired result.
+ .
+ Best-practice is that if you implement a session service whose well-known
+ name is <tt>com.example.MyService1</tt>, and it should be
+ service-activatable, you should achieve that by packaging
+ <tt>/usr/share/dbus-1/services/com.example.MyService1.service</tt>.
+Experimental: yes
+
+Tag: dbus-system-service-wrong-name
+Severity: serious
+Certainty: certain
+Info: The package contains a D-Bus system service whose filename
+ does not match the <tt>Name</tt> field found in the file.
+ This will not work, because dbus-daemon-launch-helper specifically
+ looks for that filename, in order to keep system-level activation
+ secure and predictable.
+ .
+ If you implement a session service whose well-known name is
+ <tt>com.example.MyService1</tt>, and it should be service-activatable,
+ you must provide
+ <tt>/usr/share/dbus-1/system-services/com.example.MyService1.service</tt>.
+Experimental: yes

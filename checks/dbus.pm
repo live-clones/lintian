@@ -32,8 +32,8 @@ sub run {
     my ($pkg, $type, $info) = @_;
 
     my @files;
-    foreach my $dirname (qw(etc/dbus-1/session.d/ etc/dbus-1/system.d)) {
-        if (my $dir = $info->index_resolved_path($dirname)) {
+    foreach my $dirname (qw(session system)) {
+        if (my $dir = $info->index_resolved_path("etc/dbus-1/${dirname}.d")) {
             push @files, $dir->children;
         }
     }
@@ -41,6 +41,21 @@ sub run {
     foreach my $file (@files) {
         next unless $file->is_open_ok;
         _check_policy($file);
+    }
+
+    if (my $dir = $info->index_resolved_path('usr/share/dbus-1/services')) {
+        foreach my $file ($dir->children) {
+            next unless $file->is_open_ok;
+            _check_service($file, session => 1);
+        }
+    }
+
+    if (my $dir
+        = $info->index_resolved_path('usr/share/dbus-1/system-services')) {
+        foreach my $file ($dir->children) {
+            next unless $file->is_open_ok;
+            _check_service($file);
+        }
     }
 
     return;
@@ -68,6 +83,27 @@ sub _check_policy {
             # normalize whitespace a bit
             $rule =~ s{\s+}{ }g;
             tag('dbus-policy-without-send-destination', $file, $rule);
+        }
+    }
+
+    return;
+}
+
+sub _check_service {
+    my ($file, %kwargs) = @_;
+
+    my $basename = $file->basename;
+    my $text = $file->file_contents;
+
+    while ($text =~ m{^Name=(.*)$}gm) {
+        my $name = $1;
+        if ($basename ne "${name}.service") {
+            if ($kwargs{session}) {
+                tag('dbus-session-service-wrong-name',
+                    "${name}.service", $file);
+            } else {
+                tag('dbus-system-service-wrong-name',"${name}.service", $file);
+            }
         }
     }
 
