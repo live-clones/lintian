@@ -1,0 +1,4 @@
+X: dbus-policy: dbus-policy-at-console etc/dbus-1/system.d/at-console.conf
+X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <allow send_interface="org.freedesktop.DBus.ObjectManager"/>
+X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
+X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <allow send_path="/com/example/Here"/>
