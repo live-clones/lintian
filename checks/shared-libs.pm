@@ -599,8 +599,9 @@ sub run {
         my %seen;
         @symbols_depends = grep { !$seen{$_}++ } @symbols_depends;
         for my $depend (@symbols_depends) {
-            $depend =~ s/ \#MINVER\#$//;
-            unless ($provides->implies($depend)) {
+            my $d = $depend;
+            $d =~ s/ \#MINVER\#$//;
+            unless ($provides->implies($d)) {
                 tag 'symbols-declares-dependency-on-other-package', $depend;
             }
         }
