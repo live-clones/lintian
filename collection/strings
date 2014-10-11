@@ -53,8 +53,6 @@ sub collect {
 
     $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    open(my $elf_fd, '>', "$dir/elf-index");
-
     # The directory is required, even if it would be empty.
     mkdir("$dir/strings");
 
@@ -74,8 +72,6 @@ sub collect {
         my $filename = $bin->name;
         my $finfo = $info->file_info($bin);
         next unless $finfo =~ m/\bELF\b/o;
-        printf {$elf_fd} "$filename\n";
-
         next if $bin =~ m,^usr/lib/debug/,;
         if ($bin =~ m/[:\n\r]/) {
             # Do these "interesting cases" manual
@@ -108,7 +104,6 @@ sub collect {
                 '|', ['gzip', '-9nc']);
         }
     }
-    close($elf_fd);
 
     return;
 }
