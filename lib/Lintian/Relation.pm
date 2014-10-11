@@ -89,7 +89,7 @@ satisfied).
 # the unparsed debian/control file.
 sub parse_element {
     my ($class, $element) = @_;
-    return if not $element =~ /
+    if (not $element =~ /
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
          (?:                            #  start of the name
@@ -120,7 +120,10 @@ sub parse_element {
           \s* ([^>,]+)                  # don't parse restrictions now
           \s* >                         # closing bracket
         )?                              # end of optional restriction
-    /x;
+    \s* $/x) {
+        # store the element as-is, so we can unparse it.
+        return ['PRED-UNPARSABLE', $element];
+    }
 
     my ($pkgname, $march, $relop, $relver, $bdarch, $restr)
       = ($1, $2, $3, $4, $5, $6);
@@ -628,7 +631,11 @@ sub implies_array {
             return $self->implies_array($q->[1], $p->[1]);
         }
         return $self->implies_array_inverse($p, $q->[1]);
+    } elsif ($q0 eq 'PRED-UNPARSABLE') {
+        # Assume eqv. holds for unparsable elements.
+        return 1 if $p0 eq $q0 and $p->[1] eq $q->[1];
     }
+    return;
 }
 
 # The public interface.
@@ -743,7 +750,8 @@ internal failures (such as an object in an unexpected format).
 sub unparse {
     my ($self, $partial) = @_;
     my $relation = defined($partial) ? $partial : $self;
-    if ($relation->[0] eq 'PRED') {
+    my $rel_type = $relation->[0];
+    if ($rel_type eq 'PRED') {
         my $text = $relation->[1];
         if (defined $relation->[5]) {
             $text .= ":$relation->[5]";
@@ -755,12 +763,15 @@ sub unparse {
             $text .= " [$relation->[4]]";
         }
         return $text;
-    } elsif ($relation->[0] eq 'AND' || $relation->[0] eq 'OR') {
+    } elsif ($rel_type eq 'AND' || $rel_type eq 'OR') {
         my $separator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
         return join($separator,
             map {$self->unparse($_);} @$relation[1 .. $#$relation]);
-    } elsif ($relation->[0] eq 'NOT') {
+    } elsif ($rel_type eq 'NOT') {
         return '! ' . $self->unparse($relation->[1]);
+    } elsif ($rel_type eq 'PRED-UNPARSABLE') {
+        # Return the original value
+        return $relation->[1];
     } else {
         require Carp;
         Carp::confess("Case $relation->[0] not implemented");
@@ -892,20 +903,21 @@ relation).
 sub visit {
     my ($self, $code, $flags, $partial) = @_;
     my $relation = $partial // $self;
+    my $rel_type = $relation->[0];
     $flags //= 0;
-    if ($relation->[0] eq 'PRED') {
+    if ($rel_type eq 'PRED') {
         my $against = $relation->[1];
         $against = $self->unparse($relation) if $flags & VISIT_PRED_FULL;
         local $_ = $against;
         return $code->($against);
     } elsif (($flags & VISIT_OR_CLAUSE_FULL) == VISIT_OR_CLAUSE_FULL
-        and $relation->[0] eq 'OR') {
+        and $rel_type eq 'OR') {
         my $against = $self->unparse($relation);
         local $_ = $against;
         return $code->($against);
-    } elsif ($relation->[0] eq 'AND'
-        or $relation->[0] eq 'OR'
-        or $relation->[0] eq 'NOT') {
+    } elsif ($rel_type eq 'AND'
+        or $rel_type eq 'OR'
+        or $rel_type eq 'NOT') {
         for my $rel (@$relation[1 .. $#$relation]) {
             my $ret = $self->visit($code, $flags, $rel);
             if ($ret && ($flags & VISIT_STOP_FIRST_MATCH)) {
