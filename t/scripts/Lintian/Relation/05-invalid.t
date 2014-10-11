@@ -26,13 +26,16 @@ done_testing;
 sub test_relation {
     my ($str, %tests) = @_;
     my $rel = Lintian::Relation->new($str);
+    my $tests = 0;
     if (my $unparsed = $tests{'unparsed'}) {
         is($rel->unparse, $unparsed, "Unparse $str");
+        $tests++;
     }
     if (my $implications = $tests{'implied'}) {
         for my $imp (@{$implications}) {
             my $test = qq{"$str" implies "$imp"};
             ok($rel->implies($imp), $test);
+            $tests++;
         }
     }
 
@@ -40,7 +43,10 @@ sub test_relation {
         for my $no_imp (@{$non_implications}) {
             my $test = qq{"$str" does NOT imply "$no_imp"};
             ok(!$rel->implies($no_imp), $test);
+            $tests++;
         }
     }
+    cmp_ok($tests, '>=', 1, qq{Ran at least on test on "$str"});
+    return;
 }
 
