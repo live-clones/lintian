@@ -2,6 +2,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/dbus.{desc,pm}:
+    + [NT] New check by Simon McVittie to discover some dbus
+      related issues.  (Closes: #762609)
   * collection/{bin-pkg-control,unpacked}:
     + [NT] Pass "-m" to tar to make it avoid "correcting" the
       timestamp of the extracted files.  Lintian does not need
