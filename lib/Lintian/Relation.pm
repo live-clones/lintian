@@ -930,7 +930,7 @@ sub visit {
     }
 }
 
-=item empty ()
+=item empty
 
 Returns a truth value if this relation is empty (i.e. it contains no
 predicates).
@@ -941,6 +941,32 @@ sub empty {
     my ($self) = @_;
     return 1 if $self->[0] eq 'AND' and not $self->[1];
     return 0;
+}
+
+=item unparsable_predicates
+
+Returns a list of predicates that were unparsable.
+
+They are returned in the original textual representation and are also
+sorted by said representation.
+
+=cut
+
+sub unparsable_predicates {
+    my ($self) = @_;
+    my @worklist = ($self);
+    my @unparsable;
+    while (my $current = pop(@worklist)) {
+        my $rel_type = $current->[0];
+        next if $rel_type eq 'PRED';
+        if ($rel_type eq 'PRED-UNPARSABLE') {
+            push(@unparsable, $current->[1]);
+            next;
+        }
+        push(@worklist, @$current[1 .. $#$current]);
+    }
+    @unparsable = sort(@unparsable);
+    return @unparsable;
 }
 
 =back

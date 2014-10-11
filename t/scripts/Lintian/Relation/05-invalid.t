@@ -7,18 +7,19 @@ use Test::More;
 use Lintian::Relation;
 
 test_relation(
-    'pkg%any (>= 1.0)  ,  pkgB   |  1gf  ,  pkgC(>=2.0)',
+    'pkg%any (>= 1.0)  ,  pkgB   |  _gf  ,  pkgC(>=2.0)',
     'implied' => [
-        'pkgB | 1gf', # partly unparsable, but identity holds
+        'pkgB | _gf', # partly unparsable, but identity holds
         'pkgC (>= 1.0)', # regular entry
     ],
     'not-implied' => [
         'pkg',     # unparsable
         'pkg%any', # unparsable
         'pkgB',    # OR relation with unparsable entry
-        '1gf',     # OR relation
+        '_gf',     # OR relation
     ],
-    'unparsed' => 'pkg%any (>= 1.0), pkgB | 1gf, pkgC (>= 2.0)'
+    'unparsable' => ['_gf', 'pkg%any (>= 1.0)'],
+    'unparsed' => 'pkg%any (>= 1.0), pkgB | _gf, pkgC (>= 2.0)'
 );
 
 done_testing;
@@ -46,6 +47,12 @@ sub test_relation {
             $tests++;
         }
     }
+    if (my $unparsable = $tests{'unparsable'}) {
+        my @actual = $rel->unparsable_predicates;
+        my $test_name = qq{Unparsable entries for "$str"};
+        is_deeply(\@actual, $unparsable, $test_name);
+    }
+
     cmp_ok($tests, '>=', 1, qq{Ran at least on test on "$str"});
     return;
 }
