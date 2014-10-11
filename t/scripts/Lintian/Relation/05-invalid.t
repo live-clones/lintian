@@ -6,22 +6,22 @@ use Test::More;
 
 use Lintian::Relation;
 
-test_relation('pkg%any (>= 1.0)  ,  pkgB   |  1gf  ,  pkgC(>=2.0)',
-              'implied' => [
-                  'pkgB | 1gf', # partly unparsable, but identity holds
-                  'pkgC (>= 1.0)', # regular entry
-              ],
-              'not-implied' => [
-                  'pkg',     # unparsable
-                  'pkg%any', # unparsable
-                  'pkgB',    # OR relation with unparsable entry
-                  '1gf',     # OR relation
-              ],
-              'unparsed' => 'pkg%any (>= 1.0), pkgB | 1gf, pkgC (>= 2.0)'
+test_relation(
+    'pkg%any (>= 1.0)  ,  pkgB   |  1gf  ,  pkgC(>=2.0)',
+    'implied' => [
+        'pkgB | 1gf', # partly unparsable, but identity holds
+        'pkgC (>= 1.0)', # regular entry
+    ],
+    'not-implied' => [
+        'pkg',     # unparsable
+        'pkg%any', # unparsable
+        'pkgB',    # OR relation with unparsable entry
+        '1gf',     # OR relation
+    ],
+    'unparsed' => 'pkg%any (>= 1.0), pkgB | 1gf, pkgC (>= 2.0)'
 );
 
 done_testing;
-
 
 sub test_relation {
     my ($str, %tests) = @_;

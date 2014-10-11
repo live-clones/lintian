@@ -89,7 +89,8 @@ satisfied).
 # the unparsed debian/control file.
 sub parse_element {
     my ($class, $element) = @_;
-    if (not $element =~ /
+    if (
+        not $element =~ /
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
          (?:                            #  start of the name
@@ -120,7 +121,8 @@ sub parse_element {
           \s* ([^>,]+)                  # don't parse restrictions now
           \s* >                         # closing bracket
         )?                              # end of optional restriction
-    \s* $/x) {
+    \s* $/x
+      ) {
         # store the element as-is, so we can unparse it.
         return ['PRED-UNPARSABLE', $element];
     }
