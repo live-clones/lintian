@@ -35,7 +35,7 @@ use constant READ_SIZE => 4096 * 1024 * 10;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(check_path delete_dir fail);
+use Lintian::Util qw(check_path delete_dir fail pipe_tee);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -149,7 +149,7 @@ sub can_use_dpkg_source{
 sub extract_and_index_deb {
     my ($dir) = @_;
     my @sort_gzip = (['sort', '-k', '6'], '|', ['gzip', '-9c']);
-    my @jobs;
+    my (@jobs, @out_fds, $err);
     open(my $tar_in, '-|', 'dpkg-deb', '--fsys-tarfile', "$dir/deb");
 
     # Extraction
@@ -188,42 +188,22 @@ sub extract_and_index_deb {
         });
     for my $job (@jobs) {
         spawn($job, @{$job->{'_pipeline'}});
-        $job->{'pipe_in'}->blocking(1);
+        my $out_fd = $job->{'pipe_in'};
+        $out_fd->blocking(1);
+        push(@out_fds, $out_fd);
     }
 
+    eval {pipe_tee($tar_in, \@out_fds, { 'chunk_size' => READ_SIZE});};
+    $err = $@;
     eval {
-        my $buffer;
-        while (1) {
-            # Disable autodie, because it includes the buffer
-            # exception.  Said buffer will get printed on errors
-            # yielding completely unreadable errors and a terminal
-            # drowned in binary characters.
-            no autodie qw(read syswrite);
-            my $rlen = read($tar_in, $buffer, READ_SIZE);
-            if (not $rlen) {
-                last if defined($rlen);
-                die "Failed to read from tar: $!\n";
-            }
-            for my $job (@jobs) {
-                my $written = 0;
-                my $out_fd = $job->{'pipe_in'};
-                while ($written < $rlen) {
-                    my $remain = $rlen - $written;
-                    my $res = syswrite($out_fd, $buffer, $remain,$written);
-                    if (!defined($res)) {
-                        die "Failed to write to tar: $!\n";
-                    }
-                    $written += $res;
-                }
-            }
-        }
         close($tar_in);
-        for my $job (@jobs) {
-            close($job->{'pipe_in'});
+        for my $fd (@out_fds) {
+            close($fd);
         }
         reap(@jobs);
     };
-    if (my $err = $@) {
+    $err ||= $@;
+    if ($err) {
         eval {dump_errors("$dir/unpack-errors");};
         die $err;
     }

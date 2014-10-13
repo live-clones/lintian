@@ -83,6 +83,7 @@ BEGIN {
           load_state_cache
           find_backlog
           unix_locale_split
+          pipe_tee
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -1413,6 +1414,66 @@ sub unix_locale_split {
     }
 
     return @parts;
+}
+
+=item pipe_tee(INHANDLE, OUTHANDLES[, OPTS])
+
+Read bytes from INHANDLE and copy them into all of the handles in the
+listref OUTHANDLES. The optional OPTS argument is a hashref of
+options, see below.
+
+The subroutine will continue to read from INHANDLE until it is
+exhausted or an error occurs (either during read or write).  In case
+of errors, a trappable error will be raised.  The handles are left
+open when the subroutine returns, caller must close them afterwards.
+
+Caller should ensure that handles are using "blocking" I/O.  The
+subroutine will use L<sysread|perlfunc/sysread> and
+L<syswrite|perlfunc/syswrite> when reading and writing.
+
+
+OPTS, if given, may contain the following key-value pairs:
+
+=over 4
+
+=item chuck_size
+
+A suggested buffer size for read/write.  If given, it will be to
+sysread as LENGTH argument when reading from INHANDLE.
+
+=back
+
+=cut
+
+sub pipe_tee {
+    my ($in_fd, $out_ref, $opts) = @_;
+    my $read_size = ($opts && $opts->{'chunk_size'}) // 8096;
+    my @outs = @{$out_ref};
+    my $buffer;
+    while (1) {
+        # Disable autodie, because it includes the buffer
+        # exception.  Said buffer will get printed on errors
+        # yielding completely unreadable errors and a terminal
+        # drowned in binary characters.
+        no autodie qw(sysread syswrite);
+        my $rlen = sysread($in_fd, $buffer, $read_size);
+        if (not $rlen) {
+            last if defined($rlen);
+            croak("Failed to read from input handle: $!");
+        }
+        for my $out_fd (@outs) {
+            my $written = 0;
+            while ($written < $rlen) {
+                my $remain = $rlen - $written;
+                my $res = syswrite($out_fd, $buffer, $remain,$written);
+                if (!defined($res)) {
+                    croak("Failed to write to output handle: $!");
+                }
+                $written += $res;
+            }
+        }
+    }
+    return 1;
 }
 
 =item load_state_cache(STATE_DIR)

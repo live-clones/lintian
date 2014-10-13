@@ -29,11 +29,11 @@ use constant ERROR_FILES => qw(control-index-errors control-errors);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(delete_dir fail);
+use Lintian::Util qw(delete_dir fail pipe_tee);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
-    my (@jobs, $job);
+    my (@jobs, $job, $in_fd, @out_fds, $err);
 
     if (-e "$dir/control"){
         delete_dir("$dir/control") or fail 'Cannot remove old control dir';
@@ -48,41 +48,64 @@ sub collect {
 
     # The following calls use knowledge of the .deb format for speed
 
+
     # (replaces dpkg-deb -e)
     # extract control files' tarball
+    $in_fd = FileHandle->new;
     spawn(
-        { fail => 'error', out => "$dir/control.tar" },
+        { fail => 'error', pipe_out => $in_fd },
         ['ar', 'p', "$dir/deb", 'control.tar.gz'],
         '|', ['gzip', '-dc']);
 
-    $job = { fail => 'error', err => "$dir/control-errors" };
-    push @jobs, $job;
+    $job = { fail => 'error', err => "$dir/control-errors",
+             pipe_in => FileHandle->new,
+    };
+    push(@out_fds, $job->{'pipe_in'});
+    push(@jobs, $job);
     # extract the tarball's contents
     spawn(
         $job,
         [
             'tar', '--no-same-owner','--no-same-permissions', '-mxf',
-            "$dir/control.tar", '-C',"$dir/control", '&'
+            '-', '-C',"$dir/control",
         ]);
 
     $job = {
         fail => 'error',
         out  => "$dir/control-index.gz",
-        err  => "$dir/control-index-errors"
+        err  => "$dir/control-index-errors",
+        pipe_in => FileHandle->new,
     };
 
-    push @jobs, $job;
+    push(@out_fds, $job->{'pipe_in'});
+    push(@jobs, $job);
     # create index of control.tar.gz
     spawn(
-        $job, ['tar', 'tvf', "$dir/control.tar"],
+        $job, ['tar', 'tvf', '-'],
         '|', ['sort', '-k', '6'],
-        '|', ['gzip', '--best', '-c'], '&'
+        '|', ['gzip', '--best', '-c'],
     );
 
-    reap(@jobs);
-    undef @jobs;
-    # clean up control.tar
-    unlink("$dir/control.tar");
+    $in_fd->blocking(1);
+    for my $out_pipe (@out_fds) {
+        $out_pipe->blocking(1);
+    }
+    eval {
+        pipe_tee($in_fd, \@out_fds);
+    };
+    $err = $@;
+    eval {
+        close($in_fd);
+        for my $fd (@out_fds) {
+            close($fd);
+        }
+        reap(@jobs);
+        undef(@jobs);
+    };
+    $err ||= $@;
+    if ($err) {
+        die $err;
+    }
 
     # fix permissions
     spawn({ fail => 'error' }, ['chmod', '-R', 'u+rX,o-w', "$dir/control"]);
