@@ -5,6 +5,7 @@ lintian (2.5.29) UNRELEASED; urgency=medium
   * checks/dbus.{desc,pm}:
     + [NT] New check by Simon McVittie to discover some dbus
       related issues.  (Closes: #762609)
+
   * collection/{bin-pkg-control,unpacked}:
     + [NT] Pass "-m" to tar to make it avoid "correcting" the
       timestamp of the extracted files.  Lintian does not need
@@ -13,6 +14,10 @@ lintian (2.5.29) UNRELEASED; urgency=medium
     + [NT] Explicitly pass tar options to make it extract files
       as the current user and applying the users umask.  This is
       mostly to be explicit about how things are extracted.
+  * collection/file-info:
+    + [NT] Stop collecting file-info for "non-files".  The output
+      is not used and often trivial / predictable from other data
+      input already available.
   * collection/strings:
     + [NT] Stop creating "elf-index" file as nothing uses it.
 

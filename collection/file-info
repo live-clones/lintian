@@ -65,6 +65,7 @@ sub collect {
     $opts{pipe_in}->blocking(1);
 
     foreach my $file ($info->sorted_index) {
+        next unless $file->is_file;
         printf {$opts{pipe_in}} "%s\0", $file;
     }
 
