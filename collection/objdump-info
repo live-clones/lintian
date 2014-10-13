@@ -61,6 +61,7 @@ sub collect {
     $opts{pipe_in}->blocking(1);
 
     foreach my $bin ($info->sorted_index) {
+        next if not $bin->is_file;
         my $finfo = $info->file_info($bin);
 
         if ($finfo =~ m/\bELF\b/) {

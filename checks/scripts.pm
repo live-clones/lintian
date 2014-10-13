@@ -236,10 +236,9 @@ sub run {
     # says not to depend on it.
 
     foreach my $file ($info->sorted_index) {
+        next if not $file->is_file;
         $ELF{$file} = 1 if $info->file_info($file) =~ /^[^,]*\bELF\b/o;
-
-        my $operm = $file->operm;
-        next unless $file->is_file and ($operm & 0111);
+        next if not ($file->operm & 0111);
         $executable{$file} = 1;
     }
 

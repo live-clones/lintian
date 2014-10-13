@@ -70,9 +70,9 @@ sub collect {
 
     foreach my $bin ($info->sorted_index) {
         my $filename = $bin->name;
-        my $finfo = $info->file_info($bin);
-        next unless $finfo =~ m/\bELF\b/o;
-        next if $bin =~ m,^usr/lib/debug/,;
+        my $finfo;
+        next if not $bin->is_file or $filename =~ m,^usr/lib/debug/,;
+        next unless $info->file_info($bin) =~ m/\bELF\b/o;
         if ($bin =~ m/[:\n\r]/) {
             # Do these "interesting cases" manual
             push @manual, $filename;

@@ -257,9 +257,11 @@ sub run {
     # process all files in package
     foreach my $file ($info->sorted_index) {
         my $fname = $file->name;
-        my $fileinfo = $info->file_info($fname);
-        my $objdump;
+        my ($fileinfo, $objdump);
 
+        next if not $file->is_file;
+
+        $fileinfo = $info->file_info($fname);
         # binary or object file?
         next
           unless ($fileinfo =~ m/^[^,]*\bELF\b/)
