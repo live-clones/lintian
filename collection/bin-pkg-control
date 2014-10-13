@@ -48,7 +48,6 @@ sub collect {
 
     # The following calls use knowledge of the .deb format for speed
 
-
     # (replaces dpkg-deb -e)
     # extract control files' tarball
     $in_fd = FileHandle->new;
@@ -57,8 +56,10 @@ sub collect {
         ['ar', 'p', "$dir/deb", 'control.tar.gz'],
         '|', ['gzip', '-dc']);
 
-    $job = { fail => 'error', err => "$dir/control-errors",
-             pipe_in => FileHandle->new,
+    $job = {
+        fail => 'error',
+        err => "$dir/control-errors",
+        pipe_in => FileHandle->new,
     };
     push(@out_fds, $job->{'pipe_in'});
     push(@jobs, $job);
@@ -81,8 +82,7 @@ sub collect {
     push(@jobs, $job);
     # create index of control.tar.gz
     spawn(
-        $job, ['tar', 'tvf', '-'],
-        '|', ['sort', '-k', '6'],
+        $job, ['tar', 'tvf', '-'],'|', ['sort', '-k', '6'],
         '|', ['gzip', '--best', '-c'],
     );
 
@@ -90,9 +90,7 @@ sub collect {
     for my $out_pipe (@out_fds) {
         $out_pipe->blocking(1);
     }
-    eval {
-        pipe_tee($in_fd, \@out_fds);
-    };
+    eval {pipe_tee($in_fd, \@out_fds);};
     $err = $@;
     eval {
         close($in_fd);
