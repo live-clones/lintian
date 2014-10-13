@@ -13,6 +13,8 @@ lintian (2.5.29) UNRELEASED; urgency=medium
     + [NT] Explicitly pass tar options to make it extract files
       as the current user and applying the users umask.  This is
       mostly to be explicit about how things are extracted.
+  * collection/strings:
+    + [NT] Stop creating "elf-index" file as nothing uses it.
 
   * frontend/lintian:
     + [NT] Aggressively reset the environment a well-defined
@@ -20,8 +22,34 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       "LINTIAN_" (and a select few well known variables) are
       preserved.
 
+  * lib/Lintian/Relation.pm:
+    + [NT] Unparsable entries are now included in relation
+      objects rather than being silently discarded.
   * lib/Lintian/Util.pm:
     + [NT] Purge even more ENV variables in clean_env.
+    + [NT] Add "pipe_tee" subroutine for tee'ing data from one
+      input file descriptors to one or more output output file
+      descriptors.
+
+  * private/generate-html-docs:
+    + [NT] Add doctype and encoding to generated files.
+
+  * reporting/harness:
+    + [NT] Add missing import.
+  * reporting/html_reprots:
+    + [NT] Correct the command line in the creation of the
+      lintian.log.gz.
+  * reporting/{html_reports,templates/*}:
+    + [NT] Correct the generated HTML, which was invalid in
+      some cases.
+  * reporting/templates/{head,lintian.css}.tmpl:
+    + [NT] Define a default "viewport".  This slightly improves
+      the output on some mobile devices.
+    + [NT] Add some special cases for "smaller" viewports in the
+      style sheet.
+  * reporting/templates/maintainer.tmpl:
+    + [NT] Correct name of variable to avoid using an undefined
+      variable.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 22:22:31 +0200
 
