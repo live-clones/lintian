@@ -477,12 +477,29 @@ release.
 Note that some of the information may also be available (possibly in
 a different format) with the B<--debug> option.
 
-=item B<--perf-output> X
+=item B<--perf-output> OUTPUT
 
-Write performance related debug information to the specified file
-or (if prefixed with "&") file descriptor (e.g. '&3').
+Write performance related debug information to the specified file or
+file descriptor.  If OUTPUT starts with a '&' or '+', Lintian will
+handle OUTPUT specially.  Otherwise, Lintian will open the file
+denoted by OUTPUT for writing (truncating if it exists, creating it
+if it does not exist).
 
-If given a file, the file will be truncated if it exists.
+If the first character of OUTPUT is a & and the rest of argument is a
+number N, then lintian attempts to write it to the file descriptor
+with the number N.  Said file descriptor must be open for writing.
+E.g I<&2> makes Lintian write the performance logging to STDERR.
+
+If the first character of OUTPUT is a +, Lintian will append to the
+file rather than truncating it.  In this case, the file name is OUTPUT
+with initial "+" character removed.  E.g. I<+my-file> makes Lintian
+append to I<my-file>
+
+If Lintian should write the output to a file starting with a literal
+'&' or '+', then simply prefix it with "./" (e.g. "+my-file" becomes
+"./+my-file").
+
+If this option omitted, Lintian will default to using STDOUT.
 
 =item B<--root> rootdir
 

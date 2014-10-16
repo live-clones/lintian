@@ -907,7 +907,9 @@ if (my $perf_log = $opt{'perf-output'}) {
     if ($perf_log =~ m/^&\d+/) {
         open($fd, '>>&=', substr($perf_log, 1));
     } else {
-        open($fd, '>', $perf_log);
+        my $mode = '>';
+        $mode = '>>' if $perf_log =~ s/^\+//;
+        open($fd, $mode, $perf_log);
     }
     $Lintian::Output::GLOBAL->perf_log_fd($fd);
 
