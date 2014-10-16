@@ -111,15 +111,17 @@ delete($ENV{'LINTIAN_CFG'});
 delete($ENV{'LINTIAN_ROOT'});
 
 my $html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
-my ($log_file, $list_file, $lintian_log, $html_reports_log)
+my ($log_file, $list_file, $lintian_log, $lintian_perf_log,$html_reports_log)
   = map {"$LOG_DIR/$_" }
-  qw(harness.log changed-packages.list lintian.log html_reports.log);
+  qw(harness.log changed-packages.list lintian.log lintian-perf.log html_reports.log);
 my $old_lintian_log = $lintian_log . '.old';
 my @lintian_cmd = (
     "$LINTIAN_ROOT/frontend/lintian",
     @EXTRA_LINTIAN_OPTIONS,
     qw(--no-cfg -I -E --pedantic -v --show-overrides),
     qw(--exp-output=format=fullewi --packages-from-file -),
+    qw(--perf-debug --perf-output),
+    "+$lintian_perf_log",
 );
 my $STATE_DIR = $HARNESS_STATE_DIR;
 my $START_TIME = time();
@@ -148,7 +150,8 @@ STDOUT->autoflush;
 unless ($opt{'dry-run'}) {
     # rotate log files
     my %opt = ('out' => '/dev/null',);
-    spawn(\%opt, ['savelog', $log_file, $html_reports_log])
+    my @rotate_logs = ($log_file, $html_reports_log, $lintian_perf_log);
+    spawn(\%opt, ['savelog', @rotate_logs])
       or die "Cannot rotate log files.\n";
 
     # create new log file
