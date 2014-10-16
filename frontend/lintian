@@ -167,6 +167,17 @@ $SIG{PIPE} = 'IGNORE';
 # Display Command Syntax
 # Options: -h|--help
 sub syntax {
+    my (undef, $value) = @_;
+    my $show_extended = 0;
+    if ($value) {
+        if ($value eq 'extended' or $value eq 'all') {
+            $show_extended = 1;
+        } else {
+            warn "warning: Ignoring unknown value for --help\n";
+            $value = '';
+        }
+    }
+
     print "$BANNER\n";
     print <<"EOT-EOT-EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
@@ -174,24 +185,28 @@ Actions:
     -c, --check               check packages (default action)
     -C X, --check-part X      check only certain aspects
     -F, --ftp-master-rejects  only check for automatic reject tags
+EOT-EOT-EOT
+
+    if ($show_extended) {
+        print <<"EOT-EOT-EOT";
     -r, --remove              remove package from the lab
     -R, --remove-lab          remove static lab
     -S, --setup-lab           set up static lab
+EOT-EOT-EOT
+    }
+
+    print <<"EOT-EOT-EOT";
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
     -u, --unpack              only unpack packages in the lab
     -X X, --dont-check-part X don\'t check certain aspects
 General options:
-    -d, --debug               turn Lintian\'s debug messages ON
     -h, --help                display short help text
-    --perf-debug              turn on performance debugging
-    --perf-output X           send performance logging to file (or fd w. \&X)
     --print-version           print unadorned version number and exit
     -q, --quiet               suppress all informational messages
     -v, --verbose             verbose messages
     -V, --version             display Lintian version and exit
 Behaviour options:
-    --allow-root              suppress lintian\'s warning when run as root
     --color never/always/auto disable, enable, or enable color for TTY
     --default-display-level   reset the display level to the default
     --display-source X        restrict displayed tags by source
@@ -200,7 +215,6 @@ Behaviour options:
     --fail-on-warnings        return a non-zero exit status if warnings found
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
-    --keep-lab                keep lab after run, even if temporary
     -L, --display-level       display tags with the specified level
     -o, --no-override         ignore overrides
     --pedantic                display "P:" tags (normally suppressed)
@@ -208,24 +222,46 @@ Behaviour options:
     --show-overrides          output tags that have been overriden
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
-    -U X, --unpack-info X     specify which info should be collected
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
     --ignore-lintian-env      ignore LINTIAN_* env variables
     --include-dir DIR         include checks, libraries (etc.) from DIR (*)
     -j X, --jobs X            limit the number of parallel unpacking jobs to X
-    --lab LABDIR              use LABDIR as permanent laboratory
     --[no-]user-dirs          whether to use files from user directories (*)
+EOT-EOT-EOT
+
+    if ($show_extended) {
+        print <<"EOT-EOT-EOT";
+Developer/Special usage options:
+    --allow-root              suppress lintian\'s warning when run as root
+    -d, --debug               turn Lintian\'s debug messages on (repeatable)
+    --keep-lab                keep lab after run, even if temporary
+    --lab LABDIR              use LABDIR as permanent laboratory
+    --perf-debug              turn on performance debugging
+    --perf-output X           send performance logging to file (or fd w. \&X)
+    -U X, --unpack-info X     specify which info should be collected
 Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
     --packages-from-file  X   process the packages in a file (if "-" use stdin)
     -s, --source              process only source packages
     --udeb                    process only udeb packages
+EOT-EOT-EOT
+    }
+
+    print <<"EOT-EOT-EOT";
 
 Options marked with (*) should be the first options if given at all.
 EOT-EOT-EOT
+
+    if (not $show_extended) {
+        print <<"EOT-EOT-EOT";
+
+Note that some options have been omitted, use "--help=extended" to see them
+all.
+EOT-EOT-EOT
+    }
 
     exit 0;
 }
@@ -534,7 +570,7 @@ my %opthash = (
     'remove|r' => \&record_action,
 
     # ------------------ general options
-    'help|h' => \&syntax,
+    'help|h:s' => \&syntax,
     'version|V' => \&banner,
     'print-version' => \&banner,
 

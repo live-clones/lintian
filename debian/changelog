@@ -33,6 +33,11 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       logging for performance data.  This is mostly intended
       to allow collecting performance data from archive-wide
       runs.
+    + [NT] Hide some options in the default output for --help.
+      These can now be shown with "--help=extended".
+    + [NT] Add a new "Developer/special usage options" section
+      in the --help output for some options (e.g. --debug).
+      This section is hidden by default.
 
   * lib/Lintian/Relation.pm:
     + [NT] Unparsable entries are now included in relation
@@ -45,6 +50,8 @@ lintian (2.5.29) UNRELEASED; urgency=medium
 
   * man/lintian.pod.in:
     + [NT] Document the performance logging options.
+    + [NT] Add a new "Developer/special usage options" section
+      in the --help output for some options (e.g. --debug).
 
   * private/generate-html-docs:
     + [NT] Add doctype and encoding to generated files.

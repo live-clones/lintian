@@ -133,40 +133,9 @@ General options:
 
 =over 4
 
-=item B<-d>, B<--debug>
-
-Display debugging messages. (Implies B<-v> and overrules any B<-q>).
-
-Can be used multiple times to increase the debug information.
-
-If passed 3 times (and if L<Devel::Size> can be loaded), Lintian will
-display memory usage for (some of its) data structures.  With 4 times,
-the memory usage will be more detailed.
-
-This option cannot be specified in the config file.  If used on the
-command line it will override the B<verbose> and the B<quiet> options
-in the config file.
-
 =item B<-h>, B<--help>
 
 Display usage information and exit.
-
-=item B<--perf-debug>
-
-Enable performance related debug logging.
-
-The data logged and the format used is subject to change with every
-release.
-
-Note that some of the information may also be available (possibly in
-a different format) with the B<--debug> option.
-
-=item B<--perf-output> X
-
-Write performance related debug information to the specified file
-or (if prefixed with "&") file descriptor (e.g. '&3').
-
-If given a file, the file will be truncated if it exists.
 
 =item B<-q>, B<--quiet>
 
@@ -208,10 +177,6 @@ Print unadorned version number and exit.
 Behaviour options for B<lintian>.
 
 =over 4
-
-=item B<--allow-root>
-
-Override lintian's warning when it is run with superuser privileges.
 
 =item B<--color> (never|always|auto|html)
 
@@ -283,16 +248,6 @@ configuration file.
 
 Note: B<display-level> and B<display-info> may not both appear in the
 configuration file.
-
-=item B<--keep-lab>
-
-By default, temporary labs will be removed after lintian is finished.
-Specifying this options will leave the lab behind, which might be
-useful for debugging purposes.  You can find out where the temporary
-lab is located by running lintian with the B<--verbose> option.
-
-For static (non-temporary) labs this option causes Lintian to skip
-the automatic clean up of some collections.
 
 =item B<-L> [+|-|=][>=|>|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|<|<=][S|C|S/C]
 
@@ -394,20 +349,6 @@ the exit status of Lintian.
 Tags parsed from the file will be handled as if they had been given to
 the B<--suppress-tags> option (e.g. ignored if B<--tags> is used).
 
-=item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
-
-Collect information info1, info2, etc. even if these are not required
-by the checks.  Collections requested by this option are also not
-auto-removed (in this run).
-
-This option is mostly useful for debugging or special purpose setups.
-
-It is allowed to give this option more than once.  The following
-two lines of arguments are semantically equivalent:
-
- -U info1 -U info2
- -U info1,info2
-
 =back
 
 Configuration options:
@@ -471,27 +412,6 @@ This option overrides the B<jobs> variable in the configuration file.
 By default Lintian will use I<nproc> to determine a reasonable default
 (or 2, if the nproc fails).
 
-=item B<--lab> labdir
-
-Use labdir as the permanent laboratory.  This is where Lintian keeps
-information about the packages it checks.  This option overrides the
-B<LINTIAN_LAB> environment variable and the configuration file entry
-of the same name.
-
-=item B<--root> rootdir
-
-Deprecated in 2.5.18 and will be removed in a later release.
-
-This option used to control what directory was used as the
-B<LINTIAN_ROOT>.  It's primary purpose was to use Lintian directly
-from a source tree.  However, since 2.5.18 Lintian has logic for
-automatically configuring itself without any assistance making this
-option largely obsolete.  Note if passed, then the chosen root dir
-must match the actual LINTIAN_ROOT used by Lintian.
-
-This option implies B<--no-user-dirs> for backwards compatbility with
-previous versions of Lintian.
-
 =item B<--user-dirs>, B<--no-user-dirs>
 
 By default, B<lintian> will check I<$HOME> and I</etc> for files
@@ -519,6 +439,78 @@ unsetting I<$HOME> and all the I<$XDG_*> variables (not just the
 I<$XDG_*_HOME> ones).
 
 B<Note>: This option should be the very first if given.
+
+=back
+
+Developer/Special usage options:
+
+=over 4
+
+=item B<--allow-root>
+
+Override lintian's warning when it is run with superuser privileges.
+
+=item B<--keep-lab>
+
+By default, temporary labs will be removed after lintian is finished.
+Specifying this options will leave the lab behind, which might be
+useful for debugging purposes.  You can find out where the temporary
+lab is located by running lintian with the B<--verbose> option.
+
+For static (non-temporary) labs this option causes Lintian to skip
+the automatic clean up of some collections.
+
+=item B<--lab> labdir
+
+Use labdir as the permanent laboratory.  This is where Lintian keeps
+information about the packages it checks.  This option overrides the
+B<LINTIAN_LAB> environment variable and the configuration file entry
+of the same name.
+
+=item B<--perf-debug>
+
+Enable performance related debug logging.
+
+The data logged and the format used is subject to change with every
+release.
+
+Note that some of the information may also be available (possibly in
+a different format) with the B<--debug> option.
+
+=item B<--perf-output> X
+
+Write performance related debug information to the specified file
+or (if prefixed with "&") file descriptor (e.g. '&3').
+
+If given a file, the file will be truncated if it exists.
+
+=item B<--root> rootdir
+
+Deprecated in 2.5.18 and will be removed in a later release.
+
+This option used to control what directory was used as the
+B<LINTIAN_ROOT>.  It's primary purpose was to use Lintian directly
+from a source tree.  However, since 2.5.18 Lintian has logic for
+automatically configuring itself without any assistance making this
+option largely obsolete.  Note if passed, then the chosen root dir
+must match the actual LINTIAN_ROOT used by Lintian.
+
+This option implies B<--no-user-dirs> for backwards compatbility with
+previous versions of Lintian.
+
+=item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
+
+Collect information info1, info2, etc. even if these are not required
+by the checks.  Collections requested by this option are also not
+auto-removed (in this run).
+
+This option is mostly useful for debugging or special purpose setups.
+
+It is allowed to give this option more than once.  The following
+two lines of arguments are semantically equivalent:
+
+ -U info1 -U info2
+ -U info1,info2
 
 =back
 
