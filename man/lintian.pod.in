@@ -137,9 +137,7 @@ General options:
 
 Display debugging messages. (Implies B<-v> and overrules any B<-q>).
 
-Can be used multiple times to increase the debug information.  If
-passed twice or more, Lintian will emit approximate run times for
-collections and checks (if L<Time::HiRes> can be loaded).
+Can be used multiple times to increase the debug information.
 
 If passed 3 times (and if L<Devel::Size> can be loaded), Lintian will
 display memory usage for (some of its) data structures.  With 4 times,
@@ -152,6 +150,23 @@ in the config file.
 =item B<-h>, B<--help>
 
 Display usage information and exit.
+
+=item B<--perf-debug>
+
+Enable performance related debug logging.
+
+The data logged and the format used is subject to change with every
+release.
+
+Note that some of the information may also be available (possibly in
+a different format) with the B<--debug> option.
+
+=item B<--perf-output> X
+
+Write performance related debug information to the specified file
+or (if prefixed with "&") file descriptor (e.g. '&3').
+
+If given a file, the file will be truncated if it exists.
 
 =item B<-q>, B<--quiet>
 

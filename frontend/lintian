@@ -30,6 +30,7 @@ use Cwd qw(abs_path);
 use Getopt::Long();
 use List::MoreUtils qw(any);
 use POSIX qw(:sys_wait_h);
+use Time::HiRes qw(gettimeofday tv_interval);
 
 my $INIT_ROOT;
 
@@ -127,10 +128,20 @@ my (@unpack_info, $LAB, %extra_unpack, %unpack_options, @auto_remove);
 my $exit_code = 0;
 
 # Timer handling (by default to nothing)
-my $start_timer = sub { 0; };
-my $finish_timer =  sub { ''; };
-
+my $start_timer = sub {
+    return [gettimeofday()];
+};
+my $finish_timer =  sub {
+    my ($start) = @_;
+    return tv_interval($start);
+};
+my $format_timer_result = sub {
+    my ($result) = @_;
+    return sprintf(' (%.3fs)', $result);
+};
 my $memory_usage = sub { 'N/A'; };
+
+sub timed_task(&);
 
 # }}}
 
@@ -173,6 +184,8 @@ Actions:
 General options:
     -d, --debug               turn Lintian\'s debug messages ON
     -h, --help                display short help text
+    --perf-debug              turn on performance debugging
+    --perf-output X           send performance logging to file (or fd w. \&X)
     --print-version           print unadorned version number and exit
     -q, --quiet               suppress all informational messages
     -v, --verbose             verbose messages
@@ -528,6 +541,8 @@ my %opthash = (
     'verbose|v' => \$opt{'verbose'},
     'debug|d+' => \$debug, # Count the -d flags
     'quiet|q' => \&record_quiet, # sets $opt{'verbose'} to -1
+    'perf-debug' => \$opt{'perf-debug'},
+    'perf-output=s' => \$opt{'perf-output'},
 
     # ------------------ behaviour options
     'info|i' => \$opt{'info'},
@@ -807,24 +822,6 @@ if ($debug) {
     $opt{'verbose'} = 1;
     $ENV{'LINTIAN_DEBUG'} = $debug;
     if ($debug > 1) {
-        eval {
-            require Time::HiRes;
-            import Time::HiRes qw(gettimeofday tv_interval);
-
-            $start_timer = sub {
-                return [gettimeofday()];
-            };
-            $finish_timer =  sub {
-                my ($start) = @_;
-                my $diff = tv_interval($start);
-                return sprintf(' (%.3fs)', $diff);
-            };
-            print "N: Using Time::HiRes to debug running times\n";
-        };
-        if ($@) {
-            print "N: Cannot load Time::HiRes ($@)\n";
-            print "N: Running times will not be timed.\n";
-        }
         if ($debug > 2) {
             eval {
                 require Devel::Size;
@@ -867,6 +864,28 @@ $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
 $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->color($opt{'color'});
 $Lintian::Output::GLOBAL->showdescription($opt{'info'});
+
+$Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
+if (my $perf_log = $opt{'perf-output'}) {
+    my $fd;
+    if ($perf_log =~ m/^&\d+/) {
+        open($fd, '>>&=', substr($perf_log, 1));
+    } else {
+        open($fd, '>', $perf_log);
+    }
+    $Lintian::Output::GLOBAL->perf_log_fd($fd);
+
+    END {
+        local ($!, $@);
+        return if not defined($fd);
+        eval {close($fd);};
+        if (my $err = $@) {
+            # Don't use L::Output here as it might be (partly) cleaned
+            # up.
+            print STDERR "warning: closing $perf_log failed: $!\n";
+        }
+    }
+}
 
 # check for arguments
 if (    $action =~ /^(?:check|unpack|remove)$/
@@ -1210,9 +1229,14 @@ if ($action eq 'check') {
 
 foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
-    unpack_group($gname, $group);
-    if ($action eq 'check'){
-        process_group($group);
+    my $raw_res = timed_task {
+        unpack_group($gname, $group);
+    };
+    my $tres = $format_timer_result->($raw_res);
+    debug_msg(1, "Unpack of $gname done$tres");
+    perf_log("$gname,total-group-unpack,${raw_res}");
+    if ($action eq 'check') {
+        process_group($gname, $group);
         $group->clear_cache;
         # Double check that no processes are running;  hopefully
         # it will catch regressions like 3bbcc3b earlier.
@@ -1287,6 +1311,7 @@ exit $exit_code;
 #
 sub auto_clean_package {
     my ($lpkg) = @_;
+    my $proc_id = $lpkg->identifier;
     my $pkg_name = $lpkg->pkg_name();
     my $pkg_type = $lpkg->pkg_type();
     my $base = $lpkg->base_dir();
@@ -1296,7 +1321,12 @@ sub auto_clean_package {
         next unless $lpkg->is_coll_finished($coll, $ci->version);
         debug_msg(1, "Auto removing: $coll ...");
         $changed = 1;
-        eval {$ci->collect($pkg_name, "remove-${pkg_type}", $base);};
+        eval {
+            my $raw_res = timed_task {
+                $ci->collect($pkg_name, "remove-${pkg_type}", $base);
+            };
+            perf_log("$proc_id,auto-remove coll/$coll,${raw_res}");
+        };
         if ($@) {
             warning(
                 $@,
@@ -1354,7 +1384,7 @@ sub unpack_group {
 
     v_msg("Unpacking packages in group $gname");
 
-    my %timers = ();
+    my %timers;
     my %hooks = (
         'coll-hook' => sub { coll_hook($group, \%timers, @_); },
         'finish-hook' => \&finish_hook,
@@ -1418,15 +1448,19 @@ sub coll_hook {
             $group->remove_processable($lpkg);
         } else {
             # success
-            my $tres = $finish_timer->($timers->{$pid});
+            my $raw_res = $finish_timer->($timers->{$pid});
+            my $tres = $format_timer_result->($raw_res);
             debug_msg(1, "Collection script $coll for $procid done$tres");
+            perf_log("$procid,coll/$coll,${raw_res}");
         }
     }
     return;
 }
 
 sub process_group {
-    my ($group) = @_;
+    my ($gname, $group) = @_;
+    my ($timer, $raw_res, $tres);
+    $timer = $start_timer->();
   PROC:
     foreach my $lpkg ($group->get_processables){
         my $pkg_type = $lpkg->pkg_type;
@@ -1453,7 +1487,7 @@ sub process_group {
             debug_msg(1, "Running check: $check on $procid  ...");
             eval {$cs->run_check($lpkg, $group);};
             my $err = $@;
-            my $tres = $finish_timer->($timer);
+            my $raw_res = $finish_timer->($timer);
             if ($err) {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
@@ -1462,7 +1496,9 @@ sub process_group {
                 $exit_code = 2;
                 next PROC;
             }
+            my $tres = $format_timer_result->($raw_res);
             debug_msg(1, "Check script $check for $procid done$tres");
+            perf_log("$procid,check/$check,${raw_res}");
         }
 
         unless ($exit_code) {
@@ -1478,6 +1514,11 @@ sub process_group {
 
     $TAGS->file_end;
 
+    $raw_res = $finish_timer->($timer);
+    $tres = $format_timer_result->($raw_res);
+    debug_msg(1, "Checking all of group $gname done$tres");
+    perf_log("$gname,total-group-check,${raw_res}");
+
     if ($debug > 2) {
         for my $lpkg ($group->get_processables) {
             my $id = $lpkg->identifier;
@@ -1492,6 +1533,7 @@ sub process_group {
 
     if (@auto_remove) {
         # Invoke auto-clean now that the group has been checked
+        $timer = $start_timer->();
         foreach my $lpkg ($group->get_processables){
             my $ret = auto_clean_package($lpkg);
             $exit_code = 2 if $ret < 0;
@@ -1507,7 +1549,10 @@ sub process_group {
                 }
             }
         }
-
+        $raw_res = $finish_timer->($timer);
+        $tres = $format_timer_result->($raw_res);
+        debug_msg(1, "Auto-removal all for group $gname done$tres");
+        perf_log("$gname,total-group-auto-remove,${raw_res}");
     }
 
     return 1;
@@ -1857,6 +1902,13 @@ sub _update_profile {
         $profile->disable_tags(keys %$sup_tags);
     }
     return;
+}
+
+sub timed_task(&) {
+    my ($task) = @_;
+    my $timer = $start_timer->();
+    $task->();
+    return $finish_timer->($timer);
 }
 
 # }}}

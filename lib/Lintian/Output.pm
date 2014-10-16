@@ -33,7 +33,7 @@ our (%EXPORT_TAGS, @EXPORT_OK);
 
 BEGIN {
     %EXPORT_TAGS = (
-        messages => [qw(msg v_msg warning debug_msg delimiter)],
+        messages => [qw(msg v_msg warning debug_msg delimiter perf_log)],
         util => [qw(_global_or_object)]);
     @EXPORT_OK = (@{$EXPORT_TAGS{messages}},@{$EXPORT_TAGS{util}},'string');
 }
@@ -129,7 +129,8 @@ Hash containing the names of tags which have been issued.
 
 Lintian::Output->mk_accessors(
     qw(verbosity_level debug color colors stdout
-      stderr showdescription issuedtags)
+      stderr perf_log_fd perf_debug showdescription
+      issuedtags)
 );
 
 # for the non-OO interface
@@ -150,11 +151,13 @@ sub new {
 
     $self->stdout(\*STDOUT);
     $self->stderr(\*STDERR);
+    $self->perf_log_fd(\*STDOUT);
     $self->colors({%default_colors});
     $self->issuedtags({});
 
     # Set defaults to avoid "uninitialized" warnings
     $self->verbosity_level(0);
+    $self->perf_debug(0);
     $self->color('never');
     return $self;
 }
@@ -226,6 +229,26 @@ sub warning {
     return;
 }
 
+=item  C<perf_log(@args)>
+
+Like "v_msg", except output is possibly sent to a dedicated log
+file.
+
+Will output the strings given in @args, one per line.  The lines will
+not be prefixed.  Will do nothing unless perf_debug is set to a
+positive integer.
+
+=cut
+
+sub perf_log {
+    my ($self, @args) = _global_or_object(@_);
+
+    return unless $self->perf_debug;
+
+    $self->_print($self->perf_log_fd, '', @args);
+    return;
+}
+
 =item C<delimiter()>
 
 Gives back a string that is usable for separating messages in the output.
@@ -266,8 +289,10 @@ sub string {
 
     my $output = '';
     if (@args) {
+        my $prefix = '';
+        $prefix = "$lead: " if $lead;
         foreach (@args) {
-            $output .= $lead.': '.$_."\n";
+            $output .= "${prefix}${_}\n";
         }
     } elsif ($lead) {
         $output .= $lead.".\n";

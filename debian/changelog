@@ -26,6 +26,13 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       state at start up.  Only ENV variables starting with
       "LINTIAN_" (and a select few well known variables) are
       preserved.
+    + [NT] Runtime for collections and checks now only requires
+      a single --debug option.  Lintian will now also show
+      runtime for other things (e.g. total runtimes).
+    + [NT] Add --perf-debug and --perf-output options to enable
+      logging for performance data.  This is mostly intended
+      to allow collecting performance data from archive-wide
+      runs.
 
   * lib/Lintian/Relation.pm:
     + [NT] Unparsable entries are now included in relation
@@ -35,6 +42,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
     + [NT] Add "pipe_tee" subroutine for tee'ing data from one
       input file descriptors to one or more output output file
       descriptors.
+
+  * man/lintian.pod.in:
+    + [NT] Document the performance logging options.
 
   * private/generate-html-docs:
     + [NT] Add doctype and encoding to generated files.
