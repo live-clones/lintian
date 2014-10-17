@@ -20,6 +20,10 @@ lintian (2.5.29) UNRELEASED; urgency=medium
       input already available.
   * collection/strings:
     + [NT] Stop creating "elf-index" file as nothing uses it.
+  * collection/unpacked:
+    + [NT] Gracefully handle when symlink targets contains
+      newlines.  Thanks to Faheem Mitha for reporting the bug.
+      (Closes: #765311)
 
   * frontend/lintian:
     + [NT] Aggressively reset the environment a well-defined

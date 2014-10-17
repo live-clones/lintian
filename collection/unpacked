@@ -82,13 +82,17 @@ sub collect {
             [
                 'find', '(',  '-type', 'l',
                 # If symlink
-                '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p -> %l\n',
+                '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p -> %l\0',
                 '-true',             # elif dir [needs trailing slash]
                 ')', '-o', '(',  '-type', 'd',
-                '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p/\n', '-true',
+                '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p/\0', '-true',
                 # else (not dir and not symlink)
-                ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\n'
+                ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\0'
             ],
+            # Link targets can have newlines in them.  A lession learned by
+            # clasp (#765311)
+            '|',
+            ['perl', '-l', '-0', '-pe', 's/\n/\\\n/g'],
             # Sort and compress
             '|',
             ['sort', '-k', '6'],
