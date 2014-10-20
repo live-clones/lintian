@@ -11,6 +11,8 @@ lintian (2.5.29) UNRELEASED; urgency=medium
   * checks/source-copyright.pm:
     + [NT] Apply patch from Johannes Schauer to optimise the
       check.
+    + [NT] Optimise for "dir/*" wildcards in DEP-5 copyright
+      files.
   * checks/watch-file.pm:
     + [NT] Fix undef warning with some watch files.  Thanks
       to Axel Beckert for reporting the bug.

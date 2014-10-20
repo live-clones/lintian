@@ -24,6 +24,12 @@ use strict;
 use warnings;
 use autodie;
 
+use constant {
+    WC_TYPE_REGEX => 'REGEX',
+    WC_TYPE_FILE => 'FILE',
+    WC_TYPE_DECENDANTS => 'DECENDANTS',
+};
+
 use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
@@ -308,39 +314,51 @@ sub _parse_dep5 {
                     if ($wildcard eq '') {
                         next;
                     }
-                    my $plain = 0;
-                    my ($regex, $wildcard_error);
-                    if ($wildcard =~ m/[*?\\]/) {
-                        ($regex, $wildcard_error)
-                          = wildcard_to_regex($wildcard);
-                        if (defined $wildcard_error) {
-                            tag 'invalid-escape-sequence-in-dep5-copyright',
-                              substr($wildcard_error, 0, 2)
-                              . " (paragraph at line $current_line)";
-                            next;
-                        }
-                    } else {
-                        $plain = 1;
+                    my ($wc_value, $wc_type, $wildcard_error)
+                      = parse_wildcard($wildcard);
+                    if (defined $wildcard_error) {
+                        tag 'invalid-escape-sequence-in-dep5-copyright',
+                          substr($wildcard_error, 0, 2)
+                          . " (paragraph at line $current_line)";
+                        next;
                     }
 
                     my $used = 0;
                     $file_para_coverage{$current_line} = 0;
-                    if ($plain) {
-                        if (exists($file_coverage{$wildcard})) {
+                    if ($wc_type eq WC_TYPE_FILE) {
+                        if (exists($file_coverage{$wc_value})) {
                             $used = 1;
                             $file_coverage{$wildcard} = $current_line;
-                            $file_para_coverage{$current_line} = 1;
+                        }
+                    } elsif ($wc_type eq WC_TYPE_DECENDANTS) {
+                        my @wlist;
+                        if (my $dir = $info->index($wc_value)) {
+                            if ($wc_value eq q{}) {
+                                # Special-case => Files: *
+                                push(@wlist, get_all_files($info));
+                            } else {
+                                push(@wlist, $dir->children);
+                            }
+                        }
+                        while (my $entry = pop(@wlist)) {
+                            if ($entry->is_file) {
+                                $used = 1;
+                                $file_coverage{$entry->name} = $current_line;
+                            } elsif ($entry->is_dir) {
+                                push(@wlist, $entry->children);
+                            }
                         }
                     } else {
-                        for my $srcfile (keys %file_coverage) {
-                            if ($srcfile =~ $regex) {
+                        for my $srcfile (%file_coverage) {
+                            if ($srcfile =~ $wc_value) {
                                 $used = 1;
                                 $file_coverage{$srcfile} = $current_line;
-                                $file_para_coverage{$current_line} = 1;
                             }
                         }
                     }
-                    if (not $used) {
+                    if ($used) {
+                        $file_para_coverage{$current_line} = 1;
+                    } elsif (not $used) {
                         tag 'wildcard-matches-nothing-in-dep5-copyright',
                           "$wildcard (paragraph at line $current_line)";
                     }
@@ -480,13 +498,63 @@ sub get_field {
     return;
 }
 
-sub wildcard_to_regex {
-    my ($regex) = @_;
-    $regex =~ s,^\./+,,;
-    $regex =~ s,//+,/,g;
+sub dequote_backslashes {
+    my ($string) = @_;
     my $error;
     eval {
-        $regex =~ s{
+        $string =~ s{
+            ([^\\]+) |
+            (\\[\\]) |
+            (.+)
+        }{
+            if (defined $1) {
+                quotemeta($1);
+            } elsif (defined $2) {
+                $2;
+            } else {
+                $error = $3;
+                die;
+            }
+        }egx;
+    };
+    if ($@) {
+        return (undef, $error);
+    } else {
+        return ($string, undef);
+    }
+}
+
+sub parse_wildcard {
+    my ($regex_src) = @_;
+    my ($error);
+    $regex_src =~ s,^\./+,,;
+    $regex_src =~ s,//+,/,g;
+    if ($regex_src eq '*') {
+        return ('', WC_TYPE_DECENDANTS, undef);
+    }
+    if (index($regex_src, '?') == -1) {
+        my $star_index = index($regex_src, '*');
+        my $bslash_index = index($regex_src, '\\');
+        if ($star_index == -1) {
+            # Regular file-match, dequote "\\" if any and stop here.
+            if ($bslash_index > -1) {
+                ($regex_src, $error) = dequote_backslashes($regex_src);
+            }
+            return ($regex_src, WC_TYPE_FILE, $error);
+        }
+        if (length($regex_src) - 1 == $star_index
+            and substr($regex_src, -2) eq '/*') {
+            # Files: some-dir/*
+            $regex_src = substr($regex_src, 0, -1);
+            if ($bslash_index > -1) {
+                ($regex_src, $error) = dequote_backslashes($regex_src);
+            }
+            return ($regex_src, WC_TYPE_DECENDANTS, undef);
+        }
+    }
+
+    eval {
+        $regex_src =~ s{
             (\*) |
             (\?) |
             ([^*?\\]+) |
@@ -508,9 +576,9 @@ sub wildcard_to_regex {
         }egx;
     };
     if ($@) {
-        return (undef, $error);
+        return (undef, undef, $error);
     } else {
-        return (qr/^(?:$regex)$/, undef);
+        return (qr/^(?:$regex_src)$/, WC_TYPE_REGEX, undef);
     }
 }
 
