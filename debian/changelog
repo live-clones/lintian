@@ -80,6 +80,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
     + [NT] Correct name of variable to avoid using an undefined
       variable.
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [NT] Add "vivid" per request of Iain Lane.
+
  -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 22:22:31 +0200
 
 lintian (2.5.28) unstable; urgency=medium
