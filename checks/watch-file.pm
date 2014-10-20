@@ -134,6 +134,8 @@ sub run {
 
             # This bit is as-is from uscan.pl:
             my ($base, $filepattern, $lastversion, $action) = split ' ', $_, 4;
+            # Per #765995, $base might be undefined.
+            next unless defined($base);
             if ($base =~ s%/([^/]*\([^/]*\)[^/]*)$%/%) {
                # Last component of $base has a pair of parentheses, so no
                # separate filepattern field; we remove the filepattern from the

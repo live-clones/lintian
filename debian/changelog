@@ -11,6 +11,10 @@ lintian (2.5.29) UNRELEASED; urgency=medium
   * checks/source-copyright.pm:
     + [NT] Apply patch from Johannes Schauer to optimise the
       check.
+  * checks/watch-file.pm:
+    + [NT] Fix undef warning with some watch files.  Thanks
+      to Axel Beckert for reporting the bug.
+      (Closes: #765995)
 
   * collection/{bin-pkg-control,unpacked}:
     + [NT] Pass "-m" to tar to make it avoid "correcting" the
