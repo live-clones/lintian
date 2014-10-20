@@ -284,7 +284,7 @@ sub _parse_dep5 {
                   "(paragraph at line $current_line)";
             }else {
                 for (@short_licenses) {
-                    $standalone_licenses{$_}             = $i;
+                    $standalone_licenses{$_} = $i;
                     $short_licenses_seen{$_} = $i;
                 }
             }
@@ -308,21 +308,36 @@ sub _parse_dep5 {
                     if ($wildcard eq '') {
                         next;
                     }
-                    my ($regex, $wildcard_error)= wildcard_to_regex($wildcard);
-                    if (defined $wildcard_error) {
-                        tag 'invalid-escape-sequence-in-dep5-copyright',
-                          substr($wildcard_error, 0, 2)
-                          . " (paragraph at line $current_line)";
-                        next;
+                    my $plain = 0;
+                    my ($regex, $wildcard_error);
+                    if ($wildcard =~ m/[*?\\]/) {
+                        ($regex, $wildcard_error)
+                          = wildcard_to_regex($wildcard);
+                        if (defined $wildcard_error) {
+                            tag 'invalid-escape-sequence-in-dep5-copyright',
+                              substr($wildcard_error, 0, 2)
+                              . " (paragraph at line $current_line)";
+                            next;
+                        }
+                    } else {
+                        $plain = 1;
                     }
 
                     my $used = 0;
                     $file_para_coverage{$current_line} = 0;
-                    for my $srcfile (keys %file_coverage) {
-                        if ($srcfile =~ $regex) {
+                    if ($plain) {
+                        if (exists($file_coverage{$wildcard})) {
                             $used = 1;
-                            $file_coverage{$srcfile} = $current_line;
+                            $file_coverage{$wildcard} = $current_line;
                             $file_para_coverage{$current_line} = 1;
+                        }
+                    } else {
+                        for my $srcfile (keys %file_coverage) {
+                            if ($srcfile =~ $regex) {
+                                $used = 1;
+                                $file_coverage{$srcfile} = $current_line;
+                                $file_para_coverage{$current_line} = 1;
+                            }
                         }
                     }
                     if (not $used) {

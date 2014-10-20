@@ -8,6 +8,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
   * checks/dbus.{desc,pm}:
     + [NT] New check by Simon McVittie to discover some dbus
       related issues.  (Closes: #762609)
+  * checks/source-copyright.pm:
+    + [NT] Apply patch from Johannes Schauer to optimise the
+      check.
 
   * collection/{bin-pkg-control,unpacked}:
     + [NT] Pass "-m" to tar to make it avoid "correcting" the
