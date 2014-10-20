@@ -139,6 +139,7 @@ sub run {
     # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
     # strict reading of Policy doesn't allow either, but they seem harmless.
     my $start = <$rules_fd>;
+    $start //= q{};
     tag 'debian-rules-not-a-makefile'
       unless $start =~ m%^\#!\s*/usr/bin/make\s+-[re]?f[re]?\s*$%;
 
