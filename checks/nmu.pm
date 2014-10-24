@@ -132,7 +132,7 @@ sub run {
 # are case-insensitive in the right-hand side.
 sub canonicalize {
     my ($maintainer) = @_;
-    $maintainer =~ s/(<[^>\@]+\@)([\w.-]+)>/$1 . lc ($2)/e;
+    $maintainer =~ s/<([^>\@]+\@)([\w.-]+)>/<$1\L$2>/;
     return $maintainer;
 }
 

@@ -8,6 +8,9 @@ lintian (2.5.29) UNRELEASED; urgency=medium
   * checks/dbus.{desc,pm}:
     + [NT] New check by Simon McVittie to discover some dbus
       related issues.  (Closes: #762609)
+  * checks/nmu.pm:
+    + [JW] Avoid chopping off trailing ">" in emails in the
+      canonicalize subroutine.  (Closes: #766468)
   * checks/rules.pm:
     + [JW,NT] Fix undef warning for packages with empty an
       empty d/rules file.  (Closes: #766033)
