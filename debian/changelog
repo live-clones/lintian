@@ -1,6 +1,27 @@
-lintian (2.5.29) UNRELEASED; urgency=medium
+lintian (2.5.29) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - dbus-policy-at-console
+      - dbus-policy-without-send-destination
+      - dbus-session-service-wrong-name
+      - dbus-system-service-wrong-name
+      - invalid-profile-name-in-build-profiles-field
+      - invalid-profile-name-in-source-relation
+      - invalid-restriction-formula-in-build-profiles-field
+      - restriction-formula-with-debhelper-with-conflicting-version
+      - restriction-formula-with-debhelper-without-debhelper-version
+      - restriction-formula-with-versioned-dpkg-dev-conflict
+      - restriction-formula-without-versioned-dpkg-dev-dependency
+    + Removed:
+      - invalid-restriction-label-in-source-relation
+      - invalid-restriction-namespace-in-source-relation
+      - invalid-restriction-term-in-source-relation
+      - restriction-list-with-debhelper-with-conflicting-debhelper-version
+      - restriction-list-with-debhelper-without-debhelper-version
+      - restriction-list-with-versioned-dpkg-dev-conflict
+      - restriction-list-without-versioned-dpkg-dev-dependency
+      - stageX-profile-used-but-no-binary-package-dropped
 
   * checks/{control-file,fields}.{desc,pm}:
     + [NT] Apply patch from Johannes Schauer to support the
@@ -98,7 +119,7 @@ lintian (2.5.29) UNRELEASED; urgency=medium
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Add "vivid" per request of Iain Lane.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 02 Oct 2014 22:22:31 +0200
+ -- Niels Thykier <niels@thykier.net>  Fri, 24 Oct 2014 23:15:52 +0200
 
 lintian (2.5.28) unstable; urgency=medium
 
