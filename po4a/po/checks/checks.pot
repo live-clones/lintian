@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-09-13 21:12+0000\n"
+"POT-Creation-Date: 2014-10-24 21:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2107,32 +2107,9 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: stageX-profile-used-but-no-binary-package-dropped
-#. type: Lintian tag description
-#: checks/control-file.desc:224
-#, no-wrap
-msgid ""
-"You used a stage1 or stage2 build profile restriction in the build\n"
-"dependencies but you did not mark any binary packages as not being built "
-"with\n"
-"the used profile activated. Using a stage1 or stage2 build profile "
-"restriction\n"
-"means that you intend to change the build process in a way such that some "
-"of\n"
-"the build results will be different or not generated at all. All binary\n"
-"packages which would provide different functionality, would be empty or not "
-"be\n"
-"built at all under the stage1 or stage2 profiles must be marked as not "
-"being\n"
-"generated with the Build-Profiles field."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
 #. Tag: pre-depends-directly-on-multiarch-support
 #. type: Lintian tag description
-#: checks/control-file.desc:233
+#: checks/control-file.desc:222
 #, no-wrap
 msgid ""
 "The control file mentions multiarch-support in a Pre-Depends line.\n"
@@ -2143,7 +2120,34 @@ msgid ""
 "from glibc without updating every package, Pre-Depends: "
 "${misc:Pre-Depends}\n"
 "should be used instead. Then multiarch-support can be removed by a change\n"
-"in debhelper followed by a binNMU of all affected packages.\n"
+"in debhelper followed by a binNMU of all affected packages."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: invalid-restriction-formula-in-build-profiles-field
+#. type: Lintian tag description
+#: checks/control-file.desc:229
+#, no-wrap
+msgid ""
+"The restriction formula in the Build-Profiles field must have the same\n"
+"format as the restriction formula in the Build-Depends field with angle\n"
+"brackets."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: invalid-profile-name-in-build-profiles-field
+#. type: Lintian tag description
+#: checks/control-file.desc:235
+#, no-wrap
+msgid ""
+"The restriction formula in Build-Profiles field includes an unknown build\n"
+"profile. The only allowed build profiles are \"stage1\", \"stage2\", "
+"\"nocheck\",\n"
+"\"nodoc\", \"nobiarch\" and \"cross\".\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -3653,9 +3657,21 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: license-problem-cc-by-nc-sa
+#. type: Lintian tag description
+#: checks/cruft.desc:613
+#, no-wrap
+msgid ""
+"The given source file is copyrighted under the non free\n"
+"license creative commons non commercial share alike."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: license-problem-bad-php-license
 #. type: Lintian tag description
-#: checks/cruft.desc:618
+#: checks/cruft.desc:624
 #, no-wrap
 msgid ""
 "This package appears to be covered by version 2.x of the PHP license,\n"
@@ -3671,7 +3687,7 @@ msgstr ""
 #
 #. Tag: license-problem-php-license
 #. type: Lintian tag description
-#: checks/cruft.desc:626
+#: checks/cruft.desc:632
 #, no-wrap
 msgid ""
 "This package appears to be covered by version 3.0 (exactly) of the\n"
@@ -3684,7 +3700,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-invariants
 #. type: Lintian tag description
-#: checks/cruft.desc:641
+#: checks/cruft.desc:647
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL with invariant\n"
@@ -3703,7 +3719,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-RFC
 #. type: Lintian tag description
-#: checks/cruft.desc:655
+#: checks/cruft.desc:661
 #, no-wrap
 msgid ""
 "The given source file is licensed under the newer RFC\n"
@@ -3722,7 +3738,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-RFC-BCP78
 #. type: Lintian tag description
-#: checks/cruft.desc:669
+#: checks/cruft.desc:675
 #, no-wrap
 msgid ""
 "The given source file is licensed under the non-free RFC\n"
@@ -3741,7 +3757,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-invariants-empty
 #. type: Lintian tag description
-#: checks/cruft.desc:681
+#: checks/cruft.desc:687
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL, but without any\n"
@@ -3756,7 +3772,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-non-official-text
 #. type: Lintian tag description
-#: checks/cruft.desc:690
+#: checks/cruft.desc:696
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL, but using a\n"
@@ -3771,7 +3787,7 @@ msgstr ""
 #
 #. Tag: license-problem-nvidia-intellectual
 #. type: Lintian tag description
-#: checks/cruft.desc:707
+#: checks/cruft.desc:713
 #, no-wrap
 msgid ""
 "The following source files include material under a\n"
@@ -3793,7 +3809,7 @@ msgstr ""
 #
 #. Tag: license-problem-md5sum-non-distributable-file
 #. type: Lintian tag description
-#: checks/cruft.desc:722
+#: checks/cruft.desc:728
 #, no-wrap
 msgid ""
 "The following file is not distributable even in the non-free\n"
@@ -3814,7 +3830,7 @@ msgstr ""
 #
 #. Tag: license-problem-md5sum-non-free-file
 #. type: Lintian tag description
-#: checks/cruft.desc:735
+#: checks/cruft.desc:741
 #, no-wrap
 msgid ""
 "The following file is not suitable for main or contrib.\n"
@@ -3833,7 +3849,7 @@ msgstr ""
 #
 #. Tag: source-contains-unsafe-symlink
 #. type: Lintian tag description
-#: checks/cruft.desc:746
+#: checks/cruft.desc:752
 #, no-wrap
 msgid ""
 "The source contains an unsafe symlink.  If followed, the link\n"
@@ -3850,7 +3866,7 @@ msgstr ""
 #
 #. Tag: source-is-missing
 #. type: Lintian tag description
-#: checks/cruft.desc:758
+#: checks/cruft.desc:764
 #, no-wrap
 msgid ""
 "The source of the following file is missing. Lintian checked a few\n"
@@ -3867,7 +3883,7 @@ msgstr ""
 #
 #. Tag: source-contains-autogenerated-visual-c++-file
 #. type: Lintian tag description
-#: checks/cruft.desc:769
+#: checks/cruft.desc:775
 #, no-wrap
 msgid ""
 "The following file is autogenerated by Microsoft Visual C++.\n"
@@ -6631,97 +6647,73 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: invalid-restriction-term-in-source-relation
+#. Tag: invalid-profile-name-in-source-relation
 #. type: Lintian tag description
-#: checks/fields.desc:661
+#: checks/fields.desc:660
 #, no-wrap
 msgid ""
-"The restriction list in the source relation includes a term which\n"
-"does not contain exactly one dot separating restriction namespace and "
-"label.\n"
-"A term in a restriction list is of the form \"namespace.label\" (without "
-"the\n"
-"quotes)."
+"The restriction formula in the source relation includes an unknown build\n"
+"profile. The only allowed build profiles are \"stage1\", \"stage2\", "
+"\"nocheck\",\n"
+"\"nodoc\", \"nobiarch\" and \"cross\"."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: invalid-restriction-namespace-in-source-relation
+#. Tag: restriction-formula-without-versioned-dpkg-dev-dependency
 #. type: Lintian tag description
 #: checks/fields.desc:668
 #, no-wrap
 msgid ""
-"The restriction list in the source relation includes a term with\n"
-"an unknown namespace. The only allowed namespace is \"profile\" (without "
-"the\n"
-"quotes)."
+"If a restriction formula appears in the source relation or if the\n"
+"Build-Profiles field is used in a binary package stanza then the source\n"
+"package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal\n"
+"restriction formula support."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: invalid-restriction-label-in-source-relation
+#. Tag: restriction-formula-with-versioned-dpkg-dev-conflict
 #. type: Lintian tag description
-#: checks/fields.desc:675
+#: checks/fields.desc:676
 #, no-wrap
 msgid ""
-"The restriction list in the source relation includes a term with\n"
-"an unknown label. The only allowed labels are \"stage1\", \"stage2\", "
-"\"nocheck\"\n"
-"and \"cross\"."
+"If a restriction formula appears in the build dependencies or if the\n"
+"Build-Profiles field is used in a binary package stanza then the source\n"
+"package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal\n"
+"restriction formula support. It must not conflict with version 1.17.14."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: restriction-list-without-versioned-dpkg-dev-dependency
+#. Tag: restriction-formula-with-debhelper-without-debhelper-version
 #. type: Lintian tag description
-#: checks/fields.desc:682
+#: checks/fields.desc:684
 #, no-wrap
 msgid ""
-"If a restriction list appears in the build dependencies, then the\n"
-"source package has to build depend on dpkg-dev (&gt;= 1.17.2) for minimal\n"
-"restriction list support."
+"If a restriction formula appears in the build dependencies or if the\n"
+"Build-Profiles field is used in a binary package stanza and the package "
+"uses\n"
+"debhelper, then the source package has to depend on at least debhelper\n"
+"9.20141010."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: restriction-list-with-versioned-dpkg-dev-conflict
+#. Tag: restriction-formula-with-debhelper-with-conflicting-version
 #. type: Lintian tag description
-#: checks/fields.desc:689
+#: checks/fields.desc:692
 #, no-wrap
 msgid ""
-"If a restriction list appears in the build dependencies, then the\n"
-"source package has to build depend on dpkg-dev (&gt;= 1.17.2) for minimal\n"
-"restriction list support. It must not conflict with version 1.17.2."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: restriction-list-with-debhelper-without-debhelper-version
-#. type: Lintian tag description
-#: checks/fields.desc:696
-#, no-wrap
-msgid ""
-"If a restriction list appears in the build dependencies and the\n"
-"package uses debhelper, then the source package has to depend on at least\n"
-"debhelper 9.20140227."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
-#. Tag: restriction-list-with-debhelper-with-conflicting-debhelper-version
-#. type: Lintian tag description
-#: checks/fields.desc:703
-#, no-wrap
-msgid ""
-"If a restriction list appears in the build dependencies and the\n"
-"package uses debhelper, then the source package has to depend on at least\n"
-"debhelper 9.20140227. It must not conflict with version 9.20140227."
+"If a restriction formula appears in the build dependencies or if the\n"
+"Build-Profiles field is used in a binary package stanza and the package "
+"uses\n"
+"debhelper, then the source package has to depend on at least debhelper\n"
+"9.20141010. It must not conflict with version 9.20141010."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -6729,7 +6721,7 @@ msgstr ""
 #
 #. Tag: depends-on-build-essential-package-without-using-version
 #. type: Lintian tag description
-#: checks/fields.desc:715
+#: checks/fields.desc:704
 #, no-wrap
 msgid ""
 "The package declares a depends on a build essential package without\n"
@@ -6746,7 +6738,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-an-x-font-package
 #. type: Lintian tag description
-#: checks/fields.desc:726
+#: checks/fields.desc:715
 #, no-wrap
 msgid ""
 "Packages must not depend on X Window System font packages.\n"
@@ -6762,7 +6754,7 @@ msgstr ""
 #
 #. Tag: build-depends-indep-without-arch-indep
 #. type: Lintian tag description
-#: checks/fields.desc:733
+#: checks/fields.desc:722
 #, no-wrap
 msgid ""
 "The control file specifies source relations for architecture-independent\n"
@@ -6774,7 +6766,7 @@ msgstr ""
 #
 #. Tag: build-conflicts-with-build-dependency
 #. type: Lintian tag description
-#: checks/fields.desc:740
+#: checks/fields.desc:729
 #, no-wrap
 msgid ""
 "The package build-conflicts with a package that it also\n"
@@ -6786,7 +6778,7 @@ msgstr ""
 #
 #. Tag: package-has-a-duplicate-build-relation
 #. type: Lintian tag description
-#: checks/fields.desc:747
+#: checks/fields.desc:736
 #, no-wrap
 msgid ""
 "The package declares the given build relations on the same package\n"
@@ -6799,7 +6791,7 @@ msgstr ""
 #
 #. Tag: build-depends-on-1-revision
 #. type: Lintian tag description
-#: checks/fields.desc:758
+#: checks/fields.desc:747
 #, no-wrap
 msgid ""
 "The package declares a build dependency on a version of a package\n"
@@ -6816,7 +6808,7 @@ msgstr ""
 #
 #. Tag: needlessly-depends-on-awk
 #. type: Lintian tag description
-#: checks/fields.desc:767
+#: checks/fields.desc:756
 #, no-wrap
 msgid ""
 "The package seems to declare a relation on awk. awk is a virtual\n"
@@ -6831,7 +6823,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-multiple-libstdc-versions
 #. type: Lintian tag description
-#: checks/fields.desc:774
+#: checks/fields.desc:763
 #, no-wrap
 msgid ""
 "The package seems to declare several relations to a libstdc version.\n"
@@ -6844,7 +6836,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-multiple-tcl-versions
 #. type: Lintian tag description
-#: checks/fields.desc:781
+#: checks/fields.desc:770
 #, no-wrap
 msgid ""
 "The package seems to declare several relations to a tcl version.\n"
@@ -6857,7 +6849,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-multiple-tclx-versions
 #. type: Lintian tag description
-#: checks/fields.desc:788
+#: checks/fields.desc:777
 #, no-wrap
 msgid ""
 "The package seems to declare several relations to a tclx version.\n"
@@ -6870,7 +6862,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-multiple-tk-versions
 #. type: Lintian tag description
-#: checks/fields.desc:795
+#: checks/fields.desc:784
 #, no-wrap
 msgid ""
 "The package seems to declare several relations to a tk version.\n"
@@ -6883,7 +6875,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-multiple-tkx-versions
 #. type: Lintian tag description
-#: checks/fields.desc:802
+#: checks/fields.desc:791
 #, no-wrap
 msgid ""
 "The package seems to declare several relations to a tkx version.\n"
@@ -6896,7 +6888,7 @@ msgstr ""
 #
 #. Tag: package-depends-on-multiple-libpng-versions
 #. type: Lintian tag description
-#: checks/fields.desc:809
+#: checks/fields.desc:798
 #, no-wrap
 msgid ""
 "The package seems to declare several relations to a libpng version.\n"
@@ -6909,7 +6901,7 @@ msgstr ""
 #
 #. Tag: depends-on-libdb1-compat
 #. type: Lintian tag description
-#: checks/fields.desc:817
+#: checks/fields.desc:806
 #, no-wrap
 msgid ""
 "The package seems to declare a relation on libdb1-compat.\n"
@@ -6923,7 +6915,7 @@ msgstr ""
 #
 #. Tag: depends-on-python-minimal
 #. type: Lintian tag description
-#: checks/fields.desc:826
+#: checks/fields.desc:815
 #, no-wrap
 msgid ""
 "The python-minimal package (and versioned variants thereof) exists\n"
@@ -6938,7 +6930,7 @@ msgstr ""
 #
 #. Tag: depends-exclusively-on-makedev
 #. type: Lintian tag description
-#: checks/fields.desc:835
+#: checks/fields.desc:824
 #, no-wrap
 msgid ""
 "This package depends on makedev without a udev alternative.  This\n"
@@ -6953,7 +6945,7 @@ msgstr ""
 #
 #. Tag: dbg-package-missing-depends
 #. type: Lintian tag description
-#: checks/fields.desc:849
+#: checks/fields.desc:838
 #, no-wrap
 msgid ""
 "The given binary package has a name of the form of \"X-dbg\", indicating "
@@ -6974,7 +6966,7 @@ msgstr ""
 #
 #. Tag: conflicts-with-dependency
 #. type: Lintian tag description
-#: checks/fields.desc:856
+#: checks/fields.desc:845
 #, no-wrap
 msgid ""
 "The package seems to conflict with one of its dependencies,\n"
@@ -6986,7 +6978,7 @@ msgstr ""
 #
 #. Tag: breaks-without-version
 #. type: Lintian tag description
-#: checks/fields.desc:870
+#: checks/fields.desc:859
 #, no-wrap
 msgid ""
 "This package declares a Breaks relationship with another package\n"
@@ -7005,7 +6997,7 @@ msgstr ""
 #
 #. Tag: conflicts-with-version
 #. type: Lintian tag description
-#: checks/fields.desc:882
+#: checks/fields.desc:871
 #, no-wrap
 msgid ""
 "An earlier-than version clause is normally an indication that Breaks\n"
@@ -7022,7 +7014,7 @@ msgstr ""
 #
 #. Tag: bad-menu-item
 #. type: Lintian tag description
-#: checks/fields.desc:888
+#: checks/fields.desc:877
 #, no-wrap
 msgid ""
 "The field Installer-Menu-Item should only contain positive integer\n"
@@ -7034,7 +7026,7 @@ msgstr ""
 #
 #. Tag: redundant-origin-field
 #. type: Lintian tag description
-#: checks/fields.desc:894
+#: checks/fields.desc:883
 #, no-wrap
 msgid ""
 "You use the Origin field though the field value is the default (Debian).\n"
@@ -7046,7 +7038,7 @@ msgstr ""
 #
 #. Tag: binary-nmu-debian-revision-in-source
 #. type: Lintian tag description
-#: checks/fields.desc:904
+#: checks/fields.desc:893
 #, no-wrap
 msgid ""
 "The version number of your source package ends in +b and a number or\n"
@@ -7061,7 +7053,7 @@ msgstr ""
 #
 #. Tag: dfsg-version-in-native-package
 #. type: Lintian tag description
-#: checks/fields.desc:913
+#: checks/fields.desc:902
 #, no-wrap
 msgid ""
 "The version number of this package contains \"dfsg\", but it's a\n"
@@ -7077,7 +7069,7 @@ msgstr ""
 #
 #. Tag: dfsg-version-with-period
 #. type: Lintian tag description
-#: checks/fields.desc:926
+#: checks/fields.desc:915
 #, no-wrap
 msgid ""
 "The version number of this package contains \".dfsg\", probably in a\n"
@@ -7097,7 +7089,7 @@ msgstr ""
 #
 #. Tag: dfsg-version-misspelled
 #. type: Lintian tag description
-#: checks/fields.desc:933
+#: checks/fields.desc:922
 #, no-wrap
 msgid ""
 "The version number of this package contains \"dsfg\".  You probably\n"
@@ -7110,7 +7102,7 @@ msgstr ""
 #
 #. Tag: redundant-bugs-field
 #. type: Lintian tag description
-#: checks/fields.desc:940
+#: checks/fields.desc:929
 #, no-wrap
 msgid ""
 "You use the Bugs field though the field value is the default \n"
@@ -7123,7 +7115,7 @@ msgstr ""
 #
 #. Tag: build-depends-on-build-essential
 #. type: Lintian tag description
-#: checks/fields.desc:948
+#: checks/fields.desc:937
 #, no-wrap
 msgid ""
 "You depend on the build-essential package, which is only a\n"
@@ -7136,7 +7128,7 @@ msgstr ""
 #
 #. Tag: depends-on-packaging-dev
 #. type: Lintian tag description
-#: checks/fields.desc:954
+#: checks/fields.desc:943
 #, no-wrap
 msgid ""
 "You depend/recommend/build-depend on packaging-dev, which is\n"
@@ -7148,7 +7140,7 @@ msgstr ""
 #
 #. Tag: malformed-python-version
 #. type: Lintian tag description
-#: checks/fields.desc:971
+#: checks/fields.desc:960
 #, no-wrap
 msgid ""
 "The Python-Version control field is not in one of the valid\n"
@@ -7170,7 +7162,7 @@ msgstr ""
 #
 #. Tag: malformed-dm-upload-allowed
 #. type: Lintian tag description
-#: checks/fields.desc:980
+#: checks/fields.desc:969
 #, no-wrap
 msgid ""
 "The Dm-Upload-Allowed field in this package is set to something\n"
@@ -7184,7 +7176,7 @@ msgstr ""
 #
 #. Tag: wrong-section-according-to-package-name
 #. type: Lintian tag description
-#: checks/fields.desc:986
+#: checks/fields.desc:975
 #, no-wrap
 msgid ""
 "This package has a name suggesting that it belongs to a section\n"
@@ -7196,7 +7188,7 @@ msgstr ""
 #
 #. Tag: debug-package-should-be-priority-extra
 #. type: Lintian tag description
-#: checks/fields.desc:993
+#: checks/fields.desc:982
 #, no-wrap
 msgid ""
 "This package has a name suggesting that it contains detached\n"
@@ -7209,7 +7201,7 @@ msgstr ""
 #
 #. Tag: maintainer-also-in-uploaders
 #. type: Lintian tag description
-#: checks/fields.desc:1002
+#: checks/fields.desc:991
 #, no-wrap
 msgid ""
 "The maintainer value also appears on the <tt>Uploaders</tt> field.\n"
@@ -7224,7 +7216,7 @@ msgstr ""
 #
 #. Tag: duplicate-uploader
 #. type: Lintian tag description
-#: checks/fields.desc:1008
+#: checks/fields.desc:997
 #, no-wrap
 msgid ""
 "The uploader appears more than once in the <tt>Uploaders</tt>\n"
@@ -7236,7 +7228,7 @@ msgstr ""
 #
 #. Tag: versioned-dependency-satisfied-by-perl
 #. type: Lintian tag description
-#: checks/fields.desc:1036
+#: checks/fields.desc:1025
 #, no-wrap
 msgid ""
 "This package declares an unnecessary versioned dependency\n"
@@ -7269,7 +7261,7 @@ msgstr ""
 #
 #. Tag: package-superseded-by-perl
 #. type: Lintian tag description
-#: checks/fields.desc:1060
+#: checks/fields.desc:1049
 #, no-wrap
 msgid ""
 "This package is also provided by one of the Perl core packages\n"
@@ -7298,7 +7290,7 @@ msgstr ""
 #
 #. Tag: vcs-field-uses-not-recommended-uri-format
 #. type: Lintian tag description
-#: checks/fields.desc:1071
+#: checks/fields.desc:1060
 #, no-wrap
 msgid ""
 "The VCS-* field uses a URI which doesn't match the recommended\n"
@@ -7315,7 +7307,7 @@ msgstr ""
 #
 #. Tag: vcs-field-uses-unknown-uri-format
 #. type: Lintian tag description
-#: checks/fields.desc:1077
+#: checks/fields.desc:1066
 #, no-wrap
 msgid ""
 "The VCS-* field uses an URI which doesn't match any known format.\n"
@@ -7327,7 +7319,7 @@ msgstr ""
 #
 #. Tag: vcs-field-has-unexpected-spaces
 #. type: Lintian tag description
-#: checks/fields.desc:1085
+#: checks/fields.desc:1074
 #, no-wrap
 msgid ""
 "The VCS-* field contains more spaces than expected or spaces at\n"
@@ -7341,7 +7333,7 @@ msgstr ""
 #
 #. Tag: vcs-field-not-canonical
 #. type: Lintian tag description
-#: checks/fields.desc:1102
+#: checks/fields.desc:1091
 #, no-wrap
 msgid ""
 "The VCS-* field contains an uncanonical URI. Please update to use\n"
@@ -7363,7 +7355,7 @@ msgstr ""
 #
 #. Tag: vcs-field-bitrotted
 #. type: Lintian tag description
-#: checks/fields.desc:1113
+#: checks/fields.desc:1102
 #, no-wrap
 msgid ""
 "The VCS-* field uses an address which no longer works.  Please\n"
@@ -7380,7 +7372,7 @@ msgstr ""
 #
 #. Tag: vcs-git-uses-invalid-user-uri
 #. type: Lintian tag description
-#: checks/fields.desc:1122
+#: checks/fields.desc:1111
 #, no-wrap
 msgid ""
 "The Vcs-Git field is pointing to a personal repository using\n"
@@ -7396,7 +7388,7 @@ msgstr ""
 #
 #. Tag: lib-recommends-documentation
 #. type: Lintian tag description
-#: checks/fields.desc:1135
+#: checks/fields.desc:1124
 #, no-wrap
 msgid ""
 "The given package appears to be a library package, but it recommends\n"
@@ -7415,7 +7407,7 @@ msgstr ""
 #
 #. Tag: build-depends-on-python-dev-with-no-arch-any
 #. type: Lintian tag description
-#: checks/fields.desc:1149
+#: checks/fields.desc:1138
 #, no-wrap
 msgid ""
 "The given package appears to have a Python development package\n"
@@ -7435,7 +7427,7 @@ msgstr ""
 #
 #. Tag: build-depends-on-specific-java-doc-package
 #. type: Lintian tag description
-#: checks/fields.desc:1156
+#: checks/fields.desc:1145
 #, no-wrap
 msgid ""
 "The given package declares a build dependency on either openjdk-\n"
@@ -7448,7 +7440,7 @@ msgstr ""
 #
 #. Tag: depends-on-specific-java-doc-package
 #. type: Lintian tag description
-#: checks/fields.desc:1163
+#: checks/fields.desc:1152
 #, no-wrap
 msgid ""
 "The package should use default-jdk-doc instead of classpath-doc\n"
@@ -7461,7 +7453,7 @@ msgstr ""
 #
 #. Tag: needless-dependency-on-jre
 #. type: Lintian tag description
-#: checks/fields.desc:1179
+#: checks/fields.desc:1168
 #, no-wrap
 msgid ""
 "The package appear to be a Java library and depending on one\n"
@@ -7481,7 +7473,7 @@ msgstr ""
 #
 #. Tag: documentation-package-not-architecture-independent
 #. type: Lintian tag description
-#: checks/fields.desc:1185
+#: checks/fields.desc:1174
 #, no-wrap
 msgid ""
 "Documentation packages usually shouldn't carry anything that requires\n"
@@ -7493,7 +7485,7 @@ msgstr ""
 #
 #. Tag: build-depends-on-versioned-berkeley-db
 #. type: Lintian tag description
-#: checks/fields.desc:1211
+#: checks/fields.desc:1200
 #, no-wrap
 msgid ""
 "The package build-depends on a versioned development package of\n"
@@ -7527,7 +7519,7 @@ msgstr ""
 #
 #. Tag: transitional-package-should-be-oldlibs-extra
 #. type: Lintian tag description
-#: checks/fields.desc:1221
+#: checks/fields.desc:1210
 #, no-wrap
 msgid ""
 "The package appears to be a transitional package, but it is not\n"
@@ -7542,7 +7534,7 @@ msgstr ""
 #
 #. Tag: rc-version-greater-than-expected-version
 #. type: Lintian tag description
-#: checks/fields.desc:1230
+#: checks/fields.desc:1219
 #, no-wrap
 msgid ""
 "The package appears to be a release candidate or preview release, but\n"
@@ -7556,7 +7548,7 @@ msgstr ""
 #
 #. Tag: dm-upload-allowed-is-obsolete
 #. type: Lintian tag description
-#: checks/fields.desc:1239
+#: checks/fields.desc:1228
 #, no-wrap
 msgid ""
 "The implementation of the \"Debian Maintainers\" GR has changed\n"
@@ -7570,7 +7562,7 @@ msgstr ""
 #
 #. Tag: needless-suggest-recommend-libservlet-java
 #. type: Lintian tag description
-#: checks/fields.desc:1251
+#: checks/fields.desc:1240
 #, no-wrap
 msgid ""
 "Package should not suggest or recommend libservlet-java\n"
