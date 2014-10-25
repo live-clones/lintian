@@ -22,6 +22,9 @@ lintian (2.5.30) UNRELEASED; urgency=medium
   * debian/control:
     + [AB] Add a Homepage header pointing to https://lintian.debian.org/
 
+  * debian/copyright:
+    + [AB] Add myself to debian/copyright.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 13:20:50 +0200
 
 lintian (2.5.29) unstable; urgency=medium
