@@ -161,11 +161,6 @@ sub run {
         }
     }
 
-    for my $file ($info->sorted_index) {
-        tag 'deprecated-kdelnk-file', $file
-          if ($file->basename =~ m,\.kdelnk$,);
-    }
-
     # Find the desktop files in the package for verification.
     my @desktop_files;
     for my $subdir (qw(applications xsessions)) {

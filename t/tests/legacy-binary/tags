@@ -6,7 +6,6 @@ E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-metapackage pre-depends: xorg
-E: binary: deprecated-kdelnk-file usr/share/applications/hello.kdelnk
 E: binary: desktop-entry-missing-required-key usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1
 E: binary: doc-base-file-duplicated-format binary:36 html

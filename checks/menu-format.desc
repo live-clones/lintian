@@ -388,14 +388,6 @@ Info: The desktop entry lists support for at least one mime type, but does not
  If the application can indeed handle files of the listed mime types, it should
  specify a way to pass the filenames as parameters.
 
-Tag: deprecated-kdelnk-file
-Severity: important
-Certainty: certain
-Info: kdelnk files were used by KDE 1 and since KDE 2 desktop files are used
- instead.  Renaming the file and removing the deprecated header and keys
- is often all that needs to be done.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
-
 Tag: desktop-entry-limited-to-environments
 Severity: normal
 Certainty: wild-guess

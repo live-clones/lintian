@@ -1,5 +1,5 @@
 Last generated 2014-10-25
-Coverage (Tags): 1044/1114 (93.72%), w. legacy tests: 1102/1114 (98.92%)
+Coverage (Tags): 1044/1113 (93.80%), w. legacy tests: 1101/1113 (98.92%)
 Coverage (Checks): 38/46 (82.61%), w. legacy tests: 40/46 (86.96%)
 
 The following tags are not tested by the test suite:
@@ -49,7 +49,6 @@ init.d postrm-does-not-call-updaterc.d-for-init.d-script
 init.d preinst-calls-updaterc.d
 init.d prerm-calls-updaterc.d
 
-menu-format deprecated-kdelnk-file
 menu-format desktop-contains-deprecated-header
 menu-format desktop-entry-missing-required-key
 menu-format menu-item-missing-required-tag
@@ -93,7 +92,6 @@ Breakdown of remaining tags in legacy test suite by test case:
 
 binary
   binary-has-unneeded-section
-  deprecated-kdelnk-file
   desktop-contains-deprecated-header
   desktop-entry-missing-required-key
   doc-base-document-field-ends-in-whitespace

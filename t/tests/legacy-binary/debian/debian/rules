@@ -60,8 +60,6 @@ binary-arch: build
 	install -d $(tmp)/usr/share/applications
 	install -m 644 debian/hello.desktop \
 	    $(tmp)/usr/share/applications/hello.desktop
-	install -m 644 debian/hello.desktop \
-	    $(tmp)/usr/share/applications/hello.kdelnk
 	install -m 755 debian/goodbye.desktop \
 	    $(tmp)/usr/share/applications/goodbye.desktop
 

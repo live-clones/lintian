@@ -2,6 +2,9 @@ lintian (2.5.30) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/menu-format.{desc,pm}:
+    + [NT] Retire check for "kdelnk" files.
+
   * collection/unpacked:
     + [NT] Correct handling of files with 2 or more consecutive
       backslashes.
