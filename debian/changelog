@@ -11,6 +11,10 @@ lintian (2.5.30) UNRELEASED; urgency=medium
       majority of all ELF binaries (except ones with very exotic
       file names with glyphs like ":").
 
+  * t:
+    + [NT] Apply patch from Johannes Schauer to fix FTBFS with
+      newer dpkg that have stricter checking of build-profiles.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 13:20:50 +0200
 
 lintian (2.5.29) unstable; urgency=medium
