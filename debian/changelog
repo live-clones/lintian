@@ -9,26 +9,25 @@ lintian (2.5.30) UNRELEASED; urgency=medium
     + [NT] Correct handling of files with 2 or more consecutive
       backslashes.
 
+  * debian/control:
+    + [AB] Add a Homepage header pointing to https://lintian.debian.org/
+  * debian/copyright:
+    + [AB] Add myself to debian/copyright.
+
   * helpers/coll/strings-helper:
     + [NT] Filter out duplicate strings.  This applies to the
       majority of all ELF binaries (except ones with very exotic
       file names with glyphs like ":").
 
-  * t:
-    + [NT] Apply patch from Johannes Schauer to fix FTBFS with
-      newer dpkg that have stricter checking of build-profiles.
-
   * lib/Lintian/Internal/FrontendUtil.pm:
     + [AB] Don't clean HOME and some XDG_* variables when sanitizing the
       environment. (Closes: #766737)
 
-  * debian/control:
-    + [AB] Add a Homepage header pointing to https://lintian.debian.org/
+  * t:
+    + [NT] Apply patch from Johannes Schauer to fix FTBFS with
+      newer dpkg that have stricter checking of build-profiles.
 
-  * debian/copyright:
-    + [AB] Add myself to debian/copyright.
-
- -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 13:20:50 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 16:53:34 +0200
 
 lintian (2.5.29) unstable; urgency=medium
 
