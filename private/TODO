@@ -30,12 +30,6 @@ checks:
   lintian.d.o and adjust.  If something has legitimate overrides, it's not
   severity: certain, for instance.
 
-collection:
-
-- Collect desktop files so that checks/menu-format doesn't have to walk
-  the file index and so that we can do interesting checks on desktop files
-  from inside the Lintian lab.
-
 doc:
 
 - Either update doc/CREDITS based on the changelog file or archive it
