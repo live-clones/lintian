@@ -33,6 +33,7 @@ my ($strdir) = @ARGV;
 my $curfname = '';
 my $curdir = '';
 
+my %seen;
 my %opts = (fail => 'error');
 my $out = undef;
 
@@ -45,6 +46,7 @@ while (my $line = <STDIN>) {
         if ($out) {
             close($out);
             reap(\%opts);
+            undef(%seen);
         }
         my $dir = $strdir . '/' . dirname($fname);
         if ($dir ne $curdir) {
@@ -59,6 +61,7 @@ while (my $line = <STDIN>) {
 
         $curfname = $fname;
     }
+    next if $seen{$string}++;
     print {$out} "$string\n";
 }
 
