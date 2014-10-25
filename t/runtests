@@ -254,6 +254,7 @@ if (@tests) {
         system('prove', '-j', $JOBS, '-r', '-I', "$LINTIAN_ROOT/lib", @tests)
         != 0) {
         exit 1 unless $run_all_tests;
+        push(@{$failed}, "suite:scripts [Try: prove -lr -j$JOBS t]");
         $status = 1;
     }
     $tests_run++;
