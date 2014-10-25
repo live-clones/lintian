@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-10-24 21:23+0000\n"
+"POT-Creation-Date: 2014-10-25 16:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3894,6 +3894,106 @@ msgid ""
 "Check if upstream also provides source-only tarballs that you can use as\n"
 "the upstream distribution instead.  If not, you may want to ask upstream\n"
 "to provide source-only tarballs.\n"
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: dbus-policy-at-console
+#. type: Lintian tag description
+#: checks/dbus.desc:33
+#, no-wrap
+msgid ""
+"The package contains D-Bus policy configuration that uses the\n"
+"deprecated <tt>at_console</tt> condition to impose a different policy\n"
+"for users who are \"logged in at the console\" according to\n"
+"systemd-logind, ConsoleKit or similar APIs, such as:\n"
+"\n"
+"  &lt;policy context=\"default\"&gt;\n"
+"    &lt;deny send_destination=\"com.example.PowerManagementDaemon\"/&gt;\n"
+"  &lt;/policy&gt;\n"
+"  &lt;policy at_console=\"true\"&gt;\n"
+"    &lt;allow send_destination=\"com.example.PowerManagementDaemon\"/&gt;\n"
+"  &lt;/policy&gt;\n"
+"\n"
+"The maintainers of D-Bus recommend that services should allow or deny\n"
+"method calls according to broad categories that are not typically altered\n"
+"by the system administrator (usually either \"all users\", or only root\n"
+"and/or a specified system user). If finer-grained authorization\n"
+"is required, the service should accept the method call message, then call\n"
+"out to PolicyKit to decide whether to honor the request. PolicyKit can\n"
+"use system-administrator-configurable policies to make that decision,\n"
+"including distinguishing between users who are \"at the console\" and\n"
+"those who are not."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: dbus-policy-without-send-destination
+#. type: Lintian tag description
+#: checks/dbus.desc:57
+#, no-wrap
+msgid ""
+"The package contains D-Bus policy configuration that uses\n"
+"one of the <tt>send_*</tt> conditions but does not specify a\n"
+"<tt>send_destination</tt>.\n"
+"\n"
+"Rules of the form\n"
+"\n"
+"  &lt;allow send_interface=\"com.example.MyInterface\"/&gt;\n"
+"\n"
+"allow messages with the given interface to be sent to <i>any</i>\n"
+"service, not just the one installing the rule, which is rarely\n"
+"what was intended.\n"
+"\n"
+"Similarly, on the system bus, rules of the form\n"
+"\n"
+"  &lt;deny send_interface=\"com.example.MyInterface\"/&gt;\n"
+"\n"
+"are redundant with the system bus' default-deny policy, and have\n"
+"unintended effects on other services."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: dbus-session-service-wrong-name
+#. type: Lintian tag description
+#: checks/dbus.desc:73
+#, no-wrap
+msgid ""
+"The package contains a D-Bus session service whose filename\n"
+"does not match the <tt>Name</tt> field found in the file.\n"
+"This makes it possible that two non-conflicting packages could\n"
+"provide the same service name with the same search-path priority\n"
+"(i.e. in the same directory). dbus-daemon will arbitrarily choose\n"
+"one of them, which is unlikely to be the desired result.\n"
+"\n"
+"Best-practice is that if you implement a session service whose well-known\n"
+"name is <tt>com.example.MyService1</tt>, and it should be\n"
+"service-activatable, you should achieve that by packaging\n"
+"<tt>/usr/share/dbus-1/services/com.example.MyService1.service</tt>."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: dbus-system-service-wrong-name
+#. type: Lintian tag description
+#: checks/dbus.desc:87
+#, no-wrap
+msgid ""
+"The package contains a D-Bus system service whose filename\n"
+"does not match the <tt>Name</tt> field found in the file.\n"
+"This will not work, because dbus-daemon-launch-helper specifically\n"
+"looks for that filename, in order to keep system-level activation\n"
+"secure and predictable.\n"
+"\n"
+"If you implement a session service whose well-known name is\n"
+"<tt>com.example.MyService1</tt>, and it should be service-activatable,\n"
+"you must provide\n"
+"<tt>/usr/share/dbus-1/system-services/com.example.MyService1.service</tt>.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -12189,22 +12289,9 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: deprecated-kdelnk-file
-#. type: Lintian tag description
-#: checks/menu-format.desc:398
-#, no-wrap
-msgid ""
-"kdelnk files were used by KDE 1 and since KDE 2 desktop files are used\n"
-"instead.  Renaming the file and removing the deprecated header and keys\n"
-"is often all that needs to be done."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
 #. Tag: desktop-entry-limited-to-environments
 #. type: Lintian tag description
-#: checks/menu-format.desc:409
+#: checks/menu-format.desc:401
 #, no-wrap
 msgid ""
 "This desktop entry uses OnlyShowIn to limit the environments in\n"

@@ -13,6 +13,9 @@ lintian (2.5.30) UNRELEASED; urgency=medium
     + [AB] Add a Homepage header pointing to https://lintian.debian.org/
   * debian/copyright:
     + [AB] Add myself to debian/copyright.
+  * debian/rules:
+    + [NT] Ensure that po4a/*.cfg are always up to date during releases
+      builds.
 
   * helpers/coll/strings-helper:
     + [NT] Filter out duplicate strings.  This applies to the

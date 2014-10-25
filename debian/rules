@@ -82,7 +82,7 @@ generate-docs-stamp: $(docsource)
 rebuild-lintian.debian.org: api-doc generate-docs-stamp
 
 build-arch build-indep build: build-stamp
-build-stamp: $(neededfiles) generate-docs-stamp $(testtarget)
+build-stamp: $(neededfiles) generate-docs-stamp $(testtarget) $(po4acheckcfg)
 	dh_testdir
 
 	mkdir -p l10n
