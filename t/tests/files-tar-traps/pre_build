@@ -11,5 +11,18 @@ echo "foo" > "$dir/'\\ "
 echo "bar" > "$dir/\\"
 # File named <backslash><backslash>
 # - causes md5sums-lists-nonexistent-file
-#   (TODO: debug why, but for now leave it out)
 echo "bar" > "$dir/\\\\"
+
+# File named a<backslash><backslash>b
+# - causes md5sums-lists-nonexistent-file
+echo "bar" > "$dir/a\\\\b"
+
+# Symlink to file named a<backslash><backslash>b
+ln -s 'a\\b' "$dir/link-to-weird-file1"
+
+# Because the above is not insane enough...
+# If Lintian gets this wrong, it will become an
+# "unsafe-symlink".
+mkdir -p "$dir/\\.\\./\\.\\."
+echo "golf" > "$dir/\\.\\./\\.\\./\\.\\."
+ln -s '\.\./\.\./\.\.' "$dir/some-file"

@@ -2,6 +2,10 @@ lintian (2.5.30) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * collection/unpacked:
+    + [NT] Correct handling of files with 2 or more consecutive
+      backslashes.
+
   * helpers/coll/strings-helper:
     + [NT] Filter out duplicate strings.  This applies to the
       majority of all ELF binaries (except ones with very exotic

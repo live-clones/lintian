@@ -90,9 +90,10 @@ sub collect {
                 ')', '-o', '-printf', '%M 0/0 %s %AY-%Am-%Ad %AH:%AM %p\0'
             ],
             # Link targets can have newlines in them.  A lesson learned by
-            # clasp (#765311)
+            # clasp (#765311) - We must also escape backslashes.  That would
+            # be the \x59 values (used to avoid a mass of backslashes).
             '|',
-            ['perl', '-l', '-0', '-pe', 's/\n/\\\n/g'],
+            ['perl', '-l', '-0', '-pe', 's/\x5c/\x5c\x5c/g; s/\n/\\\n/g;'],
             # Sort and compress
             '|',
             ['sort', '-k', '6'],
