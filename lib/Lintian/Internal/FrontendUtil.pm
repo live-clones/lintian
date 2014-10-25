@@ -53,7 +53,19 @@ sub check_test_feature{
     # variables.  This is mostly to ensure we know what state tools
     # (e.g. tar) start in.  In particular, we do not want to inherit
     # some random "TAR_OPTIONS" or "GZIP" values.
-    my %PRESERVE_ENV = map { $_ => 1 } qw(PATH TMPDIR LC_ALL LC_MESSAGES LANG);
+    my %PRESERVE_ENV = map { $_ => 1 } qw(
+      HOME
+      LANG
+      LC_ALL
+      LC_MESSAGES
+      PATH
+      TMPDIR
+      XDG_CACHE_HOME
+      XDG_CONFIG_DIRS
+      XDG_CONFIG_HOME
+      XDG_DATA_DIRS
+      XDG_DATA_HOME
+    );
 
     sub sanitize_environment {
         for my $key (keys(%ENV)) {

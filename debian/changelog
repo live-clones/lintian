@@ -15,6 +15,10 @@ lintian (2.5.30) UNRELEASED; urgency=medium
     + [NT] Apply patch from Johannes Schauer to fix FTBFS with
       newer dpkg that have stricter checking of build-profiles.
 
+  * lib/Lintian/Internal/FrontendUtil.pm:
+    + [AB] Don't clean HOME and some XDG_* variables when sanitizing the
+      environment. (Closes: #766737)
+
  -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 13:20:50 +0200
 
 lintian (2.5.29) unstable; urgency=medium
