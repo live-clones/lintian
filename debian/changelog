@@ -19,6 +19,9 @@ lintian (2.5.30) UNRELEASED; urgency=medium
     + [AB] Don't clean HOME and some XDG_* variables when sanitizing the
       environment. (Closes: #766737)
 
+  * debian/control:
+    + [AB] Add a Homepage header pointing to https://lintian.debian.org/
+
  -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 13:20:50 +0200
 
 lintian (2.5.29) unstable; urgency=medium
