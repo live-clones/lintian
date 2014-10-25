@@ -1,11 +1,13 @@
-Last generated 2014-09-01
-Coverage (Tags): 1034/1103 (93.74%), w. legacy tests: 1092/1103 (99.00%)
-Coverage (Checks): 38/45 (84.44%), w. legacy tests: 40/45 (88.89%)
+Last generated 2014-10-25
+Coverage (Tags): 1044/1114 (93.72%), w. legacy tests: 1102/1114 (98.92%)
+Coverage (Checks): 38/46 (82.61%), w. legacy tests: 40/46 (86.96%)
 
 The following tags are not tested by the test suite:
 
 binaries binary-file-compressed-with-upx
 binaries ocaml-custom-executable
+
+deb-format tar-errors-from-control
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file

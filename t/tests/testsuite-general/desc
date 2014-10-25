@@ -9,6 +9,7 @@ Skeleton: pedantic
 Test-Depends: dpkg (>= 1.17.11)
 Test-For:
  debian-tests-control-uses-national-encoding
+ exclusive-runtime-tests-field
  illegal-runtime-test-name
  missing-runtime-test-file
  missing-runtime-tests-field
