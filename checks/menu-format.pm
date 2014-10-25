@@ -154,7 +154,6 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
-    my $mdir = $info->lab_data_path('menu');
     my @menufiles;
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
         if (my $dir = $info->index_resolved_path($dirname)) {
@@ -162,21 +161,25 @@ sub run {
         }
     }
 
+    for my $file ($info->sorted_index) {
+        tag 'deprecated-kdelnk-file', $file
+          if ($file->basename =~ m,\.kdelnk$,);
+    }
+
     # Find the desktop files in the package for verification.
     my @desktop_files;
-    foreach my $file ($info->sorted_index) {
-        my $operm = $file->operm;
-
-        tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
-
-        if (   $file->is_file
-            && $file =~ m,^usr/share/(?:applications|xsessions)/.*\.desktop$,){
-
-            if ($operm & 0111) {
-                tag 'executable-desktop-file', sprintf('%s %04o',$file,$operm);
-            }
-            unless ($file =~ m,template,o) {
-                push(@desktop_files, $file);
+    for my $subdir (qw(applications xsessions)) {
+        if (my $dir = $info->index("usr/share/$subdir/")) {
+            for my $file ($dir->children) {
+                next unless $file->is_file;
+                next unless $file->basename =~ m/\.desktop$/;
+                if ($file->is_executable) {
+                    tag 'executable-desktop-file',
+                      sprintf('%s %04o',$file, $file->operm);
+                }
+                if (index($file, 'template') == -1) {
+                    push(@desktop_files, $file);
+                }
             }
         }
     }
