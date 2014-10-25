@@ -1,6 +1,10 @@
-lintian (2.5.30) UNRELEASED; urgency=medium
+lintian (2.5.30) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  The "welcome Axel Beckert!" release.
+
+  * Summary of tag changes:
+    + Removed:
+      - deprecated-kdelnk-file
 
   * checks/menu-format.{desc,pm}:
     + [NT] Retire check for "kdelnk" files.
@@ -30,7 +34,7 @@ lintian (2.5.30) UNRELEASED; urgency=medium
     + [NT] Apply patch from Johannes Schauer to fix FTBFS with
       newer dpkg that have stricter checking of build-profiles.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 16:53:34 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 17:03:48 +0200
 
 lintian (2.5.29) unstable; urgency=medium
 
