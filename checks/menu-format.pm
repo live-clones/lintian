@@ -540,11 +540,11 @@ sub verify_icon {
         tag 'menu-icon-too-big', "$icon: ${width}x${height} > ${size}x${size}";
     }
 
-    close($fd) or die;
+    close($fd);
     return;
 
   parse_error:
-    close($fd) or die;
+    close($fd);
     tag 'menu-icon-cannot-be-parsed', "$icon: looking for $parse";
     return;
 }
