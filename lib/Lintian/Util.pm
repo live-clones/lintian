@@ -94,7 +94,7 @@ use Encode ();
 use FileHandle;
 use Scalar::Util qw(openhandle);
 
-use Lintian::Command qw(spawn);
+use Lintian::Command qw(spawn safe_qx);
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 =head1 NAME
@@ -644,23 +644,43 @@ L</parse_dpkg_control> do.  It can also emit:
 
 =cut
 
-sub get_deb_info {
-    my ($file) = @_;
+{
+    my $dpkg_deb_has_ctrl_tarfile;
 
-    # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
-    my $opts = { pipe_out => FileHandle->new };
-    spawn($opts, ['ar', 'p', $file, 'control.tar.gz'],
-        '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
-      or die "cannot fork to unpack $file: $opts->{exception}\n";
-    my @data = parse_dpkg_control($opts->{pipe_out});
+    sub get_deb_info {
+        my ($file) = @_;
 
-    # Consume all data before exiting so that we don't kill child processes
-    # with SIGPIPE.  This will normally only be an issue with malformed
-    # control files.
-    drain_pipe($opts->{pipe_out});
-    close($opts->{pipe_out});
-    $opts->{harness}->finish();
-    return $data[0];
+        # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
+        my $opts = {
+            fail => 'exception',
+            pipe_out => FileHandle->new
+        };
+        if (not defined($dpkg_deb_has_ctrl_tarfile)) {
+            my $help = safe_qx({'err' => '/dev/null'},'dpkg-deb', '--help');
+            if (index($help, '--ctrl-tarfile') > -1) {
+                $dpkg_deb_has_ctrl_tarfile = 1;
+            } else {
+                $dpkg_deb_has_ctrl_tarfile = 0;
+            }
+        }
+        if ($dpkg_deb_has_ctrl_tarfile) {
+            spawn(
+                $opts, ['dpkg-deb', '--ctrl-tarfile', $file],
+                '|', ['tar', '--wildcards', '-xO', '-f', '-', '*control']);
+        } else {
+            spawn($opts, ['ar', 'p', $file, 'control.tar.gz'],
+                '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control']);
+        }
+        my @data = parse_dpkg_control($opts->{pipe_out});
+
+        # Consume all data before exiting so that we don't kill child processes
+        # with SIGPIPE.  This will normally only be an issue with malformed
+        # control files.
+        drain_pipe($opts->{pipe_out});
+        close($opts->{pipe_out});
+        $opts->{harness}->finish();
+        return $data[0];
+    }
 }
 
 =item get_dsc_control (DSCFILE)

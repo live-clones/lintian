@@ -1,8 +1,16 @@
 lintian (2.5.31) UNRELEASED; urgency=medium
 
+  * debian/control:
+    + [NT] Recommend dpkg (>= 1.17.14) for the --ctrl-tarfile
+      option in dpkg-deb.  Lintian relies on it to support
+      (u)deb files without a gzip compressed control.tar file.
+
   * lib/Lintian/Command.pm:
     + [NT] Use croak() rather than L::Util's fail() on errors.
       The issues are generally not "internal errors".
+  * lib/Lintian/Util.pm:
+    + [NT] Prefer dpkg-deb --ctrl-tarfile to "ar p" when dpkg
+      is recent enough.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 02 Nov 2014 14:22:59 +0100
 
