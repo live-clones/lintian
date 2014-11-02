@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use parent 'Clone';
+use Carp qw(croak);
 use List::MoreUtils qw(any);
 
 use Lintian::Util qw(fail);
@@ -485,10 +486,21 @@ Return an array containing the names of nodes that were added. E.g.
     # prints 'A' and 'B':
     print $map->known();
 
+=item known(NODE)
+
+Returns a truth value if NODE is known or C<undef> otherwise.
+
 =cut
 
 sub known {
-    my $self = shift;
+    my ($self, $node) = @_;
+
+    if (@_ > 1) {
+        croak('known(NODE) requires a defined argument')
+          if not defined($node);
+        return 1 if exists($self->{'known'}{$node});
+        return;
+    }
 
     return keys %{$self->{'known'}};
 }

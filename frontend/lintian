@@ -1182,16 +1182,30 @@ my $collmap = Lintian::DepMap::Properties->new();
 for my $c (@scripts) {
     # Add the checks with their dependency information
     my $cs = $PROFILE->get_script($c);
+    my @deps = $cs->needs_info;
     $map->add('check-' . $c);
-    if ($cs->needs_info) {
-        $map->addp('check-' . $c, 'coll-', $cs->needs_info);
+    if (@deps) {
+        # In case a (third-party) check gets their needs-info wrong,
+        # present the user with useful error message.
+        my @missing;
+        for my $dep (@deps) {
+            if (!$map->known('coll-' . $dep)) {
+                push(@missing, $dep);
+            }
+        }
+        if (@missing) {
+            my $str = join(', ', @missing);
+            fail("The check \"$c\" depends unknown collection(s): $str");
+        }
+        $map->addp('check-' . $c, 'coll-', @deps);
     }
 }
 
-# Make sure the resolver is in a sane state:
+# Make sure the resolver is in a sane state
+# - This can happen if we break collections (inter)dependencies.
 scalar($map->missing) == 0
   or
-  fail('There are missing nodes on the resolver: '. join(', ', $map->missing));
+  fail('There are missing nodes in the resolver: '. join(', ', $map->missing));
 undef $map;
 
 # }}}
