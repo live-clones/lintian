@@ -20,6 +20,8 @@ package Lintian::Command;
 use strict;
 use warnings;
 
+use Carp qw(croak);
+
 BEGIN {
     # Disabling IPC::Run::Debug saves tons of useless calls.
     $ENV{'IPCRUNDEBUG'} = 'none'
@@ -273,21 +275,19 @@ sub spawn {
         }
     };
     if ($@) {
-        require Lintian::Util;
-        Lintian::Util::fail($@) if $opts->{fail} ne 'never';
+        croak($@) if $opts->{fail} ne 'never';
         $opts->{success} = 0;
         $opts->{exception} = $@;
     } elsif ($opts->{fail} eq 'error'
         and not $opts->{success}) {
-        require Lintian::Util;
         if ($opts->{description}) {
-            Lintian::Util::fail("$opts->{description} failed with error code "
+            croak("$opts->{description} failed with error code "
                   . $opts->{harness}->result);
         } elsif (@cmds == 1) {
-            Lintian::Util::fail("$cmds[0][0] failed with error code "
+            croak("$cmds[0][0] failed with error code "
                   . $opts->{harness}->result);
         } else {
-            Lintian::Util::fail(
+            croak(
                 'command failed with error code ' . $opts->{harness}->result);
         }
     }
@@ -331,19 +331,16 @@ sub reap {
 
         eval {$opts->{success} = $opts->{harness}->finish;};
         if ($@) {
-            require Lintian::Util;
-            Lintian::Util::fail($@) if $opts->{fail} ne 'never';
+            croak($@) if $opts->{fail} ne 'never';
             $opts->{success} = 0;
             $opts->{exception} = $@;
         } elsif ($opts->{fail} eq 'error'
             and not $opts->{success}) {
-            require Lintian::Util;
             if ($opts->{description}) {
-                Lintian::Util::fail(
-                    "$opts->{description} failed with error code "
+                croak("$opts->{description} failed with error code "
                       . $opts->{harness}->result);
             } else {
-                Lintian::Util::fail('command failed with error code '
+                croak('command failed with error code '
                       . $opts->{harness}->result);
             }
         }
@@ -388,8 +385,7 @@ sub done {
     if ($@ =~ m/process ended prematurely/) {
         return 1;
     } else {
-        require Lintian::Util;
-        Lintian::Util::fail("Unknown failure when trying to pump_nb: $@");
+        croak("Unknown failure when trying to pump_nb: $@");
     }
 }
 

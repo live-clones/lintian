@@ -1,3 +1,11 @@
+lintian (2.5.31) UNRELEASED; urgency=medium
+
+  * lib/Lintian/Command.pm:
+    + [NT] Use croak() rather than L::Util's fail() on errors.
+      The issues are generally not "internal errors".
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 02 Nov 2014 14:22:59 +0100
+
 lintian (2.5.30) unstable; urgency=medium
 
   The "welcome Axel Beckert!" release.
