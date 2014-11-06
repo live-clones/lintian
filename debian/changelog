@@ -1,5 +1,9 @@
 lintian (2.5.31) UNRELEASED; urgency=medium
 
+  * checks/fields.desc:
+    + [BR] Add reference to build-depends-on-metapackage
+      (Closes: #767107).
+
   * debian/control:
     + [NT] Recommend dpkg (>= 1.17.14) for the --ctrl-tarfile
       option in dpkg-deb.  Lintian relies on it to support
