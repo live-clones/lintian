@@ -63,7 +63,7 @@ sub collect {
             pipe_in => FileHandle->new,
             fail => 'error'
         );
-        spawn(\%opts, ['xargs', '-0r', 'strings', '-f', '--'],
+        spawn(\%opts, ['xargs', '-0r', 'strings', '-af', '--'],
             '|', [$helper, "$dir/strings"]);
         $opts{pipe_in}->blocking(1);
     };
@@ -102,7 +102,7 @@ sub collect {
             }
             spawn(
                 {out => "$dir/strings/${file}.gz", fail => 'fail'},
-                ['strings', "$dir/unpacked/$file"],
+                ['strings', '-a', "$dir/unpacked/$file"],
                 '|', ['gzip', '-9nc']);
         }
     }

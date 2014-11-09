@@ -1,5 +1,9 @@
 lintian (2.5.30+deb8u1) jessie; urgency=medium
 
+  * collection/strings:
+    + [NT] Pass "-a" to strings to avoid possible security
+      issues in strings.
+
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
 
