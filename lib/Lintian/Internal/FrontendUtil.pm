@@ -31,7 +31,7 @@ use Lintian::Util qw(check_path fail);
 
 our @EXPORT_OK
   = qw(check_test_feature default_parallel load_collections split_tag
-  determine_locale sanitize_environment);
+  determine_locale sanitize_environment open_file_or_fd);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -168,6 +168,47 @@ sub default_parallel {
         $pkg_type = $3//'binary';
         return ($1, $2, $pkg_type, $4, $5, $6, $7);
     }
+}
+
+# open_file_or_fd(TO_OPEN, MODE)
+#
+# Open a given file or FD based on TO_OPEN and MODE and returns the
+# open handle.  Will croak / throw a trappable error on failure.
+#
+# MODE can be one of "<" (read) or ">" (write).
+#
+# TO_OPEN is one of:
+#  * "-", alias of "&0" or "&1" depending on MODE
+#  * "&N", reads/writes to the file descriptor numbered N
+#          based on MODE.
+#  * "+FILE" (MODE eq '>' only), open FILE in append mode
+#  * "FILE", open FILE in read or write depending on MODE.
+#            Note that this will truncate the file if MODE
+#            is ">".
+sub open_file_or_fd {
+    my ($to_open, $mode) = @_;
+    my $fd;
+    if ($mode eq '<') {
+        if ($to_open eq '-' or $to_open eq '&0') {
+            $fd = \*STDIN;
+        } elsif ($to_open =~ m/^\&\d+$/) {
+            open($fd, '<&=', substr($to_open, 1));
+        } else {
+            open($fd, '<', $to_open);
+        }
+    } elsif ($mode eq '>') {
+        if ($to_open eq '-' or $to_open eq '&1') {
+            $fd = \*STDOUT;
+        } elsif ($to_open =~ m/^\&\d+$/) {
+            open($fd, '>>&=', substr($to_open, 1));
+        } else {
+            $mode = ">$mode" if $to_open =~ s/^\+//;
+            open($fd, $mode, $to_open);
+        }
+    } else {
+        croak("Invalid mode \"$mode\" for open_file_or_fd");
+    }
+    return $fd;
 }
 
 1;
