@@ -9,4 +9,4 @@ W: changelog-file-general: latest-debian-changelog-entry-without-new-date
 W: changelog-file-general: latest-debian-changelog-entry-without-new-version
 W: changelog-file-general: syntax-error-in-debian-changelog line 30 "badly formatted heading line"
 W: changelog-file-general: syntax-error-in-debian-changelog line 32 "found change data where expected next heading or eof"
-X: changelog-file-general: bad-intended-distibution intended to experimental but uploaded to unstable
+X: changelog-file-general: bad-intended-distribution intended to experimental but uploaded to unstable
