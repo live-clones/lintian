@@ -22,8 +22,8 @@ alpha         ~~ELF 64-bit LSB .* Alpha
 amd64         ~~ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))
 arm           ~~ELF 32-bit LSB .* ARM, version \d,
 armeb         ~~ELF 32-bit MSB .* ARM
-armel         ~~ELF 32-bit LSB .* ARM, .* \(SYSV\)
-armhf         ~~ELF 32-bit LSB .* ARM, .* \(SYSV\)
+armel         ~~ELF 32-bit LSB .* ARM, .* \((?:SYSV|GNU/Linux)\)
+armhf         ~~ELF 32-bit LSB .* ARM, .* \((?:SYSV|GNU/Linux)\)
 #avr32         ~~ELF 32-bit MSB .* \(SYSV\)
 hppa          ~~ELF 32-bit MSB .* PA-RISC
 hppa64        ~~ELF 64-bit MSB .* PA-RISC
