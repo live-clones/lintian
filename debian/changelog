@@ -8,6 +8,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Pass "-a" to strings to avoid possible security
       issues in strings.
 
+  * data/binaries/arch-regex:
+    + [NT] Add ppc64el regex.
+    + [NT] Correct armel and armhf regex to cope with
+      statically linked binaries.  (Closes: #768884)
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
 
