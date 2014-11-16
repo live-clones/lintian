@@ -1,4 +1,4 @@
-lintian (2.5.30+deb8u1) jessie; urgency=medium
+lintian (2.5.30+deb8u2) unstable; urgency=medium
 
   * collection/strings:
     + [NT] Pass "-a" to strings to avoid possible security
@@ -11,7 +11,7 @@ lintian (2.5.30+deb8u1) jessie; urgency=medium
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
 
- -- Niels Thykier <niels@thykier.net>  Sun, 16 Nov 2014 14:11:43 +0100
+ -- Niels Thykier <niels@thykier.net>  Sun, 16 Nov 2014 15:37:31 +0100
 
 lintian (2.5.30) unstable; urgency=medium
 
