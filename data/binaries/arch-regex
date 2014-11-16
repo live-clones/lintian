@@ -43,6 +43,7 @@ mipsel64      ~~ELF 64-bit LSB .* MIPS
 powerpc       ~~ELF 32-bit MSB .* PowerPC
 powerpcspe    ~~ELF 32-bit MSB .* PowerPC .* cisco 4500
 ppc64         ~~ELF 64-bit MSB .* PowerPC
+ppc64el       ~~ELF 64-bit LSB .* PowerPC
 s390          ~~ELF 32-bit MSB .* S.390
 s390x         ~~ELF 64-bit MSB .* S.390
 sh4           ~~ELF 32-bit LSB .* Renesas SH
