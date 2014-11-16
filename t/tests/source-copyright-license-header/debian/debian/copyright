@@ -1,0 +1,17 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Doohickey
+Upstream-Contact: J. Random Hacker <j.r.hacker@example.com>
+Source: http://examples.com/doohickey/source/
+License: public-domain
+ some public-domain
+
+Files: *
+Comment: An old false positive see #766118
+Copyright: 2014, somebody
+License: public-domain
+
+Files: debian/*
+Copyright: 2014, somebody1
+License: this
+ this is a valid license short name
+

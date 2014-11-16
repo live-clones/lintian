@@ -245,11 +245,17 @@ sub _parse_dep5 {
           "(line $lines[0]{'format'})";
     }
 
-    my ($found_license_header, undef, undef, @short_licenses_header)
+    my ($found_license_header, $full_license_header, undef,
+        @short_licenses_header)
       =parse_license($first_para->{'license'}, 1);
     for my $short_license (@short_licenses_header) {
         $required_standalone_licenses{$short_license} = 1;
         $short_licenses_seen{$short_license}          = 1;
+    }
+    if(defined($full_license_header)) {
+        for (@short_licenses_header) {
+            $standalone_licenses{$_} = 1;
+        }
     }
 
     my (@commas_in_files, %file_para_coverage);
@@ -422,7 +428,11 @@ sub _parse_dep5 {
         if (not defined $standalone_licenses{$license}) {
             tag 'missing-license-paragraph-in-dep5-copyright', $license,
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
+        } elsif ($standalone_licenses{$license} == 1) {
+            tag 'dep5-file-paragraph-reference-header', $license,
+              "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }
+
     }
     while ((my $license, $i) = each %standalone_licenses) {
         if (not defined $required_standalone_licenses{$license}) {

@@ -1,0 +1,6 @@
+Testname: source-copyright-license-header
+Sequence: 6000
+Version: 1.0
+Description: Test for license field referencing header
+Test-For:
+ dep5-file-paragraph-reference-header

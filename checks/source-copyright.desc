@@ -240,6 +240,18 @@ Info: In contrast to package dependencies, the pipe symbol or vertical
  between two license short names. Instead, the keyword "or" between
  two license names indicates the dual licensing.
 
+Tag: dep5-file-paragraph-reference-header
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: One of the file paragraph reference in the
+ license field a standalone license defined in the header
+ paragraph.
+ .
+ According to specification all of the short names license
+ or short names followed by license exceptions making up
+ the first line must be described in stand-alone License paragraphs.
+
 Tag: invalid-escape-sequence-in-dep5-copyright
 Severity: normal
 Certainty: possible
