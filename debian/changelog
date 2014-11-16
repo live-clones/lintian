@@ -7,6 +7,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * checks/fields.desc:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).
+  * checks/files.{desc,pm}:
+    + [BR] Rename compressed-objects.inv to
+      file-should-not-be-compressed and use it for doxygen
+      map.gz (Closes: #751949).
   * checks/source-copyright.{desc,pm}:
     + [BR] Fix a false positive for
       missing-license-paragraph-in-dep5-copyright tag.

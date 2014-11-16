@@ -3,4 +3,4 @@ E: python-kinterbasdb: package-installs-python-bytecode usr/share/python-kinterb
 E: python-kinterbasdb: package-installs-python-egg usr/share/python-kinterbasdb/python.egg
 E: python-kinterbasdb: package-installs-python-pycache-dir usr/share/python-kinterbasdb/__pycache__/
 W: python-kinterbasdb-dbg: python-debug-in-wrong-location usr/lib/debug/usr/lib/pyshared/python2.7/python-module.so usr/lib/debug/usr/lib/pymodules/python2.7/python-module.so
-W: python-kinterbasdb: compressed-objects.inv usr/share/doc/python-kinterbasdb/docs/objects.inv.gz
+W: python-kinterbasdb: file-should-not-be-compressed usr/share/doc/python-kinterbasdb/docs/objects.inv.gz

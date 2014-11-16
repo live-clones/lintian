@@ -1457,15 +1457,13 @@ Info: The package appears to ship locales for a language but uses an
  It is possible that the language code was mistyped or incorrectly
  guessed from the language's or country's name.
 
-Tag: compressed-objects.inv
+Tag: file-should-not-be-compressed
 Severity: normal
 Certainty: possible
-Info: The package appears to ship a gzip compressed objects.inv file
- in it's documentation.  Unfortunately some tools do not cope with
- this file being compressed.
+Info: The following file should not be compressed.
  .
  This file should be excluded from compression during build time.
- If using debhelper (&lt;&lt; 8.1.0), you may need to use the -X
+ If using debhelper (&lt;&lt; 9.20140227), you may need to use the -X
  option to dh_compress. Newer versions of debhelper handle this
  correctly by default.
 
