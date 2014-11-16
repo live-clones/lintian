@@ -1,5 +1,9 @@
 lintian (2.5.31) UNRELEASED; urgency=medium
 
+  * checks/changelog-file.pm:
+    + [BR] Correct a typo on tag name and do not raise
+      bad-intended-distribution if distribution is still
+      set to UNRELEASED.  (Closes: #765344).
   * checks/fields.desc:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).

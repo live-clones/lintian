@@ -342,7 +342,7 @@ Info: The latest entries in the Debian changelog file and NEWS.Debian file
  changelog information is canonical and the NEWS.Debian information is
  ignored, but it may be confusing to users to have them be different.
 
-Tag: bad-intended-distibution
+Tag: bad-intended-distribution
 Severity: normal
 Certainty: wild-guess
 Experimental: yes

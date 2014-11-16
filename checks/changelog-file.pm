@@ -358,9 +358,11 @@ sub run {
                 $intended = 'unstable';
             }
             my $uploaded = $entry->Distribution;
-            unless($uploaded eq $intended) {
-                tag 'bad-intended-distibution',
-                  "intended to $intended but uploaded to $uploaded";
+            unless ($uploaded eq 'UNRELEASED') {
+                unless($uploaded eq $intended) {
+                    tag 'bad-intended-distribution',
+                    "intended to $intended but uploaded to $uploaded";
+                }
             }
         }
 
