@@ -711,7 +711,6 @@ sub find_cruft {
     return;
 }
 
-
 # try to check if source is missing
 sub check_missing_source {
     my ($file, $info, $name, $basename, $dirname,$replacementspairref) = @_;

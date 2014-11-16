@@ -4,7 +4,7 @@ Type: non-native
 Version: 1.0-1
 Description: General tests for changelog-file tags
 Test-For:
- bad-intended-distibution
+ bad-intended-distribution
  changelog-not-compressed-with-max-compression
  debian-changelog-file-contains-invalid-email-address
  debian-changelog-file-contains-obsolete-user-emacs-settings

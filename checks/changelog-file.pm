@@ -361,7 +361,7 @@ sub run {
             unless ($uploaded eq 'UNRELEASED') {
                 unless($uploaded eq $intended) {
                     tag 'bad-intended-distribution',
-                    "intended to $intended but uploaded to $uploaded";
+                      "intended to $intended but uploaded to $uploaded";
                 }
             }
         }

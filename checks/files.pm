@@ -1156,11 +1156,12 @@ sub run {
         }
 
         # doxygen compressed map
-        if ($fname =~ m,^usr/share/doc/(?:.+/)?(?:doxygen|html)/
-                         .*\.map\.$COMPRESS_FILE_EXTENSIONS_OR_ALL,x) {
+        if (
+            $fname =~ m,^usr/share/doc/(?:.+/)?(?:doxygen|html)/
+                         .*\.map\.$COMPRESS_FILE_EXTENSIONS_OR_ALL,x
+          ) {
             tag 'file-should-not-be-compressed', $file;
         }
-            
 
         # ---------------- pyshared-data
         if ($fname=~ m,^usr/share/python-support/$ppkg\.(?:public|private)$,){
