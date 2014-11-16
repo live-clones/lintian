@@ -8,9 +8,10 @@
 # some misspellings of BSD licenses
 ^bsd$                                     ~~ invalid-short-name-in-dep5-copyright
 ^bsd[^-]?[234][^-]?(?:clause|cluase)$     ~~ invalid-short-name-in-dep5-copyright
-(^|\s)-(\s|$)                                     ~~ license-problem-undefined-license
-\bfixme\b                                 ~~ license-problem-undefined-license
+# undefined license
+\A-\Z                                     ~~ license-problem-undefined-license
+\bfixmes?\b                               ~~ license-problem-undefined-license
 \btodos?\b                                ~~ license-problem-undefined-license
-\bundefined\b                             ~~ license-problem-undefined-license
+\bundefined?\b                            ~~ license-problem-undefined-license
 \bunknown?\b                              ~~ license-problem-undefined-license
 \bunspecified\b                           ~~ license-problem-undefined-license

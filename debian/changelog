@@ -1,6 +1,6 @@
 lintian (2.5.31) UNRELEASED; urgency=medium
 
-  * checks/changelog-file.pm:
+  * checks/changelog-file.{desc,pm}:
     + [BR] Correct a typo on tag name and do not raise
       bad-intended-distribution if distribution is still
       set to UNRELEASED.  (Closes: #765344).
@@ -18,6 +18,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       emit a specific tag.
       (Closes: #766118).
     + [BR] Detect if license short name are unique.
+    + [BR] Avoid false positive license-problem-undefined-license
+      for - in short license.
 
   * collection/strings:
     + [NT] Pass "-a" to strings to avoid possible security
