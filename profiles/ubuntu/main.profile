@@ -9,5 +9,5 @@ Disable-Tags: changelog-should-mention-nmu,
  source-nmu-has-incorrect-version-number,
  team-upload-has-incorrect-version-number,
  uploader-address-causes-mail-loops-or-bounces,
- upstart-job-in-etc-init.d-not-registered-via-update-rc.d
+ upstart-job-in-etc-init.d-not-registered-via-update-rc.d,
  no-human-maintainers
