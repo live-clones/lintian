@@ -252,6 +252,15 @@ Info: One of the file paragraph reference in the
  or short names followed by license exceptions making up
  the first line must be described in stand-alone License paragraphs.
 
+Tag: dep5-copyright-license-name-not-unique
+Severity: normal
+Certainty: possible
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Info: This paragraph define an already defined license.
+ .
+ According to specification the short license name are guaranteed
+ to be unique within a single copyright file.
+
 Tag: invalid-escape-sequence-in-dep5-copyright
 Severity: normal
 Certainty: possible

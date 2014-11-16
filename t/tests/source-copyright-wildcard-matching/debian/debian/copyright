@@ -13,24 +13,24 @@ License: mylicense
 
 Files: i-do-not-exist
 Copyright: 2014, somebody1
-License: mylicense
+License: mylicense-1
  Fixme
 
 Files: invalid-escape\n
 Copyright: 2014, somebody1
-License: mylicense
+License: mylicense-2
  Fixme
 
 Files: debian/*
 Copyright: 2014, somebody1
-License: mylicense
+License: mylicense-3
  Fixme
 
 Files:
  file,with,commas 
 Copyright: 2014, somebody1
 Comment: this paragraph starts with a newline and ends with a space
-License: mylicense
+License: mylicense-4
  Fixme
 
 Files: rare-filenames/01-file-with-(something-in-parenthesis).png
@@ -39,5 +39,5 @@ Files: rare-filenames/01-file-with-(something-in-parenthesis).png
        rare-filenames/04-Perhaps-even-|-will-cause-problems.png
        rare-filenames/05-Lets-not-forget-^-and-$-for-added-fun.png
 Copyright: 2014, somebody1
-License: mylicense
+License: mylicense-5
  Fixme

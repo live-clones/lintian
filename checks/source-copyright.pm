@@ -231,6 +231,7 @@ sub _parse_dep5 {
     my %standalone_licenses;
     my %required_standalone_licenses;
     my %short_licenses_seen;
+    my %full_licenses_seen;
 
     for my $field (keys %{$first_para}) {
         my $renamed_to = $dep5_renamed_fields{$field};
@@ -255,6 +256,7 @@ sub _parse_dep5 {
     if(defined($full_license_header)) {
         for (@short_licenses_header) {
             $standalone_licenses{$_} = 1;
+            $full_licenses_seen{$_} = 1;
         }
     }
 
@@ -296,7 +298,13 @@ sub _parse_dep5 {
                   "(paragraph at line $current_line)";
             }else {
                 for (@short_licenses) {
-                    $standalone_licenses{$_} = $i;
+                    if(defined($full_licenses_seen{$_})) {
+                        tag 'dep5-copyright-license-name-not-unique',
+                          "(paragraph at line $current_line)";
+                    } else {
+                        $standalone_licenses{$_} = $i;
+                        $full_licenses_seen{$_} = $current_line;
+                    }
                     $short_licenses_seen{$_} = $i;
                 }
             }
@@ -382,6 +390,13 @@ sub _parse_dep5 {
                     $short_licenses_seen{$_} = $i;
                     if (not defined($full_license)) {
                         $required_standalone_licenses{$_} = $i;
+                    } else {
+                        if(defined($full_licenses_seen{$_})) {
+                            tag 'dep5-copyright-license-name-not-unique',
+                              "(paragraph at line $current_line)";
+                        } else {
+                            $full_licenses_seen{$_} = $current_line;
+                        }
                     }
                 }
             }else {

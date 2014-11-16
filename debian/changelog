@@ -3,12 +3,13 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * checks/fields.desc:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).
-  * checks/source-copyright.pm:
+  * checks/source-copyright.{desc,pm}:
     + [BR] Fix a false positive for
       missing-license-paragraph-in-dep5-copyright tag.
       Do not allow to reference header paragraph,
       emit a specific tag.
       (Closes: #766118).
+    + [BR] Detect if license short name are unique.
 
   * collection/strings:
     + [NT] Pass "-a" to strings to avoid possible security
