@@ -9,7 +9,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       issues in strings.
 
   * data/binaries/arch-regex:
-    + [NT] Add ppc64el regex.
+    + [NT] Add arm64 and ppc64el regex.
     + [NT] Correct armel and armhf regex to cope with
       statically linked binaries.  (Closes: #768884)
   * data/changes-file/known-dists:
