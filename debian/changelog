@@ -31,6 +31,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       statically linked binaries.  (Closes: #768884)
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
+  * data/cruft/rfc-whitelist:
+    + [BR] Whitelist dual licensed vorbis rfc5215.
   * data/files/privacy-breaker-websites:
     + [BR] Add specific test for privacy breach with modernizr.js
       (Closes: #769679).
