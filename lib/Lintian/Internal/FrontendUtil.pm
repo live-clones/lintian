@@ -19,7 +19,7 @@
 package Lintian::Internal::FrontendUtil;
 use strict;
 use warnings;
-use autodie qw(opendir closedir);
+use autodie;
 
 use Exporter qw(import);
 
