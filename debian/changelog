@@ -11,7 +11,7 @@ lintian (2.5.30+deb8u1) jessie; urgency=medium
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 09 Nov 2014 13:07:54 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 16 Nov 2014 14:11:43 +0100
 
 lintian (2.5.30) unstable; urgency=medium
 
