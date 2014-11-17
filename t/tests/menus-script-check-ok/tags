@@ -1,3 +1,4 @@
+W: menus-script-check-ok: command-with-path-in-maintainer-script postinst:8 /usr/bin/update-menus
 W: menus-script-check-ok: possible-bashism-in-maintainer-script postinst:11 'if type '
 W: menus-script-check-ok: possible-bashism-in-maintainer-script postrm:3 'if type '
 W: menus-script-check-ok: postinst-has-useless-call-to-install-docs
