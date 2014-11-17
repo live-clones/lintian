@@ -84,7 +84,8 @@ my $VERSIONED_INTERPRETERS
 # When detecting commands inside shell scripts, use this regex to match the
 # beginning of the command rather than checking whether the command is at the
 # beginning of a line.
-my $LEADINSTR = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
+my $LEADINSTR
+  = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+|env(?:\s+[[:alnum:]_]+=(?:\S+|\"[^"]*\"|\'[^\']*\'))*\s+)';
 my $LEADIN = qr/$LEADINSTR/;
 
 #forbidden command in maintainer scripts
@@ -859,6 +860,17 @@ sub run {
                         }
                     }
                     my $cmd = $_;
+                    # check for test syntax
+                    if(
+                        $cmd =~ m{\[\s+
+                          (?:!\s+)? -x \s+
+                          (/(?:usr/)?s?bin/[\w.+-]+)
+                          \s+ \]}xsm
+                      ){
+                        tag 'command-with-path-in-maintainer-script',
+                          "$file:$. $1";
+                    }
+
                     $cmd =~ s/\`[^\`]+\`//g;
                     if ($cmd =~ m,$LEADIN(/(?:usr/)?s?bin/[\w.+-]+)(?:\s|;|$),)
                     {

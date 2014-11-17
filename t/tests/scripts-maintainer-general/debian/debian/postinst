@@ -170,4 +170,16 @@ adduser --system --ingroup smmta --home "/var/lib/sendmail" \
 echo "You can use update-alternatives --config runsystem to select"
 echo "the runsystem to use."
 
+# false negative
+DIVERSIONS=`env LC_ALL=C /usr/sbin/dpkg-divert --list | grep -E 'by amule(-utils)?$'` || true
+DIVERSIONS=`env LC_ALL="C" /usr/sbin/dpkg-divert --list | grep -E 'by amule(-utils)?$'` || true
+DIVERSIONS=`env LC_ALL='C' /usr/sbin/dpkg-divert --list | grep -E 'by amule(-utils)?$'` || true
+
+if [ ! -x /usr/sbin/dpkg-state-override ] || \
+   !  dpkg-state-override > /dev/null
+then
+    true;
+fi
+
+
 #DEBHELPER#

@@ -10,7 +10,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * checks/files.{desc,pm}:
     + [BR] Rename compressed-objects.inv to
       file-should-not-be-compressed and use it for doxygen
-      map.gz (Closes: #751949).
+      map.gz.  (Closes: #751949).
+  * checks/script.{desc,pm}:
+    + [BR] Fix some false negatives for
+      command-with-path-in-maintainer-script tag.
+      (Closes: #769845).
   * checks/source-copyright.{desc,pm}:
     + [BR] Fix a false positive for
       missing-license-paragraph-in-dep5-copyright tag.
