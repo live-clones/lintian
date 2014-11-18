@@ -70,7 +70,7 @@ Build-Depends: aspell,
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/lintian/lintian.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=lintian/lintian.git
-XS-Testsuite: autopkgtest
+Testsuite: autopkgtest
 Homepage: https://lintian.debian.org/
 
 Package: lintian

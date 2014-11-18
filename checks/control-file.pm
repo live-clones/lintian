@@ -88,6 +88,9 @@ sub run {
                 tag 'xs-vcs-header-in-debian-control', $field
                   if $src_fields->known($base);
             }
+            if ($field eq 'xs-testsuite') {
+                tag 'xs-testsuite-header-in-debian-control', $field;
+            }
             if ($field eq 'xc-package-type') {
                 tag 'xc-package-type-in-debian-control', "line $.";
             }

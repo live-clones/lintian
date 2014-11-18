@@ -89,6 +89,14 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  recognizes these headers and handles them correctly.  Consider removing
  the XS- prefix for this field.
 
+Tag: xs-testsuite-header-in-debian-control
+Severity: wishlist
+Certainty: certain
+Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file.  As
+ of dpkg 1.17.10, the XS- prefix is no longer necessary.  dpkg now
+ recognizes this header and handles it correctly.  Consider removing
+ the XS- prefix for this field.
+
 Tag: xc-package-type-in-debian-control
 Severity: pedantic
 Certainty: certain

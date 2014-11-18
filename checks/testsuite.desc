@@ -40,7 +40,7 @@ Info: The package provides a debian/tests/control file but no
  .
  For discoverability, packages shipping tests for the autopkgtest
  testing framework should declare their presence in the package
- dsc file by adding "XS-Testsuite: autopkgtest" to their debian/control.
+ dsc file by adding "Testsuite: autopkgtest" to their debian/control.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
 
 Tag: missing-runtime-tests-field
@@ -110,5 +110,5 @@ Severity: normal
 Certainty: certain
 Info: The dsc file sets Testsuite to a value other than autopkgtest,
  the only one allowed. This field is most probably copied by
- dpkg-source from XS-Testsuite in debian/control.
+ dpkg-source from Testsuite in debian/control.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
