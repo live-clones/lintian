@@ -1064,6 +1064,10 @@ sub run {
                         tag 'bad-relation', "$field: $part_d_orig"
                           if $rest;
 
+                        tag 'bad-version-in-relation', "$field: $part_d_orig"
+                          if ($d_version->[0]
+                            && !version_check($d_version->[1]));
+
                         # only trigger this for the the preferred alternative
                         tag 'versioned-dependency-satisfied-by-perl',
                           "$field: $part_d_orig"

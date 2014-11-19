@@ -9,6 +9,7 @@ Priority: is
 Unknown-Field: Hallo World
 Depends: other-package (>= 1.0?), another-package (>< 1.0)
 Conflicts: somepkg | anotherpkg
+Recommends: g++ (>= s4.1)
 Description: test for bad source package name
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

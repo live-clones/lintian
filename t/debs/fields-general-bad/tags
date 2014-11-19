@@ -2,6 +2,7 @@ E: fields-general-BAD?: alternates-not-allowed conflicts
 E: fields-general-BAD?: bad-package-name
 E: fields-general-BAD?: bad-relation depends: another-package (>< 1.0)
 E: fields-general-BAD?: bad-version-in-relation depends: other-package (>= 1.0?)
+E: fields-general-BAD?: bad-version-in-relation recommends: g++ (>= s4.1)
 E: fields-general-BAD?: bad-version-number 1.0?
 E: fields-general-BAD?: multiline-field priority
 E: fields-general-BAD?: package-not-lowercase
