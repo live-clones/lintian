@@ -45,6 +45,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * data/files/privacy-breaker-websites:
     + [BR] Add specific test for privacy breach with modernizr.js
       (Closes: #769679).
+  * data/spelling/corrections:
+    + [BR] Add portugese||Portuguese.  (Closes:  #764015).
+  * data/spelling/corrections-multiword:
+    + [BR] Add "allow to" and "permit to".  (Closes: #756128).
 
   * debian/control:
     + [NT] Recommend dpkg (>= 1.17.14) for the --ctrl-tarfile
