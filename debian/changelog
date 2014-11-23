@@ -45,6 +45,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * data/files/privacy-breaker-websites:
     + [BR] Add specific test for privacy breach with modernizr.js
       (Closes: #769679).
+    + [BR] Add /logos/ to privacy-breach-logo
   * data/spelling/corrections:
     + [BR] Add portugese||Portuguese.  (Closes:  #764015).
   * data/spelling/corrections-multiword:
