@@ -47,6 +47,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       (Closes: #769679).
     + [BR] Add /logos/ to privacy-breach-logo.
     + [BR] Add specific test for libjs-openlayer.
+    + [BR] Detect twitter logo.
   * data/spelling/corrections:
     + [BR] Add portugese||Portuguese.  (Closes:  #764015).
   * data/spelling/corrections-multiword:
