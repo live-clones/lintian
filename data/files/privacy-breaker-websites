@@ -21,3 +21,4 @@ privacy-breach-may-use-debian-package-jquery    ~~(?:(?!doxygen.*)/jquery(?:-(?:
 privacy-breach-may-use-debian-package-jquery-ui ~~(?:/jquery-ui(?:(?:-(?:\d\.?)+)?(?:\.min)?\.js|\.css)\Z) ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-jquery-ui package.
 privacy-breach-may-use-debian-package-mathjax   ~~ /mathjax(?:\.min)?\.js(\Z|\?)                           ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-mathjax package.
 privacy-breach-may-use-debian-package-modernizr ~~ /modernizr(?:\.min)?\.js\Z                              ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-modernizr package.
+privacy-breach-may-use-debian-package-openlayer ~~ /openlayer(?:\.min)?\.js\Z                              ~~ privacy-breach-may-use-debian-package ~~ You may use libjs-openlayer package.
