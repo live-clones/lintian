@@ -4,10 +4,12 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Correct a typo on tag name and do not raise
       bad-intended-distribution if distribution is still
       set to UNRELEASED.  (Closes: #765344).
-  * hecks/control-file.{desc,pm}:
-    + [BR]  Apply patch from Johannes Schauer in order
+  * checks/control-file.{desc,pm}:
+    + [BR] Apply patch from Johannes Schauer in order
       to detect obsolete XS-Testsuite header.
       (Closes: #770068).
+  * checks/deb-format.{desc,pm}:
+    + [BR] Support data.tar but reject it until dak is ready.
   * checks/fields.{desc,pm}:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).

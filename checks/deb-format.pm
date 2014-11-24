@@ -123,10 +123,7 @@ sub run {
             $okay = 1;
             if (
                 $data_member !~ m/\A
-                     # NB: We deliberately do not allow "data.tar",
-                     # since various tools seems to be unable to cope
-                     # with them. (see  #718331)
-                     data\.tar\.(?:gz|bz2|xz|lzma)  \Z/xsm
+                     data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z/xsm
               ) {
                 # wasn't okay after all
                 $okay = 0;
@@ -139,6 +136,13 @@ sub run {
                 tag 'lzma-deb-archive';
             } elsif ($data_member eq 'data.tar.bz2') {
                 tag 'uses-deprecated-compression-for-data-tarball', 'bzip2';
+            } elsif ($data_member eq 'data.tar') {
+                tag 'uses-no-compression-for-data-tarball';
+                # NB: We deliberately do not allow "data.tar",
+                # since various tools seems to be unable to cope
+                # with them particularly dak
+                # see https://wiki.debian.org/Teams/Dpkg/DebSupport
+                tag 'malformed-deb-archive','newer uncompressed data.tar';
             }
             if (not $okay) {
                 tag 'malformed-deb-archive',

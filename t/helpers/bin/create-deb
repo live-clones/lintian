@@ -36,6 +36,7 @@ my %TAR_OPTIONS = (
     'bz2' => ['-j'],
     'lzma' => ['-I', 'lzma'],
     'xz' => ['-I', 'xz'],
+    'none' => [],
 );
 
 # Permissions
@@ -143,7 +144,11 @@ if ($val{'md5sums'}) {
 }
 
 # Create the data.tar.$ext
-$data = "data.tar.$val{'compression'}";
+unless($val{'compression'} eq 'none') {
+    $data = "data.tar.$val{'compression'}";
+} else {
+    $data = 'data.tar';
+}
 @taropt = split m/\s++/o, $val{'tar-opts'} if defined $val{'tar-opts'};
 
 runsystem('tar', '-C', $val{'root'}, @taropt,
