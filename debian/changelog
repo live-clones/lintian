@@ -1,3 +1,8 @@
+lintian (2.5.30+deb8u3) UNRELEASED; urgency=medium
+
+
+ -- Niels Thykier <niels@thykier.net>  Fri, 28 Nov 2014 23:18:43 +0100
+
 lintian (2.5.30+deb8u2) unstable; urgency=medium
 
   * collection/strings:
