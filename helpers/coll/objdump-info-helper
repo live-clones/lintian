@@ -84,8 +84,10 @@ while (my $line = <$readelf>) {
           ) {
             print "UPX: yes\n";
         }
-    } elsif (
-        $line =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
+    } elsif ($line
+        =~ m/^readelf: Error: Reading 0x[0-9a-fA-F]+ bytes extends past end of file for section headers/
+        or $line
+        =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
         or $line
         =~ m/^readelf: Error: .*: Failed to read .*(?:magic number|file header)/
       ) {
