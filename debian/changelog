@@ -78,6 +78,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * profiles/ubuntu/main.profile:
     + [BR] Exclude no-human-maintainers (Closes: #769036).
 
+  * t:
+    + [NT] Apply patch from Matt Kraai to fix test case on
+      i386.  (Closes: #771113)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 09 Nov 2014 15:25:04 +0100
 
 lintian (2.5.30) unstable; urgency=medium
@@ -113,7 +117,7 @@ lintian (2.5.30) unstable; urgency=medium
       environment. (Closes: #766737)
 
   * t:
-    + [NT] Apply patch from Johannes Schauer to fix FTBFS with
+    + [JW,NT] Apply patch from Johannes Schauer to fix FTBFS with
       newer dpkg that have stricter checking of build-profiles.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 25 Oct 2014 17:03:48 +0200
