@@ -68,6 +68,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Produce a better error message for lintian detects
       that a check has a dependency on an unknown collection.
 
+  * helpers/coll/objdump-info-helper:
+    + [NT] Apply patch from Matt Kraai that adjusts the regex
+      used for parsing readelf output.  Thanks to Martin Pitt
+      for reporting the issues.  (Closes: #771054)
+
   * lib/Lintian/Command.pm:
     + [NT] Use croak() rather than L::Util's fail() on errors.
       The issues are generally not "internal errors".
