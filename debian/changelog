@@ -1,4 +1,4 @@
-lintian (2.5.30+deb8u3) UNRELEASED; urgency=medium
+lintian (2.5.30+deb8u3) unstable; urgency=medium
 
   * helpers/coll/objdump-info-helper:
     + [NT] Apply patch from Matt Kraai that adjusts the regex
@@ -9,7 +9,7 @@ lintian (2.5.30+deb8u3) UNRELEASED; urgency=medium
     + [NT] Apply patch from Matt Kraai to fix test case on
       i386.  (Closes: #771113)
 
- -- Niels Thykier <niels@thykier.net>  Fri, 28 Nov 2014 23:18:43 +0100
+ -- Niels Thykier <niels@thykier.net>  Fri, 28 Nov 2014 23:21:07 +0100
 
 lintian (2.5.30+deb8u2) unstable; urgency=medium
 
