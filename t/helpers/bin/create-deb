@@ -165,7 +165,7 @@ $ctrl_file = 'control.tar' if $val{'control-compression'} eq 'none';
 if (not -e $ctrl_file) {
     my @comp = @{$TAR_OPTIONS{$val{'control-compression'}}};
     if ($val{'fix-perm'}) {
-        chown 0, 0,  @ARGV;
+        chown(0, 0, (grep { not -l and -f } @ARGV));
         foreach my $f (@ARGV) {
             if (my $perm = $PERM{$f}) {
                 chmod $perm, $f;
