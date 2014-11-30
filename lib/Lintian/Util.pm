@@ -625,7 +625,8 @@ sub read_dpkg_control {
 
 =item dpkg_deb_has_ctrl_tarfile()
 
-Check if lintian could use dpkg-deb ---ctrl-tarfile
+Check if lintian could use dpkg-deb instead of ar and tar
+
 =cut
 
 {
