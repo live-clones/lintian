@@ -9,7 +9,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       to detect obsolete XS-Testsuite header.
       (Closes: #770068).
   * checks/deb-format.{desc,pm}:
-    + [BR] Support data.tar but reject it until dak is ready.
+    + [BR] Support all format described in deb(5)
+      but manually reject until dak is ready.
   * checks/fields.{desc,pm}:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).
