@@ -1,0 +1,2 @@
+E: deb-format-no-compress: malformed-deb-archive newer uncompressed data.tar
+E: deb-format-no-compress: uses-no-compression-for-data-tarball

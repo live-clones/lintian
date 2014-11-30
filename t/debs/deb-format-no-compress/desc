@@ -1,0 +1,6 @@
+Testname: deb-format-no-compress
+Sequence: 6000
+Version: 1.0
+Description: Test package with no compression
+Test-For:
+ uses-no-compression-for-data-tarball

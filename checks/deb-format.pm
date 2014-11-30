@@ -43,7 +43,7 @@ sub run {
     my $deb = $info->lab_data_path('deb');
 
     # Run ar t on the *.deb file.  deb will be a symlink to it.
-    my $okay = 0;
+    my $failed; # set to one when something is so bad that we can't continue
     my $opts = {};
     my $success = spawn($opts, ['ar', 't', $deb]);
     if ($success) {
@@ -112,27 +112,42 @@ sub run {
                   "$member ($text at position $actual_index)";
             }
         }
+
         if (not defined($ctrl_member)) {
             # Somehow I doubt we will ever get this far without a control
             # file... :)
             tag 'malformed-deb-archive', 'Missing control.tar.gz member';
-        } elsif ($ctrl_member ne 'control.tar.gz') {
-            tag 'malformed-deb-archive',
-              "second (official) member $ctrl_member not control.tar.gz";
-        } elsif (not defined($data_member)) {
+            $failed = 1;
+        } else {
+            if (
+                $ctrl_member !~ m/\A
+                     control\.tar(?:\.(?:gz|xz))?  \Z/xsm
+              ) {
+                tag 'malformed-deb-archive',
+                  join(' ',
+                    "second (official) member $ctrl_member",
+                    'not control.tar.(gz|xz)');
+                $failed = 1;
+            }
+        }
+
+        if (not defined($data_member)) {
             # Somehow I doubt we will ever get this far without a data
             # member (i.e. I suspect unpacked and index will fail), but
             # mah
             tag 'malformed-deb-archive', 'Missing data.tar member';
+            $failed = 1;
         } else {
-            # Probably okay
-            $okay = 1;
             if (
                 $data_member !~ m/\A
                      data\.tar(?:\.(?:gz|bz2|xz|lzma))?  \Z/xsm
               ) {
                 # wasn't okay after all
-                $okay = 0;
+                tag 'malformed-deb-archive',
+                  join(' ',
+                    "third (official) member $data_member",
+                    'not data.tar.(gz|bz2|xz)');
+                $failed = 1;
             } elsif ($type eq 'udeb'
                 && $data_member !~ m/^data\.tar\.[gx]z$/) {
                 tag 'udeb-uses-unsupported-compression-for-data-tarball';
@@ -150,12 +165,6 @@ sub run {
                 # see https://wiki.debian.org/Teams/Dpkg/DebSupport
                 tag 'malformed-deb-archive','newer uncompressed data.tar';
             }
-            if (not $okay) {
-                tag 'malformed-deb-archive',
-                  join(' ',
-                    "third (official) member $data_member",
-                    'not data.tar.(gz|bz2|xz)');
-            }
         }
     } else {
         # unpack will probably fail so we'll never get here, but may as well be
@@ -172,7 +181,7 @@ sub run {
     # thorough just in case.  We may eventually have a case where dpkg
     # supports a newer format but it's not permitted in the archive
     # yet.
-    if ($okay) {
+    if (not defined($failed)) {
         $opts = {};
         $success = spawn($opts, ['ar', 'p', $deb, 'debian-binary']);
         if (not $success) {

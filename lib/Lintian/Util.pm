@@ -54,6 +54,7 @@ BEGIN {
           visit_dpkg_paragraph
           parse_dpkg_control
           read_dpkg_control
+          dpkg_deb_has_ctrl_tarfile
           get_deb_info
           get_dsc_info
           get_file_checksum
@@ -622,7 +623,28 @@ sub read_dpkg_control {
     return @data;
 }
 
-=item get_deb_control(DEBFILE)
+=item dpkg_deb_has_ctrl_tarfile()
+
+Check if lintian could use dpkg-deb ---ctrl-tarfile
+=cut
+
+{
+    my $dpkg_deb_has_ctrl_tarfile_cache;
+
+    sub dpkg_deb_has_ctrl_tarfile {
+        if (not defined($dpkg_deb_has_ctrl_tarfile_cache)) {
+            my $help = safe_qx({'err' => '/dev/null'},'dpkg-deb', '--help');
+            if (index($help, '--ctrl-tarfile') > -1) {
+                $dpkg_deb_has_ctrl_tarfile_cache = 1;
+            } else {
+                $dpkg_deb_has_ctrl_tarfile_cache = 0;
+            }
+        }
+        return $dpkg_deb_has_ctrl_tarfile_cache;
+    }
+}
+
+=item get_deb_info(DEBFILE)
 
 Extracts the control file from DEBFILE and returns it as a hashref.
 
@@ -645,7 +667,6 @@ L</parse_dpkg_control> do.  It can also emit:
 =cut
 
 {
-    my $dpkg_deb_has_ctrl_tarfile;
 
     sub get_deb_info {
         my ($file) = @_;
@@ -655,15 +676,8 @@ L</parse_dpkg_control> do.  It can also emit:
             fail => 'exception',
             pipe_out => FileHandle->new
         };
-        if (not defined($dpkg_deb_has_ctrl_tarfile)) {
-            my $help = safe_qx({'err' => '/dev/null'},'dpkg-deb', '--help');
-            if (index($help, '--ctrl-tarfile') > -1) {
-                $dpkg_deb_has_ctrl_tarfile = 1;
-            } else {
-                $dpkg_deb_has_ctrl_tarfile = 0;
-            }
-        }
-        if ($dpkg_deb_has_ctrl_tarfile) {
+
+        if (dpkg_deb_has_ctrl_tarfile()) {
             spawn(
                 $opts, ['dpkg-deb', '--ctrl-tarfile', $file],
                 '|', ['tar', '--wildcards', '-xO', '-f', '-', '*control']);

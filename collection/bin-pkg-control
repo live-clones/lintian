@@ -29,7 +29,7 @@ use constant ERROR_FILES => qw(control-index-errors control-errors);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(delete_dir fail pipe_tee);
+use Lintian::Util qw(delete_dir fail pipe_tee dpkg_deb_has_ctrl_tarfile);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -51,10 +51,16 @@ sub collect {
     # (replaces dpkg-deb -e)
     # extract control files' tarball
     $in_fd = FileHandle->new;
-    spawn(
-        { fail => 'error', pipe_out => $in_fd },
-        ['ar', 'p', "$dir/deb", 'control.tar.gz'],
-        '|', ['gzip', '-dc']);
+    if (dpkg_deb_has_ctrl_tarfile()) {
+        spawn(
+            { fail => 'error', pipe_out => $in_fd },
+            ['dpkg-deb', '--ctrl-tarfile', "$dir/deb"]);
+    } else {
+        spawn(
+            { fail => 'error', pipe_out => $in_fd },
+            ['ar', 'p', "$dir/deb", 'control.tar.gz'],
+            '|', ['gzip', '-dc']);
+    }
 
     $job = {
         fail => 'error',
