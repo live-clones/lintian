@@ -737,7 +737,7 @@ sub generic_test_runner {
         my $res= chdir_runcmd($targetdir, ['fakeroot', 'make'],
             "../build.$testname");
         if ($res){
-            dump_log($testname, "$RUNDIR/build.$testname") if $DUMP_LOGS;
+            dump_log($testname, "$RUNDIR/$suite/build.$testname") if $DUMP_LOGS;
             fail("cd $targetdir && fakeroot make >../build.$testname 2>&1");
         }
         touch_file($stampfile);
