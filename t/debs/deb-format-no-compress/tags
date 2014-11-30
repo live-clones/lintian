@@ -1,2 +1,4 @@
+E: deb-format-no-compress: malformed-deb-archive newer uncompressed control.tar
 E: deb-format-no-compress: malformed-deb-archive newer uncompressed data.tar
+E: deb-format-no-compress: uses-no-compression-for-control-tarball
 E: deb-format-no-compress: uses-no-compression-for-data-tarball

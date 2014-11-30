@@ -128,6 +128,19 @@ sub run {
                     "second (official) member $ctrl_member",
                     'not control.tar.(gz|xz)');
                 $failed = 1;
+            } elsif ($ctrl_member eq 'control.tar') {
+                tag 'uses-no-compression-for-control-tarball';
+                # NB: We deliberately do not allow "data.tar",
+                # since various tools seems to be unable to cope
+                # with them particularly dak
+                # see https://wiki.debian.org/Teams/Dpkg/DebSupport
+                tag 'malformed-deb-archive','newer uncompressed control.tar';
+            } elsif ($ctrl_member eq 'control.tar.xz') {
+                # NB: We deliberately do not allow "data.tar",
+                # since various tools seems to be unable to cope
+                # with them particularly dak
+                # see https://wiki.debian.org/Teams/Dpkg/DebSupport
+                tag 'malformed-deb-archive','newer compressed control.tar.xz';
             }
         }
 
