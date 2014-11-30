@@ -22,6 +22,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Getopt::Long;
 use Cwd();
@@ -52,6 +53,7 @@ my %PERM = (
 # default values
 my %val  = (
     'compression' => 'gz',
+    'control-compression' => 'gz',
     'fix-perm'    => 1,
     'auto-build-data'  => 1,
 );
@@ -64,6 +66,7 @@ my %opts = (
     'tar-opts=s' => \$val{'tar-opts'},
     'auto-build-data!' => \$val{'auto-build-data'},
     'compression|c=s' => \$val{'compression'},
+    'control-compression=s' => \$val{'control-compression'},
     'md5sums!' => \$val{'md5sums'},
     'fix-perm!' => \$val{'fix-perm'},
     'package-name=s' => \$val{'package-name'},
@@ -128,7 +131,7 @@ if ($val{'auto-build-data'}) {
             "root/usr/share/doc/$pkg/$file")
           if -e $src;
     }
-    runsystem('gzip', '-n', '--best', "root/usr/share/doc/$pkg/$dch")
+    runsystem('gzip', '-nf', '--best', "root/usr/share/doc/$pkg/$dch")
       if -e "root/usr/share/doc/$pkg/$dch";
     # set root so it works for later :)
     $val{'root'} = 'root/';
@@ -155,9 +158,12 @@ runsystem('tar', '-C', $val{'root'}, @taropt,
     @{ $TAR_OPTIONS{$val{'compression'}} },
     '-cf', "$cwd/$data", '.');
 
-# control.tar.gz
+# control.tar
+my $ctrl_file = "control.tar.$val{'control-compression'}";
+$ctrl_file = 'control.tar' if $val{'control-compression'} eq 'none';
 
-unless (-e 'control.tar.gz') {
+if (not -e $ctrl_file) {
+    my @comp = @{$TAR_OPTIONS{$val{'control-compression'}}};
     if ($val{'fix-perm'}) {
         chown 0, 0,  @ARGV;
         foreach my $f (@ARGV) {
@@ -166,16 +172,17 @@ unless (-e 'control.tar.gz') {
             }
         }
     }
-    runsystem('tar', @taropt, '-czf', 'control.tar.gz', @ARGV);
+    runsystem('tar', @taropt, @comp, '-cf', $ctrl_file, @ARGV);
 }
 
 # debian-binary
-open my $bv, '>', 'debian-binary' or die "opening debian-binary: $!";
+open(my $bv, '>', 'debian-binary');
 print $bv "2.0\n";
-close $bv or die "closing debian-binary: $!";
+close($bv);
 
+unlink($val{'out-file'}) if -e $val{'out-file'};
 # ar the deb file
-runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', 'control.tar.gz',
+runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', $ctrl_file,
     $data);
 
 exit 0;
@@ -186,25 +193,27 @@ sub usage {
     print <<EOF ;
 usage: $0 [options] -o <file.deb> [--root <dir>] control-file[... files]
 
- --root <dir>            Everything in <dir> will be put in the data.tar
- --[no-]auto-build-data  Auto-build a data.tar, cannot be used with --root.
-                         This is the default if --root is not given.
- -c, --compression <c>   The extension used for the data.tar; defaults to "gz"
- --help                  Prints usage info and exits
- -o, --out-file <file>   The name of the resulting deb file.
- --[no-]md5sums          Whether to auto-generate an md5sums.  This file will
-                         automatically be added to the control files if
-                         generated.  This is on by default, unless an md5sums
-                         is passed.
- --[no-]fix-perm         Whether to auto-fix permissions and owner for control
-                         files.  Defaults to on.  This will modify the perm of
-                         the actual controls passed!
- --package-name <pkg>    Assume the package name is <pkg>.  This overrides
-                         the value in the control file (and allows said value
-                         to be missing as well).
- --package-version <v>   Assume the package version is <v>.  This overrides
-                         the value in the control file (and allows said value
-                         to be missing as well).
+ --root <dir>              Everything in <dir> will be put in the data.tar
+ --[no-]auto-build-data    Auto-build a data.tar, cannot be used with --root.
+                           This is the default if --root is not given.
+ -c, --compression <c>     The extension used for the data.tar; defaults to "gz"
+ --control-compression <c> The extension used for the control.tar; defaults to
+                           "gz"
+ --help                    Prints usage info and exits
+ -o, --out-file <file>     The name of the resulting deb file.
+ --[no-]md5sums            Whether to auto-generate an md5sums.  This file will
+                           automatically be added to the control files if
+                           generated.  This is on by default, unless an md5sums
+                           is passed.
+ --[no-]fix-perm           Whether to auto-fix permissions and owner for control
+                           files.  Defaults to on.  This will modify the perm of
+                           the actual controls passed!
+ --package-name <pkg>      Assume the package name is <pkg>.  This overrides
+                           the value in the control file (and allows said value
+                           to be missing as well).
+ --package-version <v>     Assume the package version is <v>.  This overrides
+                           the value in the control file (and allows said value
+                           to be missing as well).
 
 Creates a deb file from a root directory and some control files.  The
 control files are assumed to be in the current directory or the
