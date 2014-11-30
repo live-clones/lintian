@@ -79,7 +79,7 @@ sub run {
                 $ctrl_index++;
                 $ctrl_member = $members[$ctrl_index];
                 $data_index = first_index { substr($_, 0, 1) ne '_' }
-                @members[$ctrl_index..$#members];
+                @members[$ctrl_index+1..$#members];
                 if ($data_index != -1) {
                     # Since we searched only a sublist of @members, we
                     # have to adjust $data_index
