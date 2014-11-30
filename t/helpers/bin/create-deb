@@ -182,8 +182,7 @@ close($bv);
 
 unlink($val{'out-file'}) if -e $val{'out-file'};
 # ar the deb file
-runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', $ctrl_file,
-    $data);
+runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', $ctrl_file,$data);
 
 exit 0;
 
