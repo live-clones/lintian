@@ -3,17 +3,8 @@ name = deb-format-control-xz
 # Done by hand, create-deb cannot do this and it would
 # be "too much effort" to make it be able to do it.
 all:
-	echo '2.0' > debian-binary
-	mkdir -p usr/share/doc/$(name)
-	install -m 0644 copyright changelog usr/share/doc/$(name)
-	gzip -9n usr/share/doc/$(name)/changelog
-	tar cfJ data.tar.xz usr
-	chown 0:0 control
-	chmod 644 control
-	md5sum usr/share/doc/$(name)/* > md5sums
-	tar cfJ control.tar.xz control md5sums
-	ar rc $(name).deb \
-	    debian-binary control.tar.xz data.tar.xz
+	create-deb -o $(name).deb --control-compression xz -c xz \
+	    control
 clean:
 	rm -f *.tar.xz *.deb md5sums debian-binary
-	rm -rf usr
+	rm -rf root
