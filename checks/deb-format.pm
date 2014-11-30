@@ -89,6 +89,10 @@ sub run {
             }
 
             # Extra members
+            # NB: We deliberately do not allow _extra member,
+            # since various tools seems to be unable to cope
+            # with them particularly dak
+            # see https://wiki.debian.org/Teams/Dpkg/DebSupport
             for my $i (1..$#members) {
                 my $member = $members[$i];
                 my $actual_index = $i;
@@ -99,6 +103,8 @@ sub run {
                     next if $expected eq 'ANYWHERE';
                     next if $expected == $actual_index;
                     $text = "expected at position $expected, but appeared";
+                } elsif (substr($member,0,1) eq '_') {
+                    $text = 'unexpected _member';
                 } else {
                     $text = 'unexpected member';
                 }
