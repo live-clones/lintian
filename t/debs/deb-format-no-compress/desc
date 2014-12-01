@@ -5,3 +5,4 @@ Description: Test package with no compression
 Test-For:
  uses-no-compression-for-control-tarball
  uses-no-compression-for-data-tarball
+Test-Depends: dpkg (>= 1.17.6)
