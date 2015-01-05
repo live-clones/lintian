@@ -70,19 +70,32 @@ sub _check_policy {
     # note that we are parsing the entire file as one big string,
     # so that we catch <policy\nat_console="true"\n> or whatever.
 
-    if ($xml =~ m{<policy[^>]+at_console=(["'])true\1.*?</policy>}s) {
-        tag('dbus-policy-at-console', $file);
-    }
-
     my @rules;
-    while ($xml =~ m{(<(?:allow|deny)[^>]+send_\w+=[^>]+>)}sg) {
-        push(@rules, $1);
+    # a small rubbish state machine: we want to match a <policy> containing
+    # any <allow> or <deny> rule that is about sending
+    my $policy = '';
+    while ($xml =~ m{(<policy[^>]*>)|(</policy\s*>)|(<(?:allow|deny)[^>]*>)}sg)
+    {
+        if (defined $1) {
+            $policy = $1;
+        } elsif (defined $2) {
+            $policy = '';
+        } else {
+            push(@rules, $policy.$3);
+        }
     }
     foreach my $rule (@rules) {
-        if ($rule !~ m{send_destination=}) {
-            # normalize whitespace a bit
-            $rule =~ s{\s+}{ }g;
+        # normalize whitespace a bit so we can report it sensibly:
+        # typically it will now look like
+        # <policy context="default"><allow send_destination="com.example.Foo"/>
+        $rule =~ s{\s+}{ }g;
+
+        if ($rule =~ m{send_} && $rule !~ m{send_destination=}) {
             tag('dbus-policy-without-send-destination', $file, $rule);
+        }
+
+        if ($rule =~ m{at_console=['"]true}) {
+            tag('dbus-policy-at-console', $file, $rule);
         }
     }
 
