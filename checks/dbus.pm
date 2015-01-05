@@ -1,7 +1,7 @@
 # dbus -- lintian check script, vaguely based on apache2 -*- perl -*-
 #
-# Copyright © 2012 Arno Töll
-# Copyright © 2014 Collabora Ltd.
+# Copyright Â© 2012 Arno TÃ¶ll
+# Copyright Â© 2014 Collabora Ltd.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
