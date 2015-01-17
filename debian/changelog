@@ -19,6 +19,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Rename compressed-objects.inv to
       file-should-not-be-compressed and use it for doxygen
       map.gz.  (Closes: #751949).
+  * checks/init.d.desc:
+    + [BR] Add reference to #DEBHELPER# token for
+      script-in-etc-init.d-not-registered-via-update-rc.d.
+      (Closes: #775467).
   * checks/script.{desc,pm}:
     + [BR] Fix some false negatives for
       command-with-path-in-maintainer-script tag.

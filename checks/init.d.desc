@@ -87,9 +87,9 @@ Tag: script-in-etc-init.d-not-registered-via-update-rc.d
 Severity: normal
 Certainty: possible
 Info: The package installs an <tt>/etc/init.d</tt> script which is
- not registered in the <tt>postinst</tt> script. This is usually a bug,
- unless you omit the links intentionally for some reason or create the
- links some other way.
+ not registered in the <tt>postinst</tt> script. This is usually a bug
+ (such as omitting the <tt>#DEBHELPER#</tt> token) unless you omit the links
+ intentionally for some reason or create the links some other way.
 
 Tag: upstart-job-in-etc-init.d-not-registered-via-update-rc.d
 Severity: normal
