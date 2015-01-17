@@ -49,6 +49,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       statically linked binaries.  (Closes: #768884)
   * data/binaries/embedded-libs:
     + [RG] Do not warn about libpng1.6 embedding libpng
+    + [RG] Add a new string to detect embedders of libpng
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
   * data/cruft/rfc-whitelist:

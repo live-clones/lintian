@@ -67,7 +67,7 @@ libminiupnpc||source=miniupnpc||Miniupnpc Invalid Arguments
 libmikmod ||APUN \(APlayer\) and UNI \(MikMod\)
 libmysqlclient ||source-regex=(?:mysql|mariadb)(?:-\d.*)? ||MySQL client ran out of memory
 libpcap   ||(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)
-libpng    ||source-regex=(?:libpng(?:1\.6)?)||(?m)^Potential overflow in png_zalloc
+libpng    ||source-regex=(?:libpng(?:1\.6)?)||(?m)^(?:Potential overflow in png_zalloc|gamma value does not match libpng estimate)
 libraw    ||Unsupported file format or not RAW file
 libpostproc ||source-regex=lib(?:av|postproc)||using npp filters 0x%X/0x%X\n
 libssh2     ||Invalid descriptor passed to libssh2_poll
