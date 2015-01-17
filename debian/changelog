@@ -47,6 +47,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Add arm64 and ppc64el regex.
     + [NT] Correct armel and armhf regex to cope with
       statically linked binaries.  (Closes: #768884)
+  * data/binaries/embedded-libs:
+    + [RG] Do not warn about libpng1.6 embedding libpng
   * data/changes-file/known-dists:
     + [ADB] Add "stretch".
   * data/cruft/rfc-whitelist:
