@@ -1,5 +1,10 @@
 lintian (2.5.31) UNRELEASED; urgency=medium
 
+  * checks/binaries.pm:
+    + [BR] Do not tag with
+      library-in-debug-or-profile-should-not-be-stripped
+      when file add "not stripped, too many notes" to its
+      output. Thanks to Jakub Wilk.  (Closes: #775760).
   * checks/changelog-file.{desc,pm}:
     + [BR] Correct a typo on tag name and do not raise
       bad-intended-distribution if distribution is still

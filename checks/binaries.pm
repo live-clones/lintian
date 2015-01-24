@@ -332,7 +332,7 @@ sub run {
         check_spelling('spelling-error-in-binary',$strings, $file,$exceptions);
 
         # stripped?
-        if ($fileinfo =~ m,not stripped\s*$,o) {
+        if ($fileinfo =~ m,\bnot stripped\b,o) {
             # Is it an object file (which generally can not be
             # stripped), a kernel module, debugging symbols, or
             # perhaps a debugging package?
