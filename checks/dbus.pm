@@ -91,7 +91,16 @@ sub _check_policy {
         $rule =~ s{\s+}{ }g;
 
         if ($rule =~ m{send_} && $rule !~ m{send_destination=}) {
-            tag('dbus-policy-without-send-destination', $file, $rule);
+            # It is about sending but does not specify a send-destination.
+            # This could be bad.
+
+            if ($rule =~ m{[^>]*user=['"]root['"].*<allow}) {
+                # skip it: it's probably the "agent" pattern (as seen in
+                # e.g. BlueZ), and cannot normally be a security flaw
+                # because root can do anything anyway
+            } else {
+                tag('dbus-policy-without-send-destination', $file, $rule);
+            }
         }
 
         if ($rule =~ m{at_console=['"]true}) {

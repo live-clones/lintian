@@ -3,3 +3,4 @@ X: dbus-policy: dbus-policy-at-console etc/dbus-1/system.d/at-console.conf <poli
 X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
 X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_member="AreYouReallySureThisMethodIsAlwaysOK"/>
 X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy context="default"><allow send_path="/com/example/Here"/>
+X: dbus-policy: dbus-policy-without-send-destination etc/dbus-1/system.d/send-destination.conf <policy user="nobody"><allow send_interface="org.freedesktop.DBus.ObjectManager"/>
