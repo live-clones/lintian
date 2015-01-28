@@ -1,0 +1,6 @@
+Testname: changes-distribution-mismatch
+Sequence: 6000
+Version: 1.0
+Description: Test for unstable package to be installed in stable
+Test-For:
+ distribution-and-changes-mismatch

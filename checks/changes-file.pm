@@ -122,6 +122,32 @@ sub run {
                     # bad distribution entry
                     tag 'bad-distribution-in-changes-file', $distribution;
                 }
+
+                my $changes = $info->field('changes');
+                if (defined $changes) {
+                    # take the first non-empty line
+                    $changes =~ s/^\s+//s;
+                    $changes =~ s/\n.*//s;
+
+                    if ($changes
+                        =~ m/^\s*(?:\w[-+0-9a-z.]*)\s*\([^\(\) \t]+\)\s*([-+0-9A-Za-z.]+)\s*;/
+                      ) {
+                        my $changesdist = $1;
+                        if ($changesdist eq 'UNRELEASED') {
+                            tag 'unreleased-changes';
+                        } elsif ($changesdist ne $distribution
+                            && $changesdist ne $dist) {
+                            if (   $changesdist eq 'experimental'
+                                && $dist ne 'experimental') {
+                                tag 'distribution-and-experimental-mismatch',
+                                  $distribution;
+                            } elsif ($KNOWN_DISTS->known($dist)) {
+                                tag 'distribution-and-changes-mismatch',
+                                  $distribution, $changesdist;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -129,6 +155,7 @@ sub run {
             tag 'multiple-distributions-in-changes-file',
               $info->field('distribution');
         }
+
     }
 
     # Urgency is only recommended by Policy.
