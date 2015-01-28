@@ -29,7 +29,6 @@ Info: The package contains D-Bus policy configuration that uses the
  including distinguishing between users who are "at the console" and
  those who are not.
 Ref: https://bugs.freedesktop.org/show_bug.cgi?id=39611
-Experimental: yes
 
 Tag: dbus-policy-without-send-destination
 Severity: normal
@@ -66,7 +65,6 @@ Info: The package contains D-Bus policy configuration that uses
  However, such rules should still be made as specific as possible to
  avoid undesired side-effects.
 Ref: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html
-Experimental: yes
 
 Tag: dbus-policy-excessively-broad
 Severity: serious
@@ -97,7 +95,6 @@ Info: The package contains D-Bus policy configuration that
  .
  which correctly allows method calls to that particular service only.
 Ref: http://www.openwall.com/lists/oss-security/2015/01/27/25
-Experimental: yes
 
 Tag: dbus-session-service-wrong-name
 Severity: wishlist
@@ -113,7 +110,6 @@ Info: The package contains a D-Bus session service whose filename
  name is <tt>com.example.MyService1</tt>, and it should be
  service-activatable, you should achieve that by packaging
  <tt>/usr/share/dbus-1/services/com.example.MyService1.service</tt>.
-Experimental: yes
 
 Tag: dbus-system-service-wrong-name
 Severity: serious
@@ -128,4 +124,3 @@ Info: The package contains a D-Bus system service whose filename
  <tt>com.example.MyService1</tt>, and it should be service-activatable,
  you must provide
  <tt>/usr/share/dbus-1/system-services/com.example.MyService1.service</tt>.
-Experimental: yes
