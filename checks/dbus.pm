@@ -61,6 +61,8 @@ sub run {
     return;
 }
 
+my $PROPERTIES = 'org.freedesktop.DBus.Properties';
+
 sub _check_policy {
     my ($file) = @_;
 
@@ -100,6 +102,22 @@ sub _check_policy {
                 # because root can do anything anyway
             } else {
                 tag('dbus-policy-without-send-destination', $file, $rule);
+
+                if (   $rule =~ m{send_interface=}
+                    && $rule !~ m{send_interface=['"]\Q${PROPERTIES}\E['"]}) {
+                    # That's undesirable, because it opens up communication
+                    # with arbitrary services and can undo DoS mitigation
+                    # efforts; but at least it's specific to an interface
+                    # other than o.fd.DBus.Properties, so all that should
+                    # happen is that the service sends back an error message.
+                    #
+                    # Properties doesn't count as an effective limitation,
+                    # because it's a sort of meta-interface.
+                } elsif ($rule =~ m{<allow}) {
+                    # Looks like CVE-2014-8148 or similar. This is really bad;
+                    # emit an additional tag.
+                    tag('dbus-policy-excessively-broad', $file, $rule);
+                }
             }
         }
 

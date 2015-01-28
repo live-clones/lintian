@@ -68,6 +68,37 @@ Info: The package contains D-Bus policy configuration that uses
 Ref: https://bugs.freedesktop.org/show_bug.cgi?id=18961,http://lists.freedesktop.org/archives/dbus/2008-February/009401.html
 Experimental: yes
 
+Tag: dbus-policy-excessively-broad
+Severity: serious
+Certainty: possible
+Info: The package contains D-Bus policy configuration that
+ matches broad classes of messages. This will cause strange side-effects,
+ is almost certainly unintended, and is a probable security flaw.
+ .
+ For instance,
+ .
+   &lt;policy user="daemon"&gt;
+     &lt;allow send_type="method_call"/&gt;
+     &lt;allow send_destination="com.example.Bees"/&gt;
+   &lt;/policy&gt;
+ .
+ in any system bus policy file would allow the <tt>daemon</tt> user to send
+ any method call to any service, including method calls which are meant to
+ be restricted to root-only for security, such as
+ <tt>org.freedesktop.systemd1.Manager.StartTransientUnit</tt>. (In addition,
+ it allows that user to send any message to the <tt>com.example.Bees</tt>
+ service.)
+ .
+ The intended policy for that particular example was probably more like
+ .
+   &lt;policy user="daemon"&gt;
+     &lt;allow send_type="method_call" send_destination="com.example.Bees"/&gt;
+   &lt;/policy&gt;
+ .
+ which correctly allows method calls to that particular service only.
+Ref: http://www.openwall.com/lists/oss-security/2015/01/27/25
+Experimental: yes
+
 Tag: dbus-session-service-wrong-name
 Severity: wishlist
 Certainty: certain
