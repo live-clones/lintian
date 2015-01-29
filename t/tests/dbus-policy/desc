@@ -4,4 +4,5 @@ Version: 1.0
 Description: test deprecated D-Bus policies
 Test-For:
  dbus-policy-at-console
+ dbus-policy-excessively-broad
  dbus-policy-without-send-destination
