@@ -82,6 +82,7 @@ BEGIN {
           signal_number2name
           dequote_name
           load_state_cache
+          save_state_cache
           find_backlog
           unix_locale_split
           pipe_tee
@@ -92,6 +93,7 @@ BEGIN {
 use Digest::MD5;
 use Digest::SHA;
 use Encode ();
+use File::Temp qw(tempfile);
 use FileHandle;
 use Scalar::Util qw(openhandle);
 
@@ -1547,6 +1549,43 @@ sub load_state_cache {
     }
     close($fd);
     return $state;
+}
+
+=item save_state_cache(STATE_DIR, STATE)
+
+[Reporting tools only] Save the STATE cache to STATE_DIR.
+
+=cut
+
+sub save_state_cache {
+    my ($state_dir, $state) = @_;
+    my $state_file = "$state_dir/state-cache";
+    my ($tmp_fd, $tmp_path)= tempfile('state-cache-XXXXXX', DIR => $state_dir);
+
+    # atomic replacement of the state file; not a substitute for
+    # proper locking, but it will at least ensure that the file
+    # is in a consistent state.
+    eval {
+        print {$tmp_fd} YAML::Any::Dump($state);
+
+        close($tmp_fd) or die("close $tmp_path: $!");
+
+        # There is no secret in this.  Set it to 0644, so it does not
+        # require sudo access on lintian.d.o to read the file.
+        chmod(0644, $tmp_path);
+
+        rename($tmp_path, $state_file)
+          or die("rename $tmp_path -> $state_file: $!");
+    };
+    if (my $err = $@) {
+        if (-e $tmp_path) {
+            # Ignore error as we have a more important one
+            no autodie qw(unlink);
+            unlink($tmp_path);
+        }
+        die($@);
+    }
+    return 1;
 }
 
 =item find_backlog(LINTIAN_VERSION, STATE)

@@ -138,7 +138,7 @@ require Lintian::Relation::Version;
 import Lintian::Relation::Version qw(versions_comparator);
 require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
-  load_state_cache find_backlog);
+  load_state_cache find_backlog save_state_cache);
 
 my $LINTIAN_VERSION
   = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
@@ -727,36 +727,6 @@ sub _parse_srcs_pg {
     # $manifest strips redundant fields for us.
     $manifest->set($data);
     return;
-}
-
-sub save_state_cache {
-    my ($state_dir, $state) = @_;
-    my $state_file = "$state_dir/state-cache";
-    my ($tmp_fd, $tmp_path)= tempfile('state-cache-XXXXXX', DIR => $state_dir);
-
-    # atomic replacement of the state file; not a substitute for
-    # proper locking, but it will at least ensure that the file
-    # is in a consistent state.
-    eval {
-        print {$tmp_fd} YAML::Any::Dump($state);
-
-        close($tmp_fd) or die("close $tmp_path: $!");
-
-        # There is no secret in this.  Set it to 0644, so it does not
-        # require sudo access on lintian.d.o to read the file.
-        chmod(0644, $tmp_path);
-
-        rename($tmp_path, $state_file)
-          or die("rename $tmp_path -> $state_file: $!");
-    };
-    if (my $err = $@) {
-        if (-e $tmp_path) {
-            unlink($tmp_path)
-              or Log("unlink $tmp_path failed: $!");
-        }
-        Die($@);
-    }
-    return 1;
 }
 
 sub rewrite_lintian_log {
