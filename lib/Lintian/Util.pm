@@ -86,6 +86,7 @@ BEGIN {
           find_backlog
           unix_locale_split
           pipe_tee
+          untaint
           $PKGNAME_REGEX),
         @{ $EXPORT_TAGS{constants} });
 }
@@ -1612,6 +1613,17 @@ sub find_backlog {
       sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
       @list;
     return @sorted;
+}
+
+=item untaint(VALUE)
+
+Untaint VALUE
+
+=cut
+
+sub untaint {
+    return $_[0] = $1 if $_[0] =~ m/^(.*)$/;
+    return;
 }
 
 =back
