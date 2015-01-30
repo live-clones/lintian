@@ -1601,13 +1601,19 @@ processed the package.
 sub find_backlog {
     my ($lintian_version, $state) = @_;
     my (@list, @sorted);
-    for my $group_id (keys(%{$state})) {
+    for my $group_id (keys(%{$state->{'groups'}})) {
         my $last_version = '0';
-        if (exists($state->{$group_id}{'last-processed-by'})) {
-            $last_version = $state->{$group_id}{'last-processed-by'};
+        my $group_data = $state->{'groups'}{$group_id};
+        my $is_out_of_date;
+        if (exists($group_data->{'out-of-date'})) {
+            $is_out_of_date = $group_data->{'out-of-date'};
         }
-        push(@list, [$group_id, $last_version])
+        if (exists($group_data->{'last-processed-by'})) {
+            $last_version = $group_data->{'last-processed-by'};
+        }
+        $is_out_of_date = 1
           if not versions_equal($last_version, $lintian_version);
+        push(@list, [$group_id, $last_version]) if $is_out_of_date;
     }
     @sorted = map { $_->[0] }
       sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
