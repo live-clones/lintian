@@ -108,6 +108,9 @@
                 $firstarea = $info->{area} unless $firstarea;
                 if ($first) {
                     my $state = $info->{'state_data'};
+                    my $status = 'up-to-date';
+                    my $last_processed_by = $state->{'last-processed-by'} // 'N/A';
+                    $stats = '<it>outdated</i>' if (exists($state->{'out-of-date'}));
                     $OUT .= qq(  <div class="source-header">\n);
                     $OUT .= qq(   <h2 id="$info->{anchor}">);
                     $OUT .= "$source ($version$area)";
@@ -122,12 +125,8 @@
                     $OUT .= qq(    <a href="https://packages.debian.org/src:$source">Info</a>\n);
                     $OUT .= qq(    <a href="https://tracker.debian.org/$source">Package Tracker</a>\n);
                     $OUT .= qq(    <a href="https://bugs.debian.org/src:$source">Bugs</a>\n);
-                    if (exists($state->{'last-processed-by'})) {
-                        my $status = 'up-to-date';
-                        $status = '<i>outdated</i>'
-                            if $version ne $state->{'last-processed-by'};
-                        $OUT .= qq[  (${status}, last processed by Lintian/$state->{'last-processed-by'})];
-                    }
+                    $status = '<i>outdated</i>';
+                    $OUT .= qq[  (${status}, last processed by Lintian/$last_processed_by)];
                     $OUT .= qq(   </p>\n  </div>\n);
                     $OUT .= qq(  <ul class="report">\n) unless $is_binary;
                 }
