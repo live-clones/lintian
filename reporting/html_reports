@@ -28,6 +28,7 @@ use autodie;
 use POSIX qw(strftime);
 use File::Copy qw(copy);
 use Fcntl qw(SEEK_SET);
+use List::Util qw(first);
 use List::MoreUtils qw(uniq);
 use URI::Escape;
 use Text::Template ();
@@ -124,11 +125,6 @@ $templates{'lintian.css'} = Text::Template->new(
 
 # ------------------------------
 # Main routine
-
-my $LAB = Lintian::Lab->new($LINTIAN_LAB);
-my $source_info;
-$LAB->open;
-$source_info = $LAB->_get_lab_index('source');
 
 # Create output directories.
 mkdir($HTML_TMP_DIR, 0777);
@@ -239,7 +235,7 @@ my (%by_maint, %by_uploader, %by_tag);
 #
 # The "last_*" are optimizations to avoid computing the same things
 # over and over again when a package have multiple tags.
-my (%seen, $last_info, $last_maintainer);
+my (%seen, $last_info, $last_maintainer, %unknown_member_id);
 my %expanded_code = (
     E => 'errors',
     W => 'warnings',
@@ -254,7 +250,7 @@ while (<>) {
     chomp;
     @parts = split_tag($_);
     next unless @parts;
-    my ($code, $package, $type, $pver, $parch, $tag, $extra) = @parts;
+    my ($code, $package, $type, $version, $arch, $tag, $extra) = @parts;
     $type = 'binary' unless (defined $type);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
     # Ignore unknown tags - happens if we removed a tag that is still present
@@ -275,57 +271,33 @@ while (<>) {
     # version, and archive area.  Work around a missing source package by
     # pulling information from a binary package or udeb of the same name if
     # there is any.
-    my ($source, $version, $area, $source_version, $maintainer, $uploaders);
-    my $pkg_data= $LAB->_get_lab_manifest_data($package, $type, $pver, $parch);
-    my $state_data = {};
+    my ($source, $area, $source_version, $maintainer, $uploaders);
+    my $member_id
+      = "${type}:${package}/${version}" . ($type ne 'source' ? "/$arch" : q{});
+    my $state_data = $STATE_CACHE->{'members-to-groups'}{$member_id};
+    next if exists($unknown_member_id{$member_id});
     if ($type eq 'source') {
         $source = $package;
-        if (defined $pkg_data) {
-            $source_version = $version = $pkg_data->{version};
-            $area = $pkg_data->{area};
-            $maintainer = $pkg_data->{maintainer};
-            $uploaders = $pkg_data->{uploaders};
-        } else {
-            $source_version = $version = $pver;
-            $pver//='N/A';
-            warn "source package $package/$pver not found!\n";
+        $source_version = $version;
+        if (not defined($state_data)) {
+            warn "Source package ${member_id} not found in state cache!\n";
+            $unknown_member_id{$member_id} = 1;
         }
-    } else {
-        my $src_data;
-        if (defined $pkg_data) {
-            $version = $pkg_data->{version};
-            $area = $pkg_data->{area};
-            $source = $pkg_data->{source}//$package;
-            $source_version = $pkg_data->{'source-version'}//$version;
-            $src_data = $LAB->_get_lab_manifest_data($source, 'source',
-                $source_version);
-        } else {
-            $version = $pver;
+    } elsif (defined($state_data)) {
+        my $src_member
+          = first { s/^source:// } keys(%{$state_data->{'members'}});
+        if ($src_member) {
+            ($source, $source_version) = split(m{/}, $src_member, 2);
         }
-        if (defined $src_data) {
-            $maintainer = $src_data->{maintainer};
-            $uploaders = $src_data->{uploaders};
-        } else {
-            $pver//='N/A';
-            $parch//='N/A';
-            if (defined $pkg_data) {
-                warn "source for package $package/$pver/$parch"
-                  . " ($source/$source_version) not found!\n";
-            } else {
-                warn "data for package $package/$pver/$parch not found!\n";
-            }
-            $maintainer = undef;
-            $uploaders = undef;
-        }
+    } elsif (not defined($state_data)) {
+        warn "Package ${member_id} not found in state-cache!\n";
+        $unknown_member_id{$member_id} = 1;
     }
-    if ($source and ($version//'') ne '') {
-        my $group_id = "$source/$version";
-        if (exists($STATE_CACHE->{$group_id})) {
-            $state_data = $STATE_CACHE->{$group_id};
-        }
-    }
-    $maintainer ||= '(unknown)';
-    $area ||= 'main';
+    $state_data //= {};
+    $area = $state_data->{'mirror-metadata'}{'area'} ||= 'main';
+    $maintainer = $state_data->{'mirror-metadata'}{'maintainer'}
+      ||= '(unknown)';
+    $uploaders = $state_data->{'mirror-metadata'}{'uploaders'};
     $source ||= '';
     $version = 'unknown'
       unless (defined($version) and length($version) > 0);
@@ -428,9 +400,7 @@ while (<>) {
             # information to %by_uploaders (still sharing the data
             # between hashes).
             if ($uploaders) {
-                my @uploaders
-                  = map { map_maintainer($_) } split(/>\K\s*,\s*/, $uploaders);
-                for my $uploader (@uploaders) {
+                for my $uploader (@{$uploaders}) {
                     next if $uploader eq $maintainer;
                     $by_uploader{$uploader}{$source}{$source_version}
                       = $list_ref;
@@ -449,18 +419,14 @@ while (<>) {
 # this later to generate stub pages for maintainers whose packages are all
 # Lintian-clean.
 my %clean;
-$source_info->visit_all(
-    sub {
-        my ($srcdata) = @_;
-        my $maintainer = $srcdata->{maintainer};
-        my $id = maintainer_url($maintainer);
-        $clean{$id} = $maintainer;
-    });
-
-# Done with the lab and its metadata
-$LAB->close;
-undef $LAB;
-undef $source_info;
+for my $group_id (sort(keys(%{$STATE_CACHE->{'groups'}}))) {
+    my $maintainer
+      = $STATE_CACHE->{'groups'}{$group_id}{'mirror-metadata'}{'maintainer'};
+    my $id;
+    next if not $maintainer;
+    $id = maintainer_url($maintainer);
+    $clean{$id} = $maintainer;
+}
 
 # Now, walk through the tags by source package (sorted by maintainer).  Output
 # a summary page of errors and warnings for each maintainer, output a full
