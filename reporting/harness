@@ -444,7 +444,7 @@ Log('Creating HTML reports...');
 Log("Executing $html_reports_cmd $lintian_log");
 my %html_reports_opts = (
     'out' => $html_reports_log,
-    'err' => '&2',
+    'err' => '&1',
 );
 spawn(\%html_reports_opts, [$html_reports_cmd, $lintian_log])
   or
