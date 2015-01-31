@@ -96,6 +96,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * lib/Lintian/Command.pm:
     + [NT] Use croak() rather than L::Util's fail() on errors.
       The issues are generally not "internal errors".
+  * lib/Lintian/Internal/FrontendUtil.pm:
+    + [NT] Work around a bug in autodie, where an fdopen of a
+      file-descriptor always failed with "bad file descriptor".
   * lib/Lintian/Util.pm:
     + [NT] Prefer dpkg-deb --ctrl-tarfile to "ar p" when dpkg
       is recent enough.

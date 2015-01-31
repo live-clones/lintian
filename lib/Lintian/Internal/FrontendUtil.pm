@@ -188,22 +188,29 @@ sub default_parallel {
 sub open_file_or_fd {
     my ($to_open, $mode) = @_;
     my $fd;
+    # autodie trips this for some reasons (possibly fixed
+    # in v2.26)
+    no autodie qw(open);
     if ($mode eq '<') {
         if ($to_open eq '-' or $to_open eq '&0') {
             $fd = \*STDIN;
         } elsif ($to_open =~ m/^\&\d+$/) {
-            open($fd, '<&=', substr($to_open, 1));
+            open($fd, '<&=', substr($to_open, 1))
+              or die("fdopen $to_open for reading: $!\n");
         } else {
-            open($fd, '<', $to_open);
+            open($fd, '<', $to_open)
+              or die("open $to_open for reading: $!\n");
         }
     } elsif ($mode eq '>') {
         if ($to_open eq '-' or $to_open eq '&1') {
             $fd = \*STDOUT;
         } elsif ($to_open =~ m/^\&\d+$/) {
-            open($fd, '>>&=', substr($to_open, 1));
+            open($fd, '>&=', substr($to_open, 1))
+              or die("fdopen $to_open for writing: $!\n");
         } else {
             $mode = ">$mode" if $to_open =~ s/^\+//;
-            open($fd, $mode, $to_open);
+            open($fd, $mode, $to_open)
+              or die("open $to_open for write/append ($mode): $!\n");
         }
     } else {
         croak("Invalid mode \"$mode\" for open_file_or_fd");
