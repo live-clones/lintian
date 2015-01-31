@@ -121,6 +121,7 @@ my @restricted_search_dirs;
 
 my $experimental_output_opts;
 
+my $STATUS_FD;
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($pool, $action, $checks, $check_tags, $dont_check);
@@ -240,6 +241,7 @@ Developer/Special usage options:
     --lab LABDIR              use LABDIR as permanent laboratory
     --perf-debug              turn on performance debugging
     --perf-output X           send performance logging to file (or fd w. \&X)
+    --status-log X            send status logging to file (or fd w. \&X) [internal use only]
     -U X, --unpack-info X     specify which info should be collected
 Package selection options:
     -a, --all                 process all packages in distribution
@@ -579,6 +581,7 @@ my %opthash = (
     'quiet|q' => \&record_quiet, # sets $opt{'verbose'} to -1
     'perf-debug' => \$opt{'perf-debug'},
     'perf-output=s' => \$opt{'perf-output'},
+    'status-log=s' => \$opt{'status-log'},
 
     # ------------------ behaviour options
     'info|i' => \$opt{'info'},
@@ -916,6 +919,24 @@ if (my $perf_log = $opt{'perf-output'}) {
             print STDERR "warning: closing $perf_log failed: $!\n";
         }
     }
+}
+
+if (my $status_log = $opt{'status-log'}) {
+    $STATUS_FD = open_file_or_fd($status_log, '>');
+    $STATUS_FD->autoflush;
+
+    END {
+        local ($!, $@);
+        return if not defined($STATUS_FD);
+        eval {close($STATUS_FD);};
+        if (my $err = $@) {
+            # Don't use L::Output here as it might be (partly) cleaned
+            # up.
+            print STDERR "warning: closing $status_log failed: $!\n";
+        }
+    }
+} else {
+    open($STATUS_FD, '>', '/dev/null');
 }
 
 # check for arguments
@@ -1268,20 +1289,30 @@ if ($action eq 'check') {
 }
 
 foreach my $gname (sort $pool->get_group_names()) {
+    my $success = 1;
     my $group = $pool->get_group($gname);
     my $raw_res = timed_task {
-        unpack_group($gname, $group);
+        if (!unpack_group($gname, $group)) {
+            $success = 0;
+        }
     };
     my $tres = $format_timer_result->($raw_res);
     debug_msg(1, "Unpack of $gname done$tres");
     perf_log("$gname,total-group-unpack,${raw_res}");
     if ($action eq 'check') {
-        process_group($gname, $group);
+        if (!process_group($gname, $group)) {
+            $success = 0;
+        }
         $group->clear_cache;
         # Double check that no processes are running;  hopefully
         # it will catch regressions like 3bbcc3b earlier.
         fail('Unreaped processes after running checks!?')
           if waitpid(-1, WNOHANG) != -1;
+    }
+    if ($success) {
+        print {$STATUS_FD} "complete ${gname}${tres}\n";
+    } else {
+        print {$STATUS_FD} "error ${gname}${tres}\n";
     }
 }
 
@@ -1412,7 +1443,8 @@ sub prep_unpack_error {
 
 sub unpack_group {
     my ($gname, $group) = @_;
-    my $errhandler = sub { prep_unpack_error($group, @_) };
+    my $all_ok = 1;
+    my $errhandler = sub { $all_ok = 0; prep_unpack_error($group, @_) };
 
     # Kill pending jobs, if any
     $unpacker->kill_jobs;
@@ -1426,16 +1458,17 @@ sub unpack_group {
 
     my %timers;
     my %hooks = (
-        'coll-hook' => sub { coll_hook($group, \%timers, @_); },
-        'finish-hook' => \&finish_hook,
+        'coll-hook' => sub { coll_hook($group, \%timers, @_) or $all_ok = 0; },
+        'finish-hook' => sub { finish_hook(@_) or $all_ok = 0; },
     );
 
     $unpacker->process_tasks(\%hooks);
-    return;
+    return $all_ok;
 }
 
 sub finish_hook {
     my ($lpkg, $state, $changed) = @_;
+    my $ok = 1;
     if ($state eq 'sf-error') {
         # The status file could not be written; give a warning.
         my $err = $!;
@@ -1449,17 +1482,21 @@ sub finish_hook {
             my $ret = auto_clean_package($lpkg);
             # We don't have to remove it from the group if it
             # fails as we are pretty much done.
-            $exit_code = 2 if $ret < 0;
+            if ($ret < 0) {
+                $exit_code = 2;
+                $ok = 0;
+            }
             $changed->() if $ret;
         }
     }
-    return;
+    return $ok;
 }
 
 sub coll_hook {
     my ($group, $timers, $lpkg, $event, $cs, $pid, $exitval) = @_;
     my $coll = $cs->name;
     my $procid = $lpkg->identifier;
+    my $ok = 1;
 
     if ($event eq 'start') {
         if ($pid < 0) {
@@ -1471,6 +1508,7 @@ sub coll_hook {
                 "skipping $action of $pkg_type package $pkg_name"
             );
             $exit_code = 2;
+            $ok = 0;
             $group->remove_processable($lpkg);
         } else {
             # Success
@@ -1485,6 +1523,7 @@ sub coll_hook {
             warning("collect info $coll about package $pkg_name failed");
             warning("skipping $action of $pkg_type package $pkg_name");
             $exit_code = 2;
+            $ok = 0;
             $group->remove_processable($lpkg);
         } else {
             # success
@@ -1494,12 +1533,13 @@ sub coll_hook {
             perf_log("$procid,coll/$coll,${raw_res}");
         }
     }
-    return;
+    return $ok;
 }
 
 sub process_group {
     my ($gname, $group) = @_;
     my ($timer, $raw_res, $tres);
+    my $all_ok = 1;
     $timer = $start_timer->();
   PROC:
     foreach my $lpkg ($group->get_processables){
@@ -1534,6 +1574,7 @@ sub process_group {
                   " on package $procid\n";
                 warning("skipping check of $procid");
                 $exit_code = 2;
+                $all_ok = 0;
                 next PROC;
             }
             my $tres = $format_timer_result->($raw_res);
@@ -1576,7 +1617,10 @@ sub process_group {
         $timer = $start_timer->();
         foreach my $lpkg ($group->get_processables){
             my $ret = auto_clean_package($lpkg);
-            $exit_code = 2 if $ret < 0;
+            if ($ret < 0) {
+                $exit_code = 2;
+                $all_ok = 0;
+            }
             if ($ret) {
                 # Update the status file as auto_clean_package may
                 # have removed some collections
@@ -1595,7 +1639,7 @@ sub process_group {
         perf_log("$gname,total-group-auto-remove,${raw_res}");
     }
 
-    return 1;
+    return $all_ok;
 }
 
 sub handle_lab_query {
