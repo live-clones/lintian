@@ -28,6 +28,7 @@ use constant BACKLOG_PROCESSING_TIME_LIMIT => 4 * 3600; # 4hours
 
 use Date::Format qw(time2str);
 use Errno qw(ENOENT);
+use Fcntl qw(F_GETFD F_SETFD FD_CLOEXEC);
 use File::Temp qw(tempfile);
 use Getopt::Long;
 use POSIX qw(strftime);
@@ -102,18 +103,26 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
   $LINTIAN_ARCH @EXTRA_LINTIAN_OPTIONS
   $LOG_DIR
   $HTML_DIR $HTML_TMP_DIR
-  $LINTIAN_AREA $HARNESS_STATE_DIR);
+  $LINTIAN_AREA $HARNESS_STATE_DIR
 
-# export Lintian's configuration
-$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
-# delete LINTIAN_{CFG,ROOT} in case they are set.
+  $USE_PERMANENT_LAB
+  $LINTIAN_SCRATCH_SPACE
+);
+
+# delete LINTIAN_{CFG,ROOT,LAB} in case they are set.
 delete($ENV{'LINTIAN_CFG'});
 delete($ENV{'LINTIAN_ROOT'});
+delete($ENV{'LINTIAN_LAB'});
+$ENV{'TMPDIR'} = $LINTIAN_SCRATCH_SPACE
+  if defined($LINTIAN_SCRATCH_SPACE);
 
 my $html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
-my ($log_file, $list_file, $lintian_log, $lintian_perf_log,$html_reports_log)
+my $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
+
+my ($log_file, $list_file, $lintian_log, $lintian_perf_log,$html_reports_log,
+    $sync_state_log)
   = map {"$LOG_DIR/$_" }
-  qw(harness.log changed-packages.list lintian.log lintian-perf.log html_reports.log);
+  qw(harness.log changed-packages.list lintian.log lintian-perf.log html_reports.log sync_state.log);
 my $old_lintian_log = $lintian_log . '.old';
 my @lintian_cmd = (
     "$LINTIAN_ROOT/frontend/lintian",
@@ -125,7 +134,6 @@ my @lintian_cmd = (
 );
 my $STATE_DIR = $HARNESS_STATE_DIR;
 my $START_TIME = time();
-my $state;
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
@@ -150,7 +158,8 @@ STDOUT->autoflush;
 unless ($opt{'dry-run'}) {
     # rotate log files
     my %opt = ('out' => '/dev/null',);
-    my @rotate_logs = ($log_file, $html_reports_log, $lintian_perf_log);
+    my @rotate_logs
+      = ($log_file, $html_reports_log, $lintian_perf_log, $sync_state_log);
     spawn(\%opt, ['savelog', @rotate_logs])
       or die "Cannot rotate log files.\n";
 
@@ -167,32 +176,37 @@ unless ($opt{'dry-run'}) {
 
 if (not defined($STATE_DIR)) {
     Die(q{Missing required config option: $HARNESS_STATE_DIR});
-} elsif (not -d $STATE_DIR) {
-    system('mkdir', '-p', $STATE_DIR) == 0
-      or Die("mkdir -p $STATE_DIR failed");
-    Log("Created cache dir: $STATE_DIR");
+} else {
+    if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
+        Log("Purging old state-cache/dir");
+        system('rm', '-rf', $STATE_DIR) == 0
+          or Die("error removing $STATE_DIR");
+    }
+
+    if (not -d $STATE_DIR) {
+        system('mkdir', '-p', $STATE_DIR) == 0
+          or Die("mkdir -p $STATE_DIR failed");
+        Log("Created cache dir: $STATE_DIR");
+    }
 }
 
-my $LAB = Lintian::Lab->new($LINTIAN_LAB);
+if (not $opt{'dry-run'}) {
 
-unless ($opt{'dry-run'}) {
-    # purge the old packages
-    $LAB->remove if $opt{'clean-mode'};
+    if ($USE_PERMANENT_LAB) {
+        my $LAB = Lintian::Lab->new($LINTIAN_LAB);
+        # purge the old packages
+        $LAB->remove if $opt{'clean-mode'};
 
-    $LAB->create({ 'mode' => 02775}) unless $LAB->exists;
-
-} else {
-    if (!$LAB->exists || $opt{'clean-mode'}) {
-        # We either do not have a lab or we were asked to clean
-        # the existing one.  We solve this by creating a temp
-        # lab (which will be empty).  This means that A) the lab
-        # will appear to be empty (as expected by clean-mode) and
-        # B) that we do not have to do a dry-run check on every
-        # "read-only" lab operation (we still have to guard write
-        # operations).
-        $LAB = Lintian::Lab->new;
-        $LAB->create;
+        $LAB->create({ 'mode' => 02775}) unless $LAB->exists;
+    } elsif ($LINTIAN_LAB) {
+        my $LAB = Lintian::Lab->new($LINTIAN_LAB);
+        Log("Removing old permanent lab at $LINTIAN_LAB");
+        $LAB->remove if $LAB->exists;
     }
+}
+
+if ($USE_PERMANENT_LAB) {
+    push(@lintian_cmd, '--lab', $LINTIAN_LAB);
 }
 
 if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
@@ -205,218 +219,73 @@ if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
     }
 }
 
-unless ($opt{'reports-only'}) {
-    $LAB->open;
-    Log('Processing mirror index files');
-    my @manifests = local_mirror_manifests(
-        $LINTIAN_ARCHIVEDIR, [_trim_split($LINTIAN_DIST)],
-        [_trim_split($LINTIAN_AREA)], [_trim_split($LINTIAN_ARCH)]);
-    my @diffs = $LAB->generate_diffs(@manifests);
-    my (%skip, @worklist, %dirty_groups);
-    # Remove old/stale packages from the lab
-    foreach my $diff (@diffs) {
-        my $type = $diff->type;
-        my $old_manifest = $diff->olist;
-        my $man = $diff->nlist;
-        Log("Removing old or changed $type packages from the lab");
-        foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
-            my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
-            my ($entry, $pkg_src, $pkg_src_version);
-            my $sk = "$type:$pkg_name/$pkg_version";
-            $sk .= "/$pkg_arch" if $pkg_arch;
-            $skip{$sk} = 1; # For log-cleaning (incremental runs)
-            if ($opt{'dry-run'}) {
-                $entry = Lintian::Processable->new_from_metadata($type,
-                    $old_manifest->get(@$removed));
-            } else {
-                $entry = $LAB->get_package($pkg_name, $type, $pkg_version,
-                    $pkg_arch);
-            }
+if (not $opt{'reports-only'}) {
+    my ($state, @worklist);
+    my $scs = $opt{'schedule-chunk-size'};
+    my @sync_state_args = (
+        '--state-dir', $STATE_DIR,
+        '--mirror-path', $LINTIAN_ARCHIVEDIR,
+        '--distributions', $LINTIAN_DIST,
+        '--mirror-areas', $LINTIAN_AREA,
+        '--architectures', $LINTIAN_ARCH,
+        '--desired-version', $LINTIAN_VERSION,
+        '--debug',
+    );
 
-            $pkg_src = $entry->pkg_src;
-            $pkg_src_version = $entry->pkg_src_version;
-            $dirty_groups{$pkg_src}->{$pkg_src_version} = 1;
-
-            # Under dry-run, $entry is not a L::Lab::Entry, so kill it
-            # so we don't try to use it as one later.
-            $entry = undef if $opt{'dry-run'};
-            if ($opt{'dry-run'} || $entry) {
-                my $arch = '';
-                $arch = " [$pkg_arch]" if $pkg_arch;
-                if ($opt{'dry-run'} || $entry->remove) {
-                    Log("Removed $type $pkg_name ($pkg_version)$arch");
-                } else {
-                    Log("Removing $type $pkg_name ($pkg_version)$arch failed."
-                    );
-                }
-            }
-        }
-        Log("Adding new and changed $type packages to the lab");
-        foreach my $added (@{ $diff->added }, @{ $diff->changed }) {
-            my ($pkg_name, $pkg_version, $pkg_arch) = @$added;
-            my $me = $man->get(@$added);
-            my $entry;
-            my $proc = Lintian::Processable->new_from_metadata($type, $me);
-            my $pkg_src = $proc->pkg_src;
-            my $pkg_src_version = $proc->pkg_src_version;
-
-            $dirty_groups{$pkg_src}->{$pkg_src_version} = 1;
-
-            unless ($opt{'dry-run'}) {
-                $entry = $LAB->get_package($proc);
-            }
-            if ($opt{'dry-run'} || $entry) {
-                my $ok = 0;
-                my $arch = '';
-                $arch = " [$pkg_arch]" if $pkg_arch;
-                if ($opt{'dry-run'}) {
-                    $ok = 1;
-                } else {
-                    eval {
-                        $entry->create;
-                        $entry->update_status_file
-                          or die "creating status file: $!";
-                        $ok = 1;
-                    };
-                }
-                if ($ok) {
-                    my $query = "$type:$pkg_name/$pkg_version";
-                    $query .= "/$pkg_arch" if $pkg_arch;
-                    Log("Added $type $pkg_name ($pkg_version)$arch");
-                } else {
-                    Log("Adding $type $pkg_name ($pkg_version)$arch failed: $@"
-                    );
-                }
-            }
-        }
+    if ($opt{'full-mode'}) {
+        push(@sync_state_args, '--reschedule-all');
+    }
+    if ($opt{'dry-run'}) {
+        push(@sync_state_args, '--dry-run');
     }
 
-    # At this point %dirty_groups has queries for all dirty groups for
-    # the incremental run.  Basically each group falls into 2 cases:
-    #
-    #  1. All entries in the group have been added/removed
-    #     - Package added to or removed from suite
-    #     - New version replacing an older version.
-    #  2. Only part of the entries in a group has been added/removed:
-    #     - binNMUs etc.
-    #
-    # If we just "blindly" run the packages from case 1, then binaries
-    # from group 2 will not be procesed with their (full) group
-    # (particularly without the source package).
+    Log('Updating harness state cache (reading mirror index files)');
+    my %sync_state_opts = (
+        'out' => $sync_state_log,
+        'err' => '&1',
+    );
+    delete($sync_state_opts{'out'}) if $opt{'dry-run'};
+    spawn(\%sync_state_opts,
+        [$dplint_cmd, 'reporting-sync-state', @sync_state_args])
+      or Log("warning: executing reporting-sync-state returned "
+          . (($? >> 8) & 0xff));
 
-    Log('Computing grouping...');
+    Log('Update complete, loading current state information');
     eval {$state = load_state_cache($STATE_DIR);};
     if ($@) {
         Die($@);
     }
 
-    if ($opt{'full-mode'}) {
-        # for full run, just replace %dirty_groups with "<all groups in lab>".
-        $LAB->visit_packages(
-            sub {
-                my ($entry) = @_;
-                $dirty_groups{$entry->pkg_src}->{$entry->pkg_src_version} = 1;
-            });
-    } elsif (not %{$state}) {
-        # New/empty state file
-        Log('Populating state file... ');
-        $LAB->visit_packages(
-            sub {
-                my ($entry) = @_;
-                my $group_id
-                  = join('/', $entry->pkg_src, $entry->pkg_src_version);
-                $state->{$group_id} = {};
-            });
-    }
+    @worklist = find_backlog($LINTIAN_VERSION, $state);
 
-    # Sort so that the worklist is also sorted (makes it easier to review).
-    foreach my $gname (sort keys %dirty_groups) {
-        my $dver = $dirty_groups{$gname};
-        for my $gversion (sort versions_comparator keys %{$dver}) {
-            my $group_id = "${gname}/${gversion}";
-            my $query = "GROUP:${group_id}";
-            my @res = $LAB->lab_query($query);
+    # Sanity check for incremental mode.
+    die "Old Lintian log file $lintian_log not found!\n"
+      if ($opt{'incremental-mode'} and not -f $lintian_log);
 
-            if (@res) {
-                # Clear the "processed by" flag, so it will be reprocessed if
-                # lintian is interrupted for some reason.
-                delete($state->{$group_id}{'last-processed-by'});
-
-                # Group is still in the Lab - reprocess it together
-                push(@worklist, $group_id);
-                foreach my $entry (@res) {
-                    # Remove old log entry for all entries in this group
-                    # NB: This part is unable to replace the update to %skip
-                    # in the "foreach removed-entry in diff" above.  In case
-                    # the entire group is removed, we will enter this loop,
-                    # but we will see each of the entries removed in the
-                    # loop above.
-                    $skip{$entry->identifier} = 1;
-                }
-            } else {
-                # No longer present at all, kill the entire entry
-                delete($state->{$group_id});
-            }
-        }
-    }
-    save_state_cache($STATE_DIR, $state)
-      if not $opt{'dry-run'};
-
-    # Flushes the changed manifest to the file system - croaks on
-    # error
-    # - no need to check dry-run here as nothing changed and it frees
-    #   memory to do this.
-    # - in the (hopefully unlikely) case that dry-run is *buggy* and
-    #   the lab actually was modified, then this will at least keep
-    #   the lab metadata consistent with the actual contents.
-    $LAB->close;
-    # Throw away the lab to avoid it hogging memory.
-    $LAB = undef;
-
-    if ($opt{'incremental-mode'}) {
-        # Extra work for the incremental run
-        # - do this regardless of @worklist, since we could in theory
-        #   have an "only removals"-run.  In that case, their entries
-        #   should still be removed from the log.
-
-        die "Old Lintian log file $lintian_log not found!\n"
-          unless -f $lintian_log;
+    # Always update the log if it exists, as we may have removed some
+    # entries.
+    if (-f $lintian_log) {
+        my $filter = generate_log_filter($state, \@worklist);
 
         # update lintian.log
         Log('Updating lintian.log...');
-        rewrite_lintian_log($lintian_log, \%skip);
+        rewrite_lintian_log($lintian_log, $filter);
     }
 
     Log('');
 
-    # Clear some variables we no longer need, so Perl can reclaim
-    # the memory.
-    %dirty_groups = %skip = @diffs = @manifests = ();
-
-    if (@worklist) {
-        my $scs = $opt{'schedule-chunk-size'};
-        if ($opt{'full-mode'}) {
-            # truncate in full-mode
-            open(my $fd, '>', $lintian_log)
-              or Die("open/truncate $lintian_log failed: $!");
-            close($fd)
-              or Die("close $lintian_log failed: $!");
-        }
-        $state = process_worklist(\@worklist, $lintian_log, $STATE_DIR, $scs);
-    } else {
+    if (not @worklist) {
         Log('Skipping Lintian run - nothing to do...');
+    } else {
+        Log('Processing backlog...');
+        if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
+            Log(
+                "Truncating worklist to size ${\BACKLOG_PROCESSING_TIME_LIMIT}"
+                  . ' from '
+                  . (scalar(@worklist)));
+            @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
+        }
     }
-}
-
-if (defined($state) and time() <= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
-    my $scs = $opt{'schedule-chunk-size'};
-    my @worklist = find_backlog($LINTIAN_VERSION, $state);
-
-    if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
-        @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
-    }
-
-    Log('Processing backlog...') if @worklist;
 
     while (@worklist and $state) {
         my (@slice, $filter_set);
@@ -432,10 +301,11 @@ if (defined($state) and time() <= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT){
             undef(@worklist);
         }
 
-        $filter_set = generate_log_filter($LINTIAN_LAB, \@slice);
+        $filter_set = generate_log_filter($state, \@slice);
         rewrite_lintian_log($lintian_log, $filter_set);
 
-        $state = process_worklist(\@slice, $lintian_log, $STATE_DIR, -1);
+        $state
+          = process_worklist(\@slice, $state, $lintian_log, $STATE_DIR, -1);
     }
 }
 
@@ -489,126 +359,12 @@ sub Die {
     exit 1;
 }
 
-sub _trim_split {
-    my ($val) = @_;
-    return () unless $val;
-    return split m/\s*+,\s*+/o, strip($val);
-}
-
-# local_mirror_manifests ($mirdir, $dists, $areas, $archs)
-#
-# Returns a list of manifests that represents what is on the local mirror
-# at $mirdir.  3 manifests will be returned, one for "source", one for "binary"
-# and one for "udeb" packages.  They are populated based on the "Sources" and
-# "Packages" files.
-#
-# $mirdir - the path to the local mirror
-# $dists  - listref of dists to consider (i.e. ['unstable'])
-# $areas  - listref of areas to consider (i.e. ['main', 'contrib', 'non-free'])
-# $archs  - listref of archs to consider (i.e. ['i386', 'amd64'])
-#
-sub local_mirror_manifests {
-    my ($mirdir, $dists, $areas, $archs) = @_;
-    my $active_srcs = {};
-    my $srcman = Lintian::Lab::Manifest->new('source');
-    my $binman = Lintian::Lab::Manifest->new('binary');
-    my $udebman = Lintian::Lab::Manifest->new('udeb');
-    foreach my $dist (@$dists) {
-        foreach my $area (@$areas) {
-            my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
-            my ($srcfd, $srcsub);
-            # Binaries have a "per arch" file.
-            # - we check those first and then include the source packages that
-            #   are referred to by these binaries.
-            foreach my $arch (@$archs) {
-                my $pkgs = "$mirdir/dists/$dist/$area/binary-$arch/Packages";
-                my $upkgs = "$mirdir/dists/$dist/$area/debian-installer/"
-                  ."binary-$arch/Packages";
-                my $pkgfd = _open_data_file($pkgs);
-                my $binsub = sub {
-                    _parse_pkgs_pg($active_srcs, $binman, $mirdir, $area, @_);
-                };
-                my $upkgfd;
-                my $udebsub = sub {
-                    _parse_pkgs_pg($active_srcs, $udebman, $mirdir, $area, @_);
-                };
-                visit_dpkg_paragraph($binsub, $pkgfd);
-                close($pkgfd);
-                $upkgfd = _open_data_file($upkgs);
-                visit_dpkg_paragraph($udebsub, $upkgfd);
-                close($upkgfd);
-            }
-            $srcfd = _open_data_file($srcs);
-            $srcsub
-              = sub { _parse_srcs_pg($active_srcs, $srcman, $mirdir, $area, @_) };
-            visit_dpkg_paragraph($srcsub, $srcfd);
-            close $srcfd;
-        }
-    }
-    return ($srcman, $binman, $udebman);
-}
-
-# _open_data_file ($file)
-#
-# Opens $file if it exists, otherwise it tries common extensions (i.e. .gz) and opens
-# that instead.  It may pipe the file through a external decompressor, so the returned
-# file descriptor cannot be assumed to be a file.
-#
-# If $file does not exists and no common extensions are found, this dies.  It may also
-# die if it finds a file, but is unable to open it.
-sub _open_data_file {
-    my ($file) = @_;
-    if (-e $file) {
-        open my $fd, '<', $file or Die "opening $file: $!";
-        return $fd;
-    }
-    if (-e "$file.gz") {
-        return open_gz("$file.gz");
-    }
-    Die "Cannot find $file";
-}
-
-# Helper for local_mirror_manifests - it parses a paragraph from Packages file
-sub _parse_pkgs_pg {
-    my ($active_srcs, $manifest, $mirdir, $area, $data) = @_;
-    my $ts = 0;
-    my $s;
-    unless ($data->{'source'}) {
-        $data->{'source'} = $data->{'package'};
-    } elsif ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-        $data->{'source'} = $1;
-        $data->{'source-version'} = $2;
-    } else {
-        $data->{'source-version'} = $data->{'version'};
-    }
-    unless (defined $data->{'source-version'}) {
-        $data->{'source-version'} = $data->{'version'};
-    }
-    $s = $data->{'source'} . '/' . $data->{'source-version'};
-    $active_srcs->{$s}++;
-    $data->{'file'} = $mirdir . '/' . $data->{'filename'};
-    $data->{'area'} = $area;
-    # $manifest strips redundant fields for us.  But for clarity and to
-    # avoid "hard to debug" cases $manifest renames the fields, we explicitly
-    # remove the "filename" field.
-    delete $data->{'filename'};
-
-    if (my @stat = stat $data->{'file'}) {
-        $ts = $stat[9];
-    }
-    $data->{'timestamp'} = $ts;
-
-    $manifest->set($data);
-    return;
-}
-
 sub process_worklist {
-    my ($worklist_ref, $output_file, $state_dir, $schedule_chunk_size) = @_;
+    my ($worklist_ref, $state, $output_file, $state_dir, $schedule_chunk_size)
+      = @_;
     my $round = 0;
     my $rounds = 1;
     my @worklist = @{$worklist_ref};
-    my $all_ok = 1;
-    my $state;
 
     if ($schedule_chunk_size > 0) {
         # compute the number of rounds needed.
@@ -626,7 +382,9 @@ sub process_worklist {
     Log('Command line used: ' . join(q{ }, @lintian_cmd));
     while (@worklist) {
         my $len = scalar @worklist;
-        my @work_splice;
+        my (@work_splice, @completed, $signaled);
+        my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
+
         $round++;
         # correct bounds to fit chunk size
         if ($schedule_chunk_size > 0 and $len > $schedule_chunk_size) {
@@ -647,24 +405,72 @@ sub process_worklist {
 
         next if ($opt{'dry-run'});
 
-        my $pid = open(my $lintpipe, '|-') // Die("fork failed: $!");
+        pipe($lint_stdin, $lintpipe) or Die("pipe failed: $!");
+        pipe($status_fd, $lint_status_out) or Die("pipe failed: $!");
+        my $pid = fork() // Die("fork failed: $!");
         if (not $pid) {
-            # child => reopen STD{OUT,ERR} and exec lintian
+            # child => juggle some fds, close some pipes and exec lintian
+            my $status_fileno = fileno($lint_status_out);
+            # Perl is helpful and sets close-on-exec by default for fd > $^F.
+            # - except, in this case, that is *not* what we want.
+            my $flags = fcntl($lint_status_out, F_GETFD, 0)
+              or die("fcntl F_GETFD: $!");
+            fcntl($lint_status_out, F_SETFD, $flags & ~FD_CLOEXEC)
+              or die("fcntl F_SETFD: $!");
+            open(STDIN, '<&', $lint_stdin);
             open(STDOUT, '>>', $lintian_log)
               or die("re-open STDOUT failed: $!");
             open(STDERR, '>&', *STDOUT)
               or die("re-open STDERR failed: $!");
+            close($lintpipe)
+              or die("closing \"lintpipe\" pipe (not for us): $!");
+            close($status_fd)
+              or die("closing \"status_fd\" pipe (not for us): $!");
+            push(@lintian_cmd, '--status-log', '&' . ${status_fileno});
             exec(@lintian_cmd)
               or die("exec @lintian_cmd failed: $!");
         }
+        # Close the end points only the child needs
+        close($lint_stdin)
+          or Die("Cannot close \"lint_stdin\" pipe (not for us): $!");
+        close($lint_status_out)
+          or Die("Cannot close \"lint_status_out\" pipe (not for us): $!");
+
+        my $groups = $state->{'groups'};
+        # Submit the tasks to Lintian
         foreach my $group_id (@work_splice) {
-            # Technically, we emit these items in reverse order to Lintian,
-            # but Lintian sorts it anyway
-            print {$lintpipe} "!query: GROUP:$group_id\n";
+            my $members;
+            if (not exists($groups->{$group_id})) {
+                # Sanity check (can in theory happen if an external process
+                # modifies the state cache and we have reloaded it)
+                Log(
+                    "Group ${group_id} disappeared before we could schedule it"
+                );
+                next;
+            }
+            $members = $groups->{$group_id}{'members'};
+            for my $member_id (sort(keys(%{${members}}))) {
+                my $path = $members->{$member_id}{'path'};
+                print {$lintpipe} "$path\n";
+            }
+            #print {$lintpipe} "!query: GROUP:$group_id\n";
         }
-        $! = 0;
-        close $lintpipe;
-        Die("Closing pipe failed: $!") if $!;
+        close($lintpipe) or Die("Closing pipe failed: $!");
+
+        # Listen to status updates from lintian
+        while (my $line = <$status_fd>) {
+            chomp($line);
+            if ($line =~ s/^complete ([^ ]+) \(([^\)]+)\)$//) {
+                push(@completed, $1);
+                Log("  [lintian] processed $1 successfully (time: $2)");
+            } elsif ($line =~ s/^error ([^ ]+) \(([^\)]+)\)$//) {
+                Log("  [lintian] error processing $1 (time: $2)");
+            }
+        }
+        close($status_fd);
+
+        # Wait for lintian to terminate
+        waitpid($pid, 0) == $pid or Die("waitpid($pid, 0) failed: $!");
         if ($?) {
             # exit 1 (policy violations) happens all the time (sadly)
             # exit 2 (broken packages) also happens all the time...
@@ -676,9 +482,9 @@ sub process_worklist {
                 Log("Lintian terminated by signal: $sig");
                 # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
                 # don't start the next round.
-                #  - 35k / 512 => 700 rounds (or 700 SIGINTs to stop...)
                 Log(' - skipping the rest of the worklist');
-                return;
+                @worklist = ();
+                $signaled = 1;
             }
         } else {
             Log('Lintian finished successfully');
@@ -688,49 +494,23 @@ sub process_worklist {
         if ($@) {
             Die($@);
         }
-        for my $group_id (@work_splice) {
-            $state->{$group_id}{'last-processed-by'} = $LINTIAN_VERSION;
+        for my $group_id (@completed) {
+            my $group_data;
+            # In theory, they can disappear - in practise, that requires
+            # an external call to (e.g.) dplint reporting-sync-state.
+            next if not exists($state->{'groups'}{$group_id});
+            $group_data = $state->{'groups'}{$group_id};
+            $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
+            delete($group_data->{'out-of-date'});
         }
         save_state_cache($STATE_DIR, $state);
+        return if $signaled;
     }
     return $state;
 }
 
-# Helper for local_mirror_manifests - it parses a paragraph from Sources file
-sub _parse_srcs_pg {
-    my ($active_srcs, $manifest, $mirdir, $area, $data) = @_;
-    my $ts = 0;
-    my $dir = $data->{'directory'}//'';
-    my $s = $data->{'package'} . '/' . $data->{'version'};
-    # only include the source if it has any binaries to be checked.
-    # - Otherwise we may end up checking a source with no binaries
-    #   (happens if the architecture is "behind" in building)
-    return unless $active_srcs->{$s};
-    $dir .= '/' if $dir;
-    foreach my $f (split m/\n/, $data->{'files'}) {
-        strip($f);
-        next unless $f && $f =~ m/\.dsc$/;
-        my (undef, undef, $file) = split m/\s++/, $f;
-        # $dir should end with a slash if it is non-empty.
-        $data->{'file'} = $mirdir . "/$dir" . $file;
-        last;
-    }
-    $data->{'area'} = $area;
-    # Rename a field :)
-    $data->{'source'} = $data->{'package'};
-
-    if (my @stat = stat $data->{'file'}) {
-        $ts = $stat[9];
-    }
-    $data->{'timestamp'} = $ts;
-
-    # $manifest strips redundant fields for us.
-    $manifest->set($data);
-    return;
-}
-
 sub rewrite_lintian_log {
-    my ($lintian_log, $filter_set) = @_;
+    my ($lintian_log, $keep_filter) = @_;
     return if ($opt{'dry-run'});
 
     rename($lintian_log, $old_lintian_log)
@@ -739,7 +519,7 @@ sub rewrite_lintian_log {
       or Die("cannot open lintian.log $lintian_log for writing: $!");
     open(my $ofd, '<', $old_lintian_log)
       or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
-    my $copy_mode = 1;
+    my $copy_mode = 0;
     while (<$ofd>) {
         if (
             m/^N: [ ] Processing [ ] (binary|udeb|source) [ ]
@@ -749,8 +529,8 @@ sub rewrite_lintian_log {
             my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
             my $k = "$type:$pkg/$ver";
             $k .= "/$arch" if $type ne 'source';
-            $copy_mode = 1;
-            $copy_mode = 0 if exists $filter_set->{$k};
+            $copy_mode = 0;
+            $copy_mode = 1 if exists($keep_filter->{$k});
         }
         if ($copy_mode) {
             print {$nfd} $_;
@@ -763,25 +543,15 @@ sub rewrite_lintian_log {
 }
 
 sub generate_log_filter {
-    my ($lintian_lab_path, $worklist_ref) = @_;
-    my $lab = Lintian::Lab->new($lintian_lab_path);
+    my ($state, $worklist_ref) = @_;
     my %filter;
-    $lab->open;
-    for my $group_id (@{$worklist_ref}) {
-        my @res = $lab->lab_query("GROUP:${group_id}");
-        if (@res) {
-            foreach my $entry (@res) {
-                # Remove old log entry for all entries in this group
-                # NB: This part is unable to replace the update to %filter
-                # in the "foreach removed-entry in diff" above.  In case
-                # the entire group is removed, we will enter this loop,
-                # but we will see each of the entries removed in the
-                # loop above.
-                $filter{$entry->identifier} = 1;
-            }
+    my $group_map = $state->{'groups'};
+    for my $group_id (keys(%{${group_map}})) {
+        my $members = $group_map->{$group_id}{'members'};
+        for my $member_id (keys(%{$members})) {
+            $filter{$member_id} = 1;
         }
     }
-    $lab->close;
     return \%filter;
 }
 

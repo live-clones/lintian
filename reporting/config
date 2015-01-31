@@ -9,7 +9,22 @@ $LINTIAN_AREA = "main";
 $LINTIAN_ARCH = "i386";
 
 $LINTIAN_ROOT = "$HOME/root";
+
+# if you want to use a permanent lab, set $USE_PERMANENT_LAB to 1
+# and define $LINTIAN_LAB to the location of the lab.
+# Note that the storage requirements for $LINTIAN_LAB be rather
+# high (both in disk space and inodes).
+# - especially if you add "-Uunpacked" to @EXTRA_LINTIAN_OPTIONS
+
+$USE_PERMANENT_LAB = 0;
 $LINTIAN_LAB = "$HOME/laboratory";
+
+# Define the location where lintian can write large parts of data
+# "temporary" data.  With $USE_PERMANENT_LAB set to 0, this will
+# be the directory where lintian creates its "throw-away"
+# laboratories
+$LINTIAN_SCRATCH_SPACE = "$HOME/scratch";
+
 $LOG_DIR = "$HOME/logs";
 $HTML_DIR = "$HOME/www";
 $HTML_TMP_DIR = "$HTML_DIR.new";
