@@ -287,26 +287,7 @@ if (not $opt{'reports-only'}) {
         }
     }
 
-    while (@worklist and $state) {
-        my (@slice, $filter_set);
-        if (time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
-            Log('No more time for processing backlogs');
-            last;
-        }
-
-        if ($scs > -1 and $scs < @worklist) {
-            @slice = splice(@worklist, 0, $scs);
-        } else {
-            @slice = @worklist;
-            undef(@worklist);
-        }
-
-        $filter_set = generate_log_filter($state, \@slice);
-        rewrite_lintian_log($lintian_log, $filter_set);
-
-        $state
-          = process_worklist(\@slice, $state, $lintian_log, $STATE_DIR, -1);
-    }
+    process_worklist(\@worklist, $state, $lintian_log, $STATE_DIR, $scs);
 }
 
 # create html reports
@@ -360,11 +341,12 @@ sub Die {
 }
 
 sub process_worklist {
-    my ($worklist_ref, $state, $output_file, $state_dir, $schedule_chunk_size)
+    my ($worklist_ref, $state, $output_file, $state_dir,$schedule_chunk_size)
       = @_;
     my $round = 0;
     my $rounds = 1;
     my @worklist = @{$worklist_ref};
+    my (@slice, $filter_set);
 
     if ($schedule_chunk_size > 0) {
         # compute the number of rounds needed.
@@ -376,7 +358,7 @@ sub process_worklist {
         sprintf(
             'Groups to process %d will take %d round(s) [round limit: %s]',
             scalar @worklist,
-            $rounds, $schedule_chunk_size > 0 ? $schedule_chunk_size : 'none'
+            $rounds,$schedule_chunk_size > 0 ? $schedule_chunk_size : 'none'
         ));
 
     Log('Command line used: ' . join(q{ }, @lintian_cmd));
@@ -384,6 +366,11 @@ sub process_worklist {
         my $len = scalar @worklist;
         my (@work_splice, @completed, $signaled);
         my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
+
+        if (time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
+            Log('No more time for processing backlogs');
+            last;
+        }
 
         $round++;
         # correct bounds to fit chunk size
@@ -490,6 +477,8 @@ sub process_worklist {
             Log('Lintian finished successfully');
         }
         Log('Updating harness state cache');
+        # Reload the state cache, just in case it was modified by an external
+        # process during the lintian run.
         eval {$state = load_state_cache($STATE_DIR);};
         if ($@) {
             Die($@);
