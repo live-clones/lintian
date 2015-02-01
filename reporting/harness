@@ -220,8 +220,6 @@ if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
 }
 
 if (not $opt{'reports-only'}) {
-    my ($state, @worklist);
-    my $scs = $opt{'schedule-chunk-size'};
     my @sync_state_args = (
         '--state-dir', $STATE_DIR,
         '--mirror-path', $LINTIAN_ARCHIVEDIR,
@@ -250,44 +248,30 @@ if (not $opt{'reports-only'}) {
       or Log("warning: executing reporting-sync-state returned "
           . (($? >> 8) & 0xff));
 
-    Log('Update complete, loading current state information');
-    eval {$state = load_state_cache($STATE_DIR);};
-    if ($@) {
-        Die($@);
+    Log('Forking subprocess to harness lintian');
+
+    my $pid = fork();
+
+    if (not $pid) {
+        eval {harness_lintian();};
+        # Should not happen, but at least we are prepared for it
+        if (my $err = $@) {
+            Log($@);
+            POSIX::_exit(255);
+        }
+        POSIX::_exit(0);
     }
-
-    @worklist = find_backlog($LINTIAN_VERSION, $state);
-
-    # Sanity check for incremental mode.
-    die "Old Lintian log file $lintian_log not found!\n"
-      if ($opt{'incremental-mode'} and not -f $lintian_log);
-
-    # Always update the log if it exists, as we may have removed some
-    # entries.
-    if (-f $lintian_log) {
-        my $filter = generate_log_filter($state, \@worklist);
-
-        # update lintian.log
-        Log('Updating lintian.log...');
-        rewrite_lintian_log($lintian_log, $filter);
-    }
-
-    Log('');
-
-    if (not @worklist) {
-        Log('Skipping Lintian run - nothing to do...');
-    } else {
-        Log('Processing backlog...');
-        if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
-            Log(
-                "Truncating worklist to size ${\BACKLOG_PROCESSING_TIME_LIMIT}"
-                  . ' from '
-                  . (scalar(@worklist)));
-            @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
+    waitpid($pid, 0) == $pid or Die("waitpid($pid, 0) failed: $!");
+    if ($?) {
+        my $res = ($? >> 8) & 0xff;
+        my $sig = $? & 0xff;
+        # Exit code 2 is "time-out", 3 is "lintian got signalled"
+        if ($res != 2 and $res != 3) {
+            Die("Lintian harness terminated with code $res");
+        } else {
+            Die("Lintian harness was killed by signal $sig");
         }
     }
-
-    process_worklist(\@worklist, $state, $lintian_log, $STATE_DIR, $scs);
 }
 
 # create html reports
@@ -347,6 +331,7 @@ sub process_worklist {
     my $rounds = 1;
     my @worklist = @{$worklist_ref};
     my (@slice, $filter_set);
+    my $exit_code = 0;
 
     if ($schedule_chunk_size > 0) {
         # compute the number of rounds needed.
@@ -364,11 +349,12 @@ sub process_worklist {
     Log('Command line used: ' . join(q{ }, @lintian_cmd));
     while (@worklist) {
         my $len = scalar @worklist;
-        my (@work_splice, @completed, $signaled);
+        my (@work_splice, @completed);
         my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
 
         if (time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
             Log('No more time for processing backlogs');
+            $exit_code = 2;
             last;
         }
 
@@ -471,7 +457,7 @@ sub process_worklist {
                 # don't start the next round.
                 Log(' - skipping the rest of the worklist');
                 @worklist = ();
-                $signaled = 1;
+                $exit_code = 3;
             }
         } else {
             Log('Lintian finished successfully');
@@ -493,9 +479,9 @@ sub process_worklist {
             delete($group_data->{'out-of-date'});
         }
         save_state_cache($STATE_DIR, $state);
-        return if $signaled;
+        last if $exit_code;
     }
-    return $state;
+    return $exit_code;
 }
 
 sub rewrite_lintian_log {
@@ -529,6 +515,51 @@ sub rewrite_lintian_log {
     close($nfd) or Die("Close $lintian_log: $!");
     close($ofd); # Ignore (read-only handle)
     return 1;
+}
+
+sub harness_lintian {
+    my (@worklist, $state);
+    my $scs = $opt{'schedule-chunk-size'};
+    my $exit_code = 0;
+    Log('Update complete, loading current state information');
+    eval {$state = load_state_cache($STATE_DIR);};
+    if ($@) {
+        Die($@);
+    }
+
+    @worklist = find_backlog($LINTIAN_VERSION, $state);
+
+    # Sanity check for incremental mode.
+    die "Old Lintian log file $lintian_log not found!\n"
+      if ($opt{'incremental-mode'} and not -f $lintian_log);
+
+    # Always update the log if it exists, as we may have removed
+    # some entries.
+    if (-f $lintian_log) {
+        my $filter = generate_log_filter($state, \@worklist);
+
+        # update lintian.log
+        Log('Updating lintian.log...');
+        rewrite_lintian_log($lintian_log, $filter);
+    }
+
+    Log('');
+
+    if (not @worklist) {
+        Log('Skipping Lintian run - nothing to do...');
+    } else {
+        Log('Processing backlog...');
+        if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
+            Log(
+                "Truncating worklist to size ${\BACKLOG_PROCESSING_TIME_LIMIT}"
+                  . ' from '
+                  . (scalar(@worklist)));
+            @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
+        }
+        $exit_code
+          = process_worklist(\@worklist,$state,$lintian_log,$STATE_DIR,$scs);
+    }
+    POSIX::_exit($exit_code);
 }
 
 sub generate_log_filter {
