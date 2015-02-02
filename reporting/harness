@@ -56,6 +56,10 @@ Options:
              Schedule at most N groups in a given run of Lintian.  If more than N
              groups need to be processed, harness will invoke Lintian more than
              once.  If N is 0, schedule all groups in one go.  (Default: 512)
+  --schedule-limit-groups N
+             Schedule at most N groups in this run of harness.  If more than N
+             groups need to be processed, harness leave the rest for a subsequent
+             run.  (Default: ${\BACKLOG_PROCESSING_GROUP_LIMIT})
 
 Incremental mode is the default if you have a lintian.log;
 otherwise, it's full.
@@ -67,7 +71,10 @@ END
 }
 
 my $LOG_FD;
-my %opt = ('schedule-chunk-size' => 512,);
+my %opt = (
+    'schedule-chunk-size' => 512,
+    'schedule-limit-groups' => BACKLOG_PROCESSING_GROUP_LIMIT,
+);
 
 my %opthash = (
     'i' => \$opt{'incremental-mode'},
@@ -76,6 +83,7 @@ my %opthash = (
     'r' => \$opt{'reports-only'},
     'dry-run' => \$opt{'dry-run'},
     'schedule-chunk-size=i' => \$opt{'schedule-chunk-size'},
+    'schedule-limit-groups=i' => \$opt{'schedule-limit-groups'},
     'to-stdout' => \$opt{'to-stdout'},
     'help|h' => \&usage,
 );
@@ -96,6 +104,8 @@ die "Cannot use both incremental and full/clean.\n"
   if $opt{'incremental-mode'} && $opt{'full-mode'};
 die "Cannot use other modes with reports only.\n"
   if $opt{'reports-only'} && ($opt{'full-mode'} || $opt{'incremental-mode'});
+die "The argument for --schedule-limit-groups must be an > 0"
+  if $opt{'schedule-limit-groups'} < 1;
 
 # read configuration
 require './config'; ## no critic (Modules::RequireBarewordIncludes)
@@ -549,12 +559,12 @@ sub harness_lintian {
         Log('Skipping Lintian run - nothing to do...');
     } else {
         Log('Processing backlog...');
-        if (@worklist > BACKLOG_PROCESSING_GROUP_LIMIT) {
+        if (@worklist > $opt{'schedule-limit-groups'}) {
             Log(
-                "Truncating worklist to size ${\BACKLOG_PROCESSING_TIME_LIMIT}"
+                "Truncating worklist to size $opt{'schedule-limit-groups'}"
                   . ' from '
                   . (scalar(@worklist)));
-            @worklist = splice(@worklist, 0, BACKLOG_PROCESSING_GROUP_LIMIT);
+            @worklist = splice(@worklist, 0, $opt{'schedule-limit-groups'});
         }
         $exit_code
           = process_worklist(\@worklist,$state,$lintian_log,$STATE_DIR,$scs);
