@@ -24,15 +24,11 @@ use strict;
 use warnings;
 
 use constant BACKLOG_PROCESSING_GROUP_LIMIT => 1024;
-use constant BACKLOG_PROCESSING_TIME_LIMIT => 4 * 3600; # 4hours
 
 use Date::Format qw(time2str);
-use Errno qw(ENOENT);
-use Fcntl qw(F_GETFD F_SETFD FD_CLOEXEC);
-use File::Temp qw(tempfile);
+use FileHandle;
 use Getopt::Long;
 use POSIX qw(strftime);
-use YAML::Any();
 
 sub usage {
     print <<END;
@@ -119,12 +115,8 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
   $LINTIAN_SCRATCH_SPACE
 );
 
-# delete LINTIAN_{CFG,ROOT,LAB} in case they are set.
-delete($ENV{'LINTIAN_CFG'});
+# delete LINTIAN_ROOT in case it is set.
 delete($ENV{'LINTIAN_ROOT'});
-delete($ENV{'LINTIAN_LAB'});
-$ENV{'TMPDIR'} = $LINTIAN_SCRATCH_SPACE
-  if defined($LINTIAN_SCRATCH_SPACE);
 
 my $html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
 my $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
@@ -134,21 +126,12 @@ my ($log_file, $list_file, $lintian_log, $lintian_perf_log,$html_reports_log,
   = map {"$LOG_DIR/$_" }
   qw(harness.log changed-packages.list lintian.log lintian-perf.log html_reports.log sync_state.log);
 my $old_lintian_log = $lintian_log . '.old';
-my @lintian_cmd = (
-    "$LINTIAN_ROOT/frontend/lintian",
-    @EXTRA_LINTIAN_OPTIONS,
-    qw(--no-cfg -I -E --pedantic -v --show-overrides),
-    qw(--exp-output=format=fullewi --packages-from-file -),
-    qw(--perf-debug --perf-output),
-    "+$lintian_perf_log",
-);
 my $STATE_DIR = $HARNESS_STATE_DIR;
-my $START_TIME = time();
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Lintian::Command;
-import Lintian::Command qw(spawn safe_qx);
+import Lintian::Command qw(reap spawn safe_qx);
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
 require Lintian::Processable;
@@ -156,7 +139,7 @@ require Lintian::Relation::Version;
 import Lintian::Relation::Version qw(versions_comparator);
 require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
-  load_state_cache find_backlog save_state_cache);
+  load_state_cache  save_state_cache);
 
 my $LINTIAN_VERSION
   = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
@@ -215,10 +198,6 @@ if (not $opt{'dry-run'}) {
     }
 }
 
-if ($USE_PERMANENT_LAB) {
-    push(@lintian_cmd, '--lab', $LINTIAN_LAB);
-}
-
 if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
     # Nothing explicitly chosen, default to -i if the log is present,
     # otherwise -f.
@@ -239,12 +218,29 @@ if (not $opt{'reports-only'}) {
         '--desired-version', $LINTIAN_VERSION,
         '--debug',
     );
+    my @lintian_harness_args = (
+        '--lintian-frontend', "$LINTIAN_ROOT/frontend/lintian",
+        '--lintian-log-dir', $LOG_DIR,
+        '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE,
+        '--schedule-chunk-size', $opt{'schedule-chunk-size'},
+        '--schedule-limit-groups', $opt{'schedule-limit-groups'},
+        '--state-dir', $STATE_DIR,
+        # Finish with the lintian command-line
+        '--', @EXTRA_LINTIAN_OPTIONS
+    );
 
     if ($opt{'full-mode'}) {
         push(@sync_state_args, '--reschedule-all');
     }
     if ($opt{'dry-run'}) {
         push(@sync_state_args, '--dry-run');
+    }
+
+    if ($USE_PERMANENT_LAB) {
+        unshift(@lintian_harness_args,
+            '--use-permanent-lab', '--lintian-lab', $LINTIAN_LAB);
+    } else {
+        unshift(@lintian_harness_args, '--no-use-permanent-lab');
     }
 
     Log('Updating harness state cache (reading mirror index files)');
@@ -258,28 +254,39 @@ if (not $opt{'reports-only'}) {
       or Log("warning: executing reporting-sync-state returned "
           . (($? >> 8) & 0xff));
 
-    Log('Forking subprocess to harness lintian');
+    Log('Running running lintian (via reporting-lintian-harness)');
 
-    my $pid = fork();
-
-    if (not $pid) {
-        eval {harness_lintian();};
-        # Should not happen, but at least we are prepared for it
-        if (my $err = $@) {
-            Log($@);
-            POSIX::_exit(255);
+    my %harness_lintian_opts = (
+        'pipe_out'  => FileHandle->new,
+        'err'       => '&1',
+        'fail'      => 'never',
+    );
+    if (not $opt{'dry-run'}) {
+        spawn(\%harness_lintian_opts,
+            [$dplint_cmd, 'reporting-lintian-harness', @lintian_harness_args]);
+        my $child_out = $harness_lintian_opts{'pipe_out'};
+        $child_out->blocking(1);
+        while (my $line = <$child_out>) {
+            chomp($line);
+            Log_no_ts($line);
         }
-        POSIX::_exit(0);
-    }
-    waitpid($pid, 0) == $pid or Die("waitpid($pid, 0) failed: $!");
-    if ($?) {
-        my $res = ($? >> 8) & 0xff;
-        my $sig = $? & 0xff;
-        # Exit code 2 is "time-out", 3 is "lintian got signalled"
-        if ($res != 2 and $res != 3) {
-            Die("Lintian harness terminated with code $res");
-        } else {
-            Die("Lintian harness was killed by signal $sig");
+        close($child_out);
+        if (not reap(\%harness_lintian_opts)) {
+            my $exit_code = $harness_lintian_opts{harness}->full_result;
+            my $res = ($exit_code >> 8) & 0xff;
+            my $sig = $exit_code & 0xff;
+            # Exit code 2 is "time-out", 3 is "lintian got signalled"
+            # 255 => reporting-lintian-harness caught an unhandled trappable
+            # error.
+            if ($res) {
+                if ($res == 255) {
+                    Die("Lintian harness died with an unhandled exception");
+                } elsif ($res != 2 and $res != 3) {
+                    Die("Lintian harness terminated with code $res");
+                }
+            } elsif ($sig) {
+                Die("Lintian harness was killed by signal $sig");
+            }
         }
     }
 }
@@ -323,266 +330,21 @@ exit 0;
 
 sub Log {
     my ($msg) = @_;
-    my $ts = strftime('[%FT%T]: ', localtime());
-    print {$LOG_FD} $ts, $msg,"\n";
-    print $ts, $msg, "\n" if $opt{'to-stdout'};
+    my $ts = strftime('[%FT%T]', localtime());
+    Log_no_ts("${ts}: ${msg}");
+    return;
+}
+
+sub Log_no_ts {
+    my ($msg) = @_;
+    print {$LOG_FD} $msg,"\n";
+    print $msg, "\n" if $opt{'to-stdout'};
     return;
 }
 
 sub Die {
     Log("fatal error: $_[0]");
     exit 1;
-}
-
-sub process_worklist {
-    my ($worklist_ref, $state, $output_file, $state_dir,$schedule_chunk_size)
-      = @_;
-    my $round = 0;
-    my $rounds = 1;
-    my @worklist = @{$worklist_ref};
-    my (@slice, $filter_set);
-    my $exit_code = 0;
-
-    if ($schedule_chunk_size > 0) {
-        # compute the number of rounds needed.
-        my $size_up = scalar @worklist + ($schedule_chunk_size - 1);
-        $rounds = int($size_up / $schedule_chunk_size);
-    }
-
-    Log(
-        sprintf(
-            'Groups to process %d will take %d round(s) [round limit: %s]',
-            scalar @worklist,
-            $rounds,$schedule_chunk_size > 0 ? $schedule_chunk_size : 'none'
-        ));
-
-    Log('Command line used: ' . join(q{ }, @lintian_cmd));
-    while (@worklist) {
-        my $len = scalar @worklist;
-        my (@work_splice, @completed);
-        my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
-
-        if (time() >= $START_TIME + BACKLOG_PROCESSING_TIME_LIMIT) {
-            Log('No more time for processing backlogs');
-            $exit_code = 2;
-            last;
-        }
-
-        $round++;
-        # correct bounds to fit chunk size
-        if ($schedule_chunk_size > 0 and $len > $schedule_chunk_size) {
-            $len = $schedule_chunk_size;
-        }
-
-        @work_splice = splice(@worklist, 0, $len);
-
-        Log("Running Lintian (round $round/$rounds) ...");
-        if ($len == 1) {
-            Log(' - Single group: ' . $work_splice[0]);
-        } else {
-            Log(    ' - Range: GROUP:'
-                  . $work_splice[0]
-                  . q{ ... GROUP:}
-                  . $work_splice[-1]);
-        }
-
-        next if ($opt{'dry-run'});
-
-        pipe($lint_stdin, $lintpipe) or Die("pipe failed: $!");
-        pipe($status_fd, $lint_status_out) or Die("pipe failed: $!");
-        my $pid = fork() // Die("fork failed: $!");
-        if (not $pid) {
-            # child => juggle some fds, close some pipes and exec lintian
-            my $status_fileno = fileno($lint_status_out);
-            # Perl is helpful and sets close-on-exec by default for fd > $^F.
-            # - except, in this case, that is *not* what we want.
-            my $flags = fcntl($lint_status_out, F_GETFD, 0)
-              or die("fcntl F_GETFD: $!");
-            fcntl($lint_status_out, F_SETFD, $flags & ~FD_CLOEXEC)
-              or die("fcntl F_SETFD: $!");
-            open(STDIN, '<&', $lint_stdin);
-            open(STDOUT, '>>', $lintian_log)
-              or die("re-open STDOUT failed: $!");
-            open(STDERR, '>&', *STDOUT)
-              or die("re-open STDERR failed: $!");
-            close($lintpipe)
-              or die("closing \"lintpipe\" pipe (not for us): $!");
-            close($status_fd)
-              or die("closing \"status_fd\" pipe (not for us): $!");
-            push(@lintian_cmd, '--status-log', '&' . ${status_fileno});
-            exec(@lintian_cmd)
-              or die("exec @lintian_cmd failed: $!");
-        }
-        # Close the end points only the child needs
-        close($lint_stdin)
-          or Die("Cannot close \"lint_stdin\" pipe (not for us): $!");
-        close($lint_status_out)
-          or Die("Cannot close \"lint_status_out\" pipe (not for us): $!");
-
-        my $groups = $state->{'groups'};
-        # Submit the tasks to Lintian
-        foreach my $group_id (@work_splice) {
-            my $members;
-            if (not exists($groups->{$group_id})) {
-                # Sanity check (can in theory happen if an external process
-                # modifies the state cache and we have reloaded it)
-                Log(
-                    "Group ${group_id} disappeared before we could schedule it"
-                );
-                next;
-            }
-            $members = $groups->{$group_id}{'members'};
-            for my $member_id (sort(keys(%{${members}}))) {
-                my $path = $members->{$member_id}{'path'};
-                print {$lintpipe} "$path\n";
-            }
-            #print {$lintpipe} "!query: GROUP:$group_id\n";
-        }
-        close($lintpipe) or Die("Closing pipe failed: $!");
-
-        # Listen to status updates from lintian
-        while (my $line = <$status_fd>) {
-            chomp($line);
-            if ($line =~ s/^complete ([^ ]+) \(([^\)]+)\)$//) {
-                push(@completed, $1);
-                Log("  [lintian] processed $1 successfully (time: $2)");
-            } elsif ($line =~ s/^error ([^ ]+) \(([^\)]+)\)$//) {
-                Log("  [lintian] error processing $1 (time: $2)");
-            }
-        }
-        close($status_fd);
-
-        # Wait for lintian to terminate
-        waitpid($pid, 0) == $pid or Die("waitpid($pid, 0) failed: $!");
-        if ($?) {
-            # exit 1 (policy violations) happens all the time (sadly)
-            # exit 2 (broken packages) also happens all the time...
-            my $res = ($? >> 8) & 0xff;
-            my $sig = $? & 0xff;
-            if ($res != 1 and $res != 0) {
-                Log("warning: executing lintian returned $res");
-            } elsif ($sig) {
-                Log("Lintian terminated by signal: $sig");
-                # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
-                # don't start the next round.
-                Log(' - skipping the rest of the worklist');
-                @worklist = ();
-                $exit_code = 3;
-            }
-        } else {
-            Log('Lintian finished successfully');
-        }
-        Log('Updating harness state cache');
-        # Reload the state cache, just in case it was modified by an external
-        # process during the lintian run.
-        eval {$state = load_state_cache($STATE_DIR);};
-        if ($@) {
-            Die($@);
-        }
-        for my $group_id (@completed) {
-            my $group_data;
-            # In theory, they can disappear - in practise, that requires
-            # an external call to (e.g.) dplint reporting-sync-state.
-            next if not exists($state->{'groups'}{$group_id});
-            $group_data = $state->{'groups'}{$group_id};
-            $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
-            delete($group_data->{'out-of-date'});
-        }
-        save_state_cache($STATE_DIR, $state);
-        last if $exit_code;
-    }
-    return $exit_code;
-}
-
-sub rewrite_lintian_log {
-    my ($lintian_log, $keep_filter) = @_;
-    return if ($opt{'dry-run'});
-
-    rename($lintian_log, $old_lintian_log)
-      or Die("cannot rename lintian.log to $old_lintian_log: $!");
-    open(my $nfd, '>', $lintian_log)
-      or Die("cannot open lintian.log $lintian_log for writing: $!");
-    open(my $ofd, '<', $old_lintian_log)
-      or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
-    my $copy_mode = 0;
-    while (<$ofd>) {
-        if (
-            m/^N: [ ] Processing [ ] (binary|udeb|source) [ ]
-                   package [ ] (\S+) [ ] \(version [ ] (\S+), [ ]
-                   arch [ ] (\S+)\)[ ]\.\.\./oxsm
-          ) {
-            my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
-            my $k = "$type:$pkg/$ver";
-            $k .= "/$arch" if $type ne 'source';
-            $copy_mode = 0;
-            $copy_mode = 1 if exists($keep_filter->{$k});
-        }
-        if ($copy_mode) {
-            print {$nfd} $_;
-        }
-    }
-    print {$nfd} "N: ---end-of-old-lintian-log-file---\n";
-    close($nfd) or Die("Close $lintian_log: $!");
-    close($ofd); # Ignore (read-only handle)
-    return 1;
-}
-
-sub harness_lintian {
-    my (@worklist, $state);
-    my $scs = $opt{'schedule-chunk-size'};
-    my $exit_code = 0;
-    Log('Update complete, loading current state information');
-    eval {$state = load_state_cache($STATE_DIR);};
-    if ($@) {
-        Die($@);
-    }
-
-    @worklist = find_backlog($LINTIAN_VERSION, $state);
-
-    # Sanity check for incremental mode.
-    die "Old Lintian log file $lintian_log not found!\n"
-      if ($opt{'incremental-mode'} and not -f $lintian_log);
-
-    # Always update the log if it exists, as we may have removed
-    # some entries.
-    if (-f $lintian_log) {
-        my $filter = generate_log_filter($state, \@worklist);
-
-        # update lintian.log
-        Log('Updating lintian.log...');
-        rewrite_lintian_log($lintian_log, $filter);
-    }
-
-    Log('');
-
-    if (not @worklist) {
-        Log('Skipping Lintian run - nothing to do...');
-    } else {
-        Log('Processing backlog...');
-        if (@worklist > $opt{'schedule-limit-groups'}) {
-            Log(
-                "Truncating worklist to size $opt{'schedule-limit-groups'}"
-                  . ' from '
-                  . (scalar(@worklist)));
-            @worklist = splice(@worklist, 0, $opt{'schedule-limit-groups'});
-        }
-        $exit_code
-          = process_worklist(\@worklist,$state,$lintian_log,$STATE_DIR,$scs);
-    }
-    POSIX::_exit($exit_code);
-}
-
-sub generate_log_filter {
-    my ($state, $worklist_ref) = @_;
-    my %filter;
-    my $group_map = $state->{'groups'};
-    for my $group_id (keys(%{${group_map}})) {
-        my $members = $group_map->{$group_id}{'members'};
-        for my $member_id (keys(%{$members})) {
-            $filter{$member_id} = 1;
-        }
-    }
-    return \%filter;
 }
 
 # Local Variables:
