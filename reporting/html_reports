@@ -648,7 +648,7 @@ for my $section (sort keys %list) {
 if (-f $statistics_file) {
     ($old_statistics) = read_dpkg_control($statistics_file);
 }
-$statistics{'groups-known'} = scalar(keys(%{$STATE_CACHE}));
+$statistics{'groups-known'} = scalar(keys(%{$STATE_CACHE->{'groups'}));
 $statistics{'groups-backlog'}
   = scalar(find_backlog($LINTIAN_VERSION,$STATE_CACHE));
 
