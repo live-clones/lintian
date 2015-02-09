@@ -221,7 +221,6 @@ if (not $opt{'reports-only'}) {
     my @lintian_harness_args = (
         '--lintian-frontend', "$LINTIAN_ROOT/frontend/lintian",
         '--lintian-log-dir', $LOG_DIR,
-        '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE,
         '--schedule-chunk-size', $opt{'schedule-chunk-size'},
         '--schedule-limit-groups', $opt{'schedule-limit-groups'},
         '--state-dir', $STATE_DIR,
@@ -234,6 +233,11 @@ if (not $opt{'reports-only'}) {
     }
     if ($opt{'dry-run'}) {
         push(@sync_state_args, '--dry-run');
+    }
+
+    if ($LINTIAN_SCRATCH_SPACE) {
+        unshift(@lintian_harness_args,
+                '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE);
     }
 
     if ($USE_PERMANENT_LAB) {
@@ -255,9 +259,10 @@ if (not $opt{'reports-only'}) {
           . (($? >> 8) & 0xff));
 
     Log('Running running lintian (via reporting-lintian-harness)');
-    Log("Command: "
-          . join($dplint_cmd, 'reporting-lintian-harness',
-            @lintian_harness_args));
+    Log(
+        "Command: "
+          . join(' ',
+            $dplint_cmd, 'reporting-lintian-harness',@lintian_harness_args));
     my %harness_lintian_opts = (
         'pipe_out'  => FileHandle->new,
         'err'       => '&1',
