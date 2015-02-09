@@ -255,12 +255,15 @@ if (not $opt{'reports-only'}) {
           . (($? >> 8) & 0xff));
 
     Log('Running running lintian (via reporting-lintian-harness)');
-
+    Log("Command: "
+          . join($dplint_cmd, 'reporting-lintian-harness',
+            @lintian_harness_args));
     my %harness_lintian_opts = (
         'pipe_out'  => FileHandle->new,
         'err'       => '&1',
         'fail'      => 'never',
     );
+
     if (not $opt{'dry-run'}) {
         spawn(\%harness_lintian_opts,
             [$dplint_cmd, 'reporting-lintian-harness', @lintian_harness_args]);
