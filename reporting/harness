@@ -100,7 +100,7 @@ die "Cannot use both incremental and full/clean.\n"
   if $opt{'incremental-mode'} && $opt{'full-mode'};
 die "Cannot use other modes with reports only.\n"
   if $opt{'reports-only'} && ($opt{'full-mode'} || $opt{'incremental-mode'});
-die "The argument for --schedule-limit-groups must be an > 0"
+die("The argument for --schedule-limit-groups must be an > 0\n")
   if $opt{'schedule-limit-groups'} < 1;
 
 # read configuration
@@ -171,7 +171,7 @@ if (not defined($STATE_DIR)) {
     Die(q{Missing required config option: $HARNESS_STATE_DIR});
 } else {
     if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
-        Log("Purging old state-cache/dir");
+        Log('Purging old state-cache/dir');
         system('rm', '-rf', $STATE_DIR) == 0
           or Die("error removing $STATE_DIR");
     }
@@ -251,7 +251,7 @@ if (not $opt{'reports-only'}) {
     delete($sync_state_opts{'out'}) if $opt{'dry-run'};
     spawn(\%sync_state_opts,
         [$dplint_cmd, 'reporting-sync-state', @sync_state_args])
-      or Log("warning: executing reporting-sync-state returned "
+      or Log('warning: executing reporting-sync-state returned '
           . (($? >> 8) & 0xff));
 
     Log('Running running lintian (via reporting-lintian-harness)');
@@ -280,7 +280,7 @@ if (not $opt{'reports-only'}) {
             # error.
             if ($res) {
                 if ($res == 255) {
-                    Die("Lintian harness died with an unhandled exception");
+                    Die('Lintian harness died with an unhandled exception');
                 } elsif ($res != 2 and $res != 3) {
                     Die("Lintian harness terminated with code $res");
                 }
