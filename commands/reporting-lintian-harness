@@ -79,7 +79,7 @@ my %OPT_HASH = (
     'state-dir=s'             => \$OPT{'state-dir'},
     'lintian-frontend=s'      => \$OPT{'lintian-frontend'},
     'lintian-log-dir=s'       => \$OPT{'lintian-log-dir'},
-    'lintian-lab=s'           => \$OPT{'lintinan-lab'},
+    'lintian-lab=s'           => \$OPT{'lintian-lab'},
     'lintian-scratch-space=s' => \$OPT{'lintian-scratch-space'},
     'use-permanent-lab!'      => \$OPT{'use-permanent-lab'},
     'help|h'                  => \&usage,
