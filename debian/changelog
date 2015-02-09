@@ -53,6 +53,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Pass "-a" to strings to avoid possible security
       issues in strings.
 
+  * commands/reporting-{lintian-harness,sync-state}:
+    + [NT] New files (internal commands for the reporting
+      framework).
+
   * data/binaries/arch-regex:
     + [NT] Add arm64 and ppc64el regex.
     + [NT] Correct armel and armhf regex to cope with
@@ -105,6 +109,23 @@ lintian (2.5.31) UNRELEASED; urgency=medium
 
   * profiles/ubuntu/main.profile:
     + [BR] Exclude no-human-maintainers (Closes: #769036).
+
+  * reporting/config:
+    + [NT] Include and briefly document new configuration
+      options.
+  * reporting/{harness,html_reports}:
+    + [NT] Rewrite harness and remove the hard dependency on
+      a functional permanent laboratory in the reporting
+      framework.
+      - The framework now relies on the "harness state cache"
+        (a YAML file), which can be updated atomically.
+      - The harness framework now avoids stat(2)ing all
+        artefacts on the mirror just to check if they are
+        unchanged.
+      - The harness frontends use less memory and now
+        releases most of it before calling html_reports.
+        This should reduce the peak memory requirements
+        considerably for the html_reports part of the run.
 
   * t:
     + [NT] Apply patch from Matt Kraai to fix test case on
