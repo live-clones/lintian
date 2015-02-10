@@ -1291,28 +1291,31 @@ if ($action eq 'check') {
 foreach my $gname (sort $pool->get_group_names()) {
     my $success = 1;
     my $group = $pool->get_group($gname);
-    my $raw_res = timed_task {
-        if (!unpack_group($gname, $group)) {
-            $success = 0;
+    my $total_raw_res = timed_task {
+        my $raw_res = timed_task {
+            if (!unpack_group($gname, $group)) {
+                $success = 0;
+            }
+        };
+        my $tres = $format_timer_result->($raw_res);
+        debug_msg(1, "Unpack of $gname done$tres");
+        perf_log("$gname,total-group-unpack,${raw_res}");
+        if ($action eq 'check') {
+            if (!process_group($gname, $group)) {
+                $success = 0;
+            }
+            $group->clear_cache;
+            # Double check that no processes are running;  hopefully
+            # it will catch regressions like 3bbcc3b earlier.
+            fail('Unreaped processes after running checks!?')
+              if waitpid(-1, WNOHANG) != -1;
         }
     };
-    my $tres = $format_timer_result->($raw_res);
-    debug_msg(1, "Unpack of $gname done$tres");
-    perf_log("$gname,total-group-unpack,${raw_res}");
-    if ($action eq 'check') {
-        if (!process_group($gname, $group)) {
-            $success = 0;
-        }
-        $group->clear_cache;
-        # Double check that no processes are running;  hopefully
-        # it will catch regressions like 3bbcc3b earlier.
-        fail('Unreaped processes after running checks!?')
-          if waitpid(-1, WNOHANG) != -1;
-    }
+    my $total_tres = $format_timer_result->($total_raw_res);
     if ($success) {
-        print {$STATUS_FD} "complete ${gname}${tres}\n";
+        print {$STATUS_FD} "complete ${gname}${$total_tres}\n";
     } else {
-        print {$STATUS_FD} "error ${gname}${tres}\n";
+        print {$STATUS_FD} "error ${gname}${$total_tres}\n";
     }
 }
 
