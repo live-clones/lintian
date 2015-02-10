@@ -113,6 +113,7 @@ sub main {
     cleanup_state($state);
     if (not $OPT{'dry-run'}) {
         save_state_cache($OPT{'state-dir'}, $state);
+        # FIXME: Prune dead entries from the lab
     }
     exit(0);
 }

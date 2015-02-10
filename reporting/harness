@@ -237,7 +237,7 @@ if (not $opt{'reports-only'}) {
 
     if ($LINTIAN_SCRATCH_SPACE) {
         unshift(@lintian_harness_args,
-                '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE);
+            '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE);
     }
 
     if ($USE_PERMANENT_LAB) {
@@ -260,7 +260,7 @@ if (not $opt{'reports-only'}) {
 
     Log('Running running lintian (via reporting-lintian-harness)');
     Log(
-        "Command: "
+        'Command: '
           . join(' ',
             $dplint_cmd, 'reporting-lintian-harness',@lintian_harness_args));
     my %harness_lintian_opts = (
