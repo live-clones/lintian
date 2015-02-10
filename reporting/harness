@@ -159,6 +159,7 @@ unless ($opt{'dry-run'}) {
     # create new log file
     open($LOG_FD, '>', $log_file)
       or die "cannot open log file $log_file for writing: $!";
+    $LOG_FD->autoflush;
 } else {
     $opt{'to-stdout'} = 0;
     open($LOG_FD, '>&', \*STDOUT)
@@ -273,7 +274,6 @@ if (not $opt{'reports-only'}) {
         spawn(\%harness_lintian_opts,
             [$dplint_cmd, 'reporting-lintian-harness', @lintian_harness_args]);
         my $child_out = $harness_lintian_opts{'pipe_out'};
-        $child_out->blocking(1);
         while (my $line = <$child_out>) {
             chomp($line);
             Log_no_ts($line);
