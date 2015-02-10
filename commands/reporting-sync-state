@@ -431,14 +431,14 @@ sub prune_lintian_lab {
     my $err;
     eval {
         $lab->open;
-        $lab->visit_packages('ALL', sub {
+        $lab->visit_packages(sub {
             my ($lpkg) = @_;
             my $id = $lpkg->proc_id;
             if (not exists($state->{'members-to-groups'}{$id})) {
                 log_debug("Removing ${id} from lab");
                 $lpkg->remove if (not $OPT{'dry-run'});
             }
-        });
+        }, 'ALL');
     };
     $err = $@;
     eval {
