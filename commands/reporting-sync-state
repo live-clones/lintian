@@ -47,6 +47,7 @@ BEGIN {
     }
 }
 
+use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Util qw(
   find_backlog
@@ -72,6 +73,7 @@ my %OPT_HASH= (
     'architectures=s@'  =>
       sub { push(@{$OPT{'architectures'}}, split(m/,/, $_[1])); },
     'desired-version=s' => \$OPT{'desired-version'},
+    'lintian-lab=s'     => \$OPT{'lintian-lab'},
     'reschedule-all'    => \$OPT{'reschedule-all'},
     'help|h'            => \&usage,
     'debug|d'           => \$OPT{'debug'},
@@ -113,7 +115,9 @@ sub main {
     cleanup_state($state);
     if (not $OPT{'dry-run'}) {
         save_state_cache($OPT{'state-dir'}, $state);
-        # FIXME: Prune dead entries from the lab
+    }
+    if ($OPT{'lintian-lab'}) {
+        prune_lintian_lab($state, $OPT{'lintian-lab'});
     }
     exit(0);
 }
@@ -418,6 +422,33 @@ sub local_mirror_manifests {
             close($srcfd);
         }
     }
+    return;
+}
+
+sub prune_lintian_lab {
+    my ($state, $lintian_lab_dir) = @_;
+    my $lab = Lintian::Lab->new($lintian_lab_dir);
+    my $err;
+    eval {
+        $lab->open;
+        $lab->visit_packages('ALL', sub {
+            my ($lpkg) = @_;
+            my $id = $lpkg->proc_id;
+            if (not exists($state->{'members-to-groups'}{$id})) {
+                log_debug("Removing ${id} from lab");
+                $lpkg->remove if (not $OPT{'dry-run'});
+            }
+        });
+    };
+    $err = $@;
+    eval {
+        $lab->close;
+    };
+    if (my $close_err = $@) {
+        # The first error is most important
+        die($close_err) if not $err;
+    }
+    die($err) if $err;
     return;
 }
 
