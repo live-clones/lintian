@@ -438,7 +438,7 @@ sub prune_lintian_lab {
                 log_debug("Removing ${id} from lab");
                 $lpkg->remove if (not $OPT{'dry-run'});
             }
-        }, 'ALL');
+        });
     };
     $err = $@;
     eval {
