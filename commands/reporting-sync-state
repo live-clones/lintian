@@ -433,7 +433,7 @@ sub prune_lintian_lab {
         $lab->open;
         $lab->visit_packages(sub {
             my ($lpkg) = @_;
-            my $id = $lpkg->proc_id;
+            my $id = $lpkg->identifier;
             if (not exists($state->{'members-to-groups'}{$id})) {
                 log_debug("Removing ${id} from lab");
                 $lpkg->remove if (not $OPT{'dry-run'});
