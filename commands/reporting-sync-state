@@ -431,19 +431,18 @@ sub prune_lintian_lab {
     my $err;
     eval {
         $lab->open;
-        $lab->visit_packages(sub {
-            my ($lpkg) = @_;
-            my $id = $lpkg->identifier;
-            if (not exists($state->{'members-to-groups'}{$id})) {
-                log_debug("Removing ${id} from lab");
-                $lpkg->remove if (not $OPT{'dry-run'});
-            }
-        });
+        $lab->visit_packages(
+            sub {
+                my ($lpkg) = @_;
+                my $id = $lpkg->identifier;
+                if (not exists($state->{'members-to-groups'}{$id})) {
+                    log_debug("Removing ${id} from lab");
+                    $lpkg->remove if (not $OPT{'dry-run'});
+                }
+            });
     };
     $err = $@;
-    eval {
-        $lab->close;
-    };
+    eval {$lab->close;};
     if (my $close_err = $@) {
         # The first error is most important
         die($close_err) if not $err;
