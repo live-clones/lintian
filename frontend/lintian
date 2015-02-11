@@ -1313,9 +1313,9 @@ foreach my $gname (sort $pool->get_group_names()) {
     };
     my $total_tres = $format_timer_result->($total_raw_res);
     if ($success) {
-        print {$STATUS_FD} "complete ${gname}${$total_tres}\n";
+        print {$STATUS_FD} "complete ${gname}${total_tres}\n";
     } else {
-        print {$STATUS_FD} "error ${gname}${$total_tres}\n";
+        print {$STATUS_FD} "error ${gname}${total_tres}\n";
     }
 }
 
