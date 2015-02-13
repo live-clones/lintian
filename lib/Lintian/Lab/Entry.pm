@@ -64,9 +64,10 @@ use Carp qw(croak);
 use Cwd();
 use File::Spec;
 use Scalar::Util qw(refaddr);
+use POSIX qw();
 
 use Lintian::Lab;
-use Lintian::Util qw(delete_dir read_dpkg_control get_dsc_info strip);
+use Lintian::Util qw(delete_dir parse_dpkg_control get_dsc_info strip);
 
 # This is the entry format version - this changes whenever the layout of
 # entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
@@ -373,7 +374,6 @@ sub update_status_file {
     my @sc;
 
     unless ($self->exists) {
-        require POSIX;
         $! = POSIX::ENOENT;
         return 0;
     }
@@ -405,10 +405,21 @@ sub update_status_file {
 sub _init {
     my ($self, $newentry) = @_;
     my $base_dir = $self->base_dir;
-    my @data;
-    my $head;
-    my $coll;
-    my $exists = $self->exists;
+    my (@data, $head, $coll, $fd, $exists);
+
+    eval {
+        use autodie qw(open);
+        open($fd, '<', "$base_dir/.lintian-status");
+        # If the status file exists, then so does the
+        # entry.
+        $exists = 1;
+    };
+    if (my $err = $@) {
+        die($err) if $err->errno != POSIX::ENOENT;
+        $exists = $self->exists;
+    }
+    @data = parse_dpkg_control($fd);
+    close($fd);
 
     if ($newentry) {
         my $pkg_path = $self->pkg_path;
@@ -438,8 +449,6 @@ sub _init {
     }
 
     return unless $exists;
-    return unless -e "$base_dir/.lintian-status";
-    @data = read_dpkg_control("$base_dir/.lintian-status");
     $head = $data[0];
 
     # Check that we know the format.
