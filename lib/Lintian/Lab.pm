@@ -974,10 +974,6 @@ sub _new_entry {
         return $entry->info->field($f, '');
     };
 
-    if (my @stat = stat $pkg_path) {
-        $ts = $stat[9];
-    }
-    $data{'timestamp'} = $ts;
     if ($pkg_type eq 'source') {
         my $up = $field->('uploaders');
         my $maint = $field->('maintainer');
@@ -1018,6 +1014,11 @@ sub _new_entry {
     } else {
         croak "Unknown package type: $pkg_type";
     }
+
+    if (my @stat = stat $pkg_path) {
+        $ts = $stat[9];
+    }
+    $data{'timestamp'} = $ts;
 
     $pf->set(\%data);
     $pf->set_transient_marker(1, $entry);
