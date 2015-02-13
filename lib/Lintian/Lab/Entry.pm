@@ -417,9 +417,10 @@ sub _init {
     if (my $err = $@) {
         die($err) if $err->errno != POSIX::ENOENT;
         $exists = $self->exists;
+    } else {
+        @data = parse_dpkg_control($fd);
+        close($fd);
     }
-    @data = parse_dpkg_control($fd);
-    close($fd);
 
     if ($newentry) {
         my $pkg_path = $self->pkg_path;
