@@ -256,7 +256,9 @@ sub process_worklist {
             $len = $schedule_chunk_size;
         }
 
-        @work_splice = splice(@worklist, 0, $len);
+        # Sort @work_splice to have the "Range:"-line below produce
+        # reasonable output.
+        @work_splice = sort(splice(@worklist, 0, $len));
 
         log_msg("Running Lintian (round $round/$rounds) ...");
         if ($len == 1) {
