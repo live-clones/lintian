@@ -180,9 +180,10 @@ Overrides info from L<Lintian::Processable>.
 sub info {
     my ($self) = @_;
     my $info;
-    croak 'Cannot load info, extry does not exist' unless $self->exists;
     $info = $self->{info};
     if (!defined $info) {
+        croak('Cannot load info, extry does not exist') unless $self->exists;
+
         $info = Lintian::Collect->new($self->pkg_name, $self->pkg_type,
             $self->base_dir);
         $self->{info} = $info;
@@ -264,15 +265,18 @@ sub create {
     my $lab      = $self->{lab};
     my $link;
     my $madedir = 0;
-    # It already exists.
-    return 1 if $self->exists;
 
-    unless (-d $base_dir) {
+    if (not -d $base_dir) {
         # In the pool we may have to create multiple directories. On
         # error we only remove the "top dir" and that is enough.
         system('mkdir', '-p', $base_dir) == 0
           or croak "mkdir -p $base_dir failed";
         $madedir = 1;
+    } else {
+        # If $base_dir exists, then check if the entry exists
+        # - this is optimising for "non-existence" which is
+        #   often the common case.
+        return 1 if $self->exists;
     }
     if ($pkg_type eq 'changes'){
         $link = "$base_dir/changes";
@@ -416,7 +420,11 @@ sub _init {
     };
     if (my $err = $@) {
         die($err) if $err->errno != POSIX::ENOENT;
-        $exists = $self->exists;
+        # If it is a new entry, we assume it does not exist if
+        # .lintian-status absent.  In practise, it does not
+        # change the outcome for new entries and it saves
+        # a stat from calling exists().
+        $exists = $self->exists if not $newentry;
     } else {
         @data = parse_dpkg_control($fd);
         close($fd);
