@@ -244,6 +244,7 @@ if (not $opt{'reports-only'}) {
     if ($USE_PERMANENT_LAB) {
         unshift(@lintian_harness_args,
             '--use-permanent-lab', '--lintian-lab', $LINTIAN_LAB);
+        unshift(@sync_state_args, '--lintian-lab', $LINTIAN_LAB);
     } else {
         unshift(@lintian_harness_args, '--no-use-permanent-lab');
     }
@@ -254,6 +255,8 @@ if (not $opt{'reports-only'}) {
         'err' => '&1',
     );
     delete($sync_state_opts{'out'}) if $opt{'dry-run'};
+    Log('Command: '
+          . join(' ',$dplint_cmd, 'reporting-sync-state',@sync_state_args));
     spawn(\%sync_state_opts,
         [$dplint_cmd, 'reporting-sync-state', @sync_state_args])
       or Log('warning: executing reporting-sync-state returned '
