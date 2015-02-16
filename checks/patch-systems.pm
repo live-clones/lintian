@@ -52,7 +52,12 @@ sub run {
     my $dpdir = $droot->resolve_path('patches');
     my $patch_series;
 
-    $patch_series = $dpdir->resolve_path('series') if $dpdir;
+    # Find debian/patches/series, assuming debian/patches is a (symlink to a)
+    # dir.  There are cases, where it is a file (ctwm: #778556)
+    if ($dpdir and ($dpdir->is_dir or $dpdir->is_symlink)) {
+        my $resolved = $dpdir->resolve_path;
+        $patch_series = $resolved->resolve_path('series') if $resolved->is_dir;
+    }
 
     #----- dpatch
     if ($build_deps->implies('dpatch')) {

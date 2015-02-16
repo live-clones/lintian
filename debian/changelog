@@ -33,6 +33,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Add reference to #DEBHELPER# token for
       script-in-etc-init.d-not-registered-via-update-rc.d.
       (Closes: #775467).
+  * checks/patch-systems.pm:
+    + [NT] Avoid crashing on debian/patches being a file.
+      (Closes: #778556)
   * checks/script.{desc,pm}:
     + [BR] Fix some false negatives for
       command-with-path-in-maintainer-script tag.
