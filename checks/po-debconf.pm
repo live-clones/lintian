@@ -28,7 +28,7 @@ use File::Temp();
 
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env);
+use Lintian::Util qw(clean_env copy_dir);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -154,8 +154,14 @@ sub run {
         # We need an extra level of dirs, as intltool (in)directly
         # tries to use files in ".." if they exist
         # (e.g. ../templates.h).
+        # - In fact, we also need to copy debian/templates into
+        #   this "fake package directory", since intltool-updates
+        #   sometimes want to write files to "../templates" based
+        #   on the contents of the package.  (See #778558)
         my $tempdir = "$abs_tempdir/po";
         my $test_pot = "$tempdir/test.pot";
+        my $tempdir_templates = "${abs_tempdir}/templates";
+        my $d_templates = $debian_dir->resolve_path('templates');
         my %msgcmp_opts = (
             'out' => '/dev/null',
             'err' => '/dev/null',
@@ -166,7 +172,7 @@ sub run {
             'child_before_exec' => sub {
                 $ENV{'INTLTOOL_EXTRACT'}
                   = '/usr/share/intltool-debian/intltool-extract';
-                # satify of $debian_po is implied by us having
+                # safity of $debian_po is implied by us having
                 # accessed two of its children by now.
                 $ENV{'srcdir'} = $debian_po_dir->fs_path;
                 chdir($tempdir);
@@ -177,6 +183,10 @@ sub run {
 
         # Create our extra level
         mkdir($tempdir);
+        # Copy the templates dir because intltool-update might
+        # write to it.
+        copy_dir($d_templates->fs_path, $tempdir_templates)
+          if $d_templates;
 
         # Generate a "test.pot" (in a tempdir)
         spawn(
