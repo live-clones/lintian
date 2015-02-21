@@ -537,19 +537,7 @@ foreach my $source (sort keys %sources) {
 
 close($table);
 
-# Write out the QA package list.  This is a space-delimited file that contains
-# the package name and then the error count, warning count, info count,
-# pedantic count, experimental count, and overridden tag count.
-open(my $qa_fd, '>', "$HTML_TMP_DIR/qa-list.txt");
-for my $source (sort keys %qa) {
-    print {$qa_fd} $source;
-    for my $code (qw/E W I P X O/) {
-        my $count = $qa{$source}{$code} || 0;
-        print {$qa_fd} " $count";
-    }
-    print {$qa_fd} "\n";
-}
-close($qa_fd);
+write_qa_list(\%qa);
 
 # Now, generate stub pages for every maintainer who has only clean packages.
 for my $id (keys %clean) {
@@ -792,6 +780,25 @@ sub update_history_and_make_graphs {
           or die("gnuplot died with $?\n");
         unlink($commonf);
     }
+    return;
+}
+
+# Write out the QA package list.  This is a space-delimited file that contains
+# the package name and then the error count, warning count, info count,
+# pedantic count, experimental count, and overridden tag count.
+sub write_qa_list {
+    my ($qa_data) = @_;
+
+    open(my $qa_fd, '>', "$HTML_TMP_DIR/qa-list.txt");
+    for my $source (sort(keys(%{$qa_data}))) {
+        print {$qa_fd} $source;
+        for my $code (qw/E W I P X O/) {
+            my $count = $qa_data->{$source}{$code} || 0;
+            print {$qa_fd} " $count";
+        }
+        print {$qa_fd} "\n";
+    }
+    close($qa_fd);
     return;
 }
 
