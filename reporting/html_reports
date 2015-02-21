@@ -522,20 +522,7 @@ for my $maintainer (@maintainers) {
 my %data = (maintainers => \%maintainer_table,);
 output_template('maintainers.html', $templates{maintainers}, \%data);
 
-mkdir("$HTML_TMP_DIR/lookup-tables");
-open(my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages");
-
-foreach my $source (sort keys %sources) {
-    my $first = 1;
-    for my $version (sort versions_comparator keys %{ $sources{$source} }) {
-        my $xref = $sources{$source}{$version};
-        print {$table} "$source full/$xref\n" if $first;
-        print {$table} "$source/$version full/$xref\n";
-        $first = 0;
-    }
-}
-
-close($table);
+generate_lookup_tables(\%sources);
 
 write_qa_list(\%qa);
 
@@ -800,6 +787,29 @@ sub write_qa_list {
         print {$qa_fd} "\n";
     }
     close($qa_fd);
+    return;
+}
+
+
+# Generate a "redirect" lookup table for the webserver to power the
+# "<site>/source/<source>[/<version>]" redirects.
+sub generate_lookup_tables {
+    my ($sources_ref) = @_;
+    mkdir("$HTML_TMP_DIR/lookup-tables");
+    open(my $table, '>', "$HTML_TMP_DIR/lookup-tables/source-packages");
+
+    foreach my $source (sort(keys(%{$sources_ref}))) {
+        my $first = 1;
+        for my $version (
+            sort versions_comparator keys %{ $sources_ref->{$source} }) {
+            my $xref = $sources_ref->{$source}{$version};
+            print {$table} "$source full/$xref\n" if $first;
+            print {$table} "$source/$version full/$xref\n";
+            $first = 0;
+        }
+    }
+
+    close($table);
     return;
 }
 
