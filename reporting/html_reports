@@ -401,30 +401,7 @@ output_template('tags.html', $templates{tags}, \%data);
 output_template('tags-severity.html', $templates{'tags-severity'}, \%data);
 output_template('tags-all.html', $templates{'tags-all'}, \%data);
 
-# Generate the package lists.  These are huge, so we break them into four
-# separate pages.
-#
-# FIXME: Does anyone actually use these pages?  They're basically unreadable.
-my %list;
-$list{'0-9, A-F'} = [];
-$list{'G-L'}      = [];
-$list{'M-R'}      = [];
-$list{'S-Z'}      = [];
-for my $package (sort keys %sources) {
-    my $first = uc substr($package, 0, 1);
-    if    ($first le 'F') { push(@{ $list{'0-9, A-F'} }, $package) }
-    elsif ($first le 'L') { push(@{ $list{'G-L'} },      $package) }
-    elsif ($first le 'R') { push(@{ $list{'M-R'} },      $package) }
-    else                  { push(@{ $list{'S-Z'} },      $package) }
-}
-%data = (sources => \%sources,);
-my $i = 1;
-for my $section (sort keys %list) {
-    $data{section} = $section;
-    $data{list} = $list{$section};
-    output_template("packages_$i.html", $templates{packages}, \%data);
-    $i++;
-}
+generate_package_index_packages(\%sources);
 
 # Finally, we can start creating the index page.  First, read in the old
 # statistics file so that we can calculate deltas for all of our statistics.
@@ -478,6 +455,37 @@ exit 0;
 
 # ------------------------------
 # Utility functions
+
+# Generate the package lists.  These are huge, so we break them into four
+# separate pages.
+#
+# FIXME: Does anyone actually use these pages?  They're basically unreadable.
+sub generate_package_index_packages {
+    my ($sources_ref) = @_;
+
+    my %list = (
+        '0-9, A-F' => [],
+        'G-L'      => [],
+        'M-R'      => [],
+        'S-Z'      => [],
+    );
+    for my $package (sort(keys(%{$sources_ref}))) {
+        my $first = uc(substr($package, 0, 1));
+        if    ($first le 'F') { push(@{ $list{'0-9, A-F'} }, $package) }
+        elsif ($first le 'L') { push(@{ $list{'G-L'} },      $package) }
+        elsif ($first le 'R') { push(@{ $list{'M-R'} },      $package) }
+        else                  { push(@{ $list{'S-Z'} },      $package) }
+    }
+    my %data = (sources => $sources_ref);
+    my $i = 1;
+    for my $section (sort(keys(%list))) {
+        $data{section} = $section;
+        $data{list} = $list{$section};
+        output_template("packages_$i.html", $templates{packages}, \%data);
+        $i++;
+    }
+    return;
+}
 
 sub update_history_and_make_graphs {
     my ($attrs_ref, $statistics_ref, $tag_statistics_ref) = @_;
