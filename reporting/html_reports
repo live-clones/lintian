@@ -686,107 +686,114 @@ close($stats_fd);
 );
 output_template('index.html', $templates{index}, \%data);
 
-exit 0 if (not $HISTORY);
-
-# Update history.
-my %versions = ();
-my $graph_dir = "$HTML_TMP_DIR/graphs";
-my $commonf = "$graph_dir/common.gpi";
-my $unix_time = time();
-mkdir("$HISTORY_DIR")
-  if (not -d "$HISTORY_DIR");
-mkdir("$HISTORY_DIR/tags")
-  if (not -d "$HISTORY_DIR/tags");
-
-my $history_file = "$HISTORY_DIR/statistics.dat";
-my $stats = '';
-for my $attr (@attrs) {
-    $stats .= " $statistics{$attr}";
-}
-open(my $hist_fd, '+>>', $history_file);
-print {$hist_fd} "$unix_time $LINTIAN_VERSION$stats\n";
-
-if ($GRAPHS) {
-    seek($hist_fd, 0, SEEK_SET);
-    while (<$hist_fd>) {
-        my @fields = split();
-        $versions{$fields[1]} = $fields[0] if not exists $versions{$fields[1]};
-    }
-}
-close($hist_fd);
-
-if ($GRAPHS) {
-    mkdir("$graph_dir", 0777);
-    mkdir("$graph_dir/tags", 0777);
-
-    my $date_min
-      = strftime('%s', localtime($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
-    my $date_max = strftime('%s', localtime($unix_time));
-
-    # Generate loadable Gnuplot file with common variables and labels/arrows
-    # for Lintian versions.
-    open(my $common, '>', $commonf);
-    print {$common} "history_dir='$HISTORY_DIR'\n";
-    print {$common} "graph_dir='$graph_dir'\n";
-    print {$common} "date_min='$date_min'\n";
-    print {$common} "date_max='$date_max'\n";
-    my $last_version = 0;
-    for my $v (sort { $versions{$a} <=> $versions{$b} } keys %versions) {
-        next unless $versions{$v} > $date_min;
-
-        print {$common} "set arrow from '$versions{$v}',graph 0 to ",
-          "'$versions{$v}',graph 1 nohead lw 0.4\n";
-
-        # Skip label if previous release is too close; graphs can't display
-        # more than ~32 labels.
-        my $min_spacing = 3600 * 24 * $GRAPHS_RANGE_DAYS / 32;
-        if ($versions{$v} - $last_version > $min_spacing) {
-            (my $label = $v) =~ s/\-[\w\d]+$//;
-            print {$common} "set label '$label' at '$versions{$v}',graph ",
-              "1.04 rotate by 90 font ',8'\n";
-        }
-
-        $last_version = $versions{$v};
-    }
-    close($common);
-
-    print "Plotting global statistics...\n";
-    chdir_system($graph_dir,
-        ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
-      or die "gnuplot died with $?\n";
-}
-
-my $gnuplot_fd;
-if ($GRAPHS) {
-    open($gnuplot_fd, '>', "$graph_dir/call.gpi");
-}
-
-for my $tag (sort keys %tag_statistics) {
-    $history_file = "$HISTORY_DIR/tags/$tag.dat";
-    $stats = $tag_statistics{$tag};
-    open(my $tag_fd, '>>', $history_file);
-    print {$tag_fd} "$unix_time $stats->{'count'} $stats->{'overrides'} "
-      ."$stats->{'packages'}\n";
-    close($tag_fd);
-    if ($GRAPHS) {
-        print {$gnuplot_fd} qq{print 'Plotting $tag statistics...'\n};
-        print {$gnuplot_fd}
-          qq{call '$LINTIAN_ROOT/reporting/graphs/tags.gpi' '$tag'\n};
-        print {$gnuplot_fd} qq{reset\n};
-    }
-}
-
-if ($GRAPHS) {
-    close($gnuplot_fd);
-    chdir_system($graph_dir, ['gnuplot', 'call.gpi']) == 0
-      or die("gnuplot died with $?\n");
-    unlink($commonf);
+if ($HISTORY) {
+    update_history_and_make_graphs();
 }
 
 exit 0;
 
 # ------------------------------
 # Utility functions
+
+sub update_history_and_make_graphs {
+    # Update history.
+    my %versions;
+    my $graph_dir = "$HTML_TMP_DIR/graphs";
+    my $commonf = "$graph_dir/common.gpi";
+    my $unix_time = time();
+    mkdir("$HISTORY_DIR")
+      if (not -d "$HISTORY_DIR");
+    mkdir("$HISTORY_DIR/tags")
+      if (not -d "$HISTORY_DIR/tags");
+
+    my $history_file = "$HISTORY_DIR/statistics.dat";
+    my $stats = '';
+    for my $attr (@attrs) {
+        $stats .= " $statistics{$attr}";
+    }
+    open(my $hist_fd, '+>>', $history_file);
+    print {$hist_fd} "$unix_time $LINTIAN_VERSION$stats\n";
+
+    if ($GRAPHS) {
+        seek($hist_fd, 0, SEEK_SET);
+        while (<$hist_fd>) {
+            my @fields = split();
+            $versions{$fields[1]} = $fields[0]
+              if not exists $versions{$fields[1]};
+        }
+    }
+    close($hist_fd);
+
+    if ($GRAPHS) {
+        mkdir("$graph_dir", 0777);
+        mkdir("$graph_dir/tags", 0777);
+
+        my $date_min
+          = strftime('%s',
+            localtime($unix_time - 3600 * 24 * $GRAPHS_RANGE_DAYS));
+        my $date_max = strftime('%s', localtime($unix_time));
+
+       # Generate loadable Gnuplot file with common variables and labels/arrows
+       # for Lintian versions.
+        open(my $common, '>', $commonf);
+        print {$common} "history_dir='$HISTORY_DIR'\n";
+        print {$common} "graph_dir='$graph_dir'\n";
+        print {$common} "date_min='$date_min'\n";
+        print {$common} "date_max='$date_max'\n";
+        my $last_version = 0;
+        for my $v (sort { $versions{$a} <=> $versions{$b} } keys %versions) {
+            next unless $versions{$v} > $date_min;
+
+            print {$common} "set arrow from '$versions{$v}',graph 0 to ",
+              "'$versions{$v}',graph 1 nohead lw 0.4\n";
+
+            # Skip label if previous release is too close; graphs can't display
+            # more than ~32 labels.
+            my $min_spacing = 3600 * 24 * $GRAPHS_RANGE_DAYS / 32;
+            if ($versions{$v} - $last_version > $min_spacing) {
+                (my $label = $v) =~ s/\-[\w\d]+$//;
+                print {$common} "set label '$label' at '$versions{$v}',graph ",
+                  "1.04 rotate by 90 font ',8'\n";
+            }
+
+            $last_version = $versions{$v};
+        }
+        close($common);
+
+        print "Plotting global statistics...\n";
+        chdir_system($graph_dir,
+            ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
+          or die "gnuplot died with $?\n";
+    }
+
+    my $gnuplot_fd;
+    if ($GRAPHS) {
+        open($gnuplot_fd, '>', "$graph_dir/call.gpi");
+    }
+
+    for my $tag (sort keys %tag_statistics) {
+        $history_file = "$HISTORY_DIR/tags/$tag.dat";
+        $stats = $tag_statistics{$tag};
+        open(my $tag_fd, '>>', $history_file);
+        print {$tag_fd} "$unix_time $stats->{'count'} $stats->{'overrides'} "
+          ."$stats->{'packages'}\n";
+        close($tag_fd);
+        if ($GRAPHS) {
+            print {$gnuplot_fd} qq{print 'Plotting $tag statistics...'\n};
+            print {$gnuplot_fd}
+              qq{call '$LINTIAN_ROOT/reporting/graphs/tags.gpi' '$tag'\n};
+            print {$gnuplot_fd} qq{reset\n};
+        }
+    }
+
+    if ($GRAPHS) {
+        close($gnuplot_fd);
+        chdir_system($graph_dir, ['gnuplot', 'call.gpi']) == 0
+          or die("gnuplot died with $?\n");
+        unlink($commonf);
+    }
+    return;
+}
 
 # Determine the file name for the maintainer page given a maintainer.  It
 # should be <email>.html where <email> is their email address with all
