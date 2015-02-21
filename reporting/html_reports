@@ -220,7 +220,10 @@ my (%statistics, %tag_statistics);
 #
 # %by_tag is a hash of tag names to an anonymous array of tag information
 # hashes just like the inside-most data structure above.
-my (%by_maint, %by_uploader, %by_tag, @maintainers, %maintainer_table);
+my (%by_maint, %by_uploader, %by_tag, @maintainers, %maintainer_table, %delta);
+my @attrs = qw(maintainers source-packages binary-packages udeb-packages
+  errors warnings info experimental pedantic overridden groups-known
+  groups-backlog);
 
 print "Parsing lintian log...\n";
 parse_lintian_log();
@@ -239,6 +242,10 @@ parse_lintian_log();
     write_qa_list(\%qa);
 
     generate_package_index_packages(\%sources);
+
+    if ($HISTORY) {
+        update_history_and_make_graphs(\@attrs, \%statistics,\%tag_statistics);
+    }
 }
 
 # Build a hash of all maintainers, not just those with Lintian tags.  We use
@@ -381,27 +388,6 @@ output_template('tags.html', $templates{tags}, \%data);
 output_template('tags-severity.html', $templates{'tags-severity'}, \%data);
 output_template('tags-all.html', $templates{'tags-all'}, \%data);
 
-# Finally, we can start creating the index page.  First, read in the old
-# statistics file so that we can calculate deltas for all of our statistics.
-
-if (-f $statistics_file) {
-    ($old_statistics) = read_dpkg_control($statistics_file);
-}
-$statistics{'groups-known'} = scalar(keys(%{$STATE_CACHE->{'groups'}}));
-$statistics{'groups-backlog'}
-  = scalar(find_backlog($LINTIAN_VERSION,$STATE_CACHE));
-
-my %delta;
-my @attrs = qw(maintainers source-packages binary-packages udeb-packages
-  errors warnings info experimental pedantic overridden groups-known
-  groups-backlog);
-for my $attr (@attrs) {
-    my $old = $old_statistics->{$attr} || 0;
-    $statistics{$attr} ||= 0;
-    $delta{$attr}
-      = sprintf('%d (%+d)', $statistics{$attr},$statistics{$attr} - $old);
-}
-
 # Update the statistics file.
 open(my $stats_fd, '>', $statistics_file);
 print {$stats_fd} "last-updated: $timestamp\n";
@@ -412,7 +398,7 @@ for my $attr (@attrs) {
 print {$stats_fd} "lintian-version: $LINTIAN_VERSION\n";
 close($stats_fd);
 
-# Create the main page.
+# Finally, we can start creating the index page.
 %data = (
     architecture => $LINTIAN_ARCH,
     delta        => \%delta,
@@ -424,10 +410,6 @@ close($stats_fd);
     graphs_days  => $GRAPHS_RANGE_DAYS,
 );
 output_template('index.html', $templates{index}, \%data);
-
-if ($HISTORY) {
-    update_history_and_make_graphs(\@attrs, \%statistics,\%tag_statistics);
-}
 
 exit 0;
 
@@ -476,6 +458,24 @@ sub collect_statistics {
         $tag_statistics{$tag}{'overrides'} = $overrides;
         $tag_statistics{$tag}{'packages'} = scalar(keys(%seen_tags));
     }
+
+    # Read in the old statistics file so that we can calculate deltas for
+    # all of our statistics.
+
+    if (-f $statistics_file) {
+        ($old_statistics) = read_dpkg_control($statistics_file);
+    }
+    $statistics{'groups-known'} = scalar(keys(%{$STATE_CACHE->{'groups'}}));
+    $statistics{'groups-backlog'}
+      = scalar(find_backlog($LINTIAN_VERSION,$STATE_CACHE));
+
+    for my $attr (@attrs) {
+        my $old = $old_statistics->{$attr} || 0;
+        $statistics{$attr} ||= 0;
+        $delta{$attr}
+          = sprintf('%d (%+d)', $statistics{$attr},$statistics{$attr} - $old);
+    }
+
     return;
 }
 
