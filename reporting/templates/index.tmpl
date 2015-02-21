@@ -96,12 +96,13 @@
 
 {
     if ($graphs) {
+        my $graph_link = "${path_prefix}graphs/statistics.svg";
         $OUT .= qq(  <p>\n);
         $OUT .= qq(    Evolution of Lintian tags over the past\n);
         $OUT .= qq(    $graphs_days days:</p>\n);
-        $OUT .= qq(  <div class="graph"><img class="graph"\n);
-        $OUT .= qq(    src="${path_prefix}graphs/statistics.svg" alt="History of Lintian\n);
-        $OUT .= qq(    tags" /></div>\n);
+        $OUT .= qq(  <div class="graph"><a href="${graph_link}"><img class="graph"\n);
+        $OUT .= qq(    src="${graph_link}" alt="History of Lintian\n);
+        $OUT .= qq(    tags" /></a></div>\n);
     }
     '';
 }
