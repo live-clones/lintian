@@ -842,26 +842,20 @@ sub parse_lintian_log {
 }
 
 # Deduplicate maintainers.  Maintains a cache of the maintainers we've seen
-# with a given e-mail address, issues a warning if two maintainers have the
-# same e-mail address, and returns the maintainer string that we should use
-# (which is whatever maintainer we saw first with that e-mail).
+# with a given e-mail address and returns the maintainer string that we
+# should use (which is whatever maintainer we saw first with that e-mail).
 
 # PerlCritic apparently does not recognise this way of "encapsulating"
 # variables.  Though, these could probably be replaced by "state"
 # variables.
 ## no critic (ControlStructures::ProhibitUnreachableCode)
 {
-    my (%urlmap, %warned);
+    my (%urlmap);
 
     sub map_maintainer {
         my ($maintainer) = @_;
         my $url = maintainer_url($maintainer);
         if ($urlmap{$url} && $urlmap{$url} ne $maintainer) {
-            warn "$maintainer has the same page as $urlmap{$url}\n"
-              unless ($warned{$maintainer}
-                || lc($maintainer) eq lc($urlmap{$url})
-                || $maintainer =~ /\@lists\.(alioth\.)?debian\.org>/);
-            $warned{$maintainer}++;
             $maintainer = $urlmap{$url};
         } else {
             $urlmap{$url} = $maintainer;
