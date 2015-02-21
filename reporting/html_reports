@@ -675,7 +675,7 @@ close($stats_fd);
 output_template('index.html', $templates{index}, \%data);
 
 if ($HISTORY) {
-    update_history_and_make_graphs();
+    update_history_and_make_graphs(\@attrs, \%statistics,\%tag_statistics);
 }
 
 exit 0;
@@ -684,6 +684,7 @@ exit 0;
 # Utility functions
 
 sub update_history_and_make_graphs {
+    my ($attrs_ref, $statistics_ref, $tag_statistics_ref) = @_;
     # Update history.
     my %versions;
     my $graph_dir = "$HTML_TMP_DIR/graphs";
@@ -696,8 +697,8 @@ sub update_history_and_make_graphs {
 
     my $history_file = "$HISTORY_DIR/statistics.dat";
     my $stats = '';
-    for my $attr (@attrs) {
-        $stats .= " $statistics{$attr}";
+    for my $attr (@{$attrs_ref}) {
+        $stats .= ' ' . $statistics_ref->{$attr};
     }
     open(my $hist_fd, '+>>', $history_file);
     print {$hist_fd} "$unix_time $LINTIAN_VERSION$stats\n";
@@ -759,9 +760,9 @@ sub update_history_and_make_graphs {
         open($gnuplot_fd, '>', "$graph_dir/call.gpi");
     }
 
-    for my $tag (sort keys %tag_statistics) {
+    for my $tag (sort(keys(%{$tag_statistics_ref}))) {
         $history_file = "$HISTORY_DIR/tags/$tag.dat";
-        $stats = $tag_statistics{$tag};
+        $stats = $tag_statistics_ref->{$tag};
         open(my $tag_fd, '>>', $history_file);
         print {$tag_fd} "$unix_time $stats->{'count'} $stats->{'overrides'} "
           ."$stats->{'packages'}\n";
