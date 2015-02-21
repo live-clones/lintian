@@ -65,7 +65,7 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
-  find_backlog copy_dir);
+  find_backlog copy_dir delete_dir);
 
 my $old_statistics;
 my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
@@ -580,6 +580,8 @@ sub update_history_and_make_graphs {
         chdir_system($graph_dir,
             ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
           or die "gnuplot died with $?\n";
+
+        $RESOURCE_MANAGER->install_resource("${graph_dir}/statistics.svg");
     }
 
     my $gnuplot_fd;
@@ -607,6 +609,11 @@ sub update_history_and_make_graphs {
         chdir_system($graph_dir, ['gnuplot', 'call.gpi']) == 0
           or die("gnuplot died with $?\n");
         unlink($commonf);
+        for my $tag (sort(keys(%{$tag_statistics_ref}))) {
+            my $graph_file = "${graph_dir}/tags/${tag}.svg";
+            $RESOURCE_MANAGER->install_resource($graph_file);
+        }
+        delete_dir($graph_dir);
     }
     return;
 }

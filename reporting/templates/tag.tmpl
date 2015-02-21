@@ -12,7 +12,7 @@
 
 {
     if ($graphs) {
-        my $graph_link = "${path_prefix}graphs/tags/$tag.svg";
+        my $graph_link = resource_path("${tag}.svg");
         $OUT .= qq(  <p>\n);
         $OUT .= qq(    Evolution of the $tag Lintian tag over the past\n);
         $OUT .= qq(    $graphs_days days:</p>\n);
