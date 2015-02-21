@@ -220,9 +220,26 @@ my (%statistics, %tag_statistics);
 #
 # %by_tag is a hash of tag names to an anonymous array of tag information
 # hashes just like the inside-most data structure above.
-my (%by_maint, %by_uploader, %by_tag);
+my (%by_maint, %by_uploader, %by_tag, @maintainers, %maintainer_table);
 
+print "Parsing lintian log...\n";
 parse_lintian_log();
+
+@maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
+
+{
+    # Scoped to allow memory to be re-purposed.  The %qa and %sources
+    # structures are only used for a very few isolated items.
+    my (%qa, %sources);
+    print "Collecting statistics...\n";
+    collect_statistics(\@maintainers, \%sources, \%qa);
+
+    generate_lookup_tables(\%sources);
+
+    write_qa_list(\%qa);
+
+    generate_package_index_packages(\%sources);
+}
 
 # Build a hash of all maintainers, not just those with Lintian tags.  We use
 # this later to generate stub pages for maintainers whose packages are all
@@ -241,33 +258,10 @@ for my $group_id (sort(keys(%{$STATE_CACHE->{'groups'}}))) {
 # a summary page of errors and warnings for each maintainer, output a full
 # page that includes info, experimental, and overridden tags, and assemble the
 # maintainer index and the QA package list as we go.
-my (%qa, %maintainer_table, %sources);
-my @maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
 
 for my $maintainer (@maintainers) {
     my $id = maintainer_url($maintainer);
     delete $clean{$id};
-
-    # For each of this maintainer's packages, add statistical information
-    # about the number of each type of tag to the QA data and build the
-    # packages hash used for the package index.  We only do this for the
-    # maintainer packages, not the uploader packages, to avoid
-    # double-counting.
-    for my $source (keys %{ $by_maint{$maintainer} }) {
-        my %count;
-        for my $version (
-            sort versions_comparator keys %{ $by_maint{$maintainer}{$source} })
-        {
-            my $tags = $by_maint{$maintainer}{$source}{$version};
-            for my $tag (@$tags) {
-                $count{$tag->{code}}++;
-            }
-            if (@$tags) {
-                $sources{$source}{$version} = $tags->[0]->{xref};
-            }
-        }
-        $qa{$source} = \%count;
-    }
 
     # Determine if the maintainer's page is clean.  Check all packages for
     # which they're either maintainer or uploader and set $error_clean if
@@ -331,10 +325,6 @@ for my $maintainer (@maintainers) {
 my %data = (maintainers => \%maintainer_table,);
 output_template('maintainers.html', $templates{maintainers}, \%data);
 
-generate_lookup_tables(\%sources);
-
-write_qa_list(\%qa);
-
 # Now, generate stub pages for every maintainer who has only clean packages.
 for my $id (keys %clean) {
     my $maintainer = $clean{$id};
@@ -358,21 +348,11 @@ for my $tag (sort $profile->tags(1)) {
     my $info = $profile->get_tag($tag, 1);
     my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
-    my %seen_tags;
     my $tmpl = 'tag-not-seen';
     if (exists $by_tag{$tag}) {
         $tmpl = 'tag';
-        foreach (@{$by_tag{$tag}}) {
-            if ($_->{code} ne 'O') {
-                $count++;
-                $seen_tags{$_->{xref}}++;
-            } else {
-                $overrides++;
-            }
-        }
-        $tag_statistics{$tag}{'count'} = $count;
-        $tag_statistics{$tag}{'overrides'} = $overrides;
-        $tag_statistics{$tag}{'packages'} = scalar keys %seen_tags;
+        $count = $tag_statistics{$tag}{'count'};
+        $overrides = $tag_statistics{$tag}{'overrides'};
     }
 
     my %maint_data = (
@@ -400,8 +380,6 @@ for my $tag (sort $profile->tags(1)) {
 output_template('tags.html', $templates{tags}, \%data);
 output_template('tags-severity.html', $templates{'tags-severity'}, \%data);
 output_template('tags-all.html', $templates{'tags-all'}, \%data);
-
-generate_package_index_packages(\%sources);
 
 # Finally, we can start creating the index page.  First, read in the old
 # statistics file so that we can calculate deltas for all of our statistics.
@@ -455,6 +433,51 @@ exit 0;
 
 # ------------------------------
 # Utility functions
+
+sub collect_statistics {
+    my ($maintainers_ref, $sources_ref, $qa_list_ref) = @_;
+
+    # For each of this maintainer's packages, add statistical information
+    # about the number of each type of tag to the QA data and build the
+    # packages hash used for the package index.  We only do this for the
+    # maintainer packages, not the uploader packages, to avoid
+    # double-counting.
+    for my $maintainer (@{$maintainers_ref}) {
+        for my $source (keys %{ $by_maint{$maintainer} }) {
+            my %count;
+            for my $version (
+                sort versions_comparator
+                keys %{ $by_maint{$maintainer}{$source} }){
+                my $tags = $by_maint{$maintainer}{$source}{$version};
+                for my $tag (@{$tags}) {
+                    $count{$tag->{code}}++;
+                }
+                if (@$tags) {
+                    $sources_ref->{$source}{$version} = $tags->[0]->{xref};
+                }
+            }
+            $qa_list_ref->{$source} = \%count;
+        }
+    }
+
+    for my $tag ($profile->tags(1)) {
+        my ($count, $overrides) = (0, 0);
+        my %seen_tags;
+        next if (not exists($by_tag{$tag}));
+        foreach (@{$by_tag{$tag}}) {
+            if ($_->{code} ne 'O') {
+                $count++;
+                $seen_tags{$_->{xref}}++;
+            } else {
+                $overrides++;
+            }
+        }
+        $tag_statistics{$tag}{'count'} = $count;
+        $tag_statistics{$tag}{'overrides'} = $overrides;
+        $tag_statistics{$tag}{'packages'} = scalar(keys(%seen_tags));
+    }
+    return;
+}
 
 # Generate the package lists.  These are huge, so we break them into four
 # separate pages.
