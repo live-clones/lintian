@@ -6,5 +6,6 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Architecture: any
 Test-For:
+ debian-pycompat-is-obsolete
  source-contains-prebuilt-python-object
  source-is-missing

@@ -13,6 +13,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Apply patch from Johannes Schauer in order
       to detect obsolete XS-Testsuite header.
       (Closes: #770068).
+  * checks/cruft.{desc,pm}:
+    + [NT] Import "d/pycompat is deprecated" check from
+      lintian4python.
   * checks/deb-format.{desc,pm}:
     + [BR] Support all format described in deb(5)
       but manually reject until dak is ready.
