@@ -945,7 +945,7 @@ Certainty: certain
 Tag: malformed-python-version
 Severity: important
 Certainty: certain
-Ref: python-policy 2.3
+Ref: python-policy 3.4
 Info: The Python-Version control field is not in one of the valid
  formats.  It should be in one of the following formats:
  .

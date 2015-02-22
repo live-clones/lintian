@@ -761,7 +761,7 @@ Info: The package installs a file in usr/share/python-support/ but does
 Tag: package-installs-python-bytecode
 Severity: serious
 Certainty: certain
-Ref: python-policy 2.6
+Ref: python-policy 3.7
 Info: Compiled python source files must not be included in the package.
  These files should be removed from the package and created at package
  installation time in the postinst.
@@ -769,7 +769,7 @@ Info: Compiled python source files must not be included in the package.
 Tag: package-installs-python-egg
 Severity: serious
 Certainty: possible
-Ref: python-policy 2.6
+Ref: python-policy 3.7
 Info: Python eggs should not be installed, since the Debian package is
  supposed to do the required steps for installing the Python code.
  .
@@ -778,7 +778,7 @@ Info: Python eggs should not be installed, since the Debian package is
 Tag: package-installs-python-pycache-dir
 Severity: serious
 Certainty: certain
-Ref: python-policy 2.6
+Ref: python-policy 3.7
 Info: The package installs a __pycache__ directory, which is normally
  only used to store compiled python source files. Compiled python
  source files must not be included in the package, instead they
