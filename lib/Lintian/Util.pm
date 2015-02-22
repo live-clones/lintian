@@ -1474,7 +1474,7 @@ OPTS, if given, may contain the following key-value pairs:
 
 =over 4
 
-=item chuck_size
+=item chunk_size
 
 A suggested buffer size for read/write.  If given, it will be to
 sysread as LENGTH argument when reading from INHANDLE.
