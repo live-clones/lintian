@@ -16,12 +16,12 @@ ok($relation->implies('pkgB'),       'identity implies [pkgB]');
 ok(!$relation->implies('pkgC'),      'archless implies [pkgC]');
 ok($relation->implies('pkgC:i386'),  'identity implies [pkgC]');
 
+ok($relation->implies('pkgB:any'),   'arch any implies [pkgB]');
+
 TODO: {
-    local $TODO = ':X => :Y cases are not implemented';
+    local $TODO = ':X => :Y cases are not implemented (in general)';
 
     ok($relation->implies('pkgA'),       'archless implies [pkgA]');
-
-    ok($relation->implies('pkgB:any'),   'arch any implies [pkgB]');
 
     ok($relation->implies('pkgC:any'),   'arch any implies [pkgC]');
 }
@@ -34,6 +34,8 @@ my @dups3 =  Lintian::Relation->new('pkgD:i386, pkgD')->duplicates;
 my @dups4
   =  Lintian::Relation->new('pkgD:i386, pkgD:i386 (>= 1.0)')->duplicates;
 
+is_deeply(\@dups1,[['pkgD', 'pkgD:any']],'pkgD and pkgD:any are dups');
+
 is_deeply(\@dups3, [],'pkgD:i386 and pkgD are not dups');
 is_deeply(
     \@dups4,
@@ -42,9 +44,8 @@ is_deeply(
 );
 
 TODO: {
-    local $TODO = ':X => :Y cases are not implemented';
+    local $TODO = ':X => :Y cases are not implemented (in general)';
 
-    is_deeply(\@dups1,[['pkgD', 'pkgD:any']],'pkgD and pkgD:any are dups');
     is_deeply(
         \@dups2,
         [['pkgD:i386', 'pkgD:any']],
