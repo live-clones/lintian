@@ -219,15 +219,15 @@ sub _get_license_check_file {
     return $data;
 }
 
-# get usual non distribuable license
+# get usual non distributable license
 my $NON_DISTRIBUTABLE_LICENSES
   = _get_license_check_file('cruft/non-distributable-license');
 
 # get non free license
-# get usual non distribuable license
+# get usual non distributable license
 my $NON_FREE_LICENSES = _get_license_check_file('cruft/non-free-license');
 
-# get usual datas about admissible/not admissible GFDL invariant part of license
+# get usual data about admissible/not admissible GFDL invariant part of license
 my $GFDL_FRAGMENTS = Lintian::Data->new(
     'cruft/gfdl-license-fragments-checks',
     qr/\s*\~\~\s*/,
@@ -816,6 +816,9 @@ sub full_text_check {
         my ($cleanedblock, %matchedkeyword);
         my $blocknumber = $sfd->blocknumber();
 
+        # Check for non-distributable files - this
+        # applies even to non-free, as we still need
+        # permission to distribute those.
         if(
             _license_check(
                 $source_pkg, $name,
@@ -828,8 +831,8 @@ sub full_text_check {
             return;
         }
 
-        # some license issues do not apply to non-free
-        # because these file are distribuable
+        # Skip the rest of the license checks for non-free
+        # sections.
         if ($info->is_non_free) {
             next BLOCK;
         }
@@ -933,7 +936,7 @@ sub _check_gfdl_license_problem {
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
 
-    # strip puntuation
+    # strip punctuation
     my $gfdlsections  = _strip_punct($rawgfdlsections);
     my $contextbefore = _strip_punct($rawcontextbefore);
 
@@ -1070,7 +1073,7 @@ sub _clean_block {
                  (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
              }{ gnu }gxms;
 
-    # pod2man formating
+    # pod2man formatting
     $text =~ s{ \\ \* \( [LR] \" }{\"}gxsm;
     $text =~ s{ \\ -}{-}gxsm;
 
@@ -1088,7 +1091,7 @@ sub _clean_block {
     $text =~ s/\"\s?\v\#~\s?\"//gxms;
 
     $text =~ s/\\url{[^}]*?}/ /gxms;          # (la)?tex url
-    $text =~ s/\\emph{/ /gxms;                 # (la)?tex emph
+    $text =~ s/\\emph{/ /gxms;                # (la)?tex emph
     $text =~ s/\\href{[^}]*?}
                      {([^}]*?)}/ $1 /gxms;    # (la)?tex href
     $text =~ s/\\hyperlink
@@ -1143,8 +1146,8 @@ sub _clean_block {
     $text =~ s/,\s*\"/ /gxms;
     $text =~ s/\\n/ /gxms;                    # Verbatim \n in string array
 
-    $text =~ s/\\&/ /gxms;                    # pod2man formating
-    $text =~ s/\\s(?:0|-1)/ /gxms;            # pod2man formating
+    $text =~ s/\\&/ /gxms;                    # pod2man formatting
+    $text =~ s/\\s(?:0|-1)/ /gxms;            # pod2man formatting
 
     $text =~ s/(?:``|'')/ /gxms;              # quote like
 
@@ -1169,7 +1172,7 @@ sub _clean_block {
     return $text;
 }
 
-# do not use space arround punctuation
+# do not use space around punctuation
 sub _strip_punct() {
     my ($text) = @_;
     # replace final punctuation
