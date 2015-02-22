@@ -296,9 +296,7 @@ sub get_package {
         $pkg_src = $entry->{'source'};
         $dir = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
             $pkg_arch);
-        push @entries,
-          Lintian::Lab::Entry->new_from_metadata($pkg_type, $entry, $self,
-            $dir);
+        push(@entries, _entry_from_metadata($pkg_type, $entry, $self,$dir));
     } else {
         # clear $pkg_arch if it is a source package - it simplifies
         # the search code below
@@ -313,9 +311,7 @@ sub get_package {
             $dir
               = $self->_pool_path($entry->{'source'}, $pkg_type, $pkg_name,$v,
                 $a);
-            push @entries,
-              Lintian::Lab::Entry->new_from_metadata($pkg_type, $entry, $self,
-                $dir);
+            push(@entries,_entry_from_metadata($pkg_type, $entry, $self,$dir));
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
@@ -417,9 +413,8 @@ sub lab_query {
               = $self->_pool_path($entry->{'source'}, $entry_type,
                 $entry->{'package'}, $entry->{'version'},
                 $entry->{'architecture'});
-            push @result,
-              Lintian::Lab::Entry->new_from_metadata($entry_type, $entry,
-                $self, $dir);
+            push(@result,
+                _entry_from_metadata($entry_type, $entry, $self, $dir));
         };
         push @keys, $version if defined $version;
         $index->visit_all($searcher, @keys);
@@ -451,10 +446,10 @@ sub visit_packages {
             my $dir
               = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
                 $pkg_arch);
-            my $lentry
-              = Lintian::Lab::Entry->new_from_metadata($pkg_type, $me, $self,
-                $dir);
-            $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
+            my $lentry= _entry_from_metadata($pkg_type, $me, $self,$dir);
+            if ($lentry) {
+                $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
+            }
         };
         $index->visit_all($intv);
     }
@@ -934,6 +929,17 @@ Note: This returns a truth value, even if the lab was created with the
 sub is_temp {
     my ($self) = @_;
     return $self->{'mode'} eq LAB_MODE_TEMP ? 1 : 0;
+}
+
+sub _entry_from_metadata {
+    my (@args) = @_;
+    my $entry;
+    eval {$entry = Lintian::Lab::Entry->new_from_metadata(@args);};
+    if (my $err = $@) {
+        die($err) if $err ne "entry-disappeared\n";
+        return;
+    }
+    return $entry;
 }
 
 # event - triggered by Lintian::Lab::Entry

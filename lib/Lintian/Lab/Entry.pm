@@ -437,9 +437,17 @@ sub _init {
         # This error should not happen unless someone (read: me) breaks
         # Lintian::Lab::get_package
         my $pkg_type = $self->pkg_type;
-        my $id = $self->identifier;
-        croak "$id does not exists" unless $exists;
         my $link;
+        if (not $exists) {
+            # This happens with the metadata gets out of sync with reality.
+            # (e.g. unclean close).  Solve it by purging the entry.
+            $self->remove;
+            # Ensure the lab knows the entry us gone.  Depending on how
+            # "missing" the entry is, remove might fail to do it for us.
+            $self->{'lab'}->_entry_removed($self);
+            # Use die as croak insists on adding " at <...>"
+            die("entry-disappeared\n");
+        }
         $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
         $link = 'dsc' if $pkg_type eq 'source';
         $link = 'changes' if $pkg_type eq 'changes';
