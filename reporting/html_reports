@@ -946,6 +946,7 @@ sub output_template {
             }) or die "Filling out footer of $file: $Text::Template::ERROR\n";
     };
     open(my $fd, '>', "$HTML_TMP_DIR/$file");
+    binmode($fd, ':encoding(UTF-8)');
     $template->fill_in(OUTPUT => $fd, HASH => $data)
       or die "filling out $file failed: $Text::Template::ERROR\n";
     close($fd);
