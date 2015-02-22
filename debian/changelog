@@ -34,8 +34,6 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Rename compressed-objects.inv to
       file-should-not-be-compressed and use it for doxygen
       map.gz.  (Closes: #751949).
-    + [NT] Drop special handling of t1disasm to work around
-      a stack-overflow in t1disasm.
   * checks/init.d.desc:
     + [BR] Add reference to #DEBHELPER# token for
       script-in-etc-init.d-not-registered-via-update-rc.d.
@@ -104,9 +102,6 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Recommend dpkg (>= 1.17.14) for the --ctrl-tarfile
       option in dpkg-deb.  Lintian relies on it to support
       (u)deb files without a gzip compressed control.tar file.
-    + [NT] Require t1utils (>= 1.38-3~) as it fixes several
-      bugs in t1disasm, which allows us to remove some extra
-      error handling code.
 
   * frontend/lintian:
     + [NT] Produce a better error message for lintian detects
