@@ -248,7 +248,7 @@ Returns the number of spelling mistakes found in TEXT.
 
 sub check_spelling {
     my ($tag, $text, $filename, $exceptions) = @_;
-    return unless $text;
+    return 0 unless $text;
 
     my %seen;
     my $counter = 0;
