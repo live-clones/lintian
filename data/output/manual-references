@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2014-03-23
+# Last updated: 2015-02-22
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -35,7 +35,7 @@ devref::3.2.3::Voting::http://www.debian.org/doc/developers-reference/developer-
 devref::3.2.4::Going on vacation gracefully::http://www.debian.org/doc/developers-reference/developer-duties.html#inform-vacation
 devref::3.2.5::Retiring::http://www.debian.org/doc/developers-reference/developer-duties.html#s3.7
 devref::3.2.6::Returning after retirement::http://www.debian.org/doc/developers-reference/developer-duties.html#returning
-devref::4::Resources for Debian Developers::http://www.debian.org/doc/developers-reference/resources.html
+devref::4::Resources for Debian Developers and Debian Maintainers::http://www.debian.org/doc/developers-reference/resources.html
 devref::4.1::Mailing lists::http://www.debian.org/doc/developers-reference/resources.html#mailing-lists
 devref::4.1.1::Basic rules for use::http://www.debian.org/doc/developers-reference/resources.html#mailing-lists-rules
 devref::4.1.2::Core development mailing lists::http://www.debian.org/doc/developers-reference/resources.html#core-devel-mailing-lists
@@ -69,9 +69,7 @@ devref::4.10.3::Forwarding VCS commits in the PTS::http://www.debian.org/doc/dev
 devref::4.10.4::The PTS web interface::http://www.debian.org/doc/developers-reference/resources.html#pts-web
 devref::4.11::Developer's packages overview::http://www.debian.org/doc/developers-reference/resources.html#ddpo
 devref::4.12::Debian's FusionForge installation: Alioth::http://www.debian.org/doc/developers-reference/resources.html#alioth
-devref::4.13::Goodies for Developers::http://www.debian.org/doc/developers-reference/resources.html#developer-misc
-devref::4.13.1::LWN Subscriptions::http://www.debian.org/doc/developers-reference/resources.html#lwn
-devref::4.13.2::Gandi.net Hosting Discount::http://www.debian.org/doc/developers-reference/resources.html#gandi
+devref::4.13::Goodies for Debian Developers and Debian Maintainers::http://www.debian.org/doc/developers-reference/resources.html#developer-misc
 devref::5::Managing Packages::http://www.debian.org/doc/developers-reference/pkgs.html
 devref::5.1::New packages::http://www.debian.org/doc/developers-reference/pkgs.html#newpackage
 devref::5.2::Recording changes in the package::http://www.debian.org/doc/developers-reference/pkgs.html#changelog-entries
@@ -192,7 +190,7 @@ devref::A.3.1::<code>debhelper</code>::http://www.debian.org/doc/developers-refe
 devref::A.3.2::<code>dh-make</code>::http://www.debian.org/doc/developers-reference/tools.html#dh-make
 devref::A.3.3::<code>equivs</code>::http://www.debian.org/doc/developers-reference/tools.html#equivs
 devref::A.4::Package builders::http://www.debian.org/doc/developers-reference/tools.html#tools-builders
-devref::A.4.1::<code>cvs-buildpackage</code>::http://www.debian.org/doc/developers-reference/tools.html#cvs-buildpackage
+devref::A.4.1::<code>git-buildpackage</code>::http://www.debian.org/doc/developers-reference/tools.html#git-buildpackage
 devref::A.4.2::<code>debootstrap</code>::http://www.debian.org/doc/developers-reference/tools.html#debootstrap
 devref::A.4.3::<code>pbuilder</code>::http://www.debian.org/doc/developers-reference/tools.html#pbuilder
 devref::A.4.4::<code>sbuild</code>::http://www.debian.org/doc/developers-reference/tools.html#sbuild
@@ -205,9 +203,8 @@ devref::A.6.1::<code>devscripts</code>::http://www.debian.org/doc/developers-ref
 devref::A.6.2::<code>autotools-dev</code>::http://www.debian.org/doc/developers-reference/tools.html#autotools-dev
 devref::A.6.3::<code>dpkg-repack</code>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-repack
 devref::A.6.4::<code>alien</code>::http://www.debian.org/doc/developers-reference/tools.html#alien
-devref::A.6.5::<code>debsums</code>::http://www.debian.org/doc/developers-reference/tools.html#debsums
-devref::A.6.6::<code>dpkg-dev-el</code>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-dev-el
-devref::A.6.7::<strong>dpkg-depcheck</strong>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-depcheck
+devref::A.6.5::<code>dpkg-dev-el</code>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-dev-el
+devref::A.6.6::<strong>dpkg-depcheck</strong>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-depcheck
 devref::A.7::Porting tools::http://www.debian.org/doc/developers-reference/tools.html#tools-porting
 devref::A.7.1::<code>quinn-diff</code>::http://www.debian.org/doc/developers-reference/tools.html#quinn-diff
 devref::A.7.2::<code>dpkg-cross</code>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-cross
@@ -543,7 +540,7 @@ perl-policy::6.1::Building Embedded Programs::http://www.debian.org/doc/packagin
 perl-policy::6.2::Embedded Perl Dependencies::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-embedded_deps
 perl-policy::6.3::Perl Package Upgrades::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-perl_upgrades
 perl-policy::4.4.1::Architecture-Independent Modules::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-indep_modules
-perl-policy::4.4.2::Binary Modules::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-binary_modules
+perl-policy::4.4.2::Binary and Other Architecture Dependent Modules::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-binary_modules
 perl-policy::4.4.3::Automating Perl Dependencies::http://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-dh_perl
 policy::::Debian Policy Manual::http://www.debian.org/doc/debian-policy/
 policy::1::About this manual::http://www.debian.org/doc/debian-policy/ch-scope.html
@@ -780,39 +777,41 @@ policy::D.2.4::Config-Version::http://www.debian.org/doc/debian-policy/ap-pkg-co
 policy::D.2.5::Conffiles::http://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Conffiles
 policy::D.2.6::Obsolete fields::http://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#sD.2.6
 python-policy::::Debian Python Policy::http://www.debian.org/doc/packaging-manuals/python-policy/
-python-policy::1::Python Packaging::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html
-python-policy::2::Packaged Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html
-python-policy::3::Python Programs::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html
-python-policy::4::Programs Embedding Python::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html
-python-policy::5::Interaction with Locally Installed Python Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-other.html
+python-policy::1::On the move to Python 3::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python3.html
+python-policy::2::Python Packaging::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html
+python-policy::3::Packaged Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html
+python-policy::4::Python Programs::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html
+python-policy::5::Programs Embedding Python::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html
+python-policy::6::Interaction with Locally Installed Python Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-other.html
 python-policy::A::Build Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ap-build_dependencies.html
 python-policy::B::Packaging Tools::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html
 python-policy::C::Upgrade Procedure::http://www.debian.org/doc/packaging-manuals/python-policy/ap-upgrade.html
-python-policy::1.1::Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-versions
-python-policy::1.2::Main packages::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-base
-python-policy::1.3::Minimal packages::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-minimal
-python-policy::1.4::Python Interpreter::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter
-python-policy::1.5::Module Path::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-paths
-python-policy::1.6::Hooks for updates to installed runtimes::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-runtimes_hooks
-python-policy::1.7::Documentation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-docs
-python-policy::2.1::Types of Python Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s2.1
-python-policy::2.2::Module Package Names::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-package_names
-python-policy::2.3::Specifying Supported Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-specifying_versions
-python-policy::2.4::Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-dependencies
-python-policy::2.5::Provides::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-provides
-python-policy::2.6::Modules Byte-Compilation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-byte_compilation
-python-policy::3.1::Programs using the default python::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_indep_progs
-python-policy::3.2::Programs Using a Particular Python Version::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_dep_progs
-python-policy::4.1::Building Embedded Programs::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-build_embedded
-python-policy::4.2::Embedded Python Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-embedded_deps
+python-policy::2.1::Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-versions
+python-policy::2.2::Main packages::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-base
+python-policy::2.3::Minimal packages::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-minimal
+python-policy::2.4::Python Interpreter::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter
+python-policy::2.5::Module Path::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-paths
+python-policy::2.6::Hooks for updates to installed runtimes::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-runtimes_hooks
+python-policy::2.7::Documentation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-docs
+python-policy::3.1::Types of Python Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s3.1
+python-policy::3.2::Wheels::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-wheels
+python-policy::3.3::Module Package Names::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-package_names
+python-policy::3.4::Specifying Supported Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-specifying_versions
+python-policy::3.5::Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-dependencies
+python-policy::3.6::Provides::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-provides
+python-policy::3.7::Modules Byte-Compilation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-byte_compilation
+python-policy::4.1::Programs using the default python::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_indep_progs
+python-policy::4.2::Programs Using a Particular Python Version::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_dep_progs
+python-policy::5.1::Building Embedded Programs::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-build_embedded
+python-policy::5.2::Embedded Python Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-embedded_deps
 python-policy::B.1::distutils::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-distutils
 python-policy::B.2::python-support (deprecated)::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pysupport
-python-policy::B.3::python-central (deprecated)::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
+python-policy::B.3::python-central (removed)::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
 python-policy::B.4::CDBS::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-cdbs
 python-policy::B.5::dh_python2 and dh_python3::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-dh_python2_3
-python-policy::1.4.1::Interpreter Name::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_name
-python-policy::1.4.2::Interpreter Location::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_loc
-python-policy::3.1.1::Programs Shipping Private Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-current_version_progs
+python-policy::2.4.1::Interpreter Name::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_name
+python-policy::2.4.2::Interpreter Location::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_loc
+python-policy::4.1.1::Programs Shipping Private Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-current_version_progs
 vim-policy::::Debian Packaging Policy for Vim::http://pkg-vim.alioth.debian.org/vim-policy.html/
 vim-policy::1::Vim Addon Packaging in a Nutshell::http://pkg-vim.alioth.debian.org/vim-policy.html/index.html#nutshell
 vim-policy::2::Vim Packaging::http://pkg-vim.alioth.debian.org/vim-policy.html/x73.html
