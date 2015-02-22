@@ -174,3 +174,10 @@ Certainty: certain
 Info: The watch file contains a standard template included by dh_make.
  Please remove them once you have implemented the watch file.
 
+# Imported from lintian4python (python/watch)
+Tag: debian-watch-file-accesses-pypi-over-http
+Severity: wishlist
+Certainty: certain
+Description: The watch file is pointing at PyPI, using a http URL, not https.
+ PyPI now has https enabled, you should be able to simply switch to
+ https.

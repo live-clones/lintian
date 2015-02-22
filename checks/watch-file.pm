@@ -119,6 +119,9 @@ sub run {
                 tag 'debian-watch-file-uses-deprecated-sf-redirector-method',
                   "line $.";
             }
+            if (m,\b\Qhttp://pypi.python.org/\E,) {
+                tag 'debian-watch-file-accesses-pypi-over-http', "line $.";
+            }
 
             if (
                 m{ (?:https?|ftp)://

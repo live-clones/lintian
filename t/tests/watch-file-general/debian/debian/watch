@@ -20,5 +20,7 @@ version=42
 # Specifies the same version number as the package.
 http://example.com/ foo([\d.]+)\.tar\.gz 2.0.ds1-1 uupdate
 
+opts="dversionmangle=s/ds-.*$//" \
+http://pypi.python.org/foo scripts\.([\d.]+)\.tar\.gz debian uupdate
 
 # without any pgpsigurlmangle
