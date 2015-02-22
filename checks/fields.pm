@@ -1209,6 +1209,11 @@ sub run {
             ['all']);
 
         my @pyversion = split(/\s*,\s*/, $pyversion);
+
+        if ($pyversion =~ m/^current/) {
+            tag 'python-version-current-is-deprecated';
+        }
+
         if (@pyversion > 2) {
             if (any { !/^\d+\.\d+$/ } @pyversion) {
                 tag 'malformed-python-version', $pyversion;

@@ -1239,3 +1239,10 @@ Info: Package should not suggest or recommend libservlet-java
  .
  If there is otherwise a valid reason for this suggestion or recommendation,
  please override the tag.
+
+# Imported from lintian4python (python/helpers)
+Tag: python-version-current-is-deprecated
+Severity: normal
+Certainty: certain
+Info: The use of "current" in the Python-Version field is deprecated.
+Ref: python-policy 3.4
