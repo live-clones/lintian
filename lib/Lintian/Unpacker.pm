@@ -291,7 +291,7 @@ sub _requested_colls {
     }
 
     # if its new and $profile is undef, we have to run all
-    # of collections.  So lets extra early.
+    # of collections.  So lets exit early.
     return ($cmap, undef) if $new and not $profile;
     if ($profile) {
         my %tmp;
