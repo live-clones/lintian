@@ -967,50 +967,26 @@ sub _new_entry {
         'file'    => $pkg_path,
         'version' => $pkg_version,
     );
-    my $field = sub {
-        my ($f) = @_;
-        my $v;
-        return $proc->get_field($f) if $proc;
-        return $entry->info->field($f, '');
-    };
 
     if ($pkg_type eq 'source') {
-        my $up = $field->('uploaders');
-        my $maint = $field->('maintainer');
-        my $bin = $field->('binary');
 
-        # Normalize the fields - usually this will be "no-ops", but we
-        # do check some really warped packages every now and then...
-
-        if ($up) {
-            $up =~ s/\n/ /og;
-            $up = join(', ', split(m/\s*,\s*/o, $up));
-        }
-        if ($bin) {
-            $bin   =~ s/\n\s*//og;
-            $bin = join(', ', split(m/\s*,\s*/o, $bin));
-        }
-
-        $maint =~ s/\n\s*//og if $maint;
-        $data{'binary'}     = $bin;
         $data{'source'}     = $pkg_name;
-        $data{'area'}       = ''; # just blank this - we do not know it :)
-        $data{'maintainer'} = $maint;
-        $data{'uploaders'}  = $up;
+        # We *used* to rely on these for the reporting
+        # framework.
+        $data{'binary'}     = ''; # Only for compat
+        $data{'area'}       = ''; # Only for compat
+        $data{'maintainer'} = ''; # Only for compat
+        $data{'uploaders'}  = ''; # Only for compat
     } elsif ($pkg_type eq 'changes') {
         $data{'architecture'} = $entry->pkg_arch;
         $data{'source'}       = $pkg_name;
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-        my $area = 'main';
-        my $s = $field->('section');
-        if ($s && $s =~ m,\s*([a-zA-Z0-9-_]+)/,o) {
-            $area = $1;
-        }
         $data{'architecture'}   = $entry->pkg_arch;
-        $data{'area'}           = $area;
         $data{'package'}        = $pkg_name;
         $data{'source'}         = $entry->pkg_src;
         $data{'source-version'} = $entry->pkg_src_version;
+        # Previously used by the reporting framework
+        $data{'area'}           = ''; # Only for compat
     } else {
         croak "Unknown package type: $pkg_type";
     }

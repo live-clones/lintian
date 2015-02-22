@@ -109,6 +109,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * lib/Lintian/Internal/FrontendUtil.pm:
     + [NT] Work around a bug in autodie, where an fdopen of a
       file-descriptor always failed with "bad file descriptor".
+  * lib/Lintian/Lab.pm:
+    + [NT] Null fields extra metadata fields in the lab storage
+      that are no longer used.  These were previously used by
+      the reporting framework.
   * lib/Lintian/Util.pm:
     + [NT] Prefer dpkg-deb --ctrl-tarfile to "ar p" when dpkg
       is recent enough.
