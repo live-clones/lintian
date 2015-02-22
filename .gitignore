@@ -9,4 +9,5 @@
 /l10n/
 /man/man1/
 /runtests
-
+*.iml
+/.idea/

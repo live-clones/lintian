@@ -1,0 +1,5 @@
+tar-ignore
+tar-ignore=lintian/.idea
+tar-ignore=lintian/*.iml
+tar-ignore=lintian/debian/test-out
+tar-ignore=lintian/doc/api.html
