@@ -462,7 +462,7 @@ Info: Third-party Python packages should install their files in
  for Python 2.6 and later.  All other directories in
  <tt>/usr/lib/python<i>VERSION</i></tt> are for use by the core python
  packages.
-Ref: python-policy 1.5
+Ref: python-policy 2.5
 
 Tag: perl-module-in-core-directory
 Severity: important
@@ -723,7 +723,7 @@ Ref: perl-policy 2.3
 Tag: file-in-usr-lib-site-python
 Severity: important
 Certainty: certain
-Ref: python-policy 1.5
+Ref: python-policy 2.5
 Info: The directory /usr/lib/site-python has been deprecated as a
  location for installing Python modules and may be dropped from Python's
  module search path in a future version.  Most likely this module is a
@@ -733,7 +733,7 @@ Info: The directory /usr/lib/site-python has been deprecated as a
 Tag: python-module-in-wrong-location
 Severity: normal
 Certainty: possible
-Ref: python-policy 1.5, #576012
+Ref: python-policy 2.5, #576012
 Info: The package installs a Python module or debug information for a Python
  module in the wrong location for the given version of Python.
  .
