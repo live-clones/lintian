@@ -990,7 +990,7 @@ sub run {
                               $d_pkg;
                         }
 
-                        if ($d_pkg =~ m/^java-compiler$/o){
+                        if ($d_pkg eq 'java-compiler'){
                             tag 'build-depends-on-an-obsolete-java-package',
                               $d_pkg;
                         }
