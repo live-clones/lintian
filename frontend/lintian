@@ -798,7 +798,6 @@ import Lintian::Internal::FrontendUtil qw(
 require Lintian::ProcessablePool;
 require Lintian::Profile;
 require Lintian::Tags;
-import Lintian::Tags qw(tag);
 require Lintian::Unpacker;
 require Lintian::Util;
 import Lintian::Util qw(fail parse_boolean strip);
