@@ -232,7 +232,7 @@ sub run {
     #---- Format
 
     if ($type eq 'source') {
-        if (my $format = $info->field('format')) {
+        if (defined(my $format = $info->field('format'))) {
             my $supported = 0;
             foreach my $f (@supported_source_formats){
                 if($format =~ /^\s*$f\s*\z/){
@@ -347,7 +347,7 @@ sub run {
 
     #---- Multi-Arch
 
-    if (my $march = $info->field('multi-arch')){
+    if (defined(my $march = $info->field('multi-arch'))){
         unfold('multi-arch', \$march);
         tag 'unknown-multi-arch-value', $pkg, $march
           unless $march =~ m/^(?:no|foreign|allowed|same)$/o;
@@ -416,7 +416,7 @@ sub run {
 
     #---- Subarchitecture (udeb)
 
-    if (my $subarch = $info->field('subarchitecture')) {
+    if (defined(my $subarch = $info->field('subarchitecture'))) {
         unfold('subarchitecture', \$subarch);
     }
 
@@ -468,7 +468,7 @@ sub run {
     # Optional in binary packages, required in source packages, but we
     # cannot check it as dpkg-source(1) refuses to unpack source packages
     # without this field (and fields indirectly depends on unpacked)...
-    if (my $source = $info->field('source')) {
+    if (defined(my $source = $info->field('source'))) {
         unfold('source', \$source);
 
         if ($type eq 'source') {
@@ -494,7 +494,7 @@ sub run {
 
     #---- Essential
 
-    if (my $essential = $info->field('essential')) {
+    if (defined(my $essential = $info->field('essential'))) {
         unfold('essential', \$essential);
 
         tag 'essential-in-source-package' if ($type eq 'source');
@@ -586,7 +586,7 @@ sub run {
 
     #--- Homepage
 
-    if (my $homepage = $info->field('homepage')) {
+    if (defined(my $homepage = $info->field('homepage'))) {
         my $orig = $homepage;
 
         unfold('homepage', \$homepage);
@@ -627,7 +627,7 @@ sub run {
 
     #---- Installer-Menu-Item (udeb)
 
-    if (my $menu_item = $info->field('installer-menu-item')) {
+    if (defined(my $menu_item = $info->field('installer-menu-item'))) {
         unfold('installer-menu-item', \$menu_item);
 
         $menu_item =~ /^\d+$/ or tag 'bad-menu-item', $menu_item;
@@ -1162,7 +1162,7 @@ sub run {
 
     #----- Origin
 
-    if (my $origin = $info->field('origin')) {
+    if (defined(my $origin = $info->field('origin'))) {
         unfold('origin', \$origin);
 
         tag 'redundant-origin-field' if lc($origin) eq 'debian';
@@ -1170,7 +1170,7 @@ sub run {
 
     #----- Bugs
 
-    if (my $bugs = $info->field('bugs')) {
+    if (defined(my $bugs = $info->field('bugs'))) {
         unfold('bugs', \$bugs);
 
         tag 'redundant-bugs-field'
@@ -1179,7 +1179,7 @@ sub run {
 
     #----- Python-Version
 
-    if (my $pyversion = $info->field('python-version')) {
+    if (defined(my $pyversion = $info->field('python-version'))) {
         unfold('python-version', \$pyversion);
 
         my @valid = (
@@ -1220,7 +1220,7 @@ sub run {
 
     #----- Dm-Upload-Allowed
 
-    if (my $dmupload = $info->field('dm-upload-allowed')) {
+    if (defined(my $dmupload = $info->field('dm-upload-allowed'))) {
         tag 'dm-upload-allowed-is-obsolete';
 
         unfold('dm-upload-allowed', \$dmupload);
