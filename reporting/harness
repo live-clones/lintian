@@ -194,8 +194,10 @@ if (not $opt{'dry-run'}) {
         $LAB->create({ 'mode' => 02775}) unless $LAB->exists;
     } elsif ($LINTIAN_LAB) {
         my $LAB = Lintian::Lab->new($LINTIAN_LAB);
-        Log("Removing old permanent lab at $LINTIAN_LAB");
-        $LAB->remove if $LAB->exists;
+        if ($LAB->exists) {
+            Log("Removing old permanent lab at $LINTIAN_LAB");
+            $LAB->remove;
+        }
     }
 }
 
