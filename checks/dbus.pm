@@ -26,7 +26,6 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(slurp_entire_file);
 
 sub run {
     my ($pkg, $type, $info) = @_;
