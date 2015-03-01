@@ -137,6 +137,7 @@ sub prepare_lintian_environment_and_cmdline {
     my $frontend = 'lintian';
     my $eoa_marker_index = first_index { $_ eq '--' } @ARGV;
     my $logs_dir = $OPT{'lintian-log-dir'};
+    my @overridable_args = (qw(-EIL +pedantic));
     my @args = (
         qw(--verbose), # We rely on this for filtering the log
         qw(--exp-output=format=fullewi --packages-from-file -),
@@ -155,7 +156,7 @@ sub prepare_lintian_environment_and_cmdline {
         push(@args, splice(@ARGV, $eoa_marker_index));
     }
     # Put "our" arguments after user supplied ones
-    @LINTIAN_CMD = ($frontend, @ARGV, @args);
+    @LINTIAN_CMD = ($frontend, @overridable_args, @ARGV, @args);
 
     # The environment part
     for my $key (keys(%ENV)) {
