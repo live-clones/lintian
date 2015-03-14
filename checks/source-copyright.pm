@@ -35,7 +35,7 @@ use Text::Levenshtein qw(distance);
 
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(parse_dpkg_control slurp_entire_file);
+use Lintian::Util qw(parse_dpkg_control);
 use Lintian::Data;
 
 my $BAD_SHORT_LICENSES = Lintian::Data->new(
