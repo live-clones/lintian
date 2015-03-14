@@ -162,7 +162,7 @@ sub prepare_lintian_environment_and_cmdline {
     for my $key (keys(%ENV)) {
         delete($ENV{$key}) if $key =~ m/^LINTIAN_/;
     }
-    if ( $OPT{'lintian-scratch-space'} ) {
+    if ($OPT{'lintian-scratch-space'}) {
         $ENV{'TMPDIR'} = $OPT{'lintian-scratch-space'};
         log_msg("Setting TMPDIR to $ENV{'TMPDIR'}");
     } else {
