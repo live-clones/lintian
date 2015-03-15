@@ -390,6 +390,17 @@ sub run {
         }
     }
 
+    # Make sure that the Architecture field in source packages is not multiline
+    for my $bin (@package_names) {
+        # The Architecture field is mandatory and dpkg-buildpackage
+        # will already bail out if it's missing, so we don't need to
+        # check that.
+        my $raw = $info->binary_field($bin, 'architecture');
+        if ($raw =~ /\n./) {
+            tag 'multiline-architecture-field',$bin;
+        }
+    }
+
     return;
 }
 

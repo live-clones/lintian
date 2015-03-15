@@ -13,6 +13,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Apply patch from Johannes Schauer in order
       to detect obsolete XS-Testsuite header.
       (Closes: #770068).
+    + [AB] New check for multiline architecture fields in debian/control.
+      (Closes: #780474)
   * checks/cruft.{desc,pm}:
     + [NT] Import "d/pycompat is deprecated" check from
       lintian4python.

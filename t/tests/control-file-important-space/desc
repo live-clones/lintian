@@ -1,0 +1,5 @@
+Testname: control-file-important-space
+Sequence: 6000
+Version: 1.0
+Description: Important tests for control file spacing
+Test-For: multiline-architecture-field
