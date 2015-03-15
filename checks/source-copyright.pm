@@ -255,7 +255,7 @@ sub _parse_dep5 {
     }
     if(defined($full_license_header)) {
         for (@short_licenses_header) {
-            $standalone_licenses{$_} = 1;
+            $standalone_licenses{$_} = -1;
             $full_licenses_seen{$_} = 1;
         }
     }
@@ -443,7 +443,7 @@ sub _parse_dep5 {
         if (not defined $standalone_licenses{$license}) {
             tag 'missing-license-paragraph-in-dep5-copyright', $license,
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
-        } elsif ($standalone_licenses{$license} == 1) {
+        } elsif ($standalone_licenses{$license} == -1) {
             tag 'dep5-file-paragraph-reference-header', $license,
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }

@@ -5,8 +5,14 @@ Source: http://examples.com/doohickey/source/
 License: public-domain
  some public-domain
 
+License: golf
+ blah blah
+ This should not trigger a dep5-file-paragraph-reference-header
+ tag.
+
 Files: *
-Comment: An old false positive see #766118
+Comment: An old false positive see #766118.  This should instead
+ trigger a dep5-file-paragraph-reference-header
 Copyright: 2014, somebody
 License: public-domain
 
@@ -15,3 +21,6 @@ Copyright: 2014, somebody1
 License: this
  this is a valid license short name
 
+Files: debian/compat
+Copyright: 2015, somebody2
+License: golf
