@@ -112,16 +112,25 @@ for my $template (
     qw/head foot clean index maintainer maintainers packages tag
     tags tags-severity tag-not-seen tags-all/
   ) {
-    my %options = (TYPE => 'FILE', SOURCE => "$TEMPLATES/$template.tmpl");
+    open(my $fd, '<', "$TEMPLATES/$template.tmpl");
+    binmode($fd, ':encoding(UTF-8)');
+    my %options = (TYPE => 'FILEHANDLE', SOURCE => $fd);
     $templates{$template} = Text::Template->new(%options)
       or die "cannot load template $template: $Text::Template::ERROR\n";
+    close($fd);
 }
 
-$templates{'lintian.css'} = Text::Template->new(
-    TYPE => 'FILE',
-    SOURCE => "$TEMPLATES/lintian.css.tmpl",
-    DELIMITERS => ['{{{', '}}}'],
-) or die("cannot load template for lintian.css: $Text::Template::ERROR\n");
+{
+    open(my $fd, '<', "$TEMPLATES/lintian.css.tmpl");
+    binmode($fd, ':encoding(UTF-8)');
+    $templates{'lintian.css'} = Text::Template->new(
+        TYPE => 'FILEHANDLE',
+        SOURCE => $fd,
+        DELIMITERS => ['{{{', '}}}'],
+      )
+      or die("cannot load template for lintian.css: $Text::Template::ERROR\n");
+    close($fd);
+}
 
 # ------------------------------
 # Main routine
