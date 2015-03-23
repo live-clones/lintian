@@ -98,7 +98,7 @@ sub install_resource {
 
     croak("Resource name ${basename} already in use")
       if defined($self->{'_resource_cache'}{$basename});
-    if ($basename =~ m/^[^\.]+(\..+)$/xsm) {
+    if ($basename =~ m/^.+(\.[^\.]+)$/xsm) {
         my $ext = $1;
         $install_name .= $ext;
     }
