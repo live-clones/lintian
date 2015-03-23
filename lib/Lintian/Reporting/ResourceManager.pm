@@ -24,7 +24,7 @@ use warnings;
 use autodie;
 
 use Carp qw(croak);
-use File::Basename qw(basename fileparse);
+use File::Basename qw(basename);
 use File::Copy qw(copy);
 
 use Lintian::Util qw(get_file_checksum);
