@@ -129,6 +129,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       entry will be removed as well.  Previously, the lab would
       just throw an error and require a manuel correction of
       the lab.
+  * lib/Lintian/Reporting/ResourceManager.pm:
+    + [NT] Only preserve the last extension of the installed
+      resource.  Previously it would keep all "extensions",
+      including long parts of the original name if it happened
+      to contain a period.
   * lib/Lintian/Util.pm:
     + [NT] Prefer dpkg-deb --ctrl-tarfile to "ar p" when dpkg
       is recent enough.
@@ -152,6 +157,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
         releases most of it before calling html_reports.
         This should reduce the peak memory requirements
         considerably for the html_reports part of the run.
+  * reporting/html_reports:
+    + [NT] Templates are now always read and (their output)
+      written in the UTF-8 encoding.
 
   * t:
     + [NT] Apply patch from Matt Kraai to fix test case on
