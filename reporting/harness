@@ -294,7 +294,9 @@ if (not $opt{'reports-only'}) {
             if ($res) {
                 if ($res == 255) {
                     Die('Lintian harness died with an unhandled exception');
-                } elsif ($res != 2 and $res != 3) {
+                } elsif ($res == 3) {
+                    Log('Lintian harness stopped early due to signal');
+                } elsif ($res != 2) {
                     Die("Lintian harness terminated with code $res");
                 }
             } elsif ($sig) {
