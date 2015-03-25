@@ -41,7 +41,11 @@ Options:
   -c         clean mode, erase everything and start from scratch (implies -f)
   -f         full mode, blithely overwrite lintian.log
   -i         incremental mode, use old lintian.log data, process changes only
-  -r         generate HTML reports only
+  -r, --[no-]generate-reports
+             Whether to generate reports.  By default, reports will be
+             generated at the end of a run with -i, -f or -c.  It can also be
+             used as a standard alone "mode", where only reports are
+             regenerated.
   --dry-run  pretend to do the actions without actually doing them.  The
              "normal" harness output will go to stdout rather than the
              harness.log.
@@ -76,7 +80,7 @@ my %opthash = (
     'i' => \$opt{'incremental-mode'},
     'c' => \$opt{'clean-mode'},
     'f' => \$opt{'full-mode'},
-    'r' => \$opt{'reports-only'},
+    'generate-reports|r!' => \$opt{'generate-reports'},
     'dry-run' => \$opt{'dry-run'},
     'schedule-chunk-size=i' => \$opt{'schedule-chunk-size'},
     'schedule-limit-groups=i' => \$opt{'schedule-limit-groups'},
@@ -98,8 +102,6 @@ $opt{'full-mode'} = 1 if $opt{'clean-mode'};
 
 die "Cannot use both incremental and full/clean.\n"
   if $opt{'incremental-mode'} && $opt{'full-mode'};
-die "Cannot use other modes with reports only.\n"
-  if $opt{'reports-only'} && ($opt{'full-mode'} || $opt{'incremental-mode'});
 die("The argument for --schedule-limit-groups must be an > 0\n")
   if $opt{'schedule-limit-groups'} < 1;
 
@@ -201,7 +203,9 @@ if (not $opt{'dry-run'}) {
     }
 }
 
-if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
+if (   !$opt{'generate-reports'}
+    && !$opt{'full-mode'}
+    && !$opt{'incremental-mode'}) {
     # Nothing explicitly chosen, default to -i if the log is present,
     # otherwise -f.
     if (-f $lintian_log) {
@@ -211,7 +215,10 @@ if (!$opt{'reports-only'} && !$opt{'full-mode'} && !$opt{'incremental-mode'}) {
     }
 }
 
-if (not $opt{'reports-only'}) {
+# Default to yes, if not explicitly disabled.
+$opt{'generate-reports'} //= 1;
+
+if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
     my @sync_state_args = (
         '--state-dir', $STATE_DIR,
         '--mirror-path', $LINTIAN_ARCHIVEDIR,
@@ -306,36 +313,38 @@ if (not $opt{'reports-only'}) {
     }
 }
 
-# create html reports
-Log('Creating HTML reports...');
-Log("Executing $html_reports_cmd $lintian_log");
-my %html_reports_opts = (
-    'out' => $html_reports_log,
-    'err' => '&1',
-);
-spawn(\%html_reports_opts, [$html_reports_cmd, $lintian_log])
-  or
-  Log("warning: executing $html_reports_cmd returned " . (($? >> 8) & 0xff));
-Log('');
+if ($opt{'generate-reports'}) {
+    # create html reports
+    Log('Creating HTML reports...');
+    Log("Executing $html_reports_cmd $lintian_log");
+    my %html_reports_opts = (
+        'out' => $html_reports_log,
+        'err' => '&1',
+    );
+    spawn(\%html_reports_opts, [$html_reports_cmd, $lintian_log])
+      or Log(
+        "warning: executing $html_reports_cmd returned " . (($? >> 8) & 0xff));
+    Log('');
 
-# rotate the statistics file updated by $html_reports_cmd
-if (!$opt{'dry-run'} && -f "$HARNESS_STATE_DIR/statistics") {
-    my $date = time2str('%Y%m%d', time());
-    my $dest = "$LOG_DIR/stats/statistics-${date}";
-    system('cp', "$HARNESS_STATE_DIR/statistics", $dest) == 0
-      or Log('warning: could not rotate the statistics file');
-}
+    # rotate the statistics file updated by $html_reports_cmd
+    if (!$opt{'dry-run'} && -f "$HARNESS_STATE_DIR/statistics") {
+        my $date = time2str('%Y%m%d', time());
+        my $dest = "$LOG_DIR/stats/statistics-${date}";
+        system('cp', "$HARNESS_STATE_DIR/statistics", $dest) == 0
+          or Log('warning: could not rotate the statistics file');
+    }
 
-# install new html directory
-Log('Installing HTML reports...');
-unless ($opt{'dry-run'}) {
-    system('rm', '-rf', $HTML_DIR) == 0
-      or Die("error removing $HTML_DIR");
-    # a tiny bit of race right here
-    rename($HTML_TMP_DIR,$HTML_DIR)
-      or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
+    # install new html directory
+    Log('Installing HTML reports...');
+    unless ($opt{'dry-run'}) {
+        system('rm', '-rf', $HTML_DIR) == 0
+          or Die("error removing $HTML_DIR");
+        # a tiny bit of race right here
+        rename($HTML_TMP_DIR,$HTML_DIR)
+          or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
+    }
+    Log('');
 }
-Log('');
 
 # ready!!! :-)
 Log('All done.');

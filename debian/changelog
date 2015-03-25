@@ -32,6 +32,13 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       possibly also corrupt ar files.
       (Closes: #790493)
 
+  * reporting/harness:
+    + [NT] Add a --[no-]generate-reports option as alias of
+      the -r mode.  The option can now be used together with
+      "-i", "-f" or "-c" to control whether the reports
+      should generated at the end of the run.  Without any
+      of these, harness will only generate reports like it
+      used to do.
   * reporting/templates/*.tmpl:
     + [NT] Change from XHTML 1.1 to HTML5.
 
