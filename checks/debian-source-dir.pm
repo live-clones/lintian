@@ -38,6 +38,8 @@ sub run {
     my $dsrc = $info->index_resolved_path('debian/source/');
     my ($format_file, $git_pfile);
 
+    $format_file = $dsrc->child('format') if $dsrc;
+
     if ($format_file and $format_file->is_open_ok) {
         my $fd = $format_file->open;
         my $format = <$fd>;
@@ -50,7 +52,6 @@ sub run {
 
     return if not $dsrc;
 
-    $format_file = $dsrc->child('format');
     $git_pfile = $dsrc->child('git-patches');
 
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
