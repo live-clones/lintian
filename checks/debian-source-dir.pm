@@ -36,9 +36,7 @@ our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 sub run {
     my (undef, undef, $info) = @_;
     my $dsrc = $info->index_resolved_path('debian/source/');
-    return if not $dsrc;
-    my $format_file = $dsrc->child('format');
-    my $git_pfile = $dsrc->child('git-patches');
+    my ($format_file, $git_file);
 
     if ($format_file and $format_file->is_open_ok) {
         my $fd = $format_file->open;
@@ -49,6 +47,11 @@ sub run {
     } else {
         tag 'missing-debian-source-format';
     }
+
+    return if not $dsrc;
+
+    $format_file = $dsrc->child('format');
+    $git_pfile = $dsrc->child('git-patches');
 
     if ($git_pfile and $git_pfile->is_open_ok and $git_pfile->size != 0) {
         my $git_patches_fd = $git_pfile->open;

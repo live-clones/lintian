@@ -21,6 +21,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * checks/deb-format.{desc,pm}:
     + [BR] Support all format described in deb(5)
       but manually reject until dak is ready.
+  * checks/debian-source-dir.pm:
+    + [NT] Fix regression where "missing-debian-source-format" was
+      not emitted if "debian/source" was missing.  Thanks to
+      Jean-Michel Nirgal Vourgère for finding this bug.
+      (Closes: #781235)
   * checks/dbus.{desc,pm}:
     + [NT] Apply patch series from Simon McVittie to
       improve the dbus check.  In particular, detect dbus
