@@ -36,7 +36,7 @@ our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 sub run {
     my (undef, undef, $info) = @_;
     my $dsrc = $info->index_resolved_path('debian/source/');
-    my ($format_file, $git_file);
+    my ($format_file, $git_pfile);
 
     if ($format_file and $format_file->is_open_ok) {
         my $fd = $format_file->open;
