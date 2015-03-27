@@ -1,3 +1,4 @@
 E: debian-source-dir-traversal-2 source: source-contains-unsafe-symlink debian/source
+I: debian-source-dir-traversal-2 source: missing-debian-source-format
 W: debian-source-dir-traversal-2 source: debhelper-compat-file-is-missing
 W: debian-source-dir-traversal-2 source: package-uses-deprecated-debhelper-compat-version 1
