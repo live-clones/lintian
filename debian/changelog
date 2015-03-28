@@ -58,6 +58,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Fix some false negatives for
       command-with-path-in-maintainer-script tag.
       (Closes: #769845).
+  * checks/shared-libs.{desc,pm}:
+    + [NT] Apply patch from Guillem Jover to recognise the
+      "Ignore-Blacklist-Groups" meta field in symbols files.
+      (Closes: #781396)
   * checks/source-copyright.{desc,pm}:
     + [BR] Fix a false positive for
       missing-license-paragraph-in-dep5-copyright tag.

@@ -392,8 +392,8 @@ Severity: important
 Certainty: certain
 Info: The symbols control file contains an unknown meta-information field.
  .
- A list of currently supported fields may be found in deb-control(5).
-Ref: deb-control(5)
+ A list of currently supported fields may be found in deb-symbols(5).
+Ref: deb-symbols(5)
 
 Tag: symbols-declared-but-not-shlib
 Severity: important

@@ -49,6 +49,12 @@ my %stack_arches = map { $_ => 1 }qw(
   sparc
 );
 
+# List of symbols file meta-fields.
+my %symbols_meta_fields = map { $_ => 1 }qw(
+  Build-Depends-Package
+  Ignore-Blacklist-Groups
+);
+
 my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 my $MA_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
@@ -514,10 +520,8 @@ sub run {
             } elsif (m/^\*\s(\S+):\s\S+/) {
                 # meta-information
 
-                # This should probably be in a hash, but there's
-                # only one supported value currently
                 tag 'unknown-meta-field-in-symbols-file', "$1, line $."
-                  unless $1 eq 'Build-Depends-Package';
+                  unless exists $symbols_meta_fields{$1};
                 tag 'syntax-error-in-symbols-file', $.
                   unless defined $soname and $symbol_count == 0;
 
