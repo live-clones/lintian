@@ -40,12 +40,11 @@ use Text::Template ();
 # TODO: $statistics_file should no longer be defined in ./config
 #   after the 2.5.25 release.
 our (
-    $LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR,
-    $LINTIAN_DIST,$LINTIAN_ARCH, $HTML_TMP_DIR,
-    $statistics_file,$LINTIAN_AREA, $HISTORY,
-    $HISTORY_DIR, $LINTIAN_SOURCE,$GRAPHS_RANGE_DAYS,
-    $GRAPHS, $LINTIAN_MIRROR_NAME, $HARNESS_STATE_DIR,
-    $COPY_DOCS,
+    $LINTIAN_ROOT, $LINTIAN_ARCHIVEDIR,$LINTIAN_DIST,
+    $LINTIAN_ARCH, $HTML_TMP_DIR,$statistics_file,
+    $LINTIAN_AREA, $HISTORY,$HISTORY_DIR,
+    $LINTIAN_SOURCE,$GRAPHS_RANGE_DAYS,$GRAPHS,
+    $LINTIAN_MIRROR_NAME, $HARNESS_STATE_DIR,$COPY_DOCS,
 );
 
 # Read the configuration.
