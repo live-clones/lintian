@@ -94,8 +94,11 @@ Severity: wishlist
 Certainty: certain
 Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file.  As
  of dpkg 1.17.10, the XS- prefix is no longer necessary.  dpkg now
- recognizes this header and handles it correctly.  Consider removing
- the XS- prefix for this field.
+ recognizes this header and handles it correctly.  As of dpkg 1.17.11 the
+ field is automatically added by dpkg-source with the "autopkgtest" value if
+ there is a non-empty <tt>debian/tests/control</tt> file present.  Consider
+ either removing the XS- prefix for this field or removing the field
+ altogether if it contains just the "autopkgtest" value.
 
 Tag: xc-package-type-in-debian-control
 Severity: pedantic
