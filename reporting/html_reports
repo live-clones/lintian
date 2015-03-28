@@ -41,10 +41,10 @@ use Text::Template ();
 #   after the 2.5.25 release.
 our (
     $LINTIAN_ROOT, $LINTIAN_ARCHIVEDIR,$LINTIAN_DIST,
-    $LINTIAN_ARCH, $HTML_TMP_DIR,$statistics_file,
-    $LINTIAN_AREA, $HISTORY,$HISTORY_DIR,
-    $LINTIAN_SOURCE,$GRAPHS_RANGE_DAYS,$GRAPHS,
-    $LINTIAN_MIRROR_NAME, $HARNESS_STATE_DIR,$COPY_DOCS,
+    $LINTIAN_ARCH, $HTML_TMP_DIR,$LINTIAN_AREA,
+    $HISTORY,$HISTORY_DIR,$LINTIAN_SOURCE,
+    $GRAPHS_RANGE_DAYS,$GRAPHS,$LINTIAN_MIRROR_NAME,
+    $HARNESS_STATE_DIR,$COPY_DOCS,
 );
 
 # Read the configuration.
@@ -70,23 +70,7 @@ my $old_statistics;
 my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
 my $RESOURCE_MANAGER
   = Lintian::Reporting::ResourceManager->new('html_dir' => $HTML_TMP_DIR,);
-
-if (defined($statistics_file)) {
-    if (-f $statistics_file) {
-        my $new_location = "$HARNESS_STATE_DIR/statistics";
-        if (system('mv', '-f', $statistics_file, $new_location) != 0) {
-            warn("Could not relocate $statistics_file\n");
-            # Fall back assuming the run is not interrupted / fails...
-            ($old_statistics) = read_dpkg_control($statistics_file);
-            unlink($statistics_file);
-        } else {
-            print "Relocated old statistics file\n";
-        }
-    } else {
-        print "Ignoring old value of \$statistics_file; it can be removed\n";
-    }
-}
-$statistics_file = "$HARNESS_STATE_DIR/statistics";
+my $statistics_file = "$HARNESS_STATE_DIR/statistics";
 
 Lintian::Data->set_vendor($profile);
 

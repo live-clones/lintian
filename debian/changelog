@@ -165,6 +165,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * reporting/html_reports:
     + [NT] Templates are now always read and (their output)
       written in the UTF-8 encoding.
+    + [NT] Stop reading $statistics_file from the config file.
 
   * t:
     + [NT] Apply patch from Matt Kraai to fix test case on
