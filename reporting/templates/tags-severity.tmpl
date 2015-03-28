@@ -14,8 +14,9 @@
             my $heading = 0;
             for my $tag (@tags) {
                 my ($first) = @{ $tags{$tag} };
-                next unless $first->{severity} eq $severity;
-                next unless $first->{certainty} eq $certainty;
+                my $tag_info = $first->{tag_info};
+                next unless $tag_info->severity eq $severity;
+                next unless $tag_info->certainty eq $certainty;
                 unless ($heading) {
                     $OUT .= "  <h2>Severity: $severity,";
                     $OUT .= " Certainty: $certainty</h2>\n\n";

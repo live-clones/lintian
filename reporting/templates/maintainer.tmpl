@@ -150,8 +150,12 @@
                 }
 
                 my $class = '';
-                if ($info->{severity} and $info->{certainty}) {
-                    $class = qq( title="$info->{severity}, $info->{certainty}");
+                if (my $tag_info = $info->{tag_info}) {
+                    # No HTML quote needed; severity and certainty are from a fixed
+                    # whitelist of known safe words.
+                    my $severity = $tag_info->severity;
+                    my $certainty = $tag_info->certainty;
+                    $class = qq( title="$severity, $certainty");
                 }
 
                 # Display tag name only once.

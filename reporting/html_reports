@@ -193,14 +193,13 @@ my (%statistics, %tag_statistics);
 #
 # { 'gnubg' => {
 #       '0.15~20061120-1' => [
-#           { code      => 'W',
+#           { code      => 'W', # Either 'O' or same as $tag_info->code)
 #             package   => 'gnubg',
 #             version   => '0.15~20061120-1',
 #             area      => 'main',
 #             type      => 'source',
 #             tag       => 'substvar-source-version-is-deprecated',
-#             severity  => 'normal',
-#             certainty => 'certain',
+#             tag_info  => $tag_info,  # an instance of Lintian::Tag::Info
 #             extra     => 'gnubg-data'
 #             xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
 #           } ] } }
@@ -794,8 +793,7 @@ sub parse_lintian_log {
                 # comparison; but then, the number of tags with characters
                 # needing HTML-escaping is (next to) 0.
                 $info->{tag} = html_quote($tag);
-                $info->{severity}  = $tag_info->severity;
-                $info->{certainty} = $tag_info->certainty;
+                $info->{tag_info} = $tag_info;
             }
             # saves a map_maintainer call
             $maintainer = $last_maintainer;
@@ -828,10 +826,7 @@ sub parse_lintian_log {
                 # HTML-safe keywords in the start of the loop.
                 type         => $type,
                 tag          => html_quote($tag),
-                # severity and certainty follows a fixed whitelist of
-                # HTML-safe keywords
-                severity     => $tag_info->severity,
-                certainty    => $tag_info->certainty,
+                tag_info     => $tag_info,
                 # extra is unsafe in general, but we already quote it above.
                 extra        => $extra,
                 # should be safe
