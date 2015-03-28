@@ -103,6 +103,8 @@
             for my $info (@tags) {
                 my $is_binary = ($info->{type} eq "binary" or $info->{type} eq "udeb");
                 my $new_binary = $info->{package} ne $binary if $is_binary;
+                my $tag_info = $info->{tag_info};
+                my $next_tag = $tag_info->tag;
 
                 my $area = ($info->{area} eq 'main') ? '' : "; $info->{area}";
                 $firstarea = $info->{area} unless $firstarea;
@@ -136,7 +138,7 @@
                     $bin_version = " ($info->{version}; $info->{area})";
                 }
 
-                if ($tag ne $info->{tag} or $new_binary) {
+                if ($tag ne $next_tag or $new_binary) {
                     # Close the '<ul class="extra">' HTML tag if it is open
                     $OUT .= "</ul>\n" if $has_extra;
                     # Reset has_extra; if the tag has an "extra", we will check
@@ -150,22 +152,21 @@
                 }
 
                 my $class = '';
-                if (my $tag_info = $info->{tag_info}) {
-                    # No HTML quote needed; severity and certainty are from a fixed
-                    # whitelist of known safe words.
-                    my $severity = $tag_info->severity;
-                    my $certainty = $tag_info->certainty;
-                    $class = qq( title="$severity, $certainty");
-                }
+                # No HTML quote needed; severity and certainty are from a fixed
+                # whitelist of known safe words.
+                my $severity = $tag_info->severity;
+                my $certainty = $tag_info->certainty;
+                $class = qq( title="$severity, $certainty");
 
                 # Display tag name only once.
-                if ($tag ne $info->{tag} or $new_binary) {
+                if ($tag ne $next_tag or $new_binary) {
+                    my $q_next_tag = html_quote($next_tag);
                     $OUT .= "    </li>\n" unless $first or $new_binary;
                     $OUT .= "    <li$class>\n";
                     $OUT .= qq(      <span class="type-$info->{code}">);
                     $OUT .= "$info->{code}</span> ";
-                    $OUT .= qq(<a href="${path_prefix}tags/$info->{tag}.html">);
-                    $OUT .= "$info->{tag}</a>\n";
+                    $OUT .= qq(<a href="${path_prefix}tags/${q_next_tag}.html">);
+                    $OUT .= "${q_next_tag}</a>\n";
                 }
 
                 if ($info->{extra}) {
@@ -179,7 +180,7 @@
 
                 $first = 0;
                 $binary = $info->{package} if $is_binary;
-                $tag = $info->{tag};
+                $tag = $next_tag;
             }
             # Close the "extra" info-list (if present) and the current setup
             $OUT .= "</ul>\n" if $has_extra;

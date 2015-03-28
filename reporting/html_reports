@@ -198,7 +198,6 @@ my (%statistics, %tag_statistics);
 #             version   => '0.15~20061120-1',
 #             area      => 'main',
 #             type      => 'source',
-#             tag       => 'substvar-source-version-is-deprecated',
 #             tag_info  => $tag_info,  # an instance of Lintian::Tag::Info
 #             extra     => 'gnubg-data'
 #             xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
@@ -788,11 +787,7 @@ sub parse_lintian_log {
             # Code depends on whether the given tag was overridden or not
             $info->{code} = $code;
             $info->{extra} = $extra;
-            if ($info->{tag} ne $tag) {
-                # Technically we ought to html_quote when doing the
-                # comparison; but then, the number of tags with characters
-                # needing HTML-escaping is (next to) 0.
-                $info->{tag} = html_quote($tag);
+            if ($info->{tag_info}->tag ne $tag) {
                 $info->{tag_info} = $tag_info;
             }
             # saves a map_maintainer call
@@ -825,7 +820,6 @@ sub parse_lintian_log {
                 # There is a check for type being in a fixed whitelist of
                 # HTML-safe keywords in the start of the loop.
                 type         => $type,
-                tag          => html_quote($tag),
                 tag_info     => $tag_info,
                 # extra is unsafe in general, but we already quote it above.
                 extra        => $extra,
@@ -915,6 +909,7 @@ sub output_template {
     $data->{timestamp} ||= $timestamp;
     $data->{by_version} ||= \&versions_comparator;
     $data->{path_prefix} ||= $path_prefix;
+    $data->{html_quote} ||= \&html_quote;
     $data->{resource_path} ||= sub {
         return $path_prefix . $RESOURCE_MANAGER->resource_URL($_[0]);
     };
@@ -956,7 +951,7 @@ sub by_tag {
       || $a->{version} cmp $b->{version}
       || $a->{area}    cmp $b->{area}
       || $a->{type}    cmp $b->{type}
-      || $a->{tag}     cmp $b->{tag}
+      || $a->{tag_info}->tag     cmp $b->{tag_info}->tag
       || $a->{extra}   cmp $b->{extra};
 }
 
