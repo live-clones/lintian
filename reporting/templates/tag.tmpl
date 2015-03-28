@@ -1,5 +1,6 @@
-{ head("Lintian Tag: $tag") }
-  <h1><span class="type-{$code}">{$code}</span> {$tag}</h1>
+{ my $q_tag = html_quote($tag);
+  head("Lintian Tag: ${q_tag}") }
+  <h1><span class="type-{$code}">{$code}</span> {${q_tag}}</h1>
 
   <p>
     All reports of {$tag} for the archive. The extended description of this
@@ -14,10 +15,10 @@
     if ($graphs) {
         my $graph_link = resource_path("${tag}.svg");
         $OUT .= qq(  <p>\n);
-        $OUT .= qq(    Evolution of the $tag Lintian tag over the past\n);
+        $OUT .= qq(    Evolution of the ${q_tag} Lintian tag over the past\n);
         $OUT .= qq(    $graphs_days days:</p>\n);
         $OUT .= qq(  <div class="graph"><a href="${graph_link}"><img class="graph"\n);
-        $OUT .= qq(    src="${graph_link}" alt="History of $tag"\n);
+        $OUT .= qq(    src="${graph_link}" alt="History of ${q_tag}"\n);
         $OUT .= qq(    /></a></div>\n);
     }
     $OUT .= qq(<p>Emitted (non-overridden): $statistics{count}, );

@@ -193,7 +193,7 @@ my (%statistics, %tag_statistics);
 #
 # { 'gnubg' => {
 #       '0.15~20061120-1' => [
-#           { code      => 'W', # Either 'O' or same as $tag_info->code)
+#           { code      => 'W', # Either 'O' or same as $tag_info->code
 #             package   => 'gnubg',
 #             version   => '0.15~20061120-1',
 #             area      => 'main',
@@ -354,7 +354,7 @@ for my $tag (sort $profile->tags(1)) {
 
     my %maint_data = (
         description => $description,
-        tag         => html_quote($tag),
+        tag         => $tag,
         code        => $info->code,
         tags        => $by_tag{$tag},
         graphs      => $GRAPHS,
