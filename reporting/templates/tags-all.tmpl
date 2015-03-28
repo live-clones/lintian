@@ -10,6 +10,7 @@
 {
     for my $tag (sort $profile->tags (1)) {
         my $text;
+        my $q_tag = html_quote($tag);
         if ($stats{$tag}) {
             my $packages = $stats{$tag}{'packages'};
             my $count = $stats{$tag}{'count'};
@@ -19,7 +20,7 @@
         } else {
             $text = 'Not emitted';
         }
-        $OUT .= qq(    <li><a href="${path_prefix}tags/$tag.html">$tag</a>)
+        $OUT .= qq(    <li><a href="${path_prefix}tags/${q_tag}.html">${q_tag}</a>)
             . " ($text)"
             . "</li>\n";
     }

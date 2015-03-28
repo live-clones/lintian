@@ -10,6 +10,7 @@
   <ul>
 {
     for my $tag (sort keys %stats) {
+        my $q_tag = html_quote($tag);
         my $packages = $stats{$tag}{'packages'};
         my $count = $stats{$tag}{'count'};
         my $packages_str = $packages != 1 ?
@@ -25,7 +26,7 @@
                 $overrides_str = ", plus $overrides overrides";
             }
         }
-        $OUT .= qq(    <li><a href="${path_prefix}tags/$tag.html">$tag</a>)
+        $OUT .= qq(    <li><a href="${path_prefix}tags/${q_tag}.html">${q_tag}</a>)
             . " ($packages_str, ${count_str}${overrides_str}"
             . ")</li>\n";
     }

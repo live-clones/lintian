@@ -26,7 +26,8 @@
                 my $packages = $stats{$tag}{'packages'};
                 my $count = $stats{$tag}{'count'};
                 my $overrides = $stats{$tag}{'overrides'};
-                $OUT .= qq(    <li><a href="${path_prefix}tags/$tag.html">$tag</a>)
+                my $q_tag = html_quote($tag);
+                $OUT .= qq(    <li><a href="${path_prefix}tags/${q_tag}.html">${q_tag}</a>)
                     . " ($packages packages, $count tags"
                     . ($overrides > 0 ? ", plus $overrides overrides" : "")
                     . ")</li>\n";
