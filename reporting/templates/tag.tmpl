@@ -1,4 +1,5 @@
-{ my $q_tag = html_quote($tag);
+{  # No my/our in front of $q_tag or it will leave scope too soon!
+  $q_tag = html_quote($tag);
   head("Lintian Tag: ${q_tag}") }
   <h1><span class="type-{$code}">{$code}</span> {${q_tag}}</h1>
 
