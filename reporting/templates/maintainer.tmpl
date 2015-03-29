@@ -101,13 +101,14 @@
             }
 
             for my $info (@tags) {
-                my $is_binary = ($info->{type} eq "binary" or $info->{type} eq "udeb");
-                my $new_binary = $info->{package} ne $binary if $is_binary;
+                my $pkg_info = $info->{pkg_info};
+                my $is_binary = ($pkg_info->{type} eq "binary" or $pkg_info->{type} eq "udeb");
+                my $new_binary = $pkg_info->{package} ne $binary if $is_binary;
                 my $tag_info = $info->{tag_info};
                 my $next_tag = $tag_info->tag;
 
-                my $area = ($info->{area} eq 'main') ? '' : "; $info->{area}";
-                $firstarea = $info->{area} unless $firstarea;
+                my $area = ($pkg_info->{area} eq 'main') ? '' : "; $pkg_info->{area}";
+                $firstarea = $pkg_info->{area} unless $firstarea;
                 if ($first) {
                     my $state = $info->{'state_data'};
                     my $status = 'up-to-date';
@@ -133,9 +134,9 @@
                 }
 
                 my $bin_version = '';
-                unless ($info->{version} eq $version
-                        and $info->{area} eq $firstarea) {
-                    $bin_version = " ($info->{version}; $info->{area})";
+                unless ($pkg_info->{version} eq $version
+                        and $pkg_info->{area} eq $firstarea) {
+                    $bin_version = " ($pkg_info->{version}; $pkg_info->{area})";
                 }
 
                 if ($tag ne $next_tag or $new_binary) {
@@ -146,7 +147,7 @@
                     $has_extra = 0;
                     if ($new_binary) {
                         $OUT .= "    </li>\n  </ul>\n" unless $first;
-                        $OUT .= qq(  <h3>$info->{package}$bin_version</h3>\n);
+                        $OUT .= qq(  <h3>$pkg_info->{package}$bin_version</h3>\n);
                         $OUT .= qq(  <ul class="report">\n);
                     }
                 }
@@ -179,7 +180,7 @@
                 }
 
                 $first = 0;
-                $binary = $info->{package} if $is_binary;
+                $binary = $pkg_info->{package} if $is_binary;
                 $tag = $next_tag;
             }
             # Close the "extra" info-list (if present) and the current setup

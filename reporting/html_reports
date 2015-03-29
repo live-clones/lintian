@@ -194,10 +194,12 @@ my (%statistics, %tag_statistics);
 # { 'gnubg' => {
 #       '0.15~20061120-1' => [
 #           { code      => 'W', # Either 'O' or same as $tag_info->code
-#             package   => 'gnubg',
-#             version   => '0.15~20061120-1',
-#             area      => 'main',
-#             type      => 'source',
+#             pkg_info  => {
+#                            package   => 'gnubg',
+#                            version   => '0.15~20061120-1',
+#                            area      => 'main',
+#                            type      => 'source',
+#             },
 #             tag_info  => $tag_info,  # an instance of Lintian::Tag::Info
 #             extra     => 'gnubg-data'
 #             xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
@@ -679,7 +681,8 @@ sub parse_lintian_log {
     #
     # The "last_*" are optimizations to avoid computing the same
     # things over and over again when a package have multiple tags.
-    my (%seen, $last_info, $last_maintainer, %unknown_member_id, $info);
+    my (%seen, $last_info, $last_maintainer, %unknown_member_id, $info,
+        $last_pi);
     my %expanded_code = (
         E => 'errors',
         W => 'warnings',
@@ -768,9 +771,9 @@ sub parse_lintian_log {
         # between the hashes to save space (which means we can't later
         # do destructive tricks with it).
         if (   $last_info
-            && $last_info->{type} eq $type
-            && $last_info->{package} eq $package
-            && $last_info->{version} eq $version) {
+            && $last_pi->{type} eq $type
+            && $last_pi->{package} eq $package
+            && $last_pi->{version} eq $version) {
 
             # There are something like 622k tags emitted on lintian.d.o,
             # but only "some" 90k unique package+version(+arch) pairs.
@@ -814,12 +817,14 @@ sub parse_lintian_log {
             $last_info = $info = {
                 # split_tags ensures that $code is a single upper case letter
                 code         => $code,
-                package      => $package,
-                version      => $version,
-                area         => html_quote($area),
-                # There is a check for type being in a fixed whitelist of
-                # HTML-safe keywords in the start of the loop.
-                type         => $type,
+                pkg_info     => {
+                    package      => $package,
+                    version      => $version,
+                    # There is a check for type being in a fixed whitelist of
+                    # HTML-safe keywords in the start of the loop.,
+                    type         => $type,
+                    area         => html_quote($area),
+                },
                 tag_info     => $tag_info,
                 # extra is unsafe in general, but we already quote it above.
                 extra        => $extra,
@@ -828,6 +833,7 @@ sub parse_lintian_log {
                 xref         => maintainer_url($maintainer). "#${anchor}",
                 'state_data' => $state_data,
             };
+            $last_pi = $info->{pkg_info};
             if (!$by_maint{$maintainer}{$source}{$source_version}) {
                 my $list_ref = [];
                 $by_maint{$maintainer}{$source}{$source_version} = $list_ref;
@@ -942,17 +948,19 @@ sub output_template {
 # priority for those.  This is because the first tags listed are assumed to
 # be source package tags.
 sub by_tag {
-    if ($a->{type} ne $b->{type}) {
-        return -1 if $a->{type} eq 'source';
-        return  1 if $b->{type} eq 'source';
+    my $a_pi = $a->{pkg_info};
+    my $b_pi = $b->{pkg_info};
+    if ($a_pi->{type} ne $b_pi->{type}) {
+        return -1 if $a_pi->{type} eq 'source';
+        return  1 if $b_pi->{type} eq 'source';
     }
     return
-         $a->{package} cmp $b->{package}
-      || $a->{version} cmp $b->{version}
-      || $a->{area}    cmp $b->{area}
-      || $a->{type}    cmp $b->{type}
+         $a_pi->{package}        cmp $b_pi->{package}
+      || $a_pi->{version}        cmp $b_pi->{version}
+      || $a_pi->{area}           cmp $b_pi->{area}
+      || $a_pi->{type}           cmp $b_pi->{type}
       || $a->{tag_info}->tag     cmp $b->{tag_info}->tag
-      || $a->{extra}   cmp $b->{extra};
+      || $a->{extra}             cmp $b->{extra};
 }
 
 sub chdir_system {
