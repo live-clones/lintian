@@ -162,6 +162,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
         releases most of it before calling html_reports.
         This should reduce the peak memory requirements
         considerably for the html_reports part of the run.
+  * reporting/{html_reports,templates/*}:
+    + [NT] Reorder the datastructures shared with templates
+      for better data sharing.  This reduces the memory
+      consumption of html_reports by ~25% on lintian.d.o.
   * reporting/html_reports:
     + [NT] Templates are now always read and (their output)
       written in the UTF-8 encoding.
