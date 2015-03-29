@@ -28,7 +28,6 @@ use Lintian::Data;
 use Lintian::Tag::TextUtil
   qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
 use Lintian::Tags qw();
-use Lintian::Util qw(fail);
 
 # The URL to a web man page service.  NAME is replaced by the man page
 # name and SECTION with the section to form a valid URL.  This is used
@@ -323,7 +322,7 @@ Modifies the effective severity of the tag.
 
 sub set_severity{
     my ($self, $sev) = @_;
-    croak "Unknown severity $sev.\n" unless exists $CODES{$sev};
+    croak "Unknown severity $sev" unless exists $CODES{$sev};
     $self->{'effective-severity'} = $sev;
     return;
 }
