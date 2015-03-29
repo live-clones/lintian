@@ -32,7 +32,7 @@ $HARNESS_STATE_DIR = "$HOME/harness-state";
 $COPY_DOCS = 0;
 
 # Link to the Lintian source code
-$LINTIAN_SOURCE = "http://anonscm.debian.org/gitweb/?p=lintian/lintian.git";
+$LINTIAN_SOURCE = "https://anonscm.debian.org/cgit/lintian/lintian.git";
 
 $HISTORY = 0;
 $HISTORY_DIR = "$HOME/history";
