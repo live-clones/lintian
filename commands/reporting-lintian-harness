@@ -71,7 +71,7 @@ my @REQUIRED_PARAMETERS = qw(
 );
 my %OPT = (
     'use-permanent-lab' => 'guess',
-    'lintian-frontend ' => 'lintian',
+    'lintian-frontend'  => 'lintian',
 );
 my %OPT_HASH = (
     'schedule-chunk-size=i'   => \$OPT{'schedule-chunk-size'},
