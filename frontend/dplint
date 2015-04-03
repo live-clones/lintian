@@ -105,7 +105,10 @@ sub run_tool {
             # Update @INC before running the tool
             require lib;
             import lib grep { -d } map { "$_/lib" } @INCLUDE_DIRS;
-
+#<<<
+            # no Perltidy (breaks the no-critic)
+            $0 = $tool;  ## no critic (Variables::RequireLocalizedPunctuationVars)
+#>>>
             $TOOL_RUNNER->($tool_pm_path);
             error("TOOL_RUNNER returned unexpectedly!?");
         }
