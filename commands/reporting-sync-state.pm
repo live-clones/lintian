@@ -25,28 +25,6 @@ use autodie;
 use Getopt::Long();
 use File::Basename qw(basename);
 
-our @INCLUDE_DIRS;
-
-BEGIN {
-    if (!exists($ENV{'LINTIAN_INCLUDE_DIRS'})) {
-        my $basename = basename($0);
-        print STDERR
-          "Do not call $basename directly, use dplint $basename instead\n";
-        exit(1);
-    }
-    my $dirs = $ENV{'LINTIAN_INCLUDE_DIRS'};
-    if ($dirs =~ m{\A (.*) \Z}xsm) {
-        # Untaint LINTIAN_INCLUDE_DIRS
-        $dirs = $1;
-    }
-    @INCLUDE_DIRS = split(':', $dirs);
-    my $libdir = $INCLUDE_DIRS[-1] . '/lib';
-    if (-d $libdir) {
-        require lib;
-        import lib $libdir;
-    }
-}
-
 use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Util qw(
@@ -120,12 +98,6 @@ sub main {
         prune_lintian_lab($state, $OPT{'lintian-lab'});
     }
     exit(0);
-}
-
-eval {main();};
-if (my $err = $@) {
-    print STDERR "$@\n";
-    exit(255);
 }
 
 # State:

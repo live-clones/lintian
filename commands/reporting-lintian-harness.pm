@@ -36,28 +36,6 @@ use Getopt::Long();
 use List::MoreUtils qw(first_index);
 use POSIX qw(strftime);
 
-our @INCLUDE_DIRS;
-
-BEGIN {
-    if (!exists($ENV{'LINTIAN_INCLUDE_DIRS'})) {
-        my $basename = basename($0);
-        print STDERR
-          "Do not call $basename directly, use dplint $basename instead\n";
-        exit(1);
-    }
-    my $dirs = $ENV{'LINTIAN_INCLUDE_DIRS'};
-    if ($dirs =~ m{\A (.*) \Z}xsm) {
-        # Untaint LINTIAN_INCLUDE_DIRS
-        $dirs = $1;
-    }
-    @INCLUDE_DIRS = split(':', $dirs);
-    my $libdir = $INCLUDE_DIRS[-1] . '/lib';
-    if (-d $libdir) {
-        require lib;
-        import lib $libdir;
-    }
-}
-
 use Lintian::Command qw(safe_qx);
 use Lintian::Util qw(find_backlog load_state_cache save_state_cache untaint);
 
@@ -94,12 +72,6 @@ sub main {
     chomp($LINTIAN_VERSION);
     prepare_lintian_environment_and_cmdline();
     exit(harness_lintian());
-}
-
-eval {main();};
-if (my $err = $@) {
-    print STDERR "$@\n";
-    exit(255);
 }
 
 ### END OF SCRIPT -- below are helper subroutines ###
