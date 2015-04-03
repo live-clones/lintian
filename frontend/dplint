@@ -110,7 +110,7 @@ sub run_tool {
             $0 = $tool;  ## no critic (Variables::RequireLocalizedPunctuationVars)
 #>>>
             $TOOL_RUNNER->($tool_pm_path);
-            error("TOOL_RUNNER returned unexpectedly!?");
+            error('TOOL_RUNNER returned unexpectedly!?');
         }
     }
     error("$tool is not available");
