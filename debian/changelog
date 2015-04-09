@@ -1,3 +1,12 @@
+lintian (2.5.30+deb8u4) UNRELEASED; urgency=medium
+
+  * lib/Lintian/Util.pm:
+    + [NT] Stricten the permitted whitespace at the end of GPG
+      marker lines.  This is the same issue as CVE-2015-0840,
+      except lintian never attempted to validate the signature.
+
+ -- Niels Thykier <niels@thykier.net>  Thu, 09 Apr 2015 22:06:48 +0200
+
 lintian (2.5.30+deb8u3) unstable; urgency=medium
 
   * helpers/coll/objdump-info-helper:
