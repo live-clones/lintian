@@ -149,6 +149,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * lib/Lintian/Util.pm:
     + [NT] Prefer dpkg-deb --ctrl-tarfile to "ar p" when dpkg
       is recent enough.
+    + [NT] Stricten the permitted whitespace at the end of GPG
+      marker lines.  This is the same issue as CVE-2015-0840,
+      except lintian never attempted to validate the signature.
 
   * profiles/ubuntu/main.profile:
     + [BR] Exclude no-human-maintainers (Closes: #769036).

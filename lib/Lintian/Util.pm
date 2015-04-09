@@ -416,7 +416,7 @@ sub visit_dpkg_paragraph {
         # According to http://tools.ietf.org/html/rfc4880#section-6.2
         # The header MUST start at the beginning of the line and MUST NOT have
         # any other text (except whitespace) after the header.
-        elsif (m/^-----BEGIN PGP SIGNATURE-----\s*$/)
+        elsif (m/^-----BEGIN PGP SIGNATURE-----[ \r\t]*$/)
         { # skip until end of signature
             my $saw_end = 0;
             if (not $signed or $signature) {
@@ -430,7 +430,7 @@ sub visit_dpkg_paragraph {
             }
             $signature = $.;
             while (<$CONTROL>) {
-                if (m/^-----END PGP SIGNATURE-----\s*$/o) {
+                if (m/^-----END PGP SIGNATURE-----[ \r\t]*$/o) {
                     $saw_end = 1;
                     last;
                 }
@@ -454,7 +454,7 @@ sub visit_dpkg_paragraph {
             #    - Valid, but we don't support partial messages, so
             #      bail on those.
 
-            unless (m/^-----BEGIN PGP SIGNED MESSAGE-----\s*$/) {
+            unless (m/^-----BEGIN PGP SIGNED MESSAGE-----[ \r\t]*$/) {
                 # Not a (full) PGP MESSAGE; reject.
 
                 my $key = qr/(?:BEGIN|END) PGP (?:PUBLIC|PRIVATE) KEY BLOCK/;
@@ -462,7 +462,7 @@ sub visit_dpkg_paragraph {
                 my $msg
                   = qr/(?:BEGIN|END) PGP (?:(?:COMPRESSED|ENCRYPTED) )?MESSAGE/;
 
-                if (m/^-----($key|$msgpart|$msg)-----\s*$/o) {
+                if (m/^-----($key|$msgpart|$msg)-----[ \r\t]*$/o) {
                     die "syntax error at line $.: Unexpected $1 header\n";
                 } else {
                     die "syntax error at line $.: Malformed PGP header\n";
@@ -479,7 +479,7 @@ sub visit_dpkg_paragraph {
                     # allow two paragraphs to merge.  Consider:
                     #
                     # Field-P1: some-value
-                    # -----BEGIN PGP SIGANTURE----
+                    # -----BEGIN PGP SIGNATURE-----
                     #
                     # Field-P2: another value
                     #
@@ -509,9 +509,9 @@ sub visit_dpkg_paragraph {
             # two paragraphs to merge.  Consider:
             #
             # Field-P1: some-value
-            # -----BEGIN PGP SIGANTURE----
+            # -----BEGIN PGP SIGNATURE-----
             # [...]
-            # -----END PGP SIGANTURE----
+            # -----END PGP SIGNATURE-----
             # Field-P2: another value
             #
             # At the time of writing: If $open_section is true, it
