@@ -72,7 +72,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Avoid false positive license-problem-undefined-license
       for - in short license.
     + [BR] Warn when using reference to header license.
-      (Closes: #769818).
+      (related to bug #769818).
   * checks/watch-file.{desc,pm}:
     + [NT] Check for watch files accessing PyPI over HTTP
       instead of HTTPS.  This check has been imported from
