@@ -52,8 +52,6 @@ frontend:
 
 lib:
 
-- Finish documentation of Lintian::Collect::Binary and ::Source.
-
 - Finish documentation of Lintian::Output*.
 
 - Add collect function to return the sort of symlink information that's
