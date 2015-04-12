@@ -101,6 +101,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Apply patch from Jean-Michel Nirgal Vourgère for
       detecting missing-build-dependency-for-dh-addon apache2.
       (Closes: #778820).
+  * data/files/obsolete-paths:
+    + [BR] Add /etc/bash_completion.d (Closes: #776954).
   * data/files/privacy-breaker-websites:
     + [BR] Add specific test for privacy breach with modernizr.js
       (Closes: #769679).
