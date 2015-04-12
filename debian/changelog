@@ -97,6 +97,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [ADB] Add "stretch".
   * data/cruft/rfc-whitelist:
     + [BR] Whitelist dual licensed vorbis rfc5215.
+  * data/debhelper/dh_addons-manual:
+    + [BR] Apply patch from Jean-Michel Nirgal Vourgère for
+      detecting missing-build-dependency-for-dh-addon apache2.
+      (Closes: #778820).
   * data/files/privacy-breaker-websites:
     + [BR] Add specific test for privacy breach with modernizr.js
       (Closes: #769679).
