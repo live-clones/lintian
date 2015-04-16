@@ -40,6 +40,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Check source version (Closes: #749103).
     + [NT] Import check of "Python-version: current" being
       deprecated from lintian4python.
+    + [AB] Remove "dev" from list of suffixes to trigger
+      rc-version-greater-than-expected-version (Closes: #732246)
   * checks/files.{desc,pm}:
     + [BR] Rename compressed-objects.inv to
       file-should-not-be-compressed and use it for doxygen

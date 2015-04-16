@@ -303,7 +303,7 @@ sub run {
             }
             if (
                 $upstream =~ m/[^~a-z]
-                    (rc|alpha|beta|dev|pre(?:view|release)?)
+                    (rc|alpha|beta|pre(?:view|release)?)
                    ([^a-z].*|\Z)
                  /xsm
               ) {
