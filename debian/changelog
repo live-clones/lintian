@@ -122,6 +122,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Recommend dpkg (>= 1.17.14) for the --ctrl-tarfile
       option in dpkg-deb.  Lintian relies on it to support
       (u)deb files without a gzip compressed control.tar file.
+  * debian/copyright:
+    + [AB] Update copyright years.
 
   * frontend/lintian:
     + [NT] Produce a better error message for lintian detects
