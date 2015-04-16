@@ -125,6 +125,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * debian/copyright:
     + [AB] Update copyright years.
 
+  * doc/CREDITS:
+    + [AB] Add contributors from 2014 and 2015.
+
   * frontend/lintian:
     + [NT] Produce a better error message for lintian detects
       that a check has a dependency on an unknown collection.
