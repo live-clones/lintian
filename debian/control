@@ -100,6 +100,7 @@ Depends: binutils,
          patchutils,
          perl,
          t1utils,
+         xz-utils,
          ${misc:Depends}
 Recommends: dpkg (>= 1.17.14),
             perl (>= 5.20) | libautodie-perl (>= 2.18),
@@ -108,8 +109,7 @@ Suggests: binutils-multiarch,
           dpkg-dev,
           libhtml-parser-perl,
           libtext-template-perl,
-          libyaml-perl,
-          xz-utils
+          libyaml-perl
 Breaks: funny-manpages (<< 1.3-5.1)
 Replaces: funny-manpages (<< 1.3-5.1)
 Multi-Arch: foreign
