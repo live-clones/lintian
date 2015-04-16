@@ -208,7 +208,7 @@ my %VCS_VALID_URIS = (
     bzr     => qr;^(?:sftp|(?:bzr\+)?ssh)://;,
     cvs     => qr;^(?:-d\s*)?:(?:ext|pserver):;,
     hg      => qr;^ssh://;,
-    git     => qr;^(?:git\+)?ssh://;,
+    git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
     svn     => qr;^(?:svn\+)?ssh://;,
 );
 

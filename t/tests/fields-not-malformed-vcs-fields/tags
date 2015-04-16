@@ -1,0 +1,1 @@
+W: fields-not-malformed-vcs-fields source: vcs-field-uses-not-recommended-uri-format vcs-git git@git.debian.org:foobar.git

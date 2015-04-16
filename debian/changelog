@@ -42,6 +42,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       deprecated from lintian4python.
     + [AB] Remove "dev" from list of suffixes to trigger
       rc-version-greater-than-expected-version (Closes: #732246)
+    + [AB] Recognize user@host:path.git URIs in Vcs-Git (Closes: #778323)
   * checks/files.{desc,pm}:
     + [BR] Rename compressed-objects.inv to
       file-should-not-be-compressed and use it for doxygen
