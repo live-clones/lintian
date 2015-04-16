@@ -32,6 +32,10 @@ my @GOOD_WORDS = grep {$_ ne ''} map {
 
 add_stopwords(@GOOD_WORDS);
 
+# Hardcode spelling command as Test::Spelling prefers spell over
+# aspell if installed, too. This avoids a "Build-Conflicts: spell".
+set_spell_cmd('aspell list -l en -p /dev/null');
+
 chdir($ENV{'LINTIAN_TEST_ROOT'}//'.')
   or die("fatal error: could not chdir to $ENV{LINTIAN_TEST_ROOT}: $!");
 
