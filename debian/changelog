@@ -76,6 +76,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       for - in short license.
     + [BR] Warn when using reference to header license.
       (related to bug #769818).
+  * checks/symlinks.desc:
+    + [AB] package-contains-broken-symlink: Mention in the tag description
+      that only direct dependencies built from the same source package can
+      be checked by lintian. (Closes: #776535)
   * checks/watch-file.{desc,pm}:
     + [NT] Check for watch files accessing PyPI over HTTP
       instead of HTTPS.  This check has been imported from
