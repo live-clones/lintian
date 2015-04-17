@@ -181,3 +181,15 @@ Certainty: certain
 Info: The watch file is pointing at PyPI, using a http URL, not https.
  PyPI now has https enabled, you should be able to simply switch to
  https.
+
+Tag: debian-watch-file-unsupported-pypi-url
+Severity: important
+Certainty: certain
+Ref: https://wiki.python.org/moin/PyPISimple
+Info: The watch file specifies a PyPI URL which is not a supported API.
+ Instead, use PyPI's Simple API:
+ .
+   https://pypi.python.org/simple/&lt;distribution-name&gt;/
+ .
+ replacing <tt>&lt;distribution-name&gt;</tt> with the canonical name
+ of the Python project.

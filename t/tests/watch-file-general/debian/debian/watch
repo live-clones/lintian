@@ -21,6 +21,9 @@ version=42
 http://example.com/ foo([\d.]+)\.tar\.gz 2.0.ds1-1 uupdate
 
 opts="dversionmangle=s/ds-.*$//" \
-http://pypi.python.org/foo scripts\.([\d.]+)\.tar\.gz debian uupdate
+http://pypi.python.org/foo scripts\.([\d.]+)\.tar\.gz debian uupdate 
+
+# Unsupported PyPI URL.
+https://pypi.python.org/packages/source/p/pip/ pip-(\S+)\.tar\.gz
 
 # without any pgpsigurlmangle

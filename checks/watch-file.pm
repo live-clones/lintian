@@ -135,6 +135,10 @@ sub run {
                 tag 'debian-watch-file-should-use-sf-redirector', "line $.";
             }
 
+            if (m%https?://pypi\.python\.org/packages/source/%) {
+                tag 'debian-watch-file-unsupported-pypi-url', "line $.";
+            }
+
             # This bit is as-is from uscan.pl:
             my ($base, $filepattern, $lastversion, $action) = split ' ', $_, 4;
             # Per #765995, $base might be undefined.
