@@ -185,11 +185,13 @@ Info: The watch file is pointing at PyPI, using a http URL, not https.
 Tag: debian-watch-file-unsupported-pypi-url
 Severity: important
 Certainty: certain
-Ref: https://wiki.python.org/moin/PyPISimple
+Ref: #776267, https://wiki.python.org/moin/PyPISimple
 Info: The watch file specifies a PyPI URL which is not a supported API.
- Instead, use PyPI's Simple API:
+ Instead, use either the pypi.debian.net redirector service or PyPI's
+ Simple API:
  .
-   https://pypi.python.org/simple/&lt;distribution-name&gt;/
+   http://pypi.debian.net/&lt;distribution-name&gt;/&lt;distribution-name&gt;-(.*).tar.gz
+   https://pypi.python.org/simple/&lt;distribution-name&gt;/ &hellip;
  .
  replacing <tt>&lt;distribution-name&gt;</tt> with the canonical name
  of the Python project.
