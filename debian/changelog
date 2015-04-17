@@ -85,7 +85,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       instead of HTTPS.  This check has been imported from
       lintian4python (with a different tag name).
     + [AB] Check for watch files accessing unsupported PyPI URLs (Check
-      written by Ben Finney; Closes: #776267)
+      written by James McCoy and Ben Finney; Closes: #776267)
 
   * collection/strings:
     + [NT] Pass "-a" to strings to avoid possible security
