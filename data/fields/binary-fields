@@ -27,6 +27,12 @@ multi-arch
 built-using
 ruby-versions
 ghc-package
+gstreamer-version
+gstreamer-elements
+gstreamer-uri-sources
+gstreamer-uri-sinks
+gstreamer-encoders
+gstreamer-decoders
 
 # Special-case, original-maintainer is not ok in Debian, but we allow
 # it in any non-Debian profile by default.
