@@ -14,6 +14,8 @@ int
 main(void)
 {
     printf("I iz an exprimental speling error!\n");
+    printf("I also have teh broken teh!\n");
+    printf("But tEH non-broken tEh needs to be on its own line!\n");
     hardening_trigger(NULL, 0, NULL);
     return 0;
 }

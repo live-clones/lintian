@@ -1684,6 +1684,9 @@ lintian (2.5.18) unstable; urgency=low
     + [NT] Work around bug in Perl (#723805) when using "glob"
       within threads.  Thanks to Brian "hugmeir" Fraser for
       finding the underlying cause.
+  * t/tests/binaries-spelling/{debian/basic.c,tags}:
+    + [AB] Add subtest which verifies that the additional exception list
+      (teh vs tEh) for spelling-error-in-binary works.
   * t/tests/legacy-debug/debian/debian/control:
     + [NT] Mark some packages "arch:any" to avoid test failures
       on kfreebsd-amd64.  (Closes: #688524)

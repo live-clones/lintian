@@ -1,3 +1,4 @@
 I: binaries-spelling: spelling-error-in-binary usr/bin/basic exprimental experimental
 I: binaries-spelling: spelling-error-in-binary usr/bin/basic speling spelling
+I: binaries-spelling: spelling-error-in-binary usr/bin/basic teh the
 W: binaries-spelling: binary-without-manpage usr/bin/basic
