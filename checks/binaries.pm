@@ -328,8 +328,8 @@ sub run {
         my $exceptions = {
             %{ $group->info->spelling_exceptions },
             'teH' => 1, # From #711207
-            'tEH' => 1,
-            'tEh' => 1,
+            'tEH' => 1, # From #782902
+            'tEh' => 1, # From #782902, too
         };
         check_spelling('spelling-error-in-binary',$strings, $file,$exceptions);
 

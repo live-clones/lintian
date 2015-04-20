@@ -5,6 +5,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       library-in-debug-or-profile-should-not-be-stripped
       when file add "not stripped, too many notes" to its
       output. Thanks to Jakub Wilk.  (Closes: #775760).
+    + [AB] Ignore tEH and tEh for spelling-error-in-binary. (Closes:
+      #782902; bug report and patch by Tomasz Buchert, thanks!)
   * checks/changelog-file.{desc,pm}:
     + [BR] Correct a typo on tag name and do not raise
       bad-intended-distribution if distribution is still
