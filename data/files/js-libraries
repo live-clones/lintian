@@ -45,7 +45,7 @@ libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
 # that the file being checked is /the/ yahoo.js
 # libjs-yui                  ~~ (?i)/yahoo\.js(\.gz)?$EXT
 jsmath                       ~~ (?i)/jsMath(?:-fallback-\w+)?$EXT
-tinymce2?                    ~~ (?i)/tiny_mce(?:_(?:popup|src))?$EXT
+tinymce                      ~~ (?i)/tiny_mce(?:_(?:popup|src))?$EXT
 # not yet available in unstable
 # xinha                      ~~ (?i)/(htmlarea|Xinha(Loader|Core))$EXT
 
