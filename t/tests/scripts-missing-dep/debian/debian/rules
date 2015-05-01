@@ -7,6 +7,6 @@ override_dh_auto_build:
 	mkdir man
 	for FILE in *-script ; do \
 		sed s/@SCRIPT@/$$FILE/g script.pod | \
-			pod2man --section=1 > man/$$FILE.1 ; \
+			pod2man --name="$$(echo "$$FILE" | tr a-z A-Z )" \
+                             --section=1 > man/$$FILE.1 ; \
 	done
-

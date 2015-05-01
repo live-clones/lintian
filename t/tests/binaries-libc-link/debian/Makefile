@@ -3,7 +3,7 @@ LINKER_FLAGS := -Wl,--no-copy-dt-needed-entries,--no-as-needed
 all: basic basic.1 libbasic-nodeps libbasic-nolibc
 
 basic.1: basic.pod
-	pod2man --section 1 < $< > $@
+	pod2man --section 1 $< > $@
 
 basic: basic.o
 	gcc -nostdlib -o$@ $< $(LINKER_FLAGS) -lm $(LFLAGS)
