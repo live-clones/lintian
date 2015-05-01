@@ -70,9 +70,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * checks/source-copyright.{desc,pm}:
     + [BR] Fix a false positive for
       missing-license-paragraph-in-dep5-copyright tag.
-      Do not allow to reference header paragraph,
-      emit a specific tag.
-      (Closes: #766118).
+      Emit a new spefic tag for references to the header paragraph
+      as a license paragraph.  (Closes: #766118).
     + [BR] Detect if license short name are unique.
     + [BR] Avoid false positive license-problem-undefined-license
       for - in short license.
@@ -133,7 +132,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [BR] Add portugese||Portuguese.  (Closes:  #764015).
   * data/spelling/corrections-multiword:
-    + [BR] Add "allow to" and "permit to".  (Closes: #756128).
+    + [BR] Add "allow one to" and "permit one to".  (Closes: #756128).
 
   * debian/control:
     + [NT] Recommend dpkg (>= 1.17.14) for the --ctrl-tarfile
