@@ -11,6 +11,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Correct a typo on tag name and do not raise
       bad-intended-distribution if distribution is still
       set to UNRELEASED.  (Closes: #765344).
+    + [NT] Apply patches from Ben Finney to permit quotes around
+      the distribution name in the "to unstable" entries.
+      (Closes: #784012)
   * checks/control-file.{desc,pm}:
     + [BR] Apply patch from Johannes Schauer in order
       to detect obsolete XS-Testsuite header.
