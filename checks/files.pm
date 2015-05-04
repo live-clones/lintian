@@ -946,11 +946,6 @@ sub run {
             tag 'use-of-compat-symlink', $file;
         }
 
-        # ---------------- .ali files (Ada Library Information)
-        if ($fname =~ m,^usr/lib/.*\.ali$, && $operm != 0444) {
-            tag 'bad-permissions-for-ali-file', $file;
-        }
-
         # ---------------- any files
         if (not $file->is_dir) {
             unless (
@@ -1529,10 +1524,10 @@ sub run {
                     and $owner eq 'root/games'
                     and $fname =~ m,^var/(lib/)?games/\S+,) {
                     # everything is ok
-                } elsif ($operm == 0444 and $fname =~ m,^usr/lib/.*\.ali$,) {
-                    # Ada library information files should be read-only
-                    # since GNAT behaviour depends on that
-                    # everything is ok
+                } elsif ($fname =~ m,^usr/lib/.*\.ali$,) {
+                    # GNAT compiler wants read-only Ada library information.
+                    tag 'bad-permissions-for-ali-file', $file
+                      if ($operm != 0444);
                 } elsif ($operm == 0600 and $fname =~ m,^etc/backup.d/,) {
                     # backupninja expects configurations files to be 0600
                 } elsif ($fname =~ m,^etc/sudoers.d/,) {

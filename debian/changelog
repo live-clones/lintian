@@ -52,6 +52,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [BR] Rename compressed-objects.inv to
       file-should-not-be-compressed and use it for doxygen
       map.gz.  (Closes: #751949).
+    + [NT] Merge patch from Nicolas Boulenguez to remove some
+      partially redundant code.  (Closes: #784277)
   * checks/init.d.desc:
     + [BR] Add reference to #DEBHELPER# token for
       script-in-etc-init.d-not-registered-via-update-rc.d.
