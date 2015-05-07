@@ -244,20 +244,20 @@ Tag: dep5-file-paragraph-reference-header-paragraph
 Severity: normal
 Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The Files paragraph uses a reference to a license, which is
+Info: The Files paragraph uses a reference to a license which is
  only defined in the Header paragraph.  The copyright specification
  requires that the Files paragraph either contains the full license
  itself or references a "stand-alone" License paragraph, and not the
- Header paragraph
+ Header paragraph.
 
 Tag: dep5-copyright-license-name-not-unique
 Severity: normal
 Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: This paragraph define an already defined license.
+Info: This paragraph defines an already defined license.
  .
- According to specification the short license name are guaranteed
- to be unique within a single copyright file.
+ According to the specification, short license names are required to be
+ unique within a single copyright file.
 
 Tag: invalid-escape-sequence-in-dep5-copyright
 Severity: normal

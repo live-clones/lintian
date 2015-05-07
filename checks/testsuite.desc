@@ -84,7 +84,7 @@ Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plai
 Tag: unknown-runtime-tests-feature
 Severity: pedantic
 Certainty: wild-guess
-Info: A paragraph in debian/tests/control mentions a non standard
+Info: A paragraph in debian/tests/control mentions a non-standard
  value for the Features field. Though allowed, this may indicate an
  error, as the value will be ignored.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
@@ -92,7 +92,7 @@ Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plai
 Tag: unknown-runtime-tests-field
 Severity: pedantic
 Certainty: wild-guess
-Info: A paragraph in debian/tests/control mentions a non standard
+Info: A paragraph in debian/tests/control mentions a non-standard
  field. Though allowed, this may indicate an error, as the whole
  paragraph will be ignored.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
@@ -100,7 +100,7 @@ Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plai
 Tag: unknown-runtime-tests-restriction
 Severity: pedantic
 Certainty: wild-guess
-Info: A paragraph in debian/tests/control mentions a non standard
+Info: A paragraph in debian/tests/control mentions a non-standard
  value for the Restrictions field. Though allowed, this may indicate an
  error, as the whole paragraph will be ignored.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD

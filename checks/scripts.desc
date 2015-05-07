@@ -659,7 +659,7 @@ Info: The indicated program run in a maintainer script has a prepended
  If the path is required to test a program for existence, one of the suggested
  workarounds in the developer's reference can be used.
  .
- See particularly function pathfind() of devref.
+ See particularly the function pathfind() in devref.
 Ref: policy 6.1, devref 6.4
 
 Tag: maintainer-script-should-not-use-ancient-dpkg-epoch-check

@@ -95,7 +95,7 @@ Certainty: certain
 Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file.  As
  of dpkg 1.17.10, the XS- prefix is no longer necessary.  dpkg now
  recognizes this header and handles it correctly.  As of dpkg 1.17.11 the
- field is automatically added by dpkg-source with the "autopkgtest" value if
+ field is automatically added by dpkg-source with the value "autopkgtest" if
  there is a non-empty <tt>debian/tests/control</tt> file present.  Consider
  either removing the XS- prefix for this field or removing the field
  altogether if it contains just the "autopkgtest" value.
@@ -250,5 +250,5 @@ Severity: important
 Certainty: certain
 Ref: policy 5.6.8
 Info: The values of the Architecture field in debian/control must not
- be separated by anything else than spaces, i.e. must be single line
- and is not allowed to span multiple lines.
+ be separated by anything else than spaces; that is, they must form a
+ single line and are not allowed to span multiple lines.

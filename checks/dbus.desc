@@ -49,7 +49,7 @@ Info: The package contains D-Bus policy configuration that uses
  .
    &lt;deny send_interface="com.example.MyInterface"/&gt;
  .
- are redundant with the system bus' default-deny policy, and have
+ are redundant with the system bus's default-deny policy, and have
  unintended effects on other services.
  .
  This check ignores rules of the form

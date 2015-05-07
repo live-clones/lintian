@@ -67,7 +67,7 @@ Ref: policy 4.9, devref 6.7.8.2
 Info: The <tt>debian/rules</tt> file for this package does not provide
  one of the good practice targets.
  .
- If your packaged is repacked from non dfsg source, you should add a
+ If your packaged is repacked from non-dfsg source, you should add a
  get-orig-source target.
 
 Tag: debian-rules-uses-deprecated-makefile

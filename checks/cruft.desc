@@ -600,7 +600,7 @@ Info: The given control file uses <tt>CRLF</tt> as line terminator
 Tag: license-problem-json-evil
 Severity: serious
 Certainty: possible
-Info: The given source file is copyrighted under the non free
+Info: The given source file is copyrighted under the non-free
  license of json and the infamous clause:
  The Software shall be used for Good, not Evil.
 Ref: https://wiki.debian.org/qa.debian.org/jsonevil
@@ -608,8 +608,8 @@ Ref: https://wiki.debian.org/qa.debian.org/jsonevil
 Tag: license-problem-cc-by-nc-sa
 Severity: serious
 Certainty: possible
-Info: The given source file is copyrighted under the non free
- license creative commons non commercial share alike.
+Info: The given source file is copyrighted under the non-free
+ license creative commons non-commercial share-alike.
 
 Tag: license-problem-bad-php-license
 Severity: serious
@@ -680,7 +680,7 @@ Info: The given source file is licensed under GFDL, but without any
  precision about the presence of invariant sections, front-cover or
  back-cover text.
  .
- GFDL license explicitly requests you to document this non presence.
+ GFDL license explicitly requests you to document this non-presence.
  .
 Ref: https://wiki.debian.org/qa.debian.org/gfdlinvariant,
  https://www.debian.org/vote/2006/vote_001

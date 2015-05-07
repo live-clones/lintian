@@ -178,15 +178,15 @@ Info: The watch file contains a standard template included by dh_make.
 Tag: debian-watch-file-accesses-pypi-over-http
 Severity: wishlist
 Certainty: certain
-Info: The watch file is pointing at PyPI, using a http URL, not https.
- PyPI now has https enabled, you should be able to simply switch to
+Info: The watch file is pointing at PyPI, using an http URL, not https.
+ PyPI now has https enabled, so you should be able to simply switch to
  https.
 
 Tag: debian-watch-file-unsupported-pypi-url
 Severity: important
 Certainty: certain
 Ref: #776267, https://wiki.python.org/moin/PyPISimple
-Info: The watch file specifies a PyPI URL which is not a supported API.
+Info: The watch file specifies a PyPI URL, which is not a supported API.
  Instead, use either the pypi.debian.net redirector service or PyPI's
  Simple API:
  .
