@@ -185,6 +185,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Stricten the permitted whitespace at the end of GPG
       marker lines.  This is the same issue as CVE-2015-0840,
       except lintian never attempted to validate the signature.
+    + [NT] Explicitly use YAML::XS for reading and writing
+      YAML files.  YAML::Any doed not specify an interface for
+      reliably read YAML files in UTF-8 encoding leading to
+      "mojibake" in some cases.  Thanks to Andreas Rönnquist
+      for reporting the issue.  (Closes: #784639)
 
   * profiles/ubuntu/main.profile:
     + [BR] Exclude no-human-maintainers (Closes: #769036).

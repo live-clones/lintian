@@ -1525,8 +1525,8 @@ sub load_state_cache {
     my $state_file = "$state_dir/state-cache";
     my $state = {};
     my $fd;
-    require YAML::Any;
-    eval {open($fd, '<', $state_file);};
+    require YAML::XS;
+    eval {open($fd, '<:raw', $state_file);};
     if (my $err = $@) {
         if ($err->errno != ENOENT) {
             # Present, but unreadable for some reason
@@ -1535,7 +1535,7 @@ sub load_state_cache {
         # Not present; presume empty
         return $state;
     }
-    eval {$state = YAML::Any::Load(slurp_entire_file($fd, 1));};
+    eval {$state = YAML::XS::Load(slurp_entire_file($fd, 1));};
     # Not sure what Load does in case of issues; perldoc YAML says
     # very little about it.  Based on YAML::Error, I guess it will
     # write stuff to STDERR and use die/croak, but it remains a
@@ -1561,13 +1561,17 @@ sub load_state_cache {
 sub save_state_cache {
     my ($state_dir, $state) = @_;
     my $state_file = "$state_dir/state-cache";
-    my ($tmp_fd, $tmp_path)= tempfile('state-cache-XXXXXX', DIR => $state_dir);
+    my ($tmp_fd, $tmp_path);
+    require YAML::XS;
+
+    ($tmp_fd, $tmp_path) = tempfile('state-cache-XXXXXX', DIR => $state_dir);
+    ## TODO: Should tmp_fd be binmode'd as we use YAML::XS?
 
     # atomic replacement of the state file; not a substitute for
     # proper locking, but it will at least ensure that the file
     # is in a consistent state.
     eval {
-        print {$tmp_fd} YAML::Any::Dump($state);
+        print {$tmp_fd} YAML::XS::Dump($state);
 
         close($tmp_fd) or die("close $tmp_path: $!");
 
