@@ -1,6 +1,6 @@
 all: weak.1 strong.1
 	# Build without dpkg-buildflags.
-	gcc -o weak \
+	gcc -o weak -g \
 		-fno-stack-protector \
 		-Wl,-z,norelro \
 		-U_FORTIFY_SOURCE \
