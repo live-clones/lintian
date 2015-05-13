@@ -642,7 +642,7 @@ sub run {
             elsif ($fname =~ m,^usr/lib/debug/\S,) {
                 unless ($warned_debug_name) {
                     tag 'debug-package-should-be-named-dbg', $file
-                      unless ($pkg =~ /-dbg$/);
+                      unless $info->is_pkg_class('debug');
                     $warned_debug_name = 1;
                 }
 

@@ -57,6 +57,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       map.gz.  (Closes: #751949).
     + [NT] Merge patch from Nicolas Boulenguez to remove some
       partially redundant code.  (Closes: #784277)
+    + [NT] Allow "-dbgsym" as an alternative name to "-dbg" for
+      packages containing debug symbols.
   * checks/init.d.desc:
     + [BR] Add reference to #DEBHELPER# token for
       script-in-etc-init.d-not-registered-via-update-rc.d.
@@ -162,6 +164,10 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       used for parsing readelf output.  Thanks to Martin Pitt
       for reporting the issues.  (Closes: #771054)
 
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Add "debug" class for "is_pkg_class".  This uses the
+      package name to guess if the package is expected to
+      contain debug symbols.
   * lib/Lintian/Command.pm:
     + [NT] Use croak() rather than L::Util's fail() on errors.
       The issues are generally not "internal errors".

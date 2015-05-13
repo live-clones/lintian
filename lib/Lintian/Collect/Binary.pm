@@ -598,8 +598,9 @@ sub relation {
 =item is_pkg_class ([TYPE])
 
 Returns a truth value if the package is the given TYPE of special
-package.  TYPE can be one of "transitional" or "any-meta".  If omitted
-it defaults to "any-meta".  The semantics for these values are:
+package.  TYPE can be one of "transitional", "debug" or "any-meta".
+If omitted it defaults to "any-meta".  The semantics for these values
+are:
 
 =over 4
 
@@ -620,6 +621,12 @@ A transitional package will also match this.
 
 Guessed from package description, section or package name.
 
+=item debug
+
+The package is (probably) a package containing debug symbols.
+
+Guessed from the package name.
+
 =back
 
 Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
@@ -636,6 +643,10 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
         my ($self, $pkg_class) = @_;
         my $desc = $self->field('description', '');
         $pkg_class //= 'any-meta';
+        if ($pkg_class eq 'debug') {
+            return 1 if $self->name =~ m/-dbg(?:sym)?/;
+            return;
+        }
         return 1 if $desc =~ m/transitional package/;
         if ($pkg_class eq 'any-meta') {
             my ($section) = $self->field('section', '');
