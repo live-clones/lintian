@@ -29,6 +29,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * checks/cruft.{desc,pm}:
     + [NT] Import "d/pycompat is deprecated" check from
       lintian4python.
+  * checks/dbus.{desc,pm}:
+    + [NT] Apply patch series from Simon McVittie to
+      improve the dbus check.  In particular, detect dbus
+      policy files that exposes CVE-2014-8148 and
+      CVE-2014-8156.  (Closes: #776480)
   * checks/deb-format.{desc,pm}:
     + [BR] Support all format described in deb(5)
       but manually reject until dak is ready.
@@ -37,11 +42,6 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       not emitted if "debian/source" was missing.  Thanks to
       Jean-Michel Nirgal Vourgère for finding this bug.
       (Closes: #781235)
-  * checks/dbus.{desc,pm}:
-    + [NT] Apply patch series from Simon McVittie to
-      improve the dbus check.  In particular, detect dbus
-      policy files that exposes CVE-2014-8148 and
-      CVE-2014-8156.  (Closes: #776480)
   * checks/fields.{desc,pm}:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).
