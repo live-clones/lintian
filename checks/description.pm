@@ -193,7 +193,11 @@ sub run {
 
     if ($type ne 'udeb') {
         if ($lines == 0) {
-            tag 'extended-description-is-empty';
+            # Ignore debug packages with empty "extended" description
+            # "debug symbols for pkg foo" is generally descriptive
+            # enough.
+            tag 'extended-description-is-empty'
+              if not $info->is_pkg_class('debug');
         } elsif ($lines <= 2 and not $synopsis =~ /(?:dummy|transition)/i) {
             tag 'extended-description-is-probably-too-short'
               unless $info->is_pkg_class('any-meta')

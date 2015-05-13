@@ -42,6 +42,8 @@ lintian (2.5.31) UNRELEASED; urgency=medium
       not emitted if "debian/source" was missing.  Thanks to
       Jean-Michel Nirgal Vourgère for finding this bug.
       (Closes: #781235)
+  * checks/description.pm:
+    + [NT] Allow debug packages without an extended description.
   * checks/fields.{desc,pm}:
     + [BR] Add reference to build-depends-on-metapackage
       (Closes: #767107).
