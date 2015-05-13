@@ -47,7 +47,7 @@ our $KNOWN_COMMON_LICENSES
   =  Lintian::Data->new('copyright-file/common-licenses');
 
 sub run {
-    my ($pkg, undef, $info, undef, $group) = @_;
+    my ($pkg, undef, $info, $proc, $group) = @_;
     my $found = 0;
     my $linked = 0;
     my $path = "usr/share/doc/$pkg";
@@ -95,7 +95,7 @@ sub run {
             # We therefore just require the dependency for now and
             # don't worry about the version number.
             $link =~ s,/.*,,;
-            if (not depends_on($info, $link)) {
+            if (not depends_on($info, $proc, $link)) {
                 tag 'usr-share-doc-symlink-without-dependency', $link;
                 return;
             }
@@ -336,9 +336,13 @@ sub run {
 # Returns true if the package whose information is in $info depends $package
 # or if $package is essential.
 sub depends_on {
-    my ($info, $package) = @_;
+    my ($info, $proc, $package) = @_;
+    my ($strong, $arch);
     return 1 if $KNOWN_ESSENTIAL->known($package);
-    return 1 if $info->relation('strong')->implies($package);
+    $strong = $info->relation('strong');
+    return 1 if $strong->implies($package);
+    $arch = $proc->pkg_arch;
+    return 1 if $arch ne 'all' and $strong->implies("${package}:${arch}");
     return 0;
 }
 

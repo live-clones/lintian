@@ -23,6 +23,9 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [NT] Apply patch from Guillem Jover to update the description
       of the xs-testsuite-header-in-debian-control tag.
       (Closes: #781397)
+  * checks/copyright-file.pm:
+    + [NT] Permit the use of "pkg:arch" dependencies when packages use
+      symlinked doc-dirs.
   * checks/cruft.{desc,pm}:
     + [NT] Import "d/pycompat is deprecated" check from
       lintian4python.
