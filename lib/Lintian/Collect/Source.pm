@@ -350,7 +350,7 @@ values (in this case, DEFAULT is ignored).  This hashref should not be
 modified.
 
 If PACKAGE is not a binary built from this source, this returns
-C<undef> regardless of FIELD and DEFAULT.
+DEFAULT.
 
 Needs-Info requirements for using I<binary_field>: L<Same as index_resolved_path|Lintian::Collect::Package/index_resolved_path(PATH)>
 
@@ -369,7 +369,7 @@ sub binary_field {
         return $self->{binary_field}{$package}{$field}//$def if $field;
         return $self->{binary_field}{$package};
     }
-    return;
+    return $def;
 }
 
 # Internal method to load binary and source fields from
