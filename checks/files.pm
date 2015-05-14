@@ -277,6 +277,18 @@ sub run {
     my $isma_same = $info->field('multi-arch', '') eq 'same';
     my $ppkg = quotemeta($pkg);
 
+    # get the last changelog timestamp
+    # if for some weird reasons the timestamp does
+    # not exist, it will remain 0
+    my $changes = $info->changelog;
+    my $changelog_timestamp = 0;
+    if (defined $changes) {
+        my ($entry) = $changes->data;
+        if ($entry && $entry->Timestamp) {
+            $changelog_timestamp = $entry->Timestamp;
+        }
+    }
+
     # find out which files are scripts
     my %script = map {$_ => 1} (sort keys %{$info->scripts});
 
@@ -1433,7 +1445,11 @@ sub run {
                         if ($isma_same && $file !~ m/\Q$arch\E/o) {
                             tag 'gzip-file-is-not-multi-arch-same-safe', $file;
                         } else {
-                            tag 'package-contains-timestamped-gzip', $file;
+                            # see https://bugs.debian.org/762105
+                            my $diff = $file->timestamp - $changelog_timestamp;
+                            if ($diff >= 0) {
+                                tag 'package-contains-timestamped-gzip', $file;
+                            }
                         }
                     }
                 }
