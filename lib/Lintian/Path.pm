@@ -33,6 +33,7 @@ use overload (
     'fallback' => 0,
 );
 
+use Date::Parse qw(str2time);
 use Carp qw(croak confess);
 use Scalar::Util qw(weaken);
 
@@ -195,7 +196,7 @@ NB: Returns the empty string for the "root" dir.
 
 Lintian::Path->mk_ro_accessors(
     qw(name owner group link type uid gid
-      size date operm parent_dir dirname basename
+      size date time operm parent_dir dirname basename
       ));
 
 =item children
@@ -210,6 +211,20 @@ NB: Returns the empty list for non-dir entries.
 sub children {
     my ($self) = @_;
     return @{$self->{'_sorted_children'} };
+}
+
+=item timestamp
+
+Returns a Unix timestamp for the given path. This is a number of
+seconds since the start of Unix epoch in UTC.
+
+=cut
+
+sub timestamp {
+    my ($self) = @_;
+    my $date = $self->{'date'};
+    my $time = $self->{'time'};
+    return str2time("$date $time", 'GMT');
 }
 
 =item child(BASENAME)
