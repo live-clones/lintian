@@ -434,11 +434,13 @@ sub prune_lintian_lab {
 sub _open_data_file {
     my ($file) = @_;
     if (-e $file) {
-        open(my $fd, '<', $file);
+        open(my $fd, '<:encoding(UTF-8)', $file);
         return $fd;
     }
     if (-e "${file}.gz") {
-        return open_gz("${file}.gz");
+        my $fd = open_gz("${file}.gz");
+        binmode($fd, 'encoding(UTF-8)');
+        return $fd;
     }
     die("Cannot find ${file}: file does not exist");
 }

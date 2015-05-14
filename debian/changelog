@@ -6,6 +6,11 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Downgrade backports-changes-missing to a wishlist (I) tag.
       Thanks to Vincent Cheng for the report.  (Closes: #785084)
 
+  * commands/reporting-sync-state.pm:
+    + [NT] Read mirror files as UTF-8 files to avoid mojibake in
+      maintainer names.  Once again, thanks to Andreas Rönnquist
+      for the report.
+
   * debian/changelog:
     + [NT] Add missing list of new / removed tags to the
       entry for the previous release.
