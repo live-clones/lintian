@@ -1,4 +1,33 @@
+lintian (2.5.32) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+  * debian/changelog:
+    + [NT] Add missing list of new / removed tags to the
+      entry for the previous release.
+
+ -- Niels Thykier <niels@thykier.net>  Thu, 14 May 2015 09:11:05 +0200
+
 lintian (2.5.31) unstable; urgency=medium
+
+  * Summary of tag changes:
+    + Added:
+      - bad-intended-distribution
+      - dbus-policy-excessively-broad
+      - debian-pycompat-is-obsolete
+      - debian-watch-file-accesses-pypi-over-http
+      - debian-watch-file-unsupported-pypi-url
+      - dep5-copyright-license-name-not-unique
+      - dep5-file-paragraph-reference-header-paragraph
+      - file-should-not-be-compressed
+      - multiline-architecture-field
+      - python-version-current-is-deprecated
+      - uses-no-compression-for-control-tarball
+      - uses-no-compression-for-data-tarball
+      - xs-testsuite-header-in-debian-control
+    + Removed:
+      - bad-intended-distibution
+      - compressed-objects.inv
 
   * checks/binaries.pm:
     + [BR] Do not tag with
