@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-05-01 16:38+0000\n"
+"POT-Creation-Date: 2015-05-14 05:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1195,15 +1195,20 @@ msgstr ""
 #
 #. Tag: experimental-to-unstable-without-comment
 #. type: Lintian tag description
-#: checks/changelog-file.desc:231
+#: checks/changelog-file.desc:235
 #, no-wrap
 msgid ""
 "The previous version of this package had a distribution of\n"
-"experimental, this version has a distribution of unstable, and there's\n"
-"apparently no comment about the change of distributions (Lintian looks\n"
-"for the phrase \"to unstable\").  This may indicate a mistake in setting\n"
-"the distribution and accidentally uploading to unstable a package\n"
-"intended for experimental."
+"\"experimental\", this version has a distribution of \"unstable\", and "
+"there's\n"
+"apparently no comment about the change of distributions.\n"
+"\n"
+"Lintian looks in this version's changelog entry for the phrase \"to\n"
+"unstable\" or \"to sid\", with or without quotation marks around the\n"
+"distribution name.\n"
+"\n"
+"This may indicate a mistake in setting the distribution and an accidental\n"
+"upload to unstable of a package intended for experimental."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -1211,7 +1216,7 @@ msgstr ""
 #
 #. Tag: syntax-error-in-debian-changelog
 #. type: Lintian tag description
-#: checks/changelog-file.desc:244
+#: checks/changelog-file.desc:248
 #, no-wrap
 msgid ""
 "While parsing the Debian changelog, a syntax error was found.  If\n"
@@ -1229,7 +1234,7 @@ msgstr ""
 #
 #. Tag: syntax-error-in-debian-news-file
 #. type: Lintian tag description
-#: checks/changelog-file.desc:250
+#: checks/changelog-file.desc:254
 #, no-wrap
 msgid "While parsing the NEWS.Debian file, a syntax error was found."
 msgstr ""
@@ -1239,7 +1244,7 @@ msgstr ""
 #
 #. Tag: improbable-bug-number-in-closes
 #. type: Lintian tag description
-#: checks/changelog-file.desc:257
+#: checks/changelog-file.desc:261
 #, no-wrap
 msgid ""
 "The most recent changelog closes a bug numbered less than 100.\n"
@@ -1252,7 +1257,7 @@ msgstr ""
 #
 #. Tag: wrong-bug-number-in-closes
 #. type: Lintian tag description
-#: checks/changelog-file.desc:263
+#: checks/changelog-file.desc:267
 #, no-wrap
 msgid "Bug numbers can only contain digits."
 msgstr ""
@@ -1262,7 +1267,7 @@ msgstr ""
 #
 #. Tag: possible-missing-colon-in-closes
 #. type: Lintian tag description
-#: checks/changelog-file.desc:271
+#: checks/changelog-file.desc:275
 #, no-wrap
 msgid ""
 "To close a bug in the Debian changelog, the word \"closes\" must be\n"
@@ -1275,7 +1280,7 @@ msgstr ""
 #
 #. Tag: debian-news-entry-has-strange-distribution
 #. type: Lintian tag description
-#: checks/changelog-file.desc:280
+#: checks/changelog-file.desc:284
 #, no-wrap
 msgid ""
 "The latest entry in NEWS.Debian has an unusual distribution name.\n"
@@ -1290,7 +1295,7 @@ msgstr ""
 #
 #. Tag: debian-news-entry-uses-asterisk
 #. type: Lintian tag description
-#: checks/changelog-file.desc:289
+#: checks/changelog-file.desc:293
 #, no-wrap
 msgid ""
 "The latest entry in NEWS.Debian appears to use asterisks to present\n"
@@ -1304,7 +1309,7 @@ msgstr ""
 #
 #. Tag: debian-news-entry-has-unknown-version
 #. type: Lintian tag description
-#: checks/changelog-file.desc:298
+#: checks/changelog-file.desc:302
 #, no-wrap
 msgid ""
 "The version number of the most recent <tt>NEWS.Debian</tt> entry\n"
@@ -1319,7 +1324,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-changelog
 #. type: Lintian tag description
-#: checks/changelog-file.desc:309
+#: checks/changelog-file.desc:313
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the latest entry of the Debian\n"
@@ -1336,7 +1341,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-news-debian
 #. type: Lintian tag description
-#: checks/changelog-file.desc:316
+#: checks/changelog-file.desc:320
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the latest entry of the\n"
@@ -1349,7 +1354,7 @@ msgstr ""
 #
 #. Tag: new-package-should-close-itp-bug
 #. type: Lintian tag description
-#: checks/changelog-file.desc:328
+#: checks/changelog-file.desc:332
 #, no-wrap
 msgid ""
 "This package appears to be the first packaging of a new upstream\n"
@@ -1366,7 +1371,7 @@ msgstr ""
 #
 #. Tag: debian-changelog-line-too-long
 #. type: Lintian tag description
-#: checks/changelog-file.desc:336
+#: checks/changelog-file.desc:340
 #, no-wrap
 msgid ""
 "The given line of the latest changelog entry is over 80 columns.\n"
@@ -1380,7 +1385,7 @@ msgstr ""
 #
 #. Tag: changelog-news-debian-mismatch
 #. type: Lintian tag description
-#: checks/changelog-file.desc:344
+#: checks/changelog-file.desc:348
 #, no-wrap
 msgid ""
 "The latest entries in the Debian changelog file and NEWS.Debian file\n"
@@ -1394,7 +1399,7 @@ msgstr ""
 #
 #. Tag: bad-intended-distribution
 #. type: Lintian tag description
-#: checks/changelog-file.desc:351
+#: checks/changelog-file.desc:355
 #, no-wrap
 msgid ""
 "The last changelog entry implies this version is not for release.\n"
@@ -1406,7 +1411,7 @@ msgstr ""
 #
 #. Tag: version-refers-to-distribution
 #. type: Lintian tag description
-#: checks/changelog-file.desc:366
+#: checks/changelog-file.desc:370
 #, no-wrap
 msgid ""
 "The Debian portion of the package version contains a reference to a\n"
@@ -1427,7 +1432,7 @@ msgstr ""
 #
 #. Tag: debian-changelog-has-wrong-weekday
 #. type: Lintian tag description
-#: checks/changelog-file.desc:377
+#: checks/changelog-file.desc:381
 #, no-wrap
 msgid ""
 "The date in the changelog entry is not consistent with the actual\n"
@@ -1924,7 +1929,7 @@ msgid ""
 "There is an XS-Testsuite field in the <tt>debian/control</tt> file.  As\n"
 "of dpkg 1.17.10, the XS- prefix is no longer necessary.  dpkg now\n"
 "recognizes this header and handles it correctly.  As of dpkg 1.17.11 the\n"
-"field is automatically added by dpkg-source with the \"autopkgtest\" value "
+"field is automatically added by dpkg-source with the value \"autopkgtest\" "
 "if\n"
 "there is a non-empty <tt>debian/tests/control</tt> file present.  Consider\n"
 "either removing the XS- prefix for this field or removing the field\n"
@@ -2177,8 +2182,8 @@ msgstr ""
 #, no-wrap
 msgid ""
 "The values of the Architecture field in debian/control must not\n"
-"be separated by anything else than spaces, i.e. must be single line\n"
-"and is not allowed to span multiple lines.\n"
+"be separated by anything else than spaces; that is, they must form a\n"
+"single line and are not allowed to span multiple lines.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -3680,7 +3685,7 @@ msgstr ""
 #: checks/cruft.desc:607
 #, no-wrap
 msgid ""
-"The given source file is copyrighted under the non free\n"
+"The given source file is copyrighted under the non-free\n"
 "license of json and the infamous clause:\n"
 "The Software shall be used for Good, not Evil."
 msgstr ""
@@ -3693,8 +3698,8 @@ msgstr ""
 #: checks/cruft.desc:613
 #, no-wrap
 msgid ""
-"The given source file is copyrighted under the non free\n"
-"license creative commons non commercial share alike."
+"The given source file is copyrighted under the non-free\n"
+"license creative commons non-commercial share-alike."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -3795,7 +3800,7 @@ msgid ""
 "precision about the presence of invariant sections, front-cover or\n"
 "back-cover text.\n"
 "\n"
-"GFDL license explicitly requests you to document this non presence.\n"
+"GFDL license explicitly requests you to document this non-presence.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -3994,7 +3999,7 @@ msgid ""
 "\n"
 "  &lt;deny send_interface=\"com.example.MyInterface\"/&gt;\n"
 "\n"
-"are redundant with the system bus' default-deny policy, and have\n"
+"are redundant with the system bus's default-deny policy, and have\n"
 "unintended effects on other services.\n"
 "\n"
 "This check ignores rules of the form\n"
@@ -4201,12 +4206,12 @@ msgstr ""
 #: checks/deb-format.desc:83
 #, no-wrap
 msgid ""
-"The control portion of this binary package uses a non compressed\n"
+"The control portion of this binary package uses a non-compressed\n"
 "format.  Although dpkg will support extracting such binary packages\n"
 "since dpkg 1.10.24, creating them is not advised except in special\n"
 "cases.\n"
 "\n"
-"Except if data is non compressible use gzip for\n"
+"Except if data is non-compressible, use gzip for\n"
 "maximum compatibility and speed, and xz for maximum compression ratio."
 msgstr ""
 
@@ -4218,12 +4223,12 @@ msgstr ""
 #: checks/deb-format.desc:94
 #, no-wrap
 msgid ""
-"The data portion of this binary package uses a non compressed\n"
+"The data portion of this binary package uses a non-compressed\n"
 "format.  Although dpkg will support extracting such binary packages\n"
 "since dpkg 1.10.24, creating them is not advised except in special\n"
 "cases.\n"
 "\n"
-"Except if data is non compressible use gzip for\n"
+"Except if data is non-compressible, use gzip for\n"
 "maximum compatibility and speed, and xz for maximum compression ratio.\n"
 msgstr ""
 
@@ -9686,7 +9691,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "This type 1 font file includes some postscript fragment with a\n"
-"non free license of Adobe.  In order to check if this tag is genuine\n"
+"non-free license of Adobe.  In order to check if this tag is genuine\n"
 "please follow the procedure described in the reference.\n"
 "\n"
 "Should this be a false-positive, please override the tag."
@@ -9701,7 +9706,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "This type 1 font file includes some postscript fragment with a\n"
-"non free license of Adobe.  In order to check if this tag is genuine\n"
+"non-free license of Adobe.  In order to check if this tag is genuine\n"
 "please follow the procedure described in the reference.\n"
 "\n"
 "Moreover the fragment was likely verbatim copied from black\n"
@@ -13969,7 +13974,7 @@ msgid ""
 "The <tt>debian/rules</tt> file for this package does not provide\n"
 "one of the good practice targets.\n"
 "\n"
-"If your packaged is repacked from non dfsg source, you should add a\n"
+"If your packaged is repacked from non-dfsg source, you should add a\n"
 "get-orig-source target."
 msgstr ""
 
@@ -15241,7 +15246,7 @@ msgid ""
 "suggested\n"
 "workarounds in the developer's reference can be used.\n"
 "\n"
-"See particularly function pathfind() of devref."
+"See particularly the function pathfind() in devref."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16397,11 +16402,11 @@ msgstr ""
 #: checks/source-copyright.desc:252
 #, no-wrap
 msgid ""
-"The Files paragraph uses a reference to a license, which is\n"
+"The Files paragraph uses a reference to a license which is\n"
 "only defined in the Header paragraph.  The copyright specification\n"
 "requires that the Files paragraph either contains the full license\n"
 "itself or references a \"stand-alone\" License paragraph, and not the\n"
-"Header paragraph"
+"Header paragraph."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16412,10 +16417,10 @@ msgstr ""
 #: checks/source-copyright.desc:261
 #, no-wrap
 msgid ""
-"This paragraph define an already defined license.\n"
+"This paragraph defines an already defined license.\n"
 "\n"
-"According to specification the short license name are guaranteed\n"
-"to be unique within a single copyright file."
+"According to the specification, short license names are required to be\n"
+"unique within a single copyright file."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16876,7 +16881,7 @@ msgstr ""
 #: checks/testsuite.desc:91
 #, no-wrap
 msgid ""
-"A paragraph in debian/tests/control mentions a non standard\n"
+"A paragraph in debian/tests/control mentions a non-standard\n"
 "value for the Features field. Though allowed, this may indicate an\n"
 "error, as the value will be ignored."
 msgstr ""
@@ -16889,7 +16894,7 @@ msgstr ""
 #: checks/testsuite.desc:99
 #, no-wrap
 msgid ""
-"A paragraph in debian/tests/control mentions a non standard\n"
+"A paragraph in debian/tests/control mentions a non-standard\n"
 "field. Though allowed, this may indicate an error, as the whole\n"
 "paragraph will be ignored."
 msgstr ""
@@ -16902,7 +16907,7 @@ msgstr ""
 #: checks/testsuite.desc:107
 #, no-wrap
 msgid ""
-"A paragraph in debian/tests/control mentions a non standard\n"
+"A paragraph in debian/tests/control mentions a non-standard\n"
 "value for the Restrictions field. Though allowed, this may indicate an\n"
 "error, as the whole paragraph will be ignored."
 msgstr ""
@@ -17260,8 +17265,8 @@ msgstr ""
 #: checks/watch-file.desc:184
 #, no-wrap
 msgid ""
-"The watch file is pointing at PyPI, using a http URL, not https.\n"
-"PyPI now has https enabled, you should be able to simply switch to\n"
+"The watch file is pointing at PyPI, using an http URL, not https.\n"
+"PyPI now has https enabled, so you should be able to simply switch to\n"
 "https."
 msgstr ""
 
@@ -17273,7 +17278,7 @@ msgstr ""
 #: checks/watch-file.desc:197
 #, no-wrap
 msgid ""
-"The watch file specifies a PyPI URL which is not a supported API.\n"
+"The watch file specifies a PyPI URL, which is not a supported API.\n"
 "Instead, use either the pypi.debian.net redirector service or PyPI's\n"
 "Simple API:\n"
 "\n"
