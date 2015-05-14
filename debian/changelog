@@ -1,4 +1,4 @@
-lintian (2.5.31) UNRELEASED; urgency=medium
+lintian (2.5.31) unstable; urgency=medium
 
   * checks/binaries.pm:
     + [BR] Do not tag with
@@ -247,7 +247,7 @@ lintian (2.5.31) UNRELEASED; urgency=medium
   * t/tests/files-embedded/:
     + [AB] Add test case for #783327.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 09 Nov 2014 15:25:04 +0100
+ -- Niels Thykier <niels@thykier.net>  Thu, 14 May 2015 08:11:27 +0200
 
 lintian (2.5.30) unstable; urgency=medium
 
