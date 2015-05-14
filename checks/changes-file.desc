@@ -131,13 +131,13 @@ Info: The Changed-By address includes root user, which is
  was not built in a sane environment.
 
 Tag: backports-changes-missing
-Severity: serious
-# if there are no false positives, this could possibly be increased
+Severity: wishlist
 Certainty: possible
-Info: The changes file only has changelog entries from a single version. For
- backports, all changes since (old)stable or the previous backport should be
- listed (usually by adding the '-v' option to the build).
-Ref: http://backports.debian.org/Contribute/
+Info: The changes file only has changelog entries from a single version.  It
+ is recommended for backports to include all changes since (old)stable or
+ the previous backport.  This can be done by adding the '-v' option to the
+ build with the appropiate version.
+Ref: http://backports.debian.org/Contribute/, #785084
 
 Tag: backports-upload-has-incorrect-version-number
 Severity: serious
