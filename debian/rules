@@ -22,6 +22,7 @@ tag =
 # Work/output dir for tests
 # private/runtests gets TEST_WORK_DIR from environment
 export TEST_WORK_DIR ?= $(CURDIR)/debian/test-out
+CLEAN_TEST_WORK_DIR ?= 1
 
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	testtarget = runtests
@@ -100,10 +101,12 @@ clean: $(neededfiles)
 	rm -f runtests build-stamp
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf doc/api.html
+ifneq ($(CLEAN_TEST_WORK_DIR),0)
 	rm -rf "$(TEST_WORK_DIR)"
+endif
 	rm -rf man/man1/
 	rm -fr l10n/
-	dh_clean
+	dh_clean -X "$(TEST_WORK_DIR)"
 
 binary-indep: $(neededfiles) build
 	@echo .... binary-indep ....

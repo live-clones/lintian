@@ -153,6 +153,11 @@ lintian (2.5.31) UNRELEASED; urgency=medium
     + [AB] Promote xz-utils from Suggests to Depends. (Closes: #774729)
   * debian/copyright:
     + [AB] Update copyright years.
+  * debian/rules:
+    + [NT] Add CLEAN_TEST_WORK_DIR to be able to control
+      whether the test artifact directory should be cleaned
+      during a call to "debian/rules clean" (defaulting to
+      do the clean).
 
   * doc/CREDITS:
     + [AB] Add contributors from 2014 and 2015.
