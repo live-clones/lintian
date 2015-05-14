@@ -3,6 +3,13 @@ pkg=files-gzip
 %:
 	dh $@
 
+override_dh_install:
+	dh_install
+	# we set the mtime to the past
+	touch -m -d "2003-06-21 12:12:12 UTC" debian/$(pkg)/etc/timestamped-past.gz
+	# we set the mtime to right now
+	touch -m debian/$(pkg)/etc/timestamped-now.gz
+
 override_dh_installdocs:
 	dh_installdocs
 	echo "Hello world :)" > debian/$(pkg)/usr/share/doc/$(pkg)/changelog.gz
