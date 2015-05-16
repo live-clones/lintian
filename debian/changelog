@@ -5,6 +5,14 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/changes-file.{desc,pm}:
     + [NT] Downgrade backports-changes-missing to a wishlist (I) tag.
       Thanks to Vincent Cheng for the report.  (Closes: #785084)
+  * checks/files.pm:
+    + [NT] Apply patch from Tomasz Buchert to avoid false-positive
+      package-contains-timestamped-gzip in some cases.
+      (Closes: #762105)
+
+  * collection/unpacked:
+    + [NT] Apply patch from Tomasz Buchert to extract the full time
+      in UTC.
 
   * commands/reporting-sync-state.pm:
     + [NT] Read mirror files as UTF-8 files to avoid mojibake in
@@ -14,6 +22,10 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * debian/changelog:
     + [NT] Add missing list of new / removed tags to the
       entry for the previous release.
+
+  * lib/Lintian/Path.pm:
+    + [NT] Apply patch from Tomasz Buchert to add "timestamp"
+      method.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 14 May 2015 09:11:05 +0200
 
