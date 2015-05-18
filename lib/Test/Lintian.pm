@@ -719,9 +719,9 @@ sub _check_reference {
     }
 
     foreach my $reference (split /\s*,\s*/, $refdata) {
-        if (   $reference =~ m,^http://bugs.debian.org/(\d++)$,
+        if (   $reference =~ m,^https?://bugs.debian.org/(\d++)$,
             or $reference
-            =~ m,^http://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$,
+            =~ m,^https?://bugs.debian.org/cgi-bin/bugreport.cgi\?/.*bug=(\d++).*$,
           ) {
             push @issues, "replace \"$reference\" with \"#$1\"";
         } elsif (exists $URLS{$reference}) {

@@ -81,7 +81,7 @@ Certainty: possible
 Info: The package contains a debian/patches/series file
  that doesn't end with a newline. dpkg-source may silently
  corrupt this file.
-Ref: https://bugs.debian.org/584233
+Ref: #584233
 
 Tag: quilt-patch-with-non-standard-options
 Severity: normal
