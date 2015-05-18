@@ -26,6 +26,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * lib/Lintian/Path.pm:
     + [NT] Apply patch from Tomasz Buchert to add "timestamp"
       method.
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Expand BTS links using https rather than http.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 14 May 2015 09:11:05 +0200
 
