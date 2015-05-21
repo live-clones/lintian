@@ -1,0 +1,4 @@
+# Under reproducible builds, we also get an architecture dependent
+# (buildinfo) file.  This causes the archiecture field of the changes
+# file to change.  This little script fixes that.
+s/architecture="source all ([^"]*)"/architecture="source all"/
