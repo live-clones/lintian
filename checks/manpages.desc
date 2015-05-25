@@ -200,35 +200,6 @@ Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
  filename.
 Ref: groff_man(7), man(1)
 
-Tag: hyphen-used-as-minus-sign
-Severity: wishlist
-Certainty: possible
-Info: This manual page seems to contain a hyphen where a minus sign was
- intended.  By default, "-" chars are interpreted as hyphens (U+2010) by
- groff, not as minus signs (U+002D).  Since options to programs use minus
- signs (U+002D), this means for example in UTF-8 locales that you cannot
- cut and paste options, nor search for them easily.  The Debian groff
- package currently forces "-" to be interpreted as a minus sign due to the
- number of manual pages with this problem, but this is a Debian-specific
- modification and hopefully eventually can be removed.
- .
- "-" must be escaped ("\-") to be interpreted as minus.  If you really
- intend a hyphen (normally you don't), write it as "\(hy" to emphasise
- that fact.  See groff(7) and especially groff_char(7) for details, and
- also the thread starting with
- https://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
- .
- If you use some tool that converts your documentation to groff format,
- this tag may indicate a bug in the tool.  Some tools convert dashes of
- any kind to hyphens.  The safe way of converting dashes is to convert
- them to "\-".
- .
- Because this error can occur <em>very</em> often, Lintian shows only the
- first 10 occurrences for each man page and give the number of suppressed
- occurrences.  If you want to see all warnings, run Lintian with the
- -d/--debug option.
-Ref: /usr/share/doc/groff-base/README.Debian, groff_char(7)
-
 Tag: FSSTND-dir-in-manual-page
 Severity: wishlist
 Certainty: certain

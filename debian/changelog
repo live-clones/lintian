@@ -9,6 +9,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Apply patch from Tomasz Buchert to avoid false-positive
       package-contains-timestamped-gzip in some cases.
       (Closes: #762105)
+  * checks/manpages.{desc,pm}:
+    + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
+      renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)
 
   * collection/unpacked:
     + [NT] Apply patch from Tomasz Buchert to extract the full time

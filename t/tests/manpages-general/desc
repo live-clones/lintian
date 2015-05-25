@@ -8,7 +8,6 @@ Test-For:
  bad-so-link-within-manual-page
  binary-without-english-manpage
  empty-manual-page
- hyphen-used-as-minus-sign
  link-to-undocumented-manpage
  manpage-has-bad-whatis-entry
  manpage-has-errors-from-man

@@ -20,12 +20,6 @@ E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
 I: manpages-general: FSSTND-dir-in-manual-page usr/share/man/man1/test.1p.gz:13 /var/catman/
-I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:11
-I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:12
-I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
-I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:14
-I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:15
-I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:9
 I: manpages-general: spelling-error-in-manpage usr/X11R6/man/man1/rstartd.1x.gz speling spelling
 I: manpages-general: spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling
 W: manpages-general: binary-without-english-manpage usr/bin/binary-without-english-manpage

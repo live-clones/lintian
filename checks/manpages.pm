@@ -315,8 +315,6 @@ sub run {
             waitpid $pid, 0;
             # Now we search through the whole man page for some common errors
             my $lc = 0;
-            my $hc = 0;
-            my $draft_mode = 0;
             foreach my $line (@manfile) {
                 $lc++;
                 chomp $line;
@@ -328,28 +326,6 @@ sub run {
                         tag 'manpage-section-mismatch',
                           "$file:$lc $fn_section != $th_section";
                     }
-                }
-                # Catch hyphens used as minus signs by looking for
-                # ones at the beginning of a word, but don't generate
-                # false positives on \s-1 (small font), \*(-- (pod2man
-                # long dash), or things like \h'-1'.  Ignoring hyphens
-                # contained in draft mode (.eo).  Do catch hyphens
-                # after \f[C], a groff font change.
-                $draft_mode = 1 if $line =~ /^\.\s*eo/;
-                $draft_mode = 0 if $line =~ /^\.\s*ec/;
-                if (
-                    not $draft_mode
-                    and $line =~ /^(
-                                ([^\.].*)?
-                                [\s\'\"\`\(\[\]]
-                                (?<! \\s | \*\( | \(- | \w\' )
-                               )?
-                              (--?\w+)/ox
-                  ) {
-                    $hc++;
-                    tag 'hyphen-used-as-minus-sign', "$file:$lc"
-                      if $hc <= 10
-                      or $ENV{'LINTIAN_DEBUG'};
                 }
                 if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
                     || ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)){
@@ -365,9 +341,6 @@ sub run {
                     $ginfo->spelling_exceptions)
                   if ($path =~ m,/man/man\d/,);
             }
-            tag 'hyphen-used-as-minus-sign', $file, ($hc - 10),
-              'more occurrences not shown'
-              if ($hc > 10 && !$ENV{'LINTIAN_DEBUG'});
         }
     }
 
