@@ -9,6 +9,11 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Apply patch from Tomasz Buchert to avoid false-positive
       package-contains-timestamped-gzip in some cases.
       (Closes: #762105)
+    + [BR] Detects // tricks in privacy breach test.
+      (Closes: #786362)
+    + [BR] Apply patch from Lisandro Damián Nicanor Pérez Meyer
+      for detecting private cmake file.
+      (Closes: #785329).
   * checks/manpages.{desc,pm}:
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)

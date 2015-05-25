@@ -704,6 +704,13 @@ sub run {
                 $fname=~ m,^usr/share/applications/mimeinfo.cache(?:\.gz)?$,){
                 tag 'package-contains-mimeinfo.cache-file', $file;
             }
+            # ---------------- /usr/share/cmake-*
+            elsif (
+                $fname=~ m,^usr/share/cmake-\d+\.\d+/.+,){
+                  unless ($source_pkg eq 'cmake') {
+                    tag 'package-contains-cmake-private-file', $file;
+                  }
+            }
             # ---------------- /usr/share/man and /usr/X11R6/man
             elsif ($fname =~ m,^usr/X11R6/man/\S+,
                 or $fname =~ m,^usr/share/man/\S+,) {
@@ -1864,7 +1871,8 @@ sub is_localhost {
 sub _check_tag_url_privacy_breach {
     my ($fulltag, $tagattr, $url,$privacybreachhash, $file) = @_;
     my $website = $url;
-    $website =~ s,^"?(?:ht|f)tps?://,,;
+    # detect also "^//" trick
+    $website =~ s,^"?(?:(?:ht|f)tps?:)?//,,;
     $website =~ s/"?$//;
 
     if (is_localhost($website)){

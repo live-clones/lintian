@@ -6,6 +6,7 @@ Test-For:
  macos-ds-store-file-in-package
  macos-resource-fork-file-in-package
  package-contains-bts-control-dir
+ package-contains-cmake-private-file
  package-contains-linda-override
  package-contains-readme-for-other-platform-or-distro
  package-contains-vcs-control-dir

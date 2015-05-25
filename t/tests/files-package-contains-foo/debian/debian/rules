@@ -45,3 +45,7 @@ override_dh_install:
 	mkdir -p $(SHARE)/linda/overrides
 	touch $(SHARE)/linda/overrides/$(PKG)
 
+	# CMake private files
+	mkdir -p $(SHARE)/cmake-3.1/Modules
+	touch $(SHARE)/cmake-3.1/FindFoo.cmake
+	touch $(SHARE)/cmake-3.1/Modules/FindVar.cmake
