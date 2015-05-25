@@ -16,6 +16,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       (Closes: #785329).
     + [BR] Detect package shipping apt_preferences(5) file.
       (Closes: #786533).
+    + [BR] Detect package shipping oui or iab ieee database.
   * checks/manpages.{desc,pm}:
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)

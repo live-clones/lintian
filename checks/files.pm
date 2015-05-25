@@ -426,6 +426,19 @@ sub run {
             }
         }
 
+        # see #785662
+        if($file->is_regular_file) {
+            if(index($fname,'oui') > -1 || index($fname,'iab') > -1) {
+                if($fname
+                    =~ m,/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$COMPRESS_FILE_EXTENSIONS_OR_ALL)?\Z,x
+                  ) {
+                    unless ($source_pkg eq 'ieee-data') {
+                        tag 'package-install-ieee-data', $file;
+                    }
+                }
+            }
+        }
+
         # ---------------- /etc
         if ($fname =~ m,^etc/,) {
             # -----------------/etc/apt/preferences
