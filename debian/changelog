@@ -22,6 +22,10 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       maintainer names.  Once again, thanks to Andreas Rönnquist
       for the report.
 
+  * data/fields/archive-sections:
+    + [NT] Pre-emptively support the "debugsym" section, which is
+      expected to be used by debhelper for "ddebs".
+
   * debian/changelog:
     + [NT] Add missing list of new / removed tags to the
       entry for the previous release.
