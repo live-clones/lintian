@@ -74,7 +74,7 @@ my $PRIVACY_BREAKER_TAG_ATTR= Lintian::Data->new(
     qr/\s*\~\~\s*/o,
     sub {
         my ($keywords,$regex) = split(/\s*\~\~\s*/, $_[1], 2);
-        $regex =~ s/&URL/(?:ht|f)tps?:\/\/[^"\r\n]*/g;
+        $regex =~ s/&URL/(?:(?:ht|f)tps?:)?\/\/[^"\r\n]*/g;
         my @keywordlist;
         my @keywordsorraw = split(/\s*\|\|\s*/,$keywords);
         foreach my $keywordor (@keywordsorraw) {
@@ -2014,14 +2014,19 @@ sub detect_privacy_breach {
         }
         if(   index($block,'src="http') > -1
             ||index($block,'src="ftp') > -1
+            ||index($block,'src="//') > -1
             ||index($block,'data-href="http') > -1
             ||index($block,'data-href="ftp') > -1
+            ||index($block,'data-href="//') > -1
             ||index($block,'codebase="http') > -1
             ||index($block,'codebase="ftp') > -1
+            ||index($block,'codebase="//') > -1
             ||index($block,'data="http') > -1
             ||index($block,'data="ftp') > -1
+            ||index($block,'data="//') > -1
             ||index($block,'poster="http') > -1
             ||index($block,'poster="ftp') > -1
+            ||index($block,'poster="//') > -1
             ||index($block,'<link') > -1
             ||index($block,'@import') > -1){
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);

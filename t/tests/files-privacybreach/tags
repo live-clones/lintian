@@ -47,8 +47,11 @@ E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privac
 E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/awstat.xml
 E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/official.js
 E: files-privacybreach: privacy-breach-w3c-valid-html usr/share/files-privacy-breach/privacy-breach-w3c-valid-html/htmlvalid.html (http://www.w3.org/icons/valid-xhtml10)
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/applet.html (//1984.os/trackme2)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/applet.html (http://1984.os/trackme)
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/div.html (//trackme.1984/index-3.html)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/div.html (http://trackme.1984/index-2.html)
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/embed.html (//1984.os/givemydata2.swf)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/embed.html (http://1984.os/givemydata.swf)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/externalimg.xml (http://1984.ow/bigbrotheriswatchingyou.png)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/frame.html (http://1984.os/trackme_frame_c.htm)
