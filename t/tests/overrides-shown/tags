@@ -1,20 +1,23 @@
 N: override without extra information
 O: overrides-shown: manpage-has-bad-whatis-entry usr/share/man/man1/foo.1.gz
 N: exact extra information
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:4
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:4 /usr/dict/
 N: These are wildcard overrides
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:5
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:5 /usr/doc/
 N: Architecture specific override
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:6
-I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:12
-I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:13
-I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:14
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:6 /usr/etc/
+I: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:12 /usr/info/
+I: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:13 /usr/man/
+I: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:14 /usr/adm/
 N: These are wildcard overrides
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:21
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:21 /var/adm/
 N: These are wildcard overrides
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:22
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:22 /var/catman/
 N: These are wildcard overrides
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:23
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:23 /var/named/
 N: These are wildcard overrides
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:30
-O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz 2 more occurrences not shown
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:30 /var/nis/
+N: These are wildcard overrides
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:31 /var/preserve/
+N: These are wildcard overrides
+O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:32 /usr/preserve/
