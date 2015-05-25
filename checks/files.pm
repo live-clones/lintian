@@ -428,8 +428,14 @@ sub run {
 
         # ---------------- /etc
         if ($fname =~ m,^etc/,) {
+            # -----------------/etc/apt/preferences
+            if ($fname =~ m,^etc/apt/preferences(?:\.d/)?,) {
+                unless ($source_pkg eq 'apt') {
+                    tag 'package-install-apt-preferences', $file;
+                }
+            }
             # ---------------- /etc/cron.daily, etc.
-            if ($fname
+            elsif ($fname
                 =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*[\+\.],
               ) {
                 # NB: cron ships ".placeholder" files, which shouldn't be run.
@@ -705,11 +711,10 @@ sub run {
                 tag 'package-contains-mimeinfo.cache-file', $file;
             }
             # ---------------- /usr/share/cmake-*
-            elsif (
-                $fname=~ m,^usr/share/cmake-\d+\.\d+/.+,){
-                  unless ($source_pkg eq 'cmake') {
+            elsif ($fname=~ m,^usr/share/cmake-\d+\.\d+/.+,){
+                unless ($source_pkg eq 'cmake') {
                     tag 'package-contains-cmake-private-file', $file;
-                  }
+                }
             }
             # ---------------- /usr/share/man and /usr/X11R6/man
             elsif ($fname =~ m,^usr/X11R6/man/\S+,

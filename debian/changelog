@@ -14,6 +14,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [BR] Apply patch from Lisandro Damián Nicanor Pérez Meyer
       for detecting private cmake file.
       (Closes: #785329).
+    + [BR] Detect package shipping apt_preferences(5) file.
+      (Closes: #786533).
   * checks/manpages.{desc,pm}:
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)

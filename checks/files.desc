@@ -66,6 +66,15 @@ Info: The package installs files into the <tt>/etc/rc.d</tt> or
  <tt>/etc/rc?.d</tt> which is not allowed.
 Ref: policy 9.3.3
 
+Tag: package-install-apt-preferences
+Severity: serious
+Certainty: possible
+Ref: apt_preferences(5)
+Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/</tt> or install a /etc/apt/preferences file.
+ This directory is under the control of the local administrator.
+ .
+ Package should not override local administrator choices.
+
 Tag: package-installs-into-etc-rc.boot
 Severity: serious
 Certainty: certain

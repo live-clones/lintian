@@ -1,5 +1,6 @@
 bar bin/foo
 bar emul
+bar etc/apt/preferences.d
 bar etc/gconf/schemas/
 bar etc/rc.boot
 bar etc/rc.d
@@ -49,3 +50,4 @@ bar.png usr/lib/files-foo-in-bar
 
 perllocal.pod usr/lib/perl-foo
 .packlist usr/lib/perl5
+preferences etc/apt

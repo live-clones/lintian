@@ -9,6 +9,7 @@ override_dh_auto_build:
 	cp bar bar.png
 	cp bar perllocal.pod
 	touch .packlist
+	touch preferences
 
 override_dh_auto_install:
 	dh_install bar.1.gz usr/X11R6/man/man1/
