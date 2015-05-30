@@ -1,9 +1,0 @@
-Collector-Script: debfiles
-Author: Joey Hess <joeyh@debian.org>
-Info: This script collects files shipped in the source of the
- package.
-Type: source
-Version: 1
-Needs-Info: unpacked
-Interface: perl-coll
-Auto-Remove: yes

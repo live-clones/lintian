@@ -1,9 +1,0 @@
-Collector-Script: init.d
-Author: Richard Braakman <dark@xs4all.nl>
-Info: This script copies the etc/init.d directory into the lintian
- directory.
-Type: binary
-Version: 2
-Needs-Info: unpacked
-Interface: perl-coll
-Auto-Remove: yes

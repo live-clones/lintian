@@ -23,6 +23,10 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)
 
+  * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
+    + [NT] Remove deprecated and unused collections.  These were
+      deprecated in 2.5.28.  Note that debfiles was omitted in the
+      deprecation list by mistake in the original 2.5.28 release.
   * collection/unpacked:
     + [NT] Apply patch from Tomasz Buchert to extract the full time
       in UTC.
@@ -39,6 +43,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * debian/changelog:
     + [NT] Add missing list of new / removed tags to the
       entry for the previous release.
+    + [NT] Add missing "debfiles" in the list of collections
+      deprecated in 2.5.28.  It was deprecated in that release
+      despite the omission.
 
   * lib/Lintian/Collect/Package.pm:
     + [NT] Create "faux" Lintian::Path entries for missing
@@ -525,7 +532,7 @@ lintian (2.5.28) unstable; urgency=medium
 
   * collection/*:
     + [NT] Remove all uses of "debfiles" and "control".
-  * collection/{doc-base-files,init.d,menu-files}{,.desc}:
+  * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
     + [NT] Deprecated, will be removed in a future release.
       They will now be now auto-removed at the end of the
       processing if they have been collected previously.
