@@ -1,4 +1,4 @@
-name = copyright-file-foreign-package
+name = unpack-numerical-owner
 
 all:
 	create-deb -o $(name).deb --tar-opts='--numeric-owner' \
