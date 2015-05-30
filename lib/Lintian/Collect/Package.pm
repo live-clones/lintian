@@ -32,18 +32,19 @@ use Lintian::Path;
 use Lintian::Path::FSInfo;
 use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path dequote_name);
 
-my %ROOT_INDEX_TEMPLATE = (
+my %INDEX_FAUX_DIR_TEMPLATE = (
     'name'     => '',
     'type'     => 'd',
     'basename' => '',
-    'dirname'  => '',
     'owner'    => 'root',
     'group'    => 'root',
     'size'     => 0,
+    'operm'    => 0755,
     # Pick a "random" (but fixed) date
     # - hint, it's a good read.  :)
     'date'     => '1998-01-25',
     'time'     => '22:55:34',
+    'faux'     => 1,
 );
 
 # A cache for (probably) the 5 most common permission strings seen in
@@ -409,7 +410,7 @@ sub _fetch_extracted_dir {
 sub _fetch_index_data {
     my ($self, $load_info, $file) = @_;
 
-    my (%idxh, %children, $num_idx, %rhlinks, @sorted);
+    my (%idxh, %children, $num_idx, %rhlinks, @sorted, @check_dirs);
     my $base_dir = $self->base_dir;
     my $field = $load_info->{'field'};
     my $index = $load_info->{'index_file'};
@@ -488,22 +489,42 @@ sub _fetch_index_data {
         $file{dirname} = '' if $base eq '';
 
         $children{$parent} = [] unless exists $children{$parent};
+
+        # coll/unpacked sorts its output, so the parent dir ought to
+        # have been created before this entry.  However, it might not
+        # be if an intermediate directory is missing.  NB: This
+        # often triggers for the root directory, which is normal.
+        push(@check_dirs, $parent) if not exists($idxh{$parent});
+
         # Ensure the "root" is not its own child.  It is not really helpful
         # from an analysis PoV and it creates ref cycles  (and by extension
         # leaks like #695866).
         push @{ $children{$parent} }, $name unless $parent eq $name;
     }
-    if (!exists($idxh{''})) {
-        # The index did not include a "root" dir, so fake one.
-        # Note we have to do a copy here, since we will eventually
-        # add a "children" field.
-        my %cpy = %ROOT_INDEX_TEMPLATE;
-        if ($num_idx) {
-            $cpy{'uid'} = 0;
-            $cpy{'gid'} = 0;
+    while (defined(my $name = pop(@check_dirs))) {
+        # check_dirs /can/ contain the same item multiple times.
+        if (!exists($idxh{$name})) {
+            my %cpy = %INDEX_FAUX_DIR_TEMPLATE;
+            my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
+            $parent //= '';
+            $base //= '';
+            $cpy{'_fs_info'} = $fs_info;
+            $cpy{'name'} = $name;
+            $cpy{'basename'} = $base;
+            # Re: above, only insert dirname now for the root entry.
+            $cpy{'dirname'} = q{} if $name eq q{};
+            if ($num_idx) {
+                $cpy{'uid'} = 0;
+                $cpy{'gid'} = 0;
+            }
+            $idxh{$name} = \%cpy;
+            $children{$parent} = [] unless exists $children{$parent};
+            push @{ $children{$parent} }, $name unless $parent eq $name;
+            push(@check_dirs, $parent) if not exists($idxh{$parent});
         }
-        $cpy{'_fs_info'} = $fs_info;
-        $idxh{''} = \%cpy;
+    }
+    if (!exists($idxh{''})) {
+        fail('The root dir should be present or have been faked');
     }
     if (%rhlinks) {
         foreach my $file (sort keys %rhlinks) {

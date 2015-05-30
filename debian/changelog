@@ -38,9 +38,17 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Add missing list of new / removed tags to the
       entry for the previous release.
 
+  * lib/Lintian/Collect/Package.pm:
+    + [NT] Create "faux" Lintian::Path entries for missing
+      intermediate directories.  This avoids a crash and made
+      some checks work correctly even in the absence of such
+      immediate directories.  (Closes: LP: #1351380)
   * lib/Lintian/Path.pm:
     + [NT] Apply patch from Tomasz Buchert to add "timestamp"
       method.
+    + [NT] Add "faux" method that returns at truth value for
+      path entries, which Lintian has created from templates
+      to fully connect all path entries in the package.
   * lib/Lintian/Tag/Info.pm:
     + [NT] Expand BTS links using https rather than http.
 

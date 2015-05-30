@@ -192,11 +192,17 @@ for the "root" dir - see below).
 
 NB: Returns the empty string for the "root" dir.
 
+=item faux
+
+Returns a truth value if this entry absent in the package.  This can
+happen if a package does not include all intermediate directories.
+
 =cut
 
 Lintian::Path->mk_ro_accessors(
     qw(name owner group link type uid gid
       size date time operm parent_dir dirname basename
+      faux
       ));
 
 =item children
