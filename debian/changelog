@@ -22,6 +22,11 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/manpages.{desc,pm}:
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)
+  * checks/source-copyright.pm:
+    + [NT] Apply patch from Evgeni Golov to permit multiple
+      different "public-domain licenses", as they are expected to
+      describe what something is in public domain.
+      (Closes: #787248)
 
   * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
     + [NT] Remove deprecated and unused collections.  These were
@@ -61,7 +66,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * lib/Lintian/Tag/Info.pm:
     + [NT] Expand BTS links using https rather than http.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 14 May 2015 09:11:05 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 30 May 2015 18:42:22 +0200
 
 lintian (2.5.31) unstable; urgency=medium
 

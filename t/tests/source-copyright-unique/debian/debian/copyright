@@ -10,6 +10,16 @@ Copyright: 2014, somebody1
 License: some-license
  some license
 
+Files: code
+Copyright: none
+License: public-domain
+ this work is PD because I say so
+
+Files: code2
+Copyright: none
+License: public-domain
+ this work is also in the public domain
+
 Files: debian/*
 Copyright: 2014, somebody1
 License: other-license

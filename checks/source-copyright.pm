@@ -298,7 +298,8 @@ sub _parse_dep5 {
                   "(paragraph at line $current_line)";
             }else {
                 for (@short_licenses) {
-                    if(defined($full_licenses_seen{$_})) {
+                    if(defined($full_licenses_seen{$_})
+                        and $_ ne 'public-domain') {
                         tag 'dep5-copyright-license-name-not-unique',
                           "(paragraph at line $current_line)";
                     } else {
@@ -391,7 +392,8 @@ sub _parse_dep5 {
                     if (not defined($full_license)) {
                         $required_standalone_licenses{$_} = $i;
                     } else {
-                        if(defined($full_licenses_seen{$_})) {
+                        if(defined($full_licenses_seen{$_})
+                            and $_ ne 'public-domain') {
                             tag 'dep5-copyright-license-name-not-unique',
                               "(paragraph at line $current_line)";
                         } else {
