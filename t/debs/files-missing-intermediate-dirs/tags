@@ -1,0 +1,3 @@
+W: files-missing-intermediate-dirs: missing-intermediate-directory usr/
+W: files-missing-intermediate-dirs: missing-intermediate-directory usr/share/
+W: files-missing-intermediate-dirs: missing-intermediate-directory usr/share/doc/

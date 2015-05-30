@@ -1,0 +1,6 @@
+Testname: files-missing-intermediate-dirs
+Sequence: 6000
+Version: 1.0
+Description: Test for tarballs without intermediate dirs
+Test-For:
+ missing-intermediate-directory

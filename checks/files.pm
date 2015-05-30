@@ -1584,6 +1584,10 @@ sub run {
         }
         # ---------------- directories
         elsif ($file->is_dir) {
+            if ($file->faux) {
+                tag 'missing-intermediate-directory', $file;
+            }
+
             # special cases first:
             # game directory with setgid bit
             if (    $fname =~ m,^var/(?:lib/)?games/\S+,
