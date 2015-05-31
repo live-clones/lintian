@@ -641,6 +641,16 @@ sub find_cruft {
             close($fd);
         }
 
+        # Lena Söderberg image
+        if ($basename =~ /\blenn?a\b/i) {
+            if(    $file_info =~ /\bimage\b/i
+                or $file_info =~ /^Matlab v\d+ mat/i
+                or$file_info =~ /\bbitmap\b/i) {
+                tag 'license-problem-non-free-img-lenna', $name;
+            }
+
+        }
+
         # here we check old upstream specification
         # debian/upstream should be a directory
         if (   $name eq 'debian/upstream'

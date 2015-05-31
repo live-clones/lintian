@@ -1,0 +1,6 @@
+Testname: cruft-non-free-img
+Sequence: 6000
+Version: 1.0
+Description: Test of non free image like lenna
+Test-For:
+ license-problem-non-free-img-lenna
