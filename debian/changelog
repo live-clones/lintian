@@ -51,6 +51,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * data/fields/archive-sections:
     + [NT] Pre-emptively support the "debugsym" section, which is
       expected to be used by debhelper for "ddebs".
+  * data/files/privacy-breaker-websites:
+    + [BR] Detect mascot as logos.
 
   * debian/changelog:
     + [NT] Add missing list of new / removed tags to the

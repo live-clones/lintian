@@ -30,6 +30,7 @@ E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breac
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/explicitload.html (https://apis.google.com/js/plusone.js)
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/simplebutton.xml
 E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/logosourceforge.xml (http://sflogo.sourceforge.net/sflogo.php?group_id=2319&type=15)
+E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-logo/mascot.xml (http://travis-ci.com/img/travis-mascot-200px.png)
 E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/privacy-breach-twitter/logotwitter.xml (https://g.twimg.com/twitter_logo_blue.png)
 E: files-privacybreach: privacy-breach-may-use-debian-package usr/share/files-privacy-breach/privacy-breach-may-use-debian-package/libjs-jquery-flot.html You may use libjs-jquery-flot package. (http://yandex.st/jquery/flot/0.7/jquery.flot.min.js)
 E: files-privacybreach: privacy-breach-may-use-debian-package usr/share/files-privacy-breach/privacy-breach-may-use-debian-package/libjs-jquery-mobile.html You may use libjs-jquery-mobile package. (http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js)
