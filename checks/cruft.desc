@@ -617,22 +617,20 @@ Certainty: possible
 Ref: https://en.wikipedia.org/wiki/Lenna, https://www.debian.org/vote/2012/vote_002, #771191
 Info: The given source file is cropped from playboy centerfold.
  .
- It is a picture of Lena Söderberg, shot by photographer
- Dwight Hooker, cropped from the centerfold of the November 1972
- issue of Playboy magazine.
+ This image is a picture of Lena Söderberg,
+ shot by photographer Dwight Hooker, cropped from
+ the centerfold of the November 1972 issue of Playboy magazine.
  .
  According to Hutchison, Jamie (May–June 2001). "Culture,
  Communication, and an Information Age Madonna" (PDF).
  IEEE Professional Communication Society Newsletter 45 (3).
- (page 5 second column second paragraph), "When I explained everything
- to them [playboy] , they told us that they would notinterfere as
- long as the use was for research and education". Thus this image
- is at least non free.
+ (page 5 second column second paragraph), this image is
+ distributable but not free.
  .
  Moreover, Lenna photo has been pointed to as an example
  of sexism in the sciences, reinforcing gender stereotypes.
  .
- Please use user well known and free test image.
+ Please use well known and free test image.
  .
  Please also submit md5sum, sha1sum, and sha256 of this file
  as a bug report for lintian.
