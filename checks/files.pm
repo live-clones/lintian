@@ -1348,7 +1348,8 @@ sub run {
 
             # ---------------- html/javascript
             if ($fname =~ m,\.(?:x?html?|js|xht|xml|css)$,i) {
-                if($source_pkg eq 'josm' and $file->basename eq 'defaultpresets.xml') {
+                if(     $source_pkg eq 'josm'
+                    and $file->basename eq 'defaultpresets.xml') {
                     # false positive
                 } else {
                     detect_privacy_breach($info,$file);
