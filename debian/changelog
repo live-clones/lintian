@@ -8,6 +8,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/changes-file.{desc,pm}:
     + [NT] Downgrade backports-changes-missing to a wishlist (I) tag.
       Thanks to Vincent Cheng for the report.  (Closes: #785084)
+  * checks/changelog-file.{desc,pm}:
+    + [BR] Detect empty changelog entry.  (Closes:  #763457)
   * checks/files.pm:
     + [NT] Apply patch from Tomasz Buchert to avoid false-positive
       package-contains-timestamped-gzip in some cases.

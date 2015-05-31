@@ -1,0 +1,12 @@
+{$source} ({$version}) unstable; urgency=low
+
+  * .
+  *
+
+ -- {$author}  {$date}
+
+{$source} (0.1) unstable; urgency=low
+
+  * First upload (Closes: #123456).
+
+ -- {$author}  Fri, 06 Feb 2009 22:22:37 -0800

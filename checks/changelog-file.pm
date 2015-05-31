@@ -367,6 +367,12 @@ sub run {
             }
         }
 
+        my $changesempty = $changes;
+        $changesempty =~ s,\W,,gms;
+        if (length($changesempty)==0) {
+            tag 'changelog-empty-entry';
+        }
+
         my $closes = $entry->Closes;
         for my $bug (@$closes) {
             tag 'improbable-bug-number-in-closes', $bug if ($bug < 100);

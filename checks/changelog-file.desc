@@ -32,6 +32,12 @@ Info: Changelog files should be compressed using "gzip -9".  Even if they
  start out small, they will become large with time.
 Ref: policy 12.7
 
+Tag: changelog-empty-entry
+Severity: serious
+Certainty: certain
+Info: Changelog entry is empty
+Ref: policy 4.4
+
 Tag: debian-news-file-not-compressed
 Severity: normal
 Certainty: certain
