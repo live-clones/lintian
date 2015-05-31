@@ -1348,7 +1348,11 @@ sub run {
 
             # ---------------- html/javascript
             if ($fname =~ m,\.(?:x?html?|js|xht|xml|css)$,i) {
-                detect_privacy_breach($info,$file);
+                if($source_pkg eq 'josm' and $file->basename eq 'defaultpresets.xml') {
+                    # false positive
+                } else {
+                    detect_privacy_breach($info,$file);
+                }
             }
             # ---------------- fonts
             elsif ($fname =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
