@@ -1164,7 +1164,7 @@ Info: The package appear to be a Java library and depending on one
  .
  If there is otherwise a valid reason for this dependency, please override
  the tag.
-Ref: https://packages.qa.debian.org/j/java-common/news/20100405T221415Z.html,
+Ref: https://lists.debian.org/debian-devel-changes/2010/04/msg00774.html,
  #227587
 
 Tag: documentation-package-not-architecture-independent
