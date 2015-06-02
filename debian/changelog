@@ -10,6 +10,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       Thanks to Vincent Cheng for the report.  (Closes: #785084)
   * checks/changelog-file.{desc,pm}:
     + [BR] Detect empty changelog entry.  (Closes:  #763457)
+  * checks/debhelper.{desc,pm}:
+    + [NT] Warn about using dh --{until,before,after,remaining} as
+      these are deprecated and have been since debhelper/8.9.4.
   * checks/files.pm:
     + [NT] Apply patch from Tomasz Buchert to avoid false-positive
       package-contains-timestamped-gzip in some cases.

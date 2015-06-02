@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test dependency requirements for debhelper
 Test-For:
+ dh-manual-sequence-control-obsolete
  debhelper-but-no-misc-depends
  missing-build-dependency
  missing-build-dependency-for-dh_-command

@@ -168,6 +168,9 @@ sub run {
                     }
                 }
             }
+            if (m/--(after|before|until|remaining)/) {
+                tag 'dh-manual-sequence-control-obsolete', 'dh', $1;
+            }
             if (m,\$[({]\w,) {
                 # the variable could contain any add-ons
                 $seen_python_helper = 1;

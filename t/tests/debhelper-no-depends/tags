@@ -1,3 +1,5 @@
+E: debhelper-no-depends source: dh-manual-sequence-control-obsolete dh remaining
+E: debhelper-no-depends source: dh-manual-sequence-control-obsolete dh until
 E: debhelper-no-depends source: missing-build-dependency debhelper
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_clideps => cli-common-dev
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch

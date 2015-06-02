@@ -317,3 +317,29 @@ Info: The package uses debhelper but does not ship a compat file.
  compat file and the differences between each compat level.
 Ref: https://packages.qa.debian.org/d/debhelper/news/20120115T191738Z.html,
  debhelper(7)
+
+Tag: dh-manual-sequence-control-obsolete
+Severity: important
+Certainty: certain
+Info: The package uses one (or more) of the obsolete dh parameters
+ to control the debhelper command sequence.  This method has been
+ deprecated and is now replaced by override targets.  If you had:
+ .
+  [...]
+  install: build
+           dh install --before dh_auto_install
+           dh_auto_install -- PKG_DEST_DIR=`pwd`/debian/tmp/usr
+           dh install --after dh_auto_install
+  [...]
+ .
+ This should now be replaced by:
+ .
+   %:
+        dh $@
+ .
+   override_dh_auto_install:
+        dh_auto_install -- PKG_DEST_DIR=`pwd`/debian/tmp/usr
+ .
+ Please refer to the debhelper documentation for more information.
+Ref: https://packages.qa.debian.org/d/debhelper/news/20110806T234709Z.html,
+ debhelper(7)
