@@ -283,11 +283,8 @@ something like:
     %:
             dh $@
 
-    binary: binary-arch binary-indep
-    binary-arch:
-    binary-indep:
-            dh binary-indep --before dh_install
-            dh binary-indep --after dh_install
+    override_dh_install:
+            # Skip dh_install
 
 rather than adding in all of the traditional targets.  All you have to
 do is make dpkg-buildpackage happy (which means that in practice you
