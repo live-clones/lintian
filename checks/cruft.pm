@@ -890,9 +890,15 @@ sub _search_in_block0 {
                 return;
             }
         }
+        # false positive in dx package at least
+        elsif($basename eq 'srchidx.js') {
+            if($block =~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms) {
+                return;
+            }
+        }
         # see #745152
         # Be robust check also .js
-        if($basename eq 'deployJava.js') {
+        elsif($basename eq 'deployJava.js') {
             if($block =~ m/(?:\A|\v)\s*var\s+deployJava\s*=\s*function/xmsi) {
                 check_missing_source($entry,$info,$name,$basename,$dirname,
                     [['(?i)\.js$','.txt'],['','']]);
