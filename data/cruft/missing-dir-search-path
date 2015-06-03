@@ -7,6 +7,8 @@
 ../
 # maybe in src subdir
 ./src/
+# maybe in ../src subdir
+../src/
 # libtool
 /.libs/
 /.libs/$dirname/
