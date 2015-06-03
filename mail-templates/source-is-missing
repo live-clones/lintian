@@ -8,24 +8,27 @@ X-Debbugs-CC: ftpmaster@debian.org
 
 Hi,
 
-Your package seems to include some files that lack sources
+your package includes some files that seem to lack sources
 in prefered forms of modification:
 
 {list of files}
 
 According to Debian Free Software Guidelines [1] (DFSG) #2:
  "The program must include source code, and must allow distribution 
-  in source code as well as compiled form.".
+  in source code as well as compiled form."
 
-This could also constitute a license violation for some copyleft licenses such as the GNU GPL.
+In some cases this could also constitute a license violation for some
+copyleft licenses such as the GNU GPL. (While sometimes the licence
+allows not to ship the source, the DFSG always mandates source code.)
 
 In order to solve this problem, you could:
-1. repack the origin tarball adding the missing source to it.
-2  add the source files to "debian/missing-sources" directory
+1. repack the origin tarball and add the missing source files to it.
+2  add the source files to "debian/missing-sources" directory.
 
-Both way satisfies the requirement that we ship the source. Second option
+Both way satisfy the requirement to ship all source code. The second option
 might be preferable due to the following reasons [2]:
- - Upstream can do it too and you could even supply a patch to them, thus full filling our social contract [3], see particularly §2.
+ - Upstream can do it too and you could even supply a patch to them, thus
+   full filling our social contract [3], see particularly §2.
  - If source and non-source are in different locations, ftpmasters may
    miss the source and (needlessly) reject the package.
  - The source isn't duplicated in every .diff.gz/.debian.tar.* (though

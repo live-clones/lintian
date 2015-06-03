@@ -84,6 +84,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * lib/Lintian/Tag/Info.pm:
     + [NT] Expand BTS links using https rather than http.
 
+  * mail-templates/source-is-missing:
+    + [BR] Apply patch from Holger Levsen improving language.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 30 May 2015 18:42:22 +0200
 
 lintian (2.5.31) unstable; urgency=medium
