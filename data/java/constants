@@ -5,7 +5,7 @@
 #     50 -> Java6 - Current max version in Debian
 #     51 -> Java7
 #     52 -> Java8
-max-bytecode-version = 50
+max-bytecode-version = 51
 
 max-bytecode-existing-version = 52
 

@@ -8,7 +8,7 @@ override_jh_build:
 	# Unknown class version
 	perl -i -pe 's/^(\xCA\xFE\xBA\xBE...)./$$1\x2A/' org/debian/lintian/TestA.class
 	# Java7 (unsupported)
-	perl -i -pe 's/^(\xCA\xFE\xBA\xBE...)./$$1\x33/' org/debian/lintian/TestB.class
+	perl -i -pe 's/^(\xCA\xFE\xBA\xBE...)./$$1\x34/' org/debian/lintian/TestB.class
 	# Put them in separate Jars because Lintian stops when the first
 	# "unknown class format" is seen
 	zip -r testa.jar META-INF/ org/debian/lintian/TestA.class

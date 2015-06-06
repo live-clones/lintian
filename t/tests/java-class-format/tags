@@ -1,2 +1,2 @@
-W: libtest-java: incompatible-java-bytecode-format Java7 version (Class format: 51)
+W: libtest-java: incompatible-java-bytecode-format Java8 version (Class format: 52)
 W: libtest-java: unknown-java-class-version usr/share/java/testa-1.0.jar (org/debian/lintian/TestA.class -> 42)

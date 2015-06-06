@@ -72,6 +72,10 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       expected to be used by debhelper for "ddebs".
   * data/files/privacy-breaker-websites:
     + [BR] Detect mascot as logos.
+  * data/java/constants:
+    + [NT] Accept Java7 class files without warning as OpenJDK-7
+      is now the default implementation.  Thanks to Markus
+      Koschany for the report.  (Closes: #786895)
 
   * debian/changelog:
     + [NT] Add missing list of new / removed tags to the
