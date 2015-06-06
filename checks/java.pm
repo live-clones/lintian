@@ -88,7 +88,7 @@ sub run {
             next if $mver eq '-';
             if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1
                 or $mver
-                >= $MAX_BYTECODE->value('max-bytecode-existing-version')) {
+                > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
                 # First public major version was 45 (Java1), latest
                 # version is 52 (Java8).
                 tag 'unknown-java-class-version', $jar_file,
@@ -215,13 +215,14 @@ sub run {
         #     52 -> Java8
         my $bad = 0;
 
-        # If the lowest version used is:
+        # If the lowest version used is greater than the requested
+        # limit, then flag it.
         $bad = 1
-          if $jmajlow == $MAX_BYTECODE->value('max-bytecode-version')
-          + 1; # Java7 - consider bad per request.
+          if $jmajlow > $MAX_BYTECODE->value('max-bytecode-version');
 
-       # Technically we ought to do some checks with Java6 class files and
-       # dependencies/package types, but for now just skip that.  (See #673276)
+        # Technically we ought to do some checks with Java6 class
+        # files and dependencies/package types, but for now just skip
+        # that.  (See #673276)
 
         if ($bad) {
             # Map the Class version to a Java version.

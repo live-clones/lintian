@@ -31,6 +31,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       directories.
     + [BR] Avoid a false positive in jsom for defaultpresets.xml
       from openmapstreet.
+  * checks/java.pm:
+    + [NT] Fix "off-by-one" in the check for the maximum permitted
+      Java major version.
   * checks/manpages.{desc,pm}:
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)
