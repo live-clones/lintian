@@ -11,11 +11,13 @@ dh_installlisting
 dh_installtex
 dh_installxfonts
 dh_installxmlcatalogs
+dh_libva
 dh_linktree
 dh_lisp
 dh_nativejava
 dh_pangomodules
 dh_php5
+dh_phppear
 dh_pidgin
 dh_pyppd
 dh_systemd_enable
