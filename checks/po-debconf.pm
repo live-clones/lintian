@@ -147,8 +147,8 @@ sub run {
     }
 
     if ($missing_files == 0) {
-        my $temp_obj = File::Temp->newdir('lintian-po-debconf-XXXXXX',
-            DIR => $ENV{'TEMPDIR'}//'/tmp');
+        my $temp_obj
+          = File::Temp->newdir('lintian-po-debconf-XXXXXX',TMPDIR => 1);
         my $abs_tempdir = realpath($temp_obj->dirname)
           or croak('Cannot resolve ' . $temp_obj->dirname . ": $!");
         # We need an extra level of dirs, as intltool (in)directly

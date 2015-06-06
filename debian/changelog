@@ -34,6 +34,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/manpages.{desc,pm}:
     + [NT] Retire the hyphen-used-as-minus-sign tag as upstream now
       renders both "-" and "\-" as HYPHEN-MINUS.  (Closes: #785353)
+  * checks/po-debconf.pm:
+    + [JW] Use TMPDIR rather than TEMPDIR for temporary files.
+      (Closes: #787930)
   * checks/source-copyright.pm:
     + [NT] Apply patch from Evgeni Golov to permit multiple
       different "public-domain licenses", as they are expected to
