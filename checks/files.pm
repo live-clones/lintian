@@ -1134,7 +1134,7 @@ sub run {
             and not $fname =~ m{ \. (?:
                   # Common "non-license" file extensions...
                    el|[ch]|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm
-                  |png|jpe?g|gif|svg|dtd|ui|pc
+                  |png|jpe?g|gif|svg|dtd|ui|pc|mk|lisp
                ) \Z}xsm
             and not $fname=~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
             and not $fname =~ m,/under\S+License\.docbook$,
@@ -1143,6 +1143,13 @@ sub run {
             and not $fname =~ m,^usr/share/man/(?:[^/]+/)?man\d/,o
             # liblicense (again)
             and not $fname =~ m,^usr/share/pyshared-data/,o
+            # Some GNOME/GTK software uses these to show the "license
+            # header".
+            and not $fname =~ m,
+               ^usr/share/(?:gnome/)?help/[^/]+/[^/]+/license\.page$
+             ,x
+            # base-files (which is required to ship them)
+            and not $fname =~ m,^usr/share/common-licenses/[^/]+$,o
             and not defined $link
           ) {
 

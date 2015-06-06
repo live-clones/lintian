@@ -31,6 +31,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       directories.
     + [BR] Avoid a false positive in jsom for defaultpresets.xml
       from openmapstreet.
+    + [NT] Tweak the "extra-license-file" check to avoid some
+      common false-positives.
   * checks/java.pm:
     + [NT] Fix "off-by-one" in the check for the maximum permitted
       Java major version.
