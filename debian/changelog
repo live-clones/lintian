@@ -68,6 +68,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * data/cruft/warn-file-type:
     + [BR] Fix a false positive source-is-missing by checking
       -nc.js suffix.
+    + [BR] Fix a false positive source-is-missing in zivot
+      package by adding .e as binary suffix.
   * data/debhelper/*:
     + [NT] Refresh against unstable to pick up the rename of
       libaqbanking-dev.  Thanks to Micha Lenk for the reminder.
