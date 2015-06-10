@@ -70,6 +70,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       -nc.js suffix.
     + [BR] Fix a false positive source-is-missing in zivot
       package by adding .e as binary suffix.
+    + [BR] Fix a false positive source-is-missing by adding
+      yorick source file as source.
   * data/debhelper/*:
     + [NT] Refresh against unstable to pick up the rename of
       libaqbanking-dev.  Thanks to Micha Lenk for the reminder.
