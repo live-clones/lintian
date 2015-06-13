@@ -57,6 +57,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/systemd.{desc,pm}:
     + [NT] Apply patch from Felipe Sateler to mark service files in
       /usr/lib as invalid.  (Closes: #788629)
+    + [NT] Apply patch from Felipe Sateler to detect service files
+      that use spaces around the = in the key definition.
+      (Closes: #786421)
 
   * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
     + [NT] Remove deprecated and unused collections.  These were

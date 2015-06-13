@@ -188,6 +188,9 @@ sub extract_service_file_values {
         return;
     }
     my @lines = service_file_lines($file);
+    if (any { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines) {
+        tag 'service-key-has-whitespace', $file;
+    }
     if (any { /^\.include / } @lines) {
         my $parent_dir = $file->parent_dir;
         @lines = map {

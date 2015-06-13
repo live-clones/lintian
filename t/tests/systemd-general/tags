@@ -1,6 +1,7 @@
 E: systemd-general: init-script-is-not-a-file etc/init.d/fifo-pipe-as-init
 E: systemd-general: service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
 E: systemd-general: service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
+E: systemd-general: service-key-has-whitespace etc/systemd/system/test.service
 E: systemd-general: special-file etc/init.d/fifo-pipe-as-init 0644
 E: systemd-general: special-file etc/systemd/system/fifo-pipe-as-init.service 0644
 E: systemd-general: systemd-no-service-for-init-script systemd-general

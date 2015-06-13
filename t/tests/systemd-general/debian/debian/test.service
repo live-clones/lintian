@@ -3,6 +3,7 @@ After=network.target \
 syslog.target
 
 [Service]
+ExecStartPre = /bin/true
 ExecStart=/usr/bin/test
 
 [Install]
