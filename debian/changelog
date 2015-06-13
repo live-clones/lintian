@@ -54,6 +54,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       different "public-domain licenses", as they are expected to
       describe why the affected files are in public domain.
       (Closes: #787248)
+  * checks/systemd.{desc,pm}:
+    + [NT] Apply patch from Felipe Sateler to mark service files in
+      /usr/lib as invalid.  (Closes: #788629)
 
   * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
     + [NT] Remove deprecated and unused collections.  These were

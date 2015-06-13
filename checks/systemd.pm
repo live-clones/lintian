@@ -55,6 +55,9 @@ sub run {
         if ($file =~ m,^etc/systemd/system/.*\.service$,) {
             tag 'systemd-service-file-outside-lib', $file;
         }
+        if ($file =~ m,^usr/lib/systemd/system/.*\.service$,) {
+            tag 'systemd-service-file-outside-lib', $file;
+        }
         if ($file =~ m,/systemd/system/.*\.service$,) {
             check_systemd_service_file($info, $file);
             for my $name (extract_service_file_names($info, $file)) {
