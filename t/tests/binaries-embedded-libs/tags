@@ -1,4 +1,7 @@
 E: binaries-embedded-libs: embedded-library usr/bin/gmp: gmp
+E: binaries-embedded-libs: embedded-library usr/bin/ieee-data1: ieee-data
+E: binaries-embedded-libs: embedded-library usr/bin/ieee-data2: ieee-data
+E: binaries-embedded-libs: embedded-library usr/bin/ieee-data3: ieee-data
 E: binaries-embedded-libs: embedded-library usr/bin/libbz2: bzip2
 E: binaries-embedded-libs: embedded-library usr/bin/libexpat: expat
 E: binaries-embedded-libs: embedded-library usr/bin/libjpeg: libjpeg
