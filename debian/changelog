@@ -45,7 +45,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/source-copyright.pm:
     + [NT] Apply patch from Evgeni Golov to permit multiple
       different "public-domain licenses", as they are expected to
-      describe what something is in public domain.
+      describe why the affected files are in public domain.
       (Closes: #787248)
 
   * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
