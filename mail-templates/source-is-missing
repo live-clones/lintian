@@ -22,8 +22,8 @@ copyleft licenses such as the GNU GPL. (While sometimes the licence
 allows not to ship the source, the DFSG always mandates source code.)
 
 In order to solve this problem, you could:
-1. repack the origin tarball and add the missing source files to it.
-2  add the source files to "debian/missing-sources" directory.
+1.  add the source files to "debian/missing-sources" directory.
+2. repack the origin tarball and add the missing source files to it.
 
 Both way satisfy the requirement to ship all source code. The second option
 might be preferable due to the following reasons [2]:
