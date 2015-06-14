@@ -72,6 +72,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       package by adding .e as binary suffix.
     + [BR] Fix a false positive source-is-missing by adding
       yorick source file as source.
+    + [BR] Fix a false positive source-is-missing in
+      haskell-pretty-show by adding -src.js suffix.
   * data/debhelper/*:
     + [NT] Refresh against unstable to pick up the rename of
       libaqbanking-dev.  Thanks to Micha Lenk for the reminder.
