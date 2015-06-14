@@ -15,6 +15,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/debhelper.{desc,pm}:
     + [NT] Warn about using dh --{until,before,after,remaining} as
       these are deprecated and have been since debhelper/8.9.4.
+  * checks/fields.pm:
+    + [BR] Detect double comma in  uploaders fields.
+      (Closes: #783628).
   * checks/files.pm:
     + [NT] Apply patch from Tomasz Buchert to avoid false-positive
       package-contains-timestamped-gzip in some cases.

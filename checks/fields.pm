@@ -435,6 +435,12 @@ sub run {
             unfold($f, \$maintainer);
 
             if ($f eq 'uploaders') {
+                # check for empty field see  #783628
+                if($maintainer =~ m/,\s*,/) {
+                    tag 'uploader-name-missing',
+                      'you have used a double comma';
+                    $maintainer =~ s/,\s*,/,/g;
+                }
                 my %duplicate_uploaders;
                 my @uploaders = map { split /\@\S+\K\s*,\s*/ }
                   split />\K\s*,\s*/, $maintainer;
