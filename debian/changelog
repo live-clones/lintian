@@ -27,6 +27,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [BR] Detect package shipping apt_preferences(5) file.
       (Closes: #786533).
     + [BR] Detect package shipping oui or iab ieee database.
+      (Closes: #785662).
     + [NT] Add a check for packages without intermediate
       directories.
     + [BR] Avoid a false positive in jsom for defaultpresets.xml
