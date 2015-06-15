@@ -28,6 +28,7 @@ E: files-foo-in-bar: file-in-usr-local usr/local/foo/bar
 E: files-foo-in-bar: nested-examples-directory usr/share/doc/files-foo-in-bar/examples/examples/
 E: files-foo-in-bar: non-standard-dir-in-var var/foo/
 E: files-foo-in-bar: non-standard-toplevel-dir emul/
+E: files-foo-in-bar: package-contains-mime-file-outside-package-dir usr/share/mime/bar
 E: files-foo-in-bar: package-contains-thumbnails-dir usr/share/doc/files-foo-in-bar/.thumbnails/
 E: files-foo-in-bar: package-contains-xvpics-dir usr/share/doc/files-foo-in-bar/.xvpics/
 E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences

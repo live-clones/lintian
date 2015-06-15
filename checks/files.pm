@@ -738,6 +738,12 @@ sub run {
                     tag 'package-contains-cmake-private-file', $file;
                 }
             }
+            # ---------------- /usr/share/mime/
+            elsif ($fname=~ m,^usr/share/mime/.+,) {
+                unless ($fname=~ m,^usr/share/mime/packages(?:$|/),) {
+                    tag 'package-contains-mime-file-outside-package-dir',$file;
+                }
+            }
             # ---------------- /usr/share/man and /usr/X11R6/man
             elsif ($fname =~ m,^usr/X11R6/man/\S+,
                 or $fname =~ m,^usr/share/man/\S+,) {

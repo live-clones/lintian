@@ -29,6 +29,8 @@ bar usr/share/doc
 bar usr/share/doc/files-foo-in-bar/.xvpics/
 bar usr/share/doc/files-foo-in-bar/.thumbnails/
 bar usr/share/doc/files-foo-in-bar/examples/examples
+bar usr/share/mime/
+bar usr/share/mime/packages/
 bar usr/share/perl/
 bar usr/share/vim/vimcurrent/
 bar usr/share/vim/vim73/
