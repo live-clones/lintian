@@ -96,6 +96,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Refresh against unstable to pick up the rename of
       libaqbanking-dev.  Thanks to Micha Lenk for the reminder.
       (Closes: #787937)
+  * data/debhelper/filename-config-files:
+    + [NT] Add "links" file.
   * data/fields/archive-sections:
     + [NT] Pre-emptively support the "debugsym" section, which is
       expected to be used by debhelper for "ddebs".
