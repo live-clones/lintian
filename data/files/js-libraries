@@ -37,6 +37,7 @@ libjs-jquery-treetable       ~~ (?i)/jquery\.treetable$EXT
 libjs-mochikit               ~~ (?i)/mochikit$EXT
 libjs-mootools               ~~ (?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?$EXT
 libjs-prototype              ~~ (?i)/prototype(?:-[\d\.]+)?$EXT
+libjs-raphael                ~~ (?i)/raphael(?:[\.-]min)?$EXT
 libjs-scriptaculous          ~~ (?i)/scriptaculous$EXT
 libjs-strophe                ~~ (?i)/strophe$EXT
 libjs-underscore             ~~ (?i)/underscore$EXT

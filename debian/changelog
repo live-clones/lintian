@@ -90,6 +90,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * data/fields/archive-sections:
     + [NT] Pre-emptively support the "debugsym" section, which is
       expected to be used by debhelper for "ddebs".
+  * data/files/js-libraries:
+    + [NT] Apply patch from Jean-Michael Vourgère to detect
+      embedded versions of libjs-raphael.  (Closes: #788839)
   * data/files/privacy-breaker-websites:
     + [BR] Detect mascot as logos.
   * data/java/constants:
