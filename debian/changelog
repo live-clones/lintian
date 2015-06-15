@@ -21,7 +21,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/fields.pm:
     + [BR] Detect double comma in  uploaders fields.
       (Closes: #783628).
-  * checks/files.pm:
+  * checks/files.{desc,pm}:
     + [NT] Apply patch from Tomasz Buchert to avoid false-positive
       package-contains-timestamped-gzip in some cases.
       (Closes: #762105)
@@ -40,6 +40,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       from openmapstreet.
     + [NT] Tweak the "extra-license-file" check to avoid some
       common false-positives.
+    + [BR] Raise severity of package-contains-timestamped-gzip.
+      (Closes: #778328).
   * checks/java.pm:
     + [NT] Fix "off-by-one" in the check for the maximum permitted
       Java major version.

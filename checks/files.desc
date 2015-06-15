@@ -1620,7 +1620,7 @@ Info: This package ships a PKCS#11 module configuration file under
  convention and may ignore them in the future.
 
 Tag: package-contains-timestamped-gzip
-Severity: wishlist
+Severity: normal
 Certainty: certain
 Info: The package contains a gzip-compressed file that has timestamps.
  Such files make the packages unreproducible, because their
