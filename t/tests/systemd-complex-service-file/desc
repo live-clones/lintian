@@ -4,4 +4,5 @@ Version: 1.0
 Description: Verifies the .service file parser properly handles .include within
  service files.
 Test-For:
+ service-key-has-whitespace
  systemd-service-file-refers-to-obsolete-target

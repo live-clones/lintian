@@ -1,2 +1,4 @@
+E: systemd-complex-service-file: service-key-has-whitespace lib/systemd/system/test3.service at line 3
+E: systemd-complex-service-file: service-key-has-whitespace lib/systemd/system/test3.service at line 3
 W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test.service dbus.target
 W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test2.service syslog.target

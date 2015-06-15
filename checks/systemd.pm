@@ -28,7 +28,7 @@ use warnings;
 use autodie;
 
 use File::Basename;
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Tags qw(tag);
@@ -188,8 +188,9 @@ sub extract_service_file_values {
         return;
     }
     my @lines = service_file_lines($file);
-    if (any { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines) {
-        tag 'service-key-has-whitespace', $file;
+    my $key_ws = first_index { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines;
+    if ($key_ws > -1) {
+        tag 'service-key-has-whitespace', $file, 'at line', $key_ws;
     }
     if (any { /^\.include / } @lines) {
         my $parent_dir = $file->parent_dir;
