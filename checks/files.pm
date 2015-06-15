@@ -740,7 +740,10 @@ sub run {
             }
             # ---------------- /usr/share/mime/
             elsif ($fname=~ m,^usr/share/mime/.+,) {
-                unless ($fname=~ m,^usr/share/mime/packages(?:$|/),) {
+                # ---------------- /usr/share/mime
+                if ($fname =~ m,^usr/share/mime/[^/]+$,) {
+                    tag 'package-contains-mime-cache-file', $file;
+                }elsif ($fname!~ m,^usr/share/mime/packages/,) {
                     tag 'package-contains-mime-file-outside-package-dir',$file;
                 }
             }
@@ -784,10 +787,6 @@ sub run {
             # ---------------- /usr/share/linda/overrides
             elsif ($fname =~ m,^usr/share/linda/overrides/\S+,) {
                 tag 'package-contains-linda-override', $file;
-            }
-            # ---------------- /usr/share/mime
-            elsif ($fname =~ m,^usr/share/mime/[^/]+$,) {
-                tag 'package-contains-mime-cache-file', $file;
             }
             # ---------------- /usr/share/p11-kit/modules
             elsif (

@@ -22,6 +22,7 @@ Test-For:
  image-file-in-usr-lib
  non-multi-arch-lib-dir
  non-standard-toplevel-dir
+ package-contains-mime-file-outside-package-dir
  package-contains-xvpics-dir
  package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
