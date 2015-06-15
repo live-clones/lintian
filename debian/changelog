@@ -42,6 +42,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       common false-positives.
     + [BR] Raise severity of package-contains-timestamped-gzip.
       (Closes: #778328).
+    + [BR] Detect package shipping apt_sources(5) file.
+      (Closes: #646965).
   * checks/java.pm:
     + [NT] Fix "off-by-one" in the check for the maximum permitted
       Java major version.

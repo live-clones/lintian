@@ -1,6 +1,7 @@
 bar bin/foo
 bar emul
 bar etc/apt/preferences.d
+bar etc/apt/sources.d
 bar etc/gconf/schemas/
 bar etc/rc.boot
 bar etc/rc.d

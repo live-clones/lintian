@@ -87,6 +87,15 @@ Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/
  .
  Package should not override local administrator choices.
 
+Tag: package-install-apt-sources
+Severity: serious
+Certainty: possible
+Ref: apt_sources(5)
+Info: Debian packages should not install files under <tt>/etc/apt/sources.d/</tt> or install a /etc/apt/sources file.
+ This directory is under the control of the local administrator.
+ .
+ Package should not override local administrator choices.
+
 Tag: package-installs-into-etc-rc.boot
 Severity: serious
 Certainty: certain

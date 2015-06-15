@@ -441,10 +441,19 @@ sub run {
 
         # ---------------- /etc
         if ($fname =~ m,^etc/,) {
-            # -----------------/etc/apt/preferences
-            if ($fname =~ m,^etc/apt/preferences(?:\.d/)?,) {
-                unless ($source_pkg eq 'apt') {
-                    tag 'package-install-apt-preferences', $file;
+            # /etc/apt
+            if ($fname =~ m,^etc/apt/,) {
+                # -----------------/etc/apt/preferences
+                if ($fname =~ m,^etc/apt/preferences(?:\.d/)?,) {
+                    unless ($source_pkg eq 'apt') {
+                        tag 'package-install-apt-preferences', $file;
+                    }
+                }
+                # -----------------/etc/apt/sources
+                if ($fname =~ m,^etc/apt/sources(?:\.d/)?,) {
+                    unless ($source_pkg eq 'apt') {
+                        tag 'package-install-apt-sources', $file;
+                    }
                 }
             }
             # ---------------- /etc/cron.daily, etc.
