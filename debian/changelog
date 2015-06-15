@@ -15,6 +15,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/debhelper.{desc,pm}:
     + [NT] Warn about using dh --{until,before,after,remaining} as
       these are deprecated and have been since debhelper/8.9.4.
+    + [NT] Permit the use of dh-exec-install in ".manpages" as well
+      since dh-exec now advertises this as acceptable.  Thanks to
+      Andreas Henriksson for reporting this.  (Closes: #788796)
   * checks/fields.pm:
     + [BR] Detect double comma in  uploaders fields.
       (Closes: #783628).
@@ -43,6 +46,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       (Closes: #646965).
     + [BR] Warn about files installed in /usr/share/mime/ other
       than in packages/.  (Closes: #761649).
+
   * checks/java.pm:
     + [NT] Fix "off-by-one" in the check for the maximum permitted
       Java major version.
@@ -57,6 +61,12 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       different "public-domain licenses", as they are expected to
       describe why the affected files are in public domain.
       (Closes: #787248)
+  * checks/systemd.{desc,pm}:
+    + [NT] Apply patch from Felipe Sateler to mark service files in
+      /usr/lib as invalid.  (Closes: #788629)
+    + [NT] Apply patch from Felipe Sateler to detect service files
+      that use spaces around the = in the key definition.
+      (Closes: #786421)
 
   * collection/{debfiles,doc-base-files,init.d,menu-files}{,.desc}:
     + [NT] Remove deprecated and unused collections.  These were
@@ -93,9 +103,14 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Refresh against unstable to pick up the rename of
       libaqbanking-dev.  Thanks to Micha Lenk for the reminder.
       (Closes: #787937)
+  * data/debhelper/filename-config-files:
+    + [NT] Add "links" file.
   * data/fields/archive-sections:
     + [NT] Pre-emptively support the "debugsym" section, which is
       expected to be used by debhelper for "ddebs".
+  * data/files/js-libraries:
+    + [NT] Apply patch from Jean-Michael Vourgère to detect
+      embedded versions of libjs-raphael.  (Closes: #788839)
   * data/files/privacy-breaker-websites:
     + [BR] Detect mascot as logos.
   * data/java/constants:

@@ -1359,18 +1359,6 @@ Info: This package contains a file named <tt>mimeinfo.cache</tt>,
  included in a package since it needs to be generated dynamically based on
  the installed .desktop files on the system.
 
-
-Tag: package-contains-mimeinfo.cache-file
-Severity: serious
-Certainty: certain
-Info: This package contains a file named <tt>mimeinfo.cache</tt>,
- possibly compressed, in <tt>/usr/share/applications</tt>.  This file is
- generated automatically by update-desktop-database when a package
- containing <tt>.desktop</tt> files associated to MIME types is installed.
- Some upstream build systems create it automatically, but it must not be
- included in a package since it needs to be generated dynamically based on
- the installed .desktop files on the system.
-
 Tag: package-contains-mime-file-outside-package-dir
 Severity: important
 Certainty: certain
@@ -1381,6 +1369,22 @@ Info: This package contains a file in a path reserved solely for
  /usr/share/mime/ files are cache generated from
  /usr/share/mime/packages/. Thus file under /usr/share/mime/
  should not be installed
+
+Tag: package-contains-cmake-private-file
+Severity: important
+Certainty: certain
+Ref: https://wiki.debian.org/CMake, http://www.cmake.org/cmake/help/v3.2/manual/cmake-packages.7.html#config-file-packages
+Info: This package contains a file in a path reserved solely for
+ <tt>CMake</tt>. This normally means you are shipping a <tt>Find</tt>
+ module. Libraries should not ship Find modules at all but Config files
+ instead.
+ .
+ The Config files should be installed in the unversioned path
+ usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/
+ .
+ By using CMake Config files in the unversioned path, the package will
+ continue to work as expected when a new version of CMake is uploaded.
+
 
 Tag: package-modifies-ld.so-search-path
 Severity: important
