@@ -505,7 +505,7 @@ sub _check_dh_exec {
         tag 'dh-exec-script-without-dh-exec-features', $path;
     }
 
-    if ($dhe_install && $base ne 'install') {
+    if ($dhe_install && ($base ne 'install' && $base ne 'manpages')) {
         tag 'dh-exec-install-not-allowed-here', $path;
     }
     return;

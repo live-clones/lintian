@@ -15,6 +15,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * checks/debhelper.{desc,pm}:
     + [NT] Warn about using dh --{until,before,after,remaining} as
       these are deprecated and have been since debhelper/8.9.4.
+    + [NT] Permit the use of dh-exec-install in ".manpages" as well
+      since dh-exec now advertises this as acceptable.  Thanks to
+      Andreas Henriksson for reporting this.  (Closes: #788796)
   * checks/fields.pm:
     + [BR] Detect double comma in  uploaders fields.
       (Closes: #783628).

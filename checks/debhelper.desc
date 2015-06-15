@@ -290,11 +290,11 @@ Info: The package uses dh-exec in at least one of its files, but does
 Tag: dh-exec-install-not-allowed-here
 Severity: important
 Certainty: possible
-Info: The package uses a dh-exec-install construct in a non-.install
- file.
+Info: The package uses a dh-exec-install construct in a debhelper
+ config file, where it is not permitted.
  .
  The dh-exec-install constructs are only allowed in dh_install's
- .install files, and nowhere else.
+ .install and dh_installman's .manpages files, and nowhere else.
 
 Tag: dh-exec-subst-unknown-variable
 Severity: minor
