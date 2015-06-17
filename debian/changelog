@@ -131,6 +131,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Rewrite check_spelling{,_picky} with a new interface,
       which is better suited for additional purposes than just
       emitting Lintian tags.
+    + [JW, NT] Normalise spaces a bit better in check_spelling to
+      catch some "multi-word" misspellings, where said words are
+      not on the same line.  (Closes: #763456)
   * lib/Lintian/Collect/Package.pm:
     + [NT] Create "faux" Lintian::Path entries for missing
       intermediate directories.  This avoids a crash and made

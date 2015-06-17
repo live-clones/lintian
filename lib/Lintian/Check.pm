@@ -28,6 +28,7 @@ use Email::Valid;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(strip);
 
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
@@ -290,6 +291,9 @@ sub check_spelling {
 
     $text =~ s/[()\[\]]//g;
     $text =~ s/(\w-)\s*\n\s*/$1/;
+    $text =~ tr/\r\n \t/ /s;
+    $text =~ s/\s++/ /;
+    strip($text);
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
@@ -370,6 +374,9 @@ sub check_spelling_picky {
     # or similar which may legitimately contain lower-cased versions of
     # the words.
     $text =~ s/\[.+?\]//sg;
+    $text =~ tr/\r\n \t/ /s;
+    $text =~ s/\s++/ /;
+    strip($text);
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
         if ($corrections_case->known($word)) {
