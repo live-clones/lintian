@@ -32,7 +32,7 @@ use Lintian::Tags qw(tag);
 our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
 
 our @EXPORT_OK = qw(check_maintainer check_spelling check_spelling_picky
-  $known_shells_regex
+  $known_shells_regex spelling_tag_emitter
 );
 
 =head1 NAME
@@ -226,18 +226,44 @@ sub check_maintainer {
     return;
 }
 
+=item spelling_tag_emitter(TAGNAME[, FILENAME])
+
+Create and return a subroutine that is useful for emitting lintian
+tags for spelling mistakes.  The returned CODE ref can be passed to
+L</check_spelling(TEXT,[ EXCEPTIONS,] CODEREF)> and will faithfully
+emit TAGNAME once for each unique spelling mistake.
+
+The optional extra parameter FILENAME is used to denote the file name,
+when this is not given from the tagname.
+
+=cut
+
+sub spelling_tag_emitter {
+    my (@orig_args) = @_;
+    return sub {
+        return tag(@orig_args, @_);
+    };
+}
+
 sub _tag {
     my @args = grep { defined($_) } @_;
     return tag(@args);
 }
 
-=item check_spelling(TAG, TEXT, FILENAME, EXCEPTION)
+=item check_spelling(TEXT,[ EXCEPTIONS,] CODEREF)
 
-Performs a spelling check of TEXT, reporting TAG if any errors are found.
+Performs a spelling check of TEXT.  Call CODEREF once for each unique
+misspelling with the following arguments:
 
-If FILENAME is given, it will be used as the first argument to TAG.
+=over 4
 
-If EXCEPTION is given, it will be used as a hash ref of exceptions.
+=item The misspelled word/phrase
+
+=item The correct word/phrase
+
+=back
+
+If EXCEPTIONS is given, it will be used as a hash ref of exceptions.
 Any lowercase word appearing as a key of this hash ref will never be
 considered a spelling mistake (exception being if it is a part of a
 multiword misspelling).
@@ -247,8 +273,14 @@ Returns the number of spelling mistakes found in TEXT.
 =cut
 
 sub check_spelling {
-    my ($tag, $text, $filename, $exceptions) = @_;
+    my ($text, $exceptions, $code_ref) = @_;
     return 0 unless $text;
+    if (not $code_ref and $exceptions and ref($code_ref) eq 'CODE') {
+        $code_ref = $exceptions;
+        $exceptions = {};
+    } else {
+        $exceptions //= {};
+    }
 
     my %seen;
     my $counter = 0;
@@ -258,8 +290,6 @@ sub check_spelling {
 
     $text =~ s/[()\[\]]//g;
     $text =~ s/(\w-)\s*\n\s*/$1/;
-
-    $exceptions = {} unless (defined($exceptions));
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
@@ -277,7 +307,7 @@ sub check_spelling {
                 $correction = ucfirst $correction;
             }
             next if $seen{$lcword}++;
-            _tag($tag, $filename, $word, $correction) if defined $tag;
+            $code_ref->($word, $correction);
         }
     }
 
@@ -293,29 +323,36 @@ sub check_spelling {
             }
             $counter++;
             next if $seen{lc $word}++;
-            _tag($tag, $filename, $word, $correction)
-              if defined $tag;
+            $code_ref->($word, $correction);
         }
     }
 
     return $counter;
 }
 
-=item check_spelling_picky(TAG, TEXT, FILENAME)
+=item check_spelling_picky(TEXT, CODEREF)
 
-Perform a spelling check of TEXT, reporting TAG if any mistakes are found.
+Performs a spelling check of TEXT.  Call CODEREF once for each unique
+misspelling with the following arguments:
+
+=over 4
+
+=item The misspelled word/phrase
+
+=item The correct word/phrase
+
+=back
+
 This method performs some pickier corrections - such as checking for common
 capitalization mistakes - which would are not included in check_spelling as
 they are not appropriate for some files, such as changelogs.
-
-If FILENAME is given, it will be used as the first argument to TAG.
 
 Returns the number of spelling mistakes found in TEXT.
 
 =cut
 
 sub check_spelling_picky {
-    my ($tag, $text, $filename) = @_;
+    my ($text, $code_ref) = @_;
 
     my %seen;
     my $counter = 0;
@@ -326,8 +363,7 @@ sub check_spelling_picky {
     # removed below.
     if ($text =~ m,meta\s+package,) {
         $counter++;
-        _tag($tag, $filename, 'meta package', 'metapackage')
-          if defined $tag;
+        $code_ref->('meta package', 'metapackage');
     }
 
     # Exclude text enclosed in square brackets as it could be a package list
@@ -339,9 +375,7 @@ sub check_spelling_picky {
         if ($corrections_case->known($word)) {
             $counter++;
             next if $seen{$word}++;
-            _tag($tag, $filename, $word, $corrections_case->value($word))
-              if defined $tag;
-            next;
+            $code_ref->($word, $corrections_case->value($word));
         }
     }
 

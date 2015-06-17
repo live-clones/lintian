@@ -37,7 +37,7 @@ use constant {
 use Encode qw(decode);
 use List::MoreUtils qw(any);
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(slurp_entire_file file_is_encoded_in_non_utf8);
@@ -45,6 +45,9 @@ use Lintian::Util qw(slurp_entire_file file_is_encoded_in_non_utf8);
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES
   =  Lintian::Data->new('copyright-file/common-licenses');
+
+my $SPELLING_ERROR_IN_COPYRIGHT
+  = spelling_tag_emitter('spelling-error-in-copyright');
 
 sub run {
     my ($pkg, undef, $info, $proc, $group) = @_;
@@ -305,8 +308,8 @@ sub run {
         tag 'copyright-without-copyright-notice';
     }
 
-    check_spelling('spelling-error-in-copyright', $_, undef,
-        $group->info->spelling_exceptions);
+    check_spelling($_, $group->info->spelling_exceptions,
+        $SPELLING_ERROR_IN_COPYRIGHT);
 
     # Now, check for linking against libssl if the package is covered
     # by the GPL.  (This check was requested by ftp-master.)  First,

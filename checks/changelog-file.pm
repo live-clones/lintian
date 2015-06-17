@@ -29,10 +29,15 @@ use List::Util qw(first);
 use List::MoreUtils qw(any);
 use Parse::DebianChangelog;
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
+
+my $SPELLING_ERROR_IN_NEWS
+  = spelling_tag_emitter('spelling-error-in-news-debian');
+my $SPELLING_ERROR_CHANGELOG
+  = spelling_tag_emitter('spelling-error-in-changelog');
 
 sub run {
     my ($pkg, undef, $info, undef, $group) = @_;
@@ -132,8 +137,8 @@ sub run {
                 tag 'debian-news-entry-has-strange-distribution',
                   $news->Distribution;
             }
-            check_spelling('spelling-error-in-news-debian',
-                $news->Changes,undef, $group->info->spelling_exceptions);
+            check_spelling($news->Changes, $group->info->spelling_exceptions,
+                $SPELLING_ERROR_IN_NEWS);
             if ($news->Changes =~ /^\s*\*\s/) {
                 tag 'debian-news-entry-uses-asterisk';
             }
@@ -443,8 +448,8 @@ sub run {
         # Strip out all lines that contain the word spelling to avoid false
         # positives on changelog entries for spelling fixes.
         $changes =~ s/^.*spelling.*\n//gm;
-        check_spelling('spelling-error-in-changelog', $changes, undef,
-            $group->info->spelling_exceptions);
+        check_spelling($changes, $group->info->spelling_exceptions,
+            $SPELLING_ERROR_CHANGELOG);
     }
 
     return;

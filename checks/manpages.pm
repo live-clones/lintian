@@ -29,7 +29,7 @@ use File::Basename;
 use List::MoreUtils qw(any none);
 use Text::ParseWords ();
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env drain_pipe fail open_gz);
 
@@ -315,6 +315,8 @@ sub run {
             waitpid $pid, 0;
             # Now we search through the whole man page for some common errors
             my $lc = 0;
+            my $stag_emitter
+              = spelling_tag_emitter('spelling-error-in-manpage', $file);
             foreach my $line (@manfile) {
                 $lc++;
                 chomp $line;
@@ -337,8 +339,8 @@ sub run {
                     tag 'manpage-has-errors-from-pod2man', "$file:$lc";
                 }
                 # Check for spelling errors if the manpage is English
-                check_spelling('spelling-error-in-manpage', $line, $file,
-                    $ginfo->spelling_exceptions)
+                check_spelling($line, $ginfo->spelling_exceptions,
+                    $stag_emitter)
                   if ($path =~ m,/man/man\d/,);
             }
         }

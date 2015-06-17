@@ -264,8 +264,13 @@ sub test_check_desc {
         if ($is_translation) {
             $builder->skip('Skip language specific test');
         } else {
-            $builder->is_eq(check_spelling(undef, $cinfo),
-                0, "$cname Info has no spelling errors");
+            my $mistakes = 0;
+            my $handler = sub {
+                my ($incorrect, $correct) = @_;
+                $builder->diag("Spelling ($cname): $incorrect => $correct");
+                $mistakes++;
+            };
+            $builder->is_eq($mistakes, 0,"$cname Info has no spelling errors");
         }
 
         foreach my $tpara (@tagpara) {
@@ -309,8 +314,15 @@ sub test_check_desc {
                 $builder->skip('Skip language specific test');
                 $builder->skip('Skip language specific test');
             } else {
-                $builder->is_eq(check_spelling(undef, $info),
-                    0, "$content_type $cname: $tag has no spelling errors");
+                my $mistakes = 0;
+                my $handler = sub {
+                    my ($incorrect, $correct) = @_;
+                    $builder->diag(
+                        "Spelling ($cname/$tag): $incorrect => $correct");
+                    $mistakes++;
+                };
+                $builder->is_eq($mistakes, 0,
+                    "$content_type $cname: $tag has no spelling errors");
 
                 $builder->ok($info !~ /(?:^| )(?:[Ww]e|I)\b/,
                     'Tag info does not speak of "I", or "we"')

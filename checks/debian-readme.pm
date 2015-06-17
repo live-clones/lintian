@@ -23,8 +23,11 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
+
+my $SPELLING_ERROR_IN_README
+  = spelling_tag_emitter('spelling-error-in-readme-debian');
 
 sub run {
     my ($pkg, undef, $info, undef, $group) = @_;
@@ -51,8 +54,8 @@ sub run {
         tag 'readme-debian-contains-invalid-email-address', $1;
     }
 
-    check_spelling('spelling-error-in-readme-debian',
-        $readme, undef,$group->info->spelling_exceptions);
+    check_spelling($readme,$group->info->spelling_exceptions,
+        $SPELLING_ERROR_IN_README);
 
     return;
 }

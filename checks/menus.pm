@@ -25,7 +25,8 @@ use strict;
 use warnings;
 use autodie;
 
-use Lintian::Check qw(check_spelling check_spelling_picky $known_shells_regex);
+use Lintian::Check
+  qw(check_spelling check_spelling_picky $known_shells_regex spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
@@ -393,16 +394,15 @@ sub check_doc_base_field {
         # Title field.
     } elsif ($field eq 'title') {
         if (@$vals) {
+            my $stag_emitter
+              = spelling_tag_emitter('spelling-error-in-doc-base-title-field',
+                "${dbfile}:${line}");
             check_spelling(
-                'spelling-error-in-doc-base-title-field',
                 join(' ', @$vals),
-                "$dbfile:$line",$group->info->spelling_exceptions
+                $group->info->spelling_exceptions,
+                $stag_emitter
             );
-            check_spelling_picky(
-                'spelling-error-in-doc-base-title-field',
-                join(' ', @$vals),
-                "$dbfile:$line"
-            );
+            check_spelling_picky(join(' ', @$vals), $stag_emitter);
         }
 
         # Section field.
@@ -466,16 +466,16 @@ sub check_doc_base_field {
 
         # Check spelling.
         if (@$vals) {
+            my $stag_emitter
+              = spelling_tag_emitter(
+                'spelling-error-in-doc-base-abstract-field',
+                "${dbfile}:${line}");
             check_spelling(
-                'spelling-error-in-doc-base-abstract-field',
                 join(' ', @$vals),
-                "$dbfile:$line",$group->info->spelling_exceptions
+                $group->info->spelling_exceptions,
+                $stag_emitter
             );
-            check_spelling_picky(
-                'spelling-error-in-doc-base-abstract-field',
-                join(' ', @$vals),
-                "$dbfile:$line"
-            );
+            check_spelling_picky(join(' ', @$vals), $stag_emitter);
         }
     }
 

@@ -27,7 +27,7 @@ use autodie;
 use constant NUMPY_STRING => 'module compiled against ABI version %x'
   . ' but this version of numpy is %x';
 
-use Lintian::Check qw(check_spelling);
+use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
@@ -331,7 +331,9 @@ sub run {
             'tEH' => 1, # From #782902
             'tEh' => 1, # From #782902, too
         };
-        check_spelling('spelling-error-in-binary',$strings, $file,$exceptions);
+        my $tag_emitter
+          = spelling_tag_emitter('spelling-error-in-binary', $file);
+        check_spelling($strings, $exceptions, $tag_emitter);
 
         # stripped?
         if ($fileinfo =~ m,\bnot stripped\b,o) {

@@ -29,9 +29,20 @@ use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
 
 use Encode qw(decode);
 
-use Lintian::Check qw(check_spelling check_spelling_picky);
+use Lintian::Check
+  qw(check_spelling check_spelling_picky spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
+
+my $SPELLING_ERROR_IN_SYNOPSIS
+  = spelling_tag_emitter('spelling-error-in-description-synopsis');
+my $SPELLING_ERROR_IN_DESCRIPTION
+  = spelling_tag_emitter('spelling-error-in-description');
+
+my $PICKY_SPELLING_ERROR_IN_SYNOPSIS
+  = spelling_tag_emitter('capitalization-error-in-description-synopsis');
+my $PICKY_SPELLING_ERROR_IN_DESCRIPTION
+  = spelling_tag_emitter('capitalization-error-in-description');
 
 sub run {
     my ($pkg, $type, $info, undef, $group) = @_;
@@ -224,17 +235,19 @@ sub run {
     }
 
     if ($synopsis) {
-        check_spelling('spelling-error-in-description-synopsis',
-            $synopsis,undef, $group->info->spelling_exceptions);
-        check_spelling_picky('capitalization-error-in-description-synopsis',
-            $synopsis);
+        check_spelling($synopsis, $group->info->spelling_exceptions,
+            $SPELLING_ERROR_IN_SYNOPSIS);
+        check_spelling_picky($synopsis, $PICKY_SPELLING_ERROR_IN_SYNOPSIS);
     }
 
     if ($description) {
-        check_spelling('spelling-error-in-description',
-            $description,undef, $group->info->spelling_exceptions);
-        check_spelling_picky('capitalization-error-in-description',
-            $description);
+        check_spelling(
+            $description,
+            $group->info->spelling_exceptions,
+            $SPELLING_ERROR_IN_DESCRIPTION
+        );
+        check_spelling_picky($description,
+            $PICKY_SPELLING_ERROR_IN_DESCRIPTION);
     }
 
     return;

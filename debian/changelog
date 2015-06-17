@@ -2,6 +2,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/*.pm:
+    + [NT] Rewrite to handle new check_spelling{,_picky}
   * checks/cruft.{desc,pm}:
     + [BR] Detect non free lenna file based on filename and filetype.
       (Closes: #771191).
@@ -125,6 +127,10 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       deprecated in 2.5.28.  It was deprecated in that release
       despite the omission.
 
+  * lib/Lintian/Check.pm:
+    + [NT] Rewrite check_spelling{,_picky} with a new interface,
+      which is better suited for additional purposes than just
+      emitting Lintian tags.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Create "faux" Lintian::Path entries for missing
       intermediate directories.  This avoids a crash and made
@@ -138,6 +144,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       to fully connect all path entries in the package.
   * lib/Lintian/Tag/Info.pm:
     + [NT] Expand BTS links using https rather than http.
+  * lib/Test/Lintian.pm:
+    + [NT] Output spelling mistakes as "diag()" messages now.
 
   * mail-templates/source-is-missing:
     + [BR] Apply patch from Holger Levsen improving language.
