@@ -116,7 +116,7 @@ my $VCS_FILES = Lintian::Data->new(
     qr/\s++/,
     sub {
         my $regexp = $_[0];
-        $regexp =~ s/\${COMPRESS_EXT}/$COMPRESS_FILE_EXTENSIONS_OR_ALL/g;
+        $regexp =~ s/\$[{]COMPRESS_EXT[}]/$COMPRESS_FILE_EXTENSIONS_OR_ALL/g;
         return qr/(?:$regexp)/x;
     });
 

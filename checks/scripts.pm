@@ -98,7 +98,7 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
             fail 'Syntax error in scripts/maintainer-script-bad-command:', $.;
         }
         my ($incat,$exceptinpackage,$inscript,$regexp) = @sliptline;
-        $regexp =~ s/\${LEADIN}/$LEADINSTR/;
+        $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
    # allow empty $exceptinpackage and set it synonymous to check in all package
         $exceptinpackage
           = defined($exceptinpackage) ? strip($exceptinpackage) : '';
@@ -914,7 +914,7 @@ sub run {
                 }
                 my $mode = /--remove/ ? 'remove' : 'add';
                 my ($divert) = /dpkg-divert\s*(.*)$/;
-                $divert =~ s{\s*(?:\${?[\w:=-]+}?)*\s*
+                $divert =~ s{\s*(?:\$[{]?[\w:=-]+[}]?)*\s*
                                 # options without arguments
                               --(?:add|quiet|remove|rename|test|local
                                 # options with arguments
@@ -950,7 +950,7 @@ sub run {
 
                 # For now just replace variables, they will later be normalised
                 $expand_diversions = 1 if $divert =~ s/\\\$\w+/.+/g;
-                $expand_diversions = 1 if $divert =~ s/\\\$\\{\w+.*?\\}/.+/g;
+                $expand_diversions = 1 if $divert =~ s/\\\$\\[{]\w+.*?\\[}]/.+/g;
                 # handle $() the same way:
                 $expand_diversions = 1 if $divert =~ s/\\\$\\\(.+?\\\)/.+/g;
 

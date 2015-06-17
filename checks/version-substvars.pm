@@ -61,7 +61,7 @@ sub run {
             my $rel = $info->binary_relation($pkg1, $field);
             my $svid = 0;
             my $visitor = sub {
-                if (m/\${Source-Version}/o and not $svid) {
+                if (m/\$[{]Source-Version[}]/o and not $svid) {
                     $svid++;
                     tag 'substvar-source-version-is-deprecated', $pkg1;
                 }

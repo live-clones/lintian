@@ -1110,12 +1110,13 @@ sub _clean_block {
     # po comment may include html tag
     $text =~ s/\"\s?\v\#~\s?\"//gxms;
 
-    $text =~ s/\\url{[^}]*?}/ /gxms;          # (la)?tex url
-    $text =~ s/\\emph{/ /gxms;                # (la)?tex emph
-    $text =~ s/\\href{[^}]*?}
-                     {([^}]*?)}/ $1 /gxms;    # (la)?tex href
+    $text =~ s/\\url[{][^}]*?[}]/ /gxms;      # (la)?tex url
+    $text =~ s/\\emph[{]/ /gxms;              # (la)?tex emph
+    $text =~ s/\\href[{][^}]*?[}]
+                     [{]([^}]*?)[}]/ $1 /gxms;# (la)?tex href
     $text =~ s/\\hyperlink
-                 {[^}]*?}{([^}]*?)}/ $1 /gxms;# (la)?tex hyperlink
+                 [{][^}]*?[}]
+                 [{]([^}]*?)[}]/ $1 /gxms;    # (la)?tex hyperlink
     $text =~ s,-\\/,-,gxms;                   # tex strange hyphen
     $text =~ s,\\char, ,gxms;                 # tex  char command
 
@@ -1128,10 +1129,10 @@ sub _clean_block {
     $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
 
     # Tex info bold,italic, roman, fixed width
-    $text =~ s/\@[birt]{/ /gxms;
-    $text =~ s/\@sansserif{/ /gxms;           # Tex info sans serif
-    $text =~ s/\@slanted{/ /gxms;             # Tex info slanted
-    $text =~ s/\@var{/ /gxms;                 # Tex info emphasis
+    $text =~ s/\@[birt][{]/ /gxms;
+    $text =~ s/\@sansserif[{]/ /gxms;         # Tex info sans serif
+    $text =~ s/\@slanted[{]/ /gxms;             # Tex info slanted
+    $text =~ s/\@var[{]/ /gxms;                 # Tex info emphasis
 
     $text =~ s/\@(?:small)?example\s+/ /gxms; # Tex info example
     $text =~ s/\@end \h+
