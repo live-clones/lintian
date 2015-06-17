@@ -92,9 +92,9 @@ sub run {
                       . $info->binary_field($pkg1, 'depends', '')))
           ) {
             next
-              unless m/($PKGNAME_REGEX)(?: :any)? \s*           # pkg-name
-                       \(\s*(\>)?=\s*                           # rel
-                       \${((?:Source-|source:|binary:)Version)} # subvar
+              unless m/($PKGNAME_REGEX)(?: :any)? \s*               # pkg-name
+                       \(\s*(\>)?=\s*                               # rel
+                       \$[{]((?:Source-|source:|binary:)Version)[}] # subvar
                       /x;
 
             my $gt = $2//'';
