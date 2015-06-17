@@ -950,7 +950,8 @@ sub run {
 
                 # For now just replace variables, they will later be normalised
                 $expand_diversions = 1 if $divert =~ s/\\\$\w+/.+/g;
-                $expand_diversions = 1 if $divert =~ s/\\\$\\[{]\w+.*?\\[}]/.+/g;
+                $expand_diversions = 1
+                  if $divert =~ s/\\\$\\[{]\w+.*?\\[}]/.+/g;
                 # handle $() the same way:
                 $expand_diversions = 1 if $divert =~ s/\\\$\\\(.+?\\\)/.+/g;
 
