@@ -292,7 +292,7 @@ sub check_spelling {
     $text =~ s/[()\[\]]//g;
     $text =~ s/(\w-)\s*\n\s*/$1/;
     $text =~ tr/\r\n \t/ /s;
-    $text =~ s/\s++/ /;
+    $text =~ s/\s++/ /g;
     strip($text);
 
     for my $word (split(/\s+/, $text)) {
@@ -375,7 +375,7 @@ sub check_spelling_picky {
     # the words.
     $text =~ s/\[.+?\]//sg;
     $text =~ tr/\r\n \t/ /s;
-    $text =~ s/\s++/ /;
+    $text =~ s/\s++/ /g;
     strip($text);
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
