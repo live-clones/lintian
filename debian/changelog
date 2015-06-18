@@ -134,6 +134,10 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [JW, NT] Normalise spaces a bit better in check_spelling to
       catch some "multi-word" misspellings, where said words are
       not on the same line.  (Closes: #763456)
+  * lib/Lintian/Collect/Binary.pm:
+    + [JW, NT] Make is_pkg_class case-insensitive to avoid some
+      false-positive "empty-binary-package" warnings.
+      (Closes: #789151)
   * lib/Lintian/Collect/Package.pm:
     + [NT] Create "faux" Lintian::Path entries for missing
       intermediate directories.  This avoids a crash and made

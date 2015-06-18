@@ -648,6 +648,7 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
             return;
         }
         return 1 if $desc =~ m/transitional package/;
+        $desc = lc($desc);
         if ($pkg_class eq 'any-meta') {
             my ($section) = $self->field('section', '');
             return 1 if $desc =~ m/$METAPKG_REGEX/o;
