@@ -244,14 +244,19 @@ sub main {
     error('run_tool returned unexpectedly');
 }
 
-sub builtin_version {
-    my ($truename, $cmd, @args) = @_;
+sub lintian_version {
     $LINTIAN_VERSION = guess_version(__FILE__)
       if not defined($LINTIAN_VERSION);
+    return $LINTIAN_VERSION;
+}
+
+sub builtin_version {
+    my ($truename, $cmd, @args) = @_;
+    my $version = lintian_version();
     if ($cmd eq 'print-version') {
-        print "$LINTIAN_VERSION\n";
+        print "${version}\n";
     } else {
-        print "Lintian v$LINTIAN_VERSION\n";
+        print "Lintian v${version}\n";
     }
     exit(0);
 }
@@ -259,10 +264,9 @@ sub builtin_version {
 sub builtin_help {
     my ($truename, $cmd, @args) = @_;
     my $me = basename($0);
-    $LINTIAN_VERSION = guess_version(__FILE__)
-      if not defined($LINTIAN_VERSION);
+    my $version = lintian_version();
     print <<"EOT";
-Lintian v$LINTIAN_VERSION
+Lintian v${version}
 Usage: $me [General options] <command> [options/arguments...]
 General options:
   --include-dir DIR     include checks, libraries (etc.) from DIR

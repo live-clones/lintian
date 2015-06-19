@@ -29,10 +29,9 @@ use Lintian::Data;
 use Lintian::Profile;
 use Lintian::Util qw(slurp_entire_file);
 
-our $VERSION = '0.0';
-
 sub show_version {
-    print "spellintian $VERSION\n";
+    my $version = dplint::lintian_version();
+    print "spellintian v${version}\n";
     exit 0;
 }
 
@@ -96,6 +95,8 @@ END {
     close(STDOUT);
     close(STDERR);
 }
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil
