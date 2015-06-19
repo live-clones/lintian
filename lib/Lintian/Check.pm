@@ -276,7 +276,7 @@ Returns the number of spelling mistakes found in TEXT.
 sub check_spelling {
     my ($text, $exceptions, $code_ref) = @_;
     return 0 unless $text;
-    if (not $code_ref and $exceptions and ref($code_ref) eq 'CODE') {
+    if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
         $code_ref = $exceptions;
         $exceptions = {};
     } else {

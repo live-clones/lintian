@@ -809,7 +809,7 @@ sub full_text_check {
     }
 
     my $fd = $entry->open(':raw');
-    # allow to check only text file
+    # check only text files
     unless (-T $fd) {
         close($fd);
         return;

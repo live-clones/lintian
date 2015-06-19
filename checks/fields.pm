@@ -311,7 +311,7 @@ sub run {
                 my $rc = $1;
                 my $rest = $2//'';
                 my $suggestion;
-                # Remove the rc-part and the preceeding symbol (if any).
+                # Remove the rc-part and the preceding symbol (if any).
                 $expected =~ s/[\.\+\-\:]?\Q$rc\E.*//;
                 $suggestion = "$expected~$rc$rest";
                 tag 'rc-version-greater-than-expected-version', $upstream, '>',

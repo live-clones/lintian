@@ -82,6 +82,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Read mirror files as UTF-8 files to avoid mojibake in
       maintainer names.  Once again, thanks to Andreas Rönnquist
       for the report.
+  * commands/spellintian.pm:
+    + [JW,NT] Import Jakub Wilk's spellintian tool with minor
+      modifications.
 
   * data/binaries/embedded-libs:
     + [BR] Detect embedded ieee-data package.
@@ -126,6 +129,16 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Add missing "debfiles" in the list of collections
       deprecated in 2.5.28.  It was deprecated in that release
       despite the omission.
+  * debian/copyright:
+    + [NT] Document new text case being under the Expat license.
+  * debian/{lintian.links,manpages}:
+    + [NT] Install spellintian in PATH and install its manpage.
+      Thanks to Paul Wise for the suggestion.  (Closes: #767867)
+  * debian/rules:
+    + [NT] Generate the spellintian manpage during build.
+
+  * frontend/spellintian:
+    + [NT] Add symlink to dplint.
 
   * lib/Lintian/Check.pm:
     + [NT] Rewrite check_spelling{,_picky} with a new interface,
@@ -156,6 +169,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
 
   * mail-templates/source-is-missing:
     + [BR] Apply patch from Holger Levsen improving language.
+
+  * t/scripts/spellintian.t:
+    + [JW,NT] Import spellintian test case.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 30 May 2015 18:42:22 +0200
 

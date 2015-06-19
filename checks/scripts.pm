@@ -757,7 +757,7 @@ sub run {
 
                     # Remove single quoted strings, with the exception
                     # that we don't remove the string
-                    # if the quote is immediately preceeded by a < or
+                    # if the quote is immediately preceded by a < or
                     # a -, so we can match "foo <<-?'xyz'" as a
                     # heredoc later The check is a little more greedy
                     # than we'd like, but the heredoc test itself will

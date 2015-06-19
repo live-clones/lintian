@@ -9,7 +9,7 @@ X-Debbugs-CC: ftpmaster@debian.org
 Hi,
 
 your package includes some files that seem to lack sources
-in prefered forms of modification:
+in preferred forms of modification:
 
 {list of files}
 
