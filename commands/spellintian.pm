@@ -20,32 +20,30 @@
 
 use strict;
 use warnings;
+use autodie;
 
-use English qw(-no_match_vars);
-use Getopt::Long ();
+use Getopt::Long();
 
-use Lintian::Profile ();
-use Lintian::Data ();
 use Lintian::Check qw(check_spelling check_spelling_picky);
+use Lintian::Data;
+use Lintian::Profile;
+use Lintian::Util qw(slurp_entire_file);
 
 our $VERSION = '0.0';
 
-sub show_version
-{
+sub show_version {
     print "spellintian $VERSION\n";
     exit 0;
 }
 
-sub show_help
-{
+sub show_help {
     print <<'EOF' ;
 Usage: spellintian [--picky] [FILE...]
 EOF
     exit 0;
 }
 
-sub spellcheck
-{
+sub spellcheck {
     my ($path, $picky, $text) = @_;
     my $prefix = $path ? "$path: " : q{};
     my $spelling_error_handler = sub {
@@ -58,7 +56,6 @@ sub spellcheck
     }
     return;
 }
-
 
 sub main {
     my $profile = Lintian::Profile->new;
@@ -75,28 +72,20 @@ sub main {
         };
         Getopt::Long::Configure('gnu_getopt');
         Getopt::Long::GetOptions(
-            '--picky' => \$picky,
-            'h|help' => \&show_help,
+            'picky'   => \$picky,
+            'h|help'  => \&show_help,
             'version' => \&show_version,
         ) or exit(1);
     }
 
     if (not @ARGV) {
-        my $text;
-        {
-            local $RS = undef;
-            $text = <STDIN>;
-        }
+        my $text = slurp_entire_file(*STDIN);
         spellcheck(undef, $picky, $text);
     } else {
         for my $path (@ARGV) {
             my $text;
-            open(my $fh, '<', $path) or die $ERRNO;
-            {
-                local $RS = undef;
-                $text = <$fh>;
-            }
-            close($fh) or die $ERRNO;
+            die("$path is a directory\n") if not -f $path;
+            $text = slurp_entire_file($path);
             spellcheck($path, $picky, $text);
         }
     }
@@ -104,8 +93,8 @@ sub main {
 }
 
 END {
-    close(STDOUT) or die $ERRNO;
-    close(STDERR) or die $ERRNO;
+    close(STDOUT);
+    close(STDERR);
 }
 
 # Local Variables:
