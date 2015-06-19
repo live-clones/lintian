@@ -170,6 +170,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * mail-templates/source-is-missing:
     + [BR] Apply patch from Holger Levsen improving language.
 
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [NT] Refresh against current rule set.
+
   * t/scripts/spellintian.t:
     + [JW,NT] Import spellintian test case.
 
