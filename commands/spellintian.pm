@@ -58,9 +58,9 @@ sub spellcheck {
 
 sub main {
     my $profile = Lintian::Profile->new;
-    Lintian::Data->set_vendor($profile);
-
     my $picky = 0;
+    my $exit_code = 0;
+    Lintian::Data->set_vendor($profile);
     {
         local $SIG{__WARN__} = sub {
             my ($message) = @_;
@@ -81,14 +81,20 @@ sub main {
         my $text = slurp_entire_file(*STDIN);
         spellcheck(undef, $picky, $text);
     } else {
+        my $ok = 0;
         for my $path (@ARGV) {
             my $text;
-            die("$path is a directory\n") if not -f $path;
+            if (not -f $path) {
+                print STDERR "$path is a directory\n";
+                next;
+            }
+            $ok = 1;
             $text = slurp_entire_file($path);
             spellcheck($path, $picky, $text);
         }
+        $exit_code = 1 if not $ok;
     }
-    return;
+    exit($exit_code);
 }
 
 END {
