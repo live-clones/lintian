@@ -1,6 +1,6 @@
 # Manually maintained table of well known privacy breakers site
 # syntax:
-#   key ~~regex (xsm) ~~ tag (optionnal assumed to be key) ~~ hint (optionnal)
+#   key ~~regex (xsm) ~~ tag (optional assumed to be key) ~~ hint (optional)
 #
 # please always use lowercase for regex
 # Note spaces on the right hand side of ~~ are assumed to be a part

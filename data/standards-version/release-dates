@@ -1,7 +1,7 @@
 # This is a list of all known standards versions, current and older, with
 # their dates of publication.  The dates are in seconds since epoch to
 # avoid having to do time conversion during the check.  (Believe it or
-# not, this takes a noticable amount of time.)
+# not, this takes a noticeable amount of time.)
 #
 # To get the date of a new standards version, try:
 #
