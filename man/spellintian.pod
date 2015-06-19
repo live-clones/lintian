@@ -46,9 +46,10 @@ The "picky" data set also includes a lot of capitalization related
 rules (like spelling "Debian" with an uppercase "D").
 
 Note however that these checks can have false positives.  As an
-example, "the python binary" (e.g. /usr/bin/python) vs. "the Python
-language".  However, the B<--picky> option will unconditionally flag
-the use of "python" as bad despite being correct.
+example, consider the following those uses of Python "the python
+binary" (e.g. /usr/bin/python) and "the Python language".  The
+B<--picky> option will unconditionally flag the use of "python" in the
+first case as bad despite being correct.
 
 =item B<-h>, B<--help>
 
