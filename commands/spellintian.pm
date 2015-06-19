@@ -44,29 +44,9 @@ EOF
     exit 0;
 }
 
-my $profile = Lintian::Profile->new;
-Lintian::Data->set_vendor($profile);
-
-my $picky = 0;
-{
-    local $SIG{__WARN__} = sub {
-        my ($message) = @_;
-        $message =~ s/\A([[:upper:]])/lc($1)/e;
-        $message =~ s/\n+\z//;
-        print {*STDERR} "spellintian: $message\n";
-        exit(1);
-    };
-    Getopt::Long::Configure('gnu_getopt');
-    Getopt::Long::GetOptions(
-        '--picky' => \$picky,
-        'h|help' => \&show_help,
-        'version' => \&show_version,
-    ) or exit(1);
-}
-
 sub spellcheck
 {
-    my ($path, $text) = @_;
+    my ($path, $picky, $text) = @_;
     my $prefix = $path ? "$path: " : q{};
     my $spelling_error_handler = sub {
         my ($mistake, $correction) = @_;
@@ -79,24 +59,48 @@ sub spellcheck
     return;
 }
 
-if (not @ARGV) {
-    my $text;
+
+sub main {
+    my $profile = Lintian::Profile->new;
+    Lintian::Data->set_vendor($profile);
+
+    my $picky = 0;
     {
-        local $RS = undef;
-        $text = <STDIN>;
+        local $SIG{__WARN__} = sub {
+            my ($message) = @_;
+            $message =~ s/\A([[:upper:]])/lc($1)/e;
+            $message =~ s/\n+\z//;
+            print {*STDERR} "spellintian: $message\n";
+            exit(1);
+        };
+        Getopt::Long::Configure('gnu_getopt');
+        Getopt::Long::GetOptions(
+            '--picky' => \$picky,
+            'h|help' => \&show_help,
+            'version' => \&show_version,
+        ) or exit(1);
     }
-    spellcheck(undef, $text);
-} else {
-    for my $path (@ARGV) {
+
+    if (not @ARGV) {
         my $text;
-        open(my $fh, '<', $path) or die $ERRNO;
         {
             local $RS = undef;
-            $text = <$fh>;
+            $text = <STDIN>;
         }
-        close($fh) or die $ERRNO;
-        spellcheck($path, $text);
+        spellcheck(undef, $picky, $text);
+    } else {
+        for my $path (@ARGV) {
+            my $text;
+            open(my $fh, '<', $path) or die $ERRNO;
+            {
+                local $RS = undef;
+                $text = <$fh>;
+            }
+            close($fh) or die $ERRNO;
+            spellcheck($path, $picky, $text);
+        }
     }
+    return;
 }
 
 END {
@@ -104,4 +108,8 @@ END {
     close(STDERR) or die $ERRNO;
 }
 
-# vim:ts=4 sts=4 sw=4 et
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
