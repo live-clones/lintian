@@ -1,0 +1,74 @@
+# Copyright 2015 Niels Thykier
+#
+# This manual page is free software.  It is distributed under the
+# terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+# This manual page is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this manual page; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+# USA
+#
+
+=head1 NAME
+
+spellintian - simple spellchecker based on Lintian's data files
+
+=head1 SYNOPSIS
+
+B<spellintian> [B<--picky>] [I<text-file>...]
+
+
+=head1 DESCRIPTION
+
+The B<spellintian> command parses one or more text files for spelling
+mistakes.  It uses the same spellcheck algorithm and data set as
+B<lintian>.
+
+If no file is specified on the command line, this command expects
+its input on stdin.
+
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--picky>
+
+Also use the "picky" data set on top of the regular spelling data set.
+The "picky" data set also includes a lot of capitalization related
+rules (like spelling "Debian" with an uppercase "D").
+
+Note however that these checks can have false positives.  As an
+example, "the python binary" (e.g. /usr/bin/python) vs. "the Python
+language".  However, the B<--picky> option will unconditionally flag
+the use of "python" as bad despite being correct.
+
+=item B<-h>, B<--help>
+
+Display usage information and exit.
+
+=item B<--version>
+
+Print a version banner and exit.
+
+=back
+
+=head1 SEE ALSO
+
+L<lintian(1)>
+
+=head1 AUTHORS
+
+Niels Thykier <niels@thykier.net> (wrote the manpage)
+
+Jakub Wilk <jwilk@jwilk.net> (wrote the program)
+
+=cut
+

@@ -8,7 +8,7 @@ profiles := profiles/debian/main.profile \
 	    profiles/debian/ftp-master-auto-reject.profile
 neededfiles := debian/rules frontend/lintian $(profiles)
 docsource := doc/lintian.xml README man/lintian.pod.in \
-	     man/lintian-info.pod
+	     man/lintian-info.pod man/spellintian.pod
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
 tagfiles := $(wildcard t/changes/*.changes t/*/*/tags)
@@ -76,6 +76,7 @@ generate-docs-stamp: $(docsource)
 	private/generate-lintian-pod | \
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
 	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
+	pod2man --section=1 man/spellintian.pod > man/man1/spellintian.1
 	private/generate-html-docs doc/api.html > /dev/null
 	touch $@
 
