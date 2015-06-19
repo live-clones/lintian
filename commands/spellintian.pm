@@ -26,9 +26,7 @@ use Getopt::Long ();
 
 use Lintian::Profile ();
 use Lintian::Data ();
-use Lintian::Check ();
-
-use Monkey::Patch ();
+use Lintian::Check qw(check_spelling check_spelling_picky);
 
 our $VERSION = '0.0';
 
@@ -66,24 +64,17 @@ my $picky = 0;
     ) or exit(1);
 }
 
-my $monkey = Monkey::Patch::patch_package 'Lintian::Check' => '_tag' => sub {
-    my ($orig, $path, undef, $mistake, $correction) = @_;
-    my $prefix = ref($path) ? '' : "$path: ";
-    print "$prefix$mistake -> $correction\n";
-};
-
 sub spellcheck
 {
     my ($path, $text) = @_;
-    # Normalize whitespace as a work-around for
-    # <https://bugs.debian.org/763456>:
-    $text =~ s/\s+/ /g;
-    if (not defined $path) {
-        $path = \undef;
-    }
-    Lintian::Check::check_spelling($path, $text);
+    my $prefix = $path ? "$path: " : q{};
+    my $spelling_error_handler = sub {
+        my ($mistake, $correction) = @_;
+        print "$prefix$mistake -> $correction\n";
+    };
+    check_spelling($text, $spelling_error_handler);
     if ($picky) {
-        Lintian::Check::check_spelling_picky($path, $text);
+        check_spelling_picky($text, $spelling_error_handler);
     }
     return;
 }
