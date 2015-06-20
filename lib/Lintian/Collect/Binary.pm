@@ -361,6 +361,7 @@ sub objdump_info {
         my %info = (
             'PH' => {},
             'SH' => {},
+            'ELF'    => 1,
             'NOTES'  => [],
             'NEEDED' => [],
             'RPATH'  => {},
@@ -413,6 +414,25 @@ sub objdump_info {
             }
         }
 
+        if ($pg->{'filename'} =~ m,^(.+)\(([^/\)]+)\)$,o) {
+            # object file in a static lib.
+            my ($lib, $obj) = ($1, $2);
+            my $libentry = $objdump_info{$lib};
+            $info{'ELF'} = 0;
+            if (not defined $libentry) {
+                $libentry = {
+                    'filename' => $lib,
+                    'objects'  => [$obj],
+                    # static libs have no SONAMEs (and shared-libs
+                    # checks for it)
+                    'SONAME'   => [],
+                    'ELF'      => 0,
+                };
+                $objdump_info{$lib} = $libentry;
+            } else {
+                push @{ $libentry->{'objects'} }, $obj;
+            }
+        }
         $objdump_info{$pg->{'filename'}} = \%info;
     }
     $self->{objdump_info} = \%objdump_info;

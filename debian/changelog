@@ -4,6 +4,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
 
   * checks/*.pm:
     + [NT] Rewrite to handle new check_spelling{,_picky}
+  * checks/binaries.pm:
+    + [NT] Also apply the binary-has-unneeded-section check on
+      static libs.  (See #662998)
   * checks/cruft.{desc,pm}:
     + [BR] Detect non free lenna file based on filename and filetype.
       (Closes: #771191).
@@ -48,7 +51,6 @@ lintian (2.5.32) UNRELEASED; urgency=medium
       (Closes: #646965).
     + [BR] Warn about files installed in /usr/share/mime/ other
       than in packages/.  (Closes: #761649).
-
   * checks/java.pm:
     + [NT] Fix "off-by-one" in the check for the maximum permitted
       Java major version.
@@ -74,6 +76,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [NT] Remove deprecated and unused collections.  These were
       deprecated in 2.5.28.  Note that debfiles was omitted in the
       deprecation list by mistake in the original 2.5.28 release.
+  * collection/objdump-info:
+    + [NT] Also analyse static libraries.
   * collection/unpacked:
     + [NT] Apply patch from Tomasz Buchert to extract the full time
       in UTC.
@@ -140,6 +144,9 @@ lintian (2.5.32) UNRELEASED; urgency=medium
   * frontend/spellintian:
     + [NT] Add symlink to dplint.
 
+  * helpers/coll/objdump-info-helper:
+    + [NT] Collect readelf output from static libraries.
+
   * lib/Lintian/Check.pm:
     + [NT] Rewrite check_spelling{,_picky} with a new interface,
       which is better suited for additional purposes than just
@@ -151,6 +158,7 @@ lintian (2.5.32) UNRELEASED; urgency=medium
     + [JW, NT] Make is_pkg_class case-insensitive to avoid some
       false-positive "empty-binary-package" warnings.
       (Closes: #789151)
+    + [NT] Make data from static libraries available.
   * lib/Lintian/Collect/Package.pm:
     + [NT] Create "faux" Lintian::Path entries for missing
       intermediate directories.  This avoids a crash and made

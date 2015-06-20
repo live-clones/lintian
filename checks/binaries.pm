@@ -123,12 +123,17 @@ sub run {
         my $objdump = $info->objdump_info->{$file};
         my $has_lfs;
         my $is_profiled = 0;
-        # Only 32bit ELF binaries can lack LFS.
-        $ARCH_32_REGEX = $ARCH_REGEX->value('32')
-          unless defined $ARCH_32_REGEX;
-        $has_lfs = 1 unless $info->file_info($file) =~ m/$ARCH_32_REGEX/o;
-        # We don't care if it is a debug file
-        $has_lfs = 1 if $file =~ m,^usr/lib/debug/,;
+
+        # The LFS check only works reliably for ELF files due to the
+        # architecture regex.
+        if ($objdump->{'ELF'}) {
+            # Only 32bit ELF binaries can lack LFS.
+            $ARCH_32_REGEX = $ARCH_REGEX->value('32')
+              unless defined $ARCH_32_REGEX;
+            $has_lfs = 1 unless $info->file_info($file) =~ m/$ARCH_32_REGEX/o;
+            # We don't care if it is a debug file
+            $has_lfs = 1 if $file =~ m,^usr/lib/debug/,;
+        }
 
         if (defined $objdump->{SONAME}) {
             foreach my $soname (@{$objdump->{SONAME}}) {
@@ -290,6 +295,20 @@ sub run {
                 tag 'arch-dependent-file-not-in-arch-specific-directory',$file;
             }
         }
+        if ($fileinfo =~ m/\bcurrent ar archive\b/) {
+
+            # "libfoo_g.a" is usually a "debug" library, so ignore
+            # unneeded sections in those.
+            next if $file =~ m/_g\.a$/;
+
+            foreach my $obj (@{ $objdump->{'objects'} }) {
+                my $libobj = $info->objdump_info->{"${file}(${obj})"};
+                # Shouldn't happen, but...
+                fail("object ($file $obj) in static lib is missing!?")
+                  unless defined $libobj;
+                tag_unneeded_sections("${file}(${obj})", $libobj);
+            }
+        }
 
         # ELF?
         next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
@@ -359,11 +378,7 @@ sub run {
                 tag 'library-in-debug-or-profile-should-not-be-stripped',$file;
             } else {
                 # appropriately stripped, but is it stripped enough?
-                foreach my $sect ('.note', '.comment') {
-                    if (exists $objdump->{'SH'}->{$sect}) {
-                        tag 'binary-has-unneeded-section', $file, $sect;
-                    }
-                }
+                tag_unneeded_sections($file, $objdump);
             }
         }
 
@@ -592,6 +607,16 @@ sub run {
             and $depends->matches(qr/^python-numpy \(<[<=][^\|]+$/, $vflags));
     }
 
+    return;
+}
+
+sub tag_unneeded_sections {
+    my ($file, $objdump) = @_;
+    foreach my $sect ('.note', '.comment') {
+        if (exists $objdump->{'SH'}->{$sect}) {
+            tag 'binary-has-unneeded-section', "$file $sect";
+        }
+    }
     return;
 }
 

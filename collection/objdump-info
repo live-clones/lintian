@@ -64,10 +64,15 @@ sub collect {
         next if not $bin->is_file;
         my $fname = $bin->name;
         my $finfo = $info->file_info($fname);
+        my $check = 0;
 
-        if ($finfo =~ m/\bELF\b/) {
-            printf {$opts{pipe_in}} "%s\0", $fname;
+        if ($finfo =~ m/\bELF\b/ or $finfo =~ m/\bcurrent ar archive\b/) {
+            $check = 1;
+        } elsif ($finfo =~ m/\bcurrent ar archive\b/) {
+            # Probably a static library
+            $check = 1 if $fname =~ m/\.a$/;
         }
+        printf {$opts{pipe_in}} "%s\0", $fname if $check;
     }
 
     close($opts{pipe_in});

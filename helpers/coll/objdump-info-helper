@@ -70,6 +70,30 @@ while (my $line = <$readelf>) {
 
     chomp $line;
 
+    # Skip leading empty lines (readelf spits out an empty line before
+    # the first entry).
+    next if not $bin and not $line;
+
+    if (not $bin and scalar @ARGV == 1 and $line !~ m/^File: ./o) {
+        # Special case - readelf will not prefix the output with "File:
+        # $name" if it only gets one ELF file argument, so act as if it did...
+        # (but it does "the right thing" if passed a static lib >.>)
+        #
+        # - In fact, if readelf always emitted that File: header, we could
+        #   simply use xargs directly on readelf and just parse its output
+        #   in the loop below.
+        $bin = shift @ARGV;
+        print "Filename: $bin\n";
+
+        if (
+            spawn(
+                undef, ['head', $bin],
+                '|', ['grep', '-q', 'packed.*with.*UPX'])
+          ) {
+            print "UPX: yes\n";
+        }
+    }
+
     if ($line =~ m/^File: (.+)$/) {
         my $file = $1;
         finish_file();
@@ -77,8 +101,12 @@ while (my $line = <$readelf>) {
         $bin = $file;
         print "Filename: $bin\n";
 
+        # If readelf is analysing a static lib the file name will be
+        # something like "${file}(${obj})".
+
         if (
-            spawn(
+            $bin !~ m,\([^/\\)]++\)$,
+            and spawn(
                 undef, ['head', $bin],
                 '|', ['grep', '-q', 'packed.*with.*UPX'])
           ) {
