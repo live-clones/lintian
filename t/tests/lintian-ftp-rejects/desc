@@ -6,3 +6,4 @@ Description: Test Lintian --ftp-master-rejects handling
 Test-For:
  dir-or-file-in-opt
  dir-or-file-in-var-lock
+ empty-binary-package
