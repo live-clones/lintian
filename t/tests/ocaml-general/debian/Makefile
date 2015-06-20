@@ -4,6 +4,11 @@ all: symbol.a symbol-dev.a
 
 %.a: %.o
 	ar rv $@ $<
+	# Not entirely sure this is acceptable for a normal OCaml
+	# library, but for this test the library does not need
+	# to work and it avoids a warning about unneeded sections.
+	strip --remove-section=.comment --remove-section=.note \
+	  --strip-debug $@
 
 symbol-dev.o: symbol.c
 	cc -c $< -o $@

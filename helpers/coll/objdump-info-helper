@@ -174,7 +174,7 @@ while (my $line = <$readelf>) {
         next;
 
     } elsif ($line =~ m/^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
-             and $section eq 'SH') {
+        and $section eq 'SH') {
         $sections[$1] = $2;
         # We need sections as well (e.g. for incomplete stripping)
         print " $1 $2\n";
