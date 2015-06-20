@@ -3,7 +3,7 @@
 	dh $@ --with javahelper
 
 override_jh_build:
-	jh_build --javacopts='-target 1.4' --javacopts='-source 1.4'
+	jh_build --javacopts='-target 1.7' --javacopts='-source 1.7'
 	cp testa.jar testb.jar
 	unzip testa.jar
 	zip -r codeless.jar META-INF/

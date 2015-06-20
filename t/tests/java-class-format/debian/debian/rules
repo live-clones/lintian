@@ -3,7 +3,7 @@
 	dh $@ --with javahelper
 
 override_jh_build:
-	jh_build --javacopts='-target 1.4' --javacopts='-source 1.4'
+	jh_build --javacopts='-target 1.7' --javacopts='-source 1.7'
 	unzip test.jar
 	# Unknown class version
 	perl -i -pe 's/^(\xCA\xFE\xBA\xBE...)./$$1\x2A/' org/debian/lintian/TestA.class

@@ -4,5 +4,5 @@
 	dh $@ --with javahelper
 
 override_jh_build:
-	jh_build --javacopts='-target 1.4' --javacopts='-source 1.4'
+	jh_build --javacopts='-target 1.7' --javacopts='-source 1.7'
 	cp cp-missing.jar cp-missing-2.jar
