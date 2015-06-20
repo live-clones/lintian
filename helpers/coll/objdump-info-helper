@@ -173,11 +173,8 @@ while (my $line = <$readelf>) {
         redo if $redo;
         next;
 
-    } elsif ($line =~ m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
-        and $section eq 'SH') {
-        # We also match " [<addr>]: flags*, but don't need them
-        # - in this case $2 will be ':'.
-        next if $2 eq ':';
+    } elsif ($line =~ m/^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
+             and $section eq 'SH') {
         $sections[$1] = $2;
         # We need sections as well (e.g. for incomplete stripping)
         print " $1 $2\n";

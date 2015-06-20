@@ -146,6 +146,8 @@ lintian (2.5.32) UNRELEASED; urgency=medium
 
   * helpers/coll/objdump-info-helper:
     + [NT] Collect readelf output from static libraries.
+    + [NT] Fix bug that caused lintian to ignore the up to 10
+      valid named sections.
 
   * lib/Lintian/Check.pm:
     + [NT] Rewrite check_spelling{,_picky} with a new interface,

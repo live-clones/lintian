@@ -1,2 +1,3 @@
+I: libfoo-dev: binary-has-unneeded-section usr/lib/libbar.a(pstripped.o) .comment
 I: libfoo-dev: binary-has-unneeded-section usr/lib/libfoo.a(code.o) .comment
 I: libfoo-dev: binary-has-unneeded-section usr/lib/libfoo.a(other.o) .comment

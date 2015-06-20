@@ -1,10 +1,22 @@
 CC=gcc
 CFLAGS+= -g
-LIBFILES:= libfoo.a
+LIBFILES:= libfoo.a libbar.a
 
 all: $(LIBFILES)
 
-$(LIBFILES): code.o other.o
+libfoo.a: code.o other.o
+	ar rcs -o $@ $^
+
+pstripped.o: other.o
+	cp other.o pstripped.o
+	strip --strip-debug pstripped.o
+
+fstripped.o: other.o
+	cp other.o fstripped.o
+	strip --strip-debug --remove-section=.comment \
+	    --remove-section=.note fstripped.o
+
+libbar.a: fstripped.o pstripped.o
 	ar rcs -o $@ $^
 
 clean:
