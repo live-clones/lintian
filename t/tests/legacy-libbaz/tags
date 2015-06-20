@@ -28,10 +28,14 @@ I: libbaz1-dev: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1-dev: package-contains-empty-directory usr/include/
 I: libbaz1: binary-has-unneeded-section usr/lib/libbaz1.a(baz.sho) .comment
+I: libbaz1: binary-has-unneeded-section usr/lib/libbaz1.a(extra.sho) .comment
 I: libbaz1: binary-has-unneeded-section usr/lib/libbaz2.a(baz.o) .comment
+I: libbaz1: binary-has-unneeded-section usr/lib/libbaz2.a(extra.o) .comment
 I: libbaz1: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
 I: libbaz2-dbg: no-md5sums-control-file
+I: libbaz2-dev: binary-has-unneeded-section usr/lib/libbaz2.a(baz.o) .comment
+I: libbaz2-dev: binary-has-unneeded-section usr/lib/libbaz2.a(extra.o) .comment
 I: libbaz2-dev: no-md5sums-control-file
 I: libbaz2: no-md5sums-control-file
 I: libbaz2: no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
