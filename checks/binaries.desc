@@ -97,6 +97,16 @@ Info: The binary or shared library is stripped, but still contains a
  <tt>dh_strip</tt> will do this automatically for you, but
  <tt>install -s</tt> not because it calls strip without any arguments.
 
+Tag: static-library-has-unneeded-section
+Severity: wishlist
+Certainty: certain
+Experimental: yes
+Info: Tag for tallying static libraries ".comment" sections.
+ .
+ Be advised that some languages (e.g. OCaml) stores bytecode in the
+ ".comment" section and you should therefore <i>not</i> blindly
+ strip this section.
+
 Tag: missing-depends-line
 Severity: normal
 Certainty: certain

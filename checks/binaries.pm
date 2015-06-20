@@ -306,7 +306,8 @@ sub run {
                 # Shouldn't happen, but...
                 fail("object ($file $obj) in static lib is missing!?")
                   unless defined $libobj;
-                tag_unneeded_sections("${file}(${obj})", $libobj);
+                tag_unneeded_sections('static-library-has-unneeded-section',
+                    "${file}(${obj})", $libobj);
             }
         }
 
@@ -378,7 +379,8 @@ sub run {
                 tag 'library-in-debug-or-profile-should-not-be-stripped',$file;
             } else {
                 # appropriately stripped, but is it stripped enough?
-                tag_unneeded_sections($file, $objdump);
+                tag_unneeded_sections('binary-has-unneeded-section', $file,
+                    $objdump);
             }
         }
 
@@ -611,10 +613,10 @@ sub run {
 }
 
 sub tag_unneeded_sections {
-    my ($file, $objdump) = @_;
+    my ($tag, $file, $objdump) = @_;
     foreach my $sect ('.note', '.comment') {
         if (exists $objdump->{'SH'}->{$sect}) {
-            tag 'binary-has-unneeded-section', "$file $sect";
+            tag $tag, "$file $sect";
         }
     }
     return;
