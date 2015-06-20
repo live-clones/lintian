@@ -103,7 +103,7 @@ Certainty: certain
 Experimental: yes
 Info: Tag for tallying static libraries ".comment" sections.
  .
- Be advised that some languages (e.g. OCaml) stores bytecode in the
+ Be advised that some languages (e.g. OCaml) store bytecode in the
  ".comment" section and you should therefore <i>not</i> blindly
  strip this section.
 
