@@ -84,6 +84,7 @@ sub check_init_script {
     my ($info, $file, $services) = @_;
     my $basename = $file->basename;
     my $lsb_source_seen;
+    my $is_rcs_script = 0;
 
     if (!$file->is_regular_file) {
         unless ($file->is_open_ok) {
@@ -96,12 +97,14 @@ sub check_init_script {
         lstrip;
         if ($. == 1 and m{\A [#]! \s*/lib/init/init-d-script}xsm) {
             $lsb_source_seen = 1;
-            last;
         }
+        if (m,#.*Default-Start:.*S,) {
+            $is_rcs_script = 1;
+        }
+
         next if /^#/;
         if (m,(?:\.|source)\s+/lib/(?:lsb/init-functions|init/init-d-script),){
             $lsb_source_seen = 1;
-            last;
         }
     }
     close($fh);
@@ -112,6 +115,11 @@ sub check_init_script {
     # make the package work with systemd.
     tag 'systemd-no-service-for-init-script', $basename
       if (%{$services} and not $services->{$basename});
+
+    # rcS scripts are particularly bad, warn even if there is
+    # no systemd integration
+    tag 'systemd-no-service-for-init-rcS-script', $basename
+      if (not $services->{$basename} and $is_rcs_script);
     return;
 }
 
