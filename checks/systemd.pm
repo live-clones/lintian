@@ -37,81 +37,64 @@ use Lintian::Util qw(fail lstrip rstrip);
 sub run {
     my (undef, undef, $info) = @_;
 
-    # Figure out whether the maintainer of this package did any effort to
-    # make the package work with systemd. If not, we will not warn in case
-    # of an init script that has no systemd equivalent, for example.
-    my $ships_systemd_file = any { m,/systemd/, } $info->sorted_index;
-
-    # An array of names which are provided by the service files.
-    # This includes Alias= directives, so after parsing
-    # NetworkManager.service, it will contain NetworkManager and
-    # network-manager.
-    my @systemd_targets;
-
+    # non-service checks
     for my $file ($info->sorted_index) {
         if ($file =~ m,^etc/tmpfiles\.d/.*\.conf$,) {
             tag 'systemd-tmpfiles.d-outside-usr-lib', $file;
         }
-        if ($file =~ m,^etc/systemd/system/.*\.service$,) {
-            tag 'systemd-service-file-outside-lib', $file;
-        }
-        if ($file =~ m,^usr/lib/systemd/system/.*\.service$,) {
-            tag 'systemd-service-file-outside-lib', $file;
-        }
-        if ($file =~ m,/systemd/system/.*\.service$,) {
-            check_systemd_service_file($info, $file);
-            for my $name (extract_service_file_names($info, $file)) {
-                push @systemd_targets, $name;
-            }
-        }
     }
 
-    my @init_scripts = grep { m,^etc/init\.d/.+, } $info->sorted_index;
+    my @init_scripts = get_init_scripts($info);
+    my @service_files = get_systemd_service_files($info);
 
-    # Verify that each init script includes /lib/lsb/init-functions,
-    # because that is where the systemd diversion happens.
-    for my $init_script (@init_scripts) {
-        check_init_script($info, $init_script);
+    # A hash of names reference which are provided by the service files.
+    # This includes Alias= directives, so after parsing
+    # NetworkManager.service, it will contain NetworkManager and
+    # network-manager.
+    my $services = get_systemd_service_names($info);
+
+    for my $script (@init_scripts) {
+        check_init_script($info, $script, $services);
     }
 
-    @init_scripts = map { basename($_) } @init_scripts;
-
-    if ($ships_systemd_file) {
-        for my $init_script (@init_scripts) {
-            tag 'systemd-no-service-for-init-script', $init_script
-              unless any { m/\Q$init_script\E\.service/ } @systemd_targets;
-        }
+    for my $service (@service_files) {
+        check_systemd_service_file($info, $service);
     }
 
     check_maintainer_scripts($info);
     return;
 }
 
+sub get_init_scripts {
+    my ($info) = @_;
+    my @ignore = ('README','skeleton','rc','rcS',);
+    my @scripts;
+    if (my $initd_path = $info->index_resolved_path('etc/init.d/')) {
+        for my $init_script ($initd_path->children) {
+            next if any { $_ eq $init_script->basename } @ignore;
+            next
+              if $init_script->is_symlink
+              && $init_script->link eq '/lib/init/upstart-job';
+
+            push(@scripts, $init_script);
+        }
+    }
+    return @scripts;
+}
+
+# Verify that each init script includes /lib/lsb/init-functions,
+# because that is where the systemd diversion happens.
 sub check_init_script {
-    my ($info, $file) = @_;
+    my ($info, $file, $services) = @_;
     my $basename = $file->basename;
     my $lsb_source_seen;
-
-    # Couple of special cases we don't care about...
-    return
-         if $basename eq 'README'
-      or $basename eq 'skeleton'
-      or $basename eq 'rc'
-      or $basename eq 'rcS';
-
-    if ($file->is_symlink) {
-        # We cannot test upstart-jobs
-        return if $file->link eq '/lib/init/upstart-job';
-    }
 
     if (!$file->is_regular_file) {
         unless ($file->is_open_ok) {
             tag 'init-script-is-not-a-file', $file;
             return;
         }
-
     }
-
     my $fh = $file->open;
     while (<$fh>) {
         lstrip;
@@ -127,14 +110,56 @@ sub check_init_script {
     }
     close($fh);
 
-    if (!$lsb_source_seen) {
-        tag 'init.d-script-does-not-source-init-functions', $file;
-    }
+    tag 'init.d-script-does-not-source-init-functions', $file
+      unless $lsb_source_seen;
+    # Only tag if the maintainer of this package did any effort to
+    # make the package work with systemd.
+    tag 'systemd-no-service-for-init-script', $basename
+      if (%{$services} and not $services->{$basename});
     return;
+}
+
+sub get_systemd_service_files {
+    my ($info) = @_;
+
+    return grep { m,/systemd/system/.*\.service$, } $info->sorted_index;
+}
+
+sub get_systemd_service_names {
+    my ($info) = @_;
+    my %services;
+
+    my $safe_add_service = sub {
+        my ($name, $file) = @_;
+        if (exists $services{$name}) {
+            # should add a tag here
+            return;
+        }
+        $services{$name} = 1;
+    };
+
+    for my $file (get_systemd_service_files($info)) {
+        my $name = $file->basename;
+        $name =~ s/\.service$//;
+        $safe_add_service->($name, $file);
+
+        my @aliases
+          = extract_service_file_values($info, $file, 'Install', 'Alias');
+
+        for my $alias (@aliases) {
+            $safe_add_service->($alias, $file);
+        }
+    }
+    return \%services;
 }
 
 sub check_systemd_service_file {
     my ($info, $file) = @_;
+
+    tag 'systemd-service-file-outside-lib', $file
+      if ($file =~ m,^etc/systemd/system/,);
+    tag 'systemd-service-file-outside-lib', $file
+      if ($file =~ m,^usr/lib/systemd/system/,);
 
     my @values = extract_service_file_values($info, $file, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
@@ -234,13 +259,6 @@ sub extract_service_file_values {
     }
 
     return @values;
-}
-
-sub extract_service_file_names {
-    my ($info, $file) = @_;
-
-    my @aliases= extract_service_file_values($info, $file, 'Install', 'Alias');
-    return (basename($file), @aliases);
 }
 
 sub check_maintainer_scripts {
