@@ -51,14 +51,10 @@ sub run {
     # This includes Alias= directives, so after parsing
     # NetworkManager.service, it will contain NetworkManager and
     # network-manager.
-    my $services = get_systemd_service_names($info);
+    my $services = get_systemd_service_names($info, \@service_files);
 
     for my $script (@init_scripts) {
         check_init_script($info, $script, $services);
-    }
-
-    for my $service (@service_files) {
-        check_systemd_service_file($info, $service);
     }
 
     check_maintainer_scripts($info);
@@ -121,12 +117,18 @@ sub check_init_script {
 
 sub get_systemd_service_files {
     my ($info) = @_;
+    my @res;
+    my @potential
+      = grep { m,/systemd/system/.*\.service$, } $info->sorted_index;
 
-    return grep { m,/systemd/system/.*\.service$, } $info->sorted_index;
+    for my $file (@potential) {
+        push(@res, $file) if check_systemd_service_file($info, $file);
+    }
+    return @res;
 }
 
 sub get_systemd_service_names {
-    my ($info) = @_;
+    my ($info,$files_ref) = @_;
     my %services;
 
     my $safe_add_service = sub {
@@ -138,7 +140,7 @@ sub get_systemd_service_names {
         $services{$name} = 1;
     };
 
-    for my $file (get_systemd_service_files($info)) {
+    for my $file (@{$files_ref}) {
         my $name = $file->basename;
         $name =~ s/\.service$//;
         $safe_add_service->($name, $file);
@@ -161,11 +163,16 @@ sub check_systemd_service_file {
     tag 'systemd-service-file-outside-lib', $file
       if ($file =~ m,^usr/lib/systemd/system/,);
 
+    unless ($file->is_open_ok
+        || ($file->is_symlink && $file->link eq '/dev/null')) {
+        tag 'service-file-is-not-a-file', $file;
+        return 0;
+    }
     my @values = extract_service_file_values($info, $file, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
     tag 'systemd-service-file-refers-to-obsolete-target', $file, $_
       for @obsolete;
-    return;
+    return 1;
 }
 
 sub service_file_lines {
@@ -207,11 +214,6 @@ sub extract_service_file_values {
 
     my (@values, $section);
 
-    unless ($file->is_open_ok
-        || ($file->is_symlink && $file->link eq '/dev/null')) {
-        tag 'service-file-is-not-a-file', $file;
-        return;
-    }
     my @lines = service_file_lines($file);
     my $key_ws = first_index { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines;
     if ($key_ws > -1) {
