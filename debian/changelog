@@ -2,7 +2,7 @@ lintian (2.5.33) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * data/spelling/corrections-multiword
+  * data/spelling/corrections-multiword:
     + [JW] Correct spelling for "GNU Public Licence".
       (Closes: #790369)
 
