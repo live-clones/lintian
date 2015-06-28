@@ -24,7 +24,7 @@ package Lintian::Output::FullEWI;
 #   Other than that, it is identical to the normal output.
 #
 # When parsing a lintian.log written in format, it is no longer
-# ambigious which package is referred to (even if --verbose is
+# ambiguous which package is referred to (even if --verbose is
 # not used).
 #   This makes machine-parsing of the log easier, especially
 # when using the parsed data with the Lintian::Lab API.

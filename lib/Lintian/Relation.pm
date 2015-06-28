@@ -843,7 +843,7 @@ As an example:
 
  # Will match (but only because there is a version)
  $vrel->matches (qr/^pkg-\d \(.*\)$/, VISIT_PRED_FULL);
- # Will NOT match (there is no verson in the relation)
+ # Will NOT match (there is no version in the relation)
  $uvrel->matches (qr/^pkg-\d  \(.*\)$/, VISIT_PRED_FULL);
 
 =item VISIT_OR_CLAUSE_FULL

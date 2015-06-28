@@ -536,7 +536,7 @@ sub file_overrides {
         # The override looks like the following:
         # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
         # - Note we do a strict package name check here because
-        #   parsing overrides is a bit ambigious (see #699628)
+        #   parsing overrides is a bit ambiguous (see #699628)
         if (
             $override =~ m/\A (?:                   # start optional part
                   (\Q$info->{package}\E)?           # optionally starts with package name -> $1

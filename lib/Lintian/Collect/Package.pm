@@ -549,7 +549,7 @@ sub _fetch_index_data {
             #
             # Sort in reverse order (allows pop instead of unshift)
             @sorted = reverse sort keys %candidates;
-            # Our prefered target
+            # Our preferred target
             $target = pop @sorted;
 
             foreach my $link (@sorted) {
