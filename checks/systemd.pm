@@ -146,7 +146,7 @@ sub get_systemd_service_names {
         $safe_add_service->($name, $file);
 
         my @aliases
-          = extract_service_file_values($info, $file, 'Install', 'Alias');
+          = extract_service_file_values($info, $file, 'Install', 'Alias', 1);
 
         for my $alias (@aliases) {
             $safe_add_service->($alias, $file);
@@ -210,14 +210,15 @@ sub service_file_lines {
 
 # Extracts the values of a specific Key from a .service file
 sub extract_service_file_values {
-    my ($info, $file, $extract_section, $extract_key) = @_;
+    my ($info, $file, $extract_section, $extract_key, $skip_tag) = @_;
 
     my (@values, $section);
 
     my @lines = service_file_lines($file);
     my $key_ws = first_index { /^[[:alnum:]]+(\s*=\s|\s+=)/ } @lines;
     if ($key_ws > -1) {
-        tag 'service-key-has-whitespace', $file, 'at line', $key_ws;
+        tag 'service-key-has-whitespace', $file, 'at line', $key_ws
+          unless $skip_tag;
     }
     if (any { /^\.include / } @lines) {
         my $parent_dir = $file->parent_dir;
