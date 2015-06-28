@@ -9,8 +9,8 @@
 (?i)allows to||allows one to
 (?i)an other||another
 (?i)debian/gnu linux||Debian GNU/Linux
-(?i)gnu public license||GNU General Public License
-(?i)gnu lesser public license||GNU Lesser General Public License
+(?i)gnu public licen[cs]e||GNU General Public License
+(?i)gnu lesser public licen[cs]e||GNU Lesser General Public License
 (?i)is not enable||is not enabled
 (?i)permit to||permit one to
 (?i)permits to||permits one to
