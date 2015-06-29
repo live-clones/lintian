@@ -72,7 +72,7 @@ binary-indep:
 	touch debian/tmp/$(VENDORARCH)/foo/.packlist
 	chmod 644 debian/tmp/$(VENDORARCH)/foo/.packlist
 	touch debian/tmp/$(VENDORARCH)/foo/bar.pm
-	touch -t 197501010101 debian/tmp/$(VENDORARCH)/foo/ancient.pm
+	TZ=UTC touch -t 197501010101 debian/tmp/$(VENDORARCH)/foo/ancient.pm
 	chmod 644 debian/tmp/$(VENDORARCH)/foo/bar.pm
 
 	install -d debian/tmp/usr/share/pixmaps
