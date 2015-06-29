@@ -51,21 +51,6 @@ if (not $pid) {
     exec 'readelf', '-WltdVs', @ARGV;
 }
 
-if (scalar @ARGV == 1) {
-    # Special case - readelf will not prefix the output with "File:
-    # $name" if it only gets one file argument, so act as if it did...
-    # - In fact, if readelf always emitted that File: header, we could
-    #   simply use xargs directly on readelf and just parse its output
-    #   in the loop below.
-    $bin = $ARGV[0];
-    print "Filename: $bin\n";
-
-    if (spawn(undef, ['head', $bin], '|', ['grep', '-q', 'packed.*with.*UPX']))
-    {
-        print "UPX: yes\n";
-    }
-}
-
 while (my $line = <$readelf>) {
 
     chomp $line;
