@@ -5,6 +5,7 @@ Version: 1.0-1
 Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
+Test-Depends: java-common (>= 0.52)
 Test-For:
  codeless-jar
  executable-jar-without-main-class

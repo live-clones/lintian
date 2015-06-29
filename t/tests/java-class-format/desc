@@ -4,6 +4,7 @@ Sequence: 6000
 Version: 1.0-1
 Description: Various checks for Java Class format
 Section: java
+Test-Depends: java-common (>= 0.52)
 Test-For:
  incompatible-java-bytecode-format
  unknown-java-class-version
