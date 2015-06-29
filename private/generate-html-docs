@@ -5,7 +5,6 @@ use warnings;
 use autodie;
 
 use Pod::Simple::HTMLBatch;
-use Pod::Simple::HTML;
 
 my (@input, $output, $version);
 
@@ -28,8 +27,10 @@ $Pod::Simple::HTML::Content_decl
   = q{<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">};
 
 my $convert = Pod::Simple::HTMLBatch->new;
-$convert->html_render_class('Pod::Simple::HTML');
+$convert->html_render_class('My::Pod::Simple::HTML');
 $convert->contents_page_start(header());
+# No footer - it contains a "current time" and is thus unreproducible
+$convert->contents_page_end(q{});
 $convert->batch_convert(\@input, $output);
 
 print "HTML version available at $output/index.html\n";
@@ -75,4 +76,15 @@ sub guess_version {
         };
     }
     return $version;
+}
+
+package My::Pod::Simple::HTML;
+
+use strict;
+use warnings;
+use parent qw(Pod::Simple::HTML);
+
+# Skip the version tag (incl. a date) to get reproducible output
+sub version_tag_comment {
+    return q{};
 }
