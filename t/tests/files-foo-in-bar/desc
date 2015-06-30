@@ -27,6 +27,7 @@ Test-For:
  package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
  package-install-apt-preferences
+ package-install-apt-sources
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d
