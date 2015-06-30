@@ -92,19 +92,19 @@ hr {
     display: none;
 }
 
-
 /*
  * 2. Header title
  */
 
-#header {
+header {
+    display: block; /* HTML5 compat */
     margin: 0 0 28px 0;
     padding: 5px 20px;
     background: #F3F3F3 url("{{{resource_path('logo-small.png')}}}") no-repeat right;
     border-bottom: 1px solid #AAA;
 }
 
-#header p {
+header p {
     float: left;
     margin: 5px 0;
     color: #444;
@@ -113,7 +113,7 @@ hr {
     font-weight: bold;
 }
 
-#header p a {
+header p a {
     color: #444;
     text-decoration: none;
 }
@@ -151,7 +151,8 @@ hr {
  * 4. Main content
  */
 
-#main {
+main {
+    display: block;
     margin: 0 25px;
     font-size: 0.9em;
     line-height: 1.4em;
@@ -408,14 +409,15 @@ blockquote.type-P {
  * 5. Footer
  */
 
-#footer {
+footer {
+    display: block; /* HTML5 compat */
     margin: 20px 20px;
     padding: 10px 0 0 0;
     font-size: 0.85em;
     border-top: 1px solid #AAA;
 }
 
-#footer p {
+footer p {
     margin: 0;
     padding: 0;
 }
@@ -427,4 +429,11 @@ blockquote.type-P {
 
 div.clear {
     clear: both;
+}
+
+a.invisible-anchor {
+  /*
+    These elements are always empty, but lets make this abundantly clear
+  */
+  display: none;
 }

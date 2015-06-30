@@ -34,7 +34,7 @@
             if ($letter eq 'Other') {
                 $OUT .= qq(  </p>\n\n  <h2>Other</h2>\n\n  <p>\n);
             } else {
-                $OUT .= qq(  </p>\n\n  <h2 id="$letter"><a name="$letter">)
+                $OUT .= qq(  </p>\n\n  <h2 id="$letter"><a id="$letter">)
                     . $letter . "</a></h2>\n\n  <p>\n";
             }
         }

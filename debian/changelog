@@ -6,6 +6,9 @@ lintian (2.5.33) UNRELEASED; urgency=medium
     + [JW] Correct spelling for "GNU Public Licence".
       (Closes: #790369)
 
+  * reporting/templates/*.tmpl:
+    + [NT] Change from XHTML 1.1 to HTML5.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 28 Jun 2015 17:01:10 +0200
 
 lintian (2.5.32) unstable; urgency=medium
