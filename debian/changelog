@@ -2,6 +2,14 @@ lintian (2.5.33) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/systemd.{desc,pm}:
+    + [NT] Apply patches from Felipe Sateler to refactor the
+      systemd checks.  Notably this also fixes some duplicate
+      tags.
+    + [NT] Apply patch from Felipe Sateler to warn about rcS
+      init scripts without a native systemd unit file.
+      (Closes: #790323)
+
   * data/spelling/corrections-multiword:
     + [JW] Correct spelling for "GNU Public Licence".
       (Closes: #790369)
