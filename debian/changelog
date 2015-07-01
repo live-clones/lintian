@@ -2,6 +2,8 @@ lintian (2.5.33) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/infofiles.pm:
+    + [NT] Fix use of undefined variable in some cases.
   * checks/systemd.{desc,pm}:
     + [NT] Apply patches from Felipe Sateler to refactor the
       systemd checks.  Notably this also fixes some duplicate
