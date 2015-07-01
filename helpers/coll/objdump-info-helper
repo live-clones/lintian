@@ -210,9 +210,7 @@ while (my $line = <$readelf>) {
 # Finish the last file
 finish_file();
 
-eval {
-    close($readelf);
-};
+eval {close($readelf);};
 if (my $err = $@) {
     if ($static_lib_issues == 0) {
         die($err);
