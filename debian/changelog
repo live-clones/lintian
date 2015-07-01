@@ -13,6 +13,9 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       (Closes: #790323)
   * checks/source-copyright.pm:
     + [NT] Fix use of undefined variable in some cases.
+    + [NT] Avoid triggering a tag for a DEP-5 paragraph
+      referencing the license of the header paragraph
+      when said paragraph is *the* header paragraph.
 
   * data/spelling/corrections-multiword:
     + [JW] Correct spelling for "GNU Public Licence".
