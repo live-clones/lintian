@@ -20,6 +20,10 @@ lintian (2.5.33) UNRELEASED; urgency=medium
 
   * helpers/coll/objdump-info-helper:
     + [NT] Fix use of undefined variable in some cases.
+    + [JW,NT] Gracefully cope with upstreams storing poems in
+      valid ar archives with the file extension ".a" and
+      possibly also corrupt ar files.
+      (Closes: #790493)
 
   * reporting/templates/*.tmpl:
     + [NT] Change from XHTML 1.1 to HTML5.

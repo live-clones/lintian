@@ -44,6 +44,7 @@ my $section = '';
 # then we have to escape the args and that puts us over the
 # argument limit in some cases...
 my $pid = open(my $readelf, '-|');
+my $static_lib_issues = 0;
 
 if (not $pid) {
     # child - re-direct standerr and exec
@@ -107,6 +108,13 @@ while (my $line = <$readelf>) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
        # multiple errors per file, hench the "unless".
         print "Broken: yes\n" unless $truncated++;
+        next;
+    } elsif ($line =~ m/^readelf: Error: Not an ELF file/) {
+        # Some upstreams like to create valid ar archives with the ".a"
+        # extensions and fill them with poems rather than object files.
+        #
+        # Possibly a reference to afl...
+        $static_lib_issues++ if $bin =~ m{\([^/\\)]++\)$};
         next;
     } elsif ($line =~ m/^Program Headers:/) {
         $section = 'PH';
@@ -202,7 +210,14 @@ while (my $line = <$readelf>) {
 # Finish the last file
 finish_file();
 
-close($readelf);
+eval {
+    close($readelf);
+};
+if (my $err = $@) {
+    if ($static_lib_issues == 0) {
+        die($err);
+    }
+}
 
 exit 0;
 
