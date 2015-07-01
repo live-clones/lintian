@@ -250,7 +250,7 @@ sub _parse_dep5 {
         @short_licenses_header)
       =parse_license($first_para->{'license'}, 1);
     for my $short_license (@short_licenses_header) {
-        $required_standalone_licenses{$short_license} = 1;
+        $required_standalone_licenses{$short_license} = 0;
         $short_licenses_seen{$short_license}          = 1;
     }
     if(defined($full_license_header)) {

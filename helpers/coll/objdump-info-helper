@@ -173,9 +173,9 @@ while (my $line = <$readelf>) {
         }
         $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
         print "  $type   $value\n";
-    } elsif ($line =~ m/^\s*[0-9A-F]+: \s+ \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
+    } elsif ($line =~ m/^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
         and $section eq 'VS') {
-        while ($line =~ m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
+        while ($line =~ m/([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
             my ($vernum, $verstring) = ($1, $2);
             $verstring ||= '';
             if ($vernum =~ m/h$/) {

@@ -11,10 +11,15 @@ lintian (2.5.33) UNRELEASED; urgency=medium
     + [NT] Apply patch from Felipe Sateler to warn about rcS
       init scripts without a native systemd unit file.
       (Closes: #790323)
+  * checks/source-copyright.pm:
+    + [NT] Fix use of undefined variable in some cases.
 
   * data/spelling/corrections-multiword:
     + [JW] Correct spelling for "GNU Public Licence".
       (Closes: #790369)
+
+  * helpers/coll/objdump-info-helper:
+    + [NT] Fix use of undefined variable in some cases.
 
   * reporting/templates/*.tmpl:
     + [NT] Change from XHTML 1.1 to HTML5.
