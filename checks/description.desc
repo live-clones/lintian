@@ -66,8 +66,8 @@ Info: The description contains an invalid control statement.
  an empty line.
  .
  The "empty-line" control statement does not permit any characters
- following it on the same line.  Therefore, the entirely line must
- consist entirely of a space followed by a dot.
+ following it on the same line.  Therefore, the line must consist
+ entirely of a space followed by a dot.
 Ref: policy 5.6.13
 
 Tag: description-too-long
