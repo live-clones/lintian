@@ -2,6 +2,10 @@ lintian (2.5.33) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/description.desc:
+    + [NT] Clarify that the empty-line control statement " ."
+      permits no other characters on the same line. Thanks
+      to Riley Baird for the report.  (Closes: #789577)
   * checks/infofiles.pm:
     + [NT] Fix use of undefined variable in some cases.
   * checks/systemd.{desc,pm}:
