@@ -246,11 +246,6 @@ sub spelling_tag_emitter {
     };
 }
 
-sub _tag {
-    my @args = grep { defined($_) } @_;
-    return tag(@args);
-}
-
 =item check_spelling(TEXT,[ EXCEPTIONS,] CODEREF)
 
 Performs a spelling check of TEXT.  Call CODEREF once for each unique
