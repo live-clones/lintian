@@ -12,11 +12,11 @@ E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-w
 E: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:74
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:75
-E: scripts-maintainer-general: maintainer-script-should-not-use-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:188
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
 E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst:101
+E: scripts-maintainer-general: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:188
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:153 /usr/bin/gconftool-2

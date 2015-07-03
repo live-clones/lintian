@@ -368,13 +368,12 @@ Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
  scripts.
 Ref: policy 9.3.3.2
 
-Tag: maintainer-script-should-not-use-slash-for-dpkg-maintscript-helper-symlink_to_dir
+Tag: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
 Severity: serious
 Certainty: certain
-Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
- directly.  Long-running daemons should be started and stopped via init
- scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
- scripts.
+Info: The maintainer script seems to call dpkg-maintscript-helper
+ symlink_to_dir with a trailling slash for pathname. This render package
+ uninstallable.
 Ref: dpkg-maintscript-helper (1)
 
 Tag: maintainer-script-removes-device-files
