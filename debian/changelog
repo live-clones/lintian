@@ -8,6 +8,8 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       to Riley Baird for the report.  (Closes: #789577)
   * checks/infofiles.pm:
     + [NT] Fix use of undefined variable in some cases.
+  * checks/scripts.{desc,pm}:
+    + [BR] Detects problem with dpkg-maintscript-helper symlink_to_dir.
   * checks/systemd.{desc,pm}:
     + [NT] Apply patches from Felipe Sateler to refactor the
       systemd checks.  Notably this also fixes some duplicate

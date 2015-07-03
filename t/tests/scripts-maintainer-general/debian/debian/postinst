@@ -181,5 +181,16 @@ then
     true;
 fi
 
+# bad
+dpkg-maintscript-helper symlink_to_dir \
+              /usr/share/autoconf-archive/html/ \
+              ../../autoconf-archive/html \
+               20111221-2~ -- "$@"
+
+# good
+dpkg-maintscript-helper symlink_to_dir \
+              /usr/share/autoconf-archive/html \
+              ../../autoconf-archive/html \
+               20111221-2~ -- "$@"
 
 #DEBHELPER#
