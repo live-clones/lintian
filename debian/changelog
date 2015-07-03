@@ -33,6 +33,10 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       valid ar archives with the file extension ".a" and
       possibly also corrupt ar files.
       (Closes: #790493)
+  * helpers/coll/strings-helper:
+    + [NT] Avoid an unncessary overhead in using L::Command's
+      spawn+reap.  In some cases, this can reduce the runtime
+      of this command by ~50%.
 
   * reporting/harness:
     + [NT] Add a --[no-]generate-reports option as alias of

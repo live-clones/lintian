@@ -25,28 +25,26 @@ use autodie;
 
 use File::Basename qw(dirname);
 use IO::Handle;
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Command qw(spawn reap);
+use POSIX qw(WNOHANG);
 
 my ($strdir) = @ARGV;
 my $curfname = '';
 my $curdir = '';
 
-my %seen;
-my %opts = (fail => 'error');
-my $out = undef;
+my (%seen, $out);
+my @active_processes;
 
 while (my $line = <STDIN>) {
     my ($fname, $string);
     chomp $line;
     ($fname, $string) = ($line =~ m/^([^:]++): (.++)$/o);
     if ($curfname ne $fname) {
+        my $pid;
         # new file, prepare for it.
         if ($out) {
             close($out);
-            reap(\%opts);
             undef(%seen);
+            reap_pids(WNOHANG);
         }
         my $dir = $strdir . '/' . dirname($fname);
         if ($dir ne $curdir) {
@@ -54,11 +52,9 @@ while (my $line = <STDIN>) {
               or die "mkdir -p $dir failed: " . (($? >> 8) & 256), "\n";
             $curdir = $dir;
         }
-        $opts{out} = "$strdir/${fname}.gz";
-        $out = $opts{pipe_in} = IO::Handle->new;
-        spawn(\%opts, ['gzip', '-9nc']);
-        $opts{pipe_in}->blocking(1);
-
+        ($out, $pid) = fork_gzip("$strdir/${fname}.gz");
+        $out->blocking(1);
+        push(@active_processes, $pid);
         $curfname = $fname;
     }
     next if $seen{$string}++;
@@ -67,7 +63,50 @@ while (my $line = <STDIN>) {
 
 if ($out) {
     close($out);
-    reap(\%opts);
 }
 
+reap_pids(0);
+
+sub reap_pids {
+    my ($waitpid_flags) = @_;
+    my $i = 0;
+    for my $pid (@active_processes) {
+        my $res = waitpid($pid, $waitpid_flags);
+        if ($res != $pid) {
+            # If we were given WNOHANG, then it we try to reap as much
+            # as possible and stop at the first failure (to keep it
+            # simple).
+            die("waitpid($pid, 0) failed: $!\n") if not $waitpid_flags;
+            last;
+        }
+        $i++;
+        if ($?) {
+            my $res = ($? >> 8) & 0xff;
+            my $sig = $? & 0xff;
+            if ($res) {
+                die("gzip failed exit code $res\n");
+            } elsif ($sig) {
+                die("gzip killed by signal $sig\n");
+            }
+        }
+    }
+    splice(@active_processes, 0, $i) if $i;
+    return;
+}
+
+sub fork_gzip {
+    my ($out) = @_;
+    my ($gzip_stdin, $to_gzip);
+    pipe($gzip_stdin, $to_gzip);
+    my $pid = fork;
+    if (not $pid) {
+        # child
+        close($to_gzip);
+        open(STDIN, '<&', $gzip_stdin);
+        open(STDOUT, '>', $out);
+        exec('gzip', '-9nc');
+    }
+    close($gzip_stdin);
+    return ($to_gzip, $pid);
+}
 exit 0;
