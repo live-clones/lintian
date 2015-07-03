@@ -374,7 +374,7 @@ Certainty: certain
 Info: The maintainer script seems to call dpkg-maintscript-helper
  symlink_to_dir with a trailling slash for pathname. This render package
  uninstallable.
-Ref: dpkg-maintscript-helper (1)
+Ref: dpkg-maintscript-helper(1)
 
 Tag: maintainer-script-removes-device-files
 Severity: serious
