@@ -284,14 +284,14 @@ sub check_spelling {
     my $corrections_multiword
       = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
 
-    $text =~ s/[()\[\]]//g;
+    $text =~ tr/()[]//d;
     $text =~ s/(\w-)\s*\n\s*/$1/;
     $text =~ tr/\r\n \t/ /s;
     $text =~ s/\s++/ /g;
     strip($text);
 
-    for my $word (split(/\s+/, $text)) {
-        $word =~ s/[.,;:?!]+$//;
+    for my $word (split(' ', $text)) {
+        $word =~ tr/.,;:?!//d;
         next if ($word =~ /^[A-Z]{1,5}\z/);
         # Some exceptions are based on case (e.g. "teH").
         next if exists($exceptions->{$word});
