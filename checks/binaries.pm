@@ -274,8 +274,6 @@ sub run {
           unless ($fileinfo =~ m/^[^,]*\bELF\b/)
           or ($fileinfo =~ m/\bcurrent ar archive\b/);
 
-        $objdump = $info->objdump_info->{$file};
-
         # Warn about Architecture: all packages that contain shared libraries.
         if ($arch eq 'all') {
             tag 'arch-independent-package-contains-binary-or-object',$file;
@@ -301,6 +299,8 @@ sub run {
             # "libfoo_g.a" is usually a "debug" library, so ignore
             # unneeded sections in those.
             next if $file =~ m/_g\.a$/;
+
+            $objdump = $info->objdump_info->{$file};
 
             foreach my $obj (@{ $objdump->{'objects'} }) {
                 my $libobj = $info->objdump_info->{"${file}(${obj})"};
