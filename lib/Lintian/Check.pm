@@ -268,6 +268,8 @@ Returns the number of spelling mistakes found in TEXT.
 
 =cut
 
+my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
+
 sub check_spelling {
     my ($text, $exceptions, $code_ref) = @_;
     return 0 unless $text;
@@ -280,9 +282,20 @@ sub check_spelling {
 
     my %seen;
     my $counter = 0;
-    my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
-    my $corrections_multiword
-      = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
+
+    if (!%CORRECTIONS) {
+        my $corrections_multiword
+          = Lintian::Data->new('spelling/corrections-multiword', '\|\|');
+        my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
+        for my $misspelled ($corrections->all) {
+            $CORRECTIONS{$misspelled} = $corrections->value($misspelled);
+        }
+        for my $misspelled_regex ($corrections_multiword->all) {
+            my $correct = $corrections_multiword->value($misspelled_regex);
+            push(@CORRECTIONS_MULTIWORD,
+                [qr/\b($misspelled_regex)\b/, $correct]);
+        }
+    }
 
     $text =~ tr/()[]//d;
     $text =~ s/(\w-)\s*\n\s*/$1/;
@@ -296,10 +309,10 @@ sub check_spelling {
         # Some exceptions are based on case (e.g. "teH").
         next if exists($exceptions->{$word});
         my $lcword = lc $word;
-        if ($corrections->known($lcword)
+        if (exists($CORRECTIONS{$lcword})
             &&!exists($exceptions->{$lcword})) {
             $counter++;
-            my $correction = $corrections->value($lcword);
+            my $correction = $CORRECTIONS{$lcword};
             if ($word =~ /^[A-Z]+$/) {
                 $correction = uc $correction;
             } elsif ($word =~ /^[A-Z]/) {
@@ -311,10 +324,10 @@ sub check_spelling {
     }
 
     # Special case for correcting multi-word strings.
-    for my $oregex ($corrections_multiword->all) {
-        if ($text =~ m,\b($oregex)\b,) {
+    for my $cm (@CORRECTIONS_MULTIWORD) {
+        my ($oregex, $correction) = @{$cm};
+        if ($text =~ $oregex) {
             my $word = $1;
-            my $correction = $corrections_multiword->value($oregex);
             if ($word =~ /^[A-Z]+$/) {
                 $correction = uc $correction;
             } elsif ($word =~ /^[A-Z]/) {

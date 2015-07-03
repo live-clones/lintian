@@ -38,6 +38,11 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       spawn+reap.  In some cases, this can reduce the runtime
       of this command by ~50%.
 
+  * lib/Lintian/Check.pm:
+    + [NT] Optimise out some calls to Lintian::Data, which in
+      a few cases adds up to a couple of seconds in total
+      runtime.
+
   * reporting/harness:
     + [NT] Add a --[no-]generate-reports option as alias of
       the -r mode.  The option can now be used together with
