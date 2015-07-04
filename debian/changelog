@@ -7,6 +7,9 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       SONAMES with package names.  The "v5" suffix is the
       recommended suffix for packages affected by the GCC-5
       libstc++6 C11 ABI breakage.
+  * checks/cruft.pm:
+    + [BR] Increase windows size to 16384 bytes.
+      Gain about 10% in cruft.
   * checks/description.desc:
     + [NT] Clarify that the empty-line control statement " ."
       permits no other characters on the same line. Thanks
