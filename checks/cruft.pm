@@ -32,7 +32,7 @@ use v5.10;
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.
 # NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
-use constant BLOCKSIZE => 16384;
+use constant BLOCKSIZE => 16_384;
 
 use Lintian::Data;
 use Lintian::Relation ();
