@@ -28,6 +28,9 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       referencing the license of the header paragraph
       when said paragraph is *the* header paragraph.
 
+  * data/cruft/non-distributable-files:
+    + [BR] Add a few lenna image. Thanks to Norbert
+      Preining <preining@logic.at> (Closes: #790915).
   * data/spelling/corrections-multiword:
     + [JW] Correct spelling for "GNU Public Licence".
       (Closes: #790369)
