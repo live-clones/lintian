@@ -95,8 +95,7 @@ for my $template (
     qw/head foot clean index maintainer maintainers packages tag
     tags tags-severity tag-not-seen tags-all/
   ) {
-    open(my $fd, '<', "$TEMPLATES/$template.tmpl");
-    binmode($fd, ':encoding(UTF-8)');
+    open(my $fd, '<:encoding(UTF-8)', "$TEMPLATES/$template.tmpl");
     my %options = (TYPE => 'FILEHANDLE', SOURCE => $fd);
     $templates{$template} = Text::Template->new(%options)
       or die "cannot load template $template: $Text::Template::ERROR\n";
@@ -104,8 +103,7 @@ for my $template (
 }
 
 {
-    open(my $fd, '<', "$TEMPLATES/lintian.css.tmpl");
-    binmode($fd, ':encoding(UTF-8)');
+    open(my $fd, '<:encoding(UTF-8)', "$TEMPLATES/lintian.css.tmpl");
     $templates{'lintian.css'} = Text::Template->new(
         TYPE => 'FILEHANDLE',
         SOURCE => $fd,
@@ -933,8 +931,7 @@ sub output_template {
                 %{$data},
             }) or die "Filling out footer of $file: $Text::Template::ERROR\n";
     };
-    open(my $fd, '>', "$HTML_TMP_DIR/$file");
-    binmode($fd, ':encoding(UTF-8)');
+    open(my $fd, '>:encoding(UTF-8)', "$HTML_TMP_DIR/$file");
     $template->fill_in(OUTPUT => $fd, HASH => $data)
       or die "filling out $file failed: $Text::Template::ERROR\n";
     close($fd);
