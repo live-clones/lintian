@@ -30,6 +30,7 @@ lintian (2.5.33) UNRELEASED; urgency=medium
     + [NT] Avoid triggering a tag for a DEP-5 paragraph
       referencing the license of the header paragraph
       when said paragraph is *the* header paragraph.
+      (Closes: #769818)
 
   * data/cruft/non-free-files:
     + [BR] Add a few lenna image. Thanks to Norbert
