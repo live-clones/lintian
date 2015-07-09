@@ -1,4 +1,4 @@
-#!/usr/bin/perl -wT
+#!/usr/bin/perl -w
 #
 # lintian-info -- transform lintian tags into descriptive text
 #
@@ -28,35 +28,16 @@ use Getopt::Long();
 # turn file buffering off:
 STDOUT->autoflush;
 
-our @INCLUDE_DIRS;
-
-BEGIN {
-    if (!exists($ENV{'LINTIAN_INCLUDE_DIRS'})) {
-        print STDERR "Do not call $0 directly, use dplint $0 instead\n";
-        exit(1);
-    }
-    my $dirs = $ENV{'LINTIAN_INCLUDE_DIRS'};
-    if ($dirs =~ m{\A (.*) \Z}xsm) {
-        # Untaint LINTIAN_INCLUDE_DIRS
-        $dirs = $1;
-    }
-    @INCLUDE_DIRS = split(':', $dirs);
-    my $libdir = $INCLUDE_DIRS[-1] . '/lib';
-    if (-d $libdir) {
-        require lib;
-        import lib $libdir;
-    }
-}
-
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag determine_locale);
 use Lintian::Profile;
 
 sub compat();
 
+sub main {
+
 my ($annotate, $tags, $help, $prof);
 my (%already_displayed, $profile);
-my (@compat_include_dirs, $compat_user_dirs);
 my %opthash = (
     'annotate|a' => \$annotate,
     'tags|t' => \$tags,
@@ -65,8 +46,11 @@ my %opthash = (
 );
 
 if (compat) {
-    $opthash{'include-dir=s'} = \@compat_include_dirs;
-    $opthash{'user-dirs!'} = \$compat_user_dirs;
+    my $error = sub {
+        die("The --$_[0] must be the first option if given\n");
+    };
+    $opthash{'include-dir=s'} = $error;
+    $opthash{'user-dirs!'} = $error;
 }
 
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
@@ -101,19 +85,7 @@ EOT
     exit 0;
 }
 
-if (compat) {
-    if (@compat_include_dirs or defined($compat_user_dirs)) {
-        # NB: If these options were indeed first in @ARGV, then dplint
-        # would have parsed them for us.  So the fact that we see their
-        # values implies they appeared after some other option.
-        print STDERR join(q{ },
-            'Warning: --include-dir and --[no-]user-dirs',
-            "should be the first option(s) if given\n");
-        fixup_include_dirs();
-    }
-}
-
-$profile = Lintian::Profile->new($prof, \@INCLUDE_DIRS,
+$profile = Lintian::Profile->new($prof, [dplint::include_dirs()],
     { language => determine_locale() });
 
 Lintian::Data->set_vendor($profile);
@@ -176,6 +148,8 @@ while (<>) {
     print $info->description('text', 'N:   ');
     print "N:\n";
 }
+    exit(0);
+}
 
 {
     my $backwards_compat;
@@ -192,46 +166,7 @@ while (<>) {
     }
 }
 
-exit 0;
-
-sub _load_file_basedir {
-    # File::BaseDir sprews warnings if $ENV{'HOME'} is undef, so
-    # make sure it is defined when we load the module.  Though,
-    # we need to scope this, so $ENV{'HOME'} becomes undef again
-    # when we check for it later.
-    local $ENV{'HOME'} = $ENV{'HOME'} // '/nonexistent';
-    require File::BaseDir;
-    import File::BaseDir qw(config_home config_files data_home);
-    return;
-}
-
-sub fixup_include_dirs {
-    my (@user_dirs, $user_dir_regex);
-
-    # First, determine the user dirs
-    _load_file_basedir();
-
-    if (exists($ENV{'HOME'}) or exists($ENV{'XDG_CONFIG_HOME'})) {
-        my $data_home = data_home('lintian');
-        if (defined($data_home)) {
-            push(@user_dirs, $data_home);
-        }
-    }
-    push(@user_dirs, '/etc/lintian');
-
-    # Then remove the user dirs from the original include path (they will
-    # always be the "first" entries in a predictable order)
-    $user_dir_regex= join(q{},map { "(?:$_:)?" } map { quotemeta } @user_dirs);
-    $ENV{'LINTIAN_INCLUDE_DIRS'} =~ s{\A $user_dir_regex}{}xsmg;
-    # now, rebuild @INCLUDE_DIRS
-    @INCLUDE_DIRS = split(':', $ENV{'LINTIAN_INCLUDE_DIRS'});
-    if ($compat_user_dirs) {
-        unshift(@compat_include_dirs, @user_dirs);
-    }
-    # And pre-append the new dirs
-    unshift(@INCLUDE_DIRS, grep { -d } @compat_include_dirs);
-    return;
-}
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil
