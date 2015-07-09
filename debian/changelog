@@ -16,6 +16,10 @@ lintian (2.5.33) UNRELEASED; urgency=medium
     + [NT] Clarify that the empty-line control statement " ."
       permits no other characters on the same line. Thanks
       to Riley Baird for the report.  (Closes: #789577)
+  * checks/files.desc:
+    + [JW, NT] Clarify that the ISO 639-1 language codes are
+      preferred to the ISO 639-2 variant.  Thanks to Jonas
+      Smedegaard for the report.  (Closes: #790693)
   * checks/infofiles.pm:
     + [NT] Fix use of undefined variable in some cases.
   * checks/scripts.{desc,pm}:
