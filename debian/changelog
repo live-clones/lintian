@@ -39,6 +39,10 @@ lintian (2.5.33) UNRELEASED; urgency=medium
     + [JW] Correct spelling for "GNU Public Licence".
       (Closes: #790369)
 
+  * frontend/lintian:
+    + [JW, NT] Add "--hide-overrides" option to contrast
+      the "--show-overrides" option.  (Closes: #770643)
+
   * helpers/coll/objdump-info-helper:
     + [NT] Fix use of undefined variable in some cases.
     + [JW,NT] Gracefully cope with upstreams storing poems in

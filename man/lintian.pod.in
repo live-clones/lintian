@@ -268,7 +268,8 @@ in the configuration file.
 
 =item B<-o>, B<--no-override>
 
-Don't use the overrides file.
+Ignore all overrides provided by the package.  This option will overrule
+B<--show-overrides>.
 
 This option overrides the B<override> variable in the configuration
 file.
@@ -315,14 +316,20 @@ If not specified, the default value is I<{VENDOR}/main>.
 Please Refer to the Lintian User Manual for the full documentation of
 profiles.
 
-=item B<--show-overrides>
+=item B<--show-overrides>, B<--hide-overrides>
 
-Output tags that have been overridden.  The related override comments
-will also be printed (unless --quiet is used).  Please refer to the
-Lintian User Manual for the documentation on how lintian relates
-comments to a given override.
+Controls whether tags that have been overridden should be shown.
 
-This option overrides the B<show-overrides> variable in the
+The B<--show-overrides> differs from B<--no-overrides> in that shown overridden
+tags will still be marked as overridden (using an "O" code).
+
+If the overridden tags are shown, the related override comments will
+also be displayed (unless --quiet is used).  Please refer to the Lintian
+User Manual for the documentation on how lintian relates comments to a
+given override.
+
+
+These options override the B<show-overrides> variable in the
 configuration file.
 
 =item B<--suppress-tags> tag1,tag2,...

@@ -221,6 +221,7 @@ Behaviour options:
     --pedantic                display "P:" tags (normally suppressed)
     --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overridden
+    --hide-overrides          do not output tags that have been overridden (default)
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
 Configuration options:
@@ -595,6 +596,7 @@ my %opthash = (
     'suppress-tags-from-file=s' => \&record_suppress_tags_from_file,
     'no-override|o' => \$opt{'no-override'},
     'show-overrides' => \$opt{'show-overrides'},
+    'hide-overrides' => sub { $opt{'show-overrides'} = 0; },
     'color=s' => \$opt{'color'},
     'unpack-info|U=s' => \@unpack_info,
     'allow-root' => \$allow_root,
