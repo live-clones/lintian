@@ -37,8 +37,6 @@ use Text::Template ();
 # Global variables and configuration
 
 # These have no default and must be set in the configuration file.
-# TODO: $statistics_file should no longer be defined in ./config
-#   after the 2.5.25 release.
 our (
     $LINTIAN_ROOT, $LINTIAN_ARCHIVEDIR,$LINTIAN_DIST,
     $LINTIAN_ARCH, $HTML_TMP_DIR,$LINTIAN_AREA,
