@@ -30,9 +30,6 @@ use strict;
 use warnings;
 use autodie;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Command qw(spawn);
-
 my (@sections, @symbol_versions);
 my @dyn_symbols;
 my %program_headers;
@@ -71,13 +68,6 @@ while (my $line = <$readelf>) {
         $bin = shift @ARGV;
         print "Filename: $bin\n";
 
-        if (
-            spawn(
-                undef, ['head', $bin],
-                '|', ['grep', '-q', 'packed.*with.*UPX'])
-          ) {
-            print "UPX: yes\n";
-        }
     }
 
     if ($line =~ m/^File: (.+)$/) {
@@ -87,17 +77,6 @@ while (my $line = <$readelf>) {
         $bin = $file;
         print "Filename: $bin\n";
 
-        # If readelf is analysing a static lib the file name will be
-        # something like "${file}(${obj})".
-
-        if (
-            $bin !~ m,\([^/\\)]++\)$,
-            and spawn(
-                undef, ['head', $bin],
-                '|', ['grep', '-q', 'packed.*with.*UPX'])
-          ) {
-            print "UPX: yes\n";
-        }
     } elsif ($line
         =~ m/^readelf: Error: Reading 0x[0-9a-fA-F]+ bytes extends past end of file for section headers/
         or $line

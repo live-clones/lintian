@@ -369,7 +369,6 @@ sub objdump_info {
             'TEXTREL' => 0,
         );
         $info{'ERRORS'} = lc($pg->{'broken'}//'no') eq 'yes' ? 1 : 0;
-        $info{'UPX'} = lc($pg->{'upx'}//'no') eq 'yes' ? 1 : 0;
         $info{'BAD-DYNAMIC-TABLE'}
           = lc($pg->{'bad-dynamic-table'}//'no') eq 'yes' ? 1 : 0;
         foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {

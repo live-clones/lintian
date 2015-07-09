@@ -169,7 +169,6 @@ sub run {
             tag 'binary-compiled-with-profiling-enabled', $file
               if $is_profiled;
         }
-        tag 'binary-file-compressed-with-upx', $file if $objdump->{'UPX'};
         tag 'apparently-corrupted-elf-binary', $file
           if $objdump->{'ERRORS'};
         tag 'binary-file-built-without-LFS-support', $file

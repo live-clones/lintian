@@ -9,7 +9,6 @@ FSSTND-dir-in-var
 bad-package-name
 bad-relation
 bad-version-number
-binary-file-compressed-with-upx
 binary-in-etc
 build-info-in-binary-control-file-section
 conflicting-negation-in-source-relation

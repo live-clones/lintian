@@ -4,8 +4,8 @@ Disable-Tags-From-Check: lintian
 Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-share,
  arch-independent-package-contains-binary-or-object, bad-package-name,
  bad-perm-for-file-in-etc-sudoers.d, bad-relation, bad-version-number,
- binary-file-compressed-with-upx, binary-in-etc, binary-or-shlib-defines-rpath,
- binary-with-bad-dynamic-table, build-info-in-binary-control-file-section,
+ binary-in-etc, binary-or-shlib-defines-rpath, binary-with-bad-dynamic-table,
+ build-info-in-binary-control-file-section,
  conflicting-negation-in-source-relation, control-file-has-bad-owner,
  control-file-has-bad-permissions, control-file-is-not-a-file,
  control-interpreter-in-usr-local, control-interpreter-without-depends,
@@ -45,8 +45,7 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  usr-share-doc-symlink-without-dependency, wrong-file-owner-uid-or-gid
 
 Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
- binary-file-compressed-with-upx, binary-in-etc,
- build-info-in-binary-control-file-section,
+ binary-in-etc, build-info-in-binary-control-file-section,
  conflicting-negation-in-source-relation, control-file-has-bad-owner,
  control-file-has-bad-permissions, control-file-is-not-a-file,
  control-interpreter-in-usr-local, copyright-file-compressed,

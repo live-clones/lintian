@@ -155,11 +155,6 @@ Certainty: certain
 Info: While profiling is useful for testing and debugging purposes, enabling
  it causes a program to leave gmon.out files whenever a user runs it.
 
-Tag: binary-file-compressed-with-upx
-Severity: serious
-Certainty: certain
-Info: Debian does not allow binaries to be compressed by UPX.
-
 Tag: package-name-doesnt-match-sonames
 Severity: normal
 Certainty: possible

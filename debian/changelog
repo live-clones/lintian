@@ -7,6 +7,8 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       SONAMES with package names.  The "v5" suffix is the
       recommended suffix for packages affected by the GCC-5
       libstc++6 C11 ABI breakage.
+    + [NT] Drop binary-file-compressed-with-upx as it was not
+      working.  (Closes: #790932)
   * checks/cruft.pm:
     + [BR] Increase windows size to 16384 bytes.
       Gain about 10% in cruft.
@@ -49,6 +51,8 @@ lintian (2.5.33) UNRELEASED; urgency=medium
       valid ar archives with the file extension ".a" and
       possibly also corrupt ar files.
       (Closes: #790493)
+    + [NT] Remove slow "head + grep" pipeline on all ELF
+      binaries, which is no longer used.
   * helpers/coll/strings-helper:
     + [NT] Avoid an unncessary overhead in using L::Command's
       spawn+reap.  In some cases, this can reduce the runtime
@@ -58,6 +62,10 @@ lintian (2.5.33) UNRELEASED; urgency=medium
     + [NT] Optimise out some calls to Lintian::Data, which in
       a few cases adds up to a couple of seconds in total
       runtime.
+
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [NT] Drop binary-file-compressed-with-upx as it no
+      longer exists.
 
   * reporting/harness:
     + [NT] Add a --[no-]generate-reports option as alias of
