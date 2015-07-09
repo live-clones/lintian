@@ -1,6 +1,11 @@
-lintian (2.5.33) UNRELEASED; urgency=medium
+lintian (2.5.33) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - systemd-no-service-for-init-rcS-script
+      - trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
+    + Removed:
+      - binary-file-compressed-with-upx
 
   * checks/binaries.pm:
     + [NT] Ignore "v5" suffixes in package names when matching
@@ -81,7 +86,7 @@ lintian (2.5.33) UNRELEASED; urgency=medium
   * reporting/templates/*.tmpl:
     + [NT] Change from XHTML 1.1 to HTML5.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 28 Jun 2015 17:01:10 +0200
+ -- Niels Thykier <niels@thykier.net>  Thu, 09 Jul 2015 21:38:57 +0200
 
 lintian (2.5.32) unstable; urgency=medium
 
