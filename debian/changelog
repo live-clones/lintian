@@ -2,6 +2,17 @@ lintian (2.5.34) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * commands/info -> info.pm:
+    + [NT] Renamed info to info.pm to remove some boilerplate
+      code.
+    + [NT] Forbid late --user-dirs and --include-dir options.
+
+  * frontend/lintian:
+    + [NT] Forbid late --user-dirs and --include-dir options.
+    + [NT] Remove the following obsolete command line options:
+      --root, --all, --binary, --source, --udeb.  They are no
+      longer useful.
+
  -- Niels Thykier <niels@thykier.net>  Thu, 09 Jul 2015 21:50:53 +0200
 
 lintian (2.5.33) unstable; urgency=medium
