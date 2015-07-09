@@ -9,9 +9,9 @@ lintian (2.5.34) UNRELEASED; urgency=medium
 
   * frontend/lintian:
     + [NT] Forbid late --user-dirs and --include-dir options.
-    + [NT] Remove the following obsolete command line options:
-      --root, --all, --binary, --source, --udeb.  They are no
-      longer useful.
+    + [NT] Remove the following obsolete command line
+      options: --root, --all, --binary, --source, --udeb.
+      They are no longer useful.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 09 Jul 2015 21:50:53 +0200
 
