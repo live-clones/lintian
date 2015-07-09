@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-06-28 12:20+0000\n"
+"POT-Creation-Date: 2015-07-09 19:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -519,19 +519,9 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: binary-file-compressed-with-upx
-#. type: Lintian tag description
-#: checks/binaries.desc:162
-#, no-wrap
-msgid "Debian does not allow binaries to be compressed by UPX."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
 #. Tag: package-name-doesnt-match-sonames
 #. type: Lintian tag description
-#: checks/binaries.desc:172
+#: checks/binaries.desc:167
 #, no-wrap
 msgid ""
 "The package name of a library package should usually reflect\n"
@@ -549,7 +539,7 @@ msgstr ""
 #
 #. Tag: binary-with-bad-dynamic-table
 #. type: Lintian tag description
-#: checks/binaries.desc:183
+#: checks/binaries.desc:178
 #, no-wrap
 msgid ""
 "This appears to be an ELF file.  According to readelf, the\n"
@@ -566,7 +556,7 @@ msgstr ""
 #
 #. Tag: apparently-corrupted-elf-binary
 #. type: Lintian tag description
-#: checks/binaries.desc:193
+#: checks/binaries.desc:188
 #, no-wrap
 msgid ""
 "This appears to be an ELF file but readelf cannot parse it.\n"
@@ -582,7 +572,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-libc
 #. type: Lintian tag description
-#: checks/binaries.desc:208
+#: checks/binaries.desc:203
 #, no-wrap
 msgid ""
 "The listed file appears to be linked against the C library, but the\n"
@@ -602,7 +592,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-libstdc++
 #. type: Lintian tag description
-#: checks/binaries.desc:224
+#: checks/binaries.desc:219
 #, no-wrap
 msgid ""
 "The listed file appears to be linked against the C++ library, but the\n"
@@ -623,7 +613,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-perlapi
 #. type: Lintian tag description
-#: checks/binaries.desc:236
+#: checks/binaries.desc:231
 #, no-wrap
 msgid ""
 "This package includes a *.so file in <tt>/usr/lib/.../perl5</tt>,\n"
@@ -640,7 +630,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-phpapi
 #. type: Lintian tag description
-#: checks/binaries.desc:252
+#: checks/binaries.desc:247
 #, no-wrap
 msgid ""
 "This package includes a *.so file in <tt>/usr/lib/phpN</tt>\n"
@@ -662,7 +652,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-numpy-abi
 #. type: Lintian tag description
-#: checks/binaries.desc:262
+#: checks/binaries.desc:257
 #, no-wrap
 msgid ""
 "This package includes a Python extension module, which uses Numpy via its\n"
@@ -677,7 +667,7 @@ msgstr ""
 #
 #. Tag: debug-file-should-use-detached-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:280
+#: checks/binaries.desc:275
 #, no-wrap
 msgid ""
 "This file is in a location generally used for detached debugging\n"
@@ -700,7 +690,7 @@ msgstr ""
 #
 #. Tag: binary-from-other-architecture
 #. type: Lintian tag description
-#: checks/binaries.desc:288
+#: checks/binaries.desc:283
 #, no-wrap
 msgid ""
 "This ELF binary appears to have been built for an architecture other\n"
@@ -714,7 +704,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-binary
 #. type: Lintian tag description
-#: checks/binaries.desc:308
+#: checks/binaries.desc:303
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the given binary.  Lintian has a\n"
@@ -740,7 +730,7 @@ msgstr ""
 #
 #. Tag: embedded-library
 #. type: Lintian tag description
-#: checks/binaries.desc:321
+#: checks/binaries.desc:316
 #, no-wrap
 msgid ""
 "The given ELF object appears to have been statically linked to\n"
@@ -758,7 +748,7 @@ msgstr ""
 #
 #. Tag: debug-symbols-directly-in-usr-lib-debug
 #. type: Lintian tag description
-#: checks/binaries.desc:333
+#: checks/binaries.desc:328
 #, no-wrap
 msgid ""
 "The given debugging symbols-only object is installed directly in\n"
@@ -776,7 +766,7 @@ msgstr ""
 #
 #. Tag: ocaml-custom-executable
 #. type: Lintian tag description
-#: checks/binaries.desc:341
+#: checks/binaries.desc:336
 #, no-wrap
 msgid ""
 "This package provides an OCaml bytecode executable linked with a\n"
@@ -790,7 +780,7 @@ msgstr ""
 #
 #. Tag: hardening-no-stackprotector
 #. type: Lintian tag description
-#: checks/binaries.desc:352
+#: checks/binaries.desc:347
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the stack protector\n"
@@ -808,7 +798,7 @@ msgstr ""
 #
 #. Tag: hardening-no-fortify-functions
 #. type: Lintian tag description
-#: checks/binaries.desc:366
+#: checks/binaries.desc:361
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the use of fortified\n"
@@ -827,7 +817,7 @@ msgstr ""
 #
 #. Tag: hardening-no-relro
 #. type: Lintian tag description
-#: checks/binaries.desc:376
+#: checks/binaries.desc:371
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the \"read-only\n"
@@ -842,7 +832,7 @@ msgstr ""
 #
 #. Tag: debug-file-with-no-debug-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:386
+#: checks/binaries.desc:381
 #, no-wrap
 msgid ""
 "The binary is installed as a detached \"debug symbols\" ELF file,\n"
@@ -857,7 +847,7 @@ msgstr ""
 #
 #. Tag: binary-file-built-without-LFS-support
 #. type: Lintian tag description
-#: checks/binaries.desc:408
+#: checks/binaries.desc:403
 #, no-wrap
 msgid ""
 "The listed ELF binary appears to be (partially) built without\n"
@@ -5649,11 +5639,18 @@ msgstr ""
 #
 #. Tag: description-contains-invalid-control-statement
 #. type: Lintian tag description
-#: checks/description.desc:65
+#: checks/description.desc:72
 #, no-wrap
 msgid ""
-"The description contains a line starting with a dot (.). This is\n"
-"not allowed."
+"The description contains an invalid control statement.\n"
+"\n"
+"A control statement is a line starting with a dot (.).  The only\n"
+"control statement is defined by the policy is a single dot denoting\n"
+"an empty line.\n"
+"\n"
+"The \"empty-line\" control statement does not permit any characters\n"
+"following it on the same line.  Therefore, the line must consist\n"
+"entirely of a space followed by a dot."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -5661,7 +5658,7 @@ msgstr ""
 #
 #. Tag: description-too-long
 #. type: Lintian tag description
-#: checks/description.desc:71
+#: checks/description.desc:78
 #, no-wrap
 msgid "The first line of the \"Description:\" must not exceed 80 characters."
 msgstr ""
@@ -5671,7 +5668,7 @@ msgstr ""
 #
 #. Tag: description-starts-with-package-name
 #. type: Lintian tag description
-#: checks/description.desc:79
+#: checks/description.desc:86
 #, no-wrap
 msgid ""
 "The first line of the \"Description:\" should not start with the\n"
@@ -5684,7 +5681,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-starts-with-article
 #. type: Lintian tag description
-#: checks/description.desc:90
+#: checks/description.desc:97
 #, no-wrap
 msgid ""
 "The first line of the \"Description:\" should omit any initial indefinite\n"
@@ -5701,7 +5698,7 @@ msgstr ""
 #
 #. Tag: description-contains-tabs
 #. type: Lintian tag description
-#: checks/description.desc:96
+#: checks/description.desc:103
 #, no-wrap
 msgid "The package \"Description:\" must not contain tab characters."
 msgstr ""
@@ -5711,7 +5708,7 @@ msgstr ""
 #
 #. Tag: description-starts-with-leading-spaces
 #. type: Lintian tag description
-#: checks/description.desc:103
+#: checks/description.desc:110
 #, no-wrap
 msgid ""
 "The package \"Description:\" starts with leading spaces. Usually,\n"
@@ -5724,7 +5721,7 @@ msgstr ""
 #
 #. Tag: possible-unindented-list-in-extended-description
 #. type: Lintian tag description
-#: checks/description.desc:112
+#: checks/description.desc:119
 #, no-wrap
 msgid ""
 "The package \"Description:\" contains an unindented line which\n"
@@ -5738,7 +5735,7 @@ msgstr ""
 #
 #. Tag: description-is-debmake-template
 #. type: Lintian tag description
-#: checks/description.desc:118
+#: checks/description.desc:125
 #, no-wrap
 msgid ""
 "The synopsis or the extended description just says \"Missing\",\n"
@@ -5750,7 +5747,7 @@ msgstr ""
 #
 #. Tag: description-is-dh_make-template
 #. type: Lintian tag description
-#: checks/description.desc:124
+#: checks/description.desc:131
 #, no-wrap
 msgid ""
 "The synopsis or the extended description has not been changed\n"
@@ -5762,7 +5759,7 @@ msgstr ""
 #
 #. Tag: description-contains-dh-make-perl-template
 #. type: Lintian tag description
-#: checks/description.desc:132
+#: checks/description.desc:139
 #, no-wrap
 msgid ""
 "The extended description contains the statement that it was\n"
@@ -5776,7 +5773,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-might-not-be-phrased-properly
 #. type: Lintian tag description
-#: checks/description.desc:144
+#: checks/description.desc:151
 #, no-wrap
 msgid ""
 "The synopsis (first line in the package \"Description:\" field, the\n"
@@ -5794,7 +5791,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-is-duplicated
 #. type: Lintian tag description
-#: checks/description.desc:152
+#: checks/description.desc:159
 #, no-wrap
 msgid ""
 "The first line of the extended Description: should not repeat the\n"
@@ -5807,7 +5804,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-description-synopsis
 #. type: Lintian tag description
-#: checks/description.desc:161
+#: checks/description.desc:168
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the package synopsis.  Lintian\n"
@@ -5822,7 +5819,7 @@ msgstr ""
 #
 #. Tag: capitalization-error-in-description-synopsis
 #. type: Lintian tag description
-#: checks/description.desc:169
+#: checks/description.desc:176
 #, no-wrap
 msgid ""
 "Lintian found a possible capitalization error in the package\n"
@@ -5836,7 +5833,7 @@ msgstr ""
 #
 #. Tag: extended-description-line-too-long
 #. type: Lintian tag description
-#: checks/description.desc:178
+#: checks/description.desc:185
 #, no-wrap
 msgid ""
 "One or more lines in the extended part of the \"Description:\" field\n"
@@ -5850,7 +5847,7 @@ msgstr ""
 #
 #. Tag: description-contains-homepage
 #. type: Lintian tag description
-#: checks/description.desc:187
+#: checks/description.desc:194
 #, no-wrap
 msgid ""
 "The extended description contains a \"Homepage:\" pseudo-header\n"
@@ -5865,7 +5862,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-description
 #. type: Lintian tag description
-#: checks/description.desc:196
+#: checks/description.desc:203
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the package description.  Lintian\n"
@@ -5880,7 +5877,7 @@ msgstr ""
 #
 #. Tag: capitalization-error-in-description
 #. type: Lintian tag description
-#: checks/description.desc:209
+#: checks/description.desc:216
 #, no-wrap
 msgid ""
 "Lintian found a possible capitalization error in the package\n"
@@ -5899,7 +5896,7 @@ msgstr ""
 #
 #. Tag: description-contains-duplicated-word
 #. type: Lintian tag description
-#: checks/description.desc:215
+#: checks/description.desc:222
 #, no-wrap
 msgid ""
 "The description contains a duplicated word.  Usually this is a\n"
@@ -5911,7 +5908,7 @@ msgstr ""
 #
 #. Tag: using-first-person-in-description
 #. type: Lintian tag description
-#: checks/description.desc:228
+#: checks/description.desc:235
 #, no-wrap
 msgid ""
 "You should avoid the use of first person (\"I will do this...\" or\n"
@@ -5930,7 +5927,7 @@ msgstr ""
 #
 #. Tag: description-possibly-contains-homepage
 #. type: Lintian tag description
-#: checks/description.desc:235
+#: checks/description.desc:242
 #, no-wrap
 msgid ""
 "This package has no Homepage field but has a URL in the description\n"
@@ -10275,7 +10272,7 @@ msgstr ""
 #
 #. Tag: incorrect-locale-code
 #. type: Lintian tag description
-#: checks/files.desc:1502
+#: checks/files.desc:1505
 #, no-wrap
 msgid ""
 "The package appears to ship locales for a language but uses an\n"
@@ -10284,6 +10281,9 @@ msgid ""
 "finding the locale.  The language codes used in the locale directories\n"
 "are those from the ISO 639-1 and ISO 639-2 standards, not those\n"
 "usually used as TLDs (which are from the ISO 3166 standard).\n"
+"\n"
+"When both standards define a language code for a given language, the\n"
+"ISO 639-1 code should be used (i.e. the two lettered code).\n"
 "\n"
 "Lintian only knows about some commonly-mistaken set of incorrect\n"
 "locale codes."
@@ -10294,7 +10294,7 @@ msgstr ""
 #
 #. Tag: unknown-locale-code
 #. type: Lintian tag description
-#: checks/files.desc:1516
+#: checks/files.desc:1519
 #, no-wrap
 msgid ""
 "The package appears to ship locales for a language but uses an\n"
@@ -10313,7 +10313,7 @@ msgstr ""
 #
 #. Tag: file-should-not-be-compressed
 #. type: Lintian tag description
-#: checks/files.desc:1526
+#: checks/files.desc:1529
 #, no-wrap
 msgid ""
 "The following file should not be compressed.\n"
@@ -10329,7 +10329,7 @@ msgstr ""
 #
 #. Tag: useless-autogenerated-doxygen-file
 #. type: Lintian tag description
-#: checks/files.desc:1539
+#: checks/files.desc:1542
 #, no-wrap
 msgid ""
 "The package appears to ship files\n"
@@ -10348,7 +10348,7 @@ msgstr ""
 #
 #. Tag: package-contains-no-arch-dependent-files
 #. type: Lintian tag description
-#: checks/files.desc:1550
+#: checks/files.desc:1553
 #, no-wrap
 msgid ""
 "The package is not marked architecture all, but all the files it\n"
@@ -10363,7 +10363,7 @@ msgstr ""
 #
 #. Tag: vim-addon-within-vim-runtime-path
 #. type: Lintian tag description
-#: checks/files.desc:1558
+#: checks/files.desc:1561
 #, no-wrap
 msgid ""
 "Vim addons should not be installed directly under a directory contained\n"
@@ -10376,7 +10376,7 @@ msgstr ""
 #
 #. Tag: perl-module-uses-perl4-libs-without-dep
 #. type: Lintian tag description
-#: checks/files.desc:1567
+#: checks/files.desc:1570
 #, no-wrap
 msgid ""
 "This package includes perl modules using obsoleted perl 4-era\n"
@@ -10391,7 +10391,7 @@ msgstr ""
 #
 #. Tag: gzip-file-is-not-multi-arch-same-safe
 #. type: Lintian tag description
-#: checks/files.desc:1576
+#: checks/files.desc:1579
 #, no-wrap
 msgid ""
 "The gzip file contains a timestamp that will differ between\n"
@@ -10406,7 +10406,7 @@ msgstr ""
 #
 #. Tag: pkg-config-multi-arch-wrong-dir
 #. type: Lintian tag description
-#: checks/files.desc:1592
+#: checks/files.desc:1595
 #, no-wrap
 msgid ""
 "The arch all pkg-config file contains a reference to a multi-arch path.\n"
@@ -10428,7 +10428,7 @@ msgstr ""
 #
 #. Tag: pkg-config-bad-directive
 #. type: Lintian tag description
-#: checks/files.desc:1600
+#: checks/files.desc:1603
 #, no-wrap
 msgid ""
 "The pkg-config file contains a wrong directive.\n"
@@ -10442,7 +10442,7 @@ msgstr ""
 #
 #. Tag: dir-or-file-in-home
 #. type: Lintian tag description
-#: checks/files.desc:1606
+#: checks/files.desc:1609
 #, no-wrap
 msgid ""
 "Debian packages should not install into <tt>/home</tt>, because it\n"
@@ -10454,7 +10454,7 @@ msgstr ""
 #
 #. Tag: dir-or-file-in-build-tree
 #. type: Lintian tag description
-#: checks/files.desc:1611
+#: checks/files.desc:1614
 #, no-wrap
 msgid "Your package install file in our build tree."
 msgstr ""
@@ -10464,7 +10464,7 @@ msgstr ""
 #
 #. Tag: file-name-is-not-valid-UTF-8
 #. type: Lintian tag description
-#: checks/files.desc:1620
+#: checks/files.desc:1623
 #, no-wrap
 msgid ""
 "The file name does not appear to be valid UTF-8.\n"
@@ -10478,7 +10478,7 @@ msgstr ""
 #
 #. Tag: file-name-in-PATH-is-not-ASCII
 #. type: Lintian tag description
-#: checks/files.desc:1629
+#: checks/files.desc:1632
 #, no-wrap
 msgid ""
 "The given file is in PATH but consists of non-ASCII characters.\n"
@@ -10492,7 +10492,7 @@ msgstr ""
 #
 #. Tag: incorrect-naming-of-pkcs11-module
 #. type: Lintian tag description
-#: checks/files.desc:1641
+#: checks/files.desc:1644
 #, no-wrap
 msgid ""
 "This package ships a PKCS#11 module configuration file under\n"
@@ -10510,7 +10510,7 @@ msgstr ""
 #
 #. Tag: package-contains-timestamped-gzip
 #. type: Lintian tag description
-#: checks/files.desc:1651
+#: checks/files.desc:1654
 #, no-wrap
 msgid ""
 "The package contains a gzip-compressed file that has timestamps.\n"
@@ -10525,7 +10525,7 @@ msgstr ""
 #
 #. Tag: missing-intermediate-directory
 #. type: Lintian tag description
-#: checks/files.desc:1658
+#: checks/files.desc:1661
 #, no-wrap
 msgid ""
 "The package contains files in the listed directory, but does\n"
@@ -14981,9 +14981,22 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
+#. type: Lintian tag description
+#: checks/scripts.desc:378
+#, no-wrap
+msgid ""
+"The maintainer script seems to call dpkg-maintscript-helper\n"
+"symlink_to_dir with a trailling slash for pathname. This render package\n"
+"uninstallable."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: maintainer-script-removes-device-files
 #. type: Lintian tag description
-#: checks/scripts.desc:377
+#: checks/scripts.desc:385
 #, no-wrap
 msgid ""
 "Maintainer scripts must not remove device files.  This is left to\n"
@@ -14995,7 +15008,7 @@ msgstr ""
 #
 #. Tag: read-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:391
+#: checks/scripts.desc:399
 #, no-wrap
 msgid ""
 "This maintainer script appears to use read to get information from\n"
@@ -15014,7 +15027,7 @@ msgstr ""
 #
 #. Tag: possible-bashism-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:409
+#: checks/scripts.desc:417
 #, no-wrap
 msgid ""
 "This script is marked as running under <tt>/bin/sh</tt>, but it seems\n"
@@ -15038,7 +15051,7 @@ msgstr ""
 #
 #. Tag: suidregister-used-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:415
+#: checks/scripts.desc:423
 #, no-wrap
 msgid ""
 "This script calls suidregister, a long-obsolete program that has\n"
@@ -15050,7 +15063,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-needs-depends-on-update-inetd
 #. type: Lintian tag description
-#: checks/scripts.desc:426
+#: checks/scripts.desc:434
 #, no-wrap
 msgid ""
 "This script calls update-inetd, but the package does not depend or\n"
@@ -15067,7 +15080,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-needs-depends-on-adduser
 #. type: Lintian tag description
-#: checks/scripts.desc:432
+#: checks/scripts.desc:440
 #, no-wrap
 msgid ""
 "This script calls adduser, but the package does not depend or\n"
@@ -15079,7 +15092,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-needs-depends-on-gconf2
 #. type: Lintian tag description
-#: checks/scripts.desc:440
+#: checks/scripts.desc:448
 #, no-wrap
 msgid ""
 "This script calls gconf-schemas, which comes from the gconf2 package,\n"
@@ -15093,7 +15106,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-needs-depends-on-ucf
 #. type: Lintian tag description
-#: checks/scripts.desc:446
+#: checks/scripts.desc:454
 #, no-wrap
 msgid ""
 "This script calls ucf, but the package does not depend or pre-depend\n"
@@ -15105,7 +15118,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-needs-depends-on-xml-core
 #. type: Lintian tag description
-#: checks/scripts.desc:455
+#: checks/scripts.desc:463
 #, no-wrap
 msgid ""
 "This script calls update-xmlcatalog, which comes from the xml-core\n"
@@ -15121,7 +15134,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-update-alternatives-remove
 #. type: Lintian tag description
-#: checks/scripts.desc:472
+#: checks/scripts.desc:480
 #, no-wrap
 msgid ""
 "<tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is\n"
@@ -15143,7 +15156,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-update-alternatives-set
 #. type: Lintian tag description
-#: checks/scripts.desc:484
+#: checks/scripts.desc:492
 #, no-wrap
 msgid ""
 "The maintainer script calls <tt>update-alternatives --set\n"
@@ -15160,7 +15173,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-deprecated-chown-usage
 #. type: Lintian tag description
-#: checks/scripts.desc:493
+#: checks/scripts.desc:501
 #, no-wrap
 msgid ""
 "<tt>chown user.group</tt> is called in one of the maintainer\n"
@@ -15175,7 +15188,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-hide-init-failure
 #. type: Lintian tag description
-#: checks/scripts.desc:505
+#: checks/scripts.desc:513
 #, no-wrap
 msgid ""
 "This script calls invoke-rc.d to run an init script but then, if the\n"
@@ -15193,7 +15206,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-calls-init-script-directly
 #. type: Lintian tag description
-#: checks/scripts.desc:515
+#: checks/scripts.desc:523
 #, no-wrap
 msgid ""
 "This script apparently runs an init script directly rather than\n"
@@ -15208,7 +15221,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-gconftool
 #. type: Lintian tag description
-#: checks/scripts.desc:521
+#: checks/scripts.desc:529
 #, no-wrap
 msgid ""
 "This script apparently runs gconftool or gconftool-2.  It should\n"
@@ -15220,7 +15233,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-fc-cache
 #. type: Lintian tag description
-#: checks/scripts.desc:528
+#: checks/scripts.desc:536
 #, no-wrap
 msgid ""
 "This script apparently runs fc-cache.  Updating of the fontconfig\n"
@@ -15233,7 +15246,7 @@ msgstr ""
 #
 #. Tag: install-info-used-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:539
+#: checks/scripts.desc:547
 #, no-wrap
 msgid ""
 "This script apparently runs <tt>install-info</tt>.  Updating the\n"
@@ -15250,7 +15263,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-dpkg-status-directly
 #. type: Lintian tag description
-#: checks/scripts.desc:553
+#: checks/scripts.desc:561
 #, no-wrap
 msgid ""
 "The file /var/lib/dpkg/status is internal to dpkg, may disappear or\n"
@@ -15269,7 +15282,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-modify-netbase-managed-file
 #. type: Lintian tag description
-#: checks/scripts.desc:562
+#: checks/scripts.desc:570
 #, no-wrap
 msgid ""
 "The maintainer script modifies at least one of the files\n"
@@ -15283,7 +15296,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-modifies-inetd-conf
 #. type: Lintian tag description
-#: checks/scripts.desc:570
+#: checks/scripts.desc:578
 #, no-wrap
 msgid ""
 "The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.\n"
@@ -15296,7 +15309,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-modify-ld-so-conf
 #. type: Lintian tag description
-#: checks/scripts.desc:587
+#: checks/scripts.desc:595
 #, no-wrap
 msgid ""
 "This package appears to modify <tt>/etc/ld.so.conf</tt> and does not\n"
@@ -15319,7 +15332,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-install-sgmlcatalog
 #. type: Lintian tag description
-#: checks/scripts.desc:596
+#: checks/scripts.desc:604
 #, no-wrap
 msgid ""
 "The maintainer script apparently runs install-sgmlcatalog.\n"
@@ -15334,7 +15347,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-service
 #. type: Lintian tag description
-#: checks/scripts.desc:604
+#: checks/scripts.desc:612
 #, no-wrap
 msgid ""
 "The maintainer script apparently runs the service command.\n"
@@ -15347,7 +15360,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-adduser-system-without-home
 #. type: Lintian tag description
-#: checks/scripts.desc:617
+#: checks/scripts.desc:625
 #, no-wrap
 msgid ""
 " The maintainer script apparently runs 'adduser --system'\n"
@@ -15365,7 +15378,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-empty
 #. type: Lintian tag description
-#: checks/scripts.desc:630
+#: checks/scripts.desc:638
 #, no-wrap
 msgid ""
 "The maintainer script doesn't seem to contain any code other than\n"
@@ -15384,7 +15397,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-ignores-errors
 #. type: Lintian tag description
-#: checks/scripts.desc:638
+#: checks/scripts.desc:646
 #, no-wrap
 msgid ""
 "The maintainer script doesn't seem to set the <tt>-e</tt> flag which\n"
@@ -15397,7 +15410,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-without-set-e
 #. type: Lintian tag description
-#: checks/scripts.desc:649
+#: checks/scripts.desc:657
 #, no-wrap
 msgid ""
 "The maintainer script passes <tt>-e</tt> to the shell on the\n"
@@ -15413,7 +15426,7 @@ msgstr ""
 #
 #. Tag: command-with-path-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:664
+#: checks/scripts.desc:672
 #, no-wrap
 msgid ""
 "The indicated program run in a maintainer script has a prepended\n"
@@ -15434,7 +15447,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-ancient-dpkg-epoch-check
 #. type: Lintian tag description
-#: checks/scripts.desc:671
+#: checks/scripts.desc:679
 #, no-wrap
 msgid ""
 "The package calls dpkg --assert-working-epoch in a maintainer\n"
@@ -15447,7 +15460,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
 #. type: Lintian tag description
-#: checks/scripts.desc:678
+#: checks/scripts.desc:686
 #, no-wrap
 msgid ""
 "The package calls dpkg --assert-multi-conrep in a maintainer\n"
@@ -15460,7 +15473,7 @@ msgstr ""
 #
 #. Tag: package-uses-local-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:686
+#: checks/scripts.desc:694
 #, no-wrap
 msgid ""
 "The maintainer script calls dpkg-divert with <tt>--local</tt> or\n"
@@ -15473,7 +15486,7 @@ msgstr ""
 #
 #. Tag: diversion-for-unknown-file
 #. type: Lintian tag description
-#: checks/scripts.desc:692
+#: checks/scripts.desc:700
 #, no-wrap
 msgid ""
 "The maintainer script adds a diversion for a file that is not\n"
@@ -15485,7 +15498,7 @@ msgstr ""
 #
 #. Tag: orphaned-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:698
+#: checks/scripts.desc:706
 #, no-wrap
 msgid ""
 "A diversion was added for the file, but not removed. This means\n"
@@ -15497,7 +15510,7 @@ msgstr ""
 #
 #. Tag: remove-of-unknown-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:706
+#: checks/scripts.desc:714
 #, no-wrap
 msgid ""
 "The maintainer script removes a diversion that it didn't add.  If\n"
@@ -15511,7 +15524,7 @@ msgstr ""
 #
 #. Tag: script-uses-perl4-libs-without-dep
 #. type: Lintian tag description
-#: checks/scripts.desc:715
+#: checks/scripts.desc:723
 #, no-wrap
 msgid ""
 "This package includes perl scripts using obsoleted perl 4-era\n"
@@ -15526,7 +15539,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-has-unexpanded-debhelper-token
 #. type: Lintian tag description
-#: checks/scripts.desc:724
+#: checks/scripts.desc:732
 #, no-wrap
 msgid ""
 "Lintian has detected the presence of a #DEBEHELPER# token in the\n"
@@ -16875,9 +16888,30 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: systemd-no-service-for-init-rcS-script
+#. type: Lintian tag description
+#: checks/systemd.desc:63
+#, no-wrap
+msgid ""
+"The rcS init.d script has no systemd equivalent.\n"
+"\n"
+"Systemd has a SysV init.d script compatibility mode. It provides access to\n"
+"each SysV init.d script as long as there is no native service file with "
+"the\n"
+"same name (e.g. <tt>/lib/systemd/system/rsyslog.service</tt> corresponds "
+"to\n"
+"<tt>/etc/init.d/rsyslog</tt>).\n"
+"\n"
+"Services in rcS.d are particularly problematic, because they often cause\n"
+"dependency loops, as they are ordered very early in the boot sequence."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: init.d-script-does-not-source-init-functions
 #. type: Lintian tag description
-#: checks/systemd.desc:61
+#: checks/systemd.desc:75
 #, no-wrap
 msgid ""
 "The <tt>/etc/init.d</tt> script does not source\n"
@@ -16895,7 +16929,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-calls-systemctl
 #. type: Lintian tag description
-#: checks/systemd.desc:74
+#: checks/systemd.desc:88
 #, no-wrap
 msgid ""
 "The maintainer script calls systemctl directly. Actions such as enabling\n"
@@ -16915,7 +16949,7 @@ msgstr ""
 #
 #. Tag: init-script-is-not-a-file
 #. type: Lintian tag description
-#: checks/systemd.desc:80
+#: checks/systemd.desc:94
 #, no-wrap
 msgid ""
 "The package contains an init script that is not a regular file or\n"
@@ -16927,7 +16961,7 @@ msgstr ""
 #
 #. Tag: service-file-is-not-a-file
 #. type: Lintian tag description
-#: checks/systemd.desc:86
+#: checks/systemd.desc:100
 #, no-wrap
 msgid ""
 "The package contains a service file that is not a regular file or\n"
@@ -16939,7 +16973,7 @@ msgstr ""
 #
 #. Tag: service-key-has-whitespace
 #. type: Lintian tag description
-#: checks/systemd.desc:96
+#: checks/systemd.desc:110
 #, no-wrap
 msgid ""
 "The systemd service file contains space in the key definitions\n"
