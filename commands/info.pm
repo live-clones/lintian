@@ -35,32 +35,31 @@ use Lintian::Profile;
 sub compat();
 
 sub main {
+    my ($annotate, $tags, $help, $prof);
+    my (%already_displayed, $profile);
+    my %opthash = (
+        'annotate|a' => \$annotate,
+        'tags|t' => \$tags,
+        'help|h' => \$help,
+        'profile=s' => \$prof,
+    );
 
-my ($annotate, $tags, $help, $prof);
-my (%already_displayed, $profile);
-my %opthash = (
-    'annotate|a' => \$annotate,
-    'tags|t' => \$tags,
-    'help|h' => \$help,
-    'profile=s' => \$prof,
-);
+    if (compat) {
+        my $error = sub {
+            die("The --$_[0] must be the first option if given\n");
+        };
+        $opthash{'include-dir=s'} = $error;
+        $opthash{'user-dirs!'} = $error;
+    }
 
-if (compat) {
-    my $error = sub {
-        die("The --$_[0] must be the first option if given\n");
-    };
-    $opthash{'include-dir=s'} = $error;
-    $opthash{'user-dirs!'} = $error;
-}
+    Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+    Getopt::Long::GetOptions(%opthash) or die("error parsing options\n");
 
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-Getopt::Long::GetOptions(%opthash) or die("error parsing options\n");
-
-# help
-if ($help) {
-    my $me = 'dplint info';
-    $me = 'lintian-info' if compat;
-    print <<"EOT";
+    # help
+    if ($help) {
+        my $me = 'dplint info';
+        $me = 'lintian-info' if compat;
+        print <<"EOT";
 Usage: $me [log-file...] ...
        $me --annotate [overrides ...]
        $me --tags tag ...
@@ -70,84 +69,86 @@ Options:
     -t, --tags        display tag descriptions
     --profile X       use vendor profile X to determine severities
 EOT
-    if (compat) {
-        # if we are called as lintian-info, we also accept
-        # --include-dir and --[no-]user-dirs
-        print <<'EOT';
+        if (compat) {
+            # if we are called as lintian-info, we also accept
+            # --include-dir and --[no-]user-dirs
+            print <<'EOT';
     --include-dir DIR check for Lintian data in DIR
     --[no-]user-dirs  whether to include profiles from user directories
 
 Note that --include-dir and --[no-]user-dirs must appear as the first
 options if used.  Otherwise, they will trigger a deprecation warning.
 EOT
-    }
-
-    exit 0;
-}
-
-$profile = Lintian::Profile->new($prof, [dplint::include_dirs()],
-    { language => determine_locale() });
-
-Lintian::Data->set_vendor($profile);
-
-# If tag mode was specified, read the arguments as tags and display the
-# descriptions for each one.  (We don't currently display the severity,
-# although that would be nice.)
-if ($tags) {
-    my $unknown = 0;
-    for my $tag (@ARGV) {
-        my $info = $profile->get_tag($tag, 1);
-        if ($info) {
-            print $info->code . ": $tag\n";
-            print "N:\n";
-            print $info->description('text', 'N:   ');
-        } else {
-            print "N: $tag\n";
-            print "N:\n";
-            print "N:   Unknown tag.\n";
-            $unknown = 1;
         }
-        print "N:\n";
+
+        exit 0;
     }
-    exit($unknown ? 1 : 0);
-}
 
-my $type_re = qr/(?:binary|changes|source|udeb)/o;
+    $profile = Lintian::Profile->new(
+        $prof,
+        [dplint::include_dirs()],
+        { language => determine_locale() });
 
-# Otherwise, read input files or STDIN, watch for tags, and add descriptions
-# whenever we see one, can, and haven't already explained that tag.  Strip off
-# color and HTML sequences.
-while (<>) {
-    print;
-    chomp;
-    next if /^\s*$/;
-    s/\e[\[\d;]*m//g;
-    s/<span style=\"[^\"]+\">//g;
-    s,</span>,,g;
+    Lintian::Data->set_vendor($profile);
 
-    my $tag;
-    if ($annotate) {
-        my $tagdata;
-        next unless m/^(?:                         # start optional part
+    # If tag mode was specified, read the arguments as tags and display the
+    # descriptions for each one.  (We don't currently display the severity,
+    # although that would be nice.)
+    if ($tags) {
+        my $unknown = 0;
+        for my $tag (@ARGV) {
+            my $info = $profile->get_tag($tag, 1);
+            if ($info) {
+                print $info->code . ": $tag\n";
+                print "N:\n";
+                print $info->description('text', 'N:   ');
+            } else {
+                print "N: $tag\n";
+                print "N:\n";
+                print "N:   Unknown tag.\n";
+                $unknown = 1;
+            }
+            print "N:\n";
+        }
+        exit($unknown ? 1 : 0);
+    }
+
+    my $type_re = qr/(?:binary|changes|source|udeb)/o;
+
+    # Otherwise, read input files or STDIN, watch for tags, and add
+    # descriptions whenever we see one, can, and haven't already
+    # explained that tag.  Strip off color and HTML sequences.
+    while (<>) {
+        print;
+        chomp;
+        next if /^\s*$/;
+        s/\e[\[\d;]*m//g;
+        s/<span style=\"[^\"]+\">//g;
+        s,</span>,,g;
+
+        my $tag;
+        if ($annotate) {
+            my $tagdata;
+            next unless m/^(?:                     # start optional part
                     (?:\S+)?                       # Optionally starts with package name
                     (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
                     (?: \s*+ $type_re)?            # optionally followed by the type
                   :\s++)?                          # end optional part
                 ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/ox; # <tag-name> [extra] -> $1
-        $tagdata = $1;
-        ($tag, undef) = split m/ /o, $tagdata, 2;
-    } else {
-        my @parts = split_tag($_);
-        next unless @parts;
-        $tag = $parts[5];
+            $tagdata = $1;
+            ($tag, undef) = split m/ /o, $tagdata, 2;
+        } else {
+            my @parts = split_tag($_);
+            next unless @parts;
+            $tag = $parts[5];
+        }
+        next if $already_displayed{$tag}++;
+        my $info = $profile->get_tag($tag, 1);
+        next unless $info;
+        print "N:\n";
+        print $info->description('text', 'N:   ');
+        print "N:\n";
     }
-    next if $already_displayed{$tag}++;
-    my $info = $profile->get_tag($tag, 1);
-    next unless $info;
-    print "N:\n";
-    print $info->description('text', 'N:   ');
-    print "N:\n";
-}
     exit(0);
 }
 
