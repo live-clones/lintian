@@ -786,27 +786,19 @@ $SIG{'QUIT'} = \&interrupted;
 $LAB = Lintian::Lab->new($opt{'LINTIAN_LAB'});
 
 #######################################
-# Process -S option
-if ($action eq 'setup-lab') {
+# Process -S / -R option
+if ($action eq 'setup-lab' or $action eq 'remove-lab') {
     if ($#ARGV+1 > 0) {
         warning('ignoring additional command line arguments');
     }
 
-    $LAB->create
-      or fail('There was an error while setting up the static lab.');
-
-    exit 0;
-
-#######################################
-    # Process -R option
-} elsif ($action eq 'remove-lab') {
-    if ($#ARGV+1 > 0) {
-        warning('ignoring additional command line arguments');
+    if ($action eq 'setup-lab') {
+        $LAB->create
+          or fail('There was an error while setting up the static lab.');
+    } else {
+        $LAB->remove
+          or fail('There was an error while removing the static lab.');
     }
-
-    $LAB->remove
-      or fail('There was an error while removing the static lab.');
-
     exit 0;
 
 #######################################
