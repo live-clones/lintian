@@ -586,44 +586,11 @@ my %cfghash = (
     'verbose'              => \&cfg_verbosity,
 );
 
-# Parse --include-dir and --[no-]user-dirs early
-Getopt::Long::config(
-    'bundling', 'no_getopt_compat',
-    'no_auto_abbrev', 'require_order',
-    'pass_through'
-);
-
-Getopt::Long::GetOptions(
-    'include-dir=s' => \@search_dirs,
-    'user-dirs!' => \$opt{'user-dirs'},
-) or die("error parsing options\n");
-
-# init commandline parser
-Getopt::Long::config('default', 'bundling', 'no_getopt_compat',
-    'no_auto_abbrev', 'permute');
-
-# process commandline options
-Getopt::Long::GetOptions(%opthash)
-  or die("error parsing options\n");
-
-# root permissions?
-# check if effective UID is 0
-if ($> == 0 and not $opt{'allow-root'}) {
-    print STDERR join(q{ },
-        'warning: the authors of lintian do not',
-        "recommend running it with root privileges!\n");
-}
-
-if ($opt{'ignore-lintian-env'}) {
-    delete $ENV{$_} for grep { m/^LINTIAN_/ } keys %ENV;
-}
+parse_options();
 
 # }}}
 
 # {{{ Read important environment
-
-# Enable user dirs by default
-$opt{'user-dirs'} //= 1;
 
 # Set LINTIAN_ROOT to the actual root.
 $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
@@ -645,17 +612,6 @@ $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
     }
 } @search_dirs;
 
-if ($opt{'user-dirs'} and not $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
-    # Pre-append the user part of the search dirs.
-
-    unshift @restricted_search_dirs, '/etc/lintian';
-
-    # In some (rare) cases, $ENV{HOME} will not be available.
-    # - Handle that gracefully by not emitting "Uninitialized ...".
-    unshift @restricted_search_dirs, "$ENV{HOME}/.lintian"
-      if defined $ENV{HOME};
-}
-
 # environment variables overwrite settings in conf file, so load them now
 # assuming they were not set by cmd-line options
 foreach my $var (@ENV_VARS) {
@@ -663,28 +619,6 @@ foreach my $var (@ENV_VARS) {
     # so we have to use "defined" here
     $opt{$var} = $ENV{$var} if $ENV{$var} && !defined $opt{$var};
 }
-
-# }}}
-
-# {{{ Sanity check command-line options (that are unaffected by the configuration file)
-
-# option --all and packages specified at the same time?
-if ($opt{'packages-from-file'} and $#ARGV+1 > 0) {
-    print STDERR join(q{ },
-        'warning: option --packages-from-file',
-        "cannot be mixed with package parameters!\n");
-    print STDERR "(will ignore --packages-from-file option)\n";
-    delete $opt{'packages-from-file'};
-}
-
-# check specified action
-$action = 'check' unless $action;
-
-die "Cannot use profile together with --ftp-master-rejects.\n"
-  if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
-# --ftp-master-rejects is implemented in a profile
-$opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
-  if $opt{'ftp-master-rejects'};
 
 # }}}
 
@@ -1814,6 +1748,73 @@ sub load_and_select_collections {
     # Never auto-remove anything if keep-lab is given...
     @{$auto_remove_list} = () if $opt{'keep-lab'};
     return $collmap;
+}
+
+sub parse_options {
+    # Parse --include-dir and --[no-]user-dirs early
+    Getopt::Long::config(
+        'bundling', 'no_getopt_compat',
+        'no_auto_abbrev', 'require_order',
+        'pass_through'
+    );
+
+    Getopt::Long::GetOptions(
+        'include-dir=s' => \@search_dirs,
+        'user-dirs!' => \$opt{'user-dirs'},
+    ) or die("error parsing options\n");
+
+    # init commandline parser
+    Getopt::Long::config('default', 'bundling',
+        'no_getopt_compat','no_auto_abbrev','permute');
+
+    # process commandline options
+    Getopt::Long::GetOptions(%opthash)
+      or die("error parsing options\n");
+
+    # root permissions?
+    # check if effective UID is 0
+    if ($> == 0 and not $opt{'allow-root'}) {
+        print STDERR join(q{ },
+            'warning: the authors of lintian do not',
+            "recommend running it with root privileges!\n");
+    }
+
+    if ($opt{'ignore-lintian-env'}) {
+        delete($ENV{$_}) for grep { m/^LINTIAN_/ } keys %ENV;
+    }
+
+    # option --all and packages specified at the same time?
+    if ($opt{'packages-from-file'} and $#ARGV+1 > 0) {
+        print STDERR join(q{ },
+            'warning: option --packages-from-file',
+            "cannot be mixed with package parameters!\n");
+        print STDERR "(will ignore --packages-from-file option)\n";
+        delete($opt{'packages-from-file'});
+    }
+
+    # check specified action
+    $action = 'check' unless $action;
+
+    die "Cannot use profile together with --ftp-master-rejects.\n"
+      if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
+    # --ftp-master-rejects is implemented in a profile
+    $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
+      if $opt{'ftp-master-rejects'};
+
+    # Enable user dirs by default
+    $opt{'user-dirs'} //= 1;
+
+    if ($opt{'user-dirs'} and not $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
+        # Pre-append the user part of the search dirs.
+
+        unshift(@restricted_search_dirs, '/etc/lintian');
+
+        # In some (rare) cases, $ENV{HOME} will not be available.
+        # - Handle that gracefully by not emitting "Uninitialized ...".
+        unshift(@restricted_search_dirs, "$ENV{HOME}/.lintian")
+          if defined($ENV{HOME});
+    }
+    return;
 }
 
 sub _update_profile {
