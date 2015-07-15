@@ -733,10 +733,7 @@ if ($opt{'no-conf'}) {
     parse_config_file($opt{'LINTIAN_CFG'});
 }
 
-# We do this manually since the above would set $ENV{TMPDIR} to ''
-# if it was undef and that causes tempdir to give us some "funny"
-# (read: broken) paths.
-$ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined $opt{'TMPDIR'};
+$ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
 
 configure_output();
 
