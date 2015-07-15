@@ -21,6 +21,11 @@ lintian (2.5.34) UNRELEASED; urgency=medium
     + [NT] Remove references to LINTIAN_ROOT as Lintian::Data
       no longer uses it.
 
+  * reporting/templates:
+    + [NT] Remove (uses of) the "invisible-anchor" css class as
+      invisible (display: none) elements cannot be used as
+      anchors.
+
  -- Niels Thykier <niels@thykier.net>  Thu, 09 Jul 2015 21:50:53 +0200
 
 lintian (2.5.33) unstable; urgency=medium
