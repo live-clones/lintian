@@ -901,49 +901,8 @@ v_msg("Setting up lab in $opt{'LINTIAN_LAB'} ...")
 
 # {{{ Compile list of files to process
 
-$pool = Lintian::ProcessablePool->new($LAB);
-# process package/file arguments
+$pool = setup_work_pool($LAB);
 
-while (my $arg = shift) {
-    # file?
-    if (-f $arg) {
-        if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
-            eval {$pool->add_file($arg);};
-            if ($@) {
-                print STDERR "Skipping $arg: $@";
-                $exit_code = 2;
-            }
-        } else {
-            fail(
-                join(q{ },
-                    "bad package file name $arg",
-                    '(neither .deb, .udeb, .changes or .dsc file)'));
-        }
-    } else {
-        # parameter is a package name--so look it up
-        handle_lab_query($arg);
-    }
-}
-
-if ($opt{'packages-from-file'}){
-    my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
-    while (my $file = <$fd>) {
-        chomp $file;
-        if ($file =~ m/^!query:\s*(\S(?:.*\S)?)/o) {
-            my $query = $1;
-            handle_lab_query($query);
-        } else {
-            $pool->add_file($file);
-        }
-    }
-    # close unless it is STDIN (else we will see a lot of warnings
-    # about STDIN being reopened as "output only")
-    close($fd) unless fileno($fd) == fileno(STDIN);
-}
-
-# }}}
-
-# {{{ Some silent exit
 if ($pool->empty()) {
     v_msg('No packages selected.');
     exit $exit_code;
@@ -1832,6 +1791,49 @@ sub configure_output {
         open($STATUS_FD, '>', '/dev/null');
     }
     return;
+}
+
+sub setup_work_pool {
+    my ($lab) = @_;
+    my $pool = Lintian::ProcessablePool->new($lab);
+
+    for my $arg (@ARGV) {
+        # file?
+        if (-f $arg) {
+            if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
+                eval {$pool->add_file($arg);};
+                if ($@) {
+                    print STDERR "Skipping $arg: $@";
+                    $exit_code = 2;
+                }
+            } else {
+                fail(
+                    join(q{ },
+                        "bad package file name $arg",
+                        '(neither .deb, .udeb, .changes or .dsc file)'));
+            }
+        } else {
+            # parameter is a package name--so look it up
+            handle_lab_query($arg);
+        }
+    }
+
+    if ($opt{'packages-from-file'}){
+        my $fd = open_file_or_fd($opt{'packages-from-file'}, '<');
+        while (my $file = <$fd>) {
+            chomp $file;
+            if ($file =~ m/^!query:\s*(\S(?:.*\S)?)/o) {
+                my $query = $1;
+                handle_lab_query($query);
+            } else {
+                $pool->add_file($file);
+            }
+        }
+        # close unless it is STDIN (else we will see a lot of warnings
+        # about STDIN being reopened as "output only")
+        close($fd) unless fileno($fd) == fileno(STDIN);
+    }
+    return $pool;
 }
 
 sub _update_profile {
