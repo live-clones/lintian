@@ -94,20 +94,10 @@ if (not defined($LINTIAN_VERSION)) {
 }
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 
-# Variables used to record commandline options
-# Commented out variables have "defined" checks somewhere to determine if
-# they were set via commandline or environment variables
-# binary and source pkgs
-my $debug = 0;
-my $ftpmaster_tags = 0;         #flag for -F|--ftp-master-rejects switch
-my $allow_root = 0;             #flag for --allow-root switch
-my $keep_lab = 0;               #flag for --keep-lab switch
-
-my $no_conf = 0;                #flag for --no-cfg
 my %conf_opt;                   #names of options set in the cfg file
-
 my %opt = (                     #hash of some flags from cmd or cfg
     # Init some cmd-line value defaults
+    'debug' => 0,
 );
 
 # The search path - affected by --include-dir X, --[no-]user-dirs
@@ -526,7 +516,7 @@ my %opthash = (
     'check-part|C=s' => \&record_check_part,
     'tags|T=s' => \&record_check_tags,
     'tags-from-file=s' => \&record_check_tags_from_file,
-    'ftp-master-rejects|F' => \$ftpmaster_tags,
+    'ftp-master-rejects|F' => \$opt{'ftp-master-rejects'},
     'dont-check-part|X=s' => \&record_dont_check_part,
     'unpack|u' => \&record_action,
     'remove|r' => \&record_action,
@@ -537,7 +527,7 @@ my %opthash = (
     'print-version' => \&banner,
 
     'verbose|v' => \$opt{'verbose'},
-    'debug|d+' => \$debug, # Count the -d flags
+    'debug|d+' => \$opt{'debug'}, # Count the -d flags
     'quiet|q' => \&record_quiet, # sets $opt{'verbose'} to -1
     'perf-debug' => \$opt{'perf-debug'},
     'perf-output=s' => \$opt{'perf-output'},
@@ -558,13 +548,13 @@ my %opthash = (
     'hide-overrides' => sub { $opt{'show-overrides'} = 0; },
     'color=s' => \$opt{'color'},
     'unpack-info|U=s' => \@unpack_info,
-    'allow-root' => \$allow_root,
+    'allow-root' => \$opt{'allow-root'},
     'fail-on-warnings' => \$opt{'fail-on-warnings'},
-    'keep-lab' => \$keep_lab,
+    'keep-lab' => \$opt{'keep-lab'},
 
     # ------------------ configuration options
     'cfg=s' => \$opt{'LINTIAN_CFG'},
-    'no-cfg' => \$no_conf,
+    'no-cfg' => \$opt{'no-cfg'},
     'lab=s' => \$opt{'LINTIAN_LAB'},
     'profile=s' => \$opt{'LINTIAN_PROFILE'},
 
@@ -618,7 +608,7 @@ Getopt::Long::GetOptions(%opthash)
 
 # root permissions?
 # check if effective UID is 0
-if ($> == 0 and not $allow_root) {
+if ($> == 0 and not $opt{'allow-root'}) {
     print STDERR join(q{ },
         'warning: the authors of lintian do not',
         "recommend running it with root privileges!\n");
@@ -691,9 +681,10 @@ if ($opt{'packages-from-file'} and $#ARGV+1 > 0) {
 $action = 'check' unless $action;
 
 die "Cannot use profile together with --ftp-master-rejects.\n"
-  if $opt{'LINTIAN_PROFILE'} and $ftpmaster_tags;
+  if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
 # --ftp-master-rejects is implemented in a profile
-$opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
+$opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
+  if $opt{'ftp-master-rejects'};
 
 # }}}
 
@@ -732,18 +723,13 @@ import Lintian::Util qw(fail parse_boolean strip);
 
 sanitize_environment();
 
-# search for configuration file if it was not set with --cfg
-# do not search the default locations if it was set.
-unless ($no_conf) {
+# Check if we should load a config file
+if ($opt{'no-conf'}) {
+    $opt{'LINTIAN_CFG'} = '';
+} else {
     if (not $opt{'LINTIAN_CFG'}) {
         $opt{'LINTIAN_CFG'} = _find_cfg_file() // '';
     }
-} else {
-    $opt{'LINTIAN_CFG'} = '';
-}
-
-# read configuration file
-if ($opt{'LINTIAN_CFG'}) {
     parse_config_file($opt{'LINTIAN_CFG'});
 }
 
@@ -844,7 +830,7 @@ if (!$LAB->is_temp) {
             '(perhaps you forgot to run lintian --setup-lab?)')
     ) unless $LAB->exists;
 } else {
-    $LAB->create({'keep-lab' => $keep_lab});
+    $LAB->create({'keep-lab' => $opt{'keep-lab'}});
 }
 
 $LAB->open;
@@ -970,10 +956,10 @@ if (@unpack_info) {
     }
     # Never auto-remove anything explicitly requested by the user
     @auto_remove = grep { !exists $extra_unpack{$_} } @auto_remove
-      if not $keep_lab;
+      if not $opt{'keep-lab'};
 }
-# Never auto-remove anything if $keep_lab is set...
-@auto_remove = () if $keep_lab;
+# Never auto-remove anything if keep-lab is given...
+@auto_remove = () if $opt{'keep-lab'};
 
 # }}}
 
@@ -1327,7 +1313,7 @@ sub process_group {
     debug_msg(1, "Checking all of group $gname done$tres");
     perf_log("$gname,total-group-check,${raw_res}");
 
-    if ($debug > 2) {
+    if ($opt{'debug'} > 2) {
         for my $lpkg ($group->get_processables) {
             my $id = $lpkg->identifier;
             my $usage = $memory_usage->($lpkg->info);
@@ -1688,10 +1674,10 @@ sub configure_output {
             "\"never\", \"always\", \"auto\" or \"html\"\n");
     }
 
-    if ($debug) {
+    if ($opt{'debug'}) {
         $opt{'verbose'} = 1;
-        $ENV{'LINTIAN_DEBUG'} = $debug;
-        if ($debug > 2) {
+        $ENV{'LINTIAN_DEBUG'} = $opt{'debug'};
+        if ($opt{'debug'} > 2) {
             eval {
                 require Devel::Size;
                 import Devel::Size qw(total_size);
@@ -1729,7 +1715,7 @@ sub configure_output {
     }
 
     $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
-    $Lintian::Output::GLOBAL->debug($debug);
+    $Lintian::Output::GLOBAL->debug($opt{'debug'});
     $Lintian::Output::GLOBAL->color($opt{'color'});
     $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 
