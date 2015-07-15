@@ -118,7 +118,7 @@ my @restricted_search_dirs;
 
 my $experimental_output_opts;
 
-my ($STATUS_FD, @CLOSE_AT_END);
+my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($pool, $action, $checks, $check_tags, $dont_check);
@@ -787,48 +787,7 @@ debug_msg(
     delimiter(),
 );
 
-my $PROFILE;
-our $TAGS = Lintian::Tags->new;
-$TAGS->show_experimental($opt{'display-experimental'});
-$TAGS->show_overrides($opt{'show-overrides'});
-$TAGS->sources(keys %display_source) if %display_source;
-
-{
-    # Temporarily restore LC_ALL before calling determine_locale
-    local $ENV{'LC_ALL'} = $ENV{'ORIG_LC_ALL'};
-    if (!exists($ENV{'ORIG_LC_ALL'})) {
-        delete($ENV{'LC_ALL'});
-    }
-    my $locale = determine_locale();
-    my %profile_opts = (
-        'restricted-search-dirs' => \@restricted_search_dirs,
-        'language' => $locale,
-    );
-    $PROFILE = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@search_dirs,
-        \%profile_opts);
-}
-# Ensure $opt{'LINTIAN_PROFILE'} is defined
-$opt{'LINTIAN_PROFILE'} = $PROFILE->name
-  unless defined $opt{'LINTIAN_PROFILE'};
-v_msg('Using profile ' . $PROFILE->name . '.');
-
-if ($dont_check || %suppress_tags || $checks || $check_tags) {
-    _update_profile($PROFILE, $dont_check, \%suppress_tags, $checks,
-        $check_tags);
-}
-
-$TAGS->profile($PROFILE);
-Lintian::Data->set_vendor($PROFILE);
-
-# Initialize display level settings.
-for my $level (@display_level) {
-    eval { $TAGS->display(@$level) };
-    if ($@) {
-        my $error = $@;
-        $error =~ s/ at .*//;
-        die $error, "\n";
-    }
-}
+$PROFILE = load_profile_and_configure_tags();
 
 # }}}
 
@@ -1834,6 +1793,51 @@ sub setup_work_pool {
         close($fd) unless fileno($fd) == fileno(STDIN);
     }
     return $pool;
+}
+
+sub load_profile_and_configure_tags {
+    my $profile;
+    {
+        # Temporarily restore LC_ALL before calling determine_locale
+        local $ENV{'LC_ALL'} = $ENV{'ORIG_LC_ALL'};
+        if (!exists($ENV{'ORIG_LC_ALL'})) {
+            delete($ENV{'LC_ALL'});
+        }
+        my $locale = determine_locale();
+        my %profile_opts = (
+            'restricted-search-dirs' => \@restricted_search_dirs,
+            'language' => $locale,
+        );
+        $profile = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@search_dirs,
+            \%profile_opts);
+    }
+    # Ensure $opt{'LINTIAN_PROFILE'} is defined
+    $opt{'LINTIAN_PROFILE'} = $profile->name
+      unless defined($opt{'LINTIAN_PROFILE'});
+    v_msg('Using profile ' . $profile->name . '.');
+
+    if ($dont_check || %suppress_tags || $checks || $check_tags) {
+        _update_profile($profile, $dont_check, \%suppress_tags, $checks,
+            $check_tags);
+    }
+    Lintian::Data->set_vendor($profile);
+
+    $TAGS = Lintian::Tags->new;
+    $TAGS->show_experimental($opt{'display-experimental'});
+    $TAGS->show_overrides($opt{'show-overrides'});
+    $TAGS->sources(keys(%display_source)) if %display_source;
+    $TAGS->profile($profile);
+
+    # Initialize display level settings.
+    for my $level (@display_level) {
+        eval { $TAGS->display(@{$level}) };
+        if ($@) {
+            my $error = $@;
+            $error =~ s/ at .*//;
+            die $error, "\n";
+        }
+    }
+    return $profile;
 }
 
 sub _update_profile {
