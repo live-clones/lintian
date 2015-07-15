@@ -118,7 +118,7 @@ my @restricted_search_dirs;
 
 my $experimental_output_opts;
 
-my $STATUS_FD;
+my ($STATUS_FD, @CLOSE_AT_END);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($pool, $action, $checks, $check_tags, $dont_check);
@@ -732,28 +732,6 @@ import Lintian::Util qw(fail parse_boolean strip);
 
 sanitize_environment();
 
-if (defined $experimental_output_opts) {
-    my %opts = map { split(/=/) } split(/,/, $experimental_output_opts);
-    foreach (keys %opts) {
-        if ($_ eq 'format') {
-            if ($opts{$_} eq 'colons') {
-                require Lintian::Output::ColonSeparated;
-                $Lintian::Output::GLOBAL= Lintian::Output::ColonSeparated->new;
-            } elsif ($opts{$_} eq 'letterqualifier') {
-                require Lintian::Output::LetterQualifier;
-                $Lintian::Output::GLOBAL
-                  = Lintian::Output::LetterQualifier->new;
-            } elsif ($opts{$_} eq 'xml') {
-                require Lintian::Output::XML;
-                $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
-            } elsif ($opts{$_} eq 'fullewi') {
-                require Lintian::Output::FullEWI;
-                $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
-            }
-        }
-    }
-}
-
 # search for configuration file if it was not set with --cfg
 # do not search the default locations if it was set.
 unless ($no_conf) {
@@ -769,102 +747,12 @@ if ($opt{'LINTIAN_CFG'}) {
     parse_config_file($opt{'LINTIAN_CFG'});
 }
 
-# check permitted values for --color / color
-#  - We set the default to 'auto' here; because we cannot do
-#    it before the config check.
-$opt{'color'} = 'auto' unless defined $opt{'color'};
-if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
-    die join(q{ },
-        'The color value must be one of',
-        "\"never\", \"always\", \"auto\" or \"html\"\n");
-}
-
 # We do this manually since the above would set $ENV{TMPDIR} to ''
 # if it was undef and that causes tempdir to give us some "funny"
 # (read: broken) paths.
 $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined $opt{'TMPDIR'};
 
-if ($debug) {
-    $opt{'verbose'} = 1;
-    $ENV{'LINTIAN_DEBUG'} = $debug;
-    if ($debug > 1) {
-        if ($debug > 2) {
-            eval {
-                require Devel::Size;
-                import Devel::Size qw(total_size);
-                {
-                    no warnings qw(once);
-                    # Disable warnings about stuff Devel::Size cannot
-                    # give reliable sizes for.
-                    $Devel::Size::warn = 0;
-                }
-
-                $memory_usage = sub {
-                    my ($obj) = @_;
-                    my $size = total_size($obj);
-                    my $unit = 'B';
-                    if ($size > 1536) {
-                        $size /= 1024;
-                        $unit = 'kB';
-                        if ($size > 1536) {
-                            $size /= 1024;
-                            $unit = 'MB';
-                        }
-                    }
-                    return sprintf('%.2f %s', $size, $unit);
-                };
-                print "N: Using Devel::Size to debug memory usage\n";
-            };
-            if ($@) {
-                print "N: Cannot load Devel::Size ($@)\n";
-                print "N: Running memory usage will not be checked.\n";
-            }
-        }
-    }
-} else {
-    # Ensure verbose has a defined value
-    $opt{'verbose'} = 0 unless defined $opt{'verbose'};
-}
-
-$Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
-$Lintian::Output::GLOBAL->debug($debug);
-$Lintian::Output::GLOBAL->color($opt{'color'});
-$Lintian::Output::GLOBAL->showdescription($opt{'info'});
-
-$Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
-if (my $perf_log = $opt{'perf-output'}) {
-    my $fd = open_file_or_fd($perf_log, '>');
-    $Lintian::Output::GLOBAL->perf_log_fd($fd);
-
-    END {
-        local ($!, $@);
-        return if not defined($fd);
-        eval {close($fd);};
-        if (my $err = $@) {
-            # Don't use L::Output here as it might be (partly) cleaned
-            # up.
-            print STDERR "warning: closing $perf_log failed: $!\n";
-        }
-    }
-}
-
-if (my $status_log = $opt{'status-log'}) {
-    $STATUS_FD = open_file_or_fd($status_log, '>');
-    $STATUS_FD->autoflush;
-
-    END {
-        local ($!, $@);
-        return if not defined($STATUS_FD);
-        eval {close($STATUS_FD);};
-        if (my $err = $@) {
-            # Don't use L::Output here as it might be (partly) cleaned
-            # up.
-            print STDERR "warning: closing $status_log failed: $!\n";
-        }
-    }
-} else {
-    open($STATUS_FD, '>', '/dev/null');
-}
+configure_output();
 
 # check for arguments
 if (    $action =~ /^(?:check|unpack|remove)$/
@@ -1848,6 +1736,104 @@ sub _guess_version {
     return;
 }
 
+sub configure_output {
+    if (defined $experimental_output_opts) {
+        my %opts = map { split(/=/) } split(/,/, $experimental_output_opts);
+        foreach (keys %opts) {
+            if ($_ eq 'format') {
+                if ($opts{$_} eq 'colons') {
+                    require Lintian::Output::ColonSeparated;
+                    $Lintian::Output::GLOBAL
+                      = Lintian::Output::ColonSeparated->new;
+                } elsif ($opts{$_} eq 'letterqualifier') {
+                    require Lintian::Output::LetterQualifier;
+                    $Lintian::Output::GLOBAL
+                      = Lintian::Output::LetterQualifier->new;
+                } elsif ($opts{$_} eq 'xml') {
+                    require Lintian::Output::XML;
+                    $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+                } elsif ($opts{$_} eq 'fullewi') {
+                    require Lintian::Output::FullEWI;
+                    $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
+                }
+            }
+        }
+    }
+
+    # check permitted values for --color / color
+    #  - We set the default to 'auto' here; because we cannot do
+    #    it before the config check.
+    $opt{'color'} = 'auto' unless defined($opt{'color'});
+    if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
+        die join(q{ },
+            'The color value must be one of',
+            "\"never\", \"always\", \"auto\" or \"html\"\n");
+    }
+
+    if ($debug) {
+        $opt{'verbose'} = 1;
+        $ENV{'LINTIAN_DEBUG'} = $debug;
+        if ($debug > 2) {
+            eval {
+                require Devel::Size;
+                import Devel::Size qw(total_size);
+                {
+                    no warnings qw(once);
+                    # Disable warnings about stuff Devel::Size cannot
+                    # give reliable sizes for.
+                    $Devel::Size::warn = 0;
+                }
+
+                $memory_usage = sub {
+                    my ($obj) = @_;
+                    my $size = total_size($obj);
+                    my $unit = 'B';
+                    if ($size > 1536) {
+                        $size /= 1024;
+                        $unit = 'kB';
+                        if ($size > 1536) {
+                            $size /= 1024;
+                            $unit = 'MB';
+                        }
+                    }
+                    return sprintf('%.2f %s', $size, $unit);
+                };
+                print "N: Using Devel::Size to debug memory usage\n";
+            };
+            if ($@) {
+                print "N: Cannot load Devel::Size ($@)\n";
+                print "N: Running memory usage will not be checked.\n";
+            }
+        }
+    } else {
+        # Ensure verbose has a defined value
+        $opt{'verbose'} = 0 unless defined($opt{'verbose'});
+    }
+
+    $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
+    $Lintian::Output::GLOBAL->debug($debug);
+    $Lintian::Output::GLOBAL->color($opt{'color'});
+    $Lintian::Output::GLOBAL->showdescription($opt{'info'});
+
+    $Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
+    if (defined(my $perf_log = $opt{'perf-output'})) {
+        my $fd = open_file_or_fd($perf_log, '>');
+        $Lintian::Output::GLOBAL->perf_log_fd($fd);
+
+        push(@CLOSE_AT_END, [$fd, $perf_log]);
+    }
+
+    if (defined(my $status_log = $opt{'status-log'})) {
+        $STATUS_FD = open_file_or_fd($status_log, '>');
+        $STATUS_FD->autoflush;
+
+        push(@CLOSE_AT_END, [$STATUS_FD, $status_log]);
+    } else {
+        open($STATUS_FD, '>', '/dev/null');
+    }
+    return;
+}
+
 sub _update_profile {
     my ($profile, $sup_check, $sup_tags, $only_check, $only_tags) = @_;
     my %abbrev = ();
@@ -1949,14 +1935,29 @@ sub END {
     }
 
     if (1) {
-        # Prevent LAB->close and $unpacker->kill_jobs from affecting
+        # Prevent LAB->close, $unpacker->kill_jobs etc. from affecting
         # the exit code.
-        local $?;
+        local ($!, $?, $@);
+        my %already_closed;
 
         # Kill any remaining jobs.
         $unpacker->kill_jobs if $unpacker;
 
         $LAB->close if $LAB;
+        for my $to_close (@CLOSE_AT_END) {
+            my ($fd, $filename) = @{$to_close};
+            my $fno = fileno($fd);
+            # Already closed?  Can happen with e.g.
+            #   --perf-output '&1' --status-log '&1'
+            next if not defined($fno);
+            next if $fno > -1 and $already_closed{$fno}++;
+            eval {close($fd);};
+            if (my $err = $@) {
+                # Don't use L::Output here as it might be (partly) cleaned
+                # up.
+                print STDERR "warning: closing ${filename} failed: $!\n";
+            }
+        }
     }
 }
 
