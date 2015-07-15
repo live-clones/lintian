@@ -112,7 +112,7 @@ my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($pool, $action, $checks, $check_tags, $dont_check);
-my (@unpack_info, $LAB, %extra_unpack, %unpack_options, @auto_remove);
+my (@unpack_info, $LAB, %unpack_options, @auto_remove);
 my $exit_code = 0;
 
 # Timer handling (by default to nothing)
@@ -880,86 +880,9 @@ if ($action eq 'remove') {
 
 # {{{ Load information about collector scripts
 
-# $map is just here to check that all the needed collections are present.
-my $map = Lintian::DepMap->new();
 my @scripts = sort $PROFILE->scripts;
-my $collmap = Lintian::DepMap::Properties->new();
-
-{
-    my $load_coll = sub {
-        my ($cs) = @_;
-        my $coll = $cs->name;
-        debug_msg(2, "Read collector description for $coll ...");
-        $collmap->add($coll, $cs->needs_info, $cs);
-        $map->addp('coll-' . $coll, 'coll-', $cs->needs_info);
-        push @auto_remove, $coll if $cs->auto_remove;
-    };
-
-    load_collections($load_coll, "$INIT_ROOT/collection");
-}
-
-for my $c (@scripts) {
-    # Add the checks with their dependency information
-    my $cs = $PROFILE->get_script($c);
-    my @deps = $cs->needs_info;
-    $map->add('check-' . $c);
-    if (@deps) {
-        # In case a (third-party) check gets their needs-info wrong,
-        # present the user with useful error message.
-        my @missing;
-        for my $dep (@deps) {
-            if (!$map->known('coll-' . $dep)) {
-                push(@missing, $dep);
-            }
-        }
-        if (@missing) {
-            my $str = join(', ', @missing);
-            fail("The check \"$c\" depends unknown collection(s): $str");
-        }
-        $map->addp('check-' . $c, 'coll-', @deps);
-    }
-}
-
-# Make sure the resolver is in a sane state
-# - This can happen if we break collections (inter)dependencies.
-scalar($map->missing) == 0
-  or
-  fail('There are missing nodes in the resolver: '. join(', ', $map->missing));
-undef $map;
-
-# }}}
-
-# {{{ determine which info is needed by the collection scripts
-if ($action eq 'check') {
-
-    # For overrides we need "overrride-file" as well
-    unless ($opt{'no-override'}) {
-        $extra_unpack{'override-file'} = 1;
-    }
-    # For checking, pass a profile to the unpacker to limit what it
-    # unpacks.
-    $unpack_options{'profile'} = $PROFILE;
-    $unpack_options{'extra-coll'} = \%extra_unpack;
-} else {
-    # With --unpack we want all of them.  That's the default so,
-    # "done!"
-    1;
-}
-
-if (@unpack_info) {
-    # Add collections specifically requested by the user (--unpack-info)
-    for my $i (map { split m/,/ } @unpack_info) {
-        unless ($collmap->getp($i)) {
-            fail("unknown info specified: $i");
-        }
-        $extra_unpack{$i} = 1;
-    }
-    # Never auto-remove anything explicitly requested by the user
-    @auto_remove = grep { !exists $extra_unpack{$_} } @auto_remove
-      if not $opt{'keep-lab'};
-}
-# Never auto-remove anything if keep-lab is given...
-@auto_remove = () if $opt{'keep-lab'};
+my $collmap
+  = load_and_select_collections(\@scripts, \@auto_remove, \%unpack_options);
 
 # }}}
 
@@ -974,7 +897,6 @@ $unpack_options{'jobs'} = $opt{'jobs'};
 debug_msg(
     1,
     "Selected action: $action",
-    sprintf('Extra data to collect: %s', join(',',sort keys %extra_unpack)),
     sprintf('Selected checks: %s', join(',', @scripts)),
     "Parallelization limit: $opt{'jobs'}",
 );
@@ -1091,7 +1013,7 @@ exit $exit_code;
 # {{{ Some subroutines
 
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
-#  - depends on global variables %collection_info and %extra_unpack
+#  - depends on global variables %collection_info
 #
 sub auto_clean_package {
     my ($lpkg) = @_;
@@ -1824,6 +1746,85 @@ sub load_profile_and_configure_tags {
         }
     }
     return $profile;
+}
+
+sub load_and_select_collections {
+    my ($all_checks, $auto_remove_list, $unpack_options_ref) = @_;
+    # $map is just here to check that all the needed collections are present.
+    my $map = Lintian::DepMap->new();
+    my $collmap = Lintian::DepMap::Properties->new();
+    my %extra_unpack;
+    my $load_coll = sub {
+        my ($cs) = @_;
+        my $coll = $cs->name;
+        debug_msg(2, "Read collector description for $coll ...");
+        $collmap->add($coll, $cs->needs_info, $cs);
+        $map->addp('coll-' . $coll, 'coll-', $cs->needs_info);
+        push(@{$auto_remove_list}, $coll) if $cs->auto_remove;
+    };
+
+    load_collections($load_coll, "$INIT_ROOT/collection");
+
+    for my $c (@{$all_checks}) {
+        # Add the checks with their dependency information
+        my $cs = $PROFILE->get_script($c);
+        my @deps = $cs->needs_info;
+        $map->add('check-' . $c);
+        if (@deps) {
+            # In case a (third-party) check gets their needs-info wrong,
+            # present the user with useful error message.
+            my @missing;
+            for my $dep (@deps) {
+                if (!$map->known('coll-' . $dep)) {
+                    push(@missing, $dep);
+                }
+            }
+            if (@missing) {
+                my $str = join(', ', @missing);
+                fail("The check \"$c\" depends unknown collection(s): $str");
+            }
+            $map->addp('check-' . $c, 'coll-', @deps);
+        }
+    }
+
+    # Make sure the resolver is in a sane state
+    # - This can happen if we break collections (inter)dependencies.
+    if ($map->missing) {
+        fail('There are missing nodes in the resolver: '
+              . join(', ', $map->missing));
+    }
+
+    if ($action eq 'check') {
+        # For overrides we need "overrride-file" as well
+        unless ($opt{'no-override'}) {
+            $extra_unpack{'override-file'} = 1;
+        }
+        # For checking, pass a profile to the unpacker to limit what it
+        # unpacks.
+        $unpack_options_ref->{'profile'} = $PROFILE;
+        $unpack_options_ref->{'extra-coll'} = \%extra_unpack;
+    } else {
+        # With --unpack we want all of them.  That's the default so,
+        # "done!"
+        1;
+    }
+
+    if (@unpack_info) {
+        # Add collections specifically requested by the user (--unpack-info)
+        for my $i (map { split(m/,/) } @unpack_info) {
+            unless ($collmap->getp($i)) {
+                fail("unknown info specified: $i");
+            }
+            $extra_unpack{$i} = 1;
+        }
+        # Never auto-remove anything explicitly requested by the user
+        @{$auto_remove_list}
+          = grep { !exists($extra_unpack{$_}) } @{$auto_remove_list}
+          if not $opt{'keep-lab'};
+    }
+    # Never auto-remove anything if keep-lab is given...
+    @{$auto_remove_list} = () if $opt{'keep-lab'};
+    return $collmap;
 }
 
 sub _update_profile {
