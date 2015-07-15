@@ -17,6 +17,10 @@ lintian (2.5.34) UNRELEASED; urgency=medium
       options: --root, --all, --binary, --source, --udeb.
       They are no longer useful.
 
+  * lib/Lintian/Data.pm:
+    + [NT] Remove references to LINTIAN_ROOT as Lintian::Data
+      no longer uses it.
+
  -- Niels Thykier <niels@thykier.net>  Thu, 09 Jul 2015 21:50:53 +0200
 
 lintian (2.5.33) unstable; urgency=medium

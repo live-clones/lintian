@@ -366,25 +366,13 @@ that KEY was available.
 
 =over 4
 
-=item LINTIAN_ROOT/data
+=item LINTIAN_INCLUDE_DIR/data
 
 The files loaded by this module must be located in this directory.
 Relative paths containing a C</> are permitted, so files may be organized
 in subdirectories in this directory.
 
-=back
-
-=head1 ENVIRONMENT
-
-=over 4
-
-=item LINTIAN_ROOT
-
-This variable must be set to Lintian's root directory (normally
-F</usr/share/lintian> when Lintian is installed as a Debian package).  The
-B<lintian> program normally takes care of doing this.  This module doesn't
-care about the contents of this directory other than expecting the F<data>
-subdirectory of this directory to contain its files.
+Note that lintian supports multiple LINTIAN_INCLUDE_DIRs.
 
 =back
 
@@ -394,7 +382,7 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1)
+lintian(1), L<https://lintian.debian.org/manual/section-2.6.html>
 
 =cut
 
