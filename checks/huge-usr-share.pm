@@ -40,7 +40,7 @@ sub run {
     # Add up the space taken by the package and the space taken by
     # just the files in /usr/share.  Convert the totals to kilobytes.
     my ($size, $size_usrshare) = (0, 0);
-    for my $file ($info->sorted_index) {
+    for my $file (grep { $_->is_regular_file } $info->sorted_index) {
         $size += $file->size;
         if ($file =~ m,usr/share/,) {
             $size_usrshare += $file->size;

@@ -567,7 +567,7 @@ sub run {
                     }
 
                     # zero byte file in /usr/share/doc/
-                    if ($file->size == 0 and $file->is_regular_file) {
+                    if ($file->is_regular_file and $file->size == 0) {
                      # Exceptions: examples may contain empty files for various
                      # reasons, Doxygen generates empty *.map files, and Python
                      # uses __init__.py to mark module directories.
@@ -584,8 +584,8 @@ sub run {
                     # 276 is 255 bytes (maximal length for a filename)
                     # + gzip overhead
                     if (    $fname =~ m,.gz$,
+                        and $file->is_regular_file
                         and $file->size <= 276
-                        and $file->is_file
                         and $file->file_info =~ m/gzip compressed/) {
                         my $fd = $file->open_gz;
                         my $f = <$fd>;
