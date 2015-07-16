@@ -658,13 +658,16 @@ import Lintian::Util qw(fail parse_boolean strip);
 sanitize_environment();
 
 # Check if we should load a config file
-if ($opt{'no-conf'}) {
+if ($opt{'no-cfg'}) {
     $opt{'LINTIAN_CFG'} = '';
 } else {
     if (not $opt{'LINTIAN_CFG'}) {
-        $opt{'LINTIAN_CFG'} = _find_cfg_file() // '';
+        $opt{'LINTIAN_CFG'} = _find_cfg_file();
     }
-    parse_config_file($opt{'LINTIAN_CFG'});
+    # _find_cfg_file() can return undef
+    if ($opt{'LINTIAN_CFG'}) {
+        parse_config_file($opt{'LINTIAN_CFG'});
+    }
 }
 
 $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
