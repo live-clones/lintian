@@ -57,7 +57,7 @@ sub spellcheck {
 }
 
 sub main {
-    my $profile = Lintian::Profile->new;
+    my $profile = dplint::load_profile();
     my $picky = 0;
     my $exit_code = 0;
     Lintian::Data->set_vendor($profile);

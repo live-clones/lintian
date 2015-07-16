@@ -183,6 +183,17 @@ sub restricted_include_dirs {
     return @RESTRICTED_INCLUDE_DIRS;
 }
 
+sub load_profile {
+    my ($profile_name, $options) = @_;
+    my %opt = (
+        'restricted-search-dirs' => \@RESTRICTED_INCLUDE_DIRS,
+        %{$options // {}},
+    );
+    require Lintian::Profile;
+
+    return Lintian::Profile->new($profile_name, \@INCLUDE_DIRS, \%opt);
+}
+
 sub main {
     my $user_dirs = 1;
     my %opthash = (

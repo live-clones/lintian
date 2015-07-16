@@ -84,12 +84,10 @@ EOT
         exit 0;
     }
 
-    $profile = Lintian::Profile->new(
+    $profile = dplint::load_profile(
         $prof,
-        [dplint::include_dirs()],
         {
             'language' => determine_locale(),
-            'restricted-search-dirs' => [dplint::restricted_include_dirs()],
         });
 
     Lintian::Data->set_vendor($profile);
