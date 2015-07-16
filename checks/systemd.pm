@@ -71,7 +71,10 @@ sub get_init_scripts {
     my @scripts;
     if (my $initd_path = $info->index_resolved_path('etc/init.d/')) {
         for my $init_script ($initd_path->children) {
-            next if $INIT_WHITELIST->known($init_script->basename);
+            # sysv generator drops the .sh suffix
+            my $basename = $init_script->basename;
+            $basename =~ s/\.sh$//;
+            next if $INIT_WHITELIST->known($basename);
             next
               if $init_script->is_symlink
               && $init_script->link eq '/lib/init/upstart-job';
