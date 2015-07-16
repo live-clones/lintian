@@ -34,6 +34,11 @@ use Text::ParseWords qw(shellwords);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail lstrip rstrip);
 
+use Lintian::Data;
+
+# Init script that do not need a service file
+my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
+
 sub run {
     my (undef, undef, $info) = @_;
 
@@ -63,11 +68,10 @@ sub run {
 
 sub get_init_scripts {
     my ($info) = @_;
-    my @ignore = ('README','skeleton','rc','rcS',);
     my @scripts;
     if (my $initd_path = $info->index_resolved_path('etc/init.d/')) {
         for my $init_script ($initd_path->children) {
-            next if any { $_ eq $init_script->basename } @ignore;
+            next if $INIT_WHITELIST->known($init_script->basename);
             next
               if $init_script->is_symlink
               && $init_script->link eq '/lib/init/upstart-job';

@@ -12,3 +12,8 @@ override_dh_install:
 	install -m 0755 -d $(INITD_DIR) $(SYSD_DIR)
 	mkfifo $(INITD_DIR)/fifo-pipe-as-init
 	mkfifo $(SYSD_DIR)/fifo-pipe-as-init.service
+	touch $(INITD_DIR)/README
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod -x $(INITD_DIR)/README
