@@ -1649,11 +1649,6 @@ sub load_profile_and_configure_tags {
     $opt{'LINTIAN_PROFILE'} = $profile->name
       unless defined($opt{'LINTIAN_PROFILE'});
     v_msg('Using profile ' . $profile->name . '.');
-
-    if ($dont_check || %suppress_tags || $checks || $check_tags) {
-        _update_profile($profile, $dont_check, \%suppress_tags, $checks,
-            $check_tags);
-    }
     Lintian::Data->set_vendor($profile);
 
     $TAGS = Lintian::Tags->new;
@@ -1661,6 +1656,11 @@ sub load_profile_and_configure_tags {
     $TAGS->show_overrides($opt{'show-overrides'});
     $TAGS->sources(keys(%display_source)) if %display_source;
     $TAGS->profile($profile);
+
+    if ($dont_check || %suppress_tags || $checks || $check_tags) {
+        _update_profile($profile, $TAGS, $dont_check, \%suppress_tags, $checks,
+            $check_tags);
+    }
 
     # Initialize display level settings.
     for my $level (@display_level) {
@@ -1821,7 +1821,7 @@ sub parse_options {
 }
 
 sub _update_profile {
-    my ($profile, $sup_check, $sup_tags, $only_check, $only_tags) = @_;
+    my ($profile, $tags, $sup_check, $sup_tags, $only_check, $only_tags) = @_;
     my %abbrev = ();
 
     if ($sup_check || $only_check) {
@@ -1839,7 +1839,7 @@ sub _update_profile {
     if ($checks || $check_tags) {
         $profile->disable_tags($profile->tags);
         if ($check_tags) {
-            $TAGS->show_experimental(1);
+            $tags->show_experimental(1);
             # discard whatever is in @display_level and request
             # everything
             @display_level = ();
