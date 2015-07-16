@@ -662,9 +662,8 @@ if ($opt{'no-cfg'}) {
     $opt{'LINTIAN_CFG'} = '';
 } else {
     if (not $opt{'LINTIAN_CFG'}) {
-        $opt{'LINTIAN_CFG'} = _find_cfg_file();
+        $opt{'LINTIAN_CFG'} = _find_cfg_file() // q{};
     }
-    # _find_cfg_file() can return undef
     if ($opt{'LINTIAN_CFG'}) {
         parse_config_file($opt{'LINTIAN_CFG'});
     }
