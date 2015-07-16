@@ -20,6 +20,9 @@ lintian (2.5.34) UNRELEASED; urgency=medium
   * lib/Lintian/Data.pm:
     + [NT] Remove references to LINTIAN_ROOT as Lintian::Data
       no longer uses it.
+  * lib/Lintian/Path.pm:
+    + [NT] Rework some implementation details to reduce memory
+      consumption slightly.
 
   * reporting/templates:
     + [NT] Remove (uses of) the "invisible-anchor" css class as
