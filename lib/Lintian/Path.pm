@@ -21,6 +21,13 @@ package Lintian::Path;
 use strict;
 use warnings;
 use parent qw(Class::Accessor::Fast);
+
+use constant {
+    UNSAFE_PATH => 0,
+    FS_PATH_IS_OK => 1,
+    OPEN_IS_OK => 3,
+};
+
 use overload (
     '""' => \&_as_string,
     'qr' => \&_as_regex_ref,
@@ -87,11 +94,9 @@ sub new {
     # often enough for this to take up a (small) measure amount of
     # runtime.
     if ($ftype eq '-' or $ftype eq 'h') {
-        $self->{'_is_open_ok'} = 1;
-        $self->{'_valid_path'} = 1;
+        $self->{'_path_access'} = OPEN_IS_OK;
     } elsif ($ftype eq 'd') {
-        $self->{'_is_open_ok'} = 0;
-        $self->{'_valid_path'} = 1;
+        $self->{'_path_access'} = FS_PATH_IS_OK;
         for my $child ($self->children) {
             $child->_set_parent_dir($self);
         }
@@ -436,7 +441,9 @@ Returns a truth value if the path may be opened.
 
 sub is_open_ok {
     my ($self) = @_;
-    return $self->{'_is_open_ok'} if exists($self->{'_is_open_ok'});
+    if (exists($self->{'_path_access'})) {
+        return ($self->{'_path_access'} & OPEN_IS_OK) == OPEN_IS_OK ? 1 : 0;
+    }
     eval {
         my $path = $self->_collect_path();
         $self->_check_open($path);
@@ -452,22 +459,22 @@ sub _collect_path {
 
 sub _check_access {
     my ($self, $path) = @_;
-    my $safe = 1;
-    if (exists($self->{'_valid_path'})) {
-        $safe = $self->{'_valid_path'};
+    my $safe = FS_PATH_IS_OK;
+    if (exists($self->{'_path_access'})) {
+        $safe = $self->{'_path_access'};
     } else {
         my $resolvable = $self->resolve_path;
-        $safe = 0 if not $resolvable;
+        $safe = UNSAFE_PATH if not $resolvable;
+        $self->{'_path_access'} = $safe;
     }
-    if (not $safe) {
-        $self->{'_valid_path'} = $self->{'_is_open_ok'} = 0;
+    if (($safe & FS_PATH_IS_OK) != FS_PATH_IS_OK) {
+        $self->{'_path_access'} = UNSAFE_PATH if $safe == UNSAFE_PATH;
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
         confess('Attempt to access through broken or unsafe symlink:'. ' '
               . $self->name);
     }
-    $self->{'_valid_path'} = 1;
     return 1;
 }
 
@@ -477,10 +484,11 @@ sub _check_open {
     # Symlinks can point to a "non-file" object inside the
     # package root
     if ($self->is_file or ($self->is_symlink and -f $path)) {
-        $self->{'_is_open_ok'} = 1;
+        $self->{'_path_access'} |= OPEN_IS_OK;
         return 1;
     }
-    $self->{'_is_open_ok'} = 0;
+    # Leave "_path_access" here as _check_access marks it either as
+    # "UNSAFE_PATH" or "FS_PATH_IS_OK"
     confess("Attempt to open non-file (e.g. dir or pipe): $self");
 }
 
