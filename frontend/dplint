@@ -64,8 +64,7 @@ use Getopt::Long();
 # is simply a placeholder to make the command work out of the box in
 # the source tree.
 my $INIT_ROOT = find_source_root();
-my $LINTIAN_VERSION;
-my @INCLUDE_DIRS;
+my ($LINTIAN_VERSION, @INCLUDE_DIRS, @RESTRICTED_INCLUDE_DIRS);
 
 my %BUILTINS = (
     'help' => \&builtin_help,
@@ -127,9 +126,9 @@ sub setup_env {
         if (exists($ENV{'HOME'}) or exists($ENV{'XDG_CONFIG_HOME'})) {
             $data_home = data_home('lintian');
         }
-        unshift(@INCLUDE_DIRS, $data_home)
+        unshift(@RESTRICTED_INCLUDE_DIRS, $data_home)
           if defined($data_home) && -d $data_home;
-        unshift(@INCLUDE_DIRS, '/etc/lintian')
+        unshift(@RESTRICTED_INCLUDE_DIRS, '/etc/lintian')
           if -d '/etc/lintian';
     }
 
@@ -137,6 +136,8 @@ sub setup_env {
 
     $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
     $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @INCLUDE_DIRS);
+    $ENV{'LINTIAN_RESTRICTED_INCLUDE_DIRS'}
+      = join(':', grep { -d } @RESTRICTED_INCLUDE_DIRS);
     $ENV{'LINTIAN_HELPER_DIRS'} = join(
         ':',  grep { -d }
           map { "$_/helpers" } @INCLUDE_DIRS
@@ -176,6 +177,10 @@ sub find_source_root {
 
 sub include_dirs {
     return @INCLUDE_DIRS;
+}
+
+sub restricted_include_dirs {
+    return @RESTRICTED_INCLUDE_DIRS;
 }
 
 sub main {

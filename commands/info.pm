@@ -87,7 +87,10 @@ EOT
     $profile = Lintian::Profile->new(
         $prof,
         [dplint::include_dirs()],
-        { language => determine_locale() });
+        {
+            'language' => determine_locale(),
+            'restricted-search-dirs' => [dplint::restricted_include_dirs()],
+        });
 
     Lintian::Data->set_vendor($profile);
 
