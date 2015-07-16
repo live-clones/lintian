@@ -474,7 +474,6 @@ sub _fetch_index_data {
         # reason for storing it now is that we may need it during the
         # "hard-link fixup"-phase.
         $file{'name'} = $name = dequote_name($name);
-        $file{'_fs_info'} = $fs_info;
 
         $idxh{$name} = \%file;
 
@@ -508,7 +507,6 @@ sub _fetch_index_data {
             my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
             $parent //= '';
             $base //= '';
-            $cpy{'_fs_info'} = $fs_info;
             $cpy{'name'} = $name;
             $cpy{'basename'} = $base;
             # Re: above, only insert dirname now for the root entry.
@@ -590,6 +588,7 @@ sub _fetch_index_data {
             @sorted_children = reverse(@sorted_children);
             $entry->{'_sorted_children'} = \@sorted_children;
             $entry->{'children'} = \%child_table;
+            $entry->{'_fs_info'} = $fs_info;
         }
         # Insert name here to share the same storage with the hash key
         $entry->{'name'} = $file;

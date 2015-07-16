@@ -386,7 +386,7 @@ sub file_info {
     if (my $file_info = $self->{'_file_info'}) {
         return $file_info;
     }
-    $file_info = $self->{'_fs_info'}->_file_info($self);
+    $file_info = $self->_fs_info->_file_info($self);
     $self->{'_file_info'} = $file_info;
     return $file_info;
 }
@@ -454,7 +454,16 @@ sub is_open_ok {
 
 sub _collect_path {
     my ($self) = @_;
-    return $self->{'_fs_info'}->_underlying_fs_path($self);
+    return $self->_fs_info->_underlying_fs_path($self);
+}
+
+sub _fs_info {
+    my ($self) = @_;
+    # Technically, this will look up the parent dir even if $self is a dir
+    # - though calling is_dir first is probably more expensive than just
+    #   blindly calling parent_dir
+    my $dir = $self->parent_dir // $self;
+    return $dir->{'_fs_info'};
 }
 
 sub _check_access {
@@ -631,7 +640,7 @@ sub resolve_path {
     my ($self, $path_str) = @_;
     my $current = $self;
     my (@queue, %traversed_links, $had_trailing_slash);
-    my $fs_info = $self->{'_fs_info'};
+    my $fs_info = $self->_fs_info;
 
     if (defined($path_str) and ref($path_str) ne q{}) {
         croak('resolve_path only accepts string arguments');
