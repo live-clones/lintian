@@ -14,5 +14,6 @@ W: systemd-general: init.d-script-does-not-source-init-functions etc/init.d/syst
 W: systemd-general: maintainer-script-calls-systemctl postrm:6
 W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/bootmisc.sh
 W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/fifo-pipe-as-init
+W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/masked
 W: systemd-general: systemd-service-file-refers-to-obsolete-target etc/systemd/system/test.service syslog.target
 W: systemd-general: systemd-service-file-refers-to-obsolete-target usr/lib/systemd/system/test.service syslog.target

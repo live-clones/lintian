@@ -13,6 +13,7 @@ override_dh_install:
 	mkfifo $(INITD_DIR)/fifo-pipe-as-init
 	mkfifo $(SYSD_DIR)/fifo-pipe-as-init.service
 	install -m 0755 debian/bootmisc.sh $(INITD_DIR)
+	install -m 0755 debian/masked.init $(INITD_DIR)/masked
 	touch $(INITD_DIR)/README
 
 override_dh_fixperms:
