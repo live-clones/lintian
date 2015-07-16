@@ -1162,6 +1162,10 @@ sub process_group {
     perf_log("$gname,total-group-check,${raw_res}");
 
     if ($opt{'debug'} > 2) {
+        my $group_id = $group->get_source_processable->identifier;
+        my $group_usage
+          = $memory_usage->([map { $_->info } $group->get_processables]);
+        debug_msg(3, "Memory usage [$group_id]: $group_usage");
         for my $lpkg ($group->get_processables) {
             my $id = $lpkg->identifier;
             my $usage = $memory_usage->($lpkg->info);
