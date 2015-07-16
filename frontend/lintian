@@ -107,7 +107,7 @@ my %opt = (                     #hash of some flags from cmd or cfg
 my @search_dirs;
 my @restricted_search_dirs;
 
-my $experimental_output_opts;
+my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
 
 my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
@@ -575,323 +575,299 @@ my %opthash = (
     'exp-output:s' => \$experimental_output_opts,
 );
 
-parse_options();
+main();
 
-# }}}
+sub main {
+    parse_options();
 
-# {{{ Read important environment
+    # Set LINTIAN_ROOT to the actual root.
+    $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
 
-# Set LINTIAN_ROOT to the actual root.
-$ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
-
-# Filter out non-existent paths and resolve the rest.
-# - as we will add them to @INC, make sure they are resolved
-#   so a check doing a chdir will not suddenly load anything
-#   differently.
-@search_dirs = map {
-    if (-d $_) {
-        my $resolved = abs_path($_);
-        unless (defined $resolved) {
-            print STDERR "Cannot resolve $_: $!\n";
-            exit 2;
+    # Filter out non-existent paths and resolve the rest.
+    # - as we will add them to @INC, make sure they are resolved
+    #   so a check doing a chdir will not suddently load anything
+    #   differently.
+    @search_dirs = map {
+        if (-d $_) {
+            my $resolved = abs_path($_);
+            unless (defined $resolved) {
+                print STDERR "Cannot resolve $_: $!\n";
+                exit 2;
+            }
+            ($resolved);
+        } else {
+            ();
         }
-        ($resolved);
+    } @search_dirs;
+
+    # environment variables overwrite settings in conf file, so load them now
+    # assuming they were not set by cmd-line options
+    foreach my $var (@ENV_VARS) {
+     # note $opt{$var} will usually always exists due to the call to GetOptions
+     # so we have to use "defined" here
+        $opt{$var} = $ENV{$var} if $ENV{$var} && !defined $opt{$var};
+    }
+
+    # Include (only existsing) lib directories from @search_dirs in @INC
+    # and LINTIAN_{INCLUDE,HELPER}_DIRS.
+    # NB: Add INIT_ROOT to @search_dirs after updating @INC as we already
+    # added it in BEGIN{} if needed.
+    unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
+
+    push(@search_dirs, $INIT_ROOT);
+
+    $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @search_dirs);
+    $ENV{'LINTIAN_HELPER_DIRS'}
+      = join(':',grep { -d } map { "$_/helpers" } @search_dirs);
+
+    require Lintian::Command;
+    import Lintian::Command qw(safe_qx);
+    require Lintian::DepMap;
+    require Lintian::DepMap::Properties;
+    require Lintian::Data;
+    require Lintian::Lab;
+    require Lintian::Output;
+    import Lintian::Output qw(:messages);
+    require Lintian::Internal::FrontendUtil;
+    import Lintian::Internal::FrontendUtil qw(
+      default_parallel load_collections determine_locale
+      sanitize_environment open_file_or_fd);
+    require Lintian::ProcessablePool;
+    require Lintian::Profile;
+    require Lintian::Tags;
+    require Lintian::Unpacker;
+    require Lintian::Util;
+    import Lintian::Util qw(fail parse_boolean strip);
+
+    sanitize_environment();
+
+    # Check if we should load a config file
+    if ($opt{'no-cfg'}) {
+        $opt{'LINTIAN_CFG'} = '';
     } else {
-        ();
-    }
-} @search_dirs;
-
-# environment variables overwrite settings in conf file, so load them now
-# assuming they were not set by cmd-line options
-foreach my $var (@ENV_VARS) {
-    # note $opt{$var} will usually always exists due to the call to GetOptions
-    # so we have to use "defined" here
-    $opt{$var} = $ENV{$var} if $ENV{$var} && !defined $opt{$var};
-}
-
-# }}}
-
-# {{{ Loading lintian's own libraries, parse config file and setup output
-
-# Include (only existing) lib directories from @search_dirs in @INC
-# and LINTIAN_{INCLUDE,HELPER}_DIRS.
-# NB: Add INIT_ROOT to @search_dirs after updating @INC as we already
-# added it in BEGIN{} if needed.
-unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
-
-push(@search_dirs, $INIT_ROOT);
-
-$ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @search_dirs);
-$ENV{'LINTIAN_HELPER_DIRS'}
-  = join(':',grep { -d } map { "$_/helpers" } @search_dirs);
-
-require Lintian::Command;
-import Lintian::Command qw(safe_qx);
-require Lintian::DepMap;
-require Lintian::DepMap::Properties;
-require Lintian::Data;
-require Lintian::Lab;
-require Lintian::Output;
-import Lintian::Output qw(:messages);
-require Lintian::Internal::FrontendUtil;
-import Lintian::Internal::FrontendUtil qw(
-  default_parallel load_collections determine_locale
-  sanitize_environment open_file_or_fd);
-require Lintian::ProcessablePool;
-require Lintian::Profile;
-require Lintian::Tags;
-require Lintian::Unpacker;
-require Lintian::Util;
-import Lintian::Util qw(fail parse_boolean strip);
-
-sanitize_environment();
-
-# Check if we should load a config file
-if ($opt{'no-cfg'}) {
-    $opt{'LINTIAN_CFG'} = '';
-} else {
-    if (not $opt{'LINTIAN_CFG'}) {
-        $opt{'LINTIAN_CFG'} = _find_cfg_file() // q{};
-    }
-    if ($opt{'LINTIAN_CFG'}) {
-        parse_config_file($opt{'LINTIAN_CFG'});
-    }
-}
-
-$ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
-
-configure_output();
-
-# check for arguments
-if (    $action =~ /^(?:check|unpack)$/
-    and $#ARGV == -1
-    and not $opt{'packages-from-file'}) {
-    my $ok = 0;
-    # If debian/changelog exists, assume an implied
-    # "../<source>_<version>_<arch>.changes" (or
-    # "../<source>_<version>_source.changes").
-    if (-f 'debian/changelog') {
-        my $file = _find_changes();
-        push @ARGV, $file;
-        $ok = 1;
-    }
-    syntax() unless $ok;
-}
-
-# }}}
-
-# {{{ Load profile, setup display setting etc.
-
-# Print Debug banner, now that we're finished determining
-# the values and have Lintian::Output available
-debug_msg(
-    1,
-    $BANNER,
-    "Lintian root directory: $INIT_ROOT",
-    "Configuration file: $opt{'LINTIAN_CFG'}",
-    'Laboratory: ' . ($opt{'LINTIAN_LAB'} // '<N/A>'),
-    delimiter(),
-);
-
-$PROFILE = load_profile_and_configure_tags();
-
-# }}}
-
-# {{{ Set up clean-up handlers.
-
-$SIG{'INT'} = \&interrupted;
-$SIG{'QUIT'} = \&interrupted;
-
-# }}}
-
-# {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
-
-$LAB = Lintian::Lab->new($opt{'LINTIAN_LAB'});
-
-#######################################
-#  Check for non deb specific actions
-if (
-    not(   ($action eq 'unpack')
-        or ($action eq 'check'))
-  ) {
-    fail("bad action $action specified");
-}
-
-if (!$LAB->is_temp) {
-    # sanity check:
-    fail(
-        join(q{ },
-            'lintian lab has not been set up correctly',
-            '(perhaps you forgot to run lintian-lab-tool create-lab?)')
-    ) unless $LAB->exists;
-} else {
-    $LAB->create({'keep-lab' => $opt{'keep-lab'}});
-}
-
-$LAB->open;
-
-#  Update the ENV var as well - unlike the original values,
-#  $LAB->dir is always absolute
-$ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
-
-v_msg("Setting up lab in $opt{'LINTIAN_LAB'} ...")
-  if $LAB->is_temp;
-
-# }}}
-
-# {{{ Compile list of files to process
-
-$pool = setup_work_pool($LAB);
-
-if ($pool->empty()) {
-    v_msg('No packages selected.');
-    exit $exit_code;
-}
-# }}}
-
-# {{{ Load information about collector scripts
-
-my @scripts = sort $PROFILE->scripts;
-my $collmap
-  = load_and_select_collections(\@scripts, \@auto_remove, \%unpack_options);
-
-# }}}
-
-# {{{ Okay, now really processing the packages in one huge loop
-$opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
-$unpack_options{'jobs'} = $opt{'jobs'};
-
-# Filter out the "lintian" check if present - it does no real harm,
-# but it adds a bit of noise in the debug output.
-@scripts = grep { $_ ne 'lintian' } @scripts;
-
-debug_msg(
-    1,
-    "Selected action: $action",
-    sprintf('Selected checks: %s', join(',', @scripts)),
-    "Parallelization limit: $opt{'jobs'}",
-);
-
-# Now action is always either "check" or "unpack"
-# these two variables are used by process_package
-#  and need to persist between invocations.
-my $unpacker = Lintian::Unpacker->new($collmap, \%unpack_options);
-my %overrides;
-
-if ($action eq 'check') {
-    # Ensure all checks can actually be loaded...
-    foreach my $script (@scripts) {
-        my $cs = $PROFILE->get_script($script);
-        eval {$cs->load_check;};
-        if ($@) {
-            warning("Cannot load check \"$script\"");
-            print STDERR $@;
-            exit 2;
+        if (not $opt{'LINTIAN_CFG'}) {
+            $opt{'LINTIAN_CFG'} = _find_cfg_file();
+        }
+        # _find_cfg_file() can return undef
+        if ($opt{'LINTIAN_CFG'}) {
+            parse_config_file($opt{'LINTIAN_CFG'});
         }
     }
-}
 
-foreach my $gname (sort $pool->get_group_names()) {
-    my $success = 1;
-    my $group = $pool->get_group($gname);
-    my $total_raw_res = timed_task {
-        my $raw_res = timed_task {
-            if (!unpack_group($gname, $group)) {
-                $success = 0;
+    $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
+
+    configure_output();
+
+    # check for arguments
+    if (    $action =~ /^(?:check|unpack)$/
+        and $#ARGV == -1
+        and not $opt{'packages-from-file'}) {
+        my $ok = 0;
+        # If debian/changelog exists, assume an implied
+        # "../<source>_<version>_<arch>.changes" (or
+        # "../<source>_<version>_source.changes").
+        if (-f 'debian/changelog') {
+            my $file = _find_changes();
+            push @ARGV, $file;
+            $ok = 1;
+        }
+        syntax() unless $ok;
+    }
+
+    # Print Debug banner, now that we're finished determining
+    # the values and have Lintian::Output available
+    debug_msg(
+        1,
+        $BANNER,
+        "Lintian root directory: $INIT_ROOT",
+        "Configuration file: $opt{'LINTIAN_CFG'}",
+        'Laboratory: ' . ($opt{'LINTIAN_LAB'} // '<N/A>'),
+        delimiter(),
+    );
+
+    $PROFILE = load_profile_and_configure_tags();
+
+    $SIG{'INT'} = \&interrupted;
+    $SIG{'QUIT'} = \&interrupted;
+
+    $LAB = Lintian::Lab->new($opt{'LINTIAN_LAB'});
+
+    #######################################
+    #  Check for non deb specific actions
+    if (
+        not(   ($action eq 'unpack')
+            or ($action eq 'check'))
+      ) {
+        fail("bad action $action specified");
+    }
+
+    if (!$LAB->is_temp) {
+        # sanity check:
+        fail(
+            join(q{ },
+                'lintian lab has not been set up correctly',
+                '(perhaps you forgot to run lintian --setup-lab?)')
+        ) unless $LAB->exists;
+    } else {
+        $LAB->create({'keep-lab' => $opt{'keep-lab'}});
+    }
+
+    #  Update the ENV var as well - unlike the original values,
+    #  $LAB->dir is always absolute
+    $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
+
+    v_msg("Setting up lab in $opt{'LINTIAN_LAB'} ...")
+      if $LAB->is_temp;
+
+    $LAB->open;
+
+    $pool = setup_work_pool($LAB);
+
+    if ($pool->empty()) {
+        v_msg('No packages selected.');
+        exit $exit_code;
+    }
+
+    @scripts = sort $PROFILE->scripts;
+    $collmap
+      = load_and_select_collections(\@scripts, \@auto_remove,\%unpack_options);
+
+    $opt{'jobs'} = default_parallel() unless defined $opt{'jobs'};
+    $unpack_options{'jobs'} = $opt{'jobs'};
+
+    # Filter out the "lintian" check if present - it does no real harm,
+    # but it adds a bit of noise in the debug output.
+    @scripts = grep { $_ ne 'lintian' } @scripts;
+
+    debug_msg(
+        1,
+        "Selected action: $action",
+        sprintf('Selected checks: %s', join(',', @scripts)),
+        "Parallelization limit: $opt{'jobs'}",
+    );
+
+    # Now action is always either "check" or "unpack"
+    # these two variables are used by process_package
+    #  and need to persist between invocations.
+    $unpacker = Lintian::Unpacker->new($collmap, \%unpack_options);
+
+    if ($action eq 'check') {
+        # Ensure all checks can actually be loaded...
+        foreach my $script (@scripts) {
+            my $cs = $PROFILE->get_script($script);
+            eval {$cs->load_check;};
+            if ($@) {
+                warning("Cannot load check \"$script\"");
+                print STDERR $@;
+                exit 2;
+            }
+        }
+    }
+
+    foreach my $gname (sort $pool->get_group_names()) {
+        my $success = 1;
+        my $group = $pool->get_group($gname);
+        my $total_raw_res = timed_task {
+            my $raw_res = timed_task {
+                if (!unpack_group($gname, $group)) {
+                    $success = 0;
+                }
+            };
+            my $tres = $format_timer_result->($raw_res);
+            debug_msg(1, "Unpack of $gname done$tres");
+            perf_log("$gname,total-group-unpack,${raw_res}");
+            if ($action eq 'check') {
+                if (!process_group($gname, $group)) {
+                    $success = 0;
+                }
+                $group->clear_cache;
+                if ($exit_code != 2) {
+                    # Double check that no processes are running;
+                    # hopefully it will catch regressions like 3bbcc3b
+                    # earlier.
+                    if (waitpid(-1, WNOHANG) != -1) {
+                        $exit_code = 2;
+                        fail('Unreaped processes after running checks!?');
+                    }
+                } else {
+                    # If we are interrupted in (e.g.) checks/manpages, it
+                    # tends to leave processes behind.  No reason to flag
+                    # an error for that - but we still try to reap the
+                    # children if they are now done.
+                    1 while waitpid(-1, WNOHANG) > 0;
+                }
             }
         };
-        my $tres = $format_timer_result->($raw_res);
-        debug_msg(1, "Unpack of $gname done$tres");
-        perf_log("$gname,total-group-unpack,${raw_res}");
-        if ($action eq 'check') {
-            $group->init_shared_cache;
-            if (!process_group($gname, $group)) {
-                $success = 0;
-            }
-            $group->clear_cache;
-            if ($exit_code != 2) {
-                # Double check that no processes are running;
-                # hopefully it will catch regressions like 3bbcc3b
-                # earlier.
-                if (waitpid(-1, WNOHANG) != -1) {
-                    $exit_code = 2;
-                    fail('Unreaped processes after running checks!?');
-                }
-            } else {
-                # If we are interrupted in (e.g.) checks/manpages, it
-                # tends to leave processes behind.  No reason to flag
-                # an error for that - but we still try to reap the
-                # children if they are now done.
-                1 while waitpid(-1, WNOHANG) > 0;
-            }
+        my $total_tres = $format_timer_result->($total_raw_res);
+        if ($success) {
+            print {$STATUS_FD} "complete ${gname}${total_tres}\n";
+        } else {
+            print {$STATUS_FD} "error ${gname}${total_tres}\n";
         }
-    };
-    my $total_tres = $format_timer_result->($total_raw_res);
-    if ($success) {
-        print {$STATUS_FD} "complete ${gname}${total_tres}\n";
-    } else {
-        print {$STATUS_FD} "error ${gname}${total_tres}\n";
     }
-}
 
-# Write the lab state to the disk, so it remembers the new packages
-$LAB->close;
+    # Write the lab state to the disk, so it remembers the new packages
+    $LAB->close;
 
-if (    $action eq 'check'
-    and not $opt{'no-override'}
-    and not $opt{'show-overrides'}) {
-    my $errors = $overrides{errors} || 0;
-    my $warnings = $overrides{warnings} || 0;
-    my $info = $overrides{info} || 0;
-    my $total = $errors + $warnings + $info;
-    if ($total > 0) {
-        my $text
-          = ($total == 1)
-          ? "$total tag overridden"
-          : "$total tags overridden";
-        my @output;
-        if ($errors) {
-            push(@output, ($errors == 1) ? "$errors error" : "$errors errors");
+    if (    $action eq 'check'
+        and not $opt{'no-override'}
+        and not $opt{'show-overrides'}) {
+        my $errors = $overrides{errors} || 0;
+        my $warnings = $overrides{warnings} || 0;
+        my $info = $overrides{info} || 0;
+        my $total = $errors + $warnings + $info;
+        if ($total > 0) {
+            my $text
+              = ($total == 1)
+              ? "$total tag overridden"
+              : "$total tags overridden";
+            my @output;
+            if ($errors) {
+                push(@output,
+                    ($errors == 1) ? "$errors error" : "$errors errors");
+            }
+            if ($warnings) {
+                push(@output,
+                    ($warnings == 1)
+                    ? "$warnings warning"
+                    : "$warnings warnings");
+            }
+            if ($info) {
+                push(@output, "$info info");
+            }
+            msg("$text (". join(', ', @output). ')');
         }
-        if ($warnings) {
-            push(@output,
-                ($warnings == 1) ? "$warnings warning" : "$warnings warnings");
-        }
-        if ($info) {
-            push(@output, "$info info");
-        }
-        msg("$text (". join(', ', @output). ')');
     }
-}
 
-my $ign_over = $TAGS->ignored_overrides;
-if (keys %$ign_over) {
-    msg(
-        join(q{ },
-            'Some overrides were ignored,',
-            'since the tags were marked "non-overridable".'));
-    if ($opt{'verbose'}) {
-        v_msg(
+    my $ign_over = $TAGS->ignored_overrides;
+    if (keys %$ign_over) {
+        msg(
             join(q{ },
-                'The following tags were "non-overridable"',
-                'and had at least one override'));
-        foreach my $tag (sort keys %$ign_over) {
-            v_msg("  - $tag");
+                'Some overrides were ignored,',
+                'since the tags were marked "non-overridable".'));
+        if ($opt{'verbose'}) {
+            v_msg(
+                join(q{ },
+                    'The following tags were "non-overridable"',
+                    'and had at least one override'));
+            foreach my $tag (sort keys %$ign_over) {
+                v_msg("  - $tag");
+            }
+        } else {
+            msg('Use --verbose for more information.');
         }
-    } else {
-        msg('Use --verbose for more information.');
     }
+
+    # }}}
+
+    # Wait for any remaining jobs - There will usually not be any
+    # unless we had an issue examining the last package.  We patiently wait
+    # for them here; if the user cannot be bothered to wait, he/she can send
+    # us a signal and the END handler will kill any remaining jobs.
+    $unpacker->wait_for_jobs;
+
+    exit $exit_code;
 }
-
-# }}}
-
-# Wait for any remaining jobs - There will usually not be any
-# unless we had an issue examining the last package.  We patiently wait
-# for them here; if the user cannot be bothered to wait, he/she can send
-# us a signal and the END handler will kill any remaining jobs.
-$unpacker->wait_for_jobs;
-
-exit $exit_code;
 
 # {{{ Some subroutines
 
