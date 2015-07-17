@@ -20,6 +20,7 @@ lintian (2.5.34) UNRELEASED; urgency=medium
   * lib/Lintian/Collect{,/*}.pm:
     + [NT] Add a shared memory cache that can be used to
       reduce memory comsumption a bit for sharable objects.
+      (Closes: #715035)
   * lib/Lintian/Data.pm:
     + [NT] Remove references to LINTIAN_ROOT as Lintian::Data
       no longer uses it.
