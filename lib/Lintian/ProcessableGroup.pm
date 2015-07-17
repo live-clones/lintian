@@ -310,6 +310,20 @@ sub info {
     return $info;
 }
 
+=item $group->init_shared_cache
+
+Prepare a shared memory cache for all current members of the group.
+This is solely a memory saving optimisation and is not required for
+correct performance.
+
+=cut
+
+sub init_shared_cache {
+    my ($self) = @_;
+    $self->info; # Side-effect of creating the info object.
+    return;
+}
+
 =item $group->clear_cache
 
 Discard the info element of all members of this group, so the memory

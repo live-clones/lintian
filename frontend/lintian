@@ -858,6 +858,7 @@ foreach my $gname (sort $pool->get_group_names()) {
         debug_msg(1, "Unpack of $gname done$tres");
         perf_log("$gname,total-group-unpack,${raw_res}");
         if ($action eq 'check') {
+            $group->init_shared_cache;
             if (!process_group($gname, $group)) {
                 $success = 0;
             }
