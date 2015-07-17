@@ -32,21 +32,6 @@ use Lintian::Path;
 use Lintian::Path::FSInfo;
 use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path dequote_name);
 
-my %INDEX_FAUX_DIR_TEMPLATE = (
-    'name'     => '',
-    'type'     => 'd',
-    'basename' => '',
-    'owner'    => 'root',
-    'group'    => 'root',
-    'size'     => 0,
-    'operm'    => 0755,
-    # Pick a "random" (but fixed) date
-    # - hint, it's a good read.  :)
-    'date'     => '1998-01-25',
-    'time'     => '22:55:34',
-    'faux'     => 1,
-);
-
 # A cache for (probably) the 5 most common permission strings seen in
 # the wild.
 # It may seem obscene, but it has an extreme "hit-ratio" and it is
@@ -57,6 +42,30 @@ my %PERM_CACHE = map { $_ => perm2oct($_) } (
     'drwxr-xr-x', # standard dir perm
     'drwxr-sr-x', # standard dir perm with suid (lintian-lab on lintian.d.o)
     'lrwxrwxrwx', # symlinks
+);
+
+my %FILE_CODE2LPATH_TYPE = (
+    '-' => Lintian::Path::TYPE_FILE     | Lintian::Path::OPEN_IS_OK,
+    'h' => Lintian::Path::TYPE_HARDLINK | Lintian::Path::OPEN_IS_OK,
+    'd' => Lintian::Path::TYPE_DIR      | Lintian::Path::FS_PATH_IS_OK,
+    'l' => Lintian::Path::TYPE_SYMLINK,
+    'b' => Lintian::Path::TYPE_BLOCK_DEV,
+    'c' => Lintian::Path::TYPE_CHAR_DEV,
+    'p' => Lintian::Path::TYPE_PIPE,
+);
+
+my %INDEX_FAUX_DIR_TEMPLATE = (
+    'name'       => '',
+    '_path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
+    'basename'   => '',
+    'owner'      => 'root',
+    'group'      => 'root',
+    'size'       => 0,
+    # Pick a "random" (but fixed) date
+    # - hint, it's a good read.  :)
+    'date'       => '1998-01-25',
+    'time'       => '22:55:34',
+    'faux'       => 1,
 );
 
 =head1 NAME
@@ -429,7 +438,7 @@ sub _fetch_index_data {
     while (my $line = <$idx>) {
         chomp($line);
 
-        my (%file, $perm, $owner, $name);
+        my (%file, $perm, $operm, $owner, $name, $raw_type);
         ($perm,$owner,$file{size},$file{date},$file{time},$name)
           =split(' ', $line, 6);
         # This may appear to be obscene, but the call overhead of
@@ -438,11 +447,13 @@ sub _fetch_index_data {
         #   Of the 115363 paths here, only 306 had an "uncached"
         # permission string (chromium-browser/32.0.1700.123-2).
         if (exists($PERM_CACHE{$perm})) {
-            $file{operm} = $PERM_CACHE{$perm};
+            $operm = $PERM_CACHE{$perm};
         } else {
-            $file{operm} = perm2oct($perm);
+            $operm = perm2oct($perm);
         }
-        $file{type} = substr $perm, 0, 1;
+        $raw_type = substr($perm, 0, 1);
+        $file{'_path_info'} = $operm | $FILE_CODE2LPATH_TYPE{$raw_type}
+          // Lintian::Path::TYPE_OTHER;
 
         if ($num_idx) {
             # If we have a "numeric owner" index file, read that as well
@@ -462,11 +473,11 @@ sub _fetch_index_data {
 
         if ($name =~ s/ link to (.*)//) {
             my $target = dequote_name($1);
-            $file{type} = 'h';
+            $file{'_path_info'} = $FILE_CODE2LPATH_TYPE{'h'} | $operm;
             $file{link} = $target;
 
             push @{$rhlinks{$target}}, dequote_name($name);
-        } elsif ($file{type} eq 'l') {
+        } elsif ($raw_type eq 'l') {
             ($name, $file{link}) = split ' -> ', $name, 2;
             $file{link} = dequote_name($file{link}, 0);
         }
@@ -478,7 +489,7 @@ sub _fetch_index_data {
         $idxh{$name} = \%file;
 
         # Record children
-        $children{$name} ||= [] if $file{type} eq 'd';
+        $children{$name} ||= [] if $raw_type eq 'd';
         my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
         $parent = '' unless defined $parent;
         $base = '' unless defined $base;
@@ -554,11 +565,16 @@ sub _fetch_index_data {
                 next unless exists $idxh{$target};
                 my $le = $idxh{$link};
                 # We may be "demoting" a "real file" to a "hardlink"
-                $le->{type} = 'h';
+                $le->{'_path_info'}
+                  = ($le->{'_path_info'} & ~Lintian::Path::TYPE_FILE)
+                  | Lintian::Path::TYPE_HARDLINK;
                 $le->{link} = $target;
             }
             if ($target ne $e->{name}) {
-                $idxh{$target}->{type} = '-';
+                $idxh{$target}{'_path_info'}
+                  = ($idxh{$target}{'_path_info'}
+                      & ~Lintian::Path::TYPE_HARDLINK)
+                  | Lintian::Path::TYPE_FILE;
                 # hardlinks does not have size, so copy that from the original
                 # entry.
                 $idxh{$target}->{size} = $e->{size};
@@ -571,7 +587,7 @@ sub _fetch_index_data {
         # Add them in reverse order - entries in a dir are made
         # objects before the dir itself.
         my $entry = $idxh{$file};
-        if ($entry->{'type'} eq 'd') {
+        if ($entry->{'_path_info'} & Lintian::Path::TYPE_DIR) {
             my (%child_table, @sorted_children);
             for my $cname (sort(@{ $children{$file} })) {
                 my $child = $idxh{$cname};

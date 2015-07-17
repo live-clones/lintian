@@ -23,9 +23,23 @@ use warnings;
 use parent qw(Class::Accessor::Fast);
 
 use constant {
-    UNSAFE_PATH => 0,
-    FS_PATH_IS_OK => 1,
-    OPEN_IS_OK => 3,
+    TYPE_FILE      => 0x00_01_00_00,
+    TYPE_HARDLINK  => 0x00_02_00_00,
+    TYPE_DIR       => 0x00_04_00_00,
+    TYPE_SYMLINK   => 0x00_08_00_00,
+    TYPE_BLOCK_DEV => 0x00_10_00_00,
+    TYPE_CHAR_DEV  => 0x00_20_00_00,
+    TYPE_PIPE      => 0x00_40_00_00,
+    TYPE_OTHER     => 0x00_80_00_00,
+    TYPE_MASK      => 0x00_ff_00_00,
+
+    UNSAFE_PATH    => 0x01_00_00_00,
+    FS_PATH_IS_OK  => 0x02_00_00_00,
+    OPEN_IS_OK     => 0x06_00_00_00, # Implies FS_PATH_IS_OK
+    ACCESS_INFO    => 0x07_00_00_00,
+    # 0o6777 == 0xdff, which covers set[ug]id + sticky bit.  Accordingly,
+    # 0xffff should be more than sufficient for the foreseeable future.
+    OPERM_MASK     => 0x00_00_ff_ff,
 };
 
 use overload (
@@ -88,15 +102,9 @@ Argument is a hash containing the data read from the index file.
 sub new {
     my ($type, $data) = @_;
     my $self = $data;
-    my $ftype = $data->{'type'};
+    my $ftype = $data->{'_path_info'};
     bless($self, $type);
-    # Use $data->{type} directly here.  The constructor is called
-    # often enough for this to take up a (small) measure amount of
-    # runtime.
-    if ($ftype eq '-' or $ftype eq 'h') {
-        $self->{'_path_access'} = OPEN_IS_OK;
-    } elsif ($ftype eq 'd') {
-        $self->{'_path_access'} = FS_PATH_IS_OK;
+    if ($ftype & TYPE_DIR) {
         for my $child ($self->children) {
             $child->_set_parent_dir($self);
         }
@@ -165,14 +173,6 @@ NB: This is only well defined for files.
 
 Return the modification date as YYYY-MM-DD.
 
-=item operm
-
-Returns the file permissions of this object in octal (e.g. 0644).
-
-NB: This is only well defined for file entries that are subject to
-permissions (e.g. files).  Particularly, the value is not well defined
-for symlinks.
-
 =item parent_dir
 
 Returns the parent directory entry of this entry as a
@@ -205,10 +205,25 @@ happen if a package does not include all intermediate directories.
 =cut
 
 Lintian::Path->mk_ro_accessors(
-    qw(name owner group link type uid gid
-      size date time operm parent_dir dirname basename
+    qw(name owner group link uid gid
+      size date time parent_dir dirname basename
       faux
       ));
+
+=item operm
+
+Returns the file permissions of this object in octal (e.g. 0644).
+
+NB: This is only well defined for file entries that are subject to
+permissions (e.g. files).  Particularly, the value is not well defined
+for symlinks.
+
+=cut
+
+sub operm {
+    my ($self) = @_;
+    return $self->{'_path_info'} & OPERM_MASK;
+}
 
 =item children
 
@@ -307,11 +322,14 @@ symlinks, even if the symlink points to a file.
 
 =cut
 
-sub is_symlink { return $_[0]->type eq 'l'; }
-sub is_hardlink { return $_[0]->type eq 'h'; }
-sub is_dir { return $_[0]->type eq 'd'; }
-sub is_file { return $_[0]->type eq '-' || $_[0]->type eq 'h'; }
-sub is_regular_file  { return $_[0]->type eq '-'; }
+sub is_symlink { return $_[0]->{'_path_info'} & TYPE_SYMLINK ? 1 : 0; }
+sub is_hardlink { return $_[0]->{'_path_info'} & TYPE_HARDLINK ? 1 : 0; }
+sub is_dir { return $_[0]->{'_path_info'} & TYPE_DIR ? 1 : 0; }
+
+sub is_file {
+    return $_[0]->{'_path_info'} & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
+}
+sub is_regular_file { return $_[0]->{'_path_info'} & TYPE_FILE ? 1 : 0; }
 
 =item link_normalized
 
@@ -364,7 +382,7 @@ at least one bit denoting executability set (bitmask 0111).
 
 sub _any_bit_in_operm {
     my ($self, $bitmask) = @_;
-    return ($self->operm & $bitmask) ? 1 : 0;
+    return ($self->{'_path_info'} & $bitmask) ? 1 : 0;
 }
 
 sub is_readable   { return $_[0]->_any_bit_in_operm(0444); }
@@ -441,9 +459,9 @@ Returns a truth value if the path may be opened.
 
 sub is_open_ok {
     my ($self) = @_;
-    if (exists($self->{'_path_access'})) {
-        return ($self->{'_path_access'} & OPEN_IS_OK) == OPEN_IS_OK ? 1 : 0;
-    }
+    my $path_info = $self->{'_path_info'};
+    return 1 if ($path_info & OPEN_IS_OK) == OPEN_IS_OK;
+    return 0 if $path_info & ACCESS_INFO;
     eval {
         my $path = $self->_collect_path();
         $self->_check_open($path);
@@ -468,22 +486,19 @@ sub _fs_info {
 
 sub _check_access {
     my ($self, $path) = @_;
-    my $safe = FS_PATH_IS_OK;
-    if (exists($self->{'_path_access'})) {
-        $safe = $self->{'_path_access'};
-    } else {
-        my $resolvable = $self->resolve_path;
-        $safe = UNSAFE_PATH if not $resolvable;
-        $self->{'_path_access'} = $safe;
-    }
-    if (($safe & FS_PATH_IS_OK) != FS_PATH_IS_OK) {
-        $self->{'_path_access'} = UNSAFE_PATH if $safe == UNSAFE_PATH;
+    my $path_info = $self->{'_path_info'};
+    return 1 if ($path_info & FS_PATH_IS_OK) == FS_PATH_IS_OK;
+    return 0 if $path_info & ACCESS_INFO;
+    my $resolvable = $self->resolve_path;
+    if (not $resolvable) {
+        $self->{'_path_info'} |= UNSAFE_PATH;
         # NB: We are deliberately vague here to avoid suggesting
         # whether $path exists.  In some cases (e.g. lintian.d.o)
         # the output is readily available to wider public.
         confess('Attempt to access through broken or unsafe symlink:'. ' '
               . $self->name);
     }
+    $self->{'_path_info'} |= FS_PATH_IS_OK;
     return 1;
 }
 
@@ -493,7 +508,7 @@ sub _check_open {
     # Symlinks can point to a "non-file" object inside the
     # package root
     if ($self->is_file or ($self->is_symlink and -f $path)) {
-        $self->{'_path_access'} |= OPEN_IS_OK;
+        $self->{'_path_info'} |= OPEN_IS_OK;
         return 1;
     }
     # Leave "_path_access" here as _check_access marks it either as

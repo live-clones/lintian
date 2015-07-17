@@ -23,6 +23,9 @@ lintian (2.5.34) UNRELEASED; urgency=medium
   * lib/Lintian/Path.pm:
     + [NT] Rework some implementation details to reduce memory
       consumption slightly.
+    + [NT] The undocumented "type" method has been removed from
+      the API.  It was an implementation detail that has now
+      changed.
 
   * reporting/templates:
     + [NT] Remove (uses of) the "invisible-anchor" css class as
