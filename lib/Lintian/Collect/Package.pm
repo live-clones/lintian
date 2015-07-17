@@ -57,7 +57,6 @@ my %FILE_CODE2LPATH_TYPE = (
 my %INDEX_FAUX_DIR_TEMPLATE = (
     'name'       => '',
     '_path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
-    'basename'   => '',
     'owner'      => 'root',
     'group'      => 'root',
     'size'       => 0,
@@ -493,7 +492,6 @@ sub _fetch_index_data {
         my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
         $parent = '' unless defined $parent;
         $base = '' unless defined $base;
-        $file{basename} = $base;
         # Insert the dirname field later for all (non-root) entries as
         # it allows us to better reuse memory.
         $file{dirname} = '' if $base eq '';
@@ -515,11 +513,9 @@ sub _fetch_index_data {
         # check_dirs /can/ contain the same item multiple times.
         if (!exists($idxh{$name})) {
             my %cpy = %INDEX_FAUX_DIR_TEMPLATE;
-            my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
+            my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
             $parent //= '';
-            $base //= '';
             $cpy{'name'} = $name;
-            $cpy{'basename'} = $base;
             # Re: above, only insert dirname now for the root entry.
             $cpy{'dirname'} = q{} if $name eq q{};
             if ($num_idx) {

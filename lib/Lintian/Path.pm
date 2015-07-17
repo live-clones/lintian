@@ -197,6 +197,22 @@ for the "root" dir - see below).
 
 NB: Returns the empty string for the "root" dir.
 
+=cut
+
+sub basename {
+    my ($self) = @_;
+    my $name = $self->name;
+    my $slash;
+    return $name if $name eq q{}; # Root dir
+    if (substr($name, -1, 1) eq '/') {
+        $slash = rindex($name, '/', length($name) - 2);
+    } else {
+        $slash = rindex($name, '/');
+    }
+    return $name if $slash == -1; # E.g. Top level-dirs
+    return substr($name, $slash+1);
+}
+
 =item faux
 
 Returns a truth value if this entry absent in the package.  This can
@@ -206,7 +222,7 @@ happen if a package does not include all intermediate directories.
 
 Lintian::Path->mk_ro_accessors(
     qw(name owner group link uid gid
-      size date time parent_dir dirname basename
+      size date time parent_dir dirname
       faux
       ));
 
