@@ -257,7 +257,7 @@ sub is_non_free {
 # Internal sub for providing a shared storaged between multiple
 # L::Collect objects from same group.
 #
-# sub _set_shared_storag Needs-Info none
+# sub _set_shared_storage Needs-Info none
 sub _set_shared_storage {
     my ($self, $storage) = @_;
     $self->{'_shared_storage'} = $storage;
