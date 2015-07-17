@@ -29,7 +29,7 @@ use Scalar::Util qw(blessed);
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(read_dpkg_control $PKGNAME_REGEX);
+use Lintian::Util qw(get_file_checksum read_dpkg_control $PKGNAME_REGEX);
 
 =head1 NAME
 
@@ -101,8 +101,20 @@ sub changelog {
     return $self->{changelog} if exists $self->{changelog};
     my $dch = $self->index_resolved_path('debian/changelog');
     if ($dch and $dch->is_open_ok) {
-        my %opts = (infile => $dch->fs_path, quiet => 1);
-        $self->{changelog} = Parse::DebianChangelog->init(\%opts);
+        my $shared = $self->{'_shared_storage'};
+        my ($checksum, $changelog);
+        if (defined($shared)) {
+            $checksum = get_file_checksum('sha1', $dch->fs_path);
+            $changelog = $shared->{'changelog'}{$checksum};
+        }
+        if (not $changelog) {
+            my %opts = (infile => $dch->fs_path, quiet => 1);
+            $changelog = Parse::DebianChangelog->init(\%opts);
+            if (defined($shared)) {
+                $shared->{'changelog'}{$checksum} = $changelog;
+            }
+        }
+        $self->{changelog} = $changelog;
     } else {
         $self->{changelog} = undef;
     }

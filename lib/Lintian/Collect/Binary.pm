@@ -29,7 +29,7 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(fail open_gz parse_dpkg_control);
+use Lintian::Util qw(fail open_gz parse_dpkg_control get_file_checksum);
 
 =head1 NAME
 
@@ -129,8 +129,20 @@ sub changelog {
     if (-l $dch || !-f $dch) {
         $self->{changelog} = undef;
     } else {
-        my %opts = (infile => $dch, quiet => 1);
-        $self->{changelog} = Parse::DebianChangelog->init(\%opts);
+        my $shared = $self->{'_shared_storage'};
+        my ($checksum, $changelog);
+        if (defined($shared)) {
+            $checksum = get_file_checksum('sha1', $dch);
+            $changelog = $shared->{'changelog'}{$checksum};
+        }
+        if (not $changelog) {
+            my %opts = (infile => $dch, quiet => 1);
+            $changelog = Parse::DebianChangelog->init(\%opts);
+            if (defined($shared)) {
+                $shared->{'changelog'}{$checksum} = $changelog;
+            }
+        }
+        $self->{changelog} = $changelog;
     }
     return $self->{changelog};
 }

@@ -23,8 +23,6 @@ package Lintian::Collect::Group;
 use strict;
 use warnings;
 
-use Carp qw(croak);
-
 =head1 NAME
 
 Lintian::Collect::Group - Lintian interface to group data collection
@@ -61,8 +59,15 @@ L<$group|Lintian::ProcessableGroup>.
 
 sub new {
     my ($class, $group) = @_;
-    my $self = {'group' => $group,};
-    return bless $self, $class;
+    my $shared_storage = {};
+    my $self = {
+        'group' => $group,
+        '_shared_storage' => $shared_storage,
+    };
+    for my $member ($group->get_processables) {
+        $member->info->_set_shared_storage($shared_storage);
+    }
+    return bless($self, $class);
 }
 
 =item direct_dependencies (PROC)

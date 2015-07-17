@@ -21,8 +21,10 @@ use strict;
 use warnings;
 use warnings::register;
 
-use Lintian::Util qw(get_dsc_info get_deb_info);
 use Carp qw(croak);
+use Scalar::Util qw(weaken);
+
+use Lintian::Util qw(get_dsc_info get_deb_info);
 
 =encoding utf-8
 
@@ -250,6 +252,16 @@ sub is_non_free {
       if $self->field('section', 'main')
       =~ m,^(?:non-free|restricted|multiverse)/,;
     return $self->{is_non_free};
+}
+
+# Internal sub for providing a shared storaged between multiple
+# L::Collect objects from same group.
+#
+# sub _set_shared_storag Needs-Info none
+sub _set_shared_storage {
+    my ($self, $storage) = @_;
+    $self->{'_shared_storage'} = $storage;
+    return;
 }
 
 # Internal sub for dumping the memory usage of this instance
