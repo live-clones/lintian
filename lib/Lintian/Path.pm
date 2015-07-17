@@ -188,6 +188,15 @@ File::Basename::dirname.  The dirname will end with a trailing slash
 
 NB: Returns the empty string for the "root" dir.
 
+=cut
+
+sub dirname {
+    my ($self) = @_;
+    my $dir = $self->parent_dir;
+    return $dir->name if $dir;
+    return q{};
+}
+
 =item basename
 
 Returns the "filename" part of the name, similar basename(1) or
@@ -222,8 +231,7 @@ happen if a package does not include all intermediate directories.
 
 Lintian::Path->mk_ro_accessors(
     qw(name owner group link uid gid
-      size date time parent_dir dirname
-      faux
+      size date time parent_dir faux
       ));
 
 =item operm

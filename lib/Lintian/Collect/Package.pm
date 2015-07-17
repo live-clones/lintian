@@ -489,12 +489,8 @@ sub _fetch_index_data {
 
         # Record children
         $children{$name} ||= [] if $raw_type eq 'd';
-        my ($parent, $base) = ($name =~ m,^(.+/)?([^/]+/?)$,);
+        my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
         $parent = '' unless defined $parent;
-        $base = '' unless defined $base;
-        # Insert the dirname field later for all (non-root) entries as
-        # it allows us to better reuse memory.
-        $file{dirname} = '' if $base eq '';
 
         $children{$parent} = [] unless exists $children{$parent};
 
@@ -516,8 +512,6 @@ sub _fetch_index_data {
             my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
             $parent //= '';
             $cpy{'name'} = $name;
-            # Re: above, only insert dirname now for the root entry.
-            $cpy{'dirname'} = q{} if $name eq q{};
             if ($num_idx) {
                 $cpy{'uid'} = 0;
                 $cpy{'gid'} = 0;
@@ -588,9 +582,6 @@ sub _fetch_index_data {
             for my $cname (sort(@{ $children{$file} })) {
                 my $child = $idxh{$cname};
                 my $basename = $child->basename;
-                # Insert dirname here to share the same storage with
-                # the hash key
-                $child->{'dirname'} = $file;
                 if (substr($basename, -1, 1) eq '/') {
                     $basename = substr($basename, 0, -1);
                 }
