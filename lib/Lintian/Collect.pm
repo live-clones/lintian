@@ -22,7 +22,6 @@ use warnings;
 use warnings::register;
 
 use Carp qw(croak);
-use Scalar::Util qw(weaken);
 
 use Lintian::Util qw(get_dsc_info get_deb_info);
 
