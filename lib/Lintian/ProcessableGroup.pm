@@ -313,7 +313,7 @@ sub info {
 =item $group->init_shared_cache
 
 Prepare a shared memory cache for all current members of the group.
-This is solely a memory saving optimisation and is not required for
+This is solely a memory saving optimization and is not required for
 correct performance.
 
 =cut
