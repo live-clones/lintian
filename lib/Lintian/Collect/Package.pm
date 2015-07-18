@@ -451,8 +451,8 @@ sub _fetch_index_data {
             $operm = perm2oct($perm);
         }
         $raw_type = substr($perm, 0, 1);
-        $file{'_path_info'} = $operm | $FILE_CODE2LPATH_TYPE{$raw_type}
-          // Lintian::Path::TYPE_OTHER;
+        $file{'_path_info'} = $operm
+          | ($FILE_CODE2LPATH_TYPE{$raw_type} // Lintian::Path::TYPE_OTHER);
 
         if ($num_idx) {
             # If we have a "numeric owner" index file, read that as well
