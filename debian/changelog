@@ -5,6 +5,9 @@ lintian (2.5.34) UNRELEASED; urgency=medium
   * checks/binaries.desc:
     + [NT] Apply patch from Guillem Jover to improve the tag
       description of the LFS tag.  (Closes: #792167)
+  * checks/systemd.pm:
+    + [NT] Apply patches from Felipe Sateler to ignore known
+      masked init.d scripts.  (Closes: #792501)
 
   * commands/info -> info.pm:
     + [NT] Renamed info to info.pm to remove some boilerplate
