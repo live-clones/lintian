@@ -1091,7 +1091,7 @@ sub run {
                 my $fd = $file->open;
                 while (<$fd>) {
                     if (
-                        m{ (?:do|require)\s+(?:'|") # do/require
+                        m{ (?:do|require)\s+['"] # do/require
 
                           # Huge list of perl4 modules...
                           (abbrev|assert|bigfloat|bigint|bigrat
@@ -1101,7 +1101,7 @@ sub run {
                           |open2|open3|pwd|shellwords|stat|syslog
                           |tainted|termcap|timelocal|validate)
                           # ... so they end with ".pl" rather than ".pm"
-                          \.pl(?:'|")
+                          \.pl['"]
                }xsm
                       ) {
                         tag 'perl-module-uses-perl4-libs-without-dep',

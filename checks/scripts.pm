@@ -398,7 +398,7 @@ sub run {
             my $fd = $path->open;
             while (<$fd>) {
                 if (
-                    m{ (?:do|require)\s+(?:'|") # do/require
+                    m{ (?:do|require)\s+['"] # do/require
 
                           # Huge list of perl4 modules...
                           (abbrev|assert|bigfloat|bigint|bigrat
@@ -408,7 +408,7 @@ sub run {
                           |open2|open3|pwd|shellwords|stat|syslog
                           |tainted|termcap|timelocal|validate)
                           # ... so they end with ".pl" rather than ".pm"
-                          \.pl(?:'|")
+                          \.pl['"]
                }xsm
                   ) {
                     tag 'script-uses-perl4-libs-without-dep',
@@ -429,7 +429,7 @@ sub run {
                 $depends = $base;
             }
             if ($depends && !$all_parsed->implies($depends)) {
-                if ($base =~ /^(python|ruby|(m|g)awk)$/) {
+                if ($base =~ /^(python|ruby|[mg]awk)$/) {
                     tag("$base-script-but-no-$base-dep", $filename);
                 } elsif ($base eq 'csh' && $filename =~ m,^etc/csh/login\.d/,){
                     # Initialization files for csh.
@@ -930,7 +930,7 @@ sub run {
                 pos($divert) = undef;
 
                 # position after the last pair of quotation marks, if any
-                1 while ($divert =~ m/\G.*?(\"|\').+?\1/gc);
+                1 while ($divert =~ m/\G.*?(["']).+?\1/gc);
                 # Strip anything matching and after '&&', '||', ';', or '>'
                 # this is safe only after we are positioned after the last pair
                 # of quotation marks
