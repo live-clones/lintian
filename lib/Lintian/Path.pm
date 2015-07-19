@@ -753,7 +753,7 @@ sub resolve_path {
     return $current;
 }
 
-### OVERLOADED OVERATORS ###
+### OVERLOADED OPERATORS ###
 
 # overload apparently does not like the mk_ro_accessor, so use a level
 # of indirection
