@@ -5,6 +5,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use constant LINE_LENGTH => 80;
 use constant FIELD_ORDER => (
@@ -72,7 +73,7 @@ exit 0;
 sub generate_profile {
     my ($profile, $main, @other) = @_;
     my $filename = "profiles/$profile.profile";
-    open(my $fd, '>', $filename) or die "$filename: $!";
+    open(my $fd, '>', $filename);
     print $fd "# This profile is auto-generated\n";
     print $fd "Profile: $profile\n";
     foreach my $f (FIELD_ORDER) {
@@ -94,7 +95,7 @@ sub generate_profile {
         }
         print $fd "\n";
     }
-    close($fd) or die "$filename: $!";
+    close($fd);
     return;
 }
 
@@ -120,13 +121,13 @@ sub format_field {
 sub read_tags {
     my ($file) = @_;
     my @tags = ();
-    open my $fd, '<', $file or die "$file: $!";
+    open(my $fd, '<', $file);
     while (<$fd>) {
         strip;
         next if /^#/ or $_ eq '';
         push @tags, $_;
     }
-    close $fd;
+    close($fd);
     return @tags;
 }
 
