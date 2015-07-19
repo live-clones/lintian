@@ -1300,9 +1300,8 @@ sub _split_dep {
     my ($pkg, $dmarch, $version, $darch, $restr)
       = ('', '', ['',''], [[], 0], []);
 
-    my $pkgname = $1 if $dep =~ s/^\s*([^<\s\[\(]+)\s*//;
-    if (defined $pkgname) {
-        ($pkg, $dmarch) = split /:/, $pkgname, 2;
+    if ($dep =~ s/^\s*([^<\s\[\(]+)\s*//) {
+        ($pkg, $dmarch) = split(/:/, $1, 2);
         $dmarch //= '';  # Ensure it is defined (in case there is no ":")
     }
 
