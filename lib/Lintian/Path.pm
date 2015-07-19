@@ -199,7 +199,15 @@ NB: Even for symlinks, a leading "./" will be stripped.
 
 Returns the size of the path in bytes.
 
-NB: This is only well defined for files.
+NB: Only regular files can have a non-zero file size.
+
+=cut
+
+sub size {
+    my ($self) = @_;
+    return 0 if not exists($self->{'size'});
+    return $self->{'size'};
+}
 
 =item date
 
@@ -262,7 +270,7 @@ happen if a package does not include all intermediate directories.
 =cut
 
 Lintian::Path->mk_ro_accessors(
-    qw(name link size date time parent_dir faux
+    qw(name link date time parent_dir faux
       ));
 
 =item operm

@@ -57,7 +57,6 @@ my %FILE_CODE2LPATH_TYPE = (
 my %INDEX_FAUX_DIR_TEMPLATE = (
     'name'       => '',
     '_path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
-    'size'       => 0,
     # Pick a "random" (but fixed) date
     # - hint, it's a good read.  :)
     'date'       => '1998-01-25',
@@ -435,9 +434,17 @@ sub _fetch_index_data {
     while (my $line = <$idx>) {
         chomp($line);
 
-        my (%file, $perm, $operm, $ownership, $name, $raw_type);
-        ($perm,$ownership,$file{size},$file{date},$file{time},$name)
+        my (%file, $perm, $operm, $ownership, $name, $raw_type, $size);
+        ($perm,$ownership,$size,$file{date},$file{time},$name)
           =split(' ', $line, 6);
+
+        $raw_type = substr($perm, 0, 1);
+
+        # Only set size if it is non-zero and even then, only for
+        # regular files.  When we set it, insist on it being an int.
+        # This makes perl store it slightly more effecient.
+        $file{'size'} = int($size) if $size and $raw_type eq '-';
+
         # This may appear to be obscene, but the call overhead of
         # perm2oct is measurable on (e.g.) chromium-browser.  With
         # the cache we go from ~1.5s to ~0.1s.
@@ -448,7 +455,6 @@ sub _fetch_index_data {
         } else {
             $operm = perm2oct($perm);
         }
-        $raw_type = substr($perm, 0, 1);
         $file{'_path_info'} = $operm
           | ($FILE_CODE2LPATH_TYPE{$raw_type} // Lintian::Path::TYPE_OTHER);
 
@@ -575,7 +581,8 @@ sub _fetch_index_data {
                   | Lintian::Path::TYPE_FILE;
                 # hardlinks does not have size, so copy that from the original
                 # entry.
-                $idxh{$target}->{size} = $e->{size};
+                $idxh{$target}{'size'} = $e->{'size'} if exists($e->{'size'});
+                delete($e->{'size'});
                 delete $idxh{$target}->{link};
             }
         }
