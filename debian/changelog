@@ -33,6 +33,8 @@ lintian (2.5.34) UNRELEASED; urgency=medium
     + [NT] The undocumented "type" method has been removed from
       the API.  It was an implementation detail that has now
       changed.
+    + [NT] The "uid" and "gid" methods now return 0 rather than
+      undef when numeric ownership is not collected.
 
   * reporting/templates:
     + [NT] Remove (uses of) the "invisible-anchor" css class as

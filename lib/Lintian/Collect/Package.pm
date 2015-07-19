@@ -57,8 +57,6 @@ my %FILE_CODE2LPATH_TYPE = (
 my %INDEX_FAUX_DIR_TEMPLATE = (
     'name'       => '',
     '_path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
-    'owner'      => 'root',
-    'group'      => 'root',
     'size'       => 0,
     # Pick a "random" (but fixed) date
     # - hint, it's a good read.  :)
@@ -437,8 +435,8 @@ sub _fetch_index_data {
     while (my $line = <$idx>) {
         chomp($line);
 
-        my (%file, $perm, $operm, $owner, $name, $raw_type);
-        ($perm,$owner,$file{size},$file{date},$file{time},$name)
+        my (%file, $perm, $operm, $ownership, $name, $raw_type);
+        ($perm,$ownership,$file{size},$file{date},$file{time},$name)
           =split(' ', $line, 6);
         # This may appear to be obscene, but the call overhead of
         # perm2oct is measurable on (e.g.) chromium-browser.  With
@@ -462,13 +460,27 @@ sub _fetch_index_data {
             my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
             croak "mismatching contents of index files: $name $name_chk"
               if $name ne $name_chk;
-            ($file{uid}, $file{gid}) = split '/', $owner_id, 2;
+            my ($uid, $gid) = split('/', $owner_id, 2);
+            # Memory-optimise for 0/0.  Perl has an insane overhead
+            # for each field, so this is sadly worth it!
+            if ($uid) {
+                $file{'uid'} = $uid;
+            }
+            if ($gid) {
+                $file{'gid'} = $gid;
+            }
         }
 
-        ($file{owner}, $file{group}) = split '/', $owner, 2;
+        my ($owner, $group) = split('/', $ownership, 2);
 
-        $file{owner} = 'root' if $file{owner} eq '0';
-        $file{group} = 'root' if $file{group} eq '0';
+        # Memory-optimise for root/root.  Perl has an insane overhead
+        # for each field, so this is sadly worth it!
+        if ($owner ne 'root' and $owner ne '0') {
+            $file{'owner'} = $owner;
+        }
+        if ($group ne 'root' and $group ne '0') {
+            $file{'group'} = $group;
+        }
 
         if ($name =~ s/ link to (.*)//) {
             my $target = dequote_name($1);
@@ -512,10 +524,6 @@ sub _fetch_index_data {
             my ($parent) = ($name =~ m,^(.+/)?(?:[^/]+/?)$,);
             $parent //= '';
             $cpy{'name'} = $name;
-            if ($num_idx) {
-                $cpy{'uid'} = 0;
-                $cpy{'gid'} = 0;
-            }
             $idxh{$name} = \%cpy;
             $children{$parent} = [] unless exists $children{$parent};
             push @{ $children{$parent} }, $name unless $parent eq $name;

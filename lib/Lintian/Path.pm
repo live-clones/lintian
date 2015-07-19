@@ -126,6 +126,14 @@ NB: If only numerical owner information is available in the package,
 this may return a numerical owner (except uid 0 is always mapped to
 "root")
 
+=cut
+
+sub owner {
+    my ($self) = @_;
+    return 'root' if not exists($self->{'owner'});
+    return $self->{'owner'};
+}
+
 =item group
 
 Returns the group of the path entry as a username.
@@ -134,21 +142,45 @@ NB: If only numerical owner information is available in the package,
 this may return a numerical group (except gid 0 is always mapped to
 "root")
 
+=cut
+
+sub group {
+    my ($self) = @_;
+    return 'root' if not exists($self->{'group'});
+    return $self->{'group'};
+}
+
 =item uid
 
 Returns the uid of the owner of the path entry.
 
-NB: If the uid is not available, undef will be returned.
+NB: If the uid is not available, 0 will be returned.
 This usually happens if the numerical data is not collected (e.g. in
 source packages)
+
+=cut
+
+sub uid {
+    my ($self) = @_;
+    return 0 if not exists($self->{'uid'});
+    return $self->{'uid'};
+}
 
 =item gid
 
 Returns the gid of the owner of the path entry.
 
-NB: If the gid is not available, undef will be returned.
+NB: If the gid is not available, 0 will be returned.
 This usually happens if the numerical data is not collected (e.g. in
 source packages)
+
+=cut
+
+sub gid {
+    my ($self) = @_;
+    return 0 if not exists($self->{'gid'});
+    return $self->{'gid'};
+}
 
 =item link
 
@@ -230,8 +262,7 @@ happen if a package does not include all intermediate directories.
 =cut
 
 Lintian::Path->mk_ro_accessors(
-    qw(name owner group link uid gid
-      size date time parent_dir faux
+    qw(name link size date time parent_dir faux
       ));
 
 =item operm
