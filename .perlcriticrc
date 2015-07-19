@@ -8,7 +8,7 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax Modules:: BuiltinFunctions:: ClassHierarchies:: CommaSeparatedStatements QuotesAsQuotelikeOperatorDelimiters MixedBooleanOperators ProhibitBarewordFileHandles ConditionalUseStatements Tidy
+include = ExplicitReturnUndef GlobFunction NegativeIndices PrivateVars UselessInitialization MatchVars NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings EndWithOne ConditionalUseStatements PackageMatchesPodName JoinedReadline UnreachableCode TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements UnusedVariables UnusedCapture TwoArgOpen ProhibitHardTabs MismatchedOperators IndirectSyntax Modules:: BuiltinFunctions:: ClassHierarchies:: CommaSeparatedStatements QuotesAsQuotelikeOperatorDelimiters MixedBooleanOperators ProhibitBarewordFileHandles ConditionalUseStatements Modules::ProhibitAutomaticExportation ProhibitBarewordFileHandles ConditionalDeclarations Tidy
 #include = MixedBooleanOperators InteractiveTest UpperCaseHeredoc ReusedNames PackageVars ConditionalDeclarations SingleCharAlternation FixedStringMatches ConditionalUseStatements QuotedWordLists
 
 exclude = RequireFilenameMatchesPackage RequireVersionVar ProhibitExcessMainComplexity ProhibitStringySplit ComplexMappings StringyEval Documentation::PodSpell BuiltinFunctions::ProhibitUselessTopic
@@ -16,7 +16,7 @@ exclude = RequireFilenameMatchesPackage RequireVersionVar ProhibitExcessMainComp
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
 # theme = security || bugs || complexity || maintenance
-# exclude = ExtendedFormat LineBoundaryMatch DotMatchAnything AutomaticExportation BuiltinHomonyms FinalReturn PunctuationVars InitializationForLocalVars UnusualDelimiters RcsKeywords
+# exclude = ExtendedFormat LineBoundaryMatch DotMatchAnything BuiltinHomonyms InitializationForLocalVars UnusualDelimiters
 # even more stuff if theme is empty
 
 # Would be nice to fix at some point:
@@ -49,6 +49,9 @@ terminal_funcs = CORE::exec fail Lintian::Util::fail Die error
 allow_last_statement_to_be_comma_separated_in_map_and_grep = 1
 
 [-ValuesAndExpressions::ProhibitConstantPragma]
+
+# Requires "use English" and our style is against that.
+[-Variables::ProhibitPunctuationVars]
 
 [Variables::RequireLocalizedPunctuationVars]
 allow = %ENV %SIG $! $?
