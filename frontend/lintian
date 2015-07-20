@@ -1162,7 +1162,8 @@ sub process_group {
     perf_log("$gname,total-group-check,${raw_res}");
 
     if ($opt{'debug'} > 2) {
-        my $group_id = $group->get_source_processable->identifier;
+        my $pivot = ($group->get_processables)[0];
+        my $group_id = $pivot->pkg_src . '/' . $pivot->pkg_src_version;
         my $group_usage
           = $memory_usage->([map { $_->info } $group->get_processables]);
         debug_msg(3, "Memory usage [$group_id]: $group_usage");
