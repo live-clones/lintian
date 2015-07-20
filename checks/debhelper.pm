@@ -410,7 +410,7 @@ sub run {
     }
 
     if (scalar(@indebfiles)){
-        my $f = pop(@indebfiles);
+        my $f = shift(@indebfiles);
         my $others = scalar(@indebfiles);
         my $otext = '';
         if ($others > 1){
