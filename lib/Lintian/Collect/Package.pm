@@ -59,8 +59,7 @@ my %INDEX_FAUX_DIR_TEMPLATE = (
     '_path_info' => $FILE_CODE2LPATH_TYPE{'d'} | 0755,
     # Pick a "random" (but fixed) date
     # - hint, it's a good read.  :)
-    'date'       => '1998-01-25',
-    'time'       => '22:55:34',
+    'date_time'  => '1998-01-25 22:55:34',
     'faux'       => 1,
 );
 
@@ -435,9 +434,10 @@ sub _fetch_index_data {
         chomp($line);
 
         my (%file, $perm, $operm, $ownership, $name, $raw_type, $size);
-        ($perm,$ownership,$size,$file{date},$file{time},$name)
-          =split(' ', $line, 6);
+        my ($date, $time);
+        ($perm,$ownership,$size,$date,$time,$name)=split(' ', $line, 6);
 
+        $file{'date_time'} = "${date} ${time}";
         $raw_type = substr($perm, 0, 1);
 
         # Only set size if it is non-zero and even then, only for

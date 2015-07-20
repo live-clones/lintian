@@ -213,6 +213,13 @@ sub size {
 
 Return the modification date as YYYY-MM-DD.
 
+=cut
+
+sub date {
+    my ($self) = @_;
+    return (split(' ', $self->{'date_time'}, 2))[0];
+}
+
 =item parent_dir
 
 Returns the parent directory entry of this entry as a
@@ -269,9 +276,7 @@ happen if a package does not include all intermediate directories.
 
 =cut
 
-Lintian::Path->mk_ro_accessors(
-    qw(name link date time parent_dir faux
-      ));
+Lintian::Path->mk_ro_accessors(qw(name link parent_dir faux));
 
 =item operm
 
@@ -311,9 +316,7 @@ seconds since the start of Unix epoch in UTC.
 
 sub timestamp {
     my ($self) = @_;
-    my $date = $self->{'date'};
-    my $time = $self->{'time'};
-    return str2time("$date $time", 'GMT');
+    return str2time($self->{'date_time'}, 'GMT');
 }
 
 =item child(BASENAME)

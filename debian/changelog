@@ -30,9 +30,8 @@ lintian (2.5.34) UNRELEASED; urgency=medium
   * lib/Lintian/Path.pm:
     + [NT] Rework some implementation details to reduce memory
       consumption slightly.
-    + [NT] The undocumented "type" method has been removed from
-      the API.  It was an implementation detail that has now
-      changed.
+    + [NT] The undocumented "type" and "time" methods have been
+      removed from the API.
     + [NT] The "uid" and "gid" methods now return 0 rather than
       undef when numeric ownership is not collected.
 
