@@ -603,7 +603,6 @@ sub _fetch_index_data {
                 $child_table{$basename} = $child;
                 push(@sorted_children, $child);
             }
-            @sorted_children = reverse(@sorted_children);
             $entry->{'_sorted_children'} = \@sorted_children;
             $entry->{'children'} = \%child_table;
             $entry->{'_fs_info'} = $fs_info;
