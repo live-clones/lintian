@@ -645,7 +645,9 @@ sub find_cruft {
         if ($basename =~ /\blenn?a\b/i) {
             if(    $file_info =~ /\bimage\b/i
                 or $file_info =~ /^Matlab v\d+ mat/i
-                or $file_info =~ /\bbitmap\b/i) {
+                or $file_info =~ /\bbitmap\b/i
+                or $file_info =~ /^PDF Document\b/i
+                or $file_info =~ /^Postscript Document\b/i) {
                 tag 'license-problem-non-free-img-lenna', $name;
             }
 

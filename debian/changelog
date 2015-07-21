@@ -12,6 +12,7 @@ lintian (2.5.34) UNRELEASED; urgency=medium
       there cannot be a conflict involving revision 0.
       Thanks to Andreas Beckmann for the report.
       (Closes: #793068)
+    + [BR] Detect pdf, ps, and eps lenna file.
   * checks/systemd.pm:
     + [NT] Apply patches from Felipe Sateler to ignore known
       masked init.d scripts.  (Closes: #792501)
