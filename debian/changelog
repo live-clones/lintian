@@ -2,15 +2,16 @@ lintian (2.5.34) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/binaries.desc:
+  * checks/binaries.{desc,pm}:
     + [NT] Apply patch from Guillem Jover to improve the tag
       description of the LFS tag.  (Closes: #792167)
+    + [NT] Detect unstripped static libraries (as an
+      experimental tag).
   * checks/cruft.pm:
     + [NT] Avoid svn-conflict-file tag for ".r0" files, since
       there cannot be a conflict involving revision 0.
       Thanks to Andreas Beckmann for the report.
       (Closes: #793068)
-
   * checks/systemd.pm:
     + [NT] Apply patches from Felipe Sateler to ignore known
       masked init.d scripts.  (Closes: #792501)

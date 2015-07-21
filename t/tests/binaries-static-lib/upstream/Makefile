@@ -9,11 +9,11 @@ libfoo.a: code.o other.o
 
 pstripped.o: other.o
 	cp other.o pstripped.o
-	strip --strip-debug pstripped.o
+	strip --strip-unneeded pstripped.o
 
 fstripped.o: other.o
 	cp other.o fstripped.o
-	strip --strip-debug --remove-section=.comment \
+	strip --strip-unneeded --remove-section=.comment \
 	    --remove-section=.note fstripped.o
 
 libbar.a: fstripped.o pstripped.o

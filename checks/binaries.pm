@@ -27,14 +27,21 @@ use autodie;
 use constant NUMPY_STRING => 'module compiled against ABI version %x'
   . ' but this version of numpy is %x';
 
+# These are the ones file(1) looks for.  The ".zdebug_info" being the
+# compressed version of .debug_info.
+# - Technically, file(1) also looks for .symtab, but that is apparently
+#   not strippable for static libs.  Accordingly, it is omitted below.
+use constant DEBUG_SECTIONS => qw(.debug_info .zdebug_info);
+
+use File::Spec;
+use List::MoreUtils qw(any);
+
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
 use Lintian::Output qw(debug_msg);
 use Lintian::Util qw(fail slurp_entire_file strip);
-
-use File::Spec;
 
 my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
     sub { return qr/$_[1]/ });
@@ -306,8 +313,13 @@ sub run {
                 # Shouldn't happen, but...
                 fail("object ($file $obj) in static lib is missing!?")
                   unless defined $libobj;
-                tag_unneeded_sections('static-library-has-unneeded-section',
-                    "${file}(${obj})", $libobj);
+
+                if (any { exists($libobj->{'SH'}{$_}) } DEBUG_SECTIONS) {
+                    tag 'unstripped-static-library', "${file}(${obj})";
+                } else {
+                    tag_unneeded_sections('static-library-has-unneeded-section',
+                                          "${file}(${obj})", $libobj);
+                }
             }
         }
 
