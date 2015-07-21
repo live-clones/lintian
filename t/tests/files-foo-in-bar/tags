@@ -35,8 +35,8 @@ E: files-foo-in-bar: package-contains-xvpics-dir usr/share/doc/files-foo-in-bar/
 E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences
 E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences.d/
 E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences.d/bar
-E: files-foo-in-bar: package-install-apt-sources etc/apt/sources.d/
-E: files-foo-in-bar: package-install-apt-sources etc/apt/sources.d/bar
+E: files-foo-in-bar: package-install-apt-sources etc/apt/sources.list.d/
+E: files-foo-in-bar: package-install-apt-sources etc/apt/sources.list.d/bar
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/bin/bar

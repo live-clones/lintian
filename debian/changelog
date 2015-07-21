@@ -13,6 +13,8 @@ lintian (2.5.34) UNRELEASED; urgency=medium
       Thanks to Andreas Beckmann for the report.
       (Closes: #793068)
     + [BR] Detect pdf, ps, and eps lenna file.
+  * checks/files.{desc,pm}:
+    + [BR] Fix detection of sources.list file.  (Closes: #792237)
   * checks/systemd.pm:
     + [NT] Apply patches from Felipe Sateler to ignore known
       masked init.d scripts.  (Closes: #792501)
