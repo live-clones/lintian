@@ -119,9 +119,6 @@ sub run {
                 tag 'debian-watch-file-uses-deprecated-sf-redirector-method',
                   "line $.";
             }
-            if (m,\b\Qhttp://pypi.python.org/\E,) {
-                tag 'debian-watch-file-accesses-pypi-over-http', "line $.";
-            }
             if (m%githubredir\.debian\.net%) {
                 tag 'debian-watch-file-uses-deprecated-githubredir',"line $.";
             }
@@ -136,10 +133,6 @@ sub run {
                               /projects/.+/files}xsm
               ) {
                 tag 'debian-watch-file-should-use-sf-redirector', "line $.";
-            }
-
-            if (m%https?://pypi\.python\.org/packages/source/%) {
-                tag 'debian-watch-file-unsupported-pypi-url', "line $.";
             }
 
             # This bit is as-is from uscan.pl:
