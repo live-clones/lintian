@@ -304,7 +304,7 @@ my @file_checks = (
     [qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'],
     [qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'],
     [qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'],
-    [qr,^(.+/)?(.+?)\.(r\d+)$,          => 'svn-conflict-file'],
+    [qr,^(.+/)?(.+?)\.(r[1-9]\d*)$,     => 'svn-conflict-file'],
     [qr,\.(orig|rej)$,                  => 'patch-failure-file', 1],
     [qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file', 1],
 );

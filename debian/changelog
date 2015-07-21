@@ -5,6 +5,12 @@ lintian (2.5.34) UNRELEASED; urgency=medium
   * checks/binaries.desc:
     + [NT] Apply patch from Guillem Jover to improve the tag
       description of the LFS tag.  (Closes: #792167)
+  * checks/cruft.pm:
+    + [NT] Avoid svn-conflict-file tag for ".r0" files, since
+      there cannot be a conflict involving revision 0.
+      Thanks to Andreas Beckmann for the report.
+      (Closes: #793068)
+
   * checks/systemd.pm:
     + [NT] Apply patches from Felipe Sateler to ignore known
       masked init.d scripts.  (Closes: #792501)
