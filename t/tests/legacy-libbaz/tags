@@ -77,10 +77,10 @@ W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
 X: libbaz1: package-contains-broken-symlink usr/lib/libfoo.so.0.9 libfoo.so.0.9.1
 X: libbaz1: package-contains-broken-symlink usr/lib/libfoo3.so libfoo3.so.0.9
-X: libbaz1: static-library-has-unneeded-section usr/lib/libbaz1.a(baz.sho) .comment
 X: libbaz1: static-library-has-unneeded-section usr/lib/libbaz1.a(extra.sho) .comment
-X: libbaz1: static-library-has-unneeded-section usr/lib/libbaz2.a(baz.o) .comment
 X: libbaz1: static-library-has-unneeded-section usr/lib/libbaz2.a(extra.o) .comment
+X: libbaz1: unstripped-static-library usr/lib/libbaz1.a(baz.sho)
+X: libbaz1: unstripped-static-library usr/lib/libbaz2.a(baz.o)
 X: libbaz2-dev: static-library-has-unneeded-section usr/lib/libbaz2.a(baz.o) .comment
 X: libbaz2-dev: static-library-has-unneeded-section usr/lib/libbaz2.a(extra.o) .comment
 X: libbaz2: package-contains-broken-symlink usr/share/doc/libbaz2/changelog.gz usr/share/doc/lintian/changelog.gz

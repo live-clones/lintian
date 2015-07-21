@@ -317,8 +317,9 @@ sub run {
                 if (any { exists($libobj->{'SH'}{$_}) } DEBUG_SECTIONS) {
                     tag 'unstripped-static-library', "${file}(${obj})";
                 } else {
-                    tag_unneeded_sections('static-library-has-unneeded-section',
-                                          "${file}(${obj})", $libobj);
+                    tag_unneeded_sections(
+                        'static-library-has-unneeded-section',
+                        "${file}(${obj})", $libobj);
                 }
             }
         }
