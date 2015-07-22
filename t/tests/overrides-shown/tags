@@ -1,5 +1,3 @@
-N: override without extra information
-O: overrides-shown: manpage-has-bad-whatis-entry usr/share/man/man1/foo.1.gz
 N: exact extra information
 O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:4 /usr/dict/
 N: These are wildcard overrides
@@ -21,3 +19,5 @@ N: These are wildcard overrides
 O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:31 /var/preserve/
 N: These are wildcard overrides
 O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:32 /usr/preserve/
+N: override without extra information
+O: overrides-shown: manpage-has-bad-whatis-entry usr/share/man/man1/foo.1.gz
