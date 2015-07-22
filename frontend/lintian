@@ -867,9 +867,10 @@ foreach my $gname (sort $pool->get_group_names()) {
                 # Double check that no processes are running;
                 # hopefully it will catch regressions like 3bbcc3b
                 # earlier.
-                $exit_code = 2;
-                fail('Unreaped processes after running checks!?')
-                  if waitpid(-1, WNOHANG) != -1;
+                if (waitpid(-1, WNOHANG) != -1) {
+                    $exit_code = 2;
+                    fail('Unreaped processes after running checks!?');
+                }
             } else {
                 # If we are interrupted in (e.g.) checks/manpages, it
                 # tends to leave processes behind.  No reason to flag
