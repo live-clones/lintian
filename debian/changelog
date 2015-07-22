@@ -9,6 +9,9 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       come from gnulib and be LFS compliant.  Thanks to Guillem
       Jover for the report.  (Closes: #787853)
 
+  * data/spelling/corrections:
+    + [JW] Fix correction for "acknowldegement".
+
   * private/refresh-manual-refs:
     + [JW] Update the list of required packages.
 
