@@ -1,6 +1,8 @@
-lintian (2.5.34) UNRELEASED; urgency=medium
+lintian (2.5.34) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - unstripped-static-library
 
   * checks/binaries.{desc,pm}:
     + [NT] Apply patch from Guillem Jover to improve the tag
@@ -50,7 +52,7 @@ lintian (2.5.34) UNRELEASED; urgency=medium
       invisible (display: none) elements cannot be used as
       anchors.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 09 Jul 2015 21:50:53 +0200
+ -- Niels Thykier <niels@thykier.net>  Wed, 22 Jul 2015 21:55:58 +0200
 
 lintian (2.5.33) unstable; urgency=medium
 
