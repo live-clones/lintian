@@ -152,9 +152,10 @@ sub run {
             my ($foo, $sec, $sym) = @{$symbol};
 
             unless (defined $has_lfs) {
-                if ($LFS_SYMBOLS->known($sym)) {
+                if ($foo eq 'UND' and $LFS_SYMBOLS->known($sym)) {
                     # Using a 32bit only interface call, some parts of the
-                    # binary are built without LFS.
+                    # binary are built without LFS. If the symbol is defined
+                    # within the binary then we ignore it
                     $has_lfs = 0;
                 }
             }

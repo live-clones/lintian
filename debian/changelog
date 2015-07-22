@@ -2,6 +2,13 @@ lintian (2.5.35) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [NT] Apply patch from Sebastian Andrzej Siewior to inhibit
+      binary-file-built-without-LFS-support tags for binaries
+      that contains the "offending" LFS symbol.  These tend to
+      come from gnulib and be LFS compliant.  Thanks to Guillem
+      Jover for the report.  (Closes: #787853)
+
   * private/refresh-manual-refs:
     + [JW] Update the list of required packages.
 
