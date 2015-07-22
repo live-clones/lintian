@@ -36,7 +36,7 @@ use Lintian::Util qw(clean_env drain_pipe fail open_gz);
 sub run {
     my ($pkg, undef, $info, $proc, $group) = @_;
     my $ginfo = $group->info;
-    my (%binary, %link, %manpage);
+    my (%binary, %link, %manpage, @running_man, @running_lexgrog);
 
     # Read package contents...
     foreach my $file ($info->sorted_index) {
@@ -228,21 +228,12 @@ sub run {
                     exec('lexgrog', $fs_path)
                       or fail "exec lexgrog failed: $!";
                 }
-                my $desc = <$lexgrog_fd>;
-                $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
-                if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-                    tag 'manpage-has-useless-whatis-entry', $file;
-                } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
-                    tag 'manpage-is-dh_make-template', $file;
+                if (@running_lexgrog > 2) {
+                    process_lexgrog_output(\@running_lexgrog);
                 }
-                drain_pipe($lexgrog_fd);
-                eval {close($lexgrog_fd);};
-                if (my $err = $@) {
-                    # Problem closing the pipe?
-                    fail "close pipe: $err" if $err->errno;
-                    # No, then lexgrog returned with a non-zero exit code.
-                    tag 'manpage-has-bad-whatis-entry', $file;
-                }
+                # lexgrog can have a high start up time, so revisit
+                # this later.
+                push(@running_lexgrog, [$file, $lexgrog_fd, $pid]);
             }
 
             # If it's not a .so link, run it through 'man' to check for errors.
@@ -278,41 +269,14 @@ sub run {
                 # parent - close write end
                 close $write;
             }
-            while (<$read>) {
-                # Devel::Cover causes some annoying deep recursion
-                # warnings and sometimes in our child process.
-                # Filter them out, but only during coverage.
-                next if LINTIAN_COVERAGE and m{
-                    \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
-                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
-                   \d+}xsm;
-                # ignore progress information from man
-                next if /^Reformatting/;
-                next if /^\s*$/;
-                # ignore errors from gzip, will be dealt with at other places
-                next if /^(?:man|gzip)/;
-                # ignore wrapping failures for Asian man pages (groff problem)
-                if ($lang =~ /^(?:ja|ko|zh)/) {
-                    next if /warning \[.*\]: cannot adjust line/;
-                    next if /warning \[.*\]: can\'t break line/;
-                }
-                # ignore wrapping failures if they contain URLs (.UE is an
-                # extension for marking the end of a URL).
-                next
-                  if
-                  /:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
-                  and ($manfile[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
-                    or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
-                # ignore common undefined macros from pod2man << Perl 5.10
-                next if /warning: (?:macro )?\`(?:Tr|IX)\' not defined/;
-                chomp;
-                s/^[^:]+://o;
-                tag 'manpage-has-errors-from-man', $file, $_;
-                last;
+
+            if (@running_man > 3) {
+                process_man_output(\@running_man);
             }
-            close $read;
-            # reap man process
-            waitpid $pid, 0;
+            # man can have a high start up time, so revisit this
+            # later.
+            push(@running_man, [$file, $read, $pid, $lang, \@manfile]);
+
             # Now we search through the whole man page for some common errors
             my $lc = 0;
             my $stag_emitter
@@ -345,6 +309,9 @@ sub run {
             }
         }
     }
+    # If we have any running sub processes, wait for them here.
+    process_lexgrog_output(\@running_lexgrog) if @running_lexgrog;
+    process_man_output(\@running_man) if @running_man;
 
     # Check our dependencies:
     foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
@@ -376,6 +343,73 @@ sub run {
         }
     }
 
+    return;
+}
+
+sub process_lexgrog_output {
+    my ($running) = @_;
+    for my $lex_proc (@{$running}) {
+        my ($file, $lexgrog_fd, $pid) = @{$lex_proc};
+        my $desc = <$lexgrog_fd>;
+        $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
+        if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
+            tag 'manpage-has-useless-whatis-entry', $file;
+        } elsif ($desc =~ /\S+\s+-\s+programs? to do something/i) {
+            tag 'manpage-is-dh_make-template', $file;
+        }
+        drain_pipe($lexgrog_fd);
+        eval {close($lexgrog_fd);};
+        if (my $err = $@) {
+            # Problem closing the pipe?
+            fail "close pipe: $err" if $err->errno;
+            # No, then lexgrog returned with a non-zero exit code.
+            tag 'manpage-has-bad-whatis-entry', $file;
+        }
+    }
+    @{$running} = ();
+    return;
+}
+
+sub process_man_output {
+    my ($running) = @_;
+    for my $man_proc (@{$running}) {
+        my ($file, $read, $pid, $lang, $contents) = @{$man_proc};
+        while (<$read>) {
+            # Devel::Cover causes some annoying deep recursion
+            # warnings and sometimes in our child process.
+            # Filter them out, but only during coverage.
+            next if LINTIAN_COVERAGE and m{
+                    \A Deep [ ] recursion [ ] on [ ] subroutine [ ]
+                    "[^"]+" [ ] at [ ] .*B/Deparse.pm [ ] line [ ]
+                   \d+}xsm;
+            # ignore progress information from man
+            next if /^Reformatting/;
+            next if /^\s*$/;
+            # ignore errors from gzip, will be dealt with at other places
+            next if /^(?:man|gzip)/;
+            # ignore wrapping failures for Asian man pages (groff problem)
+            if ($lang =~ /^(?:ja|ko|zh)/) {
+                next if /warning \[.*\]: cannot adjust line/;
+                next if /warning \[.*\]: can\'t break line/;
+            }
+            # ignore wrapping failures if they contain URLs (.UE is an
+            # extension for marking the end of a URL).
+            next
+              if/:(\d+): warning \[.*\]: (?:can\'t break|cannot adjust) line/
+              and ($contents->[$1 - 1] =~ m,(?:https?|ftp|file)://.+,i
+                or $contents->[$1 - 1] =~ m,^\s*\.\s*UE\b,);
+            # ignore common undefined macros from pod2man << Perl 5.10
+            next if /warning: (?:macro )?\`(?:Tr|IX)\' not defined/;
+            chomp;
+            s/^[^:]+://o;
+            tag 'manpage-has-errors-from-man', $file, $_;
+            last;
+        }
+        close($read);
+        # reap man process
+        waitpid($pid, 0);
+    }
+    @{$running} = ();
     return;
 }
 
