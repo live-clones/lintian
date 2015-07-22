@@ -863,10 +863,20 @@ foreach my $gname (sort $pool->get_group_names()) {
                 $success = 0;
             }
             $group->clear_cache;
-            # Double check that no processes are running;  hopefully
-            # it will catch regressions like 3bbcc3b earlier.
-            fail('Unreaped processes after running checks!?')
-              if waitpid(-1, WNOHANG) != -1;
+            if ($exit_code != 2) {
+                # Double check that no processes are running;
+                # hopefully it will catch regressions like 3bbcc3b
+                # earlier.
+                $exit_code = 2;
+                fail('Unreaped processes after running checks!?')
+                  if waitpid(-1, WNOHANG) != -1;
+            } else {
+                # If we are interrupted in (e.g.) checks/manpages, it
+                # tends to leave processes behind.  No reason to flag
+                # an error for that - but we still try to reap the
+                # children if they are now done.
+                1 while waitpid(-1, WNOHANG) > 0;
+            }
         }
     };
     my $total_tres = $format_timer_result->($total_raw_res);
