@@ -1,10 +1,8 @@
-Last generated 2015-07-09
-Coverage (Tags): 1069/1137 (94.02%), w. legacy tests: 1126/1137 (99.03%)
-Coverage (Checks): 38/46 (82.61%), w. legacy tests: 40/46 (86.96%)
+Last generated 2015-07-22
+Coverage (Tags): 1071/1138 (94.11%), w. legacy tests: 1128/1138 (99.12%)
+Coverage (Checks): 38/46 (82.61%), w. legacy tests: 41/46 (89.13%)
 
 The following tags are not tested by the test suite:
-
-binaries ocaml-custom-executable
 
 deb-format tar-errors-from-control
 

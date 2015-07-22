@@ -14,6 +14,8 @@ all:
 	$(COMPILE) -o basicshippedrpathmore basic.c -Wl,--rpath,/usr/lib/binaries-general:/usr/lib/binaries-general/bar
 	# static version of basic for debugging checks
 	$(COMPILE) -static -o basic.static basic.c
+	# static executable to trigger ocaml check
+	$(COMPILE) -o ocaml-exec ocaml.c
 	# version with debug
 	$(COMPILE) -o basicdebug -g3 -Wl,--build-id basic.c
 
@@ -29,6 +31,7 @@ install:
 	strip -s $(DESTDIR)/usr/lib/debug/usr/share/foo/basic
 	install -m 755 -c basiclibrpath $(DESTDIR)/usr/lib/foo/basiclibrpath
 	install -m 755 -c basicshippedrpath $(DESTDIR)/usr/lib/foo/basicshippedrpath
+	install -m 755 -c ocaml-exec $(DESTDIR)/usr/lib/foo/ocaml-exec
 	install -m 744 -c basicshippedrpathmore $(DESTDIR)/usr/lib/foo/basicshippedrpathmore
 	objcopy --only-keep-debug basic $(DESTDIR)/usr/lib/debug/basic
 	install -d "$(DESTDIR)/usr/lib/debug/.build-id/"`$(GETBUILDID) -s basicdebug`
