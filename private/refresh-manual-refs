@@ -22,7 +22,8 @@
 # Should be run from the top level of the Lintian source tree or with
 # LINTIAN_ROOT set appropriately.  You need copies of all the relevant manuals
 # installed in the standard places locally (packages debian-policy,
-# developers-reference, doc-base, python, lintian, menu and libpkg-guide).
+# developers-reference, doc-base, python, lintian, menu, java-common and
+# vim-doc).
 
 use strict;
 use warnings;
