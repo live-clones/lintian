@@ -148,7 +148,7 @@ sub spelling_exceptions {
             $except{$_} = 1 for split m/-/, $name;
         }
     }
-    $self->{'seplling_exceptions'} = \%except;
+    $self->{'spelling_exceptions'} = \%except;
     return \%except;
 }
 
