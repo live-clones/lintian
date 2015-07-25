@@ -11,82 +11,82 @@
 apache||Apache
 api||API
 Api||API
-D-BUS||D-Bus
 d-bus||D-Bus
 dbus||D-Bus
+D-BUS||D-Bus
 debian||Debian
-Debian-Edu||Debian Edu
 debian-edu||Debian Edu
-Docbook||DocBook
+Debian-Edu||Debian Edu
 docbook||DocBook
+Docbook||DocBook
+EMacs||Emacs
 english||English
 french||French
-EMacs||Emacs
-Gconf||GConf
 gconf||GConf
+Gconf||GConf
 german||German
-Gnome||GNOME
 gnome||GNOME
-Gnome-VFS||GnomeVFS
-Gnome-Vfs||GnomeVFS
-GnomeVfs||GnomeVFS
+Gnome||GNOME
 gnome-vfs||GnomeVFS
 gnomevfs||GnomeVFS
+Gnome-Vfs||GnomeVFS
+GnomeVfs||GnomeVFS
+Gnome-VFS||GnomeVFS
 gnu||GNU
 Gnu||GNU
-Gobject||GObject
 gobject||GObject
-Gstreamer||GStreamer
+Gobject||GObject
 gstreamer||GStreamer
-GTK||GTK+
+Gstreamer||GStreamer
 gtk+||GTK+
+GTK||GTK+
 Http||HTTP
 kde||KDE
-meta-package||metapackage
-MYSQL||MySQL
-Mysql||MySQL
-mysql||MySQL
-linux||Linux
-Latex||LaTeX
 latex||LaTeX
+Latex||LaTeX
+linux||Linux
+meta-package||metapackage
+mysql||MySQL
+Mysql||MySQL
+MYSQL||MySQL
 oAuth||OAuth
-OCAML||OCaml
-Ocaml||OCaml
 ocaml||OCaml
-OpenLdap||OpenLDAP
-Openldap||OpenLDAP
+Ocaml||OCaml
+OCAML||OCaml
 openldap||OpenLDAP
+Openldap||OpenLDAP
+OpenLdap||OpenLDAP
 openstreetmap||OpenStreetMap
 Openstreetmap||OpenStreetMap
 OpenStreetmap||OpenStreetMap
-Postgresql||PostgreSQL
 postgresql||PostgreSQL
+Postgresql||PostgreSQL
 python||Python
 russian||Russian
-SkoleLinux||Skolelinux
 skolelinux||Skolelinux
-SLang||S-Lang
-S-lang||S-Lang
+SkoleLinux||Skolelinux
 s-lang||S-Lang
+S-lang||S-Lang
+SLang||S-Lang
 spanish||Spanish
 subversion||Subversion
-TCL||Tcl
 tcl||Tcl
-TEX||TeX
-Tex||TeX
-TeTeX||teTeX
-Tetex||teTeX
+TCL||Tcl
 tetex||teTeX
-TeXLive||TeX Live
-TeX-Live||TeX Live
-TeXlive||TeX Live
-TeX-live||TeX Live
-texlive||TeX Live
+Tetex||teTeX
+TeTeX||teTeX
 tex-live||TeX Live
-TK||Tk
+texlive||TeX Live
+TeX-live||TeX Live
+TeXlive||TeX Live
+TeX-Live||TeX Live
+TeXLive||TeX Live
+Tex||TeX
+TEX||TeX
 tk||Tk
+TK||Tk
 Xemacs||XEmacs
 XEMacs||XEmacs
-XFCE||Xfce
-XFce||Xfce
 xfce||Xfce
+XFce||Xfce
+XFCE||Xfce

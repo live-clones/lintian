@@ -7,14 +7,14 @@
 #
 # Please keep the list sorted (using the en_US locale).
 
-(?i)allow to||allow one to
 (?i)allows to||allows one to
+(?i)allow to||allow one to
 (?i)an other||another
 (?i)debian/gnu linux||Debian GNU/Linux
-(?i)gnu public licen[cs]e||GNU General Public License
 (?i)gnu lesser public licen[cs]e||GNU Lesser General Public License
+(?i)gnu public licen[cs]e||GNU General Public License
 (?i)is not enable||is not enabled
-(?i)permit to||permit one to
 (?i)permits to||permits one to
+(?i)permit to||permit one to
 (?i)these package||this package
 (?i)this packages||these packages

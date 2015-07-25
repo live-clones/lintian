@@ -12,6 +12,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
   * data/spelling/corrections*:
     + [JW] Fix correction for "acknowldegement".
     + [JW] Document that the lists should be sorted.
+    + [JW] Re-sort the correction lists.
 
   * private/refresh-manual-refs:
     + [JW] Update the list of required packages.
