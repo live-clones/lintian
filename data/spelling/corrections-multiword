@@ -4,6 +4,8 @@
 #
 # The format of each line is:
 # SPELLING_MISTAKE_REGEX||correction
+#
+# Please keep the list sorted (using the en_US locale).
 
 (?i)allow to||allow one to
 (?i)allows to||allows one to

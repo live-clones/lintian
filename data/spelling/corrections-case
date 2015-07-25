@@ -5,6 +5,8 @@
 #
 # The format of each line is:
 # mistake||correction
+#
+# Please keep the list sorted (using the en_US locale).
 
 apache||Apache
 api||API

@@ -14,6 +14,8 @@
 #
 # Note that corrections involving multiple word mistakes or case errors
 # should be included in the appropriate data file, rather than here.
+#
+# Please keep the list sorted (using the en_US locale).
 
 abandonning||abandoning
 abigious||ambiguous
