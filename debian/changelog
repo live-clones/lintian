@@ -17,6 +17,9 @@ lintian (2.5.35) UNRELEASED; urgency=medium
   * private/refresh-manual-refs:
     + [JW] Update the list of required packages.
 
+  * t/scripts/*.t:
+    + [JW] Make all the scripts executable.
+
  -- Niels Thykier <niels@thykier.net>  Wed, 22 Jul 2015 22:48:07 +0200
 
 lintian (2.5.34) unstable; urgency=medium
