@@ -46,7 +46,7 @@ my @DIRS
 all_pod_files_spelling_ok(@CHECKS, @DIRS, 't/runtests');
 
 sub check_aspell {
-    # Ubuntu Precise has an old aspell-en, which does not recogise
+    # Ubuntu Precise has an old aspell-en, which does not recognise
     # "basic" stuff like "indices" or "extendable".
     my $ok = 0;
     open(my $fd, '-|', 'dpkg', '-l');

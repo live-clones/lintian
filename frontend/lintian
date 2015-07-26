@@ -436,7 +436,7 @@ sub record_option_too_late {
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
 #    added something to it.
-#  - uses @display_level to track cmd-line appearences of
+#  - uses @display_level to track cmd-line appearances of
 #    --display-level/--display-info
 sub cfg_display_level {
     my ($var, $val) = @_;
@@ -624,7 +624,7 @@ foreach my $var (@ENV_VARS) {
 
 # {{{ Loading lintian's own libraries, parse config file and setup output
 
-# Include (only existsing) lib directories from @search_dirs in @INC
+# Include (only existing) lib directories from @search_dirs in @INC
 # and LINTIAN_{INCLUDE,HELPER}_DIRS.
 # NB: Add INIT_ROOT to @search_dirs after updating @INC as we already
 # added it in BEGIN{} if needed.

@@ -478,7 +478,7 @@ not escape the root.
  
  my $path = ...;
  # The snippet applies equally well to $info->debfiles and
- # $info->control (just remember to subst all occurrances of
+ # $info->control (just remember to subst all occurrences of
  # $info->unpacked).
  my $unpacked_file = $info->unpacked($path);
  if ( -f $unpacked_file && is_ancestor_of($info->unpacked, $unpacked_file)) {

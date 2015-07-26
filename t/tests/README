@@ -30,7 +30,7 @@ reason to.
 Number ranges:
 
 0000 - 0999	Basic test, that generally just assure that the test
-		suite and lintian are not completly broken
+		suite and lintian are not completely broken
 1000 - 1999	Tests for lib/       [1500]
 2000 - 2999	Tests for frontend/  [2500]
 3000 - 3999	Tests for unpack/    [3500]
@@ -53,7 +53,7 @@ fields are:
 
 In addition, the tags (if any) that the test case is testing for should be
 listed in a Test-For key.  The tags that the test case is testing are not
-issued (checking againts false positives) should be listed in a
+issued (checking against false positives) should be listed in a
 Test-Against key.  In both cases, the tags should be separated by
 whitespace.  The following format is suggested for multiple tags:
 
@@ -102,8 +102,8 @@ failing, use:
 
     Todo: yes
 
-Test cases marked as Todo will suceed if they fail _the testing step_
-and fail if they suceed.  Although this option can be very useful to
+Test cases marked as Todo will succeed if they fail _the testing step_
+and fail if they succeed.  Although this option can be very useful to
 document what needs to be done, the ideal situation is to have none of
 them :)
 

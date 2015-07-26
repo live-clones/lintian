@@ -8,6 +8,8 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       that contains the "offending" LFS symbol.  These tend to
       come from gnulib and be LFS compliant.  Thanks to Guillem
       Jover for the report.  (Closes: #787853)
+  * checks/fields.desc:
+    + [JW] Fix spelling of the word "indicate".
 
   * data/spelling/corrections*:
     + [JW] Fix correction for "acknowldegement".
@@ -15,7 +17,8 @@ lintian (2.5.35) UNRELEASED; urgency=medium
     + [JW] Re-sort the correction lists.
 
   * mail-templates/license-problem-*:
-    + Make the files end with newline character.
+    + [JW] Make the files end with newline character.
+    + [JW] Fix typo in template.
 
   * private/refresh-manual-refs:
     + [JW] Update the list of required packages.
@@ -61,7 +64,7 @@ lintian (2.5.34) unstable; urgency=medium
 
   * lib/Lintian/Collect{,/*}.pm:
     + [NT] Add a shared memory cache that can be used to
-      reduce memory comsumption a bit for sharable objects.
+      reduce memory consumption a bit for sharable objects.
       (Closes: #715035)
   * lib/Lintian/Data.pm:
     + [NT] Remove references to LINTIAN_ROOT as Lintian::Data
@@ -146,7 +149,7 @@ lintian (2.5.33) unstable; urgency=medium
     + [NT] Remove slow "head + grep" pipeline on all ELF
       binaries, which is no longer used.
   * helpers/coll/strings-helper:
-    + [NT] Avoid an unncessary overhead in using L::Command's
+    + [NT] Avoid an unnecessary overhead in using L::Command's
       spawn+reap.  In some cases, this can reduce the runtime
       of this command by ~50%.
 
@@ -1070,7 +1073,7 @@ lintian (2.5.26) unstable; urgency=medium
   * data/cruft/warn-file-type:
     + [BR] Add debug source suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
-      false postive in mono and in jenkin.
+      false positive in mono and in jenkins.
   * data/debhelper/dh_commands:
     + [BR] Add patch from  Piotr Ożarowski, dh-python2
       moved to dh-python package (Closes: #740161).
@@ -1176,7 +1179,7 @@ lintian (2.5.25) unstable; urgency=medium
   * data/cruft/warn-file-type:
     + [BR] add yc suffix for detecting javascript
       source-is-missing and improve test suite. Fix a
-      false postive in libdevel-nytprof-perl.
+      false positive in libdevel-nytprof-perl.
   * data/files/js-libraries:
     + [NT] Apply patch from Marcelo Jorge Vieira to correct
       a regular expression for finding embedded copies of
@@ -1495,7 +1498,7 @@ lintian (2.5.22) unstable; urgency=medium
     + [BR] Use Lintian::Data for safe symlinks list. Add
       /dev/null to this list.  (Closes: #740339).
   * checks/systemd.pm:
-    + [BR] Allow spaces arround = in service files.
+    + [BR] Allow spaces around = in service files.
       (Closes: #739366).
   * checks/watch-file.{desc,pm}:
     + [BR] Allow debian/upstream-signing-key.asc,
@@ -1881,7 +1884,7 @@ lintian (2.5.19) unstable; urgency=low
       false-positive non-standard-toplevel-dir for the
       directories /hurd and /servers.  (Closes: #724524)
     + [NT] Work around bug #724571 in t1disasm by ignoring
-      failures caused by segementation faults and bus errors.
+      failures caused by segmentation faults and bus errors.
       Though, Lintian will emit a warning when such an error
       occurs.  Thanks to Ansgar Burchardt for the report.
       (Closes: #724319)
@@ -2469,7 +2472,7 @@ lintian (2.5.15) unstable; urgency=low
     + [NT] Fix bug in the overloaded qr// operator.
   * lib/Lintian/ProcessablePool.pm:
     + [NT] Fix a bug that could cause .changes files to be
-      silently skipped.  This only occured if a related package
+      silently skipped.  This only occurred if a related package
       was passed on the command line before the .changes file.
       Thanks to Salvo Tomaselli for reporting the bug.
       (Closes: #714437)
@@ -2478,7 +2481,7 @@ lintian (2.5.15) unstable; urgency=low
   * lib/Lintian/Tags.pm:
     + [NT] Use croak instead of die when a check emits an
       unknown tag.  This gives the check writer a better chance
-      of finding where the problem occured.
+      of finding where the problem occurred.
   * lib/Lintian/Util.pm:
     + [NT] Have parse_dpkg_control and visit_dpkg_control
       give a more detailed line number information about
@@ -5278,9 +5281,9 @@ lintian (2.5.2) unstable; urgency=low
 
   * man/lintian.pod.in:
     + [NT] Documented the new --profile option.  Note that the
-      options --suppress-tags{,-from-file} now supresses tags
+      options --suppress-tags{,-from-file} now suppresses tags
       in the active profile.
-    + [NT] Removed all refereces to "unpack-level".  All unpack
+    + [NT] Removed all references to "unpack-level".  All unpack
       levels have been replaced by collections.
     + [NT] Clarified that some command-line arguments are only
       useful when using a static lintian lab.
@@ -7219,7 +7222,7 @@ lintian (2.2.18) unstable; urgency=low
       possible rather than certain since overrides are allowed.
   * checks/changelog-file:
     + [FL] Avoid various Perl warnings which can be caused by
-      completly broken changelog files.
+      completely broken changelog files.
   * checks/conffiles.desc:
     + [RA] file-in-usr-marked-as-conffile is serious (ftpmaster reject).
       Add a Policy reference and improve the description.
@@ -8604,7 +8607,7 @@ lintian (2.2.7) unstable; urgency=low
       Sequence, Options, and Skeleton for test suite descriptions.
       Thanks, Raphael Geissert.
   * doc/lintian.sgml:
-    + [RA] Document pendantic tags.  Patch from Raphael Geissert.
+    + [RA] Document pedantic tags.  Patch from Raphael Geissert.
 
   * frontend/lintian:
     + [RA] Stop loading FileHandle.  We no longer use it.
@@ -9135,7 +9138,7 @@ lintian (2.2.0) unstable; urgency=low
       Wise.  (Closes: #512363)
   * checks/nmu{,.desc}:
     + [RA] Use Lintian::Collect to read the changelog.
-    + [RA] Only treat the mention of NMU as a maintainer acknowldegement
+    + [RA] Only treat the mention of NMU as a maintainer acknowledgement
       if the "ack" string appears before the mention of NMU.  Avoids
       changelog-should-mention-nmu false positives for "NMU with ACK from
       maintainer."  Thanks, Evgeni Golov.  (Closes: #512738)
@@ -9638,7 +9641,7 @@ lintian (2.1.1) unstable; urgency=low
   * lib/Lintian/Output/ColonSeparated.pm:
     + [ADB] Fix uninitialized value warnings by displaying the type code
       rather than the (no longer present in description files) Type field
-      and handling non-overriden tags.
+      and handling non-overridden tags.
   * lib/Lintian/Output/LetterQualifier.pm:
     + [ADB] Optionally include the description of a tag when displaying it.
   * lib/Lintian/Output/XML.pm:
@@ -9816,7 +9819,7 @@ lintian (2.0.0) unstable; urgency=low
       this out.
   
   * frontend/lintian:
-    + [FL] Fix config file parsing which I completly broke in ~rc1.
+    + [FL] Fix config file parsing which I completely broke in ~rc1.
   
   * lib/Lintian/Schedule.pm:
     + [FL] Fix parsing of source package entries in package lists.
@@ -9995,7 +9998,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       for humans:
       - Update the format to include the new severity/certainty info.
       - Include information whether the tag is experimental.
-      - Move the detailled override info to the end but include info
+      - Move the detailed override info to the end but include info
         flag about the override status in the same column that also
         includes the experimental flag info.
   * lib/Lintian/Schedule.pm:
@@ -10015,7 +10018,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
   * t/runtests:
     + [FL] Copy the changes to testset/runtests from JP's branch.
     + [FL] Remove global tests that were duplicated from testset/runtests,
-      which will not go away in the forseeable future.
+      which will not go away in the foreseeable future.
     + [FL] Print a warning if no tests were run.  Based on a patch by
       Raphael Geissert.
     + [RA] Fix single test mode.
@@ -13015,7 +13018,7 @@ lintian (1.23.16) unstable; urgency=low
     + [RA] Left-justify and disable hyphenation for readability.
 
   * unpack/unpack-srcpkg-l2:
-    + [JvW] Use -q with dpkg-source to surpress warnings about unsigned source
+    + [JvW] Use -q with dpkg-source to suppress warnings about unsigned source
       packages. Requires dpkg-dev 1.13.17
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 26 Mar 2006 15:38:37 +0200
@@ -13159,7 +13162,7 @@ lintian (1.23.13) unstable; urgency=low
     + [FL] PythonX.Y dependency can also be satisfied with pythonX.Y-minimal.
       Noted by Matthias Klose (Closes: #326643)
     + [FL] Only match 'local' at the beginning of a line. The check is too
-      ambigious otherwise. Reported by Marc Haber (Closes: #330548)
+      ambiguous otherwise. Reported by Marc Haber (Closes: #330548)
     + [FL] Better reflect the current discussions wether some of the
       XSI:sms should be allowed in shell scripts by moving some of
       them to a separate check possible-non-posix-code-in-maintainer-script.
@@ -13196,7 +13199,7 @@ lintian (1.23.12) unstable; urgency=low
       Pointed out by Rene Engelhard (Closes: #322241, #324121)
     + [FL] Also remove -udeb strings and substitute lib64 with lib in
       package name before comparing with SONAME
-    + [FL] Replace any occurence of _ in the SONAME with - since the
+    + [FL] Replace any occurrence of _ in the SONAME with - since the
       former isn't allowed in package names but occasionally used in
       sonames
     + [FL] Remove trailing .so from SONAMEs
@@ -13381,7 +13384,7 @@ lintian (1.23.9) unstable; urgency=low
 
 lintian (1.23.8) unstable; urgency=low
 
-  The "Hm, this is the team's one year anniversery of maintaining lintian"
+  The "Hm, this is the team's one year anniversary of maintaining lintian"
   release[1], and still using the "temporary" subversion repository...
 
   Featuring Steve "R." Langasek in a guest appearance.
@@ -13687,7 +13690,7 @@ lintian (1.23.1) unstable; urgency=low
     + [FL] Some clean-up and warn that wm-menu-config is deprecated
       (Closes: #248997)
     + [FL] Demote executable-in-usr-lib-menu to warning as executables
-      are supported (but seldomly used) (Closes: #254498)
+      are supported (but seldom used) (Closes: #254498)
   * checks/menu-format:
     + [FL] Fix su-to-root checks to cope with the new -X option and
       improve the option parsing to better handle unknown options
@@ -13931,8 +13934,8 @@ lintian (1.23.0) unstable; urgency=low
     + [JvW] Fixed that lintian -I also displays info for I: entries
 
   * lib/Dep.pm:
-    + [FL] Fixed some semantic errors (since noone ever observed the
-      correspoding perl warnings the fixed parts are probably never
+    + [FL] Fixed some semantic errors (since no one ever observed the
+      corresponding perl warnings the fixed parts are probably never
       used in the current code)
   * lib/Utils.pm
     + [HE] Changed {read,parse}_dpkg_control a bit to cope with the fact
@@ -14015,7 +14018,7 @@ lintian (1.22.12) unstable; urgency=low
       policy, thanks Adrian Bunk for noticing, FL for patch (Closes: #200280)
   * checks/filenames:
     + [JvW] Revised the symlink detection stuff, it is now more rigorous, and
-      has seperate warning for recursive symlinks that are otherwise not
+      has separate warning for recursive symlinks that are otherwise not
       necessarily wrong (Closes: #118080)
   * checks/files:
     + [FL] only issue package-installs-nonbinary-perl-in-usr-lib-perl5 if
@@ -14119,7 +14122,7 @@ lintian (1.22.11) unstable; urgency=low
 
 lintian (1.22.10) unstable; urgency=low
 
-  * Lintian maintainance is now in the hands of the `Debian Lintian
+  * Lintian maintenance is now in the hands of the `Debian Lintian
     Maintainers' group
   * Add check for tar bug #230910
     (tar check written by Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>)
@@ -14974,7 +14977,7 @@ lintian (1.20.2) unstable; urgency=low
   * seems lintian always used the lintian-info script from the path, changed
     to look in LINTIAN_ROOT if passed
   * perl problems cleaned up, Closes: #82970
-  * removed randomization of output strings when refering to policy documents,
+  * removed randomization of output strings when referring to policy documents,
     not only is this silly but it makes regression tests impossible
   * moved manual_refs.pl list of policy manuals to an external file.  This will
     allow automated updating when releases occur.  It also removes the perl
@@ -14989,8 +14992,8 @@ lintian (1.20.1) unstable; urgency=low
     The long road of bug tracking because of this has begun.  Thanks Joey H.
   * testset/filenames now has a lengthy-symlink bug to show how that code works
   * typo in checks/control-files in a bashism check, the correct POSIX call
-    is 'read foo' however the code was checking for the existance of whitespace
-    before the call, not the existance of the variable to read into due to a
+    is 'read foo' however the code was checking for the existence of whitespace
+    before the call, not the existence of the variable to read into due to a
     mixed up regex.  Thanks Adam Heath for pointing this out. Closes: #81453
   * checks/control-files, the check for whether '.' takes more than one
     argument did not take into account things like 'and'.  It does now.
@@ -16411,10 +16414,10 @@ lintian (0.4.0) unstable; urgency=low
   * Fixed `menu' check:
     - report maintainer-script-does-not-check... tag only once per package
       and maintainer script
-    - recognize `$(which update-menus)' as valid check for the existance
+    - recognize `$(which update-menus)' as valid check for the existence
       of update-menus; same for install-docs
       (thanks to Fabrizio for pointing this out!)
-    - recognize `command -v update-menus' as valid check for the existance
+    - recognize `command -v update-menus' as valid check for the existence
       of update-menus; same for install-docs
       (thanks to Adam P. Harris for pointing this out! fixes:bug#20759)
     - fixed tag infos

@@ -1,4 +1,4 @@
-# a list of pkg-config bad contruction
+# a list of pkg-config bad constructions
 # regex (xms)
 # found in omnithread3.pc
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-[DU]__linux__) \s

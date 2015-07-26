@@ -30,7 +30,7 @@ use constant FILENAME_LENGTH_LIMIT => 80;
 
 # We could derive this from data/fields/architectures, but that
 # contains things like kopensolaris-sparc64 and kfreebsd-sparc64,
-# neither of which Debian offically supports.
+# neither of which Debian officially supports.
 use constant LONGEST_ARCHITECTURE => length 'kfreebsd-amd64';
 
 sub run {

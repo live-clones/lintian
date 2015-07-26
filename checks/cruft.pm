@@ -1031,7 +1031,7 @@ sub _check_gfdl_license_problem {
                 my $applytag = $gfdl_data->{'tag'};
                 if(defined($applytag)) {
                     unless(defined($licenseproblemhash->{$applytag})) {
-                        # lie will allow to check more block
+                        # lie will allow checking more blocks
                         _tag_gfdl($applytag, $name, $gfdlsections);
                         $licenseproblemhash->{$applytag} = 1;
                         return 0;

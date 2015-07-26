@@ -37,7 +37,7 @@ Package: {$source}-sourcing-without-test
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} -- sourcing without test
- Test a check for . /etc/default/foo without checking the existance of
+ Test a check for . /etc/default/foo without checking the existence of
  the file beforehand.
  .
  This is a test package designed to exercise some feature or tag of

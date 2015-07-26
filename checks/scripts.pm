@@ -1019,7 +1019,7 @@ sub run {
                 }
             } (keys %removed_diversions, keys %added_diversions);
 
-            # replace all the occurences with the widest regex:
+            # replace all the occurrences with the widest regex:
             for my $k (@matches) {
                 next if ($k eq $widerrx);
 

@@ -442,7 +442,7 @@ sub _fetch_index_data {
 
         # Only set size if it is non-zero and even then, only for
         # regular files.  When we set it, insist on it being an int.
-        # This makes perl store it slightly more effecient.
+        # This makes perl store it slightly more efficient.
         $file{'size'} = int($size) if $size and $raw_type eq '-';
 
         # This may appear to be obscene, but the call overhead of

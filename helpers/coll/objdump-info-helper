@@ -173,7 +173,7 @@ while (my $line = <$readelf>) {
     } elsif ($line
         =~ m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/
         and $section eq 'DS') {
-        # We (somtimes) need to read the "Version symbols section" first to
+        # We (sometimes) need to read the "Version symbols section" first to
         # use this data and readelf tends to print after this section, so
         # save for later.
         push(@dyn_symbols, [$1, $2, $3]);

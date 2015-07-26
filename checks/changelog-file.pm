@@ -354,7 +354,7 @@ sub run {
             tag 'possible-missing-colon-in-closes', $1 if $1;
         }
 
-        # check for bad intented distribution
+        # check for bad intended distribution
         if (
             $changes =~ /uploads? \s+ to \s+
                             (?'intended'testing|unstable|experimental|sid)/xi

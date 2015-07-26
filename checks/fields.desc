@@ -189,7 +189,7 @@ Tag: maintainer-address-is-root-user
 Severity: important
 Certainty: certain
 Info: The maintainer address includes root user, which is
- invalid. This might idicate that the package
+ invalid. This might indicate that the package
  was not built in a sane environment.
 
 Tag: maintainer-address-causes-mail-loops-or-bounces
@@ -236,7 +236,7 @@ Tag: uploader-address-is-root-user
 Severity: important
 Certainty: certain
 Info: The uploader address includes root user, which is
- invalid. This might idicate that the package
+ invalid. This might indicate that the package
  was not built in a sane environment.
 
 Tag: uploader-address-causes-mail-loops-or-bounces

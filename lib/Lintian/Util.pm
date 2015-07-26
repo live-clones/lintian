@@ -1313,7 +1313,7 @@ sub normalize_pkg_path {
         # We are doing CURDIR + LINK_TARGET
         if (substr($dest, 0, 1) eq '/') {
             # Link is absolute
-            # short curcuit $dest eq '/' case.
+            # short circuit $dest eq '/' case.
             return q{} if $dest eq '/';
             $path = $dest;
         } else {

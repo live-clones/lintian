@@ -79,7 +79,7 @@ sub _menu_sections {
 my $MENU_SECTIONS
   = Lintian::Data->new('menu-format/menu-sections',qr|/|, \&_menu_sections);
 
-# Authorative source of desktop keys:
+# Authoritative source of desktop keys:
 # http://standards.freedesktop.org/desktop-entry-spec/1.0/
 #
 # This is a list of all keys that should be in every desktop entry.
@@ -103,7 +103,7 @@ my %known_desktop_types = map { $_ => 1 } qw(
   Directory
 );
 
-# Authorative source of desktop categories:
+# Authoritative source of desktop categories:
 # http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
 # This is a list of all Main Categories for .desktop files.  Application is

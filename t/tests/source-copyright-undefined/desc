@@ -1,6 +1,6 @@
 Testname: source-copyright-undefined
 Sequence: 6000
 Version: 1.0
-Description: Test for fixeme/todo/unkown
+Description: Test for fixme/todo/unknown
 Test-For:
  license-problem-undefined-license
