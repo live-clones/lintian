@@ -15,6 +15,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
     + [JW] Fix correction for "acknowldegement".
     + [JW] Document that the lists should be sorted.
     + [JW] Re-sort the correction lists and remove duplicates.
+    + [JW] Add more corrections.
 
   * mail-templates/license-problem-*:
     + [JW] Make the files end with newline character.

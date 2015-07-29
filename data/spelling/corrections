@@ -123,6 +123,7 @@ bahavior||behavior
 baloon||balloon
 baloons||balloons
 bandwith||bandwidth
+basicly||basically
 batery||battery
 becomming||becoming
 becuase||because
@@ -160,6 +161,7 @@ compatability||compatibility
 compatable||compatible
 compatibiliy||compatibility
 compatibilty||compatibility
+compatiblity||compatibility
 compilant||compliant
 compleatly||completely
 completly||completely
@@ -219,6 +221,7 @@ developpment||development
 deveolpment||development
 devided||divided
 dictionnary||dictionary
+diferent||different
 diplay||display
 disapeared||disappeared
 dispertion||dispersion
@@ -226,6 +229,7 @@ dissapears||disappears
 docuentation||documentation
 documantation||documentation
 documentaion||documentation
+documention||documentation
 dont||don't
 downlad||download
 downlads||downloads
@@ -242,6 +246,7 @@ enhaced||enhanced
 enlightnment||enlightenment
 enocded||encoded
 enterily||entirely
+envionment||environment
 envireonment||environment
 enviroiment||environment
 enviroment||environment
@@ -267,6 +272,10 @@ exprimental||experimental
 extensability||extensibility
 extention||extension
 extracter||extractor
+faciliated||facilitated
+faciliate||facilitate
+faciliates||facilitates
+faciliating||facilitating
 failuer||failure
 familar||familiar
 fatser||faster
@@ -294,14 +303,26 @@ grapic||graphic
 guage||gauge
 halfs||halves
 handfull||handful
+hapening||happening
 heirarchically||hierarchically
 helpfull||helpful
 hierachy||hierarchy
 hierarchie||hierarchy
+hilighted||highlighted
+hilight||highlight
+hilighting||highlighting
+hilights||highlights
+homogenous||homogeneous
 howver||however
+hypenation||hyphenation
 immeadiately||immediately
 implemantation||implementation
 implemention||implementation
+implemetation||implementation
+implemeted||implemented
+implemet||implement
+implemeting||implementing
+implemets||implements
 incomming||incoming
 incompatabilities||incompatibilities
 incompatable||incompatible
@@ -317,6 +338,7 @@ initalize||initialize
 initators||initiators
 initializiation||initialization
 inofficial||unofficial
+inteface||interface
 integreated||integrated
 integrety||integrity
 integrey||integrity
@@ -326,6 +348,10 @@ intermittant||intermittent
 interupted||interrupted
 intial||initial
 intregral||integral
+intrumented||instrumented
+intrumenting||instrumenting
+intrument||instrument
+intruments||instruments
 intuative||intuitive
 invokation||invocation
 invokations||invocations
@@ -334,6 +360,10 @@ langage||language
 langauage||language
 langauge||language
 langugage||language
+lauched||launched
+laucher||launcher
+lauches||launches
+lauching||launching
 lauch||launch
 leightweight||lightweight
 lenght||length
@@ -343,6 +373,7 @@ libary||library
 librairies||libraries
 libraris||libraries
 licenceing||licencing
+likelyhood||likelihood
 loggging||logging
 loggin||login
 logile||logfile
@@ -356,6 +387,11 @@ malplace||misplace
 managable||manageable
 managment||management
 manoeuvering||maneuvering
+mantained||maintained
+mantainer||maintainer
+mantaining||maintaing
+mantain||maintain
+mantains||maintains
 mathimatical||mathematical
 mathimatic||mathematic
 mathimatics||mathematics
@@ -369,6 +405,7 @@ misformed||malformed
 mispelled||misspelled
 mispelt||misspelt
 mmnemonic||mnemonic
+modifing||modifying
 modulues||modules
 monochorome||monochrome
 monochromo||monochrome
@@ -383,6 +420,7 @@ navagating||navigating
 nead||need
 neccesary||necessary
 neccessary||necessary
+necesarily||necessarily
 necesary||necessary
 negotation||negotiation
 nescessary||necessary
@@ -391,9 +429,12 @@ noticable||noticeable
 notications||notifications
 o'caml||OCaml
 occationally||occasionally
+offical||official
+officialy||officially
 omitt||omit
 ommitted||omitted
 onself||oneself
+optionaly||optionally
 optionnal||optional
 optmizations||optimizations
 orientatied||orientated
@@ -437,9 +478,12 @@ precission||precision
 prefered||preferred
 prefferably||preferably
 prepaired||prepared
+priciple||principle
+priciples||principles
 primative||primitive
 princliple||principle
 priorty||priority
+priveleged||privileged
 priviledge||privilege
 priviledges||privileges
 procceed||proceed
@@ -449,6 +493,7 @@ processessing||processing
 processess||processes
 processpr||processor
 processsing||processing
+procude||produce
 progams||programs
 programers||programmers
 programm||program
@@ -508,6 +553,7 @@ runned||ran
 runnning||running
 sacrifying||sacrificing
 safly||safely
+satisfiabilty||satisfiability
 savable||saveable
 searchs||searches
 secund||second
@@ -525,6 +571,7 @@ setts||sets
 similiar||similar
 simliar||similar
 softwares||software
+sofware||software
 speach||speech
 speciefied||specified
 specifed||specified
@@ -574,13 +621,16 @@ transfering||transferring
 trasmission||transmission
 treshold||threshold
 trigerring||triggering
+typicaly||typically
 unconditionaly||unconditionally
 unecessary||unnecessary
+uneeded||unneeded
 unexecpted||unexpected
 unfortunatelly||unfortunately
 unknonw||unknown
 unkown||unknown
 unneedingly||unnecessarily
+unoffical||unofficial
 unuseful||useless
 usefule||useful
 usefull||useful
@@ -595,6 +645,7 @@ utiltity||utility
 utitlty||utility
 variantions||variations
 varient||variant
+varity||variety
 verbse||verbose
 verisons||versions
 verison||version
@@ -602,6 +653,7 @@ verson||version
 vicefersa||vice-versa
 visiters||visitors
 vitual||virtual
+wether||whether
 whataver||whatever
 wheter||whether
 wierd||weird
