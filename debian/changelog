@@ -11,6 +11,8 @@ lintian (2.5.35) UNRELEASED; urgency=medium
   * checks/fields.desc:
     + [JW] Fix spelling of the word "indicate".
 
+  * data/cruft/warn-file-type:
+    + [BR] Detect pascal ressource file source.  (Closes: #793908).
   * data/spelling/corrections*:
     + [JW] Fix correction for "acknowldegement".
     + [JW] Document that the lists should be sorted.
