@@ -32,6 +32,7 @@ use v5.10;
 # Half of the size used in the "sliding window" for detecting bad
 # licenses like GFDL with invariant sections.
 # NB: Keep in sync cruft-gfdl-fp-sliding-win/pre_build.
+# not less than 8192 for source missing
 use constant BLOCKSIZE => 16_384;
 
 use Lintian::Data;
@@ -819,8 +820,7 @@ sub full_text_check {
 
     # some js file comments are really really long
     my $sfd
-      = Lintian::SlidingWindow->new($fd, \&lc_block,
-        _is_javascript_but_not_minified($name) ? 8092 : 4096);
+        = Lintian::SlidingWindow->new($fd, \&lc_block, BLOCKSIZE);
     my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window

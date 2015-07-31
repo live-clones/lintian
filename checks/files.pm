@@ -30,6 +30,8 @@ use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
   signal_number2name strip normalize_pkg_path);
 use Lintian::SlidingWindow;
 
+use constant BLOCKSIZE => 16_384;
+
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
@@ -2038,7 +2040,7 @@ sub detect_privacy_breach {
 
     my $fd = $file->open(':raw');
 
-    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
+    my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
 
     while (my $block = $sfd->readwindow()) {
         # try generic fragment tagging
