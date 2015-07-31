@@ -15,7 +15,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       is a bad idea for system user.  (Closes: #793613).
 
   * data/cruft/warn-file-type:
-    + [BR] Detect pascal ressource file source.  (Closes: #793908).
+    + [BR] Detect pascal resource file source.  (Closes: #793908).
   * data/scripts/maintainer-script-bad-command:
     + [BR] Detect more case of
        maintainer-script-should-not-use-adduser-system-without-home.
