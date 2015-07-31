@@ -193,4 +193,8 @@ dpkg-maintscript-helper symlink_to_dir \
               ../../autoconf-archive/html \
                20111221-2~ -- "$@"
 
+# true positive
+adduser --system --quiet --ingroup ntp --no-create-home ntp
+adduser festival --quiet --system --ingroup audio --no-create-home
+
 #DEBHELPER#

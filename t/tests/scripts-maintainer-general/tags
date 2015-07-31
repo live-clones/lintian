@@ -7,8 +7,10 @@ E: scripts-maintainer-general: maintainer-script-should-not-modify-ld-so-conf po
 E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-managed-file postinst:59 '/etc/services'
 E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-managed-file postinst:60 '/etc/protocols'
 E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-managed-file postinst:61 '/etc/rpc'
-E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:148
-E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:149
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:148 'adduser --system foo'
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:149 'adduser --system foo2 --home /home/foo2'
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:197 'adduser --system --quiet --ingroup ntp --no-create-home ntp'
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:198 'adduser festival --quiet --system --ingroup audio --no-create-home'
 E: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:74
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:75

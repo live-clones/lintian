@@ -10,9 +10,17 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       Jover for the report.  (Closes: #787853)
   * checks/fields.desc:
     + [JW] Fix spelling of the word "indicate".
+  * checks/scripts.desc:
+    + [BR] Document why adduser --no-create-home
+      is a bad idea for system user.  (Closes: #793613).
 
   * data/cruft/warn-file-type:
     + [BR] Detect pascal ressource file source.  (Closes: #793908).
+  * data/scripts/maintainer-script-bad-command:
+    + [BR] Detect more case of
+       maintainer-script-should-not-use-adduser-system-without-home.
+    + [BR] Print offending line for
+      maintainer-script-should-not-use-adduser-system-without-home.
   * data/spelling/corrections*:
     + [JW] Fix correction for "acknowldegement".
     + [JW] Document that the lists should be sorted.
