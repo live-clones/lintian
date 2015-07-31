@@ -1,1 +1,4 @@
 P: changelog-file-experimental: experimental-to-unstable-without-comment
+P: changelog-file-experimental: no-upstream-changelog
+W: changelog-file-experimental source: native-package-with-dash-version
+X: changelog-file-experimental: non-consecutive-debian-revision

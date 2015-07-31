@@ -319,10 +319,21 @@ sub run {
             $first_upstream =~ s/-[^-]+$//;
             my $second_upstream = $second_version;
             $second_upstream =~ s/-[^-]+$//;
-            if (    $first_upstream eq $second_upstream
-                and $entries[0]->Changes
-                =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
-                tag 'possible-new-upstream-release-without-new-version';
+            my $first_debian = $first_version;
+            $first_debian =~ s/^[^-]+-//;
+            my $second_debian = $second_version;
+            $second_debian =~ s/^[^-]+-//;
+
+            if ($first_upstream eq $second_upstream) {
+                if ($entries[0]->Changes
+                    =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
+                    tag 'possible-new-upstream-release-without-new-version';
+                }
+                if ($first_debian =~ /^\d+$/ and $second_debian =~ /^\d+$/) {
+                    unless ($second_debian == $first_debian + 1) {
+                        tag 'non-consecutive-debian-revision';
+                    }
+                }
             }
 
             my $first_dist = lc $entries[0]->Distribution;

@@ -1,7 +1,8 @@
 Testname: changelog-file-experimental
 Sequence: 6000
-Version: 1.0
+Version: 1.0-3
 Description: Check experimental to unstable changes
 Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For: experimental-to-unstable-without-comment
+ non-consecutive-debian-revision

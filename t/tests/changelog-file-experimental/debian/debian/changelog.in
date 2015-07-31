@@ -5,7 +5,7 @@
 
  -- {$author}  {$date}
 
-{$source} (0.1) experimental; urgency=low
+{$source} (1.0-1) experimental; urgency=low
 
   * First upload to experimental.
 

@@ -8,6 +8,8 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       that contains the "offending" LFS symbol.  These tend to
       come from gnulib and be LFS compliant.  Thanks to Guillem
       Jover for the report.  (Closes: #787853)
+  * checks/changelog-file.{desc,pm}:
+    + [BR] Detect non consecutive debian revision.  (Closes: #789820)
   * checks/fields.desc:
     + [JW] Fix spelling of the word "indicate".
   * checks/scripts.desc:
@@ -18,7 +20,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
     + [BR] Detect pascal resource file source.  (Closes: #793908).
   * data/scripts/maintainer-script-bad-command:
     + [BR] Detect more case of
-       maintainer-script-should-not-use-adduser-system-without-home.
+      maintainer-script-should-not-use-adduser-system-without-home.
     + [BR] Print offending line for
       maintainer-script-should-not-use-adduser-system-without-home.
   * data/spelling/corrections*:

@@ -359,6 +359,14 @@ Experimental: yes
 Info: The last changelog entry implies this version is not for release.
     Instead it should specify the distribution it is to be uploaded to.
 
+Tag: non-consecutive-debian-revision
+Severity: pedantic
+Certainty: possible
+Experimental: yes
+Info: The last changelog entry refer to a debian revision that is not
+ consecutive to previous changelog entry. Please use consecutive Debian
+ revision or use UNRELEASED version.
+
 Tag: version-refers-to-distribution
 Severity: minor
 Certainty: certain
