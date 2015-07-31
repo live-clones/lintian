@@ -819,8 +819,7 @@ sub full_text_check {
     }
 
     # some js file comments are really really long
-    my $sfd
-        = Lintian::SlidingWindow->new($fd, \&lc_block, BLOCKSIZE);
+    my $sfd= Lintian::SlidingWindow->new($fd, \&lc_block, BLOCKSIZE);
     my %licenseproblemhash;
 
     # we try to read this file in block and use a sliding window
