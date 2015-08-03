@@ -2,11 +2,11 @@ E: control-file-general source: build-info-in-binary-control-file-section Packag
 E: control-file-general source: missing-separator-between-items in control-file-general depends field between '${shlibs:Depends}' and '${some:Depends}'
 E: control-file-general source: obsolete-relation-form-in-source in control-file-general-1 breaks: libsqlite3-0 (< 3.6.12)
 E: control-file-general source: obsolete-relation-form-in-source in source build-depends-indep: perl (> 5.8)
+E: control-file-general source: pre-depends-directly-on-multiarch-support control-file-general
 I: control-file-general source: binary-control-field-duplicates-source field "maintainer" in package control-file-general
 I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5
 I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
 I: control-file-general source: xs-vcs-header-in-debian-control xs-vcs-svn
-P: control-file-general source: pre-depends-directly-on-multiarch-support control-file-general
 W: control-file-general source: control-file-contains-dh_make-vcs-comment
 W: control-file-general source: debian-control-repeats-field-name-in-value line 81
 W: control-file-general source: no-section-field-for-source

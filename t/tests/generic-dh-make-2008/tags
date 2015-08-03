@@ -8,6 +8,7 @@ I: generic-dh-make-2008: extended-description-is-probably-too-short
 I: generic-dh-make-2008: package-contains-empty-directory usr/bin/
 I: generic-dh-make-2008: package-contains-empty-directory usr/sbin/
 P: generic-dh-make-2008 source: no-dep5-copyright
+P: generic-dh-make-2008 source: package-uses-old-debhelper-compat-version 7
 P: generic-dh-make-2008: copyright-with-old-dh-make-debian-copyright
 P: generic-dh-make-2008: no-upstream-changelog
 W: generic-dh-make-2008 source: ancient-standards-version 3.7.3 (current is CURRENT)

@@ -232,7 +232,7 @@ Info: The control file mentions multiarch-support in a Pre-Depends line.
  in debhelper followed by a binNMU of all affected packages.
  .
  Please also ensure that source package at least build-depends on
- debhelper version >=9.
+ debhelper version 9 or above.
  .
  In order to ease the multiarch-support removal the severity of
  this tag is important.

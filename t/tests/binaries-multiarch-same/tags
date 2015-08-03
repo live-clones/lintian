@@ -1,1 +1,2 @@
+E: binaries-multiarch-same source: pre-depends-directly-on-multiarch-support libbasic2
 E: libbasic2: arch-dependent-file-not-in-arch-specific-directory usr/lib/libbasic.so.2

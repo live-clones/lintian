@@ -43,7 +43,6 @@ my $dh_addons_manual
   = Lintian::Data->new('debhelper/dh_addons-manual', qr/\|\|/o);
 my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
-
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
 sub run {
