@@ -1,5 +1,9 @@
 # warn if no versionned depend below this level
 pedantic=8
-# warn if does not depend on this debhelper level
+# warn (pedantic) if does not depend on this debhelper level
 recommended=9
+# warn if below this level
+deprecated=5
+# warn if equal or above
+experimental=10
 

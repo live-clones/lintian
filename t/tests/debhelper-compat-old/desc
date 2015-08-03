@@ -1,0 +1,9 @@
+Testname: debhelper-compat-old
+Sequence: 6000
+Version: 1.0
+Description: Test for old debian/compat file
+Skeleton: pedantic
+Options: --pedantic -I -E
+Test-Depends: debhelper (>= 9),
+Test-For:
+ package-uses-old-debhelper-compat-version

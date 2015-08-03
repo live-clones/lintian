@@ -18,6 +18,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       for being raised. Suggest to depends to debhelper >= 9.
   * checks/debhelper.{desc,pm}:
     + [BR] Use data file for pedantic warning on debhelper depends version.
+    + [BR] Detect not recommended and experimental debhelper version.
   * checks/fields.desc:
     + [JW] Fix spelling of the word "indicate".
   * checks/scripts.desc:

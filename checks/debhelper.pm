@@ -271,8 +271,12 @@ sub run {
         $level = $cdbscompat;
     }
     $level ||= 1;
-    if ($level < 5) {
+    if ($level < $compat_level->value('deprecated')) {
         tag 'package-uses-deprecated-debhelper-compat-version', $level;
+    } elsif ($level < $compat_level->value('recommended')) {
+        tag 'package-uses-old-debhelper-compat-version', $level;
+    } elsif ($level >= $compat_level->value('experimental')) {
+        tag 'package-uses-experimental-debhelper-compat-version', $level;
     }
 
     if ($seendhcleank and $level >= 7) {

@@ -152,6 +152,32 @@ Info: The debhelper compatibility version used by this package is marked
  <tt>debian/rules</tt>.  If it is not set in either place, debhelper
  defaults to the deprecated compatibility version 1.
 
+Tag: package-uses-old-debhelper-compat-version
+Severity: pedantic
+Certainty: certain
+Ref: debhelper(7)
+Info: The debhelper compatibility version used by this package is marked
+ as not recommended by the debhelper developer.  You may consider
+ using a recommanded compatibility version.
+ .
+ The compatibility version can be set in (preferred)
+ <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
+ <tt>debian/rules</tt>.  If it is not set in either place, debhelper
+ defaults to the deprecated compatibility version 1.
+
+Tag: package-uses-experimental-debhelper-compat-version
+Severity: pedantic
+Certainty: certain
+Ref: debhelper(7)
+Info: The debhelper compatibility version used by this package is marked
+ as experimental by the debhelper developer.  You  may consider
+ using a stable compatibility version.
+ .
+ The compatibility version can be set in (preferred)
+ <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
+ <tt>debian/rules</tt>.  If it is not set in either place, debhelper
+ defaults to the deprecated compatibility version 1.
+
 Tag: debhelper-but-no-misc-depends
 Severity: normal
 Certainty: possible

@@ -1,0 +1,2 @@
+P: debhelper-compat-experimental source: package-uses-experimental-debhelper-compat-version 10
+W: debhelper-compat-experimental source: package-needs-versioned-debhelper-build-depends 10
