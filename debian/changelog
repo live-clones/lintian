@@ -10,10 +10,12 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       Jover for the report.  (Closes: #787853)
   * checks/changelog-file.{desc,pm}:
     + [BR] Detect non consecutive debian revision.  (Closes: #789820)
-  * checks/control-file.desc:
+  * checks/control-file.{desc,pm}:
     + [BR] In order to ease the multiarch-support removal the severity of
       pre-depends-directly-on-multiarch-support is raised to important.
       Thanks to Helmut Grohne remainder.
+    + [BR] pre-depends-directly-on-multiarch-support does not need debhelper
+      for being raised. Suggest to depends to debhelper >= 9.
   * checks/fields.desc:
     + [JW] Fix spelling of the word "indicate".
   * checks/scripts.desc:
