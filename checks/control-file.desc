@@ -231,7 +231,7 @@ Info: The control file mentions multiarch-support in a Pre-Depends line.
  should be used instead. Then multiarch-support can be removed by a change
  in debhelper followed by a binNMU of all affected packages.
  .
- Please also ensure that source package at least build-depends to
+ Please also ensure that source package at least build-depends on
  debhelper version >=9.
  .
  In order to ease the multiarch-support removal the severity of

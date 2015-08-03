@@ -15,7 +15,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       pre-depends-directly-on-multiarch-support is raised to important.
       Thanks to Helmut Grohne remainder.
     + [BR] pre-depends-directly-on-multiarch-support does not need debhelper
-      for being raised. Suggest to depends to debhelper >= 9.
+      for being raised. Suggest to build-depends on debhelper >= 9.
   * checks/debhelper.{desc,pm}:
     + [BR] Use data file for pedantic warning on debhelper depends version.
     + [BR] Detect not recommended and experimental debhelper version.
