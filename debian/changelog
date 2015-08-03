@@ -62,7 +62,7 @@ lintian (2.5.35) unstable; urgency=medium
       removing gets() that does not exist with C11 (used by default
       by gcc5).  (Closes: #794505).
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Mon, 03 Aug 2015 23:09:58 +0200
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Mon, 03 Aug 2015 23:27:48 +0200
 
 lintian (2.5.34) unstable; urgency=medium
 

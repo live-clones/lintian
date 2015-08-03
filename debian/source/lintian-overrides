@@ -8,3 +8,5 @@ lintian source: unused-build-dependency-on-cdbs
 lintian source: build-depends-on-python-dev-with-no-arch-any
 # We use hardening-includes for the hardening-check binary
 lintian source: build-depends-on-obsolete-package build-depends: hardening-includes => use dpkg-buildflags instead
+# we use old compat version in order to ease backport
+lintian source: package-uses-old-debhelper-compat-version 7

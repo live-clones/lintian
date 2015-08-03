@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-07-22 18:51+0000\n"
+"POT-Creation-Date: 2015-08-03 23:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1436,9 +1436,22 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: non-consecutive-debian-revision
+#. type: Lintian tag description
+#: checks/changelog-file.desc:369
+#, no-wrap
+msgid ""
+"The last changelog entry refer to a debian revision that is not\n"
+"consecutive to previous changelog entry. Please use consecutive Debian\n"
+"revision or use UNRELEASED version."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: version-refers-to-distribution
 #. type: Lintian tag description
-#: checks/changelog-file.desc:376
+#: checks/changelog-file.desc:384
 #, no-wrap
 msgid ""
 "The Debian portion of the package version contains a reference to a\n"
@@ -1459,7 +1472,7 @@ msgstr ""
 #
 #. Tag: debian-changelog-has-wrong-weekday
 #. type: Lintian tag description
-#: checks/changelog-file.desc:387
+#: checks/changelog-file.desc:395
 #, no-wrap
 msgid ""
 "The date in the changelog entry is not consistent with the actual\n"
@@ -2159,7 +2172,7 @@ msgstr ""
 #
 #. Tag: pre-depends-directly-on-multiarch-support
 #. type: Lintian tag description
-#: checks/control-file.desc:233
+#: checks/control-file.desc:239
 #, no-wrap
 msgid ""
 "The control file mentions multiarch-support in a Pre-Depends line.\n"
@@ -2170,7 +2183,13 @@ msgid ""
 "from glibc without updating every package, Pre-Depends: "
 "${misc:Pre-Depends}\n"
 "should be used instead. Then multiarch-support can be removed by a change\n"
-"in debhelper followed by a binNMU of all affected packages."
+"in debhelper followed by a binNMU of all affected packages.\n"
+"\n"
+"Please also ensure that source package at least build-depends on\n"
+"debhelper version 9 or above.\n"
+"\n"
+"In order to ease the multiarch-support removal the severity of\n"
+"this tag is important."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -2178,7 +2197,7 @@ msgstr ""
 #
 #. Tag: invalid-restriction-formula-in-build-profiles-field
 #. type: Lintian tag description
-#: checks/control-file.desc:240
+#: checks/control-file.desc:246
 #, no-wrap
 msgid ""
 "The restriction formula in the Build-Profiles field must have the same\n"
@@ -2191,7 +2210,7 @@ msgstr ""
 #
 #. Tag: invalid-profile-name-in-build-profiles-field
 #. type: Lintian tag description
-#: checks/control-file.desc:247
+#: checks/control-file.desc:253
 #, no-wrap
 msgid ""
 "The restriction formula in Build-Profiles field includes an unknown build\n"
@@ -2205,7 +2224,7 @@ msgstr ""
 #
 #. Tag: multiline-architecture-field
 #. type: Lintian tag description
-#: checks/control-file.desc:254
+#: checks/control-file.desc:260
 #, no-wrap
 msgid ""
 "The values of the Architecture field in debian/control must not\n"
@@ -5114,9 +5133,45 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: package-uses-old-debhelper-compat-version
+#. type: Lintian tag description
+#: checks/debhelper.desc:167
+#, no-wrap
+msgid ""
+"The debhelper compatibility version used by this package is marked\n"
+"as not recommended by the debhelper developer.  You may consider\n"
+"using a recommended compatibility version.\n"
+"\n"
+"The compatibility version can be set in (preferred)\n"
+"<tt>debian/compat</tt> or by setting and exporting DH_COMPAT in\n"
+"<tt>debian/rules</tt>.  If it is not set in either place, debhelper\n"
+"defaults to the deprecated compatibility version 1."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: package-uses-experimental-debhelper-compat-version
+#. type: Lintian tag description
+#: checks/debhelper.desc:180
+#, no-wrap
+msgid ""
+"The debhelper compatibility version used by this package is marked\n"
+"as experimental by the debhelper developer.  You  may consider\n"
+"using a stable compatibility version.\n"
+"\n"
+"The compatibility version can be set in (preferred)\n"
+"<tt>debian/compat</tt> or by setting and exporting DH_COMPAT in\n"
+"<tt>debian/rules</tt>.  If it is not set in either place, debhelper\n"
+"defaults to the deprecated compatibility version 1."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: debhelper-but-no-misc-depends
 #. type: Lintian tag description
-#: checks/debhelper.desc:165
+#: checks/debhelper.desc:191
 #, no-wrap
 msgid ""
 "The source package uses debhelper, but it does not include\n"
@@ -5132,7 +5187,7 @@ msgstr ""
 #
 #. Tag: missing-build-dependency-for-dh_-command
 #. type: Lintian tag description
-#: checks/debhelper.desc:172
+#: checks/debhelper.desc:198
 #, no-wrap
 msgid ""
 "The source package appears to be using a dh_ command but doesn't build\n"
@@ -5145,7 +5200,7 @@ msgstr ""
 #
 #. Tag: missing-build-dependency-for-dh-addon
 #. type: Lintian tag description
-#: checks/debhelper.desc:179
+#: checks/debhelper.desc:205
 #, no-wrap
 msgid ""
 "The source package appears to be using a dh addon but doesn't build\n"
@@ -5158,7 +5213,7 @@ msgstr ""
 #
 #. Tag: brace-expansion-in-debhelper-config-file
 #. type: Lintian tag description
-#: checks/debhelper.desc:188
+#: checks/debhelper.desc:214
 #, no-wrap
 msgid ""
 "This debhelper config file appears to use shell brace expansion\n"
@@ -5172,7 +5227,7 @@ msgstr ""
 #
 #. Tag: weak-dependency-on-misc-depends
 #. type: Lintian tag description
-#: checks/debhelper.desc:197
+#: checks/debhelper.desc:223
 #, no-wrap
 msgid ""
 "The source package declares a weak dependency on ${misc:Depends} in\n"
@@ -5188,7 +5243,7 @@ msgstr ""
 #
 #. Tag: debhelper-compat-not-a-number
 #. type: Lintian tag description
-#: checks/debhelper.desc:204
+#: checks/debhelper.desc:230
 #, no-wrap
 msgid ""
 "The debhelper compatibility level specified in\n"
@@ -5200,7 +5255,7 @@ msgstr ""
 #
 #. Tag: debhelper-compatibility-level-not-a-number
 #. type: Lintian tag description
-#: checks/debhelper.desc:213
+#: checks/debhelper.desc:239
 #, no-wrap
 msgid ""
 "The debhelper compatibility level specified in <tt>debian/rules</tt>\n"
@@ -5215,7 +5270,7 @@ msgstr ""
 #
 #. Tag: temporary-debhelper-file
 #. type: Lintian tag description
-#: checks/debhelper.desc:222
+#: checks/debhelper.desc:248
 #, no-wrap
 msgid ""
 "The package contains temporary debhelper files, which are normally\n"
@@ -5229,7 +5284,7 @@ msgstr ""
 #
 #. Tag: unused-build-dependency-on-cdbs
 #. type: Lintian tag description
-#: checks/debhelper.desc:228
+#: checks/debhelper.desc:254
 #, no-wrap
 msgid ""
 "The package build-depends on cdbs, but does not include any cdbs\n"
@@ -5241,7 +5296,7 @@ msgstr ""
 #
 #. Tag: python-depends-but-no-python-helper
 #. type: Lintian tag description
-#: checks/debhelper.desc:239
+#: checks/debhelper.desc:265
 #, no-wrap
 msgid ""
 "The source package declares a dependency on ${python:Depends} in the\n"
@@ -5261,7 +5316,7 @@ msgstr ""
 #
 #. Tag: python3-depends-but-no-python3-helper
 #. type: Lintian tag description
-#: checks/debhelper.desc:246
+#: checks/debhelper.desc:272
 #, no-wrap
 msgid ""
 "The source package declares a dependency on ${python3:Depends} in the\n"
@@ -5275,7 +5330,7 @@ msgstr ""
 #
 #. Tag: package-file-is-executable
 #. type: Lintian tag description
-#: checks/debhelper.desc:256
+#: checks/debhelper.desc:282
 #, no-wrap
 msgid ""
 "The packaging file is marked executable.  For control, changelog and\n"
@@ -5291,7 +5346,7 @@ msgstr ""
 #
 #. Tag: executable-debhelper-file-without-being-executable
 #. type: Lintian tag description
-#: checks/debhelper.desc:265
+#: checks/debhelper.desc:291
 #, no-wrap
 msgid ""
 "The packaging file is marked executable, but it does not appear to be\n"
@@ -5306,7 +5361,7 @@ msgstr ""
 #
 #. Tag: dh-exec-private-helper
 #. type: Lintian tag description
-#: checks/debhelper.desc:274
+#: checks/debhelper.desc:300
 #, no-wrap
 msgid ""
 "The packaging file uses dh-exec, but it does not use /usr/bin/dh-exec.\n"
@@ -5321,7 +5376,7 @@ msgstr ""
 #
 #. Tag: package-uses-dh-exec-but-lacks-build-depends
 #. type: Lintian tag description
-#: checks/debhelper.desc:280
+#: checks/debhelper.desc:306
 #, no-wrap
 msgid ""
 "If a package uses dh-exec, it must declare a Build-Depends\n"
@@ -5333,7 +5388,7 @@ msgstr ""
 #
 #. Tag: dh-exec-script-without-dh-exec-features
 #. type: Lintian tag description
-#: checks/debhelper.desc:289
+#: checks/debhelper.desc:315
 #, no-wrap
 msgid ""
 "The package uses dh-exec in at least one of its files, but does\n"
@@ -5348,7 +5403,7 @@ msgstr ""
 #
 #. Tag: dh-exec-install-not-allowed-here
 #. type: Lintian tag description
-#: checks/debhelper.desc:298
+#: checks/debhelper.desc:324
 #, no-wrap
 msgid ""
 "The package uses a dh-exec-install construct in a debhelper\n"
@@ -5363,7 +5418,7 @@ msgstr ""
 #
 #. Tag: dh-exec-subst-unknown-variable
 #. type: Lintian tag description
-#: checks/debhelper.desc:309
+#: checks/debhelper.desc:335
 #, no-wrap
 msgid ""
 "The package uses a variable in one of its debhelper config\n"
@@ -5380,7 +5435,7 @@ msgstr ""
 #
 #. Tag: debhelper-compat-file-is-missing
 #. type: Lintian tag description
-#: checks/debhelper.desc:320
+#: checks/debhelper.desc:346
 #, no-wrap
 msgid ""
 "The package uses debhelper but does not ship a compat file.\n"
@@ -5395,7 +5450,7 @@ msgstr ""
 #
 #. Tag: dh-manual-sequence-control-obsolete
 #. type: Lintian tag description
-#: checks/debhelper.desc:345
+#: checks/debhelper.desc:371
 #, no-wrap
 msgid ""
 "The package uses one (or more) of the obsolete dh parameters\n"
@@ -6290,7 +6345,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "The maintainer address includes root user, which is\n"
-"invalid. This might idicate that the package\n"
+"invalid. This might indicate that the package\n"
 "was not built in a sane environment."
 msgstr ""
 
@@ -6369,7 +6424,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "The uploader address includes root user, which is\n"
-"invalid. This might idicate that the package\n"
+"invalid. This might indicate that the package\n"
 "was not built in a sane environment."
 msgstr ""
 
@@ -15373,7 +15428,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-adduser-system-without-home
 #. type: Lintian tag description
-#: checks/scripts.desc:625
+#: checks/scripts.desc:630
 #, no-wrap
 msgid ""
 " The maintainer script apparently runs 'adduser --system'\n"
@@ -15383,7 +15438,12 @@ msgid ""
 "The FHS says: /home is a fairly standard concept, but it\n"
 "is clearly a site-specific filesystem. The setup will differ\n"
 "from host to host. Therefore, no program should rely on this\n"
-"location."
+"location.\n"
+"\n"
+"Note that passing --no-create-home alone does not solve the issue\n"
+"because home field of passwd file point to a non existing\n"
+"/home subdirectory. Please use\n"
+"<tt>adduser --no-create-home --home /nonexistent</tt> instead."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -15391,7 +15451,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-empty
 #. type: Lintian tag description
-#: checks/scripts.desc:638
+#: checks/scripts.desc:643
 #, no-wrap
 msgid ""
 "The maintainer script doesn't seem to contain any code other than\n"
@@ -15410,7 +15470,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-ignores-errors
 #. type: Lintian tag description
-#: checks/scripts.desc:646
+#: checks/scripts.desc:651
 #, no-wrap
 msgid ""
 "The maintainer script doesn't seem to set the <tt>-e</tt> flag which\n"
@@ -15423,7 +15483,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-without-set-e
 #. type: Lintian tag description
-#: checks/scripts.desc:657
+#: checks/scripts.desc:662
 #, no-wrap
 msgid ""
 "The maintainer script passes <tt>-e</tt> to the shell on the\n"
@@ -15439,7 +15499,7 @@ msgstr ""
 #
 #. Tag: command-with-path-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:672
+#: checks/scripts.desc:677
 #, no-wrap
 msgid ""
 "The indicated program run in a maintainer script has a prepended\n"
@@ -15460,7 +15520,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-ancient-dpkg-epoch-check
 #. type: Lintian tag description
-#: checks/scripts.desc:679
+#: checks/scripts.desc:684
 #, no-wrap
 msgid ""
 "The package calls dpkg --assert-working-epoch in a maintainer\n"
@@ -15473,7 +15533,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
 #. type: Lintian tag description
-#: checks/scripts.desc:686
+#: checks/scripts.desc:691
 #, no-wrap
 msgid ""
 "The package calls dpkg --assert-multi-conrep in a maintainer\n"
@@ -15486,7 +15546,7 @@ msgstr ""
 #
 #. Tag: package-uses-local-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:694
+#: checks/scripts.desc:699
 #, no-wrap
 msgid ""
 "The maintainer script calls dpkg-divert with <tt>--local</tt> or\n"
@@ -15499,7 +15559,7 @@ msgstr ""
 #
 #. Tag: diversion-for-unknown-file
 #. type: Lintian tag description
-#: checks/scripts.desc:700
+#: checks/scripts.desc:705
 #, no-wrap
 msgid ""
 "The maintainer script adds a diversion for a file that is not\n"
@@ -15511,7 +15571,7 @@ msgstr ""
 #
 #. Tag: orphaned-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:706
+#: checks/scripts.desc:711
 #, no-wrap
 msgid ""
 "A diversion was added for the file, but not removed. This means\n"
@@ -15523,7 +15583,7 @@ msgstr ""
 #
 #. Tag: remove-of-unknown-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:714
+#: checks/scripts.desc:719
 #, no-wrap
 msgid ""
 "The maintainer script removes a diversion that it didn't add.  If\n"
@@ -15537,7 +15597,7 @@ msgstr ""
 #
 #. Tag: script-uses-perl4-libs-without-dep
 #. type: Lintian tag description
-#: checks/scripts.desc:723
+#: checks/scripts.desc:728
 #, no-wrap
 msgid ""
 "This package includes perl scripts using obsoleted perl 4-era\n"
@@ -15552,7 +15612,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-has-unexpanded-debhelper-token
 #. type: Lintian tag description
-#: checks/scripts.desc:732
+#: checks/scripts.desc:737
 #, no-wrap
 msgid ""
 "Lintian has detected the presence of a #DEBEHELPER# token in the\n"
