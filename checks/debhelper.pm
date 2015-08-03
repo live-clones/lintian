@@ -28,10 +28,6 @@ use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
 
-# If compat is less than or equal to this, then a missing version
-# for this level is only a pedantic issue.
-use constant PEDANTIC_COMPAT => 8;
-
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
 # It may be better to look at what version of cdbs the package depends on and
@@ -45,6 +41,8 @@ my $dh_ver_deps= Lintian::Data->new('debhelper/dh_commands-manual', qr/\|\|/o);
 my $dh_addons = Lintian::Data->new('debhelper/dh_addons', '=');
 my $dh_addons_manual
   = Lintian::Data->new('debhelper/dh_addons-manual', qr/\|\|/o);
+my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
+
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
 
@@ -404,7 +402,7 @@ sub run {
     unless ($bdepends->implies("debhelper (>= $level~)")){
         my $tagname = 'package-needs-versioned-debhelper-build-depends';
         $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
-          if ($level <= PEDANTIC_COMPAT);
+          if ($level <= $compat_level->value('pedantic'));
 
         tag $tagname, $level;
     }

@@ -1,0 +1,5 @@
+# warn if no versionned depend below this level
+pedantic=8
+# warn if does not depend on this debhelper level
+recommended=9
+

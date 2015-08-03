@@ -16,6 +16,8 @@ lintian (2.5.35) UNRELEASED; urgency=medium
       Thanks to Helmut Grohne remainder.
     + [BR] pre-depends-directly-on-multiarch-support does not need debhelper
       for being raised. Suggest to depends to debhelper >= 9.
+  * checks/debhelper.{desc,pm}:
+    + [BR] Use data file for pedantic warning on debhelper depends version.
   * checks/fields.desc:
     + [JW] Fix spelling of the word "indicate".
   * checks/scripts.desc:
