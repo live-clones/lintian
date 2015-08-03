@@ -222,7 +222,7 @@ Info: The control file contains commented-out VCS-* lines, most
  uncommented, or removed.
 
 Tag: pre-depends-directly-on-multiarch-support
-Severity: pedantic
+Severity: important
 Certainty: possible
 Info: The control file mentions multiarch-support in a Pre-Depends line.
  Usually multiarch-support is inserted into Pre-Depends via ${misc:Pre-Depends}
@@ -230,6 +230,9 @@ Info: The control file mentions multiarch-support in a Pre-Depends line.
  from glibc without updating every package, Pre-Depends: ${misc:Pre-Depends}
  should be used instead. Then multiarch-support can be removed by a change
  in debhelper followed by a binNMU of all affected packages.
+ .
+ In order to ease the multiarch-support removal the severity of
+ this tag is important.
 
 Tag: invalid-restriction-formula-in-build-profiles-field
 Severity: important
