@@ -28,6 +28,7 @@ lintian (2.5.35) UNRELEASED; urgency=medium
     + [JW] Document that the lists should be sorted.
     + [JW] Re-sort the correction lists and remove duplicates.
     + [JW] Add more corrections.
+    + [BR] Add existant||existent correction.
 
   * mail-templates/license-problem-*:
     + [JW] Make the files end with newline character.
