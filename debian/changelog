@@ -51,6 +51,10 @@ lintian (2.5.35) UNRELEASED; urgency=medium
 
   * t/scripts/*.t:
     + [JW] Make all the scripts executable.
+  * t/tests/binaries-general/*:
+    + [BR] Fix a test suite failure with gcc5 by using compat 9, and
+    removing gets() that does not exist with C11 (used by default
+    by gcc5).
 
  -- Niels Thykier <niels@thykier.net>  Wed, 22 Jul 2015 22:48:07 +0200
 
