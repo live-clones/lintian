@@ -30,6 +30,8 @@ lintian (2.5.35) UNRELEASED; urgency=medium
 
   * data/cruft/warn-file-type:
     + [BR] Detect pascal resource file source.  (Closes: #793908).
+  * data/files/fonts:
+    + [BR] Refresh this file.  (Closes: #794196)
   * data/scripts/maintainer-script-bad-command:
     + [BR] Detect more case of
       maintainer-script-should-not-use-adduser-system-without-home.
