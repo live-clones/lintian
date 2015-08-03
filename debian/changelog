@@ -1,6 +1,10 @@
 lintian (2.5.35) UNRELEASED; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - non-consecutive-debian-revision
+      - package-uses-experimental-debhelper-compat-version
+      - package-uses-old-debhelper-compat-version
 
   * checks/binaries.pm:
     + [NT] Apply patch from Sebastian Andrzej Siewior to inhibit
