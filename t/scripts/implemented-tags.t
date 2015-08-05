@@ -47,6 +47,7 @@ our $EXCLUDE =join(
       ^hardening-.*$
       ^privacy-breach-.*$
       ^maintainer-script-should-not-.*$
+      ^maintainer-script-may-.*$
       ^install-info-used-in-maintainer-script$
       ^license-problem-cc-by-nc-sa$
       ^license-problem-json-evil$

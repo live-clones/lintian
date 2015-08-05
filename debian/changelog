@@ -2,6 +2,10 @@ lintian (2.5.36) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/scripts.desc:
+    + [BR] Detect suspicious use of ln -s that could be replaced by
+      dpkg-maintscript-helper.
+
   * debian/compat:
     + [BR] Use compat version 9.
 

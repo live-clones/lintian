@@ -628,6 +628,17 @@ Info:  The maintainer script apparently runs 'adduser --system'
  <tt>adduser --no-create-home --home /nonexistent</tt> instead.
 Ref: fhs homeuserhomedirectories, adduser(8)
 
+Tag: maintainer-script-may-use-dir_to_symlink_helper
+Severity: serious
+Certainty: possible
+Experimental: yes
+Info: The maintainer script apparently change a directory to a symlink
+ not using dir_to_symlink command of dpkg-maintscript-helper, that take
+ great care to avoid a lot of problems.
+ .
+ Please use the dpkg-maintscript-helper dir_to_symlink command.
+Ref: dpkg-maintscript-helper(1)
+
 Tag: maintainer-script-empty
 Severity: minor
 Certainty: certain

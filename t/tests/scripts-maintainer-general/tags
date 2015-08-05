@@ -44,4 +44,5 @@ W: scripts-maintainer-general: maintainer-script-should-not-use-start-stop-daemo
 W: scripts-maintainer-general: maintainer-script-should-not-use-update-alternatives-remove postrm:7
 W: scripts-maintainer-general: maintainer-script-should-not-use-update-alternatives-set postinst:129
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
+X: scripts-maintainer-general: maintainer-script-may-use-dir_to_symlink_helper postinst:203
 X: scripts-maintainer-general: maintainer-script-should-not-use-service postinst:156

@@ -197,4 +197,11 @@ dpkg-maintscript-helper symlink_to_dir \
 adduser --system --quiet --ingroup ntp --no-create-home ntp
 adduser festival --quiet --system --ingroup audio --no-create-home
 
+# detect usage that could be replaced by dpkg-maintscript-helper
+if [ -d /usr/share/doc/tworld ]; then
+   if rmdir /usr/share/doc/tworld 2>/dev/null; then
+	ln -s tworld-data /usr/share/doc/tworld
+   fi
+fi
+
 #DEBHELPER#
