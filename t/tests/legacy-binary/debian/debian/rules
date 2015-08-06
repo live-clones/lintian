@@ -12,7 +12,11 @@ build: build-arch
 
 clean:
 	make -i clean
-	rm -f debian/files debian/substvars
+	[ ! -f debian/files ] || rm -f debian/files
+	[ ! -f debian/substvars ] || rm -f debian/substvars
+	[ ! -d debian/tmp ] || rm -rf debian/tmp
+	[ ! -d debian/binary ] || rm -rf debian/binary
+	[ ! -d debian/binary-data ] || rm -rf debian/binary-data
 
 binary-arch: build
 	install -d $(tmp)/usr/bin
