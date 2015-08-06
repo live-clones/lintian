@@ -12,8 +12,10 @@ binary (4-1) unstable; urgency=low
 
   * Weird version number for the new check for accidents with native
     packaging.
+  * Date was fixed by BR and this test was put on changelog-file-strange-date
+    due to dpkg bug, see #794674.
 
- -- Marc 'HE' Brockschmidt <he@debian.org>  The, 15 Apr 2004 23:33:51 +0200
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Thu, 15 Apr 2004 23:33:51 +0200
 
 binary (4) unstable; urgency=low
 

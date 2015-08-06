@@ -1,0 +1,12 @@
+{$source} ({$version}) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: {$testname}
+
+ -- {$author}  {$date}
+
+{$source} (1.0) unstable; urgency=low
+
+  * The date will fail with some dpkg version see #794674
+
+ -- {$author}  The, 15 Apr 2004 23:33:51 +0200

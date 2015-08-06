@@ -57,6 +57,9 @@ lintian (2.5.35) unstable; urgency=medium
 
   * t/scripts/*.t:
     + [JW] Make all the scripts executable.
+  * t/tests/changelog-file-strange-date/*:
+    + [BR] Create a test with error syntax in changelog date.
+      Run only with dpkg below 1.18.2.  (Closes: #794674).
   * t/tests/binaries-general/*:
     + [BR] Fix a test suite failure with gcc5 by using compat 9, and
       removing gets() that does not exist with C11 (used by default

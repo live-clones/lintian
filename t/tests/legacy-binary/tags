@@ -133,7 +133,6 @@ W: binary: su-wrapper-not-su-to-root usr/share/applications/hello.desktop kdesu
 W: binary: su-wrapper-not-su-to-root usr/share/menu/binary:3 sux
 W: binary: superfluous-clutter-in-homepage <http://lintian.debian.org/>
 W: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
-W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
 W: binary: syntax-error-in-debian-news-file line 12 "badly formatted trailer line"
 W: binary: syntax-error-in-debian-news-file line 12 "found eof where expected more change data or trailer"
 W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:1
