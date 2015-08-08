@@ -961,9 +961,16 @@ sub _check_gfdl_license_problem {
     my $gfdlsections  = _strip_punct($rawgfdlsections);
     my $contextbefore = _strip_punct($rawcontextbefore);
 
-    my $oldgfdlsections;
+    # remove line number at beginning of line
+    # see krusader/1:2.4.0~beta3-2/doc/en_US/advanced-functions.docbook/
+    $gfdlsections =~ s{[ ]\d+[ ]}{ }gxsmo;
+    $gfdlsections =~ s{^\d+[ ]}{ }xsmo;
+    $gfdlsections =~ s{[ ]\d+$}{ }xsmo;
+    $gfdlsections =~ s{[ ]+}{ }xsmo;
+
     # remove classical and without meaning part of
     # matched string
+    my $oldgfdlsections;
     do {
         $oldgfdlsections = $gfdlsections;
         $gfdlsections =~ s{ \A \(?[ ]? g?fdl [ ]?\)?[ ]? [,\.;]?[ ]?}{}xsmo;
@@ -983,6 +990,7 @@ sub _check_gfdl_license_problem {
                        permission [ ] is [ ] granted [ ] to [ ] copy [ ]?[,\.;]?[ ]?
                        distribute [ ]?[,\.;]?[ ]? and[ ]?/?[ ]?or [ ] modify [ ]
                        this [ ] document [ ] under [ ] the [ ] terms [ ] of [ ] the\Z}{}xsmo;
+
     # Treat ambiguous empty text
     unless(
         defined(

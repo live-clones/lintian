@@ -2,6 +2,9 @@ lintian (2.5.36) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/cruft.pm:
+    + Avoid a false positive for gfdl detection in krusader.
+      Remove line number before running the detection.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953).
   * checks/scripts.desc:
