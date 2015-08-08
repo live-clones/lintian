@@ -7,6 +7,9 @@ lintian (2.5.36) UNRELEASED; urgency=medium
       Remove line number before running the detection.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953).
+    + [BR] Rename files-privacybreach-may-use-debian-package
+      to  privacy-breach-uses-embedded-file.  Thanks to
+      Guillem Jover for the report.
   * checks/scripts.desc:
     + [BR] Detect suspicious use of ln -s that could be replaced by
       dpkg-maintscript-helper.

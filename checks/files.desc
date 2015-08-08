@@ -981,7 +981,7 @@ Info: This package creates a potential privacy breach by fetching data
  that the remote resources are suitable for Debian main before making
  local copies of them.
 
-Tag: privacy-breach-may-use-debian-package
+Tag: privacy-breach-uses-embedded-file
 Severity: important
 Certainty: possible
 Info: This package creates a potential privacy breach by fetching data
