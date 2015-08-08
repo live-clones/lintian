@@ -1,0 +1,8 @@
+E: files-wrong-owner: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-0:2001 0/2001
+E: files-wrong-owner: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-100:0 100/0
+E: files-wrong-owner: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-30001:65535 30001/65535
+E: files-wrong-owner: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-65535:65001 65535/65001
+W: files-wrong-owner: file-missing-in-md5sums usr/lib/filenames/wrong-owner-0:2001
+W: files-wrong-owner: file-missing-in-md5sums usr/lib/filenames/wrong-owner-100:0
+W: files-wrong-owner: file-missing-in-md5sums usr/lib/filenames/wrong-owner-30001:65535
+W: files-wrong-owner: file-missing-in-md5sums usr/lib/filenames/wrong-owner-65535:65001
