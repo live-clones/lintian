@@ -167,3 +167,4 @@ W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-scr
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
+X: maintainer-scripts: maintainer-script-may-use-dir_to_symlink_helper postinst:5
