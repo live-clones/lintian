@@ -423,7 +423,7 @@ sub run {
                 my $oldpath  = $obs_data->{'olddir'};
                 my $newpath  = $obs_data->{'newdir'};
                 my $moreinfo = $obs_data->{'moreinfo'};
-                tag 'package-install-into-obsolete-dir',
+                tag 'package-installs-into-obsolete-dir',
                   "$file : $oldpath -> $newpath (see also $moreinfo)";
             }
         }
@@ -435,7 +435,7 @@ sub run {
                     =~ m,/(?:[^/]-)?(?:oui|iab)(?:\.(txt|idx|db))?(?:\.$COMPRESS_FILE_EXTENSIONS_OR_ALL)?\Z,x
                   ) {
                     unless ($source_pkg eq 'ieee-data') {
-                        tag 'package-install-ieee-data', $file;
+                        tag 'package-installs-ieee-data', $file;
                     }
                 }
             }
@@ -448,13 +448,13 @@ sub run {
                 # -----------------/etc/apt/preferences
                 if ($fname =~ m,^etc/apt/preferences(?:$|\.d/),) {
                     unless ($source_pkg eq 'apt') {
-                        tag 'package-install-apt-preferences', $file;
+                        tag 'package-installs-apt-preferences', $file;
                     }
                 }
                 # -----------------/etc/apt/sources
                 if ($fname =~ m,^etc/apt/sources\.list(?:$|\.d/),) {
                     unless ($source_pkg eq 'apt') {
-                        tag 'package-install-apt-sources', $file;
+                        tag 'package-installs-apt-sources', $file;
                     }
                 }
             }

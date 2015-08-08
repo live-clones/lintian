@@ -1,5 +1,5 @@
-E: files-ieee-data: package-install-ieee-data usr/share/files-ieee-data/iab.idx
-E: files-ieee-data: package-install-ieee-data usr/share/files-ieee-data/oui.db
-E: files-ieee-data: package-install-ieee-data usr/share/files-ieee-data/oui.idx
-E: files-ieee-data: package-install-ieee-data usr/share/files-ieee-data/oui.txt.gz
+E: files-ieee-data: package-installs-ieee-data usr/share/files-ieee-data/iab.idx
+E: files-ieee-data: package-installs-ieee-data usr/share/files-ieee-data/oui.db
+E: files-ieee-data: package-installs-ieee-data usr/share/files-ieee-data/oui.idx
+E: files-ieee-data: package-installs-ieee-data usr/share/files-ieee-data/oui.txt.gz
 X: files-ieee-data: package-contains-broken-symlink usr/share/files-ieee-data/iab.txt ../ieee-data/iab.txt

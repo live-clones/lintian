@@ -32,11 +32,11 @@ E: files-foo-in-bar: package-contains-mime-file-outside-package-dir usr/share/mi
 E: files-foo-in-bar: package-contains-mime-file-outside-package-dir usr/share/mime/foo/bar
 E: files-foo-in-bar: package-contains-thumbnails-dir usr/share/doc/files-foo-in-bar/.thumbnails/
 E: files-foo-in-bar: package-contains-xvpics-dir usr/share/doc/files-foo-in-bar/.xvpics/
-E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences
-E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences.d/
-E: files-foo-in-bar: package-install-apt-preferences etc/apt/preferences.d/bar
-E: files-foo-in-bar: package-install-apt-sources etc/apt/sources.list.d/
-E: files-foo-in-bar: package-install-apt-sources etc/apt/sources.list.d/bar
+E: files-foo-in-bar: package-installs-apt-preferences etc/apt/preferences
+E: files-foo-in-bar: package-installs-apt-preferences etc/apt/preferences.d/
+E: files-foo-in-bar: package-installs-apt-preferences etc/apt/preferences.d/bar
+E: files-foo-in-bar: package-installs-apt-sources etc/apt/sources.list.d/
+E: files-foo-in-bar: package-installs-apt-sources etc/apt/sources.list.d/bar
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/bin/bar
@@ -74,9 +74,9 @@ W: files-foo-in-bar: non-multi-arch-lib-dir usr/lib32/
 W: files-foo-in-bar: non-multi-arch-lib-dir usr/lib64/
 W: files-foo-in-bar: non-multi-arch-lib-dir usr/libx32/
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/
-W: files-foo-in-bar: package-install-into-obsolete-dir etc/dhcp3/ : ^etc/dhcp3/ -> etc/dhcp (see also https://bugs.debian.org/673029)
-W: files-foo-in-bar: package-install-into-obsolete-dir etc/dhcp3/bar : ^etc/dhcp3/ -> etc/dhcp (see also https://bugs.debian.org/673029)
 W: files-foo-in-bar: package-installs-into-etc-gconf-schemas etc/gconf/schemas/bar
+W: files-foo-in-bar: package-installs-into-obsolete-dir etc/dhcp3/ : ^etc/dhcp3/ -> etc/dhcp (see also https://bugs.debian.org/673029)
+W: files-foo-in-bar: package-installs-into-obsolete-dir etc/dhcp3/bar : ^etc/dhcp3/ -> etc/dhcp (see also https://bugs.debian.org/673029)
 W: files-foo-in-bar: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/Foo/Bar.pm
 W: files-foo-in-bar: package-installs-perllocal-pod usr/lib/perl-foo/perllocal.pod
 W: files-foo-in-bar: third-party-package-in-python-dir usr/lib/python2.7/bar

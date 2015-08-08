@@ -26,12 +26,12 @@ Test-For:
  package-contains-xvpics-dir
  package-contains-thumbnails-dir
  package-installs-file-to-usr-x11r6
- package-install-apt-preferences
- package-install-apt-sources
+ package-installs-apt-preferences
+ package-installs-apt-sources
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d
- package-install-into-obsolete-dir
+ package-installs-into-obsolete-dir
  package-installs-nonbinary-perl-in-usr-lib-perl5
  package-installs-perllocal-pod
  package-installs-packlist

@@ -447,7 +447,7 @@ sub _parse_dep5 {
             tag 'missing-license-paragraph-in-dep5-copyright', $license,
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         } elsif ($standalone_licenses{$license} == -1) {
-            tag 'dep5-file-paragraph-reference-header-paragraph', $license,
+            tag 'dep5-file-paragraph-references-header-paragraph', $license,
               "(paragraph at line $lines[$i]{'START-OF-PARAGRAPH'})";
         }
 

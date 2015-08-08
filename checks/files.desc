@@ -66,7 +66,7 @@ Info: The package installs files into the <tt>/etc/rc.d</tt> or
  <tt>/etc/rc?.d</tt> which is not allowed.
 Ref: policy 9.3.3
 
-Tag: package-install-ieee-data
+Tag: package-installs-ieee-data
 Severity: important
 Certainty: possible
 Ref: #785662
@@ -78,7 +78,7 @@ Info: Debian package should not install ieee oui.txt or iab.txt file
  /usr/share/ieee-data/oui.txt. Moreover, you should also
  depends on ieee-data package.
 
-Tag: package-install-apt-preferences
+Tag: package-installs-apt-preferences
 Severity: serious
 Certainty: possible
 Ref: apt_preferences(5)
@@ -87,7 +87,7 @@ Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/
  .
  Package should not override local administrator choices.
 
-Tag: package-install-apt-sources
+Tag: package-installs-apt-sources
 Severity: serious
 Certainty: possible
 Ref: sources.list(5)
@@ -104,7 +104,7 @@ Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
  which is obsolete.
 Ref: policy 9.3.4
 
-Tag: package-install-into-obsolete-dir
+Tag: package-installs-into-obsolete-dir
 Severity: normal
 Certainty: certain
 Info: The package installs files to an obsolete directory.

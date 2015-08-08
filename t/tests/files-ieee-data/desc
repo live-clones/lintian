@@ -3,4 +3,4 @@ Sequence: 6000
 Version: 1.0
 Description: Check for different ieee data install
 Test-For:
- package-install-ieee-data
+ package-installs-ieee-data
