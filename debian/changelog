@@ -5,8 +5,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Avoid a false positive for gfdl detection in krusader.
       Remove line number before running the detection.
-    + [BR] Avoid another gfdl false positive in sdlbasic, smbc
-      package.
+    + [BR] Avoid another gfdl false positive in oidentd, sdlbasic,
+      smbc package.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953).
     + [BR] Rename files-privacybreach-may-use-debian-package

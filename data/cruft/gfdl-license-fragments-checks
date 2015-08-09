@@ -19,6 +19,8 @@
 \A with [ ] no [ ] invariants? [ ] sections? (?:[ ]?[,\.;][ ]? and [ ] no [ ] covers? [ ] texts?)?\Z ~~ ~~ license-problem-gfdl-non-official-text
 # jedit
 \A with [ ] no [ ] invariant [ ] sections?[ ]?,?[ ]? front[ ]?-?[ ]?cover [ ] texts? [ ] or [ ] back[ ]?-?[ ]?cover [ ] texts?[ ]?,?[ ]?each [ ] as [ ] defined [ ] in [ ] the [ ] license \Z ~~ ~~ license-problem-gfdl-non-official-text
+# oidentd
+with [ ] (?:the[ ])? invariants? [ ] sections? [ ] being [ ] no [ ] invariants? [ ] sections?[ ]?[,\.;]?[ ]? with [ ] the [ ] front[ ]?-?[ ]?cover [ ] texts? [ ] being [ ] no  [ ] front[ ]?-?[ ]?cover [ ] texts? ?[ ]?[,\.;]?[ ]?  (?:and[ ])? with [ ] the [ ] back[ ]?-?[ ]?cover [ ] texts? [ ] being [ ] no  [ ] back[ ]?-?[ ]?cover [ ] texts? \Z~~ ~~ license-problem-gfdl-non-official-text
 #sdlbasic
 \A with [ ] no [ ] invariants? [ ] (?:sections?[ ])? texts? \Z  ~~ ~~ license-problem-gfdl-non-official-text
 # smbc
