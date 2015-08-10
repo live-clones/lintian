@@ -20,6 +20,7 @@ P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldf
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/mailutils.texi invariant part is: with no invariant sections, no front-cover, and no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/make-stds.texi invariant part is: with no invariant sections, with no front-cover texts, and with no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/normalbkchem.texi invariant part is: no invariant sections, no front-cover texts, no back-cover texts
+P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/oidentd.8 invariant part is: with the invariant sections being no invariant sections, with the front-cover texts being no front-cover texts, and with the back-cover texts being no back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/opentoken.txt invariant part is: with no invariant sections, front-cover or back-cover texts
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/parsewiki.txt invariant part is: without any invariant sections
 P: cruft-gfdl-invariants source: license-problem-gfdl-non-official-text src/oldfalsepositive/partedvariant.txt invariant part is: with the no invariant sections, with the no front-cover texts, and with no back-cover texts
