@@ -41,11 +41,14 @@ libbaz.so: $(SHOBJS)
 
 libbaz2.a: $(OBJS)
 	ar cq $@ $(OBJS)
+	strip --strip-unneeded --remove-section=.comment \
+		--remove-section=-note $@
 	ranlib $@
 
 # The pic one in the .a (wrong), no archive table
 libbaz1.a: $(SHOBJS)
 	ar cqS $@ $^
-
+	strip --strip-unneeded --remove-section=.comment \
+		--remove-section=-note $@
 clean:
 	rm -f *.a *.o *.so* *.sho
