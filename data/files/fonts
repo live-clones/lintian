@@ -616,8 +616,6 @@ fidgety.ttf ttf-aenigma
 flatline.ttf fonts-dustin
 flipside.ttf ttf-aenigma
 fontawesome-webfont.ttf fonts-font-awesome
-fontawesome-webfont.ttf fonts-font-awesome
-fontawesome.otf fonts-font-awesome
 fontawesome.otf fonts-font-awesome
 forcible.ttf ttf-aenigma
 freaktur.ttf ttf-aenigma
@@ -1602,8 +1600,6 @@ pothana2000.ttf fonts-telu-extra
 powdwrk5.ttf ttf-aenigma
 powerlinesymbols.otf fonts-powerline
 prociono.otf fonts-prociono
-prociono.otf fonts-prociono
-procionott.ttf fonts-prociono
 procionott.ttf fonts-prociono
 progenisis.ttf fonts-dustin
 pseudo.ttf ttf-aenigma
@@ -2011,10 +2007,7 @@ tsextolo.ttf ttf-aenigma
 tsextols.ttf ttf-aenigma
 tuffy.ttf fonts-tuffy
 tuffy_bold.ttf fonts-tuffy
-tuffy_bold.ttf fonts-tuffy
 tuffy_bold_italic.ttf fonts-tuffy
-tuffy_bold_italic.ttf fonts-tuffy
-tuffy_italic.ttf fonts-tuffy
 tuffy_italic.ttf fonts-tuffy
 tuffy_regular.ttf fonts-tuffy
 turmoil.ttf ttf-aenigma

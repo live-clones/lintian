@@ -81,7 +81,7 @@ if [ -z "$contents" ] ; then
 fi
 zcat "$contents" \
     | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb))\s+\w+/((?:[to]tf|t1|x?fonts)-[^,]+)(,.+)?$%$1 $2%i);' \
-    | LC_ALL=C sort >> "$workdir/fonts"
+    | LC_ALL=C sort | uniq >> "$workdir/fonts"
 # Fonts in xfonts-tipa are really shipped by tipa.
 sed -i 's/ xfonts-tipa$/ tipa/g' "$workdir/fonts"
 mv "$workdir/fonts" "$lintian_data/files/fonts"

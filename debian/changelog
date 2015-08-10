@@ -19,6 +19,9 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * debian/compat:
     + [BR] Use compat version 9.
 
+  * private/refresh-fonts-data:
+    + [NT] Prune some duplicates from the generated font file.
+
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Tue, 04 Aug 2015 17:28:59 +0200
 
 lintian (2.5.35) unstable; urgency=medium
