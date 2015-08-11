@@ -609,4 +609,8 @@ L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)>
 
 =back
 
+=head1 SEE ALSO
+
+L<Lintian::Tutorial::WritingTests>, L<Lintian::Tutorial::TestSuite>
+
 =cut
