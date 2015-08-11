@@ -30,18 +30,18 @@ sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     return if # Big exception list for all tags
-      $pkg =~ /^perl(-base)?$/                    or # perl itself
-      $pkg =~ /^ruby[\d.]*$/                      or # ruby itself
-      $pkg =~ /^python[\d.]*(-dev|-minimal)?$/    or # python itself
-      $pkg =~ /^cpan(plus|minus)$/                or # cpan package managers
-      $pkg =~ /^libmodule-.*-perl$/               or # perl module tools
-      $pkg =~ /^libdevel-.*-perl$/                or # perl debugging tools
-      $pkg =~ /^libperl.*-perl$/                  or # perl-handling tools
-      $pkg =~ /^libtest-.*-perl$/                 or # perl testing tools
-      $pkg =~ /^python[\d.]*-(stdeb|setuptools)$/ or # python packaging stuff
-      $pkg =~ /^gem2deb/                          or # ruby packaging stuff
-      $pkg =~ /^xulrunner/                        or # rendering engine
-      $pkg =~ /^lib.*-(utils|tools|bin|dev)/      or # generic library helpers
+      $pkg =~ /^perl(?:-base)?$/                    or # perl itself
+      $pkg =~ /^ruby[\d.]*$/                        or # ruby itself
+      $pkg =~ /^python[\d.]*(?:-dev|-minimal)?$/    or # python itself
+      $pkg =~ /^cpan(?:plus|minus)$/                or # cpan package managers
+      $pkg =~ /^libmodule-.*-perl$/                 or # perl module tools
+      $pkg =~ /^libdevel-.*-perl$/                  or # perl debugging tools
+      $pkg =~ /^libperl.*-perl$/                    or # perl-handling tools
+      $pkg =~ /^libtest-.*-perl$/                   or # perl testing tools
+      $pkg =~ /^python[\d.]*-(?:stdeb|setuptools)$/ or # python packaging stuff
+      $pkg =~ /^gem2deb/                            or # ruby packaging stuff
+      $pkg =~ /^xulrunner/                          or # rendering engine
+      $pkg =~ /^lib.*-(?:utils|tools|bin|dev)/      or # generic helpers
       any { $pkg eq $_ } qw(rake bundler coderay kdelibs-bin); # whitelist
 
     my @programs = ();
@@ -62,8 +62,8 @@ sub run {
     return unless @programs;
 
     # Check for library style package names
-    if ($pkg =~ /^lib(.+)-perl$|^ruby-|^python[\d.]*-/) {
-        if ($pkg =~ /^libapp(.+)-perl$/) {
+    if ($pkg =~ /^lib(?:.+)-perl$|^ruby-|^python[\d.]*-/) {
+        if ($pkg =~ /^libapp(?:.+)-perl$/) {
             tag('libapp-perl-package-name', @programs);
         } else {
             tag('library-package-name-for-application', @programs);
