@@ -240,3 +240,11 @@ Info: This package has no Homepage field but has a URL in the description
  and wording that might indicate this is the package Homepage.  If it is,
  add a Homepage control field containing it rather than mentioning it in
  the package description.
+
+Tag: perl-module-name-not-mentioned-in-description
+Severity: minor
+Certainty: certain
+Experimental: yes
+Info: Debian users are likely to look for perl modules by their name, e.g.
+ Foo::Bar, not by package name (libfoo-bar-perl). To make this easier, the main
+ module name should be present in the long package description.

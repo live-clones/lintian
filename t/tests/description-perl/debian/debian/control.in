@@ -1,0 +1,16 @@
+Source: {$source}
+Priority: extra
+Section: perl
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 9)
+
+Package: libdeb-long-description-perl
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: lintian dummy package to test a module name related check
+ This package is solely meant for testing a lintian check to argue
+ about not mentioning the contained perl module.
+ .
+ For testing and length-ish purposes, with Long::Description a similar
+ name is mentioned though

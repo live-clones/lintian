@@ -250,6 +250,29 @@ sub run {
             $PICKY_SPELLING_ERROR_IN_DESCRIPTION);
     }
 
+    if ($pkg =~ /^lib(.+)-perl$/) {
+        my $mod = $1;
+        my @mod_path_elements = split(/-/, $mod);
+        $mod = join('::', map {ucfirst} @mod_path_elements);
+        my $mod_lc = lc($mod);
+        my $d = $info->field('description');
+        $d =~ s/[^\n]+\n//; # strip long description
+
+        my $pm_found = 0;
+        my $pmpath = join('/', @mod_path_elements).'.pm';
+        my $pm     = $mod_path_elements[-1].'.pm';
+
+        foreach my $filepath ($info->sorted_index) {
+            if ($filepath =~ m(\Q$pmpath\E\z|/\Q$pm\E\z)i) {
+                $pm_found = 1;
+                last;
+            }
+        }
+
+        tag('perl-module-name-not-mentioned-in-description', $mod)
+          if (lc($d) !~ /\Q$mod_lc\E/ and $pm_found);
+    }
+
     return;
 }
 

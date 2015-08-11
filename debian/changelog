@@ -7,6 +7,9 @@ lintian (2.5.36) UNRELEASED; urgency=medium
       Remove line number before running the detection.
     + [BR] Avoid another gfdl false positive in oidentd, sdlbasic,
       smbc package.
+  * checks/description.*:
+    + [AB] Add new tag perl-module-name-not-mentioned-in-description based
+      on pkg-perl-tools' no-module-name-in-description by Damyan Ivanov.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953).
     + [BR] Rename files-privacybreach-may-use-debian-package
