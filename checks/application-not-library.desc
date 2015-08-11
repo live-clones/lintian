@@ -19,7 +19,7 @@ Info: This package contains a program in $PATH and is named
 
 Tag: library-package-name-for-application
 Severity: normal
-Certainty: possible
+Certainty: wild-guess
 Experimental: yes
 Info: This package contains a program in $PATH but is named like a
  library. E.g. instead of libfoo-bar-perl it should be named just
@@ -36,7 +36,7 @@ Info: This package contains a program in $PATH but is named like a
 
 Tag: application-in-library-section
 Severity: normal
-Certainty: possible
+Certainty: wild-guess
 Experimental: yes
 Info: This package contains a binary in $PATH but is in a section just
  thought for libraries. It likely should be in another section like
