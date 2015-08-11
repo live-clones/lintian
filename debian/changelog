@@ -15,6 +15,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [BR] Detect suspicious use of ln -s that could be replaced by
       dpkg-maintscript-helper.
+  * checks/application-not-library.*, t/tests/application-not-library/:
+    + [AB] New experimental checks imported from pkg-perl-tools.
 
   * debian/compat:
     + [BR] Use compat version 9.
