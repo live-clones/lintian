@@ -1,6 +1,6 @@
 # application-not-library -- find applications packaged like a library -*- perl -*-
 #
-# Copyright © 2014 Axel Beckert <abe@debian.org>
+# Copyright © 2014-2015 Axel Beckert <abe@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,34 +26,39 @@ use warnings;
 use Lintian::Tags qw(tag);
 
 sub run {
-    my ( $pkg, $type, $info, $proc, $group ) = @_;
+    my ($pkg, $type, $info, $proc, $group) = @_;
 
     return if # Big exception list for all tags
-        $pkg =~ /^perl(-base)?$/                    or # perl itself
-        $pkg =~ /^ruby[\d.]*$/                      or # ruby itself
-        $pkg =~ /^python[\d.]*(-dev|-minimal)?$/    or # python itself
-        $pkg =~ /^cpan(plus|minus)$/                or # cpan package managers
-        $pkg =~ /^libmodule-.*-perl$/               or # perl module tools
-        $pkg =~ /^libdevel-.*-perl$/                or # perl debugging tools
-        $pkg =~ /^libperl.*-perl$/                  or # perl-handling tools
-        $pkg =~ /^libtest-.*-perl$/                 or # perl testing tools
-        $pkg =~ /^python[\d.]*-(stdeb|setuptools)$/ or # python packaging stuff
-        $pkg =~ /^gem2deb/                          or # ruby packaging stuff
-        $pkg =~ /^xulrunner/                        or # rendering engine
-        $pkg =~ /^lib.*-(utils|tools|bin|dev)/      or # generic library helpers
-        grep { $pkg eq $_ } qw(rake bundler coderay kdelibs-bin); # whitelist
+      $pkg =~ /^perl(-base)?$/                    or # perl itself
+      $pkg =~ /^ruby[\d.]*$/                      or # ruby itself
+      $pkg =~ /^python[\d.]*(-dev|-minimal)?$/    or # python itself
+      $pkg =~ /^cpan(plus|minus)$/                or # cpan package managers
+      $pkg =~ /^libmodule-.*-perl$/               or # perl module tools
+      $pkg =~ /^libdevel-.*-perl$/                or # perl debugging tools
+      $pkg =~ /^libperl.*-perl$/                  or # perl-handling tools
+      $pkg =~ /^libtest-.*-perl$/                 or # perl testing tools
+      $pkg =~ /^python[\d.]*-(stdeb|setuptools)$/ or # python packaging stuff
+      $pkg =~ /^gem2deb/                          or # ruby packaging stuff
+      $pkg =~ /^xulrunner/                        or # rendering engine
+      $pkg =~ /^lib.*-(utils|tools|bin|dev)/      or # generic library helpers
+      scalar(
+        grep { $pkg eq $_ }
+          qw(rake bundler coderay kdelibs-bin)       # whitelist
+      );
 
     my @programs = ();
     foreach my $binpath (qw(bin sbin usr/bin usr/sbin usr/games)) {
         my $bindir = $info->index("$binpath/");
         next unless $bindir;
 
-        push(@programs,
-             grep { !/update$/ }     # ignore library maintenance tools
-             grep { !/properties$/ } # ignore library configuration tools
-             map { $_->name; }
-             grep { $_->basename !~ /^dh_/ } # ignore debhelper plugins
-             $bindir->children);
+        push(
+            @programs,
+            grep { !/update$/ }       # ignore library maintenance tools
+              grep { !/properties$/ } # ignore library configuration tools
+              map { $_->name; }
+              grep { $_->basename !~ /^dh_/ } # ignore debhelper plugins
+              $bindir->children
+        );
     }
 
     return unless @programs;
