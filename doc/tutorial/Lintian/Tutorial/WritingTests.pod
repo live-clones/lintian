@@ -150,7 +150,7 @@ The directory is seeded from I<< t/templates/tests/<skeleton>/ >>,
 where I<skeleton> is the value of the "Skeleton" field from the "desc"
 file.
 
-For this test, you only need a specialised control file.  This file
+For this test, you only need a specialized control file.  This file
 could look something like:
 
  Source: {$source}
@@ -208,7 +208,7 @@ resources that may be useful to your future test writing work.
 Basically, the tag-testing test cases all involve building a package
 and running lintian on the result.  The "tests" suite does a full
 build with dpkg-buildpackage, the other suites "hand-crafts" only the
-type of artefacts they are named after (e.g. "source" produces only
+type of artifacts they are named after (e.g. "source" produces only
 source packages).
 
 =head3 A test in the "tests" suite
