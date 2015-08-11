@@ -24,6 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
+use List::Util qw(any);
 
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
@@ -41,10 +42,7 @@ sub run {
       $pkg =~ /^gem2deb/                          or # ruby packaging stuff
       $pkg =~ /^xulrunner/                        or # rendering engine
       $pkg =~ /^lib.*-(utils|tools|bin|dev)/      or # generic library helpers
-      scalar(
-        grep { $pkg eq $_ }
-          qw(rake bundler coderay kdelibs-bin)       # whitelist
-      );
+      any { $pkg eq $_ } qw(rake bundler coderay kdelibs-bin); # whitelist
 
     my @programs = ();
     foreach my $binpath (qw(bin sbin usr/bin usr/sbin usr/games)) {
