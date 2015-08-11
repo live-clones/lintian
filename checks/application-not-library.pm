@@ -72,7 +72,7 @@ sub run {
 
     # Check for wrong section
     my $section = $info->field('section', '');
-    if ($section =~ /perl|python|ruby|^libs/) { # oldlibs is ok
+    if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
         tag('application-in-library-section', "$section", @programs);
     }
 
