@@ -18,9 +18,9 @@ L<Lintian::Tutorial::WritingTests>.
 
 The Lintian test suite is an extensive collection of various test
 cases.  The test suite is divided into 4 "sub-suites".  The majority
-of all tests are currently located in the "tests" sub-suite.
+of tests are currently located in the "tests" sub-suite.
 
-To run the full suite in all of its glory, simply invoke:
+To run the full suite in all its glory, simply invoke:
 
  $ debian/rules runtests
 
@@ -29,11 +29,11 @@ To run the full suite in all of its glory, simply invoke:
  $ mkdir -p debian/test-out
  $ t/runtests -k --dump-logs t debian/test-out
 
-But while writing a new tag (or check) you probably only want to run a
+While writing a new tag (or check) you probably only want to run a
 particular (subset of the) test(s).  See L</Running a subset of the
 tests> for the available options.
 
-When run via I<debian/rules>, the test suite respects the
+When run via I<debian/rules>, the test suite respects
 "DEB_BUILD_OPTIONS=parallel=N". When using I<t/runtests> directly, use
 I<-jN> to choose the number of threads.  Note that "N" denotes the
 amount of "worker" threads.  The test runner will generally have 2
@@ -41,9 +41,9 @@ threads more than that.  Also each "worker" will run lintian, which
 runs multiple unpacking jobs in parallel as well.
 
 In case you are wondering about the 2 extra threads in the test
-runner, the first of them is the "coordinator"-thread (which will
+runner, the first of them is the "coordinator" thread (which will
 generally be waiting when the workers are active) and the second one
-is the "output"-thread (which handles the fancy output).
+is the "output" thread (which handles the fancy output).
 
 =head2 Running a subset of the tests
 
@@ -72,7 +72,7 @@ To run all tests for a given check, use:
  $ t/runtests --dump-logs -k t debian/test-out $check
 
 $check must be the name of a check (it will test for
-checks/$check.desc) or "legacy".  This will run all tests that starts
+checks/$check.desc) or "legacy".  This will run all tests that start
 with "$check-".
 
 Note: The "changes" sub-suite in the new test suite does not support
@@ -90,12 +90,12 @@ To run all tests in a given sub-suite, use:
 
 $suites is a comma-separated list of names of sub-suites to run.
 
-Note: this cannot be used to influence the order, in which the sub-suites
+Note: this cannot be used to influence the order in which the sub-suites
 are run.
 
 =item Running all tests designed for a specific tag
 
-To run all tests that has a "Test-For" or a "Test-Against" for a given
+To run all tests that have a "Test-For" or a "Test-Against" for a given
 tag, use:
 
  $ debian/rules runtests onlyrun=tag:$tag

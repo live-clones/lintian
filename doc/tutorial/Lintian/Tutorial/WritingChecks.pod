@@ -17,17 +17,17 @@ one.
 
 =head1 DESCRIPTION
 
-The basics of writing a check is outlined in the Lintian User Manual
-(§3.3).  This tutorial will focus on the part of writing the actual
+The basics of writing a check are outlined in the Lintian User Manual
+(§3.3).  This tutorial will focus on the act of writing the actual
 check.  In this tutorial, we will assume the name of the check to be
-written is called "deb/pkg-check".
+written is "deb/pkg-check".
 
 The tutorial will work with a "binary" and "udeb" check.  Checking
 source packages works in a similar fashion.
 
 =head2 Create a check I<.desc> file
 
-As mentioned, this tutorial will focus on the part of writing a check.
+As mentioned, this tutorial will focus on the writing of a check.
 Please see the Lintian User Manual (§3.3) for how to do this part.
 
 =head2 Create the Perl check module
@@ -48,7 +48,7 @@ Start with the template:
      return;
  }
 
-This snippet above is a simple valid check that does "nothing at all".
+The snippet above is a simple valid check that does "nothing at all".
 We will extend it in just a moment, but first let us have a look at
 the arguments at the setup.
 
@@ -70,7 +70,7 @@ At the moment, $type is one of "binary" (.deb), "udeb", "source"
 (.dsc) or "changes".  This argument is mostly useful if certain checks
 do not apply equally to all package types being processed.
 
-Generally it is advisable to do check only binaries ("binary" and
+Generally it is advisable to check only binaries ("binary" and
 "udeb"), sources or changes in a given check.  But in rare cases, it
 makes sense to lump multiple types together in the same check and this
 argument helps you do that.
@@ -110,7 +110,7 @@ This is an instance of L<Lintian::ProcessableGroup>.
 
 =back
 
-Now back to the part of coding.
+Now back to the coding.
 
 =head2 Emitting a tag
 
@@ -148,15 +148,15 @@ Lintian/your check.
 
 =head2 Accessing fields
 
-Lets do a slightly harder example.  Assume we wanted to emit a tag for
+Let's do a slightly harder example.  Assume we wanted to emit a tag for
 all packages without a (valid) Multi-Arch field.  This requires us to
 A) identify if the package has a Multi-Arch field and B) identify if
-the contents of the field was valid.
+the content of the field was valid.
 
 Starting from the top.  All $info objects have a method called field,
 which gives you access to a (raw) field from the control file of the
 package.  It returns C<undef> if said field is not present or the
-contents of said field otherwise.  Note that field names must be given
+content of said field otherwise.  Note that field names must be given
 in all lowercase letters (i.e. use "multi-arch", not "Multi-Arch").
 
  # deb/pkg-check is loaded as Lintian::deb::pkg_check
@@ -179,7 +179,7 @@ in all lowercase letters (i.e. use "multi-arch", not "Multi-Arch").
      return;
  }
 
-This was the first half.  Lets look at checking the value.  Multi-arch
+This was the first half.  Let's look at checking the value.  Multi-arch
 fields can (currently) be one of "no", "same", "foreign" or "allowed".
 One way of checking this would be using the regex:
 
@@ -239,17 +239,17 @@ pre-depend on the package "multiarch-support".  Well, we could use the
 L<< $info->relation|Lintian::Collect::Binary/relation (FIELD) >> method for
 this.
 
-The $info->relation returns an instance of L<Lintian::Relation>.  This
+$info->relation returns an instance of L<Lintian::Relation>.  This
 object has an "implies" method that can be used to check if a package
 has an explicit dependency.  Note that "implies" actually checks if
-one relations "implies" another (i.e. if you satisfied relationA then
+one relation "implies" another (i.e. if you satisfied relationA then
 you definitely also satisfied relationB).
 
-Like with the "field"-method, field names have to be given in all
-lowercase.  But "relation" will never return C<undef> (not even if the
+As with the "field"-method, field names have to be given in all
+lowercase.  However "relation" will never return C<undef> (not even if the
 field is missing).
 
-So in example:
+For example:
 
  my $predepends = $info->relation('pre-depends');
  unless ($predepends->implies('multiarch-support')) {
@@ -296,7 +296,7 @@ Inserted in the proper place, our check now looks like:
 =head2 Using static data files
 
 Currently our check mixes data and code.  Namely all the valid values
-for the Multi-Arch field is currently hard-coded in our check.  We can
+for the Multi-Arch field are currently hard-coded in our check.  We can
 move those out of the check by using a data file.
 
 Lintian natively supports data files that are either "sets" or
@@ -335,7 +335,7 @@ Data files work with 3 access methods, "all", "known" and "value".
 =item all
 
 "all" (i.e. $data->all) returns a list of all the entries in the data
-files (for key/value tables, all returns the keys).  The list is not
+file (for key/value tables, all returns the keys).  The list is not
 sorted in any order (not even input order).
 
 =item known
@@ -405,7 +405,7 @@ So the resulting check is:
 
 =head2 Accessing contents of the package
 
-Another very used mechanism is to check for the presence (or absence)
+Another heavily used mechanism is to check for the presence (or absence)
 of a given file.  Generally this is what the
 L<< $info->index|Lintian::Collect::Package/index (FILE) >> and
 L<< $info->sorted_index|Lintian::Collect::Package/sorted_index >> methods
@@ -413,8 +413,8 @@ are for.  The "index" method returns instances of L<Lintian::Path>,
 which has a number of utility methods.
 
 If you want to loop over all files in a package, the sorted_index will
-do this for you.  If you are looking for a specific file (or dir), a
-call to "index" will be much faster.  For the contents of a specific dir,
+do this for you.  If you are looking for a specific file (or directory), a
+call to "index" will be much faster.  For the contents of a specific directory,
 you can use something like:
 
  if (my $dir = $info->index('path/to/dir/')) {
@@ -428,7 +428,7 @@ Keep in mind that using the "index" or "sorted_index" method will
 require that you put "unpacked" in Needs-Info.  See L</Keeping Needs-Info
 up to date>.
 
-There is also a pair of methods for accessing the control files of a
+There are also a pair of methods for accessing the control files of a
 binary package.  These are
 L<< $info->control_index|Lintian::Collect::Package/control_index (FILE) >> and
 L<< $info->sorted_control_index|Lintian::Collect::Package/sorted_control_index >>.
@@ -442,22 +442,22 @@ L<< $info->index|Lintian::Collect::Package/index (FILE) >>.  These
 methods will open the underlying file for reading (the latter
 applying a gzip decompression).
 
-However, please do assert that file is safe to read by calling
+However, please do assert that the file is safe to read by calling
 L<is_open_ok|Lintian::Path/is_open_ok> first.  Generally, it will
 only be true for files or safely resolvable symlinks pointing to
 files.  Should you attempt to open a path that does not satisfy
 those criteria, L<Lintian::Path> will raise a trappable error at
 runtime.
 
-Alternatively, if you access to the underlying file object, you can
+Alternatively, if you access the underlying file object, you can
 use the L<fs_path|Lintian::Path/fs_path> method.  Usually, you will
 want to test either L<is_open_ok|Lintian::Path/is_open_ok> or
 L<is_valid_path|Lintian::Path/is_valid_path> first to ensure you do
 not follow unsafe symlinks.  The "is_open_ok" check will also assert
-that it is not (e.g.) a named pipe and such.
+that it is not (e.g.) a named pipe or such.
 
 Should you call L<fs_path|Lintian::Path/fs_path> on a symlink that
-escape the package root, the method will throw a trappable error at
+escapes the package root, the method will throw a trappable error at
 runtime.  Once the path is returned, there are no more built-in
 fail-safes.  When you use the returned path, keep things like
 "../../../../../etc/passwd"-symlink and "fifo" pipes in mind.
@@ -500,7 +500,7 @@ separated list and each element of Y basically falls into 3 cases.
 
 =over 4
 
-=item * The element is a the word I<none>
+=item * The element is the word I<none>
 
 In this case, the method has no "external" requirements and can be
 used without any changes to your Needs-Info.  The "field" method
@@ -510,7 +510,7 @@ This only makes sense if it is the only element in the list.
 
 =item * The element is a link to a method
 
-In this case, the method uses another method to do is job.  An example
+In this case, the method uses another method to do its job.  An example
 is the
 L<sorted_control_index|Lintian::Collect::Binary/sorted_control_index>
 method, which uses the
@@ -527,13 +527,13 @@ you have to put "bin-pkg-control" in your Needs-Info.
 =back
 
 CAVEAT: Methods can have different requirements based on the type of
-package!  Example being "changelog", which requires "changelog-file"
+package!  An example of this "changelog", which requires "changelog-file"
 in binary packages and "Same as debfiles" in source packages.
 
 =head2 Avoiding security issues
 
 Over the years a couple of security issues have been discovered in
-Lintian.  The problem is people can in theory create some really nasty
+Lintian.  The problem is that people can in theory create some really nasty
 packages.  Please keep the following in mind when writing a check:
 
 =over 4
@@ -548,12 +548,12 @@ CVE-2009-4014).
 Usually 3-arg open and the non-shell variant of system/exec are
 enough.  When you actually need a shell pipeline, consider using
 L<Lintian::Command>.  It also provides a I<safe_qx> command to assist
-with capturing stdout as alternative to `$cmd` (or qx/$cmd/).
+with capturing stdout as an alternative to `$cmd` (or qx/$cmd/).
 
 =item * Do not trust field values.
 
 This is especially true if you intend to use the value as part of a
-file name.  Verify that field contains what you expect before you use
+file name.  Verify that the field contains what you expect before you use
 it.
 
 =item * Use L<Lintian::Path> (or, failing that, is_ancestor_of)
@@ -571,7 +571,7 @@ You might be tempted to think that the following code is safe:
  }
 
 This is definitely unsafe if "$filename" contains at least one
-directory segment.  So if in doubt, use
+directory segment.  So, if in doubt, use
 L<is_ancestor_of|Lintian::Util/is_ancestor_of(PARENTDIR, PATH)> to
 verify that the requested file is indeed the file you think it is.  A
 better version of the above would be:
@@ -600,7 +600,7 @@ Of course, it is much easier to use the L<Lintian::Path> object
  }
 
 Here you can drop the " && $ufile->is_file" if you want to permit
-safe-symlinks.
+safe symlinks.
 
 
 For more information on the is_ancestor_of check, see
