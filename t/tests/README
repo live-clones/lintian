@@ -216,9 +216,7 @@ test_calibration
 
 Be aware that Git doesn't track directories, only files, so any
 directory must contain at least one file to exist in a fresh Git
-checkout.  Test cases that just use the template must therefore still
-have some file in the debian directory.  Normally, this is handled by
-creating a small README file; see t/tests/basic for an example.
+checkout.
 
 
 RUNNING THE TEST SUITE

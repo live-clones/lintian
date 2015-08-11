@@ -1,0 +1,499 @@
+=encoding utf-8
+
+=head1 NAME
+
+Lintian::Tutorial::WritingTests -- Short tutorial on writing tests
+
+=head1 SYNOPSIS
+
+This document attempts to be a short / quick tutorial to the lintian
+test suite from a test-writer perspective.  As such, it will only
+cover the standard type of tests (from the "tests" suite).
+
+The guide will involve writing a test for the "deb/pkg-check" check,
+which was documented in the L<Lintian::Tutorial::WritingChecks>
+tutorial.
+
+For running tests, please see L<Lintian::Tutorial::TestSuite> instead.
+
+=head1 DESCRIPTION
+
+The lintian test suite is divided into several parts.  These are:
+
+=over 4
+
+=item * scripts
+
+Small (Perl) "prove" tests.  These assert that code style, data files
+or/and self-contained code units (i.e. unit tests) work as intended.
+They are B<not> used for testing lintian tags.
+
+=item * changes / debs / source
+
+These suites are small test suites that tests some particular tags for
+I<.changes>, I<.deb> or I<.dsc> files.  Typically, you will find the
+more exotic tags here, which require some special fiddling and cannot
+be built by a "standard" dh7 + dpkg build.
+
+=item * tests
+
+This suite is the standard test suite for testing lintian tags.
+
+=back
+
+With this in mind, let us move on to the scope.
+
+=head2 Scope of the tutorial
+
+The "tests" suite alone is fairly complex on its own.  To keep things
+simple, the tutorial itself will limit itself to creating a "native"
+package with no special requirements in the "tests" suite.
+
+In particular note that the tags I<must not> be I<pedantic> for this
+to work.  If you followed the check writing tutorial and made the tags
+pedantic, please change them into "I", "W" or "E" tags.
+
+Once the basics are covered, you should be better equipped to deal
+with the other ("tag testing") suites or using other features of the
+"tests" suite (e.g. pedantic tags).
+
+=head2 The design of the lintian test suite
+
+The basic design of the Lintian test suite can basically be summed up
+to I<less is more>.  The Debian build system is changing all the time
+(albeit, slowly) and some times it deprecates or breaks existing
+features.
+
+With over 400 tests all featuring the same basic parts, the test suite
+features several tricks to keep up with the pace.  It uses "skeletons"
+(template) directories to seed the package structures and template
+files to fill in the basic files (e.g. "debian/control" and
+"debian/changelog").
+
+This means that when a new standards-version comes along, debhelper
+deprecates a feature or (more likely) lintian adds a new tag, the
+majority of the tests can quickly be adapted with only a minor effort.
+
+Since pedantic tags tends to require additional effort to avoid, most
+Lintian tests do B<not> run with pedantic tags enabled.
+
+=head2 The basics of a "native" package in the "tests" suite
+
+For starters, you need 2 files and 1 directory, which will be placed
+in I<< t/tests/<test-name> >>.
+
+=head3 The desc file (mandatory)
+
+This is the test description file.  It is a deb822 file (i.e. same
+syntax as I<debian/control>), which contains a number of fields.
+
+Lets start with the following template:
+
+ Testname: pkg-deb-check-general
+ Sequence: 6000
+ Version: 1.0
+ Description: General test of the pkg/deb-check check
+ Test-For:
+  missing-multi-arch-field
+  missing-pre-depends-on-multiarch-support
+
+This defines the name of the test, its sequence number (i.e. how early
+it should be run), the version of the I<generated> package, a
+description and the tags you intend to test for.
+
+In case you were wondering why "invalid-multi-arch-field" is not
+listed, then it is because dpkg will not allow us to use an invalid
+Multi-Arch value.  Therefore, that particular tag would have to be
+tested in the "debs" suite instead.
+
+Note that the value of the Testname field (as Source field), Version
+field and Description field (as the synopsis) I<will> be used in the
+package.  As such, they must obey the normal requirements for these
+purposes.
+
+Please keep the following conventions in mind:
+
+=over 4
+
+=item The Testname should be "<check-name>-<test-name>"
+
+Note that regular Lintian checks do I<not> have a "/", so the naming
+convention work slightly better there.
+
+=item The Sequence should always be 6000 for tests checking tags.
+
+Other numbers are used for different purposes.
+
+=item The Version should always be "1.0" unless the test requires anything else.
+
+For non-native packages, the default would be "1.0-1".
+
+=back
+
+=head3 The "tags" file (mandatory, but may be empty)
+
+This file contains the I<sorted> "expected" output of lintian.
+Assuming all of the tags are "I" tags, the file should look something
+like:
+
+ I: pkg-deb-check-general-missing-ma: missing-multi-arch-field
+ I: pkg-deb-check-general-missing-pred: missing-pre-depends-on-multiarch-support
+
+=head3 The "debian/" directory (optional, but usually needed)
+
+The unpacked debian package in its full glory.  Note that this means
+that the (e.g.) I<debian/rules> file would be I<<
+t/tests/<test-name>/debian/debian/rules >>  (note the double
+"debian/").
+
+The directory is seeded from I<< t/templates/tests/<skeleton>/ >>,
+where I<skeleton> is the value of the "Skeleton" field from the "desc"
+file.
+
+For this test, you only need a specialized control file.  This file
+could look something like:
+
+ Source: {$source}
+ Priority: extra
+ Section: {$section}
+ Maintainer: {$author}
+ Standards-Version: {$standards_version}
+ Build-Depends: debhelper (>= 9)
+ 
+ Package: {$source}-missing-ma
+ Architecture: {$architecture}
+ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+ Description: {$description} (invalid)
+  This is a test package designed to exercise some feature or tag of
+  Lintian.  It is part of the Lintian test suite and may do very odd
+  things.  It should not be installed like a regular package.  It may
+  be an empty package.
+  .
+  Missing M-A field.
+ 
+ Package: {$source}-missing-pred
+ Architecture: any
+ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+ Multi-arch: same
+ Description: {$description} (pre-depends)
+  This is a test package designed to exercise some feature or tag of
+  Lintian.  It is part of the Lintian test suite and may do very odd
+  things.  It should not be installed like a regular package.  It may
+  be an empty package.
+  .
+  Missing Pre-Depends.
+
+=head3 Running the test
+
+At this point, the test is in fact ready to be executed.  It can be
+run by using:
+
+ $ debian/rules runtests onlyrun=pkg-deb-check-general
+
+ OR
+
+ $ t/runtests --dump-logs t debian/test-out pkg-deb-check-general
+
+Although, it will not emit the correct tags unless pkg/deb-check is
+part of the debian/main lintian profile.  If your check is a part of a
+different profile, add the "Profile: <name>" field to the "desc" file.
+
+With this, the tutorial is over.  Below you will find some more
+resources that may be useful to your future test writing work.
+
+=head1 REFERENCES / APPENDIX
+
+=head2 A step-by-step guide of how a test case works
+
+Basically, the tag-testing test cases all involve building a package
+and running lintian on the result.  The "tests" suite does a full
+build with dpkg-buildpackage, the other suites "hand-crafts" only the
+type of artifacts they are named after (e.g. "source" produces only
+source packages).
+
+=head3 A test in the "tests" suite
+
+The basic process of a lintian test in the "tests" suite.
+
+=over 4
+
+=item 1
+
+Copy the "upstream" skeleton dir into the build dir (non-native only)
+
+=item 2
+
+Copy the "upstream" dir from the test into the build dir (if present, non-native only)
+
+=item 3
+
+Run the "pre_upstream" hook (if present, non-native only)
+
+=item 4
+
+Assemble the upstream tarball (non-native only)
+
+=item 5
+
+Copy the "debian" skeleton dir into the build dir
+
+=item 6
+
+Copy the "debian" directory from the test into the build dir (if present)
+
+=item 7
+
+Create debian/control and debian/changelog from "I<< <file> >>.in" if
+they do not exist.
+
+=item 8
+
+Create an empty watch file (if missing, non-native only)
+
+=item 9
+
+Run the "pre_build" hook (if present)
+
+=item 10
+
+Run dpkg-buildpackage
+
+=item 11
+
+Run lintian on the build result
+
+=item 12
+
+Run the "post_test" hook (if present)
+
+=item 13
+
+Run the "test_calibration" hook (if present), which may produce
+a new "expected output file".
+
+=item 14
+
+Compare the result with the expected output.
+
+=back
+
+Note that the majority of the steps are conditional on
+native/non-native packages or presence of hooks.
+
+=head3 A test in the "debs" and the "source" suite
+
+The "debs" and the "source" suite share the same basic steps, which
+are:
+
+=over 4
+
+=item 1
+
+Copy the skeleton dir into the build dir
+
+=item 2
+
+Copy the test directory files into the build dir
+
+=item 3
+
+Create changelog, control, and (debs-only) Makefile from "I<< <file>
+>>.in" if they do not exist.
+
+=item 4
+
+Run make in the build dir
+
+=item 5
+
+Run lintian on the produced artifact (there must be exactly one)
+
+=item 6
+
+Compare the result with the expected output.
+
+=back
+
+=head3 A test in the "changes" suite
+
+The changes test is fairly simple as there is not much building.  The
+steps are as the following:
+
+=over 4
+
+=item 1
+
+Find or compute the test artifact as the following:
+
+=over 4
+
+=item *
+
+If I<< <test-dir>/<test-name>.changes >> exists, it is used as the
+artifact.
+
+=item *
+
+Else, copy I<< <test-dir>/<test-name>.changes.in >> into the build dir
+and use it as a template to create I<< <build-dir>/<test-name>.changes
+>>.  The result is then used as the artifact to test.
+
+=back
+
+=item 2
+
+Run lintian run on the artifact
+
+=item 3
+
+Compare the result with the expected output
+
+=back
+
+=head2 The full layout of a test in the "tests" suite
+
+Each test in the "tests" suite is placed in
+I<< t/tests/<check>-<name> >>.  In these you will find some
+of the following files:
+
+=over 4
+
+=item * desc (mandatory)
+
+This is the test description file.  It is a deb822 file (i.e. same
+syntax as I<debian/control>), which contains a number of fields.
+
+=item * tags (mandatory, but may be empty)
+
+This file contains the "expected" output of lintian.
+
+This is generally sorted, though a few tests relies on the order of
+the output.  This can be controlled via the "Sort" field in the "desc"
+file.
+
+=item * debian/ (optional, but usually what you need)
+
+The unpacked debian package.  For "native" package tests, this is
+I<also> the "upstream" part.  For "non-native" package tests, this can
+be used to override files in the "upstream" part (rarely needed).
+
+The actual packaging files (e.g. I<debian/rules>) would be in
+
+ I<< t/tests/<test-name>/debian/debian/rules >>
+
+Note the double "debian".
+
+This part is seeded from I<< t/templates/tests/<skeleton>/ >>,
+where I<skeleton> is the value of the "Skeleton" field from the "desc"
+file.
+
+=item * upstream/ (optional, rarely needed)
+
+This directory is the used to create the "upstream" tarball for
+"non-native" package tests.  Since most tags are emitted for both
+"native" and "non-native" tests, it is simpler (and slightly faster)
+to use "native" packages for most tests.
+
+The files here should also be present with the same contents in the
+debian directory unless you're intentionally creating a diff.
+However, as normal with a Debian package, you can omit files entirely
+from the debian directory and the deletions will be ignored by
+dpkg-buildpackage.
+
+The directory will be seeded from I<<
+t/templates/tests/<skeleton>.upstream/ >>, where I<skeleton> is the
+value of the "Skeleton" field from the "desc" file.
+
+=item * post_test (optional, rarely needed)
+
+This script (if present) is a sed script that can be used to "massage"
+the output of lintian before comparing it with the "expected output".
+
+The most common use for this script is to remove the architecture
+name, multi-arch path, drop hardening tags or exact standards-version
+number from tags output.  Here are some examples files used:
+
+  # Remove the exact standards version, so the tags file will not need
+  # to be updated with every new standards-version
+  s/\(current is ([0-9]+\.)+[0-9]\)/(current is CURRENT)/
+
+  # Drop all hardening tags (they can differ between architectures)
+  /: hardening-.*/ d
+
+  # Massage e.g. usr/lib/i386-linux-gnu/pkgconfig into a generic path
+  s, usr/lib/[^/]+/pkgconfig/, usr/lib/ARCH/pkgconfig/,
+
+It may be useful for other cases where the output of Lintian may
+change on different systems.
+
+=item * pre_build / pre_upstream (optional, special case usage)
+
+If present and executable, these scripts can be used to mess with the
+package directory and (what will become) the upstream tarball.
+
+Their common use case is to create files in the tarballs that cannot
+(or preferably should not) be included in the revision control system.
+Common cases include "binary", "minimized" files or files with "weird"
+names such as backslashes or non UTF-8 characters.
+
+Both scripts receive a directory as first argument, which is the
+directory they should work on.  For:
+
+=over 4
+
+=item * pre_upstream
+
+The script will be run before the upstream tarball is compiled.  The
+first argument is the directory that will be included in the upstream
+tarball.
+
+=item * pre_build
+
+The script will be run before dpkg-buildpackage is invoked.  The first
+argument is the directory of the unpacked debian source package.
+
+=back
+
+=item * test_calibration (optional, special case usage)
+
+If present and executable, this script will be invoked b<after>
+lintian I<and> post_test (if present) have been run.  The script can
+then modify the expected output I<and> the actual output.
+
+This is useful for those extremely rare cases where post_test is
+insufficient to handle the requirements.  So far, this has only been
+needed for the hardening checks, where the output differs between
+architectures.
+
+The script will be passed 3 arguments:
+
+=over 4
+
+=item * Path to the "expected output" file (read-only)
+
+This is the "tags" file from the test suite and B<must not> be
+modified.
+
+=item * Path to the "actual output" file (read-write)
+
+This is the file as lintian and post_test created it.
+
+=item * Path to the "calibrated expected output" (create+write)
+
+This file does not exist and should be created by the script, if it
+wishes to change the "expected output".  If this file exists when the
+script terminates, this file will be used instead of the original
+"expected output" file.
+
+=back
+
+=back
+
+=head1 SEE ALSO
+
+The READMEs in the suites: I<t/tests/README>, I<t/changes/README>,
+I<t/debs/README> and I<t/source/README>.
+
+L<Lintian::Tutorial::WritingChecks>, L<Lintian::Tutorial::TestSuite>
+
+=cut

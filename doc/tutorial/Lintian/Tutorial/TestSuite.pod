@@ -11,6 +11,9 @@ suite and some tricks.  The Lintian test suite is fairly large and
 accordingly it can take a substantial amount of time to run.  To speed
 up development, there are various options to limit the tests to run.
 
+If you are looking for a guide on how to write tests, please consult
+L<Lintian::Tutorial::WritingTests>.
+
 =head1 DESCRIPTION
 
 The Lintian test suite is an extensive collection of various test
@@ -142,6 +145,10 @@ Or:
   $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out $check
   $ t/runtests --coverage --dump-logs -j1 -k t debian/test-out legacy
 
+
+=head1 SEE ALSO
+
+L<Lintian::Tutorial::WritingTests>
 
 =cut
 

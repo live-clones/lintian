@@ -120,7 +120,8 @@ multiarch relationA relationB Multi natively unordered arg CVE autodie
 hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
 REMOVESLASH STAMPFILE TAGNAME TCODE TESTDATA BLOCKSIZE jN
 POSIX t1c2pfb init runtime txt executability writability
-INHANDLE OUTHANDLES UTC timestamp faux tagname
+INHANDLE OUTHANDLES UTC timestamp faux tagname READMEs Testname
+debhelper dh buildpackage
 
 __END__
 
