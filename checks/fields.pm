@@ -781,7 +781,7 @@ sub run {
 
                     tag 'package-depends-on-an-x-font-package',
                       "$field: $part_d_orig"
-                      if ( $field =~ /^(pre-)?depends$/
+                      if ( $field =~ /^(?:pre-)?depends$/
                         && $d_pkg =~ /^xfont.*/
                         && $d_pkg ne 'xfonts-utils'
                         && $d_pkg ne 'xfonts-encodings');
