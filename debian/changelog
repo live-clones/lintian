@@ -14,6 +14,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
     + [AB] Add emacs23 to list of obsolete Emacs package names.
     + [AB] Also check for obsolete emacs package names with common
       suffixes (-gtk, -el, -nox, lucid)
+    + [AB] Add an imaginary future emacs222 package to the test suite's
+      dummy package to check for depends-on-old-emacs false positives.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953)
     + [BR] Rename files-privacybreach-may-use-debian-package
