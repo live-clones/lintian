@@ -21,6 +21,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
       suffixes (-gtk, -el, -nox, lucid)
     + [AB] Add an imaginary future emacs222 package to the test suite's
       dummy package to check for depends-on-old-emacs false positives.
+    + [AB] Add libmodule-build(-tiny)-perl-needs-to-be-in-build-depends
+      tags from pkg-perl-tools by gregor herrmann.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953)
     + [BR] Rename files-privacybreach-may-use-debian-package

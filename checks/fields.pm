@@ -1165,6 +1165,23 @@ sub run {
         if ($arch_dep_packages == 0 and $build_all->implies($PYTHON_DEV)) {
             tag 'build-depends-on-python-dev-with-no-arch-any';
         }
+
+        # libmodule-build-perl
+        # matches() instead of implies() because of possible OR releation
+        if ($info->relation('build-depends-indep')
+            ->matches(qr/^libmodule-build-perl/, VISIT_PRED_NAME)
+            && !$info->relation('build-depends')
+            ->matches(qr/^libmodule-build-perl/, VISIT_PRED_NAME)) {
+            tag 'libmodule-build-perl-needs-to-be-in-build-depends';
+        }
+
+        # libmodule-build-tiny-perl
+        if ($info->relation('build-depends-indep')
+            ->implies('libmodule-build-tiny-perl')
+            && !$info->relation('build-depends')
+            ->implies('libmodule-build-tiny-perl')) {
+            tag 'libmodule-build-tiny-perl-needs-to-be-in-build-depends';
+        }
     }
 
     #----- Origin

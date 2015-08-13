@@ -1246,3 +1246,15 @@ Severity: normal
 Certainty: certain
 Info: The use of "current" in the Python-Version field is deprecated.
 Ref: python-policy 3.4
+
+Tag: libmodule-build-perl-needs-to-be-in-build-depends
+Severity: serious
+Certainty: certain
+Info: libmodule-build-perl needs to be in <tt>Build-Depends</tt>, not in
+ Build-Depends-Indep, since it's used in the clean target.
+
+Tag: libmodule-build-tiny-perl-needs-to-be-in-build-depends
+Severity: serious
+Certainty: certain
+Info: libmodule-build-tiny-perl needs to be in <tt>Build-Depends</tt>, not
+ in Build-Depends-Indep, since it's used in the clean target.
