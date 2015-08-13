@@ -675,7 +675,7 @@ sub find_cruft {
                 # ignore comments
                 $contents =~ s/#.*$//m;
                 if ($contents =~ m{usr/lib/perl5}) {
-                    tag('mentions-deprecated-usr-lib-perl5-directory', $short);
+                    tag 'mentions-deprecated-usr-lib-perl5-directory', $short;
                 }
             }
         }

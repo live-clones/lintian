@@ -269,7 +269,7 @@ sub run {
             }
         }
 
-        tag('perl-module-name-not-mentioned-in-description', $mod)
+        tag 'perl-module-name-not-mentioned-in-description', $mod
           if (lc($d) !~ /\Q$mod_lc\E/ and $pm_found);
     }
 
