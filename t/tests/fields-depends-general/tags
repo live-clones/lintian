@@ -15,6 +15,11 @@ W: fields-depends-general: breaks-without-version package-without-version
 W: fields-depends-general: depends-exclusively-on-makedev depends
 W: fields-depends-general: depends-on-old-emacs depends: emacs21
 W: fields-depends-general: depends-on-old-emacs depends: emacs22
+W: fields-depends-general: depends-on-old-emacs depends: emacs22-gtk
+W: fields-depends-general: depends-on-old-emacs depends: emacs23
+W: fields-depends-general: depends-on-old-emacs depends: emacs23-el
+W: fields-depends-general: depends-on-old-emacs depends: emacs23-lucid
+W: fields-depends-general: depends-on-old-emacs depends: emacs23-nox
 W: fields-depends-general: depends-on-packaging-dev depends
 W: fields-depends-general: package-relation-with-self breaks: fields-depends-general (<< 0.1)
 W: fields-depends-general: versioned-dependency-satisfied-by-perl depends: libtest-simple-perl (>= 0.98)

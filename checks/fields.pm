@@ -55,7 +55,9 @@ my $KNOWN_PRIOS = Lintian::Data->new('common/priorities', qr/\s*=\s*/o);
 our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 
 # Still in the archive but shouldn't be the primary Emacs dependency.
-our %known_obsolete_emacs = map { $_ => 1 } ('emacs21', 'emacs22');
+our %known_obsolete_emacs = map { $_ => 1 }
+  map { $_, $_.'-el', $_.'-gtk', $_.'-nox', $_.'-lucid' }
+  qw(emacs21 emacs22 emacs23);
 
 our %known_libstdcs = map { $_ => 1 } (
     'libstdc++2.9-glibc2.1', 'libstdc++2.10',
