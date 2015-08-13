@@ -834,7 +834,7 @@ sub run {
                       # perl-modules-5.xx (>> 5.20)
                       if $d_pkg =~ /^perl-modules/
                       && $field ne 'replaces'
-                      && $info->field('source', $pkg) ne 'perl';
+                      && $proc->pkg_src ne 'perl';
 
                     tag 'depends-exclusively-on-makedev', $field,
                       if ( $field eq 'depends'
