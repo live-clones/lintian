@@ -180,14 +180,6 @@ DEFAULT (if given) or undef.
 Otherwise this will return a hash of fields, where the key is the field
 name (in all lowercase).
 
-Note: For binary and udeb packages, this method will create the
-"source"-field if it does not exist (using the value of the
-"package"-field as described in §5.6.1 of the Debian Policy Manual).
-
-Some checks rely on the presence "source"-field to whitelist some
-packages, so removing this behaviour may cause regressions (see
-bug 640186 for an example).
-
 Needs-Info requirements for using I<field>: none
 
 =cut

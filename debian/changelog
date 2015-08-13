@@ -28,6 +28,10 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * debian/compat:
     + [BR] Use compat version 9.
 
+  * lib/Lintian/Collect.pm:
+    + [AB] Remove outdated note about automatically computed defaults for
+      "$info->field('source')".
+
   * private/refresh-fonts-data:
     + [NT] Prune some duplicates from the generated font file.
 
