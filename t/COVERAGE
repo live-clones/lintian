@@ -1,5 +1,5 @@
-Last generated 2015-07-22
-Coverage (Tags): 1071/1138 (94.11%), w. legacy tests: 1128/1138 (99.12%)
+Last generated 2015-08-12
+Coverage (Tags): 1076/1142 (94.22%), w. legacy tests: 1132/1142 (99.12%)
 Coverage (Checks): 38/46 (82.61%), w. legacy tests: 41/46 (89.13%)
 
 The following tags are not tested by the test suite:
@@ -30,7 +30,6 @@ files package-contains-upstream-install-documentation
 files script-in-usr-share-doc
 files script-with-language-extension
 files use-of-compat-symlink
-files wrong-file-owner-uid-or-gid
 
 init.d duplicate-updaterc.d-calls-in-postrm
 init.d init.d-script-has-bad-lsb-line
@@ -139,7 +138,6 @@ filenames
   desktop-file-in-wrong-dir
   package-contains-devhelp-file-without-symlink
   use-of-compat-symlink
-  wrong-file-owner-uid-or-gid
 
 foo++
 

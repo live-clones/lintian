@@ -2,3 +2,4 @@ Testname: files-wrong-owner
 Sequence: 6000
 Version: 1.0
 Description: Test for wrong owner files in the deb
+Test-For: wrong-file-owner-uid-or-gid

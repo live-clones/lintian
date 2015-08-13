@@ -4,6 +4,9 @@ lintian (2.5.36) UNRELEASED; urgency=medium
 
   * checks/application-not-library.*, t/tests/application-not-library/:
     + [AB] New experimental checks imported from pkg-perl-tools.
+  * checks/changelog-file.pm:
+    + [JW] Fix invalid comparison leading to false positive
+      non-consecutive-debian-revision tags.  (Closes: #794995)
   * checks/cruft.pm:
     + [BR] Avoid a false positive for gfdl detection in krusader.
       Remove line number before running the detection.
@@ -13,7 +16,7 @@ lintian (2.5.36) UNRELEASED; urgency=medium
     + [AB] Add new tag perl-module-name-not-mentioned-in-description based
       on pkg-perl-tools' no-module-name-in-description by Damyan Ivanov.
   * checks/files.desc:
-    + [BR] Correct a few typos.  (Closes: #794953).
+    + [BR] Correct a few typos.  (Closes: #794953)
     + [BR] Rename files-privacybreach-may-use-debian-package
       to  privacy-breach-uses-embedded-file.  Thanks to
       Guillem Jover for the report.

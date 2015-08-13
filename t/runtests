@@ -122,6 +122,8 @@ sub usage {
 :                     of jobs started is <nproc>+1.
 :         -k          Do not stop after one failed test
 :         -v          Be more verbose
+:         -B          Always (re)build packages, even if they appear to be up
+:                     to date
 :         --help, -h  Print this help and exit
 :
 :       The optional 3rd parameter causes runtests to only run tests that match
@@ -158,8 +160,7 @@ END
 
 our $DEBUG = 0;
 our $VERBOSE = 0;
-our $RUNDIR;
-our $TESTSET;
+our ($RUNDIR, $TESTSET, $ALWAYS_REBUILD);
 our $JOBS = -1;
 our $DUMP_LOGS = '';
 
@@ -374,6 +375,7 @@ exit $status;
 sub parse_args {
     Getopt::Long::Configure('bundling');
     GetOptions(
+        'B'            => \$ALWAYS_REBUILD,
         'd|debug'      => \$DEBUG,
         'j|jobs:i'     => \$JOBS,
         'k|keep-going' => \$run_all_tests,
@@ -468,7 +470,7 @@ sub test_package {
         }
     }
 
-    if (not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $origdir, $RUNNER_TS)) {
         my $tmpldir = "$TESTSET/templates/$suite/";
         my $skel = $testdata->{skeleton};
         my $is_native = ($testdata->{type} eq 'native');
@@ -715,7 +717,7 @@ sub generic_test_runner {
         }
     }
 
-    if (not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
+    if ($ALWAYS_REBUILD or not up_to_date($stampfile, $testdir, $RUNNER_TS)) {
         my $skel = $testdata->{skeleton};
         my $tmpldir = "$TESTSET/templates/$suite/";
 

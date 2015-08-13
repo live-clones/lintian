@@ -6,13 +6,13 @@ FILESDIR=debian/$(PKG)/usr/lib/filenames
 %:
 	dh $@
 
-override_dh_builddeb:
+override_dh_fixperms:
+	dh_fixperms
+	# Create some files with invalid ownership *after* dh_fixperms
 	mkdir -p $(FILESDIR)
-	# Create some files with invalid ownership.
 	set -e; for owner in 100:0 0:2001 30001:65535 65535:65001; do \
 	      touch $(FILESDIR)/wrong-owner-$$owner ; \
 	      chmod 644 $(FILESDIR)/wrong-owner-$$owner ; \
 	      chown "$$owner" $(FILESDIR)/wrong-owner-$$owner ; \
 	done
-	dh_builddeb
 

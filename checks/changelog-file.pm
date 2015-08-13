@@ -330,7 +330,7 @@ sub run {
                     tag 'possible-new-upstream-release-without-new-version';
                 }
                 if ($first_debian =~ /^\d+$/ and $second_debian =~ /^\d+$/) {
-                    unless ($second_debian == $first_debian + 1) {
+                    unless ($first_debian == $second_debian + 1) {
                         tag 'non-consecutive-debian-revision';
                     }
                 }

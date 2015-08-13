@@ -6,8 +6,8 @@ Lintian::Tutorial::WritingTests -- Short tutorial on writing tests
 
 =head1 SYNOPSIS
 
-This document attempts to be a short / quick tutorial to the lintian
-test suite from a test-writer perspective.  As such, it will only
+This document attempts to be a short / quick tutorial to the Lintian
+test suite from a test-writer's perspective.  As such, it will only
 cover the standard type of tests (from the "tests" suite).
 
 The guide will involve writing a test for the "deb/pkg-check" check,
@@ -18,26 +18,26 @@ For running tests, please see L<Lintian::Tutorial::TestSuite> instead.
 
 =head1 DESCRIPTION
 
-The lintian test suite is divided into several parts.  These are:
+The Lintian test suite is divided into several parts.  These are:
 
 =over 4
 
 =item * scripts
 
 Small (Perl) "prove" tests.  These assert that code style, data files
-or/and self-contained code units (i.e. unit tests) work as intended.
-They are B<not> used for testing lintian tags.
+and/or self-contained code units (i.e. unit tests) work as intended.
+They are B<not> used for testing Lintian tags.
 
 =item * changes / debs / source
 
-These suites are small test suites that tests some particular tags for
+These suites are small test suites that test some particular tags for
 I<.changes>, I<.deb> or I<.dsc> files.  Typically, you will find the
 more exotic tags here, which require some special fiddling and cannot
 be built by a "standard" dh7 + dpkg build.
 
 =item * tests
 
-This suite is the standard test suite for testing lintian tags.
+This suite is the standard test suite for testing Lintian tags.
 
 =back
 
@@ -46,10 +46,10 @@ With this in mind, let us move on to the scope.
 =head2 Scope of the tutorial
 
 The "tests" suite alone is fairly complex on its own.  To keep things
-simple, the tutorial itself will limit itself to creating a "native"
+simple, the tutorial will limit itself to creating a "native"
 package with no special requirements in the "tests" suite.
 
-In particular note that the tags I<must not> be I<pedantic> for this
+In particular, note that the tags I<must not> be I<pedantic> for this
 to work.  If you followed the check writing tutorial and made the tags
 pedantic, please change them into "I", "W" or "E" tags.
 
@@ -57,11 +57,11 @@ Once the basics are covered, you should be better equipped to deal
 with the other ("tag testing") suites or using other features of the
 "tests" suite (e.g. pedantic tags).
 
-=head2 The design of the lintian test suite
+=head2 The design of the Lintian test suite
 
-The basic design of the Lintian test suite can basically be summed up
-to I<less is more>.  The Debian build system is changing all the time
-(albeit, slowly) and some times it deprecates or breaks existing
+The basic design of the Lintian test suite can be summed up
+as I<less is more>.  The Debian build system is changing all the time
+(albeit, slowly) and sometimes it deprecates or breaks existing
 features.
 
 With over 400 tests all featuring the same basic parts, the test suite
@@ -71,10 +71,10 @@ files to fill in the basic files (e.g. "debian/control" and
 "debian/changelog").
 
 This means that when a new standards-version comes along, debhelper
-deprecates a feature or (more likely) lintian adds a new tag, the
+deprecates a feature or (more likely) Lintian adds a new tag, the
 majority of the tests can quickly be adapted with only a minor effort.
 
-Since pedantic tags tends to require additional effort to avoid, most
+Since pedantic tags tend to require additional effort to avoid, most
 Lintian tests do B<not> run with pedantic tags enabled.
 
 =head2 The basics of a "native" package in the "tests" suite
@@ -87,7 +87,7 @@ in I<< t/tests/<test-name> >>.
 This is the test description file.  It is a deb822 file (i.e. same
 syntax as I<debian/control>), which contains a number of fields.
 
-Lets start with the following template:
+Let's start with the following template:
 
  Testname: pkg-deb-check-general
  Sequence: 6000
@@ -118,7 +118,7 @@ Please keep the following conventions in mind:
 =item The Testname should be "<check-name>-<test-name>"
 
 Note that regular Lintian checks do I<not> have a "/", so the naming
-convention work slightly better there.
+convention works slightly better there.
 
 =item The Sequence should always be 6000 for tests checking tags.
 
@@ -194,7 +194,7 @@ run by using:
 
  $ t/runtests --dump-logs t debian/test-out pkg-deb-check-general
 
-Although, it will not emit the correct tags unless pkg/deb-check is
+However, it will not emit the correct tags unless pkg/deb-check is
 part of the debian/main lintian profile.  If your check is a part of a
 different profile, add the "Profile: <name>" field to the "desc" file.
 
@@ -207,7 +207,7 @@ resources that may be useful to your future test writing work.
 
 Basically, the tag-testing test cases all involve building a package
 and running lintian on the result.  The "tests" suite does a full
-build with dpkg-buildpackage, the other suites "hand-crafts" only the
+build with dpkg-buildpackage, the other suites "hand-craft" only the
 type of artifacts they are named after (e.g. "source" produces only
 source packages).
 
@@ -334,7 +334,7 @@ artifact.
 
 =item *
 
-Else, copy I<< <test-dir>/<test-name>.changes.in >> into the build dir
+Otherwise, copy I<< <test-dir>/<test-name>.changes.in >> into the build dir
 and use it as a template to create I<< <build-dir>/<test-name>.changes
 >>.  The result is then used as the artifact to test.
 
@@ -367,7 +367,7 @@ syntax as I<debian/control>), which contains a number of fields.
 
 This file contains the "expected" output of lintian.
 
-This is generally sorted, though a few tests relies on the order of
+This is generally sorted, though a few tests rely on the order of
 the output.  This can be controlled via the "Sort" field in the "desc"
 file.
 
