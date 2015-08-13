@@ -23,9 +23,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
       dummy package to check for depends-on-old-emacs false positives.
     + [AB] Add libmodule-build(-tiny)-perl-needs-to-be-in-build-depends
       tags from pkg-perl-tools by gregor herrmann.
-    + [AB] Add depends-on-perl-modules tag from pkg-perl-tools by Damyan
-      Ivanov. Extend check to also recognize future versioned
-      perl-modules-5.* package names.
+    + [AB] Add new tag package-relation-with-perl-modules based on
+      pkg-perl-tools' depends-on-perl-modules by Damyan Ivanov.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953)
     + [BR] Rename files-privacybreach-may-use-debian-package

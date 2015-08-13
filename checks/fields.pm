@@ -829,8 +829,12 @@ sub run {
                       && perl_core_has_version($d_pkg, $d_version->[0],
                         $d_version->[1]);
 
-                    tag 'depends-on-perl-modules', $field
-                      if $d_pkg =~ /^perl-modules/ && $pkg ne 'perl';
+                    tag 'package-relation-with-perl-modules', "$field: $d_pkg"
+                      # matches "perl-modules" (<= 5.20) as well as
+                      # perl-modules-5.xx (>> 5.20)
+                      if $d_pkg =~ /^perl-modules/
+                      && $field ne 'replaces'
+                      && $info->field('source', $pkg) ne 'perl';
 
                     tag 'depends-exclusively-on-makedev', $field,
                       if ( $field eq 'depends'

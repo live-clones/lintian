@@ -2,11 +2,11 @@ E: fields-depends-general: conflicts-with-dependency depends conflict-dep
 E: fields-depends-general: depends-on-essential-package-without-using-version depends: bash
 E: fields-depends-general: depends-on-metapackage depends: xorg
 E: fields-depends-general: depends-on-obsolete-package depends: gaim (>= 0.1)
-E: fields-depends-general: depends-on-perl-modules depends
 E: fields-depends-general: needlessly-depends-on-awk depends
 E: fields-depends-general: package-depends-on-an-x-font-package depends: xfont-a
+E: fields-depends-general: package-relation-with-perl-modules depends: perl-modules
 E: libfields-depends-general: depends-on-libdb1-compat depends
-E: libfields-depends-general: depends-on-perl-modules depends
+E: libfields-depends-general: package-relation-with-perl-modules depends: perl-modules-5.22
 E: py-fields-depends-general: depends-on-python-minimal depends
 I: fields-depends-general: conflicts-with-version package-with-version (<< 3.0)
 I: fields-depends-general: ored-depends-on-obsolete-package depends: xbase-clients (>= 0.1)
