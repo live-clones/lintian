@@ -1258,3 +1258,10 @@ Severity: serious
 Certainty: certain
 Info: libmodule-build-tiny-perl needs to be in <tt>Build-Depends</tt>, not
  in Build-Depends-Indep, since it's used in the clean target.
+
+Tag: depends-on-perl-modules
+Severity: important
+Certainty: certain
+Info: No package should depend on 'perl-modules'. Instead, a suitable
+ dependency on 'perl' should be used. The existence of the perl-modules
+ package is an implementation detail of the perl packaging.

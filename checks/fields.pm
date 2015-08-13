@@ -829,6 +829,9 @@ sub run {
                       && perl_core_has_version($d_pkg, $d_version->[0],
                         $d_version->[1]);
 
+                    tag 'depends-on-perl-modules', $field
+                      if $d_pkg =~ /^perl-modules/ && $pkg ne 'perl';
+
                     tag 'depends-exclusively-on-makedev', $field,
                       if ( $field eq 'depends'
                         && $d_pkg eq 'makedev'

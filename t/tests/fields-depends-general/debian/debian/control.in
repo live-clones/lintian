@@ -11,7 +11,7 @@ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
  conflict-dep, gawk | awk, new-package | xbase-clients (>= 0.1), {$source},
  gaim (>= 0.1), emacs21, emacs22, emacs23, makedev, libtest-simple-perl (>= 0.98),
  packaging-dev, xfont-a, emacs22-gtk, emacs23-el, emacs23-nox, emacs23-lucid,
- emacs222
+ emacs222, perl-modules
 Breaks: package-without-version, {$source} (<< 0.1),
  replaced-wo-version
 Replaces: replaced-wo-version
@@ -23,7 +23,7 @@ Description: {$description}
 
 Package: lib{$source}
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, libdb1-compat
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, libdb1-compat, perl-modules-5.22
 Recommends: debconf-doc
 Section: libs
 Description: {$description} -- fake library
@@ -54,3 +54,17 @@ Description: {$description} - Fake Doc package
  be an empty package.
  .
  The fake doc package.
+
+Package: perl
+Section: perl
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, perl-modules
+Description: {$description} - Fake Perl package
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ The fake Perl package which is only there to make sure
+ depends-on-perl-modules does not issue a false positive for the
+ dependency to perl-modules by perl.
