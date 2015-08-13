@@ -1,0 +1,5 @@
+#!/usr/bin/make -f
+
+%:
+	echo This file mentions /usr/lib/perl5/. qed.
+	dh $@

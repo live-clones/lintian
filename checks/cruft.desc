@@ -828,3 +828,13 @@ Severity: wishlist
 Certainty: certain
 Info: debian/pycompat is not used by any modern Python helper.  It should be
  safe to remove this file.
+
+# Imported from pkg-perl-tools
+Tag: mentions-deprecated-usr-lib-perl5-directory
+Severity: important
+Certainty: possible
+Info: As of Perl 5.20, the vendorarch directory is /usr/lib/&lt;triplet&gt;/perl5,
+ but this package still uses usr/lib/perl5 in some of the files under debian/.
+ Please replace that with the value of $Config{vendorarch} configuration
+ parameter, e.g.
+  $(shell perl -MConfig -wE'say substring($$Config{vendorarch},1)')

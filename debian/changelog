@@ -12,6 +12,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
       Remove line number before running the detection.
     + [BR] Avoid another gfdl false positive in oidentd, sdlbasic,
       smbc package.
+    + [AB] Add new tag mentions-deprecated-usr-lib-perl5-directory based
+      on pkg-perl-tools' usr-lib-perl5-mentioned (multiple authors).
   * checks/description.*:
     + [AB] Add new tag perl-module-name-not-mentioned-in-description based
       on pkg-perl-tools' no-module-name-in-description by Damyan Ivanov.
