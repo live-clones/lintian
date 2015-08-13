@@ -241,6 +241,7 @@ Info: This package has no Homepage field but has a URL in the description
  add a Homepage control field containing it rather than mentioning it in
  the package description.
 
+# Imported from pkg-perl-tools (named no-module-name-in-description there)
 Tag: perl-module-name-not-mentioned-in-description
 Severity: minor
 Certainty: certain

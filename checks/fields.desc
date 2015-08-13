@@ -1247,21 +1247,27 @@ Certainty: certain
 Info: The use of "current" in the Python-Version field is deprecated.
 Ref: python-policy 3.4
 
+# Imported from pkg-perl-tools
 Tag: libmodule-build-perl-needs-to-be-in-build-depends
 Severity: serious
 Certainty: certain
+Experimental: yes
 Info: libmodule-build-perl needs to be in <tt>Build-Depends</tt>, not in
  Build-Depends-Indep, since it's used in the clean target.
 
+# Imported from pkg-perl-tools
 Tag: libmodule-build-tiny-perl-needs-to-be-in-build-depends
 Severity: serious
 Certainty: certain
+Experimental: yes
 Info: libmodule-build-tiny-perl needs to be in <tt>Build-Depends</tt>, not
  in Build-Depends-Indep, since it's used in the clean target.
 
+# Imported from pkg-perl-tools (named depends-on-perl-modules there)
 Tag: package-relation-with-perl-modules
 Severity: important
 Certainty: certain
+Experimental: yes
 Info: No package should depend on 'perl-modules'. Instead, a suitable
  dependency on 'perl' should be used. The existence of the perl-modules
  package is an implementation detail of the perl packaging.
