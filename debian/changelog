@@ -25,6 +25,12 @@ lintian (2.5.36) UNRELEASED; urgency=medium
     + [BR] Detect suspicious use of ln -s that could be replaced by
       dpkg-maintscript-helper.
 
+  * data/files/privacy-breaker-websites:
+    + [BR] Detect libjs-bootstap as privacy-breach-uses-embedded-file
+    + [BR] Improve detection of google plus.
+    + [BR] Improve detection of jquery modules.
+    + [BR] Detect doxygen logo.
+    + [BR] Detect doubleclick.net
   * debian/compat:
     + [BR] Use compat version 9.
 
