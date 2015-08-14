@@ -661,6 +661,25 @@ sub find_cruft {
             tag 'debian-upstream-obsolete-path', $name;
         }
 
+        # Find mentioning of usr/lib/perl5 inside the packaging
+        if ($name =~ m{^debian/}) {
+            my $short = $entry->basename();
+
+            # Skip symlinks and other nasty stuff as well as
+            # debian/changelog
+            if (   $short ne 'changelog'
+                && $entry->is_file
+                && $entry->is_open_ok) {
+                my $contents = $entry->file_contents;
+
+                # ignore comments
+                $contents =~ s/#.*$//m;
+                if (index($contents, 'usr/lib/perl5') >= 0) {
+                    tag 'mentions-deprecated-usr-lib-perl5-directory', $short;
+                }
+            }
+        }
+
         if (   $basename eq 'doxygen.png'
             or $basename eq 'doxygen.sty') {
             unless ($source_pkg eq 'doxygen') {

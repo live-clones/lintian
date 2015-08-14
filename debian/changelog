@@ -2,6 +2,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/application-not-library.*, t/tests/application-not-library/:
+    + [AB] New experimental checks imported from pkg-perl-tools.
   * checks/changelog-file.pm:
     + [JW] Fix invalid comparison leading to false positive
       non-consecutive-debian-revision tags.  (Closes: #794995)
@@ -10,14 +12,23 @@ lintian (2.5.36) UNRELEASED; urgency=medium
       Remove line number before running the detection.
     + [BR] Avoid another gfdl false positive in oidentd, sdlbasic,
       smbc package.
+    + [AB] Add new tag mentions-deprecated-usr-lib-perl5-directory based
+      on pkg-perl-tools' usr-lib-perl5-mentioned (multiple authors).
     + [NT] Replace "funny" dash with regular ASCII dash.
     + [AB] Fix grammar issue in license-problem-non-free-img-lenna desc.
+  * checks/description.*:
+    + [AB] Add new tag perl-module-name-not-mentioned-in-description based
+      on pkg-perl-tools' no-module-name-in-description by Damyan Ivanov.
   * checks/fields.pm:
     + [AB] Add emacs23 to list of obsolete Emacs package names.
     + [AB] Also check for obsolete emacs package names with common
       suffixes (-gtk, -el, -nox, lucid)
     + [AB] Add an imaginary future emacs222 package to the test suite's
       dummy package to check for depends-on-old-emacs false positives.
+    + [AB] Add libmodule-build(-tiny)-perl-needs-to-be-in-build-depends
+      tags from pkg-perl-tools by gregor herrmann.
+    + [AB] Add new tag package-relation-with-perl-modules based on
+      pkg-perl-tools' depends-on-perl-modules by Damyan Ivanov.
   * checks/files.desc:
     + [BR] Correct a few typos.  (Closes: #794953)
     + [BR] Rename files-privacybreach-may-use-debian-package

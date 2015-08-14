@@ -1,0 +1,7 @@
+Testname: fields-module-build-perl
+Sequence: 6000
+Version: 1.0
+Description: Test some libmodule-build(-tiny)-perl checks
+Test-For:
+ libmodule-build-perl-needs-to-be-in-build-depends
+ libmodule-build-tiny-perl-needs-to-be-in-build-depends
