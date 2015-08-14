@@ -1176,9 +1176,9 @@ sub run {
         # libmodule-build-perl
         # matches() instead of implies() because of possible OR releation
         if ($info->relation('build-depends-indep')
-            ->matches(qr/^libmodule-build-perl/, VISIT_PRED_NAME)
+            ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)
             && !$info->relation('build-depends')
-            ->matches(qr/^libmodule-build-perl/, VISIT_PRED_NAME)) {
+            ->matches(qr/^libmodule-build-perl$/, VISIT_PRED_NAME)) {
             tag 'libmodule-build-perl-needs-to-be-in-build-depends';
         }
 
