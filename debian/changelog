@@ -25,6 +25,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [BR] Detect suspicious use of ln -s that could be replaced by
       dpkg-maintscript-helper.
+  * checks/systemd.desc:
+    + [NT] Replace a wide-character by spelling out "does not".
 
   * data/files/privacy-breaker-websites:
     + [BR] Detect libjs-bootstap as privacy-breach-uses-embedded-file
