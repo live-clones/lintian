@@ -50,6 +50,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
     + [BR] Use compat version 9.
   * debian/control:
     + [AB] Add myself to Uploaders.
+    + [AB] Add Breaks against pkg-perl-tools << 0.23 due to some tags
+      moved over to lintian proper.
 
   * lib/Lintian/{CheckScript,CollScript,Profile}.pm:
     + [NT] Read control files as proper UTF-8 character streams rather
