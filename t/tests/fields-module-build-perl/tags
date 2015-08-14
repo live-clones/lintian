@@ -1,2 +1,2 @@
-E: fields-module-build-perl source: libmodule-build-perl-needs-to-be-in-build-depends
-E: fields-module-build-perl source: libmodule-build-tiny-perl-needs-to-be-in-build-depends
+X: fields-module-build-perl source: libmodule-build-perl-needs-to-be-in-build-depends
+X: fields-module-build-perl source: libmodule-build-tiny-perl-needs-to-be-in-build-depends
