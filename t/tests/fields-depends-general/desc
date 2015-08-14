@@ -20,5 +20,6 @@ Test-For:
  ored-depends-on-obsolete-package
  package-depends-on-an-x-font-package
  package-depends-on-itself
+ package-relation-with-perl-modules
  package-relation-with-self
  versioned-dependency-satisfied-by-perl
