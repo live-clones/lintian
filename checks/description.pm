@@ -255,8 +255,6 @@ sub run {
         my @mod_path_elements = split(/-/, $mod);
         $mod = join('::', map {ucfirst} @mod_path_elements);
         my $mod_lc = lc($mod);
-        my $d = $info->field('description');
-        $d =~ s/[^\n]+\n//; # strip long description
 
         my $pm_found = 0;
         my $pmpath = join('/', @mod_path_elements).'.pm';
@@ -270,7 +268,7 @@ sub run {
         }
 
         tag 'perl-module-name-not-mentioned-in-description', $mod
-          if (lc($d) !~ /\Q$mod_lc\E/ and $pm_found);
+          if (index($mod_lc, lc($description)) < 0 and $pm_found);
     }
 
     return;
