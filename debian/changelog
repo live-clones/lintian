@@ -48,6 +48,8 @@ lintian (2.5.36) UNRELEASED; urgency=medium
     + [BR] Detect doubleclick.net
   * debian/compat:
     + [BR] Use compat version 9.
+  * debian/control:
+    + [AB] Add myself to Uploaders.
 
   * lib/Lintian/{CheckScript,CollScript,Profile}.pm:
     + [NT] Read control files as proper UTF-8 character streams rather
