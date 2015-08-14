@@ -7,13 +7,14 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * checks/changelog-file.pm:
     + [JW] Fix invalid comparison leading to false positive
       non-consecutive-debian-revision tags.  (Closes: #794995)
-  * checks/cruft.pm:
+  * checks/cruft.{desc,pm}:
     + [BR] Avoid a false positive for gfdl detection in krusader.
       Remove line number before running the detection.
     + [BR] Avoid another gfdl false positive in oidentd, sdlbasic,
       smbc package.
     + [AB] Add new tag mentions-deprecated-usr-lib-perl5-directory based
       on pkg-perl-tools' usr-lib-perl5-mentioned (multiple authors).
+    + [NT] Replace "funny" dash with regular ASCII dash.
   * checks/description.*:
     + [AB] Add new tag perl-module-name-not-mentioned-in-description based
       on pkg-perl-tools' no-module-name-in-description by Damyan Ivanov.
@@ -35,9 +36,21 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [BR] Detect suspicious use of ln -s that could be replaced by
       dpkg-maintscript-helper.
+  * checks/systemd.desc:
+    + [NT] Replace a wide-character by spelling out "does not".
 
+  * data/files/privacy-breaker-websites:
+    + [BR] Detect libjs-bootstap as privacy-breach-uses-embedded-file
+    + [BR] Improve detection of google plus.
+    + [BR] Improve detection of jquery modules.
+    + [BR] Detect doxygen logo.
+    + [BR] Detect doubleclick.net
   * debian/compat:
     + [BR] Use compat version 9.
+
+  * lib/Lintian/Collect.pm:
+    + [AB] Remove outdated note about automatically computed defaults for
+      "$info->field('source')".
 
   * private/refresh-fonts-data:
     + [NT] Prune some duplicates from the generated font file.
