@@ -54,6 +54,7 @@ BEGIN {
           visit_dpkg_paragraph
           parse_dpkg_control
           read_dpkg_control
+          read_dpkg_control_utf8
           dpkg_deb_has_ctrl_tarfile
           get_deb_info
           get_dsc_info
@@ -120,7 +121,7 @@ Lintian::Util - Lintian utility functions
  }
  
  my (@paragraphs);
- eval { @paragraphs = read_dpkg_control('some/debian/ctrl/file'); };
+ eval { @paragraphs = read_dpkg_control_utf8('some/debian/ctrl/file'); };
  if ($@) {
     # syntax error etc.
     die "ctrl/file: $@";
@@ -164,14 +165,14 @@ You have a I<.dsc> (or I<.changes>) file.  Alternative, it is also
 useful if you have a control file and only care about the first
 paragraph.
 
-=item Use L</read_dpkg_control> when
+=item Use L</read_dpkg_control_utf8> or L</read_dpkg_control> when
 
 You have a debian control file (such I<debian/control>) and you want
 a number of paragraphs from it.
 
 =item Use L</parse_dpkg_control> when
 
-When you would have used L</read_dpkg_control>, except you have an
+When you would have used L</read_dpkg_control_utf8>, except you have an
 open filehandle rather than a file name.
 
 =back
@@ -594,6 +595,8 @@ sub visit_dpkg_paragraph {
     }
 }
 
+=item read_dpkg_control_utf8(FILE[, FLAGS[, LINES]])
+
 =item read_dpkg_control(FILE[, FLAGS[, LINES]])
 
 This is a convenience function to ease using L</parse_dpkg_control>
@@ -605,7 +608,7 @@ Otherwise, this behaves like:
 
  use autodie;
  
- open(my $fd, '<', FILE);
+ open(my $fd, '<:encoding(UTF-8)', FILE); # or '<'
  my @p = parse_dpkg_control($fd, FLAGS, LINES);
  close($fd);
  return @p;
@@ -620,6 +623,16 @@ sub read_dpkg_control {
     my ($file, $flags, $lines) = @_;
 
     open(my $CONTROL, '<', $file);
+    my @data = parse_dpkg_control($CONTROL, $flags, $lines);
+    close($CONTROL);
+
+    return @data;
+}
+
+sub read_dpkg_control_utf8 {
+    my ($file, $flags, $lines) = @_;
+
+    open(my $CONTROL, '<:encoding(UTF-8)', $file);
     my @data = parse_dpkg_control($CONTROL, $flags, $lines);
     close($CONTROL);
 
