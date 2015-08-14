@@ -1,5 +1,4 @@
 E: libapp-something-perl: libapp-perl-package-name usr/bin/libapp-something-perl
-I: application-not-library source: duplicate-short-description libapp-something-perl libsomething-else-perl python-something ruby-something unspecified-something-pl unspecified-something-py unspecified-something-rb
 X: libapp-something-perl: application-in-library-section perl usr/bin/libapp-something-perl
 X: libsomething-else-perl: application-in-library-section perl usr/bin/libsomething-else-perl
 X: libsomething-else-perl: library-package-name-for-application usr/bin/libsomething-else-perl
