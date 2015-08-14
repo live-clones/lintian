@@ -26,7 +26,7 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 use File::Basename qw(dirname);
 
-use Lintian::Util qw(fail get_dsc_info);
+use Lintian::Util qw(fail read_dpkg_control_utf8);
 
 =head1 NAME
 
@@ -60,7 +60,7 @@ Parse FILE as a collection desc file.
 
 sub new {
     my ($class, $file) = @_;
-    my $header = get_dsc_info($file);
+    my ($header, undef) = read_dpkg_control_utf8($file);
     my $self;
     foreach my $field (qw(collector-script type version)) {
         if (($header->{$field}//'') eq '') {

@@ -38,9 +38,15 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * debian/compat:
     + [BR] Use compat version 9.
 
+  * lib/Lintian/{CheckScript,CollScript,Profile}.pm:
+    + [NT] Read control files as proper UTF-8 character streams rather
+      than byte streams.  (Closes: #793164)
   * lib/Lintian/Collect.pm:
     + [AB] Remove outdated note about automatically computed defaults for
       "$info->field('source')".
+  * lib/Lintian/Util.pm:
+    + [NT] Add read_dpkg_control_utf8 that reads the file as UTF-8
+      characters (as it ought to be) rather than a byte stream.
 
   * private/refresh-fonts-data:
     + [NT] Prune some duplicates from the generated font file.

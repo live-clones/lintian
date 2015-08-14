@@ -28,7 +28,7 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 
 use Lintian::Tag::Info ();
-use Lintian::Util qw(read_dpkg_control unix_locale_split);
+use Lintian::Util qw(read_dpkg_control_utf8 unix_locale_split);
 
 =head1 NAME
 
@@ -73,7 +73,7 @@ given, translations for the check will be loaded as well.
 
 sub new {
     my ($class, $basedir, $checkname, $profile, $lang) = @_;
-    my ($header, @tags) = read_dpkg_control("$basedir/${checkname}.desc");
+    my ($header, @tags) = read_dpkg_control_utf8("$basedir/${checkname}.desc");
     my ($self, %loc, $dir, $name);
     unless ($name = $header->{'check-script'}) {
         croak "Missing Check-Script field in $basedir/${checkname}.desc";
@@ -87,7 +87,7 @@ sub new {
             for my $i10n (@i10ns) {
                 my $path = "${path_prefix}_${i10n}.desc";
                 if (-f $path) {
-                    my ($header, @paras) = read_dpkg_control($path);
+                    my ($header, @paras) = read_dpkg_control_utf8($path);
                     my $for_check = $header->{'check-script-translation'};
                     if (not defined($for_check)
                         or $for_check ne $name) {

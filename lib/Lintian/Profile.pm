@@ -31,7 +31,7 @@ use Dpkg::Vendor qw(get_current_vendor get_vendor_info);
 
 use Lintian::CheckScript;
 use Lintian::Tags;
-use Lintian::Util qw(parse_boolean read_dpkg_control strip);
+use Lintian::Util qw(parse_boolean read_dpkg_control_utf8 strip);
 
 =head1 NAME
 
@@ -352,7 +352,7 @@ sub _read_profile {
     my $pmap = $self->{'parent-map'};
     my $pname;
     my $plist = $self->{'profile_list'};
-    @pdata = read_dpkg_control($pfile, 0);
+    @pdata = read_dpkg_control_utf8($pfile, 0);
     $pheader = shift @pdata;
     croak "Profile field is missing from $pfile"
       unless defined $pheader && $pheader->{'profile'};
