@@ -1,6 +1,29 @@
-lintian (2.5.36) UNRELEASED; urgency=medium
+lintian (2.5.36) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - application-in-library-section
+      - dep5-file-paragraph-references-header-paragraph
+      - libapp-perl-package-name
+      - libmodule-build-perl-needs-to-be-in-build-depends
+      - libmodule-build-tiny-perl-needs-to-be-in-build-depends
+      - library-package-name-for-application
+      - maintainer-script-may-use-dir_to_symlink_helper
+      - mentions-deprecated-usr-lib-perl5-directory
+      - package-installs-apt-preferences
+      - package-installs-apt-sources
+      - package-installs-ieee-data
+      - package-installs-into-obsolete-dir
+      - package-relation-with-perl-modules
+      - perl-module-name-not-mentioned-in-description
+      - privacy-breach-uses-embedded-file
+    + Removed:
+      - dep5-file-paragraph-reference-header-paragraph
+      - package-install-apt-preferences
+      - package-install-apt-sources
+      - package-install-ieee-data
+      - package-install-into-obsolete-dir
+      - privacy-breach-may-use-debian-package
 
   * checks/application-not-library.{desc,pm}:
     + [AB] New experimental checks imported from pkg-perl-tools.
@@ -66,7 +89,7 @@ lintian (2.5.36) UNRELEASED; urgency=medium
   * private/refresh-fonts-data:
     + [NT] Prune some duplicates from the generated font file.
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Tue, 04 Aug 2015 17:28:59 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 15 Aug 2015 09:48:22 +0200
 
 lintian (2.5.35) unstable; urgency=medium
 
