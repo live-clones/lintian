@@ -548,14 +548,15 @@ sub file_overrides {
           ) {
             # Valid - so far at least
             my ($opkg_name, $archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
-            my ($tag, $extra) = split(m/ /o, $tagdata, 2);
+            my ($rawtag, $extra) = split(m/ /o, $tagdata, 2);
+            my $tag;
             my $tagover;
             my $data;
             if ($opkg_type and $opkg_type ne $info->{type}) {
                 tag(
                     'malformed-override',
                     join(q{ },
-                        "Override of $tag for package type $opkg_type",
+                        "Override of $rawtag for package type $opkg_type",
                         "(expecting $info->{type}) at line $."));
                 next;
             }
@@ -564,7 +565,7 @@ sub file_overrides {
                     'malformed-override',
                     join(q{ },
                         'Architecture list for arch:all package',
-                        "at line $. (for tag $tag)"));
+                        "at line $. (for tag $rawtag)"));
                 next;
             }
             if ($archlist) {
@@ -584,7 +585,7 @@ sub file_overrides {
                             'malformed-override',
                             join(q{ },
                                 "Unknown architecture \"$a\"",
-                                "at line $. (for tag $tag)"));
+                                "at line $. (for tag $rawtag)"));
                         next OVERRIDE;
                     }
                 }
@@ -594,7 +595,7 @@ sub file_overrides {
                         'malformed-override',
                         join(q{ },
                             'Inconsistent architecture negation',
-                            "at line $. (for tag $tag)"));
+                            "at line $. (for tag $rawtag)"));
                     next;
                 }
                 # missing wildcard checks and sanity checking archs $arch
@@ -604,7 +605,7 @@ sub file_overrides {
                 next unless $found;
             }
 
-            if ($last_over && $last_over->tag eq $tag && !scalar @$comments) {
+            if ($last_over && $last_over->tag eq $rawtag && !scalar @$comments) {
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
                 # comment from the previous override (if any).
@@ -619,7 +620,7 @@ sub file_overrides {
                 'comments' => $comments,
             };
             $comments = [];
-            $tagover = Lintian::Tag::Override->new($tag, $data);
+            $tagover = Lintian::Tag::Override->new($rawtag, $data);
             # tag will be changed here if renamed reread
             $tag = $tagover->{'tag'};
 
