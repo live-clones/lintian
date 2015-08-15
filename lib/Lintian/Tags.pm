@@ -603,10 +603,6 @@ sub file_overrides {
                 }
                 next unless $found;
             }
-            if ($profile && !$profile->is_overridable($tag)) {
-                $self->{ignored_overrides}{$tag}++;
-                next;
-            }
 
             if ($last_over && $last_over->tag eq $tag && !scalar @$comments) {
                 # There are no new comments, no "empty line" in between and
@@ -624,6 +620,14 @@ sub file_overrides {
             };
             $comments = [];
             $tagover = Lintian::Tag::Override->new($tag, $data);
+            # tag will be changed here if renamed reread
+            $tag = $tagover->{'tag'};
+
+            # treat here ignored overrides
+             if ($profile && !$profile->is_overridable($tag)) {
+                $self->{ignored_overrides}{$tag}++;
+                next;
+            }
             $info->{'overrides-data'}{$tag}{$extra} = $tagover;
             $info->{overrides}{$tag}{$extra} = 0;
             $last_over = $tagover;

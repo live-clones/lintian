@@ -1,3 +1,7 @@
+N: renamed tag
+O: overrides-shown: package-installs-apt-sources etc/apt/sources.list.d/
+N: renamed tag
+O: overrides-shown: package-installs-apt-sources etc/apt/sources.list.d/foo.1
 N: exact extra information
 O: overrides-shown: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:4 /usr/dict/
 N: These are wildcard overrides

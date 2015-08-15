@@ -1,0 +1,7 @@
+# list of renamed tag old name => new name. Please alpha sort by old name
+dep5-file-paragraph-reference-header-paragraph => dep5-file-paragraph-references-header-paragraph
+package-install-apt-preferences => package-installs-apt-preferences
+package-install-apt-sources => package-installs-apt-sources
+package-install-ieee-data => package-installs-ieee-data
+package-install-into-obsolete-dir => package-installs-into-obsolete-dir
+privacy-breach-may-use-debian-package => privacy-breach-uses-embedded-file

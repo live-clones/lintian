@@ -22,6 +22,7 @@ use strict;
 use warnings;
 
 use parent qw(Class::Accessor::Fast);
+use Lintian::Data;
 
 =head1 NAME
 
@@ -72,9 +73,17 @@ considered a pattern.
 
 =cut
 
+# renamed tag list
+my $RENAMED_TAGS = Lintian::Data->new('override/renamed-tags',qr/\s*=>\s*/);
+
 sub new {
     my ($type, $tag, $data) = @_;
     $data = {} unless defined $data;
+
+    if($RENAMED_TAGS->known($tag)) {
+        $tag = $RENAMED_TAGS->value($tag);
+    }
+
     my $self = {
         'arch'     => $data->{'arch'},
         'comments' => $data->{'comments'},

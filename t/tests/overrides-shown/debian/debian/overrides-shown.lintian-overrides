@@ -14,4 +14,7 @@ FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:2*
 FSSTND-dir-in-manual-page */foo.1.gz:5 /usr/doc/
 FSSTND-dir-in-manual-page */foo.1.gz:3*
 
+# renamed tag
+package-install-apt-sources *
+
 #FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz * more occurrences not shown
