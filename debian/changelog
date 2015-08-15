@@ -2,6 +2,9 @@ lintian (2.5.36.1) unstable; urgency=medium
 
   * checks/application-not-library.pm:
     + [NT] Fix invalid import.
+  * lib/Lintian/{Tags.pm,Tag/Override.pm}:
+    + [BR] Support tag renaming. Warn about renamed
+    tags.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 15 Aug 2015 10:47:33 +0200
 
