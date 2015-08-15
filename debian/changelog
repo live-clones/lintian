@@ -2,6 +2,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
 
    "XXX: generate tag summary"
 
+  * checks/fields.desc:
+    + [JW] Use "an" (instead of "a") before "HTTP".
+
   * lib/Lintian/{Tags.pm,Tag/Override.pm}:
     + [BR] Support tag renaming. Warn about renamed
       tags.
