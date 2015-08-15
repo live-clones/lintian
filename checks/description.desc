@@ -2,7 +2,7 @@ Check-Script: description
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: des
 Type: binary, udeb
-Needs-Info: index
+Needs-Info: unpacked
 Info: Check if the Description control field of a binary package conforms
  to the rules in the Policy Manual (section 3.4).
 
