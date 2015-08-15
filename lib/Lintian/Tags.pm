@@ -605,7 +605,8 @@ sub file_overrides {
                 next unless $found;
             }
 
-            if ($last_over && $last_over->tag eq $rawtag && !scalar @$comments) {
+            if ($last_over && $last_over->tag eq $rawtag && !scalar @$comments)
+            {
                 # There are no new comments, no "empty line" in between and
                 # this tag is the same as the last, so we "carry over" the
                 # comment from the previous override (if any).
@@ -624,8 +625,12 @@ sub file_overrides {
             # tag will be changed here if renamed reread
             $tag = $tagover->{'tag'};
 
+            unless($tag eq $rawtag) {
+                tag('renamed-override',"$rawtag => $tag at line $.");
+            }
+
             # treat here ignored overrides
-             if ($profile && !$profile->is_overridable($tag)) {
+            if ($profile && !$profile->is_overridable($tag)) {
                 $self->{ignored_overrides}{$tag}++;
                 next;
             }
