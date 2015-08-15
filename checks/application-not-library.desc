@@ -1,6 +1,7 @@
 Check-Script: application-not-library
 Author: Axel Beckert <abe@debian.org>
 Type: binary
+Needs-Info: index
 Info: application packaged like a library (imported from pkg-perl-tools)
 
 Tag: libapp-perl-package-name
