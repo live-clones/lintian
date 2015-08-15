@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-08-03 23:18+0200\n"
+"POT-Creation-Date: 2015-08-15 07:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3762,7 +3762,7 @@ msgid ""
 "shot by photographer Dwight Hooker, cropped from\n"
 "the centerfold of the November 1972 issue of Playboy magazine.\n"
 "\n"
-"According to Hutchison, Jamie (May–June 2001). \"Culture,\n"
+"According to Hutchison, Jamie (May-June 2001). \"Culture,\n"
 "Communication, and an Information Age Madonna\" (PDF).\n"
 "IEEE Professional Communication Society Newsletter 45 (3).\n"
 "(page 5 second column second paragraph), this image is\n"
@@ -4046,11 +4046,28 @@ msgstr ""
 #
 #. Tag: debian-pycompat-is-obsolete
 #. type: Lintian tag description
-#: checks/cruft.desc:830
+#: checks/cruft.desc:831
 #, no-wrap
 msgid ""
 "debian/pycompat is not used by any modern Python helper.  It should be\n"
-"safe to remove this file.\n"
+"safe to remove this file."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: mentions-deprecated-usr-lib-perl5-directory
+#. type: Lintian tag description
+#: checks/cruft.desc:841
+#, no-wrap
+msgid ""
+"As of Perl 5.20, the vendorarch directory is "
+"/usr/lib/&lt;triplet&gt;/perl5,\n"
+"but this package still uses usr/lib/perl5 in some of the files under "
+"debian/.\n"
+"Please replace that with the value of $Config{vendorarch} configuration\n"
+"parameter, e.g.\n"
+" $(shell perl -MConfig -wE'say substring($$Config{vendorarch},1)')\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -5622,7 +5639,7 @@ msgstr ""
 #
 #. Tag: package-has-no-description
 #. type: Lintian tag description
-#: checks/description.desc:14
+#: checks/description.desc:15
 #, no-wrap
 msgid "The binary package does not have a \"Description:\" control field."
 msgstr ""
@@ -5632,7 +5649,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-is-empty
 #. type: Lintian tag description
-#: checks/description.desc:20
+#: checks/description.desc:21
 #, no-wrap
 msgid "The first line in the \"Description:\" is empty."
 msgstr ""
@@ -5642,7 +5659,7 @@ msgstr ""
 #
 #. Tag: extended-description-contains-empty-paragraph
 #. type: Lintian tag description
-#: checks/description.desc:26
+#: checks/description.desc:27
 #, no-wrap
 msgid ""
 "The extended description (the lines after the first line of the\n"
@@ -5654,7 +5671,7 @@ msgstr ""
 #
 #. Tag: extended-description-is-empty
 #. type: Lintian tag description
-#: checks/description.desc:33
+#: checks/description.desc:34
 #, no-wrap
 msgid ""
 "The extended description (the lines after the first line of the\n"
@@ -5666,7 +5683,7 @@ msgstr ""
 #
 #. Tag: description-too-short
 #. type: Lintian tag description
-#: checks/description.desc:40
+#: checks/description.desc:41
 #, no-wrap
 msgid ""
 "The description contains only a single word. It is likely that the\n"
@@ -5678,7 +5695,7 @@ msgstr ""
 #
 #. Tag: description-is-pkg-name
 #. type: Lintian tag description
-#: checks/description.desc:47
+#: checks/description.desc:48
 #, no-wrap
 msgid ""
 "The description is the same as the package name.\n"
@@ -5690,7 +5707,7 @@ msgstr ""
 #
 #. Tag: extended-description-is-probably-too-short
 #. type: Lintian tag description
-#: checks/description.desc:58
+#: checks/description.desc:59
 #, no-wrap
 msgid ""
 "The extended description (the lines after the first line of the\n"
@@ -5706,7 +5723,7 @@ msgstr ""
 #
 #. Tag: description-contains-invalid-control-statement
 #. type: Lintian tag description
-#: checks/description.desc:72
+#: checks/description.desc:73
 #, no-wrap
 msgid ""
 "The description contains an invalid control statement.\n"
@@ -5725,7 +5742,7 @@ msgstr ""
 #
 #. Tag: description-too-long
 #. type: Lintian tag description
-#: checks/description.desc:78
+#: checks/description.desc:79
 #, no-wrap
 msgid "The first line of the \"Description:\" must not exceed 80 characters."
 msgstr ""
@@ -5735,7 +5752,7 @@ msgstr ""
 #
 #. Tag: description-starts-with-package-name
 #. type: Lintian tag description
-#: checks/description.desc:86
+#: checks/description.desc:87
 #, no-wrap
 msgid ""
 "The first line of the \"Description:\" should not start with the\n"
@@ -5748,7 +5765,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-starts-with-article
 #. type: Lintian tag description
-#: checks/description.desc:97
+#: checks/description.desc:98
 #, no-wrap
 msgid ""
 "The first line of the \"Description:\" should omit any initial indefinite\n"
@@ -5765,7 +5782,7 @@ msgstr ""
 #
 #. Tag: description-contains-tabs
 #. type: Lintian tag description
-#: checks/description.desc:103
+#: checks/description.desc:104
 #, no-wrap
 msgid "The package \"Description:\" must not contain tab characters."
 msgstr ""
@@ -5775,7 +5792,7 @@ msgstr ""
 #
 #. Tag: description-starts-with-leading-spaces
 #. type: Lintian tag description
-#: checks/description.desc:110
+#: checks/description.desc:111
 #, no-wrap
 msgid ""
 "The package \"Description:\" starts with leading spaces. Usually,\n"
@@ -5788,7 +5805,7 @@ msgstr ""
 #
 #. Tag: possible-unindented-list-in-extended-description
 #. type: Lintian tag description
-#: checks/description.desc:119
+#: checks/description.desc:120
 #, no-wrap
 msgid ""
 "The package \"Description:\" contains an unindented line which\n"
@@ -5802,7 +5819,7 @@ msgstr ""
 #
 #. Tag: description-is-debmake-template
 #. type: Lintian tag description
-#: checks/description.desc:125
+#: checks/description.desc:126
 #, no-wrap
 msgid ""
 "The synopsis or the extended description just says \"Missing\",\n"
@@ -5814,7 +5831,7 @@ msgstr ""
 #
 #. Tag: description-is-dh_make-template
 #. type: Lintian tag description
-#: checks/description.desc:131
+#: checks/description.desc:132
 #, no-wrap
 msgid ""
 "The synopsis or the extended description has not been changed\n"
@@ -5826,7 +5843,7 @@ msgstr ""
 #
 #. Tag: description-contains-dh-make-perl-template
 #. type: Lintian tag description
-#: checks/description.desc:139
+#: checks/description.desc:140
 #, no-wrap
 msgid ""
 "The extended description contains the statement that it was\n"
@@ -5840,7 +5857,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-might-not-be-phrased-properly
 #. type: Lintian tag description
-#: checks/description.desc:151
+#: checks/description.desc:152
 #, no-wrap
 msgid ""
 "The synopsis (first line in the package \"Description:\" field, the\n"
@@ -5858,7 +5875,7 @@ msgstr ""
 #
 #. Tag: description-synopsis-is-duplicated
 #. type: Lintian tag description
-#: checks/description.desc:159
+#: checks/description.desc:160
 #, no-wrap
 msgid ""
 "The first line of the extended Description: should not repeat the\n"
@@ -5871,7 +5888,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-description-synopsis
 #. type: Lintian tag description
-#: checks/description.desc:168
+#: checks/description.desc:169
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the package synopsis.  Lintian\n"
@@ -5886,7 +5903,7 @@ msgstr ""
 #
 #. Tag: capitalization-error-in-description-synopsis
 #. type: Lintian tag description
-#: checks/description.desc:176
+#: checks/description.desc:177
 #, no-wrap
 msgid ""
 "Lintian found a possible capitalization error in the package\n"
@@ -5900,7 +5917,7 @@ msgstr ""
 #
 #. Tag: extended-description-line-too-long
 #. type: Lintian tag description
-#: checks/description.desc:185
+#: checks/description.desc:186
 #, no-wrap
 msgid ""
 "One or more lines in the extended part of the \"Description:\" field\n"
@@ -5914,7 +5931,7 @@ msgstr ""
 #
 #. Tag: description-contains-homepage
 #. type: Lintian tag description
-#: checks/description.desc:194
+#: checks/description.desc:195
 #, no-wrap
 msgid ""
 "The extended description contains a \"Homepage:\" pseudo-header\n"
@@ -5929,7 +5946,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-description
 #. type: Lintian tag description
-#: checks/description.desc:203
+#: checks/description.desc:204
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the package description.  Lintian\n"
@@ -5944,7 +5961,7 @@ msgstr ""
 #
 #. Tag: capitalization-error-in-description
 #. type: Lintian tag description
-#: checks/description.desc:216
+#: checks/description.desc:217
 #, no-wrap
 msgid ""
 "Lintian found a possible capitalization error in the package\n"
@@ -5963,7 +5980,7 @@ msgstr ""
 #
 #. Tag: description-contains-duplicated-word
 #. type: Lintian tag description
-#: checks/description.desc:222
+#: checks/description.desc:223
 #, no-wrap
 msgid ""
 "The description contains a duplicated word.  Usually this is a\n"
@@ -5975,7 +5992,7 @@ msgstr ""
 #
 #. Tag: using-first-person-in-description
 #. type: Lintian tag description
-#: checks/description.desc:235
+#: checks/description.desc:236
 #, no-wrap
 msgid ""
 "You should avoid the use of first person (\"I will do this...\" or\n"
@@ -5994,13 +6011,27 @@ msgstr ""
 #
 #. Tag: description-possibly-contains-homepage
 #. type: Lintian tag description
-#: checks/description.desc:242
+#: checks/description.desc:244
 #, no-wrap
 msgid ""
 "This package has no Homepage field but has a URL in the description\n"
 "and wording that might indicate this is the package Homepage.  If it is,\n"
 "add a Homepage control field containing it rather than mentioning it in\n"
-"the package description.\n"
+"the package description."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: perl-module-name-not-mentioned-in-description
+#. type: Lintian tag description
+#: checks/description.desc:252
+#, no-wrap
+msgid ""
+"Debian users are likely to look for perl modules by their name, e.g.\n"
+"Foo::Bar, not by package name (libfoo-bar-perl). To make this easier, the "
+"main\n"
+"module name should be present in the long package description.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -7996,9 +8027,46 @@ msgstr ""
 #
 #. Tag: python-version-current-is-deprecated
 #. type: Lintian tag description
-#: checks/fields.desc:1248
+#: checks/fields.desc:1249
 #, no-wrap
-msgid "The use of \"current\" in the Python-Version field is deprecated.\n"
+msgid "The use of \"current\" in the Python-Version field is deprecated."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: libmodule-build-perl-needs-to-be-in-build-depends
+#. type: Lintian tag description
+#: checks/fields.desc:1257
+#, no-wrap
+msgid ""
+"libmodule-build-perl needs to be in <tt>Build-Depends</tt>, not in\n"
+"Build-Depends-Indep, since it's used in the clean target."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: libmodule-build-tiny-perl-needs-to-be-in-build-depends
+#. type: Lintian tag description
+#: checks/fields.desc:1265
+#, no-wrap
+msgid ""
+"libmodule-build-tiny-perl needs to be in <tt>Build-Depends</tt>, not\n"
+"in Build-Depends-Indep, since it's used in the clean target."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: package-relation-with-perl-modules
+#. type: Lintian tag description
+#: checks/fields.desc:1273
+#, no-wrap
+msgid ""
+"No package should depend on 'perl-modules'. Instead, a suitable\n"
+"dependency on 'perl' should be used. The existence of the perl-modules\n"
+"package is an implementation detail of the perl packaging.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -8123,7 +8191,7 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: package-install-ieee-data
+#. Tag: package-installs-ieee-data
 #. type: Lintian tag description
 #: checks/files.desc:80
 #, no-wrap
@@ -8140,7 +8208,7 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: package-install-apt-preferences
+#. Tag: package-installs-apt-preferences
 #. type: Lintian tag description
 #: checks/files.desc:89
 #, no-wrap
@@ -8155,7 +8223,7 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: package-install-apt-sources
+#. Tag: package-installs-apt-sources
 #. type: Lintian tag description
 #: checks/files.desc:99
 #, no-wrap
@@ -8183,7 +8251,7 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: package-install-into-obsolete-dir
+#. Tag: package-installs-into-obsolete-dir
 #. type: Lintian tag description
 #: checks/files.desc:112
 #, no-wrap
@@ -9597,7 +9665,7 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: privacy-breach-may-use-debian-package
+#. Tag: privacy-breach-uses-embedded-file
 #. type: Lintian tag description
 #: checks/files.desc:993
 #, no-wrap
@@ -15449,9 +15517,24 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: maintainer-script-may-use-dir_to_symlink_helper
+#. type: Lintian tag description
+#: checks/scripts.desc:641
+#, no-wrap
+msgid ""
+"The maintainer script apparently change a directory to a symlink\n"
+"not using dir_to_symlink command of dpkg-maintscript-helper, that take\n"
+"great care to avoid a lot of problems.\n"
+"\n"
+"Please use the dpkg-maintscript-helper dir_to_symlink command."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: maintainer-script-empty
 #. type: Lintian tag description
-#: checks/scripts.desc:643
+#: checks/scripts.desc:654
 #, no-wrap
 msgid ""
 "The maintainer script doesn't seem to contain any code other than\n"
@@ -15470,7 +15553,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-ignores-errors
 #. type: Lintian tag description
-#: checks/scripts.desc:651
+#: checks/scripts.desc:662
 #, no-wrap
 msgid ""
 "The maintainer script doesn't seem to set the <tt>-e</tt> flag which\n"
@@ -15483,7 +15566,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-without-set-e
 #. type: Lintian tag description
-#: checks/scripts.desc:662
+#: checks/scripts.desc:673
 #, no-wrap
 msgid ""
 "The maintainer script passes <tt>-e</tt> to the shell on the\n"
@@ -15499,7 +15582,7 @@ msgstr ""
 #
 #. Tag: command-with-path-in-maintainer-script
 #. type: Lintian tag description
-#: checks/scripts.desc:677
+#: checks/scripts.desc:688
 #, no-wrap
 msgid ""
 "The indicated program run in a maintainer script has a prepended\n"
@@ -15520,7 +15603,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-ancient-dpkg-epoch-check
 #. type: Lintian tag description
-#: checks/scripts.desc:684
+#: checks/scripts.desc:695
 #, no-wrap
 msgid ""
 "The package calls dpkg --assert-working-epoch in a maintainer\n"
@@ -15533,7 +15616,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
 #. type: Lintian tag description
-#: checks/scripts.desc:691
+#: checks/scripts.desc:702
 #, no-wrap
 msgid ""
 "The package calls dpkg --assert-multi-conrep in a maintainer\n"
@@ -15546,7 +15629,7 @@ msgstr ""
 #
 #. Tag: package-uses-local-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:699
+#: checks/scripts.desc:710
 #, no-wrap
 msgid ""
 "The maintainer script calls dpkg-divert with <tt>--local</tt> or\n"
@@ -15559,7 +15642,7 @@ msgstr ""
 #
 #. Tag: diversion-for-unknown-file
 #. type: Lintian tag description
-#: checks/scripts.desc:705
+#: checks/scripts.desc:716
 #, no-wrap
 msgid ""
 "The maintainer script adds a diversion for a file that is not\n"
@@ -15571,7 +15654,7 @@ msgstr ""
 #
 #. Tag: orphaned-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:711
+#: checks/scripts.desc:722
 #, no-wrap
 msgid ""
 "A diversion was added for the file, but not removed. This means\n"
@@ -15583,7 +15666,7 @@ msgstr ""
 #
 #. Tag: remove-of-unknown-diversion
 #. type: Lintian tag description
-#: checks/scripts.desc:719
+#: checks/scripts.desc:730
 #, no-wrap
 msgid ""
 "The maintainer script removes a diversion that it didn't add.  If\n"
@@ -15597,7 +15680,7 @@ msgstr ""
 #
 #. Tag: script-uses-perl4-libs-without-dep
 #. type: Lintian tag description
-#: checks/scripts.desc:728
+#: checks/scripts.desc:739
 #, no-wrap
 msgid ""
 "This package includes perl scripts using obsoleted perl 4-era\n"
@@ -15612,7 +15695,7 @@ msgstr ""
 #
 #. Tag: maintainer-script-has-unexpanded-debhelper-token
 #. type: Lintian tag description
-#: checks/scripts.desc:737
+#: checks/scripts.desc:748
 #, no-wrap
 msgid ""
 "Lintian has detected the presence of a #DEBEHELPER# token in the\n"
@@ -16663,7 +16746,7 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: dep5-file-paragraph-reference-header-paragraph
+#. Tag: dep5-file-paragraph-references-header-paragraph
 #. type: Lintian tag description
 #: checks/source-copyright.desc:252
 #, no-wrap
@@ -17011,7 +17094,7 @@ msgid ""
 "on machines with or without systemd. Starting a service should be done via\n"
 "<tt>invoke-rc.d</tt>, if the service has a corresponding sysvinit script, "
 "or\n"
-"<tt>deb-systemd-invoke</tt> if it doesn’t.\n"
+"<tt>deb-systemd-invoke</tt> if it does not.\n"
 "\n"
 "If you are using debhelper, please use the <tt>dh-systemd</tt> debhelper\n"
 "addon."
