@@ -364,6 +364,7 @@ sub run {
             'teH' => 1, # From #711207
             'tEH' => 1, # From #782902
             'tEh' => 1, # From #782902, too
+            'ang' => 1, # The Go stdlib html/ package contains "ang;"
         };
         my $tag_emitter
           = spelling_tag_emitter('spelling-error-in-binary', $file);
