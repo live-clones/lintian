@@ -1,3 +1,10 @@
+lintian (2.5.36.1) unstable; urgency=medium
+
+  * checks/application-not-library.pm:
+    + [NT] Fix invalid import.
+
+ -- Niels Thykier <niels@thykier.net>  Sat, 15 Aug 2015 10:47:33 +0200
+
 lintian (2.5.36) unstable; urgency=medium
 
   * Summary of tag changes:

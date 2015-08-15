@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
-use List::Util qw(any);
+use List::MoreUtils qw(any);
 
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
