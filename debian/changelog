@@ -16,6 +16,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
   * checks/fields.desc:
     + [JW] Use "an" (instead of "a") before "HTTP".
 
+  * data/binaries/embedded-libs:
+    + [RG] Add another matching string for libidn
+
   * lib/Lintian/{Tags.pm,Tag/Override.pm}:
     + [BR] Support tag renaming. Warn about renamed
       tags.
