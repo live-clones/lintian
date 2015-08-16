@@ -549,9 +549,10 @@ sub run {
                         my $tag = "hardening-$t";
                         # Binaries built by the Go compiler do not support all
                         # hardening measures.
-                        next if ($t eq 'no-relro' ||
-                                 $t eq 'no-fortify-functions') &&
-                                 $built_with_golang;
+                        next
+                          if ($t eq 'no-relro'
+                            ||$t eq 'no-fortify-functions')
+                          &&$built_with_golang;
                         tag $tag, $file if $flags->{$tag};
                     }
                 }
