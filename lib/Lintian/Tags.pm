@@ -626,7 +626,7 @@ sub file_overrides {
             $tag = $tagover->{'tag'};
 
             unless($tag eq $rawtag) {
-                tag('renamed-override',"$rawtag => $tag at line $.");
+                tag 'renamed-tag',"$rawtag => $tag at line $.";
             }
 
             # treat here ignored overrides
