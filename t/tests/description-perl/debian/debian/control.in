@@ -13,4 +13,14 @@ Description: lintian dummy package to test a module name related check
  about not mentioning the contained perl module.
  .
  For testing and length-ish purposes, with Long::Description a similar
- name is mentioned though
+ name is mentioned though.
+
+Package: libdeb-long-description-proper-perl
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: lintian dummy package to test a module name related false positive
+ This package is solely meant for testing a lintian check to argue
+ about not mentioning the contained perl module.
+ .
+ This is a package which checks the test for false positives, so it
+ actually mentions Deb::Long::Description::Proper.

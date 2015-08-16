@@ -10,6 +10,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [NT] Apply patch from Michael Stapelberg to a
       common false positive spelling mistake in "go"
       binaries.  (Closes: #795614)
+  * checks/description.pm:
+    + [AB] Fix false positives in
+      perl-module-name-not-mentioned-in-description (Closes: #795779)
   * checks/fields.desc:
     + [JW] Use "an" (instead of "a") before "HTTP".
 

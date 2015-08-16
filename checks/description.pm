@@ -268,7 +268,7 @@ sub run {
         }
 
         tag 'perl-module-name-not-mentioned-in-description', $mod
-          if (index($mod_lc, lc($description)) < 0 and $pm_found);
+          if (index(lc($description), $mod_lc) < 0 and $pm_found);
     }
 
     return;
