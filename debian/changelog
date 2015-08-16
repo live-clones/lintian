@@ -2,6 +2,11 @@ lintian (2.5.37) UNRELEASED; urgency=medium
 
    "XXX: generate tag summary"
 
+  * checks/binaries.pm:
+    + [NT] Apply patch from Michael Stapelberg to ignore
+      "no-relro" and "no-fortify-functions" issues in
+      binaries built by the go compiler, as it does not
+      support these features.  (Closes: #795667)
   * checks/fields.desc:
     + [JW] Use "an" (instead of "a") before "HTTP".
 
