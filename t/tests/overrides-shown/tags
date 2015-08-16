@@ -1,4 +1,4 @@
-P: overrides-shown: renamed-override package-install-apt-sources => package-installs-apt-sources at line 18
+P: overrides-shown: renamed-tag package-install-apt-sources => package-installs-apt-sources at line 18
 N: renamed tag
 O: overrides-shown: package-installs-apt-sources etc/apt/sources.list.d/
 N: renamed tag

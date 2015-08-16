@@ -18,11 +18,11 @@ Info: Lintian discovered an unused override entry in its database.
  If the override is unused, please remove it from the overrides file.
 
 
-Tag: renamed-override
+Tag: renamed-tag
 Severity: pedantic
 Certainty: certain
-Info: Lintian discovered an renamed override entry in its database.
- Lintian tag are sometime renamed in order to improve description.
+Info: The package has an override for a tag that was renamed.
+ Lintian tag are sometime renamed in order to improve their name.
  .
  Override file is dynamically translated by lintian. Nevertheless
  please replace the old name by the new name.
