@@ -1,0 +1,12 @@
+Testname: copyright-file-non-common-license
+Sequence: 6000
+Version: 1.0
+Description: Test for false positive for a common license
+Skeleton: pedantic
+Options: -IE --pedantic
+Test-Against:
+ copyright-should-refer-to-common-license-file-for-gpl
+ copyright-should-refer-to-common-license-file-for-gfdl
+ copyright-should-refer-to-common-license-file-for-lgpl
+ copyright-should-refer-to-common-license-file-for-apache-2
+ copyright-file-lacks-pointer-to-perl-license

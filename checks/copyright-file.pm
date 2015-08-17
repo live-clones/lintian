@@ -36,11 +36,13 @@ use constant {
 
 use Encode qw(decode);
 use List::MoreUtils qw(any);
+use Data::Alias;
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(slurp_entire_file file_is_encoded_in_non_utf8);
+use Lintian::Util
+  qw(slurp_entire_file file_is_encoded_in_non_utf8 read_dpkg_control);
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_COMMON_LICENSES
@@ -228,36 +230,64 @@ sub run {
     # discussions of licensing are included in the copyright file but
     # aren't referring to the license of the package.
     if (
-           m,/usr/share/common-licenses,
-        || m/Zope Public License/
-        || m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
-        || m/LaTeX Project Public License/
-        || m/(?:^From:.*^To:|^To:.*^From:).*(?:GNU General Public License|GPL)/ms
-        || m/AFFERO GENERAL PUBLIC LICENSE/
-        || m/GNU Free Documentation License[,\s]*Version 1\.1/
-        || m/CeCILL FREE SOFTWARE LICENSE AGREEMENT/ #v2.0
-        || m/FREE SOFTWARE LICENSING AGREEMENT CeCILL/ #v1.1
-        || m/CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT/
-        || m/compatible\s+with\s+(?:the\s+)?(?:GNU\s+)?GPL/
-        || m/(?:GNU\s+)?GPL\W+compatible/
-        || m/was\s+previously\s+(?:distributed\s+)?under\s+the\s+GNU/
-        || m/means\s+either\s+the\s+GNU\s+General\s+Public\s+License/
-        || $wrong_directory_detected
+        not(
+               m,/usr/share/common-licenses,
+            || m/Zope Public License/
+            || m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
+            || m/LaTeX Project Public License/
+            || m/(?:^From:.*^To:|^To:.*^From:).*(?:GNU General Public License|GPL)/ms
+            || m/AFFERO GENERAL PUBLIC LICENSE/
+            || m/GNU Free Documentation License[,\s]*Version 1\.1/
+            || m/CeCILL FREE SOFTWARE LICENSE AGREEMENT/ #v2.0
+            || m/FREE SOFTWARE LICENSING AGREEMENT CeCILL/ #v1.1
+            || m/CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT/
+            || m/compatible\s+with\s+(?:the\s+)?(?:GNU\s+)?GPL/
+            || m/(?:GNU\s+)?GPL\W+compatible/
+            || m/was\s+previously\s+(?:distributed\s+)?under\s+the\s+GNU/
+            || m/means\s+either\s+the\s+GNU\s+General\s+Public\s+License/
+            || $wrong_directory_detected
+        )
       ) {
-        # False positive or correct reference.  Ignore.
-    } elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {
-        tag 'copyright-should-refer-to-common-license-file-for-gfdl';
-    } elsif (m/GNU (?:Lesser|Library) General Public License/i or m/\bLGPL\b/){
-        tag 'copyright-should-refer-to-common-license-file-for-lgpl';
-    } elsif (m/GNU General Public License/i or m/\bGPL\b/) {
-        tag 'copyright-should-refer-to-common-license-file-for-gpl';
-        $gpl = 1;
-    } elsif (m/Apache License\s+,? Version 2\.0/i or m/\bApache-2(?:\.0)?\b/) {
-        tag 'copyright-should-refer-to-common-license-file-for-apache-2';
+        if (
+            check_names_texts(
+                qr/\b(?:GFDL|gnu[-_]free[-_]documentation[-_]license)\b/i,
+                qr/GNU Free Documentation License|(?-i:\bGFDL\b)/i
+            )
+          ) {
+            tag 'copyright-should-refer-to-common-license-file-for-gfdl';
+        }elsif (
+            check_names_texts(
+qr/\b(?:LGPL|gnu[-_](?:lesser|library)[-_]general[-_]public[-_]license)\b/i,
+qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
+            )
+          ) {
+            tag 'copyright-should-refer-to-common-license-file-for-lgpl';
+        }elsif (
+            check_names_texts(
+                qr/\b(?:GPL|gnu[-_]general[-_]public[-_]license)\b/i,
+                qr/GNU General Public License|(?-i:\bGPL\b)/i
+            )
+          ) {
+            tag 'copyright-should-refer-to-common-license-file-for-gpl';
+            $gpl = 1;
+        }elsif (
+            check_names_texts(
+                qr/\bapache[-_]2/i,
+                qr/\bApache License\s*,?\s*Version 2|\b(?-i:Apache)-2/i
+            )
+          ) {
+            tag 'copyright-should-refer-to-common-license-file-for-apache-2';
+        }
     }
 
-    if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i
-        && !m,usr/share/common-licenses/,) {
+    if (
+        check_names_texts(
+            qr/\b(?:perl|artistic)\b/,
+            sub {
+                /(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself\b/i
+                  &&!m,usr/share/common-licenses/,;
+            })
+      ) {
         tag 'copyright-file-lacks-pointer-to-perl-license';
     }
 
@@ -371,6 +401,53 @@ sub check_cross_link {
         #>>>
     }
     return;
+}
+
+# Checks the name and text of every license in the file against given name and
+# text check coderefs, if the file is in the new format, if the file is in the
+# old format only runs the text coderef against the whole file.
+sub check_names_texts {
+    my ($name_check, $text_check) = @_;
+
+    my $make_check = sub {
+        my $action = $_[0];
+
+        if ((ref($action) || '') eq 'Regexp') {
+            return sub { ${$_[0]} =~ $action };
+        }
+        return sub {
+            alias $_ = ${$_[0]};
+            return $action->($_);
+        };
+    };
+    $name_check = $make_check->($name_check);
+    $text_check = $make_check->($text_check);
+
+    my $file = \$_;
+    local $@;
+    local $_;
+    eval {
+        foreach my $paragraph (read_dpkg_control($file)) {
+            next unless exists $paragraph->{license};
+
+            my ($license_name, $license_text)
+              = $paragraph->{license} =~ /^\s*([^\r\n]+)\r?\n(.*)\z/s;
+
+            next if ($license_text||'') =~ /^[\s\r\n]*\z/;
+
+            die 'MATCH'
+              if $name_check->(\$license_name)
+              && $text_check->(\$license_text);
+        }
+    };
+    if ($@)
+    { # match or parse error: copyright not in new format, just check text
+        return 1 if $@ =~ /^MATCH/;
+
+        return $text_check->($file);
+    }
+
+    return; # did not match anything
 }
 
 1;
