@@ -42,23 +42,9 @@ exit(0);
 
 sub run_critic {
     my (@args) = @_;
-    plan tests => scalar(@args);
-    for my $arg (@args) {
-        if (-d $arg) {
 
-            # all_critic_ok emits its own plan, so run it in a subtest
-            # so we can just count it as "one" test.
-            subtest "Critic all code in $arg" => sub {
-                all_critic_ok($arg);
-            };
-        }elsif (-f _ ) {
-            critic_ok($arg);
-        }else {
-            print STDERR "N: $arg\n";
-            die "$arg does not exists\n" if not -e _;
-            die "$arg is of an unsupported file type\n";
-        }
-    }
+    all_critic_ok(@args);
+
     # For some reason, perltidy has started to leave behind a
     # "perltidy.LOG" which is rather annoying.  Lets have the tests
     # unconditionally kill those.
