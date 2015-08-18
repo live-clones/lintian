@@ -1,7 +1,5 @@
 # list of renamed tag old name => new name. Please alpha sort by old name
-application-in-library-section => application-should-not-be-in-library-section
 dep5-file-paragraph-reference-header-paragraph => dep5-file-paragraph-references-header-paragraph
-library-package-name-for-application => application-should-not-have-library-package-name
 package-install-apt-preferences => package-installs-apt-preferences
 package-install-apt-sources => package-installs-apt-sources
 package-install-ieee-data => package-installs-ieee-data

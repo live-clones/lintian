@@ -1,11 +1,11 @@
 E: libapp-something-perl: libapp-perl-package-name usr/bin/libapp-something-perl
-X: libapp-something-perl: application-should-not-be-in-library-section perl usr/bin/libapp-something-perl
-X: libsomething-else-perl: application-should-not-be-in-library-section perl usr/bin/libsomething-else-perl
-X: libsomething-else-perl: application-should-not-have-library-package-name usr/bin/libsomething-else-perl
-X: python-something: application-should-not-be-in-library-section python usr/bin/python-something
-X: python-something: application-should-not-have-library-package-name usr/bin/python-something
-X: ruby-something: application-should-not-be-in-library-section ruby usr/bin/ruby-something
-X: ruby-something: application-should-not-have-library-package-name usr/bin/ruby-something
-X: unspecified-something-pl: application-should-not-be-in-library-section perl usr/bin/unspecified-something-pl
-X: unspecified-something-py: application-should-not-be-in-library-section python usr/bin/unspecified-something-py
-X: unspecified-something-rb: application-should-not-be-in-library-section ruby usr/bin/unspecified-something-rb
+X: libapp-something-perl: application-in-library-section perl usr/bin/libapp-something-perl
+X: libsomething-else-perl: application-in-library-section perl usr/bin/libsomething-else-perl
+X: libsomething-else-perl: library-package-name-for-application usr/bin/libsomething-else-perl
+X: python-something: application-in-library-section python usr/bin/python-something
+X: python-something: library-package-name-for-application usr/bin/python-something
+X: ruby-something: application-in-library-section ruby usr/bin/ruby-something
+X: ruby-something: library-package-name-for-application usr/bin/ruby-something
+X: unspecified-something-pl: application-in-library-section perl usr/bin/unspecified-something-pl
+X: unspecified-something-py: application-in-library-section python usr/bin/unspecified-something-py
+X: unspecified-something-rb: application-in-library-section ruby usr/bin/unspecified-something-rb

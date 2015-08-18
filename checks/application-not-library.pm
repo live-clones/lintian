@@ -66,15 +66,14 @@ sub run {
         if ($pkg =~ /^libapp(?:.+)-perl$/) {
             tag 'libapp-perl-package-name', @programs;
         } else {
-            tag 'application-should-not-have-library-package-name', @programs;
+            tag 'library-package-name-for-application', @programs;
         }
     }
 
     # Check for wrong section
     my $section = $info->field('section', '');
     if ($section =~ /perl|python|ruby|(?:^|\/)libs/) { # oldlibs is ok
-        tag 'application-should-not-be-in-library-section',
-          "$section", @programs;
+        tag 'application-in-library-section', "$section", @programs;
     }
 
     return;

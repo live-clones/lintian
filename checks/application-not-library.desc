@@ -17,7 +17,7 @@ Info: This package contains a program in $PATH and is named
  package.
 Ref: http://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
 
-Tag: application-should-not-have-library-package-name
+Tag: library-package-name-for-application
 Severity: normal
 Certainty: wild-guess
 Experimental: yes
@@ -33,7 +33,7 @@ Info: This package contains a program in $PATH but is named like a
  primarily a library, please add a lintian override for this tag.
 Ref: http://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
 
-Tag: application-should-not-be-in-library-section
+Tag: application-in-library-section
 Severity: normal
 Certainty: wild-guess
 Experimental: yes
