@@ -19,6 +19,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
   * data/binaries/embedded-libs:
     + [RG] Add another matching string for libidn
 
+  * debian/control:
+    + [AB] Update Vcs-Browser header to use https and cgit.
+
   * lib/Lintian/{Tags.pm,Tag/Override.pm}:
     + [BR] Support tag renaming. Warn about renamed
       tags.
