@@ -237,7 +237,7 @@ file name, not the full path.
 It's often more useful to run every test that is relevant to a
 particular tag.  To do that, run:
 
-    debian/rules check-tag tag=<tag>
+    debian/rules runtests onlyrun=tag:<tag>
 
 This will run all tests that list that tag in either Test-For or
 Test-Against.
@@ -270,8 +270,9 @@ issued.
 
 Be sure to use Test-For and Test-Against for tags that are targets of
 a particular test case.  The test harness will ensure that the test
-case behaves correctly, and that metadata is used for the check-tag
-target and when checking test coverage.
+case behaves correctly, and that metadata is used for the runtests
+target (when called with the onlyrun=tag:<tag> filter) and when checking test
+coverage.
 
 The test template uses debhelper 7.  Use debhelper 7 features whenever
 possible rather than replacing the rules file with a more verbose one.

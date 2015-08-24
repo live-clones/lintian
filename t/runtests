@@ -21,8 +21,8 @@
 # MA 02110-1301, USA.
 
 # The harness for Lintian's new test suite.  Normally run through the runtests
-# or check-tag targets in debian/rules.  For detailed information on the test
-# suite layout and naming conventions, see t/tests/README.
+# targets in debian/rules.  For detailed information on the test suite layout
+# and naming conventions, see t/tests/README.
 #
 # The build output is directed to build.pkgname in the testing-directory.
 

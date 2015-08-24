@@ -80,7 +80,7 @@ To run a specific test case, run:
 It's often more useful to run every test that is relevant to a
 particular tag.  To do that, run:
 
-    debian/rules check-tag tag=<tag>
+    debian/rules runtests onlyrun=tag:<tag>
 
 This will run all tests that list that tag in the tags file.
 
