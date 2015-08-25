@@ -13,11 +13,16 @@ lintian (2.5.37) UNRELEASED; urgency=medium
   * checks/description.pm:
     + [AB] Fix false positives in
       perl-module-name-not-mentioned-in-description (Closes: #795779)
-  * checks/fields.desc:
+  * checks/fields.{desc,pm}:
     + [JW] Use "an" (instead of "a") before "HTTP".
+    + [NT] Assert that -dbgsym packages are in the "debug" section.
+      Thanks to Jean-Michel Vourgère for reporting the issue.
 
   * data/binaries/embedded-libs:
     + [RG] Add another matching string for libidn
+  * data/fields/archive-sections:
+    + [NT] Remove the "debugsym" section as "ddebs" will be put in
+      the regular "debug" section.
 
   * debian/control:
     + [AB] Update Vcs-Browser header to use https and cgit.

@@ -96,7 +96,7 @@ our @known_java_pkg = map { qr/$_/ } (
 # Mapping of package names to section names
 my @NAME_SECTION_MAPPINGS = (
     [qr/-docs?$/                      => 'doc'],
-    [qr/-dbg$/                        => 'debug'],
+    [qr/-dbg(?:sym)?$/                => 'debug'],
     [qr/^(?:python-)?zope/            => 'zope'],
     [qr/^python-/                     => 'python'],
     [qr/^r-cran-/                     => 'gnu-r'],
