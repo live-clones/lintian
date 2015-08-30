@@ -148,6 +148,8 @@ rm /dev/.hiddenfile
 adduser --system foo
 adduser --system foo2 --home /home/foo2
 adduser --system bar --home /var/lib/bar
+adduser --home /var/lib/fnord --system fnord
+adduser --home /home/fnord2 --system fnord2
 
 # other test case for gconftool
 /usr/bin/gconftool-2 --makefile-install-rule foo.schema

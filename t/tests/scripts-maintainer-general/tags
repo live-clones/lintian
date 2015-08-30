@@ -9,8 +9,9 @@ E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-manag
 E: scripts-maintainer-general: maintainer-script-should-not-modify-netbase-managed-file postinst:61 '/etc/rpc'
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:148 'adduser --system foo'
 E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:149 'adduser --system foo2 --home /home/foo2'
-E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:197 'adduser --system --quiet --ingroup ntp --no-create-home ntp'
-E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:198 'adduser festival --quiet --system --ingroup audio --no-create-home'
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:152 'adduser --home /home/fnord2 --system fnord2'
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:199 'adduser --system --quiet --ingroup ntp --no-create-home ntp'
+E: scripts-maintainer-general: maintainer-script-should-not-use-adduser-system-without-home postinst:200 'adduser festival --quiet --system --ingroup audio --no-create-home'
 E: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-status-directly postinst:56
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:74
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:75
@@ -18,14 +19,14 @@ E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
 E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst:101
-E: scripts-maintainer-general: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:188
+E: scripts-maintainer-general: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:190
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
-W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:153 /usr/bin/gconftool-2
-W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:174 /usr/sbin/dpkg-divert
-W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:175 /usr/sbin/dpkg-divert
+W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:155 /usr/bin/gconftool-2
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:176 /usr/sbin/dpkg-divert
-W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:179 /usr/sbin/dpkg-state-override
+W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:177 /usr/sbin/dpkg-divert
+W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:178 /usr/sbin/dpkg-divert
+W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:181 /usr/sbin/dpkg-state-override
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
 W: scripts-maintainer-general: maintainer-script-has-unexpanded-debhelper-token postinst
 W: scripts-maintainer-general: maintainer-script-ignores-errors postrm
@@ -37,12 +38,12 @@ W: scripts-maintainer-general: maintainer-script-should-not-hide-init-failure po
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:14 'chown root.root'
 W: scripts-maintainer-general: maintainer-script-should-not-use-deprecated-chown-usage postinst:84 'chown -R root.root'
 W: scripts-maintainer-general: maintainer-script-should-not-use-fc-cache postinst:95
-W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:153
+W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:155
 W: scripts-maintainer-general: maintainer-script-should-not-use-gconftool postinst:44
 W: scripts-maintainer-general: maintainer-script-should-not-use-start-stop-daemon postinst:138
 W: scripts-maintainer-general: maintainer-script-should-not-use-start-stop-daemon postinst:78
 W: scripts-maintainer-general: maintainer-script-should-not-use-update-alternatives-remove postrm:7
 W: scripts-maintainer-general: maintainer-script-should-not-use-update-alternatives-set postinst:129
 W: scripts-maintainer-general: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:26
-X: scripts-maintainer-general: maintainer-script-may-use-dir_to_symlink_helper postinst:203
-X: scripts-maintainer-general: maintainer-script-should-not-use-service postinst:156
+X: scripts-maintainer-general: maintainer-script-may-use-dir_to_symlink_helper postinst:205
+X: scripts-maintainer-general: maintainer-script-should-not-use-service postinst:158
