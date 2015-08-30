@@ -41,6 +41,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [BR] Support tag renaming. Warn about renamed
       tags.
 
+  * t/runtests:
+    + [BR] Apply patch from Chris Lamb improving documentation.
+      (Closes:  #796822).
   * t/scripts/01-critic/runner.pl:
     + [AB] Fix FTBFS in perlcritic runner with Test::Perl::Critic 1.03
 
