@@ -931,30 +931,49 @@ sub _search_in_block0 {
     return;
 }
 
-# try to detect non human source based on line length
-sub _linelength_test {
-    my ($entry, $info, $name, $basename, $dirname, $block) = @_;
-    my $strip = $block;
-    # from perl faq strip comments
-    $strip
-      =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?(?=\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
-    # strip empty line
-    $strip =~ s/^\s*\n//mg;
-    # remove last \n
-    $strip =~ s/\n\Z//m;
-    # compute now means line length
-    my $total = length($strip);
-    if($total > 0) {
-        my $linelength = $total/($strip =~ tr/\n// + 1);
-        if($linelength > 255) {
+# detect if max line of block is > cutoff
+# return false if file is minified
+sub _linelength_test_maxlength_ok {
+    my ($entry, $info, $name, $basename, $dirname, $block, $cutoff) = @_;
+    while($block =~ /([^\n]+)\n?/g){
+        my $linelength = length($1);
+        if($linelength > $cutoff) {
             tag 'source-contains-prebuilt-javascript-object',
-              $name, 'mean line length is about', int($linelength),
-              'characters';
+              $name, 'line length is', int($linelength),
+              "characters (>$cutoff)";
             # Check for missing source.  It will check
             # for the source file in well known directories
             check_missing_source($entry,$info,$name,$basename,$dirname,
                 [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']]);
+            return 0;
         }
+    }
+    return 1;
+}
+
+# try to detect non human source based on line length
+sub _linelength_test {
+    my ($entry, $info, $name, $basename, $dirname, $block) = @_;
+
+    # first check if line > 1024 that is likely minification
+    if(
+        _linelength_test_maxlength_ok(
+            $entry, $info, $name, $basename, $dirname, $block,1024
+        )
+      ) {
+# now try to be more clever and work only on the 8192 character in order to avoid
+# regexp recursion problems
+        my $strip = substr($block,0,8192);
+        # from perl faq strip comments
+        $strip
+          =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?(?=\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
+        # strip empty line
+        $strip =~ s/^\s*\n//mg;
+        # remove last \n
+        $strip =~ s/\n\Z//m;
+        _linelength_test_maxlength_ok(
+            $entry, $info, $name, $basename, $dirname, $strip,256
+          );
     }
     return;
 }
