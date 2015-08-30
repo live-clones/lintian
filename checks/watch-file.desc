@@ -149,7 +149,7 @@ Info: This watch file does not include a means to verify
  use the pgpsigurlmangle options in this watch file's
  opts= to generate the URL of an upstream GPG signature.
  This signature is automatically downloaded and verified
- against a keyring stored in debian/upstream-signing-key.asc.
+ against a keyring stored in debian/upstream/signing-key.asc.
  .
  Of course, not all upstreams provide such signatures, but
  you could request them as a way of verifying that no third

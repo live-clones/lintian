@@ -27,6 +27,8 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [BR] Fix Unescaped left brace in regex.  (Closes: #788926)
   * checks/version-substvars.pm:
     + [BR] Fix Unescaped left brace in regex is deprecated line 68.
+  * checks/watch.desc:
+    + [BR] Upgrade upstream PGP keys location.  (Closes: #796311)
 
   * data/binaries/embedded-libs:
     + [RG] Add another matching string for libidn
