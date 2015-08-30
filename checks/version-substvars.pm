@@ -68,7 +68,7 @@ sub run {
                 if (
                     m/ ($PKGNAME_REGEX)(?: :any)? \s*           # pkg-name $1
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
-                        \${(?:Source-|source:|binary:)Version} # {subvar}
+                        \$[{](?:Source-|source:|binary:)Version[}] # {subvar}
                      /x
                   ) {
                     my $other = $1;

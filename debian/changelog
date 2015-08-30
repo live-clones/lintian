@@ -2,12 +2,6 @@ lintian (2.5.37) UNRELEASED; urgency=medium
 
    "XXX: generate tag summary"
 
-  * checks/cruft.pm:
-    + [BR] Fix complex regular subexpression recursion limit.
-      Strip comments is only done on first 8192 characters.
-      (Closes: #795955).
-    + [BR] Performance improvement check if line < 1024 before
-      stripping comment. Classify to minified if line > 1024.
   * checks/binaries.pm:
     + [NT] Apply patch from Michael Stapelberg to ignore
       "no-relro" and "no-fortify-functions" issues in
@@ -16,6 +10,12 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [NT] Apply patch from Michael Stapelberg to a
       common false positive spelling mistake in "go"
       binaries.  (Closes: #795614)
+  * checks/cruft.pm:
+    + [BR] Fix complex regular subexpression recursion limit.
+      Strip comments is only done on first 8192 characters.
+      (Closes: #795955).
+    + [BR] Performance improvement check if line < 1024 before
+      stripping comment. Classify to minified if line > 1024.
   * checks/description.pm:
     + [AB] Fix false positives in
       perl-module-name-not-mentioned-in-description (Closes: #795779)
@@ -23,6 +23,8 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [JW] Use "an" (instead of "a") before "HTTP".
     + [NT] Assert that -dbgsym packages are in the "debug" section.
       Thanks to Jean-Michel Vourgère for reporting the issue.
+  * checks/version-substvars.pm:
+    + [BR] Fix Unescaped left brace in regex is deprecated line 68.
 
   * data/binaries/embedded-libs:
     + [RG] Add another matching string for libidn
