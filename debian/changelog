@@ -18,11 +18,13 @@ lintian (2.5.37) UNRELEASED; urgency=medium
       stripping comment. Classify to minified if line > 1024.
   * checks/description.pm:
     + [AB] Fix false positives in
-      perl-module-name-not-mentioned-in-description (Closes: #795779)
+      perl-module-name-not-mentioned-in-description.  (Closes: #795779)
   * checks/fields.{desc,pm}:
     + [JW] Use "an" (instead of "a") before "HTTP".
     + [NT] Assert that -dbgsym packages are in the "debug" section.
       Thanks to Jean-Michel Vourgère for reporting the issue.
+  * checks/scripts.pm:
+    + [BR] Fix Unescaped left brace in regex.  (Closes: #788926)
   * checks/version-substvars.pm:
     + [BR] Fix Unescaped left brace in regex is deprecated line 68.
 
