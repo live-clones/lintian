@@ -303,7 +303,7 @@ sub run {
            $found
         && !$linked
         && !/(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b
-               |\bpublic\s+domain\b/xi
+               |\bpublic(?:\s+|-)domain\b/xi
       ) {
         tag 'copyright-without-copyright-notice';
     }

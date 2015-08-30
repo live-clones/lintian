@@ -10,6 +10,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [NT] Apply patch from Michael Stapelberg to a
       common false positive spelling mistake in "go"
       binaries.  (Closes: #795614)
+  * checks/copyright.pm:
+    + [BR] Fix FP for copyright-without-copyright-notice tag
+      allow public-domain.  (Closes: #786867)
   * checks/cruft.pm:
     + [BR] Fix complex regular subexpression recursion limit.
       Strip comments is only done on first 8192 characters.
