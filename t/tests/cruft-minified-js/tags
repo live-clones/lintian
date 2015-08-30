@@ -3,7 +3,7 @@ E: cruft-minified-js source: source-is-missing usr/share/javascript/jswithoutmin
 E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/test-min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-nc.js/test-yc.js
-P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/debug.js/testdebug.js mean line is about NUMBER characters
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/debug.js/testdebug.js line length is NUMBER characters (>CUTOFF)
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/src.js/test.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compiled.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compressed.js
@@ -16,8 +16,8 @@ P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalse
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test_min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/json/json.min.js
-P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminext/json.js mean line is about NUMBER characters
-P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js mean line is about NUMBER characters
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminext/json.js line length is NUMBER characters (>CUTOFF)
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line length is NUMBER characters (>CUTOFF)
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/minwithoutsource/notsourced.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/sourced/sourced.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/sourced_variant/sourced.min.js

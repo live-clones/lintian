@@ -1,1 +1,2 @@
 s/mean line length is about [0-9]+ characters$/mean line is about NUMBER characters/
+s/line length is [0-9]+ characters \(>[0-9]+\)$/line length is NUMBER characters (>CUTOFF)/
