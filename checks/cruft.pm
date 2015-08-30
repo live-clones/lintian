@@ -964,6 +964,8 @@ sub _linelength_test {
 # now try to be more clever and work only on the 8192 character in order to avoid
 # regexp recursion problems
         my $strip = substr($block,0,8192);
+        # strip indention
+        $strip =~ s/^\s+//g;
         # from perl faq strip comments
         $strip
           =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?(?=\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
@@ -971,9 +973,8 @@ sub _linelength_test {
         $strip =~ s/^\s*\n//mg;
         # remove last \n
         $strip =~ s/\n\Z//m;
-        _linelength_test_maxlength_ok(
-            $entry, $info, $name, $basename, $dirname, $strip,256
-          );
+        _linelength_test_maxlength_ok($entry, $info, $name, $basename,
+            $dirname, $strip,256);
     }
     return;
 }
