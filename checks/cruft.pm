@@ -961,14 +961,19 @@ sub _linelength_test {
             $entry, $info, $name, $basename, $dirname, $block,1024
         )
       ) {
-# now try to be more clever and work only on the 8192 character in order to avoid
-# regexp recursion problems
+        # now try to be more clever and work only on the 8192
+        # character in order to avoid regexp recursion problems
         my $strip = substr($block,0,8192);
         # strip indention
         $strip =~ s/^\s+//g;
-        # from perl faq strip comments
+        # from perl faq strip comments (split into 3 and rewritten a bit)
+        # - Part 1) Strip /* */ comments
+        $strip =~ s# /\* [^*]*+\*++ (?:[^/*][^*]*+\*++)*+ / ##xgs;
+        # - Part 2) Strip // comments (allowing "\\\n" line continuation)
+        $strip =~ s# // (?:[^\\]++|[^\n][\n]?)*? (?=\n)##xgs;
+        # - Part 3) "De-stringify" elements ("foo" => foo)
         $strip
-          =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?(?=\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
+          =~ s#("(\\.|[^"\\]++)*"|'(\\.|[^'\\]++)*'|.[^/"'\\]*+)#defined $1 ? $1 : ""#xgse;
         # strip empty line
         $strip =~ s/^\s*\n//mg;
         # remove last \n
