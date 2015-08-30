@@ -38,6 +38,10 @@ lintian (2.5.37) UNRELEASED; urgency=medium
   * data/fields/archive-sections:
     + [NT] Remove the "debugsym" section as "ddebs" will be put in
       the regular "debug" section.
+  * data/scripts/maintainer-script-bad-command:
+    + [AB] Fix maintainer-script-should-not-use-adduser-system-without-home
+      false positve in cases where --system and --home are ordered
+      differently than initially expected. (Closes: #797395)
 
   * debian/control:
     + [AB] Update Vcs-Browser header to use https and cgit.
