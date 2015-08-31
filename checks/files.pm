@@ -441,8 +441,18 @@ sub run {
             }
         }
 
+        # build directory
+        if (   $fname =~ m,^var/cache/pbuilder/build/,
+            or $fname =~ m,^var/lib/sbuild/,
+            or $fname =~ m,^var/lib/buildd/,
+            or $fname =~ m,^build/,
+            or $fname =~ m,^tmp/buildd/,) {
+            unless ($source_pkg eq 'sbuild') {
+                tag 'dir-or-file-in-build-tree', $file;
+            }
+        }
         # ---------------- /etc
-        if ($fname =~ m,^etc/,) {
+        elsif ($fname =~ m,^etc/,) {
             # /etc/apt
             if ($fname =~ m,^etc/apt/,) {
                 # -----------------/etc/apt/preferences
@@ -952,14 +962,6 @@ sub run {
         elsif ($fname =~ m,^srv/.,) {
             tag 'dir-or-file-in-srv', $file;
         }
-        # build directory
-        elsif ($fname =~ m,^var/cache/pbuilder/build/.,
-            or $fname =~ m,^var/lib/sbuild/.,
-            or $fname =~ m,^var/lib/buildd/.,) {
-            unless ($source_pkg eq 'sbuild') {
-                tag 'dir-or-file-in-build-tree', $file;
-            }
-        }
         # ---------------- FHS directory?
         elsif (
                 $fname =~ m,^[^/]+/$,o
@@ -1014,7 +1016,7 @@ sub run {
                 or $fname =~ m,^usr/iraf/,
                 # not allowed, but tested indivudually
                 or $fname =~ m{\A (?:
-                        home|mnt|opt|root|run|srv
+                        build|home|mnt|opt|root|run|srv
                        |(?:(?:usr|var)/)?tmp)|var/www/}xsm
               ) {
                 tag 'file-in-unusual-dir', $file;
