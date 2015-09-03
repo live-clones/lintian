@@ -2,6 +2,7 @@
 # content, one hostname per line. Subdomains will be matched, too.
 
 code.google.com
+googlecode.com
 gitorious.org
 codehaus.org
 freshmeat.net
