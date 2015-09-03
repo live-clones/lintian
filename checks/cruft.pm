@@ -794,7 +794,12 @@ sub check_missing_source {
             }
             # relative path
             else {
-                $newpath = normalize_pkg_path($dirname.'/'.$newbasename);
+                $newpath
+                  = normalize_pkg_path($dirname.'/'.$path.'/'.$newbasename);
+            }
+            # path outside package
+            if(!defined($newpath)) {
+                next PATH;
             }
             # ok we get same name => next
             if($newpath eq $name) {
