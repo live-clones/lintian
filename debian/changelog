@@ -10,6 +10,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [NT] Apply patch from Michael Stapelberg to a
       common false positive spelling mistake in "go"
       binaries.  (Closes: #795614)
+  * checks/control-file.pm:
+    + [AB] Apply patch by Christoph Biedl for relaxing dependency checks
+      to allow versions with tilde. (Closes: #797951)
   * checks/copyright.pm:
     + [BR] Fix FP for copyright-without-copyright-notice tag
       allow public-domain.  (Closes: #786867)
