@@ -26,6 +26,11 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [JW] Use "an" (instead of "a") before "HTTP".
     + [NT] Assert that -dbgsym packages are in the "debug" section.
       Thanks to Jean-Michel Vourgère for reporting the issue.
+  * checks/obsolete-sites.{desc,pm}:
+    + [AB] New check with tag obsolete-url-in-packaging to check for URLs
+      of hosting sites with frozen contents or (soon to be) closed hosting
+      sites (Google Code, Gitorious, Freshmeat, etc.) inside the
+      packaging.  (Closes: #793503)
   * checks/scripts.pm:
     + [BR] Fix Unescaped left brace in regex.  (Closes: #788926)
   * checks/version-substvars.pm:

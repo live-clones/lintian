@@ -1,0 +1,9 @@
+# Known obsolete websites / hosters who closed down or have frozen
+# content, one hostname per line. Subdomains will be matched, too.
+
+code.google.com
+gitorious.org
+codehaus.org
+freshmeat.net
+freecode.com
+berlios.de

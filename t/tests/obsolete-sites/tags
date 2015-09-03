@@ -1,0 +1,6 @@
+W: obsolete-sites source: obsolete-url-in-packaging debian/control http://code.google.com/p/foo
+W: obsolete-sites source: obsolete-url-in-packaging debian/copyright http://freshmeat.net/p/foo
+W: obsolete-sites source: obsolete-url-in-packaging debian/copyright https://foo.berlios.de/
+W: obsolete-sites source: obsolete-url-in-packaging debian/upstream/metadata git://gitorious.org/foo/foo.git
+W: obsolete-sites source: obsolete-url-in-packaging debian/upstream/metadata http://freecode.com/p/foo
+W: obsolete-sites source: obsolete-url-in-packaging debian/watch http://gitorious.org/foo/foo/file-(.*)\.tar\.gz

@@ -1,0 +1,3 @@
+version=3
+
+http://gitorious.org/foo/foo/file-(.*)\.tar\.gz
