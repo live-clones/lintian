@@ -1,7 +1,7 @@
 E: cruft-minified-js source: source-is-missing deployJava/deployJava.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
-P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/test-min.js
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/src/test-min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-nc.js/test-yc.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/debug.js/testdebug.js line length is NUMBER characters (>CUTOFF)
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/src.js/test.min.js
