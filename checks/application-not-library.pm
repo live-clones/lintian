@@ -48,7 +48,7 @@ sub run {
       bundler
       coderay
       kdelibs-bin
-      libapp-cmd-perl
+      libapp-options-perl
 
       ); # whitelist
 
