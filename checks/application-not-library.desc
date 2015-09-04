@@ -6,7 +6,7 @@ Info: application packaged like a library (imported from pkg-perl-tools)
 
 Tag: libapp-perl-package-name
 Severity: important
-Certainty: certain
+Certainty: possible
 Info: This package contains a program in $PATH and is named
  libapp-*-perl which usually implies that the upstream project on CPAN
  is under the App:: hierachy for applications. Instead of
