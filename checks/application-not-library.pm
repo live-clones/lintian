@@ -42,7 +42,15 @@ sub run {
       $pkg =~ /^gem2deb/                            or # ruby packaging stuff
       $pkg =~ /^xulrunner/                          or # rendering engine
       $pkg =~ /^lib.*-(?:utils|tools|bin|dev)/      or # generic helpers
-      any { $pkg eq $_ } qw(rake bundler coderay kdelibs-bin); # whitelist
+      any { $pkg eq $_ } qw(
+
+      rake
+      bundler
+      coderay
+      kdelibs-bin
+      libapp-cmd-perl
+
+      ); # whitelist
 
     my @programs = ();
     foreach my $binpath (qw(bin sbin usr/bin usr/sbin usr/games)) {

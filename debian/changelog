@@ -4,6 +4,7 @@ lintian (2.5.37) UNRELEASED; urgency=medium
 
   * checks/application-not-library.{desc,pm}:
     + [AB] Downgrade libapp-perl-package-name to certainty possible.
+    + [AB] Add libapp-cmd-perl to whitelist of not emitted packages.
   * checks/binaries.pm:
     + [NT] Apply patch from Michael Stapelberg to ignore
       "no-relro" and "no-fortify-functions" issues in
