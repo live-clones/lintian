@@ -15,6 +15,16 @@ Description: {$description} libapp
  odd things.  It should not be installed like a regular package.  It
  may be an empty package.
 
+Package: libapp-some-app-helper-module-perl
+Architecture: any
+Section: perl
+Depends: $\{misc:Depends\}, $\{shlib:Depends\}
+Description: libapp false positive test
+ This is an App:: test package designed to check if Lintian reports
+ false positives.  It is part of the Lintian test suite and may do
+ very odd things.  It should not be installed like a regular package.
+ It may be an empty package.
+
 Package: libsomething-else-perl
 Architecture: any
 Section: perl

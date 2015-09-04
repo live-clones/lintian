@@ -68,6 +68,8 @@ lintian (2.5.37) UNRELEASED; urgency=medium
       (Closes:  #796822).
   * t/scripts/01-critic/runner.pl:
     + [AB] Fix FTBFS in perlcritic runner with Test::Perl::Critic 1.03
+  * t/tests/application-not-library/debian/debian/control.in:
+    + [AB] Add a false positive test for libapp-perl-package-name.
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Sat, 15 Aug 2015 23:49:50 +0200
 
