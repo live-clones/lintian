@@ -479,13 +479,15 @@ sub run {
         # statically linked?
         if (!scalar(@{ $objdump->{NEEDED} })) {
             if ($fileinfo =~ m/shared object/o) {
-                # Some exceptions: kernel modules, detached debugging
-                # information and the dynamic loader (which itself has
-                # no dependencies).
+                # Some exceptions: kernel modules, syslinux modules, detached
+                # debugging information and the dynamic loader (which itself
+                # has no dependencies).
+                next if ($fname =~ m%^boot/modules/%);
                 next if ($fname =~ m%^lib/modules/%);
                 next if ($fname =~ m%^usr/lib/debug/%);
+                next if ($fname =~ m%\.(?:[ce]32|e64)$%);
                 next
-                  if ($fname =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
+                  if ($fname =~ m%^lib(?:|32|x32|64)/(?:[-\w/]+/)?ld-[\d.]+\.so$%);
                 tag 'shared-lib-without-dependency-information', $file;
             } else {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
