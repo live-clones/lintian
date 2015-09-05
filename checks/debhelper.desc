@@ -118,7 +118,7 @@ Severity: normal
 Certainty: certain
 Ref: dh_clean(1)
 Info: This package calls dh_clean -k in its <tt>debian/rules</tt> file
- instread of dh_prep.
+ instead of dh_prep.
 
 Tag: debhelper-compat-file-is-empty
 Severity: important
