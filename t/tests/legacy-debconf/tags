@@ -35,6 +35,7 @@ W: debconf source: ancient-standards-version 3.7.2 (current is CURRENT)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 56)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 60)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3
+W: debconf source: dh-clean-k-is-deprecated
 W: debconf source: dpatch-build-dep-but-no-patch-list
 W: debconf source: invalid-po-file debian/po/fr.po
 W: debconf source: invalid-po-file debian/po/sample-file.po

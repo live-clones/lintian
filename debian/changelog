@@ -30,6 +30,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
       stripping comment. Classify to minified if line > 1024.
     + [BR] Fix false positive in missing-sources directory
       search path.
+  * checks/debhelper.pm:
+    + [NT] Unconditionally warn about dh_clean -k usage even when the
+      debhelper compat is less than 7.
   * checks/description.pm:
     + [AB] Fix false positives in
       perl-module-name-not-mentioned-in-description.  (Closes: #795779)

@@ -118,9 +118,7 @@ Severity: normal
 Certainty: certain
 Ref: dh_clean(1)
 Info: This package calls dh_clean -k in its <tt>debian/rules</tt> file
- and declares a debhelper compatibility version of at least 7.
- .
- debhelper 7 deprecated dh_clean -k in favour of dh_prep.
+ instread of dh_prep.
 
 Tag: debhelper-compat-file-is-empty
 Severity: important

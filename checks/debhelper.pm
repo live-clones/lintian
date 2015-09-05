@@ -278,7 +278,7 @@ sub run {
         tag 'package-uses-experimental-debhelper-compat-version', $level;
     }
 
-    if ($seendhcleank and $level >= 7) {
+    if ($seendhcleank) {
         tag 'dh-clean-k-is-deprecated';
     }
 

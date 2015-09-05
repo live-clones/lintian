@@ -28,6 +28,7 @@ W: debug source: debhelper-but-no-misc-depends hello-hello-dbg
 W: debug source: debhelper-but-no-misc-depends hi-dbg
 W: debug source: debhelper-compat-file-is-missing
 W: debug source: debian-rules-sets-DH_COMPAT line 5
+W: debug source: dh-clean-k-is-deprecated
 W: debug source: timewarp-standards-version (2006-04-04 < 2006-04-26)
 W: hello-dbg: debug-file-with-no-debug-symbols usr/lib/debug/usr/bin/hello
 W: hello-hello-dbg: latest-debian-changelog-entry-without-new-version
