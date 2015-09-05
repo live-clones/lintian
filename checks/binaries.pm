@@ -487,7 +487,13 @@ sub run {
                 next if ($fname =~ m%^usr/lib/debug/%);
                 next if ($fname =~ m%\.(?:[ce]32|e64)$%);
                 next
-                  if ($fname =~ m%^lib(?:|32|x32|64)/(?:[-\w/]+/)?ld-[\d.]+\.so$%);
+                  if (
+                    $fname =~ m{
+                                  ^lib(?:|32|x32|64)/
+                                   (?:[-\w/]+/)?
+                                   ld-[\d.]+\.so$
+                                }xsm
+                  );
                 tag 'shared-lib-without-dependency-information', $file;
             } else {
                 # Some exceptions: files in /boot, /usr/lib/debug/*,
