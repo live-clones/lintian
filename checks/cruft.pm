@@ -972,8 +972,16 @@ sub _linelength_test {
         # strip indention
         $strip =~ s/^\s+//g;
         # from perl faq strip comments
-        $strip
-          =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?(?=\n)|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $3 ? $3 : ""#gse;
+        $strip =~ s#
+                     /\*[^*]*\*+([^/*][^*]*\*+)*/
+
+                  |  //([^\\]|[^\n][\n]?)*?(?=\n)
+                  |  (
+                         "(\\.|[^"\\])*"
+                       | '(\\.|[^'\\])*'
+                       | .[^/"'\\]*
+                     )
+                   #defined $3 ? $3 : ""#xgse;
         # strip empty line
         $strip =~ s/^\s*\n//mg;
         # remove last \n
