@@ -4,6 +4,7 @@ E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutso
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/src/test-min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-nc.js/test-yc.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/debug.js/testdebug.js line length is NUMBER characters (>CUTOFF)
+P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/nested-dir/dist/fake.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/src.js/test.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compiled.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/suffix/test-compressed.js
