@@ -973,11 +973,16 @@ sub _linelength_test {
         $strip =~ s/^\s+//g;
         # from perl faq strip comments
         $strip =~ s{
+                     # Strip /* */ comments
                      /\* [^*]*+ \*++ (?: [^/*][^*]*+\*++ ) */
+                     # Strip // comments (C++ style)
                   |  // (?: [^\\] | [^\n][\n]? )*? (?=\n)
                   |  (
+                         # Keep "/* */" (etc) as is
                          "(?: \\. | [^"\\]++)*"
+                         # Keep '/**/' (etc) as is
                        | '(?: \\. | [^'\\]++)*'
+                         # Keep anything else
                        | .[^/"'\\]*+
                      )
                    }{defined $1 ? $1 : ""}xgse;
