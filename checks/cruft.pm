@@ -971,23 +971,14 @@ sub _linelength_test {
         my $strip = substr($block,0,8192);
         # strip indention
         $strip =~ s/^\s+//g;
-        # Based on the "strip comments" from the Perl FAQ
-        # (rewritten a bit)
-        $strip =~ s{
-                   # Part 1) Strip /* */ comments
-                     /\* [^*]*+\*++ (?:[^/*][^*]*+\*++)*+ /
-                   # Part 2) Strip // comments (C++-style)
-                   | // (?:[^\\]++|[^\n][\n]?)*? (?=\n)
-                   # Part 3) Retain any non-comment (capture)
-                   | (
-                   # Part 3a) Non-string content
-                          .[^/"'\\]*+
-                   # Part 3b) ""-strings
-                        | "(?:\\.|[^"\\]++)*+"
-                   # Part 3c) ''-blocks
-                        | '(?:\\.|[^'\\]++)*+'
-                   )
-                }{defined $1 ? $1 : ""}xgse;
+        # from perl faq strip comments (split into 3 and rewritten a bit)
+        # - Part 1) Strip /* */ comments
+        $strip =~ s# /\* [^*]*+\*++ (?:[^/*][^*]*+\*++)*+ / ##xgs;
+        # - Part 2) Strip // comments (allowing "\\\n" line continuation)
+        $strip =~ s# // (?:[^\\]++|[^\n][\n]?)*? (?=\n)##xgs;
+        # - Part 3) "De-stringify" elements ("foo" => foo)
+        $strip
+          =~ s#("(\\.|[^"\\]++)*"|'(\\.|[^'\\]++)*'|.[^/"'\\]*+)#defined $1 ? $1 : ""#xgse;
         # strip empty line
         $strip =~ s/^\s*\n//mg;
         # remove last \n
