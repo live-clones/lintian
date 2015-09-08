@@ -148,7 +148,11 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'restrictions'}) {
-        for my $restriction (split ' ', $paragraph->{'restrictions'}) {
+        my $restrictions = $paragraph->{'restrictions'};
+        # Trim leading and trailing whitepace before splitting
+        $restrictions =~ s/^\s+//;
+        $restrictions =~ s/\s+$//;
+        for my $restriction (split /\s*,\s*|\s+/ms, $restrictions) {
             if (not exists $KNOWN_RESTRICTIONS{$restriction}) {
                 tag 'unknown-runtime-tests-restriction', $restriction,
                   'paragraph starting at line', $line;

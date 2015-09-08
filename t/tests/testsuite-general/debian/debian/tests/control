@@ -23,3 +23,7 @@ Depends: @
 
 Features: unknownfeature
 Restrictions: unknownrestriction
+
+Test-Command: /bin/true
+Restrictions: breaks-testbed, rw-build-tree, needs-root
+Depends: @
