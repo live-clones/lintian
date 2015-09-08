@@ -27,6 +27,7 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(
   file_is_encoded_in_non_utf8
   read_dpkg_control
+  strip
 );
 
 # empty because it is test xor test-command
@@ -139,10 +140,7 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'features'}) {
-        my $features = $paragraph->{'features'};
-        # Trim leading and trailing whitepace before splitting
-        $features =~ s/^\s+//;
-        $features =~ s/\s+$//;
+        my $features = strip($paragraph->{'features'});
         for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
             if (not exists $KNOWN_FEATURES{$feature}) {
                 tag 'unknown-runtime-tests-feature', $feature,
@@ -152,11 +150,8 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'restrictions'}) {
-        my $restrictions = $paragraph->{'restrictions'};
-        # Trim leading and trailing whitepace before splitting
-        $restrictions =~ s/^\s+//;
-        $restrictions =~ s/\s+$//;
-        for my $restriction (split /\s*,\s*|\s+/ms, $restrictions) {
+        my $restrictions = strip($paragraph->{'restrictions'});
+        for my $restriction (split(/\s*,\s*|\s+/ms, $restrictions)) {
             if (not exists $KNOWN_RESTRICTIONS{$restriction}) {
                 tag 'unknown-runtime-tests-restriction', $restriction,
                   'paragraph starting at line', $line;
@@ -165,10 +160,7 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'tests'}) {
-        my $tests = $paragraph->{'tests'};
-        # Trim leading and trailing whitepace before splitting
-        $tests =~ s/^\s+//;
-        $tests =~ s/\s+$//;
+        my $tests = strip($paragraph->{'tests'});
         my $directory = 'debian/tests';
         if (exists $paragraph->{'tests-directory'}) {
             $directory = $paragraph->{'tests-directory'};
