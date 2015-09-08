@@ -1068,6 +1068,13 @@ sub run {
                           if ($d_version->[0]
                             && !version_check($d_version->[1]));
 
+                        tag 'package-relation-with-perl-modules',
+                          "$field: $part_d_orig"
+                          # matches "perl-modules" (<= 5.20) as well as
+                          # perl-modules-5.xx (>> 5.20)
+                          if $d_pkg =~ /^perl-modules/
+                          && $proc->pkg_src ne 'perl';
+
                         # only trigger this for the the preferred alternative
                         tag 'versioned-dependency-satisfied-by-perl',
                           "$field: $part_d_orig"
