@@ -27,3 +27,6 @@ Restrictions: unknownrestriction
 Test-Command: /bin/true
 Restrictions: breaks-testbed, rw-build-tree, needs-root
 Depends: @
+
+Tests: test-1, test-2
+Depends: @

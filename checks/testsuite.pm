@@ -139,7 +139,11 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'features'}) {
-        for my $feature (split(' ', $paragraph->{'features'})) {
+        my $features = $paragraph->{'features'};
+        # Trim leading and trailing whitepace before splitting
+        $features =~ s/^\s+//;
+        $features =~ s/\s+$//;
+        for my $feature (split(/\s*,\s*|\s+/ms, $features)) {
             if (not exists $KNOWN_FEATURES{$feature}) {
                 tag 'unknown-runtime-tests-feature', $feature,
                   'paragraph starting at line', $line;
@@ -161,11 +165,15 @@ sub check_control_paragraph {
     }
 
     if (exists $paragraph->{'tests'}) {
+        my $tests = $paragraph->{'tests'};
+        # Trim leading and trailing whitepace before splitting
+        $tests =~ s/^\s+//;
+        $tests =~ s/\s+$//;
         my $directory = 'debian/tests';
         if (exists $paragraph->{'tests-directory'}) {
             $directory = $paragraph->{'tests-directory'};
         }
-        for my $testname (split(' ', $paragraph->{'tests'})) {
+        for my $testname (split(/\s*,\s*|\s+/ms, $tests)) {
             check_test_file($info, $directory, $testname, $line);
         }
     }

@@ -50,8 +50,8 @@ lintian (2.5.37) UNRELEASED; urgency=medium
   * checks/scripts.pm:
     + [BR] Fix Unescaped left brace in regex.  (Closes: #788926)
   * checks/testsuite.pm:
-    + [AB] Split up restrictions by comma as well as space.
-      (Closes: #798359, #792418)
+    + [AB] Split up restrictions, features and tests by comma as well as
+      space. (Closes: #798359, #792418)
   * checks/version-substvars.pm:
     + [BR] Fix Unescaped left brace in regex is deprecated line 68.
   * checks/watch.desc:
