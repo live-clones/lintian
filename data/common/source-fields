@@ -17,6 +17,7 @@ dm-upload-allowed
 files
 format
 homepage
+go-import-path
 maintainer
 origin
 
@@ -27,7 +28,6 @@ origin
 # disappear without notice
 @if-vendor-is-not debian original-maintainer
 
-go-import-path
 package-list
 python-version
 ruby-versions
