@@ -27,6 +27,7 @@ origin
 # disappear without notice
 @if-vendor-is-not debian original-maintainer
 
+go-import-path
 package-list
 python-version
 ruby-versions
