@@ -59,6 +59,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
 
   * data/binaries/embedded-libs:
     + [RG] Add another matching string for libidn
+  * data/common/source-fields:
+    + [AB] Add patch by Tianon Gravi to add go-import-path as known source
+      field. (Closes: #798422)
   * data/fields/archive-sections:
     + [NT] Remove the "debugsym" section as "ddebs" will be put in
       the regular "debug" section.
