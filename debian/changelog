@@ -69,6 +69,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [AB] Fix maintainer-script-should-not-use-adduser-system-without-home
       false positve in cases where --system and --home are ordered
       differently than initially expected. (Closes: #797395)
+  * data/spelling/corrections
+    + [JW] Add correction for "bellow". (This is an actual English word, but
+      in technical texts, it's almost certainly a misspelling of "below".)
 
   * debian/control:
     + [AB] Update Vcs-Browser header to use https and cgit.
