@@ -65,6 +65,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
   * data/fields/archive-sections:
     + [NT] Remove the "debugsym" section as "ddebs" will be put in
       the regular "debug" section.
+  * data/fields/binary-fields:
+    + [NT] Accept the "Build-Ids" field, which debhelper will start to
+      include in debug packages.
   * data/scripts/maintainer-script-bad-command:
     + [AB] Fix maintainer-script-should-not-use-adduser-system-without-home
       false positive in cases where --system and --home are ordered

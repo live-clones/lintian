@@ -24,6 +24,7 @@ homepage
 bugs
 origin
 multi-arch
+build-ids
 built-using
 ruby-versions
 ghc-package
