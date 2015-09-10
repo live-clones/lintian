@@ -13,4 +13,7 @@ override_dh_builddeb:
 	    fi ; \
 	  done ; \
 	done
+	# Work around debhelper adding triggers instead of explicit
+	# ldconfig calls
+	rm -f debian/libfoo1/DEBIAN/triggers
 	dh_builddeb
