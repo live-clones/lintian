@@ -67,12 +67,13 @@ lintian (2.5.37) UNRELEASED; urgency=medium
       the regular "debug" section.
   * data/scripts/maintainer-script-bad-command:
     + [AB] Fix maintainer-script-should-not-use-adduser-system-without-home
-      false positve in cases where --system and --home are ordered
+      false positive in cases where --system and --home are ordered
       differently than initially expected. (Closes: #797395)
   * data/spelling/corrections:
     + [JW] Add correction for "bellow". (This is an actual English word,
       but in technical texts, it's almost certainly a misspelling of
       "below".)
+    + [JW] Add correction for "positve".
 
   * debian/control:
     + [AB] Update Vcs-Browser header to use https and cgit.
@@ -5134,7 +5135,7 @@ lintian (2.5.3) unstable; urgency=low
       email (used for orphaned packages).  (Closes: #640834)
   * lib/Lintian/Collect.pm:
     + [JW,NT] Create the source field from the package field if the
-      former is not present.  This fixes a number of false-positves
+      former is not present.  This fixes a number of false-positives
       introduced in 2.5.2.  (Closes: #640186)
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
