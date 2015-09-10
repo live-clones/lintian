@@ -29,7 +29,7 @@ use List::MoreUtils qw(any none);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(fail strip);
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
@@ -633,6 +633,7 @@ sub run {
     }
 
     my $we_call_postinst=0;
+    my $we_trigger_ldconfig = 0;
     if (my $postinst = $info->control_index_resolved_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
@@ -642,14 +643,32 @@ sub run {
         }
     }
 
+    if (my $triggers = $info->control_index_resolved_path('triggers')) {
+        if ($triggers->is_open_ok) {
+            # Determine if the package had an ldconfig trigger
+            my $fd = $triggers->open;
+            while (my $line = <$fd>) {
+                strip($line);
+                $line =~ tr/ \t/ /s;
+                if ($line eq 'activate-noawait ldconfig') {
+                    $we_trigger_ldconfig=1;
+                    last;
+                }
+            }
+            close($fd);
+        }
+    }
+
     if ($type eq 'udeb') {
         tag 'udeb-postinst-must-not-call-ldconfig'
-          if $we_call_postinst;
+          if $we_call_postinst or $we_trigger_ldconfig;
     } else {
         tag 'postinst-has-useless-call-to-ldconfig'
-          if $we_call_postinst and not $must_call_ldconfig;
+          if ($we_trigger_ldconfig or $we_call_postinst)
+          and not $must_call_ldconfig;
         tag 'postinst-must-call-ldconfig', $must_call_ldconfig
-          if not $we_call_postinst and $must_call_ldconfig;
+          if not($we_call_postinst or $we_trigger_ldconfig)
+          and $must_call_ldconfig;
     }
 
     my $multiarch = $info->field('multi-arch') // 'no';
