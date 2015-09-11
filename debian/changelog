@@ -1,3 +1,9 @@
+lintian (2.5.38) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Niels Thykier <niels@thykier.net>  Fri, 11 Sep 2015 16:51:26 +0200
+
 lintian (2.5.37) unstable; urgency=medium
 
   * Summary of tag changes:
