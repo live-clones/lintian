@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-08-15 07:52+0000\n"
+"POT-Creation-Date: 2015-09-11 14:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5092,13 +5092,11 @@ msgstr ""
 #
 #. Tag: dh-clean-k-is-deprecated
 #. type: Lintian tag description
-#: checks/debhelper.desc:124
+#: checks/debhelper.desc:122
 #, no-wrap
 msgid ""
 "This package calls dh_clean -k in its <tt>debian/rules</tt> file\n"
-"and declares a debhelper compatibility version of at least 7.\n"
-"\n"
-"debhelper 7 deprecated dh_clean -k in favour of dh_prep."
+"instead of dh_prep."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -5106,7 +5104,7 @@ msgstr ""
 #
 #. Tag: debhelper-compat-file-is-empty
 #. type: Lintian tag description
-#: checks/debhelper.desc:132
+#: checks/debhelper.desc:130
 #, no-wrap
 msgid ""
 "The source package has an empty debian/compat file.  This is an error,\n"
@@ -5120,7 +5118,7 @@ msgstr ""
 #
 #. Tag: declares-possibly-conflicting-debhelper-compat-versions
 #. type: Lintian tag description
-#: checks/debhelper.desc:141
+#: checks/debhelper.desc:139
 #, no-wrap
 msgid ""
 "The source package declares the debhelper compatibility version\n"
@@ -5134,7 +5132,7 @@ msgstr ""
 #
 #. Tag: package-uses-deprecated-debhelper-compat-version
 #. type: Lintian tag description
-#: checks/debhelper.desc:154
+#: checks/debhelper.desc:152
 #, no-wrap
 msgid ""
 "The debhelper compatibility version used by this package is marked\n"
@@ -5152,7 +5150,7 @@ msgstr ""
 #
 #. Tag: package-uses-old-debhelper-compat-version
 #. type: Lintian tag description
-#: checks/debhelper.desc:167
+#: checks/debhelper.desc:165
 #, no-wrap
 msgid ""
 "The debhelper compatibility version used by this package is marked\n"
@@ -5170,7 +5168,7 @@ msgstr ""
 #
 #. Tag: package-uses-experimental-debhelper-compat-version
 #. type: Lintian tag description
-#: checks/debhelper.desc:180
+#: checks/debhelper.desc:178
 #, no-wrap
 msgid ""
 "The debhelper compatibility version used by this package is marked\n"
@@ -5188,7 +5186,7 @@ msgstr ""
 #
 #. Tag: debhelper-but-no-misc-depends
 #. type: Lintian tag description
-#: checks/debhelper.desc:191
+#: checks/debhelper.desc:189
 #, no-wrap
 msgid ""
 "The source package uses debhelper, but it does not include\n"
@@ -5204,7 +5202,7 @@ msgstr ""
 #
 #. Tag: missing-build-dependency-for-dh_-command
 #. type: Lintian tag description
-#: checks/debhelper.desc:198
+#: checks/debhelper.desc:196
 #, no-wrap
 msgid ""
 "The source package appears to be using a dh_ command but doesn't build\n"
@@ -5217,7 +5215,7 @@ msgstr ""
 #
 #. Tag: missing-build-dependency-for-dh-addon
 #. type: Lintian tag description
-#: checks/debhelper.desc:205
+#: checks/debhelper.desc:203
 #, no-wrap
 msgid ""
 "The source package appears to be using a dh addon but doesn't build\n"
@@ -5230,7 +5228,7 @@ msgstr ""
 #
 #. Tag: brace-expansion-in-debhelper-config-file
 #. type: Lintian tag description
-#: checks/debhelper.desc:214
+#: checks/debhelper.desc:212
 #, no-wrap
 msgid ""
 "This debhelper config file appears to use shell brace expansion\n"
@@ -5244,7 +5242,7 @@ msgstr ""
 #
 #. Tag: weak-dependency-on-misc-depends
 #. type: Lintian tag description
-#: checks/debhelper.desc:223
+#: checks/debhelper.desc:221
 #, no-wrap
 msgid ""
 "The source package declares a weak dependency on ${misc:Depends} in\n"
@@ -5260,7 +5258,7 @@ msgstr ""
 #
 #. Tag: debhelper-compat-not-a-number
 #. type: Lintian tag description
-#: checks/debhelper.desc:230
+#: checks/debhelper.desc:228
 #, no-wrap
 msgid ""
 "The debhelper compatibility level specified in\n"
@@ -5272,7 +5270,7 @@ msgstr ""
 #
 #. Tag: debhelper-compatibility-level-not-a-number
 #. type: Lintian tag description
-#: checks/debhelper.desc:239
+#: checks/debhelper.desc:237
 #, no-wrap
 msgid ""
 "The debhelper compatibility level specified in <tt>debian/rules</tt>\n"
@@ -5287,7 +5285,7 @@ msgstr ""
 #
 #. Tag: temporary-debhelper-file
 #. type: Lintian tag description
-#: checks/debhelper.desc:248
+#: checks/debhelper.desc:246
 #, no-wrap
 msgid ""
 "The package contains temporary debhelper files, which are normally\n"
@@ -5301,7 +5299,7 @@ msgstr ""
 #
 #. Tag: unused-build-dependency-on-cdbs
 #. type: Lintian tag description
-#: checks/debhelper.desc:254
+#: checks/debhelper.desc:252
 #, no-wrap
 msgid ""
 "The package build-depends on cdbs, but does not include any cdbs\n"
@@ -5313,7 +5311,7 @@ msgstr ""
 #
 #. Tag: python-depends-but-no-python-helper
 #. type: Lintian tag description
-#: checks/debhelper.desc:265
+#: checks/debhelper.desc:263
 #, no-wrap
 msgid ""
 "The source package declares a dependency on ${python:Depends} in the\n"
@@ -5333,7 +5331,7 @@ msgstr ""
 #
 #. Tag: python3-depends-but-no-python3-helper
 #. type: Lintian tag description
-#: checks/debhelper.desc:272
+#: checks/debhelper.desc:270
 #, no-wrap
 msgid ""
 "The source package declares a dependency on ${python3:Depends} in the\n"
@@ -5347,7 +5345,7 @@ msgstr ""
 #
 #. Tag: package-file-is-executable
 #. type: Lintian tag description
-#: checks/debhelper.desc:282
+#: checks/debhelper.desc:280
 #, no-wrap
 msgid ""
 "The packaging file is marked executable.  For control, changelog and\n"
@@ -5363,7 +5361,7 @@ msgstr ""
 #
 #. Tag: executable-debhelper-file-without-being-executable
 #. type: Lintian tag description
-#: checks/debhelper.desc:291
+#: checks/debhelper.desc:289
 #, no-wrap
 msgid ""
 "The packaging file is marked executable, but it does not appear to be\n"
@@ -5378,7 +5376,7 @@ msgstr ""
 #
 #. Tag: dh-exec-private-helper
 #. type: Lintian tag description
-#: checks/debhelper.desc:300
+#: checks/debhelper.desc:298
 #, no-wrap
 msgid ""
 "The packaging file uses dh-exec, but it does not use /usr/bin/dh-exec.\n"
@@ -5393,7 +5391,7 @@ msgstr ""
 #
 #. Tag: package-uses-dh-exec-but-lacks-build-depends
 #. type: Lintian tag description
-#: checks/debhelper.desc:306
+#: checks/debhelper.desc:304
 #, no-wrap
 msgid ""
 "If a package uses dh-exec, it must declare a Build-Depends\n"
@@ -5405,7 +5403,7 @@ msgstr ""
 #
 #. Tag: dh-exec-script-without-dh-exec-features
 #. type: Lintian tag description
-#: checks/debhelper.desc:315
+#: checks/debhelper.desc:313
 #, no-wrap
 msgid ""
 "The package uses dh-exec in at least one of its files, but does\n"
@@ -5420,7 +5418,7 @@ msgstr ""
 #
 #. Tag: dh-exec-install-not-allowed-here
 #. type: Lintian tag description
-#: checks/debhelper.desc:324
+#: checks/debhelper.desc:322
 #, no-wrap
 msgid ""
 "The package uses a dh-exec-install construct in a debhelper\n"
@@ -5435,7 +5433,7 @@ msgstr ""
 #
 #. Tag: dh-exec-subst-unknown-variable
 #. type: Lintian tag description
-#: checks/debhelper.desc:335
+#: checks/debhelper.desc:333
 #, no-wrap
 msgid ""
 "The package uses a variable in one of its debhelper config\n"
@@ -5452,7 +5450,7 @@ msgstr ""
 #
 #. Tag: debhelper-compat-file-is-missing
 #. type: Lintian tag description
-#: checks/debhelper.desc:346
+#: checks/debhelper.desc:344
 #, no-wrap
 msgid ""
 "The package uses debhelper but does not ship a compat file.\n"
@@ -5467,7 +5465,7 @@ msgstr ""
 #
 #. Tag: dh-manual-sequence-control-obsolete
 #. type: Lintian tag description
-#: checks/debhelper.desc:371
+#: checks/debhelper.desc:369
 #, no-wrap
 msgid ""
 "The package uses one (or more) of the obsolete dh parameters\n"
@@ -7790,7 +7788,7 @@ msgid ""
 "admins (see reference).\n"
 "\n"
 "Note that this check is based on a list of known URIs.  Lintian did not\n"
-"send a HTTP request to the URI to test this.  Should the canonical URI\n"
+"send an HTTP request to the URI to test this.  Should the canonical URI\n"
 "have changed, please file a bug against Lintian so the check can be\n"
 "updated accordingly."
 msgstr ""
@@ -7807,7 +7805,7 @@ msgid ""
 "update it to use the current canonical URI instead.\n"
 "\n"
 "Note that this check is based on a list of known URIs or/and\n"
-"patterns.  Lintian did not send a HTTP request to the URI to test\n"
+"patterns.  Lintian did not send an HTTP request to the URI to test\n"
 "this.  Should the URI actually work, please file a bug against\n"
 "Lintian so the check can be updated accordingly."
 msgstr ""
@@ -8061,12 +8059,13 @@ msgstr ""
 #
 #. Tag: package-relation-with-perl-modules
 #. type: Lintian tag description
-#: checks/fields.desc:1273
+#: checks/fields.desc:1274
 #, no-wrap
 msgid ""
-"No package should depend on 'perl-modules'. Instead, a suitable\n"
-"dependency on 'perl' should be used. The existence of the perl-modules\n"
-"package is an implementation detail of the perl packaging.\n"
+"No package should (build-) depend on 'perl-modules'. Instead, a\n"
+"suitable dependency on 'perl' should be used. The existence of the\n"
+"perl-modules package is an implementation detail of the perl\n"
+"packaging.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -11669,9 +11668,24 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: renamed-tag
+#. type: Lintian tag description
+#: checks/lintian.desc:29
+#, no-wrap
+msgid ""
+"The package has an override for a tag that was renamed.\n"
+"Lintian tag are sometime renamed in order to improve their name.\n"
+"\n"
+"Override file is dynamically translated by lintian. Nevertheless\n"
+"please replace the old name by the new name."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: malformed-override
 #. type: Lintian tag description
-#: checks/lintian.desc:33
+#: checks/lintian.desc:43
 #, no-wrap
 msgid ""
 "Lintian discovered an override entry with an invalid format.  An\n"
@@ -15842,7 +15856,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "The preinst script calls ldconfig.  Calls to ldconfig should only be\n"
-"in postinst and postrm scripts."
+"in postinst and postrm scripts (or via a noawait trigger)."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -15854,7 +15868,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "The prerm script calls ldconfig.  Calls to ldconfig should only\n"
-"be in postinst and postrm scripts."
+"be in postinst and postrm scripts (or via a noawait trigger)."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16004,11 +16018,15 @@ msgstr ""
 #
 #. Tag: udeb-postinst-must-not-call-ldconfig
 #. type: Lintian tag description
-#: checks/shared-libs.desc:219
+#: checks/shared-libs.desc:223
 #, no-wrap
 msgid ""
-"The postinst script calls ldconfig, which is an error in udebs.\n"
-"ldconfig is not available and not needed in debian-installer"
+"The udeb invokes ldconfig on install, which is an error in udebs.\n"
+"\n"
+"ldconfig is not available and not needed in debian-installer.\n"
+"\n"
+"Note that this tag may (despite what the name suggests) be issued if\n"
+"the udeb uses a dpkg trigger to invoke ldconfig."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16016,14 +16034,17 @@ msgstr ""
 #
 #. Tag: postrm-has-useless-call-to-ldconfig
 #. type: Lintian tag description
-#: checks/shared-libs.desc:229
+#: checks/shared-libs.desc:236
 #, no-wrap
 msgid ""
 "The postrm script calls ldconfig even though no shared libraries are\n"
 "installed in a directory controlled by the dynamic library loader.\n"
 "\n"
 "Note this may be triggered by a bug in debhelper, that causes it to\n"
-"auto-generate an ldconfig snippet for packages that does not need it."
+"auto-generate an ldconfig snippet for packages that does not need it.\n"
+"\n"
+"This tag may (despite what the name suggests) be issued if the package\n"
+"uses a dpkg trigger."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16031,13 +16052,17 @@ msgstr ""
 #
 #. Tag: postinst-must-call-ldconfig
 #. type: Lintian tag description
-#: checks/shared-libs.desc:237
+#: checks/shared-libs.desc:248
 #, no-wrap
 msgid ""
 "The package installs shared libraries in a directory controlled by\n"
 "the dynamic library loader. Therefore, the package must call \"ldconfig\" "
 "in\n"
-"its postinst script."
+"during installation.\n"
+"\n"
+"This should either be done via a <tt>activate-noawait ldconfig</tt>\n"
+"trigger or by calling \"ldconfig\" directly in the postinst script on\n"
+"the \"configure\" step."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16045,13 +16070,17 @@ msgstr ""
 #
 #. Tag: postrm-should-call-ldconfig
 #. type: Lintian tag description
-#: checks/shared-libs.desc:245
+#: checks/shared-libs.desc:260
 #, no-wrap
 msgid ""
 "The package installs shared libraries in a directory controlled by\n"
-"the dynamic library loader. Therefore, the package should call "
-"\"ldconfig\"\n"
-"in its postrm script."
+"the dynamic library loader. Therefore, the package must call \"ldconfig\" "
+"in\n"
+"during removal.\n"
+"\n"
+"This should either be done via a <tt>activate-noawait ldconfig</tt>\n"
+"trigger or by calling \"ldconfig\" directly in the postrm script on\n"
+"the \"remove\" step."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -16059,7 +16088,7 @@ msgstr ""
 #
 #. Tag: sharedobject-in-library-directory-missing-soname
 #. type: Lintian tag description
-#: checks/shared-libs.desc:259
+#: checks/shared-libs.desc:274
 #, no-wrap
 msgid ""
 "A shared object was identified in a library directory (a directory\n"
@@ -16079,7 +16108,7 @@ msgstr ""
 #
 #. Tag: shlib-without-PT_GNU_STACK-section
 #. type: Lintian tag description
-#: checks/shared-libs.desc:271
+#: checks/shared-libs.desc:286
 #, no-wrap
 msgid ""
 "The listed shared libraries lacks a PT_GNU_STACK section. This forces\n"
@@ -16097,7 +16126,7 @@ msgstr ""
 #
 #. Tag: shlib-with-executable-stack
 #. type: Lintian tag description
-#: checks/shared-libs.desc:286
+#: checks/shared-libs.desc:301
 #, no-wrap
 msgid ""
 "The listed shared libraries declares the stack as executable.\n"
@@ -16118,7 +16147,7 @@ msgstr ""
 #
 #. Tag: symbols-file-contains-current-version-with-debian-revision
 #. type: Lintian tag description
-#: checks/shared-libs.desc:302
+#: checks/shared-libs.desc:317
 #, no-wrap
 msgid ""
 "Debian revisions should be stripped from versions in symbols files.\n"
@@ -16140,7 +16169,7 @@ msgstr ""
 #
 #. Tag: symbols-file-contains-debian-revision
 #. type: Lintian tag description
-#: checks/shared-libs.desc:313
+#: checks/shared-libs.desc:328
 #, no-wrap
 msgid ""
 "Debian revisions should be stripped from versions in symbols files.\n"
@@ -16156,7 +16185,7 @@ msgstr ""
 #
 #. Tag: syntax-error-in-symbols-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:322
+#: checks/shared-libs.desc:337
 #, no-wrap
 msgid ""
 "The symbols file contains an entry that does not follow the syntax\n"
@@ -16170,7 +16199,7 @@ msgstr ""
 #
 #. Tag: duplicate-entry-in-symbols-control-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:327
+#: checks/shared-libs.desc:342
 #, no-wrap
 msgid "The symbols control file contains a duplicate entry."
 msgstr ""
@@ -16180,7 +16209,7 @@ msgstr ""
 #
 #. Tag: no-symbols-control-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:338
+#: checks/shared-libs.desc:353
 #, no-wrap
 msgid ""
 "Although the package includes a shared library, the package does not\n"
@@ -16196,7 +16225,7 @@ msgstr ""
 #
 #. Tag: pkg-has-symbols-control-file-but-no-shared-libs
 #. type: Lintian tag description
-#: checks/shared-libs.desc:350
+#: checks/shared-libs.desc:365
 #, no-wrap
 msgid ""
 "Although the package does not include any shared libraries, it does\n"
@@ -16215,7 +16244,7 @@ msgstr ""
 #
 #. Tag: shlib-missing-in-symbols-control-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:357
+#: checks/shared-libs.desc:372
 #, no-wrap
 msgid ""
 "The package contains a shared library that is not listed in the\n"
@@ -16228,7 +16257,7 @@ msgstr ""
 #
 #. Tag: unused-shlib-entry-in-symbols-control-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:363
+#: checks/shared-libs.desc:378
 #, no-wrap
 msgid ""
 "The symbols control file contains an entry for a shared library that\n"
@@ -16240,7 +16269,7 @@ msgstr ""
 #
 #. Tag: symbols-declares-dependency-on-other-package
 #. type: Lintian tag description
-#: checks/shared-libs.desc:379
+#: checks/shared-libs.desc:394
 #, no-wrap
 msgid ""
 "This package declares in its symbols control file a dependency on\n"
@@ -16261,7 +16290,7 @@ msgstr ""
 #
 #. Tag: invalid-template-id-in-symbols-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:389
+#: checks/shared-libs.desc:404
 #, no-wrap
 msgid ""
 "The symbol definition refers to an alternative dependency template\n"
@@ -16277,7 +16306,7 @@ msgstr ""
 #
 #. Tag: unknown-meta-field-in-symbols-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:397
+#: checks/shared-libs.desc:412
 #, no-wrap
 msgid ""
 "The symbols control file contains an unknown meta-information field.\n"
@@ -16290,7 +16319,7 @@ msgstr ""
 #
 #. Tag: symbols-declared-but-not-shlib
 #. type: Lintian tag description
-#: checks/shared-libs.desc:403
+#: checks/shared-libs.desc:418
 #, no-wrap
 msgid ""
 "The symbols control file contains dependency and symbol information\n"
@@ -16302,7 +16331,7 @@ msgstr ""
 #
 #. Tag: shlib-calls-exit
 #. type: Lintian tag description
-#: checks/shared-libs.desc:417
+#: checks/shared-libs.desc:432
 #, no-wrap
 msgid ""
 "The listed shared library calls the C library exit() or _exit()\n"
@@ -16321,7 +16350,7 @@ msgstr ""
 #
 #. Tag: incorrect-libdir-in-la-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:426
+#: checks/shared-libs.desc:441
 #, no-wrap
 msgid ""
 "The given .la file points to a libdir other than the path where it is\n"
@@ -16338,7 +16367,7 @@ msgstr ""
 #
 #. Tag: non-empty-dependency_libs-in-la-file
 #. type: Lintian tag description
-#: checks/shared-libs.desc:442
+#: checks/shared-libs.desc:457
 #, no-wrap
 msgid ""
 "The dependency_libs field in the .la file has not been cleared.  It has\n"
@@ -16357,7 +16386,7 @@ msgstr ""
 #
 #. Tag: shlib-in-multi-arch-foreign-package
 #. type: Lintian tag description
-#: checks/shared-libs.desc:449
+#: checks/shared-libs.desc:464
 #, no-wrap
 msgid ""
 "The package is marked as Multi-Arch: foreign, but it includes a shared\n"
@@ -16369,7 +16398,7 @@ msgstr ""
 #
 #. Tag: shlibs-uses-obsolete-relation
 #. type: Lintian tag description
-#: checks/shared-libs.desc:457
+#: checks/shared-libs.desc:472
 #, no-wrap
 msgid ""
 "The forms \"&lt;\" and \"&gt;\" mean \"&lt;=\" and \"&gt;=\", not "
@@ -17611,7 +17640,7 @@ msgid ""
 "use the pgpsigurlmangle options in this watch file's\n"
 "opts= to generate the URL of an upstream GPG signature.\n"
 "This signature is automatically downloaded and verified\n"
-"against a keyring stored in debian/upstream-signing-key.asc.\n"
+"against a keyring stored in debian/upstream/signing-key.asc.\n"
 "\n"
 "Of course, not all upstreams provide such signatures, but\n"
 "you could request them as a way of verifying that no third\n"
