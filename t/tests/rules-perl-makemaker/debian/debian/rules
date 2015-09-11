@@ -6,6 +6,9 @@ PERL ?= /usr/bin/perl
 
 PACKAGE = $(shell dh_listpackages)
 TMP     = $(CURDIR)/debian/$(PACKAGE)
+EMPTY   =
+FOO     = DEST
+INDIRECT_DEST_VAR = $(FOO)DIR=$(TMP)
 
 configure: configure-stamp
 configure-stamp:
@@ -43,7 +46,7 @@ install: build
 	dh_prep
 	dh_installdirs
 
-	$(MAKE) install PREFIX=$(TMP)/usr
+	$(MAKE) install PREFIX=$(EMPTY)/usr $(INDIRECT_DEST_VAR)
 
 	# Remove any empty directories
 	find $(TMP)/usr -type d -empty -print0 | xargs --no-run-if-empty --null rmdir -p --ignore-fail-on-non-empty

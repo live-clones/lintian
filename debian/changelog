@@ -95,6 +95,9 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [AB] Fix FTBFS in perlcritic runner with Test::Perl::Critic 1.03
   * t/tests/application-not-library/debian/debian/control.in:
     + [AB] Add a false positive test for libapp-perl-package-name.
+  * t/tests/rules-perl-makemaker/debian/debian/rules:
+    + [NT] Pass DESTDIR to MakeMaker to avoid FTBFS with Perl 5.22.
+      Thanks to Dominic Hargreaves for the report.  (Closes: #797600)
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Sat, 15 Aug 2015 23:49:50 +0200
 
