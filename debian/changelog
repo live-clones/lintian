@@ -1,6 +1,9 @@
-lintian (2.5.37) UNRELEASED; urgency=medium
+lintian (2.5.37) unstable; urgency=medium
 
-   "XXX: generate tag summary"
+  * Summary of tag changes:
+    + Added:
+      - obsolete-url-in-packaging
+      - renamed-tag
 
   * checks/application-not-library.{desc,pm}:
     + [AB] Downgrade libapp-perl-package-name to certainty possible.
@@ -99,7 +102,7 @@ lintian (2.5.37) UNRELEASED; urgency=medium
     + [NT] Pass DESTDIR to MakeMaker to avoid FTBFS with Perl 5.22.
       Thanks to Dominic Hargreaves for the report.  (Closes: #797600)
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Sat, 15 Aug 2015 23:49:50 +0200
+ -- Niels Thykier <niels@thykier.net>  Fri, 11 Sep 2015 16:37:10 +0200
 
 lintian (2.5.36.1) unstable; urgency=medium
 
