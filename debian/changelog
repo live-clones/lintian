@@ -2,6 +2,9 @@ lintian (2.5.38) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/obsolete-sites.pm:
+    + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
+
   * data/obsolete-sites/obsolete-sites:
     + [AB] Add patch by Hideki Yamane to add sourceforge.jp.
     + [AB] Sort file alphabetically.
