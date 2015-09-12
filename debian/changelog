@@ -2183,6 +2183,8 @@ lintian (2.5.19) unstable; urgency=low
 
 lintian (2.5.18.1) unstable; urgency=low
 
+  * checks/application-not-library.desc:
+    + [JW] Fix typo.
   * checks/files.pm:
     + [NT] Only open .pc files if they are regular files.
       This fixes a possible DoS introduced in 2.5.17.
