@@ -62,7 +62,6 @@ sub search_for_obsolete_sites {
         my $dcontents = $dfile->file_contents;
 
         foreach my $site ($OBSOLETE_SITES->all()) {
-            #warn "$file vs $site";
             if ($dcontents
                 =~ m((\w+://(?:[\w.]*\.)?\Q$site\E[/:][^\s\"<>\$]*))i) {
                 tag 'obsolete-url-in-packaging', $file, $1;
