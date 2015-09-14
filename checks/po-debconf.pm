@@ -45,7 +45,7 @@ sub run {
         $potfiles_in_path = $debian_po_dir->resolve_path('POTFILES.in');
     }
 
-    # First, check wether this package seems to use debconf but not
+    # First, check whether this package seems to use debconf but not
     # po-debconf.  Read the templates file and look at the template
     # names it provides, since some shared templates aren't
     # translated.
