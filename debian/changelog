@@ -14,6 +14,9 @@ lintian (2.5.38) UNRELEASED; urgency=medium
     + [AB] Apply patch by Chris Lamb to update link to Debian systemd
       packaging reference. (Closes: #799082)
 
+  * data/binaries/embedded-libs:
+    + [RG] Use a different string to detect the copies of freetype
+      (Closes: #756722)
   * data/obsolete-sites/obsolete-sites:
     + [AB] Add patch by Hideki Yamane to add sourceforge.jp (Closes:
       #798736)
