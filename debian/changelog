@@ -7,6 +7,9 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       and /tmp/buildd in dir-or-file-in-build-tree.  (Closes: #797532)
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
+  * checks/systemd.desc:
+    + [AB] Apply patch by Chris Lamb to update link to Debian systemd
+      packaging reference. (Closes: #799082)
 
   * data/obsolete-sites/obsolete-sites:
     + [AB] Add patch by Hideki Yamane to add sourceforge.jp (Closes:
