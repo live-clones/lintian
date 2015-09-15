@@ -76,7 +76,7 @@ Info: The <tt>/etc/init.d</tt> script does not source
 Tag: maintainer-script-calls-systemctl
 Severity: normal
 Certainty: certain
-Ref: https://wiki.debian.org/Systemd/Packaging
+Ref: https://wiki.debian.org/Teams/pkg-systemd/Packaging
 Info: The maintainer script calls systemctl directly. Actions such as enabling
  a unit file should be done using <tt>deb-systemd-helper</tt> so that they work
  on machines with or without systemd. Starting a service should be done via
