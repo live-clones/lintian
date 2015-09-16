@@ -102,10 +102,6 @@ Severity: wishlist
 Certainty: certain
 Experimental: yes
 Info: Tag for tallying static libraries ".comment" sections.
- .
- Note that debhelper does not correctly strip these at the moment.
- If you use debhelper to strip the library, please ignore this tag
- at the moment.
 
 Tag: unstripped-static-library
 Severity: wishlist
