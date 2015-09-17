@@ -17,6 +17,7 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * data/binaries/embedded-libs:
     + [RG] Use a different string to detect the copies of freetype
       (Closes: #756722)
+    + [RG] Allow ffmpeg to provide libav*.
   * data/obsolete-sites/obsolete-sites:
     + [AB] Add patch by Hideki Yamane to add sourceforge.jp (Closes:
       #798736)

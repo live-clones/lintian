@@ -51,11 +51,11 @@ ieee-data ||(?i)(?:standards(?:-oui\.ieee\.org|\.ieee\.org/develop/regauth/oui)/
 
 lcms      ||cmsCreateTransform: intent mismatch
 lcms2     ||Unsupported number of channels for VCGT
-libavcodec  ||source=libav||insufficient thread locking around avcodec_open/close\(\)\n
-libavdevice ||source=libav||Soundcard does not support 16 bit sample format\n
-libavfilter ||source=libav||Buffer video frames, and make them accessible to the filterchain\.
-libavformat ||source=libav||Format detected only with low score of %d, misdetection possible!\n
-libavutil   ||source=libav||AVOption type %d of option %s not implemented yet\n
+libavcodec  ||source-regex=(?:libav|ffmpeg)||insufficient thread locking around avcodec_open/close\(\)\n
+libavdevice ||source-regex=(?:libav|ffmpeg)||Soundcard does not support 16 bit sample format\n
+libavfilter ||source-regex=(?:libav|ffmpeg)||Buffer video frames, and make them accessible to the filterchain\.
+libavformat ||source-regex=(?:libav|ffmpeg)||Format detected only with low score of %d, misdetection possible!\n
+libavutil   ||source-regex=(?:libav|ffmpeg)||AVOption type %d of option %s not implemented yet\n
 libgd     ||source-regex=libgd2? ||gd-(?:png|jpeg:) error:
 libgadu     ||Gadu-Gadu Client Build
 libidn      ||(?m)^(?:Punycode failed|ISCSIprep$)
@@ -76,7 +76,7 @@ libraw    ||Unsupported file format or not RAW file
 libpostproc ||source-regex=lib(?:av|postproc)||using npp filters 0x%X/0x%X\n
 libssh2     ||Invalid descriptor passed to libssh2_poll
 libssh      ||Error allocating memory for ssh_scp
-libswscale  ||source=libav||Exactly one scaler algorithm must be chosen\n
+libswscale  ||source-regex=(?:libav|ffmpeg)||Exactly one scaler algorithm must be chosen[,\n]
 
 # Trailing whitespace was present when the file was created (see commit: 77fd246)
 libtheora ||Xiph.Org libtheora\s
