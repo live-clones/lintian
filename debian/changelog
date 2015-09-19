@@ -5,9 +5,12 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * checks/binaries.desc:
     + [NT] Update description of a tag now that debhelper properly
       strips static libraries.
-  * checks/files.pm:
+  * checks/files.{desc,pm}:
     + [AB] Apply patch by Mattia Rizzolo to also check for files in /build
       and /tmp/buildd in dir-or-file-in-build-tree.  (Closes: #797532)
+    + [NT] Rewrit the description for dir-or-file-in-build-tree.  Thanks
+      to Chris Lamb and Jakub Wilk for pointing out issues with the
+      original description.  (Closes: #797466)
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
   * checks/scripts.desc:
