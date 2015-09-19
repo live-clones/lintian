@@ -73,6 +73,7 @@ lintian (2.5.37) unstable; urgency=medium
     + [JW] Use "an" (instead of "a") before "HTTP".
     + [NT] Assert that -dbgsym packages are in the "debug" section.
       Thanks to Jean-Michel Vourgère for reporting the issue.
+      (Closes: #796896)
     + [AB] Also emit package-relation-with-perl-module for build-*
       relations. Thanks gregor herrmann! (Closes: #798385)
   * checks/obsolete-sites.{desc,pm}:
