@@ -13,6 +13,9 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       original description.  (Closes: #797466)
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
+  * checks/rules.desc:
+    + [NT] Improve the wording of one of the tags based on feedback
+      from Chris Lamb and Jakub Wilk.  (Closes: #796815)
   * checks/scripts.desc:
     + [NT] Apply patch from Chris Lamp to fix a grammatical issue in a
       tag description.  (Closes: #797555)
