@@ -615,7 +615,7 @@ Severity: serious
 Certainty: certain
 Info:  The maintainer script apparently runs 'adduser --system'
  but hardcodes a path under '/home' for the '--home' option or
- do not use the '--home' option.
+ does not use the '--home' option.
  .
  The FHS says: /home is a fairly standard concept, but it
  is clearly a site-specific filesystem. The setup will differ

@@ -10,6 +10,9 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       and /tmp/buildd in dir-or-file-in-build-tree.  (Closes: #797532)
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
+  * checks/scripts.desc:
+    + [NT] Apply patch from Chris Lamp to fix a grammatical issue in a
+      tag description.  (Closes: #797555)
   * checks/systemd.desc:
     + [AB] Apply patch by Chris Lamb to update link to Debian systemd
       packaging reference. (Closes: #799082)
