@@ -1,3 +1,6 @@
+# This file is generated from private/refresh-debhelper-data.
+# It was generated on 2015-09-19 15:08
+
 apache2-dev
 autotools-dev
 bash-completion
@@ -14,6 +17,7 @@ dh-buildinfo
 dh-consoledata
 dh-di
 dh-dist-zilla
+dh-elpa
 dh-golang
 dh-kpatches
 dh-linktree

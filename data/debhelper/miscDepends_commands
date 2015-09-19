@@ -1,6 +1,10 @@
+# This file is generated from private/refresh-debhelper-data.
+# It was generated on 2015-09-19 15:08
+
 dh_apache2
 dh_cme_upgrade
 dh_dkms
+dh_elpa
 dh_gconf
 dh_gtkmodules
 dh_installcatalogs

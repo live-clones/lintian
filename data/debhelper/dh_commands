@@ -1,3 +1,10 @@
+# This file is generated from private/refresh-debhelper-data.
+# It was generated on 2015-09-19 15:08
+#
+# If the script generates an sufficient/incorrect value for a
+# single item, please have a look at dh_commands-manual.
+#
+
 dh_acc=dh-acc
 dh_ada_library=dh-ada-library
 dh_apache2=apache2-dev
@@ -33,12 +40,14 @@ dh_desktop=debhelper
 dh_di_kernel_gencontrol=dh-di
 dh_di_kernel_install=dh-di
 dh_di_numbers=dh-di
+dh_dist_zilla_origtar=dh-dist-zilla
 dh_dkms=dkms
 dh_doxygen=doxygen
 dh_dpatch_patch=dpatch
 dh_dpatch_unpatch=dpatch
 dh_dzil_build=dh-dist-zilla
 dh_dzil_clean=dh-dist-zilla
+dh_elpa=dh-elpa
 dh_fixperms=debhelper
 dh_gconf=debhelper
 dh_gencontrol=debhelper

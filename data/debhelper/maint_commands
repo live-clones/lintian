@@ -1,3 +1,6 @@
+# This file is generated from private/refresh-debhelper-data.
+# It was generated on 2015-09-19 15:08
+
 dh_apache2
 dh_apparmor
 dh_cligacpolicy
@@ -5,6 +8,7 @@ dh_cme_upgrade
 dh_configpackage
 dh_consoledata
 dh_dkms
+dh_elpa
 dh_icons
 dh_installcatalogs
 dh_installcliframework
@@ -34,3 +38,4 @@ dh_systemd_enable
 dh_systemd_start
 dh_ucf
 dh_usrlocal
+dh_virtualenv

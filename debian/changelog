@@ -23,6 +23,9 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       #798736)
     + [AB] Sort file alphabetically.
 
+  * private/refresh-debhelper-data:
+    + [NT] Add a "This file is generated" header to all output files.
+
  -- Niels Thykier <niels@thykier.net>  Fri, 11 Sep 2015 16:51:26 +0200
 
 lintian (2.5.37) unstable; urgency=medium

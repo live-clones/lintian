@@ -48,6 +48,7 @@ readonly contents="$(readlink -f "$2")"
 readonly dh_regex='^(usr/bin/dh_|usr/share/perl5/Debian/Debhelper/Sequence/).'
 readonly dh_command_perl_regex='^usr/bin/(dh_[^\s]+)\s+[\w-]+/([^,]+).*'
 readonly dh_addon_perl_regex='^usr/share/perl5/Debian/Debhelper/Sequence/([^\s]+)\.pm\s+[\w-]+/([^,]+).*'
+current_date=$(date -u  '+%Y-%m-%d %H:%M')
 offline=0
 
 [ -d "$lintian_data" ] || {
@@ -67,6 +68,27 @@ readonly workdir="$(mktemp -d)"
 cleanup () {
         [ ! -d "$workdir" ] || rm -rf "$workdir"
 }; trap cleanup EXIT
+
+create_data_file() {
+    local file="$1" basename
+    cat > "$file" <<EOF
+# This file is generated from private/refresh-debhelper-data.
+# It was generated on ${current_date}
+EOF
+    if [ -f "${file}-manual" ] ; then
+        basename=$(basename "$file")
+        cat >> "$file" <<EOF
+#
+# If the script generates an sufficient/incorrect value for a
+# single item, please have a look at ${basename}-manual.
+#
+EOF
+    fi
+
+    echo >> "$file"
+    LC_ALL=C sort -u >> "$file"
+}
+
 
 if [ $offline -eq 1 ]; then
     known_commands="$lintian_data/debhelper/dh_commands"
@@ -105,19 +127,18 @@ else
     zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
     cat dh_entries \
         | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
-        | LC_ALL=C sort > dh_commands
+        > dh_commands
     cat dh_entries \
         | perl -n -w -E 's#'"$dh_addon_perl_regex"'#$1=$2# and print' \
-        | LC_ALL=C sort > dh_addons
+        > dh_addons
     cat dh_commands \
-        | cut -d '=' -f 2 \
-        | LC_ALL=C sort -u > dh_packages
+        | cut -d '=' -f 2 | sort -u > dh_packages
 
     for f in commands addons packages; do
         rf="$lintian_data/debhelper/dh_$f"
         [ ! -f "$rf" ] ||
             mv "$rf" "${rf}.old"
-        cp -a "dh_$f" "$rf"
+        create_data_file "$rf" < "dh_$f"
     done
 
     wget dists/sid/main/binary-i386/Packages.gz
@@ -127,23 +148,23 @@ else
         wget "$fn"
         file="$(basename "$fn")"
         dpkg-deb -x "$file" "$(mktemp -d -p .)"
-        rm -rf "$file"
+        rm -f "$file"
         find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
             | xargs rm >/dev/null 2>&1 || true
         find */ -type l -print | xargs rm >/dev/null 2>&1 || true
     done
 
     grep -lr autoscript */ \
-        | sed 's,.*/usr/bin/,,g' | sort -u > maint_commands
+        | sed 's,.*/usr/bin/,,g' > maint_commands
     grep -lr misc:Depends */ \
-        | sed 's,.*/usr/bin/,,g' | sort -u | grep -v dh_gencontrol \
+        | sed 's,.*/usr/bin/,,g' | grep -v dh_gencontrol \
         > miscDepends_commands
 
     for f in maint miscDepends; do
         rf="$lintian_data/debhelper/${f}_commands"
         [ ! -f "$rf" ] ||
             mv "$rf" "${rf}.old"
-        cp -a "${f}_commands" "$rf"
+        create_data_file "$rf" < "${f}_commands"
     done
 fi
 
