@@ -18,6 +18,11 @@ W: menu-none: menu-icon-uses-relative-path non-existent.xpm
 W: menu-none: menu-icon-uses-relative-path non-existent16.xpm
 W: menu-none: menu-icon-uses-relative-path non-existent32.xpm
 W: menu-none: menu-item-uses-icon-none usr/share/menu/menu-none:4
+W: menu-section: command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:12
+W: menu-section: command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:15
+W: menu-section: command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:3
+W: menu-section: command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:6
+W: menu-section: command-in-menu-file-and-desktop-file pargs-section usr/share/menu/menu-section:9
 W: menu-section: menu-item-creates-new-section Games usr/share/menu/menu-section:9
 W: menu-section: menu-item-creates-new-section WindowManagers/Programming usr/share/menu/menu-section:15
 W: menu-section: menu-item-uses-apps-games-section usr/share/menu/menu-section:6

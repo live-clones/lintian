@@ -13,6 +13,10 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       original description.  (Closes: #797466)
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
+  * checks/menu-format.{desc,pm}:
+    + [NT] Check for menu files used to provide a command also listed in
+      a desktop file.  This tag is based on the verdict in
+      [CTTE #741573].
   * checks/rules.desc:
     + [NT] Improve the wording of one of the tags based on feedback
       from Chris Lamb and Jakub Wilk.  (Closes: #796815)

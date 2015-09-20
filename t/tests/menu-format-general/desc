@@ -4,6 +4,7 @@ Version: 1.0
 Description: Test menu file tags
 Test-For:
  bad-test-in-menu-item
+ command-in-menu-file-and-desktop-file
  duplicated-tag-in-menu-item
  menu-command-not-in-package
  menu-icon-cannot-be-parsed

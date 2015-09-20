@@ -154,7 +154,7 @@ my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
-    my @menufiles;
+    my (@menufiles, %desktop_cmds);
     for my $dirname (qw(usr/share/menu/ usr/lib/menu/)) {
         if (my $dir = $info->index_resolved_path($dirname)) {
             push(@menufiles, $dir->children);
@@ -181,7 +181,7 @@ sub run {
 
     # Verify all the desktop files.
     for my $desktop_file (@desktop_files) {
-        verify_desktop_file($desktop_file, $pkg, $info);
+        verify_desktop_file($desktop_file, $pkg, $info, \%desktop_cmds);
     }
 
     # Now all the menu files.
@@ -233,15 +233,17 @@ sub run {
             # This is caught by verify_line().
             if (!($menufile_line =~ m/\\\s*?$/)) {
                 verify_line(
-                    $pkg, $info, $proc, $group, $type,
-                    $menufile, $fullname, $line, $lc
+                    $pkg, $info, $proc, $group,
+                    $type,$menufile, $fullname, $line,
+                    $lc,\%desktop_cmds
                 );
                 $line='';
             }
         } while ($menufile_line = <$fd>);
         verify_line(
-            $pkg, $info, $proc, $group, $type,
-            $menufile, $fullname, $line, $lc
+            $pkg, $info, $proc, $group,
+            $type,$menufile, $fullname, $line,
+            $lc,\%desktop_cmds
         );
 
         close($fd);
@@ -257,7 +259,7 @@ sub run {
 sub verify_line {
     my (
         $pkg, $info, $proc, $group, $type,
-        $menufile, $fullname, $line, $linecount
+        $menufile, $fullname, $line, $linecount,$desktop_cmds
     ) = @_;
 
     my %vals;
@@ -400,6 +402,14 @@ sub verify_line {
         or ($tested_packages >= 2)
         or
         ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
+
+    if (defined($command)) {
+        $command =~ s@^(?:usr/)?s?bin/@@;
+        if ($desktop_cmds->{$command}) {
+            tag 'command-in-menu-file-and-desktop-file', $command,
+              "${fullname}:${linecount}";
+        }
+    }
 
     if (exists($vals{'icon'})) {
         verify_icon($info, $proc, $group, $menufile, $fullname, $linecount,
@@ -551,7 +561,7 @@ sub verify_icon {
 
 # Syntax-checks a .desktop file.
 sub verify_desktop_file {
-    my ($file, $pkg, $info) = @_;
+    my ($file, $pkg, $info, $desktop_cmds) = @_;
     my ($saw_first, $warned_cr, %vals, @pending);
     my $fd = $file->open;
     while (my $line = <$fd>) {
@@ -649,6 +659,9 @@ sub verify_desktop_file {
         tag 'desktop-command-not-in-package', $file, $command
           unless $okay
           or $command eq 'kcmshell';
+        $command =~ s@^(?:usr/)?s?bin/@@;
+        $desktop_cmds->{$command} = 1
+          if $command !~ m/^(?:su-to-root|sux?|(?:gk|kde)su)$/;
     }
 
     # Check the Category tag.

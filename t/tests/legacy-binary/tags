@@ -79,6 +79,14 @@ W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-news-debian-mismatch distribution unstable != UNRELEASED
 W: binary: changelog-news-debian-mismatch urgency low != high
+W: binary: command-in-menu-file-and-desktop-file hello usr/lib/menu/binary:21
+W: binary: command-in-menu-file-and-desktop-file hello usr/lib/menu/binary:22
+W: binary: command-in-menu-file-and-desktop-file hello usr/lib/menu/binary:24
+W: binary: command-in-menu-file-and-desktop-file hello usr/lib/menu/binary:5
+W: binary: command-in-menu-file-and-desktop-file hello usr/share/menu/binary:21
+W: binary: command-in-menu-file-and-desktop-file hello usr/share/menu/binary:22
+W: binary: command-in-menu-file-and-desktop-file hello usr/share/menu/binary:24
+W: binary: command-in-menu-file-and-desktop-file hello usr/share/menu/binary:5
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package usr/share/applications/goodbye.desktop goodbye
