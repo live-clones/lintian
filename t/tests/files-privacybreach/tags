@@ -16,6 +16,9 @@ E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-br
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseimagemagick.xml
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyadds.html (http://pagead2.googlesyndication.com/pagead/show_ads.js)
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/adsenseonlyvar.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/page2.js
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/page2ins.html
+E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/pagead2.html (http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js)
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchin.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinconstructor.js
 E: files-privacybreach: privacy-breach-google-adsense usr/share/files-privacy-breach/privacy-breach-google-adsense/urchinfragment.xml (http://www.google-analytics.com/urchin.js)

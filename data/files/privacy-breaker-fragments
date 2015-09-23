@@ -11,6 +11,8 @@ google_ad_client           ~~ google_ad_client\s*=                              
 google-analytics.com/ga.js ~~ [\"\']\.?google-analytics.com/ga.js[\"\']                                                                                    ~~ privacy-breach-google-adsense
 urchintracker              ~~ urchintracker\s*\(\s*\)\s*;                                                                                                  ~~ privacy-breach-google-adsense
 adsense                    ~~ </?\s*adsense\s*>                                                                                                            ~~ privacy-breach-google-adsense
+data-ad-client             ~~ \s+data-ad-client\s*                                                                                                         ~~ privacy-breach-google-adsense
+adsbygoogle                ~~ =\s*window\.adsbygoogle                                                                                                      ~~ privacy-breach-google-adsense 
 googlesearchdomain         ~~ googlesearchdomain\s*=                                                                                                       ~~ privacy-breach-google-cse
 cse-branding               ~~ <div\s+class="cse-branding-(?:logo|form)"\s*>                                                                                ~~ privacy-breach-google-cse
 customsearchcontrol        ~~ google\.search\.customsearchcontrol\s*\(\s*'                                                                                 ~~ privacy-breach-google-cse

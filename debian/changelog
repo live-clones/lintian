@@ -11,6 +11,7 @@ lintian (2.5.38) UNRELEASED; urgency=medium
     + [NT] Rewrit the description for dir-or-file-in-build-tree.  Thanks
       to Chris Lamb and Jakub Wilk for pointing out issues with the
       original description.  (Closes: #797466)
+    + [BR] Detects pagead2.
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
   * checks/menu-format.{desc,pm}:
