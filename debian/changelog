@@ -39,6 +39,8 @@ lintian (2.5.38) UNRELEASED; urgency=medium
     + [AB] Add patch by Hideki Yamane to add sourceforge.jp (Closes:
       #798736)
     + [AB] Sort file alphabetically.
+  * data/spelling/corrections:
+    + [JW] Add correction for "exectuable".
 
   * private/refresh-debhelper-data:
     + [NT] Add a "This file is generated" header to all output files.
@@ -14326,7 +14328,7 @@ lintian (1.22.12) unstable; urgency=low
       arch-dependent packages. Currently just I:. Thanks Steve McIntyre for
       the idea. (Closes: #232849)
   * checks/menus{,.desc}:
-    + [FL] Remove non-exectuable-in-etc-menu-methods as it doesn't
+    + [FL] Remove non-executable-in-etc-menu-methods as it doesn't
       reflects the current menu manual (Closes: #229460)
   * checks/po-debconf:
     + [JvW] Check whether files listed in debian/po/POTFILES.in actually
