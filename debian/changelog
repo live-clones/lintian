@@ -40,7 +40,7 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       #798736)
     + [AB] Sort file alphabetically.
   * data/spelling/corrections:
-    + [JW] Add correction for "exectuable".
+    + [JW] Add more corrections.
 
   * private/refresh-debhelper-data:
     + [NT] Add a "This file is generated" header to all output files.
@@ -780,7 +780,7 @@ lintian (2.5.31) unstable; urgency=medium
   * checks/source-copyright.{desc,pm}:
     + [BR] Fix a false positive for
       missing-license-paragraph-in-dep5-copyright tag.
-      Emit a new spefic tag for references to the header paragraph
+      Emit a new specific tag for references to the header paragraph
       as a license paragraph.  (Closes: #766118).
     + [BR] Detect if license short name are unique.
     + [BR] Avoid false positive license-problem-undefined-license
