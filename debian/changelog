@@ -12,6 +12,8 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       to Chris Lamb and Jakub Wilk for pointing out issues with the
       original description.  (Closes: #797466)
     + [BR] Detect pagead2.
+    + [BR] Fix false positive privacy-breach-* for alternate link tag
+      with type application/rdf+xml.  (Closes: #799914).
   * checks/obsolete-sites.pm:
     + [AB] Stop at <>, $, or " when emitting URLs as tag parameter.
   * checks/menu-format.{desc,pm}:

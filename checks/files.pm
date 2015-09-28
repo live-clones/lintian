@@ -1933,7 +1933,8 @@ sub _check_tag_url_privacy_breach {
     }
     # reparse fulltag for rel
     if ($tagattr eq 'link') {
-        $fulltag =~ m,<link
+        my $rel = $fulltag;
+        $rel =~ m,<link
                       (?:\s[^>]+)? \s+
                       rel="([^"\r\n]*)"
                       [^>]*
@@ -1949,6 +1950,19 @@ sub _check_tag_url_privacy_breach {
             } elsif ($relcontent eq 'generator-home') {
                 # generator-home is used by texinfo
                 return;
+                # reparse for alternate (css alternate is loaded)
+            } elsif ($relcontent eq 'alternate') {
+                my $type = $fulltag;
+                $type =~ m,<link
+                      (?:\s[^>]+)? \s+
+                      type="([^"\r\n]*)"
+                      [^>]*
+                      >,xismog;
+                my $typecontent = $1;
+                if($typecontent eq 'application/rdf+xml') {
+                    # see #79991
+                    return;
+                }
             }
         }
     }
