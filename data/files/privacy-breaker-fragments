@@ -8,7 +8,7 @@
 #
 # Please keep this sorted by tag.
 google_ad_client           ~~ google_ad_client\s*=                                                                                                         ~~ privacy-breach-google-adsense
-google-analytics.com/ga.js ~~ [\"\']\.?google-analytics.com/ga.js[\"\']                                                                                    ~~ privacy-breach-google-adsense
+google-analytics.com/ga.js ~~ [\"\']([^/.]\.)?google-analytics.com/(?:ga|analytics).js[\"\']                                                               ~~ privacy-breach-google-adsense
 urchintracker              ~~ urchintracker\s*\(\s*\)\s*;                                                                                                  ~~ privacy-breach-google-adsense
 adsense                    ~~ </?\s*adsense\s*>                                                                                                            ~~ privacy-breach-google-adsense
 data-ad-client             ~~ \s+data-ad-client\s*                                                                                                         ~~ privacy-breach-google-adsense
