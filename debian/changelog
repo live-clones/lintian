@@ -49,7 +49,7 @@ lintian (2.5.38) UNRELEASED; urgency=medium
 
   * lib/Lintian/Collect.pm:
     + [JW] Fix typo.
-  * lib/Lintian/Lab.pm
+  * lib/Lintian/Lab.pm:
     + [JW] Fix typo.
 
   * man/lintian.pod.in:
