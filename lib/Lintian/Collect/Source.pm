@@ -624,7 +624,7 @@ only have one tarball and their debian packaging is included in that
 tarball.
 
 IMPLEMENTATION DETAIL/CAVEAT: Lintian currently (2.5.11) generates
-this by running "find(1)" after unpacking the the source package.
+this by running "find(1)" after unpacking the source package.
 This has three consequences.
 
 First it means that (original) owner/group data is lost; Lintian

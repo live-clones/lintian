@@ -44,6 +44,17 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
+  * doc/lintian.xml:
+    + [JW] Fix typo.
+
+  * lib/Lintian/Collect.pm:
+    + [JW] Fix typo.
+  * lib/Lintian/Lab.pm
+    + [JW] Fix typo.
+
+  * man/lintian.pod.in:
+    + [JW] Fix typo.
+
   * private/refresh-debhelper-data:
     + [NT] Add a "This file is generated" header to all output files.
 
@@ -8108,7 +8119,7 @@ lintian (2.2.13) unstable; urgency=low
       contains a tilde or consists of a single character.  Thanks, Raphael
       Geissert and Ryan Niebur.
     + [RA] Avoid a false positive in the bashism check for trap with
-      signal numbers when the the trap command contains a number.  Thanks,
+      signal numbers when the trap command contains a number.  Thanks,
       Julien Cristau.  (Closes: #534580)
     + [RA] Check for any maintainer script running install-info, since
       this is now handled with triggers.
@@ -14205,7 +14216,7 @@ lintian (1.23.0) unstable; urgency=low
     + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
 
   * collection/diffstat
-    + [HE] The diff.gz file name does not include the the epoch, so strip it
+    + [HE] The diff.gz file name does not include the epoch, so strip it
       before trying to get the file.
   * collection/override-file:
     + [FL] add support for source overrides (Closes: #129510)

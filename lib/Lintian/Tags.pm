@@ -111,7 +111,7 @@ created object.
 #     Policy, or devref, or so forth.
 #
 # files:
-#     Info about a specific file.  Key is the the filename, value another
+#     Info about a specific file.  Key is the filename, value another
 #     hash with the following keys:
 #      - pkg: package name
 #      - version: package version

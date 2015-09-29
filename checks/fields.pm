@@ -821,7 +821,7 @@ sub run {
                       if ("$d_pkg-doc" eq $pkg
                         && $field =~ /^(?:pre-)?depends$/);
 
-                    # only trigger this for the the preferred alternative
+                    # only trigger this for the preferred alternative
                     tag 'versioned-dependency-satisfied-by-perl',
                       "$field: $part_d_orig"
                       if $alternatives[0][-1] eq $part_d_orig
@@ -1075,7 +1075,7 @@ sub run {
                           if $d_pkg =~ /^perl-modules/
                           && $proc->pkg_src ne 'perl';
 
-                        # only trigger this for the the preferred alternative
+                        # only trigger this for the preferred alternative
                         tag 'versioned-dependency-satisfied-by-perl',
                           "$field: $part_d_orig"
                           if $alternatives[0][-1] eq $part_d_orig

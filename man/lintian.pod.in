@@ -123,7 +123,7 @@ L</COLLECTION> section below.
 
 =item B<-X> chk1,chk2,..., B<--dont-check-part> chk1,chk2,...
 
-Run all but the the specified checks.  You can either specify the name
+Run all but the specified checks.  You can either specify the name
 of the check script or the abbreviation.  For details, see the
 L</CHECKS> section below.
 

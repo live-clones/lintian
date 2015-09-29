@@ -1088,7 +1088,7 @@ Overridable: no
                 </para>
                 <para>
                   More formally, let <replaceable>CP</replaceable> be the name of the vendor
-                  profile that defines the the data file containing the instruction.  Let
+                  profile that defines the data file containing the instruction.  Let
                   the parent of <replaceable>CP</replaceable> be referred to as
                   <replaceable>PCP</replaceable>.
                 </para>
