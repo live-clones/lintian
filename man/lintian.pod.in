@@ -529,7 +529,7 @@ automatically configuring itself without any assistance making this
 option largely obsolete.  Note if passed, then the chosen root dir
 must match the actual LINTIAN_ROOT used by Lintian.
 
-This option implies B<--no-user-dirs> for backwards compatbility with
+This option implies B<--no-user-dirs> for backwards compatibility with
 previous versions of Lintian.
 
 =item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
