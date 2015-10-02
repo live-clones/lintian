@@ -292,7 +292,9 @@ sub run {
                 # just do without it as often (but not always) works.
                 $stem = "usr/lib/gcc/$gcc_ver" unless defined $madir;
 
-                push @alt, map { "$stem/$_$basename" } ('', qw(64/ 32/ n32/ x32/ sf/ hf/));
+                push @alt,
+                  map { "$stem/$_$basename" }
+                  ('', qw(64/ 32/ n32/ x32/ sf/ hf/));
             }
 
           PKG:
