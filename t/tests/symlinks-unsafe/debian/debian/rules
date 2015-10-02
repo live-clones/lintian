@@ -2,7 +2,7 @@
 
 PKG:=$(shell dh_listpackages)
 LINK_DIR:=debian/$(PKG)/usr/share/lintian/bad-links
-LINK_TARGET:=non-existant/path/lintian-should-not-open
+LINK_TARGET:=non-existent/path/lintian-should-not-open
 
 %:
 	dh $@

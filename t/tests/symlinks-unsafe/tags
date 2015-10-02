@@ -1,3 +1,3 @@
 E: symlinks-unsafe: package-contains-unsafe-symlink usr/share/lintian/bad-links/absolute
 E: symlinks-unsafe: package-contains-unsafe-symlink usr/share/lintian/bad-links/relative-escape
-E: symlinks-unsafe: symlink-has-too-many-up-segments usr/share/lintian/bad-links/relative-escape ../../../../../non-existant/path/lintian-should-not-open
+E: symlinks-unsafe: symlink-has-too-many-up-segments usr/share/lintian/bad-links/relative-escape ../../../../../non-existent/path/lintian-should-not-open

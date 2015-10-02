@@ -199,10 +199,10 @@ sub run {
         # not know the multi-arch path for a known architecture) , we assume
         # it the multi-arch path to be this (hopefully!) non-existent path to
         # avoid warnings about uninitialized variables.
-        $madir = './!non-existant-path!/./';
+        $madir = './!non-existent-path!/./';
     }
 
-    $madir = './!non-existant-path!/./' unless defined $madir;
+    $madir = './!non-existent-path!/./' unless defined $madir;
 
     $gnu_triplet_re = quotemeta $madir;
     $gnu_triplet_re =~ s,^i386,i[3-6]86,;

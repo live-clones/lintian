@@ -12890,7 +12890,7 @@ lintian (1.23.23) unstable; urgency=low
   * collection/changelog-file:
     + [RA] Be much more careful about changelog files that are symlinks.
       Don't skip over changelog symlinks just because they point to
-      non-existant files, mark unsafe symlinks or symlinks to non-existent
+      non-existent files, mark unsafe symlinks or symlinks to non-existent
       files by creating copyright as a symlink to a non-existent file in
       the lab, and don't create an empty dummy changelog if we couldn't
       find a changelog.  Correctly handle changelog files that are
