@@ -34,6 +34,8 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * checks/systemd.desc:
     + [AB] Apply patch by Chris Lamb to update link to Debian systemd
       packaging reference. (Closes: #799082)
+  * checks/watch-file.desc:
+    + [JW] Fix typo.
 
   * data/binaries/embedded-libs:
     + [RG] Use a different string to detect the copies of freetype

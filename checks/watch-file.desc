@@ -69,7 +69,7 @@ Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt>, but a misleading upstream version mangling occurs in
  the <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not
  part of the upstream version and its addition is Debian-specific, the
- the <tt>debian/watch</tt> file should use the dversionmangle option to
+ <tt>debian/watch</tt> file should use the dversionmangle option to
  remove, instead of adding in uversionmangle, the <tt>dfsg</tt> before
  comparing version numbers.
 
