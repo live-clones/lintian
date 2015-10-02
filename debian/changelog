@@ -31,6 +31,10 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [NT] Apply patch from Chris Lamb to fix a grammatical issue in a
       tag description.  (Closes: #797555)
+  * checks/shared-libs.pm:
+    + [JW] Fix false positive dev-pkg-without-shlib-symlink for GCC runtime
+      libraries.  Thanks to Matthias Klose for the bug report.
+      (Closes: #790739)
   * checks/systemd.desc:
     + [AB] Apply patch by Chris Lamb to update link to Debian systemd
       packaging reference. (Closes: #799082)

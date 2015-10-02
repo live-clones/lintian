@@ -268,7 +268,7 @@ sub run {
 
             push @alt, $link_file;
 
-            if ($proc->pkg_src =~ m/^gcc-(\d+.\d+)$/o) {
+            if ($proc->pkg_src =~ m/^gcc-(\d+(?:.\d+)?)$/o) {
                 # gcc has a lot of bi-arch libs and puts the dev symlink
                 # in slightly different directories (to be co-installable
                 # with itself I guess).  Allegedly, clang (etc.) have to
@@ -277,11 +277,12 @@ sub run {
                 my $gcc_ver = $1;
                 my $basename = basename($link_file);
                 my $madir = $MA_DIRS->value($proc->pkg_arch);
+                $madir =~ s/^i386/i586/;
                 my $stem;
                 # Generally we are looking for
                 #  * usr/lib/gcc/MA-TRIPLET/$gcc_ver/${BIARCH}$basename
                 #
-                # Where BIARCH is one of {,32/,n32/,x32/,sf/,hf/}.  Note
+                # Where BIARCH is one of {,64/,32/,n32/,x32/,sf/,hf/}.  Note
                 # the "empty string" as a possible option.
                 #
                 # The two-three letter name directory before the
@@ -291,7 +292,7 @@ sub run {
                 # just do without it as often (but not always) works.
                 $stem = "usr/lib/gcc/$gcc_ver" unless defined $madir;
 
-                push @alt, map { "$stem/$_"  } ('', qw(32 n32 x32 sf hf));
+                push @alt, map { "$stem/$_$basename" } ('', qw(64/ 32/ n32/ x32/ sf/ hf/));
             }
 
           PKG:
