@@ -296,7 +296,7 @@ sub run {
 
         if ($multiarch eq 'same') {
             unless ($fname
-                =~ m,\b$gnu_triplet_re\b|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,
+                =~ m,\b$gnu_triplet_re(?:\b|_)|/(?:$ruby_triplet_re|java-\d+-openjdk-\Q$arch\E|\.build-id)/,
               ) {
                 tag 'arch-dependent-file-not-in-arch-specific-directory',$file;
             }

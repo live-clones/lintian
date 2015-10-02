@@ -5,6 +5,11 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * checks/binaries.desc:
     + [NT] Update description of a tag now that debhelper properly
       strips static libraries.
+    + [JW] Relax the regular expression used to used to recognize
+      architecture-specific paths to avoid false positive
+      arch-dependent-file-not-in-arch-specific-directory in Python debug
+      packages.  Thanks to Matthias Klose for the bug report.
+      (Closes: #795275)
   * checks/files.{desc,pm}:
     + [AB] Apply patch by Mattia Rizzolo to also check for files in /build
       and /tmp/buildd in dir-or-file-in-build-tree.  (Closes: #797532)
