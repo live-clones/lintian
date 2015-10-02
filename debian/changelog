@@ -10076,8 +10076,8 @@ lintian (2.1.0) unstable; urgency=low
     + [CW] Add jaunty as an allowable distribution for Ubuntu, and remove
       the EOLed edgy and feisty.
     + [ADB] Don't complain about unused overrides if the check script
-      for the overriden tag hasn't been run (or --tags was used and
-      the overriden tag not specified).  (Closes: #501722)
+      for the overridden tag hasn't been run (or --tags was used and
+      the overridden tag not specified).  (Closes: #501722)
   
   * lib/Lintian/Output:
     + [FL] New module to bundle output methods.
@@ -12908,7 +12908,7 @@ lintian (1.23.23) unstable; urgency=low
       the description.  (Closes: #376109)
 
   * lib/Tags.pm:
-    + [RA] If a tag has been overriden via any mechanism, do not add it to
+    + [RA] If a tag has been overridden via any mechanism, do not add it to
       any of the statistics (tag, severity, or significance).  Before, the
       override only suppressed a record for the specific statistic the
       override was based on, meaning that classic tag-based overrides
@@ -13482,10 +13482,10 @@ lintian (1.23.13) unstable; urgency=low
       Noted by Matthias Klose (Closes: #326643)
     + [FL] Only match 'local' at the beginning of a line. The check is too
       ambiguous otherwise. Reported by Marc Haber (Closes: #330548)
-    + [FL] Better reflect the current discussions wether some of the
+    + [FL] Better reflect the current discussions whether some of the
       XSI:sms should be allowed in shell scripts by moving some of
       them to a separate check possible-non-posix-code-in-maintainer-script.
-      Not doing that for kill -NAME as reuqested since -s NAME is available
+      Not doing that for kill -NAME as requested since -s NAME is available
       and should be perfectly portable. (Closes: #323053)
   * checks/shared-libs:
     + [HE] Apply patch from Bastian Blank to check for executable stacks in
@@ -15373,7 +15373,7 @@ lintian (1.11.13) unstable; urgency=low
 lintian (1.11.12) unstable; urgency=low
 
   * new command line option: --show-overrides, displays tags even if
-    they have been overriden, marked 'O: .....'
+    they have been overridden, marked 'O: .....'
   * shared-libs.desc text changed to give more info when a shared library is
     present, but the SONAME is not set or set improperly, Closes: #78277
   * removed references to libtool-workarounds.txt (it never died ....),
