@@ -10,6 +10,7 @@
   * http://www.example.com/but-a-really-long-url-does-not-count-as-a-long-line-at-all
     See http://www.example.com/but-a-really-long-url-does-not-count-as-a-long-line-at-all
     even if preceded by See.
+  * Mispell Closes (Close: #666666)
 
   * Here is another really long in the changelog, and it would be really nice if a
     certain program would report its line number correctly.  Especially since,

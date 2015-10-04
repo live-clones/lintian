@@ -10,6 +10,8 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       arch-dependent-file-not-in-arch-specific-directory in Python debug
       packages.  Thanks to Matthias Klose for the bug report.
       (Closes: #795275)
+  * checks/changelog-files.{desc,pm}:
+    + [BR] Detect mispelled Closes in changelog file (Closes: #798799)
   * checks/files.{desc,pm}:
     + [AB] Apply patch by Mattia Rizzolo to also check for files in /build
       and /tmp/buildd in dir-or-file-in-build-tree.  (Closes: #797532)
