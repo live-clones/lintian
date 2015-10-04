@@ -26,8 +26,8 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       a desktop file.  This tag is based on the verdict in
       [CTTE #741573].
   * checks/rules.desc:
-    + [NT] Improve the wording of one of the tags based on feedback
-      from Chris Lamb and Jakub Wilk.  (Closes: #796815)
+    + [NT,JW] Improve the wording of one of the tags based on feedback
+      from Chris Lamb.  (Closes: #796815)
   * checks/scripts.desc:
     + [NT] Apply patch from Chris Lamb to fix a grammatical issue in a
       tag description.  (Closes: #797555)

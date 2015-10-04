@@ -218,7 +218,7 @@ Info: The rules file appears to be reading or modifying a variable not
  intended for use by package maintainers.
  .
  The special variables <tt>DEB_*FLAGS_{SET,APPEND}</tt> can be used by
- users, who wants to re-compile debian packages with special (or
+ users who want to re-compile debian packages with special (or
  non-standard) build flags.
  .
  Please use the <tt>DEB_*FLAGS_MAINT_{SET,APPEND}</tt> flags instead.
