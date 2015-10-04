@@ -384,7 +384,7 @@ sub run {
         }
 
         if($changes =~ /Close:\s+(\#\d+)/xi) {
-            tag 'mispell-closes-bug',$1;
+            tag 'misspelled-closes-bug',$1;
         }
 
         my $changesempty = $changes;
