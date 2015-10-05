@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-09-11 14:32+0000\n"
+"POT-Creation-Date: 2015-10-05 20:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -425,14 +425,9 @@ msgstr ""
 #
 #. Tag: static-library-has-unneeded-section
 #. type: Lintian tag description
-#: checks/binaries.desc:109
+#: checks/binaries.desc:105
 #, no-wrap
-msgid ""
-"Tag for tallying static libraries \".comment\" sections.\n"
-"\n"
-"Note that debhelper does not correctly strip these at the moment.\n"
-"If you use debhelper to strip the library, please ignore this tag\n"
-"at the moment."
+msgid "Tag for tallying static libraries \".comment\" sections."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -440,7 +435,7 @@ msgstr ""
 #
 #. Tag: unstripped-static-library
 #. type: Lintian tag description
-#: checks/binaries.desc:115
+#: checks/binaries.desc:111
 #, no-wrap
 msgid "Tag for tallying unstripped static libraries."
 msgstr ""
@@ -450,7 +445,7 @@ msgstr ""
 #
 #. Tag: missing-depends-line
 #. type: Lintian tag description
-#: checks/binaries.desc:123
+#: checks/binaries.desc:119
 #, no-wrap
 msgid ""
 "The package contains an ELF binary with dynamic dependencies,\n"
@@ -464,7 +459,7 @@ msgstr ""
 #
 #. Tag: shared-lib-without-dependency-information
 #. type: Lintian tag description
-#: checks/binaries.desc:136
+#: checks/binaries.desc:132
 #, no-wrap
 msgid ""
 "The listed shared library doesn't include information about which\n"
@@ -483,7 +478,7 @@ msgstr ""
 #
 #. Tag: arch-dependent-file-in-usr-share
 #. type: Lintian tag description
-#: checks/binaries.desc:143
+#: checks/binaries.desc:139
 #, no-wrap
 msgid ""
 "This package installs an ELF binary in the <tt>/usr/share</tt>\n"
@@ -495,7 +490,7 @@ msgstr ""
 #
 #. Tag: arch-dependent-file-not-in-arch-specific-directory
 #. type: Lintian tag description
-#: checks/binaries.desc:150
+#: checks/binaries.desc:146
 #, no-wrap
 msgid ""
 "This package is Multi-Arch \"same\", but it installs an ELF binary in the\n"
@@ -507,7 +502,7 @@ msgstr ""
 #
 #. Tag: binary-in-etc
 #. type: Lintian tag description
-#: checks/binaries.desc:157
+#: checks/binaries.desc:153
 #, no-wrap
 msgid ""
 "This package installs an ELF binary in <tt>/etc</tt>.  The\n"
@@ -519,7 +514,7 @@ msgstr ""
 #
 #. Tag: binary-compiled-with-profiling-enabled
 #. type: Lintian tag description
-#: checks/binaries.desc:163
+#: checks/binaries.desc:159
 #, no-wrap
 msgid ""
 "While profiling is useful for testing and debugging purposes, enabling\n"
@@ -531,7 +526,7 @@ msgstr ""
 #
 #. Tag: package-name-doesnt-match-sonames
 #. type: Lintian tag description
-#: checks/binaries.desc:173
+#: checks/binaries.desc:169
 #, no-wrap
 msgid ""
 "The package name of a library package should usually reflect\n"
@@ -549,7 +544,7 @@ msgstr ""
 #
 #. Tag: binary-with-bad-dynamic-table
 #. type: Lintian tag description
-#: checks/binaries.desc:184
+#: checks/binaries.desc:180
 #, no-wrap
 msgid ""
 "This appears to be an ELF file.  According to readelf, the\n"
@@ -566,7 +561,7 @@ msgstr ""
 #
 #. Tag: apparently-corrupted-elf-binary
 #. type: Lintian tag description
-#: checks/binaries.desc:194
+#: checks/binaries.desc:190
 #, no-wrap
 msgid ""
 "This appears to be an ELF file but readelf cannot parse it.\n"
@@ -582,7 +577,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-libc
 #. type: Lintian tag description
-#: checks/binaries.desc:209
+#: checks/binaries.desc:205
 #, no-wrap
 msgid ""
 "The listed file appears to be linked against the C library, but the\n"
@@ -602,7 +597,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-libstdc++
 #. type: Lintian tag description
-#: checks/binaries.desc:225
+#: checks/binaries.desc:221
 #, no-wrap
 msgid ""
 "The listed file appears to be linked against the C++ library, but the\n"
@@ -623,7 +618,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-perlapi
 #. type: Lintian tag description
-#: checks/binaries.desc:237
+#: checks/binaries.desc:233
 #, no-wrap
 msgid ""
 "This package includes a *.so file in <tt>/usr/lib/.../perl5</tt>,\n"
@@ -640,7 +635,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-phpapi
 #. type: Lintian tag description
-#: checks/binaries.desc:253
+#: checks/binaries.desc:249
 #, no-wrap
 msgid ""
 "This package includes a *.so file in <tt>/usr/lib/phpN</tt>\n"
@@ -662,7 +657,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-numpy-abi
 #. type: Lintian tag description
-#: checks/binaries.desc:263
+#: checks/binaries.desc:259
 #, no-wrap
 msgid ""
 "This package includes a Python extension module, which uses Numpy via its\n"
@@ -677,7 +672,7 @@ msgstr ""
 #
 #. Tag: debug-file-should-use-detached-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:281
+#: checks/binaries.desc:277
 #, no-wrap
 msgid ""
 "This file is in a location generally used for detached debugging\n"
@@ -700,7 +695,7 @@ msgstr ""
 #
 #. Tag: binary-from-other-architecture
 #. type: Lintian tag description
-#: checks/binaries.desc:289
+#: checks/binaries.desc:285
 #, no-wrap
 msgid ""
 "This ELF binary appears to have been built for an architecture other\n"
@@ -714,7 +709,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-binary
 #. type: Lintian tag description
-#: checks/binaries.desc:309
+#: checks/binaries.desc:305
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the given binary.  Lintian has a\n"
@@ -740,7 +735,7 @@ msgstr ""
 #
 #. Tag: embedded-library
 #. type: Lintian tag description
-#: checks/binaries.desc:322
+#: checks/binaries.desc:318
 #, no-wrap
 msgid ""
 "The given ELF object appears to have been statically linked to\n"
@@ -758,7 +753,7 @@ msgstr ""
 #
 #. Tag: debug-symbols-directly-in-usr-lib-debug
 #. type: Lintian tag description
-#: checks/binaries.desc:334
+#: checks/binaries.desc:330
 #, no-wrap
 msgid ""
 "The given debugging symbols-only object is installed directly in\n"
@@ -776,7 +771,7 @@ msgstr ""
 #
 #. Tag: ocaml-custom-executable
 #. type: Lintian tag description
-#: checks/binaries.desc:342
+#: checks/binaries.desc:338
 #, no-wrap
 msgid ""
 "This package provides an OCaml bytecode executable linked with a\n"
@@ -790,7 +785,7 @@ msgstr ""
 #
 #. Tag: hardening-no-stackprotector
 #. type: Lintian tag description
-#: checks/binaries.desc:353
+#: checks/binaries.desc:349
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the stack protector\n"
@@ -808,7 +803,7 @@ msgstr ""
 #
 #. Tag: hardening-no-fortify-functions
 #. type: Lintian tag description
-#: checks/binaries.desc:367
+#: checks/binaries.desc:363
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the use of fortified\n"
@@ -827,7 +822,7 @@ msgstr ""
 #
 #. Tag: hardening-no-relro
 #. type: Lintian tag description
-#: checks/binaries.desc:377
+#: checks/binaries.desc:373
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the \"read-only\n"
@@ -842,7 +837,7 @@ msgstr ""
 #
 #. Tag: debug-file-with-no-debug-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:387
+#: checks/binaries.desc:383
 #, no-wrap
 msgid ""
 "The binary is installed as a detached \"debug symbols\" ELF file,\n"
@@ -857,7 +852,7 @@ msgstr ""
 #
 #. Tag: binary-file-built-without-LFS-support
 #. type: Lintian tag description
-#: checks/binaries.desc:411
+#: checks/binaries.desc:407
 #, no-wrap
 msgid ""
 "The listed ELF binary appears to be (partially) built without\n"
@@ -1449,9 +1444,21 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: misspelled-closes-bug
+#. type: Lintian tag description
+#: checks/changelog-file.desc:376
+#, no-wrap
+msgid ""
+"The last changelog entry uses Close: #123456 instead of correct\n"
+"Closes: #123456"
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: version-refers-to-distribution
 #. type: Lintian tag description
-#: checks/changelog-file.desc:384
+#: checks/changelog-file.desc:391
 #, no-wrap
 msgid ""
 "The Debian portion of the package version contains a reference to a\n"
@@ -1472,7 +1479,7 @@ msgstr ""
 #
 #. Tag: debian-changelog-has-wrong-weekday
 #. type: Lintian tag description
-#: checks/changelog-file.desc:395
+#: checks/changelog-file.desc:402
 #, no-wrap
 msgid ""
 "The date in the changelog entry is not consistent with the actual\n"
@@ -10589,9 +10596,14 @@ msgstr ""
 #
 #. Tag: dir-or-file-in-build-tree
 #. type: Lintian tag description
-#: checks/files.desc:1615
+#: checks/files.desc:1619
 #, no-wrap
-msgid "Your package install file in our build tree."
+msgid ""
+"The package installs a file in common build paths.\n"
+"\n"
+"This often occurs if the package uses regular expressions to\n"
+"strip the build path without properly regex quoting the build\n"
+"path."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -10599,7 +10611,7 @@ msgstr ""
 #
 #. Tag: file-name-is-not-valid-UTF-8
 #. type: Lintian tag description
-#: checks/files.desc:1624
+#: checks/files.desc:1628
 #, no-wrap
 msgid ""
 "The file name does not appear to be valid UTF-8.\n"
@@ -10613,7 +10625,7 @@ msgstr ""
 #
 #. Tag: file-name-in-PATH-is-not-ASCII
 #. type: Lintian tag description
-#: checks/files.desc:1633
+#: checks/files.desc:1637
 #, no-wrap
 msgid ""
 "The given file is in PATH but consists of non-ASCII characters.\n"
@@ -10627,7 +10639,7 @@ msgstr ""
 #
 #. Tag: incorrect-naming-of-pkcs11-module
 #. type: Lintian tag description
-#: checks/files.desc:1645
+#: checks/files.desc:1649
 #, no-wrap
 msgid ""
 "This package ships a PKCS#11 module configuration file under\n"
@@ -10645,7 +10657,7 @@ msgstr ""
 #
 #. Tag: package-contains-timestamped-gzip
 #. type: Lintian tag description
-#: checks/files.desc:1655
+#: checks/files.desc:1659
 #, no-wrap
 msgid ""
 "The package contains a gzip-compressed file that has timestamps.\n"
@@ -10660,7 +10672,7 @@ msgstr ""
 #
 #. Tag: missing-intermediate-directory
 #. type: Lintian tag description
-#: checks/files.desc:1662
+#: checks/files.desc:1666
 #, no-wrap
 msgid ""
 "The package contains files in the listed directory, but does\n"
@@ -12762,7 +12774,7 @@ msgstr ""
 #
 #. Tag: desktop-entry-limited-to-environments
 #. type: Lintian tag description
-#: checks/menu-format.desc:401
+#: checks/menu-format.desc:402
 #, no-wrap
 msgid ""
 "This desktop entry uses OnlyShowIn to limit the environments in\n"
@@ -12772,7 +12784,22 @@ msgid ""
 "unintentionally hides the application from desktop environments such as\n"
 "LXDE where it would work fine.  If this application supports any desktop\n"
 "environment except some specific ones, it should list the unsupported\n"
-"environments in the NotShowIn key instead.\n"
+"environments in the NotShowIn key instead."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: command-in-menu-file-and-desktop-file
+#. type: Lintian tag description
+#: checks/menu-format.desc:411
+#, no-wrap
+msgid ""
+"The command is listed both in a menu file and a desktop file\n"
+"\n"
+"Per the tech-ctte decision on #741573, this is now prohibited.\n"
+"\n"
+"Please remove the reference from the menu file.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -14519,16 +14546,17 @@ msgstr ""
 #
 #. Tag: debian-rules-should-not-use-or-modify-user-only-variable
 #. type: Lintian tag description
-#: checks/rules.desc:224
+#: checks/rules.desc:225
 #, no-wrap
 msgid ""
-"The rules files appear to be reading or modifying a variable not\n"
-"intended for use by package maintainers.  The special variables\n"
+"The rules file appears to be reading or modifying a variable not\n"
+"intended for use by package maintainers.\n"
 "\n"
-"DEB_*FLAGS_{SET,APPEND}\n"
+"The special variables <tt>DEB_*FLAGS_{SET,APPEND}</tt> can be used by\n"
+"users who want to re-compile debian packages with special (or\n"
+"non-standard) build flags.\n"
 "\n"
-"can be used by users, who wants to re-compile debian packages with\n"
-"special (or non-standard) build flags."
+"Please use the <tt>DEB_*FLAGS_MAINT_{SET,APPEND}</tt> flags instead."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -14536,7 +14564,7 @@ msgstr ""
 #
 #. Tag: debian-rules-should-not-use-underscore-variable
 #. type: Lintian tag description
-#: checks/rules.desc:239
+#: checks/rules.desc:240
 #, no-wrap
 msgid ""
 "The rules file use the make variable $(_).\n"
@@ -14556,7 +14584,7 @@ msgstr ""
 #
 #. Tag: package-would-benefit-from-build-arch-targets
 #. type: Lintian tag description
-#: checks/rules.desc:249
+#: checks/rules.desc:250
 #, no-wrap
 msgid ""
 "The source package does not have both a build-arch and a build-indep\n"
@@ -15515,7 +15543,7 @@ msgstr ""
 msgid ""
 " The maintainer script apparently runs 'adduser --system'\n"
 "but hardcodes a path under '/home' for the '--home' option or\n"
-"do not use the '--home' option.\n"
+"does not use the '--home' option.\n"
 "\n"
 "The FHS says: /home is a fairly standard concept, but it\n"
 "is clearly a site-specific filesystem. The setup will differ\n"
@@ -17523,7 +17551,7 @@ msgid ""
 "or <tt>debian</tt>, but a misleading upstream version mangling occurs in\n"
 "the <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not\n"
 "part of the upstream version and its addition is Debian-specific, the\n"
-"the <tt>debian/watch</tt> file should use the dversionmangle option to\n"
+"<tt>debian/watch</tt> file should use the dversionmangle option to\n"
 "remove, instead of adding in uversionmangle, the <tt>dfsg</tt> before\n"
 "comparing version numbers."
 msgstr ""
