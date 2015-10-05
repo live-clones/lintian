@@ -1,6 +1,9 @@
-lintian (2.5.38) UNRELEASED; urgency=medium
+lintian (2.5.38) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - command-in-menu-file-and-desktop-file
+      - misspelled-closes-bug
 
   * checks/binaries.desc:
     + [NT] Update description of a tag now that debhelper properly
@@ -11,7 +14,7 @@ lintian (2.5.38) UNRELEASED; urgency=medium
       packages.  Thanks to Matthias Klose for the bug report.
       (Closes: #795275)
   * checks/changelog-files.{desc,pm}:
-    + [BR] Detect mispelled Closes in changelog file (Closes: #798799)
+    + [BR] Detect misspelled Closes in changelog file (Closes: #798799)
   * checks/files.{desc,pm}:
     + [AB] Apply patch by Mattia Rizzolo to also check for files in /build
       and /tmp/buildd in dir-or-file-in-build-tree.  (Closes: #797532)
@@ -71,7 +74,7 @@ lintian (2.5.38) UNRELEASED; urgency=medium
   * private/refresh-debhelper-data:
     + [NT] Add a "This file is generated" header to all output files.
 
- -- Niels Thykier <niels@thykier.net>  Fri, 11 Sep 2015 16:51:26 +0200
+ -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:10:31 +0200
 
 lintian (2.5.37) unstable; urgency=medium
 
