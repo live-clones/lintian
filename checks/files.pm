@@ -1014,7 +1014,7 @@ sub run {
                 # non-FHS, but still usual
                 or $fname =~ m,^usr/[^/]+-linux[^/]*/,
                 or $fname =~ m,^usr/iraf/,
-                # not allowed, but tested indivudually
+                # not allowed, but tested individually
                 or $fname =~ m{\A (?:
                         build|home|mnt|opt|root|run|srv
                        |(?:(?:usr|var)/)?tmp)|var/www/}xsm

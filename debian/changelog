@@ -2,6 +2,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
+
   * man/lintian.pod.in:
     + [JW] Fix incorrect claim that "pedantic" and "display-info" can't be
       used together in the config file.
