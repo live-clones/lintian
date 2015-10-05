@@ -2,6 +2,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * man/lintian.pod.in:
+    + [JW] Fix incorrect claim that "pedantic" and "display-info" can't be
+      used together in the config file.
+
  -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:21:02 +0200
 
 lintian (2.5.38) unstable; urgency=medium

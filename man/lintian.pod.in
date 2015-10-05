@@ -288,7 +288,7 @@ tags is probably not worth the effort.
 This option overrides the B<pedantic> variable in the configuration
 file.
 
-Note: B<pedantic> and B<display-info> may not both appear in the
+Note: B<pedantic> and B<display-level> may not both appear in the
 configuration file.
 
 =item B<--profile> vendor[/prof]
