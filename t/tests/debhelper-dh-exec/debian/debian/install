@@ -1,2 +1,2 @@
 #! /usr/bin/dh-exec
-usr/lib
+usr/lib/foo [linux-any] [hurd-any] [kfreebsd-any]

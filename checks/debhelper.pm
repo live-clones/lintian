@@ -481,7 +481,7 @@ sub _check_dh_exec {
         tag 'dh-exec-private-helper', $path;
     }
 
-    my ($dhe_subst, $dhe_install) = (0, 0);
+    my ($dhe_subst, $dhe_install, $dhe_filter) = (0, 0, 0);
     my $fd = $path->open;
     while (<$fd>) {
         if (/\$\{([^\}]+)\}/) {
@@ -499,10 +499,12 @@ sub _check_dh_exec {
             }
         }
         $dhe_install = 1 if / => /;
+        $dhe_filter = 1 if /\[[^\]]+\]/;
+        $dhe_filter = 1 if /<[^>]+>/;
     }
     close($fd);
 
-    if (!($dhe_subst || $dhe_install)) {
+    if (!($dhe_subst || $dhe_install || $dhe_filter)) {
         tag 'dh-exec-script-without-dh-exec-features', $path;
     }
 
