@@ -2,4 +2,6 @@ E: debhelper-dh-exec source: dh-exec-install-not-allowed-here debian/links
 E: debhelper-dh-exec source: dh-exec-private-helper debian/manpages
 E: debhelper-dh-exec source: package-uses-dh-exec-but-lacks-build-depends
 I: debhelper-dh-exec source: dh-exec-subst-unknown-variable debian/manpages DEB_BUILD_WHATEVER
+I: debhelper-dh-exec source: dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH} /usr/lib/${DEB_HOST_MULTIARCH}/"
+I: debhelper-dh-exec source: dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH}"
 W: debhelper-dh-exec source: dh-exec-script-without-dh-exec-features debian/dirs

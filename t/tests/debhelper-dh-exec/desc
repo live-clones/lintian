@@ -10,4 +10,5 @@ Test-For:
  dh-exec-private-helper
  dh-exec-script-without-dh-exec-features
  dh-exec-subst-unknown-variable
+ dh-exec-useless-usage
  package-uses-dh-exec-but-lacks-build-depends

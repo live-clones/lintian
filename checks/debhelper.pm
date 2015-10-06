@@ -501,6 +501,33 @@ sub _check_dh_exec {
         $dhe_install = 1 if / => /;
         $dhe_filter = 1 if /\[[^\]]+\]/;
         $dhe_filter = 1 if /<[^>]+>/;
+
+        if (/^usr\/lib\/\$\{([^\}]+)\}\/?$/ ||
+            /^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/) {
+            my $sv = $1;
+            my $dv = $2;
+            my $dhe_useless = 0;
+
+            if (
+                $sv =~ m{ \A
+                   DEB_(?:BUILD|HOST)_(?:
+                       ARCH (?: _OS|_CPU|_BITS|_ENDIAN )?
+                      |GNU_ (?:CPU|SYSTEM|TYPE)|MULTIARCH
+             ) \Z}xsm
+              ) {
+                if (defined($dv)) {
+                    $dhe_useless = ($sv eq $dv);
+                } else {
+                    $dhe_useless = 1;
+                }
+            }
+            if ($dhe_useless) {
+                my $form = $_;
+                chomp ($form);
+                $form = "\"$form\"";
+                tag 'dh-exec-useless-usage', $path, $form;
+            }
+        }
     }
     close($fd);
 
@@ -511,6 +538,7 @@ sub _check_dh_exec {
     if ($dhe_install && ($base ne 'install' && $base ne 'manpages')) {
         tag 'dh-exec-install-not-allowed-here', $path;
     }
+
     return;
 }
 
