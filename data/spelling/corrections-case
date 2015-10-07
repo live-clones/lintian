@@ -8,9 +8,15 @@
 #
 # Please keep the list sorted (using the en_US locale).
 
+american||American
 apache||Apache
 api||API
 Api||API
+arabic||Arabic
+british||British
+chinese||Chinese
+cyrillic||Cyrillic
+czech||Czech
 d-bus||D-Bus
 dbus||D-Bus
 D-BUS||D-Bus
@@ -21,6 +27,10 @@ docbook||DocBook
 Docbook||DocBook
 EMacs||Emacs
 english||English
+esperanto||Esperanto
+european||European
+farsi||Farsi
+finnish||Finnish
 french||French
 gconf||GConf
 Gconf||GConf
@@ -36,19 +46,27 @@ gnu||GNU
 Gnu||GNU
 gobject||GObject
 Gobject||GObject
+greek||Greek
 gstreamer||GStreamer
 Gstreamer||GStreamer
 gtk+||GTK+
 GTK||GTK+
+hebrew||Hebrew
 Http||HTTP
+hungarian||Hungarian
+italian||Italian
+japanese||Japanese
 kde||KDE
+korean||Korean
 latex||LaTeX
 Latex||LaTeX
+latin||Latin
 linux||Linux
 meta-package||metapackage
 mysql||MySQL
 Mysql||MySQL
 MYSQL||MySQL
+norwegian||Norwegian
 oAuth||OAuth
 ocaml||OCaml
 Ocaml||OCaml
@@ -59,6 +77,7 @@ OpenLdap||OpenLDAP
 openstreetmap||OpenStreetMap
 Openstreetmap||OpenStreetMap
 OpenStreetmap||OpenStreetMap
+portuguese||Portuguese
 postgresql||PostgreSQL
 Postgresql||PostgreSQL
 python||Python
@@ -68,8 +87,10 @@ SkoleLinux||Skolelinux
 s-lang||S-Lang
 S-lang||S-Lang
 SLang||S-Lang
+slavic||Slavic
 spanish||Spanish
 subversion||Subversion
+swedish||Swedish
 tcl||Tcl
 TCL||Tcl
 tetex||teTeX

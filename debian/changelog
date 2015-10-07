@@ -2,7 +2,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * data/spelling/corrections:
+  * data/spelling/corrections*:
     + [JW] Add more corrections.
 
   * man/lintian.pod.in:
