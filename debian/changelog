@@ -2,6 +2,11 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [BR] Avoid false positive in minified javascript by
+      detecting line with only one colon.
+      (Closes: #792365, #798900).
+
   * data/spelling/corrections*:
     + [JW] Add more corrections.
 

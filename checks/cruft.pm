@@ -35,6 +35,10 @@ use v5.10;
 # not less than 8192 for source missing
 use constant BLOCKSIZE => 16_384;
 
+# constant for insane line lenght
+use constant INSANE_LINE_LENGTH => 512;
+use constant SAFE_LINE_LENGTH => 128;
+
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
@@ -936,62 +940,88 @@ sub _search_in_block0 {
     return;
 }
 
+# warn about prebuilt javascript and check missing source
+sub _warn_prebuilt_javascript{
+    my ($entry, $info, $name, $basename, $dirname,$linelength,$cutoff) = @_;
+    tag 'source-contains-prebuilt-javascript-object',
+      $name, 'line length is', int($linelength),
+      "characters (>$cutoff)";
+    # Check for missing source.  It will check
+    # for the source file in well known directories
+    check_missing_source($entry,$info,$name,$basename,$dirname,
+        [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']]);
+}
+
 # detect if max line of block is > cutoff
 # return false if file is minified
-sub _linelength_test_maxlength_ok {
+sub _linelength_test_maxlength {
     my ($entry, $info, $name, $basename, $dirname, $block, $cutoff) = @_;
     while($block =~ /([^\n]+)\n?/g){
         my $linelength = length($1);
         if($linelength > $cutoff) {
-            tag 'source-contains-prebuilt-javascript-object',
-              $name, 'line length is', int($linelength),
-              "characters (>$cutoff)";
-            # Check for missing source.  It will check
-            # for the source file in well known directories
-            check_missing_source($entry,$info,$name,$basename,$dirname,
-                [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']]);
-            return 0;
+            return ($linelength,$1,substr($block,pos($block)));
         }
     }
-    return 1;
+    return (0,'',$block);
 }
 
 # try to detect non human source based on line length
 sub _linelength_test {
     my ($entry, $info, $name, $basename, $dirname, $block) = @_;
+    my $linelength = 0;
+    my $line;
+    my $nextblock;
 
-    # first check if line > 1024 that is likely minification
-    if(
-        _linelength_test_maxlength_ok(
-            $entry, $info, $name, $basename, $dirname, $block,1024
-        )
-      ) {
-# now try to be more clever and work only on the 8192 character in order to avoid
-# regexp recursion problems
-        my $strip = substr($block,0,8192);
-        # strip indention
-        $strip =~ s/^\s+//g;
-        # from perl faq strip comments
-        $strip =~ s{
-                     # Strip /* */ comments
-                     /\* [^*]*+ \*++ (?: [^/*][^*]*+\*++ ) */
-                     # Strip // comments (C++ style)
-                  |  // (?: [^\\] | [^\n][\n]? )*? (?=\n)
-                  |  (
-                         # Keep "/* */" (etc) as is
-                         "(?: \\. | [^"\\]++)*"
-                         # Keep '/**/' (etc) as is
-                       | '(?: \\. | [^'\\]++)*'
-                         # Keep anything else
-                       | .[^/"'\\]*+
-                     )
-                   }{defined $1 ? $1 : ""}xgse;
-        # strip empty line
-        $strip =~ s/^\s*\n//mg;
-        # remove last \n
-        $strip =~ s/\n\Z//m;
-        _linelength_test_maxlength_ok($entry, $info, $name, $basename,
-            $dirname, $strip,256);
+    ($linelength)
+      = _linelength_test_maxlength($entry, $info, $name, $basename, $dirname,
+        $block,INSANE_LINE_LENGTH);
+    # first check if line >  INSANE_LINE_LENGTH that is likely minification
+    # avoid problem by recursive regex with longline
+    if($linelength) {
+        _warn_prebuilt_javascript($entry, $info, $name, $basename, $dirname,
+            $linelength,INSANE_LINE_LENGTH);
+        return;
+    }
+    # Now try to be more clever and work only on the 8192 character
+    # in order to avoid regexp recursion problems
+    my $strip = substr($block,0,8192);
+    # strip indention
+    $strip =~ s/^\s+//g;
+    # from perl faq strip comments
+    $strip =~ s{
+                # Strip /* */ comments
+                /\* [^*]*+ \*++ (?: [^/*][^*]*+\*++ ) */
+                # Strip // comments (C++ style)
+                |  // (?: [^\\] | [^\n][\n]? )*? (?=\n)
+                |  (
+                    # Keep "/* */" (etc) as is
+                    "(?: \\. | [^"\\]++)*"
+                    # Keep '/**/' (etc) as is
+                    | '(?: \\. | [^'\\]++)*'
+                    # Keep anything else
+                    | .[^/"'\\]*+
+                   )
+               }{defined $1 ? $1 : ""}xgse;
+    # strip empty line
+    $strip =~ s/^\s*\n//mg;
+    # remove last \n
+    $strip =~ s/\n\Z//m;
+    $nextblock = $strip;
+    while(length($nextblock)) {
+        # check line above > SAFE_LINE_LENGTH
+        ($linelength,$line,$nextblock)
+          = _linelength_test_maxlength($entry, $info, $name, $basename,
+            $dirname, $nextblock,SAFE_LINE_LENGTH);
+        # no long line
+        unless($linelength) {
+            return;
+        }
+        # compute number of ;
+        if(($line =~ tr/;/;/) > 1) {
+            _warn_prebuilt_javascript($entry, $info, $name, $basename,
+                $dirname,$linelength,SAFE_LINE_LENGTH);
+            return;
+        }
     }
     return;
 }
