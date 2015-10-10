@@ -6,6 +6,8 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [BR] Avoid false positive in minified javascript by
       detecting line with only one colon.
       (Closes: #792365).
+  * checks/files.pm:
+    + [BR] Whitelist pbuilder for dir-or-file-in-build-tree.
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.

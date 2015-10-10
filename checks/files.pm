@@ -447,7 +447,7 @@ sub run {
             or $fname =~ m,^var/lib/buildd/,
             or $fname =~ m,^build/,
             or $fname =~ m,^tmp/buildd/,) {
-            unless ($source_pkg eq 'sbuild') {
+            unless ($source_pkg eq 'sbuild' || $source_pkg eq 'pbuilder') {
                 tag 'dir-or-file-in-build-tree', $file;
             }
         }
