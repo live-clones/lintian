@@ -5,7 +5,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Avoid false positive in minified javascript by
       detecting line with only one colon.
-      (Closes: #792365, #798900).
+      (Closes: #792365).
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.
