@@ -950,6 +950,7 @@ sub _warn_prebuilt_javascript{
     # for the source file in well known directories
     check_missing_source($entry,$info,$name,$basename,$dirname,
         [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']]);
+    return;
 }
 
 # detect if max line of block is > cutoff
