@@ -71,27 +71,27 @@ my $dbk_fields = [['section'], ['url'], ['title']];
 my %manuals = (
     'policy' => [
         '/usr/share/doc/debian-policy/policy.html/index.html',
-        'http://www.debian.org/doc/debian-policy/',
+        'https://www.debian.org/doc/debian-policy/',
         $link_re, $fields
     ],
     'menu-policy' => [
         '/usr/share/doc/debian-policy/menu-policy.html/index.html',
-        'http://www.debian.org/doc/packaging-manuals/menu-policy/',
+        'https://www.debian.org/doc/packaging-manuals/menu-policy/',
         $link_re, $fields
     ],
     'perl-policy' => [
         '/usr/share/doc/debian-policy/perl-policy.html/index.html',
-        'http://www.debian.org/doc/packaging-manuals/perl-policy/',
+        'https://www.debian.org/doc/packaging-manuals/perl-policy/',
         $link_re, $fields
     ],
     'python-policy' => [
         '/usr/share/doc/python/python-policy.html/index.html',
-        'http://www.debian.org/doc/packaging-manuals/python-policy/',
+        'https://www.debian.org/doc/packaging-manuals/python-policy/',
         $link_re, $fields
     ],
     'java-policy' => [
         '/usr/share/doc/java-common/debian-java-policy/index.html',
-        'http://www.debian.org/doc/packaging-manuals/java-policy/',
+        'https://www.debian.org/doc/packaging-manuals/java-policy/',
         $dbk_index_re,
         $dbk_fields
     ],
@@ -103,12 +103,12 @@ my %manuals = (
     ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
-        'http://lintian.debian.org/manual/',
+        'https://lintian.debian.org/manual/',
         $dbk_index_re, $dbk_fields
     ],
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
-        'http://www.debian.org/doc/developers-reference/',
+        'https://www.debian.org/doc/developers-reference/',
         $index_re,
         $fields,
 #<<< no perl tidy
@@ -120,7 +120,7 @@ my %manuals = (
     ],
     'menu' => [
         '/usr/share/doc/menu/html/index.html',
-        'http://www.debian.org/doc/packaging-manuals/menu.html/',
+        'https://www.debian.org/doc/packaging-manuals/menu.html/',
         $index_re, $fields
     ],
     'doc-base' => [
@@ -130,7 +130,7 @@ my %manuals = (
     'debconf-spec' => [
         '/usr/share/doc/debian-policy/debconf_specification.html',
         join(q{/},
-            'http://www.debian.org',
+            'https://www.debian.org',
             'doc/packaging-manuals/debconf_specification.html'),
         qr/<a href="(#.+?)">([\w\s[:punct:]]+?)<\/a>/,
         [['section', 'url'], ['title']]

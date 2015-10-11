@@ -20,6 +20,8 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   * private/refresh-*:
     + [JW] Use httpredir.debian.org as the default mirror.
+  * private/refresh-manual-refs:
+    + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
 
  -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:21:02 +0200
 
