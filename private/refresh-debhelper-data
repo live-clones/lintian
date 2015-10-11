@@ -31,7 +31,7 @@ indicate if the list is up to date with an exit status of zero.
 
 If the Contents file is not specified, the script will download the following
 files from a mirror (which should be specified via the DEB_MIRROR env var, 
-which defaults to http://i386-geomirror.debian.net/debian and is used directly
+which defaults to http://httpredir.debian.org/debian and is used directly
 without any kind of parsing so one can play with it):
 * Contents-i386.gz, main/binary-i386/Packages.gz
 * Binary packages found at Contents shipping dh_ commands
@@ -114,7 +114,7 @@ if [ $offline -eq 1 ]; then
     cmp -s "$known_commands" "$new_commands"
     exit
 else
-    mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
+    mirror="${DEB_MIRROR:=http://httpredir.debian.org/debian}"
     WGET_ARGS="${WGET_ARGS:=-nv}"
     wget() {
         echo wget "$mirror"/"$1"

@@ -16,6 +16,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Fix incorrect claim that "pedantic" and "display-info" can't be
       used together in the config file.
 
+  * private/refresh-*:
+    + [JW] Use httpredir.debian.org as the default mirror.
+
  -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:21:02 +0200
 
 lintian (2.5.38) unstable; urgency=medium

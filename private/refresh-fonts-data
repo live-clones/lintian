@@ -31,7 +31,7 @@ be the path to the root of the Lintian data directory to update.
 If the Contents file is not specified, the script will download the
 following files from a mirror.  The mirror can be specified with the
 DEB_MIRROR environment variable.  If it is not set, the default is
-http://i386-geomirror.debian.net/debian.
+http://httpredir.debian.org/debian.
 
 * Contents-i386.gz
 
@@ -58,7 +58,7 @@ cleanup () {
     [ ! -d "$workdir" ] || rm -rf "$workdir"
 }; trap cleanup EXIT
 
-mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
+mirror="${DEB_MIRROR:=http://httpredir.debian.org/debian}"
 WGET_ARGS="${WGET_ARGS:=-nv}"
 wget() {
     echo wget "$mirror"/"$1"
