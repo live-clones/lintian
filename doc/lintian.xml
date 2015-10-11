@@ -663,7 +663,7 @@ foo source: another-tag without any comments
         <para>
           The architecture list has the same syntax as the
           architecture list in the "Build-Depends" field of a source
-          package. This is described in detail in the <ulink url="http://www.debian.org/doc/debian-policy/ch-relationships.html#s-depsyntax">
+          package. This is described in detail in the <ulink url="https://www.debian.org/doc/debian-policy/ch-relationships.html#s-depsyntax">
           Debian Policy Manual §7.1</ulink>.  Examples:
         </para>
         <screen>
@@ -761,7 +761,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
         <para>
           Profiles are written in the same syntax as Debian
           control files as described in the
-          <ulink url="http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
+          <ulink url="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
           Debian Policy Manual §5.1</ulink>.  Profiles allow
           comments as described in the Policy Manual.
         </para>
@@ -1268,7 +1268,7 @@ Overridable: no
         <para>
           The check description file is written in the same syntax as
           Debian control files as described in the
-          <ulink url="http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
+          <ulink url="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
           Debian Policy Manual §5.1</ulink>.  Check description files
           allow comments as described in the Policy Manual.
         </para>

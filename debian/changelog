@@ -8,11 +8,19 @@ lintian (2.5.39) UNRELEASED; urgency=medium
       (Closes: #792365).
   * checks/files.pm:
     + [BR] Whitelist pbuilder for dir-or-file-in-build-tree.
+  * checks/source-copyright.desc:
+    + [JW] Use HTTPS for www.debian.org URLs.
 
   * data/output/manual-references:
     + [JW] Refresh.
   * data/spelling/corrections*:
     + [JW] Add more corrections.
+
+  * doc/lintian.xml:
+    + [JW] Use HTTPS for www.debian.org URLs.
+
+  * mail-templates/license-problem-non-free-RFC:
+    + [JW] Use HTTPS for www.debian.org URLs.
 
   * man/lintian.pod.in:
     + [JW] Fix incorrect claim that "pedantic" and "display-info" can't be
@@ -22,6 +30,12 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Use httpredir.debian.org as the default mirror.
   * private/refresh-manual-refs:
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
+
+  * reporting/templates/index.tmpl:
+    + [JW] Use HTTPS for www.debian.org URLs.
+
+  * README:
+    + [JW] Use HTTPS for www.debian.org URLs.
 
  -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:21:02 +0200
 

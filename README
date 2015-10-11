@@ -195,6 +195,6 @@ public.  Should you be aware of a severe non-disclosed security issue
 in Lintian, then please contact the
 [Debian Security Team][report-security-issue] instead.
 
-[bts-report-bug]: http://www.debian.org/Bugs/Reporting
+[bts-report-bug]: https://www.debian.org/Bugs/Reporting
 
-[report-security-issue]: http://www.debian.org/security/faq#contact
+[report-security-issue]: https://www.debian.org/security/faq#contact

@@ -1,7 +1,7 @@
 # Data file of all the valid sections a menu item (or submenu) can go in.
 #
 # Authoritative source of menu sections:
-# http://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
+# https://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
 #
 # This file maps "root sections" to the valid sections in each root
 # sections.

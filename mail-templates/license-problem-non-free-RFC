@@ -26,7 +26,7 @@ DFSG-free, see:
 
 The severity is serious, because this violates the Debian policy:
 
- * http://www.debian.org/doc/debian-policy/ch-archive.html#s-dfsg
+ * https://www.debian.org/doc/debian-policy/ch-archive.html#s-dfsg
 
 There are (at least) three ways to fix this problem.  In order of
 preference:
