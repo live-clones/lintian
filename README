@@ -56,7 +56,7 @@ can find the Lintian User's Manual in:
 Alternatively, Debian provides an on-line version of the manual on
 the [Lintian web site][online-manual].
 
-[online-manual]: http://lintian.debian.org/manual/index.html
+[online-manual]: https://lintian.debian.org/manual/index.html
 
 Compiling Lintian
 =================
@@ -105,7 +105,7 @@ Note that the online copy does not necessarily reflect the API of the
 current development version of Lintian.  Instead, it is the API of
 Lintian when it was last updated on the Lintian web site.
 
-[online-api-docs]: http://lintian.debian.org/library-api/index.html
+[online-api-docs]: https://lintian.debian.org/library-api/index.html
 
 Translating Lintian
 ===================

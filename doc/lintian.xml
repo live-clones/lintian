@@ -1424,7 +1424,7 @@ Overridable: no
                 </para>
                 <para>
                   Other references include manpages ("lintian(1)"),
-                  ftp or http(s) links ("http://lintian.debian.org"),
+                  ftp or http(s) links ("https://lintian.debian.org"),
                   file references ("/usr/share/doc/lintian/changelog.gz")
                   or Debian bug numbers prefixed with a hash ("#651816").
                 </para>

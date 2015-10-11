@@ -1,11 +1,11 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: lintian
 Upstream-Contact: <debian-lint-maint@lists.debian.org>
-Source: http://lintian.debian.org/
+Source: https://lintian.debian.org/
 Comment:
  This is the Debian package of Lintian, the Debian package checker.
  The latest version of Lintian can always be found at:
-	http://lintian.debian.org/
+	https://lintian.debian.org/
  .
  Lintian was designed and written by Christian Schwarz and Richard Braakman.
  The package was previously maintained by Darren Benham,

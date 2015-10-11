@@ -17,7 +17,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Add more corrections.
 
   * doc/lintian.xml:
-    + [JW] Use HTTPS for www.debian.org URLs.
+    + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
+
+  * debian/copyright:
+    + [JW] Use HTTPS for lintian.debian.org URLs.
 
   * mail-templates/license-problem-non-free-RFC:
     + [JW] Use HTTPS for www.debian.org URLs.
@@ -35,7 +38,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Use HTTPS for www.debian.org URLs.
 
   * README:
-    + [JW] Use HTTPS for www.debian.org URLs.
+    + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
 
  -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:21:02 +0200
 
