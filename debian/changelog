@@ -27,8 +27,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Use HTTPS for lintian.debian.org URLs.
 
   * mail-templates/license-problem-non-free-RFC:
-    + [JW] Use HTTPS for www.debian.org, wiki.debian.org and
-      bugs.debian.org URLs.
+    + [JW] Use HTTPS for debian.org URLs.
 
   * man/lintian.pod.in:
     + [JW] Fix incorrect claim that "pedantic" and "display-info" can't be

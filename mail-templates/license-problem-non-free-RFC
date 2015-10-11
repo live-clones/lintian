@@ -21,8 +21,8 @@ The license on RFC/I-Ds is not DFSG-free, see:
 According to the squeeze/wheezy release policy, source packages must be
 DFSG-free, see:
 
- * http://release.debian.org/squeeze/rc_policy.txt
- * http://release.debian.org/wheezy/rc_policy.txt
+ * https://release.debian.org/squeeze/rc_policy.txt
+ * https://release.debian.org/wheezy/rc_policy.txt
 
 The severity is serious, because this violates the Debian policy:
 
