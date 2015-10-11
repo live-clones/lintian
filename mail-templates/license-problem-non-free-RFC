@@ -16,7 +16,7 @@ IETF under non-free license terms:
 The license on RFC/I-Ds is not DFSG-free, see:
 
  * https://wiki.debian.org/NonFreeIETFDocuments
- * http://bugs.debian.org/199810
+ * https://bugs.debian.org/199810
 
 According to the squeeze/wheezy release policy, source packages must be
 DFSG-free, see:
