@@ -144,7 +144,7 @@ Issue reported by Lintian.
 =head2 Useful tricks
 
 There is an extended description of tricks on
-L<http://wiki.debian.org/Teams/Lintian/HackersGuide>, but some of them
+L<https://wiki.debian.org/Teams/Lintian/HackersGuide>, but some of them
 are also listed here.
 
 =head3 Running lintian from the git repository

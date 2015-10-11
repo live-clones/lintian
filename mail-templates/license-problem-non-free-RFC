@@ -15,7 +15,7 @@ IETF under non-free license terms:
 
 The license on RFC/I-Ds is not DFSG-free, see:
 
- * http://wiki.debian.org/NonFreeIETFDocuments
+ * https://wiki.debian.org/NonFreeIETFDocuments
  * http://bugs.debian.org/199810
 
 According to the squeeze/wheezy release policy, source packages must be
@@ -33,7 +33,7 @@ preference:
 
 1. Ask the author of the RFC to re-license the RFC under a free
    license.  A template for this e-mail request can be found at
-   http://wiki.debian.org/NonFreeIETFDocuments
+   https://wiki.debian.org/NonFreeIETFDocuments
 
 2. Remove the non-free material from the source, e.g., by re-packaging
    the upstream archive and adding 'dfsg' to the Debian package
