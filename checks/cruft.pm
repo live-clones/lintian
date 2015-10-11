@@ -35,7 +35,7 @@ use v5.10;
 # not less than 8192 for source missing
 use constant BLOCKSIZE => 16_384;
 
-# constant for insane line lenght
+# constant for insane line length
 use constant INSANE_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 128;
 
