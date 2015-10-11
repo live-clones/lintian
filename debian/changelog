@@ -38,8 +38,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * private/refresh-manual-refs:
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
 
-  * reporting/templates/index.tmpl:
+  * reporting/templates/foot.tmpl:
     + [JW] Use HTTPS for www.debian.org URLs.
+  * reporting/templates/index.tmpl:
+    + [JW] Use HTTPS for debian.org URLs.
 
   * README:
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
