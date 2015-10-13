@@ -2,6 +2,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.{desc,pm}:
+    + [NT] Check for ".debug_str" section in addition to the
+      ".debug_line" section to determine if an ELF file contains
+      detached debug symbols.
   * checks/cruft.pm:
     + [BR] Avoid false positive in minified javascript by
       detecting line with only one colon.

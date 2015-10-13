@@ -464,8 +464,10 @@ sub run {
                 tag 'debug-file-should-use-detached-symbols', $file;
             }
             tag 'debug-file-with-no-debug-symbols', $file
-              unless (exists $objdump->{'SH'}->{'.debug_line'}
-                or exists $objdump->{'SH'}->{'.zdebug_line'});
+              unless (exists $objdump->{'SH'}{'.debug_line'}
+                or exists $objdump->{'SH'}{'.zdebug_line'}
+                or exists $objdump->{'SH'}{'.debug_str'}
+                or exists $objdump->{'SH'}{'.zdebug_str'});
         }
 
         # Detached debugging symbols directly in /usr/lib/debug.
