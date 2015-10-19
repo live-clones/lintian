@@ -30,6 +30,11 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * debian/copyright:
     + [JW] Use HTTPS for lintian.debian.org URLs.
 
+  * lib/Lintian/Util.pm:
+    + [NT] Whitelist TMPDIR in "clean_env", so that man and msgfmt
+      will use the user defined TMPDIR (if any).  Thanks to Bjarni
+      Ingi Gislason Bjarni for the bug report.  (Closes: #801483)
+
   * mail-templates/license-problem-non-free-RFC:
     + [JW] Use HTTPS for debian.org URLs.
 

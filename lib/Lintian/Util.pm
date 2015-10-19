@@ -888,6 +888,7 @@ The list of whitelisted %ENV variables are:
 
  PATH
  LC_ALL (*)
+ TMPDIR
 
 (*) LC_ALL is a special case as clean_env will change its value to
 either "C.UTF-8" or "C" (if CLOC is given and a truth value).
@@ -896,7 +897,7 @@ either "C.UTF-8" or "C" (if CLOC is given and a truth value).
 
 sub clean_env {
     my ($cloc) = @_;
-    my @whitelist = qw(PATH);
+    my @whitelist = qw(PATH TMPDIR);
     my %newenv
       = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } (@whitelist);
     %ENV = %newenv;
