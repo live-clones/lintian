@@ -100,7 +100,7 @@ sub new {
     my ($profile, @full_inc_path, $lang);
     if (!defined $ipath) {
         # Temporary fix (see _safe_include_path)
-        @full_inc_path = [_default_inc_path()] unless $ipath;
+        @full_inc_path = (_default_inc_path());
         if (defined $ENV{'LINTIAN_ROOT'}) {
             $ipath = [$ENV{'LINTIAN_ROOT'}];
         } else {

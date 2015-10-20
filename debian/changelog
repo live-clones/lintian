@@ -30,6 +30,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * debian/copyright:
     + [JW] Use HTTPS for lintian.debian.org URLs.
 
+  * lib/Lintian/Profile.pm:
+    + [JW,NT] Correct include path for default profile when include
+      directories are not given explicitly.  (Closes: #802476)
   * lib/Lintian/Util.pm:
     + [NT] Whitelist TMPDIR in "clean_env", so that man and msgfmt
       will use the user defined TMPDIR (if any).  Thanks to Bjarni
