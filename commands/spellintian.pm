@@ -85,7 +85,7 @@ sub main {
         for my $path (@ARGV) {
             my $text;
             if (not -f $path) {
-                print STDERR "$path is a directory\n";
+                print STDERR "$path is not a file\n";
                 next;
             }
             $ok = 1;
