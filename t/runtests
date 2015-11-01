@@ -455,7 +455,7 @@ sub run_lintian {
         }
         unless ($status == 0 or $status == 1) {
             my $name = $testdata->{testname};
-            #NB: lines in @data has trailing newline.
+            #NB: lines in @data have trailing newlines.
             my $msg = "$LINTIAN @options $file exited with status $status\n";
             $msg .= join(q{},map { "$name: $_" } @data);
 
