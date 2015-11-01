@@ -342,7 +342,7 @@ sub test_package {
             }
         }
 
-        $test_state->info_msg(2, 'Cleaning up and repopulating $targetdir...');
+        $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $rundir);
         runsystem_ok('mkdir', '-p', $rundir);
         unless ($is_native) {
