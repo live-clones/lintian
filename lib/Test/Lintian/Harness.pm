@@ -193,6 +193,7 @@ sub check_test_depends {
     # dpkg-checkbuilddeps requires that the Source: field is present.
     print {$test_fd} "Source: bd-test-pkg\n";
     print {$test_fd} "Build-Depends: $testdata->{'test-depends'}\n";
+    close($test_fd);
 
     $pid = open($fd, '-|');
     if (!$pid) {
@@ -205,19 +206,21 @@ sub check_test_depends {
     eval {close($fd);};
     $err = $@;
     unlink($test_file);
-    if ($err) {
-        # Problem closing the pipe?
-        fail "close pipe: $err" if $err->errno;
-        # Else we presume that dpkg-checkbuilddeps concluded missing
-        # build-dependencies
-        $missing =~ s{\A dpkg-checkbuilddeps: [ ]
-                         Unmet [ ] build [ ] dependencies: \s* }{}xsm;
+    if (
+        $missing =~ s{\A dpkg-checkbuilddeps: [ ] (?:error: [ ])?
+                         Unmet [ ] build [ ] dependencies: \s* }{}xsm
+      ) {
         chomp($missing);
         if ($missing =~ s{\n}{\\n}gxsm) {
             # We expect exactly one line.
             fail "Unexpected output from dpkg-checkbuilddeps: $missing";
         }
         return $missing;
+    }
+    if ($err) {
+        # Problem closing the pipe?
+        fail "close pipe: $err" if $err->errno;
+        fail $err;
     }
     return;
 }
