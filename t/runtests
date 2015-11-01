@@ -738,7 +738,8 @@ sub create_child {
         on_finish => sub {
             $ACTIVE_JOBS--;
             if ($ACTIVE_JOBS < 1) {
-                print STDERR "Stopping loop, no more active workers\n";
+                print "Stopping loop, no more active workers\n"
+                  if $VERBOSE >= 2;
                 $loop->stop;
             }
             return;
