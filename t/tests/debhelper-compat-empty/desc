@@ -2,6 +2,7 @@ Testname: debhelper-compat-empty
 Sequence: 6000
 Version: 1.0
 Description: Test empty debian/compat file
+Test-Depends: debhelper (<< 9.20151101~)
 Test-For:
  debhelper-compat-file-is-empty
  package-uses-deprecated-debhelper-compat-version
