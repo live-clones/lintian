@@ -16,7 +16,6 @@ Test-For:
  extended-description-is-probably-too-short
  helper-templates-in-copyright
  new-package-should-close-itp-bug
- package-uses-deprecated-debhelper-compat-version
  readme-debian-contains-debmake-template
  section-is-dh_make-template
  wrong-bug-number-in-closes

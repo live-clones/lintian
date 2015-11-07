@@ -12,7 +12,6 @@ W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-in
 W: generic-dh-make-2005 source: debian-rules-sets-DH_COMPAT line 12
 W: generic-dh-make-2005 source: dh-clean-k-is-deprecated
 W: generic-dh-make-2005 source: dh_suidregister-is-obsolete line 85
-W: generic-dh-make-2005 source: package-uses-deprecated-debhelper-compat-version 2
 W: generic-dh-make-2005: copyright-without-copyright-notice
 W: generic-dh-make-2005: new-package-should-close-itp-bug
 W: generic-dh-make-2005: readme-debian-contains-debmake-template

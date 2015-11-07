@@ -5,4 +5,4 @@ export DH_COMPAT=7
 %:
 	dh $@
 
-DH_COMPAT='{3'
+DH_COMPAT=5

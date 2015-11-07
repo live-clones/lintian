@@ -44,14 +44,12 @@ I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postr
 W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is CURRENT)
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: debhelper-but-no-misc-depends maintainer-scripts
-W: maintainer-scripts source: debhelper-compat-file-is-missing
 W: maintainer-scripts source: debian-watch-file-in-native-package
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 11
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 7
 W: maintainer-scripts source: debian-watch-file-unknown-version 4
 W: maintainer-scripts source: dfsg-version-in-native-package 7+dfsg-0.1
 W: maintainer-scripts source: dm-upload-allowed-is-obsolete
-W: maintainer-scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
 W: maintainer-scripts: command-with-path-in-maintainer-script postinst:171 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep

@@ -9,7 +9,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-export DH_COMPAT=2
+export DH_COMPAT=5  # Original 2, but debhelper does not support that any more
 
 CFLAGS = -Wall -g
 
