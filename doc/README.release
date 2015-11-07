@@ -25,7 +25,7 @@ issues that have not been fixed during development.  If you do code
 changes, remember to set the distribution back to UNRELEASED!
 Otherwise, some checks on the code will be skipped (e.g. critic).
 
-Sign and upload upload the package.  Historically, the Lintian
+Sign and upload the package.  Historically, the Lintian
 maintainers have included the (unsigned) changes file in the signed
 git tag (see e.g. the 2.4.3 tag or the 2.5.19 tag).  If/When doing
 this, it may be prudent to wait for the upload to be accepted before

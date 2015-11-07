@@ -186,7 +186,7 @@ sub new {
 Prepare a number of L<lab entries|Lintian::Lab::Entry> for unpacking.
 
 The ERRHANDLER should be a code ref, which will be invoked in case
-that an entry is not in in the laboratory and cannot be created (via
+that an entry is not in the laboratory and cannot be created (via
 the create method).  It is invoked once per failed entry giving the
 entry as first (and only) argument.
 

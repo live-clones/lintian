@@ -271,7 +271,7 @@ if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
       or Log('warning: executing reporting-sync-state returned '
           . (($? >> 8) & 0xff));
 
-    Log('Running running lintian (via reporting-lintian-harness)');
+    Log('Running lintian (via reporting-lintian-harness)');
     Log(
         'Command: '
           . join(' ',

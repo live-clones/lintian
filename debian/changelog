@@ -10,6 +10,8 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [BR] Avoid false positive in minified javascript by
       detecting line with only one colon.
       (Closes: #792365).
+  * checks/debconf.desc:
+    + [JW] Fix typo.
   * checks/files.pm:
     + [BR] Whitelist pbuilder for dir-or-file-in-build-tree.
   * checks/shared-libs.pm:
@@ -34,13 +36,20 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
   * doc/README.developers:
     + [JW] Use HTTPS for wiki.debian.org URLs.
+  * doc/README.release:
+    + [JW] Fix typo.
 
   * debian/copyright:
     + [JW] Use HTTPS for lintian.debian.org URLs.
 
+  * lib/Lintian/DepMap/Properties.pm:
+    + [JW] Fix typo.
   * lib/Lintian/Profile.pm:
     + [JW,NT] Correct include path for default profile when include
       directories are not given explicitly.  (Closes: #802476)
+    + [JW] Fix typo.
+  * lib/Lintian/Unpacker.pm:
+    + [JW] Fix typo.
   * lib/Lintian/Util.pm:
     + [NT] Whitelist TMPDIR in "clean_env", so that man and msgfmt
       will use the user defined TMPDIR (if any).  Thanks to Bjarni
@@ -58,6 +67,8 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * private/refresh-manual-refs:
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
 
+  * reporting/harness:
+    + [JW] Fix typo.
   * reporting/templates/*.tmpl:
     + [JW] Use HTTPS for debian.org URLs.
 
@@ -1172,7 +1183,7 @@ lintian (2.5.29) unstable; urgency=medium
   * lib/Lintian/Util.pm:
     + [NT] Purge even more ENV variables in clean_env.
     + [NT] Add "pipe_tee" subroutine for tee'ing data from one
-      input file descriptors to one or more output output file
+      input file descriptors to one or more output file
       descriptors.
 
   * man/lintian.pod.in:
@@ -1394,7 +1405,7 @@ lintian (2.5.26) unstable; urgency=medium
     + [BR] Add patch from Ivo De Decker, add check for
       backports changes file.  (Closes: #732225).
     + [BR] Apply patch from Tomasz Bucher, add check for
-      for timestamped gzip files.  (Closes: #738591).
+      timestamped gzip files.  (Closes: #738591).
   * checks/cruft.{desc,pm}:
     + [BR] Use license checking framework for checking php license.
       (Closes: #752540).
@@ -2222,7 +2233,7 @@ lintian (2.5.20) unstable; urgency=low
   * data/binary/embedded-libs:
     + [RG] Detect embedded copies of poppler/xpdf.  (Closes: #724733)
   * data/files/obsolete-paths:
-    + [BR] Add this this file to generically check obsolete path.
+    + [BR] Add this file to generically check obsolete path.
     + [BR] Check obsolete /etc/dhcp3 path.  (Closes: #673029)
   * data/fields/obsolete-packages:
     + [NT] Apply patch from Eric Dorland to mark various versions
@@ -2592,7 +2603,7 @@ lintian (2.5.17) unstable; urgency=low
     + [NT] Prefer paths without leading slash in the
       documentation for normalize_pkg_path.  Thanks to
       Kevin Ryde for spotting this inconsistency.
-    + [NT] The first argument argument of normalize_pkg_path
+    + [NT] The first argument of normalize_pkg_path
       is now unconditionally normalized.  Furthermore, allow
       the function to be called with only one argument like
       Cwd::realpath.
@@ -14919,7 +14930,7 @@ lintian (1.21.1) unstable; urgency=low
     actually makes it work, thanks to Matej Vela, closes: #157317.
   * Warn against all uncompressed changelogs, thanks again to Matej Vela,
     closes: #157318.
-  * Nuked the code that checked that that for every /usr/share/doc/foo -> ...
+  * Nuked the code that checked that for every /usr/share/doc/foo -> ...
     symlink there exists an equivalent /usr/doc/foo -> ... symlink;
     seems to be a leftover from the FHS transition days, thanks yet again
     to Matej Vela for the patch, closes: #161716.

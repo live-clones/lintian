@@ -274,7 +274,7 @@ Ref: devref 6.5.3.2
 Tag: unknown-debconf-priority
 Severity: important
 Certainty: certain
-Info: The given maintainer script calls db_input or or db_text with a
+Info: The given maintainer script calls db_input or db_text with a
  first argument that doesn't match one of the known priorities.  The
  supported priorities are low, medium, high, and critical.
 Ref: debconf-devel(7)

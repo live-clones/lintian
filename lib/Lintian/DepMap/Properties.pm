@@ -84,7 +84,7 @@ sub add {
 Adds the given C<node> to the map marking any third or more parameters,
 after prefixing them with C<prefix>, as its dependencies and sets the
 C<node>'s property to the ref, if defined. See add()'s description for
-more information about about properties. E.g.
+more information about properties. E.g.
 
     # pA and pB have no dependency:
     $map->addp('pA', {name => 'John Doe'});

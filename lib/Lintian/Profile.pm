@@ -85,7 +85,7 @@ my %SEC_FIELDS = (
 =item Lintian::Profile->new ([$profname[, $ipath[, $extra]]])
 
 Creates a new profile from the profile.  $profname is the name of the
-profile and $ipath is a list reference containing containing the path
+profile and $ipath is a list reference containing the path
 to one (or more) Lintian "roots".
 
 If $profname is C<undef>, the default vendor will be loaded based on
