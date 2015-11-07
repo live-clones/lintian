@@ -12,6 +12,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
       (Closes: #792365).
   * checks/files.pm:
     + [BR] Whitelist pbuilder for dir-or-file-in-build-tree.
+  * checks/shared-libs.pm:
+    + [ADB, NT] Fix false-positive instance of the tag
+      postrm-should-call-ldconfig when the package is using the
+      ldconfig trigger.  (Closes: #804256)
   * checks/source-copyright.desc:
     + [JW] Use HTTPS for www.debian.org URLs.
 

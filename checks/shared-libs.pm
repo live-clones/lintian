@@ -697,7 +697,7 @@ sub run {
                   unless $must_call_ldconfig;
             } else {
                 tag 'postrm-should-call-ldconfig', $must_call_ldconfig
-                  if $must_call_ldconfig;
+                  if $must_call_ldconfig and not $we_trigger_ldconfig;
             }
 
             # Decide if we do it safely
