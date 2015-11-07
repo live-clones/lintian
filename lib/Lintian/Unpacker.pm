@@ -231,7 +231,7 @@ sub prepare_tasks {
                 foreach my $wlist (values %worklists) {
                     next unless $wlist->{'changed'};
                     my $lpkg = $wlist->{'lab-entry'};
-                    # igore errors; there is not much we can do about
+                    # ignore errors; there is not much we can do about
                     # it here.
                     $lpkg->update_status_file;
                 }
