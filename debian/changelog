@@ -1404,7 +1404,7 @@ lintian (2.5.26) unstable; urgency=medium
   * checks/changes-file.{desc,pm}:
     + [BR] Add patch from Ivo De Decker, add check for
       backports changes file.  (Closes: #732225).
-    + [BR] Apply patch from Tomasz Bucher, add check for
+    + [BR] Apply patch from Tomasz Buchert, add check for
       timestamped gzip files.  (Closes: #738591).
   * checks/cruft.{desc,pm}:
     + [BR] Use license checking framework for checking php license.
