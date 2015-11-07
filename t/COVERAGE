@@ -1,13 +1,19 @@
-Last generated 2015-08-12
-Coverage (Tags): 1076/1142 (94.22%), w. legacy tests: 1132/1142 (99.12%)
-Coverage (Checks): 38/46 (82.61%), w. legacy tests: 41/46 (89.13%)
+Last generated 2015-11-07
+Coverage (Tags): 1085/1154 (94.02%), w. legacy tests: 1141/1154 (98.87%)
+Coverage (Checks): 37/48 (77.08%), w. legacy tests: 40/48 (83.33%)
 
 The following tags are not tested by the test suite:
 
+changelog-file misspelled-closes-bug
+
 deb-format tar-errors-from-control
+
+debhelper debhelper-compatibility-level-not-a-number
 
 files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
+
+lintian renamed-tag
 
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-needs-dwww
