@@ -14,6 +14,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Fix typo.
   * checks/files.pm:
     + [BR] Whitelist pbuilder for dir-or-file-in-build-tree.
+  * checks/scripts.pm:
+    + [NT] Check the syntax of maintainter scripts with "sh" when
+      the script is declared with "#!/bin/sh".  Thanks to Ron Lee
+      for spotting this.
   * checks/shared-libs.pm:
     + [ADB, NT] Fix false-positive instance of the tag
       postrm-should-call-ldconfig when the package is using the

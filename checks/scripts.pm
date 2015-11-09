@@ -594,7 +594,7 @@ sub run {
         if ($shellscript) {
             $checkbashisms = $base eq 'sh' ? 1 : 0;
             if ($base eq 'sh' or $base eq 'bash') {
-                if (check_script_syntax('/bin/bash', $path)) {
+                if (check_script_syntax("/bin/${base}", $path)) {
                     tag 'maintainer-shell-script-fails-syntax-check', $file;
                 }
             }
