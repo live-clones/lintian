@@ -11211,7 +11211,7 @@ lintian (1.23.47) unstable; urgency=low
     + [RA] Attempt to quash some Perl warnings.
     + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex
       files do not need to be executable even if they look like scripts.
-    + [RA] Add clisp, procmail, and rrdcgi, and another way interpretors
+    + [RA] Add clisp, procmail, and rrdcgi, and another way interpreters
       are templated in *.in files.
     + [RA] Expect unversioned dependencies on OCaml packages rather than
       versioned dependencies since the version changes frequently and

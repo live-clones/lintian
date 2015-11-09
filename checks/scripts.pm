@@ -1200,7 +1200,7 @@ sub script_is_evil_and_wrong {
     return $ret;
 }
 
-# Given an interpretor and a file, run the interpretor on that file with the
+# Given an interpreter and a file, run the interpreter on that file with the
 # -n option to check syntax, discarding output and returning the exit status.
 sub check_script_syntax {
     my ($interpreter, $path) = @_;
