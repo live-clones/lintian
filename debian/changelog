@@ -76,6 +76,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * reporting/templates/*.tmpl:
     + [JW] Use HTTPS for debian.org URLs.
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [JW] Add "wily" and "xenial".
+
   * README:
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
 
