@@ -89,7 +89,9 @@ if ($opt{'in-place'}) {
 sub emit_tag_summary {
     my ($fd) = @_;
 
-    print {$fd} "  * Summary of tag changes:\n";
+    if (%added or %removed) {
+        print {$fd} "  * Summary of tag changes:\n";
+    }
     if (%added) {
         print {$fd} "    + Added:\n";
         for my $tag (sort(keys(%added))) {
