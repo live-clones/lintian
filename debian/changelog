@@ -1,6 +1,6 @@
-lintian (2.5.39) UNRELEASED; urgency=medium
+lintian (2.5.38.1) unstable; urgency=medium
 
-  XXX: generate tag summary
+  No tags were added or removed
 
   * checks/binaries.{desc,pm}:
     + [NT] Check for ".debug_str" section in addition to the
@@ -82,7 +82,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * README:
     + [JW] Use HTTPS for www.debian.org and lintian.debian.org URLs.
 
- -- Niels Thykier <niels@thykier.net>  Mon, 05 Oct 2015 22:21:02 +0200
+ -- Niels Thykier <niels@thykier.net>  Mon, 16 Nov 2015 20:45:24 +0100
 
 lintian (2.5.38) unstable; urgency=medium
 
