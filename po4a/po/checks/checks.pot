@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-05 20:13+0000\n"
+"POT-Creation-Date: 2015-11-16 19:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -837,14 +837,15 @@ msgstr ""
 #
 #. Tag: debug-file-with-no-debug-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:383
+#: checks/binaries.desc:384
 #, no-wrap
 msgid ""
 "The binary is installed as a detached \"debug symbols\" ELF file,\n"
 "but it does not appear to have debug information associated with it.\n"
 "\n"
-"Implementation detail: Lintian currently checks for the \".debug_line\"\n"
-"section, which is a part of the DWARF standard."
+"Implementation detail: Lintian checks for the \".debug_line\" and the\n"
+"\".debug_str\" sections.  If either of these are present, the binary\n"
+"is assumed to contain debug information."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -852,7 +853,7 @@ msgstr ""
 #
 #. Tag: binary-file-built-without-LFS-support
 #. type: Lintian tag description
-#: checks/binaries.desc:407
+#: checks/binaries.desc:408
 #, no-wrap
 msgid ""
 "The listed ELF binary appears to be (partially) built without\n"
@@ -4821,7 +4822,7 @@ msgstr ""
 #: checks/debconf.desc:281
 #, no-wrap
 msgid ""
-"The given maintainer script calls db_input or or db_text with a\n"
+"The given maintainer script calls db_input or db_text with a\n"
 "first argument that doesn't match one of the known priorities.  The\n"
 "supported priorities are low, medium, high, and critical."
 msgstr ""
