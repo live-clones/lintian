@@ -11,7 +11,7 @@ override_dh_auto_build:
 	ln -s ../..//..//..//../etc/lintian/pkg.conf symlinks/pkg.conf
 	ln -s /usr/share/lintian/data/data-file symlinks/data-file.old
 	ln -s /etc/lintian/ symlinks/etc-lintian
-	ln -s / symlinks/self-resursive
+	ln -s / symlinks/self-recursive
 	ln -s ../../lintian-old/../lintian/data/data-file  symlinks/spurious
 	ln -s ../../../share/lintian/data/comp-data.gz symlinks/comp-data
 

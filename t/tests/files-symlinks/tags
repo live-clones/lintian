@@ -5,5 +5,5 @@ E: files-symlinks: symlink-has-too-many-up-segments usr/share/lintian/data/pkg.c
 E: files-symlinks: symlink-should-be-absolute usr/share/lintian/data/pkg-old.conf ../../../../etc/lintian/pkg.conf
 W: files-symlinks: symlink-ends-with-slash usr/share/etc-lintian /etc/lintian/
 W: files-symlinks: symlink-has-double-slash usr/share/lintian/data/pkg.conf ../..//..//..//../etc/lintian/pkg.conf
-W: files-symlinks: symlink-is-self-recursive usr/share/lintian/data/self-resursive /
+W: files-symlinks: symlink-is-self-recursive usr/share/lintian/data/self-recursive /
 W: files-symlinks: symlink-should-be-relative usr/share/lintian/data/data-file.old /usr/share/lintian/data/data-file
