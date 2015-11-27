@@ -659,7 +659,7 @@ sub _find_vendor_profile {
         $cpy =~ s/\Q{VENDOR}\E//g;
         croak "Unknown substitution \"$1\" (in \"$prof\")"
           if $cpy =~ m/\{([^ \}]+)\}/;
-        croak "Bad, broken or empty subtitution marker in \"$prof\""
+        croak "Bad, broken or empty substitution marker in \"$prof\""
           if $cpy =~ m/[{}]/;
     }
 

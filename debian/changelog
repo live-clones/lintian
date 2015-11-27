@@ -20,6 +20,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * lib/Lintian/Output.pm:
     + [JW] Fix typos.
 
+  * lib/Lintian/Profile.pm:
+    + [JW] Fix typo.
+
   * lib/Lintian/Tags.pm:
     + [JW] Fix typo.
 
