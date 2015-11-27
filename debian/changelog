@@ -11,6 +11,12 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
+  * doc/examples/profiles/my-vendor/main.profile:
+    + [JW] Fix typo.
+
+  * doc/lintian.xml:
+    + [JW] Fix typo.
+
  -- Niels Thykier <niels@thykier.net>  Mon, 16 Nov 2015 20:57:35 +0100
 
 lintian (2.5.38.1) unstable; urgency=medium
