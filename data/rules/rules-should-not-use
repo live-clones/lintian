@@ -1,4 +1,4 @@
-# a list of fordidden construct in debian/rules
+# a list of forbidden constructs in debian/rules
 # format is 
 #   tag ~~ regex (\x\s)
 # Please sort by alphabetic sort of tags

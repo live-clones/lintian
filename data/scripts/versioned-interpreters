@@ -23,7 +23,7 @@
 # the version of it.  It should have exactly one capture group, which captures the
 # version.  If the regex does not match the interpreter or does not capture a version
 # in the <version-list>, the entry is assumed not to apply to this interpreter.
-# NB: The regex will be achored and must match the /entire/ interpreter with version.
+# NB: The regex will be anchored and must match the /entire/ interpreter with version.
 #   (e.g. guile-([\d\.]*) is matched as m/^guile-([\d\.]*)$/)
 #
 # <dependency-template> is a dependency template that will generate the dependency
@@ -52,7 +52,7 @@
 #   for the dependency:
 #      "pike7.6 | pike7.6-core"
 #
-# When used on an unversionde interpreter, Lintian will check for a dependency satisfying
+# When used on an unversioned interpreter, Lintian will check for a dependency satisfying
 # ANY of the versioned dependencies that can be generated from applying the versions from
 # <version-list> to <dependency-template>.  Furthermore, also check for the dependency on
 # the <dependency-relation> (assuming it is not one of the magic values).
