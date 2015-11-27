@@ -55,7 +55,7 @@ sub collect {
     my %opts;
     my $open_hardening_info = sub {
         # Use xargs to keep processing times of packages like linux-image
-        # reasonble.
+        # reasonable.
 
         %opts = (
             pipe_in => FileHandle->new,

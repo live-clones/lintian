@@ -36,7 +36,7 @@ sub collect {
     unlink("$dir/changelog")
       if -e "$dir/changelog" or -l "$dir/changelog";
 
-    # Extract NEWS.Debian files as well, with similar precautious.
+    # Extract NEWS.Debian files as well, with similar precautions.
     # Ignore any symlinks to other packages here; in that case, we
     # just won't check the file.
     unlink("$dir/NEWS.Debian")
@@ -75,7 +75,7 @@ sub collect {
     # laboratory and we don't want to end up reading that file by
     # mistake.  Relative links within the same directory or to a
     # subdirectory we accept; anything else is replaced by an
-    # intentinally broken symlink so that checks can do the right
+    # intentionally broken symlink so that checks can do the right
     # thing.
     if (defined($chl) && -l $chl) {
         my $link = readlink($chl);
