@@ -153,7 +153,7 @@ sub parse_element {
     # multi-arch qualifiers equally so (at least at the moment).
     # On unversioned relations, we end up paying for 4 (unique) empty
     # scalars.
-    #   This overhead accumuates to 0.44M for the binary relations of
+    #   This overhead accumulates to 0.44M for the binary relations of
     # source:linux (on i386).
     #
     # Fortunately, perl allows us to do "out-of-bounds" access and
@@ -682,7 +682,7 @@ and pass that in as RELATION instead of the string.
 # This internal function does the heavy lifting of inverse implication between
 # two elements.  Takes two elements and returns true iff the falsehood of
 # the second can be deduced from the truth of the first.  In other words, p
-# implies not q, or resstated, q implies not p.  (Since if a implies b, not b
+# implies not q, or restated, q implies not p.  (Since if a implies b, not b
 # implies not a.)  Due to the return value of implies_element(), we can let it
 # do most of the work.
 sub implies_element_inverse {

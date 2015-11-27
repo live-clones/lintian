@@ -220,7 +220,7 @@ sub control_index {
         'index_owner_file' => undef,
         'fs_root_sub' => 'control',
         # Control files are not installed relative to the system root.
-        # Accordingly, we forbit absolute paths and symlinks..
+        # Accordingly, we forbid absolute paths and symlinks..
         'has_anchored_root_dir' => 0,
     };
     return $self->_fetch_index_data($load_info, $file);

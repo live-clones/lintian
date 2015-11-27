@@ -41,7 +41,7 @@ use constant {
     LAB_MODE_TEMP   => 'temporary',
 };
 
-# A private table of suported types.
+# A private table of supported types.
 my %SUPPORTED_TYPES = (
     'binary'  => 1,
     'changes' => 1,

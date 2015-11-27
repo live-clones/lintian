@@ -1143,7 +1143,7 @@ Otherwise, a copy of the string is returned:
   while ( my $orig = <$fd> ) {
     my $stripped = strip ($orig);
     if ($stripped ne $orig) {
-        # $orig had leadning or/and trailing whitespace
+        # $orig had leading or/and trailing whitespace
     }
   }
 

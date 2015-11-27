@@ -438,7 +438,7 @@ sub _read_profile_section {
 
 # $self->_read_profile_tags($pname, $pheader)
 #
-# Interprets the {dis,en}able-tags{,-from-chcek} fields from
+# Interprets the {dis,en}able-tags{,-from-check} fields from
 # the profile header $pheader.  $pname is the name of the
 # profile (used for error reporting).
 #

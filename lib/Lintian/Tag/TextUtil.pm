@@ -32,7 +32,7 @@ use Text::Wrap;
 
 use Lintian::Util qw(fail strip);
 
-# html_wrap -- word-wrap a paragaph.  The wrap() function from Text::Wrap
+# html_wrap -- word-wrap a paragraph.  The wrap() function from Text::Wrap
 # is not suitable, because it chops words that are longer than the line
 # length.
 sub html_wrap {

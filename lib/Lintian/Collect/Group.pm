@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This is a "Lintian::Collect"-like interace (as in "not quite a
+# This is a "Lintian::Collect"-like interface (as in "not quite a
 # Lintian::Collect").
 package Lintian::Collect::Group;
 

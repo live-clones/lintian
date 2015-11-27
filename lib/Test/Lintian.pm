@@ -750,7 +750,7 @@ sub _check_reference {
             # Check it is a valid reference like URLs or #123456
             # NB: "policy 10.1" references already covered above
             my $ok = 0;
-            $ok = 1 if $reference =~ m/^#\d++$/; # debbug reference
+            $ok = 1 if $reference =~ m/^#\d++$/; # debbugs reference
             $ok = 1 if $reference =~ m,^(?:ftp|https?)://,; # browser URL
             $ok = 1 if $reference =~ m,^/,; # local file reference
             $ok = 1 if $reference =~ m,[\w_-]+\(\d\w*\)$,; # man reference

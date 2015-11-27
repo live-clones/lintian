@@ -128,7 +128,7 @@ sub load_collections {
     return;
 }
 
-# Return the default number of parallization to be used
+# Return the default number of parallelization to be used
 sub default_parallel {
     # check cpuinfo for the number of cores...
     my %opts = ('err' => '&1');

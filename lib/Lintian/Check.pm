@@ -155,7 +155,7 @@ sub check_maintainer {
     # <email>" (#640489).  Email::Valid->address (below) will accept
     # this in most cases (because that is generally valid), but we
     # only want Email::Valid to validate the "email" part and not the
-    # name (Policy allows "." to be unqouted in names, Email::Valid
+    # name (Policy allows "." to be unquoted in names, Email::Valid
     # does not etc.).  Thus this check is to ensure we only pass the
     # "email"-part to Email::Valid.
     if ($extra or ($mail && $mail =~ m/\@[^\>\@]+\>[^\>\@]*$/o)) {

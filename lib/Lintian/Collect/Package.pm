@@ -550,7 +550,7 @@ sub _fetch_index_data {
             while (my $current = pop @check) {
                 $candidates{$current} = 1;
                 foreach my $rdep (@{$rhlinks{$current}}) {
-                    # There should not be any cicles, but just in case
+                    # There should not be any cycles, but just in case
                     push @check, $rdep unless $candidates{$rdep};
                 }
                 # Remove links we are fixing

@@ -245,7 +245,7 @@ sub is_non_free {
     return $self->{is_non_free};
 }
 
-# Internal sub for providing a shared storaged between multiple
+# Internal sub for providing a shared storage between multiple
 # L::Collect objects from same group.
 #
 # sub _set_shared_storage Needs-Info none
