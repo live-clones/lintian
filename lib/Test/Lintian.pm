@@ -218,7 +218,7 @@ sub test_check_desc {
         $tested += 2;
 
         if ($is_translation or $cname eq 'lintian') {
-            my $reason = 'tranlations have no type';
+            my $reason = 'translations have no type';
             $reason = 'check "lintian" does not have a type'
               if not $is_translation;
             # skip these two tests for this special case...

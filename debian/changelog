@@ -26,6 +26,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * lib/Lintian/Tags.pm:
     + [JW] Fix typo.
 
+  * lib/Test/Lintian.pm:
+    + [JW] Fix typo.
+
   * private/refresh-insserv-data:
     + [JW] Fix typo.
 
