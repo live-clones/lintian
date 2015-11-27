@@ -26,7 +26,7 @@ cp "$uglyjson" "$jsdir/jswithoutminext/json.js"
 cp "$uglyjson" "$jsdir/minwithoutsource/notsourced.min.js"
 # fake install but not sourced
 cp "$uglyjson" "$jsdir/jswithoutminextwithoutsource/jsonnotsourced.js"
-# fake source and min alon
+# fake source and min alone
 cp "$uglyjson" "$jsdir/sourced/sourced.min.js"
 cp "$json" "$jsdir/sourced/sourced.js"
 cp "$uglyjson" "$jsdir/sourced_variant/sourced.min.js"

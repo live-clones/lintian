@@ -2,7 +2,7 @@
 # This should be a makefile.
 exec dh "$@"
 
-# fake targets to trick lintain into believing the 
+# fake targets to trick lintian into believing the
 # required targets are present (removed unrelated errors).
 binary:
 binary-arch:

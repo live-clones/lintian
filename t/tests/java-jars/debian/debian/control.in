@@ -55,7 +55,7 @@ Description: {$description} - part D
 Package: unparsable
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
-Description: {$description} - unparable
+Description: {$description} - unparsable
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. The unparsable part.
  .

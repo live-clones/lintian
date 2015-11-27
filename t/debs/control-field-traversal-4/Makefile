@@ -10,7 +10,7 @@ all:
 	# same package, there's a directory traversal issue.
 	# This is because the 'binary/<pkg>/source' symlink in the
 	# laboratory will point to '../../source/../binary/<pkg>'
-	# if the bogus source package name is not catched. This results
+	# if the bogus source package name is not caught. This results
 	# into a valid symlink which is enough for copyright-file to
 	# determine that 'source/dpkg' does not exist.
 	ln -s dpkg root/usr/share/doc/$(name)

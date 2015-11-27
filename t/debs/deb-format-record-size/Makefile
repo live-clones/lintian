@@ -1,6 +1,6 @@
 name = deb-format-record-size
 
-# Build the deb manully, since we need to fiddle with
+# Build the deb manually, since we need to fiddle with
 # with the record-size.
 all:
 	echo '2.0' > debian-binary

@@ -50,7 +50,7 @@ binary-arch:	build
 	dh_fixperms -a
 
 # The shlibs stuff doesn't matter here so do it in a weird order to
-# test wwarnings.
+# test warnings.
 	dh_installdeb -a
 	dh_shlibdeps -a
 	dh_makeshlibs -a

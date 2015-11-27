@@ -1,6 +1,6 @@
 Testname: source-copyright-boilerplate-uri
 Sequence: 6000
 Version: 1.0
-Description: Test for boilerplace DEP-5-like URI
+Description: Test for boilerplate DEP-5-like URI
 Test-For:
  boilerplate-copyright-format-uri

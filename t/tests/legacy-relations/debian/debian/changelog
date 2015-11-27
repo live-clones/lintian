@@ -21,7 +21,7 @@ relations (3) unstable; urgency=low
 
 relations (2) unstable; urgency=low
 
-  * Added a ddepends on dpkg (violates policy) and a versioned depends
+  * Added a depends on dpkg (violates policy) and a versioned depends
     on bash (follows policy)
 
  -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri,  2 Feb 2001 12:37:17 -0800
