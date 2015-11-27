@@ -51,7 +51,7 @@ Lintian::Output - Lintian messaging handling
 
     msg("Something interesting");
     v_msg("Something less interesting");
-    debug_msg(3, "Something very specfific");
+    debug_msg(3, "Something very specific");
 
     # OO
     use Lintian::Output;
@@ -61,12 +61,12 @@ Lintian::Output - Lintian messaging handling
     $out->verbosity_level(-1);
     $out->msg("Something interesting");
     $out->v_msg("Something less interesting");
-    $out->debug_msg(3, "Something very specfific");
+    $out->debug_msg(3, "Something very specific");
 
 =head1 DESCRIPTION
 
 Lintian::Output is used for all interaction between lintian and the user.
-It is designed to be easily extendable via subclassing.
+It is designed to be easily extensible via subclassing.
 
 To simplify usage in the most common cases, many Lintian::Output methods
 can be used as class methods and will therefor automatically use the object
