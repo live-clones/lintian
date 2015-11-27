@@ -597,7 +597,7 @@ $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
 
 # Filter out non-existent paths and resolve the rest.
 # - as we will add them to @INC, make sure they are resolved
-#   so a check doing a chdir will not suddently load anything
+#   so a check doing a chdir will not suddenly load anything
 #   differently.
 @search_dirs = map {
     if (-d $_) {
@@ -1285,7 +1285,7 @@ sub _find_cfg_file {
     if ($opt{'user-dirs'}) {
         my $rcfile;
         {
-            # File::BaseDir sprews warnings if $ENV{'HOME'} is undef, so
+            # File::BaseDir spews warnings if $ENV{'HOME'} is undef, so
             # make sure it is defined when we load the module.  Though,
             # we need to scope this, so $ENV{HOME} becomes undef again
             # when we check for it later.

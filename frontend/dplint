@@ -148,7 +148,7 @@ sub setup_env {
 }
 
 sub load_file_basedir {
-    # File::BaseDir sprews warnings if $ENV{'HOME'} is undef, so
+    # File::BaseDir spews warnings if $ENV{'HOME'} is undef, so
     # make sure it is defined when we load the module.  Though,
     # we need to scope this, so $ENV{HOME} becomes undef again
     # when we check for it later.
