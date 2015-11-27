@@ -740,7 +740,7 @@ Info: This package includes perl scripts using obsoleted perl 4-era
 Tag: maintainer-script-has-unexpanded-debhelper-token
 Severity: normal
 Certainty: possible
-Info: Lintian has detected the presence of a #DEBEHELPER# token in the
+Info: Lintian has detected the presence of a #DEBHELPER# token in the
  listed maintainer/control script.  By default, dh_installdeb will remove
  the token when it makes a substitution in a script.
  .

@@ -2,6 +2,12 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/files.desc:
+    + [JW] Fix typo.
+
+  * checks/scripts.desc:
+    + [JW] Fix typo.
+
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
@@ -1012,7 +1018,7 @@ lintian (2.5.31) unstable; urgency=medium
     + [NT] Automatically correct lab metadata, when the lab
       discovers an entry does not exist.  Any remains of the
       entry will be removed as well.  Previously, the lab would
-      just throw an error and require a manuel correction of
+      just throw an error and require a manual correction of
       the lab.
   * lib/Lintian/Reporting/ResourceManager.pm:
     + [NT] Only preserve the last extension of the installed
