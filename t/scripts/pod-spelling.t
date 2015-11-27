@@ -112,7 +112,7 @@ showdescription printables overridable processables msg ORed SIGKILLs
 SIGTERM wildcard wildcards ar whitelist blacklist API amd armhf cpu
 linux whitelisted blacklisted shaX sha rstrip lstrip parsers
 customisation ALGO CLOC CMD DEBFILE DEST DSCFILE FOH NOCLOSE PARENTDIR
-PGP STARTLINE STR UTF bitmask cp debconf rw proccessable severities
+PGP STARTLINE STR UTF bitmask cp debconf rw processable severities
 AND'ing # ' # this is getting old
 superset YYYY dirname operm username whitespace
 Whitespace udebs multiword recognised eqv testsuite methodx multi

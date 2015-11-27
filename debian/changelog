@@ -17,6 +17,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * doc/lintian.xml:
     + [JW] Fix typo.
 
+  * lib/Lintian/Tags.pm:
+    + [JW] Fix typo.
+
  -- Niels Thykier <niels@thykier.net>  Mon, 16 Nov 2015 20:57:35 +0100
 
 lintian (2.5.38.1) unstable; urgency=medium

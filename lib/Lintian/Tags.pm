@@ -777,7 +777,7 @@ sub overrides {
 
 =item statistics([PROC])
 
-Returns a reference to the statistics hash for the given proccessable or, if PROC
+Returns a reference to the statistics hash for the given processable or, if PROC
 is omitted, a reference to the full statistics hash for all files.  In the
 latter case, the returned hash reference has as keys the file names and as
 values the per-file statistics.
