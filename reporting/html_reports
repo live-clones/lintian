@@ -755,7 +755,7 @@ sub parse_lintian_log {
         $source_version =~ tr/a-zA-Z0-9.+:~-/_/c;
 
         # Conditionally call html_quote if needed.  On average, 11-13% of
-        # all tags (emitted on lintan.d.o) have no "extra".  That would be
+        # all tags (emitted on lintian.d.o) have no "extra".  That would be
         # tags like "no-upstream-changelog".
         if (defined($extra)) {
             $extra = html_quote($extra);
