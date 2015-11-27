@@ -110,7 +110,7 @@ sub run {
     }
 
     # Check a NEWS.Debian file if we have one.  Save the parsed version of the
-    # flie for later checks against the changelog file.
+    # file for later checks against the changelog file.
     my $news;
     my $dnews = $info->lab_data_path('NEWS.Debian');
     if (-f $dnews) {

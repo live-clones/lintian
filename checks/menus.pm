@@ -183,7 +183,7 @@ sub run {
         if ($pkg =~ /^libghc6?-.*-doc$/) {
             # This is the library documentation for a haskell library. Haskell
             # libraries register their documentation via the ghc compiler's
-            # documetation registration mechanism.  See bug #586877.
+            # documentation registration mechanism.  See bug #586877.
         } else {
             tag 'possible-documentation-but-no-doc-base-registration';
         }
@@ -278,7 +278,7 @@ sub check_doc_base_file {
             check_doc_base_file_section($dbfile, $line + 1, \%sawfields,
                 \%sawformats, $knownfields);
 
-            # Intialize variables for new section.
+            # Initialize variables for new section.
             undef $field;
             undef $line;
             @vals      = ();
@@ -556,7 +556,7 @@ sub delink {
 
     # In the loop below we split $file into two parts on each '/' until
     # there's no remaining slashes.  We try substituting the first part with
-    # corresponding symlink and if it succeedes, we start the procedure from
+    # corresponding symlink and if it succeeds, we start the procedure from
     # beginning.
     #
     # Example:

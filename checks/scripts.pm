@@ -210,7 +210,7 @@ my @bashism_regexs = (
     $LEADIN . qr'type\s',
     $LEADIN . qr'time\s',
     $LEADIN . qr'dirs(\s|\Z)',
-    qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substituion
+    qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substitution
     qr'(?:^|\s+)readonly\s+-[af]', # readonly -[af]
     $LEADIN . qr'(sh|\$\{?SHELL\}?) -[rD]', # sh -[rD]
     $LEADIN . qr'(sh|\$\{?SHELL\}?) --\w+', # sh --long-option

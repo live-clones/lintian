@@ -715,7 +715,7 @@ sub run {
                     && ($field eq 'depends' || $field eq 'pre-depends')
                     && ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk')
                     # ignore phpapi- dependencies as adding an
-                    # alternative, real, package breaks its pourpose
+                    # alternative, real, package breaks its purpose
                     && $alternatives[0]->[0] !~ m/^phpapi-/
                   );
 

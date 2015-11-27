@@ -45,7 +45,7 @@ sub run {
         # Here we add length .deb / .dsc (in both cases +4)
         $len += 4;
     } else {
-        # .udeb, thats a +5
+        # .udeb, that's a +5
         $len += 5;
     }
 

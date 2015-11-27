@@ -413,7 +413,7 @@ sub run {
             # satisfy.
             #
             # Deduplicate the list of dependencies before warning so
-            # that we don't dupliate warnings.
+            # that we don't duplicate warnings.
             my %seen;
             @shlibs_depends = grep { !$seen{$_}++ } @shlibs_depends;
             for my $depend (@shlibs_depends) {
@@ -603,7 +603,7 @@ sub run {
         # files that they themselves can satisfy.
         #
         # Deduplicate the list of dependencies before warning so that we don't
-        # dupliate warnings.
+        # duplicate warnings.
         my %seen;
         @symbols_depends = grep { !$seen{$_}++ } @symbols_depends;
         for my $depend (@symbols_depends) {

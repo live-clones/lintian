@@ -327,7 +327,7 @@ sub run {
         tag 'debian-files-list-in-source';
     }
 
-    # This doens't really belong here, but there isn't a better place at the
+    # This doesn't really belong here, but there isn't a better place at the
     # moment to put this check.
     my $version = $info->field('version', '0-1');
 
@@ -1279,7 +1279,7 @@ sub _clean_block {
     $text =~ s/}/ /gxms;
     # single char at end
     # String, C-style comment/javadoc indent,
-    # quotes for strings, pipe and antislash, tilde in some txt
+    # quotes for strings, pipe and backslash, tilde in some txt
     $text =~ s,[%\*\"\|\\\#~], ,gxms;
     # delete double spacing now and normalize spacing
     # to space character
