@@ -44,7 +44,7 @@ my $pid = open(my $readelf, '-|');
 my $static_lib_issues = 0;
 
 if (not $pid) {
-    # child - re-direct standerr and exec
+    # child - re-direct stderr and exec
     open(STDERR, '>&', \*STDOUT);
     exec 'readelf', '-WltdVs', @ARGV;
 }

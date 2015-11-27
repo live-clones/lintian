@@ -39,7 +39,7 @@ use Lintian::Command qw(spawn reap);
 #   - Work around bug #677530
 # - The parent will (in second pass) pipe the verbose hardening-check
 #   output to the child.
-#   - Only binaries with a no-foritfy-function tag in the first pass
+#   - Only binaries with a no-fortify-function tag in the first pass
 #     will be re-checked with --verbose.
 #
 # - In the first pass, the child will behave like cat.
