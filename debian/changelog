@@ -1665,7 +1665,7 @@ lintian (2.5.24) unstable; urgency=medium
       deprecated compressions on data.tar-members.
       (Closes: #745740)
   * checks/menu-format.pm:
-    + [JW] Also validate desktop files in usr/share/xessions.
+    + [JW] Also validate desktop files in usr/share/xsessions.
       (Closes: #746402)
 
   * data/files/privacy-breaker-{fragments,websites}:
@@ -2243,7 +2243,7 @@ lintian (2.5.20) unstable; urgency=low
     + [BR] Rename maintainer-script-uses-dpkg-status-directly to
       maintainer-script-should-not-use-dpkg-status-directly.
     + [BR] Rename update-alternatives detection in maintainer script to
-      aintainer-script-should-not-use convention.
+      maintainer-script-should-not-use convention.
     + [BR] Rename start-stop-daemon-in-maintainer-script to
       maintainer-script-should-not-use-start-stop-daemon
   * checks/standards-version:
@@ -2386,7 +2386,7 @@ lintian (2.5.18) unstable; urgency=low
       is consistent with the date.  Thanks to Raphael Champeimont
       for the report.  (Closes: #703407)
   * checks/cruft.{desc,pm}:
-    + [BR] Fix false-postive for license-problem-gfdl-invariants.
+    + [BR] Fix false-positive for license-problem-gfdl-invariants.
       (Closes: #721252)
     + [BR] Extend tag description of the gfdl-invariants tag.
       (Closes: #722102)
@@ -2397,7 +2397,7 @@ lintian (2.5.18) unstable; urgency=low
       Thanks to Guillem Jover for the report and the feedback.
       (Closes: #718349)
   * checks/fields.{desc,pm}:
-    + [NT] Warn about "?op=log" in svn.d.o brower links.  Thanks
+    + [NT] Warn about "?op=log" in svn.d.o browser links.  Thanks
       to Paul Wise for the report.  (Closes: #707700)
     + [NT] Fix false-positive dbg-package-missing-depends for
       transitional dbg packages.  Thanks to Paul Wise for the
@@ -2894,7 +2894,7 @@ lintian (2.5.15) unstable; urgency=low
   * lib/Lintian/Collect/Source.pm:
     + [NT] "binaries" and "binary_field" now only exposes data
       about entries in d/control with a valid package name.
-    + [NT] Document that "binaries" return an unorderd list.
+    + [NT] Document that "binaries" return an unordered list.
     + [NT] relation and relation_noarch now recognises
       "Build-Depends-Arch".
   * lib/Lintian/Path.pm:
@@ -3573,7 +3573,7 @@ lintian (2.5.12) experimental; urgency=medium
     + [NT] Update xrefs to include source version.
     + [NT] Generate a text file suitable for Apache's RewriteMap to
       map source packages to the full report for that source.
-      Thanks to Joerg "Gannef" Jasper for the suggestion to use
+      Thanks to Joerg "Ganneff" Jaspert for the suggestion to use
       RewriteMap.  (Closes: #696960)
     + [JP] Fix version labels glitches.
     + [JP] Use global $GRAPHS_RANGE_DAYS.
@@ -4269,7 +4269,7 @@ lintian (2.5.7) unstable; urgency=low
   * checks/nmu:
     + [NT] Remove Ubuntu specific code to handle their (lack of) NMUs.
       These tags are instead suppressed by the Ubuntu profile.
-  * chekcs/rules:
+  * checks/rules:
     + [NT] Fix false-positive "ignores-make-clean-error" tag caused by
       using make with -C and a dir containing the letter "i".  Thanks to
       Tobias Hansen for the report.  (Closes: #671537)
@@ -4622,7 +4622,7 @@ lintian (2.5.5) unstable; urgency=low
   * collection/source-control-file{,.desc}:
     + [NT] Removed as they are no longer needed.  They have been
       replaced by a smarter Lintian::Collect.
-  * collcetion/unpacked:
+  * collection/unpacked:
     + [NT] Pass --no-check to dpkg-source when requested not to
       check signatures (via reporting/harness).
 
@@ -5761,7 +5761,7 @@ lintian (2.5.1) unstable; urgency=low
       - ldconfig-symlink-before-shlib-in-deb
 
   * checks/binaries:
-    + [NT] Applied patch from Paul Wise to detect binaries embeddeding
+    + [NT] Applied patch from Paul Wise to detect binaries embedding
       glee, glew and libtheora.  (Closes: #629288)
     + [NT] Also consider multiarch dirs when looking for public shared
       libraries.  (Closes: #630164)
@@ -5912,7 +5912,7 @@ lintian (2.5.0) unstable; urgency=low
     + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
       Axel Beckert for the suggestion.  (Closes: #614715)
   * check/fields:
-    + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
+    + [NT] Accepted patch from Antonio Terceiro to add Ruby-Version as a
       accepted field in binary packages.  Thanks to Vincent Carmona for
       the report.  (Closes: #623390)
   * check/files:
@@ -5938,7 +5938,7 @@ lintian (2.5.0) unstable; urgency=low
       (Closes: #626210)
 
   * data/common/source-fields:
-    + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
+    + [NT] Accepted patch from Antonio Terceiro to add Ruby-Version as a
       accepted field in binary packages.  Thanks to Vincent Carmona for
       the report.
 
@@ -6007,7 +6007,7 @@ lintian (2.5.0~rc3) unstable; urgency=low
       Steve R. Langasek for the patch.
 
   * checks/java{,.desc}:
-    + [NT] Added file based on patches submitted by Vicent Fourmond.
+    + [NT] Added file based on patches submitted by Vincent Fourmond.
       This new file checks for jar files in weird locations.
       (Closes: #620829, #575447)
   * checks/manpages:
@@ -6022,7 +6022,7 @@ lintian (2.5.0~rc3) unstable; urgency=low
   * checks/symlinks{,.desc}:
     + [NT] New file that checks for broken symlinks.  A symlink
       is considered broken if it does not exist in the package
-      itself or in its direct dependecies.  Since only absolute
+      itself or in its direct dependencies.  Since only absolute
       symlinks are checked at the moment, this only partly
       fixes #217023.
 
@@ -6090,7 +6090,7 @@ lintian (2.5.0~rc3) unstable; urgency=low
   * lib/{Lab/Package,Lintian/Processable*}.pm:
     + [NT] Added files to assist in package grouping.
   * lib/Lintian/Command/Simple.pm:
-    + [NT] Added support for chanding directory before running the
+    + [NT] Added support for changing directory before running the
       command.
   * lib/Lintian/Collect.pm,lib/Lintian/Collect/*.pm:
     + [NT] Removed assumption that all the information handled by
@@ -6296,7 +6296,7 @@ lintian (2.5.0~rc1) experimental; urgency=low
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
     + [NT] Added hurd-udeb to the list of packages allowed to ship
-      unusual top-level directories.  Thanks to Samual Thibault for
+      unusual top-level directories.  Thanks to Samuel Thibault for
       the patch.  (Closes: #591331)
     + [NT] Fixed spelling of metapackage in empty-binary-package tag
       description.  (Closes: #591300)
@@ -6594,7 +6594,7 @@ lintian (2.4.2) unstable; urgency=low
     + [RG] Check for invalid package names in provided (virtual)
       packages.
     + [RG] Exclude dash from the depends-on-essential-package checks, as
-      per discusion in debian-devel.  (Closes: #587209)
+      per discussion in debian-devel.  (Closes: #587209)
     + [RA] Allow architecture wildcards in build relations and in the
       Architecture field of binary and source packages.  (Closes: #582804)
     + [RA] Rename arch-any-in-binary-pkg to arch-wildcard-in-binary-package
@@ -7905,7 +7905,7 @@ lintian (2.2.15) unstable; urgency=low
       when converting it to a number.  Thanks, Niels Thykier.
       (Closes: #545430)
   * checks/fields{,.desc}:
-    + [RA] Exclude base-files from the needlesly-depends-on-awk tag
+    + [RA] Exclude base-files from the needlessly-depends-on-awk tag
       and from the warning about depending on a virtual package without
       a real package for the awk virtual package.
     + [RA] Use Lintian::Data to read the essential package list.
@@ -8070,7 +8070,7 @@ lintian (2.2.14) unstable; urgency=low
     + [RA] Fix spelling of xfonts-encodings in the xfont dependency
       exception.  (Closes: #540425)
     + [RA] Allow :ext: CVS repository references if the username looks
-      like it won't require autentication.  Thanks, Thorsten Glaser.
+      like it won't require authentication.  Thanks, Thorsten Glaser.
   * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
@@ -8528,7 +8528,7 @@ lintian (2.2.11) unstable; urgency=low
 
   * man/lintian.1:
     + [ADB] Document the new --area command line option and update the
-      documentation of --section to indiciate that it is deprecated in
+      documentation of --section to indicate that it is deprecated in
       favour of the new option.
 
   * private/refresh-debhelper-data:
@@ -9115,7 +9115,7 @@ lintian (2.2.6) unstable; urgency=low
   * checks/changelog-file:
     + [RA] Don't warn about uncompressed ChangeLog files in doc.  They may
       be small files and the maintainer may be installing some other
-      upstream file as the upstrema changelog.  (Closes: #515601)
+      upstream file as the upstream changelog.  (Closes: #515601)
     + [RA] Fix improbable-bug-number-in-closes so that it works.
   * checks/control-file:
     + [ADB] Properly exclude packages built from the glibc source package
@@ -9903,7 +9903,7 @@ lintian (2.1.4) unstable; urgency=low
 
   * t/runtests:
     + [RA] Check that a test produces all tags listed in Test-For and
-      doesn't produce any tages listed in Test-Against.
+      doesn't produce any tags listed in Test-Against.
     + [RA] Support finding and running all tests for or against a
       particular tag.
     + [RA] Correctly set up non-native packages for dpkg-source.
@@ -10590,7 +10590,7 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update a couple of Policy references.  Thanks Jordà Polo.
     + [ADB] Warn when a package embeds a copy of the Universal Feed Parser.
       Patch from Chris Lamb.  (Closes: #493156)
-    + [FL, ADB] Don't issue tag file-in-unusal-dir for files where we already
+    + [FL, ADB] Don't issue tag file-in-unusual-dir for files where we already
       issued one of the specific dir-or-file-in-* tags.  (Closes: #493921)
     + [ADB] Add a missing "have" to package-contains-ancient-file's
       description.
@@ -11125,7 +11125,7 @@ lintian (1.23.49) unstable; urgency=low
   
   * lib/Util.pm:
     + [FL] Only require Digest::SHA if the code path is really used.
-      This makes it unnessesary to install libdigest-sha-perl on
+      This makes it unnecessary to install libdigest-sha-perl on
       lintian.debian.org for now.
   
   * man/lintian.1:
@@ -11563,7 +11563,7 @@ lintian (1.23.43) unstable; urgency=low
       issue is fixed in Perl 5.10; there's no need to add code to
       debian/rules when 5.10 is landing soon.  (Closes: #463138)
   * checks/infofiles:
-    + [RA] Don't issue unknown-intepreter for maintainer scripts with
+    + [RA] Don't issue unknown-interpreter for maintainer scripts with
       weird interpreters.  checks/scripts already handles this and the tag
       wasn't defined.  Thanks, Thijs Kinkhorst.  (Closes: #460964)
     + [RA] Fix Perl warnings given a zero-byte maintainer script.  Thanks,
@@ -11971,7 +11971,7 @@ lintian (1.23.37) unstable; urgency=low
   * checks/fields:
     + [HE] Add 'doc-package-should-be-section-doc',
            'python-package-should-be-section-python',
-           'perl-package-should-be-section-perl'. Ideas shamelessy
+           'perl-package-should-be-section-perl'. Ideas shamelessly
            stolen from linda. (Closes: #452839)
     + [RA] Allow Python dependencies in Build-Depends when using another
       variant for calling Python in the clean target.  Thanks, Bernd
@@ -12008,7 +12008,7 @@ lintian (1.23.37) unstable; urgency=low
            without a dependency on csh. Files there should also
            be allowed to have csh in the shebang line. (Closes: #453417)
     + [HE] Allow packages to drop snippets into /etc/fish.d/ without
-           a dependecy on fish. (Closes: #453416)
+           a dependency on fish. (Closes: #453416)
     + [RA] Remove possible-non-posix-code-in-maintainer-script entirely.
       Debian Policy now allows local and test -a/-o specifically and this
       is pointless portability.
@@ -13470,7 +13470,7 @@ lintian (1.23.15) unstable; urgency=low
     + [FL] Indicate where we found which compat version in
       declares-possibly-conflicting-debhelper-compat-versions
       (Closes: #329953)
-    + [FL] Add dh_installtexfonts to list of commands that modfiy
+    + [FL] Add dh_installtexfonts to list of commands that modify
       the maintainer scripts
     + [FL] Try a little harder to find the DH_COMPAT setting in debian/rules
       (Closes: #348380)
@@ -13478,7 +13478,7 @@ lintian (1.23.15) unstable; urgency=low
     + [FL] Allow version numbers of 0 by correctly checking the output
       of _valid_version for definedness and not the boolean value
       (Closes: #345005)
-    + [FL] Better check for false postives of build-depends-without-arch-dep.
+    + [FL] Better check for false positives of build-depends-without-arch-dep.
       Should fix false positives for cdbs, dbs, dpatch and yada. Based on
       a patch by Russ Allbery (Closes: #344609, #321135, #339750)
     + [FL] Also check for build-dependencies on obsolete packages not
@@ -13655,7 +13655,7 @@ lintian (1.23.12) unstable; urgency=low
     + [FL] Policy section of Description field has changed
   * checks/fields{,.desc}:
     + [FL] Fix a lot of off-by-one errors in the policy references
-      (caused by the addition of the Uploaders field). Unknowningly
+      (caused by the addition of the Uploaders field). Unknowingly
       pointed out by Russ Allbery
     + [FL] Also use non_standards_archs when checking source package
       relations. Patch by Russ Allbery (Closes: #322291)
@@ -14038,8 +14038,8 @@ lintian (1.23.2) unstable; urgency=low
 
   * The "of course it had to go wrong on my first own lintian
     upload" release.
-  * Tigthen versioned Build-Depends on sed to (>= 4.1-4) to avoid
-    be hitten by a bug in sed that changes the permissions of files
+  * Tighten versioned Build-Depends on sed to (>= 4.1-4) to avoid
+    being hit by a bug in sed that changes the permissions of files
     when processed with sed -i (Closes: #259109)
 
  -- Frank Lichtenheld <djpig@debian.org>  Tue, 13 Jul 2004 13:36:45 +0200
@@ -14186,7 +14186,7 @@ lintian (1.23.1) unstable; urgency=low
       on clean target, and not distributing them in the source
 
   * unpack/list-srcpkg:
-    + [FL] Some packages don't specifiy a standards-version, e.g. d-i ones.
+    + [FL] Some packages don't specify a standards-version, e.g. d-i ones.
       Prevent Perl warnings.
   * unpack/list-udebpkg:
     + [FL] Fix sort of copy & paste error which caused the whole
@@ -14348,7 +14348,7 @@ lintian (1.23.0) unstable; urgency=low
       to copyright file
 
   * doc/lintian.sgml:
-    + [FL] Some updates, some more verbatim explantions
+    + [FL] Some updates, some more verbatim explanations
       (Closes: #197955)
     + [FL] Reworked the override section to handle udeb and
       source packages, too
@@ -14431,10 +14431,10 @@ lintian (1.22.12) unstable; urgency=low
     + [FL] fix description-is-dh_make-template check. (Closes: #215125)
       Fix suggested by Josip Rodin
   * checks/etcfiles.desc:
-    + [FL] correcting abbrevation of etcfiles to 'etc', was 'ini' which
+    + [FL] correcting abbreviation of etcfiles to 'etc', was 'ini' which
       is already used by init.d
   * checks/fields:
-    + [FL] Really check only "real" dependency fields for needlessy
+    + [FL] Really check only "real" dependency fields for needless
       depends (Closes: #185035)
     + [JvW] Don't consider depending on coreutils bad, as this is in a way a
       versioned depend (Closes: #216536)
@@ -14524,7 +14524,7 @@ lintian (1.22.11) unstable; urgency=low
      + Missing required tags are now an error (and check name changed)
      + Check tag-quotation
      + Rewrite needs check properly, being more precise what is allowed
-     + Complain about needs="dwww", as this is obsolete accordint to menu
+     + Complain about needs="dwww", as this is obsolete according to menu
        maintainer
        (parts menu-format updates based on patch by Bill Allombert
        <ballombe@debian.org>)
@@ -14716,7 +14716,7 @@ lintian (1.22.2) unstable; urgency=medium
   * Added exception in the shell syntax checks for evil rep scripts,
     thanks to Kevin Ryde, closes: #171175.
   * Added checks for multiple dependencies on libstdc, tcl, tclx, tk, tkx
-    and libpng packages. This is currently beind done in a hardcoded manner,
+    and libpng packages. This is currently being done in a hardcoded manner,
     but that should do for now, closes: #80447, #129548.
   * Added a regression test as part of the relations regression test for
     the above multiple dependencies.
@@ -15205,9 +15205,9 @@ lintian (1.20.9) unstable; urgency=low
 
   * 'rule monger' release
   * checks/debhelper: make regex case insensitive, Closes: #89070
-  * checks/debhelper: modify search logic so it does not report false postives
+  * checks/debhelper: modify search logic so it does not report false positives
     when both Build-Depends and Build-Depends-Indep are defined, Closes: #89069
-  * Fix the decription for package-contains-upstream-install-documentation,
+  * Fix the description for package-contains-upstream-install-documentation,
     Closes: #89257
   * dh_testversion is deprecated, patch applied.  Closes: #89624
   * lintian now detects that the deb/dsc/changes file it was told to parse is
@@ -15442,7 +15442,7 @@ lintian (1.20.1) unstable; urgency=low
     the old messages suidregister-used-in-maintainer-script-other-than-postinst
     and suidunregister-not-called-in-postrm due to suidregister being phased
     out of Debian.  Closes: #81868
-  * binary-has-unneeded-section upgradeed from info to warning
+  * binary-has-unneeded-section upgraded from info to warning
 
  -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed,  3 Jan 2001 13:04:20 -0800
 
@@ -15673,7 +15673,7 @@ lintian (1.9.1) unstable; urgency=low
     + Added a check for /etc/pam.conf.  Precursor for reserved
       /etc/* files
     + Added a check of postinst and prerm for /usr/doc symlink manipulation
-    + Added the /usr/doc symlink to lintians scripts
+    + Added the /usr/doc symlink to lintian's scripts
 
  -- Darren Benham <gecko@debian.org>  Mon, 13 Sep 1999 22:06:07 -0700
 
@@ -15695,7 +15695,7 @@ lintian (1.7) unstable; urgency=low
     + Changed FSSTND directory Infos to Josip's suggested wording.
     + Removed /var/lib from the FSSTND check
     + Fixed non-US/section check
-    + Added text about bashism checks perfromed to N: tag
+    + Added text about bashism checks performed to N: tag
     + Fixed bad-link-to-undocumented.man.page N: tag
 
  -- Darren Benham <gecko@debian.org>  Thu, 29 Jul 1999 15:54:37 -0700
@@ -15711,14 +15711,14 @@ lintian (1.6) unstable; urgency=low
     + Added Help and App/Databases to valid menu entries
     + Added patch from Steve Haslam to recognise /etc/menu-methods and
       check for update-menus calls
-    + Added overrieds for dh_make requested by C. Small
+    + Added overrides for dh_make requested by C. Small
     + Added patch from Roderick Schertler to skip comments/blank lines at
       top of menu files.
     + Changed the relative shared-library check to look for either
       rela.text or rel.text, not just rel.text.  This is needed for PowerPC
       and other non-i386 architectures.
     + Added ruby as a valid interpreter
-    + Added notice when unrecogized file format is found that it might be
+    + Added notice when unrecognized file format is found that it might be
       due to a missing package: binutils-multiarch
 
  -- Darren Benham <gecko@debian.org>  Sun, 11 Jul 1999 17:15:40 -0700
@@ -15748,7 +15748,7 @@ lintian (1.4-1) unstable; urgency=low
      + Don't exit with code 1 for errors that were overridden.
        This fixes bug#37353, reported by Wichert Akkerman.
      + Correctly handle escaped characters in menu items (bug pointed
-       out by Raphael Herzog).
+       out by Raphael Hertzog).
      + bltwish scripts should now depend on blt, not blt8.0.
        This fixes bug#38092, reported by Gordon Russell.
   * Darren's changes:
@@ -16263,7 +16263,7 @@ lintian (0.7.3) unstable; urgency=low
 
   * (checks/binaries, checks/binaries.desc)
     Allow unstripped-binary-or-object for any package with "debug" in its
-    name.  (This is in addition to the exeption already made for "-dbg").
+    name.  (This is in addition to the exception already made for "-dbg").
     Allow binary-not-linked-against-libc for libc itself :-)
 
   * (lib/pipeline.pl)
