@@ -543,7 +543,7 @@ sub file_overrides {
                   (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
                   (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
                 :\s++)?                             # end optional part
-                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)       # <tag-name> [extra] -> $4
+                ([\-\+\.a-zA-Z_0-9]+ (?:\s.+)?)     # <tag-name> [extra] -> $4
                    \Z/xsm
           ) {
             # Valid - so far at least

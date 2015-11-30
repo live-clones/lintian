@@ -25,6 +25,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   * lib/Lintian/Tags.pm:
     + [JW] Fix typo.
+    + [JW] Make it possible to override tags containing "+" characters, such
+      as "missing-dependency-on-libstdc++".  Thanks to Andreas Beckmann for the
+      bug report.  (Closes: #806504)
 
   * lib/Test/Lintian.pm:
     + [JW] Fix typo.
