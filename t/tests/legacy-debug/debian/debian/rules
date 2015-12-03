@@ -21,7 +21,7 @@ build: build-arch build-indep
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp *.o libhello.so.0.0
+	rm -f build-stamp *.o libhello.so.0.0 libhello.so
 	dh_clean
 
 install: build-stamp
