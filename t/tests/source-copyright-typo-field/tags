@@ -1,3 +1,4 @@
+I: source-copyright-typo-field: spelling-error-in-copyright Copyrigth Copyright
 W: source-copyright-typo-field source: field-name-typo-in-dep5-copyright copyrigth -> copyright (line 7)
 W: source-copyright-typo-field source: field-name-typo-in-dep5-copyright file -> files (line 6)
 W: source-copyright-typo-field source: field-name-typo-in-dep5-copyright licens -> license (line 8)
