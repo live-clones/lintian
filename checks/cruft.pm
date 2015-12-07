@@ -37,7 +37,7 @@ use constant BLOCKSIZE => 16_384;
 
 # constant for insane line length
 use constant INSANE_LINE_LENGTH => 512;
-use constant SAFE_LINE_LENGTH => 128;
+use constant SAFE_LINE_LENGTH => 256;
 
 use Lintian::Data;
 use Lintian::Relation ();

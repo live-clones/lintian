@@ -2,6 +2,8 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [BR] Relax line length for minified javascript.
   * checks/files.desc:
     + [JW] Fix typo.
 
