@@ -11,8 +11,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Fix typo.
 
   * data/spelling/corrections:
-    + [JW] Add more corrections.
-    + [AB] Add correction for "arround".
+    + [JW, AB] Add more corrections.
 
   * doc/examples/profiles/my-vendor/main.profile:
     + [JW] Fix typo.
