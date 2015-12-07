@@ -20,6 +20,7 @@ I: source-copyright-undefined source: wildcard-matches-nothing-in-dep5-copyright
 I: source-copyright-undefined source: wildcard-matches-nothing-in-dep5-copyright debian/e (paragraph at line 39)
 I: source-copyright-undefined source: wildcard-matches-nothing-in-dep5-copyright debian/f (paragraph at line 45)
 I: source-copyright-undefined source: wildcard-matches-nothing-in-dep5-copyright debian/g (paragraph at line 51)
+I: source-copyright-undefined: spelling-error-in-copyright unknow unknown
 W: source-copyright-undefined source: dep5-copyright-license-name-not-unique (paragraph at line 33)
 W: source-copyright-undefined source: space-in-std-shortname-in-dep5-copyright common public license - v 1.0 (paragraph at line 51)
 W: source-copyright-undefined source: space-in-std-shortname-in-dep5-copyright undefined undefined (paragraph at line 39)
