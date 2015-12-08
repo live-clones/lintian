@@ -12,6 +12,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   * data/spelling/corrections:
     + [JW, AB] Add more corrections.
+      Thanks to Paul Wise for patch for one of them.
 
   * doc/examples/profiles/my-vendor/main.profile:
     + [JW] Fix typo.
