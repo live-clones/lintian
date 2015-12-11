@@ -10,7 +10,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [JW] Fix typo.
 
-  * data/spelling/corrections:
+  * data/spelling/corrections*:
     + [JW, AB] Add more corrections.
       Thanks to Paul Wise for patch for one of them.
 
