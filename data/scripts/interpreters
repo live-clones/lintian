@@ -70,6 +70,7 @@ procmail       => /usr/bin
 python         => /usr/bin, python:any | python-minimal:any
 pforth         => /usr/bin
 racket         => /usr/bin
+rake           => /usr/bin
 r              => /usr/bin, littler
 rackup         => /usr/bin, ruby-rack
 rc             => /usr/bin
