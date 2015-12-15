@@ -10,6 +10,10 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [JW] Fix typo.
 
+  * data/binaries/embedded-libs:
+    + [JW] Apply patch from James Cowgill to rename "polarssl" as
+      "mbedtls".  (Closes: #808050)
+
   * data/scripts/interpreters:
     + [JW] Add rake as a known interpreter.  Thanks to Pirate Praveen for
       the bug report.  (Closes: #808013)

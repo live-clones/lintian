@@ -85,6 +85,7 @@ libupnp   ||source-regex=libupnp\d?||(?m)(?:SSDP_LIB: New Request Handler:Error|
 libxml2   ||root and DTD name do not match
 libyaml   ||(?m)^did not find expected <stream-start>
 ltdl      ||source=libtool ||(?m)^library already shutdown
+mbedtls   ||(?m)^(?:ASN1 - Actual length differs from expected length|SSL - The connection indicated an EOF)
 mpfr      ||source=mpfr4 ||MPFR: Can't allocate memory
 mpg123    ||Warning: Encountered more data after announced end of track
 ncurses   ||Not enough memory to create terminal structure
@@ -94,7 +95,6 @@ openjpeg  ||tcd_decode: incomplete bistream
 openssl   ||You need to read the OpenSSL FAQ
 pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
 poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing anyway\)|PDF file is damaged - attempting to reconstruct xref table\.\.\.)
-polarssl  ||(?m)^(?:ASN1 - Actual length differs from expected length|SSL - The connection indicated an EOF)
 srtp      ||srtp: in stream 0x%x:
 sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
 t1lib     ||t1lib is copyright \(c\) Rainer Menzner
