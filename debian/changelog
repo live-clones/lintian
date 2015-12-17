@@ -15,8 +15,8 @@ lintian (2.5.39) UNRELEASED; urgency=medium
       "mbedtls".  (Closes: #808050)
 
   * data/scripts/interpreters:
-    + [JW] Add rake as a known interpreter.  Thanks to Pirate Praveen for
-      the bug report.  (Closes: #808013)
+    + [JW] Add rake as a known interpreter.  Thanks to Cédric Boutillier
+      and Pirate Praveen for the bug reports.  (Closes: #795036)
 
   * data/spelling/corrections*:
     + [JW, AB] Add more corrections.
