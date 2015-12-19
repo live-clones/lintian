@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-11-16 19:50+0000\n"
+"POT-Creation-Date: 2015-12-19 23:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5456,9 +5456,35 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: dh-exec-useless-usage
+#. type: Lintian tag description
+#: checks/debhelper.desc:353
+#, no-wrap
+msgid ""
+"The package uses dh-exec for things it is not needed for.\n"
+"\n"
+"This typically includes using ${DEB_HOST_MULTIARCH} in an install\n"
+"target where a wildcard would suffice. For example, if you had:\n"
+"\n"
+" #! /usr/bin/dh-exec\n"
+" usr/lib/${DEB_HOST_MULTIARCH}\n"
+"\n"
+"This could be replaced with the following in most cases, dropping the\n"
+"need for dh-exec:\n"
+"\n"
+" usr/lib/*\n"
+"\n"
+"However, there may be other directories that match the wildcard,\n"
+"which one does not wish to install. In that case, this warning should\n"
+"be ignored or overridden."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: debhelper-compat-file-is-missing
 #. type: Lintian tag description
-#: checks/debhelper.desc:344
+#: checks/debhelper.desc:364
 #, no-wrap
 msgid ""
 "The package uses debhelper but does not ship a compat file.\n"
@@ -5473,7 +5499,7 @@ msgstr ""
 #
 #. Tag: dh-manual-sequence-control-obsolete
 #. type: Lintian tag description
-#: checks/debhelper.desc:369
+#: checks/debhelper.desc:389
 #, no-wrap
 msgid ""
 "The package uses one (or more) of the obsolete dh parameters\n"
@@ -17187,7 +17213,7 @@ msgstr ""
 #
 #. Tag: service-key-has-whitespace
 #. type: Lintian tag description
-#: checks/systemd.desc:110
+#: checks/systemd.desc:111
 #, no-wrap
 msgid ""
 "The systemd service file contains space in the key definitions\n"
@@ -17196,7 +17222,21 @@ msgid ""
 "They are not explicitly supported by systemd, and third party tools\n"
 "have been known to break.\n"
 "\n"
-"Please remove the spaces surrounding the key definition.\n"
+"Please remove the spaces surrounding the key definition."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: systemd-service-alias-without-extension
+#. type: Lintian tag description
+#: checks/systemd.desc:119
+#, no-wrap
+msgid ""
+"The service file lists an alias without an file extension.\n"
+"\n"
+"The spec mandates that the extension of the listed alias matches\n"
+"the extension of the unit itself.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
