@@ -35,6 +35,7 @@ gstreamer-uri-sinks
 gstreamer-encoders
 gstreamer-decoders
 lua-versions
+auto-built-package
 
 # Special-case, original-maintainer is not ok in Debian, but we allow
 # it in any non-Debian profile by default.
