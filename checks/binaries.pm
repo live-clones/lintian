@@ -86,8 +86,7 @@ our $EMBEDDED_LIBRARIES
   = Lintian::Data->new('binaries/embedded-libs', qr/\s*+\|\|/,
     \&_embedded_libs);
 
-our $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
-    sub { return { 'dir' => $_[1], 'match' => qr/\Q$_[1]\E/ } });
+our $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
 sub _split_hash {
     my (undef, $val) = @_;
@@ -192,17 +191,14 @@ sub run {
     # This avoids false positives with plugins like Apache modules,
     # which may have their own SONAMEs but which don't matter for the
     # purposes of this check.  Also filter out nsswitch modules
-    if (defined($MULTIARCH_DIRS->value($arch))) {
-        $madir = $MULTIARCH_DIRS->value($arch)->{'dir'};
-    } else {
+    $madir = $MULTIARCH_DIRS->value($arch);
+    if (not defined($madir)) {
         # In the case that the architecture is "all" or unknown (or we do
         # not know the multi-arch path for a known architecture) , we assume
         # it the multi-arch path to be this (hopefully!) non-existent path to
         # avoid warnings about uninitialized variables.
         $madir = './!non-existent-path!/./';
     }
-
-    $madir = './!non-existent-path!/./' unless defined $madir;
 
     $gnu_triplet_re = quotemeta $madir;
     $gnu_triplet_re =~ s,^i386,i[3-6]86,;

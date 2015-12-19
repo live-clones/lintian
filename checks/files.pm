@@ -37,8 +37,7 @@ my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
-my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/,
-    sub { return { 'dir' => $_[1], 'match' => qr/\Q$_[1]\E/ } });
+my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     'files/privacy-breaker-websites',
@@ -657,17 +656,15 @@ sub run {
                     # check if pkgconfig file include path point to
                     # arch specific dir
                   MULTI_ARCH_DIR:
-                    foreach my $multiarch_dir ($MULTIARCH_DIRS->all) {
-                        my $value =  $MULTIARCH_DIRS->value($multiarch_dir);
-                        my $pkgconfig_dir = $value->{'dir'};
-                        my $regex = $value->{'match'};
-                        if ($pkg_config_arch eq $pkgconfig_dir) {
+                    foreach my $arch ($MULTIARCH_DIRS->all) {
+                        my $madir = $MULTIARCH_DIRS->value($arch);
+                        if ($pkg_config_arch eq $madir) {
                             next MULTI_ARCH_DIR;
                         }
-                        if ($block =~ m{\W$regex(\W|$)}xms) {
+                        if ($block =~ m{\W\Q$madir\E(\W|$)}xms) {
                             tag 'pkg-config-multi-arch-wrong-dir',$file,
                               'full text contains architecture specific dir',
-                              $pkgconfig_dir;
+                              $madir;
                             last MULTI_ARCH_DIR;
                         }
                     }

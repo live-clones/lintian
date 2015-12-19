@@ -2,13 +2,16 @@ lintian (2.5.39) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [JW] Fix inconsistent parsing of a data file.
   * checks/cruft.pm:
     + [BR] Relax line length for minified javascript.
-  * checks/files.desc:
+  * checks/files.{desc,pm}:
     + [JW] Fix typo.
+    + [JW] Fix inconsistent parsing of a data file.  (Closes: #790739)
   * checks/scripts.desc:
     + [JW] Fix typo.
-  * checks/systemd.{pm,desc}:
+  * checks/systemd.{desc,pm}:
     + [NT] Apply patch from Evgeni Golov to strip ".service" from
       aliases before looking for an init.d service of same name.
       (Closes: #773087)
