@@ -108,3 +108,12 @@ Info: The systemd service file contains space in the key definitions
  have been known to break.
  .
  Please remove the spaces surrounding the key definition.
+
+Tag: systemd-service-alias-without-extension
+Severity: normal
+Certainty: certain
+Ref: http://www.freedesktop.org/software/systemd/man/systemd.unit.html#Alias=
+Info: The service file lists an alias without an file extension.
+ .
+ The spec mandates that the extension of the listed alias matches
+ the extension of the unit itself.

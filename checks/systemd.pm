@@ -164,6 +164,8 @@ sub get_systemd_service_names {
           = extract_service_file_values($info, $file, 'Install', 'Alias', 1);
 
         for my $alias (@aliases) {
+            tag 'systemd-service-alias-without-extension', $file
+              if $alias !~ m/\.service$/;
             $alias =~ s/\.service$//;
             $safe_add_service->($alias, $file);
         }

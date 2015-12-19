@@ -13,3 +13,4 @@ Test-For:
  systemd-service-file-refers-to-obsolete-target
  systemd-no-service-for-init-script
  systemd-no-service-for-init-rcS-script
+ systemd-service-alias-without-extension
