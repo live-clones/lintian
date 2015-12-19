@@ -7,34 +7,24 @@
 #   debian/rules refresh-perl-provides
 # in the lintian source tree
 #
-# last updated for PERL_VERSION=5.020002
-libsocket-perl 2.013
-libio-socket-ip-perl 0.29
-libsys-syslog-perl 0.33
-libio-compress-perl 2.064
-libencode-perl 2.60
-libdigest-sha-perl 5.88
-libcompress-raw-zlib-perl 2.065
-libcompress-raw-bzip2-perl 2.064
+# last updated for PERL_VERSION=5.022001
+libsocket-perl 2.018
+libio-socket-ip-perl 0.37
 libversion-perl 1:0.9909
-libunicode-collate-perl 1.04
-libtest-simple-perl 1.001002
-libtest-harness-perl 3.30
-libpod-simple-perl 3.28
-libparse-cpan-meta-perl 1.4414
-libmodule-metadata-perl 1.000019
-libmodule-load-conditional-perl 0.62
-libmodule-corelist-perl 5.20150214
-libmath-complex-perl 1.59
-libmath-bigint-perl 1.9993
-libjson-pp-perl 2.27203
-libhttp-tiny-perl 0.043
-libfile-spec-perl 3.4801
-libextutils-parsexs-perl 3.240000
-libextutils-cbuilder-perl 0.280217
-libexperimental-perl 0.007
-libdigest-perl 1.17
+libunicode-collate-perl 1.12
+libtest-simple-perl 1.001014
+libtest-harness-perl 3.35
+libpod-simple-perl 3.29
+libmodule-metadata-perl 1.000026
+libmodule-load-conditional-perl 0.64
+libmodule-corelist-perl 5.20151213
+libmath-bigint-perl 1.999700
+libjson-pp-perl 2.27300
+libhttp-tiny-perl 0.054
+libextutils-parsexs-perl 3.280000
+libextutils-cbuilder-perl 0.280221
+libexperimental-perl 0.013
 libcpan-meta-yaml-perl 0.012
-libcpan-meta-requirements-perl 2.125
-libcpan-meta-perl 2.140640
-libautodie-perl 2.23
+libcpan-meta-requirements-perl 2.132
+libcpan-meta-perl 2.150001
+libautodie-perl 2.26
