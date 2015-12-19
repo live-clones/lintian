@@ -6,9 +6,15 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [BR] Relax line length for minified javascript.
   * checks/files.desc:
     + [JW] Fix typo.
-
   * checks/scripts.desc:
     + [JW] Fix typo.
+  * checks/systemd.{pm,desc}:
+    + [NT] Apply patch from Evgeni Golov to strip ".service" from
+      aliases before looking for an init.d service of same name.
+      (Closes: #773087)
+    + [NT] Apply patch from Evgeni Golov to check that the Alias
+      field of .service files ends with .service (as required by
+      the systemd.unit specification).  (Closes: #808369)
 
   * data/binaries/embedded-libs:
     + [JW] Apply patch from James Cowgill to rename "polarssl" as
