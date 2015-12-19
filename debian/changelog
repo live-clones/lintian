@@ -6,6 +6,9 @@ lintian (2.5.39) UNRELEASED; urgency=medium
     + [JW] Fix inconsistent parsing of a data file.
   * checks/cruft.pm:
     + [BR] Relax line length for minified javascript.
+  * checks/debhelper.{desc,pm}:
+    + [NT] Apply patches from Gergely Nagy to extend the dh-exec
+      related checks.  (Closes: #794296, #801104)
   * checks/files.{desc,pm}:
     + [JW] Fix typo.
     + [JW] Fix inconsistent parsing of a data file.  (Closes: #790739)
