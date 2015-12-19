@@ -502,9 +502,9 @@ sub _check_dh_exec {
         $dhe_filter = 1 if /\[[^\]]+\]/;
         $dhe_filter = 1 if /<[^>]+>/;
 
-        if (/^usr\/lib\/\$\{([^\}]+)\}\/?$/ ||
-            /^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/ ||
-            /^usr\/lib\/\$\{([^\}]+)\}[^\s]+$/) {
+        if (  /^usr\/lib\/\$\{([^\}]+)\}\/?$/
+            ||/^usr\/lib\/\$\{([^\}]+)\}\/?\s+\/usr\/lib\/\$\{([^\}]+)\}\/?$/
+            ||/^usr\/lib\/\$\{([^\}]+)\}[^\s]+$/) {
             my $sv = $1;
             my $dv = $2;
             my $dhe_useless = 0;
@@ -524,7 +524,7 @@ sub _check_dh_exec {
             }
             if ($dhe_useless) {
                 my $form = $_;
-                chomp ($form);
+                chomp($form);
                 $form = "\"$form\"";
                 tag 'dh-exec-useless-usage', $path, $form;
             }
