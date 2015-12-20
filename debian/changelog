@@ -1,6 +1,9 @@
-lintian (2.5.39) UNRELEASED; urgency=medium
+lintian (2.5.39) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - dh-exec-useless-usage
+      - systemd-service-alias-without-extension
 
   * checks/binaries.pm:
     + [JW] Fix inconsistent parsing of a data file.
@@ -69,7 +72,7 @@ lintian (2.5.39) UNRELEASED; urgency=medium
   * private/refresh-insserv-data:
     + [JW] Fix typo.
 
- -- Niels Thykier <niels@thykier.net>  Mon, 16 Nov 2015 20:57:35 +0100
+ -- Niels Thykier <niels@thykier.net>  Sun, 20 Dec 2015 00:56:05 +0000
 
 lintian (2.5.38.1) unstable; urgency=medium
 
