@@ -2,6 +2,9 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * private/refresh-ftp-master-tags:
+    + [JW] Use HTTPS for the ftp-master.debian.org URL.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 20 Dec 2015 00:58:34 +0000
 
 lintian (2.5.39) unstable; urgency=medium

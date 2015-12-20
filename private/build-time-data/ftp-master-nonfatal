@@ -1,8 +1,8 @@
 # This file lists all tags that cause an automatic reject on upload but can
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
-# http://ftp-master.debian.org/static/lintian.tags
+# https://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2015-06-19
+# Last updated: 2015-12-20
 
 arch-dependent-file-in-usr-share
 arch-independent-package-contains-binary-or-object

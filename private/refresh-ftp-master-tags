@@ -37,7 +37,7 @@ BEGIN {
     }
 }
 
-our $YAML_URL = 'http://ftp-master.debian.org/static/lintian.tags';
+our $YAML_URL = 'https://ftp-master.debian.org/static/lintian.tags';
 
 # Retrieve the YAML file that determines which ftp-master tags warrant a
 # reject and then parse it.  We should probably use a real YAML parser, but
