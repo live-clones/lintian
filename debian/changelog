@@ -2,6 +2,9 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
+
   * private/refresh-ftp-master-tags:
     + [JW] Use HTTPS for the ftp-master.debian.org URL.
 
