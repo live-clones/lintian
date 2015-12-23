@@ -7,8 +7,12 @@ override_dh_install:
 	dh_install
 	# we set the mtime to the past
 	touch -m -d "2003-06-21 12:12:12 UTC" debian/$(pkg)/etc/timestamped-past.gz
-	# we set the mtime to right now
-	touch -m debian/$(pkg)/etc/timestamped-now.gz
+	# we set the mtime to "right" now (meaning two hours ahead of
+	# the changelog file).  We use that as "now" to be more robust
+	# about being built in the past/present/future or in weird
+	# time-zones
+	NOW="$$(date -d "$$(dpkg-parsechangelog -SDate)" +%s)" ; \
+	  touch -m -d @"$$((NOW+3600*2))" debian/$(pkg)/etc/timestamped-now.gz
 
 override_dh_installdocs:
 	dh_installdocs
