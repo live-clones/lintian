@@ -2,6 +2,11 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/binaries/embedded-libs:
+    + [JW] Fix typo in the string used for detecting copies of OpenJPEG.
+      (But continue to recognize the misspelled variant, which might be
+      still present in some copies.)
+
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
