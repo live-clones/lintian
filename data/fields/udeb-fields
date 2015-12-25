@@ -22,6 +22,8 @@ kernel-version
 installer-menu-item
 bugs
 origin
+auto-built-package
+build-ids
 built-using
 
 # Special-case, original-maintainer is not ok in Debian, but we allow

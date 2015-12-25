@@ -6,6 +6,9 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [JW] Fix typo in the string used for detecting copies of OpenJPEG.
       (But continue to recognize the misspelled variant, which might be
       still present in some copies.)
+  * data/fields/udeb-fields:
+    + [NT] Add Auto-Built-Package and Build-Ids fields.  Thanks to
+      Guillem Jover for the report.  (Closes: #808566)
 
   * data/spelling/corrections:
     + [JW] Add more corrections.
