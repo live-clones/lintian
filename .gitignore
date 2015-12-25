@@ -11,3 +11,4 @@
 /runtests
 *.iml
 /.idea/
+/.nobackup
