@@ -13,6 +13,10 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
+  * man/lintian.pod.in:
+    + [NT,JW] Document clarify that "-L +=<value>" is valid.
+      (Closes: #802729)
+
   * private/refresh-ftp-master-tags:
     + [JW] Use HTTPS for the ftp-master.debian.org URL.
 

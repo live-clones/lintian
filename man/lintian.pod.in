@@ -249,7 +249,7 @@ configuration file.
 Note: B<display-level> and B<display-info> may not both appear in the
 configuration file.
 
-=item B<-L> [+|-|=][>=|>|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|<|<=][S|C|S/C]
+=item B<-L> [+|-|=][>=|>|=|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|=|<|<=][S|C|S/C]
 
 Fine-grained selection of tags to be displayed. It is possible to add,
 remove or set the levels to display, specifying a severity (S:
