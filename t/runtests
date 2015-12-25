@@ -789,8 +789,10 @@ sub handle_msg_from_child {
         }
         $final_msg = "${msg_type} ${suite}::${testname}";
         $final_msg .= ": ${info_msg}" if defined($info_msg);
-        $show_msg = 1 if $msg_type ne 'pass'
-            and $msg_type ne 'pass-todo' and $msg_type ne 'skip';
+        $show_msg = 1
+          if $msg_type ne 'pass'
+          and $msg_type ne 'pass-todo'
+          and $msg_type ne 'skip';
         $show_msg = 1 if $output_is_tty or $VERBOSE;
         print "${final_msg}\n" if $show_msg;
 
