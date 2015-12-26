@@ -65,6 +65,7 @@ pagsh          => /usr/bin, openafs-client | heimdal-clients
 parrot         => /usr/bin
 perl           => /usr/bin, @NODEPS@
 perl6          => /usr/bin, rakudo
+perl6-m        => /usr/bin, rakudo
 plackup        => /usr/bin, libplack-perl
 procmail       => /usr/bin
 python         => /usr/bin, python:any | python-minimal:any

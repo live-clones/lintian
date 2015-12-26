@@ -9,7 +9,9 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * data/fields/udeb-fields:
     + [NT] Add Auto-Built-Package and Build-Ids fields.  Thanks to
       Guillem Jover for the report.  (Closes: #808566)
-
+  * data/scripts/interpreters:
+    + [JW] Add perl6-m as a known interpreter.  Thanks to Dominique Dumont
+      for the bug report.  (Closes: #809057)
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
