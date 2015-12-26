@@ -16,6 +16,10 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * man/lintian.pod.in:
     + [NT,JW] Document clarify that "-L +=<value>" is valid.
       (Closes: #802729)
+    + [NT] Attempt to document --display-level a bit more extensively.
+      Thanks to Matt Zagrabelny for the report.  (Closes: #802725)
+    + [NT] Clarify what --default-display-level does and why one might
+      want to use it.
 
   * private/refresh-ftp-master-tags:
     + [JW] Use HTTPS for the ftp-master.debian.org URL.

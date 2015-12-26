@@ -190,12 +190,19 @@ This option overrides the B<color> variable in the configuration file.
 
 =item B<--default-display-level>
 
-Reset the current display level to the default.  This option behaves
-exactly like passing B<-L> ">=important" B<-L> "+>=normal/possible"
-B<-L> "+minor/certain" to lintian.
+Reset the current display level to the default.  Basically, this
+option behaves exactly like passing the following options to lintian:
 
-One use for this option is to override only the display settings in
-the config file.
+   B<-L> ">=important" B<-L> "+>=normal/possible" B<-L> "+minor/certain"
+
+The primary use for this is to ensure that lintian's display level has
+been reset to the built-in default values.  Notably, this can be used
+to override display settings earlier on the command-line or in the
+lintian configuration file.
+
+Further changes to the display level can be done I<after> this option.
+Example: B<--default-display-level --display-info> gives you the
+default display level plus informational ("I:") tags.
 
 =item B<--display-source> X
 
@@ -257,6 +264,46 @@ serious, important, normal, minor, wishlist, pedantic), a certainty
 (C: certain, possible, wild-guess), or both (S/C).  The default
 settings are equivalent to B<-L> ">=important" B<-L>
 "+>=normal/possible" B<-L> "+minor/certain").
+
+The value consists of 3 parts, where two of them are optional.  The
+parts are:
+
+=over 4
+
+=item modifier operator
+
+How to affect the current display level.  Can be one of add to ("+"),
+remove from ("-") or set to ("=") the display level(s) denoted by the
+following selection.
+
+The default value is "=" (i.e. set the display level).
+
+=item set operator
+
+The set of severity and certainties to be selected.  The operator can
+be one of ">=", ">", "=", "<" or "<=".  As an example, this can be used
+to select all important (or "more severe") tags via ">=important".
+
+The selected values includes only items where I<both> the severity and
+the certainty are both included in the set.
+
+As an example, ">=important/possible" includes "important/possible",
+"important/certain", "serious/possible" and "serious/certain".  Note
+that it does I<not> include "serious/wild-guess" (since it does not
+satisfy the lower-bound for the certainty).
+
+The default value is "=", which means "exactly" the given severity
+or/and certainty.
+
+=item severity-certainty
+
+The severity or/and certainty.  This can be any of the 3 forms:
+I<severity>, I<certainty> or I<severity>/I<certainty>.
+
+If only a severity or a certainty is given, the other one defaults to
+"any" as in "any certainty with the given severity" (or vice versa).
+
+=back
 
 This option overrides the B<display-level> variable in the
 configuration file.  The value of the B<display-level> in
