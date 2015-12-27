@@ -30,7 +30,7 @@ Info: This package does not use a machine-readable debian/copyright file.
  .
  This format makes it easier to review licenses and can be easily parsed
  by Lintian.
-Ref: https://dep.debian.net/deps/dep5/
+Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 
 Tag: unknown-copyright-format-uri
 Severity: pedantic
