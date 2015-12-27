@@ -760,6 +760,8 @@ sub create_child {
     return 1;
 }
 
+my $partial_line = 0;
+
 sub handle_msg_from_child {
     my ($child_in_ch, $test_queue, $msg_type, $test_metadata, @payload) = @_;
     my $suite = $test_metadata->{'suite'};
@@ -789,12 +791,31 @@ sub handle_msg_from_child {
         }
         $final_msg = "${msg_type} ${suite}::${testname}";
         $final_msg .= ": ${info_msg}" if defined($info_msg);
-        $show_msg = 1
-          if $msg_type ne 'pass'
-          and $msg_type ne 'pass-todo'
-          and $msg_type ne 'skip';
-        $show_msg = 1 if $output_is_tty or $VERBOSE;
-        print "${final_msg}\n" if $show_msg;
+        if (not $output_is_tty and not $VERBOSE) {
+            if ($msg_type eq 'pass') {
+                $final_msg = '.';
+            } elsif ($msg_type eq 'skip') {
+                $final_msg = 'S';
+            } elsif ($msg_type eq 'pass-todo') {
+                $final_msg = 'T';
+            } else {
+                $show_msg = 1;
+            }
+        } else {
+            $show_msg = 1;
+        }
+        if ($show_msg) {
+            $final_msg .= "\n";
+            print "\n" if $partial_line;
+            $partial_line = 0;
+        } else {
+            $partial_line++;
+            if ($partial_line > 79) {
+                $final_msg .= "\n";
+                $partial_line = 0;
+            }
+        }
+        print $final_msg;
 
         $test = shift(@{$test_queue});
 
