@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-19 23:35+0000\n"
+"POT-Creation-Date: 2015-12-27 09:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12826,7 +12826,7 @@ msgid ""
 "\n"
 "Per the tech-ctte decision on #741573, this is now prohibited.\n"
 "\n"
-"Please remove the reference from the menu file.\n"
+"Please remove the menu file from the package.\n"
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
