@@ -1,6 +1,4 @@
-lintian (2.5.40) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.39.1) unstable; urgency=medium
 
   * checks/menu-format.desc:
     + [NT] Clarify how to handle a command listed both in a menu file
@@ -31,7 +29,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * private/refresh-ftp-master-tags:
     + [JW] Use HTTPS for the ftp-master.debian.org URL.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 20 Dec 2015 00:58:34 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 27 Dec 2015 09:37:34 +0000
 
 lintian (2.5.39) unstable; urgency=medium
 
