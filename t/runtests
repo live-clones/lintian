@@ -760,7 +760,7 @@ sub create_child {
     return 1;
 }
 
-my $partial_line = 0;
+my $partial_line = 0;  ## no critic (it is reachable)
 
 sub handle_msg_from_child {
     my ($child_in_ch, $test_queue, $msg_type, $test_metadata, @payload) = @_;
