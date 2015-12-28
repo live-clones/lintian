@@ -2,6 +2,10 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/source-copyright.desc:
+    + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
+      copyright format specification URL.
+
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
