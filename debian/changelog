@@ -2,6 +2,10 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [JW] Exclude /usr/lib/debug/.build-id/ from foreign-architecture
+      checks.  Thanks to Aurelien Jarno for the bug report.  (Closes:
+      #809262)
   * checks/source-copyright.desc:
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)

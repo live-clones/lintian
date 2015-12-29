@@ -340,6 +340,9 @@ sub run {
                 my $bitre = $ARCH_REGEX->value($1);
                 # Special case - "old" multi-arch dirs
                 $bad = 0 if $bitre and $fileinfo =~ m/$bitre/;
+            } elsif ($fname =~ m,^usr/lib/debug/\.build-id/,) {
+                # Detached debug symbols could be for a biarch library.
+                $bad = 0;
             } elsif ($ARCH_64BIT_EQUIVS->known($arch)
                 && $fname =~ m,^lib/modules/,) {
                 my $arch64re
