@@ -10,7 +10,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)
 
-  * data/spelling/corrections:
+  * data/spelling/corrections*:
     + [JW] Add more corrections.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 27 Dec 2015 09:43:24 +0000
