@@ -1,6 +1,6 @@
 # first field is tag
 # second field is a list of keyword in lower case separated by &&
-# third field is a lower case sentence to match the license. Notes that space are normalized before and formating removed
+# third field is a lower case sentence to match the license. Notes that space are normalized before and formatting removed
 # fourth field is a regex to use to match the license, use lower case and [ ] for space.
 # 5th field is a regex to use for the first block (by default equal to 4th field)
 # 6th field is a function to call if the field 2th to 5th match.
