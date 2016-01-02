@@ -31,6 +31,13 @@ Files: debian/copyright
 License: GPL-2 or GPL-3 with Font exception
 Copyright: 2010 J. Random Hacker <j.r.hacker@example.com>
 
+Files: debian/control
+License: GPL-2 and custom
+Copyright: 2010 J. Random Hacker <j.r.hacker@example.com>
+
+License: custom
+ Custom test license
+
 
 License: GPL-2
  This package is free software; you can redistribute it and/or modify it under
