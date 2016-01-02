@@ -696,7 +696,7 @@ Info: The following file is a old style config file, used
  It is typically used to compile and link against one or more libraries.
  .
  This old style config file contains a multi-arch path and the package
- is not Multi-arch: no.
+ is not Multi-arch: no or package is arch: all.
 
 Tag: package-contains-upstream-install-documentation
 Severity: normal

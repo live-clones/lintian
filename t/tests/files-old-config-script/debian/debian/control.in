@@ -6,23 +6,34 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 
 Package: config-ma-no
-Architecture: all
+Architecture: any
 Depends: $\{misc:Depends\}, $\{shlib:Depends\}
 Multi-arch: no
 Description: Contains config test file no
  This is a test package designed to exercise some feature or tag of
- Lintian for arch all pkgconfig files.
+ Lintian for arch any ma no config script.
  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
 Package: config-ma-foreign
-Architecture: all
+Architecture: any
 Multi-arch: foreign
 Depends: $\{misc:Depends\}, $\{shlib:Depends\}
 Description: Contains config test file foreign
  This is a test package designed to exercise some feature or tag of
- Lintian for arch any pkgconfig files.
+ Lintian for arch any config script ma foreign.
+ It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: config-all
+Architecture: all
+Depends: $\{misc:Depends\}, $\{shlib:Depends\}
+Multi-arch: no
+Description: Contains config test file all arch
+ This is a test package designed to exercise some feature or tag of
+ Lintian for arch all ma no config script.
  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.

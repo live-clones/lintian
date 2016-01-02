@@ -845,7 +845,7 @@ sub run {
                                 tag 'old-style-config-script',$file;
                                 my $multiarch = $info->field('multi-arch','');
                                 # could be ok but only if multi-arch: no
-                                unless($multiarch eq 'no') {
+                                if($multiarch ne 'no' or $arch eq 'all') {
                                     # check multi-arch path
                                     foreach my $arch ($MULTIARCH_DIRS->all) {
                                         my $madir
