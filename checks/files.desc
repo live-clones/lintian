@@ -661,6 +661,43 @@ Info: Lintian overrides should be put in a regular file named
  format.
 Ref: lintian 2.4
 
+Tag: old-style-config-script
+Severity: pedantic
+Certainty: possible
+Info: The following file is a old style config file, used
+ used to retrieve information about installed libraries in the system.
+ It is typically used to compile and link against one or more libraries.
+ .
+ Using this kind of system to pass compile file is obsolete and
+ will likely introduce bugs in a multi-arch system. Particularly,
+ this kind of script could only belong to Multi-Arch: no
+ package.
+ .
+ You should consider to move to pkg-config file and
+ warn your user to not use this script, and open a bug upstream.
+ .
+ You should also consider to implement this file as a compatibility
+ wrapper over pkg-config.
+ .
+ After fixing every reverse depends of your package and use
+ pkg-config reverse depends makefile, you should
+ consider to put this script, as a temporarly convenience of your users,
+ under /usr/lib/$DEB_HOST_MULTIARCH/$PACKAGE/bin where
+ $DEB_HOST_MULTIARCH is the multi-arch triplet and $PACKAGE is the
+ package name. You should also consider to add a NEWS.Debian entry.
+Ref: pkg-config(1),
+     http://sources.debian.net/src/imagemagick/8:6.8.9.9-6/debian/NEWS/
+
+Tag: old-style-config-script-multiarch-path
+Severity: serious
+Certainty: possible
+Info: The following file is a old style config file, used
+ used to retrieve information about installed libraries in the system.
+ It is typically used to compile and link against one or more libraries.
+ .
+ This old style config file contains a multi-arch path and the package
+ is not Multi-arch: no.
+
 Tag: package-contains-upstream-install-documentation
 Severity: normal
 Certainty: possible

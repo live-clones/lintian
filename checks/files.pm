@@ -827,6 +827,47 @@ sub run {
                     and $fname !~ m,^usr/bin/(?:X11|mh)/,) {
                     tag 'subdir-in-usr-bin', $file;
                 }
+                # check old style config script
+                elsif ($file->is_regular_file
+                    && $fname =~ m,-config$,) {
+                    if ($script{$file}) {
+                        # try to find some indication of
+                        # config file (read only one block)
+                        my $fd = $file->open(':raw');
+                        my $sfd = Lintian::SlidingWindow->new($fd);
+                        my $block = $sfd->readwindow();
+                        if ($block) {
+                            # some common stuff found in config file
+                            if (   index($block,'flag')>-1
+                                or index($block,'/include/') > -1
+                                or index($block,'pkg-config')  > -1) {
+                                # ok old config style script tag it
+                                tag 'old-style-config-script',$file;
+                                my $multiarch = $info->field('multi-arch','');
+                                # could be ok but only if multi-arch: no
+                                unless($multiarch eq 'no') {
+                                    # check multi-arch path
+                                    foreach my $arch ($MULTIARCH_DIRS->all) {
+                                        my $madir
+                                          = $MULTIARCH_DIRS->value($arch);
+                                        if ($block =~ m{\W\Q$madir\E(\W|$)}xms)
+                                        {
+                                            #<<< No perltidy - tag name too long
+                                            tag
+                                              'old-style-config-script-multiarch-path',
+                                              $file,
+                                              'full text contains architecture specific dir',
+                                              $madir;
+                                            #>>>
+                                            last;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        close($fd);
+                    }
+                }
             }
             # ---------------- /usr subdirs
             elsif ($type ne 'udeb' and $fname =~ m,^usr/[^/]+/$,)

@@ -1,0 +1,10 @@
+E: config-ma-foreign: old-style-config-script-multiarch-path usr/bin/arch-cross-foreign-config full text contains architecture specific dir ARCH
+E: config-ma-foreign: old-style-config-script-multiarch-path usr/bin/arch-foreign-config full text contains architecture specific dir ARCH
+P: config-ma-foreign: old-style-config-script usr/bin/arch-cross-foreign-config
+P: config-ma-foreign: old-style-config-script usr/bin/arch-foreign-config
+P: config-ma-no: old-style-config-script usr/bin/arch-cross-no-config
+P: config-ma-no: old-style-config-script usr/bin/arch-no-config
+W: config-ma-foreign: binary-without-manpage usr/bin/arch-cross-foreign-config
+W: config-ma-foreign: binary-without-manpage usr/bin/arch-foreign-config
+W: config-ma-no: binary-without-manpage usr/bin/arch-cross-no-config
+W: config-ma-no: binary-without-manpage usr/bin/arch-no-config
