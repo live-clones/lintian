@@ -2,6 +2,9 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [BR] Pass information about minified javascript down to tag.
+      (Closes:  #804147).
   * checks/binaries.pm:
     + [JW] Exclude /usr/lib/debug/.build-id/ from foreign-architecture
       checks.  Thanks to Aurelien Jarno for the bug report.  (Closes:
@@ -10,7 +13,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * checks/source-copyright.desc:
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)
-    + [BR] Improve description text of dep5-copyright-license-name-not-unique.
+    + [BR] Improve description text of tag
+       dep5-copyright-license-name-not-unique.
       (Closes: #809651).
 
   * data/spelling/corrections*:

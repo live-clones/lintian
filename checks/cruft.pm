@@ -753,7 +753,10 @@ sub find_cruft {
 
 # try to check if source is missing
 sub check_missing_source {
-    my ($file, $info, $name, $basename, $dirname,$replacementspairref) = @_;
+    my ($file, $info, $name, $basename, $dirname,$replacementspairref,
+        $extratext)
+      = @_;
+    $extratext //= '';
 
     # do not check missing source for non free
     if($info->is_non_free) {
@@ -819,7 +822,7 @@ sub check_missing_source {
             }
         }
     }
-    tag 'source-is-missing', $name;
+    tag 'source-is-missing', $name, $extratext;
     return;
 }
 
@@ -943,13 +946,14 @@ sub _search_in_block0 {
 # warn about prebuilt javascript and check missing source
 sub _warn_prebuilt_javascript{
     my ($entry, $info, $name, $basename, $dirname,$linelength,$cutoff) = @_;
-    tag 'source-contains-prebuilt-javascript-object',
-      $name, 'line length is', int($linelength),
-      "characters (>$cutoff)";
+    my $extratext
+      =  'line length is '.int($linelength)." characters (>$cutoff)";
+    tag 'source-contains-prebuilt-javascript-object',$name,$extratext;
     # Check for missing source.  It will check
     # for the source file in well known directories
     check_missing_source($entry,$info,$name,$basename,$dirname,
-        [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']]);
+        [['(?i)\.js$','.debug.js'],['(?i)\.js$','-debug.js'],['','']],
+        $extratext);
     return;
 }
 
