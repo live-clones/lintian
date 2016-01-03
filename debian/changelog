@@ -16,7 +16,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [BR] Improve description text of tag
       dep5-copyright-license-name-not-unique.
       (Closes: #809651).
-   * checks/watch-file.{desc,pm}:
+  * checks/watch-file.{desc,pm}:
     + [BR] Apply patch from Chris Lamb <lamby@debian.org>,
       warn if debian/watch uses deprecated
       githubredir.debian.net scraper (Closes: #803106).
