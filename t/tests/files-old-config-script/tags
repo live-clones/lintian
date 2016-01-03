@@ -1,10 +1,26 @@
+E: config-all: old-style-config-script-multiarch-path-arch-all usr/bin/arch-all-config full text contains architecture specific dir ARCH
+E: config-all: old-style-config-script-multiarch-path-arch-all usr/bin/arch-cross-all-config full text contains architecture specific dir ARCH
+E: config-all: old-style-config-script-multiarch-path-arch-allusr/bin/TRIPLET_-arch-cross-all-config full text contains architecture specific dir ARCH
 E: config-ma-foreign: old-style-config-script-multiarch-path usr/bin/arch-cross-foreign-config full text contains architecture specific dir ARCH
 E: config-ma-foreign: old-style-config-script-multiarch-path usr/bin/arch-foreign-config full text contains architecture specific dir ARCH
+E: config-ma-foreign: old-style-config-script-multiarch-pathusr/bin/TRIPLET_-arch-cross-foreign-config full text contains architecture specific dir ARCH
+P: config-all: old-style-config-script usr/bin/arch-all-config
+P: config-all: old-style-config-script usr/bin/arch-cross-all-config
+P: config-all: old-style-config-scriptusr/bin/TRIPLET_-arch-all-config
+P: config-all: old-style-config-scriptusr/bin/TRIPLET_-arch-cross-all-config
 P: config-ma-foreign: old-style-config-script usr/bin/arch-cross-foreign-config
 P: config-ma-foreign: old-style-config-script usr/bin/arch-foreign-config
+P: config-ma-foreign: old-style-config-scriptusr/bin/TRIPLET_-arch-cross-foreign-config
+P: config-ma-foreign: old-style-config-scriptusr/bin/TRIPLET_-arch-foreign-config
 P: config-ma-no: old-style-config-script usr/bin/arch-cross-no-config
 P: config-ma-no: old-style-config-script usr/bin/arch-no-config
+W: config-all: binary-without-manpage usr/bin/arch-all-config
+W: config-all: binary-without-manpage usr/bin/arch-cross-all-config
+W: config-all: binary-without-manpageusr/bin/TRIPLET_-arch-all-config
+W: config-all: binary-without-manpageusr/bin/TRIPLET_-arch-cross-all-config
 W: config-ma-foreign: binary-without-manpage usr/bin/arch-cross-foreign-config
 W: config-ma-foreign: binary-without-manpage usr/bin/arch-foreign-config
+W: config-ma-foreign: binary-without-manpageusr/bin/TRIPLET_-arch-cross-foreign-config
+W: config-ma-foreign: binary-without-manpageusr/bin/TRIPLET_-arch-foreign-config
 W: config-ma-no: binary-without-manpage usr/bin/arch-cross-no-config
 W: config-ma-no: binary-without-manpage usr/bin/arch-no-config

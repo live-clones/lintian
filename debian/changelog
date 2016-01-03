@@ -6,6 +6,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [JW] Exclude /usr/lib/debug/.build-id/ from foreign-architecture
       checks.  Thanks to Aurelien Jarno for the bug report.  (Closes:
       #809262)
+    + [BR] Detect old style config script and detect Mutli-arch error.
   * checks/source-copyright.desc:
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)

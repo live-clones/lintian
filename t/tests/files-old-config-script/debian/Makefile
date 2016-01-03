@@ -6,7 +6,7 @@ else
 endif
 
 all:
-	find generated -name '*-config.in' -exec sh -c 'echo "build" {} && cat {} | sed s/\$$\(ARCH\)/$(ARCH)/g | sed s/\$$\(ARCH_CROSS\)/$(ARCH_CROSS)/g > `echo {} | sed s/\-config\.in$$/\-config/g`' \;
+	find generated -name '*-config.in' -exec sh -c 'echo "build" {} && cat {} | sed -e s/\$$\(ARCH\)/$(ARCH)/g -e s/\$$\(ARCH_CROSS\)/$(ARCH_CROSS)/g > `echo {} | sed -e s/\-config\.in$$/\-config/g -e s,/ARCH_,/$(ARCH)_,g`' \;
 
 install:
 	install -d $(DESTDIR)/usr/bin

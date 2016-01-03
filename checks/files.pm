@@ -828,45 +828,57 @@ sub run {
                     tag 'subdir-in-usr-bin', $file;
                 }
                 # check old style config script
-                elsif ($file->is_regular_file
-                    && $fname =~ m,-config$,) {
-                    if ($script{$file}) {
-                        # try to find some indication of
-                        # config file (read only one block)
-                        my $fd = $file->open(':raw');
-                        my $sfd = Lintian::SlidingWindow->new($fd);
-                        my $block = $sfd->readwindow();
-                        if ($block) {
-                            # some common stuff found in config file
-                            if (   index($block,'flag')>-1
-                                or index($block,'/include/') > -1
-                                or index($block,'pkg-config')  > -1) {
-                                # ok old config style script tag it
-                                tag 'old-style-config-script',$file;
-                                my $multiarch = $info->field('multi-arch','');
-                                # could be ok but only if multi-arch: no
-                                if($multiarch ne 'no' or $arch eq 'all') {
-                                    # check multi-arch path
-                                    foreach my $arch ($MULTIARCH_DIRS->all) {
-                                        my $madir
-                                          = $MULTIARCH_DIRS->value($arch);
-                                        if ($block =~ m{\W\Q$madir\E(\W|$)}xms)
-                                        {
-                                            #<<< No perltidy - tag name too long
-                                            tag
-                                              'old-style-config-script-multiarch-path',
-                                              $file,
-                                              'full text contains architecture specific dir',
-                                              $madir;
-                                            #>>>
-                                            last;
-                                        }
+                elsif ( $file->is_regular_file
+                    and $fname =~ m,-config$,
+                    and $script{$file}) {
+                    # try to find some indication of
+                    # config file (read only one block)
+                    my $fd = $file->open(':raw');
+                    my $sfd = Lintian::SlidingWindow->new($fd);
+                    my $block = $sfd->readwindow();
+                    # some common stuff found in config file
+                    if (
+                        $block
+                        and (  index($block,'flag')>-1
+                            or index($block,'/include/') > -1
+                            or index($block,'pkg-config')  > -1)
+                      ) {
+                        # ok old config style script tag it
+                        tag 'old-style-config-script',$file;
+                        my $multiarch = $info->field('multi-arch','');
+                        # could be ok but only if multi-arch: no
+                        if($multiarch ne 'no' or $arch eq 'all') {
+                            # check multi-arch path
+                            foreach my $archs ($MULTIARCH_DIRS->all) {
+                                my $madir= $MULTIARCH_DIRS->value($archs);
+                                if ($block =~ m{\W\Q$madir\E(\W|$)}xms){
+                             # allow files to begin by triplet if it match arch
+                                    if($file->basename =~ m{^\Q$madir\E}xms) {
+                                        next;
                                     }
+                                    if($arch eq 'all') {
+                                         #<<< No perltidy - tag name too long
+                                        tag
+                                          'old-style-config-script-multiarch-path-arch-all',
+                                          $file,
+                                          'full text contains architecture specific dir',
+                                          $madir;
+                                         #>>>
+                                    } else {
+                                        #<<< No perltidy - tag name too long
+                                        tag
+                                          'old-style-config-script-multiarch-path',
+                                          $file,
+                                          'full text contains architecture specific dir',
+                                          $madir;
+                                        #>>>
+                                    }
+                                    last;
                                 }
                             }
                         }
-                        close($fd);
                     }
+                    close($fd);
                 }
             }
             # ---------------- /usr subdirs
@@ -1536,12 +1548,12 @@ sub run {
                     close($fd);
                     if ($mtime != 0) {
                         if ($isma_same && $file !~ m/\Q$arch\E/o) {
-                            tag 'gzip-file-is-not-multi-arch-same-safe', $file;
+                            tag 'gzip-file-is-not-multi-arch-same-safe',$file;
                         } else {
                             # see https://bugs.debian.org/762105
-                            my $diff = $file->timestamp - $changelog_timestamp;
+                            my $diff= $file->timestamp - $changelog_timestamp;
                             if ($diff >= 0) {
-                                tag 'package-contains-timestamped-gzip', $file;
+                                tag 'package-contains-timestamped-gzip',$file;
                             }
                         }
                     }

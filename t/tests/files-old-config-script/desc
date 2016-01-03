@@ -6,3 +6,4 @@ Options: --pedantic -I -E
 Test-For:
  old-style-config-script
  old-style-config-script-multiarch-path
+ old-style-config-script-multiarch-path-arch-all

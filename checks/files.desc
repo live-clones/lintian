@@ -696,7 +696,21 @@ Info: The following file is a old style config file, used
  It is typically used to compile and link against one or more libraries.
  .
  This old style config file contains a multi-arch path and the package
- is not Multi-arch: no or package is arch: all.
+ is not Multi-arch: no.
+ .
+ You should change this package to Multi-arch: no.
+
+Tag: old-style-config-script-multiarch-path-arch-all
+Severity: serious
+Certainty: possible
+Info: The following file is a old style config file, used
+ used to retrieve information about installed libraries in the system.
+ It is typically used to compile and link against one or more libraries.
+ .
+ This old style config file contains a multi-arch path and the package
+ is is arch: all.
+ .
+ You should change the package to arch: any.
 
 Tag: package-contains-upstream-install-documentation
 Severity: normal
