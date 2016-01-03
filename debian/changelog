@@ -14,7 +14,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)
     + [BR] Improve description text of tag
-      dep5-copyright-license-name-not-unique.
+       dep5-copyright-license-name-not-unique.
       (Closes: #809651).
 
   * data/spelling/corrections*:

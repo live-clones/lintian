@@ -26,7 +26,4 @@ http://pypi.python.org/foo scripts\.([\d.]+)\.tar\.gz debian uupdate
 # Unsupported PyPI URL.
 https://pypi.python.org/packages/source/p/pip/ pip-(\S+)\.tar\.gz
 
-# Deprecated githubredir
-http://githubredir.debian.net/github/username/project /(.*).tar.gz
-
 # without any pgpsigurlmangle
