@@ -692,7 +692,7 @@ Tag: old-style-config-script-multiarch-path
 Severity: serious
 Certainty: possible
 Info: The following file is a old style config file, used
- used to retrieve information about installed libraries in the system.
+ to retrieve information about installed libraries in the system.
  It is typically used to compile and link against one or more libraries.
  .
  This old style config file contains a multi-arch path and the package
