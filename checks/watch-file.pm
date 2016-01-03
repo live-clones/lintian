@@ -123,8 +123,7 @@ sub run {
                 tag 'debian-watch-file-accesses-pypi-over-http', "line $.";
             }
             if (m%githubredir\.debian\.net%) {
-                tag 'debian-watch-file-uses-deprecated-githubredir',
-                  "line $.";
+                tag 'debian-watch-file-uses-deprecated-githubredir',"line $.";
             }
 
             if (
