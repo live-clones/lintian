@@ -1,4 +1,5 @@
 E: watch-file-general source: debian-watch-file-unsupported-pypi-url line 27
+E: watch-file-general source: debian-watch-file-uses-deprecated-githubredir line 30
 I: watch-file-general source: debian-watch-file-accesses-pypi-over-http line 24
 I: watch-file-general source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 P: watch-file-general source: debian-watch-may-check-gpg-signature
@@ -8,6 +9,7 @@ W: watch-file-general source: debian-watch-file-should-mangle-version line 12
 W: watch-file-general source: debian-watch-file-should-mangle-version line 14
 W: watch-file-general source: debian-watch-file-should-mangle-version line 15
 W: watch-file-general source: debian-watch-file-should-mangle-version line 27
+W: watch-file-general source: debian-watch-file-should-mangle-version line 30
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 12
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 14
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 15

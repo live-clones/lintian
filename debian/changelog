@@ -10,12 +10,16 @@ lintian (2.5.40) UNRELEASED; urgency=medium
       checks.  Thanks to Aurelien Jarno for the bug report.  (Closes:
       #809262)
     + [BR] Detect old style config script and detect Mutli-arch error.
-  * checks/source-copyright.desc:
+  * checks/source-copyright.{desc,pm}:
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)
     + [BR] Improve description text of tag
-       dep5-copyright-license-name-not-unique.
+      dep5-copyright-license-name-not-unique.
       (Closes: #809651).
+   * checks/watch-file.{desc,pm}:
+    + [BR] Apply patch from Chris Lamb <lamby@debian.org>,
+      warn if debian/watch uses deprecated
+      githubredir.debian.net scraper (Closes: #803106).
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.
