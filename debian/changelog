@@ -10,6 +10,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * checks/source-copyright.desc:
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)
+    + [BR] Improve description text of dep5-copyright-license-name-not-unique.
+      (Closes: #809651).
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.

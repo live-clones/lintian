@@ -258,6 +258,23 @@ Info: This paragraph defines an already defined license.
  .
  According to the specification, short license names are required to be
  unique within a single copyright file.
+ .
+ This tag could be raised by something like this:
+ | Files: filea ...
+ | Copyright: 2009, ...
+ | License: LGPL-2.1
+ |  This program is free software;
+ |         ...
+ |
+ | Files: fileb ...
+ | Copyright: 2009, ...
+ | License: LGPL-2.1
+ |  This program is free software;
+ |  ...
+ .
+ In this case, you redefine LGPL-2.1 license. You should use
+ a stand-alone paragraph or merge the two files (using a single
+ paragraph).
 
 Tag: invalid-escape-sequence-in-dep5-copyright
 Severity: normal
