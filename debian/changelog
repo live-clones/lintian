@@ -6,6 +6,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [JW] Use "~bpo7+N" as the suffix for wheezy-backports-sloppy
       uploads.  Thanks to Vincent Bernat for the bug report.  (Closes:
       #810028).
+    + [JW] Use "~bpo8+N" as the suffix for jessie backports.
   * checks/cruft.pm:
     + [BR] Pass information about minified javascript down to tag.
       (Closes:  #804147).

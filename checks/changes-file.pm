@@ -77,8 +77,7 @@ sub run {
                                     && $distnumber ne '70')
                                 ||($distribution eq 'wheezy-backports-sloppy'
                                     && $distnumber ne '7')
-                                # TODO version number for jessie?
-                                ||($dist eq 'jessie' && $distnumber !~ /^8\d*/)
+                                ||($dist eq 'jessie' && $distnumber ne '8')
                               ) {
                                 tag
 'backports-upload-has-incorrect-version-number',
