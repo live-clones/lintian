@@ -72,8 +72,11 @@ sub run {
                             my $distnumber = $1;
                             my $bpoversion = $2;
                             if (
-                                  ($dist eq 'squeeze' && $distnumber ne '60')
-                                ||($dist eq 'wheezy' && $distnumber ne '70')
+                                ($dist eq 'squeeze' && $distnumber ne '60')
+                                ||(    $distribution eq 'wheezy-backports'
+                                    && $distnumber ne '70')
+                                ||($distribution eq 'wheezy-backports-sloppy'
+                                    && $distnumber ne '7')
                                 # TODO version number for jessie?
                                 ||($dist eq 'jessie' && $distnumber !~ /^8\d*/)
                               ) {
