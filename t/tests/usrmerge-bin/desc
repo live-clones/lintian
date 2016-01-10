@@ -1,0 +1,6 @@
+Testname: usrmerge-bin
+Sequence: 6000
+Version: 1.0
+Description: Check for file installed in /usr/bin /bin
+Test-For:
+ file-in-root-and-usr
