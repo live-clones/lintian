@@ -33,6 +33,10 @@ E: files-foo-in-bar: dir-or-file-in-var-www var/www/foo/
 E: files-foo-in-bar: dir-or-file-in-var-www var/www/foo/bar
 E: files-foo-in-bar: file-directly-in-usr-share usr/share/bar
 E: files-foo-in-bar: file-directly-in-usr-share-doc usr/share/doc/bar
+E: files-foo-in-bar: file-in-root-and-usr bin/foo/bar usr/bin/foo/bar
+E: files-foo-in-bar: file-in-root-and-usr lib32/bar usr/lib32/bar
+E: files-foo-in-bar: file-in-root-and-usr lib64/bar usr/lib64/bar
+E: files-foo-in-bar: file-in-root-and-usr libx32/bar usr/libx32/bar
 E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/
 E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/bar
 E: files-foo-in-bar: file-in-usr-local usr/local/foo/bar
