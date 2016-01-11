@@ -182,18 +182,7 @@ sub check_maintainer {
         if (not $malformed and not Email::Valid->address($mail)) {
             # Either not a valid email or possibly missing a comma between
             # two entries.
-            $malformed = 1;
-            if ($mail =~ /^0/) {
-                # Email::Valid does not handle emails starting with "0" too
-                # well.  So replace it with a "1", which Email::Valid cannot
-                # misinterpret as a "false-value".
-                # - Fixed in libemail-valid-perl/0.187-2, this work around
-                #   can be dropped when the fix is in stable.
-                my $copy = $mail;
-                $copy =~ s/^0/1/;
-                $malformed = 0 if Email::Valid->address($copy);
-            }
-            tag "$field-address-malformed", $maintainer if $malformed;
+            tag "$field-address-malformed", $maintainer;
         }
         if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
             tag "$field-address-is-on-localhost", $maintainer;
