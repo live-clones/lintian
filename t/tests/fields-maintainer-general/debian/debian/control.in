@@ -1,7 +1,7 @@
 Source: {$source}
 Priority: extra
 Section: {$section}
-Maintainer: <lintian-maint@debian.org>
+Maintainer: lintian-maint@debian.org
 Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
  Russ Allbery <rra@debian.org>,
  I L. Oop  <fields-maintainer-general@packages.qa.debian.org>,

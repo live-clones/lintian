@@ -144,7 +144,7 @@ sub check_maintainer {
     if (not $mail and $name =~ m/@/) {
         # Name probably missing and address has no <>.
         $mail = $name;
-        $name = undef;
+        $name = '';
     }
 
     # Some basic tests.
