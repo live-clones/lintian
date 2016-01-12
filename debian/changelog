@@ -30,6 +30,7 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.
+      Thanks to Paul Wise for patch for one of them.
 
   * lib/Lintian/Check.pm:
     + [JW] Remove work-around for Email::Valid bug (#663663), which is now
