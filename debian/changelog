@@ -28,6 +28,9 @@ lintian (2.5.40) UNRELEASED; urgency=medium
       warn if debian/watch uses deprecated
       githubredir.debian.net scraper (Closes: #803106).
 
+  * data/control-files/deb-permissions:
+    + [NT] Pre-emptively add new experimental "manifest" file as a known
+      file.
   * data/spelling/corrections*:
     + [JW] Add more corrections.
       Thanks to Paul Wise for patch for one of them.

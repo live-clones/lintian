@@ -6,6 +6,7 @@ clilibs    0644
 config     0755
 control    0644
 conffiles  0644
+manifest   0644
 md5sums    0644
 postinst   0755
 preinst    0755
