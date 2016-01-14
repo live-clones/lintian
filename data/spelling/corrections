@@ -192,6 +192,7 @@ availavility||availability
 availble||available
 availiable||available
 avaliable||available
+aviable||available
 backgroud||background
 backslashs||backslashes
 bahavior||behavior
@@ -312,6 +313,8 @@ concatentation||concatenation
 concatentations||concatenations
 conditionaly||conditionally
 conditionnaly||conditionally
+conent||content
+conents||contents
 configuratoin||configuration
 conjuction||conjunction
 conneciton||connection
@@ -389,6 +392,10 @@ dependecies||dependencies
 dependecy||dependency
 depreacted||deprecated
 depreacte||deprecate
+deprectated||deprecated
+deprectate||deprecate
+deprectates||deprecates
+deprectating||deprecating
 deprected||deprecated
 derefenced||dereferenced
 desactivate||deactivate
@@ -409,6 +416,10 @@ developper||developer
 developpment||development
 deveolpment||development
 devided||divided
+diabled||disabled
+diable||disable
+diables||disables
+diabling||disabling
 dictionnary||dictionary
 diferent||different
 differents||different
@@ -420,6 +431,7 @@ disapear||disappear
 disapeared||disappeared
 disapearing||disappearing
 disapears||disappears
+discernable||discernible
 discusion||discussion
 dispertion||dispersion
 dissapears||disappears
@@ -437,6 +449,8 @@ documetation||documentation
 doens't||doesn't
 doesnt||doesn't
 does't||doesn't
+doman||domain
+domans||domains
 dont||don't
 donwload||download
 donwloaded||downloaded
@@ -577,6 +591,10 @@ forse||force
 fortan||fortran
 forunate||fortunate
 forunately||fortunately
+forwaded||forwarded
+forwad||forward
+forwading||forwarding
+forwads||forwards
 forwardig||forwarding
 fowarded||forwarded
 foward||forward
@@ -716,6 +734,7 @@ interpeting||interpreting
 interpet||interpret
 interpets||interprets
 interpretes||interprets
+interruped||interrupted
 interupted||interrupted
 intial||initial
 intregral||integral
@@ -747,6 +766,7 @@ lauching||launching
 lauch||launch
 leightweight||lightweight
 lenght||length
+lenth||length
 lesstiff||lesstif
 libaries||libraries
 libary||library
@@ -792,8 +812,21 @@ mimick||mimic
 mimicks||mimics
 miscelleneous||miscellaneous
 misformed||malformed
+mismached||mismatched
+mismaches||mismatches
+mismaching||mismatching
+mismach||mismatch
 mispelled||misspelled
 mispelt||misspelt
+missconfiguration||misconfiguration
+missconfigured||misconfigured
+missconfigure||misconfigure
+missconfigures||misconfigures
+missconfiguring||misconfiguring
+missmatched||mismatched
+missmatches||mismatches
+missmatching||mismatching
+missmatch||mismatch
 mmnemonic||mnemonic
 modifing||modifying
 modulues||modules
@@ -837,6 +870,7 @@ noticable||noticeable
 notications||notifications
 notifcation||notification
 notifcations||notifications
+observered||observed
 o'caml||OCaml
 occationally||occasionally
 occurance||occurrence
@@ -911,6 +945,7 @@ permissons||permissions
 persistant||persistent
 perviously||previously
 pervious||previous
+pitty||pity
 plattform||platform
 pleaes||please
 ploting||plotting
@@ -1019,9 +1054,12 @@ reimplmented||reimplemented
 reimplmenting||reimplementing
 reimplment||reimplement
 reimplments||reimplements
+reletively||relatively
+reletive||relative
 relevent||relevant
 remoote||remote
 removeable||removable
+renegotation||renegotiation
 repectively||respectively
 repective||respective
 replacments||replacements
@@ -1057,6 +1095,7 @@ retrive||retrieve
 retrives||retrieves
 retriving||retrieving
 returs||returns
+rewriten||rewritten
 rigth|right
 rigths|rights
 rmeoved||removed
@@ -1157,6 +1196,7 @@ standart||standard
 staticly||statically
 strenghts||strengths
 strenght||strength
+strenth||strength
 subdirectoires||subdirectories
 subexpresssions||subexpressions
 subexpresssion||subexpression
@@ -1218,6 +1258,7 @@ threashold||threshold
 threshholds||thresholds
 threshhold||threshold
 throught||through
+thses||these
 tigthened||tightened
 tigthening||tightening
 tigthens||tightens
@@ -1325,6 +1366,7 @@ vaules||values
 vaule||value
 vauling||valuing
 verbse||verbose
+verious||various
 verisons||versions
 verison||version
 verry||very
@@ -1344,6 +1386,8 @@ wich||which
 widht||width
 wierd||weird
 wiht||with
+wilcards||wildcards
+wilcard||wildcard
 wont||won't
 workaroung||workaround
 writting||writing
