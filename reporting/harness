@@ -127,7 +127,6 @@ my ($log_file, $list_file, $lintian_log, $lintian_perf_log,$html_reports_log,
     $sync_state_log)
   = map {"$LOG_DIR/$_" }
   qw(harness.log changed-packages.list lintian.log lintian-perf.log html_reports.log sync_state.log);
-my $old_lintian_log = $lintian_log . '.old';
 my $STATE_DIR = $HARNESS_STATE_DIR;
 
 # import perl libraries
