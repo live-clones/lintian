@@ -1362,7 +1362,7 @@ lintian (2.5.29) unstable; urgency=medium
 
   * reporting/harness:
     + [NT] Add missing import.
-  * reporting/html_reprots:
+  * reporting/html_reports:
     + [NT] Correct the command line in the creation of the
       lintian.log.gz.
   * reporting/{html_reports,templates/*}:
