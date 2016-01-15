@@ -36,14 +36,14 @@
                 # Full report, so include the package
                 @interesting = sort by_version keys %$versions;
                 @interesting = map {
-                    [$_, $versions->{$_}[0]{anchor}]
+                    [$_, $versions->{$_}[0]{pkg_info}{anchor}]
                 } @interesting;
             } else {
                 for my $version (sort by_version keys %$versions) {
                     my $tags = $versions->{$version};
                     for my $tag (@$tags) {
                         if (($tag->{code} eq 'E') or ($tag->{code} eq 'W')) {
-                            push(@interesting, [$version, $tag->{anchor}]);
+                            push(@interesting, [$version, $tag->{pkg_info}{anchor}]);
                             last;
                         }
                     }
@@ -110,12 +110,12 @@
                 my $area = ($pkg_info->{area} eq 'main') ? '' : "; $pkg_info->{area}";
                 $firstarea = $pkg_info->{area} unless $firstarea;
                 if ($first) {
-                    my $state = $info->{'state_data'};
+                    my $state = $pkg_info->{'state_data'};
                     my $status = 'up-to-date';
                     my $last_processed_by = $state->{'last-processed-by'} // 'N/A';
                     $status = '<i>outdated</i>' if (exists($state->{'out-of-date'}));
                     $OUT .= qq(  <div class="source-header">\n);
-                    $OUT .= qq(   <h2 id="$info->{anchor}">);
+                    $OUT .= qq(   <h2 id="$pkg_info->{anchor}">);
                     $OUT .= "$source ($version$area)";
                     $OUT .= " [Uploader]" if $upload;
                     if ($first_version) {

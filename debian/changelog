@@ -43,6 +43,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
       script omit packages on maintainer's pages.  Thanks to Charles
       Plessy for the report and to Dr. Tobias Quathamer for finding
       the condition for triggering the bug.  (Closes: #797178)
+    + [NT] Share more data for a ~15% memory reduction on a an old
+      dataset.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 27 Dec 2015 09:43:24 +0000
 

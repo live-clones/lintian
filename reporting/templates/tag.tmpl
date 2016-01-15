@@ -44,7 +44,7 @@
             or "$pkg_info->{package} $pkg_info->{type} $pkg_info->{version}" ne "$last_pi->{package} $last_pi->{type} $last_pi->{version}") {
             if ($last) {
                 my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
-                $OUT .= qq(  <h2 class="tag"><a href="${path_prefix}full/$last->{xref}">);
+                $OUT .= qq(  <h2 class="tag"><a href="${path_prefix}full/$last->{pkg_info}{xref}">);
                 $OUT .= "$last_pi->{package} $last_pi->{version}</a> ($last_pi->{type})$overridden</h2>\n";
                 if ($tag) {
                     $OUT .= qq(  <ul class="tag">\n);
@@ -67,7 +67,7 @@
         }
     }
     my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
-    $OUT .= qq(  <h2 class="tag"><a href="${path_prefix}full/$last->{xref}">);
+    $OUT .= qq(  <h2 class="tag"><a href="${path_prefix}full/$last->{pkg_info}{xref}">);
     $OUT .= "$last_pi->{package} $last_pi->{version}</a> ($last_pi->{type})$overridden</h2>\n";
     if ($tag) {
         $OUT .= qq(  <ul class="tag">\n);

@@ -195,10 +195,11 @@ my (%statistics, %tag_statistics);
 #                            version   => '0.15~20061120-1',
 #                            area      => 'main',
 #                            type      => 'source',
+#                            anchor    => 'gnubg_0.15~20061120-1',
+#                            xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
 #             },
 #             tag_info  => $tag_info,  # an instance of Lintian::Tag::Info
 #             extra     => 'gnubg-data'
-#             xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
 #           } ] } }
 #
 # and then stored under the key 'Russ Allbery <rra@debian.org>'
@@ -811,8 +812,15 @@ sub parse_lintian_log {
             $statistics{maintainers}++ unless defined $by_maint{$maintainer};
 
             $last_info = $info = {
+                # Tag instance specific data
+
                 # split_tags ensures that $code is a single upper case letter
                 code         => $code,
+                tag_info     => $tag_info,
+                # extra is unsafe in general, but we already quote it above.
+                extra        => $extra,
+
+                # Shareable data
                 pkg_info     => {
                     package      => $package,
                     version      => $version,
@@ -820,14 +828,11 @@ sub parse_lintian_log {
                     # HTML-safe keywords in the start of the loop.,
                     type         => $type,
                     area         => html_quote($area),
+                    # should be safe
+                    anchor       => $anchor,
+                    xref         => maintainer_url($maintainer). "#${anchor}",
+                    'state_data' => $state_data,
                 },
-                tag_info     => $tag_info,
-                # extra is unsafe in general, but we already quote it above.
-                extra        => $extra,
-                # should be safe
-                anchor       => $anchor,
-                xref         => maintainer_url($maintainer). "#${anchor}",
-                'state_data' => $state_data,
             };
             $last_pi = $info->{pkg_info};
             if (!$by_maint{$maintainer}{$source}{$source_version}) {
