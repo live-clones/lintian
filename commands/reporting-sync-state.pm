@@ -222,7 +222,7 @@ sub cleanup_group_state {
     if (not exists($ACTIVE_GROUPS{$group_id}) or not $members) {
         # No members left, remove the group entirely
         delete($state->{'groups'}{$group_id});
-        if (exists($ACTIVE_GROUPS{$group_id})) {
+        if (not exists($ACTIVE_GROUPS{$group_id})) {
             log_debug("Group ${group_id} dropped: It is not an active group");
         } else {
             log_debug("Group ${group_id} dropped: No members left (early)");
