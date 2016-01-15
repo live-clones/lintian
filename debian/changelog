@@ -38,6 +38,12 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [JW] Apply patch from Justin B Rye to fix an uninitialized value
       warning.  (Closes: #810649)
 
+  * reporting/html_reports:
+    + [JW] Add missing "map_maintainer" call, which made the reporting
+      script omit packages on maintainer's pages.  Thanks to Charles
+      Plessy for the report and to Dr. Tobias Quathamer for finding
+      the condition for triggering the bug.  (Closes: #797178)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 27 Dec 2015 09:43:24 +0000
 
 lintian (2.5.39.1) unstable; urgency=medium

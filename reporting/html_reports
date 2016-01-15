@@ -838,6 +838,7 @@ sub parse_lintian_log {
                 # between hashes).
                 if ($uploaders) {
                     for my $uploader (@{$uploaders}) {
+                        $uploader = map_maintainer($uploader);
                         next if $uploader eq $maintainer;
                         $by_uploader{$uploader}{$source}{$source_version}
                           = $list_ref;
