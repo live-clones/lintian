@@ -27,6 +27,8 @@ use autodie;
 
 use Lintian::Tags qw(tag);
 
+our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
+
 sub run {
     my (undef, undef, $info) = @_;
     my $template = 0;
@@ -78,7 +80,9 @@ sub run {
                 tag 'debian-watch-file-declares-multiple-versions', "line $.";
             }
             $watchver = $1;
-            if ($watchver ne '2' and $watchver ne '3') {
+            my $minver = $WATCH_VERSION->value('min-version');
+            my $maxver = $WATCH_VERSION->value('max-version');
+            if ($watchver < $minver or $watchver > $maxver) {
                 tag 'debian-watch-file-unknown-version', $watchver;
             }
         } else {

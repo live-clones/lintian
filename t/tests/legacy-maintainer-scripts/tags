@@ -47,7 +47,7 @@ W: maintainer-scripts source: debhelper-but-no-misc-depends maintainer-scripts
 W: maintainer-scripts source: debian-watch-file-in-native-package
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 11
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 7
-W: maintainer-scripts source: debian-watch-file-unknown-version 4
+W: maintainer-scripts source: debian-watch-file-unknown-version 5
 W: maintainer-scripts source: dfsg-version-in-native-package 7+dfsg-0.1
 W: maintainer-scripts source: dm-upload-allowed-is-obsolete
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1

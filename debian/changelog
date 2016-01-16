@@ -31,6 +31,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
       githubredir.debian.net scraper (Closes: #803106).
     + [NT] Apply patch from Dmitry Shachnev <mitya57@debian.org> to
       remove obsolete check.  (Closes: #793149)
+    + [NT] Apply patch from Sylvestre Ledru <sylvestre@debian.org> to
+      support version 4 of the debian/watch.  (Closes: #811175)
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.

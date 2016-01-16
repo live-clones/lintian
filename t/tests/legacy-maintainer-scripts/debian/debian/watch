@@ -1,5 +1,5 @@
 # A whitespace is fine for uscan:
- version=4
+ version=5
 
 # Following line should not be matched:
 #opts=uversionmangle=s/$/+debian/,dversionmangle=s/foo/bar/ \
