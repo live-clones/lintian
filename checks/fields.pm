@@ -169,13 +169,13 @@ my %VCS_CANONIFY = (
             $_[1] = 'vcs-git-uses-invalid-user-uri';
         }
         $_[0] =~ s{\Qhttp://git.debian.org/\E}
-                  {http://anonscm.debian.org/git/};
+                  {https://anonscm.debian.org/git/};
         $_[0] =~ s{\Qhttp://anonscm.debian.org/git/git/\E}
-                  {http://anonscm.debian.org/git/};
+                  {https://anonscm.debian.org/git/};
         $_[0] =~ s{\Qgit://git.debian.org/\E}
-                  {git://anonscm.debian.org/};
+                  {https://anonscm.debian.org/git/};
         $_[0] =~ s{\Qgit://anonscm.debian.org/git/\E}
-                  {git://anonscm.debian.org/};
+                  {https://anonscm.debian.org/git/};
     },
     hg      => sub {
         $_[0] =~ s{\Qhttp://hg.debian.org/\E}
@@ -1291,6 +1291,9 @@ sub run {
                 }
                 if (any { $_ and /\s/} @parts) {
                     tag 'vcs-field-has-unexpected-spaces', "vcs-$vcs", $uri;
+                }
+                if ($parts[0] =~ m%^(?:git|http)://%) {
+                    tag 'vcs-field-uses-insecure-uri', "vcs-$vcs", $uri;
                 }
             }
             if ($VCS_CANONIFY{$vcs}) {

@@ -1108,7 +1108,17 @@ Info: The Vcs-Git field is pointing to a personal repository using
  a git://(git|anonscm).debian.org/~$LOGIN/$PRJ.git style URI.  This is not
  recommended since the repository this points is not automatically updated
  when pushing to the personal repository.  The recommended URI for anonymous
- access is git://anonscm.debian.org/users/$LOGIN/$PRJ.git.
+ access is https://anonscm.debian.org/git/users/$LOGIN/$PRJ.git.
+
+Tag: vcs-field-uses-insecure-uri
+Severity: wishlist
+Certainty: certain
+Info: The Vcs-* field uses an unencrypted transport protocol for the
+ URI.  It is recommended to use a secure transport such as HTTPS for
+ anonymous read-only access.
+ .
+ Note that you can often just exchange e.g. git:// with https:// for
+ repositories.
 
 Tag: lib-recommends-documentation
 Severity: normal

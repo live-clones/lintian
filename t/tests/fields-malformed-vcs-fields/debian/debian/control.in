@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9)
 Vcs-Browser: svn.debian.org/wsvn/foobar/trunk
 Vcs-Svn: svn+ssh://svn.debian.org/svn/foobar/trunk
-Vcs-Git: git://anonscm.debian.org/test/test.git --branch wrong
+Vcs-Git: https://anonscm.debian.org/test/test.git --branch wrong
 
 Package: {$source}
 Architecture: {$architecture}

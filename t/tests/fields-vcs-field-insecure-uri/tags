@@ -1,0 +1,2 @@
+I: fields-vcs-field-insecure-uri source: vcs-field-uses-insecure-uri vcs-browser http://anonscm.debian.org/git/users/toddy/foobar.git
+I: fields-vcs-field-insecure-uri source: vcs-field-uses-insecure-uri vcs-git git://anonscm.debian.org/users/toddy/foobar.git

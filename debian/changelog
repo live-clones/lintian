@@ -15,6 +15,10 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [BR] Pass information about minified javascript down to tag.
       (Closes:  #804147).
+  * checks/fields.{desc,pm}:
+    + [NT] Apply patch from Dr. Tobias Quathamer <toddy@debian.org> to
+      check for some insecure protocols in Vcs-* fields.
+      (Closes: #810378)
   * checks/files.pm:
     + [NT] Fix off-by-one in an "mtime" comparison, which could give
       false-positive package-contains-timestamped-gzip warnings.
