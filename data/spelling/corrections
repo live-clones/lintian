@@ -61,6 +61,7 @@ ackowledged||acknowledged
 acording||according
 activete||activate
 acumulating||accumulating
+acutally||actually
 addd||add
 addded||added
 addding||adding
@@ -263,6 +264,8 @@ clearifying||clarifying
 cleint||client
 cleints||clients
 collapsable||collapsible
+collegue||colleague
+collegues||colleagues
 colorfull||colorful
 comand||command
 coment||comment
@@ -303,6 +306,11 @@ completness||completeness
 complient||compliant
 complier||compiler
 compliers||compilers
+complile||compile
+compliled||compiled
+compliles||compiles
+compliling||compiling
+compling||compiling
 compontent||component
 compontents||components
 compres||compress
@@ -369,6 +377,7 @@ deafult||default
 deamon||daemon
 debain||Debian
 debians||Debian's
+debuging||debugging
 decalared||declared
 decalare||declare
 decalares||declares
@@ -584,6 +593,7 @@ foget||forget
 fogot||forgot
 fogotten||forgotten
 folloing||following
+folowing||following
 forbiden||forbidden
 foreing||foreign
 formating||formatting
@@ -605,6 +615,8 @@ freqencies||frequencies
 freqency||frequency
 fuction||function
 fuctions||functions
+funciton||function
+funcitons||functions
 functionallity||functionality
 functionaly||functionally
 functionnality||functionality
@@ -939,6 +951,7 @@ perfromed||performed
 perfroming||performing
 perfrom||perform
 perfroms||performs
+peristent||persistent
 permanantly||permanently
 permanant||permanent
 permissons||permissions
@@ -1129,6 +1142,7 @@ sensistively||insensitively
 sentance||sentence
 sentances||sentences
 separatly||separately
+separed||separated
 separted||separated
 separte||separate
 separtes||separates
@@ -1156,6 +1170,7 @@ shoud||should
 shouldnt||shouldn't
 similiar||similar
 simliar||similar
+simmilar||similar
 simplier||simpler
 simultanously||simultaneously
 simultanous||simultaneous
@@ -1168,6 +1183,10 @@ somes||some
 someting||something
 souce||source
 souces||sources
+spawed||spawned
+spawing||spawning
+spaw||spawn
+spaws||spawns
 speach||speech
 specfic||specific
 specfied||specified
@@ -1279,6 +1298,7 @@ tranparently||transparently
 tranparent||transparent
 transfered||transferred
 transfering||transferring
+transmition||transmission
 trasmission||transmission
 treshold||threshold
 trigerring||triggering
@@ -1347,6 +1367,7 @@ usefule||useful
 usefull||useful
 usege||usage
 usera||users
+userful||useful
 usetnet||Usenet
 usuable||usable
 usualy||usually
@@ -1371,6 +1392,7 @@ verisons||versions
 verison||version
 verry||very
 versionned||versioned
+versionning||versioning
 versoned||versioned
 versons||versions
 verson||version
