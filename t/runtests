@@ -120,7 +120,7 @@ our $DUMP_LOGS = '';
 our @TESTS;
 our $ACTIVE_JOBS = 0;
 
-my ($run_all_tests, $tag, $coverage, $singletest, %suites);
+my ($run_all_tests, $tag, $coverage, $test_filter, %suites);
 
 parse_args();
 
@@ -152,18 +152,18 @@ my @failed;
 # anything.
 my $tests_run = 0;
 
-if ($singletest && $singletest =~ s/^tag://) {
-    $tag = $singletest;
-    # clear singletest to avoid find a "single" test.
-    $singletest = '';
-} elsif ($singletest && $singletest =~ m/^suite:(.++)/) {
+if ($test_filter && $test_filter =~ s/^tag://) {
+    $tag = $test_filter;
+    # clear test_filter to avoid find a "single" test.
+    $test_filter = '';
+} elsif ($test_filter && $test_filter =~ m/^suite:(.++)/) {
     my $list = $1;
     %suites = ();
     foreach my $s (split m/\s*+,\s*+/, $list) {
         $suites{$s} = 1;
     }
     # clear singletest to avoid find a "single" test.
-    $singletest = '';
+    $test_filter = '';
 } else {
     # run / check all of them
     foreach my $s (SUITES) {
@@ -210,7 +210,7 @@ sub parse_args {
 
     $VERBOSE = 1 + $debug if $debug;
 
-    ($TESTSET, $RUNDIR, $singletest) = @ARGV;
+    ($TESTSET, $RUNDIR, $test_filter) = @ARGV;
 
     if (-d $RUNDIR) {
         my $abs = Cwd::abs_path($RUNDIR);
@@ -256,7 +256,7 @@ sub parse_args {
 
 sub print_test_summary {
     if (!$tests_run) {
-        if ($singletest) {
+        if ($test_filter) {
             print "W: No tests run, did you specify a valid test name?\n";
         } elsif ($tag) {
             print "I: No tests found for that tag.\n";
@@ -622,18 +622,18 @@ sub find_tests_to_run {
     foreach my $tsi (@test_suite_info) {
         my ($suite, $globstr) = @{$tsi};
         my @tests;
-        if ($singletest) {
-            my $desc_file = $globstr;
-
-            $desc_file =~ s/\Q*\E/$singletest/;
-
-            if (-f $desc_file) {
-                push(@tests, read_test_desc($desc_file));
-            } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"
-                || $singletest eq 'legacy') {
-                my $check_glob = $globstr;
-                $check_glob =~ s/\Q*\E/${singletest}-*/;
-                @tests = map { read_test_desc($_) }glob($check_glob);
+        if ($test_filter) {
+            for my $part (split(m/,/, $test_filter)) {
+                my $desc_file = $globstr;
+                $desc_file =~ s/\Q*\E/${part}/;
+                if (-f $desc_file) {
+                    push(@tests, read_test_desc($desc_file));
+                } elsif (-f "$LINTIAN_ROOT/checks/${part}.desc"
+                    || $part eq 'legacy') {
+                    my $check_glob = $globstr;
+                    $check_glob =~ s/\Q*\E/${part}-*/;
+                    push(@tests, map { read_test_desc($_) }glob($check_glob));
+                }
             }
         } elsif ($tag) {
             @tests = find_tests_for_tag($tag, $globstr);
@@ -659,12 +659,14 @@ sub find_tests_to_run {
 
 sub run_prove_tests {
     my @do_run;
-    if ($singletest) {
-        my $script = "$TESTSET/scripts/$singletest.t";
-        if (-f $script) {
-            @do_run = ($script);
-        } elsif (-d "$TESTSET/scripts/$singletest") {
-            @do_run = ("$TESTSET/scripts/$singletest");
+    if ($test_filter) {
+        for my $part (split(m/,/, $test_filter)) {
+            my $script = "$TESTSET/scripts/${part}.t";
+            if (-f $script) {
+                push(@do_run, $script);
+            } elsif (-d "$TESTSET/scripts/${part}") {
+                push(@do_run, "$TESTSET/scripts/${part}");
+            }
         }
     } elsif ($suites{'scripts'}) {
         unless (-d "$TESTSET/scripts") {
