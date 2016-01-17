@@ -20,7 +20,6 @@ lintian (2.5.40) UNRELEASED; urgency=medium
       copyright format specification URL.  (Closes: #809248)
     + [BR] Improve description text of tag
       dep5-copyright-license-name-not-unique.
-      (Closes: #809651).
   * checks/usrmerge.{desc,pm}:
     + [BR] Add usrmerge test from Marco d'Itri.  (Closes: #767754).
   * checks/watch-file.{desc,pm}:
