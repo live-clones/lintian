@@ -770,8 +770,11 @@ sub handle_msg_from_child {
     my $suite = $test_metadata->{'suite'};
     my $testname = $test_metadata->{'testname'};
 
-    print "PROTO-MSG [DEBUG] ${msg_type} -- ${suite}::${testname} [@payload]\n"
-      if $VERBOSE >= 3;
+    if ($VERBOSE >= 3) {
+        my @dmsg = map { $_ // '<undef>' } @payload;
+        print
+          "PROTO-MSG [DEBUG] ${msg_type} -- ${suite}::${testname} [@dmsg]\n";
+    }
 
     if (   $msg_type eq 'pass'
         or $msg_type eq 'skip'
