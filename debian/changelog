@@ -48,6 +48,10 @@ lintian (2.5.40) UNRELEASED; urgency=medium
     + [NT] Share more data for a ~15% memory reduction on an old
       dataset.
 
+  * t:
+    + [NT] Fix test case relying on removed debhelper compat level.
+      (Closes: #811309)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 27 Dec 2015 09:43:24 +0000
 
 lintian (2.5.39.1) unstable; urgency=medium

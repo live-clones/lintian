@@ -11,10 +11,9 @@ W: fields source: ancient-standards-version 3.9.2 (current is CURRENT)
 W: fields source: changelog-should-mention-nmu
 W: fields source: debhelper-but-no-misc-depends another-version
 W: fields source: debhelper-but-no-misc-depends fields
-W: fields source: debhelper-compat-file-is-missing
 W: fields source: debian-revision-not-well-formed 1.5-.3
 W: fields source: native-package-with-dash-version
-W: fields source: package-uses-deprecated-debhelper-compat-version 1
+W: fields source: package-needs-versioned-debhelper-build-depends 9
 W: fields source: source-nmu-has-incorrect-version-number 1.5-.3
 W: fields: debian-revision-not-well-formed 1.5-.3
 W: fields: essential-no-not-needed
