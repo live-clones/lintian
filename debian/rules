@@ -83,8 +83,7 @@ generate-docs-stamp: $(docsource)
 # Target for updating things on lintian.d.o
 rebuild-lintian.debian.org: api-doc generate-docs-stamp
 
-build-arch build-indep build: build-stamp
-build-stamp: $(neededfiles) generate-docs-stamp $(testtarget) $(po4acheckcfg)
+override_dh_auto_build: $(neededfiles) generate-docs-stamp $(testtarget) $(po4acheckcfg)
 	dh_testdir
 
 	mkdir -p l10n
@@ -93,29 +92,17 @@ build-stamp: $(neededfiles) generate-docs-stamp $(testtarget) $(po4acheckcfg)
 	# check that the static data about perl core modules is up to date
 	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
 
-	touch $@
 
-clean: $(neededfiles)
-	@echo .... cleaning ....
-	dh_testdir
-	dh_testroot
-	rm -f runtests build-stamp
-	rm -rf doc/lintian.html/ doc/lintian.txt
-	rm -rf doc/api.html
+override_dh_clean: $(neededfiles)
+	rm -f runtests
+	rm -rf  doc/api.html doc/lintian.html/ doc/lintian.txt
 ifneq ($(CLEAN_TEST_WORK_DIR),0)
 	rm -rf "$(TEST_WORK_DIR)"
 endif
-	rm -rf man/man1/
-	rm -fr l10n/
+	rm -rf man/man1/ l10n/
 	dh_clean -X "$(TEST_WORK_DIR)"
 
-binary-indep: $(neededfiles) build
-	@echo .... binary-indep ....
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-
+override_dh_install:
 	dh_install
 # some manual work
 	perl -p -i -e 's/my \$$LINTIAN_VERSION;/my \$$LINTIAN_VERSION = q{$(VER)};/;' \
@@ -124,22 +111,14 @@ binary-indep: $(neededfiles) build
 	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
 	# Remove the l10n dir, if empty - happens if there are no translations
 	rmdir --ignore-fail-on-non-empty $(tmp)/usr/share/lintian/l10n
-	dh_installdocs
-	dh_installchangelogs
-	dh_installexamples
-	dh_installman
-	dh_lintian
-	dh_link
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
 
-binary-arch:
+override_dh_auto_test: $(testtarget)
 
-binary:	binary-indep binary-arch
+%:
+	dh $@
 
-.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides update-po update-lintian.debian.org generate-docs
+# Messes with our tests and we don't need it.
+override_dh_update_autotools_config:
+
+.PHONY: refresh-perl-provides update-po update-lintian.debian.org generate-docs
 .DELETE_ON_ERROR: runtests
