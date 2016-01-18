@@ -1,0 +1,5 @@
+Testname: files-mtime
+Sequence: 6000
+Version: 1.0
+Description: Test for mod time in the deb tarballs
+Test-For: package-contains-timestamped-gzip

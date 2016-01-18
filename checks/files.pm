@@ -1552,7 +1552,7 @@ sub run {
                         } else {
                             # see https://bugs.debian.org/762105
                             my $diff= $file->timestamp - $changelog_timestamp;
-                            if ($diff >= 0) {
+                            if ($diff > 0) {
                                 tag 'package-contains-timestamped-gzip',$file;
                             }
                         }
