@@ -582,7 +582,8 @@ sub generic_test_runner {
         my $res= chdir_runcmd($targetdir, ['fakeroot', 'make'],
             "../build.$testname");
         if ($res) {
-            $test_state->dump_log($testname, "$RUNDIR/build.$testname")
+            $test_state->dump_log($testname,
+                "${RUNDIR}/${suite}/build.${testname}")
               if $DUMP_LOGS;
             return $test_state->test_error(
                 join(q{ },
