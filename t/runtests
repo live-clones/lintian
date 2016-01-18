@@ -584,7 +584,7 @@ sub generic_test_runner {
         if ($res) {
             $test_state->dump_log($testname, "$RUNDIR/build.$testname")
               if $DUMP_LOGS;
-            $test_state->test_error(
+            return $test_state->test_error(
                 join(q{ },
                     "cd $targetdir &&",
                     "fakeroot make >../build.$testname 2>&1 failed"));
@@ -597,12 +597,12 @@ sub generic_test_runner {
     my $file = shift @matches;
     unless ($file && -e $file) {
         $file //= '<N/A>';
-        $test_state->test_error(
+        return $test_state->test_error(
             join(q{ },
                 "$testname did not produce any file matching",
                 "\"$targetdir/*.$ext\" ($file)"));
     }
-    $test_state->test_error(
+    return $test_state->test_error(
         join(q{ },
             "$testname produced more than one file",
             "matching \"$targetdir/*.$ext\""))if @matches;
