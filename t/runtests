@@ -116,7 +116,7 @@ our %OPT;
 our $VERBOSE = 0;
 our ($RUNDIR, $TESTSET, $ALWAYS_REBUILD);
 our $JOBS = -1;
-our $DUMP_LOGS = '';
+our $DUMP_LOGS = 1;
 our @TESTS;
 our $ACTIVE_JOBS = 0;
 
