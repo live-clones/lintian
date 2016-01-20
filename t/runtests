@@ -108,8 +108,6 @@ chomp $DATE;
 my $output_is_tty = -t STDOUT;
 
 our $IO_LOOP = IO::Async::Loop->new;
-our $OUTPUT_IS_TTY = -t STDOUT;
-our %OPT;
 
 # --- Parsed options / arguments
 
@@ -179,7 +177,7 @@ find_tests_to_run();
 
 if (@TESTS) {
     for my $i (0..$JOBS-1) {
-        create_child($IO_LOOP, \@TESTS, $i)
+        create_child($IO_LOOP, \@TESTS)
           or last;
     }
 
@@ -419,8 +417,7 @@ sub _builder_tests {
     $test_state->progress('building');
     my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
     if ($res){
-        my $pkg = $testdata->{source};
-        $test_state->dump_log($pkg, $log) if $DUMP_LOGS;
+        $test_state->dump_log($log) if $DUMP_LOGS;
         fail("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
     }
 
@@ -481,7 +478,6 @@ sub run_lintian {
 # passes and false if it fails.
 sub test_changes {
     my ($test_state, $testdata) = @_;
-    my $testname = $testdata->{testname};
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
         return $test_state->skip_test('architecture mismatch');
@@ -582,8 +578,7 @@ sub generic_test_runner {
         my $res= chdir_runcmd($targetdir, ['fakeroot', 'make'],
             "../build.$testname");
         if ($res) {
-            $test_state->dump_log($testname,
-                "${RUNDIR}/${suite}/build.${testname}")
+            $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
               if $DUMP_LOGS;
             return $test_state->test_error(
                 join(q{ },
@@ -692,7 +687,7 @@ sub run_prove_tests {
 }
 
 sub create_child {
-    my ($loop, $tests, $child_no) = @_;
+    my ($loop, $tests) = @_;
     my ($child_in_ch, $child_out_ch, $routine);
     my $start_test = shift(@{$tests});
 
@@ -1103,7 +1098,7 @@ sub test_error {
 }
 
 sub dump_log {
-    my ($self, $pkg, $logfile) = @_;
+    my ($self, $logfile) = @_;
     return $self->_send('dump-file', $logfile);
 }
 
