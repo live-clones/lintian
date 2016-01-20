@@ -38,19 +38,6 @@ application allowing nodes to have application-defined properties.
 
 =over 4
 
-=item new()
-
-Creates a new Lintian::DepMap::Properties object and returns a reference to it.
-
-=cut
-
-sub new {
-    my ($class, $pkg) = @_;
-    my $self = {};
-    bless($self, $class);
-    return $self;
-}
-
 =item add(node, [dependencies], [ref to property])
 
 Adds a node with possibly one or more dependencies and sets the C<node>'s
