@@ -210,9 +210,6 @@ or manually.
 
 sub prepare_tasks {
     my ($self, $errorhandler, @lpkgs) = @_;
-    my $collmap = $self->{'collmap'};
-    my $extra = $self->{'extra-coll'};
-    my $profile = $self->{'profile'};
     my %worklists;
     foreach my $lpkg (@lpkgs) {
         my $changed = 0;

@@ -71,7 +71,7 @@ Creates a new Lintian::DepMap object and returns a reference to it.
 =cut
 
 sub new {
-    my ($class, $pkg) = @_;
+    my ($class) = @_;
     my $self = {};
     bless($self, $class);
     return $self;
@@ -578,7 +578,6 @@ sub circular {
     } else {
         for my $node (keys %{$self->{'nodes'}}) {
             my $node_p = $self->{'nodes'}{$node}->{'parents'};
-            my $node_b = $self->{'nodes'}{$node}->{'branches'};
             push @circ, grep { exists $node_p->{$_} } keys %{$node_p};
         }
     }

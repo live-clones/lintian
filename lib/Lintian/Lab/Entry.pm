@@ -108,7 +108,6 @@ sub new_from_metadata {
 sub _new_from_proc {
     my ($type, $proc, $lab, $base_dir) = @_;
     my $self = {};
-    my $pkg_path = $proc->pkg_path;
     bless $self, $type;
     $self->{pkg_name}        = $proc->pkg_name;
     $self->{pkg_version}     = $proc->pkg_version;

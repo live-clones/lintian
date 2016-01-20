@@ -281,7 +281,7 @@ sub get_package {
             # Add the entry to the index
             # Ignore errors - happens if $proc does not have the extra fields
             # we need.
-            eval {$self->_new_entry($entry, $proc);};
+            eval {$self->_new_entry($entry);};
         }
     } elsif (defined $pkg_version
         && (defined $pkg_arch || $pkg_type eq 'source')) {
@@ -303,7 +303,7 @@ sub get_package {
         undef $pkg_arch if $pkg_type eq 'source';
         my $searcher = sub {
             my ($entry, @keys) = @_;
-            my ($n, $v, $a) = @keys;
+            my (undef, $v, $a) = @keys;
             my $dir;
             # We do not have to check version - if we have a specific
             # version, only entries with that version will be visited.
@@ -578,7 +578,6 @@ sub repair {
             my ($metadata, @keys) = @_;
             my ($pkg_name, $pkg_version, $pkg_arch) = @keys;
             my $pkg_src = $metadata->{'source'}//$pkg_name;
-            my $pkg_src_version = $metadata->{'source-version'};
             my $dir
               = $self->_pool_path($pkg_src, $pkg_type, $pkg_name, $pkg_version,
                 $pkg_arch);
@@ -962,7 +961,7 @@ sub _entry_created {
 }
 
 sub _new_entry {
-    my ($self, $entry, $proc) = @_;
+    my ($self, $entry) = @_;
     my $pkg_name    = $entry->pkg_name;
     my $pkg_type    = $entry->pkg_type;
     my $pkg_version = $entry->pkg_version;

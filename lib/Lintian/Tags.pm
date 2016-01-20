@@ -547,7 +547,7 @@ sub file_overrides {
                    \Z/xsm
           ) {
             # Valid - so far at least
-            my ($opkg_name, $archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
+            my ($archlist, $opkg_type, $tagdata)= ($1, $2, $3, $4);
             my ($rawtag, $extra) = split(m/ /o, $tagdata, 2);
             my $tag;
             my $tagover;
@@ -693,7 +693,7 @@ present.
 =cut
 
 sub load_overrides {
-    my ($self, $overrides) = @_;
+    my ($self) = @_;
     my $current = $self->{current};
     my $lpkg;
     my $overrides_file;
