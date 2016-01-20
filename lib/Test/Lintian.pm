@@ -184,7 +184,6 @@ sub test_check_desc {
         my $content_type = $content_type_base;
         my $cname = $header->{'check-script'}//'';
         my $ctype = $header->{'type'} // '';
-        my $cinfo = $header->{'info'} // '';
         my $needs = $header->{'needs-info'} // '';
         my $tname = $header->{'check-script-translation'} // '';
         my $i = 1; # paragraph counter.
@@ -605,7 +604,6 @@ sub test_tags_implemented {
     my ($opts, $dir, @checknames);
     my $pattern;
     my $builder = $CLASS->builder;
-    my $find_opt = {'want-check-name' => 1,};
 
     if ($_[0] and ref $_[0] eq 'HASH') {
         ($opts, $dir, @checknames) = @_;
