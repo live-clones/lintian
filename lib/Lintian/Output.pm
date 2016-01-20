@@ -23,6 +23,8 @@ use warnings;
 
 use v5.8.0; # for PerlIO
 use parent qw(Class::Accessor::Fast);
+# The limit is includin the "use --foo to see all tags".
+use constant DEFAULT_INTERACTIVE_TAG_LIMIT => 4;
 
 use Exporter qw(import);
 
@@ -123,6 +125,10 @@ Whether to show the description of a tag when printing it.
 
 Hash containing the names of tags which have been issued.
 
+=item tag_display_limit
+
+Get/Set the number of times a tag is emitted per processable.
+
 =back
 
 =cut
@@ -130,7 +136,7 @@ Hash containing the names of tags which have been issued.
 Lintian::Output->mk_accessors(
     qw(verbosity_level debug color colors stdout
       stderr perf_log_fd perf_debug showdescription
-      issuedtags)
+      issuedtags tag_display_limit)
 );
 
 # for the non-OO interface
@@ -154,6 +160,7 @@ sub new {
     $self->perf_log_fd(\*STDOUT);
     $self->colors({%default_colors});
     $self->issuedtags({});
+    $self->{'proc_id2tag_count'} = {};
 
     # Set defaults to avoid "uninitialized" warnings
     $self->verbosity_level(0);
@@ -329,20 +336,34 @@ sub print_tag {
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
     my $fpkg_info = $self->_format_pkg_info($pkg_info, $tag_info, $override);
-
+    my $tag_name = $tag_info->tag;
+    my $limit = $self->tag_display_limit;
     my $tag;
+
+    # Limit the output so people do not drown in tags.  Some tags are
+    # insanely noisy (hi static-library-has-unneeded-section)
+    if ($limit) {
+        my $proc_id = $pkg_info->{'processable'}->identifier;
+        my $emitted_count
+          = $self->{'proc_id2tag_count'}{$proc_id}{$tag_name}++;
+        return if $emitted_count >= $limit;
+        my $msg
+          = ' ... use --no-tag-display-limit to see all (or pipe to a file/program)';
+        $information = $self->_quote_print($msg)
+          if $emitted_count >= $limit-1;
+    }
     if ($self->_do_color) {
         if ($self->color eq 'html') {
-            my $escaped = $tag_info->{tag};
+            my $escaped = $tag_name;
             $escaped =~ s/&/&amp;/g;
             $escaped =~ s/</&lt;/g;
             $escaped =~ s/>/&gt;/g;
             $tag .= qq(<span style="color: $tag_color">$escaped</span>);
         } else {
-            $tag .= Term::ANSIColor::colored($tag_info->tag, $tag_color);
+            $tag .= Term::ANSIColor::colored($tag_name, $tag_color);
         }
     } else {
-        $tag .= $tag_info->tag;
+        $tag .= $tag_name;
     }
 
     if ($override && @{ $override->comments }) {

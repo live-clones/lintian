@@ -403,6 +403,13 @@ the exit status of Lintian.
 Tags parsed from the file will be handled as if they had been given to
 the B<--suppress-tags> option (e.g. ignored if B<--tags> is used).
 
+=item B<--no-tag-display-limit>
+
+By default, lintian limits itself to emitting at most 4 instances of each
+tag per processable when STDOUT is a TTY.  This option disables that limit.
+
+When STDOUT is not a TTY, lintian has no limit.
+
 =back
 
 Configuration options:

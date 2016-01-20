@@ -43,6 +43,11 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * debian/rules:
     + [NT] Convert to dh7 style build.
 
+  * frontend/lintian:
+    + [NT] Limit the number of instances of the same tag when output is a
+      TTY.  Add --no-tag-display-limit to disable this feature.  Thanks
+      to Thijs Kinkhorst for the report.  (Closes: #775667)
+
   * lib/Lintian/Check.pm:
     + [JW] Remove work-around for Email::Valid bug (#663663), which is now
       fixed even in oldstable.

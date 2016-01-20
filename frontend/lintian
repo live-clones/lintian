@@ -97,7 +97,8 @@ my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 my %conf_opt;                   #names of options set in the cfg file
 my %opt = (                     #hash of some flags from cmd or cfg
     # Init some cmd-line value defaults
-    'debug' => 0,
+    'debug'             => 0,
+    'tag-display-limit' => 'auto',
 );
 
 # The search path - affected by --include-dir X, --[no-]user-dirs
@@ -211,6 +212,16 @@ Behaviour options:
     --hide-overrides          do not output tags that have been overridden (default)
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
+EOT-EOT-EOT
+    if ($show_extended) {
+        # Not a special option per se, but most people will probably
+        # not need it
+        print <<"EOT-EOT-EOT";
+    --no-tag-display-limit    Disable "tag per package" display limit
+EOT-EOT-EOT
+    }
+
+    print <<"EOT-EOT-EOT";
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --no-cfg                  do not read any config files
@@ -551,6 +562,7 @@ my %opthash = (
     'allow-root' => \$opt{'allow-root'},
     'fail-on-warnings' => \$opt{'fail-on-warnings'},
     'keep-lab' => \$opt{'keep-lab'},
+    'no-tag-display-limit' => sub { $opt{'tag-display-limit'} = 0; },
 
     # ------------------ configuration options
     'cfg=s' => \$opt{'LINTIAN_CFG'},
@@ -1537,6 +1549,14 @@ sub configure_output {
             'The color value must be one of',
             "\"never\", \"always\", \"auto\" or \"html\"\n");
     }
+    if ($opt{'tag-display-limit'} eq 'auto') {
+        if (-t STDOUT) {
+            $opt{'tag-display-limit'}
+              = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
+        } else {
+            $opt{'tag-display-limit'} = 0;
+        }
+    }
 
     if ($opt{'debug'}) {
         $opt{'verbose'} = 1;
@@ -1581,6 +1601,7 @@ sub configure_output {
     $Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
     $Lintian::Output::GLOBAL->debug($opt{'debug'});
     $Lintian::Output::GLOBAL->color($opt{'color'});
+    $Lintian::Output::GLOBAL->tag_display_limit($opt{'tag-display-limit'});
     $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 
     $Lintian::Output::GLOBAL->perf_debug($opt{'perf-debug'});
