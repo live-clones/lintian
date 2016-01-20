@@ -1602,7 +1602,7 @@ sub save_state_cache {
             no autodie qw(unlink);
             unlink($tmp_path);
         }
-        die($@);
+        die($err);
     }
     return 1;
 }
