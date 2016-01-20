@@ -132,7 +132,7 @@ sub load_collections {
 sub default_parallel {
     # check cpuinfo for the number of cores...
     my %opts = ('err' => '&1');
-    my $cpus = safe_qx('nproc');
+    my $cpus = safe_qx(\%opts, 'nproc');
     if ($? == 0 and $cpus =~ m/^\d+$/) {
         # Running up to twice the number of cores usually gets the most out
         # of the CPUs and disks but it might be too aggressive to be the
