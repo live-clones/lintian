@@ -539,7 +539,7 @@ sub file_overrides {
         #   parsing overrides is a bit ambiguous (see #699628)
         if (
             $override =~ m/\A (?:                   # start optional part
-                  (\Q$info->{package}\E)?           # optionally starts with package name -> $1
+                  (?:\Q$info->{package}\E)?         # optionally starts with package name -> $1
                   (?: \s*+ \[([^\]]+?)\])?          # optionally followed by an [arch-list] (like in B-D) -> $2
                   (?:\s*+ ([a-z]+) \s*+ )?          # optionally followed by the type -> $3
                 :\s++)?                             # end optional part
