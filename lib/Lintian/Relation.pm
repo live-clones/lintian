@@ -868,8 +868,7 @@ example:
 =cut
 
 sub matches {
-    my ($self, $regex, $what, $partial) = @_;
-    my $relation = $partial // $self;
+    my ($self, $regex, $what) = @_;
     $what //= VISIT_PRED_NAME;
     return $self->visit(sub { m/$regex/ }, $what | VISIT_STOP_FIRST_MATCH);
 }
