@@ -2,6 +2,8 @@
 
 DUPSHF:=debian/libdupshf1/DEBIAN/shlibs
 
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
 %:
 	dh $@
 

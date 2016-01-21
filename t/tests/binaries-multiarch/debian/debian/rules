@@ -12,6 +12,8 @@ else
     TRIPLET = x86_64-linux-gnu
 endif
 
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
 %:
 	dh $@
 
