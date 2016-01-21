@@ -238,6 +238,10 @@ brower||browser
 browers||browsers
 bufffer||buffer
 bufffers||buffers
+bulid||build
+buliding||building
+bulids||builds
+bulit||built
 calcualte||calculate
 calcualted||calculated
 calcualtes||calculates
@@ -494,6 +498,8 @@ distibutes||distributes
 distibuting||distributing
 distibution||distribution
 distibutions||distributions
+distribtion||distribution
+distribtions||distributions
 docuentation||documentation
 documantation||documentation
 documentaion||documentation
@@ -551,6 +557,7 @@ enocded||encoded
 enrties||entries
 enrty||entry
 enterily||entirely
+entites||entities
 envionment||environment
 envireonment||environment
 enviroiment||environment
@@ -734,9 +741,14 @@ igore||ignore
 igores||ignores
 igoring||ignoring
 immeadiately||immediately
+immediatly||immediately
 implemantation||implementation
 implemementation||implementation
 implemementations||implementations
+implememented||implemented
+implemement||implement
+implemementing||implementing
+implemements||implements
 implemention||implementation
 implemetation||implementation
 implemeted||implemented
@@ -977,6 +989,7 @@ nessessary||necessary
 nonexistant||nonexistent
 noone||no one
 noticable||noticeable
+noticably||noticeably
 notications||notifications
 notifcation||notification
 notifcations||notifications
@@ -1013,6 +1026,7 @@ orientied||oriented
 orignal||original
 othwerwise||otherwise
 ouput||output
+outut||output
 overaall||overall
 overidden||overridden
 overide||override
@@ -1106,6 +1120,8 @@ prefferably||preferably
 prepaired||prepared
 prepartion||preparation
 prepartions||preparations
+prerequsite||prerequisite
+prerequsites||prerequisites
 priciple||principle
 priciples||principles
 primative||primitive
@@ -1156,6 +1172,10 @@ reasearchers||researchers
 reasearch||research
 reasonble||reasonable
 reasonbly||reasonably
+rebuliding||rebuilding
+rebulid||rebuild
+rebulids||rebuilds
+rebulit||rebuilt
 recieved||received
 recieve||receive
 reciever||receiver
@@ -1197,6 +1217,10 @@ remoote||remote
 removeable||removable
 renderering||rendering
 renegotation||renegotiation
+repaced||replaced
+repace||replace
+repaces||replaces
+repacing||replacing
 repectively||respectively
 repective||respective
 replacments||replacements
@@ -1529,6 +1553,7 @@ utillities||utilities
 utilties||utilities
 utiltity||utility
 utitlty||utility
+utlity||utility
 validing||validating
 variantions||variations
 varibales||variables
@@ -1566,6 +1591,7 @@ wilcards||wildcards
 wilcard||wildcard
 wont||won't
 workaroung||workaround
+writen||written
 writting||writing
 xwindows||X
 yeilded||yielded
