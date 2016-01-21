@@ -49,6 +49,8 @@ E: binary: suidregister-used-in-maintainer-script postinst:5
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: unstripped-binary-or-object usr/bin/hello
 I: binary source: binary-control-field-duplicates-source field "vcs-svn" in package binary
+I: binary source: vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.nl/lintian/trunk
+I: binary source: vcs-field-uses-insecure-uri vcs-svn http://svn.wolffelaar.nl/lintian/trunk
 I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
 I: binary-data: capitalization-error-in-description subversion Subversion
 I: binary: arch-dep-package-has-big-usr-share
