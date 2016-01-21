@@ -23,7 +23,7 @@ use warnings;
 
 use v5.8.0; # for PerlIO
 use parent qw(Class::Accessor::Fast);
-# The limit is includin the "use --foo to see all tags".
+# The limit is including the "use --foo to see all tags".
 use constant DEFAULT_INTERACTIVE_TAG_LIMIT => 4;
 
 use Exporter qw(import);
