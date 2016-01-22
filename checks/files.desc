@@ -380,7 +380,7 @@ Severity: pedantic
 Certainty: certain
 Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
  According to the Filesystem Hierarchy Standard, architecture-independent
- files should to be placed within <tt>/usr/share</tt> instead.
+ files should be placed within <tt>/usr/share</tt> instead.
 
 Tag: file-directly-in-usr-share-doc
 Severity: serious

@@ -171,7 +171,7 @@ my @FILE_PACKAGE_MAPPING = (
     ),
 );
 
-sub _detect_embeded_libraries {
+sub _detect_embedded_libraries {
     my ($fname, $file, $pkg) = @_;
 
     # detect only in regular file
@@ -1406,7 +1406,7 @@ sub run {
             }
 
             # ---------------- embedded libraries
-            _detect_embeded_libraries($fname, $file, $pkg);
+            _detect_embedded_libraries($fname, $file, $pkg);
 
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
