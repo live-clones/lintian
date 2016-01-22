@@ -39,7 +39,7 @@ my %hardening = (
     relro           => 'if-enabled',
     stackprotector  => 'if-enabled',
     bindnow         => 'always',
-    #    pie             => 'always',
+    pie             => 'always',
 );
 my (%archs, %files);
 

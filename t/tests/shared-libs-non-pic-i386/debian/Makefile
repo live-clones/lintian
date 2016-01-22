@@ -3,14 +3,17 @@ CC=gcc
 NOPICOBJS=non-pic.o
 SONAME:=libbaz3.so.1
 
+NOPIC_CFLAGS = $(filter-out -fPIE,$(CFLAGS))
+NOPIC_LDFLAGS = $(filter-out -fPIE -pie,$(LDFLAGS))
+
 all: libbaz3.so.1.0.3b
 
 # Non-PIC. We can't test this on all architectures
 libbaz3.so.1.0.3b: $(NOPICOBJS)
-	$(CC) $(LDFLAGS) -o $@ -shared -Wl,-soname,$(SONAME) $^ -lc
+	$(CC) $(NOPIC_LDFLAGS) -o $@ -shared -Wl,-soname,$(SONAME) $^ -lc
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(CC) $(NOPIC_CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 clean:
 	rm -f *.a *.o *.so* *.sho

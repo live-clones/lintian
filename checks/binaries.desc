@@ -390,6 +390,37 @@ Info: This package provides an ELF binary that lacks the "bindnow"
  The relevant compiler flags are set in <tt>LDFLAGS</tt>.
 Ref: https://wiki.debian.org/Hardening
 
+Tag: hardening-no-pie
+Severity: wishlist
+Certainty: certain
+Experimental: yes
+Info: This package provides an ELF executable that was not compiled
+ as a position independent executable (PIE).
+ .
+ PIE is required for fully enabling Address Space Layout
+ Randomization (ASLR), which makes "Return-oriented" attacks more
+ difficult.
+ .
+ Historically, PIE has been associated with notiable performance
+ overhead on i386.  However, GCC-5 has implemented an optimization
+ that can reduce the overhead significantly.
+ .
+ If you use <tt>dpkg-buildflags</tt>, you may have to add
+ <tt>hardening=+pie</tt> or <tt>hardening=+all</tt> to
+ <tt>DEB_BUILD_MAINT_OPTIONS</tt>.
+ .
+ The relevant compiler flags must be passed both to the compiler
+ and the linker (e.g. for C that would be commonly be
+ <tt>CFLAGS</tt> and <tt>LDFLAGS</tt>).
+ .
+ CAVEAT: Some binaries FTBFS when built with the PIE flags.  A
+ notable example being static libraries (<tt>gcc -static</tt>).
+ If your upstream build compiles both static libs and executables,
+ you may have to patch the build to ensure that only the latter
+ are compiled with PIE.
+Ref: https://wiki.debian.org/Hardening,
+ https://gcc.gnu.org/gcc-5/changes.html
+
 Tag: debug-file-with-no-debug-symbols
 Severity: normal
 Certainty: possible
