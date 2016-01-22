@@ -582,22 +582,6 @@ my %opthash = (
     'exp-output:s' => \$experimental_output_opts,
 );
 
-# Options that can appear in the config file
-my %cfghash = (
-    'color'                => \$opt{'color'},
-    'display-experimental' => \$opt{'display-experimental'},
-    'display-info'         => \&cfg_display_level,
-    'display-level'        => \&cfg_display_level,
-    'fail-on-warnings'     => \$opt{'fail-on-warnings'},
-    'info'                 => \$opt{'info'},
-    'jobs'                 => \$opt{'jobs'},
-    'pedantic'             => \&cfg_display_level,
-    'quiet'                => \&cfg_verbosity,
-    'override'             => \&cfg_override,
-    'show-overrides'       => \$opt{'show-overrides'},
-    'verbose'              => \&cfg_verbosity,
-);
-
 parse_options();
 
 # }}}
@@ -1348,7 +1332,7 @@ sub parse_config_file {
         'verbose'              => \&cfg_verbosity,
     );
 
-    open(my $fd, '<', $opt{'LINTIAN_CFG'});
+    open(my $fd, '<', $config_file);
     while (<$fd>) {
         chomp;
         s/\#.*$//go;
@@ -1695,8 +1679,7 @@ sub load_profile_and_configure_tags {
     $TAGS->profile($profile);
 
     if ($dont_check || %suppress_tags || $checks || $check_tags) {
-        _update_profile($profile, $TAGS, $dont_check, \%suppress_tags, $checks,
-            $check_tags);
+        _update_profile($profile, $TAGS, $dont_check, \%suppress_tags,$checks);
     }
 
     # Initialize display level settings.
@@ -1858,7 +1841,7 @@ sub parse_options {
 }
 
 sub _update_profile {
-    my ($profile, $tags, $sup_check, $sup_tags, $only_check, $only_tags) = @_;
+    my ($profile, $tags, $sup_check, $sup_tags, $only_check) = @_;
     my %abbrev = ();
 
     if ($sup_check || $only_check) {
