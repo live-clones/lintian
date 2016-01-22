@@ -1,4 +1,6 @@
-COMPILE:= $(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
+NOPIE_CFLAGS = $(filter-out -fPIE,$(CFLAGS))
+NOPIE_LDFLAGS = $(filter-out -fPIE -pie,$(LDFLAGS))
+COMPILE:= $(CC) $(NOPIE_CFLAGS) $(CPPFLAGS) $(NOPIE_LDFLAGS)
 
 all:
 	# static version

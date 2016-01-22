@@ -1,11 +1,14 @@
+NOPIE_CFLAGS = $(filter-out -fPIE,$(CFLAGS))
+NOPIE_LDFLAGS = $(filter-out -fPIE -pie,$(LDFLAGS))
 COMPILE:= $(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
+COMPILE_NOPIE:= $(CC) $(NOPIE_CFLAGS) $(CPPFLAGS) $(NOPIE_LDFLAGS)
 # extract from readelf
 GETBUILDID:=./getbuildid
 
 all:
 	# rpath not matching any of the exceptions to the rpath checks
 	#  - with profiling enabled.
-	$(COMPILE) -o basic basic.c -pg -Wl,--rpath,/usr/local/lib
+	$(COMPILE_NOPIE) -o basic basic.c -pg -Wl,--rpath,/usr/local/lib
 	# rpath shipped in the package, but one of {/usr}?/lib
 	$(COMPILE) -o basiclibrpath basic.c -Wl,--rpath,/usr/lib
 	# non-special rpath shipped in the package
@@ -13,9 +16,9 @@ all:
 	# special rpath shipped in the package, multiple paths
 	$(COMPILE) -o basicshippedrpathmore basic.c -Wl,--rpath,/usr/lib/binaries-general:/usr/lib/binaries-general/bar
 	# static version of basic for debugging checks
-	$(COMPILE) -static -o basic.static basic.c
+	$(COMPILE_NOPIE) -static -o basic.static basic.c
 	# static executable to trigger ocaml check
-	$(COMPILE) -o ocaml-exec ocaml.c
+	$(COMPILE_NOPIE) -o ocaml-exec ocaml.c
 	# version with debug
 	$(COMPILE) -o basicdebug -g3 -Wl,--build-id basic.c
 
