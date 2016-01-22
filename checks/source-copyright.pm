@@ -246,8 +246,7 @@ sub _parse_dep5 {
           "(line $lines[0]{'format'})";
     }
 
-    my ($found_license_header, $full_license_header, undef,
-        @short_licenses_header)
+    my (undef, $full_license_header, undef,@short_licenses_header)
       =parse_license($first_para->{'license'}, 1);
     for my $short_license (@short_licenses_header) {
         $required_standalone_licenses{$short_license} = 0
@@ -286,7 +285,7 @@ sub _parse_dep5 {
         }
 
         if (defined $license and not defined $files) {
-            my ($found_license, $full_license, $short_license,@short_licenses)
+            my (undef, $full_license, $short_license,@short_licenses)
               = parse_license($license, $current_line);
 
             # Standalone license paragraph

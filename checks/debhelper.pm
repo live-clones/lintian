@@ -55,7 +55,6 @@ sub run {
     my $needdhexecbuilddepends = '';
     my $needtomodifyscripts = '';
     my $level;
-    my $seenversiondepends = '0';
     my $compat = 0;
     my $usescdbs = '';
     my $seendhcleank = '';

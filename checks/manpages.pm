@@ -34,7 +34,7 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(clean_env drain_pipe fail open_gz);
 
 sub run {
-    my ($pkg, undef, $info, $proc, $group) = @_;
+    my (undef, undef, $info, $proc, $group) = @_;
     my $ginfo = $group->info;
     my (%binary, %link, %manpage, @running_man, @running_lexgrog);
 
@@ -42,7 +42,7 @@ sub run {
     foreach my $file ($info->sorted_index) {
         my $file_info = $file->file_info;
         my $link = $file->link || '';
-        my ($fname, $path, $suffix) = fileparse($file);
+        my ($fname, $path, undef) = fileparse($file);
 
         # Binary that wants a manual page?
         #
@@ -195,7 +195,7 @@ sub run {
                             # then it's likely a language subdir, so let's run
                             # the other component through the same check
                             if ($rest =~ m,^([^/]+)/(.+)$,) {
-                                my ($lang, $rest) = ($1, $2);
+                                my (undef, $rest) = ($1, $2);
                                 if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
                                     tag 'bad-so-link-within-manual-page',$file;
                                 }
@@ -286,7 +286,7 @@ sub run {
                 chomp $line;
                 next if $line =~ /^\.\\\"/o; # comments .\"
                 if ($line =~ /^\.TH\s/) { # header
-                    my ($th_command, $th_title, $th_section, $th_date)
+                    my (undef, undef, $th_section, undef)
                       = Text::ParseWords::parse_line('\s+', 0, $line);
                     if ($th_section && (lc($fn_section) ne lc($th_section))) {
                         tag 'manpage-section-mismatch',
@@ -318,7 +318,7 @@ sub run {
         # Find the manpages in our related dependencies
         my $depinfo = $depproc->info();
         foreach my $file ($depinfo->sorted_index){
-            my ($fname, $path, $suffix) = fileparse($file, qr,\..+$,o);
+            my ($fname, $path, undef) = fileparse($file, qr,\..+$,o);
             my $lang = '';
             next
               unless ($file->is_file or $file->is_symlink)
@@ -349,7 +349,7 @@ sub run {
 sub process_lexgrog_output {
     my ($running) = @_;
     for my $lex_proc (@{$running}) {
-        my ($file, $lexgrog_fd, $pid) = @{$lex_proc};
+        my ($file, $lexgrog_fd, undef) = @{$lex_proc};
         my $desc = <$lexgrog_fd>;
         $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
         if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {

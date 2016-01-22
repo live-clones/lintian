@@ -1120,7 +1120,7 @@ sub generic_check_bad_command {
                 my $extrainfo = defined($1) ? "\'$1\'" : '';
                 my $inpackage = $bad_cmd_data->{'in_package'};
                 unless($pkg =~ m{$inpackage}) {
-                    tag $bad_cmd_tag, "$file:$.", $extrainfo;
+                    tag $bad_cmd_tag, "$file:$lineno", $extrainfo;
                 }
             }
         }

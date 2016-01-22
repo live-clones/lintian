@@ -960,7 +960,7 @@ sub _warn_prebuilt_javascript{
 # detect if max line of block is > cutoff
 # return false if file is minified
 sub _linelength_test_maxlength {
-    my ($entry, $info, $name, $basename, $dirname, $block, $cutoff) = @_;
+    my ($block, $cutoff) = @_;
     while($block =~ /([^\n]+)\n?/g){
         my $linelength = length($1);
         if($linelength > $cutoff) {
@@ -977,9 +977,7 @@ sub _linelength_test {
     my $line;
     my $nextblock;
 
-    ($linelength)
-      = _linelength_test_maxlength($entry, $info, $name, $basename, $dirname,
-        $block,INSANE_LINE_LENGTH);
+    ($linelength)= _linelength_test_maxlength($block,INSANE_LINE_LENGTH);
     # first check if line >  INSANE_LINE_LENGTH that is likely minification
     # avoid problem by recursive regex with longline
     if($linelength) {
@@ -1015,8 +1013,7 @@ sub _linelength_test {
     while(length($nextblock)) {
         # check line above > SAFE_LINE_LENGTH
         ($linelength,$line,$nextblock)
-          = _linelength_test_maxlength($entry, $info, $name, $basename,
-            $dirname, $nextblock,SAFE_LINE_LENGTH);
+          = _linelength_test_maxlength($nextblock,SAFE_LINE_LENGTH);
         # no long line
         unless($linelength) {
             return;

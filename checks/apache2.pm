@@ -64,16 +64,14 @@ sub run {
 
             # Package appears to be a web application
             elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
-                check_web_application_package($pkg, $type, $info, $file, $1,
-                    $2);
+                check_web_application_package($pkg, $info, $file, $1, $2);
                 $seen_apache2_special_file++;
             }
 
             # Package appears to be a legacy web application
             elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
                 tag 'apache2-reverse-dependency-uses-obsolete-directory',$file;
-                check_web_application_package($pkg, $type, $info, $file,
-                    'conf', $1);
+                check_web_application_package($pkg, $info, $file,'conf', $1);
                 $seen_apache2_special_file++;
             }
 
@@ -96,7 +94,7 @@ sub run {
 }
 
 sub check_web_application_package {
-    my ($pkg, $type, $info, $file, $pkgtype, $webapp) = @_;
+    my ($pkg, $info, $file, $pkgtype, $webapp) = @_;
 
     tag 'non-standard-apache2-configuration-name', $webapp, '!=', "$pkg.conf"
       if $webapp ne "$pkg.conf"
@@ -135,8 +133,6 @@ sub check_module_package {
     # obviously the package should be in all lowercase.
     my $expected_name = 'libapache2-' . lc($module);
 
-    # Package depends on apache2-api-YYYYMMDD
-    my $seen_api_dependency = 0;
     my $rel;
     my $visit = sub {
         if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {

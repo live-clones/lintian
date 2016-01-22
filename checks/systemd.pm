@@ -147,7 +147,7 @@ sub get_systemd_service_names {
     my %services;
 
     my $safe_add_service = sub {
-        my ($name, $file) = @_;
+        my ($name) = @_;
         if (exists $services{$name}) {
             # should add a tag here
             return;
@@ -158,16 +158,15 @@ sub get_systemd_service_names {
     for my $file (@{$files_ref}) {
         my $name = $file->basename;
         $name =~ s/\.service$//;
-        $safe_add_service->($name, $file);
+        $safe_add_service->($name);
 
-        my @aliases
-          = extract_service_file_values($info, $file, 'Install', 'Alias', 1);
+        my @aliases= extract_service_file_values($file, 'Install', 'Alias', 1);
 
         for my $alias (@aliases) {
             tag 'systemd-service-alias-without-extension', $file
               if $alias !~ m/\.service$/;
             $alias =~ s/\.service$//;
-            $safe_add_service->($alias, $file);
+            $safe_add_service->($alias);
         }
     }
     return \%services;
@@ -186,7 +185,7 @@ sub check_systemd_service_file {
         tag 'service-file-is-not-a-file', $file;
         return 0;
     }
-    my @values = extract_service_file_values($info, $file, 'Unit', 'After');
+    my @values = extract_service_file_values($file, 'Unit', 'After');
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
     tag 'systemd-service-file-refers-to-obsolete-target', $file, $_
       for @obsolete;
@@ -228,7 +227,7 @@ sub service_file_lines {
 
 # Extracts the values of a specific Key from a .service file
 sub extract_service_file_values {
-    my ($info, $file, $extract_section, $extract_key, $skip_tag) = @_;
+    my ($file, $extract_section, $extract_key, $skip_tag) = @_;
 
     my (@values, $section);
 

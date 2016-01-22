@@ -90,7 +90,6 @@ sub collect {
                    | JAR /xo;
 
         if ($filename =~ m#\S+\.jar$#i) {
-            my $has_manifest = 0;
             my $manifest;
             my $azip = Archive::Zip->new;
 

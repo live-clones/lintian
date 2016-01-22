@@ -43,7 +43,6 @@ sub run {
     my ($pkg, undef, $info, undef, $group) = @_;
     my $found_html = 0;
     my $found_text = 0;
-    my $ppkg = quotemeta($pkg);
     my ($native_pkg, $foreign_pkg, @doc_files);
 
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink

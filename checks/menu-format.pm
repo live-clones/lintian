@@ -540,11 +540,9 @@ sub verify_icon {
 
     $parse = 'size line';
     do { defined($line = <$fd>) or goto parse_error; }
-      until ($line =~ /"\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*"/);
+      until ($line =~ /"\s*([0-9]+)\s*([0-9]+)\s*(?:[0-9]+)\s*(?:[0-9]+)\s*"/);
     my $width = $1 + 0;
     my $height = $2 + 0;
-    my $numcolours = $3 + 0;
-    my $cpp = $4 + 0;
 
     if ($width > $size || $height > $size) {
         tag 'menu-icon-too-big', "$icon: ${width}x${height} > ${size}x${size}";
@@ -593,7 +591,7 @@ sub verify_desktop_file {
         if ($line =~ /^(.*?)\s*=\s*(.*)$/) {
             my ($tag, $value) = ($1, $2);
             my $basetag = $tag;
-            my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
+            $basetag =~ s/\[([^\]]+)\]$//;
             if (exists $vals{$tag}) {
                 tag 'duplicated-key-in-desktop-entry', "$file:$. $tag";
             } elsif ($DEPRECATED_DESKTOP_KEYS->known($basetag)) {

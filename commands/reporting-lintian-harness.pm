@@ -198,7 +198,6 @@ sub process_worklist {
     my $rounds = 1;
     my @worklist = @{$worklist_ref};
     my $exit_code = 0;
-    my $state_dir = $OPT{'state-dir'};
     my $schedule_chunk_size = $OPT{'schedule-chunk-size'};
     my $start_time = time();
 

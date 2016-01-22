@@ -301,7 +301,7 @@ sub run {
             foreach my $devpkg (@devpkgs) {
                 my $dinfo = $devpkg->info;
                 foreach my $link (@alt) {
-                    if ($devpkg->info->index($link)) {
+                    if ($dinfo->index($link)) {
                         $ok = 1;
                         last PKG;
                     }

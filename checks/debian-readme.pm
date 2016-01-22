@@ -30,7 +30,7 @@ my $SPELLING_ERROR_IN_README
   = spelling_tag_emitter('spelling-error-in-readme-debian');
 
 sub run {
-    my ($pkg, undef, $info, undef, $group) = @_;
+    my (undef, undef, $info, undef, $group) = @_;
     my $readme = '';
 
     open(my $fd, '<', $info->lab_data_path('README.Debian'));

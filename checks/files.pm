@@ -172,7 +172,7 @@ my @FILE_PACKAGE_MAPPING = (
 );
 
 sub _detect_embeded_libraries {
-    my ($fname, $file, $pkg,$info) = @_;
+    my ($fname, $file, $pkg) = @_;
 
     # detect only in regular file
     unless($file->is_regular_file) {
@@ -1406,7 +1406,7 @@ sub run {
             }
 
             # ---------------- embedded libraries
-            _detect_embeded_libraries($fname, $file, $pkg, $info);
+            _detect_embeded_libraries($fname, $file, $pkg);
 
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
@@ -1427,7 +1427,7 @@ sub run {
                     and $file->basename eq 'defaultpresets.xml') {
                     # false positive
                 } else {
-                    detect_privacy_breach($info,$file);
+                    detect_privacy_breach($file);
                 }
             }
             # ---------------- fonts
@@ -1721,9 +1721,9 @@ sub run {
             }
             if ($fname =~ m,^usr/share/locale/([^/]+)/$,) {
                 # Without encoding:
-                my ($lwccode) = split(/[.@]/, $1);
+                my ($lwccode) = split(m/[.@]/, $1);
                 # Without country code:
-                my ($lcode) = split(/_/, $lwccode);
+                my ($lcode) = split(m/_/, $lwccode);
 
                 # special exception:
                 if ($lwccode ne 'l10n') {
@@ -2096,7 +2096,7 @@ sub detect_generic_privacy_breach {
 }
 
 sub detect_privacy_breach {
-    my ($info, $file) = @_;
+    my ($file) = @_;
     my %privacybreachhash;
 
     # detect only in regular file

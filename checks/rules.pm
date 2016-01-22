@@ -220,10 +220,10 @@ sub run {
         }
 
         # General assignment - save the variable
-        if (/^\s*(?:\S+\s+)*?(\S+)\s*([:\?\+])?=\s*(.*+)?$/so) {
+        if (/^\s*(?:\S+\s+)*?(\S+)\s*[:\?\+]?=\s*(.*+)?$/so) {
             # This is far too simple from a theoretical PoV, but should do
             # rather well.
-            my ($var, $atype, $value) = ($1, $2, $3);
+            my ($var, $value) = ($1, $2);
             $variables{$var} = $value;
         }
 

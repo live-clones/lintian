@@ -31,7 +31,7 @@ my $KNOWN_PRIOS = Lintian::Data->new('common/priorities', qr/\s*=\s*/o);
 
 sub run {
 
-    my (undef, undef, $info, undef, $group) = @_;
+    my (undef, undef, undef, undef, $group) = @_;
 
     ## To find circular dependencies, we will first generate Strongly
     ## Connected Components using Tarjan's algorithm

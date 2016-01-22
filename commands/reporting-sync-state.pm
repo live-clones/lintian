@@ -215,8 +215,7 @@ sub remove_if_empty {
 
 sub cleanup_group_state {
     my ($state, $group_id, $backlog) = @_;
-    my ($members, $member);
-    my $changed = 0;
+    my ($members);
     my $group_data = $state->{'groups'}{$group_id};
     $members = $group_data->{'members'};
     if (not exists($ACTIVE_GROUPS{$group_id}) or not $members) {

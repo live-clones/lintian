@@ -107,7 +107,6 @@ sub run {
     my $madir;
     my $gnu_triplet_re;
     my $ruby_triplet_re;
-    my $dynsyms = 0;
     my $needs_libc = '';
     my $needs_libcxx = '';
     my $needs_libc_file;

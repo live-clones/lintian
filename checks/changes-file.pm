@@ -31,7 +31,7 @@ use Lintian::Util qw(get_file_checksum);
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 
 sub run {
-    my ($pkg, undef, $info) = @_;
+    my (undef, undef, $info) = @_;
 
     # If we don't have a Format key, something went seriously wrong.
     # Tag the file and skip remaining processing.

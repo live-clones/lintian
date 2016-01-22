@@ -53,7 +53,7 @@ our %KNOWN_DOCBASE_FORMAT_FIELDS = (
 our $SECTIONS = Lintian::Data->new('doc-base/sections');
 
 sub run {
-    my ($pkg, $type, $info, undef, $group) = @_;
+    my ($pkg, undef, $info, undef, $group) = @_;
     my (%all_files, %all_links);
 
     my %preinst;
@@ -231,7 +231,7 @@ sub check_doc_base_file {
     }
 
     my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;
-    my (@files, $field, @vals);
+    my ($field, @vals);
     my %sawfields;        # local for each section of control file
     my %sawformats;       # global for control file
     $line           = 0;  # global

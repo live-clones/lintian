@@ -726,7 +726,7 @@ sub run {
                     && $known_obsolete_emacs{$alternatives[0]->[0]});
 
                 for my $part_d (@alternatives) {
-                    my ($d_pkg, $d_march, $d_version, $d_arch, undef, $rest,
+                    my ($d_pkg, undef, $d_version, undef, undef, $rest,
                         $part_d_orig)
                       = @$part_d;
 
@@ -973,11 +973,10 @@ sub run {
                         && &$is_dep_field($field));
 
                     for my $part_d (@alternatives) {
-                        my ($d_pkg, $d_march, $d_version, $d_arch, $d_restr,
+                        my ($d_pkg, undef, $d_version, $d_arch, $d_restr,
                             $rest,$part_d_orig)
                           = @$part_d;
 
-                        my $negated = 0;
                         for my $arch (@{$d_arch->[0]}) {
                             if ($arch eq 'all' || !is_arch_or_wildcard($arch)){
                                 tag 'invalid-arch-string-in-source-relation',
