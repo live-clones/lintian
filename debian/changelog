@@ -1,6 +1,19 @@
-lintian (2.5.40) UNRELEASED; urgency=medium
+lintian (2.5.40) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-file-uses-deprecated-githubredir
+      - file-in-root-and-usr
+      - hardening-no-bindnow
+      - hardening-no-pie
+      - library-in-root-and-usr
+      - old-style-config-script
+      - old-style-config-script-multiarch-path
+      - old-style-config-script-multiarch-path-arch-all
+      - vcs-field-uses-insecure-uri
+    + Removed:
+      - debian-watch-file-accesses-pypi-over-http
+      - debian-watch-file-unsupported-pypi-url
 
   * checks/binaries.{desc,pm}:
     + [JW] Exclude /usr/lib/debug/.build-id/ from foreign-architecture
