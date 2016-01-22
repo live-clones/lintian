@@ -82,6 +82,7 @@ generate-docs-stamp: $(docsource)
 
 # Target for updating things on lintian.d.o
 rebuild-lintian.debian.org: api-doc generate-docs-stamp
+	# done
 
 override_dh_auto_build: $(neededfiles) generate-docs-stamp $(testtarget) $(po4acheckcfg)
 	mkdir -p l10n
