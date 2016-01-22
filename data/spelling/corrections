@@ -50,6 +50,7 @@ accompagny||accompany
 accompagnying||accompanying
 accordint||according
 accout||account
+accross||across
 acessable||accessible
 acess||access
 achor||anchor
@@ -102,6 +103,7 @@ algoritms||algorithms
 algorrithm||algorithm
 algorritm||algorithm
 allpication||application
+alltogether||altogether
 alogirhtms||algorithms
 alot||a lot
 alow||allow
@@ -137,6 +139,7 @@ appropiate||appropriate
 appropriatly||appropriately
 aproximation||approximation
 aproximations||approximations
+aquire||acquire
 aquired||acquired
 arbitary||arbitrary
 archiecture||architecture
@@ -145,6 +148,7 @@ architechture||architecture
 architechtures||architectures
 archvie||archive
 archvies||archives
+aready||already
 arguement||argument
 arguements||arguments
 arithmatic||arithmetic
@@ -161,6 +165,8 @@ arugments||arguments
 assertation||assertion
 assigment||assignment
 assigments||assignments
+assignemnt||assignment
+assignemnts||assignments
 assistent||assistant
 assocation||association
 asthetic||aesthetic
@@ -317,6 +323,7 @@ comparisions||comparisons
 comparsion||comparison
 comparsions||comparisons
 compatability||compatibility
+compatabilty||compatibility
 compatable||compatible
 compatbility||compatibility
 compatiability||compatibility
@@ -385,6 +392,10 @@ continous||continuous
 continously||continuously
 continueing||continuing
 contraints||constraints
+contructor||constructor
+contructors||constructors
+converstion||conversion
+converstions||conversions
 convertion||conversion
 convertions||conversions
 convertor||converter
@@ -487,6 +498,10 @@ disapearing||disappearing
 disapears||disappears
 discernable||discernible
 discusion||discussion
+dispath||dispatch
+dispathed||dispatched
+dispathes||dispatches
+dispathing||dispatching
 dispertion||dispersion
 dissapear||disappear
 dissapeared||disappeared
@@ -603,6 +618,8 @@ exectuable||executable
 exectuables||executables
 executeable||executable
 executeables||executables
+exension||extension
+exensions||extensions
 exept||except
 exeption||exception
 exeptions||exceptions
@@ -675,6 +692,7 @@ freqencies||frequencies
 freqency||frequency
 fuction||function
 fuctions||functions
+fullfill||fulfill
 funcion||function
 funcions||functions
 funciton||function
@@ -689,6 +707,10 @@ funtions||functions
 futhermore||furthermore
 generater||generator
 generaters||generators
+genereated||generated
+genereate||generate
+genereates||generates
+genereating||generating
 generiously||generously
 genreated||generated
 genreate||generate
@@ -1589,6 +1611,7 @@ wierd||weird
 wiht||with
 wilcards||wildcards
 wilcard||wildcard
+withing||within
 wont||won't
 workaroung||workaround
 writen||written
