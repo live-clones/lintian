@@ -127,7 +127,7 @@ Tag: changed-by-address-is-root-user
 Severity: important
 Certainty: certain
 Info: The Changed-By address includes root user, which is
- invalid. This might idicate that the package
+ invalid. This might indicate that the package
  was not built in a sane environment.
 
 Tag: backports-changes-missing
