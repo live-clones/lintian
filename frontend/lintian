@@ -1961,7 +1961,7 @@ sub END {
             if (my $err = $@) {
                 # Don't use L::Output here as it might be (partly) cleaned
                 # up.
-                print STDERR "warning: closing ${filename} failed: $!\n";
+                print STDERR "warning: closing ${filename} failed: $err\n";
             }
         }
     }
