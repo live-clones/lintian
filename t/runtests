@@ -176,7 +176,7 @@ if (!$tag) {
 find_tests_to_run();
 
 if (@TESTS) {
-    for my $i (0..$JOBS-1) {
+    for (0..$JOBS-1) {
         create_child($IO_LOOP, \@TESTS)
           or last;
     }
