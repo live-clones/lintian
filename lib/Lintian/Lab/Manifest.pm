@@ -28,8 +28,6 @@ use parent qw(Class::Accessor::Fast Clone);
 
 use Carp qw(croak);
 
-use Lintian::Lab::ManifestDiff;
-
 =head1 NAME
 
 Lintian::Lab::Manifest -- Lintian Lab manifest
@@ -469,11 +467,7 @@ L<Lintian::Lab::ManifestDiff> for more information.
 sub diff {
     my ($self, $other) = @_;
     croak 'Cannot diff a GROUP manifest' if $self->type eq 'GROUP';
-    my $copy;
-    my @changed;
-    my @added;
-    my @removed;
-    my $visitor;
+    my ($copy, @changed, @added, @removed, $visitor);
     unless ($self->{'type'} eq $other->{'type'}) {
         my $st = $self->{'type'};
         my $ot = $other->{'type'};
@@ -502,6 +496,8 @@ sub diff {
     $other->visit_all($visitor);
     # Thus we can just add all of these entries to @removed.  :)
     $copy->visit_all(sub { my (undef, @keys) = @_; push @removed, \@keys; });
+
+    require Lintian::Lab::ManifestDiff;
 
     return Lintian::Lab::ManifestDiff->_new($self->{'type'}, $other, $self,
         \@added, \@removed, \@changed);
