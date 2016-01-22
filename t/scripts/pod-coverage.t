@@ -25,6 +25,7 @@ our %MODULES =(
     'Lintian::Lab'                => [],
     'Lintian::Lab::Entry'         => [],
     'Lintian::Lab::Manifest'      => [],
+    'Lintian::Lab::ManifestDiff'  => [],
     'Lintian::Profile'            => [],
     'Lintian::Processable'        => [qr/^new$/],
     'Lintian::ProcessableGroup'   => [],
