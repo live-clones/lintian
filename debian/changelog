@@ -68,6 +68,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
       fixed even in oldstable.
     + [JW] Apply patch from Justin B Rye to fix an uninitialized value
       warning.  (Closes: #810649)
+  * lib/Lintian/Lab/ManifestDiff.pm:
+    + [NT] Remove module.
 
   * reporting/html_reports:
     + [JW] Add missing "map_maintainer" call, which made the reporting

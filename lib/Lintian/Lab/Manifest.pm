@@ -28,8 +28,6 @@ use parent qw(Class::Accessor::Fast Clone);
 
 use Carp qw(croak);
 
-use Lintian::Lab::ManifestDiff;
-
 =head1 NAME
 
 Lintian::Lab::Manifest -- Lintian Lab manifest
@@ -453,58 +451,6 @@ sub _do_delete {
         return 1;
     }
     return 0;
-}
-
-=item diff (MANIFEST)
-
-Returns a L<diff|Lintian::Lab::ManifestDiff> between this manifest and
-MANIFEST.
-
-This instance is considered the "original" and MANIFEST is "new"
-version of the manifest.  (See the olist and nlist methods of
-L<Lintian::Lab::ManifestDiff> for more information.
-
-=cut
-
-sub diff {
-    my ($self, $other) = @_;
-    croak 'Cannot diff a GROUP manifest' if $self->type eq 'GROUP';
-    my $copy;
-    my @changed;
-    my @added;
-    my @removed;
-    my $visitor;
-    unless ($self->{'type'} eq $other->{'type'}) {
-        my $st = $self->{'type'};
-        my $ot = $other->{'type'};
-        croak "Diffing incompatible types ($st != $ot)";
-    }
-    $copy = $self->clone;
-
-    $visitor = sub {
-        my ($ov, @keys) = @_;
-        my $sv = $copy->get(@keys);
-        unless (defined $sv) {
-            push @added, \@keys;
-            return;
-        }
-        if (  $sv->{'version'} ne $ov->{'version'}
-            ||$sv->{'timestamp'} ne $ov->{'timestamp'}) {
-            push @changed, \@keys;
-        }
-        # Remove the entry from $copy
-        $copy->delete(@keys);
-    }; # End of visitor sub
-
-    # Find all the added and changed entries - since $visitor removes
-    # all entries it finds from $copy, $copy will contain the elements
-    # that are only in $self after this call.
-    $other->visit_all($visitor);
-    # Thus we can just add all of these entries to @removed.  :)
-    $copy->visit_all(sub { my (undef, @keys) = @_; push @removed, \@keys; });
-
-    return Lintian::Lab::ManifestDiff->_new($self->{'type'}, $other, $self,
-        \@added, \@removed, \@changed);
 }
 
 ### Internal methods ###
