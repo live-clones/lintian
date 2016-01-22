@@ -376,11 +376,11 @@ Info: Files in the <tt>/etc/emacs*</tt> directories should not be marked
  executable.
 
 Tag: image-file-in-usr-lib
-Severity: normal
+Severity: pedantic
 Certainty: certain
 Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
  According to the Filesystem Hierarchy Standard, architecture-independent
- files need to be placed within <tt>/usr/share</tt> instead.
+ files should to be placed within <tt>/usr/share</tt> instead.
 
 Tag: file-directly-in-usr-share-doc
 Severity: serious

@@ -2,6 +2,8 @@ Testname: files-foo-in-bar
 Sequence: 6000
 Version: 1.0
 Description: Test tags about files or dirs in given paths
+Options: -I -E --pedantic
+Skeleton: pedantic
 Test-For:
  dir-in-usr-local
  dir-or-file-in-build-tree

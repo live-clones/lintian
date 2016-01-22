@@ -25,6 +25,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [NT] Fix off-by-one in an "mtime" comparison, which could give
       false-positive package-contains-timestamped-gzip warnings.
+    + [NT] Downgrade image-file-in-usr-lib to pedantic given the
+      policy has relaxed on this point.  (Closes: #415558)
   * checks/source-copyright.{desc,pm}:
     + [JW] Apply patch from Mattia Rizzolo to update the machine-readable
       copyright format specification URL.  (Closes: #809248)
