@@ -23,6 +23,7 @@ use autodie;
 
 use Exporter qw(import);
 
+use Carp qw(croak);
 use Dpkg::Vendor;
 
 use Lintian::CollScript;
