@@ -45,6 +45,8 @@ lintian (2.5.40) UNRELEASED; urgency=medium
 
   * debian/control:
     + [NT] Add ${perl:Depends} to Depends.
+    + [NT] Use https://anonscm.debian.org/git/lintian/lintian.git in the
+      Vcs-* fields.
   * debian/rules:
     + [NT] Convert to dh7 style build.
 
