@@ -508,7 +508,7 @@ defined entry, for which L</is_dir> returns a truth value.
 sub fs_path {
     my ($self) = @_;
     my $path = $self->_collect_path();
-    $self->_check_access($path);
+    $self->_check_access();
     return $path if $self->resolve_path->is_dir;
     $self->_check_open($path);
     return $path;
@@ -551,7 +551,7 @@ sub _fs_info {
 }
 
 sub _check_access {
-    my ($self, $path) = @_;
+    my ($self) = @_;
     my $path_info = $self->{'_path_info'};
     return 1 if ($path_info & FS_PATH_IS_OK) == FS_PATH_IS_OK;
     return 0 if $path_info & ACCESS_INFO;
@@ -570,7 +570,7 @@ sub _check_access {
 
 sub _check_open {
     my ($self, $path) = @_;
-    $self->_check_access($path);
+    $self->_check_access();
     # Symlinks can point to a "non-file" object inside the
     # package root
     if ($self->is_file or ($self->is_symlink and -f $path)) {
