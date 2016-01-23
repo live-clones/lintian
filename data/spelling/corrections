@@ -122,6 +122,7 @@ ammends||amends
 ammount||amount
 amoung||among
 amout||amount
+analagous||analogous
 analysator||analyzer
 ang||and
 anniversery||anniversary
@@ -139,6 +140,10 @@ appropiate||appropriate
 appropriatly||appropriately
 aproximation||approximation
 aproximations||approximations
+aqcuire||acquire
+aqcuired||acquired
+aqcuires||acquires
+aqcuiring||acquiring
 aquire||acquire
 aquired||acquired
 arbitary||arbitrary
@@ -543,6 +548,7 @@ ecspecially||especially
 edditable||editable
 editting||editing
 efficency||efficiency
+efficent||efficient
 efficently||efficiently
 eletronic||electronic
 eligable||eligible
@@ -586,6 +592,8 @@ equiped||equipped
 equivelant||equivalent
 equivilant||equivalent
 eroneous||erroneous
+erorr||error
+erorrs||errors
 estbalishment||establishment
 etsablishment||establishment
 etsbalishment||establishment
@@ -723,6 +731,8 @@ goverment||government
 grabing||grabbing
 grahical||graphical
 grahpical||graphical
+grammer||grammar
+grammers||grammars
 grapic||graphic
 guage||gauge
 guarenteed||guaranteed
@@ -734,6 +744,7 @@ handfull||handful
 hanshake||handshake
 hanshakes||handshakes
 hapening||happening
+happend||happened
 happenned||happened
 harcoded||hardcoded
 harcode||hardcode
@@ -756,6 +767,7 @@ hilights||highlights
 homogenous||homogeneous
 horzontal||horizontal
 horzontally||horizontally
+howerver||however
 howver||however
 hypenation||hyphenation
 igored||ignored
@@ -771,6 +783,8 @@ implememented||implemented
 implemement||implement
 implemementing||implementing
 implemements||implements
+implemenation||implementation
+implemenations||implementations
 implemention||implementation
 implemetation||implementation
 implemeted||implemented
@@ -978,6 +992,7 @@ monochorome||monochrome
 monochromo||monochrome
 monocrome||monochrome
 mroe||more
+mulitple||multiple
 mulitplied||multiplied
 multidimensionnal||multidimensional
 multplied||multiplied
@@ -1034,6 +1049,7 @@ officialy||officially
 omitt||omit
 ommitted||omitted
 onself||oneself
+opague||opaque
 optinally||optionally
 optinal||optional
 optionaly||optionally
@@ -1093,6 +1109,7 @@ paremeters||parameters
 parenthesed||parenthesized
 particularily||particularly
 pased||passed
+peformance||performance
 pendantic||pedantic
 peprocessor||preprocessor
 perfoming||performing
@@ -1261,6 +1278,7 @@ requrest||request
 requrests||requests
 requried||required
 resemblence||resemblance
+reserverd||reserved
 resizeable||resizable
 resouce||resource
 resouces||resources
@@ -1477,6 +1495,7 @@ tigth||tight
 tihs||this
 timetamps||timestamps
 timetamp||timestamp
+togther||together
 traditionnal||traditional
 tranformations||transformations
 tranformation||transformation
@@ -1604,6 +1623,7 @@ wan't||want
 weigth||weight
 wether||whether
 whataver||whatever
+whenver||whenever
 wheter||whether
 wich||which
 widht||width
