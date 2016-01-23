@@ -200,6 +200,11 @@ sub _get_license_check_file {
             if(scalar(@keywordlist) < 1) {
                 fail $syntaxerror, 'No keywords line', $.;
             }
+            my @sentencelist = split(/\s*\|\|\s*/, $sentence);
+            if(scalar(@sentencelist) < 1) {
+                fail $syntaxerror, 'No sentence line', $.;
+            }
+
             if($regex eq '') {
                 $regex = '.*';
             }
@@ -208,7 +213,7 @@ sub _get_license_check_file {
             }
             my %ret = (
                 'keywords' =>  \@keywordlist,
-                'sentence' => $sentence,
+                'sentence' => \@sentencelist,
                 'regex' => qr/$regex/xsm,
                 'firstregex' => qr/$firstregex/xsm,
             );
@@ -1375,7 +1380,16 @@ sub _license_check {
         unless(defined($$cleanedblock)) {
             $$cleanedblock = _clean_block($block);
         }
-        unless(index($$cleanedblock,$licenseproblemdata->{'sentence'}) > -1){
+
+        my $foundsentence = 0;
+        my @sentencelist =  @{$licenseproblemdata->{'sentence'}};
+        foreach my $sentence (@sentencelist) {
+            if(index($$cleanedblock,$sentence) > -1){
+                $foundsentence = 1;
+            }
+        }
+
+        unless($foundsentence) {
             next LICENSE;
         }
         my $regex

@@ -4,6 +4,7 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Check package testsuite for license problems.
+    + [BR] Allow multiple full text for license problems.
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.
