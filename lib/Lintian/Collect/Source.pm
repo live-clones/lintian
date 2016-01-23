@@ -573,7 +573,7 @@ instead, which returns L<Lintian::Path> objects.
 
 Returns the path to FILE in the debian dir of the extracted source
 package.  FILE must be relative to the root of the debian dir and
-should be without leading slash (and and without "./").  If FILE is
+should be without leading slash (and without "./").  If FILE is
 not in the debian dir, it returns the path to a non-existent file
 entry.
 

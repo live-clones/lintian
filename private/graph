@@ -115,7 +115,7 @@ sub gen_depth_level {
     my @queue;
     my %re = (); # "remaining" edges
     # Breadth first search with multiple source nodes
-    # - Note we visit a node when we reach it through its LAST egde
+    # - Note we visit a node when we reach it through its LAST edge
     # - first find the source nodes and enqueue them
     foreach my $node (@colls) {
         my $needed = $needs{"coll-$node"};

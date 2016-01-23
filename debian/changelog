@@ -5,6 +5,11 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * data/spelling/corrections*:
     + [JW] Add more corrections.
 
+  * lib/Lintian/Collect/Source.pm:
+    + [JW] Fix typo.
+  * lib/Lintian/Lab/Entry.pm:
+    + [JW] Fix typo.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 23 Jan 2016 08:30:50 +0000
 
 lintian (2.5.40.1) unstable; urgency=medium
@@ -15471,7 +15476,7 @@ lintian (1.20.7) unstable; urgency=low
   * warning description cleanups, Closes: #87528
   * added more bashism checks -- '|&', '$[foo]', '${parm:len[:offset]}',
     '${parm/pat[/str]}', '${parm//pat[/str]}'
-    Closes: #32113 (the suiregister stuff happened a release or three ago)
+    Closes: #32113 (the suidregister stuff happened a release or three ago)
     you guessed it, need a testset
   * bashism check now tells you what it thinks the bashism was.
     Closes: #81738
@@ -15578,7 +15583,7 @@ lintian (1.20.4) unstable; urgency=low
     check referenced in a desc also has an info section.  runtests now runs
     this test as well.
   * suidregister warning is now an error.
-  * checks/menus: fixed the if link case pattern match -- one more perl erro
+  * checks/menus: fixed the if link case pattern match -- one more perl error
     down, 3 billion hidden ones to go.
   * Following items thanks to Colin Watson
   * updated checks/standards-version so it does not give perl errors when it

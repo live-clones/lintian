@@ -1,6 +1,6 @@
 # Manually maintained table of well known privacy breakers html/js fragment
 # syntax:
-#   keywork ~~regex (xsm) ~~ tag
+#   keyword ~~regex (xsm) ~~ tag
 #
 # Note spaces on the right hand side of ~~ are assumed to be a part
 # of the regex.  Also note that the regex will be applied to a string

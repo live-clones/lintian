@@ -181,7 +181,7 @@ sub info {
     my $info;
     $info = $self->{info};
     if (!defined $info) {
-        croak('Cannot load info, extry does not exist') unless $self->exists;
+        croak('Cannot load info, entry does not exist') unless $self->exists;
 
         $info = Lintian::Collect->new($self->pkg_name, $self->pkg_type,
             $self->base_dir);

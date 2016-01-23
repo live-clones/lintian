@@ -638,7 +638,7 @@ sub run {
 
                 }
             }
-            # ---------------- arch-indep pkconfig
+            # ---------------- arch-indep pkgconfig
             elsif ($file->is_regular_file
                 && $fname
                 =~ m,^usr/(?:lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,) {
