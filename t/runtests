@@ -44,6 +44,25 @@ use constant SUITES => qw(scripts changes debs source tests);
 our ($LINTIAN_ROOT, $LINTIAN, @LINTIAN_CMD);
 
 BEGIN {
+    # Whitelist the part of the environment we permit.  This is to
+    # avoid inheriting things that messes up tests (like CFLAGS,
+    # DH_OPTIONS, DEB_HOST_ARCH etc.)
+    my %PRESERVE_ENV = map { $_ => 1 } qw(
+      LINTIAN_TEST_INSTALLED
+      NO_PKG_MANGLE
+      PATH
+      TMPDIR
+    );
+    # TODO: MAKEFLAGS - some of the tests don't cope too well with it
+    for my $key (keys(%ENV)) {
+        delete $ENV{$key}
+          if not exists($PRESERVE_ENV{$key});
+
+    }
+    for my $var (sort(keys(%ENV))) {
+        print "ENV[$var]=$ENV{$var}\n";
+    }
+
     if (($ENV{'LINTIAN_TEST_INSTALLED'}//'no') eq 'yes') {
         $LINTIAN_ROOT = '/usr/share/lintian';
         $LINTIAN = '/usr/bin/lintian';
@@ -55,14 +74,6 @@ BEGIN {
     $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
     @LINTIAN_CMD = ($LINTIAN);
 
-    delete $ENV{'LINTIAN_CFG'};
-    delete $ENV{'LINTIAN_LAB'};
-    delete($ENV{'LINTIAN_PROFILE'});
-    delete($ENV{'LINTIAN_COVERAGE'});
-    # Some of the tests don't cope too well with "-j" in MAKEFLAGS
-    delete($ENV{'MAKEFLAGS'});
-    # Ensure Lintian works without $ENV{HOME}
-    delete($ENV{'HOME'});
     # Ubuntu auto-builders run pkg-mangle which messes with our
     # test packages, so ask it not to do so by default.
     $ENV{'NO_PKG_MANGLE'} = 'true'
