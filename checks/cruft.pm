@@ -551,6 +551,7 @@ sub find_cruft {
         my $basename = $entry->basename;
         my $dirname = $entry->dirname;
         my $file_info;
+        my $istestsetdir = istestset($dirname);
 
         if ($entry->is_dir) {
 
@@ -568,7 +569,7 @@ sub find_cruft {
             # "source-contains-quilt-control-dir" tag.
             next if $basename eq '.pc';
 
-            if (not istestset($dirname) && not $warned->{$name}) {
+            if (not $istestsetdir && not $warned->{$name}) {
                 for my $rule (@directory_checks) {
                     if ($basename =~ /$rule->[0]/) {
                         tag "${prefix}-$rule->[1]", $name;
@@ -583,7 +584,7 @@ sub find_cruft {
             next ENTRY;
         }
         if ($entry->is_symlink) {
-            next ENTRY if istestset($dirname);
+            next ENTRY if $istestsetdir;
 
             # An absolute link always escapes the root (of a source
             # package).  For relative links, it escapes the root if we
@@ -598,7 +599,7 @@ sub find_cruft {
         # we just need normal files for the rest
         next ENTRY unless $entry->is_file;
         # avoid lintian testset
-        next ENTRY if $source_pkg eq 'lintian' && istestset($dirname);
+        next ENTRY if $source_pkg eq 'lintian' && $istestsetdir;
 
         # check non free file
         my $md5sum = $info->md5sums->{$name};
@@ -650,7 +651,7 @@ sub find_cruft {
 
         }
 
-        next ENTRY if istestset($dirname);
+        next ENTRY if $istestsetdir;
 
         # warn by file type
         foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
