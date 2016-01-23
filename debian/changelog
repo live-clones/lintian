@@ -5,6 +5,9 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * data/spelling/corrections*:
     + [JW] Add more corrections.
 
+  * debian/post{inst,rm}:
+    + [NT] Remove obsolete maintainer scripts.
+
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fix typo.
   * lib/Lintian/Lab/Entry.pm:
