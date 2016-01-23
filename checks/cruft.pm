@@ -158,6 +158,14 @@ my $RFC_WHITELIST =  Lintian::Data->new(
         return qr/$_[0]/xms;
     });
 
+# prebuilt-file or forbidden copyright
+my $BAD_LINK_COPYRIGHT =  Lintian::Data->new(
+    'cruft/bad-link-copyright',
+    qr/\s*\~\~\s*/,
+    sub {
+        return qr/$_[1]/xms;
+    });
+
 my $MISSING_DIR_SEARCH_PATH
   =  Lintian::Data->new('cruft/missing-dir-search-path');
 
@@ -954,6 +962,23 @@ sub _search_in_block0 {
         }
         # now search hidden minified
         _linelength_test($entry, $info, $name, $basename, $dirname,$block);
+    }
+    # search link rel header
+    if(index($block,' rel="copyright" ') > -1) {
+        my $href = $block;
+        $href =~ m,<link \s+
+                  rel="copyright" \s+
+                  href="([^"]+)" \s*/? \s*>,xmsi;
+        if(defined($1)) {
+            my $copyrighttarget = $1;
+            foreach my $badcopyrighttag ($BAD_LINK_COPYRIGHT->all) {
+                my $regex =  $BAD_LINK_COPYRIGHT->value($badcopyrighttag);
+                if($copyrighttarget =~ m{$regex}) {
+                    tag $badcopyrighttag, $name;
+                    last;
+                }
+            }
+        }
     }
     return;
 }
