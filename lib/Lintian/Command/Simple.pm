@@ -22,7 +22,7 @@ use autodie qw(open close chdir);
 use Exporter qw(import);
 use POSIX qw(:sys_wait_h);
 
-our @EXPORT_OK = qw(rundir background background_dir wait_any kill_all);
+our @EXPORT_OK = qw(rundir background wait_any kill_all);
 
 =head1 NAME
 
@@ -110,36 +110,6 @@ sub background {
         close(STDIN);
         open(STDIN, '<', '/dev/null');
 
-        CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
-    }
-}
-
-=item background_dir(dir, command, argument  [, ...])
-
-Executes the given C<command> with the given arguments asynchronously
-in dir and returns the process id of the child process.
-
-A return value of -1 indicates an error. This can either be a problem
-when calling CORE::fork() or when trying to run another command before
-calling wait() to reap the previous command.
-
-=cut
-
-sub background_dir {
-    my $pid = fork();
-
-    if (not defined($pid)) {
-        # failed
-        return -1;
-    } elsif ($pid > 0) {
-        # parent
-        return $pid;
-    } else {
-        # child
-        my $dir = shift;
-        close(STDIN);
-        open(STDIN, '<', '/dev/null');
-        chdir($dir);
         CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
     }
 }
