@@ -1,6 +1,4 @@
-lintian (2.5.41) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.40.1) unstable; urgency=medium
 
   * debian/rules:
     + [NT] Only run tests from the override_dh_auto_test target.
@@ -9,7 +7,7 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [NT] Use a whitelist for cleaning up the environment.  Fixes
       FTBFS / test failures.
 
- -- Niels Thykier <niels@thykier.net>  Fri, 22 Jan 2016 21:48:04 +0000
+ -- Niels Thykier <niels@thykier.net>  Sat, 23 Jan 2016 08:28:24 +0000
 
 lintian (2.5.40) unstable; urgency=medium
 
