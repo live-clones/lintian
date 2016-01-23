@@ -524,6 +524,12 @@ sub check_debian_dir {
     return;
 }
 
+# testset exception
+sub istestset {
+    my ($dirname) = @_;
+    return $dirname =~ m{ (:?\A|/) t (?: est (?: s (?: et)?+ )?+ )?+ /?\Z}xsm;
+}
+
 # Check each file in the source package for problems.  By the time we get to
 # this point, we've already checked the diff and warned about anything added
 # there, so we only warn about things that weren't in the diff here.
@@ -562,11 +568,7 @@ sub find_cruft {
             # "source-contains-quilt-control-dir" tag.
             next if $basename eq '.pc';
 
-            # Ignore files in test suites.  They may be part of the test.
-            next
-              if $basename=~ m{ \A t (?: est (?: s (?: et)?+ )?+ )?+ \Z}xsm;
-
-            if (not $warned->{$name}) {
+            if (not istestset($dirname) && not $warned->{$name}) {
                 for my $rule (@directory_checks) {
                     if ($basename =~ /$rule->[0]/) {
                         tag "${prefix}-$rule->[1]", $name;
@@ -581,6 +583,7 @@ sub find_cruft {
             next ENTRY;
         }
         if ($entry->is_symlink) {
+            next ENTRY if istestset($dirname);
 
             # An absolute link always escapes the root (of a source
             # package).  For relative links, it escapes the root if we
@@ -594,6 +597,8 @@ sub find_cruft {
 
         # we just need normal files for the rest
         next ENTRY unless $entry->is_file;
+        # avoid lintian testset
+        next ENTRY if $source_pkg eq 'lintian' && istestset($dirname);
 
         # check non free file
         my $md5sum = $info->md5sums->{$name};
@@ -612,21 +617,8 @@ sub find_cruft {
 
         $file_info = $entry->file_info;
 
-        # warn by file type
-        foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
-            my $warn_data = $WARN_FILE_TYPE->value($tag_filetype);
-            my $regtype = $warn_data->{'regtype'};
-            if($file_info =~ m{$regtype}) {
-                my $regname = $warn_data->{'regname'};
-                if($name =~ m{$regname}) {
-                    tag $tag_filetype, $name;
-                    if($warn_data->{'checkmissing'}) {
-                        check_missing_source($entry,$info,$name, $basename,
-                            $dirname,$warn_data->{'transform'});
-                    }
-                }
-            }
-        }
+        # check full text problem
+        full_text_check($source_pkg, $entry, $info, $name, $basename,$dirname);
 
         # waf is not allowed
         if ($basename =~ /\bwaf$/) {
@@ -656,6 +648,24 @@ sub find_cruft {
                 tag 'license-problem-non-free-img-lenna', $name;
             }
 
+        }
+
+        next ENTRY if istestset($dirname);
+
+        # warn by file type
+        foreach my $tag_filetype ($WARN_FILE_TYPE->all) {
+            my $warn_data = $WARN_FILE_TYPE->value($tag_filetype);
+            my $regtype = $warn_data->{'regtype'};
+            if($file_info =~ m{$regtype}) {
+                my $regname = $warn_data->{'regname'};
+                if($name =~ m{$regname}) {
+                    tag $tag_filetype, $name;
+                    if($warn_data->{'checkmissing'}) {
+                        check_missing_source($entry,$info,$name, $basename,
+                            $dirname,$warn_data->{'transform'});
+                    }
+                }
+            }
         }
 
         # here we check old upstream specification
@@ -746,7 +756,6 @@ sub find_cruft {
             }
             close($fd);
         }
-        full_text_check($source_pkg, $entry, $info, $name, $basename,$dirname);
     }
     return;
 }
