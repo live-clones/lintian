@@ -84,7 +84,7 @@ generate-docs-stamp: $(docsource)
 rebuild-lintian.debian.org: api-doc generate-docs-stamp
 	# done
 
-override_dh_auto_build: $(neededfiles) generate-docs-stamp $(testtarget) $(po4acheckcfg)
+override_dh_auto_build: $(neededfiles) generate-docs-stamp $(po4acheckcfg)
 	mkdir -p l10n
 	PERL5LIB=lib/ po4a --keep 80 $(po4acheckcfg)
 
