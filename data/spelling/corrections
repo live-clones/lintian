@@ -115,6 +115,7 @@ alpabets||alphabets
 alreay||already
 altough||although
 ambigious||ambiguous
+ambigous||ambiguous
 ammend||amend
 ammended||amended
 ammending||amending
@@ -452,6 +453,10 @@ delare||declare
 delares||declares
 delaring||declaring
 delemiter||delimiter
+demostrated||demonstrated
+demostrate||demonstrate
+demostrates||demonstrates
+demostrating||demonstrating
 dependancies||dependencies
 dependancy||dependency
 dependant||dependent
@@ -830,6 +835,7 @@ incuded||included
 incude||include
 incudes||includes
 incuding||including
+incure||incur
 indempotent||idempotent
 indendation||indentation
 indended||intended
@@ -939,6 +945,7 @@ libary||library
 librairies||libraries
 libraris||libraries
 licenceing||licencing
+licese||license
 ligth||light
 likelyhood||likelihood
 loggging||logging
@@ -964,6 +971,7 @@ mantaining||maintaining
 mantain||maintain
 mantains||maintains
 manully||manually
+matchin||matching
 mathimatical||mathematical
 mathimatic||mathematic
 mathimatics||mathematics
@@ -971,6 +979,8 @@ maxium||maximum
 mecanism||mechanism
 mecanisms||mechanisms
 ment||meant
+mesage||message
+mesages||messages
 messsage||message
 messsages||messages
 microprocesspr||microprocessor
@@ -1092,6 +1102,10 @@ overrriden||overridden
 overrride||override
 overrriding||overriding
 overun||overrun
+ovverridden||overridden
+ovverride||override
+ovverrides||overrides
+ovverriding||overriding
 pacakge||package
 pachage||package
 pach||patch
@@ -1159,6 +1173,8 @@ postions||positions
 postive||positive
 postives||positives
 powerfull||powerful
+prcesses||processes
+prcess||process
 preceeded||preceded
 preceeding||preceding
 preceed||precede
@@ -1377,6 +1393,7 @@ shoud||should
 shouldnt||shouldn't
 signficantly||significantly
 signficant||significant
+similiarly||similarly
 similiar||similar
 simliar||similar
 simmilar||similar
@@ -1627,6 +1644,8 @@ vaules||values
 vaule||value
 vauling||valuing
 verbse||verbose
+verions||versions
+verion||version
 verious||various
 verisons||versions
 verison||version
