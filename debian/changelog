@@ -13,6 +13,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   * debian/post{inst,rm}:
     + [NT] Remove obsolete maintainer scripts.
+  * debian/tests/testsuite:
+    + [NT] Remove temporary directory after test.
 
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fix typo.

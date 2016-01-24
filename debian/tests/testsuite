@@ -9,3 +9,4 @@ rm -f runtests
 
 debian/rules TEST_WORK_DIR="$WORKDIR" runtests onlyrun="suite:changes,debs,source,tests"
 
+rm -fr "${WORKDIR}"
