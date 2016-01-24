@@ -424,7 +424,8 @@ sub collect_statistics {
                     $count{$tag->{code}}++;
                 }
                 if (@$tags) {
-                    $sources_ref->{$source}{$version} = $tags->[0]->{xref};
+                    $sources_ref->{$source}{$version}
+                      = $tags->[0]->{pkg_info}{xref};
                 }
             }
             $qa_list_ref->{$source} = \%count;
@@ -438,7 +439,7 @@ sub collect_statistics {
         foreach (@{$by_tag{$tag}}) {
             if ($_->{code} ne 'O') {
                 $count++;
-                $seen_tags{$_->{xref}}++;
+                $seen_tags{$_->{pkg_info}{xref}}++;
             } else {
                 $overrides++;
             }
