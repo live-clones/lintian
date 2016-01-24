@@ -808,6 +808,11 @@ sub parse_lintian_log {
                 $anchor =~ s/[+]/_x2b/g;
                 $anchor =~ s/[:]/_x3a/g;
             }
+            if (substr($maintainer, 0, 1) eq q{"}) {
+                # Strip out ""-quotes, which is required in d/control for some
+                # maintainers.
+                $maintainer =~ s/^"(.*)" <(.*)>$/$1 <$2>/;
+            }
 
             # Check if we've seen the URL for this maintainer before
             # and, if so, map them to the same person as the previous
@@ -850,6 +855,11 @@ sub parse_lintian_log {
                 # between hashes).
                 if ($uploaders) {
                     for my $uploader (@{$uploaders}) {
+                        if (substr($uploader, 0, 1) eq q{"}) {
+                            # Strip out ""-quotes, which is required in d/control for some
+                            # uploaders.
+                            $uploader =~ s/^"(.*)" <(.*)>$/$1 <$2>/;
+                        }
                         $uploader = map_maintainer($uploader);
                         next if $uploader eq $maintainer;
                         $by_uploader{$uploader}{$source}{$source_version}
