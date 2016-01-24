@@ -856,8 +856,8 @@ sub parse_lintian_log {
                 if ($uploaders) {
                     for my $uploader (@{$uploaders}) {
                         if (substr($uploader, 0, 1) eq q{"}) {
-                            # Strip out ""-quotes, which is required in d/control for some
-                            # uploaders.
+                            # Strip out ""-quotes, which is required in
+                            # d/control for some uploaders.
                             $uploader =~ s/^"(.*)" <(.*)>$/$1 <$2>/;
                         }
                         $uploader = map_maintainer($uploader);
