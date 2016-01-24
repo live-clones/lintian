@@ -282,9 +282,8 @@ for my $maintainer (@maintainers) {
 
     # Determine the parts of the maintainer and the file name for the
     # maintainer page.
-    my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
-    $name = 'Unknown Maintainer' unless $name;
-    $email = 'unknown' unless $email;
+    my ($name, $email) = extract_name_and_email($maintainer);
+
     my $regular = "maintainer/$id";
     my $full = "full/$id";
 
@@ -324,8 +323,7 @@ output_template('maintainers.html', $templates{maintainers}, \%data);
 # Now, generate stub pages for every maintainer who has only clean packages.
 for my $id (keys %clean) {
     my $maintainer = $clean{$id};
-    my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
-    $email = 'unknown' unless $email;
+    my ($name, $email) = extract_name_and_email($maintainer);
     my %maint_data = (
         id         => $id,
         email      => html_quote(uri_escape($email)),
@@ -467,6 +465,14 @@ sub collect_statistics {
     }
 
     return;
+}
+
+sub extract_name_and_email {
+    my ($maintainer) = @_;
+    my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
+    $name = 'Unknown Maintainer' unless $name;
+    $email = 'unknown' unless $email;
+    return ($name, $email);
 }
 
 # Generate the package lists.  These are huge, so we break them into four
