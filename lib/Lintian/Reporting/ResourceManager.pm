@@ -40,8 +40,10 @@ Lintian::Reporting::ResourceManager -- A simple resource manager for html_report
  my $resMan = Lintian::Reporting::ResourceManager->new(
     'html_dir' => 'path/to/HTML-root',
  );
- $resMan->install_resource('path/to/my-image.png');
- $resMan->install_resource('path/to/my-styles.css');
+ # Copy the resource
+ $resMan->install_resource('path/to/my-image.png', { install_method => 'copy'} );
+ # Move the resource
+ $resMan->install_resource('path/to/generated-styles.css');
  print 'Image: ' . $resMan->resource_URL('my-image.png'), "\n";
  print 'CSS: ' . $resMan->resource_URL('my-styles.css'), "\n";
 
@@ -80,7 +82,7 @@ sub new {
 
 =over 4
 
-=item install_resource(RESOURCE)
+=item install_resource(RESOURCE[, OPT])
 
 Installs RESOURCE into the html root.  The resource may be renamed
 (based on content etc.).
@@ -88,13 +90,29 @@ Installs RESOURCE into the html root.  The resource may be renamed
 Note that the basename of RESOURCE must be unique between all
 resources installed.  See L</resource_URL(RESOURCE_NAME)>.
 
+If OPT is given, it must be a hashref with 0 or more of the following
+keys (and values).
+
+=over 4
+
+=item install_method
+
+Can be "copy" or "move" (default).  If set to "move", the original file
+will be renamed into its new location.  Otherwise, a copy is done and
+the original file is left in place.
+
+=back
+
 =cut
 
 sub install_resource {
-    my ($self, $resource) = @_;
+    my ($self, $resource, $opt) = @_;
     my $install_name = get_file_checksum('sha1', $resource);
     my $basename = basename($resource);
     my $resource_root = $self->{'html_dir'} . '/resources';
+    my $method = 'move';
+    $method = $opt->{'install_method'}
+      if $opt && exists($opt->{'install_method'});
 
     croak("Resource name ${basename} already in use")
       if defined($self->{'_resource_cache'}{$basename});
@@ -103,8 +121,18 @@ sub install_resource {
         $install_name .= $ext;
     }
     mkdir($resource_root, 0755) if not -d $resource_root;
-    copy($resource, "$resource_root/$install_name")
-      or croak("Cannot copy $resource to $resource_root/$install_name: $!");
+    if ($method eq 'move') {
+        rename($resource, "$resource_root/$install_name");
+    } elsif ($method eq 'copy') {
+        copy($resource, "$resource_root/$install_name")
+          or
+          croak("Cannot copy $resource to $resource_root/$install_name: $!");
+    } else {
+        croak(
+            join(' ',
+                "Unknown install method ${method}",
+                '- please use "move" or "copy"'));
+    }
     $self->{'_resource_cache'}{$basename} = "resources/$install_name";
     return;
 }

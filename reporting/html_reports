@@ -145,7 +145,8 @@ for my $dir_basename (qw(resources images)) {
     opendir(my $dirfd, $dir);
     for my $resname (readdir($dirfd)) {
         next if $resname eq '.' or $resname eq '..';
-        $RESOURCE_MANAGER->install_resource("$dir/$resname");
+        $RESOURCE_MANAGER->install_resource("$dir/$resname",
+            { install_method => 'copy'});
     }
     closedir($dirfd);
 }
@@ -157,7 +158,6 @@ output_template(
     $templates{'lintian.css'},
     { 'path_prefix' => '../' });
 $RESOURCE_MANAGER->install_resource("$HTML_TMP_DIR/lintian.css");
-unlink("$HTML_TMP_DIR/lintian.css");
 
 my $STATE_CACHE = load_state_cache($HARNESS_STATE_DIR);
 
