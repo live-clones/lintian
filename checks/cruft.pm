@@ -540,7 +540,8 @@ sub check_debian_dir {
 # testset exception
 sub istestset {
     my ($dirname) = @_;
-    return $dirname =~ m{ (:?\A|/) t (?: est (?: s (?: et)?+ )?+ )?+ /?\Z}xsm;
+    return $dirname
+      =~ m{ (:?\A|/) t (?: est (?: s (?: et)?+ )?+ )?+ (?: \Z | /)}xsm;
 }
 
 # Check each file in the source package for problems.  By the time we get to
