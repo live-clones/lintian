@@ -19,6 +19,12 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * lib/Lintian/Lab/Entry.pm:
     + [JW] Fix typo.
 
+  * reports/html_reports:
+    + [NT] Fix uninitialized warnings.
+    + [NT] Remove ""-quotes covering the full maintainer name.
+      This makes "Adam" sort under "A" rather than "Other" on the
+      list of maintainers.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 23 Jan 2016 08:30:50 +0000
 
 lintian (2.5.40.1) unstable; urgency=medium
