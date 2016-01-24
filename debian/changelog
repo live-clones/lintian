@@ -1,6 +1,4 @@
-lintian (2.5.41) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.40.2) unstable; urgency=medium
 
   * checks/cruft.pm:
     + [BR] Check package testsuite for license problems.
@@ -27,7 +25,7 @@ lintian (2.5.41) UNRELEASED; urgency=medium
       This makes "Adam" sort under "A" rather than "Other" on the
       list of maintainers.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 23 Jan 2016 08:30:50 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:52:18 +0000
 
 lintian (2.5.40.1) unstable; urgency=medium
 
