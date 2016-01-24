@@ -206,11 +206,11 @@ sub _get_license_check_file {
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
             if(scalar(@keywordlist) < 1) {
-                fail $syntaxerror, 'No keywords line', $.;
+                fail $syntaxerror, 'No keywords on line', $.;
             }
             my @sentencelist = split(/\s*\|\|\s*/, $sentence);
             if(scalar(@sentencelist) < 1) {
-                fail $syntaxerror, 'No sentence line', $.;
+                fail $syntaxerror, 'No sentence on line', $.;
             }
 
             if($regex eq '') {
