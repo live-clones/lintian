@@ -138,6 +138,7 @@ appplication||application
 appplications||applications
 appropiate||appropriate
 appropriatly||appropriately
+approximatly||approximately
 aproximation||approximation
 aproximations||approximations
 aqcuire||acquire
@@ -397,6 +398,8 @@ continous||continuous
 continously||continuously
 continueing||continuing
 contraints||constraints
+controler||controller
+controlers||controllers
 contructor||constructor
 contructors||constructors
 converstion||conversion
@@ -550,6 +553,8 @@ editting||editing
 efficency||efficiency
 efficent||efficient
 efficently||efficiently
+egde||edge
+egdes||edges
 eletronic||electronic
 eligable||eligible
 elliminated||eliminated
@@ -594,6 +599,8 @@ equivilant||equivalent
 eroneous||erroneous
 erorr||error
 erorrs||errors
+esential||essential
+esentially||essentially
 estbalishment||establishment
 etsablishment||establishment
 etsbalishment||establishment
@@ -770,6 +777,10 @@ horzontally||horizontally
 howerver||however
 howver||however
 hypenation||hyphenation
+idicated||indicated
+idicate||indicate
+idicates||indicates
+idicating||indicating
 igored||ignored
 igore||ignore
 igores||ignores
@@ -905,6 +916,7 @@ itialize||initialize
 itializes||initializes
 itializing||initializing
 jave||java
+keywork||keyword
 langage||language
 langauage||language
 langauge||language
@@ -1024,6 +1036,7 @@ nesesarily||necessarily
 nessesary||necessary
 nessessary||necessary
 nonexistant||nonexistent
+nontheless||nonetheless
 noone||no one
 noticable||noticeable
 noticably||noticeably
@@ -1064,6 +1077,7 @@ orientied||oriented
 orignal||original
 othwerwise||otherwise
 ouput||output
+outputing||outputting
 outut||output
 overaall||overall
 overidden||overridden
@@ -1415,6 +1429,8 @@ straigt||straight
 strenghts||strengths
 strenght||strength
 strenth||strength
+stuctures||structures
+stucture||structure
 subdirectoires||subdirectories
 subexpresssions||subexpressions
 subexpresssion||subexpression
@@ -1432,6 +1448,10 @@ succeedes||succeeds
 succesfully||successfully
 succesful||successful
 succint||succinct
+suceeded||succeeded
+suceeding||succeeding
+suceeds||succeeds
+suceed||succeed
 sucesses||successes
 sucessfully||successfully
 sucess||success
@@ -1566,6 +1586,7 @@ unqouting||unquoting
 unrecogized||unrecognized
 unreconized||unrecognized
 unspported||unsupported
+unsual||unusual
 unsued||unused
 unsuported||unsupported
 untill||until
