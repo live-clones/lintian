@@ -1,3 +1,9 @@
+lintian (2.5.41) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:58:06 +0000
+
 lintian (2.5.40.2) unstable; urgency=medium
 
   * checks/cruft.pm:
