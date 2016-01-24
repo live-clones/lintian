@@ -1,4 +1,9 @@
 /*-stamp
+/debian/*.debhelper.*
+/debian/debhelper-build-stamp
+/debian/files
+/debian/lintian.substvars
+/debian/lintian/
 /debian/test-out/
 /debian/test.locale/
 /doc/api.html/
