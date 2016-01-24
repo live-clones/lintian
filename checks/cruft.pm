@@ -582,7 +582,7 @@ sub find_cruft {
             # "source-contains-quilt-control-dir" tag.
             next if $basename eq '.pc';
 
-            if (not $istestsetdir && not $warned->{$name}) {
+            if (not $istestsetdir and not $warned->{$name}) {
                 for my $rule (@directory_checks) {
                     if ($basename =~ /$rule->[0]/) {
                         tag "${prefix}-$rule->[1]", $name;
