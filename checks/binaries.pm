@@ -104,7 +104,7 @@ our $ARCH_32_REGEX;
 sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
-    my $madir;
+    my ($madir, %directories, $built_with_golang, %SONAME);
     my $gnu_triplet_re;
     my $ruby_triplet_re;
     my $needs_libc = '';
@@ -117,8 +117,6 @@ sub run {
     my $has_perl_lib = 0;
     my $has_php_ext = 0;
     my $uses_numpy_c_abi = 0;
-
-    my %SONAME;
 
     my $arch = $info->field('architecture', '');
     my $multiarch = $info->field('multi-arch', 'no');
@@ -250,16 +248,7 @@ sub run {
     tag 'package-name-doesnt-match-sonames', "@sonames"
       if @sonames && !$match_found;
 
-    my %directories;
-    for my $file ($info->sorted_index) {
-        my $name = $file->name;
-        next unless $file->is_dir || $file->is_symlink;
-        $name =~ s,/\z,,;
-        $directories{"/$name"}++;
-    }
-
     my $src = $group->get_source_processable();
-    my $built_with_golang;
     if (defined($src)) {
         $built_with_golang
           = $src->info->relation('build-depends')->implies('golang-go');
@@ -402,6 +391,16 @@ sub run {
 
         # rpath is disallowed, except in private directories
         if (exists $objdump->{RPATH}) {
+            if (not %directories) {
+                for my $file ($info->sorted_index) {
+                    my $name;
+                    next unless $file->is_dir || $file->is_symlink;
+                    $name = $file->name;
+                    $name =~ s,/\z,,;
+                    $directories{"/$name"}++;
+                }
+            }
+
             foreach my $rpath (
                 map {File::Spec->canonpath($_)}
                 keys %{$objdump->{RPATH}}
