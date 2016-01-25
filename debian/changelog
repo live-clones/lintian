@@ -2,9 +2,19 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * helper/coll/objdump-info-helper:
+    + [NT] Avoid collecting unused information.
+
   * data/spelling/corrections:
     + [JW] Fix some corrections.
     + [JW] Add more corrections.
+
+  * lib/Lintian/Path.pm:
+    + [NT] Remove the _file_info cache field to avoid paying
+      for all "file(1)" info twice.
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Remove unnecessary values on members in the
+      objdump_info table.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:58:06 +0000
 
