@@ -128,14 +128,17 @@ sub run {
         my $objdump = $info->objdump_info->{$file};
         my $has_lfs;
         my $is_profiled = 0;
+        # $file can be an object inside a static lib.  These do
+        # not appear in the output of our file_info collection.
+        my $file_info = $info->file_info($file) // '';
 
         # The LFS check only works reliably for ELF files due to the
         # architecture regex.
-        if ($objdump->{'ELF'}) {
+        if ($file_info =~ m/^[^,]*\bELF\b/o) {
             # Only 32bit ELF binaries can lack LFS.
             $ARCH_32_REGEX = $ARCH_REGEX->value('32')
               unless defined $ARCH_32_REGEX;
-            $has_lfs = 1 unless $info->file_info($file) =~ m/$ARCH_32_REGEX/o;
+            $has_lfs = 1 unless $file_info =~ m/$ARCH_32_REGEX/o;
             # We don't care if it is a debug file
             $has_lfs = 1 if $file =~ m,^usr/lib/debug/,;
         }
