@@ -29,7 +29,7 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(fail open_gz parse_dpkg_control get_file_checksum);
+use Lintian::Util qw(fail open_gz parse_dpkg_control get_file_checksum strip);
 
 =head1 NAME
 
@@ -385,9 +385,13 @@ sub objdump_info {
                 push @{ $info{'SYMBOLS'} }, [$sec, $ver, $sym];
             }
         }
-        foreach my $data (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
-            next unless $data;
-            my (undef, $section) = split m/\s++/, $data;
+        foreach my $section (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
+            next unless $section;
+            # NB: helpers/coll/objdump-info-helper discards most
+            # sections.  If you are missing a section name for a
+            # check, please update helpers/coll/objdump-info-helper to
+            # retrain the section name you need.
+            strip($section);
             $info{'SH'}{$section} = 1;
         }
         foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {

@@ -36,6 +36,12 @@ my %program_headers;
 my $bin;
 my $truncated = 0;
 my $section = '';
+# List of named sections, which are collected
+my %COLLECT_SECTIONS = map { $_ => 1 } qw(
+  .comment
+  .note
+);
+my $COLLECT_SECTIONS_REGEX = qr/^\.z?debug_/;
 
 # it would have been nice to do open '-|', "readelf ... 2>&1" but
 # then we have to escape the args and that puts us over the
@@ -147,19 +153,25 @@ while (my $line = <$readelf>) {
 
     } elsif ($line =~ m/^\s*\[\s*(\d+)\] (\S+)(?:\s|\Z)/
         and $section eq 'SH') {
-        $sections[$1] = $2;
+        my $section = $2;
+        $sections[$1] = $section;
         # We need sections as well (e.g. for incomplete stripping)
-        print " $1 $2\n";
+        print " $section\n"
+          if exists($COLLECT_SECTIONS{$section})
+          or$section =~ $COLLECT_SECTIONS_REGEX;
     } elsif ($line =~ m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
         and $section eq 'DS') {
         my ($type, $value) = ($1, $2);
+        my $keep = 0;
 
         if ($type eq 'RPATH') {
             $value =~ s/.*\[//;
             $value =~ s/\]\s*$//;
+            $keep = 1;
         }
-        $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
-        print "  $type   $value\n";
+        $keep = 1
+          if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
+        print "  $type   $value\n" if $keep;
     } elsif ($line =~ m/^\s*[0-9a-f]+: \s* \S+ \s* (?:\(\S+\))? (?:\s|\Z)/xi
         and $section eq 'VS') {
         while ($line =~ m/([0-9a-f]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
