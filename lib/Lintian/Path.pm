@@ -466,13 +466,7 @@ files.
 
 sub file_info {
     my ($self) = @_;
-    my $file_info;
-    if ($file_info = $self->{'_file_info'}) {
-        return $file_info;
-    }
-    $file_info = $self->_fs_info->_file_info($self);
-    $self->{'_file_info'} = $file_info;
-    return $file_info;
+    return $self->_fs_info->_file_info($self);
 }
 
 =item fs_path
