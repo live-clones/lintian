@@ -369,11 +369,7 @@ sub objdump_info {
     local $_;
     my $fd = open_gz($objf);
     foreach my $pg (parse_dpkg_control($fd)) {
-        my %info = (
-            'PH'     => {},
-            'SH'     => {},
-            'NEEDED' => [],
-        );
+        my %info;
         if (lc($pg->{'broken'}//'no') eq 'yes') {
             $info{'ERRORS'} = 1;
         }
@@ -392,7 +388,7 @@ sub objdump_info {
         foreach my $data (split m/\s*\n\s*/, $pg->{'section-headers'}//'') {
             next unless $data;
             my (undef, $section) = split m/\s++/, $data;
-            $info{'SH'}->{$section}++;
+            $info{'SH'}{$section} = 1;
         }
         foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {
             next unless $data;

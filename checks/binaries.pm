@@ -460,7 +460,7 @@ sub run {
         if ($fname
             =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul|\.build-id)/,)
         {
-            if (scalar(@{ $objdump->{NEEDED} })) {
+            if (exists($objdump->{NEEDED})) {
                 tag 'debug-file-should-use-detached-symbols', $file;
             }
             tag 'debug-file-with-no-debug-symbols', $file
@@ -472,14 +472,14 @@ sub run {
 
         # Detached debugging symbols directly in /usr/lib/debug.
         if ($fname =~ m,^usr/lib/debug/[^/]+$,) {
-            unless (scalar(@{ $objdump->{NEEDED} })
+            unless (exists($objdump->{NEEDED})
                 || $fileinfo =~ m/statically linked/) {
                 tag 'debug-symbols-directly-in-usr-lib-debug', $file;
             }
         }
 
         # statically linked?
-        if (!scalar(@{ $objdump->{NEEDED} })) {
+        if (!exists($objdump->{NEEDED})) {
             if ($fileinfo =~ m/shared object/o) {
                 # Some exceptions: kernel modules, syslinux modules, detached
                 # debugging information and the dynamic loader (which itself
@@ -520,9 +520,11 @@ sub run {
         } else {
             my $no_libc = 1;
             my $is_shared = 0;
+            my @needed;
             $needs_depends_line = 1;
             $is_shared = 1 if index($fileinfo, 'shared object') != -1;
-            for my $lib (@{$objdump->{NEEDED}}) {
+            @needed = @{$objdump->{NEEDED}} if exists($objdump->{NEEDED});
+            for my $lib (@needed) {
                 if ($lib =~ /^libc\.so\.(\d+.*)/) {
                     $needs_libc = "libc$1";
                     $needs_libc_file = $fname unless $needs_libc_file;
