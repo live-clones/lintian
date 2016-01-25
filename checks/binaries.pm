@@ -256,8 +256,7 @@ sub run {
 
     # process all files in package
     foreach my $file ($info->sorted_index) {
-        my $fname = $file->name;
-        my ($fileinfo, $objdump);
+        my ($fileinfo, $objdump, $fname);
 
         next if not $file->is_file;
 
@@ -273,6 +272,7 @@ sub run {
             tag 'arch-independent-package-contains-binary-or-object',$file;
         }
 
+        $fname = $file->name;
         if ($fname =~ m,^etc/,) {
             tag 'binary-in-etc', $file;
         }
