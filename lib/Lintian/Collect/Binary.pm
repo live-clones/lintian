@@ -370,18 +370,16 @@ sub objdump_info {
     my $fd = open_gz($objf);
     foreach my $pg (parse_dpkg_control($fd)) {
         my %info = (
-            'PH' => {},
-            'SH' => {},
-            'ELF'    => 1,
-            'NOTES'  => [],
+            'PH'     => {},
+            'SH'     => {},
             'NEEDED' => [],
-            'RPATH'  => {},
-            'SONAME' => [],
-            'TEXTREL' => 0,
         );
-        $info{'ERRORS'} = lc($pg->{'broken'}//'no') eq 'yes' ? 1 : 0;
-        $info{'BAD-DYNAMIC-TABLE'}
-          = lc($pg->{'bad-dynamic-table'}//'no') eq 'yes' ? 1 : 0;
+        if (lc($pg->{'broken'}//'no') eq 'yes') {
+            $info{'ERRORS'} = 1;
+        }
+        if (lc($pg->{'bad-dynamic-table'}//'no') eq 'yes') {
+            $info{'BAD-DYNAMIC-TABLE'} = 1;
+        }
         foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {
             next unless $symd;
             if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){
@@ -399,12 +397,12 @@ sub objdump_info {
         foreach my $data (split m/\s*\n\s*/, $pg->{'program-headers'}//'') {
             next unless $data;
             my ($header, @vals) = split m/\s++/, $data;
-            $info{'PH'}->{$header} = {};
             foreach my $extra (@vals) {
                 my ($opt, $val) = split m/=/, $extra;
-                $info{'PH'}->{$header}->{$opt} = $val;
                 if ($opt eq 'interp' and $header eq 'INTERP') {
                     $info{'INTERP'} = $val;
+                } else {
+                    $info{'PH'}{$header}{$opt} = $val;
                 }
             }
         }
@@ -428,15 +426,10 @@ sub objdump_info {
             # object file in a static lib.
             my ($lib, $obj) = ($1, $2);
             my $libentry = $objdump_info{$lib};
-            $info{'ELF'} = 0;
             if (not defined $libentry) {
                 $libentry = {
                     'filename' => $lib,
                     'objects'  => [$obj],
-                    # static libs have no SONAMEs (and shared-libs
-                    # checks for it)
-                    'SONAME'   => [],
-                    'ELF'      => 0,
                 };
                 $objdump_info{$lib} = $libentry;
             } else {

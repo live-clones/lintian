@@ -69,8 +69,8 @@ sub run {
 
     # 1st step: get info about shared libraries installed by this package
     foreach my $file (sort keys %{$objdump}) {
-        $SONAME{$file} = $objdump->{$file}->{SONAME}[0]
-          if scalar @{ $objdump->{$file}->{SONAME} };
+        $SONAME{$file} = $objdump->{$file}{SONAME}[0]
+          if exists($objdump->{$file}{SONAME});
     }
 
     foreach my $file ($info->sorted_index) {
