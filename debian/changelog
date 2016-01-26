@@ -2,6 +2,10 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/files.pm:
+    + [JW] Treat packages without Multi-Arch field as if they had "Multi-Arch:
+      no".  Thanks to Bas Couwenberg for the bug report.
+
   * data/spelling/corrections:
     + [JW] Fix some corrections.
     + [JW] Add more corrections.

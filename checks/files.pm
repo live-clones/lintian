@@ -845,7 +845,7 @@ sub run {
                       ) {
                         # ok old config style script tag it
                         tag 'old-style-config-script',$file;
-                        my $multiarch = $info->field('multi-arch','');
+                        my $multiarch = $info->field('multi-arch', 'no');
                         # could be ok but only if multi-arch: no
                         if($multiarch ne 'no' or $arch eq 'all') {
                             # check multi-arch path
