@@ -843,7 +843,6 @@ sub run {
                             or index($block,'/include/') > -1
                             or index($block,'pkg-config')  > -1)
                       ) {
-                        # ok old config style script tag it
                         tag 'old-style-config-script',$file;
                         my $multiarch = $info->field('multi-arch', 'no');
                         # could be ok but only if multi-arch: no
