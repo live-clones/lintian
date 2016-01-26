@@ -851,7 +851,7 @@ sub run {
                             foreach my $archs ($MULTIARCH_DIRS->all) {
                                 my $madir= $MULTIARCH_DIRS->value($archs);
                                 if ($block =~ m{\W\Q$madir\E(\W|$)}xms){
-                             # allow files to begin with triplet if it matches arch
+                         # allow files to begin with triplet if it matches arch
                                     if($file->basename =~ m{^\Q$madir\E}xms) {
                                         next;
                                     }
