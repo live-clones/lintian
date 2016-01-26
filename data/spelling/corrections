@@ -194,6 +194,8 @@ attemtps||attempts
 attemts||attempts
 attibute||attribute
 attibutes||attributes
+attirbute||attribute
+attirbutes||attributes
 attruibutes||attributes
 atttribute||attribute
 atttributes||attributes
@@ -576,6 +578,10 @@ emptry||empty
 emtpy||empty
 enchanced||enhanced
 encorporating||incorporating
+encosed||enclosed
+encose||enclose
+encoses||encloses
+encosing||enclosing
 encrytion||encryption
 endianess||endianness
 enhaced||enhanced
@@ -1341,6 +1347,10 @@ sacrifying||sacrificing
 safly||safely
 saftey||safety
 safty||safety
+santized||sanitized
+santize||sanitize
+santizes||sanitizes
+santizing||sanitizing
 satisfiabilty||satisfiability
 satisified||satisfied
 satisifies||satisfies
@@ -1407,6 +1417,7 @@ softwares||software
 sofware||software
 somes||some
 someting||something
+somthing||something
 souce||source
 souces||sources
 spawed||spawned
