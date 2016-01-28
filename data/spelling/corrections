@@ -75,6 +75,8 @@ addesses||addresses
 addessing||addressing
 addional||additional
 additionaly||additionally
+additonal||additional
+additonally||additionally
 addres||address
 addresed||addressed
 addreses||addresses
@@ -104,6 +106,7 @@ algorrithm||algorithm
 algorritm||algorithm
 allpication||application
 alltogether||altogether
+allways||always
 alogirhtms||algorithms
 alot||a lot
 alow||allow
@@ -139,6 +142,8 @@ appplication||application
 appplications||applications
 appropiate||appropriate
 appropriatly||appropriately
+approriate||appropriate
+approriately||appropriately
 approximatly||approximately
 aproximation||approximation
 aproximations||approximations
@@ -175,6 +180,10 @@ assigments||assignments
 assignemnt||assignment
 assignemnts||assignments
 assistent||assistant
+assocate||associate
+assocated||associated
+assocates||associates
+assocating||associating
 assocation||association
 asthetic||aesthetic
 asuming||assuming
@@ -419,9 +428,15 @@ copyrigth||copyright
 copyrigthed||copyrighted
 copyrigths||copyrights
 corected||corrected
+corespond||correspond
+coresponded||corresponded
+corespondence||correspondence
+coresponding||corresponding
+coresponds||corresponds
 correponding||corresponding
 correponds||corresponds
 correspoding||corresponding
+correspondance||correspondence
 corresponing||corresponding
 coverted||converted
 crtical||critical
@@ -446,9 +461,13 @@ decompreses||decompresses
 decompresing||decompressing
 decription||description
 decriptions||descriptions
+decsriptor||descriptor
+decsriptors||descriptors
 defautl||default
 definate||definite
 definately||definitely
+defintion||definition
+defintions||definitions
 defualt||default
 delared||declared
 delare||declare
@@ -757,6 +776,7 @@ guarenteed||guaranteed
 guarentee||guarantee
 guarenteeing||guaranteeing
 guarentees||guarantees
+guassian||Gaussian
 halfs||halves
 handfull||handful
 hanshake||handshake
