@@ -2,6 +2,9 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.{desc,pm}:
+    + [BR] Filter some simple comments for long line in source-is-missing
+      (Closes: #798900).
   * checks/files.pm:
     + [JW] Treat packages without Multi-Arch field as if they had
       "Multi-Arch: no".  Thanks to Bas Couwenberg for the bug report.

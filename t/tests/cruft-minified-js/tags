@@ -1,6 +1,9 @@
 E: cruft-minified-js source: source-is-missing deployJava/deployJava.js
 E: cruft-minified-js source: source-is-missing usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line length is NUMBER characters (>CUTOFF)
 E: cruft-minified-js source: source-is-missing usr/share/javascript/minwithoutsource/notsourced.min.js
+P: cruft-minified-js source: insane-line-length-in-source-file oldfalsepositives/jslint.js line length is NUMBER characters (>CUTOFF)
+P: cruft-minified-js source: insane-line-length-in-source-file usr/share/javascript/jswithoutminext/json.js line length is NUMBER characters (>CUTOFF)
+P: cruft-minified-js source: insane-line-length-in-source-file usr/share/javascript/jswithoutminextwithoutsource/jsonnotsourced.js line length is NUMBER characters (>CUTOFF)
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-debug.js/src/test-min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/-nc.js/test-yc.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object oldfalsepositives/debug.js/testdebug.js line length is NUMBER characters (>CUTOFF)

@@ -1022,9 +1022,19 @@ sub _linelength_test {
     # first check if line >  INSANE_LINE_LENGTH that is likely minification
     # avoid problem by recursive regex with longline
     if($linelength) {
-        _warn_prebuilt_javascript($entry, $info, $name, $basename, $dirname,
-            $linelength,INSANE_LINE_LENGTH);
-        return;
+        tag 'insane-line-length-in-source-file', $name,
+          'line length is', int($linelength),
+          'characters (>'.INSANE_LINE_LENGTH.')';
+        # clean up jslint craps line
+        $block =~ s,^\s*/[*][^\n]*[*]/\s*$,,gm;
+        $block =~ s,^\s*//[^\n]*$,,gm;
+        ($linelength)= _linelength_test_maxlength($block,INSANE_LINE_LENGTH);
+
+        if($linelength) {
+            _warn_prebuilt_javascript($entry, $info, $name, $basename,
+                $dirname,$linelength,INSANE_LINE_LENGTH);
+            return;
+        }
     }
     # Now try to be more clever and work only on the 8192 character
     # in order to avoid regexp recursion problems

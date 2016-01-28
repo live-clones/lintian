@@ -775,6 +775,27 @@ Info: The source contains an unsafe symlink.  If followed, the link
  If it is a part of the package's testsuite, Lintian may have failed
  to recognise it as a test.  In that case, please override the tag.
 
+Tag: insane-line-length-in-source-file
+Severity: pedantic
+Certainty: certain
+Info: The source file includes a line length that is well beyond
+ the normally human made code line length.
+ .
+ This very long line length does not allow lintian to do
+ correctly some source file checks.
+ .
+ This line could also be the result of some text injected by
+ a computer program, and thus could be a to FTBFS bugs.
+ .
+ Last but not least, long line in source code could be used
+ to offuscate the source code and to hide stuff like backdoors
+ or security problems.
+ .
+ It could be due to jslint source comments or other build tool
+ comments.
+ .
+ You may report this issue upstream.
+
 
 Tag: source-is-missing
 Severity: serious
