@@ -46,7 +46,7 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 Instances of this perl class are objects that Lintian can process (e.g.
 deb files).  Multiple objects can then be combined into
-L<groups|Lintain::ProcessableGroup>, which Lintian will process
+L<groups|Lintian::ProcessableGroup>, which Lintian will process
 together.
 
 =head1 CLASS METHODS
@@ -236,7 +236,7 @@ Lintian::Processable->mk_ro_accessors(
 
 =item $proc->group([$group])
 
-Returns the L<group|Lintain::ProcessableGroup> $proc is in,
+Returns the L<group|Lintian::ProcessableGroup> $proc is in,
 if any.  If the processable is not in a group, this returns C<undef>.
 
 Can also be used to set the group of this processable.
@@ -311,7 +311,7 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 lintian(1)
 
-L<Lintain::ProcessableGroup>
+L<Lintian::ProcessableGroup>
 
 =cut
 

@@ -19,6 +19,10 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Remove unnecessary values on members in the
       objdump_info table.
+  * lib/Lintian/Processable*.pm:
+    + [JW] Fix typos.
+  * lib/Lintian/Tag/Override.pm:
+    + [JW] Fix typo.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:58:06 +0000
 
@@ -10827,7 +10831,7 @@ lintian (1.24.3) unstable; urgency=low
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)
-    + [ADB] Use Lintain::Collect to read the package's description.
+    + [ADB] Use Lintian::Collect to read the package's description.
   * checks/etcfiles:
     + [ADB] Walk Lintian::Collect->index instead of reading the "index" file.
   * checks/fields{,.desc}:

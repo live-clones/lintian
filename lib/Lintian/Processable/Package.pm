@@ -216,7 +216,7 @@ lintian(1)
 
 L<Lintian::Processable>
 
-L<Lintain::ProcessableGroup>
+L<Lintian::ProcessableGroup>
 
 =cut
 

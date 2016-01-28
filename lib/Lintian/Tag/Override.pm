@@ -186,7 +186,7 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 lintian(1)
 
-L<Lintain::Tags>
+L<Lintian::Tags>
 
 =cut
 

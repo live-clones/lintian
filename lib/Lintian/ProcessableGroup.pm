@@ -351,7 +351,7 @@ Originally written by Niels Thykier <niels@thykier.net> for Lintian.
 
 lintian(1)
 
-L<Lintain::Processable>
+L<Lintian::Processable>
 
 =cut
 
