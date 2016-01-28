@@ -15307,7 +15307,7 @@ lintian (1.20.15) unstable; urgency=low
     that link to files in another directory.  Since I warn about hardlinks
     existing adding a separate check for where they link seems silly.
   * applied Edward Betts patch to detect .cvsignore and CVS/.  Closes: #74684.
-  * applied Daniel Schleper's patch for Build-Depends v. Build-Depends-Indep.
+  * applied Daniel Schepler's patch for Build-Depends v. Build-Depends-Indep.
     Closes: #92472.
   * applied Edward Betts patch for detecting a misspelling in common-licenses.
   * added 'debain' to list of spelling errors.  Closes: #112083.
