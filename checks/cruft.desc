@@ -788,7 +788,7 @@ Info: The source file includes a line length that is well beyond
  a computer program, and thus could be a to FTBFS bugs.
  .
  Last but not least, long line in source code could be used
- to offuscate the source code and to hide stuff like backdoors
+ to obfuscate the source code and to hide stuff like backdoors
  or security problems.
  .
  It could be due to jslint source comments or other build tool
