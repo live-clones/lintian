@@ -946,6 +946,12 @@ sub _search_in_block0 {
                 return;
             }
         }
+        if($basename eq 'search_index.js') {
+            if($block =~ m/\A\s*var\s*search_index\s*=/xms) {
+                tag 'source-contains-prebuilt-pango-documentation', $dirname;
+                return;
+            }
+        }
         # false positive in dx package at least
         elsif($basename eq 'srchidx.js') {
             if($block =~ m/\A\s*profiles \s* = \s* new \s* Array\s*\(/xms) {

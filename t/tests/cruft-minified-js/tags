@@ -25,3 +25,4 @@ P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/shar
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/minwithoutsource/notsourced.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/sourced/sourced.min.js
 P: cruft-minified-js source: source-contains-prebuilt-javascript-object usr/share/javascript/sourced_variant/sourced.min.js
+P: cruft-minified-js source: source-contains-prebuilt-pango-documentation oldfalsepositives/pango/

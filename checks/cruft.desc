@@ -524,6 +524,16 @@ Info: The source tarball contains prebuilt Sphinx documentation.
  .
  It is preferable to rebuild documentation directly from source.
 
+Tag: source-contains-prebuilt-pango-documentation
+Severity: pedantic
+Certainty: possible
+Info: The source tarball contains prebuilt pango documentation.
+ This is usually left by mistake when generating the tarball without
+ first cleaning the source directory.  You may want to report this as
+ an upstream bug, if there is no sign that this was intended.
+ .
+ It is preferable to rebuild documentation directly from source.
+
 Tag: source-contains-prebuilt-doxygen-documentation
 Severity: pedantic
 Certainty: possible
