@@ -785,7 +785,7 @@ Info: The source file includes a line length that is well beyond
  correctly some source file checks.
  .
  This line could also be the result of some text injected by
- a computer program, and thus could be a to FTBFS bugs.
+ a computer program, and thus could lead to FTBFS bugs.
  .
  Last but not least, long line in source code could be used
  to obfuscate the source code and to hide stuff like backdoors
