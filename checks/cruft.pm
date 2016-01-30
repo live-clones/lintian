@@ -948,7 +948,7 @@ sub _search_in_block0 {
         }
         if($basename eq 'search_index.js') {
             if($block =~ m/\A\s*var\s*search_index\s*=/xms) {
-                tag 'source-contains-prebuilt-pango-documentation', $dirname;
+                tag 'source-contains-prebuilt-pandoc-documentation', $dirname;
                 return;
             }
         }
