@@ -1017,6 +1017,29 @@ sub _linelength_test_maxlength {
     return (0,'',$block);
 }
 
+# strip C comment
+# warning block is at more 8192 char in order to be too slow
+# and in order to avoid regex recursion
+sub _strip_c_comments {
+    my ($block) = @_;
+    # from perl faq strip comments
+    $block =~ s{
+                # Strip /* */ comments
+                /\* [^*]*+ \*++ (?: [^/*][^*]*+\*++ ) */
+                # Strip // comments (C++ style)
+                |  // (?: [^\\] | [^\n][\n]? )*? (?=\n)
+                |  (
+                    # Keep "/* */" (etc) as is
+                    "(?: \\. | [^"\\]++)*"
+                    # Keep '/**/' (etc) as is
+                    | '(?: \\. | [^'\\]++)*'
+                    # Keep anything else
+                    | .[^/"'\\]*+
+                   )
+               }{defined $1 ? $1 : ""}xgse;
+    return $block;
+}
+
 # try to detect non human source based on line length
 sub _linelength_test {
     my ($entry, $info, $name, $basename, $dirname, $block) = @_;
@@ -1034,6 +1057,22 @@ sub _linelength_test {
         # clean up jslint craps line
         $block =~ s,^\s*/[*][^\n]*[*]/\s*$,,gm;
         $block =~ s,^\s*//[^\n]*$,,gm;
+        $block =~ s/^\s+//gm;
+
+        # try to remove comments in first 8192 block (license...)
+        my $block8192 = substr($block,0,8192);
+        $block8192 = _strip_c_comments($block8192);
+        $block
+          = length($block) > 8192
+          ? $block8192.substr($block,8192)
+          : $block8192;
+
+        # strip empty line
+        $block =~ s/^\s*\n//mg;
+        # remove last \n
+        $block =~ s/\n\Z//m;
+
+        # retry insane line length test now: if insane length likely minified
         ($linelength)= _linelength_test_maxlength($block,INSANE_LINE_LENGTH);
 
         if($linelength) {
@@ -1046,22 +1085,8 @@ sub _linelength_test {
     # in order to avoid regexp recursion problems
     my $strip = substr($block,0,8192);
     # strip indention
-    $strip =~ s/^\s+//g;
-    # from perl faq strip comments
-    $strip =~ s{
-                # Strip /* */ comments
-                /\* [^*]*+ \*++ (?: [^/*][^*]*+\*++ ) */
-                # Strip // comments (C++ style)
-                |  // (?: [^\\] | [^\n][\n]? )*? (?=\n)
-                |  (
-                    # Keep "/* */" (etc) as is
-                    "(?: \\. | [^"\\]++)*"
-                    # Keep '/**/' (etc) as is
-                    | '(?: \\. | [^'\\]++)*'
-                    # Keep anything else
-                    | .[^/"'\\]*+
-                   )
-               }{defined $1 ? $1 : ""}xgse;
+    $strip =~ s/^\s+//mg;
+    $strip = _strip_c_comments($block);
     # strip empty line
     $strip =~ s/^\s*\n//mg;
     # remove last \n
