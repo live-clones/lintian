@@ -767,9 +767,8 @@ This is the type of the package and (if present) must be one of "ALL",
 "GROUP", "binary", "udeb", "source" or "changes".  This is case
 sensitive.
 
-If omitted this defaults to "ALL" unless another default has been
-specified (see B<--binary>, B<--udeb> or B<--source>).  The pseudo
-type "ALL" acts as a wildcard for any real package type.
+If omitted this defaults to "ALL".  The pseudo type "ALL" acts as a
+wildcard for any real package type.
 
 The special type "GROUP" can be used to match all packages related to
 a given source package.  For more info, please see L<Group query>
@@ -899,23 +898,6 @@ tags.
 Check the changes file and, if listed, the source and binary package
 of the upload. The output will contain detailed information about the
 reported tags.
-
-=item B<$ lintian -c --binary foo>
-
-Check the binary package foo in the Lintian laboratory.
-
-=item B<$ lintian -C cpy --source foo>
-
-Run the copyright checks on source package foo.  The package foo must
-be in the Lintian laboratory.
-
-=item B<$ lintian -u foo -U unpacked>
-
-Unpack all packages named foo in the Lintian laboratory.
-
-=item B<$ lintian -r foo>
-
-Remove all packages named foo from the Lintian laboratory.
 
 =item B<$ lintian>
 
