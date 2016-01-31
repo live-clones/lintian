@@ -2,6 +2,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [NT] Update match for detecting numpy linking.
   * checks/cruft.{desc,pm}:
     + [BR] Filter some simple comments for long line in source-is-missing
       (Closes: #798900).

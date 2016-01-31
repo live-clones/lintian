@@ -24,8 +24,10 @@ use strict;
 use warnings;
 use autodie;
 
-use constant NUMPY_STRING => 'module compiled against ABI version %x'
-  . ' but this version of numpy is %x';
+use constant NUMPY_REGEX => qr/
+    \Qmodule compiled against ABI version \E (?:0x)?%x
+    \Q but this version of numpy is \E (?:0x)?%x
+/xo;
 
 # These are the ones file(1) looks for.  The ".zdebug_info" being the
 # compressed version of .debug_info.
@@ -450,7 +452,7 @@ sub run {
             or(     $fname =~ m,usr/lib/python3/.+\.cpython-\d+([a-z]+)\.so$,
                 and $1 !~ /d/)
           ) {
-            if (index($strings, NUMPY_STRING) != -1) {
+            if (index($strings, 'numpy') > -1 and $strings =~ NUMPY_REGEX) {
                 $uses_numpy_c_abi = 1;
             }
         }
