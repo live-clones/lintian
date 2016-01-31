@@ -11,9 +11,15 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [JW] Treat packages without Multi-Arch field as if they had
       "Multi-Arch: no".  Thanks to Bas Couwenberg for the bug report.
 
+  * commands/lab-tool.pm:
+    + [NT] New utility to handle most laboratory operations.
+
   * data/spelling/corrections:
     + [JW] Fix some corrections.
     + [JW] Add more corrections.
+
+  * debian/{lintian.links,manpages,rules}:
+    + [NT] Update to install the new lab-tool command.
 
   * helper/coll/objdump-info-helper:
     + [NT] Avoid collecting unused information.
@@ -28,6 +34,9 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [JW] Fix typos.
   * lib/Lintian/Tag/Override.pm:
     + [JW] Fix typo.
+
+  * man/lintian-lab-tool.pod:
+    + [NT] New file.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:58:06 +0000
 

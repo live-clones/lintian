@@ -1,3 +1,2 @@
-man/man1/lintian.1
-man/man1/lintian-info.1
-man/man1/spellintian.1
+man/man1/*.1
+

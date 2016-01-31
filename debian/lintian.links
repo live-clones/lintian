@@ -1,2 +1,3 @@
 usr/share/lintian/frontend/dplint usr/bin/lintian-info
+usr/share/lintian/frontend/dplint usr/bin/lintian-lab-tool
 usr/share/lintian/frontend/dplint usr/bin/spellintian

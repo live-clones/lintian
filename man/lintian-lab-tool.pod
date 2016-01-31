@@ -1,0 +1,100 @@
+# Copyright 2016 Niels Thykier
+#
+# This manual page is free software.  It is distributed under the
+# terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your
+# option) any later version.
+#
+# This manual page is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this manual page; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
+# USA
+#
+
+=head1 NAME
+
+lintian-lab-tool - perform common operations on/involving laboratories
+
+=head1 SYNOPSIS
+
+B<lintian-lab-tool> <cmd> <lab> [...]
+
+B<lintian-lab-tool> help
+
+=head1 DESCRIPTION
+
+The B<lintian-lab-tool> ...
+
+
+=head1 OPERATIONS
+
+=over 4
+
+=item B<create-lab> F<laboratory-dir>
+
+Creates a new permanent Lintian laboratory in the directory denoted by B<laboratory-dir>.
+
+=item B<help> [I<cmd>]
+
+Display the synopsis of this tool or one of its operations.
+
+=item B<remove-lab> F<laboratory-dir>
+
+Removes a permanent Lintian laboratory in the directory denoted by B<laboratory-dir>.
+
+=item B<remove-pkgs> F<laboratory-dir> I<query> [... I<query>]
+
+Removes all packages matching the given I<queries> from the permanent Lintian laboratory
+denoted by B<laboratory-dir>.
+
+=item B<scrub-lab> F<laboratory-dir>
+
+Attempt to fix common metadata issues in an existing laboratory.
+
+This command can correct I<some> corruptions caused by programs that failed to synchronize
+the laboratory metadata with the actual contents.  Almost all corrections involve discarding
+corrupted entries.
+
+These issues usually occur because:
+
+=over 4
+
+=item *
+
+Two proceses update the laboratory concurrently.
+
+=item *
+
+A process updated the laboratory but was killed / crashed before it properly close the
+laboratory.
+
+=back
+
+Note that Lintian tools will fix these issues automatically as the tools happen to run into
+the issues.
+
+=back
+
+=head1 CAVEAT
+
+Laboratories are not designed to have multiple processes working on them concurrently.
+
+=head1 SEE ALSO
+
+L<lintian(1)>
+
+=head1 AUTHORS
+
+Niels Thykier <niels@thykier.net>
+
+Richard Braakman <dark@xs4all.nl>
+
+Christian Schwarz <schwarz@monet.m.isar.de>
+
+=cut
+
