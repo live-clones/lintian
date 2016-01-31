@@ -100,7 +100,7 @@ sub with_lab($&) {
 sub validate_lab_dir_arg {
     my ($dir) = @_;
     if (not defined($dir)) {
-        error("Missing laboratory path");
+        error('Missing laboratory path');
     }
     return $dir;
 }
@@ -174,7 +174,7 @@ sub remove_pkgs_from_lab {
     my (undef, $lab_dir, @queries) = @_;
     validate_lab_dir_arg($lab_dir);
     if (not @queries) {
-        error("Please specify a \"lab query\" to delete items from the lab");
+        error('Please specify a "lab query" to delete items from the lab');
     }
     return with_lab $lab_dir, sub {
         my ($lab) = @_;
@@ -192,7 +192,7 @@ sub remove_pkgs_from_lab {
             }
         }
         if (not $had_match) {
-            print "Nothing matched any of the queries given";
+            print "Nothing matched any of the queries given\n";
             return 1;
         }
         return 0;
