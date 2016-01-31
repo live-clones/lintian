@@ -21,6 +21,10 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * debian/{lintian.links,manpages,rules}:
     + [NT] Update to install the new lab-tool command.
 
+  * frontend/lintian:
+    + [NT] Remove -S, -R and -r, which are now supported in the new
+      lintian-lab-tool command.
+
   * helper/coll/objdump-info-helper:
     + [NT] Avoid collecting unused information.
 

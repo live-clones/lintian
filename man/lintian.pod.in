@@ -80,20 +80,6 @@ recently.
 This is implemented via a profile and thus this option cannot be used
 together with B<--profile>.
 
-=item B<-r>, B<--remove>
-
-Removed the specified packages from the lintian lab.  This is only
-useful with static labs.
-
-=item B<-R>, B<--remove-lab>
-
-Remove the laboratory directory.  This is only useful with static
-labs.
-
-=item B<-S>, B<--setup-lab>
-
-Set up or update a static lintian laboratory.
-
 =item B<-T> tag1,tag2,..., B<--tags> tag1,tag2,...
 
 Run only the checks that issue the requested tags.  The tests for
@@ -950,7 +936,8 @@ If you discover any other bugs in lintian, please contact the authors.
 =head1 SEE ALSO
 
 L<lintian-info(1)>, Lintian User Manual
-(file:/usr/share/doc/lintian/lintian.html/index.html)
+(file:/usr/share/doc/lintian/lintian.html/index.html),
+L<lintian-lab-tool(1)>
 
 Packaging tools: L<debhelper(7)>, L<dh_make(8)>,
 L<dpkg-buildpackage(1)>.

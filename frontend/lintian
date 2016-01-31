@@ -176,14 +176,6 @@ Actions:
     -F, --ftp-master-rejects  only check for automatic reject tags
 EOT-EOT-EOT
 
-    if ($show_extended) {
-        print <<"EOT-EOT-EOT";
-    -r, --remove              remove package from the lab
-    -R, --remove-lab          remove static lab
-    -S, --setup-lab           set up static lab
-EOT-EOT-EOT
-    }
-
     print <<"EOT-EOT-EOT";
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
@@ -518,11 +510,15 @@ sub cfg_override {
     return;
 }
 
+sub use_lab_tool_instead {
+    die("Please use lintian-lab-tool instead\n");
+}
+
 # Hash used to process commandline options
 my %opthash = (
     # ------------------ actions
-    'setup-lab|S' => \&record_action,
-    'remove-lab|R' => \&record_action,
+    'setup-lab|S' => \&use_lab_tool_instead,
+    'remove-lab|R' => \&use_lab_tool_instead,
     'check|c' => \&record_action,
     'check-part|C=s' => \&record_check_part,
     'tags|T=s' => \&record_check_tags,
@@ -530,7 +526,7 @@ my %opthash = (
     'ftp-master-rejects|F' => \$opt{'ftp-master-rejects'},
     'dont-check-part|X=s' => \&record_dont_check_part,
     'unpack|u' => \&record_action,
-    'remove|r' => \&record_action,
+    'remove|r' => \&use_lab_tool_instead,
 
     # ------------------ general options
     'help|h:s' => \&syntax,
@@ -670,19 +666,17 @@ $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
 configure_output();
 
 # check for arguments
-if (    $action =~ /^(?:check|unpack|remove)$/
+if (    $action =~ /^(?:check|unpack)$/
     and $#ARGV == -1
     and not $opt{'packages-from-file'}) {
     my $ok = 0;
-    if ($action eq 'check' or $action eq 'unpack') {
-        # If debian/changelog exists, assume an implied
-        # "../<source>_<version>_<arch>.changes" (or
-        # "../<source>_<version>_source.changes").
-        if (-f 'debian/changelog') {
-            my $file = _find_changes();
-            push @ARGV, $file;
-            $ok = 1;
-        }
+    # If debian/changelog exists, assume an implied
+    # "../<source>_<version>_<arch>.changes" (or
+    # "../<source>_<version>_source.changes").
+    if (-f 'debian/changelog') {
+        my $file = _find_changes();
+        push @ARGV, $file;
+        $ok = 1;
     }
     syntax() unless $ok;
 }
@@ -718,27 +712,10 @@ $SIG{'QUIT'} = \&interrupted;
 $LAB = Lintian::Lab->new($opt{'LINTIAN_LAB'});
 
 #######################################
-# Process -S / -R option
-if ($action eq 'setup-lab' or $action eq 'remove-lab') {
-    if ($#ARGV+1 > 0) {
-        warning('ignoring additional command line arguments');
-    }
-
-    if ($action eq 'setup-lab') {
-        $LAB->create
-          or fail('There was an error while setting up the static lab.');
-    } else {
-        $LAB->remove
-          or fail('There was an error while removing the static lab.');
-    }
-    exit 0;
-
-#######################################
-    #  Check for non deb specific actions
-} elsif (
+#  Check for non deb specific actions
+if (
     not(   ($action eq 'unpack')
-        or ($action eq 'check')
-        or ($action eq 'remove'))
+        or ($action eq 'check'))
   ) {
     fail("bad action $action specified");
 }
@@ -748,7 +725,7 @@ if (!$LAB->is_temp) {
     fail(
         join(q{ },
             'lintian lab has not been set up correctly',
-            '(perhaps you forgot to run lintian --setup-lab?)')
+            '(perhaps you forgot to run lintian-lab-tool create-lab?)')
     ) unless $LAB->exists;
 } else {
     $LAB->create({'keep-lab' => $opt{'keep-lab'}});
@@ -771,30 +748,6 @@ $pool = setup_work_pool($LAB);
 
 if ($pool->empty()) {
     v_msg('No packages selected.');
-    exit $exit_code;
-}
-# }}}
-
-# {{{ Handle $action eq 'remove'
-# We have enough information to handle remove now.
-
-if ($action eq 'remove') {
-    # Handle remove here - makes the unpack/check loop simpler.
-    foreach my $group ($pool->get_groups()){
-        foreach my $lpkg ($group->get_processables()){
-
-            $TAGS->file_start($lpkg);
-
-            unless ($lpkg->remove) {
-                my $pkg_name = $lpkg->pkg_name();
-                warning("cannot remove entry for $pkg_name: $!");
-                $exit_code = 2;
-            }
-        }
-    }
-    $TAGS->file_end();
-    # Write the lab state to the disk, so it remembers they are gone.
-    $LAB->close;
     exit $exit_code;
 }
 # }}}
