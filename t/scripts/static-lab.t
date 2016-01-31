@@ -7,15 +7,13 @@ use Test::Simple tests => 4;
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
-my $lintian_path = "$ENV{LINTIAN_TEST_ROOT}/frontend/lintian";
+my $dplint = "$ENV{LINTIAN_TEST_ROOT}/frontend/dplint";
 my $labdir = tempdir(CLEANUP => 1);
 
-$lintian_path = $ENV{'LINTIAN_FRONTEND'} if exists($ENV{'LINTIAN_FRONTEND'});
+$dplint = $ENV{'LINTIAN_DPLINT_FRONTEND'}
+  if exists($ENV{'LINTIAN_DPLINT_FRONTEND'});
 
-ok(system("$lintian_path --allow-root --lab $labdir --setup-lab") == 0,
-    'Create');
-ok(system("$lintian_path --allow-root --lab $labdir --setup-lab") == 0,
-    'Renew');
-ok(system("$lintian_path --allow-root --lab $labdir --remove-lab") == 0,
-    'Remove');
-ok(system("rmdir $labdir") == 0, 'Rmdir');
+ok(system($dplint, 'lab-tool', 'create-lab', $labdir) == 0, 'Create');
+ok(system($dplint, 'lab-tool', 'scrub-lab', $labdir) == 0, 'Scrub');
+ok(system($dplint, 'lab-tool', 'remove-lab', $labdir) == 0, 'Remove');
+ok(system('rmdir', $labdir) == 0, 'Rmdir');

@@ -47,6 +47,7 @@ BEGIN {
     # Whitelist the part of the environment we permit.  This is to
     # avoid inheriting things that messes up tests (like CFLAGS,
     # DH_OPTIONS, DEB_HOST_ARCH etc.)
+    my $dplint;
     my %PRESERVE_ENV = map { $_ => 1 } qw(
       LINTIAN_TEST_INSTALLED
       NO_PKG_MANGLE
@@ -66,12 +67,15 @@ BEGIN {
     if (($ENV{'LINTIAN_TEST_INSTALLED'}//'no') eq 'yes') {
         $LINTIAN_ROOT = '/usr/share/lintian';
         $LINTIAN = '/usr/bin/lintian';
+        $dplint = '/usr/share/lintian/frontend/dplint';
     } else {
         $LINTIAN_ROOT = Cwd::cwd();
         $LINTIAN = "$LINTIAN_ROOT/frontend/lintian";
+        $dplint = "$LINTIAN_ROOT/frontend/dplint";
     }
     $ENV{'LINTIAN_TEST_ROOT'} = $LINTIAN_ROOT;
     $ENV{'LINTIAN_FRONTEND'} = $LINTIAN;
+    $ENV{'LINTIAN_DPLINT_FRONTEND'} = $dplint;
     @LINTIAN_CMD = ($LINTIAN);
 
     # Ubuntu auto-builders run pkg-mangle which messes with our
