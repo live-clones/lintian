@@ -898,6 +898,12 @@ infomation||information
 informatiom||information
 informations||information
 infromation||information
+initalisation||initialisation
+initalised||initialised
+initalise||initialise
+initalises||initialises
+initalising||initialising
+initalization||initialization
 initalized||initialized
 initalize||initialize
 initalizes||initializes
@@ -976,6 +982,10 @@ langauges||languages
 langugage||language
 languge||language
 languges||languages
+laoded||loaded
+laoding||loading
+laod||load
+laods||loads
 lauched||launched
 laucher||launcher
 lauches||launches
@@ -1036,6 +1046,7 @@ milliseonds||milliseconds
 mimick||mimic
 mimicks||mimics
 mininum||minimum
+miniscule||minuscule
 minumum||minimum
 miscelleneous||miscellaneous
 misformed||malformed
@@ -1055,6 +1066,10 @@ missmatches||mismatches
 missmatching||mismatching
 missmatch||mismatch
 mmnemonic||mnemonic
+modfied||modified
+modfies||modifies
+modfying||modifying
+modfy||modify
 modifing||modifying
 modulues||modules
 monochorome||monochrome
@@ -1070,6 +1085,7 @@ multplying||multiplying
 multply||multiply
 musn't||mustn't
 mutiple||multiple
+mutliple||multiple
 nam||name
 nams||names
 navagating||navigating
@@ -1127,11 +1143,13 @@ optionnal||optional
 optmization||optimization
 optmizations||optimizations
 orderd||ordered
+orginally||originally
 orginal||original
 orgin||origin
 orientatied||orientated
 orientied||oriented
 orignal||original
+otehr||other
 othwerwise||otherwise
 ouput||output
 outputing||outputting
@@ -1199,6 +1217,8 @@ permanant||permanent
 permision||permission
 permisions||permissions
 permissons||permissions
+permuation||permutation
+permuations||permutations
 persistance||persistence
 persistant||persistent
 perviously||previously
