@@ -12,7 +12,7 @@ tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-may-check-gpg-signature::
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:direct-changes-in-diff-but-no-patch-system:Changes:
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
-tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-homepage-field::
+tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:source:source:no-homepage-field::
 tag:P:pedantic:wild-guess:O:lintian-output-colons:1.0+dsfg-1.1:all:binary:no-upstream-changelog::no-upstream-changelog
 tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*
 tag:W:normal:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:maintainer-upload-has-incorrect-version-number:1.0+dsfg-1.1:

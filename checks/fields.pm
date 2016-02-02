@@ -626,9 +626,9 @@ sub run {
             }
             if ($binary_has_homepage_field) {
                 tag 'homepage-in-binary-package';
+            } else {
+                tag 'no-homepage-field';
             }
-        } elsif ($type eq 'binary') {
-            tag 'no-homepage-field';
         }
     }
 

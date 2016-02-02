@@ -9,6 +9,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
       (Closes: #798900).
     + [BR] Detect pandoc docs avoiding source-is-missing warning.
     + [BR] Fix other source-is-missing FP. (Closes: #813013).
+  * checks/fields.pm:
+    + [NT] Emit "no-homepage-field" only for source packages.
   * checks/files.pm:
     + [JW] Treat packages without Multi-Arch field as if they had
       "Multi-Arch: no".  Thanks to Bas Couwenberg for the bug report.
