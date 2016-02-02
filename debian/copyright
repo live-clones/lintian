@@ -31,7 +31,7 @@ Comment:
  .
  Lintian is maintained in git.  The current development version may
  be checked out from:
-	git://git.debian.org/git/lintian/lintian.git
+	https://anonscm.debian.org/git/lintian/lintian.git
 
 Files: *
 Copyright: 1998, Christian Schwarz
