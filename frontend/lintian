@@ -174,9 +174,6 @@ Actions:
     -c, --check               check packages (default action)
     -C X, --check-part X      check only certain aspects
     -F, --ftp-master-rejects  only check for automatic reject tags
-EOT-EOT-EOT
-
-    print <<"EOT-EOT-EOT";
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
     -u, --unpack              only unpack packages in the lab
