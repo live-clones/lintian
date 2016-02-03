@@ -124,7 +124,7 @@ my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
 my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
-my ($pool, $action, $checks, $check_tags, $dont_check);
+my ($action, $checks, $check_tags, $dont_check);
 my (@unpack_info, $LAB, %unpack_options, @auto_remove);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
@@ -616,6 +616,8 @@ my %opthash = (
 main();
 
 sub main {
+    my ($pool);
+
     parse_options();
 
     # Set LINTIAN_ROOT to the actual root.
@@ -1134,7 +1136,7 @@ sub process_group {
 }
 
 sub handle_lab_query {
-    my ($query) = @_;
+    my ($pool, $query) = @_;
     my ($type, $pkg, $version, $arch, @res);
     my $orig = $query; # Save for the error message later
 
@@ -1515,7 +1517,7 @@ sub setup_work_pool {
             }
         } else {
             # parameter is a package name--so look it up
-            handle_lab_query($arg);
+            handle_lab_query($pool, $arg);
         }
     }
 
