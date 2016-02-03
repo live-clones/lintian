@@ -17,6 +17,11 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   * commands/lab-tool.pm:
     + [NT] New utility to handle most laboratory operations.
+  * commands/lintian:
+    + [NT] New location for "frontend/lintian".
+    + [NT] Refactored to use "dplint" to compute the include dirs.
+    + [NT] Remove -S, -R and -r, which are now supported in the new
+      lintian-lab-tool command.
 
   * data/spelling/corrections:
     + [JW] Fix some corrections.
@@ -26,8 +31,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [NT] Update to install the new lab-tool command.
 
   * frontend/lintian:
-    + [NT] Remove -S, -R and -r, which are now supported in the new
-      lintian-lab-tool command.
+    + [NT] Move the code to "commands/lintian" and leave a symlink to
+      dplint to replace it.
 
   * helper/coll/objdump-info-helper:
     + [NT] Avoid collecting unused information.
