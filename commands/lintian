@@ -32,26 +32,58 @@ use List::MoreUtils qw(any);
 use POSIX qw(:sys_wait_h);
 use Time::HiRes qw(gettimeofday tv_interval);
 
-my $INIT_ROOT;
+my ($INIT_ROOT, @INCLUDE_DIRS, @RESTRICTED_INCLUDE_DIRS, @HELPER_DIRS);
 
 BEGIN {
-    if (not defined($INIT_ROOT)) {
-        require File::Basename;
-        import File::Basename qw(dirname);
-        my $path = abs_path(__FILE__);
-        if (not defined($path)) {
-            print STDERR "realpath($0) failed: $!\n";
-            exit(2);
-        }
-        # .../lintian.git/frontend/lintian  => .../lintian.git
-        $INIT_ROOT = dirname(dirname($path));
+    if (!exists($ENV{'LINTIAN_INCLUDE_DIRS'})) {
+        print STDERR "Do not call $0 directly, call lintian instead\n";
+        exit(2);
     }
-
-    if (-d "$INIT_ROOT/lib") {
+    my $dirs = $ENV{'LINTIAN_INCLUDE_DIRS'};
+    my @libdirs;
+    if ($dirs =~ m{\A (.*) \Z}xsm) {
+        # Untaint INCLUDE_DIRS
+        $dirs = $1;
+    }
+    @INCLUDE_DIRS = split(':', $dirs);
+    $INIT_ROOT = $INCLUDE_DIRS[-1];
+    @libdirs = grep { -d } map { "$_/lib" } @INCLUDE_DIRS;
+    if (@libdirs) {
         require lib;
-        import lib "$INIT_ROOT/lib";
+        lib->import(@libdirs);
+    }
+    if (my $restricted = $ENV{'LINTIAN_RESTRICTED_INCLUDE_DIRS'}) {
+        if ($restricted =~ m{\A (.*) \Z}xsm) {
+            # Untaint RESTRICTED_INCLUDE_DIRS
+            $restricted = $1;
+        }
+        @RESTRICTED_INCLUDE_DIRS = split(':', $restricted);
+    }
+    if (my $helpers = $ENV{'LINTIAN_HELPER_DIRS'}) {
+        if ($helpers =~ m{\A (.*) \Z}xsm) {
+            # Untaint HELPER_DIRS
+            $helpers = $1;
+        }
+        @HELPER_DIRS = split(':', $helpers);
     }
 }
+
+use Lintian::Command qw(safe_qx);
+use Lintian::DepMap;
+use Lintian::DepMap::Properties;
+use Lintian::Data;
+use Lintian::Lab;
+use Lintian::Output qw(:messages);
+use Lintian::Internal::FrontendUtil qw(
+  default_parallel load_collections determine_locale
+  sanitize_environment open_file_or_fd);
+use Lintian::ProcessablePool;
+use Lintian::Profile;
+use Lintian::Tags qw(tag);
+use Lintian::Unpacker;
+use Lintian::Util qw(fail parse_boolean strip);
+
+sanitize_environment();
 
 # }}}
 
@@ -101,12 +133,6 @@ my %opt = (                     #hash of some flags from cmd or cfg
     'tag-display-limit' => 'auto',
 );
 
-# The search path - affected by --include-dir X, --[no-]user-dirs
-# The LINTIAN_ROOT will be appended last and the user dirs will be
-# pre-appended (depending --[no-]user-dirs).
-my @search_dirs;
-my @restricted_search_dirs;
-
 my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
 
 my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
@@ -114,6 +140,7 @@ my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
 my ($pool, $action, $checks, $check_tags, $dont_check);
 my (@unpack_info, $LAB, %unpack_options, @auto_remove);
+my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
 
 # Timer handling (by default to nothing)
@@ -582,23 +609,7 @@ sub main {
 
     # Set LINTIAN_ROOT to the actual root.
     $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
-
-    # Filter out non-existent paths and resolve the rest.
-    # - as we will add them to @INC, make sure they are resolved
-    #   so a check doing a chdir will not suddently load anything
-    #   differently.
-    @search_dirs = map {
-        if (-d $_) {
-            my $resolved = abs_path($_);
-            unless (defined $resolved) {
-                print STDERR "Cannot resolve $_: $!\n";
-                exit 2;
-            }
-            ($resolved);
-        } else {
-            ();
-        }
-    } @search_dirs;
+    $ENV{'LINTIAN_HELPER_DIRS'} = join(':', @HELPER_DIRS);
 
     # environment variables overwrite settings in conf file, so load them now
     # assuming they were not set by cmd-line options
@@ -607,39 +618,6 @@ sub main {
      # so we have to use "defined" here
         $opt{$var} = $ENV{$var} if $ENV{$var} && !defined $opt{$var};
     }
-
-    # Include (only existsing) lib directories from @search_dirs in @INC
-    # and LINTIAN_{INCLUDE,HELPER}_DIRS.
-    # NB: Add INIT_ROOT to @search_dirs after updating @INC as we already
-    # added it in BEGIN{} if needed.
-    unshift @INC, grep { -d } map { "$_/lib" } @search_dirs;
-
-    push(@search_dirs, $INIT_ROOT);
-
-    $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @search_dirs);
-    $ENV{'LINTIAN_HELPER_DIRS'}
-      = join(':',grep { -d } map { "$_/helpers" } @search_dirs);
-
-    require Lintian::Command;
-    import Lintian::Command qw(safe_qx);
-    require Lintian::DepMap;
-    require Lintian::DepMap::Properties;
-    require Lintian::Data;
-    require Lintian::Lab;
-    require Lintian::Output;
-    import Lintian::Output qw(:messages);
-    require Lintian::Internal::FrontendUtil;
-    import Lintian::Internal::FrontendUtil qw(
-      default_parallel load_collections determine_locale
-      sanitize_environment open_file_or_fd);
-    require Lintian::ProcessablePool;
-    require Lintian::Profile;
-    require Lintian::Tags;
-    require Lintian::Unpacker;
-    require Lintian::Util;
-    import Lintian::Util qw(fail parse_boolean strip);
-
-    sanitize_environment();
 
     # Check if we should load a config file
     if ($opt{'no-cfg'}) {
@@ -1204,7 +1182,7 @@ sub _find_cfg_file {
     return $ENV{'LINTIAN_CFG'}
       if exists $ENV{'LINTIAN_CFG'} and -f $ENV{'LINTIAN_CFG'};
 
-    if ($opt{'user-dirs'}) {
+    if ($user_dirs) {
         my $rcfile;
         {
             # File::BaseDir spews warnings if $ENV{'HOME'} is undef, so
@@ -1586,10 +1564,11 @@ sub load_profile_and_configure_tags {
         }
         my $locale = determine_locale();
         my %profile_opts = (
-            'restricted-search-dirs' => \@restricted_search_dirs,
+            'restricted-search-dirs' => \@RESTRICTED_INCLUDE_DIRS,
             'language' => $locale,
         );
-        $profile = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@search_dirs,
+        $profile
+          = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@INCLUDE_DIRS,
             \%profile_opts);
     }
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
@@ -1700,18 +1679,6 @@ sub load_and_select_collections {
 }
 
 sub parse_options {
-    # Parse --include-dir and --[no-]user-dirs early
-    Getopt::Long::config(
-        'bundling', 'no_getopt_compat',
-        'no_auto_abbrev', 'require_order',
-        'pass_through'
-    );
-
-    Getopt::Long::GetOptions(
-        'include-dir=s' => \@search_dirs,
-        'user-dirs!' => \$opt{'user-dirs'},
-    ) or die("error parsing options\n");
-
     # init commandline parser
     Getopt::Long::config('default', 'bundling',
         'no_getopt_compat','no_auto_abbrev','permute');
@@ -1750,19 +1717,6 @@ sub parse_options {
     $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
       if $opt{'ftp-master-rejects'};
 
-    # Enable user dirs by default
-    $opt{'user-dirs'} //= 1;
-
-    if ($opt{'user-dirs'} and not $ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
-        # Pre-append the user part of the search dirs.
-
-        unshift(@restricted_search_dirs, '/etc/lintian');
-
-        # In some (rare) cases, $ENV{HOME} will not be available.
-        # - Handle that gracefully by not emitting "Uninitialized ...".
-        unshift(@restricted_search_dirs, "$ENV{HOME}/.lintian")
-          if defined($ENV{HOME});
-    }
     return;
 }
 

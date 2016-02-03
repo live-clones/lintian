@@ -1,5 +1,4 @@
 frontend/dplint		usr/share/lintian/frontend
-frontend/lintian	usr/bin
 checks			usr/share/lintian
 collection		usr/share/lintian
 commands                usr/share/lintian

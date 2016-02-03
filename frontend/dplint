@@ -138,6 +138,7 @@ sub setup_env {
     $ENV{'LINTIAN_INCLUDE_DIRS'} = join(':', grep { -d } @INCLUDE_DIRS);
     $ENV{'LINTIAN_RESTRICTED_INCLUDE_DIRS'}
       = join(':', grep { -d } @RESTRICTED_INCLUDE_DIRS);
+    $ENV{'LINTIAN_ENABLE_USER_DIRS'} = $user_dirs ? 1 : 0;
     $ENV{'LINTIAN_HELPER_DIRS'} = join(
         ':',  grep { -d }
           map { "$_/helpers" } @INCLUDE_DIRS
@@ -222,6 +223,8 @@ sub main {
         $truename = $0;
         if ($called_as eq 'lintian-ng') {
             $cmd = 'check';
+        } elsif ($called_as eq 'lintian') {
+            $cmd = 'lintian';
         } elsif ($called_as =~ m{\A (?:(?:lintian|dplint)-)? (.+) \Z}xsm) {
             $cmd = $1;
         } else {
