@@ -33,6 +33,7 @@ use POSIX qw(:sys_wait_h);
 use Time::HiRes qw(gettimeofday tv_interval);
 
 my ($INIT_ROOT, @INCLUDE_DIRS, @RESTRICTED_INCLUDE_DIRS, @HELPER_DIRS);
+my $DPLINT = $ENV{'LINTIAN_DPLINT_FRONTEND'};
 
 BEGIN {
     if (!exists($ENV{'LINTIAN_INCLUDE_DIRS'})) {
@@ -111,21 +112,6 @@ my @ENV_VARS = (
       ));
 
 ### "Normal" application variables
-
-# Version number - Is inserted during build with sed, see d/rules
-my $LINTIAN_VERSION;
-if (not defined($LINTIAN_VERSION)) {
-    # For some reason the version above has not been inserted.
-    # Most likely this means we are a git clone or an unpacked
-    # source package.  If so, we will use a version that best
-    # describes our situation...
-    my $guess = _guess_version();
-    $LINTIAN_VERSION = $guess if $guess;
-    # Use a placeholder if we cannot determine our version.
-    $LINTIAN_VERSION //= '<VERSION>';
-}
-my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
-
 my %conf_opt;                   #names of options set in the cfg file
 my %opt = (                     #hash of some flags from cmd or cfg
     # Init some cmd-line value defaults
@@ -170,6 +156,28 @@ STDOUT->autoflush;
 # than randomly delivered signals.
 $SIG{PIPE} = 'IGNORE';
 
+sub lintian_version {
+    # Version number - Is inserted during build with sed, see d/rules
+    my $LINTIAN_VERSION;
+    if (not defined($LINTIAN_VERSION)) {
+        # For some reason the version above has not been inserted.
+        # Most likely this means we are a git clone or an unpacked
+        # source package.  If so, we will use a version that best
+        # describes our situation...
+        open(my $fd, '-|', $DPLINT, '--print-version');
+        chomp($LINTIAN_VERSION = <$fd>);
+        close($fd);
+        # Use a placeholder if we cannot determine our version.
+        $LINTIAN_VERSION //= '<VERSION>';
+    }
+    return $LINTIAN_VERSION;
+}
+
+sub lintian_banner {
+    my $lintian_version = lintian_version();
+    return "Lintian v${lintian_version}";
+}
+
 # }}}
 
 # {{{ Process Command Line
@@ -185,6 +193,7 @@ $SIG{PIPE} = 'IGNORE';
 sub syntax {
     my (undef, $value) = @_;
     my $show_extended = 0;
+    my $banner = lintian_banner();
     if ($value) {
         if ($value eq 'extended' or $value eq 'all') {
             $show_extended = 1;
@@ -194,7 +203,7 @@ sub syntax {
         }
     }
 
-    print "$BANNER\n";
+    print "${banner}\n";
     print <<"EOT-EOT-EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
 Actions:
@@ -282,9 +291,11 @@ EOT-EOT-EOT
 # Options: -V|--version, --print-version
 sub banner {
     if ($_[0] eq 'print-version') {
-        print "$LINTIAN_VERSION\n";
+        my $lintian_version = lintian_version();
+        print "${lintian_version}\n";
     } else {
-        print "$BANNER\n";
+        my $banner = lintian_banner();
+        print "${banner}\n";
     }
     exit 0;
 }
@@ -652,16 +663,19 @@ sub main {
         syntax() unless $ok;
     }
 
-    # Print Debug banner, now that we're finished determining
-    # the values and have Lintian::Output available
-    debug_msg(
-        1,
-        $BANNER,
-        "Lintian root directory: $INIT_ROOT",
-        "Configuration file: $opt{'LINTIAN_CFG'}",
-        'Laboratory: ' . ($opt{'LINTIAN_LAB'} // '<N/A>'),
-        delimiter(),
-    );
+    if ($opt{'debug'}) {
+        my $banner = lintian_banner();
+        # Print Debug banner, now that we're finished determining
+        # the values and have Lintian::Output available
+        debug_msg(
+            1,
+            $banner,
+            "Lintian root directory: $INIT_ROOT",
+            "Configuration file: $opt{'LINTIAN_CFG'}",
+            'Laboratory: '.($opt{'LINTIAN_LAB'} // '<N/A>'),
+            delimiter(),
+        );
+    }
 
     $PROFILE = load_profile_and_configure_tags();
 
@@ -1371,37 +1385,6 @@ sub _find_changes {
     print STDERR " in the following dirs:\n";
     print STDERR '  ', join("\n  ", @dirs), "\n";
     exit 0;
-}
-
-sub _guess_version {
-    my $guess;
-
-    if (-d "$INIT_ROOT/.git") {
-        # Lets try git
-        eval {
-            # Disabling IPC::Run::Debug saves tons of useless calls.
-            $ENV{'IPCRUNDEBUG'} = 'none'
-              unless exists $ENV{'IPCRUNDEBUG'};
-            require IPC::Run;
-            IPC::Run::run(['git', "--git-dir=$INIT_ROOT/.git", 'describe'],
-                \undef, \$guess, '2>/dev/null');
-            chomp $guess;
-        };
-        return $guess if $guess;
-    }
-    # git was not possible - maybe the changelog is available
-    if (-f "$INIT_ROOT/debian/changelog") {
-        require Parse::DebianChangelog;
-        eval {
-            my $changelog
-              = Parse::DebianChangelog->init(
-                { infile => "$INIT_ROOT/debian/changelog" });
-            $guess = $changelog->dpkg()->{'Version'} if $changelog;
-        };
-        return $guess if $guess;
-    }
-    # Out of guesses ...
-    return;
 }
 
 sub configure_output {
