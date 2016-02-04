@@ -252,7 +252,7 @@ are Lintian::Relation objects already.
 
 sub and {
     my ($class, @args) = @_;
-    my @result;
+    my (@result, $last_rel, $rels);
     foreach my $arg (@args) {
         my $rel = $arg;
         unless ($arg && ref $arg eq 'Lintian::Relation') {
@@ -260,6 +260,9 @@ sub and {
             next unless $arg;
             $rel = Lintian::Relation->new($arg);
         }
+        next if $rel->empty;
+        ++$rels;
+        $last_rel = $rel;
         if ($rel->[0] eq 'AND') {
             my @r = @$rel;
             push @result, @r[1..$#r];
@@ -270,6 +273,7 @@ sub and {
 
     if ($class eq 'Lintian::Relation') {
         return $EMPTY_RELATION if not @result;
+        return $last_rel if $rels == 1;
     }
 
     my $self;
