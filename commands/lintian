@@ -624,7 +624,7 @@ sub main {
     $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
     $ENV{'LINTIAN_HELPER_DIRS'} = join(':', @HELPER_DIRS);
 
-    # environment variables overwrite settings in conf file, so load them now
+    # environment variables override settings in conf file, so load them now
     # assuming they were not set by cmd-line options
     foreach my $var (@ENV_VARS) {
      # note $opt{$var} will usually always exists due to the call to GetOptions
@@ -1631,7 +1631,7 @@ sub load_and_select_collections {
     }
 
     if ($action eq 'check') {
-        # For overrides we need "overrride-file" as well
+        # For overrides we need "override-file" as well
         unless ($opt{'no-override'}) {
             $extra_unpack{'override-file'} = 1;
         }
