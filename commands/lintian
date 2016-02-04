@@ -167,8 +167,6 @@ sub lintian_version {
         open(my $fd, '-|', $DPLINT, '--print-version');
         chomp($LINTIAN_VERSION = <$fd>);
         close($fd);
-        # Use a placeholder if we cannot determine our version.
-        $LINTIAN_VERSION //= '<VERSION>';
     }
     return $LINTIAN_VERSION;
 }
