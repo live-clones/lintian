@@ -164,7 +164,7 @@ sub lintian_version {
         # Most likely this means we are a git clone or an unpacked
         # source package.  If so, we will use a version that best
         # describes our situation...
-        open(my $fd, '-|', $DPLINT, '--print-version');
+        open(my $fd, '-|', $DPLINT, 'print-version');
         chomp($LINTIAN_VERSION = <$fd>);
         close($fd);
     }
