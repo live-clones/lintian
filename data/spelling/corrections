@@ -890,6 +890,10 @@ horzontal||horizontal
 horzontally||horizontally
 howerver||however
 howver||however
+hypenated||hyphenated
+hypenate||hyphenate
+hypenates||hyphenates
+hypenating||hyphenating
 hypenation||hyphenation
 hypen||hyphen
 hypens||hyphens
@@ -1009,6 +1013,10 @@ interaces||interfaces
 interator||iterator
 interators||iterators
 interchangable||interchangeable
+interesected||intersected
+interesecting||intersecting
+interesect||intersect
+interesects||intersects
 interger||integer
 intergers||integers
 intermittant||intermittent
@@ -1033,6 +1041,8 @@ intialize||initialize
 intializes||initializes
 intializing||initializing
 intregral||integral
+intruction||instruction
+intructions||instructions
 intrumented||instrumented
 intrumenting||instrumenting
 intrument||instrument
@@ -1190,6 +1200,8 @@ noticably||noticeably
 notications||notifications
 notifcation||notification
 notifcations||notifications
+numberal||numeral
+numberals||numerals
 observered||observed
 obsure||obscure
 o'caml||OCaml
@@ -1225,6 +1237,7 @@ orientatied||orientated
 orientied||oriented
 orignal||original
 otehr||other
+otherwhise||otherwise
 othwerwise||otherwise
 ouput||output
 ouputs||outputs
@@ -1281,6 +1294,8 @@ parenthesed||parenthesized
 particularily||particularly
 pased||passed
 peformance||performance
+penalities||penalties
+penality||penalty
 pendantic||pedantic
 peprocessor||preprocessor
 perfoming||performing
@@ -1313,6 +1328,8 @@ positve||positive
 positves||positives
 possibe||possible
 possibilites||possibilities
+possibilties||possibilities
+possibilty||possibility
 possiblities||possibilities
 possiblity||possibility
 postgressql||PostgreSQL
@@ -1428,6 +1445,10 @@ refecting||reflecting
 refect||reflect
 refects||reflects
 refence||reference
+refernced||referenced
+refernce||reference
+refernces||references
+referncing||referencing
 refrenced||referenced
 refrence||reference
 refrences||references
