@@ -558,20 +558,6 @@ If Lintian should write the output to a file starting with a literal
 
 If this option omitted, Lintian will default to using STDOUT.
 
-=item B<--root> rootdir
-
-Deprecated in 2.5.18 and will be removed in a later release.
-
-This option used to control what directory was used as the
-B<LINTIAN_ROOT>.  It's primary purpose was to use Lintian directly
-from a source tree.  However, since 2.5.18 Lintian has logic for
-automatically configuring itself without any assistance making this
-option largely obsolete.  Note if passed, then the chosen root dir
-must match the actual LINTIAN_ROOT used by Lintian.
-
-This option implies B<--no-user-dirs> for backwards compatibility with
-previous versions of Lintian.
-
 =item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
 
 Collect information info1, info2, etc. even if these are not required
