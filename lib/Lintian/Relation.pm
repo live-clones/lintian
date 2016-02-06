@@ -357,6 +357,33 @@ sub duplicates {
     } keys %dups;
 }
 
+=item restriction_less()
+
+Returns a restriction-less variant of this relation (or this relation
+object if it has no restrictions).
+
+=cut
+
+sub restriction_less {
+    my ($self) = @_;
+    my @worklist = ($self);
+    my $has_restrictions = 0;
+    while (my $current = pop(@worklist)) {
+        my $rel_type = $current->[0];
+        if ($rel_type eq 'PRED') {
+            if (defined($current->[4]) or defined($current->[6])) {
+                $has_restrictions = 1;
+                last;
+            }
+            next;
+        }
+        next if $rel_type eq 'PRED-UNPARSABLE';
+        push(@worklist, @$current[1 .. $#$current]);
+    }
+    return $self if not $has_restrictions;
+    return Lintian::Relation->new_norestriction($self->unparse);
+}
+
 =item implies(RELATION)
 
 Returns true if the relationship implies RELATION, meaning that if the

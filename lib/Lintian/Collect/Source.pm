@@ -537,30 +537,19 @@ sub relation {
 =item relation_noarch (FIELD)
 
 The same as L</relation (FIELD)>, but ignores architecture
-restrictions in the FIELD field.
+restrictions and build profile restrictions in the FIELD field.
 
-Needs-Info requirements for using I<relation_noarch>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+Needs-Info requirements for using I<relation_noarch>: L<Same as relation|Lintian::Collect/relation (FIELD)>
 
 =cut
 
 sub relation_noarch {
     my ($self, $field) = @_;
     $field = lc $field;
-    return $self->{relation_noarch}->{$field}
-      if exists $self->{relation_noarch}->{$field};
+    return $self->{relation_noarch}{$field}
+      if exists $self->{relation_noarch}{$field};
 
-    my $result;
-    if ($field =~ /^build-(depends|conflicts)-all$/) {
-        my $type = $1;
-        my @fields = ("build-$type", "build-$type-indep", "build-$type-arch");
-        $result
-          = Lintian::Relation->and(map { $self->relation_noarch($_) } @fields);
-    } elsif ($field =~ /^build-(depends|conflicts)(?:-(?:arch|indep))?$/) {
-        my $value = $self->field($field);
-        $result = Lintian::Relation->new_noarch($value);
-    } else {
-        croak("unknown relation field $field");
-    }
+    my $result = $self->relation($field)->restriction_less;
     $self->{relation_noarch}{$field} = $result;
     return $result;
 }
