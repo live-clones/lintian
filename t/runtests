@@ -843,11 +843,15 @@ sub handle_msg_from_child {
         }
     } elsif ($msg_type eq 'diff-files') {
         my ($original, $actual) = @payload;
+        print "\n" if $partial_line;
+        $partial_line = 0;
         print "${suite}::${testname}: diff -u ${original} ${actual}\n";
         runsystem_ok('diff', '-u', $original, $actual);
     } elsif ($msg_type eq 'dump-file') {
         my ($log_file) = @payload;
         my $prefix = "${suite}::${testname}: ";
+        print "\n" if $partial_line;
+        $partial_line = 0;
         handle_dump_log($prefix, $log_file);
     } elsif ($msg_type eq 'progress') {
         my ($new_phase) = @payload;
