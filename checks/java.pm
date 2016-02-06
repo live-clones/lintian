@@ -62,8 +62,7 @@ sub run {
         my $bsname = '';
 
         if (exists $java_info->{$jar_file}{error}) {
-            tag 'zip-parse-error', "$jar_file:",
-              $java_info->{$jar_file}{error};
+            tag 'zip-parse-error', "$jar_file:",$java_info->{$jar_file}{error};
             next;
         }
 
