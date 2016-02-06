@@ -204,13 +204,13 @@ sub tarjans {
     $self->{stack} = [];
     $self->{on_stack} = {};
     # The information for each node:
-    #  $self->{node_info}->{$node}->[X], where X is:
+    #  $self->{node_info}{$node}[X], where X is:
     #    0 => index
     #    1 => low_index
     $self->{node_info} = {};
     foreach my $node (@$nodes) {
         $self->_tarjans_sc($node)
-          unless defined $self->{node_info}->{$node};
+          unless defined $self->{node_info}{$node};
     }
     return $self->{scc};
 }
@@ -221,20 +221,20 @@ sub _tarjans_sc {
     my $stack = $self->{stack};
     my $ninfo = [$index, $index];
     my $on_stack = $self->{on_stack};
-    $self->{node_info}->{$node} = $ninfo;
+    $self->{node_info}{$node} = $ninfo;
     $index++;
     $self->{index} = $index;
     push @$stack, $node;
     $on_stack->{$node} = 1;
 
-    foreach my $neighbour (@{ $self->{edges}->{$node} }){
+    foreach my $neighbour (@{ $self->{edges}{$node} }){
         my $nb_info;
-        $nb_info = $self->{node_info}->{$neighbour};
+        $nb_info = $self->{node_info}{$neighbour};
         if (!defined $nb_info){
             # First time visit
             $self->_tarjans_sc($neighbour);
             # refresh $nb_info
-            $nb_info = $self->{node_info}->{$neighbour};
+            $nb_info = $self->{node_info}{$neighbour};
             # min($node.low_index, $neigh.low_index)
             $ninfo->[1] = $nb_info->[1] if $nb_info->[1] < $ninfo->[1];
         } elsif (exists $on_stack->{$neighbour})  {

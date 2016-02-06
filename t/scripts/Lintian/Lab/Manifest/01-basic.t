@@ -28,7 +28,7 @@ $plist->visit_all(sub { my ($v, @k) = @_; push @contents, $v; push @keys, \@k}
 );
 
 is(@contents, 1, 'Contents one element');
-is($contents[0]->{'source'}, $input->{'source'}, 'Element has the right name');
+is($contents[0]{'source'}, $input->{'source'}, 'Element has the right name');
 
 # Change input, output should be unaffected
 $input->{'file'} = 'lalalala';

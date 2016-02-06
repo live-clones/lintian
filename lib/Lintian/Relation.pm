@@ -335,14 +335,14 @@ sub duplicates {
                 my $first = $self->unparse($self_i);
                 my $second = $self->unparse($self_j);
                 if ($seen{$first}) {
-                    $dups{$seen{$first}}->{$second} = $j;
+                    $dups{$seen{$first}}{$second} = $j;
                     $seen{$second} = $seen{$first};
                 } elsif ($seen{$second}) {
-                    $dups{$seen{$second}}->{$first} = $i;
+                    $dups{$seen{$second}}{$first} = $i;
                     $seen{$first} = $seen{$second};
                 } else {
                     $dups{$first} ||= {};
-                    $dups{$first}->{$second} = $j;
+                    $dups{$first}{$second} = $j;
                     $seen{$second} = $first;
                 }
             }

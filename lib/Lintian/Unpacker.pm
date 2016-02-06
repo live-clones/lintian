@@ -270,7 +270,7 @@ sub _gen_type_coll {
 
     $cmap->initialise;
 
-    $self->{'cache'}->{$pkg_type} = $cmap;
+    $self->{'cache'}{$pkg_type} = $cmap;
     return $cmap->clone;
 }
 
@@ -281,10 +281,10 @@ sub _requested_colls {
     my $pkg_type = $lpkg->pkg_type;
     my ($cmap, %needed, @check);
 
-    unless (exists $self->{'cache'}->{$pkg_type}) {
+    unless (exists $self->{'cache'}{$pkg_type}) {
         $cmap = $self->_gen_type_coll($pkg_type);
     } else {
-        $cmap = $self->{'cache'}->{$pkg_type}->clone;
+        $cmap = $self->{'cache'}{$pkg_type}->clone;
     }
 
     # if its new and $profile is undef, we have to run all
@@ -513,7 +513,7 @@ sub process_tasks {
             foreach my $procid (keys %$worklists) {
                 # Failed ones do not count...
                 next if $failed{$procid};
-                my $cmap = $worklists->{$procid}->{'collmap'};
+                my $cmap = $worklists->{$procid}{'collmap'};
                 if ($cmap->pending) {
                     $done = 0;
                     last;

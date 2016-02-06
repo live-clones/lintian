@@ -126,7 +126,7 @@ sub new {
     if ($self->{'type'}//'ALL' ne 'ALL') {
         $self->{'type-table'} = {};
         for my $t (split /\s*,\s*/o, $self->{'type'}) {
-            $self->{'type-table'}->{$t} = 1;
+            $self->{'type-table'}{$t} = 1;
         }
     }
 
@@ -136,7 +136,7 @@ sub new {
           unless $pg->{'tag'};
         $pg->{'info'} = $loc{$pg->{'tag'}} if exists $loc{$pg->{'tag'}};
         $ti = Lintian::Tag::Info->new($pg, $self->{'name'}, $self->{'type'});
-        $self->{'tag-table'}->{$ti->tag} = $ti;
+        $self->{'tag-table'}{$ti->tag} = $ti;
     }
 
     bless $self, $class;
@@ -194,7 +194,7 @@ inputs.
 sub is_check_type {
     my ($self, $type) = @_;
     return 1 if ($self->{'type'}//'ALL') eq 'ALL';
-    return $self->{'type-table'}->{$type};
+    return $self->{'type-table'}{$type};
 }
 
 =item $cs->get_tag ($tagname)
@@ -206,7 +206,7 @@ this check).
 
 sub get_tag {
     my ($self, $tag) = @_;
-    return $self->{'tag-table'}->{$tag};
+    return $self->{'tag-table'}{$tag};
 }
 
 =item $cs->tags

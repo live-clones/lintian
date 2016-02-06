@@ -59,7 +59,7 @@ the lab as caches.
 The data structure is basically a tree (using hashes).  For binaries
 is looks (something) like:
 
- $self->{'state'}->{$name}->{$version}->{$architecture}
+ $self->{'state'}{$name}{$version}{$architecture}
 
 The (order of the) fields used in the tree are listed in the
 @{BIN,SRC,CHG}_QUERY lists below.  The fields may (and generally do)
@@ -588,7 +588,7 @@ sub _do_set {
     my $k;
 
     # Find the hash where the entry should be stored
-    # - The basic structure is "$root->{key1}->...->{keyN-1}->{keyN} = $entry"
+    # - The basic structure is "$root->{key1}->...->{keyN-1}{keyN} = $entry"
     # - This loop is supposed to find the "n-1"th hash and save that in $cur.
     # - After the loop, a simple "$cur->{$keyN} = $entry" inserts the element.
     for (my $i = 0 ; $i < $qfl ; $i++) {

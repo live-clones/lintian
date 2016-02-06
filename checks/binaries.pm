@@ -650,7 +650,7 @@ sub run {
 sub tag_unneeded_sections {
     my ($tag, $file, $objdump) = @_;
     foreach my $sect ('.note', '.comment') {
-        if (exists $objdump->{'SH'}->{$sect}) {
+        if (exists $objdump->{'SH'}{$sect}) {
             tag $tag, "$file $sect";
         }
     }

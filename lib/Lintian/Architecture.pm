@@ -104,9 +104,9 @@ sub _parse_arch {
     my ($os, $cpu) = split /\s++/o, $raw;
     # map $os-any (e.g. "linux-any") and any-$arch (e.g. "any-amd64") to
     # the relevant architectures.
-    $ARCH_WILDCARDS{"$os-any"}->{$archstr} = 1;
-    $ARCH_WILDCARDS{"any-$cpu"}->{$archstr} = 1;
-    $ARCH_WILDCARDS{'any'}->{$archstr} = 1;
+    $ARCH_WILDCARDS{"$os-any"}{$archstr} = 1;
+    $ARCH_WILDCARDS{"any-$cpu"}{$archstr} = 1;
+    $ARCH_WILDCARDS{'any'}{$archstr} = 1;
     if ($os eq 'linux') {
         my ($long, $short);
         # Per Policy §11.1 (3.9.3):
@@ -226,7 +226,7 @@ sub wildcard_includes_arch {
     # Load the wildcards if it has not been done yet.
     $ARCH_RAW->known('any') unless %ARCH_WILDCARDS;
     $arch = $ALT_ARCH_NAMES{$arch} if exists $ALT_ARCH_NAMES{$arch};
-    return exists $ARCH_WILDCARDS{$wc}->{$arch} ? 1 : 0;
+    return exists $ARCH_WILDCARDS{$wc}{$arch} ? 1 : 0;
 }
 
 =back

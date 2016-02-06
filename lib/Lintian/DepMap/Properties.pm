@@ -61,7 +61,7 @@ sub add {
     } elsif (not ref($ref)) {
         push @_, $ref;
     } else {
-        $self->{'properties'}->{$_[0]} = $ref;
+        $self->{'properties'}{$_[0]} = $ref;
     }
     return $self->SUPER::add(@_);
 }
@@ -89,7 +89,7 @@ sub addp {
     } elsif (not ref($ref)) {
         push @_, $ref;
     } else {
-        $self->{'properties'}->{$_[0]} = $ref;
+        $self->{'properties'}{$_[0]} = $ref;
     }
     return $self->SUPER::addp(@_);
 }
@@ -114,7 +114,7 @@ E.g.
 sub getp {
     my $self = shift;
     my $node = shift;
-    return $self->{'properties'}->{$node};
+    return $self->{'properties'}{$node};
 }
 
 1;

@@ -35,7 +35,7 @@ Lintian::Collect::Changes - Lintian interface to .changes file data collection
     my $files = $collect->files();
 
     foreach my $file (keys %{$files}) {
-        my $size = $files->{$file}->{size};
+        my $size = $files->{$file}{size};
         print "File $file has size $size\n";
     }
 

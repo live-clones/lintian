@@ -221,8 +221,8 @@ Needs-Info requirements for using I<binary_package_type>: L<Same as binary_field
 sub binary_package_type {
     my ($self, $binary) = @_;
     if (exists $self->{binaries}) {
-        return $self->{binaries}->{$binary}
-          if exists $self->{binaries}->{$binary};
+        return $self->{binaries}{$binary}
+          if exists $self->{binaries}{$binary};
         return;
     }
     # we need the binary fields for this.
@@ -463,8 +463,8 @@ Needs-Info requirements for using I<binary_relation>: L<Same as binary_field|/bi
 sub binary_relation {
     my ($self, $package, $field) = @_;
     $field = lc $field;
-    return $self->{binary_relation}->{$package}->{$field}
-      if exists $self->{binary_relation}->{$package}->{$field};
+    return $self->{binary_relation}{$package}{$field}
+      if exists $self->{binary_relation}{$package}{$field};
 
     my %special = (
         all    => [qw(pre-depends depends recommends suggests)],
@@ -483,7 +483,7 @@ sub binary_relation {
         my $value = $self->binary_field($package, $field);
         $result = Lintian::Relation->new($value);
     }
-    $self->{binary_relation}->{$package}->{$field} = $result;
+    $self->{binary_relation}{$package}{$field} = $result;
     return $result;
 }
 
@@ -517,7 +517,7 @@ Needs-Info requirements for using I<relation>: L<Same as field|Lintian::Collect/
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
-    return $self->{relation}->{$field} if exists $self->{relation}->{$field};
+    return $self->{relation}{$field} if exists $self->{relation}{$field};
 
     my $result;
     if ($field =~ /^build-(depends|conflicts)-all$/) {

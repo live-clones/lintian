@@ -105,7 +105,7 @@ sub check_control_contents {
     } else {
         while (my ($index, $paragraph) = each(@paragraphs)) {
             check_control_paragraph($info, $paragraph,
-                $lines[$index]->{'START-OF-PARAGRAPH'});
+                $lines[$index]{'START-OF-PARAGRAPH'});
         }
     }
     return;

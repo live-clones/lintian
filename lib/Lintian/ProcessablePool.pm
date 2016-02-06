@@ -112,7 +112,7 @@ sub add_proc {
         return 0;
     }
     $groupid = $self->_get_group_id($proc);
-    $group = $self->{groups}->{$groupid};
+    $group = $self->{groups}{$groupid};
     if (defined $group){
         if ($pkg_type eq 'source'){
             # if this is a source pkg, then this is a duplicate
@@ -125,7 +125,7 @@ sub add_proc {
         # Create a new group
         $group = Lintian::ProcessableGroup->new($self->{'lab'});
         $group->add_processable($proc);
-        $self->{groups}->{$groupid} = $group;
+        $self->{groups}{$groupid} = $group;
     }
     # add it to the "unprocessed"/"seen" map.
     return 1;
@@ -153,7 +153,7 @@ if there is no group called $name.
 
 sub get_group{
     my ($self, $group) = @_;
-    return $self->{groups}->{$group};
+    return $self->{groups}{$group};
 }
 
 =item $pool->get_groups()
@@ -191,7 +191,7 @@ sub _add_changes_file{
     my $group = Lintian::ProcessableGroup->new($self->{'lab'}, $pkg_path);
     my $cproc = $group->get_changes_processable();
     my $gid = $self->_get_group_id($cproc);
-    my $ogroup = $self->{groups}->{$gid};
+    my $ogroup = $self->{groups}{$gid};
     if (defined($ogroup)){
         # Group already exists...
         my $added = 0;
@@ -215,7 +215,7 @@ sub _add_changes_file{
         }
         return $added;
     } else {
-        $self->{groups}->{$gid} = $group;
+        $self->{groups}{$gid} = $group;
     }
     return 1;
 }

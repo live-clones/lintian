@@ -388,14 +388,14 @@ symlinks, even if the symlink points to a file.
 
 =cut
 
-sub is_symlink { return $_[0]->{'_path_info'} & TYPE_SYMLINK ? 1 : 0; }
-sub is_hardlink { return $_[0]->{'_path_info'} & TYPE_HARDLINK ? 1 : 0; }
-sub is_dir { return $_[0]->{'_path_info'} & TYPE_DIR ? 1 : 0; }
+sub is_symlink { return $_[0]{'_path_info'} & TYPE_SYMLINK ? 1 : 0; }
+sub is_hardlink { return $_[0]{'_path_info'} & TYPE_HARDLINK ? 1 : 0; }
+sub is_dir { return $_[0]{'_path_info'} & TYPE_DIR ? 1 : 0; }
 
 sub is_file {
-    return $_[0]->{'_path_info'} & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
+    return $_[0]{'_path_info'} & (TYPE_FILE | TYPE_HARDLINK) ? 1 : 0;
 }
-sub is_regular_file { return $_[0]->{'_path_info'} & TYPE_FILE ? 1 : 0; }
+sub is_regular_file { return $_[0]{'_path_info'} & TYPE_FILE ? 1 : 0; }
 
 =item link_normalized
 

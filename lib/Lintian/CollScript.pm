@@ -81,7 +81,7 @@ sub new {
     $self->{'auto_remove'} = 1
       if lc($header->{'auto-remove'}//'') eq 'yes';
     for my $t (split /\s*,\s*/o, $self->{'type'}) {
-        $self->{'type-table'}->{$t} = 1;
+        $self->{'type-table'}{$t} = 1;
     }
 
     bless $self, $class;
@@ -116,9 +116,9 @@ sub _parse_needs {
             push @max, $part unless exists $seen{$part};
         }
     }
-    $self->{'needs_info'}->{'min'} = \@min;
-    $self->{'needs_info'}->{'type'} = \%typespec;
-    $self->{'needs_info'}->{'max'} = \@max;
+    $self->{'needs_info'}{'min'} = \@min;
+    $self->{'needs_info'}{'type'} = \%typespec;
+    $self->{'needs_info'}{'max'} = \@max;
     return;
 }
 
@@ -211,11 +211,11 @@ sub needs_info {
         my $needs = $self->{'needs_info'};
         my @min = @{ $needs->{'min'} };
         my $type = $cond->{'type'};
-        push @min, @{ $needs->{'type'}->{$type} }
-          if exists $needs->{'type'}->{$type};
+        push @min, @{ $needs->{'type'}{$type} }
+          if exists $needs->{'type'}{$type};
         return @min;
     }
-    return @{ $self->{'needs_info'}->{'max'} };
+    return @{ $self->{'needs_info'}{'max'} };
 }
 
 =item is_type (TYPE)
@@ -226,7 +226,7 @@ Returns a truth value if this collection can be applied to a TYPE package.
 
 sub is_type {
     my ($self, $type) = @_;
-    return $self->{'type-table'}->{$type};
+    return $self->{'type-table'}{$type};
 }
 
 =item collect (PKG, TASK, DIR)

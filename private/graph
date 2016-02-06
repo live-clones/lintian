@@ -136,7 +136,7 @@ sub gen_depth_level {
         foreach my $other (@{ $rneeds{$node} }) {
             next unless $other =~ m/^coll-/o;
             next if exists $depth{$other};
-            delete $re{$other}->{$node};
+            delete $re{$other}{$node};
             # Is this the last edge to this node?
             next if scalar keys %{ $re{$other} };
             # Yes, then we visit it.
@@ -185,7 +185,7 @@ sub mark_longest_paths {
         foreach my $node (@c) {
             foreach my $dep (@{ $needs{$node} }) {
                 next unless $depth{"coll-$dep"} == $next;
-                $path_marks->{$node}->{"coll-$dep"} = 1;
+                $path_marks->{$node}{"coll-$dep"} = 1;
                 push @nc, "coll-$dep";
             }
         }
@@ -206,7 +206,7 @@ sub make_graph {
     print "\n// Edges\n";
     foreach my $sn (sort keys %edges) {
         foreach my $en (sort keys %{ $edges{$sn} }) {
-            my ($et, $attr) = @{ $edges{$sn}->{$en} };
+            my ($et, $attr) = @{ $edges{$sn}{$en} };
             my $e = "\"$sn\" $et \"$en\"";
             $e .= " [ $attr ]" if $attr;
             print "    $e\n";
@@ -220,7 +220,7 @@ sub make_graph {
 sub is_marked {
     my ($paths, $start, $end) = @_;
     return unless $paths;
-    return unless exists $paths->{$start} && exists $paths->{$start}->{$end};
+    return unless exists $paths->{$start} && exists $paths->{$start}{$end};
     return 1;
 }
 

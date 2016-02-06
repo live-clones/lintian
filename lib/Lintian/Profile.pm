@@ -215,7 +215,7 @@ Returns a false value if the tag has been marked as
 
 sub is_overridable {
     my ($self, $tag) = @_;
-    return !exists $self->{'non-overridable-tags'}->{$tag};
+    return !exists $self->{'non-overridable-tags'}{$tag};
 }
 
 =item $prof->get_tag ($tag[, $known])
@@ -228,8 +228,8 @@ Otherwise it returns undef.
 
 sub get_tag {
     my ($self, $tag, $known) = @_;
-    return unless $known || exists $self->{'enabled-tags'}->{$tag};
-    return $self->{'known-tags'}->{$tag};
+    return unless $known || exists $self->{'enabled-tags'}{$tag};
+    return $self->{'known-tags'}{$tag};
 }
 
 =item $prof->get_script ($script[, $known])
@@ -245,8 +245,8 @@ provides are enabled.
 
 sub get_script {
     my ($self, $script, $known) = @_;
-    return unless $known || exists $self->{'enabled-checks'}->{$script};
-    return $self->{'check-scripts'}->{$script};
+    return unless $known || exists $self->{'enabled-checks'}{$script};
+    return $self->{'check-scripts'}{$script};
 }
 
 =item $prof->enable_tags (@tags)
@@ -258,11 +258,11 @@ Enables all tags named in @tags.  Croaks if an unknown tag is found.
 sub enable_tags {
     my ($self, @tags) = @_;
     for my $tag (@tags) {
-        my $ti = $self->{'known-tags'}->{$tag};
+        my $ti = $self->{'known-tags'}{$tag};
         croak "Unknown tag $tag" unless $ti;
-        next if exists $self->{'enabled-tags'}->{$tag};
-        $self->{'enabled-tags'}->{$tag} = 1;
-        $self->{'enabled-checks'}->{$ti->script}++;
+        next if exists $self->{'enabled-tags'}{$tag};
+        $self->{'enabled-tags'}{$tag} = 1;
+        $self->{'enabled-checks'}{$ti->script}++;
     }
     return;
 }
@@ -276,12 +276,12 @@ Disable all tags named in @tags.  Croaks if an unknown tag is found.
 sub disable_tags {
     my ($self, @tags) = @_;
     for my $tag (@tags) {
-        my $ti = $self->{'known-tags'}->{$tag};
+        my $ti = $self->{'known-tags'}{$tag};
         croak "Unknown tag $tag" unless $ti;
-        next unless exists $self->{'enabled-tags'}->{$tag};
-        delete $self->{'enabled-tags'}->{$tag};
-        delete $self->{'enabled-checks'}->{$ti->script}
-          unless --$self->{'enabled-checks'}->{$ti->script};
+        next unless exists $self->{'enabled-tags'}{$tag};
+        delete $self->{'enabled-tags'}{$tag};
+        delete $self->{'enabled-checks'}{$ti->script}
+          unless --$self->{'enabled-checks'}{$ti->script};
     }
     return;
 }
@@ -421,9 +421,9 @@ sub _read_profile_section {
 
     foreach my $tag (@tags) {
         croak "Unknown check $tag in $pname (section $sno)"
-          unless $self->{'known-tags'}->{$tag};
+          unless $self->{'known-tags'}{$tag};
         if ($severity) {
-            $self->{'known-tags'}->{$tag}->set_severity($severity);
+            $self->{'known-tags'}{$tag}->set_severity($severity);
         }
         if ($overridable != -1) {
             if ($overridable) {
@@ -455,17 +455,17 @@ sub _read_profile_tags{
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
 
-        unless (exists $self->{'check-scripts'}->{$check}) {
+        unless (exists $self->{'check-scripts'}{$check}) {
             $self->_load_check($pname, $check);
         }
-        return $self->{'check-scripts'}->{$check}->tags;
+        return $self->{'check-scripts'}{$check}->tags;
     };
     my $tag_sub = sub {
         my ($field, $tag) = @_;
-        unless (exists $self->{'known-tags'}->{$tag}) {
+        unless (exists $self->{'known-tags'}{$tag}) {
             $self->_load_checks;
             croak "Unknown tag \"$tag\" in profile \"$pname\""
-              unless exists $self->{'known-tags'}->{$tag};
+              unless exists $self->{'known-tags'}{$tag};
         }
         return $tag;
     };
@@ -473,7 +473,7 @@ sub _read_profile_tags{
         for
           my $check ($self->_split_comma_sep_field($pheader->{'load-checks'})){
             $self->_load_check($pname, $check)
-              unless exists $self->{'check-scripts'}->{$check};
+              unless exists $self->{'check-scripts'}{$check};
         }
     }
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check',
@@ -594,26 +594,26 @@ sub _parse_check {
     my ($self, $gcname, $dir) = @_;
     # Have we already tried to load this before?  Possibly via an alias
     # or symlink
-    return $self->{'check-scripts'}->{$gcname}
-      if exists $self->{'check-scripts'}->{$gcname};
+    return $self->{'check-scripts'}{$gcname}
+      if exists $self->{'check-scripts'}{$gcname};
     my $c= Lintian::CheckScript->new($dir, $gcname,$self, $self->{'language'});
     my $cname = $c->name;
-    if (exists $self->{'check-scripts'}->{$cname}) {
+    if (exists $self->{'check-scripts'}{$cname}) {
         # We have loaded the check under a different name
-        $c = $self->{'check-scripts'}->{$cname};
+        $c = $self->{'check-scripts'}{$cname};
         # Record the alias so we don't have to parse the check file again.
-        $self->{'check-scripts'}->{$gcname} = $c;
+        $self->{'check-scripts'}{$gcname} = $c;
         return $c;
     }
-    $self->{'check-scripts'}->{$cname} = $c;
-    $self->{'check-scripts'}->{$gcname} = $c if $gcname ne $cname;
+    $self->{'check-scripts'}{$cname} = $c;
+    $self->{'check-scripts'}{$gcname} = $c if $gcname ne $cname;
 
     for my $tn ($c->tags) {
-        if ($self->{'known-tags'}->{$tn}) {
-            my $ocn = $self->{'known-tags'}->{$tn}->script;
+        if ($self->{'known-tags'}{$tn}) {
+            my $ocn = $self->{'known-tags'}{$tn}->script;
             croak "$cname redefined tag $tn which was defined by $ocn";
         }
-        $self->{'known-tags'}->{$tn} = $c->get_tag($tn);
+        $self->{'known-tags'}{$tn} = $c->get_tag($tn);
     }
     return $c;
 }

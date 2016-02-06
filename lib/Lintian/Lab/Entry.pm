@@ -324,7 +324,7 @@ Note: The version can be 0.
 
 sub coll_version {
     my ($self, $coll) = @_;
-    return $self->{coll}->{$coll}//'';
+    return $self->{coll}{$coll}//'';
 }
 
 =item is_coll_finished (COLL, VERSION)
@@ -350,7 +350,7 @@ sub is_coll_finished {
 # non-public method to mark a collection as complete
 sub _mark_coll_finished {
     my ($self, $coll, $version) = @_;
-    $self->{coll}->{$coll} = $version;
+    $self->{coll}{$coll} = $version;
     return 1;
 }
 
@@ -359,7 +359,7 @@ sub _mark_coll_finished {
 # Removes the notion that $coll has been finished.
 sub _clear_coll_status {
     my ($self, $coll) = @_;
-    delete $self->{coll}->{$coll};
+    delete $self->{coll}{$coll};
     return 1;
 }
 
@@ -399,7 +399,7 @@ sub update_status_file {
 
     @sc = sort keys %{ $self->{coll} };
     print $sfd "Collections: \n";
-    print $sfd ' ' . join(",\n ", map { "$_=$self->{coll}->{$_}" } @sc);
+    print $sfd ' ' . join(",\n ", map { "$_=$self->{coll}{$_}" } @sc);
     print $sfd "\n\n";
     close $sfd or return 0;
     return 1;

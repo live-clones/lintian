@@ -151,7 +151,7 @@ sub new_from_metadata {
         my $val;
         $val = delete $self->{$k} unless exists $KEEP{$k};
         if (defined $val && exists $KEEP_EXTRA{$k}) {
-            $self->{'extra-fields'}->{$k} = $val;
+            $self->{'extra-fields'}{$k} = $val;
         }
     }
     $self->_make_identifier;
@@ -297,8 +297,8 @@ sub get_field {
     my ($self, $field, $def) = @_;
     return $def
       unless exists $self->{'extra-fields'}
-      and exists $self->{'extra-fields'}->{$field};
-    return $self->{'extra-fields'}->{$field}//$def;
+      and exists $self->{'extra-fields'}{$field};
+    return $self->{'extra-fields'}{$field}//$def;
 }
 
 =back

@@ -248,8 +248,8 @@ sub run {
     my $str_deps = $info->relation('strong');
 
     for my $filename (sort keys %{$info->scripts}) {
-        my $interpreter = $info->scripts->{$filename}->{interpreter};
-        my $calls_env = $info->scripts->{$filename}->{calls_env};
+        my $interpreter = $info->scripts->{$filename}{interpreter};
+        my $calls_env = $info->scripts->{$filename}{calls_env};
         my $path;
         $scripts{$filename} = 1;
 

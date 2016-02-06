@@ -233,7 +233,7 @@ sub file_info {
     $self->{file_info} = \%file_info;
 
     return ${$self->{file_info}{$file}}
-      if exists $self->{file_info}->{$file};
+      if exists $self->{file_info}{$file};
     return;
 }
 
@@ -583,7 +583,7 @@ sub _fetch_index_data {
                 # entry.
                 $idxh{$target}{'size'} = $e->{'size'} if exists($e->{'size'});
                 delete($e->{'size'});
-                delete $idxh{$target}->{link};
+                delete $idxh{$target}{link};
             }
         }
     }
@@ -622,7 +622,7 @@ sub _fetch_index_data {
     $self->{"sorted_$field"} = \@sorted;
     close($idx);
     close($num_idx) if $num_idx;
-    return $self->{$field}->{$file} if exists $self->{$field}->{$file};
+    return $self->{$field}{$file} if exists $self->{$field}{$file};
     return;
 }
 

@@ -52,8 +52,8 @@ sub run {
     # We first loop over jar files to find problems
 
     for my $jar_file (sort keys %{$java_info}) {
-        my $files = $java_info->{$jar_file}->{files};
-        my $manifest = $java_info->{$jar_file}->{manifest};
+        my $files = $java_info->{$jar_file}{files};
+        my $manifest = $java_info->{$jar_file}{manifest};
         my $operm = $info->index($jar_file)->operm;
         my $jar_dir;
         my $classes = 0;
@@ -61,9 +61,9 @@ sub run {
         my $cp = '';
         my $bsname = '';
 
-        if (exists $java_info->{$jar_file}->{error}) {
+        if (exists $java_info->{$jar_file}{error}) {
             tag 'zip-parse-error', "$jar_file:",
-              $java_info->{$jar_file}->{error};
+              $java_info->{$jar_file}{error};
             next;
         }
 

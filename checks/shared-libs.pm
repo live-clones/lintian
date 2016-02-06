@@ -127,19 +127,19 @@ sub run {
 
             # Now that we're sure this is really a shared library, report on
             # non-PIC problems.
-            if ($objdump->{$cur_file}->{TEXTREL}) {
+            if ($objdump->{$cur_file}{TEXTREL}) {
                 tag 'shlib-with-non-pic-code', $cur_file;
             }
 
             my @symbol_names
-              = map { @{$_}[2] } @{$objdump->{$cur_file}->{SYMBOLS}};
+              = map { @{$_}[2] } @{$objdump->{$cur_file}{SYMBOLS}};
             if (   (any { m/^_?exit$/ } @symbol_names)
                 && (none { $_ eq 'fork' } @symbol_names)) {
                 # If it has an INTERP section it might be an application with
                 # a SONAME (hi openjdk-6, see #614305).  Also see the comment
                 # for "shlib-with-executable-bit" below.
                 tag 'shlib-calls-exit', $cur_file
-                  unless $objdump->{$cur_file}->{INTERP};
+                  unless $objdump->{$cur_file}{INTERP};
             }
 
             # executable?
@@ -150,7 +150,7 @@ sub run {
                 # report an error.  Also give ld.so a pass, since it's
                 # special.
                 tag 'shlib-with-executable-bit', $cur_file, $perms
-                  unless ($objdump->{$cur_file}->{INTERP}
+                  unless ($objdump->{$cur_file}{INTERP}
                     or $cur_file =~ m,^lib(?:32|64)?/ld-[\d.]+\.so$,);
             } elsif ($perm != 0644) {
                 tag 'shlib-with-bad-permissions', $cur_file, $perms;
@@ -160,13 +160,13 @@ sub run {
             # section on some architectures.  Only warn if there's an
             # Architecture field; if that's missing, we'll already be
             # complaining elsewhere.
-            if (not defined $objdump->{$cur_file}->{'PH'}->{STACK}) {
+            if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
                 if (defined $info->field('architecture')) {
                     my $arch = $info->field('architecture');
                     tag 'shlib-without-PT_GNU_STACK-section', $cur_file
                       if $stack_arches{$arch};
                 }
-            } elsif ($objdump->{$cur_file}->{'PH'}->{STACK}->{flags} ne 'rw-'){
+            } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
                 tag 'shlib-with-executable-stack', $cur_file;
             }
         } elsif ($ldconfig_dirs->known(dirname($cur_file))

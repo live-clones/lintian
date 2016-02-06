@@ -423,7 +423,7 @@ sub collect_statistics {
                 }
                 if (@$tags) {
                     $sources_ref->{$source}{$version}
-                      = $tags->[0]->{pkg_info}{xref};
+                      = $tags->[0]{pkg_info}{xref};
                 }
             }
             $qa_list_ref->{$source} = \%count;

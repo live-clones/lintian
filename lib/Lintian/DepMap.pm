@@ -139,10 +139,10 @@ sub add {
     }
     $self->{'known'}{$node}++;
 
-    $self->{'nodes'}{$node}->{'branches'} = {}
-      unless(exists($self->{'nodes'}{$node}->{'branches'}));
-    $self->{'nodes'}{$node}->{'parents'} = {}
-      unless(exists($self->{'nodes'}{$node}->{'parents'}));
+    $self->{'nodes'}{$node}{'branches'} = {}
+      unless(exists($self->{'nodes'}{$node}{'branches'}));
+    $self->{'nodes'}{$node}{'parents'} = {}
+      unless(exists($self->{'nodes'}{$node}{'parents'}));
 
     while (my $parent = pop @parents) {
         $parents = 1;
@@ -153,12 +153,12 @@ sub add {
             $self->{'unknown'}{$parent}++;
         }
 
-        $self->{'nodes'}{$parent}->{'branches'}->{$node}
+        $self->{'nodes'}{$parent}{'branches'}{$node}
           = $self->{'nodes'}{$node};
-        $self->{'nodes'}{$node}->{'parents'}->{$parent}
+        $self->{'nodes'}{$node}{'parents'}{$parent}
           = $self->{'nodes'}{$parent};
     }
-    unless ($parents || scalar %{$self->{'nodes'}{$node}->{'parents'}}) {
+    unless ($parents || scalar %{$self->{'nodes'}{$node}{'parents'}}) {
         $self->{'pending'}{$node} = 1;
     } elsif (exists $self->{'pending'}{$node}) {
         delete $self->{'pending'}{$node};
@@ -235,10 +235,10 @@ sub satisfy {
     $self->{'satisfied_nodes'}{$node}
       = [keys %{$self->{'nodes'}{$node}{'branches'}}];
 
-    for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
-        delete $self->{'nodes'}{$branch}->{'parents'}->{$node};
-        delete $self->{'nodes'}{$node}->{'branches'}->{$branch};
-        unless (scalar keys %{$self->{'nodes'}{$branch}->{'parents'}}) {
+    for my $branch (keys %{$self->{'nodes'}{$node}{'branches'}}) {
+        delete $self->{'nodes'}{$branch}{'parents'}{$node};
+        delete $self->{'nodes'}{$node}{'branches'}{$branch};
+        unless (scalar keys %{$self->{'nodes'}{$branch}{'parents'}}) {
             $self->{'pending'}{$branch} = 1;
         }
     }
@@ -267,7 +267,7 @@ E.g.
 sub done {
     my $self = shift;
     my $node = shift;
-    return exists $self->{'satisfied_nodes'}->{$node};
+    return exists $self->{'satisfied_nodes'}{$node};
 }
 
 =item unlink(node)
@@ -311,13 +311,13 @@ sub unlink {
     delete $self->{'selected'}{$node}
       if (exists($self->{'selected'}{$node}));
 
-    for my $parent (keys %{$self->{'nodes'}{$node}->{'parents'}}) {
+    for my $parent (keys %{$self->{'nodes'}{$node}{'parents'}}) {
         delete $self->{'nodes'}{$parent}{'branches'}{$node}
           if exists $self->{'nodes'}{$parent}{'branches'}{$node};
         delete $self->{'nodes'}{$node}{'parents'}{$parent};
     }
 
-    for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
+    for my $branch (keys %{$self->{'nodes'}{$node}{'branches'}}) {
         delete $self->{'nodes'}{$branch}{'parents'}{$node};
         delete $self->{'nodes'}{$node}{'branches'}{$branch};
     }
@@ -577,7 +577,7 @@ sub circular {
         $self->initialise();
     } else {
         for my $node (keys %{$self->{'nodes'}}) {
-            my $node_p = $self->{'nodes'}{$node}->{'parents'};
+            my $node_p = $self->{'nodes'}{$node}{'parents'};
             push @circ, grep { exists $node_p->{$_} } keys %{$node_p};
         }
     }

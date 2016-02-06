@@ -413,7 +413,7 @@ sub objdump_info {
             if ($header eq 'RPATH') {
                 # RPATH is like PATH
                 foreach my $rpathcomponent (split(m/:/,$val)) {
-                    $info{$header}->{$rpathcomponent} = 1;
+                    $info{$header}{$rpathcomponent} = 1;
                 }
             } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
                 push @{ $info{$header} }, $val;
@@ -491,8 +491,8 @@ a hash containing the following keys:
 A hash containing the contents of the JAR file manifest. For instance,
 to find the classpath of I<$file>, you could use:
 
- if (exists $info->java_info->{$file}->{'manifest'}) {
-     my $cp = $info->java_info->{$file}->{'manifest'}->{'Class-Path'};
+ if (exists $info->java_info->{$file}{'manifest'}) {
+     my $cp = $info->java_info->{$file}{'manifest'}{'Class-Path'};
      # ...
  }
 
@@ -538,16 +538,16 @@ sub java_info {
         next if m/^\s*$/o;
 
         if (m#^-- ERROR:\s*(\S.++)$#o) {
-            $java_info{$file}->{error} = $1;
+            $java_info{$file}{error} = $1;
         } elsif (m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
             # TODO: check $file == $1 ?
-            $java_info{$file}->{manifest} = {};
-            $manifest = $java_info{$file}->{manifest};
+            $java_info{$file}{manifest} = {};
+            $manifest = $java_info{$file}{manifest};
             $file_list = 0;
         } elsif (m#^-- (?:\./)?(.+)$#o) {
             $file = $1;
-            $java_info{$file}->{files} = {};
-            $file_list = $java_info{$file}->{files};
+            $java_info{$file}{files} = {};
+            $file_list = $java_info{$file}{files};
             $manifest = 0;
         } else {
             if ($manifest && m#^  (\S+):\s(.*)$#o) {
@@ -596,7 +596,7 @@ Needs-Info requirements for using I<relation>: L<Same as field|Lintian::Collect/
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
-    return $self->{relation}->{$field} if exists $self->{relation}->{$field};
+    return $self->{relation}{$field} if exists $self->{relation}{$field};
 
     my %special = (
         all    => [qw(pre-depends depends recommends suggests)],
@@ -614,8 +614,8 @@ sub relation {
         my $value = $self->field($field);
         $result = Lintian::Relation->new($value);
     }
-    $self->{relation}->{$field} = $result;
-    return $self->{relation}->{$field};
+    $self->{relation}{$field} = $result;
+    return $self->{relation}{$field};
 }
 
 =item is_pkg_class ([TYPE])
@@ -701,7 +701,7 @@ Needs-Info requirements for using I<is_conffile>: L<Same as control_index_resolv
 sub is_conffile {
     my ($self, $file) = @_;
     if (exists $self->{'conffiles'}) {
-        return 1 if exists $self->{'conffiles'}->{$file};
+        return 1 if exists $self->{'conffiles'}{$file};
         return;
     }
     my $cf = $self->control_index_resolved_path('conffiles');

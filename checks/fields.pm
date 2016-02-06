@@ -693,37 +693,37 @@ sub run {
                   for (split /\s*\|\s*/, $dep);
 
                 if (&$is_dep_field($field)) {
-                    push @seen_libstdcs, $alternatives[0]->[0]
-                      if defined $known_libstdcs{$alternatives[0]->[0]};
-                    push @seen_tcls, $alternatives[0]->[0]
-                      if defined $known_tcls{$alternatives[0]->[0]};
-                    push @seen_tclxs, $alternatives[0]->[0]
-                      if defined $known_tclxs{$alternatives[0]->[0]};
-                    push @seen_tks, $alternatives[0]->[0]
-                      if defined $known_tks{$alternatives[0]->[0]};
-                    push @seen_tkxs, $alternatives[0]->[0]
-                      if defined $known_tkxs{$alternatives[0]->[0]};
-                    push @seen_libpngs, $alternatives[0]->[0]
-                      if defined $known_libpngs{$alternatives[0]->[0]};
+                    push @seen_libstdcs, $alternatives[0][0]
+                      if defined $known_libstdcs{$alternatives[0][0]};
+                    push @seen_tcls, $alternatives[0][0]
+                      if defined $known_tcls{$alternatives[0][0]};
+                    push @seen_tclxs, $alternatives[0][0]
+                      if defined $known_tclxs{$alternatives[0][0]};
+                    push @seen_tks, $alternatives[0][0]
+                      if defined $known_tks{$alternatives[0][0]};
+                    push @seen_tkxs, $alternatives[0][0]
+                      if defined $known_tkxs{$alternatives[0][0]};
+                    push @seen_libpngs, $alternatives[0][0]
+                      if defined $known_libpngs{$alternatives[0][0]};
                 }
 
                 # Only for (Pre-)?Depends.
                 tag 'virtual-package-depends-without-real-package-depends',
-                  "$field: $alternatives[0]->[0]"
+                  "$field: $alternatives[0][0]"
                   if (
-                       $VIRTUAL_PACKAGES->known($alternatives[0]->[0])
+                       $VIRTUAL_PACKAGES->known($alternatives[0][0])
                     && ($field eq 'depends' || $field eq 'pre-depends')
-                    && ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk')
+                    && ($pkg ne 'base-files' || $alternatives[0][0] ne 'awk')
                     # ignore phpapi- dependencies as adding an
                     # alternative, real, package breaks its purpose
-                    && $alternatives[0]->[0] !~ m/^phpapi-/
+                    && $alternatives[0][0] !~ m/^phpapi-/
                   );
 
                 # Check defaults for transitions.  Here, we only care
                 # that the first alternative is current.
-                tag 'depends-on-old-emacs', "$field: $alternatives[0]->[0]"
+                tag 'depends-on-old-emacs', "$field: $alternatives[0][0]"
                   if ( &$is_dep_field($field)
-                    && $known_obsolete_emacs{$alternatives[0]->[0]});
+                    && $known_obsolete_emacs{$alternatives[0][0]});
 
                 for my $part_d (@alternatives) {
                     my ($d_pkg, undef, $d_version, undef, undef, $rest,
@@ -876,7 +876,7 @@ sub run {
                       // '';
                     $replacement = ' => ' . $replacement
                       if $replacement ne '';
-                    if ($pkg_name eq $alternatives[0]->[0]
+                    if ($pkg_name eq $alternatives[0][0]
                         or scalar @seen_obsolete_packages
                         == scalar @alternatives) {
                         tag 'depends-on-obsolete-package',
@@ -968,8 +968,8 @@ sub run {
                       for (split /\s*\|\s*/, $dep);
 
                     tag 'virtual-package-depends-without-real-package-depends',
-                      "$field: $alternatives[0]->[0]"
-                      if ( $VIRTUAL_PACKAGES->known($alternatives[0]->[0])
+                      "$field: $alternatives[0][0]"
+                      if ( $VIRTUAL_PACKAGES->known($alternatives[0][0])
                         && &$is_dep_field($field));
 
                     for my $part_d (@alternatives) {
@@ -1092,7 +1092,7 @@ sub run {
                           // '';
                         $replacement = ' => ' . $replacement
                           if $replacement ne '';
-                        if (   $pkg_name eq $alternatives[0]->[0]
+                        if (   $pkg_name eq $alternatives[0][0]
                             or $all_obsolete) {
                             tag 'build-depends-on-obsolete-package',
                               "$field: $dep${replacement}";
