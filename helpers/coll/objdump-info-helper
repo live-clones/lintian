@@ -245,6 +245,9 @@ sub finish_file {
             if ($seg =~ m/^\d+$/ and defined $sections[$seg]) {
                 $seg = $sections[$seg];
             }
+            # We only care about undefined symbols and symbols in
+            # the .text segment.
+            next if $seg ne 'UND' and $seg ne '.text';
 
             print " $seg $ver $sym\n";
         }
