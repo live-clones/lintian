@@ -238,6 +238,10 @@ sub finish_file {
                 }
             }
 
+            # Skip "nameless" symbols - happens once or twice
+            # for regular binaries.
+            next if $sym eq q{};
+
             if ($seg =~ m/^\d+$/ and defined $sections[$seg]) {
                 $seg = $sections[$seg];
             }
