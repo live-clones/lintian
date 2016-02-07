@@ -16,6 +16,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [JW] Treat packages without Multi-Arch field as if they had
       "Multi-Arch: no".  Thanks to Bas Couwenberg for the bug report.
+  * checks/scripts.desc:
+    + [JW] Fix typos.
 
   * commands/lab-tool.pm:
     + [NT] New utility to handle most laboratory operations.

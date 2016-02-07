@@ -372,8 +372,8 @@ Tag: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
 Severity: serious
 Certainty: certain
 Info: The maintainer script seems to call dpkg-maintscript-helper
- symlink_to_dir with a trailling slash for pathname. This render package
- uninstallable.
+ symlink_to_dir with a trailing slash for pathname. This renders the
+ package uninstallable.
 Ref: dpkg-maintscript-helper(1)
 
 Tag: maintainer-script-removes-device-files
