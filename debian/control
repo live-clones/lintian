@@ -50,7 +50,7 @@ Build-Depends: aspell,
                libtext-template-perl,
                libtimedate-perl,
                liburi-perl,
-               libyaml-perl,
+               libyaml-libyaml-perl,
                man-db,
                node-uglify,
                patchutils,
@@ -112,7 +112,7 @@ Suggests: binutils-multiarch,
           dpkg-dev,
           libhtml-parser-perl,
           libtext-template-perl,
-          libyaml-perl
+          libyaml-libyaml-perl
 Breaks: funny-manpages (<< 1.3-5.1),
         pkg-perl-tools (<< 0.23)
 Replaces: funny-manpages (<< 1.3-5.1)

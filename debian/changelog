@@ -27,6 +27,10 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [JW] Fix some corrections.
     + [JW] Add more corrections.
 
+  * debian/control:
+    + [JW] Switch from libyaml-perl to libyaml-libyaml-perl in
+      Build-Depends and Suggests. (Lintian has been using the latter
+      package since 2.5.31.)
   * debian/{lintian.links,manpages,rules}:
     + [NT] Update to install the new lab-tool command.
 
