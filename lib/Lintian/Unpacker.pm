@@ -454,6 +454,11 @@ sub process_tasks {
                             $ret = 2;
                         }
                     } else {
+                        if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
+                            my $p5opt = $ENV{'PERL5OPT'}//q{};
+                            $p5opt .= ' ' if $p5opt ne q{};
+                            $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
+                        }
                         # Its fork + exec - invoke that directly (saves a fork)
                         exec $cs->script_path, $pkg_name, $pkg_type, $base
                           or die "exec $cs->script_path: $!";

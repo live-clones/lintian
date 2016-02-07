@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
-use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}//0);
+use constant LINTIAN_COVERAGE => ($ENV{'LINTIAN_COVERAGE'}?1:0);
 
 use File::Basename;
 use List::MoreUtils qw(any none);

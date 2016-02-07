@@ -146,6 +146,12 @@ sub setup_env {
     $ENV{'LINTIAN_DPLINT_CALLED_AS'} = $0;
     $ENV{'LINTIAN_DPLINT_FRONTEND'} = realpath($0)
       // error("Cannot resolve $0: $!");
+
+    if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
+        my $p5opt = $ENV{'PERL5OPT'}//q{};
+        $p5opt .= ' ' if $p5opt ne q{};
+        $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
+    }
     return;
 }
 

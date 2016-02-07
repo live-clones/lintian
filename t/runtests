@@ -41,7 +41,7 @@ use List::MoreUtils qw(none);
 
 use constant SUITES => qw(scripts changes debs source tests);
 
-our ($LINTIAN_ROOT, $LINTIAN, @LINTIAN_CMD);
+our ($LINTIAN_ROOT, $LINTIAN, @LINTIAN_CMD, @LINTIAN_COMMON_OPTIONS);
 
 BEGIN {
     # Whitelist the part of the environment we permit.  This is to
@@ -246,12 +246,15 @@ sub parse_args {
         my @criteria = qw(statement branch condition path subroutine);
         my $coverage_arg
           = '-MDevel::Cover=-silent,1,+ignore,^(.*/)?t/scripts/.+';
+        $coverage_arg .= ',+ignore,/usr/bin/.*,+ignore,(.*/)?Dpkg';
         $coverage_arg .= ',-coverage,' . join(',-coverage,', @criteria);
         $coverage_arg .= ',' . $coverage if $coverage ne '';
-        $ENV{'LINTIAN_COVERAGE'} = 1;
+        $ENV{'LINTIAN_COVERAGE'} = $coverage_arg;
         $harness_perl_switches .= ' ' . $coverage_arg;
         $ENV{'HARNESS_PERL_SWITCHES'} = $harness_perl_switches;
-        unshift(@LINTIAN_CMD, 'perl', $coverage_arg);
+        # Coverage has some race conditions (at least when using the same
+        # cover database).
+        push(@LINTIAN_COMMON_OPTIONS, '-j1');
     }
 
     # Getopt::Long assigns 0 as default value if none was specified
@@ -479,8 +482,16 @@ sub run_lintian {
             close($fd);
         }
     } else {
+        my @cmd = @LINTIAN_CMD;
+        if ($ENV{'LINTIAN_COVERAGE'}) {
+            my $suite = $testdata->{suite};
+            my $name = $testdata->{testname};
+            my $cover_dir = "./cover_db-${suite}-${name}";
+            $ENV{'LINTIAN_COVERAGE'} .= ",-db,${cover_dir}";
+            unshift(@cmd, 'perl', $ENV{'LINTIAN_COVERAGE'});
+        }
         open(STDERR, '>&', \*STDOUT);
-        exec {$LINTIAN_CMD[0]} @LINTIAN_CMD, @options, $file
+        exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
           or fail "exec failed: $!";
     }
     return 1;
@@ -686,7 +697,12 @@ sub run_prove_tests {
         @do_run = ("$TESTSET/scripts");
     }
     if (@do_run) {
-        my @prove_cmd= ('prove', '-j', $JOBS, '-r', '-I', "$LINTIAN_ROOT/lib");
+        my $jobs = $JOBS;
+        # Devel::Cover + one cover_db + multiple processes is a recipe
+        # for corruptions.  Force $jobs to 1 if we are running under
+        # coverage.
+        $jobs = 1 if $ENV{'LINTIAN_COVERAGE'};
+        my @prove_cmd= ('prove', '-j', $jobs, '-r', '-I', "$LINTIAN_ROOT/lib");
 
         print "Test scripts:\n";
         if (system(@prove_cmd, @do_run) != 0) {
