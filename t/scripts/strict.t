@@ -4,9 +4,10 @@ use strict;
 use warnings;
 use autodie;
 
-use
-  if $ENV{'LINTIAN_COVERAGE'}, 'Test::More',
-  'skip_all' => 'Not needed for coverage of Lintian';
+use Test::More;
+if ($ENV{'LINTIAN_COVERAGE'}) {
+    plan 'skip_all' => 'Not needed for coverage of Lintian';
+}
 
 eval 'use Test::Strict';
 plan skip_all => 'Test::Strict required to run this test' if $@;
