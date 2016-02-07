@@ -2,6 +2,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/apache2.desc:
+    + [JW] Remove spurious check name abbreviation.
   * checks/binaries.pm:
     + [NT] Update match for detecting numpy linking.
   * checks/cruft.{desc,pm}:
