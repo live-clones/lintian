@@ -49,10 +49,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Remove unnecessary values on members in the
       objdump_info table.
-  * lib/Lintian/Processable*.pm:
+  * lib/Lintian/*.pm:
     + [JW] Fix typos.
-  * lib/Lintian/Tag/Override.pm:
-    + [JW] Fix typo.
 
   * man/lintian-lab-tool.pod:
     + [NT] New file.

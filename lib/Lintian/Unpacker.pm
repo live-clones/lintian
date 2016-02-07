@@ -333,7 +333,7 @@ HOOKS (if given) is a hashref of hooks.  The following hooks are available:
 
 Called each time a new collection job is started or finished.
 
-LPKG is the L<entry|Lintian::lab::Entry> it is applied to.  COLL is
+LPKG is the L<entry|Lintian::Lab::Entry> it is applied to.  COLL is
 the L<collection|Lintian::CollScript> being applied.  EVENT is either
 "start" for a new job or "finish" for a job terminating.
 

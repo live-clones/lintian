@@ -199,7 +199,7 @@ sub is_check_type {
 
 =item $cs->get_tag ($tagname)
 
-Return the L<tag|Lintian::Info::Tag> or undef (if the tag is not in
+Return the L<tag|Lintian::Tag::Info> or undef (if the tag is not in
 this check).
 
 =cut
