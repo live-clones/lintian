@@ -18,3 +18,5 @@
 /.idea/
 /.nobackup
 *.rej
+cover_db*
+/coverage-report
