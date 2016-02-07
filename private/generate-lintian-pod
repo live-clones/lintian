@@ -61,7 +61,7 @@ sub pretty_print {
         $line =~ s@\<b\>([^<]*)\</b\>@B<$1>@iog;
         $line =~ s@\<i\>([^<]*)\</i\>@I<$1>@iog;
         # Underline paths
-        $line =~ s@(\S*/(?:[^/ \t]++/?)*)@I<$1>@og;
+        $line =~ s@(\S*/(?:[^/ \t]*[^/ \t.,:;]/?)*)@I<$1>@og;
         # Policy Manual
         $line =~ s@Policy Manual@B<Policy Manual>@og;
         foreach my $kw (@keywords){

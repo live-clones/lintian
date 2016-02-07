@@ -57,6 +57,9 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * man/lintian-lab-tool.pod:
     + [NT] New file.
 
+  * private/generate-lintian-pod:
+    + [JW] Fix formatting pathnames followed by punctuation characters.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:58:06 +0000
 
 lintian (2.5.40.2) unstable; urgency=medium
