@@ -364,6 +364,7 @@ commmented||commented
 commmenting||commenting
 commments||comments
 commoditiy||commodity
+communcation||communication
 compability||compatibility
 comparision||comparison
 comparisions||comparisons
@@ -481,6 +482,7 @@ correponding||corresponding
 correponds||corresponds
 correspoding||corresponding
 correspondance||correspondence
+correspondes||corresponds
 corresponing||corresponding
 corresponsing||corresponding
 coverted||converted
@@ -515,6 +517,7 @@ decription||description
 decriptions||descriptions
 decsriptor||descriptor
 decsriptors||descriptors
+defalt||default
 defautl||default
 definate||definite
 definately||definitely
@@ -532,6 +535,8 @@ demostrated||demonstrated
 demostrate||demonstrate
 demostrates||demonstrates
 demostrating||demonstrating
+depencies||dependencies
+depency||dependency
 dependancies||dependencies
 dependancy||dependency
 dependant||dependent
@@ -940,6 +945,8 @@ implemementing||implementing
 implemements||implements
 implemenation||implementation
 implemenations||implementations
+implementaion||implementation
+implementaions||implementations
 implemention||implementation
 implemetation||implementation
 implemeted||implemented
@@ -1043,6 +1050,8 @@ interchangable||interchangeable
 interesected||intersected
 interesecting||intersecting
 interesect||intersect
+interesection||intersection
+interesections||intersections
 interesects||intersects
 interger||integer
 intergers||integers
@@ -1151,6 +1160,8 @@ mesages||messages
 messsage||message
 messsages||messages
 microprocesspr||microprocessor
+milisecond||millisecond
+miliseconds||milliseconds
 millenium||millennium
 milliseonds||milliseconds
 mimick||mimic
@@ -1189,6 +1200,7 @@ mroe||more
 mulitple||multiple
 mulitplied||multiplied
 multidimensionnal||multidimensional
+multipled||multiplied
 multplied||multiplied
 multplies||multiplies
 multplying||multiplying
@@ -1496,6 +1508,7 @@ reimplments||reimplements
 reletively||relatively
 reletive||relative
 relevent||relevant
+remaing||remaining
 remoote||remote
 removeable||removable
 renderering||rendering
@@ -1504,6 +1517,7 @@ repaced||replaced
 repace||replace
 repaces||replaces
 repacing||replacing
+repeatly||repeatedly
 repectively||respectively
 repective||respective
 replacments||replacements
@@ -1587,6 +1601,8 @@ sematically||semantically
 sematical||semantical
 sematic||semantic
 sematics||semantics
+sempahore||semaphore
+sempahores||semaphores
 sensistive||insensitive
 sensistively||insensitively
 sentance||sentence
@@ -1764,6 +1780,7 @@ terminaters||terminators
 terminater||terminator
 thats||that's
 theres||there's
+therfore||therefore
 thie||the
 threasholds||thresholds
 threashold||threshold
@@ -1782,6 +1799,7 @@ timetamps||timestamps
 timetamp||timestamp
 togther||together
 traditionnal||traditional
+trailling||trailing
 tranformations||transformations
 tranformation||transformation
 tranformed||transformed
@@ -1847,6 +1865,7 @@ unnecesarily||unnecessarily
 unnecesary||unnecessary
 unneedingly||unnecessarily
 unnesesarily||unnecessarily
+unnessecary||unnecessary
 unnessesary||unnecessary
 unoffical||unofficial
 unorderd||unordered
