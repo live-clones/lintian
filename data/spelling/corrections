@@ -24,6 +24,7 @@ abigious||ambiguous
 abilties||abilities
 abilty||ability
 abitrate||arbitrate
+abolute||absolute
 abov||above
 absense||absence
 absolut||absolute
@@ -70,6 +71,7 @@ acquring||acquiring
 actaul||actual
 actaully||actually
 activete||activate
+acually||actually
 acumulating||accumulating
 acutally||actually
 addd||add
@@ -156,6 +158,8 @@ appplication||application
 appplications||applications
 appropiate||appropriate
 appropriatly||appropriately
+approproate||appropriate
+appropropriate||appropriate
 approriate||appropriate
 approriately||appropriately
 approximatly||approximately
@@ -189,6 +193,12 @@ artillary||artillery
 arugment||argument
 arugments||arguments
 assertation||assertion
+assgin||assign
+assgined||assigned
+assgining||assigning
+assginment||assignment
+assginments||assignments
+assgins||assigns
 assigment||assignment
 assigments||assignments
 assignemnt||assignment
@@ -231,6 +241,7 @@ authenticaiton||authentication
 authentification||authentication
 authorative||authoritative
 authoritive||authoritative
+automaticall||automatically
 automaticaly||automatically
 automaticly||automatically
 automatize||automate
@@ -271,6 +282,8 @@ betwen||between
 bianries||binaries
 bizzare||bizarre
 blindy||blindly
+brige||bridge
+briges||bridges
 brighness||brightness
 brokeness||brokenness
 brower||browser
@@ -573,6 +586,7 @@ detemined||determined
 detemine||determine
 detemines||determines
 detemining||determining
+determing||determining
 determinstically||deterministically
 determinstic||deterministic
 detroy||destroy
@@ -650,6 +664,7 @@ donwloads||downloads
 dosen't||doesn't
 downlad||download
 downlads||downloads
+droppped||dropped
 dumplicated||duplicated
 dumplicate||duplicate
 dumplicates||duplicates
@@ -994,6 +1009,8 @@ indiciated||indicated
 indiciate||indicate
 indiciates||indicates
 indiciating||indicating
+indipendent||independent
+indipendently||independently
 indivudual||individual
 indivudually||individually
 inefficency||inefficiency
@@ -1450,6 +1467,7 @@ qoute||quote
 qoutes||quotes
 qouting||quoting
 quering||querying
+reachs||reaches
 readabilty||readability
 reasearcher||researcher
 reasearchers||researchers
@@ -1721,6 +1739,7 @@ succeedes||succeeds
 succesfully||successfully
 succesful||successful
 succesive||successive
+successfuly||successfully
 succint||succinct
 suceeded||succeeded
 suceeding||succeeding
@@ -1779,6 +1798,7 @@ teh||the
 terminaters||terminators
 terminater||terminator
 thats||that's
+theer||there
 theres||there's
 therfore||therefore
 thie||the
