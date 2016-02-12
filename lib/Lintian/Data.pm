@@ -184,10 +184,9 @@ sub _parse_file {
             ($key, $val) = split(/$separator/, $line, 2);
             if ($code) {
                 my $pval = $dataset->{$key};
-                $val = $code->($key, $val, $pval) if $code;
-                next if !defined $val && defined $pval;
-                unless (defined $val) {
-                    next if defined $pval;
+                $val = $code->($key, $val, $pval);
+                if (not defined($val)) {
+                    next if defined($pval);
                     croak "undefined value for $key (data-name: $data_name)";
                 }
             }
