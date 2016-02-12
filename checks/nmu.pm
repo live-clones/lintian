@@ -70,16 +70,14 @@ sub run {
         $changelog_mentions_team_upload = 1 if /team upload/i;
     }
 
-    my $version = $info->field('version');
+    # If the version field is missing, assume it to be a native,
+    # maintainer upload as it is probably the most likely case.
+    my $version = $info->field('version', '0-1');
     my $maintainer = canonicalize($info->field('maintainer', ''));
     my $uploaders = $info->field('uploaders');
 
     my $version_nmuness = 0;
     my $version_local = 0;
-
-    # If the version field is missing, assume it to be a native,
-    # maintainer upload as it is probably the most likely case.
-    $version = '0-1' unless defined $version;
 
     if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
         $version_nmuness = 1 if defined $1;
