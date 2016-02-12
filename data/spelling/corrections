@@ -74,6 +74,7 @@ activete||activate
 acually||actually
 acumulating||accumulating
 acutally||actually
+adapated||adapted
 addd||add
 addded||added
 addding||adding
@@ -675,6 +676,7 @@ easilly||easily
 ecspecially||especially
 edditable||editable
 editting||editing
+effectly||effectively
 efficency||efficiency
 efficent||efficient
 efficently||efficiently
@@ -727,9 +729,12 @@ environent||environment
 equiped||equipped
 equivelant||equivalent
 equivilant||equivalent
+equvalent||equivalent
 eroneous||erroneous
 erorr||error
 erorrs||errors
+erronous||erroneous
+erronously||erroneously
 esential||essential
 esentially||essentially
 estbalishment||establishment
@@ -744,6 +749,7 @@ everone||everyone
 everthing||everything
 everwhere||everywhere
 everyhing||everything
+everythings||everything
 evironment||environment
 evironments||environments
 excact||exact
@@ -772,6 +778,7 @@ exensions||extensions
 exept||except
 exeption||exception
 exeptions||exceptions
+exising||existing
 exisiting||existing
 existance||existence
 existant||existent
@@ -1213,6 +1220,7 @@ modulues||modules
 monochorome||monochrome
 monochromo||monochrome
 monocrome||monochrome
+morever||moreover
 mroe||more
 mulitple||multiple
 mulitplied||multiplied
@@ -1416,6 +1424,7 @@ prepartion||preparation
 prepartions||preparations
 prerequsite||prerequisite
 prerequsites||prerequisites
+prevously||previously
 priciple||principle
 priciples||principles
 primative||primitive
@@ -1433,6 +1442,10 @@ proceded||proceeded
 procede||proceed
 procedes||proceeds
 proceding||proceeding
+proceeeded||proceeded
+proceeeding||proceeding
+proceeed||proceed
+proceeeds||proceeds
 proceses||processes
 proces||process
 processessing||processing
@@ -1478,6 +1491,10 @@ rebuliding||rebuilding
 rebulid||rebuild
 rebulids||rebuilds
 rebulit||rebuilt
+receieved||received
+receieve||receive
+receieves||receives
+receieving||receiving
 recieved||received
 recieve||receive
 reciever||receiver
@@ -1817,6 +1834,7 @@ tigth||tight
 tihs||this
 timetamps||timestamps
 timetamp||timestamp
+timout||timeout
 togther||together
 traditionnal||traditional
 trailling||trailing
@@ -1970,10 +1988,12 @@ wheter||whether
 wich||which
 widht||width
 wierd||weird
+wihout||without
 wiht||with
 wilcards||wildcards
 wilcard||wildcard
 withing||within
+witin||within
 wont||won't
 workaroung||workaround
 writen||written
