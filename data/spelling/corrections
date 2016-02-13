@@ -499,6 +499,7 @@ correspondance||correspondence
 correspondes||corresponds
 corresponing||corresponding
 corresponsing||corresponding
+corretly||correctly
 coverted||converted
 crtical||critical
 cryptocraphic||cryptographic
@@ -619,6 +620,7 @@ diplay||display
 directores||directories
 directries||directories
 directry||directory
+directy||directly
 disapear||disappear
 disapeared||disappeared
 disapearing||disappearing
@@ -733,8 +735,12 @@ equvalent||equivalent
 eroneous||erroneous
 erorr||error
 erorrs||errors
+erroneus||erroneous
+erroneusly||erroneously
 erronous||erroneous
 erronously||erroneously
+errorneous||erroneous
+errorneously||erroneously
 esential||essential
 esentially||essentially
 estbalishment||establishment
@@ -1147,6 +1153,7 @@ licenceing||licencing
 licese||license
 ligth||light
 likelyhood||likelihood
+limted||limited
 lintain||lintian
 loggging||logging
 loggin||login
@@ -1325,6 +1332,9 @@ overrriden||overridden
 overrride||override
 overrriding||overriding
 overun||overrun
+overwite||overwrite
+overwites||overwrites
+overwitten||overwritten
 ovverridden||overridden
 ovverride||override
 ovverrides||overrides
@@ -1393,6 +1403,7 @@ portugese||Portuguese
 posible||possible
 positve||positive
 positves||positives
+possesion||possession
 possibe||possible
 possibilites||possibilities
 possibilties||possibilities
@@ -1433,6 +1444,8 @@ priorty||priority
 priveleged||privileged
 priviledge||privilege
 priviledges||privileges
+privilige||privilege
+priviliges||privileges
 problably||probably
 procceed||proceed
 proccesors||processors
@@ -1479,6 +1492,7 @@ qouted||quoted
 qoute||quote
 qoutes||quotes
 qouting||quoting
+queing||queueing
 quering||querying
 reachs||reaches
 readabilty||readability
@@ -1684,11 +1698,14 @@ simmilar||similar
 simplier||simpler
 simultanously||simultaneously
 simultanous||simultaneous
+skiped||skipped
+skiping||skipping
 slashs||slashes
 sligthly||slightly
 sligth||slight
 softwares||software
 sofware||software
+somehwere||somewhere
 somes||some
 someting||something
 somthing||something
@@ -1836,6 +1853,7 @@ timetamps||timestamps
 timetamp||timestamp
 timout||timeout
 togther||together
+touple||tuple
 traditionnal||traditional
 trailling||trailing
 tranformations||transformations
@@ -1985,6 +2003,8 @@ wether||whether
 whataver||whatever
 whenver||whenever
 wheter||whether
+whish||wish
+whithout||without
 wich||which
 widht||width
 wierd||weird
