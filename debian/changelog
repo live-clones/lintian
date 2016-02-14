@@ -18,6 +18,10 @@ lintian (2.5.41) UNRELEASED; urgency=medium
       "Multi-Arch: no".  Thanks to Bas Couwenberg for the bug report.
   * checks/scripts.desc:
     + [JW] Fix typos.
+  * checks/testsuite.{desc,pm}:
+    + [JW, NT] Apply patch from Christian Seiler to accept DEP-8 tests
+      being symlinks to existing files in the source package.  Thanks
+      to Raphaël Hertzog for suggesting it.  (Closes: #809440)
 
   * commands/lab-tool.pm:
     + [NT] New utility to handle most laboratory operations.

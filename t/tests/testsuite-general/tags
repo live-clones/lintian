@@ -1,4 +1,10 @@
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/asym
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/asym1
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/broken
 I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/fifo
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/lfifo
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/self
+I: testsuite-general source: runtime-test-file-is-not-a-regular-file debian/tests/self1
 P: testsuite-general source: unknown-runtime-tests-feature unknownfeature paragraph starting at line 24
 P: testsuite-general source: unknown-runtime-tests-field comment paragraph starting at line 1
 P: testsuite-general source: unknown-runtime-tests-restriction unknownrestriction paragraph starting at line 24

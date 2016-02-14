@@ -68,7 +68,8 @@ Tag: runtime-test-file-is-not-a-regular-file
 Severity: wishlist
 Certainty: certain
 Info: A runtime test listed by debian/tests/control is not a regular
- file.
+ file or a relative symbolic link to a regular file in the source
+ package.
 Ref: http://anonscm.debian.org/gitweb/?p=autopkgtest/autopkgtest.git;a=blob_plain;f=doc/README.package-tests.rst;hb=HEAD
 
 Tag: syntax-error-in-debian-tests-control

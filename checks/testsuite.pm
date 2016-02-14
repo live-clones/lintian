@@ -184,7 +184,7 @@ sub check_test_file {
     if (not defined($index)) {
         tag 'missing-runtime-test-file', $path,
           'paragraph starting at line', $line;
-    } elsif (not $index->is_regular_file) {
+    } elsif (not $index->is_open_ok) {
         tag 'runtime-test-file-is-not-a-regular-file', $path;
     }
     # Test files are allowed not to be executable.

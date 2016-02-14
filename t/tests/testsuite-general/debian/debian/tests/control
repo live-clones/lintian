@@ -30,3 +30,6 @@ Depends: @
 
 Tests: test-1, test-2
 Depends: @
+
+Tests: asym, asym1, self, self1, broken, lfifo, working
+Depends: @

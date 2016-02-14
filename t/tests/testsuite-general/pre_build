@@ -3,4 +3,13 @@
 set -e
 
 DIR="$1"
-mkfifo "$DIR/debian/tests/fifo"
+mkfifo            "$DIR/debian/tests/fifo"
+ln -s /dev/null   "$DIR/debian/tests/asym"
+ln -s /dev/null   "$DIR/debian/tests/asym2"
+ln -s asym2       "$DIR/debian/tests/asym1"
+ln -s self        "$DIR/debian/tests/self"
+ln -s self2       "$DIR/debian/tests/self2"
+ln -s self2       "$DIR/debian/tests/self1"
+ln -s nonexistent "$DIR/debian/tests/broken"
+ln -s fifo        "$DIR/debian/tests/lfifo"
+ln -s test-1      "$DIR/debian/tests/working"
