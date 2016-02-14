@@ -363,10 +363,6 @@ sub run {
                     }
                 }
 
-                # Skip brace expansion check for compat < 3 as those files
-                # do not allow any form for wildcards.
-                next if $level < 3;
-
                 my $fd = $file->open;
                 local $_;
                 while (<$fd>) {
