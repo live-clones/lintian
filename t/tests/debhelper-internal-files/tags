@@ -1,1 +1,2 @@
-E: debhelper-internal-files source: temporary-debhelper-file package.debhelper.log and 1 other
+E: debhelper-internal-files source: temporary-debhelper-file package.debhelper.log
+E: debhelper-internal-files source: temporary-debhelper-file package.postinst.debhelper

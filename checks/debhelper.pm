@@ -283,7 +283,6 @@ sub run {
 
     # Check the files in the debian directory for various debhelper-related
     # things.
-    my @indebfiles;
     for my $file ($droot->children) {
         next if not $file->is_symlink and not $file->is_file;
         next if $file->name eq $drules->name;
@@ -325,7 +324,7 @@ sub run {
             # The regex matches "debhelper", but debhelper/Dh_Lib does not
             # make those, so skip it.
             if ($basename ne 'debhelper') {
-                push(@indebfiles, $basename);
+                tag 'temporary-debhelper-file', $basename;
             }
         } else {
             my $base = $basename;
@@ -403,18 +402,6 @@ sub run {
           if ($level <= $compat_level->value('pedantic'));
 
         tag $tagname, $level;
-    }
-
-    if (scalar(@indebfiles)){
-        my $f = shift(@indebfiles);
-        my $others = scalar(@indebfiles);
-        my $otext = '';
-        if ($others > 1){
-            $otext = " and $others others";
-        } elsif($others == 1){
-            $otext = ' and 1 other';
-        }
-        tag 'temporary-debhelper-file', "$f$otext";
     }
 
     if ($seen_python_helper == -1 and $level >= 9) {
