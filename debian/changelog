@@ -22,6 +22,9 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [JW, NT] Apply patch from Christian Seiler to accept DEP-8 tests
       being symlinks to existing files in the source package.  Thanks
       to Raphaël Hertzog for suggesting it.  (Closes: #809440)
+  * checks/upstream-metadata.{desc,pm}:
+    + [NT] Apply patch from Petter Reinholdtsen to check that the
+      upstream metadata file is valid YAML if present.  (Closes: #813904)
 
   * commands/lab-tool.pm:
     + [NT] New utility to handle most laboratory operations.
