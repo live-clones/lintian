@@ -1,0 +1,5 @@
+Testname: upstream-metadata-is-not-a-file
+Sequence: 6000
+Version: 1.0
+Description: Tests for d/upstream/metadata being non-file
+Test-For: upstream-metadata-is-not-a-file

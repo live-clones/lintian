@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+DIR="$1"
+mkdir -p "$DIR/debian/upstream"
+mkfifo "$DIR/debian/upstream/metadata"

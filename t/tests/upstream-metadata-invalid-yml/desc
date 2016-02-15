@@ -1,0 +1,5 @@
+Testname: upstream-metadata-invalid-yml
+Sequence: 6000
+Version: 1.0
+Description: Tests for upstream-metadata being invalid yml
+Test-For: upstream-metadata-yaml-invalid
