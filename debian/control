@@ -98,6 +98,7 @@ Depends: binutils,
          libtext-levenshtein-perl,
          libtimedate-perl,
          liburi-perl,
+         libyaml-libyaml-perl,
          man-db,
          patchutils,
          perl,
@@ -112,7 +113,6 @@ Suggests: binutils-multiarch,
           dpkg-dev,
           libhtml-parser-perl,
           libtext-template-perl,
-          libyaml-libyaml-perl
 Breaks: funny-manpages (<< 1.3-5.1),
         pkg-perl-tools (<< 0.23)
 Replaces: funny-manpages (<< 1.3-5.1)

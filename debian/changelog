@@ -42,6 +42,8 @@ lintian (2.5.41) UNRELEASED; urgency=medium
     + [JW] Switch from libyaml-perl to libyaml-libyaml-perl in
       Build-Depends and Suggests. (Lintian has been using the latter
       package since 2.5.31.)
+    + [NT] Add dependency on libyaml-libyaml-perl for the new
+      upstream-metadata check.
   * debian/{lintian.links,manpages,rules}:
     + [NT] Update to install the new lab-tool command.
 
