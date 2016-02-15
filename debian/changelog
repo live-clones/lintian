@@ -41,6 +41,9 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW] Fix some corrections.
     + [JW] Add more corrections.
+  * data/standards-version/release-dates:
+    + [NT] Add 3.9.7.  Thanks to Alf Gaida for the reminder.
+      (Closes: #814041)
 
   * debian/control:
     + [JW] Switch from libyaml-perl to libyaml-libyaml-perl in
@@ -48,6 +51,7 @@ lintian (2.5.41) UNRELEASED; urgency=medium
       package since 2.5.31.)
     + [NT] Add dependency on libyaml-libyaml-perl for the new
       upstream-metadata check.
+    + [NT] Bump Standards-Versions to 3.9.7 - no changes required.
   * debian/{lintian.links,manpages,rules}:
     + [NT] Update to install the new lab-tool command.
 

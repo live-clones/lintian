@@ -69,7 +69,7 @@ Build-Depends: aspell,
                unzip,
                xz-utils,
                zip
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Vcs-Git: https://anonscm.debian.org/git/lintian/lintian.git
 Vcs-Browser: https://anonscm.debian.org/git/lintian/lintian.git
 Testsuite: autopkgtest
@@ -133,4 +133,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 3.9.6.
+ This version of Lintian is calibrated for policy version 3.9.7.
