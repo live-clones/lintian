@@ -1,4 +1,3 @@
 E: shared-libs-la-files: depends-on-obsolete-package depends: python-support (>= 0.90) => use dh_python2 instead
 E: shared-libs-la-files: incorrect-libdir-in-la-file usr/lib/kde3/kio_locate.la /build/buildd/kio-locate-0.4.5+ds/debian/kio-locate/usr/lib/kde3 != /usr/lib/kde3
 E: shared-libs-la-files: non-empty-dependency_libs-in-la-file usr/lib/dependency_libs.la
-X: shared-libs-la-files: package-contains-broken-symlink var/lib/kde3/foo.la kio_locate.la

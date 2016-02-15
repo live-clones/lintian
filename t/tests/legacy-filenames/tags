@@ -145,17 +145,3 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debia
 W: more-filename-games: binary-without-manpage usr/bin/another-test-game
 W: more-filename-games: binary-without-manpage usr/games/yet-another-test-game
 W: more-filename-games: package-section-games-but-has-usr-bin
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink1ok ../../share/symlink
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink1wrong ../../../etc/symlink
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink2ok etc/symlink
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink3ok test
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink3wrong usr/lib/filenames/symlink2
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink4ok ../menu/somethingelse
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink5wrong ../menu/../somethingelse
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink6wrong ./file4
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink7wrong ../menu/./something
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink8wrong ../menu//something
-X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink9wrong ../menu/something/
-X: filenames: package-contains-broken-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
-X: filenames: package-contains-broken-symlink usr/share/gtk-doc/html/bad ../doc/filenames/bad-devhelp

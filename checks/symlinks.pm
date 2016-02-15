@@ -25,17 +25,9 @@ use autodie;
 
 use File::Basename qw(dirname);
 use Lintian::Tags qw(tag);
-use Lintian::Data;
-
-my $WELL_KNOWN_SYMLINKS_TARGET = Lintian::Data->new(
-    'symlinks/well-known-symlinks-target',
-    qr/\s*\~\~\s*/,
-    sub {
-        return qr/$_[0]/x;
-    });
 
 sub run {
-    my ($pkg, undef, $info, $proc, $group) = @_;
+    my (undef, undef, $info, $proc, $group) = @_;
     my $ginfo = $group->info;
     my (@brokenlinks, @dindexes);
 
@@ -56,34 +48,16 @@ sub run {
             # self-recursive and possibly not very useful)
             next if $path eq '';
 
-            # Skip usr/share/doc/<pkg> - we got a separate check for
-            # that.
-            next if $file eq "usr/share/doc/$pkg";
-
             # Check if the destination is in the package itself
             next if $info->index($path) || $info->index("$path/");
 
+            # If it contains a "*" it probably a bad
+            # ln -s target/*.so link expansion.  We do not bother looking
+            # for other broken symlinks as people keep adding new special
+            # cases and it is not worth it.
+            next if index($target, '*') < 0;
+
             $target =~ s,^/++,,o; # strip leading slashes (for reporting)
-
-            # Ignore links pointing to common things that may exist
-            # even if they are not shipped by any binary from this
-            # source package.
-            foreach my $wellknowntarget ($WELL_KNOWN_SYMLINKS_TARGET->all) {
-                my $regex
-                  = $WELL_KNOWN_SYMLINKS_TARGET->value($wellknowntarget);
-                if($path =~ m{$regex}) {
-                    next FILE;
-                }
-            }
-
-            # Skip langpack links (used in Ubuntu) - after we check that
-            # it appears to be consistent.
-            if ($path =~ m,/([^/]+)-langpack/,o) {
-                my $pre = $1;
-                my $t = $path;
-                $t =~ s,/\Q$pre\E-langpack/,/help/,;
-                next if $t eq $file;
-            }
 
             # Possibly broken symlink
             push @brokenlinks, [$file, $path, $target]
@@ -106,14 +80,9 @@ sub run {
             # Is it in our dependency?
             next BLINK if $dinfo->index($path) || $dinfo->index("$path/");
         }
-        # nope - not found in any of our direct dependencies.
-        if ($target =~ m/\*/) {
-            # If it contains a "*" it probably a bad ln -s target/*.so link
-            # expansion.
-            tag 'package-contains-broken-symlink-wildcard', $file, $target;
-        } else {
-            tag 'package-contains-broken-symlink', $file, $target;
-        }
+        # nope - not found in any of our direct dependencies.  Ergo it is
+        # a broken "ln -s target/*.so link" expansion.
+        tag 'package-contains-broken-symlink-wildcard', $file, $target;
     }
 
     return;

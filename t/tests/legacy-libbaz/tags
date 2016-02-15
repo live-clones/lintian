@@ -76,6 +76,3 @@ W: libbaz2: debian-changelog-file-is-a-symlink
 W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
 X: libbaz1: maintainer-script-may-use-dir_to_symlink_helper postinst:8
-X: libbaz1: package-contains-broken-symlink usr/lib/libfoo.so.0.9 libfoo.so.0.9.1
-X: libbaz1: package-contains-broken-symlink usr/lib/libfoo3.so libfoo3.so.0.9
-X: libbaz2: package-contains-broken-symlink usr/share/doc/libbaz2/changelog.gz usr/share/doc/lintian/changelog.gz

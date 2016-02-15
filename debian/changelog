@@ -18,6 +18,10 @@ lintian (2.5.41) UNRELEASED; urgency=medium
       "Multi-Arch: no".  Thanks to Bas Couwenberg for the bug report.
   * checks/scripts.desc:
     + [JW] Fix typos.
+  * checks/symlinks.{desc,pm}:
+    + [NT] Retire package-contains-broken-symlink tag.  It was too much
+      effort compared to the gain.  (Closes: #672297, #683059, #763270,
+      #812723, #661003, #738187)
   * checks/testsuite.{desc,pm}:
     + [JW, NT] Apply patch from Christian Seiler to accept DEP-8 tests
       being symlinks to existing files in the source package.  Thanks
