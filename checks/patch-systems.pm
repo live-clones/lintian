@@ -41,10 +41,7 @@ sub run {
     # maintainer meant to use:
     my $build_deps = $info->relation('build-depends-all');
     # Get source package format
-    my $format = '';
-    if (defined $info->field('format')) {
-        $format = $info->field('format');
-    }
+    my $format = $info->field('format', '');
     my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
     my $droot = $info->index_resolved_path('debian/');
