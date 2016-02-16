@@ -56,7 +56,7 @@ sub run {
 
     # The md5sums file should not be a symlink.  If it is, the best
     # we can do is to leave it alone.
-    return if -l $control->is_symlink or not $control->is_open_ok;
+    return if $control->is_symlink or not $control->is_open_ok;
 
     # Is it empty? Then skip it. Tag will be issued by control-files
     return if $control->size == 0;
