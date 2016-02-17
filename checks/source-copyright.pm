@@ -576,7 +576,7 @@ sub parse_wildcard {
             if ($bslash_index > -1) {
                 ($regex_src, $error) = dequote_backslashes($regex_src);
             }
-            return ($regex_src, WC_TYPE_DECENDANTS, undef);
+            return ($regex_src, WC_TYPE_DECENDANTS, $error);
         }
     }
 
