@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-01-22 21:18+0000\n"
+"POT-Creation-Date: 2016-02-19 18:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 #
 #. Tag: non-standard-apache2-module-package-name
 #. type: Lintian tag description
-#: checks/apache2.desc:15
+#: checks/apache2.desc:14
 #, no-wrap
 msgid ""
 "The package appears to be an Apache2 HTTPD server module but it isn't\n"
@@ -35,7 +35,7 @@ msgstr ""
 #
 #. Tag: apache2-module-depends-on-real-apache2-package
 #. type: Lintian tag description
-#: checks/apache2.desc:27
+#: checks/apache2.desc:26
 #, no-wrap
 msgid ""
 "The package is an Apache2 HTTPD server module but it depends on a real\n"
@@ -53,7 +53,7 @@ msgstr ""
 #
 #. Tag: apache2-module-does-not-depend-on-apache2-api
 #. type: Lintian tag description
-#: checks/apache2.desc:36
+#: checks/apache2.desc:35
 #, no-wrap
 msgid ""
 "The package is an Apache2 HTTPD server module but does not declare a\n"
@@ -69,7 +69,7 @@ msgstr ""
 #
 #. Tag: apache2-module-does-not-ship-load-file
 #. type: Lintian tag description
-#: checks/apache2.desc:46
+#: checks/apache2.desc:45
 #, no-wrap
 msgid ""
 "The package is an Apache2 HTTPD server module but does not ship a\n"
@@ -89,7 +89,7 @@ msgstr ""
 #
 #. Tag: apache2-reverse-dependency-ships-file-in-not-allowed-directory
 #. type: Lintian tag description
-#: checks/apache2.desc:54
+#: checks/apache2.desc:53
 #, no-wrap
 msgid ""
 "The package installs a piece of Apache2 configuration to\n"
@@ -105,7 +105,7 @@ msgstr ""
 #
 #. Tag: non-standard-apache2-configuration-name
 #. type: Lintian tag description
-#: checks/apache2.desc:63
+#: checks/apache2.desc:62
 #, no-wrap
 msgid ""
 "The package appears to be a web application which is installing a\n"
@@ -121,7 +121,7 @@ msgstr ""
 #
 #. Tag: apache2-reverse-dependency-calls-wrapper-script
 #. type: Lintian tag description
-#: checks/apache2.desc:73
+#: checks/apache2.desc:72
 #, no-wrap
 msgid ""
 "The package is calling an Apache2 configuration wrapper script (e.g.\n"
@@ -137,7 +137,7 @@ msgstr ""
 #
 #. Tag: web-application-depends-on-apache2-data-package
 #. type: Lintian tag description
-#: checks/apache2.desc:85
+#: checks/apache2.desc:84
 #, no-wrap
 msgid ""
 "The package appears to be a web application but declares a package\n"
@@ -158,7 +158,7 @@ msgstr ""
 #
 #. Tag: web-application-should-not-depend-unconditionally-on-apache2
 #. type: Lintian tag description
-#: checks/apache2.desc:95
+#: checks/apache2.desc:94
 #, no-wrap
 msgid ""
 "The package appears to be a web application but declares a dependency\n"
@@ -178,7 +178,7 @@ msgstr ""
 #
 #. Tag: apache2-reverse-dependency-calls-invoke-rc.d
 #. type: Lintian tag description
-#: checks/apache2.desc:104
+#: checks/apache2.desc:103
 #, no-wrap
 msgid ""
 "The package is invoking apache2's init script in its maintainer script\n"
@@ -194,7 +194,7 @@ msgstr ""
 #
 #. Tag: apache2-reverse-dependency-uses-obsolete-directory
 #. type: Lintian tag description
-#: checks/apache2.desc:112
+#: checks/apache2.desc:111
 #, no-wrap
 msgid ""
 "The package is installing a file into the obsolete\n"
@@ -210,7 +210,7 @@ msgstr ""
 #
 #. Tag: apache2-configuration-files-need-conf-suffix
 #. type: Lintian tag description
-#: checks/apache2.desc:119
+#: checks/apache2.desc:118
 #, no-wrap
 msgid ""
 "The package is installing an Apache2 configuration but that file does not\n"
@@ -225,7 +225,7 @@ msgstr ""
 #
 #. Tag: apache2-unparsable-dependency
 #. type: Lintian tag description
-#: checks/apache2.desc:128
+#: checks/apache2.desc:127
 #, no-wrap
 msgid ""
 "The package is declaring a module dependency within an Apache\n"
@@ -240,7 +240,7 @@ msgstr ""
 #
 #. Tag: apache2-unsupported-dependency
 #. type: Lintian tag description
-#: checks/apache2.desc:136
+#: checks/apache2.desc:135
 #, no-wrap
 msgid ""
 "The package is declaring a module dependency within an Apache\n"
@@ -255,7 +255,7 @@ msgstr ""
 #
 #. Tag: apache2-deprecated-auth-config
 #. type: Lintian tag description
-#: checks/apache2.desc:147
+#: checks/apache2.desc:146
 #, no-wrap
 msgid ""
 "The package is using some of the deprecated authentication configuration\n"
@@ -3677,9 +3677,25 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: source-contains-prebuilt-doxygen-documentation
+#. Tag: source-contains-prebuilt-pandoc-documentation
 #. type: Lintian tag description
 #: checks/cruft.desc:536
+#, no-wrap
+msgid ""
+"The source tarball contains prebuilt pandoc documentation.\n"
+"This is usually left by mistake when generating the tarball without\n"
+"first cleaning the source directory.  You may want to report this as\n"
+"an upstream bug, if there is no sign that this was intended.\n"
+"\n"
+"It is preferable to rebuild documentation directly from source."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
+#. Tag: source-contains-prebuilt-doxygen-documentation
+#. type: Lintian tag description
+#: checks/cruft.desc:546
 #, no-wrap
 msgid ""
 "The source tarball contains prebuilt doxygen documentation.\n"
@@ -3695,7 +3711,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-python-object
 #. type: Lintian tag description
-#: checks/cruft.desc:544
+#: checks/cruft.desc:554
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt Python object.  They are\n"
@@ -3709,7 +3725,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-silverlight-object
 #. type: Lintian tag description
-#: checks/cruft.desc:552
+#: checks/cruft.desc:562
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt Silverlight control.\n"
@@ -3723,7 +3739,7 @@ msgstr ""
 #
 #. Tag: source-contains-prebuilt-windows-binary
 #. type: Lintian tag description
-#: checks/cruft.desc:563
+#: checks/cruft.desc:573
 #, no-wrap
 msgid ""
 "The source tarball contains a prebuilt binary for Microsoft Windows.\n"
@@ -3740,7 +3756,7 @@ msgstr ""
 #
 #. Tag: source-contains-waf-binary
 #. type: Lintian tag description
-#: checks/cruft.desc:578
+#: checks/cruft.desc:588
 #, no-wrap
 msgid ""
 "The source tarball contains a waf binary. This file is a Python\n"
@@ -3760,7 +3776,7 @@ msgstr ""
 #
 #. Tag: tar-errors-from-source
 #. type: Lintian tag description
-#: checks/cruft.desc:586
+#: checks/cruft.desc:596
 #, no-wrap
 msgid ""
 "tar produced an error while unpacking this source package.  This\n"
@@ -3774,7 +3790,7 @@ msgstr ""
 #
 #. Tag: control-file-with-CRLF-EOLs
 #. type: Lintian tag description
-#: checks/cruft.desc:599
+#: checks/cruft.desc:609
 #, no-wrap
 msgid ""
 "The given control file uses <tt>CRLF</tt> as line terminator\n"
@@ -3793,7 +3809,7 @@ msgstr ""
 #
 #. Tag: license-problem-json-evil
 #. type: Lintian tag description
-#: checks/cruft.desc:607
+#: checks/cruft.desc:617
 #, no-wrap
 msgid ""
 "The given source file is copyrighted under the non-free\n"
@@ -3806,7 +3822,7 @@ msgstr ""
 #
 #. Tag: license-problem-cc-by-nc-sa
 #. type: Lintian tag description
-#: checks/cruft.desc:613
+#: checks/cruft.desc:623
 #, no-wrap
 msgid ""
 "The given source file is copyrighted under the non-free\n"
@@ -3818,7 +3834,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-img-lenna
 #. type: Lintian tag description
-#: checks/cruft.desc:637
+#: checks/cruft.desc:647
 #, no-wrap
 msgid ""
 "The given source file is cropped from playboy centerfold.\n"
@@ -3847,7 +3863,7 @@ msgstr ""
 #
 #. Tag: license-problem-bad-php-license
 #. type: Lintian tag description
-#: checks/cruft.desc:649
+#: checks/cruft.desc:659
 #, no-wrap
 msgid ""
 "This package appears to be covered by version 2.x of the PHP license,\n"
@@ -3863,7 +3879,7 @@ msgstr ""
 #
 #. Tag: license-problem-php-license
 #. type: Lintian tag description
-#: checks/cruft.desc:657
+#: checks/cruft.desc:667
 #, no-wrap
 msgid ""
 "This package appears to be covered by version 3.0 (exactly) of the\n"
@@ -3876,7 +3892,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-invariants
 #. type: Lintian tag description
-#: checks/cruft.desc:672
+#: checks/cruft.desc:682
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL with invariant\n"
@@ -3895,7 +3911,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-RFC
 #. type: Lintian tag description
-#: checks/cruft.desc:686
+#: checks/cruft.desc:696
 #, no-wrap
 msgid ""
 "The given source file is licensed under the newer RFC\n"
@@ -3914,7 +3930,7 @@ msgstr ""
 #
 #. Tag: license-problem-non-free-RFC-BCP78
 #. type: Lintian tag description
-#: checks/cruft.desc:700
+#: checks/cruft.desc:710
 #, no-wrap
 msgid ""
 "The given source file is licensed under the non-free RFC\n"
@@ -3933,7 +3949,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-invariants-empty
 #. type: Lintian tag description
-#: checks/cruft.desc:712
+#: checks/cruft.desc:722
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL, but without any\n"
@@ -3948,7 +3964,7 @@ msgstr ""
 #
 #. Tag: license-problem-gfdl-non-official-text
 #. type: Lintian tag description
-#: checks/cruft.desc:721
+#: checks/cruft.desc:731
 #, no-wrap
 msgid ""
 "The given source file is licensed under GFDL, but using a\n"
@@ -3963,7 +3979,7 @@ msgstr ""
 #
 #. Tag: license-problem-nvidia-intellectual
 #. type: Lintian tag description
-#: checks/cruft.desc:738
+#: checks/cruft.desc:748
 #, no-wrap
 msgid ""
 "The following source files include material under a\n"
@@ -3985,7 +4001,7 @@ msgstr ""
 #
 #. Tag: license-problem-md5sum-non-distributable-file
 #. type: Lintian tag description
-#: checks/cruft.desc:753
+#: checks/cruft.desc:763
 #, no-wrap
 msgid ""
 "The following file is not distributable even in the non-free\n"
@@ -4006,7 +4022,7 @@ msgstr ""
 #
 #. Tag: license-problem-md5sum-non-free-file
 #. type: Lintian tag description
-#: checks/cruft.desc:766
+#: checks/cruft.desc:776
 #, no-wrap
 msgid ""
 "The following file is not suitable for main or contrib.\n"
@@ -4025,7 +4041,7 @@ msgstr ""
 #
 #. Tag: source-contains-unsafe-symlink
 #. type: Lintian tag description
-#: checks/cruft.desc:777
+#: checks/cruft.desc:787
 #, no-wrap
 msgid ""
 "The source contains an unsafe symlink.  If followed, the link\n"
@@ -4040,9 +4056,36 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
+#. Tag: insane-line-length-in-source-file
+#. type: Lintian tag description
+#: checks/cruft.desc:808
+#, no-wrap
+msgid ""
+"The source file includes a line length that is well beyond\n"
+"the normally human made code line length.\n"
+"\n"
+"This very long line length does not allow lintian to do\n"
+"correctly some source file checks.\n"
+"\n"
+"This line could also be the result of some text injected by\n"
+"a computer program, and thus could lead to FTBFS bugs.\n"
+"\n"
+"Last but not least, long line in source code could be used\n"
+"to obfuscate the source code and to hide stuff like backdoors\n"
+"or security problems.\n"
+"\n"
+"It could be due to jslint source comments or other build tool\n"
+"comments.\n"
+"\n"
+"You may report this issue upstream."
+msgstr ""
+
+#. Please keep the leading space.  Indented lines are used for
+#. "verbatim" or shell commands (specially formatted in output).
+#
 #. Tag: source-is-missing
 #. type: Lintian tag description
-#: checks/cruft.desc:789
+#: checks/cruft.desc:820
 #, no-wrap
 msgid ""
 "The source of the following file is missing. Lintian checked a few\n"
@@ -4059,7 +4102,7 @@ msgstr ""
 #
 #. Tag: source-contains-data-from-ieee-data-oui-db
 #. type: Lintian tag description
-#: checks/cruft.desc:799
+#: checks/cruft.desc:830
 #, no-wrap
 msgid ""
 "The following file contains data from the OUI database\n"
@@ -4075,7 +4118,7 @@ msgstr ""
 #
 #. Tag: source-contains-autogenerated-visual-c++-file
 #. type: Lintian tag description
-#: checks/cruft.desc:812
+#: checks/cruft.desc:843
 #, no-wrap
 msgid ""
 "The following file is autogenerated by Microsoft Visual C++.\n"
@@ -4093,7 +4136,7 @@ msgstr ""
 #
 #. Tag: source-contains-autogenerated-gperf-data
 #. type: Lintian tag description
-#: checks/cruft.desc:824
+#: checks/cruft.desc:855
 #, no-wrap
 msgid ""
 "The following file is autogenerated by gperf\n"
@@ -4111,7 +4154,7 @@ msgstr ""
 #
 #. Tag: debian-pycompat-is-obsolete
 #. type: Lintian tag description
-#: checks/cruft.desc:831
+#: checks/cruft.desc:862
 #, no-wrap
 msgid ""
 "debian/pycompat is not used by any modern Python helper.  It should be\n"
@@ -4123,7 +4166,7 @@ msgstr ""
 #
 #. Tag: mentions-deprecated-usr-lib-perl5-directory
 #. type: Lintian tag description
-#: checks/cruft.desc:841
+#: checks/cruft.desc:872
 #, no-wrap
 msgid ""
 "As of Perl 5.20, the vendorarch directory is "
@@ -15332,8 +15375,8 @@ msgstr ""
 #, no-wrap
 msgid ""
 "The maintainer script seems to call dpkg-maintscript-helper\n"
-"symlink_to_dir with a trailling slash for pathname. This render package\n"
-"uninstallable."
+"symlink_to_dir with a trailing slash for pathname. This renders the\n"
+"package uninstallable."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -17176,22 +17219,9 @@ msgstr ""
 #. Please keep the leading space.  Indented lines are used for
 #. "verbatim" or shell commands (specially formatted in output).
 #
-#. Tag: package-contains-broken-symlink
-#. type: Lintian tag description
-#: checks/symlinks.desc:15
-#, no-wrap
-msgid ""
-"The package contains a symlink but the destination\n"
-"for the link does not exist in the package nor in its\n"
-"direct dependencies built from the same source package."
-msgstr ""
-
-#. Please keep the leading space.  Indented lines are used for
-#. "verbatim" or shell commands (specially formatted in output).
-#
 #. Tag: package-contains-broken-symlink-wildcard
 #. type: Lintian tag description
-#: checks/symlinks.desc:23
+#: checks/symlinks.desc:15
 #, no-wrap
 msgid ""
 "The package contains a symlink with a target that\n"
@@ -17205,7 +17235,7 @@ msgstr ""
 #
 #. Tag: package-contains-unsafe-symlink
 #. type: Lintian tag description
-#: checks/symlinks.desc:29
+#: checks/symlinks.desc:21
 #, no-wrap
 msgid ""
 "The package contains an unsafe symlink.  If followed,\n"
@@ -17498,11 +17528,12 @@ msgstr ""
 #
 #. Tag: runtime-test-file-is-not-a-regular-file
 #. type: Lintian tag description
-#: checks/testsuite.desc:73
+#: checks/testsuite.desc:74
 #, no-wrap
 msgid ""
 "A runtime test listed by debian/tests/control is not a regular\n"
-"file."
+"file or a relative symbolic link to a regular file in the source\n"
+"package."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -17510,7 +17541,7 @@ msgstr ""
 #
 #. Tag: syntax-error-in-debian-tests-control
 #. type: Lintian tag description
-#: checks/testsuite.desc:83
+#: checks/testsuite.desc:84
 #, no-wrap
 msgid ""
 "The debian/tests/control file didn't pass Debian control file\n"
@@ -17525,7 +17556,7 @@ msgstr ""
 #
 #. Tag: unknown-runtime-tests-feature
 #. type: Lintian tag description
-#: checks/testsuite.desc:91
+#: checks/testsuite.desc:92
 #, no-wrap
 msgid ""
 "A paragraph in debian/tests/control mentions a non-standard\n"
@@ -17538,7 +17569,7 @@ msgstr ""
 #
 #. Tag: unknown-runtime-tests-field
 #. type: Lintian tag description
-#: checks/testsuite.desc:99
+#: checks/testsuite.desc:100
 #, no-wrap
 msgid ""
 "A paragraph in debian/tests/control mentions a non-standard\n"
@@ -17551,7 +17582,7 @@ msgstr ""
 #
 #. Tag: unknown-runtime-tests-restriction
 #. type: Lintian tag description
-#: checks/testsuite.desc:107
+#: checks/testsuite.desc:108
 #, no-wrap
 msgid ""
 "A paragraph in debian/tests/control mentions a non-standard\n"
@@ -17564,7 +17595,7 @@ msgstr ""
 #
 #. Tag: unknown-testsuite
 #. type: Lintian tag description
-#: checks/testsuite.desc:114
+#: checks/testsuite.desc:115
 #, no-wrap
 msgid ""
 "The dsc file sets Testsuite to a value other than autopkgtest,\n"
