@@ -1,6 +1,13 @@
-lintian (2.5.41) UNRELEASED; urgency=medium
+lintian (2.5.41) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - insane-line-length-in-source-file
+      - source-contains-prebuilt-pandoc-documentation
+      - upstream-metadata-is-not-a-file
+      - upstream-metadata-yaml-invalid
+    + Removed:
+      - package-contains-broken-symlink
 
   * checks/apache2.desc:
     + [JW] Remove spurious check name abbreviation.
@@ -77,7 +84,7 @@ lintian (2.5.41) UNRELEASED; urgency=medium
   * private/generate-lintian-pod:
     + [JW] Fix formatting pathnames followed by punctuation characters.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 24 Jan 2016 12:58:06 +0000
+ -- Niels Thykier <niels@thykier.net>  Fri, 19 Feb 2016 18:35:36 +0000
 
 lintian (2.5.40.2) unstable; urgency=medium
 
