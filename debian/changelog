@@ -2,6 +2,15 @@ lintian (2.5.42) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/copyright-file.pm:
+    + [NT] Apply patch from Rafael Kitover to avoid some
+      false-positives with the DEP-5 copyright format.
+      (Closes: #795641)
+
+  * debian/control:
+    + [NT] Add (Build-)Dependency on libdata-alias-perl due
+      to patch from Rafael Kitover.
+
  -- Niels Thykier <niels@thykier.net>  Fri, 19 Feb 2016 18:59:49 +0000
 
 lintian (2.5.41) unstable; urgency=medium
