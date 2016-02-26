@@ -417,7 +417,7 @@ sub check_names_texts {
         }
         return sub {
             alias $_ = ${$_[0]};
-            return $action->($_);
+            return $action->();
         };
     };
     $text_check = $make_check->($text_check);
