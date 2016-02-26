@@ -420,7 +420,6 @@ sub check_names_texts {
             return $action->($_);
         };
     };
-    $name_check = $make_check->($name_check);
     $text_check = $make_check->($text_check);
 
     my $file = \$_;
@@ -436,7 +435,7 @@ sub check_names_texts {
             next if ($license_text||'') =~ /^[\s\r\n]*\z/;
 
             die 'MATCH'
-              if $name_check->(\$license_name)
+              if $license_name =~ $name_check
               && $text_check->(\$license_text);
         }
     };
