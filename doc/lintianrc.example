@@ -37,10 +37,6 @@
 # Quiet by default (--quiet)
 #quiet = yes
 
-# Specify a laboratory--a directory where Lintian should store some info
-# about packages being checked.
-#LINTIAN_LAB="/var/spool/lintian"
-
 # Use a different directory for temporary files - useful if /tmp is a
 # tmpfs with "limited" capacity.
 #TMPDIR="/var/tmp"
