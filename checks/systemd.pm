@@ -189,6 +189,12 @@ sub check_systemd_service_file {
     my @obsolete = grep { /^(?:syslog|dbus)\.target$/ } @values;
     tag 'systemd-service-file-refers-to-obsolete-target', $file, $_
       for @obsolete;
+
+    if (not $file->is_symlink or $file->link ne '/dev/null') {
+        tag 'systemd-service-file-missing-documentation-key', $file,
+          unless extract_service_file_values($file, 'Unit', 'Documentation',1);
+    }
+
     return 1;
 }
 

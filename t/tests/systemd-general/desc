@@ -10,6 +10,7 @@ Test-For:
  service-key-has-whitespace
  systemd-service-file-outside-lib
  systemd-tmpfiles.d-outside-usr-lib
+ systemd-service-file-missing-documentation-key
  systemd-service-file-refers-to-obsolete-target
  systemd-no-service-for-init-script
  systemd-no-service-for-init-rcS-script

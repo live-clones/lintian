@@ -6,3 +6,4 @@ Description: Verifies the .service file parser properly handles .include within
 Test-For:
  service-key-has-whitespace
  systemd-service-file-refers-to-obsolete-target
+ systemd-service-file-missing-documentation-key

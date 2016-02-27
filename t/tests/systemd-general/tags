@@ -10,6 +10,8 @@ E: systemd-general: systemd-service-file-outside-lib etc/systemd/system/fifo-pip
 E: systemd-general: systemd-service-file-outside-lib etc/systemd/system/test.service
 E: systemd-general: systemd-service-file-outside-lib usr/lib/systemd/system/test.service
 E: systemd-general: systemd-tmpfiles.d-outside-usr-lib etc/tmpfiles.d/test.conf
+I: systemd-general: systemd-service-file-missing-documentation-key etc/systemd/system/test.service
+I: systemd-general: systemd-service-file-missing-documentation-key usr/lib/systemd/system/test.service
 W: systemd-general: init.d-script-does-not-source-init-functions etc/init.d/systemd-general
 W: systemd-general: maintainer-script-calls-systemctl postrm:6
 W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/bootmisc.sh

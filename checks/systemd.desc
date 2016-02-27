@@ -117,3 +117,12 @@ Info: The service file lists an alias without an file extension.
  .
  The spec mandates that the extension of the listed alias matches
  the extension of the unit itself.
+
+Tag: systemd-service-file-missing-documentation-key
+Severity: wishlist
+Certainty: certain
+Info: The systemd service file does not contain a <tt>Documentation</tt> key.
+ .
+ Documentation for systemd service files can be automatically viewed using
+ <tt>systemctl help servicename</tt> if this field is present.
+Ref: systemd.unit(5)
