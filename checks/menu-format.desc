@@ -252,7 +252,7 @@ Info: The desktop entry file has lines ending in CRLF instead of just LF.
  <tt>CR</tt> character in the file:
  .
  <tt>sed -i 's/\r//g' path/to/file</tt>
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s02.html
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/1.0/ar01s02.html
 
 Tag: duplicated-key-in-desktop-entry
 Severity: normal
@@ -270,7 +270,7 @@ Info: Desktop entries must contain, at a minimum, the keys Type and Name.
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
 
 Tag: desktop-entry-contains-unknown-key
 Severity: minor
@@ -282,7 +282,7 @@ Info: The key on this line of the desktop entry is not one of the standard
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
 
 Tag: desktop-entry-contains-deprecated-key
 Severity: normal
@@ -292,7 +292,7 @@ Info: The key on this line of the desktop entry has been deprecated in the
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
 Tag: desktop-entry-contains-encoding-key
 Severity: wishlist
@@ -304,7 +304,7 @@ Info: The Encoding key is now deprecated by the FreeDesktop standard and
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
 Tag: desktop-entry-lacks-main-category
 Severity: normal
@@ -315,7 +315,7 @@ Info: The categories for this desktop entry do not contain any Main
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
+Ref: https://specifications.freedesktop.org/menu-spec/1.0/apa.html
 
 Tag: desktop-entry-lacks-keywords-entry
 Severity: wishlist
@@ -330,7 +330,7 @@ Info: This .desktop file does either not contain a "Keywords" entry or it does
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s05.html,
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s05.html,
  #693918, https://wiki.gnome.org/Initiatives/GnomeGoals/DesktopFileKeywords
 
 Tag: desktop-entry-uses-reserved-category
@@ -344,7 +344,7 @@ Info: This desktop entry includes a Reserved Category, one which has a
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
+Ref: https://specifications.freedesktop.org/menu-spec/1.0/apa.html
 
 Tag: desktop-entry-invalid-category
 Severity: normal
@@ -357,7 +357,7 @@ Info: This desktop entry lists a category that is not one of the
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
+Ref: https://specifications.freedesktop.org/menu-spec/1.0/apa.html
 
 Tag: desktop-command-not-in-package
 Severity: normal
@@ -377,7 +377,7 @@ Info: The header on this line of the desktop entry has been deprecated in the
  .
  The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
-Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
+Ref: https://specifications.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
 Tag: desktop-mime-but-no-exec-code
 Severity: normal

@@ -6,6 +6,10 @@ lintian (2.5.42) UNRELEASED; urgency=medium
     + [NT] Apply patch from Rafael Kitover to avoid some
       false-positives with the DEP-5 copyright format.
       (Closes: #795641)
+  * checks/files.desc:
+    + [JW] Update freedesktop.org specification URL.
+  * checks/menu-format.desc:
+    + [JW] Update freedesktop.org specification URLs.
   * checks/systemd.{desc,pm}:
     + [NT] Apply patch from Chris Lamb to flag systemd units
       without the "Documentation" key.  (Closes: #799083)
