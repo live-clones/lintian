@@ -14,6 +14,9 @@ lintian (2.5.42) UNRELEASED; urgency=medium
     + [NT] Apply patch from Chris Lamb to flag systemd units
       without the "Documentation" key.  (Closes: #799083)
 
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
+
   * debian/control:
     + [NT] Add (Build-)Dependency on libdata-alias-perl due
       to patch from Rafael Kitover.

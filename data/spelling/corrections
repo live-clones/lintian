@@ -578,6 +578,9 @@ descriptior||descriptor
 descriptiors||descriptors
 descripton||description
 descriptons||descriptions
+descrition||description
+descritpion||description
+descritpions||descriptions
 desireable||desirable
 detabase||database
 detatch||detach
@@ -795,6 +798,8 @@ exlicitly||explicitly
 exmaple||example
 expecially||especially
 expectes||expects
+explaination||explanation
+explainations||explanations
 explantion||explanation
 explantions||explanations
 explicitely||explicitly
@@ -802,6 +807,8 @@ explicitily||explicitly
 explicity||explicitly
 explict||explicit
 explictly||explicitly
+explit||explicit
+explitly||explicitly
 expresion||expression
 expresssion||expression
 expresssions||expressions
@@ -1114,6 +1121,7 @@ intrumenting||instrumenting
 intrument||instrument
 intruments||instruments
 intuative||intuitive
+invarient||invariant
 invokation||invocation
 invokations||invocations
 irrelevent||irrelevant
@@ -1188,6 +1196,8 @@ mecanisms||mechanisms
 ment||meant
 mesage||message
 mesages||messages
+messge||message
+messges||messages
 messsage||message
 messsages||messages
 microprocesspr||microprocessor
@@ -1222,6 +1232,7 @@ modfied||modified
 modfies||modifies
 modfying||modifying
 modfy||modify
+modifed||modified
 modifing||modifying
 modulues||modules
 monochorome||monochrome
@@ -1345,6 +1356,7 @@ pach||patch
 packacge||package
 packege||package
 packge||package
+packges||packages
 pakage||package
 palete||palette
 pallete||palette
@@ -1465,6 +1477,10 @@ processessing||processing
 processess||processes
 processpr||processor
 processsing||processing
+proctected||protected
+proctecting||protecting
+proctect||protect
+proctects||protects
 procude||produce
 progams||programs
 programers||programmers
@@ -1639,6 +1655,8 @@ satisifies||satisfies
 satisifying||satisfying
 satisify||satisfy
 savable||saveable
+savely||safely
+savety||safety
 seached||searched
 seaches||searches
 seaching||searching
@@ -1810,6 +1828,8 @@ surpressing||suppressing
 surpress||suppress
 suspicously||suspiciously
 suspicous||suspicious
+sustitutions||substitutions
+sustitution||substitution
 suuported||supported
 suuporting||supporting
 suuports||supports
