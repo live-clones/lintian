@@ -536,6 +536,7 @@ defalt||default
 defautl||default
 definate||definite
 definately||definitely
+definitly||definitely
 defintion||definition
 defintions||definitions
 defualt||default
@@ -550,6 +551,8 @@ demostrated||demonstrated
 demostrate||demonstrate
 demostrates||demonstrates
 demostrating||demonstrating
+depdencies||dependencies
+depdency||dependency
 depencies||dependencies
 depency||dependency
 dependancies||dependencies
@@ -621,6 +624,7 @@ diffrent||different
 digitial||digital
 diplay||display
 directores||directories
+directorys||directories
 directries||directories
 directry||directory
 directy||directly
@@ -710,7 +714,9 @@ encose||enclose
 encoses||encloses
 encosing||enclosing
 encrytion||encryption
+endianes||endianness
 endianess||endianness
+endiannes||endianness
 enhaced||enhanced
 enhancment||enhancement
 enhancments||enhancements
@@ -766,6 +772,10 @@ excactly||exactly
 excecutable||executable
 exceded||exceeded
 excellant||excellent
+excercised||exercised
+excercise||exercise
+excercises||exercises
+excercising||exercising
 excpected||expected
 excpect||expect
 excpecting||expecting
@@ -896,6 +906,7 @@ genreate||generate
 genreates||generates
 genreating||generating
 geomtry||geometry
+geting||getting
 glpyh||glyph
 glpyhs||glyphs
 goverment||government
@@ -930,6 +941,8 @@ heirarchies||hierarchies
 heirarchy||hierarchy
 helpfull||helpful
 hexidecimal||hexadecimal
+hiearchies||hierarchies
+hiearchy||hierarchy
 hierachy||hierarchy
 hierarchie||hierarchy
 highlighing||highlighting
@@ -1038,6 +1051,7 @@ infomation||information
 informatiom||information
 informations||information
 infromation||information
+inital||initial
 initalisation||initialisation
 initalised||initialised
 initalise||initialise
@@ -1361,6 +1375,8 @@ pakage||package
 palete||palette
 pallete||palette
 pallette||palette
+paniced||panicked
+panicing||panicking
 paralell||parallel
 paralel||parallel
 parallell||parallel
@@ -1382,12 +1398,16 @@ paremeters||parameters
 parenthesed||parenthesized
 particularily||particularly
 pased||passed
+pathes||paths
 peformance||performance
 penalities||penalties
 penality||penalty
 pendantic||pedantic
 peprocessor||preprocessor
+perfomed||performed
 perfoming||performing
+perfom||perform
+perfoms||performs
 perfromance||performance
 perfromed||performed
 perfroming||performing
@@ -1775,6 +1795,7 @@ subexpresssions||subexpressions
 subexpresssion||subexpression
 suble||subtle
 subseqent||subsequent
+subsequest||subsequent
 substituions||substitutions
 substituion||substitution
 subtituted||substituted
