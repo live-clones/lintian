@@ -117,11 +117,14 @@ algoritm||algorithm
 algoritms||algorithms
 algorrithm||algorithm
 algorritm||algorithm
+alignemnt||alignment
+alignemnts||alignments
 allign||align
 alligned||aligned
 alligning||aligning
 alligns||aligns
 allpication||application
+allthough||although
 alltogether||altogether
 allways||always
 alogirhtms||algorithms
@@ -338,7 +341,10 @@ chceks||checks
 childs||children
 chnage||change
 chnages||changes
+choise||choice
 choosen||chosen
+chracter||character
+chracters||characters
 classs||class
 classses||classes
 clearified||clarified
@@ -446,6 +452,8 @@ connnections||connections
 connnects||connects
 consistancy||consistency
 consistant||consistent
+constuctor||constructor
+constuctors||constructors
 containes||contains
 containg||containing
 containts||contains
@@ -503,6 +511,7 @@ corretly||correctly
 coverted||converted
 crtical||critical
 cryptocraphic||cryptographic
+cummulative||cumulative
 curently||currently
 cymk||CMYK
 dafault||default
@@ -708,6 +717,8 @@ embeded||embedded
 emptry||empty
 emtpy||empty
 enchanced||enhanced
+enconding||encoding
+encondings||encodings
 encorporating||incorporating
 encosed||enclosed
 encose||enclose
@@ -759,6 +770,10 @@ evalutated||evaluated
 evalutate||evaluate
 evalutates||evaluates
 evalutating||evaluating
+evaluted||evaluated
+evalute||evaluate
+evalutes||evaluates
+evaluting||evaluating
 everbody||everybody
 everone||everyone
 everthing||everything
@@ -979,6 +994,8 @@ igoring||ignoring
 imediate||immediate
 imediately||immediately
 immeadiately||immediately
+immedate||immediate
+immedately||immediately
 immediatly||immediately
 immmediate||immediate
 immmediately||immediately
@@ -1754,6 +1771,8 @@ spawing||spawning
 spaw||spawn
 spaws||spawns
 speach||speech
+spearator||separator
+spearators||separators
 specfication||specification
 specfications||specifications
 specfic||specific
@@ -1879,6 +1898,7 @@ therfore||therefore
 thie||the
 threasholds||thresholds
 threashold||threshold
+threhold||threshold
 threshholds||thresholds
 threshhold||threshold
 throught||through
