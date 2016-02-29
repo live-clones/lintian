@@ -26,6 +26,9 @@ lintian (2.5.42) UNRELEASED; urgency=medium
   * doc/lintianrc.example:
     + [NT] Remove LINTIAN_LAB - most people will never need it.
 
+  * lib/Lintian/Tag/Info.pm:
+    + [JW] Allow "." characters in manual page references.
+
  -- Niels Thykier <niels@thykier.net>  Fri, 19 Feb 2016 18:59:49 +0000
 
 lintian (2.5.41) unstable; urgency=medium

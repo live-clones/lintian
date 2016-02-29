@@ -215,7 +215,7 @@ sub _format_reference {
         my $text;
         if ($ref =~ /^([\w-]+)\s+(.+)$/) {
             $text = _manual_reference($1, $2);
-        } elsif ($ref =~ /^([\w_-]+)\((\d\w*)\)$/) {
+        } elsif ($ref =~ /^([\w.-]+)\((\d\w*)\)$/) {
             my ($name, $section) = ($1, $2);
             my $url = $MANURL;
             $url =~ s/NAME/$name/g;
