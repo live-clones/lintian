@@ -14,6 +14,8 @@ lintian (2.5.42) UNRELEASED; urgency=medium
     + [NT] Apply patch from Chris Lamb to flag systemd units
       without the "Documentation" key.  (Closes: #799083)
 
+  * data/scripts/interpreters:
+    + [JW] Add hhvm as a known interpreter.  (Closes: #789878)
   * data/spelling/corrections:
     + [JW] Add more corrections.
 

@@ -42,6 +42,7 @@ gforth         => /usr/bin
 gjs            => /usr/bin
 gnuplot        => /usr/bin
 gosh           => /usr/bin, gauche
+hhvm           => /usr/bin
 icmake         => /usr/bin, icmake
 install-menu   => /usr/bin, @NODEPS@
 ir             => /usr/bin, ironruby
