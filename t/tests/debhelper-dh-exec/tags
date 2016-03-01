@@ -5,4 +5,4 @@ I: debhelper-dh-exec source: dh-exec-subst-unknown-variable debian/manpages DEB_
 I: debhelper-dh-exec source: dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH} /usr/lib/${DEB_HOST_MULTIARCH}/"
 I: debhelper-dh-exec source: dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH}"
 I: debhelper-dh-exec source: dh-exec-useless-usage debian/install "usr/lib/${DEB_HOST_MULTIARCH}/some-package/*.so"
-W: debhelper-dh-exec source: dh-exec-script-without-dh-exec-features debian/dirs
+W: debhelper-dh-exec source: dh-exec-script-without-dh-exec-features debian/docs

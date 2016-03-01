@@ -16,6 +16,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Avoid advertising python-support as possible solution for
       python-depends-but-no-python-helper.  Thanks to Gunnar Wolf for
       the bug report.  (Closes: #754315)
+    + [NT] Apply patch from Gergely Nagy to only emit the
+      dh-exec-useless-usage check for install and manpages files.
+      Thanks to Rafael Laboissière for the report.
+      (Closes: #816341)
   * checks/debian-source-dir.{desc,pm}:
     + [NT] Add tag for classifying the source format.
       (Closes: #612610)
@@ -62,7 +66,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       (Closes: #818607)
   * checks/shared-libs.{desc,pm}:
     + [NT] Rename and clarify some ldconfig related tags to better reflect
-      the use of the ldconfig trigger.  Thanks to Rafael Laboissiere for
+      the use of the ldconfig trigger.  Thanks to Rafael Laboissière for
       reporting this.  (Closes: #809577)
     + [NT] Merge and remove some ldconfig related tags.  Notably
       unconditionally flag all uses of ldconfig in maintainer scripts
