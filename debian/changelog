@@ -18,6 +18,8 @@ lintian (2.5.42) UNRELEASED; urgency=medium
     + [JW] Add hhvm as a known interpreter.  (Closes: #789878)
   * data/spelling/corrections:
     + [JW] Add more corrections.
+    + [JW] Remove correction for "homogenous".  (Closes: #816599)
+      Thanks to IOhannes m zmölnig for the bug report.
 
   * debian/control:
     + [NT] Add (Build-)Dependency on libdata-alias-perl due
