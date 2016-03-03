@@ -101,12 +101,12 @@ sub run {
                 }
                 close($package_xml_fd);
                 if ($package_type eq 'extsrc') { # PECL package
-                    if (!$bdepends->implies('php5-dev')) {
+                    if (!$bdepends->implies('php-dev')) {
                         tag 'pecl-package-requires-build-dependency',
-                          'php5-dev';
+                          'php-dev';
                     }
-                    if (!$bdepends->implies('dh-php5')) {
-                        tag 'pecl-package-requires-build-dependency','dh-php5';
+                    if (!$bdepends->implies('dh-php')) {
+                        tag 'pecl-package-requires-build-dependency','dh-php';
                     }
                     if (!$bdepends->implies('pkg-php-tools (>= 1.5~)')) {
                         tag
@@ -152,7 +152,7 @@ sub run {
             my $has_buildsystem_phppear = 0;
             my $has_addon_phppear = 0;
             my $has_addon_phpcomposer= 0;
-            my $has_addon_php5 = 0;
+            my $has_addon_php = 0;
             my $rules_fd = $rules->open;
             while (<$rules_fd>) {
                 while (s,\\$,, and defined(my $cont = <$rules_fd>)) {
@@ -172,8 +172,8 @@ m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/
                   ) {
                     $has_addon_phpcomposer = 1;
                 }
-                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php5(?:,\S+)*\s/) {
-                    $has_addon_php5 = 1;
+                if (m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*php(?:,\S+)*\s/) {
+                    $has_addon_php = 1;
                 }
             }
             close($rules_fd);
@@ -186,8 +186,8 @@ m/^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*phpcomposer(?:,\S+)*\s/
                 if (!$has_addon_phppear) {
                     tag 'missing-pkg-php-tools-addon', 'phppear';
                 }
-                if (($package_type eq 'extsrc') and not $has_addon_php5) {
-                    tag 'missing-pkg-php-tools-addon', 'php5';
+                if (($package_type eq 'extsrc') and not $has_addon_php) {
+                    tag 'missing-pkg-php-tools-addon', 'php';
                 }
             }
             if (   !defined($package_xml)
