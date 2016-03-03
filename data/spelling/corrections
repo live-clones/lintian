@@ -176,6 +176,7 @@ aqcuiring||acquiring
 aquire||acquire
 aquired||acquired
 arbitary||arbitrary
+arbitray||arbitrary
 archiecture||architecture
 archiectures||architectures
 architechture||architecture
@@ -543,6 +544,7 @@ decsriptor||descriptor
 decsriptors||descriptors
 defalt||default
 defautl||default
+defered||deferred
 definate||definite
 definately||definitely
 definitly||definitely
@@ -556,6 +558,8 @@ delaring||declaring
 delemiter||delimiter
 delimeter||delimiter
 delimeters||delimiters
+demoninator||denominator
+demoninators||denominators
 demostrated||demonstrated
 demostrate||demonstrate
 demostrates||demonstrates
@@ -859,7 +863,11 @@ feauture||feature
 feautures||features
 fetaure||feature
 fetaures||features
+filesytem||filesystem
+filesytems||filesystems
 findout||find out
+fitler||filter
+fitlers||filters
 flie||file
 floting||floating
 foget||forget
@@ -1080,6 +1088,14 @@ initalizes||initializes
 initalizing||initializing
 initators||initiators
 initializiation||initialization
+initiliased||initialised
+initiliase||initialise
+initiliases||initialises
+initiliasing||initialising
+initiliazed||initialized
+initiliaze||initialize
+initiliazes||initializes
+initiliazing||initializing
 initilized||initialized
 initilize||initialize
 initilizes||initializes
@@ -1312,6 +1328,8 @@ noticably||noticeably
 notications||notifications
 notifcation||notification
 notifcations||notifications
+nubmer||number
+nubmers||numbers
 numberal||numeral
 numberals||numerals
 observered||observed
@@ -1354,6 +1372,7 @@ orignal||original
 otehr||other
 otherwhise||otherwise
 othwerwise||otherwise
+ouptut||output
 ouput||output
 ouputs||outputs
 ouputted||outputted
@@ -1413,6 +1432,7 @@ paremeter||parameter
 paremeters||parameters
 parenthesed||parenthesized
 particularily||particularly
+partioning||partitioning
 pased||passed
 pathes||paths
 peformance||performance
