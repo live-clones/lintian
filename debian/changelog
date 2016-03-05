@@ -1,6 +1,11 @@
-lintian (2.5.42) UNRELEASED; urgency=medium
+lintian (2.5.42) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - systemd-service-file-missing-documentation-key
+    + Removed:
+      - dh_scrollkeeper-is-deprecated
+      - dh_suidregister-is-obsolete
 
   * checks/copyright-file.pm:
     + [NT] Apply patch from Rafael Kitover to avoid some
@@ -34,7 +39,7 @@ lintian (2.5.42) UNRELEASED; urgency=medium
   * lib/Lintian/Tag/Info.pm:
     + [JW] Allow "." characters in manual page references.
 
- -- Niels Thykier <niels@thykier.net>  Fri, 19 Feb 2016 18:59:49 +0000
+ -- Niels Thykier <niels@thykier.net>  Sat, 05 Mar 2016 19:38:32 +0000
 
 lintian (2.5.41) unstable; urgency=medium
 
