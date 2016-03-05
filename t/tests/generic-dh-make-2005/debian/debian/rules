@@ -82,7 +82,7 @@ binary-arch: build install
 #	dh_installinfo
 	dh_installman
 #	dh_dhelp
-	dh_suidregister
+	#dh_suidregister # originally there, but no longer supported
 	dh_link
 	dh_strip
 	dh_compress

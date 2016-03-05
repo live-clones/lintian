@@ -6,6 +6,4 @@ Test-For:
  dh_desktop-is-deprecated
  dh_installmanpages-is-obsolete
  dh_pysupport-is-obsolete
- dh_scrollkeeper-is-deprecated
- dh_suidregister-is-obsolete
  dh_undocumented-is-obsolete

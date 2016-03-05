@@ -90,9 +90,6 @@ sub run {
         if (m/^\s+-?(dh_\S+)/) {
             my $dhcommand = $1;
 
-            if ($dhcommand eq 'dh_suidregister') {
-                tag 'dh_suidregister-is-obsolete', "line $.";
-            }
             if ($dhcommand eq 'dh_undocumented') {
                 tag 'dh_undocumented-is-obsolete', "line $.";
             }
@@ -115,9 +112,6 @@ sub run {
             unless ($maybe_skipping) {
                 if ($dhcommand eq 'dh_desktop') {
                     tag 'dh_desktop-is-deprecated', "line $.";
-                }
-                if ($dhcommand eq 'dh_scrollkeeper') {
-                    tag 'dh_scrollkeeper-is-deprecated', "line $.";
                 }
                 if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
                     $seendhcleank = 1;

@@ -2,6 +2,4 @@ E: debhelper-deprecated source: build-depends-on-obsolete-package build-depends:
 W: debhelper-deprecated source: dh_desktop-is-deprecated line 25
 W: debhelper-deprecated source: dh_installmanpages-is-obsolete line 24
 W: debhelper-deprecated source: dh_pysupport-is-obsolete line 28
-W: debhelper-deprecated source: dh_scrollkeeper-is-deprecated line 26
-W: debhelper-deprecated source: dh_suidregister-is-obsolete line 38
 W: debhelper-deprecated source: dh_undocumented-is-obsolete line 39

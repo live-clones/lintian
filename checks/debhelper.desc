@@ -63,13 +63,6 @@ Info: This package contains debian/*.ex and/or debian/ex.* files
  package's details and renamed for use by various debhelper commands.
  If they are not being used, they should be removed.
 
-Tag: dh_suidregister-is-obsolete
-Severity: normal
-Certainty: certain
-Ref: dh_suidregister(1)
-Info: suidregister is obsoleted by dpkg-statoverride, so registration of
- files in with dh_suidregister is unnecessary, and even harmful.
-
 Tag: dh_undocumented-is-obsolete
 Severity: normal
 Certainty: certain
@@ -103,15 +96,6 @@ Ref: dh_desktop(1)
 Info: This package calls dh_desktop in its <tt>debian/rules</tt> file.
  dh_desktop is deprecated and no longer does anything.  The setup it used
  to handle is now done with triggers.
-
-Tag: dh_scrollkeeper-is-deprecated
-Severity: normal
-Certainty: certain
-Ref: dh_scrollkeeper(1)
-Info: This package calls dh_scrollkeeper in its <tt>debian/rules</tt> file.
- dh_scrollkeeper is deprecated and no longer does anything.  scrollkeeper
- has been replaced by rarian, which does not require the functionality
- dh_scrollkeeper used to provide.
 
 Tag: dh-clean-k-is-deprecated
 Severity: normal

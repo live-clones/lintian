@@ -6,6 +6,9 @@ lintian (2.5.42) UNRELEASED; urgency=medium
     + [NT] Apply patch from Rafael Kitover to avoid some
       false-positives with the DEP-5 copyright format.
       (Closes: #795641)
+  * checks/debhelper.{desc,pm}:
+    + [NT] Remove tags for dh_scrollkeeper and dh_suidregister,
+      which are removed in the next version of debhelper.
   * checks/files.desc:
     + [JW] Update freedesktop.org specification URL.
   * checks/menu-format.desc:
