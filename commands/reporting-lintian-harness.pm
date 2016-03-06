@@ -29,7 +29,7 @@ use autodie;
 
 use constant BACKLOG_PROCESSING_TIME_LIMIT => 4 * 3600; # 4hours
 
-use Fcntl qw(F_GETFD F_SETFD FD_CLOEXEC);
+use Fcntl qw(F_GETFD F_SETFD FD_CLOEXEC SEEK_END);
 use File::Basename qw(basename);
 use File::Temp qw(tempfile);
 use Getopt::Long();
@@ -337,6 +337,7 @@ sub process_worklist {
             log_msg('Lintian finished successfully');
         }
         my $filter = generate_log_filter($state, \%processed);
+        seek($nfd, 0, SEEK_END);
         update_lintian_log($filter, $nfd, $new_lintian_log);
 
         log_msg('Updating harness state cache');
@@ -403,7 +404,7 @@ sub update_lintian_log {
             }
         }
         close($input);
-
+        close($new_fd);
         rename($tmp_path, $lintian_log);
     };
     if (my $err = $@) {
