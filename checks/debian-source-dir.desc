@@ -3,7 +3,7 @@ Author: Raphaël Hertzog <hertzog@debian.org>
 Abbrev: dsd
 Type: source
 Info: This script looks for mistakes in debian/source/* files.
-Needs-Info: unpacked
+Needs-Info: unpacked, diffstat
 
 Tag: missing-debian-source-format
 Severity: wishlist
@@ -63,3 +63,8 @@ Info: The source package contains non-empty debian/source/git-patches,
  with a misconfigured gitpkg) and without manually exporting the patches.
  See the above mentioned hook file (in /usr/share/gitpkg/hooks) for
  information on how to manually export patches.
+
+Tag: source-format
+Severity: classification
+Certainty: certain
+Info: This is the source format declared in the package.

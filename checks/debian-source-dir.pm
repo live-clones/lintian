@@ -36,19 +36,32 @@ our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 sub run {
     my (undef, undef, $info) = @_;
     my $dsrc = $info->index_resolved_path('debian/source/');
-    my ($format_file, $git_pfile);
+    my ($format_file, $git_pfile, $format, $format_extra);
 
     $format_file = $dsrc->child('format') if $dsrc;
 
     if ($format_file and $format_file->is_open_ok) {
         my $fd = $format_file->open;
-        my $format = <$fd>;
+        $format = <$fd>;
         chomp $format;
         close($fd);
+        $format_extra = '';
         tag 'unknown-source-format', $format unless $KNOWN_FORMATS{$format};
     } else {
         tag 'missing-debian-source-format';
+        $format = '1.0';
+        $format_extra = 'implicit';
     }
+    if ($format eq '1.0') {
+        $format_extra .= ' ' if $format_extra;
+        if ($info->diffstat) {
+            $format_extra .= 'non-native';
+        } else {
+            $format_extra .= 'native';
+        }
+    }
+    $format .= " [$format_extra]" if $format_extra;
+    tag 'source-format', $format;
 
     return if not $dsrc;
 

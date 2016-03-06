@@ -1,2 +1,3 @@
 C: debhelper-compat-old source: debian-build-system dh
+C: debhelper-compat-old source: source-format 1.0 [non-native]
 P: debhelper-compat-old source: package-uses-old-debhelper-compat-version 8
