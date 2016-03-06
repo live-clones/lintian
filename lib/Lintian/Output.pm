@@ -144,7 +144,8 @@ my %default_colors = (
     'E' => 'red',
     'W' => 'yellow',
     'I' => 'cyan',
-    'P' => 'green'
+    'P' => 'green',
+    'C' => 'blue',
 );
 
 our $GLOBAL = Lintian::Output->new;

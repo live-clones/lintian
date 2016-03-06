@@ -417,13 +417,22 @@ sub _read_profile_section {
             qq{Profile "$pname" contains invalid severity},
             qq{"$severity" in section $sno}))
 
-      if $severity && !$SEVERITIES{$severity};
+      if $severity
+      && (!$SEVERITIES{$severity} || $severity eq 'classification');
 
     foreach my $tag (@tags) {
         croak "Unknown check $tag in $pname (section $sno)"
           unless $self->{'known-tags'}{$tag};
         if ($severity) {
-            $self->{'known-tags'}{$tag}->set_severity($severity);
+            my $t = $self->{'known-tags'}{$tag};
+            if ($t->severity(1) eq 'classification') {
+                croak(
+                    join(q{ },
+                        qq{${tag} is a classification tag},
+                        q{and cannot not be assigned a severity},
+                        qq{(profile "$pname", section $sno)}));
+            }
+            $t->set_severity($severity);
         }
         if ($overridable != -1) {
             if ($overridable) {

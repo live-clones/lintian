@@ -43,6 +43,7 @@ our $MANUALS
 
 # Map severity/certainty levels to tag codes.
 our %CODES = (
+    classification => { 'wild-guess' => 'C', possible => 'C', certain => 'C' },
     pedantic  => { 'wild-guess' => 'P', possible => 'P', certain => 'P' },
     wishlist  => { 'wild-guess' => 'I', possible => 'I', certain => 'I' },
     minor     => { 'wild-guess' => 'I', possible => 'I', certain => 'W' },
@@ -277,6 +278,12 @@ sub description {
               . ' and might still give surprising results.  Feel free to'
               . ' ignore experimental tags that do not seem to make sense,'
               . ' though of course bug reports are always welcome.');
+    }
+    if ($severity eq 'classification') {
+        push(@text,
+            '',
+            'This tag intended as a classification'
+              . '  and is <i>not</i> an issue in the package.');
     }
 
     # Format and return the output.

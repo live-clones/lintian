@@ -28,6 +28,11 @@ use Lintian::Output qw(:util);
 use parent qw(Lintian::Output);
 
 my %codes = (
+    'classification' => {
+        'wild-guess' => 'C?',
+        'possible' => 'C ',
+        'certain' => 'C!'
+    },
     'pedantic' => {
         'wild-guess' => 'P?',
         'possible' => 'P ',

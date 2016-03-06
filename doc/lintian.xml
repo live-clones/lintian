@@ -929,9 +929,12 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
               <term><emphasis>Severity</emphasis> (simple, optional)</term>
               <listitem>
                 <para>
-                  The value must be a valid tag severity; the severity
-                  of the affected tags is set to this value.  Note
-                  that <emphasis>experimental</emphasis> is not a
+                  The value must be a valid tag severity other than "classification".
+                  The severity of the affected tags is set to this value.  This
+                  cannot be used on any tag that is defined as a "classification" tag.
+                </para>
+                <para>
+                  Note that <emphasis>experimental</emphasis> is not a
                   severity.
                 </para>
               </listitem>

@@ -42,7 +42,8 @@ BEGIN {
 our $GLOBAL;
 
 # Ordered lists of severities and certainties, used for display level parsing.
-our @SEVERITIES  = qw(pedantic wishlist minor normal important serious);
+our @SEVERITIES
+  = qw(classification pedantic wishlist minor normal important serious);
 our @CERTAINTIES = qw(wild-guess possible certain);
 
 =head1 NAME
@@ -146,6 +147,8 @@ sub new {
     my $self = {
         current           => undef,
         display_level     => {
+            classification =>
+              { 'wild-guess' => 0, possible => 0, certain => 0 },
             wishlist  => { 'wild-guess' => 0, possible => 0, certain => 0 },
             minor     => { 'wild-guess' => 0, possible => 0, certain => 1 },
             normal    => { 'wild-guess' => 0, possible => 1, certain => 1 },

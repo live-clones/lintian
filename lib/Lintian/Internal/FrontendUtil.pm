@@ -160,7 +160,7 @@ sub default_parallel {
     # Where the marked part(s) are optional values.  The numbers above
     # the example are the capture groups.
     my $TAG_REGEX
-      = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
+      = qr/([EWIXOPC]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
 
     sub split_tag {
         my ($tag_input) = @_;
