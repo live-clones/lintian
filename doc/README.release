@@ -8,12 +8,9 @@ Preparing and doing a release
 Run the full test suite while the distribution is still set to
 UNRELEASED to ensure everything and all tests are green.  Once
 complete, replace the placeholder in the changelog with the
-actual tags changed.  This two line script may be helpful:
+actual tags changed.  The following command may be helpful:
 
-  $ LAST_VERSION_RELEASED=2.5.20
-  $ perl -p -i -e \
-   "s,\s+XXX: generate tag summary with private/generate-tag-summary\Z,$(private/generate-tag-summary $LAST_VERSION_RELEASED..HEAD)" \
-    debian/changelog
+  $ private/generate-tag-summary --in-place
 
 Then set the distribution (e.g. via dch -r) and run the "scripts" test
 suite again.  This may appear redundant at first, but some of the
