@@ -354,3 +354,9 @@ Info: The package uses one (or more) of the obsolete dh parameters
  Please refer to the debhelper documentation for more information.
 Ref: https://lists.debian.org/debian-devel-changes/2011/08/msg00519.html,
  debhelper(7)
+
+Tag: debian-build-system
+Severity: classification
+Certainty: certain
+Info: This is the build system that Lintian believes the package is
+ using.

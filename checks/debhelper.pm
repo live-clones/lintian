@@ -65,8 +65,7 @@ sub run {
     my $dhcompatvalue;
     my $inclcdbs = 0;
 
-    my $bdepends_noarch;
-    my $bdepends;
+    my ($bdepends_noarch, $bdepends, %build_systems);
     my $seen_dh = 0;
     my $seen_python_helper = 0;
     my $seen_python3_helper = 0;
@@ -89,6 +88,8 @@ sub run {
 
         if (m/^\s+-?(dh_\S+)/) {
             my $dhcommand = $1;
+            $build_systems{'debhelper'} = 1
+              if not exists($build_systems{'dh'});
 
             if ($dhcommand eq 'dh_pysupport') {
                 tag 'dh_pysupport-is-obsolete', "line $.";
@@ -128,6 +129,8 @@ sub run {
             $seencommand = 1;
             $needbuilddepends = 1;
         } elsif (m,^\s+dh\s+,) {
+            $build_systems{'dh'} = 1;
+            delete($build_systems{'debhelper'});
             $seen_dh = 1;
             $seencommand = 1;
             $needbuilddepends = 1;
@@ -160,6 +163,8 @@ sub run {
                 $seen_python_helper = -1; # maybe; we'll check that later
             }
         } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
+            $build_systems{'cdbs-with-debhelper.mk'} = 1;
+            delete($build_systems{'cdbs-without-debhelper.mk'});
             $seencommand = 1;
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
@@ -182,6 +187,8 @@ sub run {
         } elsif (m,^include\s+/usr/share/cdbs/,
             or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
             $inclcdbs = 1;
+            $build_systems{'cdbs-without-debhelper.mk'} = 1
+              if not exists($build_systems{'cdbs-with-debhelper.mk'});
         }
     }
     close($rules_fd);
@@ -190,6 +197,13 @@ sub run {
         my $bdepends = $info->relation('build-depends-all');
         # Okay - d/rules does not include any file in /usr/share/cdbs/
         tag 'unused-build-dependency-on-cdbs' if ($bdepends->implies('cdbs'));
+    }
+
+    if (%build_systems) {
+        my @systems = sort(keys(%build_systems));
+        tag 'debian-build-system', join(', ', @systems);
+    } else {
+        tag 'debian-build-system', 'other';
     }
 
     return unless $seencommand;

@@ -3,7 +3,8 @@ Sequence: 6000
 Version: 1.0
 Description: Test for old debian/compat file
 Skeleton: pedantic
-Options: --pedantic -I -E
+Options: --pedantic -I -E -L +classification
 Test-Depends: debhelper (>= 9),
 Test-For:
  package-uses-old-debhelper-compat-version
+ debian-build-system
