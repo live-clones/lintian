@@ -6,6 +6,10 @@ lintian (2.5.43) UNRELEASED; urgency=medium
     + [NT] Add missing close and seek to the end of the new
       lintian log file before appending to it.
 
+  * data/binaries/embedded-libs:
+    + [JW] Apply patch from Sebastian Ramacher to allow ffmpeg as
+      libpostproc provider.  (Closes: #817004)
+
  -- Niels Thykier <niels@thykier.net>  Sat, 05 Mar 2016 20:58:52 +0000
 
 lintian (2.5.42) unstable; urgency=medium
