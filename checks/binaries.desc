@@ -387,7 +387,6 @@ Ref: https://wiki.debian.org/Hardening
 Tag: hardening-no-bindnow
 Severity: wishlist
 Certainty: certain
-Experimental: yes
 Info: This package provides an ELF binary that lacks the "bindnow"
  linker flag.
  .
@@ -406,7 +405,6 @@ Ref: https://wiki.debian.org/Hardening
 Tag: hardening-no-pie
 Severity: wishlist
 Certainty: certain
-Experimental: yes
 Info: This package provides an ELF executable that was not compiled
  as a position independent executable (PIE).
  .
