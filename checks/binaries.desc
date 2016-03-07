@@ -100,14 +100,27 @@ Info: The binary or shared library is stripped, but still contains a
 Tag: static-library-has-unneeded-section
 Severity: wishlist
 Certainty: certain
-Experimental: yes
-Info: Tag for tallying static libraries ".comment" sections.
+Info: The static library is stripped, but still contains a section
+ that is not useful.  You should call strip with
+ <tt>--remove-section=.comment --remove-section=.note</tt> to remove the
+ <tt>.note</tt> and <tt>.comment</tt> sections.
+ .
+ <tt>dh_strip</tt> (after debhelper/9.20150811) will do this
+ automatically for you, but <tt>install -s</tt> not because it calls strip
+ without any arguments.
 
 Tag: unstripped-static-library
 Severity: wishlist
 Certainty: certain
-Experimental: yes
-Info: Tag for tallying unstripped static libraries.
+Info: The package installs an unstripped static library.
+ .
+ Please note, that static libraries have to be stripped with the
+ <tt>--strip-debug</tt> option.  You will probably also want to
+ use <tt>--remove-section=.comment --remove-section=.note</tt>
+ to avoid the static-library-has-unneeded-section tag.
+ .
+ <tt>dh_strip</tt> (after debhelper/9.20150811) will do this
+ automatically for you.
 
 Tag: missing-depends-line
 Severity: normal

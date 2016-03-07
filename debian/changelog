@@ -2,6 +2,10 @@ lintian (2.5.43) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/binaries.desc:
+    + [NT] Remove the experimental marker from the tags about
+      (partially) unstripped static libraries.
+
   * commands/reporting-lintian-harness.pm:
     + [NT] Add missing close and seek to the end of the new
       lintian log file before appending to it.
