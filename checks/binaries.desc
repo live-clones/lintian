@@ -95,7 +95,8 @@ Info: The binary or shared library is stripped, but still contains a
  <tt>.note</tt> and <tt>.comment</tt> sections.
  .
  <tt>dh_strip</tt> will do this automatically for you, but
- <tt>install -s</tt> not because it calls strip without any arguments.
+ <tt>install -s</tt> will not because it calls strip without any
+ arguments.
 
 Tag: static-library-has-unneeded-section
 Severity: wishlist
@@ -106,8 +107,8 @@ Info: The static library is stripped, but still contains a section
  <tt>.note</tt> and <tt>.comment</tt> sections.
  .
  <tt>dh_strip</tt> (after debhelper/9.20150811) will do this
- automatically for you, but <tt>install -s</tt> not because it calls strip
- without any arguments.
+ automatically for you, but <tt>install -s</tt> will not because it calls
+ strip without any arguments.
 
 Tag: unstripped-static-library
 Severity: wishlist
