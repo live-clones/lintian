@@ -16,6 +16,10 @@ lintian (2.5.43) UNRELEASED; urgency=medium
     + [JW] Apply patch from Sebastian Ramacher to allow ffmpeg as
       libpostproc provider.  (Closes: #817004)
 
+  * lib/Lintian/Tag/Info.pm:
+    + [JW] Use manpages.debian.org (instead of manpages.debian.net) for
+      manual page hyperlinks.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 05 Mar 2016 20:58:52 +0000
 
 lintian (2.5.42) unstable; urgency=medium

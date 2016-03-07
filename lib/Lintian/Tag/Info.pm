@@ -34,7 +34,7 @@ use Lintian::Tags qw();
 # when formatting references to manual pages into HTML to provide a link
 # to the manual page.
 our $MANURL
-  = 'http://manpages.debian.net/cgi-bin/man.cgi?query=NAME&amp;sektion=SECTION';
+  = 'http://manpages.debian.org/cgi-bin/man.cgi?query=NAME&amp;sektion=SECTION';
 
 # Stores the parsed manual reference data.  Loaded the first time info()
 # is called.
