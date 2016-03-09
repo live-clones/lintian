@@ -281,6 +281,7 @@ sub run {
         if ($first_timestamp) {
             my $dch_date = $entries[0]->Date;
             my ($weekday_declared, $date) = split(m/,\s*/, $dch_date, 2);
+            $date //= '';
             my ($tz, $weekday_actual);
 
             if ($date =~ m/[ ]+ ([^ ]+)\Z/xsm) {

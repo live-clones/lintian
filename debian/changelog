@@ -7,6 +7,9 @@ lintian (2.5.43) UNRELEASED; urgency=medium
       (partially) unstripped static libraries.
     + [NT] Remove the experimental marker from the no-pie and
       no-bindnow hardening tags.
+  * checks/changelog-file.pm:
+    + [JW] Fix use of uninitialized value when checking incorrectly
+      formatted changelog entries.
 
   * commands/reporting-lintian-harness.pm:
     + [NT] Add missing close and seek to the end of the new
