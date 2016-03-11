@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-03-05 19:39+0000\n"
+"POT-Creation-Date: 2016-03-11 17:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -408,7 +408,7 @@ msgstr ""
 #
 #. Tag: binary-has-unneeded-section
 #. type: Lintian tag description
-#: checks/binaries.desc:99
+#: checks/binaries.desc:100
 #, no-wrap
 msgid ""
 "The binary or shared library is stripped, but still contains a\n"
@@ -417,7 +417,8 @@ msgid ""
 "<tt>.note</tt> and <tt>.comment</tt> sections.\n"
 "\n"
 "<tt>dh_strip</tt> will do this automatically for you, but\n"
-"<tt>install -s</tt> not because it calls strip without any arguments."
+"<tt>install -s</tt> will not because it calls strip without any\n"
+"arguments."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -425,9 +426,17 @@ msgstr ""
 #
 #. Tag: static-library-has-unneeded-section
 #. type: Lintian tag description
-#: checks/binaries.desc:105
+#: checks/binaries.desc:112
 #, no-wrap
-msgid "Tag for tallying static libraries \".comment\" sections."
+msgid ""
+"The static library is stripped, but still contains a section\n"
+"that is not useful.  You should call strip with\n"
+"<tt>--remove-section=.comment --remove-section=.note</tt> to remove the\n"
+"<tt>.note</tt> and <tt>.comment</tt> sections.\n"
+"\n"
+"<tt>dh_strip</tt> (after debhelper/9.20150811) will do this\n"
+"automatically for you, but <tt>install -s</tt> will not because it calls\n"
+"strip without any arguments."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -435,9 +444,18 @@ msgstr ""
 #
 #. Tag: unstripped-static-library
 #. type: Lintian tag description
-#: checks/binaries.desc:111
+#: checks/binaries.desc:125
 #, no-wrap
-msgid "Tag for tallying unstripped static libraries."
+msgid ""
+"The package installs an unstripped static library.\n"
+"\n"
+"Please note, that static libraries have to be stripped with the\n"
+"<tt>--strip-debug</tt> option.  You will probably also want to\n"
+"use <tt>--remove-section=.comment --remove-section=.note</tt>\n"
+"to avoid the static-library-has-unneeded-section tag.\n"
+"\n"
+"<tt>dh_strip</tt> (after debhelper/9.20150811) will do this\n"
+"automatically for you."
 msgstr ""
 
 #. Please keep the leading space.  Indented lines are used for
@@ -445,7 +463,7 @@ msgstr ""
 #
 #. Tag: missing-depends-line
 #. type: Lintian tag description
-#: checks/binaries.desc:119
+#: checks/binaries.desc:133
 #, no-wrap
 msgid ""
 "The package contains an ELF binary with dynamic dependencies,\n"
@@ -459,7 +477,7 @@ msgstr ""
 #
 #. Tag: shared-lib-without-dependency-information
 #. type: Lintian tag description
-#: checks/binaries.desc:132
+#: checks/binaries.desc:146
 #, no-wrap
 msgid ""
 "The listed shared library doesn't include information about which\n"
@@ -478,7 +496,7 @@ msgstr ""
 #
 #. Tag: arch-dependent-file-in-usr-share
 #. type: Lintian tag description
-#: checks/binaries.desc:139
+#: checks/binaries.desc:153
 #, no-wrap
 msgid ""
 "This package installs an ELF binary in the <tt>/usr/share</tt>\n"
@@ -490,7 +508,7 @@ msgstr ""
 #
 #. Tag: arch-dependent-file-not-in-arch-specific-directory
 #. type: Lintian tag description
-#: checks/binaries.desc:146
+#: checks/binaries.desc:160
 #, no-wrap
 msgid ""
 "This package is Multi-Arch \"same\", but it installs an ELF binary in the\n"
@@ -502,7 +520,7 @@ msgstr ""
 #
 #. Tag: binary-in-etc
 #. type: Lintian tag description
-#: checks/binaries.desc:153
+#: checks/binaries.desc:167
 #, no-wrap
 msgid ""
 "This package installs an ELF binary in <tt>/etc</tt>.  The\n"
@@ -514,7 +532,7 @@ msgstr ""
 #
 #. Tag: binary-compiled-with-profiling-enabled
 #. type: Lintian tag description
-#: checks/binaries.desc:159
+#: checks/binaries.desc:173
 #, no-wrap
 msgid ""
 "While profiling is useful for testing and debugging purposes, enabling\n"
@@ -526,7 +544,7 @@ msgstr ""
 #
 #. Tag: package-name-doesnt-match-sonames
 #. type: Lintian tag description
-#: checks/binaries.desc:169
+#: checks/binaries.desc:183
 #, no-wrap
 msgid ""
 "The package name of a library package should usually reflect\n"
@@ -544,7 +562,7 @@ msgstr ""
 #
 #. Tag: binary-with-bad-dynamic-table
 #. type: Lintian tag description
-#: checks/binaries.desc:180
+#: checks/binaries.desc:194
 #, no-wrap
 msgid ""
 "This appears to be an ELF file.  According to readelf, the\n"
@@ -561,7 +579,7 @@ msgstr ""
 #
 #. Tag: apparently-corrupted-elf-binary
 #. type: Lintian tag description
-#: checks/binaries.desc:190
+#: checks/binaries.desc:204
 #, no-wrap
 msgid ""
 "This appears to be an ELF file but readelf cannot parse it.\n"
@@ -577,7 +595,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-libc
 #. type: Lintian tag description
-#: checks/binaries.desc:205
+#: checks/binaries.desc:219
 #, no-wrap
 msgid ""
 "The listed file appears to be linked against the C library, but the\n"
@@ -597,7 +615,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-libstdc++
 #. type: Lintian tag description
-#: checks/binaries.desc:221
+#: checks/binaries.desc:235
 #, no-wrap
 msgid ""
 "The listed file appears to be linked against the C++ library, but the\n"
@@ -618,7 +636,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-perlapi
 #. type: Lintian tag description
-#: checks/binaries.desc:233
+#: checks/binaries.desc:247
 #, no-wrap
 msgid ""
 "This package includes a *.so file in <tt>/usr/lib/.../perl5</tt>,\n"
@@ -635,7 +653,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-phpapi
 #. type: Lintian tag description
-#: checks/binaries.desc:249
+#: checks/binaries.desc:263
 #, no-wrap
 msgid ""
 "This package includes a *.so file in <tt>/usr/lib/phpN</tt>\n"
@@ -657,7 +675,7 @@ msgstr ""
 #
 #. Tag: missing-dependency-on-numpy-abi
 #. type: Lintian tag description
-#: checks/binaries.desc:259
+#: checks/binaries.desc:273
 #, no-wrap
 msgid ""
 "This package includes a Python extension module, which uses Numpy via its\n"
@@ -672,7 +690,7 @@ msgstr ""
 #
 #. Tag: debug-file-should-use-detached-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:277
+#: checks/binaries.desc:291
 #, no-wrap
 msgid ""
 "This file is in a location generally used for detached debugging\n"
@@ -695,7 +713,7 @@ msgstr ""
 #
 #. Tag: binary-from-other-architecture
 #. type: Lintian tag description
-#: checks/binaries.desc:285
+#: checks/binaries.desc:299
 #, no-wrap
 msgid ""
 "This ELF binary appears to have been built for an architecture other\n"
@@ -709,7 +727,7 @@ msgstr ""
 #
 #. Tag: spelling-error-in-binary
 #. type: Lintian tag description
-#: checks/binaries.desc:305
+#: checks/binaries.desc:319
 #, no-wrap
 msgid ""
 "Lintian found a spelling error in the given binary.  Lintian has a\n"
@@ -735,7 +753,7 @@ msgstr ""
 #
 #. Tag: embedded-library
 #. type: Lintian tag description
-#: checks/binaries.desc:318
+#: checks/binaries.desc:332
 #, no-wrap
 msgid ""
 "The given ELF object appears to have been statically linked to\n"
@@ -753,7 +771,7 @@ msgstr ""
 #
 #. Tag: debug-symbols-directly-in-usr-lib-debug
 #. type: Lintian tag description
-#: checks/binaries.desc:330
+#: checks/binaries.desc:344
 #, no-wrap
 msgid ""
 "The given debugging symbols-only object is installed directly in\n"
@@ -771,7 +789,7 @@ msgstr ""
 #
 #. Tag: ocaml-custom-executable
 #. type: Lintian tag description
-#: checks/binaries.desc:338
+#: checks/binaries.desc:352
 #, no-wrap
 msgid ""
 "This package provides an OCaml bytecode executable linked with a\n"
@@ -785,7 +803,7 @@ msgstr ""
 #
 #. Tag: hardening-no-stackprotector
 #. type: Lintian tag description
-#: checks/binaries.desc:349
+#: checks/binaries.desc:363
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the stack protector\n"
@@ -803,7 +821,7 @@ msgstr ""
 #
 #. Tag: hardening-no-fortify-functions
 #. type: Lintian tag description
-#: checks/binaries.desc:363
+#: checks/binaries.desc:377
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the use of fortified\n"
@@ -822,7 +840,7 @@ msgstr ""
 #
 #. Tag: hardening-no-relro
 #. type: Lintian tag description
-#: checks/binaries.desc:373
+#: checks/binaries.desc:387
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the \"read-only\n"
@@ -837,7 +855,7 @@ msgstr ""
 #
 #. Tag: hardening-no-bindnow
 #. type: Lintian tag description
-#: checks/binaries.desc:392
+#: checks/binaries.desc:405
 #, no-wrap
 msgid ""
 "This package provides an ELF binary that lacks the \"bindnow\"\n"
@@ -860,7 +878,7 @@ msgstr ""
 #
 #. Tag: hardening-no-pie
 #. type: Lintian tag description
-#: checks/binaries.desc:423
+#: checks/binaries.desc:436
 #, no-wrap
 msgid ""
 "This package provides an ELF executable that was not compiled\n"
@@ -894,7 +912,7 @@ msgstr ""
 #
 #. Tag: debug-file-with-no-debug-symbols
 #. type: Lintian tag description
-#: checks/binaries.desc:434
+#: checks/binaries.desc:447
 #, no-wrap
 msgid ""
 "The binary is installed as a detached \"debug symbols\" ELF file,\n"
@@ -910,7 +928,7 @@ msgstr ""
 #
 #. Tag: binary-file-built-without-LFS-support
 #. type: Lintian tag description
-#: checks/binaries.desc:458
+#: checks/binaries.desc:471
 #, no-wrap
 msgid ""
 "The listed ELF binary appears to be (partially) built without\n"
