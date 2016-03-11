@@ -1,3 +1,9 @@
+lintian (2.5.43) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary with private/generate-tag-summary
+
+ -- Niels Thykier <niels@thykier.net>  Fri, 11 Mar 2016 18:35:45 +0000
+
 lintian (2.5.42.1) unstable; urgency=medium
 
   * checks/binaries.desc:
