@@ -1,6 +1,4 @@
-lintian (2.5.43) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary with private/generate-tag-summary
+lintian (2.5.42.1) unstable; urgency=medium
 
   * checks/binaries.desc:
     + [NT] Remove the experimental marker from the tags about
@@ -23,7 +21,7 @@ lintian (2.5.43) UNRELEASED; urgency=medium
     + [JW] Use manpages.debian.org (instead of manpages.debian.net) for
       manual page hyperlinks.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 05 Mar 2016 20:58:52 +0000
+ -- Niels Thykier <niels@thykier.net>  Fri, 11 Mar 2016 17:43:28 +0000
 
 lintian (2.5.42) unstable; urgency=medium
 
