@@ -113,6 +113,7 @@ override_dh_install:
 	     -e 's@my \$$INIT_ROOT(\s*=.*)?;@my \$$INIT_ROOT = q{/usr/share/lintian};@;' \
 	    $(tmp)/usr/share/lintian/commands/lintian \
 	    $(tmp)/usr/share/lintian/frontend/dplint
+	$(tmp)/usr/share/lintian/frontend/dplint --print-version
 	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
 	# Remove the l10n dir, if empty - happens if there are no translations
 	rmdir --ignore-fail-on-non-empty $(tmp)/usr/share/lintian/l10n

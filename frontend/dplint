@@ -64,7 +64,8 @@ use Getopt::Long();
 # is simply a placeholder to make the command work out of the box in
 # the source tree.
 my $INIT_ROOT = find_source_root();
-my ($LINTIAN_VERSION, @INCLUDE_DIRS, @RESTRICTED_INCLUDE_DIRS);
+my (@INCLUDE_DIRS, @RESTRICTED_INCLUDE_DIRS);
+my $LINTIAN_VERSION; # Substituted during build/install
 
 my %BUILTINS = (
     'help' => \&builtin_help,

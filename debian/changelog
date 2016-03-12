@@ -2,6 +2,11 @@ lintian (2.5.43) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * frontend/dplint:
+    + [NT] Put $LINTIAN_VERSION on its own line so the build
+      time substitution works again.  Thanks to Stuart
+      Prescott for reporting the issue.
+
  -- Niels Thykier <niels@thykier.net>  Fri, 11 Mar 2016 18:35:45 +0000
 
 lintian (2.5.42.1) unstable; urgency=medium
