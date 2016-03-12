@@ -293,7 +293,7 @@ sub check_spelling {
     strip($text);
 
     for my $word (split(' ', $text)) {
-        $word =~ tr/.,;:?!//d;
+        $word =~ s/[.,;:?!]+$//;
         next if ($word =~ /^[A-Z]{1,5}\z/);
         # Some exceptions are based on case (e.g. "teH").
         next if exists($exceptions->{$word});

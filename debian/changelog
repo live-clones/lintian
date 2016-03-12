@@ -7,6 +7,11 @@ lintian (2.5.43) UNRELEASED; urgency=medium
       time substitution works again.  Thanks to Stuart
       Prescott for reporting the issue.
 
+  * lib/Lintian/Check.pm:
+    + [JW,ADB] Don't ignore midword punctuation characters when
+      spell-checking.  (Closes: #818003)  Thanks to Andreas Beckmann for
+      the bug report.
+
  -- Niels Thykier <niels@thykier.net>  Fri, 11 Mar 2016 18:35:45 +0000
 
 lintian (2.5.42.1) unstable; urgency=medium
