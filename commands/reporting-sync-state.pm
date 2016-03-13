@@ -37,7 +37,7 @@ use Lintian::Util qw(
   untaint
 );
 
-my $DEFAULT_CHECKSUM = 'sha1';
+my $DEFAULT_CHECKSUM = 'sha256';
 my (%KNOWN_MEMBERS, %ACTIVE_GROUPS);
 my %OPT;
 my %OPT_HASH= (
