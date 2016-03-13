@@ -5,3 +5,4 @@ E: version-substvars-general source: not-binnmuable-any-depends-any program-util
 E: version-substvars-general source: version-substvar-for-external-package program-data -> foreign-pkg
 E: version-substvars-general source: version-substvar-for-external-package program-data -> other-foreign-pkg
 W: version-substvars-general source: substvar-source-version-is-deprecated program-data
+X: version-substvars-general source: maybe-not-arch-all-binnmuable program-bin -> program-data-extra

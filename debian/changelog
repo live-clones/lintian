@@ -2,6 +2,14 @@ lintian (2.5.43) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/version-substvars.{desc,pm}:
+    + [NT] Add an experimental tag to check for arch:all
+      binNMUability.  This is currently not supported at all
+      and there is no known fix for the tag.  That said, it
+      is still useful for determine how many packages might
+      be affected by it in case Debian will support arch:all
+      binNMUs.
+
   * commands/reporting-sync-state.pm:
     + [NT] Use the sha256 instead of the sha1 checksum field
       for finding related files and checking of members have

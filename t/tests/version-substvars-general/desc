@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test of substvars
 Test-For:
+ maybe-not-arch-all-binnmuable
  not-binnmuable-all-depends-any
  not-binnmuable-any-depends-all
  not-binnmuable-any-depends-any

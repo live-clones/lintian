@@ -120,10 +120,14 @@ sub run {
                         # a bit weird.
                         1;
                     }
-                } elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
+                } elsif (not $pkg2_is_any) {
                     # (b2) any -> all ( = ${binary:Version}) [or S-V]
                     # or  -- same --  (>= ${binary:Version}) [or S-V]
-                    tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
+                    tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2"
+                      if not $substvar_strips_binNMU;
+                    if ($substvar_strips_binNMU and not $gt) {
+                        tag 'maybe-not-arch-all-binnmuable', "$pkg1 -> $pkg2";
+                    }
                 }
             } elsif ($pkg2_is_any && !$gt) {
                 # (b3) all -> any (= ${either-of-them})

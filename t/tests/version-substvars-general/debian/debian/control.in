@@ -8,7 +8,8 @@ Build-Depends: debhelper (>= 9)
 Package: program-bin
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         program-data (= $\{binary:Version\})
+         program-data (= $\{binary:Version\}),
+         program-data-extra (= $\{source:Version\})
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
