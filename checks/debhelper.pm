@@ -90,9 +90,6 @@ sub run {
         if (m/^\s+-?(dh_\S+)/) {
             my $dhcommand = $1;
 
-            if ($dhcommand eq 'dh_undocumented') {
-                tag 'dh_undocumented-is-obsolete', "line $.";
-            }
             if ($dhcommand eq 'dh_pysupport') {
                 tag 'dh_pysupport-is-obsolete', "line $.";
                 $seen_python_helper = 1;

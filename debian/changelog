@@ -2,6 +2,9 @@ lintian (2.5.43) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/debhelper.{desc,pm}:
+    + [NT] Remove check for dh_undocumented as debhelper has
+      dropped the helper.
   * checks/version-substvars.{desc,pm}:
     + [NT] Add an experimental tag to check for arch:all
       binNMUability.  This is currently not supported at all
