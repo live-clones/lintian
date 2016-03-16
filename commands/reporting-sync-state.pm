@@ -441,6 +441,11 @@ sub _open_data_file {
         binmode($fd, 'encoding(UTF-8)');
         return $fd;
     }
+    if (-e "${file}.xz") {
+        open(my $fd, '-|', 'xz', '-dc', "${file}.xz");
+        binmode($fd, 'encoding(UTF-8)');
+        return $fd;
+    }
     die("Cannot find ${file}: file does not exist");
 }
 

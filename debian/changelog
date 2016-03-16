@@ -17,6 +17,7 @@ lintian (2.5.43) UNRELEASED; urgency=medium
     + [NT] Use the sha256 instead of the sha1 checksum field
       for finding related files and checking which members
       have changed.
+    + [NT] Support reading Packages.xz and Sources.xz files.
 
   * frontend/dplint:
     + [NT] Put $LINTIAN_VERSION on its own line so the build
