@@ -19,6 +19,9 @@ lintian (2.5.43) UNRELEASED; urgency=medium
       have changed.
     + [NT] Support reading Packages.xz and Sources.xz files.
 
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
+
   * frontend/dplint:
     + [NT] Put $LINTIAN_VERSION on its own line so the build
       time substitution works again.  Thanks to Stuart
