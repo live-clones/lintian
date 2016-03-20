@@ -17,6 +17,7 @@
 #
 # Please keep the list sorted (using the en_US locale).
 
+abandonned||abandoned
 abandonning||abandoning
 abbrevation||abbreviation
 abbrevations||abbreviations
@@ -103,6 +104,7 @@ advertisments||advertisements
 adviced||advised
 afecting||affecting
 afer||after
+aforementionned||aforementioned
 afterall||after all
 agains||against
 agressive||aggressive
@@ -845,6 +847,7 @@ explictly||explicitly
 explit||explicit
 explitly||explicitly
 expresion||expression
+expresions||expressions
 expresssion||expression
 expresssions||expressions
 exprimental||experimental
@@ -1252,6 +1255,7 @@ mathimatics||mathematics
 maxium||maximum
 mecanism||mechanism
 mecanisms||mechanisms
+mentionned||mentioned
 ment||meant
 mesage||message
 mesages||messages
@@ -1264,6 +1268,7 @@ milisecond||millisecond
 miliseconds||milliseconds
 millenium||millennium
 milliseonds||milliseconds
+mimicing||mimicking
 mimick||mimic
 mimicks||mimics
 mininum||minimum
@@ -1484,6 +1489,7 @@ ploting||plotting
 poinnter||pointer
 portugese||Portuguese
 posible||possible
+positionned||positioned
 positve||positive
 positves||positives
 possesion||possession
@@ -1745,6 +1751,7 @@ sensistive||insensitive
 sensistively||insensitively
 sentance||sentence
 sentances||sentences
+sentinal||sentinel
 separatly||separately
 separed||separated
 separted||separated
@@ -1969,6 +1976,7 @@ transfered||transferred
 transfering||transferring
 transistions||transitions
 transistion||transition
+transitionned||transitioned
 transmition||transmission
 transtions||transitions
 transtion||transition
@@ -1992,6 +2000,7 @@ uncommmented||uncommented
 uncommmenting||uncommenting
 uncommments||uncomments
 uncommment||uncomment
+uncomplete||incomplete
 unconditionaly||unconditionally
 uncoverted||unconverted
 undesireable||undesirable
@@ -2048,6 +2057,7 @@ upates||updates
 upate||update
 upating||updating
 updateing||updating
+upsream||upstream
 upsteam||upstream
 upstrema||upstream
 upto||up to
