@@ -66,14 +66,21 @@ sub run {
     return;
 }
 
+sub get_init_service_name {
+    my ($file) = @_;
+    my $basename = $file->basename;
+    # sysv generator drops the .sh suffix
+    $basename =~ s/\.sh$//;
+    return $basename;
+}
+
 sub get_init_scripts {
     my ($info) = @_;
     my @scripts;
     if (my $initd_path = $info->index_resolved_path('etc/init.d/')) {
         for my $init_script ($initd_path->children) {
             # sysv generator drops the .sh suffix
-            my $basename = $init_script->basename;
-            $basename =~ s/\.sh$//;
+            my $basename = get_init_service_name($init_script);
             next if $INIT_WHITELIST->known($basename);
             next
               if $init_script->is_symlink
@@ -90,6 +97,7 @@ sub get_init_scripts {
 sub check_init_script {
     my ($info, $file, $services) = @_;
     my $basename = $file->basename;
+    my $servicename = get_init_service_name($file);
     my $lsb_source_seen;
     my $is_rcs_script = 0;
 
@@ -121,12 +129,12 @@ sub check_init_script {
     # Only tag if the maintainer of this package did any effort to
     # make the package work with systemd.
     tag 'systemd-no-service-for-init-script', $basename
-      if (%{$services} and not $services->{$basename});
+      if (%{$services} and not $services->{$servicename});
 
     # rcS scripts are particularly bad, warn even if there is
     # no systemd integration
     tag 'systemd-no-service-for-init-rcS-script', $basename
-      if (not $services->{$basename} and $is_rcs_script);
+      if (not $services->{$servicename} and $is_rcs_script);
     return;
 }
 
