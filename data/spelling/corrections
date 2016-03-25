@@ -282,6 +282,7 @@ bandwith||bandwidth
 basicly||basically
 batery||battery
 beacause||because
+beacuse||because
 beause||because
 becomming||becoming
 becuase||because
@@ -295,6 +296,7 @@ betwen||between
 bianries||binaries
 bizzare||bizarre
 blindy||blindly
+boundry||boundary
 brige||bridge
 briges||bridges
 brighness||brightness
@@ -327,6 +329,10 @@ ceate||create
 ceated||created
 ceates||creates
 ceating||creating
+cehck||check
+cehcked||checked
+cehcking||checking
+cehcks||checks
 certficate||certificate
 certficates||certificates
 certian||certain
@@ -880,7 +886,9 @@ faciliated||facilitated
 faciliate||facilitate
 faciliates||facilitates
 faciliating||facilitating
+failue||failure
 failuer||failure
+failues||failures
 falg||flag
 falgs||flags
 faliure||failure
@@ -1050,6 +1058,7 @@ implemenation||implementation
 implemenations||implementations
 implementaion||implementation
 implementaions||implementations
+implementated||implemented
 implemention||implementation
 implemetation||implementation
 implemeted||implemented
@@ -1097,6 +1106,10 @@ independant||independent
 independed||independent
 indepenent||independent
 indepenently||independently
+indiated||indicated
+indiate||indicate
+indiates||indicates
+indiating||indicating
 indiciated||indicated
 indiciate||indicate
 indiciates||indicates
@@ -1194,6 +1207,9 @@ interpets||interprets
 interpretes||interprets
 interruped||interrupted
 interupted||interrupted
+interupting||interrupting
+interupt||interrupt
+interupts||interrupts
 intial||initial
 intialisation||initialisation
 intialised||initialised
@@ -1224,6 +1240,7 @@ itialized||initialized
 itialize||initialize
 itializes||initializes
 itializing||initializing
+itslef||itself
 jave||java
 keywork||keyword
 langage||language
@@ -1759,6 +1776,7 @@ rmeoves||removes
 rougly||roughly
 rountine||routine
 rountines||routines
+runing||running
 runned||ran
 runnning||running
 sacrifying||sacrificing
@@ -1832,6 +1850,7 @@ shouldnt||shouldn't
 signficantly||significantly
 signficant||significant
 similarily||similarly
+similary||similarly
 similiarly||similarly
 similiar||similar
 simliar||similar
