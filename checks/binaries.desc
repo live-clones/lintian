@@ -425,11 +425,17 @@ Info: This package provides an ELF executable that was not compiled
  and the linker (e.g. for C that would be commonly be
  <tt>CFLAGS</tt> and <tt>LDFLAGS</tt>).
  .
- CAVEAT: Some binaries FTBFS when built with the PIE flags.  A
- notable example being static libraries (<tt>gcc -static</tt>).
- If your upstream build compiles both static libs and executables,
- you may have to patch the build to ensure that only the latter
- are compiled with PIE.
+ CAVEAT: Please keep in mind that the PIE flags (-fPIE) is not
+ suitable for all cases:
+ .
+  * It is <i>not</i> compatible with -fPIC which required for
+    compiling shared libraries.
+  * It is unlikely to work when compiling static libraries or
+    executables (<tt>gcc -static</tt>).
+ .
+ If your upstream build compiles either of the above, you may have to
+ patch the build to ensure that only ELF executables are compiled with
+ PIE.
 Ref: https://wiki.debian.org/Hardening,
  https://gcc.gnu.org/gcc-5/changes.html,
  https://software.intel.com/en-us/blogs/2014/12/26/new-optimizations-for-x86-in-upcoming-gcc-50-32bit-pic-mode
