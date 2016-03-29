@@ -24,6 +24,7 @@ lintian (2.5.43) UNRELEASED; urgency=medium
 
   * data/spelling/corrections:
     + [JW] Add more corrections.
+      Thanks to Mattia Rizzolo for suggesting one of them.
 
   * frontend/dplint:
     + [NT] Put $LINTIAN_VERSION on its own line so the build

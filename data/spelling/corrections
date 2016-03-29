@@ -318,6 +318,10 @@ calcualted||calculated
 calcualtes||calculates
 calcualting||calculating
 calender||calendar
+calulate||calculate
+calulated||calculated
+calulates||calculates
+calulating||calculating
 cancelation||cancellation
 capabilies||capabilities
 capabilites||capabilities
@@ -425,6 +429,8 @@ compatiability||compatibility
 compatibiliy||compatibility
 compatibilty||compatibility
 compatiblity||compatibility
+competion||completion
+competions||completions
 compilant||compliant
 compleatly||completely
 completly||completely
@@ -913,6 +919,8 @@ fetaure||feature
 fetaures||features
 filesytem||filesystem
 filesytems||filesystems
+fileystem||filesystem
+fileystems||filesystems
 findout||find out
 fitler||filter
 fitlers||filters
@@ -1076,6 +1084,8 @@ implemeted||implemented
 implemet||implement
 implemeting||implementing
 implemets||implements
+implemntation||implementation
+implemntations||implementations
 implicitely||implicitly
 implicity||implicitly
 implmentation||implementation
@@ -1391,6 +1401,7 @@ necesarrily||necessarily
 necesarry||necessary
 necesary||necessary
 necessar||necessary
+nedded||needed
 neeeded||needed
 neeeding||needing
 neeed||need
@@ -1413,6 +1424,8 @@ nubmer||number
 nubmers||numbers
 numberal||numeral
 numberals||numerals
+numebr||number
+numebrs||numbers
 observered||observed
 obsure||obscure
 o'caml||OCaml
@@ -1754,6 +1767,8 @@ reserverd||reserved
 resizeable||resizable
 resouce||resource
 resouces||resources
+resoure||resource
+resoures||resources
 responsabilities||responsibilities
 responsability||responsibility
 responsed||responded
@@ -2034,6 +2049,10 @@ threshhold||threshold
 throught||through
 thses||these
 thsi||this
+tiggered||triggered
+tiggering||triggering
+tiggers||triggers
+tigger||trigger
 tigthened||tightened
 tigthening||tightening
 tigthens||tightens
@@ -2092,6 +2111,8 @@ uncommment||uncomment
 uncomplete||incomplete
 unconditionaly||unconditionally
 uncoverted||unconverted
+underuns||underruns
+underun||underrun
 undesireable||undesirable
 unecessary||unnecessary
 uneeded||unneeded
@@ -2118,6 +2139,7 @@ unneccessarily||unnecessarily
 unneccessary||unnecessary
 unnecesarily||unnecessarily
 unnecesary||unnecessary
+unnedded||unneeded
 unneedingly||unnecessarily
 unnesesarily||unnecessarily
 unnessecary||unnecessary
