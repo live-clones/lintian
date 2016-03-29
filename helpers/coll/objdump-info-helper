@@ -168,6 +168,8 @@ while (my $line = <$readelf>) {
             $value =~ s/.*\[//;
             $value =~ s/\]\s*$//;
             $keep = 1;
+        } elsif ($type eq 'TEXTREL') {
+            $keep = 1;
         }
         $keep = 1
           if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;

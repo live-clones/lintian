@@ -30,6 +30,10 @@ lintian (2.5.43) UNRELEASED; urgency=medium
       time substitution works again.  Thanks to Stuart
       Prescott for reporting the issue.
 
+  * helpers/coll/objdump-info-helper:
+    + [JW] Apply patch from Dan Nicholson to keep TEXTREL entries from the
+      dynamic section.  (Closes: #819506)
+
   * lib/Lintian/Check.pm:
     + [JW,ADB] Don't ignore midword punctuation characters when
       spell-checking.  (Closes: #818003)  Thanks to Andreas Beckmann for
