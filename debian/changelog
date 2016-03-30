@@ -40,6 +40,10 @@ lintian (2.5.43) UNRELEASED; urgency=medium
       spell-checking.  (Closes: #818003)  Thanks to Andreas Beckmann for
       the bug report.
 
+  * t/tests/binaries-missing-depends-on-libc/debian/debian/rules:
+    + [JW] Apply patch from Dan Nicholson to pass --no-as-needed to the
+      linker.  (Closes: #819551)
+
  -- Niels Thykier <niels@thykier.net>  Fri, 11 Mar 2016 18:35:45 +0000
 
 lintian (2.5.42.1) unstable; urgency=medium
