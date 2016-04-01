@@ -8,8 +8,6 @@ Test-For:
  invalid-profile-name-in-source-relation
  invalid-profile-name-in-build-profiles-field
  invalid-restriction-formula-in-build-profiles-field
- restriction-formula-with-debhelper-with-conflicting-version
  restriction-formula-with-debhelper-without-debhelper-version
- restriction-formula-with-versioned-dpkg-dev-conflict
  restriction-formula-without-versioned-dpkg-dev-dependency
 References: Debian Bug#540594, Debian Bug#551793

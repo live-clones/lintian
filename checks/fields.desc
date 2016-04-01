@@ -667,14 +667,6 @@ Info: If a restriction formula appears in the source relation or if the
  package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal
  restriction formula support.
 
-Tag: restriction-formula-with-versioned-dpkg-dev-conflict
-Severity: normal
-Certainty: certain
-Info: If a restriction formula appears in the build dependencies or if the
- Build-Profiles field is used in a binary package stanza then the source
- package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal
- restriction formula support. It must not conflict with version 1.17.14.
-
 Tag: restriction-formula-with-debhelper-without-debhelper-version
 Severity: normal
 Certainty: certain
@@ -682,14 +674,6 @@ Info: If a restriction formula appears in the build dependencies or if the
  Build-Profiles field is used in a binary package stanza and the package uses
  debhelper, then the source package has to depend on at least debhelper
  9.20141010.
-
-Tag: restriction-formula-with-debhelper-with-conflicting-version
-Severity: normal
-Certainty: certain
-Info: If a restriction formula appears in the build dependencies or if the
- Build-Profiles field is used in a binary package stanza and the package uses
- debhelper, then the source package has to depend on at least debhelper
- 9.20141010. It must not conflict with version 9.20141010.
 
 Tag: depends-on-build-essential-package-without-using-version
 Severity: important

@@ -2,6 +2,9 @@ lintian (2.5.43) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/{control-file,fields}.{desc,pm}:
+    + [JW] Remove confusing checks for build-conflicts related to build
+      profiles.
   * checks/debhelper.{desc,pm}:
     + [NT] Remove check for dh_undocumented as debhelper has
       dropped the helper.
