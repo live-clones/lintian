@@ -425,7 +425,7 @@ Info: This package provides an ELF executable that was not compiled
  and the linker (e.g. for C that would be commonly be
  <tt>CFLAGS</tt> and <tt>LDFLAGS</tt>).
  .
- CAVEAT: Please keep in mind that the PIE flags (-fPIE) is not
+ CAVEAT: Please keep in mind that the PIE flag (-fPIE) is not
  suitable for all cases:
  .
   * It is <i>not</i> compatible with -fPIC which required for
