@@ -11,8 +11,8 @@ use autodie;
 use Test::More;
 
 # How much out of date the check may be; measured in seconds
-# 1 month
-use constant ERROR_MARGIN => 3600 * 24 * 31;
+# 2 months
+use constant ERROR_MARGIN => 3600 * 24 * 31 * 2;
 # How long before a SV is considered "Ancient" in seconds.
 # 2 years.
 use constant ANCIENT_AGE  => 3600 * 24 * 365 * 2;
@@ -47,7 +47,8 @@ while (my $line = <$fd>) {
           or die "Cannot parse date ($date, line $.): $!";
         my $time = time - ANCIENT_AGE;
         $found = 1;
-        cmp_ok($time, '<', $and + ERROR_MARGIN, 'ANCIENT_DATE is up to date');
+        cmp_ok($time, '<', $and + ERROR_MARGIN, 'ANCIENT_DATE is up to date')
+          or diag(' * Please update data/standards-version/ancient-date');
         cmp_ok(
             $time, '>',
             $and - ERROR_MARGIN,
