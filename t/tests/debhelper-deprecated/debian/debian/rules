@@ -22,7 +22,7 @@ binary-indep:
 	dh_installchangelogs
 	dh_installdocs
 	dh_installmanpages
-	dh_desktop
+
 	#dh_scrollkeeper
 	-dh_python-ply # neither should this
 	-dh_pysupport

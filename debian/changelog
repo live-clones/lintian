@@ -6,8 +6,8 @@ lintian (2.5.43) UNRELEASED; urgency=medium
     + [JW] Remove confusing checks for build-conflicts related to build
       profiles.
   * checks/debhelper.{desc,pm}:
-    + [NT] Remove check for dh_undocumented as debhelper has
-      dropped the helper.
+    + [NT] Remove check for dh_undocumented and dh_desktop as debhelper
+      has dropped the helper.
   * checks/systemd.pm:
     + [JW] Apply patch from Felipe Sateler to properly remove .sh suffix
       when checking systemd-initscript matching.  (Closes: #819087)

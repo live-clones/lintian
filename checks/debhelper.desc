@@ -80,14 +80,6 @@ Ref: dh_installmanpages(1)
 Info: This package calls dh_installmanpages in its <tt>debian/rules</tt> file.
  dh_installmanpages is deprecated in favour of dh_installman.
 
-Tag: dh_desktop-is-deprecated
-Severity: normal
-Certainty: certain
-Ref: dh_desktop(1)
-Info: This package calls dh_desktop in its <tt>debian/rules</tt> file.
- dh_desktop is deprecated and no longer does anything.  The setup it used
- to handle is now done with triggers.
-
 Tag: dh-clean-k-is-deprecated
 Severity: normal
 Certainty: certain

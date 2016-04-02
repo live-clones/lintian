@@ -107,9 +107,6 @@ sub run {
             # Don't warn about recently deprecated commands in code that may be
             # optional.  It may be there only for backports.
             unless ($maybe_skipping) {
-                if ($dhcommand eq 'dh_desktop') {
-                    tag 'dh_desktop-is-deprecated', "line $.";
-                }
                 if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
                     $seendhcleank = 1;
                 }
