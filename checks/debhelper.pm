@@ -104,12 +104,8 @@ sub run {
                 $seen_python_helper = 1;
             }
 
-            # Don't warn about recently deprecated commands in code that may be
-            # optional.  It may be there only for backports.
-            unless ($maybe_skipping) {
-                if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
-                    $seendhcleank = 1;
-                }
+            if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
+                $seendhcleank = 1;
             }
 
             # if command is passed -n, it does not modify the scripts
