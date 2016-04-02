@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Test::Lintian;
 use Test::More;
 if ($ENV{'LINTIAN_COVERAGE'}) {
     plan 'skip_all' => 'Not needed for coverage of Lintian';
@@ -22,10 +23,11 @@ $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 # BEGIN, so make sure it is present for them.
 $ENV{'LINTIAN_INCLUDE_DIRS'} = $ENV{'LINTIAN_TEST_ROOT'};
 
-my @DIRS = map { "$ENV{'LINTIAN_TEST_ROOT'}/$_" }
-  qw(lib private frontend helpers collection checks commands doc/examples/checks);
-all_perl_files_ok(@DIRS);
-
-# html_reports loads ./config, so we have do chdir before checking it.
-chdir("$ENV{'LINTIAN_TEST_ROOT'}/reporting");
-all_perl_files_ok('.');
+if ($0 =~ m{^(?:.*/)?reporting\.t$}) {
+    # html_reports loads ./config, so we have do chdir before checking it.
+    chdir("$ENV{'LINTIAN_TEST_ROOT'}/reporting");
+    all_perl_files_ok('.');
+} else {
+    my @test_paths = program_name_to_perl_paths($0);
+    all_perl_files_ok(@test_paths);
+}
