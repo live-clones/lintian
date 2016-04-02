@@ -90,9 +90,6 @@ rebuild-lintian.debian.org: api-doc generate-docs-stamp
 	# done
 
 override_dh_auto_build: $(neededfiles) generate-docs-stamp $(po4acheckcfg)
-	mkdir -p l10n
-	PERL5LIB=lib/ po4a --keep 80 $(po4acheckcfg)
-
 	# check that the static data about perl core modules is up to date
 	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
 
@@ -115,8 +112,6 @@ override_dh_install:
 	    $(tmp)/usr/share/lintian/frontend/dplint
 	$(tmp)/usr/share/lintian/frontend/dplint --print-version
 	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
-	# Remove the l10n dir, if empty - happens if there are no translations
-	rmdir --ignore-fail-on-non-empty $(tmp)/usr/share/lintian/l10n
 
 override_dh_auto_test: $(testtarget)
 
