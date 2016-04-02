@@ -6,5 +6,8 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Architecture: any
 Test-For:
+ insane-line-length-in-source-file
  source-contains-prebuilt-javascript-object
+ source-contains-prebuilt-pandoc-documentation
  source-is-missing
+
