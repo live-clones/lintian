@@ -212,7 +212,7 @@ my (%statistics, %tag_statistics);
 my (%by_maint, %by_uploader, %by_tag, @maintainers, %maintainer_table, %delta);
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
   errors warnings info experimental pedantic overridden groups-known
-  groups-backlog);
+  groups-backlog classifications);
 
 print "Parsing lintian log...\n";
 parse_lintian_log();
@@ -694,6 +694,7 @@ sub parse_lintian_log {
         X => 'experimental',
         O => 'overridden',
         P => 'pedantic',
+        C => 'classifications',
     );
     while (<>) {
         my @parts;
