@@ -81,11 +81,11 @@ our %known_tkxs = map { $_ => 1 } ('tkx8.2', 'tkx8.3',);
 our %known_libpngs = map { $_ => 1 } ('libpng12-0', 'libpng2', 'libpng3',);
 
 our @known_java_pkg = map { qr/$_/ } (
-    'default-jre(?:-headless)?', 'default-jdk', # default java
-    'java\d*-runtime(?:-headless)?'
-    , # java-runtime and javaX-runtime alternatives (virtual)
-    '(openjdk-|sun-java)\d+-jre(?:-headless)?',
-    '(openjdk-|sun-java)\d+-jdk', # openjdk-X and sun-javaX
+    'default-j(?:re|dk)(?:-headless)?',
+    # java-runtime and javaX-runtime alternatives (virtual)
+    'java\d*-runtime(?:-headless)?',
+    # openjdk-X and sun-javaX
+    '(openjdk-|sun-java)\d+-j(?:re|dk)(?:-headless)?',
     'gcj-(?:\d+\.\d+-)?jre(?:-headless)?', 'gcj-(?:\d+\.\d+-)?jdk', # gcj
     'gij',
     'java-gcj-compat(?:-dev|-headless)?', # deprecated/transitional packages
