@@ -1,6 +1,13 @@
-lintian (2.5.43) UNRELEASED; urgency=medium
+lintian (2.5.43) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - maybe-not-arch-all-binnmuable
+    + Removed:
+      - dh_desktop-is-deprecated
+      - dh_undocumented-is-obsolete
+      - restriction-formula-with-debhelper-with-conflicting-version
+      - restriction-formula-with-versioned-dpkg-dev-conflict
 
   * checks/{control-file,fields}.{desc,pm}:
     + [JW] Remove confusing checks for build-conflicts related to build
@@ -47,7 +54,7 @@ lintian (2.5.43) UNRELEASED; urgency=medium
     + [JW] Apply patch from Dan Nicholson to pass --no-as-needed to the
       linker.  (Closes: #819551)
 
- -- Niels Thykier <niels@thykier.net>  Fri, 11 Mar 2016 18:35:45 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 09:01:08 +0000
 
 lintian (2.5.42.1) unstable; urgency=medium
 
