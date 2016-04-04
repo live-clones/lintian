@@ -5,6 +5,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * checks/fields.pm:
     + [NT] Add default-jdk-headless and openjdk-X-jdk-headless
       to the set of known java providers.
+    + [JW] Relax build profile dependency checks to allow versions with
+      trailing tilde.  (Closes: #819509)  Thanks to Felix Geyer for the bug
+      report.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
 
