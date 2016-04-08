@@ -9,6 +9,13 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       trailing tilde.  (Closes: #819509)  Thanks to Felix Geyer for the bug
       report.
 
+  * data/standards-version/release-dates:
+    + [AB] Add 3.9.8.
+
+  * debian/control:
+    + [AB] Declare compliance with Debian Policy 3.9.8. (No other changes
+      required.)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
 
 lintian (2.5.43) unstable; urgency=medium
