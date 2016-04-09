@@ -28,9 +28,9 @@
 
  -- Unknown <unknown@unknown>  {$date}
 
-{$source} () unstable; urgency=low
+{$source} (0.1) unstable; urgency=low
 
-  * Syntax error here.
+  * Used to be a syntax error here.
 
  -- {$author}  {$date}
 

@@ -1,0 +1,2 @@
+W: changelog-file-syntax: syntax-error-in-debian-changelog line 15 "badly formatted heading line"
+W: changelog-file-syntax: syntax-error-in-debian-changelog line 17 "found change data where expected next heading or eof"

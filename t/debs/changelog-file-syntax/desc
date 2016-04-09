@@ -1,0 +1,5 @@
+Testname: changelog-file-syntax
+Sequence: 6000
+Version: 1.0
+Description: Test for syntax errors in changelogs
+Test-For: syntax-error-in-debian-changelog

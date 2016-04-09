@@ -13,4 +13,3 @@ Test-For:
  latest-debian-changelog-entry-without-new-date
  latest-debian-changelog-entry-without-new-version
  possible-missing-colon-in-closes
- syntax-error-in-debian-changelog
