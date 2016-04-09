@@ -115,7 +115,7 @@ chomp $ARCHITECTURE;
 our %TEMPLATES = (
     'tests'  => ['debian/changelog', 'debian/control'],
     'debs'   => ['changelog', 'control', 'Makefile'],
-    'source' => ['changelog', 'control'],
+    'source' => ['changelog', 'control', 'dsc.in'],
 );
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;
@@ -384,7 +384,7 @@ sub test_package {
             ['--exclude=debian/changelog']);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            unless (-e "$targetdir/$tfile") {
+            if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
                 fill_in_tmpl("$targetdir/$tfile", $testdata);
             }
         }
@@ -595,7 +595,7 @@ sub generic_test_runner {
             ['--exclude=changelog'], ['--exclude=desc']);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            unless (-e "$targetdir/$tfile") {
+            if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
                 fill_in_tmpl("$targetdir/$tfile", $testdata);
             }
         }

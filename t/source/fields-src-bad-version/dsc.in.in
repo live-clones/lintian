@@ -4,8 +4,8 @@ Binary: control-file-syntax-error
 Architecture: all
 Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Standards-Version: 3.9.8
-Build-Depends: debhelper (>= 7)
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7), g++ (>= s4.0), gcc ((>= 4)
 Checksums-Sha1:
  @SHA1@ @SIZE@ control-file-syntax-error_1.tar.gz
 Checksums-Sha256:
