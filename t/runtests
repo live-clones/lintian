@@ -345,6 +345,7 @@ sub test_package {
         my $is_native = ($testdata->{type} eq 'native');
         my $pkgdir = "$pkg-$testdata->{version}";
         my $targetdir = "$rundir/$pkgdir";
+        my %regen_template;
 
         # Strip the Debian revision off of the name of the target
         # directory and the *.orig.tar.gz file if the package is
@@ -364,6 +365,15 @@ sub test_package {
         unless ($is_native) {
             copy_template_dir("$tmpldir/${skel}.upstream",
                 "$origdir/upstream/",$targetdir);
+
+            foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+                if (!-e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
+                    fill_in_tmpl("$targetdir/$tfile", $testdata);
+                    unlink("$targetdir/${tfile}.in");
+                    $regen_template{$tfile} = 1;
+                }
+            }
+
             unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
             if (-x "$origdir/pre_upstream") {
                 $test_state->progress('pre_upstream hook');
@@ -384,7 +394,9 @@ sub test_package {
             ['--exclude=debian/changelog']);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
+            my $may_fill = $regen_template{$tfile}
+              or not -e "$targetdir/$tfile";
+            if ($may_fill and -f "$targetdir/${tfile}.in") {
                 fill_in_tmpl("$targetdir/$tfile", $testdata);
                 unlink("$targetdir/${tfile}.in");
             }

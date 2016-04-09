@@ -1,9 +1,0 @@
-#!/bin/sh
-#
-# Remove files copied over from the skeleton but which aren't in the
-# upstream tarball so that we exactly match.
-
-set -e
-dir="$1"
-
-rm "${dir}"/debian/*.in
