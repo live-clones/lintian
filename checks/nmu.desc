@@ -96,7 +96,7 @@ Info: The file <tt>debian/changelog</tt> is a symlink instead of a regular
  This problem may have prevented lintian from performing other checks,
  leading to undetected changelog errors.
 
-Tag: extra-whitespace-around-name-in-changelog-footer
+Tag: extra-whitespace-around-name-in-changelog-trailer
 Severity: normal
 Certainty: certain
 Info: There is too much whitespace around the name in debian/changelog.

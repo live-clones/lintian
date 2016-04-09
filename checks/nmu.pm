@@ -81,7 +81,7 @@ sub run {
     my $version_local = 0;
 
     if ($uploader =~ m/^\s|\s$/) {
-        tag 'extra-whitespace-around-name-in-changelog-footer';
+        tag 'extra-whitespace-around-name-in-changelog-trailer';
         strip($uploader);
     }
 
