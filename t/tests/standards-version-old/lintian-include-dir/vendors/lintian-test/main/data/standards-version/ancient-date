@@ -1,0 +1,7 @@
+# Any Standards Version released before this day is "ancient"
+#
+# Frozen for this test so we do not have to update the test every time
+# we update the real "ancient-date" data file.
+#
+# Format is ANCIENT < Date
+ANCIENT < 20 Feb 2014
