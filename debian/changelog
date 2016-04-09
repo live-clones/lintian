@@ -5,12 +5,15 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * checks/description.{desc,pm}:
     + [NT] Drop duplicate word tag, which is now covered by the
       spelling error check.
-  * checks/fields.pm:
+  * checks/fields.{desc,pm}:
     + [NT] Add default-jdk-headless and openjdk-X-jdk-headless
       to the set of known java providers.
     + [JW] Relax build profile dependency checks to allow versions with
       trailing tilde.  (Closes: #819509)  Thanks to Felix Geyer for the bug
       report.
+    + [NT] Expand the vcs-field-uses-insecure-uri check to check other
+      known insecure protocols (e.g. svn and pserver).  Thanks to Paul
+      "(UTF-8) Snowman" Tagliamonte for the report.  (Closes: #812962)
   * checks/nmu.{desc,pm}:
     + [NT] Create a separate tag for extra whitespace around uploader name
       in the changelog.  Thanks to Ben Wiederhake for the suggestion.

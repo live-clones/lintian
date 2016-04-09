@@ -1281,7 +1281,8 @@ sub run {
                 if (any { $_ and /\s/} @parts) {
                     tag 'vcs-field-has-unexpected-spaces', "vcs-$vcs", $uri;
                 }
-                if ($parts[0] =~ m%^(?:git|http)://%) {
+                if (   $parts[0] =~ m%^(?:git|(?:nosmart\+)?http|svn)://%
+                    or $parts[0] =~ m%(?:pserver|lp):%) {
                     tag 'vcs-field-uses-insecure-uri', "vcs-$vcs", $uri;
                 }
             }

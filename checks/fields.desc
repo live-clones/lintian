@@ -1102,7 +1102,9 @@ Info: The Vcs-* field uses an unencrypted transport protocol for the
  anonymous read-only access.
  .
  Note that you can often just exchange e.g. git:// with https:// for
- repositories.
+ repositories.  Though, in some cases (bzr's "lp:" or CVS's pserver) it
+ might not be possible to use an alternative url and still have a
+ working (anonymous read-only) repository.
 
 Tag: lib-recommends-documentation
 Severity: normal
