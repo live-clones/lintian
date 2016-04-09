@@ -2,6 +2,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/changelog-file.{desc,pm}:
+    + [JW,NT] Use "day of week" rather than "weekday".
+      (Closes: #796093)
   * checks/description.{desc,pm}:
     + [NT] Drop duplicate word tag, which is now covered by the
       spelling error check.

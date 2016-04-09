@@ -291,7 +291,7 @@ sub run {
             if ($tz and $weekday_declared ne $weekday_actual) {
                 my $real_weekday = time2str('%A', $first_timestamp, $tz);
                 my $short_date = time2str('%Y-%m-%d', $first_timestamp, $tz);
-                tag 'debian-changelog-has-wrong-weekday',
+                tag 'debian-changelog-has-wrong-day-of-week',
                   "$short_date is a $real_weekday";
             }
         }
