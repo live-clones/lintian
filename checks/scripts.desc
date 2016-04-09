@@ -251,7 +251,7 @@ Info: Packages with Python scripts should depend on the package
  <tt>/usr/bin/python2.6</tt> binary.
  .
  If you are using debhelper, adding <tt>${python:Depends}</tt> to the
- Depends field and ensuring dh_pysupport or dh_pycentral are run during
+ Depends field and ensuring dh_python2 or dh_python3 are run during
  the build should take care of adding the correct dependency.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will

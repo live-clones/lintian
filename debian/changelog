@@ -15,6 +15,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Create a separate tag for extra whitespace around uploader name
       in the changelog.  Thanks to Ben Wiederhake for the suggestion.
       (Closes: #801647)
+  * checks/scripts.desc:
+    + [NT] Suggest dh_python2 / dh_python3 instead of dh_pysupport and
+      dh_pycentral.  Thanks to Neil Williams for the rapport.
+      (Closes: #818607)
 
   * commands/info.pm:
     + [NT] Accept "--tag" as an alias of "--tags".  Thanks to Robert
