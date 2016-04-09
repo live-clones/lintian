@@ -310,8 +310,9 @@ sub test_package {
     my ($test_state, $testdata) = @_;
     my $suite = $testdata->{suite};
     my $testname = $testdata->{testname};
+    my $origdir = "$TESTSET/$suite/$testname";
 
-    if (!check_test_is_sane($TESTSET, $testdata)) {
+    if (!check_test_is_sane($TESTSET, $origdir, $testdata)) {
         return $test_state->skip_test('architecture mismatch');
     }
 
@@ -319,7 +320,6 @@ sub test_package {
 
     my $pkg = $testdata->{source};
     my $rundir = "$RUNDIR/$suite/$pkg";
-    my $origdir = "$TESTSET/$suite/$testname";
     my $orig_version = $testdata->{version};
     my $expected = "$origdir/tags";
     my $origexp = $expected;
@@ -462,6 +462,9 @@ sub run_lintian {
     unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile});
     unshift(@options, '--no-user-dirs');
+    if (my $incl_dir = $testdata->{'lintian-include-dir'}) {
+        unshift(@options, '--include-dir', $incl_dir);
+    }
     my $pid = open(my $in, '-|');
     if ($pid) {
         my @data = <$in>;
@@ -518,7 +521,7 @@ sub run_lintian {
 sub test_changes {
     my ($test_state, $testdata) = @_;
 
-    if (!check_test_is_sane($TESTSET, $testdata)) {
+    if (!check_test_is_sane($TESTSET, undef, $testdata)) {
         return $test_state->skip_test('architecture mismatch');
     }
 
@@ -572,14 +575,14 @@ sub generic_test_runner {
     my ($test_state, $testdata, $ext) = @_;
     my $suite = $testdata->{suite};
     my $testname = $testdata->{testname};
+    my $testdir = "$TESTSET/$suite/$testname";
 
-    if (!check_test_is_sane($TESTSET, $testdata)) {
+    if (!check_test_is_sane($TESTSET, $testdir, $testdata)) {
         return $test_state->skip_test('architecture mismatch');
     }
 
     $test_state->progress('setup');
 
-    my $testdir = "$TESTSET/$suite/$testname";
     my $targetdir = "$RUNDIR/$suite/$testname";
     my $stampfile = "$RUNDIR/$suite/$testname-build-stamp";
 
@@ -1013,7 +1016,7 @@ sub handle_dump_log{
 }
 
 sub check_test_is_sane {
-    my ($dir, $data) = @_;
+    my ($dir, $testdir, $data) = @_;
 
     unless ($data->{testname} && exists $data->{version}) {
         fail('Name or Version missing');
@@ -1054,6 +1057,10 @@ sub check_test_is_sane {
     # FIXME: deal with wildcards correctly.
     if (none { $data->{architecture} =~ m/\b$_\b/ } @architectures) {
         return 0;
+    }
+
+    if ($testdir and -d "${testdir}/lintian-include-dir") {
+        $data->{'lintian-include-dir'} = "${testdir}/lintian-include-dir";
     }
 
     return 1;
