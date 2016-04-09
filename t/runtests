@@ -367,7 +367,7 @@ sub test_package {
                 "$origdir/upstream/",$targetdir);
 
             foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-                if (!-e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
+                if (!-e "$targetdir/$tfile" && -f "$targetdir/${tfile}.in") {
                     fill_in_tmpl("$targetdir/$tfile", $testdata);
                     unlink("$targetdir/${tfile}.in");
                     $regen_template{$tfile} = 1;
