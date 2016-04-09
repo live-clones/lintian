@@ -394,8 +394,8 @@ sub test_package {
             ['--exclude=debian/changelog']);
 
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
-            my $may_fill = $regen_template{$tfile}
-              or not -e "$targetdir/$tfile";
+            my $may_fill = $regen_template{$tfile};
+            $may_fill = 1 if not -e "$targetdir/$tfile";
             if ($may_fill and -f "$targetdir/${tfile}.in") {
                 fill_in_tmpl("$targetdir/$tfile", $testdata);
                 unlink("$targetdir/${tfile}.in");
