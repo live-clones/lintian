@@ -6,7 +6,7 @@ License: public-domain
  some public-domain
 
 License: golf
- blah blah
+ blah bla
  This should not trigger a dep5-file-paragraph-reference-header
  tag.
 
@@ -18,7 +18,7 @@ License: public-domain
 
 Files: debian/*
 Copyright: 2014, somebody1
-License: this
+License: this-license
  this is a valid license short name
 
 Files: debian/compat

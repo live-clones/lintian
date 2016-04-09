@@ -6,7 +6,7 @@ Source: http://examples.com/doohickey/source/
 Files: *
 Copyright: 2014, somebody1
 License: Fixme
- Fixme
+ Fixme-license text
 
 
 Files: debian/*
@@ -39,7 +39,7 @@ License: -
 Files: debian/e
 Comment: too many false positive with space
 Copyright: 2014, somebody2
-License: undefined undefined
+License: undefined license
  Fixme
 
 Files: debian/f

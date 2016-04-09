@@ -23,8 +23,7 @@ W: description-general-4: spelling-error-in-description mroe more
 W: description-general-syn-article: description-synopsis-starts-with-article
 W: description-general-syn-spelling: spelling-error-in-description-synopsis developement development
 W: description-general: description-contains-dh-make-perl-template
-W: description-general: description-contains-duplicated-word All all all
-W: description-general: description-contains-duplicated-word The the
-W: description-general: description-contains-duplicated-word matched matched matched
-W: description-general: description-contains-duplicated-word of of
-W: description-general: description-contains-duplicated-word these these
+W: description-general: spelling-error-in-description all all (duplicate word) all
+W: description-general: spelling-error-in-description matched matched (duplicate word) matched
+W: description-general: spelling-error-in-description of of (duplicate word) of
+W: description-general: spelling-error-in-description these these (duplicate word) these

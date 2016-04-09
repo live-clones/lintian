@@ -157,26 +157,6 @@ sub run {
             tag 'description-contains-dh-make-perl-template';
         }
 
-        # Check for duplicated words.  We want to catch "this this."
-        # but not "ITU-T T.81", so compare non-whitespace sequences
-        # rather than word characters but allow punctuation at the
-        # end.
-        #
-        # We don't want to think ", ," or "a, a" is a duplicated word,
-        # so require that a word start and end with a word character.
-        #
-        # We replace text that is quoted with ' "" '.  The assumption
-        # is that quoted words are "okay" and blindly removing them
-        # causes false positives with text like "'a' or 'b' or 'c'".
-        my $stripped = $_;
-        $stripped =~ s,(["'])(.*?)(\1), "" ,g;
-        while ($stripped
-            =~ m%(?:\s|^)((\w(?:\S*\w)?)(\s+(\2))+)(?:[\).,?!:;\s]|\z)%i) {
-            my $words = $1;
-            $stripped =~ s/\Q$words//;
-            tag 'description-contains-duplicated-word', $words;
-        }
-
         my $first_person = $_;
         while ($first_person
             =~ m/(?:^|\s)(I|[Mm]y|[Oo]urs?|mine|myself|me|us|[Ww]e)(?:$|\s)/) {

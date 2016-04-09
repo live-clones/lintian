@@ -6,7 +6,6 @@ Test-For:
  capitalization-error-in-description
  capitalization-error-in-description-synopsis
  description-contains-dh-make-perl-template
- description-contains-duplicated-word
  description-contains-homepage
  description-contains-invalid-control-statement
  description-contains-tabs

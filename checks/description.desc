@@ -215,12 +215,6 @@ Info: Lintian found a possible capitalization error in the package
  false positives for project names used in a context where they should be
  lowercase, such as package names or executable names.
 
-Tag: description-contains-duplicated-word
-Severity: normal
-Certainty: possible
-Info: The description contains a duplicated word.  Usually this is a
- mistake, or at least an awkward phrasing.
-
 Tag: using-first-person-in-description
 Severity: minor
 Certainty: possible

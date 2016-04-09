@@ -304,7 +304,7 @@ sub run {
                 }
                 # Check for spelling errors if the manpage is English
                 check_spelling($line, $ginfo->spelling_exceptions,
-                    $stag_emitter)
+                    $stag_emitter, 0)
                   if ($path =~ m,/man/man\d/,);
             }
         }

@@ -360,7 +360,7 @@ sub run {
         };
         my $tag_emitter
           = spelling_tag_emitter('spelling-error-in-binary', $file);
-        check_spelling($strings, $exceptions, $tag_emitter);
+        check_spelling($strings, $exceptions, $tag_emitter, 0);
 
         # stripped?
         if ($fileinfo =~ m,\bnot stripped\b,o) {

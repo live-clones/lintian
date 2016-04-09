@@ -260,7 +260,7 @@ Returns the number of spelling mistakes found in TEXT.
 my (%CORRECTIONS, @CORRECTIONS_MULTIWORD);
 
 sub check_spelling {
-    my ($text, $exceptions, $code_ref) = @_;
+    my ($text, $exceptions, $code_ref, $duplicate_check) = @_;
     return 0 unless $text;
     if (not $code_ref and $exceptions and ref($exceptions) eq 'CODE') {
         $code_ref = $exceptions;
@@ -268,8 +268,9 @@ sub check_spelling {
     } else {
         $exceptions //= {};
     }
+    $duplicate_check //= 1;
 
-    my %seen;
+    my (%seen, %duplicates, $last_word, $quoted);
     my $counter = 0;
 
     if (!%CORRECTIONS) {
@@ -293,7 +294,25 @@ sub check_spelling {
     strip($text);
 
     for my $word (split(' ', $text)) {
-        $word =~ s/[.,;:?!]+$//;
+        my $ends_with_punct = 0;
+        my $q = $word =~ tr/"/"/;
+        # Change quoting on "foo or foo" but not "foo".
+        if ($q & 1) {
+            $quoted = not $quoted;
+        }
+        $ends_with_punct = 1 if $word =~ s/[.,;:?!]+$//;
+
+        if ($duplicate_check and defined($last_word) and $last_word eq $word) {
+            # Avoid flagging words inside quoted text.
+            $code_ref->("$word $word (duplicate word)", $word)
+              if not $quoted and not $duplicates{$word}++;
+        }
+
+        if ($word =~ m/^[A-Za-z]+$/ and not $ends_with_punct) {
+            $last_word = $word;
+        } else {
+            $last_word = undef;
+        }
         next if ($word =~ /^[A-Z]{1,5}\z/);
         # Some exceptions are based on case (e.g. "teH").
         next if exists($exceptions->{$word});
