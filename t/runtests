@@ -386,6 +386,7 @@ sub test_package {
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
                 fill_in_tmpl("$targetdir/$tfile", $testdata);
+                unlink("$targetdir/${tfile}.in");
             }
         }
 
@@ -597,6 +598,7 @@ sub generic_test_runner {
         foreach my $tfile (@{ $TEMPLATES{$suite} }) {
             if (not -e "$targetdir/$tfile" and -f "$targetdir/${tfile}.in") {
                 fill_in_tmpl("$targetdir/$tfile", $testdata);
+                unlink("$targetdir/${tfile}.in");
             }
         }
 
