@@ -39,7 +39,7 @@ sub main {
     my (%already_displayed, $profile);
     my %opthash = (
         'annotate|a' => \$annotate,
-        'tags|t' => \$tags,
+        'tags|tag|t' => \$tags,
         'help|h' => \$help,
         'profile=s' => \$prof,
     );
@@ -65,9 +65,9 @@ Usage: $me [log-file...] ...
        $me --tags tag ...
 
 Options:
-    -a, --annotate    display descriptions of tags in Lintian overrides
-    -t, --tags        display tag descriptions
-    --profile X       use vendor profile X to determine severities
+    -a, --annotate     display descriptions of tags in Lintian overrides
+    -t, --tag, --tags  display tag descriptions
+    --profile X        use vendor profile X to determine severities
 EOT
         if (compat) {
             # if we are called as lintian-info, we also accept

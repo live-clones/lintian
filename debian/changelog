@@ -9,6 +9,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       trailing tilde.  (Closes: #819509)  Thanks to Felix Geyer for the bug
       report.
 
+  * command/info.pm:
+    + [NT] Accept "--tag" as an alias of "--tags".  Thanks to Robert
+      Luberda for the suggestion.  (Closes: #816454)
+
   * data/standards-version/release-dates:
     + [AB] Add 3.9.8.
 
