@@ -273,6 +273,8 @@ sub fill_in_tmpl {
     my $tmpl = "$file.in";
 
     my $template = Text::Template->new(TYPE => 'FILE',  SOURCE => $tmpl);
+    fail("Cannot read template $tmpl: $Text::Template::ERROR")
+      if not $template;
     open(my $out, '>', $file);
 
     unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
