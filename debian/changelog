@@ -8,6 +8,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [JW] Relax build profile dependency checks to allow versions with
       trailing tilde.  (Closes: #819509)  Thanks to Felix Geyer for the bug
       report.
+  * checks/nmu.{desc,pm}:
+    + [NT] Create a separate tag for extra whitespace around uploader name
+      in the changelog.  Thanks to Ben Wiederhake for the suggestion.
+      (Closes: #801647)
 
   * commands/info.pm:
     + [NT] Accept "--tag" as an alias of "--tags".  Thanks to Robert

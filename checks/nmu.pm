@@ -27,6 +27,7 @@ use List::MoreUtils qw(any);
 use List::Util qw(first);
 
 use Lintian::Tags qw(tag);
+use Lintian::Util qw(strip);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -79,6 +80,11 @@ sub run {
     my $version_nmuness = 0;
     my $version_local = 0;
 
+    if ($uploader =~ m/^\s|\s$/) {
+        tag 'extra-whitespace-around-name-in-changelog-footer';
+        strip($uploader);
+    }
+
     if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
         $version_nmuness = 1 if defined $1;
         $version_nmuness = 2 if defined $2;
@@ -96,7 +102,7 @@ sub run {
     my $upload_is_nmu = $uploader ne $maintainer;
     if (defined $uploaders) {
         my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/,$uploaders;
-        $upload_is_nmu = 0 if any { /^\s*\Q$uploader\E\s*$/ } @uploaders;
+        $upload_is_nmu = 0 if any { $_ eq $uploader } @uploaders;
     }
 
     if ($maintainer =~ /packages\@qa.debian.org/) {
