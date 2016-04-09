@@ -542,7 +542,7 @@ sub implies_element {
         } elsif ($$p[2] eq '>=') {
             return versions_gt($$p[3], $$q[3]) ? 0 : undef;
         } elsif ($$p[2] eq '=') {
-            return versions_equal($$p[3], $$q[3]);
+            return versions_equal($$p[3], $$q[3]) ? 1 : 0;
         }
     }
 
@@ -554,7 +554,7 @@ sub implies_element {
         } elsif ($$p[2] eq '>=') {
             return versions_gt($$p[3], $$q[3]) ? 0 : undef;
         } elsif ($$p[2] eq '=') {
-            return versions_lte($$p[3], $$q[3]);
+            return versions_lte($$p[3], $$q[3]) ? 1 : 0;
         } else {
             return versions_lte($$p[3], $$q[3]) ? 1 : undef;
         }
@@ -566,9 +566,9 @@ sub implies_element {
         if ($$p[2] eq '>>' or $$p[2] eq '>=') {
             return versions_gte($$p[3], $$p[3]) ? 0 : undef;
         } elsif ($$p[2] eq '<<') {
-            return versions_lte($$p[3], $$q[3]);
+            return versions_lte($$p[3], $$q[3]) ? 1 : undef;
         } elsif ($$p[2] eq '=') {
-            return versions_lt($$p[3], $$q[3]);
+            return versions_lt($$p[3], $$q[3]) ? 1 : 0;
         } else {
             return versions_lt($$p[3], $$q[3]) ? 1 : undef;
         }
@@ -581,7 +581,7 @@ sub implies_element {
         } elsif ($$p[2] eq '<=') {
             return versions_lt($$p[3], $$q[3]) ? 0 : undef;
         } elsif ($$p[2] eq '=') {
-            return versions_gte($$p[3], $$q[3]);
+            return versions_gte($$p[3], $$q[3]) ? 1 : 0;
         } else {
             return versions_gte($$p[3], $$q[3]) ? 1 : undef;
         }
@@ -590,9 +590,9 @@ sub implies_element {
         if ($$p[2] eq '<<' or $$p[2] eq '<=') {
             return versions_lte($$p[3], $$q[3]) ? 0 : undef;
         } elsif ($$p[2] eq '>>') {
-            return versions_gte($$p[3], $$q[3]);
+            return versions_gte($$p[3], $$q[3]) ? 1 : undef;
         } elsif ($$p[2] eq '=') {
-            return versions_gt($$p[3], $$q[3]);
+            return versions_gt($$p[3], $$q[3]) ? 1 : 0;
         } else {
             return versions_gt($$p[3], $$q[3]) ? 1 : undef;
         }
@@ -718,10 +718,10 @@ and pass that in as RELATION instead of the string.
 # do most of the work.
 sub implies_element_inverse {
     my ($self, $p, $q) = @_;
-    my $result = $self->implies_element($q, $p);
+    my $result = $self->implies_element($p, $q);
 
-    return not $result if defined $result;
-    return;
+    return if not defined($result);
+    return $result ? 0 : 1;
 }
 
 # This internal function does the heavily lifting for AND, OR, and NOT

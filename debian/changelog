@@ -37,6 +37,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * lib/Lintian/Check.pm:
     + [JW,NT] Flag a duplicate word as a spelling error.  This affects
       several tags plus spellintian.  (Closes: #800476)
+  * lib/Lintian/Relation.pm:
+    + [JW,NT] Fix broken implication with "P (<< V)" relations.
+      (Closes: #819560)
 
  -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
 
