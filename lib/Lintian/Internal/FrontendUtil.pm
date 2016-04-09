@@ -55,6 +55,7 @@ sub check_test_feature{
     # (e.g. tar) start in.  In particular, we do not want to inherit
     # some random "TAR_OPTIONS" or "GZIP" values.
     my %PRESERVE_ENV = map { $_ => 1 } qw(
+      DEBRELEASE_DEBS_DIR
       HOME
       LANG
       LC_ALL
