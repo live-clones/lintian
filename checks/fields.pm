@@ -1282,7 +1282,7 @@ sub run {
                     tag 'vcs-field-has-unexpected-spaces', "vcs-$vcs", $uri;
                 }
                 if (   $parts[0] =~ m%^(?:git|(?:nosmart\+)?http|svn)://%
-                    or $parts[0] =~ m%^(?:pserver|lp):%) {
+                    or $parts[0] =~ m%^(?:lp|:pserver):%) {
                     tag 'vcs-field-uses-insecure-uri', "vcs-$vcs", $uri;
                 }
             }
