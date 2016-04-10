@@ -1,5 +1,5 @@
-I: fields-uncanonical-vcs-fields source: vcs-field-not-canonical http://hg.debian.org/hg/foobar/pkg/foobar http://anonscm.debian.org/hg/foobar/pkg/foobar
-I: fields-uncanonical-vcs-fields source: vcs-field-not-canonical nosmart+http://bzr.debian.org/bzr/collab-maint/foobar nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
+I: fields-uncanonical-vcs-fields source: vcs-field-not-canonical http://hg.debian.org/hg/foobar/pkg/foobar https://anonscm.debian.org/hg/foobar/pkg/foobar
+I: fields-uncanonical-vcs-fields source: vcs-field-not-canonical nosmart+http://bzr.debian.org/bzr/collab-maint/foobar nosmart+https://anonscm.debian.org/bzr/collab-maint/foobar
 I: fields-uncanonical-vcs-fields source: vcs-field-not-canonical svn://svn.debian.org/svn/foobar/trunk svn://anonscm.debian.org/foobar/trunk
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-bzr nosmart+http://bzr.debian.org/bzr/collab-maint/foobar
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-cvs :pserver:anonymous@cvs.alioth.debian.org:/cvsroot/foobar module
@@ -7,5 +7,5 @@ I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-git git
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-hg http://hg.debian.org/hg/foobar/pkg/foobar
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-svn svn://svn.debian.org/svn/foobar/trunk
 W: fields-uncanonical-vcs-fields source: vcs-field-bitrotted :pserver:anonymous@cvs.alioth.debian.org:/cvsroot/foobar :pserver:anonymous@anonscm.debian.org:/cvs/foobar
-W: fields-uncanonical-vcs-fields source: vcs-field-bitrotted https://svn.debian.org/wsvn/foobar/trunk?foo=bar;op=log;something=else http://anonscm.debian.org/viewvc/foobar/trunk?foo=bar;something=else
-W: fields-uncanonical-vcs-fields source: vcs-git-uses-invalid-user-uri git://git.debian.org/~djpig/foobar.git git://anonscm.debian.org/users/djpig/foobar.git
+W: fields-uncanonical-vcs-fields source: vcs-field-bitrotted https://svn.debian.org/wsvn/foobar/trunk?foo=bar;op=log;something=else https://anonscm.debian.org/viewvc/foobar/trunk?foo=bar;something=else
+W: fields-uncanonical-vcs-fields source: vcs-git-uses-invalid-user-uri git://git.debian.org/~djpig/foobar.git https://anonscm.debian.org/git/users/djpig/foobar.git

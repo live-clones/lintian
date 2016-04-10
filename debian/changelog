@@ -17,6 +17,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Expand the vcs-field-uses-insecure-uri check to check other
       known insecure protocols (e.g. svn and pserver).  Thanks to Paul
       "(UTF-8) Snowman" Tagliamonte for the report.  (Closes: #812962)
+    + [NT] Use https URL in the correction for canonical VCS URLs.
   * checks/nmu.{desc,pm}:
     + [NT] Create a separate tag for extra whitespace around uploader name
       in the changelog.  Thanks to Ben Wiederhake for the suggestion.

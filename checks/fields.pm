@@ -128,12 +128,12 @@ my %VCS_EXTRACT = (
 my %VCS_CANONIFY = (
     browser => sub {
         $_[0] =~ s{https?://svn\.debian\.org/wsvn/}
-                  {http://anonscm.debian.org/viewvc/};
-        $_[0] =~ s{\Qhttp://git.debian.org/?p=\E}
-                  {https://anonscm.debian.org/cgit/};
-        $_[0] =~ s{\Qhttp://bzr.debian.org/loggerhead/\E}
-                  {http://anonscm.debian.org/loggerhead/};
-        if ($_[0] =~ m{\Qhttp://anonscm.debian.org/viewvc/\E}xsm) {
+                  {https://anonscm.debian.org/viewvc/};
+        $_[0] =~ s{https?\Q://git.debian.org/?p=\E}
+                  {https://anonscm.debian.org/git/};
+        $_[0] =~ s{https?\Q://bzr.debian.org/loggerhead/\E}
+                  {https://anonscm.debian.org/loggerhead/};
+        if ($_[0] =~ m{https?\Q://anonscm.debian.org/viewvc/\E}xsm) {
             if ($_[0] =~ s{\?(.*[;\&])?op=log(?:[;\&](.*))?\Z}{}xsm) {
                 my (@keep) = ($1, $2, $3);
                 my $final = join('', grep {defined} @keep);
@@ -152,25 +152,25 @@ my %VCS_CANONIFY = (
         $_[0] =~ s{\@cvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
     },
     arch     => sub {
-        $_[0] =~ s{\Qhttp://arch.debian.org/arch/\E}
-                  {http://anonscm.debian.org/arch/};
+        $_[0] =~ s{https?\Q://arch.debian.org/arch/\E}
+                  {https://anonscm.debian.org/arch/};
     },
     bzr     => sub {
-        $_[0] =~ s{\Qhttp://bzr.debian.org/\E}
-                  {http://anonscm.debian.org/bzr/};
-        $_[0] =~ s{\Qhttp://anonscm.debian.org/bzr/bzr/\E}
-                  {http://anonscm.debian.org/bzr/};
+        $_[0] =~ s{https?\Q://bzr.debian.org/\E}
+                  {https://anonscm.debian.org/bzr/};
+        $_[0] =~ s{https?\Q://anonscm.debian.org/bzr/bzr/\E}
+                  {https://anonscm.debian.org/bzr/};
     },
     git     => sub {
         if (
             $_[0] =~ s{git://(?:git|anonscm)\.debian\.org/~}
-                      {git://anonscm.debian.org/users/}
+                      {https://anonscm.debian.org/git/users/}
           ) {
             $_[1] = 'vcs-git-uses-invalid-user-uri';
         }
-        $_[0] =~ s{\Qhttp://git.debian.org/\E}
+        $_[0] =~ s{https?\Q://git.debian.org/\E}
                   {https://anonscm.debian.org/git/};
-        $_[0] =~ s{\Qhttp://anonscm.debian.org/git/git/\E}
+        $_[0] =~ s{https?\Q://anonscm.debian.org/git/git/\E}
                   {https://anonscm.debian.org/git/};
         $_[0] =~ s{\Qgit://git.debian.org/\E}
                   {https://anonscm.debian.org/git/};
@@ -178,10 +178,10 @@ my %VCS_CANONIFY = (
                   {https://anonscm.debian.org/git/};
     },
     hg      => sub {
-        $_[0] =~ s{\Qhttp://hg.debian.org/\E}
-                  {http://anonscm.debian.org/hg/};
-        $_[0] =~ s{\Qhttp://anonscm.debian.org/hg/hg/\E}
-                  {http://anonscm.debian.org/hg/};
+        $_[0] =~ s{https?\Q://hg.debian.org/\E}
+                  {https://anonscm.debian.org/hg/};
+        $_[0] =~ s{https?\Q://anonscm.debian.org/hg/hg/\E}
+                  {https://anonscm.debian.org/hg/};
     },
     svn     => sub {
         $_[0] =~ s{\Qsvn://cvs.alioth.debian.org/\E}
