@@ -43,6 +43,8 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * data/menu-format/known-desktop-keys:
     + [NT] Accept "DesktopNames" as a known key in desktop files.  Thanks
       to Yves-Alexis Perez for the suggestion.  (Closes: #766099)
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
   * data/standards-version/release-dates:
     + [AB] Add 3.9.8.
 

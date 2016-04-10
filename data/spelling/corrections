@@ -264,6 +264,7 @@ automatize||automate
 automatized||automated
 automatizes||automates
 autonymous||autonomous
+auxilary||auxiliary
 auxillary||auxiliary
 auxilliary||auxiliary
 avaiable||available
@@ -366,6 +367,7 @@ chcek||check
 chceked||checked
 chceking||checking
 chceks||checks
+checksuming||checksumming
 childern||children
 childs||children
 chnage||change
@@ -673,6 +675,8 @@ diferent||different
 differents||different
 differnet||different
 diffrent||different
+difinition||definition
+difinitions||definitions
 digitial||digital
 diplay||display
 directores||directories
@@ -993,6 +997,7 @@ goverment||government
 grabing||grabbing
 grahical||graphical
 grahpical||graphical
+gramatically||grammatically
 grammer||grammar
 grammers||grammars
 grapic||graphic
@@ -1190,6 +1195,8 @@ instanciates||instantiates
 instanciating||instantiating
 instanciation||instantiation
 instanciations||instantiations
+intance||instance
+intances||instances
 intead||instead
 inteface||interface
 integreated||integrated
@@ -1332,6 +1339,7 @@ mentionned||mentioned
 ment||meant
 mesage||message
 mesages||messages
+messags||messages
 messge||message
 messges||messages
 messsage||message
@@ -1444,6 +1452,7 @@ offical||official
 officialy||officially
 ofthe||of the
 omitt||omit
+ommiting||omitting
 ommitted||omitted
 onself||oneself
 opague||opaque
@@ -1535,6 +1544,8 @@ partioning||partitioning
 pased||passed
 pathes||paths
 peformance||performance
+peice||piece
+peices||pieces
 penalities||penalties
 penality||penalty
 pendantic||pedantic
@@ -1682,6 +1693,10 @@ rebuliding||rebuilding
 rebulid||rebuild
 rebulids||rebuilds
 rebulit||rebuilt
+reccommended||recommended
+reccommending||recommending
+reccommend||recommend
+reccommends||recommends
 receieved||received
 receieve||receive
 receieves||receives
@@ -1691,6 +1706,7 @@ recieve||receive
 reciever||receiver
 recieves||receives
 recieving||receiving
+recipies||recipes
 recogized||recognized
 recogize||recognize
 recogizes||recognizes
@@ -2099,6 +2115,7 @@ tupple||tuple
 typicaly||typically
 typles||tuples
 typle||tuple
+uesd||used
 uknown||unknown
 uncomented||uncommented
 uncomenting||uncommenting
@@ -2219,6 +2236,7 @@ vicefersa||vice-versa
 visiters||visitors
 vitual||virtual
 wan't||want
+wasnt||wasn't
 weigth||weight
 weired||weird
 wether||whether
@@ -2232,12 +2250,14 @@ widht||width
 wierd||weird
 wihout||without
 wiht||with
+wiil||will
 wilcards||wildcards
 wilcard||wildcard
 withing||within
 witin||within
 wont||won't
 workaroung||workaround
+writeing||writing
 writen||written
 writting||writing
 xwindows||X
