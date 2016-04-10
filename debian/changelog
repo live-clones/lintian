@@ -56,6 +56,8 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * lib/Lintian/Relation.pm:
     + [JW,NT] Fix broken implication with "P (<< V)" relations.
       (Closes: #819560)
+  * lib/Lintian/Unpacker.pm:
+    + [NT] Name the subprocess after what is processing.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
 
