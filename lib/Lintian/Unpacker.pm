@@ -531,7 +531,8 @@ sub process_tasks {
         my $state = 'unchanged';
         $state = 'changed' if $changed;
         $state = 'failed' if exists $failed{$procid};
-        $finish_hook->($lpkg, $state, sub { $changed = 1 })
+        # Gracefully handle the hook deleting the entire entry
+        $finish_hook->($lpkg, $state, sub { $changed = $lpkg->exists ? 1 : 0 })
           if $finish_hook;
         if ($changed) {
             $state = 'sf-error';

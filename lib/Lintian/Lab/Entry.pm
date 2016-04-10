@@ -153,9 +153,13 @@ sub _new_from_proc {
 
 Returns the base directory of this package inside the lab.
 
+=item lab
+
+Returns a reference to the laboratory related to this entry.
+
 =cut
 
-Lintian::Lab::Entry->mk_ro_accessors(qw(base_dir));
+Lintian::Lab::Entry->mk_ro_accessors(qw(lab base_dir));
 
 =item from_lab (LAB)
 

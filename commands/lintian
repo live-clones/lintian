@@ -873,10 +873,18 @@ sub auto_clean_package {
     my $pkg_type = $lpkg->pkg_type();
     my $base = $lpkg->base_dir();
     my $changed = 0;
+    if ($lpkg->lab->is_temp) {
+        debug_msg(1, "Auto removing: $proc_id ...");
+        my $raw_res = timed_task {
+            $lpkg->remove;
+        };
+        perf_log("$proc_id,auto-remove entry,${raw_res}");
+        return 2;
+    }
     for my $coll (@auto_remove) {
         my $ci = $collmap->getp($coll);
         next unless $lpkg->is_coll_finished($coll, $ci->version);
-        debug_msg(1, "Auto removing: $coll ...");
+        debug_msg(1, "Auto removing: $proc_id ($coll) ...");
         $changed = 1;
         eval {
             my $raw_res = timed_task {
@@ -1112,7 +1120,7 @@ sub process_group {
                 $exit_code = 2;
                 $all_ok = 0;
             }
-            if ($ret) {
+            if ($ret and $ret != 2) {
                 # Update the status file as auto_clean_package may
                 # have removed some collections
                 unless ($lpkg->update_status_file) {
