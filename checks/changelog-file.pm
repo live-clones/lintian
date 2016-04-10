@@ -365,7 +365,7 @@ sub run {
             tag 'possible-missing-colon-in-closes', $1 if $1;
         }
         if ($changes =~ m/(TEMP-\d{7}-[0-9a-fA-F]{6})/) {
-            tag 'changelog-references-temp-security-identifier', $1
+            tag 'changelog-references-temp-security-identifier', $1;
         }
 
         # check for bad intended distribution
