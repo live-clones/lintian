@@ -442,11 +442,7 @@ sub process_tasks {
                         # For platforms that do not support, the child
                         # process will just keep its name as
                         # "lintian".
-                        my $name = "${coll} (processing ${procid})";
-#<<<
-                        # no Perltidy (breaks the no-critic)
-                        $0 = $name;  ## no critic (Variables::RequireLocalizedPunctuationVars)
-#>>>
+                        $0 = "${coll} (processing ${procid})";
 
                         eval {$cs->collect($pkg_name, $pkg_type, $base);};
                         if ($@) {

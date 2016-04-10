@@ -751,9 +751,13 @@ sub create_child {
         channels_out => [$child_out_ch],
 
         code => sub {
+            $0 = 'Test worker - idle';
             while (my $test_data = $child_in_ch->recv) {
                 my $state = Test::State->new($test_data, $child_out_ch);
                 my $suite = $test_data->{'suite'};
+                my $testname = $test_data->{testname};
+
+                $0 = "Test worker - processing ${suite}::${testname}";
 
                 eval {
                     if ($suite eq 'changes') {
@@ -772,6 +776,7 @@ sub create_child {
                 if (my $err = $@) {
                     $state->test_error($err);
                 }
+                $0 = 'Test worker - idle';
 
                 #                my $testname = $ref->{'testname'};
                 #                print STDERR "$child_no: $suite::$testname\n";
