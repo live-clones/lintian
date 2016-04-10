@@ -19,6 +19,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       "(UTF-8) Snowman" Tagliamonte for the report.  (Closes: #812962)
     + [NT] Use https URL in the correction for canonical VCS URLs.
       (Closes: #813587)
+    + [NT] Bump known python 3 version to include 3.4 and 3.5.
   * checks/nmu.{desc,pm}:
     + [NT] Create a separate tag for extra whitespace around uploader name
       in the changelog.  Thanks to Ben Wiederhake for the suggestion.

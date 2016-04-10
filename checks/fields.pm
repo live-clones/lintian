@@ -219,7 +219,7 @@ my %VCS_VALID_URIS = (
 # dependencies for architecture-independent source packages.
 our $PYTHON_DEV = join(' | ',
     qw(python-dev python-all-dev python3-dev python3-all-dev),
-    map { "python$_-dev" } qw(2.7 3 3.2));
+    map { "python$_-dev" } qw(2.7 3 3.4 3.5));
 
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 our $OBSOLETE_PACKAGES
