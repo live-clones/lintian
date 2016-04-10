@@ -20,11 +20,14 @@ package Lintian::Unpacker;
 
 use strict;
 use warnings;
+use v5.16;
 
 use parent 'Class::Accessor::Fast';
 
 use POSIX;
+use IO::Async::Loop;
 
+use Lintian::Output qw(:messages);
 use Lintian::Command::Simple qw(wait_any kill_all);
 use Lintian::Util qw(do_fork internal_error);
 
@@ -130,6 +133,7 @@ sub new {
         'profile' => $profile,
         'running-jobs' => {},
         'worktable' => {},
+        'async-loop' => IO::Async::Loop->new,
     };
     if (defined $profile) {
         $req_table = {};
@@ -322,19 +326,22 @@ HOOKS (if given) is a hashref of hooks.  The following hooks are available:
 
 =over 4
 
-=item coll-hook (LPKG, EVENT, COLL, PID[, STATUS])
+=item coll-hook (LPKG, EVENT, COLL, TASK_ID[, STATUS_OR_ERROR_MSG])
 
 Called each time a new collection job is started or finished.
 
 LPKG is the L<entry|Lintian::Lab::Entry> it is applied to.  COLL is
 the L<collection|Lintian::CollScript> being applied.  EVENT is either
-"start" for a new job or "finish" for a job terminating.
+"start" for a new job, "start-failed" for a job that failed to
+start (appears instead of a "start" event) or "finish" for a job
+terminating.
 
-PID is the process id of the job.  If EVENT is "start" this can be -1
-to signal a failure.
+TASK_ID is the task id of the job (a string).
 
-STATUS is the exit status of the finishing job.  It is only available
-if EVENT is "finish" and if STATUS is non-zero is considered an error.
+If the event is "finish", then STATUS_OR_ERROR_MSG is the exit code of
+the job (non-zero being an error).  If the event is "start-failed", it
+is an error message explaining why the job failed to start.  It is not
+defined for other events.
 
 =back
 
@@ -346,14 +353,14 @@ sub process_tasks {
     my $running_jobs = $self->{'running-jobs'};
     my $colls = $self->{'collmap'};
     my $jobs = $self->jobs;
+    my $loop = $self->{'async-loop'};
 
     $hooks //= {};
     my $coll_hook = $hooks->{'coll-hook'};
     my %failed;
+    my $debug_enabled = $Lintian::Output::GLOBAL->debug;
     my %active = map { $_ => 1 } keys %$worklists;
-
-    while (1) {
-        my $nohang = 0;
+    my $find_task = sub {
       PROC:
         foreach my $procid (keys %active) {
             my $wlist = $worklists->{$procid};
@@ -365,9 +372,7 @@ sub process_tasks {
             }
             my $lpkg = $wlist->{'lab-entry'};
             my $needed = $wlist->{'needed'};
-            my $pkg_name = $lpkg->pkg_name;
             my $pkg_type = $lpkg->pkg_type;
-            my $base = $lpkg->base_dir;
             foreach my $coll (@todo) {
                 my $cs = $colls->getp($coll);
 
@@ -394,10 +399,29 @@ sub process_tasks {
                 # collect info
                 $cmap->select($coll);
                 $wlist->{'changed'} = 1;
-                my $pid = do_fork()//-1;
-                if (not $pid) {
+                debug_msg(3, "READY ${coll}-${procid}");
+                return ("${coll}-${procid}", $cs, $lpkg, $cmap);
+            }
+        }
+        return;
+    };
+    my $schedule_task = sub {
+        my ($task_id, $cs, $lpkg, $cmap) = @_;
+        my $coll = $cs->name;
+        my $procid = $lpkg->identifier;
+        my $sch_task_inner = __SUB__;
+        debug_msg(3, "START $task_id");
+        my $pid = -1;
+        eval {
+            # We need to use fork - otherwise some of the collections
+            # get "stuck" in IPC::Run.  Shucks but such is life.
+            $pid = $loop->fork(
+                code  => sub {
                     # child
                     my $ret = 0;
+                    my $pkg_name = $lpkg->pkg_name;
+                    my $pkg_type = $lpkg->pkg_type;
+                    my $base = $lpkg->base_dir;
                     if ($cs->interface ne 'exec'
                         and not $ENV{'LINTIAN_COVERAGE'}) {
                         # With a non-exec interface, let L::CollScript
@@ -422,7 +446,7 @@ sub process_tasks {
                         }
                     } else {
                         if (my $coverage_arg = $ENV{'LINTIAN_COVERAGE'}) {
-                            my $p5opt = $ENV{'PERL5OPT'}//q{};
+                            my $p5opt = $ENV{'PERL5OPT'} // q{};
                             $p5opt .= ' ' if $p5opt ne q{};
                             $ENV{'PERL5OPT'} = "${p5opt} ${coverage_arg}";
                         }
@@ -431,70 +455,62 @@ sub process_tasks {
                           or die "exec $cs->script_path: $!";
                     }
                     POSIX::_exit($ret);
-                }
-                $coll_hook->($lpkg, 'start', $cs, $pid) if $coll_hook;
-                if ($pid < 0) {
-                    # failed - Lets not start any more jobs for this
-                    # processable
-                    $failed{$lpkg->identifier} = 1;
-                    delete $active{$lpkg->identifier};
-                    last;
-                }
-                $running_jobs->{$pid} = [$cs, $cmap, $lpkg];
-                if ($jobs) {
-                    # Have we hit the limit of running jobs?
-                    last PROC if scalar keys %$running_jobs >= $jobs;
-                }
-            }
+                },
+                on_exit      => sub {
+                    my ($pid, $status) = @_;
+                    delete($running_jobs->{$pid});
+
+                    debug_msg(3, "FINISH $task_id ($status)");
+
+                    $coll_hook->($lpkg, 'finish', $cs, $task_id, $status)
+                      if $coll_hook;
+
+                    if ($status) {
+                        # failed ...
+                        $failed{$procid} = 1;
+                        delete $active{$procid};
+                        return;
+                    }
+
+                    # The collection was success
+                    $lpkg->_mark_coll_finished($coll, $cs->version);
+                    $cmap->satisfy($coll);
+                    # If the entry is marked as failed, don't break the loop
+                    # for it.
+                    return if exists $failed{$procid};
+                    $active{$procid} = 1 if $cmap->selectable;
+                    while (1) {
+                        my @task = $find_task->();
+                        last if not @task;
+                        $sch_task_inner->(@task);
+                        last
+                          if $jobs and scalar(keys(%{$running_jobs})) >= $jobs;
+                    }
+                    $loop->loop_stop if not %{$running_jobs};
+                    if ($debug_enabled) {
+                        my $queue = join(', ', sort(values(%{$running_jobs})));
+                        debug_msg(3, "RUNNING QUEUE: $queue");
+                    }
+                });
+        };
+        if ($coll_hook) {
+            my $err = $@;
+            $coll_hook->($lpkg, 'start', $cs, $task_id) if $pid > -1;
+            $coll_hook->($lpkg, 'start-failed', $cs, $task_id, $err)
+              if $pid == -1;
         }
-        # wait until a job finishes to run its branches, if any, or skip
-        # this package if any of the jobs failed.
+        $running_jobs->{$pid} = $task_id;
+        #$loop->add($process);
+    };
 
-        while (my ($pid, $job_data) = wait_any($running_jobs, $nohang)) {
-            my $status = $?;
-            my ($cs, $cmap, $lpkg) = @$job_data;
-            my $procid = $lpkg->identifier;
-
-            $coll_hook->($lpkg, 'finish', $cs, $pid, $status)
-              if $coll_hook;
-
-            if ($status) {
-                # failed ...
-                $failed{$procid} = 1;
-                delete $active{$procid};
-                next;
-            }
-
-            my $coll = $cs->name;
-            # The collection was success
-            $lpkg->_mark_coll_finished($coll, $cs->version);
-            $cmap->satisfy($coll);
-            # If the entry is marked as failed, don't break the loop
-            # for it.
-            next if exists $failed{$procid};
-            $active{$procid} = 1 if $cmap->selectable;
-            $nohang = 1 if %active;
-        }
-
-        # Stop when there are no running jobs and no new pending ones.
-        unless (%active or %$running_jobs) {
-            # No more running jobs and no new jobs have become available...
-            # It is not quite sufficient, so ensure that all jobs have in
-            # fact been run.
-            my $done = 1;
-            foreach my $procid (keys %$worklists) {
-                # Failed ones do not count...
-                next if $failed{$procid};
-                my $cmap = $worklists->{$procid}{'collmap'};
-                if ($cmap->pending) {
-                    $done = 0;
-                    last;
-                }
-            }
-            last if $done;
-        }
+    while (1) {
+        my @task = $find_task->();
+        last if not @task;
+        $schedule_task->(@task);
+        last if $jobs and scalar(keys(%{$running_jobs})) >= $jobs;
     }
 
+    $loop->run;
     return;
 }
 

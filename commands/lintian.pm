@@ -984,41 +984,41 @@ sub unpack_group {
 }
 
 sub coll_hook {
-    my ($group, $timers, $lpkg, $event, $cs, $pid, $exitval) = @_;
+    my ($group, $timers, $lpkg, $event, $cs, $task_id, $exitval) = @_;
     my $coll = $cs->name;
     my $procid = $lpkg->identifier;
     my $ok = 1;
 
     if ($event eq 'start') {
-        if ($pid < 0) {
-            # failed
-            my $pkg_name = $lpkg->pkg_name;
-            my $pkg_type = $lpkg->pkg_type;
-            warning(
-                "collect info $coll about package $pkg_name failed",
-                "skipping $action of $pkg_type package $pkg_name"
-            );
-            $exit_code = 2;
-            $ok = 0;
-            $group->remove_processable($lpkg);
-        } else {
-            # Success
-            $timers->{$pid} = $start_timer->();
-            debug_msg(1, "Collecting info: $coll for $procid ...");
-        }
+        $timers->{$task_id} = $start_timer->();
+        debug_msg(1, "Collecting info: $coll for $procid ...");
+    } elsif ($event eq 'start-failed') {
+        # failed
+        my $pkg_name = $lpkg->pkg_name;
+        my $pkg_type = $lpkg->pkg_type;
+        warning(
+            "collect info $coll about package $pkg_name failed",
+            "skipping $action of $pkg_type package $pkg_name",
+            "error: $exitval"
+        );
+        $exit_code = 2;
+        $ok = 0;
+        $group->remove_processable($lpkg);
     } elsif ($event eq 'finish') {
         if ($exitval) {
             # Failed
             my $pkg_name  = $lpkg->pkg_name;
             my $pkg_type = $lpkg->pkg_type;
-            warning("collect info $coll about package $pkg_name failed");
+            warning(
+                "collect info $coll about package $pkg_name failed ($exitval)"
+            );
             warning("skipping $action of $pkg_type package $pkg_name");
             $exit_code = 2;
             $ok = 0;
             $group->remove_processable($lpkg);
         } else {
             # success
-            my $raw_res = $finish_timer->($timers->{$pid});
+            my $raw_res = $finish_timer->($timers->{$task_id});
             my $tres = $format_timer_result->($raw_res);
             debug_msg(1, "Collection script $coll for $procid done$tres");
             perf_log("$procid,coll/$coll,${raw_res}");
