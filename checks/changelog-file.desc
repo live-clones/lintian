@@ -415,4 +415,4 @@ Info: The changelog entry references a temporary security identifier,
  If a CVE has been allocated, please use that instead.  Otherwise,
  please replace the TEMP identifier with a short description of the
  issue.
-Ref: #787929, #809226
+Ref: #787929, #807892
