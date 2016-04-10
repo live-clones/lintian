@@ -20,6 +20,8 @@
     of ~75 characters, but consists of over 200 bytes.
     üüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüü
 
+  * It might even fix TEMP-1234567-abcdef, though probably not.
+
  -- {$author}  {$date}
 
 {$source} ({$version}) unstable; urgency=low

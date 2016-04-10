@@ -6,6 +6,7 @@ Description: General tests for changelog-file tags
 Test-For:
  bad-intended-distribution
  changelog-not-compressed-with-max-compression
+ changelog-references-temp-security-identifier
  debian-changelog-file-contains-invalid-email-address
  debian-changelog-file-contains-obsolete-user-emacs-settings
  debian-changelog-line-too-long

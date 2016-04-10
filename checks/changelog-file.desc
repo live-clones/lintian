@@ -400,3 +400,19 @@ Info: The date in the changelog entry is not consistent with the actual
  .
    $ date -R -ud '2013-11-05 23:59:59'
    Tue, 05 Nov 2013 23:59:59 +0000
+
+Tag: changelog-references-temp-security-identifier
+Severity: normal
+Certainty: certain
+Info: The changelog entry references a temporary security identifier,
+ like "TEMP-0000000-2FC21E".
+ .
+ The TEMP identifier will disappear in the future once a proper CVE
+ identifier has been assigned.  Therefore it is useless as an
+ external reference.   Even worse, the identifier is not stable and
+ may change even before a CVE is allocated.
+ .
+ If a CVE has been allocated, please use that instead.  Otherwise,
+ please replace the TEMP identifier with a short description of the
+ issue.
+Ref: #787929, #809226
