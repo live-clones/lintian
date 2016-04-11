@@ -137,6 +137,8 @@ alocated||allocated
 alocates||allocates
 alocating||allocating
 alogirhtms||algorithms
+alogrithm||algorithm
+alogrithms||algorithms
 alot||a lot
 alow||allow
 alows||allows
@@ -224,6 +226,10 @@ assocated||associated
 assocates||associates
 assocating||associating
 assocation||association
+associcate||associate
+associcated||associated
+associcates||associates
+associcating||associating
 assotiated||associated
 asthetic||aesthetic
 asuming||assuming
@@ -941,6 +947,7 @@ foreing||foreign
 forground||foreground
 formated||formatted
 formating||formatting
+forseeable||foreseeable
 forse||force
 fortan||fortran
 forunate||fortunate
@@ -1221,6 +1228,8 @@ interesect||intersect
 interesection||intersection
 interesections||intersections
 interesects||intersects
+interferred||interfered
+interferring||interfering
 interger||integer
 intergers||integers
 intermittant||intermittent
@@ -1259,6 +1268,7 @@ intruments||instruments
 intuative||intuitive
 invalud||invalid
 invarient||invariant
+invididual||individual
 invokation||invocation
 invokations||invocations
 irrelevent||irrelevant
@@ -1543,6 +1553,8 @@ particularily||particularly
 partioning||partitioning
 pased||passed
 pathes||paths
+pecularities||peculiarities
+pecularity||peculiarity
 peformance||performance
 peice||piece
 peices||pieces
@@ -1567,6 +1579,8 @@ permisions||permissions
 permissons||permissions
 permuation||permutation
 permuations||permutations
+peroid||period
+peroids||periods
 persistance||persistence
 persistant||persistent
 personnal||personal
@@ -2034,6 +2048,7 @@ suuported||supported
 suuporting||supporting
 suuports||supports
 suuport||support
+swaping||swapping
 synax||syntax
 synchonized||synchronized
 synchonizes||synchronizes
@@ -2242,6 +2257,7 @@ weired||weird
 wether||whether
 whataver||whatever
 whenver||whenever
+wheras||whereas
 wheter||whether
 whish||wish
 whithout||without
@@ -2255,6 +2271,10 @@ wilcards||wildcards
 wilcard||wildcard
 withing||within
 witin||within
+wnated||wanted
+wnating||wanting
+wnats||wants
+wnat||want
 wont||won't
 workaroung||workaround
 writeing||writing
