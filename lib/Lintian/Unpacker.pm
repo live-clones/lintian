@@ -343,27 +343,6 @@ to signal a failure.
 STATUS is the exit status of the finishing job.  It is only available
 if EVENT is "finish" and if STATUS is non-zero is considered an error.
 
-=item finish-hook (LPKG, STATE[, CHANGED])
-
-Called once or twice for each entry processed at the end of the run.
-The LPKG is the L<entry|Lintian::Lab::Entry> being processed.
-
-For the first call, STATE is one of "changed" (the entry has been
-modified), "unchanged" (the entry was unmodified) or "failed" (at
-least one collection could not be applied).  Note that a "failed"
-entry may (or may not) be "changed" depending on where the failure
-happened.
-
-In the first call is done before the status file is written and the
-hook may alter the entry at this point (e.g. auto-remove unused
-collections).  If it does so CHANGED should be invoked as a code-ref
-to inform the unpacker of the change.
-
-The second call only happens for entries that has been changed (one
-way or another).  STATE will be one of "sf-success" or "sf-error",
-which determined on whether or not status file update was successful.
-On errors (i.e. "sf-error"), $! will contain the error.
-
 =back
 
 =cut
@@ -377,7 +356,6 @@ sub process_tasks {
 
     $hooks //= {};
     my $coll_hook = $hooks->{'coll-hook'};
-    my $finish_hook = $hooks->{'finish-hook'};
     my %failed;
     my %active = map { $_ => 1 } keys %$worklists;
 
@@ -524,25 +502,6 @@ sub process_tasks {
         }
     }
 
-    foreach my $procid (keys %$worklists) {
-        my $wlist = $worklists->{$procid};
-        my $lpkg = $wlist->{'lab-entry'};
-        my $changed = $wlist->{'changed'};
-        my $state = 'unchanged';
-        $state = 'changed' if $changed;
-        $state = 'failed' if exists $failed{$procid};
-        # Gracefully handle the hook deleting the entire entry
-        $finish_hook->($lpkg, $state, sub { $changed = $lpkg->exists ? 1 : 0 })
-          if $finish_hook;
-        if ($changed) {
-            $state = 'sf-error';
-            if ($lpkg->update_status_file) {
-                $state = 'sf-success';
-            }
-            $finish_hook->($lpkg, $state)
-              if $finish_hook;
-        }
-    }
     return;
 }
 

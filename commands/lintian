@@ -760,6 +760,7 @@ sub main {
         my $success = 1;
         my $group = $pool->get_group($gname);
         my $total_raw_res = timed_task {
+            my @group_lpkg;
             my $raw_res = timed_task {
                 if (!unpack_group($gname, $group)) {
                     $success = 0;
@@ -787,6 +788,27 @@ sub main {
                     # an error for that - but we still try to reap the
                     # children if they are now done.
                     1 while waitpid(-1, WNOHANG) > 0;
+                }
+                @group_lpkg = $group->get_processables;
+            } else {
+                for my $lpkg ($group->get_processables) {
+                    my $ret = auto_clean_package($lpkg);
+                    next if ($ret == 2);
+                    if ($ret < 0) {
+                        $exit_code = 2;
+                        next;
+                    }
+                    push(@group_lpkg, $lpkg);
+                }
+            }
+            if (not $LAB->is_temp) {
+                for my $lpkg (@group_lpkg) {
+                    $lpkg->update_status_file
+                      or
+                      warning('could not create status file for package '
+                          .$lpkg->pkg_name
+                          . ": $!");
+
                 }
             }
         };
@@ -950,40 +972,12 @@ sub unpack_group {
 
     v_msg("Unpacking packages in group $gname");
 
-    my %timers;
-    my %hooks = (
-        'coll-hook' => sub { coll_hook($group, \%timers, @_) or $all_ok = 0; },
-        'finish-hook' => sub { finish_hook(@_) or $all_ok = 0; },
-    );
+    my (%timers, %hooks);
+    $hooks{'coll-hook'}
+      = sub { coll_hook($group, \%timers, @_) or $all_ok = 0; };
 
     $unpacker->process_tasks(\%hooks);
     return $all_ok;
-}
-
-sub finish_hook {
-    my ($lpkg, $state, $changed) = @_;
-    my $ok = 1;
-    if ($state eq 'sf-error') {
-        # The status file could not be written; give a warning.
-        my $err = $!;
-        my $pkg_name = $lpkg->pkg_name;
-        warning("could not create status file for package $pkg_name: $err");
-    } elsif ($state eq 'unchanged' or $state eq 'changed') {
-        # If we are only unpacking stuff, auto-remove colls
-        # immediately.
-        if ($action ne 'check' and @auto_remove) {
-            # we are done now - start auto-cleaning
-            my $ret = auto_clean_package($lpkg);
-            # We don't have to remove it from the group if it
-            # fails as we are pretty much done.
-            if ($ret < 0) {
-                $exit_code = 2;
-                $ok = 0;
-            }
-            $changed->() if $ret;
-        }
-    }
-    return $ok;
 }
 
 sub coll_hook {
