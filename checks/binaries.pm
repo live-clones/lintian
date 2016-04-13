@@ -42,7 +42,6 @@ use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
-use Lintian::Output qw(debug_msg);
 use Lintian::Util qw(fail slurp_entire_file strip);
 
 my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
