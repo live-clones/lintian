@@ -185,8 +185,13 @@ aqcuire||acquire
 aqcuired||acquired
 aqcuires||acquires
 aqcuiring||acquiring
+aquaint||acquaint
+aquainted||acquainted
+aquainting||acquainting
+aquaints||acquaints
 aquire||acquire
 aquired||acquired
+aquisition||acquisition
 arbitary||arbitrary
 arbitray||arbitrary
 archiecture||architecture
@@ -513,6 +518,7 @@ continous||continuous
 continously||continuously
 continueing||continuing
 contraints||constraints
+contries||countries
 controled||controlled
 controler||controller
 controlers||controllers
@@ -524,6 +530,7 @@ contructing||constructing
 contructor||constructor
 contructors||constructors
 contructs||constructs
+contry||country
 converstion||conversion
 converstions||conversions
 convertion||conversion
@@ -592,6 +599,7 @@ defautl||default
 defered||deferred
 definate||definite
 definately||definitely
+definining||defining
 definitly||definitely
 defintion||definition
 defintions||definitions
@@ -645,6 +653,8 @@ descritpions||descriptions
 desctiptor||descriptor
 desctiptors||descriptors
 desireable||desirable
+desriptor||descriptor
+desriptors||descriptors
 detabase||database
 detatch||detach
 detatched||detached
@@ -927,6 +937,7 @@ feauture||feature
 feautures||features
 fetaure||feature
 fetaures||features
+ficticious||fictitious
 filesytem||filesystem
 filesytems||filesystems
 fileystem||filesystem
@@ -1298,6 +1309,8 @@ lauches||launches
 lauching||launching
 lauch||launch
 leightweight||lightweight
+lengh||length
+lenghs||lengths
 lenght||length
 lenghts||lengths
 lenghty||lengthy
@@ -1593,6 +1606,7 @@ plattform||platform
 pleaes||please
 ploting||plotting
 poinnter||pointer
+polution||pollution
 portugese||Portuguese
 posible||possible
 positionned||positioned
@@ -1951,6 +1965,7 @@ specfies||specifies
 specfying||specifying
 specfy||specify
 speciefied||specified
+specifc||specific
 specifed||specified
 specificatin||specification
 specificaton||specification
@@ -1974,6 +1989,8 @@ statments||statements
 statment||statement
 stirngs||strings
 stirng||string
+stoped||stopped
+stoping||stopping
 straigth||straight
 straigt||straight
 strenghts||strengths
@@ -2184,6 +2201,7 @@ unqoute||unquote
 unqouting||unquoting
 unrecogized||unrecognized
 unreconized||unrecognized
+unsinged||unsigned
 unspported||unsupported
 unsual||unusual
 unsued||unused
@@ -2223,6 +2241,8 @@ utlity||utility
 vaiables||variables
 vaiable||variable
 validing||validating
+varables||variables
+varable||variable
 variabes||variables
 variabe||variable
 variantions||variations
