@@ -58,6 +58,8 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * lib/Lintian/Relation.pm:
     + [JW,NT] Fix broken implication with "P (<< V)" relations.
       (Closes: #819560)
+  * lib/Lintian/Tag/Info.pm:
+    + [JW] Use HTTPS for manpages.debian.org URLs.
   * lib/Lintian/Unpacker.pm:
     + [NT] Name the subprocess after what is processing.
 
