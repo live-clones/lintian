@@ -28,6 +28,6 @@ W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/i
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/64x64/lintian-64x64.png 22x22
 W: files-general: icon-size-and-directory-name-mismatch usr/share/icons/hicolor/22x22/apps/lintian-16x16.png 16x16
 W: files-general: nfs-temporary-file-in-package usr/share/foo/.nfs-fake-tmpfile
-W: files-general: obsolete-comments-style-in-php-ini etc/php5/conf.d/php-foo.ini
+W: files-general: obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
 W: files-general: raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
 W: files-general: windows-devel-file-in-package usr/lib/foo/foo.vcproj

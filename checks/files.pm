@@ -518,8 +518,8 @@ sub run {
             elsif ($fname =~ m,^etc/pam.conf, and $pkg ne 'libpam-runtime') {
                 tag 'config-file-reserved', "$fname by libpam-runtime";
             }
-            #----------------- /etc/php5/conf.d
-            elsif ($fname =~ m,^etc/php5/conf.d/.+\.ini$,) {
+            #----------------- /etc/php/7.0/mods-available/*.ini
+            elsif ($fname =~ m,^etc/php/.*/mods-available/.+\.ini$,) {
                 if ($file->is_file) {
                     my $fd = $file->open;
                     while (<$fd>) {

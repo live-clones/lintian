@@ -11,7 +11,7 @@ lintian.conf etc/modprobe.d
 dir usr/share/info
 foo.vcproj usr/lib/foo
 lintian-lib.conf etc/ld.so.conf.d
-php-foo.ini etc/php5/conf.d
+php-foo.ini etc/php/7.0/mods-available
 types usr/share/mime
 mimeinfo.cache usr/share/applications
 file-in-new-top-level-dir new-top-level-dir/
