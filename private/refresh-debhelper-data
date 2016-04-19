@@ -123,7 +123,7 @@ else
     mkdir -p "$lintian_data/debhelper"
 
     cd "$workdir"
-    wget dists/sid/Contents-i386.gz
+    wget dists/sid/main/Contents-i386.gz
     zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
     cat dh_entries \
         | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
