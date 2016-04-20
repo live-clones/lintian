@@ -102,8 +102,7 @@ sub run {
                 close($package_xml_fd);
                 if ($package_type eq 'extsrc') { # PECL package
                     if (!$bdepends->implies('php-dev')) {
-                        tag 'pecl-package-requires-build-dependency',
-                          'php-dev';
+                        tag 'pecl-package-requires-build-dependency','php-dev';
                     }
                     if (!$bdepends->implies('dh-php')) {
                         tag 'pecl-package-requires-build-dependency','dh-php';
