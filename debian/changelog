@@ -40,6 +40,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       packages are given on the command line.  Thanks to Sean Whitton for
       the suggestion.  (Closes: #812568)
 
+  * data/debhelper/*:
+    + [JW] Refresh against unstable.  Thanks to Mathieu Parent for the bug
+      report.
   * data/menu-format/known-desktop-keys:
     + [NT] Accept "DesktopNames" as a known key in desktop files.  Thanks
       to Yves-Alexis Perez for the suggestion.  (Closes: #766099)

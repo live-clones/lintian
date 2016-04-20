@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2015-09-19 15:08
+# It was generated on 2016-04-20 17:06
 
 dh_apache2
 dh_cme_upgrade
@@ -18,11 +18,12 @@ dh_installxmlcatalogs
 dh_libva
 dh_linktree
 dh_lisp
+dh_makefont
 dh_nativejava
-dh_pangomodules
-dh_php5
+dh_nodejs
 dh_phppear
 dh_pidgin
+dh_ppp
 dh_pyppd
 dh_systemd_enable
 dh_ucf

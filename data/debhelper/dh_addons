@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2015-09-19 15:08
+# It was generated on 2016-04-20 17:06
 #
 # If the script generates an sufficient/incorrect value for a
 # single item, please have a look at dh_addons-manual.
@@ -13,6 +13,7 @@ aspell_simple=dictionaries-common-dev
 autoreconf=dh-autoreconf
 autotools_dev=autotools-dev
 bash_completion=bash-completion
+buildinfo=dh-buildinfo
 cli=cli-common-dev
 cli_nant=cli-common-dev
 cme_upgrade=cme
@@ -23,10 +24,12 @@ dist_zilla=dh-dist-zilla
 dkms=dkms
 dpatch=dpatch
 eclipse_helper=javahelper
+elpa=dh-elpa
 germinate=germinate
 gir=gobject-introspection
 gnome=gnome-pkg-tools
 golang=dh-golang
+haskell=dh-haskell
 javahelper=javahelper
 jh_maven_repo_helper=maven-repo-helper
 kde=pkg-kde-tools
@@ -36,14 +39,16 @@ linktree=dh-linktree
 lisp=dh-lisp
 lua=dh-lua
 maven_repo_helper=maven-repo-helper
+nodejs=nodejs-dev
 ocaml=dh-ocaml
 parrot=parrot-devel
 perl_dbi=libdbi-perl
 perl_imager=libimager-perl
-php5=dh-php5
+php=dh-php
 phpcomposer=pkg-php-tools
 phppear=pkg-php-tools
 pkgkde_symbolshelper=pkg-kde-tools
+ppp=ppp-dev
 pydeb=python-van.pydeb
 pyppd=pyppd
 pypy=dh-python
@@ -60,6 +65,7 @@ sphinxdoc=sphinx-common
 swi_prolog=swi-prolog-nox
 systemd=dh-systemd
 tex=tex-common
+vdrplugin=vdr-dev
 xine=libxine2-dev
 xsf=xserver-xorg-dev
 xsp=dh-xsp
