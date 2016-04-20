@@ -88,7 +88,7 @@ L<Lintian::Collect::Package> modules are also available.
 =item native
 
 Returns true if the binary package is native and false otherwise.
-Nativeness will be judged by its version number.
+Nativeness will be judged by the source version number.
 
 If the version number is absent, this will return false (as
 native packages are a lot rarer than non-native ones).
@@ -100,7 +100,13 @@ Needs-Info requirements for using I<native>: L<Same as field|Lintian::Collect/fi
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
-    my $version = $self->field('version');
+    my $version;
+    my $source = $self->field('source');
+    if (defined $source && $source =~ m/\((.*)\)/) {
+        $version = $1;
+    } else {
+        $version = $self->field('version');
+    }
     if (defined $version) {
         $self->{native} = ($version !~ m/-/);
     } else {
