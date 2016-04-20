@@ -23,10 +23,16 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Use https URL in the correction for canonical VCS URLs.
       (Closes: #813587)
     + [NT] Bump known python 3 version to include 3.4 and 3.5.
+  * checks/files.pm:
+    + [JW] Apply patch from Mathieu Parent to fix directories for PHP INI
+      files.
   * checks/nmu.{desc,pm}:
     + [NT] Create a separate tag for extra whitespace around uploader name
       in the changelog.  Thanks to Ben Wiederhake for the suggestion.
       (Closes: #801647)
+  * checks/phppear.{desc,pm}:
+    + [JW] Apply patch from Mathieu Parent to make dh-php* and php*-dev
+      package names unversioned.
   * checks/scripts.desc:
     + [NT] Suggest dh_python2 / dh_python3 instead of dh_pysupport and
       dh_pycentral.  Thanks to Neil Williams for the report.
