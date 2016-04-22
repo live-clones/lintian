@@ -45,3 +45,17 @@ Tag: control-file-is-not-a-file
 Severity: serious
 Certainty: certain
 Info: The package contains a control file that is not a regular file.
+
+Tag: ctrl-script
+Severity: classification
+Certainty: certain
+Info: This package has one or more maintainer scripts (or other
+ executable control files).
+ .
+ This flags any control file with the executable bit set.
+
+Tag: no-ctrl-scripts
+Severity: classification
+Certainty: certain
+Info: The package does not rely on any maintainer scripts (or other
+ executable control files).

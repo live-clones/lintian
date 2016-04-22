@@ -1,0 +1,6 @@
+Testname: control-files-classifications-ctrl-script
+Sequence: 6000
+Version: 1.0
+Description: Test for control-files classifications
+Options: -L +=classification -C control-files
+Test-For: ctrl-script

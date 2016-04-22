@@ -1,0 +1,2 @@
+C: control-files-classifications-ctrl-script: ctrl-script postinst
+C: control-files-classifications-ctrl-script: ctrl-script prerm

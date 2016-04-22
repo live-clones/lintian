@@ -39,6 +39,7 @@ sub run {
     my (undef, $type, $info) = @_;
     my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
     my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
+    my $has_ctrl_script = 0;
 
     # process control-index file
     foreach my $file ($info->sorted_control_index) {
@@ -76,6 +77,10 @@ sub run {
         next if $file eq 'control';
 
         $operm = $file->operm;
+        if ($operm & 0111 or $experm & 0111) {
+            $has_ctrl_script = 1;
+            tag 'ctrl-script', $file;
+        }
 
         # correct permissions?
         unless ($operm == $experm) {
@@ -91,6 +96,9 @@ sub run {
         }
 
         # for other maintainer scripts checks, see the scripts check
+    }
+    if (not $has_ctrl_script) {
+        tag 'no-ctrl-scripts';
     }
     return;
 } # </run>
