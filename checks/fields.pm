@@ -946,15 +946,19 @@ sub run {
         tag 'build-depends-indep-without-arch-indep'
           if (defined $info->field('build-depends-indep')
             && $arch_indep_packages == 0);
+        tag 'build-depends-arch-without-arch-dependant-binary'
+          if (defined $info->field('build-depends-arch')
+            && $arch_dep_packages == 0);
 
         my $is_dep_field = sub {
-            any { $_ eq $_[0] } qw(build-depends build-depends-indep);
+            any { $_ eq $_[0] }
+            qw(build-depends build-depends-indep build-depends-arch);
         };
 
         my $restrictions_used = 0;
         my %depend;
         for my $field (
-            qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)
+            qw(build-depends build-depends-indep build-depends-arch build-conflicts build-conflicts-indep build-conflicts-arch)
           ) {
             if (defined $info->field($field)) {
                 #Get data and clean it
@@ -1113,7 +1117,11 @@ sub run {
         }
 
         # Make sure build dependencies and conflicts are consistent.
-        for ($depend{'build-conflicts'}, $depend{'build-conflicts-indep'}) {
+        for (
+            $depend{'build-conflicts'},
+            $depend{'build-conflicts-indep'},
+            $depend{'build-conflicts-arch'}
+          ) {
             next unless $_;
             for my $conflict (split /\s*,\s*/, $_) {
                 if ($build_all->implies($conflict)) {

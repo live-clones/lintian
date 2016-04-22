@@ -32,6 +32,8 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Bump known python 3 version to include 3.4 and 3.5.
     + [AB] package-relation-with-perl-modules: Remove "experimental" flag.
       Asked for by Dominic Hargreaves.
+    + [NT] Apply patch from Mattia Rizzolo to make lintian know and check
+      the Build-Depends-Arch field.  (Closes: #822281)
   * checks/files.pm:
     + [JW] Apply patch from Mathieu Parent to fix directories for PHP INI
       files.

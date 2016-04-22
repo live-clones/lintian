@@ -6,8 +6,10 @@ autobuild
 binary
 bugs
 build-conflicts
+build-conflicts-arch
 build-conflicts-indep
 build-depends
+build-depends-arch
 build-depends-indep
 checksums-md5
 checksums-sha1
