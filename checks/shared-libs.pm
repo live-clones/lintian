@@ -680,7 +680,7 @@ sub run {
           if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
-    my $multiarch = $info->field('multi-arch') // 'no';
+    my $multiarch = $info->field('multi-arch', 'no');
     if ($multiarch eq 'foreign' and $must_call_ldconfig) {
         tag 'shlib-in-multi-arch-foreign-package', $must_call_ldconfig;
     }
