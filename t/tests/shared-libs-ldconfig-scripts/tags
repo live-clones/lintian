@@ -1,6 +1,6 @@
-E: libfoo1: postinst-must-call-ldconfig usr/lib/libfoo.so.1.0.1
+E: libfoo1: package-must-activate-ldconfig-trigger usr/lib/libfoo.so.1.0.1
 E: libfoo1: postrm-should-call-ldconfig usr/lib/libfoo.so.1.0.1
-W: app: postinst-has-useless-call-to-ldconfig
+W: app: package-has-unnecessary-activation-of-ldconfig-trigger
 W: app: postrm-has-useless-call-to-ldconfig
 W: libfish1: preinst-calls-ldconfig
 W: libfish1: prerm-calls-ldconfig

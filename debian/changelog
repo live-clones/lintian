@@ -39,6 +39,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Suggest dh_python2 / dh_python3 instead of dh_pysupport and
       dh_pycentral.  Thanks to Neil Williams for the report.
       (Closes: #818607)
+  * checks/shared-libs.{desc,pm}:
+    + [NT] Rename and clarify some ldconfig related tags to better reflect
+      the use of the ldconfig trigger.  Thanks to Rafael Laboissiere for
+      reporting this.  (Closes: #809577)
 
   * commands/info.pm:
     + [NT] Accept "--tag" as an alias of "--tags".  Thanks to Robert

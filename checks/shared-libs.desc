@@ -201,14 +201,15 @@ Info: The package installs a file with the name, ldconfig would use for
  the symbolic link to reference the shared library.
 Ref: policy 8.1
 
-Tag: postinst-has-useless-call-to-ldconfig
+Tag: package-has-unnecessary-activation-of-ldconfig-trigger
 Severity: minor
 Certainty: certain
-Info: The postinst script calls ldconfig even though no shared libraries are
- installed in a directory controlled by the dynamic library loader.
+Info: The package activates the ldconfig trigger even though no shared
+ libraries are installed in a directory controlled by the dynamic
+ library loader.
  .
  Note this may be triggered by a bug in debhelper, that causes it to
- auto-generate an ldconfig snippet for packages that does not need it.
+ auto-generate an ldconfig trigger for packages that does not need it.
 Ref: policy 8.1.1, #204975
 
 Tag: udeb-postinst-must-not-call-ldconfig
@@ -234,17 +235,17 @@ Info: The postrm script calls ldconfig even though no shared libraries are
  uses a dpkg trigger.
 Ref: policy 8.1.1, #204975
 
-Tag: postinst-must-call-ldconfig
+Tag: package-must-activate-ldconfig-trigger
 Severity: serious
 Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
- the dynamic library loader. Therefore, the package must call "ldconfig" in
- during installation.
+ the dynamic library loader. Therefore, the package must trigger libc's
+ "ldconfig" trigger to ensure the ldconfig cache is updated.
  .
- This should either be done via a <tt>activate-noawait ldconfig</tt>
- trigger or by calling "ldconfig" directly in the postinst script on
- the "configure" step.
-Ref: policy 8.1.1
+ This should be done via a <tt>activate-noawait ldconfig</tt>
+ trigger. With debhelper it is usually sufficient to simply add that line
+ to <tt>debian/&lt;package&gt;.triggers</tt>.
+Ref: policy 8.1.1, https://lists.debian.org/debian-devel/2015/08/msg00412.html
 
 Tag: postrm-should-call-ldconfig
 Severity: important

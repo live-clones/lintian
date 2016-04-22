@@ -11,7 +11,7 @@ E: libbaz1: ldconfig-symlink-missing-for-shlib usr/lib/libbaz2.so.1.0 usr/lib/li
 E: libbaz1: ldconfig-symlink-missing-for-shlib usr/lib/libbaz3.so.1 usr/lib/libbaz3.so.1.0.3b libbaz3.so.1
 E: libbaz1: maintainer-shell-script-fails-syntax-check postinst
 E: libbaz1: missing-dependency-on-perlapi
-E: libbaz1: postinst-must-call-ldconfig usr/lib/libfoo2.so.1.0.3b
+E: libbaz1: package-must-activate-ldconfig-trigger usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: sharedobject-in-library-directory-missing-soname usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: shlib-missing-in-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: shlib-with-executable-bit usr/lib/libfoo2.so.1.0.3b 0755

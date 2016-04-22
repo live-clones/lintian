@@ -3,8 +3,8 @@ Sequence: 6000
 Version: 1.0
 Description: Test checks related to ldconfig in scripts
 Test-For: 
- postinst-has-useless-call-to-ldconfig
- postinst-must-call-ldconfig
+ package-has-unnecessary-activation-of-ldconfig-trigger
+ package-must-activate-ldconfig-trigger
  postrm-has-useless-call-to-ldconfig
  postrm-should-call-ldconfig
  postrm-unsafe-ldconfig

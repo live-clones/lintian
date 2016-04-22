@@ -666,12 +666,10 @@ sub run {
         tag 'udeb-postinst-must-not-call-ldconfig'
           if $we_call_postinst or $we_trigger_ldconfig;
     } else {
-        tag 'postinst-has-useless-call-to-ldconfig'
-          if ($we_trigger_ldconfig or $we_call_postinst)
-          and not $must_call_ldconfig;
-        tag 'postinst-must-call-ldconfig', $must_call_ldconfig
-          if not($we_call_postinst or $we_trigger_ldconfig)
-          and $must_call_ldconfig;
+        tag 'package-has-unnecessary-activation-of-ldconfig-trigger'
+          if $we_trigger_ldconfig and not $must_call_ldconfig;
+        tag 'package-must-activate-ldconfig-trigger', $must_call_ldconfig
+          if not $we_trigger_ldconfig and $must_call_ldconfig;
     }
 
     my $multiarch = $info->field('multi-arch') // 'no';
