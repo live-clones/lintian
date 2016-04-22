@@ -8,6 +8,13 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [JW,NT] Flag references to "TEMP" security identifiers.
       Thanks to Paul Wise for assisting with the regex.
       (Closes: #807892)
+  * checks/control-files.{desc,pm}:
+    + [NT] Add classification tags for (absence of) maintscripts.
+  * checks/debhelper.{desc,pm}:
+    + [NT] Add tag for classifying the build system.
+  * checks/debian-source-dir.{desc,pm}:
+    + [NT] Add tag for classifying the source format.
+      (Closes: #612610)
   * checks/description.{desc,pm}:
     + [NT] Drop duplicate word tag, which is now covered by the
       spelling error check.
@@ -54,6 +61,8 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Also check DEBRELEASE_DEBS_DIR for .changes files when no
       packages are given on the command line.  Thanks to Sean Whitton for
       the suggestion.  (Closes: #812568)
+  * commands/reporting-lintian-harness.pm:
+    + [NT] Add support for classsification tags.
 
   * data/debhelper/*:
     + [JW] Refresh against unstable.  Thanks to Mathieu Parent for the bug
@@ -70,6 +79,11 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [AB] Declare compliance with Debian Policy 3.9.8. (No other changes
       required.)
 
+  * doc/lintian.xml:
+    + [NT] Document the new classification tags.
+
+  * lib/Lintian/*{,/*}.pm:
+    + [NT] Add support for classification tags.
   * lib/Lintian/Check.pm:
     + [JW,NT] Flag a duplicate word as a spelling error.  This affects
       several tags plus spellintian.  (Closes: #800476)
@@ -86,6 +100,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
 
   * private/refresh-debhelper-data:
     + [JW] Apply patch from Mathieu Parent to fix path to Contents files.
+
+  * reporting/*:
+    + [NT] Add support for classsification tags.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
 
