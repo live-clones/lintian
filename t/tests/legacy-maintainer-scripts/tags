@@ -69,6 +69,7 @@ W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage p
 W: maintainer-scripts: maintainer-script-should-not-use-gconftool postinst:68
 W: maintainer-scripts: maintainer-script-should-not-use-start-stop-daemon postinst:159
 W: maintainer-scripts: maintainer-script-should-not-use-update-alternatives-remove postrm:4
+W: maintainer-scripts: maintscript-calls-ldconfig postrm
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:108 '${H[@]}'
@@ -164,5 +165,4 @@ W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-scr
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postrm-does-not-purge-debconf
-W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
 X: maintainer-scripts: maintainer-script-may-use-dir_to_symlink_helper postinst:5

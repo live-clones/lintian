@@ -630,18 +630,26 @@ sub run {
     if (my $preinst = $info->control_index_resolved_path('preinst')) {
         if ($preinst->is_open_ok) {
             if ($preinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
-                tag 'preinst-calls-ldconfig';
+                tag 'maintscript-calls-ldconfig', 'preinst'
+                  # Assume it is needed if glibc does it
+                  if $proc->pkg_src ne 'glibc';
             }
         }
     }
 
-    my $we_call_postinst=0;
     my $we_trigger_ldconfig = 0;
     if (my $postinst = $info->control_index_resolved_path('postinst')) {
         if ($postinst->is_open_ok) {
             # Decide if we call ldconfig
             if ($postinst->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
-                $we_call_postinst=1;
+                if ($type eq 'udeb') {
+                    tag 'udeb-postinst-must-not-call-ldconfig';
+                } else {
+                    # glibc (notably libc-bin) needs to call ldconfig in
+                    # order to implement the "ldconfig" trigger.
+                    tag 'maintscript-calls-ldconfig', 'postinst'
+                      if $proc->pkg_src ne 'glibc';
+                }
             }
         }
     }
@@ -664,7 +672,7 @@ sub run {
 
     if ($type eq 'udeb') {
         tag 'udeb-postinst-must-not-call-ldconfig'
-          if $we_call_postinst or $we_trigger_ldconfig;
+          if $we_trigger_ldconfig;
     } else {
         tag 'package-has-unnecessary-activation-of-ldconfig-trigger'
           if $we_trigger_ldconfig and not $must_call_ldconfig;
@@ -680,7 +688,9 @@ sub run {
     if (my $prerm = $info->control_index_resolved_path('prerm')) {
         if ($prerm->is_open_ok) {
             if ($prerm->file_contents =~ m/^[^\#]*\bldconfig\b/m) {
-                tag 'prerm-calls-ldconfig';
+                tag 'maintscript-calls-ldconfig', 'prerm'
+                  # Assume it is needed if glibc does it
+                  if $proc->pkg_src ne 'glibc';
             }
         }
     }
@@ -691,26 +701,9 @@ sub run {
 
             # Decide if we call ldconfig
             if ($contents =~ m/^[^\#]*\bldconfig\b/m) {
-                tag 'postrm-has-useless-call-to-ldconfig',
-                  unless $must_call_ldconfig;
-            } else {
-                tag 'postrm-should-call-ldconfig', $must_call_ldconfig
-                  if $must_call_ldconfig and not $we_trigger_ldconfig;
-            }
-
-            # Decide if we do it safely
-            $contents =~ s/\bldconfig\b/BldconfigB/g;
-            $contents =~ s/[ \t]//g;
-            # this one matches code from debhelper
-            $contents =~ s/^if\["\$1"=.?remove.?\];?\n*then\n*BldconfigB//gm;
-            # variations...
-            $contents =~ s/^if\[.?remove.?="\$1"\];?\n*then\n*BldconfigB//gm;
-            $contents =~ s/^\["\$1"=.?remove.?\]\&&BldconfigB//gm;
-            $contents =~ s/^\[.?remove.?="\$1"\]&&BldconfigB//gm;
-            $contents =~ s/remove(?:\|[^)]+)*\).*?BldconfigB.*?(?:;;|esac)//s;
-
-            if ($contents =~ m/^[^\#]*BldconfigB/m) {
-                tag 'postrm-unsafe-ldconfig';
+                tag 'maintscript-calls-ldconfig', 'postrm'
+                  # Assume it is needed if glibc does it
+                  if $proc->pkg_src ne 'glibc';
             }
         }
     }

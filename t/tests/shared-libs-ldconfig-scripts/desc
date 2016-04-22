@@ -3,10 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test checks related to ldconfig in scripts
 Test-For: 
+ maintscript-calls-ldconfig
  package-has-unnecessary-activation-of-ldconfig-trigger
  package-must-activate-ldconfig-trigger
- postrm-has-useless-call-to-ldconfig
- postrm-should-call-ldconfig
- postrm-unsafe-ldconfig
- preinst-calls-ldconfig
- prerm-calls-ldconfig

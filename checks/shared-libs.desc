@@ -106,26 +106,22 @@ Info: Although this package is not a "-dev" package, it installs a
  override this warning.
 Ref: policy 8.4
 
-Tag: preinst-calls-ldconfig
+Tag: maintscript-calls-ldconfig
 Severity: normal
 Certainty: certain
-Info: The preinst script calls ldconfig.  Calls to ldconfig should only be
- in postinst and postrm scripts (or via a noawait trigger).
-Ref: policy 8.1.1
-
-Tag: prerm-calls-ldconfig
-Severity: normal
-Certainty: certain
-Info: The prerm script calls ldconfig.  Calls to ldconfig should only
- be in postinst and postrm scripts (or via a noawait trigger).
-Ref: policy 8.1.1
-
-Tag: postrm-unsafe-ldconfig
-Severity: normal
-Certainty: certain
-Info: The postrm script calls ldconfig unsafely.  The postrm
- must only call ldconfig when given the argument "remove".
-Ref: policy 8.1.1
+Info: The given maintainer script calls ldconfig.  However, explicit
+ calls in maintainer scripts should be replaced by a dpkg trigger.
+ .
+ Please replace the "ldconfig" call with a <tt>activate-noawait
+ ldconfig</tt> trigger.  With debhelper it is usually sufficient
+ to simply add that line to <tt>debian/&lt;package&gt;.triggers</tt>.
+ .
+ If you use debhelper, this warning will appear if the package was
+ compiled with debhelper before 9.20151004.  Assuming all ldconfig
+ invocations have been added by debhelper, this warning will
+ disappear once the package is rebuilt with a newer version of
+ debhelper.
+Ref: https://lists.debian.org/debian-devel/2015/08/msg00412.html
 
 Tag: no-shlibs-control-file
 Severity: serious
@@ -222,19 +218,6 @@ Info: The udeb invokes ldconfig on install, which is an error in udebs.
  Note that this tag may (despite what the name suggests) be issued if
  the udeb uses a dpkg trigger to invoke ldconfig.
 
-Tag: postrm-has-useless-call-to-ldconfig
-Severity: minor
-Certainty: certain
-Info: The postrm script calls ldconfig even though no shared libraries are
- installed in a directory controlled by the dynamic library loader.
- .
- Note this may be triggered by a bug in debhelper, that causes it to
- auto-generate an ldconfig snippet for packages that does not need it.
- .
- This tag may (despite what the name suggests) be issued if the package
- uses a dpkg trigger.
-Ref: policy 8.1.1, #204975
-
 Tag: package-must-activate-ldconfig-trigger
 Severity: serious
 Certainty: certain
@@ -246,18 +229,6 @@ Info: The package installs shared libraries in a directory controlled by
  trigger. With debhelper it is usually sufficient to simply add that line
  to <tt>debian/&lt;package&gt;.triggers</tt>.
 Ref: policy 8.1.1, https://lists.debian.org/debian-devel/2015/08/msg00412.html
-
-Tag: postrm-should-call-ldconfig
-Severity: important
-Certainty: certain
-Info: The package installs shared libraries in a directory controlled by
- the dynamic library loader. Therefore, the package must call "ldconfig" in
- during removal.
- .
- This should either be done via a <tt>activate-noawait ldconfig</tt>
- trigger or by calling "ldconfig" directly in the postrm script on
- the "remove" step.
-Ref: policy 8.1.1
 
 Tag: sharedobject-in-library-directory-missing-soname
 Severity: important

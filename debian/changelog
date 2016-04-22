@@ -43,6 +43,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Rename and clarify some ldconfig related tags to better reflect
       the use of the ldconfig trigger.  Thanks to Rafael Laboissiere for
       reporting this.  (Closes: #809577)
+    + [NT] Merge and remove some ldconfig related tags.  Notably
+      unconditionally flag all uses of ldconfig in maintainer scripts
+      (outside glibc) as these should be replaced by a trigger.
 
   * commands/info.pm:
     + [NT] Accept "--tag" as an alias of "--tags".  Thanks to Robert
