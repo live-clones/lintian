@@ -2,5 +2,6 @@ Testname: shared-libs-ldconfig-wrong-file
 Sequence: 6000
 Version: 1.0-1
 Type: non-native
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Test ldconfig symlink with wrong target
 Test-For: ldconfig-symlink-referencing-wrong-file

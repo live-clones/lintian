@@ -1,6 +1,7 @@
 Testname: shared-libs-exit
 Sequence: 6000
 Version: 1.0
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to libs invoking exit(3)
 Test-For:
  shlib-calls-exit

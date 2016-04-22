@@ -1,6 +1,7 @@
 Testname: shared-libs-ldconfig-scripts
 Sequence: 6000
 Version: 1.0
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Test checks related to ldconfig in scripts
 Test-For: 
  maintscript-calls-ldconfig

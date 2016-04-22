@@ -1,6 +1,7 @@
 Testname: usrmerge-lib
 Sequence: 6000
 Version: 1.0
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Check for file installed in /usr/lib /lib
 Test-For:
  library-in-root-and-usr

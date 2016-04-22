@@ -2,5 +2,6 @@ Testname: shared-libs-dev-symlink-fp
 Sequence: 6000
 Version: 1.0-1
 Type: non-native
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Test against dev symlink fp
 Test-Against: dev-pkg-without-shlib-symlink

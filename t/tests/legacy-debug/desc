@@ -2,4 +2,5 @@ Testname: legacy-debug
 Source: debug
 Sequence: 9999
 Version: 1.0
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Legacy test "debug"

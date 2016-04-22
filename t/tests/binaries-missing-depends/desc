@@ -1,6 +1,7 @@
 Testname: binaries-missing-depends
 Sequence: 6000
 Version: 1.0
+Test-Depends: debhelper (>= 9.20151004~)
 Description: Test for missing depends line
 Architecture: any
 Test-For: missing-depends-line
