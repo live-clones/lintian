@@ -25,10 +25,13 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(rstrip);
 
-our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev';
-our $PYTHON3_DEPEND = 'python3 | python3-dev | python3-all | python3-all-dev';
-our $PYTHON2X_DEPEND = 'python2.7 | python2.7-dev';
-our $PYTHON3X_DEPEND = join(' | ', map { "python$_ | python$_-dev" } qw(3.2));
+our $PYTHON_DEPEND
+  = 'python:any | python-dev:any | python-all:any | python-all-dev:any';
+our $PYTHON3_DEPEND
+  = 'python3:any | python3-dev:any | python3-all:any | python3-all-dev:any';
+our $PYTHON2X_DEPEND = 'python2.7:any | python2.7-dev:any';
+our $PYTHON3X_DEPEND
+  = join(' | ', map { "python${_}:any | python${_}-dev:any" } qw(3.2));
 our $ANYPYTHON_DEPEND
   = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 

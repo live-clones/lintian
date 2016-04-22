@@ -42,6 +42,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * checks/phppear.{desc,pm}:
     + [JW] Apply patch from Mathieu Parent to make dh-php* and php*-dev
       package names unversioned.
+  * checks/rules.pm:
+    + [NT] Add ":any" to all python dependencies.  Thanks to Barry Warsaw
+      for reporting the bug.
   * checks/scripts.desc:
     + [NT] Suggest dh_python2 / dh_python3 instead of dh_pysupport and
       dh_pycentral.  Thanks to Neil Williams for the report.
@@ -67,6 +70,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * data/debhelper/*:
     + [JW] Refresh against unstable.  Thanks to Mathieu Parent for the bug
       report.
+  * data/debhelper/dh_commands-manual:
+    + [NT] Add ":any" to the dependencies for the python add-ons.  Thanks
+      to Barry Warsaw for reporting the bug.  (Closes: #803164)
   * data/menu-format/known-desktop-keys:
     + [NT] Accept "DesktopNames" as a known key in desktop files.  Thanks
       to Yves-Alexis Perez for the suggestion.  (Closes: #766099)
