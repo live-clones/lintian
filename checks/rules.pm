@@ -31,7 +31,7 @@ our $PYTHON3_DEPEND
   = 'python3:any | python3-dev:any | python3-all:any | python3-all-dev:any';
 our $PYTHON2X_DEPEND = 'python2.7:any | python2.7-dev:any';
 our $PYTHON3X_DEPEND
-  = join(' | ', map { "python${_}:any | python${_}-dev:any" } qw(3.2));
+  = join(' | ', map { "python${_}:any | python${_}-dev:any" } qw(3.4 3.5));
 our $ANYPYTHON_DEPEND
   = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 
