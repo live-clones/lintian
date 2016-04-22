@@ -111,6 +111,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * reporting/*:
     + [NT] Add support for classsification tags.
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [NT] Apply patch from Mattia Rizzolo to add yakkety.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
 
 lintian (2.5.43) unstable; urgency=medium
