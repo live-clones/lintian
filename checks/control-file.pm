@@ -357,7 +357,6 @@ sub run {
     # correct dpkg (and optionally debhelper) versions
     if ($profiles_used) {
         my $build_all = $info->relation('build-depends-all');
-        my $build_conflicts_all = $info->relation('build-conflicts-all');
         tag 'restriction-formula-without-versioned-dpkg-dev-dependency'
           unless ($build_all->implies('dpkg-dev (>= 1.17.14~)'));
         # if the package uses debhelper then it must require and not
