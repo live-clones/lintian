@@ -80,11 +80,11 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       packages are given on the command line.  Thanks to Sean Whitton for
       the suggestion.  (Closes: #812568)
     + [NT] Clean up entries in temporarily labs fully once they have been
-      processed.  This avoids acculating files on the disk for archive-
+      processed.  This avoids accumulating files on the disk for archive-
       wide runs done in temporary labs.  This mitigates some of the
       excessive disk usage for archive-wide runs  (See #779228).
   * commands/reporting-lintian-harness.pm:
-    + [NT] Add support for classsification tags.
+    + [NT] Add support for classification tags.
 
   * data/debhelper/*:
     + [JW] Refresh against unstable.  Thanks to Mathieu Parent for the bug
@@ -128,7 +128,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [JW] Apply patch from Mathieu Parent to fix path to Contents files.
 
   * reporting/*:
-    + [NT] Add support for classsification tags.
+    + [NT] Add support for classification tags.
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Apply patch from Mattia Rizzolo to add yakkety.
