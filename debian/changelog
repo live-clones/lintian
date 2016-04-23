@@ -13,6 +13,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * checks/debhelper.{desc,pm}:
     + [NT] Add tag for classifying the build system.
     + [NT] Remove test for dh_pysupport usage.
+    + [NT] Avoid advertising python-support as possible solution for
+      python-depends-but-no-python-helper.  Thanks to Gunnar Wolf for
+      the bug report.  (Closes: #754315)
   * checks/debian-source-dir.{desc,pm}:
     + [NT] Add tag for classifying the source format.
       (Closes: #612610)

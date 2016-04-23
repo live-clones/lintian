@@ -214,9 +214,8 @@ Info: The source package declares a dependency on ${python:Depends} in the
  given binary package's debian/control entry.  However, debian/rules doesn't
  call any helper that would generate this substitution variable.
  .
- When using debhelper compatibility level below 9, dh will call dh_pysupport by
- default if it's installed, but the build dependency on python-support is still
- necessary.
+ The source package probably needs a call to dh_python2 (possibly via the
+ python2 dh add-on) in the debian/rules file.
 
 Tag: python3-depends-but-no-python3-helper
 Severity: serious
