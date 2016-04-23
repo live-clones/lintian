@@ -486,7 +486,7 @@ sub _check_dh_exec {
                     $dhe_useless = 1;
                 }
             }
-            if ($dhe_useless && $path =~ /debian\/.*(install|manpages)/ ) {
+            if ($dhe_useless && $path =~ /debian\/.*(install|manpages)/) {
                 my $form = $_;
                 chomp($form);
                 $form = "\"$form\"";
