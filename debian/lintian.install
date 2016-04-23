@@ -3,9 +3,8 @@ checks			usr/share/lintian
 collection		usr/share/lintian
 commands                usr/share/lintian
 data		  	usr/share/lintian
-doc/tutorial/Lintian    usr/share/perl5
 helpers 		usr/share/lintian
 lib/Lintian		usr/share/perl5
-lib/Test		usr/share/lintian/lib
+lib/Test		usr/share/perl5
 profiles		usr/share/lintian
 vendors 		usr/share/lintian

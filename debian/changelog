@@ -108,6 +108,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * debian/control:
     + [AB] Declare compliance with Debian Policy 3.9.8. (No other changes
       required.)
+  * debian/lintian.install:
+    + [NT] Install Test::Lintian modules in Perl5 module path and remove
+      the Lintian::Toturial files (as they are just POD files).
   * debian/{manpages,rules}:
     + [JW,NT] Generate and install manpages of Lintian's perl modules.
       (Closes: #816862)
