@@ -467,11 +467,14 @@ Info: Only the "Depends", "Recommends", "Suggests" and "Pre-Depends"
  fields may specify alternate dependencies using the "|" symbol.
 Ref: policy 7.1
 
-Tag: versioned-provides
+Tag: invalid-versioned-provides
 Severity: important
 Certainty: certain
-Ref: policy 7.1
-Info: The "Provides" field may not specify a version range.
+Ref: policy 7.1, #761219
+Info: The package declares a provides relation with an invalid version
+ operator (e.g. "&gt;=").
+ .
+ If a provides is versioned, it must use "=".
 
 Tag: obsolete-relation-form
 Ref: policy 7.1

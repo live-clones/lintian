@@ -1,4 +1,4 @@
 E: fields-virtual-packages2: bad-provided-package-name a
 E: fields-virtual-packages2: bad-provided-package-name iNvAlId-NaMe
-E: fields-virtual-packages2: versioned-provides versioned (>> 0.1)
+E: fields-virtual-packages2: invalid-versioned-provides versioned (>> 0.1)
 W: fields-virtual-packages: virtual-package-depends-without-real-package-depends depends: httpd

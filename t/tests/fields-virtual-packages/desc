@@ -4,5 +4,5 @@ Version: 1.0
 Description: Tests related to virtual packages
 Test-For:
  bad-provided-package-name
- versioned-provides
+ invalid-versioned-provides
  virtual-package-depends-without-real-package-depends

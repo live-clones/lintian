@@ -12,7 +12,8 @@ Provides:
     123456789,
     {$source}-$\{source:Version\},
     arch-specific [i386],
-    provides-are-allowed [!i386]
+    provides-are-allowed [!i386],
+    valid-versioned-provides (= 1.0)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

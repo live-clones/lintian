@@ -34,6 +34,8 @@ lintian (2.5.44) UNRELEASED; urgency=medium
       Asked for by Dominic Hargreaves.
     + [NT] Apply patch from Mattia Rizzolo to make lintian know and check
       the Build-Depends-Arch field.  (Closes: #822281)
+    + [NT] Stop emitting tags for (valid) versioned provides.  Thanks to
+      Thorsten Glaser for the bug report.  (Closes: #800438)
   * checks/files.pm:
     + [JW] Apply patch from Mathieu Parent to fix directories for PHP INI
       files.

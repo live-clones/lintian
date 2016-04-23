@@ -730,8 +730,10 @@ sub run {
                         $part_d_orig)
                       = @$part_d;
 
-                    tag 'versioned-provides', $part_d_orig
-                      if ($field eq 'provides' && $d_version->[0]);
+                    tag 'invalid-versioned-provides', $part_d_orig
+                      if ( $field eq 'provides'
+                        && $d_version->[0]
+                        && $d_version->[0] ne '=');
 
                     tag 'bad-provided-package-name', $d_pkg
                       if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
