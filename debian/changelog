@@ -52,7 +52,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Add ":any" to all python dependencies.  Thanks to Barry Warsaw
       for reporting the bug.
     + [NT] Bump known python 3 version to include 3.4 and 3.5.
-    + [NT] Remove check for python-support.
+    + [NT] Remove check for python-support and python-central.
   * checks/scripts.desc:
     + [NT] Suggest dh_python2 / dh_python3 instead of dh_pysupport and
       dh_pycentral.  Thanks to Neil Williams for the report.

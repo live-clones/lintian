@@ -76,9 +76,8 @@ our @GLOBAL_CLEAN_DEPENDS = (
 # A list of packages; regular expressions that, if they match anywhere in the
 # debian/rules file, this package must be listed in either Build-Depends or
 # Build-Depends-Indep as appropriate; and optional tags as above.
-my @GLOBAL_DEPENDS =(
+my @GLOBAL_DEPENDS=(
     ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s'],
-    ['python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral'],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the
