@@ -4,23 +4,21 @@ Description record for collection scripts:
   Info: <description of what this script does>
   Type: comma-separated list of <binary | changes | source | udeb>
   Version: <integer to be bumped when a change that requires script to be re-run is made>
-  Order: <order--necessary if this script needs info from other scripts, see Needs-Info>
   Needs-Info: <info this scripts needs from other collector scripts>
   [ Auto-Remove <yes> ]
 
 Description record for checks scripts:
 
   Check-Script: <file name of checker script>
-  Abbrev: <abbrev>
+  [ Abbrev: <abbrev> ]
   Info: <description of what this check does>
   Type: comma-separated list of <binary | changes | source | udeb>
-  Standards-Version: <standards-version for which this check has been designed>
   Needs-Info: <info this script needs>
 
 Description record of a Lintian tag:
 
   Tag: <tag>
-  Severity: <serious | important | normal | minor | wishlist | pedantic>
+  Severity: <serious | important | normal | minor | wishlist | pedantic | classification>
   Certainty: <certain | possible | wild-guess>
   Info: <description of this tag>
   Ref: <reference>
@@ -40,8 +38,8 @@ Description record of a test case:
   [ Date: <date for changelog entry> ]
   [ Author: <maintainer for control and changelog> ]
   [ Architecture: <architecture for control> ]
+  [ Profile: <name of lintian profile to use for test> ]
   [ Section: <section for package> ]
-  [ Standards-Version: <standard version for control> ]
   [ Options: <options to pass to lintian> ]
   [ Output-Format: <EWI | ...> ]
   [ Skeleton: <skeleton to base the package on> ]
