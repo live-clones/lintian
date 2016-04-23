@@ -97,7 +97,7 @@ sub run {
             if ($dhcommand eq 'dh_python3') {
                 $seen_python3_helper = 1;
             }
-            if ($dhcommand =~ m,^dh_(?:pysupport$|python(?:2$|\$.*)),) {
+            if ($dhcommand =~ m,^dh_python(?:2$|\$.*),) {
                 $seen_python_helper = 1;
             }
 
@@ -140,7 +140,7 @@ sub run {
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }
-                    if ($addon =~ m,python(?:2|_central|_support)$,) {
+                    if ($addon eq 'python2') {
                         $seen_python_helper = 1;
                     } elsif ($addon eq 'python3') {
                         $seen_python3_helper = 1;
@@ -154,9 +154,6 @@ sub run {
                 # the variable could contain any add-ons
                 $seen_python_helper = 1;
                 $seen_python3_helper = 1;
-            }
-            if ($seen_python_helper == 0) {
-                $seen_python_helper = -1; # maybe; we'll check that later
             }
         } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
@@ -398,10 +395,7 @@ sub run {
         tag $tagname, $level;
     }
 
-    if ($seen_python_helper == -1 and $level >= 9) {
-        $seen_python_helper = 0;
-    }
-    if ($seen_dh and $seen_python_helper != 1) {
+    if ($seen_dh and not $seen_python_helper) {
         my %python_depends;
         for my $binpkg (@pkgs) {
             if ($info->binary_relation($binpkg, 'all')
@@ -410,17 +404,11 @@ sub run {
             }
         }
         if (%python_depends) {
-            if ($seen_python_helper == -1) {
-                $seen_python_helper
-                  = $bdepends_noarch->implies('python-support');
-            }
-            if (not $seen_python_helper) {
-                tag 'python-depends-but-no-python-helper',
-                  sort(keys %python_depends);
-            }
+            tag 'python-depends-but-no-python-helper',
+              sort(keys %python_depends);
         }
     }
-    if ($seen_dh and $seen_python3_helper != 1) {
+    if ($seen_dh and not $seen_python3_helper) {
         my %python3_depends;
         for my $binpkg (@pkgs) {
             if ($info->binary_relation($binpkg, 'all')
@@ -428,7 +416,7 @@ sub run {
                 $python3_depends{$binpkg} = 1;
             }
         }
-        if (%python3_depends and not $seen_python3_helper) {
+        if (%python3_depends) {
             tag 'python3-depends-but-no-python3-helper',
               sort(keys %python3_depends);
         }
