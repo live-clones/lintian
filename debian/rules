@@ -74,13 +74,17 @@ generate-docs-stamp: $(docsource)
 	dh_testdir
 	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
 	cd doc && LC_ALL=C jw -b txt lintian.xml
-	mkdir -p man/man1/
+	mkdir -p man/man1/ man/man3/
 	private/generate-lintian-pod | \
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
 	set -e ; for POD in $(pod2mansources) ; do \
 		DIR=$$(dirname "$$POD") ; \
 		BASENAME=$$(basename "$$POD" .pod) ; \
 		pod2man --section=1 "$$POD" > "$$DIR/man1/$$BASENAME".1 ; \
+	done
+	set -e ; for POD in $$(find lib/Lintian lib/Test -type f '!' -path '*/Internal/*' '!' -path '*/Output/*' '!' -path '*/Tag/TextUtil.pm'  ) ; do \
+		BASENAME=$$(echo "$$POD" | perl -pe 's@^lib/@@; s@/@::@g; s/\.pm$$//') ; \
+		pod2man --section=3 "$$POD" > "man/man3/$$BASENAME".3 ; \
 	done
 	private/generate-html-docs doc/api.html > /dev/null
 	touch $@
@@ -100,7 +104,7 @@ override_dh_clean: $(neededfiles)
 ifneq ($(CLEAN_TEST_WORK_DIR),0)
 	rm -rf "$(TEST_WORK_DIR)"
 endif
-	rm -rf man/man1/ l10n/
+	rm -rf man/man1/ man/man3/ l10n/
 	dh_clean -X "$(TEST_WORK_DIR)"
 
 override_dh_install:

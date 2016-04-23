@@ -12,7 +12,7 @@
 /doc/lintian.html/
 /doc/lintian.txt
 /l10n/
-/man/man1/
+/man/man*/
 /runtests
 *.iml
 /.idea/

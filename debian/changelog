@@ -108,6 +108,9 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * debian/control:
     + [AB] Declare compliance with Debian Policy 3.9.8. (No other changes
       required.)
+  * debian/{manpages,rules}:
+    + [JW,NT] Generate and install manpages of Lintian's perl modules.
+      (Closes: #816862)
 
   * doc/lintian.xml:
     + [NT] Document the new classification tags.
