@@ -2,7 +2,7 @@
 # Sample debian/rules that uses debhelper. 
 # This file is public domain software, originally written by Joey Hess.
 
-export DH_COMPAT := 5
+#export DH_COMPAT := 5
 
 build-indep:
 

@@ -1,7 +1,8 @@
 #!/bin/sh
 #
-# dh_make in 2005 didn't generate a compat file for debhelper or a watch
-# file, so remove the ones that are copied over from the template.
+# Remove the watch file as dh_make in 2005 did not create it.
+# It did not create a compat file either, but debhelper does not forgive
+# that anymore.
 
-rm -f "$1"/debian/compat
+
 rm -f "$1"/debian/watch

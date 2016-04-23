@@ -5,11 +5,9 @@ E: generic-dh-make-2005: section-is-dh_make-template
 I: generic-dh-make-2005 source: debian-watch-file-is-missing
 I: generic-dh-make-2005: extended-description-is-probably-too-short
 W: generic-dh-make-2005 source: ancient-standards-version 3.6.2 (current is CURRENT)
-W: generic-dh-make-2005 source: debhelper-compat-file-is-missing
 W: generic-dh-make-2005 source: debian-rules-ignores-make-clean-error line 47
 W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-arch
 W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-indep
-W: generic-dh-make-2005 source: debian-rules-sets-DH_COMPAT line 12
 W: generic-dh-make-2005 source: dh-clean-k-is-deprecated
 W: generic-dh-make-2005: copyright-without-copyright-notice
 W: generic-dh-make-2005: new-package-should-close-itp-bug
