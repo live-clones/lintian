@@ -57,6 +57,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Merge and remove some ldconfig related tags.  Notably
       unconditionally flag all uses of ldconfig in maintainer scripts
       (outside glibc) as these should be replaced by a trigger.
+  * checks/version-substvars.pm:
+    + [NT] Apply patch from Javier Serrano Polo that makes the check
+      ignore all multi-arch quantifiers (when determining if the
+      dependency is for an external package).  (Closes: #822269)
 
   * commands/info.pm:
     + [NT] Accept "--tag" as an alias of "--tags".  Thanks to Robert

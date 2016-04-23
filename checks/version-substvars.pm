@@ -66,7 +66,7 @@ sub run {
                     tag 'substvar-source-version-is-deprecated', $pkg1;
                 }
                 if (
-                    m/ ($PKGNAME_REGEX)(?: :any)? \s*           # pkg-name $1
+                    m/ ($PKGNAME_REGEX)(?: :[-a-z0-9]+)? \s*    # pkg-name $1
                        \(\s*[\>\<]?[=\>\<]\s*                  # REL 
                         \$[{](?:Source-|source:|binary:)Version[}] # {subvar}
                      /x
