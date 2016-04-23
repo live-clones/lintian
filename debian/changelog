@@ -79,6 +79,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Also check DEBRELEASE_DEBS_DIR for .changes files when no
       packages are given on the command line.  Thanks to Sean Whitton for
       the suggestion.  (Closes: #812568)
+    + [NT] Clean up entries in temporarily labs fully once they have been
+      processed.  This avoids acculating files on the disk for archive-
+      wide runs done in temporary labs.  This mitigates some of the
+      excessive disk usage for archive-wide runs  (See #779228).
   * commands/reporting-lintian-harness.pm:
     + [NT] Add support for classsification tags.
 
