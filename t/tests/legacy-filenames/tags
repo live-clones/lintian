@@ -46,6 +46,7 @@ I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.ditr
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.svn/
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/CVS/
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/{arch}/
+I: filenames: package-contains-empty-directory usr/share/python-support/filenames/
 I: filenames: using-first-person-in-description line 1: I
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game

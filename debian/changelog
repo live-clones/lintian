@@ -12,6 +12,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Add classification tags for (absence of) maintscripts.
   * checks/debhelper.{desc,pm}:
     + [NT] Add tag for classifying the build system.
+    + [NT] Remove test for dh_pysupport usage.
   * checks/debian-source-dir.{desc,pm}:
     + [NT] Add tag for classifying the source format.
       (Closes: #612610)
@@ -39,6 +40,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [JW] Apply patch from Mathieu Parent to fix directories for PHP INI
       files.
+    + [NT] Remove code related to python-support.
   * checks/nmu.{desc,pm}:
     + [NT] Create a separate tag for extra whitespace around uploader name
       in the changelog.  Thanks to Ben Wiederhake for the suggestion.
@@ -50,6 +52,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Add ":any" to all python dependencies.  Thanks to Barry Warsaw
       for reporting the bug.
     + [NT] Bump known python 3 version to include 3.4 and 3.5.
+    + [NT] Remove check for python-support.
   * checks/scripts.desc:
     + [NT] Suggest dh_python2 / dh_python3 instead of dh_pysupport and
       dh_pycentral.  Thanks to Neil Williams for the report.
@@ -79,9 +82,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * data/debhelper/*:
     + [JW] Refresh against unstable.  Thanks to Mathieu Parent for the bug
       report.
-  * data/debhelper/dh_commands-manual:
+  * data/debhelper/dh_addons-manual:
     + [NT] Add ":any" to the dependencies for the python add-ons.  Thanks
       to Barry Warsaw for reporting the bug.  (Closes: #803164)
+    + [NT] Remove entry for pysupport.
   * data/menu-format/known-desktop-keys:
     + [NT] Accept "DesktopNames" as a known key in desktop files.  Thanks
       to Yves-Alexis Perez for the suggestion.  (Closes: #766099)

@@ -262,7 +262,6 @@ sub run {
     my ($is_python, $is_perl, $has_binary_perl_file);
     my @nonbinary_perl_files_in_lib;
     my %linked_against_libvga;
-    my $py_support_nver;
     my @devhelp;
     my @devhelp_links;
 
@@ -1269,14 +1268,6 @@ sub run {
             tag 'file-should-not-be-compressed', $file;
         }
 
-        # ---------------- pyshared-data
-        if ($fname=~ m,^usr/share/python-support/$ppkg\.(?:public|private)$,){
-            $py_support_nver = '(>= 0.90)';
-        } elsif ($fname =~ m,^usr/share/python-support/\S+,o
-            && !$py_support_nver){
-            $py_support_nver = '';
-        }
-
         # ---------------- python file locations
         #  - The python people kindly provided the following table.
         # good:
@@ -1862,22 +1853,6 @@ sub run {
           unless $type eq 'udeb';
     }
 
-    # python-support check
-    if (defined($py_support_nver) && $pkg ne 'python-support'){
-        # Okay - package installs something to /usr/share/python-support/
-        # $py_support_nver is either the empty string or a version
-        # describing what we need.
-        #
-        # We also skip debug packages since they are okay as long as
-        # foo-dbg depends on foo (= $version) and foo has its dependency
-        # correct.
-        my $dep = $info->relation('depends');
-        tag 'missing-dependency-on-python-support',
-          "python-support $py_support_nver"
-          unless ($pkg =~ m/-dbg$/
-            || $dep->implies("python-support $py_support_nver"));
-    }
-
     # Check for section games but nothing in /usr/games.  Check for
     # any binary to save ourselves from game-data false positives:
     my $games = dir_counts($info, 'usr/games/');
@@ -1900,9 +1875,6 @@ sub run {
     # Empty Perl directories are an ExtUtils::MakeMaker artifact that
     # will be fixed in Perl 5.10, and people can cause more problems
     # by trying to fix it, so just ignore them.
-    #
-    # python-support needs a directory for each package even it might
-    # be empty
     if ($pkg ne 'base-files') {
         foreach my $dir ($info->sorted_index) {
             next if not $dir->is_dir;
@@ -1910,8 +1882,7 @@ sub run {
             next if ($dirname =~ m{^var/} or $dirname =~ m{^etc/});
             if (scalar($dir->children) == 0) {
                 if (    $dirname !~ m;^usr/lib/(?:[^/]+/)?perl5/$;
-                    and $dirname ne 'usr/share/perl5/'
-                    and $dirname !~ m;^usr/share/python-support/;) {
+                    and $dirname ne 'usr/share/perl5/') {
                     tag 'package-contains-empty-directory', $dirname;
                 }
             }

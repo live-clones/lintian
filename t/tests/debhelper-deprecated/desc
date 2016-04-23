@@ -4,5 +4,4 @@ Version: 1.0
 Description: Test for use of deprecated dh_* commands
 Test-For:
  dh_installmanpages-is-obsolete
- dh_pysupport-is-obsolete
 

@@ -79,7 +79,6 @@ our @GLOBAL_CLEAN_DEPENDS = (
 my @GLOBAL_DEPENDS =(
     ['dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s'],
     ['python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral'],
-    ['python-support' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport'],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the

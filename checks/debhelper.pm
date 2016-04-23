@@ -91,10 +91,6 @@ sub run {
             $build_systems{'debhelper'} = 1
               if not exists($build_systems{'dh'});
 
-            if ($dhcommand eq 'dh_pysupport') {
-                tag 'dh_pysupport-is-obsolete', "line $.";
-                $seen_python_helper = 1;
-            }
             if ($dhcommand eq 'dh_installmanpages') {
                 tag 'dh_installmanpages-is-obsolete', "line $.";
             }

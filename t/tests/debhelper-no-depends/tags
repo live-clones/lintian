@@ -7,6 +7,5 @@ E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_gtkm
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_lisp => dh-lisp
 E: debhelper-no-depends source: package-uses-debhelper-but-lacks-build-depends
 W: debhelper-no-depends source: debhelper-but-no-misc-depends debhelper-no-depends
-W: debhelper-no-depends source: dh_pysupport-is-obsolete line 20
 W: debhelper-no-depends source: package-needs-versioned-debhelper-build-depends 9
 W: debhelper-no-depends source: weak-dependency-on-misc-depends debhelper-suggests

@@ -7,5 +7,4 @@ apache2||dh-apache2 | apache2-dev
 lv2config||lv2core
 python2||python:any | python-all:any | python-dev:any | python-all-dev:any
 python3||python3:any | python3-all:any | python3-dev:any | python3-all-dev:any
-python_support||python-support
 sphinxdoc||python-sphinx | python3-sphinx

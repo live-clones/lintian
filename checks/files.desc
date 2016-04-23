@@ -831,15 +831,6 @@ Info: The package appears to be installing debug modules in
  should be installed in /usr/lib/debug/usr/lib/pymodules/pythonX.Y/
  instead.
 
-Tag: missing-dependency-on-python-support
-Severity: important
-Certainty: possible
-Info: The package installs a file in usr/share/python-support/ but does
- not declare the necessary dependency on python-support.
- .
- This can happen if ${python:Depends} was omitted from the Depends field
- in debian/control.
-
 Tag: package-installs-python-bytecode
 Severity: serious
 Certainty: certain
