@@ -182,7 +182,7 @@ my (%statistics, %tag_statistics);
 #
 # %by_tag is a hash of tag names to an anonymous array of tag information
 # hashes just like the inside-most data structure above.
-my (%by_maint, %by_uploader, %by_tag, @maintainers, %maintainer_table, %delta);
+my (%by_maint, %by_uploader, %by_tag, %maintainer_table, %delta);
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
   errors warnings info experimental pedantic overridden groups-known
   groups-backlog classifications);
@@ -190,194 +190,207 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
 print "Parsing lintian log...\n";
 parse_lintian_log();
 
-@maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
-
-{
-    # Scoped to allow memory to be re-purposed.  The %qa and %sources
-    # structures are only used for a very few isolated items.
-    my (%qa, %sources);
-    print "Collecting statistics...\n";
-    collect_statistics(\@maintainers, \%sources, \%qa);
-
-    generate_lookup_tables(\%sources);
-
-    write_qa_list(\%qa);
-
-    generate_package_index_packages(\%sources);
-
-    if ($HISTORY) {
-        update_history_and_make_graphs(\@attrs, \%statistics,\%tag_statistics);
-    }
-}
-
-# Build a hash of all maintainers, not just those with Lintian tags.  We use
-# this later to generate stub pages for maintainers whose packages are all
-# Lintian-clean.
-my %clean;
-for my $group_id (sort(keys(%{$STATE_CACHE->{'groups'}}))) {
-    my $maintainer
-      = $STATE_CACHE->{'groups'}{$group_id}{'mirror-metadata'}{'maintainer'};
-    my $id;
-    next if not $maintainer;
-    $id = maintainer_url($maintainer);
-    $clean{$id} = $maintainer;
-}
-
-# Now, walk through the tags by source package (sorted by maintainer).  Output
-# a summary page of errors and warnings for each maintainer, output a full
-# page that includes info, experimental, and overridden tags, and assemble the
-# maintainer index and the QA package list as we go.
-
-for my $maintainer (@maintainers) {
-    my $id = maintainer_url($maintainer);
-    delete $clean{$id};
-
-    # Determine if the maintainer's page is clean.  Check all packages for
-    # which they're either maintainer or uploader and set $error_clean if
-    # they have no errors or warnings.
-    #
-    # Also take this opportunity to sort the tags so that all similar tags
-    # will be grouped, which produces better HTML output.
-    my $error_clean = 1;
-    for my $source (keys %{ $by_maint{$maintainer} },
-        keys %{ $by_uploader{$maintainer} }) {
-        my $versions = $by_maint{$maintainer}{$source}
-          || $by_uploader{$maintainer}{$source};
-        for my $version (keys %$versions) {
-            $versions->{$version} = [sort by_tag @{ $versions->{$version} }];
-            next if not $error_clean;
-            my $tags = $versions->{$version};
-            for my $tag (@$tags) {
-                if ($tag->{code} eq 'E' or $tag->{code} eq 'W') {
-                    $error_clean = 0;
-                    last;
-                }
-            }
-        }
-    }
-
-    # Determine the parts of the maintainer and the file name for the
-    # maintainer page.
-    my ($name, $email) = extract_name_and_email($maintainer);
-
-    my $regular = "maintainer/$id";
-    my $full = "full/$id";
-
-    # Create the regular maintainer page (only errors and warnings) and the
-    # full maintainer page (all tags, including overrides and info tags).
-    print "Generating page for $id\n";
-    my $q_name = html_quote($name);
-    my %data = (
-        email      => html_quote(uri_escape($email)),
-        errors     => 1,
-        id         => $id,
-        maintainer => html_quote($maintainer),
-        name       => $q_name,
-        packages   => $by_maint{$maintainer},
-        uploads    => $by_uploader{$maintainer},
-    );
-    my $template;
-    if ($error_clean) {
-        $template = $templates{clean};
-    } else {
-        $template = $templates{maintainer};
-    }
-    output_template($regular, $template, \%data);
-    $template = $templates{maintainer};
-    $data{errors} = 0;
-    output_template($full, $template, \%data);
-
-    my %index_data = (url => $id, name => $q_name);
-    # Add this maintainer to the hash of maintainer to URL mappings.
-    $maintainer_table{$maintainer} = \%index_data;
-}
-
-# Write out the maintainer index.
-my %data = (maintainers => \%maintainer_table,);
-output_template('maintainers.html', $templates{maintainers}, \%data);
-
-# Now, generate stub pages for every maintainer who has only clean packages.
-for my $id (keys %clean) {
-    my $maintainer = $clean{$id};
-    my ($name, $email) = extract_name_and_email($maintainer);
-    my %maint_data = (
-        id         => $id,
-        email      => html_quote(uri_escape($email)),
-        maintainer => html_quote($maintainer),
-        name       => html_quote($name),
-        clean      => 1,
-    );
-    print "Generating clean page for $id\n";
-    output_template("maintainer/$id", $templates{clean}, \%maint_data);
-    output_template("full/$id", $templates{clean}, \%maint_data);
-}
-
-# Create the pages for each tag.  Each page shows the extended description for
-# the tag and all the packages for which that tag was issued.
-for my $tag (sort $profile->tags(1)) {
-    my $info = $profile->get_tag($tag, 1);
-    my $description = $info->description('html', '    ');
-    my ($count, $overrides) = (0, 0);
-    my $tmpl = 'tag-not-seen';
-    if (exists $by_tag{$tag}) {
-        $tmpl = 'tag';
-        $count = $tag_statistics{$tag}{'count'};
-        $overrides = $tag_statistics{$tag}{'overrides'};
-    }
-
-    my %maint_data = (
-        description => $description,
-        tag         => $tag,
-        code        => $info->code,
-        tags        => $by_tag{$tag},
-        graphs      => $GRAPHS,
-        graphs_days => $GRAPHS_RANGE_DAYS,
-        statistics  => {
-            count       => $count,
-            overrides   => $overrides,
-            total       => $count + $overrides,
-        },
-    );
-    output_template("tags/$tag.html", $templates{$tmpl}, \%maint_data);
-}
-
-# Create the general tag indices.
-%data = (
-    tags       => \%by_tag,
-    stats      => \%tag_statistics,
-    profile    => \$profile,
-);
-output_template('tags.html', $templates{tags}, \%data);
-output_template('tags-severity.html', $templates{'tags-severity'}, \%data);
-output_template('tags-all.html', $templates{'tags-all'}, \%data);
-
-# Update the statistics file.
-open(my $stats_fd, '>', $statistics_file);
-print {$stats_fd} "last-updated: $timestamp\n";
-print {$stats_fd} "mirror-timestamp: $mirror_timestamp\n";
-for my $attr (@attrs) {
-    print {$stats_fd} "$attr: $statistics{$attr}\n";
-}
-print {$stats_fd} "lintian-version: $LINTIAN_VERSION\n";
-close($stats_fd);
-
-# Finally, we can start creating the index page.
-%data = (
-    architecture => $LINTIAN_ARCH,
-    delta        => \%delta,
-    dist         => $LINTIAN_DIST,
-    mirror       => $mirror_timestamp,
-    previous     => $old_statistics->{'last-updated'},
-    area         => join(', ', split(/\s*,\s*/, $LINTIAN_AREA)),
-    graphs       => $GRAPHS,
-    graphs_days  => $GRAPHS_RANGE_DAYS,
-);
-output_template('index.html', $templates{index}, \%data);
+process_data();
 
 exit 0;
 
 # ------------------------------
 # Utility functions
+
+
+sub process_data {
+    my @maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
+
+    {
+        # Scoped to allow memory to be re-purposed.  The %qa and %sources
+        # structures are only used for a very few isolated items.
+        my (%qa, %sources);
+        print "Collecting statistics...\n";
+        collect_statistics(\@maintainers, \%sources, \%qa);
+
+        generate_lookup_tables(\%sources);
+
+        write_qa_list(\%qa);
+
+        generate_package_index_packages(\%sources);
+
+        if ($HISTORY) {
+            update_history_and_make_graphs(\@attrs, \%statistics,
+                \%tag_statistics);
+        }
+    }
+
+    # Build a hash of all maintainers, not just those with Lintian tags.  We
+    # use this later to generate stub pages for maintainers whose packages are
+    # all Lintian-clean.
+    my %clean;
+    for my $group_id (sort(keys(%{$STATE_CACHE->{'groups'}}))) {
+        my $maintainer
+            = $STATE_CACHE->{'groups'}{$group_id}{'mirror-metadata'}
+            {'maintainer'};
+        my $id;
+        next if not $maintainer;
+        $id = maintainer_url($maintainer);
+        $clean{$id} = $maintainer;
+    }
+
+    # Now, walk through the tags by source package (sorted by maintainer).
+    # Output a summary page of errors and warnings for each maintainer, output
+    # a full page that includes info, experimental, and overridden tags, and
+    # assemble the maintainer index and the QA package list as we go.
+
+    for my $maintainer (@maintainers) {
+        my $id = maintainer_url($maintainer);
+        delete $clean{$id};
+
+        # Determine if the maintainer's page is clean.  Check all packages for
+        # which they're either maintainer or uploader and set $error_clean if
+        # they have no errors or warnings.
+        #
+        # Also take this opportunity to sort the tags so that all similar tags
+        # will be grouped, which produces better HTML output.
+        my $error_clean = 1;
+        for my $source (
+            keys %{ $by_maint{$maintainer} },
+            keys %{ $by_uploader{$maintainer} }
+        ) {
+            my $versions = $by_maint{$maintainer}{$source}
+                || $by_uploader{$maintainer}{$source};
+            for my $version (keys %$versions) {
+                $versions->{$version}
+                    = [sort by_tag @{ $versions->{$version} }];
+                next if not $error_clean;
+                my $tags = $versions->{$version};
+                for my $tag (@$tags) {
+                    if ($tag->{code} eq 'E' or $tag->{code} eq 'W') {
+                        $error_clean = 0;
+                        last;
+                    }
+                }
+            }
+        }
+
+        # Determine the parts of the maintainer and the file name for the
+        # maintainer page.
+        my ($name, $email) = extract_name_and_email($maintainer);
+
+        my $regular = "maintainer/$id";
+        my $full = "full/$id";
+
+        # Create the regular maintainer page (only errors and warnings) and the
+        # full maintainer page (all tags, including overrides and info tags).
+        print "Generating page for $id\n";
+        my $q_name = html_quote($name);
+        my %data = (
+            email      => html_quote(uri_escape($email)),
+            errors     => 1,
+            id         => $id,
+            maintainer => html_quote($maintainer),
+            name       => $q_name,
+            packages   => $by_maint{$maintainer},
+            uploads    => $by_uploader{$maintainer},
+        );
+        my $template;
+        if ($error_clean) {
+            $template = $templates{clean};
+        } else {
+            $template = $templates{maintainer};
+        }
+        output_template($regular, $template, \%data);
+        $template = $templates{maintainer};
+        $data{errors} = 0;
+        output_template($full, $template, \%data);
+
+        my %index_data = (url => $id, name => $q_name);
+        # Add this maintainer to the hash of maintainer to URL mappings.
+        $maintainer_table{$maintainer} = \%index_data;
+    }
+    undef(@maintainers);
+
+    # Write out the maintainer index.
+    my %data = (maintainers => \%maintainer_table,);
+    output_template('maintainers.html', $templates{maintainers}, \%data);
+
+    # Now, generate stub pages for every maintainer who has only clean
+    # packages.
+    for my $id (keys %clean) {
+        my $maintainer = $clean{$id};
+        my ($name, $email) = extract_name_and_email($maintainer);
+        my %maint_data = (
+            id         => $id,
+            email      => html_quote(uri_escape($email)),
+            maintainer => html_quote($maintainer),
+            name       => html_quote($name),
+            clean      => 1,
+        );
+        print "Generating clean page for $id\n";
+        output_template("maintainer/$id", $templates{clean}, \%maint_data);
+        output_template("full/$id", $templates{clean}, \%maint_data);
+    }
+
+    # Create the pages for each tag.  Each page shows the extended description
+    # for the tag and all the packages for which that tag was issued.
+    for my $tag (sort $profile->tags(1)) {
+        my $info = $profile->get_tag($tag, 1);
+        my $description = $info->description('html', '    ');
+        my ($count, $overrides) = (0, 0);
+        my $tmpl = 'tag-not-seen';
+        if (exists $by_tag{$tag}) {
+            $tmpl = 'tag';
+            $count = $tag_statistics{$tag}{'count'};
+            $overrides = $tag_statistics{$tag}{'overrides'};
+        }
+
+        my %maint_data = (
+            description => $description,
+            tag         => $tag,
+            code        => $info->code,
+            tags        => $by_tag{$tag},
+            graphs      => $GRAPHS,
+            graphs_days => $GRAPHS_RANGE_DAYS,
+            statistics  => {
+                count       => $count,
+                overrides   => $overrides,
+                total       => $count + $overrides,
+            },
+        );
+        output_template("tags/$tag.html", $templates{$tmpl}, \%maint_data);
+    }
+
+    # Create the general tag indices.
+    %data = (
+        tags       => \%by_tag,
+        stats      => \%tag_statistics,
+        profile    => \$profile,
+    );
+    output_template('tags.html', $templates{tags}, \%data);
+    output_template('tags-severity.html', $templates{'tags-severity'}, \%data);
+    output_template('tags-all.html', $templates{'tags-all'}, \%data);
+
+    # Update the statistics file.
+    open(my $stats_fd, '>', $statistics_file);
+    print {$stats_fd} "last-updated: $timestamp\n";
+    print {$stats_fd} "mirror-timestamp: $mirror_timestamp\n";
+    for my $attr (@attrs) {
+        print {$stats_fd} "$attr: $statistics{$attr}\n";
+    }
+    print {$stats_fd} "lintian-version: $LINTIAN_VERSION\n";
+    close($stats_fd);
+
+    # Finally, we can start creating the index page.
+    %data = (
+        architecture => $LINTIAN_ARCH,
+        delta        => \%delta,
+        dist         => $LINTIAN_DIST,
+        mirror       => $mirror_timestamp,
+        previous     => $old_statistics->{'last-updated'},
+        area         => join(', ', split(/\s*,\s*/, $LINTIAN_AREA)),
+        graphs       => $GRAPHS,
+        graphs_days  => $GRAPHS_RANGE_DAYS,
+    );
+    output_template('index.html', $templates{index}, \%data);
+    return;
+}
 
 sub setup_output_dir {
     my (%args) = @_;
