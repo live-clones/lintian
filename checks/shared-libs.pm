@@ -24,7 +24,7 @@ use warnings;
 use autodie;
 
 use File::Basename;
-use List::MoreUtils qw(any none);
+use List::MoreUtils qw(any none uniq);
 
 use Lintian::Data;
 use Lintian::Relation;
@@ -414,8 +414,7 @@ sub run {
             #
             # Deduplicate the list of dependencies before warning so
             # that we don't duplicate warnings.
-            my %seen;
-            @shlibs_depends = grep { !$seen{$_}++ } @shlibs_depends;
+            @shlibs_depends = uniq(@shlibs_depends);
             for my $depend (@shlibs_depends) {
                 unless ($provides->implies($depend)) {
                     tag 'shlibs-declares-dependency-on-other-package', $depend;
@@ -604,8 +603,7 @@ sub run {
         #
         # Deduplicate the list of dependencies before warning so that we don't
         # duplicate warnings.
-        my %seen;
-        @symbols_depends = grep { !$seen{$_}++ } @symbols_depends;
+        @symbols_depends = uniq(@symbols_depends);
         for my $depend (@symbols_depends) {
             my $d = $depend;
             $d =~ s/ \#MINVER\#$//;
