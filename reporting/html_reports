@@ -418,7 +418,7 @@ sub setup_output_dir {
         }
         closedir($dirfd);
     }
-
+    return;
 }
 
 sub collect_statistics {
