@@ -225,9 +225,14 @@ Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package must trigger libc's
  "ldconfig" trigger to ensure the ldconfig cache is updated.
  .
- This should be done via a <tt>activate-noawait ldconfig</tt>
- trigger. With debhelper it is usually sufficient to simply add that line
- to <tt>debian/&lt;package&gt;.triggers</tt>.
+ If the package is using debhelper, the <tt>dh_makeshlibs</tt> should
+ automatically discover this need and add the trigger itself.
+ Otherwise, please add <tt>activate-noawait ldconfig</tt> to the
+ the <tt>triggers</tt> file in the control member.
+ .
+ Note this tag may trigger for packages built with debhelper before
+ version 9.20151004.  In such case, a simple rebuild will often be
+ sufficient to fix this issue.
 Ref: policy 8.1.1, https://lists.debian.org/debian-devel/2015/08/msg00412.html
 
 Tag: sharedobject-in-library-directory-missing-soname
