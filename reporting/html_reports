@@ -114,37 +114,15 @@ for my $template (
 # ------------------------------
 # Main routine
 
-# Create output directories.
-mkdir($HTML_TMP_DIR, 0777);
-mkdir("$HTML_TMP_DIR/full", 0777);
-mkdir("$HTML_TMP_DIR/maintainer", 0777);
-mkdir("$HTML_TMP_DIR/tags", 0777);
-symlink('.', "$HTML_TMP_DIR/reports");
-copy_dir("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual");
-copy_dir("$LINTIAN_ROOT/doc/api.html", "$HTML_TMP_DIR/library-api");
+setup_output_dir(
+    'output_dir' => $HTML_TMP_DIR,
+    'lintian_manual' => "${LINTIAN_ROOT}/doc/lintian.html",
+    'lintian_api_docs' => "${LINTIAN_ROOT}/doc/api.html",
+    'lintian_log_file' => $ARGV[0],
+    'resource_dirs' =>
+      [map { "${LINTIAN_ROOT}/reporting/$_"} qw(images resources)],
+);
 
-if ($ARGV[0]) {
-    my %opts = (
-        'in' => $ARGV[0],
-        'out' => "$HTML_TMP_DIR/lintian.log.gz",
-    );
-    copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")
-      or die("cannot copy $ARGV[0] to $HTML_TMP_DIR/lintian.log: $!");
-    spawn(\%opts, ['gzip', '-9nc'])
-      or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";
-}
-
-for my $dir_basename (qw(resources images)) {
-    my $dir = "$LINTIAN_ROOT/reporting/$dir_basename";
-    next if not -d $dir;
-    opendir(my $dirfd, $dir);
-    for my $resname (readdir($dirfd)) {
-        next if $resname eq '.' or $resname eq '..';
-        $RESOURCE_MANAGER->install_resource("$dir/$resname",
-            { install_method => 'copy'});
-    }
-    closedir($dirfd);
-}
 # Create lintian.css from a template, install the output file as a resource
 # and discard the original output file.  We do this after installing all
 # resources, so the .css file can refer to resources.
@@ -397,6 +375,48 @@ exit 0;
 
 # ------------------------------
 # Utility functions
+
+sub setup_output_dir {
+    my (%args) = @_;
+    my $output_dir = $args{'output_dir'};
+    my $lintian_manual = $args{'lintian_manual'};
+    my $lintian_api = $args{'lintian_api_docs'};
+    my $resource_dirs = $args{'resource_dirs'} // [];
+    my $lintian_log_file = $args{'lintian_log'};
+
+    # Create output directories.
+    mkdir($output_dir, 0777);
+    mkdir("$output_dir/full", 0777);
+    mkdir("$output_dir/maintainer", 0777);
+    mkdir("$output_dir/tags", 0777);
+    symlink('.', "$output_dir/reports");
+    copy_dir($lintian_manual, "$output_dir/manual");
+    copy_dir($lintian_api, "$output_dir/library-api");
+
+    if ($lintian_log_file) {
+        my %opts = (
+            'in'  => $lintian_log_file,
+            'out' => "$output_dir/lintian.log.gz",
+        );
+        copy($lintian_log_file, "$output_dir/lintian.log")
+          or
+          die("cannot copy $lintian_log_file to $output_dir/lintian.log: $!");
+        spawn(\%opts, ['gzip', '-9nc'])
+          or die("cannot create $output_dir/lintian.log.gz.\n");
+    }
+
+    for my $dir (@{$resource_dirs}) {
+        next if not -d $dir;
+        opendir(my $dirfd, $dir);
+        for my $resname (readdir($dirfd)) {
+            next if $resname eq '.' or $resname eq '..';
+            $RESOURCE_MANAGER->install_resource("$dir/$resname",
+                { install_method => 'copy' });
+        }
+        closedir($dirfd);
+    }
+
+}
 
 sub collect_statistics {
     my ($maintainers_ref, $sources_ref, $qa_list_ref) = @_;
