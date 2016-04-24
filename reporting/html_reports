@@ -245,10 +245,13 @@ for my $maintainer (@maintainers) {
           || $by_uploader{$maintainer}{$source};
         for my $version (keys %$versions) {
             $versions->{$version} = [sort by_tag @{ $versions->{$version} }];
+            next if not $error_clean;
             my $tags = $versions->{$version};
             for my $tag (@$tags) {
-                $error_clean = 0 if ($tag->{code} eq 'E');
-                $error_clean = 0 if ($tag->{code} eq 'W');
+                if ($tag->{code} eq 'E' or $tag->{code} eq 'W') {
+                    $error_clean = 0;
+                    last;
+                }
             }
         }
     }
