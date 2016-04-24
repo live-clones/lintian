@@ -82,9 +82,9 @@ generate-docs-stamp: $(docsource)
 		BASENAME=$$(basename "$$POD" .pod) ; \
 		$(pod2man) --section=1 "$$POD" > "man/man1/$$BASENAME".1 ; \
 	done
-	set -e ; for POD in $$(find lib/Lintian lib/Test -type f '!' -path '*/Internal/*' '!' -path '*/Output/*' '!' -path '*/Tag/TextUtil.pm'  ) ; do \
-		BASENAME=$$(echo "$$POD" | perl -pe 's@^lib/@@; s@/@::@g; s/\.pm$$//') ; \
-		$(pod2man) --section=3 "$$POD" > "man/man3/$$BASENAME".3 ; \
+	set -e ; for POD in $$(find doc/tutorial lib/Lintian lib/Test -type f '!' -path '*/Internal/*' '!' -path '*/Output/*' '!' -path '*/Tag/TextUtil.pm'  ) ; do \
+		BASENAME=$$(echo "$$POD" | perl -pe 's@^(doc/tutorial|lib)/@@; s@/@::@g; s/\.(pod|pm)$$//') ; \
+		$(pod2man) --name="$$BASENAME" --section=3 "$$POD" > "man/man3/$$BASENAME".3 ; \
 	done
 	private/generate-html-docs doc/api.html > /dev/null
 	touch $@

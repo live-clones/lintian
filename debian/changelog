@@ -25,6 +25,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Put "Debian Package Checker" in all manpage headers.
     + [JW] Put Lintian version in all manpage footers.
     + [JW] Simplify manpage generation.
+    + [JW] Install Lintian::Tutorial manpages.
 
   * reporting/{config,html_reports}:
     + [NT] Remove "$COPY_DOCS" configuration option.  The
