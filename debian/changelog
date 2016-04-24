@@ -97,6 +97,10 @@ lintian (2.5.44) UNRELEASED; urgency=medium
     + [NT] Add ":any" to the dependencies for the python add-ons.  Thanks
       to Barry Warsaw for reporting the bug.  (Closes: #803164)
     + [NT] Remove entry for pysupport.
+  * data/fields/virtual-packages:
+    + [NT] Refresh against unstable main (amd64).
+  * data/files/fonts:
+    + [NT] Refresh against unstable main (amd64).
   * data/menu-format/known-desktop-keys:
     + [NT] Accept "DesktopNames" as a known key in desktop files.  Thanks
       to Yves-Alexis Perez for the suggestion.  (Closes: #766099)
