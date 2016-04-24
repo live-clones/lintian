@@ -22,13 +22,6 @@ $LINTIAN_DIST = "sid,experimental";
 $LINTIAN_AREA = "main,contrib,non-free";
 $LINTIAN_ARCH = "i386,amd64";
 
-# If true, copy the docs (e.g. the manual) into $HTML_DIR
-# instead of just symlinking to them.  If you build the
-# reports on one server and then push to another server
-# for serving the website, you will generally need to
-# copy the documents.
-$COPY_DOCS = 1;
-
 # Path to a source checkout of lintian
 $LINTIAN_ROOT = "$HOME/lintian";
 

@@ -19,6 +19,10 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Put Lintian version in all manpage footers.
     + [JW] Simplify manpage generation.
 
+  * reporting/{config,html_reports}:
+    + [NT] Remove "$COPY_DOCS" configuration option.  The
+      html_reports now always copies the documentation.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 24 Apr 2016 07:16:45 +0000
 
 lintian (2.5.44) unstable; urgency=medium
