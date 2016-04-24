@@ -1,6 +1,32 @@
-lintian (2.5.44) UNRELEASED; urgency=medium
+lintian (2.5.44) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - build-depends-arch-without-arch-dependant-binary
+      - changelog-references-temp-security-identifier
+      - ctrl-script
+      - debian-build-system
+      - debian-changelog-has-wrong-day-of-week
+      - extra-whitespace-around-name-in-changelog-trailer
+      - invalid-versioned-provides
+      - maintscript-calls-ldconfig
+      - no-ctrl-scripts
+      - package-has-unnecessary-activation-of-ldconfig-trigger
+      - package-must-activate-ldconfig-trigger
+      - source-format
+    + Removed:
+      - debian-changelog-has-wrong-weekday
+      - description-contains-duplicated-word
+      - dh_pysupport-is-obsolete
+      - missing-dependency-on-python-support
+      - postinst-has-useless-call-to-ldconfig
+      - postinst-must-call-ldconfig
+      - postrm-has-useless-call-to-ldconfig
+      - postrm-should-call-ldconfig
+      - postrm-unsafe-ldconfig
+      - preinst-calls-ldconfig
+      - prerm-calls-ldconfig
+      - versioned-provides
 
   * checks/changelog-file.{desc,pm}:
     + [JW,NT] Use "day of week" rather than "weekday".
@@ -147,7 +173,7 @@ lintian (2.5.44) UNRELEASED; urgency=medium
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [NT] Apply patch from Mattia Rizzolo to add yakkety.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 03 Apr 2016 18:48:59 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 24 Apr 2016 06:25:53 +0000
 
 lintian (2.5.43) unstable; urgency=medium
 
