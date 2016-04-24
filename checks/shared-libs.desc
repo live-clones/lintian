@@ -225,8 +225,8 @@ Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package must trigger libc's
  "ldconfig" trigger to ensure the ldconfig cache is updated.
  .
- If the package is using debhelper, the <tt>dh_makeshlibs</tt> should
- automatically discover this need and add the trigger itself.
+ If the package is using debhelper, <tt>dh_makeshlibs</tt> should
+ automatically discover this and add the trigger itself.
  Otherwise, please add <tt>activate-noawait ldconfig</tt> to the
  the <tt>triggers</tt> file in the control member.
  .
