@@ -109,7 +109,7 @@ sub prepare_lintian_environment_and_cmdline {
     my $frontend = 'lintian';
     my $eoa_marker_index = first_index { $_ eq '--' } @ARGV;
     my $logs_dir = $OPT{'lintian-log-dir'};
-    my @overridable_args = (qw(-EIL +classification --show-overrides));
+    my @overridable_args = (qw(-EL +>=classification --show-overrides));
     my @args = (
         qw(--verbose), # We rely on this for filtering the log
         qw(--exp-output=format=fullewi --packages-from-file -),
