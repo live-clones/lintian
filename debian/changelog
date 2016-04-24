@@ -9,6 +9,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * debian/rules:
     + [JW] Put "Debian Package Checker" in all manpage headers.
     + [JW] Put Lintian version in all manpage footers.
+    + [JW] Simplify manpage generation.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 24 Apr 2016 07:16:45 +0000
 

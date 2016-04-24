@@ -79,9 +79,8 @@ generate-docs-stamp: $(docsource)
 	private/generate-lintian-pod | \
 		$(pod2man) --name lintian --section=1 > man/man1/lintian.1
 	set -e ; for POD in $(pod2mansources) ; do \
-		DIR=$$(dirname "$$POD") ; \
 		BASENAME=$$(basename "$$POD" .pod) ; \
-		$(pod2man) --section=1 "$$POD" > "$$DIR/man1/$$BASENAME".1 ; \
+		$(pod2man) --section=1 "$$POD" > "man/man1/$$BASENAME".1 ; \
 	done
 	set -e ; for POD in $$(find lib/Lintian lib/Test -type f '!' -path '*/Internal/*' '!' -path '*/Output/*' '!' -path '*/Tag/TextUtil.pm'  ) ; do \
 		BASENAME=$$(echo "$$POD" | perl -pe 's@^lib/@@; s@/@::@g; s/\.pm$$//') ; \
