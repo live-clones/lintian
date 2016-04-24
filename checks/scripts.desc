@@ -746,3 +746,9 @@ Info: Lintian has detected the presence of a #DEBHELPER# token in the
  .
  Please note that dh_installdeb does <i>not</i> substitute the #DEBHELPER#
  token in udebs.
+
+Tag: debhelper-autoscript-in-maintainer-scripts
+Severity: classification
+Certainty: possible
+Info: The maintainer scripts of the package one or more auto-generated
+ shell snippets inserted by the listed debhelper tool.

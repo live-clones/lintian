@@ -511,8 +511,7 @@ sub run {
     # normal scripts above, because there were just enough differences to
     # make a shared function awkward.
 
-    my %added_diversions;
-    my %removed_diversions;
+    my (%added_diversions, %removed_diversions, %dh_cmd_substs);
     my $expand_diversions = 0;
     while (<$ctrl_fd>) {
         chop;
@@ -618,6 +617,11 @@ sub run {
 
             if (/\#DEBHELPER\#/) {
                 tag 'maintainer-script-has-unexpanded-debhelper-token', $file;
+            }
+            if (/^# Automatically added by (\S+)/) {
+                my $dh_cmd = $1;
+                tag 'debhelper-autoscript-in-maintainer-scripts', $dh_cmd
+                  if not $dh_cmd_substs{$dh_cmd}++;
             }
 
             next if m,^\s*$,;  # skip empty lines

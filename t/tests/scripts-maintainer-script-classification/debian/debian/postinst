@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+# Automatically added by dh_fake_lintian_tool
+if [ "$1" = configure ]; then
+    echo do something ...
+fi
+# End automatically added section
+
+exit 0

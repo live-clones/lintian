@@ -1,0 +1,6 @@
+Testname: scripts-maintainer-script-classification
+Sequence: 6000
+Version: 1.0
+Description: Test for classification tags in maintscripts
+Options: -EI -L +classification -C scripts
+Test-For: debhelper-autoscript-in-maintainer-scripts

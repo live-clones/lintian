@@ -2,6 +2,10 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/scripts.{desc,pm}:
+    + [NT] Add tracking tag to trace auto-generated shell
+      snippets in maintainer scripts.
+
   * commands/reporting-lintian-harness.pm:
     + [NT] Re-enable pedantic tags by default.  These were
       disabled in the previous release by mistake.
