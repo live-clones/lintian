@@ -89,7 +89,7 @@ sub collect {
     # create index of control.tar.gz
     spawn(
         $job, ['tar', 'tvf', '-'],'|', ['sort', '-k', '6'],
-        '|', ['gzip', '--best', '-c'],
+        '|', ['gzip', '-9nc'],
     );
 
     $in_fd->blocking(1);

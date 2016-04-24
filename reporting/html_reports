@@ -130,7 +130,7 @@ if ($ARGV[0]) {
     );
     copy($ARGV[0], "$HTML_TMP_DIR/lintian.log")
       or die("cannot copy $ARGV[0] to $HTML_TMP_DIR/lintian.log: $!");
-    spawn(\%opts, ['gzip', '-9c'])
+    spawn(\%opts, ['gzip', '-9nc'])
       or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";
 }
 

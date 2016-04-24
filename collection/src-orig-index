@@ -209,7 +209,7 @@ sub index_orig {
         { fail => 'error', out => "$dir/orig-index.gz" },
         sub { print @result },
         '|', ['sort', '-k', '6'],
-        '|', ['gzip', '--best', '-c']);
+        '|', ['gzip', '-9nc']);
     return 1;
 }
 

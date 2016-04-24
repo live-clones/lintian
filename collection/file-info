@@ -61,7 +61,7 @@ sub collect {
     );
     spawn(\%opts,
         ['xargs', '-0r', 'file', '-e', 'ascii', '-NF', '', '--print0', '--'],
-        '|', [$helper], '|', ['gzip', '--best', '-c']);
+        '|', [$helper], '|', ['gzip', '-9nc']);
     $opts{pipe_in}->blocking(1);
 
     foreach my $file ($info->sorted_index) {

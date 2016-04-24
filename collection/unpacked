@@ -98,7 +98,7 @@ sub collect {
             '|',
             ['sort', '-k', '6'],
             '|',
-            ['gzip', '-9c']);
+            ['gzip', '-9nc']);
 
         # fix permissions
         spawn({ fail => 'error' },
@@ -153,7 +153,7 @@ sub can_use_dpkg_source{
 
 sub extract_and_index_deb {
     my ($dir) = @_;
-    my @sort_gzip = (['sort', '-k', '6'], '|', ['gzip', '-9c']);
+    my @sort_gzip = (['sort', '-k', '6'], '|', ['gzip', '-9nc']);
     my (@jobs, @out_fds, $err);
     open(my $tar_in, '-|', 'dpkg-deb', '--fsys-tarfile', "$dir/deb");
 

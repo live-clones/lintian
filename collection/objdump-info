@@ -57,7 +57,7 @@ sub collect {
         out => "$dir/objdump-info.gz",
         fail => 'error'
     );
-    spawn(\%opts, ['xargs', '-0r', $helper], '|', ['gzip', '-9c']);
+    spawn(\%opts, ['xargs', '-0r', $helper], '|', ['gzip', '-9nc']);
     $opts{pipe_in}->blocking(1);
 
     foreach my $bin ($info->sorted_index) {

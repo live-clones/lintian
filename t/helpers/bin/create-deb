@@ -131,7 +131,7 @@ if ($val{'auto-build-data'}) {
             "root/usr/share/doc/$pkg/$file")
           if -e $src;
     }
-    runsystem('gzip', '-nf', '--best', "root/usr/share/doc/$pkg/$dch")
+    runsystem('gzip', '-9nf', "root/usr/share/doc/$pkg/$dch")
       if -e "root/usr/share/doc/$pkg/$dch";
     # set root so it works for later :)
     $val{'root'} = 'root/';
