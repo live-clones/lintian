@@ -8,13 +8,13 @@ Info: This script checks if a binary package conforms to info document policy.
 Tag: info-document-not-compressed
 Severity: important
 Certainty: certain
-Info: Info documents should be compressed with <tt>gzip -9</tt>.
+Info: Info documents should be compressed with <tt>gzip -9n</tt>.
 Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-gzip
 Severity: important
 Certainty: certain
-Info: Info documents should be compressed with <tt>gzip -9</tt>.  This
+Info: Info documents should be compressed with <tt>gzip -9n</tt>.  This
  file ends in <tt>.gz</tt> but doesn't appear to be a gzip-compressed
  file.
 Ref: policy 12.2
@@ -22,7 +22,7 @@ Ref: policy 12.2
 Tag: info-document-not-compressed-with-max-compression
 Severity: important
 Certainty: certain
-Info: Info documents should be compressed with <tt>gzip -9</tt>.  This
+Info: Info documents should be compressed with <tt>gzip -9n</tt>.  This
  file is compressed with gzip, but without using maximum compression.
 Ref: policy 12.2
 

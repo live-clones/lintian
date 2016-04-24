@@ -75,19 +75,19 @@ Ref: policy 12.1
 Tag: manpage-not-compressed
 Severity: important
 Certainty: certain
-Info: Manual pages have to be installed compressed (using "<tt>gzip -9</tt>").
+Info: Manual pages have to be installed compressed (using "<tt>gzip -9n</tt>").
 Ref: policy 12.1
 
 Tag: manpage-not-compressed-with-gzip
 Severity: important
 Certainty: certain
-Info: Manual pages should be compressed with <tt>gzip -9</tt>.
+Info: Manual pages should be compressed with <tt>gzip -9n</tt>.
 Ref: policy 12.1
 
 Tag: manpage-not-compressed-with-max-compression
 Severity: important
 Certainty: certain
-Info: Manual pages should be compressed with <tt>gzip -9</tt>.
+Info: Manual pages should be compressed with <tt>gzip -9n</tt>.
 Ref: policy 12.1
 
 Tag: manpage-has-bad-whatis-entry

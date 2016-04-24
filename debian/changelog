@@ -2,6 +2,10 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/info-files.desc:
+    + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
+  * checks/manpages.desc:
+    + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
   * checks/scripts.{desc,pm}:
     + [NT] Add tracking tag to trace auto-generated shell
       snippets in maintainer scripts.
