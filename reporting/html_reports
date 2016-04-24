@@ -55,6 +55,7 @@ our $LINTIAN_TIMESTAMP
 # Import Lintian Perl libraries.
 use lib "$LINTIAN_ROOT/lib";
 use Lintian::Command qw(safe_qx spawn);
+use Lintian::Command::Simple qw(rundir);
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Lab;
@@ -609,8 +610,8 @@ sub update_history_and_make_graphs {
         close($common);
 
         print "Plotting global statistics...\n";
-        chdir_system($graph_dir,
-            ['gnuplot', "$LINTIAN_ROOT/reporting/graphs/statistics.gpi"]) == 0
+        rundir($graph_dir, 'gnuplot',
+            "$LINTIAN_ROOT/reporting/graphs/statistics.gpi") == 0
           or die "gnuplot died with $?\n";
 
         $RESOURCE_MANAGER->install_resource("${graph_dir}/statistics.svg");
@@ -638,7 +639,7 @@ sub update_history_and_make_graphs {
 
     if ($GRAPHS) {
         close($gnuplot_fd);
-        chdir_system($graph_dir, ['gnuplot', 'call.gpi']) == 0
+        rundir($graph_dir, 'gnuplot', 'call.gpi') == 0
           or die("gnuplot died with $?\n");
         unlink($commonf);
         for my $tag (sort(keys(%{$tag_statistics_ref}))) {
@@ -1017,19 +1018,6 @@ sub by_tag {
       || $a_pi->{type}           cmp $b_pi->{type}
       || $a->{tag_info}->tag     cmp $b->{tag_info}->tag
       || $a->{extra}             cmp $b->{extra};
-}
-
-sub chdir_system {
-    my ($dir, $cmd) = @_;
-    my $pid = fork();
-    if ($pid) {
-        waitpid($pid, 0) == $pid or die "waitpid failed: $!\n";
-        return $?;
-    }
-
-    chdir($dir);
-    exec @$cmd
-      or die "exec failed: $!";
 }
 
 # Local Variables:
