@@ -30,6 +30,14 @@ use FileHandle;
 use Getopt::Long;
 use POSIX qw(strftime);
 
+use Lintian::Command qw(reap spawn safe_qx);
+use Lintian::Lab;
+use Lintian::Lab::Manifest;
+use Lintian::Processable;
+use Lintian::Relation::Version qw(versions_comparator);
+use Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
+  load_state_cache  save_state_cache);
+
 sub usage {
     print <<END;
 Lintian reporting harness
@@ -102,21 +110,6 @@ our (
     $html_reports_log,$sync_state_log, $dplint_cmd,
     $STATE_DIR, $LINTIAN_VERSION, $LOG_FD
 );
-
-# import perl libraries
-unshift @INC, "$LINTIAN_ROOT/lib";
-require Lintian::Command;
-import Lintian::Command qw(reap spawn safe_qx);
-require Lintian::Lab;
-require Lintian::Lab::Manifest;
-require Lintian::Processable;
-require Lintian::Relation::Version;
-import Lintian::Relation::Version qw(versions_comparator);
-require Lintian::Util;
-import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
-  load_state_cache  save_state_cache);
-
-main();
 
 sub main {
     parse_options_and_config();
@@ -402,6 +395,8 @@ sub Die {
     Log("fatal error: $_[0]");
     exit 1;
 }
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil

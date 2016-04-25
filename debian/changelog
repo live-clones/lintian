@@ -39,6 +39,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * reporting/config:
     + [NT] Remove "$COPY_DOCS" configuration option.  The
       html_reports now always copies the documentation.
+  * reporting/harness:
+    + [NT] Refactored into a "dplint" command and renamed to
+      "commands/reporting-harness.pm".
   * reporting/html_reports:
     + [NT] Refactored into a "dplint" command and renamed to
       "commands/reporting-html-reports.pm".
