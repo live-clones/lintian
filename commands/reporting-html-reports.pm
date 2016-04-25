@@ -122,8 +122,6 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
 # ------------------------------
 # Main routine
 
-main();
-
 sub main {
     my $profile = init_globals();
 
@@ -1029,6 +1027,8 @@ sub by_tag {
       || $a->{tag_info}->tag     cmp $b->{tag_info}->tag
       || $a->{extra}             cmp $b->{extra};
 }
+
+1;
 
 # Local Variables:
 # indent-tabs-mode: nil
