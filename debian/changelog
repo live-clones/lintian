@@ -27,6 +27,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Simplify manpage generation.
     + [JW] Install Lintian::Tutorial manpages.
 
+  * doc/tutorial/Lintian/Tutorial.pod:
+    + [JW] Add link to the WritingTests tutorial.
   * doc/tutorial/Lintian/Tutorial/WritingTests.pod:
     + [JW] Fix formatting error.
 
