@@ -25,5 +25,15 @@ To be written.
 
 =back
 
+=begin :man
+
+=head1 SEE ALSO
+
+L<Lintian::Tutorial::WritingChecks>,
+L<Lintian::Tutorial::TestSuite>,
+L<Lintian::Tutorial::WritingTests>
+
+=end :man
+
 =cut
 

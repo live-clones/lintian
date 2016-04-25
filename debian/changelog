@@ -29,6 +29,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   * doc/tutorial/Lintian/Tutorial.pod:
     + [JW] Add link to the WritingTests tutorial.
+    + [JW] Add SEE ALSO section (for the man formatter).
   * doc/tutorial/Lintian/Tutorial/WritingTests.pod:
     + [JW] Fix formatting error.
 
