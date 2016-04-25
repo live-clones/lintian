@@ -70,7 +70,6 @@ END
     exit;
 }
 
-my $LOG_FD;
 my %opt = (
     'schedule-chunk-size' => 512,
     'schedule-limit-groups' => BACKLOG_PROCESSING_GROUP_LIMIT,
@@ -88,45 +87,21 @@ my %opthash = (
     'help|h' => \&usage,
 );
 
-# init commandline parser
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-
-# process commandline options
-GetOptions(%opthash)
-  or die("error parsing options\n");
-
-# clean implies full - do this as early as possible, so we can just
-# check $opt{'full-mode'} rather than a full
-#   ($opt{'clean-mode'} || $opt{'full-mode'})
-$opt{'full-mode'} = 1 if $opt{'clean-mode'};
-
-die "Cannot use both incremental and full/clean.\n"
-  if $opt{'incremental-mode'} && $opt{'full-mode'};
-die("The argument for --schedule-limit-groups must be an > 0\n")
-  if $opt{'schedule-limit-groups'} < 1;
-
-# read configuration
-require './config'; ## no critic (Modules::RequireBarewordIncludes)
-use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
-  $LINTIAN_ARCH @EXTRA_LINTIAN_OPTIONS
-  $LOG_DIR
-  $HTML_DIR $HTML_TMP_DIR
-  $LINTIAN_AREA $HARNESS_STATE_DIR
-
-  $USE_PERMANENT_LAB
-  $LINTIAN_SCRATCH_SPACE
+# Options set in ./config
+our (
+    $LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR,
+    $LINTIAN_DIST,$LINTIAN_ARCH, @EXTRA_LINTIAN_OPTIONS,
+    $LOG_DIR, $HTML_DIR, $HTML_TMP_DIR,
+    $LINTIAN_AREA, $HARNESS_STATE_DIR,$USE_PERMANENT_LAB,
+    $LINTIAN_SCRATCH_SPACE,
 );
 
-# delete LINTIAN_ROOT in case it is set.
-delete($ENV{'LINTIAN_ROOT'});
-
-my $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
-
-my ($log_file, $lintian_log, $lintian_perf_log,$html_reports_log,
-    $sync_state_log)
-  = map {"$LOG_DIR/$_" }
-  qw(harness.log lintian.log lintian-perf.log html_reports.log sync_state.log);
-my $STATE_DIR = $HARNESS_STATE_DIR;
+# Global variables
+our (
+    $log_file, $lintian_log, $lintian_perf_log,
+    $html_reports_log,$sync_state_log, $dplint_cmd,
+    $STATE_DIR, $LINTIAN_VERSION, $LOG_FD
+);
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
@@ -141,13 +116,10 @@ require Lintian::Util;
 import Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
   load_state_cache  save_state_cache);
 
-my $LINTIAN_VERSION
-  = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
-chomp($LINTIAN_VERSION);
-
 main();
 
 sub main {
+    parse_options_and_config();
 
     # turn file buffering off
     STDOUT->autoflush;
@@ -158,11 +130,11 @@ sub main {
         my @rotate_logs
           = ($log_file, $html_reports_log, $lintian_perf_log, $sync_state_log);
         spawn(\%savelog_opt, ['savelog', @rotate_logs])
-          or die "Cannot rotate log files.\n";
+          or die("Cannot rotate log files.\n");
 
         # create new log file
         open($LOG_FD, '>', $log_file)
-          or die "cannot open log file $log_file for writing: $!";
+          or die("cannot open log file $log_file for writing: $!");
         $LOG_FD->autoflush;
     } else {
         $opt{'to-stdout'} = 0;
@@ -234,6 +206,48 @@ sub main {
 }
 
 # -------------------------------
+
+sub parse_options_and_config {
+
+    # init commandline parser
+    Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+    # process commandline options
+    GetOptions(%opthash)
+      or die("error parsing options\n");
+
+    # clean implies full - do this as early as possible, so we can just
+    # check $opt{'full-mode'} rather than a full
+    #   ($opt{'clean-mode'} || $opt{'full-mode'})
+    $opt{'full-mode'} = 1 if $opt{'clean-mode'};
+
+    die("Cannot use both incremental and full/clean.\n")
+      if $opt{'incremental-mode'} && $opt{'full-mode'};
+    die("The argument for --schedule-limit-groups must be an > 0\n")
+      if $opt{'schedule-limit-groups'} < 1;
+
+    # read configuration
+    require './config'; ## no critic (Modules::RequireBarewordIncludes)
+
+    # delete LINTIAN_ROOT in case it is set.
+    delete($ENV{'LINTIAN_ROOT'});
+
+    $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
+
+    $LINTIAN_VERSION
+      = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
+    chomp($LINTIAN_VERSION);
+
+    (
+        $log_file, $lintian_log, $lintian_perf_log,$html_reports_log,
+        $sync_state_log
+      )
+      = map {"$LOG_DIR/$_" }
+      qw(harness.log lintian.log lintian-perf.log html_reports.log sync_state.log);
+    $STATE_DIR = $HARNESS_STATE_DIR;
+
+    return;
+}
 
 sub run_lintian {
     my @sync_state_args = (
