@@ -33,23 +33,6 @@ use List::MoreUtils qw(uniq);
 use URI::Escape;
 use Text::Template ();
 
-# ------------------------------
-# Global variables and configuration
-
-# These have no default and must be set in the configuration file.
-our (
-    $LINTIAN_ROOT, $LINTIAN_ARCHIVEDIR,$LINTIAN_DIST,
-    $LINTIAN_ARCH, $HTML_TMP_DIR,$LINTIAN_AREA,
-    $HISTORY,$HISTORY_DIR,$LINTIAN_SOURCE,
-    $GRAPHS_RANGE_DAYS,$GRAPHS,$LINTIAN_MIRROR_NAME,
-    $HARNESS_STATE_DIR,
-);
-
-# Read the configuration.
-BEGIN { require './config'; } ## no critic (Modules::RequireBarewordIncludes)
-
-# Import Lintian Perl libraries.
-use lib "$LINTIAN_ROOT/lib";
 use Lintian::Command qw(safe_qx spawn);
 use Lintian::Command::Simple qw(rundir);
 use Lintian::Data;
@@ -60,6 +43,20 @@ use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
   find_backlog copy_dir delete_dir);
 
+# ------------------------------
+# Global variables and configuration
+
+# These have no default and must be set in the configuration file.
+# (i.e. they are pulled from """ require "./config" """)
+our (
+    $LINTIAN_ROOT, $LINTIAN_ARCHIVEDIR,$LINTIAN_DIST,
+    $LINTIAN_ARCH, $HTML_TMP_DIR,$LINTIAN_AREA,
+    $HISTORY,$HISTORY_DIR,$LINTIAN_SOURCE,
+    $GRAPHS_RANGE_DAYS,$GRAPHS,$LINTIAN_MIRROR_NAME,
+    $HARNESS_STATE_DIR,
+);
+
+# Some globals intialised in init_global()
 our ($RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp, $mirror_timestamp);
 
 # ------------------------------
@@ -163,7 +160,10 @@ sub main {
 # Utility functions
 
 sub init_globals {
-    my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
+    # Read the configuration.
+    require './config'; ## no critic (Modules::RequireBarewordIncludes)
+
+    my $profile = dplint::load_profile();
 
     Lintian::Data->set_vendor($profile);
 
@@ -171,8 +171,7 @@ sub init_globals {
     my $mirror_trace_file
       = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
 
-    $LINTIAN_VERSION
-      = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
+    $LINTIAN_VERSION = dplint::lintian_version();
     $timestamp = safe_qx(qw(date -u --rfc-822));
     $mirror_timestamp = slurp_entire_file($mirror_trace_file);
     chomp($LINTIAN_VERSION, $timestamp);

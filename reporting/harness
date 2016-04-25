@@ -120,7 +120,6 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
 # delete LINTIAN_ROOT in case it is set.
 delete($ENV{'LINTIAN_ROOT'});
 
-my $html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
 my $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
 
 my ($log_file, $lintian_log, $lintian_perf_log,$html_reports_log,
@@ -319,17 +318,18 @@ if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
 if ($opt{'generate-reports'}) {
     # create html reports
     Log('Creating HTML reports...');
-    Log("Executing $html_reports_cmd $lintian_log");
+    Log("Executing $dplint_cmd reporting-html-reports $lintian_log");
     my %html_reports_opts = (
         'out' => $html_reports_log,
         'err' => '&1',
     );
-    spawn(\%html_reports_opts, [$html_reports_cmd, $lintian_log])
-      or Log(
-        "warning: executing $html_reports_cmd returned " . (($? >> 8) & 0xff));
+    spawn(\%html_reports_opts,
+        [$dplint_cmd, 'reporting-html-reports', $lintian_log])
+      or Log('warning: executing reporting-html-reports returned '
+          . (($? >> 8) & 0xff));
     Log('');
 
-    # rotate the statistics file updated by $html_reports_cmd
+    # rotate the statistics file updated by reporting-html-reports
     if (!$opt{'dry-run'} && -f "$HARNESS_STATE_DIR/statistics") {
         my $date = time2str('%Y%m%d', time());
         my $dest = "$LOG_DIR/stats/statistics-${date}";
