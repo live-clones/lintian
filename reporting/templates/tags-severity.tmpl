@@ -9,7 +9,7 @@
 
 {
     my @tags = sort keys %tags;
-    for my $severity (qw/serious important normal minor wishlist pedantic/) {
+    for my $severity (qw/serious important normal minor wishlist pedantic classification/) {
         for my $certainty (qw/certain possible wild-guess/) {
             my $heading = 0;
             for my $tag (@tags) {
