@@ -48,10 +48,6 @@ our (
 # Read the configuration.
 BEGIN { require './config'; } ## no critic (Modules::RequireBarewordIncludes)
 
-# The path to the mirror timestamp.
-our $LINTIAN_TIMESTAMP
-  = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
-
 # Import Lintian Perl libraries.
 use lib "$LINTIAN_ROOT/lib";
 use Lintian::Command qw(safe_qx spawn);
@@ -65,16 +61,7 @@ use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
   find_backlog copy_dir delete_dir);
 
-my $RESOURCE_MANAGER
-  = Lintian::Reporting::ResourceManager->new('html_dir' => $HTML_TMP_DIR,);
-
-# Set the Lintian version, current timestamp, and archive timestamp.
-our $LINTIAN_VERSION
-  = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
-our $timestamp = safe_qx(qw(date -u --rfc-822));
-our $mirror_timestamp = slurp_entire_file($LINTIAN_TIMESTAMP);
-chomp($LINTIAN_VERSION, $timestamp);
-$mirror_timestamp =~ s/\n.*//s;
+our ($RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp, $mirror_timestamp);
 
 # ------------------------------
 # Initialize templates
@@ -142,9 +129,7 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
 main();
 
 sub main {
-    my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
-
-    Lintian::Data->set_vendor($profile);
+    my $profile = init_globals();
 
     setup_output_dir(
         'output_dir'       => $HTML_TMP_DIR,
@@ -177,6 +162,27 @@ sub main {
 
 # ------------------------------
 # Utility functions
+
+sub init_globals {
+    my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
+
+    Lintian::Data->set_vendor($profile);
+
+    # The path to the mirror timestamp.
+    my $mirror_trace_file
+      = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
+
+    $LINTIAN_VERSION
+      = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
+    $timestamp = safe_qx(qw(date -u --rfc-822));
+    $mirror_timestamp = slurp_entire_file($mirror_trace_file);
+    chomp($LINTIAN_VERSION, $timestamp);
+    $mirror_timestamp =~ s/\n.*//s;
+
+    $RESOURCE_MANAGER
+      = Lintian::Reporting::ResourceManager->new('html_dir' => $HTML_TMP_DIR,);
+    return $profile;
+}
 
 sub load_templates {
     my ($template_dir) = @_;
