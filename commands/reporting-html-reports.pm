@@ -1011,7 +1011,7 @@ sub output_template {
 # Sort function for sorting lists of tags.  Sort by package, version, area,
 # type, tag, and then any extra data.  This will produce the best HTML output.
 #
-# Note that source tags must come before all other tags, hench the "unfair"
+# Note that source tags must come before all other tags, hence the "unfair"
 # priority for those.  This is because the first tags listed are assumed to
 # be source package tags.
 sub by_tag {

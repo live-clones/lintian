@@ -22,7 +22,7 @@ while (my $line = <>) {
             if ($magic == 0x1f8b){ # the gzip file magic
                 $text = 'gzip compressed data';
                 # 2 for max compression; RFC1952 suggests this is a
-                # flag and not a value, hench the bit and operation
+                # flag and not a value, hence the bit and operation
                 if (($comp & 2) == 2){
                     $text = "$text, max compression";
                 }

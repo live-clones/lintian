@@ -91,7 +91,7 @@ while (my $line = <$readelf>) {
         =~ m/^readelf: Error: .*: Failed to read .*(?:magic number|file header)/
       ) {
        # Various errors for corrupt / broken files.  Note, readelf may spit out
-       # multiple errors per file, hench the "unless".
+       # multiple errors per file, hence the "unless".
         print "Broken: yes\n" unless $truncated++;
         next;
     } elsif ($line =~ m/^readelf: Error: Not an ELF file/) {
