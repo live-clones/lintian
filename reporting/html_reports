@@ -65,13 +65,8 @@ use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
   find_backlog copy_dir delete_dir);
 
-my $old_statistics;
-my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
 my $RESOURCE_MANAGER
   = Lintian::Reporting::ResourceManager->new('html_dir' => $HTML_TMP_DIR,);
-my $statistics_file = "$HARNESS_STATE_DIR/statistics";
-
-Lintian::Data->set_vendor($profile);
 
 # Set the Lintian version, current timestamp, and archive timestamp.
 our $LINTIAN_VERSION
@@ -147,6 +142,10 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
 main();
 
 sub main {
+    my $profile = Lintian::Profile->new(undef,[$LINTIAN_ROOT]);
+
+    Lintian::Data->set_vendor($profile);
+
     setup_output_dir(
         'output_dir'       => $HTML_TMP_DIR,
         'lintian_manual'   => "${LINTIAN_ROOT}/doc/lintian.html",
@@ -170,9 +169,9 @@ sub main {
     my $state_cache = load_state_cache($HARNESS_STATE_DIR);
 
     print "Parsing lintian log...\n";
-    parse_lintian_log($state_cache);
+    parse_lintian_log($profile, $state_cache);
 
-    process_data($state_cache);
+    process_data($profile, $state_cache);
     exit(0);
 }
 
@@ -204,15 +203,19 @@ sub load_templates {
 }
 
 sub process_data {
-    my ($state_cache) = @_;
+    my ($profile, $state_cache) = @_;
     my @maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
+    my $statistics_file = "$HARNESS_STATE_DIR/statistics";
+    my $old_statistics;
 
     {
         # Scoped to allow memory to be re-purposed.  The %qa and %sources
         # structures are only used for a very few isolated items.
         my (%qa, %sources);
         print "Collecting statistics...\n";
-        collect_statistics($state_cache, \@maintainers, \%sources, \%qa);
+        $old_statistics
+          = collect_statistics($profile, $state_cache, $statistics_file,
+            \@maintainers,\%sources, \%qa);
 
         generate_lookup_tables(\%sources);
 
@@ -441,7 +444,10 @@ sub setup_output_dir {
 }
 
 sub collect_statistics {
-    my ($state_cache, $maintainers_ref, $sources_ref, $qa_list_ref) = @_;
+    my ($profile, $state_cache, $statistics_file, $maintainers_ref,
+        $sources_ref, $qa_list_ref)
+      = @_;
+    my $old_statistics;
 
     # For each of this maintainer's packages, add statistical information
     # about the number of each type of tag to the QA data and build the
@@ -501,7 +507,7 @@ sub collect_statistics {
           = sprintf('%d (%+d)', $statistics{$attr},$statistics{$attr} - $old);
     }
 
-    return;
+    return $old_statistics;
 }
 
 sub extract_name_and_email {
@@ -708,7 +714,7 @@ sub maintainer_url {
 }
 
 sub parse_lintian_log {
-    my ($state_cache) = @_;
+    my ($profile, $state_cache) = @_;
     # We take a lintian log file on either standard input or as the
     # first argument.  This log file contains all the tags lintian
     # found, plus N: tags with informational messages.  Ignore all the
