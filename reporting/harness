@@ -145,88 +145,93 @@ my $LINTIAN_VERSION
   = safe_qx("$LINTIAN_ROOT/frontend/lintian",'--print-version');
 chomp($LINTIAN_VERSION);
 
-# turn file buffering off
-STDOUT->autoflush;
+main();
 
-unless ($opt{'dry-run'}) {
-    # rotate log files
-    my %opt = ('out' => '/dev/null',);
-    my @rotate_logs
-      = ($log_file, $html_reports_log, $lintian_perf_log, $sync_state_log);
-    spawn(\%opt, ['savelog', @rotate_logs])
-      or die "Cannot rotate log files.\n";
+sub main {
 
-    # create new log file
-    open($LOG_FD, '>', $log_file)
-      or die "cannot open log file $log_file for writing: $!";
-    $LOG_FD->autoflush;
-} else {
-    $opt{'to-stdout'} = 0;
-    open($LOG_FD, '>&', \*STDOUT)
-      or die "Cannot open log file <stdout> for writing: $!";
-    Log('Running in dry-run mode');
-}
-# From here on we can use Log() and Die().
+    # turn file buffering off
+    STDOUT->autoflush;
 
-if (not defined($STATE_DIR)) {
-    Die(q{Missing required config option: $HARNESS_STATE_DIR});
-} else {
-    if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
-        Log('Purging old state-cache/dir');
-        system('rm', '-rf', $STATE_DIR) == 0
-          or Die("error removing $STATE_DIR");
+    unless ($opt{'dry-run'}) {
+        # rotate log files
+        my %savelog_opt = ('out' => '/dev/null',);
+        my @rotate_logs
+          = ($log_file, $html_reports_log, $lintian_perf_log, $sync_state_log);
+        spawn(\%savelog_opt, ['savelog', @rotate_logs])
+          or die "Cannot rotate log files.\n";
+
+        # create new log file
+        open($LOG_FD, '>', $log_file)
+          or die "cannot open log file $log_file for writing: $!";
+        $LOG_FD->autoflush;
+    } else {
+        $opt{'to-stdout'} = 0;
+        open($LOG_FD, '>&', \*STDOUT)
+          or die "Cannot open log file <stdout> for writing: $!";
+        Log('Running in dry-run mode');
     }
+    # From here on we can use Log() and Die().
 
-    if (not -d $STATE_DIR) {
-        system('mkdir', '-p', $STATE_DIR) == 0
-          or Die("mkdir -p $STATE_DIR failed");
-        Log("Created cache dir: $STATE_DIR");
-    }
-}
+    if (not defined($STATE_DIR)) {
+        Die(q{Missing required config option: $HARNESS_STATE_DIR});
+    } else {
+        if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
+            Log('Purging old state-cache/dir');
+            system('rm', '-rf', $STATE_DIR) == 0
+              or Die("error removing $STATE_DIR");
+        }
 
-if (not $opt{'dry-run'}) {
-
-    if ($USE_PERMANENT_LAB) {
-        my $LAB = Lintian::Lab->new($LINTIAN_LAB);
-        # purge the old packages
-        $LAB->remove if $opt{'clean-mode'};
-
-        $LAB->create({ 'mode' => 02775}) unless $LAB->exists;
-    } elsif ($LINTIAN_LAB) {
-        my $LAB = Lintian::Lab->new($LINTIAN_LAB);
-        if ($LAB->exists) {
-            Log("Removing old permanent lab at $LINTIAN_LAB");
-            $LAB->remove;
+        if (not -d $STATE_DIR) {
+            system('mkdir', '-p', $STATE_DIR) == 0
+              or Die("mkdir -p $STATE_DIR failed");
+            Log("Created cache dir: $STATE_DIR");
         }
     }
-}
 
-if (   !$opt{'generate-reports'}
-    && !$opt{'full-mode'}
-    && !$opt{'incremental-mode'}) {
-    # Nothing explicitly chosen, default to -i if the log is present,
-    # otherwise -f.
-    if (-f $lintian_log) {
-        $opt{'incremental-mode'} = 1;
-    } else {
-        $opt{'full-mode'} = 1;
+    if (not $opt{'dry-run'}) {
+
+        if ($USE_PERMANENT_LAB) {
+            my $LAB = Lintian::Lab->new($LINTIAN_LAB);
+            # purge the old packages
+            $LAB->remove if $opt{'clean-mode'};
+
+            $LAB->create({ 'mode' => 02775 }) unless $LAB->exists;
+        } elsif ($LINTIAN_LAB) {
+            my $LAB = Lintian::Lab->new($LINTIAN_LAB);
+            if ($LAB->exists) {
+                Log("Removing old permanent lab at $LINTIAN_LAB");
+                $LAB->remove;
+            }
+        }
     }
+
+    if (   !$opt{'generate-reports'}
+        && !$opt{'full-mode'}
+        && !$opt{'incremental-mode'}) {
+        # Nothing explicitly chosen, default to -i if the log is present,
+        # otherwise -f.
+        if (-f $lintian_log) {
+            $opt{'incremental-mode'} = 1;
+        } else {
+            $opt{'full-mode'} = 1;
+        }
+    }
+
+    # Default to yes, if not explicitly disabled.
+    $opt{'generate-reports'} //= 1;
+
+    if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
+        run_lintian();
+    }
+
+    if ($opt{'generate-reports'}) {
+        generate_reports();
+    }
+
+    # ready!!! :-)
+    Log('All done.');
+    exit 0;
 }
-
-# Default to yes, if not explicitly disabled.
-$opt{'generate-reports'} //= 1;
-
-if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
-    run_lintian();
-}
-
-if ($opt{'generate-reports'}) {
-    generate_reports();
-}
-
-# ready!!! :-)
-Log('All done.');
-exit 0;
 
 # -------------------------------
 
