@@ -54,7 +54,6 @@ use Lintian::Command qw(safe_qx spawn);
 use Lintian::Command::Simple qw(rundir);
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
-use Lintian::Lab;
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
