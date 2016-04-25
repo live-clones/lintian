@@ -217,6 +217,20 @@ if (   !$opt{'generate-reports'}
 $opt{'generate-reports'} //= 1;
 
 if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
+    run_lintian();
+}
+
+if ($opt{'generate-reports'}) {
+    generate_reports();
+}
+
+# ready!!! :-)
+Log('All done.');
+exit 0;
+
+# -------------------------------
+
+sub run_lintian {
     my @sync_state_args = (
         '--state-dir', $STATE_DIR,
         '--mirror-path', $LINTIAN_ARCHIVEDIR,
@@ -313,17 +327,8 @@ if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
             }
         }
     }
+    return;
 }
-
-if ($opt{'generate-reports'}) {
-    generate_reports();
-}
-
-# ready!!! :-)
-Log('All done.');
-exit 0;
-
-# -------------------------------
 
 sub generate_reports {
     # create html reports
