@@ -27,6 +27,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Simplify manpage generation.
     + [JW] Install Lintian::Tutorial manpages.
 
+  * doc/tutorial/Lintian/Tutorial/WritingTests.pod:
+    + [JW] Fix formatting error.
+
   * reporting/{config,html_reports}:
     + [NT] Remove "$COPY_DOCS" configuration option.  The
       html_reports now always copies the documentation.

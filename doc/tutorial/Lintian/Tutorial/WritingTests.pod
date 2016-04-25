@@ -456,7 +456,7 @@ argument is the directory of the unpacked debian source package.
 
 =item * test_calibration (optional, special case usage)
 
-If present and executable, this script will be invoked b<after>
+If present and executable, this script will be invoked B<after>
 lintian I<and> post_test (if present) have been run.  The script can
 then modify the expected output I<and> the actual output.
 
