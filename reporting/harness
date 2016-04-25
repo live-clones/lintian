@@ -316,6 +316,16 @@ if ($opt{'incremental-mode'} or $opt{'full-mode'}) {
 }
 
 if ($opt{'generate-reports'}) {
+    generate_reports();
+}
+
+# ready!!! :-)
+Log('All done.');
+exit 0;
+
+# -------------------------------
+
+sub generate_reports {
     # create html reports
     Log('Creating HTML reports...');
     Log("Executing $dplint_cmd reporting-html-reports $lintian_log");
@@ -347,13 +357,8 @@ if ($opt{'generate-reports'}) {
           or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
     }
     Log('');
+    return;
 }
-
-# ready!!! :-)
-Log('All done.');
-exit 0;
-
-# -------------------------------
 
 sub Log {
     my ($msg) = @_;
