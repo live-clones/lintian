@@ -155,7 +155,8 @@ sub run {
                 $seen_python_helper = 1;
                 $seen_python3_helper = 1;
             }
-        } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
+        } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,
+            or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
             $build_systems{'cdbs-with-debhelper.mk'} = 1;
             delete($build_systems{'cdbs-without-debhelper.mk'});
             $seencommand = 1;
@@ -177,8 +178,7 @@ sub run {
             $level = $1 if ($level);
         } elsif (/^override_dh_/) {
             $needbuilddepends = 1;
-        } elsif (m,^include\s+/usr/share/cdbs/,
-            or m,^include\s+/usr/share/R/debian/r-cran.mk,o) {
+        } elsif (m,^include\s+/usr/share/cdbs/,) {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
               if not exists($build_systems{'cdbs-with-debhelper.mk'});
