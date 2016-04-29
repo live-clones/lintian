@@ -391,10 +391,10 @@ Certainty: certain
 Info: This package provides an ELF binary that lacks the "bindnow"
  linker flag.
  .
- If the ELF binary does not rely on late binding of symbols (e.g. weak
- symbols), then please consider enabling this feature.  Otherwise,
- please consider overriding the tag (possibly with a comment about
- why).
+ This is needed (together with "relro") to make the "Global Offset
+ Table" (GOT) fully read-only.  The bindnow feature trades startup
+ time for improved security.   Plase consider enabling this feature
+ or consider overriding the tag (possibly with a comment about why).
  .
  If you use <tt>dpkg-buildflags</tt>, you may have to add
  <tt>hardening=+bindnow</tt> or <tt>hardening=+all</tt> to

@@ -2,6 +2,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/binaries.desc:
+    + [NT] Rewrite description for hardening-no-bindnow.  There
+      is no references to why bindnow would cause issues.
   * checks/debhelper.pm:
     + [NT] The /usr/share/R/debian/r-cran.mk file implies
       /usr/share/cdbs/1/rules/debhelper.mk.
