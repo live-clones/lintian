@@ -290,7 +290,7 @@ sub run {
     }
 
     # find out which files are scripts
-    my %script = map {$_ => 1} (sort keys %{$info->scripts});
+    my %script = map {$_ => 1} (keys %{$info->scripts});
 
     # We only want to warn about these once.
     my $warned_debug_name = 0;
