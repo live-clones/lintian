@@ -714,7 +714,7 @@ sub run {
             # ---------------- .packlist files
             elsif ($fname =~ m,^usr/lib/perl.*/.packlist$,) {
                 tag 'package-installs-packlist', $file;
-            }elsif ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.(?:pl|pm)$,) {
+            }elsif ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.p[lm]$,) {
                 push @nonbinary_perl_files_in_lib, $file;
             }elsif ($fname =~ m,^usr/lib/(?:[^/]+/)?perl5/.*\.(?:bs|so)$,) {
                 $has_binary_perl_file = 1;
@@ -722,7 +722,7 @@ sub run {
            # ---------------- /usr/lib -- needs to go after the other usr/lib/*
             elsif ($fname =~ m,^usr/lib/,) {
                 if (    $type ne 'udeb'
-                    and $file =~ m,\.(?:bmp|gif|jpeg|jpg|png|tiff|xpm|xbm)$,
+                    and $file =~ m,\.(?:bmp|gif|jpe?g|png|tiff|x[pb]m)$,
                     and not defined $link) {
                     tag 'image-file-in-usr-lib', $file;
                 }
@@ -1095,9 +1095,9 @@ sub run {
         # ---------------- .egg (python egg files)
         if (
             $fname =~ m,\.egg$,o
-            && (   $fname =~ m,usr/lib/python\d+(?:\.\d+/),o
-                || $fname =~ m,usr/lib/pyshared,o
-                || $fname =~ m,usr/share/,o)
+            && (   $fname =~ m,^usr/lib/python\d+(?:\.\d+/),o
+                || $fname =~ m,^usr/lib/pyshared,o
+                || $fname =~ m,^usr/share/,o)
           ) {
             tag 'package-installs-python-egg', $file;
         }
@@ -1199,8 +1199,8 @@ sub run {
             and ($operm & 0111) == 0
             and not $fname =~ m{ \. (?:
                   # Common "non-license" file extensions...
-                   el|[ch]|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm
-                  |png|jpe?g|gif|svg|dtd|ui|pc|mk|lisp
+                   el|[ch]|cc|p[ylmc]|[hu]i|p_hi|html|php|rb|xpm
+                     |png|jpe?g|gif|svg|dtd|mk|lisp
                ) \Z}xsm
             and not $fname=~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
             and not $fname =~ m,/under\S+License\.docbook$,
@@ -1372,14 +1372,14 @@ sub run {
             if (
                 $fname =~ m{\A
                            (?:usr/)?(?:s?bin|games)/[^/]+\.
-                           (?:pl|sh|py|php|rb|tcl|bsh|csh|tcl)
+                           (?:p[ly]|php|rb|[bc]?sh|tcl)
                          \Z}xsm
               ) {
                 tag 'script-with-language-extension', $file;
             }
 
             # ---------------- Devel files for Windows
-            if (    $fname =~ m,/.+\.(?:vcproj|sln|dsp|dsw)(?:\.gz)?$,
+            if (    $fname =~ m,/.+\.(?:vcproj|sln|ds[pw])(?:\.gz)?$,
                 and $fname !~ m,^usr/share/doc/,) {
                 tag 'windows-devel-file-in-package', $file;
             }
