@@ -717,7 +717,7 @@ L</parse_dpkg_control> do.  It can also emit:
 =item get_dsc_control (DSCFILE)
 
 Convenience function for reading dsc files.  It will read the DSCFILE
-using L<read_dpkg_control(FILE[, FLAGS[, LINES]])> and then return the
+using L</read_dpkg_control(FILE[, FLAGS[, LINES]])> and then return the
 first paragraph.  If the file has no paragraphs, C<undef> is returned
 instead.
 
