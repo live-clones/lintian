@@ -1857,13 +1857,15 @@ sub run {
     # any binary to save ourselves from game-data false positives:
     my $games = dir_counts($info, 'usr/games/');
     my $other = dir_counts($info, 'bin/') + dir_counts($info, 'usr/bin/');
-    if ($pkg_section =~ m,games$, and $games == 0 and $other > 0) {
-        tag 'package-section-games-but-contains-no-game';
-    }
-    if ($pkg_section =~ m,games$, and $games > 0 and $other > 0) {
-        tag 'package-section-games-but-has-usr-bin';
-    }
-    if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
+    if ($other) {
+        if ($pkg_section =~ m,games$,) {
+            if ($games) {
+                tag 'package-section-games-but-has-usr-bin';
+            } else {
+                tag 'package-section-games-but-contains-no-game';
+            }
+        }
+    } elsif ($games > 0 and $pkg_section !~ m,games$,) {
         tag 'games-package-should-be-section-games';
     }
 
