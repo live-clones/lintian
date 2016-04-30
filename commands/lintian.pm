@@ -589,7 +589,7 @@ sub _main {
 }
 
 sub main {
-    my ($pool);
+    my ($pool, $async_loop);
 
     #turn off file buffering
     STDOUT->autoflush;
@@ -726,7 +726,8 @@ sub main {
     # Now action is always either "check" or "unpack"
     # these two variables are used by process_package
     #  and need to persist between invocations.
-    $unpacker = Lintian::Unpacker->new($collmap, \%unpack_options);
+    $async_loop = IO::Async::Loop->new;
+    $unpacker = Lintian::Unpacker->new($async_loop, $collmap, \%unpack_options);
 
     if ($action eq 'check') {
         # Ensure all checks can actually be loaded...
@@ -760,7 +761,7 @@ sub main {
             debug_msg(1, "Unpack of $gname done$tres");
             perf_log("$gname,total-group-unpack,${raw_res}");
             if ($action eq 'check') {
-                if (!process_group($gname, $group)) {
+                if (!process_group($async_loop, $gname, $group)) {
                     $success = 0;
                 }
                 $group->clear_cache;
@@ -782,15 +783,21 @@ sub main {
                 }
                 @group_lpkg = $group->get_processables;
             } else {
+                my @futures;
                 for my $lpkg ($group->get_processables) {
-                    my $ret = auto_clean_package($lpkg);
-                    next if ($ret == 2);
-                    if ($ret < 0) {
-                        $exit_code = 2;
-                        next;
+                    my @pkg_futures = auto_clean_package($async_loop, $lpkg);
+                    if (not $LAB->is_temp) {
+                        my $f= $async_loop->new_future->wait_all(@pkg_futures);
+                        $f = $f->then(
+                            sub {
+                                push(@group_lpkg, $lpkg);
+                            });
+                        push(@futures, $f);
+                    } else {
+                        push(@futures, @pkg_futures);
                     }
-                    push(@group_lpkg, $lpkg);
                 }
+                $async_loop->await_all(@futures);
             }
             if (not $LAB->is_temp) {
                 for my $lpkg (@group_lpkg) {
@@ -890,25 +897,28 @@ sub main {
 #  - depends on global variables %collection_info
 #
 sub auto_clean_package {
-    my ($lpkg) = @_;
+    my ($async_loop, $lpkg) = @_;
     my $proc_id = $lpkg->identifier;
     my $pkg_name = $lpkg->pkg_name;
     my $pkg_type = $lpkg->pkg_type;
     my $base = $lpkg->base_dir;
-    my $changed = 0;
     if ($lpkg->lab->is_temp) {
-        debug_msg(1, "Auto removing: $proc_id ...");
-        my $raw_res = timed_task {
-            $lpkg->remove;
-        };
-        perf_log("$proc_id,auto-remove entry,${raw_res}");
-        return 2;
+        debug_msg(1, "Auto removing: ${proc_id} ...");
+        my $time = $start_timer->();
+        my $f = $lpkg->remove_async($async_loop);
+        return $f->on_ready(
+            sub {
+                my $raw_res = $finish_timer->($time);
+                debug_msg(1, "Auto removing: ${proc_id} done (${raw_res}s)");
+                perf_log("$proc_id,auto-remove entry,${raw_res}");
+                return;
+            });
     }
+    # TODO: Convert this to proper async
     for my $coll (@auto_remove) {
         my $ci = $collmap->getp($coll);
         next unless $lpkg->is_coll_finished($coll, $ci->version);
         debug_msg(1, "Auto removing: $proc_id ($coll) ...");
-        $changed = 1;
         eval {
             my $raw_res = timed_task {
                 $ci->collect($pkg_name, "remove-${pkg_type}", $base);
@@ -921,11 +931,11 @@ sub auto_clean_package {
                 "removing collect info $coll about package $pkg_name failed",
                 "skipping cleanup of $pkg_type package $pkg_name"
             );
-            return -1;
+            return $async_loop->new_future->fail("$@");
         }
         $lpkg->_clear_coll_status($coll);
     }
-    return $changed;
+    return $async_loop->new_future->done();
 }
 
 sub post_pkg_process_overrides{
@@ -1028,7 +1038,7 @@ sub coll_hook {
 }
 
 sub process_group {
-    my ($gname, $group) = @_;
+    my ($async_loop, $gname, $group) = @_;
     my ($timer, $raw_res, $tres);
     my $all_ok = 1;
     $timer = $start_timer->();
@@ -1112,23 +1122,32 @@ sub process_group {
     if (@auto_remove) {
         # Invoke auto-clean now that the group has been checked
         $timer = $start_timer->();
-        foreach my $lpkg ($group->get_processables){
-            my $ret = auto_clean_package($lpkg);
-            if ($ret < 0) {
-                $exit_code = 2;
-                $all_ok = 0;
-            }
-            if ($ret and $ret != 2) {
+        my @futures;
+        foreach my $lpkg ($group->get_processables) {
+            my @pkg_futures = auto_clean_package($async_loop, $lpkg);
+            if (not $lpkg->lab->is_temp) {
                 # Update the status file as auto_clean_package may
                 # have removed some collections
-                unless ($lpkg->update_status_file) {
-                    my $pkg_name = $lpkg->pkg_name;
-                    warning(
-                        join(q{ },
-                            'could not create status',
-                            "file for package $pkg_name: $!"));
-                }
+                my $f = $async_loop->new_future->wait_all(@pkg_futures)->then(
+                    sub {
+                        if (not $lpkg->update_status_file) {
+                            my $pkg_name = $lpkg->pkg_name;
+                            warning(
+                                join(q{ },
+                                    'could not create status',
+                                    "file for package $pkg_name: $!"));
+                        }
+                    });
+                push(@futures, $f);
+            } else {
+                push(@futures, @pkg_futures);
             }
+
+        }
+        $async_loop->await_all(@futures);
+        if (any { $_->is_failed } @futures) {
+            $exit_code = 2;
+            $all_ok = 0;
         }
         $raw_res = $finish_timer->($timer);
         $tres = $format_timer_result->($raw_res);

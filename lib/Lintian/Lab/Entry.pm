@@ -227,6 +227,41 @@ sub remove {
     return 1;
 }
 
+=item remove_async(ASYNC_LOOP)
+
+Starts an asynchronious removal of the unpacked parts of the package in the lab.
+
+The method will return a L<Future>, which will be "done" once the entry has been removed.
+
+=cut
+
+sub remove_async {
+    my ($self, $async_loop) = @_;
+    my $basedir = $self->{base_dir};
+    my $future = $async_loop->new_future;
+    return $future->done(0) if not -e $basedir;
+    $self->clear_cache;
+    $async_loop->spawn_child(
+        command => ['rm', '-fr', '--', $basedir],
+        on_exit => sub {
+            my (undef, $exitcode, $dollarbang) = @_;
+            if (not $exitcode and not $dollarbang) {
+                $self->{lab}->_entry_removed($self);
+                $future->done();
+            } else {
+                my $msg = 'Error: Removing lab entry ' . $self->identifier . ' failed';
+                if ($dollarbang) {
+                    $msg = "$msg: $dollarbang";
+                } else {
+                    $msg = "$msg with exitcode $exitcode";
+                }
+                $future->fail($msg);
+            }
+        });
+
+    return $future;
+}
+
 =item exists
 
 Returns a truth value if the entry exists.

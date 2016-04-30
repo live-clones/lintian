@@ -73,7 +73,7 @@ available via L<Lintian::Collect>.
 
 =over 4
 
-=item new (COLLMAP, PROFILE[, OPTIONS])
+=item new (ASYNC_LOOP, COLLMAP, PROFILE[, OPTIONS])
 
 Creates a new unpacker.
 
@@ -117,7 +117,7 @@ changed with the L</jobs> method later.  If omitted, it defaults to
 =cut
 
 sub new {
-    my ($class, $collmap, $options) = @_;
+    my ($class, $async_loop, $collmap, $options) = @_;
     my $ccmap = $collmap->clone;
     my ($req_table, $profile, $extra);
     my $jobs = 0;
@@ -133,7 +133,7 @@ sub new {
         'profile' => $profile,
         'running-jobs' => {},
         'worktable' => {},
-        'async-loop' => IO::Async::Loop->new,
+        'async-loop' => $async_loop,
     };
     if (defined $profile) {
         $req_table = {};
