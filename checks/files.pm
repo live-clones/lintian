@@ -24,7 +24,6 @@ use warnings;
 use autodie;
 
 use Lintian::Data;
-use Lintian::Output qw(warning);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
   signal_number2name strip normalize_pkg_path);
@@ -1533,41 +1532,7 @@ sub run {
                         }
                     }
                     drain_pipe($t1pipe);
-                    eval {close($t1pipe);};
-                    if (my $err = $@) {
-                        # check if we hit #724571 (t1disasm
-                        # seg. faults on files).
-                        my $exit_code_raw = $?;
-                        fail("closing t1disasm $file: $!") if $err->errno;
-                        my $code = ($exit_code_raw >> 8) & 0xff;
-                        my $sig = $exit_code_raw & 0xff;
-                        fail("t1disasm $file exited $code") if $code;
-                        if ($sig) {
-                            my $signame = signal_number2name($sig);
-                            fail("t1disasm $file killed with signal $signame")
-                              unless $signame eq 'SEGV'
-                              or $signame eq 'BUS';
-                            # This is #724571.  The problem is that it
-                            # causes the FTP masters to Lintian
-                            # auto-reject to trigger (and lintian.d.o
-                            # to re-check packages daily if the have a
-                            # file triggering this).
-                            # Technically, t1disasm has only triggered
-                            # a SEGV so far, but it we assume it can
-                            # also get hit by a BUS.
-                            warning(
-                                join(q{ },
-                                    "t1disasm $file died with a",
-                                    'segmentation fault or bus error'),
-                                'This may hide a license-problem warning.'
-                            );
-                        } else {
-                            fail(
-                                join(q{ },
-                                    "t1disasm $file died with raw",
-                                    "exit code $exit_code_raw"));
-                        }
-                    }
+                    close($t1pipe);
                 }
             }
 
