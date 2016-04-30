@@ -316,7 +316,7 @@ sub run {
     # Check our dependencies:
     foreach my $depproc (@{ $ginfo->direct_dependencies($proc) }) {
         # Find the manpages in our related dependencies
-        my $depinfo = $depproc->info();
+        my $depinfo = $depproc->info;
         foreach my $file ($depinfo->sorted_index){
             my ($fname, $path, undef) = fileparse($file, qr,\..+$,o);
             my $lang = '';

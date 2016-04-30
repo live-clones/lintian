@@ -6,7 +6,7 @@ use Test::More tests => 4;
 
 use Lintian::DepMap;
 
-my $map = Lintian::DepMap->new();
+my $map = Lintian::DepMap->new;
 
 $map->add('A');
 $map->add('B');
@@ -29,7 +29,7 @@ is_deeply(
 );
 
 $map->satisfy('B');
-is_deeply([$map->selectable()], ['C'], 'B satisfied, C selectable');
+is_deeply([$map->selectable], ['C'], 'B satisfied, C selectable');
 
 $map->satisfy('C');
-is_deeply([$map->selectable()], ['D'], 'C satisfied, D now selectable');
+is_deeply([$map->selectable], ['D'], 'C satisfied, D now selectable');

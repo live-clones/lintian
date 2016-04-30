@@ -57,11 +57,11 @@ sub run {
 sub search_for_obsolete_sites {
     my ($dfile, $file) = @_;
 
-    if (defined($dfile) and $dfile->is_regular_file() and $dfile->is_open_ok) {
+    if (defined($dfile) and $dfile->is_regular_file and $dfile->is_open_ok) {
 
         my $dcontents = $dfile->file_contents;
 
-        foreach my $site ($OBSOLETE_SITES->all()) {
+        foreach my $site ($OBSOLETE_SITES->all) {
             if ($dcontents
                 =~ m((\w+://(?:[\w.]*\.)?\Q$site\E[/:][^\s\"<>\$]*))i) {
                 tag 'obsolete-url-in-packaging', $file, $1;

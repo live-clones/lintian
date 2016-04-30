@@ -171,7 +171,7 @@ sub native {
         $self->{native} = 1;
     } else {
         my $version = $self->field('version');
-        my $base_dir = $self->base_dir();
+        my $base_dir = $self->base_dir;
         if (defined $version) {
             $version =~ s/^\d+://;
             my $name = $self->{name};

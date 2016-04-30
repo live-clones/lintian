@@ -38,11 +38,11 @@ Lintian::ProcessablePool -- Pool of processables
 
  use Lintian::ProcessablePool;
  
- my $pool = Lintian::ProcessablePool->new();
+ my $pool = Lintian::ProcessablePool->new;
  $pool->add_file('foo.changes');
  $pool->add_file('bar.dsc');
  $pool->add_file('baz.deb');
- foreach my $gname ($pool->get_group_names()){
+ foreach my $gname ($pool->get_group_names){
     my $group = $pool->get_group($gname);
     process($gname, $group);
  }
@@ -131,7 +131,7 @@ sub add_proc {
     return 1;
 }
 
-=item $pool->get_group_names()
+=item $pool->get_group_names
 
 Returns the name of all the groups in this pool.
 
@@ -156,7 +156,7 @@ sub get_group{
     return $self->{groups}{$group};
 }
 
-=item $pool->get_groups()
+=item $pool->get_groups
 
 Returns all the groups in the pool.
 
@@ -173,7 +173,7 @@ sub get_groups{
     return ();
 }
 
-=item $pool->empty()
+=item $pool->empty
 
 Returns true if the pool is empty.
 
@@ -189,7 +189,7 @@ sub empty{
 sub _add_changes_file{
     my ($self, $pkg_path) = @_;
     my $group = Lintian::ProcessableGroup->new($self->{'lab'}, $pkg_path);
-    my $cproc = $group->get_changes_processable();
+    my $cproc = $group->get_changes_processable;
     my $gid = $self->_get_group_id($cproc);
     my $ogroup = $self->{groups}{$gid};
     if (defined($ogroup)){
@@ -203,12 +203,12 @@ sub _add_changes_file{
             $added = 1;
         }
 
-        if (  !defined $ogroup->get_source_processable()
-            && defined $group->get_source_processable()){
-            $ogroup->add_processable($group->get_source_processable());
+        if (  !defined $ogroup->get_source_processable
+            && defined $group->get_source_processable){
+            $ogroup->add_processable($group->get_source_processable);
             $added = 1;
         }
-        foreach my $bin ($group->get_binary_processables()){
+        foreach my $bin ($group->get_binary_processables){
             # New binary package ?
             my $was_new = $ogroup->add_processable($bin);
             $added ||= $was_new;

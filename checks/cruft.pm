@@ -692,7 +692,7 @@ sub find_cruft {
 
         # Find mentioning of usr/lib/perl5 inside the packaging
         if ($name =~ m{^debian/}) {
-            my $short = $entry->basename();
+            my $short = $entry->basename;
 
             # Skip symlinks and other nasty stuff as well as
             # debian/changelog
@@ -882,9 +882,9 @@ sub full_text_check {
     # string to match in $block. Please emit license tags only once
     # per file
   BLOCK:
-    while (my $block = $sfd->readwindow()) {
+    while (my $block = $sfd->readwindow) {
         my ($cleanedblock, %matchedkeyword);
-        my $blocknumber = $sfd->blocknumber();
+        my $blocknumber = $sfd->blocknumber;
 
         # Check for non-distributable files - this
         # applies even to non-free, as we still need

@@ -6,7 +6,7 @@ use Test::More tests => 2;
 
 use Lintian::DepMap;
 
-my $map = Lintian::DepMap->new();
+my $map = Lintian::DepMap->new;
 
 $map->add('A');
 $map->add('B', 'A');

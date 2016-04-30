@@ -32,7 +32,7 @@ Lintian::Collect::Changes - Lintian interface to .changes file data collection
 
     my ($name, $type) = ('foobar_1.2_i386.changes', 'changes');
     my $collect = Lintian::Collect->new($name, $type);
-    my $files = $collect->files();
+    my $files = $collect->files;
 
     foreach my $file (keys %{$files}) {
         my $size = $files->{$file}{size};

@@ -40,7 +40,7 @@ sub run {
     my $has_jars = 0;
     my $jmajlow = '-';
 
-    my $depends = $info->relation('strong')->unparse();
+    my $depends = $info->relation('strong')->unparse;
     # Remove all libX-java-doc packages to avoid thinking they are java libs
     #  - note the result may not be a valid dependency listing
     $depends =~ s/lib[^\s,]+-java-doc//go;

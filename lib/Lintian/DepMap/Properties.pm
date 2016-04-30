@@ -27,7 +27,7 @@ Lintian::DepMap::Properties - Dependencies with properties map/tree creator
 
     use Lintian::DepMap::Properties;
 
-    my $map = Lintian::DepMap::Properties->new();
+    my $map = Lintian::DepMap::Properties->new;
 
 
 =head1 DESCRIPTION

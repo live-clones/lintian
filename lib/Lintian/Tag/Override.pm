@@ -92,7 +92,7 @@ sub new {
     };
     $self->{'arch'} = 'any' unless $self->{'arch'};
     bless $self, $type;
-    $self->_init();
+    $self->_init;
     return $self;
 }
 

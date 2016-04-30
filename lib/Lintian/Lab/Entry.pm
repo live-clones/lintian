@@ -99,7 +99,7 @@ sub new_from_metadata {
     $self->{coll}     = {};
     $self->{base_dir} = $base_dir;
     $self->{pkg_path} = $pkg_path; # Could be undef, _init will fix that
-    $self->_init();
+    $self->_init;
 
     return $self;
 }
@@ -385,7 +385,7 @@ sub update_status_file {
         return 0;
     }
 
-    $file = $self->base_dir() . '/.lintian-status';
+    $file = $self->base_dir . '/.lintian-status';
     open my $sfd, '>', $file or return 0;
     print $sfd 'Lab-Entry-Format: ' . LAB_ENTRY_FORMAT . "\n";
     # Basic package meta-data - this is redundant, but having it may

@@ -63,7 +63,7 @@ sub run {
     # on some other package from this source.
     return if scalar @nodes < 2;
 
-    $sccs = Lintian::group_checks::Graph->new(\@nodes, \%edges)->tarjans();
+    $sccs = Lintian::group_checks::Graph->new(\@nodes, \%edges)->tarjans;
 
     foreach my $comp (@$sccs) {
         # It takes two to tango... erh. make a circular dependency.

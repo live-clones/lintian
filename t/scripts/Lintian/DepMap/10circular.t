@@ -6,7 +6,7 @@ use Test::More tests => 5;
 
 use Lintian::DepMap;
 
-my $map = Lintian::DepMap->new();
+my $map = Lintian::DepMap->new;
 
 $map->add('A', 'B');
 $map->add('B', 'A');
@@ -19,7 +19,7 @@ $map->add('C');
 is(join(', ', sort($map->circular)),
     'A, B', 'A and B cause a circular dependency (2nd)');
 
-$map = Lintian::DepMap->new();
+$map = Lintian::DepMap->new;
 $map->add('A', 'B');
 $map->add('B', 'C');
 $map->add('C', 'A');

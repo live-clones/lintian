@@ -32,7 +32,7 @@ Lintian::DepMap - Dependencies map/tree creator
 
     use Lintian::DepMap;
 
-    my $map = Lintian::DepMap->new();
+    my $map = Lintian::DepMap->new;
 
     # know about A:
     $map->add('A');
@@ -40,7 +40,7 @@ Lintian::DepMap - Dependencies map/tree creator
     $map->add('B', 'A');
 
     # prints 'A':
-    print $map->selectable();
+    print $map->selectable;
 
     # indicate we are working on 'A' (optional):
     $map->select('A');
@@ -49,7 +49,7 @@ Lintian::DepMap - Dependencies map/tree creator
     # we are done with A:
     $map->satisfy('A');
     # prints 'B':
-    print $map->selectable();
+    print $map->selectable;
 
 
 =head1 DESCRIPTION
@@ -90,9 +90,9 @@ E.g.
     $map->add('A');
     $map->satisfy('A');
     # prints nothing
-    print $map->selectable();
-    $map->initialise();
-    print $map->selectable();
+    print $map->selectable;
+    $map->initialise;
+    print $map->selectable;
 
 =cut
 
@@ -218,7 +218,7 @@ sub satisfy {
     my $self = shift;
     my $node = shift;
 
-    if (any {$_ eq $node} $self->missing()) {
+    if (any {$_ eq $node} $self->missing) {
         fail(  "Attempted to mark node '$node' as satisfied but it is not "
               .'reachable, perhaps you forgot to add() it first?');
     }
@@ -286,11 +286,11 @@ E.g.
 
     $map->add('A');
     # Prints A
-    print $map->selectable();
+    print $map->selectable;
     # we later notice we don't want A
     $map->unlink('A');
     # Prints nothing
-    print $map->selectable();
+    print $map->selectable;
 
 B<Note>: shall the requested node not exist this method die()s.
 
@@ -336,8 +336,8 @@ E.g.
 
     $map->add('A');
     $map->add('B', 'A');
-    while($map->pending()) {
-        for my $node ($map->selectable()) {
+    while($map->pending) {
+        for my $node ($map->selectable) {
             $map->select($node);
             # work work work
             $map->satisfy($node);
@@ -398,7 +398,7 @@ E.g.
     # Returns true
     $map->selected('A');
     # Prints A
-    print $map->selected();
+    print $map->selected;
 
 =cut
 
@@ -420,7 +420,7 @@ select()s all the selectable() nodes.
 sub selectAll {
     my $self = shift;
 
-    for my $node ($self->selectable()) {
+    for my $node ($self->selectable) {
         $self->select($node);
     }
     return;
@@ -459,13 +459,13 @@ Return the number of nodes that can or have already been selected. E.g.
 
     $map->add('B', 'A');
     # prints 1:
-    print $map->pending();
+    print $map->pending;
     $map->select('A');
     # prints 1:
-    print $map->pending();
+    print $map->pending;
     $map->satisfy('A');
     # prints 1 ('B' is now available):
-    print $map->pending();
+    print $map->pending;
 
 =cut
 
@@ -481,10 +481,10 @@ Return an array containing the names of nodes that were added. E.g.
 
     $map->add('B', 'A');
     # prints 'B':
-    print $map->known();
+    print $map->known;
     $map->add('A');
     # prints 'A' and 'B':
-    print $map->known();
+    print $map->known;
 
 =item known(NODE)
 
@@ -512,14 +512,14 @@ another node depended on it. E.g.
 
     $map->add('B', 'A');
     # prints 'A':
-    print $map->missing();
+    print $map->missing;
     $map->add('A');
     # prints nothing:
-    print $map->missing();
+    print $map->missing;
     # this also works; A depends on 'Z':
     $map->add('A', 'Z');
     # but now this prints 'Z':
-    print $map->missing();
+    print $map->missing;
 
 =cut
 
@@ -538,7 +538,7 @@ E.g.
     $map->add('A', 'B');
     $map->add('B', 'A');
     # Prints A and B
-    print $map->circular();
+    print $map->circular;
 
 B<Note>: since recursive/deep circular dependencies detection is a bit
 more resource expensive it is not the default.
@@ -547,7 +547,7 @@ more resource expensive it is not the default.
     $map->add('B', 'C');
     $map->add('C', 'A');
     # No deep/recursive scanning is performed, prints nothing
-    print $map->circular();
+    print $map->circular;
     # deep scan, prints 'A, B, C'
     print $map->circular('deep');
 
@@ -564,7 +564,7 @@ sub circular {
         my @nodes;
         my ($prev_satisfied, $prev_selected)
           = ($self->{'satisfied_nodes'}, $self->{'selected'});
-        while(@nodes = $self->selectable()) {
+        while(@nodes = $self->selectable) {
             for my $node (@nodes) {
                 $self->satisfy($node);
             }
@@ -574,7 +574,7 @@ sub circular {
 
         $self->{'satisfied_nodes'} = $prev_satisfied;
         $self->{'selected'} = $prev_selected;
-        $self->initialise();
+        $self->initialise;
     } else {
         for my $node (keys %{$self->{'nodes'}}) {
             my $node_p = $self->{'nodes'}{$node}{'parents'};

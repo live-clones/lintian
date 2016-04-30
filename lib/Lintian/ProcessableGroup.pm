@@ -35,9 +35,9 @@ Lintian::ProcessableGroup -- A group of objects that Lintian can process
  use Lintian::ProcessableGroup;
 
  my $group = Lintian::ProcessableGroup->new('lintian_2.5.0_i386.changes');
- foreach my $proc ($group->get_processables()){
-     printf "%s %s (%s)\n", $proc->pkg_name(),
-            $proc->pkg_version(), $proc->pkg_type();
+ foreach my $proc ($group->get_processables){
+     printf "%s %s (%s)\n", $proc->pkg_name,
+            $proc->pkg_version, $proc->pkg_type;
  }
  # etc.
 
@@ -163,7 +163,7 @@ added.
 
 sub add_processable{
     my ($self, $processable) = @_;
-    my $pkg_type = $processable->pkg_type();
+    my $pkg_type = $processable->pkg_type;
 
     if ($pkg_type eq 'changes'){
         fail 'Cannot add another changes file' if (exists $self->{changes});
@@ -238,7 +238,7 @@ Removes $proc from $group
 
 sub remove_processable {
     my ($self, $proc) = @_;
-    my $pkg_type = $proc->pkg_type();
+    my $pkg_type = $proc->pkg_type;
     if ($pkg_type eq 'source' or $pkg_type eq 'changes'){
         delete $self->{$pkg_type};
     } elsif (defined $self->{$pkg_type}) {
@@ -249,7 +249,7 @@ sub remove_processable {
     return 1;
 }
 
-=item $group->get_source_processable()
+=item $group->get_source_processable
 
 Returns the processable identified as the "source" package (e.g. the dsc).
 
@@ -262,7 +262,7 @@ sub get_source_processable {
     return $self->{source};
 }
 
-=item $group->get_changes_processable()
+=item $group->get_changes_processable
 
 Returns the processable identified as the "changes" processable (e.g.
 the changes file).
@@ -276,7 +276,7 @@ sub get_changes_processable {
     return $self->{changes};
 }
 
-=item $group->get_binary_processables()
+=item $group->get_binary_processables
 
 Returns all binary (and udeb) processables in $group.
 

@@ -382,7 +382,7 @@ sub depends_on {
 # Checks cross pkg links for /usr/share/doc/$pkg links
 sub check_cross_link {
     my ($group, $fpkg) = @_;
-    my $src = $group->get_source_processable();
+    my $src = $group->get_source_processable;
     if ($src) {
         # source package is available; check it's list of binary
         return if defined $src->info->binary_package_type($fpkg);

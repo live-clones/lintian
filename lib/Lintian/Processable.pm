@@ -185,39 +185,39 @@ sub _make_identifier {
     return;
 }
 
-=item $proc->pkg_name()
+=item $proc->pkg_name
 
 Returns the package name.
 
-=item $proc->pkg_version()
+=item $proc->pkg_version
 
 Returns the version of the package.
 
-=item $proc->pkg_path()
+=item $proc->pkg_path
 
 Returns the path to the packaged version of actual package.  This path
 is used in case the data needs to be extracted from the package.
 
 Note: This may return the path to a symlink to the package.
 
-=item $proc->pkg_type()
+=item $proc->pkg_type
 
 Returns the type of package (e.g. binary, source, udeb ...)
 
-=item $proc->pkg_arch()
+=item $proc->pkg_arch
 
 Returns the architecture(s) of the package. May return multiple values
 from changes processables.  For source processables it is "source".
 
-=item $proc->pkg_src()
+=item $proc->pkg_src
 
 Returns the name of the source package.
 
-=item $proc->pkg_src_version()
+=item $proc->pkg_src_version
 
 Returns the version of the source package.
 
-=item $proc->tainted()
+=item $proc->tainted
 
 Returns a truth value if one or more fields in this Processable is
 tainted.  On a best effort basis tainted fields will be sanitized

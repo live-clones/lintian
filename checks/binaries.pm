@@ -249,7 +249,7 @@ sub run {
     tag 'package-name-doesnt-match-sonames', "@sonames"
       if @sonames && !$match_found;
 
-    my $src = $group->get_source_processable();
+    my $src = $group->get_source_processable;
     if (defined($src)) {
         $built_with_golang
           = $src->info->relation('build-depends')->implies('golang-go');

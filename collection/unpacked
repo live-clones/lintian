@@ -138,7 +138,7 @@ sub libdpkg_unpack_dsc {
     # Create the object that does everything
     my $srcpkg = Dpkg::Source::Package->new(filename => $dsc, options => $opt);
 
-    $srcpkg->check_checksums();
+    $srcpkg->check_checksums;
 
     # Unpack the source package (delegated to Dpkg::Source::Package::*)
     $srcpkg->extract($target);

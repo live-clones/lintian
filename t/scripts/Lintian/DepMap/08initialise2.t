@@ -6,14 +6,14 @@ use Test::More tests => 2;
 
 use Lintian::DepMap;
 
-my $obj = Lintian::DepMap->new();
+my $obj = Lintian::DepMap->new;
 
-$obj->initialise();
+$obj->initialise;
 
 $obj->add('A');
 $obj->add('B', 'A');
 $obj->satisfy('A');
-$obj->initialise();
+$obj->initialise;
 is(join(', ', $obj->selectable),
     'A','Only A is selectable after reinitialising');
 

@@ -31,7 +31,7 @@ my $changelog = Parse::DebianChangelog->init({ infile => 'debian/changelog' })
 
 plan skip_all => 'Only valid for regular Debian releases'
   if should_skip($changelog);
-my $changes = $changelog->dpkg()->{'Changes'};
+my $changes = $changelog->dpkg->{'Changes'};
 my $line = 0;
 my $prev_head = '';
 my $release_header = 0;

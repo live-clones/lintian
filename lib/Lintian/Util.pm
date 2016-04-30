@@ -709,7 +709,7 @@ L</parse_dpkg_control> do.  It can also emit:
         # control files.
         drain_pipe($opts->{pipe_out});
         close($opts->{pipe_out});
-        $opts->{harness}->finish();
+        $opts->{harness}->finish;
         return $data[0];
     }
 }

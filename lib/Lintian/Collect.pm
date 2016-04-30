@@ -203,7 +203,7 @@ sub _get_field {
     my ($self, $field, $def) = @_;
     my $fields;
     unless (exists $self->{field}) {
-        my $base_dir = $self->base_dir();
+        my $base_dir = $self->base_dir;
         my $type = $self->{type};
         if ($type eq 'changes' or $type eq 'source'){
             my $file = 'changes';

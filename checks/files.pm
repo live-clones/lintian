@@ -205,7 +205,7 @@ sub _detect_embedded_libraries {
                       = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
 
                   READWINDOW:
-                    while (my $block = $sfd->readwindow()) {
+                    while (my $block = $sfd->readwindow) {
                         if ($block =~ m{$reinside}) {
                             $foundre = 1;
                             last READWINDOW;
@@ -647,7 +647,7 @@ sub run {
                 my $fd = $file->open(':raw');
                 my $sfd = Lintian::SlidingWindow->new($fd);
               BLOCK:
-                while (my $block = $sfd->readwindow()) {
+                while (my $block = $sfd->readwindow) {
                     # remove comment line
                     $block =~ s,\#\V*,,gsm;
                     # remove continuation line
@@ -834,7 +834,7 @@ sub run {
                     # config file (read only one block)
                     my $fd = $file->open(':raw');
                     my $sfd = Lintian::SlidingWindow->new($fd);
-                    my $block = $sfd->readwindow();
+                    my $block = $sfd->readwindow;
                     # some common stuff found in config file
                     if (
                         $block
@@ -2080,7 +2080,7 @@ sub detect_privacy_breach {
 
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
 
-    while (my $block = $sfd->readwindow()) {
+    while (my $block = $sfd->readwindow) {
         # try generic fragment tagging
         foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
             if(index($block,$keyword) > -1) {

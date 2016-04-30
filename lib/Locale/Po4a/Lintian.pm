@@ -62,7 +62,7 @@ sub parse {
             }
         }
         $lr = $ref if defined $ref;
-        ($line, $ref) = $self->shiftline();
+        ($line, $ref) = $self->shiftline;
     }
     $self->_trans($lr, $check_name, $tag, \@lines, $comment) if @lines;
     return;

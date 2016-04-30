@@ -6,7 +6,7 @@ use Test::More tests => 4;
 
 use Lintian::DepMap;
 
-my $obj = Lintian::DepMap->new();
+my $obj = Lintian::DepMap->new;
 
 ok($obj->add('A', 'B'), 'Nodes can be added in any order');
 

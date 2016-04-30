@@ -36,7 +36,7 @@ sub t {
     my $output;
     my $cmd
       = IPC::Run::start([$cmd_path, @options],'<', \$input,'>', \$output,);
-    $cmd->finish();
+    $cmd->finish;
     cmp_ok($cmd->result, '==', 0, 'exit code 0');
     cmp_ok($output, 'eq', $expected, 'expected output');
     return;

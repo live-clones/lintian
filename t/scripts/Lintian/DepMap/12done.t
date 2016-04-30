@@ -6,7 +6,7 @@ use Test::More tests => 4;
 
 use Lintian::DepMap;
 
-my $obj = Lintian::DepMap->new();
+my $obj = Lintian::DepMap->new;
 
 $obj->add('A');
 ok(!$obj->done('A'), 'A is not done yet');

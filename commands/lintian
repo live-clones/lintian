@@ -715,7 +715,7 @@ sub main {
 
     $pool = setup_work_pool($LAB);
 
-    if ($pool->empty()) {
+    if ($pool->empty) {
         v_msg('No packages selected.');
         exit $exit_code;
     }
@@ -756,7 +756,7 @@ sub main {
         }
     }
 
-    foreach my $gname (sort $pool->get_group_names()) {
+    foreach my $gname (sort $pool->get_group_names) {
         my $success = 1;
         my $group = $pool->get_group($gname);
         my $total_raw_res = timed_task {
@@ -891,9 +891,9 @@ sub main {
 sub auto_clean_package {
     my ($lpkg) = @_;
     my $proc_id = $lpkg->identifier;
-    my $pkg_name = $lpkg->pkg_name();
-    my $pkg_type = $lpkg->pkg_type();
-    my $base = $lpkg->base_dir();
+    my $pkg_name = $lpkg->pkg_name;
+    my $pkg_type = $lpkg->pkg_type;
+    my $base = $lpkg->base_dir;
     my $changed = 0;
     if ($lpkg->lab->is_temp) {
         debug_msg(1, "Auto removing: $proc_id ...");
@@ -1590,8 +1590,8 @@ sub load_profile_and_configure_tags {
 sub load_and_select_collections {
     my ($all_checks, $auto_remove_list, $unpack_options_ref) = @_;
     # $map is just here to check that all the needed collections are present.
-    my $map = Lintian::DepMap->new();
-    my $collmap = Lintian::DepMap::Properties->new();
+    my $map = Lintian::DepMap->new;
+    my $collmap = Lintian::DepMap::Properties->new;
     my %extra_unpack;
     my $load_coll = sub {
         my ($cs) = @_;
