@@ -57,7 +57,11 @@ my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
 
 my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
   autopkgtest
+  autopkgtest-pkg-dkms
+  autopkgtest-pkg-nodejs
   autopkgtest-pkg-perl
+  autopkgtest-pkg-python
+  autopkgtest-pkg-r
   autopkgtest-pkg-ruby
 );
 
