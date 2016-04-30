@@ -1365,17 +1365,15 @@ sub _find_changes {
         push @archs, $arch if $arch ne '';
     }
     push @archs, $ENV{'DEB_HOST_ARCH'} if exists $ENV{'DEB_HOST_ARCH'};
-    if (system('dpkg', '--assert-multi-arch') == 0) {
-        # Maybe cross-built for something dpkg knows about...
-        open(my $foreign, '-|', 'dpkg', '--print-foreign-architectures');
-        while (my $line = <$foreign>) {
-            chomp $line;
-            # Skip already attempted architectures (e.g. via DEB_BUILD_ARCH)
-            next if any { $_ eq $line } @archs;
-            push @archs, $line;
-        }
-        close($foreign);
+    # Maybe cross-built for something dpkg knows about...
+    open(my $foreign, '-|', 'dpkg', '--print-foreign-architectures');
+    while (my $line = <$foreign>) {
+        chomp($line);
+        # Skip already attempted architectures (e.g. via DEB_BUILD_ARCH)
+        next if any { $_ eq $line } @archs;
+        push(@archs, $line);
     }
+    close($foreign);
     push @archs, qw(multi all source);
     foreach my $dir (@dirs) {
         foreach my $arch (@archs) {
