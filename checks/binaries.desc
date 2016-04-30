@@ -393,7 +393,7 @@ Info: This package provides an ELF binary that lacks the "bindnow"
  .
  This is needed (together with "relro") to make the "Global Offset
  Table" (GOT) fully read-only.  The bindnow feature trades startup
- time for improved security.  Plase consider enabling this feature
+ time for improved security.  Please consider enabling this feature
  or consider overriding the tag (possibly with a comment about why).
  .
  If you use <tt>dpkg-buildflags</tt>, you may have to add
