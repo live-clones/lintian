@@ -24,7 +24,7 @@ use autodie;
 
 # Not a B-D and script is compile tested...
 require LWP::Simple;
-import LWP::Simple qw(get);
+LWP::Simple->import(qw(get));
 use POSIX qw(strftime);
 
 BEGIN {

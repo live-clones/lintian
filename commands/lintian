@@ -1207,7 +1207,7 @@ sub _find_cfg_file {
             # when we check for it later.
             local $ENV{'HOME'} = $ENV{'HOME'} // '/nonexistent';
             require File::BaseDir;
-            import File::BaseDir qw(config_home config_files);
+            File::BaseDir->import(qw(config_home config_files));
         };
         # only accept config_home if either HOME or
         # XDG_CONFIG_HOME was set.  If both are unset, then this
@@ -1440,7 +1440,7 @@ sub configure_output {
         if ($opt{'debug'} > 2) {
             eval {
                 require Devel::Size;
-                import Devel::Size qw(total_size);
+                Devel::Size->import(qw(total_size));
                 {
                     no warnings qw(once);
                     # Disable warnings about stuff Devel::Size cannot

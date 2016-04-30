@@ -54,7 +54,7 @@ sub check_aspell {
         if ($line =~ m/^.i \s+ aspell-en \s+ (\S+) \s/xsm) {
             my $version = $1;
             require Lintian::Relation::Version;
-            import Lintian::Relation::Version qw(versions_gte);
+            Lintian::Relation::Version->import(qw(versions_gte));
             # Print the version of aspell-en if it is not new enough
             $ok = versions_gte($version, '7.1-0~')
               ||diag("Found aspell-en $version, want 7.1-0~ or newer");
