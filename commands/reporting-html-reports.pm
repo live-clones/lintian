@@ -56,7 +56,7 @@ our (
     $HARNESS_STATE_DIR,
 );
 
-# Some globals intialised in init_global()
+# Some globals initialised in init_global()
 our ($RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp, $mirror_timestamp);
 
 # ------------------------------
