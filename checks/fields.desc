@@ -712,7 +712,7 @@ Tag: build-depends-arch-without-arch-dependent-binary
 Severity: important
 Certainty: certain
 Info: The control file specifies source relations for architecture-dependent
- packages, but not architecture-dependent packages are built.
+ packages, but no architecture-dependent packages are built.
 
 Tag: build-conflicts-with-build-dependency
 Severity: important
