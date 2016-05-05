@@ -708,11 +708,11 @@ Ref: policy 7.7
 Info: The control file specifies source relations for architecture-independent
  packages, but no architecture-independent packages are built.
 
-Tag: build-depends-arch-without-arch-dependant-binary
+Tag: build-depends-arch-without-arch-dependent-binary
 Severity: important
 Certainty: certain
-Info: The control file specifies source relations for architecture-dependant
- packages, but not architecture-dependant packages are built.
+Info: The control file specifies source relations for architecture-dependent
+ packages, but not architecture-dependent packages are built.
 
 Tag: build-conflicts-with-build-dependency
 Severity: important

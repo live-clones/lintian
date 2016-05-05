@@ -8,6 +8,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * checks/debhelper.pm:
     + [NT] The /usr/share/R/debian/r-cran.mk file implies
       /usr/share/cdbs/1/rules/debhelper.mk.
+  * checks/fields.{desc,pm}:
+    + [JW] Fix typos.
   * checks/files.desc:
     + [BR] Do not suggest unsupported Multi-arch: no.
       (Closes: #816455).

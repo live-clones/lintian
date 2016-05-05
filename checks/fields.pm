@@ -948,7 +948,7 @@ sub run {
         tag 'build-depends-indep-without-arch-indep'
           if (defined $info->field('build-depends-indep')
             && $arch_indep_packages == 0);
-        tag 'build-depends-arch-without-arch-dependant-binary'
+        tag 'build-depends-arch-without-arch-dependent-binary'
           if (defined $info->field('build-depends-arch')
             && $arch_dep_packages == 0);
 

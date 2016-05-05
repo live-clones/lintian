@@ -1,6 +1,6 @@
 Testname: fields-dep-without-arch-dep-binary
 Sequence: 6000
 Version: 1.0
-Description: Test for B-D-A and no architecture-dependant pkgs
+Description: Test for B-D-A and no architecture-dependent pkgs
 Test-For:
- build-depends-arch-without-arch-dependant-binary
+ build-depends-arch-without-arch-dependent-binary
