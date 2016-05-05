@@ -201,6 +201,7 @@ architechtures||architectures
 archvie||archive
 archvies||archives
 aready||already
+arent||aren't
 arguement||argument
 arguements||arguments
 arithmatic||arithmetic
@@ -242,6 +243,7 @@ asycronous||asynchronous
 asynchonous||asynchronous
 asynchonously||asynchronously
 atomatically||automatically
+atomicly||atomically
 attachement||attachment
 attemps||attempts
 attemt||attempt
@@ -303,6 +305,7 @@ beause||because
 becomming||becoming
 becuase||because
 beeing||being
+befor||before
 begining||beginning
 behavoir||behavior
 behavoirs||behaviors
@@ -947,6 +950,7 @@ fitler||filter
 fitlers||filters
 flie||file
 floting||floating
+flusing||flushing
 foget||forget
 fogot||forgot
 fogotten||forgotten
@@ -1137,6 +1141,7 @@ incoporated||incorporated
 incoporate||incorporate
 incoporates||incorporates
 incoporating||incorporating
+increas||increase
 incuded||included
 incude||include
 incudes||includes
@@ -1461,6 +1466,7 @@ numebrs||numbers
 observered||observed
 obsure||obscure
 o'caml||OCaml
+occassionally||occasionally
 occationally||occasionally
 occurance||occurrence
 occurances||occurrences
@@ -1704,6 +1710,7 @@ protable||portable
 protcol||protocol
 protecion||protection
 protocoll||protocol
+psuedo||pseudo
 psychadelic||psychedelic
 qouted||quoted
 qoute||quote
@@ -1758,6 +1765,7 @@ refecting||reflecting
 refect||reflect
 refects||reflects
 refence||reference
+refered||referred
 refernced||referenced
 refernce||reference
 refernces||references
@@ -1997,6 +2005,8 @@ straigt||straight
 strenghts||strengths
 strenght||strength
 strenth||strength
+stucts||structs
+stuct||struct
 stuctures||structures
 stucture||structure
 subdirectoires||subdirectories
