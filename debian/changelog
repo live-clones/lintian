@@ -33,6 +33,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [NT] Re-enable pedantic tags by default.  These were
       disabled in the previous release by mistake.
 
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
+
   * debian/rules:
     + [JW] Put "Debian Package Checker" in all manpage headers.
     + [JW] Put Lintian version in all manpage footers.
