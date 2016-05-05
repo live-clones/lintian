@@ -228,7 +228,7 @@ Info: The package installs shared libraries in a directory controlled by
  If the package is using debhelper, <tt>dh_makeshlibs</tt> should
  automatically discover this and add the trigger itself.
  Otherwise, please add <tt>activate-noawait ldconfig</tt> to the
- the <tt>triggers</tt> file in the control member.
+ <tt>triggers</tt> file in the control member.
  .
  Note this tag may trigger for packages built with debhelper before
  version 9.20151004.  In such case, a simple rebuild will often be
