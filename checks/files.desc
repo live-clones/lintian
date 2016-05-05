@@ -670,8 +670,8 @@ Info: The following file is a old style config file, used
  .
  Using this kind of system to pass compile file is obsolete and
  will likely introduce bugs in a multi-arch system. Particularly,
- this kind of script could only belong to Multi-Arch: no
- package.
+ this kind of script could only belong to a package that is not
+ Multi-Arch.
  .
  You should consider to move to pkg-config file and
  warn your user to not use this script, and open a bug upstream.
@@ -696,9 +696,7 @@ Info: The following file is a old style config file, used
  It is typically used to compile and link against one or more libraries.
  .
  This old style config file contains a multi-arch path and the package
- is not Multi-arch: no.
- .
- You should change this package to Multi-arch: no.
+ is declared Multi-arch.
 
 Tag: old-style-config-script-multiarch-path-arch-all
 Severity: serious
