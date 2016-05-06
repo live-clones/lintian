@@ -347,6 +347,8 @@ cariage||carriage
 casue||cause
 casued||caused
 casues||causes
+catagories||categories
+catagory||category
 catched||caught
 ceate||create
 ceated||created
@@ -366,6 +368,8 @@ certifcates||certificates
 challange||challenge
 challanges||challenges
 changable||changeable
+channle||channel
+channles||channels
 channnel||channel
 channnels||channels
 charachter||character
@@ -996,6 +1000,10 @@ functonality||functionality
 funtion||function
 funtions||functions
 futhermore||furthermore
+gauranteed||guaranteed
+gaurantee||guarantee
+gauranteeing||guaranteeing
+gaurantees||guarantees
 generater||generator
 generaters||generators
 genereated||generated
@@ -1418,10 +1426,13 @@ mulitple||multiple
 mulitplied||multiplied
 multidimensionnal||multidimensional
 multipled||multiplied
+multple||multiple
 multplied||multiplied
 multplies||multiplies
 multplying||multiplying
 multply||multiply
+mumber||number
+mumbers||numbers
 musn't||mustn't
 mutiple||multiple
 mutliple||multiple
@@ -1463,6 +1474,8 @@ numberal||numeral
 numberals||numerals
 numebr||number
 numebrs||numbers
+numner||number
+numners||numbers
 observered||observed
 obsure||obscure
 o'caml||OCaml
@@ -2017,6 +2030,11 @@ subseqent||subsequent
 subsequest||subsequent
 substituions||substitutions
 substituion||substitution
+substracted||subtracted
+substracting||subtracting
+substraction||subtraction
+substracts||subtracts
+substract||subtract
 subtituted||substituted
 subtitutes||substitutes
 subtitute||substitute
@@ -2031,6 +2049,7 @@ succeedes||succeeds
 succesfully||successfully
 succesful||successful
 succesive||successive
+successfull||successful
 successfuly||successfully
 succint||succinct
 suceeded||succeeded
@@ -2077,6 +2096,7 @@ suuporting||supporting
 suuports||supports
 suuport||support
 swaping||swapping
+symetric||symmetric
 synax||syntax
 synchonized||synchronized
 synchonizes||synchronizes
