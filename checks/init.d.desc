@@ -363,7 +363,7 @@ Severity: serious
 Certainty: possible
 Info: The given init script declares a dependency on a virtual facility
  that is not known to be provided by any init.d script in the archive.
- If the dependency can not be satisfied upon the package's
+ If the dependency cannot be satisfied upon the package's
  installation, insserv will refuse the activation of the init.d script.
 Ref: https://wiki.debian.org/LSBInitScripts
 

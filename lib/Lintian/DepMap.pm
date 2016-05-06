@@ -301,7 +301,7 @@ sub unlink {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-        fail(  "Attempted to unlink node '$node' but it can not be found"
+        fail(  "Attempted to unlink node '$node' but it cannot be found"
               .', perhaps it has already been satisfied?');
     }
 
@@ -365,7 +365,7 @@ sub select {
 
 If a C<node> is specified returns TRUE if it can be select()ed.
 
-B<Note>: already select()ed nodes can not be re-selected,
+B<Note>: already select()ed nodes cannot be re-selected,
 i.e. if the given C<node> has already been selected this function will
 return FALSE; or any selected item will be omitted from the returned array,
 in case no C<node> is specified. 

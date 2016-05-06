@@ -16,6 +16,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Fix typos.
   * checks/info-files.desc:
     + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
+  * checks/init.d.desc:
+    + [JW] Fix typo.
   * checks/manpages.desc:
     + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
   * checks/scripts.{desc,pm}:
@@ -53,6 +55,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Add SEE ALSO section (for the man formatter).
   * doc/tutorial/Lintian/Tutorial/WritingTests.pod:
     + [JW] Fix formatting error.
+
+  * lib/Lintian/DepMap.pm:
+    + [JW] Fix typos.
 
   * reporting/config:
     + [NT] Remove "$COPY_DOCS" configuration option.  The
@@ -16085,7 +16090,7 @@ lintian (1.20.4) unstable; urgency=low
 lintian (1.20.3) unstable; urgency=low
 
   * 'Does the pain ever end?' release
-  * oops, lintian can not create a static lab due to an error check too
+  * oops, lintian cannot create a static lab due to an error check too
     early in the code.  While fixing this I also added a static lab check in
     testset/runtests. Closes: #83411
 

@@ -363,7 +363,7 @@ sub run {
 
         # stripped?
         if ($fileinfo =~ m,\bnot stripped\b,o) {
-            # Is it an object file (which generally can not be
+            # Is it an object file (which generally cannot be
             # stripped), a kernel module, debugging symbols, or
             # perhaps a debugging package?
             unless ($fname =~ m,\.k?o$,
