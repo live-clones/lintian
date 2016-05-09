@@ -44,6 +44,7 @@ accesss||access
 accidentaly||accidentally
 accidently||accidentally
 accidentually||accidentally
+accoding||according
 accomodate||accommodate
 accomodates||accommodates
 accompagnied||accompanied
@@ -67,6 +68,7 @@ acknowldegement||acknowledgement
 ackowledge||acknowledge
 ackowledged||acknowledged
 acording||according
+acordingly||accordingly
 acqure||acquire
 acqured||acquired
 acqures||acquires
@@ -721,6 +723,7 @@ disapeared||disappeared
 disapearing||disappearing
 disapears||disappears
 discernable||discernible
+discontinous||discontinuous
 discusion||discussion
 dispath||dispatch
 dispathed||dispatched
@@ -1069,6 +1072,8 @@ helpfull||helpful
 hexidecimal||hexadecimal
 hiearchies||hierarchies
 hiearchy||hierarchy
+hierachical||hierarchical
+hierachies||hierarchies
 hierachy||hierarchy
 hierarchie||hierarchy
 highlighing||highlighting
@@ -1108,6 +1113,7 @@ immeadiately||immediately
 immedate||immediate
 immedately||immediately
 immediatly||immediately
+immidiate||immediate
 immmediate||immediate
 immmediately||immediately
 impementation||implementation
@@ -1732,6 +1738,7 @@ progess||progress
 programers||programmers
 programm||program
 programms||programs
+promiscous||promiscuous
 promps||prompts
 pronnounced||pronounced
 prononciation||pronunciation
@@ -1776,6 +1783,8 @@ receieved||received
 receieve||receive
 receieves||receives
 receieving||receiving
+recepient||recipient
+recepients||recipients
 recieved||received
 recieve||receive
 reciever||receiver
@@ -1792,6 +1801,10 @@ recommanded||recommended
 rectange||rectangle
 rectanges||rectangles
 recurrance||recurrence
+recyled||recycled
+recyle||recycle
+recyles||recycles
+recyling||recycling
 redefintion||redefinition
 redefintions||redefinitions
 redircet||redirect
@@ -1860,6 +1873,9 @@ requst||request
 requsts||requests
 resemblence||resemblance
 reserverd||reserved
+reseted||reset
+reseting||resetting
+resetted||reset
 resizeable||resizable
 resouce||resource
 resouces||resources
@@ -1990,6 +2006,9 @@ similarily||similarly
 similary||similarly
 similiarly||similarly
 similiar||similar
+simlarlity||similarity
+simlarly||similarly
+simlar||similar
 simliar||similar
 simmilar||similar
 simplier||simpler
@@ -2043,6 +2062,8 @@ spports||supports
 spport||support
 spreaded||spread
 spurios||spurious
+sructures||structures
+sructure||structure
 staically||statically
 standardss||standards
 standart||standard
@@ -2152,6 +2173,7 @@ taht||that
 targetted||targeted
 targetting||targeting
 teh||the
+temorary||temporary
 terminaters||terminators
 terminater||terminator
 thats||that's
