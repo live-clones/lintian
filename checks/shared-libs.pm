@@ -277,8 +277,19 @@ sub run {
                 my $gcc_ver = $1;
                 my $basename = basename($link_file);
                 my $madir = $MA_DIRS->value($proc->pkg_arch);
-                $madir =~ s/^i386/i586/;
-                my $stem;
+                my @madirs;
+                if (defined $madir) {
+                    # For i386-*, the triplet GCC uses can be i586-* or i686-*.
+                    if ($madir =~ /^i386-/) {
+                        for my $n (5..6) {
+                            $madir =~ s/^i./i$n/;
+                            push @madirs, $madir;
+                        }
+                    } else {
+                        push @madirs, $madir;
+                    }
+                }
+                my @stems;
                 # Generally we are looking for
                 #  * usr/lib/gcc/MA-TRIPLET/$gcc_ver/${BIARCH}$basename
                 #
@@ -287,14 +298,16 @@ sub run {
                 #
                 # The two-three letter name directory before the
                 # basename is bi-arch names.
-                $stem = "usr/lib/gcc/$madir/$gcc_ver" if defined $madir;
+                push @stems, map { "usr/lib/gcc/$_/$gcc_ver" } @madirs;
                 # But in the rare case we don't know the Multi-arch dir,
                 # just do without it as often (but not always) works.
-                $stem = "usr/lib/gcc/$gcc_ver" unless defined $madir;
+                push @stems, "usr/lib/gcc/$gcc_ver" unless @madirs;
 
-                push @alt,
-                  map { "$stem/$_$basename" }
-                  ('', qw(64/ 32/ n32/ x32/ sf/ hf/));
+                for my $stem (@stems) {
+                    push @alt,
+                      map { "$stem/$_$basename" }
+                      ('', qw(64/ 32/ n32/ x32/ sf/ hf/));
+                }
             }
 
           PKG:

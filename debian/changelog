@@ -27,6 +27,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [NT] Improve the description for missing ldconfig trigger
       to cover that debhelper will generally add it
       automatically.  Most packages will just need a rebuild.
+    + [JW] Fix false positive dev-pkg-without-shlib-symlink for GCC runtime
+      libraries.  Thanks to Matthias Klose for the bug report.
+      (Closes: #823833)
   * checks/testsuite.pm:
     + [NT] Apply patch from Ondřej Nový to add more known
       autodep8 test suites.  (Closes: #823088)
