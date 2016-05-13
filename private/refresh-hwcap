@@ -14,7 +14,7 @@ die "Usage: $0 path/to/lintian/data.\n" unless $datadir;
 
 open(my $manpage, '-|', 'zcat', $man);
 while (<$manpage>) {
-    next unless /^\.SH HARDWARE CAPABILITIES/;
+    next unless /^\.S[SH] HARDWARE CAPABILITIES/i;
     last;
 }
 while (<$manpage>) {
@@ -22,7 +22,7 @@ while (<$manpage>) {
     last;
 }
 while (<$manpage>) {
-    last if /^\.SH /;
+    last if /^\.S[SH] /;
     next if /^\./;
     chomp;
     $caps{$_} = 1 foreach split /,\s*/;

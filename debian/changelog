@@ -70,6 +70,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * lib/Lintian/DepMap.pm:
     + [JW] Fix typos.
 
+  * private/refresh-hwcap:
+    + [JW] Make the ld.so manpage parser work with the current version.
+
   * reporting/config:
     + [NT] Remove "$COPY_DOCS" configuration option.  The
       html_reports now always copies the documentation.
