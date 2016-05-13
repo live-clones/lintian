@@ -46,7 +46,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   * data/binaries/hardening-tags:
     + [JW] Refresh with dpkg-architecture 1.18.7.
-  * data/common/{architectures,multiarch-dirs}
+  * data/common/{architectures,multiarch-dirs}:
     + [JW] Refresh with dpkg-architecture 1.18.7.
   * data/files/triplets:
     + [JW] Refresh with dpkg-architecture 1.18.7.
