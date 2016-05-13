@@ -44,6 +44,14 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [NT] Re-enable pedantic tags by default.  These were
       disabled in the previous release by mistake.
 
+  * data/binaries/hardening-tags:
+    + [JW] Refresh with dpkg-architecture 1.18.7.
+  * data/common/{architectures,multiarch-dirs}
+    + [JW] Refresh with dpkg-architecture 1.18.7.
+  * data/files/triplets:
+    + [JW] Refresh with dpkg-architecture 1.18.7.
+  * data/shared-libs/ldconfig-dirs:
+    + [JW] Refresh with dpkg-architecture 1.18.7.
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
