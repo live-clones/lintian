@@ -12,7 +12,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Fix typos.
   * checks/files.desc:
     + [BR] Do not suggest unsupported Multi-arch: no.
-      (Closes: #816455).
+      (Closes: #816455)
     + [JW] Fix typos.
   * checks/files.pm:
     + [JW] Fix false positive gzip-file-is-not-multi-arch-same-safe when
