@@ -487,8 +487,7 @@ sub file_start {
         overrides => {},
     };
     if ($self->{current}) {
-        my $info = $self->{info}{$self->{current}};
-        $Lintian::Output::GLOBAL->print_end_pkg($info);
+        $self->file_end;
     }
     $self->{current} = $file;
     $Lintian::Output::GLOBAL->print_start_pkg($self->{info}{$file});

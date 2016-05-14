@@ -72,6 +72,10 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   * lib/Lintian/DepMap.pm:
     + [JW] Fix typos.
+  * lib/Lintian/Tags.pm:
+    + [JW,NT]: Always report unused overrides for all packages
+      processed.  Thanks to Andreas Beckmann for the report.
+      (Closes: #792191)
 
   * private/refresh-hwcap:
     + [JW] Make the ld.so manpage parser work with the current version.
