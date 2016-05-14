@@ -1537,7 +1537,7 @@ sub run {
                     }
                     close($fd);
                     if ($mtime != 0) {
-                        if ($isma_same && $file !~ m/\Q$arch\E/o) {
+                        if ($isma_same && $file !~ m/\Q$arch\E/) {
                             tag 'gzip-file-is-not-multi-arch-same-safe',$file;
                         } else {
                             # see https://bugs.debian.org/762105

@@ -14,6 +14,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [BR] Do not suggest unsupported Multi-arch: no.
       (Closes: #816455).
     + [JW] Fix typos.
+  * checks/files.pm:
+    + [JW] Fix false positive gzip-file-is-not-multi-arch-same-safe when
+      processing multiple debs.  (Closes: #738444)
   * checks/info-files.desc:
     + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
   * checks/init.d.desc:
