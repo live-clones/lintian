@@ -546,7 +546,7 @@ lintian (2.5.40) unstable; urgency=medium
     + [JW] Exclude /usr/lib/debug/.build-id/ from foreign-architecture
       checks.  Thanks to Aurelien Jarno for the bug report.  (Closes:
       #809262)
-    + [BR] Detect old style config script and detect Mutli-arch error.
+    + [BR] Detect old style config scripts and detect Multi-arch errors.
     + [NT] Add experimental tag for missing "bindnow" and "pie"
       hardening.  Thanks to intrigeri for the suggestion.
       (Closes: #759363)
@@ -6333,7 +6333,7 @@ lintian (2.5.2) unstable; urgency=low
   * data/fields/*:
     + [NT] Added new files based on data variables from checks/fields.
   * data/fields/obsolete-packages:
-    + [NT] Added ligdigest-sha1-perl on request of the Perl Team.
+    + [NT] Added libdigest-sha1-perl on request of the Perl Team.
       Thanks to Salvatore Bonaccorso for the report and patch.
       (Closes: #635441)
   * data/fields/perl-provides:
@@ -17346,7 +17346,7 @@ lintian (0.4.6) unstable; urgency=low
     be listed in only one category, and the former is more important
     to flag.
 
-  * (frontent/lintian)
+  * (frontend/lintian)
     Rewrote option handling to use Getopt::Long, thus allowing nifty
     features like bundling of single-character options.  Closes wishlist
     bug#22566.

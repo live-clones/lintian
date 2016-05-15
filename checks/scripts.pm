@@ -54,7 +54,7 @@ my $INTERPRETERS = Lintian::Data->new('scripts/interpreters', qr/\s*=\>\s*/o,
 # dashes, digits, and periods.
 #
 # The list contains the following values:
-#  [<path>, <dependency-relation>, <regex>, <dependency-templatel>, <version-list>]
+#  [<path>, <dependency-relation>, <regex>, <dependency-template>, <version-list>]
 #
 # Their meaning is documented in Lintian's scripts/versioned-interpreters
 # file, though they are ordered differently and there are a few differences
