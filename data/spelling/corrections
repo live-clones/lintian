@@ -55,6 +55,10 @@ accompagnying||accompanying
 accordint||according
 accoring||according
 accout||account
+accquire||acquire
+accquired||acquired
+accquires||acquires
+accquiring||acquiring
 accross||across
 acessable||accessible
 acess||access
@@ -302,6 +306,8 @@ avilable||available
 backgroud||background
 backslashs||backslashes
 bahavior||behavior
+bakup||backup
+bakups||backups
 baloon||balloon
 baloons||balloons
 bandwith||bandwidth
@@ -482,6 +488,7 @@ compresing||compressing
 compresion||compression
 comptible||compatible
 comression||compression
+comunication||communication
 conatin||contain
 conatined||contained
 conatining||containing
@@ -1038,6 +1045,7 @@ genreated||generated
 genreate||generate
 genreates||generates
 genreating||generating
+genric||generic
 geomtry||geometry
 geting||getting
 glpyh||glyph
@@ -1203,6 +1211,10 @@ infomation||information
 informatiom||information
 informations||information
 infromation||information
+ingored||ignored
+ingore||ignore
+ingores||ignores
+ingoring||ignoring
 inheritence||inheritance
 inital||initial
 initalisation||initialisation
@@ -1468,6 +1480,7 @@ nam||name
 nams||names
 navagating||navigating
 nead||need
+neccecary||necessary
 neccesarily||necessarily
 neccesary||necessary
 neccessarily||necessarily
@@ -2101,6 +2114,8 @@ stucts||structs
 stuct||struct
 stuctures||structures
 stucture||structure
+sturctures||structures
+sturcture||structure
 subdirectoires||subdirectories
 subexpresssions||subexpressions
 subexpresssion||subexpression
@@ -2246,6 +2261,10 @@ transistions||transitions
 transistion||transition
 transitionned||transitioned
 transmition||transmission
+transormed||transformed
+transorming||transforming
+transorms||transforms
+transorm||transform
 transtions||transitions
 transtion||transition
 transtitions||transitions
@@ -2353,6 +2372,7 @@ utitlty||utility
 utlity||utility
 vaiables||variables
 vaiable||variable
+vaild||valid
 validing||validating
 varables||variables
 varable||variable
