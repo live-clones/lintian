@@ -36,7 +36,14 @@ sub run {
         my $yaml;
         eval { $yaml = YAML::XS::LoadFile($yamlfile->fs_path); };
         if (!$yaml) {
-            tag('upstream-metadata-yaml-invalid');
+            my $msg;
+            if (my ($reason, $doc, $line, $col)
+                = $@
+                =~ m/\AYAML::XS::Load Error: The problem:\n\n ++(.+)\n\nwas found at document: (\d+), line: (\d+), column: (\d+)\n/
+              ) {
+                $msg = "$reason (at document $doc, line $line, column $col)";
+            }
+            tag('upstream-metadata-yaml-invalid', $msg);
         }
     } else {
         tag('upstream-metadata-is-not-a-file');
