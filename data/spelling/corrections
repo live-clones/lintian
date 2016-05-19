@@ -85,6 +85,8 @@ acually||actually
 acumulating||accumulating
 acutally||actually
 adapated||adapted
+adapater||adapter
+adapaters||adapters
 addd||add
 addded||added
 addding||adding
@@ -121,6 +123,7 @@ aforementionned||aforementioned
 aformentioned||aforementioned
 afterall||after all
 agains||against
+agaist||against
 agressive||aggressive
 agressively||aggressively
 agrument||argument
@@ -300,6 +303,7 @@ availale||available
 availavility||availability
 availble||available
 availiable||available
+avalable||available
 avaliable||available
 aviable||available
 avilable||available
@@ -733,6 +737,10 @@ disapeared||disappeared
 disapearing||disappearing
 disapears||disappears
 discernable||discernible
+disconnet||disconnect
+disconneted||disconnected
+disconneting||disconnecting
+disconnets||disconnects
 discontinous||discontinuous
 discusion||discussion
 dispath||dispatch
@@ -750,6 +758,7 @@ distibutes||distributes
 distibuting||distributing
 distibution||distribution
 distibutions||distributions
+distiction||distinction
 distingush||distinguish
 distingushed||distinguished
 distingushes||distinguishes
@@ -1008,6 +1017,8 @@ fowards||forwards
 framwork||framework
 freqencies||frequencies
 freqency||frequency
+frontent||frontend
+frontents||frontends
 fucntion||function
 fucntions||functions
 fuction||function
@@ -1126,6 +1137,7 @@ imediately||immediately
 immeadiately||immediately
 immedate||immediate
 immedately||immediately
+immediatelly||immediately
 immediatly||immediately
 immidiate||immediate
 immmediate||immediate
@@ -1575,6 +1587,8 @@ overidden||overridden
 overide||override
 overides||overrides
 overiding||overriding
+overlaped||overlapped
+overlaping||overlapping
 overridded||overridden
 overrided||overridden
 overriden||overridden
@@ -1851,7 +1865,11 @@ refrence||reference
 refrences||references
 refrencing||referencing
 regaring||regarding
+registed||registered
+registeing||registering
 registerd||registered
+registe||register
+registes||registers
 registraration||registration
 regulamentations||regulations
 regularily||regularly
@@ -1860,6 +1878,7 @@ reimplmented||reimplemented
 reimplmenting||reimplementing
 reimplment||reimplement
 reimplments||reimplements
+releated||related
 reletively||relatively
 reletive||relative
 relevent||relevant
@@ -2081,6 +2100,7 @@ specifed||specified
 specificatin||specification
 specificaton||specification
 specifing||specifying
+specifiying||specifying
 specifiy||specify
 speficied||specified
 spefic||specific
