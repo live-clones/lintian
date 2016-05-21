@@ -1,0 +1,4 @@
+Testname: no-sha256-checksum
+Sequence: 6000
+Version: 1.0
+Description: Test for missing Checksums-Sha256 field

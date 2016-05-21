@@ -1276,3 +1276,18 @@ Info: No package should (build-) depend on 'perl-modules'. Instead, a
  suitable dependency on 'perl' should be used. The existence of the
  perl-modules package is an implementation detail of the perl
  packaging.
+
+Tag: no-strong-checksums-in-dsc
+Severity: serious
+Certainty: certain
+Info: This .dsc file contains no Checksum-Sha256 field and hence only
+ weak checksums.
+ .
+ This issue will only show up for source packages built with
+ dpkg-source before 1.14.17 (March 2008) and hence will probably never
+ show up when you run lintian locally but only on
+ https://lintian.debian.org/ for source packages in the archive.
+ .
+ Accordingly it can be fixed by simply rebuilding the source package
+ with a more recent dpkg-source version, i.e. by uploading a new
+ debian release of the package.

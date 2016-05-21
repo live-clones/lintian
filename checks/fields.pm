@@ -1309,6 +1309,14 @@ sub run {
         }
     }
 
+    #---- Checksums
+
+    if ($type eq 'source') {
+        if (!$info->field('checksums-sha256')) {
+            tag 'no-strong-checksums-in-dsc';
+        }
+    }
+
     #----- Field checks (without checking the value)
 
     for my $field (keys %{$info->field}) {

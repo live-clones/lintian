@@ -10,6 +10,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
       /usr/share/cdbs/1/rules/debhelper.mk.
   * checks/fields.{desc,pm}:
     + [JW] Fix typos.
+    + [AB] Add new check for weak checksums in source packages:
+      new tag no-strong-checksums-in-dsc (Closes: #824916)
   * checks/files.desc:
     + [BR] Do not suggest unsupported Multi-arch: no.
       (Closes: #816455)

@@ -1,0 +1,12 @@
+Format: 1.0
+Source: no-sha256-checksum
+Binary: no-sha256-checksum
+Architecture: all
+Version: 1
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 9)
+Checksums-Sha1:
+ @SHA1@ @SIZE@ no-sha256-checksum_1.tar.gz
+Files:
+ @MD5@ @SIZE@ no-sha256-checksum_1.tar.gz
