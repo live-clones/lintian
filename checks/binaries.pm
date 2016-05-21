@@ -614,7 +614,7 @@ sub run {
     if ($has_perl_lib) {
         # It is a virtual package, so no version is allowed and
         # alternatives probably does not make sense here either.
-        my $re = qr/^perlapi-[\d.]+(?:\s*\[[^\]]+\])?$/;
+        my $re = qr/^perlapi-[-\w.]+(?:\s*\[[^\]]+\])?$/;
         unless ($depends->matches($re, VISIT_OR_CLAUSE_FULL)) {
             tag 'missing-dependency-on-perlapi';
         }
