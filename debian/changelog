@@ -40,6 +40,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * checks/testsuite.pm:
     + [NT] Apply patch from Ondřej Nový to add more known
       autodep8 test suites.  (Closes: #823088)
+    + [JW] Update autopkgtest specification URL.
+      Thanks to Mattia Rizzolo for the bug report.
   * checks/upstream-metadata.pm:
     + [JW] Include YAML validation error in the output.
 
