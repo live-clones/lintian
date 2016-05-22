@@ -33,7 +33,7 @@ sub run {
       $pkg =~ /^perl(?:-base)?$/                    or # perl itself
       $pkg =~ /^ruby[\d.]*$/                        or # ruby itself
       $pkg =~ /^python[\d.]*(?:-dev|-minimal)?$/    or # python itself
-      $pkg =~ /^cpan(?:plus|minus)$/                or # cpan package managers
+      $pkg =~ /^cpan/                               or # cpan related tools
       $pkg =~ /^libmodule-.*-perl$/                 or # perl module tools
       $pkg =~ /^libdevel-.*-perl$/                  or # perl debugging tools
       $pkg =~ /^libperl.*-perl$/                    or # perl-handling tools

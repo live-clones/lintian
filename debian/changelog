@@ -2,8 +2,10 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * checks/application-not-library.desc:
+  * checks/application-not-library.{desc,pm}:
     + [JW] Use HTTPS for Alioth URLs.
+    + [AB] Don't emit application-in-library-section for packages starting
+      with "cpan", not only "cpanplus" and "cpanminus".
   * checks/binaries.{desc,pm}:
     + [NT] Rewrite description for hardening-no-bindnow.  There
       is no references to why bindnow would cause issues.
