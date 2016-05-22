@@ -16,7 +16,7 @@ Info: The package ships two files with the same name installed both in
  make it a symlink to the other and manage the links in the maintainer
  scripts.
 Ref: https://wiki.debian.org/UsrMerge,
-     http://anonscm.debian.org/cgit/users/md/usrmerge.git/plain/debian/README.Debian
+     https://anonscm.debian.org/cgit/users/md/usrmerge.git/plain/debian/README.Debian
 
 Tag: library-in-root-and-usr
 Severity: important

@@ -15,7 +15,7 @@ Info: This package contains a program in $PATH and is named
  People tend to skip library-like named packages when looking for
  applications in the package list and hence wouldn't notice this
  package.
-Ref: http://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
+Ref: https://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
 
 Tag: library-package-name-for-application
 Severity: normal
@@ -31,7 +31,7 @@ Info: This package contains a program in $PATH but is named like a
  .
  In case the program in $PATH is only a helper tool and the package is
  primarily a library, please add a lintian override for this tag.
-Ref: http://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
+Ref: https://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
 
 Tag: application-in-library-section
 Severity: normal
