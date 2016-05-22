@@ -32,7 +32,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * checks/scripts.{desc,pm}:
     + [NT] Add tracking tag to trace auto-generated shell
       snippets in maintainer scripts.
-  * checks/shared-libs.desc:
+  * checks/shared-libs.{desc,pm}:
     + [NT] Improve the description for missing ldconfig trigger
       to cover that debhelper will generally add it
       automatically.  Most packages will just need a rebuild.
