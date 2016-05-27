@@ -1277,11 +1277,11 @@ Info: No package should (build-) depend on 'perl-modules'. Instead, a
  perl-modules package is an implementation detail of the perl
  packaging.
 
-Tag: no-strong-checksums-in-dsc
+Tag: no-strong-digests-in-dsc
 Severity: serious
 Certainty: certain
 Info: This .dsc file contains no Checksum-Sha256 field and hence only
- weak checksums.
+ weak digests.
  .
  This issue will only show up for source packages built with
  dpkg-source before 1.14.17 (March 2008) and hence will probably never

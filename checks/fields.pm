@@ -1313,7 +1313,7 @@ sub run {
 
     if ($type eq 'source') {
         if (!$info->field('checksums-sha256')) {
-            tag 'no-strong-checksums-in-dsc';
+            tag 'no-strong-digests-in-dsc';
         }
     }
 

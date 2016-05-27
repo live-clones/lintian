@@ -1,1 +1,1 @@
-E: no-sha256-checksum source: no-strong-checksums-in-dsc
+E: no-sha256-checksum source: no-strong-digests-in-dsc
