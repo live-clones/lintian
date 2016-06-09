@@ -344,6 +344,7 @@ brower||browser
 browers||browsers
 bufffer||buffer
 bufffers||buffers
+bulding||building
 bulid||build
 buliding||building
 bulids||builds
@@ -624,6 +625,8 @@ decribes||describes
 decribing||describing
 decription||description
 decriptions||descriptions
+decriptor||descriptor
+decriptors||descriptors
 decsriptor||descriptor
 decsriptors||descriptors
 defalt||default
@@ -1352,6 +1355,7 @@ intrumenting||instrumenting
 intrument||instrument
 intruments||instruments
 intuative||intuitive
+invaid||invalid
 invalud||invalid
 invarient||invariant
 invididual||individual
@@ -1631,6 +1635,7 @@ pallete||palette
 pallette||palette
 paniced||panicked
 panicing||panicking
+paralellism||parallelism
 paralell||parallel
 paralel||parallel
 parallell||parallel
@@ -1915,6 +1920,10 @@ reponse||response
 reponses||responses
 representaion||representation
 representaions||representations
+represneted||represented
+represneting||representing
+represnet||represent
+represnets||represents
 reproducable||reproducible
 requiered||required
 requiere||require
@@ -2448,6 +2457,7 @@ wan't||want
 wasnt||wasn't
 weigth||weight
 weired||weird
+werent||weren't
 wether||whether
 whataver||whatever
 whenver||whenever
