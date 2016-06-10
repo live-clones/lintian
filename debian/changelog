@@ -71,7 +71,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Refresh with dpkg-architecture 1.18.7.
   * data/spelling/corrections:
     + [JW] Add more corrections.
-      Thanks to Paul Wise for patch for one of them.
+      Thanks to Paul Wise for patches for some of them.
 
   * debian/rules:
     + [JW] Put "Debian Package Checker" in all manpage headers.
