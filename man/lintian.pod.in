@@ -843,7 +843,7 @@ Pseudo architecture used by mergechanges(1).
 
 =item I<all>
 
-Used when building architecture indep packages only (e.g
+Used when building architecture indep packages only (e.g.
 dpkg-buildpackage -A).
 
 =item I<source>

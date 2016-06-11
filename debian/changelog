@@ -92,6 +92,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
       processed.  Thanks to Andreas Beckmann for the report.
       (Closes: #792191)
 
+  * man/lintian.pod.in:
+    + [JW] Fix typo.
+
   * private/refresh-hwcap:
     + [JW] Make the ld.so manpage parser work with the current version.
 
