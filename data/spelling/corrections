@@ -239,6 +239,8 @@ assginments||assignments
 assgins||assigns
 assigment||assignment
 assigments||assignments
+assignement||assignment
+assignements||assignments
 assignemnt||assignment
 assignemnts||assignments
 assistent||assistant
@@ -349,6 +351,7 @@ bulid||build
 buliding||building
 bulids||builds
 bulit||built
+bulletted||bulleted
 calcualte||calculate
 calcualted||calculated
 calcualtes||calculates
@@ -639,6 +642,8 @@ definitly||definitely
 defintion||definition
 defintions||definitions
 defualt||default
+deivce||device
+deivces||devices
 delared||declared
 delare||declare
 delares||declares
@@ -964,6 +969,7 @@ extention||extension
 extesion||extension
 extesions||extensions
 extracter||extractor
+extraenous||extraneous
 faciliated||facilitated
 faciliate||facilitate
 faciliates||facilitates
@@ -1003,6 +1009,7 @@ fogot||forgot
 fogotten||forgotten
 folloing||following
 follwing||following
+follwoing||following
 folowing||following
 forbiden||forbidden
 foreing||foreign
@@ -1213,6 +1220,10 @@ indempotent||idempotent
 indendation||indentation
 indended||intended
 indentical||identical
+indentified||identified
+indentifies||identifies
+indentify||identify
+indentifying||identifying
 independant||independent
 independed||independent
 indepenent||independent
@@ -1230,6 +1241,7 @@ indipendently||independently
 indivudual||individual
 indivudually||individually
 inefficency||inefficiency
+inferrence||inference
 infomation||information
 informatiom||information
 informations||information
@@ -1589,6 +1601,8 @@ orginal||original
 orgin||origin
 orientatied||orientated
 orientied||oriented
+origionally||originally
+origional||original
 orignal||original
 otehr||other
 otherwhise||otherwise
@@ -1842,6 +1856,10 @@ receieves||receives
 receieving||receiving
 recepient||recipient
 recepients||recipients
+receved||received
+receve||receive
+receves||receives
+receving||receiving
 recieved||received
 recieve||receive
 reciever||receiver
@@ -2063,6 +2081,8 @@ seperator||separator
 sepperate||separate
 seprator||separator
 seprators||separators
+sequece||sequence
+sequeces||sequences
 sequencial||sequential
 serie||series
 serivce||service
