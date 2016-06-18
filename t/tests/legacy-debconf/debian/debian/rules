@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-export DH_COMPAT = 4
+export DH_COMPAT = 5
 
 deb_dir		=	debian/debconf
 udeb_dir	=	debian/debconf-udeb

@@ -1,5 +1,5 @@
 E: debconf source: build-depends-on-obsolete-package build-depends: dpatch
-E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
+E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=5 compat=5
 E: debconf source: untranslatable-debconf-templates debconf-test.templates: 47
 E: debconf source: untranslatable-debconf-templates debconf-test.templates: 58
 E: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
@@ -43,7 +43,6 @@ W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.p
 W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
-W: debconf source: package-uses-deprecated-debhelper-compat-version 4
 W: debconf source: patch-system-but-no-source-readme
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
 W: debconf source: template-uses-unsplit-choices debconf-test - debconf/testmulti-escape
