@@ -54,6 +54,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * collection/*:
     + [NT] Always pass "-n" to "gzip".
 
+  * commands/lintian:
+    + [NT] Add ":utf8" layer to STDOUT.  Thanks to Michael
+      Prokop for reporting the issue.  (Closes: #801296)
   * commands/reporting-html-reports.pm:
     + [NT] Remove "$COPY_DOCS" configuration option.  The
       html_reports now always copies the documentation.
@@ -84,6 +87,9 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Add SEE ALSO section (for the man formatter).
   * doc/tutorial/Lintian/Tutorial/WritingTests.pod:
     + [JW] Fix formatting error.
+
+  * frontend/dplint:
+    + [NT] Add ":utf8" layer to STDOUT.
 
   * lib/Lintian/DepMap.pm:
     + [JW] Fix typos.

@@ -206,6 +206,8 @@ sub main {
         'user-dirs!' => $user_dirs,
     );
 
+    binmode(STDOUT, ':utf8');
+
     # init commandline parser
     Getopt::Long::config(
         'bundling', 'no_getopt_compat',

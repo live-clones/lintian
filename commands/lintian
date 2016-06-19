@@ -151,6 +151,7 @@ sub timed_task(&);
 
 #turn off file buffering
 STDOUT->autoflush;
+binmode(STDOUT, ':utf8');
 
 # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
 # than randomly delivered signals.
