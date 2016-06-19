@@ -334,7 +334,7 @@ sub check_init {
                     tag 'init.d-script-missing-lsb-short-description',
                       $initd_path;
                 } elsif ($keyword eq 'description') {
-                    tag 'init.d-script-missing-lsb-description',$initd_path;
+                    next;
                 } else {
                     tag 'init.d-script-missing-lsb-keyword',
                       $initd_path, $keyword;

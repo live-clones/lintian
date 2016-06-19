@@ -181,15 +181,6 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
  used currently, but adding it is still a good idea for documentation
  purposes.
 
-Tag: init.d-script-missing-lsb-description
-Severity: wishlist
-Certainty: certain
-Ref: https://wiki.debian.org/LSBInitScripts
-Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but
- it is missing a Description LSB keyword.  This field isn't directly
- used currently, but adding it is still a good idea for documentation
- purposes.
-
 Tag: init.d-script-has-bad-start-runlevel
 Severity: normal
 Certainty: certain

@@ -27,8 +27,10 @@ lintian (2.5.45) UNRELEASED; urgency=medium
       processing multiple debs.  (Closes: #738444)
   * checks/info-files.desc:
     + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
-  * checks/init.d.desc:
+  * checks/init.d.{desc,pm}:
     + [JW] Fix typo.
+    + [NT] Remove tag for missing long LSB description in init scripts.
+      Thanks to Vincent Bernat for the report.  (Closes: #825193)
   * checks/manpages.desc:
     + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
   * checks/scripts.{desc,pm}:

@@ -13,7 +13,6 @@ E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility etc/init.d/init.d-lsb-headers sysklogd -> $syslog
 E: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers 0
 E: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel etc/init.d/init.d-lsb-headers 6
-I: init.d-lsb-headers-missing: init.d-script-missing-lsb-description etc/init.d/init.d-lsb-headers-missing
 I: init.d-lsb-headers-missing: init.d-script-missing-lsb-short-description etc/init.d/init.d-lsb-headers-missing
 I: init.d-lsb-headers: init.d-script-does-not-provide-itself etc/init.d/init.d-lsb-headers
 W: init.d-lsb-headers-missing: init.d-script-missing-start etc/init.d/init.d-lsb-headers-missing 4

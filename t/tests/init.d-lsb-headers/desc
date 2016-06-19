@@ -12,7 +12,6 @@ Test-For:
  init.d-script-has-duplicate-lsb-keyword
  init.d-script-missing-dependency-on-remote_fs
  init.d-script-missing-dependency-on-local_fs
- init.d-script-missing-lsb-description
  init.d-script-missing-lsb-short-description
  init.d-script-missing-start
  init.d-script-possible-missing-stop
