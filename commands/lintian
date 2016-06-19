@@ -25,6 +25,7 @@
 use strict;
 use warnings;
 use autodie;
+use utf8;
 
 use Cwd qw(abs_path);
 use Getopt::Long();
@@ -674,6 +675,7 @@ sub main {
             "Lintian root directory: $INIT_ROOT",
             "Configuration file: $opt{'LINTIAN_CFG'}",
             'Laboratory: '.($opt{'LINTIAN_LAB'} // '<N/A>'),
+            'UTF-8: ✓ (☃)',
             delimiter(),
         );
     }
