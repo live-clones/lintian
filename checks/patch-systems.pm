@@ -236,8 +236,11 @@ sub run {
     if (@direct) {
         my $files= (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
 
-        tag 'patch-system-but-direct-changes-in-diff', $files
-          if ($uses_patch_system);
+        if ($uses_patch_system) {
+            for my $patched_file (@direct) {
+                tag 'patch-system-but-direct-changes-in-diff', $patched_file;
+            }
+        }
         tag 'direct-changes-in-diff-but-no-patch-system', $files
           if (not $uses_patch_system);
     }

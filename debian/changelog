@@ -33,6 +33,11 @@ lintian (2.5.45) UNRELEASED; urgency=medium
       Thanks to Vincent Bernat for the report.  (Closes: #825193)
   * checks/manpages.desc:
     + [NT] Use "gzip -9n" rather than "gzip -9" in examples.
+  * checks/patch-systems.pm:
+    + [NT] Emit a separate tag for each patched file instead of bundling
+      them all together.  This allows individual instances to be
+      overridden.  Thanks to Nathan Summers for the report.
+      (Closes: #541491)
   * checks/scripts.{desc,pm}:
     + [NT] Add tracking tag to trace auto-generated shell
       snippets in maintainer scripts.
