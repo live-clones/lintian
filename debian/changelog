@@ -78,6 +78,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Refresh with dpkg-architecture 1.18.7.
   * data/common/{architectures,multiarch-dirs}:
     + [JW] Refresh with dpkg-architecture 1.18.7.
+  * data/fields/perl-provides:
+    + [NT] Refresh against Perl 5.22.
   * data/files/triplets:
     + [JW] Refresh with dpkg-architecture 1.18.7.
   * data/shared-libs/ldconfig-dirs:
@@ -113,6 +115,8 @@ lintian (2.5.45) UNRELEASED; urgency=medium
 
   * private/refresh-hwcap:
     + [JW] Make the ld.so manpage parser work with the current version.
+  * private/refresh-perl-provides:
+    + [NT] Look for a versioned perl-modules package.
 
   * reporting/config:
     + [NT] Remove "$COPY_DOCS" configuration option.  The

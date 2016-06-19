@@ -55,8 +55,15 @@ my %manual_split
 use Module::CoreList;
 my $versioning = $_system->versioning;
 
-# we look at packages provided by these
-my @core_packages = (qw(perl-base perl perl-modules));
+# we look at packages provided by these (with V being the version)
+my @core_packages = (qw(perl-base perl perl-modules-V));
+
+my $perl_version = $];
+
+# Map 5.022002 into 5.22
+$perl_version =~ s/^(5)\.0*([1-9][0-9])\d+/$1.$2/;
+
+@core_packages = map { s/V/$perl_version/; $_ } @core_packages;
 
 # check we have a cache of Debian sid packages available
 warn(
