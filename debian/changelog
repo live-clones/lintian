@@ -43,11 +43,14 @@ lintian (2.5.45) UNRELEASED; urgency=medium
     + [JW] Fix false positive dev-pkg-without-shlib-symlink for GCC runtime
       libraries.  Thanks to Matthias Klose for the bug report.
       (Closes: #823833)
-  * checks/testsuite.pm:
+  * checks/testsuite.{desc,pm}:
     + [NT] Apply patch from Ondřej Nový to add more known
       autodep8 test suites.  (Closes: #823088)
     + [JW] Update autopkgtest specification URL.
       Thanks to Mattia Rizzolo for the bug report.
+    + [NT] Check for broken dependency fields in the autopkgtest control
+      file.  Thanks to Jérémy Bobbio for the suggestion.
+      (Closes: #795083)
   * checks/upstream-metadata.pm:
     + [JW] Include YAML validation error in the output.
   * checks/usrmerge.desc:

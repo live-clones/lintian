@@ -113,3 +113,18 @@ Info: The dsc file sets Testsuite to a value other than autopkgtest,
  the only one allowed. This field is most probably copied by
  dpkg-source from Testsuite in debian/control.
 Ref: https://anonscm.debian.org/git/autopkgtest/autopkgtest.git/tree/doc/README.package-tests.rst
+
+Tag: testsuite-dependency-has-unparsable-elements
+Severity: normal
+Certainty: possible
+Info: Lintian cannot parse the Depends field for the given autopkgtest.
+ .
+ Please double check that dependency the syntax is correct.
+ .
+ Note that Lintian has a whitelist of known "special" dependencies
+ permitted by autopkgtest (e.g. @builddep@).  Lintian does not accept
+ these as a part of an OR-clause.
+ .
+ If Lintian complains about a new special "@"-dependency, please file
+ a bug against Lintian and have it added to the whitelist.
+Ref: https://anonscm.debian.org/git/autopkgtest/autopkgtest.git/tree/doc/README.package-tests.rst

@@ -19,14 +19,14 @@ Depends: @
 
 Tests: test-2
 Test-Command: /bin/true
-Depends: @
+Depends: @, missing a comma
 
 Features: unknownfeature
 Restrictions: unknownrestriction
 
 Test-Command: /bin/true
 Restrictions: breaks-testbed, rw-build-tree, needs-root
-Depends: @
+Depends: @, @builddeps@
 
 Tests: test-1, test-2
 Depends: @

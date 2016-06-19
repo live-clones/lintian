@@ -14,6 +14,7 @@ Test-For:
  missing-runtime-test-file
  missing-runtime-tests-field
  runtime-test-file-is-not-a-regular-file
+ testsuite-dependency-has-unparsable-elements
  unknown-runtime-tests-feature
  unknown-runtime-tests-field
  unknown-runtime-tests-restriction

@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Lintian::Relation;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(
   file_is_encoded_in_non_utf8
@@ -63,6 +64,11 @@ my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
   autopkgtest-pkg-python
   autopkgtest-pkg-r
   autopkgtest-pkg-ruby
+);
+
+my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
+  @
+  @builddeps@
 );
 
 sub run {
@@ -171,6 +177,16 @@ sub check_control_paragraph {
         }
         for my $testname (split(/\s*,\s*|\s+/ms, $tests)) {
             check_test_file($info, $directory, $testname, $line);
+        }
+    }
+    if (exists($paragraph->{'depends'})) {
+        my $dep = Lintian::Relation->new($paragraph->{'depends'});
+        for my $unparsable ($dep->unparsable_predicates) {
+            # @ is not a valid predicate in general, but autopkgtests
+            # allows it.
+            next if exists($KNOWN_SPECIAL_DEPENDS{$unparsable});
+            tag 'testsuite-dependency-has-unparsable-elements', "\"$unparsable\"",
+                "(in paragraph starting at line $line)";
         }
     }
     return;
