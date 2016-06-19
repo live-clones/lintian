@@ -185,8 +185,9 @@ sub check_control_paragraph {
             # @ is not a valid predicate in general, but autopkgtests
             # allows it.
             next if exists($KNOWN_SPECIAL_DEPENDS{$unparsable});
-            tag 'testsuite-dependency-has-unparsable-elements', "\"$unparsable\"",
-                "(in paragraph starting at line $line)";
+            tag 'testsuite-dependency-has-unparsable-elements',
+              "\"$unparsable\"",
+              "(in paragraph starting at line $line)";
         }
     }
     return;
