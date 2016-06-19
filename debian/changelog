@@ -1,6 +1,14 @@
-lintian (2.5.45) UNRELEASED; urgency=medium
+lintian (2.5.45) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - build-depends-arch-without-arch-dependent-binary
+      - debhelper-autoscript-in-maintainer-scripts
+      - no-strong-digests-in-dsc
+      - testsuite-dependency-has-unparsable-elements
+    + Removed:
+      - build-depends-arch-without-arch-dependant-binary
+      - init.d-script-missing-lsb-description
 
   * checks/application-not-library.{desc,pm}:
     + [JW] Use HTTPS for Alioth URLs.
@@ -130,7 +138,7 @@ lintian (2.5.45) UNRELEASED; urgency=medium
   * reporting/templates/tags-severity.tmpl:
     + [NT] Add sections for "classification" tags.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 24 Apr 2016 07:16:45 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2016 19:36:51 +0000
 
 lintian (2.5.44) unstable; urgency=medium
 
