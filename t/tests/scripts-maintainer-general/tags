@@ -18,7 +18,6 @@ E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcata
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
-E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst:101
 E: scripts-maintainer-general: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:190
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:118 /usr/bin/foo

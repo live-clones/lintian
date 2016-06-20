@@ -62,8 +62,6 @@ W: maintainer-scripts: maintainer-script-needs-depends-on-gconf2 postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-ucf postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-xml-core postinst
 W: maintainer-scripts: maintainer-script-should-not-hide-init-failure postinst:55
-W: maintainer-scripts: maintainer-script-should-not-use-ancient-dpkg-epoch-check preinst:8
-W: maintainer-scripts: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check preinst:10
 W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:165 'chown -R root.root'
 W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:33 'chown root.root'
 W: maintainer-scripts: maintainer-script-should-not-use-gconftool postinst:68

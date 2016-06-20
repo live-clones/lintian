@@ -32,7 +32,6 @@ Test-For:
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script
- suidregister-used-in-maintainer-script
  trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir
  maintainer-script-may-use-dir_to_symlink_helper
 References: Debian Bug#532984

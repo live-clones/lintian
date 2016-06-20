@@ -126,6 +126,11 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * data/scripts/interpreters:
     + [NT] Add stap as a known interpreter.  Thanks to gustavo panizzo
       for the suggestion.  (Closes: #858326)
+  * data/scripts/maintainer-script-bad-command:
+    + [NT] Remove check for suidregister, dpkg --assert-working-epoch, and
+      dpkg --assert-multi-conrep.  None of these trigger any tags in the
+      archive any longer and the (new) features have been available for
+      8+ years.
   * data/spelling/corrections:
     + [NT] Apply patches from Edward Betts to fix bugs in the correction
       word lists.  (Closes: #852005, #852084)
