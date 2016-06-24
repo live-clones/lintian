@@ -97,6 +97,8 @@ addesses||addresses
 addessing||addressing
 addional||additional
 additionaly||additionally
+additionnal||additional
+additionnally||additionally
 additonal||additional
 additonally||additionally
 addres||address
@@ -699,6 +701,7 @@ desctiptors||descriptors
 desireable||desirable
 desriptor||descriptor
 desriptors||descriptors
+destoryed||destroyed
 detabase||database
 detatch||detach
 detatched||detached
@@ -971,10 +974,12 @@ extenstion||extension
 extenstions||extensions
 extented||extended
 extention||extension
+extentions||extensions
 extesion||extension
 extesions||extensions
 extracter||extractor
 extraenous||extraneous
+extremly||extremely
 faciliated||facilitated
 faciliate||facilitate
 faciliates||facilitates
@@ -1128,6 +1133,10 @@ hierarchie||hierarchy
 higer||higher
 highlighing||highlighting
 highlightning||highlighting
+hightlighted||highlighted
+hightlight||highlight
+hightlighting||highlighting
+hightlights||highlights
 higlighted||highlighted
 higlight||highlight
 higlighting||highlighting
@@ -1246,6 +1255,8 @@ indiciates||indicates
 indiciating||indicating
 indipendent||independent
 indipendently||independently
+indivdual||individual
+indivdually||individually
 indivudual||individual
 indivudually||individually
 inefficency||inefficiency
@@ -1777,6 +1788,7 @@ prepartion||preparation
 prepartions||preparations
 prerequsite||prerequisite
 prerequsites||prerequisites
+presense||presence
 prevously||previously
 priciple||principle
 priciples||principles
@@ -1793,6 +1805,8 @@ privilige||privilege
 priviliges||privileges
 probaly||probably
 problably||probably
+problme||problem
+problmes||problems
 procceed||proceed
 proccesors||processors
 proccesses||processes
@@ -1831,6 +1845,7 @@ pronnounced||pronounced
 prononciation||pronunciation
 pronouce||pronounce
 pronunce||pronounce
+properies||properties
 propery||property
 propigate||propagate
 propigation||propagation
@@ -2196,6 +2211,10 @@ stoping||stopping
 stoppped||stopped
 straigth||straight
 straigt||straight
+streched||stretched
+streches||stretches
+streching||stretching
+strech||stretch
 strenghts||strengths
 strenght||strength
 strenth||strength
@@ -2495,6 +2514,7 @@ verson||version
 vicefersa||vice-versa
 visiters||visitors
 vitual||virtual
+want's||wants
 wan't||want
 wasnt||wasn't
 weigth||weight
