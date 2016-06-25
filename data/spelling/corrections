@@ -109,6 +109,8 @@ addresss||address
 addresssed||addressed
 addressses||addresses
 addresssing||addressing
+addtional||additional
+addtionally||additionally
 aditional||additional
 aditionally||additionally
 aditionaly||additionally
@@ -165,6 +167,7 @@ alpabets||alphabets
 alreay||already
 alterative||alternative
 alteratives||alternatives
+alternativly||alternatively
 altough||although
 ambigious||ambiguous
 ambigous||ambiguous
@@ -438,6 +441,7 @@ cofigure||configure
 cofigured||configured
 cofigures||configures
 cofiguring||configuring
+colaboration||collaboration
 collapsable||collapsible
 collegue||colleague
 collegues||colleagues
@@ -524,6 +528,8 @@ conection||connection
 conections||connections
 conent||content
 conents||contents
+configration||configuration
+configrations||configurations
 configuation||configuration
 configuations||configurations
 configuratoin||configuration
@@ -541,6 +547,7 @@ consistancy||consistency
 consistant||consistent
 consonent||consonant
 consonents||consonants
+constructred||constructed
 constuctor||constructor
 constuctors||constructors
 containes||contains
@@ -736,6 +743,10 @@ dictionnary||dictionary
 didnt||didn't
 didnt'||didn't
 diferent||different
+differenciated||differentiated
+differenciate||differentiate
+differenciates||differentiates
+differenciating||differentiating
 differents||different
 differnet||different
 diffrent||different
@@ -745,6 +756,7 @@ digitial||digital
 diplay||display
 directores||directories
 directorys||directories
+directoy||directory
 directries||directories
 directry||directory
 directy||directly
@@ -953,6 +965,8 @@ exlicitly||explicitly
 exmaple||example
 expecially||especially
 expectes||expects
+expection||exception
+expections||exceptions
 explaination||explanation
 explainations||explanations
 explantion||explanation
@@ -1402,6 +1416,8 @@ invokation||invocation
 invokations||invocations
 irrelevent||irrelevant
 isnt||isn't
+isssue||issue
+isssues||issues
 istead||instead
 itialized||initialized
 itialize||initialize
@@ -1890,6 +1906,9 @@ recepients||recipients
 receved||received
 receve||receive
 receves||receives
+recevied||received
+recevie||receive
+recevies||receives
 receving||receiving
 recieved||received
 recieve||receive
@@ -2044,6 +2063,7 @@ reuqests||requests
 rewriten||rewritten
 rigth||right
 rigths||rights
+rigt||right
 rmeoved||removed
 rmeove||remove
 rmeoves||removes
