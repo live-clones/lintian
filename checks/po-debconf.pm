@@ -172,7 +172,7 @@ sub run {
             'child_before_exec' => sub {
                 $ENV{'INTLTOOL_EXTRACT'}
                   = '/usr/share/intltool-debian/intltool-extract';
-                # safity of $debian_po is implied by us having
+                # safety of $debian_po is implied by us having
                 # accessed two of its children by now.
                 $ENV{'srcdir'} = $debian_po_dir->fs_path;
                 chdir($tempdir);
