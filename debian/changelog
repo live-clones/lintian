@@ -6,6 +6,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [NT] Fix typo in named parameter that made the raw lintain.log
       unavailable on lintian.debian.org.  Thanks to Guillem Jover
       for reporting the issue.  (Closes: #828719)
+    + [NT] Install the lintian log file as a resource so it can be
+      handled (e.g. cached) like other resources.
 
   * data/spelling/corrections:
     + [JW] Add more corrections.

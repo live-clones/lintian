@@ -425,11 +425,15 @@ sub setup_output_dir {
             'in'  => $lintian_log_file,
             'out' => "$output_dir/lintian.log.gz",
         );
-        copy($lintian_log_file, "$output_dir/lintian.log")
-          or
-          die("cannot copy $lintian_log_file to $output_dir/lintian.log: $!");
+        $RESOURCE_MANAGER->install_resource(
+            'lintian.log',
+            {
+                'install_method' => 'copy',
+                'source_file' => $lintian_log_file,
+            });
         spawn(\%opts, ['gzip', '-9nc'])
           or die("cannot create $output_dir/lintian.log.gz.\n");
+        $RESOURCE_MANAGER->install_resource("$output_dir/lintian.log.gz");
     }
 
     for my $dir (@{$resource_dirs}) {
