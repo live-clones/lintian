@@ -2,6 +2,11 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
    XXX: generate tag summary with private/generate-tag-summary
 
+  * commands/reporting-html-reports.pm:
+    + [NT] Fix typo in named parameter that made the raw lintain.log
+      unavailable on lintian.debian.org.  Thanks to Guillem Jover
+      for reporting the issue.  (Closes: #828719)
+
   * data/spelling/corrections:
     + [JW] Add more corrections.
 

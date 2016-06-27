@@ -409,7 +409,7 @@ sub setup_output_dir {
     my $lintian_manual = $args{'lintian_manual'};
     my $lintian_api = $args{'lintian_api_docs'};
     my $resource_dirs = $args{'resource_dirs'} // [];
-    my $lintian_log_file = $args{'lintian_log'};
+    my $lintian_log_file = $args{'lintian_log_file'};
 
     # Create output directories.
     mkdir($output_dir, 0777);
