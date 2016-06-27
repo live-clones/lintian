@@ -101,18 +101,40 @@ Can be "copy" or "move" (default).  If set to "move", the original file
 will be renamed into its new location.  Otherwise, a copy is done and
 the original file is left in place.
 
+=item source_file
+
+By default, the path denoted by RESOURCE is both the resource name and
+the source file.  This option can be used to install a given file as
+RESOURCE regardless of the basename of the source file.
+
+If this is passed, RESOURCE must be a basename (i.e. without any
+slashes).
+
 =back
 
 =cut
 
 sub install_resource {
-    my ($self, $resource, $opt) = @_;
-    my $install_name = get_file_checksum('sha1', $resource);
-    my $basename = basename($resource);
+    my ($self, $resource_name, $opt) = @_;
     my $resource_root = $self->{'html_dir'} . '/resources';
     my $method = 'move';
+    my ($basename, $install_name, $resource);
     $method = $opt->{'install_method'}
       if $opt && exists($opt->{'install_method'});
+    if ($opt && exists($opt->{'source_file'})) {
+        $basename = $resource_name;
+        $resource = $opt->{'source_file'};
+        if (index($basename, '/') > -1) {
+            croak(
+                join(' ',
+                    qq(Resource "${resource_name}" must not contain "/"),
+                    'when source_file is given'));
+        }
+    } else {
+        $basename = basename($resource_name);
+        $resource = $resource_name;
+    }
+    $install_name = get_file_checksum('sha1', $resource);
 
     croak("Resource name ${basename} already in use")
       if defined($self->{'_resource_cache'}{$basename});
