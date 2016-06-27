@@ -434,6 +434,10 @@ sub setup_output_dir {
         spawn(\%opts, ['gzip', '-9nc'])
           or die("cannot create $output_dir/lintian.log.gz.\n");
         $RESOURCE_MANAGER->install_resource("$output_dir/lintian.log.gz");
+        symlink($RESOURCE_MANAGER->resource_URL('lintian.log'),
+            "$output_dir/lintian.log");
+        symlink($RESOURCE_MANAGER->resource_URL('lintian.log.gz'),
+            "$output_dir/lintian.log.gz");
     }
 
     for my $dir (@{$resource_dirs}) {
