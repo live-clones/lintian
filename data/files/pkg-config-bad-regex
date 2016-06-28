@@ -28,7 +28,7 @@
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-[DU]NEW_STDCPP) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?check-new) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?inline) \s
-# found in postgres sql see 687208
+# found in postgresql, see 687208
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-pie) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?strict-aliasing) \s
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f(?:no-)?wrapv) \s
