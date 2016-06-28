@@ -186,6 +186,10 @@ annoucement||announcement
 anomolies||anomalies
 anomoly||anomaly
 anway||anyway
+anwser||answer
+anwsered||answered
+anwsering||answering
+anwsers||answers
 anyting||anything
 aplication||application
 appearence||appearance
@@ -214,6 +218,7 @@ aquaints||acquaints
 aquire||acquire
 aquired||acquired
 aquisition||acquisition
+arbitarily||arbitrarily
 arbitary||arbitrary
 arbitray||arbitrary
 archiecture||architecture
@@ -651,6 +656,8 @@ defered||deferred
 definate||definite
 definately||definitely
 definining||defining
+defininition||definition
+defininitions||definitions
 definitly||definitely
 defintion||definition
 defintions||definitions
@@ -801,6 +808,8 @@ documenation||documentation
 documentaion||documentation
 documention||documentation
 documetation||documentation
+documment||document
+documments||documents
 doens't||doesn't
 doesen't||doesn't
 doesnt||doesn't
@@ -851,7 +860,11 @@ elminating||eliminating
 embeddeding||embedding
 embeded||embedded
 emptry||empty
+emtied||emptied
+emties||empties
 emtpy||empty
+emty||empty
+emtying||emptying
 enchanced||enhanced
 enconding||encoding
 encondings||encodings
@@ -1038,6 +1051,7 @@ folowing||following
 forbiden||forbidden
 foreing||foreign
 forground||foreground
+formaly||formally
 formated||formatted
 formating||formatting
 forseeable||foreseeable
@@ -2324,6 +2338,12 @@ symetric||symmetric
 synax||syntax
 synchonized||synchronized
 synchonizes||synchronizes
+syncronised||synchronised
+syncronises||synchronises
+syncronise||synchronise
+syncronising||synchronising
+syncronized||synchronized
+syncronizes||synchronizes
 syncronize||synchronize
 syncronizing||synchronizing
 syncronus||synchronous
