@@ -58,6 +58,7 @@ make           => /usr/bin, make | build-essential | dpkg-dev
 mawk           => /usr/bin
 mksh           => /bin
 mscgen         => /usr/bin
+newlisp        => /usr/bin
 ngraph         => /usr/bin, ngraph-gtk
 nickle         => /usr/bin
 nodejs         => /usr/bin
