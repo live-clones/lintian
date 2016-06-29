@@ -7,6 +7,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       "#!/usr/bin/env" shebang and the interpreter was shipped in the same
       package.  Thanks to Sergio Durigan Junior for the bug report and the
       initial patch.  (Closes: #828933)
+  * checks/files.desc:
+    + [JW] Fix typo.
+  * checks/manpages.desc:
+    + [JW] Fix typos.
 
   * commands/reporting-html-reports.pm:
     + [NT] Fix typo in named parameter that made the raw lintain.log
@@ -20,6 +24,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       known interpreter.  (Closes: #828934)
   * data/spelling/corrections:
     + [JW] Add more corrections.
+
+  * lib/Lintian/Output.pm:
+    + [JW] Fix typo.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2016 20:17:52 +0000
 
@@ -18004,7 +18011,7 @@ lintian (0.2.4) unstable; urgency=low
       - this should fix all problems where Lintian couldn't check
         python/perl dynamic objects, etc.
       - allow cross-checking of packages, e.g., to check non-i386 .debs
-        on a i386 system (note, that this requires a multi-arch objdump)
+        on an i386 system (note, that this requires a multi-arch objdump)
       - recognize if the shared library uses its SONAME
     New tag:
       shared-library-uses-its-soname

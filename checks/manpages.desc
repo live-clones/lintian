@@ -216,8 +216,8 @@ Severity: normal
 Certainty: certain
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page. You don't
- provide an english, only a translated manpage. Since english is fallback,
- shipping only a non-english man page leaves most users without a man page
+ provide an English, only a translated manpage. Since English is fallback,
+ shipping only a non-English man page leaves most users without a man page
  at all.
 
 Tag: manpage-locale-dir-country-specific

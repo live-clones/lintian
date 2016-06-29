@@ -22,7 +22,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# In main scope, need a unnamed sub to avoid tainting the "main" namespace
+# In main scope, need an unnamed sub to avoid tainting the "main" namespace
 # in case we need to run a ".pm" tool.
 use strict;
 use warnings;

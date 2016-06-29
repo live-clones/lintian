@@ -552,7 +552,7 @@ sub _quote_print {
 
 =item C<_global_or_object(@args)>
 
-If $args[0] is a object which satisfies C<isa('Lintian::Output')>
+If $args[0] is an object which satisfies C<isa('Lintian::Output')>
 returns @args, otherwise returns C<($Lintian::Output::GLOBAL, @_)>.
 
 =back

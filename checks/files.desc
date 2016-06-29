@@ -1631,7 +1631,7 @@ Info: The arch all pkg-config file contains a reference to a multi-arch path.
  .
  Last but not least, this file could contain a reference to a cross
  architecture (like for instance a x86_64-linux-gnu pkg-config file
- referencing a i386-linux-gnu file). In this case the usual cure is to
+ referencing an i386-linux-gnu file). In this case the usual cure is to
  fix this path.
 
 Tag: pkg-config-bad-directive
