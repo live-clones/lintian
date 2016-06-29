@@ -146,6 +146,7 @@ allign||align
 alligned||aligned
 alligning||aligning
 alligns||aligns
+allmost||almost
 allpication||application
 allthough||although
 alltogether||altogether
@@ -750,6 +751,9 @@ dictionnary||dictionary
 didnt||didn't
 didnt'||didn't
 diferent||different
+diffcult||difficult
+diffculties||difficulties
+diffculty||difficulty
 differenciated||differentiated
 differenciate||differentiate
 differenciates||differentiates
@@ -776,6 +780,7 @@ disconnet||disconnect
 disconneted||disconnected
 disconneting||disconnecting
 disconnets||disconnects
+discontigous||discontiguous
 discontinous||discontinuous
 discusion||discussion
 dispath||dispatch
@@ -835,6 +840,8 @@ dumplicates||duplicates
 dumplicating||duplicating
 dupliate||duplicate
 dupliates||duplicates
+dynmaically||dynamically
+dynmaic||dynamic
 easilly||easily
 ecspecially||especially
 edditable||editable
@@ -1820,6 +1827,7 @@ prerequsite||prerequisite
 prerequsites||prerequisites
 presense||presence
 prevously||previously
+prevous||previous
 priciple||principle
 priciples||principles
 primative||primitive
@@ -1887,6 +1895,8 @@ prosess||process
 protable||portable
 protcol||protocol
 protecion||protection
+protocal||protocol
+protocals||protocols
 protocoll||protocol
 psuedo||pseudo
 psychadelic||psychedelic
@@ -2265,6 +2275,10 @@ subexpresssion||subexpression
 suble||subtle
 subseqent||subsequent
 subsequest||subsequent
+substituded||substituted
+substitudes||substitutes
+substitude||substitute
+substituding||substituting
 substituions||substitutions
 substituion||substitution
 substracted||subtracted
@@ -2286,6 +2300,8 @@ succeedes||succeeds
 succesfully||successfully
 succesful||successful
 succesive||successive
+succesors||successors
+succesor||successor
 successfull||successful
 successfuly||successfully
 succint||succinct
@@ -2436,6 +2452,7 @@ uncomented||uncommented
 uncomenting||uncommenting
 uncoments||uncomments
 uncoment||uncomment
+uncommited||uncommitted
 uncommmented||uncommented
 uncommmenting||uncommenting
 uncommments||uncomments
@@ -2528,6 +2545,8 @@ vaild||valid
 validing||validating
 varables||variables
 varable||variable
+varaibles||variables
+varaible||variable
 variabes||variables
 variabe||variable
 variantions||variations
@@ -2552,6 +2571,7 @@ versionning||versioning
 versoned||versioned
 versons||versions
 verson||version
+verticaly||vertically
 vicefersa||vice-versa
 visiters||visitors
 vitual||virtual
