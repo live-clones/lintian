@@ -2,6 +2,12 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
    XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/scripts.pm:
+    + [JW] Fix false positive unusual-interpreter when the script had
+      "#!/usr/bin/env" shebang and the interpreter was shipped in the same
+      package.  Thanks to Sergio Durigan Junior for the bug report and the
+      initial patch.  (Closes: #828933)
+
   * commands/reporting-html-reports.pm:
     + [NT] Fix typo in named parameter that made the raw lintain.log
       unavailable on lintian.debian.org.  Thanks to Guillem Jover

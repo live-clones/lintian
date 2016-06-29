@@ -380,6 +380,13 @@ sub run {
                 # executable).
                 my $interfile = substr $interpreter, 1;
                 $pinter = 1 if $executable{$interfile};
+            } elsif (defined $calls_env) {
+                for my $dir (qw(usr/bin bin)) {
+                    if ($executable{"$dir/$interpreter"}) {
+                        $pinter = 1;
+                        last;
+                    }
+                }
             }
             script_tag('unusual-interpreter', $filename, "#!$interpreter")
               unless $pinter;
