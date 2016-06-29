@@ -371,9 +371,6 @@ sub run {
             }
         } elsif ($interpreter =~ m,/usr/local/,) {
             script_tag('interpreter-in-usr-local', $filename,"#!$interpreter");
-        } elsif ($executable{'.' . $interpreter}) {
-         # Package installs the interpreter itself, so it's probably ok.  Don't
-         # emit any tag for this.
         } elsif ($interpreter eq '/bin/env') {
             script_tag('script-uses-bin-env', $filename);
         } else {
@@ -382,8 +379,7 @@ sub run {
                 # Check if the package ships the interpreter (and it is
                 # executable).
                 my $interfile = substr $interpreter, 1;
-                my $index_info = $info->index($interfile);
-                $pinter = 1 if $index_info && ($index_info->operm & 0111);
+                $pinter = 1 if $executable{$interfile};
             }
             script_tag('unusual-interpreter', $filename, "#!$interpreter")
               unless $pinter;
