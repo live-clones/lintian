@@ -9,6 +9,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [NT] Install the lintian log file as a resource so it can be
       handled (e.g. cached) like other resources.
 
+  * data/scripts/interpreters:
+    + [JW] Apply patch from Sergio Durigan Junior to add newLISP as a
+      known interpreter.  (Closes: #828934)
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
