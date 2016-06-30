@@ -28,6 +28,7 @@ package Lintian::coll::objdump_info;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 use FileHandle;
 

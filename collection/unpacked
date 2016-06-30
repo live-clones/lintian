@@ -25,6 +25,7 @@ package Lintian::coll::unpacked;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 # Read up to 40kB at the time.  This happens to be 4096 "tar records"
 # (with a block-size of 512 and a block factor of 20, which appears to

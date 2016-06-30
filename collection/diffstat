@@ -30,6 +30,7 @@ package Lintian::coll::diffstat;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail get_dsc_info gunzip_file);

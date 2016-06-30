@@ -12,6 +12,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * checks/manpages.desc:
     + [JW] Fix typos.
 
+  * collection/*:
+    + [JW] Remove "." from Perl's module search path.  (Mitigates: #588017)
+
   * commands/reporting-html-reports.pm:
     + [NT] Fix typo in named parameter that made the raw lintain.log
       unavailable on lintian.debian.org.  Thanks to Guillem Jover
@@ -24,6 +27,12 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       known interpreter.  (Closes: #828934)
   * data/spelling/corrections:
     + [JW] Add more corrections.
+
+  * frontend/dplint:
+    + [JW] Remove "." from Perl's search path.  (Mitigates: #588017)
+
+  * helpers/coll/*:
+    + [JW] Remove "." from Perl's search path.  (Mitigates: #588017)
 
   * lib/Lintian/Output.pm:
     + [JW] Fix typo.

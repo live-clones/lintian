@@ -24,6 +24,7 @@ package Lintian::coll::ar_info;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use FileHandle;

@@ -26,6 +26,7 @@
 # in case we need to run a ".pm" tool.
 use strict;
 use warnings;
+no lib '.';
 
 my $TOOL_RUNNER = sub {
     my ($tool_pm_path) = @_;

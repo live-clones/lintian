@@ -24,6 +24,7 @@ package Lintian::coll::copyright_file;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file is_ancestor_of touch_file);

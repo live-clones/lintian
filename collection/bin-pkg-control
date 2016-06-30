@@ -24,6 +24,7 @@ package Lintian::coll::bin_pkg_control;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 use constant ERROR_FILES => qw(control-index-errors control-errors);
 

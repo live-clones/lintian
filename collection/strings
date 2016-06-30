@@ -24,6 +24,7 @@ package Lintian::coll::strings;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 use FileHandle;
 

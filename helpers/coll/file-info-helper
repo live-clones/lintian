@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 while (my $line = <>) {
     my ($file, $type) = $line =~ (m/^(.*?)\x00(.*)$/o);

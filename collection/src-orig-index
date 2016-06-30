@@ -24,6 +24,7 @@ package Lintian::coll::src_orig_index;
 use strict;
 use warnings;
 use autodie;
+no lib '.';
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
