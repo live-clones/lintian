@@ -22,6 +22,8 @@
 # }}}
 
 # {{{ libraries and such
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;

@@ -22,6 +22,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * collection/*:
     + [JW] Remove "." from Perl's module search path.  (Mitigates: #588017)
 
+  * commands/lintian:
+    + [NT,JW] Remove "." from Perl's search path.  (Mitigates: #588017)
   * commands/reporting-html-reports.pm:
     + [NT] Fix typo in named parameter that made the raw lintain.log
       unavailable on lintian.debian.org.  Thanks to Guillem Jover
