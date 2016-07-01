@@ -240,7 +240,8 @@ sub run {
         tag 'missing-classpath', join(', ', @java_lib_depends);
     }
 
-    if (!$has_public_jars && $pkg =~ /^lib[^\s,]+-java$/) {
+    my $is_transitional = $info->is_pkg_class('transitional');
+    if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
         # Skip this if it installs a symlink in usr/share/java
         return if any { m@^usr/share/java/[^/]+\.jar$@o } $info->sorted_index;
         tag 'javalib-but-no-public-jars';

@@ -11,6 +11,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [JW] Fix typos.
   * checks/infofiles.desc:
     + [JW] Fix typo.
+  * checks/java.pm:
+    + [JW] Don't emit javalib-but-no-public-jars for transitional packages.
+      Thanks to Jeremy Bicha for the bug report.  (Closes: #829047)
   * checks/manpages.desc:
     + [JW] Fix typos.
   * checks/systemd.desc:
