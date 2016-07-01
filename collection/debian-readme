@@ -21,10 +21,11 @@
 
 package Lintian::coll::debian_readme;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Util qw(fail gunzip_file touch_file is_ancestor_of);

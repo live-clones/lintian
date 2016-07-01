@@ -21,10 +21,11 @@
 
 package Lintian::coll::scripts;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Collect;

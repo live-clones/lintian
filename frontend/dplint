@@ -22,11 +22,12 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+no lib '.';
+
 # In main scope, need an unnamed sub to avoid tainting the "main" namespace
 # in case we need to run a ".pm" tool.
 use strict;
 use warnings;
-no lib '.';
 
 my $TOOL_RUNNER = sub {
     my ($tool_pm_path) = @_;

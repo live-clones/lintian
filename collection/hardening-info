@@ -28,10 +28,11 @@
 
 package Lintian::coll::hardening_info;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use FileHandle;
 

@@ -20,7 +20,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [JW] Fix typo.
 
   * collection/*:
-    + [JW] Remove "." from Perl's module search path.  (Mitigates: #588017)
+    + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
 
   * commands/lintian:
     + [NT,JW] Remove "." from Perl's search path.  (Mitigates: #588017)
@@ -41,10 +41,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [JW] Fix typo.
 
   * frontend/dplint:
-    + [JW] Remove "." from Perl's search path.  (Mitigates: #588017)
+    + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
 
   * helpers/coll/*:
-    + [JW] Remove "." from Perl's search path.  (Mitigates: #588017)
+    + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
 
   * lib/Lintian/*.pm:
     + [JW] Fix typos.

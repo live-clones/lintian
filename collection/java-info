@@ -21,10 +21,11 @@
 
 package Lintian::coll::java_info;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 use FileHandle;

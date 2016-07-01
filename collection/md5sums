@@ -21,10 +21,11 @@
 
 package Lintian::coll::md5sums;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";

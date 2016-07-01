@@ -21,10 +21,11 @@
 
 package Lintian::coll::strings;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use FileHandle;
 

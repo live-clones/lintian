@@ -21,10 +21,11 @@
 
 package Lintian::coll::changelog_file;
 
+no lib '.';
+
 use strict;
 use warnings;
 use autodie;
-no lib '.';
 
 use File::Copy qw(copy);
 
