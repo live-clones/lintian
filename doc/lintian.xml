@@ -1244,7 +1244,7 @@ Overridable: no
       </itemizedlist>
       <para>
         Existing checks can be shadowed by placing a check with the
-        same name in an directory appearing earlier in the list.  This
+        same name in a directory appearing earlier in the list.  This
         also holds for the checks provided by Lintian itself.
       </para>
       <para>

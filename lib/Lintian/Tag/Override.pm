@@ -26,7 +26,7 @@ use Lintian::Data;
 
 =head1 NAME
 
-Lintian::Tag::Override -- Representation of an Lintian Override
+Lintian::Tag::Override -- Representation of a Lintian Override
 
 =head1 SYNOPSIS
 

@@ -682,7 +682,7 @@ L</OPTIONS>.
 
 In the configuration file, all options listed must have a value, even
 if they do not accept a value on command line (e.g. --pedantic).  The
-values "yes", "y", "1", or "true" will enable such a option and "no",
+values "yes", "y", "1", or "true" will enable such an option and "no",
 "n", "0" or "false" will disable it.  Prior to the 2.5.2 release,
 these values were case sensitive.
 

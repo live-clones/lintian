@@ -8,9 +8,13 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       package.  Thanks to Sergio Durigan Junior for the bug report and the
       initial patch.  (Closes: #828933)
   * checks/files.desc:
+    + [JW] Fix typos.
+  * checks/infofiles.desc:
     + [JW] Fix typo.
   * checks/manpages.desc:
     + [JW] Fix typos.
+  * checks/systemd.desc:
+    + [JW] Fix typo.
 
   * collection/*:
     + [JW] Remove "." from Perl's module search path.  (Mitigates: #588017)
@@ -28,13 +32,19 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
+  * doc/lintian.xml:
+    + [JW] Fix typo.
+
   * frontend/dplint:
     + [JW] Remove "." from Perl's search path.  (Mitigates: #588017)
 
   * helpers/coll/*:
     + [JW] Remove "." from Perl's search path.  (Mitigates: #588017)
 
-  * lib/Lintian/Output.pm:
+  * lib/Lintian/*.pm:
+    + [JW] Fix typos.
+
+  * man/lintian.pod.in:
     + [JW] Fix typo.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2016 20:17:52 +0000
@@ -3882,7 +3892,7 @@ lintian (2.5.13) unstable; urgency=low
       to Torquil Sørensen for the report.  (Closes: #705835)
     + [NT] Clarify in the tag description of some tags related
       to "Vcs-*" fields that the tags are based on a data list
-      (and is not a result of a HTTP request while checking the
+      (and is not a result of an HTTP request while checking the
       package).
   * checks/files{,.desc}:
     + [JW,NT] Drop missing-pre-dependency-on-multiarch-support
@@ -4124,7 +4134,7 @@ lintian (2.5.12) experimental; urgency=medium
     + [NT] Do not suggest the use of "virtual package" as a way
       to suppress empty-binary-package.  Lintian will still
       accept it the phrase for now.
-    + [NT] Accept libx32 as an bi-arch directory.
+    + [NT] Accept libx32 as a bi-arch directory.
     + [NT] Ignore gzipped lintian overrides when checking whether
       a package is empty.
     + [NT] Fix typo of Pre-Depends, thanks to Raúl Benencia for
@@ -5501,7 +5511,7 @@ lintian (2.5.5) unstable; urgency=low
       status of some collections.
     + [NT] Keep auto-cleaned collections until all processables in
       the group has been checked.
-    + [NT] Attempt guess the version number when running in an git
+    + [NT] Attempt guess the version number when running in a git
       checkout or unpacked source dir.  Based on patch from Evan
       Broder.  (Closes: #650701)
     + [NT] Added support for the virtual "GROUP" type in Lab Queries.
@@ -6718,7 +6728,7 @@ lintian (2.5.0) unstable; urgency=low
     + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
       Axel Beckert for the suggestion.  (Closes: #614715)
   * check/fields:
-    + [NT] Accepted patch from Antonio Terceiro to add Ruby-Version as a
+    + [NT] Accepted patch from Antonio Terceiro to add Ruby-Version as an
       accepted field in binary packages.  Thanks to Vincent Carmona for
       the report.  (Closes: #623390)
   * check/files:
@@ -6744,7 +6754,7 @@ lintian (2.5.0) unstable; urgency=low
       (Closes: #626210)
 
   * data/common/source-fields:
-    + [NT] Accepted patch from Antonio Terceiro to add Ruby-Version as a
+    + [NT] Accepted patch from Antonio Terceiro to add Ruby-Version as an
       accepted field in binary packages.  Thanks to Vincent Carmona for
       the report.
 
@@ -8102,7 +8112,7 @@ lintian (2.3.1) unstable; urgency=low
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
     + [RG] Lower the severity of init.d-script-does-not-provide-itself
       to minor.
-    + [RG] Fix a init.d-script-possible-missing-stop false positive when
+    + [RG] Fix an init.d-script-possible-missing-stop false positive when
       stopping on runlevels 2-5.
     + [RG] Mention 'killprocs' in init.d-script-possible-missing-stop's
       description.  Thanks, Kurt Roeckx.  (Closes: #562608)
@@ -9207,7 +9217,7 @@ lintian (2.2.11) unstable; urgency=low
       and Paul Gevers.  (Closes: #526435)
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.  (Closes: #530008)
-    + [ADB] Don't consider an 64-bit kernel module shipped in a binary
+    + [ADB] Don't consider a 64-bit kernel module shipped in a binary
       package for the corresponding 32-bit architecture to be "from other
       architecture".  (Closes: #532013)
     + [ADB] When checking for binaries which define rpaths, don't exclude
@@ -11447,7 +11457,7 @@ lintian (1.24.3) unstable; urgency=low
       Polo.
   * checks/rules:
     + [ADB] Use ::Collect for field access.
-    + [FL] Do not complain about using dh in a unused binary-* target.
+    + [FL] Do not complain about using dh in an unused binary-* target.
   * checks/scripts{,.desc}:
     + [RA] Warn about maintainer scripts that prepend a path to commands.
       Based on a patch by Raphael Geissert.  (Closes: #376184)
@@ -15086,7 +15096,7 @@ lintian (1.23.0) unstable; urgency=low
       they're installed. Based on patch by Jay Bonci. (Closes: #178441)
   * checks/init.d:
     + [FL] output-of-updaterc.d-not-redirected-to-dev-null should be
-      only a info tag since it is more a aesthetical issue, not a
+      only an info tag since it is more an aesthetical issue, not a
       policy violation. (Closes: #149700)
   * checks/lintian.desc:
     + [JvW] Added missing Type: tags

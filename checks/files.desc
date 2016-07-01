@@ -1512,7 +1512,7 @@ Severity: minor
 Certainty: wild-guess
 Experimental: yes
 Info: This udeb package appears to be empty, and its description does
- not say that it's a metapackage or an package.  This is often due to
+ not say that it's a metapackage or a package.  This is often due to
  problems with updating debhelper *.install files during package
  renames or similar problems where installation rules don't put files
  in the correct place.

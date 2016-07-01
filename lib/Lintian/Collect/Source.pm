@@ -152,7 +152,7 @@ If the source format is 1.0 and the version number is absent, this
 will return false (as native packages are a lot rarer than non-native
 ones).
 
-Note if the source format is missing, it is assumed to be an 1.0
+Note if the source format is missing, it is assumed to be a 1.0
 package.
 
 Needs-Info requirements for using I<native>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>

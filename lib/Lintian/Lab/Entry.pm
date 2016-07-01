@@ -34,7 +34,7 @@ Lintian::Lab::Entry - A package inside the Lab
  # create the entry if it does not exist
  $lpkg->create unless $lpkg->exists;
  
- # obtain an Lintian::Collect object.
+ # obtain a Lintian::Collect object.
  my $info = $lpkg->info;
  
  $lpkg->clear_cache;

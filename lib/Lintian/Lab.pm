@@ -229,7 +229,7 @@ order (e.g. the returned list is not ordered).
 
 If the second calling convention is used, then this method will search
 for an entry matching the processable passed.  If such an entry
-does not exists, an new "non-existing" L<entry|Lintian::Lab::Entry>
+does not exists, a new "non-existing" L<entry|Lintian::Lab::Entry>
 will be returned.  This entry can be created by using the
 L<create|Lintian::Lab::Entry/create> method on the entry.
 
