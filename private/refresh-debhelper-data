@@ -79,7 +79,7 @@ EOF
         basename=$(basename "$file")
         cat >> "$file" <<EOF
 #
-# If the script generates an sufficient/incorrect value for a
+# If the script generates an insufficient/incorrect value for a
 # single item, please have a look at ${basename}-manual.
 #
 EOF
