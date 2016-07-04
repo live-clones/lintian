@@ -36,6 +36,7 @@ ruby-versions
 source
 standards-version
 testsuite
+testsuite-triggers
 uploaders
 vcs-arch
 vcs-browser
