@@ -35,6 +35,9 @@ lintian (2.5.50) UNRELEASED; urgency=medium
       test for php scripts without a php-cli dependency.  Thanks
       to Ondřej Surý for the report and Mathieu Parent for the
       initial patch.  (Closes: #818962)
+    + [CL, NT] Warn about new source packages providing a python2
+      package as EOL for python2 is expected in 2020, which is
+      before buster's expected EOL.  (Closes: #829744)
 
   * collection/objdump-info.desc:
     + [NT] Bump version due to RUNPATH collection.

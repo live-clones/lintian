@@ -1,0 +1,8 @@
+Testname: scripts-python2
+Sequence: 6000
+Version: 1.0
+Description: Check various Python 2 issues
+Skeleton: pedantic
+Options: --pedantic -I -E
+Test-For:
+ new-package-should-not-package-python2-module

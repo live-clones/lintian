@@ -3,7 +3,7 @@ Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: scr
 Type: binary
 Info: This script checks the #! lines of scripts in a package.
-Needs-Info: unpacked, file-info, scripts, bin-pkg-control
+Needs-Info: unpacked, file-info, changelog-file, scripts, bin-pkg-control
 
 Tag: script-without-interpreter
 Severity: important
@@ -751,3 +751,16 @@ Severity: classification
 Certainty: possible
 Info: The maintainer scripts of the package one or more auto-generated
  shell snippets inserted by the listed debhelper tool.
+
+Tag: new-package-should-not-package-python2-module
+Severity: wishlist
+Certainty: certain
+Info: This package appears to be the first packaging of a new upstream
+ software package but it appears to package a module for Python 2.
+ .
+ The 2.x series of Python is due for deprecation and will not be maintained
+ past 2020 so it is recommended that Python 2 modules are not packaged unless
+ necessary.
+ .
+ This warning can be ignored if the package is not intended for Debian or
+ if it is a split of an existing Debian package.

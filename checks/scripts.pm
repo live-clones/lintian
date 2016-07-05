@@ -1109,6 +1109,13 @@ sub run {
         }
     }
 
+    my @entries = $info->changelog->data;
+
+    if (@entries == 1) {
+      tag 'new-package-should-not-package-python2-module', $pkg
+        if $pkg =~ /^python-/
+    }
+
     return;
 }
 
