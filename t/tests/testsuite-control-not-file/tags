@@ -1,2 +1,0 @@
-I: testsuite-control-not-file source: debian-tests-control-is-not-a-regular-file
-I: testsuite-control-not-file source: xs-testsuite-header-in-debian-control xs-testsuite

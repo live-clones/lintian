@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-
-DIR="$1"
-mkdir -p "$DIR/debian/tests"
-mkfifo "$DIR/debian/tests/control"
