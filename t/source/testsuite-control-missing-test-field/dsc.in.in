@@ -1,0 +1,15 @@
+Format: 1.0
+Source: testsuite-control-missing-test-field
+Binary: testsuite-control-missing-test-field
+Architecture: all
+Version: 1
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7)
+Testsuite: autopkgtest
+Checksums-Sha1:
+ @SHA1@ @SIZE@ testsuite-control-missing-test-field_1.tar.gz
+Checksums-Sha256:
+ @SHA256@ @SIZE@ testsuite-control-missing-test-field_1.tar.gz
+Files:
+ @MD5@ @SIZE@ testsuite-control-missing-test-field_1.tar.gz
