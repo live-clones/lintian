@@ -21,6 +21,7 @@ Tests: test-2
 Test-Command: /bin/true
 Depends: @, missing a comma
 
+Test-Command: /bin/true
 Features: unknownfeature
 Restrictions: unknownrestriction
 

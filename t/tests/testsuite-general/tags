@@ -12,5 +12,4 @@ W: testsuite-general source: debian-tests-control-uses-national-encoding at line
 W: testsuite-general source: exclusive-runtime-tests-field tests, test-command paragraph starting at line 20
 W: testsuite-general source: illegal-runtime-test-name under_score paragraph starting at line 5
 W: testsuite-general source: missing-runtime-test-file debian/tests/missing-test paragraph starting at line 5
-W: testsuite-general source: missing-runtime-tests-field tests || test-command paragraph starting at line 24
 W: testsuite-general source: testsuite-dependency-has-unparsable-elements "missing a comma" (in paragraph starting at line 20)
