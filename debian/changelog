@@ -35,7 +35,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [NT] Apply patch from Edward Betts to add Testsuite-Triggers as
       a known source field.  (Closes: #829545)
   * data/java/constants:
-    + [NT] Bumb known java-class versions.  Thanks to Hideki Yamane for
+    + [NT] Bump known java-class versions.  Thanks to Hideki Yamane for
       the report.  (Closes: #829592)
   * data/scripts/interpreters:
     + [JW] Apply patch from Sergio Durigan Junior to add newLISP as a
