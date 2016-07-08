@@ -55,6 +55,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * man/lintian.pod.in:
     + [JW] Fix typo.
 
+  * t:
+    + [JW,NT] Update tests to work now that dpkg validates
+      debian/tests/control.  (Closes: #829635)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2016 20:17:52 +0000
 
 lintian (2.5.45) unstable; urgency=medium
