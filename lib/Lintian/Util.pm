@@ -361,10 +361,10 @@ An invalid or malformed PGP header appears.
 
 Two "BEGIN PGP MESSAGE" headers appears in the same message.
 
-=item End of file but expected a "END PGP SIGNATURE" header
+=item End of file but expected an "END PGP SIGNATURE" header
 
 The file ended after a "BEGIN PGP SIGNATURE" header without being
-followed by a "END PGP SIGNATURE".
+followed by an "END PGP SIGNATURE".
 
 =item PGP MESSAGE header must be first content if present
 

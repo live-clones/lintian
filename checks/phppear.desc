@@ -9,7 +9,7 @@ Info: This script checks if the packages comply with various aspects of the
 Tag: pear-package-without-pkg-php-tools-builddep
 Severity: normal
 Certainty: possible
-Info: The package contains an package.xml or package2.xml file but doesn't
+Info: The package contains a package.xml or package2.xml file but doesn't
  build-depend on pkg-php-tools.
  .
  pkg-php-tools is the recommended tool for building PEAR and PECL packages. For
@@ -18,7 +18,7 @@ Info: The package contains an package.xml or package2.xml file but doesn't
 Tag: pear-channel-without-pkg-php-tools-builddep
 Severity: normal
 Certainty: possible
-Info: The package contains an channel.xml file but doesn't build-depend on
+Info: The package contains a channel.xml file but doesn't build-depend on
  pkg-php-tools.
  .
  pkg-php-tools is the recommended tool for building PEAR and PECL packages. For
@@ -55,7 +55,7 @@ Info: The package is a PECL package but its control file doesn't have
 Tag: composer-package-without-pkg-php-tools-builddep
 Severity: wishlist
 Certainty: possible
-Info: The package contains an composer.json file but doesn't build-depend on
+Info: The package contains a composer.json file but doesn't build-depend on
  pkg-php-tools.
  .
  pkg-php-tools is the recommended tool for building PHP Composer packages. For

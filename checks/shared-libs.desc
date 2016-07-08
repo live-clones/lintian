@@ -112,7 +112,7 @@ Certainty: certain
 Info: The given maintainer script calls ldconfig.  However, explicit
  calls in maintainer scripts should be replaced by a dpkg trigger.
  .
- Please replace the "ldconfig" call with a <tt>activate-noawait
+ Please replace the "ldconfig" call with an <tt>activate-noawait
  ldconfig</tt> trigger.  With debhelper it is usually sufficient
  to simply add that line to <tt>debian/&lt;package&gt;.triggers</tt>.
  .

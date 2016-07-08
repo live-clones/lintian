@@ -786,7 +786,7 @@ values the per-file statistics.
 
 The per-file statistics has a set of hashes of keys to times seen in tags:
 tag names (the C<tags> key), severities (the C<severity> key), certainties
-(the C<certainty> key), and tag codes (the C<types> key).  It also has a
+(the C<certainty> key), and tag codes (the C<types> key).  It also has an
 C<overrides> key which has as its value another hash with those same four
 keys, which keeps statistics on overridden tags (not included in the
 regular counts).

@@ -16,6 +16,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       Thanks to Jeremy Bicha for the bug report.  (Closes: #829047)
   * checks/manpages.desc:
     + [JW] Fix typos.
+  * checks/phppear.desc:
+    + [JW] Fix typos.
+  * checks/shared-libs.desc:
+    + [JW] Fix typo.
   * checks/systemd.desc:
     + [JW] Fix typo.
 
