@@ -1,3 +1,6 @@
+# turn off PIE in CC in case we have a PIEful toolchain:
+CC := gcc -fno-pie -no-pie
+
 LINKER_FLAGS := -Wl,--no-copy-dt-needed-entries,--no-as-needed
 
 all: basic basic.1 libbasic-nodeps libbasic-nolibc
@@ -6,13 +9,13 @@ basic.1: basic.pod
 	pod2man --section 1 $< > $@
 
 basic: basic.o
-	gcc -nostdlib -o$@ $< $(LINKER_FLAGS) -lm $(LFLAGS)
+	$(CC) -nostdlib -o$@ $< $(LINKER_FLAGS) -lm $(LFLAGS)
 
 libbasic-nodeps: basic.o
-	gcc -nostdlib --shared -o$@ $<
+	$(CC) -nostdlib --shared -o$@ $<
 
 libbasic-nolibc: basic.o
-	gcc -nostdlib --shared -o$@ $< $(LINKER_FLAGS) -lm
+	$(CC) -nostdlib --shared -o$@ $< $(LINKER_FLAGS) -lm
 
 install:
 	install -d $(DESTDIR)/usr/bin

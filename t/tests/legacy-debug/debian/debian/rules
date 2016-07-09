@@ -4,16 +4,19 @@
 
 #export DH_COMPAT := 5
 
+# turn off PIE in CC in case we have a PIEful toolchain:
+CC := gcc -fno-pie -no-pie
+
 build-indep:
 
 build-arch: build-stamp
 
 build-stamp:
 	dh_testdir
-	gcc -D_REENTRANT -fPIC -c libhello.c
-	gcc -o libhello.so.0.0 -shared -Wl,-soname,libhello.so.0 libhello.o
+	$(CC) -D_REENTRANT -fPIC -c libhello.c
+	$(CC) -o libhello.so.0.0 -shared -Wl,-soname,libhello.so.0 libhello.o
 	ln -s libhello.so.0.0 libhello.so
-	gcc -o hello hello.c -L. -lhello
+	$(CC) -o hello hello.c -L. -lhello
 	touch build-stamp
 
 build: build-arch build-indep

@@ -1,11 +1,14 @@
+# turn off PIE in CC in case we have a PIEful toolchain:
+CC := gcc -fno-pie -no-pie
+
 all: weak.1 strong.1
 	# Build without dpkg-buildflags.
-	gcc -o weak -g \
+	$(CC) -o weak -g \
 		-fno-stack-protector \
 		-Wl,-z,norelro \
 		-U_FORTIFY_SOURCE \
 		hello.c
-	gcc -o strong \
+	$(CC) -o strong \
 		$(shell dpkg-buildflags --get CPPFLAGS) \
 		$(shell dpkg-buildflags --get CFLAGS) \
 		$(shell dpkg-buildflags --get LDFLAGS) \

@@ -1,3 +1,6 @@
+# turn off PIE in CC in case we have a PIEful toolchain:
+CC := gcc -fno-pie -no-pie
+
 NOPIE_CFLAGS = $(filter-out -fPIE,$(CFLAGS))
 NOPIE_LDFLAGS = $(filter-out -fPIE -pie,$(LDFLAGS))
 COMPILE:= $(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
