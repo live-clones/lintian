@@ -1,5 +1,9 @@
 # turn off PIE in CC in case we have a PIEful toolchain:
-CC := gcc -fno-pie -no-pie
+ifneq ($(findstring -no-pie,$(shell gcc -no-pie 2>&1)),)
+  CC := gcc
+else
+  CC := gcc -fno-pie -no-pie
+endif
 
 all: weak.1 strong.1
 	# Build without dpkg-buildflags.
