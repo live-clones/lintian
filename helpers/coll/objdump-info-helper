@@ -256,7 +256,7 @@ sub finish_file {
             print " $seg $ver $sym\n";
         }
     }
-    # Add an newline to end the current paragraph
+    # Add a newline to end the current paragraph
     print "\n";
 
     # reset variables

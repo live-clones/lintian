@@ -740,7 +740,7 @@ sub format_soname {
 }
 
 # Returns a truth value if the first argument appears to be the path
-# to an libc nss plugin (libnss_<name>.so.$version).
+# to a libc nss plugin (libnss_<name>.so.$version).
 sub is_nss_plugin {
     my ($path) = @_;
     return 1 if $path =~ m,^(.*/)?libnss_[^.]+\.so\.\d+$,o;

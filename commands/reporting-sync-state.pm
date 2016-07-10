@@ -425,7 +425,7 @@ sub prune_lintian_lab {
 # _open_data_file ($file)
 #
 # Opens $file if it exists, otherwise it tries common extensions (i.e. .gz) and opens
-# that instead.  It may pipe the file through a external decompressor, so the returned
+# that instead.  It may pipe the file through an external decompressor, so the returned
 # file descriptor cannot be assumed to be a file.
 #
 # If $file does not exists and no common extensions are found, this dies.  It may also

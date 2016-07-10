@@ -182,7 +182,7 @@ sub _check_multiarch {
     return;
 }
 
-## Encapsulate Tarjan's algorithm in an class/object to keep
+## Encapsulate Tarjan's algorithm in a class/object to keep
 ## the run sub somewhat sane.  Allow this "extra" package as
 ## it is not a proper subclass.
 #<<< no Perl tidy (it breaks the no critic comment)

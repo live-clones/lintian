@@ -17,7 +17,7 @@ my %TESTS_BAD = (
     'pgp-malformed-header' => qr/${syntax_error}: Malformed PGP header/,
 
     'pgp-two-signed-msgs' => qr/${syntax_error}: Expected at most one signed message \(previous at line \d+\)/,
-    'pgp-no-end-pgp-header' => qr/${syntax_error}: End of file but expected a "END PGP SIGNATURE" header/,
+    'pgp-no-end-pgp-header' => qr/${syntax_error}: End of file but expected an "END PGP SIGNATURE" header/,
     'pgp-leading-unsigned' => qr/${syntax_error}: PGP MESSAGE header must be first content if present/,
     'pgp-trailing-unsigned' => qr/${syntax_error}: Data after the PGP SIGNATURE/,
     'pgp-eof-missing-sign' => qr/${syntax_error}: End of file before "BEGIN PGP SIGNATURE"/,

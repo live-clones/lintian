@@ -31,7 +31,7 @@ sub run {
     my $control = $info->control_index('md5sums');
     my (%control_entry, %info_entry);
 
-    # Is there a md5sums control file?
+    # Is there an md5sums control file?
     if (not $control) {
         # ignore if package contains no files
         return if -z $info->lab_data_path('md5sums');

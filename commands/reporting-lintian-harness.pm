@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Lintian reporting harness -- Run lintian against a archive mirror
+# Lintian reporting harness -- Run lintian against an archive mirror
 #
 # Copyright (C) 2015 Niels Thykier
 #

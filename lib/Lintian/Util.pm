@@ -440,7 +440,7 @@ sub visit_dpkg_paragraph {
             # message format identical.
             die join(q{ },
                 "syntax error at line $.:",
-                qq{End of file but expected a "END PGP SIGNATURE" header\n})
+                qq{End of file but expected an "END PGP SIGNATURE" header\n})
               unless $saw_end;
         }
         # other pgp control?

@@ -318,7 +318,7 @@ sub run {
             unless ($fname =~ m,/$,) {
                 # Skip if $file is outside /usr/share/doc/$pkg directory
                 if ($fname !~ m,^usr/share/doc/\Q$pkg\E,) {
-                    # - except if it is an lintian override.
+                    # - except if it is a lintian override.
                     next
                       if $fname =~ m{\A
                             usr/share/lintian/overrides/$ppkg(?:\.gz)?
@@ -1183,7 +1183,7 @@ sub run {
             #
             # Another exception is made for .html and .php because
             # preserving working links is more important than saving
-            # some bytes, and because a package had a HTML form for
+            # some bytes, and because a package had an HTML form for
             # licenses called like that.  Another exception is made
             # for various picture formats since those are likely to
             # just be simply pictures.

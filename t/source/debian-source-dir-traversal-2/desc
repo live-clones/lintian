@@ -1,4 +1,4 @@
 Testname: debian-source-dir-traversal-2
 Sequence: 6000
 Version: 1.0
-Description: Test for information discloure via d/source
+Description: Test for information disclosure via d/source
