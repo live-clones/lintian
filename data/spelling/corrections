@@ -446,6 +446,7 @@ clearify||clarify
 clearifying||clarifying
 cleint||client
 cleints||clients
+closeing||closing
 coefficent||coefficient
 coefficents||coefficients
 cofigure||configure
@@ -545,6 +546,7 @@ configration||configuration
 configrations||configurations
 configuation||configuration
 configuations||configurations
+configuraion||configuration
 configuratoin||configuration
 conjuction||conjunction
 conneciton||connection
@@ -590,6 +592,8 @@ controlls||controls
 contruct||construct
 contructed||constructed
 contructing||constructing
+contruction||construction
+contructions||constructions
 contructor||constructor
 contructors||constructors
 contructs||constructs
@@ -721,9 +725,12 @@ descritpion||description
 descritpions||descriptions
 desctiptor||descriptor
 desctiptors||descriptors
+desination||destination
+desinations||destinations
 desireable||desirable
 desriptor||descriptor
 desriptors||descriptors
+destory||destroy
 destoryed||destroyed
 detabase||database
 detatch||detach
@@ -1043,6 +1050,7 @@ fatser||faster
 feasable||feasible
 feauture||feature
 feautures||features
+feeded||fed
 fetaure||feature
 fetaures||features
 ficticious||fictitious
@@ -1137,6 +1145,7 @@ geomtry||geometry
 geting||getting
 glpyh||glyph
 glpyhs||glyphs
+goind||going
 goverment||government
 grabing||grabbing
 grahical||graphical
@@ -1907,6 +1916,7 @@ promps||prompts
 pronnounced||pronounced
 prononciation||pronunciation
 pronouce||pronounce
+pronounciation||pronunciation
 pronunce||pronounce
 properies||properties
 propery||property
@@ -2010,6 +2020,10 @@ registerd||registered
 registe||register
 registes||registers
 registraration||registration
+regsitered||registered
+regsitering||registering
+regsiter||register
+regsiters||registers
 regulamentations||regulations
 regularily||regularly
 reimplmentation||reimplementation
@@ -2234,6 +2248,8 @@ slashs||slashes
 sligthly||slightly
 sligth||slight
 smae||same
+smaple||sample
+smaples||samples
 softwares||software
 sofware||software
 somehwere||somewhere
@@ -2387,6 +2403,7 @@ suuports||supports
 suuport||support
 swaping||swapping
 switchs||switches
+sylog||syslog
 symetric||symmetric
 synax||syntax
 synchonized||synchronized
@@ -2500,6 +2517,7 @@ uncommment||uncomment
 uncomplete||incomplete
 unconditionaly||unconditionally
 uncoverted||unconverted
+uncrypted||unencrypted
 underuns||underruns
 underun||underrun
 undesireable||undesirable
@@ -2625,6 +2643,7 @@ wether||whether
 whataver||whatever
 whenver||whenever
 wheras||whereas
+whereever||wherever
 wheter||whether
 whish||wish
 whithout||without
@@ -2644,6 +2663,7 @@ wnats||wants
 wnat||want
 wont||won't
 workaroung||workaround
+woud||would
 writeing||writing
 writen||written
 writting||writing
