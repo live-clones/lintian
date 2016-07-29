@@ -127,7 +127,7 @@ Info: The watch file specifies a githubredir.debian.net URL, which is deprecated
   https://github.com/&lt;user&gt;/&lt;project&gt;/tags .*/(.*)\.tar\.gz
  .
  replacing <tt>&lt;user&gt;</tt> and <tt>&lt;project&gt;</tt> with the Github
- username and project respectfully.
+ username and project respectively.
 
 Tag: debian-watch-file-specifies-wrong-upstream-version
 Severity: normal

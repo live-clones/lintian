@@ -22,6 +22,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [JW] Fix typo.
   * checks/systemd.desc:
     + [JW] Fix typos.
+  * checks/watch-file.desc:
+    + [JW] Fix typo.
 
   * collection/*:
     + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
