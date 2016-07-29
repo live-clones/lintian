@@ -3,3 +3,6 @@
 [Unit]
 After=
 After = syslog.target
+
+[Install]
+WantedBy=multi-user.target

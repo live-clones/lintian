@@ -201,6 +201,9 @@ sub check_systemd_service_file {
     if (not $file->is_symlink or $file->link ne '/dev/null') {
         tag 'systemd-service-file-missing-documentation-key', $file,
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);
+        tag 'systemd-service-file-missing-install-key', $file,
+          unless extract_service_file_values($file, 'Install', 'WantedBy',1)
+          or extract_service_file_values($file, 'Install', 'RequiredBy',1);
     }
 
     return 1;
