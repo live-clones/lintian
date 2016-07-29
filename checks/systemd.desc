@@ -11,7 +11,7 @@ Info: The package ships a systemd service file outside
  <tt>/lib/systemd/system/</tt>
  .
  Systemd in Debian searches for unit files in <tt>/lib/systemd/system/</tt>
- and <tt>/etc/systemd/system</tt>.  Notable, it does <i>not</i> look
+ and <tt>/etc/systemd/system</tt>.  Notably, it does <i>not</i> look
  in <tt>/usr/lib/systemd/system/</tt> for service files.
  .
  System administrators should have the possibility to overwrite a

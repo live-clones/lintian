@@ -21,7 +21,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * checks/shared-libs.desc:
     + [JW] Fix typo.
   * checks/systemd.desc:
-    + [JW] Fix typo.
+    + [JW] Fix typos.
 
   * collection/*:
     + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
