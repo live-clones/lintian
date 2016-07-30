@@ -16,15 +16,14 @@ grep
 gzip
 hostname
 hurd
+init-system-helpers
 libc-bin
 login
-mktemp
 mount
 ncurses-base
 ncurses-bin
 perl-base
 sed
-sysvinit
 sysvinit-utils
 tar
 util-linux
