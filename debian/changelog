@@ -2,6 +2,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
    XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/debhelper.{desc,pm}:
+    + [JW] Apply patch from Chris Lamb to check for common typos in
+      debian/rules target names.  (Closes: #832096)
   * checks/scripts.pm:
     + [JW] Fix false positive unusual-interpreter when the script had
       "#!/usr/bin/env" shebang and the interpreter was shipped in the same
