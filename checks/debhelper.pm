@@ -186,7 +186,8 @@ sub run {
                 foreach my $x (sort $dh_commands_depends->all) {
                     if (distance($dhcommand, $x) < 3) {
                         tag 'typo-in-debhelper-override-target',
-                          "override_$dhcommand", '->', "override_$x", "(line $.)";
+                          "override_$dhcommand", '->', "override_$x",
+                          "(line $.)";
                         last; # Only emit a single match
                     }
                 }
