@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+# Good
+override_dh_install:
+override_dh_will_never_exist:
+
+# Bad
+override_dh_instakk:
+override_dh_install_examples:
+
+# Multiple matches should emit only one tag
+override_dh_nump:

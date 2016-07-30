@@ -1,0 +1,5 @@
+Testname: debhelper-override-typos
+Sequence: 6000
+Version: 1.0
+Description: Test for typos in override targets
+Test-For: typo-in-debhelper-override-target

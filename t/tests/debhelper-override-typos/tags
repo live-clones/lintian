@@ -1,0 +1,3 @@
+W: debhelper-override-typos source: typo-in-debhelper-override-target override_dh_instakk -> override_dh_install (line 11)
+W: debhelper-override-typos source: typo-in-debhelper-override-target override_dh_install_examples -> override_dh_installexamples (line 12)
+W: debhelper-override-typos source: typo-in-debhelper-override-target override_dh_nump -> override_dh_numpy (line 15)

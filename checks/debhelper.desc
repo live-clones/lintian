@@ -349,3 +349,15 @@ Severity: classification
 Certainty: certain
 Info: This is the build system that Lintian believes the package is
  using.
+
+Tag: typo-in-debhelper-override-target
+Severity: normal
+Certainty: possible
+Info: The listed target in debian/rules command is a likely misspelling.
+ .
+ This can result in (for example) a <tt>dh_override_</tt>-style target
+ silently not being executed by <tt>make</tt>.
+ .
+ Implementation detail: The typo is detected by using "Levenshtein
+ edit distance".  Therefore, if the typo involve several characters,
+ Lintian may not detect it.

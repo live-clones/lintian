@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use Text::Levenshtein qw(distance);
+
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
@@ -176,8 +178,19 @@ sub run {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
-        } elsif (/^override_dh_/) {
+        } elsif (/^override_(dh_[^:]+)/) {
             $needbuilddepends = 1;
+            my $dhcommand = $1;
+            if (not $dh_commands_depends->known($dhcommand)) {
+                # Unknown command, so check for likely misspellings
+                foreach my $x (sort $dh_commands_depends->all) {
+                    if (distance($dhcommand, $x) < 3) {
+                        tag 'typo-in-debhelper-override-target',
+                          "override_$dhcommand", '->', "override_$x", "(line $.)";
+                        last; # Only emit a single match
+                    }
+                }
+            }
         } elsif (m,^include\s+/usr/share/cdbs/,) {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
