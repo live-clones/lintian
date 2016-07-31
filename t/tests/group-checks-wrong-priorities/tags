@@ -1,1 +1,0 @@
-W: group-checks-wrong-priorities source: package-depends-on-lower-priority-package pkg-optional:optional depends on pkg-extra:extra

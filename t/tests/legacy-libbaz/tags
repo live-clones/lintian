@@ -44,7 +44,6 @@ W: libbaz source: debhelper-but-no-misc-depends libbaz2
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dbg
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dev
 W: libbaz source: native-package-with-dash-version
-W: libbaz source: package-depends-on-lower-priority-package libbaz2-dbg:optional depends on libbaz2:extra
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
 W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
 W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel

@@ -13,6 +13,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       (Closes: #828773)
   * checks/files.desc:
     + [JW] Fix typos.
+  * checks/group-checks.{desc,pm}:
+    + [NT] Drop "lower priorities" check as the general conseus seems to
+      be that priorties changes are mostly busy work.  Thanks to Dominic
+      Hargreaves for the report.  (Closes: #823326)
   * checks/infofiles.desc:
     + [JW] Fix typo.
   * checks/java.pm:

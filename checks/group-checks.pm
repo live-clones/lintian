@@ -54,7 +54,6 @@ sub run {
             my $pname = $proc->pkg_name;
             push @nodes, $pname;
             $edges{$pname} = [map { $_->pkg_name } @$deps];
-            _check_priorities($proc, $deps);
             _check_multiarch($proc, $deps);
         }
     }
@@ -71,28 +70,6 @@ sub run {
         tag 'intra-source-package-circular-dependency', sort @$comp;
     }
 
-    return;
-}
-
-# Check that $proc has a priority that is less than or equal to that
-# of its dependencies (Policy §2.5)
-sub _check_priorities {
-    my ($proc, $deps) = @_;
-    my $priority = $proc->info->field('priority');
-    my $pkg_name = $proc->pkg_name;
-    if ($priority) {
-        my $prival = $KNOWN_PRIOS->value($priority);
-        foreach my $dep (@$deps) {
-            my $dpri = $dep->info->field('priority') // '';
-            my $dprival = $KNOWN_PRIOS->value($dpri);
-            # Ignore packages without priorities - we have a separate
-            # check for that.
-            next unless $dprival;
-            tag 'package-depends-on-lower-priority-package',
-              "$pkg_name:$priority", 'depends on', $dep->pkg_name . ":$dpri"
-              unless $prival <= $dprival;
-        }
-    }
     return;
 }
 

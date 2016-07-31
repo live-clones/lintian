@@ -23,18 +23,6 @@ Info: The listed packages from the same source circularly depend
  different source packages is beyond the scope of Lintian.
 Ref: policy 7.2
 
-Tag: package-depends-on-lower-priority-package
-Severity: normal
-Certainty: certain
-Ref: policy 2.5, https://qa.debian.org/debcheck.php
-Info: The package depends on a package with lower priority than
- itself.
- .
- Note: This check is limited to packages created from the same source
- package.  A full check of all dependencies built from different
- source packages is beyond the scope of Lintian.  The depcheck service
- can do this.
-
 Tag: binaries-have-file-conflict
 Severity: normal
 Certainty: possible

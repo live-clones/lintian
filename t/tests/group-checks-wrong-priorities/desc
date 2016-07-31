@@ -1,5 +1,0 @@
-Testname: group-checks-wrong-priorities
-Sequence: 6000
-Version: 1.0
-Description: Test for priority issues
-Test-For: package-depends-on-lower-priority-package
