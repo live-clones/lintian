@@ -83,8 +83,8 @@ Info: The maintainer script calls systemctl directly. Actions such as enabling
  <tt>invoke-rc.d</tt>, if the service has a corresponding sysvinit script, or
  <tt>deb-systemd-invoke</tt> if it does not.
  .
- If you are using debhelper, please use the <tt>dh-systemd</tt> debhelper
- addon.
+ If you are using debhelper, please use the <tt>systemd</tt> debhelper
+ addon, which is provided by <tt>debhelper (&gt;= 9.20160709~) | dh-systemd</tt>.
 
 Tag: init-script-is-not-a-file
 Severity: serious

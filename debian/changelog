@@ -33,6 +33,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [JW] Fix typos.
     + [JW, NT] Apply from Chris Lamb to check for a possibly missing
       "WantedBy" target in service files.  (Closes: #832771)
+    + [JW, NT] Improve wording about the "systemd" sequence of a tag.
   * checks/watch-file.desc:
     + [JW] Fix typo.
 
