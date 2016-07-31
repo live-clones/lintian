@@ -201,13 +201,20 @@ sub run {
               ^include \s+
                  /usr/share/(?:
                    dh-php/pkg-pecl\.mk
-                  |pkg-kde-tool/qt-kde-team/\d+/debian-qt-kde\.mk
                   |blends-dev/rules
                  )
               }xsm
           ) {
             # All of these indirectly use dh.
             $build_systems{'dh'} = 1;
+            delete($build_systems{'debhelper'});
+        } elsif (
+            m{
+              ^include \s+
+                 /usr/share/pkg-kde-tool/qt-kde-team/\d+/debian-qt-kde\.mk
+              }xsm
+          ) {
+            $build_systems{'dhmk'} = 1;
             delete($build_systems{'debhelper'});
         }
     }
