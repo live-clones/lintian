@@ -196,6 +196,19 @@ sub run {
             $inclcdbs = 1;
             $build_systems{'cdbs-without-debhelper.mk'} = 1
               if not exists($build_systems{'cdbs-with-debhelper.mk'});
+        } elsif (
+            m{
+              ^include \s+
+                 /usr/share/(?:
+                   dh-php/pkg-pecl\.mk
+                  |pkg-kde-tool/qt-kde-team/\d+/debian-qt-kde\.mk
+                  |blends-dev/rules
+                 )
+              }xsm
+          ) {
+            # All of these indirectly use dh.
+            $build_systems{'dh'} = 1;
+            delete($build_systems{'debhelper'});
         }
     }
     close($rules_fd);
