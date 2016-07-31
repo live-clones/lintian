@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf-,
 # otf-, t1-, xfonts- and fonts- are searched for fonts.
 #
-# Last updated: 2016-04-24
+# Last updated: 2016-07-31
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -325,8 +325,8 @@ caladea-italic.ttf fonts-crosextra-caladea
 caladea-regular.ttf fonts-crosextra-caladea
 caliban.ttf fonts-georgewilliams
 candystr.ttf ttf-aenigma
-cantarell-bold-oblique.otf fonts-cantarell
 cantarell-bold.otf fonts-cantarell
+cantarell-boldoblique.otf fonts-cantarell
 cantarell-oblique.otf fonts-cantarell
 cantarell-regular.otf fonts-cantarell
 carlito-bold.ttf fonts-crosextra-carlito
@@ -458,6 +458,7 @@ dbsillc.ttf fonts-sil-dai-banna
 dbsillo.ttf fonts-sil-dai-banna
 dbsillr.ttf fonts-sil-dai-banna
 decrepit.ttf ttf-aenigma
+dejavumathtexgyre.ttf fonts-dejavu-extra
 dejavusans-bold.ttf fonts-dejavu-core
 dejavusans-bold.ttf ttf-dejavu-core
 dejavusans-boldoblique.ttf fonts-dejavu-extra
@@ -1201,6 +1202,7 @@ madscrwl.ttf ttf-aenigma
 maitreyasymbols.ttf fonts-maitreya
 manchufont.ttf fonts-manchufont
 markedfool.ttf fonts-dustin
+marlett.ttf fonts-wine
 marvosym.ttf ttf-marvosym
 materialdesignicons-webfont.ttf fonts-materialdesignicons-webfont
 mathjax_ams-regular.otf fonts-mathjax
@@ -1232,22 +1234,6 @@ mekanusadfstd-bold.otf ttf-adf-mekanus
 mekanusadfstd-bolditalic.otf ttf-adf-mekanus
 mekanusadfstd-italic.otf ttf-adf-mekanus
 mekanusadfstd-regular.otf ttf-adf-mekanus
-mgopencanonicabold.ttf fonts-mgopen
-mgopencanonicabolditalic.ttf fonts-mgopen
-mgopencanonicaitalic.ttf fonts-mgopen
-mgopencanonicaregular.ttf fonts-mgopen
-mgopencosmeticabold.ttf fonts-mgopen
-mgopencosmeticaboldoblique.ttf fonts-mgopen
-mgopencosmeticaoblique.ttf fonts-mgopen
-mgopencosmeticaregular.ttf fonts-mgopen
-mgopenmodatabold.ttf fonts-mgopen
-mgopenmodataboldoblique.ttf fonts-mgopen
-mgopenmodataoblique.ttf fonts-mgopen
-mgopenmodataregular.ttf fonts-mgopen
-mgopenmodernabold.ttf fonts-mgopen
-mgopenmodernaboldoblique.ttf fonts-mgopen
-mgopenmodernaoblique.ttf fonts-mgopen
-mgopenmodernaregular.ttf fonts-mgopen
 migmix-1m-bold.ttf fonts-migmix
 migmix-1m-regular.ttf fonts-migmix
 migmix-1p-bold.ttf fonts-migmix
@@ -1718,6 +1704,11 @@ rachana.ttf fonts-smc
 radissans-medium.otf fonts-radisnoir
 raghumalayalamsans.ttf fonts-smc
 rambling.ttf ttf-aenigma
+rasa-bold.ttf fonts-yrsa-rasa
+rasa-light.ttf fonts-yrsa-rasa
+rasa-medium.ttf fonts-yrsa-rasa
+rasa-regular.ttf fonts-yrsa-rasa
+rasa-semibold.ttf fonts-yrsa-rasa
 ratav53.ttf fonts-sil-mondulkiri-extra
 ravaged2.ttf ttf-aenigma
 ravcater.ttf ttf-aenigma
@@ -1935,12 +1926,15 @@ switzeraadflightcd-bold.otf ttf-adf-switzera
 switzeraadflightcd-bolditalic.otf ttf-adf-switzera
 switzeraadflightcd-italic.otf ttf-adf-switzera
 switzeraadflightcd-regular.otf ttf-adf-switzera
+symbol.ttf fonts-wine
 symbola_hint.ttf fonts-symbola
 symmetry.ttf ttf-aenigma
 syndrome.ttf ttf-aenigma
 syntheti.ttf ttf-aenigma
 syracuse.ttf ttf-aenigma
 tagbanwa.ttf ttf-tagbanwa
+tahoma.ttf fonts-wine
+tahomabd.ttf fonts-wine
 taiheritagepro-b.ttf fonts-sil-taiheritagepro
 taiheritagepro-r.ttf fonts-sil-taiheritagepro
 takaogothic.ttf fonts-takao-gothic
@@ -1974,6 +1968,7 @@ texgyrecursor-bold.otf fonts-texgyre
 texgyrecursor-bolditalic.otf fonts-texgyre
 texgyrecursor-italic.otf fonts-texgyre
 texgyrecursor-regular.otf fonts-texgyre
+texgyredejavu-math.otf fonts-texgyre
 texgyreheros-bold.otf fonts-texgyre
 texgyreheros-bolditalic.otf fonts-texgyre
 texgyreheros-italic.otf fonts-texgyre
@@ -2242,6 +2237,7 @@ ukijtzneqish.ttf fonts-ukij-uyghur
 ukijtztr.ttf fonts-ukij-uyghur
 ukijtztrbold.ttf fonts-ukij-uyghur
 ukijzilwa.ttf fonts-ukij-uyghur
+ume-hgo4.ttf fonts-horai-umefont
 ume-pgc4.ttf fonts-horai-umefont
 ume-pgc5.ttf fonts-horai-umefont
 ume-pgo4.ttf fonts-horai-umefont
@@ -2407,6 +2403,7 @@ whatever.ttf ttf-aenigma
 whipsnap.ttf ttf-aenigma
 wigsquig.ttf ttf-aenigma
 wincing.ttf ttf-aenigma
+wingding.ttf fonts-wine
 winks.ttf fonts-dustin
 withstan.ttf ttf-aenigma
 wobbly.ttf ttf-aenigma
@@ -2448,6 +2445,11 @@ yigezubisratgothic.ttf fonts-senamirmir-washra
 yonder.ttf ttf-aenigma
 yoshisst.ttf ttf-aenigma
 yourcomp.ttf ttf-aenigma
+yrsa-bold.ttf fonts-yrsa-rasa
+yrsa-light.ttf fonts-yrsa-rasa
+yrsa-medium.ttf fonts-yrsa-rasa
+yrsa-regular.ttf fonts-yrsa-rasa
+yrsa-semibold.ttf fonts-yrsa-rasa
 z003034d.pfb t1-cyrillic
 zaghawaberia.otf fonts-sil-zaghawa-beria
 zelan.ttf fonts-senamirmir-washra

@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2016-04-20 17:06
+# It was generated on 2016-07-31 15:44
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_addons-manual.
@@ -59,11 +59,12 @@ python_virtualenv=dh-virtualenv
 quilt=quilt
 rebar=dh-rebar
 ruby=gem2deb
+runit=dh-runit
 scour=python-scour
 sodeps=pkg-kde-tools
 sphinxdoc=sphinx-common
 swi_prolog=swi-prolog-nox
-systemd=dh-systemd
+systemd=debhelper
 tex=tex-common
 vdrplugin=vdr-dev
 xine=libxine2-dev

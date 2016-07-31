@@ -52,6 +52,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * data/common/source-fields:
     + [NT] Apply patch from Edward Betts to add Testsuite-Triggers as
       a known source field.  (Closes: #829545)
+  * data/debhelper/*:
+    + [NT] Refresh aainst unstable.
   * data/debhelper/dh_{addons,commands}-manual:
     + [JW, NT] Add the systemd sequence and related tools now that
       debhelper is taking over the dh-systemd helpers.  Thanks to
@@ -59,6 +61,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * data/fields/essential:
     + [JW] Add init-system-helpers; remove sysvinit and mktemp.  Thanks to
       Felipe Sateler for the bug report.  (Closes: #833015)
+  * data/files/fonts:
+    + [NT] Refresh against unstable.
   * data/java/constants:
     + [NT] Bump known java-class versions.  Thanks to Hideki Yamane for
       the report.  (Closes: #829592)

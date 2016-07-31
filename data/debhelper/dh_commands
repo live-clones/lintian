@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2016-04-20 17:06
+# It was generated on 2016-07-31 15:44
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_commands-manual.
@@ -47,6 +47,7 @@ dh_dpatch_unpatch=dpatch
 dh_dzil_build=dh-dist-zilla
 dh_dzil_clean=dh-dist-zilla
 dh_elpa=dh-elpa
+dh_elpa_test=dh-elpa
 dh_fixperms=debhelper
 dh_gconf=debhelper
 dh_gencontrol=debhelper
@@ -57,7 +58,7 @@ dh_gnome=gnome-pkg-tools
 dh_gnome_clean=gnome-pkg-tools
 dh_gnustep=gnustep-make
 dh_golang=dh-golang
-dh_gstscancodecs=libgstreamer0.10-dev
+dh_gstscancodecs=libgstreamer1.0-dev
 dh_gtkmodules=libgtk2.0-dev
 dh_haskell_blurbs=haskell-devscripts
 dh_haskell_depends=haskell-devscripts
@@ -149,6 +150,7 @@ dh_rebar=dh-rebar
 dh_ruby=gem2deb
 dh_ruby_fixdepends=gem2deb
 dh_ruby_fixdocs=gem2deb
+dh_runit=dh-runit
 dh_sameversiondep=pkg-kde-tools
 dh_scour=python-scour
 dh_shlibdeps=debhelper
@@ -159,8 +161,8 @@ dh_sphinxdoc=sphinx-common
 dh_strip=debhelper
 dh_strip_nondeterminism=dh-strip-nondeterminism
 dh_swi_prolog=swi-prolog-nox
-dh_systemd_enable=dh-systemd
-dh_systemd_start=dh-systemd
+dh_systemd_enable=debhelper
+dh_systemd_start=debhelper
 dh_testdir=debhelper
 dh_testroot=debhelper
 dh_ucf=debhelper

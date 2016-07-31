@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2016-04-20 17:06
+# It was generated on 2016-07-31 15:44
 
 apache2-dev
 autotools-dev
@@ -29,8 +29,8 @@ dh-ocaml
 dh-php
 dh-python
 dh-rebar
+dh-runit
 dh-strip-nondeterminism
-dh-systemd
 dh-virtualenv
 dh-xsp
 dictionaries-common-dev
@@ -47,7 +47,7 @@ haskell-devscripts
 libaqbanking-dev
 libdbi-perl
 libgcj-common
-libgstreamer0.10-dev
+libgstreamer1.0-dev
 libgtk2.0-dev
 libimager-perl
 libva-dev
