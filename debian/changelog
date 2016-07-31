@@ -61,6 +61,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * data/fields/essential:
     + [JW] Add init-system-helpers; remove sysvinit and mktemp.  Thanks to
       Felipe Sateler for the bug report.  (Closes: #833015)
+  * data/fields/obsolete-packages:
+    + [NT] Remove "debmake" as the package is now reintroduced with a
+      different purpose.  Thanks to Paul Wise for the report.
+      (Closes: #827158)
   * data/files/fonts:
     + [NT] Refresh against unstable.
   * data/java/constants:

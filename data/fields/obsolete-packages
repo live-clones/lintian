@@ -18,7 +18,6 @@
 xlibs-dev
 
 # Last seen in etch.
-debmake
 gcc-2.95
 
 # Last seen in lenny.
