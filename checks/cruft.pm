@@ -697,6 +697,7 @@ sub find_cruft {
             # Skip symlinks and other nasty stuff as well as
             # debian/changelog
             if (   $short ne 'changelog'
+                && $name !~ m{^debian/patches/.*$}
                 && $entry->is_file
                 && $entry->is_open_ok) {
                 my $contents = $entry->file_contents;

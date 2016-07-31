@@ -2,6 +2,10 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
    XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/cruft.pm:
+    + [NT] Ignore mentions of /usr/lib/perl5 in patches as they might
+      be a way of fixing said mentions.  Thanks to Robert Luberda
+      for reporting the bug.  (Closes: #802964)
   * checks/debhelper.{desc,pm}:
     + [JW] Apply patch from Chris Lamb to check for common typos in
       debian/rules target names.  (Closes: #832096)
