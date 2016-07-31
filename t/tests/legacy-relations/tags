@@ -3,7 +3,6 @@ E: relations source: build-conflicts-with-build-dependency debmake [!powerpc]
 E: relations source: build-depends-on-build-essential build-depends-indep
 E: relations source: build-depends-on-essential-package-without-using-version build-depends-indep: bash
 E: relations source: build-depends-on-essential-package-without-using-version build-depends: findutils
-E: relations source: build-depends-on-obsolete-package build-depends-indep: debmake
 E: relations source: depends-on-build-essential-package-without-using-version libc6-dev [build-depends: libc6-dev]
 E: relations source: depends-on-build-essential-package-without-using-version make [build-depends-indep: make]
 E: relations source: invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
