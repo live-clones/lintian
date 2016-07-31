@@ -66,6 +66,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
   * lib/Lintian/*.pm:
     + [JW] Fix typos.
+  * lib/Lintian/Tags.pm:
+    + [JW, NT] Fix mojibake in UTF-8 encoded comments for overrides.
+      (Closes: #833052)
 
   * man/lintian.pod.in:
     + [JW] Fix typo.

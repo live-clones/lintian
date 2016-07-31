@@ -515,7 +515,7 @@ sub file_overrides {
     my $info = $self->{info}{$self->{current}};
     my $comments = [];
     my $last_over;
-    open(my $file, '<', $overrides);
+    open(my $file, '<:encoding(UTF-8)', $overrides);
     local $_;
   OVERRIDE:
     while (<$file>) {

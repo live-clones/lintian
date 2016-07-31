@@ -12,6 +12,7 @@ FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:4 /usr/dict/
 # These are wildcard overrides
 FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:2*
 FSSTND-dir-in-manual-page */foo.1.gz:5 /usr/doc/
+# Comments in UTF-8: ✓ (☃)
 FSSTND-dir-in-manual-page */foo.1.gz:3*
 
 # renamed tag
