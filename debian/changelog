@@ -7,11 +7,6 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       debian/rules target names.  (Closes: #832096)
     + [JW, NT] Add some more (indirect) "dh" build-systems.
       (Closes: #828773)
-  * checks/scripts.pm:
-    + [JW] Fix false positive unusual-interpreter when the script had
-      "#!/usr/bin/env" shebang and the interpreter was shipped in the same
-      package.  Thanks to Sergio Durigan Junior for the bug report and the
-      initial patch.  (Closes: #828933)
   * checks/files.desc:
     + [JW] Fix typos.
   * checks/infofiles.desc:
@@ -23,6 +18,11 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [JW] Fix typos.
   * checks/phppear.desc:
     + [JW] Fix typos.
+  * checks/scripts.pm:
+    + [JW] Fix false positive unusual-interpreter when the script had
+      "#!/usr/bin/env" shebang and the interpreter was shipped in the same
+      package.  Thanks to Sergio Durigan Junior for the bug report and the
+      initial patch.  (Closes: #828933)
   * checks/shared-libs.desc:
     + [JW] Fix typo.
   * checks/systemd.{desc,pm}:
