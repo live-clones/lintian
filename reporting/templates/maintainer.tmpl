@@ -23,7 +23,7 @@
     # Show the summary only if the number of packages is within a certain
     # range.
     my $num_packages = keys(%packages) + keys(%uploads);
-    if ($num_packages > 1 and $num_packages < 20) {
+    if ($num_packages) {
         $OUT .= qq(  <div id="summary">\n    <ul>\n);
         foreach my $source (sort(keys(%packages), keys(%uploads))) {
             # Only display a link for the package if either we're
