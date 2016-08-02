@@ -294,26 +294,58 @@ sub process_worklist {
                 my $path = $members->{$member_id}{'path'};
                 print {$lintpipe} "$path\n";
             }
-            #print {$lintpipe} "!query: GROUP:$group_id\n";
         }
         close($lintpipe);
 
-        # Listen to status updates from lintian
-        while (my $line = <$status_fd>) {
-            chomp($line);
-            if ($line =~ s/^complete ([^ ]+) \(([^\)]+)\)$//) {
-                my ($group_id, $runtime) = ($1, $2);
-                push(@completed, $group_id);
-                $processed{$group_id} = 1;
-                log_msg("  [lintian] processed $group_id"
-                      . " successfully (time: $runtime)");
-            } elsif ($line =~ s/^error ([^ ]+) \(([^\)]+)\)$//) {
-                my ($group_id, $runtime) = ($1, $2);
-                log_msg(
-                    "  [lintian] error processing $group_id (time: $runtime)");
-                $processed{$group_id} = 1;
+        eval {
+            my $time_limit
+              = time() - ($start_time + BACKLOG_PROCESSING_TIME_LIMIT);
+            my $count = 0;
+            my $sig_handler = sub {
+                my ($signal_name) = @_;
+                $count++;
+                if ($count < 3) {
+                    log_msg("Received SIG${signal_name}, "
+                          . "sending SIGTERM to $pid [${count}/3]");
+                    kill('TERM', $pid);
+                    if ($signal_name eq 'ALRM') {
+                        log_msg(
+                            'Scheduling another alarm in 5 minutes from now...'
+                        );
+                        alarm(300);
+                    }
+                } else {
+                    log_msg("Received SIG${signal_name} as the third one, "
+                          . "sending SIGKILL to $pid");
+                    log_msg('You may have to clean up some '
+                          . 'temporary directories manually');
+                    kill('KILL', $pid);
+                }
+            };
+            local $SIG{'TERM'} = $sig_handler;
+            local $SIG{'INT'} = $sig_handler;
+            local $SIG{'ALRM'} = $sig_handler;
+
+            alarm($time_limit);
+
+            # Listen to status updates from lintian
+            while (my $line = <$status_fd>) {
+                chomp($line);
+                if ($line =~ s/^complete ([^ ]+) \(([^\)]+)\)$//) {
+                    my ($group_id, $runtime) = ($1, $2);
+                    push(@completed, $group_id);
+                    $processed{$group_id} = 1;
+                    log_msg("  [lintian] processed $group_id"
+                          . " successfully (time: $runtime)");
+                } elsif ($line =~ s/^error ([^ ]+) \(([^\)]+)\)$//) {
+                    my ($group_id, $runtime) = ($1, $2);
+                    log_msg("  [lintian] error processing $group_id "
+                          . "(time: $runtime)");
+                    $processed{$group_id} = 1;
+                }
             }
-        }
+            alarm(0);
+        };
         close($status_fd);
 
         # Wait for lintian to terminate
