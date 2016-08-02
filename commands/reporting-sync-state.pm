@@ -265,7 +265,7 @@ sub cleanup_group_state {
         delete($state->{$group_id});
         log_debug("Group ${group_id} dropped: No members left (late)");
     } else {
-        # remote redundant fields
+        # remove redundant fields
         remove_if_empty($group_data, 'out-of-date');
         for my $metadata_field (qw(area maintainer uploaders)) {
             remove_if_empty($group_data->{'mirror-metadata'}, $metadata_field);
