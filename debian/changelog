@@ -14,8 +14,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * checks/files.desc:
     + [JW] Fix typos.
   * checks/group-checks.{desc,pm}:
-    + [NT] Drop "lower priorities" check as the general conseus seems to
-      be that priorties changes are mostly busy work.  Thanks to Dominic
+    + [NT] Drop "lower priorities" check as the general consensus seems to
+      be that priorities changes are mostly busy work.  Thanks to Dominic
       Hargreaves for the report.  (Closes: #823326)
   * checks/infofiles.desc:
     + [JW] Fix typo.
@@ -65,7 +65,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [NT] Apply patch from Edward Betts to add Testsuite-Triggers as
       a known source field.  (Closes: #829545)
   * data/debhelper/*:
-    + [NT] Refresh aainst unstable.
+    + [NT] Refresh against unstable.
   * data/debhelper/dh_{addons,commands}-manual:
     + [JW, NT] Add the systemd sequence and related tools now that
       debhelper is taking over the dh-systemd helpers.  Thanks to
