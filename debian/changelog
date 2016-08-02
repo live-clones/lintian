@@ -58,6 +58,8 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * commands/reporting-sync-state.pm:
     + [NT] Remove redundant "area" field from all binary packages in
       the harness state cache.
+    + [NT] Drop existing instances of the "sha1" field from all packages
+      in the harness state cache.
 
   * data/common/source-fields:
     + [NT] Apply patch from Edward Betts to add Testsuite-Triggers as

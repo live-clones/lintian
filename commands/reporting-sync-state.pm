@@ -179,6 +179,7 @@ sub add_member_to_group {
         $group_data->{'out-of-date'} = 1;
         $member->{$DEFAULT_CHECKSUM} = $member_data->{$DEFAULT_CHECKSUM};
     }
+    delete($member->{'sha1'});
 
     return;
 }
@@ -242,7 +243,8 @@ sub cleanup_group_state {
             my $member_data = $members->{$member_id};
             # Create "member_id to group_data" link
             $state->{'members-to-groups'}{$member_id} = $group_data;
-            remove_if_empty($member_data->{'mirror-metadata'}, 'area');
+            delete($member_data->{'mirror-metadata'}{'area'})
+              if exists($member_data->{'mirror-metadata'});
             remove_if_empty($member_data, 'mirror-metadata');
         }
     }
