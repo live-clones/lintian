@@ -330,7 +330,6 @@ sub _parse_pkgs_pg {
     $data{'path'}
       = $extra_metadata->{'mirror-dir'} . '/' . $paragraph->{'filename'};
     $data{$DEFAULT_CHECKSUM} = $paragraph->{$DEFAULT_CHECKSUM};
-    $data{'mirror-metadata'}{'area'} = $extra_metadata->{'area'};
 
     $group_metadata{'mirror-metadata'}{'maintainer'}
       = $paragraph->{'maintainer'};

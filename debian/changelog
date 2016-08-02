@@ -55,6 +55,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
       for reporting the issue.  (Closes: #828719)
     + [NT] Install the lintian log file as a resource so it can be
       handled (e.g. cached) like other resources.
+  * commands/reporting-sync-state.pm:
+    + [NT] Remove redundant "area" field from all binary packages in
+      the harness state cache.
 
   * data/common/source-fields:
     + [NT] Apply patch from Edward Betts to add Testsuite-Triggers as
