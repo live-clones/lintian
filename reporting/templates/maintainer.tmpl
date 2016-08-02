@@ -51,19 +51,12 @@
             }
 
             if (@interesting) {
-                if (scalar @interesting > 1) {
-                    $OUT .= qq(      <li>$source<ul>\n);
-                    foreach my $vdata (@interesting) {
-                        my ($version, $anchor) = @{$vdata};
-                        $OUT .= q{            } .
-                            qq(<li><a href="#${anchor}">$version</a></li>\n);
-                    }
-                    $OUT .= qq(      </ul></li>\n);
-                } else {
-                    my ($vdata) = @interesting;
+                foreach my $vdata (@interesting) {
                     my ($version, $anchor) = @{$vdata};
-                    $OUT .= qq(      <li><a href="#${anchor}">$source</a> ($version)</li>\n);
+                    $OUT .= q{            } .
+                        qq(<li><a href="#${anchor}">$source ($version)</a></li>\n);
                 }
+                $OUT .= qq(      </ul></li>\n);
             }
         }
         $OUT .= "    </ul>\n  </nav>\n";
