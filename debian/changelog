@@ -110,6 +110,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * lib/Lintian/Tags.pm:
     + [JW, NT] Fix mojibake in UTF-8 encoded comments for overrides.
       (Closes: #833052)
+  * lib/Lintian/Util.pm:
+    + [NT] Shuffle the harness backlog a bit to reduce the risk of a lot
+      of very large package groups being scheduled in the same run.
 
   * man/lintian.pod.in:
     + [JW] Fix typo.

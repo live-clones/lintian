@@ -97,6 +97,7 @@ use Digest::SHA;
 use Encode ();
 use File::Temp qw(tempfile);
 use FileHandle;
+use List::Util qw(shuffle);
 use Scalar::Util qw(openhandle);
 
 use Lintian::Command qw(spawn safe_qx);
@@ -1614,11 +1615,15 @@ harness state, return a list of group ids that are part of the
 backlog.  The list is sorted based on what version of Lintian
 processed the package.
 
+Note the result is by design not deterministic to reduce the
+risk of all large packages being in the same run (e.g. like
+gcc-5 + gcc-5-cross + gcc-6 + gcc-6-cross).
+
 =cut
 
 sub find_backlog {
     my ($lintian_version, $state) = @_;
-    my (@list, @sorted);
+    my (@backlog, %by_version);
     for my $group_id (keys(%{$state->{'groups'}})) {
         my $last_version = '0';
         my $group_data = $state->{'groups'}{$group_id};
@@ -1631,12 +1636,12 @@ sub find_backlog {
         }
         $is_out_of_date = 1
           if not versions_equal($last_version, $lintian_version);
-        push(@list, [$group_id, $last_version]) if $is_out_of_date;
+        push(@{$by_version{$last_version}}, $group_id) if $is_out_of_date;
     }
-    @sorted = map { $_->[0] }
-      sort { versions_comparator($a->[1], $b->[1]) || $a->[0] cmp $b->[0] }
-      @list;
-    return @sorted;
+    for my $v (sort(versions_comparator keys(%by_version))) {
+        push(@backlog, shuffle(@{$by_version{$v}}));
+    }
+    return @backlog;
 }
 
 =item untaint(VALUE)
