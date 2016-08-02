@@ -29,7 +29,7 @@ use Getopt::Long();
 STDOUT->autoflush;
 
 use Lintian::Data;
-use Lintian::Internal::FrontendUtil qw(split_tag determine_locale);
+use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 
 sub compat();
@@ -84,11 +84,7 @@ EOT
         exit 0;
     }
 
-    $profile = dplint::load_profile(
-        $prof,
-        {
-            'language' => determine_locale(),
-        });
+    $profile = dplint::load_profile($prof);
 
     Lintian::Data->set_vendor($profile);
 

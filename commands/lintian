@@ -79,7 +79,7 @@ use Lintian::Data;
 use Lintian::Lab;
 use Lintian::Output qw(:messages);
 use Lintian::Internal::FrontendUtil qw(
-  default_parallel load_collections determine_locale
+  default_parallel load_collections
   sanitize_environment open_file_or_fd);
 use Lintian::ProcessablePool;
 use Lintian::Profile;
@@ -1546,22 +1546,10 @@ sub setup_work_pool {
 }
 
 sub load_profile_and_configure_tags {
-    my $profile;
-    {
-        # Temporarily restore LC_ALL before calling determine_locale
-        local $ENV{'LC_ALL'} = $ENV{'ORIG_LC_ALL'};
-        if (!exists($ENV{'ORIG_LC_ALL'})) {
-            delete($ENV{'LC_ALL'});
-        }
-        my $locale = determine_locale();
-        my %profile_opts = (
-            'restricted-search-dirs' => \@RESTRICTED_INCLUDE_DIRS,
-            'language' => $locale,
-        );
-        $profile
-          = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@INCLUDE_DIRS,
-            \%profile_opts);
-    }
+    my %profile_opts= ('restricted-search-dirs' => \@RESTRICTED_INCLUDE_DIRS,);
+    my $profile
+      = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@INCLUDE_DIRS,
+        \%profile_opts);
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
     $opt{'LINTIAN_PROFILE'} = $profile->name
       unless defined($opt{'LINTIAN_PROFILE'});

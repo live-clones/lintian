@@ -44,6 +44,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * collection/*:
     + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
 
+  * commands/{info.pm,lintian}:
+    + [NT] Drop the necessary bits for supporting translated tag
+      descriptions.
   * commands/lintian:
     + [NT,JW] Remove "." from Perl's search path.  (Mitigates: #588017)
   * commands/reporting-html-reports.pm:
@@ -80,6 +83,11 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW] Add more corrections.
 
+  * debian/control:
+    + [NT] Drop now unnecessary po4a Build-Dependency.
+  * debian/rules:
+    + [NT] Drop code for handling translations.
+
   * doc/lintian.xml:
     + [JW] Fix typo.
 
@@ -89,6 +97,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
   * helpers/coll/*:
     + [JW,NT] Remove "." from Perl's search path.  (Mitigates: #588017)
 
+  * lib/*.pm:
+    + [NT] Drop support for translations of tag descriptions.  It never
+      got used.
   * lib/Lintian/*.pm:
     + [JW] Fix typos.
   * lib/Lintian/Tags.pm:
@@ -97,6 +108,9 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
   * man/lintian.pod.in:
     + [JW] Fix typo.
+
+  * po4a:
+    + [NT] Drop as it was not used.
 
   * t:
     + [JW,NT] Update tests to work now that dpkg validates

@@ -18,7 +18,6 @@ tagfiles := $(wildcard t/changes/*.changes t/*/*/tags)
 testfiles := $(wildcard t/tests/*/*.desc)
 perlprovides := data/fields/perl-provides
 autoreject_data := $(wildcard private/build-time-data/*)
-po4acheckcfg := po4a/po4a-checks.cfg
 onlyrun =
 tag =
 
@@ -51,7 +50,7 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
-runtests-translation: $(neededfiles) $(allchecks) update-po
+runtests-translation: $(neededfiles) $(allchecks)
 	@echo .... running translation tests ....
 	mkdir -p "$(TEST_WORK_DIR)"
 	t/runtests -k $(PAR_ARGS) t "$(TEST_WORK_DIR)" \
@@ -60,15 +59,6 @@ runtests-translation: $(neededfiles) $(allchecks) update-po
 # this target is only run manually
 refresh-perl-provides:
 	perl private/refresh-perl-provides > $(perlprovides)
-
-# For translators, we keep basically any file regardless of how little
-# is translated.  But for release purposes, we require 80%.
-update-po: $(po4acheckcfg)
-	rm -rf l10n
-	PERL5LIB=lib/ po4a --keep 0.001 $<
-
-po4a/%.cfg: po4a/%.cfg.in private/gen-po4a-conf
-	private/gen-po4a-conf $@
 
 generate-docs: generate-docs-stamp
 generate-docs-stamp: $(docsource)
@@ -93,7 +83,7 @@ generate-docs-stamp: $(docsource)
 rebuild-lintian.debian.org: api-doc generate-docs-stamp
 	# done
 
-override_dh_auto_build: $(neededfiles) generate-docs-stamp $(po4acheckcfg)
+override_dh_auto_build: $(neededfiles) generate-docs-stamp
 	# check that the static data about perl core modules is up to date
 	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n} . q{*}x60 . qq{\n}' $(perlprovides)
 
@@ -125,5 +115,5 @@ override_dh_auto_test: $(testtarget)
 # Messes with our tests and we don't need it.
 override_dh_update_autotools_config:
 
-.PHONY: refresh-perl-provides update-po update-lintian.debian.org generate-docs
+.PHONY: refresh-perl-provides update-lintian.debian.org generate-docs
 .DELETE_ON_ERROR: runtests

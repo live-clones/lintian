@@ -32,7 +32,7 @@ use Lintian::Util qw(check_path fail);
 
 our @EXPORT_OK
   = qw(check_test_feature default_parallel load_collections split_tag
-  determine_locale sanitize_environment open_file_or_fd);
+  sanitize_environment open_file_or_fd);
 
 # Check if we are testing a specific feature
 #  - e.g. vendor-libdpkg-perl
@@ -75,9 +75,7 @@ sub check_test_feature{
               if not exists($PRESERVE_ENV{$key})
               and $key !~ m/^LINTIAN_/;
         }
-        # reset locale definition (necessary for tar) - but store
-        # LC_ALL because we need it later
-        $ENV{'ORIG_LC_ALL'} = $ENV{'LC_ALL'} if exists($ENV{'LC_ALL'});
+        # reset locale definition (necessary for tar)
         $ENV{'LC_ALL'} = 'C';
 
         # reset timezone definition (also for tar)
@@ -90,22 +88,6 @@ sub check_test_feature{
         $ENV{'PATH'} = '/bin:/usr/bin' unless exists($ENV{'PATH'});
         return;
     }
-}
-
-# determine_locale
-#
-# Guess which language should be used based on environment variables.
-#
-# Note this will look at and return the contents of LC_ALL or
-# LC_MESSAGES etc. if one of these are set.
-#
-# If suitable variable is set, this will return "C.UTF-8" as fallback.
-#
-sub determine_locale {
-    for my $var (qw(LC_ALL LC_MESSAGES LANG)) {
-        return $ENV{$var} if exists($ENV{$var}) and $ENV{$var} ne '';
-    }
-    return 'C.UTF-8';
 }
 
 # load_collections ($visitor, $dirname)

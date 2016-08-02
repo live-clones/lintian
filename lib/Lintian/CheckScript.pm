@@ -74,39 +74,12 @@ given, translations for the check will be loaded as well.
 sub new {
     my ($class, $basedir, $checkname, $profile, $lang) = @_;
     my ($header, @tags) = read_dpkg_control_utf8("$basedir/${checkname}.desc");
-    my ($self, %loc, $dir, $name);
+    my ($self, $dir, $name);
     unless ($name = $header->{'check-script'}) {
         croak "Missing Check-Script field in $basedir/${checkname}.desc";
     }
     $dir = realpath($basedir)
       or croak "Cannot resolve $basedir: $!";
-
-    if (defined($lang) and my @i10ns = unix_locale_split($lang)) {
-        my $stem = "l10n/checks/${checkname}";
-        for my $path_prefix ($profile->include_path($stem)) {
-            for my $i10n (@i10ns) {
-                my $path = "${path_prefix}_${i10n}.desc";
-                if (-f $path) {
-                    my ($header, @paras) = read_dpkg_control_utf8($path);
-                    my $for_check = $header->{'check-script-translation'};
-                    if (not defined($for_check)
-                        or $for_check ne $name) {
-                        croak(  "Translation file $path is missing mandatory"
-                              . ' Check-Script-Translation field')
-                          if not defined($for_check);
-                        croak(  "Translation file $path suggests it is for"
-                              . " $for_check, but it was loaded for $name.");
-                    }
-
-                    foreach my $para (@paras) {
-                        next unless $para->{'tag'} && $para->{'info'};
-                        $loc{$para->{'tag'}} = $para->{'info'};
-                    }
-                    last;
-                }
-            }
-        }
-    }
 
     $self = {
         'name' => $header->{'check-script'},
@@ -134,7 +107,6 @@ sub new {
         my $ti;
         croak "Missing Tag field for tag in $basedir/${checkname}.desc"
           unless $pg->{'tag'};
-        $pg->{'info'} = $loc{$pg->{'tag'}} if exists $loc{$pg->{'tag'}};
         $ti = Lintian::Tag::Info->new($pg, $self->{'name'}, $self->{'type'});
         $self->{'tag-table'}{$ti->tag} = $ti;
     }
