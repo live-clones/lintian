@@ -282,7 +282,7 @@ sub _parse_srcs_pg {
     my $dir = $paragraph->{'directory'}//'';
     my $group_id = $paragraph->{'package'} . '/' . $paragraph->{'version'};
     my $member_id = "source:${group_id}";
-    my (%data, %group_metadata);
+    my (%data, %group_metadata, $group_mirror_md);
     # only include the source if it has any binaries to be checked.
     # - Otherwise we may end up checking a source with no binaries
     #   (happens if the architecture is "behind" in building)
@@ -298,12 +298,12 @@ sub _parse_srcs_pg {
         last;
     }
 
-    $group_metadata{'mirror-metadata'}{'area'} = $extra_metadata->{'area'};
-    $group_metadata{'mirror-metadata'}{'maintainer'}
-      = $paragraph->{'maintainer'};
+    $group_mirror_md = $group_metadata{'mirror-metadata'};
+    $group_mirror_md->{'area'} = $extra_metadata->{'area'};
+    $group_mirror_md->{'maintainer'} = $paragraph->{'maintainer'};
     if (my $uploaders = $paragraph->{'uploaders'}) {
         my @ulist = split(/>\K\s*,\s*/, $uploaders);
-        $group_metadata{'mirror-metadata'}{'uploaders'} = \@ulist;
+        $group_mirror_md->{'uploaders'} = \@ulist;
     }
 
     add_member_to_group($state, $group_id, $member_id, \%data,
