@@ -63,12 +63,7 @@ Info: The package uses the now deprecated ${Source-Version} substvar,
  in the future.
 
 Tag: maybe-not-arch-all-binnmuable
-Severity: wishlist
+Severity: classification
 certainty: possible
-Experimental: yes
 Info: Tag to attempt to measure the number of packages that might
  have an issue with arch:all binNMUs.
- .
- At this time, please do <i>not</i> attempt to "fix" the problem.  It
- is not clear what the solution is (if any at all).  Nor is it clear
- that this is something that will be supported.
