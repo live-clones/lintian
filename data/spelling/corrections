@@ -90,6 +90,8 @@ adapaters||adapters
 addd||add
 addded||added
 addding||adding
+adddress||address
+adddresses||addresses
 addds||adds
 addess||address
 addessed||addressed
@@ -494,6 +496,7 @@ compatbility||compatibility
 compatiability||compatibility
 compatibiliy||compatibility
 compatibilty||compatibility
+compatiblities||compatibilities
 compatiblity||compatibility
 competion||completion
 competions||completions
@@ -626,6 +629,10 @@ correspondes||corresponds
 corresponing||corresponding
 corresponsing||corresponding
 corretly||correctly
+cotrol||control
+cotrolled||controlled
+cotrolling||controlling
+cotrols||controls
 coutner||counter
 coutners||counters
 coverted||converted
@@ -802,6 +809,8 @@ disconneting||disconnecting
 disconnets||disconnects
 discontigous||discontiguous
 discontinous||discontinuous
+discription||description
+discriptions||descriptions
 discusion||discussion
 dispath||dispatch
 dispathed||dispatched
@@ -1178,6 +1187,7 @@ harcodes||hardcodes
 harcoding||hardcoding
 harware||hardware
 havent||haven't
+havn't||haven't
 heigth||height
 heirarchical||hierarchical
 heirarchically||hierarchically
@@ -1281,6 +1291,8 @@ incompatability||incompatibility
 incompatable||incompatible
 incompatbility||incompatibility
 incompatiability||incompatibility
+incompatiblities||incompatibilities
+incompatiblity||incompatibility
 incomptible||incompatible
 inconsistant||inconsistent
 incoporated||incorporated
@@ -1606,6 +1618,7 @@ monochromo||monochrome
 monocrome||monochrome
 morever||moreover
 mroe||more
+mssing||missing
 mulitple||multiple
 mulitplied||multiplied
 multidimensionnal||multidimensional
@@ -2275,6 +2288,8 @@ someting||something
 somthing||something
 souce||source
 souces||sources
+soure||source
+soures||sources
 spawed||spawned
 spawing||spawning
 spaw||spawn
@@ -2459,6 +2474,7 @@ threhold||threshold
 threshholds||thresholds
 threshhold||threshold
 throught||through
+throug||through
 thses||these
 thsi||this
 tiggered||triggered
@@ -2500,6 +2516,7 @@ transistions||transitions
 transistion||transition
 transitionned||transitioned
 transmition||transmission
+transmittion||transmission
 transormed||transformed
 transorming||transforming
 transorms||transforms
@@ -2678,6 +2695,7 @@ whereever||wherever
 wheter||whether
 whish||wish
 whithout||without
+whith||with
 wich||which
 widht||width
 wierd||weird
@@ -2686,6 +2704,8 @@ wiht||with
 wiil||will
 wilcards||wildcards
 wilcard||wildcard
+wirtes||writes
+wirte||write
 withing||within
 witin||within
 wnated||wanted
