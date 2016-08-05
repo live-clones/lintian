@@ -10,7 +10,7 @@ neededfiles := debian/rules frontend/lintian $(profiles) \
 	     $(wildcard commands/*)
 pod2man := pod2man --center "Debian Package Checker" --release "Lintian v$(VER)"
 pod2mansources := $(wildcard man/*.pod)
-docsource := doc/lintian.xml README man/lintian.pod.in \
+docsource := doc/lintian.xml README.md man/lintian.pod.in \
 	     $(pod2mansources)
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
