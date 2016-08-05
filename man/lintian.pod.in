@@ -904,7 +904,7 @@ If you discover any other bugs in lintian, please contact the authors.
 =head1 SEE ALSO
 
 L<lintian-info(1)>, Lintian User Manual
-(file:/usr/share/doc/lintian/lintian.html/index.html),
+(/usr/share/doc/lintian/lintian.html/index.html),
 L<lintian-lab-tool(1)>
 
 Packaging tools: L<debhelper(7)>, L<dh_make(8)>,

@@ -121,6 +121,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
 
   * man/lintian.pod.in:
     + [JW] Fix typo.
+    + [JW] Remove unneeded "file:" in front of a pathname.
 
   * po4a:
     + [NT] Drop as it was not used.
