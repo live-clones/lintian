@@ -183,8 +183,7 @@ sub test_check_desc {
         my $i = 1; # paragraph counter.
         $builder->ok(1, "Can parse check $desc_file");
 
-        $builder->isnt_eq($cname, '',
-            "$content_type has a name ($desc_file)");
+        $builder->isnt_eq($cname, '',"$content_type has a name ($desc_file)");
 
         # From here on, we just use "$cname" as name of the check, so
         # we don't need to choose been it and $tname.
@@ -234,7 +233,7 @@ sub test_check_desc {
                 $mistakes++;
             };
             check_spelling($d, $handler);
-            $builder->is_eq($mistakes, 0, "$cname Info has no spelling errors");
+            $builder->is_eq($mistakes, 0,"$cname Info has no spelling errors");
         } else {
             $builder->ok(0, "$cname has an Info field");
         }
@@ -272,8 +271,8 @@ sub test_check_desc {
                     "Spelling ($cname/$tag): $incorrect => $correct");
                 $mistakes++;
             };
-            # FIXME: There are a couple of known false-positives that breaks the
-            # test.
+            # FIXME: There are a couple of known false-positives that
+            # breaks the test.
             # check_spelling($info, $handler);
             $builder->is_eq($mistakes, 0,
                 "$content_type $cname: $tag has no spelling errors");
