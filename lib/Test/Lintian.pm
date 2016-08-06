@@ -236,7 +236,7 @@ sub test_check_desc {
             check_spelling($d, $handler);
             $builder->is_eq($mistakes, 0, "$cname Info has no spelling errors");
         } else {
-            $builder->fail("$cname has an Info field");
+            $builder->ok(0, "$cname has an Info field");
         }
         foreach my $tpara (@tagpara) {
             my $tag = $tpara->{'tag'}//'';
