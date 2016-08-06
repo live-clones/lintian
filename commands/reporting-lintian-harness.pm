@@ -300,7 +300,7 @@ sub process_worklist {
 
         eval {
             my $time_limit
-              = time() - ($start_time + BACKLOG_PROCESSING_TIME_LIMIT);
+              = $start_time + BACKLOG_PROCESSING_TIME_LIMIT - time();
             my $count = 0;
             my $sig_handler = sub {
                 my ($signal_name) = @_;
