@@ -220,7 +220,8 @@ sub process_worklist {
         my (@work_splice, @completed, %processed);
         my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
 
-        if (time() >= $start_time + BACKLOG_PROCESSING_TIME_LIMIT) {
+        # Bail if there is less than 5 minutes left
+        if (time() >= $start_time + BACKLOG_PROCESSING_TIME_LIMIT - 300) {
             log_msg('No more time for processing backlogs');
             $exit_code = 2;
             last;
