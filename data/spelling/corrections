@@ -275,6 +275,8 @@ asuming||assuming
 asycronous||asynchronous
 asynchonous||asynchronous
 asynchonously||asynchronously
+asyncronous||asynchronous
+asyncronously||asynchronously
 atomatically||automatically
 atomicly||atomically
 attachement||attachment
@@ -386,6 +388,7 @@ capabilies||capabilities
 capabilites||capabilities
 capatibilities||capabilities
 captial||capital
+carefull||careful
 carefuly||carefully
 cariage||carriage
 casue||cause
@@ -1160,6 +1163,7 @@ glpyh||glyph
 glpyhs||glyphs
 goind||going
 goverment||government
+grabed||grabbed
 grabing||grabbing
 grahical||graphical
 grahpical||graphical
@@ -1426,6 +1430,7 @@ interferring||interfering
 interger||integer
 intergers||integers
 intermittant||intermittent
+internation||international
 internel||internal
 internels||internals
 interpeted||interpreted
@@ -1668,6 +1673,7 @@ nonexistant||nonexistent
 nontheless||nonetheless
 noone||no one
 normaly||normally
+nothern||northern
 noticable||noticeable
 noticably||noticeably
 notications||notifications
@@ -1701,8 +1707,12 @@ offical||official
 officialy||officially
 ofthe||of the
 omitt||omit
+ommited||omitted
 ommiting||omitting
+ommit||omit
+ommits||omits
 ommitted||omitted
+ommitting||omitting
 onself||oneself
 onthe||on the
 opague||opaque
@@ -2061,6 +2071,10 @@ reimplmented||reimplemented
 reimplmenting||reimplementing
 reimplment||reimplement
 reimplments||reimplements
+relased||released
+relase||release
+relases||releases
+relasing||releasing
 releasse||release
 releated||related
 reletively||relatively
@@ -2203,6 +2217,8 @@ seach||search
 searchs||searches
 secund||second
 securty||security
+segement||segment
+segements||segments
 sematically||semantically
 sematical||semantical
 sematic||semantic
@@ -2241,6 +2257,8 @@ sequencial||sequential
 serie||series
 serivce||service
 serivces||services
+sertificate||certificate
+sertificates||certificates
 serveral||several
 sesssion||session
 sesssions||sessions
@@ -2448,6 +2466,8 @@ syncronized||synchronized
 syncronizes||synchronizes
 syncronize||synchronize
 syncronizing||synchronizing
+syncronously||synchronously
+syncronous||synchronous
 syncronus||synchronous
 synopsys||synopsis
 syste||system
