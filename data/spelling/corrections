@@ -17,6 +17,7 @@
 #
 # Please keep the list sorted (using the en_US locale).
 
+abailable||available
 abandonned||abandoned
 abandonning||abandoning
 abbrevation||abbreviation
@@ -359,6 +360,7 @@ betwen||between
 bianries||binaries
 bizzare||bizarre
 blindy||blindly
+boundries||boundaries
 boundry||boundary
 brige||bridge
 briges||bridges
@@ -640,6 +642,8 @@ coutner||counter
 coutners||counters
 coverted||converted
 coypright||copyright
+critera||criteria
+criterias||criteria
 crtical||critical
 cryptocraphic||cryptographic
 cummulative||cumulative
@@ -999,6 +1003,8 @@ exeception||exception
 execeptions||exceptions
 exectuable||executable
 exectuables||executables
+exectution||execution
+exectutions||executions
 executeable||executable
 executeables||executables
 exension||extension
@@ -1014,6 +1020,8 @@ exlcude||exclude
 exlcusive||exclusive
 exlicit||explicit
 exlicitly||explicitly
+exlusive||exclusive
+exlusively||exclusively
 exmaple||example
 expecially||especially
 expectes||expects
@@ -1192,6 +1200,7 @@ harcoding||hardcoding
 harware||hardware
 havent||haven't
 havn't||haven't
+heigt||height
 heigth||height
 heirarchical||hierarchical
 heirarchically||hierarchically
@@ -1364,6 +1373,14 @@ initializiation||initialization
 initialsed||initialised
 initialse||initialise
 initialses||initialises
+initialysed||initialised
+initialyse||initialise
+initialyses||initialises
+initialysing||initialising
+initialyzed||initialized
+initialyze||initialize
+initialyzes||initializes
+initialyzing||initializing
 initialzed||initialized
 initialze||initialize
 initialzes||initializes
@@ -2215,6 +2232,8 @@ seaches||searches
 seaching||searching
 seach||search
 searchs||searches
+secion||section
+secions||sections
 secund||second
 securty||security
 segement||segment
@@ -2561,6 +2580,7 @@ udpating||updating
 uesd||used
 uglyness||ugliness
 uknown||unknown
+unabailable||unavailable
 uncertainities||uncertainties
 uncertainity||uncertainty
 uncomented||uncommented
