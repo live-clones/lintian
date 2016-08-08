@@ -28,6 +28,10 @@ abilty||ability
 abitrate||arbitrate
 abolute||absolute
 abov||above
+abreviate||abbreviate
+abreviated||abbreviated
+abreviates||abbreviates
+abreviating||abbreviating
 absense||absence
 absolut||absolute
 absoulte||absolute
@@ -353,8 +357,10 @@ befor||before
 begining||beginning
 behavoir||behavior
 behavoirs||behaviors
+belived||believed
 bellow||below
 benifit||benefit
+beteen||between
 betweeen||between
 betwen||between
 bianries||binaries
@@ -546,8 +552,12 @@ concatinations||concatenations
 concensus||consensus
 conditionaly||conditionally
 conditionnaly||conditionally
+conect||connect
+conected||connected
+conecting||connecting
 conection||connection
 conections||connections
+conects||connects
 conent||content
 conents||contents
 configration||configuration
@@ -980,6 +990,7 @@ everyhing||everything
 everythings||everything
 evironment||environment
 evironments||environments
+exacly||exactly
 excact||exact
 excactly||exactly
 excecutable||executable
@@ -1208,6 +1219,7 @@ heirarchies||hierarchies
 heirarchy||hierarchy
 helpfull||helpful
 hexidecimal||hexadecimal
+hiddden||hidden
 hidding||hiding
 hiearchies||hierarchies
 hiearchy||hierarchy
@@ -1515,6 +1527,8 @@ itializing||initializing
 itsef||itself
 itslef||itself
 jave||java
+keybord||keyboard
+keybords||keyboards
 keywork||keyword
 knowlege||knowledge
 langage||language
@@ -1583,6 +1597,7 @@ matcing||matching
 mathimatical||mathematical
 mathimatic||mathematic
 mathimatics||mathematics
+maximimum||maximum
 maxium||maximum
 mecanism||mechanism
 mecanisms||mechanisms
@@ -1685,6 +1700,8 @@ nessesarily||necessarily
 nessesary||necessary
 nessessarily||necessarily
 nessessary||necessary
+nework||network
+neworks||networks
 newtork||network
 nonexistant||nonexistent
 nontheless||nonetheless
@@ -1703,6 +1720,7 @@ numberal||numeral
 numberals||numerals
 numebr||number
 numebrs||numbers
+numering||numbering
 numner||number
 numners||numbers
 observered||observed
@@ -2154,6 +2172,7 @@ responsability||responsibility
 responsed||responded
 responsiblity||responsibility
 responsing||responding
+resposible||responsible
 ressize||resize
 ressource||resource
 ressources||resources
@@ -2529,6 +2548,7 @@ tihs||this
 timetamps||timestamps
 timetamp||timestamp
 timout||timeout
+tipically||typically
 togther||together
 touple||tuple
 traditionnal||traditional
