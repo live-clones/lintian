@@ -481,7 +481,11 @@ colaboration||collaboration
 collapsable||collapsible
 collegue||colleague
 collegues||colleagues
+collumn||column
+collumns||columns
 colorfull||colorful
+coloumn||column
+coloumns||columns
 comand||command
 coment||comment
 comented||commented
@@ -620,6 +624,7 @@ contries||countries
 controled||controlled
 controler||controller
 controlers||controllers
+controling||controlling
 controll||control
 controlls||controls
 contruct||construct
@@ -749,6 +754,10 @@ deprectate||deprecate
 deprectates||deprecates
 deprectating||deprecating
 deprected||deprecated
+depricated||deprecated
+depricate||deprecate
+depricates||deprecates
+depricating||deprecating
 derefenced||dereferenced
 desactivate||deactivate
 descibed||described
@@ -1381,6 +1390,8 @@ indiciated||indicated
 indiciate||indicate
 indiciates||indicates
 indiciating||indicating
+indicte||indicate
+indictes||indicates
 indipendent||independent
 indipendently||independently
 indivdual||individual
@@ -1655,6 +1666,7 @@ mimicks||mimics
 mininum||minimum
 miniscule||minuscule
 minumum||minimum
+miscelaneous||miscellaneous
 miscelleneous||miscellaneous
 misformed||malformed
 mismached||mismatched
@@ -1883,6 +1895,8 @@ particularily||particularly
 partioning||partitioning
 pased||passed
 pathes||paths
+paticularly||particularly
+paticular||particular
 pecularities||peculiarities
 pecularity||peculiarity
 peformance||performance
@@ -1906,6 +1920,7 @@ permanantly||permanently
 permanant||permanent
 permision||permission
 permisions||permissions
+permissable||permissible
 permissons||permissions
 permuation||permutation
 permuations||permutations
@@ -1919,6 +1934,8 @@ pervious||previous
 phyiscally||physically
 phyiscal||physical
 pitty||pity
+plaform||platform
+plaforms||platforms
 plase||please
 platfrom||platform
 platfroms||platforms
@@ -2211,6 +2228,7 @@ reserverd||reserved
 reseted||reset
 reseting||resetting
 resetted||reset
+resistent||resistant
 resizeable||resizable
 resouce||resource
 resouces||resources
@@ -2459,6 +2477,7 @@ stucture||structure
 sturctures||structures
 sturcture||structure
 subdirectoires||subdirectories
+subdirectorys||subdirectories
 subexpresssions||subexpressions
 subexpresssion||subexpression
 suble||subtle
@@ -2622,6 +2641,7 @@ tranlations||translations
 tranlation||translation
 tranparently||transparently
 tranparent||transparent
+transciever||transceiver
 transfered||transferred
 transfering||transferring
 transistions||transitions
