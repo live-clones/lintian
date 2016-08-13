@@ -1,6 +1,11 @@
-lintian (2.5.46) UNRELEASED; urgency=medium
+lintian (2.5.46) unstable; urgency=medium
 
-   XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - systemd-service-file-missing-install-key
+      - typo-in-debhelper-override-target
+    + Removed:
+      - package-depends-on-lower-priority-package
 
   * checks/cruft.pm:
     + [NT] Ignore mentions of /usr/lib/perl5 in patches as they might
@@ -132,7 +137,7 @@ lintian (2.5.46) UNRELEASED; urgency=medium
     + [NT] Apply patch from Adam Conrad to make some tests work
       when the compiler uses -fPIE by default.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2016 20:17:52 +0000
+ -- Niels Thykier <niels@thykier.net>  Sat, 13 Aug 2016 19:53:23 +0000
 
 lintian (2.5.45) unstable; urgency=medium
 
