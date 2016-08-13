@@ -332,13 +332,13 @@ sub process_worklist {
             # Listen to status updates from lintian
             while (my $line = <$status_fd>) {
                 chomp($line);
-                if ($line =~ s/^complete ([^ ]+) \(([^\)]+)\)$//) {
+                if ($line =~ m/^complete ([^ ]+) \(([^\)]+)\)$/) {
                     my ($group_id, $runtime) = ($1, $2);
                     push(@completed, $group_id);
                     $processed{$group_id} = 1;
                     log_msg("  [lintian] processed $group_id"
                           . " successfully (time: $runtime)");
-                } elsif ($line =~ s/^error ([^ ]+) \(([^\)]+)\)$//) {
+                } elsif ($line =~ m/^error ([^ ]+) \(([^\)]+)\)$/) {
                     my ($group_id, $runtime) = ($1, $2);
                     log_msg("  [lintian] error processing $group_id "
                           . "(time: $runtime)");
