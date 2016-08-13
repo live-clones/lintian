@@ -13,7 +13,7 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib/";
 use Lintian::Command qw(safe_qx);
 
 my $RE = qr{
-    \A [ ] [ ]  XXX: [ ] generate [ ] tag [ ] summary
+    \A [ ]{2,}  XXX: [ ] generate [ ] tag [ ] summary
     [ ] with [ ] private/generate-tag-summary \n \Z
 }xsm;
 my (%added, %removed, %opt);
@@ -40,6 +40,7 @@ if (not $commit_range) {
     }
     $describe =~ s/-\d+-g[0-9a-fA-F]{7}$//;
     $commit_range = "${describe}..HEAD";
+    print "Assuming commit range to be: ${commit_range}\n";
 }
 
 open(my $fd, '-|', 'git', 'diff', $commit_range, '--', 'checks/*.desc');
@@ -69,17 +70,22 @@ if (not %added and not %removed) {
 }
 
 if ($opt{'in-place'}) {
+    my $matched = 0;
     open(my $in_fd, '<', 'debian/changelog');
     open(my $out_fd, '>', 'debian/changelog.tmp');
     while (my $line = <$in_fd>) {
         if ($line =~ m/$RE/o) {
             emit_tag_summary($out_fd);
+            $matched++;
         } else {
             print {$out_fd} $line;
         }
     }
     close($out_fd);
     close($in_fd);
+    if ($matched != 1) {
+        die("changelog did not match $RE exactly once\n");
+    }
     rename('debian/changelog.tmp', 'debian/changelog');
     print "Updated debian/changelog\n";
 } else {
