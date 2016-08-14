@@ -47,6 +47,7 @@ accesnt||accent
 accessable||accessible
 accesss||access
 accidentaly||accidentally
+accidentily||accidentally
 accidently||accidentally
 accidentually||accidentally
 accoding||according
@@ -79,6 +80,10 @@ achoring||anchoring
 achors||anchors
 acient||ancient
 acknowldegement||acknowledgement
+acknowlege||acknowledge
+acknowleged||acknowledged
+acknowleges||acknowledges
+acknowleging||acknowledging
 ackowledge||acknowledge
 ackowledged||acknowledged
 acording||according
@@ -366,7 +371,10 @@ befor||before
 begining||beginning
 behavoir||behavior
 behavoirs||behaviors
+belive||believe
 belived||believed
+belives||believes
+beliving||believing
 bellow||below
 benifit||benefit
 beteen||between
@@ -1175,7 +1183,10 @@ fucntion||function
 fucntions||functions
 fuction||function
 fuctions||functions
+fullfilled||fulfilled
 fullfill||fulfill
+fullfilling||fulfilling
+fullfills||fulfills
 funcion||function
 funcions||functions
 funciton||function
@@ -1456,6 +1467,8 @@ inlcuded||included
 inlcude||include
 inlcudes||includes
 inlcuding||including
+innacurate||inaccurate
+innacurately||inaccurately
 inofficial||unofficial
 inproper||improper
 inproperly||improperly
@@ -2120,6 +2133,10 @@ recogizes||recognizes
 recogizing||recognizing
 recogniced||recognised
 recognizeable||recognizable
+recomended||recommended
+recomending||recommending
+recomend||recommend
+recomends||recommends
 recommanded||recommended
 recommented||recommended
 rectange||rectangle
@@ -2242,6 +2259,8 @@ responsed||responded
 responsiblity||responsibility
 responsing||responding
 resposible||responsible
+respositories||repositories
+respository||repository
 ressize||resize
 ressource||resource
 ressources||resources
@@ -2292,6 +2311,7 @@ rquest||request
 rquests||requests
 runing||running
 runned||ran
+runnig||running
 runnning||running
 sacrifying||sacrificing
 safly||safely

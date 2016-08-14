@@ -2,6 +2,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * data/spelling/corrections:
+    + [JW] Add more corrections.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 13 Aug 2016 20:07:19 +0000
 
 lintian (2.5.46) unstable; urgency=medium
