@@ -219,6 +219,7 @@ sub process_worklist {
         my $len = scalar @worklist;
         my (@work_splice, @completed, %processed);
         my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
+        my $got_alarm = 0;
 
         # Bail if there is less than 5 minutes left
         if (time() >= $start_time + BACKLOG_PROCESSING_TIME_LIMIT - 300) {
@@ -305,6 +306,11 @@ sub process_worklist {
             my $sig_handler = sub {
                 my ($signal_name) = @_;
                 $count++;
+                if ($signal_name eq 'ALRM') {
+                    $got_alarm = 1 if $got_alarm >= 0;
+                } else {
+                    $got_alarm = -1;
+                }
                 if ($count < 3) {
                     log_msg("Received SIG${signal_name}, "
                           . "sending SIGTERM to $pid [${count}/3]");
@@ -364,7 +370,15 @@ sub process_worklist {
                 # don't start the next round.
                 log_msg(' - skipping the rest of the worklist');
                 @worklist = ();
-                $exit_code = 3;
+                if ($got_alarm == 1) {
+                    # Lintian was (presumably) killed due to a
+                    # time-out from this process
+                    $exit_code = 2;
+                } else {
+                    # Lintian was killed by another signal; notify
+                    # harness that it should skip the rest as well.
+                    $exit_code = 3;
+                }
             }
         } else {
             log_msg('Lintian finished successfully');
