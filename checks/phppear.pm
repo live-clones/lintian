@@ -25,11 +25,18 @@ use warnings;
 
 use autodie;
 
+use List::MoreUtils qw(none);
+
 use Lintian::Tags qw(tag);
 use Lintian::Relation;
 
 sub run {
     my ($pkg, $type, $info) = @_;
+
+    # Don't check package if it doesn't contain a .php file
+    if (none { $_->basename =~ m/\.php$/i } $info->sorted_index) {
+        return;
+    }
 
     my $bdepends = $info->relation('build-depends');
     my $package_type = 'unknown';

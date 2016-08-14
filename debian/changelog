@@ -20,8 +20,10 @@ lintian (2.5.47) UNRELEASED; urgency=medium
     + [JW] Fix typo.
   * checks/patch-systems.desc:
     + [JW] Fix formatting of some filenames.
-  * checks/phppear.desc:
+  * checks/phppear.{desc,pm}:
     + [JW] Fix typo.
+    + [NT] Apply patch from Jochen Sprickerhof to skip this check if the
+      package does not contain any php files.  (Closes: #805076)
   * checks/rules.desc:
     + [JW] Fix typo.
   * checks/shared-libs.desc:
