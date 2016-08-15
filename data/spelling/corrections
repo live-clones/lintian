@@ -380,9 +380,12 @@ benifit||benefit
 beteen||between
 betweeen||between
 betwen||between
+beween||between
 bianries||binaries
 bizzare||bizarre
 blindy||blindly
+boudaries||boundaries
+boudary||boundary
 boundries||boundaries
 boundry||boundary
 brige||bridge
@@ -653,6 +656,7 @@ convet||convert
 conveted||converted
 conveting||converting
 convets||converts
+convinience||convenience
 convinient||convenient
 conviniently||conveniently
 copyrigth||copyright
@@ -890,6 +894,8 @@ distribtion||distribution
 distribtions||distributions
 distribtuion||distribution
 distribtuions||distributions
+distrubution||distribution
+distrubutions||distributions
 divison||division
 divisons||divisions
 docuentation||documentation
@@ -1105,6 +1111,7 @@ extesion||extension
 extesions||extensions
 extracter||extractor
 extraenous||extraneous
+extrememly||extremely
 extremly||extremely
 faciliated||facilitated
 faciliate||facilitate
@@ -1138,6 +1145,7 @@ finsih||finish
 finsihing||finishing
 fitler||filter
 fitlers||filters
+flaged||flagged
 flie||file
 floting||floating
 flusing||flushing
@@ -1354,6 +1362,7 @@ improvment||improvement
 improvments||improvements
 inadvertant||inadvertent
 inadvertantly||inadvertently
+incase||in case
 inclued||included
 inclue||include
 inclues||includes
@@ -1838,6 +1847,7 @@ origionally||originally
 origional||original
 orignal||original
 otehr||other
+otherise||otherwise
 otherwhise||otherwise
 othwerwise||otherwise
 ouptut||output
@@ -2002,6 +2012,8 @@ prefferably||preferably
 prepaired||prepared
 prepartion||preparation
 prepartions||preparations
+prerequisit||prerequisite
+prerequisits||prerequisites
 prerequsite||prerequisite
 prerequsites||prerequisites
 presense||presence
@@ -2182,6 +2194,8 @@ regsitered||registered
 regsitering||registering
 regsiter||register
 regsiters||registers
+regualarly||regularly
+regualar||regular
 regulamentations||regulations
 regularily||regularly
 reimplmentation||reimplementation
@@ -2352,6 +2366,8 @@ sematic||semantic
 sematics||semantics
 sempahore||semaphore
 sempahores||semaphores
+senario||scenario
+senarios||scenarios
 sensistive||insensitive
 sensistively||insensitively
 sentance||sentence
@@ -2427,6 +2443,7 @@ smaple||sample
 smaples||samples
 softwares||software
 sofware||software
+somehwat||somewhat
 somehwere||somewhere
 somes||some
 someting||something
@@ -2555,6 +2572,7 @@ suport||support
 suppied||supplied
 suppies||supplies
 suppored||supported
+supportd||supported
 supportin||supporting
 suppoted||supported
 suppported||supported
@@ -2709,6 +2727,8 @@ uncommments||uncomments
 uncommment||uncomment
 uncomplete||incomplete
 unconditionaly||unconditionally
+uncorrect||incorrect
+uncorrectly||incorrectly
 uncoverted||unconverted
 uncrypted||unencrypted
 underuns||underruns
