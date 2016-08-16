@@ -122,9 +122,10 @@ Ref: http://dep.debian.net/deps/dep3/
 Tag: patch-modifying-debian-files
 Severity: important
 Certainty: certain
-Info: A patch stored in debian/patches/ should never modify files
- in the debian directory (even when it's only creating new files) because
- the debian directory is always directly provided by the Debian packaging.
+Info: A patch stored in <tt>debian/patches/</tt> should never modify files
+ in the <tt>debian</tt> directory (even when it's only creating new files)
+ because the <tt>debian</tt> directory is always directly provided by the
+ Debian packaging.
  And you shouldn't have to modify what you choose to provide in the first
  place.
  .
