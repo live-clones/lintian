@@ -8,8 +8,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
     + [JW] Fix typo.
   * checks/duplicate-files.desc:
     + [JW] Fix typo.
-  * checks/fields.desc:
+  * checks/fields.{desc,pm}:
     + [JW] Fix typos.
+    + [JW] Escape dots in some regexps.
   * checks/files.desc:
     + [JW] Fix typos.
   * checks/java.desc:

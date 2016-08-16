@@ -144,12 +144,12 @@ my %VCS_CANONIFY = (
     },
     cvs      => sub {
         if (
-            $_[0] =~ s{\@(?:cvs.alioth|anonscm)\.debian\.org:/cvsroot/}
+            $_[0] =~ s{\@(?:cvs\.alioth|anonscm)\.debian\.org:/cvsroot/}
                       {\@anonscm.debian.org:/cvs/}
           ) {
             $_[1] = 'vcs-field-bitrotted';
         }
-        $_[0] =~ s{\@cvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
+        $_[0] =~ s{\@\Qcvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
     },
     arch     => sub {
         $_[0] =~ s{https?\Q://arch.debian.org/arch/\E}
