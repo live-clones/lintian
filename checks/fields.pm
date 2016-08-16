@@ -149,7 +149,7 @@ my %VCS_CANONIFY = (
           ) {
             $_[1] = 'vcs-field-bitrotted';
         }
-        $_[0] =~ s{\@\Qcvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
+        $_[0]=~ s{\@\Qcvs.alioth.debian.org:/cvs/}{\@anonscm.debian.org:/cvs/};
     },
     arch     => sub {
         $_[0] =~ s{https?\Q://arch.debian.org/arch/\E}
