@@ -1270,7 +1270,7 @@ sub _clean_block {
 
     # be paranoiac replace gnu with texinfo by gnu
     $text =~ s{
-                 (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Tex info cmd
+                 (?:@[[:alpha:]]*?\{)?\s*gnu\s*\}                   # Texinfo cmd
              }{ gnu }gxms;
 
     # pod2man formatting
@@ -1300,25 +1300,25 @@ sub _clean_block {
     $text =~ s,-\\/,-,gxms;                   # tex strange hyphen
     $text =~ s,\\char, ,gxms;                 # tex  char command
 
-    # Tex info comment with end section
+    # Texinfo comment with end section
     $text =~ s/\@c(?:omment)?\h+
                 end \h+ ifman\s+/ /gxms;
     $text =~ s/\@c(?:omment)?\s+
-                noman\s+/ /gxms;              # Tex info comment no manual
+                noman\s+/ /gxms;              # Texinfo comment no manual
 
-    $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Tex info comment
+    $text =~ s/\@c(?:omment)?\s+/ /gxms;      # Texinfo comment
 
-    # Tex info bold,italic, roman, fixed width
+    # Texinfo bold,italic, roman, fixed width
     $text =~ s/\@[birt][{]/ /gxms;
-    $text =~ s/\@sansserif[{]/ /gxms;         # Tex info sans serif
-    $text =~ s/\@slanted[{]/ /gxms;             # Tex info slanted
-    $text =~ s/\@var[{]/ /gxms;                 # Tex info emphasis
+    $text =~ s/\@sansserif[{]/ /gxms;         # Texinfo sans serif
+    $text =~ s/\@slanted[{]/ /gxms;             # Texinfo slanted
+    $text =~ s/\@var[{]/ /gxms;                 # Texinfo emphasis
 
-    $text =~ s/\@(?:small)?example\s+/ /gxms; # Tex info example
+    $text =~ s/\@(?:small)?example\s+/ /gxms; # Texinfo example
     $text =~ s/\@end \h+
-               (?:small)example\s+/ /gxms;    # Tex info end example tag
-    $text =~ s/\@group\s+/ /gxms;             # Tex info group
-    $text =~ s/\@end\h+group\s+/ /gxms;       # Tex info end group
+               (?:small)example\s+/ /gxms;    # Texinfo end example tag
+    $text =~ s/\@group\s+/ /gxms;             # Texinfo group
+    $text =~ s/\@end\h+group\s+/ /gxms;       # Texinfo end group
 
     $text =~ s/<!--/ /gxms;                   # XML comments
     $text =~ s/-->/ /gxms;                    # end XML comment
@@ -1326,7 +1326,7 @@ sub _clean_block {
     $text =~ s{</?a[^>]*?>}{ }gxms;           # a link
     $text =~ s{<br\s*/?>}{ }gxms;             # (X)?HTML line
     # breaks
-    $text =~ s{</?citetitle[^>]*?>}{ }gxms;   # docbook citation title
+    $text =~ s{</?citetitle[^>]*?>}{ }gxms;   # DocBook citation title
     $text =~ s{</?div[^>]*?>}{ }gxms;         # html style
     $text =~ s{</?font[^>]*?>}{ }gxms;        # font
     $text =~ s{</?i[^>]*?>}{ }gxms;           # italic
@@ -1334,7 +1334,7 @@ sub _clean_block {
     $text =~ s{</?p[^>]*?>}{ }gxms;           # html paragraph
     $text =~ s{</?quote[^>]*?>}{ }gxms;       # xml quote
     $text =~ s{</?span[^>]*?>}{ }gxms;        # span tag
-    $text =~ s{</?ulink[^>]*?>}{ }gxms;       # ulink docbook
+    $text =~ s{</?ulink[^>]*?>}{ }gxms;       # ulink DocBook
     $text =~ s{</?var[^>]*?>}{ }gxms;         # var used by texinfo2html
 
     $text =~ s{\&[lr]dquo;}{ }gxms;           # html rquote
@@ -1359,7 +1359,7 @@ sub _clean_block {
                [-+] \d+,\d+ \s*
                \@\@/ /gxms;                   # patch line
 
-    # Tex info end tag (could be more clever but brute force is fast)
+    # Texinfo end tag (could be more clever but brute force is fast)
     $text =~ s/}/ /gxms;
     # single char at end
     # String, C-style comment/javadoc indent,
