@@ -2,6 +2,25 @@ lintian (2.5.47) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/changelog-file.desc:
+    + [JW] Fix typo.
+  * checks/cruft.desc:
+    + [JW] Fix typo.
+  * checks/duplicate-files.desc:
+    + [JW] Fix typo.
+  * checks/fields.desc:
+    + [JW] Fix typos.
+  * checks/files.desc:
+    + [JW] Fix typos.
+  * checks/java.desc:
+    + [JW] Fix typo.
+  * checks/phppear.desc:
+    + [JW] Fix typo.
+  * checks/rules.desc:
+    + [JW] Fix typo.
+  * checks/shared-libs.desc:
+    + [JW] Fix typos.
+
   * data/spelling/corrections*:
     + [JW] Add more corrections.
 

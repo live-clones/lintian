@@ -4,7 +4,7 @@ Abbrev: phppear
 Type: source
 Needs-Info: unpacked
 Info: This script checks if the packages comply with various aspects of the
- debian PHP policy.
+ Debian PHP policy.
 
 Tag: pear-package-without-pkg-php-tools-builddep
 Severity: normal

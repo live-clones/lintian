@@ -1080,7 +1080,7 @@ sub run {
             }
         }
 
-        # ---------------- .pyc/.pyo (compiled python files)
+        # ---------------- .pyc/.pyo (compiled Python files)
         #  skip any file installed inside a __pycache__ directory
         #  - we have a separate check for that directory.
         if ($fname =~ m,\.py[co]$,o && $fname !~ m,/__pycache__/,o) {
@@ -1092,7 +1092,7 @@ sub run {
             tag 'package-installs-python-pycache-dir', $file;
         }
 
-        # ---------------- .egg (python egg files)
+        # ---------------- .egg (Python egg files)
         if (
             $fname =~ m,\.egg$,o
             && (   $fname =~ m,^usr/lib/python\d+(?:\.\d+/),o
@@ -1268,8 +1268,8 @@ sub run {
             tag 'file-should-not-be-compressed', $file;
         }
 
-        # ---------------- python file locations
-        #  - The python people kindly provided the following table.
+        # ---------------- Python file locations
+        #  - The Python people kindly provided the following table.
         # good:
         # /usr/lib/python2.5/site-packages/
         # /usr/lib/python2.6/dist-packages/
@@ -1293,7 +1293,7 @@ sub run {
             my @correction;
             $pmin = 0 unless (defined $pmin);
             $debug = '' unless (defined $debug);
-            next if ($pmaj < 2 or $pmaj > 3); # Not python 2 or 3
+            next if ($pmaj < 2 or $pmaj > 3); # Not Python 2 or 3
             if ($pmaj == 2 and $pmin < 6){
                 # 2.4 and 2.5
                 if ($loc ne 'site') {
@@ -1303,7 +1303,7 @@ sub run {
                     );
                 }
             } elsif ($pmaj == 3){
-                # python 3. Everything must be in python3/dist-... and
+                # Python 3. Everything must be in python3/dist-... and
                 # not python3.X/<something>
                 if ($pyver ne '3' or $loc ne 'dist'){
                     # bad mojo
@@ -1313,7 +1313,7 @@ sub run {
                     );
                 }
             } else {
-                # python 2.6+
+                # Python 2.6+
                 if ($loc ne 'dist') {
                     @correction = (
                         "${debug}usr/lib/python${pyver}/$loc-packages/$rest",

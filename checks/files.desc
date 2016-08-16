@@ -833,7 +833,7 @@ Tag: package-installs-python-bytecode
 Severity: serious
 Certainty: certain
 Ref: python-policy 3.7
-Info: Compiled python source files must not be included in the package.
+Info: Compiled Python source files must not be included in the package.
  These files should be removed from the package and created at package
  installation time in the postinst.
 
@@ -844,14 +844,14 @@ Ref: python-policy 3.7
 Info: Python eggs should not be installed, since the Debian package is
  supposed to do the required steps for installing the Python code.
  .
- The egg may contain pre-compiled python bytecode or shared libraries.
+ The egg may contain pre-compiled Python bytecode or shared libraries.
 
 Tag: package-installs-python-pycache-dir
 Severity: serious
 Certainty: certain
 Ref: python-policy 3.7
 Info: The package installs a __pycache__ directory, which is normally
- only used to store compiled python source files. Compiled python
+ only used to store compiled Python source files. Compiled Python
  source files must not be included in the package, instead they
  should be generated at installation time in the postinst.
  .
