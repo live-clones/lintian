@@ -576,6 +576,8 @@ concatentations||concatenations
 concatination||concatenation
 concatinations||concatenations
 concensus||consensus
+concurent||concurrent
+concurently||concurrently
 conditionaly||conditionally
 conditionnaly||conditionally
 conect||connect
@@ -1251,6 +1253,10 @@ guarenteed||guaranteed
 guarentee||guarantee
 guarenteeing||guaranteeing
 guarentees||guarantees
+guarranteed||guaranteed
+guarrantee||guarantee
+guarranteeing||guaranteeing
+guarrantees||guarantees
 guassian||Gaussian
 halfs||halves
 hander||handler
@@ -1914,6 +1920,8 @@ paranthesis||parenthesis
 paremeter||parameter
 paremeters||parameters
 parenthesed||parenthesized
+particuarly||particularly
+particuar||particular
 particularily||particularly
 partioning||partitioning
 pased||passed
@@ -2360,6 +2368,8 @@ secund||second
 securty||security
 segement||segment
 segements||segments
+selction||selection
+selctions||selections
 sematically||semantically
 sematical||semantical
 sematic||semantic
@@ -2513,6 +2523,10 @@ stuctures||structures
 stucture||structure
 sturctures||structures
 sturcture||structure
+subcribed||subscribed
+subcribes||subscribes
+subcribe||subscribe
+subcribing||subscribing
 subdirectoires||subdirectories
 subdirectorys||subdirectories
 subexpresssions||subexpressions
@@ -2597,6 +2611,7 @@ suuported||supported
 suuporting||supporting
 suuports||supports
 suuport||support
+swaped||swapped
 swaping||swapping
 switchs||switches
 sylog||syslog
@@ -2682,6 +2697,8 @@ tranparent||transparent
 transciever||transceiver
 transfered||transferred
 transfering||transferring
+transisions||transitions
+transision||transition
 transistions||transitions
 transistion||transition
 transitionned||transitioned
@@ -2788,6 +2805,8 @@ unreconized||unrecognized
 unsinged||unsigned
 unspported||unsupported
 unsual||unusual
+unsuccesfully||unsuccessfully
+unsuccesful||unsuccessful
 unsued||unused
 unsuported||unsupported
 untill||until
@@ -2874,6 +2893,7 @@ wheras||whereas
 whereever||wherever
 wheter||whether
 whish||wish
+whitch||which
 whithout||without
 whith||with
 wich||which
