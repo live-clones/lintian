@@ -520,6 +520,7 @@ commmented||commented
 commmenting||commenting
 commments||comments
 commoditiy||commodity
+commuication||communication
 communcation||communication
 compability||compatibility
 comparision||comparison
@@ -723,6 +724,7 @@ decriptor||descriptor
 decriptors||descriptors
 decsriptor||descriptor
 decsriptors||descriptors
+defailt||default
 defalt||default
 defautl||default
 defered||deferred
@@ -735,6 +737,7 @@ definitly||definitely
 defintion||definition
 defintions||definitions
 defualt||default
+defult||default
 deivce||device
 deivces||devices
 delared||declared
@@ -810,6 +813,7 @@ detemine||determine
 detemines||determines
 detemining||determining
 determing||determining
+determins||determines
 determinstically||deterministically
 determinstic||deterministic
 detroy||destroy
@@ -933,6 +937,7 @@ dumplicates||duplicates
 dumplicating||duplicating
 dupliate||duplicate
 dupliates||duplicates
+dynamicly||dynamically
 dynmaically||dynamically
 dynmaic||dynamic
 easilly||easily
@@ -1427,6 +1432,7 @@ indivudually||individually
 inefficency||inefficiency
 inferrence||inference
 infomation||information
+informaion||information
 informatiom||information
 informations||information
 infromation||information
@@ -1852,6 +1858,10 @@ orientied||oriented
 origionally||originally
 origional||original
 orignal||original
+oscilated||oscillated
+oscilate||oscillate
+oscilating||oscillating
+oscilating||oscillating
 otehr||other
 otherise||otherwise
 otherwhise||otherwise
@@ -2220,6 +2230,7 @@ releated||related
 reletively||relatively
 reletive||relative
 relevent||relevant
+relocateable||relocatable
 remaing||remaining
 remoote||remote
 removeable||removable
@@ -2617,8 +2628,16 @@ switchs||switches
 sylog||syslog
 symetric||symmetric
 synax||syntax
+synchonisation||synchronisation
+synchonised||synchronised
+synchonises||synchronises
+synchonise||synchronise
+synchonising||synchronising
+synchonization||synchronization
 synchonized||synchronized
 synchonizes||synchronizes
+synchonize||synchronize
+synchonizing||synchronizing
 syncronised||synchronised
 syncronises||synchronises
 syncronise||synchronise
@@ -2888,6 +2907,7 @@ weired||weird
 werent||weren't
 wether||whether
 whataver||whatever
+whcih||which
 whenver||whenever
 wheras||whereas
 whereever||wherever
