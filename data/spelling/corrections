@@ -145,6 +145,7 @@ aformentioned||aforementioned
 afterall||after all
 agains||against
 agaist||against
+aginst||against
 agressive||aggressive
 agressively||aggressively
 agrument||argument
@@ -530,6 +531,8 @@ comparsions||comparisons
 compatability||compatibility
 compatabilty||compatibility
 compatable||compatible
+compatablities||compatibilities
+compatablity||compatibility
 compatbility||compatibility
 compatiability||compatibility
 compatibiliy||compatibility
@@ -688,6 +691,7 @@ coutner||counter
 coutners||counters
 coverted||converted
 coypright||copyright
+creationg||creating
 critera||criteria
 criterias||criteria
 crtical||critical
@@ -1382,6 +1386,8 @@ incomming||incoming
 incompatabilities||incompatibilities
 incompatability||incompatibility
 incompatable||incompatible
+incompatablities||incompatibilities
+incompatablity||incompatibility
 incompatbility||incompatibility
 incompatiability||incompatibility
 incompatiblities||incompatibilities
@@ -1544,6 +1550,8 @@ interpet||interpret
 interpets||interprets
 interpretes||interprets
 interruped||interrupted
+interruping||interrupting
+interrups||interrupts
 interupted||interrupted
 interupting||interrupting
 interupt||interrupt
@@ -1587,10 +1595,14 @@ invididual||individual
 invokation||invocation
 invokations||invocations
 irrelevent||irrelevant
+isntance||instance
+isntances||instances
 isnt||isn't
 isssue||issue
 isssues||issues
 istead||instead
+iterface||interface
+iterfaces||interfaces
 itialised||initialised
 itialise||initialise
 itialises||initialises
@@ -1660,6 +1672,7 @@ malplace||misplace
 mamory||memory
 managable||manageable
 managment||management
+manangement||management
 mangement||management
 manoeuvering||maneuvering
 mantained||maintained
@@ -2027,6 +2040,7 @@ preferrable||preferable
 preferrably||preferably
 prefferable||preferable
 prefferably||preferably
+preformance||performance
 prepaired||prepared
 prepartion||preparation
 prepartions||preparations
@@ -2189,6 +2203,7 @@ refect||reflect
 refects||reflects
 refence||reference
 refered||referred
+refering||referring
 refernced||referenced
 refernce||reference
 refernces||references
@@ -2212,6 +2227,10 @@ regsitered||registered
 regsitering||registering
 regsiter||register
 regsiters||registers
+regstered||registered
+regstering||registering
+regster||register
+regsters||registers
 regualarly||regularly
 regualar||regular
 regulamentations||regulations
@@ -2410,6 +2429,7 @@ seperately||separately
 seperate||separate
 seperates||separates
 seperating||separating
+seperation||separation
 seperatly||separately
 seperator||separator
 sepperate||separate
