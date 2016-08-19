@@ -36,7 +36,6 @@ use constant {
 
 use Encode qw(decode);
 use List::MoreUtils qw(any);
-use Data::Alias;
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data ();
@@ -416,7 +415,7 @@ sub check_names_texts {
             return sub { ${$_[0]} =~ $action };
         }
         return sub {
-            alias $_ = ${$_[0]};
+            $_ = ${$_[0]};
             return $action->();
         };
     };

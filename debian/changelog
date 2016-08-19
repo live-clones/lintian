@@ -4,6 +4,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
 
   * checks/changelog-file.desc:
     + [JW] Fix typo.
+  * checks/copyright-file.pm:
+    + [JW] Stop using Data::Alias.  Thanks to Niko Tyni for the bug report.
+      (Closes: #834797)
   * checks/cruft.desc:
     + [JW] Fix typo.
   * checks/duplicate-files.desc:
@@ -26,6 +29,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
 
   * data/spelling/corrections*:
     + [JW] Add more corrections.
+
+  * debian/control:
+    + [JW] Drop now-unused libdata-alias-perl from (Build-)Depends.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 13 Aug 2016 20:07:19 +0000
 
