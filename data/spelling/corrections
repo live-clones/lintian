@@ -870,6 +870,10 @@ disapear||disappear
 disapeared||disappeared
 disapearing||disappearing
 disapears||disappears
+disapper||disappear
+disappered||disappeared
+disappering||disappearing
+disappers||disappears
 discernable||discernible
 disconnet||disconnect
 disconneted||disconnected
@@ -885,6 +889,7 @@ dispathed||dispatched
 dispathes||dispatches
 dispathing||dispatching
 dispertion||dispersion
+dispite||despite
 dissapear||disappear
 dissapeared||disappeared
 dissapearing||disappearing
@@ -912,6 +917,7 @@ docuentation||documentation
 documantation||documentation
 documenation||documentation
 documentaion||documentation
+documentaiton||documentation
 documention||documentation
 documetation||documentation
 documment||document
@@ -1070,6 +1076,8 @@ excutes||executes
 excuting||executing
 exeception||exception
 execeptions||exceptions
+exection||execution
+exections||executions
 exectuable||executable
 exectuables||executables
 exectution||execution
@@ -1227,6 +1235,7 @@ gauranteed||guaranteed
 gaurantee||guarantee
 gauranteeing||guaranteeing
 gaurantees||guarantees
+gausian||Gaussian
 generater||generator
 generaters||generators
 genereated||generated
@@ -1611,6 +1620,7 @@ itialize||initialize
 itializes||initializes
 itializing||initializing
 itsef||itself
+itselfs||itself
 itslef||itself
 jave||java
 keyboad||keyboard
@@ -1660,6 +1670,7 @@ loggin||login
 logile||logfile
 longers||longer
 loosly||loosely
+losely||loosely
 machinary||machinery
 maintainance||maintenance
 maintainence||maintenance
@@ -1681,6 +1692,8 @@ mantaining||maintaining
 mantain||maintain
 mantains||maintains
 manully||manually
+mappping||mapping
+mapppings||mappings
 matchin||matching
 matcing||matching
 mathimatical||mathematical
@@ -1712,6 +1725,8 @@ mimick||mimic
 mimicks||mimics
 mininum||minimum
 miniscule||minuscule
+minium||minimum
+miniums||minimums
 minumum||minimum
 miscelaneous||miscellaneous
 miscelleneous||miscellaneous
@@ -1934,6 +1949,7 @@ parallizes||parallelizes
 parallizing||parallelizing
 paramameters||parameters
 paramater||parameter
+paramaters||parameters
 parametes||parameters
 parametised||parametrised
 paramter||parameter
@@ -2963,4 +2979,8 @@ yeilded||yielded
 yeilding||yielding
 yeilds||yields
 yeild||yield
+yelded||yielded
+yelding||yielding
+yelds||yields
+yeld||yield
 yur||your
