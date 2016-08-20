@@ -413,6 +413,8 @@ calulated||calculated
 calulates||calculates
 calulating||calculating
 cancelation||cancellation
+canidate||candidate
+canidates||candidates
 capabilies||capabilities
 capabilites||capabilities
 capatibilities||capabilities
@@ -472,6 +474,7 @@ chnage||change
 chnages||changes
 choise||choice
 choosen||chosen
+chosing||choosing
 chracter||character
 chracters||characters
 classs||class
@@ -759,6 +762,8 @@ demostrates||demonstrates
 demostrating||demonstrating
 depdencies||dependencies
 depdency||dependency
+depedencies||dependencies
+depedency||dependency
 depencies||dependencies
 depency||dependency
 dependancies||dependencies
@@ -807,6 +812,8 @@ desriptor||descriptor
 desriptors||descriptors
 destory||destroy
 destoryed||destroyed
+destorying||destroying
+destorys||destroys
 detabase||database
 detatch||detach
 detatched||detached
@@ -1005,6 +1012,8 @@ enrties||entries
 enrty||entry
 enterily||entirely
 entites||entities
+entitities||entities
+entitity||entity
 envionment||environment
 envireonment||environment
 enviroiment||environment
@@ -1188,6 +1197,7 @@ formating||formatting
 forseeable||foreseeable
 forse||force
 fortan||fortran
+fortunatly||fortunately
 forunate||fortunate
 forunately||fortunately
 forwaded||forwarded
@@ -1199,6 +1209,8 @@ fowarded||forwarded
 foward||forward
 fowarding||forwarding
 fowards||forwards
+fragement||fragment
+fragements||fragments
 framwork||framework
 freqencies||frequencies
 freqency||frequency
@@ -1672,6 +1684,7 @@ longers||longer
 loosly||loosely
 losely||loosely
 machinary||machinery
+maching||matching
 maintainance||maintenance
 maintainence||maintenance
 maintaing||maintaining
@@ -1685,6 +1698,8 @@ managable||manageable
 managment||management
 manangement||management
 mangement||management
+mannually||manually
+mannual||manual
 manoeuvering||maneuvering
 mantained||maintained
 mantainer||maintainer
@@ -1742,6 +1757,7 @@ missconfigured||misconfigured
 missconfigure||misconfigure
 missconfigures||misconfigures
 missconfiguring||misconfiguring
+missleading||misleading
 missmatched||mismatched
 missmatches||mismatches
 missmatching||mismatching
@@ -2187,6 +2203,10 @@ reciever||receiver
 recieves||receives
 recieving||receiving
 recipies||recipes
+recived||received
+recive||receive
+recives||receives
+reciving||receiving
 recogized||recognized
 recogize||recognize
 recogizes||recognizes
