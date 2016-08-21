@@ -68,6 +68,10 @@ accquiring||acquiring
 accross||across
 acessable||accessible
 acess||access
+acheive||achieve
+acheived||achieved
+acheives||achieves
+acheiving||achieving
 achitecture||architecture
 achitectures||architectures
 achive||achieve
@@ -131,6 +135,9 @@ aditional||additional
 aditionally||additionally
 aditionaly||additionally
 adminstrative||administrative
+adminstrator||administrator
+adminstrators||administrators
+admissable||admissible
 adress||address
 adressed||addressed
 adresses||addresses
@@ -285,6 +292,10 @@ associcate||associate
 associcated||associated
 associcates||associates
 associcating||associating
+assosiate||associate
+assosiated||associated
+assosiates||associates
+assosiating||associating
 assotiated||associated
 asthetic||aesthetic
 asuming||assuming
@@ -339,6 +350,7 @@ availale||available
 availavility||availability
 availble||available
 availiable||available
+availibility||availability
 avalable||available
 avaliable||available
 avaluated||evaluated
@@ -385,6 +397,7 @@ beween||between
 bianries||binaries
 bizzare||bizarre
 blindy||blindly
+bofore||before
 boudaries||boundaries
 boudary||boundary
 boundries||boundaries
@@ -397,6 +410,7 @@ brower||browser
 browers||browsers
 bufffer||buffer
 bufffers||buffers
+bugus||bogus
 bulding||building
 bulid||build
 buliding||building
@@ -499,8 +513,14 @@ collegues||colleagues
 collumn||column
 collumns||columns
 colorfull||colorful
+coloum||column
 coloumn||column
 coloumns||columns
+coloums||columns
+colum||column
+colums||columns
+comamnd||command
+comamnds||commands
 comand||command
 coment||comment
 comented||commented
@@ -814,6 +834,10 @@ destory||destroy
 destoryed||destroyed
 destorying||destroying
 destorys||destroys
+destroi||destroy
+destroied||destroyed
+destroing||destroying
+destrois||destroys
 detabase||database
 detatch||detach
 detatched||detached
@@ -862,6 +886,8 @@ diffrent||different
 difinition||definition
 difinitions||definitions
 digitial||digital
+dimention||dimension
+dimentions||dimensions
 diplay||display
 dirctories||directories
 dirctory||directory
@@ -891,6 +917,10 @@ discontinous||discontinuous
 discription||description
 discriptions||descriptions
 discusion||discussion
+dislay||display
+dislayed||displayed
+dislaying||displaying
+dislays||displays
 dispath||dispatch
 dispathed||dispatched
 dispathes||dispatches
@@ -937,6 +967,7 @@ doesnt't||doesn't
 does't||doesn't
 doman||domain
 domans||domains
+donnot||do not
 dont||don't
 dont'||don't
 dont't||don't
@@ -947,6 +978,8 @@ donwloads||downloads
 dosen't||doesn't
 downlad||download
 downlads||downloads
+draging||dragging
+droped||dropped
 droppped||dropped
 dumplicated||duplicated
 dumplicate||duplicate
@@ -965,6 +998,9 @@ effectly||effectively
 efficency||efficiency
 efficent||efficient
 efficently||efficiently
+effiency||efficiency
+effient||efficient
+effiently||efficiently
 egde||edge
 egdes||edges
 eletronic||electronic
@@ -1091,6 +1127,8 @@ exectuable||executable
 exectuables||executables
 exectution||execution
 exectutions||executions
+execuable||executable
+execuables||executables
 executeable||executable
 executeables||executables
 exension||extension
@@ -1230,6 +1268,8 @@ funcion||function
 funcions||functions
 funciton||function
 funcitons||functions
+functin||function
+functins||functions
 functionallity||functionality
 functionaly||functionally
 functionnality||functionality
@@ -1288,6 +1328,12 @@ guarrantee||guarantee
 guarranteeing||guaranteeing
 guarrantees||guarantees
 guassian||Gaussian
+guidline||guideline
+guidlines||guidelines
+guranteed||guaranteed
+gurantee||guarantee
+guranteeing||guaranteeing
+gurantees||guarantees
 halfs||halves
 hander||handler
 handfull||handful
@@ -1394,6 +1440,10 @@ implmented||implemented
 implment||implement
 implmenting||implementing
 implments||implements
+impoved||improved
+impove||improve
+impoves||improves
+impoving||improving
 improvment||improvement
 improvments||improvements
 inadvertant||inadvertent
@@ -1419,6 +1469,10 @@ incoporated||incorporated
 incoporate||incorporate
 incoporates||incorporates
 incoporating||incorporating
+incorperated||incorporated
+incorperate||incorporate
+incorperates||incorporates
+incorperating||incorporating
 incosistent||inconsistent
 increas||increase
 incuded||included
@@ -1457,6 +1511,8 @@ indivdually||individually
 indivudual||individual
 indivudually||individually
 inefficency||inefficiency
+ineffient||inefficient
+ineffiently||inefficiently
 inferrence||inference
 infomation||information
 informaion||information
@@ -1545,6 +1601,8 @@ intepret||interpret
 inteprets||interprets
 interace||interface
 interaces||interfaces
+interanl||internal
+interanlly||internally
 interator||iterator
 interators||iterators
 interchangable||interchangeable
@@ -1570,6 +1628,10 @@ interpeting||interpreting
 interpet||interpret
 interpets||interprets
 interpretes||interprets
+interrrupted||interrupted
+interrrupting||interrupting
+interrrupt||interrupt
+interrrupts||interrupts
 interruped||interrupted
 interruping||interrupting
 interrups||interrupts
@@ -1641,6 +1703,7 @@ keybord||keyboard
 keybords||keyboards
 keywork||keyword
 knowlege||knowledge
+knwon||known
 langage||language
 langauage||language
 langauge||language
@@ -1677,6 +1740,7 @@ ligth||light
 likelyhood||likelihood
 limted||limited
 lintain||lintian
+litle||little
 loggging||logging
 loggin||login
 logile||logfile
@@ -1726,6 +1790,8 @@ ment||meant
 mesage||message
 mesages||messages
 messags||messages
+messanger||messenger
+messangers||messengers
 messge||message
 messges||messages
 messsage||message
@@ -1813,10 +1879,18 @@ neeeded||needed
 neeeding||needing
 neeed||need
 neeeds||needs
+negociated||negotiated
+negociate||negotiate
+negociates||negotiates
+negociating||negotiating
+negociation||negotiation
+negociations||negotiations
 negotation||negotiation
 nescessarily||necessarily
 nescessary||necessary
 nesesarily||necessarily
+nessecarily||necessarily
+nessecary||necessary
 nessesarily||necessarily
 nessesary||necessary
 nessessarily||necessarily
@@ -1996,6 +2070,7 @@ perfomed||performed
 perfoming||performing
 perfom||perform
 perfoms||performs
+performace||performance
 perfromance||performance
 perfromed||performed
 perfroming||performing
@@ -2026,6 +2101,7 @@ plase||please
 platfrom||platform
 platfroms||platforms
 plattform||platform
+plattforms||platforms
 pleaes||please
 ploting||plotting
 poinnter||pointer
@@ -2097,6 +2173,8 @@ priviledges||privileges
 privilige||privilege
 priviliges||privileges
 probaly||probably
+probelm||problem
+probelms||problems
 proberly||properly
 problably||probably
 problme||problem
@@ -2133,6 +2211,7 @@ procude||produce
 progams||programs
 progess||progress
 programatically||programmatically
+programatic||programmatic
 programers||programmers
 programm||program
 programms||programs
@@ -2222,6 +2301,7 @@ recommented||recommended
 rectange||rectangle
 rectanges||rectangles
 recurrance||recurrence
+recursivly||recursively
 recyled||recycled
 recyle||recycle
 recyles||recycles
@@ -2305,6 +2385,8 @@ replacments||replacements
 replys||replies
 reponse||response
 reponses||responses
+repostiories||repositories
+repostiory||repository
 representaion||representation
 representaions||representations
 represneted||represented
@@ -2421,6 +2503,7 @@ satisify||satisfy
 savable||saveable
 savely||safely
 savety||safety
+scalled||scaled
 scaned||scanned
 scaning||scanning
 seached||searched
@@ -2473,6 +2556,7 @@ seprator||separator
 seprators||separators
 sequece||sequence
 sequeces||sequences
+sequencially||sequentially
 sequencial||sequential
 serie||series
 serivce||service
@@ -2567,6 +2651,10 @@ staically||statically
 standardss||standards
 standart||standard
 staticly||statically
+statisfied||satisfied
+statisfies||satisfies
+statisfying||satisfying
+statisfy||satisfy
 statments||statements
 statment||statement
 stirngs||strings
@@ -2666,6 +2754,10 @@ supressed||suppressed
 supresses||suppresses
 supressing||suppressing
 supress||suppress
+suprised||surprised
+suprises||surprises
+suprise||surprise
+suprising||surprising
 surpressed||suppressed
 surpresses||suppresses
 surpressing||suppressing
@@ -2785,6 +2877,8 @@ transormed||transformed
 transorming||transforming
 transorms||transforms
 transorm||transform
+transparantly||transparently
+transparant||transparent
 transtions||transitions
 transtion||transition
 transtitions||transitions
@@ -2846,6 +2940,7 @@ univerities||universities
 univerity||university
 unknonw||unknown
 unknow||unknown
+unknwon||unknown
 unkown||unknown
 unles||unless
 unneccecarily||unnecessarily
@@ -2864,6 +2959,7 @@ unneedingly||unnecessarily
 unnescessarily||unnecessarily
 unnescessary||unnecessary
 unnesesarily||unnecessarily
+unnessecarily||unnecessarily
 unnessecary||unnecessary
 unnessesarily||unnecessarily
 unnessesary||unnecessary
@@ -2950,6 +3046,10 @@ versoned||versioned
 versons||versions
 verson||version
 verticaly||vertically
+veryified||verified
+veryifies||verifies
+veryifying||verifying
+veryify||verify
 vicefersa||vice-versa
 visiters||visitors
 vitual||virtual
