@@ -29,6 +29,8 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * checks/shared-libs.desc:
     + [JW] Fix typos.
 
+  * data/output/manual-references:
+    + [JW] Refresh.
   * data/spelling/corrections*:
     + [JW] Add more corrections.
 

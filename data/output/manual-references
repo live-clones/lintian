@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2015-10-11
+# Last updated: 2016-08-22
 
 debconf-spec::::Configuration management::https://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -65,11 +65,11 @@ devref::4.8::The Incoming system::https://www.debian.org/doc/developers-referenc
 devref::4.9::Package information::https://www.debian.org/doc/developers-reference/ch04.html#pkg-info
 devref::4.9.1::On the web::https://www.debian.org/doc/developers-reference/ch04.html#pkg-info-web
 devref::4.9.2::The <strong>dak ls</strong> utility::https://www.debian.org/doc/developers-reference/ch04.html#dak-ls
-devref::4.10::The Package Tracking System::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracking-system
-devref::4.10.1::The PTS email interface::https://www.debian.org/doc/developers-reference/ch04.html#pts-commands
-devref::4.10.2::Filtering PTS mails::https://www.debian.org/doc/developers-reference/ch04.html#pts-mail-filtering
-devref::4.10.3::Forwarding VCS commits in the PTS::https://www.debian.org/doc/developers-reference/ch04.html#pts-vcs-commit
-devref::4.10.4::The PTS web interface::https://www.debian.org/doc/developers-reference/ch04.html#pts-web
+devref::4.10::The Debian Package Tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker
+devref::4.10.1::The package tracker email interface::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker-commands
+devref::4.10.2::Filtering mails from the package tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker-mail-filtering
+devref::4.10.3::Forwarding VCS commits to the package tracker::https://www.debian.org/doc/developers-reference/ch04.html#pkg-tracker-vcs-commit
+devref::4.10.4::The package tracker web interface::https://www.debian.org/doc/developers-reference/ch04.html#pts-web
 devref::4.11::Developer's packages overview::https://www.debian.org/doc/developers-reference/ch04.html#ddpo
 devref::4.12::Debian's FusionForge installation: Alioth::https://www.debian.org/doc/developers-reference/ch04.html#alioth
 devref::4.13::Goodies for Debian Developers and Debian Maintainers::https://www.debian.org/doc/developers-reference/ch04.html#developer-misc
@@ -443,13 +443,13 @@ java-policy::::Debian policy for Java::https://www.debian.org/doc/packaging-manu
 java-policy::1::Background::https://www.debian.org/doc/packaging-manuals/java-policy/c42.html
 java-policy::2::Policy::https://www.debian.org/doc/packaging-manuals/java-policy/c50.html
 java-policy::2.1::Virtual machines::https://www.debian.org/doc/packaging-manuals/java-policy/c50.html#policy-vm
-java-policy::2.2::Building Java packages::https://www.debian.org/doc/packaging-manuals/java-policy/x84.html
-java-policy::2.3::Java programs::https://www.debian.org/doc/packaging-manuals/java-policy/x95.html
-java-policy::2.4::Java libraries::https://www.debian.org/doc/packaging-manuals/java-policy/x110.html
-java-policy::2.5::Native Java Bytecode (gcj packages)::https://www.debian.org/doc/packaging-manuals/java-policy/x155.html
-java-policy::2.6::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/x179.html
-java-policy::3::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/c186.html
-java-policy::4::Advices to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/c213.html
+java-policy::2.2::Building Java packages::https://www.debian.org/doc/packaging-manuals/java-policy/x94.html
+java-policy::2.3::Java programs::https://www.debian.org/doc/packaging-manuals/java-policy/x105.html
+java-policy::2.4::Java libraries::https://www.debian.org/doc/packaging-manuals/java-policy/x126.html
+java-policy::2.5::Native Java Bytecode (gcj packages)::https://www.debian.org/doc/packaging-manuals/java-policy/x169.html
+java-policy::2.6::Main, contrib or non-free::https://www.debian.org/doc/packaging-manuals/java-policy/x193.html
+java-policy::3::Issues to discuss::https://www.debian.org/doc/packaging-manuals/java-policy/c200.html
+java-policy::4::Advices to Java packagers::https://www.debian.org/doc/packaging-manuals/java-policy/c227.html
 lintian::::Lintian User's Manual::https://lintian.debian.org/manual/
 lintian::1::Introduction::https://lintian.debian.org/manual/chapter-1.html
 lintian::1.1::About Lintian::https://lintian.debian.org/manual/chapter-1.html#section-1.1
@@ -657,7 +657,7 @@ policy::11.10::Emacs lisp programs::https://www.debian.org/doc/debian-policy/ch-
 policy::11.11::Games::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.11
 policy::12.1::Manual pages::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.1
 policy::12.2::Info documents::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.2
-policy::12.3::Additional documentation::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.3
+policy::12.3::Additional documentation::https://www.debian.org/doc/debian-policy/ch-docs.html#s-docs-additional
 policy::12.4::Preferred documentation formats::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.4
 policy::12.5::Copyright information::https://www.debian.org/doc/debian-policy/ch-docs.html#s-copyrightfile
 policy::12.6::Examples::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.6
@@ -739,6 +739,9 @@ policy::9.3.3.2::Running initscripts::https://www.debian.org/doc/debian-policy/c
 policy::9.3.4::Boot-time initialization::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.4
 policy::9.3.5::Example::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.5
 policy::9.5.1::Cron job file names::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-cron-files
+policy::9.7.1::Registration of media type handlers with desktop entries::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-media-types-freedesktop
+policy::9.7.2::Registration of media type handlers with mailcap entries::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-mailcap
+policy::9.7.3::Providing media types to files::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-file-media-type
 policy::9.11.1::Event-based boot with upstart::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-upstart
 policy::10.7.1::Definitions::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.1
 policy::10.7.2::Location::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.2
@@ -798,18 +801,20 @@ python-policy::3.4::Specifying Supported Versions::https://www.debian.org/doc/pa
 python-policy::3.5::Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-dependencies
 python-policy::3.6::Provides::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-provides
 python-policy::3.7::Modules Byte-Compilation::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-byte_compilation
-python-policy::4.1::Programs using the default python::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_indep_progs
-python-policy::4.2::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_dep_progs
+python-policy::4.2::Programs using the default Python::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_indep_progs
+python-policy::4.3::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_dep_progs
 python-policy::5.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-build_embedded
 python-policy::5.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-embedded_deps
 python-policy::B.1::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-distutils
-python-policy::B.2::python-support (deprecated)::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pysupport
-python-policy::B.3::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
-python-policy::B.4::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-cdbs
-python-policy::B.5::dh_python2 and dh_python3::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-dh_python2_3
+python-policy::B.2::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-setuptools
+python-policy::B.3::dh-python::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-dh-python
+python-policy::B.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pybuild
+python-policy::B.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-cdbs
+python-policy::B.6::python-support (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pysupport
+python-policy::B.7::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
 python-policy::2.4.1::Interpreter Name::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_name
 python-policy::2.4.2::Interpreter Location::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_loc
-python-policy::4.1.1::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-current_version_progs
+python-policy::4.2.1::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-current_version_progs
 vim-policy::::Debian Packaging Policy for Vim::http://pkg-vim.alioth.debian.org/vim-policy.html/
 vim-policy::1::Vim Addon Packaging in a Nutshell::http://pkg-vim.alioth.debian.org/vim-policy.html/index.html#nutshell
 vim-policy::2::Vim Packaging::http://pkg-vim.alioth.debian.org/vim-policy.html/x73.html
