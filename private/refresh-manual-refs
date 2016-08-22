@@ -22,7 +22,7 @@
 # Should be run from the top level of the Lintian source tree or with
 # LINTIAN_ROOT set appropriately.  You need copies of all the relevant manuals
 # installed in the standard places locally (packages debian-policy,
-# developers-reference, doc-base, python, lintian, menu, java-common and
+# developers-reference, doc-base, python, lintian, menu, java-policy and
 # vim-doc).
 
 use strict;
@@ -90,7 +90,7 @@ my %manuals = (
         $link_re, $fields
     ],
     'java-policy' => [
-        '/usr/share/doc/java-common/debian-java-policy/index.html',
+        '/usr/share/doc/java-policy/debian-java-policy/index.html',
         'https://www.debian.org/doc/packaging-manuals/java-policy/',
         $dbk_index_re,
         $dbk_fields
