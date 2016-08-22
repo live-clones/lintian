@@ -47,6 +47,8 @@ accesnt||accent
 accessable||accessible
 accesss||access
 accidentaly||accidentally
+accidential||accidental
+accidentially||accidentally
 accidentily||accidentally
 accidently||accidentally
 accidentually||accidentally
@@ -83,6 +85,10 @@ achored||anchored
 achoring||anchoring
 achors||anchors
 acient||ancient
+acknoledge||acknowledge
+acknoledged||acknowledged
+acknoledges||acknowledges
+acknoledging||acknowledging
 acknowldegement||acknowledgement
 acknowlege||acknowledge
 acknowleged||acknowledged
@@ -170,6 +176,8 @@ alignemnts||alignments
 allign||align
 alligned||aligned
 alligning||aligning
+allignment||alignment
+allignments||alignments
 alligns||aligns
 allmost||almost
 allpication||application
@@ -209,7 +217,11 @@ analagous||analogous
 analysator||analyzer
 ang||and
 anniversery||anniversary
+annouce||announce
+annouced||announced
 annoucement||announcement
+annouces||announces
+annoucing||announcing
 anomolies||anomalies
 anomoly||anomaly
 anway||anyway
@@ -221,6 +233,8 @@ anyting||anything
 aplication||application
 appearence||appearance
 appeneded||appended
+applicaiton||application
+applicaitons||applications
 appliction||application
 applictions||applications
 appplication||application
@@ -232,6 +246,8 @@ appropropriate||appropriate
 approriate||appropriate
 approriately||appropriately
 approximatly||approximately
+apropriate||appropriate
+apropriately||appropriately
 aproximation||approximation
 aproximations||approximations
 aqcuire||acquire
@@ -307,6 +323,7 @@ asyncronously||asynchronously
 atomatically||automatically
 atomicly||atomically
 attachement||attachment
+attched||attached
 attemps||attempts
 attemt||attempt
 attemted||attempted
@@ -613,6 +630,8 @@ conecting||connecting
 conection||connection
 conections||connections
 conects||connects
+conenction||connection
+conenctions||connections
 conent||content
 conents||contents
 configration||configuration
@@ -710,6 +729,9 @@ cotrol||control
 cotrolled||controlled
 cotrolling||controlling
 cotrols||controls
+coudn't||couldn't
+countour||contour
+countours||contours
 coutner||counter
 coutners||counters
 coverted||converted
@@ -810,6 +832,10 @@ descibed||described
 descibe||describe
 descibes||describes
 descibing||describing
+descided||decided
+descide||decide
+descides||decides
+desciding||deciding
 desciptor||descriptor
 desciptors||descriptors
 descriptior||descriptor
@@ -826,6 +852,8 @@ desctiptors||descriptors
 desination||destination
 desinations||destinations
 desireable||desirable
+deskop||desktop
+deskops||desktops
 desription||description
 desriptions||descriptions
 desriptor||descriptor
@@ -1052,6 +1080,8 @@ entitities||entities
 entitity||entity
 envionment||environment
 envireonment||environment
+envirnoment||environment
+envirnoments||environments
 enviroiment||environment
 enviromental||environmental
 enviromentally||environmentally
@@ -1424,6 +1454,8 @@ implemenation||implementation
 implemenations||implementations
 implementaion||implementation
 implementaions||implementations
+implementaiton||implementation
+implementaitons||implementations
 implementated||implemented
 implemention||implementation
 implemetation||implementation
@@ -1433,6 +1465,8 @@ implemeting||implementing
 implemets||implements
 implemntation||implementation
 implemntations||implementations
+implentation||implementation
+implentations||implementations
 implicitely||implicitly
 implicity||implicitly
 implmentation||implementation
@@ -1464,6 +1498,8 @@ incompatiability||incompatibility
 incompatiblities||incompatibilities
 incompatiblity||incompatibility
 incomptible||incompatible
+inconsisent||inconsistent
+inconsisently||inconsistently
 inconsistant||inconsistent
 incoporated||incorporated
 incoporate||incorporate
@@ -1930,6 +1966,7 @@ occurances||occurrences
 occured||occurred
 occurence||occurrence
 occurences||occurrences
+occure||occur
 occuring||occurring
 occurrance||occurrence
 occurrances||occurrences
@@ -2400,6 +2437,8 @@ requiered||required
 requiere||require
 requieres||requires
 requiering||requiring
+requirment||requirement
+requirments||requirements
 requred||required
 requrested||requested
 requresting||requesting
@@ -2790,6 +2829,8 @@ syncronised||synchronised
 syncronises||synchronises
 syncronise||synchronise
 syncronising||synchronising
+syncronizations||synchronizations
+syncronization||synchronization
 syncronized||synchronized
 syncronizes||synchronizes
 syncronize||synchronize
@@ -2820,11 +2861,14 @@ thier||their
 thie||the
 threasholds||thresholds
 threashold||threshold
+threds||threads
+thred||thread
 threhold||threshold
 threshholds||thresholds
 threshhold||threshold
 throught||through
 throug||through
+throuth||through
 thses||these
 thsi||this
 tiggered||triggered
@@ -2857,6 +2901,10 @@ tranformed||transformed
 tranforming||transforming
 tranforms||transforms
 tranform||transform
+tranlated||translated
+tranlates||translates
+tranlate||translate
+tranlating||translating
 tranlations||translations
 tranlation||translation
 tranparently||transparently
@@ -2983,6 +3031,7 @@ unsuported||unsupported
 untill||until
 unusally||unusually
 unusal||unusual
+unuseable||unusable
 unuseful||useless
 unusuable||unusable
 unversionned||unversioned
@@ -3080,6 +3129,7 @@ wiht||with
 wiil||will
 wilcards||wildcards
 wilcard||wildcard
+willl||will
 wirtes||writes
 wirte||write
 withing||within
