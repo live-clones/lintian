@@ -176,10 +176,15 @@ sub run {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
-        } elsif (/^override_(dh_[^:]+)/) {
+        } elsif (/(.*override_dh_.*):/) {
+            my $targets = $1;
             $needbuilddepends = 1;
-            my $dhcommand = $1;
-            if (not $dh_commands_depends->known($dhcommand)) {
+            # Can be multiple targets per rule.
+            while ($targets =~ /\boverride_(dh_[^\s]+)/g) {
+                my $dhcommand = $1;
+                # If maintainer is using wildcards, it's unlikely to be a typo.
+                next if ($dhcommand =~ /%/);
+                next if ($dh_commands_depends->known($dhcommand));
                 # Unknown command, so check for likely misspellings
                 foreach my $x (sort $dh_commands_depends->all) {
                     if (distance($dhcommand, $x) < 3) {
