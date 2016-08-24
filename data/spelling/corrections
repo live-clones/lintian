@@ -308,6 +308,10 @@ associcate||associate
 associcated||associated
 associcates||associates
 associcating||associating
+assosciate||associate
+assosciated||associated
+assosciates||associates
+assosciating||associating
 assosiate||associate
 assosiated||associated
 assosiates||associates
@@ -386,6 +390,8 @@ avod||avoid
 avoded||avoided
 avoding||avoiding
 avods||avoids
+aweful||awful
+awefully||awfully
 backgroud||background
 backslashs||backslashes
 bahavior||behavior
@@ -728,6 +734,10 @@ coresponds||corresponds
 correctnes||correctness
 correponding||corresponding
 correponds||corresponds
+corresond||correspond
+corresonded||corresponded
+corresonding||corresponding
+corresonds||corresponds
 correspoding||corresponding
 correspondance||correspondence
 correspondes||corresponds
@@ -902,6 +912,9 @@ developper||developer
 developpment||development
 deveolpment||development
 devided||divided
+devide||divide
+devides||divides
+deviding||dividing
 diabled||disabled
 diable||disable
 diables||disables
@@ -1097,6 +1110,9 @@ enviromentally||environmentally
 enviroment||environment
 enviroments||environments
 environement||environment
+environemntal||environmental
+environemnt||environment
+environemnts||environments
 environent||environment
 eqivalent||equivalent
 equiped||equipped
@@ -1313,6 +1329,7 @@ functins||functions
 functionallity||functionality
 functionaly||functionally
 functionnality||functionality
+functios||functions
 functiosn||functions
 functonality||functionality
 funtional||functional
@@ -1736,6 +1753,7 @@ isntances||instances
 isnt||isn't
 isssue||issue
 isssues||issues
+issueing||issuing
 istead||instead
 iterface||interface
 iterfaces||interfaces
@@ -1863,6 +1881,7 @@ minium||minimum
 miniums||minimums
 minumum||minimum
 miscelaneous||miscellaneous
+miscellanous||miscellaneous
 miscelleneous||miscellaneous
 misformed||malformed
 mismached||mismatched
@@ -2303,6 +2322,7 @@ queing||queueing
 quering||querying
 reachs||reaches
 readabilty||readability
+reamde||README
 reasearcher||researcher
 reasearchers||researchers
 reasearch||research
