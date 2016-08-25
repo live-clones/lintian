@@ -233,6 +233,8 @@ anyting||anything
 aplication||application
 appearence||appearance
 appeneded||appended
+appered||appeared
+appers||appears
 applicaiton||application
 applicaitons||applications
 appliction||application
@@ -832,6 +834,7 @@ dependancy||dependency
 dependant||dependent
 dependecies||dependencies
 dependecy||dependency
+dependend||dependent
 depenencies||dependencies
 depenency||dependency
 depreacted||deprecated
@@ -1040,6 +1043,8 @@ dupliates||duplicates
 dynamicly||dynamically
 dynmaically||dynamically
 dynmaic||dynamic
+eample||example
+eamples||examples
 easilly||easily
 ecspecially||especially
 edditable||editable
@@ -1206,6 +1211,7 @@ expecially||especially
 expectes||expects
 expection||exception
 expections||exceptions
+expeted||expected
 explaination||explanation
 explainations||explanations
 explantion||explanation
@@ -2205,6 +2211,8 @@ postion||position
 postions||positions
 postive||positive
 postives||positives
+potentally||potentially
+potental||potential
 powerfull||powerful
 prcesses||processes
 prcess||process
@@ -2460,6 +2468,9 @@ replacments||replacements
 replys||replies
 reponse||response
 reponses||responses
+reponsibilities||responsibilities
+reponsibility||responsibility
+reponsible||responsible
 repostiories||repositories
 repostiory||repository
 representaion||representation
@@ -2647,6 +2658,10 @@ setted||set
 setts||sets
 settting||setting
 setttings||settings
+sheduled||scheduled
+shedule||schedule
+shedules||schedules
+sheduling||scheduling
 shoud||should
 shouldnt||shouldn't
 shoule||should
@@ -2749,6 +2764,8 @@ strech||stretch
 strenghts||strengths
 strenght||strength
 strenth||strength
+structres||structures
+structre||structure
 stucts||structs
 stuct||struct
 stuctures||structures
@@ -2803,6 +2820,7 @@ suceeding||succeeding
 suceeds||succeeds
 suceed||succeed
 sucesses||successes
+sucessfull||successful
 sucessfully||successfully
 sucessfuly||successfully
 sucess||success
@@ -3013,6 +3031,8 @@ unexcpected||unexpected
 unexecpted||unexpected
 unexected||unexpected
 unexepcted||unexpected
+unexpetedly||unexpectedly
+unexpeted||unexpected
 unfortunatelly||unfortunately
 unfortunatly||unfortunately
 unforunately||unfortunately
