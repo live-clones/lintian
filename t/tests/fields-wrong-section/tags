@@ -10,6 +10,7 @@ W: libfields-wrong-section-ocaml-dev: wrong-section-according-to-package-name li
 W: libfields-wrong-section-perl: wrong-section-according-to-package-name libfields-wrong-section-perl => perl
 W: libfields-wrong-section-ruby1.8: wrong-section-according-to-package-name libfields-wrong-section-ruby1.8 => ruby
 W: libghc-fields-wrong-section: wrong-section-according-to-package-name libghc-fields-wrong-section => haskell
+W: libjs-fields-wrong-section: wrong-section-according-to-package-name libjs-fields-wrong-section => web
 W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
 W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
 W: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r

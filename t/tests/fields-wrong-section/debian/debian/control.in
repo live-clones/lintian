@@ -82,6 +82,17 @@ Description: {$description} (OCaml)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: libjs-{$source}
+Architecture: any
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (Javascript)
+ Test for web section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
 Package: libghc-{$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}

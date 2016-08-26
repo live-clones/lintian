@@ -18,6 +18,8 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * checks/fields.{desc,pm}:
     + [JW] Fix typos.
     + [JW] Escape dots in some regexps.
+    + [NT] Apply patch from Chris Lamb to check that libjs-* packages
+      are in the "web" section.  (Closes: #798983)
   * checks/files.{desc,pm}:
     + [JW] Fix typos.
     + [NT] Apply patch from Chris Lamb to catch ".coverage" files in
