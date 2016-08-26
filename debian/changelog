@@ -29,6 +29,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * checks/shared-libs.desc:
     + [JW] Fix typos.
 
+  * data/debhelper/dh_{addons,commands}-manual:
+    + [JW] Add dh-autoreconf, which is now a dependency of debhelper.
+      Thanks to Michael Biebl for the bug report.  (Closes: #835449)
   * data/output/manual-references:
     + [JW] Refresh.
   * data/spelling/corrections*:
