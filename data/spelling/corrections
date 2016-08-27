@@ -457,6 +457,8 @@ calulate||calculate
 calulated||calculated
 calulates||calculates
 calulating||calculating
+calulation||calculation
+calulations|calculations
 cancelation||cancellation
 canidate||candidate
 canidates||candidates
@@ -539,6 +541,8 @@ cofigures||configures
 cofiguring||configuring
 colaboration||collaboration
 collapsable||collapsible
+collecion||collection
+collecions||collections
 collegue||colleague
 collegues||colleagues
 collumn||column
@@ -798,6 +802,7 @@ defailt||default
 defalt||default
 defautl||default
 defered||deferred
+defiend||defined
 definate||definite
 definately||definitely
 definining||defining
@@ -880,6 +885,8 @@ desription||description
 desriptions||descriptions
 desriptor||descriptor
 desriptors||descriptors
+destiantion||destination
+destiantions||destinations
 destory||destroy
 destoryed||destroyed
 destorying||destroying
@@ -1088,6 +1095,7 @@ encose||enclose
 encoses||encloses
 encosing||enclosing
 encrytion||encryption
+encyption||encryption
 endianes||endianness
 endianess||endianness
 endiannes||endianness
@@ -1382,6 +1390,7 @@ grammer||grammar
 grammers||grammars
 grapic||graphic
 guage||gauge
+guaranted||guaranteed
 guarenteed||guaranteed
 guarentee||guarantee
 guarenteeing||guaranteeing
@@ -2003,6 +2012,11 @@ obsure||obscure
 o'caml||OCaml
 occassionally||occasionally
 occationally||occasionally
+occoured||occurred
+occouring||occurring
+occour||occur
+occourring||occurring
+occours||occurs
 occurance||occurrence
 occurances||occurrences
 occured||occurred
@@ -2293,6 +2307,7 @@ progess||progress
 programatically||programmatically
 programatic||programmatic
 programers||programmers
+programing||programming
 programm||program
 programms||programs
 progresss||progress
@@ -2328,6 +2343,7 @@ qoutes||quotes
 qouting||quoting
 queing||queueing
 quering||querying
+quiting||quitting
 reachs||reaches
 readabilty||readability
 reamde||README
@@ -2416,6 +2432,7 @@ refrence||reference
 refrences||references
 refrencing||referencing
 regaring||regarding
+regarless||regardless
 registed||registered
 registeing||registering
 registerd||registered
@@ -2601,6 +2618,7 @@ seach||search
 searchs||searches
 secion||section
 secions||sections
+sectionning||sectioning
 secund||second
 securty||security
 segement||segment
@@ -2981,6 +2999,7 @@ transormed||transformed
 transorming||transforming
 transorms||transforms
 transorm||transform
+transparancy||transparency
 transparantly||transparently
 transparant||transparent
 transtions||transitions
@@ -3093,6 +3112,7 @@ unusal||unusual
 unuseable||unusable
 unuseful||useless
 unusuable||unusable
+unvailable||unavailable
 unversionned||unversioned
 unversoned||unversioned
 upated||updated
