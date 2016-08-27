@@ -364,6 +364,10 @@ sub run {
             tag 'file-name-is-not-valid-UTF-8', $file;
         }
 
+        if ($fname =~ m,[*?],) {
+          tag 'file-name-contains-wildcard-character', $file;
+        }
+
         if ($file->is_hardlink) {
             my $link_target_dir = $link;
             $link_target_dir =~ s,[^/]*$,,;

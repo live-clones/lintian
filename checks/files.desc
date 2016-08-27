@@ -1687,6 +1687,14 @@ Info: The given file is in PATH but consists of non-ASCII characters.
  Note that Lintian may be unable to display the filename accurately.
  Unprintable characters may have been replaced.
 
+Tag: file-name-contains-wildcard-character
+Severity: normal
+Certainty: possible
+Info: The file name contains shell wildcard characters.
+ .
+ These are most likely unexpanded wildcard characters from (for example)
+ <tt>debian/*.install</tt> files, or it may have been installed by accident.
+
 Tag: incorrect-naming-of-pkcs11-module
 Severity: important
 Certainty: certain

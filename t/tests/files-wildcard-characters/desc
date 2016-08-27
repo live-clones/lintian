@@ -1,0 +1,6 @@
+Testname: files-wildcard-characters
+Sequence: 6000
+Version: 1.0
+Description: Check for wildcard characters in filenames
+Test-For:
+ file-name-contains-wildcard-character
