@@ -96,6 +96,10 @@ acknowleges||acknowledges
 acknowleging||acknowledging
 ackowledge||acknowledge
 ackowledged||acknowledged
+acommodate||accommodate
+acommodated||accommodated
+acommodates||accommodates
+acommodating||accommodating
 acording||according
 acordingly||accordingly
 acqure||acquire
@@ -111,6 +115,8 @@ acutally||actually
 adapated||adapted
 adapater||adapter
 adapaters||adapters
+adatper||adapter
+adatpers||adapters
 addd||add
 addded||added
 addding||adding
@@ -222,6 +228,8 @@ annouced||announced
 annoucement||announcement
 annouces||announces
 annoucing||announcing
+announcment||announcement
+announcments||announcements
 anomolies||anomalies
 anomoly||anomaly
 anway||anyway
@@ -276,6 +284,7 @@ aready||already
 arent||aren't
 arguement||argument
 arguements||arguments
+aribtrary||arbitrary
 arithmatic||arithmetic
 aritmetic||arithmetic
 arne't||aren't
@@ -372,6 +381,7 @@ auxilary||auxiliary
 auxillary||auxiliary
 auxilliary||auxiliary
 avaiable||available
+avaible||available
 availabe||available
 availabled||available
 availablity||availability
@@ -380,6 +390,7 @@ availavility||availability
 availble||available
 availiable||available
 availibility||availability
+availible||available
 avalable||available
 avaliable||available
 avaluated||evaluated
@@ -448,6 +459,18 @@ buliding||building
 bulids||builds
 bulit||built
 bulletted||bulleted
+cacluate||calculate
+cacluated||calculated
+cacluates||calculates
+cacluating||calculating
+cacluation||calculation
+cacluations||calculations
+caculate||calculate
+caculated||calculated
+caculates||calculates
+caculating||calculating
+caculation||calculation
+caculations||calculations
 calcualte||calculate
 calcualted||calculated
 calcualtes||calculates
@@ -495,6 +518,7 @@ challanage||challenge
 challange||challenge
 challanges||challenges
 changable||changeable
+chaning||changing
 channle||channel
 channles||channels
 channnel||channel
@@ -557,6 +581,7 @@ colums||columns
 comamnd||command
 comamnds||commands
 comand||command
+comaptible||compatible
 coment||comment
 comented||commented
 comenting||commenting
@@ -699,6 +724,8 @@ continous||continuous
 continously||continuously
 continueing||continuing
 contraints||constraints
+contributer||contributor
+contributers||contributors
 contries||countries
 controled||controlled
 controler||controller
@@ -1168,6 +1195,8 @@ everythings||everything
 evironment||environment
 evironments||environments
 exacly||exactly
+exapmle||example
+exapmles||examples
 excact||exact
 excactly||exactly
 excecutable||executable
@@ -1440,6 +1469,10 @@ hierarchie||hierarchy
 higer||higher
 highlighing||highlighting
 highlightning||highlighting
+highligted||highlighted
+highligt||highlight
+highligting||highlighting
+highligts||highlights
 hightlighted||highlighted
 hightlight||highlight
 hightlighting||highlighting
@@ -1529,6 +1562,7 @@ inclued||included
 inclue||include
 inclues||includes
 incluing||including
+incomaptible||incompatible
 incomming||incoming
 incompatabilities||incompatibilities
 incompatability||incompatibility
@@ -1603,6 +1637,7 @@ infomation||information
 informaion||information
 informatiom||information
 informations||information
+informtion||information
 infromation||information
 ingored||ignored
 ingore||ignore
@@ -1833,6 +1868,8 @@ logile||logfile
 longers||longer
 loosly||loosely
 losely||loosely
+machanism||mechanism
+machanisms||mechanisms
 machinary||machinery
 maching||matching
 maintainance||maintenance
@@ -1890,6 +1927,7 @@ milliseonds||milliseconds
 mimicing||mimicking
 mimick||mimic
 mimicks||mimics
+minimun||minimum
 mininum||minimum
 miniscule||minuscule
 minium||minimum
@@ -1996,6 +2034,8 @@ notications||notifications
 notifcation||notification
 notifcations||notifications
 notifed||notified
+notifiying||notifying
+notifiy||notify
 nubmer||number
 nubmers||numbers
 numberal||numeral
@@ -2467,6 +2507,10 @@ reletive||relative
 relevent||relevant
 relocateable||relocatable
 remaing||remaining
+remebered||remembered
+remebering||remembering
+remeber||remember
+remebers||remembers
 remoote||remote
 removeable||removable
 renderering||rendering
@@ -2497,6 +2541,8 @@ represneting||representing
 represnet||represent
 represnets||represents
 reproducable||reproducible
+repsonse||response
+repsonses||responses
 reqeust||request
 reqeusts||requests
 requiered||required
@@ -2923,6 +2969,8 @@ targetting||targeting
 teached||taught
 teh||the
 temorary||temporary
+tempararily||temporarily
+temparary||temporary
 terminaters||terminators
 terminater||terminator
 texually||textually
@@ -3024,6 +3072,8 @@ uglyness||ugliness
 uknown||unknown
 unabailable||unavailable
 unamed||unnamed
+unavaible||unavailable
+unavailible||unavailable
 uncertainities||uncertainties
 uncertainity||uncertainty
 uncomented||uncommented
