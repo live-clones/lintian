@@ -169,6 +169,8 @@ agressive||aggressive
 agressively||aggressively
 agrument||argument
 agruments||arguments
+agument||argument
+aguments||arguments
 albumns||albums
 alegorical||allegorical
 algorith||algorithm
@@ -548,6 +550,12 @@ choosen||chosen
 chosing||choosing
 chracter||character
 chracters||characters
+cirumstance||circumstance
+cirumstances||circumstances
+clasified||classified
+clasifies||classifies
+clasify||classify
+clasifying||classifying
 classs||class
 classses||classes
 clearified||clarified
@@ -791,6 +799,8 @@ coypright||copyright
 creationg||creating
 critera||criteria
 criterias||criteria
+criticial||critical
+criticially||critically
 crtical||critical
 cryptocraphic||cryptographic
 cummulative||cumulative
@@ -976,6 +986,9 @@ digitial||digital
 dimention||dimension
 dimentions||dimensions
 diplay||display
+diplayed||displayed
+diplaying||displaying
+diplays||displays
 dirctories||directories
 dirctory||directory
 direcories||directories
@@ -1140,8 +1153,12 @@ enterily||entirely
 entites||entities
 entitities||entities
 entitity||entity
+entrys||entries
 envionment||environment
 envireonment||environment
+envirnmental||environmental
+envirnment||environment
+envirnments||environments
 envirnoment||environment
 envirnoments||environments
 enviroiment||environment
@@ -1485,6 +1502,7 @@ hilighted||highlighted
 hilight||highlight
 hilighting||highlighting
 hilights||highlights
+hopefuly||hopefully
 horzontal||horizontal
 horzontally||horizontally
 howerver||however
@@ -1532,6 +1550,8 @@ implementaions||implementations
 implementaiton||implementation
 implementaitons||implementations
 implementated||implemented
+implementatin||implementation
+implementatins||implementations
 implemention||implementation
 implemetation||implementation
 implemeted||implemented
@@ -1610,7 +1630,9 @@ indentifies||identifies
 indentify||identify
 indentifying||identifying
 independant||independent
+independantly||independently
 independed||independent
+independend||independent
 indepenent||independent
 indepenently||independently
 indiated||indicated
@@ -1680,9 +1702,14 @@ initiliazed||initialized
 initiliaze||initialize
 initiliazes||initializes
 initiliazing||initializing
+initilisation||initialisation
+initilisations||initialisations
 initilised||initialised
 initilise||initialise
 initilises||initialises
+initilising||initialising
+initilization||initialization
+initilizations||initializations
 initilized||initialized
 initilize||initialize
 initilizes||initializes
@@ -1894,6 +1921,8 @@ mantaining||maintaining
 mantain||maintain
 mantains||maintains
 manully||manually
+manupulation||manipulation
+manupulations||manipulations
 mappping||mapping
 mapppings||mappings
 matchin||matching
@@ -1927,6 +1956,7 @@ milliseonds||milliseconds
 mimicing||mimicking
 mimick||mimic
 mimicks||mimics
+mimimum||minimum
 minimun||minimum
 mininum||minimum
 miniscule||minuscule
@@ -1999,6 +2029,8 @@ necesarrily||necessarily
 necesarry||necessary
 necesary||necessary
 necessar||necessary
+necesserily||necessarily
+necessery||necessary
 nedded||needed
 neeeded||needed
 neeeding||needing
@@ -2103,6 +2135,10 @@ optmizations||optimizations
 orderd||ordered
 orginally||originally
 orginal||original
+orginated||originated
+orginate||originate
+orginates||originates
+orginating||originating
 orgin||origin
 orientatied||orientated
 orientied||oriented
@@ -2436,6 +2472,10 @@ recomending||recommending
 recomend||recommend
 recomends||recommends
 recommanded||recommended
+recommeded||recommended
+recommeding||recommending
+recommed||recommend
+recommeds||recommends
 recommented||recommended
 rectange||rectangle
 rectanges||rectangles
@@ -2457,6 +2497,7 @@ refecting||reflecting
 refect||reflect
 refects||reflects
 refence||reference
+refences||references
 refered||referred
 refering||referring
 refernced||referenced
@@ -3041,6 +3082,7 @@ transistion||transition
 transitionned||transitioned
 transmiters||transmitters
 transmiter||transmitter
+transmiting||transmitting
 transmition||transmission
 transmittion||transmission
 transormed||transformed
@@ -3057,6 +3099,10 @@ transtition||transition
 trasmission||transmission
 treshold||threshold
 trigerring||triggering
+trucated||truncated
+trucates||truncates
+trucate||truncate
+trucating||truncating
 truely||truly
 tupples||tuples
 tupple||tuple
@@ -3094,6 +3140,8 @@ uncrypted||unencrypted
 underuns||underruns
 underun||underrun
 undesireable||undesirable
+undestand||understand
+undestood||understood
 unecessary||unnecessary
 uneeded||unneeded
 unexcpected||unexpected
@@ -3130,6 +3178,8 @@ unnecesarrily||unnecessarily
 unnecesarry||unnecessary
 unnecesary||unnecessary
 unnecessar||unnecessary
+unnecesserily||unnecessarily
+unnecessery||unnecessary
 unnedded||unneeded
 unneedingly||unnecessarily
 unnescessarily||unnecessarily
