@@ -286,6 +286,7 @@ aready||already
 arent||aren't
 arguement||argument
 arguements||arguments
+aribtrarily||arbitrarily
 aribtrary||arbitrary
 arithmatic||arithmetic
 aritmetic||arithmetic
@@ -425,6 +426,7 @@ becomming||becoming
 becuase||because
 beeing||being
 befor||before
+beggining||beginning
 begining||beginning
 behavoir||behavior
 behavoirs||behaviors
@@ -487,6 +489,10 @@ calulations|calculations
 cancelation||cancellation
 canidate||candidate
 canidates||candidates
+canonalize||canonicalize
+canonalized||canonicalized
+canonalizes||canonicalizes
+canonalizing||canonicalizing
 capabilies||capabilities
 capabilites||capabilities
 capatibilities||capabilities
@@ -536,6 +542,8 @@ charactors||characters
 charater||character
 charaters||characters
 charcter||character
+chatacter||character
+chatacters||characters
 chcek||check
 chceked||checked
 chceking||checking
@@ -670,6 +678,10 @@ concatentation||concatenation
 concatentations||concatenations
 concatination||concatenation
 concatinations||concatenations
+concatonate||concatenate
+concatonated||concatenated
+concatonates||concatenates
+concatonating||concatenating
 concensus||consensus
 concurent||concurrent
 concurently||concurrently
@@ -760,6 +772,8 @@ convet||convert
 conveted||converted
 conveting||converting
 convets||converts
+convienient||convenient
+convieniently||conveniently
 convinience||convenience
 convinient||convenient
 conviniently||conveniently
@@ -1007,6 +1021,10 @@ disapper||disappear
 disappered||disappeared
 disappering||disappearing
 disappers||disappears
+disbaled||disabled
+disbale||disable
+disbales||disables
+disbaling||disabling
 discernable||discernible
 disconnet||disconnect
 disconneted||disconnected
@@ -1087,6 +1105,7 @@ dumplicates||duplicates
 dumplicating||duplicating
 dupliate||duplicate
 dupliates||duplicates
+durring||during
 dynamicly||dynamically
 dynmaically||dynamically
 dynmaic||dynamic
@@ -1126,6 +1145,10 @@ emties||empties
 emtpy||empty
 emty||empty
 emtying||emptying
+enbaled||enabled
+enbale||enable
+enbales||enables
+enbaling||enabling
 enchanced||enhanced
 enconding||encoding
 encondings||encodings
@@ -1203,6 +1226,7 @@ evalute||evaluate
 evalutes||evaluates
 evaluting||evaluating
 eventhough||even though
+eventuall||eventually
 everbody||everybody
 everone||everyone
 everthing||everything
@@ -1392,6 +1416,8 @@ functionnality||functionality
 functios||functions
 functiosn||functions
 functonality||functionality
+fundemental||fundamental
+fundementally||fundamentally
 funtional||functional
 funtionalities||functionalities
 funtionality||functionality
@@ -1505,6 +1531,7 @@ hilights||highlights
 hopefuly||hopefully
 horzontal||horizontal
 horzontally||horizontally
+hovewer||however
 howerver||however
 howver||however
 hypenated||hyphenated
@@ -1598,6 +1625,7 @@ inconsisent||inconsistent
 inconsisently||inconsistently
 inconsistant||inconsistent
 inconvertable||inconvertible
+inconvienient||inconvenient
 incoporated||incorporated
 incoporate||incorporate
 incoporates||incorporates
@@ -1725,6 +1753,8 @@ inproper||improper
 inproperly||improperly
 insensistive||insensitive
 insensistively||insensitively
+instalation||installation
+instalations||installations
 instanciated||instantiated
 instanciate||instantiate
 instanciates||instantiates
@@ -1764,6 +1794,7 @@ interferred||interfered
 interferring||interfering
 interger||integer
 intergers||integers
+intermidiate||intermediate
 intermittant||intermittent
 internation||international
 internel||internal
@@ -2178,6 +2209,7 @@ overun||overrun
 overwite||overwrite
 overwites||overwrites
 overwitten||overwritten
+overwriten||overwritten
 ovverridden||overridden
 ovverride||override
 ovverrides||overrides
@@ -2347,6 +2379,7 @@ probelm||problem
 probelms||problems
 proberly||properly
 problably||probably
+problimatic||problematic
 problme||problem
 problmes||problems
 procceed||proceed
@@ -2532,6 +2565,10 @@ regualarly||regularly
 regualar||regular
 regulamentations||regulations
 regularily||regularly
+reigstered||registered
+reigstering||registering
+reigster||register
+reigsters||registers
 reimplmentation||reimplementation
 reimplmented||reimplemented
 reimplmenting||reimplementing
@@ -2705,6 +2742,8 @@ seach||search
 searchs||searches
 secion||section
 secions||sections
+seciton||section
+secitons||sections
 sectionning||sectioning
 secund||second
 securty||security
@@ -2728,6 +2767,10 @@ sentinal||sentinel
 sentinals||sentinels
 separatly||separately
 separed||separated
+separeted||separated
+separete||separate
+separetes||separates
+separeting||separating
 separted||separated
 separte||separate
 separtes||separates
@@ -3075,6 +3118,12 @@ tranparent||transparent
 transciever||transceiver
 transfered||transferred
 transfering||transferring
+transfromations||transformations
+transfromation||transformation
+transfromed||transformed
+transfroming||transforming
+transfroms||transforms
+transfrom||transform
 transisions||transitions
 transision||transition
 transistions||transitions
@@ -3204,6 +3253,7 @@ unspported||unsupported
 unsual||unusual
 unsuccesfully||unsuccessfully
 unsuccesful||unsuccessful
+unsuccessfull||unsuccessful
 unsued||unused
 unsuported||unsupported
 untill||until
