@@ -34,6 +34,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
       Thanks to Michael Biebl for the bug report.  (Closes: #835449)
   * data/output/manual-references:
     + [JW] Refresh.
+  * data/scripts/interpreters:
+    + [JW] Add pypy as a known interpreter. Thanks to Sebastian Ramacher
+      for the bug report.  (Closes: #836017)
   * data/spelling/corrections*:
     + [JW] Add more corrections.
 
