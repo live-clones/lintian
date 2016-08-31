@@ -163,6 +163,7 @@ aforementionned||aforementioned
 aformentioned||aforementioned
 afterall||after all
 agains||against
+againts||against
 agaist||against
 aginst||against
 agressive||aggressive
@@ -207,6 +208,7 @@ alpabet||alphabet
 alpabetical||alphabetical
 alpabetic||alphabetic
 alpabets||alphabets
+alrady||already
 alreay||already
 alterative||alternative
 alteratives||alternatives
@@ -283,6 +285,7 @@ architechtures||architectures
 archvie||archive
 archvies||archives
 aready||already
+are'nt||aren't
 arent||aren't
 arguement||argument
 arguements||arguments
@@ -306,6 +309,7 @@ assgining||assigning
 assginment||assignment
 assginments||assignments
 assgins||assigns
+assiged||assigned
 assigment||assignment
 assigments||assignments
 assignement||assignment
@@ -384,6 +388,7 @@ auxilary||auxiliary
 auxillary||auxiliary
 auxilliary||auxiliary
 avaiable||available
+avaialble||available
 avaible||available
 availabe||available
 availabled||available
@@ -564,6 +569,7 @@ clasified||classified
 clasifies||classifies
 clasify||classify
 clasifying||classifying
+classess||classes
 classs||class
 classses||classes
 clearified||clarified
@@ -729,6 +735,7 @@ constuctor||constructor
 constuctors||constructors
 containes||contains
 containg||containing
+containting||containing
 containts||contains
 contaisn||contains
 contan||contain
@@ -743,6 +750,8 @@ contence||contents
 continous||continuous
 continously||continuously
 continueing||continuing
+contoller||controller
+contollers||controllers
 contraints||constraints
 contributer||contributor
 contributers||contributors
@@ -804,6 +813,7 @@ cotrolled||controlled
 cotrolling||controlling
 cotrols||controls
 coudn't||couldn't
+could'nt||couldn't
 countour||contour
 countours||contours
 coutner||counter
@@ -833,6 +843,8 @@ decalares||declares
 decalaring||declaring
 decendant||descendant
 decendent||descendent
+declaritive||declarative
+declaritively||declaratively
 declation||declaration
 declations||declarations
 decompres||decompress
@@ -871,6 +883,7 @@ delare||declare
 delares||declares
 delaring||declaring
 delemiter||delimiter
+deleteing||deleting
 delimeter||delimiter
 delimeters||delimiters
 demoninator||denominator
@@ -981,6 +994,7 @@ diable||disable
 diables||disables
 diabling||disabling
 dictionnary||dictionary
+did'nt||didn't
 didnt||didn't
 didnt'||didn't
 diferent||different
@@ -1079,6 +1093,7 @@ documment||document
 documments||documents
 doens't||doesn't
 doesen't||doesn't
+does'nt||doesn't
 doesnt||doesn't
 doesnt'||doesn't
 doesnt't||doesn't
@@ -1177,6 +1192,10 @@ entites||entities
 entitities||entities
 entitity||entity
 entrys||entries
+enumarated||enumerated
+enumarate||enumerate
+enumarates||enumerates
+enumarating||enumerating
 envionment||environment
 envireonment||environment
 envirnmental||environmental
@@ -1214,6 +1233,7 @@ errror||error
 errrors||errors
 esential||essential
 esentially||essentially
+espacially||especially
 estbalishment||establishment
 etsablishment||establishment
 etsbalishment||establishment
@@ -1233,6 +1253,7 @@ everthing||everything
 everwhere||everywhere
 everyhing||everything
 everythings||everything
+everyting||everything
 evironment||environment
 evironments||environments
 exacly||exactly
@@ -1349,6 +1370,7 @@ finsihed||finished
 finsihes||finishes
 finsih||finish
 finsihing||finishing
+fisrt||first
 fitler||filter
 fitlers||filters
 flaged||flagged
@@ -1481,6 +1503,10 @@ gurantees||guarantees
 halfs||halves
 hander||handler
 handfull||handful
+hanled||handled
+hanle||handle
+hanles||handles
+hanling||handling
 hanshake||handshake
 hanshakes||handshakes
 hapening||happening
@@ -1491,6 +1517,8 @@ harcode||hardcode
 harcodes||hardcodes
 harcoding||hardcoding
 harware||hardware
+has'nt||hasn't
+have'nt||haven't
 havent||haven't
 havn't||haven't
 heigt||height
@@ -1682,6 +1710,8 @@ indivudually||individually
 inefficency||inefficiency
 ineffient||inefficient
 ineffiently||inefficiently
+infered||inferred
+infering||inferring
 inferrence||inference
 infomation||information
 informaion||information
@@ -1858,6 +1888,7 @@ invokations||invocations
 irrelevent||irrelevant
 isntance||instance
 isntances||instances
+is'nt||isn't
 isnt||isn't
 isssue||issue
 isssues||issues
@@ -1936,6 +1967,8 @@ maintaing||maintaining
 maintance||maintenance
 maintan||maintain
 makeing||making
+malicously||maliciously
+malicous||malicious
 malplaced||misplaced
 malplace||misplace
 mamory||memory
@@ -2031,6 +2064,7 @@ mroe||more
 mssing||missing
 mulitple||multiple
 mulitplied||multiplied
+multible||multiple
 multidimensionnal||multidimensional
 multipe||multiple
 multipes||multiples
@@ -2345,6 +2379,7 @@ preceeds||precedes
 precendence||precedence
 precison||precision
 precission||precision
+predifined||predefined
 prefered||preferred
 preferrable||preferable
 preferrably||preferably
@@ -2367,6 +2402,8 @@ primative||primitive
 princliple||principle
 priorty||priority
 priveleged||privileged
+privelege||privilege
+priveleges||privileges
 privilaged||privileged
 privilage||privilege
 privilages||privileges
@@ -2553,6 +2590,7 @@ registerd||registered
 registe||register
 registes||registers
 registraration||registration
+registred||registered
 regsitered||registered
 regsitering||registering
 regsiter||register
@@ -2644,6 +2682,8 @@ reserverd||reserved
 reseted||reset
 reseting||resetting
 resetted||reset
+resgister||register
+resgisters||registers
 resistent||resistant
 resizeable||resizable
 resouce||resource
@@ -2811,6 +2851,7 @@ shedule||schedule
 shedules||schedules
 sheduling||scheduling
 shoud||should
+should'nt||shouldn't
 shouldnt||shouldn't
 shoule||should
 siginificantly||significantly
@@ -2828,6 +2869,7 @@ simlar||similar
 simliar||similar
 simmilar||similar
 simplier||simpler
+simpliest||simplest
 simultanously||simultaneously
 simultanous||simultaneous
 singal||signal
@@ -2872,6 +2914,8 @@ specifc||specific
 specifed||specified
 specificatin||specification
 specificaton||specification
+specificiation||specification
+specificiations||specifications
 specifing||specifying
 specifiying||specifying
 specifiy||specify
@@ -3115,6 +3159,8 @@ tranlations||translations
 tranlation||translation
 tranparently||transparently
 tranparent||transparent
+transations||transactions
+transation||transaction
 transciever||transceiver
 transfered||transferred
 transfering||transferring
@@ -3148,6 +3194,7 @@ transtition||transition
 trasmission||transmission
 treshold||threshold
 trigerring||triggering
+triggerred||triggered
 trucated||truncated
 trucates||truncates
 trucate||truncate
@@ -3336,8 +3383,10 @@ wan't||want
 waranties||warranties
 waranty||warranty
 wasnt||wasn't
+was'nt||weren't
 weigth||weight
 weired||weird
+were'nt||wasn't
 werent||weren't
 wether||whether
 whataver||whatever
@@ -3370,6 +3419,7 @@ wnat||want
 wont||won't
 workaroung||workaround
 woud||would
+would'nt||wouldn't
 writeing||writing
 writen||written
 writting||writing
