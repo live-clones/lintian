@@ -46,6 +46,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * private/refresh-manual-refs:
     + [JW] Fix path to Debian policy for Java.
 
+  * reporting/templates/head.tmpl:
+    + [NT] Add subresource integrity fields to all <link> tags.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 13 Aug 2016 20:07:19 +0000
 
 lintian (2.5.46) unstable; urgency=medium
