@@ -793,7 +793,7 @@ Creates an ALGO digest object that is seeded with the contents of
 FILE.  If you just want the hex digest, please use
 L</get_file_checksum(ALGO, FILE)> instead.
 
-ALGO can be 'md5' or shaX, where X is any numer supported by
+ALGO can be 'md5' or shaX, where X is any number supported by
 L<Digest::SHA> (e.g. 'sha256').
 
 This sub is a convenience wrapper around Digest::{MD5,SHA}.
