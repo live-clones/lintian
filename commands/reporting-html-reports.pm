@@ -993,6 +993,9 @@ sub output_template {
     $data->{resource_path} ||= sub {
         return $path_prefix . $RESOURCE_MANAGER->resource_URL($_[0]);
     };
+    $data->{resource_integrity} ||= sub {
+        return $RESOURCE_MANAGER->resource_integrity_value($_[0]);
+    };
     $data->{head} ||= sub {
         $templates{head}->fill_in(
             HASH => {

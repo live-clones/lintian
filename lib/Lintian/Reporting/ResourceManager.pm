@@ -27,7 +27,7 @@ use Carp qw(croak);
 use File::Basename qw(basename);
 use File::Copy qw(copy);
 
-use Lintian::Util qw(get_file_checksum);
+use Lintian::Util qw(get_file_digest);
 
 =head1 NAME
 
@@ -73,6 +73,7 @@ sub new {
     croak('Missing required parameter html_dir (or it is undef)')
       if not defined $opts{'html_dir'};
     $self->{'_resource_cache'} = {};
+    $self->{'_resource_integrity'} = {};
     return bless($self, $class);
 }
 
@@ -118,7 +119,7 @@ sub install_resource {
     my ($self, $resource_name, $opt) = @_;
     my $resource_root = $self->{'html_dir'} . '/resources';
     my $method = 'move';
-    my ($basename, $install_name, $resource);
+    my ($basename, $install_name, $resource, $digest, $b64digest);
     $method = $opt->{'install_method'}
       if $opt && exists($opt->{'install_method'});
     if ($opt && exists($opt->{'source_file'})) {
@@ -134,7 +135,13 @@ sub install_resource {
         $basename = basename($resource_name);
         $resource = $resource_name;
     }
-    $install_name = get_file_checksum('sha1', $resource);
+    $digest = get_file_digest('sha256', $resource);
+    $install_name = $digest->clone->hexdigest;
+    $b64digest = $digest->b64digest;
+
+    while (length($b64digest) % 4) {
+        $b64digest .= '=';
+    }
 
     croak("Resource name ${basename} already in use")
       if defined($self->{'_resource_cache'}{$basename});
@@ -156,6 +163,7 @@ sub install_resource {
                 '- please use "move" or "copy"'));
     }
     $self->{'_resource_cache'}{$basename} = "resources/$install_name";
+    $self->{'_resource_integrity'}{$basename} = "sha256-${b64digest}";
     return;
 }
 
@@ -172,6 +180,20 @@ sub resource_URL {
     croak("Unknown resource $resource_name")
       if not defined($self->{'_resource_cache'}{$resource_name});
     return $self->{'_resource_cache'}{$resource_name};
+}
+
+=item resource_integrity_value(RESOURCE_NAME)
+
+Return a string that is valid in the "integrity" field of a C<< <link>
+>> HTML tag.  (See https://www.w3.org/TR/SRI/)
+
+=cut
+
+sub resource_integrity_value {
+    my ($self, $resource_name) = @_;
+    croak("Unknown resource $resource_name")
+      if not defined($self->{'_resource_integrity'}{$resource_name});
+    return $self->{'_resource_integrity'}{$resource_name};
 }
 
 =back
