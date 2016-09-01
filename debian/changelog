@@ -48,6 +48,7 @@ lintian (2.5.47) UNRELEASED; urgency=medium
 
   * reporting/templates/head.tmpl:
     + [NT] Add subresource integrity fields to all <link> tags.
+    + [NT] Add Content-Security-Policy header (via <meta http-equiv>).
 
  -- Niels Thykier <niels@thykier.net>  Sat, 13 Aug 2016 20:07:19 +0000
 
