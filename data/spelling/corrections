@@ -22,6 +22,8 @@ abandonned||abandoned
 abandonning||abandoning
 abbrevation||abbreviation
 abbrevations||abbreviations
+abbriviation||abbreviation
+abbriviations||abbreviations
 abigious||ambiguous
 abilties||abilities
 abilty||ability
@@ -747,6 +749,7 @@ conteined||contained
 conteining||containing
 conteins||contains
 contence||contents
+contigious||contiguous
 continous||continuous
 continously||continuously
 continueing||continuing
@@ -1355,6 +1358,8 @@ faliures||failures
 familar||familiar
 fatser||faster
 feasable||feasible
+featue||feature
+featues||features
 feauture||feature
 feautures||features
 feeded||fed
@@ -1471,6 +1476,7 @@ genreating||generating
 genric||generic
 geomtry||geometry
 geting||getting
+gived||given
 glpyh||glyph
 glpyhs||glyphs
 goind||going
@@ -1633,6 +1639,10 @@ improvments||improvements
 inadvertant||inadvertent
 inadvertantly||inadvertently
 incase||in case
+inclding||including
+incldued||included
+incldue||include
+incldues||includes
 inclued||included
 inclue||include
 inclues||includes
@@ -1781,6 +1791,7 @@ innacurately||inaccurately
 inofficial||unofficial
 inproper||improper
 inproperly||improperly
+insde||inside
 insensistive||insensitive
 insensistively||insensitively
 instalation||installation
@@ -1914,6 +1925,7 @@ keybords||keyboards
 keywork||keyword
 knowlege||knowledge
 knwon||known
+lables||labels
 langage||language
 langauage||language
 langauge||language
@@ -2300,6 +2312,7 @@ penalities||penalties
 penality||penalty
 pendantic||pedantic
 peprocessor||preprocessor
+perfomance||performance
 perfomed||performed
 perfoming||performing
 perfom||perform
@@ -2686,6 +2699,7 @@ resgister||register
 resgisters||registers
 resistent||resistant
 resizeable||resizable
+resonable||reasonable
 resouce||resource
 resouces||resources
 resoure||resource
@@ -2775,6 +2789,7 @@ savety||safety
 scalled||scaled
 scaned||scanned
 scaning||scanning
+scolling||scrolling
 seached||searched
 seaches||searches
 seaching||searching
@@ -2947,6 +2962,7 @@ stoped||stopped
 stoping||stopping
 stoppped||stopped
 straighforward||straightforward
+straightfoward||straightforward
 straigth||straight
 straigt||straight
 streched||stretched
@@ -3133,6 +3149,7 @@ tigth||tight
 tihs||this
 timetamps||timestamps
 timetamp||timestamp
+timming||timing
 timout||timeout
 tipically||typically
 togther||together
@@ -3295,6 +3312,7 @@ unqoute||unquote
 unqouting||unquoting
 unrecogized||unrecognized
 unreconized||unrecognized
+unresonable||unreasonable
 unsinged||unsigned
 unspported||unsupported
 unsual||unusual
@@ -3341,6 +3359,7 @@ vaiables||variables
 vaiable||variable
 vaild||valid
 validing||validating
+valied||valid
 varables||variables
 varable||variable
 varaibles||variables
@@ -3371,6 +3390,7 @@ versoned||versioned
 versons||versions
 verson||version
 verticaly||vertically
+verticies||vertices
 veryified||verified
 veryifies||verifies
 veryifying||verifying
