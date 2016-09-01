@@ -59,6 +59,7 @@ BEGIN {
           get_deb_info
           get_dsc_info
           get_file_checksum
+          get_file_digest
           slurp_entire_file
           file_is_encoded_in_non_utf8
           is_string_utf8_encoded
@@ -786,7 +787,34 @@ sub drain_pipe {
     return 1;
 }
 
-=item get_file_checksum (ALGO, FILE)
+=item get_file_digest(ALGO, FILE)
+
+Creates an ALGO digest object that is seeded with the contents of
+FILE.  If you just want the hex digest, please use
+L</get_file_checksum(ALGO, FILE)> instead.
+
+ALGO can be 'md5' or shaX, where X is any numer supported by
+L<Digest::SHA> (e.g. 'sha256').
+
+This sub is a convenience wrapper around Digest::{MD5,SHA}.
+
+=cut
+
+sub get_file_digest {
+    my ($alg, $file) = @_;
+    open(my $fd, '<', $file);
+    my $digest;
+    if ($alg eq 'md5') {
+        $digest = Digest::MD5->new;
+    } elsif ($alg =~ /sha(\d+)/) {
+        $digest = Digest::SHA->new($1);
+    }
+    $digest->addfile($fd);
+    close($fd);
+    return $digest;
+}
+
+=item get_file_checksum(ALGO, FILE)
 
 Returns a hexadecimal string of the message digest checksum generated
 by the algorithm ALGO on FILE.
@@ -799,16 +827,7 @@ This sub is a convenience wrapper around Digest::{MD5,SHA}.
 =cut
 
 sub get_file_checksum {
-    my ($alg, $file) = @_;
-    open(my $fd, '<', $file);
-    my $digest;
-    if ($alg eq 'md5') {
-        $digest = Digest::MD5->new;
-    } elsif ($alg =~ /sha(\d+)/) {
-        $digest = Digest::SHA->new($1);
-    }
-    $digest->addfile($fd);
-    close($fd);
+    my $digest = get_file_digest(@_);
     return $digest->hexdigest;
 }
 
