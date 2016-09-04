@@ -39,6 +39,7 @@ lintian (2.5.47) UNRELEASED; urgency=medium
       for the bug report.  (Closes: #836017)
   * data/spelling/corrections*:
     + [JW] Add more corrections.
+      Thanks to Paul Wise for patch for one of them.
 
   * debian/control:
     + [JW] Drop now-unused libdata-alias-perl from (Build-)Depends.
