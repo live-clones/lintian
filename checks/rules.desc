@@ -55,7 +55,7 @@ Info: The <tt>debian/rules</tt> file for this package does not provide
    build-arch: build-stamp
    build-indep: build-stamp
    build-stamp:
-	build here
+   	build here
  .
  These targets will be required by policy in the future, so should be
  added to prevent future breakage.

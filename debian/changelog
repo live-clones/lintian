@@ -26,6 +26,7 @@ lintian (2.5.47) UNRELEASED; urgency=medium
       package does not contain any php files.  (Closes: #805076)
   * checks/rules.desc:
     + [JW] Fix typo.
+    + [JW] Fix tag description formatting.
   * checks/shared-libs.desc:
     + [JW] Fix typos.
 
