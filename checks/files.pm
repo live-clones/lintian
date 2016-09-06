@@ -1102,6 +1102,11 @@ sub run {
             tag 'package-installs-python-egg', $file;
         }
 
+        # ---------------- .coverage (coverage.py output)
+        if ($file->basename eq ".coverage") {
+            tag 'package-contains-python-coverage-file', $file;
+        }
+
         # ---------------- /usr/lib/site-python
         if ($fname =~ m,^usr/lib/site-python/\S,) {
             tag 'file-in-usr-lib-site-python', $file;

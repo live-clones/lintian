@@ -18,8 +18,10 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * checks/fields.{desc,pm}:
     + [JW] Fix typos.
     + [JW] Escape dots in some regexps.
-  * checks/files.desc:
+  * checks/files.{desc,pm}:
     + [JW] Fix typos.
+    + [NT] Apply patch from Chris Lamb to catch ".coverage" files in
+      packages.  (Closes: #831864)
   * checks/java.desc:
     + [JW] Fix typo.
   * checks/patch-systems.desc:

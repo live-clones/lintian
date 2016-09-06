@@ -1,0 +1,6 @@
+Testname: files-python-coverage
+Sequence: 6000
+Version: 1.0
+Description: Check for Python .coverage files
+Test-For:
+ package-contains-python-coverage-file
