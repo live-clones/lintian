@@ -6,7 +6,7 @@
 # The format of each line is:
 # mistake||correction
 #
-# Please keep the list sorted (using the en_US locale).
+# Please keep the list sorted using `make sort`
 
 american||American
 apache||Apache

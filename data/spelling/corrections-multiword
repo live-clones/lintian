@@ -5,7 +5,7 @@
 # The format of each line is:
 # SPELLING_MISTAKE_REGEX||correction
 #
-# Please keep the list sorted (using the en_US locale).
+# Please keep the list sorted using `make sort`
 
 (?i)allows to||allows one to
 (?i)allow to||allow one to
