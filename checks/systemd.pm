@@ -203,7 +203,8 @@ sub check_systemd_service_file {
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);
         tag 'systemd-service-file-missing-install-key', $file,
           unless extract_service_file_values($file, 'Install', 'WantedBy',1)
-          or extract_service_file_values($file, 'Install', 'RequiredBy',1);
+          or extract_service_file_values($file, 'Install', 'RequiredBy',1)
+          or $file =~ m,@\.service$,;
     }
 
     return 1;
