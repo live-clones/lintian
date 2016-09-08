@@ -2,4 +2,5 @@ debian/test.service lib/systemd/system/
 debian/test2.service lib/systemd/system/
 debian/test3.service lib/systemd/system/
 debian/test4.service lib/systemd/system/
+debian/test5.service lib/systemd/system/
 debian/test@.service lib/systemd/system/

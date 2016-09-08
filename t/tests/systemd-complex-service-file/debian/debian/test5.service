@@ -1,0 +1,6 @@
+[Unit]
+Documentation=https://www.example.com/
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/test

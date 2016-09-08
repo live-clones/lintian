@@ -205,6 +205,7 @@ sub check_systemd_service_file {
           unless extract_service_file_values($file, 'Install', 'WantedBy',1)
           or extract_service_file_values($file, 'Install', 'RequiredBy',1)
           or extract_service_file_values($file, 'Install', 'Also',1)
+          or any { /^oneshot$/ } extract_service_file_values($file, 'Service', 'Type')
           or $file =~ m,@\.service$,;
     }
 
