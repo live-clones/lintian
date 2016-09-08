@@ -129,12 +129,10 @@ Ref: systemd.unit(5)
 
 Tag: systemd-service-file-missing-install-key
 Severity: normal
-Certainty: possible
+Certainty: wild-guess
 Info: The systemd service file does not contain a <tt>WantedBy=</tt> or
  <tt>RequiredBy=</tt> key in its <tt>[Install]</tt> section.
  .
  Forgetting to add such a line (e.g. <tt>WantedBy=multi-user.target</tt>)
  results in the service file not being started by default.
- .
- If this is intentional, please override this warning.
 Ref: systemd.unit(5)
