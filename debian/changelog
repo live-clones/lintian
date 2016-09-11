@@ -9,6 +9,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
       (Closes: #834797)
   * checks/cruft.desc:
     + [JW] Fix typo.
+  * checks/debhelper.pm:
+    + [NT] Remove logic for CDBS creating a compat file when it is absent
+      as debhelper now requires a compat file unconditionally.
   * checks/duplicate-files.desc:
     + [JW] Fix typo.
   * checks/fields.{desc,pm}:

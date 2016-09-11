@@ -58,7 +58,6 @@ sub run {
     my $needtomodifyscripts = '';
     my $level;
     my $compat = 0;
-    my $usescdbs = '';
     my $seendhcleank = '';
     my %missingbdeps;
     my %missingbdeps_addons;
@@ -166,10 +165,8 @@ sub run {
             $needtomodifyscripts = 1;
             $inclcdbs = 1;
 
-         # CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
-         # a debian/compat file if none was found; that logic is handled later.
+            # CDBS sets DH_COMPAT but doesn't export it.
             $dhcompatvalue = $cdbscompat;
-            $usescdbs = 1;
         } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
             $level = $1;
         } elsif (/^\s*export\s+DH_COMPAT/) {
@@ -290,9 +287,6 @@ sub run {
         $compatnan = 1;
     }
 
-    if ($usescdbs and not defined($level)) {
-        $level = $cdbscompat;
-    }
     $level ||= 1;
     if ($level < $compat_level->value('deprecated')) {
         tag 'package-uses-deprecated-debhelper-compat-version', $level;
