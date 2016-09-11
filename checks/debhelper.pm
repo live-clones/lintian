@@ -271,6 +271,7 @@ sub run {
             } elsif ($compat !~ m/^\d+$/) {
                 tag 'debhelper-compat-not-a-number', $compat;
                 $compat =~ s/[^\d]//g;
+                $compat_value = $compat;
                 $compatnan = 1;
             }
             if ($level) {
