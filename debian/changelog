@@ -1,6 +1,8 @@
-lintian (2.5.47) UNRELEASED; urgency=medium
+lintian (2.5.47) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - package-contains-python-coverage-file
 
   * checks/changelog-file.desc:
     + [JW] Fix typo.
@@ -74,7 +76,7 @@ lintian (2.5.47) UNRELEASED; urgency=medium
     + [NT] Add subresource integrity fields to all <link> tags.
     + [NT] Add Content-Security-Policy header (via <meta http-equiv>).
 
- -- Niels Thykier <niels@thykier.net>  Sat, 13 Aug 2016 20:07:19 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 11 Sep 2016 14:34:34 +0000
 
 lintian (2.5.46) unstable; urgency=medium
 
