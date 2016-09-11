@@ -855,8 +855,8 @@ Info: The package conains a file that looks like output from the Python
  subsequently analyzed to identify code that could have been executed but was
  not.
  .
- As they are are unlikely to be of utility to end-users, these files should be
- removed from the package.
+ As they are are unlikely to be of utility to end-users, these files should not
+ be shipped in the final binary package.
 
 Tag: package-installs-python-pycache-dir
 Severity: serious
