@@ -41,7 +41,7 @@
 ^(?:[^:]*flags\h*:|[^=]*FLAGS\h*=) (?:\V*\h)? (-f\S+math) \s
 # found in libbt.pc
 ^(?:[lL]ibs\h*:|LDFLAGS\h*=) (?:\V*\h)? (-Wl,z,relro) \s
-# not replace automake variable
+# unexpanded automake variable
 (@[^@\s]*@)
 
 
