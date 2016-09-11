@@ -1103,7 +1103,7 @@ sub run {
         }
 
         # ---------------- .coverage (coverage.py output)
-        if ($file->basename eq ".coverage") {
+        if ($file->basename eq '.coverage') {
             tag 'package-contains-python-coverage-file', $file;
         }
 
