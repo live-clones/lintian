@@ -3,7 +3,7 @@
 
 # likely in current dir
 ./
-# for binary object build by libtools
+# for binary object built by libtool
 ../
 # maybe in src subdir
 ./src/
