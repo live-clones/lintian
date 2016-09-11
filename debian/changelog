@@ -33,6 +33,9 @@ lintian (2.5.47) UNRELEASED; urgency=medium
     + [JW] Fix tag description formatting.
   * checks/shared-libs.desc:
     + [JW] Fix typos.
+  * checks/systemd.{desc,pm}:
+    + [NT] Apply patches from Chris Lamb to fix some false positives with
+      systemd-service-file-missing-install-key.  (Closes: #837057)
 
   * data/debhelper/compat-level:
     + [NT] Bump debhelper compat versions with the release of debhelper
