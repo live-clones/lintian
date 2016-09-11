@@ -1,0 +1,5 @@
+# List of all "named" compat levels and when they were introduced
+#
+
+beta-tester          => introduced-in=10,compat-level=10
+bleeding-edge-tester => introduced-in=10,compat-level=10

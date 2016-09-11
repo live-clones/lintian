@@ -46,17 +46,18 @@ my $dh_addons_manual
 my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
+my $NAMED_COMPAT_LEVELS = Lintian::Data->new('debhelper/named-compat-levels',
+    qr/\s*=>\s*/, \&_named_compat_levels);
 
 sub run {
     my (undef, undef, $info) = @_;
     my $droot = $info->index_resolved_path('debian/');
-    my $drules;
+    my ($drules, $dh_bd_version, $level, $using_named_compat);
 
     my $seencommand = '';
     my $needbuilddepends = '';
     my $needdhexecbuilddepends = '';
     my $needtomodifyscripts = '';
-    my $level;
     my $compat = 0;
     my $seendhcleank = '';
     my %missingbdeps;
@@ -261,18 +262,25 @@ sub run {
         ($compat) = split(/\n/, $compat_file);
         strip($compat);
         if ($compat ne '') {
-            if ($compat !~ m/^\d+$/) {
+            my $compat_value = $compat;
+            if (my $named_compat = $NAMED_COMPAT_LEVELS->value($compat)) {
+                $dh_bd_version = $named_compat->{'introduced-in'};
+                $compat_value = $named_compat->{'compat-level'};
+                $using_named_compat = 1;
+            } elsif ($compat !~ m/^\d+$/) {
                 tag 'debhelper-compat-not-a-number', $compat;
                 $compat =~ s/[^\d]//g;
                 $compatnan = 1;
             }
             if ($level) {
+                my $c = $compat;
+                $c .= " ($compat_value)" if $using_named_compat;
                 tag 'declares-possibly-conflicting-debhelper-compat-versions',
-                  "rules=$level compat=$compat";
+                  "rules=$level compat=${c}";
             } else {
                 # this is not just to fill in the gap, but because debhelper
                 # prefers DH_COMPAT over debian/compat
-                $level = $compat;
+                $level = $compat_value;
             }
         } else {
             tag 'debhelper-compat-file-is-empty';
@@ -415,12 +423,16 @@ sub run {
           unless ($bdepends_noarch->implies($dep));
     }
 
-    unless ($bdepends->implies("debhelper (>= $level~)")){
+    $dh_bd_version = $level if not defined($dh_bd_version);
+    unless ($bdepends->implies("debhelper (>= ${dh_bd_version}~)")){
         my $tagname = 'package-needs-versioned-debhelper-build-depends';
+        my @extra = ($level);
         $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
-          if ($level <= $compat_level->value('pedantic'));
-
-        tag $tagname, $level;
+          if ($dh_bd_version <= $compat_level->value('pedantic'));
+        if ($using_named_compat) {
+            push(@extra, '(for the named compat level)');
+        }
+        tag $tagname, @extra;
     }
 
     if ($seen_dh and not $seen_python_helper) {
@@ -566,6 +578,16 @@ sub _shebang_cmd {
     # binaries for all architectures in the source as well. :)
 
     return $cmd;
+}
+
+sub _named_compat_levels {
+    my ($key, $raw_val, undef) = @_;
+    my $result = {};
+    for my $opt (split(m/\s*,\s*/, $raw_val)) {
+        my ($key, $val) = split(m/\s*=\s*/, $opt, 2);
+        $result->{$key} = $val;
+    }
+    return $result;
 }
 
 1;

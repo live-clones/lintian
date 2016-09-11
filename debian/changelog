@@ -12,6 +12,7 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * checks/debhelper.pm:
     + [NT] Remove logic for CDBS creating a compat file when it is absent
       as debhelper now requires a compat file unconditionally.
+    + [NT] Support the new named compat levels in debhelper.
   * checks/duplicate-files.desc:
     + [JW] Fix typo.
   * checks/fields.{desc,pm}:
@@ -39,6 +40,8 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * data/debhelper/dh_{addons,commands}-manual:
     + [JW] Add dh-autoreconf, which is now a dependency of debhelper.
       Thanks to Michael Biebl for the bug report.  (Closes: #835449)
+  * data/debhelper/named-compat-levels:
+    + [NT] New file.
   * data/output/manual-references:
     + [JW] Refresh.
   * data/scripts/interpreters:
