@@ -2,6 +2,7 @@ Testname: phppear-pear
 Sequence: 6000
 Version: 1.0-1
 Description: phppear tests for PEAR packages
+Extra-Build-Depends: pkg-php-tools
 Test-For:
  missing-pkg-php-tools-addon
  missing-pkg-php-tools-buildsystem

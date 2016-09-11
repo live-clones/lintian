@@ -1,5 +1,6 @@
 Testname: debhelper-unused-cdbs
 Sequence: 6000
 Version: 1.0
+Extra-Build-Depends: cdbs
 Description: Test for unused build-depends on cdbs
 Test-For: unused-build-dependency-on-cdbs

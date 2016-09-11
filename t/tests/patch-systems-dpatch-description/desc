@@ -2,6 +2,7 @@ Testname: patch-systems-dpatch-description
 Sequence: 6000
 Version: 1.0
 Description: Test patch-system tags for a dpatch package
+Extra-Build-Depends: dpatch
 Test-For:
  dpatch-index-references-non-existent-patch
  dpatch-missing-description

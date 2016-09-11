@@ -1,6 +1,7 @@
 Testname: cruft-updated-libtool
 Sequence: 6000
 Version: 1.0
+Extra-Build-Depends: libtool
 Description: Old ltmain.sh/ltconfig is fine with build-depend
 Test-Against: ancient-libtool
 References: Debian Bug#534134
