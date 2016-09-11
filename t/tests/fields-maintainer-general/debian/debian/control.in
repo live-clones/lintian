@@ -9,7 +9,7 @@ Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
  Mr. Missing Comma <mrmc@comma.com>
  Mrs. Missing Comma <mrsmc@comma.com>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}

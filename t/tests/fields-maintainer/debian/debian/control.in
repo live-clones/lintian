@@ -4,7 +4,7 @@ Section: devel
 Maintainer: Mrs. Localhost<user@localhost>
 Uploaders: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}

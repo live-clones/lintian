@@ -3,7 +3,7 @@ Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9),
+Build-Depends: {$build_depends},
  cli-common-dev (>= 0.5.7) [i386 sparc amd64 ia64]
 
 Package: {$source}

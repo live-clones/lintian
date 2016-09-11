@@ -4,7 +4,7 @@ Section: {$section}
 Maintainer: {$author}
 Uploaders: Niels Thykier <niels@thykier.net>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}

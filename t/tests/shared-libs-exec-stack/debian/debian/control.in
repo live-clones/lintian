@@ -3,7 +3,7 @@ Priority: extra
 Section: libs
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: libexecstack1
 Architecture: any

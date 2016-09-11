@@ -3,7 +3,7 @@ Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9), python-ply (>= 3.4-1~)
+Build-Depends: {$build_depends}, python-ply (>= 3.4-1~)
 
 Package: {$source}
 Architecture: {$architecture}

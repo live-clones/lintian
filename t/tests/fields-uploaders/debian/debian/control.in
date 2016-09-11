@@ -9,7 +9,7 @@ Uploaders: Mrs. Localhost <user@localhost>,
            Doris Double-Email <Doris Double-Email <doris@demail.com>>,
            Valid email <0@somewhere.com>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}

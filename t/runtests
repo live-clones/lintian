@@ -113,7 +113,7 @@ my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 our %TEMPLATES = (
-    'tests'  => ['debian/changelog', 'debian/control'],
+    'tests'  => ['debian/changelog', 'debian/control', 'debian/compat'],
     'debs'   => ['changelog', 'control', 'Makefile'],
     'source' => ['changelog', 'control', 'dsc.in'],
 );
@@ -1048,6 +1048,12 @@ sub check_test_is_sane {
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
+    $data->{'dh_compat_level'} //= '9';
+    $data->{'default-build-depends'} //= 'debhelper (>= 9)';
+    $data->{'extra-build-depends'} //= '';
+    $data->{'build_depends'} ||= join(', ',
+        grep { $_ }
+          ($data->{'default-build-depends'}, $data->{'extra-build-depends'}));
 
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;

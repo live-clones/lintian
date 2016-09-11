@@ -3,7 +3,7 @@ Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: 3.8
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}

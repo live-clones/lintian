@@ -3,7 +3,7 @@ Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: libcontrol-file-foo1
 Architecture: {$architecture}

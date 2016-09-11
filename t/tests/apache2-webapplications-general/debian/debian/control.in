@@ -4,7 +4,7 @@ Priority: extra
 Maintainer:  Big Kahuna <kahuna@example.com>
 Uploaders: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: phpmyfoo
 Architecture: {$architecture}

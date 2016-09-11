@@ -3,7 +3,7 @@ Priority: extra
 Section: devel
 Maintainer: Debian QA Group <debian-qa@lists.debian.org>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: all

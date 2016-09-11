@@ -3,7 +3,7 @@ Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9), libtest-simple-perl (>= 0.98), perl-modules
+Build-Depends: {$build_depends}, libtest-simple-perl (>= 0.98), perl-modules
 
 Package: {$source}
 Architecture: {$architecture}

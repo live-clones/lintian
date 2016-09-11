@@ -5,7 +5,7 @@ Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Uploaders: I Will Loop <fields-maintainer-bounces@packages.debian.org>,
  I Will Loop Too <fields-maintainer-bounces@PACKAGES.QA.DEBIAN.ORG>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 9)
+Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}
