@@ -263,7 +263,8 @@ sub run {
         strip($compat);
         if ($compat ne '') {
             my $compat_value = $compat;
-            if (my $named_compat = $NAMED_COMPAT_LEVELS->value($compat)) {
+            my $named_compat = $NAMED_COMPAT_LEVELS->value($compat);
+            if (defined($named_compat)) {
                 $dh_bd_version = $named_compat->{'introduced-in'};
                 $compat_value = $named_compat->{'compat-level'};
                 $using_named_compat = 1;
