@@ -135,7 +135,7 @@ lintian (2.5.46) unstable; urgency=medium
   * commands/lintian:
     + [NT,JW] Remove "." from Perl's search path.  (Mitigates: #588017)
   * commands/reporting-html-reports.pm:
-    + [NT] Fix typo in named parameter that made the raw lintain.log
+    + [NT] Fix typo in named parameter that made the raw lintian.log
       unavailable on lintian.debian.org.  Thanks to Guillem Jover
       for reporting the issue.  (Closes: #828719)
     + [NT] Install the lintian log file as a resource so it can be
