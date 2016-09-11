@@ -33,7 +33,11 @@ BEGIN {
 }
 
 use AptPkg::Config '$_config';
-my $versioning = $_config->system->versioning;
+my $versioning = do {
+    my $config = AptPkg::Config->new;
+    $config->init;
+    $config->system->versioning;
+};
 
 =head1 NAME
 

@@ -63,6 +63,10 @@ lintian (2.5.47) UNRELEASED; urgency=medium
   * debian/control:
     + [JW] Drop now-unused libdata-alias-perl from (Build-)Depends.
 
+  * lib/Lintian/Relation/Version.pm:
+    + [NT] Apply change from Brendan O'Dea to avoid (implicitly) messing
+      with the global APT "_config" object.  (Closes: #833656)
+
   * private/refresh-manual-refs:
     + [JW] Fix path to Debian policy for Java.
 
