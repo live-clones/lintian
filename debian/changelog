@@ -2,6 +2,10 @@ lintian (2.5.48) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * data/files/php-libraries:
+    + [JW] Apply patch from Marcelo Jorge Vieira to update package name
+      for php-gettext.  (Closes: #837502)
+
  -- Jakub Wilk <jwilk@debian.org>  Mon, 12 Sep 2016 11:16:53 +0200
 
 lintian (2.5.47) unstable; urgency=medium
