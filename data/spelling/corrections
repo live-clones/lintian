@@ -218,7 +218,9 @@ alpabetical||alphabetical
 alpabetic||alphabetic
 alpabets||alphabets
 alrady||already
+alraedy||already
 alreay||already
+alreayd||already
 alterative||alternative
 alteratives||alternatives
 alternativly||alternatively
@@ -272,6 +274,8 @@ approriately||appropriately
 approximatly||approximately
 apropriate||appropriate
 apropriately||appropriately
+aproximate||approximate
+aproximately||approximately
 aproximation||approximation
 aproximations||approximations
 aqcuire||acquire
@@ -444,6 +448,7 @@ becasue||because
 becomming||becoming
 becuase||because
 beeing||being
+beetween||between
 befor||before
 beggining||beginning
 begining||beginning
@@ -577,6 +582,8 @@ choosen||chosen
 chosing||choosing
 chracter||character
 chracters||characters
+circut||circuit
+circuts||circuits
 cirumstance||circumstance
 cirumstances||circumstances
 clasified||classified
@@ -1103,6 +1110,8 @@ distrubution||distribution
 distrubutions||distributions
 divison||division
 divisons||divisions
+docuement||document
+docuements||documents
 docuentation||documentation
 documantation||documentation
 documenation||documentation
@@ -1397,6 +1406,7 @@ fisrt||first
 fitler||filter
 fitlers||filters
 flaged||flagged
+flexable||flexible
 flie||file
 floting||floating
 flusing||flushing
@@ -1607,6 +1617,7 @@ igores||ignores
 igoring||ignoring
 imediate||immediate
 imediately||immediately
+imediatly||immediately
 immeadiately||immediately
 immedate||immediate
 immedately||immediately
@@ -1745,6 +1756,7 @@ ineffiently||inefficiently
 infered||inferred
 infering||inferring
 inferrence||inference
+inflexable||inflexible
 infomation||information
 informaion||information
 informatiom||information
@@ -1824,6 +1836,7 @@ instanciates||instantiates
 instanciating||instantiating
 instanciation||instantiation
 instanciations||instantiations
+ins't||isn't
 intance||instance
 intances||instances
 intead||instead
@@ -2655,6 +2668,7 @@ relased||released
 relase||release
 relases||releases
 relasing||releasing
+relativly||relatively
 releasse||release
 releated||related
 reletively||relatively
@@ -3060,6 +3074,9 @@ sucessfuly||successfully
 sucess||success
 sufficently||sufficiently
 sufficent||sufficient
+sugestions||suggestions
+sugestion||suggestion
+sugests||suggests
 superflous||superfluous
 superseeded||superseded
 suplied||supplied
@@ -3151,6 +3168,7 @@ thats||that's
 theer||there
 theres||there's
 therfore||therefore
+theyre||they're
 thier||their
 thie||the
 threasholds||thresholds
@@ -3181,6 +3199,7 @@ timetamp||timestamp
 timming||timing
 timout||timeout
 tipically||typically
+togehter||together
 togther||together
 touple||tuple
 traditionnal||traditional
@@ -3471,6 +3490,7 @@ wnats||wants
 wnat||want
 wont||won't
 workaroung||workaround
+woudn't||wouldn't
 woud||would
 would'nt||wouldn't
 writeing||writing
