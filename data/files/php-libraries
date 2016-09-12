@@ -3,7 +3,7 @@
 #                                  regexp (x modifier)
 #
 # Note: + we automatically add ^ and $ for main package name
-#       + we automatically add a bunch of js extension at the end
+#       + we automatically add a few PHP extensions at the end
 #         of the basename regexp if you add $EXT.
 #         If you want exact match add $ at the
 #         end of regexp
