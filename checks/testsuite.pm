@@ -64,6 +64,7 @@ my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
   autopkgtest-pkg-python
   autopkgtest-pkg-r
   autopkgtest-pkg-ruby
+  autopkgtest-pkg-elpa
 );
 
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(
