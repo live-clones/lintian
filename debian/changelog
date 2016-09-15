@@ -11,7 +11,7 @@ lintian (2.5.48) UNRELEASED; urgency=low
       for php-gettext.  (Closes: #837502)
   * data/spelling/corrections:
     + [JW] Add more corrections.
-      Thanks to Paul Wise for patch for one of them.
+      Thanks to Paul Wise for patches for some of them.
 
  -- Jakub Wilk <jwilk@debian.org>  Mon, 12 Sep 2016 11:16:53 +0200
 
