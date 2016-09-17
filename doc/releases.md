@@ -23,12 +23,17 @@ issues that have not been fixed during development.  If you do code
 changes, remember to set the distribution back to UNRELEASED!
 Otherwise, some checks on the code will be skipped (e.g. critic).
 
-Sign and upload the package.  Historically, the Lintian
-maintainers have included the (unsigned) changes file in the signed
-git tag (see e.g. the 2.4.3 tag or the 2.5.19 tag).  If/When doing
-this, it may be prudent to wait for the upload to be accepted before
-pushing the new tag (so that the checksums in the signed tag match
-those of the uploaded files).
+Sign and upload the package.  Furthermore, prepare a signed git
+tag.  This is generally done in the following way:
+
+ * Take a copy of the signed `.changes`
+ * Optionally strip the signature from it.
+ * Add a tag message to the top of the file
+ * Tag with `git tag <VERSION> -u <KEYID> --file <FILE>`
+
+This is method is used to provide a "trust" path between the tag and
+the uploaded files.  This is also why we use the signed `.changes`
+(as signing the source package changes the checksums in the `.changes`).
 
 Once the upload has been accepted and the commit has been tagged, you
 may want to "open" the next entry in the changelog.  The rationale for
