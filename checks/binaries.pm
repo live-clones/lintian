@@ -106,8 +106,7 @@ sub run {
     my ($pkg, $type, $info, $proc, $group) = @_;
 
     my ($madir, %directories, $built_with_golang, %SONAME);
-    my $gnu_triplet_re;
-    my $ruby_triplet_re;
+    my ($arch_hardening, $gnu_triplet_re, $ruby_triplet_re);
     my $needs_libc = '';
     my $needs_libcxx = '';
     my $needs_libc_file;
@@ -122,6 +121,9 @@ sub run {
     my $arch = $info->field('architecture', '');
     my $multiarch = $info->field('multi-arch', 'no');
     my $srcpkg = $proc->pkg_src;
+
+    $arch_hardening = $HARDENING->value($arch)
+      if $arch ne 'all';
 
     foreach my $file (sort keys %{$info->objdump_info}) {
         my $objdump = $info->objdump_info->{$file};
@@ -556,8 +558,7 @@ sub run {
             # handles the following checks:
             # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
             if (exists($info->hardening_info->{$fname})) {
-                my $flags = $HARDENING->value($arch);
-                if ($flags) {
+                if ($arch_hardening) {
                     foreach my $t (@{$info->hardening_info->{$fname}}) {
                         my $tag = "hardening-$t";
                         # Binaries built by the Go compiler do not support all
@@ -566,7 +567,7 @@ sub run {
                           if ($t eq 'no-relro'
                             ||$t eq 'no-fortify-functions')
                           &&$built_with_golang;
-                        tag $tag, $file if $flags->{$tag};
+                        tag $tag, $file if $arch_hardening->{$tag};
                     }
                 }
             }
