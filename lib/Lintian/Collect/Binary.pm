@@ -382,6 +382,7 @@ sub objdump_info {
         if (lc($pg->{'bad-dynamic-table'}//'no') eq 'yes') {
             $info{'BAD-DYNAMIC-TABLE'} = 1;
         }
+        $info{'ELF-TYPE'} = $pg->{'elf-type'} if $pg->{'elf-type'};
         foreach my $symd (split m/\s*\n\s*/, $pg->{'dynamic-symbols'}//'') {
             next unless $symd;
             if ($symd =~ m/^\s*(\S+)\s+(?:(\S+)\s+)?(\S+)$/){

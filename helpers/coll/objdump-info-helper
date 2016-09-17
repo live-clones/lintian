@@ -103,6 +103,9 @@ while (my $line = <$readelf>) {
         # Possibly a reference to afl...
         $static_lib_issues++ if $bin =~ m{\([^/\\)]++\)$};
         next;
+    } elsif ($line =~ m/^Elf file type is (\S+)/) {
+        print "Elf-Type: $1\n";
+        next;
     } elsif ($line =~ m/^Program Headers:/) {
         $section = 'PH';
         print "Program-Headers:\n";

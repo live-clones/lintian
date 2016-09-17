@@ -565,6 +565,11 @@ sub run {
                 tag 'hardening-no-bindnow', $file;
             }
 
+            if ($arch_hardening->{'hardening-no-pie'}
+                and $objdump->{'ELF-TYPE'} eq 'EXEC') {
+                tag 'hardening-no-pie', $file;
+            }
+
             # Check for missing hardening characteristics. This currently
             # handles the following checks:
             # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
@@ -573,7 +578,7 @@ sub run {
                     foreach my $t (@{$info->hardening_info->{$fname}}) {
                         my $tag = "hardening-$t";
                         # Implemented elsewhere
-                        next if $t eq 'no-relro' or $t eq 'no-bindnow';
+                        next if $t eq 'no-relro' or $t eq 'no-bindnow' or $t eq 'no-pie';
                         # Binaries built by the Go compiler do not support all
                         # hardening measures.
                         next
