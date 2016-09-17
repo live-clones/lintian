@@ -172,6 +172,16 @@ while (my $line = <$readelf>) {
             $keep = 1;
         } elsif ($type eq 'TEXTREL') {
             $keep = 1;
+        } elsif ($type eq 'FLAGS_1') {
+            # Will contain "NOW" if the binary was built with -Wl,-z,now
+            $keep = 1;
+            $value =~ s/^Flags:\s*//i;
+        } elsif (($type eq 'FLAGS' and $value =~ m/\bBIND_NOW\b/)
+            or $type eq 'BIND_NOW') {
+            # Variants of bindnow
+            $type = 'FLAGS_1';
+            $value = 'NOW';
+            $keep = 1;
         }
         $keep = 1
           if $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;

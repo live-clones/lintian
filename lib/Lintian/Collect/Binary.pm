@@ -415,7 +415,7 @@ sub objdump_info {
         foreach my $data (split m/\s*\n\s*/, $pg->{'dynamic-section'}//'') {
             next unless $data;
             # Here we just need RPATH and NEEDS, so ignore the rest for now
-            my ($header, $val) = split m/\s++/, $data;
+            my ($header, $val) = split(m/\s++/, $data, 2);
             if ($header eq 'RPATH') {
                 # RPATH is like PATH
                 foreach my $rpathcomponent (split(m/:/,$val)) {
@@ -425,6 +425,10 @@ sub objdump_info {
                 push @{ $info{$header} }, $val;
             } elsif ($header eq 'TEXTREL') {
                 $info{$header} = 1;
+            } elsif ($header eq 'FLAGS_1') {
+                for my $flag (split(m/\s++/, $val)) {
+                    $info{$header}{$flag} = 1;
+                }
             }
         }
 
