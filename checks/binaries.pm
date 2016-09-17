@@ -98,6 +98,7 @@ sub _split_hash {
 
 our $HARDENING= Lintian::Data->new('binaries/hardening-tags', qr/\s*\|\|\s*/o,
     \&_split_hash);
+our $HARDENED_FUNCTIONS = Lintian::Data->new('binaries/hardened-functions');
 our $LFS_SYMBOLS = Lintian::Data->new('binaries/lfs-symbols');
 
 our $ARCH_32_REGEX;
@@ -127,7 +128,7 @@ sub run {
 
     foreach my $file (sort keys %{$info->objdump_info}) {
         my $objdump = $info->objdump_info->{$file};
-        my $has_lfs;
+        my ($has_lfs, %unharded_functions, @hardened_functions);
         my $is_profiled = 0;
         # $file can be an object inside a static lib.  These do
         # not appear in the output of our file_info collection.
@@ -152,6 +153,20 @@ sub run {
         }
         foreach my $symbol (@{$objdump->{SYMBOLS}}) {
             my ($foo, $sec, $sym) = @{$symbol};
+
+            if ($foo eq 'UND') {
+                my $name = $sym;
+                my $hardened;
+                $hardened = 1 if $name =~ s/^__(\S+)_chk$/$1/;
+                if ($HARDENED_FUNCTIONS->known($name)) {
+                    if ($hardened) {
+                        push(@hardened_functions, $name);
+                    } else {
+                        $unharded_functions{$name} = 1;
+                    }
+                }
+
+            }
 
             unless (defined $has_lfs) {
                 if ($foo eq 'UND' and $LFS_SYMBOLS->known($sym)) {
@@ -179,6 +194,13 @@ sub run {
             tag 'binary-compiled-with-profiling-enabled', $file
               if $is_profiled;
         }
+        if (    %unharded_functions
+            and not @hardened_functions
+            and not $built_with_golang
+            and $arch_hardening->{'hardening-no-fortify-functions'}) {
+            tag 'hardening-no-fortify-functions', $file;
+        }
+
         tag 'apparently-corrupted-elf-binary', $file
           if $objdump->{'ERRORS'};
         tag 'binary-file-built-without-LFS-support', $file
@@ -565,7 +587,7 @@ sub run {
                 tag 'hardening-no-bindnow', $file;
             }
 
-            if ($arch_hardening->{'hardening-no-pie'}
+            if (    $arch_hardening->{'hardening-no-pie'}
                 and $objdump->{'ELF-TYPE'} eq 'EXEC') {
                 tag 'hardening-no-pie', $file;
             }
@@ -578,13 +600,7 @@ sub run {
                     foreach my $t (@{$info->hardening_info->{$fname}}) {
                         my $tag = "hardening-$t";
                         # Implemented elsewhere
-                        next if $t eq 'no-relro' or $t eq 'no-bindnow' or $t eq 'no-pie';
-                        # Binaries built by the Go compiler do not support all
-                        # hardening measures.
-                        next
-                          if ($t eq 'no-relro'
-                            ||$t eq 'no-fortify-functions')
-                          &&$built_with_golang;
+                        next if $t ne 'no-stackprotector';
                         tag $tag, $file if $arch_hardening->{$tag};
                     }
                 }
