@@ -168,8 +168,9 @@ guidelines are:
    by a single line.
  * Inside a "root" folder, changes are grouped by files and sorted by
    the ("earliest") file in the group.
- * Changes to the test suite are generally only documented if it has a
-   "visible" effect (e.g. closes a "FTBFS" bug).
+ * Changes to the test suite and the "private" directory are generally
+   only documented if they have a "visible" effect (e.g. closes a
+   "FTBFS" bug).
  * If a change effects more than one "root" folder, they are repeated
    for each of the related "root" folders.
  * Text after a period is followed by *two* spaces (except where it is
