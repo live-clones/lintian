@@ -84,28 +84,7 @@ Developing/Patching Lintian
 ===========================
 
 If you are interested in working developing patches for Lintian or
-just writing your own Lintian checks, please download the Lintian
-source and consider reading the doc/README.developers from the source
-tree:
-
-    $ perldoc doc/README.developers
-
-We also have some short tutorials in our API docs.  You can compile
-the API documentation via:
-
-    $ debian/rules api-doc
-    $ sensible-browser doc/api.html/index.html
-
-From there, you might want to start with "Lintian::Tutorial".  If you
-prefer to use perldoc (or want to improve the tutorials), you can find
-the source files for the tutorial in doc/tutorial.
-
-There is also an online copy on the [Lintian web site][online-api-docs].
-Note that the online copy does not necessarily reflect the API of the
-current development version of Lintian.  Instead, it is the API of
-Lintian when it was last updated on the Lintian web site.
-
-[online-api-docs]: https://lintian.debian.org/library-api/index.html
+just writing your own Lintian checks, please review [CONTRIBUTING.md]().
 
 Feedback
 ========
