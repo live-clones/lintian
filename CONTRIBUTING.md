@@ -198,4 +198,4 @@ Additional resources
 
  * perldoc [doc/tutorial/Lintian/Tutorial.pod]()
  * perldoc [doc/README.developers]()
- * perldoc [doc/README.release]()
+ * [doc/relases.md]()

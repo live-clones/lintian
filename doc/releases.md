@@ -1,18 +1,19 @@
-This document describes the basic release process/work flow for
-Lintian.
+Lintian release management
+==========================
+
 
 
 Preparing and doing a release
-=============================
+-----------------------------
 
 Run the full test suite while the distribution is still set to
 UNRELEASED to ensure everything and all tests are green.  Once
 complete, replace the placeholder in the changelog with the
 actual tags changed.  The following command may be helpful:
 
-  $ private/generate-tag-summary --in-place
+    $ private/generate-tag-summary --in-place
 
-Then set the distribution (e.g. via dch -r) and run the "scripts" test
+Then set the distribution (e.g. via `dch -r`) and run the "scripts" test
 suite again.  This may appear redundant at first, but some of the
 tests react differently when the distribution is not UNRELEASED
 (e.g. changelog-format checks that you remembered the step above).
