@@ -6,6 +6,9 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)
 
+  * data/files/js-libraries:
+    + [BR] Apply patch from Jean-Michel Vourgère to add detection of
+      libjs-jquery-migrate-1.  (Closes: #823627)
   * data/files/php-libraries:
     + [JW] Apply patch from Marcelo Jorge Vieira to update package name
       for php-gettext.  (Closes: #837502)

@@ -29,6 +29,7 @@ libjs-jquery-jush            ~~ (?i)/jquery\.jush$EXT
 libjs-jquery-livequery       ~~ (?i)/jquery\.livequery$EXT
 libjs-jquery-meiomask        ~~ (?i)/jquery\.meiomask$EXT
 libjs-jquery-metadata        ~~ (?i)/jquery\.metadata$EXT
+libjs-jquery-migrate-1       ~~ (?i)/jquery-migrate(?:-1[\d\.]*)$EXT
 libjs-jquery-mousewheel      ~~ (?i)/jquery\.mousewheel$EXT
 libjs-jquery-opacityrollover ~~ (?i)/jquery\.opacityrollover$EXT
 libjs-jquery-tablesorter     ~~ (?i)/jquery\.tablesorter$EXT
