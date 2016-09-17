@@ -22,20 +22,26 @@ The Lintian test suite is divided into several parts.  These are:
 
 =over 4
 
-=item * scripts
+=item -
+
+scripts
 
 Small (Perl) "prove" tests.  These assert that code style, data files
 and/or self-contained code units (i.e. unit tests) work as intended.
 They are B<not> used for testing Lintian tags.
 
-=item * changes / debs / source
+=item -
+
+changes / debs / source
 
 These suites are small test suites that test some particular tags for
 I<.changes>, I<.deb> or I<.dsc> files.  Typically, you will find the
 more exotic tags here, which require some special fiddling and cannot
 be built by a "standard" dh7 + dpkg build.
 
-=item * tests
+=item -
+
+tests
 
 This suite is the standard test suite for testing Lintian tags.
 
@@ -115,16 +121,22 @@ Please keep the following conventions in mind:
 
 =over 4
 
-=item The Testname should be "<check-name>-<test-name>"
+=item -
+
+The Testname should be "<check-name>-<test-name>"
 
 Note that regular Lintian checks do I<not> have a "/", so the naming
 convention works slightly better there.
 
-=item The Sequence should always be 6000 for tests checking tags.
+=item -
+
+The Sequence should always be 6000 for tests checking tags.
 
 Other numbers are used for different purposes.
 
-=item The Version should always be "1.0" unless the test requires anything else.
+=item -
+
+The Version should always be "1.0" unless the test requires anything else.
 
 For non-native packages, the default would be "1.0-1".
 
@@ -327,12 +339,12 @@ Find or compute the test artifact as the following:
 
 =over 4
 
-=item *
+=item -
 
 If I<< <test-dir>/<test-name>.changes >> exists, it is used as the
 artifact.
 
-=item *
+=item -
 
 Otherwise, copy I<< <test-dir>/<test-name>.changes.in >> into the build dir
 and use it as a template to create I<< <build-dir>/<test-name>.changes
@@ -358,12 +370,16 @@ of the following files:
 
 =over 4
 
-=item * desc (mandatory)
+=item -
+
+desc (mandatory)
 
 This is the test description file.  It is a deb822 file (i.e. same
 syntax as I<debian/control>), which contains a number of fields.
 
-=item * tags (mandatory, but may be empty)
+=item -
+
+tags (mandatory, but may be empty)
 
 This file contains the "expected" output of lintian.
 
@@ -371,7 +387,9 @@ This is generally sorted, though a few tests rely on the order of
 the output.  This can be controlled via the "Sort" field in the "desc"
 file.
 
-=item * debian/ (optional, but usually what you need)
+=item -
+
+debian/ (optional, but usually what you need)
 
 The unpacked debian package.  For "native" package tests, this is
 I<also> the "upstream" part.  For "non-native" package tests, this can
@@ -387,7 +405,9 @@ This part is seeded from I<< t/templates/tests/<skeleton>/ >>,
 where I<skeleton> is the value of the "Skeleton" field from the "desc"
 file.
 
-=item * upstream/ (optional, rarely needed)
+=item -
+
+upstream/ (optional, rarely needed)
 
 This directory is the used to create the "upstream" tarball for
 "non-native" package tests.  Since most tags are emitted for both
@@ -404,7 +424,9 @@ The directory will be seeded from I<<
 t/templates/tests/<skeleton>.upstream/ >>, where I<skeleton> is the
 value of the "Skeleton" field from the "desc" file.
 
-=item * post_test (optional, rarely needed)
+=item -
+
+post_test (optional, rarely needed)
 
 This script (if present) is a sed script that can be used to "massage"
 the output of lintian before comparing it with the "expected output".
@@ -426,7 +448,9 @@ number from tags output.  Here are some examples files used:
 It may be useful for other cases where the output of Lintian may
 change on different systems.
 
-=item * pre_build / pre_upstream (optional, special case usage)
+=item -
+
+pre_build / pre_upstream (optional, special case usage)
 
 If present and executable, these scripts can be used to mess with the
 package directory and (what will become) the upstream tarball.
@@ -441,20 +465,26 @@ directory they should work on.  For:
 
 =over 4
 
-=item * pre_upstream
+=item -
+
+pre_upstream
 
 The script will be run before the upstream tarball is compiled.  The
 first argument is the directory that will be included in the upstream
 tarball.
 
-=item * pre_build
+=item -
+
+pre_build
 
 The script will be run before dpkg-buildpackage is invoked.  The first
 argument is the directory of the unpacked debian source package.
 
 =back
 
-=item * test_calibration (optional, special case usage)
+=item -
+
+test_calibration (optional, special case usage)
 
 If present and executable, this script will be invoked B<after>
 lintian I<and> post_test (if present) have been run.  The script can
@@ -469,16 +499,22 @@ The script will be passed 3 arguments:
 
 =over 4
 
-=item * Path to the "expected output" file (read-only)
+=item -
+
+Path to the "expected output" file (read-only)
 
 This is the "tags" file from the test suite and B<must not> be
 modified.
 
-=item * Path to the "actual output" file (read-write)
+=item -
+
+Path to the "actual output" file (read-write)
 
 This is the file as lintian and post_test created it.
 
-=item * Path to the "calibrated expected output" (create+write)
+=item -
+
+Path to the "calibrated expected output" (create+write)
 
 This file does not exist and should be created by the script, if it
 wishes to change the "expected output".  If this file exists when the
