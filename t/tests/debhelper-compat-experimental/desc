@@ -1,5 +1,4 @@
 Testname: debhelper-compat-experimental
-Sequence: 6000
 Version: 1.0
 Description: Test for old debian/compat file
 # Overrides the "data/debhelper/compat-level"

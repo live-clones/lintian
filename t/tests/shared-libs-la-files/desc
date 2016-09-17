@@ -1,5 +1,4 @@
 Testname: shared-libs-la-files
-Sequence: 6000
 Version: 1.0
 Description: Test checks related to libtool .la files
 Test-For:

@@ -1,5 +1,4 @@
 Testname: debhelper-no-depends
-Sequence: 6000
 Version: 1.0
 # Overrides the "data/debhelper/compat-level"
 Profile: lintian-test

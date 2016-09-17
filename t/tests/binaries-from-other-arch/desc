@@ -1,5 +1,4 @@
 Testname: binaries-from-other-arch
-Sequence: 6000
 Architecture: any
 Version: 1.0
 Description: Test package with a pseudo binary from a different architecture

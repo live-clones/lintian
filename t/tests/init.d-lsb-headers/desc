@@ -1,5 +1,4 @@
 Testname: init.d-lsb-headers
-Sequence: 6000
 Version: 1.0
 Description: Test tags related to init script LSB headers
 Test-For:

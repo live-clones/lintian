@@ -1,5 +1,4 @@
 Testname: debhelper-arch-depends
-Sequence: 6000
 Version: 1.0
 Extra-Build-Depends: cli-common-dev (>= 0.5.7) [i386 sparc amd64 ia64]
 Description: Test arch-specific dependencies on dh commands

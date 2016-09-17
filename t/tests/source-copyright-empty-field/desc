@@ -1,5 +1,4 @@
 Testname: source-copyright-empty-field
-Sequence: 6000
 Version: 1.0
 Description: Test for empty required field
 Test-For:

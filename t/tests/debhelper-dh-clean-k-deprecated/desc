@@ -1,5 +1,4 @@
 Testname: debhelper-dh-clean-k-deprecated
-Sequence: 6000
 Version: 1.0
 Description: Test for debhelper >=7 packages using dh_clean -k
 Test-For:

@@ -1,5 +1,4 @@
 Testname: rules-ignore-define
-Sequence: 6000
 Version: 1.0
 Description: Ignore define blocks when checking rule files
 Test-Against: binary-arch-rules-but-pkg-is-arch-indep

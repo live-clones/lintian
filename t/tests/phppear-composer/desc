@@ -1,5 +1,4 @@
 Testname: phppear-composer
-Sequence: 6000
 Version: 1.0-1
 Description: Composer phppear tests
 Test-For:

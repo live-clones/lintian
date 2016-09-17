@@ -1,5 +1,4 @@
 Testname: files-old-config-script
-Sequence: 6000
 Version: 1.0
 Description: Check for detection of old style config script
 Options: --pedantic -I -E

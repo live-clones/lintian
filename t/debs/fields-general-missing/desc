@@ -1,5 +1,4 @@
 Testname: fields-general-missing
-Sequence: 6000
 Version: 1.0-1
 Description: Test for missing control fields
 Test-For:

@@ -1,5 +1,4 @@
 Testname: fields-multiple-x-deps
-Sequence: 6000
 Version: 1.0
 Description: Tests for multiple depends on X
 Test-For:

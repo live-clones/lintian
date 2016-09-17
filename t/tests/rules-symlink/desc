@@ -1,5 +1,4 @@
 Testname: rules-symlink
-Sequence: 6000
 Version: 1.0
 Description: Test for debian/rules being a symlink
 Test-For:

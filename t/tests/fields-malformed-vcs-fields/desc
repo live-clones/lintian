@@ -1,5 +1,4 @@
 Testname: fields-malformed-vcs-fields
-Sequence: 6000
 Description: Test malformed VCS-* fields
 Version: 1.0
 Test-For:

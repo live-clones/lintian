@@ -1,5 +1,4 @@
 Testname: debhelper-misc-depends-fp
-Sequence: 6000
 Version: 1.0
 Description: Test against missing reading the Depends field
 Test-Against: debhelper-but-no-misc-depends

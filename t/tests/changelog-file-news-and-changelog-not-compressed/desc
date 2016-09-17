@@ -1,5 +1,4 @@
 Testname: changelog-file-news-and-changelog-not-compressed
-Sequence: 6000
 Version: 1.0
 Description: General tests for changelog-file tags
 Test-For:

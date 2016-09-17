@@ -1,5 +1,4 @@
 Testname: debhelper-script-token-unneeded
-Sequence: 6000
 Version: 1.0
 Description: Check unnecessary debhelper script token
 Test-Against: maintainer-script-lacks-debhelper-token

@@ -1,5 +1,4 @@
 Testname: files-pkgconfig
-Sequence: 6000
 Version: 1.0
 Description: Check for detection of pkgconfig problem
 Test-For:

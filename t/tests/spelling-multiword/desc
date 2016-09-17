@@ -1,5 +1,4 @@
 Testname: spelling-multiword
-Sequence: 6000
 Version: 1.0
 Description: Multi-word spelling errors detection
 Test-For: spelling-error-in-description

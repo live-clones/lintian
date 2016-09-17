@@ -1,5 +1,4 @@
 Testname: standards-version-newer
-Sequence: 6000
 Version: 1.0
 Description: Test too-new standards version
 Test-For: newer-standards-version

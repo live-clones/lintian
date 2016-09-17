@@ -1,5 +1,4 @@
 Testname: standards-version-old
-Sequence: 6000
 Version: 1.0
 # Overrides the "data/standards-version/ancient-date"
 # data file to avoid turning "old" into "ancient".

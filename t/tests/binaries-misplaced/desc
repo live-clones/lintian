@@ -1,5 +1,4 @@
 Testname: binaries-misplaced
-Sequence: 6000
 Version: 1.0
 Description: Test binaries in /etc
 Test-For:

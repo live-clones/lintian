@@ -1,5 +1,4 @@
 Testname: conffiles-etc-not-marked
-Sequence: 6000
 Version: 1.0
 Description: Test checking etc files not being marked as conffiles
 Test-For: file-in-etc-not-marked-as-conffile

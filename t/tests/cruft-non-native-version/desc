@@ -1,5 +1,4 @@
 Testname: cruft-non-native-version
-Sequence: 6000
 Type: non-native
 Version: 1.0
 Description: Test non-native package with native version

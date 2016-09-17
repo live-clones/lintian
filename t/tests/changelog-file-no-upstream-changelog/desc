@@ -1,5 +1,4 @@
 Testname: changelog-file-no-upstream-changelog
-Sequence: 6000
 Type: non-native
 Version: 1.0-1
 Skeleton: pedantic

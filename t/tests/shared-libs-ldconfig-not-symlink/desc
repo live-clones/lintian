@@ -1,5 +1,4 @@
 Testname: shared-libs-ldconfig-not-symlink
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Test-Depends: debhelper (>= 9.20151004~)

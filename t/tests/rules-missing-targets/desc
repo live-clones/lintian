@@ -1,5 +1,4 @@
 Testname: rules-missing-targets
-Sequence: 6000
 Version: 1.0+dfsg-1
 Type: non-native
 Description: Test for missing targets in debian/rules

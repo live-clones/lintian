@@ -1,5 +1,4 @@
 Testname: fields-src-fields-filename
-Sequence: 6000
 Version: 1
 Description: Test package for src field filename mismatch
 Test-For: source-field-does-not-match-pkg-name

@@ -1,5 +1,4 @@
 Testname: fields-aspell
-Sequence: 6000
 Version: 1.0
 Description: Tests for Architecture of an aspell package
 Architecture: any

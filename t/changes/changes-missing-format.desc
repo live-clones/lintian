@@ -1,5 +1,4 @@
 Testname: changes-missing-format
-Sequence: 6000
 Version: 1.0
 Description: Test for missing format field
 Test-For: malformed-changes-file

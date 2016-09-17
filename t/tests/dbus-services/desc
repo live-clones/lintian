@@ -1,5 +1,4 @@
 Testname: dbus-services
-Sequence: 6000
 Version: 1.0
 Description: test D-Bus .service files
 Test-For:

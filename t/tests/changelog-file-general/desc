@@ -1,5 +1,4 @@
 Testname: changelog-file-general
-Sequence: 6000
 Type: non-native
 Version: 1.0-1
 Description: General tests for changelog-file tags

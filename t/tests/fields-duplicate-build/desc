@@ -1,5 +1,4 @@
 Testname: fields-duplicate-build
-Sequence: 6000
 Version: 1.0
 Description: Check for duplicate build relations
 Test-For: package-has-a-duplicate-build-relation

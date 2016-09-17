@@ -1,5 +1,4 @@
 Testname: rules-dh-unused-target-nonempty
-Sequence: 6000
 Version: 1.0
 Description: Allow dh in unused targets, but nothing else
 Test-For: binary-arch-rules-but-pkg-is-arch-indep

@@ -1,5 +1,4 @@
 Testname: debhelper-executable-files
-Sequence: 6000
 Version: 1.0
 Description: Tests related to executable packaging files
 Test-For: package-file-is-executable

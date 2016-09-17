@@ -1,5 +1,4 @@
 Testname: patch-systems-quilt-no-depends
-Sequence: 6000
 Version: 1.0
 Description: Test for quilt series but no B-D on quilt
 Test-For:

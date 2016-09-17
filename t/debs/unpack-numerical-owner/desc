@@ -1,5 +1,4 @@
 Testname: unpack-numerical-owner
-Sequence: 6000
 Version: 1.0
 Description: Test for tarballs with numerical owner only
 Test-Against:

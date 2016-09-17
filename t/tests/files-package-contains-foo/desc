@@ -1,5 +1,4 @@
 Testname: files-package-contains-foo
-Sequence: 6000
 Version: 1.0
 Description: Test tags about cruft in binary packages
 Test-For:

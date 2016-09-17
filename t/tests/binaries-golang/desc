@@ -1,5 +1,4 @@
 Testname: binaries-golang
-Sequence: 6000
 Version: 1.0
 Extra-Build-Depends: golang-go (>= 2:1.1.1-4)
 Description: Misc errors related to golang binaries

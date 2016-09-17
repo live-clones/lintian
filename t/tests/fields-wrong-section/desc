@@ -1,5 +1,4 @@
 Testname: fields-wrong-section
-Sequence: 6000
 Version: 1.0
 Description: Packages placed in the wrong sections
 Test-For:

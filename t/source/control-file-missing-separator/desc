@@ -1,5 +1,4 @@
 Testname: control-file-missing-separator
-Sequence: 6000
 Version: 1.0
 Description: Test for missing separators in control files
 Test-For: missing-separator-between-items

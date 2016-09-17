@@ -1,5 +1,4 @@
 Testname: source-copyright-nodep5
-Sequence: 6000
 Version: 1.0
 Description: Test for no dep5 source copyright
 Options: -I -E --pedantic

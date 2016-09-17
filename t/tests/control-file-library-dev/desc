@@ -1,5 +1,4 @@
 Testname: control-file-library-dev
-Sequence: 6000
 Version: 1.0
 Architecture: any
 Description: Check control file handling of library dev packages

@@ -1,5 +1,4 @@
 Testname: symlinks-broken
-Sequence: 6000
 Version: 1.0
 Description: General tests broken symlinks
 Test-For:

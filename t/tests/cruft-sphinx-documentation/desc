@@ -1,5 +1,4 @@
 Testname: cruft-sphinx-documentation
-Sequence: 6000
 Version: 1.0
 Description: Detect sphinx documentation
 Skeleton: pedantic

@@ -1,5 +1,4 @@
 Testname: nmu-qa-upload
-Sequence: 6000
 Version: 1.0+nmu1
 Description: Test for QA upload issues
 Author: Debian QA Group <packages@qa.debian.org>

@@ -1,5 +1,4 @@
 Testname: cruft-ancient-file
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test package for ancient files producing tar errors

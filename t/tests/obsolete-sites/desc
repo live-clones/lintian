@@ -1,5 +1,4 @@
 Testname: obsolete-sites
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test cases where packages contain links to frozen, closing or closed hosters

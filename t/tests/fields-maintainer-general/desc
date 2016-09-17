@@ -1,5 +1,4 @@
 Testname: fields-maintainer-general
-Sequence: 6000
 Version: 1.0
 Description: Tests of various maintainer and uploader tags
 Test-For:

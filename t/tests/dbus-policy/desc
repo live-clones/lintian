@@ -1,5 +1,4 @@
 Testname: dbus-policy
-Sequence: 6000
 Version: 1.0
 Description: test deprecated D-Bus policies
 Test-For:

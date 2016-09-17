@@ -1,5 +1,4 @@
 Testname: cruft-non-free-md5sums
-Sequence: 6000
 Version: 1.0
 Description: Test of md5sums forbidden-file
 Test-For:

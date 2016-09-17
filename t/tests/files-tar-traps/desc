@@ -1,5 +1,4 @@
 Testname: files-tar-traps
-Sequence: 6000
 Version: 1.0
 Description: Test tags for tar common bugs
 # tar -t in 1.27 is buggy and creates tarballs incorrectly

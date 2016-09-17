@@ -1,5 +1,4 @@
 Testname: fields-multi-arch-unknown
-Sequence: 6000
 Version: 1.0
 Description: Test package with an unknown Multi-arch value
 Test-For: unknown-multi-arch-value

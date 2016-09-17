@@ -1,5 +1,4 @@
 Testname: scripts-interpreters
-Sequence: 6000
 Version: 1.0
 Description: Check various script interpreter issues
 Skeleton: pedantic

@@ -1,5 +1,4 @@
 Testname: nmu-case-insensitive
-Sequence: 6000
 Version: 1.0
 Author: Russ Allbery <rra@debian.ORG>
 Description: Test case-insensitive matching of e-mail addresses

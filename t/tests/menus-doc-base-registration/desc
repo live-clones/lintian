@@ -1,5 +1,4 @@
 Testname: menus-doc-base-registration
-Sequence: 6000
 Version: 1.0
 Description: Test some doc-base registration related tags
 Test-For: possible-documentation-but-no-doc-base-registration

@@ -1,5 +1,4 @@
 Testname: files-zero-byte-doc
-Sequence: 6000
 Version: 1.0
 Section: doc
 Description: Check detection of zero-byte files in doc directories

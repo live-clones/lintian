@@ -1,5 +1,4 @@
 Testname: cruft-ancient-libtool-2
-Sequence: 6000
 Version: 1.0
 Description: Test that an old (1.5.2) ltmain.sh is detected correctly
 Test-For: ancient-libtool

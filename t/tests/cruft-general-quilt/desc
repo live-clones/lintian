@@ -1,5 +1,4 @@
 Testname: cruft-general-quilt
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Check for cruft added in a 3.0 (quilt) package

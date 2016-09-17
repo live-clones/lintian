@@ -1,5 +1,4 @@
 Testname: cruft-contains-waf-stripped
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Check for sources with waf

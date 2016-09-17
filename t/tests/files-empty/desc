@@ -1,5 +1,4 @@
 Testname: files-empty
-Sequence: 6000
 Version: 1.0
 Description: Test of empty binary package detection
 Test-For:

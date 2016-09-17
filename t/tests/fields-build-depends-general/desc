@@ -1,5 +1,4 @@
 Testname: fields-build-depends-general
-Sequence: 6000
 Version: 1.0
 Description: General tests for build dependencies
 Test-For:

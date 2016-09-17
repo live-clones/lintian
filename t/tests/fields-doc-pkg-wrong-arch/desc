@@ -1,5 +1,4 @@
 Testname: fields-doc-pkg-wrong-arch
-Sequence: 6000
 Version: 1.0
 Type: native
 Description: Check for doc pkg not being arch all

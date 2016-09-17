@@ -1,5 +1,4 @@
 Testname: debhelper-dh-nativejava
-Sequence: 6000
 Version: 1.0
 Extra-Build-Depends: gcj-native-helper
 Description: Dependency handling for dh_nativejava

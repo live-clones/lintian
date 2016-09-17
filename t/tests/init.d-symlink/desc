@@ -1,5 +1,4 @@
 Testname: init.d-symlink
-Sequence: 6000
 Version: 1.0
 Description: Check proper handling of symlinked init scripts
 Test-Against:

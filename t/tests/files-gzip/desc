@@ -1,5 +1,4 @@
 Testname: files-gzip
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test for issues handling gz but not gzip files

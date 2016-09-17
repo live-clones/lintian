@@ -1,5 +1,4 @@
 Testname: patch-systems-no-readme-source
-Sequence: 6000
 Version: 1.0
 Description: Patch system with no README.source
 Test-For: patch-system-but-no-source-readme

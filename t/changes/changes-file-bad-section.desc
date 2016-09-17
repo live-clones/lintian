@@ -1,5 +1,4 @@
 Testname: changes-file-bad-section
-Sequence: 6000
 Version: 1.0
 Description: Test for bad section in changes file
 Test-For: bad-section-in-changes-file

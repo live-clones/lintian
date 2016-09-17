@@ -1,5 +1,4 @@
 Testname: debhelper-dh-with-quilt
-Sequence: 6000
 Version: 1.0
 Description: Check dependency requirements for dh --with quilt
 Test-For: missing-build-dependency-for-dh-addon

@@ -1,5 +1,4 @@
 Testname: shared-libs-no-shared-lib
-Sequence: 6000
 Version: 1.0
 Description: Test checks shlib without SO
 Test-For: pkg-has-shlibs-control-file-but-no-actual-shared-libs

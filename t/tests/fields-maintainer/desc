@@ -1,5 +1,4 @@
 Testname: fields-maintainer
-Sequence: 6000
 Version: 1.0
 Description: General tests of the maintainer field
 Test-For:

@@ -1,5 +1,4 @@
 Testname: fields-udeb
-Sequence: 6000
 Version: 1.0
 Description: Test for various udeb field issues
 Test-For:

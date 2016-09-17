@@ -1,5 +1,4 @@
 Testname: changes-bad-ubuntu-distribution
-Sequence: 6000
 Version: 1.0+ubuntu2
 Description: Test for invalid Ubuntu distribution
 Profile: ubuntu/main

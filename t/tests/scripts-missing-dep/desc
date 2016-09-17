@@ -1,5 +1,4 @@
 Testname: scripts-missing-dep
-Sequence: 6000
 Version: 1.0
 Description: Check missing dep on various script interpreters
 Test-For: wish-script-but-no-wish-dep

@@ -1,5 +1,4 @@
 Testname: watch-file-template
-Sequence: 6000
 Type: non-native
 Version: 1.0-1
 Description: Test for dh_make(1) templates

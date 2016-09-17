@@ -1,5 +1,4 @@
 Testname: cruft-minified-js
-Sequence: 6000
 Version: 1.0
 Description: Misc errors related to minified javascript
 Skeleton: pedantic

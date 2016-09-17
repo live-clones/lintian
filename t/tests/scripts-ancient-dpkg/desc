@@ -1,5 +1,4 @@
 Testname: scripts-ancient-dpkg
-Sequence: 6000
 Version: 1.0
 Description: Tests for ancient dpkg stuff
 Test-For:

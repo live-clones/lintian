@@ -1,5 +1,4 @@
 Testname: cruft-empty-diff
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test an empty Debian diff

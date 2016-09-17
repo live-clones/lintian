@@ -1,5 +1,4 @@
 Testname: changed-by-no-name
-Sequence: 6000
 Version: 1.0
 Description: Test Changed-By field with missing name
 Test-For:

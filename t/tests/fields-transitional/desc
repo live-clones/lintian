@@ -1,5 +1,4 @@
 Testname: fields-transitional
-Sequence: 6000
 Version: 1.0
 Description: Test for transitional package in wrong section
 Test-For: transitional-package-should-be-oldlibs-extra

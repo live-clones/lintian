@@ -1,5 +1,4 @@
 Testname: control-file-suggests-itself
-Sequence: 6000
 Version: 1.0
 Description: Test a package Suggesting itself
 Test-For: package-depends-on-itself

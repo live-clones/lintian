@@ -1,5 +1,4 @@
 Testname: debian-source-dir-unknown-source-format
-Sequence: 6000
 Version: 1.0
 Description: Test for d/changelog being a symlink
 Test-For: unknown-source-format

@@ -1,5 +1,4 @@
 Testname: md5sums-traversal
-Sequence: 6000
 Version: 1.0
 Description: Test for traversals via md5sums symlink
 Options: -C copyright-file,md5sums,control-files -IE

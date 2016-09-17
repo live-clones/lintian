@@ -1,5 +1,4 @@
 Testname: apache2-webapplications-general
-Sequence: 6000
 Version: 1.0
 Description: Several tests related to Apache2 web application packages
 Test-For:

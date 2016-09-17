@@ -1,5 +1,4 @@
 Testname: patch-systems-quilt-debian-changes
-Sequence: 6000
 Version: 1.0-1
 Description: Test a 3.0 (quilt) package which has a debian-changes-XXX patch
 Type: non-native

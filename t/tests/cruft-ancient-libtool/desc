@@ -1,5 +1,4 @@
 Testname: cruft-ancient-libtool
-Sequence: 6000
 Version: 1.0
 Description: Test that a very old ltmain.sh/ltconfig is detected correctly
 Test-For: ancient-libtool

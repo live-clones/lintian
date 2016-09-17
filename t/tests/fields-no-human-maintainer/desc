@@ -1,5 +1,4 @@
 Testname: fields-no-human-maintainer
-Sequence: 6000
 Version: 1.0
 Description: Checks for a package maintained only by a list
 Author: Lintian Maintainers <debian-lint-maint@lists.debian.org>

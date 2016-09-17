@@ -1,5 +1,4 @@
 Testname: changelog-file-extra-upstream
-Sequence: 6000
 Type: non-native
 Version: 1.0-1
 Description: Check a package with ChangeLog and changelog.gz

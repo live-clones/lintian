@@ -1,5 +1,4 @@
 Testname: changelog-file-wrong-weekday
-Sequence: 6000
 Version: 1.0
 Profile: lintian-test
 Description: Test for wrong weekday in changelog date

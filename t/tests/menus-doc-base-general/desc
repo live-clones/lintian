@@ -1,5 +1,4 @@
 Testname: menus-doc-base-general
-Sequence: 6000
 Version: 1.0
 Description: Test some doc-base related tags
 Test-Against: doc-base-unknown-section

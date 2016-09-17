@@ -1,5 +1,4 @@
 Testname: files-doxygen-documentation
-Sequence: 6000
 Version: 1.0
 Description: Detect doxygen documentation problem
 Skeleton: pedantic

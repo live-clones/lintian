@@ -1,5 +1,4 @@
 Testname: cruft-general-native
-Sequence: 6000
 Version: 1.0
 Type: native
 Description: Check for cruft in a native package

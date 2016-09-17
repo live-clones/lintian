@@ -1,5 +1,4 @@
 Testname: testsuite-control-missing-test-field
-Sequence: 6000
 Version: 1.0
 Description: Detection of missing test/test-command fields
 Test-For: missing-runtime-tests-field

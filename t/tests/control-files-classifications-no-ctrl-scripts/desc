@@ -1,5 +1,4 @@
 Testname: control-files-classifications-no-ctrl-scripts
-Sequence: 6000
 Version: 1.0
 Description: Test for control-files classifications
 Options: -L +=classification -C control-files

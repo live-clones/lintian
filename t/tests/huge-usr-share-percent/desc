@@ -1,5 +1,4 @@
 Testname: huge-usr-share-percent
-Sequence: 6000
 Version: 1.0
 Description: Check passing the percentage limit of /usr/share data
 Architecture: any

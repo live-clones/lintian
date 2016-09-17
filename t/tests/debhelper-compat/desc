@@ -1,5 +1,4 @@
 Testname: debhelper-compat
-Sequence: 6000
 Version: 1.0
 Description: Test the content of debian/compat
 Test-Depends: debhelper (<< 9.20151101~)

@@ -1,5 +1,4 @@
 Testname: nmu-with-maintainer-ack
-Sequence: 6000
 Type: non-native
 Description: Test a variation on NMU wording
 Version: 1.0-1.1

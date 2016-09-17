@@ -1,5 +1,4 @@
 Testname: scripts-killall
-Sequence: 6000
 Version: 1.0
 Description: Test for killall usage in maint script
 Test-For: killall-is-dangerous

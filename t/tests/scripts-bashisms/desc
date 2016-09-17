@@ -1,5 +1,4 @@
 Testname: scripts-bashisms
-Sequence: 6000
 Version: 1.0
 Description: Check bashism detection
 Test-For: possible-bashism-in-maintainer-script

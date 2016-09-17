@@ -1,5 +1,4 @@
 Testname: watch-file-general
-Sequence: 6000
 Type: non-native
 Version: 2.0.ds1-1
 Description: General watch file checks

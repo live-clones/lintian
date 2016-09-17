@@ -1,5 +1,4 @@
 Testname: debconf-templates-general
-Sequence: 6000
 Version: 1.0
 Description: Test for various debconf template issues
 Test-For:

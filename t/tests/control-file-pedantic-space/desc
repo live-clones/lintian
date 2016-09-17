@@ -1,5 +1,4 @@
 Testname: control-file-pedantic-space
-Sequence: 6000
 Version: 1.0
 Skeleton: pedantic
 Options: --pedantic -I -E

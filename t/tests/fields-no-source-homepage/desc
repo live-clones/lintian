@@ -1,5 +1,4 @@
 Testname: fields-no-source-homepage
-Sequence: 6000
 Type: non-native
 Description: Test check for no Homepage field in source
 Version: 1.0-1

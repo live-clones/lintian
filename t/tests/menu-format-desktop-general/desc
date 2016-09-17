@@ -1,5 +1,4 @@
 Testname: menu-format-desktop-general
-Sequence: 6000
 Version: 1.0
 Description: Test desktop file tags
 Test-For:

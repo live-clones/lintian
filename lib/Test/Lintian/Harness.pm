@@ -258,6 +258,7 @@ sub read_test_desc {
         fail(   "$filename is called $testdata->{'testname'}"
               . " instead of $expected_name");
     }
+    $testdata->{'sequence'} //= 6000;
     return $testdata;
 }
 

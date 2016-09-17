@@ -1,5 +1,4 @@
 Testname: fields-no-homepage
-Sequence: 6000
 Type: non-native
 Description: Test pedantic check for no Homepage field
 Version: 1.0-1

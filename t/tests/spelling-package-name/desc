@@ -1,5 +1,4 @@
 Testname: spelling-package-name
-Sequence: 6000
 Version: 1.0
 Description: Spell check test for excluding package name
 Test-Against:

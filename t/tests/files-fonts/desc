@@ -1,5 +1,4 @@
 Testname: files-fonts
-Sequence: 6000
 Version: 1.0
 Description: Font file checks
 Test-For:

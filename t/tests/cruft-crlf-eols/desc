@@ -1,5 +1,4 @@
 Testname: cruft-crlf-eols
-Sequence: 6000
 Version: 1.0
 Description: Check that control files with CRLF EOLs are reported
 Test-For:

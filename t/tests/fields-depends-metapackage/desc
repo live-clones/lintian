@@ -1,5 +1,4 @@
 Testname: fields-depends-metapackage
-Sequence: 6000
 Version: 1.0
 Description: Tests for package dependencies in a metapackage
 Test-For: build-depends-on-metapackage

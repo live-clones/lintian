@@ -1,5 +1,4 @@
 Testname: fields-multi-arch
-Sequence: 6000
 Version: 1.0
 Description: Tests for the Multi-Arch field
 Test-Against:

@@ -1,5 +1,4 @@
 Testname: copyright-file-foreign-package
-Sequence: 6000
 Version: 1.0
 Description: Test for foreign symlink in package
 Test-For:

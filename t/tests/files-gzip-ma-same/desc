@@ -1,5 +1,4 @@
 Testname: files-gzip-ma-same
-Sequence: 6000
 Version: 1.0
 Description: Test for issues handling gz in Multi-Arch same pkgs
 Test-for: gzip-file-is-not-multi-arch-same-safe

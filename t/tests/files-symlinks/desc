@@ -1,5 +1,4 @@
 Testname: files-symlinks
-Sequence: 6000
 Version: 1.0
 Description: Test tags about symlinks
 Test-For:

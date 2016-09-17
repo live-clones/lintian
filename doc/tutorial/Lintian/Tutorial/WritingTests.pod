@@ -96,7 +96,6 @@ syntax as I<debian/control>), which contains a number of fields.
 Let's start with the following template:
 
  Testname: pkg-deb-check-general
- Sequence: 6000
  Version: 1.0
  Description: General test of the pkg/deb-check check
  Test-For:
@@ -127,12 +126,6 @@ The Testname should be "<check-name>-<test-name>"
 
 Note that regular Lintian checks do I<not> have a "/", so the naming
 convention works slightly better there.
-
-=item -
-
-The Sequence should always be 6000 for tests checking tags.
-
-Other numbers are used for different purposes.
 
 =item -
 

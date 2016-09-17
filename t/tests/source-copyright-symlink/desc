@@ -1,5 +1,4 @@
 Testname: source-copyright-symlink
-Sequence: 6000
 Version: 1.0
 Description: Test for symlinked debian/copyright
 Test-For: debian-copyright-is-symlink

@@ -1,6 +1,5 @@
 Testname: description-wording
 Version: 1.0
-Sequence: 6000
 Description: Tests for description wording
 Test-For:
  using-first-person-in-description

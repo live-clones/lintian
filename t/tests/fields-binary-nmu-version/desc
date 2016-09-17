@@ -1,5 +1,4 @@
 Testname: fields-binary-nmu-version
-Sequence: 6000
 Type: non-native
 Version: 1.0-1.0.1
 Description: Check binary NMU version handling

@@ -1,5 +1,4 @@
 Testname: changelog-file-empty-entry
-Sequence: 6000
 Version: 1.0
 Description: Check changelog empty entry
 Test-For: changelog-empty-entry

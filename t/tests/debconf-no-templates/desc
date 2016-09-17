@@ -1,5 +1,4 @@
 Testname: debconf-no-templates
-Sequence: 6000
 Version: 1.0
 Description: Test for missing debconf templates
 Test-For: no-debconf-templates

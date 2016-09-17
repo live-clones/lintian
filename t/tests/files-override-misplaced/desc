@@ -1,5 +1,4 @@
 Testname: files-override-misplaced
-Sequence: 6000
 Version: 1.0
 Description: Check for misplaced override file detection
 Test-For: override-file-in-wrong-location

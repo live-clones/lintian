@@ -1,5 +1,4 @@
 Testname: debian-source-dir-general
-Sequence: 6000
 Version: 1.0
 Description: General tests for debian/source/* checks
 Test-For:

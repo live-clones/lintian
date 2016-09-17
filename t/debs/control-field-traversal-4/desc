@@ -1,5 +1,4 @@
 Testname: control-field-traversal-4
-Sequence: 6000
 Version: 1.0
 Description: Test for directory traversal issues via field names or values
 

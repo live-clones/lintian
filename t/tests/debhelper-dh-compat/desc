@@ -1,5 +1,4 @@
 Testname: debhelper-dh-compat
-Sequence: 6000
 Version: 1.0
 Description: Test the value of DH_COMPAT
 Test-For:

@@ -1,5 +1,4 @@
 Testname: cruft-native-dash-version
-Sequence: 6000
 Version: 1.0-1
 Type: native
 Description: Test for native packages with dash version

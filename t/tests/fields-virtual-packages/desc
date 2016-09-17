@@ -1,5 +1,4 @@
 Testname: fields-virtual-packages
-Sequence: 6000
 Version: 1.0
 Description: Tests related to virtual packages
 Test-For:

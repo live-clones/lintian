@@ -1,5 +1,4 @@
 Testname: rules-build-dep-pattern
-Sequence: 6000
 Version: 1.0
 Description: Check recognition of pattern dependencies
 Test-For: missing-python-build-dependency

@@ -1,5 +1,4 @@
 Testname: files-privacybreach
-Sequence: 6000
 Version: 1.0
 Description: Check for different html privacy breach
 Test-For:

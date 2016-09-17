@@ -1,5 +1,4 @@
 Testname: systemd-complex-service-file
-Sequence: 6000
 Version: 1.0
 Description: Verifies the .service file parser properly handles .include within
  service files.

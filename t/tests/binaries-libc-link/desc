@@ -1,5 +1,4 @@
 Testname: binaries-libc-link
-Sequence: 6000
 Version: 1.0
 Description: Binaries not linked against libc
 Architecture: any

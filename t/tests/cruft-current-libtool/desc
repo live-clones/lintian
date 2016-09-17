@@ -1,5 +1,4 @@
 Testname: cruft-current-libtool
-Sequence: 6000
 Version: 1.0
 Description: Test that a current ltmain.sh is detected correctly
 Test-Against: ancient-libtool

@@ -1,5 +1,4 @@
 Testname: unpack-srcpkg-dot-subdir
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test package for upstream tar files with a ./ prefix

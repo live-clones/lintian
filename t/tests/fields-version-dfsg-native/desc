@@ -1,5 +1,4 @@
 Testname: fields-version-dfsg-native
-Sequence: 6000
 Version: 1.0.dfsg1
 Description: Use of dfsg in a native package
 Test-For: dfsg-version-in-native-package

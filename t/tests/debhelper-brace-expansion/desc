@@ -1,5 +1,4 @@
 Testname: debhelper-brace-expansion
-Sequence: 6000
 Version: 1.0
 Description: Check for brace expansion in debhelper config files
 Test-For: brace-expansion-in-debhelper-config-file

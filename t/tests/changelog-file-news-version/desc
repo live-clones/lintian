@@ -1,5 +1,4 @@
 Testname: changelog-file-news-version
-Sequence: 6000
 Version: 1.0
 Description: Check mismatches of the NEWS.Debian version
 Test-For: debian-news-entry-has-unknown-version

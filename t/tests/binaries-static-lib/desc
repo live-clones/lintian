@@ -1,5 +1,4 @@
 Testname: binaries-static-lib
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test checks related to static libs

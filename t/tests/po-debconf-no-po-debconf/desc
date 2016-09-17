@@ -1,5 +1,4 @@
 Testname: po-debconf-no-po-debconf
-Sequence: 6000
 Version: 1.0
 Description: Test for not using po-debconf
 Test-For: not-using-po-debconf

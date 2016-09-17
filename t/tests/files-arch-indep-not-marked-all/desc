@@ -1,5 +1,4 @@
 Testname: files-arch-indep-not-marked-all
-Sequence: 6000
 Version: 1.0
 Architecture: any
 Description: Test of arch indep package not marked arch:all

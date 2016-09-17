@@ -1,5 +1,4 @@
 Testname: group-checks-multi-arch
-Sequence: 6000
 Version: 1.0
 Description: Test for multi-arch issues
 Test-For:

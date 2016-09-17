@@ -1,5 +1,4 @@
 Testname: fields-module-build-perl
-Sequence: 6000
 Version: 1.0
 Description: Test some libmodule-build(-tiny)-perl checks
 Test-For:

@@ -1,5 +1,4 @@
 Testname: changelog-file-unreleased
-Sequence: 6000
 Version: 2.0
 Description: Suppress new date warnings for UNRELEASED
 Test-Against: latest-debian-changelog-entry-without-new-date

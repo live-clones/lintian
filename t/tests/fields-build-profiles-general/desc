@@ -1,5 +1,4 @@
 Testname: fields-build-profiles-general
-Sequence: 6000
 Version: 1.0
 Description: General tests for build profiles
 # Build-profiles requires dpkg 1.17.14 and debhelper 9.20141010

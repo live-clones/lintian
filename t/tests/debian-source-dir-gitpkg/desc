@@ -1,5 +1,4 @@
 Testname: debian-source-dir-gitpkg
-Sequence: 6000
 Version: 1.0-1
 Type: non-native
 Description: Test for false positives in git-patches-not-exported

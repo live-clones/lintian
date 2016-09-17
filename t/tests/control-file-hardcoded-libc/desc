@@ -1,5 +1,4 @@
 Testname: control-file-hardcoded-libc
-Sequence: 6000
 Version: 1.0
 Description: Test hard-coded dependencies on libc
 Test-For: package-depends-on-hardcoded-libc

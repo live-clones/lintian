@@ -1,5 +1,4 @@
 Testname: deb-format-lzma
-Sequence: 6000
 Version: 1.0
 Description: Test package with LZMA compression
 Test-For:

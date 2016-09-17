@@ -1,5 +1,4 @@
 Testname: scripts-maintainer-script-set-e
-Sequence: 6000
 Version: 1.0
 Description: Test for using set -e in script body
 Skeleton: pedantic

@@ -1,5 +1,4 @@
 Testname: files-flash-non-free
-Sequence: 6000
 Version: 1.0
 Description: non-free flash files
 Test-For: non-free-flash

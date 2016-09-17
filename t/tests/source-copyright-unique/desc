@@ -1,5 +1,4 @@
 Testname: source-copyright-unique
-Sequence: 6000
 Version: 1.0
 Description: Test if standalone paragraph name are unique
 Test-For:

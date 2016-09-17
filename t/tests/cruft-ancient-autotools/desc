@@ -1,5 +1,4 @@
 Testname: cruft-ancient-autotools
-Sequence: 6000
 Version: 1.0
 Description: Test for old autotools helper files
 Test-For:

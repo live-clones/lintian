@@ -1,5 +1,4 @@
 Testname: debhelper-compat-whitespace
-Sequence: 6000
 Version: 1.0
 Description: Allow whitespace in debian/compat
 Test-Against: debhelper-compat-not-a-number

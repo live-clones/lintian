@@ -1,5 +1,4 @@
 Testname: fields-debug-bad
-Sequence: 6000
 Version: 1.0
 Description: Test for tags related to debug pkgs
 Test-For:

@@ -1,5 +1,4 @@
 Testname: debconf-maintscripts-deps
-Sequence: 6000
 Version: 1.0
 Description: Test for various debconf maintscripts and dep issues
 Test-For:

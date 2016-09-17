@@ -1,5 +1,4 @@
 Testname: changelog-file-news-general
-Sequence: 6000
 Version: 1.0
 Description: General checks for NEWS.Debian
 Test-For:

@@ -1,5 +1,4 @@
 Testname: deb-format-udeb-compression
-Sequence: 6000
 Version: 1.0
 Description: Test of compression of udeb data member
 Test-For: udeb-uses-unsupported-compression-for-data-tarball

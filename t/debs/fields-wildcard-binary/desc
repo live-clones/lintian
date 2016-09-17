@@ -1,5 +1,4 @@
 Testname: fields-wildcard-binary
-Sequence: 6000
 Version: 1.0
 Description: Test for architecture wildcard in binary package
 Test-For: arch-wildcard-in-binary-package

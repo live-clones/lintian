@@ -1,5 +1,4 @@
 Testname: cruft-gfdl-fp-sliding-win
-Sequence: 6000
 Version: 1.0
 Description: Check for FP with GFDL invariants sections
 Test-Against: license-problem-gfdl-invariants

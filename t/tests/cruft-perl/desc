@@ -1,5 +1,4 @@
 Testname: cruft-perl
-Sequence: 6000
 Version: 1.0
 Description: Misc errors related to Perl
 Test-For:

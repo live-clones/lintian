@@ -1,5 +1,4 @@
 Testname: fields-general-bad
-Sequence: 6000
 Version: 1.0
 Description: Test for package with control bad values
 Test-For:

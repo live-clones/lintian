@@ -1,5 +1,4 @@
 Testname: scripts-uses-perl4-libs-without-dep
-Sequence: 6000
 Version: 1.0
 Description: Check that script-uses-perl4-libs-without-dep works (positive)
 Extra-Build-Depends: perl

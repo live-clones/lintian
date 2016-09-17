@@ -1,5 +1,4 @@
 Testname: fields-src-bad-version
-Sequence: 6000
 Version: 1.0
 Description: Test for d/control with syntax errors
 Test-For: bad-relation

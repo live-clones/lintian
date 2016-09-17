@@ -1,5 +1,4 @@
 Testname: fields-java
-Sequence: 6000
 Version: 1.0
 Description: General tests for java package (build) dependencies
 Test-For:

@@ -1,5 +1,4 @@
 Testname: changelog-file-experimental
-Sequence: 6000
 Version: 1.0-3
 Description: Check experimental to unstable changes
 Skeleton: pedantic

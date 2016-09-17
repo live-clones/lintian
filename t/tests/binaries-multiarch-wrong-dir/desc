@@ -1,5 +1,4 @@
 Testname: binaries-multiarch-wrong-dir
-Sequence: 6000
 Version: 1.0
 Test-Depends: debhelper (>= 9.20151004~)
 Description: Multiarch-related tests but not multiarch itself

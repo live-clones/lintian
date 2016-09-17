@@ -1,5 +1,4 @@
 Testname: binaries-hardening
-Sequence: 6000
 Version: 1.0
 Description: Check for missing hardening features
 Architecture: amd64 i386 armhf arm64

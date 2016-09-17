@@ -1,5 +1,4 @@
 Testname: phppear-pearok
-Sequence: 6000
 Version: 1.0-1
 Description: phppear tests for PEAR packages
 Test-Against:

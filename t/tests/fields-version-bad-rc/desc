@@ -1,5 +1,4 @@
 Testname: fields-version-bad-rc
-Sequence: 6000
 Version: 1.0+rc3-1
 Description: Test for bad release cand. versions
 Type: non-native

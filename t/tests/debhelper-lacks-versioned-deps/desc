@@ -1,5 +1,4 @@
 Testname: debhelper-lacks-versioned-deps
-Sequence: 6000
 Version: 1.0
 Description: Test pedantic dependency requirements for debhelper
 Options: -I -E --pedantic

@@ -1,5 +1,4 @@
 Testname: rules-dh-order
-Sequence: 6000
 Version: 1.0
 Description: Test order of dh command invocations
 Test-For: debian-rules-calls-debhelper-in-odd-order

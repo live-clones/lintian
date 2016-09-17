@@ -1,5 +1,4 @@
 Testname: po-debconf-general
-Sequence: 6000
 Version: 1.0
 Description: General tests for debconf translations
 Test-For:

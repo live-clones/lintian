@@ -1,5 +1,4 @@
 Testname: files-bad-perm-owner
-Sequence: 6000
 Version: 1.0
 Description: General permissions and owner tests
 Test-For:

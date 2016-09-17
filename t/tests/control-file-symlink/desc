@@ -1,5 +1,4 @@
 Testname: control-file-symlink
-Sequence: 6000
 Version: 1.0
 Description: Test if debian/control is a symlink
 Test-For:

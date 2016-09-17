@@ -1,5 +1,4 @@
 Testname: scripts-exec
-Sequence: 6000
 Version: 1.0
 Description: Check for exec bit related issues for scripts
 Test-For:

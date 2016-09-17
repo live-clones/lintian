@@ -1,5 +1,4 @@
 Testname: watch-file-native
-Sequence: 6000
 Version: 1.0
 Description: Native package with a watch file
 Test-For:

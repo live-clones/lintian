@@ -1,5 +1,4 @@
 Testname: source-copyright-pipe-as-or
-Sequence: 6000
 Version: 1.0
 Description: Test for the pipe symbol being used as an "or"
 Test-For:

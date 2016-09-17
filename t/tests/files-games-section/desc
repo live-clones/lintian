@@ -1,5 +1,4 @@
 Testname: files-games-section
-Sequence: 6000
 Section: games
 Version: 1.0
 Description: Correct section for games packages

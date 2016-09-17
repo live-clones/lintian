@@ -1,5 +1,4 @@
 Testname: debhelper-executable-files-compat-9
-Sequence: 6000
 Version: 1.0
 Options: --suppress-tags
  package-needs-versioned-debhelper-build-depends

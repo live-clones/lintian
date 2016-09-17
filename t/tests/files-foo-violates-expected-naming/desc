@@ -1,5 +1,4 @@
 Testname: files-foo-violates-expected-naming
-Sequence: 6000
 Version: 1.0
 Description: Test naming conventions not being followed
 Test-For:

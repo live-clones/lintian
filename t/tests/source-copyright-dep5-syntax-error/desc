@@ -1,5 +1,4 @@
 Testname: source-copyright-dep5-syntax-error
-Sequence: 6000
 Version: 1.0
 Description: Test for DEP-5 syntax error
 Test-For:

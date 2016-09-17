@@ -1,5 +1,4 @@
 Testname: menus-foo-calls-bar
-Sequence: 6000
 Version: 1.0
 Description: check for installdocs and updatemenus calls
 Test-For:

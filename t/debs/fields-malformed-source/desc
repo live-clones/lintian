@@ -1,5 +1,4 @@
 Testname: fields-malformed-source
-Sequence: 6000
 Version: 1.0
 Description: Test for bad source package name
 Test-For: source-field-malformed

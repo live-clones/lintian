@@ -1,5 +1,4 @@
 Testname: scripts-control-interpreters
-Sequence: 6000
 Type: native
 Version: 1.0
 Description: Check maintainer and config script interpreters

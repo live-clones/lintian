@@ -1,5 +1,4 @@
 Testname: rules-not-makefile
-Sequence: 6000
 Version: 1.0
 Description: Check if the rules file is a makefile
 Test-For: debian-rules-not-a-makefile

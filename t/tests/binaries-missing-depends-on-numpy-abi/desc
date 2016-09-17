@@ -1,5 +1,4 @@
 Testname: binaries-missing-depends-on-numpy-abi
-Sequence: 6000
 Version: 1.0
 Description: Test for missing dependency on python-numpy-abiN
 Architecture: any

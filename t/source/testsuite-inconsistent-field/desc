@@ -1,5 +1,4 @@
 Testname: testsuite-inconsistent-field
-Sequence: 6000
 Version: 1.0
 Description: Test a source with inconsistent Testsuite field
 Test-For: inconsistent-testsuite-field

@@ -1,5 +1,4 @@
 Testname: manpages-wrong-dir
-Sequence: 6000
 Version: 1.0
 Description: Test for manpages in wrong dirs
 Test-For: manpage-in-wrong-directory

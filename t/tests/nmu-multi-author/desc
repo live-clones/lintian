@@ -1,5 +1,4 @@
 Testname: nmu-multi-author
-Sequence: 6000
 Type: non-native
 Version: 1.0-1.1
 Description: Test an NMU with a multi-author changelog

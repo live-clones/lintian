@@ -1,5 +1,4 @@
 Testname: changelog-file-national-encoding
-Sequence: 6000
 Version: 1.0
 Description: Test for changelog with national encoding
 Test-For: debian-changelog-file-uses-obsolete-national-encoding

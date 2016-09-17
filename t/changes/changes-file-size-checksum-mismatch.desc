@@ -1,5 +1,4 @@
 Testname: changes-file-size-checksum-mismatch
-Sequence: 6000
 Version: 1.0
 Description: Test for file size and checksums check
 Test-For:

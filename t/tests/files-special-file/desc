@@ -1,5 +1,4 @@
 Testname: files-special-file
-Sequence: 6000
 Version: 1.0
 Description: Test for special files in the deb
 Test-For: special-file

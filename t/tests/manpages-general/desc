@@ -1,5 +1,4 @@
 Testname: manpages-general
-Sequence: 6000
 Version: 1.0
 Description: General tests for manpage checks
 Test-For:

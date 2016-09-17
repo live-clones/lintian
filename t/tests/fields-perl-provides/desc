@@ -1,5 +1,4 @@
 Testname: fields-perl-provides
-Sequence: 6000
 Version: 0.26
 Description: Test for packages provided by perl
 Test-For: package-superseded-by-perl

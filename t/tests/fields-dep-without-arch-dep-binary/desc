@@ -1,5 +1,4 @@
 Testname: fields-dep-without-arch-dep-binary
-Sequence: 6000
 Version: 1.0
 Description: Test for B-D-A and no architecture-dependent pkgs
 Test-For:

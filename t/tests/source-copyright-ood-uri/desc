@@ -1,5 +1,4 @@
 Testname: source-copyright-ood-uri
-Sequence: 6000
 Version: 1.0
 Description: Test for out-of-date DEP-5-like URI
 Options: -I -E --pedantic

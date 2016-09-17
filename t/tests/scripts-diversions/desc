@@ -1,5 +1,4 @@
 Testname: scripts-diversions
-Sequence: 6000
 Version: 1.0
 Description: Tests of dpkg-divert checks
 Test-For:

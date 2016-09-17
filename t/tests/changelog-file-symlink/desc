@@ -1,5 +1,4 @@
 Testname: changelog-file-symlink
-Sequence: 6000
 Type: native
 Version: 1.0
 Description: Test if Debian changelog is a symlink

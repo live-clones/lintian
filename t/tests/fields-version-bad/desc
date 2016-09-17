@@ -1,5 +1,4 @@
 Testname: fields-version-bad
-Sequence: 6000
 Version: 0-.3
 Description: Test for weird versions
 Type: non-native

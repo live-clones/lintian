@@ -1,5 +1,4 @@
 Testname: patch-systems-empty-series
-Sequence: 6000
 Version: 1.0
 Description: Test for quilt patches with empty series
 Test-Against: quilt-build-dep-but-no-series-file

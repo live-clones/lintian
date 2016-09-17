@@ -1,5 +1,4 @@
 Testname: binaries-unsafe-open
-Sequence: 6000
 Architecture: any
 Version: 1.0
 Description: Test for possible command execution when processing filenames

@@ -1,5 +1,4 @@
 Testname: init.d-script-registration
-Sequence: 6000
 Version: 1.0
 Description: Test tags related to the registration of init scripts
 Test-For:

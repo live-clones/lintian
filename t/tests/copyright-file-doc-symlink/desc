@@ -1,5 +1,4 @@
 Testname: copyright-file-doc-symlink
-Sequence: 6000
 Version: 1.0
 Description: Test a symlinked /usr/share/doc
 Test-Against: usr-share-doc-symlink-without-dependency

@@ -1,5 +1,4 @@
 Testname: debhelper-compat-named
-Sequence: 6000
 Version: 1.0
 Description: Test support for named compat levels
 Test-Depends: debhelper (>= 10),

@@ -1,5 +1,4 @@
 Testname: control-file-duplicate-field
-Sequence: 6000
 Version: 1.0
 Description: Test for d/control containing duplicate fields
 Test-For: syntax-error-in-control-file

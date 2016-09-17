@@ -1,5 +1,4 @@
 Testname: nmu-local-changelog
-Sequence: 6000
 Version: 1.0
 Description: Test suppression of NMU tags for local packages
 Test-Against:

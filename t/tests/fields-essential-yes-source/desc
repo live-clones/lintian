@@ -1,5 +1,4 @@
 Testname: fields-essential-yes-source
-Sequence: 6000
 Version: 1.0
 Description: Canary test for Essential field-related checks and assumptions
 Test-Against:

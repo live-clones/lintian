@@ -1,5 +1,4 @@
 Testname: shared-libs-non-pic-i386
-Sequence: 6000
 Version: 1.0
 Architecture: i386
 Test-Depends: debhelper (>= 9.20151004~)

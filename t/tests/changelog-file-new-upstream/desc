@@ -1,5 +1,4 @@
 Testname: changelog-file-new-upstream
-Sequence: 6000
 Type: non-native
 Version: 1.0-2
 Description: Check a new upstream version without a version change

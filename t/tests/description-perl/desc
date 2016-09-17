@@ -1,5 +1,4 @@
 Testname: description-perl
-Sequence: 6000
 Version: 1.0
 Description: Tests of perl-related description tags
 Test-For: perl-module-name-not-mentioned-in-description

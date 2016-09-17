@@ -1,6 +1,5 @@
 Testname: java-classpath
 Type: non-native
-Sequence: 6000
 Version: 1.0-1
 Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>

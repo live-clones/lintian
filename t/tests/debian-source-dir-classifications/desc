@@ -1,5 +1,4 @@
 Testname: debian-source-dir-classifications
-Sequence: 6000
 Version: 1.0
 Options: -L +classification -C debian-source-dir
 Description: Test for d-s-d classifications tags

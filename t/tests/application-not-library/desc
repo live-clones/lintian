@@ -1,5 +1,4 @@
 Testname: application-not-library
-Sequence: 6000
 Version: 1.0
 Description: Test cases where packages look like libraries but are applications
 Test-For: libapp-perl-package-name library-package-name-for-application application-in-library-section

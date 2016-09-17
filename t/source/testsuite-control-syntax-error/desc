@@ -1,5 +1,4 @@
 Testname: testsuite-control-syntax-error
-Sequence: 6000
 Version: 1.0
 Description: Detection of syntax errors in autopkgtest control file
 Test-For: syntax-error-in-debian-tests-control
