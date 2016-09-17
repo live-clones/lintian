@@ -158,7 +158,7 @@ could look something like:
  Section: {$section}
  Maintainer: {$author}
  Standards-Version: {$standards_version}
- Build-Depends: debhelper (>= 9)
+ Build-Depends: {$build_depends}
  
  Package: {$source}-missing-ma
  Architecture: {$architecture}
