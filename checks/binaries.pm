@@ -554,6 +554,12 @@ sub run {
                 }
             }
 
+            if (    $arch_hardening->{'hardening-no-relro'}
+                and not $built_with_golang
+                and not $objdump->{'PH'}{'RELRO'}) {
+                tag 'hardening-no-relro', $file;
+            }
+
             # Check for missing hardening characteristics. This currently
             # handles the following checks:
             # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
@@ -561,6 +567,8 @@ sub run {
                 if ($arch_hardening) {
                     foreach my $t (@{$info->hardening_info->{$fname}}) {
                         my $tag = "hardening-$t";
+                        # Implemented elsewhere
+                        next if $t eq 'no-relro';
                         # Binaries built by the Go compiler do not support all
                         # hardening measures.
                         next
