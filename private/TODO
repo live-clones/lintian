@@ -70,22 +70,19 @@ private:
 
 reporting:
 
-- Turn the bulk of the reporting framework into a module and move report
-  generation into frontend as a lintian-report program (or something like
-  that) which we can install as a first-class executable.  The
-  html_reports script is relatively okay but could stand some cleanup and
-  conversion to a module.  The harness script needs serious de-yucking.
+- Rewrite the config handling of the reporting framework (both
+  reporting-harness and reporting-html-reports).  Currently, you have to
+  run these tools in the folder with the config file.
+
+- Replace the template framework with template-toolkit.
 
 t:
 
-- Write new-style test cases for everything tested by the old test suite
-  and retire the old test suite.
+- Write new-style test cases for everything tested by the legacy test suite
+  and retire the "legacy" tests.
 
 - Go through t/tests/legacy-libbaz/debian/debian/rules and make sure
   all TODO's are lintian-detected.
-
-- t/runtests has a lot of duplicate code and could stand some
-  restructuring and factoring of common code.
 
 - udebs are generally undertested right now and could use some general
   tests, particularly for things that we don't care about with udebs but
