@@ -591,20 +591,6 @@ sub run {
                 and $objdump->{'ELF-TYPE'} eq 'EXEC') {
                 tag 'hardening-no-pie', $file;
             }
-
-            # Check for missing hardening characteristics. This currently
-            # handles the following checks:
-            # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
-            if (exists($info->hardening_info->{$fname})) {
-                if ($arch_hardening) {
-                    foreach my $t (@{$info->hardening_info->{$fname}}) {
-                        my $tag = "hardening-$t";
-                        # Implemented elsewhere
-                        next if $t ne 'no-stackprotector';
-                        tag $tag, $file if $arch_hardening->{$tag};
-                    }
-                }
-            }
         }
     }
 

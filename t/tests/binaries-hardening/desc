@@ -2,10 +2,8 @@ Testname: binaries-hardening
 Version: 1.0
 Description: Check for missing hardening features
 Architecture: amd64 i386 armhf arm64
-Profile: debian/extra-hardening
 Test-For:
  hardening-no-bindnow
  hardening-no-fortify-functions
  hardening-no-pie
  hardening-no-relro
- hardening-no-stackprotector

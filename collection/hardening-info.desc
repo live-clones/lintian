@@ -1,8 +1,0 @@
-Collector-Script: hardening-info
-Author: Kees Cook <kees@debian.org>
-Info: This script runs hardening-check(1) over all ELF binaries of a binary
- package.
-Type: binary, udeb
-Version: 5
-Needs-Info: bin-pkg-control, file-info, unpacked
-Interface: perl-coll
