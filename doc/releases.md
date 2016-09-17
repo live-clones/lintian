@@ -31,7 +31,7 @@ tag.  This is generally done in the following way:
  * Add a tag message to the top of the file
  * Tag with `git tag <VERSION> -u <KEYID> --file <FILE>`
 
-This is method is used to provide a "trust" path between the tag and
+This method is used to provide a "trust" path between the tag and
 the uploaded files.  This is also why we use the signed `.changes`
 (as signing the source package changes the checksums in the `.changes`).
 
