@@ -16,6 +16,9 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Add more corrections.
       Thanks to Paul Wise for patches for some of them.
 
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [JW] Refresh against current rule set.
+
  -- Jakub Wilk <jwilk@debian.org>  Mon, 12 Sep 2016 11:16:53 +0200
 
 lintian (2.5.47) unstable; urgency=medium

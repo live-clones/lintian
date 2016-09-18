@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # https://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2015-12-20
+# Last updated: 2016-09-18
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
@@ -43,6 +43,7 @@ library-in-debug-or-profile-should-not-be-stripped
 license-problem-md5sum-non-distributable-file
 license-problem-md5sum-non-free-file
 magic-arch-in-arch-list
+maintainer-address-causes-mail-loops-or-bounces
 maintainer-address-is-on-localhost
 maintainer-address-malformed
 maintainer-address-missing
