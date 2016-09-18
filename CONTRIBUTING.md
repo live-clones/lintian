@@ -64,7 +64,7 @@ Making changes
 
 ````
     Add =encoding to the POD in Lintian::Collect
-    
+
     We use a UTF-8 section symbol, and the current version of Pod::Simple
     therefore requires explicitly declaring the character set.
 ````
@@ -85,7 +85,7 @@ be done by using `reportbug`:
     $ reportbug lintian
 
 Otherwise send a plain text mail to "<submit@bugs.debian.org>" with
-the first line being `Package: lintian`: 
+the first line being `Package: lintian`:
 
 You are welcome to attach the changes to the bug report or link to a
 git branch.  If you use attachments, please generate the changes via
@@ -162,7 +162,7 @@ guidelines are:
 
  * The message is prefixed with the intials of the committer(s). New
    committers, please remember to add yourself to debian/copyright.
- * Changes are grouped by "root" folder ("checks", "data" and "lib" in 
+ * Changes are grouped by "root" folder ("checks", "data" and "lib" in
    the example above).
  * The groups are sorted by the name of the "root" folder and separated
    by a single line.
