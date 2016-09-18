@@ -37,7 +37,7 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	PAR_ARGS=-j $(jobs)
 endif
 
-profiles: $(profiles)
+profiles: $(profiles);
 $(profiles): $(allchecks) $(autoreject_data) private/generate-profiles.pl
 	private/generate-profiles.pl
 
