@@ -3,7 +3,7 @@ How to contribute to Lintian
 
 This document is intended for prospective and existing contributors.
 
-The first section will cover how to get started for new comers.  After
+The first section will cover how to get started for newcomers.  After
 that is a section on recommended practices and additional resources.
 
 Getting started
@@ -160,7 +160,7 @@ The general format is:
 Beyond the regular rules for Debian changelog files, the general
 guidelines are:
 
- * The message is prefixed with the intials of the committer(s). New
+ * The message is prefixed with the initials of the committer(s). New
    committers, please remember to add yourself to debian/copyright.
  * Changes are grouped by "root" folder ("checks", "data" and "lib" in
    the example above).
@@ -199,4 +199,4 @@ Additional resources
 
  * perldoc [doc/tutorial/Lintian/Tutorial.pod]()
  * perldoc [doc/README.developers]()
- * [doc/relases.md]()
+ * [doc/releases.md]()

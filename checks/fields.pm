@@ -646,7 +646,7 @@ sub run {
     # Check whether the package looks like a metapackage, used for later
     # dependency checks.  We consider a package to possibly be a metapackage if
     # it is a binary package with no files outside of /usr/share/doc and a few
-    # other directories found in metapackges.  This also catches documentation
+    # other directories found in metapackages.  This also catches documentation
     # packages, but that doesn't matter for our purposes.
     my $metapackage = 0;
     if ($type eq 'binary') {
