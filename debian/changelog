@@ -2,9 +2,18 @@ lintian (2.5.48) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/binaries.pm:
+    + [NT] Rewrite/embed the necessary bits from hardening-check to
+      implement the default hardening-no-* checks directly in lintian.
+      This is because hardening-check appears to be losing its
+      "home" with the coming removal of hardening-wrapper and
+      hardening-includes.
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)
+
+  * collection/hardening-info:
+    + [NT] Removed.
 
   * data/files/js-libraries:
     + [BR] Apply patch from Jean-Michel Vourgère to add detection of
@@ -16,6 +25,22 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Add more corrections.
       Thanks to Paul Wise for patches for some of them.
 
+  * debian/control:
+    + [NT] Drop dependencies on hardening-includes as we no longer need
+      hardening-check.
+
+  * helpers/coll/hardening-info-helper:
+    + [NT] Removed.
+  * helpers/coll/objdump-info-helper:
+    + [NT] Expose a few more bits from readelf needed to implement some
+      of the hardening checks.
+
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Expose a few more bits from readelf needed to implement some
+      of the hardening checks.
+
+  * profiles/debian/extra-hardening.profile:
+    + [NT] Removed - we no longer support the stackprotector tag.
   * profiles/debian/ftp-master-auto-reject.profile:
     + [JW] Refresh against current rule set.
 
