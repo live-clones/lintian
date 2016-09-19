@@ -2,12 +2,13 @@ lintian (2.5.48) UNRELEASED; urgency=low
 
   XXX: generate tag summary with private/generate-tag-summary
 
-  * checks/binaries.pm:
+  * checks/binaries.{desc,pm}:
     + [NT] Rewrite/embed the necessary bits from hardening-check to
       implement the default hardening-no-* checks directly in lintian.
       This is because hardening-check appears to be losing its
       "home" with the coming removal of hardening-wrapper and
       hardening-includes.
+    + [JW] Remove the hardening-no-stackprotector tag.
   * checks/debhelper.pm:
     + [JW] Ignore comments in debian/rules.
     + [JW] Fix parsing rule targets in lines containing multiple colons.
@@ -52,6 +53,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [NT] Removed - we no longer support the stackprotector tag.
   * profiles/debian/ftp-master-auto-reject.profile:
     + [JW] Refresh against current rule set.
+  * profiles/debian/main.profile:
+    + [JW] Stop disabling the hardening-no-stackprotector tag.
 
   * t/scripts/spellintian.t:
     + [JW] Relicense as GPLv2+, like the rest of Lintian.

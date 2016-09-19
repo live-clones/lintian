@@ -10,5 +10,4 @@ Enable-Tags-From-Check: apache2, application-not-library, automake, binaries,
  po-debconf, rules, scripts, shared-libs, source-copyright, standards-version,
  symlinks, systemd, testsuite, upstream-metadata, usrmerge, version-substvars,
  watch-file
-Disable-Tags: hardening-no-stackprotector
 

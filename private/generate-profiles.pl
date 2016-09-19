@@ -46,7 +46,6 @@ generate_profile(
     {
         'Extends' => 'debian/ftp-master-auto-reject',
         'Enable-Tags-From-Check' => \@checks,
-        'Disable-Tags' => ['hardening-no-stackprotector'],
     });
 
 generate_profile(

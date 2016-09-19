@@ -350,17 +350,6 @@ Info: This package provides an OCaml bytecode executable linked with a
  special care. Their usage is deprecated in favour of shared libraries
  for C stubs (dll*.so).
 
-Tag: hardening-no-stackprotector
-Severity: normal
-Certainty: wild-guess
-Info: This package provides an ELF binary that lacks the stack protector
- function <tt>__stack_chk_fail</tt>. Either there are no character arrays used
- on the stack of any routines, or the package was not built with the
- default Debian compiler flags defined by <tt>dpkg-buildflags</tt>. If built
- using <tt>dpkg-buildflags</tt> directly, be sure to import <tt>CFLAGS</tt>
- and/or <tt>CXXFLAGS</tt>.
-Ref: https://wiki.debian.org/Hardening
-
 Tag: hardening-no-fortify-functions
 Severity: normal
 Certainty: wild-guess
