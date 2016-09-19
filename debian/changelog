@@ -12,6 +12,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Ignore comments in debian/rules.
     + [JW] Fix parsing rule targets in lines containing multiple colons.
       Thanks to Andreas Beckmann for the bug report.  (Closes: #838246)
+  * checks/fields.desc:
+    + [JW] Fix typo.
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)
@@ -1396,7 +1398,7 @@ lintian (2.5.36) unstable; urgency=medium
     + [NT] Replace a wide-character by spelling out "does not".
 
   * data/files/privacy-breaker-websites:
-    + [BR] Detect libjs-bootstap as privacy-breach-uses-embedded-file
+    + [BR] Detect libjs-bootstrap as privacy-breach-uses-embedded-file
     + [BR] Improve detection of google plus.
     + [BR] Improve detection of jquery modules.
     + [BR] Detect doxygen logo.

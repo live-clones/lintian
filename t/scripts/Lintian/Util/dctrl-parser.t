@@ -27,7 +27,7 @@ my %TESTS_BAD = (
 my $DATADIR = $0;
 $DATADIR =~ s,[^/]+$,,o;
 if ($DATADIR) {
-    # invokved in some other dir
+    # invoked in some other dir
     $DATADIR = "$DATADIR/data";
 } else {
     # current dir

@@ -30,7 +30,7 @@ EOF
 
 # This is a heredoc
 cat <<-EOF
-echo "All of the arry is ${H[@]}"
+echo "All of the array is ${H[@]}"
 EOF
 
 # As is this
