@@ -50,13 +50,6 @@ generate_profile(
     });
 
 generate_profile(
-    'debian/extra-hardening',
-    {
-        'Extends' => 'debian/main',
-        'Enable-Tags' => ['hardening-no-stackprotector'],
-    });
-
-generate_profile(
     'debian/ftp-master-auto-reject',
     {
         # "lintian" is enabled by default, so we explicitly disable it.
