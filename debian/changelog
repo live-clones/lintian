@@ -1997,7 +1997,7 @@ lintian (2.5.31) unstable; urgency=medium
   * data/fields/perl-provides:
     + [NT] Update perl-provides for perl 5.20.2.
   * data/files/js-libraries:
-    + [AB] Use "tinymce" instead of "tinymec2?" (Closes: #783327)
+    + [AB] Use "tinymce" instead of "tinymce2?" (Closes: #783327)
   * data/files/obsolete-paths:
     + [BR] Add /etc/bash_completion.d (Closes: #776954).
   * data/files/privacy-breaker-websites:
