@@ -35,6 +35,7 @@ lintian (2.5.48) UNRELEASED; urgency=low
       hardening-check.
   * debian/copyright:
     + [JW] Add Paul Wise.
+    + [JW] Remove now-unneeded separate entry for spellintian.t.
 
   * helpers/coll/hardening-info-helper:
     + [NT] Removed.
@@ -50,6 +51,9 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [NT] Removed - we no longer support the stackprotector tag.
   * profiles/debian/ftp-master-auto-reject.profile:
     + [JW] Refresh against current rule set.
+
+  * t/scripts/spellintian.t:
+    + [JW] Relicense as GPLv2+, like the rest of Lintian.
 
  -- Jakub Wilk <jwilk@debian.org>  Mon, 12 Sep 2016 11:16:53 +0200
 
