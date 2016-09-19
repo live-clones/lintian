@@ -3,18 +3,6 @@
 %:
 	dh $@
 
-# Good
-override_dh_install:
-override_dh_install :
- override_dh_install: #
-prefix_override_dh_gconfs:
-override_dh_will_never_exist:
-override_dh_python2 override_dh_perl :
-override_dh_systemd_enable override_dh_systemd_disable:
-override_dh_auto_configure-% override_dh_auto_install-%:
-foo override_dh_installdeb bar override_dh_installxmlcatalogs: # combining regular and overrides
-
-
 # Bad
 override_dh_nump: # Multiple matches should emit only one tag
 override_dh_instakk:
@@ -29,4 +17,14 @@ foo override_dh_installdebs bar override_dh_installxmlcatalog: # combining regul
 # Don't worry about anything beyond a colon even if wrong; it will fail anyway.
 override_dh_testdirs: override_dh_ucfs
 
+# Good
 .PHONY: override_dh_ucfs
+override_dh_install:
+override_dh_install :
+ override_dh_install: #
+prefix_override_dh_gconfs:
+override_dh_will_never_exist:
+override_dh_python2 override_dh_perl :
+override_dh_systemd_enable override_dh_systemd_disable:
+override_dh_auto_configure-% override_dh_auto_install-%:
+foo override_dh_installdeb bar override_dh_installxmlcatalogs: # combining regular and overrides
