@@ -177,7 +177,7 @@ sub run {
             $dhcompatvalue = $1;
             # one can export and then set the value:
             $level = $1 if ($level);
-        } elsif (/(.*override_dh_.*):/) {
+        } elsif (/^([^:]*override_dh_[^:]*):/) {
             my $targets = $1;
             $needbuilddepends = 1;
             # Can be multiple targets per rule.
