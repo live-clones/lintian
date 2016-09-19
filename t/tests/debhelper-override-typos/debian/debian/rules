@@ -28,3 +28,4 @@ override_dh_python2 override_dh_perl :
 override_dh_systemd_enable override_dh_systemd_disable:
 override_dh_auto_configure-% override_dh_auto_install-%:
 foo override_dh_installdeb bar override_dh_installxmlcatalogs: # combining regular and overrides
+# override_dh_instal: would be a typo, but in a comment it doesn't matter

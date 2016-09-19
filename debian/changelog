@@ -8,6 +8,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
       This is because hardening-check appears to be losing its
       "home" with the coming removal of hardening-wrapper and
       hardening-includes.
+  * checks/debhelper.pm:
+    + [JW] Ignore comments in debian/rules.
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)

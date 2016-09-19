@@ -88,6 +88,7 @@ sub run {
             $maybe_skipping--;
         }
 
+        next if /^\s*\#/;
         if (m/^\s+-?(dh_\S+)/) {
             my $dhcommand = $1;
             $build_systems{'debhelper'} = 1
