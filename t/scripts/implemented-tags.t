@@ -44,7 +44,6 @@ our $EXCLUDE =join(
       ^example.*interpreter.*
       ^example-script-.*$
       ^example-shell-script-.*$
-      ^hardening-.*$
       ^privacy-breach-.*$
       ^maintainer-script-should-not-.*$
       ^maintainer-script-may-.*$
