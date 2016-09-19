@@ -22,12 +22,13 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Apply patch from Marcelo Jorge Vieira to update package name
       for php-gettext.  (Closes: #837502)
   * data/spelling/corrections:
-    + [JW] Add more corrections.
-      Thanks to Paul Wise for patches for some of them.
+    + [JW, PW] Add more corrections.
 
   * debian/control:
     + [NT] Drop dependencies on hardening-includes as we no longer need
       hardening-check.
+  * debian/copyright:
+    + [JW] Add Paul Wise.
 
   * helpers/coll/hardening-info-helper:
     + [NT] Removed.

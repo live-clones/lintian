@@ -28,6 +28,7 @@ Comment:
  JW  == Jakub Wilk <jwilk@debian.org>
  BR  == Bastien ROUCARIÈS <roucaries.bastien@gmail.com>
  AB  == Axel Beckert <abe@debian.org>
+ PW  == Paul Wise <pabs@debian.org>
  .
  Lintian is maintained in git.  The current development version may
  be checked out from:
