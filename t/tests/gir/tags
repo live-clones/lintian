@@ -1,0 +1,9 @@
+E: gir1.2-bad: typelib-in-arch-all-package usr/lib/girepository-1.0/Bad-23.typelib
+I: gir1.2-bad: typelib-not-in-multiarch-directory usr/lib/girepository-1.0/Bad-23.typelib usr/lib/${DEB_HOST_MULTIARCH}/girepository-1.0
+I: gir1.2-good-42: typelib-not-in-multiarch-directory usr/lib/girepository-1.0/Good-42.typelib usr/lib/MULTIARCH/girepository-1.0
+W: gir source: typelib-missing-gir-depends gir1.2-bad
+W: gir1.2-bad: gir-in-arch-all-package usr/share/gir-1.0/Bad-23.gir
+W: gir1.2-bad: gir-missing-typelib-dependency usr/share/gir-1.0/Bad-23.gir gir1.2-bad-23
+W: gir1.2-bad: gir-section-not-libdevel usr/share/gir-1.0/Bad-23.gir misc
+W: gir1.2-bad: typelib-package-name-does-not-match usr/lib/girepository-1.0/Bad-23.typelib gir1.2-bad-23
+W: gir1.2-bad: typelib-section-not-introspection usr/lib/girepository-1.0/Bad-23.typelib misc

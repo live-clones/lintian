@@ -1,0 +1,12 @@
+Testname: gir
+Version: 1.0
+Description: test GObject-Introspection
+Test-For:
+ gir-section-not-libdevel
+ gir-in-arch-all-package
+ gir-missing-typelib-dependency
+ typelib-package-name-does-not-match
+ typelib-section-not-introspection
+ typelib-in-arch-all-package
+ typelib-not-in-multiarch-directory
+ typelib-missing-gir-depends

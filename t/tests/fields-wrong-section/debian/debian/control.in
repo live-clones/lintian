@@ -185,7 +185,7 @@ Description: {$description} (contrib docs)
 
 Package: gir1.2-{$source}-0.1
 Architecture: all
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{gir:Depends\}
 Description: {$description} (gir1.2-pkg)
  Test for gir1.2 packages.
  .
