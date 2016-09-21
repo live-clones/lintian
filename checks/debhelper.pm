@@ -361,7 +361,7 @@ sub run {
             while (<$fd>) {
                 if (m/--\s+"\$(?:@|{@})"\s*$/) {
                     tag 'maintscript-includes-maint-script-parameters',
-                        $basename, "(line $.)";
+                      $basename, "(line $.)";
                 }
             }
             close($fd);
