@@ -13,8 +13,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Ignore comments in debian/rules.
     + [JW] Fix parsing rule targets in lines containing multiple colons.
       Thanks to Andreas Beckmann for the bug report.  (Closes: #838246)
-    + [CL] Check for .maintscript files that include "maint-script-parameters".
-      (Closes: #838195)
+    + [CL] Check for .maintscript files that include
+      "maint-script-parameters".  (Closes: #838195)
   * checks/fields.desc:
     + [JW] Fix typo.
   * checks/testsuite.pm:
