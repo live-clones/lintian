@@ -10,7 +10,6 @@ Tag: package-has-no-description
 Severity: serious
 Certainty: certain
 Info: The binary package does not have a "Description:" control field.
-Tested: empty
 Ref: policy 3.4
 
 Tag: description-synopsis-is-empty

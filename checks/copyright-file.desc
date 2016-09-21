@@ -18,7 +18,6 @@ Certainty: certain
 Info: Each binary package has to include a plain file
  /usr/share/doc/<i>pkg</i>/copyright
 Ref: policy 12.5
-Tested: empty
 
 Tag: copyright-refers-to-old-directory
 Severity: serious
