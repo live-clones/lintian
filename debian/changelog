@@ -40,6 +40,7 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Add Paul Wise.
     + [JW] Remove now-unneeded separate entry for spellintian.t.
     + [JW] Update copyright years.
+    + [CL] Add Chris Lamb.
 
   * helpers/coll/hardening-info-helper:
     + [NT] Removed.
