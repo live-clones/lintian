@@ -3,7 +3,7 @@ Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: ctl
 Type: binary, udeb
 Info: Check for unknown control files in the binary package.
-Needs-info: bin-pkg-control
+Needs-Info: bin-pkg-control
 
 Tag: unknown-control-file
 Severity: normal
