@@ -361,3 +361,11 @@ Info: The listed target in debian/rules command is a likely misspelling.
  Implementation detail: The typo is detected by using "Levenshtein
  edit distance".  Therefore, if the typo involve several characters,
  Lintian may not detect it.
+
+Tag: maintscript-includes-maint-script-parameters
+Severity: normal
+Certainty: possible
+Info: Lines in a <tt>debian/*.maintscript</tt> correspond to
+  <tt>dpkg-maintscript-helper(1)</tt> commands and parameters.  However, the
+  "maint-script-parameters" should not be included as debhelper will add those
+  automatically. See <tt>dh_installdeb(1)</tt> for more information.

@@ -355,6 +355,16 @@ sub run {
             _tag_if_executable($file);
         } elsif ($basename =~ m/^ex\.|\.ex$/i) {
             tag 'dh-make-template-in-source', $file;
+        } elsif ($basename =~ m/^(?:(.*)\.)?maintscript$/) {
+            next unless $file->is_open_ok;
+            my $fd = $file->open;
+            while (<$fd>) {
+                if (m/--\s+"\$(?:@|{@})"\s*$/) {
+                    tag 'maintscript-includes-maint-script-parameters',
+                        $basename, "(line $.)";
+                }
+            }
+            close($fd);
         } elsif ($basename =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
             # The regex matches "debhelper", but debhelper/Dh_Lib does not
             # make those, so skip it.

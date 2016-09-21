@@ -1,0 +1,6 @@
+Testname: maintscript-includes-maint-script-parameters
+Sequence: 6000
+Version: 1.0
+Description: Check dh_installdeb .maintscript files
+Test-For:
+ maintscript-includes-maint-script-parameters
