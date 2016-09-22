@@ -24,6 +24,9 @@ lintian (2.5.48) UNRELEASED; urgency=low
   * collection/hardening-info:
     + [NT] Removed.
 
+  * data/fields/obsolete-packages:
+    + [NT] Apply patch from Otto Kekäläinen to assist with the transition
+      to the "default-mysql-*" packages.  (Closes: #838603)
   * data/files/js-libraries:
     + [BR] Apply patch from Jean-Michel Vourgère to add detection of
       libjs-jquery-migrate-1.  (Closes: #823627)
