@@ -2,11 +2,6 @@ Testname: binaries-libc-link
 Version: 1.0
 Description: Binaries not linked against libc
 Architecture: any
-# Ubuntu Precise emits so weird "readelf: Error: 'EXEC': No such file"
-# errors. They appear from coll/hardening-info (or/and its helper).
-# That makes hardening-check the likely suspect.  The version in Wheezy
-# appears to work fine though, so presume >= 2.2 will work just fine.
-Test-Depends: hardening-includes (>= 2.2)
 Test-For:
  library-not-linked-against-libc
  program-not-linked-against-libc
