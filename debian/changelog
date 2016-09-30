@@ -32,6 +32,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Demote tags for build-depends related to build profiles to
       pedantic, as the required packages are available in stable.
       Thanks to Helmut Grohne for the bug report.  (Closes: #831633)
+    + [NT] Apply patch from Dylan Aïssi to tag r-bioc packages not in
+      section "gnu-r".  (Closes: #839263)
   * checks/files.{desc,pm}:
     + [CL, NT] Tag usages of shell wildcard characters in file names.
       (Closes: #814326)
