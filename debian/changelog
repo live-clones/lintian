@@ -9,6 +9,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
       "home" with the coming removal of hardening-wrapper and
       hardening-includes.
     + [JW] Remove the hardening-no-stackprotector tag.
+  * checks/control-file.desc:
+    + [JW] Add references to tags related to build profiles.
   * checks/debhelper.pm:
     + [JW] Ignore comments in debian/rules.
     + [JW] Fix parsing rule targets in lines containing multiple colons.
@@ -17,6 +19,7 @@ lintian (2.5.48) UNRELEASED; urgency=low
       "maint-script-parameters".  (Closes: #838195)
   * checks/fields.desc:
     + [JW] Fix typo.
+    + [JW] Add references to tags related to build profiles.
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)

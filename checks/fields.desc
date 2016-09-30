@@ -661,6 +661,7 @@ Certainty: possible
 Info: The restriction formula in the source relation includes an unknown build
  profile. The only allowed build profiles are "stage1", "stage2", "nocheck",
  "nodoc", "nobiarch" and "cross".
+Ref: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
 
 Tag: restriction-formula-without-versioned-dpkg-dev-dependency
 Severity: normal
