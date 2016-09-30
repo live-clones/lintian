@@ -14,15 +14,17 @@ lintian (2.5.48) UNRELEASED; urgency=low
     + [JW] Relax Build-Profiles syntax check to allow (almost) any
       characters in profile names.  Thanks to Ximin Luo for the bug report.
       (Closes: #839086)
+    + [JW] Add support for pkg.<srcpkg>.<anything> build profiles.
   * checks/debhelper.pm:
     + [JW] Ignore comments in debian/rules.
     + [JW] Fix parsing rule targets in lines containing multiple colons.
       Thanks to Andreas Beckmann for the bug report.  (Closes: #838246)
     + [CL] Check for .maintscript files that include
       "maint-script-parameters".  (Closes: #838195)
-  * checks/fields.desc:
+  * checks/fields.{desc,pm}:
     + [JW] Fix typo.
     + [JW] Add references to tags related to build profiles.
+    + [JW] Add support for pkg.<srcpkg>.<anything> build profiles.
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)
@@ -30,6 +32,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
   * collection/hardening-info:
     + [NT] Removed.
 
+  * data/fields/build-profiles:
+    + [JW] Add new profiles: nogolang, nojava, noperl, nopython, noudeb.
   * data/fields/obsolete-packages:
     + [NT] Apply patch from Otto Kekäläinen to assist with the transition
       to the "default-mysql-*" packages.  (Closes: #838603)

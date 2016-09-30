@@ -1000,7 +1000,8 @@ sub run {
                                 $prof =~ s/^!//;
                                 tag 'invalid-profile-name-in-source-relation',
                                   "$prof [$field: $part_d_orig]"
-                                  unless $KNOWN_BUILD_PROFILES->known($prof);
+                                  unless $KNOWN_BUILD_PROFILES->known($prof)
+                                  or $prof =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                             }
                         }
 

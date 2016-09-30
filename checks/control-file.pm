@@ -347,7 +347,8 @@ sub run {
                     $profile =~ s/^!//;
                     tag 'invalid-profile-name-in-build-profiles-field',
                       $profile, $bin
-                      unless $KNOWN_BUILD_PROFILES->known($profile);
+                      unless $KNOWN_BUILD_PROFILES->known($profile)
+                      or $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                 }
             }
         }
