@@ -9,8 +9,11 @@ lintian (2.5.48) UNRELEASED; urgency=low
       "home" with the coming removal of hardening-wrapper and
       hardening-includes.
     + [JW] Remove the hardening-no-stackprotector tag.
-  * checks/control-file.desc:
+  * checks/control-file.{desc,pm}:
     + [JW] Add references to tags related to build profiles.
+    + [JW] Relax Build-Profiles syntax check to allow (almost) any
+      characters in profile names.  Thanks to Ximin Luo for the bug report.
+      (Closes: #839086)
   * checks/debhelper.pm:
     + [JW] Ignore comments in debian/rules.
     + [JW] Fix parsing rule targets in lines containing multiple colons.

@@ -318,19 +318,19 @@ sub run {
         if (
             $raw!~ m{^\s*              # skip leading whitespace
                      <                 # first list start
-                       !?[a-z0-9]+     # (possibly negated) term
+                       !?[^\s<>]+      # (possibly negated) term
                        (?:             # any additional terms
                          \s+           # start with a space
-                         !?[a-z0-9]+   # (possibly negated) term
+                         !?[^\s<>]+    # (possibly negated) term
                        )*              # zero or more additional terms
                      >                 # first list end
                      (?:               # any additional restriction lists
                        \s+             # start with a space
                        <               # additional list start
-                         !?[a-z0-9]+   # (possibly negated) term
+                         !?[^\s<>]+    # (possibly negated) term
                          (?:           # any additional terms
                            \s+         # start with a space
-                           !?[a-z0-9]+ # (possibly negated) term
+                           !?[^\s<>]+  # (possibly negated) term
                          )*            # zero or more additional terms
                        >               # additional list end
                      )*                # zero or more additional lists

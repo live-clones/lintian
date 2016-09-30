@@ -9,7 +9,7 @@ Build-Depends: {$build_depends},
 Package: {$source}-wrong-syntax
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Build-Profiles: <in.valid>
+Build-Profiles: <in<valid>
 Description: {$description} (wrong syntax)
  Check the syntax of the Build-Profiles field
  .
