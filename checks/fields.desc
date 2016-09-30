@@ -675,7 +675,7 @@ Info: The restriction formula in the source relation includes an unknown build
 Ref: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
 
 Tag: restriction-formula-without-versioned-dpkg-dev-dependency
-Severity: normal
+Severity: pedantic
 Certainty: certain
 Info: If a restriction formula appears in the source relation or if the
  Build-Profiles field is used in a binary package stanza then the source
@@ -683,7 +683,7 @@ Info: If a restriction formula appears in the source relation or if the
  restriction formula support.
 
 Tag: restriction-formula-with-debhelper-without-debhelper-version
-Severity: normal
+Severity: pedantic
 Certainty: certain
 Info: If a restriction formula appears in the build dependencies or if the
  Build-Profiles field is used in a binary package stanza and the package uses
