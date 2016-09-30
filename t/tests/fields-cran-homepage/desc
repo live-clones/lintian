@@ -1,0 +1,4 @@
+Testname: fields-cran-homepage
+Version: 1.0
+Description: CRAN Homepage URLs should be canonical
+Test-For: homepage-for-cran-package-not-canonical

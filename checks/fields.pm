@@ -616,6 +616,9 @@ sub run {
         {
             tag 'homepage-for-cpan-package-contains-version', $orig;
         }
+        if ($homepage=~ m,/cran\.r-project\.org/web/packages/.+,){
+            tag 'homepage-for-cran-package-not-canonical', $orig;
+        }
     } elsif (not $info->native) {
         if ($type eq 'source') {
             my $binary_has_homepage_field = 0;
