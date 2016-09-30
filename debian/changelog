@@ -9,6 +9,10 @@ lintian (2.5.48) UNRELEASED; urgency=low
       "home" with the coming removal of hardening-wrapper and
       hardening-includes.
     + [JW] Remove the hardening-no-stackprotector tag.
+    + [NT] Allow "golang-any" as an alternative to "golang-go" in
+      Build-Depends for detecting golang binaries.  Thanks to
+      Martín Ferrari for the report and the initial patch.
+      (Closes: #839228)
   * checks/control-file.{desc,pm}:
     + [JW] Add references to tags related to build profiles.
     + [JW] Relax Build-Profiles syntax check to allow (almost) any
