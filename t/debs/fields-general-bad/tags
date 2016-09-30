@@ -9,4 +9,7 @@ E: fields-general-BAD?: package-not-lowercase
 E: fields-general-BAD?: too-many-architectures
 E: fields-general-BAD?: unknown-priority is weird
 I: fields-general-BAD?: unknown-field-in-control unknown-field
+W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/
+W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/changelog.gz
+W: fields-general-BAD?: file-name-contains-wildcard-character usr/share/doc/fields-general-BAD?/copyright
 W: fields-general-BAD?: unknown-architecture weird

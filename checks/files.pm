@@ -365,7 +365,7 @@ sub run {
         }
 
         if ($fname =~ m,[*?],) {
-          tag 'file-name-contains-wildcard-character', $file;
+            tag 'file-name-contains-wildcard-character', $file;
         }
 
         if ($file->is_hardlink) {

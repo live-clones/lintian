@@ -23,6 +23,7 @@ W: files-general: backup-file-in-package usr/share/foo/file~
 W: files-general: executable-not-elf-or-script usr/share/man/man5/foo.5.gz
 W: files-general: file-in-unusual-dir new-top-level-dir/file-in-new-top-level-dir
 W: files-general: file-in-unusual-dir var/catman/do
+W: files-general: file-name-contains-wildcard-character usr/share/foo/*
 W: files-general: file-name-ends-in-whitespace usr/share/foo/ws 
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/22x22/lintian-16x16.png 16x16
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/64x64/lintian-64x64.png 22x22
