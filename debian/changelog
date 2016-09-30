@@ -7,7 +7,7 @@ lintian (2.5.48) UNRELEASED; urgency=low
       implement the default hardening-no-* checks directly in lintian.
       This is because hardening-check appears to be losing its
       "home" with the coming removal of hardening-wrapper and
-      hardening-includes.
+      hardening-includes.  (Closes: #836756)
     + [JW] Remove the hardening-no-stackprotector tag.
     + [NT] Allow "golang-any" as an alternative to "golang-go" in
       Build-Depends for detecting golang binaries.  Thanks to
