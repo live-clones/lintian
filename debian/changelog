@@ -42,6 +42,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
       /lib/lsb/init-functions utility functions without declaring the
       corresponding dependency on lsb-base (>= 3.0-6).
       (Closes: #838997)
+  * checks/shared-libs.desc:
+    + [JW] Fix typos.
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)

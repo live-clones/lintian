@@ -252,7 +252,7 @@ Info: A shared object was identified in a library directory (a directory
 Tag: shlib-without-PT_GNU_STACK-section
 Severity: important
 Certainty: certain
-Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
+Info: The listed shared library lacks a PT_GNU_STACK section. This forces
  the dynamic linker to make the stack executable.
  .
  The shared lib is linked either with a non-GNU linker or a linker which is
@@ -264,7 +264,7 @@ Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
 Tag: shlib-with-executable-stack
 Severity: normal
 Certainty: possible
-Info: The listed shared libraries declares the stack as executable.
+Info: The listed shared library declares the stack as executable.
  .
  Executable stack is usually an error as it is only needed if the code
  contains GCC trampolines or similar constructs which uses code on the
