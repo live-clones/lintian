@@ -1,6 +1,6 @@
 etcfiles (1) unstable; urgency=low
 
-  * Acknowledge NMU (Closes: #1234).
+  * Acknowledge NMU (Closes: #123456).
   * initial setup
 
  -- Lintian Maintainers <lintian-maint@debian.org>  Fri, 21 Sep 2001 11:56:02 -0700
