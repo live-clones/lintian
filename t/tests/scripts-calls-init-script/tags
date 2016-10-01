@@ -1,1 +1,2 @@
+E: scripts-calls-init-script: init.d-script-needs-depends-on-lsb-base etc/init.d/self-invoke (line 12)
 E: scripts-calls-init-script: maintainer-script-calls-init-script-directly postinst:5

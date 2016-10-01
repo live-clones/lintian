@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -15,7 +15,7 @@ Description: {$description}
 
 Package: {$source}-bugs
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- bugs
  Test some simple bugs in the check
  .
@@ -35,7 +35,7 @@ Description: {$description} -- bad script interpreter
 
 Package: {$source}-sourcing-without-test
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, lsb-base (>= 3.0-6)
 Description: {$description} -- sourcing without test
  Test a check for . /etc/default/foo without checking the existence of
  the file beforehand.

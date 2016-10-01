@@ -198,7 +198,7 @@ sub run {
 
         # Check if file exists in package and check the script for
         # other issues if it was included in the package.
-        check_init($initd_path);
+        check_init($initd_path, $info);
     }
 
     return unless $initd_dir and $initd_dir->is_dir;
@@ -222,7 +222,7 @@ sub run {
         # coverage in the first pass.
         unless ($initd_postinst{$script->basename}) {
             tag $tagname, $script;
-            check_init($script);
+            check_init($script, $info);
         }
     }
 
@@ -230,7 +230,7 @@ sub run {
 }
 
 sub check_init {
-    my ($initd_path) = @_;
+    my ($initd_path, $info) = @_;
 
     # In an upstart system, such as Ubuntu, init scripts are symlinks to
     # upstart-job.  It doesn't make sense to check the syntax of upstart-job,
@@ -320,6 +320,12 @@ sub check_init {
 
         while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//o) {
             $tag{$1} = 1;
+        }
+
+        if ($l =~ m{^\s*\.\s+/lib/lsb/init-functions}
+            && !$info->relation('strong')->implies('lsb-base (>= 3.0-6)')) {
+            tag 'init.d-script-needs-depends-on-lsb-base',
+              $initd_path, "(line $.)";
         }
     }
     close($fd);

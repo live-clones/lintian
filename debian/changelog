@@ -37,6 +37,11 @@ lintian (2.5.48) UNRELEASED; urgency=low
   * checks/files.{desc,pm}:
     + [CL, NT] Tag usages of shell wildcard characters in file names.
       (Closes: #814326)
+  * checks/init.d.{desc,pm}:
+    + [CL, NT]: Emit a tag for initscripts that source the
+      /lib/lsb/init-functions utility functions without declaring the
+      corresponding dependency on lsb-base (>= 3.0-6).
+      (Closes: #838997)
   * checks/testsuite.pm:
     + [JW] Apply patch from Sean Whitton to recognise autopkgtest-pkg-elpa
       as a valid value for the Testsuite field.  (Closes: #837801)

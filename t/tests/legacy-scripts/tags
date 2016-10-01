@@ -10,6 +10,7 @@ E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-brok
 E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-broken restart
 E: scripts: init.d-script-has-duplicate-lsb-section etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section etc/init.d/lsb-broken:15
+E: scripts: init.d-script-needs-depends-on-lsb-base etc/init.d/skeleton (line 40)
 E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken)
 E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo)
 E: scripts: package-installs-python-bytecode usr/lib/python2.3/site-packages/test.pyc

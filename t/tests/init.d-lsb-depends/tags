@@ -1,0 +1,1 @@
+E: init.d-lsb-depends: init.d-script-needs-depends-on-lsb-base etc/init.d/init.d-lsb-depends (line 30)
