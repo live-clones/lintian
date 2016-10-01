@@ -5,7 +5,7 @@ W: changelog-file-general: changelog-references-temp-security-identifier TEMP-12
 W: changelog-file-general: debian-changelog-file-contains-obsolete-user-emacs-settings
 W: changelog-file-general: debian-changelog-line-too-long line 15
 W: changelog-file-general: debian-changelog-line-too-long line 8
-W: changelog-file-general: improbable-bug-number-in-closes 12
+W: changelog-file-general: improbable-bug-number-in-closes 1234
 W: changelog-file-general: latest-debian-changelog-entry-without-new-date
 W: changelog-file-general: latest-debian-changelog-entry-without-new-version
 W: changelog-file-general: misspelled-closes-bug #666666

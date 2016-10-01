@@ -13,6 +13,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
       Build-Depends for detecting golang binaries.  Thanks to
       Martín Ferrari for the report and the initial patch.
       (Closes: #839228)
+  * checks/changelog-file.{desc,pm}:
+    + [JW] Bump threshold for improbable bug number to 2000.
   * checks/control-file.{desc,pm}:
     + [JW] Add references to tags related to build profiles.
     + [JW] Relax Build-Profiles syntax check to allow (almost) any

@@ -398,7 +398,7 @@ sub run {
 
         my $closes = $entry->Closes;
         for my $bug (@$closes) {
-            tag 'improbable-bug-number-in-closes', $bug if ($bug < 100);
+            tag 'improbable-bug-number-in-closes', $bug if ($bug < 2000);
         }
 
         # unstable, testing, and stable shouldn't be used in Debian

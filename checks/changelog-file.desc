@@ -261,7 +261,7 @@ Ref: devref 6.3.4
 Tag: improbable-bug-number-in-closes
 Severity: normal
 Certainty: possible
-Info: The most recent changelog closes a bug numbered less than 100.
+Info: The most recent changelog closes a bug numbered less than 2000.
  While this is distantly possible, it's more likely a typo or a
  placeholder value that mistakenly wasn't filled in.
 
