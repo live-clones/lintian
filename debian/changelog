@@ -27,6 +27,8 @@ lintian (2.5.48) UNRELEASED; urgency=low
       Thanks to Andreas Beckmann for the bug report.  (Closes: #838246)
     + [CL] Check for .maintscript files that include
       "maint-script-parameters".  (Closes: #838195)
+    + [NT] Fix typo that prevented lintian from detecting uses of the
+      dhmk build-system.
   * checks/fields.{desc,pm}:
     + [JW] Fix typo.
     + [JW] Add references to tags related to build profiles.

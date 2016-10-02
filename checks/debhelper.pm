@@ -215,7 +215,7 @@ sub run {
         } elsif (
             m{
               ^include \s+
-                 /usr/share/pkg-kde-tool/qt-kde-team/\d+/debian-qt-kde\.mk
+                 /usr/share/pkg-kde-tools/qt-kde-team/\d+/debian-qt-kde\.mk
               }xsm
           ) {
             $build_systems{'dhmk'} = 1;
