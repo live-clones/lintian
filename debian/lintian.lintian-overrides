@@ -1,2 +1,0 @@
-# We use hardening-includes for the hardening-check binary
-lintian binary: depends-on-obsolete-package depends: hardening-includes => use dpkg-buildflags instead
