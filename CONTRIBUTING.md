@@ -174,7 +174,7 @@ guidelines are:
  * If a change effects more than one "root" folder, they are repeated
    for each of the related "root" folders.
  * Text after a period is followed by *two* spaces (except where it is
-   part of a abbreviation like "e.g.").
+   part of an abbreviation like "e.g.").
 
 Backport requirements
 ---------------------
