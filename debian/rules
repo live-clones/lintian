@@ -80,7 +80,7 @@ generate-docs-stamp: $(docsource)
 	touch $@
 
 # Target for updating things on lintian.d.o
-rebuild-lintian.debian.org: api-doc generate-docs-stamp
+rebuild-lintian.debian.org: generate-docs-stamp
 	# done
 
 override_dh_auto_build: $(neededfiles) generate-docs-stamp
