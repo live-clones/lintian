@@ -1,6 +1,13 @@
-lintian (2.5.48) UNRELEASED; urgency=low
+lintian (2.5.48) unstable; urgency=low
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - file-name-contains-wildcard-character
+      - homepage-for-cran-package-not-canonical
+      - init.d-script-needs-depends-on-lsb-base
+      - maintscript-includes-maint-script-parameters
+    + Removed:
+      - hardening-no-stackprotector
 
   * checks/binaries.{desc,pm}:
     + [NT] Rewrite/embed the necessary bits from hardening-check to
@@ -102,7 +109,7 @@ lintian (2.5.48) UNRELEASED; urgency=low
   * t/scripts/spellintian.t:
     + [JW] Relicense as GPLv2+, like the rest of Lintian.
 
- -- Jakub Wilk <jwilk@debian.org>  Mon, 12 Sep 2016 11:16:53 +0200
+ -- Niels Thykier <niels@thykier.net>  Tue, 04 Oct 2016 19:37:17 +0000
 
 lintian (2.5.47) unstable; urgency=medium
 
