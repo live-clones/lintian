@@ -197,6 +197,6 @@ jenkins.debian.net to test this.
 Additional resources
 ====================
 
- * perldoc [doc/tutorial/Lintian/Tutorial.pod]()
- * perldoc [doc/README.developers]()
- * [doc/releases.md]()
+ * perldoc [doc/tutorial/Lintian/Tutorial.pod](doc/tutorial/Lintian/Tutorial.pod)
+ * perldoc [doc/README.developers](doc/README.developers)
+ * [doc/releases.md](doc/releases.md)
