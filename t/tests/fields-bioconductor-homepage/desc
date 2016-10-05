@@ -1,0 +1,4 @@
+Testname: fields-bioconductor-homepage
+Version: 1.0
+Description: Bioconductor Homepage URLs should be canonical
+Test-For: homepage-for-bioconductor-package-not-canonical

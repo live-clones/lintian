@@ -619,6 +619,9 @@ sub run {
         if ($homepage=~ m,/cran\.r-project\.org/web/packages/.+,){
             tag 'homepage-for-cran-package-not-canonical', $orig;
         }
+        if ($homepage=~ m,bioconductor\.org/packages/.*/bioc/html/.*\.html*$,){
+            tag 'homepage-for-bioconductor-package-not-canonical', $orig;
+        }
     } elsif (not $info->native) {
         if ($type eq 'source') {
             my $binary_has_homepage_field = 0;

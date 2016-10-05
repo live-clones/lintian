@@ -1318,3 +1318,18 @@ Info: The Homepage field for this package points to an uncanonical CRAN URL.
  not:
  .
   https://cran.r-project.org/web/packages/foo/index.html
+
+Tag: homepage-for-bioconductor-package-not-canonical
+Severity: wishlist
+Certainty: certain
+Info: The Homepage field for this package points to an uncanonical Bioconductor URL.
+ Please update to use the current canonical URL instead. The canonical URL is
+ recommended for use in publications, etc., will always redirect to current
+ release version (or devel if package is not in release yet).  For example, the
+ link for the package "foo" should be:
+ .
+ https://bioconductor.org/packages/foo/
+ .
+ not:
+ .
+ https://www.bioconductor.org/packages/(release|devel|*)/bioc/html/foo.html
