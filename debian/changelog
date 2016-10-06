@@ -2,6 +2,10 @@ lintian (2.5.49) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/debhelper.desc:
+    + [CL] Drop double leading spaces in includes-maint-script-parameters
+      paragraph that was causing indentation when rendered on lintian.d.o.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Oct 2016 19:04:23 +0100
 
 lintian (2.5.48) unstable; urgency=low
