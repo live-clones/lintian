@@ -7,7 +7,7 @@ lintian (2.5.49) UNRELEASED; urgency=medium
       paragraph that was causing indentation when rendered on lintian.d.o.
   * checks/fields.{pm,desc}:
     + [NT] Apply patch from Dylan Aïssi to tag non-canonical uses of
-      the bioconductor homepage in the Homepage field.  (Closes: #839553)
+      the bioconductor homepage in the Homepage field.  (Closes: #839874)
 
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Oct 2016 19:04:23 +0100
 
