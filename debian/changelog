@@ -9,7 +9,7 @@ lintian (2.5.49) UNRELEASED; urgency=medium
     + [NT] Apply patch from Dylan Aïssi to tag non-canonical uses of
       the bioconductor homepage in the Homepage field.  (Closes: #839874)
   * data/spelling/corrections:
-    + [PW] Add more corrections.
+    + [JW, PW] Add more corrections.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Oct 2016 19:04:23 +0100
 
