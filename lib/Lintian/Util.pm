@@ -897,6 +897,7 @@ sub do_fork() {
     $pid = CORE::fork();
     $fork_error = $!;
     if ($pid == 0) {
+
         for my $sig (keys(%SIG)) {
             if (ref($SIG{$sig}) eq 'CODE') {
                 $SIG{$sig} = 'DEFAULT';
