@@ -26,7 +26,7 @@ use parent 'Class::Accessor::Fast';
 use POSIX;
 
 use Lintian::Command::Simple qw(wait_any kill_all);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(do_fork fail);
 
 =head1 NAME
 
@@ -401,7 +401,7 @@ sub process_tasks {
                 # collect info
                 $cmap->select($coll);
                 $wlist->{'changed'} = 1;
-                my $pid = fork//-1;
+                my $pid = do_fork()//-1;
                 if (not $pid) {
                     # child
                     my $ret = 0;

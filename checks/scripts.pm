@@ -33,7 +33,7 @@ use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail strip);
+use Lintian::Util qw(do_fork fail strip);
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -1212,7 +1212,7 @@ sub script_is_evil_and_wrong {
 sub check_script_syntax {
     my ($interpreter, $path) = @_;
     my $fs_path = $path->fs_path;
-    my $pid = fork();
+    my $pid = do_fork();
     if ($pid == 0) {
         open(STDOUT, '>', '/dev/null');
         open(STDERR, '>&', \*STDOUT);

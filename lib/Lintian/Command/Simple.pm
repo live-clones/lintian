@@ -22,6 +22,8 @@ use autodie qw(open close chdir);
 use Exporter qw(import);
 use POSIX qw(:sys_wait_h);
 
+use Lintian::Util qw(do_fork);
+
 our @EXPORT_OK = qw(rundir background wait_any kill_all);
 
 =head1 NAME
@@ -65,7 +67,7 @@ sub rundir {
     my $pid;
     my $res;
 
-    $pid = fork();
+    $pid = do_fork();
     if (not defined($pid)) {
         # failed
         $res = -1;
@@ -97,7 +99,7 @@ calling wait() to reap the previous command.
 =cut
 
 sub background {
-    my $pid = fork();
+    my $pid = do_fork();
 
     if (not defined($pid)) {
         # failed

@@ -31,7 +31,7 @@ use Text::ParseWords ();
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env drain_pipe fail open_gz);
+use Lintian::Util qw(clean_env do_fork drain_pipe fail open_gz);
 
 sub run {
     my (undef, undef, $info, $proc, $group) = @_;
@@ -251,7 +251,7 @@ sub run {
             }
             my ($read, $write);
             pipe($read, $write);
-            my $pid = fork();
+            my $pid = do_fork();
             if ($pid == 0) {
                 clean_env;
                 close STDOUT;

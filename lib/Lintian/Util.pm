@@ -28,6 +28,7 @@ use Carp qw(croak);
 use Cwd qw(abs_path);
 use Errno qw(ENOENT);
 use Exporter qw(import);
+use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
 
 use constant {
     DCTRL_DEBCONF_TEMPLATE => 1,
@@ -64,6 +65,7 @@ BEGIN {
           file_is_encoded_in_non_utf8
           is_string_utf8_encoded
           fail
+          do_fork
           strip
           lstrip
           rstrip
@@ -879,6 +881,36 @@ sub file_is_encoded_in_non_utf8 {
     return $line;
 }
 
+=item do_fork()
+
+Overrides fork to reset signal handlers etc. in the child.
+
+=cut
+
+sub do_fork() {
+    my ($pid, $fork_error);
+    my $orig_mask = POSIX::SigSet->new;
+    my $fork_mask = POSIX::SigSet->new;
+    $fork_mask->fillset;
+    sigprocmask(SIG_BLOCK, $fork_mask, $orig_mask)
+      or die("sigprocmask failed: $!\n");
+    $pid = CORE::fork();
+    $fork_error = $!;
+    if ($pid == 0) {
+        for my $sig (keys(%SIG)) {
+            if (ref($SIG{$sig}) eq 'CODE') {
+                $SIG{$sig} = 'DEFAULT';
+            }
+        }
+    }
+    sigprocmask(SIG_SETMASK, $orig_mask, undef)
+      or die("sigprocmask failed: $!\n");
+    if ($pid == -1) {
+        $! = $fork_error;
+    }
+    return $pid;
+}
+
 =item system_env (CMD)
 
 Behaves like system (CMD) except that the environment of CMD is
@@ -887,7 +919,7 @@ cleaned (as defined by L</clean_env>(1)).
 =cut
 
 sub system_env {
-    my $pid = fork;
+    my $pid = do_fork;
     if (not defined $pid) {
         return -1;
     } elsif ($pid == 0) {

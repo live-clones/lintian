@@ -49,7 +49,7 @@ use File::Temp qw(tempfile);
 use POSIX qw(ENOENT);
 use Text::Template;
 
-use Lintian::Util qw(fail read_dpkg_control slurp_entire_file);
+use Lintian::Util qw(do_fork fail read_dpkg_control slurp_entire_file);
 
 our @EXPORT_OK = qw(
   chdir_runcmd
@@ -298,7 +298,7 @@ Returns 0 on success and non-zero otherwise.
 
 sub chdir_runcmd {
     my ($dir, $cmd, $log) = @_;
-    my $pid = fork();
+    my $pid = do_fork();
     if ($pid) {
         waitpid $pid, 0;
         return $?;

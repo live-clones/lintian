@@ -11,6 +11,15 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW, PW] Add more corrections.
 
+  * lib/Lintian/Unpacker.pm:
+    + [NT] Use the new "do_fork()" sub to ensure works do not inherit
+      the default signal handler, which could allow any number of workers
+      to promote themselves to independent "masters" - effectively
+      creating a fork-bomb with an ill-timed signal.
+  * lib/Lintian/Util.pm:
+    + [NT] Add a "do_fork()" sub to ensure signal handling is
+      reset for child processes.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 06 Oct 2016 19:04:23 +0100
 
 lintian (2.5.48) unstable; urgency=low
