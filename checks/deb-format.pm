@@ -195,7 +195,7 @@ sub run {
     # supports a newer format but it's not permitted in the archive
     # yet.
     if (not defined($failed)) {
-        my $output = spawn('ar', 'p', $deb, 'debian-binary');
+        my $output = safe_qx('ar', 'p', $deb, 'debian-binary');
         if ($? != 0) {
             tag 'malformed-deb-archive', 'cannot read debian-binary member';
         } elsif ($output !~ /^2\.\d+\n/) {
