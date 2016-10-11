@@ -22,7 +22,7 @@ use autodie;
 
 use List::MoreUtils qw(first_index none);
 
-use Lintian::Command qw(spawn);
+use Lintian::Command qw(safe_qx spawn);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
@@ -195,12 +195,11 @@ sub run {
     # supports a newer format but it's not permitted in the archive
     # yet.
     if (not defined($failed)) {
-        $opts = {};
-        $success = spawn($opts, ['ar', 'p', $deb, 'debian-binary']);
-        if (not $success) {
+        my $output = spawn('ar', 'p', $deb, 'debian-binary');
+        if ($? != 0) {
             tag 'malformed-deb-archive', 'cannot read debian-binary member';
-        } elsif (${ $opts->{out} } !~ /^2\.\d+\n/) {
-            my ($version) = split("\n", ${ $opts->{out} });
+        } elsif ($output !~ /^2\.\d+\n/) {
+            my ($version) = split(m/\n/, $output);
             tag 'malformed-deb-archive', "version $version not 2.0";
         }
     }
