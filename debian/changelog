@@ -11,6 +11,9 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [JW, PW] Add more corrections.
 
+  * data/cruft/non-distributable-files:
+    + [BR] Add some rapidjson files.
+
   * lib/Lintian/Unpacker.pm:
     + [NT] Use the new "do_fork()" sub to ensure works do not inherit
       the default signal handler, which could allow any number of workers
