@@ -13,6 +13,9 @@ lintian (2.5.49) UNRELEASED; urgency=medium
 
   * data/cruft/non-distributable-files:
     + [BR] Add some rapidjson files.
+  * data/files/privacy-breaker-tag-attr:
+    + [BR] Apply patch from Frederic Bonnard detecting audio tags.
+      (Closes: #840009)
 
   * lib/Lintian/Unpacker.pm:
     + [NT] Use the new "do_fork()" sub to ensure works do not inherit

@@ -19,3 +19,4 @@ source           ~~ src="http       && <source    || src="ftp       && <source  
 track            ~~ src="http       && <track     || src="ftp       && <track   || src="//       && <track  ~~ (<(track) (?:\s[^>]+)? \s+ src="(&URL)" [^>]*>)
 video src=       ~~ src="http       && <video     || src="ftp       && <video   || src="//       && <video  ~~ (<(video) (?:\s[^>]+)? \s+ src="(&URL)" [^>]*>)
 video poster=    ~~ poster="http    && <video     || poster="ftp    && <video   || poster="//    && <video  ~~ (<(video) (?:\s[^>]+)? \s+ poster="(&URL)" [^>]*>)
+audio            ~~ src="http       && <audio     || src="ftp       && <audio   || src="//       && <audio  ~~ (<(audio) (?:\s[^>]+)? \s+ src="(&URL)" [^>]*>)
