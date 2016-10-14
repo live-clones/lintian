@@ -864,6 +864,8 @@ coresponding||corresponding
 coresponds||corresponds
 correclty||correctly
 correctnes||correctness
+correect||correct
+correectly||correctly
 correponding||corresponding
 correponds||corresponds
 corresond||correspond
@@ -1723,6 +1725,10 @@ implentation||implementation
 implentations||implementations
 implicitely||implicitly
 implicity||implicitly
+implimented||implemented
+impliment||implement
+implimenting||implementing
+impliments||implements
 implmentation||implementation
 implmented||implemented
 implment||implement
@@ -1776,6 +1782,8 @@ incorperate||incorporate
 incorperates||incorporates
 incorperating||incorporating
 incorreclty||incorrectly
+incorreect||incorrect
+incorreectly||incorrectly
 incosistent||inconsistent
 increas||increase
 incrmental||incremental
@@ -3163,6 +3171,7 @@ succedes||succeeds
 succede||succeed
 succeding||succeeding
 succeedes||succeeds
+succesfull||successful
 succesfully||successfully
 succesful||successful
 succesive||successive
@@ -3493,6 +3502,7 @@ unresonable||unreasonable
 unsinged||unsigned
 unspported||unsupported
 unsual||unusual
+unsuccesfull||unsuccessful
 unsuccesfully||unsuccessfully
 unsuccesful||unsuccessful
 unsuccessfull||unsuccessful
