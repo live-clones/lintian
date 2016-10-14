@@ -323,7 +323,7 @@ sub check_init {
         }
 
         if ($l =~ m{^\s*\.\s+/lib/lsb/init-functions}
-            && !$info->relation('strong')->implies('lsb-base (>= 3.0-6)')) {
+            && !$info->relation('strong')->implies('lsb-base')) {
             tag 'init.d-script-needs-depends-on-lsb-base',
               $initd_path, "(line $.)";
         }
