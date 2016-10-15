@@ -149,6 +149,10 @@ additionnal||additional
 additionnally||additionally
 additonal||additional
 additonally||additionally
+addjust||adjust
+addjusted||adjusted
+addjusting||adjusting
+addjusts||adjusts
 addres||address
 addresed||addressed
 addreses||addresses
@@ -207,6 +211,7 @@ allignment||alignment
 allignments||alignments
 alligns||aligns
 allmost||almost
+allowd||allowed
 allpication||application
 allready||already
 allthough||although
@@ -884,6 +889,7 @@ cotrolling||controlling
 cotrols||controls
 coudn't||couldn't
 could'nt||couldn't
+could't||couldn't
 countour||contour
 countours||contours
 coutner||counter
@@ -1066,6 +1072,7 @@ diabled||disabled
 diable||disable
 diables||disables
 diabling||disabling
+dictionay||dictionary
 dictionnary||dictionary
 did'nt||didn't
 didnt||didn't
@@ -1916,6 +1923,8 @@ instanciating||instantiating
 instanciation||instantiation
 instanciations||instantiations
 ins't||isn't
+instruciton||instruction
+instrucitons||instructions
 intance||instance
 intances||instances
 intead||instead
@@ -2371,6 +2380,7 @@ outputing||outputting
 outut||output
 overaall||overall
 overidden||overridden
+overiden||overridden
 overide||override
 overides||overrides
 overiding||overriding
@@ -3021,6 +3031,7 @@ sheduling||scheduling
 shoud||should
 should'nt||shouldn't
 shouldnt||shouldn't
+should't||shouldn't
 shoule||should
 siginificantly||significantly
 siginificant||significant
@@ -3128,6 +3139,10 @@ strech||stretch
 strenghts||strengths
 strenght||strength
 strenth||strength
+strored||stored
+strores||stores
+strore||store
+stroring||storing
 structres||structures
 structre||structure
 stucts||structs
@@ -3291,6 +3306,8 @@ teh||the
 temorary||temporary
 tempararily||temporarily
 temparary||temporary
+tenatively||tentatively
+tenative||tentative
 terminaters||terminators
 terminater||terminator
 texually||textually
@@ -3373,6 +3390,8 @@ transision||transition
 transistions||transitions
 transistion||transition
 transitionned||transitioned
+transitons||transitions
+transiton||transition
 transmiters||transmitters
 transmiter||transmitter
 transmiting||transmitting
@@ -3631,6 +3650,7 @@ workaroung||workaround
 woudn't||wouldn't
 woud||would
 would'nt||wouldn't
+would't||wouldn't
 writeing||writing
 writen||written
 writting||writing
