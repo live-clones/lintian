@@ -11,6 +11,10 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * checks/init.d.pm:
     + [JW] Don't require version constraint for lsb-base dependencies.
       The needed version has been available for many stable releases.
+  * checks/watch-file.pm:
+    + [JW] Assume that watch files containing the pgpmode option (different
+      than "none") verify upstream signature.  Thanks to Robert Luberda for
+      the bug report.  (Closes: #841000)
 
   * data/cruft/non-distributable-files:
     + [BR] Add some rapidjson files.

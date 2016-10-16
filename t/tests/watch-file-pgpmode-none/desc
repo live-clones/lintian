@@ -1,0 +1,9 @@
+Testname: watch-file-pgpmode-none
+Type: non-native
+Version: 2.0-1
+Options: --pedantic
+Skeleton: pedantic
+Description: Watch file with pgpmode=none
+Test-For: debian-watch-may-check-gpg-signature
+Test-Against: debian-watch-file-pubkey-file-is-missing
+References: #841000

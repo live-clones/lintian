@@ -116,6 +116,8 @@ sub run {
                       and /^uversionmangle\s*=.*$prerelease/;
                     $withgpgverification = 1
                       if /^pgpsigurlmangle\s*=\s*/;
+                    $withgpgverification = 1
+                      if /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
                 }
             }
             if (m%qa\.debian\.org/watch/sf\.php\?%) {
