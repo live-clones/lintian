@@ -9,6 +9,7 @@ W: generic-dh-make-2005 source: debian-rules-ignores-make-clean-error line 47
 W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-arch
 W: generic-dh-make-2005 source: debian-rules-missing-recommended-target build-indep
 W: generic-dh-make-2005 source: dh-clean-k-is-deprecated
+W: generic-dh-make-2005 source: package-uses-deprecated-debhelper-compat-version 5
 W: generic-dh-make-2005: copyright-without-copyright-notice
 W: generic-dh-make-2005: new-package-should-close-itp-bug
 W: generic-dh-make-2005: readme-debian-contains-debmake-template

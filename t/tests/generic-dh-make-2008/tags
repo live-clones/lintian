@@ -8,7 +8,6 @@ I: generic-dh-make-2008: extended-description-is-probably-too-short
 I: generic-dh-make-2008: package-contains-empty-directory usr/bin/
 I: generic-dh-make-2008: package-contains-empty-directory usr/sbin/
 P: generic-dh-make-2008 source: no-dep5-copyright
-P: generic-dh-make-2008 source: package-uses-old-debhelper-compat-version 7
 P: generic-dh-make-2008: copyright-with-old-dh-make-debian-copyright
 P: generic-dh-make-2008: no-upstream-changelog
 W: generic-dh-make-2008 source: ancient-standards-version 3.7.3 (current is CURRENT)
@@ -33,6 +32,7 @@ W: generic-dh-make-2008 source: dh-make-template-in-source debian/postrm.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/preinst.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/prerm.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/watch.ex
+W: generic-dh-make-2008 source: package-uses-deprecated-debhelper-compat-version 7
 W: generic-dh-make-2008 source: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: bad-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: copyright-has-url-from-dh_make-boilerplate

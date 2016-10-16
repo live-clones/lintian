@@ -1,2 +1,2 @@
-E: debhelper-dh-compat source: declares-possibly-conflicting-debhelper-compat-versions rules=5 compat=9
+E: debhelper-dh-compat source: declares-possibly-conflicting-debhelper-compat-versions rules=8 compat=9
 W: debhelper-dh-compat source: debian-rules-sets-DH_COMPAT line 3

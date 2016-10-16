@@ -14,6 +14,9 @@ lintian (2.5.49) UNRELEASED; urgency=medium
 
   * data/cruft/non-distributable-files:
     + [BR] Add some rapidjson files.
+  * data/debhelper/compat-level:
+    + [NT] Bump the deprecated debhelper compat level to match the one
+      in debhelper.
   * data/files/privacy-breaker-tag-attr:
     + [BR] Apply patch from Frederic Bonnard detecting audio tags.
       (Closes: #840009)

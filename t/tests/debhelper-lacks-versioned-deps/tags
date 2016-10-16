@@ -1,2 +1,1 @@
-P: debhelper-lacks-versioned-deps source: package-lacks-versioned-build-depends-on-debhelper 7
-P: debhelper-lacks-versioned-deps source: package-uses-old-debhelper-compat-version 7
+P: debhelper-lacks-versioned-deps source: package-lacks-versioned-build-depends-on-debhelper 9

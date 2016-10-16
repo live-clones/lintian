@@ -3,7 +3,7 @@ pedantic=9
 # warn (pedantic) if does not depend on this debhelper level
 recommended=9
 # warn if below this level
-deprecated=5
+deprecated=9
 # warn if equal or above
 experimental=11
 

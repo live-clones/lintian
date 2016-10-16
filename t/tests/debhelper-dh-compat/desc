@@ -1,6 +1,7 @@
 Testname: debhelper-dh-compat
 Version: 1.0
 Description: Test the value of DH_COMPAT
+Profile: lintian-test
 Test-For:
  debian-rules-sets-DH_COMPAT
  declares-possibly-conflicting-debhelper-compat-versions

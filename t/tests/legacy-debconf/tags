@@ -43,6 +43,7 @@ W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.p
 W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
+W: debconf source: package-uses-deprecated-debhelper-compat-version 5
 W: debconf source: patch-system-but-no-source-readme
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
 W: debconf source: template-uses-unsplit-choices debconf-test - debconf/testmulti-escape

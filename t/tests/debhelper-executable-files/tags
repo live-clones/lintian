@@ -2,3 +2,4 @@ W: debhelper-executable-files source: package-file-is-executable debian/changelo
 W: debhelper-executable-files source: package-file-is-executable debian/control
 W: debhelper-executable-files source: package-file-is-executable debian/copyright
 W: debhelper-executable-files source: package-file-is-executable debian/manpages
+W: debhelper-executable-files source: package-uses-deprecated-debhelper-compat-version 8
