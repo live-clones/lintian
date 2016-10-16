@@ -618,8 +618,14 @@ sub generic_test_runner {
         }
 
         $test_state->progress('building');
-        my $res= chdir_runcmd($targetdir, ['fakeroot', 'make'],
-            "../build.$testname");
+        my $res= chdir_runcmd(
+            $targetdir,
+            [
+                'fakeroot', 'make',
+                "DEFAULT_DH_COMPAT=$testdata->{dh_compat_level}"
+            ],
+            "../build.$testname"
+        );
         if ($res) {
             $test_state->dump_log("${RUNDIR}/${suite}/build.${testname}")
               if $DUMP_LOGS;

@@ -7,7 +7,7 @@ all:
 	cp changelog copyright control rules $(dir)/debian/
 	mv $(dir)/debian/changelog $(dir)/debian/changelog.old
 	ln -s changelog.old $(dir)/debian/changelog
-	echo 7 > $(dir)/debian/compat
+	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	mkdir $(dir)/debian/source
 	echo '3.0 (quilt)' > $(dir)/debian/source/format
 	tar cfz $(name)_1.tar.gz $(dir)

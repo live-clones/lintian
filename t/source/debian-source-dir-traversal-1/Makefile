@@ -7,7 +7,7 @@ all:
 	cp changelog copyright control rules $(dir)/debian/
 	# prevent patch-system-but-no-source-readme
 	echo "Hallo World" > $(dir)/debian/README.source
-	echo 7 > $(dir)/debian/compat
+	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	mkdir $(dir)/debian/source
 	echo 1.0 > $(dir)/debian/source/format
 	# link to index file for the lab entry

@@ -7,7 +7,7 @@ all:
 	mkdir $(dir)/debian
 	mkdir $(dir)/debian/source
 	echo "1.0" > $(dir)/debian/source/format
-	echo 7 > $(dir)/debian/compat
+	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	cp changelog copyright control rules $(dir)/debian/
 	tar cfz $(dsc)_1.tar.gz $(dir)
 	subst-dsc $(dsc)_1.tar.gz < dsc.in > $(dsc)_1.dsc
