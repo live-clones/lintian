@@ -494,7 +494,7 @@ sub parse_license {
     }else {
         $short_license = $license_block;
     }
-    $short_license =~ s/[(),]//;
+    $short_license =~ s/[(),]/ /g;
     if ($short_license =~ m/\A\s*\Z/) {
         tag 'empty-short-license-in-dep5-copyright',
           "(paragraph at line $line)";
