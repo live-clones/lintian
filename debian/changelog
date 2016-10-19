@@ -24,7 +24,7 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * data/files/privacy-breaker-tag-attr:
     + [BR] Apply patch from Frederic Bonnard detecting audio tags.
       (Closes: #840009)
-  * data/spelling/corrections:
+  * data/spelling/corrections*:
     + [JW, PW] Add more corrections.
 
   * lib/Lintian/Unpacker.pm:
