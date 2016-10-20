@@ -11,6 +11,9 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * checks/init.d.pm:
     + [JW] Don't require version constraint for lsb-base dependencies.
       The needed version has been available for many stable releases.
+  * checks/shared-libs.pm:
+    + [JW] Don't complain about executable bit for ld.so shipped in
+      multi-arch directories.
   * checks/source-copyright.pm:
     + [RA, JW] Fix handling punctuation characters in license expressions
       in machine-readable copyright files.  (Closes: #841356)

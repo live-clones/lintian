@@ -151,7 +151,7 @@ sub run {
                 # special.
                 tag 'shlib-with-executable-bit', $cur_file, $perms
                   unless ($objdump->{$cur_file}{INTERP}
-                    or $cur_file =~ m,^lib(?:32|64)?/ld-[\d.]+\.so$,);
+                    or $cur_file =~ m,^lib.*/ld-[\d.]+\.so$,);
             } elsif ($perm != 0644) {
                 tag 'shlib-with-bad-permissions', $cur_file, $perms;
             }
