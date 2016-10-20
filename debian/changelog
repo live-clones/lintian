@@ -8,6 +8,8 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * checks/fields.{pm,desc}:
     + [NT] Apply patch from Dylan Aïssi to tag non-canonical uses of
       the bioconductor homepage in the Homepage field.  (Closes: #839874)
+    + [JW] Apply patch from Dylan Aïssi to tag r-other packages not in
+      section "gnu-r".  (Closes: #841455)
   * checks/init.d.pm:
     + [JW] Don't require version constraint for lsb-base dependencies.
       The needed version has been available for many stable releases.
