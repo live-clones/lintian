@@ -3,8 +3,8 @@ CC=gcc
 NOPICOBJS=non-pic.o
 SONAME:=libbaz3.so.1
 
-NOPIC_CFLAGS = $(filter-out -fPIE,$(CFLAGS))
-NOPIC_LDFLAGS = $(filter-out -fPIE -pie,$(LDFLAGS))
+NOPIC_CFLAGS = $(CFLAGS) -fno-PIE
+NOPIC_LDFLAGS = $(LDFLAGS) -fno-PIE -fno-pie
 
 all: libbaz3.so.1.0.3b
 
