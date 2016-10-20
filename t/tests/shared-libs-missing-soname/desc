@@ -1,0 +1,6 @@
+Testname: shared-libs-missing-soname
+Version: 1.0
+Test-Depends: debhelper (>= 9.20151004~)
+Description: Test for shlib without SONAME
+Test-For:
+ sharedobject-in-library-directory-missing-soname

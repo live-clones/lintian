@@ -424,7 +424,7 @@ sub objdump_info {
                 }
             } elsif ($header eq 'NEEDED' or $header eq 'SONAME') {
                 push @{ $info{$header} }, $val;
-            } elsif ($header eq 'TEXTREL') {
+            } elsif ($header eq 'TEXTREL' or $header eq 'DEBUG') {
                 $info{$header} = 1;
             } elsif ($header eq 'FLAGS_1') {
                 for my $flag (split(m/\s++/, $val)) {

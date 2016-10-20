@@ -16,6 +16,9 @@ lintian (2.5.49) UNRELEASED; urgency=medium
   * checks/shared-libs.pm:
     + [JW] Don't complain about executable bit for ld.so shipped in
       multi-arch directories.
+    + [JW] Don't complain about missing SONAME for position-independent
+      executables.  Thanks to Reuben Thomas for the bug report.
+      (Closes: #731987)
   * checks/source-copyright.pm:
     + [RA, JW] Fix handling punctuation characters in license expressions
       in machine-readable copyright files.  (Closes: #841356)

@@ -173,7 +173,7 @@ while (my $line = <$readelf>) {
             $value =~ s/.*\[//;
             $value =~ s/\]\s*$//;
             $keep = 1;
-        } elsif ($type eq 'TEXTREL') {
+        } elsif ($type eq 'TEXTREL' or $type eq 'DEBUG') {
             $keep = 1;
         } elsif ($type eq 'FLAGS_1') {
             # Will contain "NOW" if the binary was built with -Wl,-z,now
