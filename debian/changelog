@@ -19,6 +19,7 @@ lintian (2.5.49) UNRELEASED; urgency=medium
     + [JW] Don't complain about missing SONAME for position-independent
       executables.  Thanks to Reuben Thomas for the bug report.
       (Closes: #731987)
+    + [JW] Check for PT_GNU_STACK existence on all architectures.
   * checks/source-copyright.pm:
     + [RA, JW] Fix handling punctuation characters in license expressions
       in machine-readable copyright files.  (Closes: #841356)

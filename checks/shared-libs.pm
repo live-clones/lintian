@@ -36,19 +36,6 @@ use Lintian::Util qw(fail strip);
 # one of the following names.
 my $HWCAP_DIRS = Lintian::Data->new('shared-libs/hwcap-dirs');
 
-# The following architectures should always have a STACK setting in shared
-# libraries to disable executable stack.  Other architectures don't always add
-# this section and therefore can't be checked.
-my %stack_arches = map { $_ => 1 }qw(
-  alpha
-  amd64
-  i386
-  m68k
-  powerpc
-  s390
-  sparc
-);
-
 # List of symbols file meta-fields.
 my %symbols_meta_fields = map { $_ => 1 }qw(
   Build-Depends-Package
@@ -162,15 +149,11 @@ sub run {
                 tag 'shlib-with-bad-permissions', $cur_file, $perms;
             }
 
-            # executable stack.  We can only warn about a missing
-            # section on some architectures.  Only warn if there's an
-            # Architecture field; if that's missing, we'll already be
-            # complaining elsewhere.
+            # executable stack.
             if (not defined $objdump->{$cur_file}{'PH'}{STACK}) {
                 if (defined $info->field('architecture')) {
                     my $arch = $info->field('architecture');
-                    tag 'shlib-without-PT_GNU_STACK-section', $cur_file
-                      if $stack_arches{$arch};
+                    tag 'shlib-without-PT_GNU_STACK-section', $cur_file;
                 }
             } elsif ($objdump->{$cur_file}{'PH'}{STACK}{flags} ne 'rw-'){
                 tag 'shlib-with-executable-stack', $cur_file;
