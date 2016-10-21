@@ -1,6 +1,6 @@
 Last generated 2016-10-21
-Coverage (Tags): 1102/1170 (94.19%), w. legacy tests: 1157/1170 (98.89%)
-Coverage (Checks): 39/50 (78.00%), w. legacy tests: 42/50 (84.00%)
+Coverage (Tags): 1103/1170 (94.27%), w. legacy tests: 1158/1170 (98.97%)
+Coverage (Checks): 39/50 (78.00%), w. legacy tests: 43/50 (86.00%)
 
 The following tags are not tested by the test suite:
 
@@ -22,8 +22,6 @@ menu-format whitespace-after-continuation-character
 
 menus executable-in-usr-share-docbase
 menus executable-menu-file
-
-shared-libs shlib-without-PT_GNU_STACK-section
 
 The following tags are only tested by the legacy test suite:
 
