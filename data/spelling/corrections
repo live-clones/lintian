@@ -384,6 +384,7 @@ asynchonously||asynchronously
 asyncronous||asynchronous
 asyncronously||asynchronously
 atomatically||automatically
+atomical||atomic
 atomicly||atomically
 attachement||attachment
 attatch||attach
@@ -964,6 +965,8 @@ defininitions||definitions
 definitly||definitely
 defintion||definition
 defintions||definitions
+defition||definition
+defitions||definitions
 defualt||default
 defult||default
 deivce||device
@@ -1966,6 +1969,9 @@ intepret||interpret
 inteprets||interprets
 interace||interface
 interaces||interfaces
+interal||internal
+interally||internally
+interals||internals
 interanl||internal
 interanlly||internally
 interator||iterator
@@ -2405,6 +2411,10 @@ ouputted||outputted
 ouputting||outputting
 outputing||outputting
 outut||output
+oveflowed||overflowed
+oveflowing||overflowing
+oveflow||overflow
+oveflows||overflows
 overaall||overall
 overidden||overridden
 overiden||overridden
