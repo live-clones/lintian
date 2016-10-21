@@ -1,5 +1,5 @@
-Last generated 2016-09-19
-Coverage (Tags): 1096/1165 (94.08%), w. legacy tests: 1152/1165 (98.88%)
+Last generated 2016-10-21
+Coverage (Tags): 1102/1170 (94.19%), w. legacy tests: 1157/1170 (98.89%)
 Coverage (Checks): 39/50 (78.00%), w. legacy tests: 42/50 (84.00%)
 
 The following tags are not tested by the test suite:
@@ -83,7 +83,6 @@ menus postrm-does-not-call-updatemenus
 po-debconf newer-debconf-templates
 po-debconf unknown-encoding-in-po-file
 
-shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
 shared-libs udeb-postinst-must-not-call-ldconfig
@@ -129,7 +128,6 @@ debconf
 
 debug
   binary-with-bad-dynamic-table
-  sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib
   symbols-declares-dependency-on-other-package
   unknown-meta-field-in-symbols-file
