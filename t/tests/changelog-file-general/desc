@@ -12,4 +12,5 @@ Test-For:
  improbable-bug-number-in-closes
  latest-debian-changelog-entry-without-new-date
  latest-debian-changelog-entry-without-new-version
+ misspelled-closes-bug
  possible-missing-colon-in-closes
