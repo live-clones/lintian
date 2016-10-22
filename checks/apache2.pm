@@ -39,7 +39,6 @@ sub run {
     # whether the package appears to be an Apache2 module/web application
     my $seen_apache2_special_file = 0;
 
-    if ($type eq 'binary') {
         foreach my $file ($info->sorted_index) {
 
             # File is probably not relevant to us, ignore it
@@ -89,7 +88,6 @@ sub run {
         if ($seen_apache2_special_file) {
             check_maintainer_scripts($info);
         }
-    }
     return;
 }
 
