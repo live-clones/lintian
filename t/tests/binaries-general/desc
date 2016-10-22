@@ -8,6 +8,7 @@ Test-For:
  binary-or-shlib-defines-rpath
  debug-file-should-use-detached-symbols
  debug-file-with-no-debug-symbols
+ debug-package-should-be-named-dbg
  debug-symbols-directly-in-usr-lib-debug
  library-in-debug-or-profile-should-not-be-stripped
  ocaml-custom-executable
