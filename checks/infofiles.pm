@@ -37,7 +37,7 @@ sub run {
     foreach my $file ($info_dir->children('breadth-first')) {
         # NB: file_info can be undef (e.g. symlinks)
         my $file_info = $file->file_info // '';
-        my $fname = $file->name;
+        my $fname = $file->basename;
 
         next unless $file->is_symlink or $file->is_file;
 
