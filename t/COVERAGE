@@ -1,5 +1,5 @@
 Last generated 2016-10-22
-Coverage (Tags): 1105/1170 (94.44%), w. legacy tests: 1160/1170 (99.15%)
+Coverage (Tags): 1106/1170 (94.53%), w. legacy tests: 1161/1170 (99.23%)
 Coverage (Checks): 41/50 (82.00%), w. legacy tests: 45/50 (90.00%)
 
 The following tags are not tested by the test suite:
@@ -8,7 +8,6 @@ deb-format tar-errors-from-control
 
 debhelper debhelper-compatibility-level-not-a-number
 
-files debug-package-should-be-named-dbg
 files udeb-contains-documentation-file
 
 menu-format menu-item-contains-unknown-tag
