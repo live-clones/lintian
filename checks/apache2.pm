@@ -39,55 +39,55 @@ sub run {
     # whether the package appears to be an Apache2 module/web application
     my $seen_apache2_special_file = 0;
 
-        foreach my $file ($info->sorted_index) {
+    foreach my $file ($info->sorted_index) {
 
-            # File is probably not relevant to us, ignore it
-            next if $file->is_dir;
-            next if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
+        # File is probably not relevant to us, ignore it
+        next if $file->is_dir;
+        next if $file !~ m#^(?:usr/lib/apache2/modules/|etc/apache2/)#;
 
-            # Package installs an unrecognized file - check this for all files
-            if (    $file !~ m#\.conf$#
-                and $file =~ m#^etc/apache2/(conf|site|mods)-available/(.*)$#){
-                my $temp_type = $1;
-                my $temp_file = $2;
-                # ... except modules which are allowed to ship .load files
-                tag 'apache2-configuration-files-need-conf-suffix', $file
-                  unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
-            }
+        # Package installs an unrecognized file - check this for all files
+        if (    $file !~ m#\.conf$#
+            and $file =~ m#^etc/apache2/(conf|site|mods)-available/(.*)$#){
+            my $temp_type = $1;
+            my $temp_file = $2;
+            # ... except modules which are allowed to ship .load files
+            tag 'apache2-configuration-files-need-conf-suffix', $file
+              unless $temp_type eq 'mods' and $temp_file =~ m#\.load#;
+        }
 
-            # Package appears to be a binary module
-            if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
-                check_module_package($pkg, $info, $1);
-                $seen_apache2_special_file++;
-            }
+        # Package appears to be a binary module
+        if ($file =~ m#^usr/lib/apache2/modules/(.*)\.so#) {
+            check_module_package($pkg, $info, $1);
+            $seen_apache2_special_file++;
+        }
 
-            # Package appears to be a web application
-            elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
-                check_web_application_package($pkg, $info, $file, $1, $2);
-                $seen_apache2_special_file++;
-            }
+        # Package appears to be a web application
+        elsif ($file =~ m#^etc/apache2/(conf|site)-available/(.*)$#) {
+            check_web_application_package($pkg, $info, $file, $1, $2);
+            $seen_apache2_special_file++;
+        }
 
-            # Package appears to be a legacy web application
-            elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
-                tag 'apache2-reverse-dependency-uses-obsolete-directory',$file;
-                check_web_application_package($pkg, $info, $file,'conf', $1);
-                $seen_apache2_special_file++;
-            }
+        # Package appears to be a legacy web application
+        elsif ($file =~ m#^etc/apache2/conf\.d/(.*)$#) {
+            tag 'apache2-reverse-dependency-uses-obsolete-directory',$file;
+            check_web_application_package($pkg, $info, $file,'conf', $1);
+            $seen_apache2_special_file++;
+        }
 
-            # Package does scary things
-            elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
+        # Package does scary things
+        elsif ($file =~ m#^etc/apache2/(?:conf|sites|mods)-enabled/.*$#) {
 #<<< no perltidy (tag name is too long to fit)
-                tag 'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
-                  $file;
+            tag 'apache2-reverse-dependency-ships-file-in-not-allowed-directory',
+              $file;
 #>>>
-                $seen_apache2_special_file++;
-            }
-
+            $seen_apache2_special_file++;
         }
 
-        if ($seen_apache2_special_file) {
-            check_maintainer_scripts($info);
-        }
+    }
+
+    if ($seen_apache2_special_file) {
+        check_maintainer_scripts($info);
+    }
     return;
 }
 
