@@ -6,9 +6,9 @@ Test-For:
  arch-dependent-file-in-usr-share
  binary-compiled-with-profiling-enabled
  binary-or-shlib-defines-rpath
- debug-symbols-directly-in-usr-lib-debug
  debug-file-should-use-detached-symbols
  debug-file-with-no-debug-symbols
+ debug-symbols-directly-in-usr-lib-debug
  library-in-debug-or-profile-should-not-be-stripped
  ocaml-custom-executable
  statically-linked-binary
