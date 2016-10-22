@@ -293,18 +293,49 @@ sub operm {
     return $self->{'_path_info'} & OPERM_MASK;
 }
 
-=item children
+=item children([RECURSIVE_MODE])
 
 Returns a list of children (as Lintian::Path objects) of this entry.
 The list and its contents should not be modified.
+
+The optional RECURSIVE_MODE parameter can be used to control if and
+how descendants of this directory is selected.  The following values
+are supported:
+
+=over 4
+
+=item direct
+
+This is the default and only returns direct children of this
+directory.  The entries are sorted by name.
+
+=item breadth-first
+
+Recursive into subdirectories and return the descendants in
+breadth-first order.  Children of a given directory will be sorted by
+name.
+
+=back
 
 NB: Returns the empty list for non-dir entries.
 
 =cut
 
 sub children {
-    my ($self) = @_;
-    return @{$self->{'_sorted_children'} };
+    my ($self, $recursive) = @_;
+    return @{$self->{'_sorted_children'} }
+      if not defined($recursive)
+      or $recursive eq 'direct';
+    croak("Unsupported recursive mode ${recursive}")
+      if $recursive ne 'breadth-first';
+    my @all = @{$self->{'_sorted_children'} };
+    my @remaining_dirs = grep { $_->is_dir } @all;
+    while (my $dir = shift(@remaining_dirs)) {
+        my @children = $dir->children;
+        push(@all, @children);
+        push(@remaining_dirs, grep { $_->is_dir } @children);
+    }
+    return @all;
 }
 
 =item timestamp
