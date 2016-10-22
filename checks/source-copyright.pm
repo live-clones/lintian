@@ -352,16 +352,14 @@ sub _parse_dep5 {
                                 # Special-case => Files: *
                                 push(@wlist, get_all_files($info));
                             } else {
-                                push(@wlist, $dir->children);
+                                push(@wlist,
+                                    grep { $_->is_file }
+                                      $dir->children('breadth-first'));
                             }
+                            $used = 1 if @wlist;
                         }
-                        while (my $entry = pop(@wlist)) {
-                            if ($entry->is_file) {
-                                $used = 1;
-                                $file_coverage{$entry->name} = $current_line;
-                            } elsif ($entry->is_dir) {
-                                push(@wlist, $entry->children);
-                            }
+                        for my $entry (@wlist) {
+                            $file_coverage{$entry->name} = $current_line;
                         }
                     } else {
                         for my $srcfile (%file_coverage) {
