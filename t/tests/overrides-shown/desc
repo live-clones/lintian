@@ -6,3 +6,4 @@ Options: --pedantic --show-overrides -I -E
 Sort: no
 Architecture: any
 Description: Test override handling
+Test-For: renamed-tag

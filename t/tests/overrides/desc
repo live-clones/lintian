@@ -5,3 +5,4 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Description: Test override handling
 Architecture: any
+Test-For: renamed-tag
