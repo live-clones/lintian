@@ -43,9 +43,11 @@ sub run {
     my (undef, undef, $info) = @_;
 
     # non-service checks
-    for my $file ($info->sorted_index) {
-        if ($file =~ m,^etc/tmpfiles\.d/.*\.conf$,) {
-            tag 'systemd-tmpfiles.d-outside-usr-lib', $file;
+    if (my $tmpfiles = $info->index_resolved_path('etc/tmpfiles.d/')) {
+        for my $file ($tmpfiles->children('breadth-first')) {
+            if ($file->basename =~ m,\.conf$,) {
+                tag 'systemd-tmpfiles.d-outside-usr-lib', $file;
+            }
         }
     }
 
