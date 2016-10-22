@@ -1,6 +1,8 @@
-lintian (2.5.49) UNRELEASED; urgency=medium
+lintian (2.5.49) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - homepage-for-bioconductor-package-not-canonical
 
   * checks/debhelper.desc:
     + [CL] Drop double leading spaces in includes-maint-script-parameters
@@ -52,7 +54,7 @@ lintian (2.5.49) UNRELEASED; urgency=medium
     + [JW] Pass -fno-PIE and -fno-pie to GCC, so that the test works even
       when the compiler enables PIE by default.  (Closes: #841442)
 
- -- Chris Lamb <lamby@debian.org>  Thu, 06 Oct 2016 19:04:23 +0100
+ -- Niels Thykier <niels@thykier.net>  Sat, 22 Oct 2016 13:42:28 +0000
 
 lintian (2.5.48) unstable; urgency=low
 
