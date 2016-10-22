@@ -27,20 +27,19 @@ use autodie;
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail open_gz normalize_pkg_path);
 
-use File::Basename qw(fileparse);
-
 sub run {
     my (undef, undef, $info) = @_;
+    my $info_dir = $info->index_resolved_path('usr/share/info/');
+
+    return if not $info_dir;
 
     # Read package contents...
-    foreach my $file ($info->sorted_index) {
+    foreach my $file ($info_dir->children('breadth-first')) {
         # NB: file_info can be undef (e.g. symlinks)
         my $file_info = $file->file_info // '';
-        my ($fname, $path) = fileparse($file);
+        my $fname = $file->name;
 
-        next
-          unless ($file->is_symlink or $file->is_file)
-          and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
+        next unless $file->is_symlink or $file->is_file;
 
         # Ignore dir files.  That's a different error which we already catch in
         # the files check.
