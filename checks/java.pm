@@ -243,8 +243,12 @@ sub run {
     my $is_transitional = $info->is_pkg_class('transitional');
     if (!$has_public_jars && !$is_transitional && $pkg =~ /^lib[^\s,]+-java$/){
         # Skip this if it installs a symlink in usr/share/java
-        return if any { m@^usr/share/java/[^/]+\.jar$@o } $info->sorted_index;
-        tag 'javalib-but-no-public-jars';
+        my $java_dir = $info->index_resolved_path('usr/share/java/');
+        my $has_jars = 0;
+        $has_jars = 1
+          if $java_dir
+          and any { $_->name =~ m@^[^/]+\.jar$@o } $java_dir->children;
+        tag 'javalib-but-no-public-jars' if not $has_jars;
     }
 
     return;
