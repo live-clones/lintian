@@ -398,6 +398,10 @@ Certainty: certain
 Info: This package provides an ELF executable that was not compiled
  as a position independent executable (PIE).
  .
+ In Debian, gcc-6 as of version 6.2.0-9 will compile ELF binaries with
+ PIE by default.  In most cases a simple rebuild will be sufficient to
+ remove this tag.
+ .
  PIE is required for fully enabling Address Space Layout
  Randomization (ASLR), which makes "Return-oriented" attacks more
  difficult.
@@ -413,14 +417,6 @@ Info: This package provides an ELF executable that was not compiled
  The relevant compiler flags must be passed both to the compiler
  and the linker (e.g. for C that would be commonly be
  <tt>CFLAGS</tt> and <tt>LDFLAGS</tt>).
- .
- CAVEAT: Please keep in mind that the PIE flag (-fPIE) is not
- suitable for all cases:
- .
-  * It is <i>not</i> compatible with -fPIC which required for
-    compiling shared libraries.
-  * It is unlikely to work when compiling static libraries or
-    executables (<tt>gcc -static</tt>).
  .
  If your upstream build compiles either of the above, you may have to
  patch the build to ensure that only ELF executables are compiled with
