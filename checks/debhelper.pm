@@ -134,8 +134,8 @@ sub run {
             $seencommand = 1;
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
-            while (m/\s--with(?:=|\s+)(\S+)/go) {
-                my $addon_list = $1;
+            while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
+                my $addon_list = $2;
                 for my $addon (split(m/,/o, $addon_list)) {
                     $addon =~ y,-,_,;
                     my $depends =$dh_addons_manual->value($addon)

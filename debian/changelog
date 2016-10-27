@@ -5,6 +5,10 @@ lintian (2.5.50) UNRELEASED; urgency=medium
   * checks/binaries.desc:
     + [NT] Update hardening-no-pie description to reflect that
       PIE is on by default in Debian.
+  * checks/debhelper.pm
+    + [BR] Apply patch from Yann Soubeyrand :
+      "Allow debhelper "--with" addons to be quoted".
+      (Closes: #839822)
 
   * data/spelling/corrections:
     + [PW] Add more corrections.
