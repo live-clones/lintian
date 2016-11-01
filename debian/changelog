@@ -54,6 +54,8 @@ lintian (2.5.50) UNRELEASED; urgency=medium
       (Closes: #743599)
   * data/spelling/corrections:
     + [PW] Add more corrections.
+  * data/spelling/corrections-case:
+    + [EG] Correct spelling of Lua (Closes: #842781)
 
   * helpers/coll/objdump-info-helper:
     + [NT] Extract RUNPATH from binaries as well.
