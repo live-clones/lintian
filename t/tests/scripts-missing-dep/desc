@@ -7,6 +7,6 @@ Test-For: wish-script-but-no-wish-dep
  maintainer-script-needs-depends-on-adduser
  maintainer-script-needs-depends-on-update-inetd
  mawk-script-but-no-mawk-dep
- php-script-but-no-phpX-cli-dep
+ php-script-but-no-php-cli-dep
  python-script-but-no-python-dep
  tclsh-script-but-no-tclsh-dep

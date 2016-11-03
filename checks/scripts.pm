@@ -390,6 +390,12 @@ sub run {
             }
             script_tag('unusual-interpreter', $filename, "#!$interpreter")
               unless $pinter;
+
+            # This allows us to still perform the dependencies checks
+            # below even when an unusual interpreter has been found.
+            if ($base =~ /^php/) {
+                $data = $INTERPRETERS->value('php');
+            }
         }
 
         # Check for obsolete perl libraries
@@ -432,7 +438,9 @@ sub run {
                 $depends = $base;
             }
             if ($depends && !$all_parsed->implies($depends)) {
-                if ($base =~ /^(python|ruby|[mg]awk)$/) {
+                if ($base =~ /^php/) {
+                    tag 'php-script-but-no-php-cli-dep', $filename;
+                } elsif ($base =~ /^(python|ruby|[mg]awk)$/) {
                     tag("$base-script-but-no-$base-dep", $filename);
                 } elsif ($base eq 'csh' && $filename =~ m,^etc/csh/login\.d/,){
                     # Initialization files for csh.
@@ -459,9 +467,7 @@ sub run {
             unshift(@depends, $data->[1]) if length $data->[1];
             my $depends = join(' | ',  @depends);
             unless ($all_parsed->implies($depends)) {
-                if ($base eq 'php') {
-                    tag 'php-script-but-no-phpX-cli-dep', $filename;
-                } elsif ($base =~ /^(wish|tclsh)/) {
+                if ($base =~ /^(wish|tclsh)/) {
                     tag "$1-script-but-no-$1-dep", $filename;
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
@@ -473,9 +479,7 @@ sub run {
             my $depends = $data->[3];
             $depends =~ s/\$1/$version/g;
             unless ($all_parsed->implies($depends)) {
-                if ($base =~ /^php/) {
-                    tag 'php-script-but-no-phpX-cli-dep', $filename;
-                } elsif ($base =~ /^(python|ruby)/) {
+                if ($base =~ /^(python|ruby)/) {
                     tag "$1-script-but-no-$1-dep", $filename;
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",

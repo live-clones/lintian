@@ -217,24 +217,16 @@ Info: Packages that use mawk scripts must depend on the mawk package.
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
-Tag: php-script-but-no-phpX-cli-dep
+Tag: php-script-but-no-php-cli-dep
 Severity: important
 Certainty: certain
-Info: Packages with PHP scripts must depend on a phpX-cli package such as
- php5-cli.  Note that a dependency on a php-cgi package (such as php5-cgi)
+Info: Packages with PHP scripts must depend on the php-cli package.
+ Note that a dependency on a php-cgi package (such as php-cgi or php7.0-cgi)
  is needlessly strict and forces the user to install a package that isn't
  needed.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
- .
- Lintian can only recognize phpX-cli dependencies for values of X that it
- knows are available in the archive.  You will get this warning if you
- allow, as alternatives, versions of PHP that are so old they're not
- available in stable.  The correct fix in those cases is probably to drop
- the old alternative.  If this package depends on a newer php-cli package
- that Lintian doesn't know about, please file a bug against Lintian so
- that it can be updated.
 
 Tag: python-script-but-no-python-dep
 Severity: important

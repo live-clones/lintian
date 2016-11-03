@@ -1,6 +1,6 @@
 E: scripts-missing-dep: gawk-script-but-no-gawk-dep usr/bin/gawk-script
 E: scripts-missing-dep: mawk-script-but-no-mawk-dep usr/bin/mawk-script
-E: scripts-missing-dep: php-script-but-no-phpX-cli-dep usr/bin/php-script
+E: scripts-missing-dep: php-script-but-no-php-cli-dep usr/bin/php-script
 E: scripts-missing-dep: python-script-but-no-python-dep usr/bin/python-script
 E: scripts-missing-dep: ruby-script-but-no-ruby-dep usr/bin/ruby-script
 E: scripts-missing-dep: tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script

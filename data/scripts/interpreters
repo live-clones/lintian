@@ -68,6 +68,7 @@ parrot         => /usr/bin
 perl           => /usr/bin, @NODEPS@
 perl6          => /usr/bin, rakudo
 perl6-m        => /usr/bin, rakudo
+php            => /usr/bin, php-cli
 plackup        => /usr/bin, libplack-perl
 procmail       => /usr/bin
 pypy           => /usr/bin

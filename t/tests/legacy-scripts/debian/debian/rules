@@ -66,8 +66,8 @@ binary-indep:
 	install -m 755 init-lsb-other $(tmp)/etc/init.d/lsb-other
 
 	install -m 755 phpfoo $(tmp)/usr/share/scripts/
-	sed 's/php$$/php5/' phpfoo > $(tmp)/usr/share/scripts/php5foo
-	chmod 755 $(tmp)/usr/share/scripts/php5foo
+	sed 's/php$$/php7.0/' phpfoo > $(tmp)/usr/share/scripts/php7.0foo
+	chmod 755 $(tmp)/usr/share/scripts/php7.0foo
 
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in
