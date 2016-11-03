@@ -69,6 +69,10 @@ binary-indep:
 	sed 's/php$$/php7.0/' phpfoo > $(tmp)/usr/share/scripts/php7.0foo
 	chmod 755 $(tmp)/usr/share/scripts/php7.0foo
 
+	install -m 755 phpenvfoo $(tmp)/usr/share/scripts/
+	sed 's/php$$/php7.0/' phpenvfoo > $(tmp)/usr/share/scripts/php7.0envfoo
+	chmod 755 $(tmp)/usr/share/scripts/php7.0envfoo
+
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in
 

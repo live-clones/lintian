@@ -14,7 +14,9 @@ E: scripts: init.d-script-needs-depends-on-lsb-base etc/init.d/skeleton (line 40
 E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken)
 E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo)
 E: scripts: package-installs-python-bytecode usr/lib/python2.3/site-packages/test.pyc
+E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0envfoo
 E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo
+E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo
 E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpfoo
 E: scripts: python-script-but-no-python-dep usr/bin/py2.Xfoo
 E: scripts: python-script-but-no-python-dep usr/bin/py2foo
@@ -90,9 +92,10 @@ W: scripts: maintainer-script-has-unexpanded-debhelper-token preinst
 W: scripts: maintainer-script-ignores-errors postinst
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 W: scripts: non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
+W: scripts: php-script-with-unusual-interpreter usr/share/scripts/php7.0envfoo php7.0
+W: scripts: php-script-with-unusual-interpreter usr/share/scripts/php7.0foo /usr/bin/php7.0
 W: scripts: script-uses-bin-env usr/bin/envfoo
 W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4555 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4751 root/root
 W: scripts: unusual-interpreter usr/bin/suidperlfoo #!/usr/bin/suidperl
-W: scripts: unusual-interpreter usr/share/scripts/php7.0foo #!/usr/bin/php7.0

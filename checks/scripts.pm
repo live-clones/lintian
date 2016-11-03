@@ -373,6 +373,13 @@ sub run {
             script_tag('interpreter-in-usr-local', $filename,"#!$interpreter");
         } elsif ($interpreter eq '/bin/env') {
             script_tag('script-uses-bin-env', $filename);
+        } elsif ($base =~ /^php/) {
+            script_tag('php-script-with-unusual-interpreter',
+                $filename, "$interpreter");
+
+            # This allows us to still perform the dependencies checks
+            # below even when an unusual interpreter has been found.
+            $data = $INTERPRETERS->value('php');
         } else {
             my $pinter = 0;
             if ($interpreter =~ m,^/,) {
@@ -391,11 +398,6 @@ sub run {
             script_tag('unusual-interpreter', $filename, "#!$interpreter")
               unless $pinter;
 
-            # This allows us to still perform the dependencies checks
-            # below even when an unusual interpreter has been found.
-            if ($base =~ /^php/) {
-                $data = $INTERPRETERS->value('php');
-            }
         }
 
         # Check for obsolete perl libraries
