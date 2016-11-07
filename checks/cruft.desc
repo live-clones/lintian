@@ -762,7 +762,7 @@ Info: The following file source files include material under a
  by repacking.
  .
  If this is a false-positive, please report a bug against Lintian.
-Ref: https://bugs.debian.org/823100
+Ref: #823100
 
 Tag: license-problem-md5sum-non-distributable-file
 Severity: serious
