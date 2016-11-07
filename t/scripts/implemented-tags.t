@@ -49,6 +49,7 @@ our $EXCLUDE =join(
       ^maintainer-script-may-.*$
       ^install-info-used-in-maintainer-script$
       ^license-problem-cc-by-nc-sa$
+      ^license-problem-convert-utf-code$
       ^license-problem-json-evil$
       ^license-problem-non-free-RFC$
       ^license-problem-non-free-RFC-BCP78$

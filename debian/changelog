@@ -2,6 +2,9 @@ lintian (2.5.50) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/cruft.desc:
+    + [BR] Detect utf convert non free code.
+      (Closes: #843595)
   * checks/binaries.desc:
     + [NT] Update hardening-no-pie description to reflect that
       PIE is on by default in Debian.

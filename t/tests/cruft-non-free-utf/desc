@@ -1,0 +1,4 @@
+Testname: cruft-non-free-utf
+Version: 1.0
+Description: Check for non free utf
+Test-For: license-problem-convert-utf-code
