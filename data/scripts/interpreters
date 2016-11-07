@@ -73,6 +73,7 @@ plackup        => /usr/bin, libplack-perl
 procmail       => /usr/bin
 pypy           => /usr/bin
 python         => /usr/bin, python:any | python-minimal:any
+python2        => /usr/bin, python:any | python-minimal:any
 pforth         => /usr/bin
 racket         => /usr/bin
 rake           => /usr/bin
