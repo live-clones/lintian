@@ -17,6 +17,7 @@ E: scripts: package-installs-python-bytecode usr/lib/python2.3/site-packages/tes
 E: scripts: php-script-but-no-phpX-cli-dep usr/share/scripts/php5foo
 E: scripts: php-script-but-no-phpX-cli-dep usr/share/scripts/phpfoo
 E: scripts: python-script-but-no-python-dep usr/bin/py2.Xfoo
+E: scripts: python-script-but-no-python-dep usr/bin/py2foo
 E: scripts: python-script-but-no-python-dep usr/bin/pyfoo
 E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
 E: scripts: wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
@@ -33,6 +34,7 @@ I: scripts: init.d-script-does-not-provide-itself etc/init.d/lsb-broken
 I: scripts: init.d-script-missing-lsb-short-description etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2.Xfoo
+I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
 W: scripts source: ancient-standards-version 3.2.1 (current is CURRENT)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
@@ -56,6 +58,7 @@ W: scripts: binary-without-manpage usr/bin/perl-bizarre-2
 W: scripts: binary-without-manpage usr/bin/perl-bizarre-3
 W: scripts: binary-without-manpage usr/bin/perlfoo
 W: scripts: binary-without-manpage usr/bin/py2.Xfoo
+W: scripts: binary-without-manpage usr/bin/py2foo
 W: scripts: binary-without-manpage usr/bin/pyfoo
 W: scripts: binary-without-manpage usr/bin/rubyfoo
 W: scripts: binary-without-manpage usr/bin/sh-broken

@@ -33,6 +33,9 @@ binary-indep:
 	install -m 755 py2.Xfoo $(tmp)/usr/bin/
 # This uses "env" and should trigger script-in-usr-share-doc
 	install -m 755 py2.Xfoo $(tmp)/usr/share/doc/scripts/
+	install -m 755 py2foo $(tmp)/usr/bin/
+# This uses "env" and should trigger script-in-usr-share-doc
+	install -m 755 py2foo $(tmp)/usr/share/doc/scripts/
 	install -m 755 perlfoo $(tmp)/usr/bin/
 	install -m 755 rubyfoo $(tmp)/usr/bin/
 # This doesn't use "env" but should also trigger script-in-usr-share-doc
