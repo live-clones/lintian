@@ -1,0 +1,8 @@
+C: version-substvars-obsolete source: maybe-not-arch-all-binnmuable program-bin -> program-data-extra
+E: version-substvars-obsolete source: not-binnmuable-all-depends-any program-data-extra -> program-bin
+E: version-substvars-obsolete source: not-binnmuable-any-depends-all program-bin -> program-data
+E: version-substvars-obsolete source: not-binnmuable-any-depends-all program-utils -> program-data
+E: version-substvars-obsolete source: not-binnmuable-any-depends-any program-utils -> program-bin
+E: version-substvars-obsolete source: version-substvar-for-external-package program-data -> foreign-pkg
+E: version-substvars-obsolete source: version-substvar-for-external-package program-data -> other-foreign-pkg
+W: version-substvars-obsolete source: substvar-source-version-is-deprecated program-data

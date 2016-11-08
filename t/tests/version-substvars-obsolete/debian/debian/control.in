@@ -20,7 +20,7 @@ Description: {$description}
 Package: program-data
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         foreign-pkg:any (= $\{source:Version\})
+         foreign-pkg:any (= $\{Source-Version\})
 Replaces: other-foreign-pkg:any (<< $\{binary:Version\})
 Description: {$description} - data
  This is a test package designed to exercise some feature or tag of

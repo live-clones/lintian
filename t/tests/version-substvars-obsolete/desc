@@ -1,0 +1,13 @@
+Testname: version-substvars-obsolete
+Version: 1.0
+Description: Test of substvars
+Options: -L +classification -C version-substvars
+Test-For:
+ maybe-not-arch-all-binnmuable
+ not-binnmuable-all-depends-any
+ not-binnmuable-any-depends-all
+ not-binnmuable-any-depends-any
+ substvar-source-version-is-deprecated
+ version-substvar-for-external-package
+# dpkg 1.18.11 Will error out for ${source-version}
+Test-Depends: dpkg (<< 1.17.2)
