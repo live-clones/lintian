@@ -7,5 +7,4 @@ Test-For:
  not-binnmuable-all-depends-any
  not-binnmuable-any-depends-all
  not-binnmuable-any-depends-any
- substvar-source-version-is-deprecated
  version-substvar-for-external-package
