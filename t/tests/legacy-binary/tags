@@ -1,6 +1,5 @@
 E: binary source: debian-rules-missing-required-target binary-indep
 E: binary source: not-binnmuable-all-depends-any binary-data -> binary
-E: binary source: not-binnmuable-any-depends-all binary -> binary-data
 E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
@@ -70,8 +69,6 @@ W: binary source: intra-source-package-circular-dependency binary binary-data
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
 W: binary source: package-would-benefit-from-build-arch-targets
-W: binary source: substvar-source-version-is-deprecated binary
-W: binary source: substvar-source-version-is-deprecated binary-data
 W: binary-data: control-file-is-empty md5sums
 W: binary-data: empty-binary-package
 W: binary: binary-without-manpage usr/bin/hello
