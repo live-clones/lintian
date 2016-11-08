@@ -37,7 +37,7 @@ Description: test handling of library packages (good)
 
 Package: libbaz2-dev
 Architecture: any
-Depends: ${shlibs:Depends}, libbaz2 (= ${Source-Version})
+Depends: ${shlibs:Depends}, libbaz2 (= ${source:Version})
 Description: development package (good)
  Regression test for lintian's handling of libraries (dev good).
  .

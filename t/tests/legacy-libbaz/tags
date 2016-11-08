@@ -1,5 +1,7 @@
 E: libbaz source: not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
+E: libbaz source: not-binnmuable-any-depends-any libbaz2-dev -> libbaz2
 E: libbaz source: weak-library-dev-dependency libbaz1-dev on libbaz1 (= ${source:Version})
+E: libbaz source: weak-library-dev-dependency libbaz2-dev on libbaz2 (= ${source:Version})
 E: libbaz1-dev: missing-dependency-on-libc needed by usr/lib/ma-dir/perl/version/auto/Foo/Foo.so
 E: libbaz1: control-file-has-bad-permissions shlibs 0755 != 0644
 E: libbaz1: control-file-has-bad-permissions symbols 0755 != 0644
@@ -46,7 +48,6 @@ W: libbaz source: debhelper-but-no-misc-depends libbaz2-dev
 W: libbaz source: native-package-with-dash-version
 W: libbaz source: package-uses-deprecated-debhelper-compat-version 6
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
-W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
 W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
 W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz.so usr/lib/libbaz.so
 W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz3.so.1.0.3b usr/lib/libbaz3.so
