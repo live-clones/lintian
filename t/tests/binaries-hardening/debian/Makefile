@@ -1,13 +1,13 @@
 # turn off PIE in CC in case we have a PIEful toolchain:
-ifneq ($(findstring -no-pie,$(shell gcc -no-pie 2>&1)),)
-  CC := gcc
+ifneq ($(findstring -no-pie,$(shell ${CC} -no-pie 2>&1)),)
+  CCWEAK := ${CC}
 else
-  CC := gcc -fno-pie -no-pie
+  CCWEAK := ${CC} -fno-pie -no-pie
 endif
 
 all: weak.1 strong.1
 	# Build without dpkg-buildflags.
-	$(CC) -o weak -g \
+	$(CCWEAK) -o weak -g \
 		-fno-stack-protector \
 		-Wl,-z,norelro \
 		-U_FORTIFY_SOURCE \
