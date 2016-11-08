@@ -2,3 +2,5 @@ Testname: deb-format-udeb-compression
 Version: 1.0
 Description: Test of compression of udeb data member
 Test-For: udeb-uses-unsupported-compression-for-data-tarball
+# dpkg 1.18.1 Will warn for us
+Test-Depends: dpkg (<< 1.18.11)
