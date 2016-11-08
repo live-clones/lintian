@@ -92,7 +92,7 @@ ncurses   ||Not enough memory to create terminal structure
 nspr      ||(?m)^Unable to create nspr log file
 nss       ||(?m)^My Encrytion Test Data
 openjpeg  ||tcd_decode: incomplete bit?stream
-openssl   ||You need to read the OpenSSL FAQ
+openssl   ||source-regex=openssl(?:\d+(?:\.\d+)?)?||You need to read the OpenSSL FAQ
 pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
 poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing anyway\)|PDF file is damaged - attempting to reconstruct xref table\.\.\.)
 srtp      ||srtp: in stream 0x%x:
