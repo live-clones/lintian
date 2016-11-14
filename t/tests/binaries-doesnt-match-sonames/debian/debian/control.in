@@ -33,3 +33,15 @@ Description: {$description} with gcc 5 version
  things.  It should not be installed like a regular package.
  .
  It test if v5 string are correctly escaped
+
+Package: libanyq16-6
+Architecture: any
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} with Q16 version
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ It test if string are correctly escaped like for imagemagick.
+ .
+ library name is not libanyQ166
