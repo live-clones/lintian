@@ -253,7 +253,7 @@ sub run {
     $base_pkg =~ s/c2a?\b//o;
     $base_pkg =~ s/\dg$//o;
     $base_pkg =~ s/gf$//o;
-    $base_pkg =~ s/v5$//o; # GCC-5 / libstdc++6 C11 ABI breakage
+    $base_pkg =~ s/v[5-6]$//o; # GCC-5 / libstdc++6 C11 ABI breakage
     $base_pkg =~ s/-udeb$//o;
     $base_pkg =~ s/^lib64/lib/o;
 
