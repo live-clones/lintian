@@ -2,7 +2,7 @@ CC=gcc
 MYCFLAGS=-Wall -Winline -O2 -fPIC
 CFLAGS:=$(MYCFLAGS) $(CPPFLAGS) $(CFLAGS)
 
-SONAMES:= libany.so.1 libanygcc.so.1v6
+SONAMES:= libany.so.1 libany6gcc.so.1v6 libany5gcc.so.1
 LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
 
 all: $(LIBFILES)
