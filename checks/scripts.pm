@@ -298,6 +298,10 @@ sub run {
             && !$is_absolute
             && $in_examples);
 
+        # Skip upstream source code shipped in /usr/share/cargo/registry/
+        next
+          if $filename =~ m,^usr/share/cargo/registry/,;
+
         if ($interpreter eq '') {
             script_tag('script-without-interpreter', $filename);
             next;

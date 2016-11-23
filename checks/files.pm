@@ -1218,6 +1218,8 @@ sub run {
             and not $fname =~ m,^usr/share/man/(?:[^/]+/)?man\d/,o
             # liblicense (again)
             and not $fname =~ m,^usr/share/pyshared-data/,o
+            # Rust crate unmodified upstream sources
+            and not $fname =~ m,^usr/share/cargo/registry/,o
             # Some GNOME/GTK software uses these to show the "license
             # header".
             and not $fname =~ m,
@@ -1365,7 +1367,8 @@ sub run {
             }
 
             # ---------------- vcs control files
-            if ($fname =~ m,$VCS_FILES_OR_ALL,) {
+            if (    $fname =~ m,$VCS_FILES_OR_ALL,
+                and $fname !~ m,^usr/share/cargo/registry/,) {
                 tag 'package-contains-vcs-control-file', $file;
             }
 
