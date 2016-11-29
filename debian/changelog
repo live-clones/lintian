@@ -2,6 +2,8 @@ lintian (2.5.50) UNRELEASED; urgency=medium
 
   XXX: generate tag summary with private/generate-tag-summary
 
+  * checks/binaries.{desc,pm}:
+    + [NT] Handle RUNPATH like we handle RPATH.  (Closes: #844903)
   * checks/cruft.desc:
     + [BR] Detect utf convert non free code.
       (Closes: #843595)
@@ -13,12 +15,21 @@ lintian (2.5.50) UNRELEASED; urgency=medium
       "Allow debhelper "--with" addons to be quoted".
       (Closes: #839822)
 
+  * collection/objdump-info.desc:
+    + [NT] Bump version due to RUNPATH collection.
+
   * data/binaries/embedded-libs:
     + [BR] Allow openssl1.0 as source package.  (Closes: #843406).
   * data/spelling/corrections:
     + [PW] Add more corrections.
   * data/files/privacy-breaker-websites:
     + [BR] Detect more logos.
+
+  * helpers/coll/objdump-info-helper:
+    + [NT] Extract RUNPATH from binaries as well.
+
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Expose RUNPATH when set in the binary.
 
  -- Niels Thykier <niels@thykier.net>  Wed, 26 Oct 2016 20:42:18 +0000
 

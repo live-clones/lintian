@@ -68,16 +68,17 @@ Tag: binary-or-shlib-defines-rpath
 Severity: serious
 Certainty: possible
 Ref: https://wiki.debian.org/RpathIssue
-Info: The binary or shared library sets RPATH.  This overrides the normal
- library search path, possibly interfering with local policy and causing
- problems for multilib, among other issues.
+Info: The binary or shared library sets RPATH or RUNPATH.  This
+ overrides the normal library search path, possibly interfering with
+ local policy and causing problems for multilib, among other issues.
  .
- The only time a binary or shared library in a Debian package should set
- RPATH is if it is linked to private shared libraries in the same package.
- In that case, place those private shared libraries in
- <tt>/usr/lib/<i>package</i></tt>.  Libraries used by binaries in other
- packages should be placed in <tt>/lib</tt> or <tt>/usr/lib</tt> as
- appropriate, with a proper SONAME, in which case RPATH is unnecessary.
+ The only time a binary or shared library in a Debian package should
+ set RPATH or RUNPATH is if it is linked to private shared libraries
+ in the same package.  In that case, place those private shared
+ libraries in <tt>/usr/lib/<i>package</i></tt>.  Libraries used by
+ binaries in other packages should be placed in <tt>/lib</tt> or
+ <tt>/usr/lib</tt> as appropriate, with a proper SONAME, in which case
+ RPATH/RUNPATH is unnecessary.
  .
  To fix this problem, look for link lines like:
      gcc test.o -o test -Wl,--rpath,/usr/local/lib

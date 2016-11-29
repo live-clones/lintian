@@ -169,7 +169,7 @@ while (my $line = <$readelf>) {
         my ($type, $value) = ($1, $2);
         my $keep = 0;
 
-        if ($type eq 'RPATH') {
+        if ($type eq 'RPATH' or $type eq 'RUNPATH') {
             $value =~ s/.*\[//;
             $value =~ s/\]\s*$//;
             $keep = 1;

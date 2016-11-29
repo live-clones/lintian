@@ -416,7 +416,7 @@ sub run {
         }
 
         # rpath is disallowed, except in private directories
-        if (exists $objdump->{RPATH}) {
+        if (exists($objdump->{RPATH}) or exists($objdump->{RUNPATH})) {
             if (not %directories) {
                 for my $file ($info->sorted_index) {
                     my $name;
@@ -426,11 +426,10 @@ sub run {
                     $directories{"/$name"}++;
                 }
             }
+            my @rpaths
+              = (keys(%{$objdump->{RPATH}}),keys(%{$objdump->{RUNPATH}}),);
 
-            foreach my $rpath (
-                map {File::Spec->canonpath($_)}
-                keys %{$objdump->{RPATH}}
-              ) {
+            foreach my $rpath (map {File::Spec->canonpath($_)}@rpaths) {
                 next
                   if $rpath
                   =~ m,^/usr/lib/(?:$madir/)?(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z),;
