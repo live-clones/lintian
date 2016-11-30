@@ -13,6 +13,11 @@ lintian (2.5.50) UNRELEASED; urgency=medium
     + [BR] Apply patch from Yann Soubeyrand :
       "Allow debhelper "--with" addons to be quoted".
       (Closes: #839822)
+  * checks/files.desc:
+    + [NT] Document that we no longer accept "virtual packages"
+      for deliberately empty packages.  If your package receives
+      an "empty-binary-package" tag, please replace the use of
+      "virtual package".
   * checks/scripts.{desc,pm}:
     + [JW, NT] Apply patch from Antonio Ospite that updates the
       test for php scripts without a php-cli dependency.  Thanks
@@ -40,6 +45,9 @@ lintian (2.5.50) UNRELEASED; urgency=medium
 
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Expose RUNPATH when set in the binary.
+    + [NT] Remove "virtual package" from the list of phrases
+      marking a package as a meta-package.  Thanks to Stuart
+      Prescott for the report.  (Closes: #685029)
 
  -- Niels Thykier <niels@thykier.net>  Wed, 26 Oct 2016 20:42:18 +0000
 

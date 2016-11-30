@@ -670,8 +670,7 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
 {
     # Regexes to try against the package description to find metapackages or
     # transitional packages.
-    my $METAPKG_REGEX
-      = qr/meta[ -]?package|dummy|(?:dependency|empty|virtual) package/;
+    my $METAPKG_REGEX= qr/meta[ -]?package|dummy|(?:dependency|empty) package/;
 
     sub is_pkg_class {
         my ($self, $pkg_class) = @_;

@@ -1518,6 +1518,11 @@ Info: This binary package appears to be empty, and its description does
  If the package is deliberately empty, please mention in the package long
  description one of the phrases "metapackage", "dummy", "dependency
  package", or "empty package".
+ .
+ Previously, lintian also accepted the use of "virtual package".  This
+ was removed to avoid overloading the term.  If you have been relying on
+ the phrase "virtual package" to avoid this warning, please replace it
+ with one of the others.
 
 Tag: empty-udeb-package
 Severity: minor
