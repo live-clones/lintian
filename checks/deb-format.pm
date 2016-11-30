@@ -130,17 +130,6 @@ sub run {
                 $failed = 1;
             } elsif ($ctrl_member eq 'control.tar') {
                 tag 'uses-no-compression-for-control-tarball';
-                # NB: We deliberately do not allow "data.tar",
-                # since various tools seems to be unable to cope
-                # with them particularly dak
-                # see https://wiki.debian.org/Teams/Dpkg/DebSupport
-                tag 'malformed-deb-archive','newer uncompressed control.tar';
-            } elsif ($ctrl_member eq 'control.tar.xz') {
-                # NB: We deliberately do not allow "data.tar",
-                # since various tools seems to be unable to cope
-                # with them particularly dak
-                # see https://wiki.debian.org/Teams/Dpkg/DebSupport
-                tag 'malformed-deb-archive','newer compressed control.tar.xz';
             }
         }
 
@@ -172,11 +161,6 @@ sub run {
                 tag 'uses-deprecated-compression-for-data-tarball', 'bzip2';
             } elsif ($data_member eq 'data.tar') {
                 tag 'uses-no-compression-for-data-tarball';
-                # NB: We deliberately do not allow "data.tar",
-                # since various tools seems to be unable to cope
-                # with them particularly dak
-                # see https://wiki.debian.org/Teams/Dpkg/DebSupport
-                tag 'malformed-deb-archive','newer uncompressed data.tar';
             }
         }
     } else {

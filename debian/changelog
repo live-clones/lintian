@@ -9,6 +9,10 @@ lintian (2.5.50) UNRELEASED; urgency=medium
   * checks/cruft.desc:
     + [BR] Detect utf convert non free code.
       (Closes: #843595)
+  * checks/deb-format.pm:
+    + [NT] Permit uncompressed {control,data}.tar members plus xz
+      compressed control.tar files in deb files.  Thanks to
+      Guillem Jover for the report.  (Closes: #834867)
   * checks/debhelper.pm:
     + [BR] Apply patch from Yann Soubeyrand :
       "Allow debhelper "--with" addons to be quoted".

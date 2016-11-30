@@ -1,4 +1,0 @@
-Testname: deb-format-control-xz
-Version: 1.0
-Description: Test package with control.tar.xz
-Test-Depends: dpkg (>= 1.17.6)
