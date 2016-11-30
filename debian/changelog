@@ -26,6 +26,12 @@ lintian (2.5.50) UNRELEASED; urgency=medium
     + [BR] Allow openssl1.0 as source package.  (Closes: #843406).
   * data/files/privacy-breaker-websites:
     + [BR] Detect more logos.
+  * data/scripts/interpreters:
+    + [NT] Apply patch from Antonio Ospite to correct a false
+      positive warning for python scripts using python2 in the
+      shebang line.  Thanks to Per Andersson for the report and
+      Luca Boccassi for the initial patch for solving this.
+      (Closes: #743599)
   * data/spelling/corrections:
     + [PW] Add more corrections.
 
