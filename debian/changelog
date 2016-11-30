@@ -22,6 +22,9 @@ lintian (2.5.50) UNRELEASED; urgency=medium
       for deliberately empty packages.  If your package receives
       an "empty-binary-package" tag, please replace the use of
       "virtual package".
+  * checks/manpages.pm:
+    + [JW, NT] Fix false negative manpage-named-after-build-path
+      for packages built by sbuild.  (Closes: #801760)
   * checks/scripts.{desc,pm}:
     + [JW, NT] Apply patch from Antonio Ospite that updates the
       test for php scripts without a php-cli dependency.  Thanks

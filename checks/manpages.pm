@@ -81,7 +81,7 @@ sub run {
             or ($path =~ m,^usr/share/man(/\S+),o));
         my $t = $1;
 
-        if ($file =~ m/_build_buildd/ or $file =~ /_tmp_buildd/) {
+        if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
             tag 'manpage-named-after-build-path', $file;
         }
 
