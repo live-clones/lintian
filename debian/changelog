@@ -36,6 +36,10 @@ lintian (2.5.50) UNRELEASED; urgency=medium
 
   * data/binaries/embedded-libs:
     + [BR] Allow openssl1.0 as source package.  (Closes: #843406).
+  * data/debhelper/dh_commands-manual:
+    + [NT] Apply patch from Piotr Ożarowski that ensure that
+      consumers of dh_python2 Build-Depends on dh-python.
+      (Closes: #740161)
   * data/files/privacy-breaker-websites:
     + [BR] Detect more logos.
   * data/scripts/interpreters:
