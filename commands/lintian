@@ -152,14 +152,6 @@ sub timed_task(&);
 
 # {{{ Setup Code
 
-#turn off file buffering
-STDOUT->autoflush;
-binmode(STDOUT, ':utf8');
-
-# Globally ignore SIGPIPE.  We'd rather deal with error returns from write
-# than randomly delivered signals.
-$SIG{PIPE} = 'IGNORE';
-
 sub lintian_version {
     # Version number - Is inserted during build with sed, see d/rules
     my $LINTIAN_VERSION;
@@ -620,6 +612,14 @@ main();
 
 sub main {
     my ($pool);
+
+    #turn off file buffering
+    STDOUT->autoflush;
+    binmode(STDOUT, ':utf8');
+
+    # Globally ignore SIGPIPE.  We'd rather deal with error returns from write
+    # than randomly delivered signals.
+    $SIG{PIPE} = 'IGNORE';
 
     parse_options();
 
