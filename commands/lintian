@@ -229,6 +229,7 @@ Behaviour options:
     -E, --display-experimental display "X:" tags (normally suppressed)
     --no-display-experimental suppress "X:" tags
     --fail-on-warnings        return a non-zero exit status if warnings found
+                              (Deprecated)
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
@@ -650,6 +651,10 @@ sub main {
     $ENV{'TMPDIR'} = $opt{'TMPDIR'} if defined($opt{'TMPDIR'});
 
     configure_output();
+
+    if ($opt{'fail-on-warnings'}) {
+        warning('--fail-on-warnings is deprecated');
+    }
 
     # check for arguments
     if (    $action =~ /^(?:check|unpack)$/
@@ -1297,6 +1302,11 @@ sub parse_config_file {
                     print STDERR " in $opt{'LINTIAN_CFG'} (line: $.)",
                       " - Using the first value!\n";
                     next;
+                }
+                if ($var eq 'fail-on-warnings') {
+                    print STDERR "The config option ${var} is deprecated\n";
+                    print STDERR
+                      " - Found in $opt{'LINTIAN_CFG'} (line: $.)\n";
                 }
                 $conf_opt{$var} = 1;
                 $found = 1;

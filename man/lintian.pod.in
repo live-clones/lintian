@@ -223,6 +223,8 @@ warnings or errors are found.
 This option overrides the B<fail-on-warnings> variable in the
 configuration file.
 
+This option is deprecated and will be removed in the near future.
+
 =item B<-i>, B<--info>
 
 Print explanatory information about each problem discovered in

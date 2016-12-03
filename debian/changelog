@@ -34,6 +34,10 @@ lintian (2.5.50) UNRELEASED; urgency=medium
   * collection/objdump-info.desc:
     + [NT] Bump version due to RUNPATH collection.
 
+  * commands/lintian:
+    + [NT] Deprecate --fail-on-warnings, which will be removed in
+      Debian/buster.
+
   * data/binaries/embedded-libs:
     + [BR] Allow openssl1.0 as source package.  (Closes: #843406).
   * data/debhelper/dh_commands-manual:
