@@ -334,9 +334,9 @@ Info: The "Section:" field in this package's control file is not one of
  admin, comm, cli-mono, database, debug, devel, doc,
  editors, electronics, embedded, fonts, games, gnome, gnu-r,
  gnustep, graphics, hamradio, haskell, httpd, interpreters,
- java, kde, libdevel, libs, lisp, localization, kernel, mail,
+ java, javascript, kde, libdevel, libs, lisp, localization, kernel, mail,
  math, misc, net, news, ocaml, oldlibs, otherosfs, perl,
- php, python, ruby, science, shells, sound, tex, text,
+ php, python, ruby, rust, science, shells, sound, tex, text,
  utils, vcs, video, web, x11, xfce, zope.
  .
  The section name should be preceded by "non-free/" if the package
