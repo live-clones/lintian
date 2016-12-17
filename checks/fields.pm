@@ -36,7 +36,11 @@ use Lintian::Check qw(check_maintainer);
 use Lintian::Relation qw(:constants);
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw($PKGNAME_REGEX);
+use Lintian::Util qw($PKGNAME_REGEX $PKGVERSION_REGEX);
+
+use constant {
+    BUILT_USING_REGEX => qr/^$PKGNAME_REGEX \(= $PKGVERSION_REGEX\)$/o,
+};
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
@@ -933,6 +937,22 @@ sub run {
                 }
             }
         }
+    }
+
+    #---- Built-Using
+    if (defined(my $built_using = $info->field('built-using'))) {
+        my $built_using_rel = Lintian::Relation->new($built_using);
+        $built_using_rel->visit(
+            sub {
+                if ($_ !~ BUILT_USING_REGEX) {
+                    tag 'invalid-value-in-built-using-field', $_;
+                    return 1;
+                }
+                return 0;
+            },
+            VISIT_OR_CLAUSE_FULL | VISIT_STOP_FIRST_MATCH
+        );
+
     }
 
     #---- Package relations (source package)

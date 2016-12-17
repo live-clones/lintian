@@ -17,6 +17,9 @@ lintian (2.5.50) UNRELEASED; urgency=medium
     + [BR] Apply patch from Yann Soubeyrand :
       "Allow debhelper "--with" addons to be quoted".
       (Closes: #839822)
+  * checks/files.{desc,pm}:
+    + [NT] Check for invalid clauses in "Built-Using" fields.  Thanks to
+      Andrey Rahmatullin for the suggestion.  (Closes: #847558)
   * checks/files.desc:
     + [NT] Document that we no longer accept "virtual packages"
       for deliberately empty packages.  If your package receives

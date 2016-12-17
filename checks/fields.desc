@@ -1333,3 +1333,15 @@ Info: The Homepage field for this package points to an uncanonical Bioconductor 
  not:
  .
  https://www.bioconductor.org/packages/(release|devel|*)/bioc/html/foo.html
+
+Tag: invalid-value-in-built-using-field
+Severity: serious
+Certainty: certain
+Info: The Built-Using field contains invalid fields.
+ .
+ The Built-Using field must consist of simple <tt>source (=
+ version)</tt> clauses.  Notably, it must use a strictly equal in the
+ relation.
+ .
+ Only first issue is shown.
+Ref: policy 7.8
