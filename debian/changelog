@@ -126,6 +126,8 @@ lintian (2.5.49) unstable; urgency=medium
   * lib/Lintian/Util.pm:
     + [NT] Add a "do_fork()" sub to ensure signal handling is
       reset for child processes.
+    + [NT] Add $PKGVERSION_REGEX variable containing a regex matching
+      valid versions.
 
   * t/tests/shared-libs-non-pic-i386/debian/Makefile:
     + [JW] Pass -fno-PIE and -fno-pie to GCC, so that the test works even

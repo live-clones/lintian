@@ -91,7 +91,9 @@ BEGIN {
           unix_locale_split
           pipe_tee
           untaint
-          $PKGNAME_REGEX),
+          $PKGNAME_REGEX
+          $PKGVERSION_REGEX
+          ),
         @{ $EXPORT_TAGS{constants} });
 }
 
@@ -212,6 +214,20 @@ is not anchored and does not enforce any "boundary" characters.
 =cut
 
 our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/o;
+
+=item $PKGVERSION_REGEX
+
+Regular expression that matches valid package versions.  The
+expression is not anchored and does not enforce any "boundary"
+characters.
+
+=cut
+
+our $PKGVERSION_REGEX = qr/
+                 (?: \d+ : )?                # Optional epoch
+                 [0-9][0-9A-Za-z.+:~]*       # Upstream version (with no hyphens)
+                 (?: - [0-9A-Za-z.+:~]+ )*   # Optional debian revision (+ upstreams versions with hyphens)
+                          /xoa;
 
 =back
 
