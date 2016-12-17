@@ -66,6 +66,13 @@ lintian (2.5.50) UNRELEASED; urgency=medium
       marking a package as a meta-package.  Thanks to Stuart
       Prescott for the report.  (Closes: #685029)
 
+  * profiles/kali/main.profile:
+    + [NT] Add a profile for Kali Linux.  Thanks to Raphaël
+      Hertzog for the report.  (Closes: #847318)
+
+  * vendors/kali/main/data/changes-file/known-dists:
+    + [NT] Add data file for Kali Linux.
+
  -- Niels Thykier <niels@thykier.net>  Wed, 26 Oct 2016 20:42:18 +0000
 
 lintian (2.5.49) unstable; urgency=medium
