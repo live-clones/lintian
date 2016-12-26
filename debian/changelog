@@ -1,6 +1,14 @@
-lintian (2.5.50) UNRELEASED; urgency=medium
+lintian (2.5.50) unstable; urgency=medium
 
-  XXX: generate tag summary with private/generate-tag-summary
+  * Summary of tag changes:
+    + Added:
+      - invalid-value-in-built-using-field
+      - license-problem-convert-utf-code
+      - new-package-should-not-package-python2-module
+      - php-script-but-no-php-cli-dep
+      - php-script-with-unusual-interpreter
+    + Removed:
+      - php-script-but-no-phpX-cli-dep
 
   * checks/binaries.{desc,pm}:
     + [NT] Handle RUNPATH like we handle RPATH.  (Closes: #844903)
@@ -88,7 +96,7 @@ lintian (2.5.50) UNRELEASED; urgency=medium
   * vendors/kali/main/data/changes-file/known-dists:
     + [NT] Add data file for Kali Linux.
 
- -- Niels Thykier <niels@thykier.net>  Wed, 26 Oct 2016 20:42:18 +0000
+ -- Niels Thykier <niels@thykier.net>  Mon, 26 Dec 2016 16:07:20 +0000
 
 lintian (2.5.49) unstable; urgency=medium
 
