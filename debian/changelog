@@ -9,6 +9,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [BR] Do not report duplicates for package-installs-apt-preferences
       and package-installs-apt-sources.  (Closes: #814521).
 
+  * lib/Lintian/CheckScript.pm:
+    + [NT] Remove fallback code for "old" style "pm"-less checks.
+
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
 
 lintian (2.5.50) unstable; urgency=medium
