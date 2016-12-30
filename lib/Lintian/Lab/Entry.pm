@@ -31,8 +31,8 @@ Lintian::Lab::Entry - A package inside the Lab
  my $lab = Lintian::Lab->new ("dir");
  my $lpkg = $lab->get_package ("name", "type", "version", "arch");
  
- # create the entry if it does not exist
- $lpkg->create unless $lpkg->exists;
+ # create the entry
+ $lpkg->create;
  
  # obtain a Lintian::Collect object.
  my $info = $lpkg->info;
@@ -279,7 +279,7 @@ sub create {
         # If $base_dir exists, then check if the entry exists
         # - this is optimising for "non-existence" which is
         #   often the common case.
-        return 1 if $self->exists;
+        return 0 if $self->exists;
     }
     if ($pkg_type eq 'changes'){
         $link = "$base_dir/changes";

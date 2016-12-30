@@ -212,15 +212,11 @@ sub prepare_tasks {
     my ($self, $errorhandler, @lpkgs) = @_;
     my %worklists;
     foreach my $lpkg (@lpkgs) {
-        my $changed = 0;
-        my $cmap;
-        my $needed;
+        my ($changed, $cmap, $needed);
 
-        if ($lpkg->exists) {
-            # It already exists, do nothing.
-            1;
-        } elsif (not $lpkg->create){
-            eval {$errorhandler->($lpkg);};
+        eval {$changed = $lpkg->create;};
+        if (my $e = $@) {
+            eval {$errorhandler->($lpkg, $e);};
             if ($@) {
                 # The error handler croaked; attempt to write status
                 # files for entries we created.
@@ -236,9 +232,6 @@ sub prepare_tasks {
                 die $err;
             }
             next;
-        } else {
-            # created
-            $changed = 1;
         }
 
         ($cmap, $needed) = $self->_requested_colls($lpkg, $changed);
