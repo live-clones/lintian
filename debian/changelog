@@ -2,6 +2,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.desc:
+    + [BR] Document long line tagged source-is-missing as a feature
+      not a bug.  (Closes: #849470).
+
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
 
 lintian (2.5.50) unstable; urgency=medium
