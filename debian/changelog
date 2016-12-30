@@ -5,6 +5,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * checks/cruft.desc:
     + [BR] Document long line tagged source-is-missing as a feature
       not a bug.  (Closes: #849470).
+  * checks/files.pm:
+    + [BR] Do not report duplicates for package-installs-apt-preferences
+      and package-installs-apt-sources.  (Closes: #814521).
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
 

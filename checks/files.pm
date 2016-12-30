@@ -458,13 +458,13 @@ sub run {
             # /etc/apt
             if ($fname =~ m,^etc/apt/,) {
                 # -----------------/etc/apt/preferences
-                if ($fname =~ m,^etc/apt/preferences(?:$|\.d/),) {
+                if ($fname =~ m,^etc/apt/preferences(?:$|\.d/[^/]+),) {
                     unless ($source_pkg eq 'apt') {
                         tag 'package-installs-apt-preferences', $file;
                     }
                 }
                 # -----------------/etc/apt/sources
-                if ($fname =~ m,^etc/apt/sources\.list(?:$|\.d/),) {
+                if ($fname =~ m,^etc/apt/sources\.list(?:$|\.d/[^/]+),) {
                     unless ($source_pkg eq 'apt') {
                         tag 'package-installs-apt-sources', $file;
                     }

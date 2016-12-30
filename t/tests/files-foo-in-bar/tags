@@ -48,9 +48,7 @@ E: files-foo-in-bar: package-contains-mime-file-outside-package-dir usr/share/mi
 E: files-foo-in-bar: package-contains-thumbnails-dir usr/share/doc/files-foo-in-bar/.thumbnails/
 E: files-foo-in-bar: package-contains-xvpics-dir usr/share/doc/files-foo-in-bar/.xvpics/
 E: files-foo-in-bar: package-installs-apt-preferences etc/apt/preferences
-E: files-foo-in-bar: package-installs-apt-preferences etc/apt/preferences.d/
 E: files-foo-in-bar: package-installs-apt-preferences etc/apt/preferences.d/bar
-E: files-foo-in-bar: package-installs-apt-sources etc/apt/sources.list.d/
 E: files-foo-in-bar: package-installs-apt-sources etc/apt/sources.list.d/bar
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/bin/
