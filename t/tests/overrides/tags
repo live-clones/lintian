@@ -1,5 +1,5 @@
 I: overrides: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:12 /usr/info/
 I: overrides: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:13 /usr/man/
 I: overrides: FSSTND-dir-in-manual-page usr/share/man/man1/foo.1.gz:14 /usr/adm/
-N: 12 tags overridden (2 errors, 1 warning, 9 info)
+N: 11 tags overridden (1 error, 1 warning, 9 info)
 P: overrides: renamed-tag package-install-apt-sources => package-installs-apt-sources at line 18
