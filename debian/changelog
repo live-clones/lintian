@@ -1,3 +1,9 @@
+lintian (2.5.51) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
+
 lintian (2.5.50) unstable; urgency=medium
 
   * Summary of tag changes:
