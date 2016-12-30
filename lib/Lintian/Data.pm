@@ -23,10 +23,22 @@ use warnings;
 use autodie;
 
 use Carp qw(croak confess);
+use POSIX qw(ENOENT);
 
 use Lintian::Util qw(strip);
 
 our $LAZY_LOAD = 1;
+
+sub _checked_open {
+    my ($path) = @_;
+    my $fd;
+    eval {open($fd, '<', $path);};
+    if (my $err = $@) {
+        die($err) if not ref $err or $err->errno != ENOENT;
+        return;
+    }
+    return $fd;
+}
 
 sub new {
     my ($class, @args) = @_;
@@ -107,24 +119,24 @@ sub new {
     # - $start is an index into $vendors (the first $vendor to try)
     sub _open_data_file {
         my ($self, $data_name, $vendors, $start) = @_;
-        my $file;
+        my ($fd, $file);
         my $cur = $start;
 
       OUTER: for (; $cur < scalar @$vendors ; $cur++) {
             my $vendorpart = "vendors/$vendors->[$cur]/data/$data_name";
             foreach my $datafile ($profile->include_path($vendorpart)) {
-                if (-f $datafile) {
-                    $file = $datafile;
-                    last OUTER;
-                }
+                $fd =_checked_open($datafile);
+                next if not $fd;
+                $file = $datafile;
+                last OUTER;
             }
         }
         if (not defined $file and $cur == scalar @$vendors) {
             foreach my $datafile ($profile->include_path("data/$data_name")) {
-                if (-f $datafile) {
-                    $file = $datafile;
-                    last;
-                }
+                $fd =_checked_open($datafile);
+                next if not $fd;
+                $file = $datafile;
+                last;
             }
             $cur++;
         }
@@ -132,7 +144,6 @@ sub new {
             croak "Unknown data file: $data_name" unless $start;
             croak "No parent data file for $vendors->[$start]";
         }
-        open(my $fd, '<', "$file");
         return ($fd, $cur);
     }
 }
