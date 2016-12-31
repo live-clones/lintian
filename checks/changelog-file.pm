@@ -149,15 +149,9 @@ sub run {
     }
 
     # is this a native Debian package?
-    my $version;
-    if (defined $info->field('version')) {
-        $version = $info->field('version');
-    } else {
-        # We do not know, but we assume it to be non-native
-        # as that is most likely.
-        $version = '0-1';
-    }
-
+    # If the version is missing, we assume it to be non-native
+    # as it is the most likely case.
+    my $version = $info->field('version', '0-1');
     $native_pkg  = $info->native;
     $foreign_pkg = (!$native_pkg && $version !~ m/-0\./);
     # A version of 1.2.3-0.1 could be either, so in that
