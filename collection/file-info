@@ -41,10 +41,6 @@ sub collect {
 
     my $outfile = "$dir/file-info.gz";
 
-    if (-e "$dir/file-info") {
-        unlink("$dir/file-info");
-    }
-
     if (-e $outfile) {
         unlink($outfile);
     }

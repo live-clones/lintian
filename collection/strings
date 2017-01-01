@@ -40,10 +40,6 @@ sub collect {
     my ($pkg, $type, $dir) = @_;
     my ($info, @manual, %opts);
 
-    if (-e "$dir/elf-index") {
-        unlink("$dir/elf-index");
-    }
-
     if (-d "$dir/strings") {
         delete_dir("$dir/strings") or fail "rmdir strings: $!";
     }

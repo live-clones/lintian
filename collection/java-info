@@ -39,14 +39,10 @@ sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    # Sanity check
     unless (-d "$dir/unpacked/") {
         fail 'java-info called with the wrong dir argument';
     }
 
-    if (-f "$dir/java-info") {
-        unlink("$dir/java-info");
-    }
     if (-f "$dir/java-info.gz") {
         unlink("$dir/java-info.gz");
     }
