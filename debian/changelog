@@ -8,6 +8,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [BR] Do not report duplicates for package-installs-apt-preferences
       and package-installs-apt-sources.  (Closes: #814521).
+  * checks/menu-format.desc:
+    + [NT] Update the reference to Desktop Entry Specification to point
+      to version 1.1.
 
   * lib/Lintian/CheckScript.pm:
     + [NT] Remove fallback code for "old" style "pm"-less checks.
