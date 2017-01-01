@@ -15,6 +15,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * lib/Lintian/CheckScript.pm:
     + [NT] Remove fallback code for "old" style "pm"-less checks.
 
+  * frontend/dplint:
+    + [NT] Ensure all include directories are absolute before passing
+      them on to the actual command.
+
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
 
 lintian (2.5.50) unstable; urgency=medium
