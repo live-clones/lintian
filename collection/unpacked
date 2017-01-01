@@ -177,7 +177,7 @@ sub extract_and_index_deb {
         @jobs,
         {
             '_pipeline' => [
-                ['tar', '--utc', '--full-time', '-tvf', '-'], '|',
+                ['tar', '--utc', '--full-time', '-stvf', '-'], '|',
                 @sort_gzip, '&'
             ],
             'fail' => 'error',
@@ -189,8 +189,10 @@ sub extract_and_index_deb {
     push(
         @jobs,
         {
-            '_pipeline' =>[
-                ['tar', '--utc', '--full-time', '--numeric-owner', '-tvf','-'],
+            '_pipeline' =>[[
+                    'tar', '--utc', '--full-time', '--numeric-owner', '-stvf',
+                    '-'
+                ],
                 '|',
                 @sort_gzip,
                 '&'

@@ -90,7 +90,7 @@ sub collect {
     push(@jobs, $job);
     # create index of control.tar.gz
     spawn(
-        $job, ['tar', 'tvf', '-'],'|', ['sort', '-k', '6'],
+        $job, ['tar', '-stvf', '-'],'|', ['sort', '-k', '6'],
         '|', ['gzip', '-9nc'],
     );
 
