@@ -74,12 +74,10 @@ given, translations for the check will be loaded as well.
 sub new {
     my ($class, $basedir, $checkname, $profile, $lang) = @_;
     my ($header, @tags) = read_dpkg_control_utf8("$basedir/${checkname}.desc");
-    my ($self, $dir, $name);
+    my ($self, $name);
     unless ($name = $header->{'check-script'}) {
         croak "Missing Check-Script field in $basedir/${checkname}.desc";
     }
-    $dir = realpath($basedir)
-      or croak "Cannot resolve $basedir: $!";
 
     $self = {
         'name' => $header->{'check-script'},
@@ -92,7 +90,7 @@ sub new {
     $self->{'script_pkg'} =~ s,/,::,go;
     $self->{'script_pkg'} =~ s,[-.],_,go;
 
-    $self->{'script_path'} = $dir . '/' . $self->{'name'} . '.pm';
+    $self->{'script_path'} = $basedir . '/' . $self->{'name'} . '.pm';
 
     $self->{'script_run'} = undef; # init'ed with $self->load_check later
 
