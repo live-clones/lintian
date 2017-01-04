@@ -19,6 +19,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Ensure all include directories are absolute before passing
       them on to the actual command.
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [CW] Add zesty.
+
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
 
 lintian (2.5.50) unstable; urgency=medium
