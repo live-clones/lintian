@@ -470,10 +470,10 @@ sub _fetch_index_data {
             # Memory-optimise for 0/0.  Perl has an insane overhead
             # for each field, so this is sadly worth it!
             if ($uid) {
-                $file{'uid'} = $uid;
+                $file{'uid'} = int($uid);
             }
             if ($gid) {
-                $file{'gid'} = $gid;
+                $file{'gid'} = int($gid);
             }
         }
 
