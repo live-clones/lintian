@@ -88,7 +88,6 @@ BEGIN {
           load_state_cache
           save_state_cache
           find_backlog
-          unix_locale_split
           pipe_tee
           untaint
           $PKGNAME_REGEX
@@ -1494,47 +1493,6 @@ sub is_ancestor_of {
         return 1;
     }
     return 0;
-}
-
-=item unix_locale_split(STR)
-
-Read STR as a locale code (e.g. en_GB.UTF-8) and return a list of
-locale codes ordered by preference.  As an example, en_GB.UTF-8
-might return
-
-  en_GB
-  en
-
-Note encoding I<is ignored> as all Lintian files are always encoded in
-UTF-8.
-
-B<Special cases>: The "C" or "POSIX" locale returns the empty list.
-Other strings that do not match the expected format causes a trappable
-error.
-
-=cut
-
-sub unix_locale_split {
-    my ($str) = @_;
-    my ($locale_part, undef) = split(m/\./, $str, 2);
-    my @parts;
-    if ($locale_part eq 'POSIX' or $locale_part eq 'C') {
-        return;
-    }
-
-    if ($locale_part !~ m/\A [a-z0-9-]+ (?: _ [a-z0-9-]+)* \Z/xsmi) {
-        croak("Cannot parse $str as a locale string");
-    }
-
-    while ($locale_part ne '') {
-        my $end;
-        push(@parts, $locale_part);
-        $end = rindex($locale_part, '_');
-        last if ($end == -1);
-        $locale_part = substr($locale_part, 0, $end);
-    }
-
-    return @parts;
 }
 
 =item pipe_tee(INHANDLE, OUTHANDLES[, OPTS])

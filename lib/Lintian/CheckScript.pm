@@ -28,7 +28,7 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 
 use Lintian::Tag::Info ();
-use Lintian::Util qw(read_dpkg_control_utf8 unix_locale_split);
+use Lintian::Util qw(read_dpkg_control_utf8);
 
 =head1 NAME
 
