@@ -284,12 +284,12 @@ Needs-Info requirements for using I<strings>: strings
 
 sub strings {
     my ($self, $file) = @_;
-    my $real = $self->_fetch_extracted_dir('strings', 'strings', $file);
-    if (not -f "${real}.gz") {
+    my $real = $self->_fetch_extracted_dir('strings', 'strings', "${file}.gz");
+    if (not -f $real) {
         open(my $fd, '<', '/dev/null');
         return $fd;
     }
-    my $fd = open_gz("$real.gz");
+    my $fd = open_gz($real);
     return $fd;
 }
 
