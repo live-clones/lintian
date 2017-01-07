@@ -286,7 +286,7 @@ sub strings {
     my ($self, $file) = @_;
     my $real = $self->_fetch_extracted_dir('strings', 'strings', $file);
     if (not -f "${real}.gz") {
-        open my $fd, '<', '/dev/null' or fail "open /dev/null: $!";
+        open(my $fd, '<', '/dev/null');
         return $fd;
     }
     my $fd = open_gz("$real.gz");
