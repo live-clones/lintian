@@ -1412,11 +1412,11 @@ sub normalize_pkg_path {
     # Add all segments to the queue
     @queue = split(m,/,o, $path);
 
-    # Loop through @dc and modify @cc so that in the
-    # end of the loop, @cc will contain the path that
-    # - note that @cc will be empty if we end in the
-    # root (e.g. '/' + 'usr' + '..' -> '/'), this is
-    # fine.
+    # Loop through @queue and modify @normalised so that in the end of
+    # the loop, @normalised will contain the path that.
+    #
+    # Note that @normalised will be empty if we end in the root
+    # (e.g. '/' + 'usr' + '..' -> '/'), this is fine.
     while (my $target = shift(@queue)) {
         if ($target eq '..') {
             # are we out of bounds?
