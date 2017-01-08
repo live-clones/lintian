@@ -2,6 +2,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changes-file.{desc,pm}:
+    + [BR] Apply patch by Simon McVittie to detect unreleased package
+      uploaded to unstable and  mismatched .changes and
+      Changes: distribution.  (Closes: #540294).
   * checks/cruft.desc:
     + [BR] Document long line tagged source-is-missing as a feature
       not a bug.  (Closes: #849470).
