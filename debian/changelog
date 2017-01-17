@@ -2,6 +2,13 @@ lintian (2.5.50.1) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * t/runtests:
+    + [NT] Re-sort test output after running the "post_test" sed script
+      on the output.  This prevent test failures caused by the order
+      changing on different architectures prior to the sed script is run
+      (assuming the sed script otherwise normalises the differences
+      correctly).
+
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CW] Add zesty.
 
