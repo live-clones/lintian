@@ -426,8 +426,19 @@ sub test_package {
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    runsystem_ok('sed', '-ri', '-f', "$origdir/post_test", "$rundir/tags.$pkg")
-      if -e "$origdir/post_test";
+    if (-f "$origdir/post_test") {
+        runsystem_ok('sed', '-ri', '-f', "$origdir/post_test",
+            "$rundir/tags.$pkg");
+        if ($testdata->{'sort'}) {
+            # Re-sort as the sed may have changed the order lines
+            open(my $rfd, '<', "$rundir/tags.$pkg");
+            my @lines = sort(<$rfd>);
+            close($rfd);
+            open(my $wfd, '>', "$rundir/tags.$pkg");
+            print {$wfd} $_ for @lines;
+            close($wfd);
+        }
+    }
 
     if (-x "$origdir/test_calibration") {
         my $calibrated = "$rundir/expected.$pkg.calibrated";
