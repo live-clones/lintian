@@ -6,8 +6,8 @@ lintian (2.5.50.1) UNRELEASED; urgency=medium
     + [EB] Add Edward Betts.
 
   * data/spelling/corrections:
-    + [NT] Apply patch from Edward Betts to fix wrong correction for
-      some words.  (Closes: #852005)
+    + [NT] Apply patches from Edward Betts to fix bugs in the correction
+      word lists.  (Closes: #852005, #852084)
 
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
