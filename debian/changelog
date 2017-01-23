@@ -5,6 +5,10 @@ lintian (2.5.50.1) UNRELEASED; urgency=medium
   * debian/copyright:
     + [EB] Add Edward Betts.
 
+  * data/spelling/corrections:
+    + [NT] Apply patch from Edward Betts to fix wrong correction for
+      some words.  (Closes: #852005)
+
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
       on the output.  This prevent test failures caused by the order
