@@ -19,8 +19,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       to version 1.1.
 
   * data/spelling/corrections:
-    + [NT] Apply patch from Edward Betts to fix wrong correction for
-      some words.  (Closes: #852005)
+    + [NT] Apply patches from Edward Betts to fix bugs in the correction
+      word lists.  (Closes: #852005, #852084)
 
   * lib/Lintian/CheckScript.pm:
     + [NT] Remove fallback code for "old" style "pm"-less checks.
