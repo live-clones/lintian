@@ -12,9 +12,9 @@ lintian (2.5.50.1) UNRELEASED; urgency=medium
       (assuming the sed script otherwise normalises the differences
       correctly).
   * t/tests/cruft-general-upstream/pre_upstream:
-    + [EB] Fix failing tests by making the fake flash object more convincing.
-      The most recent version of libmagic uses a more precise definition
-      of the data within a flash file.
+    + [EB] Fix failing tests by making the fake flash object more
+      convincing.  The most recent version of libmagic uses a more precise
+      definition of the data within a flash file.
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CW] Add zesty.
