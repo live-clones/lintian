@@ -68,6 +68,7 @@ accomadates||accommodates
 accomadating||accommodating
 accomodate||accommodate
 accomodates||accommodates
+accomodation||accommodation
 accompagnied||accompanied
 accompagnies||accompanies
 accompagny||accompany
@@ -215,6 +216,7 @@ allmost||almost
 allowd||allowed
 allpication||application
 allready||already
+allso||also
 allthough||although
 alltogether||altogether
 allways||always
@@ -581,6 +583,7 @@ certainity||certainty
 certficate||certificate
 certficates||certificates
 certian||certain
+certianly||certainly
 certicate||certificate
 certicates||certificates
 certifcate||certificate
@@ -1028,6 +1031,7 @@ depricate||deprecate
 depricates||deprecates
 depricating||deprecating
 derefenced||dereferenced
+derivitive||derivative
 desactivate||deactivate
 descibed||described
 descibe||describe
@@ -1050,6 +1054,7 @@ descryption||description
 descryptions||descriptions
 desctiptor||descriptor
 desctiptors||descriptors
+desgined||designed
 desination||destination
 desinations||destinations
 desireable||desirable
@@ -1280,6 +1285,7 @@ elminated||eliminated
 elminate||eliminate
 elminates||eliminates
 elminating||eliminating
+embarrasing||embarrassing
 embeddded||embedded
 embeddeding||embedding
 embeded||embedded
@@ -1317,6 +1323,7 @@ enhancment||enhancement
 enhancments||enhancements
 enitities||entities
 enitity||entity
+enlargment||enlargement
 enlightnment||enlightenment
 enocded||encoded
 enought||enough
@@ -1455,6 +1462,7 @@ expections||exceptions
 expeted||expected
 explaination||explanation
 explainations||explanations
+explaning||explaining
 explantion||explanation
 explantions||explanations
 explicitely||explicitly
@@ -1686,6 +1694,7 @@ heirarchically||hierarchically
 heirarchies||hierarchies
 heirarchy||hierarchy
 helpfull||helpful
+helpfuly||helpfully
 hexidecimal||hexadecimal
 hiddden||hidden
 hidding||hiding
@@ -2017,6 +2026,7 @@ interesect||intersect
 interesection||intersection
 interesections||intersections
 interesects||intersects
+interferance||interference
 interferred||interfered
 interferring||interfering
 interger||integer
@@ -2112,6 +2122,7 @@ itializing||initializing
 itsef||itself
 itselfs||itself
 itslef||itself
+janurary||january
 jave||java
 keyboad||keyboard
 keyboads||keyboards
@@ -2164,6 +2175,7 @@ likelyhood||likelihood
 limted||limited
 lintain||lintian
 litle||little
+litterally||literally
 loggging||logging
 loggin||login
 logile||logfile
@@ -2329,6 +2341,7 @@ negociating||negotiating
 negociation||negotiation
 negociations||negotiations
 negotation||negotiation
+neigbourhood||neighbourhood
 nescessarily||necessarily
 nescessary||necessary
 nesesarily||necessarily
@@ -2353,6 +2366,7 @@ nothern||northern
 noticable||noticeable
 noticably||noticeably
 notications||notifications
+noticible||noticeable
 notifcation||notification
 notifcations||notifications
 notifed||notified
@@ -2373,6 +2387,7 @@ nunbers||numbers
 observered||observed
 obsure||obscure
 o'caml||OCaml
+ocassional||occasional
 occassionally||occasionally
 occationally||occasionally
 occoured||occurred
@@ -2400,6 +2415,7 @@ offets||offsets
 offical||official
 officialy||officially
 ofthe||of the
+omiting||omitting
 omitt||omit
 ommited||omitted
 ommiting||omitting
@@ -2569,10 +2585,12 @@ peroids||periods
 persistance||persistence
 persistant||persistent
 personnal||personal
+pertubation||perturbation
 perviously||previously
 pervious||previous
 phyiscally||physically
 phyiscal||physical
+physicaly||physically
 pitty||pity
 plaform||platform
 plaforms||platforms
@@ -2592,6 +2610,7 @@ polutes||pollutes
 poluting||polluting
 polution||pollution
 portugese||Portuguese
+posessing||possessing
 posibilities||possibilities
 posibility||possibility
 posible||possible
@@ -2624,6 +2643,7 @@ preceeds||precedes
 precendence||precedence
 precison||precision
 precission||precision
+predicitons||predictions
 predifined||predefined
 prefered||preferred
 preferrable||preferable
@@ -2870,6 +2890,7 @@ releasse||release
 releated||related
 reletively||relatively
 reletive||relative
+relevence||relevance
 relevent||relevant
 relocateable||relocatable
 remaing||remaining
@@ -3299,6 +3320,7 @@ suceed||succeed
 sucesses||successes
 sucessfull||successful
 sucessfully||successfully
+sucessful||successful
 sucessfuly||successfully
 sucess||success
 sufficently||sufficiently
@@ -3411,6 +3433,7 @@ tghe||the
 thansk||thanks
 thats||that's
 theer||there
+therby||thereby
 theres||there's
 therfore||therefore
 theyre||they're
@@ -3628,6 +3651,7 @@ unsuccessfull||unsuccessful
 unsued||unused
 unsuported||unsupported
 untill||until
+untranslateable||untranslatable
 unusally||unusually
 unusal||unusual
 unuseable||unusable

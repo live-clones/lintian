@@ -24,6 +24,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Apply patch from Edward Betts to remove corrections for
       "targetted" and "targetting" as they are valid alternative
       spellings in AU.  (Closes: #852145)
+    + [EB] Add some more spelling corrections.  (Closes: #852369, #852404,
+      #852407, #852409, #852410, #852411, #852413, #852414, #852416, #852419,
+      #852421, #852426)
 
   * debian/copyright:
     + [EB] Add Edward Betts.
