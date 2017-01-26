@@ -38,7 +38,7 @@ printf "MZ\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
 # use old magic \001\000\000\000 part is optional but needed with old file
 printf "ITSF\003\000\000\000\140\000\000\000\001\000\000\000" > "${dir}/fake-help-file.chm"
 
-printf "CWS\011" > "${dir}/fakeflash.swf"
+printf "CWS\011    x" > "${dir}/fakeflash.swf"
 echo '//comment' > "${dir}/fake.min.js"
 # Make python generate python bytecode files
 # - more reliable than crafting them ourselves
