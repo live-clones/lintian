@@ -2,6 +2,9 @@ lintian (2.5.50.1) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * debian/copyright:
+    + [EB] Add Edward Betts.
+
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
       on the output.  This prevent test failures caused by the order
