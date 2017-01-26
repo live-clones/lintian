@@ -25,6 +25,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       "targetted" and "targetting" as they are valid alternative
       spellings in AU.  (Closes: #852145)
 
+  * debian/copyright:
+    + [EB] Add Edward Betts.
+
   * lib/Lintian/CheckScript.pm:
     + [NT] Remove fallback code for "old" style "pm"-less checks.
 

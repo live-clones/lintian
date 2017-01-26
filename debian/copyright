@@ -30,6 +30,7 @@ Comment:
  AB  == Axel Beckert <abe@debian.org>
  PW  == Paul Wise <pabs@debian.org>
  CL  == Chris Lamb <lamby@debian.org>
+ EB  == Edward Betts <edward@debian.org>
  .
  Lintian is maintained in git.  The current development version may
  be checked out from:
@@ -62,6 +63,7 @@ Copyright: 1998, Christian Schwarz
 	   2013-2015, Bastien ROUCARIÈS
 	   2014-2016, Axel Beckert
 	   2016, Chris Lamb
+	   2017, Edward Betts
 License: GPL-2+
  This program is free software; you may redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
