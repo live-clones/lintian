@@ -47,7 +47,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * t/tests/cruft-general-upstream/pre_upstream:
     + [EB] Fix failing tests by making the fake flash object more
       convincing.  The most recent version of libmagic uses a more precise
-      definition of the data within a flash file.
+      definition of the data within a flash file.  (Closes: #852891)
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CW] Add zesty.
