@@ -267,6 +267,8 @@ announcment||announcement
 announcments||announcements
 anomolies||anomalies
 anomoly||anomaly
+ansestor||ancestor
+ansestors||ancestors
 anway||anyway
 anwser||answer
 anwsered||answered
@@ -391,6 +393,8 @@ asyncronously||asynchronously
 atomatically||automatically
 atomical||atomic
 atomicly||atomically
+atribute||attribute
+atributes||attributes
 attachement||attachment
 attatch||attach
 attatched||attached
@@ -774,6 +778,8 @@ concatonated||concatenated
 concatonates||concatenates
 concatonating||concatenating
 concensus||consensus
+concidered||considered
+conciousness||consciousness
 concurent||concurrent
 concurently||concurrently
 conditionaly||conditionally
@@ -950,6 +956,7 @@ decalares||declares
 decalaring||declaring
 decendant||descendant
 decendent||descendent
+decison||decision
 declaritive||declarative
 declaritively||declaratively
 declation||declaration
@@ -1172,6 +1179,7 @@ disconneting||disconnecting
 disconnets||disconnects
 discontigous||discontiguous
 discontinous||discontinuous
+discribes||describes
 discription||description
 discriptions||descriptions
 discusion||discussion
@@ -2520,6 +2528,7 @@ paralellism||parallelism
 paralell||parallel
 paralel||parallel
 parallell||parallel
+parallely||parallelly
 parallization||parallelization
 parallized||parallelized
 parallize||parallelize
@@ -2588,6 +2597,7 @@ personnal||personal
 pertubation||perturbation
 perviously||previously
 pervious||previous
+phillipines||philippines
 phyiscally||physically
 phyiscal||physical
 physicaly||physically
@@ -3187,6 +3197,7 @@ somes||some
 somethign||something
 someting||something
 somthing||something
+sorrounding||surrounding
 souce||source
 souces||sources
 soure||source
@@ -3255,6 +3266,7 @@ streching||stretching
 strech||stretch
 strenghts||strengths
 strenght||strength
+strenous||strenuous
 strenth||strength
 strored||stored
 strores||stores
@@ -3374,6 +3386,7 @@ surpressed||suppressed
 surpresses||suppresses
 surpressing||suppressing
 surpress||suppress
+surrouding||surrounding
 suspicously||suspiciously
 suspicous||suspicious
 sustitutions||substitutions
@@ -3470,6 +3483,7 @@ timming||timing
 timout||timeout
 tipically||typically
 togehter||together
+toghether||together
 togther||together
 touple||tuple
 traditionnal||traditional
@@ -3559,6 +3573,7 @@ unavailabel||unavailable
 unavailible||unavailable
 uncertainities||uncertainties
 uncertainity||uncertainty
+unchangable||unchangeable
 uncomented||uncommented
 uncomenting||uncommenting
 uncoments||uncomments
@@ -3730,6 +3745,7 @@ veryifies||verifies
 veryifying||verifying
 veryify||verify
 vicefersa||vice-versa
+virutal||virtual
 visiters||visitors
 vitual||virtual
 want's||wants
@@ -3738,6 +3754,7 @@ waranties||warranties
 waranty||warranty
 wasnt||wasn't
 was'nt||weren't
+weaponary||weaponry
 weigth||weight
 weired||weird
 were'nt||wasn't
