@@ -18,6 +18,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Update the reference to Desktop Entry Specification to point
       to version 1.1.
 
+  * data/common/source-fields:
+    + [NT] Add new "Testsuite-Restrictions" field.
   * data/spelling/corrections:
     + [NT] Apply patches from Edward Betts to fix bugs in the correction
       word lists.  (Closes: #852005, #852084)

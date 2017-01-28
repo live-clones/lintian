@@ -18,8 +18,8 @@ dgit
 dm-upload-allowed
 files
 format
-homepage
 go-import-path
+homepage
 maintainer
 origin
 
@@ -36,6 +36,7 @@ ruby-versions
 source
 standards-version
 testsuite
+testsuite-restrictions
 testsuite-triggers
 uploaders
 vcs-arch
