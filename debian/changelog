@@ -1,6 +1,4 @@
-lintian (2.5.50.1) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.50.1) unstable; urgency=medium
 
   * debian/copyright:
     + [EB] Add Edward Betts.
@@ -26,7 +24,7 @@ lintian (2.5.50.1) UNRELEASED; urgency=medium
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CW] Add zesty.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 29 Dec 2017 22:00:00 +0000
+ -- Niels Thykier <niels@thykier.net>  Sat, 04 Feb 2017 15:05:07 +0000
 
 lintian (2.5.50) unstable; urgency=medium
 
