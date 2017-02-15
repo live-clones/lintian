@@ -1117,7 +1117,7 @@ sub run {
 
     if (@entries == 1) {
         tag 'new-package-should-not-package-python2-module', $pkg
-          if $pkg =~ /^python-/;
+          if $pkg =~ /^python-.*(?<!-doc)$/;
     }
 
     return;
