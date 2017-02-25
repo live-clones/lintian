@@ -1,4 +1,4 @@
 I: binaries-hardening: hardening-no-bindnow usr/bin/weak
 I: binaries-hardening: hardening-no-fortify-functions usr/bin/weak
-I: binaries-hardening: hardening-no-pie usr/bin/weak
+W: binaries-hardening: hardening-no-pie usr/bin/weak
 W: binaries-hardening: hardening-no-relro usr/bin/weak

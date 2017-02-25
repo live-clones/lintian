@@ -394,34 +394,25 @@ Info: This package provides an ELF binary that lacks the "bindnow"
 Ref: https://wiki.debian.org/Hardening
 
 Tag: hardening-no-pie
-Severity: wishlist
+Severity: normal
 Certainty: certain
 Info: This package provides an ELF executable that was not compiled
  as a position independent executable (PIE).
  .
- In Debian, gcc-6 as of version 6.2.0-9 will compile ELF binaries with
- PIE by default.  In most cases a simple rebuild will be sufficient to
- remove this tag.
+ In Debian, since version 6.2.0-7 of the gcc-6 package GCC will
+ compile ELF binaries with PIE by default.  In most cases a simple
+ rebuild will be sufficient to remove this tag.
  .
  PIE is required for fully enabling Address Space Layout
  Randomization (ASLR), which makes "Return-oriented" attacks more
  difficult.
  .
  Historically, PIE has been associated with noticeable performance
- overhead on i386.  However, GCC-5 has implemented an optimization
+ overhead on i386.  However, GCC >= 5 has implemented an optimization
  that can reduce the overhead significantly.
  .
- If you use <tt>dpkg-buildflags</tt>, you may have to add
- <tt>hardening=+pie</tt> or <tt>hardening=+all</tt> to
- <tt>DEB_BUILD_MAINT_OPTIONS</tt>.
- .
- The relevant compiler flags must be passed both to the compiler
- and the linker (e.g. for C that would be commonly be
- <tt>CFLAGS</tt> and <tt>LDFLAGS</tt>).
- .
- If your upstream build compiles either of the above, you may have to
- patch the build to ensure that only ELF executables are compiled with
- PIE.
+ If you use <tt>dpkg-buildflags</tt> with <tt>hardening=+all,-pie</tt>
+ in <tt>DEB_BUILD_MAINT_OPTIONS</tt>, remove the <tt>-pie</tt>.
 Ref: https://wiki.debian.org/Hardening,
  https://gcc.gnu.org/gcc-5/changes.html,
  https://software.intel.com/en-us/blogs/2014/12/26/new-optimizations-for-x86-in-upcoming-gcc-50-32bit-pic-mode

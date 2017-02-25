@@ -2,6 +2,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.desc:
+    + [NT] Apply patch from Adrian Bunk to bump severity of the
+      hardening-no-pie to a W-tag and improve the tag description.
+      (Closes: #856155)
   * checks/changelog-file.pm:
     + [BR] Check also bug over 1000000 as improbable. Bug below
       50004 are not archived and are thus improbable.
