@@ -1545,6 +1545,7 @@ Overridable: no
 use Lintian::Tags qw(tag);
 sub run {
     tag 'my-tag', 'hallo world';
+    return;
 }
 </programlisting>
           <para>
