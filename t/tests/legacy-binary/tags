@@ -57,7 +57,7 @@ I: binary: binary-has-unneeded-section usr/bin/hello-static .comment
 I: binary: capitalization-error-in-description debian Debian
 I: binary: desktop-entry-contains-encoding-key usr/share/applications/goodbye.desktop:11 Encoding
 I: binary: desktop-entry-contains-encoding-key usr/share/applications/hello.desktop:13 Encoding
-: binary: desktop-entry-lacks-icon-entry usr/share/applications/goodbye.desktop
+I: binary: desktop-entry-lacks-icon-entry usr/share/applications/goodbye.desktop
 I: binary: desktop-entry-lacks-keywords-entry usr/share/applications/goodbye.desktop
 I: binary: desktop-entry-lacks-keywords-entry usr/share/applications/hello.desktop
 I: binary: no-md5sums-control-file
