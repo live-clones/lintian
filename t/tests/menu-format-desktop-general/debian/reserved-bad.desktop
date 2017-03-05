@@ -4,4 +4,5 @@ Comment=Entry in a reserved category (incorrect)
 Type=Application
 Categories=Screensaver;
 Exec=foo
+Icon=foo
 Keywords=Fun

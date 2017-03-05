@@ -8,6 +8,7 @@ Test-For:
  desktop-entry-contains-unknown-key
  desktop-entry-file-has-crs
  desktop-entry-invalid-category
+ desktop-entry-lacks-icon-entry
  desktop-entry-lacks-keywords-entry
  desktop-entry-lacks-main-category
  desktop-entry-limited-to-environments

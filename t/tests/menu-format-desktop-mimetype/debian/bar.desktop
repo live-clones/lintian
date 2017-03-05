@@ -6,4 +6,5 @@ Type=Application
 Categories=Game;BoardGame;GTK;
 MimeType=application/bar;
 Keywords=Lintian
+Icon=foo
 Exec=pargs %U

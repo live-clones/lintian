@@ -1,5 +1,6 @@
 E: menu-format-desktop-general: executable-desktop-file usr/share/applications/general.desktop 0755
 I: menu-format-desktop-general: desktop-entry-contains-encoding-key usr/share/applications/general.desktop:7 Encoding
+I: menu-format-desktop-general: desktop-entry-lacks-icon-entry usr/share/applications/general.desktop
 I: menu-format-desktop-general: desktop-entry-lacks-keywords-entry usr/share/applications/general.desktop
 I: menu-format-desktop-general: desktop-entry-limited-to-environments usr/share/applications/environments.desktop
 W: menu-format-desktop-general: desktop-command-not-in-package usr/share/applications/environments.desktop foo

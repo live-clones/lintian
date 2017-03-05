@@ -5,4 +5,5 @@ Comment=A foo test entry for Lintian
 Type=Application
 Categories=Game;BoardGame;GTK;
 MimeType=application/foo;
+Icon=foo
 Keywords=Lintian

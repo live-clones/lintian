@@ -638,6 +638,9 @@ sub verify_desktop_file {
 
     # test if missing Keywords (only if NoDisplay is not set)
     if (!defined $vals{NoDisplay}) {
+        if (!defined $vals{Icon}) {
+            tag 'desktop-entry-lacks-icon-entry', $file;
+        }
         if (!defined $vals{Keywords}) {
             tag 'desktop-entry-lacks-keywords-entry', $file;
         }

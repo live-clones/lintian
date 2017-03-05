@@ -9,4 +9,5 @@ Categories=Building;Lintian;
 Terminal=true
 TerminalOptions=-g 80x25
 Exec=foo
+#missing Icon
 #missing Keywords
