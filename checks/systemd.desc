@@ -34,6 +34,15 @@ Info: The systemd service file refers to an obsolete target.
  example, declaring <tt>After=syslog.target</tt> is unnecessary by now because
  syslog is socket-activated and will therefore be started when needed.
 
+Tag: systemd-service-file-refers-to-obsolete-bindto
+Severity: normal
+Certainty: certain
+Info: The systemd service file refers to the obsolete BindTo= option.
+ .
+ The <tt>BindTo=</tt> option has been deprecated in favour of
+ <tt>BindsTo=</tt> which should be used instead.
+Ref: https://github.com/systemd/systemd/commit/7f2cddae09fd2579ae24434df577bb5e5a157d86
+
 Tag: systemd-no-service-for-init-script
 Severity: serious
 Certainty: certain

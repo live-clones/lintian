@@ -65,6 +65,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Apply patch from Christopher Hoskin to except -doc packages
       from the "new-package-should-not-package-python2-module" tag.
       (Closes: #855243)
+  * checks/systemd.{desc,pm}:
+    + [NT] Apply patch from Michael Biebl to warn about deprecated
+      "BindTo" option in systemd service files.  (Closes: #857194)
   * checks/testsuite.{desc,pm}:
     + [NT] Apply patch from Lucas Kanashiro to add a tag for recommending
       packagers to create an autopkgtest for their package.

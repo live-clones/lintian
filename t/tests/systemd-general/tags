@@ -1,8 +1,8 @@
 E: systemd-general: init-script-is-not-a-file etc/init.d/fifo-pipe-as-init
 E: systemd-general: init.d-script-needs-depends-on-lsb-base etc/init.d/systemd-aliasd (line 35)
 E: systemd-general: service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
-E: systemd-general: service-key-has-whitespace etc/systemd/system/test.service at line 3
-E: systemd-general: service-key-has-whitespace usr/lib/systemd/system/test.service at line 3
+E: systemd-general: service-key-has-whitespace etc/systemd/system/test.service at line 4
+E: systemd-general: service-key-has-whitespace usr/lib/systemd/system/test.service at line 4
 E: systemd-general: special-file etc/init.d/fifo-pipe-as-init 0644
 E: systemd-general: special-file etc/systemd/system/fifo-pipe-as-init.service 0644
 E: systemd-general: systemd-no-service-for-init-rcS-script systemd-general
@@ -20,5 +20,7 @@ W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init
 W: systemd-general: script-in-etc-init.d-not-registered-via-update-rc.d etc/init.d/masked
 W: systemd-general: systemd-service-alias-without-extension etc/systemd/system/test.service
 W: systemd-general: systemd-service-alias-without-extension usr/lib/systemd/system/test.service
+W: systemd-general: systemd-service-file-refers-to-obsolete-bindto etc/systemd/system/test.service
+W: systemd-general: systemd-service-file-refers-to-obsolete-bindto usr/lib/systemd/system/test.service
 W: systemd-general: systemd-service-file-refers-to-obsolete-target etc/systemd/system/test.service syslog.target
 W: systemd-general: systemd-service-file-refers-to-obsolete-target usr/lib/systemd/system/test.service syslog.target
