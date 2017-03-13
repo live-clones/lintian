@@ -586,11 +586,13 @@ sub run {
             }
 
             if ($arch_hardening->{'hardening-no-bindnow'}
+                and not $built_with_golang
                 and not exists($objdump->{'FLAGS_1'}{'NOW'})) {
                 tag 'hardening-no-bindnow', $file;
             }
 
             if (    $arch_hardening->{'hardening-no-pie'}
+                and not $built_with_golang
                 and $objdump->{'ELF-TYPE'} eq 'EXEC') {
                 tag 'hardening-no-pie', $file;
             }
