@@ -126,6 +126,13 @@ sub run {
     $arch_hardening = $HARDENING->value($arch)
       if $arch ne 'all';
 
+    my $src = $group->get_source_processable;
+    if (defined($src)) {
+        $built_with_golang
+          = $src->info->relation('build-depends')
+          ->implies('golang-go | golang-any');
+    }
+
     foreach my $file (sort keys %{$info->objdump_info}) {
         my $objdump = $info->objdump_info->{$file};
         my ($has_lfs, %unharded_functions, @hardened_functions);
@@ -272,13 +279,6 @@ sub run {
 
     tag 'package-name-doesnt-match-sonames', "@sonames"
       if @sonames && !$match_found;
-
-    my $src = $group->get_source_processable;
-    if (defined($src)) {
-        $built_with_golang
-          = $src->info->relation('build-depends')
-          ->implies('golang-go | golang-any');
-    }
 
     # process all files in package
     foreach my $file ($info->sorted_index) {
