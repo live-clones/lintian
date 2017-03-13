@@ -1154,6 +1154,7 @@ sub _check_gfdl_license_problem {
                            the [ ] free [ ] software [ ] foundation[ ]?}{}xsmo;
         $gfdlsections =~ s{\(?[ ]? fsf [ ]?\)?[ ]?}{}xsmo;
         $gfdlsections =~ s{\A [ ]? [,\.;]? [ ]?}{}xsmo;
+        $gfdlsections =~ s{[ ]? [,\.]? [ ]?\Z}{}xsmo;
     } while ($oldgfdlsections ne $gfdlsections);
 
     $contextbefore =~ s{
