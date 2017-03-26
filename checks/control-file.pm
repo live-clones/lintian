@@ -36,8 +36,15 @@ use Lintian::Util qw(file_is_encoded_in_non_utf8 read_dpkg_control
 # rather than using ${shlibs:Depends}.
 my @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
 my $LIBCS = Lintian::Relation->new(join(' | ', @LIBCS));
+
 my $src_fields = Lintian::Data->new('common/source-fields');
 my $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
+my $KNOWN_DBG_PACKAGE = Lintian::Data->new(
+    'common/dbg-pkg',
+    qr/\s*\~\~\s*/,
+    sub {
+        return qr/$_[0]/xms;
+    });
 
 sub run {
     my ($pkg, undef, $info) = @_;
@@ -135,9 +142,8 @@ sub run {
             tag 'debian-control-has-dbgsym-package', $bin;
         }
         if ($bin =~ /[-]dbg$/) {
-            # libc dbg is needed by valgrind and gcc
             tag 'debian-control-has-obsolete-dbg-package', $bin
-              unless $pkg =~ /^e?glibc$/;
+              unless dbg_pkg_is_known($bin);
         }
     }
 
@@ -400,6 +406,19 @@ sub run {
     }
 
     return;
+}
+
+# check debug package
+sub dbg_pkg_is_known {
+    my ($pkg) = @_;
+
+    foreach my $dbg_regexp ($KNOWN_DBG_PACKAGE->all) {
+        my $regex = $KNOWN_DBG_PACKAGE->value($dbg_regexp);
+        if($pkg =~ m/$regex/xms) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 # Check the dependencies of a -dev package.  Any dependency on one of the
