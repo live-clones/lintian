@@ -131,6 +131,9 @@ sub run {
               if ( $info->source_field($field)
                 && $bfields->{$field} eq $info->source_field($field));
         }
+        if ($bin =~ /[-]dbgsym$/) {
+            tag 'debian-control-has-dbgsym-package', $bin;
+        }
     }
 
     # Check that fields which should be comma-separated or
