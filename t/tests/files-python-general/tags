@@ -5,3 +5,4 @@ E: python-kinterbasdb: package-installs-python-pycache-dir usr/share/python-kint
 W: files-python-general source: package-uses-deprecated-debhelper-compat-version 7
 W: python-kinterbasdb-dbg: python-debug-in-wrong-location usr/lib/debug/usr/lib/pyshared/python2.7/python-module.so usr/lib/debug/usr/lib/pymodules/python2.7/python-module.so
 W: python-kinterbasdb: file-should-not-be-compressed usr/share/doc/python-kinterbasdb/docs/objects.inv.gz
+X: files-python-general source: debian-control-has-obsolete-dbg-package python-kinterbasdb-dbg

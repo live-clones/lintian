@@ -134,6 +134,11 @@ sub run {
         if ($bin =~ /[-]dbgsym$/) {
             tag 'debian-control-has-dbgsym-package', $bin;
         }
+        if ($bin =~ /[-]dbg$/) {
+            # libc dbg is needed by valgrind and gcc
+            tag 'debian-control-has-obsolete-dbg-package', $bin
+              unless $pkg =~ /^e?glibc$/;
+        }
     }
 
     # Check that fields which should be comma-separated or

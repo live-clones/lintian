@@ -1,2 +1,3 @@
 W: fields-debug-bad source: dbg-package-missing-depends fields-debug-bad-dbg
 W: fields-debug-bad-dbg: debug-package-should-be-priority-extra fields-debug-bad-dbg
+X: fields-debug-bad source: debian-control-has-obsolete-dbg-package fields-debug-bad-dbg

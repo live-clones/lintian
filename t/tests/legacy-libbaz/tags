@@ -76,4 +76,5 @@ W: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel
 W: libbaz2: debian-changelog-file-is-a-symlink
 W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
+X: libbaz source: debian-control-has-obsolete-dbg-package libbaz2-dbg
 X: libbaz1: maintainer-script-may-use-dir_to_symlink_helper postinst:8

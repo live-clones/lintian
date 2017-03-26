@@ -11,6 +11,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       Changes: distribution.  (Closes: #540294).
   * checks/control.{desc,pm}:
     + [BR] Detect dbgsym package in control file.  (Closes: #858117).
+    + [BR] Warn about obsolete -dbg package.
   * checks/cruft.{desc,pm}:
     + [BR] Document long line tagged source-is-missing as a feature
       not a bug.  (Closes: #849470).

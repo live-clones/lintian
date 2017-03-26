@@ -14,3 +14,4 @@ W: libjs-fields-wrong-section: wrong-section-according-to-package-name libjs-fie
 W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
 W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
 W: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
+X: fields-wrong-section source: debian-control-has-obsolete-dbg-package fields-wrong-section-dbg
