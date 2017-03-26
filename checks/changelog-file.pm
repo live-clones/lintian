@@ -34,6 +34,11 @@ use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(file_is_encoded_in_non_utf8 strip);
 
+use Lintian::Data ();
+
+my $BUGS_NUMBER
+  = Lintian::Data->new('changelog-file/bugs-number', qr/\s*=\s*/o);
+
 my $SPELLING_ERROR_IN_NEWS
   = spelling_tag_emitter('spelling-error-in-news-debian');
 my $SPELLING_ERROR_CHANGELOG
@@ -391,8 +396,12 @@ sub run {
         }
 
         my $closes = $entry->Closes;
+        # before bug 50004 bts removed bug instead of archiving
         for my $bug (@$closes) {
-            tag 'improbable-bug-number-in-closes', $bug if ($bug < 2000);
+            if (   $bug < $BUGS_NUMBER->value('min-bug')
+                || $bug > $BUGS_NUMBER->value('max-bug')) {
+                tag 'improbable-bug-number-in-closes', $bug;
+            }
         }
 
         # unstable, testing, and stable shouldn't be used in Debian

@@ -2,6 +2,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.pm:
+    + [BR] Check also bug over 1000000 as improbable. Bug below
+      50004 are not archived and are thus improbable.
   * checks/changes-file.{desc,pm}:
     + [BR] Apply patch by Simon McVittie to detect unreleased package
       uploaded to unstable and  mismatched .changes and
