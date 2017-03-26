@@ -10,6 +10,9 @@ lintian (2.5.50.1) unstable; urgency=medium
       "targetted" and "targetting" as they are valid alternative
       spellings in AU.  (Closes: #852145)
 
+  * reporting/graphs/tags.gpi:
+    + [NT] Tweak tags.gpi so it works with gnuplot 5.
+
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
       on the output.  This prevent test failures caused by the order
