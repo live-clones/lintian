@@ -560,6 +560,11 @@ sub run {
                     last;
                 }
             }
+            if ($parts[-1] eq 'debug') {
+                if($pkg !~ /-dbg(?:sym)?$/) {
+                    tag 'wrong-section-according-to-package-name',"$pkg";
+                }
+            }
             if ($info->is_pkg_class('transitional')) {
                 my $pri = $info->field('priority', '');
                 # Cannot use "unfold" as it could emit a tag for priority,

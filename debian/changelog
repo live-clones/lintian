@@ -18,6 +18,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [BR] Correct a typo in description of tag
       license-problem-convert-utf-code.
     + [BR] Avoid a false positive in gfdl file detection.
+  * checks/fields.pm:
+    + [BR] Enforce naming convention for debug package.  (Closes: #645455).
   * checks/files.pm:
     + [BR] Do not report duplicates for package-installs-apt-preferences
       and package-installs-apt-sources.  (Closes: #814521).
