@@ -49,6 +49,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Ensure all include directories are absolute before passing
       them on to the actual command.
 
+  * reporting/graphs/tags.gpi:
+    + [NT] Tweak tags.gpi so it works with gnuplot 5.
+
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
       on the output.  This prevent test failures caused by the order
