@@ -78,6 +78,8 @@ sub run {
     my $control = $info->index('debian/tests/control');
     my $needs_control = 0;
 
+    tag 'testsuite-autopkgtest-missing' if ($testsuites !~ /autopkgtest/);
+
     for my $testsuite (split(m/\s*,\s*/o, $testsuites)) {
         if (not exists($KNOWN_TESTSUITES{$testsuite})) {
             tag 'unknown-testsuite', $testsuite;

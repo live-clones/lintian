@@ -1,0 +1,5 @@
+Testname: testsuite-autopkgtest-missing
+Version: 1.0
+Description: Verify if Testsuite field and autopkgtest are used
+Test-For:
+  testsuite-autopkgtest-missing

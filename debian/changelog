@@ -33,6 +33,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       to version 1.1.
     + [NT] Apply patch from Laurent Bigonville to check desktop files
       for missing "Icon" field.  (Closes: #854132)
+  * checks/testsuite.{desc,pm}:
+    + [NT] Apply patch from Lucas Kanashiro to add a tag for recommending
+      packagers to create an autopkgtest for their package.
+      (Closes: #859467)
 
   * coll/debian-readme{,desc}:
     + [NT] Remove.  Merge what little functionality it offers into the
