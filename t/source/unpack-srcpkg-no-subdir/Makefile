@@ -9,6 +9,7 @@ all:
 	mkdir -p $(dir)/debian
 	cp README foo.c foo.h $(dir)
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	echo > $(dir)/debian/watch
 	mkdir $(dir)/debian/source

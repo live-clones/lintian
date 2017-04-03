@@ -9,6 +9,7 @@ all:
 	echo "1.0" > $(dir)/debian/source/format
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	tar cfz $(dsc)_1.tar.gz $(dir)
 	subst-dsc $(dsc)_1.tar.gz < dsc.in > $(dsc)_1.dsc
 	mv $(dsc)_1.dsc $(name)_1.dsc

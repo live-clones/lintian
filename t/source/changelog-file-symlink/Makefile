@@ -5,6 +5,7 @@ all:
 	mkdir $(dir)
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	mv $(dir)/debian/changelog $(dir)/debian/changelog.old
 	ln -s changelog.old $(dir)/debian/changelog
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat

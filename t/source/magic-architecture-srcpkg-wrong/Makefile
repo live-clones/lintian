@@ -7,6 +7,7 @@ all:
 	tar -c -f $(name)_1.0.orig.tar.gz -z $(dir)
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	echo '# foo' > $(dir)/debian/watch
 	mkdir $(dir)/debian/source

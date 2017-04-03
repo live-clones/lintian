@@ -113,9 +113,9 @@ my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;
 
 our %TEMPLATES = (
-    'tests'  => ['debian/changelog', 'debian/control', 'debian/compat'],
+    'tests'  => ['debian/changelog', 'debian/control', 'debian/compat', 'debian/tests'],
     'debs'   => ['changelog', 'control', 'Makefile'],
-    'source' => ['changelog', 'control', 'dsc.in'],
+    'source' => ['changelog', 'control', 'dsc.in', 'tests/control', 'tests/test'],
 );
 my $DATE = safe_qx(qw(date -R));
 chomp $DATE;

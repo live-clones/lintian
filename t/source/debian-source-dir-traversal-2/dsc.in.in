@@ -6,6 +6,7 @@ Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 7)
+Testsuite: autopkgtest
 Checksums-Sha1:
  @SHA1@ @SIZE@ debian-source-dir-traversal-2_1.tar.gz
 Checksums-Sha256:

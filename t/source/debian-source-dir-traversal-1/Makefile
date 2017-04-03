@@ -5,6 +5,7 @@ all:
 	mkdir $(dir)
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	# prevent patch-system-but-no-source-readme
 	echo "Hallo World" > $(dir)/debian/README.source
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat

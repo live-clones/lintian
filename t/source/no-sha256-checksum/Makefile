@@ -4,6 +4,7 @@ dir  = $(name)-1
 all:
 	mkdir -p $(dir)/debian/source
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	echo 9 > $(dir)/debian/compat
 	echo "3.0 (native)" > $(dir)/debian/source/format
 	tar cfz $(name)_1.tar.gz $(dir)

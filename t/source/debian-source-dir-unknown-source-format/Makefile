@@ -5,6 +5,7 @@ all:
 	mkdir $(dir)
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	echo $(DEFAULT_DH_COMPAT) > $(dir)/debian/compat
 	mkdir $(dir)/debian/source
 	echo "3.0 (unknown-format)" > $(dir)/debian/source/format

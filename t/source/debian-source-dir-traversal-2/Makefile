@@ -5,6 +5,7 @@ all:
 	mkdir $(dir)
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
+	cp -R tests/ $(dir)/debian/
 	# Link to the lab entry - should trigger a myriad of
 	# "unknown-file-in-debian-source" tags, if lintian is vulnerable
 	ln -s ../../ $(dir)/debian/source
