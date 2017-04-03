@@ -41,6 +41,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * data/obsolete-sites/obsolete-sites:
     + [BR] Apply patch from Hideki Yamane in order to warn about
       fedorahosted.  (Closes: #856954).
+    + [NT] Apply patch from Hideki Yamane to warn about codeplex.com
+      closing down.  (Closes: #859412).
   * data/scripts/interpreters:
     + [NT] Add stap as a known interpreter.  Thanks to gustavo panizzo
       for the suggestion.  (Closes: #858326)
