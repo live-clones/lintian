@@ -18,6 +18,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [BR] Correct a typo in description of tag
       license-problem-convert-utf-code.
     + [BR] Avoid a false positive in gfdl file detection.
+  * checks/debian-readme.{desc,pm}:
+    + [NT] Locate the README.Debian using the index rather than relying
+      on a collection.
   * checks/fields.pm:
     + [BR] Enforce naming convention for debug package.  (Closes: #645455).
   * checks/files.pm:
@@ -28,6 +31,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       to version 1.1.
     + [NT] Apply patch from Laurent Bigonville to check desktop files
       for missing "Icon" field.  (Closes: #854132)
+
+  * coll/debian-readme{,desc}:
+    + [NT] Remove.  Merge what little functionality it offers into the
+      debian-readme check.
 
   * data/common/source-fields:
     + [NT] Add new "Testsuite-Restrictions" field.

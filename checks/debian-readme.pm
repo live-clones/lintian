@@ -29,11 +29,29 @@ use Lintian::Tags qw(tag);
 my $SPELLING_ERROR_IN_README
   = spelling_tag_emitter('spelling-error-in-readme-debian');
 
+sub open_readme {
+    my ($pkg_name, $info) = @_;
+    my $doc_dir = $info->index_resolved_path("usr/share/doc/${pkg_name}/");
+    if ($doc_dir) {
+        for my $name (
+            qw(README.Debian.gz README.Debian README.debian.gz README.debian)){
+            my $path = $doc_dir->child($name);
+            next if not $path or not $path->is_open_ok;
+            if ($name =~ m/\.gz$/) {
+                return $path->open_gz;
+            }
+            return $path->open;
+        }
+    }
+    return;
+}
+
 sub run {
-    my (undef, undef, $info, undef, $group) = @_;
+    my ($pkg_name, undef, $info, undef, $group) = @_;
     my $readme = '';
 
-    open(my $fd, '<', $info->lab_data_path('README.Debian'));
+    my $fd = open_readme($pkg_name, $info);
+    return if not defined($fd);
     while (my $line = <$fd>) {
         if ($line =~ m,/usr/doc\b,) {
             tag 'readme-debian-mentions-usr-doc', "line $.";
