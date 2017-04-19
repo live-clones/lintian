@@ -41,6 +41,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * data/obsolete-sites/obsolete-sites:
     + [BR] Apply patch from Hideki Yamane in order to warn about
       fedorahosted.  (Closes: #856954).
+  * data/scripts/interpreters:
+    + [NT] Add stap as a known interpreter.  Thanks to gustavo panizzo
+      for the suggestion.  (Closes: #858326)
   * data/spelling/corrections:
     + [NT] Apply patches from Edward Betts to fix bugs in the correction
       word lists.  (Closes: #852005, #852084)

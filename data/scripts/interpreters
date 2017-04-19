@@ -93,6 +93,7 @@ seed           => /usr/bin
 sh             => /bin, @NODEPS@
 slsh           => /usr/bin
 speedy         => /usr/bin, speedy-cgi-perl
+stap           => /usr/bin, systemtap
 swipl          => /usr/bin, swi-prolog | swi-prolog-nox
 tcsh           => /usr/bin
 texlua         => /usr/bin, texlive-binaries (>= 2014.20140512.33982)
