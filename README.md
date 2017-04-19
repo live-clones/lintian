@@ -83,8 +83,8 @@ alternative dependencies for "Debian specific" libraries/tools.
 Developing/Patching Lintian
 ===========================
 
-If you are interested in working developing patches for Lintian or
-just writing your own Lintian checks, please review
+If you are interested in developing patches for Lintian or just
+writing your own Lintian checks, please review
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Feedback
