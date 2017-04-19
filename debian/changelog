@@ -28,6 +28,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       and package-installs-apt-sources.  (Closes: #814521).
     + [NT] Apply patch from Helmut Grohne to detect some possible invalid
       uses of "Multi-Arch: foreign".  (Closes: #856975)
+    + [NT] Improve the empty-binary-package tag by adding more common
+      files that should be ignored.  Thanks to Helmut Grohne for all the
+      research behind it.  (Closes: #856857)
   * checks/menu-format.{desc,pm}:
     + [NT] Update the reference to Desktop Entry Specification to point
       to version 1.1.
@@ -44,6 +47,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
 
   * data/common/source-fields:
     + [NT] Add new "Testsuite-Restrictions" field.
+  * data/files/standard-files:
+    + [NT] Add more common files based on feedback from Helmut Grohne.
   * data/obsolete-sites/obsolete-sites:
     + [BR] Apply patch from Hideki Yamane in order to warn about
       fedorahosted.  (Closes: #856954).

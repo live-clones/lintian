@@ -322,8 +322,14 @@ sub run {
                     # - except if it is a lintian override.
                     next
                       if $fname =~ m{\A
-                            usr/share/lintian/overrides/$ppkg(?:\.gz)?
-                         \Z}xsm;
+                            # Except for:
+                            usr/share/ (?:
+                                # lintian overrides
+                                  lintian/overrides/$ppkg(?:\.gz)?
+                                # reportbug scripts/utilities
+                                | bug/$ppkg(?:/(?:control|presubj|script))?
+
+                         )\Z}xsm;
                     $is_empty = 0;
                     last;
                 }
@@ -334,13 +340,22 @@ sub run {
                 }
                 # Skip /usr/share/doc/$pkg symlinks.
                 next if $fname eq "usr/share/doc/$pkg";
+                my $basename = $file->basename;
                 # For files directly in /usr/share/doc/$pkg, if the
                 # file isn't one of the uninteresting ones, the
                 # package isn't empty.
-                unless ($STANDARD_FILES->known($file->basename)) {
-                    $is_empty = 0;
-                    last;
+                next if $STANDARD_FILES->known($basename);
+                # Ignore all READMEs
+                next if $basename =~ m/^README(?:\..*)?$/i;
+                my $pkg_arch = $proc->pkg_arch;
+                if ($pkg_arch ne 'all') {
+                    # binNMU changelog (debhelper)
+                    next if $basename eq "changelog.Debian.${pkg_arch}.gz";
                 }
+                # buildinfo file (dh-buildinfo)
+                next if $basename eq "buildinfo_${pkg_arch}.gz";
+                $is_empty = 0;
+                last;
             }
         }
         if ($is_empty) {

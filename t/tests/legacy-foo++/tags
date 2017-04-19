@@ -22,5 +22,6 @@ W: foo++ source: dm-upload-allowed-is-obsolete
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 W: foo++-helper: empty-binary-package
 W: foo++: debian-changelog-has-wrong-day-of-week 2003-04-14 is a Monday
+W: foo++: empty-binary-package
 W: foo++: latest-debian-changelog-entry-without-new-date
 W: foo++: readme-debian-contains-invalid-email-address foo@unknown

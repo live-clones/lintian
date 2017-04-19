@@ -37,6 +37,7 @@ W: generic-dh-make-2008 source: superfluous-clutter-in-homepage <insert the upst
 W: generic-dh-make-2008: bad-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: copyright-has-url-from-dh_make-boilerplate
 W: generic-dh-make-2008: copyright-without-copyright-notice
+W: generic-dh-make-2008: empty-binary-package
 W: generic-dh-make-2008: new-package-should-close-itp-bug
 W: generic-dh-make-2008: readme-debian-contains-debmake-template
 W: generic-dh-make-2008: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
