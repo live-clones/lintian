@@ -53,6 +53,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [EB] Add some more spelling corrections.  (Closes: #852369, #852404,
       #852407, #852409, #852410, #852411, #852413, #852414, #852416,
       #852419, #852421, #852426)
+    + [CL] Add "none were" -> "none was" multiword correction.
+      (Closes: 860558)
 
   * debian/copyright:
     + [EB] Add Edward Betts.
