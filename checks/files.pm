@@ -259,7 +259,8 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
 
 sub run {
     my ($pkg, $type, $info, $proc) = @_;
-    my ($is_python, $is_perl, $has_binary_perl_file);
+    my ($is_python, $is_perl, $has_binary_perl_file, $has_public_executable,
+        $has_public_shared_library);
     my @nonbinary_perl_files_in_lib;
     my %linked_against_libvga;
     my @devhelp;
@@ -274,7 +275,7 @@ sub run {
     my $source_pkg = $proc->pkg_src;
     my $pkg_section = $info->field('section', '');
     my $arch = $info->field('architecture', '');
-    my $isma_same = $info->field('multi-arch', '') eq 'same';
+    my $multiarch = $info->field('multi-arch', 'no');
     my $ppkg = quotemeta($pkg);
 
     # get the last changelog timestamp
@@ -358,6 +359,7 @@ sub run {
         $arch_dep_files = 1 if $fname !~ m,^usr/share/,o && $fname ne 'usr/';
 
         if (exists($PATH_DIRECTORIES{$file->dirname})) {
+            $has_public_executable = 1;
             tag 'file-name-in-PATH-is-not-ASCII', $file
               if $file->basename !~ m{\A [[:ascii:]]++ \Z}xsm;
         } elsif (!is_string_utf8_encoded($fname)) {
@@ -847,7 +849,6 @@ sub run {
                             or index($block,'pkg-config')  > -1)
                       ) {
                         tag 'old-style-config-script',$file;
-                        my $multiarch = $info->field('multi-arch', 'no');
                         # could be ok but only if multi-arch: no
                         if($multiarch ne 'no' or $arch eq 'all') {
                             # check multi-arch path
@@ -1082,6 +1083,11 @@ sub run {
                   $TRIPLETS->value($subdir)
                   unless ($arch eq $TRIPLETS->value($subdir));
             }
+        }
+
+        if ($fname =~ m,(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$,) {
+            $has_public_shared_library = 1
+              if (!defined($1) || $TRIPLETS->known($1));
         }
 
         # ---------------- .pyc/.pyo (compiled Python files)
@@ -1549,7 +1555,7 @@ sub run {
                     }
                     close($fd);
                     if ($mtime != 0) {
-                        if ($isma_same && $file !~ m/\Q$arch\E/) {
+                        if ($multiarch eq 'same' && $file !~ m/\Q$arch\E/) {
                             tag 'gzip-file-is-not-multi-arch-same-safe',$file;
                         } else {
                             # see https://bugs.debian.org/762105
@@ -1931,6 +1937,12 @@ sub run {
     if ($x11_font_dirs{misc} and keys(%x11_font_dirs) > 1) {
         tag 'package-mixes-misc-and-dpi-fonts';
     }
+
+    tag 'multiarch-foreign-shared-library'
+      if $arch ne 'all'
+      and $multiarch eq 'foreign'
+      and $has_public_shared_library
+      and not $has_public_executable;
 
     return;
 }
