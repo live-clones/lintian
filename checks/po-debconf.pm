@@ -32,7 +32,7 @@ use Lintian::Util qw(clean_env copy_dir run_cmd);
 
 sub run {
     my (undef, undef, $info) = @_;
-    my $has_template = my $has_depends = my $has_config = 0;
+    my $has_template = 0;
     my @lang_templates;
     my $full_translation = 0;
     my $debian_dir = $info->index_resolved_path('debian/');
