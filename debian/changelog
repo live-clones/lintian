@@ -23,6 +23,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       on a collection.
   * checks/fields.pm:
     + [BR] Enforce naming convention for debug package.  (Closes: #645455).
+    + [NT] Avoid proposing "/git/git/" as a part of the canonical URL for
+      anonscm.debian.org.  Thanks to Andreas Beckmann for spotting the
+      bug.  (Closes: #851215)
   * checks/files.pm:
     + [BR] Do not report duplicates for package-installs-apt-preferences
       and package-installs-apt-sources.  (Closes: #814521).
