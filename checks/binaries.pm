@@ -585,7 +585,7 @@ sub run {
                 tag 'hardening-no-relro', $file;
             }
 
-            if ($arch_hardening->{'hardening-no-bindnow'}
+            if (    $arch_hardening->{'hardening-no-bindnow'}
                 and not $built_with_golang
                 and not exists($objdump->{'FLAGS_1'}{'NOW'})) {
                 tag 'hardening-no-bindnow', $file;
