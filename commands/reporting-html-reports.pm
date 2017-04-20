@@ -34,14 +34,13 @@ use URI::Escape;
 use Text::Template ();
 
 use Lintian::Command qw(safe_qx spawn);
-use Lintian::Command::Simple qw(rundir);
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
-  find_backlog copy_dir delete_dir);
+  find_backlog copy_dir delete_dir run_cmd);
 
 # ------------------------------
 # Global variables and configuration
@@ -626,9 +625,8 @@ sub update_history_and_make_graphs {
         close($common);
 
         print "Plotting global statistics...\n";
-        rundir($graph_dir, 'gnuplot',
-            "$LINTIAN_ROOT/reporting/graphs/statistics.gpi") == 0
-          or die "gnuplot died with $?\n";
+        run_cmd({ 'chdir' => $graph_dir},
+            'gnuplot',"$LINTIAN_ROOT/reporting/graphs/statistics.gpi");
 
         $RESOURCE_MANAGER->install_resource("${graph_dir}/statistics.svg");
     }
@@ -655,8 +653,7 @@ sub update_history_and_make_graphs {
 
     if ($GRAPHS) {
         close($gnuplot_fd);
-        rundir($graph_dir, 'gnuplot', 'call.gpi') == 0
-          or die("gnuplot died with $?\n");
+        run_cmd({'chdir' => $graph_dir}, 'gnuplot', 'call.gpi');
         unlink($commonf);
         for my $tag (sort(keys(%{$tag_statistics_ref}))) {
             my $graph_file = "${graph_dir}/tags/${tag}.svg";

@@ -17,14 +17,11 @@ package Lintian::Command::Simple;
 
 use strict;
 use warnings;
-use autodie qw(open close chdir);
 
 use Exporter qw(import);
 use POSIX qw(:sys_wait_h);
 
-use Lintian::Util qw(do_fork);
-
-our @EXPORT_OK = qw(rundir wait_any kill_all);
+our @EXPORT_OK = qw(wait_any kill_all);
 
 =head1 NAME
 
@@ -32,9 +29,15 @@ Lintian::Command::Simple - Run commands without pipes
 
 =head1 SYNOPSIS
 
-    use Lintian::Command::Simple qw(rundir);
+    use Lintian::Command::Simple qw(wait_any);
 
-    rundir('./some-dir/', 'echo', 'hello world');
+    my %pid_info;
+    my $pid = fork() // die("fork: $!");
+    exec('do', 'something') if $pid == 0;
+    $pid_info{$pid} = "A useful value associated with $pid";
+
+    my ($termiated_pid, $value) = wait_any(\%pid_info);
+    ...;
 
 =head1 DESCRIPTION
 
@@ -46,41 +49,6 @@ the shell. See 'perldoc -f exec's note about shell metacharacters.
 If you want to pipe to/from Perl, look at Lintian::Command instead.
 
 =over 4
-
-=item rundir(dir, command, argument  [, ...])
-
-Executes the given C<command> with the given arguments and in C<dir>
-returns the status code as one would see it from a shell script.
-
-Being fair, the only advantage of this function over the
-CORE::system() function is the way the return status is reported
-and the chdir support.
-
-=cut
-
-sub rundir {
-    my $pid;
-    my $res;
-
-    $pid = do_fork();
-    if (not defined($pid)) {
-        # failed
-        $res = -1;
-    } elsif ($pid > 0) {
-        # parent
-        waitpid($pid, 0);
-        $res = $? >> 8;
-    } else {
-        # child
-        my $dir = shift;
-        close(STDIN);
-        open(STDIN, '<', '/dev/null');
-        chdir($dir);
-        CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
-    }
-
-    return $res;
-}
 
 =item wait_any (hashref[, nohang])
 

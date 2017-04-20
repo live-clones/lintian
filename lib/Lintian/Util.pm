@@ -65,6 +65,7 @@ BEGIN {
           is_string_utf8_encoded
           fail
           do_fork
+          run_cmd
           strip
           lstrip
           rstrip
@@ -1005,6 +1006,95 @@ sub perm2oct {
     $o += 01001 if $9 eq 't';   # stickybit + other execute
 
     return $o;
+}
+
+=item run_cmd([OPTS, ]COMMAND[, ARGS...])
+
+Executes the given C<COMMAND> with the (optional) arguments C<ARGS> and
+returns the status code as one would see it from a shell script.  Shell
+features cannot be used.
+
+OPTS, if given, is a hash reference with zero or more of the following key-value pairs:
+
+=over 4
+
+=item chdir
+
+The child process with chdir to the given directory before executing the command.
+
+=item in
+
+The STDIN of the child process will be reopened and read from the filename denoted by the value of this key.
+By default, STDIN will reopened to read from /dev/null.
+
+=item out
+
+The STDOUT of the child process will be reopened and write to filename denoted by the value of this key.
+By default, STDOUT is discarded.
+
+=item update-env-vars
+
+Each key/value pair defined in the hashref associated with B<update-env-vars> will be updated in the
+child processes's environment.  If a value is C<undef>, then the corresponding environment variable
+will be removed (if set).  Otherwise, the environment value will be set to that value.
+
+=back
+
+=cut
+
+sub run_cmd {
+    my (@cmd_args) = @_;
+    my ($opts, $pid);
+    if (ref($cmd_args[0]) eq 'HASH') {
+        $opts = shift(@cmd_args);
+    } else {
+        $opts = {};
+    }
+    $pid = do_fork();
+    if (not defined($pid)) {
+        # failed
+        die("fork failed: $!\n");
+    } elsif ($pid > 0) {
+        # parent
+        waitpid($pid, 0);
+        if ($?) {
+            my $exit_code = ($? >> 8) & 0xff;
+            my $signal = $? & 0x7f;
+            my $cmd = join(' ', @cmd_args);
+            if ($exit_code) {
+                die("Command $cmd returned: $exit_code\n");
+            } else {
+                my $signame = signal_number2name($signal);
+                die("Command $cmd received signal: $signame ($signal)\n");
+            }
+        }
+    } else {
+        # child
+        if (defined(my $env = $opts->{'update-env-vars'})) {
+            while (my ($k, $v) = each(%{$env})) {
+                if (defined($v)) {
+                    $ENV{$k} = $v;
+                } else {
+                    delete($ENV{$k});
+                }
+            }
+        }
+        if ($opts->{'in'}) {
+            open(STDIN, '<', $opts->{'in'});
+        } else {
+            open(STDIN, '<', '/dev/null');
+        }
+        if ($opts->{'out'}) {
+            open(STDOUT, '>', $opts->{'out'});
+        } else {
+            open(STDOUT, '>', '/dev/null');
+        }
+        chdir($opts->{'chdir'}) if $opts->{'chdir'};
+        # Avoid shell evaluation.
+        CORE::exec {$cmd_args[0]} @cmd_args
+          or die("Failed to exec '$_[0]': $!\n");
+    }
+    return 1;
 }
 
 =item delete_dir (ARGS)
