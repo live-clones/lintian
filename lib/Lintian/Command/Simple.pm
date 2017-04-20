@@ -24,7 +24,7 @@ use POSIX qw(:sys_wait_h);
 
 use Lintian::Util qw(do_fork);
 
-our @EXPORT_OK = qw(rundir background wait_any kill_all);
+our @EXPORT_OK = qw(rundir wait_any kill_all);
 
 =head1 NAME
 
@@ -32,14 +32,9 @@ Lintian::Command::Simple - Run commands without pipes
 
 =head1 SYNOPSIS
 
-    use Lintian::Command::Simple qw(background rundir);
+    use Lintian::Command::Simple qw(rundir);
 
-    Lintian::Command::Simple::rundir ('./some-dir/', 'echo', 'hello world');
-
-    # Start a command in the background:
-    Lintian::Command::Simple::background('sleep', 10);
-    print wait() > 0 ? 'success' : 'failure';
-
+    rundir('./some-dir/', 'echo', 'hello world');
 
 =head1 DESCRIPTION
 
@@ -85,35 +80,6 @@ sub rundir {
     }
 
     return $res;
-}
-
-=item background(command, argument  [, ...])
-
-Executes the given C<command> with the given arguments asynchronously
-and returns the process id of the child process.
-
-A return value of -1 indicates an error. This can either be a problem
-when calling CORE::fork() or when trying to run another command before
-calling wait() to reap the previous command.
-
-=cut
-
-sub background {
-    my $pid = do_fork();
-
-    if (not defined($pid)) {
-        # failed
-        return -1;
-    } elsif ($pid > 0) {
-        # parent
-        return $pid;
-    } else {
-        # child
-        close(STDIN);
-        open(STDIN, '<', '/dev/null');
-
-        CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
-    }
 }
 
 =item wait_any (hashref[, nohang])
