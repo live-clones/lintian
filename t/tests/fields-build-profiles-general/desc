@@ -2,8 +2,6 @@ Testname: fields-build-profiles-general
 Version: 1.0
 Options: --pedantic
 Description: General tests for build profiles
-# Build-profiles requires dpkg 1.17.14 and debhelper 9.20141010
-Test-Depends: dpkg (>= 1.17.14), debhelper (>= 9.20141010)
 Test-For:
  invalid-profile-name-in-source-relation
  invalid-profile-name-in-build-profiles-field

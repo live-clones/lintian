@@ -4,7 +4,6 @@ Version: 1.0-1
 Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
-Test-Depends: java-common (>= 0.52)
 Test-For:
  missing-classpath
  classpath-contains-relative-path

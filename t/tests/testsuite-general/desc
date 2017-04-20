@@ -3,9 +3,6 @@ Version: 1.0
 Description: General tests of the autopkgtest control file
 Options: -I -E --pedantic
 Skeleton: pedantic
-# according to changelog dpkg 1.17.11:
-# * Automatically add the Testsuite field in dpkg-source to the .dsc file
-Test-Depends: dpkg (>= 1.17.11)
 Test-For:
  debian-tests-control-uses-national-encoding
  exclusive-runtime-tests-field

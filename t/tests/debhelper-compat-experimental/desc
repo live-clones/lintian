@@ -5,6 +5,5 @@ Description: Test for old debian/compat file
 Profile: lintian-test
 Skeleton: pedantic
 Options: --pedantic -I -E
-Test-Depends: debhelper (>= 9.20141221),
 Test-For:
  package-uses-experimental-debhelper-compat-version

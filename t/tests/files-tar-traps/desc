@@ -1,11 +1,5 @@
 Testname: files-tar-traps
 Version: 1.0
 Description: Test tags for tar common bugs
-# tar -t in 1.27 is buggy and creates tarballs incorrectly
-# for "quoted" file names.
-#
-# See #740199 and
-# http://lists.gnu.org/archive/html/bug-tar/2014-03/msg00001.html
-Test-Depends: tar (>= 1.27.1~), dpkg (>= 1.17.7)
 Test-For:
  non-standard-toplevel-dir
