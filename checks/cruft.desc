@@ -382,39 +382,6 @@ Info: Leaving config.cache/status causes autobuilders problems.
  Note that Lintian cannot reliably detect the removal in the clean rule,
  so once you fix this, please ignore or override this warning.
 
-Tag: ancient-autotools-helper-file
-Severity: important
-Certainty: possible
-Info: The referenced file has a time stamp older than year 2004 and the
- package does not build-depend on autotools-dev or automake and therefore
- apparently does not update it.  This usually means that the source
- package will not build correctly on all currently released architectures.
- .
- For packages using debhelper, the tools from the dh-autoreconf
- package should handle this issue.  cdbs will automatically update
- these files if autotools-dev is installed during build, but the build
- dependency on autotools-dev is still necessary.
- .
- Otherwise, read /usr/share/doc/autotools-dev/README.Debian.gz (from the
- autotools-dev package) for information on how to fix this problem.
-
-Tag: outdated-autotools-helper-file
-Severity: normal
-Certainty: possible
-Info: The referenced file has a time stamp older than April of 2012 and the
- package does not build-depend on autotools-dev or automake and therefore
- apparently does not update it.  This usually means that the source
- package will not build correctly on ARM64, for which a Debian port is
- currently in progress, and may not support other newer architectures.
- .
- For packages using debhelper, the tools from the dh-autoreconf
- package should handle this issue.  cdbs will automatically update
- these files if autotools-dev is installed during build, but the build
- dependency on autotools-dev is still necessary.
- .
- Otherwise, read /usr/share/doc/autotools-dev/README.Debian.gz (from the
- autotools-dev package) for information on how to fix this problem.
-
 Tag: ancient-libtool
 Severity: normal
 Certainty: possible

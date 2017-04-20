@@ -18,6 +18,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [BR] Correct a typo in description of tag
       license-problem-convert-utf-code.
     + [BR] Avoid a false positive in gfdl file detection.
+    + [NT] Drop tags about outdated autotools config.guess and
+      config.sub files.  These days debhelper automatically updates
+      them when people use the dh-sequencer and the check is not
+      geared for more thorough analysis.  (Closes: #848878)
   * checks/debian-readme.{desc,pm}:
     + [NT] Locate the README.Debian using the index rather than relying
       on a collection.

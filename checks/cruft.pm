@@ -45,14 +45,6 @@ use Lintian::Tags qw(tag);
 use Lintian::Util qw(fail normalize_pkg_path strip);
 use Lintian::SlidingWindow;
 
-# All the packages that may provide config.{sub,guess} during the build, used
-# to suppress warnings about outdated autotools helper files.  I'm not
-# thrilled with having the automake exception as well, but people do depend on
-# autoconf and automake and then use autoreconf to update config.guess and
-# config.sub, and automake depends on autotools-dev.
-our $AUTOTOOLS = Lintian::Relation->new(
-    join(' | ', Lintian::Data->new('cruft/autotools')->all));
-
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
 
 # load data for md5sums based check
@@ -356,7 +348,6 @@ sub run {
 
     # Check if the package build-depends on autotools-dev, automake,
     # or libtool.
-    my $atdinbd= $info->relation('build-depends-all')->implies($AUTOTOOLS);
     my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);
     my %warned;
     my $format = $info->field('format');
@@ -371,7 +362,7 @@ sub run {
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
-    find_cruft($source_pkg, $info, \%warned, $atdinbd, $ltinbd);
+    find_cruft($source_pkg, $info, \%warned, $ltinbd);
 
     for my $file (@EOL_TERMINATORS_FILES) {
         my $path = $info->index_resolved_path("debian/$file");
@@ -552,7 +543,7 @@ sub istestset {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    my ($source_pkg, $info, $warned, $atdinbd, $ltinbd) = @_;
+    my ($source_pkg, $info, $warned, $ltinbd) = @_;
     my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
     my @worklist;
 
@@ -733,28 +724,6 @@ sub find_cruft {
             if ($dirname ne 'debian') {
                 tag 'configure-generated-file-in-source', $name;
             }
-        }elsif ($basename =~ m{\A config.(?:guess|sub) \Z}xsm
-            and not $atdinbd){
-            my $fd = $entry->open;
-            while (<$fd>) {
-                last
-                  if $.> 10;  # it's on the 6th line, but be a bit more lenient
-                if (/^(?:timestamp|version)='((\d+)-(\d+).*)'$/) {
-                    my ($date, $year, $month) = ($1, $2, $3);
-                    if ($year < 2004) {
-                        tag 'ancient-autotools-helper-file', $name, $date;
-                    }elsif (($year < 2012)
-                        or ($year == 2012 and $month < 4)){
-                        # config.sub   >= 2012-04-18 (was 2012-02-10)
-                        # config.guess >= 2012-06-10 (was 2012-02-10)
-                        # Flagging anything earlier than 2012-04 as
-                        # outdated works, due to the "bumped from"
-                        # dates.
-                        tag 'outdated-autotools-helper-file', $name, $date;
-                    }
-                }
-            }
-            close($fd);
         }elsif ($basename eq 'ltconfig' and not $ltinbd) {
             tag 'ancient-libtool', $name;
         }elsif ($basename eq 'ltmain.sh', and not $ltinbd) {

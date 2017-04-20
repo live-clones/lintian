@@ -1,6 +1,0 @@
-Testname: cruft-ancient-autotools
-Version: 1.0
-Description: Test for old autotools helper files
-Test-For:
- ancient-autotools-helper-file
- outdated-autotools-helper-file
