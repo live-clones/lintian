@@ -44,6 +44,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Improve the empty-binary-package tag by adding more common
       files that should be ignored.  Thanks to Helmut Grohne for all the
       research behind it.  (Closes: #856857)
+  * checks/init.d.{desc,pm}:
+    + [NT] Remove check for init.d scripts accessing /usr without a
+      $remote_fs dependency as /usr must now be mounted by the initramfs.
+      (Closes: #829649)
   * checks/menu-format.{desc,pm}:
     + [NT] Update the reference to Desktop Entry Specification to point
       to version 1.1.

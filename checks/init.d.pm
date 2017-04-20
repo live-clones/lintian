@@ -243,7 +243,7 @@ sub check_init {
     return if not $initd_path->is_open_ok;
     my (%tag, %lsb);
     my $in_file_test = 0;
-    my %needs_fs = ('remote' => 0, 'local' => 0);
+    my $needs_fs = 0;
     my $fd = $initd_path->open;
     while (my $l = <$fd>) {
         if ($. == 1) {
@@ -315,8 +315,7 @@ sub check_init {
 
         # This should be more sophisticated: ignore heredocs, ignore quoted
         # text and the arguments to echo, etc.
-        $needs_fs{'remote'} = 1 if ($l =~ m,^[^\#]*/usr/,);
-        $needs_fs{'local'}  = 1 if ($l =~ m,^[^\#]*/var/,);
+        $needs_fs = 1 if ($l =~ m,^[^\#]*/var/,);
 
         while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//o) {
             $tag{$1} = 1;
@@ -417,22 +416,13 @@ sub check_init {
           unless $provides_self;
     }
 
-    # If $remote_fs is needed $local_fs is not, since it's implied.
-    $needs_fs{'local'} = 0 if $needs_fs{'remote'};
-
     # Separately check Required-Start and Required-Stop, since while they're
     # similar, they're not quite identical.  This could use some further
     # restructuring by pulling the regexes out as data tied to start/stop and
     # remote/local and then combining the loops.
     if (defined $lsb{'default-start'} && length($lsb{'default-start'})) {
         my @required = split(' ', $lsb{'required-start'} || '');
-        if ($needs_fs{remote}) {
-            if (none { /^\$(?:remote_fs|all)\z/ } @required) {
-                tag 'init.d-script-missing-dependency-on-remote_fs',
-                  "${initd_path}: required-start";
-            }
-        }
-        if ($needs_fs{local}) {
+        if ($needs_fs) {
             if (none { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
                 tag 'init.d-script-missing-dependency-on-local_fs',
                   "${initd_path}: required-start";
@@ -441,13 +431,7 @@ sub check_init {
     }
     if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
         my @required = split(' ', $lsb{'required-stop'} || '');
-        if ($needs_fs{remote}) {
-            if (none { /^(?:\$remote_fs|\$all|umountnfs)\z/ } @required) {
-                tag 'init.d-script-missing-dependency-on-remote_fs',
-                  "${initd_path}: required-stop";
-            }
-        }
-        if ($needs_fs{local}) {
+        if ($needs_fs) {
             if (none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
                 @required) {
                 tag 'init.d-script-missing-dependency-on-local_fs',

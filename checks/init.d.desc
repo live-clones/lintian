@@ -220,11 +220,9 @@ Tag: init.d-script-uses-usr-interpreter
 Severity: normal
 Certainty: possible
 Info: The given <tt>/etc/init.d</tt> script specifies an interpreter in
- its shebang located under <tt>/usr</tt>.  This means the init script will
- fail if run at a point in the boot sequence before the <tt>/usr</tt>
- partition has been mounted.
+ its shebang located under <tt>/usr</tt>.
  .
- It also indicates that the init script may be using a non-essential
+ It indicates that the init script may be using a non-essential
  interpreter.  Since init scripts are configuration files, they may be
  left on the system after their package has been removed but not purged.
  At that point, the package dependencies are not guaranteed to exist and
@@ -319,22 +317,6 @@ Info: The given <tt>/etc/init.d</tt> script indicates it should be
  mistake.  The system administrators should be given the opportunity to
  customize the runlevels at their will.
 Ref: policy 9.3.3.1
-
-Tag: init.d-script-missing-dependency-on-remote_fs
-Severity: important
-Certainty: possible
-Info: The given init script seems to refer to <tt>/usr</tt>, possibly
- using a file or binary from there.  Without a dependency on
- <tt>$remote_fs</tt> in Required-Start or Required-Stop, as appropriate,
- the init script might be run before <tt>/usr</tt> is mounted or after
- it's unmounted.
- .
- Using Should-Start or Should-Stop to declare the dependency is
- conceptually incorrect since the $remote_fs facility is always
- available.  Required-Start or Required-Stop should be used instead.
- Also, please note that $all should not be used in Required-Stop, only
- Required-Start.
-Ref: https://wiki.debian.org/LSBInitScripts
 
 Tag: init.d-script-missing-dependency-on-local_fs
 Severity: important
