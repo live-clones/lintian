@@ -408,7 +408,7 @@ Info: This package provides an ELF executable that was not compiled
  difficult.
  .
  Historically, PIE has been associated with noticeable performance
- overhead on i386.  However, GCC >= 5 has implemented an optimization
+ overhead on i386.  However, GCC &gt;= 5 has implemented an optimization
  that can reduce the overhead significantly.
  .
  If you use <tt>dpkg-buildflags</tt> with <tt>hardening=+all,-pie</tt>
