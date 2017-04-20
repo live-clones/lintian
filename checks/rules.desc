@@ -237,14 +237,3 @@ Info: The rules file use the make variable $(_).
  If the rules file uses $(dir $(_)) to discover the directory containing
  the source package (presumably in order to implement the get-orig-source
  target), please replace it by $(dir $(firstword $(MAKEFILE_LIST))).
-
-Tag: package-would-benefit-from-build-arch-targets
-Severity: normal
-Certainty: certain
-Ref: #629385, https://wiki.debian.org/ReleaseGoals/BuildArchTarget
-Info: The source package does not have both a build-arch and a build-indep
- target.  Furthermore it is part of the selected set of packages to
- be fixed for Wheezy.
- .
- Please consider adding both the build-arch and build-indep targets.
-

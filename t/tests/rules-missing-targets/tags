@@ -1,4 +1,3 @@
 I: rules-missing-targets source: debian-rules-missing-good-practice-target-dfsg get-orig-source
 W: rules-missing-targets source: debian-rules-missing-recommended-target build-arch
 W: rules-missing-targets source: debian-rules-missing-recommended-target build-indep
-W: rules-missing-targets source: package-would-benefit-from-build-arch-targets

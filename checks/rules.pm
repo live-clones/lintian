@@ -364,7 +364,6 @@ sub run {
     close($rules_fd);
 
     unless ($includes) {
-        my $rec_allindep = 0;
         # Make sure all the required rules were seen.
         for my $target ($POLICYRULES->all) {
             unless ($seen{$target}) {
@@ -373,7 +372,6 @@ sub run {
                     tag 'debian-rules-missing-required-target', $target;
                 } elsif ($typerule eq 'recommended_allindep') {
                     tag 'debian-rules-missing-recommended-target', $target;
-                    $rec_allindep++;
                 } elsif ($typerule eq 'goodpractice_dfsg') {
                     if ($version =~ /(dfsg|debian|ds)/) {
                         tag 'debian-rules-missing-good-practice-target-dfsg',
@@ -387,18 +385,6 @@ sub run {
                             "$typerule (target: $target)"));
                 }
             }
-        }
-
-        if ($rec_allindep) {
-            my $all = 0;
-            my $notall = 0;
-            foreach my $p ($group->get_processables) {
-                next if $p->pkg_type eq 'source' or $p->pkg_type eq 'changes';
-                $all++ if $p->pkg_arch eq 'all';
-                $notall++ if $p->pkg_arch ne 'all';
-            }
-            tag 'package-would-benefit-from-build-arch-targets'
-              if $all && $notall;
         }
     }
 

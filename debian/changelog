@@ -49,6 +49,11 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       to version 1.1.
     + [NT] Apply patch from Laurent Bigonville to check desktop files
       for missing "Icon" field.  (Closes: #854132)
+  * checks/rules.{desc,pm}:
+    + [NT] Drop "package-would-benefit-from-build-arch-targets".  The
+      dpkg-buildpackage refuses to build packages that trigger this tag.
+      Also, the tag implies two other "W" tags so contributors are still
+      notified of a potential problem.
   * checks/scripts.pm:
     + [NT] Apply patch from Christopher Hoskin to except -doc packages
       from the "new-package-should-not-package-python2-module" tag.

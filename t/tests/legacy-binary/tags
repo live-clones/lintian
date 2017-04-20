@@ -69,7 +69,6 @@ W: binary source: dm-upload-allowed-is-obsolete
 W: binary source: intra-source-package-circular-dependency binary binary-data
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
-W: binary source: package-would-benefit-from-build-arch-targets
 W: binary-data: control-file-is-empty md5sums
 W: binary-data: empty-binary-package
 W: binary: binary-without-manpage usr/bin/hello

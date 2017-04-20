@@ -5,4 +5,3 @@ Description: Test for missing targets in debian/rules
 Test-For:
  debian-rules-missing-good-practice-target-dfsg
  debian-rules-missing-recommended-target
- package-would-benefit-from-build-arch-targets
