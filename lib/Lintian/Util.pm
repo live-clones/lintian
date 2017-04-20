@@ -1104,7 +1104,7 @@ Convenient way of calling I<rm -fr ARGS>.
 =cut
 
 sub delete_dir {
-    return spawn(undef, ['rm', '-rf', '--', @_]);
+    return run_cmd('rm', '-rf', '--', @_);
 }
 
 =item copy_dir (ARGS)
@@ -1117,7 +1117,7 @@ sub copy_dir {
     # --reflink=auto (coreutils >= 7.5).  On FS that support it,
     # make a CoW copy of the data; otherwise fallback to a regular
     # deep copy.
-    return spawn(undef, ['cp', '-a', '--reflink=auto', '--', @_]);
+    return run_cmd('cp', '-a', '--reflink=auto', '--', @_);
 }
 
 =item gunzip_file (IN, OUT)
@@ -1130,7 +1130,7 @@ will cause a trappable error.
 
 sub gunzip_file {
     my ($in, $out) = @_;
-    spawn({out => $out, fail => 'error'}, ['gzip', '-dc', $in]);
+    run_cmd({out => $out}, 'gzip', '-dc', $in);
     return;
 }
 

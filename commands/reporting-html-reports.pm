@@ -33,7 +33,7 @@ use List::MoreUtils qw(uniq);
 use URI::Escape;
 use Text::Template ();
 
-use Lintian::Command qw(safe_qx spawn);
+use Lintian::Command qw(safe_qx);
 use Lintian::Data;
 use Lintian::Internal::FrontendUtil qw(split_tag);
 use Lintian::Profile;
@@ -430,8 +430,7 @@ sub setup_output_dir {
                 'install_method' => 'copy',
                 'source_file' => $lintian_log_file,
             });
-        spawn(\%opts, ['gzip', '-9nc'])
-          or die("cannot create $output_dir/lintian.log.gz.\n");
+        run_cmd(\%opts, ['gzip', '-9nc']);
         $RESOURCE_MANAGER->install_resource("$output_dir/lintian.log.gz");
         symlink($RESOURCE_MANAGER->resource_URL('lintian.log'),
             "$output_dir/lintian.log");

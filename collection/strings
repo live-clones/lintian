@@ -32,7 +32,7 @@ use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Collect;
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(delete_dir fail locate_helper_tool);
+use Lintian::Util qw(delete_dir fail locate_helper_tool run_cmd);
 
 my $helper = locate_helper_tool('coll/strings-helper');
 
@@ -95,8 +95,7 @@ sub collect {
             my $strdir = $dir . '/strings/' . File::Basename::dirname($file);
             # create the dir if needed.
             unless (-d $strdir) {
-                system('mkdir', '-p', $strdir) == 0
-                  or fail "mkdir -p $strdir failed " . (($? >> 8) & 256), "\n";
+                run_cmd('mkdir', '-p', $strdir);
             }
             spawn(
                 {out => "$dir/strings/${file}.gz", fail => 'fail'},

@@ -31,7 +31,7 @@ use constant ERROR_FILES => qw(control-index-errors control-errors);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(delete_dir fail pipe_tee);
+use Lintian::Util qw(delete_dir fail pipe_tee run_cmd);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -107,7 +107,7 @@ sub collect {
     }
 
     # fix permissions
-    spawn({ fail => 'error' }, ['chmod', '-R', 'u+rX,o-w', "$dir/control"]);
+    run_cmd('chmod', '-R', 'u+rX,o-w', "$dir/control");
 
     # Remove empty error files...
     for my $file (ERROR_FILES) {

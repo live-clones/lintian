@@ -37,7 +37,7 @@ use constant READ_SIZE => 4096 * 1024 * 10;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(check_path delete_dir fail pipe_tee);
+use Lintian::Util qw(check_path delete_dir fail run_cmd pipe_tee);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -103,8 +103,7 @@ sub collect {
             ['gzip', '-9nc']);
 
         # fix permissions
-        spawn({ fail => 'error' },
-            ['chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked"]);
+        run_cmd('chmod', '-R', 'u+rwX,o+rX,o-w', "$dir/unpacked");
 
     } else {
         mkdir("$dir/unpacked", 0777);
@@ -112,8 +111,7 @@ sub collect {
         extract_and_index_deb($dir);
 
         # fix permissions
-        spawn({ fail => 'error' },
-            ['chmod', '-R', 'u+rwX,go-w', "$dir/unpacked"]);
+        run_cmd('chmod', '-R', 'u+rwX,go-w', "$dir/unpacked");
     }
 
     # Remove the error file if it is empty

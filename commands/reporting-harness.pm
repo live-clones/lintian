@@ -36,7 +36,7 @@ use Lintian::Lab::Manifest;
 use Lintian::Processable;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Util qw(open_gz slurp_entire_file strip visit_dpkg_paragraph
-  load_state_cache  save_state_cache);
+  load_state_cache run_cmd save_state_cache);
 
 sub usage {
     print <<END;
@@ -119,11 +119,9 @@ sub main {
 
     unless ($opt{'dry-run'}) {
         # rotate log files
-        my %savelog_opt = ('out' => '/dev/null',);
         my @rotate_logs
           = ($log_file, $html_reports_log, $lintian_perf_log, $sync_state_log);
-        spawn(\%savelog_opt, ['savelog', @rotate_logs])
-          or die("Cannot rotate log files.\n");
+        run_cmd('savelog', @rotate_logs);
 
         # create new log file
         open($LOG_FD, '>', $log_file)

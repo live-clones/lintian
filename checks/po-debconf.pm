@@ -28,7 +28,7 @@ use File::Temp();
 
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env copy_dir);
+use Lintian::Util qw(clean_env copy_dir run_cmd);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -169,16 +169,14 @@ sub run {
         );
         my @msgcmp = ('msgcmp', '--use-untranslated');
         my %intltool_opts = (
-            'child_before_exec' => sub {
-                $ENV{'INTLTOOL_EXTRACT'}
-                  = '/usr/share/intltool-debian/intltool-extract';
+            'update-env-vars' => {
+                'INTLTOOL_EXTRACT' =>
+                  '/usr/share/intltool-debian/intltool-extract',
                 # safety of $debian_po is implied by us having
                 # accessed two of its children by now.
-                $ENV{'srcdir'} = $debian_po_dir->fs_path;
-                chdir($tempdir);
+                'srcdir' => $debian_po_dir->fs_path,
             },
-            'fail' => 'error',
-            'out' => \*STDOUT,
+            'chdir' => $tempdir,
         );
 
         # Create our extra level
@@ -189,12 +187,12 @@ sub run {
           if $d_templates;
 
         # Generate a "test.pot" (in a tempdir)
-        spawn(
+        run_cmd(
             \%intltool_opts,
-            [
-                '/usr/share/intltool-debian/intltool-update',
-                '--gettext-package=test','--pot'
-            ]);
+
+            '/usr/share/intltool-debian/intltool-update',
+            '--gettext-package=test','--pot'
+        );
 
         # Compare our "test.pot" with the existing "templates.pot"
         (
