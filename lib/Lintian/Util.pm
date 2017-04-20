@@ -56,7 +56,6 @@ BEGIN {
           parse_dpkg_control
           read_dpkg_control
           read_dpkg_control_utf8
-          dpkg_deb_has_ctrl_tarfile
           get_deb_info
           get_dsc_info
           get_file_checksum
@@ -104,7 +103,7 @@ use FileHandle;
 use List::Util qw(shuffle);
 use Scalar::Util qw(openhandle);
 
-use Lintian::Command qw(spawn safe_qx);
+use Lintian::Command qw(spawn);
 use Lintian::Relation::Version qw(versions_equal versions_comparator);
 
 =head1 NAME
@@ -658,28 +657,6 @@ sub read_dpkg_control_utf8 {
     return @data;
 }
 
-=item dpkg_deb_has_ctrl_tarfile()
-
-Check if lintian could use dpkg-deb instead of ar and tar
-
-=cut
-
-{
-    my $dpkg_deb_has_ctrl_tarfile_cache;
-
-    sub dpkg_deb_has_ctrl_tarfile {
-        if (not defined($dpkg_deb_has_ctrl_tarfile_cache)) {
-            my $help = safe_qx({'err' => '/dev/null'},'dpkg-deb', '--help');
-            if (index($help, '--ctrl-tarfile') > -1) {
-                $dpkg_deb_has_ctrl_tarfile_cache = 1;
-            } else {
-                $dpkg_deb_has_ctrl_tarfile_cache = 0;
-            }
-        }
-        return $dpkg_deb_has_ctrl_tarfile_cache;
-    }
-}
-
 =item get_deb_info(DEBFILE)
 
 Extracts the control file from DEBFILE and returns it as a hashref.
@@ -713,14 +690,9 @@ L</parse_dpkg_control> do.  It can also emit:
             pipe_out => FileHandle->new
         };
 
-        if (dpkg_deb_has_ctrl_tarfile()) {
-            spawn(
-                $opts, ['dpkg-deb', '--ctrl-tarfile', $file],
-                '|', ['tar', '--wildcards', '-xO', '-f', '-', '*control']);
-        } else {
-            spawn($opts, ['ar', 'p', $file, 'control.tar.gz'],
-                '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control']);
-        }
+        spawn(
+            $opts, ['dpkg-deb', '--ctrl-tarfile', $file],
+            '|', ['tar', '--wildcards', '-xO', '-f', '-', '*control']);
         my @data = parse_dpkg_control($opts->{pipe_out});
 
         # Consume all data before exiting so that we don't kill child processes

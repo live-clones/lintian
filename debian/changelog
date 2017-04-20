@@ -76,11 +76,17 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [CL] Add "none were" -> "none was" multiword correction.
       (Closes: 860558)
 
+  * debian/control:
+    + [NT] Add explicit (Build-)Depends on dpkg (>= 1.17.14) to make it
+      explicit that we no longer support Wheezy or older.
   * debian/copyright:
     + [EB] Add Edward Betts.
 
   * lib/Lintian/CheckScript.pm:
     + [NT] Remove fallback code for "old" style "pm"-less checks.
+  * lib/Lintian/Util.pm:
+    + [NT] Drop dpkg_deb_has_ctrl_tarfile.  Lintian now assumes that
+      dpkg 1.17.14 is available (provided by Debian jessie or later).
 
   * frontend/dplint:
     + [NT] Ensure all include directories are absolute before passing
