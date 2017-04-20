@@ -198,7 +198,8 @@ sub check_control_paragraph {
 
 sub check_test_file {
     my ($info, $directory, $name, $line) = @_;
-    my $path = "$directory/$name";
+    # Special case with "Tests-Directory: ." (see #849880)
+    my $path = $directory eq '.' ? $name : "$directory/$name";
     my $index = $info->index($path);
 
     if ($name !~ m{^ [ [:alnum:] \+ \- \. / ]++ $}xsm) {

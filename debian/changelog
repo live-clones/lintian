@@ -47,6 +47,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Apply patch from Lucas Kanashiro to add a tag for recommending
       packagers to create an autopkgtest for their package.
       (Closes: #859467)
+    + [NT] Fix false-positive "missing-runtime-test-file" when the
+      "Tests-Directory" field is set to a single dot.  Thanks to
+      Ian Jackson for reporting the issue.  (Closes: #849880)
 
   * coll/debian-readme{,desc}:
     + [NT] Remove.  Merge what little functionality it offers into the
