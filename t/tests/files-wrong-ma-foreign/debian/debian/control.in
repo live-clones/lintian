@@ -8,10 +8,24 @@ Build-Depends: {$build_depends}
 Package: libpublic1
 Architecture: any
 Depends: $\{misc:Depends\}, $\{shlibs:Depends\},
-Multi-Arch: foreign
+Multi-Arch: same
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: libpublic-dev
+Section: libdevel
+Architecture: any
+Depends: $\{misc:Depends\}, $\{shlibs:Depends\},
+Multi-Arch: foreign
+Description: {$description} (dev)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Supposedly includes some headers.
+
 

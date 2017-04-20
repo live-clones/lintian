@@ -1100,7 +1100,7 @@ sub run {
             }
         }
 
-        if ($fname =~ m,(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$,) {
+        if ($fname =~ m,^(?:usr/)?lib/(?:([^/]+)/)?lib[^/]*\.so$,) {
             $has_public_shared_library = 1
               if (!defined($1) || $TRIPLETS->known($1));
         }
