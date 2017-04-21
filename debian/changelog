@@ -70,7 +70,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       "Tests-Directory" field is set to a single dot.  Thanks to
       Ian Jackson for reporting the issue.  (Closes: #849880)
   * checks/triggers.{desc,pm}:
-    + [NT] New check.
+    + [NT] New check.  (Closes: #698723)
 
   * coll/debian-readme{,desc}:
     + [NT] Remove.  Merge what little functionality it offers into the

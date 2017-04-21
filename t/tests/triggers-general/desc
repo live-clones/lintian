@@ -3,5 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test of the triggers check
 Test-For:
+ repeated-trigger-name
  unknown-trigger random-trigger
  uses-implicit-await-trigger

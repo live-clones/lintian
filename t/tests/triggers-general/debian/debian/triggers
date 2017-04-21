@@ -9,3 +9,7 @@ interest /usr/share/lintian/baz
 
 # Not known by lintian
 random-trigger /bar
+
+# Repated trigger
+interest-await /usr/share/lintian/foo2
+interest-noawait /usr/share/lintian/foo2

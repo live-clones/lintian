@@ -53,6 +53,7 @@ sub run {
     my $triggers_file = $info->control_index('triggers');
     return if not $triggers_file or not $triggers_file->is_open_ok;
     my $fd = $triggers_file->open;
+    my %seen_triggers;
     while (my $line = <$fd>) {
         strip($line);
         next if $line =~ m/^(?:\s*)(?:#.*)?$/;
@@ -65,6 +66,13 @@ sub run {
         if ($trigger_info->{'implicit-await'}) {
             tag 'uses-implicit-await-trigger', $line, "(line $.)";
         }
+        if (defined(my $prev_info = $seen_triggers{$arg})) {
+            my ($prev_line, $prev_line_no) = @{$prev_info};
+            tag 'repeated-trigger-name', $line, "(line $.)", 'vs', $prev_line,
+              "(line $prev_line_no)";
+            next;
+        }
+        $seen_triggers{$arg} = [$line, $.];
     }
     return;
 }
