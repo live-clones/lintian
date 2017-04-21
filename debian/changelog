@@ -69,6 +69,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Fix false-positive "missing-runtime-test-file" when the
       "Tests-Directory" field is set to a single dot.  Thanks to
       Ian Jackson for reporting the issue.  (Closes: #849880)
+  * checks/triggers.{desc,pm}:
+    + [NT] New check.
 
   * coll/debian-readme{,desc}:
     + [NT] Remove.  Merge what little functionality it offers into the

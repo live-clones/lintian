@@ -1,0 +1,36 @@
+Check-Script: triggers
+Author: Niels Thykier <niels@thykier.net>
+Type: binary, udeb
+Info: Check of trigger files in the binary package.
+Needs-Info: bin-pkg-control
+
+Tag: unknown-trigger
+Severity: important
+Certainty: possible
+Info: The package has a trigger that Lintian does not recognise in its
+ control file.
+ .
+ The package may be uninstallable  if dpkg does not support the trigger.
+ .
+ If this is a new type of trigger, then Lintian may simply be out of date.
+ Please verify if the latest version of Lintian know of the trigger or file
+ a bug against Lintian.
+Ref: deb-triggers(5)
+
+Tag: uses-implicit-await-trigger
+Severity: normal
+Certainty: possible
+Info: The listed trigger is present in the control file of the package.
+ The trigger is an await trigger, which may be not obvious from its name.
+ .
+ Await triggers puts rather strong requirements on dpkg that often lead
+ to trigger cycles due to changes in other packages.
+ .
+ If the package does not need the guarantees that dpkg provide to await
+ triggers, please use the "-noawait" variant of the trigger.  This is often
+ the case for packages that use the trigger to compile a form of cache.
+ .
+ If the package do need the guarantees provided by dpkg, then please
+ document the rationale in a comment above the trigger and use the
+ "-await" variant of the trigger to avoid this warning.
+Ref: deb-triggers(5), #774559

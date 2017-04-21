@@ -1,0 +1,7 @@
+Testname: triggers-general
+Sequence: 6000
+Version: 1.0
+Description: Test of the triggers check
+Test-For:
+ unknown-trigger random-trigger
+ uses-implicit-await-trigger

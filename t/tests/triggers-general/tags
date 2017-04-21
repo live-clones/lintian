@@ -1,0 +1,2 @@
+E: triggers-general: unknown-trigger random-trigger /bar (line 11)
+W: triggers-general: uses-implicit-await-trigger interest /usr/share/lintian/baz (line 8)
