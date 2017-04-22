@@ -35,42 +35,7 @@ use List::MoreUtils qw(any);
 use POSIX qw(:sys_wait_h);
 use Time::HiRes qw(gettimeofday tv_interval);
 
-my ($INIT_ROOT, @INCLUDE_DIRS, @RESTRICTED_INCLUDE_DIRS, @HELPER_DIRS);
-my $DPLINT = $ENV{'LINTIAN_DPLINT_FRONTEND'};
-
-BEGIN {
-    if (!exists($ENV{'LINTIAN_INCLUDE_DIRS'})) {
-        print STDERR "Do not call $0 directly, call lintian instead\n";
-        exit(2);
-    }
-    my $dirs = $ENV{'LINTIAN_INCLUDE_DIRS'};
-    my @libdirs;
-    if ($dirs =~ m{\A (.*) \Z}xsm) {
-        # Untaint INCLUDE_DIRS
-        $dirs = $1;
-    }
-    @INCLUDE_DIRS = split(':', $dirs);
-    $INIT_ROOT = $INCLUDE_DIRS[-1];
-    @libdirs = grep { -d } map { "$_/lib" } @INCLUDE_DIRS;
-    if (@libdirs) {
-        require lib;
-        lib->import(@libdirs);
-    }
-    if (my $restricted = $ENV{'LINTIAN_RESTRICTED_INCLUDE_DIRS'}) {
-        if ($restricted =~ m{\A (.*) \Z}xsm) {
-            # Untaint RESTRICTED_INCLUDE_DIRS
-            $restricted = $1;
-        }
-        @RESTRICTED_INCLUDE_DIRS = split(':', $restricted);
-    }
-    if (my $helpers = $ENV{'LINTIAN_HELPER_DIRS'}) {
-        if ($helpers =~ m{\A (.*) \Z}xsm) {
-            # Untaint HELPER_DIRS
-            $helpers = $1;
-        }
-        @HELPER_DIRS = split(':', $helpers);
-    }
-}
+my $INIT_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use Lintian::Command qw(safe_qx);
 use Lintian::DepMap;
@@ -152,23 +117,8 @@ sub timed_task(&);
 
 # {{{ Setup Code
 
-sub lintian_version {
-    # Version number - Is inserted during build with sed, see d/rules
-    my $LINTIAN_VERSION;
-    if (not defined($LINTIAN_VERSION)) {
-        # For some reason the version above has not been inserted.
-        # Most likely this means we are a git clone or an unpacked
-        # source package.  If so, we will use a version that best
-        # describes our situation...
-        open(my $fd, '-|', $DPLINT, 'print-version');
-        chomp($LINTIAN_VERSION = <$fd>);
-        close($fd);
-    }
-    return $LINTIAN_VERSION;
-}
-
 sub lintian_banner {
-    my $lintian_version = lintian_version();
+    my $lintian_version = dplint::lintian_version();
     return "Lintian v${lintian_version}";
 }
 
@@ -286,7 +236,7 @@ EOT-EOT-EOT
 # Options: -V|--version, --print-version
 sub banner {
     if ($_[0] eq 'print-version') {
-        my $lintian_version = lintian_version();
+        my $lintian_version = dplint::lintian_version();
         print "${lintian_version}\n";
     } else {
         my $banner = lintian_banner();
@@ -625,7 +575,6 @@ sub main {
 
     # Set LINTIAN_ROOT to the actual root.
     $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
-    $ENV{'LINTIAN_HELPER_DIRS'} = join(':', @HELPER_DIRS);
 
     # environment variables override settings in conf file, so load them now
     # assuming they were not set by cmd-line options
@@ -1556,10 +1505,7 @@ sub setup_work_pool {
 }
 
 sub load_profile_and_configure_tags {
-    my %profile_opts= ('restricted-search-dirs' => \@RESTRICTED_INCLUDE_DIRS,);
-    my $profile
-      = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},\@INCLUDE_DIRS,
-        \%profile_opts);
+    my $profile = dplint::load_profile($opt{'LINTIAN_PROFILE'});
     # Ensure $opt{'LINTIAN_PROFILE'} is defined
     $opt{'LINTIAN_PROFILE'} = $profile->name
       unless defined($opt{'LINTIAN_PROFILE'});
