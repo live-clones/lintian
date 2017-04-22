@@ -24,6 +24,7 @@ use autodie;
 
 use Getopt::Long();
 use File::Basename qw(basename);
+use YAML::XS ();
 
 use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
@@ -34,24 +35,15 @@ use Lintian::Util qw(
   save_state_cache
   strip
   visit_dpkg_paragraph
-  untaint
 );
 
 my $DEFAULT_CHECKSUM = 'sha256';
 my (%KNOWN_MEMBERS, %ACTIVE_GROUPS);
+my $CONFIG;
 my %OPT;
 my %OPT_HASH= (
-    'state-dir=s'       => \$OPT{'state-dir'},
-    'mirror-path=s'     => \$OPT{'mirror-path'},
-    # Comma-separated lists
-    'distributions=s@'  =>
-      sub { push(@{$OPT{'distributions'}}, split(m/,/, $_[1])); },
-    'mirror-areas=s@'   =>
-      sub { push(@{$OPT{'mirror-areas'}},  split(m/,/, $_[1])); },
-    'architectures=s@'  =>
-      sub { push(@{$OPT{'architectures'}}, split(m/,/, $_[1])); },
+    'reporting-config=s'=> \$OPT{'reporting-config'},
     'desired-version=s' => \$OPT{'desired-version'},
-    'lintian-lab=s'     => \$OPT{'lintian-lab'},
     'reschedule-all'    => \$OPT{'reschedule-all'},
     'help|h'            => \&usage,
     'debug|d'           => \$OPT{'debug'},
@@ -59,43 +51,77 @@ my %OPT_HASH= (
 );
 
 sub check_parameters {
-    for my $parameter (
-        qw(state-dir mirror-path distributions mirror-areas architectures desired-version)
-      ) {
+    for my $parameter (qw(reporting-config desired-version)) {
         if (not defined($OPT{$parameter})) {
             die(    "Missing required parameter \"--${parameter}\""
                   . "(use --help for more info)\n");
         }
     }
-    if (-d $OPT{'state-dir'}) {
-        untaint($OPT{'state-dir'});
-    } else {
-        die("The --state-dir parameter must point to an existing directory\n");
+    if (not $OPT{'reporting-config'} or not -f $OPT{'reporting-config'}) {
+        die("The --reporting-config parameter must point to an existing file\n"
+        );
     }
     return;
 }
 
+sub required_cfg_value {
+    my (@keys) = @_;
+    my $v = $CONFIG;
+    for my $key (@keys) {
+        if (not exists($v->{$key})) {
+            my $k = join('.', @keys);
+            die("Missing required config parameter: ${k}\n");
+        }
+        $v = $v->{$key};
+    }
+    return $v;
+}
+
+sub required_cfg_non_empty_list_value {
+    my (@keys) = @_;
+    my $v = required_cfg_value(@keys);
+    if (not defined($v) || ref($v) ne 'ARRAY' || scalar(@{$v}) < 1) {
+        my $k = join('.', @keys);
+        die("Invalid configuration: ${k} must be a non-empty list\n");
+    }
+    return $v;
+}
+
 sub main {
-    my $state;
+    my ($state_dir, $state, $archives);
     STDOUT->autoflush;
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     Getopt::Long::GetOptions(%OPT_HASH) or die("error parsing options\n");
     check_parameters();
-    $state = load_state_cache($OPT{'state-dir'});
+    $CONFIG = YAML::XS::LoadFile($OPT{'reporting-config'});
+    $state_dir = required_cfg_value('storage', 'state-cache');
+    $state = load_state_cache($state_dir);
+
     if (upgrade_state_cache_if_needed($state)) {
         log_debug('Updated the state cache');
     }
     log_debug('Initial state had '
           . (scalar(keys(%{$state->{'groups'}})))
           . ' groups');
-    local_mirror_manifests($state,$OPT{'mirror-path'},$OPT{'distributions'},
-        $OPT{'mirror-areas'},$OPT{'architectures'});
+    $archives = required_cfg_value('archives');
+    for my $archive (sort(keys(%{$archives}))) {
+        log_debug("Processing archive $archive");
+        my $path = required_cfg_value('archives', $archive, 'base-dir');
+        my $archs = required_cfg_non_empty_list_value('archives', $archive,
+            'architectures');
+        my $components
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'components');
+        my $distributions
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'distributions');
+        local_mirror_manifests($state, $path, $distributions, $components,
+            $archs);
+    }
+
     cleanup_state($state);
     if (not $OPT{'dry-run'}) {
-        save_state_cache($OPT{'state-dir'}, $state);
-    }
-    if ($OPT{'lintian-lab'}) {
-        prune_lintian_lab($state, $OPT{'lintian-lab'});
+        save_state_cache($state_dir, $state);
     }
     exit(0);
 }
@@ -398,32 +424,6 @@ sub local_mirror_manifests {
     return;
 }
 
-sub prune_lintian_lab {
-    my ($state, $lintian_lab_dir) = @_;
-    my $lab = Lintian::Lab->new($lintian_lab_dir);
-    my $err;
-    eval {
-        $lab->open;
-        $lab->visit_packages(
-            sub {
-                my ($lpkg) = @_;
-                my $id = $lpkg->identifier;
-                if (not exists($state->{'members-to-groups'}{$id})) {
-                    log_debug("Removing ${id} from lab");
-                    $lpkg->remove if (not $OPT{'dry-run'});
-                }
-            });
-    };
-    $err = $@;
-    eval {$lab->close;};
-    if (my $close_err = $@) {
-        # The first error is most important
-        die($close_err) if not $err;
-    }
-    die($err) if $err;
-    return;
-}
-
 # _open_data_file ($file)
 #
 # Opens $file if it exists, otherwise it tries common extensions (i.e. .gz) and opens
@@ -468,16 +468,11 @@ Usage: $me <args>
   --help                 Show this text and exit
   --debug                Show/log debugging output
 
-  --state-dir   DIR      Directory containing the state cache (must be writable) [!]
-  --mirror-path DIR      Directory containing a local Debian mirror.  [!]
-  --distributions X,...  Comma-separated list of Debian distributions to check (e.g. "jessie,stretch"). [!]
-  --mirror-areas  X,...  Comma-separated list of mirror areas to check (e.g. "main,contrib"). [!]
-  --architectures X,...  Comma-separated list of architectures areas to check (e.g. "amd64,i386"). [!]
+  --reporting-config FILE
+                         Path to the configuration file (listing the archive definitions) [!]
   --desired-version X    The desired "last-processed-by" Lintian version. [!]
 
 Arguments marked with [!] are required for a successful run.
-
-NB: The architecture "all" is implied and should not be specified with --architectures.
 
 EOF
 
