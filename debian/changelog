@@ -76,6 +76,10 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Remove.  Merge what little functionality it offers into the
       debian-readme check.
 
+  * commands/{lintian => lintian.pm}:
+    + [NT] Turn the lintian frontend into a dplint command module to aovid
+      code duplication.
+
   * data/common/source-fields:
     + [NT] Add new "Testsuite-Restrictions" field.
   * data/files/standard-files:
@@ -117,6 +121,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * frontend/dplint:
     + [NT] Ensure all include directories are absolute before passing
       them on to the actual command.
+    + [NT] Work around a "Bizarre Copy" bug in perl that could trigger
+      on errors.
 
   * reporting/graphs/tags.gpi:
     + [NT] Tweak tags.gpi so it works with gnuplot 5.
