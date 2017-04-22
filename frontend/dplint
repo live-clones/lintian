@@ -85,7 +85,7 @@ sub error {
 }
 
 sub run_tool {
-    my ($truename, $tool, @args) = @_;
+    my ($truename, $tool) = @_;
     for my $include_dir (@INCLUDE_DIRS) {
         my $tool_path = "$include_dir/commands/${tool}";
         my $tool_pm_path = "${tool_path}.pm";
@@ -95,12 +95,12 @@ sub run_tool {
             }
             {
                 # Scope here it to avoid a warning about exec not returning.
-                exec {$tool_path} $truename, @args;
+                exec {$tool_path} $truename, @ARGV;
             }
             local $" = ' ';
             error(
                 "Running $tool failed!",
-                "  Command: $tool_path @args",
+                "  Command: $tool_path @ARGV",
                 "  Error from exec: $!"
             );
         }
@@ -282,7 +282,7 @@ sub main {
         error("Built-in $cmd returned unexpectedly");
     }
     $truename //= $cmd;
-    run_tool($truename, $cmd, @ARGV);
+    run_tool($truename, $cmd);
     error('run_tool returned unexpectedly');
 }
 
