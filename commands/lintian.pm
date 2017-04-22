@@ -573,9 +573,6 @@ sub main {
 
     parse_options();
 
-    # Set LINTIAN_ROOT to the actual root.
-    $ENV{'LINTIAN_ROOT'} = $INIT_ROOT;
-
     # environment variables override settings in conf file, so load them now
     # assuming they were not set by cmd-line options
     foreach my $var (@ENV_VARS) {
