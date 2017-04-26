@@ -25,6 +25,7 @@ use strict;
 use warnings;
 use autodie;
 
+use Getopt::Long;
 use POSIX qw(strftime);
 use File::Copy qw(copy);
 use Fcntl qw(SEEK_SET);
@@ -32,6 +33,7 @@ use List::Util qw(first);
 use List::MoreUtils qw(uniq);
 use URI::Escape;
 use Text::Template ();
+use YAML::XS ();
 
 use Lintian::Command qw(safe_qx);
 use Lintian::Data;
@@ -40,23 +42,25 @@ use Lintian::Profile;
 use Lintian::Relation::Version qw(versions_comparator);
 use Lintian::Reporting::ResourceManager;
 use Lintian::Util qw(read_dpkg_control slurp_entire_file load_state_cache
-  find_backlog copy_dir delete_dir run_cmd);
+  find_backlog copy_dir delete_dir run_cmd check_path);
+
+my $CONFIG;
+my %OPT;
+my %OPT_HASH = ('reporting-config=s'=> \$OPT{'reporting-config'},);
 
 # ------------------------------
 # Global variables and configuration
 
-# These have no default and must be set in the configuration file.
-# (i.e. they are pulled from """ require "./config" """)
-our (
-    $LINTIAN_ROOT, $LINTIAN_ARCHIVEDIR,$LINTIAN_DIST,
-    $LINTIAN_ARCH, $HTML_TMP_DIR,$LINTIAN_AREA,
-    $HISTORY,$HISTORY_DIR,$LINTIAN_SOURCE,
-    $GRAPHS_RANGE_DAYS,$GRAPHS,$LINTIAN_MIRROR_NAME,
-    $HARNESS_STATE_DIR,
-);
-
 # Some globals initialised in init_global()
-our ($RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp, $mirror_timestamp);
+my (
+    $RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp,
+    $TEMPLATE_CONFIG_VARS,$HARNESS_STATE_DIR, $HISTORY_DIR,
+    $HISTORY, $GRAPHS, $LINTIAN_ROOT,
+    $HTML_TMP_DIR,
+);
+# FIXME: Should become obsolete if gnuplot is replaced by R like piuparts.d.o /
+# reproducible.d.n is using
+my $GRAPHS_RANGE_DAYS = 366;
 
 # ------------------------------
 # Initialize templates
@@ -118,6 +122,29 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
   errors warnings info experimental pedantic overridden groups-known
   groups-backlog classifications);
 
+sub required_cfg_value {
+    my (@keys) = @_;
+    my $v = $CONFIG;
+    for my $key (@keys) {
+        if (not exists($v->{$key})) {
+            my $k = join('.', @keys);
+            die("Missing required config parameter: ${k}\n");
+        }
+        $v = $v->{$key};
+    }
+    return $v;
+}
+
+sub required_cfg_non_empty_list_value {
+    my (@keys) = @_;
+    my $v = required_cfg_value(@keys);
+    if (not defined($v) || ref($v) ne 'ARRAY' || scalar(@{$v}) < 1) {
+        my $k = join('.', @keys);
+        die("Invalid configuration: ${k} must be a non-empty list\n");
+    }
+    return $v;
+}
+
 # ------------------------------
 # Main routine
 
@@ -157,22 +184,54 @@ sub main {
 # Utility functions
 
 sub init_globals {
-    # Read the configuration.
-    require './config'; ## no critic (Modules::RequireBarewordIncludes)
+    Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+    Getopt::Long::GetOptions(%OPT_HASH) or die("error parsing options\n");
+
+    if (not $OPT{'reporting-config'} or not -f $OPT{'reporting-config'}) {
+        die("The --reporting-config parameter must point to an existing file\n"
+        );
+    }
+    $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+    $CONFIG = YAML::XS::LoadFile($OPT{'reporting-config'});
+    $HARNESS_STATE_DIR = required_cfg_value('storage', 'state-cache');
+    $HTML_TMP_DIR = required_cfg_value('storage', 'reports-work-dir');
+    my $history_key = 'storage.historical-data-dir';
+    if (exists($CONFIG->{'storage'}{'historical-data-dir'})) {
+        $HISTORY = 1;
+        $HISTORY_DIR = required_cfg_value('storage', 'historical-data-dir');
+        print "Enabling history tracking as ${history_key} is set\n";
+        if (check_path('gnuplot')) {
+            $GRAPHS = 1;
+            print "Enabling graphs (gnuplot is in PATH)\n";
+        } else {
+            $GRAPHS = 0;
+            print "No graphs as \"gnuplot\" is not in PATH\n";
+        }
+    } else {
+        $HISTORY = 0;
+        $GRAPHS = 0;
+        print "History tracking is disabled (${history_key} is unset)\n";
+        print "Without history tracking, there will be no graphs\n";
+    }
+
+    if (exists($CONFIG->{'template-variables'})) {
+        $TEMPLATE_CONFIG_VARS = $CONFIG->{'template-variables'};
+    } else {
+        $TEMPLATE_CONFIG_VARS = {};
+    }
+    # Provide a default URL for the source code.  It might not be correct for
+    # the given installation, but it is better than nothing.
+    $TEMPLATE_CONFIG_VARS->{'LINTIAN_SOURCE'}
+      //= 'https://anonscm.debian.org/git/lintian/lintian.git';
 
     my $profile = dplint::load_profile();
 
     Lintian::Data->set_vendor($profile);
 
-    # The path to the mirror timestamp.
-    my $mirror_trace_file
-      = "$LINTIAN_ARCHIVEDIR/project/trace/$LINTIAN_MIRROR_NAME";
-
     $LINTIAN_VERSION = dplint::lintian_version();
     $timestamp = safe_qx(qw(date -u --rfc-822));
-    $mirror_timestamp = slurp_entire_file($mirror_trace_file);
     chomp($LINTIAN_VERSION, $timestamp);
-    $mirror_timestamp =~ s/\n.*//s;
 
     $RESOURCE_MANAGER
       = Lintian::Reporting::ResourceManager->new('html_dir' => $HTML_TMP_DIR,);
@@ -207,7 +266,7 @@ sub process_data {
     my ($profile, $state_cache) = @_;
     my @maintainers = sort(uniq(keys(%by_maint), keys(%by_uploader)));
     my $statistics_file = "$HARNESS_STATE_DIR/statistics";
-    my $old_statistics;
+    my ($old_statistics, $archives, @archive_info);
 
     {
         # Scoped to allow memory to be re-purposed.  The %qa and %sources
@@ -380,21 +439,46 @@ sub process_data {
     # Update the statistics file.
     open(my $stats_fd, '>', $statistics_file);
     print {$stats_fd} "last-updated: $timestamp\n";
-    print {$stats_fd} "mirror-timestamp: $mirror_timestamp\n";
     for my $attr (@attrs) {
         print {$stats_fd} "$attr: $statistics{$attr}\n";
     }
     print {$stats_fd} "lintian-version: $LINTIAN_VERSION\n";
     close($stats_fd);
 
+    $archives = required_cfg_value('archives');
+    for my $archive (sort(keys(%{$archives}))) {
+        my $architectures
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'architectures');
+        my $components
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'components');
+        my $distributions
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'distributions');
+        my $path = required_cfg_value('archives', $archive, 'base-dir');
+        my $trace_basename
+          = required_cfg_value('archives', $archive, 'tracefile');
+
+        # The path to the mirror timestamp.
+        my $trace_file= "${path}/project/trace/${trace_basename}";
+        my $mirror_timestamp = slurp_entire_file($trace_file);
+        $mirror_timestamp =~ s/\n.*//s;
+        my %info = (
+            'name' => $archive,
+            'architectures' => $architectures,
+            'components'    => $components,
+            'distributions' => $distributions,
+            'timestamp'     => $mirror_timestamp,
+        );
+        push(@archive_info, \%info);
+    }
+
     # Finally, we can start creating the index page.
     %data = (
-        architecture => $LINTIAN_ARCH,
         delta        => \%delta,
-        dist         => $LINTIAN_DIST,
-        mirror       => $mirror_timestamp,
+        archives     => \@archive_info,
         previous     => $old_statistics->{'last-updated'},
-        area         => join(', ', split(/\s*,\s*/, $LINTIAN_AREA)),
         graphs       => $GRAPHS,
         graphs_days  => $GRAPHS_RANGE_DAYS,
     );
@@ -996,17 +1080,19 @@ sub output_template {
         $templates{head}->fill_in(
             HASH => {
                 page_title => $_[0],
+                config_vars => $TEMPLATE_CONFIG_VARS,
                 %{$data},
             }) or die "Filling out head of $file: $Text::Template::ERROR\n";
     };
     $data->{foot} ||= sub {
         $templates{foot}->fill_in(
             HASH => {
-                LINTIAN_SOURCE => $LINTIAN_SOURCE,
+                config_vars => $TEMPLATE_CONFIG_VARS,
                 %{$data},
             }) or die "Filling out footer of $file: $Text::Template::ERROR\n";
     };
-    open(my $fd, '>:encoding(UTF-8)', "$HTML_TMP_DIR/$file");
+    $data->{config_vars} ||= $TEMPLATE_CONFIG_VARS,
+      open(my $fd, '>:encoding(UTF-8)', "$HTML_TMP_DIR/$file");
     $template->fill_in(OUTPUT => $fd, HASH => $data)
       or die "filling out $file failed: $Text::Template::ERROR\n";
     close($fd);
