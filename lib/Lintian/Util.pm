@@ -29,6 +29,7 @@ use Cwd qw(abs_path);
 use Errno qw(ENOENT);
 use Exporter qw(import);
 use POSIX qw(sigprocmask SIG_BLOCK SIG_UNBLOCK SIG_SETMASK);
+use YAML::XS ();
 
 use constant {
     DCTRL_DEBCONF_TEMPLATE => 1,
@@ -1628,7 +1629,6 @@ sub load_state_cache {
     my $state_file = "$state_dir/state-cache";
     my $state = {};
     my $fd;
-    require YAML::XS;
     eval {open($fd, '<:raw', $state_file);};
     if (my $err = $@) {
         if ($err->errno != ENOENT) {
@@ -1665,7 +1665,6 @@ sub save_state_cache {
     my ($state_dir, $state) = @_;
     my $state_file = "$state_dir/state-cache";
     my ($tmp_fd, $tmp_path);
-    require YAML::XS;
 
     ($tmp_fd, $tmp_path) = tempfile('state-cache-XXXXXX', DIR => $state_dir);
     ## TODO: Should tmp_fd be binmode'd as we use YAML::XS?
