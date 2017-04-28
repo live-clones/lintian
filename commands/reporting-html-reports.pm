@@ -101,7 +101,7 @@ my (%statistics, %tag_statistics);
 #             pkg_info  => {
 #                            package   => 'gnubg',
 #                            version   => '0.15~20061120-1',
-#                            area      => 'main',
+#                            component => 'main',
 #                            type      => 'source',
 #                            anchor    => 'gnubg_0.15~20061120-1',
 #                            xref      => 'rra@debian.org.html#gnubg_0.15~20061120-1'
@@ -854,10 +854,10 @@ sub parse_lintian_log {
 
         # Determine the source package for this package and warn if
         # there appears to be no source package in the archive.
-        # Determine the maintainer, version, and archive area.  Work
+        # Determine the maintainer, version, and archive component.  Work
         # around a missing source package by pulling information from
         # a binary package or udeb of the same name if there is any.
-        my ($source, $area, $source_version, $maintainer, $uploaders);
+        my ($source, $component, $source_version, $maintainer, $uploaders);
         my $member_id
           = "${type}:${package}/${version}"
           . ($type ne 'source' ? "/$arch" : q{});
@@ -881,7 +881,7 @@ sub parse_lintian_log {
             $unknown_member_id{$member_id} = 1;
         }
         $state_data //= {};
-        $area = $state_data->{'mirror-metadata'}{'area'} ||= 'main';
+        $component = $state_data->{'mirror-metadata'}{'component'} ||= 'main';
         $maintainer = $state_data->{'mirror-metadata'}{'maintainer'}
           ||= '(unknown)';
         $uploaders = $state_data->{'mirror-metadata'}{'uploaders'};
@@ -974,7 +974,7 @@ sub parse_lintian_log {
                     # There is a check for type being in a fixed whitelist of
                     # HTML-safe keywords in the start of the loop.,
                     type         => $type,
-                    area         => html_quote($area),
+                    component    => html_quote($component),
                     # should be safe
                     anchor       => $anchor,
                     xref         => maintainer_url($maintainer). "#${anchor}",
@@ -1099,7 +1099,7 @@ sub output_template {
     return;
 }
 
-# Sort function for sorting lists of tags.  Sort by package, version, area,
+# Sort function for sorting lists of tags.  Sort by package, version, component,
 # type, tag, and then any extra data.  This will produce the best HTML output.
 #
 # Note that source tags must come before all other tags, hence the "unfair"
@@ -1115,7 +1115,7 @@ sub by_tag {
     return
          $a_pi->{package}        cmp $b_pi->{package}
       || $a_pi->{version}        cmp $b_pi->{version}
-      || $a_pi->{area}           cmp $b_pi->{area}
+      || $a_pi->{component}      cmp $b_pi->{component}
       || $a_pi->{type}           cmp $b_pi->{type}
       || $a->{tag_info}->tag     cmp $b->{tag_info}->tag
       || $a->{extra}             cmp $b->{extra};
