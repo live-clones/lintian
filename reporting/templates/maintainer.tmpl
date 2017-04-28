@@ -99,8 +99,8 @@
                 my $tag_info = $info->{tag_info};
                 my $next_tag = $tag_info->tag;
 
-                my $area = ($pkg_info->{area} eq 'main') ? '' : "; $pkg_info->{area}";
-                $firstarea = $pkg_info->{area} unless $firstarea;
+                my $component = ($pkg_info->{component} eq 'main') ? '' : "; $pkg_info->{component}";
+                $firstcomponent = $pkg_info->{component} unless $firstcomponent;
                 if ($first) {
                     my $state = $pkg_info->{'state_data'};
                     my $status = 'up-to-date';
@@ -108,7 +108,7 @@
                     $status = '<i>outdated</i>' if (exists($state->{'out-of-date'}));
                     $OUT .= qq(  <div class="source-header">\n);
                     $OUT .= qq(   <h2 id="$pkg_info->{anchor}">);
-                    $OUT .= "$source ($version$area)";
+                    $OUT .= "$source ($version$component)";
                     $OUT .= " [Uploader]" if $upload;
                     if ($first_version) {
                         # Unversioned #<pkg> references just go to the first version.
@@ -127,8 +127,8 @@
 
                 my $bin_version = '';
                 unless ($pkg_info->{version} eq $version
-                        and $pkg_info->{area} eq $firstarea) {
-                    $bin_version = " ($pkg_info->{version}; $pkg_info->{area})";
+                        and $pkg_info->{component} eq $firstcomponent) {
+                    $bin_version = " ($pkg_info->{version}; $pkg_info->{component})";
                 }
 
                 if ($tag ne $next_tag or $new_binary) {

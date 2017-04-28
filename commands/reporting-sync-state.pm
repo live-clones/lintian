@@ -139,7 +139,22 @@ sub main {
 
 sub upgrade_state_cache_if_needed {
     my ($state) = @_;
-    return 0 if exists($state->{'groups'});
+    if (exists($state->{'groups'})) {
+        my $updated = 0;
+        my $groups = $state->{'groups'};
+        for my $group (sort(keys(%{$groups}))) {
+            my $group_data = $groups->{$group};
+            if (   exists($group_data->{'mirror-metadata'})
+                && exists($group_data->{'mirror-metadata'}{'area'})) {
+                if (not exists($group_data->{'mirror-metadata'}{'component'})){
+                    $group_data->{'mirror-metadata'}{'component'}
+                      = $group_data->{'mirror-metadata'}{'area'};
+                    $updated = 1;
+                }
+            }
+        }
+        return $updated;
+    }
     # Migrate the "last-processed-by" version.
     my $groups = $state->{'groups'} = {};
     for my $key (sort(keys(%${state}))) {
@@ -269,7 +284,7 @@ sub cleanup_group_state {
             my $member_data = $members->{$member_id};
             # Create "member_id to group_data" link
             $state->{'members-to-groups'}{$member_id} = $group_data;
-            delete($member_data->{'mirror-metadata'}{'area'})
+            delete($member_data->{'mirror-metadata'}{'component'})
               if exists($member_data->{'mirror-metadata'});
             remove_if_empty($member_data, 'mirror-metadata');
         }
@@ -293,7 +308,7 @@ sub cleanup_group_state {
     } else {
         # remove redundant fields
         remove_if_empty($group_data, 'out-of-date');
-        for my $metadata_field (qw(area maintainer uploaders)) {
+        for my $metadata_field (qw(component maintainer uploaders)) {
             remove_if_empty($group_data->{'mirror-metadata'}, $metadata_field);
         }
         remove_if_empty($group_data, 'mirror-metadata');
@@ -325,7 +340,7 @@ sub _parse_srcs_pg {
     }
 
     $group_mirror_md = $group_metadata{'mirror-metadata'};
-    $group_mirror_md->{'area'} = $extra_metadata->{'area'};
+    $group_mirror_md->{'component'} = $extra_metadata->{'component'};
     $group_mirror_md->{'maintainer'} = $paragraph->{'maintainer'};
     if (my $uploaders = $paragraph->{'uploaders'}) {
         my @ulist = split(/>\K\s*,\s*/, $uploaders);
@@ -371,7 +386,7 @@ sub _parse_pkgs_pg {
     return;
 }
 
-# local_mirror_manifests ($mirdir, $dists, $areas, $archs)
+# local_mirror_manifests ($mirdir, $dists, $components, $archs)
 #
 # Returns a list of manifests that represents what is on the local mirror
 # at $mirdir.  3 manifests will be returned, one for "source", one for "binary"
@@ -380,26 +395,27 @@ sub _parse_pkgs_pg {
 #
 # $mirdir - the path to the local mirror
 # $dists  - listref of dists to consider (e.g. ['unstable'])
-# $areas  - listref of areas to consider (e.g. ['main', 'contrib', 'non-free'])
+# $components  - listref of components to consider (e.g. ['main', 'contrib', 'non-free'])
 # $archs  - listref of archs to consider (e.g. ['i386', 'amd64'])
 #
 sub local_mirror_manifests {
-    my ($state, $mirdir, $dists, $areas, $archs) = @_;
+    my ($state, $mirdir, $dists, $components, $archs) = @_;
     foreach my $dist (@$dists) {
-        foreach my $area (@$areas) {
-            my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
+        foreach my $component (@{$components}) {
+            my $srcs = "$mirdir/dists/$dist/$component/source/Sources";
             my ($srcfd, $srcsub);
             my %extra_metadata = (
-                'area' => $area,
+                'component' => $component,
                 'mirror-dir' => $mirdir,
             );
             # Binaries have a "per arch" file.
             # - we check those first and then include the source packages that
             #   are referred to by these binaries.
+            my $dist_path = "$mirdir/dists/$dist/$component";
             foreach my $arch (@{$archs}) {
-                my $pkgs = "$mirdir/dists/$dist/$area/binary-$arch/Packages";
-                my $upkgs = "$mirdir/dists/$dist/$area/debian-installer/"
-                  ."binary-$arch/Packages";
+                my $pkgs = "${dist_path}/binary-$arch/Packages";
+                my $upkgs
+                  = "${dist_path}/debian-installer/binary-$arch/Packages";
                 my $pkgfd = _open_data_file($pkgs);
                 my $binsub = sub {
                     _parse_pkgs_pg($state, \%extra_metadata, 'binary', @_);
