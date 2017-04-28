@@ -82,6 +82,12 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * commands/{lintian => lintian.pm}:
     + [NT] Turn the lintian frontend into a dplint command module to aovid
       code duplication.
+  * commands/reporting-*:
+    + [NT] Rewrite the config file handling.  The reporting framework now
+      uses a YAML configuration file instead of a perl script.
+    + [NT] Support processing packages from multiple archives and different
+      suites in these archives.  This enables lintian.d.o to also process
+      dbgsym packages.  (Closes: ##856312)
 
   * data/common/source-fields:
     + [NT] Add new "Testsuite-Restrictions" field.
@@ -127,8 +133,12 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Work around a "Bizarre Copy" bug in perl that could trigger
       on errors.
 
+  * reporting/{config => config.yaml}:
+    + [NT] Rewrite the reporting config template into the new YAML format.
   * reporting/graphs/tags.gpi:
     + [NT] Tweak tags.gpi so it works with gnuplot 5.
+  * reporting/templates/{index.tmpl,lintian.css.tmpl}:
+    + [NT] Update to support multiple archives.
 
   * t/*:
     + [NT] Drop "Test-Depends" from tests where the versions in Debian
