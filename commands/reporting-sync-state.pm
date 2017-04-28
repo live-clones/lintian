@@ -483,16 +483,11 @@ Usage: $me <args>
   --help                 Show this text and exit
   --debug                Show/log debugging output
 
-  --state-dir   DIR      Directory containing the state cache (must be writable) [!]
-  --mirror-path DIR      Directory containing a local Debian mirror.  [!]
-  --distributions X,...  Comma-separated list of Debian distributions to check (e.g. "jessie,stretch"). [!]
-  --mirror-areas  X,...  Comma-separated list of mirror areas to check (e.g. "main,contrib"). [!]
-  --architectures X,...  Comma-separated list of architectures areas to check (e.g. "amd64,i386"). [!]
+  --reporting-config FILE
+                         Path to the configuration file (listing the archive definitions) [!]
   --desired-version X    The desired "last-processed-by" Lintian version. [!]
 
 Arguments marked with [!] are required for a successful run.
-
-NB: The architecture "all" is implied and should not be specified with --architectures.
 
 EOF
 
