@@ -1,3 +1,16 @@
+lintian (2.5.50.2) UNRELEASED; urgency=medium
+
+  * frontend/dplint:
+    + [NT] Work around a "Bizarre Copy" bug in perl that could trigger
+      on errors.  Notably, this bug causes the reporting framework in
+      lintian to break with a very non-informative error when the
+      "state-cache" is not present.
+
+  * reporting/graphs/tags.gpi:
+    + [NT] Tweak tags.gpi so it works with gnuplot 5.
+
+ -- Niels Thykier <niels@thykier.net>  Sat, 29 Apr 2017 17:54:39 +0000
+
 lintian (2.5.50.1) unstable; urgency=medium
 
   * debian/copyright:
@@ -9,9 +22,6 @@ lintian (2.5.50.1) unstable; urgency=medium
     + [NT] Apply patch from Edward Betts to remove corrections for
       "targetted" and "targetting" as they are valid alternative
       spellings in AU.  (Closes: #852145)
-
-  * reporting/graphs/tags.gpi:
-    + [NT] Tweak tags.gpi so it works with gnuplot 5.
 
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
