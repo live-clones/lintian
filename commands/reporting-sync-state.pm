@@ -149,6 +149,7 @@ sub upgrade_state_cache_if_needed {
                 if (not exists($group_data->{'mirror-metadata'}{'component'})){
                     $group_data->{'mirror-metadata'}{'component'}
                       = $group_data->{'mirror-metadata'}{'area'};
+                    delete($group_data->{'mirror-metadata'}{'area'});
                     $updated = 1;
                 }
             }
