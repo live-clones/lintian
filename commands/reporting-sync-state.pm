@@ -298,7 +298,8 @@ sub _parse_srcs_pg {
         last;
     }
 
-    $group_mirror_md = $group_metadata{'mirror-metadata'};
+
+    $group_mirror_md = $group_metadata{'mirror-metadata'} = {};
     $group_mirror_md->{'area'} = $extra_metadata->{'area'};
     $group_mirror_md->{'maintainer'} = $paragraph->{'maintainer'};
     if (my $uploaders = $paragraph->{'uploaders'}) {
