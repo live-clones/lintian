@@ -29,6 +29,7 @@ use Date::Format qw(time2str);
 use FileHandle;
 use Getopt::Long;
 use POSIX qw(strftime);
+use YAML::XS ();
 
 use Lintian::Command qw(reap spawn safe_qx);
 use Lintian::Lab;
@@ -54,6 +55,9 @@ Options:
              generated at the end of a run with -i, -f or -c.  It can also be
              used as a standard alone "mode", where only reports are
              regenerated.
+  --reporting-config FILE
+             Parse FILE as the primary configuration file.  Defines which
+             archives to process, etc.  (Default: ./config.yaml)
   --dry-run  pretend to do the actions without actually doing them.  The
              "normal" harness output will go to stdout rather than the
              harness.log.
@@ -74,13 +78,14 @@ otherwise, it's full.
 
 Report bugs to <lintian-maint\@debian.org>.
 END
-    #'# for cperl-mode
+    #'/# for cperl-mode
     exit;
 }
 
 my %opt = (
     'schedule-chunk-size' => 512,
     'schedule-limit-groups' => BACKLOG_PROCESSING_GROUP_LIMIT,
+    'reporting-config' => './config.yaml',
 );
 
 my %opthash = (
@@ -88,6 +93,7 @@ my %opthash = (
     'c' => \$opt{'clean-mode'},
     'f' => \$opt{'full-mode'},
     'generate-reports|r!' => \$opt{'generate-reports'},
+    'reporting-config=s'=> \$opt{'reporting-config'},
     'dry-run' => \$opt{'dry-run'},
     'schedule-chunk-size=i' => \$opt{'schedule-chunk-size'},
     'schedule-limit-groups=i' => \$opt{'schedule-limit-groups'},
@@ -95,21 +101,38 @@ my %opthash = (
     'help|h' => \&usage,
 );
 
-# Options set in ./config
-our (
-    $LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR,
-    $LINTIAN_DIST,$LINTIAN_ARCH, @EXTRA_LINTIAN_OPTIONS,
-    $LOG_DIR, $HTML_DIR, $HTML_TMP_DIR,
-    $LINTIAN_AREA, $HARNESS_STATE_DIR,$USE_PERMANENT_LAB,
-    $LINTIAN_SCRATCH_SPACE,
-);
-
 # Global variables
-our (
+my (
     $log_file, $lintian_log, $lintian_perf_log,
     $html_reports_log,$sync_state_log, $dplint_cmd,
-    $STATE_DIR, $LINTIAN_VERSION, $LOG_FD
+    $STATE_DIR, $LINTIAN_VERSION, $LOG_FD,
+    $CONFIG,$LOG_DIR, $HTML_DIR,
+    $HTML_TMP_DIR,$LINTIAN_SCRATCH_SPACE, $LINTIAN_ROOT,
+    $EXTRA_LINTIAN_OPTIONS,
 );
+
+sub required_cfg_value {
+    my (@keys) = @_;
+    my $v = $CONFIG;
+    for my $key (@keys) {
+        if (not exists($v->{$key})) {
+            my $k = join('.', @keys);
+            die("Missing required config parameter: ${k}\n");
+        }
+        $v = $v->{$key};
+    }
+    return $v;
+}
+
+sub required_cfg_list_value {
+    my (@keys) = @_;
+    my $v = required_cfg_value(@keys);
+    if (not defined($v) || ref($v) ne 'ARRAY') {
+        my $k = join('.', @keys);
+        die("Invalid configuration: ${k} must be a (possibly empty) list\n");
+    }
+    return $v;
+}
 
 sub main {
     parse_options_and_config();
@@ -134,38 +157,16 @@ sub main {
         Log('Running in dry-run mode');
     }
     # From here on we can use Log() and Die().
-
-    if (not defined($STATE_DIR)) {
-        Die(q{Missing required config option: $HARNESS_STATE_DIR});
-    } else {
-        if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
-            Log('Purging old state-cache/dir');
-            system('rm', '-rf', $STATE_DIR) == 0
-              or Die("error removing $STATE_DIR");
-        }
-
-        if (not -d $STATE_DIR) {
-            system('mkdir', '-p', $STATE_DIR) == 0
-              or Die("mkdir -p $STATE_DIR failed");
-            Log("Created cache dir: $STATE_DIR");
-        }
+    if (not $opt{'dry-run'} and $opt{'clean-mode'}) {
+        Log('Purging old state-cache/dir');
+        system('rm', '-rf', $STATE_DIR) == 0
+          or Die("error removing $STATE_DIR");
     }
 
-    if (not $opt{'dry-run'}) {
-
-        if ($USE_PERMANENT_LAB) {
-            my $LAB = Lintian::Lab->new($LINTIAN_LAB);
-            # purge the old packages
-            $LAB->remove if $opt{'clean-mode'};
-
-            $LAB->create({ 'mode' => 02775 }) unless $LAB->exists;
-        } elsif ($LINTIAN_LAB) {
-            my $LAB = Lintian::Lab->new($LINTIAN_LAB);
-            if ($LAB->exists) {
-                Log("Removing old permanent lab at $LINTIAN_LAB");
-                $LAB->remove;
-            }
-        }
+    if (not -d $STATE_DIR) {
+        system('mkdir', '-p', $STATE_DIR) == 0
+          or Die("mkdir -p $STATE_DIR failed");
+        Log("Created cache dir: $STATE_DIR");
     }
 
     if (   !$opt{'generate-reports'}
@@ -216,12 +217,27 @@ sub parse_options_and_config {
       if $opt{'incremental-mode'} && $opt{'full-mode'};
     die("The argument for --schedule-limit-groups must be an > 0\n")
       if $opt{'schedule-limit-groups'} < 1;
-
+    if (not $opt{'reporting-config'} or not -f $opt{'reporting-config'}) {
+        die("The --reporting-config parameter must point to an existing file\n"
+        );
+    }
     # read configuration
-    require './config'; ## no critic (Modules::RequireBarewordIncludes)
+    $CONFIG = YAML::XS::LoadFile($opt{'reporting-config'});
+    $LOG_DIR = required_cfg_value('storage', 'log-dir');
+    $HTML_DIR = required_cfg_value('storage', 'reports-dir');
+    $HTML_TMP_DIR = required_cfg_value('storage', 'reports-work-dir');
+    $STATE_DIR = required_cfg_value('storage', 'state-cache');
+    $LINTIAN_SCRATCH_SPACE = required_cfg_value('storage', 'scratch-space');
 
-    # delete LINTIAN_ROOT in case it is set.
-    delete($ENV{'LINTIAN_ROOT'});
+    if (   exists($CONFIG->{'lintian'})
+        && exists($CONFIG->{'lintian'}{'extra-options'})) {
+        $EXTRA_LINTIAN_OPTIONS
+          = required_cfg_list_value('lintian', 'extra-options');
+    } else {
+        $EXTRA_LINTIAN_OPTIONS = [];
+    }
+
+    $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
     $dplint_cmd = "$LINTIAN_ROOT/frontend/dplint";
 
@@ -235,20 +251,14 @@ sub parse_options_and_config {
       )
       = map {"$LOG_DIR/$_" }
       qw(harness.log lintian.log lintian-perf.log html_reports.log sync_state.log);
-    $STATE_DIR = $HARNESS_STATE_DIR;
 
     return;
 }
 
 sub run_lintian {
     my @sync_state_args = (
-        '--state-dir', $STATE_DIR,
-        '--mirror-path', $LINTIAN_ARCHIVEDIR,
-        '--distributions', $LINTIAN_DIST,
-        '--mirror-areas', $LINTIAN_AREA,
-        '--architectures', $LINTIAN_ARCH,
-        '--desired-version', $LINTIAN_VERSION,
-        '--debug',
+        '--reporting-config', $opt{'reporting-config'},
+        '--desired-version', $LINTIAN_VERSION,'--debug',
     );
     my @lintian_harness_args = (
         '--lintian-frontend', "$LINTIAN_ROOT/frontend/lintian",
@@ -257,8 +267,7 @@ sub run_lintian {
         '--schedule-limit-groups', $opt{'schedule-limit-groups'},
         '--state-dir', $STATE_DIR,
         # Finish with the lintian command-line
-        '--', @EXTRA_LINTIAN_OPTIONS
-    );
+        '--', @{$EXTRA_LINTIAN_OPTIONS});
 
     if ($opt{'full-mode'}) {
         push(@sync_state_args, '--reschedule-all');
@@ -272,13 +281,7 @@ sub run_lintian {
             '--lintian-scratch-space', $LINTIAN_SCRATCH_SPACE);
     }
 
-    if ($USE_PERMANENT_LAB) {
-        unshift(@lintian_harness_args,
-            '--use-permanent-lab', '--lintian-lab', $LINTIAN_LAB);
-        unshift(@sync_state_args, '--lintian-lab', $LINTIAN_LAB);
-    } else {
-        unshift(@lintian_harness_args, '--no-use-permanent-lab');
-    }
+    unshift(@lintian_harness_args, '--no-use-permanent-lab');
 
     Log('Updating harness state cache (reading mirror index files)');
     my %sync_state_opts = (
@@ -341,24 +344,26 @@ sub run_lintian {
 }
 
 sub generate_reports {
+    my @html_reports_args
+      = ('--reporting-config',$opt{'reporting-config'},$lintian_log,);
     # create html reports
     Log('Creating HTML reports...');
-    Log("Executing $dplint_cmd reporting-html-reports $lintian_log");
+    Log("Executing $dplint_cmd reporting-html-reports @html_reports_args");
     my %html_reports_opts = (
         'out' => $html_reports_log,
         'err' => '&1',
     );
     spawn(\%html_reports_opts,
-        [$dplint_cmd, 'reporting-html-reports', $lintian_log])
+        [$dplint_cmd, 'reporting-html-reports', @html_reports_args])
       or Log('warning: executing reporting-html-reports returned '
           . (($? >> 8) & 0xff));
     Log('');
 
     # rotate the statistics file updated by reporting-html-reports
-    if (!$opt{'dry-run'} && -f "$HARNESS_STATE_DIR/statistics") {
+    if (!$opt{'dry-run'} && -f "$STATE_DIR/statistics") {
         my $date = time2str('%Y%m%d', time());
         my $dest = "$LOG_DIR/stats/statistics-${date}";
-        system('cp', "$HARNESS_STATE_DIR/statistics", $dest) == 0
+        system('cp', "$STATE_DIR/statistics", $dest) == 0
           or Log('warning: could not rotate the statistics file');
     }
 

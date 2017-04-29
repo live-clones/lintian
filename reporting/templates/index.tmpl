@@ -48,14 +48,31 @@
     </ul>
   </nav> <!-- index -->
 
+  <div id="archives">
+    <h2>Archives</h2>
+    <p>The following archives are processed by Lintian:</p>
+    <table>
+      <tr><th>Archive name</th><th>Attribute</th><th>Attribute value</th></tr>
+{
+        for my $archive_info (@archives) {
+          my $name = $archive_info->{'name'};
+          my $archs = join(' ', @{$archive_info->{'architectures'}});
+          my $distributions = join(' ', @{$archive_info->{'distributions'}});
+          my $components = join(' ', @{$archive_info->{'components'}});
+          my $timestamp = $archive_info->{'timestamp'};
+          $OUT .= qq{      <tr><td rowspan="4">${name}</td><td>Architectures</td><td>$archs</td></tr>\n};
+          $OUT .= qq{      <tr><td>Distributions/Suites</td><td>$distributions</td></tr>\n};
+          $OUT .= qq{      <tr><td>Components</td><td>$components</td></tr>\n};
+          $OUT .= qq{      <tr><td>Mirror timestamp</td><td>$timestamp</td></tr>\n};
+        }
+}
+    </table>
+  </div>
+
   <div id="stats">
     <h2>Statistics</h2>
     <table>
       <tr><td>Last updated:</td>     <td>{$timestamp}</td></tr>
-      <tr><td>Archive timestamp:</td><td>{$mirror}</td></tr>
-      <tr><td>Distribution:</td>     <td>{$dist}</td></tr>
-      <tr><td>Archive area:</td>     <td>{$area}</td></tr>
-      <tr><td>Architecture:</td>     <td>{$architecture}</td></tr>
       <tr><td>Maintainers:</td>      <td>{$delta{maintainers}}</td></tr>
       <tr><td>Package groups:</td>     <td>{$delta{'groups-known'}}</td></tr>
       <tr><td>Rescheduled groups:</td> <td>{$delta{'groups-backlog'}}</td></tr>

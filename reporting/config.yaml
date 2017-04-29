@@ -1,0 +1,68 @@
+## Used to define some reused variables
+defaults:
+  architectures: &ARCH
+   - i386
+   - amd64
+  components: &COMP
+   - main
+   - contrib
+   - non-free
+
+## List of archives to process
+archives:
+   ## A name given to the archive
+  debian:
+    ## Name of the tracefile to use for determine how up to date
+    ## the archive is.
+    tracefile: ftp-master.debian.org
+    ## Where the archive is placed on the file system
+    base-dir: /srv/mirrors/debian
+    ## Architectures to process
+    architectures: *ARCH
+    ## Which components to process
+    components: *COMP
+    ## Which suites/distributions to process
+    distributions:
+     - unstable
+     - experimental
+  debian-debug:
+    tracefile: ftp-master.debian.org
+    base-dir: /srv/mirrors/debian-debug
+    architectures: *ARCH
+    components: *COMP
+    distributions:
+     - unstable-debug
+     - experimental-debug
+
+storage:
+## Path to the log files
+  log-dir: /srv/lintian.debian.org/logs
+## Path to directory hold temporary data used by lintian.
+## Used as TMPDIR for lintian and will also hold temporary labs
+## - Can be /var/tmp or /tmp as long as they have space enough
+## - Can be cleaned automatically.  Either on boot or via a
+##   "delete anything older than X days"-mechanism
+  scratch-space: /srv/lintian.debian.org/scratch
+## Path to a directory to hold cached data like which packages
+## have been processed.
+## - Can be in /var/cache
+## - Can be deleted to reset / restart processing from scratch
+  state-cache: /srv/lintian.debian.org/harness-state
+## Where to store latest completed report / static website
+  reports-dir: /srv/lintian.debian.org/reports-directory/www
+## Directory to use for compiling new reports
+## FIXME: This should just be a tmpdir
+  reports-work-dir: /srv/lintian.debian.org/reports-directory/www.tmp
+## Where to store collected data / historical data (used for
+## generating graphs etc.)
+  historical-data-dir: /srv/lintian.debian.org/history
+
+lintian:
+## Extra options to pass to lintian (not all options can be
+## passed via this.  E.g. --cfg is ignored).
+#  extra-options: ['--jobs', '2']
+
+## All of these variables will be available for templates to consume
+## via "$config_vars{VAR}"
+template-variables:
+  LINTIAN_SOURCE: https://anonscm.debian.org/git/lintian/lintian.git

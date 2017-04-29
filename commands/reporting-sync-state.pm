@@ -24,6 +24,7 @@ use autodie;
 
 use Getopt::Long();
 use File::Basename qw(basename);
+use YAML::XS ();
 
 use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
@@ -34,24 +35,15 @@ use Lintian::Util qw(
   save_state_cache
   strip
   visit_dpkg_paragraph
-  untaint
 );
 
 my $DEFAULT_CHECKSUM = 'sha256';
 my (%KNOWN_MEMBERS, %ACTIVE_GROUPS);
+my $CONFIG;
 my %OPT;
 my %OPT_HASH= (
-    'state-dir=s'       => \$OPT{'state-dir'},
-    'mirror-path=s'     => \$OPT{'mirror-path'},
-    # Comma-separated lists
-    'distributions=s@'  =>
-      sub { push(@{$OPT{'distributions'}}, split(m/,/, $_[1])); },
-    'mirror-areas=s@'   =>
-      sub { push(@{$OPT{'mirror-areas'}},  split(m/,/, $_[1])); },
-    'architectures=s@'  =>
-      sub { push(@{$OPT{'architectures'}}, split(m/,/, $_[1])); },
+    'reporting-config=s'=> \$OPT{'reporting-config'},
     'desired-version=s' => \$OPT{'desired-version'},
-    'lintian-lab=s'     => \$OPT{'lintian-lab'},
     'reschedule-all'    => \$OPT{'reschedule-all'},
     'help|h'            => \&usage,
     'debug|d'           => \$OPT{'debug'},
@@ -59,43 +51,77 @@ my %OPT_HASH= (
 );
 
 sub check_parameters {
-    for my $parameter (
-        qw(state-dir mirror-path distributions mirror-areas architectures desired-version)
-      ) {
+    for my $parameter (qw(reporting-config desired-version)) {
         if (not defined($OPT{$parameter})) {
             die(    "Missing required parameter \"--${parameter}\""
                   . "(use --help for more info)\n");
         }
     }
-    if (-d $OPT{'state-dir'}) {
-        untaint($OPT{'state-dir'});
-    } else {
-        die("The --state-dir parameter must point to an existing directory\n");
+    if (not $OPT{'reporting-config'} or not -f $OPT{'reporting-config'}) {
+        die("The --reporting-config parameter must point to an existing file\n"
+        );
     }
     return;
 }
 
+sub required_cfg_value {
+    my (@keys) = @_;
+    my $v = $CONFIG;
+    for my $key (@keys) {
+        if (not exists($v->{$key})) {
+            my $k = join('.', @keys);
+            die("Missing required config parameter: ${k}\n");
+        }
+        $v = $v->{$key};
+    }
+    return $v;
+}
+
+sub required_cfg_non_empty_list_value {
+    my (@keys) = @_;
+    my $v = required_cfg_value(@keys);
+    if (not defined($v) || ref($v) ne 'ARRAY' || scalar(@{$v}) < 1) {
+        my $k = join('.', @keys);
+        die("Invalid configuration: ${k} must be a non-empty list\n");
+    }
+    return $v;
+}
+
 sub main {
-    my $state;
+    my ($state_dir, $state, $archives);
     STDOUT->autoflush;
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     Getopt::Long::GetOptions(%OPT_HASH) or die("error parsing options\n");
     check_parameters();
-    $state = load_state_cache($OPT{'state-dir'});
+    $CONFIG = YAML::XS::LoadFile($OPT{'reporting-config'});
+    $state_dir = required_cfg_value('storage', 'state-cache');
+    $state = load_state_cache($state_dir);
+
     if (upgrade_state_cache_if_needed($state)) {
         log_debug('Updated the state cache');
     }
     log_debug('Initial state had '
           . (scalar(keys(%{$state->{'groups'}})))
           . ' groups');
-    local_mirror_manifests($state,$OPT{'mirror-path'},$OPT{'distributions'},
-        $OPT{'mirror-areas'},$OPT{'architectures'});
+    $archives = required_cfg_value('archives');
+    for my $archive (sort(keys(%{$archives}))) {
+        log_debug("Processing archive $archive");
+        my $path = required_cfg_value('archives', $archive, 'base-dir');
+        my $archs = required_cfg_non_empty_list_value('archives', $archive,
+            'architectures');
+        my $components
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'components');
+        my $distributions
+          = required_cfg_non_empty_list_value('archives', $archive,
+            'distributions');
+        local_mirror_manifests($state, $path, $distributions, $components,
+            $archs);
+    }
+
     cleanup_state($state);
     if (not $OPT{'dry-run'}) {
-        save_state_cache($OPT{'state-dir'}, $state);
-    }
-    if ($OPT{'lintian-lab'}) {
-        prune_lintian_lab($state, $OPT{'lintian-lab'});
+        save_state_cache($state_dir, $state);
     }
     exit(0);
 }
@@ -113,7 +139,23 @@ sub main {
 
 sub upgrade_state_cache_if_needed {
     my ($state) = @_;
-    return 0 if exists($state->{'groups'});
+    if (exists($state->{'groups'})) {
+        my $updated = 0;
+        my $groups = $state->{'groups'};
+        for my $group (sort(keys(%{$groups}))) {
+            my $group_data = $groups->{$group};
+            if (   exists($group_data->{'mirror-metadata'})
+                && exists($group_data->{'mirror-metadata'}{'area'})) {
+                if (not exists($group_data->{'mirror-metadata'}{'component'})){
+                    $group_data->{'mirror-metadata'}{'component'}
+                      = $group_data->{'mirror-metadata'}{'area'};
+                    delete($group_data->{'mirror-metadata'}{'area'});
+                    $updated = 1;
+                }
+            }
+        }
+        return $updated;
+    }
     # Migrate the "last-processed-by" version.
     my $groups = $state->{'groups'} = {};
     for my $key (sort(keys(%${state}))) {
@@ -243,7 +285,7 @@ sub cleanup_group_state {
             my $member_data = $members->{$member_id};
             # Create "member_id to group_data" link
             $state->{'members-to-groups'}{$member_id} = $group_data;
-            delete($member_data->{'mirror-metadata'}{'area'})
+            delete($member_data->{'mirror-metadata'}{'component'})
               if exists($member_data->{'mirror-metadata'});
             remove_if_empty($member_data, 'mirror-metadata');
         }
@@ -267,7 +309,7 @@ sub cleanup_group_state {
     } else {
         # remove redundant fields
         remove_if_empty($group_data, 'out-of-date');
-        for my $metadata_field (qw(area maintainer uploaders)) {
+        for my $metadata_field (qw(component maintainer uploaders)) {
             remove_if_empty($group_data->{'mirror-metadata'}, $metadata_field);
         }
         remove_if_empty($group_data, 'mirror-metadata');
@@ -298,9 +340,8 @@ sub _parse_srcs_pg {
         last;
     }
 
-
     $group_mirror_md = $group_metadata{'mirror-metadata'} = {};
-    $group_mirror_md->{'area'} = $extra_metadata->{'area'};
+    $group_mirror_md->{'component'} = $extra_metadata->{'component'};
     $group_mirror_md->{'maintainer'} = $paragraph->{'maintainer'};
     if (my $uploaders = $paragraph->{'uploaders'}) {
         my @ulist = split(/>\K\s*,\s*/, $uploaders);
@@ -346,7 +387,7 @@ sub _parse_pkgs_pg {
     return;
 }
 
-# local_mirror_manifests ($mirdir, $dists, $areas, $archs)
+# local_mirror_manifests ($mirdir, $dists, $components, $archs)
 #
 # Returns a list of manifests that represents what is on the local mirror
 # at $mirdir.  3 manifests will be returned, one for "source", one for "binary"
@@ -355,26 +396,27 @@ sub _parse_pkgs_pg {
 #
 # $mirdir - the path to the local mirror
 # $dists  - listref of dists to consider (e.g. ['unstable'])
-# $areas  - listref of areas to consider (e.g. ['main', 'contrib', 'non-free'])
+# $components  - listref of components to consider (e.g. ['main', 'contrib', 'non-free'])
 # $archs  - listref of archs to consider (e.g. ['i386', 'amd64'])
 #
 sub local_mirror_manifests {
-    my ($state, $mirdir, $dists, $areas, $archs) = @_;
+    my ($state, $mirdir, $dists, $components, $archs) = @_;
     foreach my $dist (@$dists) {
-        foreach my $area (@$areas) {
-            my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
+        foreach my $component (@{$components}) {
+            my $srcs = "$mirdir/dists/$dist/$component/source/Sources";
             my ($srcfd, $srcsub);
             my %extra_metadata = (
-                'area' => $area,
+                'component' => $component,
                 'mirror-dir' => $mirdir,
             );
             # Binaries have a "per arch" file.
             # - we check those first and then include the source packages that
             #   are referred to by these binaries.
+            my $dist_path = "$mirdir/dists/$dist/$component";
             foreach my $arch (@{$archs}) {
-                my $pkgs = "$mirdir/dists/$dist/$area/binary-$arch/Packages";
-                my $upkgs = "$mirdir/dists/$dist/$area/debian-installer/"
-                  ."binary-$arch/Packages";
+                my $pkgs = "${dist_path}/binary-$arch/Packages";
+                my $upkgs
+                  = "${dist_path}/debian-installer/binary-$arch/Packages";
                 my $pkgfd = _open_data_file($pkgs);
                 my $binsub = sub {
                     _parse_pkgs_pg($state, \%extra_metadata, 'binary', @_);
@@ -395,32 +437,6 @@ sub local_mirror_manifests {
             close($srcfd);
         }
     }
-    return;
-}
-
-sub prune_lintian_lab {
-    my ($state, $lintian_lab_dir) = @_;
-    my $lab = Lintian::Lab->new($lintian_lab_dir);
-    my $err;
-    eval {
-        $lab->open;
-        $lab->visit_packages(
-            sub {
-                my ($lpkg) = @_;
-                my $id = $lpkg->identifier;
-                if (not exists($state->{'members-to-groups'}{$id})) {
-                    log_debug("Removing ${id} from lab");
-                    $lpkg->remove if (not $OPT{'dry-run'});
-                }
-            });
-    };
-    $err = $@;
-    eval {$lab->close;};
-    if (my $close_err = $@) {
-        # The first error is most important
-        die($close_err) if not $err;
-    }
-    die($err) if $err;
     return;
 }
 
@@ -468,16 +484,11 @@ Usage: $me <args>
   --help                 Show this text and exit
   --debug                Show/log debugging output
 
-  --state-dir   DIR      Directory containing the state cache (must be writable) [!]
-  --mirror-path DIR      Directory containing a local Debian mirror.  [!]
-  --distributions X,...  Comma-separated list of Debian distributions to check (e.g. "jessie,stretch"). [!]
-  --mirror-areas  X,...  Comma-separated list of mirror areas to check (e.g. "main,contrib"). [!]
-  --architectures X,...  Comma-separated list of architectures areas to check (e.g. "amd64,i386"). [!]
+  --reporting-config FILE
+                         Path to the configuration file (listing the archive definitions) [!]
   --desired-version X    The desired "last-processed-by" Lintian version. [!]
 
 Arguments marked with [!] are required for a successful run.
-
-NB: The architecture "all" is implied and should not be specified with --architectures.
 
 EOF
 
