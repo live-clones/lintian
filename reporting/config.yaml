@@ -49,10 +49,10 @@ storage:
 ## - Can be deleted to reset / restart processing from scratch
   state-cache: /srv/lintian.debian.org/harness-state
 ## Where to store latest completed report / static website
-  reports-dir: /srv/lintian.debian.org/www
+  reports-dir: /srv/lintian.debian.org/reports-directory/www
 ## Directory to use for compiling new reports
 ## FIXME: This should just be a tmpdir
-  reports-work-dir: /srv/lintian.debian.org/www.tmp
+  reports-work-dir: /srv/lintian.debian.org/reports-directory/www.tmp
 ## Where to store collected data / historical data (used for
 ## generating graphs etc.)
   historical-data-dir: /srv/lintian.debian.org/history
