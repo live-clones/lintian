@@ -1,5 +1,8 @@
 # List of ubuntu distributions
 
+# Alias
+devel
+
 dapper
 hardy
 karmic
