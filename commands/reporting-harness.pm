@@ -127,7 +127,7 @@ sub required_cfg_value {
 sub required_cfg_list_value {
     my (@keys) = @_;
     my $v = required_cfg_value(@keys);
-    if (not defined($v) || ref($v) ne 'ARRAY') {
+    if (not defined($v) or ref($v) ne 'ARRAY') {
         my $k = join('.', @keys);
         die("Invalid configuration: ${k} must be a (possibly empty) list\n");
     }
