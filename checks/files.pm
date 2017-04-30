@@ -179,10 +179,11 @@ sub _tag_build_tree_path {
     my ($path, $msg) = @_;
     foreach my $buildpath ($BUILD_PATH_REGEX->all) {
         my $regex = $BUILD_PATH_REGEX->value($buildpath);
-        if($path =~ m{$regex}xms) {
+        if ($path =~ m{$regex}xms) {
             tag 'dir-or-file-in-build-tree', $msg;
         }
     }
+    return;
 }
 
 sub _is_tmp_path {
