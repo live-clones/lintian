@@ -1,4 +1,4 @@
-lintian (2.5.50.2) UNRELEASED; urgency=medium
+lintian (2.5.50.2) unstable; urgency=medium
 
   * frontend/dplint:
     + [NT] Work around a "Bizarre Copy" bug in perl that could trigger
@@ -9,7 +9,7 @@ lintian (2.5.50.2) UNRELEASED; urgency=medium
   * reporting/graphs/tags.gpi:
     + [NT] Tweak tags.gpi so it works with gnuplot 5.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 29 Apr 2017 17:54:39 +0000
+ -- Niels Thykier <niels@thykier.net>  Sun, 30 Apr 2017 07:40:24 +0000
 
 lintian (2.5.50.1) unstable; urgency=medium
 
