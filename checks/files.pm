@@ -175,6 +175,16 @@ my $BUILD_PATH_REGEX
   = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
     sub { return  qr/$_[0]/xsm;});
 
+sub _tag_build_tree_path {
+    my ($path, $msg) = @_;
+    foreach my $buildpath ($BUILD_PATH_REGEX->all) {
+        my $regex = $BUILD_PATH_REGEX->value($buildpath);
+        if($path =~ m{$regex}xms) {
+            tag 'dir-or-file-in-build-tree', $msg;
+        }
+    }
+}
+
 sub _detect_embedded_libraries {
     my ($fname, $file, $pkg) = @_;
 
@@ -466,12 +476,7 @@ sub run {
 
         # build directory
         unless ($source_pkg eq 'sbuild' || $source_pkg eq 'pbuilder') {
-            foreach my $buildpath ($BUILD_PATH_REGEX->all) {
-                my $regex = $BUILD_PATH_REGEX->value($buildpath);
-                if($fname =~ m{$regex}xms) {
-                    tag 'dir-or-file-in-build-tree', $file;
-                }
-            }
+            _tag_build_tree_path($fname, $file);
         }
 
         # ---------------- /etc
