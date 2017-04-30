@@ -157,6 +157,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [EB] Fix failing tests by making the fake flash object more
       convincing.  The most recent version of libmagic uses a more precise
       definition of the data within a flash file.  (Closes: #852891)
+  * t/tests/java-jars:
+    + [NT] Provide a more convincing corrupt .zip file that also fools
+      file 5.30.
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CW] Add zesty.
