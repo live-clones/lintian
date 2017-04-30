@@ -185,6 +185,16 @@ sub _tag_build_tree_path {
     }
 }
 
+sub _is_tmp_path {
+    my ($path) = @_;
+    if(    $path =~ m,^tmp/.,
+        or $path =~ m,^(?:var|usr)/tmp/.,
+        or $path =~ m,^/dev/shm/,) {
+        return 1;
+    }
+    return 0;
+}
+
 sub _detect_embedded_libraries {
     my ($fname, $file, $pkg) = @_;
 
@@ -1022,7 +1032,7 @@ sub run {
             tag 'dir-or-file-in-home', $file;
         }
         # ---------------- /tmp, /var/tmp, /usr/tmp
-        elsif ($fname =~ m,^tmp/., or $fname =~ m,^(?:var|usr)/tmp/.,) {
+        elsif (_is_tmp_path($fname)) {
             tag 'dir-or-file-in-tmp', $file;
         }
         # ---------------- /mnt
@@ -1797,6 +1807,7 @@ sub run {
             my $filetop = $1;
 
             if ($mylink =~ m,^/([^/]*),) {
+                my $flinkname = substr($mylink,1);
                 # absolute link, including link to /
                 # determine top-level directory of link
                 my $linktop = $1;
@@ -1806,8 +1817,12 @@ sub run {
                     tag 'symlink-should-be-relative', "$fname $link";
                 }
 
-                _tag_build_tree_path(substr($mylink,1),
+                _tag_build_tree_path($flinkname,
                     "symlink $file point to $mylink");
+
+                if(_is_tmp_path($flinkname)) {
+                    tag 'dir-or-file-in-tmp', "symlink $file point to $mylink";
+                }
 
                 # Any other case is already definitely non-recursive
                 tag 'symlink-is-self-recursive', "$fname $link"
