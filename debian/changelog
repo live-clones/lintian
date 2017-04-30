@@ -83,7 +83,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       debian-readme check.
 
   * commands/{lintian => lintian.pm}:
-    + [NT] Turn the lintian frontend into a dplint command module to aovid
+    + [NT] Turn the lintian frontend into a dplint command module to avoid
       code duplication.
   * commands/reporting-*:
     + [NT] Rewrite the config file handling.  The reporting framework now
