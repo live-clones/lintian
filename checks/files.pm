@@ -171,6 +171,10 @@ my @FILE_PACKAGE_MAPPING = (
     ),
 );
 
+my $BUILD_PATH_REGEX
+  = Lintian::Data->new('files/build-path-regex',qr/~~~~~/,
+    sub { return  qr/$_[0]/xsm;});
+
 sub _detect_embedded_libraries {
     my ($fname, $file, $pkg) = @_;
 
@@ -461,17 +465,17 @@ sub run {
         }
 
         # build directory
-        if (   $fname =~ m,^var/cache/pbuilder/build/,
-            or $fname =~ m,^var/lib/sbuild/,
-            or $fname =~ m,^var/lib/buildd/,
-            or $fname =~ m,^build/,
-            or $fname =~ m,^tmp/buildd/,) {
-            unless ($source_pkg eq 'sbuild' || $source_pkg eq 'pbuilder') {
-                tag 'dir-or-file-in-build-tree', $file;
+        unless ($source_pkg eq 'sbuild' || $source_pkg eq 'pbuilder') {
+            foreach my $buildpath ($BUILD_PATH_REGEX->all) {
+                my $regex = $BUILD_PATH_REGEX->value($buildpath);
+                if($fname =~ m{$regex}xms) {
+                    tag 'dir-or-file-in-build-tree', $file;
+                }
             }
         }
+
         # ---------------- /etc
-        elsif ($fname =~ m,^etc/,) {
+        if ($fname =~ m,^etc/,) {
             # /etc/apt
             if ($fname =~ m,^etc/apt/,) {
                 # -----------------/etc/apt/preferences

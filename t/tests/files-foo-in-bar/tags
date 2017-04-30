@@ -23,6 +23,10 @@ E: files-foo-in-bar: dir-or-file-in-run run/foo/
 E: files-foo-in-bar: dir-or-file-in-run run/foo/bar
 E: files-foo-in-bar: dir-or-file-in-srv srv/foo/
 E: files-foo-in-bar: dir-or-file-in-srv srv/foo/bar
+E: files-foo-in-bar: dir-or-file-in-tmp tmp/buildd/
+E: files-foo-in-bar: dir-or-file-in-tmp tmp/buildd/dir/
+E: files-foo-in-bar: dir-or-file-in-tmp tmp/buildd/dir/foo/
+E: files-foo-in-bar: dir-or-file-in-tmp tmp/buildd/dir/foo/bar
 E: files-foo-in-bar: dir-or-file-in-tmp tmp/foo/
 E: files-foo-in-bar: dir-or-file-in-tmp tmp/foo/bar
 E: files-foo-in-bar: dir-or-file-in-var-lock var/lock/foo/
@@ -42,6 +46,7 @@ E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/bar
 E: files-foo-in-bar: file-in-usr-local usr/local/foo/bar
 E: files-foo-in-bar: nested-examples-directory usr/share/doc/files-foo-in-bar/examples/examples/
 E: files-foo-in-bar: non-standard-dir-in-var var/foo/
+E: files-foo-in-bar: non-standard-toplevel-dir build/
 E: files-foo-in-bar: non-standard-toplevel-dir emul/
 E: files-foo-in-bar: package-contains-mime-file-outside-package-dir usr/share/mime/foo/
 E: files-foo-in-bar: package-contains-mime-file-outside-package-dir usr/share/mime/foo/bar
