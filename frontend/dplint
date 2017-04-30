@@ -278,7 +278,7 @@ sub main {
             'bundling','no_getopt_compat',
             'no_auto_abbrev'
         );
-        $handler->($truename, $cmd, @ARGV);
+        $handler->($truename, $cmd);
         error("Built-in $cmd returned unexpectedly");
     }
     $truename //= $cmd;
@@ -293,7 +293,7 @@ sub lintian_version {
 }
 
 sub builtin_version {
-    my ($truename, $cmd, @args) = @_;
+    my ($truename, $cmd) = @_;
     my $version = lintian_version();
     if ($cmd eq 'print-version') {
         print "${version}\n";
@@ -304,7 +304,7 @@ sub builtin_version {
 }
 
 sub builtin_help {
-    my ($truename, $cmd, @args) = @_;
+    my ($truename, $cmd) = @_;
     my $me = basename($0);
     my $version = lintian_version();
     print <<"EOT";
