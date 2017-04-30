@@ -1806,6 +1806,9 @@ sub run {
                     tag 'symlink-should-be-relative', "$fname $link";
                 }
 
+                _tag_build_tree_path(substr($mylink,1),
+                    "symlink $file point to $mylink");
+
                 # Any other case is already definitely non-recursive
                 tag 'symlink-is-self-recursive', "$fname $link"
                   if $mylink eq '/';

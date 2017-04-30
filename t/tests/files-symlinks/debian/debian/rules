@@ -14,6 +14,7 @@ override_dh_auto_build:
 	ln -s / symlinks/self-recursive
 	ln -s ../../lintian-old/../lintian/data/data-file  symlinks/spurious
 	ln -s ../../../share/lintian/data/comp-data.gz symlinks/comp-data
+	ln -s /var/lib/sbuild/1024 symlinks/1024
 
 override_dh_auto_clean:
 	rm -fr symlinks/ tmp

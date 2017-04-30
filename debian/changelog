@@ -44,6 +44,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Improve the empty-binary-package tag by adding more common
       files that should be ignored.  Thanks to Helmut Grohne for all the
       research behind it.  (Closes: #856857)
+    + [BR] Detect symlink pointing to builddir.  (Closes: #860419)
   * checks/gir.{desc,pm}:
     + [NT] Add check for gir packages written by Simon McVittie.
       (Closes: #695345)
