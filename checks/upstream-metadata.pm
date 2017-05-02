@@ -30,7 +30,11 @@ use YAML::XS;
 sub run {
     my (undef, undef, $info) = @_;
     my $yamlfile = $info->index_resolved_path('debian/upstream/metadata');
-    return if not $yamlfile;
+
+    if (not $yamlfile) {
+        tag 'upstream-metadata-file-is-missing' unless $info->native;
+        return;
+    }
 
     if ($yamlfile->is_open_ok) {
         my $yaml;

@@ -28,6 +28,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
       etc.  (Closes: #832099)
   * checks/scripts.pm:
     + [CL] Prevent some false-positives in udevadm-called-without-guard.
+  * checks/upstream-metadata.{desc,pm}:
+    + [CL] Apply patch from Dylan Aïssi to suggest maintainers add a
+      debian/upstream/metadata file, although downgrade the check to
+      "experimental" level for the time being.  (Closes: #833007)
   * checks/watch-file.pm:
     + [CL] Use our new $PKGREPACK_REGEX to match and capture the suffix
       when looking at potential debian/watch mangling issues.
