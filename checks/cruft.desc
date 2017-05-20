@@ -859,3 +859,12 @@ Info: As of Perl 5.20, the vendorarch directory is /usr/lib/&lt;triplet&gt;/perl
  Please replace that with the value of $Config{vendorarch} configuration
  parameter, e.g.
   $(shell perl -MConfig -wE'say substring($$Config{vendorarch},1)')
+
+Tag: readme-source-is-dh_make-template
+Severity: important
+Certainty: certain
+Info: The debian/README.source file appears to be an unmodified or insufficiently
+ modified copy of the dh_make template.
+ .
+ Please double-check the README.source page and replace it with information
+ about this source package or simply remove the file completely.

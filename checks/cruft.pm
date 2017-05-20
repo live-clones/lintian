@@ -681,6 +681,15 @@ sub find_cruft {
             tag 'debian-upstream-obsolete-path', $name;
         }
 
+        if (   $name eq 'debian/README.source'
+            && $entry->is_file
+            && $entry->is_open_ok) {
+            my $contents = $entry->file_contents;
+            if (index($contents, 'You WILL either need to modify or delete this file') >= 0) {
+                tag 'readme-source-is-dh_make-template';
+            }
+        }
+
         # Find mentioning of usr/lib/perl5 inside the packaging
         if ($name =~ m{^debian/}) {
             my $short = $entry->basename;

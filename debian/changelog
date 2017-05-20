@@ -28,6 +28,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       config.sub files.  These days debhelper automatically updates
       them when people use the dh-sequencer and the check is not
       geared for more thorough analysis.  (Closes: #848878)
+    + [CL] Check that README.source is not the dh_make template.
+      (Closes: #633850)
   * checks/debian-readme.{desc,pm}:
     + [NT] Locate the README.Debian using the index rather than relying
       on a collection.
