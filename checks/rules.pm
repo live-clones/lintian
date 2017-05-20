@@ -276,6 +276,10 @@ sub run {
             next; #.PHONY implies the rest will not match
         }
 
+        if (!$includes && m/dpkg-parsechangelog.*(Source|Version|Date|Timestamp)/s) {
+                tag 'debian-rules-parses-dpkg-parsechangelog', "(line $.)";
+        }
+
         if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/s) {
             my ($target_names, $target_dependencies) = ($1, $2);
             @current_targets = split ' ', $target_names;

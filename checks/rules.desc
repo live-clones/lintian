@@ -237,3 +237,13 @@ Info: The rules file use the make variable $(_).
  If the rules file uses $(dir $(_)) to discover the directory containing
  the source package (presumably in order to implement the get-orig-source
  target), please replace it by $(dir $(firstword $(MAKEFILE_LIST))).
+
+Tag: debian-rules-parses-dpkg-parsechangelog
+Severity: wishlist
+Certainty: possible
+Info: The rules file appears to be parsing the output of dpkg-parsechangelog to
+ determine the current package version name, version, timestamp, etc.
+ .
+ Since dpkg 1.16.1, this may be able to be replaced by including the
+ /usr/share/dpkg/pkg-info.mk file and using the DEB_{SOURCE,VERSION} or
+ SOURCE_DATE_EPOCH variables.
