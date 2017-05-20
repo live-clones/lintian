@@ -3,7 +3,6 @@ Version: 1.0-1
 Type: non-native
 Description: Check for cruft added in a 2.0 package
 Test-For:
- debian-files-list-in-source
  diff-contains-arch-control-dir
  diff-contains-arch-inventory-file
  diff-contains-bts-control-dir
