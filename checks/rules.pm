@@ -276,7 +276,7 @@ sub run {
             next; #.PHONY implies the rest will not match
         }
 
-        if (!$includes && m/dpkg-parsechangelog.*(Source|Version|Date|Timestamp)/s) {
+        if (!$includes && m/dpkg-parsechangelog.*(?:Source|Version|Date|Timestamp)/s) {
                 tag 'debian-rules-parses-dpkg-parsechangelog', "(line $.)";
         }
 
