@@ -151,6 +151,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * t/*:
     + [NT] Drop "Test-Depends" from tests where the versions in Debian
       jessie will satisfy the dependency.
+    + [NT] Update tests to fix FTBFS caused by dpkg-source now ignoring
+      debian/files by default.  (Closes: #863020)
   * t/runtests:
     + [NT] Re-sort test output after running the "post_test" sed script
       on the output.  This prevent test failures caused by the order
