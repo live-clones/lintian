@@ -64,8 +64,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       dpkg-buildpackage refuses to build packages that trigger this tag.
       Also, the tag implies two other "W" tags so contributors are still
       notified of a potential problem.
-    + [CL] Check for manual parsing of dpkg-parsechangelog output now that we
-      have /usr/share/dpkg/pkg-info.mk.
+    + [CL] Check for manual parsing of dpkg-parsechangelog output now that
+      we have /usr/share/dpkg/pkg-info.mk.
   * checks/scripts.pm:
     + [NT] Apply patch from Christopher Hoskin to except -doc packages
       from the "new-package-should-not-package-python2-module" tag.
