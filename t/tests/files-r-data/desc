@@ -1,0 +1,6 @@
+Testname: files-r-data
+Sequence: 6000
+Version: 1.0
+Description: Checks for R statistical data files
+Test-For:
+ r-data-without-readme-source

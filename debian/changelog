@@ -47,6 +47,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       files that should be ignored.  Thanks to Helmut Grohne for all the
       research behind it.  (Closes: #856857)
     + [BR] Detect symlink pointing to builddir.  (Closes: #860419)
+    + [CL] Detect RData without README.source.  (Closes: #815233)
   * checks/gir.{desc,pm}:
     + [NT] Add check for gir packages written by Simon McVittie.
       (Closes: #695345)
