@@ -748,8 +748,7 @@ sub run {
             elsif ($fname =~ m,^usr/lib/R/site-library/\S,) {
                 if (   $file->is_file
                     && $file =~ m,\.(?:rda|Rda|rdata|Rdata)$,
-                    && !$info->index_resolved_path('debian/README.source'))
-                {
+                    && !$info->index_resolved_path('debian/README.source')) {
                     tag 'r-data-without-readme-source', $file;
                 }
             }
