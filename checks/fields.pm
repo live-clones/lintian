@@ -113,7 +113,7 @@ my @NAME_SECTION_MAPPINGS = (
     [qr/^lib.*-(?:ocaml|camlp4)-dev$/ => 'ocaml'],
     [qr/^lib.*-dev$/                  => 'libdevel'],
     [qr/^gir\d+\.\d+-.*-\d+\.\d+$/    => 'introspection'],
-    [qr/^libjs-/                      => 'web'],
+    [qr/^libjs-/                      => 'javascript'],
 );
 
 my %VCS_EXTRACT = (
