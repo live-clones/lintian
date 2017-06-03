@@ -1,4 +1,4 @@
-lintian (2.5.50.4) UNRELEASED; urgency=medium
+lintian (2.5.50.4) unstable; urgency=medium
 
   * checks/upstream-metadata.pm:
     + [JW, NT] Disable YAML parsing of upstream metadata file as the YAML
@@ -9,7 +9,7 @@ lintian (2.5.50.4) UNRELEASED; urgency=medium
       debian/files by default.  This includes renaming a folder in the
       the t/tests/legacy-filenames test.  (Closes: #863020)
 
- -- Niels Thykier <niels@thykier.net>  Sun, 30 Apr 2017 13:12:39 +0000
+ -- Niels Thykier <niels@thykier.net>  Sat, 03 Jun 2017 16:48:24 +0000
 
 lintian (2.5.50.3) unstable; urgency=medium
 
