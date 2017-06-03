@@ -83,6 +83,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       Ian Jackson for reporting the issue.  (Closes: #849880)
   * checks/triggers.{desc,pm}:
     + [NT] New check.  (Closes: #698723)
+  * checks/upstream-metadata.pm:
+    + [JW, NT] Disable YAML parsing of upstream metadata file as the YAML
+      parser executes code.  (Closes: #861958, CVE-2017-8829)
 
   * coll/debian-readme{,desc}:
     + [NT] Remove.  Merge what little functionality it offers into the
