@@ -22,11 +22,11 @@ VENDORARCH := $(shell perl -MConfig -wE'say substr($$Config{vendorarch},1)')
 
 clean:
 	mkdir -p .svn CVS "{arch}" .arch-ids .bzr
-	touch files/.cvsignore files/svn-commit.tmp files/svk-commitsEr9P.tmp
-	touch files/.arch-inventory
-	touch 'files/.#Maelstrom Sound.1.1.1' 'files/Maelstrom Sounce.r121'
-	touch 'files/Maelstrom Sound.mine'
-	touch "files/'\\ "
+	touch data/.cvsignore data/svn-commit.tmp data/svk-commitsEr9P.tmp
+	touch data/.arch-inventory
+	touch 'data/.#Maelstrom Sound.1.1.1' 'data/Maelstrom Sounce.r121'
+	touch 'data/Maelstrom Sound.mine'
+	touch "data/'\\ "
 	touch filenames.c~
 
 build-arch:
@@ -40,7 +40,7 @@ binary-arch:
 
 binary-indep:
 	install -d debian/tmp/DEBIAN
-	cp -a files debian/tmp
+	cp -a data debian/tmp/files
 	chmod -R go=rX debian/tmp/files
 
 	install -d debian/tmp/usr/lib/filenames

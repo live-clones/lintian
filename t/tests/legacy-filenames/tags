@@ -54,14 +54,14 @@ W: filename-games: no-priority-field
 W: filenames source: ancient-standards-version 3.1.1 (current is CURRENT)
 W: filenames source: diff-contains-arch-control-dir .arch-ids
 W: filenames source: diff-contains-arch-control-dir {arch}
-W: filenames source: diff-contains-arch-inventory-file files/.arch-inventory
+W: filenames source: diff-contains-arch-inventory-file data/.arch-inventory
 W: filenames source: diff-contains-bzr-control-dir .bzr
-W: filenames source: diff-contains-cvs-conflict-copy files/.#Maelstrom Sound.1.1.1
+W: filenames source: diff-contains-cvs-conflict-copy data/.#Maelstrom Sound.1.1.1
 W: filenames source: diff-contains-cvs-control-dir CVS
 W: filenames source: diff-contains-editor-backup-file filenames.c~
-W: filenames source: diff-contains-svk-commit-file files/svk-commitsEr9P.tmp
-W: filenames source: diff-contains-svn-commit-file files/svn-commit.tmp
-W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sounce.r121
+W: filenames source: diff-contains-svk-commit-file data/svk-commitsEr9P.tmp
+W: filenames source: diff-contains-svn-commit-file data/svn-commit.tmp
+W: filenames source: diff-contains-svn-conflict-file data/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-control-dir .svn
 W: filenames source: no-section-field-for-source
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali

@@ -6,7 +6,8 @@ lintian (2.5.50.4) UNRELEASED; urgency=medium
 
   * t/*:
     + [NT] Update tests to fix FTBFS caused by dpkg-source now ignoring
-      debian/files by default.  (Closes: #863020)
+      debian/files by default.  This includes renaming a folder in the
+      the t/tests/legacy-filenames test.  (Closes: #863020)
 
  -- Niels Thykier <niels@thykier.net>  Sun, 30 Apr 2017 13:12:39 +0000
 
