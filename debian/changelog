@@ -1,5 +1,9 @@
 lintian (2.5.50.4) UNRELEASED; urgency=medium
 
+  * checks/upstream-metadata.pm:
+    + [JW, NT] Disable YAML parsing of upstream metadata file as the YAML
+      parser executes code.  (Closes: #861958, CVE-2017-8829)
+
   * t/*:
     + [NT] Update tests to fix FTBFS caused by dpkg-source now ignoring
       debian/files by default.  (Closes: #863020)
