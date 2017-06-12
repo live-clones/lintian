@@ -103,6 +103,9 @@ lintian (2.5.51) UNRELEASED; urgency=medium
 
   * data/common/source-fields:
     + [NT] Add new "Testsuite-Restrictions" field.
+  * data/files/privacy-breaker-websites:
+    + [BR] Add digit.com as tracker.
+    + [BR] Add static.ak.fbcdn.net as facebook.
   * data/files/standard-files:
     + [NT] Add more common files based on feedback from Helmut Grohne.
   * data/obsolete-sites/obsolete-sites:

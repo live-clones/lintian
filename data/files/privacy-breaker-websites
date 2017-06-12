@@ -11,7 +11,7 @@ privacy-breach-google-adsense	                 ~~^(?:[^\./]+\.)?(?:googlesyndica
 privacy-breach-google-cse                        ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/(:?afsonline/show_afs_search\.js|cse/api/branding\.css|coop/cse/brand\?[^/]+)$
 privacy-breach-google-plus                       ~~(?:^(?:[^\./]+\.)?google\.[^\./]+\.?/js/plusone\.[^\./]+\Z|^plus\.google\.com/)
 privacy-breach-donation                          ~~(?:(?:donate|paypal|support)\.(gif|jpe?g|png|svg)$|^(?:[^\./]+\.)?(?:flattr\.(?:com|net)|paypal(?:objects)?\.com|pledgie\.com|xoom\.com)/)
-privacy-breach-facebook                          ~~^(?:[^\./]+\.)?facebook\.com(?:/|\Z)
+privacy-breach-facebook                          ~~^(?:[^\./]+\.)?(?:facebook\.com|static\.ak\.fbcdn\.net)(?:/|\Z)
 privacy-breach-logo                              ~~(?:^(?:sflogo\.)?(?:sourceforge|sf)\.[^\./]+/sflogo\.php\?|/logos?/|(?:acrobat|clanlib|(?:fav|github-)?icons?|logos?_?(?:\d+|small)|mascot[^\./]*|youtube-icon[^\./]*|twitter_logo[^\./]*|doxygen|logos?_[^/\.]*|logos?)\.(gif|ico|jpe?g|png|svg)$)
 privacy-breach-piwik                             ~~/piwik\.php\?
 privacy-breach-statistics-website                ~~^(?:(?:[^\./]+\.)?(?:count\.digitalpoint\.com|cruel-carlota\.pagodabox\.com|linkexchange\.com|nedstatbasic\.net|onestat\.com|sitemeter\.com|statcounter\.com|webstats\.motigo\.com|digit\.com)(?:/|\Z)|/count(?:er)?\.cgi\?[^/]*\Z)
