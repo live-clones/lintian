@@ -159,17 +159,17 @@ lintian (2.5.51) UNRELEASED; urgency=medium
   * debian/copyright:
     + [EB] Add Edward Betts.
 
-  * lib/Lintian/CheckScript.pm:
-    + [NT] Remove fallback code for "old" style "pm"-less checks.
-  * lib/Lintian/Util.pm:
-    + [NT] Drop dpkg_deb_has_ctrl_tarfile.  Lintian now assumes that
-      dpkg 1.17.14 is available (provided by Debian jessie or later).
-
   * frontend/dplint:
     + [NT] Ensure all include directories are absolute before passing
       them on to the actual command.
     + [NT] Work around a "Bizarre Copy" bug in perl that could trigger
       on errors.
+
+  * lib/Lintian/CheckScript.pm:
+    + [NT] Remove fallback code for "old" style "pm"-less checks.
+  * lib/Lintian/Util.pm:
+    + [NT] Drop dpkg_deb_has_ctrl_tarfile.  Lintian now assumes that
+      dpkg 1.17.14 is available (provided by Debian jessie or later).
 
   * reporting/{config => config.yaml}:
     + [NT] Rewrite the reporting config template into the new YAML format.
