@@ -193,6 +193,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [CW] Add zesty.
     + [NT] Apply patch from "Unit 193" to add "devel" as a known Ubuntu
       distribution.  (Closes: #861509)
+    + [NT] Add artful.
 
  -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
 
