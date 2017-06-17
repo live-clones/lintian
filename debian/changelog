@@ -77,8 +77,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Apply patch from Christopher Hoskin to except -doc packages
       from the "new-package-should-not-package-python2-module" tag.
       (Closes: #855243)
-    + [NT] Remove references to tags about calling suidregister, dpkg
-      --assert-working-epoch, and dpkg --assert-multi-conrep from
+    + [NT] Remove references to tags about calling suidregister,
+      dpkg --assert-working-epoch, and dpkg --assert-multi-conrep from
       maintainer scripts.
   * checks/systemd.{desc,pm}:
     + [NT] Apply patch from Michael Biebl to warn about deprecated
