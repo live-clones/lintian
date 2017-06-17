@@ -113,6 +113,8 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       suites in these archives.  This enables lintian.d.o to also process
       dbgsym packages.  (Closes: #856312)
 
+  * data/changes-file/known-dists:
+    + [NT] Add buster and remove squeeze.
   * data/common/source-fields:
     + [NT] Add new "Testsuite-Restrictions" field.
   * data/files/privacy-breaker-websites:
