@@ -100,7 +100,7 @@ sub run {
             if (   s/^opt(?:ion)?s=\"([^\"]+)\"\s+//
                 || s/^opt(?:ion)?s=(\S+)\s+//) {
                 $opts = $1;
-                @opts = split(',', $opts);
+                @opts = split($watchver >= 4 ? '\s*,\s*' : ',', $opts);
                 for (@opts) {
                     $repack_mangle = 1
                       if defined $repack
