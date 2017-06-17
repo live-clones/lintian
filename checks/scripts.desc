@@ -414,12 +414,6 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
   '[[ test ]]' instead of '[ test ]' (requires a Korn shell)
   'type' instead of 'which' or 'command -v'
 
-Tag: suidregister-used-in-maintainer-script
-Severity: important
-Certainty: certain
-Info: This script calls suidregister, a long-obsolete program that has
- been replaced by dpkg-statoverride.
-
 Tag: maintainer-script-needs-depends-on-update-inetd
 Severity: normal
 Certainty: certain
@@ -684,20 +678,6 @@ Info: The indicated program run in a maintainer script has a prepended
  .
  See particularly the function pathfind() in devref.
 Ref: policy 6.1, devref 6.4
-
-Tag: maintainer-script-should-not-use-ancient-dpkg-epoch-check
-Severity: minor
-Certainty: certain
-Info: The package calls dpkg --assert-working-epoch in a maintainer
- script.  This check is obsolete and has always returned true since dpkg
- 1.4.0.7, released 1997-01-25.
-
-Tag: maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
-Severity: minor
-Certainty: certain
-Info: The package calls dpkg --assert-multi-conrep in a maintainer
- script.  This check is obsolete and has always returned true since dpkg
- 1.4.1.19, released 1999-10-30.
 
 Tag: package-uses-local-diversion
 Severity: serious
