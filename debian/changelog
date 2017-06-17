@@ -144,6 +144,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
     + [NT] Drop versioned dependencies that are there to assist to
       Wheezy.
     + [NT] Mention Debian Policy v4.0.0 in the description.
+    + [NT] Bump Standards-Version to 4.0.0 - no changes required.
   * debian/copyright:
     + [EB] Add Edward Betts.
 
