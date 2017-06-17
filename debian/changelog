@@ -131,12 +131,16 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       #852419, #852421, #852426)
     + [CL] Add "none were" -> "none was" multiword correction.
       (Closes: 860558)
+  * data/standards-version/release-dates:
+    + [NT] Add 4.0.0 as a known standards version along with its release
+      date.
 
   * debian/control:
     + [NT] Add explicit (Build-)Depends on dpkg (>= 1.17.14) to make it
       explicit that we no longer support Wheezy or older.
     + [NT] Drop versioned dependencies that are there to assist to
       Wheezy.
+    + [NT] Mention Debian Policy v4.0.0 in the description.
   * debian/copyright:
     + [EB] Add Edward Betts.
 
