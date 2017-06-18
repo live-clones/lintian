@@ -10,6 +10,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [NT] Remove check for missing versioned build-depends for dpkg
       and debhlper when using Build-Profiles.  The necessary versions
       are now in oldstable.
+    + [NT] Drop check for depending on multiple versions of tkx as
+      tkx does not seem to be in Debian any longer.
   * checks/scripts.desc:
     + [CL] Upgrade new-package-should-not-package-python2-module from
       I: to W:. See #829744 for more info.

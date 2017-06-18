@@ -16,7 +16,6 @@ E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0
 E: relations-multiple-libs: package-depends-on-multiple-tcl-versions tcl8.0 tcl8.2
 E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
-E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
 E: relations-multiple-libs: usr-share-doc-symlink-without-dependency relations
 E: relations: changelog-file-missing-in-native-package
 E: relations: conflicts-with-dependency depends foo

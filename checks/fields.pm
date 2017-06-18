@@ -80,8 +80,6 @@ our %known_tclxs
 our %known_tks
   = map { $_ => 1 } ('tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', 'tk8.5',);
 
-our %known_tkxs = map { $_ => 1 } ('tkx8.2', 'tkx8.3',);
-
 our %known_libpngs = map { $_ => 1 } ('libpng12-0', 'libpng2', 'libpng3',);
 
 our @known_java_pkg = map { qr/$_/ } (
@@ -693,8 +691,10 @@ sub run {
             my $javadep = 0;
             unfold($field, \$data);
 
-            my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs,
-                @seen_libpngs);
+            my (
+                @seen_libstdcs, @seen_tcls, @seen_tclxs,
+                @seen_tks, @seen_libpngs
+            );
 
             my $is_dep_field = sub {
                 any { $_ eq $_[0] }qw(depends pre-depends recommends suggests);
@@ -717,8 +717,6 @@ sub run {
                       if defined $known_tclxs{$alternatives[0][0]};
                     push @seen_tks, $alternatives[0][0]
                       if defined $known_tks{$alternatives[0][0]};
-                    push @seen_tkxs, $alternatives[0][0]
-                      if defined $known_tkxs{$alternatives[0][0]};
                     push @seen_libpngs, $alternatives[0][0]
                       if defined $known_libpngs{$alternatives[0][0]};
                 }
@@ -923,8 +921,6 @@ sub run {
               if (scalar @seen_tclxs > 1);
             tag 'package-depends-on-multiple-tk-versions', @seen_tks
               if (scalar @seen_tks > 1);
-            tag 'package-depends-on-multiple-tkx-versions', @seen_tkxs
-              if (scalar @seen_tkxs > 1);
             tag 'package-depends-on-multiple-libpng-versions', @seen_libpngs
               if (scalar @seen_libpngs > 1);
         }

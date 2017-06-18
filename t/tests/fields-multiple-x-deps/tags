@@ -3,4 +3,3 @@ E: fields-multiple-x-deps: package-depends-on-multiple-libstdc-versions libstdc+
 E: fields-multiple-x-deps: package-depends-on-multiple-tcl-versions tcl8.0 tcl8.2
 E: fields-multiple-x-deps: package-depends-on-multiple-tclx-versions tclx76 tclx8.0.4 tclx8.2
 E: fields-multiple-x-deps: package-depends-on-multiple-tk-versions tk8.2 tk8.3
-E: fields-multiple-x-deps: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3

@@ -11,7 +11,6 @@ Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
          libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0,
          tk8.2, tk8.3,
          tcl8.0, tcl8.2,
-         tkx8.2, tkx8.3,
          tclx76, tclx8.0.4, tclx8.2,
          libpng2, libpng3
 Description: {$description}
