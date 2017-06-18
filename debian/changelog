@@ -18,6 +18,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [CL] Clarify wording in new-package-should-not-package-python2-module
       to make the justification clearer.
 
+  * commands/lintian.pm:
+    + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
+
   * lib/Lintian/Util.pm:
     + [NT] Fix uninitialized warning if a fork call fails.
 

@@ -635,6 +635,7 @@ sub main {
 
     $PROFILE = load_profile_and_configure_tags();
 
+    $SIG{'TERM'} = \&interrupted;
     $SIG{'INT'} = \&interrupted;
     $SIG{'QUIT'} = \&interrupted;
 
