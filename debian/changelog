@@ -2,6 +2,14 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.pm:
+    + [NT] Remove check for missing versioned build-depends for dpkg
+      and debhlper when using Build-Profiles.  The necessary versions
+      are now in oldstable.
+  * checks/fields.{desc,pm}:
+    + [NT] Remove check for missing versioned build-depends for dpkg
+      and debhlper when using Build-Profiles.  The necessary versions
+      are now in oldstable.
   * checks/scripts.desc:
     + [CL] Upgrade new-package-should-not-package-python2-module from
       I: to W:. See #829744 for more info.

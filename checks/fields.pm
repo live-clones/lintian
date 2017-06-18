@@ -989,7 +989,6 @@ sub run {
             qw(build-depends build-depends-indep build-depends-arch);
         };
 
-        my $restrictions_used = 0;
         my %depend;
         for my $field (
             qw(build-depends build-depends-indep build-depends-arch build-conflicts build-conflicts-indep build-conflicts-arch)
@@ -1020,10 +1019,6 @@ sub run {
                                 tag 'invalid-arch-string-in-source-relation',
                                   "$arch [$field: $part_d_orig]";
                             }
-                        }
-
-                        if (scalar @{$d_restr} >= 1) {
-                            $restrictions_used = 1;
                         }
 
                         for my $restrlist (@{$d_restr}) {
@@ -1162,21 +1157,6 @@ sub run {
                 if ($build_all->implies($conflict)) {
                     tag 'build-conflicts-with-build-dependency', $conflict;
                 }
-            }
-        }
-
-        # if restrictions are found in the build-depends/conflicts, then
-        # package must build-depend on dpkg (>= 1.17.14)
-        if ($restrictions_used) {
-            my $build_conflicts_all = $info->relation('build-conflicts-all');
-            tag 'restriction-formula-without-versioned-dpkg-dev-dependency'
-              unless ($build_all->implies('dpkg-dev (>= 1.17.14~)'));
-            # if the package uses debhelper then it must require
-            # version >= 9.20141010
-            if ($build_all->implies('debhelper')) {
-                tag
-'restriction-formula-with-debhelper-without-debhelper-version'
-                  unless ($build_all->implies('debhelper (>= 9.20141010~)'));
             }
         }
 

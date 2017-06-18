@@ -316,19 +316,10 @@ sub run {
         }
     }
 
-    # check the Build-Profiles field
-    # this has to checked here because the Build-Profiles field does not appear
-    # in DEBIAN/control and even if it should in the future, some binary
-    # packages might never be built in the first place because of build
-    # profiles
-
-    my $profiles_used = 0;
-
     # check the syntax of the Build-Profiles field
     for my $bin (@package_names) {
         my $raw = $info->binary_field($bin, 'build-profiles');
         next unless $raw;
-        $profiles_used = 1;
         if (
             $raw!~ m{^\s*              # skip leading whitespace
                      <                 # first list start
@@ -365,20 +356,6 @@ sub run {
                       or $profile =~ /^pkg\.[a-z0-9][a-z0-9+.-]+\../;
                 }
             }
-        }
-    }
-
-    # if a Build-Profiles field was used, then the package must depend on the
-    # correct dpkg (and optionally debhelper) versions
-    if ($profiles_used) {
-        my $build_all = $info->relation('build-depends-all');
-        tag 'restriction-formula-without-versioned-dpkg-dev-dependency'
-          unless ($build_all->implies('dpkg-dev (>= 1.17.14~)'));
-        # if the package uses debhelper then it must require
-        # version >= 9.20141010
-        if ($build_all->implies('debhelper')) {
-            tag 'restriction-formula-with-debhelper-without-debhelper-version'
-              unless ($build_all->implies('debhelper (>= 9.20141010~)'));
         }
     }
 

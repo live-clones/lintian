@@ -1,7 +1,3 @@
 E: fields-build-profiles-general source: invalid-profile-name-in-build-profiles-field unknown fields-build-profiles-general-unknown-profile
 E: fields-build-profiles-general source: invalid-profile-name-in-source-relation foobar [build-depends: bpfail1 <foobar>]
 E: fields-build-profiles-general source: invalid-restriction-formula-in-build-profiles-field <in<valid> fields-build-profiles-general-wrong-syntax
-P: fields-build-profiles-general source: restriction-formula-with-debhelper-without-debhelper-version
-P: fields-build-profiles-general source: restriction-formula-with-debhelper-without-debhelper-version
-P: fields-build-profiles-general source: restriction-formula-without-versioned-dpkg-dev-dependency
-P: fields-build-profiles-general source: restriction-formula-without-versioned-dpkg-dev-dependency

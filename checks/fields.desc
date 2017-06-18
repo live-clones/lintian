@@ -674,22 +674,6 @@ Info: The restriction formula in the source relation includes an unknown build
  and "pkg.<i>srcpkg</i>.<i>anything</i>".
 Ref: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
 
-Tag: restriction-formula-without-versioned-dpkg-dev-dependency
-Severity: pedantic
-Certainty: certain
-Info: If a restriction formula appears in the source relation or if the
- Build-Profiles field is used in a binary package stanza then the source
- package has to build depend on dpkg-dev (&gt;= 1.17.14) for minimal
- restriction formula support.
-
-Tag: restriction-formula-with-debhelper-without-debhelper-version
-Severity: pedantic
-Certainty: certain
-Info: If a restriction formula appears in the build dependencies or if the
- Build-Profiles field is used in a binary package stanza and the package uses
- debhelper, then the source package has to depend on at least debhelper
- 9.20141010.
-
 Tag: depends-on-build-essential-package-without-using-version
 Severity: important
 Certainty: certain
