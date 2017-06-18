@@ -18,6 +18,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [CL] Clarify wording in new-package-should-not-package-python2-module
       to make the justification clearer.
 
+  * lib/Lintian/Util.pm:
+    + [NT] Fix uninitialized warning if a fork call fails.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Jun 2017 19:03:46 +0800
 
 lintian (2.5.51) unstable; urgency=medium

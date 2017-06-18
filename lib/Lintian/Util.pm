@@ -885,7 +885,7 @@ sub do_fork() {
       or die("sigprocmask failed: $!\n");
     $pid = CORE::fork();
     $fork_error = $!;
-    if ($pid == 0) {
+    if (defined($pid) and $pid == 0) {
 
         for my $sig (keys(%SIG)) {
             if (ref($SIG{$sig}) eq 'CODE') {
@@ -895,7 +895,7 @@ sub do_fork() {
     }
     sigprocmask(SIG_SETMASK, $orig_mask, undef)
       or die("sigprocmask failed: $!\n");
-    if ($pid == -1) {
+    if (not defined($pid)) {
         $! = $fork_error;
     }
     return $pid;
