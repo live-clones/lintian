@@ -2,6 +2,10 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/scripts.desc:
+    + [CL] Upgrade new-package-should-not-package-python2-module from
+      I: to W:. See #829744 for more info.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Jun 2017 19:03:46 +0800
 
 lintian (2.5.51) unstable; urgency=medium

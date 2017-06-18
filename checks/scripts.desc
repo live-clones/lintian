@@ -733,7 +733,7 @@ Info: The maintainer scripts of the package one or more auto-generated
  shell snippets inserted by the listed debhelper tool.
 
 Tag: new-package-should-not-package-python2-module
-Severity: wishlist
+Severity: normal
 Certainty: certain
 Info: This package appears to be the first packaging of a new upstream
  software package but it appears to package a module for Python 2.
