@@ -1,1 +1,1 @@
-I: python-scripts-python2: new-package-should-not-package-python2-module python-scripts-python2
+W: python-scripts-python2: new-package-should-not-package-python2-module python-scripts-python2
