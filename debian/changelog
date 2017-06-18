@@ -5,6 +5,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Upgrade new-package-should-not-package-python2-module from
       I: to W:. See #829744 for more info.
+    + [CL] Clarify wording in new-package-should-not-package-python2-module
+      to make the justification clearer.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Jun 2017 19:03:46 +0800
 
