@@ -350,13 +350,12 @@ sub run {
     # or libtool.
     my $ltinbd  = $info->relation('build-depends-all')->implies($LIBTOOL);
     my %warned;
-    my $format = $info->field('format');
-
     # Assume the package to be non-native if the field is not present.
     # - while 1.0 is more likely in this case, Lintian will probably get
     #   better results by checking debfiles/ rather than looking for a diffstat
     #   that may not be present.
-    $format = '3.0 (quilt)' unless defined $format;
+    my $format = $info->field('format', '3.0 (quilt)');
+
     if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
         check_debian_dir($info, \%warned);
     }elsif (not $info->native) {
