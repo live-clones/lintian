@@ -631,7 +631,7 @@ sub run {
             if (/\#DEBHELPER\#/) {
                 tag 'maintainer-script-has-unexpanded-debhelper-token', $file;
             }
-            if (/^# Automatically added by (\S+)/) {
+            if (/^# Automatically added by (\S*[^:\s]):?\s*$/) {
                 my $dh_cmd = $1;
                 tag 'debhelper-autoscript-in-maintainer-scripts', $dh_cmd
                   if not $dh_cmd_substs{$dh_cmd}++;
