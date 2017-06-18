@@ -3,6 +3,9 @@ Version: 1.0
 Description: Check backport
 Skeleton: pedantic
 Options: --pedantic -I -E
+# Overrides the "data/changes-file/known-dists"
+# data file to avoid updating the test every release
+Profile: lintian-test
 Test-For:
  backports-upload-has-incorrect-version-number
  backports-changes-missing
