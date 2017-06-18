@@ -1,6 +1,38 @@
-lintian (2.5.51) UNRELEASED; urgency=medium
+lintian (2.5.51) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debian-control-has-dbgsym-package
+      - debian-control-has-obsolete-dbg-package
+      - debian-rules-parses-dpkg-parsechangelog
+      - desktop-entry-lacks-icon-entry
+      - distribution-and-changes-mismatch
+      - distribution-and-experimental-mismatch
+      - gir-in-arch-all-package
+      - gir-missing-typelib-dependency
+      - gir-section-not-libdevel
+      - multiarch-foreign-shared-library
+      - r-data-without-readme-source
+      - readme-source-is-dh_make-template
+      - repeated-trigger-name
+      - systemd-service-file-refers-to-obsolete-bindto
+      - testsuite-autopkgtest-missing
+      - typelib-in-arch-all-package
+      - typelib-missing-gir-depends
+      - typelib-not-in-multiarch-directory
+      - typelib-package-name-does-not-match
+      - typelib-section-not-introspection
+      - unknown-trigger
+      - unreleased-changes
+      - uses-implicit-await-trigger
+    + Removed:
+      - ancient-autotools-helper-file
+      - init.d-script-missing-dependency-on-remote_fs
+      - maintainer-script-should-not-use-ancient-dpkg-epoch-check
+      - maintainer-script-should-not-use-ancient-dpkg-multi-conrep-check
+      - outdated-autotools-helper-file
+      - package-would-benefit-from-build-arch-targets
+      - suidregister-used-in-maintainer-script
 
   * checks/binaries.{desc,pm}:
     + [NT] Apply patch from Adrian Bunk to bump severity of the
@@ -205,7 +237,7 @@ lintian (2.5.51) UNRELEASED; urgency=medium
       distribution.  (Closes: #861509)
     + [NT] Add artful.
 
- -- Bastien Roucariès <roucaries.bastien+debian@gmail.com>  Fri, 30 Dec 2016 17:14:54 +0100
+ -- Niels Thykier <niels@thykier.net>  Sun, 18 Jun 2017 07:57:57 +0000
 
 lintian (2.5.50) unstable; urgency=medium
 
