@@ -27,8 +27,6 @@ use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 
-my $KNOWN_PRIOS = Lintian::Data->new('common/priorities', qr/\s*=\s*/o);
-
 sub run {
 
     my (undef, undef, undef, undef, $group) = @_;
