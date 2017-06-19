@@ -21,6 +21,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
 
+  * data/spelling/corrections:
+    + [AB] Remove "iff". It's a valid English word. (Closes: #865055)
+
   * lib/Lintian/Util.pm:
     + [NT] Fix uninitialized warning if a fork call fails.
 
