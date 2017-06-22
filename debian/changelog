@@ -12,6 +12,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       are now in oldstable.
     + [NT] Drop check for depending on multiple versions of tkx as
       tkx does not seem to be in Debian any longer.
+  * checks/menu-format.desc:
+    + [ADB] Fix formatting of desktop-entry-lacks-icon-entry
   * checks/scripts.desc:
     + [CL] Upgrade new-package-should-not-package-python2-module from
       I: to W:. See #829744 for more info.
