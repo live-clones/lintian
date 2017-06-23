@@ -2,6 +2,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.desc:
+    + [AB] Fix typo "%gt;" vs "&gt;".
   * checks/control-file.pm:
     + [NT] Remove check for missing versioned build-depends for dpkg
       and debhlper when using Build-Profiles.  The necessary versions
