@@ -113,8 +113,8 @@ override_dh_auto_test: $(testtarget)
 %:
 	dh $@
 
-# Messes with our tests and we don't need it.
-override_dh_update_autotools_config:
+# Unneeded helpers or helpers that messes up our test.
+override_dh_update_autotools_config override_dh_autoreconf override_dh_autoreconf_clean:
 
 .PHONY: refresh-perl-provides update-lintian.debian.org generate-docs
 .DELETE_ON_ERROR: runtests

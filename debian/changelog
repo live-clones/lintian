@@ -28,11 +28,15 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [AB] Remove "iff". It's a valid English word. (Closes: #865055)
 
+  * debian/{control,compat}:
+    + [NT] Bump debhelper compat to 10.
   * debian/rules:
     + [JW, NT] Post process HTML docmentation to set the charset to UTF-8,
       which fixes mojibake in the Debian Policy Manual links.  Thanks to
       Paul Hardy for finding a solution to the problem.
       (Closes: #802721)
+    + [NT] Override dh_autoreconf tools as they are not used (but need to
+      scan over all files in the source package).
 
   * lib/Lintian/Util.pm:
     + [NT] Fix uninitialized warning if a fork call fails.
