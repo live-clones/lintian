@@ -28,8 +28,6 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [AB] Remove "iff". It's a valid English word. (Closes: #865055)
 
-  * debian/{control,compat}:
-    + [NT] Bump debhelper compat to 10.
   * debian/rules:
     + [JW, NT] Post process HTML docmentation to set the charset to UTF-8,
       which fixes mojibake in the Debian Policy Manual links.  Thanks to
