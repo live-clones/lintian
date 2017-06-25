@@ -65,6 +65,8 @@ generate-docs-stamp: $(docsource)
 	dh_testdir
 	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
 	cd doc && LC_ALL=C jw -b txt lintian.xml
+	# docbook does not set a charset and we rely on UTF-8.  Make this explicit to avoid #802721
+	find doc/lintian.html/ -type f -name '*.html' -exec perl -pe 's/(<TITLE[\s\r\n])/<meta charset="UTF-8">$$1/' -i {} +
 	mkdir -p man/man1/ man/man3/
 	private/generate-lintian-pod | \
 		$(pod2man) --name lintian --section=1 > man/man1/lintian.1
