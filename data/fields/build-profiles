@@ -4,8 +4,10 @@ nocheck
 nodoc
 nogolang
 nojava
+nolua
 noperl
 nopython
+noruby
 noudeb
 stage1
 stage2
