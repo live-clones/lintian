@@ -94,6 +94,10 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       reduction is also applicable to other reporting tools that loads the
       harness cache.
 
+  * data/cruft/non-free-files:
+    + [CL] Match more Lena Söderberg images. Thanks to Lumin
+      <cdluminate@gmail.com> and Dylan Aïssi <bob.dybian@gmail.com>.
+      (Closes: #827941)
   * data/fields/build-profiles:
     + [NT] Add patch from Mattia Rizzolo to update the list of known build
       profiles, adding «nolua» and «noruby».
