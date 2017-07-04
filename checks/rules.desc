@@ -242,8 +242,11 @@ Tag: debian-rules-parses-dpkg-parsechangelog
 Severity: wishlist
 Certainty: possible
 Info: The rules file appears to be parsing the output of dpkg-parsechangelog to
- determine the current package version name, version, timestamp, etc.
+ determine the current package version name, version, or timestamp, etc.
  .
- Since dpkg 1.16.1, this may be able to be replaced by including the
- /usr/share/dpkg/pkg-info.mk file and using the DEB_{SOURCE,VERSION} or
- SOURCE_DATE_EPOCH variables.
+ Since dpkg 1.16.1, this could be replaced by including the
+ /usr/share/dpkg/pkg-info.mk Makefile library and using the
+ DEB_{SOURCE,VERSION} or SOURCE_DATE_EPOCH variables.
+ .
+ Using this library is not only cleaner, it handles many corner-cases such
+ as binNMUs, epoch versions, etc.
