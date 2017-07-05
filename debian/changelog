@@ -22,8 +22,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [CL] Clarify wording in new-package-should-not-package-python2-module
       to make the justification clearer.
   * checks/rules.desc:
-    + [CL] Clarify wording in debian-rules-parses-dpkg-parsechangelog to make
-      the justification clearer. (Closes: #865882)
+    + [CL] Clarify wording in debian-rules-parses-dpkg-parsechangelog to
+      make the justification clearer.  (Closes: #865882)
 
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
