@@ -248,5 +248,5 @@ Info: The rules file appears to be parsing the output of dpkg-parsechangelog to
  /usr/share/dpkg/pkg-info.mk Makefile library and using the
  DEB_{SOURCE,VERSION} or SOURCE_DATE_EPOCH variables.
  .
- Using this library is not only cleaner, it handles many corner-cases such
- as binNMUs, epoch versions, etc.
+ Using this library is not only cleaner and more efficient, it handles many
+ corner-cases such as binNMUs, epoch versions, etc.
