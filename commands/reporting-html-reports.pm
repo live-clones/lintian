@@ -820,7 +820,7 @@ sub parse_lintian_log {
     # The "last_*" are optimizations to avoid computing the same
     # things over and over again when a package have multiple tags.
     my (%seen, $last_info, $last_maintainer, %unknown_member_id, $info,
-        $last_pi);
+        $last_pi, %map_maint);
     my %expanded_code = (
         E => 'errors',
         W => 'warnings',
@@ -953,7 +953,8 @@ sub parse_lintian_log {
             # and, if so, map them to the same person as the previous
             # one.
 
-            $last_maintainer = $maintainer = map_maintainer($maintainer);
+            $last_maintainer = $maintainer
+              = map_maintainer(\%map_maint, $maintainer);
 
             # Update maintainer statistics.
             $statistics{maintainers}++ unless defined $by_maint{$maintainer};
@@ -995,7 +996,7 @@ sub parse_lintian_log {
                             # d/control for some uploaders.
                             $uploader =~ s/^"(.*)" <(.*)>$/$1 <$2>/;
                         }
-                        $uploader = map_maintainer($uploader);
+                        $uploader = map_maintainer(\%map_maint, $uploader);
                         next if $uploader eq $maintainer;
                         $by_uploader{$uploader}{$source}{$source_version}
                           = $list_ref;
@@ -1015,24 +1016,15 @@ sub parse_lintian_log {
 # Deduplicate maintainers.  Maintains a cache of the maintainers we've seen
 # with a given e-mail address and returns the maintainer string that we
 # should use (which is whatever maintainer we saw first with that e-mail).
-
-# PerlCritic apparently does not recognise this way of "encapsulating"
-# variables.  Though, these could probably be replaced by "state"
-# variables.
-## no critic (ControlStructures::ProhibitUnreachableCode)
-{
-    my (%urlmap);
-
-    sub map_maintainer {
-        my ($maintainer) = @_;
-        my $url = maintainer_url($maintainer);
-        if ($urlmap{$url} && $urlmap{$url} ne $maintainer) {
-            $maintainer = $urlmap{$url};
-        } else {
-            $urlmap{$url} = $maintainer;
-        }
-        return $maintainer;
+sub map_maintainer {
+    my ($urlmap, $maintainer) = @_;
+    my $url = maintainer_url($maintainer);
+    if ($urlmap->{$url} && $urlmap->{$url} ne $maintainer) {
+        $maintainer = $urlmap->{$url};
+    } else {
+        $urlmap->{$url} = $maintainer;
     }
+    return $maintainer;
 }
 
 # Quote special characters for HTML output.
