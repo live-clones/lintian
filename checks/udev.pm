@@ -33,7 +33,7 @@ sub run {
     my $rules_dir = $info->index_resolved_path('lib/udev/rules.d/');
     return unless $rules_dir;
     foreach my $file ($rules_dir->children) {
-        if (! $file->is_open_ok()) {
+        if (!$file->is_open_ok) {
             tag('udev-rule-unreadable', $file);
             next;
         }
@@ -47,8 +47,9 @@ sub check_rule {
 
     # for USB, if everyone or the plugdev group members are
     # allowed access, the uaccess tag should be used too.
-    if ($rule =~ m/SUBSYSTEM=="usb"/
-        && ($rule =~ m/GROUP="plugdev"/
+    if (
+        $rule =~ m/SUBSYSTEM=="usb"/
+        && (   $rule =~ m/GROUP="plugdev"/
             || $rule =~ m/MODE="0666"/)
         && $rule !~ m/ENV\{COLOR_MEASUREMENT_DEVICE\}/
         && $rule !~ m/ENV\{DDC_DEVICE\}/
@@ -64,18 +65,25 @@ sub check_rule {
         && $rule !~ m/ENV\{ID_SECURITY_TOKEN\}/
         && $rule !~ m/ENV\{ID_SMARTCARD_READER\}/
         && $rule !~ m/ENV\{ID_SOFTWARE_RADIO\}/
-        && $rule !~ m/TAG\+="uaccess"/) {
-        tag('udev-rule-missing-uaccess', "$file:$linenum",
-            'user accessible device missing TAG+="uaccess"');
+        && $rule !~ m/TAG\+="uaccess"/
+      ) {
+        tag(
+            'udev-rule-missing-uaccess',
+            "$file:$linenum",
+            'user accessible device missing TAG+="uaccess"'
+        );
     }
 
     # Matching rules mentioning vendor/product should also specify
     # subsystem, as vendor/product is subsystem specific.
-    if ($rule =~ m/ATTR\{idVendor\}=="[0-9a-fA-F]+"/
+    if (   $rule =~ m/ATTR\{idVendor\}=="[0-9a-fA-F]+"/
         && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
-        && $rule !~ m/SUBSYSTEM=="[^"]+"/ ) {
-        tag('udev-rule-missing-subsystem', "$file:$linenum",
-            'vendor/product matching missing SUBSYSTEM specifier');
+        && $rule !~ m/SUBSYSTEM=="[^"]+"/) {
+        tag(
+            'udev-rule-missing-subsystem',
+            "$file:$linenum",
+            'vendor/product matching missing SUBSYSTEM specifier'
+        );
     }
     return 0;
 }
@@ -83,7 +91,7 @@ sub check_rule {
 sub check_udev_rules {
     my ($file, $check) = @_;
 
-    my $fd = $file->open();
+    my $fd = $file->open;
     my $linenum = 0;
     my $cont;
     my $retval = 0;
