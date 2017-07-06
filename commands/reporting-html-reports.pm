@@ -1019,8 +1019,8 @@ sub parse_lintian_log {
 sub map_maintainer {
     my ($urlmap, $maintainer) = @_;
     my $url = maintainer_url($maintainer);
-    if ($urlmap->{$url} && $urlmap->{$url} ne $maintainer) {
-        $maintainer = $urlmap->{$url};
+    if (defined(my $res = $urlmap->{$url})) {
+        $maintainer = $res;
     } else {
         $urlmap->{$url} = $maintainer;
     }
