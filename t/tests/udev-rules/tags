@@ -1,0 +1,4 @@
+E: udev-rules: udev-rule-unreadable lib/udev/rules.d/60-dangling-symlink.rules
+W: udev-rules: udev-rule-missing-subsystem lib/udev/rules.d/60-udev-rules.rules:14 vendor/product matching missing SUBSYSTEM specifier
+W: udev-rules: udev-rule-missing-uaccess lib/udev/rules.d/60-udev-rules.rules:2 user accessible device missing TAG+="uaccess"
+W: udev-rules: udev-rule-missing-uaccess lib/udev/rules.d/60-udev-rules.rules:5 user accessible device missing TAG+="uaccess"

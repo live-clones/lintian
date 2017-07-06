@@ -1,0 +1,7 @@
+Testname: udev-rules
+Version: 1.0
+Description: Check udev rules for mistakes
+Test-For:
+ udev-rule-unreadable
+ udev-rule-missing-uaccess
+ udev-rule-missing-subsystem

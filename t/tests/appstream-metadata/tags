@@ -1,0 +1,6 @@
+E: appstream-metadata: appstream-metadata-legacy-format usr/share/appdata/appstream-metadata-obsolete.metadata.xml
+W: appstream-metadata: appstream-metadata-in-legacy-location usr/share/appdata/appstream-metadata-obsolete.metadata.xml
+W: appstream-metadata: appstream-metadata-malformed-modalias-provide usr/share/metainfo/appstream-metadata.metadata.xml include non-valid hex digit in USB matching rule 'usb:v0000p000ad*'
+W: appstream-metadata: appstream-metadata-missing-modalias-provide lib/udev/rules.d/60-appstream-metadata.rules match rule usb:v0000p000Ad*
+W: appstream-metadata: udev-rule-missing-uaccess lib/udev/rules.d/60-appstream-metadata.rules:2 user accessible device missing TAG+="uaccess"
+W: appstream-metadata: udev-rule-missing-uaccess lib/udev/rules.d/60-appstream-metadata.rules:5 user accessible device missing TAG+="uaccess"

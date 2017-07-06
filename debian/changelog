@@ -2,6 +2,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/appstream-metadata.{desc,pm}:
+    + [NT] New check by Petter Reinholdtsen.
   * checks/changelog-file.desc:
     + [AB] Fix typo "%gt;" vs "&gt;".
   * checks/control-file.pm:
@@ -24,6 +26,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * checks/rules.desc:
     + [CL] Clarify wording in debian-rules-parses-dpkg-parsechangelog to
       make the justification clearer.  (Closes: #865882)
+  * checks/udev.{desc,pm}:
+    + [NT] New check by Petter Reinholdtsen.
 
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
@@ -34,6 +38,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [AB] Remove "iff". It's a valid English word. (Closes: #865055)
 
+  * debian/control:
+    + [NT] Add (Build-)Depends on libxml-simple-perl for the new
+      appstream-metadata check.
   * debian/rules:
     + [JW, NT] Post process HTML docmentation to set the charset to UTF-8,
       which fixes mojibake in the Debian Policy Manual links.  Thanks to
@@ -44,6 +51,10 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   * lib/Lintian/Util.pm:
     + [NT] Fix uninitialized warning if a fork call fails.
+
+  * profiles/debian/main.profile:
+    + [NT] Enable appstream-metadata + udev check by default.
+      (Closes: #841670)
 
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Jun 2017 19:03:46 +0800
 

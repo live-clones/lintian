@@ -1,0 +1,8 @@
+Testname: appstream-metadata
+Version: 1.0
+Description: Test AppStream and udev metadata in binary package
+Test-For:
+ appstream-metadata-in-legacy-location
+ appstream-metadata-legacy-format
+ appstream-metadata-missing-modalias-provide
+ appstream-metadata-malformed-modalias-provide
