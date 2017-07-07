@@ -1,1 +1,4 @@
 C: scripts-maintainer-script-classification: debhelper-autoscript-in-maintainer-scripts dh_fake_lintian_tool
+C: scripts-maintainer-script-classification: debhelper-autoscript-in-maintainer-scripts dh_fake_lintian_tool_versioned/1.0
+C: scripts-maintainer-script-classification: debhelper-autoscript-in-maintainer-scripts dh_fake_python3
+C: scripts-maintainer-script-classification: debhelper-autoscript-in-maintainer-scripts dh_fake_python3_versioned/1.0
