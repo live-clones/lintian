@@ -631,8 +631,10 @@ sub run {
             if (/\#DEBHELPER\#/) {
                 tag 'maintainer-script-has-unexpanded-debhelper-token', $file;
             }
-            if (/^# Automatically added by (\S*[^:\s]):?\s*$/) {
+            if (/^# Automatically added by (\S+)\s*$/) {
                 my $dh_cmd = $1;
+                # dh_python puts a trailing ":", remove that.
+                $dh_cmd =~ s/:++$//g;
                 tag 'debhelper-autoscript-in-maintainer-scripts', $dh_cmd
                   if not $dh_cmd_substs{$dh_cmd}++;
             }
