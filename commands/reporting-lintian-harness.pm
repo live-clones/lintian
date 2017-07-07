@@ -160,10 +160,6 @@ sub harness_lintian {
 
     @worklist = find_backlog($LINTIAN_VERSION, $state);
 
-    # Sanity check for incremental mode.
-    die("Old Lintian log file $lintian_log not found!\n")
-      if ($OPT{'incremental-mode'} and not -f $lintian_log);
-
     # Always update the log if it exists, as we may have removed
     # some entries.
     if (-f $lintian_log) {
