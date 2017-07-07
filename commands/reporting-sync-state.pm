@@ -25,6 +25,7 @@ use autodie;
 use Getopt::Long();
 use File::Basename qw(basename);
 use YAML::XS ();
+use MIME::Base64 qw(encode_base64);
 
 use Lintian::Lab;
 use Lintian::Relation::Version qw(versions_comparator);
@@ -334,8 +335,9 @@ sub _parse_srcs_pg {
         strip($f);
         next unless $f && $f =~ m/\.dsc$/;
         my ($checksum, undef, $basename) = split(m/\s++/, $f);
+        my $b64_checksum = encode_base64(pack('H*', $checksum));
         # $dir should end with a slash if it is non-empty.
-        $data{$DEFAULT_CHECKSUM} = $checksum;
+        $data{$DEFAULT_CHECKSUM} = $b64_checksum;
         $data{'path'} = $extra_metadata->{'mirror-dir'}  . "/$dir" . $basename;
         last;
     }
@@ -356,7 +358,7 @@ sub _parse_srcs_pg {
 # Helper for local_mirror_manifests - it parses a paragraph from Packages file
 sub _parse_pkgs_pg {
     my ($state, $extra_metadata, $type, $paragraph) = @_;
-    my ($group_id, $member_id, %data, %group_metadata);
+    my ($group_id, $member_id, %data, %group_metadata, $b64_checksum);
     my $package = $paragraph->{'package'};
     my $version = $paragraph->{'version'};
     my $architecture = $paragraph->{'architecture'};
@@ -373,7 +375,8 @@ sub _parse_pkgs_pg {
     $member_id = "${type}:${package}/${version}/${architecture}";
     $data{'path'}
       = $extra_metadata->{'mirror-dir'} . '/' . $paragraph->{'filename'};
-    $data{$DEFAULT_CHECKSUM} = $paragraph->{$DEFAULT_CHECKSUM};
+    $b64_checksum = encode_base64(pack('H*', $paragraph->{$DEFAULT_CHECKSUM}));
+    $data{$DEFAULT_CHECKSUM} = $b64_checksum;
 
     $group_metadata{'mirror-metadata'}{'maintainer'}
       = $paragraph->{'maintainer'};
