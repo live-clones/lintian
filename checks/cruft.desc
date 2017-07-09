@@ -472,9 +472,8 @@ Info: The source tarball contains a prebuilt Microsoft precompiled help
  CHM files are mainly produced by proprietary, Windows-specific software.
  They are also mainly consumed by the Microsoft HTML Help Workshop.
  .
- There is Linux software to read them and an incomplete
- FreePascal related project to create them,
- but any examples in source packages are likely to be created
+ Whilst there is free software to read and write them, any
+ examples existing in source packages are likely to be created
  by the proprietary Microsoft software and are probably missing
  the source HTML and associated files.
  .
