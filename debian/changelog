@@ -31,6 +31,14 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
+  * commands/reporting-html-reports:
+    + [NT] Enable re-use of the memory for the maintainer mapping once the
+      log file as been parsed.
+  * commands/reporting-sync-state:
+    + [NT] Re-encode checksums into base64 encoded strings (from hex).
+      This reduces size per checksum by about ~30% (disk and memory).  This
+      reduction is also applicable to other reporting tools that loads the
+      harness cache.
 
   * data/fields/build-profiles:
     + [NT] Add patch from Mattia Rizzolo to update the list of known build
