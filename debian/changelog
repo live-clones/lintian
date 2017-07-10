@@ -69,6 +69,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [NT] Enable appstream-metadata + udev check by default.
       (Closes: #841670)
 
+  * t/tests/spelling-general/debian/debian/copyright:
+    + [CL] Add regression test for #844166.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Jun 2017 19:03:46 +0800
 
 lintian (2.5.51) unstable; urgency=medium

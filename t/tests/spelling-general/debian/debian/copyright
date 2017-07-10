@@ -13,3 +13,7 @@ This text should not generate a spelling error for "ment":
  12.212 and  48 C.F.R. 227.7202-1 through  227.7202-4 (JUNE 1995),
 
 But deafult is still a spelling error.
+
+This text should not generate a spelling error for the duplicate "a" (re. #844166)
+
+ following Attribution Information: (a) a copyright notice including the name
