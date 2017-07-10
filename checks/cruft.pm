@@ -655,7 +655,7 @@ sub find_cruft {
         if (   $basename =~ m,\.(?:rda|Rda|rdata|Rdata)$,
             && $entry->is_file
             && !$info->index_resolved_path('debian/README.source')) {
-	    tag 'r-data-without-readme-source', $name;
+            tag 'r-data-without-readme-source', $name;
         }
 
         # Lena Söderberg image
