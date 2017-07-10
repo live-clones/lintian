@@ -651,6 +651,13 @@ sub find_cruft {
             tag 'source-contains-prebuilt-ms-help-file', $name;
         }
 
+        # Ensure we have a README.source for R data files
+        if (   $basename =~ m,\.(?:rda|Rda|rdata|Rdata)$,
+            && $entry->is_file
+            && !$info->index_resolved_path('debian/README.source')) {
+	    tag 'r-data-without-readme-source', $name;
+        }
+
         # Lena Söderberg image
         if ($basename =~ /\blenn?a\b/i) {
             if(    $file_info =~ /\bimage\b/i

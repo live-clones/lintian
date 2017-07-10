@@ -743,15 +743,6 @@ sub run {
                 }
             }
 
-            # ---------------- /usr/lib/R/site-library
-            elsif ($fname =~ m,^usr/lib/R/site-library/\S,) {
-                if (   $file->is_file
-                    && $file =~ m,\.(?:rda|Rda|rdata|Rdata)$,
-                    && !$info->index_resolved_path('debian/README.source')) {
-                    tag 'r-data-without-readme-source', $file;
-                }
-            }
-
             # ---------------- /usr/lib/sgml
             elsif ($fname =~ m,^usr/lib/sgml/\S,) {
                 tag 'file-in-usr-lib-sgml', $file;

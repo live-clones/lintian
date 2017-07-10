@@ -1741,14 +1741,3 @@ Info: The package is architecture-dependent, ships a shared library in
  same package, but this package does not contain any programs.
  .
  Please remove the <tt>Multi-Arch: foreign</tt> stanza.
-
-Tag: r-data-without-readme-source
-Severity: important
-Certainty: certain
-Info: Many modules packaged for the R Project for Statistical Computing contain
- data files with names as *.rda, *.Rda, *.rdata, *.Rdata, etc.
- .
- When such files exist, the FTP masters expect them to be explained in
- debian/README.source, which this package is missing.
- .
- Please add a README.source documenting the origins of these files.

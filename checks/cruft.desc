@@ -867,3 +867,14 @@ Info: The debian/README.source file appears to be an unmodified or insufficientl
  .
  Please double-check the README.source page and replace it with information
  about this source package or simply remove the file completely.
+
+Tag: r-data-without-readme-source
+Severity: important
+Certainty: certain
+Info: Many modules packaged for the R Project for Statistical Computing contain
+ data files with names as *.rda, *.Rda, *.rdata, *.Rdata, etc.
+ .
+ When such files exist, the FTP masters expect them to be explained in
+ debian/README.source, which this package is missing.
+ .
+ Please add a README.source documenting the origins of these files.
