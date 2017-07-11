@@ -134,6 +134,15 @@ Info: As of debhelper version 4, the DH_COMPAT environment variable is
  line in <tt>debian/rules</tt> that sets it globally should be deleted and
  a separate <tt>debian/compat</tt> file created if needed.
 
+Tag: debian-rules-sets-DH_BUILD_OPTIONS
+Severity: normal
+Certainty: certain
+Ref: dpkg-buildflags(1)
+Info: The <tt>debian/rules</tt> file sets the DH_BUILD_OPTIONS variable,
+ which will override any user-specified build profile.
+ .
+ Please replace with DH_BUILD_MAINT_OPTIONS.
+
 Tag: binary-arch-rules-but-pkg-is-arch-indep
 Severity: normal
 Certainty: certain

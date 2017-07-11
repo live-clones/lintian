@@ -1,0 +1,7 @@
+#!/usr/bin/make -f
+
+export DH_BUILD_OPTIONS=nocheck
+export DEB_BUILD_MAINT_OPTIONS=hardening=+pie,-fortify
+
+%:
+	dh $@

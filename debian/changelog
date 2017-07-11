@@ -36,6 +36,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * checks/rules.desc:
     + [CL] Clarify wording in debian-rules-parses-dpkg-parsechangelog to
       make the justification clearer.  (Closes: #865882)
+    + [CL] Check for files setting DH_BUILD_OPTIONS instead of
+      DH_BUILD_MAINT_OPTIONS. (Closes: #833691)
   * checks/udev.{desc,pm}:
     + [NT] New check by Petter Reinholdtsen.
 
