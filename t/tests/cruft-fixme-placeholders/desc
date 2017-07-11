@@ -1,0 +1,6 @@
+Testname: cruft-fixme-placeholders
+Sequence: 6000
+Version: 1.0
+Description: Check for placeholders in various maintainer scripts
+Test-For:
+ file-contains-fixme-placeholder
