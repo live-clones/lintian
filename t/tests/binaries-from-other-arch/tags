@@ -1,4 +1,5 @@
 E: binaries-from-other-arch: binary-from-other-architecture usr/bin/elfobject
 E: binaries-from-other-arch: statically-linked-binary usr/bin/elfobject
+W: binaries-from-other-arch source: debian-rules-sets-DEB_BUILD_OPTIONS line 3
 W: binaries-from-other-arch: apparently-corrupted-elf-binary usr/bin/elfobject
 W: binaries-from-other-arch: binary-without-manpage usr/bin/elfobject
