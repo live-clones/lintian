@@ -18,6 +18,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [CL] Move r-data-without-readme-source to check the source package,
       no the binary; the expected README.source files are not installed
       in binary packages. (Closes: #866322)
+    + [CL] Apply patch from Dylan Aïssi to also check for .RData files
+      (not just .Rdata) files in r-data-without-readme-source.
+      (Closes: #868178)
     + [CL] Check for "FIXME" and similar placeholders in various files
       under debian/. (Closes: #846009)
   * checks/fields.{desc,pm}:
