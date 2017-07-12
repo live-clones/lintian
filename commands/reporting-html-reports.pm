@@ -464,6 +464,8 @@ sub process_data {
         my $trace_file= "${path}/project/trace/${trace_basename}";
         my $mirror_timestamp = slurp_entire_file($trace_file);
         $mirror_timestamp =~ s/\n.*//s;
+        $mirror_timestamp
+          = safe_qx('date', '-u', '--rfc-822', '-d', $mirror_timestamp);
         my %info = (
             'name' => $archive,
             'architectures' => $architectures,

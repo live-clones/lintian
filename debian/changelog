@@ -61,6 +61,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * commands/reporting-html-reports:
     + [NT] Enable re-use of the memory for the maintainer mapping once the
       log file as been parsed.
+    + [CL] Consistently use the same "Debian style" RFC 822 date format for
+      both "Mirror timestamp" and "Last updated" on the index page.
+      (Closes: #828720)
   * commands/reporting-sync-state:
     + [NT] Re-encode checksums into base64 encoded strings (from hex).
       This reduces size per checksum by about ~30% (disk and memory).  This
