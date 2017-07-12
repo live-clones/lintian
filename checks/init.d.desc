@@ -239,7 +239,9 @@ Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
  <tt>/etc/default/</tt> file without checking for its existence first.
  Files in <tt>/etc/default/</tt> can be deleted by the administrator at
  any time, and init scripts are required to handle the situation
- gracefully.
+ gracefully. For example:
+ .
+  [ -r /etc/default/foo ] && . /etc/default/foo
 Ref: policy 9.3.2
 
 Tag: init.d-script-starts-in-stop-runlevel

@@ -26,6 +26,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       are now in oldstable.
     + [NT] Drop check for depending on multiple versions of tkx as
       tkx does not seem to be in Debian any longer.
+  * checks/init.d.desc:
+    + [CL] Add an example snippet to explain how to prevent emission
+      of init.d-script-sourcing-without-test.
   * checks/menu-format.desc:
     + [ADB] Fix formatting of desktop-entry-lacks-icon-entry
   * checks/scripts.desc:
