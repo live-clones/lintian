@@ -652,7 +652,7 @@ sub find_cruft {
         }
 
         # Ensure we have a README.source for R data files
-        if (   $basename =~ m,\.(?:rda|Rda|rdata|Rdata)$,
+        if (   $basename =~ m,\.(?:rda|Rda|rdata|Rdata|RData)$,
             && $entry->is_file
             && !$info->index_resolved_path('debian/README.source')) {
             tag 'r-data-without-readme-source', $name;
