@@ -258,7 +258,7 @@ Info: The string "Please also look if..." appears in the copyright
  to find additional copyright/license, or that you didn't remove that
  paragraph after having done so.
 
-Tag: copyright-contains-dh-make-perl-boilerplate
+Tag: copyright-contains-automatically-extracted-boilerplate
 Severity: normal
 Certainty: certain
 Ref: policy 12.5

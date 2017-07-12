@@ -5,7 +5,7 @@ Skeleton: pedantic
 Options: -IE --pedantic
 Test-For:
  FSSTND-dir-in-usr
- copyright-contains-dh-make-perl-boilerplate
+ copyright-contains-automatically-extracted-boilerplate
  copyright-does-not-refer-to-common-license-file
  copyright-file-compressed
  copyright-file-contains-full-apache-2-license

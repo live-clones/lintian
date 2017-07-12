@@ -24,7 +24,7 @@ E: copyright-poor-common-licenses: copyright-should-refer-to-common-license-file
 E: copyright-symlink: copyright-file-is-symlink
 P: copyright-crln: copyright-has-crs
 W: copyright-full-apache-2: copyright-without-copyright-notice
-W: copyright-misc-errors: copyright-contains-dh-make-perl-boilerplate
+W: copyright-misc-errors: copyright-contains-automatically-extracted-boilerplate
 W: copyright-misc-errors: copyright-has-url-from-dh_make-boilerplate
 W: copyright-misc-errors: copyright-refers-to-deprecated-bsd-license-file
 W: copyright-misc-errors: copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2

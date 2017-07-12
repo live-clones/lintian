@@ -311,7 +311,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     }
 
     if (m/This copyright info was automatically extracted/o) {
-        tag 'copyright-contains-dh-make-perl-boilerplate';
+        tag 'copyright-contains-automatically-extracted-boilerplate';
     }
 
     if (m,url://,o) {
