@@ -208,8 +208,8 @@ sub run {
             }
         }
 
-        if (/^\s*(?:export\s+)?DH_BUILD_OPTIONS\s*:?=/ && keys(%seen) == 0) {
-            tag 'debian-rules-sets-DH_BUILD_OPTIONS', "line $.";
+        if (/^\s*(?:export\s+)?DEB_BUILD_OPTIONS\s*:?=/ && keys(%seen) == 0) {
+            tag 'debian-rules-sets-DEB_BUILD_OPTIONS', "line $.";
         }
 
         # check generic problem
