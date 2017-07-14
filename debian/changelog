@@ -60,6 +60,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
 
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
+    + [CL] Allow the use of suppress-tags=<tag>[,<tag>[,<tag>]] in lintianrc.
+      (Closes: #764486)
   * commands/reporting-html-reports:
     + [NT] Enable re-use of the memory for the maintainer mapping once the
       log file as been parsed.

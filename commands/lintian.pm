@@ -1206,6 +1206,7 @@ sub parse_config_file {
         'quiet'                => \&cfg_verbosity,
         'override'             => \&cfg_override,
         'show-overrides'       => \$opt{'show-overrides'},
+        'suppress-tags'        => \&record_suppress_tags,
         'verbose'              => \&cfg_verbosity,
     );
 
