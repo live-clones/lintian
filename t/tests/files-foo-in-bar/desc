@@ -29,6 +29,7 @@ Test-For:
  package-installs-file-to-usr-x11r6
  package-installs-apt-preferences
  package-installs-apt-sources
+ package-installs-deprecated-upstart-configuration
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d

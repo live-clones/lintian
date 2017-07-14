@@ -531,6 +531,10 @@ sub run {
             elsif ($fname =~ m,^etc/gconf/schemas/\S,) {
                 tag 'package-installs-into-etc-gconf-schemas', $file;
             }
+            # ---------------- /etc/init
+            elsif ($fname =~ m,^etc/init/\S,) {
+                tag 'package-installs-deprecated-upstart-configuration', $file;
+            }
             # ---------------- /etc/init.d
             elsif ( $fname =~ m,^etc/init\.d/\S,
                 and $fname !~ m,^etc/init\.d/(?:README|skeleton)$,

@@ -3,6 +3,7 @@ bar emul
 bar etc/apt/preferences.d
 bar etc/apt/sources.list.d
 bar etc/gconf/schemas/
+bar etc/init
 bar etc/rc.boot
 bar etc/rc.d
 bar etc/udev/rules.d

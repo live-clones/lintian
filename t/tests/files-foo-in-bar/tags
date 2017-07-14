@@ -92,6 +92,7 @@ W: files-foo-in-bar: non-multi-arch-lib-dir usr/lib32/
 W: files-foo-in-bar: non-multi-arch-lib-dir usr/lib64/
 W: files-foo-in-bar: non-multi-arch-lib-dir usr/libx32/
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/
+W: files-foo-in-bar: package-installs-deprecated-upstart-configuration etc/init/bar
 W: files-foo-in-bar: package-installs-into-etc-gconf-schemas etc/gconf/schemas/bar
 W: files-foo-in-bar: package-installs-into-obsolete-dir etc/dhcp3/ : ^etc/dhcp3/ -> etc/dhcp (see also https://bugs.debian.org/673029)
 W: files-foo-in-bar: package-installs-into-obsolete-dir etc/dhcp3/bar : ^etc/dhcp3/ -> etc/dhcp (see also https://bugs.debian.org/673029)

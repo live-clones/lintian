@@ -1,5 +1,6 @@
 etc/apt/preferences.d
 etc/apt
+etc/init
 bin/foo
 mnt/foo
 tmp/foo

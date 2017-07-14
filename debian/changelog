@@ -38,6 +38,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [CL] Add .yml to the list of file extensions to avoid false
       positives when emitting extra-license-file, with testcase. Thanks
       to Rene Engelhard for the report.  (Closes: #856137)
+    + [CL] Check for packages containing upstart configuration under
+      /etc/init. Thanks to Paul Wise for the report.  (Closes: #825348)
   * checks/init.d.desc:
     + [CL] Add an example snippet to explain how to prevent emission
       of init.d-script-sourcing-without-test.
