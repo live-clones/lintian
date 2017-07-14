@@ -40,3 +40,6 @@
 # Use a different directory for temporary files - useful if /tmp is a
 # tmpfs with "limited" capacity.
 #TMPDIR="/var/tmp"
+
+# Suppress tags (--suppress-tags)
+#suppress-tags = debian-watch-may-check-gpg-signature
