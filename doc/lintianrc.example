@@ -41,5 +41,5 @@
 # tmpfs with "limited" capacity.
 #TMPDIR="/var/tmp"
 
-# Suppress tags (--suppress-tags)
+# Suppress the listed tags (--suppress-tags)
 #suppress-tags = debian-watch-may-check-gpg-signature
