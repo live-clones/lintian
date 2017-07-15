@@ -6,6 +6,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [NT] New check by Petter Reinholdtsen.
   * checks/changelog-file.desc:
     + [AB] Fix typo "%gt;" vs "&gt;".
+    + [CL] Expand the rationale for the
+      latest-debian-changelog-entry-without-new-date tag to mention
+      possible implications for SOURCE_DATE_EPOCH/reproducible builds.
   * checks/control-file.pm:
     + [NT] Remove check for missing versioned build-depends for dpkg
       and debhlper when using Build-Profiles.  The necessary versions
