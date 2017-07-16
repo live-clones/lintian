@@ -14,8 +14,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       and debhlper when using Build-Profiles.  The necessary versions
       are now in oldstable.
   * checks/changes-file.{desc,pm}:
-    + [CL] Check for the presence of a signature if an upstream signing
-      key is present.  (Closes: #833585)
+    + [CL] Check for the presence of an .asc signature if an upstream
+      signing key is present.  (Closes: #833585)
   * checks/copyright-file.{desc,pm}:
     + [CL] Rename copyright-contains-dh-make-perl-boilerplate to
       copyright-contains-automatically-extracted-boilerplate as it can
