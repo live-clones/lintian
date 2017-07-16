@@ -198,9 +198,9 @@ sub run {
         # signature.
         if (   $has_signing_key
             && $file =~ m/\.orig\.tar\./
-            && $file !~ m/\.asc$/
-            && not exists $files->{"$file.asc"}) {
-            tag 'orig-tarball-missing-upstream-signature', "$file";
+            && $file !~ m/\.asc$/) {
+            next if exists $files->{"$file.asc"};
+            tag 'orig-tarball-missing-upstream-signature', $file;
         }
 
         # check section
