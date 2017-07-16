@@ -28,6 +28,7 @@ use autodie;
 use Lintian::Tags qw(tag);
 
 our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
+our $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -185,12 +186,8 @@ sub run {
     tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
     if ($withgpgverification) {
-        my @key_names = (
-            qw(upstream-signing-key.pgp upstream/signing-key.pgp
-              upstream/signing-key.asc)
-        );
         my $found = 0;
-        for my $key_name (@key_names) {
+        for my $key_name ($SIGNING_KEY_FILENAMES->all) {
             my $path = $info->index_resolved_path("debian/$key_name");
             if ($path and $path->is_file) {
                 $found = 1;

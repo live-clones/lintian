@@ -60,6 +60,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       DH_BUILD_MAINT_OPTIONS. (Closes: #833691)
   * checks/udev.{desc,pm}:
     + [NT] New check by Petter Reinholdtsen.
+  * checks/watch-file.pm:
+    + [CL] Factor out hard-coded list of possible upstream key locations
+      to the "common/signing-key-filenames" Lintian::Data resource.
 
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
