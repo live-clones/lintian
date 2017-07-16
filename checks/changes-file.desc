@@ -179,3 +179,10 @@ Info: The distribution in the <tt>Changes</tt> field copied from
  <tt>debian/changelog</tt> indicates that this package was not intended
  to be released yet.
 Ref: #542747
+
+Tag: orig-tarball-missing-upstream-signature
+Severity: important
+Certainty: certain
+Info: The packaging includes an upstream signing key but the corresponding
+ <tt>.asc</tt> signature for one or more source tarballs are not included
+ in your .changes file.

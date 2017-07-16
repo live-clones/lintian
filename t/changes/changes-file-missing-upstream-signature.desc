@@ -1,0 +1,5 @@
+Testname: changes-file-missing-upstream-signature
+Version: 1.0
+Description: Check presence of a signature if we have an upstream signing key
+Test-Against:
+ orig-tarball-missing-upstream-signature
