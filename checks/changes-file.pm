@@ -176,7 +176,7 @@ sub run {
         check_maintainer($info->field('changed-by'), 'changed-by');
     }
 
-    my $has_signing_key = 1;
+    my $has_signing_key = 0;
     my $src = $group->get_source_processable;
     if ($src) {
         for my $key_name ($SIGNING_KEY_FILENAMES->all) {
