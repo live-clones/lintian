@@ -4,5 +4,5 @@ Version: 1.0-1
 Description: No upstream signature included but package contains a signing key
 Test-For:
  orig-tarball-missing-upstream-signature
-# dpkg 1.17.20 required in order to create multiple tarballs
-Test-Depends: dpkg (>= 1.17.20)
+# dpkg 1.18.5 required in order to create multiple tarballs with detached signatures
+Test-Depends: dpkg (>= 1.18.5)
