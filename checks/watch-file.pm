@@ -28,7 +28,7 @@ use autodie;
 use Lintian::Tags qw(tag);
 
 our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
-our $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
+our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
 
 sub run {
     my (undef, undef, $info) = @_;
