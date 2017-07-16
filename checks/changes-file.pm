@@ -194,10 +194,10 @@ sub run {
     foreach my $file (keys %$files) {
         my $file_info = $files->{$file};
 
-        # Ensure orig tarballs have a signature if we have an upstream
+        # Ensure all orig tarballs have a signature if we have an upstream
         # signature.
         if (   $has_signing_key
-            && $file =~ m/\.orig\.tar\./
+            && $file =~ m/\.orig(-[A-Za-z\d-]+)?\.tar\./
             && $file !~ m/\.asc$/) {
             next if exists $files->{"$file.asc"};
             tag 'orig-tarball-missing-upstream-signature', $file;
