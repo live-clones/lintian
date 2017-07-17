@@ -34,6 +34,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       (Closes: #868178)
     + [CL] Check for "FIXME" and similar placeholders in various files
       under debian/. (Closes: #846009)
+  * checks/elpa.{desc,pm}:
+    + [NT] Apply patch from Sean Whitton to add elpa related checks.
+      (Closes: #867042)
   * checks/fields.{desc,pm}:
     + [NT] Remove check for missing versioned build-depends for dpkg
       and debhlper when using Build-Profiles.  The necessary versions
@@ -92,6 +95,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * debian/control:
     + [NT] Add (Build-)Depends on libxml-simple-perl for the new
       appstream-metadata check.
+    + [NT] Apply patch from Sean Whitton to add a Build-Depends on dh-elpa
+      for a test.
   * debian/rules:
     + [JW, NT] Post process HTML docmentation to set the charset to UTF-8,
       which fixes mojibake in the Debian Policy Manual links.  Thanks to
