@@ -369,3 +369,12 @@ Info: Lines in a <tt>debian/*.maintscript</tt> correspond to
  <tt>dpkg-maintscript-helper(1)</tt> commands and parameters.  However, the
  "maint-script-parameters" should not be included as debhelper will add those
  automatically. See <tt>dh_installdeb(1)</tt> for more information.
+
+Tag: useless-autoreconf-build-depends
+Severity: normal
+Certainty: possible
+Info: Since compatibility level 10, debhelper enables the <tt>autoreconf</tt>
+ sequence by default.
+ .
+ It is therefore not necessary to specify build-dependencies on
+ <tt>dh-autoreconf</tt> or <tt>autotools-dev</tt> and they can be removed.

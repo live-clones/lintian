@@ -453,6 +453,13 @@ sub run {
         tag $tagname, @extra;
     }
 
+    if ($level >= 10) {
+        for my $pkg (qw(dh-autoreconf autotools-dev)) {
+            tag 'useless-autoreconf-build-depends', $pkg
+              if $bdepends->implies($pkg);
+        }
+    }
+
     if ($seen_dh and not $seen_python_helper) {
         my %python_depends;
         for my $binpkg (@pkgs) {

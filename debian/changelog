@@ -34,6 +34,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       (Closes: #868178)
     + [CL] Check for "FIXME" and similar placeholders in various files
       under debian/. (Closes: #846009)
+  * checks/debhelper.{desc,pm}:
+    + [CL] Check for useless build-dependencies on dh-autoreconf or
+      autotools-dev under compat levels 10 or higher.  (Closes: #844191)
   * checks/elpa.{desc,pm}:
     + [NT] Apply patch from Sean Whitton to add elpa related checks.
       (Closes: #867042)

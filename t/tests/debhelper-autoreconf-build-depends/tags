@@ -1,0 +1,2 @@
+W: debhelper-autoreconf-build-depends source: useless-autoreconf-build-depends autotools-dev
+W: debhelper-autoreconf-build-depends source: useless-autoreconf-build-depends dh-autoreconf
