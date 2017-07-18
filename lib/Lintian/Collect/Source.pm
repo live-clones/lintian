@@ -164,8 +164,8 @@ sub native {
     return $self->{native} if exists $self->{native};
     my $format = $self->field('format');
     $format = '1.0' unless defined $format;
-    if ($format =~ m/^\s*2\.0\s*$/o or $format =~ m/^\s*3\.0\s+\(quilt\)\s*$/o)
-    {
+    if (   $format =~ m/^\s*2\.0\s*$/o
+        or $format =~ m/^\s*3\.0\s+\(quilt|git\)\s*$/o){
         $self->{native} = 0;
     } elsif ($format =~ m/^\s*3\.0\s+\(native\)\s*$/o) {
         $self->{native} = 1;

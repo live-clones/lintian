@@ -356,7 +356,7 @@ sub run {
     #   that may not be present.
     my $format = $info->field('format', '3.0 (quilt)');
 
-    if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
+    if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt|git\)/) {
         check_debian_dir($info, \%warned);
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);

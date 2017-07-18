@@ -113,6 +113,10 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [NT] Override dh_autoreconf tools as they are not used (but need to
       scan over all files in the source package).
 
+  * lib/Lintian/Collect/Source.pm:
+    + [CL] Improve support for "3.0 (git)" packages. They are still marked
+      as unsupported-source-format as they are not accepted by the Debian
+      archive.  (Closes: #605999)
   * lib/Lintian/Util.pm:
     + [NT] Fix uninitialized warning if a fork call fails.
 
