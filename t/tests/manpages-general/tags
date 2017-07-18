@@ -4,6 +4,7 @@ E: manpages-general: empty-manual-page usr/share/man/de/man1/binary-without-engl
 E: manpages-general: empty-manual-page usr/share/man/man1/usr-bin-binary-alt.1.gz
 E: manpages-general: empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages-general: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
+E: manpages-general: manpage-has-overly-generic-name usr/share/man/man1/README.1.gz
 E: manpages-general: manpage-has-wrong-extension usr/share/man/man6/simple.pod.gz
 E: manpages-general: manpage-is-dh_make-template usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages-general: manpage-is-dh_make-template usr/share/man/man1/program.1.gz

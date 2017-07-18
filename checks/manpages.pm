@@ -85,6 +85,10 @@ sub run {
             tag 'manpage-named-after-build-path', $file;
         }
 
+        if ($file =~ m,/README\.,) {
+            tag 'manpage-has-overly-generic-name', $file;
+        }
+
         if (not $t =~ m,^.*man(\d)/$,o) {
             tag 'manpage-in-wrong-directory', $file;
             next;

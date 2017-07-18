@@ -252,3 +252,11 @@ Info: The manual page appears to be named after its build path and
  not after its content.
  .
  Please check your debian/rules or upstream Makefile.
+
+Tag: manpage-has-overly-generic-name
+Severity: important
+Certainty: certain
+Info: The manual page appears to have an overly generic name that is likely to
+ clash with other packages.
+ .
+ Please check your debian/rules or upstream Makefile.

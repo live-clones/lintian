@@ -23,6 +23,7 @@ override_dh_auto_install:
 	gzip -n -c9 < test.1p > $(tmp)/usr/share/man/man1/test.1p.gz
 	gzip -n -c9 < test.3p > $(tmp)/usr/share/man/man3/test.3p.gz
 	gzip -n -c9 < true.1 > $(tmp)/usr/share/man/man1/true.1.gz
+	gzip -n -c9 < README.1 > $(tmp)/usr/share/man/man1/README.1.gz
 	gzip -n -c9 < program.1 > $(tmp)/usr/share/man/man1/program.1.gz
 
 	ln -s ../X11R6/bin/rstartd $(tmp)/usr/bin/rstartd

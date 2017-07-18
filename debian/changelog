@@ -55,6 +55,9 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * checks/init.d.desc:
     + [CL] Add an example snippet to explain how to prevent emission
       of init.d-script-sourcing-without-test.
+  * checks/manpages.{desc,pm}:
+    + [CL] Check for overly-generic filenames such as README.3pm.gz.
+      (Closes: #792846)
   * checks/menu-format.desc:
     + [ADB] Fix formatting of desktop-entry-lacks-icon-entry
   * checks/scripts.desc:

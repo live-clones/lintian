@@ -11,6 +11,7 @@ Test-For:
  manpage-has-bad-whatis-entry
  manpage-has-errors-from-man
  manpage-has-errors-from-pod2man
+ manpage-has-overly-generic-name
  manpage-has-useless-whatis-entry
  manpage-has-wrong-extension
  manpage-is-dh_make-template
