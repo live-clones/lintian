@@ -615,10 +615,9 @@ sub run {
         # now scan the file contents themselves
         my $fd = $path->open;
 
-        my (
-            $saw_init, $saw_invoke, $saw_debconf,
-            $saw_bange, $saw_sete, $has_code
-        );
+        my ($saw_init, $saw_invoke, $saw_debconf,
+            $saw_bange, $saw_sete, $has_code,
+            $saw_statoverride_list, $saw_statoverride_add);
         my %warned;
         my $cat_string = '';
 
@@ -673,6 +672,11 @@ sub run {
             if ($shellscript
                 && m,${LEADIN}set\s*(?:\s+-(?:-.*|[^e]+))*\s-\w*e,) {
                 $saw_sete = 1;
+            }
+
+            if (m,$LEADIN(?:/usr/bin/)?dpkg-statoverride\s,) {
+                $saw_statoverride_add = $. if /--add/;
+                $saw_statoverride_list = 1 if /--list/;
             }
 
             if (    m,[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]}\s],
@@ -999,6 +1003,11 @@ sub run {
             } else {
                 tag 'maintainer-script-ignores-errors', $file;
             }
+        }
+
+        if ($saw_statoverride_add && !$saw_statoverride_list) {
+            tag 'unconditional-use-of-dpkg-statoverride',
+              "$file:$saw_statoverride_add";
         }
 
         close($fd);

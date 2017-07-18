@@ -1,0 +1,5 @@
+Testname: scripts-unconditional-use-of-dpkg-statoverride
+Version: 1.0
+Description: Test for maintscripts that call dpkg-statoverride without calling --list
+Test-For:
+ unconditional-use-of-dpkg-statoverride

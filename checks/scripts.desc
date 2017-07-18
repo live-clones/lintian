@@ -745,3 +745,11 @@ Info: This package appears to be the initial packaging of a new upstream
  .
  This warning can be ignored if the package is not intended for Debian or
  if it is a split of an existing Debian package.
+
+Tag: unconditional-use-of-dpkg-statoverride
+Severity: normal
+Certainty: possible
+Info: The maintainer script appears to use <tt>dpkg-statoverride --add</tt>
+ without a prior call to <tt>dpkg-statoverride --list</tt> to check the
+ current status.
+Ref: policy 10.9.1
