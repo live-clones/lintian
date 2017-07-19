@@ -61,6 +61,13 @@ sub run {
         $found = 1;
     }
 
+    my $latest_year = 0;
+    my $changes = $info->changelog;
+    if (defined $changes) {
+        my ($entry) = $info->changelog->data;
+        $latest_year = (gmtime($entry->{Timestamp}))[5] + 1900;
+    }
+
     if (my $index_info = $info->index("$path/copyright")) {
         $found = 1;
         if ($index_info->is_symlink) {
@@ -328,13 +335,18 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     }
     # Other flaws in the copyright phrasing or contents.
 
-    if (
-           $found
-        && !$linked
-        && !/(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b
-               |\bpublic(?:\s+|-)domain\b/xi
-      ) {
-        tag 'copyright-without-copyright-notice';
+    if ($found && !$linked) {
+        my $seen_copyright = 0;
+        while (
+            /(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b(\d{4})\b
+               |\bpublic(?:\s+|-)domain\b/xig
+          ) {
+            $seen_copyright = 1;
+            if ($latest_year && $1 > $latest_year) {
+                tag 'copyright-year-in-future', "($1 > $latest_year)";
+            }
+        }
+        tag 'copyright-without-copyright-notice' unless $seen_copyright;
     }
 
     check_spelling($_, $group->info->spelling_exceptions,
