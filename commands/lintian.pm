@@ -164,7 +164,7 @@ General options:
     -q, --quiet               suppress all informational messages
     -v, --verbose             verbose messages
     -V, --version             display Lintian version and exit
-Behaviour options:
+Behavior options:
     --color never/always/auto disable, enable, or enable color for TTY
     --default-display-level   reset the display level to the default
     --display-source X        restrict displayed tags by source

@@ -160,7 +160,7 @@ Print unadorned version number and exit.
 
 =back
 
-Behaviour options for B<lintian>.
+Behavior options for B<lintian>.
 
 =over 4
 
