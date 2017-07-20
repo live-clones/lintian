@@ -61,9 +61,14 @@ sub run {
         $found = 1;
     }
 
+    # Extract the year from the most recent entry in debian/changelog. We do
+    # not use UNRELEASED entries as there is no guarantee that their timestamps
+    # are meaningful.
     my $latest_year = 0;
     my $changes = $info->changelog;
-    if (defined $changes) {
+    if (   defined($changes)
+        && defined $info->field('distribution')
+        && $info->field('distribution') ne 'UNRELEASED') {
         my ($entry) = $info->changelog->data;
         $latest_year = (gmtime($entry->{Timestamp}))[5] + 1900;
     }
