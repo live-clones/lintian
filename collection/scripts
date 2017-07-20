@@ -69,8 +69,17 @@ sub collect {
     open(my $ctrl_fd, '>', "$dir/control-scripts");
     for my $path ($info->control_index('')->children) {
         next unless $path->is_open_ok;
-        my $scriptpath = shebang_line($path);
-        next unless defined($scriptpath);
+        # Only collect maintainer scripts
+        next unless $path =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
+
+        # Allow ELF binaries
+        my $magic;
+        my $fd = $path->open;
+        if (read($fd, $magic, 4)) {
+            next if $magic eq "\x7FELF";
+        }
+        close($fd);
+        my $scriptpath = shebang_line($path) // '';
 
         # Remove everything after the first space (i.e. any options)
         $scriptpath =~ s/\s++ .++ \Z//xsm;

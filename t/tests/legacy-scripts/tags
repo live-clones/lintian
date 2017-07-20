@@ -21,6 +21,7 @@ E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo
 E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpfoo
 E: scripts: python-script-but-no-python-dep usr/bin/py2.Xfoo
 E: scripts: python-script-but-no-python-dep usr/bin/pyfoo
+E: scripts: script-without-interpreter control/prerm
 E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
 E: scripts: wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
 E: scripts: wrong-path-for-interpreter usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)

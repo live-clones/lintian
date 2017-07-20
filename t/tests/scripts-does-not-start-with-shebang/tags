@@ -1,0 +1,1 @@
+E: scripts-does-not-start-with-shebang: script-without-interpreter control/postrm

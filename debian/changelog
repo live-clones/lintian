@@ -82,6 +82,10 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [CL] Factor out hard-coded list of possible upstream key locations
       to the "common/signing-key-filenames" Lintian::Data resource.
 
+  * collection/scripts:
+    + [CL] Check that non-ELF maintainer scripts start with #!.
+      (Closes: #843428)
+
   * commands/lintian.pm:
     + [NT] Attempt to clean up on SIGTERM (like with SIGINT).
     + [CL] Allow the use of suppress-tags=<tag>[,<tag>[,<tag>]] in
