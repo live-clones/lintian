@@ -342,7 +342,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                |\bpublic(?:\s+|-)domain\b/xig
           ) {
             $seen_copyright = 1;
-            if ($latest_year && $1 > $latest_year) {
+            if ($latest_year && defined($1) && $1 > $latest_year) {
                 tag 'copyright-year-in-future', "($1 > $latest_year)";
             }
         }
