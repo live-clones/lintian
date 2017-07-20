@@ -1,0 +1,28 @@
+Source: {$source}
+Section: introspection
+Priority: extra
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: {$build_depends}
+
+Package: gir1.1-missing-gir-depends-2.2
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description}
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package should be tagged by Lintian.
+
+Package: gir1.1-gir-depends-present-2.2
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}, $\{gir:Depends\}
+Description: {$description}: False
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package should not be tagged by Lintian.

@@ -13,6 +13,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
     + [NT] Remove check for missing versioned build-depends for dpkg
       and debhlper when using Build-Profiles.  The necessary versions
       are now in oldstable.
+    + [CL] Add check for GObject Introspection packages that are missing
+      binary dependencies on ${gir:Depends}.  (Closes: #860801)
   * checks/changes-file.{desc,pm}:
     + [CL] Check for the presence of an .asc signature if an upstream
       signing key is present.  (Closes: #833585)

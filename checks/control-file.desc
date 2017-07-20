@@ -296,3 +296,13 @@ Ref: policy 5.6.8
 Info: The values of the Architecture field in debian/control must not
  be separated by anything else than spaces; that is, they must form a
  single line and are not allowed to span multiple lines.
+
+Tag: gobject-instrospection-package-missing-depends-on-gir-depends
+Severity: serious
+Certainty: certain
+Info: The package is a GObject Instrospection package but it does not specify a
+ dependency on the ${gir:Depends} substvar. Missing these dependenceis usually
+ results in the program aborting.
+ .
+ This is usually an accidental omission and/or where the maintainer omits
+ the <tt>--with=gir</tt> debhelper sequence.

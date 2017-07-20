@@ -382,6 +382,15 @@ sub run {
         }
     }
 
+    # Check for GObject Introspection packages that are missing ${gir:Depends}
+    foreach my $bin (@package_names) {
+        next unless $bin =~ m/gir[\d\.]+-.*-[\d\.]+$/;
+        my $relation = $info->binary_relation($bin, 'all');
+        tag 'gobject-instrospection-package-missing-depends-on-gir-depends',
+          $bin
+          unless $relation->implies('${gir:Depends}');
+    }
+
     return;
 }
 
