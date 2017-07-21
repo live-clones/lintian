@@ -66,11 +66,11 @@ sub run {
     # are meaningful.
     my $latest_year = 0;
     my $changes = $info->changelog;
-    if (   defined($changes)
-        && defined $info->field('distribution')
-        && $info->field('distribution') ne 'UNRELEASED') {
+    if (defined($changes)) {
         my ($entry) = $info->changelog->data;
-        $latest_year = (gmtime($entry->{Timestamp}))[5] + 1900;
+        if ($entry->{'Distribution'} ne 'UNRELEASED') {
+            $latest_year = (gmtime($entry->{Timestamp}))[5] + 1900;
+        }
     }
 
     if (my $index_info = $info->index("$path/copyright")) {
