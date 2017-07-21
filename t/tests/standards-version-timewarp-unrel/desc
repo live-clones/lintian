@@ -1,4 +1,6 @@
 Testname: standards-version-timewarp-unrel
 Version: 1.0
 Description: Test newer standards version with unreleased old changelog date
-Test-Against: timewarp-standards-version
+Test-Against:
+ timewarp-standards-version
+ copyright-year-in-future
