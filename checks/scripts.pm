@@ -542,6 +542,11 @@ sub run {
             next;
         }
 
+        if ($interpreter eq 'ELF') {
+            tag 'elf-maintainer-script', "control/$file";
+            next;
+        }
+
         tag 'interpreter-not-absolute', "control/$file", "#!$interpreter"
           unless ($interpreter =~ m|^/|);
 

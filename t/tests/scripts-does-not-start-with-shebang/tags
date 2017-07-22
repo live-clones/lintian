@@ -1,1 +1,2 @@
+C: scripts-does-not-start-with-shebang: elf-maintainer-script control/preinst
 E: scripts-does-not-start-with-shebang: script-without-interpreter control/postrm

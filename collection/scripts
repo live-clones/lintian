@@ -73,13 +73,14 @@ sub collect {
         next unless $path =~ m/^(?:(?:pre|post)(?:inst|rm)|config)$/;
 
         # Allow ELF binaries
-        my $magic;
         my $fd = $path->open;
+        my ($magic, $scriptpath);
         if (read($fd, $magic, 4)) {
-            next if $magic eq "\x7FELF";
+            $scriptpath = 'ELF' if $magic eq "\x7FELF";
         }
         close($fd);
-        my $scriptpath = shebang_line($path) // '';
+        # If they aren't ELF, look for a shebang
+        $scriptpath = $scriptpath // shebang_line($path) // '';
 
         # Remove everything after the first space (i.e. any options)
         $scriptpath =~ s/\s++ .++ \Z//xsm;
