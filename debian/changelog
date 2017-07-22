@@ -71,6 +71,8 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       to make the justification clearer.
     + [CL] Check for calls to dpkg-statoverride --add without a
       corresponding --list.  (Closes: #652963)
+    + [CL] Add missing "contains" verb to the description of the
+      debhelper-autoscript-in-maintainer-scripts tag.
   * checks/rules.desc:
     + [CL] Clarify wording in debian-rules-parses-dpkg-parsechangelog to
       make the justification clearer.  (Closes: #865882)

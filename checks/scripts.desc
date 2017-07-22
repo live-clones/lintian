@@ -729,8 +729,8 @@ Info: Lintian has detected the presence of a #DEBHELPER# token in the
 Tag: debhelper-autoscript-in-maintainer-scripts
 Severity: classification
 Certainty: possible
-Info: The maintainer scripts of the package one or more auto-generated
- shell snippets inserted by the listed debhelper tool.
+Info: The maintainer scripts of the package contians one or more
+ auto-generated shell snippets inserted by the listed debhelper tool.
 
 Tag: new-package-should-not-package-python2-module
 Severity: normal
