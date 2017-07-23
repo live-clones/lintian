@@ -15,14 +15,12 @@ matrix:
         DEB_BUILD_OPTIONS: parallel=4
       services:
         - docker
-# For stable + stable-backports. Unfortunately, it travis.d.n's method
-# does not seem to support installing our B-D correctly.
-#    - env:
-#        TRAVIS_DEBIAN_DISTRIBUTION: stable
-#        TRAVIS_DEBIAN_BACKPORTS: true
-#        TRAVIS_DEBIAN_AUTOPKGTEST: false
-#      services:
-#        - docker
+    - env:
+        TRAVIS_DEBIAN_DISTRIBUTION: stable
+        TRAVIS_DEBIAN_BACKPORTS: true
+        TRAVIS_DEBIAN_AUTOPKGTEST: false
+      services:
+        - docker
     - env:
         TRAVIS_DEBIAN_DISTRIBUTION: unstable
         TRAVIS_DEBIAN_AUTOPKGTEST: true
@@ -35,15 +33,13 @@ matrix:
         DEB_BUILD_OPTIONS: nocheck
       services:
         - docker
-# For stable + stable-backports. Unfortunately, it travis.d.n's method
-# does not seem to support installing our B-D correctly.
-#    - env:
-#        TRAVIS_DEBIAN_DISTRIBUTION: stable
-#        TRAVIS_DEBIAN_BACKPORTS: true
-#        TRAVIS_DEBIAN_AUTOPKGTEST: true
-#        DEB_BUILD_OPTIONS: nocheck
-#      services:
-#        - docker
+    - env:
+        TRAVIS_DEBIAN_DISTRIBUTION: stable
+        TRAVIS_DEBIAN_BACKPORTS: true
+        TRAVIS_DEBIAN_AUTOPKGTEST: true
+        DEB_BUILD_OPTIONS: nocheck
+      services:
+        - docker
 
 script:
   - wget -O- http://travis.debian.net/script.sh | sh -
