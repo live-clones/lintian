@@ -1,6 +1,31 @@
-lintian (2.5.52) UNRELEASED; urgency=medium
+lintian (2.5.52) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - appstream-metadata-in-legacy-location
+      - appstream-metadata-legacy-format
+      - appstream-metadata-malformed-modalias-provide
+      - appstream-metadata-missing-modalias-provide
+      - copyright-contains-automatically-extracted-boilerplate
+      - copyright-year-in-future
+      - debian-rules-sets-DEB_BUILD_OPTIONS
+      - elf-maintainer-script
+      - emacsen-common-without-dh-elpa
+      - file-contains-fixme-placeholder
+      - gobject-instrospection-package-missing-depends-on-gir-depends
+      - manpage-has-overly-generic-name
+      - orig-tarball-missing-upstream-signature
+      - package-installs-deprecated-upstart-configuration
+      - udev-rule-missing-subsystem
+      - udev-rule-missing-uaccess
+      - udev-rule-unreadable
+      - unconditional-use-of-dpkg-statoverride
+      - useless-autoreconf-build-depends
+    + Removed:
+      - copyright-contains-dh-make-perl-boilerplate
+      - package-depends-on-multiple-tkx-versions
+      - restriction-formula-with-debhelper-without-debhelper-version
+      - restriction-formula-without-versioned-dpkg-dev-dependency
 
   * checks/appstream-metadata.{desc,pm}:
     + [NT] New check by Petter Reinholdtsen.
@@ -144,7 +169,7 @@ lintian (2.5.52) UNRELEASED; urgency=medium
   * t/tests/spelling-general/debian/debian/copyright:
     + [CL] Add regression test for #844166.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 18 Jun 2017 19:03:46 +0800
+ -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 07:18:06 +0000
 
 lintian (2.5.51) unstable; urgency=medium
 
