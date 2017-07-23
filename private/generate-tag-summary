@@ -14,7 +14,7 @@ use Lintian::Command qw(safe_qx);
 
 my $RE = qr{
     \A [ ]{2,}  XXX: [ ] generate [ ] tag [ ] summary
-    [ ] with [ ] private/generate-tag-summary \n \Z
+    (?:[ ] with [ ] private/generate-tag-summary)? \s* \n \Z
 }xsm;
 my (%added, %removed, %opt);
 
