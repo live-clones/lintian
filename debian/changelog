@@ -121,6 +121,7 @@ lintian (2.5.52) UNRELEASED; urgency=medium
       appstream-metadata check.
     + [NT] Apply patch from Sean Whitton to add a Build-Depends on dh-elpa
       for a test.
+    + [NT] Prefer default-jdk-headless to default-jdk when available.
   * debian/rules:
     + [JW, NT] Post process HTML docmentation to set the charset to UTF-8,
       which fixes mojibake in the Debian Policy Manual links.  Thanks to

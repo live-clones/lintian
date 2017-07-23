@@ -16,7 +16,9 @@ Build-Depends: aspell,
                bzip2,
                cdbs,
                debhelper (>= 9),
-               default-jdk,
+# Prefer the headless variant as it saves about 25% (installed-size), but
+# it is not available in Jessie.
+               default-jdk-headless | default-jdk,
 # Use bash as a Jessie indicator (dh-elpa is only used for a test)
                dh-elpa | bash (<< 4.4),
                diffstat,
