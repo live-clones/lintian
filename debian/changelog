@@ -3,8 +3,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * commands/lintian.pm:
-    + [CL] Apply patch from Maia Everett to avoid British spelling when using
-      en_US locale.  (Closes: #868897)
+    + [CL] Apply patch from Maia Everett to avoid British spelling when
+      using en_US locale.  (Closes: #868897)
 
  -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 10:16:35 +0000
 
