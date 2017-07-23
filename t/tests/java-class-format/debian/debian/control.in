@@ -3,7 +3,7 @@ Priority: extra
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: {$build_depends}, javahelper, default-jdk
+Build-Depends: {$build_depends}, javahelper, default-jdk-headless | default-jdk
 
 Package: libtest-java
 Architecture: {$architecture}
