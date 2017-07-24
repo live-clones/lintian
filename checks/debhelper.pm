@@ -433,6 +433,7 @@ sub run {
 
     while (my ($dep, $command) = each %missingbdeps) {
         next if $dep eq 'debhelper'; #handled above
+        next if $dep eq 'autotools-dev' and $level >= 10;
         tag 'missing-build-dependency-for-dh_-command', "$command => $dep"
           unless ($bdepends_noarch->implies($dep));
     }

@@ -1,0 +1,7 @@
+Testname: debhelper-autoreconf-build-depends-unrel
+Version: 1.0
+Description: Test for useless autoreconf-related build dependencies false positives
+Test-Depends: debhelper (>= 10)
+Test-Against:
+ missing-build-dependency-for-dh_-command
+ useless-autoreconf-build-depends
