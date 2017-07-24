@@ -85,7 +85,7 @@ my $VERSIONED_INTERPRETERS
 # beginning of the command rather than checking whether the command is at the
 # beginning of a line.
 my $LEADINSTR
-  = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+|env(?:\s+[[:alnum:]_]+=(?:\S+|\"[^"]*\"|\'[^\']*\'))*\s+)';
+  = '(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while|!)\s+|env(?:\s+[[:alnum:]_]+=(?:\S+|\"[^"]*\"|\'[^\']*\'))*\s+)';
 my $LEADIN = qr/$LEADINSTR/;
 
 #forbidden command in maintainer scripts
