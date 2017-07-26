@@ -186,3 +186,7 @@ Certainty: certain
 Info: The packaging includes an upstream signing key but the corresponding
  <tt>.asc</tt> signature for one or more source tarballs are not included
  in your .changes file.
+ .
+ If you are repackaging your source tarballs for Debian Free Software
+ Guidelines compliance reasons, ensure that your package version includes
+ <tt>dfsg</tt> or similar.
