@@ -4,10 +4,17 @@ Upstream-Contact: Lintian Maintainers <debian-lint-maint@lists.debian.org>
 Source: http://git.debian.org/?p=lintian/lintian.git
 
 Files: *
-Copyright: 2199 Always in the Future, Inc. <debian-lint-maint@lists.debian.org>
+Copyright:
+ 2000 Lintian Maintainers <debian-lint-maint@lists.debian.org>
+ 2100 Lintian Maintainers <debian-lint-maint@lists.debian.org>
+ 2101, 2102 Lintian Maintainers <debian-lint-maint@lists.debian.org>
+ 2103-2104 Lintian Maintainers <debian-lint-maint@lists.debian.org>
+ 2000 Lintian Maintainers (http://debian.org:2200)
+ 2000 Lintian Maintainers <2201.rransom.2202@2203.debian.org>
+ 2000 ISO 2203-2 & ISO-2204 LLC. (2008)
+ 2000 Lintian Maintainers, Immensee, CH-2205, Switzerland.
+ 2000 Sun Microsystems, Inc., 4150 Network Circle, Santa Clara, California 95054, U.S.A.
 License: MIT
- Copyright (C) 1900 Always in the Past, Inc. <debian-lint-maint@lists.debian.org>
- .
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions
  are met:

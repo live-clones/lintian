@@ -338,20 +338,31 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,io) {
         tag 'copyright-with-old-dh-make-debian-copyright';
     }
-    # Other flaws in the copyright phrasing or contents.
 
+    # Other flaws in the copyright phrasing or contents.
     if ($found && !$linked) {
-        my $seen_copyright = 0;
-        while (
-            /(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b(\d{4})\b
-               |\bpublic(?:\s+|-)domain\b/xig
-          ) {
-            $seen_copyright = 1;
-            if ($latest_year && defined($1) && $1 > $latest_year) {
-                tag 'copyright-year-in-future', "($1 > $latest_year)";
+        tag 'copyright-without-copyright-notice'
+          unless /(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b
+               |\bpublic(?:\s+|-)domain\b/xi;
+
+        if ($latest_year) {
+            my $linenum = 1;
+            foreach my $line (split /^/m) {
+                while (
+                    $line =~ /(?<![a-z][\s\-])\b(?<![:\.\@])
+                    (\d{4}) \b(?!\.)/xig
+                  ) {
+                    my $year = $1;
+                    my $column = $-[0] + 1;
+                    next if $year < $latest_year;
+                    # "Sun Microsystems, 4150 Network Drive, CA"
+                    next if $year == 4150;
+                    tag 'copyright-year-in-future',
+                      "$year (line $linenum, column $column)";
+                }
+                $linenum++;
             }
         }
-        tag 'copyright-without-copyright-notice' unless $seen_copyright;
     }
 
     check_spelling($_, $group->info->spelling_exceptions,
@@ -363,7 +374,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     # packages with a mix of GPL and LGPL or Artistic licensing or
     # with an exception or exemption.
     if ($gpl || m,/usr/share/common-licenses/GPL,) {
-        unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,) {
+        unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,){
             my @depends;
             if (my $field = $info->field('depends')) {
                 @depends = split(/\s*,\s*/, $field);
