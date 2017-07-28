@@ -358,7 +358,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                     # "Sun Microsystems, 4150 Network Drive, CA"
                     next if $year == 4150;
                     tag 'copyright-year-in-future',
-                      "$year (line $linenum, column $column)";
+                      "$year > $latest_year (line $linenum, column $column)";
                 }
                 $linenum++;
             }
