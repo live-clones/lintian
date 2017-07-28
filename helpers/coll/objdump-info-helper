@@ -200,7 +200,7 @@ while (my $line = <$readelf>) {
             push @symbol_versions, $verstring;
         }
     } elsif ($line
-        =~ m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/
+        =~ m/^\s*(\d+):\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(?:\[.*\]\s+)?(\S+)\s+(.*)\Z/
         and $section eq 'DS') {
         # We (sometimes) need to read the "Version symbols section" first to
         # use this data and readelf tends to print after this section, so

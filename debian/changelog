@@ -27,6 +27,11 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Apply patch from Maia Everett to avoid British spelling when
       using en_US locale.  (Closes: #868897)
 
+  * helpers/coll/objdump-info-helper:
+    + [CL] Apply patch from Steve Langasek to accomodate binutils 2.29
+      outputting symbols in a different format on ppc64el.
+      (Closes: #869750)
+
  -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 10:16:35 +0000
 
 lintian (2.5.52) unstable; urgency=medium
