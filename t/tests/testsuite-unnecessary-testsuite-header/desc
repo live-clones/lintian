@@ -1,5 +1,0 @@
-Testname: testsuite-unnecessary-testsuite-header
-Version: 1.0
-Description: Tests for unnecessary Testsuite header in debian/control
-Test-For:
- unnecessary-testsuite-header

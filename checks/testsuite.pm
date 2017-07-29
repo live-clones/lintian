@@ -104,8 +104,8 @@ sub run {
             check_control_contents($info, $path);
         }
 
-        tag 'unnecessary-testsuite-header'
-          if defined($info->source_field('testsuite'));
+        tag 'unnecessary-testsuite-autopkgtest-header'
+          if $info->source_field('testsuite') // '' eq 'autopkgtest';
     }
     return;
 }
