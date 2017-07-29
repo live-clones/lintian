@@ -37,10 +37,6 @@ Certainty: certain
 Info: The package provides a debian/tests/control file but no
  Testsuite field in the dsc file, or the field exists but not the
  file.
- .
- For discoverability, packages shipping tests for the autopkgtest
- testing framework should declare their presence in the package
- dsc file by adding "Testsuite: autopkgtest" to their debian/control.
 Ref: https://anonscm.debian.org/git/autopkgtest/autopkgtest.git/tree/doc/README.package-tests.rst
 
 Tag: missing-runtime-tests-field
@@ -138,11 +134,8 @@ Info: This package does not declare a test suite. Having a test suite helps with
  any of the package dependencies has a new version and check whether that
  update caused problems for your package.
  .
- To declare a test suite in your package, you need to add a `Testsuite` field to
- the source part of debian/control. This field will usually have a value of
- `autopkgtest`, i.e.:
- .
-	Testsuite: autopkgtest
+ To declare a test suite, please add a <tt>debian/tests/control</tt> file to
+ your package.
  .
  For more information on how to add functional tests to your package, browse to
  https://ci.debian.net/doc/.
