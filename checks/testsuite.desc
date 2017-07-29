@@ -139,3 +139,12 @@ Info: This package does not declare a test suite. Having a test suite helps with
  .
  For more information on how to add functional tests to your package, browse to
  https://ci.debian.net/doc/.
+
+Tag: unnecessary-testsuite-header
+Severity: normal
+Certainty: certain
+Info: You do not need to specify a <tt>Testsuite</tt> field if a
+ <tt>debian/tests/control</tt> file exists. It is automatically added by
+ dpkg-source(1) since dpkg 1.17.1.
+ .
+ Please remove this line from your <tt>debian/control</tt> file.

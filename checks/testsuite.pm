@@ -103,6 +103,9 @@ sub run {
             }
             check_control_contents($info, $path);
         }
+
+        tag 'unnecessary-testsuite-header'
+          if defined($info->source_field('testsuite'));
     }
     return;
 }

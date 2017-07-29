@@ -26,6 +26,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Remove recommendations to add a "Testsuite: autopkgtest" field
       to debian/control as it is added when needed by dpkg-source(1)
       since dpkg 1.17.1.  (Closes: #865531)
+    + [CL] Warn if we see an unnecessary "Testsuite" header in
+      debian/control.
 
   * commands/lintian.pm:
     + [CL] Apply patch from Maia Everett to avoid British spelling when

@@ -3,6 +3,8 @@ Version: 1.0
 Description: General tests of the autopkgtest control file
 Options: -I -E --pedantic
 Skeleton: pedantic
+Test-Against:
+ unnecessary-testsuite-header
 Test-For:
  debian-tests-control-uses-national-encoding
  exclusive-runtime-tests-field
