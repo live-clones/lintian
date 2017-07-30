@@ -22,12 +22,13 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Correct false positives in
       unconditional-use-of-dpkg-statoverride by detecting "if !" as a
       valid shell prefix.  (Closes: #869587)
-  * checks/testsuite.desc:
+  * checks/testsuite.{desc,pm}:
     + [CL] Remove recommendations to add a "Testsuite: autopkgtest" field
       to debian/control as it is added when needed by dpkg-source(1)
       since dpkg 1.17.1.  (Closes: #865531)
     + [CL] Warn if we see an unnecessary "Testsuite: autopkgtest" header
       in debian/control.
+    + [NT] Recognise "autopkgtest-pkg-go" as a valid test suite.
 
   * commands/lintian.pm:
     + [CL] Apply patch from Maia Everett to avoid British spelling when
