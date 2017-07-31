@@ -71,6 +71,17 @@ Description: {$description} (Python)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: python3-{$source}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (Python 3)
+ Test for Python section for Python 3.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
 Package: lib{$source}-ocaml-dev
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}

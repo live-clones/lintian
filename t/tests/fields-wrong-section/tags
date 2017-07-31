@@ -13,5 +13,6 @@ W: libghc-fields-wrong-section: wrong-section-according-to-package-name libghc-f
 W: libjs-fields-wrong-section: wrong-section-according-to-package-name libjs-fields-wrong-section => javascript
 W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
 W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
+W: python3-fields-wrong-section: wrong-section-according-to-package-name python3-fields-wrong-section => python
 W: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
 X: fields-wrong-section source: debian-control-has-obsolete-dbg-package fields-wrong-section-dbg
