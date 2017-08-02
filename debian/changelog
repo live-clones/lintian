@@ -13,6 +13,10 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       - Match all violating years in a line, not just the first (eg.
         "2000-2107").
       - Expand testsuite.
+  * checks/cruft.desc:
+    + [CL] Downgrade severity of file-contains-fixme-placeholder
+      tag from "important" (ie. "E:") to "wishlist" (ie. "I:").
+      Thanks to Gregor Herrmann for the suggestion.
   * checks/debhelper.pm:
     + [CL] Prevent a false positive of
       missing-build-dependency-for-dh_-command that can be exposed by
