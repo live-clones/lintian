@@ -1,4 +1,4 @@
-Testname: scripts-python2
+Testname: python-python2
 Sequence: 6000
 Version: 1.0
 Description: Check various Python 2 issues

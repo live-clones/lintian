@@ -732,20 +732,6 @@ Certainty: possible
 Info: The maintainer scripts of the package contians one or more
  auto-generated shell snippets inserted by the listed debhelper tool.
 
-Tag: new-package-should-not-package-python2-module
-Severity: normal
-Certainty: certain
-Info: This package appears to be the initial packaging of a new upstream
- software package but it appears to package a module for Python 2.
- .
- The 2.x series of Python is due for deprecation and will not be maintained
- past 2020 so it is recommended that Python 2 modules are not packaged unless
- necessary such as directly requested by an end-user or required as part of a
- dependency chain.
- .
- This warning can be ignored if the package is not intended for Debian or
- if it is a split of an existing Debian package.
-
 Tag: unconditional-use-of-dpkg-statoverride
 Severity: normal
 Certainty: possible
