@@ -5,6 +5,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
   * checks/changes.{pm,desc}:
     + [CL] Ignore DFSG-repacked packages when checking for upstream
       source tarball signatures as they will never match by definition.
+    + [CL] Downgrade severity of orig-tarball-missing-upstream-signature
+      from "E:" to "W:" as many common tools do not make including the
+      signatures easy enough right now.  (Closes: #870722)
   * checks/copyright-file.pm:
     + [CL] Address a number of issues in copyright-year-in-future:
       - Prevent false positives in port numbers, email addresses, ISO
