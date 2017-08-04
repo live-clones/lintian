@@ -1,0 +1,6 @@
+Testname: python-python2-no-python3
+Sequence: 6000
+Version: 1.0
+Description: Check for Python packages that only ship a Python 2.x module
+Test-For:
+ python-foo-but-no-python3-foo
