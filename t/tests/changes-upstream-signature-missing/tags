@@ -1,2 +1,2 @@
-E: changes-upstream-signature-missing changes: orig-tarball-missing-upstream-signature changes-upstream-signature-missing_1.0.orig-component.tar.gz
-E: changes-upstream-signature-missing changes: orig-tarball-missing-upstream-signature changes-upstream-signature-missing_1.0.orig.tar.gz
+W: changes-upstream-signature-missing changes: orig-tarball-missing-upstream-signature changes-upstream-signature-missing_1.0.orig-component.tar.gz
+W: changes-upstream-signature-missing changes: orig-tarball-missing-upstream-signature changes-upstream-signature-missing_1.0.orig.tar.gz
