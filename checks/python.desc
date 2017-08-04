@@ -17,3 +17,12 @@ Info: This package appears to be the initial packaging of a new upstream
  .
  This warning can be ignored if the package is not intended for Debian or
  if it is a split of an existing Debian package.
+
+Tag: python-foo-but-no-python3-foo
+Severity: wishlist
+Certainty: certain
+Info: This package appears to generate a Python 2 module without a
+ corresponding Python 3 version.
+ .
+ The 2.x series of Python is due for deprecation and will not be maintained
+ past 2020.

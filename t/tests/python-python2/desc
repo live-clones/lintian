@@ -6,3 +6,4 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
  new-package-should-not-package-python2-module
+ python-foo-but-no-python3-foo

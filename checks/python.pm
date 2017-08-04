@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(any);
+
 use Lintian::Tags qw(tag);
 
 sub run {
@@ -33,7 +35,12 @@ sub run {
 
     foreach my $bin (@package_names) {
         # Python 2 packages
-        if ($bin =~ /^python-.*(?<!-doc)$/) {
+        if ($bin =~ /^python-(.*(?<!-doc))$/) {
+            my $suffix = $1;
+
+            tag 'python-foo-but-no-python3-foo', $bin
+              unless any { $_ eq "python3-${suffix}" } @package_names;
+
             tag 'new-package-should-not-package-python2-module', $bin
               if @entries == 1;
         }
