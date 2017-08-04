@@ -187,6 +187,12 @@ Info: The packaging includes an upstream signing key but the corresponding
  <tt>.asc</tt> signature for one or more source tarballs are not included
  in your .changes file.
  .
+ Please ensure a
+ <tt>&lt;package&gt;_&lt;version&gt;.orig.tar.&lt;ext&gt;.asc</tt> file
+ exists in the same directory as your
+ <tt>&lt;package&gt;_&lt;version&gt;.orig.tar.&lt;ext&gt;</tt> tarball prior
+ to <tt>dpkg-source --build</tt> being called.
+ .
  If you are repackaging your source tarballs for Debian Free Software
  Guidelines compliance reasons, ensure that your package version includes
  <tt>dfsg</tt> or similar.
