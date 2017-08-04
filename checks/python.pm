@@ -51,6 +51,10 @@ sub run {
       if $build_all->implies('python-sphinx')
       and not $build_all->implies('python3-sphinx');
 
+    tag 'alternatively-build-depends-on-python-sphinx-and-python3-sphinx'
+      if $info->field('build-depends')
+      =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
+
     return;
 }
 

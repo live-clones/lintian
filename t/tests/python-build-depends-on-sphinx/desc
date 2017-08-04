@@ -3,3 +3,5 @@ Version: 1.0
 Description: Check packages that Build-Depend on python-sphinx
 Test-For:
  build-depends-on-python-sphinx-only
+Test-Against:
+ alternatively-build-depends-on-python-sphinx-and-python3-sphinx
