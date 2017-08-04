@@ -26,3 +26,16 @@ Info: This package appears to generate a Python 2 module without a
  .
  The 2.x series of Python is due for deprecation and will not be maintained
  past 2020.
+
+Tag: build-depends-on-python-sphinx-only
+Severity: normal
+Certainty: certain
+Info: This package Build-Depends on the Python 2.x version of the Sphinx
+ documentation generator.
+ .
+ The 2.x series of Python is due for deprecation and will not be maintained
+ past 2020.
+ .
+ Some Python modules may need to depend on both <tt>python-sphinx</tt> and
+ <tt>python3-sphinx</tt> but please consider moving to only Build-Depending on
+ the <tt>python3-sphinx</tt> package instead.

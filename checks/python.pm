@@ -46,6 +46,11 @@ sub run {
         }
     }
 
+    my $build_all = $info->relation('build-depends-all');
+    tag 'build-depends-on-python-sphinx-only'
+      if $build_all->implies('python-sphinx')
+      and !$build_all->implies('python3-sphinx');
+
     return;
 }
 
