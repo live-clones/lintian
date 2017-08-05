@@ -27,6 +27,8 @@ use List::MoreUtils qw(any);
 
 use Lintian::Tags qw(tag);
 
+my @PYTHON2 = qw(python python2.7 python-dev);
+
 sub run {
     my ($pkg, undef, $info) = @_;
 
@@ -34,7 +36,7 @@ sub run {
     my @package_names = $info->binaries;
 
     foreach my $bin (@package_names) {
-        # Python 2 packages
+        # Python 2 modules
         if ($bin =~ /^python-(.*(?<!-doc))$/) {
             my $suffix = $1;
 
@@ -43,6 +45,20 @@ sub run {
 
             tag 'new-package-should-not-package-python2-module', $bin
               if @entries == 1;
+        }
+
+        # Python applications
+        if ($bin !~ /^python[23]?-/ and not any { $_ eq $bin } @PYTHON2) {
+            for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
+                next unless $info->binary_field($bin, lc($field));
+
+                my $relation = $info->binary_relation($bin, $field);
+                for my $dep (@PYTHON2) {
+                    tag 'dependency-on-python-version-marked-for-end-of-life',
+                      "$bin ($field: $dep)"
+                      if $relation->implies($dep);
+                }
+            }
         }
     }
 

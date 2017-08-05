@@ -1,0 +1,75 @@
+Source: {$source}
+Priority: extra
+Section: python
+Maintainer: {$author}
+Build-Depends: {$build_depends}
+Standards-Version: {$standards_version}
+
+Package: pkg-depends
+Architecture: all
+Depends: $\{misc:Depends\}, python
+Description: Test package with Python 2.x in Depends
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Description: Test package with Python 2.x in Depends.
+
+Package: pkg-pre-depends
+Architecture: all
+Depends: $\{misc:Depends\}
+Pre-Depends: python2.7
+Description: Test package with Python 2.x in Pre-Suggests
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Description: Test package with Python 2.x in Pre-Depends.
+
+Package: pkg-recommends
+Architecture: all
+Depends: $\{misc:Depends\}
+Recommends: python-dev
+Description: Test package with Python 2.x in Recommends
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Description: Test package with Python 2.x in Recommends.
+
+Package: pkg-suggests
+Architecture: all
+Depends: $\{misc:Depends\}
+Suggests: python, python2.7
+Description: Test package with Python 2.x in Suggests
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Description: Test package with Python 2.x in Suggests.
+
+Package: python-{$source}
+Architecture: all
+Depends: $\{misc:Depends\}, python
+Description: Python 3 module with Python 3.x in Depends
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Python module with Python 2.x in Depends.
+
+Package: python3-{$source}
+Architecture: all
+Depends: $\{misc:Depends\}, python3
+Description: Test package (Python 3)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Python 3 module with Python 3.x in Depends.

@@ -51,3 +51,12 @@ Info: This package alternatively Build-Depends on the Python 2 or Python 3
  .
  Please replace the alternative with a single build dependency on
  <tt>python3-sphinx</tt>.
+
+Tag: dependency-on-python-version-marked-for-end-of-life
+Severity: pedantic
+Certainty: certain
+Ref: https://wiki.debian.org/Python/Python3Port, https://www.python.org/dev/peps/pep-0373/
+Info: The package specifies a dependency on Python 2.x which is due for
+ deprecation and will not be maintained past 2020.
+ .
+ Please port the package to use Python 3 instead.

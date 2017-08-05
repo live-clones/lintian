@@ -41,6 +41,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       (Closes: #870730)
     + [CL] Check for packages that alternatively Build-Depend on the
       Python 2 and Python 3 versions of Sphinx.  (Closes: #870758)
+    + [CL] Check for binary packages that depend on Python 2.x.
+      (Closes: #870822)
   * checks/scripts.pm:
     + [CL] Correct false positives in
       unconditional-use-of-dpkg-statoverride by detecting "if !" as a

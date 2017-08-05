@@ -1,0 +1,5 @@
+P: python-python2-apps source: dependency-on-python-version-marked-for-end-of-life pkg-depends (Depends: python)
+P: python-python2-apps source: dependency-on-python-version-marked-for-end-of-life pkg-pre-depends (Pre-Depends: python2.7)
+P: python-python2-apps source: dependency-on-python-version-marked-for-end-of-life pkg-recommends (Recommends: python-dev)
+P: python-python2-apps source: dependency-on-python-version-marked-for-end-of-life pkg-suggests (Suggests: python)
+P: python-python2-apps source: dependency-on-python-version-marked-for-end-of-life pkg-suggests (Suggests: python2.7)

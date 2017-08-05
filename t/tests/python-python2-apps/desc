@@ -1,0 +1,6 @@
+Testname: python-python2-apps
+Version: 1.0
+Description: Check packages that Depend/Suggest etc. on Python 2.x
+Options: -I -E --pedantic
+Test-For:
+ dependency-on-python-version-marked-for-end-of-life
