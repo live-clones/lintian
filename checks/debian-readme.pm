@@ -63,7 +63,8 @@ sub run {
     my @template =(
         'Comments regarding the Package',
         'So far nothing to say',
-        '<possible notes regarding this package - if none, delete this file>'
+        '<possible notes regarding this package - if none, delete this file>',
+        'Please edit this to provide information specific to'
     );
     my $regex = join('|', @template);
     if ($readme =~ m/$regex/io) {
