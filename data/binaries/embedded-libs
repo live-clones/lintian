@@ -45,6 +45,7 @@ gl2ps     ||\(C\) 1999-2009 C\. Geuzaine
 glee      ||Extension name exceeds 1023 characters\.
 glew      ||Missing GL version
 gmp       ||GNU MP: Cannot allocate memory
+heimdal   ||Heimdal (?:NTLMSSP|SPNEGO) Mechanism
 
 # not really an embedded lib but avoid duplication
 ieee-data ||(?i)(?:standards(?:-oui\.ieee\.org|\.ieee\.org/develop/regauth/oui)/oui\.txt|DR\. B\. STRUCK)

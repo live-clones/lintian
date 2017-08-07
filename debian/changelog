@@ -59,6 +59,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       in debian/control.
     + [NT] Recognise "autopkgtest-pkg-go" as a valid test suite.
 
+  * data/binaries/embedded-libs:
+    + [RG] Detect embedded copies of heimdal.
+
   * commands/lintian.pm:
     + [CL] Apply patch from Maia Everett to avoid British spelling when
       using en_US locale.  (Closes: #868897)
