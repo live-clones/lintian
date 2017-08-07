@@ -3,4 +3,3 @@ Version: 1.0
 Description: Test for tags related to debug pkgs
 Test-For:
  dbg-package-missing-depends
- debug-package-should-be-priority-extra

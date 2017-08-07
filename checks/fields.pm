@@ -586,11 +586,6 @@ sub run {
 
         tag 'unknown-priority', $priority
           unless $KNOWN_PRIOS->known($priority);
-
-        if ($pkg =~ /-dbg$/) {
-            tag 'debug-package-should-be-priority-extra', $pkg
-              unless $priority eq 'extra';
-        }
     }
 
     #---- Standards-Version

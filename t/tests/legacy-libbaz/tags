@@ -69,7 +69,6 @@ W: libbaz1: unused-shlib-entry-in-control-file libdoesntexist2 1.0
 W: libbaz1: unused-shlib-entry-in-control-file udeb: libdoesntexist2 1.0
 W: libbaz1: unused-shlib-entry-in-symbols-control-file libbaz 2
 W: libbaz1: zero-byte-file-in-doc-directory usr/share/doc/README.Debian
-W: libbaz2-dbg: debug-package-should-be-priority-extra libbaz2-dbg
 W: libbaz2-dbg: wrong-section-according-to-package-name libbaz2-dbg => debug
 W: libbaz2-dev: new-package-should-close-itp-bug
 W: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel

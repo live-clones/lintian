@@ -956,13 +956,6 @@ Certainty: possible
 Info: This package has a name suggesting that it belongs to a section
  other than the one it is currently categorized in.
 
-Tag: debug-package-should-be-priority-extra
-Severity: normal
-Certainty: certain
-Info: This package has a name suggesting that it contains detached
- debugging symbols.  If so, it should have priority "extra" since users
- normally do not need such packages.
-
 Tag: maintainer-also-in-uploaders
 Severity: minor
 Certainty: certain
