@@ -76,6 +76,7 @@ libpng    ||source-regex=(?:libpng(?:1\.6)?)||(?m)^(?:Potential overflow in png_
 libquicktime||quicktime_make_streamable: out of memory
 libraw    ||Unsupported file format or not RAW file
 libpostproc ||source-regex=(?:libav|libpostproc|ffmpeg)||using npp filters 0x%X/0x%X\n
+libsass     ||unknown internal error; please contact the LibSass maintainers
 libssh2     ||Invalid descriptor passed to libssh2_poll
 libssh      ||Error allocating memory for ssh_scp
 libswscale  ||source-regex=(?:libav|ffmpeg)||Exactly one scaler algorithm must be chosen[,\n]
