@@ -59,6 +59,7 @@ libavformat ||source-regex=(?:libav|ffmpeg)||Format detected only with low score
 libavutil   ||source-regex=(?:libav|ffmpeg)||AVOption type %d of option %s not implemented yet\n
 libgd     ||source-regex=libgd2? ||gd-(?:png|jpeg:) error:
 libgadu     ||Gadu-Gadu Client Build
+libgxps     ||Invalid XPS File: cannot open fixedrepresentation
 libidn      ||(?m)^(?:Punycode failed|ISCSIprep$)
 libidn2-0   ||punycode conversion resulted in overflow
 libjpeg   ||source-regex=libjpeg.* ||(?m)^Caution: quantization tables are too coarse for baseline JPEG
