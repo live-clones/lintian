@@ -102,6 +102,7 @@ pcre3     ||this version of PCRE is not compiled with PCRE_UTF8 support
 poppler   ||source-regex=(?:poppler|xpdf)||(?:May not be a PDF file \(continuing anyway\)|PDF file is damaged - attempting to reconstruct xref table\.\.\.)
 srtp      ||srtp: in stream 0x%x:
 sqlite    ||source-regex=sqlite3? ||CREATE TABLE sqlite_master\(
+taglib    ||One of the size bytes in the id3v2 header was greater than the allowed 128
 t1lib     ||t1lib is copyright \(c\) Rainer Menzner
 tiff      ||source-regex=tiff\d* ||No space for PixarLog state block
 tinyxml   ||(?m)^(?:Error when TiXmlDocument added to document|Error null \(0\) or unexpected EOF found in input stream\.)
