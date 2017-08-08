@@ -79,7 +79,7 @@ sub run {
             $has_public_jars = 1;
         }
         # check for common code files like .class or .clj (Clojure files)
-        foreach my $class (grep { m/\.(?:class|clj)$/oi } sort keys %{$files}){
+        foreach my $class (grep { m/\.(?:class|cljc?)$/oi } sort keys %{$files}){
             my $mver = $files->{$class};
             $classes = 1;
             next if $class =~ m/\.cljc?$/;
