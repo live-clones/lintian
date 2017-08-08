@@ -167,6 +167,8 @@ lintian (2.5.52) unstable; urgency=medium
       (Closes: #792846)
   * checks/menu-format.desc:
     + [ADB] Fix formatting of desktop-entry-lacks-icon-entry
+    + [CL] Add reference to Policy 9.6 for the
+      command-in-menu-file-and-desktop-file tag.  (Closes: #871008)
   * checks/scripts.desc:
     + [CL] Upgrade new-package-should-not-package-python2-module from
       I: to W:. See #829744 for more info.
