@@ -358,5 +358,4 @@ Tag: init.d-script-needs-depends-on-lsb-base
 Severity: important
 Certainty: possible
 Info: The given init script sources the <tt>/lib/lsb/init-functions</tt> utility
- functions without declaring the corresponding dependency on lsb-base
- (&gt;= 3.0-6).
+ functions without declaring the corresponding dependency on lsb-base.
