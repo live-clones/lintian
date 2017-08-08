@@ -82,7 +82,7 @@ sub run {
         foreach my $class (grep { m/\.(?:class|clj)$/oi } sort keys %{$files}){
             my $mver = $files->{$class};
             $classes = 1;
-            next if $class =~ m/\.clj$/;
+            next if $class =~ m/\.cljc?$/;
             # .class but no major version?
             next if $mver eq '-';
             if (   $mver <= $MAX_BYTECODE->value('min-bytecode-version') - 1

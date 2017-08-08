@@ -36,6 +36,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Ensure that python3-foo packages have "Section: python", not
       just python2-foo.  (Closes: #870272)
     + [RG] Do no longer require debug packages to be priority extra.
+  * checks/java.pm:
+    + [CL] Additionally consider .cljc files as code to avoid false-
+      positive codeless-jar warnings.  (Closes: #870649)
   * checks/python.{pm,desc}:
     + [CL] Split out Python checks from "scripts" check to a new, source
       check of type "source".
