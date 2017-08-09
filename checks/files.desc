@@ -1751,3 +1751,11 @@ Info: The package installs files into the <tt>/etc/init</tt>
  .
  However, Upstart was removed in Debian "stretch" and these files are thus no
  longer useful and should be removed.
+
+Tag: override-file-in-wrong-package
+Severity: important
+Certainty: certain
+Info: This package includes Lintian overrides intended for another package.
+ Lintian overrides should be put in a regular file named
+ /usr/share/lintian/overrides/<tt>package</tt>
+Ref: lintian 2.4

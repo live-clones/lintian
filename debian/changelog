@@ -165,6 +165,8 @@ lintian (2.5.52) unstable; urgency=medium
       to Rene Engelhard for the report.  (Closes: #856137)
     + [CL] Check for packages containing upstart configuration under
       /etc/init. Thanks to Paul Wise for the report.  (Closes: #825348)
+    + [CL] Check for Lintian overrides installed in the wrong package.
+      (Closes: #792198)
   * checks/init.d.desc:
     + [CL] Add an example snippet to explain how to prevent emission
       of init.d-script-sourcing-without-test.

@@ -1306,6 +1306,8 @@ sub run {
         if (   $fname =~ m,^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$,
             or $fname =~ m,^usr/share/lintian/overrides/$ppkg/.+,) {
             tag 'override-file-in-wrong-location', $file;
+        } elsif ($fname =~ m,^usr/share/lintian/overrides/(.+)/.+$,) {
+            tag 'override-file-in-wrong-package', $file if $1 ne $pkg;
         }
 
         # doxygen md5sum

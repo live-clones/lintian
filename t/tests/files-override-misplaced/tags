@@ -1,3 +1,4 @@
 E: files-override-misplaced: override-file-in-wrong-location usr/share/doc/files-override-misplaced/override.Lintian.gz
 E: files-override-misplaced: override-file-in-wrong-location usr/share/doc/files-override-misplaced/override.lintian
 E: files-override-misplaced: override-file-in-wrong-location usr/share/lintian/overrides/files-override-misplaced/some-override
+E: files-override-misplaced: override-file-in-wrong-package usr/share/lintian/overrides/wrong-package/some-override
