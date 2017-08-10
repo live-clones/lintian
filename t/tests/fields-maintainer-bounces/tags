@@ -1,4 +1,2 @@
 E: fields-maintainer-bounces source: maintainer-address-causes-mail-loops-or-bounces Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-E: fields-maintainer-bounces source: uploader-address-causes-mail-loops-or-bounces I Will Loop <fields-maintainer-bounces@packages.debian.org>
-E: fields-maintainer-bounces source: uploader-address-causes-mail-loops-or-bounces I Will Loop Too <fields-maintainer-bounces@PACKAGES.QA.DEBIAN.ORG>
 E: fields-maintainer-bounces: maintainer-address-causes-mail-loops-or-bounces Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>

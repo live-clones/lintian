@@ -191,11 +191,8 @@ sub check_maintainer {
             tag "$field-address-is-root-user", $maintainer;
         }
 
-        if (
-            ($field ne 'changed-by')
-            and (  $mail =~ /\@packages\.(?:qa\.)?debian\.org/i
-                or $KNOWN_BOUNCE_ADDRESSES->known($mail))
-          ) {
+        if (($field ne 'changed-by') and $KNOWN_BOUNCE_ADDRESSES->known($mail))
+        {
             tag "$field-address-causes-mail-loops-or-bounces", $maintainer;
         }
 
