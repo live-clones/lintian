@@ -4,7 +4,7 @@ Section: {$section}
 Maintainer: lintian-maint@debian.org
 Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
  Russ Allbery <rra@debian.org>,
- I L. Oop  <fields-maintainer-general@packages.qa.debian.org>,
+ Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>,
  Double comma <double@comma.com>, ,
  Mr. Missing Comma <mrmc@comma.com>
  Mrs. Missing Comma <mrsmc@comma.com>

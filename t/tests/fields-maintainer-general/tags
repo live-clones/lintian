@@ -1,5 +1,5 @@
 E: fields-maintainer-general source: maintainer-name-missing lintian-maint@debian.org
-E: fields-maintainer-general source: uploader-address-causes-mail-loops-or-bounces I L. Oop  <fields-maintainer-general@packages.qa.debian.org>
+E: fields-maintainer-general source: uploader-address-causes-mail-loops-or-bounces Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 E: fields-maintainer-general source: uploader-address-malformed Mr. Missing Comma <mrmc@comma.com> Mrs. Missing Comma <mrsmc@comma.com>
 E: fields-maintainer-general source: uploader-name-missing <lintian-maint@debian.org>
 E: fields-maintainer-general source: uploader-name-missing you have used a double comma
