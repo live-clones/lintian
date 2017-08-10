@@ -3,6 +3,7 @@ Version: 1.0
 Description: test e-mail addresses which are known to bounce e-mails
 # To avoid NMU warnings / having a changelog.in
 Author: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-Test-For:
+Test-Against:
  uploader-address-causes-mail-loops-or-bounces
+Test-For:
  maintainer-address-causes-mail-loops-or-bounces
