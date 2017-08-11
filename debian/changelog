@@ -72,6 +72,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       openjpeg2.  (Closes: #762956)
   * data/files/privacy-breaker-websites:
     + [BR] Detect custom donation logos like apache.
+    + [BR] Detect generic counter website.
 
   * commands/lintian.pm:
     + [CL] Apply patch from Maia Everett to avoid British spelling when
