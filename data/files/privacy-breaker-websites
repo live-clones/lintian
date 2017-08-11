@@ -10,7 +10,7 @@
 privacy-breach-google-adsense	                 ~~^(?:[^\./]+\.)?(?:googlesyndication\.com/pagead/(?:show_ads\.js|js/)|google-analytics\.com/(?:ga|urchin)\.js)
 privacy-breach-google-cse                        ~~^(?:[^\./]+\.)?google\.[^\./]+\.?/(:?afsonline/show_afs_search\.js|cse/api/branding\.css|coop/cse/brand\?[^/]+)$
 privacy-breach-google-plus                       ~~(?:^(?:[^\./]+\.)?google\.[^\./]+\.?/js/plusone\.[^\./]+\Z|^plus\.google\.com/)
-privacy-breach-donation                          ~~(?:(?:donate|paypal|support)\.(gif|jpe?g|png|svg)$|^(?:[^\./]+\.)?(?:flattr\.(?:com|net)|paypal(?:objects)?\.com|pledgie\.com|xoom\.com)/)
+privacy-breach-donation                          ~~(?:(?:donate|paypal|support)(?:[^/_.]*)?(?:_?small)?\.(gif|jpe?g|png|svg)$|^(?:[^\./]+\.)?(?:flattr\.(?:com|net)|paypal(?:objects)?\.com|pledgie\.com|xoom\.com)/)
 privacy-breach-facebook                          ~~^(?:[^\./]+\.)?(?:facebook\.com|static\.ak\.fbcdn\.net)(?:/|\Z)
 privacy-breach-logo                              ~~(?:^(?:sflogo\.)?(?:sourceforge|sf)\.[^\./]+/sflogo\.php\?|/logos?/|(?:acrobat|clanlib|(?:fav|github-)?icons?|logos?_?(?:\d+|small)|mascot[^\./]*|youtube-icon[^\./]*|twitter_logo[^\./]*|doxygen|forkme_[^/\.]*|logos?_[^/\.]*|logos?)\.(gif|ico|jpe?g|png|svg)$)
 privacy-breach-piwik                             ~~/piwik\.php\?
