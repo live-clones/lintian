@@ -2027,6 +2027,15 @@ sub _check_tag_url_privacy_breach {
         }
     }
 
+    # False positive
+    # legal.xml file of gnome
+    # could be replaced by a link to local file but not really a privacy breach
+    if(    $file->basename eq 'legal.xml'
+        && $tagattr eq 'link'
+        &&  $website =~ m{^creativecommons.org/licenses/}) {
+        return;
+    }
+
     # track well known site
     foreach my $breaker ($PRIVACY_BREAKER_WEBSITES->all) {
         my $value = $PRIVACY_BREAKER_WEBSITES->value($breaker);
@@ -2042,6 +2051,7 @@ sub _check_tag_url_privacy_breach {
             return;
         }
     }
+
     # generic case
     unless (exists $privacybreachhash->{'tag-generic-'.$website}){
         tag 'privacy-breach-generic', $file, "($url)";
