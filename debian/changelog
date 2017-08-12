@@ -237,6 +237,8 @@ lintian (2.5.52) unstable; urgency=medium
       profiles, adding «nolua» and «noruby».
   * data/spelling/corrections:
     + [AB] Remove "iff". It's a valid English word. (Closes: #865055)
+    + [CL] Avoid false positives in spelling-error-in-{binary,manpage} for
+      "CAs" which was annoying for cryptographic software.  (Closes: #871791)
 
   * debian/control:
     + [NT] Add (Build-)Depends on libxml-simple-perl for the new
