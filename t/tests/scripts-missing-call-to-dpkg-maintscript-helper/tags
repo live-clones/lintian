@@ -1,0 +1,1 @@
+E: scripts-missing-call-to-dpkg-maintscript-helper: missing-call-to-dpkg-maintscript-helper postrm (symlink_to_dir)

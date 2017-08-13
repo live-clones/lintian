@@ -16,6 +16,8 @@ E: scripts-maintainer-general: maintainer-script-should-not-use-dpkg-status-dire
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:74
 E: scripts-maintainer-general: maintainer-script-should-not-use-install-sgmlcatalog postinst:75
 E: scripts-maintainer-general: maintainer-shell-script-fails-syntax-check prerm
+E: scripts-maintainer-general: missing-call-to-dpkg-maintscript-helper postrm (symlink_to_dir)
+E: scripts-maintainer-general: missing-call-to-dpkg-maintscript-helper preinst (symlink_to_dir)
 E: scripts-maintainer-general: mknod-in-maintainer-script postinst:125
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
 E: scripts-maintainer-general: trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir postinst:190
