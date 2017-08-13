@@ -375,6 +375,14 @@ Info: The maintainer script seems to call dpkg-maintscript-helper
  package uninstallable.
 Ref: dpkg-maintscript-helper(1)
 
+Tag: missing-call-to-dpkg-maintscript-helper
+Severity: serious
+Certainty: certain
+Info: The maintainer script is missing a call to the specified
+ dpkg-maintscript-helper command which requires coordinated actions from
+ several maintainer scripts.
+Ref: dpkg-maintscript-helper(1)
+
 Tag: maintainer-script-removes-device-files
 Severity: serious
 Certainty: certain
