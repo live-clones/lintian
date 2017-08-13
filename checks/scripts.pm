@@ -231,7 +231,7 @@ sub script_tag {
 sub run {
     my ($pkg, undef, $info) = @_;
 
-    my (%executable, %ELF, %scripts, %seen_helper_cmds);
+    my (%executable, %ELF, %scripts);
 
     # no dependency for install-menu, because the menu package specifically
     # says not to depend on it.
@@ -684,12 +684,6 @@ sub run {
                 $saw_statoverride_list = 1 if /--list/;
             }
 
-            if (m,$LEADIN(?:/usr/bin/)?dpkg-maintscript-helper\s(\S+),) {
-                my $cmd = $1;
-                $seen_helper_cmds{$cmd} = () unless $seen_helper_cmds{$cmd};
-                $seen_helper_cmds{$cmd}{$file} = 1;
-            }
-
             if (    m,[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]}\s],
                 and not m/\bmks?temp\b/
                 and not m/\btempfile\b/
@@ -1025,17 +1019,6 @@ sub run {
 
     }
     close($ctrl_fd);
-
-    for my $cmd (qw(rm_conffile mv_conffile symlink_to_dir)) {
-        next unless $seen_helper_cmds{$cmd};
-
-        # dpkg-maintscript-helper(1) recommends the snippets are in all
-        # maintainer scripts but they are not strictly required in prerm.
-        for my $file (qw(preinst postinst postrm)) {
-            tag 'missing-call-to-dpkg-maintscript-helper', "$file ($cmd)"
-              unless $seen_helper_cmds{$cmd}{$file};
-        }
-    }
 
     # If any of the maintainer scripts used a variable in the file or
     # diversion name normalise them all

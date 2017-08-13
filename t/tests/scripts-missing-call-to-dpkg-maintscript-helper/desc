@@ -1,5 +1,0 @@
-Testname: scripts-missing-call-to-dpkg-maintscript-helper
-Version: 1.0
-Description: Test for packages that miss calls to dpkg-maintscript-helper(1)
-Test-For:
- missing-call-to-dpkg-maintscript-helper
