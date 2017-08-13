@@ -49,7 +49,7 @@ sub run {
     # source package sign, for fine grained version mangling check
     # If the version field is missing, we assume a neutral non-native one.
     my $version = $info->field('version', '0-1');
-    if ($version =~ /(dfsg|debian|ds)/) {
+    if ($version =~ /(dfsg|debian|ds|repack)/) {
         $repack = $1;
     }
     if ($version =~ /(alpha|beta|rc)/i) {

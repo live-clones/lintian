@@ -209,6 +209,8 @@ lintian (2.5.52) unstable; urgency=medium
   * checks/watch-file.pm:
     + [CL] Factor out hard-coded list of possible upstream key locations
       to the "common/signing-key-filenames" Lintian::Data resource.
+    + [CL] Add "repack" (along with "dfsg" etc.) to identify a repacked
+      upstream tarball.  (Closes: #871957)
 
   * collection/scripts:
     + [CL] Check that non-ELF maintainer scripts start with #!.
