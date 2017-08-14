@@ -74,6 +74,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       libsass, libytnef, and taglib.
     + [RG] Use an additional string to detect embedded copies of
       openjpeg2.  (Closes: #762956)
+  * data/files/obsolete-paths:
+    + [CL] Add note to /etc/bash_completion.d entry regarding stricter
+      filename requirements.  (Closes: #814599)
   * data/files/privacy-breaker-websites:
     + [BR] Detect custom donation logos like apache.
     + [BR] Detect generic counter website.
