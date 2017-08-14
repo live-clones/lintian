@@ -467,7 +467,7 @@ sub run {
                 my $newpath  = $obs_data->{'newdir'};
                 my $moreinfo = $obs_data->{'moreinfo'};
                 tag 'package-installs-into-obsolete-dir',
-                  "$file : $oldpath -> $newpath (see also $moreinfo)";
+                  "$file : $oldpath -> $newpath $moreinfo";
             }
         }
 

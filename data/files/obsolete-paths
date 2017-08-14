@@ -1,6 +1,6 @@
 # obsolete path (regexp) -> newer path ~~ Reference
 #
 # Please alpha sort
-^etc/bash_completion.d/   -> usr/share/bash-completion/completions  ~~ https://bugs.debian.org/776954
-^etc/dhcp3/               -> etc/dhcp                               ~~ https://bugs.debian.org/673029
-^etc/X11/fonts/X11R7/     -> etc/X11/fonts                          ~~ https://bugs.debian.org/364530#24
+^etc/bash_completion.d/   -> usr/share/bash-completion/completions  ~~ (see also https://bugs.debian.org/776954)
+^etc/dhcp3/               -> etc/dhcp                               ~~ (see also https://bugs.debian.org/673029)
+^etc/X11/fonts/X11R7/     -> etc/X11/fonts                          ~~ (see also https://bugs.debian.org/364530#24)
