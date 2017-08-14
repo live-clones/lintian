@@ -24,6 +24,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Downgrade severity of file-contains-fixme-placeholder
       tag from "important" (ie. "E:") to "wishlist" (ie. "I:").
       Thanks to Gregor Herrmann for the suggestion.
+    + [CL] Apply patch from Alex Muntada (alexm) to use "substr" instead
+      of "substring" in mentions-deprecated-usr-lib-perl5-directory's
+      description.  (Closes: #871767)
   * checks/debhelper.pm:
     + [CL] Prevent a false positive of
       missing-build-dependency-for-dh_-command that can be exposed by
