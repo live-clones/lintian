@@ -111,3 +111,6 @@ mysql-server-core => default-mysql-server-core
 mysql-client => default-mysql-client
 mysql-client-core => default-mysql-client-core
 libmysqlclient-dev => default-libmysqlclient-dev
+
+# Deprecated in Stretch (#872076)
+dh-systemd => use debhelper (>= 9.20160709)
