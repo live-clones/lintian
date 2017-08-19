@@ -107,7 +107,7 @@ our @DPKG_BUILDPACKAGE_CMD = (
     qw(-iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING),
     qw(--source-option=--auto-commit),
 );
-our $STANDARDS_VERSION = '4.0.0';
+our $STANDARDS_VERSION = '4.0.1';
 our $ARCHITECTURE = safe_qx(qw(dpkg-architecture -qDEB_HOST_ARCH));
 my $RUNNER_TS = (stat($0))[9];
 chomp $ARCHITECTURE;

@@ -3,3 +3,4 @@ Version: 1.0
 Description: Test for "future" years in debian/copyright
 Test-For:
  copyright-year-in-future
+ timewarp-standards-version
