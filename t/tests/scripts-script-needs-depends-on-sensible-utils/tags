@@ -1,0 +1,2 @@
+E: scripts-script-needs-depends-on-sensible-utils: script-needs-depends-on-sensible-utils postinst (line 5)
+E: scripts-script-needs-depends-on-sensible-utils: script-needs-depends-on-sensible-utils var/lib/test/test-script (line 3)

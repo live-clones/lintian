@@ -1,0 +1,4 @@
+Testname: scripts-script-needs-depends-on-sensible-utils
+Version: 1.0
+Description: Check missing dep on sensible-utils
+Test-For: script-needs-depends-on-sensible-utils

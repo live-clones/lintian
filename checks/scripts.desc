@@ -752,3 +752,16 @@ Tag: elf-maintainer-script
 Severity: classification
 Certainty: certain
 Info: The maintainer script is an ELF binary.
+
+Tag: script-needs-depends-on-sensible-utils
+Severity: important
+Certainty: possible
+Info: The listed script uses one or more of the binaries in
+ <tt>sensible-utils</tt> but is missing a dependency for this package.
+ .
+ As part of the transition to split <tt>sensible-utils</tt> and
+ <tt>debianutils</tt>, the remaining <tt>Depends</tt> from
+ <tt>debianutils</tt> was removed in version 4.8.2.
+ .
+ In most cases, you will need to add a <tt>Depends</tt> on
+ <tt>sensible-utils</tt>.

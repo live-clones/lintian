@@ -349,6 +349,7 @@ sub run {
                 if (check_script_syntax($interpreter, $path)) {
                     script_tag('shell-script-fails-syntax-check', $filename);
                 }
+                check_script_uses_sensible_utils($path);
             }
         }
 
@@ -614,6 +615,7 @@ sub run {
                 if (check_script_syntax("/bin/${base}", $path)) {
                     tag 'maintainer-shell-script-fails-syntax-check', $file;
                 }
+                check_script_uses_sensible_utils($path);
             }
         }
 
@@ -1265,6 +1267,20 @@ sub check_script_syntax {
         waitpid $pid, 0;
     }
     return $?;
+}
+
+sub check_script_uses_sensible_utils {
+    my ($path) = @_;
+    my $fd = $path->open;
+    while (<$fd>) {
+        if (m/${LEADIN}(?:select-editor|sensible-(?:browser|editor|pager))\b/){
+            tag 'script-needs-depends-on-sensible-utils',
+              $path->name, "(line $.)";
+            last;
+        }
+    }
+    close($fd);
+    return;
 }
 
 sub remove_comments {
