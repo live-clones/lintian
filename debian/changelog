@@ -88,7 +88,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [BR] Detect custom donation logos like apache.
     + [BR] Detect generic counter website.
   * data/standards-version/release-dates:
-    + [CL] Add 4.0.1 as a known standards version.
+    + [CL] Add 4.0.1 and 4.1.0 as known standards versions.
 
   * debian/control:
     + [CL] Mention Debian Policy v4.0.1 in the description.
