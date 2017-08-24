@@ -16,6 +16,6 @@ Description: {$description}
  .
  FIXME: This line should be detected by Lintian.
  .
- This line should not be detected as it only the quoted "FIXME" form.
+ This line shouldn't be detected as it has a quoted "FIXME".
  .
- FIXME: This mixed "FIXME" line should be detected though.
+ FIXME: This mixed "FIXME" line should still be detected though.
