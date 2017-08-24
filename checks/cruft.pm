@@ -707,7 +707,7 @@ sub find_cruft {
             }
         }
 
-        if (   $name =~ m{^debian/(README.source|copyright|rules|control)}
+        if (   $name =~ m{^debian/(README.source|copyright|rules|control)$}
             && $entry->is_file
             && $entry->is_open_ok) {
             my $fd = $entry->open;
