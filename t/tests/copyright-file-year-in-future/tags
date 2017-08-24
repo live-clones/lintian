@@ -1,4 +1,4 @@
-W: copyright-file-year-in-future source: timewarp-standards-version (2017-07-20 < 2017-08-06)
+W: copyright-file-year-in-future source: timewarp-standards-version (2017-07-20 < 2017-08-21)
 W: copyright-file-year-in-future: copyright-year-in-future 2100 > 2017 (line 9, column 2)
 W: copyright-file-year-in-future: copyright-year-in-future 2101 > 2017 (line 10, column 2)
 W: copyright-file-year-in-future: copyright-year-in-future 2102 > 2017 (line 10, column 8)
