@@ -3,3 +3,4 @@ Version: 1.0
 Description: Check various NodeJS issues
 Test-For:
  missing-dep-for-interpreter
+ script-uses-deprecated-nodejs-location

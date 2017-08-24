@@ -378,6 +378,10 @@ sub run {
             script_tag('interpreter-in-usr-local', $filename,"#!$interpreter");
         } elsif ($interpreter eq '/bin/env') {
             script_tag('script-uses-bin-env', $filename);
+        } elsif ($interpreter eq 'nodejs') {
+            script_tag('script-uses-deprecated-nodejs-location',$filename);
+            # Check whether we have correct dependendies on nodejs regardless.
+            $data = $INTERPRETERS->value('node');
         } elsif ($base =~ /^php/) {
             script_tag('php-script-with-unusual-interpreter',
                 $filename, "$interpreter");
