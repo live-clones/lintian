@@ -712,7 +712,7 @@ sub find_cruft {
             && $entry->is_open_ok) {
             my $fd = $entry->open;
             while (my $line = <$fd>) {
-                next unless $line =~ m/(FIX_?ME)/;
+                next unless $line =~ m/(?<!")(FIX_?ME)(?!")/;
                 tag 'file-contains-fixme-placeholder', "$name:$. $1";
             }
         }

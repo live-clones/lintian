@@ -20,7 +20,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       - Match all violating years in a line, not just the first (eg.
         "2000-2107").
       - Expand testsuite.
-  * checks/cruft.desc:
+  * checks/cruft.{pm,desc}:
     + [CL] Downgrade severity of file-contains-fixme-placeholder
       tag from "important" (ie. "E:") to "wishlist" (ie. "I:").
       Thanks to Gregor Herrmann for the suggestion.
@@ -29,6 +29,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       description.  (Closes: #871767)
     + [CL] Don't check copyright_hints file for FIXME placeholders.
       (Closes: #872843)
+    + [CL] Don't match quoted "FIXME" variants as they are almost always
+      deliberate. Thanks to Adrian Bunk for the report.  (Closes: #870199)
   * checks/debhelper.pm:
     + [CL] Prevent a false positive of
       missing-build-dependency-for-dh_-command that can be exposed by

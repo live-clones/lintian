@@ -15,3 +15,7 @@ Description: {$description}
  be an empty package.
  .
  FIXME: This line should be detected by Lintian.
+ .
+ This line should not be detected as it only the quoted "FIXME" form.
+ .
+ FIXME: This mixed "FIXME" line should be detected though.
