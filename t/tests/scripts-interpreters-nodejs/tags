@@ -1,0 +1,2 @@
+E: scripts-interpreters-nodejs: missing-dep-for-interpreter node => nodejs (usr/bin/usr-bin-env-node)
+E: scripts-interpreters-nodejs: missing-dep-for-interpreter nodejs => nodejs (usr/bin/usr-bin-env-nodejs)

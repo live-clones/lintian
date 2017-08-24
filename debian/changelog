@@ -454,6 +454,8 @@ lintian (2.5.51) unstable; urgency=medium
   * data/scripts/interpreters:
     + [NT] Add stap as a known interpreter.  Thanks to gustavo panizzo
       for the suggestion.  (Closes: #858326)
+    + [CL] Add node as a known interpreter. Thanks to Julien Puydt for the
+      bug report.  (Closes: #872699)
   * data/scripts/maintainer-script-bad-command:
     + [NT] Remove check for suidregister, dpkg --assert-working-epoch, and
       dpkg --assert-multi-conrep.  None of these trigger any tags in the

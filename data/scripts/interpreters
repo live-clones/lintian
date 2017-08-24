@@ -61,6 +61,7 @@ mscgen         => /usr/bin
 newlisp        => /usr/bin
 ngraph         => /usr/bin, ngraph-gtk
 nickle         => /usr/bin
+node           => /usr/bin, nodejs
 nodejs         => /usr/bin
 ocamlrun       => /usr/bin, ocaml-base-nox | ocaml-base | ocaml-nox | ocaml
 pagsh          => /usr/bin, openafs-client | heimdal-clients
