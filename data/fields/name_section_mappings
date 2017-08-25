@@ -14,3 +14,4 @@ lib.*-cil(?:-dev)?$          => cli-mono
 ^lib.*-dev$                  => libdevel
 ^gir\d+\.\d+-.*-\d+\.\d+$    => introspection
 ^libjs-                      => javascript
+^node-                       => javascript
