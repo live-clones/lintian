@@ -87,6 +87,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       libsass, libytnef, and taglib.
     + [RG] Use an additional string to detect embedded copies of
       openjpeg2.  (Closes: #762956)
+  * data/fields/name_section_mappings:
+    + [BR] node- package section is javascript.
   * data/fields/obsolete-packages:
     + [MR] Add dh-systemd.  (Closes: #872076)
   * data/files/obsolete-paths:

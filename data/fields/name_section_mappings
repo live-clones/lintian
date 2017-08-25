@@ -2,6 +2,7 @@
 # this list is tried from top to bottom
 -docs?$                      => doc
 -dbg(?:sym)?$                => debug
+^node-                       => javascript
 ^(?:python-)?zope            => zope
 ^python3?-                   => python
 ^r-(?:cran|bioc|other)-      => gnu-r
