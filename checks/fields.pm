@@ -96,23 +96,14 @@ our @known_java_pkg = map { qr/$_/ } (
 );
 
 # Mapping of package names to section names
-my @NAME_SECTION_MAPPINGS = (
-    [qr/-docs?$/                      => 'doc'],
-    [qr/-dbg(?:sym)?$/                => 'debug'],
-    [qr/^(?:python-)?zope/            => 'zope'],
-    [qr/^python3?-/                   => 'python'],
-    [qr/^r-(?:cran|bioc|other)-/      => 'gnu-r'],
-    [qr/^lib.*-perl$/                 => 'perl'],
-    [qr/^lib.*-cil(?:-dev)?$/         => 'cli-mono'],
-    [qr/^lib.*-(?:java|gcj)$/         => 'java'],
-    [qr/^(?:lib)php-/                 => 'php'],
-    [qr/^lib(?:hugs|ghc6?)-/          => 'haskell'],
-    [qr/^lib.*-ruby(?:1\.\d)?$/       => 'ruby'],
-    [qr/^lib.*-(?:ocaml|camlp4)-dev$/ => 'ocaml'],
-    [qr/^lib.*-dev$/                  => 'libdevel'],
-    [qr/^gir\d+\.\d+-.*-\d+\.\d+$/    => 'introspection'],
-    [qr/^libjs-/                      => 'javascript'],
-);
+my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
+    'fields/name_section_mappings',
+    qr/\s*=>\s*/,
+    sub {
+        my $regex = qr/$_[0]/x;
+        $_[0] = $_[1];
+        return $regex;
+    });
 
 my %VCS_EXTRACT = (
     browser => sub { return @_;},
@@ -547,14 +538,15 @@ sub run {
             # Check package name <-> section.  oldlibs is a special case; let
             # anything go there.
             if ($parts[-1] ne 'oldlibs') {
-                foreach my $map (@NAME_SECTION_MAPPINGS) {
-                    next unless ($pkg =~ $map->[0]);
+                foreach my $section ($NAME_SECTION_MAPPINGS->all()) {
+                    my $regex = $NAME_SECTION_MAPPINGS->value($section);
+                    next unless ($pkg =~ m{$regex});
 
                     my $area = '';
                     $area = "$parts[0]/" if (scalar @parts == 2);
                     tag 'wrong-section-according-to-package-name',
-                      "$pkg => ${area}$map->[1]"
-                      unless $parts[-1] eq $map->[1];
+                      "$pkg => ${area}$section"
+                      unless $parts[-1] eq $section;
                     last;
                 }
             }
