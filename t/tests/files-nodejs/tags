@@ -1,0 +1,2 @@
+E: files-nodejs: node-package-install-in-nodejs-rootdir usr/lib/nodejs/package.json
+E: files-nodejs: node-package-install-in-nodejs-rootdir usr/lib/nodejs/test.js

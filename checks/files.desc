@@ -1215,6 +1215,12 @@ Info: This package creates a potential privacy breach by fetching W3C
  Note that these icons are non-free and must not be copied into the
  package. You could safely delete this W3C validation badge.
 
+Tag: node-package-install-in-nodejs-rootdir
+Severity: important
+Certainty: certain
+Info: This package contains a file under /usr/lib/nodejs
+ instead to /usr/lib/nodejs/${package}
+
 Tag: embedded-feedparser-library
 Severity: normal
 Certainty: certain

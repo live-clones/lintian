@@ -751,6 +751,14 @@ sub run {
             elsif ($fname =~ m,^usr/lib/sgml/\S,) {
                 tag 'file-in-usr-lib-sgml', $file;
             }
+            # ---------------- /usr/lib/node
+            elsif ($fname =~ m,^usr/lib/nodejs/,) {
+                if ($fname eq 'usr/lib/nodejs/package.json') {
+                    tag 'node-package-install-in-nodejs-rootdir', $fname;
+                }elsif ($fname =~m,usr/lib/nodejs/[^/]*\.js$,) {
+                    tag 'node-package-install-in-nodejs-rootdir', $fname;
+                }
+            }
             # ---------------- perllocal.pod
             elsif ($fname =~ m,^usr/lib/perl.*/perllocal.pod$,) {
                 tag 'package-installs-perllocal-pod', $file;
