@@ -1,0 +1,18 @@
+# map between regex (x) of package => section
+# this list is tried from top to bottom
+-docs?$                      => doc
+-dbg(?:sym)?$                => debug
+^(?:python-)?zope            => zope
+^python3?-                   => python
+^r-(?:cran|bioc|other)-      => gnu-r
+^lib.*-perl$                 => perl
+lib.*-cil(?:-dev)?$          => cli-mono
+^lib.*-(?:java|gcj)$         => java
+^(?:lib)php-                 => php
+^lib(?:hugs|ghc6?)-          => haskell
+^lib.*-ruby(?:1\.\d)?$       => ruby
+^lib.*-(?:ocaml|camlp4)-dev$ => ocaml
+^libjs-                      => javascript
+^gir\d+\.\d+-.*-\d+\.\d+$    => introspection
+# catch remaining should be after specific lib
+^lib.*-dev$                  => libdevel
