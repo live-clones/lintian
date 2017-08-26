@@ -27,6 +27,8 @@ use POSIX qw(ENOENT);
 
 use Lintian::Util qw(strip);
 
+use Tie::IxHash;
+
 our $LAZY_LOAD = 1;
 
 sub _checked_open {
@@ -58,6 +60,11 @@ sub new {
         $self->_force_promise if not $LAZY_LOAD;
     }
     return $self;
+}
+
+sub get_orderedtype {
+    tie my %myhash, 'Tie::IxHash';
+    return \%myhash;
 }
 
 # _get_data fetches an already loaded dataset by type.  It is
@@ -256,7 +263,12 @@ Lintian::Data - Lintian interface to query lists of keywords
         # do something ...
     }
     my $hash = Lintian::Data->new('another-type', qr{\s++});
-    if ($list->value($keyword) > 1) {
+    if ($hash->value($keyword) > 1) {
+        # do something ...
+    }
+    my $ordered = Lintian::Data->new('ordered-type',
+       qr{\s++}, undef,Lintian::Data->get_orderedtype());
+    if ($ordered->value($keyword) > 1) {
         # do something ...
     }
     my @keywords = $list->all;
@@ -320,7 +332,7 @@ If CODE is also given, it is assumed to be a sub that will pre-process
 the key/value pairs.  See the L</Interface for the CODE argument> above.
 
 If STORAGE is also given (by default {}), it will be used to store value/key.
-STORAGE should tie to a hash and could be used to prepopulate value or
+STORAGE should tie to a hash and could be used to populate value or
 to be used to use insertion ordered hash.
 
 A given file will only be loaded once.  If new() is called again with the
@@ -331,6 +343,10 @@ multiple file reads.
 
 Specifies vendor profile.  It must be set before the first data file
 is loaded.
+
+=item get_orderedtype()
+
+Get a empty ordered hash implementation
 
 =back
 
