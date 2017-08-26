@@ -542,6 +542,9 @@ sub run {
         $interpreter =~ m|([^/]*)$|;
         my $base = $1;
 
+        # tag for statistics
+        tag 'maintainer-script-interpreter', "control/$file", $interpreter;
+
         if ($interpreter eq '') {
             tag 'script-without-interpreter', "control/$file";
             next;

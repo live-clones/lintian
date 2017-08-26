@@ -1,2 +1,5 @@
 C: scripts-does-not-start-with-shebang: elf-maintainer-script control/preinst
+C: scripts-does-not-start-with-shebang: maintainer-script-interpreter control/postinst /bin/sh
+C: scripts-does-not-start-with-shebang: maintainer-script-interpreter control/postrm
+C: scripts-does-not-start-with-shebang: maintainer-script-interpreter control/preinst ELF
 E: scripts-does-not-start-with-shebang: script-without-interpreter control/postrm

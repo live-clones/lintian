@@ -753,6 +753,11 @@ Severity: classification
 Certainty: certain
 Info: The maintainer script is an ELF binary.
 
+Tag: maintainer-script-interpreter
+Severity: classification
+Certainty: certain
+Info: Interpreter used in maintainer script or ELF
+
 Tag: script-needs-depends-on-sensible-utils
 Severity: important
 Certainty: possible

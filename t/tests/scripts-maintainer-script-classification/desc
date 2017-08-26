@@ -3,3 +3,4 @@ Version: 1.0
 Description: Test for classification tags in maintscripts
 Options: -EI -L +classification -C scripts
 Test-For: debhelper-autoscript-in-maintainer-scripts
+ maintainer-script-interpreter
