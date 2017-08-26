@@ -80,9 +80,10 @@ sub new {
     sub _load_data {
         my ($self, $data_spec) = @_;
         my $data_name = $data_spec->[0];
+        my $data_type = $data_spec->[3] // {};
         unless (exists($data{$data_name})) {
             my $vendors = $self->_get_vendor_names;
-            my $dataset = {};
+            my $dataset = $data_type;
             my ($fd, $vno) = $self->_open_data_file($data_name, $vendors, 0);
             $self->_parse_file($data_name, $fd, $dataset, $data_spec,
                 $vendors, $vno);
@@ -304,7 +305,7 @@ is a hashref, new keys can be inserted etc.
 
 =over 4
 
-=item new(TYPE [,SEPARATOR[, CODE]])
+=item new(TYPE [,SEPARATOR[, [CODE, STORAGE]]])
 
 Creates a new Lintian::Data object for the given TYPE.  TYPE is a partial
 path relative to the F<data> directory and should correspond to a file in
@@ -317,6 +318,10 @@ the lines into key/value pairs.
 
 If CODE is also given, it is assumed to be a sub that will pre-process
 the key/value pairs.  See the L</Interface for the CODE argument> above.
+
+If STORAGE is also given (by default {}), it will be used to store value/key.
+STORAGE should tie to a hash and could be used to prepopulate value or
+to be used to use insertion ordered hash.
 
 A given file will only be loaded once.  If new() is called again with the
 same TYPE argument, the data previously loaded will be reused, avoiding
