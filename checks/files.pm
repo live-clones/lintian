@@ -1163,7 +1163,7 @@ sub run {
             tag 'package-contains-python-coverage-file', $file;
         }
 
-        # ---------------- .coverage (coverage.py output)
+        # ---------------- .class (compiled Java files)
         if ($fname =~ m,\.class$,o) {
             tag 'package-installs-java-bytecode', $file;
         }
