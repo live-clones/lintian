@@ -1163,6 +1163,11 @@ sub run {
             tag 'package-contains-python-coverage-file', $file;
         }
 
+        # ---------------- .coverage (coverage.py output)
+        if ($fname =~ m,\.class$,o) {
+            tag 'package-installs-java-bytecode', $file;
+        }
+
         # ---------------- /usr/lib/site-python
         if ($fname =~ m,^usr/lib/site-python/\S,) {
             tag 'file-in-usr-lib-site-python', $file;
