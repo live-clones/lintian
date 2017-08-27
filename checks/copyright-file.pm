@@ -355,6 +355,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                     my $year = $1;
                     my $column = $-[0] + 1;
                     next if $year <= $latest_year;
+                    next if $line =~ m/Original Author/;
                     # "Sun Microsystems, 4150 Network Drive, CA"
                     next if $year == 4150;
                     tag 'copyright-year-in-future',

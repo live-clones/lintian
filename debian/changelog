@@ -19,6 +19,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
         addresses.  (Closes: #869788)
       - Match all violating years in a line, not just the first (eg.
         "2000-2107").
+      - Ignore meta copyright statements such as "Original Author". Thanks
+        to Thorsten Alteholz for the bug report.  (Closes: #873323)
       - Expand testsuite.
   * checks/cruft.{pm,desc}:
     + [CL] Downgrade severity of file-contains-fixme-placeholder
