@@ -125,6 +125,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Add explicit test for packages including external fonts via
       the Google Font API. Thanks to Ian Jackson for the report.
       (Closes: #873434)
+    + [CL] Add explicit test for packages including external fonts via
+      the Typekit API via <script/> HTML tags.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 10:16:35 +0000
 

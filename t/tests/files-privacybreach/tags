@@ -73,6 +73,7 @@ X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/pr
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/object.html (https://1984.os/hellotrackme.swf)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/source.html (https://1984.os/tracking.mp3)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/track.html (http://1984.os/notracking.vtt)
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/typekit.html (//use.typekit.net/uniquecodehere.js)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/video.html (ftp://1984.os/tuxistrackingme.ogg)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/videoposter.html (ftp://1984.os/tuxistrackingme.ogg)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-google-plus/asyncload.html (http://www.example.com)
