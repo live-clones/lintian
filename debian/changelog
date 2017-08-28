@@ -129,6 +129,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       (Closes: #873434)
     + [CL] Add explicit test for packages including external fonts via
       the Typekit API via <script/> HTML tags.
+  * t/tests/legacy-foo++/tags:
+    + [CL] Add missing entries in "Test-For" field.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 10:16:35 +0000
 
