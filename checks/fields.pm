@@ -101,8 +101,7 @@ my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
     qr/\s*=>\s*/,
     sub {
         return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
-    },
-    Lintian::Data->get_orderedtype());
+    });
 
 my %VCS_EXTRACT = (
     browser => sub { return @_;},
