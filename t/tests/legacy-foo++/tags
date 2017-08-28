@@ -11,6 +11,7 @@ E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <d
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++: debian-changelog-file-contains-invalid-email-address he@unknown
 E: foo++: debian-changelog-file-uses-obsolete-national-encoding at line 11
+E: foo++: latest-debian-changelog-entry-without-new-date
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 I: foo++ source: duplicate-short-description foo++ foo++-helper
@@ -23,5 +24,4 @@ W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@local
 W: foo++-helper: empty-binary-package
 W: foo++: debian-changelog-has-wrong-day-of-week 2003-04-14 is a Monday
 W: foo++: empty-binary-package
-W: foo++: latest-debian-changelog-entry-without-new-date
 W: foo++: readme-debian-contains-invalid-email-address foo@unknown

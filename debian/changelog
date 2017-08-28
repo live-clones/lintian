@@ -170,6 +170,8 @@ lintian (2.5.52) unstable; urgency=medium
     + [CL] Expand the rationale for the
       latest-debian-changelog-entry-without-new-date tag to mention
       possible implications for SOURCE_DATE_EPOCH/reproducible builds.
+    + [CL] Upgrade latest-debian-changelog-entry-without-new-date from
+      a warning to an error.  (Closes: #873490)
   * checks/control-file.pm:
     + [NT] Remove check for missing versioned build-depends for dpkg
       and debhlper when using Build-Profiles.  The necessary versions
