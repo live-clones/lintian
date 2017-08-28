@@ -6,3 +6,5 @@ Options: --pedantic -I -E
 Test-Depends: debhelper (>= 9.20151004~)
 Test-Against:
  triplet-dir-and-architecture-mismatch
+Test-For:
+ pre-depends-directly-on-multiarch-support

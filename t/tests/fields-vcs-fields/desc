@@ -8,3 +8,5 @@ Test-Against:
  vcs-field-uses-not-recommended-uri-format
  vcs-field-uses-unknown-uri-format
  vcs-git-uses-invalid-user-uri
+Test-For:
+ vcs-field-uses-insecure-uri

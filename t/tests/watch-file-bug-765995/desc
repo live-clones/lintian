@@ -2,3 +2,5 @@ Testname: watch-file-bug-765995
 Type: non-native
 Version: 2.0-1
 Description: Watch file that caused undef warning
+Test-For:
+ orig-tarball-missing-upstream-signature

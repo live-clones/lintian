@@ -6,3 +6,5 @@ Skeleton: pedantic
 Description: Watch file with pgpmode=next
 Test-Against: debian-watch-may-check-gpg-signature
 References: #841000
+Test-For:
+ orig-tarball-missing-upstream-signature
