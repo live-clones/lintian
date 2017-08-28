@@ -64,6 +64,7 @@ X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/pr
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/externalimg.xml (http://1984.ow/bigbrotheriswatchingyou.png)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/frame.html (http://1984.os/trackme_frame_c.htm)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/genericwebsite.html (http://www.example.com/trackme.js)
+X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/googlefontapi.html (http://fonts.googleapis.com/css?family=open+sans)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/iframe.html (http://1984.ow/bigbrotheriswatchingyou.html)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/import.css (http://1984.wo/importtracking.css)
 X: files-privacybreach: privacy-breach-generic usr/share/files-privacy-breach/privacy-breach-generic/importcss.html (http://trackme.css/track.css)
