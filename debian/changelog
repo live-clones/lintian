@@ -2,6 +2,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/apache2.pm:
+    + [CL] Fix a apache2-unparsable-dependency false positive by allowing
+      periods (".") in dependency names.  (Closes: #873701)
   * checks/changes.{pm,desc}:
     + [CL] Ignore DFSG-repacked packages when checking for upstream
       source tarball signatures as they will never match by definition.

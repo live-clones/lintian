@@ -239,7 +239,7 @@ sub inspect_conf_file {
             my @dependencies = split(/[\n\s]+/, $value);
             foreach my $dep (@dependencies) {
                 tag 'apache2-unparsable-dependency', $file, $dep
-                  if $dep =~ m/\W/
+                  if $dep =~ m/[^\w\.]/
                   or $dep =~ /^mod\_/
                   or $dep =~ m/\.(?:conf|load)/;
             }
