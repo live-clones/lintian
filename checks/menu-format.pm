@@ -641,7 +641,7 @@ sub verify_desktop_file {
         if (!defined $vals{Icon}) {
             tag 'desktop-entry-lacks-icon-entry', $file;
         }
-        if (!defined $vals{Keywords}) {
+        if (!defined $vals{Keywords} && $vals{'Type'} ne 'Link') {
             tag 'desktop-entry-lacks-keywords-entry', $file;
         }
     }
