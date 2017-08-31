@@ -5,3 +5,4 @@ missing.desktop      usr/share/applications
 reserved-bad.desktop usr/share/applications
 reserved.desktop     usr/share/applications
 link.desktop         usr/share/applications
+directory.desktop    usr/share/applications

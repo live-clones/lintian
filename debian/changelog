@@ -62,7 +62,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       positive codeless-jar warnings.  (Closes: #870649)
   * checks/menu-format.desc:
     + [CL] Prevent false positives in desktop-entry-lacks-keywords-entry
-      for "Link" .desktop files.  (Closes: #873702)
+      for "Link" and "Directory" .desktop files.  (Closes: #873702)
   * checks/python.{pm,desc}:
     + [CL] Split out Python checks from "scripts" check to a new, source
       check of type "source".
