@@ -120,6 +120,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
   * debian/control:
     + [CL] Mention Debian Policy v4.1.0 in the description.
 
+  * commands/info.pm:
+    + [CL] Add a --list-tags option to print all tags Lintian knows about.
+      Thanks to Rajendra Gokhale for the suggestion.  (Closes: #779675)
   * commands/lintian.pm:
     + [CL] Apply patch from Maia Everett to avoid British spelling when
       using en_US locale.  (Closes: #868897)

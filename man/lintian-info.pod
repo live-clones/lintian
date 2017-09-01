@@ -56,6 +56,10 @@ and search the input for lines formatted like Lintian override
 entries.  For each one that was found, display verbose information
 about that tag.
 
+=item B<-l>, B<--list-tags>
+
+List all tags Lintian knows about in sorted order.
+
 =item B<-h>, B<--help>
 
 Display usage information and exit.

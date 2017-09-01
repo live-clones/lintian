@@ -35,10 +35,11 @@ use Lintian::Profile;
 sub compat();
 
 sub main {
-    my ($annotate, $tags, $help, $prof);
+    my ($annotate, $list_tags, $tags, $help, $prof);
     my (%already_displayed, $profile);
     my %opthash = (
         'annotate|a' => \$annotate,
+        'list-tags|l' => \$list_tags,
         'tags|tag|t' => \$tags,
         'help|h' => \$help,
         'profile=s' => \$prof,
@@ -66,6 +67,7 @@ Usage: $me [log-file...] ...
 
 Options:
     -a, --annotate     display descriptions of tags in Lintian overrides
+    -l, --list-tags    list all tags Lintian knows about
     -t, --tag, --tags  display tag descriptions
     --profile X        use vendor profile X to determine severities
 EOT
@@ -87,6 +89,13 @@ EOT
     $profile = dplint::load_profile($prof);
 
     Lintian::Data->set_vendor($profile);
+
+    if ($list_tags) {
+        foreach my $tag (sort $profile->tags) {
+            print "$tag\n";
+        }
+        exit 0;
+    }
 
     # If tag mode was specified, read the arguments as tags and display the
     # descriptions for each one.  (We don't currently display the severity,
