@@ -104,9 +104,10 @@ Ref: policy 5.6.13
 Tag: description-starts-with-leading-spaces
 Severity: normal
 Certainty: possible
-Info: The package "Description:" starts with leading spaces. Usually,
- leading spaces are used to switch "verbatim display" on (i.e., lines
- are not wrapped) so this might be a bug in the package.
+Info: The package's extended "Description:" paragraph starts with more than
+ one leading space. Usually, leading spaces are used to switch "verbatim
+ display" on (i.e., lines are not wrapped) so this might be a bug in the
+ package.
 
 Tag: possible-unindented-list-in-extended-description
 Severity: normal
