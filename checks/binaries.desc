@@ -439,11 +439,15 @@ Info: The listed ELF binary appears to be (partially) built without
  To support large files, code review might be needed to make sure that
  those files are not slurped into memory or mmap(2)ed, and that correct
  64-bit data types are used (ex: off_t instead of ssize_t), etc.  Once
- that has been done ensure <tt>_FILE_OFFSET_BITS</tt> is defined and
- set to 64 before the relevant files are included.  This can be done by
+ that has been done ensure, if needed, that <tt>_FILE_OFFSET_BITS</tt>
+ is defined and
+ set to 64 before the relevant files are included. This can be done
+ conditionally by
  using the <tt>AC_SYS_LARGEFILE</tt> macro with autoconf, or by appending
  the output of <tt>getconf LFS_CFLAGS</tt> and <tt>getconf LFS_LDFLAGS</tt>
- to <tt>CFLAGS</tt> and <tt>LDFLAGS</tt> respectively.
+ to <tt>CFLAGS</tt> and <tt>LDFLAGS</tt> respectively. Functions such
+ as pwrite and pread should be replaced by pwrite64 and pread64 in
+ cases where <tt>_FILE_OFFSET_BITS</tt> is defined and set to 64.
  .
  Take into account that even if this tag is not emitted, that does not
  mean the binary is LFS-safe (ie. no OOM conditions, file truncation
