@@ -150,7 +150,6 @@ sub run {
             # Only run the tests when a classpath is present
             my @relative;
             my @paths = split(m/\s++/o, $cp);
-            $need_cp = 0;
             for my $p (@paths) {
                 if ($p) {
                     # Strip leading ./
