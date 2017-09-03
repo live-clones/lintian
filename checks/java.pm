@@ -35,7 +35,6 @@ sub run {
     my ($pkg, undef, $info) = @_;
     my $java_info = $info->java_info;
     my $missing_jarwrapper = 0;
-    my $need_cp = 0;
     my $has_public_jars = 0;
     my $has_jars = 0;
     my $jmajlow = '-';
@@ -46,8 +45,6 @@ sub run {
     $depends =~ s/lib[^\s,]+-java-doc//go;
 
     my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/og);
-
-    $need_cp = 1 if @java_lib_depends;
 
     # We first loop over jar files to find problems
 
@@ -149,14 +146,7 @@ sub run {
             tag 'missing-manifest', $jar_file;
         }
 
-        if (!$cp) {
-            # Do we have OSGi instead?
-            $need_cp = 0 if $bsname;
-            # Maybe it is a maven plugin?
-            $need_cp = 0
-              if $need_cp
-              && any { m,^META-INF/maven/plugin.xml$,io } keys %$files;
-        } else {
+        if ($cp) {
             # Only run the tests when a classpath is present
             my @relative;
             my @paths = split(m/\s++/o, $cp);
@@ -230,15 +220,6 @@ sub run {
             tag 'incompatible-java-bytecode-format',
               "Java${v} version (Class format: $jmajlow)";
         }
-    }
-
-    if ($has_jars && $need_cp && $pkg =~ /^lib[^\s,]+-java$/) {
-        # Only tag if there is at least one jar file and one strong
-        # java dependency and no classpath/osgi.  Technically there
-        # should be no reason to have a strong relation with a java
-        # library without having a jar file, but we ignore some jars
-        # (e.g. in JVMs) so going safe here.
-        tag 'missing-classpath', join(', ', @java_lib_depends);
     }
 
     my $is_transitional = $info->is_pkg_class('transitional');

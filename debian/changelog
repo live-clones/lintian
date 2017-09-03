@@ -67,6 +67,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
   * checks/java.pm:
     + [CL] Additionally consider .cljc files as code to avoid false-
       positive codeless-jar warnings.  (Closes: #870649)
+    + [CL] Drop problematic missing-classpath check.  (Closes: #857123)
   * checks/menu-format.desc:
     + [CL] Prevent false positives in desktop-entry-lacks-keywords-entry
       for "Link" and "Directory" .desktop files.  (Closes: #873702)

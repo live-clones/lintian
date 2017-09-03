@@ -56,23 +56,6 @@ Ref: java-policy 2.2
 Info: Packages containing an executable JAR must depend on jarwrapper or
  other packages providing similar functionalities.
 
-Tag: missing-classpath
-Severity: normal
-Certainty: possible
-Info: None of the jar files contained in the package declare a Class-Path
- in their manifest, but the package depends on at least one java library.
- That means that either the dependency is not needed or at least one of
- the JARs should include a classpath.
- .
- It is important to keep the classpath up-to-date to allow the
- automatic detection of dependencies at run time. Having a Class-Path
- element in the manifest allows for painless transitions if the class
- path of the dependencies of the library ever changes.
- .
- Failing to do that means that for every change in class path, all
- rdepends must update their wrapper scripts, which is a lot of work
- for nothing.
-
 Tag: javalib-but-no-public-jars
 Severity: minor
 Certainty: possible
