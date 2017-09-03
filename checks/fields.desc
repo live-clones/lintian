@@ -1095,6 +1095,14 @@ Info: The Vcs-* field uses an unencrypted transport protocol for the
  might not be possible to use an alternative url and still have a
  working (anonymous read-only) repository.
 
+Tag: vcs-browser-links-to-empty-view
+Severity: normal
+Certainty: certain
+Info: The VCS-Browser links to an an empty view of the repository due to
+ it including a suffix such as <tt>?rev=0&sc=0</tt>.
+ .
+ You should remove this suffix from the field.
+
 Tag: lib-recommends-documentation
 Severity: normal
 Certainty: possible

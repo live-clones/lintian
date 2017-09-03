@@ -10,3 +10,4 @@ Test-Against:
  vcs-git-uses-invalid-user-uri
 Test-For:
  vcs-field-uses-insecure-uri
+ vcs-browser-links-to-empty-view

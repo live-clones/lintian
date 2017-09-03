@@ -1303,6 +1303,8 @@ sub run {
                     tag $tag, $parts[0], $canonicalized;
                 }
             }
+            tag 'vcs-browser-links-to-empty-view', $uri
+              if $vcs eq 'browser' and $uri =~ m%rev=0&sc=0%;
         }
     }
 
