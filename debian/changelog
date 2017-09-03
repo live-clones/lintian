@@ -5,9 +5,6 @@ lintian (2.5.53) UNRELEASED; urgency=medium
   * checks/apache2.pm:
     + [CL] Fix an apache2-unparsable-dependency false positive by allowing
       periods (".") in dependency names.  (Closes: #873701)
-  * checks/binaries.pm:
-    + [CL] Apply patch from Boud Roukema to improve the description of the
-      binary-file-built-without-LFS-support tag.  (Closes: #874078)
   * checks/changes.{pm,desc}:
     + [CL] Ignore DFSG-repacked packages when checking for upstream
       source tarball signatures as they will never match by definition.
