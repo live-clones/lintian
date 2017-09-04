@@ -462,6 +462,5 @@ Info: The listed ELF binary appears to be (partially) built without
  systems with an ABI without LFS, defining <tt>_LARGEFILE64_SOURCE</tt>
  and exporting both 32 and 64-bit variants of the interfaces can avoid
  the SOVERSION bump, at the cost of more complex maintenance.
-Ref:
- https://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html,
+Ref: https://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html,
  http://www.unix.org/version2/whatsnew/lfs20mar.html
