@@ -6,6 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 
 Package: libcontrol-file-foo1
+Section: libs
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (shared lib 1)
@@ -43,6 +44,7 @@ Description: {$description} (dev package)
  be an empty package.
 
 Package: libcontrol-file-baz9-4
+Section: libs
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (shared lib 3)

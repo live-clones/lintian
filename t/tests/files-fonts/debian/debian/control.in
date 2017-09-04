@@ -17,6 +17,7 @@ Description: {$description}
  things.  It should not be installed like a regular package.
 
 Package: ttf-{$source}
+Section: fonts
 Architecture: {$architecture}
 # Due to file-conflict
 Conflicts: {$source}

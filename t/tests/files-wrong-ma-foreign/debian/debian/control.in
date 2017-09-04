@@ -6,6 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 
 Package: libpublic1
+Section: libs
 Architecture: any
 Depends: $\{misc:Depends\}, $\{shlibs:Depends\},
 Multi-Arch: same

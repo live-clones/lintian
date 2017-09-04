@@ -1,5 +1,5 @@
 Source: {$source}
-Section: web
+Section: httpd
 Priority: extra
 Maintainer:  Big Kahuna <kahuna@example.com>
 Uploaders: {$author}
