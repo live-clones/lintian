@@ -973,6 +973,11 @@ sub _search_in_block0 {
                 return;
             }
         }
+        # https://github.com/rafaelp/css_browser_selector is actually the
+        # original source. (#874381)
+        elsif ($block =~ m/css browser selector/) {
+            return;
+        }
         # now search hidden minified
         _linelength_test($entry, $info, $name, $basename, $dirname,$block);
     }

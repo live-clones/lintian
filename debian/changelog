@@ -40,6 +40,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       (Closes: #872843)
     + [CL] Don't match quoted "FIXME" variants as they are almost always
       deliberate. Thanks to Adrian Bunk for the report.  (Closes: #870199)
+    + [CL] Avoid false positives in missing source checks for "CSS Browser
+      Selector".  (Closes: #874381)
   * checks/debhelper.pm:
     + [CL] Prevent a false positive of
       missing-build-dependency-for-dh_-command that can be exposed by
