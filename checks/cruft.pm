@@ -975,7 +975,7 @@ sub _search_in_block0 {
         }
         # https://github.com/rafaelp/css_browser_selector is actually the
         # original source. (#874381)
-        elsif ($block =~ m/css browser selector/) {
+        elsif ($block =~ m/css_browser_selector\(/) {
             return;
         }
         # now search hidden minified
