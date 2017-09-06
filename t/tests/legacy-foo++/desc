@@ -16,6 +16,7 @@ Test-For:
  dm-upload-allowed-is-obsolete
  duplicate-short-description
  empty-binary-package
+ latest-changelog-entry-without-new-date
  latest-debian-changelog-entry-without-new-date
  malformed-dm-upload-allowed
  no-copyright-file

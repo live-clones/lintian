@@ -26,6 +26,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
       new vcs-mtn mtn:// uri format.  (Closes: #878798)
   * checks/md5sums.pm:
     + [CL] Allow empty md5sums files.  (Closes: #781372)
+  * checks/source-changelog.{desc.pm}:
+    + [CL] Move latest-debian-changelog-entry-without-new-date tag into a
+      new check of type "source".  (Closes: #873612)
   * checks/watch-file.pm:
     + [CL] Include the offending URI in debian-watch-uses-insecure-uri
       output, not the line number.

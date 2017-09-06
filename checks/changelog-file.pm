@@ -299,7 +299,7 @@ sub run {
             my $second_timestamp = $entries[1]->Timestamp;
 
             if ($first_timestamp && $second_timestamp) {
-                tag 'latest-debian-changelog-entry-without-new-date'
+                tag 'latest-changelog-entry-without-new-date'
                   unless (($first_timestamp - $second_timestamp) > 0
                     or lc($entries[0]->Distribution) eq 'unreleased');
             }

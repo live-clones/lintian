@@ -1,6 +1,7 @@
 E: foo++ changes: changed-by-address-malformed Marc 'HE' Brockschmidt <he@unknown>
 E: foo++ source: build-info-in-binary-control-file-section Package foo++
 E: foo++ source: debian-control-file-uses-obsolete-national-encoding at line 19
+E: foo++ source: latest-debian-changelog-entry-without-new-date
 E: foo++ source: malformed-dm-upload-allowed no
 E: foo++ source: uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 E: foo++ source: uploader-address-malformed Josip, I am afraid of spam and think this helps <no_spam_please AT debian.org>
@@ -11,7 +12,7 @@ E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <d
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++: debian-changelog-file-contains-invalid-email-address he@unknown
 E: foo++: debian-changelog-file-uses-obsolete-national-encoding at line 11
-E: foo++: latest-debian-changelog-entry-without-new-date
+E: foo++: latest-changelog-entry-without-new-date
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 I: foo++ source: debian-watch-uses-insecure-uri http://domain.tld/file-(.*)\.tar\.gz
