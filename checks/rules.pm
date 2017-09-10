@@ -382,7 +382,7 @@ sub run {
                 } elsif ($typerule eq 'recommended_allindep') {
                     tag 'debian-rules-missing-recommended-target', $target;
                 } elsif ($typerule eq 'goodpractice_dfsg') {
-                    if ($info->is_repacked_tarball) {
+                    if ($version =~ /(dfsg|debian|ds)/) {
                         tag 'debian-rules-missing-good-practice-target-dfsg',
                           $target;
                     }

@@ -678,25 +678,6 @@ sub is_non_free {
     return $self->{is_non_free};
 }
 
-=item is_repacked_tarball
-
-Returns a truth value if the package appears to be a repacked tarball.
-
-Needs-Info requirements for using I<native>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
-
-=cut
-
-sub is_repacked_tarball {
-    my ($self) = @_;
-    return $self->{is_repacked_tarball} if exists $self->{is_repacked_tarball};
-    $self->{is_repacked_tarball} = 0;
-    my $version = $self->field('version', '0-1');
-    if ($version =~ /(dfsg|debian|ds|repack)/) {
-        $self->{is_repacked_tarball} = 1;
-    }
-    return $self->{is_repacked_tarball};
-}
-
 =back
 
 =head1 AUTHOR
