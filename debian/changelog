@@ -142,6 +142,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
   * lib/Lintian/Check.pm:
     + [CL] Stop emitting {maintainer,uploader}-address-causes-mail-loops
       for @packages.debian.org addresses.  (Closes: #871575)
+  * lib/Lintian/Collect/Source.pm:
+    + [CL] Add $info->is_repacked_tarball utility.  (Refs: #871957)
   * lib/Lintian/Data.pm:
     + [CL] Modify Lintian::Data's "all" to always return keys in insertion
       order, dropping dependency on libtie-ixhash-perl.
