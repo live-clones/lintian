@@ -121,7 +121,7 @@ hashrefs namespace subdir SIGPIPE SIG blocknumber blocksub readwindow
 REMOVESLASH STAMPFILE TAGNAME TCODE TESTDATA BLOCKSIZE jN
 POSIX t1c2pfb init runtime txt executability writability
 INHANDLE OUTHANDLES UTC timestamp faux tagname READMEs Testname
-debhelper dh buildpackage uaccess udev AppStream plugdev
+debhelper dh buildpackage uaccess udev AppStream plugdev dbgsym
 
 __END__
 
