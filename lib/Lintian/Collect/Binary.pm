@@ -661,6 +661,13 @@ The package is (probably) a package containing debug symbols.
 
 Guessed from the package name.
 
+=item auto-generated
+
+The package is (probably) a package generated automatically (e.g. a
+dbgsym package)
+
+Guessed from the "Auto-Built-Package" field.
+
 =back
 
 Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
@@ -678,6 +685,10 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
         $pkg_class //= 'any-meta';
         if ($pkg_class eq 'debug') {
             return 1 if $self->name =~ m/-dbg(?:sym)?/;
+            return;
+        }
+        if ($pkg_class eq 'auto-generated') {
+            return 1 if $self->field('auto-built-package');
             return;
         }
         return 1 if $desc =~ m/transitional package/;
