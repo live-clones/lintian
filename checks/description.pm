@@ -217,7 +217,12 @@ sub run {
     if ($synopsis) {
         check_spelling($synopsis, $group->info->spelling_exceptions,
             $SPELLING_ERROR_IN_SYNOPSIS);
-        check_spelling_picky($synopsis, $PICKY_SPELLING_ERROR_IN_SYNOPSIS);
+        # Auto-generated dbgsym packages will use the package name in
+        # their synopsis.  Unfortunately, some package names trigger a
+        # capitalization error, such as "dbus" -> "D-Bus".  Therefore,
+        # we exempt auto-generated packages from this check.
+        check_spelling_picky($synopsis, $PICKY_SPELLING_ERROR_IN_SYNOPSIS)
+          if not $info->is_pkg_class('auto-generated');
     }
 
     if ($description) {
