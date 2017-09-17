@@ -105,9 +105,9 @@ Ref: https://anonscm.debian.org/git/autopkgtest/autopkgtest.git/tree/doc/README.
 Tag: unknown-testsuite
 Severity: normal
 Certainty: certain
-Info: The dsc file sets Testsuite to a value other than autopkgtest,
- the only one allowed. This field is most probably copied by
- dpkg-source from Testsuite in debian/control.
+Info: The dsc file sets Testsuite to an unrecognised value. This
+ field is most probably copied by dpkg-source from Testsuite in
+ debian/control.
 Ref: https://anonscm.debian.org/git/autopkgtest/autopkgtest.git/tree/doc/README.package-tests.rst
 
 Tag: testsuite-dependency-has-unparsable-elements

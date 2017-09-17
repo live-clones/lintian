@@ -116,6 +116,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       (Closes: #873458)
     + [CL] Recognise "autopkgtest-pkg-octave" as a valid test suite.
       (Closes: #875985)
+    + [CL] Update the description of unknown-testsuite to reflect that
+      "autopkgtest" is not the only valid value; the referenced URL
+      is out-of-date (filed as #876008).  (Closes: #876003)
 
   * data/binaries/embedded-libs:
     + [RG] Detect embedded copies of heimdal, libgxps, libquicktime,
