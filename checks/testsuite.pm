@@ -62,6 +62,7 @@ my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
   autopkgtest-pkg-elpa
   autopkgtest-pkg-go
   autopkgtest-pkg-nodejs
+  autopkgtest-pkg-octave
   autopkgtest-pkg-perl
   autopkgtest-pkg-python
   autopkgtest-pkg-r
