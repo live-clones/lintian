@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: devel
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Uploaders: I Will Loop <fields-maintainer-bounces@packages.debian.org>,

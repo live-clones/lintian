@@ -1,6 +1,6 @@
 Source: generic-dh-make-2008
 Section: unknown
-Priority: extra
+Priority: optional
 Maintainer: Russ Allbery <rra@debian.org>
 Build-Depends: debhelper (>= 7)
 Standards-Version: 3.7.3

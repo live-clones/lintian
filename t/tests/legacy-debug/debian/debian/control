@@ -18,7 +18,7 @@ Description: Test for external debugging information
  things.  It should not be installed like a regular package.
 
 Package: hello-dbg
-Priority: extra
+Priority: optional
 Section: debug
 Architecture: any
 Depends: hello (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
@@ -44,7 +44,7 @@ Description: Test for external debugging information (library)
 
 Package: libhello0-dbg
 Section: debug
-Priority: extra
+Priority: optional
 Architecture: any
 Depends: libhello (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information (library symbols)
@@ -57,7 +57,7 @@ Description: Test for external debugging information (library symbols)
 
 Package: hi-dbg
 Section: debug
-Priority: extra
+Priority: optional
 Architecture: any
 Depends: foo-pkg, not-libhello0
 Description: Test for external debugging symbols
@@ -71,7 +71,7 @@ Description: Test for external debugging symbols
 
 Package: hello-hello-dbg
 Section: debug
-Priority: extra
+Priority: optional
 Architecture: any
 Depends: foo-pkg, not-libhello0, hello
 Description: Test for external debugging symbols - another try

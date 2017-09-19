@@ -3,7 +3,7 @@ Version: 1.0
 Architecture: all
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
-Priority: extra
+Priority: optional
 Depends: other-package
 Description: test for foreign symlink in package
  This is a test package designed to exercise some feature or tag of

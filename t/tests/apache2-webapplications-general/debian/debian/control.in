@@ -1,6 +1,6 @@
 Source: {$source}
 Section: web
-Priority: extra
+Priority: optional
 Maintainer:  Big Kahuna <kahuna@example.com>
 Uploaders: {$author}
 Standards-Version: {$standards_version}

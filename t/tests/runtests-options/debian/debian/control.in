@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: 1.2.3

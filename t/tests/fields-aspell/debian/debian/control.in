@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: localization
 Maintainer: {$author}
 Standards-Version: {$standards_version}

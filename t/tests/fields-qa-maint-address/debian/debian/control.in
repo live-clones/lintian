@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: devel
 Maintainer: Debian QA Group <debian-qa@lists.debian.org>
 Standards-Version: {$standards_version}

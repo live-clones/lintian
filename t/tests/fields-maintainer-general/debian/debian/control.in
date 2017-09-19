@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: lintian-maint@debian.org
 Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,

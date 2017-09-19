@@ -3,7 +3,7 @@ Version: {$version}
 Architecture: {$architecture}
 Maintainer: {$author}
 Section: {$section}
-Priority: extra
+Priority: optional
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

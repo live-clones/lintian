@@ -1,5 +1,5 @@
 Source: some-other-name
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}

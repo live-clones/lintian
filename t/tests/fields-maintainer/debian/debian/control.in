@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: devel
 Maintainer: Mrs. Localhost<user@localhost>
 Uploaders: {$author}

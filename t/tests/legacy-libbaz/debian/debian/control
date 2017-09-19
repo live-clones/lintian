@@ -1,6 +1,6 @@
 Source: libbaz
 Section: libs
-Priority: extra
+Priority: optional
 Maintainer: Lintian Maintainer <lintian-maint@debian.org>
 Build-depends: debhelper (>=4)
 Standards-Version: 3.2.1

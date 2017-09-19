@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends},

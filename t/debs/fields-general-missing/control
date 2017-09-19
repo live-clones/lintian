@@ -1,5 +1,5 @@
 Section: devel
-Priority: extra
+Priority: optional
 Depends: some-pkg
 Description: test for bad source package name
  This is a test package designed to exercise some feature or tag of

@@ -1,6 +1,6 @@
 Source: scripts
 Section: interpreters
-Priority: extra
+Priority: optional
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
 Uploaders: Jeroen van Wolfelaar <jeroen@wolffelaar.nl>, Marc 'HE' Brockschmidt <he@debian.org>
 Build-Depends-Indep: python (>= 2.3), python (<< 2.4), dpatch
