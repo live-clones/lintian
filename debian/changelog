@@ -177,6 +177,9 @@ lintian (2.5.53) UNRELEASED; urgency=medium
     + [CL] Add missing entries in "Test-For" fields to make
       development/testing workflow less error-prone.
 
+  * private/refresh-*:
+    + [CL] Use deb.debian.org as the default mirror.
+
  -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 10:16:35 +0000
 
 lintian (2.5.52) unstable; urgency=medium
