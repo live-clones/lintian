@@ -561,9 +561,9 @@ sub run {
                 # Cannot use "unfold" as it could emit a tag for priority,
                 # which will be duplicated below.
                 $pri =~ s/\n//;
-                tag 'transitional-package-should-be-oldlibs-extra',
+                tag 'transitional-package-should-be-oldlibs-optional',
                   "$parts[-1]/$pri"
-                  unless $pri eq 'extra' && $parts[-1] eq 'oldlibs';
+                  unless $pri eq 'optional' && $parts[-1] eq 'oldlibs';
             }
         }
     }

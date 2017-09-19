@@ -1192,7 +1192,7 @@ Info: The package build-depends on a versioned development package of
  package, please add an override.
 Ref: http://download.oracle.com/docs/cd/E17076_02/html/upgrading/upgrade_process.html
 
-Tag: transitional-package-should-be-oldlibs-extra
+Tag: transitional-package-should-be-oldlibs-optional
 Severity: normal
 Certainty: possible
 Ref: #645438, devref 6.7.7
