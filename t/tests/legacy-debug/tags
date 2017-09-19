@@ -20,6 +20,10 @@ E: libhello0: syntax-error-in-symbols-file 19
 E: libhello0: syntax-error-in-symbols-file 3
 E: libhello0: syntax-error-in-symbols-file 4
 E: libhello0: unknown-meta-field-in-symbols-file Build-Dep-Foo, line 11
+I: debug source: binary-control-field-duplicates-source field "priority" in package hello-dbg
+I: debug source: binary-control-field-duplicates-source field "priority" in package hello-hello-dbg
+I: debug source: binary-control-field-duplicates-source field "priority" in package hi-dbg
+I: debug source: binary-control-field-duplicates-source field "priority" in package libhello0-dbg
 W: debug source: ancient-standards-version 3.7.0 (current is CURRENT)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: dbg-package-missing-depends hi-dbg
