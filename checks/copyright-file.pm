@@ -349,7 +349,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
             my $linenum = 1;
             foreach my $line (split /^/m) {
                 while (
-                    $line =~ /(?<![a-z][\s\-])\b(?<![:\.\@])
+                    $line =~ /(?<![a-z][\s\-\/])\b(?<![:\/\.\@])
                     (\d{4}) \b(?!\.)/xig
                   ) {
                     my $year = $1;
