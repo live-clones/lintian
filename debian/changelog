@@ -148,6 +148,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
 
   * debian/control:
     + [CL] Mention Debian Policy v4.1.0 in the description.
+    + [CL] Add myself to Uploaders.
 
   * commands/info.pm:
     + [CL] Add a --list-tags option to print all tags Lintian knows about.
