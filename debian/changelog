@@ -173,6 +173,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       outputting symbols in a different format on ppc64el.
       (Closes: #869750)
 
+  * t/tests/fields-perl-provides/tags:
+    + [CL] Update expected output to match new Perl provides.
   * t/tests/files-privacybreach/*:
     + [CL] Add explicit test for packages including external fonts via
       the Google Font API. Thanks to Ian Jackson for the report.
