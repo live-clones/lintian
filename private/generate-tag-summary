@@ -30,7 +30,7 @@ Getopt::Long::GetOptions(%opthash)
 
 my ($commit_range) = @ARGV;
 if (not $commit_range) {
-    my $describe = safe_qx(qw(git describe));
+    my $describe = safe_qx(qw(git describe --abbrev=0));
     if ($? != 0) {
         die 'git describe failed with code ' . (($? >> 8) & 0xff);
     }
@@ -38,7 +38,6 @@ if (not $commit_range) {
     if (not $describe) {
         die "git describe did not return anything.\n";
     }
-    $describe =~ s/-\d+-g[0-9a-fA-F]{7}$//;
     $commit_range = "${describe}..HEAD";
     print "Assuming commit range to be: ${commit_range}\n";
 }
