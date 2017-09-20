@@ -5,6 +5,9 @@ lintian (2.5.54) UNRELEASED; urgency=medium
   * checks/copyright-file.pm:
     + [CL] Prevent false positives in copyright-year-in-future when
       matching URLs.
+  * checks/files.desc
+    + [CL] Correct grammar and punctuation in description of
+      node-package-install-in-nodejs-rootdir.
 
  -- Chris Lamb <lamby@debian.org>  Wed, 20 Sep 2017 18:24:43 +0100
 

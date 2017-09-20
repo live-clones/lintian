@@ -1218,7 +1218,7 @@ Tag: node-package-install-in-nodejs-rootdir
 Severity: important
 Certainty: certain
 Info: This package contains a file under /usr/lib/nodejs
- instead to /usr/lib/nodejs/${package}
+ instead of /usr/lib/nodejs/${package}.
 
 Tag: embedded-feedparser-library
 Severity: normal
