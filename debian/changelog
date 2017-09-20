@@ -167,7 +167,7 @@ lintian (2.5.53) UNRELEASED; urgency=medium
       order, dropping dependency on libtie-ixhash-perl.
 
   * helpers/coll/objdump-info-helper:
-    + [CL] Apply patch from Steve Langasek to accomodate binutils 2.29
+    + [CL] Apply patch from Steve Langasek to accommodate binutils 2.29
       outputting symbols in a different format on ppc64el.
       (Closes: #869750)
 
