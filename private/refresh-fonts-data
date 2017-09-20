@@ -76,7 +76,7 @@ cat > "$workdir/fonts" <<EOF
 EOF
 
 if [ -z "$contents" ] ; then
-    wget dists/sid/Contents-i386.gz
+    wget dists/sid/main/Contents-i386.gz
     contents="$workdir/Contents-i386.gz"
 fi
 zcat "$contents" \

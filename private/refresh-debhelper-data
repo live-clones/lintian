@@ -33,7 +33,7 @@ If the Contents file is not specified, the script will download the following
 files from a mirror (which should be specified via the DEB_MIRROR env var, 
 which defaults to http://deb.debian.org/debian and is used directly
 without any kind of parsing so one can play with it):
-* Contents-i386.gz, main/binary-i386/Packages.gz
+* main/Contents-i386.gz, main/binary-i386/Packages.gz
 * Binary packages found at Contents shipping dh_ commands
 Any special parameter can be passed to wget via WGET_ARGS, if needed.
 

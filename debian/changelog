@@ -179,6 +179,8 @@ lintian (2.5.53) UNRELEASED; urgency=medium
 
   * private/refresh-*:
     + [CL] Use deb.debian.org as the default mirror.
+    + [CL] Update locations of Contents-<arch> files; they are now namespaced
+      by distribution (eg. "main").
 
  -- Niels Thykier <niels@thykier.net>  Sun, 23 Jul 2017 10:16:35 +0000
 
