@@ -5,6 +5,8 @@ lintian (2.5.54) UNRELEASED; urgency=medium
   * checks/copyright-file.pm:
     + [CL] Prevent false positives in copyright-year-in-future when
       matching URLs.
+    + [CL] Prevent false positives in copyright-year-in-future when
+      matching the Tcl license (eg. postgresql-10).  (Closes: #876360)
   * checks/files.desc:
     + [CL] Correct grammar and punctuation in description of
       node-package-install-in-nodejs-rootdir.

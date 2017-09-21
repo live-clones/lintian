@@ -358,6 +358,8 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
                     next if $line =~ m/Original Author/;
                     # "Sun Microsystems, 4150 Network Drive, CA"
                     next if $year == 4150;
+                    # "Clause 252.227-7013 (c) (1) of DFARs" in Tcl license
+                    next if $year == 7013;
                     tag 'copyright-year-in-future',
                       "$year > $latest_year (line $linenum, column $column)";
                 }
