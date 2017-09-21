@@ -11,6 +11,12 @@ lintian (2.5.54) UNRELEASED; urgency=medium
     + [CL] Correct grammar and punctuation in description of
       node-package-install-in-nodejs-rootdir.
 
+  * t/tests/fields-perl-provides/{desc,tags}:
+    + [CL] Apply patch from Gianfranco Costamagna (locutusofborg) to fix
+      failing test on 32-bit architectures and add a suitable Test-Against
+      stanza to make this easier to catch in future. Thanks to Matthias
+      Klose (doko) for the report.  (Closes: #876343)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 20 Sep 2017 18:24:43 +0100
 
 lintian (2.5.53) unstable; urgency=medium
