@@ -434,8 +434,9 @@ sub run {
 
     while (my ($dep, $command) = each %missingbdeps) {
         next if $dep eq 'debhelper'; #handled above
-        next if $level >= 10 and any { $_ eq $dep }
-          qw(autotools-dev dh-strip-nondeterminism);
+        next
+          if $level >= 10
+          and any { $_ eq $dep } qw(autotools-dev dh-strip-nondeterminism);
         tag 'missing-build-dependency-for-dh_-command', "$command => $dep"
           unless ($bdepends_noarch->implies($dep));
     }
