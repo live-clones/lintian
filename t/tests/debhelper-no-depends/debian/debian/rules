@@ -21,4 +21,4 @@ else
   endif
 endif
 	dh binary-indep --remaining
-	dh_strip_nondeterminism
+	-dh_strip_nondeterminism
