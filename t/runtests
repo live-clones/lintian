@@ -33,6 +33,7 @@ use autodie;
 use Carp qw(confess);
 use Cwd();
 
+use File::Path qw(make_path);
 use Getopt::Long qw(GetOptions);
 use IO::Async::Channel;
 use IO::Async::Loop;
@@ -363,7 +364,7 @@ sub test_package {
 
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $rundir);
-        runsystem_ok('mkdir', '-p', $rundir);
+        make_path($rundir);
         unless ($is_native) {
             copy_template_dir("$tmpldir/${skel}.upstream",
                 "$origdir/upstream/",$targetdir);
@@ -547,10 +548,10 @@ sub test_changes {
         }
     }
 
-    # Use mkdir -p to avoid a race condition where two threads tries
-    # to create the same dir and then have one of them error out.
-    runsystem_ok('mkdir', '-p', "$RUNDIR/changes")
-      if not -d "$RUNDIR/changes";
+    # make_path supports "mkdir -p"-like behaviour where even if multiple
+    # threads can race to create the directory, they will all return
+    # "successful".
+    make_path("$RUNDIR/changes") if not -d "$RUNDIR/changes";
 
     $test_state->progress('setup');
 
@@ -617,7 +618,7 @@ sub generic_test_runner {
 
         $test_state->info_msg(2, "Cleaning up and repopulating $targetdir...");
         runsystem_ok('rm', '-rf', $targetdir);
-        runsystem_ok('mkdir', '-p', $targetdir);
+        make_path($targetdir);
         runsystem('cp', '-rp', $testdir, $targetdir);
 
         copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
