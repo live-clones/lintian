@@ -1074,7 +1074,8 @@ sub check_test_is_sane {
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
     $data->{'dh_compat_level'} //= '9';
-    $data->{'default-build-depends'} //= "debhelper (>= $data->{dh_compat_level}~)";
+    $data->{'default-build-depends'}
+      //= "debhelper (>= $data->{dh_compat_level}~)";
     $data->{'extra-build-depends'} //= '';
     $data->{'build_depends'} ||= join(', ',
         grep { $_ }
