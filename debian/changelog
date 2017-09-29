@@ -24,6 +24,9 @@ lintian (2.5.54) UNRELEASED; urgency=medium
   * debian/control:
     + [CL] Mention Debian Policy v4.1.1 in the description.
 
+  * t/tests/binaries-from-other-arch/debian/debian/dumpobj:
+    + [CL] Apply patch from Jakub Wilk to prevent test failures on
+      armhf/arm64, etc.  (Closes: #877147)
   * t/tests/fields-perl-provides/{desc,tags}:
     + [CL] Apply patch from Gianfranco Costamagna (locutusofborg) to fix
       failing test on 32-bit architectures and add a suitable Test-Against
