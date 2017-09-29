@@ -1,3 +1,9 @@
+lintian (2.5.55) UNRELEASED; urgency=medium
+
+  "XXX: generate tag summary"
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 29 Sep 2017 19:13:19 +0100
+
 lintian (2.5.54) unstable; urgency=medium
 
   * checks/copyright-file.pm:
