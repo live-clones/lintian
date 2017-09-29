@@ -8,5 +8,6 @@
     - This line has the same speling error, but we should only
       get one tag for it.
   * Corrected spelling: abov -> above.
+  * Corrected typo: abov -> above.
 
  -- {$author}  {$date}

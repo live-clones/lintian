@@ -468,7 +468,7 @@ sub run {
 
         # Strip out all lines that contain the word spelling to avoid false
         # positives on changelog entries for spelling fixes.
-        $changes =~ s/^.*spelling.*\n//gm;
+        $changes =~ s/^.*(?:spelling|typo).*\n//gm;
         check_spelling($changes, $group->info->spelling_exceptions,
             $SPELLING_ERROR_CHANGELOG);
     }

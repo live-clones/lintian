@@ -14,6 +14,9 @@ lintian (2.5.54) UNRELEASED; urgency=medium
   * checks/files.desc:
     + [CL] Correct grammar and punctuation in description of
       node-package-install-in-nodejs-rootdir.
+  * checks/changelog-file.pm:
+    + [CL] Also ignore lines that (meta) reference "typo" when checking
+      for "spelling-error-in-changelog".
 
   * data/standards-version/release-dates:
     + [CL] Add 4.1.1 as a known standards version.
