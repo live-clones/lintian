@@ -5,6 +5,8 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * checks/python.pm:
     + [CL] Move to "Type: source, binary" check type.
     + [CL] Also match packages named "python2-*" as relating to Python 2.x.
+    + [CL] Warn about Django libraries that do not depend on Django itself.
+      (Closes: #877292)
 
   * t/tests/python-new-python2-package/*:
     + [CL] Correct Depends of python2.7 → python3 in Python 3 test
