@@ -5,6 +5,7 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
  csh-considered-harmful
+ dependency-on-python-version-marked-for-end-of-life
  example-interpreter-in-usr-local
  example-interpreter-not-absolute
  example-script-uses-bin-env
