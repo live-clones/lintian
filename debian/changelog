@@ -6,6 +6,10 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Move to "Type: source, binary" check type.
     + [CL] Also match packages named "python2-*" as relating to Python 2.x.
 
+  * t/tests/python-new-python2-package/*:
+    + [CL] Correct Depends of python2.7 → python3 in Python 3 test
+      package.
+
  -- Chris Lamb <lamby@debian.org>  Fri, 29 Sep 2017 19:13:19 +0100
 
 lintian (2.5.54) unstable; urgency=medium
