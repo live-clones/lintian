@@ -2,6 +2,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
 
   "XXX: generate tag summary"
 
+  * checks/python.pm:
+    + [CL] Move to "Type: source, binary" check type.
+
  -- Chris Lamb <lamby@debian.org>  Fri, 29 Sep 2017 19:13:19 +0100
 
 lintian (2.5.54) unstable; urgency=medium

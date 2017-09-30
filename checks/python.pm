@@ -30,35 +30,27 @@ use Lintian::Tags qw(tag);
 my @PYTHON2 = qw(python python2.7 python-dev);
 
 sub run {
-    my ($pkg, undef, $info) = @_;
+    my ($pkg, $type, $info) = @_;
 
-    my @entries = $info->changelog ? $info->changelog->data : ();
+    if ($type eq 'source') {
+        _run_source($pkg, $info);
+    } else {
+        _run_binary($pkg, $info);
+    }
+
+    return;
+}
+
+sub _run_source {
+    my ($pkg, $info) = @_;
+
     my @package_names = $info->binaries;
-
     foreach my $bin (@package_names) {
         # Python 2 modules
         if ($bin =~ /^python-(.*(?<!-doc))$/) {
             my $suffix = $1;
-
             tag 'python-foo-but-no-python3-foo', $bin
               unless any { $_ eq "python3-${suffix}" } @package_names;
-
-            tag 'new-package-should-not-package-python2-module', $bin
-              if @entries == 1;
-        }
-
-        # Python applications
-        if ($bin !~ /^python[23]?-/ and not any { $_ eq $bin } @PYTHON2) {
-            for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
-                next unless $info->binary_field($bin, lc($field));
-
-                my $relation = $info->binary_relation($bin, $field);
-                for my $dep (@PYTHON2) {
-                    tag 'dependency-on-python-version-marked-for-end-of-life',
-                      "$bin ($field: $dep)"
-                      if $relation->implies($dep);
-                }
-            }
         }
     }
 
@@ -70,6 +62,31 @@ sub run {
     tag 'alternatively-build-depends-on-python-sphinx-and-python3-sphinx'
       if $info->field('build-depends', '')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
+
+    return;
+}
+
+sub _run_binary {
+    my ($pkg, $info) = @_;
+
+    my @entries = $info->changelog ? $info->changelog->data : ();
+
+    # Python 2 modules
+    if ($pkg =~ /^python-.*(?<!-doc)$/) {
+        tag 'new-package-should-not-package-python2-module'
+          if @entries == 1;
+    }
+
+    # Python applications
+    if ($pkg !~ /^python[23]?-/ and not any { $_ eq $pkg } @PYTHON2) {
+        for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
+            for my $dep (@PYTHON2) {
+                tag 'dependency-on-python-version-marked-for-end-of-life',
+                  "($field: $dep)"
+                  if $info->relation($field)->implies($dep);
+            }
+        }
+    }
 
     return;
 }
