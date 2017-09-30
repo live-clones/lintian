@@ -47,7 +47,7 @@ sub _run_source {
     my @package_names = $info->binaries;
     foreach my $bin (@package_names) {
         # Python 2 modules
-        if ($bin =~ /^python-(.*(?<!-doc))$/) {
+        if ($bin =~ /^python2?-(.*(?<!-doc))$/) {
             my $suffix = $1;
             tag 'python-foo-but-no-python3-foo', $bin
               unless any { $_ eq "python3-${suffix}" } @package_names;
@@ -72,7 +72,7 @@ sub _run_binary {
     my @entries = $info->changelog ? $info->changelog->data : ();
 
     # Python 2 modules
-    if ($pkg =~ /^python-.*(?<!-doc)$/) {
+    if ($pkg =~ /^python2?-.*(?<!-doc)$/) {
         tag 'new-package-should-not-package-python2-module'
           if @entries == 1;
     }
