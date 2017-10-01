@@ -1268,7 +1268,8 @@ sub parse_config_file {
             if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
                 my ($var, $val) = ($1, $2);
                 my $ref = $cfghash{$var};
-                die "Unknown configuration variable $var at line: ${.}.\n"
+                fatal_error(
+                    "Unknown configuration variable $var at line: ${.}.")
                   unless $ref;
                 if (exists $conf_opt{$var}){
                     print STDERR
@@ -1408,9 +1409,10 @@ sub configure_output {
     #    it before the config check.
     $opt{'color'} = 'auto' unless defined($opt{'color'});
     if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
-        die join(q{ },
-            'The color value must be one of',
-            "\"never\", \"always\", \"auto\" or \"html\"\n");
+        fatal_error(
+            join(q{ },
+                'The color value must be one of',
+                'never", "always", "auto" or "html"'));
     }
     if ($opt{'tag-display-limit'} eq 'auto') {
         if (-t STDOUT) {
