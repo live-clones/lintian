@@ -681,7 +681,7 @@ sub main {
         fatal_error(
             join(q{ },
                 'lintian lab has not been set up correctly',
-                '(perhaps you forgot to run lintian --setup-lab?)')
+                '(perhaps you forgot to run lintian-lab-tool create-lab?)')
         ) unless $LAB->exists;
     } else {
         $LAB->create({'keep-lab' => $opt{'keep-lab'}});
