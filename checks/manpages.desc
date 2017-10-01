@@ -10,9 +10,7 @@ Severity: important
 Certainty: certain
 Info: The symbolic link should reference
  "<tt>../man[237]/undocumented.[237].gz</tt>" for manual pages in
- <tt>/usr/share/man</tt> or
- "<tt>../../../share/man/man[237]/undocumented.[237].gz</tt>" for manual
- pages in <tt>/usr/X11R6/man</tt>.
+ <tt>/usr/share/man</tt>.
 
 Tag: link-to-undocumented-manpage
 Severity: normal

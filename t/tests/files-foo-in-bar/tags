@@ -74,6 +74,7 @@ E: files-foo-in-bar: subdir-in-bin bin/foo/
 E: files-foo-in-bar: subdir-in-usr-bin usr/bin/foo/
 E: files-foo-in-bar: udev-rule-in-etc etc/udev/rules.d/bar
 P: files-foo-in-bar: image-file-in-usr-lib usr/lib/files-foo-in-bar/bar.png
+W: files-foo-in-bar: binary-without-manpage usr/X11R6/bin/bar
 W: files-foo-in-bar: debug-package-should-be-named-dbg usr/lib/debug/bar
 W: files-foo-in-bar: executable-not-elf-or-script bin/foo/bar
 W: files-foo-in-bar: executable-not-elf-or-script usr/bin/foo/bar

@@ -807,9 +807,8 @@ sub run {
                     tag 'package-contains-mime-file-outside-package-dir',$file;
                 }
             }
-            # ---------------- /usr/share/man and /usr/X11R6/man
-            elsif ($fname =~ m,^usr/X11R6/man/\S+,
-                or $fname =~ m,^usr/share/man/\S+,) {
+            # ---------------- /usr/share/man
+            elsif ($fname =~ m,^usr/share/man/\S+,) {
                 if ($type eq 'udeb') {
                     tag 'udeb-contains-documentation-file', $file;
                 }

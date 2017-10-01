@@ -135,9 +135,8 @@ Ref: policy 9.1.2
 Tag: stray-directory-in-manpage-directory
 Severity: important
 Certainty: certain
-Info: This package installs a directory under <tt>/usr/share/man</tt> or
- <tt>/usr/X11R6/man</tt> that isn't a manual section directory or locale
- directory.
+Info: This package installs a directory under <tt>/usr/share/man</tt>
+ that is not a manual section directory or locale directory.
 Ref: fhs usrsharemanmanualpages
 
 Tag: executable-manpage

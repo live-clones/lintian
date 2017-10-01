@@ -76,9 +76,7 @@ sub run {
         # manual page?
         next
           unless ($file->is_symlink or $file->is_file)
-          and (($path =~ m,^usr/man(/\S+),o)
-            or ($path =~ m,^usr/X11R6/man(/\S+),o)
-            or ($path =~ m,^usr/share/man(/\S+),o));
+          and $path =~ m,^usr/share/man(/\S+),o;
         my $t = $1;
 
         if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
@@ -134,41 +132,25 @@ sub run {
         # check symbolic links to other manual pages
         if ($file->is_symlink) {
             if ($link =~ m,(^|/)undocumented,o) {
-                if ($path =~ m,^usr/share/man,o) {
-                    # undocumented link in /usr/share/man -- possibilities
-                    #    undocumented... (if in the appropriate section)
-                    #    ../man?/undocumented...
-                    #    ../../man/man?/undocumented...
-                    #    ../../../share/man/man?/undocumented...
-                    #    ../../../../usr/share/man/man?/undocumented...
-                    if ((
-                        #<<< no perl tidy for now
-                                $link =~ m,^undocumented\.([237])\.gz,o
-                            and $path =~ m,^usr/share/man/man$1,)
-                        or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
-                        or $link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
-                        or $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                        or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
-                        #>>>
-                      ) {
-                        tag 'link-to-undocumented-manpage', $file;
-                    } else {
-                        tag 'bad-link-to-undocumented-manpage', $file;
-                    }
-                } else {
-                    # undocumented link in /usr/X11R6/man -- possibilities:
-                    #    ../../../share/man/man?/undocumented...
-                    #    ../../../../usr/share/man/man?/undocumented...
-                    if (
+                # undocumented link in /usr/share/man -- possibilities
+                #    undocumented... (if in the appropriate section)
+                #    ../man?/undocumented...
+                #    ../../man/man?/undocumented...
+                #    ../../../share/man/man?/undocumented...
+                #    ../../../../usr/share/man/man?/undocumented...
+                if ((
                     #<<< no perl tidy for now
-                        $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                     or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
+                            $link =~ m,^undocumented\.([237])\.gz,o
+                        and $path =~ m,^usr/share/man/man$1,)
+                    or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
+                    or $link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
+                    or $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
+                    or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
                     #>>>
-                      ) {
-                        tag 'link-to-undocumented-manpage', $file;
-                    } else {
-                        tag 'bad-link-to-undocumented-manpage', $file;
-                    }
+                  ) {
+                    tag 'link-to-undocumented-manpage', $file;
+                } else {
+                    tag 'bad-link-to-undocumented-manpage', $file;
                 }
             }
         } else { # not a symlink
@@ -326,9 +308,7 @@ sub run {
             my $lang = '';
             next
               unless ($file->is_file or $file->is_symlink)
-              and (($path =~ m,^usr/man/\S+,o)
-                or ($path =~ m,^usr/X11R6/man/\S+,o)
-                or ($path =~ m,^usr/share/man/\S+,o));
+              and $path =~ m,^usr/share/man/\S+,o;
             next unless ($path =~ m,man\d/$,o);
             $manpage{$fname} = [] unless exists $manpage{$fname};
             $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
