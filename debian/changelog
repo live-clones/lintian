@@ -10,6 +10,8 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Add missing example-script-uses-deprecated-nodejs-location tag.
       (Closes: #877142)
+    + [NT] Apply patch from Mattia Rizzolo to improve the tag description
+      for script-uses-deprecated-nodejs-location.
 
   * commands/lintian.pm:
     + [NT] Simplify handling of uncaught exceptions.

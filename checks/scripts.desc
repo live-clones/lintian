@@ -779,11 +779,12 @@ Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  .
  The <tt>/usr/bin/node</tt> binary was previously provided by
  <tt>ax25-node</tt> and packages were required to use <tt>/usr/bin/nodejs</tt>
- instead. This was subsequently repealed by the Technical Committee and the
- <tt>nodejs</tt> now ships the <tt>/usr/bin/node</tt> binary to match the rest
- of the Node.js ecosystem.
+ instead. <tt>ax25-node</tt> has since been removed from the archive and the
+ <tt>nodejs</tt> package now ships the <tt>/usr/bin/node</tt> binary to match
+ the rest of the Node.js ecosystem.
  .
  Please update your package to use the <tt>node</tt> variant.
+Ref: #614907, #862051
 
 Tag: example-script-uses-deprecated-nodejs-location
 Severity: normal
@@ -793,8 +794,9 @@ Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  .
  The <tt>/usr/bin/node</tt> binary was previously provided by
  <tt>ax25-node</tt> and packages were required to use <tt>/usr/bin/nodejs</tt>
- instead. This was subsequently repealed by the Technical Committee and the
- <tt>nodejs</tt> now ships the <tt>/usr/bin/node</tt> binary to match the rest
- of the Node.js ecosystem.
+ instead.  <tt>ax25-node</tt> has since been removed from the archive and the
+ <tt>nodejs</tt> package now ships the <tt>/usr/bin/node</tt> binary to match
+ the rest of the Node.js ecosystem.
  .
  Please update your package to use the <tt>node</tt> variant.
+Ref: #614907, #862051
