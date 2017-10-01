@@ -10,7 +10,7 @@ BEGIN {
 }
 use lib $ENV{LINTIAN_ROOT} . '/lib/';
 
-use Lintian::Util qw(read_dpkg_control fail);
+use Lintian::Util qw(read_dpkg_control);
 
 my @keywords = ();
 

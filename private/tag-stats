@@ -26,7 +26,7 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Tag::Info;
-use Lintian::Util qw(fail read_dpkg_control);
+use Lintian::Util qw(read_dpkg_control);
 
 my @severities = reverse qw(pedantic wishlist minor normal important serious);
 my @certainties = reverse qw(wild-guess possible certain);
