@@ -29,7 +29,8 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(fail open_gz parse_dpkg_control get_file_checksum strip);
+use Lintian::Util
+  qw(internal_error open_gz parse_dpkg_control get_file_checksum strip);
 
 =head1 NAME
 
@@ -342,7 +343,7 @@ sub scripts {
             chomp($line);
 
             $line =~ m/^(env )?(\S*) (.*)$/o
-              or fail("bad line in scripts file: $line");
+              or internal_error("bad line in scripts file: $line");
             ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
 
             $name =~ s,^\./,,o;

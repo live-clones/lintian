@@ -42,7 +42,7 @@ use constant SAFE_LINE_LENGTH => 256;
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail normalize_pkg_path strip);
+use Lintian::Util qw(internal_error normalize_pkg_path strip);
 use Lintian::SlidingWindow;
 
 our $LIBTOOL = Lintian::Relation->new('libtool | dh-autoreconf');
@@ -56,7 +56,7 @@ sub _md5sum_based_lintian_data {
         sub {
             my @sliptline = split(/\s*\~\~\s*/, $_[1], 5);
             if (scalar(@sliptline) != 5) {
-                fail "Syntax error in $filename", $.;
+                internal_error("Syntax error in $filename", $.);
             }
             my ($sha1, $sha256, $name, $reason, $link) = @sliptline;
             return {
@@ -83,7 +83,7 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
     sub {
         my @sliptline = split(/\s*\~\~\s*/, $_[1], 4);
         if (scalar(@sliptline) < 1 or scalar(@sliptline) > 4) {
-            fail 'Syntax error in cruft/warn-file-type', $.;
+            internal_error('Syntax error in cruft/warn-file-type', $.);
         }
         my ($regtype, $regname, $transformlist) = @sliptline;
 
@@ -107,28 +107,29 @@ my $WARN_FILE_TYPE =  Lintian::Data->new(
                     if($transform =~ m'^s/') {
                         $transform =~ m'^s/([^/]*?)/([^/]*?)/$';
                         unless(defined($1) and defined($2)) {
-                            fail $syntaxerror, 'in transform regex',$.
-
+                            internal_error($syntaxerror, 'in transform regex',
+                                $.);
                         }
                         push(@transformpairs,[$1,$2]);
                     } elsif ($transform =~ m'^map\s*{') {
                         $transform
                           =~ m#^map \s* { \s* 's/([^/]*?)/\'.\$_.'/' \s* } \s* qw\(([^\)]*)\)#x;
                         unless(defined($1) and defined($2)) {
-                            fail $syntaxerror,'in map transform regex',$.;
+                            internal_error($syntaxerror,
+                                'in map transform regex', $.);
                         }
                         my $words = $2;
                         my $match = $1;
                         my @wordarray = split(/\s+/,$words);
                         if(scalar(@wordarray) == 0) {
-                            fail $syntaxerror,
-                              'in map transform regex : no qw arg',$.;
+                            internal_error($syntaxerror,
+                                'in map transform regex : no qw arg', $.);
                         }
                         foreach my $word (@wordarray) {
                             push(@transformpairs,[$match, $word]);
                         }
                     } else {
-                        fail $syntaxerror,'in last field',$.;
+                        internal_error($syntaxerror, 'in last field', $.);
                     }
                 }
             }
@@ -186,7 +187,7 @@ sub _get_license_check_file {
             my @splitline = split(/\s*\~\~\s*/, $_[1], 5);
             my $syntaxerror = 'Syntax error in '.$filename;
             if(scalar(@splitline) > 5 or scalar(@splitline) <2) {
-                fail $syntaxerror, $.;
+                internal_error($syntaxerror, $.);
             }
             my ($keywords, $sentence, $regex, $firstregex, $callsub)
               = @splitline;
@@ -198,11 +199,11 @@ sub _get_license_check_file {
 
             my @keywordlist = split(/\s*\&\&\s*/, $keywords);
             if(scalar(@keywordlist) < 1) {
-                fail $syntaxerror, 'No keywords on line', $.;
+                internal_error($syntaxerror, 'No keywords on line', $.);
             }
             my @sentencelist = split(/\s*\|\|\s*/, $sentence);
             if(scalar(@sentencelist) < 1) {
-                fail $syntaxerror, 'No sentence on line', $.;
+                internal_error($syntaxerror, 'No sentence on line', $.);
             }
 
             if($regex eq '') {
@@ -220,8 +221,8 @@ sub _get_license_check_file {
             unless($callsub eq '') {
                 if(defined($LICENSE_CHECK_DISPATCH_TABLE{$callsub})) {
                     $ret{'callsub'} = $LICENSE_CHECK_DISPATCH_TABLE{$callsub};
-                }else {
-                    fail $syntaxerror, 'Unknown sub', $.;
+                } else {
+                    internal_error($syntaxerror, 'Unknown sub', $.);
                 }
             }
             return \%ret;
@@ -425,7 +426,7 @@ sub check_diffstat {
     local $_;
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
-          or fail("syntax error in diffstat file: $_");
+          or internal_error("syntax error in diffstat file: $_");
         $saw_file = 1;
 
         # Check for CMake cache files.  These embed the source path and hence

@@ -25,7 +25,7 @@ use autodie;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
+use Lintian::Util qw(drain_pipe internal_error is_string_utf8_encoded open_gz
   signal_number2name strip normalize_pkg_path);
 use Lintian::SlidingWindow;
 
@@ -270,7 +270,7 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
     sub {
         my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
         if (scalar(@sliptline) != 2) {
-            fail 'Syntax error in files/obsolete-paths', $.;
+            internal_error('Syntax error in files/obsolete-paths', $.);
         }
         my ($newdir, $moreinfo) =  @sliptline;
         return {
@@ -1569,7 +1569,7 @@ sub run {
                         #  __ __  __ __,    $mtime    - variables
                         (undef, $mtime) = unpack('NN', $buff);
                     } else {
-                        fail "reading $file: $!";
+                        internal_error("reading $file failed: $!");
                     }
                     close($fd);
                     if ($mtime != 0) {

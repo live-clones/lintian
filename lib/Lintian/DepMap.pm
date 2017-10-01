@@ -22,7 +22,7 @@ use parent 'Clone';
 use Carp qw(croak);
 use List::MoreUtils qw(any);
 
-use Lintian::Util qw(fail);
+use Lintian::Util qw(internal_error);
 
 =head1 NAME
 
@@ -219,11 +219,13 @@ sub satisfy {
     my $node = shift;
 
     if (any {$_ eq $node} $self->missing) {
-        fail(  "Attempted to mark node '$node' as satisfied but it is not "
+        internal_error(
+               "Attempted to mark node '$node' as satisfied but it is not "
               .'reachable, perhaps you forgot to add() it first?');
     }
     if (not exists($self->{'nodes'}{$node})) {
-        fail(  "Attempted to mark node '$node' as satisfied but it is not "
+        internal_error(
+               "Attempted to mark node '$node' as satisfied but it is not "
               .'reachable, perhaps you forgot to satisfy() its dependencies first?'
         );
     }
@@ -301,7 +303,8 @@ sub unlink {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-        fail(  "Attempted to unlink node '$node' but it cannot be found"
+        internal_error(
+               "Attempted to unlink node '$node' but it cannot be found"
               .', perhaps it has already been satisfied?');
     }
 
@@ -351,7 +354,8 @@ sub select {
     my $node = shift;
 
     if (not exists($self->{'pending'}{$node})) {
-        fail(  "Attempted to mark node '$node' as selected but it is not "
+        internal_error(
+               "Attempted to mark node '$node' as selected but it is not "
               .'known, perhaps its parents are not yet satisfied?');
     }
     return 0 if (exists($self->{'selected'}{$node}));
@@ -446,7 +450,8 @@ sub parents {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-        fail(  "Attempted to get the parents of node '$node' but it is not"
+        internal_error(
+               "Attempted to get the parents of node '$node' but it is not"
               .'known, perhaps you forgot to add() it first?');
     }
 

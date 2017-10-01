@@ -25,7 +25,7 @@ use warnings;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail strip);
+use Lintian::Util qw(internal_error strip);
 
 sub _parse_trigger_types {
     my ($key, $val) = @_;
@@ -35,7 +35,7 @@ sub _parse_trigger_types {
         $values{$k} = $v;
     }
     if (exists($values{'implicit-await'})) {
-        fail(
+        internal_error(
             join(q{ },
                 'Invalid trigger-types data file:',
                 "$key is defined as implicit-await trigger,",

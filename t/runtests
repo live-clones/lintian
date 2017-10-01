@@ -95,7 +95,7 @@ use lib "$LINTIAN_ROOT/lib";
 
 use Lintian::Command qw(safe_qx);
 use Lintian::Internal::FrontendUtil qw(default_parallel);
-use Lintian::Util qw(delete_dir fail parse_boolean
+use Lintian::Util qw(delete_dir internal_error parse_boolean
   rstrip slurp_entire_file touch_file);
 
 use Test::Lintian::Harness qw(chdir_runcmd check_test_depends
@@ -143,7 +143,7 @@ parse_args();
 if (-d "$TESTSET/helpers/bin") {
     # Add the test helpers to PATH
     my $tpath = Cwd::abs_path("$TESTSET/helpers/bin");
-    fail "Cannot resolve $TESTSET/helpers/bin: $!" unless $tpath;
+    internal_error("Cannot resolve $TESTSET/helpers/bin: $!") unless $tpath;
     $ENV{'PATH'} = "$tpath:$ENV{'PATH'}";
 }
 
@@ -230,15 +230,15 @@ sub parse_args {
 
     if (-d $RUNDIR) {
         my $abs = Cwd::abs_path($RUNDIR);
-        fail("Cannot resolve $RUNDIR: $!")
+        internal_error("Cannot resolve $RUNDIR: $!")
           if not defined($abs);
         $RUNDIR = $abs;
     } else {
-        fail("test directory $RUNDIR does not exist");
+        internal_error("test directory $RUNDIR does not exist");
     }
 
     unless (-d $TESTSET) {
-        fail("test set directory $TESTSET does not exist");
+        internal_error("test set directory $TESTSET does not exist");
     }
 
     if (defined($coverage)) {
@@ -463,7 +463,7 @@ sub _builder_tests {
     my $res = chdir_runcmd($testdir, \@DPKG_BUILDPACKAGE_CMD, $log);
     if ($res){
         $test_state->dump_log($log) if $DUMP_LOGS;
-        fail("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
+        internal_error("cd $testdir && @DPKG_BUILDPACKAGE_CMD >$log 2>&1");
     }
 
     return;
@@ -485,7 +485,7 @@ sub run_lintian {
         my $status = 0;
         eval {close($in);};
         if (my $err = $@) {
-            fail("close pipe: $!") if $err->errno;
+            internal_error("close pipe: $!") if $err->errno;
             $status = ($? >> 8) & 255;
         }
         if (defined($coverage)) {
@@ -522,7 +522,7 @@ sub run_lintian {
         }
         open(STDERR, '>&', \*STDOUT);
         exec @cmd, @options, @LINTIAN_COMMON_OPTIONS, $file
-          or fail "exec failed: $!";
+          or internal_error("exec failed: $!");
     }
     return 1;
 }
@@ -698,7 +698,7 @@ sub find_tests_to_run {
             @tests = find_tests_for_tag($tag, $globstr);
         } elsif ($suites{$suite}) {
             unless (-d "$TESTSET/$suite/") {
-                fail("cannot find $TESTSET/$suite: $!");
+                internal_error("cannot find $TESTSET/$suite: $!");
             }
             @tests = map { read_test_desc($_) } glob($globstr);
         }
@@ -729,7 +729,7 @@ sub run_prove_tests {
         }
     } elsif ($suites{'scripts'}) {
         unless (-d "$TESTSET/scripts") {
-            fail("cannot find $TESTSET/scripts: $!");
+            internal_error("cannot find $TESTSET/scripts: $!");
         }
         @do_run = ("$TESTSET/scripts");
     }
@@ -1044,7 +1044,7 @@ sub check_test_is_sane {
     my ($dir, $testdir, $data) = @_;
 
     unless ($data->{testname} && exists $data->{version}) {
-        fail('Name or Version missing');
+        internal_error('Name or Version missing');
     }
 
     $data->{source} ||= $data->{testname};

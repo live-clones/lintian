@@ -42,7 +42,7 @@ use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Data;
 use Lintian::Relation qw(:constants);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail slurp_entire_file strip);
+use Lintian::Util qw(internal_error slurp_entire_file strip);
 
 my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
     sub { return qr/$_[1]/ });
@@ -65,14 +65,14 @@ sub _embedded_libs {
             } elsif ($opt eq 'source-regex') {
                 $result->{$opt} = qr/$val/;
             } else {
-                fail(   "Unknown option $opt used for $key"
+                internal_error("Unknown option $opt used for $key"
                       . ' (in binaries/embedded-libs)');
             }
         }
     }
 
     if (defined $result->{'source'} and $result->{'source-regex'}) {
-        fail(   "Both source and source-regex used for $key"
+        internal_error("Both source and source-regex used for $key"
               . ' (in binaries/embedded-libs)');
     } else {
         $result->{'source'} = $key unless defined $result->{'source'};
@@ -325,7 +325,8 @@ sub run {
             foreach my $obj (@{ $objdump->{'objects'} }) {
                 my $libobj = $info->objdump_info->{"${file}(${obj})"};
                 # Shouldn't happen, but...
-                fail("object ($file $obj) in static lib is missing!?")
+                internal_error(
+                    "object ($file $obj) in static lib is missing!?")
                   unless defined $libobj;
 
                 if (any { exists($libobj->{'SH'}{$_}) } DEBUG_SECTIONS) {

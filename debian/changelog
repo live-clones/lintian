@@ -24,6 +24,10 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * commands/lintian.pm:
     + [NT] Simplify handling of uncaught exceptions.
 
+  * lib/Lintian/Util.pm:
+    + [NT] Rename the "fail" subroutine to "internal_error" to better
+      reflect its purpose.
+
   * t/tests/python-new-python2-package/*:
     + [CL] Correct Depends of python2.7 → python3 in Python 3 test
       package.

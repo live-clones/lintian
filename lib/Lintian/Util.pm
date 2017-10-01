@@ -65,6 +65,7 @@ BEGIN {
           file_is_encoded_in_non_utf8
           is_string_utf8_encoded
           fail
+          internal_error
           do_fork
           run_cmd
           strip
@@ -1183,7 +1184,7 @@ sub touch_file {
     return 1;
 }
 
-=item fail (MSG[, ...])
+=item internal_error (MSG[, ...])
 
 Use to signal an internal error. The argument(s) will used to print a
 diagnostic message to the user.
@@ -1192,9 +1193,19 @@ If multiple arguments are given, they will be merged into a single
 string (by join (' ', @_)).  If only one argument is given it will be
 stringified and used directly.
 
+=item fail (MSG[, ...])
+
+Deprecated alias of "internal_error".
+
 =cut
 
 sub fail {
+    warnings::warnif('deprecated',
+        '[deprecation] fail() has been replaced by internal_error()');
+    goto \&internal_error;
+}
+
+sub internal_error {
     my $str = 'internal error: ';
     if (@_) {
         $str .= join ' ', @_;
@@ -1228,7 +1239,7 @@ If the tool cannot be found, this sub will cause a trappable error.
     sub locate_helper_tool {
         my ($toolname) = @_;
         if ($toolname =~ m{(?:\A|/) \.\. (?:\Z|/)}xsm) {
-            fail("$toolname is not a valid tool name");
+            internal_error("$toolname is not a valid tool name");
         }
         return $_CACHE{$toolname} if exists $_CACHE{$toolname};
 
@@ -1245,7 +1256,7 @@ If the tool cannot be found, this sub will cause a trappable error.
             }
         }
         $toolpath_str //= '<N/A>';
-        fail(
+        internal_error(
             sprintf(
                 'Cannot locate %s (search dirs: %s)',
                 $toolname, $toolpath_str

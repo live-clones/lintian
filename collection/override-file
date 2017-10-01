@@ -29,12 +29,13 @@ use warnings;
 use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(fail gunzip_file is_ancestor_of);
+use Lintian::Util qw(internal_error gunzip_file is_ancestor_of);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
-    -d "$dir/unpacked" or fail 'override-file invoked with wrong dir argument';
+    -d "$dir/unpacked"
+      or internal_error('override-file invoked with wrong dir argument');
 
     if (-e "$dir/override"){
         unlink("$dir/override");

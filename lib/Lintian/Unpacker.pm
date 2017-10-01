@@ -26,7 +26,7 @@ use parent 'Class::Accessor::Fast';
 use POSIX;
 
 use Lintian::Command::Simple qw(wait_any kill_all);
-use Lintian::Util qw(do_fork fail);
+use Lintian::Util qw(do_fork internal_error);
 
 =head1 NAME
 
@@ -164,7 +164,7 @@ sub new {
             $ccmap->unlink($node);
         }
         # ccmap should not be inconsistent by this change.
-        fail 'Inconsistent collmap after deletion'
+        internal_error('Inconsistent collmap after deletion')
           if $ccmap->missing;
     }
     $self->{'extra-coll'} = $extra;

@@ -30,7 +30,8 @@ use Scalar::Util qw(blessed);
 
 use Lintian::Path;
 use Lintian::Path::FSInfo;
-use Lintian::Util qw(fail open_gz perm2oct normalize_pkg_path dequote_name);
+use Lintian::Util
+  qw(internal_error open_gz perm2oct normalize_pkg_path dequote_name);
 
 # A cache for (probably) the 5 most common permission strings seen in
 # the wild.
@@ -259,7 +260,7 @@ sub md5sums {
         chop($line);
         next if $line =~ m/^\s*$/o;
         $line =~ m/^(\\)?(\S+)\s*(\S.*)$/o
-          or fail "syntax error in $md5f info file: $line";
+          or internal_error("syntax error in $md5f info file: $line");
         my ($zzescaped, $zzsum, $zzfile) = ($1, $2, $3);
         if($zzescaped) {
             $zzfile = dequote_name($zzfile);
@@ -537,7 +538,7 @@ sub _fetch_index_data {
         }
     }
     if (!exists($idxh{''})) {
-        fail('The root dir should be present or have been faked');
+        internal_error('The root dir should be present or have been faked');
     }
     if (%rhlinks) {
         foreach my $file (sort keys %rhlinks) {

@@ -31,7 +31,7 @@ use Text::ParseWords ();
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env do_fork drain_pipe fail open_gz);
+use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
 sub run {
     my (undef, undef, $info, $proc, $group) = @_;
@@ -212,7 +212,7 @@ sub run {
                     clean_env;
                     open(STDERR, '>&', \*STDOUT);
                     exec('lexgrog', $fs_path)
-                      or fail "exec lexgrog failed: $!";
+                      or internal_error("exec lexgrog failed: $!");
                 }
                 if (@running_lexgrog > 2) {
                     process_lexgrog_output(\@running_lexgrog);
@@ -250,7 +250,7 @@ sub run {
                 $ENV{MANROFFSEQ} = '';
                 $ENV{MANWIDTH} = 80;
                 exec { $cmd[0] } @cmd
-                  or fail("cannot run man -E UTF-8 -l: $!");
+                  or internal_error("cannot run man -E UTF-8 -l: $!");
             } else {
                 # parent - close write end
                 close $write;
@@ -345,7 +345,7 @@ sub process_lexgrog_output {
         eval {close($lexgrog_fd);};
         if (my $err = $@) {
             # Problem closing the pipe?
-            fail "close pipe: $err" if $err->errno;
+            internal_error("close pipe: $err") if $err->errno;
             # No, then lexgrog returned with a non-zero exit code.
             tag 'manpage-has-bad-whatis-entry', $file;
         }

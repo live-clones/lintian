@@ -31,14 +31,15 @@ use constant ERROR_FILES => qw(control-index-errors control-errors);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(delete_dir fail pipe_tee run_cmd);
+use Lintian::Util qw(delete_dir internal_error pipe_tee run_cmd);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
     my (@jobs, $job, $in_fd, @out_fds, $err);
 
     if (-e "$dir/control"){
-        delete_dir("$dir/control") or fail 'Cannot remove old control dir';
+        delete_dir("$dir/control")
+          or internal_error('Cannot remove old control dir');
     }
 
     for my $file ('control-index.gz', ERROR_FILES) {

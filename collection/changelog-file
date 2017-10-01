@@ -30,7 +30,7 @@ use autodie;
 use File::Copy qw(copy);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(fail gunzip_file is_ancestor_of);
+use Lintian::Util qw(internal_error gunzip_file is_ancestor_of);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -99,7 +99,7 @@ sub collect {
     } elsif ($chl =~ /\.gz$/) {
         gunzip_file($chl, "$dir/changelog");
     } elsif (-f $chl && -l $chl) {
-        copy($chl, "$dir/changelog") or fail "cannot copy $chl: $!";
+        copy($chl, "$dir/changelog") or internal_error("cannot copy $chl: $!");
     } else {
         link($chl, "$dir/changelog");
     }

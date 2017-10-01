@@ -29,7 +29,7 @@ use List::MoreUtils qw(any none uniq);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail strip);
+use Lintian::Util qw(internal_error strip);
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
@@ -195,7 +195,7 @@ sub run {
     for my $shlib_file (keys %SONAME) {
         # file found?
         if (not $info->index($shlib_file)) {
-            fail(
+            internal_error(
                 "shlib $shlib_file not found in package (should not happen!)");
         }
 

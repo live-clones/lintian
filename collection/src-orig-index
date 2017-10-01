@@ -33,7 +33,7 @@ use Cwd();
 use Lintian::Collect;
 use Lintian::Command qw(spawn);
 use Lintian::Processable::Package;
-use Lintian::Util qw(fail);
+use Lintian::Util qw(internal_error);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
@@ -64,7 +64,8 @@ sub gather_tarballs {
     my $base;
     my $baserev;
     my $proc;
-    fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file."
+    internal_error(
+        "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.")
       unless $file and -e $file;
 
     # Use Lintian::Processable::Package to determine source and
@@ -75,7 +76,7 @@ sub gather_tarballs {
     $version = $proc->pkg_src_version;
     if ($version =~ /:/) {
         $version =~ s/^(?:\d+):(.+)/$1/
-          or fail "bad version number '$version'";
+          or internal_error("bad version number \"$version\"");
     }
     $baserev = $proc->pkg_src . '_' . $version;
     $version =~ s/(.+)-(?:.*)$/$1/;
@@ -95,7 +96,7 @@ sub gather_tarballs {
             push @tarballs, [$t[2], $1//''];
         }
     }
-    fail 'could not find the source tarball' unless @tarballs;
+    internal_error('could not find the source tarball') unless @tarballs;
     return @tarballs;
 }
 
@@ -144,8 +145,9 @@ sub index_orig {
             },
             ['tar', @tar_options, "$dir/$tarball"]);
         if ($last) {
-            fail
-              "tar output (for $tarball from $pkg) does not end in a newline";
+            internal_error(
+                "tar output (for $tarball from $pkg) does not end in a newline"
+            );
         }
         # We now need to see if all files in the tarball have a common
         # prefix.  If so, we're going to strip that prefix off each

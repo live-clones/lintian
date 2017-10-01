@@ -50,7 +50,7 @@ use Lintian::ProcessablePool;
 use Lintian::Profile;
 use Lintian::Tags qw(tag);
 use Lintian::Unpacker;
-use Lintian::Util qw(fail parse_boolean strip);
+use Lintian::Util qw(internal_error parse_boolean strip);
 
 sanitize_environment();
 
@@ -763,7 +763,8 @@ sub main {
                     # earlier.
                     if (waitpid(-1, WNOHANG) != -1) {
                         $exit_code = 2;
-                        fail('Unreaped processes after running checks!?');
+                        internal_error(
+                            'Unreaped processes after running checks!?');
                     }
                 } else {
                     # If we are interrupted in (e.g.) checks/manpages, it
@@ -1594,7 +1595,8 @@ sub load_and_select_collections {
             }
             if (@missing) {
                 my $str = join(', ', @missing);
-                fail("The check \"$c\" depends unknown collection(s): $str");
+                internal_error(
+                    "The check \"$c\" depends unknown collection(s): $str");
             }
             $map->addp('check-' . $c, 'coll-', @deps);
         }
@@ -1603,7 +1605,7 @@ sub load_and_select_collections {
     # Make sure the resolver is in a sane state
     # - This can happen if we break collections (inter)dependencies.
     if ($map->missing) {
-        fail('There are missing nodes in the resolver: '
+        internal_error('There are missing nodes in the resolver: '
               . join(', ', $map->missing));
     }
 
