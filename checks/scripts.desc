@@ -784,3 +784,17 @@ Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  of the Node.js ecosystem.
  .
  Please update your package to use the <tt>node</tt> variant.
+
+Tag: example-script-uses-deprecated-nodejs-location
+Severity: normal
+Certainty: possible
+Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
+ interpreter for an example script.
+ .
+ The <tt>/usr/bin/node</tt> binary was previously provided by
+ <tt>ax25-node</tt> and packages were required to use <tt>/usr/bin/nodejs</tt>
+ instead. This was subsequently repealed by the Technical Committee and the
+ <tt>nodejs</tt> now ships the <tt>/usr/bin/node</tt> binary to match the rest
+ of the Node.js ecosystem.
+ .
+ Please update your package to use the <tt>node</tt> variant.
