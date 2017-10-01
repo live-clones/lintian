@@ -1205,7 +1205,6 @@ sub fail {
             $str .= 'No context.';
         }
     }
-    $! = 2; # set return code outside eval()
     croak $str;
 }
 
