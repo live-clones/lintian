@@ -122,6 +122,12 @@ sub lintian_banner {
     return "Lintian v${lintian_version}";
 }
 
+sub fatal_error {
+    my ($msg) = @_;
+    print STDERR  "$msg\n";
+    exit(2);
+}
+
 # }}}
 
 # {{{ Process Command Line
@@ -249,7 +255,7 @@ sub banner {
 # Options: -S, -R, -c, -u, -r
 sub record_action {
     if ($action) {
-        die("too many actions specified: $_[0]");
+        fatal_error("too many actions specified: $_[0]");
     }
     $action = "$_[0]";
     return;
@@ -259,10 +265,10 @@ sub record_action {
 # Options: -C|--check-part
 sub record_check_part {
     if (defined $action and $action eq 'check' and $checks) {
-        die('multiple -C or --check-part options not allowed');
+        fatal_error('multiple -C or --check-part options not allowed');
     }
     if ($dont_check) {
-        die(
+        fatal_error(
             join(q{ },
                 'both -C or --check-part and -X',
                 'or --dont-check-part options not allowed'));
@@ -276,13 +282,15 @@ sub record_check_part {
 # Options: -T|--tags
 sub record_check_tags {
     if (defined $action and $action eq 'check' and $check_tags) {
-        die('multiple -T or --tags options not allowed');
+        fatal_error('multiple -T or --tags options not allowed');
     }
     if ($checks) {
-        die('both -T or --tags and -C or --check-part options not allowed');
+        fatal_error(
+            'both -T or --tags and -C or --check-part options not allowed');
     }
     if ($dont_check) {
-        die('both -T or --tags and -X or --dont-check-part options not allowed'
+        fatal_error(
+            'both -T or --tags and -X or --dont-check-part options not allowed'
         );
     }
     record_action('check');
@@ -338,10 +346,10 @@ sub record_suppress_tags_from_file {
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
     if (defined $action and $action eq 'check' and $dont_check) {
-        die('multiple -X or --dont-check-part options not allowed');
+        fatal_error('multiple -X or --dont-check-part options not allowed');
     }
     if ($checks) {
-        die(
+        fatal_error(
             join(q{ },
                 'both -C or --check-part and',
                 '-X or --dont-check-part options not allowed'));
@@ -409,10 +417,10 @@ sub record_quiet {
 }
 
 sub record_option_too_late {
-    print STDERR join(q{ },
-        'Warning: --include-dir and --[no-]user-dirs',
-        "should be the first option(s) if given\n");
-    exit(2);
+    fatal_error(
+        join(q{ },
+            'Warning: --include-dir and --[no-]user-dirs',
+            "should be the first option(s) if given"));
 }
 
 # Process display-info and display-level options in cfg files
@@ -424,7 +432,8 @@ sub record_option_too_late {
 sub cfg_display_level {
     my ($var, $val) = @_;
     if ($var eq 'display-info' or $var eq 'pedantic'){
-        die "$var and display-level may not both appear in the config file.\n"
+        fatal_error(
+            "$var and display-level may not both appear in the config file.\n")
           if $conf_opt{'display-level'};
 
         return unless $val; # case "display-info=no" (or "pedantic=no")
@@ -442,10 +451,10 @@ sub cfg_display_level {
         display_pedantictags() if $var eq 'pedantic';
     } elsif ($var eq 'display-level'){
         foreach my $other (qw(pedantic display-info)) {
-            die(
+            fatal_error(
                 join(q{ },
                     "$other and display-level may not",
-                    "both appear in the config file.\n"))if $conf_opt{$other};
+                    "both appear in the config file."))if $conf_opt{$other};
         }
 
         return if @display_level;
@@ -465,7 +474,8 @@ sub cfg_verbosity {
     my ($var, $val) = @_;
     if (   ($var eq 'verbose' && exists $conf_opt{'quiet'})
         || ($var eq 'quiet' && exists $conf_opt{'verbose'})) {
-        die "verbose and quiet may not both appear in the config file.\n";
+        fatal_error(
+            "verbose and quiet may not both appear in the config file.");
     }
     # quiet = no or verbose = no => no change
     return unless $val;
@@ -491,7 +501,7 @@ sub cfg_override {
 }
 
 sub use_lab_tool_instead {
-    die("Please use lintian-lab-tool instead\n");
+    fatal_error("Please use lintian-lab-tool instead");
 }
 
 # Hash used to process commandline options
@@ -561,18 +571,19 @@ my %opthash = (
 # dplint has a similar wrapper; but it uses a different exit code
 # for uncaught exceptions (compared to what lintian documents).
 sub _main {
-    eval {
-        _main();
-    };
+    eval {_main();};
     # Cocerce the error to a string
     if (my $err = "$@") {
         $err =~ s/\n//;
+        # Special-case the message from the signal handler as it is not
+        # entirely unexpected.
+        if ($err eq "N: Interrupted") {
+            fatal_error($err);
+        }
         print STDERR "$err\n";
-        print STDERR "Uncaught exception\n";
-        exit(2);
+        fatal_error("Uncaught exception");
     }
-    print STDERR "Assertion error: _main returned !?\n";
-    exit(2);
+    fatal_error("Assertion error: _main returned !?");
 }
 
 sub main {
@@ -662,12 +673,12 @@ sub main {
         not(   ($action eq 'unpack')
             or ($action eq 'check'))
       ) {
-        fail("bad action $action specified");
+        fatal_error("invalid action $action specified");
     }
 
     if (!$LAB->is_temp) {
         # sanity check:
-        fail(
+        fatal_error(
             join(q{ },
                 'lintian lab has not been set up correctly',
                 '(perhaps you forgot to run lintian --setup-lab?)')
@@ -1288,7 +1299,7 @@ sub parse_config_file {
             }
         }
         unless ($found) {
-            die "syntax error in configuration file: $_\n";
+            fatal_error("syntax error in configuration file: $_");
         }
     }
     close($fd);
@@ -1489,7 +1500,7 @@ sub setup_work_pool {
                     $exit_code = 2;
                 }
             } else {
-                fail(
+                fatal_error(
                     join(q{ },
                         "bad package file name $arg",
                         '(neither .deb, .udeb, .changes or .dsc file)'));
@@ -1542,7 +1553,7 @@ sub load_profile_and_configure_tags {
         if ($@) {
             my $error = $@;
             $error =~ s/ at .*//;
-            die $error, "\n";
+            fatal_error($error);
         }
     }
     return $profile;
@@ -1613,7 +1624,8 @@ sub load_and_select_collections {
         # Add collections specifically requested by the user (--unpack-info)
         for my $i (map { split(m/,/) } @unpack_info) {
             unless ($collmap->getp($i)) {
-                fail("unknown info specified: $i");
+                fatal_error(
+                    "unrecognized info specified via --unpack-info: $i");
             }
             $extra_unpack{$i} = 1;
         }
@@ -1634,7 +1646,7 @@ sub parse_options {
 
     # process commandline options
     Getopt::Long::GetOptions(%opthash)
-      or die("error parsing options\n");
+      or fatal_error("error parsing options\n");
 
     # root permissions?
     # check if effective UID is 0
@@ -1660,7 +1672,7 @@ sub parse_options {
     # check specified action
     $action = 'check' unless $action;
 
-    die "Cannot use profile together with --ftp-master-rejects.\n"
+    fatal_error("Cannot use profile together with --ftp-master-rejects.")
       if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
     # --ftp-master-rejects is implemented in a profile
     $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
@@ -1698,7 +1710,8 @@ sub _update_profile {
         } else {
             for my $c (split /,/, $checks) {
                 my $cs = $profile->get_script($c, 1) || $abbrev{$c};
-                fail("Unknown check script $c") unless $cs;
+                fatal_error("Unrecognized check script (via -C): $c")
+                  unless $cs;
                 $profile->enable_tags($cs->tags);
             }
         }
@@ -1706,7 +1719,7 @@ sub _update_profile {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
             my $cs = $profile->get_script($c, 1) || $abbrev{$c};
-            fail("Unknown check script $c") unless $cs;
+            fatal_error("Unrecognized check script (via -X): $c") unless $cs;
             $profile->disable_tags($cs->tags);
         }
     }
