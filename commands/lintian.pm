@@ -420,7 +420,7 @@ sub record_option_too_late {
     fatal_error(
         join(q{ },
             'Warning: --include-dir and --[no-]user-dirs',
-            "should be the first option(s) if given"));
+            'should be the first option(s) if given'));
 }
 
 # Process display-info and display-level options in cfg files
@@ -454,7 +454,7 @@ sub cfg_display_level {
             fatal_error(
                 join(q{ },
                     "$other and display-level may not",
-                    "both appear in the config file."))if $conf_opt{$other};
+                    'both appear in the config file.'))if $conf_opt{$other};
         }
 
         return if @display_level;
@@ -475,7 +475,7 @@ sub cfg_verbosity {
     if (   ($var eq 'verbose' && exists $conf_opt{'quiet'})
         || ($var eq 'quiet' && exists $conf_opt{'verbose'})) {
         fatal_error(
-            "verbose and quiet may not both appear in the config file.");
+            'verbose and quiet may not both appear in the config file.');
     }
     # quiet = no or verbose = no => no change
     return unless $val;
@@ -501,7 +501,7 @@ sub cfg_override {
 }
 
 sub use_lab_tool_instead {
-    fatal_error("Please use lintian-lab-tool instead");
+    fatal_error('Please use lintian-lab-tool instead');
 }
 
 # Hash used to process commandline options
@@ -577,13 +577,13 @@ sub _main {
         $err =~ s/\n//;
         # Special-case the message from the signal handler as it is not
         # entirely unexpected.
-        if ($err eq "N: Interrupted") {
+        if ($err eq 'N: Interrupted') {
             fatal_error($err);
         }
         print STDERR "$err\n";
-        fatal_error("Uncaught exception");
+        fatal_error('Uncaught exception');
     }
-    fatal_error("Assertion error: _main returned !?");
+    fatal_error('Assertion error: _main returned !?');
 }
 
 sub main {
@@ -1672,7 +1672,7 @@ sub parse_options {
     # check specified action
     $action = 'check' unless $action;
 
-    fatal_error("Cannot use profile together with --ftp-master-rejects.")
+    fatal_error('Cannot use profile together with --ftp-master-rejects.')
       if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
     # --ftp-master-rejects is implemented in a profile
     $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
