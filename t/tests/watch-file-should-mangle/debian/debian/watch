@@ -2,10 +2,10 @@
 # package version number.
 
 version=2
-http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz debian uupdate
+https://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz debian uupdate
 
 # version mangling is not needed in this case:
-http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz 0.24 uupdate
+https://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz 0.24 uupdate
 
 # version mangling *is* needed in this case:
-http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz
+https://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz

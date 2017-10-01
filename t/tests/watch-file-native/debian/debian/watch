@@ -1,5 +1,5 @@
 # watch file with upstream version mangling
 
 version=3
-http://somewhere.debian.org/foo/foo_bar(.+)\.tar\.gz 5 uupdate
+https://somewhere.debian.org/foo/foo_bar(.+)\.tar\.gz 5 uupdate
 

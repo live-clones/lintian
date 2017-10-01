@@ -121,15 +121,13 @@ sub run {
                       if /^pgpmode\s*=\s*(?!none\s*$)\S.*$/;
                 }
             }
+
             if (m%qa\.debian\.org/watch/sf\.php\?%) {
                 tag 'debian-watch-file-uses-deprecated-sf-redirector-method',
                   "line $.";
-            }
-            if (m%githubredir\.debian\.net%) {
+            } elsif (m%githubredir\.debian\.net%) {
                 tag 'debian-watch-file-uses-deprecated-githubredir',"line $.";
-            }
-
-            if (
+            } elsif (
                 m{ (?:https?|ftp)://
                    (?:(?:.+\.)?dl|(?:pr)?downloads?|ftp\d?|upload) \.
                    (?:sourceforge|sf)\.net}xsm
@@ -139,6 +137,8 @@ sub run {
                               /projects/.+/files}xsm
               ) {
                 tag 'debian-watch-file-should-use-sf-redirector', "line $.";
+            } elsif (m%(?:http|ftp):%) {
+                tag 'debian-watch-uses-insecure-uri',"line $.";
             }
 
             # This bit is as-is from uscan.pl:

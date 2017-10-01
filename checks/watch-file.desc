@@ -186,3 +186,10 @@ Severity: wishlist
 Certainty: certain
 Info: The watch file contains a standard template included by dh_make.
  Please remove them once you have implemented the watch file.
+
+Tag: debian-watch-uses-insecure-uri
+Severity: wishlist
+Certainty: certain
+Info: The watch file uses an unencrypted transport protocol for the
+ URI. It is recommended to use a secure transport such as HTTPS for
+ anonymous read-only access.

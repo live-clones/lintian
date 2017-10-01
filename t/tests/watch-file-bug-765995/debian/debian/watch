@@ -1,4 +1,4 @@
 version=3
 # Trailing whitespace and missing continuation backslash intentional!
 opts=pgpsigurlmangle=s/$/.asc/ 
-http://www.example.com/Downloads/code-(.+)code\.zip
+https://www.example.com/Downloads/code-(.+)code\.zip

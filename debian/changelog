@@ -12,6 +12,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       (Closes: #877142)
     + [NT] Apply patch from Mattia Rizzolo to improve the tag description
       for script-uses-deprecated-nodejs-location.
+  * checks/watch-file.{pm,desc}:
+    + [CL] Warn for debian/watch files using insecure URIs such as HTTP or
+      FTP, similar to vcs-field-uses-insecure-uri.  (Closes: #849515)
 
   * commands/lintian.pm:
     + [NT] Simplify handling of uncaught exceptions.
