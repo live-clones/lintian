@@ -558,7 +558,22 @@ my %opthash = (
     'exp-output:s' => \$experimental_output_opts,
 );
 
-main();
+# dplint has a similar wrapper; but it uses a different exit code
+# for uncaught exceptions (compared to what lintian documents).
+sub _main {
+    eval {
+        _main();
+    };
+    # Cocerce the error to a string
+    if (my $err = "$@") {
+        $err =~ s/\n//;
+        print STDERR "$err\n";
+        print STDERR "Uncaught exception\n";
+        exit(2);
+    }
+    print STDERR "Assertion error: _main returned !?\n";
+    exit(2);
+}
 
 sub main {
     my ($pool);
@@ -1719,40 +1734,6 @@ sub END {
 
     $SIG{'INT'} = 'DEFAULT';
     $SIG{'QUIT'} = 'DEFAULT';
-
-    # We have to ensure that our exit code is 0, 1 or 2.  Quote from
-    # "perldoc -f die":
-    #
-    # """
-    # If an uncaught exception results in interpreter exit, the exit
-    # code is determined from the values of $! and $? with this
-    # pseudocode:
-    #
-    #   exit $! if $!; # errno
-    #   exit $? >> 8 if $? >> 8; # child exit status
-    #   exit 255;
-    # """
-    #
-    # So, here in the END handler, we abuse the fact that we can alter
-    # the exit code by changing $?.  It is not a perfect solution
-    # (e.g.  if $! is 1, then we might still exit 1 instead of 2), but
-    # it is definitely better than exiting with undocumented exit codes.
-    if ($? != 0 && $? != 2) {
-        # If $? is not 1, then we definitely want $? to be 2.  If
-        # $exit_code != 1, then either we got an uncaught exception
-        # before the first policy violation or we already saw an
-        # internal error that we caught.  Either way, we want to
-        # exit with 2 in this case.
-        #
-        # Sadly, this is unreliable if we saw a policy violation and
-        # then cause an uncaught internal error (where e.g. $! is 1).
-        # In this case we will still exit 1 instead of 2 as we should.
-        # Nevertheless, this is probably a lot more reliable than
-        # Lintian <= 2.5.12 was.
-        if ($? != 1 || $exit_code != 1) {
-            $? = 2;
-        }
-    }
 
     if (1) {
         # Prevent LAB->close, $unpacker->kill_jobs etc. from affecting

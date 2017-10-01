@@ -11,6 +11,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Add missing example-script-uses-deprecated-nodejs-location tag.
       (Closes: #877142)
 
+  * commands/lintian.pm:
+    + [NT] Simplify handling of uncaught exceptions.
+
   * t/tests/python-new-python2-package/*:
     + [CL] Correct Depends of python2.7 → python3 in Python 3 test
       package.
