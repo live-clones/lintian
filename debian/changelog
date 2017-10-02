@@ -12,6 +12,7 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Also match packages named "python2-*" as relating to Python 2.x.
     + [CL] Warn about Django libraries that do not depend on Django itself.
       (Closes: #877292)
+    + [CL] Do not emit python-foo-but-no-python3-foo for -common packages.
   * checks/scripts.desc:
     + [CL] Add missing example-script-uses-deprecated-nodejs-location tag.
       (Closes: #877142)

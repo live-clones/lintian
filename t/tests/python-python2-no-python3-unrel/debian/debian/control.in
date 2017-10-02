@@ -36,3 +36,14 @@ Description: Python 2 package with corresponding Python 3 package (documentation
  be an empty package.
  .
  This package contains documentation.
+
+Package: python-{$source}-common
+Architecture: all
+Depends: $\{misc:Depends\}
+Description: Python 2 package with corresponding Python 3 package (common files)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package contains files common to both packages.

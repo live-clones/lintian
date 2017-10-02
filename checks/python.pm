@@ -47,7 +47,7 @@ sub _run_source {
     my @package_names = $info->binaries;
     foreach my $bin (@package_names) {
         # Python 2 modules
-        if ($bin =~ /^python2?-(.*(?<!-doc))$/) {
+        if ($bin =~ /^python2?-(.*(?<!-doc)(?<!-common))$/) {
             my $suffix = $1;
             tag 'python-foo-but-no-python3-foo', $bin
               unless any { $_ eq "python3-${suffix}" } @package_names;
