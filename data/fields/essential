@@ -19,7 +19,6 @@ hurd
 init-system-helpers
 libc-bin
 login
-mount
 ncurses-base
 ncurses-bin
 perl-base
