@@ -31,6 +31,8 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * t/tests/python-new-python2-package/*:
     + [CL] Correct Depends of python2.7 → python3 in Python 3 test
       package.
+  * t/tests/python-python2-no-python3-unrel/debian/debian/control.in:
+    + [CL] Add test for ignoring python-foo-doc packages.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 29 Sep 2017 19:13:19 +0100
 
