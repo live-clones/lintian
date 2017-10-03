@@ -7,6 +7,10 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       to simplify some code paths.  Nothing ships manpages in these
       directories and lintian emits tags to strongly discourage people
       from doing so.
+  * checks/init.d.pm:
+    + [CL] Avoid warning for init.d-script-not-marked-as-conffile when
+      the init.d script does not exist; we will already be alerted via
+      the init.d-script-not-included-in-package error.
   * checks/python.pm:
     + [CL] Move to "Type: source, binary" check type.
     + [CL] Also match packages named "python2-*" as relating to Python 2.x.

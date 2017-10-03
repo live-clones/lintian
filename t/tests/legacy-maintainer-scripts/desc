@@ -20,7 +20,6 @@ Test-For:
  dm-upload-allowed-is-obsolete
  forbidden-config-interpreter
  init.d-script-not-included-in-package
- init.d-script-not-marked-as-conffile
  install-info-used-in-maintainer-script
  maintainer-script-calls-init-script-directly
  maintainer-script-empty
@@ -60,3 +59,5 @@ Test-For:
  read-in-maintainer-script
  uses-implicit-await-trigger
  wrong-debian-qa-group-name
+Test-Against:
+ init.d-script-not-marked-as-conffile

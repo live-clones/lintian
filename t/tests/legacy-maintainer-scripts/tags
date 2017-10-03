@@ -55,7 +55,6 @@ W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
 W: maintainer-scripts: command-with-path-in-maintainer-script postinst:171 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep
 W: maintainer-scripts: config-does-not-load-confmodule
-W: maintainer-scripts: init.d-script-not-marked-as-conffile etc/init.d/foo
 W: maintainer-scripts: maintainer-script-empty config
 W: maintainer-scripts: maintainer-script-ignores-errors postrm
 W: maintainer-scripts: maintainer-script-ignores-errors preinst

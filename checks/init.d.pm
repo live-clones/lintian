@@ -173,15 +173,6 @@ sub run {
         $initd_path = $initd_dir->child($initd_file)
           if $initd_dir;
 
-        if (
-            not $initd_path
-            or (    not $info->is_conffile($initd_path->name)
-                and not $initd_path->is_symlink)
-          ) {
-            tag 'init.d-script-not-marked-as-conffile',
-              "etc/init.d/$initd_file";
-        }
-
         # init.d scripts have to be marked as conffiles unless they're
         # symlinks.
         if (not $initd_path or not $initd_path->resolve_path) {
@@ -194,6 +185,15 @@ sub run {
                   "etc/init.d/$initd_file";
             }
             next;
+        }
+
+        if (
+            not $initd_path
+            or (    not $info->is_conffile($initd_path->name)
+                and not $initd_path->is_symlink)
+          ) {
+            tag 'init.d-script-not-marked-as-conffile',
+              "etc/init.d/$initd_file";
         }
 
         # Check if file exists in package and check the script for
