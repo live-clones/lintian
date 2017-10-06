@@ -39,7 +39,7 @@ E: files-privacybreach: privacy-breach-logo usr/share/files-privacy-breach/priva
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwik.html
 E: files-privacybreach: privacy-breach-piwik usr/share/files-privacy-breach/privacy-breach-piwik/piwikvariant.html
 E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/img.html (http://counter.ceres.dti.ne.jp/cgi-bin/count.cgi?df=knak.01.dat|dd=d|ft=0|md=10|comma=y|srgb=00ff00|prgb=ff0000|trgb=black)
-E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter.xml
+E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter.xml (http://c8.statcounter.com/counter.php?sc_project=895001&amp;java=0&amp;security=5ea85181&amp;invisible=1)
 E: files-privacybreach: privacy-breach-statistics-website usr/share/files-privacy-breach/privacy-breach-statistics-website/statcounter2.js
 E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/awstat.xml
 E: files-privacybreach: privacy-breach-twitter usr/share/files-privacy-breach/privacy-breach-twitter/official.js

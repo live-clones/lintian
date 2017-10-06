@@ -6,6 +6,8 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Drop copyright-year-in-future after all; it's just too error
       prone and time-consuming to maintain given the severity of the issues
       it can find.  (Closes: #877766)
+  * checks/files.pm:
+    + [CL] Ignore privacy breach violations in comments.  (Closes: #877421)
   * checks/{files,manpages}.{desc,pm}:
     + [NT] Stop treating usr/man and usr/X11R6/man as manpage directories
       to simplify some code paths.  Nothing ships manpages in these

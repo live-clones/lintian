@@ -2141,6 +2141,10 @@ sub detect_privacy_breach {
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
 
     while (my $block = $sfd->readwindow) {
+        # Strip comments
+        for my $x (qw(<!--.*?--\s*> /\*.*?\*/)) {
+            $block =~ s@$x@@gs;
+        }
         # try generic fragment tagging
         foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
             if(index($block,$keyword) > -1) {
