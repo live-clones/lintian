@@ -2155,24 +2155,14 @@ sub detect_privacy_breach {
                 }
             }
         }
-        if(   index($block,'src="http') > -1
-            ||index($block,'src="ftp') > -1
-            ||index($block,'src="//') > -1
-            ||index($block,'data-href="http') > -1
-            ||index($block,'data-href="ftp') > -1
-            ||index($block,'data-href="//') > -1
-            ||index($block,'codebase="http') > -1
-            ||index($block,'codebase="ftp') > -1
-            ||index($block,'codebase="//') > -1
-            ||index($block,'data="http') > -1
-            ||index($block,'data="ftp') > -1
-            ||index($block,'data="//') > -1
-            ||index($block,'poster="http') > -1
-            ||index($block,'poster="ftp') > -1
-            ||index($block,'poster="//') > -1
-            ||index($block,'<link') > -1
-            ||index($block,'@import') > -1){
+        for my $x (
+            qw(src="http src="ftp src="// data-href="http data-href="ftp
+            data-href="// codebase="http codebase="ftp codebase="// data="http
+            data="ftp data="// poster="http poster="ftp poster="// <link @import)
+          ) {
+            next if index($block, $x) == -1;
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);
+            last;
         }
     }
     close($fd);
