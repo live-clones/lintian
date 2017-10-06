@@ -247,6 +247,7 @@ sub run {
     my $all_parsed = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'),$pkg);
     my $str_deps = $info->relation('strong');
+    my $has_sensible_utils = $str_deps->implies('sensible-utils');
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
@@ -350,7 +351,8 @@ sub run {
                 if (check_script_syntax($interpreter, $path)) {
                     script_tag('shell-script-fails-syntax-check', $filename);
                 }
-                check_script_uses_sensible_utils($path);
+                check_script_uses_sensible_utils($path)
+                  unless $has_sensible_utils;
             }
         }
 
@@ -624,7 +626,8 @@ sub run {
                 if (check_script_syntax("/bin/${base}", $path)) {
                     tag 'maintainer-shell-script-fails-syntax-check', $file;
                 }
-                check_script_uses_sensible_utils($path);
+                check_script_uses_sensible_utils($path)
+                  unless $has_sensible_utils;
             }
         }
 
