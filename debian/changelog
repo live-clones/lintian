@@ -2,6 +2,10 @@ lintian (2.5.55) UNRELEASED; urgency=medium
 
   "XXX: generate tag summary"
 
+  * checks/copyright-file.pm:
+    + [CL] Drop copyright-year-in-future after all; it's just too error
+      prone and time-consuming to maintain given the severity of the issues
+      it can find.  (Closes: #877766)
   * checks/{files,manpages}.{desc,pm}:
     + [NT] Stop treating usr/man and usr/X11R6/man as manpage directories
       to simplify some code paths.  Nothing ships manpages in these

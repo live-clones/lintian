@@ -61,18 +61,6 @@ sub run {
         $found = 1;
     }
 
-    # Extract the year from the most recent entry in debian/changelog. We do
-    # not use UNRELEASED entries as there is no guarantee that their timestamps
-    # are meaningful.
-    my $latest_year = 0;
-    my $changes = $info->changelog;
-    if (defined($changes)) {
-        my ($entry) = $info->changelog->data;
-        if ($entry->{'Distribution'} ne 'UNRELEASED') {
-            $latest_year = (gmtime($entry->{Timestamp}))[5] + 1900;
-        }
-    }
-
     if (my $index_info = $info->index("$path/copyright")) {
         $found = 1;
         if ($index_info->is_symlink) {
@@ -344,28 +332,6 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
         tag 'copyright-without-copyright-notice'
           unless /(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b
                |\bpublic(?:\s+|-)domain\b/xi;
-
-        if ($latest_year) {
-            my $linenum = 1;
-            foreach my $line (split /^/m) {
-                while (
-                    $line =~ /(?<![a-z][\s\-\/])\b(?<![:\/\.\@])
-                    (\d{4}) \b(?!\.)/xig
-                  ) {
-                    my $year = $1;
-                    my $column = $-[0] + 1;
-                    next if $year <= $latest_year;
-                    next if $line =~ m/Original Author/;
-                    # "Sun Microsystems, 4150 Network Drive, CA"
-                    next if $year == 4150;
-                    # "Clause 252.227-7013 (c) (1) of DFARs" in Tcl license
-                    next if $year == 7013;
-                    tag 'copyright-year-in-future',
-                      "$year > $latest_year (line $linenum, column $column)";
-                }
-                $linenum++;
-            }
-        }
     }
 
     check_spelling($_, $group->info->spelling_exceptions,
