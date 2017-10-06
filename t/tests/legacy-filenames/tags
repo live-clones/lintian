@@ -65,7 +65,6 @@ W: filenames source: diff-contains-svn-conflict-file data/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-control-dir .svn
 W: filenames source: no-section-field-for-source
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
-W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2
 W: filenames: binary-without-manpage usr/bin/X11/testxbin
 W: filenames: binary-without-manpage usr/bin/mh/read
 W: filenames: debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian

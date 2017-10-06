@@ -57,8 +57,7 @@ sub run {
                 or ($path eq 'usr/bin/X11/')
                 or ($path eq 'usr/bin/mh/')
                 or ($path eq 'usr/sbin/')
-                or ($path eq 'usr/games/')
-                or ($path eq 'usr/X11R6/bin/'))
+                or ($path eq 'usr/games/'))
           ) {
 
             my $bin = $fname;
@@ -68,7 +67,7 @@ sub run {
             next;
         }
 
-        if (($path =~ m,usr/(share|X11R6)/man/$,) and ($fname ne '')) {
+        if (($path =~ m,usr/share/man/$,) and ($fname ne '')) {
             tag 'manpage-in-wrong-directory', $file;
             next;
         }

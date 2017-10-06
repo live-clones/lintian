@@ -145,7 +145,7 @@ my %reserved_categories = map { $_ => 1 } qw(
 
 # Path in which to search for binaries referenced in menu entries.  These must
 # not have leading slashes.
-my @path = qw(usr/local/bin/ usr/bin/ bin/ usr/X11R6/bin/ usr/games/);
+my @path = qw(usr/local/bin/ usr/bin/ bin/ usr/games/);
 
 my %known_tags_hash = map { $_ => 1 } @known_tags;
 my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;

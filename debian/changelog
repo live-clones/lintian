@@ -8,11 +8,11 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       it can find.  (Closes: #877766)
   * checks/files.pm:
     + [CL] Ignore privacy breach violations in comments.  (Closes: #877421)
-  * checks/{files,manpages}.{desc,pm}:
-    + [NT] Stop treating usr/man and usr/X11R6/man as manpage directories
-      to simplify some code paths.  Nothing ships manpages in these
-      directories and lintian emits tags to strongly discourage people
-      from doing so.
+  * checks/{files,manpages,menu-format}.{desc,pm}:
+    + [NT] Stop considering usr/man, usr/X11R6/bin and usr/X11R6/man as
+      manpage directories / PATH directories to simplify some code paths.
+      Nothing ships manpages in these directories and lintian emits tags
+      to strongly discourage people from doing so.
   * checks/init.d.pm:
     + [CL] Avoid warning for init.d-script-not-marked-as-conffile when
       the init.d script does not exist; we will already be alerted via

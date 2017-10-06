@@ -219,7 +219,7 @@ sub run {
     }
 
     # For the package naming check, filter out SONAMEs where all the
-    # files are at paths other than /lib, /usr/lib, or /usr/X11R6/lib.
+    # files are at paths other than /lib, /usr/lib and /usr/lib/<MA-DIR>.
     # This avoids false positives with plugins like Apache modules,
     # which may have their own SONAMEs but which don't matter for the
     # purposes of this check.  Also filter out nsswitch modules
