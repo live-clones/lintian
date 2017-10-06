@@ -2044,7 +2044,7 @@ sub _check_tag_url_privacy_breach {
     # could be replaced by a link to local file but not really a privacy breach
     if(    $file->basename eq 'legal.xml'
         && $tagattr eq 'link'
-        &&  $website =~ m{^creativecommons.org/licenses/}) {
+        && $website =~ m{^creativecommons.org/licenses/}) {
         return;
     }
 
