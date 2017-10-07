@@ -6,6 +6,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Drop copyright-year-in-future after all; it's just too error
       prone and time-consuming to maintain given the severity of the issues
       it can find.  (Closes: #877766)
+  * checks/debhelper.pm:
+    + [AB] Also recognize dh-exec's "=>" arrow if surrounded by tabs.
+      (Closes: #877905)
   * checks/files.pm:
     + [CL] Ignore privacy breach violations in comments.  (Closes: #877421)
   * checks/{files,manpages,menu-format}.{desc,pm}:

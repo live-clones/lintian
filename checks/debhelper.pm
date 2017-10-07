@@ -531,7 +531,7 @@ sub _check_dh_exec {
                 tag 'dh-exec-subst-unknown-variable', $path, $sv;
             }
         }
-        $dhe_install = 1 if / => /;
+        $dhe_install = 1 if /[ \t]=>[ \t]/;
         $dhe_filter = 1 if /\[[^\]]+\]/;
         $dhe_filter = 1 if /<[^>]+>/;
 
