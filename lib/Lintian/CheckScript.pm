@@ -64,15 +64,14 @@ common meta data of the check (such as Needs-Info).
 
 =over 4
 
-=item Lintian::CheckScript->new($basedir, $checkname[, $profile, $lang])
+=item Lintian::CheckScript->new($basedir, $checkname)
 
-Parses the $file as a check desc file.  If $profile and $lang is
-given, translations for the check will be loaded as well.
+Parses the $file as a check desc file.
 
 =cut
 
 sub new {
-    my ($class, $basedir, $checkname, $profile, $lang) = @_;
+    my ($class, $basedir, $checkname) = @_;
     my ($header, @tags) = read_dpkg_control_utf8("$basedir/${checkname}.desc");
     my ($self, $name);
     unless ($name = $header->{'check-script'}) {
