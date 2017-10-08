@@ -54,7 +54,7 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [NT] Simplify handling of uncaught exceptions.
 
   * doc/lintian.xml:
-    + [NT] Document that the XDG_CONFIG_HOME directory can be used for
+    + [NT] Document that the XDG_DATA_HOME directory can be used for
       user profiles and data files.  This has been supported for quite
       a while but the documentation incorrectly listed "$HOME/.lintian"
       instead (which in fact did not work for this purpose).
@@ -62,7 +62,7 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * frontend/dplint:
     + [NT] Restore "$HOME/.lintian" as a directory that is used for
       user profiles and data files.  It was advertised as such in the
-      documentation but the code actually only used the XDG_CONFIG_HOME
+      documentation but the code actually only used the XDG_DATA_HOME
       path.  Thanks to Daniel Kauffman for the report.  (Closes: #875636)
 
   * lib/Lintian/Util.pm:

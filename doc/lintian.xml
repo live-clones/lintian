@@ -728,7 +728,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
         <itemizedlist>
           <listitem>
             <para>
-              <filename>$XDG_CONFIG_HOME/lintian/profiles</filename>
+              <filename>$XDG_DATA_HOME/lintian/profiles</filename>
             </para>
           </listitem>
           <listitem>
@@ -758,7 +758,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           first file matching the profile will be used.  This allows
           users to override a system profile by putting one with the
           same filename
-          in <filename>$XDG_CONFIG_HOME/lintian/profiles</filename>
+          in <filename>$XDG_DATA_HOME/lintian/profiles</filename>
           or <filename>$HOME/.lintian/profiles</filename>.
         </para>
       </sect2>
@@ -1005,7 +1005,7 @@ Overridable: no
         <itemizedlist>
           <listitem>
             <para>
-              <filename>$XDG_CONFIG_HOME/lintian/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
+              <filename>$XDG_DATA_HOME/lintian/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
             </para>
           </listitem>
           <listitem>
