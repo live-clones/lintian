@@ -6,6 +6,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Drop copyright-year-in-future after all; it's just too error
       prone and time-consuming to maintain given the severity of the issues
       it can find.  (Closes: #877766)
+  * checks/cruft.pm:
+    + [CL] Exempt debian/copyright from license-problem-non-free-RFC tag
+      to avoid false-positives on meta-references.  (Closes: #877999)
   * checks/debhelper.pm:
     + [AB] Also recognize dh-exec's "=>" arrow if surrounded by tabs.
       (Closes: #877905)

@@ -1249,6 +1249,7 @@ sub _rfc_whitelist_filename {
         $matchedkeyword,$licenseproblemhash, $licenseproblem,
         %matchedhash
     )= @_;
+    return 0 if $name eq 'debian/copyright';
     my $lcname = lc($basename);
 
     foreach my $rfc_regexp ($RFC_WHITELIST->all) {
