@@ -578,7 +578,9 @@ sub run {
         unfold('priority', \$priority);
 
         if ($priority eq 'extra') {
-            tag 'priority-extra-is-replaced-by-priority-optional';
+            tag 'priority-extra-is-replaced-by-priority-optional'
+              if $type eq 'source'
+              or not $info->is_pkg_class('auto-generated');
             # Re-map to optional to avoid an additional warning from
             # lintian
             $priority = 'optional';
