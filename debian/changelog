@@ -42,7 +42,7 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       FTP, similar to vcs-field-uses-insecure-uri.  (Closes: #849515)
 
   * data/{common => fields}/priorities:
-   + [NT] Rename file.
+    + [NT] Rename file.
   * data/fields/essential:
     + [MR] Remove 'mount' from the essential packages.  Starting with
       util-linux version 2.29.2-3 the Essential flag has been removed.
