@@ -58,6 +58,7 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       user profiles and data files.  This has been supported for quite
       a while but the documentation incorrectly listed "$HOME/.lintian"
       instead (which in fact did not work for this purpose).
+      (Closes: #701477)
 
   * frontend/dplint:
     + [NT] Restore "$HOME/.lintian" as a directory that is used for
