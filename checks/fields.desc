@@ -1321,3 +1321,13 @@ Info: The Built-Using field contains invalid fields.
  .
  Only first issue is shown.
 Ref: policy 7.8
+
+Tag: priority-extra-is-replaced-by-priority-optional
+Severity: minor
+Certainty: certain
+Info: Since Debian Policy version 4.0.1, the priority <tt>extra</tt>
+ has been deprecated.
+ .
+ Please update <tt>debian/control</tt> and replace all instances of
+ <tt>Priority: extra</tt> with <tt>Priority: optional</tt>.
+Ref: policy 2.5

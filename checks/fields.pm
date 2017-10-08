@@ -54,7 +54,7 @@ our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
-my $KNOWN_PRIOS = Lintian::Data->new('common/priorities', qr/\s*=\s*/o);
+my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
 our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 
@@ -576,6 +576,13 @@ sub run {
         my $priority = $info->field('priority');
 
         unfold('priority', \$priority);
+
+        if ($priority eq 'extra') {
+            tag 'priority-extra-is-replaced-by-priority-optional';
+            # Re-map to optional to avoid an additional warning from
+            # lintian
+            $priority = 'optional';
+        }
 
         tag 'unknown-priority', $priority
           unless $KNOWN_PRIOS->known($priority);

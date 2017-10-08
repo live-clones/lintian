@@ -1,5 +1,0 @@
-I: fields-debug-bad source: duplicate-long-description fields-debug-bad-dbg fields-debug-bad-debug
-I: fields-debug-bad source: duplicate-short-description fields-debug-bad-dbg fields-debug-bad-debug
-W: fields-debug-bad source: dbg-package-missing-depends fields-debug-bad-dbg
-W: fields-debug-bad-debug: wrong-section-according-to-package-name fields-debug-bad-debug
-X: fields-debug-bad source: debian-control-has-obsolete-dbg-package fields-debug-bad-dbg

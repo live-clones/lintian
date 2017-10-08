@@ -4,37 +4,42 @@ Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Homepage: http://lintian.debian.org/
 
 Package: {$source}
 Architecture: {$architecture}
-Depends: $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+# Whoops, typo
+Homepage: ttp://lintian.debian.org/
 
 Package: {$source}-dbg
 Section: debug
 Architecture: {$architecture}
-Depends: $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (dbg)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- The debug package.
+ The debug package (dbg)g.
+# ... and some unneeded <>
+Homepage: <http://lintian.debian.org/>
 
 Package: {$source}-debug
 Section: debug
 Architecture: {$architecture}
-Depends: $\{misc:Depends\}
-Description: {$description} (dbg)
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (debug)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- The debug package.
+ The debug package (debug).
 

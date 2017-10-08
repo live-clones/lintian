@@ -9,6 +9,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * checks/debhelper.pm:
     + [AB] Also recognize dh-exec's "=>" arrow if surrounded by tabs.
       (Closes: #877905)
+  * checks/fields.{desc,pm}:
+    + [NT] Add an info tag for packages that use "Priority: extra".  Thanks
+      to Mattia Rizzolo for the suggestion.  (Closes: #870898)
   * checks/files.pm:
     + [CL] Ignore privacy breach violations in comments.  (Closes: #877421)
   * checks/{files,manpages,menu-format}.{desc,pm}:
@@ -38,10 +41,14 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Warn for debian/watch files using insecure URIs such as HTTP or
       FTP, similar to vcs-field-uses-insecure-uri.  (Closes: #849515)
 
+  * data/{common => fields}/priorities:
+   + [NT] Rename file.
   * data/fields/essential:
     + [MR] Remove 'mount' from the essential packages.  Starting with
       util-linux version 2.29.2-3 the Essential flag has been removed.
       (Closes: #877511)
+  * data/fields/priorities:
+    + [NT] Remove "extra".
 
   * commands/lintian.pm:
     + [NT] Simplify handling of uncaught exceptions.
