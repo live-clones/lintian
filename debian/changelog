@@ -64,6 +64,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       user profiles and data files.  It was advertised as such in the
       documentation but the code actually only used the XDG_DATA_HOME
       path.  Thanks to Daniel Kauffman for the report.  (Closes: #875636)
+    + [NT] Correct the order of restricted search paths (user directories
+      and /etc/lintian).  It incorrectly used /etc/lintian before the
+      user directory.
 
   * lib/Lintian/Util.pm:
     + [NT] Rename the "fail" subroutine to "internal_error" to better

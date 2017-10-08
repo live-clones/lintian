@@ -138,11 +138,11 @@ sub setup_env {
             my $cwd = getcwd();
             $data_home = "${cwd}/${data_home}";
         }
-        unshift(@RESTRICTED_INCLUDE_DIRS, $data_home)
+        push(@RESTRICTED_INCLUDE_DIRS, $data_home)
           if defined($data_home) && -d $data_home;
-        unshift(@RESTRICTED_INCLUDE_DIRS, $legacy_user_data)
+        push(@RESTRICTED_INCLUDE_DIRS, $legacy_user_data)
             if defined($legacy_user_data) && -d $legacy_user_data;
-        unshift(@RESTRICTED_INCLUDE_DIRS, '/etc/lintian')
+        push(@RESTRICTED_INCLUDE_DIRS, '/etc/lintian')
           if -d '/etc/lintian';
     }
 
