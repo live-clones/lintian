@@ -40,6 +40,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Actually check for a dependency on sensible-utils before
       emitting script-needs-depends-on-sensible-utils.  Thanks to Daniel
       Reichelt for the detailed bug report.  (Closes: #877439)
+  * checks/standards-version.desc:
+    + [CL] Correct invalid link to upgrading-checklist. Thanks to Dann
+      Frazier for the report.  (Closes: #878184)
   * checks/watch-file.{pm,desc}:
     + [CL] Warn for debian/watch files using insecure URIs such as HTTP or
       FTP, similar to vcs-field-uses-insecure-uri.  (Closes: #849515)
