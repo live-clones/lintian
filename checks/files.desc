@@ -1770,3 +1770,9 @@ Certainty: certain
 Ref: java-policy 2
 Info: Compiled Java source files must not be included in the package. These
  files should be removed from the package or included in <tt>.jar</tt> archives.
+
+Tag: python-module-has-overly-generic-name
+Severity: important
+Certainty: certain
+Info: This package installs a Python module with an overly generic name to
+ a global namespace.

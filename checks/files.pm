@@ -1392,6 +1392,10 @@ sub run {
             }
             tag 'python-module-in-wrong-location', @correction
               if (@correction);
+            if (    $rest =~ m,^(tests?)(?:\.py|/__init__\.py)$,
+                and $file->is_regular_file) {
+                tag 'python-module-has-overly-generic-name', $fname, "($1)";
+            }
         }
 
         if ($fname =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){

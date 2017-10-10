@@ -17,6 +17,8 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       to Mattia Rizzolo for the suggestion.  (Closes: #870898)
   * checks/files.pm:
     + [CL] Ignore privacy breach violations in comments.  (Closes: #877421)
+    + [CL] Check for Python modules with overly generic names such as
+      "tests" or "test".  (Closes: #875964)
   * checks/{files,manpages,menu-format}.{desc,pm}:
     + [NT] Stop considering usr/man, usr/X11R6/bin and usr/X11R6/man as
       manpage directories / PATH directories to simplify some code paths.
