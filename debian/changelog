@@ -57,6 +57,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
       (Closes: #877511)
   * data/fields/priorities:
     + [NT] Remove "extra".
+  * data/files/privacy-breaker-websites:
+    + [CL] Replace (eg.) "You may use libjs-prototype package" with "You
+      may use the libjs-prototype package".
 
   * commands/lintian.pm:
     + [NT] Simplify handling of uncaught exceptions.
