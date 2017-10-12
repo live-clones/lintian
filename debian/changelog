@@ -45,6 +45,9 @@ lintian (2.5.55) UNRELEASED; urgency=medium
   * checks/standards-version.desc:
     + [CL] Correct invalid link to upgrading-checklist. Thanks to Dann
       Frazier for the report.  (Closes: #878184)
+  * checks/systemd.{desc,pm}:
+    + [CL] Warn if native systemd service files only wrap existing SysV/LSB
+      init scripts.  (Closes: #870704)
   * checks/watch-file.{pm,desc}:
     + [CL] Warn for debian/watch files using insecure URIs such as HTTP or
       FTP, similar to vcs-field-uses-insecure-uri.  (Closes: #849515)

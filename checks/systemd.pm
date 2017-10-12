@@ -203,6 +203,14 @@ sub check_systemd_service_file {
     tag 'systemd-service-file-refers-to-obsolete-bindto', $file,
       if extract_service_file_values($file, 'Unit', 'BindTo', 1);
 
+    for my $key (
+        qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
+      ) {
+        tag 'systemd-service-file-wraps-init-script', $file, $key
+          if any { m,^/etc/init\.d/, }
+        extract_service_file_values($file, 'Service', $key, 1);
+    }
+
     if (not $file->is_symlink or $file->link ne '/dev/null') {
         tag 'systemd-service-file-missing-documentation-key', $file,
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);

@@ -3,3 +3,9 @@ I: systemd-complex-service-file: systemd-service-file-missing-documentation-key 
 I: systemd-complex-service-file: systemd-service-file-missing-install-key lib/systemd/system/test2.service
 W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test.service dbus.target
 W: systemd-complex-service-file: systemd-service-file-refers-to-obsolete-target lib/systemd/system/test2.service syslog.target
+W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecReload
+W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStart
+W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPost
+W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStartPre
+W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStop
+W: systemd-complex-service-file: systemd-service-file-wraps-init-script lib/systemd/system/test5.service ExecStopPost
