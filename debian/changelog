@@ -1,6 +1,15 @@
-lintian (2.5.55) UNRELEASED; urgency=medium
+lintian (2.5.55) unstable; urgency=medium
 
-  "XXX: generate tag summary"
+  * Summary of tag changes:
+    + Added:
+      - debian-watch-uses-insecure-uri
+      - django-package-does-not-depend-on-django
+      - example-script-uses-deprecated-nodejs-location
+      - priority-extra-is-replaced-by-priority-optional
+      - python-module-has-overly-generic-name
+      - systemd-service-file-wraps-init-script
+    + Removed:
+      - copyright-year-in-future
 
   * checks/copyright-file.pm:
     + [CL] Drop copyright-year-in-future after all; it's just too error
@@ -97,7 +106,7 @@ lintian (2.5.55) UNRELEASED; urgency=medium
     + [CL] Add test for ignoring python-foo-doc packages.
     + [CL] Correct short descriptions of binary packages.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 29 Sep 2017 19:13:19 +0100
+ -- Chris Lamb <lamby@debian.org>  Thu, 12 Oct 2017 11:50:41 -0400
 
 lintian (2.5.54) unstable; urgency=medium
 
