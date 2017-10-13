@@ -6,6 +6,10 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to fix a
       number of spelling mistakes.  (Closes: #878446)
 
+  * private/refresh-manual-refs:
+    + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
+      the Debconf reference mapping. Many thanks!  (Closes: #878449)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 12 Oct 2017 14:08:44 -0400
 
 lintian (2.5.55) unstable; urgency=medium

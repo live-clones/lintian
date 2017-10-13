@@ -62,7 +62,7 @@ my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
 my $link_re
   = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re
-  = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
+  = qr/<a href="(.+?)">\s*([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)\s*<\/a>/;
 my $fields = [['url'], ['section'], ['title']];
 my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
@@ -132,8 +132,7 @@ my %manuals = (
         join(q{/},
             'https://www.debian.org',
             'doc/packaging-manuals/debconf_specification.html'),
-        qr/<a href="(#.+?)">([\w\s[:punct:]]+?)<\/a>/,
-        [['section', 'url'], ['title']]
+        $index_re, $fields
     ],
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
