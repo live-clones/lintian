@@ -8,6 +8,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * checks/debconf.desc:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       the debconf-spec refs.  (Closes: #878449)
+  * checks/watch-file.pm:
+    + [CL] Include the offending URI in debian-watch-uses-insecure-uri
+      output, not the line number.
 
   * private/refresh-manual-refs:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
