@@ -5,6 +5,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * checks/conffiles.pm, checks/{debconf,files,scripts}.desc:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to fix a
       number of spelling mistakes.  (Closes: #878446)
+  * checks/debconf.desc:
+    + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
+      the debconf-spec refs.  (Closes: #878449)
 
   * private/refresh-manual-refs:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
