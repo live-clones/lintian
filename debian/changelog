@@ -12,6 +12,11 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Include the offending URI in debian-watch-uses-insecure-uri
       output, not the line number.
 
+  * data/spelling/corrections:
+    + [CL] Revert addition of "none were" -> "none was" multiword spelling
+      correction as it is "acceptable beyond serious criticism".
+      (Closes: #878457)
+
   * private/refresh-manual-refs:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       the Debconf reference mapping. Many thanks!  (Closes: #878449)
