@@ -77,17 +77,17 @@ my %manuals = (
     'menu-policy' => [
         '/usr/share/doc/debian-policy/menu-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/menu-policy/',
-        $link_re, $fields
+        $index_re, $fields
     ],
     'perl-policy' => [
         '/usr/share/doc/debian-policy/perl-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/perl-policy/',
-        $link_re, $fields
+        $index_re, $fields
     ],
     'python-policy' => [
         '/usr/share/doc/python/python-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/python-policy/',
-        $link_re, $fields
+        $index_re, $fields
     ],
     'java-policy' => [
         '/usr/share/doc/java-policy/debian-java-policy/index.html',
