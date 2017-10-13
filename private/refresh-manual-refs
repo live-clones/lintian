@@ -132,7 +132,8 @@ my %manuals = (
         join(q{/},
             'https://www.debian.org',
             'doc/packaging-manuals/debconf_specification.html'),
-        $index_re, $fields
+        $index_re,
+        $fields
     ],
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
