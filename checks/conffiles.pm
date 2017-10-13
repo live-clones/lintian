@@ -83,7 +83,7 @@ sub run {
         }
         next unless $file =~ m{\A etc/ }xsm and $file->is_file;
 
-       # If there is a /etc/foo, it must be a conffile (with a few exceptions).
+       # If there is an /etc/foo, it must be a conffile (with a few exceptions).
         if (    not exists($conffiles{$file})
             and $file !~ m{ /README $}xsm
             and $file ne 'etc/init.d/skeleton'

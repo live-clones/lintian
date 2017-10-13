@@ -2,6 +2,10 @@ lintian (2.5.56) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/conffiles.pm, checks/{debconf,files,scripts}.desc:
+    + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to fix a
+      number of spelling mistakes.  (Closes: #878446)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 12 Oct 2017 14:08:44 -0400
 
 lintian (2.5.55) unstable; urgency=medium

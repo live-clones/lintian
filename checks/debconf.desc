@@ -309,7 +309,7 @@ Tag: template-uses-unsplit-choices
 Severity: normal
 Certainty: possible
 Info: The use of _Choices in templates is deprecated.
- An _Choices field must be translated as a single string.
+ A _Choices field must be translated as a single string.
  .
  Using __Choices allows each choice to be translated separately, easing
  translation and is therefore recommended.

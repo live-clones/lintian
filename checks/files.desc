@@ -82,7 +82,7 @@ Tag: package-installs-apt-preferences
 Severity: serious
 Certainty: possible
 Ref: apt_preferences(5)
-Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/</tt> or install a /etc/apt/preferences file.
+Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/</tt> or install an /etc/apt/preferences file.
  This directory is under the control of the local administrator.
  .
  Package should not override local administrator choices.
@@ -92,7 +92,7 @@ Severity: serious
 Certainty: possible
 Ref: sources.list(5)
 Info: Debian packages should not install files under <tt>/etc/apt/sources.list.d/</tt>
- or install a /etc/apt/sources.list file.
+ or install an /etc/apt/sources.list file.
  This directory is under the control of the local administrator.
  .
  Package should not override local administrator choices.
@@ -1741,7 +1741,7 @@ Info: The package is architecture-dependent, ships a shared library in
  a public library search path and is marked <tt>Multi-Arch:
  foreign</tt>. Typically, shared libraries are marked <tt>Multi-Arch:
  same</tt> when possible. Sometimes, private shared libraries are put
- into the public library search path to accomodate programs in the
+ into the public library search path to accommodate programs in the
  same package, but this package does not contain any programs.
  .
  Please remove the <tt>Multi-Arch: foreign</tt> stanza.

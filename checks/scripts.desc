@@ -737,7 +737,7 @@ Info: Lintian has detected the presence of a #DEBHELPER# token in the
 Tag: debhelper-autoscript-in-maintainer-scripts
 Severity: classification
 Certainty: possible
-Info: The maintainer scripts of the package contians one or more
+Info: The maintainer scripts of the package contain one or more
  auto-generated shell snippets inserted by the listed debhelper tool.
 
 Tag: unconditional-use-of-dpkg-statoverride
