@@ -61,14 +61,10 @@ sub run {
     my $needtomodifyscripts = '';
     my $compat = 0;
     my $seendhcleank = '';
-    my %missingbdeps;
-    my %missingbdeps_addons;
-
-    my $maybe_skipping;
-    my $dhcompatvalue;
+    my (%missingbdeps, %missingbdeps_addons, $maybe_skipping, $dhcompatvalue);
     my $inclcdbs = 0;
 
-    my ($bdepends_noarch, $bdepends, %build_systems);
+    my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
     my $seen_dh = 0;
     my $seen_python_helper = 0;
     my $seen_python3_helper = 0;
@@ -102,6 +98,7 @@ sub run {
                 or $dhcommand eq 'dh_autotools-dev_updateconfig') {
                 tag 'debhelper-tools-from-autotools-dev-are-deprecated',
                   "$dhcommand (line $.)";
+                $uses_autotools_dev_dh = 1;
             }
             if ($dhcommand eq 'dh_python3') {
                 $seen_python3_helper = 1;
@@ -151,6 +148,7 @@ sub run {
                         tag
                           'debhelper-tools-from-autotools-dev-are-deprecated',
                           "dh ... --with ${orig_addon} (line $.)";
+                        $uses_autotools_dev_dh = 1;
                     }
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
@@ -470,6 +468,7 @@ sub run {
 
     if ($level >= 10) {
         for my $pkg (qw(dh-autoreconf autotools-dev)) {
+            next if $pkg eq 'autotools-dev' and $uses_autotools_dev_dh;
             tag 'useless-autoreconf-build-depends', $pkg
               if $bdepends->implies($pkg);
         }

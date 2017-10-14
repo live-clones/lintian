@@ -14,6 +14,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [NT] Add check for using using the debhelper tooling from the
       autotools-dev package.  These have been replaced by the changes
       inside debhelper itself.
+    + [NT] Avoid useless-autoreconf-build-depends for autotools-dev when
+      the autotools-dev tooling is used in debian/rules.
+      (Closes: #871711)
   * checks/watch-file.pm:
     + [CL] Include the offending URI in debian-watch-uses-insecure-uri
       output, not the line number.
