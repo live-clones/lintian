@@ -22,6 +22,10 @@ lintian (2.5.56) UNRELEASED; urgency=medium
       correction as it is "acceptable beyond serious criticism".
       (Closes: #878457)
 
+  * doc/lintian.xml, checks/{fields,files,menu-format}.desc, etc.:
+    + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
+      a large number of errors in links.  (Closes: #878521)
+
   * private/refresh-manual-refs:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       the Debconf reference mapping. Many thanks!  (Closes: #878449)

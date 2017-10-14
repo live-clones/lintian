@@ -1430,7 +1430,7 @@ Info: This package contains a file in a path reserved solely for
 Tag: package-contains-cmake-private-file
 Severity: important
 Certainty: certain
-Ref: https://wiki.debian.org/CMake, http://www.cmake.org/cmake/help/v3.2/manual/cmake-packages.7.html#config-file-packages
+Ref: https://wiki.debian.org/CMake, https://cmake.org/cmake/help/v3.10/manual/cmake-packages.7.html#config-file-packages
 Info: This package contains a file in a path reserved solely for
  <tt>CMake</tt>. This normally means you are shipping a <tt>Find</tt>
  module. Libraries should not ship Find modules at all but Config files

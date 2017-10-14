@@ -133,7 +133,7 @@ Info: This package is architecture all and hence requires a Multi-Arch
  An Architecture: all package to satisfy the dependencies of a
  foreign-architecture package, it must be marked Multi-Arch: foreign
  or Multi-Arch: allowed.
-Ref: https://wiki.ubuntu.com/MultiarchSpec#Dependencies_involving_Architecture:_all_packages/
+Ref: https://wiki.ubuntu.com/MultiarchSpec#Dependencies_involving_Architecture:_all_packages
 
 Tag: aspell-package-not-arch-all
 Severity: normal
@@ -1190,7 +1190,7 @@ Info: The package build-depends on a versioned development package of
  .
  Should the package have a legitimate reason for using the versioned development
  package, please add an override.
-Ref: http://download.oracle.com/docs/cd/E17076_02/html/upgrading/upgrade_process.html
+Ref: http://docs.oracle.com/cd/E17076_02/html/upgrading/upgrade_process.html
 
 Tag: transitional-package-should-be-oldlibs-optional
 Severity: normal
