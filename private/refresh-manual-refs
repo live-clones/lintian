@@ -28,6 +28,7 @@
 use strict;
 use warnings;
 use autodie;
+use open qw(:std :utf8);
 
 use File::Basename;
 use List::MoreUtils qw(none);
