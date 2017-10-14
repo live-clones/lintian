@@ -477,7 +477,7 @@ Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  .
  <tt>update-alternatives --remove</tt> should be called in the prerm
  instead.
-Ref: policy F, update-alternatives(8)
+Ref: policy 6*, update-alternatives(8)
 
 Tag: maintainer-script-should-not-use-update-alternatives-set
 Severity: normal
