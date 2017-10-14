@@ -12,9 +12,6 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Include the offending URI in debian-watch-uses-insecure-uri
       output, not the line number.
 
-  * data/output/manual-references:
-    + [CL] Update file after changes to private/refresh-manual-refs as
-      part of #878449.
   * data/spelling/corrections:
     + [CL] Revert addition of "none were" -> "none was" multiword spelling
       correction as it is "acceptable beyond serious criticism".
