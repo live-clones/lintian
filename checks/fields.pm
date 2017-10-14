@@ -114,8 +114,8 @@ my %VCS_EXTRACT = (
     # git uri followed by optional " -b " + branchname:
     git     => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
     svn     => sub { return @_;},
-    # that's a hostname followed by a module name:
-    mtn     => sub { return shift =~ /^(.+?)\s+(\S+)$/;},
+    # New "mtn://host?branch" uri or deprecated "host branch".
+    mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
 );
 my %VCS_CANONIFY = (
     browser => sub {
@@ -195,7 +195,7 @@ my %VCS_RECOMMENDED_URIS = (
     hg      => qr;^https?://;,
     git     => qr;^(?:git|https?|rsync)://;,
     svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
-    mtn     => qr;^[\w.-]+$;,
+    mtn     => qr;^mtn://;,
 );
 my %VCS_VALID_URIS = (
     arch    => qr;^https?://;,
@@ -204,6 +204,7 @@ my %VCS_VALID_URIS = (
     hg      => qr;^ssh://;,
     git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
     svn     => qr;^(?:svn\+)?ssh://;,
+    mtn     => qr;^[\w.-]+$;,
 );
 
 # Python development packages that are used almost always just for building

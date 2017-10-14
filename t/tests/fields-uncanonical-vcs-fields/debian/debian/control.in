@@ -6,7 +6,7 @@ Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 Vcs-Browser: https://svn.debian.org/wsvn/foobar/trunk?foo=bar;op=log;something=else
 Vcs-Svn: svn://svn.debian.org/svn/foobar/trunk
-Vcs-Mtn: www.example.org org.debian.foobar
+Vcs-Mtn: mtn://www.example.org?org.debian.foobar
 Vcs-Hg: http://hg.debian.org/hg/foobar/pkg/foobar
 Vcs-Git: git://git.debian.org/~djpig/foobar.git -b master
 Vcs-Cvs: :pserver:anonymous@cvs.alioth.debian.org:/cvsroot/foobar module
