@@ -23,6 +23,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * private/refresh-manual-refs:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       the Debconf reference mapping. Many thanks!  (Closes: #878449)
+    + [CL] Apply a patch series from Ville Skyttä <ville.skytta@iki.fi>
+      to a number of issues in the Menu, Perl, Python and Debian
+      Policy parsing.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 12 Oct 2017 14:08:44 -0400
 
