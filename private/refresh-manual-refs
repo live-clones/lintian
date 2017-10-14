@@ -59,7 +59,7 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 # additional regex can be defined to match possible references on other pages
 # of the manual.
 
-my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
+my $title_re = qr/<title\s?>(.+?)(?:\s+v[\d.]+)?<\/title\s?>/i;
 my $link_re
   = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re
