@@ -98,6 +98,11 @@ sub run {
             if ($dhcommand eq 'dh_installmanpages') {
                 tag 'dh_installmanpages-is-obsolete', "line $.";
             }
+            if (   $dhcommand eq 'dh_autotools-dev_restoreconfig'
+                or $dhcommand eq 'dh_autotools-dev_updateconfig') {
+                tag 'debhelper-tools-from-autotools-dev-are-deprecated',
+                  "$dhcommand (line $.)";
+            }
             if ($dhcommand eq 'dh_python3') {
                 $seen_python3_helper = 1;
             }
@@ -138,9 +143,15 @@ sub run {
             while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
                 my $addon_list = $2;
                 for my $addon (split(m/,/o, $addon_list)) {
+                    my $orig_addon = $addon;
                     $addon =~ y,-,_,;
-                    my $depends =$dh_addons_manual->value($addon)
+                    my $depends = $dh_addons_manual->value($addon)
                       || $dh_addons->value($addon);
+                    if ($addon eq 'autotools_dev') {
+                        tag
+                          'debhelper-tools-from-autotools-dev-are-deprecated',
+                          "dh ... --with ${orig_addon} (line $.)";
+                    }
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }

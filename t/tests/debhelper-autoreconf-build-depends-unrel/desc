@@ -5,3 +5,5 @@ Test-Depends: debhelper (>= 10)
 Test-Against:
  missing-build-dependency-for-dh_-command
  useless-autoreconf-build-depends
+Test-For:
+ debhelper-tools-from-autotools-dev-are-deprecated

@@ -3,5 +3,5 @@ Version: 1.0
 Description: Test for use of deprecated dh_* commands
 Extra-Build-Depends: python-ply (>= 3.4-1~)
 Test-For:
+ debhelper-tools-from-autotools-dev-are-deprecated
  dh_installmanpages-is-obsolete
-
