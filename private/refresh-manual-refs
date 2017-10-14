@@ -73,7 +73,18 @@ my %manuals = (
     'policy' => [
         '/usr/share/doc/debian-policy/policy.html/index.html',
         'https://www.debian.org/doc/debian-policy/',
-        $link_re, $fields
+        # $index_re would match the Policy's TOC and work otherwise, but
+        # the TOC is generated only up to 3 levels deep as of 4.1.1.1, and
+        # we want refs to all levels.
+        qr{
+              <(h[2-5])>\s*
+              ([A-Z]|[A-Z]?[\d\.]+?)
+              \.?\s+
+              ([\w\s[:punct:]]+?)
+              <a\s(?:[^>]*?)\bhref="([^"]+)".+?</a>
+              </\1>
+        }x,
+        [['_ignored'], ['section'], ['title'], ['url']]
     ],
     'menu-policy' => [
         '/usr/share/doc/debian-policy/menu-policy.html/index.html',
