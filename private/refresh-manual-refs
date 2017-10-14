@@ -185,6 +185,8 @@ sub extract_refs {
     # the Developer's Reference are cut in the middle of <a>...</a>.
     local $/ = "\n\n";
 
+    my %seen_sections;
+
     while (<$page_fd>) {
         if (not $title and m/$title_re/) {
             $title = 1;
@@ -211,12 +213,23 @@ sub extract_refs {
                 $ref{url} = basename($page) . "#$ref{url}";
             }
 
-            $ref{section} =~ s/^\#(.+)$/\L$1/;
             $ref{title} =~ s/\s+/ /g;
             $ref{title} =~ s,<span[^>]*>(.*?)</span ?>,$1,ig;
             $ref{title} =~ s,<code[^>]*>(.*?)</code ?>,<code>$1</code>,ig;
+
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;
+
+            $ref{section} =~ s/^\#(.+)$/\L$1/;
+            # Some manuals reuse section numbers for different references,
+            # e.g. the Debian Policy's normal and appendix sections are
+            # numbers that clash with each other. Track if we've already
+            # seen a section pointing to some other URL than the current one,
+            # and uniquify it by appending as many asterisks as necessary.
+            $ref{section} .= '*'
+              while (defined($seen_sections{$ref{section}})
+                && $seen_sections{$ref{section}} ne $ref{url});
+            $seen_sections{$ref{section}} = $ref{url};
 
             my @out = ($manual, $ref{section}, $ref{title}, $ref{url});
             print {$fh} join('::', @out) . "\n";
