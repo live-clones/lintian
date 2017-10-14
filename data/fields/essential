@@ -10,7 +10,6 @@ dash
 debianutils
 diffutils
 dpkg
-e2fsprogs
 findutils
 grep
 gzip
