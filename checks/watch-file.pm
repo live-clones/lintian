@@ -137,8 +137,8 @@ sub run {
                               /projects/.+/files}xsm
               ) {
                 tag 'debian-watch-file-should-use-sf-redirector', "line $.";
-            } elsif (m%(?:http|ftp):\S+%) {
-                tag 'debian-watch-uses-insecure-uri',$&;
+            } elsif (m%((?:http|ftp):\S+)%) {
+                tag 'debian-watch-uses-insecure-uri',$1;
             }
 
             # This bit is as-is from uscan.pl:
