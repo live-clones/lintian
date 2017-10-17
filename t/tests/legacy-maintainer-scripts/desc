@@ -8,7 +8,6 @@ Test-For:
  changelog-should-mention-qa
  command-with-path-in-maintainer-script
  config-does-not-load-confmodule
- control-file-has-bad-permissions
  debhelper-but-no-misc-depends
  debian-changelog-file-contains-invalid-email-address
  debian-rules-missing-good-practice-target-dfsg
