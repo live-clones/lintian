@@ -10,7 +10,7 @@ binary-arch:
 
 binary-indep:
 	install -d debian/tmp/DEBIAN
-	install -m 0644 debian/config debian/tmp/DEBIAN
+	install -m 0755 debian/config debian/tmp/DEBIAN
 	install -m 0755 debian/preinst debian/tmp/DEBIAN
 	install -m 0755 debian/postinst debian/tmp/DEBIAN
 	install -m 0755 debian/prerm debian/tmp/DEBIAN

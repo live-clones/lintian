@@ -1,8 +1,6 @@
 E: maintainer-scripts source: malformed-dm-upload-allowed Yes
 E: maintainer-scripts source: orphaned-package-should-not-have-uploaders
 E: maintainer-scripts source: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-E: maintainer-scripts: control-file-has-bad-permissions config 0644 != 0755
-E: maintainer-scripts: debconf-config-not-executable
 E: maintainer-scripts: debian-changelog-file-contains-invalid-email-address jeroen@mordor
 E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package etc/init.d/foo

@@ -1,0 +1,4 @@
+E: debconf-config-not-executable: control-file-has-bad-permissions config 0644 != 0755
+E: debconf-config-not-executable: debconf-config-not-executable
+W: debconf-config-not-executable: no-debconf-templates
+W: debconf-config-not-executable: postinst-does-not-load-confmodule

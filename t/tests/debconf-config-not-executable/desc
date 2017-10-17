@@ -1,0 +1,7 @@
+Testname: debconf-config-not-executable
+Version: 1.0
+Description: Test for debian/config not being executable
+# dpkg 1.19.0 will error out due to https://anonscm.debian.org/git/dpkg/dpkg.git/commit/?id=cd791ccf8117398ea765eda3a92db52a9cf04c23
+Test-Depends: dpkg (<< 1.19.0)
+Test-For:
+ debconf-config-not-executable

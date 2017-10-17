@@ -1,5 +1,3 @@
-E: debconf-config-general: control-file-has-bad-permissions config 0644 != 0755
-E: debconf-config-general: debconf-config-not-executable
 E: debconf-config-general: unknown-debconf-priority config:13 unknown
 W: debconf-config-general: config-does-not-load-confmodule
 W: debconf-config-general: isdefault-flag-is-deprecated config

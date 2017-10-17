@@ -50,6 +50,10 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * t/scripts/pod-synopsis.t:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to skip all
       POD synopsis tests if Test::Pod is not available.  (Closes: #878522)
+  * t/tests/debconf-config-*, t/tests/legacy-maintainer-scripts:
+    + [CL] Split out checks for debconf-config-not-executable into a
+      separate test protected by a Test-Requires now that dpkg >= 1.19.0
+      will bail out on that condition.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 12 Oct 2017 14:08:44 -0400
 
