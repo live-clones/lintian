@@ -3,6 +3,8 @@ Source: binary
 Sequence: 9999
 Version: 4-1.1
 Description: Legacy test "binary"
+Test-Against:
+ control-file-is-empty
 Test-For:
  ancient-standards-version
  arch-dep-package-has-big-usr-share
@@ -13,7 +15,6 @@ Test-For:
  changelog-file-not-compressed
  changelog-news-debian-mismatch
  command-in-menu-file-and-desktop-file
- control-file-is-empty
  debian-changelog-file-missing-or-wrong-name
  debian-copyright-file-uses-obsolete-national-encoding
  debian-news-entry-has-strange-distribution

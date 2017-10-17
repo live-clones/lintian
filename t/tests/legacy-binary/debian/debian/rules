@@ -84,9 +84,6 @@ binary-arch: build
 	dpkg-gencontrol -pbinary -isp
 	dpkg-gencontrol -pbinary-data -Pdebian/binary-data -isp
 
-	# Test an md5sums check while we're here.
-	touch debian/binary-data/DEBIAN/md5sums
-
 	dpkg --build debian/tmp ..
 	dpkg --build debian/binary-data ..
 
