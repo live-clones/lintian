@@ -255,6 +255,10 @@ sub check_init {
                 }
             }
         }
+        if ($l =~ m/Please remove the "Author" lines|Example initscript/) {
+            tag 'init.d-script-contains-skeleton-template-content',
+              "${initd_path}:$.";
+        }
         if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
             if ($lsb{BEGIN}) {
                 tag 'init.d-script-has-duplicate-lsb-section',$initd_path;

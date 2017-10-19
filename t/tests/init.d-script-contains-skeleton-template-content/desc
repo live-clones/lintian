@@ -1,0 +1,5 @@
+Testname: init.d-script-contains-skeleton-template-content
+Version: 1.0
+Description: Test for scripts using the /etc/init.d/skeleton template
+Test-For:
+ init.d-script-contains-skeleton-template-content
