@@ -6,6 +6,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Apply patch from Adrian Bunk to mention the lack of the "-g"
       flag as a common cause for the debug-file-with-no-debug-symbols tag.
       (Closes: #878806)
+  * checks/changes-file.desc:
+    + [CL] Add a note to orig-tarball-missing-upstream-signature regarding
+      support in pristine-tar and git-buildpackage.
   * checks/conffiles.pm, checks/{debconf,files,scripts}.desc:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to fix a
       number of spelling mistakes.  (Closes: #878446)
