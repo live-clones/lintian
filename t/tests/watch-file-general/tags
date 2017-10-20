@@ -10,6 +10,7 @@ W: watch-file-general source: debian-watch-file-should-mangle-version line 15
 W: watch-file-general source: debian-watch-file-should-mangle-version line 24
 W: watch-file-general source: debian-watch-file-should-mangle-version line 28
 W: watch-file-general source: debian-watch-file-should-mangle-version line 29
+W: watch-file-general source: debian-watch-file-should-mangle-version line 32
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 12
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 14
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 15

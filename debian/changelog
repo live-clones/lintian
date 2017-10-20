@@ -35,6 +35,8 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * checks/watch-file.pm:
     + [CL] Include the offending URI in debian-watch-uses-insecure-uri
       output, not the line number.
+    + [CL] Ignore the magic http://sf.net/ redirector URI for the
+      debian-watch-uses-insecure-uri tag.  (Closes: #879206)
 
   * data/fields/essential:
     + [CL] Apply patch from Helmut Grohne <helmut@subdivi.de> to treat

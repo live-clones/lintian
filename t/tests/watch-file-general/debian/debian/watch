@@ -27,3 +27,6 @@ http://githubredir.debian.net/github/username/project /(.*).tar.gz
 
 http://insecure.com /(.*).tar.gz
 https://secure.com /(.*).tar.gz
+
+# False positive for debian-watch-uses-insecure-uri
+http://sf.net/uses/redirector-([^-]+)\.tar\.gz
