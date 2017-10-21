@@ -7,7 +7,7 @@ Build-Depends: {$build_depends}
 
 Package: {$source}
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, python2.7, csh
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, python2.7, csh, cwltool
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

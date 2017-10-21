@@ -44,6 +44,8 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * data/fields/essential:
     + [CL] Apply patch from Helmut Grohne <helmut@subdivi.de> to treat
       e2fsprogs as non-essential.  (Closes: #878518)
+  * data/scripts/interpreters:
+    + [CL] Add cwl-runner to the list of interpreters.  (Closes: #851126)
   * data/spelling/corrections:
     + [CL] Revert addition of "none were" -> "none was" multiword spelling
       correction as it is "acceptable beyond serious criticism".

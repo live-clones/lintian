@@ -26,6 +26,7 @@ bltwish        => /usr/bin, blt
 cfagent        => /usr/sbin, cfengine2
 clisp          => /usr/bin
 csh            => /bin, tcsh | csh | c-shell
+cwl-runner     => /usr/bin, cwltool
 dash           => /bin, @NODEPS@
 escript        => /usr/bin, erlang-base | erlang-base-hipe
 expect         => /usr/bin
