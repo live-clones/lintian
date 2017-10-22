@@ -4,6 +4,7 @@ Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}, javahelper, default-jdk-headless | default-jdk
+Rules-Requires-Root: no
 
 Package: libtesta-java
 Architecture: {$architecture}

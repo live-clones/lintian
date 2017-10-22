@@ -4,6 +4,7 @@ Section: {$section}
 Maintainer: {$author}
 Standards-Version: 3.8
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

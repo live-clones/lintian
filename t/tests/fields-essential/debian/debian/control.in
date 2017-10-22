@@ -5,6 +5,7 @@ Maintainer: {$author}
 Standards-Version: {$standards_version}
 XS-Essential: no
 Build-Depends: {$build_depends}
+Rules-Requires-Root: binary-targets
 
 Package: {$source}
 Essential: yes

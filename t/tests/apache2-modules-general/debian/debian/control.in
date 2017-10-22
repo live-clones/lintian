@@ -5,6 +5,7 @@ Maintainer:  Big Kahuna <kahuna@example.com>
 Uploaders: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: libapache2-mod-foo
 Architecture: {$architecture}

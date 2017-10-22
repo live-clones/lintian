@@ -4,6 +4,7 @@ Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 Vcs-Browser: https://anonscm.debian.org/viewvc/foobar/trunk?rev=0&sc=0
 Vcs-Svn: svn://anonscm.debian.org/foobar/trunk
 Vcs-Mtn: www.example.org org.debian.foobar

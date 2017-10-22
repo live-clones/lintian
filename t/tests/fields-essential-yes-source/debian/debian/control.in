@@ -5,6 +5,7 @@ Maintainer: {$author}
 Standards-Version: {$standards_version}
 Essential: yes
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

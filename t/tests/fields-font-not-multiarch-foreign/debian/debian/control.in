@@ -4,6 +4,7 @@ Section: fonts
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
 Package: fonts-{$source}

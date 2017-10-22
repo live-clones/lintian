@@ -10,10 +10,10 @@ Build-Depends: {$build_depends},
  sparc i386 amd64
  ]
 Build-Depends-Indep: perl (> 5.8)
+Rules-Requires-Root: no
 XS-Vcs-Svn: https://svn.example.com/{$source}/trunk
 #Vcs-Git: git://git.debian.org/collab-maint/<pkg>.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/<pkg>.git;a=summary
-
 
 Package: {$source}
 Section: {$section}

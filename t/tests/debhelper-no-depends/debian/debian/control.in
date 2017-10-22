@@ -3,6 +3,7 @@ Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

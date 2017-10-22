@@ -5,6 +5,7 @@ Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends},
  cli-common-dev (>= 0.5.7) [i386 sparc amd64 ia64]
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

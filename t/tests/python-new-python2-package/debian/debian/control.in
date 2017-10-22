@@ -4,6 +4,7 @@ Section: python
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: python-{$source}
 Architecture: all

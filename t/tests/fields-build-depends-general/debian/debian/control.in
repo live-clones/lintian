@@ -12,6 +12,7 @@ Build-Depends: {$build_depends}, bd-conflict, revision-1 (>= 1.0-1),
  mount
 Build-Conflicts:
  bd-conflict,
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

@@ -4,6 +4,7 @@ Section: python
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}, python-sphinx | python3-sphinx
+Rules-Requires-Root: no
 
 Package: python3-{$source}
 Architecture: all

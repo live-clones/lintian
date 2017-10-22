@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: gir1.1-missing-gir-depends-2.2
 Architecture: {$architecture}

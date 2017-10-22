@@ -5,6 +5,7 @@ Maintainer: {$author}
 Standards-Version: {$standards_version}
 XS-Python-Version: current 2.6
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: all

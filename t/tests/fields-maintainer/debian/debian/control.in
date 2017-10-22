@@ -5,6 +5,7 @@ Maintainer: Mrs. Localhost<user@localhost>
 Uploaders: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}
