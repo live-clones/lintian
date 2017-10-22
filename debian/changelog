@@ -53,6 +53,11 @@ lintian (2.5.56) UNRELEASED; urgency=medium
       correction as it is "acceptable beyond serious criticism".
       (Closes: #878457)
 
+  * debian/control:
+    + [NT] Set R³ to "no".  Lintian builds fine without root and
+      Build-Depends on fakeroot for the tests that still require
+      fakeroot.
+
   * doc/lintian.xml, checks/{fields,files,menu-format}.desc, etc.:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       a large number of errors in links.  (Closes: #878521)
