@@ -1,6 +1,7 @@
 Testname: patch-systems-quilt-description
 Version: 1.0
 Description: Test for quilt patches which do not have accompanying descriptions
+Extra-Build-Depends: quilt
 Test-For: quilt-patch-missing-description
           quilt-patch-using-template-description
 References: Debian Bug #498892

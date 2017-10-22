@@ -3,7 +3,7 @@ Priority: optional
 Section: python
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7.0.50~), dpkg-dev (>= 1.16.1~)
+Build-Depends: {$build_depends}, dpkg-dev (>= 1.16.1~)
 
 Package: python-kinterbasdb
 Architecture: any

@@ -3,7 +3,7 @@ Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends-Indep: debhelper (>= 9), python
+Build-Depends-Indep: {$build_depends}, python
 
 Package: {$source}
 Architecture: {$architecture}
