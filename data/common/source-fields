@@ -33,6 +33,7 @@ origin
 package-list
 python-version
 ruby-versions
+rules-requires-root
 source
 standards-version
 testsuite

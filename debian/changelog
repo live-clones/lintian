@@ -41,6 +41,8 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Ignore the magic http://sf.net/ redirector URI for the
       debian-watch-uses-insecure-uri tag.  (Closes: #879206)
 
+  * data/common/source-fields:
+    + [NT] Add "Rules-Requires-Root".
   * data/fields/essential:
     + [CL] Apply patch from Helmut Grohne <helmut@subdivi.de> to treat
       e2fsprogs as non-essential.  (Closes: #878518)
