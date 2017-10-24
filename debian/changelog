@@ -2,6 +2,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/appstream-metadata.{pm,desc}:
+    + [CL] Don't error out when AppStream metadata is invalid and emit new
+      appstream-metadata-invalid tag instead.  (Closes: #879661)
   * checks/binaries.desc:
     + [CL] Apply patch from Adrian Bunk to mention the lack of the "-g"
       flag as a common cause for the debug-file-with-no-debug-symbols tag.
