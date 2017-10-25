@@ -891,7 +891,7 @@ Info: This file appears to be incomplete or insufficiently modified as it
  command or information.
 
 Tag: file-contains-trailing-whitespace
-Severity: wishlist
+Severity: pedantic
 Certainty: certain
 Info: This file appears to contain one or more lines with trailing
  whitespace characters.
