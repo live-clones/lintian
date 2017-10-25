@@ -515,7 +515,9 @@ sub run {
 
         unfold('section', \$section);
 
-        if ($type eq 'udeb') {
+        if ($section eq '') {
+            tag 'empty-section-field';
+        } elsif ($type eq 'udeb') {
             unless ($section eq 'debian-installer') {
                 tag 'wrong-section-for-udeb', $section;
             }
