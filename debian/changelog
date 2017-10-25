@@ -37,6 +37,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
       template. Thanks to Christoph Biedl for the idea.  (Closes: #879152)
   * checks/md5sums.pm:
     + [CL] Allow empty md5sums files.  (Closes: #781372)
+  * checks/rules.{pm,desc}:
+    + [CL] Warn on packages unnecessararily setting dpkg-architecture(1)
+      variables.  (Closes: #793554)
   * checks/source-changelog.{desc.pm}:
     + [CL] Move latest-debian-changelog-entry-without-new-date tag into a
       new check of type "source".  (Closes: #873612)

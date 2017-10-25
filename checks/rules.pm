@@ -212,6 +212,16 @@ sub run {
             tag 'debian-rules-sets-DEB_BUILD_OPTIONS', "line $.";
         }
 
+        if (
+            /^
+                \s*(?:export\s+)?
+                (DEB_(?:HOST|BUILD|TARGET)_(?:ARCH|MULTIARCH|GNU)[A-Z_]*)\s*:?=
+            /x
+            && keys(%seen) == 0
+          ) {
+            tag 'debian-rules-sets-dpkg-architecture-variable', "$1 (line $.)";
+        }
+
         # check generic problem
         foreach my $bad_construct ($BAD_CONSTRUCT_IN_RULES->all) {
             my $badregex = $BAD_CONSTRUCT_IN_RULES->value($bad_construct);
