@@ -324,6 +324,10 @@ my @file_checks = (
 # to the debian/ source directory
 our @EOL_TERMINATORS_FILES = qw(control changelog);
 
+# List of files to check for a trailing whitespace characters relative
+# to the debian/ source directory
+our @TRAILING_WHITESPACE_FILES = qw(control rules changelog README.source);
+
 sub run {
     my (undef, undef, $info, $proc) = @_;
     my $source_pkg = $proc->pkg_src;
@@ -373,6 +377,17 @@ sub run {
                 tag 'control-file-with-CRLF-EOLs', $path;
                 last;
             }
+        }
+        close($fd);
+    }
+
+    for my $file (@TRAILING_WHITESPACE_FILES) {
+        my $path = $info->index_resolved_path("debian/$file");
+        next if not $path or not $path->is_open_ok;
+        my $fd = $path->open;
+        while (my $line = <$fd>) {
+            tag 'file-contains-trailing-whitespace', "$path (line $.)"
+              if ($line =~ m/\s+\n$/);
         }
         close($fd);
     }

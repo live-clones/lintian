@@ -17,6 +17,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
       number of spelling mistakes.  (Closes: #878446)
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       a number of manual references.  (Closes: #878517)
+  * checks/cruft.{pm,desc}:
+    + [CL] Warn about certain files under debian/* that contain trailing
+      whitespace characters.  (Closes: #748405)
   * checks/debconf.desc:
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       the debconf-spec refs.  (Closes: #878449)
