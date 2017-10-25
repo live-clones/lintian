@@ -30,6 +30,8 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * checks/fields.pm:
     + [CL] Apply patch from Nicolas Boulenguez to accept and recommend the
       new vcs-mtn mtn:// uri format.  (Closes: #878798)
+    + [CL] Emit new empty-section-field tag instead of uninitialized value
+      warnings on an empty "Section:" field.  (Closes: #878515)
   * checks/init.d.pm:
     + [CL] Check for files that use content from the /etc/init.d/skeleton
       template. Thanks to Christoph Biedl for the idea.  (Closes: #879152)

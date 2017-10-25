@@ -1331,3 +1331,9 @@ Info: Since Debian Policy version 4.0.1, the priority <tt>extra</tt>
  Please update <tt>debian/control</tt> and replace all instances of
  <tt>Priority: extra</tt> with <tt>Priority: optional</tt>.
 Ref: policy 2.5
+
+Tag: empty-section-field
+Severity: normal
+Certainty: certain
+Info: The "Section:" field in this package's control file is empty.
+Ref: policy 2.4
