@@ -520,15 +520,13 @@ sub run {
                 tag 'wrong-section-for-udeb', $section;
             }
         } else {
-            my @parts = split(m{/}, $section, 2) || ('');
+            my @parts = split(m{/}, $section, 2);
 
             if (scalar @parts > 1) {
                 tag 'unknown-section', $section
                   unless $KNOWN_ARCHIVE_PARTS{$parts[0]};
                 tag 'unknown-section', $section
                   unless $KNOWN_SECTIONS->known($parts[1]);
-            } elsif ($parts[0] eq '') {
-                tag 'empty-section-field';
             } elsif ($parts[0] eq 'unknown') {
                 tag 'section-is-dh_make-template';
             } else {

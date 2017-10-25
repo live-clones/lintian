@@ -3,7 +3,7 @@ Source: fields-general-bad
 Version: 1.0?
 Architecture: weird i386 amd64
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Section:
+Section: devel
 Priority: is
  weird
 Unknown-Field: Hallo World
