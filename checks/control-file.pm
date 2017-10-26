@@ -102,7 +102,7 @@ sub run {
                 tag 'xc-package-type-in-debian-control', "line $.";
             }
             if (/^(\S+):$/) {
-                tag 'debian-control-has-empty-field', "$1 (line $.)"
+                tag 'debian-control-has-empty-field', "$1 (line $.)";
             }
             unless (/^\S+: \S/ || /^\S+:$/) {
                 tag 'debian-control-has-unusual-field-spacing', "line $.";
@@ -133,8 +133,10 @@ sub run {
     foreach my $bin (@package_names) {
         my $bfields = $info->binary_field($bin);
         tag 'build-info-in-binary-control-file-section', "Package $bin"
-          if (first { $bfields->{"build-$_"} }
-            qw(depends depends-indep conflicts conflicts-indep));
+          if (
+            first { $bfields->{"build-$_"} }
+            qw(depends depends-indep conflicts conflicts-indep)
+          );
         foreach my $field (keys %$bfields) {
             tag 'binary-control-field-duplicates-source',
               "field \"$field\" in package $bin"
