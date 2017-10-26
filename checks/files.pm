@@ -1163,7 +1163,8 @@ sub run {
         }
 
         # ---------------- .class (compiled Java files)
-        if ($fname =~ m,\.class$,o) {
+        if (   $fname =~ m,\.class$,o
+            && $fname !~ m,(?:WEB-INF|demo|doc|example|sample|test),o) {
             tag 'package-installs-java-bytecode', $file;
         }
 
