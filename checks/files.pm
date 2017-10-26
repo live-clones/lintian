@@ -1165,7 +1165,11 @@ sub run {
         # ---------------- .class (compiled Java files)
         if (   $fname =~ m,\.class$,o
             && $fname !~ m,(?:WEB-INF|demo|doc|example|sample|test),o) {
-            tag 'package-installs-java-bytecode', $file;
+            my $fd = $file->open;
+            read($fd, my $magic, 4);
+            close($fd);
+            tag 'package-installs-java-bytecode', $file
+                if $magic eq "\xCA\xFE\xBA\xBE";
         }
 
         # ---------------- /usr/lib/site-python
