@@ -122,6 +122,8 @@ lintian (2.5.55) unstable; urgency=medium
     + [CL] Ignore privacy breach violations in comments.  (Closes: #877421)
     + [CL] Check for Python modules with overly generic names such as
       "tests" or "test".  (Closes: #875964)
+    + [CL] Lower the severity of package-installs-java-bytecode from
+      "error" to "warning".  (Closes: #879862)
   * checks/{files,manpages,menu-format}.{desc,pm}:
     + [NT] Stop considering usr/man, usr/X11R6/bin and usr/X11R6/man as
       manpage directories / PATH directories to simplify some code paths.

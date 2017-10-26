@@ -1765,7 +1765,7 @@ Info: This package includes Lintian overrides intended for another package.
 Ref: lintian 2.4
 
 Tag: package-installs-java-bytecode
-Severity: serious
+Severity: normal
 Certainty: certain
 Ref: java-policy 2
 Info: Compiled Java source files must not be included in the package. These
