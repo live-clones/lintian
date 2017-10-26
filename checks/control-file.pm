@@ -101,8 +101,9 @@ sub run {
             if ($field eq 'xc-package-type') {
                 tag 'xc-package-type-in-debian-control', "line $.";
             }
-            tag 'debian-control-has-empty-field', "$1 (line $.)"
-              if (/^(\S+):$/);
+            if (/^(\S+):$/) {
+                tag 'debian-control-has-empty-field', "$1 (line $.)"
+            }
             unless (/^\S+: \S/ || /^\S+:$/) {
                 tag 'debian-control-has-unusual-field-spacing', "line $.";
             }
