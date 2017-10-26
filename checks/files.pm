@@ -1169,7 +1169,7 @@ sub run {
             read($fd, my $magic, 4);
             close($fd);
             tag 'package-installs-java-bytecode', $file
-                if $magic eq "\xCA\xFE\xBA\xBE";
+              if $magic eq "\xCA\xFE\xBA\xBE";
         }
 
         # ---------------- /usr/lib/site-python
