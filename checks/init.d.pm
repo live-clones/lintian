@@ -436,10 +436,8 @@ sub check_init {
     if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
         my @required = split(' ', $lsb{'required-stop'} || '');
         if ($needs_fs) {
-            if (
-                none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
-                @required
-              ) {
+            if (none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
+                @required) {
                 tag 'init.d-script-missing-dependency-on-local_fs',
                   "${initd_path}: required-stop";
             }

@@ -762,8 +762,7 @@ sub run {
                       if ($field eq 'conflicts' && $d_version->[0]);
 
                     tag 'obsolete-relation-form', "$field: $part_d_orig"
-                      if (
-                        $d_version && any { $d_version->[0] eq $_ }
+                      if ($d_version && any { $d_version->[0] eq $_ }
                         ('<', '>'));
 
                     tag 'bad-version-in-relation', "$field: $part_d_orig"
