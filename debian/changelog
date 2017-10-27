@@ -9,6 +9,8 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Apply patch from Adrian Bunk to mention the lack of the "-g"
       flag as a common cause for the debug-file-with-no-debug-symbols tag.
       (Closes: #878806)
+    + [CL] Apply patch from Guillem Jover to strongly discourage the use
+      of the getconf(1) interface for LFS support.  (Closes: #879935)
   * checks/changes-file.desc:
     + [CL] Add a note to orig-tarball-missing-upstream-signature regarding
       support in pristine-tar and git-buildpackage.
