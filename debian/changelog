@@ -3530,7 +3530,7 @@ lintian (2.5.27) unstable; urgency=medium
     + [BR] Fix false positive for space-in-std-shortname-in-dep5-copyright
       with alternative licenses.  (Closes: #760642).
     + [BR] Fix false positive for with exception syntax.
-    + [BR] Fix false positive of 
+    + [BR] Fix false positive of
       wildcard-matches-nothing-in-dep5-copyright.  (Closes: 761125)
   * checks/testsuite.{desc,pm}:
     + [BR] Fix false positive missing-runtime-tests-field.
@@ -4235,7 +4235,7 @@ lintian (2.5.21) unstable; urgency=medium
   * checks/files.{desc,pm}:
     + [BR] Add xz and zip to duplicated-compressed-file regexp.
     + [BR] Use Lintian::Data for compressed file extension.
-    + [BR] Use Lintian::Data for vcs files list.  Add a few more VCS 
+    + [BR] Use Lintian::Data for vcs files list.  Add a few more VCS
       files (Closes: #731904).
     + [BR] Remove long obsolete reference to rc.boot(5) manpage
       in package-installs-into-etc-rc.boot description.
@@ -4245,7 +4245,7 @@ lintian (2.5.21) unstable; urgency=medium
       (Closes: #729037).
     + [BR] Check privacy breach only in regular file.
     + [BR] Add link tag as potential privacy breaker.
-    + [BR] Add <div data-href="http://website" to potential privacy 
+    + [BR] Add <div data-href="http://website" to potential privacy
       breaker.
   * checks/md5sums.pm:
     + [BR] In case of strange filename, md5sum(1) prefix the md5sum
@@ -8035,7 +8035,7 @@ lintian (2.5.1) unstable; urgency=low
 
   * man/lintian.pod.in:
     + [NT] Mentioned that --checksums and aliases are deprecated.
-  
+
   * unpack/list-srcpkg:
     + [ADB] Don't rely on the order of fields in the Sources file.  The
       files produced by the Debian archive no longer follow the order
@@ -8345,7 +8345,7 @@ lintian (2.5.0~rc2) unstable; urgency=low
     + [NT] Added 'package-list' field, which is emitted by dpkg 1.16.0.
   * data/spelling/corrections:
     + [NT] Added more misspellings.
-  
+
   * t/tests/shared-libs-la-files:
     + [NT] Fixed an issue where files would not be included in the tarball
       due to dpkg-source's exclude patterns.  (Closes: #619287)
@@ -9363,7 +9363,7 @@ lintian (2.3.2) unstable; urgency=high
     + [ADB] Update the documentation to reflect the existence of
       Lintian::Collect::Binary.
   * lib/Lintian/Collect/Binary.pm:
-    + [ADB] Correct a reference in the documentation indicating that the 
+    + [ADB] Correct a reference in the documentation indicating that the
       module collects data for source packages.
   * lib/Lintian/Schedule.pm:
     + [RG] Fix CVE-2009-4013: missing control files sanitation.
@@ -9498,7 +9498,7 @@ lintian (2.3.1) unstable; urgency=low
       scripts.
     + [ADB] Correct the documentation of --tags-from-file to indicate that
       the file contains tags to issue, not suppress.
-  
+
   * reporting/html_reports:
     + [RA] Sort the tags so that the maintainer view will group repeated
       instances of the same tag and display extra information in sorted
@@ -9645,7 +9645,7 @@ lintian (2.3.0) unstable; urgency=low
       Thanks, martin f krafft.  (Closes: #554617)
 
   * data/debhelper/*:
-    + [ADB] Refresh against unstable.  
+    + [ADB] Refresh against unstable.
   * data/fields/{perl-provides,virtual-packages}:
     + [ADB] Refresh against unstable.
   * data/files/fonts:
@@ -10014,7 +10014,7 @@ lintian (2.2.16) unstable; urgency=low
       tag by passing undef for the tag name so that the spell checking
       functions can be used to test tag descriptions for spelling errors.
       (Closes: #546641)
-  
+
   * reporting/html_reports:
     + [RA] Include all tag types in the qa-list.txt file instead of just
       errors and warnings.  The new order of columns is errors, warnings,
@@ -10044,7 +10044,7 @@ lintian (2.2.15) unstable; urgency=low
       - init.d-script-should-depend-on-virtual-facility
       - init.d-script-starts-in-stop-runlevel
       - ocaml-custom-executable
-  
+
   * checks/binaries{,.desc}:
     + [RA] Add a new check for OCaml bytecode executables.  Patch from
       Stéphane Glondu.  (Closes: #498138)
@@ -10446,7 +10446,7 @@ lintian (2.2.13) unstable; urgency=low
 lintian (2.2.12) unstable; urgency=low
 
   The "Policy 3.8.2" release.
-  
+
   * Summary of tag changes:
     + Added:
       - debug-symbols-directly-in-usr-lib-debug
@@ -10461,7 +10461,7 @@ lintian (2.2.12) unstable; urgency=low
       - package-mixes-misc-and-dpi-fonts
     + Removed:
       - missing-comma-between-items
-      
+
   * checks/binaries{,.desc}:
     + [RA] Diagnose installing detached debugging symbols directly in
       /usr/lib/debug instead of in an appropriate subdirectory.  Patch
@@ -10907,7 +10907,7 @@ lintian (2.2.9) unstable; urgency=low
        - doc-package-should-be-section-doc
        - perl-package-should-be-section-perl
        - python-package-should-be-section-python
-  
+
   * checks/deb-format.desc:
     + [RA] In the tag description, the first required element should be
       debian-binary, not debian-control.  Thanks, Judit Foglszinger.
@@ -11241,7 +11241,7 @@ lintian (2.2.7) unstable; urgency=low
     + [RA] Do a little bit of parallelization when writing out the sorted
       index of the source package.
     + [RA] Ignore leading whitespace in the Files section.
-  
+
  -- Russ Allbery <rra@debian.org>  Sun, 08 Mar 2009 21:58:32 -0700
 
 lintian (2.2.6) unstable; urgency=low
@@ -11304,7 +11304,7 @@ lintian (2.2.6) unstable; urgency=low
       file we scan.  Patch from Raphael Geissert.
     + [ADB] Modify the check for embedded Javascript libraries to ignore
       yahoo.js as there are similarly named, but unrelated, scripts in
-      the archive.      
+      the archive.
     + [ADB] Lower the certainty of the embedded-{javascript,php}-library
       tags to "possible" as they trigger purely on filenames and not
       content.  (Closes: #515690)
@@ -12323,14 +12323,14 @@ lintian (2.1.0) unstable; urgency=low
       _exit() or exit() without at some point calling fork() (a somewhat
       inaccurate heuristic, but one which should weed out a number of
       false positives).  (Closes: #504257)
-  
+
   * collection/objdump-info:
     + [ADB] Only use readelf to emulate objdump if objdump returned "file
       format not recognized".  In cases where the objdump output was "invalid
       operation", the output of etch's readelf is not particularly useful
       and it's easier to simply let the checks scripts handle the objdump
       output.
-  
+
   * debian/control:
     + [FL] Add dependency on libipc-run-perl for Lintian::Command.
 
@@ -12344,7 +12344,7 @@ lintian (2.1.0) unstable; urgency=low
     + [ADB] Don't complain about unused overrides if the check script
       for the overridden tag hasn't been run (or --tags was used and
       the overridden tag not specified).  (Closes: #501722)
-  
+
   * lib/Lintian/Output:
     + [FL] New module to bundle output methods.
   * lib/Tags/{ColonSeparated,LetterQualifier}.pm:
@@ -12355,7 +12355,7 @@ lintian (2.1.0) unstable; urgency=low
   * lib/Lintian/Command:
     + [FL] New utility module as a replacement for Pipeline. Provides
       a convenient wrapper around IPC::Run.
-  
+
   * lib/Lab.pm:
     + [FL] Convert to use Lintian::Output.
   * lib/Tags.pm:
@@ -12372,7 +12372,7 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Convert to use Lintian::Output.
     + [FL] Add some new utility functions: delete_dir copy_dir gunzip_file
       touch_file.
-  
+
   * private/refresh-debhelper-data:
     + [FL] New script to update debhelper related data by Raphael Geissert.
       - data/debhelper/miscDepends_commands: debhelper commands that set
@@ -12384,7 +12384,7 @@ lintian (2.1.0) unstable; urgency=low
          packages they are contained in
 
   * testset/{diffs,filenames}:
-    + [ADB] Generate the files "files/'\ " and "filenames.c~" at build time 
+    + [ADB] Generate the files "files/'\ " and "filenames.c~" at build time
       instead of including it in the source package, to allow lintian to be
       imported in to Bazaar.
 
@@ -12402,16 +12402,16 @@ lintian (2.0.0) unstable; urgency=low
     + [ADB] Detect brace expansions with either a leading or trailing
       blank component (e.g. "{foo,}"). Thanks to Jonny Lamb for pointing
       this out.
-  
+
   * frontend/lintian:
     + [FL] Fix config file parsing which I completely broke in ~rc1.
-  
+
   * lib/Lintian/Schedule.pm:
     + [FL] Fix parsing of source package entries in package lists.
 
   * man/lintian.1:
     + [FL] Remove a stray backslash.
-  
+
   * reporting/harness:
     + [FL] Include STDERR output in lintian.log.
 
@@ -12422,7 +12422,7 @@ lintian (2.0.0~rc2) experimental; urgency=low
   * Summary of tag changes:
     + Added:
       - package-superseded-by-perl
-  
+
   * checks/copyright-file:
     + [FL] Also detect v1.1 of CeCILL license, not only v2.0.
       (Closes: #498994)
@@ -12441,10 +12441,10 @@ lintian (2.0.0~rc2) experimental; urgency=low
     + [FL] Use new Lintian::Collect::Source->binaries method to
       fix udeb detection.  Thanks to Raphael Geissert.
       (Closes: #498096)
-  
+
   * frontend/lintian:
     + [FL] Add support for ranges to --display-level.
-  
+
   * lib/Lintian/Collect/Source.pm:
     + [FL] New binaries method that returns a hash with binary package
       names and types.
@@ -12458,7 +12458,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
     dimensions (Severity and Certainty).
     The default output is unchanged, see the documentation on
     how to utilize the new features.
-  
+
   * Summary of tag changes:
     + Added:
       - description-contains-dh-make-perl-template
@@ -12476,7 +12476,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       - windows-devel-file-in-package
     + Removed:
       - package-needs-python-policy-debhelper
-  
+
   * checks/*.desc:
     + [ADB] Fix a number of spelling mistakes and typos.
   * checks/changelog-file{,.desc}:
@@ -12554,13 +12554,13 @@ lintian (2.0.0~rc1) experimental; urgency=low
       using readelf.
     + [ADB] Update the readelf version table parsing code to handle hidden
       symbols.
-  
+
   * data/fields/perl-provides:
     + [FL] Data about Perl modules that are available both in Perl and as
       separate packages.
   * private/refresh-perl-provides:
     + [FL] Script to update data/fields/perl-provides.  By Niko Tyni.
-  
+
   * doc/lintian.sgml:
     + [FL] Document wildcard support in overrides.
 
@@ -12574,7 +12574,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
     + [FL] Use new module Lintian::Schedule and make package architecture
       available to output formatters if possible.
       Currently used only by experimental colon-separated output.
-  
+
   * lib/Tags.pm:
     + [FL] Add support for specifying wildcards in overrides.
       (Closes: #253884)
@@ -12591,10 +12591,10 @@ lintian (2.0.0~rc1) experimental; urgency=low
   * lib/Lintian/Data.pm:
     + [FL] Extend Lintian::Data to handle key/value pairs.  Patch by
       Niko Tyni.
-  
+
   * man/lintian.1:
     + [FL] Document udeb support in description for --packages-file.
-  
+
   * reporting/templates/maintainer.tmpl:
     + [ADB] Don't list packages in the summary at the top of the main
       report page if all of the issues reported for the package were
@@ -12616,9 +12616,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
 lintian (1.24.4) unstable; urgency=low
 
   The "[JP] is Jordà Polo" release.
-  
+
   * checks/*.desc:
-    + [JP] Update, fix and unify various manual references. 
+    + [JP] Update, fix and unify various manual references.
   * checks/copyright-file:
     + [ADB] Don't flag copyright files using phrases such as "previously
       distributed under the GNU GPL" as lacking a reference to the license.
@@ -12665,16 +12665,16 @@ lintian (1.24.4) unstable; urgency=low
     + [FL] Use $(PERL) instead of a hardcoded path.
     + [FL] Clean-up the binary-indep code.
     + [FL] Add build stamp file.
-  
+
   * doc/README{,.in}:
     + [FL] Move README to README.in and add the listing of lintian
       options on build time from lintian --help.
-  
+
   * frontend/lintian:
     + [FL] Do not try to use fail() before the lintian libraries are
       loaded.
     + [JP] Allow tags from the "lintian" checkset to be specified with --tags.
-  
+
   * lib/manual_refs:
     + [JP] Regenerate with new manual_refs_update.pl script.
       (Closes: #493660)
@@ -12682,7 +12682,7 @@ lintian (1.24.4) unstable; urgency=low
     + [JP] Add support for new manuals, allow specifying manual
       sections by id and not only by section number.
     + [JP] Link manpages to manpages.debian.net.
-  
+
   * private/manual_refs_update.pl:
     + [JP] Add support for many more manuals (FHS, debconf-spec,
       {menu,python,perl}-policy, libpkg-guide).
@@ -12690,7 +12690,7 @@ lintian (1.24.4) unstable; urgency=low
  -- Frank Lichtenheld <djpig@debian.org>  Fri, 22 Aug 2008 07:43:52 +0200
 
 lintian (1.24.3) unstable; urgency=low
-  
+
   The "greetings from Argentina" release.
 
   * checks/binaries:
@@ -12829,7 +12829,7 @@ lintian (1.24.3) unstable; urgency=low
   * doc/README:
     + [ADB] Add -E / --show-experimental, -T / --tags and --tags-from-file
       to the option list.
-  
+
   * frontend/lintian:
     + [FL, ADB] Add new --tags/-T option to limit the amount of checks
       run not by check names but by names of tags you're interested
@@ -12860,7 +12860,7 @@ lintian (1.24.3) unstable; urgency=low
 
   * t/:
     + [FL] Begin work on a new testsuite.
-  
+
   * testset/fields:
     + [ADB] New testset from Tobias Quathamer (including some tags which
       previously weren't tested)
@@ -12873,7 +12873,7 @@ lintian (1.24.3) unstable; urgency=low
 lintian (1.24.2) unstable; urgency=low
 
   The "welcome Adam D. Barratt!" release.
-  
+
   * checks/binaries.desc:
     + [ADB] Add some FHS references.  Thanks Jordà Polo.
   * checks/changelog-file{,.desc}:
@@ -12990,7 +12990,7 @@ lintian (1.24.2) unstable; urgency=low
       f krafft.  (Closes: #488114)
     + [RA] Add the cupsys packages, all of which have been renamed to cups.
       Patch from Raphael Geissert.
-  
+
   * debian/control:
     + [FL] Adapt VCS-* headers for move from SVN to git.
   * debian/copyright:
@@ -13003,7 +13003,7 @@ lintian (1.24.2) unstable; urgency=low
       lab using shell instead of lintian.  We only want to remove the lab
       on purge, and purge is only passed to postrm, not prerm, by which
       point the lintian frontend is gone.  (Closes: #489860)
-  
+
   * doc/CREDITS:
     + [FL] Add Raphael Geissert and Adam D. Barratt.
   * doc/lintian.sgml:
@@ -13023,13 +13023,13 @@ lintian (1.24.2) unstable; urgency=low
       checks for LaTeX and TeX.  Thanks, Raphael Geissert.
   * lib/Tags.pm:
     + [ADB] (Re-)Add support for experimental tags.
-  
+
   * man/lintian.1:
     + [FL] Document watch-file check.
     + [ADB] Document new option to display experimental tags.
     + [RA] Refer to lintian-info(1) for printing tag descriptions.  Patch
       from Chris Lamb.  (Closes: #490374)
-  
+
   * reporting/harness:
     + [ADB] Process packages using -E so that experimental tags are included.
   * reporting/html_reports:
@@ -13057,7 +13057,7 @@ lintian (1.24.2) unstable; urgency=low
  -- Russ Allbery <rra@debian.org>  Sun, 13 Jul 2008 17:28:08 -0700
 
 lintian (1.24.1) unstable; urgency=medium
-  
+
   The "mostly for the benefit of lintian.debian.org only" release.
 
   * frontend/lintian:
@@ -13067,19 +13067,19 @@ lintian (1.24.1) unstable; urgency=medium
       affects static labs and only if packages get rechecked
       (i.e. not on harness -i runs) it only got noticed now.
       Use urgency=medium for this fix.
-  
+
   * checks/watch-file:
     + [FL] Fix the order of two regular expression to use
       the more specific one first.  Patch by Raphael Geissert.
       (Closes: #485884)
-  
+
   * unpack/unpack-binpkg-l1:
     + [FL] Don't include version number from Source: field in
       the source symlink.  Noted by RA.  (Closes: #485474)
-  
+
   * lib/Lintian/Collect/Binary.pm:
     + [FL] New module for retrieving binary package information.
-  
+
   * reporting/checkout-release:
     + [FL] New helper script for lintian.d.o maintenance.
   * reporting/config:
@@ -13097,7 +13097,7 @@ lintian (1.24.1) unstable; urgency=medium
     + [FL] New templates meant for inclusion by other templates
       for common header and footer parts
   * reporting/templates/index.tmpl:
-    + [FL] Remove obsolete reports/ subdirectory from the links.    
+    + [FL] Remove obsolete reports/ subdirectory from the links.
   * reporting/templates/maintainer.tmpl:
     + [RA] Redisplay the tag name for each separate binary package, also
       fixing list nesting problems in some cases.  Patch from Jordà
@@ -13112,7 +13112,7 @@ lintian (1.24.0) unstable; urgency=low
 
   The "Policy 3.8.0, infrastructure evolution, and real web design"
   release.
-  
+
   * checks/binaries:
     + [RA] Fix code for filtering out NSS modules from SONAME checks.
     + [RA] When checking SONAMEs against package names, convert all
@@ -13270,7 +13270,7 @@ lintian (1.23.49) unstable; urgency=low
     + [FL] Always use /bin/bash for shell script syntax check to give
       consistent errors on systems with changed /bin/sh.  Suggested
       by Raphael Geissert.  (Closes: #478192)
-  
+
   * frontend/lintian:
     + [FL] Don't issue a warning about Distribution: UNRELEASED in
       .changes files.  It can be annoying to have to ignore this error
@@ -13278,19 +13278,19 @@ lintian (1.23.49) unstable; urgency=low
       on it anyway.  Suggested by martin f krafft.  (Closes: #382327)
     + [FL] Add a --keep-lab option to make it easier to debug temporary
       labs.  (Closes: #401046)
-  
+
   * lib/Util.pm:
     + [FL] Only require Digest::SHA if the code path is really used.
       This makes it unnecessary to install libdigest-sha-perl on
       lintian.debian.org for now.
-  
+
   * man/lintian.1:
     + [FL] Document --keep-lab option.
     + [FL] Fix error in checkname: s/patch-system/patch-systems/.
       Reported by Jörg Sommer.
-  
+
   * reporting/html_reports:
-    + [FL] Escape $email variable for usage in URI query strings.  
+    + [FL] Escape $email variable for usage in URI query strings.
       Currently it is not used for anything else, so it is most simple
       to do it in the actual code.  Reported by Sandro Tosi.
       (Closes: #481256)
@@ -13447,7 +13447,7 @@ lintian (1.23.47) unstable; urgency=low
       are errors or warnings in their co-maintained packages.
   * reporting/templates/maintainer.tmpl:
     + [RA] Always add anchors to the package names even for uploaders.
-  
+
   * testset/copyright:
     + [FL] New testcases by Tobias Toedter.  (Closes: #472665)
   * testset/description:
@@ -13963,7 +13963,7 @@ lintian (1.23.41) unstable; urgency=low
     + [RA] Warn about desktop files containing CRLF line endings (and then
       strip the CR for later checks).  The standard is explicit that each
       line ends in only LF.
-  
+
   * debian/control:
     + [FL] Add liburi-perl to Depends for the Homepage checks.
     + [RA] Wrap Depends for readability.
@@ -14073,7 +14073,7 @@ lintian (1.23.38) unstable; urgency=low
   * checks/patch-systems:
     + [FL] Try appending .dpatch to patchnames found in 00list.
            Patch by Leo Antunes. (Closes: #454516, #454518)
-  
+
   * lib/Dep.pm:
     + [FL] Fix "uninitialized value" warning in pred_implies().
 
@@ -14223,7 +14223,7 @@ lintian (1.23.36) unstable; urgency=low
     + [RA] Use the three-argument form of open uniformly, whether needed
       or not, to head off further quoting and whitespace interpretation
       bugs.
-  
+
   * checks/files{.desc,}:
     + [RA] Catch .DS_Store.gz files as well.
     + [RA] Warn about ._ Mac OS X resource files in the package.
@@ -14351,7 +14351,7 @@ lintian (1.23.34) unstable; urgency=low
 lintian (1.23.33) unstable; urgency=low
 
   The "menu and cruft reorganization" release.
-  
+
   * checks/common_data.pm:
     + [CW] Add automaken as a known virtual package.
     + [CW] Update architectures to dpkg 1.14.5, adding solaris-* and lpia.
