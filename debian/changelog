@@ -54,6 +54,9 @@ lintian (2.5.56) UNRELEASED; urgency=medium
   * checks/rules.{pm,desc}:
     + [CL] Warn on packages unnecessararily setting dpkg-architecture(1)
       variables.  (Closes: #793554)
+  * checks/scripts.desc:
+    + [CL] Check the "Recommends" field as well when testing scripts for
+      script-needs-depends-on-sensible-utils.  (Closes: #879953)
   * checks/source-changelog.{desc.pm}:
     + [CL] Move latest-debian-changelog-entry-without-new-date tag into a
       new check of type "source".  (Closes: #873612)

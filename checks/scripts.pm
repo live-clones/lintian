@@ -247,7 +247,9 @@ sub run {
     my $all_parsed = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'),$pkg);
     my $str_deps = $info->relation('strong');
-    my $has_sensible_utils = $str_deps->implies('sensible-utils');
+    my $has_sensible_utils =
+      Lintian::Relation->and( $str_deps, $info->relation('recommends') )
+      ->implies('sensible-utils');
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
