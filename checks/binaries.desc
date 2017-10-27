@@ -449,7 +449,7 @@ Info: The listed ELF binary appears to be (partially) built without
  macro required to enable LFS when necessary, or by enabling the
  <tt>lfs</tt> feature from the <tt>future</tt> dpkg-buildflags feature
  area which sets the <tt>CPPFLAGS</tt> variable (since dpkg-dev 1.19.0).
- Note though, that <tt>getconf LFS_CFLAGS</tt> must <b>not</b> be used,
+ Note though, that <tt>getconf LFS_CFLAGS</tt> must not be used,
  as it does  not support cross-building.  Using
  <tt>_FILE_OFFSET_BITS</tt> should require no system function renames (eg.
  from open(2) to open64(2)), and if this tag is still emitted, the most
