@@ -1,6 +1,15 @@
-lintian (2.5.56) UNRELEASED; urgency=medium
+lintian (2.5.56) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - appstream-metadata-invalid
+      - debhelper-tools-from-autotools-dev-are-deprecated
+      - debian-control-has-empty-field
+      - debian-rules-sets-dpkg-architecture-variable
+      - empty-section-field
+      - file-contains-trailing-whitespace
+      - init.d-script-contains-skeleton-template-content
+      - latest-changelog-entry-without-new-date
 
   * checks/appstream-metadata.{pm,desc}:
     + [CL] Don't error out when AppStream metadata is invalid and emit new
@@ -104,7 +113,7 @@ lintian (2.5.56) UNRELEASED; urgency=medium
       separate test protected by a Test-Requires now that dpkg >= 1.19.0
       will bail out on that condition.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 12 Oct 2017 14:08:44 -0400
+ -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 18:29:35 +0000
 
 lintian (2.5.55) unstable; urgency=medium
 
