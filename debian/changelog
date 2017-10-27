@@ -28,7 +28,7 @@ lintian (2.5.56) UNRELEASED; urgency=medium
     + [CL] Apply patch from Ville Skyttä <ville.skytta@iki.fi> to update
       the debconf-spec refs.  (Closes: #878449)
   * checks/debhelper.{desc,pm}:
-    + [NT] Add check for using the debhelper tooling from the
+    + [NT] Add a check for packages using the debhelper tooling from the
       autotools-dev package.  These have been replaced by the changes
       inside debhelper itself.
     + [NT] Avoid useless-autoreconf-build-depends for autotools-dev when
