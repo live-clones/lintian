@@ -101,9 +101,6 @@ sub run {
             if ($field eq 'xc-package-type') {
                 tag 'xc-package-type-in-debian-control', "line $.";
             }
-            if (/^(\S+):$/) {
-                tag 'debian-control-has-empty-field', "$1 (line $.)";
-            }
             unless (/^\S+: \S/ || /^\S+:$/) {
                 tag 'debian-control-has-unusual-field-spacing', "line $.";
             }
@@ -128,6 +125,12 @@ sub run {
         return;
     }
 
+    foreach my $field (keys %{$info->source_field()}) {
+        tag 'debian-control-has-empty-field',
+          "field \"$field\" in source paragraph",
+          if $info->source_field($field) eq '';
+    }
+
     my @package_names = $info->binaries;
 
     foreach my $bin (@package_names) {
@@ -142,6 +145,9 @@ sub run {
               "field \"$field\" in package $bin"
               if ( $info->source_field($field)
                 && $bfields->{$field} eq $info->source_field($field));
+            tag 'debian-control-has-empty-field',
+              "field \"$field\" in package $bin",
+              if $bfields->{$field} eq '';
         }
         if ($bin =~ /[-]dbgsym$/) {
             tag 'debian-control-has-dbgsym-package', $bin;

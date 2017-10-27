@@ -2,6 +2,11 @@ lintian (2.5.57) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.pm:
+    + [CL] Avoid false positives in debian-control-has-empty-field when the
+      field is wrapped onto a new line. Thanks to Mattia Rizzolo for the
+      report.  (Closes: #879977)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 20:00:29 +0100
 
 lintian (2.5.56) unstable; urgency=medium

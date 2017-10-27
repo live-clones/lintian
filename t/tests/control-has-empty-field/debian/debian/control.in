@@ -2,10 +2,13 @@ Source: {$source}
 Priority: optional
 Section: {$section}
 Maintainer: {$author}
+Uploaders:
+ Wrapped Onto New Line <test@example.com>
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 Rules-Requires-Root: binary-targets
 Homepage: https://lintian.debian.org/
+Vcs-Browser:
 
 Package: {$source}
 Architecture: {$architecture}
