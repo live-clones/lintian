@@ -13,6 +13,8 @@ lintian (2.5.57) UNRELEASED; urgency=medium
       from upstream that would be ideally left intact.
   * checks/debhelper.pm:
     + [NT] Remove code handling named compat levels.
+  * checks/files.desc:
+    + [CL] Ignore embedded jQuery libraries for Doxygen.  (Closes: #736360)
 
   * commands/lintian.pm:
     + [NT] Have lintian resignal between various stages of the

@@ -1475,7 +1475,11 @@ sub run {
             }
 
             # ---------------- embedded libraries
-            _detect_embedded_libraries($fname, $file, $pkg);
+            _detect_embedded_libraries($fname, $file, $pkg)
+              # Ignore embedded jQuery libraries for Doxygen (#736360)
+              unless $file->basename eq 'jquery.js'
+              and defined(
+                $info->index_resolved_path($file->dirname . 'doxygen.css'));
 
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
