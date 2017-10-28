@@ -92,7 +92,7 @@ my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
 my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
-my ($action, $checks, $check_tags, $dont_check);
+my ($action, $checks, $check_tags, $dont_check, $received_signal);
 my (@unpack_info, $LAB, %unpack_options, @auto_remove);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
@@ -742,6 +742,10 @@ sub main {
     foreach my $gname (sort $pool->get_group_names) {
         my $success = 1;
         my $group = $pool->get_group($gname);
+
+        # Do not start a new group if we have a signal pending.
+        retrigger_signal() if $received_signal;
+
         my $total_raw_res = timed_task {
             my @group_lpkg;
             my $raw_res = timed_task {
@@ -954,6 +958,8 @@ sub unpack_group {
     return
       unless $unpacker->prepare_tasks($errhandler, $group->get_processables);
 
+    retrigger_signal() if $received_signal;
+
     v_msg("Unpacking packages in group $gname");
 
     my (%timers, %hooks);
@@ -1040,6 +1046,7 @@ sub process_group {
             eval {$cs->run_check($lpkg, $group);};
             my $err = $@;
             my $raw_res = $finish_timer->($timer);
+            retrigger_signal() if $received_signal;
             if ($err) {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
@@ -1779,9 +1786,22 @@ sub END {
     }
 }
 
+sub _die_in_signal_handler {
+    die("N: Interrupted.\n");
+}
+
+sub retrigger_signal {
+    # Re-kill ourselves with the same signal to ensure that the exit
+    # code reflects that we died by a signal.
+    local $SIG{$received_signal} = \&_die_in_signal_handler;
+    debug_msg(2, "Retriggering signal SIG${received_signal}");
+    return kill($received_signal, $$);
+}
+
 sub interrupted {
-    $SIG{$_[0]} = 'DEFAULT';
-    die "N: Interrupted.\n";
+    $received_signal = $_[0];
+    $SIG{$received_signal} = 'DEFAULT';
+    return _die_in_signal_handler();
 }
 
 # }}}

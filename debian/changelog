@@ -12,6 +12,12 @@ lintian (2.5.57) UNRELEASED; urgency=medium
       file-contains-trailing-whitespace tag as it can include quotes
       from upstream that would be ideally left intact.
 
+  * commands/lintian.pm:
+    + [NT] Have lintian resignal between various stages of the
+      processing.  Previously, ill-timed signals would be caught and
+      "semi-ignored" with lintian happily continuing to process the
+      next package.  (Closes: #878575)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 20:00:29 +0100
 
 lintian (2.5.56) unstable; urgency=medium
