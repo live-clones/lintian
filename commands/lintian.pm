@@ -1801,6 +1801,7 @@ sub retrigger_signal {
 sub interrupted {
     $received_signal = $_[0];
     $SIG{$received_signal} = 'DEFAULT';
+    print {$STATUS_FD} "ack-signal SIG${received_signal}\n";
     return _die_in_signal_handler();
 }
 

@@ -345,6 +345,11 @@ sub process_worklist {
                     log_msg("  [lintian] error processing $group_id "
                           . "(time: $runtime)");
                     $processed{$group_id} = 1;
+                } elsif ($line =~ m/^ack-signal (SIG\S+)$/) {
+                    my $signal = $1;
+                    log_msg(
+                        "Signal $signal acknowledged: disabled timed alarms");
+                    alarm(0);
                 }
             }
             alarm(0);
