@@ -1,1 +1,0 @@
-W: debhelper-compat-named source: package-needs-versioned-debhelper-build-depends 10 (for the named compat level)
