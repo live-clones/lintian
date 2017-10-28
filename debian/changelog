@@ -6,6 +6,8 @@ lintian (2.5.57) UNRELEASED; urgency=medium
     + [CL] Avoid false positives in debian-control-has-empty-field when the
       field is wrapped onto a new line. Thanks to Mattia Rizzolo for the
       report.  (Closes: #879977)
+  * checks/cruft.desc:
+    + [CL] Add example on how to remove trailing whitespace with sed.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 20:00:29 +0100
 
