@@ -326,7 +326,7 @@ our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 # List of files to check for a trailing whitespace characters relative
 # to the debian/ source directory
-our @TRAILING_WHITESPACE_FILES = qw(control rules changelog README.source);
+our @TRAILING_WHITESPACE_FILES = qw(control rules changelog);
 
 sub run {
     my (undef, undef, $info, $proc) = @_;

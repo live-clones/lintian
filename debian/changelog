@@ -8,6 +8,9 @@ lintian (2.5.57) UNRELEASED; urgency=medium
       report.  (Closes: #879977)
   * checks/cruft.desc:
     + [CL] Add example on how to remove trailing whitespace with sed.
+    + [CL] Drop README.source from files to check against the
+      file-contains-trailing-whitespace tag as it can include quotes
+      from upstream that would be ideally left intact.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 20:00:29 +0100
 
