@@ -2,6 +2,10 @@ lintian (2.5.58) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [CL] Add bionic as known Ubuntu distribution. Thanks Jeremy Bicha!
+      (Closes: #880115)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 29 Oct 2017 12:17:12 +0000
 
 lintian (2.5.57) unstable; urgency=medium
