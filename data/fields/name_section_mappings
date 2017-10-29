@@ -30,7 +30,7 @@ lib.*-cil(?:-dev)?$          => cli-mono
 ^rust-                                  => rust
 ^lib.*-(?:ocaml|camlp4)-dev$ => ocaml
 ^libjs-                      => javascript
-^lib.*-(tcl|lua|gst)                    => interpreters
+^lib.*-(tcl|lua|gst)$                   => interpreters
 # data files
 ^gir\d+\.\d+-.*-\d+\.\d+$    => introspection
 ^(?:x?fonts|ttf)-                       => fonts
