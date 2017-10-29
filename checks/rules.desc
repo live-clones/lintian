@@ -272,3 +272,13 @@ Info: The <tt>debian/rules</tt> file sets one or more
  build time.
  .
  Please replace the assignment operator with <tt>?=</tt>.
+
+Tag: debian-rules-should-not-set-CFLAGS-from-noopt
+Severity: normal
+Certainty: certain
+Ref: dpkg-buildflags(1)
+Info: The <tt>debian/rules</tt> file for this package appears to set
+ <tt>CFLAGS</tt> if the value of <tt>DEB_BUILD_OPTIONS</tt> contains
+ <tt>noopt</tt>.
+ .
+ This has been obsoleted in favour of <tt>dpkg-buildflags</tt>.

@@ -44,6 +44,10 @@ my $BAD_CONSTRUCT_IN_RULES
   = Lintian::Data->new('rules/rules-should-not-use', qr/\s*~~\s*/,
     sub { return qr/$_[1]/xs });
 
+my $BAD_MULTILINE_CONSTRUCT_IN_RULES
+  = Lintian::Data->new('rules/rules-should-not-use-multiline',
+    qr/\s*~~\s*/,sub { return qr/$_[1]/xsm });
+
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
 # rule.  (See Policy 7.6.)  The following is a list of package dependencies;
@@ -453,6 +457,17 @@ sub run {
             }
         }
     }
+
+    $rules_fd = $rules->open;
+    my $sfd = Lintian::SlidingWindow->new($rules_fd);
+    my $block;
+    while ($block = $sfd->readwindow) {
+        foreach my $tag ($BAD_MULTILINE_CONSTRUCT_IN_RULES->all) {
+            my $regex = $BAD_MULTILINE_CONSTRUCT_IN_RULES->value($tag);
+            tag $tag if $block =~ m/$regex/;
+        }
+    }
+    close($rules_fd);
 
     return;
 }

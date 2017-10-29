@@ -15,6 +15,9 @@ lintian (2.5.57) UNRELEASED; urgency=medium
     + [NT] Remove code handling named compat levels.
   * checks/files.desc:
     + [CL] Ignore embedded jQuery libraries for Doxygen.  (Closes: #736360)
+  * checks/rules.desc:
+    + [CL] Warn if packages set CFLAGS if the value of DEB_BUILD_OPTIONS
+      contains noopt.  (Closes: #718640)
 
   * commands/lintian.pm:
     + [NT] Have lintian resignal between various stages of the
