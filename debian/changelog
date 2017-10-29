@@ -4,7 +4,7 @@ lintian (2.5.58) UNRELEASED; urgency=medium
 
   * data/fields/name_section_mappings:
     + [CL] Apply patch from Simon McVittie to prevent a misdetection of
-      libcanberra-gstreamer as a GNU Smalltalk library.  (Closes; #880140)
+      libcanberra-gstreamer as a GNU Smalltalk library.  (Closes: #880140)
 
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add bionic as known Ubuntu distribution. Thanks Jeremy Bicha!
