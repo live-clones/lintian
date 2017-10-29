@@ -1,6 +1,8 @@
-lintian (2.5.57) UNRELEASED; urgency=medium
+lintian (2.5.57) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-should-not-set-CFLAGS-from-noopt
 
   * checks/control-file.pm:
     + [CL] Avoid false positives in debian-control-has-empty-field when the
@@ -28,7 +30,7 @@ lintian (2.5.57) UNRELEASED; urgency=medium
   * data/debhelper/named-compat-levels:
     + [NT] Removed; no longer used.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 20:00:29 +0100
+ -- Chris Lamb <lamby@debian.org>  Sun, 29 Oct 2017 12:14:30 +0000
 
 lintian (2.5.56) unstable; urgency=medium
 
