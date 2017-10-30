@@ -1197,9 +1197,9 @@ Severity: normal
 Certainty: possible
 Ref: #645438, devref 6.7.7
 Info: The package appears to be a transitional package, but it is not
- priority extra and in the oldlibs section.
+ priority optional and in the oldlibs section.
  .
- Using oldlibs/extra assists package managers in handling the
+ Using oldlibs/optional assists package managers in handling the
  transition package correctly.
 
 Tag: rc-version-greater-than-expected-version
