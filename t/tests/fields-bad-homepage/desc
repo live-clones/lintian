@@ -1,6 +1,0 @@
-Testname: fields-bad-homepage
-Version: 1.0
-Description: Test for invalid Homepage protocol
-Test-For:
- bad-homepage
- superfluous-clutter-in-homepage

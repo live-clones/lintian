@@ -6,7 +6,6 @@ E: manpages-general: empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages-general: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
 E: manpages-general: manpage-has-overly-generic-name usr/share/man/man1/README.1.gz
 E: manpages-general: manpage-has-wrong-extension usr/share/man/man6/simple.pod.gz
-E: manpages-general: manpage-is-dh_make-template usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages-general: manpage-is-dh_make-template usr/share/man/man1/program.1.gz
 E: manpages-general: manpage-named-after-build-path usr/share/man/man6/_build_buildd-openchangex_1.0-3-i386-mbKpOA_openchange-1.0_simple.6.gz
 E: manpages-general: manpage-not-compressed usr/share/man/de/man1/binary-without-english-manpage.1
@@ -21,9 +20,9 @@ E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
 I: manpages-general: FSSTND-dir-in-manual-page usr/share/man/man1/test.1p.gz:13 /var/catman/
-I: manpages-general: spelling-error-in-manpage usr/X11R6/man/man1/rstartd.1x.gz speling spelling
 I: manpages-general: spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling
 W: manpages-general: binary-without-english-manpage usr/bin/binary-without-english-manpage
+W: manpages-general: binary-without-manpage usr/bin/rstartd
 W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages-general: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
@@ -34,5 +33,4 @@ W: manpages-general: manpage-has-errors-from-man usr/share/man/man3/included.3.g
 W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:19
 W: manpages-general: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages-general: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
-W: manpages-general: manpage-section-mismatch usr/X11R6/man/man1/rstartd.1x.gz:5 1x != 1
 W: manpages-general: manpage-section-mismatch usr/share/man/man6/simple.pod.gz:LINE pod != 6

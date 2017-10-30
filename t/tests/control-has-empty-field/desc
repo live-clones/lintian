@@ -1,0 +1,6 @@
+Testname: control-has-empty-field
+Version: 1.0
+Options: -I -E --pedantic
+Description: Check for empty fields
+Test-For:
+ debian-control-has-empty-field

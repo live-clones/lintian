@@ -6,3 +6,4 @@ Test-For:
  appstream-metadata-legacy-format
  appstream-metadata-missing-modalias-provide
  appstream-metadata-malformed-modalias-provide
+ appstream-metadata-invalid

@@ -201,6 +201,7 @@ agruments||arguments
 agument||argument
 aguments||arguments
 aheared||adhered
+aiffer||differ
 albumns||albums
 alegorical||allegorical
 algorith||algorithm
@@ -466,6 +467,7 @@ avaialble||available
 avaible||available
 availabe||available
 availabel||available
+availabilty||availability
 availabled||available
 availablity||availability
 availale||available
@@ -750,6 +752,7 @@ communcation||communication
 compability||compatibility
 comparation||comparison
 comparations||comparisons
+compariable||comparable
 comparision||comparison
 comparisions||comparisons
 comparitive||comparative
@@ -895,6 +898,8 @@ conteined||contained
 conteining||containing
 conteins||contains
 contence||contents
+contian||contain
+contians||contains
 contigious||contiguous
 continous||continuous
 continously||continuously
@@ -1015,6 +1020,7 @@ deatches||detaches
 deatching||detaching
 debain||Debian
 debiab||Debian
+Debiab||Debian
 debia||Debian
 debians||Debian's
 debugginf||debugging
@@ -1083,6 +1089,7 @@ delimeter||delimiter
 delimeters||delimiters
 delivative||derivative
 delivatives||derivatives
+delte||delete
 demoninator||denominator
 demoninators||denominators
 demostrated||demonstrated
@@ -1675,6 +1682,7 @@ forground||foreground
 formaly||formally
 formated||formatted
 formating||formatting
+formend||formed
 forseeable||foreseeable
 forse||force
 fortan||fortran
@@ -1961,6 +1969,7 @@ inadvertant||inadvertent
 inadvertantly||inadvertently
 inappropiate||inappropriate
 incase||in case
+incidently||incidentally
 inclding||including
 incldued||included
 incldue||include
@@ -2045,6 +2054,7 @@ indipendently||independently
 indistiguishable||indistinguishable
 indivdual||individual
 indivdually||individually
+individuelly||individually
 indivudual||individual
 indivudually||individually
 inefficency||inefficiency
@@ -2132,6 +2142,7 @@ inscpeting||inspecting
 insde||inside
 insensistive||insensitive
 insensistively||insensitively
+insensitve||insensitive
 instad||instead
 instalation||installation
 instalations||installations
@@ -2237,6 +2248,7 @@ intializing||initializing
 intially||initially
 intials||initials
 intregral||integral
+introsepection||introspection
 intrrupted||interrupted
 intrrupting||interrupting
 intrrupt||interrupt
@@ -2342,6 +2354,7 @@ limted||limited
 lintain||lintian
 litle||little
 litterally||literally
+localation||location
 loggging||logging
 loggin||login
 logile||logfile
@@ -2598,6 +2611,7 @@ offet||offset
 offets||offsets
 offical||official
 officialy||officially
+ofo||of
 ofthe||of the
 omiting||omitting
 omitt||omit
@@ -2691,10 +2705,12 @@ ovverrides||overrides
 ovverriding||overriding
 owership||ownership
 pacakge||package
+pacakges||packages
 pachage||package
 pach||patch
 packacge||package
 packege||package
+packe||packed
 packge||package
 packges||packages
 pakage||package
@@ -2970,6 +2986,7 @@ qouting||quoting
 queing||queueing
 quering||querying
 quiting||quitting
+quitt||quit
 reachs||reaches
 readabilty||readability
 reamde||README
@@ -3034,6 +3051,7 @@ recommened||recommended
 recommented||recommended
 rectange||rectangle
 rectanges||rectangles
+recude||reduce
 recurrance||recurrence
 recursivly||recursively
 recusion||recursion
@@ -3159,6 +3177,7 @@ represneted||represented
 represneting||representing
 represnet||represent
 represnets||represents
+reprociblbe||reproducible
 reproducable||reproducible
 repsonse||response
 repsonses||responses
@@ -3168,6 +3187,7 @@ requiered||required
 requiere||require
 requieres||requires
 requiering||requiring
+requireing||requiring
 requirment||requirement
 requirments||requirements
 requred||required
@@ -3285,6 +3305,7 @@ satifies||satisfies
 satifying||satisfying
 satify||satisfy
 satisfiabilty||satisfiability
+satisifed||satisfied
 satisified||satisfied
 satisifies||satisfies
 satisifying||satisfying
@@ -3327,6 +3348,7 @@ senarios||scenarios
 sence||sense
 sensistively||sensitively
 sensistive||sensitive
+sensitve||sensitive
 sentance||sentence
 sentances||sentences
 sentinal||sentinel
@@ -3578,12 +3600,14 @@ suceeded||succeeded
 suceeding||succeeding
 suceeds||succeeds
 suceed||succeed
+sucesfully||successfully
 sucesses||successes
 sucessfull||successful
 sucessfully||successfully
 sucessful||successful
 sucessfuly||successfully
 sucess||success
+suces||success
 sufficently||sufficiently
 sufficent||sufficient
 sugestions||suggestions
@@ -3679,6 +3703,7 @@ syncronous||synchronous
 syncronus||synchronous
 syncting||syncing
 synopsys||synopsis
+syntesis||synthesis
 systen||system
 syste||system
 sytems||systems
@@ -3709,6 +3734,7 @@ theer||there
 therby||thereby
 theres||there's
 therfore||therefore
+thether||whether
 theyre||they're
 thier||their
 thie||the
@@ -3724,6 +3750,7 @@ throug||through
 throuth||through
 thses||these
 thsi||this
+tiemstamp||timestamp
 tiggered||triggered
 tiggering||triggering
 tiggers||triggers
@@ -3914,6 +3941,7 @@ unnessessarily||unnecessarily
 unnessessary||unnecessary
 unoffical||unofficial
 unorderd||unordered
+unpacke||unpacked
 unqouted||unquoted
 unqoutes||unquotes
 unqoute||unquote

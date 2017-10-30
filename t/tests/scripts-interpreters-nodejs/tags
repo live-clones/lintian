@@ -1,3 +1,4 @@
 E: scripts-interpreters-nodejs: missing-dep-for-interpreter node => nodejs (usr/bin/usr-bin-env-node)
 E: scripts-interpreters-nodejs: missing-dep-for-interpreter nodejs => nodejs (usr/bin/usr-bin-env-nodejs)
+W: scripts-interpreters-nodejs: example-script-uses-deprecated-nodejs-location usr/share/doc/scripts-interpreters-nodejs/examples/usr-bin-env-nodejs
 W: scripts-interpreters-nodejs: script-uses-deprecated-nodejs-location usr/bin/usr-bin-env-nodejs

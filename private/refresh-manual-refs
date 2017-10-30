@@ -28,6 +28,7 @@
 use strict;
 use warnings;
 use autodie;
+use open qw(:std :utf8);
 
 use File::Basename;
 use List::MoreUtils qw(none);
@@ -58,11 +59,11 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 # additional regex can be defined to match possible references on other pages
 # of the manual.
 
-my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
+my $title_re = qr/<title\s?>(.+?)(?:\s+v[\d.]+)?<\/title\s?>/i;
 my $link_re
   = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re
-  = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
+  = qr/<a href="(.+?)">\s*([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)\s*<\/a>/;
 my $fields = [['url'], ['section'], ['title']];
 my $dbk_index_re
   = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
@@ -72,22 +73,33 @@ my %manuals = (
     'policy' => [
         '/usr/share/doc/debian-policy/policy.html/index.html',
         'https://www.debian.org/doc/debian-policy/',
-        $link_re, $fields
+        # $index_re would match the Policy's TOC and work otherwise, but
+        # the TOC is generated only up to 3 levels deep as of 4.1.1.1, and
+        # we want refs to all levels.
+        qr{
+              <(h[2-5])>\s*
+              ([A-Z]|[A-Z]?[\d\.]+?)
+              \.?\s+
+              ([\w\s[:punct:]]+?)
+              <a\s(?:[^>]*?)\bhref="([^"]+)".+?</a>
+              </\1>
+        }x,
+        [['_ignored'], ['section'], ['title'], ['url']]
     ],
     'menu-policy' => [
         '/usr/share/doc/debian-policy/menu-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/menu-policy/',
-        $link_re, $fields
+        $index_re, $fields
     ],
     'perl-policy' => [
         '/usr/share/doc/debian-policy/perl-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/perl-policy/',
-        $link_re, $fields
+        $index_re, $fields
     ],
     'python-policy' => [
         '/usr/share/doc/python/python-policy.html/index.html',
         'https://www.debian.org/doc/packaging-manuals/python-policy/',
-        $link_re, $fields
+        $index_re, $fields
     ],
     'java-policy' => [
         '/usr/share/doc/java-policy/debian-java-policy/index.html',
@@ -132,8 +144,8 @@ my %manuals = (
         join(q{/},
             'https://www.debian.org',
             'doc/packaging-manuals/debconf_specification.html'),
-        qr/<a href="(#.+?)">([\w\s[:punct:]]+?)<\/a>/,
-        [['section', 'url'], ['title']]
+        $index_re,
+        $fields
     ],
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
@@ -173,6 +185,8 @@ sub extract_refs {
     # the Developer's Reference are cut in the middle of <a>...</a>.
     local $/ = "\n\n";
 
+    my %seen_sections;
+
     while (<$page_fd>) {
         if (not $title and m/$title_re/) {
             $title = 1;
@@ -199,12 +213,23 @@ sub extract_refs {
                 $ref{url} = basename($page) . "#$ref{url}";
             }
 
-            $ref{section} =~ s/^\#(.+)$/\L$1/;
             $ref{title} =~ s/\s+/ /g;
             $ref{title} =~ s,<span[^>]*>(.*?)</span ?>,$1,ig;
             $ref{title} =~ s,<code[^>]*>(.*?)</code ?>,<code>$1</code>,ig;
+
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;
+
+            $ref{section} =~ s/^\#(.+)$/\L$1/;
+            # Some manuals reuse section numbers for different references,
+            # e.g. the Debian Policy's normal and appendix sections are
+            # numbers that clash with each other. Track if we've already
+            # seen a section pointing to some other URL than the current one,
+            # and uniquify it by appending as many asterisks as necessary.
+            $ref{section} .= '*'
+              while (defined($seen_sections{$ref{section}})
+                && $seen_sections{$ref{section}} ne $ref{url});
+            $seen_sections{$ref{section}} = $ref{url};
 
             my @out = ($manual, $ref{section}, $ref{title}, $ref{url});
             print {$fh} join('::', @out) . "\n";

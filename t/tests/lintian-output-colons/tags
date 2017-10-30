@@ -8,7 +8,7 @@ tag:I:normal:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:desktop-e
 tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-field-duplicates-source:field "section" in package lintian-output-colons:
 tag:I:wishlist:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-contains-empty-directory:usr/local/share/lintian/:
 tag:I:wishlist:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
-tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 11:
+tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 12:
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-watch-may-check-gpg-signature::
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:direct-changes-in-diff-but-no-patch-system:Changes:
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:

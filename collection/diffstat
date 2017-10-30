@@ -34,14 +34,15 @@ use warnings;
 use autodie;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Util qw(fail get_dsc_info gunzip_file);
+use Lintian::Util qw(internal_error get_dsc_info gunzip_file);
 
 sub collect {
     my ($pkg, undef, $dir) = @_;
     my $data;
     my $ver;
 
-    -f "$dir/dsc" or fail 'diffstat invoked with wrong dir argument';
+    -f "$dir/dsc"
+      or internal_error('diffstat invoked with wrong dir argument');
 
     $data = get_dsc_info("$dir/dsc");
     $ver = $data->{'version'};

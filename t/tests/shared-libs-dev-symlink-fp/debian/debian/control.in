@@ -1,9 +1,10 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: libs
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: libfoo-1
 Architecture: any

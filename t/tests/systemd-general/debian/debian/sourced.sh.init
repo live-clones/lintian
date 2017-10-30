@@ -9,7 +9,7 @@ fi
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Example initscript
+# Short-Description: Example Lintian initscript
 # Description:       This file should be used to construct scripts to be
 #                    placed in /etc/init.d.  This example start a
 #                    single forking daemon capable of writing a pid
@@ -17,11 +17,6 @@ fi
 #                    do_start(), do_stop() or other functions to
 #                    override the defaults in /lib/init/init-d-script.
 ### END INIT INFO
-
-# Author: Foo Bar <foobar@baz.org>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
 
 DESC="Description of the service"
 DAEMON=/usr/sbin/daemonexecutablename

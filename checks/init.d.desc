@@ -359,3 +359,12 @@ Severity: important
 Certainty: possible
 Info: The given init script sources the <tt>/lib/lsb/init-functions</tt> utility
  functions without declaring the corresponding dependency on lsb-base.
+
+Tag: init.d-script-contains-skeleton-template-content
+Severity: important
+Certainty: certain
+Info: The given init script appears to contain content from the
+ <tt>/etc/init.d/skeleton</tt> example.
+ .
+ Please double-check the script and/or replace it with content suitable to
+ this binary package.

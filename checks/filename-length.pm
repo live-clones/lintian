@@ -41,6 +41,11 @@ sub run {
     my $len = length($pkg) + length($proc->pkg_version) + 1;
     my $extra;
 
+    # Skip auto-generated packages (dbgsym)
+    return
+      if ($type eq 'binary' or $type eq 'udeb')
+      and $info->is_pkg_class('auto-generated');
+
     if ($type eq 'binary' || $type eq 'source'){
         # Here we add length .deb / .dsc (in both cases +4)
         $len += 4;

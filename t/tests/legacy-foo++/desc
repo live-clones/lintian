@@ -3,3 +3,27 @@ Source: foo++
 Sequence: 9999
 Version: 5
 Description: Legacy test "foo++"
+Test-For:
+ ancient-standards-version
+ build-info-in-binary-control-file-section
+ changed-by-address-malformed
+ debian-changelog-file-contains-invalid-email-address
+ debian-changelog-file-uses-obsolete-national-encoding
+ debian-changelog-has-wrong-day-of-week
+ debian-control-file-uses-obsolete-national-encoding
+ debian-watch-file-in-native-package
+ debian-watch-file-unknown-version
+ dm-upload-allowed-is-obsolete
+ duplicate-short-description
+ empty-binary-package
+ latest-changelog-entry-without-new-date
+ latest-debian-changelog-entry-without-new-date
+ malformed-dm-upload-allowed
+ no-copyright-file
+ no-md5sums-control-file
+ readme-debian-contains-invalid-email-address
+ uploader-address-is-on-localhost
+ uploader-address-looks-weird
+ uploader-address-malformed
+ uploader-name-missing
+ wrong-debian-qa-address-set-as-maintainer

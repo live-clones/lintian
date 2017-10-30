@@ -26,7 +26,7 @@ Ref: policy 10.7.2
 Tag: relative-conffile
 Severity: important
 Certainty: certain
-Ref: policy E.1
+Ref: policy 5.1*
 Info: All entries in the <tt>debian/conffiles</tt> control file should
  have an absolute path specification.
 

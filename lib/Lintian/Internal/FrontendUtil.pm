@@ -28,7 +28,7 @@ use Dpkg::Vendor;
 
 use Lintian::CollScript;
 use Lintian::Command qw(safe_qx);
-use Lintian::Util qw(check_path fail);
+use Lintian::Util qw(check_path);
 
 our @EXPORT_OK
   = qw(check_test_feature default_parallel load_collections split_tag

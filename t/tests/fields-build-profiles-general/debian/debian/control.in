@@ -1,11 +1,12 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: devel
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends},
  big <stage1>, bpfail1 <foobar>,
  bpcomplicated <stage1 nocheck> <cross> <!pkg.{$source}.foo>
+Rules-Requires-Root: no
 
 Package: {$source}-wrong-syntax
 Architecture: {$architecture}

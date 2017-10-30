@@ -1,2 +1,1 @@
-W: libcp-missing-java: missing-classpath libdepends-java
 W: libcp-relative-java: classpath-contains-relative-path usr/share/java/cp-relative-1.0.jar: obviously-relative/stuff.jar

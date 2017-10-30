@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(any);
 use Text::Levenshtein qw(distance);
 
 use Lintian::Data;
@@ -46,13 +47,11 @@ my $dh_addons_manual
 my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);
 
 my $MISC_DEPENDS = Lintian::Relation->new('${misc:Depends}');
-my $NAMED_COMPAT_LEVELS = Lintian::Data->new('debhelper/named-compat-levels',
-    qr/\s*=>\s*/, \&_named_compat_levels);
 
 sub run {
     my (undef, undef, $info) = @_;
     my $droot = $info->index_resolved_path('debian/');
-    my ($drules, $dh_bd_version, $level, $using_named_compat);
+    my ($drules, $dh_bd_version, $level);
 
     my $seencommand = '';
     my $needbuilddepends = '';
@@ -60,14 +59,10 @@ sub run {
     my $needtomodifyscripts = '';
     my $compat = 0;
     my $seendhcleank = '';
-    my %missingbdeps;
-    my %missingbdeps_addons;
-
-    my $maybe_skipping;
-    my $dhcompatvalue;
+    my (%missingbdeps, %missingbdeps_addons, $maybe_skipping, $dhcompatvalue);
     my $inclcdbs = 0;
 
-    my ($bdepends_noarch, $bdepends, %build_systems);
+    my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
     my $seen_dh = 0;
     my $seen_python_helper = 0;
     my $seen_python3_helper = 0;
@@ -96,6 +91,12 @@ sub run {
 
             if ($dhcommand eq 'dh_installmanpages') {
                 tag 'dh_installmanpages-is-obsolete', "line $.";
+            }
+            if (   $dhcommand eq 'dh_autotools-dev_restoreconfig'
+                or $dhcommand eq 'dh_autotools-dev_updateconfig') {
+                tag 'debhelper-tools-from-autotools-dev-are-deprecated',
+                  "$dhcommand (line $.)";
+                $uses_autotools_dev_dh = 1;
             }
             if ($dhcommand eq 'dh_python3') {
                 $seen_python3_helper = 1;
@@ -137,9 +138,16 @@ sub run {
             while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
                 my $addon_list = $2;
                 for my $addon (split(m/,/o, $addon_list)) {
+                    my $orig_addon = $addon;
                     $addon =~ y,-,_,;
-                    my $depends =$dh_addons_manual->value($addon)
+                    my $depends = $dh_addons_manual->value($addon)
                       || $dh_addons->value($addon);
+                    if ($addon eq 'autotools_dev') {
+                        tag
+                          'debhelper-tools-from-autotools-dev-are-deprecated',
+                          "dh ... --with ${orig_addon} (line $.)";
+                        $uses_autotools_dev_dh = 1;
+                    }
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }
@@ -269,12 +277,7 @@ sub run {
         strip($compat);
         if ($compat ne '') {
             my $compat_value = $compat;
-            my $named_compat = $NAMED_COMPAT_LEVELS->value($compat);
-            if (defined($named_compat)) {
-                $dh_bd_version = $named_compat->{'introduced-in'};
-                $compat_value = $named_compat->{'compat-level'};
-                $using_named_compat = 1;
-            } elsif ($compat !~ m/^\d+$/) {
+            if ($compat !~ m/^\d+$/) {
                 tag 'debhelper-compat-not-a-number', $compat;
                 $compat =~ s/[^\d]//g;
                 $compat_value = $compat;
@@ -282,7 +285,6 @@ sub run {
             }
             if ($level) {
                 my $c = $compat;
-                $c .= " ($compat_value)" if $using_named_compat;
                 tag 'declares-possibly-conflicting-debhelper-compat-versions',
                   "rules=$level compat=${c}";
             } else {
@@ -433,7 +435,9 @@ sub run {
 
     while (my ($dep, $command) = each %missingbdeps) {
         next if $dep eq 'debhelper'; #handled above
-        next if $dep eq 'autotools-dev' and $level >= 10;
+        next
+          if $level >= 10
+          and any { $_ eq $dep } qw(autotools-dev dh-strip-nondeterminism);
         tag 'missing-build-dependency-for-dh_-command', "$command => $dep"
           unless ($bdepends_noarch->implies($dep));
     }
@@ -448,14 +452,12 @@ sub run {
         my @extra = ($level);
         $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
           if ($dh_bd_version <= $compat_level->value('pedantic'));
-        if ($using_named_compat) {
-            push(@extra, '(for the named compat level)');
-        }
         tag $tagname, @extra;
     }
 
     if ($level >= 10) {
         for my $pkg (qw(dh-autoreconf autotools-dev)) {
+            next if $pkg eq 'autotools-dev' and $uses_autotools_dev_dh;
             tag 'useless-autoreconf-build-depends', $pkg
               if $bdepends->implies($pkg);
         }
@@ -528,7 +530,7 @@ sub _check_dh_exec {
                 tag 'dh-exec-subst-unknown-variable', $path, $sv;
             }
         }
-        $dhe_install = 1 if / => /;
+        $dhe_install = 1 if /[ \t]=>[ \t]/;
         $dhe_filter = 1 if /\[[^\]]+\]/;
         $dhe_filter = 1 if /<[^>]+>/;
 
@@ -604,16 +606,6 @@ sub _shebang_cmd {
     # binaries for all architectures in the source as well. :)
 
     return $cmd;
-}
-
-sub _named_compat_levels {
-    my ($key, $raw_val, undef) = @_;
-    my $result = {};
-    for my $opt (split(m/\s*,\s*/, $raw_val)) {
-        my ($key, $val) = split(m/\s*=\s*/, $opt, 2);
-        $result->{$key} = $val;
-    }
-    return $result;
 }
 
 1;

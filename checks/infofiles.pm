@@ -25,7 +25,7 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail open_gz normalize_pkg_path);
+use Lintian::Util qw(open_gz normalize_pkg_path);
 
 sub run {
     my (undef, undef, $info) = @_;

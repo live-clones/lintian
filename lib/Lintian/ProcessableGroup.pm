@@ -24,7 +24,7 @@ use warnings;
 
 use Lintian::Collect::Group;
 use Lintian::Processable;
-use Lintian::Util qw(fail get_dsc_info strip);
+use Lintian::Util qw(internal_error get_dsc_info strip);
 
 =head1 NAME
 
@@ -85,9 +85,9 @@ sub _lab_proc {
 sub _init_group_from_changes {
     my ($self, $changes) = @_;
     my ($cinfo, $cdir);
-    fail "$changes does not exist" unless -e $changes;
+    internal_error("$changes does not exist") unless -e $changes;
     $cinfo = get_dsc_info($changes)
-      or fail "$changes is not a valid changes file";
+      or internal_error("$changes is not a valid changes file");
     $self->add_new_processable($changes, 'changes');
     $cdir = $changes;
     if ($changes =~ m,^/+[^/]++$,o){
@@ -166,15 +166,17 @@ sub add_processable{
     my $pkg_type = $processable->pkg_type;
 
     if ($pkg_type eq 'changes'){
-        fail 'Cannot add another changes file' if (exists $self->{changes});
+        internal_error('Cannot add another changes file')
+          if (exists $self->{changes});
         $self->{changes} = $self->_lab_proc($processable);
     } elsif ($pkg_type eq 'source'){
-        fail 'Cannot add another source package' if (exists $self->{source});
+        internal_error('Cannot add another source package')
+          if (exists $self->{source});
         $self->{source} = $self->_lab_proc($processable);
     } else {
         my $phash;
         my $id = $processable->identifier;
-        fail "Unknown type $pkg_type"
+        internal_error("Unknown type $pkg_type")
           unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
         $phash = $self->{$pkg_type};
         if (!defined $phash){
@@ -214,7 +216,7 @@ sub get_processables {
         return values %{$self->{$type}}
           if $type eq 'binary'
           or $type eq 'udeb';
-        fail "Unknown type of processable: $type";
+        internal_error("Unknown type of processable: $type");
     }
     # We return changes, dsc, debs and udebs in that order,
     # because that is the order lintian used to process a changes

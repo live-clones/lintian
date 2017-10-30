@@ -10,6 +10,7 @@ Test-For:
  debian-changelog-file-contains-obsolete-user-emacs-settings
  debian-changelog-line-too-long
  improbable-bug-number-in-closes
+ latest-changelog-entry-without-new-date
  latest-debian-changelog-entry-without-new-date
  latest-debian-changelog-entry-without-new-version
  misspelled-closes-bug

@@ -33,7 +33,7 @@ use Lintian::Check qw($known_shells_regex);
 use Lintian::Data;
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(do_fork fail strip);
+use Lintian::Util qw(do_fork internal_error strip);
 
 # This is a map of all known interpreters.  The key is the interpreter
 # name (the binary invoked on the #! line).  The value is an anonymous
@@ -95,7 +95,8 @@ my $BAD_MAINT_CMD = Lintian::Data->new(
     sub {
         my @sliptline = split(/\s*\~\~/, $_[1], 4);
         if(scalar(@sliptline) != 4) {
-            fail 'Syntax error in scripts/maintainer-script-bad-command:', $.;
+            internal_error(
+                'Syntax error in scripts/maintainer-script-bad-command:', $.);
         }
         my ($incat,$exceptinpackage,$inscript,$regexp) = @sliptline;
         $regexp =~ s/\$[{]LEADIN[}]/$LEADINSTR/;
@@ -246,6 +247,9 @@ sub run {
     my $all_parsed = Lintian::Relation->and($info->relation('all'),
         $info->relation('provides'),$pkg);
     my $str_deps = $info->relation('strong');
+    my $has_sensible_utils
+      =Lintian::Relation->and($str_deps, $info->relation('recommends'))
+      ->implies('sensible-utils');
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
@@ -349,7 +353,8 @@ sub run {
                 if (check_script_syntax($interpreter, $path)) {
                     script_tag('shell-script-fails-syntax-check', $filename);
                 }
-                check_script_uses_sensible_utils($path);
+                check_script_uses_sensible_utils($path)
+                  unless $has_sensible_utils;
             }
         }
 
@@ -534,7 +539,8 @@ sub run {
     while (<$ctrl_fd>) {
         chop;
 
-        m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
+        m/^(\S*) (.*)$/
+          or internal_error("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
         my $path = $info->control_index_resolved_path($file);
@@ -622,7 +628,8 @@ sub run {
                 if (check_script_syntax("/bin/${base}", $path)) {
                     tag 'maintainer-shell-script-fails-syntax-check', $file;
                 }
-                check_script_uses_sensible_utils($path);
+                check_script_uses_sensible_utils($path)
+                  unless $has_sensible_utils;
             }
         }
 
@@ -1005,7 +1012,7 @@ sub run {
                     push @{$removed_diversions{$divert}},
                       {'script' => $file, 'line' => $.};
                 } else {
-                    fail "Internal error: \$mode has unknown value: $mode";
+                    internal_error("\$mode has unknown value: $mode");
                 }
             }
         }
@@ -1269,7 +1276,7 @@ sub check_script_syntax {
         open(STDOUT, '>', '/dev/null');
         open(STDERR, '>&', \*STDOUT);
         exec $interpreter, '-n', $fs_path
-          or fail("cannot exec $interpreter: $!");
+          or internal_error("cannot exec $interpreter: $!");
     } else {
         waitpid $pid, 0;
     }
@@ -1333,7 +1340,8 @@ sub _parse_interpreters {
     if ($dep eq '@NODEPS@') {
         $dep = '';
     } elsif ($dep =~ m/@/) {
-        fail "Unknown magic value $dep for versioned interpreter $interpreter";
+        internal_error(
+            "Unknown magic value $dep for versioned interpreter $interpreter");
     }
     return [$path, $dep];
 }
@@ -1348,8 +1356,10 @@ sub _parse_versioned_interpreters {
     } elsif ($deprel eq '@SKIP_UNVERSIONED@') {
         $deprel = undef;
     } elsif ($deprel =~ m/@/) {
-        fail
-          "Unknown magic value $deprel for versioned interpreter $interpreter";
+        internal_error(
+            join(q{ },
+                "Unknown magic value $deprel",
+                "for versioned interpreter $interpreter"));
     }
     return [$path, $deprel, qr/^$regex$/, $deptmp, \@versions];
 }

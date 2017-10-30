@@ -27,8 +27,6 @@ use POSIX qw(ENOENT);
 
 use Lintian::Util qw(strip);
 
-use Tie::IxHash;
-
 our $LAZY_LOAD = 1;
 
 sub _checked_open {
@@ -62,11 +60,6 @@ sub new {
     return $self;
 }
 
-sub get_orderedtype {
-    tie my %myhash, 'Tie::IxHash';
-    return \%myhash;
-}
-
 # _get_data fetches an already loaded dataset by type.  It is
 # mostly useful for determining whether it makes sense to make
 # sense to be "lazy".
@@ -87,15 +80,14 @@ sub get_orderedtype {
     sub _load_data {
         my ($self, $data_spec) = @_;
         my $data_name = $data_spec->[0];
-        my $data_type = $data_spec->[3] // {};
         unless (exists($data{$data_name})) {
             my $vendors = $self->_get_vendor_names;
-            my $dataset = $data_type;
+            my ($dataset, $keyorder) = ({}, []);
             my ($fd, $vno) = $self->_open_data_file($data_name, $vendors, 0);
-            $self->_parse_file($data_name, $fd, $dataset, $data_spec,
-                $vendors, $vno);
+            $self->_parse_file($data_name, $fd, $dataset, $keyorder,
+                $data_spec, $vendors, $vno);
             close($fd);
-            $data{$data_name} = $dataset;
+            $data{$data_name} = {dataset => $dataset, keyorder => $keyorder};
         }
         return $self->{'data'} = $data{$data_name};
     }
@@ -157,7 +149,8 @@ sub get_orderedtype {
 }
 
 sub _parse_file {
-    my ($self, $data_name, $fd, $dataset, $data_spec, $vendors, $vno)= @_;
+    my ($self, $data_name, $fd, $dataset, $keyorder, $data_spec, $vendors,$vno)
+      = @_;
     my (undef, $separator, $code) = @{$data_spec};
     my $filename = $data_name;
     $filename = $vendors->[$vno] . '/' . $data_name if $vno < scalar @$vendors;
@@ -170,12 +163,13 @@ sub _parse_file {
             if ($op eq 'delete') {
                 croak "Missing key after \@delete in $filename at line $."
                   unless defined $value && length $value;
+                @{$keyorder} = grep { $_ ne $value } @{$keyorder};
                 delete $dataset->{$value};
             } elsif ($op eq 'include-parent') {
                 my ($pfd, $pvo)
                   = $self->_open_data_file($data_name, $vendors,$vno +1);
-                $self->_parse_file($data_name, $pfd, $dataset, $data_spec,
-                    $vendors, $pvo);
+                $self->_parse_file($data_name, $pfd, $dataset, $keyorder,
+                    $data_spec, $vendors, $pvo);
                 close($pfd);
             } elsif ($op eq 'if-vendor-is' or $op eq 'if-vendor-is-not') {
                 my ($desired_name, $remain) = split(m{ \s++ }xsm, $value, 2);
@@ -212,6 +206,7 @@ sub _parse_file {
         } else {
             ($key, $val) = ($line => 1);
         }
+        push @{$keyorder}, $key unless exists $dataset->{$key};
         $dataset->{$key} = $val;
     }
     return;
@@ -232,21 +227,21 @@ sub known {
         return;
     }
     my $data = $self->{data} || $self->_force_promise;
-    return (exists $data->{$keyword}) ? 1 : undef;
+    return (exists $data->{'dataset'}{$keyword}) ? 1 : undef;
 }
 
 # Return all known keywords (in no particular order).
 sub all {
     my ($self) = @_;
     my $data = $self->{data} || $self->_force_promise;
-    return keys(%{$data});
+    return @{$data->{'keyorder'}};
 }
 
 # Query a data object for the value attached to a particular keyword.
 sub value {
     my ($self, $keyword) = @_;
     my $data = $self->{data} || $self->_force_promise;
-    return (exists $data->{$keyword}) ? $data->{$keyword} : undef;
+    return $data->{'dataset'}{$keyword} // undef;
 }
 
 1;
@@ -266,9 +261,7 @@ Lintian::Data - Lintian interface to query lists of keywords
     if ($hash->value($keyword) > 1) {
         # do something ...
     }
-    my $ordered = Lintian::Data->new('ordered-type',
-       qr{\s++}, undef,Lintian::Data->get_orderedtype());
-    if ($ordered->value($keyword) > 1) {
+    if ($list->value($keyword) > 1) {
         # do something ...
     }
     my @keywords = $list->all;
@@ -317,7 +310,7 @@ is a hashref, new keys can be inserted etc.
 
 =over 4
 
-=item new(TYPE [,SEPARATOR[, [CODE, STORAGE]]])
+=item new(TYPE [,SEPARATOR[, CODE]])
 
 Creates a new Lintian::Data object for the given TYPE.  TYPE is a partial
 path relative to the F<data> directory and should correspond to a file in
@@ -331,10 +324,6 @@ the lines into key/value pairs.
 If CODE is also given, it is assumed to be a sub that will pre-process
 the key/value pairs.  See the L</Interface for the CODE argument> above.
 
-If STORAGE is also given (by default {}), it will be used to store value/key.
-STORAGE should tie to a hash and could be used to populate value or
-to be used to use insertion ordered hash.
-
 A given file will only be loaded once.  If new() is called again with the
 same TYPE argument, the data previously loaded will be reused, avoiding
 multiple file reads.
@@ -344,10 +333,6 @@ multiple file reads.
 Specifies vendor profile.  It must be set before the first data file
 is loaded.
 
-=item get_orderedtype()
-
-Get a empty ordered hash implementation
-
 =back
 
 =head1 INSTANCE METHODS
@@ -356,9 +341,8 @@ Get a empty ordered hash implementation
 
 =item all()
 
-Returns all keywords listed in the data file as a list (in no particular
-order; the original order is not preserved).  In a scalar context, returns
-the number of keywords.
+Returns all keywords listed in the data file as a list in original order.
+In a scalar context, returns the number of keywords.
 
 =item known(KEYWORD)
 

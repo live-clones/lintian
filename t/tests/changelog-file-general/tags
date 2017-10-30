@@ -1,4 +1,6 @@
+E: changelog-file-general source: latest-debian-changelog-entry-without-new-date
 E: changelog-file-general: debian-changelog-file-contains-invalid-email-address unknown@unknown
+E: changelog-file-general: latest-changelog-entry-without-new-date
 E: changelog-file-general: possible-missing-colon-in-closes Closes #555555
 W: changelog-file-general: changelog-not-compressed-with-max-compression changelog.Debian.gz
 W: changelog-file-general: changelog-references-temp-security-identifier TEMP-1234567-abcdef
@@ -6,7 +8,6 @@ W: changelog-file-general: debian-changelog-file-contains-obsolete-user-emacs-se
 W: changelog-file-general: debian-changelog-line-too-long line 15
 W: changelog-file-general: debian-changelog-line-too-long line 8
 W: changelog-file-general: improbable-bug-number-in-closes 1234
-W: changelog-file-general: latest-debian-changelog-entry-without-new-date
 W: changelog-file-general: latest-debian-changelog-entry-without-new-version
 W: changelog-file-general: misspelled-closes-bug #666666
 X: changelog-file-general: bad-intended-distribution intended to experimental but uploaded to unstable

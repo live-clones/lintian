@@ -5,6 +5,7 @@ E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_clid
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_dpatch_patch => dpatch
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_gtkmodules => libgtk2.0-dev
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_lisp => dh-lisp
+E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_strip_nondeterminism => dh-strip-nondeterminism
 E: debhelper-no-depends source: package-uses-debhelper-but-lacks-build-depends
 W: debhelper-no-depends source: debhelper-but-no-misc-depends debhelper-no-depends
 W: debhelper-no-depends source: package-needs-versioned-debhelper-build-depends 9

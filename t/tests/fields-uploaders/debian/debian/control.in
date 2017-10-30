@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: devel
 Maintainer: {$author}
 Uploaders: Mrs. Localhost <user@localhost>,
@@ -10,6 +10,7 @@ Uploaders: Mrs. Localhost <user@localhost>,
            Valid email <0@somewhere.com>
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

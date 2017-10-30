@@ -889,3 +889,17 @@ Info: This file appears to be incomplete or insufficiently modified as it
  .
  Please double-check the file and replace the placeholder with the required
  command or information.
+
+Tag: file-contains-trailing-whitespace
+Severity: pedantic
+Certainty: certain
+Info: This file appears to contain one or more lines with trailing
+ whitespace characters.
+ .
+ Whilst typically harmless and merely unsightly, they can often cause
+ difficult-to-spot issues where tools interpret the whitespace characters
+ literally and are thus best avoided in their entirity.
+ .
+ Whitespace can be removed with the following code snippet:
+ .
+  $ sed -i -e 's@[ ]*$@@g' path/to/filename

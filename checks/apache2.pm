@@ -27,7 +27,7 @@ use autodie;
 use File::Basename;
 use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
-use Lintian::Util qw(fail);
+use Lintian::Util qw(internal_error);
 
 sub run {
     my ($pkg, $type, $info) = @_;
@@ -178,7 +178,8 @@ sub check_maintainer_scripts {
     open(my $fd, '<', $info->lab_data_path('control-scripts'));
 
     while (<$fd>){
-        m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
+        m/^(\S*) (.*)$/
+          or internal_error("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
         my $path = $info->control_index_resolved_path($file);
@@ -239,7 +240,7 @@ sub inspect_conf_file {
             my @dependencies = split(/[\n\s]+/, $value);
             foreach my $dep (@dependencies) {
                 tag 'apache2-unparsable-dependency', $file, $dep
-                  if $dep =~ m/\W/
+                  if $dep =~ m/[^\w\.]/
                   or $dep =~ /^mod\_/
                   or $dep =~ m/\.(?:conf|load)/;
             }

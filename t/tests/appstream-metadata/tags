@@ -1,3 +1,4 @@
+E: appstream-metadata: appstream-metadata-invalid appstream-metadata-invalid.metadata.xml
 E: appstream-metadata: appstream-metadata-legacy-format usr/share/appdata/appstream-metadata-obsolete.metadata.xml
 W: appstream-metadata: appstream-metadata-in-legacy-location usr/share/appdata/appstream-metadata-obsolete.metadata.xml
 W: appstream-metadata: appstream-metadata-malformed-modalias-provide usr/share/metainfo/appstream-metadata.metadata.xml include non-valid hex digit in USB matching rule 'usb:v0000p000ad*'

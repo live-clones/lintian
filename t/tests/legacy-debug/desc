@@ -4,3 +4,33 @@ Sequence: 9999
 Version: 1.0
 Test-Depends: debhelper (>= 9.20151004~)
 Description: Legacy test "debug"
+Test-For:
+ ancient-standards-version
+ binary-with-bad-dynamic-table
+ binary-without-manpage
+ build-depends-indep-without-arch-indep
+ changelog-file-missing-in-native-package
+ changelog-should-not-mention-nmu
+ dbg-package-missing-depends
+ debhelper-but-no-misc-depends
+ debian-control-has-obsolete-dbg-package
+ debug-file-should-use-detached-symbols
+ debug-file-with-no-debug-symbols
+ dh-clean-k-is-deprecated
+ duplicate-entry-in-symbols-control-file
+ invalid-template-id-in-symbols-file
+ latest-debian-changelog-entry-without-new-version
+ missing-dependency-on-libc
+ package-uses-deprecated-debhelper-compat-version
+ pkg-has-symbols-control-file-but-no-shared-libs
+ shared-lib-without-dependency-information
+ sharedobject-in-library-directory-missing-soname
+ statically-linked-binary
+ symbols-declared-but-not-shlib
+ symbols-declares-dependency-on-other-package
+ syntax-error-in-symbols-file
+ timewarp-standards-version
+ unknown-meta-field-in-symbols-file
+ unstripped-binary-or-object
+ unused-shlib-entry-in-symbols-control-file
+ version-substvar-for-external-package

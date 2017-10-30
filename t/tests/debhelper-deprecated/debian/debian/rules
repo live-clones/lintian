@@ -42,4 +42,7 @@ endif
 	dh_md5sums
 	dh_builddeb
 
+somewhere:
+	dh $@ --with autotools-dev
+
 .PHONY: build-arch build-indep build binary binary-arch binary-indep clean

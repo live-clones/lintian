@@ -50,7 +50,7 @@ use Lintian::ProcessablePool;
 use Lintian::Profile;
 use Lintian::Tags qw(tag);
 use Lintian::Unpacker;
-use Lintian::Util qw(fail parse_boolean strip);
+use Lintian::Util qw(internal_error parse_boolean strip);
 
 sanitize_environment();
 
@@ -92,7 +92,7 @@ my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
 my ($STATUS_FD, @CLOSE_AT_END, $PROFILE, $TAGS);
 my @certainties = qw(wild-guess possible certain);
 my (@display_level, %display_source, %suppress_tags);
-my ($action, $checks, $check_tags, $dont_check);
+my ($action, $checks, $check_tags, $dont_check, $received_signal);
 my (@unpack_info, $LAB, %unpack_options, @auto_remove);
 my $user_dirs = $ENV{'LINTIAN_ENABLE_USER_DIRS'} // 1;
 my $exit_code = 0;
@@ -120,6 +120,12 @@ sub timed_task(&);
 sub lintian_banner {
     my $lintian_version = dplint::lintian_version();
     return "Lintian v${lintian_version}";
+}
+
+sub fatal_error {
+    my ($msg) = @_;
+    print STDERR  "$msg\n";
+    exit(2);
 }
 
 # }}}
@@ -249,7 +255,7 @@ sub banner {
 # Options: -S, -R, -c, -u, -r
 sub record_action {
     if ($action) {
-        die("too many actions specified: $_[0]");
+        fatal_error("too many actions specified: $_[0]");
     }
     $action = "$_[0]";
     return;
@@ -259,10 +265,10 @@ sub record_action {
 # Options: -C|--check-part
 sub record_check_part {
     if (defined $action and $action eq 'check' and $checks) {
-        die('multiple -C or --check-part options not allowed');
+        fatal_error('multiple -C or --check-part options not allowed');
     }
     if ($dont_check) {
-        die(
+        fatal_error(
             join(q{ },
                 'both -C or --check-part and -X',
                 'or --dont-check-part options not allowed'));
@@ -276,13 +282,15 @@ sub record_check_part {
 # Options: -T|--tags
 sub record_check_tags {
     if (defined $action and $action eq 'check' and $check_tags) {
-        die('multiple -T or --tags options not allowed');
+        fatal_error('multiple -T or --tags options not allowed');
     }
     if ($checks) {
-        die('both -T or --tags and -C or --check-part options not allowed');
+        fatal_error(
+            'both -T or --tags and -C or --check-part options not allowed');
     }
     if ($dont_check) {
-        die('both -T or --tags and -X or --dont-check-part options not allowed'
+        fatal_error(
+            'both -T or --tags and -X or --dont-check-part options not allowed'
         );
     }
     record_action('check');
@@ -338,10 +346,10 @@ sub record_suppress_tags_from_file {
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
     if (defined $action and $action eq 'check' and $dont_check) {
-        die('multiple -X or --dont-check-part options not allowed');
+        fatal_error('multiple -X or --dont-check-part options not allowed');
     }
     if ($checks) {
-        die(
+        fatal_error(
             join(q{ },
                 'both -C or --check-part and',
                 '-X or --dont-check-part options not allowed'));
@@ -409,10 +417,10 @@ sub record_quiet {
 }
 
 sub record_option_too_late {
-    print STDERR join(q{ },
-        'Warning: --include-dir and --[no-]user-dirs',
-        "should be the first option(s) if given\n");
-    exit(2);
+    fatal_error(
+        join(q{ },
+            'Warning: --include-dir and --[no-]user-dirs',
+            'should be the first option(s) if given'));
 }
 
 # Process display-info and display-level options in cfg files
@@ -424,7 +432,8 @@ sub record_option_too_late {
 sub cfg_display_level {
     my ($var, $val) = @_;
     if ($var eq 'display-info' or $var eq 'pedantic'){
-        die "$var and display-level may not both appear in the config file.\n"
+        fatal_error(
+            "$var and display-level may not both appear in the config file.\n")
           if $conf_opt{'display-level'};
 
         return unless $val; # case "display-info=no" (or "pedantic=no")
@@ -442,10 +451,10 @@ sub cfg_display_level {
         display_pedantictags() if $var eq 'pedantic';
     } elsif ($var eq 'display-level'){
         foreach my $other (qw(pedantic display-info)) {
-            die(
+            fatal_error(
                 join(q{ },
                     "$other and display-level may not",
-                    "both appear in the config file.\n"))if $conf_opt{$other};
+                    'both appear in the config file.'))if $conf_opt{$other};
         }
 
         return if @display_level;
@@ -465,7 +474,8 @@ sub cfg_verbosity {
     my ($var, $val) = @_;
     if (   ($var eq 'verbose' && exists $conf_opt{'quiet'})
         || ($var eq 'quiet' && exists $conf_opt{'verbose'})) {
-        die "verbose and quiet may not both appear in the config file.\n";
+        fatal_error(
+            'verbose and quiet may not both appear in the config file.');
     }
     # quiet = no or verbose = no => no change
     return unless $val;
@@ -491,7 +501,7 @@ sub cfg_override {
 }
 
 sub use_lab_tool_instead {
-    die("Please use lintian-lab-tool instead\n");
+    fatal_error('Please use lintian-lab-tool instead');
 }
 
 # Hash used to process commandline options
@@ -558,7 +568,23 @@ my %opthash = (
     'exp-output:s' => \$experimental_output_opts,
 );
 
-main();
+# dplint has a similar wrapper; but it uses a different exit code
+# for uncaught exceptions (compared to what lintian documents).
+sub _main {
+    eval {_main();};
+    # Cocerce the error to a string
+    if (my $err = "$@") {
+        $err =~ s/\n//;
+        # Special-case the message from the signal handler as it is not
+        # entirely unexpected.
+        if ($err eq 'N: Interrupted') {
+            fatal_error($err);
+        }
+        print STDERR "$err\n";
+        fatal_error('Uncaught exception');
+    }
+    fatal_error('Assertion error: _main returned !?');
+}
 
 sub main {
     my ($pool);
@@ -647,15 +673,15 @@ sub main {
         not(   ($action eq 'unpack')
             or ($action eq 'check'))
       ) {
-        fail("bad action $action specified");
+        fatal_error("invalid action $action specified");
     }
 
     if (!$LAB->is_temp) {
         # sanity check:
-        fail(
+        fatal_error(
             join(q{ },
                 'lintian lab has not been set up correctly',
-                '(perhaps you forgot to run lintian --setup-lab?)')
+                '(perhaps you forgot to run lintian-lab-tool create-lab?)')
         ) unless $LAB->exists;
     } else {
         $LAB->create({'keep-lab' => $opt{'keep-lab'}});
@@ -716,6 +742,10 @@ sub main {
     foreach my $gname (sort $pool->get_group_names) {
         my $success = 1;
         my $group = $pool->get_group($gname);
+
+        # Do not start a new group if we have a signal pending.
+        retrigger_signal() if $received_signal;
+
         my $total_raw_res = timed_task {
             my @group_lpkg;
             my $raw_res = timed_task {
@@ -737,7 +767,8 @@ sub main {
                     # earlier.
                     if (waitpid(-1, WNOHANG) != -1) {
                         $exit_code = 2;
-                        fail('Unreaped processes after running checks!?');
+                        internal_error(
+                            'Unreaped processes after running checks!?');
                     }
                 } else {
                     # If we are interrupted in (e.g.) checks/manpages, it
@@ -927,6 +958,8 @@ sub unpack_group {
     return
       unless $unpacker->prepare_tasks($errhandler, $group->get_processables);
 
+    retrigger_signal() if $received_signal;
+
     v_msg("Unpacking packages in group $gname");
 
     my (%timers, %hooks);
@@ -1013,6 +1046,7 @@ sub process_group {
             eval {$cs->run_check($lpkg, $group);};
             my $err = $@;
             my $raw_res = $finish_timer->($timer);
+            retrigger_signal() if $received_signal;
             if ($err) {
                 print STDERR $err;
                 print STDERR "internal error: cannot run $check check",
@@ -1242,7 +1276,8 @@ sub parse_config_file {
             if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
                 my ($var, $val) = ($1, $2);
                 my $ref = $cfghash{$var};
-                die "Unknown configuration variable $var at line: ${.}.\n"
+                fatal_error(
+                    "Unknown configuration variable $var at line: ${.}.")
                   unless $ref;
                 if (exists $conf_opt{$var}){
                     print STDERR
@@ -1273,7 +1308,7 @@ sub parse_config_file {
             }
         }
         unless ($found) {
-            die "syntax error in configuration file: $_\n";
+            fatal_error("syntax error in configuration file: $_");
         }
     }
     close($fd);
@@ -1382,9 +1417,10 @@ sub configure_output {
     #    it before the config check.
     $opt{'color'} = 'auto' unless defined($opt{'color'});
     if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
-        die join(q{ },
-            'The color value must be one of',
-            "\"never\", \"always\", \"auto\" or \"html\"\n");
+        fatal_error(
+            join(q{ },
+                'The color value must be one of',
+                'never", "always", "auto" or "html"'));
     }
     if ($opt{'tag-display-limit'} eq 'auto') {
         if (-t STDOUT) {
@@ -1474,7 +1510,7 @@ sub setup_work_pool {
                     $exit_code = 2;
                 }
             } else {
-                fail(
+                fatal_error(
                     join(q{ },
                         "bad package file name $arg",
                         '(neither .deb, .udeb, .changes or .dsc file)'));
@@ -1527,7 +1563,7 @@ sub load_profile_and_configure_tags {
         if ($@) {
             my $error = $@;
             $error =~ s/ at .*//;
-            die $error, "\n";
+            fatal_error($error);
         }
     }
     return $profile;
@@ -1566,7 +1602,8 @@ sub load_and_select_collections {
             }
             if (@missing) {
                 my $str = join(', ', @missing);
-                fail("The check \"$c\" depends unknown collection(s): $str");
+                internal_error(
+                    "The check \"$c\" depends unknown collection(s): $str");
             }
             $map->addp('check-' . $c, 'coll-', @deps);
         }
@@ -1575,7 +1612,7 @@ sub load_and_select_collections {
     # Make sure the resolver is in a sane state
     # - This can happen if we break collections (inter)dependencies.
     if ($map->missing) {
-        fail('There are missing nodes in the resolver: '
+        internal_error('There are missing nodes in the resolver: '
               . join(', ', $map->missing));
     }
 
@@ -1598,7 +1635,8 @@ sub load_and_select_collections {
         # Add collections specifically requested by the user (--unpack-info)
         for my $i (map { split(m/,/) } @unpack_info) {
             unless ($collmap->getp($i)) {
-                fail("unknown info specified: $i");
+                fatal_error(
+                    "unrecognized info specified via --unpack-info: $i");
             }
             $extra_unpack{$i} = 1;
         }
@@ -1619,7 +1657,7 @@ sub parse_options {
 
     # process commandline options
     Getopt::Long::GetOptions(%opthash)
-      or die("error parsing options\n");
+      or fatal_error("error parsing options\n");
 
     # root permissions?
     # check if effective UID is 0
@@ -1645,7 +1683,7 @@ sub parse_options {
     # check specified action
     $action = 'check' unless $action;
 
-    die "Cannot use profile together with --ftp-master-rejects.\n"
+    fatal_error('Cannot use profile together with --ftp-master-rejects.')
       if $opt{'LINTIAN_PROFILE'} and $opt{'ftp-master-rejects'};
     # --ftp-master-rejects is implemented in a profile
     $opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject'
@@ -1683,7 +1721,8 @@ sub _update_profile {
         } else {
             for my $c (split /,/, $checks) {
                 my $cs = $profile->get_script($c, 1) || $abbrev{$c};
-                fail("Unknown check script $c") unless $cs;
+                fatal_error("Unrecognized check script (via -C): $c")
+                  unless $cs;
                 $profile->enable_tags($cs->tags);
             }
         }
@@ -1691,7 +1730,7 @@ sub _update_profile {
         # we are disabling checks
         for my $c (split(/,/, $sup_check)) {
             my $cs = $profile->get_script($c, 1) || $abbrev{$c};
-            fail("Unknown check script $c") unless $cs;
+            fatal_error("Unrecognized check script (via -X): $c") unless $cs;
             $profile->disable_tags($cs->tags);
         }
     }
@@ -1720,40 +1759,6 @@ sub END {
     $SIG{'INT'} = 'DEFAULT';
     $SIG{'QUIT'} = 'DEFAULT';
 
-    # We have to ensure that our exit code is 0, 1 or 2.  Quote from
-    # "perldoc -f die":
-    #
-    # """
-    # If an uncaught exception results in interpreter exit, the exit
-    # code is determined from the values of $! and $? with this
-    # pseudocode:
-    #
-    #   exit $! if $!; # errno
-    #   exit $? >> 8 if $? >> 8; # child exit status
-    #   exit 255;
-    # """
-    #
-    # So, here in the END handler, we abuse the fact that we can alter
-    # the exit code by changing $?.  It is not a perfect solution
-    # (e.g.  if $! is 1, then we might still exit 1 instead of 2), but
-    # it is definitely better than exiting with undocumented exit codes.
-    if ($? != 0 && $? != 2) {
-        # If $? is not 1, then we definitely want $? to be 2.  If
-        # $exit_code != 1, then either we got an uncaught exception
-        # before the first policy violation or we already saw an
-        # internal error that we caught.  Either way, we want to
-        # exit with 2 in this case.
-        #
-        # Sadly, this is unreliable if we saw a policy violation and
-        # then cause an uncaught internal error (where e.g. $! is 1).
-        # In this case we will still exit 1 instead of 2 as we should.
-        # Nevertheless, this is probably a lot more reliable than
-        # Lintian <= 2.5.12 was.
-        if ($? != 1 || $exit_code != 1) {
-            $? = 2;
-        }
-    }
-
     if (1) {
         # Prevent LAB->close, $unpacker->kill_jobs etc. from affecting
         # the exit code.
@@ -1781,9 +1786,23 @@ sub END {
     }
 }
 
+sub _die_in_signal_handler {
+    die("N: Interrupted.\n");
+}
+
+sub retrigger_signal {
+    # Re-kill ourselves with the same signal to ensure that the exit
+    # code reflects that we died by a signal.
+    local $SIG{$received_signal} = \&_die_in_signal_handler;
+    debug_msg(2, "Retriggering signal SIG${received_signal}");
+    return kill($received_signal, $$);
+}
+
 sub interrupted {
-    $SIG{$_[0]} = 'DEFAULT';
-    die "N: Interrupted.\n";
+    $received_signal = $_[0];
+    $SIG{$received_signal} = 'DEFAULT';
+    print {$STATUS_FD} "ack-signal SIG${received_signal}\n";
+    return _die_in_signal_handler();
 }
 
 # }}}

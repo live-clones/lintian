@@ -37,14 +37,14 @@ use constant READ_SIZE => 4096 * 1024 * 10;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
-use Lintian::Util qw(check_path delete_dir fail run_cmd pipe_tee);
+use Lintian::Util qw(check_path delete_dir internal_error run_cmd pipe_tee);
 
 sub collect {
     my ($pkg, $type, $dir) = @_;
 
     if (-d "$dir/unpacked/") {
         delete_dir("$dir/unpacked/")
-          or fail("failed to remove unpacked directory of $pkg");
+          or internal_error("failed to remove unpacked directory of $pkg");
     }
     for my $file (qw(index index.gz index-errors unpacked-errors)) {
         unlink("$dir/$file") if -e "$dir/$file";
@@ -68,7 +68,7 @@ sub collect {
                     ['dpkg-source', @args, '-x', "$dir/dsc", "$dir/unpacked"])
               ) {
                 dump_errors("$dir/unpacked-errors");
-                fail('dpkg-source -x failed with status ',
+                internal_error('dpkg-source -x failed with status ',
                     $opts->{harness}->result);
             }
         } else {

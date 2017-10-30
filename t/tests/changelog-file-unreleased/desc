@@ -1,5 +1,7 @@
 Testname: changelog-file-unreleased
 Version: 2.0
 Description: Suppress new date warnings for UNRELEASED
-Test-Against: latest-debian-changelog-entry-without-new-date
+Test-Against:
+ latest-changelog-entry-without-new-date
+ latest-debian-changelog-entry-without-new-date
 References: Debian Bug#560149

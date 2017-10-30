@@ -1,5 +1,0 @@
-{$source} ({$version}) unstable; urgency=low
-
-  * Lintian Test Suite.
-
- -- {$author}  Thu, 20 Jul 2017 23:01:57 +0100

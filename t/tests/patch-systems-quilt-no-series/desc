@@ -2,5 +2,6 @@ Testname: patch-systems-quilt-no-series
 Version: 1.0-1
 Type: non-native
 Description: Test for quilt patches with no series
+Extra-Build-Depends: quilt
 Test-For: quilt-build-dep-but-no-series-file
 

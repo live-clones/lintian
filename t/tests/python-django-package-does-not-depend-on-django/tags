@@ -1,0 +1,2 @@
+W: python-django-positive: django-package-does-not-depend-on-django python-django
+W: python3-django-positive: django-package-does-not-depend-on-django python3-django

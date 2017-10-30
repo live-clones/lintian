@@ -88,12 +88,19 @@ sub check_modalias {
         # FIXME report this as an error
         return;
     }
-    my $xml = XMLin(
-        $metadatafile->fs_path,
-        ForceArray => ['provides', 'modalias'],
-        KeepRoot => 1,
-        KeyAttr => [],
-    );
+    my $xml = eval {
+        XMLin(
+            $metadatafile->fs_path,
+            ForceArray => ['provides', 'modalias'],
+            KeepRoot => 1,
+            KeyAttr => [],
+        );
+    };
+    if ($@) {
+        tag 'appstream-metadata-invalid', basename($metadatafile->fs_path);
+        return 0;
+    }
+
     if (exists $xml->{'application'}) {
         tag('appstream-metadata-legacy-format', $metadatafile);
         return 0;

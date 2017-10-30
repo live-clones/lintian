@@ -196,3 +196,6 @@ Info: The packaging includes an upstream signing key but the corresponding
  If you are repackaging your source tarballs for Debian Free Software
  Guidelines compliance reasons, ensure that your package version includes
  <tt>dfsg</tt> or similar.
+ .
+ Support for signatures was added to <tt>pristine-tar</tt> in version 1.41
+ and support in <tt>git-buildpackage</tt> is being tracked in #872864.

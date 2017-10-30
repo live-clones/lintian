@@ -306,3 +306,10 @@ Info: The package is a GObject Instrospection package but it does not specify a
  .
  This is usually an accidental omission and/or where the maintainer omits
  the <tt>--with=gir</tt> debhelper sequence.
+
+Tag: debian-control-has-empty-field
+Severity: pedantic
+Certainty: certain
+Info: The field on this line of <tt>debian/control</tt> is empty. Whilst
+ this is permitted in the syntax of Debian control files it is
+ unnecessary.

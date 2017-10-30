@@ -10,7 +10,6 @@ dash
 debianutils
 diffutils
 dpkg
-e2fsprogs
 findutils
 grep
 gzip
@@ -19,7 +18,6 @@ hurd
 init-system-helpers
 libc-bin
 login
-mount
 ncurses-base
 ncurses-bin
 perl-base

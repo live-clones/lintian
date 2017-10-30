@@ -122,12 +122,15 @@ sub setup_env {
     my ($user_dirs) = @_;
 
     if ($user_dirs) {
-        my $data_home;
+        my ($data_home, $legacy_user_data);
 
         load_file_basedir();
 
         if (exists($ENV{'HOME'}) or exists($ENV{'XDG_CONFIG_HOME'})) {
             $data_home = data_home('lintian');
+        }
+        if (exists($ENV{'HOME'})) {
+            $legacy_user_data = "$ENV{HOME}/.lintian";
         }
         if (defined($data_home) and $data_home !~ m@^/@) {
             # Turn the path into an absolute one.  Just in case
@@ -135,9 +138,11 @@ sub setup_env {
             my $cwd = getcwd();
             $data_home = "${cwd}/${data_home}";
         }
-        unshift(@RESTRICTED_INCLUDE_DIRS, $data_home)
+        push(@RESTRICTED_INCLUDE_DIRS, $data_home)
           if defined($data_home) && -d $data_home;
-        unshift(@RESTRICTED_INCLUDE_DIRS, '/etc/lintian')
+        push(@RESTRICTED_INCLUDE_DIRS, $legacy_user_data)
+          if defined($legacy_user_data) && -d $legacy_user_data;
+        push(@RESTRICTED_INCLUDE_DIRS, '/etc/lintian')
           if -d '/etc/lintian';
     }
 

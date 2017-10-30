@@ -3,3 +3,6 @@ Sequence: 2500
 Version: 1.0
 Description: Test checking a specific list of tags from a file
 Options: --tags-from-file TESTSET/tests/lintian-check-tags-file/tag-list
+Test-For:
+ debhelper-but-no-misc-depends
+ section-is-dh_make-template

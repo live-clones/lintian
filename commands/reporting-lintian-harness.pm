@@ -345,6 +345,11 @@ sub process_worklist {
                     log_msg("  [lintian] error processing $group_id "
                           . "(time: $runtime)");
                     $processed{$group_id} = 1;
+                } elsif ($line =~ m/^ack-signal (SIG\S+)$/) {
+                    my $signal = $1;
+                    log_msg(
+                        "Signal $signal acknowledged: disabled timed alarms");
+                    alarm(0);
                 }
             }
             alarm(0);
@@ -360,12 +365,22 @@ sub process_worklist {
             my $sig = $? & 0xff;
             if ($res != 1 and $res != 0) {
                 log_msg("warning: executing lintian returned $res");
+                if ($got_alarm) {
+                    # Ideally, lintian would always die by the signal
+                    # but some times it catches it and terminates
+                    # "normally"
+                    log_msg('Stopped by a signal or time out');
+                    log_msg(' - skipping the rest of the worklist');
+                    @worklist = ();
+                }
             } elsif ($sig) {
                 log_msg("Lintian terminated by signal: $sig");
                 # If someone is sending us signals (e.g. SIGINT/Ctrl-C)
                 # don't start the next round.
                 log_msg(' - skipping the rest of the worklist');
                 @worklist = ();
+            }
+            if ($got_alarm) {
                 if ($got_alarm == 1) {
                     # Lintian was (presumably) killed due to a
                     # time-out from this process

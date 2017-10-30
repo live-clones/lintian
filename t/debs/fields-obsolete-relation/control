@@ -3,7 +3,7 @@ Version: 1.0
 Architecture: all
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
-Priority: extra
+Priority: optional
 Conflicts: libsqlite3-0 (< 3.6.12)
 Description: Test for obsolete relation syntax in a binary package
  This is a test package designed to exercise some feature or tag of

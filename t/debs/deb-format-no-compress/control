@@ -3,7 +3,7 @@ Version: 1.0
 Architecture: all
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
-Priority: extra
+Priority: optional
 Description: Test package with no compressed data.tar and control.tar
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

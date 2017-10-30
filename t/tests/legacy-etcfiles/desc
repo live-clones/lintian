@@ -3,3 +3,19 @@ Source: etcfiles
 Sequence: 9999
 Version: 1
 Description: Legacy test "etcfiles"
+Test-For:
+ ancient-standards-version
+ changelog-file-not-compressed
+ debian-rules-missing-required-target
+ extended-description-is-empty
+ file-in-etc-not-marked-as-conffile
+ file-missing-in-md5sums
+ malformed-md5sums-control-file
+ md5sum-mismatch
+ md5sums-lists-nonexistent-file
+ no-copyright-file
+ non-etc-file-marked-as-conffile
+ not-binnmuable-all-depends-any
+ package-contains-hardlink
+ readme-debian-mentions-usr-doc
+ run-parts-cron-filename-contains-illegal-chars

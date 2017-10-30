@@ -133,7 +133,7 @@ Info: This package is architecture all and hence requires a Multi-Arch
  An Architecture: all package to satisfy the dependencies of a
  foreign-architecture package, it must be marked Multi-Arch: foreign
  or Multi-Arch: allowed.
-Ref: https://wiki.ubuntu.com/MultiarchSpec#Dependencies_involving_Architecture:_all_packages/
+Ref: https://wiki.ubuntu.com/MultiarchSpec#Dependencies_involving_Architecture:_all_packages
 
 Tag: aspell-package-not-arch-all
 Severity: normal
@@ -1095,6 +1095,14 @@ Info: The Vcs-* field uses an unencrypted transport protocol for the
  might not be possible to use an alternative url and still have a
  working (anonymous read-only) repository.
 
+Tag: vcs-browser-links-to-empty-view
+Severity: normal
+Certainty: certain
+Info: The VCS-Browser links to an an empty view of the repository due to
+ it including a suffix such as <tt>?rev=0&sc=0</tt>.
+ .
+ You should remove this suffix from the field.
+
 Tag: lib-recommends-documentation
 Severity: normal
 Certainty: possible
@@ -1182,9 +1190,9 @@ Info: The package build-depends on a versioned development package of
  .
  Should the package have a legitimate reason for using the versioned development
  package, please add an override.
-Ref: http://download.oracle.com/docs/cd/E17076_02/html/upgrading/upgrade_process.html
+Ref: http://docs.oracle.com/cd/E17076_02/html/upgrading/upgrade_process.html
 
-Tag: transitional-package-should-be-oldlibs-extra
+Tag: transitional-package-should-be-oldlibs-optional
 Severity: normal
 Certainty: possible
 Ref: #645438, devref 6.7.7
@@ -1313,3 +1321,19 @@ Info: The Built-Using field contains invalid fields.
  .
  Only first issue is shown.
 Ref: policy 7.8
+
+Tag: priority-extra-is-replaced-by-priority-optional
+Severity: minor
+Certainty: certain
+Info: Since Debian Policy version 4.0.1, the priority <tt>extra</tt>
+ has been deprecated.
+ .
+ Please update <tt>debian/control</tt> and replace all instances of
+ <tt>Priority: extra</tt> with <tt>Priority: optional</tt>.
+Ref: policy 2.5
+
+Tag: empty-section-field
+Severity: normal
+Certainty: certain
+Info: The "Section:" field in this package's control file is empty.
+Ref: policy 2.4

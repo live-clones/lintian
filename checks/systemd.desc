@@ -145,3 +145,15 @@ Info: The systemd service file does not contain a <tt>WantedBy=</tt> or
  Forgetting to add such a line (e.g. <tt>WantedBy=multi-user.target</tt>)
  results in the service file not being started by default.
 Ref: systemd.unit(5)
+
+Tag: systemd-service-file-wraps-init-script
+Severity: normal
+Certainty: certain
+Info: The listed service file simply uses ths existing SysV init script
+ via ExecStart, ExecStop, etc.
+ .
+ The main logic of more complex init scripts should be moved into helper
+ scripts which can be used directly from both the .service file and the
+ init script. This will also make the init scripts more readable and easier
+ to support other alternatives. Note that as /etc/init.d/* files are
+ conffiles, such updates are not guaranteed to reach users.

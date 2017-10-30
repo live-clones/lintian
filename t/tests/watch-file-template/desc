@@ -2,4 +2,6 @@ Testname: watch-file-template
 Type: non-native
 Version: 1.0-1
 Description: Test for dh_make(1) templates
-Test-For: debian-watch-contains-dh_make-template
+Test-For:
+ debian-watch-contains-dh_make-template
+ debian-watch-uses-insecure-uri

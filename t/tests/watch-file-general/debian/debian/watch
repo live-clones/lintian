@@ -18,9 +18,15 @@ http://sourceforge.net/projects/synce/files http://downloads.sourceforge.net/.+/
 version=42
 
 # Specifies the same version number as the package.
-http://example.com/ foo([\d.]+)\.tar\.gz 2.0.ds1-1 uupdate
+https://example.com/ foo([\d.]+)\.tar\.gz 2.0.ds1-1 uupdate
 
 # Deprecated githubredir
 http://githubredir.debian.net/github/username/project /(.*).tar.gz
 
 # without any pgpsigurlmangle
+
+http://insecure.com /(.*).tar.gz
+https://secure.com /(.*).tar.gz
+
+# False positive for debian-watch-uses-insecure-uri
+http://sf.net/uses/redirector-([^-]+)\.tar\.gz

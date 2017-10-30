@@ -3,3 +3,20 @@ Source: fields
 Sequence: 9999
 Version: 1.5-.3
 Description: Legacy test "fields"
+Test-For:
+ ancient-standards-version
+ changelog-should-mention-nmu
+ debhelper-but-no-misc-depends
+ debian-changelog-file-missing
+ debian-changelog-file-missing-or-wrong-name
+ debian-revision-not-well-formed
+ debian-revision-should-not-be-zero
+ depends-on-python-minimal
+ essential-no-not-needed
+ missing-build-dependency
+ native-package-with-dash-version
+ new-essential-package
+ no-copyright-file
+ package-uses-debhelper-but-lacks-build-depends
+ source-nmu-has-incorrect-version-number
+ unknown-section

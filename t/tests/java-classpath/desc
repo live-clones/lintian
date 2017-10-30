@@ -5,5 +5,4 @@ Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
 Test-For:
- missing-classpath
  classpath-contains-relative-path

@@ -1,9 +1,10 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: python
 Maintainer: {$author}
 Build-Depends: {$build_depends}
 Standards-Version: {$standards_version}
+Rules-Requires-Root: no
 
 Package: pkg-depends
 Architecture: all

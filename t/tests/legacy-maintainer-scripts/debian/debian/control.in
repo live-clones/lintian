@@ -5,6 +5,7 @@ Maintainer: QA group <packages@qa.debian.org>
 Uploaders: Anyone but Jeroen <jeroen@wolffelaar.nl>
 Build-Depends: {$build_depends}
 Standards-Version: 3.1.1
+Rules-Requires-Root: binary-targets
 XS-Dm-Upload-Allowed: Yes
 
 Package: maintainer-scripts

@@ -1,3 +1,5 @@
 I: fields-vcs-fields source: vcs-field-uses-insecure-uri vcs-bzr nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
 I: fields-vcs-fields source: vcs-field-uses-insecure-uri vcs-cvs :pserver:anonymous@anonscm.debian.org:/cvs/foobar module
 I: fields-vcs-fields source: vcs-field-uses-insecure-uri vcs-svn svn://anonscm.debian.org/foobar/trunk
+W: fields-vcs-fields source: vcs-browser-links-to-empty-view https://anonscm.debian.org/viewvc/foobar/trunk?rev=0&sc=0
+W: fields-vcs-fields source: vcs-field-uses-not-recommended-uri-format vcs-mtn www.example.org org.debian.foobar

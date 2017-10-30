@@ -663,7 +663,7 @@ foo source: another-tag without any comments
         <para>
           The architecture list has the same syntax as the
           architecture list in the "Build-Depends" field of a source
-          package. This is described in detail in the <ulink url="https://www.debian.org/doc/debian-policy/ch-relationships.html#s-depsyntax">
+          package. This is described in detail in the <ulink url="https://www.debian.org/doc/debian-policy/#s-controlsyntax">
           Debian Policy Manual §7.1</ulink>.  Examples:
         </para>
         <screen>
@@ -728,6 +728,11 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
         <itemizedlist>
           <listitem>
             <para>
+              <filename>$XDG_DATA_HOME/lintian/profiles</filename>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
               <filename>$HOME/.lintian/profiles</filename>
             </para>
           </listitem>
@@ -753,7 +758,8 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           first file matching the profile will be used.  This allows
           users to override a system profile by putting one with the
           same filename
-          in <filename>$HOME/.lintian/profiles</filename>.
+          in <filename>$XDG_DATA_HOME/lintian/profiles</filename>
+          or <filename>$HOME/.lintian/profiles</filename>.
         </para>
       </sect2>
       <sect2 label="2.5.2" id="section-2.5.2">
@@ -761,7 +767,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
         <para>
           Profiles are written in the same syntax as Debian
           control files as described in the
-          <ulink url="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
+          <ulink url="https://www.debian.org/doc/debian-policy/#s-controlsyntax">
           Debian Policy Manual §5.1</ulink>.  Profiles allow
           comments as described in the Policy Manual.
         </para>
@@ -997,6 +1003,11 @@ Overridable: no
           vendor specific data files:
         </para>
         <itemizedlist>
+          <listitem>
+            <para>
+              <filename>$XDG_DATA_HOME/lintian/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
+            </para>
+          </listitem>
           <listitem>
             <para>
               <filename>$HOME/.lintian/vendors/<replaceable>PROFILENAME</replaceable>/data</filename>
@@ -1271,7 +1282,7 @@ Overridable: no
         <para>
           The check description file is written in the same syntax as
           Debian control files as described in the
-          <ulink url="https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
+          <ulink url="https://www.debian.org/doc/debian-policy/#s-controlsyntax">
           Debian Policy Manual §5.1</ulink>.  Check description files
           allow comments as described in the Policy Manual.
         </para>

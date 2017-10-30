@@ -3,3 +3,5 @@ jquery*  usr/share/php
 feedparser.py usr/share/php
 rss_parse.php usr/share/php
 tiny_mce_popup.js usr/share/php
+jquery.js usr/share/doxygen-test/
+doxygen.css usr/share/doxygen-test

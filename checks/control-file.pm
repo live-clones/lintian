@@ -125,18 +125,29 @@ sub run {
         return;
     }
 
+    foreach my $field (keys %{$info->source_field()}) {
+        tag 'debian-control-has-empty-field',
+          "field \"$field\" in source paragraph",
+          if $info->source_field($field) eq '';
+    }
+
     my @package_names = $info->binaries;
 
     foreach my $bin (@package_names) {
         my $bfields = $info->binary_field($bin);
         tag 'build-info-in-binary-control-file-section', "Package $bin"
-          if (first { $bfields->{"build-$_"} }
-            qw(depends depends-indep conflicts conflicts-indep));
+          if (
+            first { $bfields->{"build-$_"} }
+            qw(depends depends-indep conflicts conflicts-indep)
+          );
         foreach my $field (keys %$bfields) {
             tag 'binary-control-field-duplicates-source',
               "field \"$field\" in package $bin"
               if ( $info->source_field($field)
                 && $bfields->{$field} eq $info->source_field($field));
+            tag 'debian-control-has-empty-field',
+              "field \"$field\" in package $bin",
+              if $bfields->{$field} eq '';
         }
         if ($bin =~ /[-]dbgsym$/) {
             tag 'debian-control-has-dbgsym-package', $bin;

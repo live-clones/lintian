@@ -4,7 +4,7 @@ Architecture: all
 Multi-arch: cheese
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
-Priority: extra
+Priority: optional
 Description: Test package with an unknown Multi-arch value
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

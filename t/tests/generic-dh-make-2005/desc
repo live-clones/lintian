@@ -9,6 +9,7 @@ Test-For:
  changelog-is-dh_make-template
  copyright-without-copyright-notice
  debian-rules-ignores-make-clean-error
+ debian-rules-should-not-set-CFLAGS-from-noopt
  debian-watch-file-is-missing
  description-is-dh_make-template
  extended-description-is-probably-too-short

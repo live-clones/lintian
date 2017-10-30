@@ -41,7 +41,7 @@ functions = open opendir chdir read readdir readline closedir sysopen sysread sy
 [-Modules::ProhibitExcessMainComplexity]
 
 [Subroutines::RequireFinalReturn]
-terminal_funcs = CORE::exec fail Lintian::Util::fail Die error
+terminal_funcs = CORE::exec fatal_error internal_error Lintian::Util::internal_error Die error
 
 [ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 

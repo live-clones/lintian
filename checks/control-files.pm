@@ -67,7 +67,7 @@ sub run {
 
         $experm = $ctrl->value($file);
 
-        if ($file->size == 0) {
+        if ($file->size == 0 and $file->basename ne 'md5sums') {
             tag 'control-file-is-empty', $file;
         }
 

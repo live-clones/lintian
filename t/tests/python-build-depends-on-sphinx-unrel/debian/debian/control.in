@@ -1,9 +1,10 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: python
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 9), python-sphinx, python3-sphinx
+Rules-Requires-Root: no
 
 Package: python-{$source}
 Architecture: all

@@ -1,0 +1,7 @@
+{$source} ({$version}) {$distribution}; urgency=low
+
+  * This line contains trailing whitespace. 
+  * This line does not contais trailing whitespace.
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- {$author}  {$date}

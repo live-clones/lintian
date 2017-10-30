@@ -1,12 +1,14 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}, dh-elpa
 Homepage: https://lintian.debian.org/
+Rules-Requires-Root: no
 
 Package: elpa-foo
+Section: lisp
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, $\{elpa:Depends\}
 Description: {$description}

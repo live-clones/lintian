@@ -10,7 +10,7 @@ I: scripts-interpreters: example-script-uses-bin-env usr/share/doc/scripts-inter
 I: scripts-interpreters: example-script-without-interpreter usr/share/doc/scripts-interpreters/examples/no-interpreter
 I: scripts-interpreters: example-wrong-path-for-interpreter usr/share/doc/scripts-interpreters/examples/not-absolute (#!perl != /usr/bin/perl)
 I: scripts-interpreters: example-wrong-path-for-interpreter usr/share/doc/scripts-interpreters/examples/wrong-perl-path (#!/bin/perl != /usr/bin/perl)
-P: scripts-interpreters source: dependency-on-python-version-marked-for-end-of-life scripts-interpreters (Depends: python2.7)
+P: scripts-interpreters: dependency-on-python-version-marked-for-end-of-life (Depends: python2.7)
 P: scripts-interpreters: example-interpreter-in-usr-local usr/share/doc/scripts-interpreters/examples/usr-local #!/usr/local/bin/special-perl
 P: scripts-interpreters: example-shell-script-fails-syntax-check usr/share/doc/scripts-interpreters/examples/syntax
 P: scripts-interpreters: example-unusual-interpreter usr/share/doc/scripts-interpreters/examples/unusual #!/usr/bin/lintian

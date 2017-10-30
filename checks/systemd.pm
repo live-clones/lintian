@@ -32,7 +32,7 @@ use List::MoreUtils qw(any first_index);
 use Text::ParseWords qw(shellwords);
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail lstrip rstrip);
+use Lintian::Util qw(internal_error lstrip rstrip);
 
 use Lintian::Data;
 
@@ -203,6 +203,14 @@ sub check_systemd_service_file {
     tag 'systemd-service-file-refers-to-obsolete-bindto', $file,
       if extract_service_file_values($file, 'Unit', 'BindTo', 1);
 
+    for my $key (
+        qw(ExecStart ExecStartPre ExecStartPost ExecReload ExecStop ExecStopPost)
+      ) {
+        tag 'systemd-service-file-wraps-init-script', $file, $key
+          if any { m,^/etc/init\.d/, }
+        extract_service_file_values($file, 'Service', $key, 1);
+    }
+
     if (not $file->is_symlink or $file->link ne '/dev/null') {
         tag 'systemd-service-file-missing-documentation-key', $file,
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);
@@ -315,7 +323,8 @@ sub check_maintainer_scripts {
     open(my $fd, '<', $info->lab_data_path('control-scripts'));
 
     while (<$fd>) {
-        m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
+        m/^(\S*) (.*)$/
+          or internal_error("bad line in control-scripts file: $_");
         my $interpreter = $1;
         my $file = $2;
         my $path = $info->control_index_resolved_path($file);

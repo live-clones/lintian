@@ -31,7 +31,7 @@ use POSIX qw(ENOENT);
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
 use Lintian::Tag::Override;
-use Lintian::Util qw(fail $PKGNAME_REGEX strip);
+use Lintian::Util qw($PKGNAME_REGEX strip);
 
 BEGIN {
     our @EXPORT_OK = qw(tag);

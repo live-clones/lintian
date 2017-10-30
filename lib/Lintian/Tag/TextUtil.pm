@@ -30,7 +30,7 @@ our @EXPORT_OK= qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
 # requires wrap() function
 use Text::Wrap;
 
-use Lintian::Util qw(fail strip);
+use Lintian::Util qw(internal_error strip);
 
 # html_wrap -- word-wrap a paragraph.  The wrap() function from Text::Wrap
 # is not suitable, because it chops words that are longer than the line
@@ -99,7 +99,7 @@ sub split_paragraphs {
         }
         # what else can happen?
         else {
-            fail('internal error in wrap');
+            internal_error('internal error in wrap');
         }
     }
     #FLUSH;

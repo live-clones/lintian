@@ -1,5 +1,6 @@
 usr/share/man/man1/interpreters.1       usr/share/man/man1/bin-env.1
 usr/share/man/man1/interpreters.1       usr/share/man/man1/csh-shell.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/cwl-runner.1
 usr/share/man/man1/interpreters.1       usr/share/man/man1/no-interpreter.1
 usr/share/man/man1/interpreters.1       usr/share/man/man1/not-absolute.1
 usr/share/man/man1/interpreters.1       usr/share/man/man1/python2.7.1

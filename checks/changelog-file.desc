@@ -195,8 +195,8 @@ Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
   $ iconv -f ISO-8859-1 -t UTF-8 NEWS.Debian &gt; NEWS.Debian.new
   $ mv NEWS.Debian.new NEWS.Debian
 
-Tag: latest-debian-changelog-entry-without-new-date
-Severity: normal
+Tag: latest-changelog-entry-without-new-date
+Severity: important
 Certainty: certain
 Info: The latest Debian changelog entry has either the same or even an
  older date as the entry before.

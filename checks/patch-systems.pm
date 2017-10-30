@@ -28,7 +28,7 @@ use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(fail strip);
+use Lintian::Util qw(internal_error strip);
 
 sub run {
     my (undef, undef, $info) = @_;
@@ -229,7 +229,7 @@ sub run {
     open(my $fd, '<', $info->diffstat);
     while (<$fd>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
-          or fail("syntax error in diffstat file: $_");
+          or internal_error("syntax error in diffstat file: $_");
         push(@direct, $file) if ($file !~ m,^debian/,);
     }
     close($fd);

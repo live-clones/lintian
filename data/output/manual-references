@@ -7,15 +7,17 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2016-08-22
+# Last updated: 2017-10-14
 
 debconf-spec::::Configuration management::https://www.debian.org/doc/packaging-manuals/debconf_specification.html
-debconf-spec::aen27::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
-debconf-spec::aen30::Configuration Data::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN30
-debconf-spec::aen45::Templates::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN45
-debconf-spec::aen101::Configuration frontends::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN101
-debconf-spec::aen106::Communication with the frontend::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN106
-debconf-spec::aen283::Debian install-time configuration::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN283
+debconf-spec::1::Introduction::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.2
+debconf-spec::2::Configuration Data::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.3
+debconf-spec::2.1::The configuration space::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.3.2
+debconf-spec::3::Templates::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.4
+debconf-spec::3.1::Template information::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.4.4
+debconf-spec::4::Configuration frontends::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.5
+debconf-spec::5::Communication with the frontend::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.6
+debconf-spec::6::Debian install-time configuration::https://www.debian.org/doc/packaging-manuals/debconf_specification.html#id-1.7
 devref::::Debian Developer's Reference::https://www.debian.org/doc/developers-reference/
 devref::1::Scope of This Document::https://www.debian.org/doc/developers-reference/ch01.html
 devref::2::Applying to Become a Maintainer::https://www.debian.org/doc/developers-reference/ch02.html
@@ -517,304 +519,377 @@ menu-policy::2.1::Preferred menu structure::https://www.debian.org/doc/packaging
 perl-policy::::Debian Perl Policy::https://www.debian.org/doc/packaging-manuals/perl-policy/
 perl-policy::1::About this document::https://www.debian.org/doc/packaging-manuals/perl-policy/ch1.html
 perl-policy::2::Perl Packaging::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html
-perl-policy::3::Locally Installed Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html
-perl-policy::4::Packaged Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html
-perl-policy::5::Perl Programs::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html
-perl-policy::6::Programs Embedding Perl::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html
-perl-policy::A::Perl 6::https://www.debian.org/doc/packaging-manuals/perl-policy/ap-perl6.html
 perl-policy::2.1::Versions::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-versions
 perl-policy::2.2::Base Package::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-base
 perl-policy::2.3::Module Path::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-paths
 perl-policy::2.4::Documentation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-perl.html#s-docs
-perl-policy::3.1::Site Directories::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html#s-site_dirs
-perl-policy::3.2::Site Installation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html#s-site_install
-perl-policy::4.1::Vendor Directories::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-vendor_dirs
-perl-policy::4.2::Module Package Names::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-package_names
-perl-policy::4.3::Vendor Installation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-vendor_install
-perl-policy::4.4::Module Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-module_deps
-perl-policy::5.1::Script Magic::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-hash_bang
-perl-policy::5.2::Program Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-program_deps
-perl-policy::6.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-build_embedded
-perl-policy::6.2::Embedded Perl Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-embedded_deps
-perl-policy::6.3::Perl Package Upgrades::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-perl_upgrades
-perl-policy::4.4.1::Architecture-Independent Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-indep_modules
-perl-policy::4.4.2::Binary and Other Architecture Dependent Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-binary_modules
-perl-policy::4.4.3::Automating Perl Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-dh_perl
+perl-policy::3::Locally Installed Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html
+perl-policy::3.1::Site Directories::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html#s-site-dirs
+perl-policy::3.2::Site Installation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-site.html#s-site-install
+perl-policy::4::Packaged Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html
+perl-policy::4.1::Vendor Directories::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-vendor-dirs
+perl-policy::4.2::Module Package Names::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-package-names
+perl-policy::4.3::Vendor Installation::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-vendor-install
+perl-policy::4.4::Module Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-module-deps
+perl-policy::4.4.1::Architecture-Independent Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-indep-modules
+perl-policy::4.4.2::Binary and Other Architecture Dependent Modules::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-binary-modules
+perl-policy::4.4.3::Automating Perl Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-module_packages.html#s-dh-perl
+perl-policy::5::Perl Programs::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html
+perl-policy::5.1::Script Magic::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-hash-bang
+perl-policy::5.2::Program Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-programs.html#s-program-deps
+perl-policy::6::Programs Embedding Perl::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html
+perl-policy::6.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-build-embedded
+perl-policy::6.2::Embedded Perl Dependencies::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-embedded-deps
+perl-policy::6.3::Perl Package Upgrades::https://www.debian.org/doc/packaging-manuals/perl-policy/ch-embed.html#s-perl-upgrades
+perl-policy::A::Perl 6::https://www.debian.org/doc/packaging-manuals/perl-policy/ap-perl6.html
 policy::::Debian Policy Manual::https://www.debian.org/doc/debian-policy/
-policy::1::About this manual::https://www.debian.org/doc/debian-policy/ch-scope.html
-policy::2::The Debian Archive::https://www.debian.org/doc/debian-policy/ch-archive.html
-policy::3::Binary packages::https://www.debian.org/doc/debian-policy/ch-binary.html
-policy::4::Source packages::https://www.debian.org/doc/debian-policy/ch-source.html
-policy::5::Control files and their fields::https://www.debian.org/doc/debian-policy/ch-controlfields.html
-policy::6::Package maintainer scripts and installation procedure::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
-policy::7::Declaring relationships between packages::https://www.debian.org/doc/debian-policy/ch-relationships.html
-policy::8::Shared libraries::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html
-policy::9::The Operating System::https://www.debian.org/doc/debian-policy/ch-opersys.html
-policy::10::Files::https://www.debian.org/doc/debian-policy/ch-files.html
-policy::11::Customized programs::https://www.debian.org/doc/debian-policy/ch-customized-programs.html
-policy::12::Documentation::https://www.debian.org/doc/debian-policy/ch-docs.html
-policy::A::Introduction and scope of these appendices::https://www.debian.org/doc/debian-policy/ap-pkg-scope.html
-policy::B::Binary packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html
-policy::C::Source packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html
-policy::D::Control files and their fields (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html
-policy::E::Configuration file handling (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html
-policy::F::Alternative versions of an interface - update-alternatives (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-alternatives.html
-policy::G::Diversions - overriding a package's version of a file (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/ap-pkg-diversions.html
-policy::1.1::Scope::https://www.debian.org/doc/debian-policy/ch-scope.html#s1.1
-policy::1.2::New versions of this document::https://www.debian.org/doc/debian-policy/ch-scope.html#s1.2
-policy::1.3::Authors and Maintainers::https://www.debian.org/doc/debian-policy/ch-scope.html#s-authors
-policy::1.4::Related documents::https://www.debian.org/doc/debian-policy/ch-scope.html#s-related
-policy::1.5::Definitions::https://www.debian.org/doc/debian-policy/ch-scope.html#s-definitions
-policy::2.1::The Debian Free Software Guidelines::https://www.debian.org/doc/debian-policy/ch-archive.html#s-dfsg
-policy::2.2::Archive areas::https://www.debian.org/doc/debian-policy/ch-archive.html#s-sections
-policy::2.3::Copyright considerations::https://www.debian.org/doc/debian-policy/ch-archive.html#s-pkgcopyright
-policy::2.4::Sections::https://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections
-policy::2.5::Priorities::https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities
-policy::3.1::The package name::https://www.debian.org/doc/debian-policy/ch-binary.html#s3.1
-policy::3.2::The version of a package::https://www.debian.org/doc/debian-policy/ch-binary.html#s-versions
-policy::3.3::The maintainer of a package::https://www.debian.org/doc/debian-policy/ch-binary.html#s-maintainer
-policy::3.4::The description of a package::https://www.debian.org/doc/debian-policy/ch-binary.html#s-descriptions
-policy::3.5::Dependencies::https://www.debian.org/doc/debian-policy/ch-binary.html#s-dependencies
-policy::3.6::Virtual packages::https://www.debian.org/doc/debian-policy/ch-binary.html#s-virtual_pkg
-policy::3.7::Base system::https://www.debian.org/doc/debian-policy/ch-binary.html#s3.7
-policy::3.8::Essential packages::https://www.debian.org/doc/debian-policy/ch-binary.html#s3.8
-policy::3.9::Maintainer Scripts::https://www.debian.org/doc/debian-policy/ch-binary.html#s-maintscripts
-policy::4.1::Standards conformance::https://www.debian.org/doc/debian-policy/ch-source.html#s-standardsversion
-policy::4.2::Package relationships::https://www.debian.org/doc/debian-policy/ch-source.html#s-pkg-relations
-policy::4.3::Changes to the upstream sources::https://www.debian.org/doc/debian-policy/ch-source.html#s4.3
-policy::4.4::Debian changelog: debian/changelog::https://www.debian.org/doc/debian-policy/ch-source.html#s-dpkgchangelog
-policy::4.5::Copyright: debian/copyright::https://www.debian.org/doc/debian-policy/ch-source.html#s-dpkgcopyright
-policy::4.6::Error trapping in makefiles::https://www.debian.org/doc/debian-policy/ch-source.html#s4.6
-policy::4.7::Time Stamps::https://www.debian.org/doc/debian-policy/ch-source.html#s-timestamps
-policy::4.8::Restrictions on objects in source packages::https://www.debian.org/doc/debian-policy/ch-source.html#s-restrictions
-policy::4.9::Main building script: debian/rules::https://www.debian.org/doc/debian-policy/ch-source.html#s-debianrules
-policy::4.10::Variable substitutions: debian/substvars::https://www.debian.org/doc/debian-policy/ch-source.html#s-substvars
-policy::4.11::Optional upstream source location: debian/watch::https://www.debian.org/doc/debian-policy/ch-source.html#s-debianwatch
-policy::4.12::Generated files list: debian/files::https://www.debian.org/doc/debian-policy/ch-source.html#s-debianfiles
-policy::4.13::Convenience copies of code::https://www.debian.org/doc/debian-policy/ch-source.html#s-embeddedfiles
-policy::4.14::Source package handling: debian/README.source::https://www.debian.org/doc/debian-policy/ch-source.html#s-readmesource
-policy::5.1::Syntax of control files::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax
-policy::5.2::Source package control files -- debian/control::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-sourcecontrolfiles
-policy::5.3::Binary package control files -- DEBIAN/control::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-binarycontrolfiles
-policy::5.4::Debian source control files -- .dsc::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-debiansourcecontrolfiles
-policy::5.5::Debian changes files -- .changes::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-debianchangesfiles
-policy::5.6::List of fields::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlfieldslist
-policy::5.7::User-defined fields::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s5.7
-policy::5.8::Obsolete fields::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-obsolete-control-data-fields
-policy::6.1::Introduction to package maintainer scripts::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s6.1
-policy::6.2::Maintainer scripts idempotency::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-idempotency
-policy::6.3::Controlling terminal for maintainer scripts::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-controllingterminal
-policy::6.4::Exit status::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-exitstatus
-policy::6.5::Summary of ways maintainer scripts are called::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-mscriptsinstact
-policy::6.6::Details of unpack phase of installation or upgrade::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-unpackphase
-policy::6.7::Details of configuration::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-configdetails
-policy::6.8::Details of removal and/or configuration purging::https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html#s-removedetails
-policy::7.1::Syntax of relationship fields::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-depsyntax
-policy::7.2::Binary Dependencies - Depends, Recommends, Suggests, Enhances, Pre-Depends::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-binarydeps
-policy::7.3::Packages which break other packages - Breaks::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-breaks
-policy::7.4::Conflicting binary packages - Conflicts::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-conflicts
-policy::7.5::Virtual packages - Provides::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-virtual
-policy::7.6::Overwriting files and replacing packages - Replaces::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-replaces
-policy::7.7::Relationships between source and binary packages - Build-Depends, Build-Depends-Indep, Build-Conflicts, Build-Conflicts-Indep::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-sourcebinarydeps
-policy::7.8::Additional source packages used to build the binary - Built-Using::https://www.debian.org/doc/debian-policy/ch-relationships.html#s-built-using
-policy::8.1::Run-time shared libraries::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-runtime
-policy::8.2::Shared library support files::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-support-files
-policy::8.3::Static libraries::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-static
-policy::8.4::Development files::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-dev
-policy::8.5::Dependencies between the packages of the same library::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-intradeps
-policy::8.6::Dependencies between the library and other packages::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-depends
-policy::9.1::File system hierarchy::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1
-policy::9.2::Users and groups::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2
-policy::9.3::System run levels and init.d scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-sysvinit
-policy::9.4::Console messages from init.d scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.4
-policy::9.5::Cron jobs::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-cron-jobs
-policy::9.6::Menus::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-menus
-policy::9.7::Multimedia handlers::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-mime
-policy::9.8::Keyboard configuration::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.8
-policy::9.9::Environment variables::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.9
-policy::9.10::Registering Documents using doc-base::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-doc-base
-policy::9.11::Alternate init systems::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-alternateinit
-policy::10.1::Binaries::https://www.debian.org/doc/debian-policy/ch-files.html#s-binaries
-policy::10.2::Libraries::https://www.debian.org/doc/debian-policy/ch-files.html#s-libraries
-policy::10.3::Shared libraries::https://www.debian.org/doc/debian-policy/ch-files.html#s10.3
-policy::10.4::Scripts::https://www.debian.org/doc/debian-policy/ch-files.html#s-scripts
-policy::10.5::Symbolic links::https://www.debian.org/doc/debian-policy/ch-files.html#s10.5
-policy::10.6::Device files::https://www.debian.org/doc/debian-policy/ch-files.html#s10.6
-policy::10.7::Configuration files::https://www.debian.org/doc/debian-policy/ch-files.html#s-config-files
-policy::10.8::Log files::https://www.debian.org/doc/debian-policy/ch-files.html#s10.8
-policy::10.9::Permissions and owners::https://www.debian.org/doc/debian-policy/ch-files.html#s-permissions-owners
-policy::10.10::File names::https://www.debian.org/doc/debian-policy/ch-files.html#s-filenames
-policy::11.1::Architecture specification strings::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-arch-spec
-policy::11.2::Daemons::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.2
-policy::11.3::Using pseudo-ttys and modifying wtmp, utmp and lastlog::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.3
-policy::11.4::Editors and pagers::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.4
-policy::11.5::Web servers and applications::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-web-appl
-policy::11.6::Mail transport, delivery and user agents::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-mail-transport-agents
-policy::11.7::News system configuration::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.7
-policy::11.8::Programs for the X Window System::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8
-policy::11.9::Perl programs and modules::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-perl
-policy::11.10::Emacs lisp programs::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-emacs
-policy::11.11::Games::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.11
-policy::12.1::Manual pages::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.1
-policy::12.2::Info documents::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.2
-policy::12.3::Additional documentation::https://www.debian.org/doc/debian-policy/ch-docs.html#s-docs-additional
-policy::12.4::Preferred documentation formats::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.4
-policy::12.5::Copyright information::https://www.debian.org/doc/debian-policy/ch-docs.html#s-copyrightfile
-policy::12.6::Examples::https://www.debian.org/doc/debian-policy/ch-docs.html#s12.6
-policy::12.7::Changelog files::https://www.debian.org/doc/debian-policy/ch-docs.html#s-changelogs
-policy::B.1::Creating package files - dpkg-deb::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#s-pkg-bincreating
-policy::B.2::Package control information files::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#s-pkg-controlarea
-policy::B.3::The main control information file: control::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#s-pkg-controlfile
-policy::B.4::Time Stamps::https://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#sB.4
-policy::C.1::Tools for processing source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcetools
-policy::C.2::The Debian package source tree::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcetree
-policy::C.3::Source packages as archives::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcearchives
-policy::C.4::Unpacking a Debian source package without dpkg-source::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.4
-policy::D.1::Syntax of control files::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#sD.1
-policy::D.2::List of fields::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#sD.2
-policy::E.1::Automatic handling of configuration files by dpkg::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#sE.1
-policy::E.2::Fully-featured maintainer script configuration handling::https://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#sE.2
-policy::2.2.1::The main archive area::https://www.debian.org/doc/debian-policy/ch-archive.html#s-main
-policy::2.2.2::The contrib archive area::https://www.debian.org/doc/debian-policy/ch-archive.html#s-contrib
-policy::2.2.3::The non-free archive area::https://www.debian.org/doc/debian-policy/ch-archive.html#s-non-free
-policy::3.2.1::Version numbers based on dates::https://www.debian.org/doc/debian-policy/ch-binary.html#s3.2.1
-policy::3.4.1::The single line synopsis::https://www.debian.org/doc/debian-policy/ch-binary.html#s-synopsis
-policy::3.4.2::The extended description::https://www.debian.org/doc/debian-policy/ch-binary.html#s-extendeddesc
-policy::3.9.1::Prompting in maintainer scripts::https://www.debian.org/doc/debian-policy/ch-binary.html#s-maintscriptprompt
-policy::4.9.1::debian/rules and DEB_BUILD_OPTIONS::https://www.debian.org/doc/debian-policy/ch-source.html#s-debianrules-options
-policy::5.6.1::Source::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Source
-policy::5.6.2::Maintainer::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Maintainer
-policy::5.6.3::Uploaders::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Uploaders
-policy::5.6.4::Changed-By::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Changed-By
-policy::5.6.5::Section::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Section
-policy::5.6.6::Priority::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Priority
-policy::5.6.7::Package::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Package
-policy::5.6.8::Architecture::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Architecture
-policy::5.6.9::Essential::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Essential
-policy::5.6.10::Package interrelationship fields: Depends, Pre-Depends, Recommends, Suggests, Breaks, Conflicts, Provides, Replaces, Enhances::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s5.6.10
-policy::5.6.11::Standards-Version::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Standards-Version
-policy::5.6.12::Version::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version
-policy::5.6.13::Description::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Description
-policy::5.6.14::Distribution::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Distribution
-policy::5.6.15::Date::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Date
-policy::5.6.16::Format::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Format
-policy::5.6.17::Urgency::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Urgency
-policy::5.6.18::Changes::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Changes
-policy::5.6.19::Binary::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Binary
-policy::5.6.20::Installed-Size::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Installed-Size
-policy::5.6.21::Files::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Files
-policy::5.6.22::Closes::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Closes
-policy::5.6.23::Homepage::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Homepage
-policy::5.6.24::Checksums-Sha1 and Checksums-Sha256::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Checksums
-policy::5.6.25::DM-Upload-Allowed::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s5.6.25
-policy::5.6.26::Version Control System (VCS) fields::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-VCS-fields
-policy::5.6.27::Package-List::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Package-List
-policy::5.6.28::Package-Type::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Package-Type
-policy::5.6.29::Dgit::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Dgit
-policy::5.8.1::DM-Upload-Allowed::https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-DM-Upload-Allowed
-policy::7.6.1::Overwriting files in other packages::https://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.1
-policy::7.6.2::Replacing whole packages, forcing their removal::https://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.2
-policy::8.1.1::ldconfig::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-ldconfig
-policy::8.6.1::Generating dependencies on shared libraries::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-dpkg-shlibdeps
-policy::8.6.2::Shared library ABI changes::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-updates
-policy::8.6.3::The symbols system::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-symbols
-policy::8.6.3.1::The symbols files present on the system::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-symbols-paths
-policy::8.6.3.2::The symbols File Format::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-symbols
-policy::8.6.3.3::Providing a symbols file::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-providing-symbols
-policy::8.6.4::The shlibs system::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-sharedlibs-shlibdeps
-policy::8.6.4.1::The shlibs files present on the system::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs-paths
-policy::8.6.4.2::The shlibs File Format::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs
-policy::8.6.4.3::Providing a shlibs file::https://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.4.3
-policy::9.1.1::File System Structure::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs
-policy::9.1.2::Site-specific programs::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.2
-policy::9.1.3::The system-wide mail directory::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.3
-policy::9.1.4::/run and /run/lock::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs-run
-policy::9.2.1::Introduction::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.1
-policy::9.2.2::UID and GID classes::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.2
-policy::9.3.1::Introduction::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-/etc/init.d
-policy::9.3.2::Writing the scripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-writing-init
-policy::9.3.3::Interfacing with the initscript system::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3
-policy::9.3.3.1::Managing the links::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3.1
-policy::9.3.3.2::Running initscripts::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3.2
-policy::9.3.4::Boot-time initialization::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.4
-policy::9.3.5::Example::https://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.5
-policy::9.5.1::Cron job file names::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-cron-files
-policy::9.7.1::Registration of media type handlers with desktop entries::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-media-types-freedesktop
-policy::9.7.2::Registration of media type handlers with mailcap entries::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-mailcap
-policy::9.7.3::Providing media types to files::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-file-media-type
-policy::9.11.1::Event-based boot with upstart::https://www.debian.org/doc/debian-policy/ch-opersys.html#s-upstart
-policy::10.7.1::Definitions::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.1
-policy::10.7.2::Location::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.2
-policy::10.7.3::Behavior::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.3
-policy::10.7.4::Sharing configuration files::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.4
-policy::10.7.5::User configuration files (&quot;dotfiles&quot;)::https://www.debian.org/doc/debian-policy/ch-files.html#s10.7.5
-policy::10.9.1::The use of dpkg-statoverride::https://www.debian.org/doc/debian-policy/ch-files.html#s10.9.1
-policy::11.1.1::Architecture wildcards::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-arch-wildcard-spec
-policy::11.8.1::Providing X support and package priorities::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.1
-policy::11.8.2::Packages providing an X server::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.2
-policy::11.8.3::Packages providing a terminal emulator::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.3
-policy::11.8.4::Packages providing a window manager::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.4
-policy::11.8.5::Packages providing fonts::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.5
-policy::11.8.6::Application defaults files::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-appdefaults
-policy::11.8.7::Installation directory issues::https://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.7
-policy::12.5.1::Machine-readable copyright information::https://www.debian.org/doc/debian-policy/ch-docs.html#s-copyrightformat
-policy::C.1.1::dpkg-source - packs and unpacks Debian source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-source
-policy::C.1.2::dpkg-buildpackage - overall package-building control script::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-buildpackage
-policy::C.1.3::dpkg-gencontrol - generates binary package control files::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-gencontrol
-policy::C.1.4::dpkg-shlibdeps - calculates shared library dependencies::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-shlibdeps
-policy::C.1.5::dpkg-distaddfile - adds a file to debian/files::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-distaddfile
-policy::C.1.6::dpkg-genchanges - generates a .changes upload control file::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-genchanges
-policy::C.1.7::dpkg-parsechangelog - produces parsed representation of a changelog::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-parsechangelog
-policy::C.1.8::dpkg-architecture - information about the build and host system::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-architecture
-policy::C.2.1::debian/rules - the main building script::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-debianrules
-policy::C.2.2::debian/substvars and variable substitutions::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-srcsubstvars
-policy::C.2.3::debian/files::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.3
-policy::C.2.4::debian/tmp::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.4
-policy::C.4.1::Restrictions on objects in source packages::https://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.4.1
-policy::D.2.1::Filename and MSDOS-Filename::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Filename
-policy::D.2.2::Size and MD5sum::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Size
-policy::D.2.3::Status::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Status
-policy::D.2.4::Config-Version::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Config-Version
-policy::D.2.5::Conffiles::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Conffiles
-policy::D.2.6::Obsolete fields::https://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#sD.2.6
+policy::1::About this manual::https://www.debian.org/doc/debian-policy/#about-this-manual
+policy::1.1::Scope::https://www.debian.org/doc/debian-policy/#scope
+policy::1.2::New versions of this document::https://www.debian.org/doc/debian-policy/#new-versions-of-this-document
+policy::1.3::Authors and Maintainers::https://www.debian.org/doc/debian-policy/#authors-and-maintainers
+policy::1.4::Related documents::https://www.debian.org/doc/debian-policy/#related-documents
+policy::1.5::Definitions::https://www.debian.org/doc/debian-policy/#definitions
+policy::2::The Debian Archive::https://www.debian.org/doc/debian-policy/#the-debian-archive
+policy::2.1::The Debian Free Software Guidelines::https://www.debian.org/doc/debian-policy/#the-debian-free-software-guidelines
+policy::2.2::Archive areas::https://www.debian.org/doc/debian-policy/#archive-areas
+policy::2.2.1::The main archive area::https://www.debian.org/doc/debian-policy/#the-main-archive-area
+policy::2.2.2::The contrib archive area::https://www.debian.org/doc/debian-policy/#the-contrib-archive-area
+policy::2.2.3::The non-free archive area::https://www.debian.org/doc/debian-policy/#the-non-free-archive-area
+policy::2.3::Copyright considerations::https://www.debian.org/doc/debian-policy/#copyright-considerations
+policy::2.4::Sections::https://www.debian.org/doc/debian-policy/#sections
+policy::2.5::Priorities::https://www.debian.org/doc/debian-policy/#priorities
+policy::3::Binary packages::https://www.debian.org/doc/debian-policy/#binary-packages
+policy::3.1::The package name::https://www.debian.org/doc/debian-policy/#the-package-name
+policy::3.2::The version of a package::https://www.debian.org/doc/debian-policy/#the-version-of-a-package
+policy::3.2.1::Version numbers based on dates::https://www.debian.org/doc/debian-policy/#version-numbers-based-on-dates
+policy::3.3::The maintainer of a package::https://www.debian.org/doc/debian-policy/#the-maintainer-of-a-package
+policy::3.4::The description of a package::https://www.debian.org/doc/debian-policy/#the-description-of-a-package
+policy::3.4.1::The single line synopsis::https://www.debian.org/doc/debian-policy/#the-single-line-synopsis
+policy::3.4.2::The extended description::https://www.debian.org/doc/debian-policy/#the-extended-description
+policy::3.5::Dependencies::https://www.debian.org/doc/debian-policy/#dependencies
+policy::3.6::Virtual packages::https://www.debian.org/doc/debian-policy/#virtual-packages
+policy::3.7::Base system::https://www.debian.org/doc/debian-policy/#base-system
+policy::3.8::Essential packages::https://www.debian.org/doc/debian-policy/#essential-packages
+policy::3.9::Maintainer Scripts::https://www.debian.org/doc/debian-policy/#maintainer-scripts
+policy::3.9.1::Prompting in maintainer scripts::https://www.debian.org/doc/debian-policy/#prompting-in-maintainer-scripts
+policy::4::Source packages::https://www.debian.org/doc/debian-policy/#source-packages
+policy::4.1::Standards conformance::https://www.debian.org/doc/debian-policy/#standards-conformance
+policy::4.2::Package relationships::https://www.debian.org/doc/debian-policy/#package-relationships
+policy::4.3::Changes to the upstream sources::https://www.debian.org/doc/debian-policy/#changes-to-the-upstream-sources
+policy::4.4::Debian changelog: <code>debian/changelog</code>::https://www.debian.org/doc/debian-policy/#debian-changelog-debian-changelog
+policy::4.5::Copyright: <code>debian/copyright</code>::https://www.debian.org/doc/debian-policy/#copyright-debian-copyright
+policy::4.6::Error trapping in makefiles::https://www.debian.org/doc/debian-policy/#error-trapping-in-makefiles
+policy::4.7::Time Stamps::https://www.debian.org/doc/debian-policy/#time-stamps
+policy::4.8::Restrictions on objects in source packages::https://www.debian.org/doc/debian-policy/#restrictions-on-objects-in-source-packages
+policy::4.9::Main building script: <code>debian/rules</code>::https://www.debian.org/doc/debian-policy/#main-building-script-debian-rules
+policy::4.9.1::<code>debian/rules</code> and <code>DEB_BUILD_OPTIONS</code>::https://www.debian.org/doc/debian-policy/#debian-rules-and-deb-build-options
+policy::4.10::Variable substitutions: <code>debian/substvars</code>::https://www.debian.org/doc/debian-policy/#variable-substitutions-debian-substvars
+policy::4.11::Optional upstream source location: <code>debian/watch</code>::https://www.debian.org/doc/debian-policy/#optional-upstream-source-location-debian-watch
+policy::4.12::Generated files list: <code>debian/files</code>::https://www.debian.org/doc/debian-policy/#generated-files-list-debian-files
+policy::4.13::Convenience copies of code::https://www.debian.org/doc/debian-policy/#convenience-copies-of-code
+policy::4.14::Source package handling: <code>debian/README.source</code>::https://www.debian.org/doc/debian-policy/#source-package-handling-debian-readme-source
+policy::4.15::Reproducibility::https://www.debian.org/doc/debian-policy/#reproducibility
+policy::5::Control files and their fields::https://www.debian.org/doc/debian-policy/#control-files-and-their-fields
+policy::5.1::Syntax of control files::https://www.debian.org/doc/debian-policy/#syntax-of-control-files
+policy::5.2::Source package control files – <code>debian/control</code>::https://www.debian.org/doc/debian-policy/#source-package-control-files-debian-control
+policy::5.3::Binary package control files – <code>DEBIAN/control</code>::https://www.debian.org/doc/debian-policy/#binary-package-control-files-debian-control
+policy::5.4::Debian source control files – <code>.dsc</code>::https://www.debian.org/doc/debian-policy/#debian-source-control-files-dsc
+policy::5.5::Debian changes files – <code>.changes</code>::https://www.debian.org/doc/debian-policy/#debian-changes-files-changes
+policy::5.6::List of fields::https://www.debian.org/doc/debian-policy/#list-of-fields
+policy::5.6.1::<code>Source</code>::https://www.debian.org/doc/debian-policy/#source
+policy::5.6.2::<code>Maintainer</code>::https://www.debian.org/doc/debian-policy/#maintainer
+policy::5.6.3::<code>Uploaders</code>::https://www.debian.org/doc/debian-policy/#uploaders
+policy::5.6.4::<code>Changed-By</code>::https://www.debian.org/doc/debian-policy/#changed-by
+policy::5.6.5::<code>Section</code>::https://www.debian.org/doc/debian-policy/#section
+policy::5.6.6::<code>Priority</code>::https://www.debian.org/doc/debian-policy/#priority
+policy::5.6.7::<code>Package</code>::https://www.debian.org/doc/debian-policy/#package
+policy::5.6.8::<code>Architecture</code>::https://www.debian.org/doc/debian-policy/#architecture
+policy::5.6.9::<code>Essential</code>::https://www.debian.org/doc/debian-policy/#essential
+policy::5.6.10::Package interrelationship fields: <code>Depends</code>, <code>Pre-Depends</code>, <code>Recommends</code>, <code>Suggests</code>, <code>Breaks</code>, <code>Conflicts</code>, <code>Provides</code>, <code>Replaces</code>, <code>Enhances</code>::https://www.debian.org/doc/debian-policy/#package-interrelationship-fields-depends-pre-depends-recommends-suggests-breaks-conflicts-provides-replaces-enhances
+policy::5.6.11::<code>Standards-Version</code>::https://www.debian.org/doc/debian-policy/#standards-version
+policy::5.6.12::<code>Version</code>::https://www.debian.org/doc/debian-policy/#version
+policy::5.6.13::<code>Description</code>::https://www.debian.org/doc/debian-policy/#description
+policy::5.6.14::<code>Distribution</code>::https://www.debian.org/doc/debian-policy/#distribution
+policy::5.6.15::<code>Date</code>::https://www.debian.org/doc/debian-policy/#date
+policy::5.6.16::<code>Format</code>::https://www.debian.org/doc/debian-policy/#format
+policy::5.6.17::<code>Urgency</code>::https://www.debian.org/doc/debian-policy/#urgency
+policy::5.6.18::<code>Changes</code>::https://www.debian.org/doc/debian-policy/#changes
+policy::5.6.19::<code>Binary</code>::https://www.debian.org/doc/debian-policy/#binary
+policy::5.6.20::<code>Installed-Size</code>::https://www.debian.org/doc/debian-policy/#installed-size
+policy::5.6.21::<code>Files</code>::https://www.debian.org/doc/debian-policy/#files
+policy::5.6.22::<code>Closes</code>::https://www.debian.org/doc/debian-policy/#closes
+policy::5.6.23::<code>Homepage</code>::https://www.debian.org/doc/debian-policy/#homepage
+policy::5.6.24::<code>Checksums-Sha1</code> and <code>Checksums-Sha256</code>::https://www.debian.org/doc/debian-policy/#checksums-sha1-and-checksums-sha256
+policy::5.6.25::<code>DM-Upload-Allowed</code>::https://www.debian.org/doc/debian-policy/#dm-upload-allowed
+policy::5.6.26::Version Control System (VCS) fields::https://www.debian.org/doc/debian-policy/#version-control-system-vcs-fields
+policy::5.6.27::<code>Package-List</code>::https://www.debian.org/doc/debian-policy/#package-list
+policy::5.6.28::<code>Package-Type</code>::https://www.debian.org/doc/debian-policy/#package-type
+policy::5.6.29::<code>Dgit</code>::https://www.debian.org/doc/debian-policy/#dgit
+policy::5.6.30::<code>Testsuite</code>::https://www.debian.org/doc/debian-policy/#testsuite
+policy::5.7::User-defined fields::https://www.debian.org/doc/debian-policy/#user-defined-fields
+policy::5.8::Obsolete fields::https://www.debian.org/doc/debian-policy/#obsolete-fields
+policy::5.8.1::<code>DM-Upload-Allowed</code>::https://www.debian.org/doc/debian-policy/#s-f-dm-upload-allowed
+policy::6::Package maintainer scripts and installation procedure::https://www.debian.org/doc/debian-policy/#package-maintainer-scripts-and-installation-procedure
+policy::6.1::Introduction to package maintainer scripts::https://www.debian.org/doc/debian-policy/#introduction-to-package-maintainer-scripts
+policy::6.2::Maintainer scripts idempotency::https://www.debian.org/doc/debian-policy/#maintainer-scripts-idempotency
+policy::6.3::Controlling terminal for maintainer scripts::https://www.debian.org/doc/debian-policy/#controlling-terminal-for-maintainer-scripts
+policy::6.4::Exit status::https://www.debian.org/doc/debian-policy/#exit-status
+policy::6.5::Summary of ways maintainer scripts are called::https://www.debian.org/doc/debian-policy/#summary-of-ways-maintainer-scripts-are-called
+policy::6.6::Details of unpack phase of installation or upgrade::https://www.debian.org/doc/debian-policy/#details-of-unpack-phase-of-installation-or-upgrade
+policy::6.7::Details of configuration::https://www.debian.org/doc/debian-policy/#details-of-configuration
+policy::6.8::Details of removal and/or configuration purging::https://www.debian.org/doc/debian-policy/#details-of-removal-and-or-configuration-purging
+policy::7::Declaring relationships between packages::https://www.debian.org/doc/debian-policy/#declaring-relationships-between-packages
+policy::7.1::Syntax of relationship fields::https://www.debian.org/doc/debian-policy/#syntax-of-relationship-fields
+policy::7.2::Binary Dependencies - <code>Depends</code>, <code>Recommends</code>, <code>Suggests</code>, <code>Enhances</code>, <code>Pre-Depends</code>::https://www.debian.org/doc/debian-policy/#binary-dependencies-depends-recommends-suggests-enhances-pre-depends
+policy::7.3::Packages which break other packages - <code>Breaks</code>::https://www.debian.org/doc/debian-policy/#packages-which-break-other-packages-breaks
+policy::7.4::Conflicting binary packages - <code>Conflicts</code>::https://www.debian.org/doc/debian-policy/#conflicting-binary-packages-conflicts
+policy::7.5::Virtual packages - <code>Provides</code>::https://www.debian.org/doc/debian-policy/#virtual-packages-provides
+policy::7.6::Overwriting files and replacing packages - <code>Replaces</code>::https://www.debian.org/doc/debian-policy/#overwriting-files-and-replacing-packages-replaces
+policy::7.6.1::Overwriting files in other packages::https://www.debian.org/doc/debian-policy/#overwriting-files-in-other-packages
+policy::7.6.2::Replacing whole packages, forcing their removal::https://www.debian.org/doc/debian-policy/#replacing-whole-packages-forcing-their-removal
+policy::7.7::Relationships between source and binary packages - <code>Build-Depends</code>, <code>Build-Depends-Indep</code>, <code>Build-Depends-Arch</code>, <code>Build-Conflicts</code>, <code>Build-Conflicts-Indep</code>, <code>Build-Conflicts-Arch</code>::https://www.debian.org/doc/debian-policy/#relationships-between-source-and-binary-packages-build-depends-build-depends-indep-build-depends-arch-build-conflicts-build-conflicts-indep-build-conflicts-arch
+policy::7.8::Additional source packages used to build the binary - <code>Built-Using</code>::https://www.debian.org/doc/debian-policy/#additional-source-packages-used-to-build-the-binary-built-using
+policy::8::Shared libraries::https://www.debian.org/doc/debian-policy/#shared-libraries
+policy::8.1::Run-time shared libraries::https://www.debian.org/doc/debian-policy/#run-time-shared-libraries
+policy::8.1.1::<code>ldconfig</code>::https://www.debian.org/doc/debian-policy/#ldconfig
+policy::8.2::Shared library support files::https://www.debian.org/doc/debian-policy/#shared-library-support-files
+policy::8.3::Static libraries::https://www.debian.org/doc/debian-policy/#static-libraries
+policy::8.4::Development files::https://www.debian.org/doc/debian-policy/#development-files
+policy::8.5::Dependencies between the packages of the same library::https://www.debian.org/doc/debian-policy/#dependencies-between-the-packages-of-the-same-library
+policy::8.6::Dependencies between the library and other packages::https://www.debian.org/doc/debian-policy/#dependencies-between-the-library-and-other-packages
+policy::8.6.1::Generating dependencies on shared libraries::https://www.debian.org/doc/debian-policy/#generating-dependencies-on-shared-libraries
+policy::8.6.2::Shared library ABI changes::https://www.debian.org/doc/debian-policy/#shared-library-abi-changes
+policy::8.6.3::The <code>symbols</code> system::https://www.debian.org/doc/debian-policy/#the-symbols-system
+policy::8.6.3.1::The <code>symbols</code> files present on the system::https://www.debian.org/doc/debian-policy/#the-symbols-files-present-on-the-system
+policy::8.6.3.2::The <code>symbols</code> File Format::https://www.debian.org/doc/debian-policy/#the-symbols-file-format
+policy::8.6.3.3::Providing a <code>symbols</code> file::https://www.debian.org/doc/debian-policy/#providing-a-symbols-file
+policy::8.6.4::The <code>shlibs</code> system::https://www.debian.org/doc/debian-policy/#the-shlibs-system
+policy::8.6.4.1::The <code>shlibs</code> files present on the system::https://www.debian.org/doc/debian-policy/#the-shlibs-files-present-on-the-system
+policy::8.6.4.2::The <code>shlibs</code> File Format::https://www.debian.org/doc/debian-policy/#the-shlibs-file-format
+policy::8.6.4.3::Providing a <code>shlibs</code> file::https://www.debian.org/doc/debian-policy/#providing-a-shlibs-file
+policy::9::The Operating System::https://www.debian.org/doc/debian-policy/#the-operating-system
+policy::9.1::File system hierarchy::https://www.debian.org/doc/debian-policy/#file-system-hierarchy
+policy::9.1.1::File System Structure::https://www.debian.org/doc/debian-policy/#file-system-structure
+policy::9.1.2::Site-specific programs::https://www.debian.org/doc/debian-policy/#site-specific-programs
+policy::9.1.3::The system-wide mail directory::https://www.debian.org/doc/debian-policy/#the-system-wide-mail-directory
+policy::9.1.4::<code>/run</code> and <code>/run/lock</code>::https://www.debian.org/doc/debian-policy/#run-and-run-lock
+policy::9.2::Users and groups::https://www.debian.org/doc/debian-policy/#users-and-groups
+policy::9.2.1::Introduction::https://www.debian.org/doc/debian-policy/#introduction
+policy::9.2.2::UID and GID classes::https://www.debian.org/doc/debian-policy/#uid-and-gid-classes
+policy::9.2.3::Non-existent home directories::https://www.debian.org/doc/debian-policy/#non-existent-home-directories
+policy::9.3::System run levels and <code>init.d</code> scripts::https://www.debian.org/doc/debian-policy/#system-run-levels-and-init-d-scripts
+policy::9.3.1::Introduction::https://www.debian.org/doc/debian-policy/#s-etc-init-d
+policy::9.3.2::Writing the scripts::https://www.debian.org/doc/debian-policy/#writing-the-scripts
+policy::9.3.3::Interfacing with init systems::https://www.debian.org/doc/debian-policy/#interfacing-with-init-systems
+policy::9.3.3.1::Managing the links::https://www.debian.org/doc/debian-policy/#managing-the-links
+policy::9.3.3.2::Running initscripts::https://www.debian.org/doc/debian-policy/#running-initscripts
+policy::9.3.4::Boot-time initialization::https://www.debian.org/doc/debian-policy/#boot-time-initialization
+policy::9.3.5::Example::https://www.debian.org/doc/debian-policy/#example
+policy::9.4::Console messages from <code>init.d</code> scripts::https://www.debian.org/doc/debian-policy/#console-messages-from-init-d-scripts
+policy::9.5::Cron jobs::https://www.debian.org/doc/debian-policy/#cron-jobs
+policy::9.5.1::Cron job file names::https://www.debian.org/doc/debian-policy/#cron-job-file-names
+policy::9.6::Menus::https://www.debian.org/doc/debian-policy/#menus
+policy::9.7::Multimedia handlers::https://www.debian.org/doc/debian-policy/#multimedia-handlers
+policy::9.7.1::Registration of media type handlers with desktop entries::https://www.debian.org/doc/debian-policy/#registration-of-media-type-handlers-with-desktop-entries
+policy::9.7.2::Registration of media type handlers with mailcap entries::https://www.debian.org/doc/debian-policy/#registration-of-media-type-handlers-with-mailcap-entries
+policy::9.7.3::Providing media types to files::https://www.debian.org/doc/debian-policy/#providing-media-types-to-files
+policy::9.8::Keyboard configuration::https://www.debian.org/doc/debian-policy/#keyboard-configuration
+policy::9.9::Environment variables::https://www.debian.org/doc/debian-policy/#environment-variables
+policy::9.10::Registering Documents using doc-base::https://www.debian.org/doc/debian-policy/#registering-documents-using-doc-base
+policy::9.11::Alternate init systems::https://www.debian.org/doc/debian-policy/#alternate-init-systems
+policy::9.11.1::Event-based boot with upstart::https://www.debian.org/doc/debian-policy/#event-based-boot-with-upstart
+policy::10::Files::https://www.debian.org/doc/debian-policy/#files
+policy::10.1::Binaries::https://www.debian.org/doc/debian-policy/#binaries
+policy::10.2::Libraries::https://www.debian.org/doc/debian-policy/#libraries
+policy::10.3::Shared libraries::https://www.debian.org/doc/debian-policy/#shared-libraries
+policy::10.4::Scripts::https://www.debian.org/doc/debian-policy/#scripts
+policy::10.5::Symbolic links::https://www.debian.org/doc/debian-policy/#symbolic-links
+policy::10.6::Device files::https://www.debian.org/doc/debian-policy/#device-files
+policy::10.7::Configuration files::https://www.debian.org/doc/debian-policy/#configuration-files
+policy::10.7.1::Definitions::https://www.debian.org/doc/debian-policy/#definitions
+policy::10.7.2::Location::https://www.debian.org/doc/debian-policy/#location
+policy::10.7.3::Behavior::https://www.debian.org/doc/debian-policy/#behavior
+policy::10.7.4::Sharing configuration files::https://www.debian.org/doc/debian-policy/#sharing-configuration-files
+policy::10.7.5::User configuration files (“dotfiles”)::https://www.debian.org/doc/debian-policy/#user-configuration-files-dotfiles
+policy::10.8::Log files::https://www.debian.org/doc/debian-policy/#log-files
+policy::10.9::Permissions and owners::https://www.debian.org/doc/debian-policy/#permissions-and-owners
+policy::10.9.1::The use of <code>dpkg-statoverride</code>::https://www.debian.org/doc/debian-policy/#the-use-of-dpkg-statoverride
+policy::10.10::File names::https://www.debian.org/doc/debian-policy/#file-names
+policy::11::Customized programs::https://www.debian.org/doc/debian-policy/#customized-programs
+policy::11.1::Architecture specification strings::https://www.debian.org/doc/debian-policy/#architecture-specification-strings
+policy::11.1.1::Architecture wildcards::https://www.debian.org/doc/debian-policy/#architecture-wildcards
+policy::11.2::Daemons::https://www.debian.org/doc/debian-policy/#daemons
+policy::11.3::Using pseudo-ttys and modifying wtmp, utmp and lastlog::https://www.debian.org/doc/debian-policy/#using-pseudo-ttys-and-modifying-wtmp-utmp-and-lastlog
+policy::11.4::Editors and pagers::https://www.debian.org/doc/debian-policy/#editors-and-pagers
+policy::11.5::Web servers and applications::https://www.debian.org/doc/debian-policy/#web-servers-and-applications
+policy::11.6::Mail transport, delivery and user agents::https://www.debian.org/doc/debian-policy/#mail-transport-delivery-and-user-agents
+policy::11.7::News system configuration::https://www.debian.org/doc/debian-policy/#news-system-configuration
+policy::11.8::Programs for the X Window System::https://www.debian.org/doc/debian-policy/#programs-for-the-x-window-system
+policy::11.8.1::Providing X support and package priorities::https://www.debian.org/doc/debian-policy/#providing-x-support-and-package-priorities
+policy::11.8.2::Packages providing an X server::https://www.debian.org/doc/debian-policy/#packages-providing-an-x-server
+policy::11.8.3::Packages providing a terminal emulator::https://www.debian.org/doc/debian-policy/#packages-providing-a-terminal-emulator
+policy::11.8.4::Packages providing a window manager::https://www.debian.org/doc/debian-policy/#packages-providing-a-window-manager
+policy::11.8.5::Packages providing fonts::https://www.debian.org/doc/debian-policy/#packages-providing-fonts
+policy::11.8.6::Application defaults files::https://www.debian.org/doc/debian-policy/#application-defaults-files
+policy::11.8.7::Installation directory issues::https://www.debian.org/doc/debian-policy/#installation-directory-issues
+policy::11.9::Perl programs and modules::https://www.debian.org/doc/debian-policy/#perl-programs-and-modules
+policy::11.10::Emacs lisp programs::https://www.debian.org/doc/debian-policy/#emacs-lisp-programs
+policy::11.11::Games::https://www.debian.org/doc/debian-policy/#games
+policy::12::Documentation::https://www.debian.org/doc/debian-policy/#documentation
+policy::12.1::Manual pages::https://www.debian.org/doc/debian-policy/#manual-pages
+policy::12.2::Info documents::https://www.debian.org/doc/debian-policy/#info-documents
+policy::12.3::Additional documentation::https://www.debian.org/doc/debian-policy/#additional-documentation
+policy::12.4::Preferred documentation formats::https://www.debian.org/doc/debian-policy/#preferred-documentation-formats
+policy::12.5::Copyright information::https://www.debian.org/doc/debian-policy/#copyright-information
+policy::12.5.1::Machine-readable copyright information::https://www.debian.org/doc/debian-policy/#machine-readable-copyright-information
+policy::12.6::Examples::https://www.debian.org/doc/debian-policy/#examples
+policy::12.7::Changelog files::https://www.debian.org/doc/debian-policy/#changelog-files
+policy::1*::Introduction and scope of these appendices::https://www.debian.org/doc/debian-policy/#introduction-and-scope-of-these-appendices
+policy::2*::Binary packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/#binary-packages-from-old-packaging-manual
+policy::2.1*::Creating package files - <code>dpkg-deb</code>::https://www.debian.org/doc/debian-policy/#creating-package-files-dpkg-deb
+policy::2.2*::Package control information files::https://www.debian.org/doc/debian-policy/#package-control-information-files
+policy::2.3*::The main control information file: <code>control</code>::https://www.debian.org/doc/debian-policy/#the-main-control-information-file-control
+policy::2.4*::Time Stamps::https://www.debian.org/doc/debian-policy/#time-stamps
+policy::3*::Source packages (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/#source-packages-from-old-packaging-manual
+policy::3.1*::Tools for processing source packages::https://www.debian.org/doc/debian-policy/#tools-for-processing-source-packages
+policy::3.1.1::<code>dpkg-source</code> - packs and unpacks Debian source packages::https://www.debian.org/doc/debian-policy/#dpkg-source-packs-and-unpacks-debian-source-packages
+policy::3.1.2::<code>dpkg-buildpackage</code> - overall package-building control script::https://www.debian.org/doc/debian-policy/#dpkg-buildpackage-overall-package-building-control-script
+policy::3.1.3::<code>dpkg-gencontrol</code> - generates binary package control files::https://www.debian.org/doc/debian-policy/#dpkg-gencontrol-generates-binary-package-control-files
+policy::3.1.4::<code>dpkg-shlibdeps</code> - calculates shared library dependencies::https://www.debian.org/doc/debian-policy/#dpkg-shlibdeps-calculates-shared-library-dependencies
+policy::3.1.5::<code>dpkg-distaddfile</code> - adds a file to <code>debian/files</code>::https://www.debian.org/doc/debian-policy/#dpkg-distaddfile-adds-a-file-to-debian-files
+policy::3.1.6::<code>dpkg-genchanges</code> - generates a <code>.changes</code> upload control file::https://www.debian.org/doc/debian-policy/#dpkg-genchanges-generates-a-changes-upload-control-file
+policy::3.1.7::<code>dpkg-parsechangelog</code> - produces parsed representation of a changelog::https://www.debian.org/doc/debian-policy/#dpkg-parsechangelog-produces-parsed-representation-of-a-changelog
+policy::3.1.8::<code>dpkg-architecture</code> - information about the build and host system::https://www.debian.org/doc/debian-policy/#dpkg-architecture-information-about-the-build-and-host-system
+policy::3.2*::The Debian package source tree::https://www.debian.org/doc/debian-policy/#the-debian-package-source-tree
+policy::3.2.1*::<code>debian/rules</code> - the main building script::https://www.debian.org/doc/debian-policy/#debian-rules-the-main-building-script
+policy::3.2.2::<code>debian/substvars</code> and variable substitutions::https://www.debian.org/doc/debian-policy/#debian-substvars-and-variable-substitutions
+policy::3.2.3::<code>debian/files</code>::https://www.debian.org/doc/debian-policy/#debian-files
+policy::3.2.4::<code>debian/tmp</code>::https://www.debian.org/doc/debian-policy/#debian-tmp
+policy::3.3*::Source packages as archives::https://www.debian.org/doc/debian-policy/#source-packages-as-archives
+policy::3.4*::Unpacking a Debian source package without <code>dpkg-source</code>::https://www.debian.org/doc/debian-policy/#unpacking-a-debian-source-package-without-dpkg-source
+policy::3.4.1*::Restrictions on objects in source packages::https://www.debian.org/doc/debian-policy/#restrictions-on-objects-in-source-packages
+policy::4*::Control files and their fields (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/#control-files-and-their-fields-from-old-packaging-manual
+policy::4.1*::Syntax of control files::https://www.debian.org/doc/debian-policy/#syntax-of-control-files
+policy::4.2*::List of fields::https://www.debian.org/doc/debian-policy/#list-of-fields
+policy::4.2.1::<code>Filename</code> and <code>MSDOS-Filename</code>::https://www.debian.org/doc/debian-policy/#filename-and-msdos-filename
+policy::4.2.2::<code>Size</code> and <code>MD5sum</code>::https://www.debian.org/doc/debian-policy/#size-and-md5sum
+policy::4.2.3::<code>Status</code>::https://www.debian.org/doc/debian-policy/#status
+policy::4.2.4::<code>Config-Version</code>::https://www.debian.org/doc/debian-policy/#config-version
+policy::4.2.5::<code>Conffiles</code>::https://www.debian.org/doc/debian-policy/#conffiles
+policy::4.2.6::Obsolete fields::https://www.debian.org/doc/debian-policy/#obsolete-fields
+policy::5*::Configuration file handling (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/#configuration-file-handling-from-old-packaging-manual
+policy::5.1*::Automatic handling of configuration files by <code>dpkg</code>::https://www.debian.org/doc/debian-policy/#automatic-handling-of-configuration-files-by-dpkg
+policy::5.2*::Fully-featured maintainer script configuration handling::https://www.debian.org/doc/debian-policy/#fully-featured-maintainer-script-configuration-handling
+policy::6*::Alternative versions of an interface - <code>update-alternatives</code> (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/#alternative-versions-of-an-interface-update-alternatives-from-old-packaging-manual
+policy::7*::Diversions - overriding a package’s version of a file (from old Packaging Manual)::https://www.debian.org/doc/debian-policy/#diversions-overriding-a-package-s-version-of-a-file-from-old-packaging-manual
+policy::8*::Debian Policy changes process::https://www.debian.org/doc/debian-policy/#debian-policy-changes-process
+policy::8.1*::Introduction::https://www.debian.org/doc/debian-policy/#introduction
+policy::8.2*::Change Goals::https://www.debian.org/doc/debian-policy/#change-goals
+policy::8.3*::Current Process::https://www.debian.org/doc/debian-policy/#current-process
+policy::8.3.1::State A: More information required::https://www.debian.org/doc/debian-policy/#state-a-more-information-required
+policy::8.3.2::State B: Discussion::https://www.debian.org/doc/debian-policy/#state-b-discussion
+policy::8.3.3::State C: Proposal::https://www.debian.org/doc/debian-policy/#state-c-proposal
+policy::8.3.4::State D: Wording proposed::https://www.debian.org/doc/debian-policy/#state-d-wording-proposed
+policy::8.3.5::State E: Seconded::https://www.debian.org/doc/debian-policy/#state-e-seconded
+policy::8.3.6::State F: Accepted::https://www.debian.org/doc/debian-policy/#state-f-accepted
+policy::8.3.7::State G: Reject::https://www.debian.org/doc/debian-policy/#state-g-reject
+policy::8.4*::Other Tags::https://www.debian.org/doc/debian-policy/#other-tags
+policy::9*::Maintainer script flowcharts::https://www.debian.org/doc/debian-policy/#maintainer-script-flowcharts
+policy::10*::Upgrading checklist::https://www.debian.org/doc/debian-policy/#upgrading-checklist
+policy::10.1*::About the checklist::https://www.debian.org/doc/debian-policy/#about-the-checklist
+policy::10.2*::Version 4.1.1::https://www.debian.org/doc/debian-policy/#version-4-1-1
+policy::10.3*::Version 4.1.0::https://www.debian.org/doc/debian-policy/#version-4-1-0
+policy::10.4*::Version 4.0.1::https://www.debian.org/doc/debian-policy/#version-4-0-1
+policy::10.5*::Version 4.0.0::https://www.debian.org/doc/debian-policy/#version-4-0-0
+policy::10.6*::Version 3.9.8::https://www.debian.org/doc/debian-policy/#version-3-9-8
+policy::10.7*::Version 3.9.7::https://www.debian.org/doc/debian-policy/#version-3-9-7
+policy::10.8*::Version 3.9.6::https://www.debian.org/doc/debian-policy/#version-3-9-6
+policy::10.9*::Version 3.9.5::https://www.debian.org/doc/debian-policy/#version-3-9-5
+policy::10.10*::Version 3.9.4::https://www.debian.org/doc/debian-policy/#version-3-9-4
+policy::10.11::Version 3.9.3::https://www.debian.org/doc/debian-policy/#version-3-9-3
+policy::10.12::Version 3.9.2::https://www.debian.org/doc/debian-policy/#version-3-9-2
+policy::10.13::Version 3.9.1::https://www.debian.org/doc/debian-policy/#version-3-9-1
+policy::10.14::Version 3.9.0::https://www.debian.org/doc/debian-policy/#version-3-9-0
+policy::10.15::Version 3.8.4::https://www.debian.org/doc/debian-policy/#version-3-8-4
+policy::10.16::Version 3.8.3::https://www.debian.org/doc/debian-policy/#version-3-8-3
+policy::10.17::Version 3.8.2::https://www.debian.org/doc/debian-policy/#version-3-8-2
+policy::10.18::Version 3.8.1::https://www.debian.org/doc/debian-policy/#version-3-8-1
+policy::10.19::Version 3.8.0::https://www.debian.org/doc/debian-policy/#version-3-8-0
+policy::10.20::Version 3.7.3::https://www.debian.org/doc/debian-policy/#version-3-7-3
+policy::10.21::Version 3.7.2.2::https://www.debian.org/doc/debian-policy/#version-3-7-2-2
+policy::10.22::Version 3.7.2::https://www.debian.org/doc/debian-policy/#version-3-7-2
+policy::10.23::Version 3.7.1::https://www.debian.org/doc/debian-policy/#version-3-7-1
+policy::10.24::Version 3.7.0::https://www.debian.org/doc/debian-policy/#version-3-7-0
+policy::10.25::Version 3.6.2::https://www.debian.org/doc/debian-policy/#version-3-6-2
+policy::10.26::Version 3.6.1::https://www.debian.org/doc/debian-policy/#version-3-6-1
+policy::10.27::Version 3.6.0::https://www.debian.org/doc/debian-policy/#version-3-6-0
+policy::10.28::Version 3.5.10::https://www.debian.org/doc/debian-policy/#version-3-5-10
+policy::10.29::Version 3.5.9::https://www.debian.org/doc/debian-policy/#version-3-5-9
+policy::10.30::Version 3.5.8::https://www.debian.org/doc/debian-policy/#version-3-5-8
+policy::10.31::Version 3.5.7::https://www.debian.org/doc/debian-policy/#version-3-5-7
+policy::10.32::Version 3.5.6::https://www.debian.org/doc/debian-policy/#version-3-5-6
+policy::10.33::Version 3.5.5::https://www.debian.org/doc/debian-policy/#version-3-5-5
+policy::10.34::Version 3.5.4::https://www.debian.org/doc/debian-policy/#version-3-5-4
+policy::10.35::Version 3.5.3::https://www.debian.org/doc/debian-policy/#version-3-5-3
+policy::10.36::Version 3.5.2::https://www.debian.org/doc/debian-policy/#version-3-5-2
+policy::10.37::Version 3.5.1::https://www.debian.org/doc/debian-policy/#version-3-5-1
+policy::10.38::Version 3.5.0::https://www.debian.org/doc/debian-policy/#version-3-5-0
+policy::10.39::Version 3.2.1.1::https://www.debian.org/doc/debian-policy/#version-3-2-1-1
+policy::10.40::Version 3.2.1::https://www.debian.org/doc/debian-policy/#version-3-2-1
+policy::10.41::Version 3.2.0::https://www.debian.org/doc/debian-policy/#version-3-2-0
+policy::10.42::Version 3.1.1::https://www.debian.org/doc/debian-policy/#version-3-1-1
+policy::10.43::Version 3.1.0::https://www.debian.org/doc/debian-policy/#version-3-1-0
+policy::10.44::Version 3.0.1::https://www.debian.org/doc/debian-policy/#version-3-0-1
+policy::10.45::Version 3.0.0::https://www.debian.org/doc/debian-policy/#version-3-0-0
+policy::10.46::Version 2.5.0::https://www.debian.org/doc/debian-policy/#version-2-5-0
+policy::10.47::Version 2.4.1::https://www.debian.org/doc/debian-policy/#version-2-4-1
+policy::10.48::Version 2.4.0::https://www.debian.org/doc/debian-policy/#version-2-4-0
+policy::10.49::Version 2.3.0::https://www.debian.org/doc/debian-policy/#version-2-3-0
+policy::10.50::Version 2.2.0::https://www.debian.org/doc/debian-policy/#version-2-2-0
+policy::10.51::Version 2.1.3::https://www.debian.org/doc/debian-policy/#version-2-1-3
+policy::10.52::Version 2.1.2::https://www.debian.org/doc/debian-policy/#version-2-1-2
+policy::10.53::Version 2.1.1::https://www.debian.org/doc/debian-policy/#version-2-1-1
+policy::10.54::Version 2.1.0::https://www.debian.org/doc/debian-policy/#version-2-1-0
+policy::11*::License::https://www.debian.org/doc/debian-policy/#license
 python-policy::::Debian Python Policy::https://www.debian.org/doc/packaging-manuals/python-policy/
-python-policy::1::On the move to Python 3::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python3.html
-python-policy::2::Python Packaging::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html
-python-policy::3::Packaged Modules::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html
-python-policy::4::Python Programs::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html
-python-policy::5::Programs Embedding Python::https://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html
-python-policy::6::Interaction with Locally Installed Python Versions::https://www.debian.org/doc/packaging-manuals/python-policy/ch-other.html
-python-policy::A::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/ap-build_dependencies.html
-python-policy::B::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html
-python-policy::C::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/ap-upgrade.html
-python-policy::2.1::Versions::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-versions
-python-policy::2.2::Main packages::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-base
-python-policy::2.3::Minimal packages::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-minimal
-python-policy::2.4::Python Interpreter::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter
-python-policy::2.5::Module Path::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-paths
-python-policy::2.6::Hooks for updates to installed runtimes::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-runtimes_hooks
-python-policy::2.7::Documentation::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-docs
-python-policy::3.1::Types of Python Modules::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s3.1
-python-policy::3.2::Wheels::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-wheels
-python-policy::3.3::Module Package Names::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-package_names
-python-policy::3.4::Specifying Supported Versions::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-specifying_versions
-python-policy::3.5::Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-dependencies
-python-policy::3.6::Provides::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-provides
-python-policy::3.7::Modules Byte-Compilation::https://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-byte_compilation
-python-policy::4.2::Programs using the default Python::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_indep_progs
-python-policy::4.3::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_dep_progs
-python-policy::5.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-build_embedded
-python-policy::5.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-embedded_deps
-python-policy::B.1::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-distutils
-python-policy::B.2::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-setuptools
-python-policy::B.3::dh-python::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-dh-python
-python-policy::B.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pybuild
-python-policy::B.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-cdbs
-python-policy::B.6::python-support (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pysupport
-python-policy::B.7::python-central (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
-python-policy::2.4.1::Interpreter Name::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_name
-python-policy::2.4.2::Interpreter Location::https://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_loc
-python-policy::4.2.1::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-current_version_progs
+python-policy::1::On the move to Python 3::https://www.debian.org/doc/packaging-manuals/python-policy/python3.html
+python-policy::2::Python Packaging::https://www.debian.org/doc/packaging-manuals/python-policy/python.html
+python-policy::2.1::Versions::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#versions
+python-policy::2.2::Main packages::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#base
+python-policy::2.3::Minimal packages::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#minimal
+python-policy::2.4::Python Interpreter::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#interpreter
+python-policy::2.4.1::Interpreter Name::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#interpreter_name
+python-policy::2.4.2::Interpreter Location::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#interpreter_loc
+python-policy::2.5::Module Path::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#paths
+python-policy::2.6::Hooks for updates to installed runtimes::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#runtimes_hooks
+python-policy::2.7::Documentation::https://www.debian.org/doc/packaging-manuals/python-policy/python.html#docs
+python-policy::3::Packaged Modules::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html
+python-policy::3.1::Types of Python Modules::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#idm302
+python-policy::3.2::Wheels::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#wheels
+python-policy::3.3::Module Package Names::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#package_names
+python-policy::3.4::Specifying Supported Versions::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#specifying_versions
+python-policy::3.5::Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#dependencies
+python-policy::3.6::Provides::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#provides
+python-policy::3.7::Modules Byte-Compilation::https://www.debian.org/doc/packaging-manuals/python-policy/module_packages.html#byte_compilation
+python-policy::4::Python Programs::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html
+python-policy::4.1::Interpreter directive (“Shebang”)::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#interpreter-directive
+python-policy::4.2::Programs using the default Python::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#version_indep_progs
+python-policy::4.2.1::Programs Shipping Private Modules::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#current_version_progs
+python-policy::4.3::Programs Using a Particular Python Version::https://www.debian.org/doc/packaging-manuals/python-policy/programs.html#version_dep_progs
+python-policy::5::Programs Embedding Python::https://www.debian.org/doc/packaging-manuals/python-policy/embed.html
+python-policy::5.1::Building Embedded Programs::https://www.debian.org/doc/packaging-manuals/python-policy/embed.html#build_embedded
+python-policy::5.2::Embedded Python Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/embed.html#embedded_deps
+python-policy::6::Interaction with Locally Installed Python Versions::https://www.debian.org/doc/packaging-manuals/python-policy/other.html
+python-policy::A::Build Dependencies::https://www.debian.org/doc/packaging-manuals/python-policy/build_dependencies.html
+python-policy::B::Packaging Tools::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html
+python-policy::B.1::distutils::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#distutils
+python-policy::B.2::setuptools::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#setuptools
+python-policy::B.3::<code>dh-python</code>::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#dh-python
+python-policy::B.4::pybuild::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#pybuild
+python-policy::B.5::CDBS::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#cdbs
+python-policy::B.6::<code>python-support</code> (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#pysupport
+python-policy::B.7::<code>python-central</code> (removed)::https://www.debian.org/doc/packaging-manuals/python-policy/packaging_tools.html#pycentral
+python-policy::C::Upgrade Procedure::https://www.debian.org/doc/packaging-manuals/python-policy/upgrade.html
 vim-policy::::Debian Packaging Policy for Vim::http://pkg-vim.alioth.debian.org/vim-policy.html/
 vim-policy::1::Vim Addon Packaging in a Nutshell::http://pkg-vim.alioth.debian.org/vim-policy.html/index.html#nutshell
 vim-policy::2::Vim Packaging::http://pkg-vim.alioth.debian.org/vim-policy.html/x73.html

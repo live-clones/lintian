@@ -26,6 +26,7 @@ E: libbaz2-dbg: debian-changelog-file-missing
 E: libbaz2-dev: changelog-file-not-compressed changelog
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
+I: libbaz source: binary-control-field-duplicates-source field "priority" in package libbaz2-dbg
 I: libbaz1-dev: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1-dev: package-contains-empty-directory usr/include/

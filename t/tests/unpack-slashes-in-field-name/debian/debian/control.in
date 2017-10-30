@@ -1,10 +1,11 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 XS-../foo: bar
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

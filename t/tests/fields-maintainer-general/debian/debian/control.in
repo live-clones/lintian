@@ -1,5 +1,5 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: lintian-maint@debian.org
 Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
@@ -10,6 +10,7 @@ Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
  Mrs. Missing Comma <mrsmc@comma.com>
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

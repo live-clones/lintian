@@ -173,15 +173,6 @@ sub run {
         $initd_path = $initd_dir->child($initd_file)
           if $initd_dir;
 
-        if (
-            not $initd_path
-            or (    not $info->is_conffile($initd_path->name)
-                and not $initd_path->is_symlink)
-          ) {
-            tag 'init.d-script-not-marked-as-conffile',
-              "etc/init.d/$initd_file";
-        }
-
         # init.d scripts have to be marked as conffiles unless they're
         # symlinks.
         if (not $initd_path or not $initd_path->resolve_path) {
@@ -194,6 +185,15 @@ sub run {
                   "etc/init.d/$initd_file";
             }
             next;
+        }
+
+        if (
+            not $initd_path
+            or (    not $info->is_conffile($initd_path->name)
+                and not $initd_path->is_symlink)
+          ) {
+            tag 'init.d-script-not-marked-as-conffile',
+              "etc/init.d/$initd_file";
         }
 
         # Check if file exists in package and check the script for
@@ -254,6 +254,10 @@ sub check_init {
                     $tag{$arg} = 1;
                 }
             }
+        }
+        if ($l =~ m/Please remove the "Author" lines|Example initscript/) {
+            tag 'init.d-script-contains-skeleton-template-content',
+              "${initd_path}:$.";
         }
         if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
             if ($lsb{BEGIN}) {
@@ -432,8 +436,10 @@ sub check_init {
     if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
         my @required = split(' ', $lsb{'required-stop'} || '');
         if ($needs_fs) {
-            if (none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
-                @required) {
+            if (
+                none { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ }
+                @required
+              ) {
                 tag 'init.d-script-missing-dependency-on-local_fs',
                   "${initd_path}: required-stop";
             }

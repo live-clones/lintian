@@ -54,7 +54,7 @@ our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
-my $KNOWN_PRIOS = Lintian::Data->new('common/priorities', qr/\s*=\s*/o);
+my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
 our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
 
@@ -101,8 +101,7 @@ my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
     qr/\s*=>\s*/,
     sub {
         return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
-    },
-    Lintian::Data->get_orderedtype());
+    });
 
 my %VCS_EXTRACT = (
     browser => sub { return @_;},
@@ -115,8 +114,8 @@ my %VCS_EXTRACT = (
     # git uri followed by optional " -b " + branchname:
     git     => sub { return shift =~ /^(.+?)(?:\s+-b\s+(\S*))?$/;},
     svn     => sub { return @_;},
-    # that's a hostname followed by a module name:
-    mtn     => sub { return shift =~ /^(.+?)\s+(\S+)$/;},
+    # New "mtn://host?branch" uri or deprecated "host branch".
+    mtn     => sub { return shift =~ /^(.+?)(?:\s+\S+)?$/;},
 );
 my %VCS_CANONIFY = (
     browser => sub {
@@ -196,7 +195,7 @@ my %VCS_RECOMMENDED_URIS = (
     hg      => qr;^https?://;,
     git     => qr;^(?:git|https?|rsync)://;,
     svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
-    mtn     => qr;^[\w.-]+$;,
+    mtn     => qr;^mtn://;,
 );
 my %VCS_VALID_URIS = (
     arch    => qr;^https?://;,
@@ -205,6 +204,7 @@ my %VCS_VALID_URIS = (
     hg      => qr;^ssh://;,
     git     => qr;^(?:git\+)?ssh://|^[\w.]+@[a-zA-Z0-9.]+:[/a-zA-Z0-9.];,
     svn     => qr;^(?:svn\+)?ssh://;,
+    mtn     => qr;^[\w.-]+$;,
 );
 
 # Python development packages that are used almost always just for building
@@ -515,7 +515,9 @@ sub run {
 
         unfold('section', \$section);
 
-        if ($type eq 'udeb') {
+        if ($section eq '') {
+            tag 'empty-section-field';
+        } elsif ($type eq 'udeb') {
             unless ($section eq 'debian-installer') {
                 tag 'wrong-section-for-udeb', $section;
             }
@@ -562,9 +564,9 @@ sub run {
                 # Cannot use "unfold" as it could emit a tag for priority,
                 # which will be duplicated below.
                 $pri =~ s/\n//;
-                tag 'transitional-package-should-be-oldlibs-extra',
+                tag 'transitional-package-should-be-oldlibs-optional',
                   "$parts[-1]/$pri"
-                  unless $pri eq 'extra' && $parts[-1] eq 'oldlibs';
+                  unless $pri eq 'optional' && $parts[-1] eq 'oldlibs';
             }
         }
     }
@@ -577,6 +579,15 @@ sub run {
         my $priority = $info->field('priority');
 
         unfold('priority', \$priority);
+
+        if ($priority eq 'extra') {
+            tag 'priority-extra-is-replaced-by-priority-optional'
+              if $type eq 'source'
+              or not $info->is_pkg_class('auto-generated');
+            # Re-map to optional to avoid an additional warning from
+            # lintian
+            $priority = 'optional';
+        }
 
         tag 'unknown-priority', $priority
           unless $KNOWN_PRIOS->known($priority);
@@ -751,7 +762,8 @@ sub run {
                       if ($field eq 'conflicts' && $d_version->[0]);
 
                     tag 'obsolete-relation-form', "$field: $part_d_orig"
-                      if ($d_version && any { $d_version->[0] eq $_ }
+                      if (
+                        $d_version && any { $d_version->[0] eq $_ }
                         ('<', '>'));
 
                     tag 'bad-version-in-relation', "$field: $part_d_orig"
@@ -1304,6 +1316,8 @@ sub run {
                     tag $tag, $parts[0], $canonicalized;
                 }
             }
+            tag 'vcs-browser-links-to-empty-view', $uri
+              if $vcs eq 'browser' and $uri =~ m%rev=0&sc=0%;
         }
     }
 

@@ -259,3 +259,26 @@ Info: The rules file appears to be parsing the output of dpkg-parsechangelog to
  .
  Using this library is not only cleaner and more efficient, it handles many
  corner-cases such as binNMUs, epoch versions, etc.
+
+Tag: debian-rules-sets-dpkg-architecture-variable
+Severity: normal
+Certainty: certain
+Ref: dpkg-architecture(1)
+Info: The <tt>debian/rules</tt> file sets one or more
+ <tt>dpkg-architecture</tt> variables such as <tt>DEB_BUILD_ARCH</tt>.
+ .
+ These variables are pre-initialized in the environment when running under
+ <tt>dpkg-buildpackage</tt> - avoiding these assignments can reduce package
+ build time.
+ .
+ Please replace the assignment operator with <tt>?=</tt>.
+
+Tag: debian-rules-should-not-set-CFLAGS-from-noopt
+Severity: normal
+Certainty: certain
+Ref: dpkg-buildflags(1)
+Info: The <tt>debian/rules</tt> file for this package appears to set
+ <tt>CFLAGS</tt> if the value of <tt>DEB_BUILD_OPTIONS</tt> contains
+ <tt>noopt</tt>.
+ .
+ This has been obsoleted in favour of <tt>dpkg-buildflags</tt>.

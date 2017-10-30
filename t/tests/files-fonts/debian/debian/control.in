@@ -1,9 +1,10 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 Homepage: http://lintian.debian.org/
 
 Package: {$source}
@@ -17,6 +18,7 @@ Description: {$description}
  things.  It should not be installed like a regular package.
 
 Package: ttf-{$source}
+Section: fonts
 Architecture: {$architecture}
 # Due to file-conflict
 Conflicts: {$source}

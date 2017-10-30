@@ -25,7 +25,7 @@ use autodie;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(drain_pipe fail is_string_utf8_encoded open_gz
+use Lintian::Util qw(drain_pipe internal_error is_string_utf8_encoded open_gz
   signal_number2name strip normalize_pkg_path);
 use Lintian::SlidingWindow;
 
@@ -270,7 +270,7 @@ my $OBSOLETE_PATHS = Lintian::Data->new(
     sub {
         my @sliptline =  split(/\s*\~\~\s*/, $_[1], 2);
         if (scalar(@sliptline) != 2) {
-            fail 'Syntax error in files/obsolete-paths', $.;
+            internal_error('Syntax error in files/obsolete-paths', $.);
         }
         my ($newdir, $moreinfo) =  @sliptline;
         return {
@@ -807,9 +807,8 @@ sub run {
                     tag 'package-contains-mime-file-outside-package-dir',$file;
                 }
             }
-            # ---------------- /usr/share/man and /usr/X11R6/man
-            elsif ($fname =~ m,^usr/X11R6/man/\S+,
-                or $fname =~ m,^usr/share/man/\S+,) {
+            # ---------------- /usr/share/man
+            elsif ($fname =~ m,^usr/share/man/\S+,) {
                 if ($type eq 'udeb') {
                     tag 'udeb-contains-documentation-file', $file;
                 }
@@ -1163,9 +1162,14 @@ sub run {
             tag 'package-contains-python-coverage-file', $file;
         }
 
-        # ---------------- .coverage (coverage.py output)
-        if ($fname =~ m,\.class$,o) {
-            tag 'package-installs-java-bytecode', $file;
+        # ---------------- .class (compiled Java files)
+        if (   $fname =~ m,\.class$,o
+            && $fname !~ m,(?:WEB-INF|demo|doc|example|sample|test),o) {
+            my $fd = $file->open;
+            read($fd, my $magic, 4);
+            close($fd);
+            tag 'package-installs-java-bytecode', $file
+              if $magic eq "\xCA\xFE\xBA\xBE";
         }
 
         # ---------------- /usr/lib/site-python
@@ -1393,6 +1397,10 @@ sub run {
             }
             tag 'python-module-in-wrong-location', @correction
               if (@correction);
+            if (    $rest =~ m,^(tests?)(?:\.py|/__init__\.py)$,
+                and $file->is_regular_file) {
+                tag 'python-module-has-overly-generic-name', $fname, "($1)";
+            }
         }
 
         if ($fname =~ m,/icons/[^/]+/(\d+)x(\d+)/(?!animations/).*\.png$,){
@@ -1467,7 +1475,11 @@ sub run {
             }
 
             # ---------------- embedded libraries
-            _detect_embedded_libraries($fname, $file, $pkg);
+            _detect_embedded_libraries($fname, $file, $pkg)
+              # Ignore embedded jQuery libraries for Doxygen (#736360)
+              unless $file->basename eq 'jquery.js'
+              and defined(
+                $info->index_resolved_path($file->dirname . 'doxygen.css'));
 
             # ---------------- embedded Feedparser library
             if (    $fname =~ m,/feedparser\.py$,
@@ -1570,7 +1582,7 @@ sub run {
                         #  __ __  __ __,    $mtime    - variables
                         (undef, $mtime) = unpack('NN', $buff);
                     } else {
-                        fail "reading $file: $!";
+                        internal_error("reading $file failed: $!");
                     }
                     close($fd);
                     if ($mtime != 0) {
@@ -2045,7 +2057,7 @@ sub _check_tag_url_privacy_breach {
     # could be replaced by a link to local file but not really a privacy breach
     if(    $file->basename eq 'legal.xml'
         && $tagattr eq 'link'
-        &&  $website =~ m{^creativecommons.org/licenses/}) {
+        && $website =~ m{^creativecommons.org/licenses/}) {
         return;
     }
 
@@ -2142,6 +2154,10 @@ sub detect_privacy_breach {
     my $sfd = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); },BLOCKSIZE);
 
     while (my $block = $sfd->readwindow) {
+        # Strip comments
+        for my $x (qw(<!--.*?--\s*> /\*.*?\*/)) {
+            $block =~ s@$x@@gs;
+        }
         # try generic fragment tagging
         foreach my $keyword ($PRIVACY_BREAKER_FRAGMENTS->all) {
             if(index($block,$keyword) > -1) {
@@ -2156,24 +2172,14 @@ sub detect_privacy_breach {
                 }
             }
         }
-        if(   index($block,'src="http') > -1
-            ||index($block,'src="ftp') > -1
-            ||index($block,'src="//') > -1
-            ||index($block,'data-href="http') > -1
-            ||index($block,'data-href="ftp') > -1
-            ||index($block,'data-href="//') > -1
-            ||index($block,'codebase="http') > -1
-            ||index($block,'codebase="ftp') > -1
-            ||index($block,'codebase="//') > -1
-            ||index($block,'data="http') > -1
-            ||index($block,'data="ftp') > -1
-            ||index($block,'data="//') > -1
-            ||index($block,'poster="http') > -1
-            ||index($block,'poster="ftp') > -1
-            ||index($block,'poster="//') > -1
-            ||index($block,'<link') > -1
-            ||index($block,'@import') > -1){
+        for my $x (
+            qw(src="http src="ftp src="// data-href="http data-href="ftp
+            data-href="// codebase="http codebase="ftp codebase="// data="http
+            data="ftp data="// poster="http poster="ftp poster="// <link @import)
+          ) {
+            next if index($block, $x) == -1;
             detect_generic_privacy_breach($block,\%privacybreachhash,$file);
+            last;
         }
     }
     close($fd);

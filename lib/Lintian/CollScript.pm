@@ -26,7 +26,7 @@ use parent 'Class::Accessor::Fast';
 use Carp qw(croak);
 use File::Basename qw(dirname);
 
-use Lintian::Util qw(fail read_dpkg_control_utf8);
+use Lintian::Util qw(internal_error read_dpkg_control_utf8);
 
 =head1 NAME
 
@@ -243,7 +243,7 @@ sub collect {
         system($self->script_path, $pkg_name, $task, $dir) == 0
           or die 'Collection ' . $self->name . " for $pkg_name failed\n";
     } else {
-        fail "Unknown interface: $iface";
+        internal_error("Unknown interface: $iface");
     }
     return;
 }
@@ -265,7 +265,7 @@ sub _load_collector {
         $collector = \&{'Lintian::coll::' . $ppkg . '::collect'}
           if defined &{'Lintian::coll::' . $ppkg . '::collect'};
     }
-    fail $self->name . ' does not have a collect function'
+    internal_error($self->name . ' does not have a collect function')
       unless defined $collector;
     $self->{'_collect_sub'} = $collector;
     return;

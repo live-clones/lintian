@@ -1,5 +1,6 @@
 Testname: patch-systems-no-readme-source
 Version: 1.0
 Description: Patch system with no README.source
+Extra-Build-Depends: quilt
 Test-For: patch-system-but-no-source-readme
 References: Debian Bug #537969

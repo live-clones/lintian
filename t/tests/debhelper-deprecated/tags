@@ -1,1 +1,3 @@
+E: debhelper-deprecated source: missing-build-dependency-for-dh-addon autotools_dev => autotools-dev
+W: debhelper-deprecated source: debhelper-tools-from-autotools-dev-are-deprecated dh ... --with autotools-dev (line 46)
 W: debhelper-deprecated source: dh_installmanpages-is-obsolete line 24

@@ -1,3 +1,4 @@
+I: obsolete-sites source: debian-watch-uses-insecure-uri http://gitorious.org/foo/foo/file-(.*)\.tar\.gz
 W: obsolete-sites source: obsolete-url-in-packaging debian/control http://code.google.com/p/foo
 W: obsolete-sites source: obsolete-url-in-packaging debian/copyright http://freshmeat.net/p/foo
 W: obsolete-sites source: obsolete-url-in-packaging debian/copyright https://foo.berlios.de/

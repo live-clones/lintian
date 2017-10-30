@@ -21,7 +21,7 @@ BEGIN {
 }
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
-use Lintian::Util qw(fail read_dpkg_control strip);
+use Lintian::Util qw(internal_error read_dpkg_control strip);
 
 my $root = $ENV{LINTIAN_ROOT};
 my @dirs = ('profiles/debian');
@@ -30,7 +30,7 @@ my (@checks, @fatal, @nonfatal);
 foreach my $check (glob("$root/checks/*.desc")){
     my ($header, undef) = read_dpkg_control($check);
     my $cname = $header->{'check-script'};
-    fail "$check missing check-script\n" unless defined $cname;
+    internal_error("$check missing check-script\n") unless defined $cname;
     push @checks, $cname;
 }
 
@@ -38,7 +38,7 @@ foreach my $check (glob("$root/checks/*.desc")){
 @nonfatal = read_tags('private/build-time-data/ftp-master-nonfatal');
 
 foreach my $dir (@dirs) {
-    mkdir $dir or fail "mkdir $dir: $!" unless -d $dir;
+    mkdir($dir) or internal_error("mkdir $dir: $!") unless -d $dir;
 }
 
 generate_profile(

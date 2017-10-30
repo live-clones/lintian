@@ -1,8 +1,6 @@
 E: maintainer-scripts source: malformed-dm-upload-allowed Yes
 E: maintainer-scripts source: orphaned-package-should-not-have-uploaders
 E: maintainer-scripts source: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-E: maintainer-scripts: control-file-has-bad-permissions config 0644 != 0755
-E: maintainer-scripts: debconf-config-not-executable
 E: maintainer-scripts: debian-changelog-file-contains-invalid-email-address jeroen@mordor
 E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package etc/init.d/foo
@@ -39,6 +37,7 @@ E: maintainer-scripts: read-in-maintainer-script prerm:65
 E: maintainer-scripts: read-in-maintainer-script prerm:66
 E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
 I: maintainer-scripts source: debian-rules-missing-good-practice-target-dfsg get-orig-source
+I: maintainer-scripts source: debian-watch-uses-insecure-uri http://domain.tld/foo-(.+)\.tar\.gz
 I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm
 W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is CURRENT)
@@ -54,7 +53,6 @@ W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
 W: maintainer-scripts: command-with-path-in-maintainer-script postinst:171 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep
 W: maintainer-scripts: config-does-not-load-confmodule
-W: maintainer-scripts: init.d-script-not-marked-as-conffile etc/init.d/foo
 W: maintainer-scripts: maintainer-script-empty config
 W: maintainer-scripts: maintainer-script-ignores-errors postrm
 W: maintainer-scripts: maintainer-script-ignores-errors preinst

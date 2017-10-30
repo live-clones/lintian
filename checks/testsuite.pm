@@ -59,13 +59,14 @@ my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
 my %KNOWN_TESTSUITES = map { $_ => 1 } qw(
   autopkgtest
   autopkgtest-pkg-dkms
+  autopkgtest-pkg-elpa
   autopkgtest-pkg-go
   autopkgtest-pkg-nodejs
+  autopkgtest-pkg-octave
   autopkgtest-pkg-perl
   autopkgtest-pkg-python
   autopkgtest-pkg-r
   autopkgtest-pkg-ruby
-  autopkgtest-pkg-elpa
 );
 
 my %KNOWN_SPECIAL_DEPENDS = map { $_ => 1 } qw(

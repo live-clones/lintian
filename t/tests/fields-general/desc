@@ -1,0 +1,9 @@
+Testname: fields-general
+Version: 1.0
+Description: Test for tags related to minor field issues
+Test-For:
+ bad-homepage
+ dbg-package-missing-depends
+ debian-control-has-obsolete-dbg-package
+ superfluous-clutter-in-homepage
+ wrong-section-according-to-package-name

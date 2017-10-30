@@ -1,6 +1,6 @@
 Source: etcfiles
 Section: misc
-Priority: extra
+Priority: optional
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
 Standards-Version: 3.5.0
 

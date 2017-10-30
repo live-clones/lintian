@@ -1,10 +1,11 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: devel
 Maintainer: root <someone@debian.org>
 Uploaders: John Doe <root@debian.org>
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: all

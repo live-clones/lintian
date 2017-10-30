@@ -1,9 +1,10 @@
 Source: {$source}
-Priority: extra
+Priority: optional
 Section: {$section}
 Maintainer: {$author}
 Standards-Version: 5.15.0.0
 Build-Depends: {$build_depends}
+Rules-Requires-Root: no
 
 Package: {$source}
 Architecture: {$architecture}

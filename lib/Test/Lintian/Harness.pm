@@ -49,7 +49,8 @@ use File::Temp qw(tempfile);
 use POSIX qw(ENOENT);
 use Text::Template;
 
-use Lintian::Util qw(do_fork fail read_dpkg_control slurp_entire_file);
+use Lintian::Util
+  qw(do_fork internal_error read_dpkg_control slurp_entire_file);
 
 our @EXPORT_OK = qw(
   chdir_runcmd
@@ -115,7 +116,7 @@ Run CMD via system, but throw an error if CMD does not return 0.
 
 sub runsystem {
     system(@_) == 0
-      or fail("failed: @_\n");
+      or internal_error("failed: @_\n");
     return;
 }
 
@@ -134,7 +135,7 @@ sub runsystem_ok {
     my $errcode = system(@_);
     $errcode == 0
       or $errcode == (1 << 8)
-      or fail("failed: @_\n");
+      or internal_error("failed: @_\n");
     return $errcode == 0;
 }
 
@@ -200,7 +201,7 @@ sub check_test_depends {
         open(STDIN, '<', '/dev/null');
         open(STDERR, '>&', \*STDOUT);
         exec 'dpkg-checkbuilddeps', $test_file
-          or fail "exec dpkg-checkbuilddeps: $!";
+          or internal_error("exec dpkg-checkbuilddeps: $!");
     }
     $missing = slurp_entire_file($fd, 1);
     eval {close($fd);};
@@ -213,14 +214,15 @@ sub check_test_depends {
         chomp($missing);
         if ($missing =~ s{\n}{\\n}gxsm) {
             # We expect exactly one line.
-            fail "Unexpected output from dpkg-checkbuilddeps: $missing";
+            internal_error(
+                "Unexpected output from dpkg-checkbuilddeps: $missing");
         }
         return $missing;
     }
     if ($err) {
         # Problem closing the pipe?
-        fail "close pipe: $err" if $err->errno;
-        fail $err;
+        internal_error("close pipe: $err") if $err->errno;
+        internal_error($err);
     }
     return;
 }
@@ -240,7 +242,7 @@ sub read_test_desc {
     my ($testdata, $expected_name);
 
     if (scalar(@paragraphs) != 1) {
-        fail("$filename does not have exactly one paragraph");
+        internal_error("$filename does not have exactly one paragraph");
     }
     $testdata = $paragraphs[0];
     if ($filename =~ m{/desc$}) {
@@ -252,10 +254,10 @@ sub read_test_desc {
     }
 
     if (!exists $testdata->{'testname'}) {
-        fail("$filename is missing Testname field");
+        internal_error("$filename is missing Testname field");
     }
     if ($expected_name ne $testdata->{'testname'}) {
-        fail(   "$filename is called $testdata->{'testname'}"
+        internal_error("$filename is called $testdata->{'testname'}"
               . " instead of $expected_name");
     }
     $testdata->{'sequence'} //= 6000;
@@ -274,12 +276,12 @@ sub fill_in_tmpl {
     my $tmpl = "$file.in";
 
     my $template = Text::Template->new(TYPE => 'FILE',  SOURCE => $tmpl);
-    fail("Cannot read template $tmpl: $Text::Template::ERROR")
+    internal_error("Cannot read template $tmpl: $Text::Template::ERROR")
       if not $template;
     open(my $out, '>', $file);
 
     unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
-        fail("cannot create $file");
+        internal_error("cannot create $file");
     }
     close($out);
     return;
@@ -308,7 +310,8 @@ sub chdir_runcmd {
         open(STDIN, '<', '/dev/null');
         open(STDOUT, '>', $log);
         open(STDERR, '>&', \*STDOUT);
-        exec { $cmd->[0] } @$cmd or fail 'exec ' . @$cmd . " failed: $!";
+        exec { $cmd->[0] } @$cmd
+          or internal_error('exec ' . @$cmd . " failed: $!");
     }
 }
 

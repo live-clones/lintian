@@ -1,6 +1,6 @@
 Check-Script: python
 Author: Chris Lamb <lamby@debian.org>
-Type: source
+Type: source, binary
 Info: This script checks Python-related issues
 Needs-Info: unpacked, changelog-file
 
@@ -60,3 +60,12 @@ Info: The package specifies a dependency on Python 2.x which is due for
  deprecation and will not be maintained past 2020.
  .
  Please port the package to use Python 3 instead.
+
+Tag: django-package-does-not-depend-on-django
+Severity: normal
+Certainty: certain
+Info: This package appears to be library module for the Django web development
+ framework but it does not specify a binary dependency on the Django package
+ itself.
+ .
+ Please add a Depends on <tt>python-django</tt> or <tt>python3-django</tt>.

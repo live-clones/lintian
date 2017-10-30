@@ -80,7 +80,7 @@ my $MENU_SECTIONS
   = Lintian::Data->new('menu-format/menu-sections',qr|/|, \&_menu_sections);
 
 # Authoritative source of desktop keys:
-# https://specifications.freedesktop.org/desktop-entry-spec/1.0/
+# https://specifications.freedesktop.org/desktop-entry-spec/1.1/
 #
 # This is a list of all keys that should be in every desktop entry.
 my @req_desktop_keys = qw(Type Name);
@@ -96,7 +96,7 @@ my $DEPRECATED_DESKTOP_KEYS
 my $KDE_DESKTOP_KEYS = Lintian::Data->new('menu-format/kde-desktop-keys');
 
 # Known types of desktop entries.
-# https://specifications.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
+# https://specifications.freedesktop.org/desktop-entry-spec/1.1/ar01s05.html
 my %known_desktop_types = map { $_ => 1 } qw(
   Application
   Link
@@ -104,7 +104,7 @@ my %known_desktop_types = map { $_ => 1 } qw(
 );
 
 # Authoritative source of desktop categories:
-# https://specifications.freedesktop.org/menu-spec/1.0/apa.html
+# https://specifications.freedesktop.org/menu-spec/1.1/apa.html
 
 # This is a list of all Main Categories for .desktop files.  Application is
 # added as an exception; it's not listed in the standard, but it's widely used
@@ -145,7 +145,7 @@ my %reserved_categories = map { $_ => 1 } qw(
 
 # Path in which to search for binaries referenced in menu entries.  These must
 # not have leading slashes.
-my @path = qw(usr/local/bin/ usr/bin/ bin/ usr/X11R6/bin/ usr/games/);
+my @path = qw(usr/local/bin/ usr/bin/ bin/ usr/games/);
 
 my %known_tags_hash = map { $_ => 1 } @known_tags;
 my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
@@ -641,7 +641,7 @@ sub verify_desktop_file {
         if (!defined $vals{Icon}) {
             tag 'desktop-entry-lacks-icon-entry', $file;
         }
-        if (!defined $vals{Keywords}) {
+        if (!defined $vals{Keywords} && $vals{'Type'} eq 'Application') {
             tag 'desktop-entry-lacks-keywords-entry', $file;
         }
     }

@@ -29,7 +29,8 @@ use Lintian::Relation;
 use Carp qw(croak);
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(fail open_gz parse_dpkg_control get_file_checksum strip);
+use Lintian::Util
+  qw(internal_error open_gz parse_dpkg_control get_file_checksum strip);
 
 =head1 NAME
 
@@ -342,7 +343,7 @@ sub scripts {
             chomp($line);
 
             $line =~ m/^(env )?(\S*) (.*)$/o
-              or fail("bad line in scripts file: $line");
+              or internal_error("bad line in scripts file: $line");
             ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
 
             $name =~ s,^\./,,o;
@@ -661,6 +662,13 @@ The package is (probably) a package containing debug symbols.
 
 Guessed from the package name.
 
+=item auto-generated
+
+The package is (probably) a package generated automatically (e.g. a
+dbgsym package)
+
+Guessed from the "Auto-Built-Package" field.
+
 =back
 
 Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
@@ -678,6 +686,10 @@ Needs-Info requirements for using I<is_pkg_class>: L<Same as field|Lintian::Coll
         $pkg_class //= 'any-meta';
         if ($pkg_class eq 'debug') {
             return 1 if $self->name =~ m/-dbg(?:sym)?/;
+            return;
+        }
+        if ($pkg_class eq 'auto-generated') {
+            return 1 if $self->field('auto-built-package');
             return;
         }
         return 1 if $desc =~ m/transitional package/;

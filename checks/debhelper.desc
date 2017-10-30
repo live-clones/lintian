@@ -378,3 +378,22 @@ Info: Since compatibility level 10, debhelper enables the <tt>autoreconf</tt>
  .
  It is therefore not necessary to specify build-dependencies on
  <tt>dh-autoreconf</tt> or <tt>autotools-dev</tt> and they can be removed.
+
+Tag: debhelper-tools-from-autotools-dev-are-deprecated
+Severity: minor
+Certainty: certain
+Info: The debhelper tools from autotools-dev has been replaced by the tool
+ <tt>dh_update_autotools_config</tt>, which was available in
+ debhelper (&gt;= 9.20160114)
+ .
+ The <tt>dh_update_autotools_config</tt> is run by default via the <tt>dh</tt>
+ command sequencer.  If you are using <tt>dh</tt>, you can probably just remove
+ the uses of the tooling from autotools-dev without doing any further changes.
+ .
+ If you use the "classic" debhelper style, then please replace all
+ calls to <tt>dh_autotools-dev_updateconfig</tt> with
+ <tt>dh_update_autotools_config</tt>.  The calls to
+ <tt>dh_autotools-dev_restoreconfig</tt> are replaced by
+ <tt>dh_clean</tt>, so they can most likely just be removed without
+ any further changes.
+Ref: #878528

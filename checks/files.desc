@@ -82,7 +82,7 @@ Tag: package-installs-apt-preferences
 Severity: serious
 Certainty: possible
 Ref: apt_preferences(5)
-Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/</tt> or install a /etc/apt/preferences file.
+Info: Debian packages should not install files under <tt>/etc/apt/preferences.d/</tt> or install an /etc/apt/preferences file.
  This directory is under the control of the local administrator.
  .
  Package should not override local administrator choices.
@@ -92,7 +92,7 @@ Severity: serious
 Certainty: possible
 Ref: sources.list(5)
 Info: Debian packages should not install files under <tt>/etc/apt/sources.list.d/</tt>
- or install a /etc/apt/sources.list file.
+ or install an /etc/apt/sources.list file.
  This directory is under the control of the local administrator.
  .
  Package should not override local administrator choices.
@@ -135,9 +135,8 @@ Ref: policy 9.1.2
 Tag: stray-directory-in-manpage-directory
 Severity: important
 Certainty: certain
-Info: This package installs a directory under <tt>/usr/share/man</tt> or
- <tt>/usr/X11R6/man</tt> that isn't a manual section directory or locale
- directory.
+Info: This package installs a directory under <tt>/usr/share/man</tt>
+ that is not a manual section directory or locale directory.
 Ref: fhs usrsharemanmanualpages
 
 Tag: executable-manpage
@@ -1021,7 +1020,6 @@ Ref: policy 4.13
 Tag: privacy-breach-generic
 Severity: important
 Certainty: wild-guess
-Experimental: yes
 Info: This package creates a potential privacy breach by fetching data
  from an external website at runtime. Please remove these scripts or
  external HTML resources.
@@ -1219,7 +1217,7 @@ Tag: node-package-install-in-nodejs-rootdir
 Severity: important
 Certainty: certain
 Info: This package contains a file under /usr/lib/nodejs
- instead to /usr/lib/nodejs/${package}
+ instead of /usr/lib/nodejs/${package}.
 
 Tag: embedded-feedparser-library
 Severity: normal
@@ -1432,7 +1430,7 @@ Info: This package contains a file in a path reserved solely for
 Tag: package-contains-cmake-private-file
 Severity: important
 Certainty: certain
-Ref: https://wiki.debian.org/CMake, http://www.cmake.org/cmake/help/v3.2/manual/cmake-packages.7.html#config-file-packages
+Ref: https://wiki.debian.org/CMake, https://cmake.org/cmake/help/v3.10/manual/cmake-packages.7.html#config-file-packages
 Info: This package contains a file in a path reserved solely for
  <tt>CMake</tt>. This normally means you are shipping a <tt>Find</tt>
  module. Libraries should not ship Find modules at all but Config files
@@ -1743,7 +1741,7 @@ Info: The package is architecture-dependent, ships a shared library in
  a public library search path and is marked <tt>Multi-Arch:
  foreign</tt>. Typically, shared libraries are marked <tt>Multi-Arch:
  same</tt> when possible. Sometimes, private shared libraries are put
- into the public library search path to accomodate programs in the
+ into the public library search path to accommodate programs in the
  same package, but this package does not contain any programs.
  .
  Please remove the <tt>Multi-Arch: foreign</tt> stanza.
@@ -1767,8 +1765,14 @@ Info: This package includes Lintian overrides intended for another package.
 Ref: lintian 2.4
 
 Tag: package-installs-java-bytecode
-Severity: serious
+Severity: normal
 Certainty: certain
 Ref: java-policy 2
 Info: Compiled Java source files must not be included in the package. These
  files should be removed from the package or included in <tt>.jar</tt> archives.
+
+Tag: python-module-has-overly-generic-name
+Severity: important
+Certainty: certain
+Info: This package installs a Python module with an overly generic name to
+ a global namespace.

@@ -27,9 +27,9 @@ if [ -z "${1:-}" ]; then
 
 The script downloads the following files from a mirror (which should be
 specified via the DEB_MIRROR env var, which defaults to 
-http://httpredir.debian.org/debian and is used directly without any
+http://deb.debian.org/debian and is used directly without any
 kind of parsing so one can play with it):
-* Contents-i386.gz, main/binary-i386/Packages.gz
+* main/Contents-i386.gz, main/binary-i386/Packages.gz
 * Binary packages found at Contents shipping insserv.conf.d files
 Any special parameter can be passed to wget via WGET_ARGS, if needed.
 
@@ -62,7 +62,7 @@ cat > "$workdir/virtual_facilities" <<EOF
 \$all
 EOF
 
-mirror="${DEB_MIRROR:=http://httpredir.debian.org/debian}"
+mirror="${DEB_MIRROR:=http://deb.debian.org/debian}"
 WGET_ARGS="${WGET_ARGS:=-nv}"
 wget() {
     echo wget "$mirror"/"$1"
@@ -71,7 +71,7 @@ wget() {
 mkdir -p "$lintian_data/init.d"
 
 cd "$workdir"
-wget dists/sid/Contents-i386.gz
+wget dists/sid/main/Contents-i386.gz
 zgrep -E "$regex" Contents-i386.gz > entries
 cat entries \
     | perl -p -w -E 's#'"$perl_regex"'#$1#g;' \

@@ -31,7 +31,7 @@ use Text::ParseWords ();
 
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(clean_env do_fork drain_pipe fail open_gz);
+use Lintian::Util qw(clean_env do_fork drain_pipe internal_error open_gz);
 
 sub run {
     my (undef, undef, $info, $proc, $group) = @_;
@@ -57,8 +57,7 @@ sub run {
                 or ($path eq 'usr/bin/X11/')
                 or ($path eq 'usr/bin/mh/')
                 or ($path eq 'usr/sbin/')
-                or ($path eq 'usr/games/')
-                or ($path eq 'usr/X11R6/bin/'))
+                or ($path eq 'usr/games/'))
           ) {
 
             my $bin = $fname;
@@ -68,7 +67,7 @@ sub run {
             next;
         }
 
-        if (($path =~ m,usr/(share|X11R6)/man/$,) and ($fname ne '')) {
+        if (($path =~ m,usr/share/man/$,) and ($fname ne '')) {
             tag 'manpage-in-wrong-directory', $file;
             next;
         }
@@ -76,9 +75,7 @@ sub run {
         # manual page?
         next
           unless ($file->is_symlink or $file->is_file)
-          and (($path =~ m,^usr/man(/\S+),o)
-            or ($path =~ m,^usr/X11R6/man(/\S+),o)
-            or ($path =~ m,^usr/share/man(/\S+),o));
+          and $path =~ m,^usr/share/man(/\S+),o;
         my $t = $1;
 
         if ($file =~ m{/_build_} or $file =~ m{_tmp_buildd}) {
@@ -134,41 +131,25 @@ sub run {
         # check symbolic links to other manual pages
         if ($file->is_symlink) {
             if ($link =~ m,(^|/)undocumented,o) {
-                if ($path =~ m,^usr/share/man,o) {
-                    # undocumented link in /usr/share/man -- possibilities
-                    #    undocumented... (if in the appropriate section)
-                    #    ../man?/undocumented...
-                    #    ../../man/man?/undocumented...
-                    #    ../../../share/man/man?/undocumented...
-                    #    ../../../../usr/share/man/man?/undocumented...
-                    if ((
-                        #<<< no perl tidy for now
-                                $link =~ m,^undocumented\.([237])\.gz,o
-                            and $path =~ m,^usr/share/man/man$1,)
-                        or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
-                        or $link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
-                        or $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                        or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
-                        #>>>
-                      ) {
-                        tag 'link-to-undocumented-manpage', $file;
-                    } else {
-                        tag 'bad-link-to-undocumented-manpage', $file;
-                    }
-                } else {
-                    # undocumented link in /usr/X11R6/man -- possibilities:
-                    #    ../../../share/man/man?/undocumented...
-                    #    ../../../../usr/share/man/man?/undocumented...
-                    if (
+                # undocumented link in /usr/share/man -- possibilities
+                #    undocumented... (if in the appropriate section)
+                #    ../man?/undocumented...
+                #    ../../man/man?/undocumented...
+                #    ../../../share/man/man?/undocumented...
+                #    ../../../../usr/share/man/man?/undocumented...
+                if ((
                     #<<< no perl tidy for now
-                        $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
-                     or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
+                            $link =~ m,^undocumented\.([237])\.gz,o
+                        and $path =~ m,^usr/share/man/man$1,)
+                    or $link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o
+                    or $link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o
+                    or $link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o
+                    or $link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o
                     #>>>
-                      ) {
-                        tag 'link-to-undocumented-manpage', $file;
-                    } else {
-                        tag 'bad-link-to-undocumented-manpage', $file;
-                    }
+                  ) {
+                    tag 'link-to-undocumented-manpage', $file;
+                } else {
+                    tag 'bad-link-to-undocumented-manpage', $file;
                 }
             }
         } else { # not a symlink
@@ -230,7 +211,7 @@ sub run {
                     clean_env;
                     open(STDERR, '>&', \*STDOUT);
                     exec('lexgrog', $fs_path)
-                      or fail "exec lexgrog failed: $!";
+                      or internal_error("exec lexgrog failed: $!");
                 }
                 if (@running_lexgrog > 2) {
                     process_lexgrog_output(\@running_lexgrog);
@@ -268,7 +249,7 @@ sub run {
                 $ENV{MANROFFSEQ} = '';
                 $ENV{MANWIDTH} = 80;
                 exec { $cmd[0] } @cmd
-                  or fail("cannot run man -E UTF-8 -l: $!");
+                  or internal_error("cannot run man -E UTF-8 -l: $!");
             } else {
                 # parent - close write end
                 close $write;
@@ -326,9 +307,7 @@ sub run {
             my $lang = '';
             next
               unless ($file->is_file or $file->is_symlink)
-              and (($path =~ m,^usr/man/\S+,o)
-                or ($path =~ m,^usr/X11R6/man/\S+,o)
-                or ($path =~ m,^usr/share/man/\S+,o));
+              and $path =~ m,^usr/share/man/\S+,o;
             next unless ($path =~ m,man\d/$,o);
             $manpage{$fname} = [] unless exists $manpage{$fname};
             $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
@@ -365,7 +344,7 @@ sub process_lexgrog_output {
         eval {close($lexgrog_fd);};
         if (my $err = $@) {
             # Problem closing the pipe?
-            fail "close pipe: $err" if $err->errno;
+            internal_error("close pipe: $err") if $err->errno;
             # No, then lexgrog returned with a non-zero exit code.
             tag 'manpage-has-bad-whatis-entry', $file;
         }
