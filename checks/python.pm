@@ -89,7 +89,8 @@ sub _run_binary {
     }
 
     # Django modules
-    if ($pkg =~ /^(python[23]?-django)-.*(?<!-doc)$/) {
+    if (    $pkg =~ /^(python[23]?-django)-.*(?<!-doc)$/
+        and $pkg !~ /^python3?-django$/) {
         my $version = $1;
         tag 'django-package-does-not-depend-on-django', $version
           if not $info->relation('strong')->implies($version);
