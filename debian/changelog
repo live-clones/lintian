@@ -11,7 +11,7 @@ lintian (2.5.58) UNRELEASED; urgency=medium
     + [SL] Update of the documentation for the change introduced in 2.5.53:
       Transitional packages should now be "oldlibs/optional" rather
       than "oldlibs/extra".
-  * checks/python.pm
+  * checks/python.pm:
     + [CL] Don't count python-django and python3-django as "Django modules"
       as they are Django itself. This avoids a warning where python-django
       triggers "django-package-does-not-depend-on-django".
