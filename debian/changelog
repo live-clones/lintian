@@ -2,7 +2,7 @@ lintian (2.5.58) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/cruft.pm
+  * checks/cruft.pm:
     + [CL] Rewrite file-contains-trailing-whitespace tag to be hash from
       filename to the regex we should match.
     + [CL] Allow trailing tabs in debian/rules files; they are very common
