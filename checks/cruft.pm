@@ -329,7 +329,7 @@ our @EOL_TERMINATORS_FILES = qw(control changelog);
 our @TRAILING_WHITESPACE_FILES = (
     ['debian/changelog'        => qr,\s+\n$,],
     ['debian/control'          => qr,\s+\n$,],
-    ['debian/rules'            => qr,\s+\n$,],
+    ['debian/rules'            => qr,[ ]+\n$,], # Allow trailing tabs in Make
 );
 
 sub run {

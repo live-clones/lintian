@@ -5,6 +5,8 @@ lintian (2.5.58) UNRELEASED; urgency=medium
   * checks/cruft.pm
     + [CL] Rewrite file-contains-trailing-whitespace tag to be hash from
       filename to the regex we should match.
+    + [CL] Allow trailing tabs in debian/rules files; they are very common
+      in Makefiles.
   * checks/fields.desc:
     + [SL] Update of the documentation for the change introduced in 2.5.53:
       Transitional packages should now be "oldlibs/optional" rather
