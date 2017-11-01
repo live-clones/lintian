@@ -2,6 +2,15 @@ lintian (2.5.58) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.desc:
+    + [SL] Update of the documentation for the change introduced in 2.5.53:
+      Transitional packages should now be "oldlibs/optional" rather
+      than "oldlibs/extra".
+  * checks/python.pm
+    + [CL] Don't count python-django and python3-django as "Django modules"
+      as they are Django itself. This avoids a warning where python-django
+      triggers "django-package-does-not-depend-on-django".
+
   * data/fields/name_section_mappings:
     + [CL] Apply patch from Simon McVittie to prevent a misdetection of
       libcanberra-gstreamer as a GNU Smalltalk library.  (Closes: #880140)
@@ -11,15 +20,6 @@ lintian (2.5.58) UNRELEASED; urgency=medium
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add bionic as known Ubuntu distribution. Thanks Jeremy Bicha!
       (Closes: #880115)
-
-  * checks/fields.desc:
-    + [SL] Update of the documentation for the change introduced in 2.5.53:
-      Transitional packages should now be "oldlibs/optional" rather
-      than "oldlibs/extra".
-  * checks/python.pm
-    + [CL] Don't count python-django and python3-django as "Django modules"
-      as they are Django itself. This avoids a warning where python-django
-      triggers "django-package-does-not-depend-on-django".
 
  -- Chris Lamb <lamby@debian.org>  Sun, 29 Oct 2017 12:17:12 +0000
 
