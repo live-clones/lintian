@@ -69,7 +69,10 @@ sub _run_binary {
     $madir = '${DEB_HOST_MULTIARCH}' unless defined $madir;
 
     if (my $xmldir = $info->index_resolved_path('usr/share/gir-1.0/')) {
-        push @girs, $xmldir->children;
+        foreach my $child ($xmldir->children) {
+            next unless $child =~ m/\.gir$/;
+            push @girs, $child;
+        }
     }
 
     if (my $dir = $info->index_resolved_path('usr/lib/girepository-1.0/')) {
