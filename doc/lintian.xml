@@ -608,7 +608,12 @@ foo source: configure-generated-file-in-source config.cache
           info, too (second line in the examples).  If you add an
           asterisk (<literal>*</literal>) in the additional info, this
           will match arbitrary strings similar to the shell wildcard.
+          For example:
         </para>
+        <screen>
+# The "help text" must also be covered by the override
+source-is-missing apidoc/html/api_data.js *
+</screen>
         <para>
           The first wildcard support appeared in Lintian 2.0.0, which
           only allowed the wildcards in the very beginning or end.

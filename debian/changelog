@@ -22,6 +22,10 @@ lintian (2.5.58) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [AB] Add more misspellings of the word "dependency".
 
+  * doc/lintian.xml:
+    + [CL] Improve overrides docs using source-is-missing as an example.
+      (Closes: #838807)
+
   * vendors/ubuntu/main/data/changes-file/known-dists:
     + [CL] Add bionic as known Ubuntu distribution. Thanks Jeremy Bicha!
       (Closes: #880115)
