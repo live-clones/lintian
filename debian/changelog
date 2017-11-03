@@ -17,7 +17,7 @@ lintian (2.5.58) unstable; urgency=medium
       than "oldlibs/extra".
   * checks/python.pm:
     + [CL] Don't count python-django and python3-django as Django modules.
-      This avoids a warning where Django itsel triggers
+      This avoids a warning where Django itself triggers
       "django-package-does-not-depend-on-django".
 
   * data/fields/name_section_mappings:
