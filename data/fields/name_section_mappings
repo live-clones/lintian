@@ -17,6 +17,7 @@
 -elisp(?:-.*)$                          => lisp
 ^lib.*-guile$                           => lisp
 ^guile-                                 => lisp
+^golang-                                => golang
 ^lib.*-perl$                 => perl
 lib.*-cil(?:-dev)?$          => cli-mono
 ^lib.*-(?:java|gcj|jni)$                => java
