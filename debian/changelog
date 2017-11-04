@@ -2,7 +2,7 @@ lintian (2.5.59) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * lib/Lintian/Check.pm
+  * lib/Lintian/Check.pm:
     + [CL] Don't warn about duplicate words when separated by punctuation.
       (Closes: #822504)
 
