@@ -302,7 +302,9 @@ sub check_spelling {
         if ($duplicate_check and defined($last_word) and $last_word eq $word) {
             # Avoid flagging words inside quoted text.
             $code_ref->("$word $word (duplicate word)", $word)
-              if not $quoted and not $duplicates{$word}++;
+              if not $quoted
+              and not $duplicates{$word}++
+              and not $ends_with_punct;
         }
 
         if ($word =~ m/^[A-Za-z]+$/ and not $ends_with_punct) {
