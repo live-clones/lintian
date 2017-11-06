@@ -1,4 +1,5 @@
 C: debhelper-compat-old source: debian-build-system dh
+C: debhelper-compat-old source: rules-does-not-require-root
 C: debhelper-compat-old source: source-format 1.0 [non-native]
 C: debhelper-compat-old: no-ctrl-scripts
 P: debhelper-compat-old source: package-uses-old-debhelper-compat-version 8

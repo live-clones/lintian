@@ -1,15 +1,17 @@
 Source: {$source}
-Section: devel
 Priority: optional
+Section: {$section}
 Maintainer: {$author}
-Build-Depends: debhelper (>= 7), g++ (>= s4.0)
 Standards-Version: {$standards_version}
-Rules-Requires-Root: keyword-without-namespace
+Build-Depends: {$build_depends}
+Rules-Requires-Root: no
+Homepage: https://lintian.debian.org/
 
 Package: {$source}
-Architecture: all
+Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

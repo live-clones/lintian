@@ -313,3 +313,31 @@ Certainty: certain
 Info: The field on this line of <tt>debian/control</tt> is empty. Whilst
  this is permitted in the syntax of Debian control files it is
  unnecessary.
+
+Tag: rules-does-not-require-root
+Severity: classification
+Certainty: certain
+Info: Package supports building without fakeroot or similar
+Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
+
+Tag: rules-requires-root-implicitly
+Severity: classification
+Certainty: possible
+Info: Package requires fakeroot or similar to build binary targets
+Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
+
+Tag: rules-requires-root-explicitly
+Severity: classification
+Certainty: certain
+Info: Package requires fakeroot or similar to build binary targets and explicitly declares it.
+Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
+
+Tag: rules-requires-root-misses-namespace
+Severity: normal
+Certainty: possible
+Info: The package has a Rules-Requires-Root header, but its value misses a namespace
+ The Rules-Requires-Root header may either contain "no",
+ "binary-targets" or a value consisting of a namespace and a keyword
+ separated by a slash. This package's Rules-Requires-Root header
+ matches neither of these options.
+Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz

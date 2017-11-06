@@ -1,0 +1,6 @@
+Testname: rules-requires-root-no
+Version: 1.0
+Description: Test for "Rules-Requires-Root: no"
+Options: -L +classification
+Test-For:
+  rules-does-not-require-root

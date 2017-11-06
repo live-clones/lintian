@@ -370,6 +370,19 @@ sub run {
         }
     }
 
+    # Check Rules-Requires-Root
+    if (defined(my $r3 = $info->source_field('rules-requires-root'))) {
+        if ($r3 eq 'no') {
+            tag 'rules-does-not-require-root';
+        } elsif ($r3 eq 'binary-targets') {
+            tag 'rules-requires-root-explicitly';
+        } elsif ($r3 !~ m(/)) {
+            tag 'rules-requires-root-misses-namespace', $r3;
+        }
+    } else {
+        tag 'rules-requires-root-implicitly';
+    }
+
     # find binary packages that Pre-Depend on multiarch-support without going
     # via ${misc:Pre-Depends}
     if ($info->source_field('build-depends')) {

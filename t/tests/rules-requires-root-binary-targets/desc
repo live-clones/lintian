@@ -1,0 +1,6 @@
+Testname: rules-requires-root-binary-targets
+Version: 1.0
+Description: Test for "Rules-Requires-Root: binary-targets"
+Options: -L +classification
+Test-For:
+  rules-requires-root-explicitly

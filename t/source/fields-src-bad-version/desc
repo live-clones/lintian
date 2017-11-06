@@ -3,4 +3,4 @@ Version: 1.0
 Description: Test for d/control with syntax errors
 Test-For: bad-relation
  bad-version-in-relation
-
+ rules-requires-root-misses-namespace
