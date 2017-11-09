@@ -1,4 +1,4 @@
-Testname: rules-requires-root-binary-targets
+Testname: control-file-rules-requires-root-binary-targets
 Version: 1.0
 Description: Test for "Rules-Requires-Root: binary-targets"
 Options: -L +classification

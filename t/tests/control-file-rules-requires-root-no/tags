@@ -1,0 +1,4 @@
+C: control-file-rules-requires-root-no source: debian-build-system dh
+C: control-file-rules-requires-root-no source: rules-does-not-require-root
+C: control-file-rules-requires-root-no source: source-format 1.0 [non-native]
+C: control-file-rules-requires-root-no: no-ctrl-scripts

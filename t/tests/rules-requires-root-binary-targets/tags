@@ -1,4 +1,0 @@
-C: rules-requires-root-binary-targets source: debian-build-system dh
-C: rules-requires-root-binary-targets source: rules-requires-root-explicitly
-C: rules-requires-root-binary-targets source: source-format 1.0 [non-native]
-C: rules-requires-root-binary-targets: no-ctrl-scripts

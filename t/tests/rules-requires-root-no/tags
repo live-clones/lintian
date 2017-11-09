@@ -1,4 +1,0 @@
-C: rules-requires-root-no source: debian-build-system dh
-C: rules-requires-root-no source: rules-does-not-require-root
-C: rules-requires-root-no source: source-format 1.0 [non-native]
-C: rules-requires-root-no: no-ctrl-scripts
