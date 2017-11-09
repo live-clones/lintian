@@ -109,6 +109,7 @@ acknoledged||acknowledged
 acknoledges||acknowledges
 acknoledging||acknowledging
 acknowldegement||acknowledgement
+acknowleding||acknowledging
 acknowlege||acknowledge
 acknowleged||acknowledged
 acknowleges||acknowledges
@@ -202,6 +203,7 @@ agument||argument
 aguments||arguments
 aheared||adhered
 aiffer||differ
+aks||ask
 albumns||albums
 alegorical||allegorical
 algorith||algorithm
@@ -284,6 +286,7 @@ anwser||answer
 anwsered||answered
 anwsering||answering
 anwsers||answers
+anymore||any more
 anyting||anything
 apendix||appendix
 aplication||application
@@ -697,6 +700,8 @@ clearifying||clarifying
 cleean||clean
 cleint||client
 cleints||clients
+cloack||cloak
+cloacks||cloaks
 closeing||closing
 coefficent||coefficient
 coefficents||coefficients
@@ -1037,6 +1042,8 @@ declaritively||declaratively
 declation||declaration
 declations||declarations
 decleration||declaration
+decommissionn||decommission
+decommissionned||decommissioned
 decompres||decompress
 decompresed||decompressed
 decompreses||decompresses
@@ -1083,6 +1090,7 @@ delared||declared
 delare||declare
 delares||declares
 delaring||declaring
+delate||delete
 delemiter||delimiter
 deleteing||deleting
 delimeter||delimiter
@@ -1595,6 +1603,7 @@ explainations||explanations
 explaning||explaining
 explantion||explanation
 explantions||explanations
+explicite||explicit
 explicitely||explicitly
 explicitily||explicitly
 explicity||explicitly
@@ -1775,6 +1784,7 @@ genric||generic
 gental||gentle
 geometrie||geometry
 geomtry||geometry
+german||German
 geting||getting
 gettetx||gettext
 gived||given
@@ -2297,8 +2307,8 @@ itialize||initialize
 itializes||initializes
 itializing||initializing
 itsef||itself
-itsel||itself
 itselfs||itself
+itsel||itself
 itslef||itself
 janurary||january
 japanses||Japanese
@@ -2373,6 +2383,7 @@ machanism||mechanism
 machanisms||mechanisms
 machinary||machinery
 maching||matching
+macpakge||package
 maintainance||maintenance
 maintainence||maintenance
 maintaing||maintaining
@@ -2722,6 +2733,7 @@ packge||package
 packges||packages
 pakage||package
 pakages||packages
+pakge||package
 palete||palette
 pallete||palette
 pallette||palette
@@ -2758,6 +2770,7 @@ particularily||particularly
 particulary||particularly
 partioning||partitioning
 partion||partition
+partitial||partial
 partiton||partition
 pased||passed
 pasteing||pasting
@@ -2984,6 +2997,8 @@ protoypes||prototypes
 psaswd||passwd
 psuedo||pseudo
 psychadelic||psychedelic
+publically||publicly
+publicaly||publicly
 pusehd||pushed
 pyton||python
 qouted||quoted
@@ -2996,6 +3011,7 @@ quiting||quitting
 quitt||quit
 reachs||reaches
 readabilty||readability
+readapted||re-adapted
 reamde||README
 reappered||reappeared
 reappering||reappearing
@@ -3109,6 +3125,7 @@ registeres||registers
 registes||registers
 registraration||registration
 registred||registered
+regresion||regression
 regsitered||registered
 regsitering||registering
 regsiter||register
@@ -3246,6 +3263,7 @@ ressurected||resurrected
 ressurecting||resurrecting
 ressurect||resurrect
 ressurects||resurrects
+restriced||restricted
 resultion||resolution
 resultions||resolutions
 resulution||resolution
@@ -3299,6 +3317,7 @@ runing||running
 runned||ran
 runnig||running
 runnning||running
+russian||Russian
 sacrifying||sacrificing
 safly||safely
 saftey||safety
@@ -3613,6 +3632,7 @@ sucessfull||successful
 sucessfully||successfully
 sucessful||successful
 sucessfuly||successfully
+sucessor||successor
 sucess||success
 suces||success
 sufficently||sufficiently
@@ -4069,6 +4089,7 @@ waranties||warranties
 waranty||warranty
 wasnt||wasn't
 was'nt||weren't
+wasn||was
 was't||wasn't
 weaponary||weaponry
 weigth||weight
