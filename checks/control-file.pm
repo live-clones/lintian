@@ -376,8 +376,6 @@ sub run {
             tag 'rules-does-not-require-root';
         } elsif ($r3 eq 'binary-targets') {
             tag 'rules-requires-root-explicitly';
-        } elsif ($r3 !~ m(/)) {
-            tag 'rules-requires-root-misses-namespace', $r3;
         }
     } else {
         tag 'rules-requires-root-implicitly';

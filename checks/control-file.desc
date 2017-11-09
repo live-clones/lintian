@@ -331,13 +331,3 @@ Severity: classification
 Certainty: certain
 Info: Package requires fakeroot or similar to build binary targets and explicitly declares it.
 Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
-
-Tag: rules-requires-root-misses-namespace
-Severity: normal
-Certainty: possible
-Info: The package has a Rules-Requires-Root header, but its value misses a namespace
- The Rules-Requires-Root header may either contain "no",
- "binary-targets" or a value consisting of a namespace and a keyword
- separated by a slash. This package's Rules-Requires-Root header
- matches neither of these options.
-Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz

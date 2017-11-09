@@ -1,3 +1,2 @@
 E: control-file-syntax-error source: bad-relation build-depends: gcc ((>= 4)
 E: control-file-syntax-error source: bad-version-in-relation build-depends: g++ (>= s4.0)
-W: control-file-syntax-error source: rules-requires-root-misses-namespace keyword-without-namespace

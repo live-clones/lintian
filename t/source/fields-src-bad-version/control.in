@@ -4,7 +4,6 @@ Priority: optional
 Maintainer: {$author}
 Build-Depends: debhelper (>= 7), g++ (>= s4.0)
 Standards-Version: {$standards_version}
-Rules-Requires-Root: keyword-without-namespace
 
 Package: {$source}
 Architecture: all

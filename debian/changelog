@@ -3,9 +3,7 @@ lintian (2.5.60) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/control-file.{desc,pm}:
-    + [AB] Add classification tags for R³ and emit new tag
-      rules-requires-root-misses-namespace if neither a known value is
-      present nor does the value adhere the <namespace>/<keyword> syntax.
+    + [AB] Add classification tags for R³.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 09 Nov 2017 09:09:49 +0000
 
