@@ -109,10 +109,20 @@ sub _run_binary {
         }
     }
 
-    foreach my $gir (@girs) {
+  GIR: foreach my $gir (@girs) {
         my $expected = 'gir1.2-' . lc($gir->basename);
         $expected =~ s/\.gir$//;
         my $version = $info->field('version');
+
+        foreach my $bin ($group->get_binary_processables) {
+            next unless $bin->pkg_name =~ m/^gir1\.2-/;
+            my $other = $bin->pkg_name.' (= '.$bin->info->field('version').')';
+            if (    $bin->info->relation('provides')->implies($expected)
+                and $info->relation('strong')->implies($other)) {
+                next GIR;
+            }
+        }
+
         if (not $info->relation('strong')->implies("$expected (= $version)")) {
             tag('gir-missing-typelib-dependency', $gir, $expected);
         }
