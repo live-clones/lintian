@@ -121,7 +121,8 @@ sub _run_binary {
     foreach my $typelib (@typelibs) {
         my $expected = 'gir1.2-' . lc($typelib->basename);
         $expected =~ s/\.typelib$//;
-        if ($pkg ne $expected) {
+        if ($pkg ne $expected
+            and not $info->relation('provides')->implies($expected)) {
             tag('typelib-package-name-does-not-match', $typelib, $expected);
         }
     }

@@ -48,11 +48,16 @@ Certainty: possible
 Info: GObject-Introspection binary typelibs (<tt>Foo-23.typelib</tt>)
  should normally be made available in a package named gir1.2-foo-23.
  .
- Please ignore and override this tag if the typelib is deliberately shipped
- in a package whose name does not match the typelib's machine-readable name.
- For example, <tt>gir1.2-glib-2.0</tt> is named for the <tt>GLib-2.0</tt>
- typelib, but also contains the <tt>GObject-2.0</tt> and <tt>Gio-2.0</tt>
- typelibs; this is unconventional, but is allowed.
+ If multiple typelibs are shipped in the same package, then that package
+ should have versioned <tt>Provides</tt> for the names that would have been
+ used for separate packages. This arrangement should only be used if the
+ included typelibs' versions are expected to remain the same at all times.
+ .
+ For example, <tt>gir1.2-gtk-3.0</tt> is named for the <tt>Gtk-3.0</tt>
+ typelib, but also contains the <tt>Gdk-3.0</tt> and <tt>GdkX11-3.0</tt>
+ typelibs. It should have versioned <tt>Provides</tt> entries for
+ <tt>gir1.2-gdk-3.0 (= ${binary:Version})</tt>
+ and <tt>gir1.2-gdkx11-3.0 (= ${binary:Version})</tt> to indicate this.
 Ref: /usr/share/doc/gobject-introspection/policy.txt
 
 Tag: typelib-section-not-introspection
