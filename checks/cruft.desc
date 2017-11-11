@@ -902,4 +902,9 @@ Info: This file appears to contain one or more lines with trailing
  .
  Whitespace can be removed with the following code snippet:
  .
-  $ sed -i -e 's@[ ]*$@@g' path/to/filename
+  $ sed -i -e 's@[[:space:]]*$@@g' debian/control
+ .
+ However, if you wish to only remove trailing spaces and leave trailing tabs
+ (eg. for Makefiles), you can use the following code snippet:
+ .
+  $ sed -i -e 's@[ ]*$@@g' debian/rules

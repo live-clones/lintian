@@ -2,6 +2,11 @@ lintian (2.5.60) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.desc:
+    + [CL] Add suggested [[:space:]]-based sed call for
+      file-contains-trailing-whitespace. Thanks to Stuart Prescott.
+      (Closes: #881389)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 09 Nov 2017 09:09:49 +0000
 
 lintian (2.5.59) unstable; urgency=medium
