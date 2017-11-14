@@ -2,5 +2,6 @@ Testname: rules-including-deprecated-makefiles
 Version: 1.0
 Description: Test for debian/rules with deprecated included file
 Extra-Build-Depends: cdbs
+Test-Conflicts: dh-buildinfo
 Test-For:
  debian-rules-uses-deprecated-makefile
