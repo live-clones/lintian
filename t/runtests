@@ -335,10 +335,10 @@ sub test_package {
         return $test_state->skip_test("(disabled) $reason");
     }
 
-    if ($testdata->{'test-depends'}) {
+    if ($testdata->{'test-depends'} or $testdata->{'test-conflicts'}) {
         my $missing = check_test_depends($testdata);
         if ($missing) {
-            return $test_state->skip_test("Missing Depends: $missing");
+            return $test_state->skip_test($missing);
         }
     }
 
@@ -539,12 +539,12 @@ sub test_changes {
         return $test_state->skip_test('architecture mismatch');
     }
 
-    if ($testdata->{'test-depends'}) {
+    if ($testdata->{'test-depends'} or $testdata->{'test-conflicts'}) {
         # Not sure this makes sense for .changes tests, but at least it
         # makes it consistent.
         my $missing = check_test_depends($testdata);
         if ($missing) {
-            return $test_state->skip_test("Missing Depends: $missing");
+            return $test_state->skip_test($missing);
         }
     }
 
@@ -605,10 +605,10 @@ sub generic_test_runner {
         return $test_state->skip_test("(disabled) $reason");
     }
 
-    if ($testdata->{'test-depends'}) {
+    if ($testdata->{'test-depends'} or $testdata->{'test-conflicts'}) {
         my $missing = check_test_depends($testdata);
         if ($missing) {
-            return $test_state->skip_test("Missing Depends: $missing");
+            return $test_state->skip_test($missing);
         }
     }
 

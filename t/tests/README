@@ -128,7 +128,13 @@ current stable.  In this case, you can use:
 
     Test-Depends: <dpkg depends field>
 
-If any of the dependencies are unavailable, the test will be skipped.
+Sometimes tests fail if certain non-required packages are installed.
+If you notice such a case, you can use:
+
+    Test-Conflicts: <dpkg conflicts field>
+
+If any of the dependencies are unavailable or conflicts are present,
+the test will be skipped.
 
 All other fields in the .desc file are optional and control the values
 filled into the template control and changelog files by the test suite

@@ -193,7 +193,10 @@ sub check_test_depends {
 
     # dpkg-checkbuilddeps requires that the Source: field is present.
     print {$test_fd} "Source: bd-test-pkg\n";
-    print {$test_fd} "Build-Depends: $testdata->{'test-depends'}\n";
+    print {$test_fd} "Build-Depends: $testdata->{'test-depends'}\n"
+      if $testdata->{'test-depends'};
+    print {$test_fd} "Build-Conflicts: $testdata->{'test-conflicts'}\n"
+      if $testdata->{'test-conflicts'};
     close($test_fd);
 
     $pid = open($fd, '-|');
@@ -207,10 +210,8 @@ sub check_test_depends {
     eval {close($fd);};
     $err = $@;
     unlink($test_file);
-    if (
-        $missing =~ s{\A dpkg-checkbuilddeps: [ ] (?:error: [ ])?
-                         Unmet [ ] build [ ] dependencies: \s* }{}xsm
-      ) {
+    if ($missing =~ s{\A dpkg-checkbuilddeps: [ ] (?:error: [ ])? }{}xsm) {
+        $missing =~ s{ \b build \b }{test}gxi;
         chomp($missing);
         if ($missing =~ s{\n}{\\n}gxsm) {
             # We expect exactly one line.
