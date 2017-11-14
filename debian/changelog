@@ -8,6 +8,8 @@ lintian (2.5.60) UNRELEASED; urgency=medium
     + [CL] Add suggested [[:space:]]-based sed call for
       file-contains-trailing-whitespace. Thanks to Stuart Prescott.
       (Closes: #881389)
+    + [AB] Also mention Emacs' "M-x wh-cl" (whitespace-cleanup) for
+      file-contains-trailing-whitespace.
 
   * data/spelling/corrections:
     + [PW] Add several corrections.

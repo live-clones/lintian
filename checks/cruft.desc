@@ -904,6 +904,8 @@ Info: This file appears to contain one or more lines with trailing
  .
   $ sed -i -e 's@[[:space:]]*$@@g' debian/control
  .
+ If you use Emacs, you can also use "M-x wh-cl" (whitespace-cleanup).
+ .
  However, if you wish to only remove trailing spaces and leave trailing tabs
  (eg. for Makefiles), you can use the following code snippet:
  .
