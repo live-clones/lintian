@@ -1,0 +1,4 @@
+C: control-file-rules-requires-root-binary-targets source: debian-build-system dh
+C: control-file-rules-requires-root-binary-targets source: rules-requires-root-explicitly
+C: control-file-rules-requires-root-binary-targets source: source-format 1.0 [non-native]
+C: control-file-rules-requires-root-binary-targets: no-ctrl-scripts

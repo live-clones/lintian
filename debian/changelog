@@ -2,6 +2,8 @@ lintian (2.5.60) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.{desc,pm}:
+    + [AB] Add classification tags for R³.
   * checks/cruft.desc:
     + [CL] Add suggested [[:space:]]-based sed call for
       file-contains-trailing-whitespace. Thanks to Stuart Prescott.
