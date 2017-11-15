@@ -11,6 +11,9 @@ lintian (2.5.60) UNRELEASED; urgency=medium
     + [AB] Also mention Emacs' "M-x wh-cl" (whitespace-cleanup) for
       file-contains-trailing-whitespace.
 
+  * data/fields/*:
+    + [CL] Revert patch from Guillem Jover to add a "golang" archive
+      section; it has not ben added to the archive yet.
   * data/spelling/corrections:
     + [PW] Add several corrections.
 
@@ -23,10 +26,6 @@ lintian (2.5.60) UNRELEASED; urgency=medium
 
   * .gitignore:
     + [AB] Ignore /debian/.debhelper/ directory.
-
-  * data/fields/*:
-    + [CL] Revert patch from Guillem Jover to add a "golang" archive
-      section; it has not ben added to the archive yet.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 09 Nov 2017 09:09:49 +0000
 
