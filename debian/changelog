@@ -10,6 +10,8 @@ lintian (2.5.60) UNRELEASED; urgency=medium
       (Closes: #881389)
     + [AB] Also mention Emacs' "M-x wh-cl" (whitespace-cleanup) for
       file-contains-trailing-whitespace.
+  * checks/version-substvars.desc:
+    + [CL] Don't recommend "Source-Version" in tag descriptions.
 
   * data/fields/*:
     + [CL] Revert patch from Guillem Jover to add a "golang" archive

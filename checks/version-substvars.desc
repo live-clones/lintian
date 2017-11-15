@@ -18,7 +18,7 @@ Tag: not-binnmuable-any-depends-all
 Severity: important
 Certainty: certain
 Info: The package is not safely binNMUable because an arch:any package
- depends on an arch:all package with a (= ${Source-Version}) or
+ depends on an arch:all package with a (= ${source:Version}) or
  (= ${binary:Version}) relationship. Please use (= ${source:Version})
  instead.
  .
@@ -29,7 +29,7 @@ Tag: not-binnmuable-all-depends-any
 Severity: important
 Certainty: certain
 Info: The package is not safely binNMUable because an arch:all package
- depends on an arch:any package with a strict (= ${Source-Version}), or
+ depends on an arch:any package with a strict (= ${source:Version}), or
  similar, relationship.
  .
  It is not possible for arch:all packages to depend so strictly on
