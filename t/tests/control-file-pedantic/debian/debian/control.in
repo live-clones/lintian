@@ -5,7 +5,7 @@ Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 Rules-Requires-Root: no
-Homepage: http://lintian.debian.org/
+Homepage: https://lintian.debian.org/
 
 Package: {$source}-udeb
 Section: debian-installer

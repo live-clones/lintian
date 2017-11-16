@@ -1337,3 +1337,9 @@ Severity: normal
 Certainty: certain
 Info: The "Section:" field in this package's control file is empty.
 Ref: policy 2.4
+
+Tag: homepage-field-uses-insecure-uri
+Severity: pedantic
+Certainty: certain
+Info: The Homepage field uses an unencrypted transport protocol for the
+ URI.

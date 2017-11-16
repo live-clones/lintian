@@ -5,3 +5,4 @@ Version: 1.0-1
 Options: -I -E --pedantic
 Skeleton: pedantic
 Test-For: no-homepage-field
+Test-Against: homepage-field-uses-insecure-uri

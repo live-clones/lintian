@@ -1,0 +1,7 @@
+Testname: fields-homepage-field-uses-insecure-uri
+Description: Test for Homepage fields using insecure URIs
+Version: 1.0
+Options: -I -E --pedantic
+Skeleton: pedantic
+Test-For:
+ homepage-field-uses-insecure-uri

@@ -1,0 +1,2 @@
+P: fields-homepage-field-uses-insecure-uri source: homepage-field-uses-insecure-uri http://insecure.example.com/
+P: fields-homepage-field-uses-insecure-uri: homepage-field-uses-insecure-uri http://insecure.example.com/

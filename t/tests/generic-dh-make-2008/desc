@@ -23,4 +23,6 @@ Test-For:
  section-is-dh_make-template
  superfluous-clutter-in-homepage
  wrong-bug-number-in-closes
+Test-Against:
+ homepage-field-uses-insecure-uri
 References: Debian Bug#497347
