@@ -11,8 +11,8 @@ lintian (2.5.60) UNRELEASED; urgency=medium
     + [AB] Also mention Emacs' "M-x wh-cl" (whitespace-cleanup) for
       file-contains-trailing-whitespace.
   * checks/fields.desc:
-    + [CL] Warn for Homepage files using insecure URIs such as HTTP or
-      FTP, similar to vcs-field-uses-insecure-uri.  (Closes: #849514)
+    + [CL] Warn for Homepage files using well-known insecure URIs.
+      (Closes: #849514)
   * checks/version-substvars.desc:
     + [CL] Don't recommend "Source-Version" in tag descriptions.
 
