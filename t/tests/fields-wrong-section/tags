@@ -1,3 +1,4 @@
+I: fields-wrong-section source: debian-control-has-obsolete-dbg-package fields-wrong-section-dbg
 I: libfields-wrong-section-java: javalib-but-no-public-jars
 W: fields-wrong-section-contrib-doc: wrong-section-according-to-package-name fields-wrong-section-contrib-doc => contrib/doc
 W: fields-wrong-section-dbg: wrong-section-according-to-package-name fields-wrong-section-dbg => debug
@@ -15,4 +16,3 @@ W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-f
 W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
 W: python3-fields-wrong-section: wrong-section-according-to-package-name python3-fields-wrong-section => python
 W: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
-X: fields-wrong-section source: debian-control-has-obsolete-dbg-package fields-wrong-section-dbg

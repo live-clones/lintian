@@ -27,6 +27,7 @@ E: libbaz2-dev: changelog-file-not-compressed changelog
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
 I: libbaz source: binary-control-field-duplicates-source field "priority" in package libbaz2-dbg
+I: libbaz source: debian-control-has-obsolete-dbg-package libbaz2-dbg
 I: libbaz1-dev: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1-dev: package-contains-empty-directory usr/include/
@@ -76,5 +77,4 @@ W: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel
 W: libbaz2: debian-changelog-file-is-a-symlink
 W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
-X: libbaz source: debian-control-has-obsolete-dbg-package libbaz2-dbg
 X: libbaz1: maintainer-script-may-use-dir_to_symlink_helper postinst:8

@@ -1,3 +1,3 @@
+I: group-checks-multi-arch source: debian-control-has-obsolete-dbg-package pkg-dbg
 I: group-checks-multi-arch source: debug-package-for-multi-arch-same-pkg-not-coinstallable pkg-dbg => pkg-same
 W: group-checks-multi-arch source: dependency-is-not-multi-archified pkg-same depends on pkg-foreign (multi-arch: no)
-X: group-checks-multi-arch source: debian-control-has-obsolete-dbg-package pkg-dbg

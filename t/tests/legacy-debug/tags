@@ -24,6 +24,10 @@ I: debug source: binary-control-field-duplicates-source field "priority" in pack
 I: debug source: binary-control-field-duplicates-source field "priority" in package hello-hello-dbg
 I: debug source: binary-control-field-duplicates-source field "priority" in package hi-dbg
 I: debug source: binary-control-field-duplicates-source field "priority" in package libhello0-dbg
+I: debug source: debian-control-has-obsolete-dbg-package hello-dbg
+I: debug source: debian-control-has-obsolete-dbg-package hello-hello-dbg
+I: debug source: debian-control-has-obsolete-dbg-package hi-dbg
+I: debug source: debian-control-has-obsolete-dbg-package libhello0-dbg
 W: debug source: ancient-standards-version 3.7.0 (current is CURRENT)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: dbg-package-missing-depends hi-dbg
@@ -55,7 +59,3 @@ W: libhello0: symbols-declares-dependency-on-other-package libhello2 (>= 1:2.3)
 W: libhello0: symbols-declares-dependency-on-other-package libhelloc0c2 (<< 1.3)
 W: libhello0: symbols-declares-dependency-on-other-package libhelloc0c3
 W: libhello0: unused-shlib-entry-in-symbols-control-file libhello 2
-X: debug source: debian-control-has-obsolete-dbg-package hello-dbg
-X: debug source: debian-control-has-obsolete-dbg-package hello-hello-dbg
-X: debug source: debian-control-has-obsolete-dbg-package hi-dbg
-X: debug source: debian-control-has-obsolete-dbg-package libhello0-dbg

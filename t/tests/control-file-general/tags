@@ -5,6 +5,7 @@ E: control-file-general source: obsolete-relation-form-in-source in control-file
 E: control-file-general source: obsolete-relation-form-in-source in source build-depends-indep: perl (> 5.8)
 E: control-file-general source: pre-depends-directly-on-multiarch-support control-file-general
 I: control-file-general source: binary-control-field-duplicates-source field "maintainer" in package control-file-general
+I: control-file-general source: debian-control-has-obsolete-dbg-package control-file-general-dbg
 I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4 control-file-general-5 control-file-general-dbgsym control-file-general-dbg
 I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
 I: control-file-general source: xs-vcs-header-in-debian-control xs-vcs-svn
@@ -19,4 +20,3 @@ W: control-file-general source: stronger-dependency-implies-weaker control-file-
 W: control-file-general source: stronger-dependency-implies-weaker control-file-general depends -> suggests bar | baz
 W: control-file-general source: stronger-dependency-implies-weaker control-file-general recommends -> suggests bar | baz
 W: control-file-general source: stronger-dependency-implies-weaker control-file-general recommends -> suggests match${lintian:Match}
-X: control-file-general source: debian-control-has-obsolete-dbg-package control-file-general-dbg
