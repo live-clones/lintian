@@ -629,7 +629,7 @@ sub run {
         if ($homepage=~ m,bioconductor\.org/packages/.*/bioc/html/.*\.html*$,){
             tag 'homepage-for-bioconductor-package-not-canonical', $orig;
         }
-        if (   $homepage =~ m,^ftp//,
+        if (   $homepage =~ m,^ftp://,
             or $homepage =~
             m,^http://(?:[^\.]+\.)?(?:github\.com|metacpan\.org|debian\.org)/,
           ){
