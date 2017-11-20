@@ -6,6 +6,9 @@ lintian (2.5.60) UNRELEASED; urgency=medium
     + [AB] Add classification tags for R³.
     + [CL] Remove the "Experimental: yes" flag from the
       debian-control-has-obsolete-dbg-package tag.  (Closes: #882154)
+    + [AB] Change reference for debian-control-has-obsolete-dbg-package
+      from https://wiki.debian.org/DebugPackage to
+      https://wiki.debian.org/AutomaticDebugPackages
   * checks/cruft.desc:
     + [CL] Add suggested [[:space:]]-based sed call for
       file-contains-trailing-whitespace. Thanks to Stuart Prescott.

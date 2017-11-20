@@ -49,7 +49,7 @@ Info: The <tt>debian/control</tt> file includes declaration of
 Tag: debian-control-has-obsolete-dbg-package
 Severity: wishlist
 Certainty: possible
-Ref: https://wiki.debian.org/DebugPackage
+Ref: https://wiki.debian.org/AutomaticDebugPackage
 Info: The <tt>debian/control</tt> file includes declaration of
  -dbg package.
  .
