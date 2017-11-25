@@ -257,7 +257,7 @@ my @flash_nonfree = (
 );
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
-  bin/ sbin/ usr/bin/ usr/sbin usr/games/ );
+  bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
 
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.

@@ -18,6 +18,11 @@ lintian (2.5.60) UNRELEASED; urgency=medium
   * checks/fields.desc:
     + [CL] Warn for Homepage files using well-known insecure URIs.
       (Closes: #849514)
+  * checks/files.pm:
+    + [NT] Add missing slash for usr/sbin that caused lintian to report
+      false-positive multiarch-foreign-shared-library when a package
+      only had executables in usr/sbin.  Thanks to Helmut Grohne for
+      reporting the issue.
   * checks/version-substvars.desc:
     + [CL] Don't recommend "Source-Version" in tag descriptions.
 
