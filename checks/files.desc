@@ -1549,6 +1549,14 @@ Info: The given file is literally installed as <tt>*</tt> (star
  symbol).  Normally this indicates a mistake in the installation
  process of the package either when creating symlinks or renaming files.
 
+Tag: hyphen-file
+Severity: important
+Certainty: possible
+Info: The given file is literally installed as <tt>-</tt> (hyphen
+ symbol).  Normally this indicates a mistake in the package when
+ attempting to write to standard output.
+Ref: #882638
+
 Tag: incorrect-locale-code
 Severity: normal
 Certainty: possible

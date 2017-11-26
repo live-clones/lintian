@@ -1318,6 +1318,9 @@ sub run {
         if ($fname =~ m,/\*\z,) {
             tag 'star-file', $file;
         }
+        if ($fname =~ m,/-\z,) {
+            tag 'hyphen-file', $file;
+        }
 
         # ---------------- misplaced lintian overrides
         if (   $fname =~ m,^usr/share/doc/$ppkg/override\.[lL]intian(?:\.gz)?$,

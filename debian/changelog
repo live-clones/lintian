@@ -23,6 +23,8 @@ lintian (2.5.60) UNRELEASED; urgency=medium
       false-positive multiarch-foreign-shared-library when a package
       only had executables in usr/sbin.  Thanks to Helmut Grohne for
       reporting the issue.
+    + [CL] Warn on files called "-" (hyphen symbol). See #882638 for an
+      example.
   * checks/version-substvars.desc:
     + [CL] Don't recommend "Source-Version" in tag descriptions.
 
