@@ -1,6 +1,11 @@
-lintian (2.5.60) UNRELEASED; urgency=medium
+lintian (2.5.60) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - homepage-field-uses-insecure-uri
+      - hyphen-file
+      - rules-does-not-require-root
+      - rules-requires-root-explicitly
 
   * checks/control-file.{desc,pm}:
     + [AB] Add classification tags for R³.
@@ -44,7 +49,7 @@ lintian (2.5.60) UNRELEASED; urgency=medium
   * .gitignore:
     + [AB] Ignore /debian/.debhelper/ directory.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 09 Nov 2017 09:09:49 +0000
+ -- Chris Lamb <lamby@debian.org>  Sun, 26 Nov 2017 11:13:58 +0900
 
 lintian (2.5.59) unstable; urgency=medium
 
