@@ -26,6 +26,12 @@ Info: A team upload (uploading a package from the same team without adding
  get a NMU revision number.  Team uploads are recognized by the string
  "team upload" on the first line of the changelog file.
 
+Tag: unnecessary-team-upload
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/changelog</tt> file refers to a "Team upload" but the
+ uploader is listed amongst the Maintainer/Uploaders.
+
 Tag: source-nmu-has-incorrect-version-number
 Severity: normal
 Certainty: certain

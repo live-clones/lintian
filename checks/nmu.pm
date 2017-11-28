@@ -115,6 +115,7 @@ sub run {
     } elsif ($changelog_mentions_team_upload) {
         tag 'team-upload-has-incorrect-version-number', $version
           if $version_nmuness == 1;
+        tag 'unnecessary-team-upload' unless $upload_is_nmu;
     } else {
         # Local packages may be either NMUs or not.
         unless ($changelog_mentions_local || $version_local) {
