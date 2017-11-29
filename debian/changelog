@@ -7,6 +7,10 @@ lintian (2.5.61) UNRELEASED; urgency=medium
       changelog) but the uploader is among the Maintainer/Uploaders.
       (Closes: #882954)
 
+  * data/spelling/corrections:
+    + [CL] Remove "german|German" entry - it is covered by
+      Udata/spelling/corrections-case.  (Closes: #883041)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 26 Nov 2017 11:51:35 +0900
 
 lintian (2.5.60) unstable; urgency=medium
