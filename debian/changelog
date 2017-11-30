@@ -2,6 +2,9 @@ lintian (2.5.61) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.pm:
+    + [CL] Apply patch from Dylan Aïssi to add R CRAN & Bioconductor
+      repositories to the list of known insecure URIs.  (Closes: #883121)
   * checks/nmu.{desc,pm}:
     + [CL] Warn if a "Team upload" (ie. that string is present in the
       changelog) but the uploader is among the Maintainer/Uploaders.

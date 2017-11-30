@@ -631,7 +631,7 @@ sub run {
         }
         if (   $homepage =~ m,^ftp://,
             or $homepage
-            =~m,^http://(?:[^\.]+\.)?(?:github\.com|metacpan\.org|debian\.org)/,
+            =~m,^http://(?:[^\.]+\.)?(?:github\.com|metacpan\.org|debian\.org|cran\.r-project\.org|bioconductor\.org)/,
           ){
             tag 'homepage-field-uses-insecure-uri', $orig;
         }
