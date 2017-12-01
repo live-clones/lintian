@@ -16,6 +16,7 @@ lintian (2.5.61) UNRELEASED; urgency=medium
 
   * data/standards-version/release-dates:
     + [AB] Add 4.1.2 as known standards version.
+    + [AB] Suggest "date +%s -s …" instead of libtimedate-perl.
 
   * debian/control:
     + [AB] Declare compliance with Debian Policy 4.1.2.
