@@ -14,6 +14,16 @@ lintian (2.5.61) UNRELEASED; urgency=medium
     + [CL] Remove "german|German" entry - it is covered by
       data/spelling/corrections-case.  (Closes: #883041)
 
+  * data/standards-version/release-dates:
+    + [AB] Add 4.1.2 as known standards version.
+
+  * debian/control:
+    + [AB] Declare compliance with Debian Policy 4.1.2.
+    + [AB] Mention Debian Policy 4.1.2 in long package description.
+
+  * t/runtests:
+    + [AB] Use standards version 4.1.2 in tests.
+
  -- Chris Lamb <lamby@debian.org>  Sun, 26 Nov 2017 11:51:35 +0900
 
 lintian (2.5.60) unstable; urgency=medium
