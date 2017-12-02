@@ -2,6 +2,9 @@ lintian (2.5.61) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/elpa.desc:
+    + [CL] Correct reference to dh_elpa(1) manpage. Thanks to Paul Gevers
+      for the report.  (Closes: #883356)
   * checks/fields.pm:
     + [CL] Apply patch from Dylan Aïssi to add R CRAN & Bioconductor
       repositories to the list of known insecure URIs.  (Closes: #883121)

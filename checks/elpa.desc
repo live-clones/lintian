@@ -20,4 +20,4 @@ Info: The package uses the emacsen-common infrastructure but the
  .
  In addition, a package built with dh-elpa integrates with the GNU
  Emacs package manager, for a better user experience.
-Ref: dh-elpa(1), dh-make-elpa(1), https://pkg-emacsen.alioth.debian.org/
+Ref: dh_elpa(1), dh-make-elpa(1), https://pkg-emacsen.alioth.debian.org/
