@@ -11,8 +11,8 @@ lintian (2.5.61) UNRELEASED; urgency=medium
       (Closes: #882954)
 
   * data/spelling/corrections:
-    + [CL] Remove "german|German" entry - it is covered by
-      data/spelling/corrections-case.  (Closes: #883041)
+    + [CL] Remove "german|German" and "russian|Russian" entries - they are
+      covered by data/spelling/corrections-case.  (Closes: #883041)
 
   * data/standards-version/release-dates:
     + [AB] Add 4.1.2 as known standards version.
