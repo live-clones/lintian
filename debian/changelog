@@ -16,6 +16,8 @@ lintian (2.5.61) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [CL] Remove "german|German" and "russian|Russian" entries - they are
       covered by data/spelling/corrections-case.  (Closes: #883041)
+  * data/spelling/corrections-case:
+    + [PW] Correct spelling of GCC
 
   * data/standards-version/release-dates:
     + [AB] Add 4.1.2 as known standards version.
