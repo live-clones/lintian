@@ -27,6 +27,10 @@ lintian (2.5.61) UNRELEASED; urgency=medium
 
   * t/runtests:
     + [AB] Use standards version 4.1.2 in tests.
+  * t/scripts/spellintian.t:
+    + [AB] Add two checks for common mistakes in d…/spelling/corrections:
+      "iff" is a valid word (c.f. #865055) and case-only misspellings
+      belong into data/spelling/corrections-case.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 26 Nov 2017 11:51:35 +0900
 

@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 # Copyright © 2014-2016 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2017 Axel Beckert <abe@debian.org>
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -21,13 +22,14 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 use IPC::Run();
 
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
 
 my $cmd_path = "$ENV{LINTIAN_TEST_ROOT}/frontend/spellintian";
+my $spelling_data = 'data/spelling/corrections';
 
 sub t {
     my ($input, $expected, @options) = @_;
@@ -45,6 +47,35 @@ my $s = "A familar brown gnu allows\nto jump over the lazy dog.\n";
 t($s, "familar -> familiar\nallows to -> allows one to\n");
 t($s, "familar -> familiar\nallows to -> allows one to\ngnu -> GNU\n",
     '--picky');
+
+my $iff = 0;
+my $case_sen = 0;
+
+open(my $sp_fh, '<', $spelling_data)
+  or die "Can't open $spelling_data for reading: $!";
+while (my $corr = <$sp_fh>) {
+    next if $corr =~ m{ ^\# | ^$ }x;
+    chomp($corr);
+
+    # Check if case sensitive corrections have been added to the wrong
+    # file (data/spelling/corrections, not data/spelling/corrections-case).
+    # Bad example: german||German
+    my ($wrong, $good) = split(/\|\|/, $corr);
+    $case_sen++ if ($wrong eq lc($good));
+
+    # Check if "iff" has been added as correction. See #865055 why
+    # this is wrong. Bad example: iff||if
+    $iff++ if $corr =~ m{ ^ iff \|\| }x;
+}
+close($sp_fh);
+
+ok($case_sen == 0, "No case sensitive correction present in ${spelling_data}");
+ok(
+    $iff == 0,
+    '"iff" is not present in '
+      . $spelling_data
+      .'. See #865055 why this is wrong.'
+);
 
 # Local Variables:
 # indent-tabs-mode: nil
