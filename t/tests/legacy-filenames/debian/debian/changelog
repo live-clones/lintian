@@ -1,6 +1,6 @@
 filenames (1:12-0.1) unstable; urgency=low
 
-  * /me is doing a correct NMU of this package.
+  * /me is doing a correct NMU of this package, bumping the epoch too.
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Apr 2004 02:04:39 +0200
 

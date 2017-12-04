@@ -78,3 +78,5 @@ Test-For:
  wrong-file-owner-uid-or-gid
  wrong-name-for-debian-news-file
  zero-byte-file-in-doc-directory
+Test-Against:
+ epoch-change-without-comment
