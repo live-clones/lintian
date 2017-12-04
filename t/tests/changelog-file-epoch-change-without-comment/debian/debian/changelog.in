@@ -1,0 +1,11 @@
+{$source} (2:{$version}) unstable; urgency=low
+
+  * This changelog entry bumps the version.
+
+ -- {$author}  {$date}
+
+{$source} (1:{$version}) unstable; urgency=low
+
+  * Initial upload.
+
+ -- {$author}  Fri, 06 Feb 2009 22:22:37 -0800

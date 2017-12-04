@@ -2,6 +2,10 @@ lintian (2.5.61) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.{desc,pm}:
+    + [CL] Warn about packages that modify the epoch and there's no comment
+      about the change. This was motivated by accidental bumping of the
+      epoch in my python-django 2:2.0-1 upload.
   * checks/elpa.desc:
     + [CL] Correct reference to dh_elpa(1) manpage. Thanks to Paul Gevers
       for the report.  (Closes: #883356)

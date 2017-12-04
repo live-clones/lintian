@@ -1,0 +1,11 @@
+{$source} (1:{$version}) unstable; urgency=low
+
+  * This changelog entry introduces a version prefix.
+
+ -- {$author}  {$date}
+
+{$source} ({$version}) unstable; urgency=low
+
+  * Initial upload.
+
+ -- {$author}  Fri, 06 Feb 2009 22:22:37 -0800

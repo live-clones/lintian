@@ -1,0 +1,5 @@
+Testname: changelog-file-epoch-change-without-comment
+Version: 1.0
+Description: Check changelog for accidental epoch changes
+Test-For:
+ epoch-change-without-comment

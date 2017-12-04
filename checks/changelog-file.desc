@@ -420,3 +420,14 @@ Info: The changelog entry references a temporary security identifier,
  please replace the TEMP identifier with a short description of the
  issue.
 Ref: #787929, #807892
+
+Tag: epoch-change-without-comment
+Severity: normal
+Certainty: possible
+Info: The previous version of this package had a different version epoch
+ (eg. 2:1.0-1) to the current version and there's no reference to this in
+ the changelog entry.
+ .
+ This may indicate a mistake in setting the version.
+ .
+ Lintian looks in this version's changelog entry for the phrase "epoch".

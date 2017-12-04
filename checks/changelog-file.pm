@@ -343,6 +343,13 @@ sub run {
                     tag 'experimental-to-unstable-without-comment';
                 }
             }
+
+            my ($first_epoch) = $first_version =~ /^([^:]+):/;
+            my ($second_epoch) = $second_version =~ /^([^:]+):/;
+            if ($first_epoch and $second_epoch // '' ne $first_epoch) {
+                tag 'epoch-change-without-comment',
+                  unless $entries[0]->Changes =~ /\bepoch\b/im;
+            }
         }
 
         # Some checks should only be done against the most recent
