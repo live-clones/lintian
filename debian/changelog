@@ -1,6 +1,10 @@
-lintian (2.5.61) UNRELEASED; urgency=medium
+lintian (2.5.61) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - epoch-change-without-comment
+      - source-includes-file-in-files-excluded
+      - unnecessary-team-upload
 
   * checks/changelog-file.{desc,pm}:
     + [CL] Warn about packages that modify the epoch and there's no comment
@@ -26,6 +30,7 @@ lintian (2.5.61) UNRELEASED; urgency=medium
       tree.  (Closes: #871454)
 
   * data/spelling/corrections:
+    + [PW] Add a number of corrections.
     + [CL] Remove "german|German" and "russian|Russian" entries - they are
       covered by data/spelling/corrections-case.  (Closes: #883041)
 
@@ -44,7 +49,7 @@ lintian (2.5.61) UNRELEASED; urgency=medium
       "iff" is a valid word (c.f. #865055) and case-only misspellings
       belong into data/spelling/corrections-case.
 
- -- Chris Lamb <lamby@debian.org>  Sun, 26 Nov 2017 11:51:35 +0900
+ -- Chris Lamb <lamby@debian.org>  Tue, 05 Dec 2017 14:41:02 +0000
 
 lintian (2.5.60) unstable; urgency=medium
 
