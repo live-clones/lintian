@@ -19,7 +19,7 @@ Info: This package appears to be the initial packaging of a new upstream
  if it is a split of an existing Debian package.
 
 Tag: python-foo-but-no-python3-foo
-Severity: wishlist
+Severity: normal
 Certainty: certain
 Info: This package appears to generate a Python 2 module without a
  corresponding Python 3 version.
@@ -53,7 +53,7 @@ Info: This package alternatively Build-Depends on the Python 2 or Python 3
  <tt>python3-sphinx</tt>.
 
 Tag: dependency-on-python-version-marked-for-end-of-life
-Severity: pedantic
+Severity: normal
 Certainty: certain
 Ref: https://wiki.debian.org/Python/Python3Port, https://www.python.org/dev/peps/pep-0373/
 Info: The package specifies a dependency on Python 2.x which is due for

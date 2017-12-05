@@ -16,6 +16,11 @@ lintian (2.5.61) UNRELEASED; urgency=medium
     + [CL] Warn if a "Team upload" (ie. that string is present in the
       changelog) but the uploader is among the Maintainer/Uploaders.
       (Closes: #882954)
+  * checks/python.desc:
+    + [CL] Raise the severity of the
+      "dependency-on-python-version-marked-for-end-of-life" and
+      "python-foo-but-no-python3-foo" Python 2.x deprecation tags to
+      regular warnings.  (Closes: #883581)
   * checks/source-copyright.{desc,pm}:
     + [CL] Warn when files specified in Files-Excluded exist in the source
       tree.  (Closes: #871454)
