@@ -9,7 +9,9 @@ E: scripts-control-interpreters-python: preinst-interpreter-without-predepends #
 E: scripts-control-interpreters-unknown: unknown-control-interpreter control/postinst #!/usr/bin/unknown
 W: scripts-control-interpreters-forbidden: unusual-control-interpreter control/postinst #!/usr/bin/python
 W: scripts-control-interpreters-paths: unusual-control-interpreter control/prerm #!/bin/python
+W: scripts-control-interpreters-prepython: dependency-on-python-version-marked-for-end-of-life (Pre-Depends: python)
 W: scripts-control-interpreters-prepython: unusual-control-interpreter control/postinst #!/usr/bin/python
 W: scripts-control-interpreters-prepython: unusual-control-interpreter control/preinst #!/usr/bin/python
+W: scripts-control-interpreters-python: dependency-on-python-version-marked-for-end-of-life (Depends: python)
 W: scripts-control-interpreters-python: unusual-control-interpreter control/postinst #!/usr/bin/python
 W: scripts-control-interpreters-python: unusual-control-interpreter control/preinst #!/usr/bin/python
