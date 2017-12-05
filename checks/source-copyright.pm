@@ -240,6 +240,7 @@ sub _parse_dep5 {
               $renamed_to, "(line $lines[0]{$field})";
         }
     }
+    check_files_excluded($info, $first_para->{'files-excluded'} // '');
     if (    not defined $first_para->{'format'}
         and not defined $first_para->{'format-specification'}){
         tag 'missing-field-in-dep5-copyright', 'format',
@@ -610,6 +611,35 @@ sub parse_wildcard {
 sub get_all_files {
     my ($info) = @_;
     return grep { $_->is_file } $info->sorted_index;
+}
+
+sub check_files_excluded {
+    my ($info, $excluded) = @_;
+    my @files = get_all_files($info);
+    my @wildcards = split /[\n\t ]+/, $excluded;
+    for my $wildcard (@wildcards) {
+        $wildcard =~ s/^\s+|\s+$//g;
+        if ($wildcard eq '') {
+            next;
+        }
+        my ($wc_value, $wc_type, $wildcard_error)= parse_wildcard($wildcard);
+        if (defined $wildcard_error) {
+            tag 'invalid-escape-sequence-in-dep5-copyright', $wildcard_error;
+            next;
+        }
+        if ($wc_type eq WC_TYPE_FILE) {
+            # Also match "dir/filename" for "Files-Excluded: dir"
+            $wc_value = qr/^${wc_value}(?:\/|$)/;
+        }
+        for my $srcfile (@files) {
+            if ($srcfile =~ $wc_value) {
+                tag 'source-includes-file-in-files-excluded',$srcfile;
+                last;
+            }
+        }
+    }
+
+    return;
 }
 
 1;

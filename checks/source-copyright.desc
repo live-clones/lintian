@@ -311,3 +311,12 @@ Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: The <tt>Files</tt> paragraph in debian/copyright is superfluous as it is
  never used to match any files. You should be able to safely remove it.
+
+Tag: source-includes-file-in-files-excluded
+Severity: normal
+Certainty: possible
+Info: A file specified in the <tt>Files-Excluded</tt> header in
+ debian/copyright exists in the source tree.
+ .
+ This usually indicates that the upstream tarball was not repacked as
+ intended.

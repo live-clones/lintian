@@ -1,0 +1,4 @@
+W: source-copyright-source-files-excluded source: source-includes-file-in-files-excluded .matches
+W: source-copyright-source-files-excluded source: source-includes-file-in-files-excluded exclude-dir-2/filename
+W: source-copyright-source-files-excluded source: source-includes-file-in-files-excluded exclude-dir/filename
+W: source-copyright-source-files-excluded source: source-includes-file-in-files-excluded exclude-this

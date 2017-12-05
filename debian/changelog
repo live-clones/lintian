@@ -16,6 +16,9 @@ lintian (2.5.61) UNRELEASED; urgency=medium
     + [CL] Warn if a "Team upload" (ie. that string is present in the
       changelog) but the uploader is among the Maintainer/Uploaders.
       (Closes: #882954)
+  * checks/source-copyright.{desc,pm}:
+    + [CL] Warn when files specified in Files-Excluded exist in the source
+      tree.  (Closes: #871454)
 
   * data/spelling/corrections:
     + [CL] Remove "german|German" and "russian|Russian" entries - they are
