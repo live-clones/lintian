@@ -313,7 +313,7 @@ Info: The <tt>Files</tt> paragraph in debian/copyright is superfluous as it is
  never used to match any files. You should be able to safely remove it.
 
 Tag: source-includes-file-in-files-excluded
-Severity: normal
+Severity: serious
 Certainty: possible
 Info: A file specified in the <tt>Files-Excluded</tt> header in
  debian/copyright exists in the source tree.
