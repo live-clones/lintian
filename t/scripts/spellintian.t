@@ -22,7 +22,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use IPC::Run();
 
@@ -49,6 +49,7 @@ t($s, "familar -> familiar\nallows to -> allows one to\ngnu -> GNU\n",
     '--picky');
 
 my $iff = 0;
+my $publically = 0;
 my $case_sen = 0;
 
 open(my $sp_fh, '<', $spelling_data)
@@ -66,6 +67,12 @@ while (my $corr = <$sp_fh>) {
     # Check if "iff" has been added as correction. See #865055 why
     # this is wrong. Bad example: iff||if
     $iff++ if $corr =~ m{ ^ iff \|\| }x;
+
+    # Check if "publically" has been added as correction. It is a
+    # seldom, but valid English word, is used in the OpenSSL license
+    # and hence causes quite some false positives, when being added
+    # (again).
+    $publically++ if $corr =~ m{ ^ publically \|\| }x;
 }
 close($sp_fh);
 
@@ -75,6 +82,12 @@ ok(
     '"iff" is not present in '
       . $spelling_data
       .'. See #865055 why this is wrong.'
+);
+ok(
+    $publically == 0,
+    '"publically" is not present in '
+      . $spelling_data
+      .q{. It's a valid English word and used in the OpenSSL license.}
 );
 
 # Local Variables:
