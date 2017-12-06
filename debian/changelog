@@ -2,6 +2,11 @@ lintian (2.5.62) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/python.desc:
+    + [CL] Also match, for example, "python2.7:all" when checking the
+      "dependency-on-python-version-marked-for-end-of-life" tag, not just
+      "python2.7".  (Closes: #883053)
+
  -- Chris Lamb <lamby@debian.org>  Tue, 05 Dec 2017 15:27:44 +0000
 
 lintian (2.5.61) unstable; urgency=medium

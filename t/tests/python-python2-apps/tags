@@ -1,3 +1,4 @@
+W: pkg-depends-any: dependency-on-python-version-marked-for-end-of-life (Depends: python)
 W: pkg-depends: dependency-on-python-version-marked-for-end-of-life (Depends: python)
 W: pkg-pre-depends: dependency-on-python-version-marked-for-end-of-life (Pre-Depends: python2.7)
 W: pkg-recommends: dependency-on-python-version-marked-for-end-of-life (Recommends: python-dev)
