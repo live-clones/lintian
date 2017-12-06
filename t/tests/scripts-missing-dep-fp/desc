@@ -1,5 +1,7 @@
 Testname: scripts-missing-dep-fp
 Version: 1.0
 Description: Check F-P missing dep on various script interpreters
-Test-Against: python-script-but-no-python-dep
-
+Test-Against:
+ python-script-but-no-python-dep
+Test-For:
+ dependency-on-python-version-marked-for-end-of-life
