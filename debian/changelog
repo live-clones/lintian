@@ -3,7 +3,7 @@ lintian (2.5.62) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/python.desc:
-    + [CL] Also match, for example, "python2.7:all" when checking the
+    + [CL] Also match, for example, "python2.7:any" when checking the
       "dependency-on-python-version-marked-for-end-of-life" tag, not just
       "python2.7".  (Closes: #883053)
     + [CL] Detect an invalid debian/po/POTFILES.in instead of bailing out.
