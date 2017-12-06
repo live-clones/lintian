@@ -83,8 +83,7 @@ sub _run_binary {
             for my $dep (@PYTHON2) {
                 tag 'dependency-on-python-version-marked-for-end-of-life',
                   "($field: $dep)"
-                  if $info->relation($field)->implies($dep)
-                  or $info->relation($field)->implies("$dep:any");
+                  if $info->relation($field)->implies("$dep:any");
             }
         }
     }
