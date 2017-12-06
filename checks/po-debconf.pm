@@ -187,12 +187,19 @@ sub run {
           if $d_templates;
 
         # Generate a "test.pot" (in a tempdir)
-        run_cmd(
-            \%intltool_opts,
+        if (
+            !eval {
+                run_cmd(
+                    \%intltool_opts,
 
-            '/usr/share/intltool-debian/intltool-update',
-            '--gettext-package=test','--pot'
-        );
+                    '/usr/share/intltool-debian/intltool-update',
+                    '--gettext-package=test','--pot'
+                );
+            }
+          ) {
+            tag 'invalid-potfiles-in';
+            return;
+        }
 
         # Compare our "test.pot" with the existing "templates.pot"
         (
