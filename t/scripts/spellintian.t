@@ -59,7 +59,7 @@ while (my $corr = <$sp_fh>) {
 
     # Check if case sensitive corrections have been added to the wrong
     # file (data/spelling/corrections, not data/spelling/corrections-case).
-    # Bad example: german||German
+    # Bad example from #883041: german||German
     my ($wrong, $good) = split(/\|\|/, $corr);
     $case_sen++ if ($wrong eq lc($good));
 
