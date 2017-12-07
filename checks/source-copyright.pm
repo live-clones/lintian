@@ -632,7 +632,7 @@ sub check_files_excluded {
             $wc_value = qr/^${wc_value}(?:\/|$)/;
         }
         for my $srcfile (@files) {
-            if ($srcfile =~ $wc_value) {
+            if ($srcfile =~ qr/^$wc_value/) {
                 tag 'source-includes-file-in-files-excluded',$srcfile;
                 last;
             }

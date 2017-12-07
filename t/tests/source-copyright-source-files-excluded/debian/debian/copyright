@@ -5,6 +5,7 @@ Files-Excluded: exclude-this
  exclude-dir-2/*
  .*
  */js/jquery.js
+ lib/*
 
 Files: *
 Copyright: 2011 J. Random Hacker <j.r.hacker@example.com>

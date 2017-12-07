@@ -20,6 +20,10 @@ lintian (2.5.62) UNRELEASED; urgency=medium
       indeed bad (#769845 and the mail referred to in there). Rewrite
       recommendations, explain what conditions should be given if someone
       intents to override this tag. (Closes: #807695)
+  * checks/source-copyright.pm:
+    + [CL] Correct false positives in the
+      "source-includes-file-in-files-excluded" tag where a Files-Excluded
+      of "lib/*" would be triggered for "foolib/filename".
 
   * data/spelling/corrections:
     + [AB] Remove "publically". It's a seldom, but valid English word
