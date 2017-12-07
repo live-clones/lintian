@@ -684,7 +684,7 @@ Info: The indicated program run in a maintainer script has a prepended
  If the path is used to test a program for existence, please use <tt>if
  which $program > /dev/null; then …</tt>.
  .
- If you intent to override this tag, please make sure that you are in
+ If you intend to override this tag, please make sure that you are in
  control of the installation path of the according program and that
  you won't forget to change this maintainer script, too, if you ever
  move that program around.
