@@ -12,6 +12,12 @@ lintian (2.5.62) UNRELEASED; urgency=medium
       "python2.7".  (Closes: #883053)
     + [CL] Detect an invalid debian/po/POTFILES.in instead of bailing out.
       (Closes: #883653)
+  * checks/scripts.desc:
+    + [AB] command-with-path-in-maintainer-script: Add more references,
+      especially the reason why "if [ -x /usr/bin/<command> ]; …" is
+      indeed bad (#769845 and the mail referred to in there). Rewrite
+      recommendations, explain what conditions should be given if someone
+      intents to override this tag. (Closes: #807695)
 
   * data/spelling/corrections:
     + [AB] Remove "publically". It's a seldom, but valid English word

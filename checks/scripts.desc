@@ -681,11 +681,15 @@ Info: The indicated program run in a maintainer script has a prepended
  and prepending a path may prevent the local administrator from using a
  replacement version of a command for some local reason.
  .
- If the path is required to test a program for existence, one of the suggested
- workarounds in the developer's reference can be used.
+ If the path is used to test a program for existence, please use <tt>if
+ which $program > /dev/null; then …</tt>.
  .
- See particularly the function pathfind() in devref.
-Ref: policy 6.1, devref 6.4
+ If you intent to override this tag, please make sure that you are in
+ control of the installation path of the according program and that
+ you won't forget to change this maintainer script, too, if you ever
+ move that program around.
+Ref: policy 6.1, devref 6.4, #769845, #807695,
+ https://lists.debian.org/debian-devel/2014/11/msg00044.html
 
 Tag: package-uses-local-diversion
 Severity: serious
