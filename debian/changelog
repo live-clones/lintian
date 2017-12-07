@@ -28,6 +28,8 @@ lintian (2.5.62) UNRELEASED; urgency=medium
       "source-includes-file-in-files-excluded" tag where we would warn when
       the maintainer has removed upstream's debian/ directory and then we
       would trigger it on the maintainer's replacement files.
+    + [CL] List all files violating source-includes-file-in-files-excluded,
+      not just the first one we encounter per "Files-Excluded" entry.
 
   * data/spelling/corrections:
     + [AB] Remove "publically". It's a seldom, but valid English word
