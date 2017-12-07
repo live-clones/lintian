@@ -344,10 +344,11 @@ sub run {
                 }
             }
 
-            my ($first_epoch) = $first_version =~ /^([^:]+):/;
-            my ($second_epoch) = $second_version =~ /^([^:]+):/;
-            if ($first_epoch and ($second_epoch // '') ne $first_epoch) {
+            my ($first_epoch) = ($first_version =~ /^([^:]+):/, '(none)');
+            my ($second_epoch) = ($second_version =~ /^([^:]+):/, '(none)');
+            if ($first_epoch and $second_epoch ne $first_epoch) {
                 tag 'epoch-change-without-comment',
+                  "$second_epoch -> $first_epoch"
                   unless $entries[0]->Changes =~ /\bepoch\b/im;
             }
         }

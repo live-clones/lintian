@@ -6,6 +6,8 @@ lintian (2.5.62) UNRELEASED; urgency=medium
     + [CL] Correct operator precedence in "epoch-change-without-comment"
       to prevent a false positive when an epoch is present but is unchanged
       between versions.
+    + [CL] Improve output of epoch-change-without-comment to include the
+      actual version change.
   * checks/python.desc:
     + [CL] Also match, for example, "python2.7:any" when checking the
       "dependency-on-python-version-marked-for-end-of-life" tag, not just
