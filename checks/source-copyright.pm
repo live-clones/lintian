@@ -632,7 +632,7 @@ sub check_files_excluded {
             $wc_value = qr/^${wc_value}(?:\/|$)/;
         }
         for my $srcfile (@files) {
-            next if $srcfile =~ m/^debian\//;
+            next if $srcfile =~ m/^(?:debian|\.pc)\//;
             tag 'source-includes-file-in-files-excluded', $srcfile
                 if $srcfile =~ qr/^$wc_value/;
         }
