@@ -1,6 +1,8 @@
-lintian (2.5.62) UNRELEASED; urgency=medium
+lintian (2.5.62) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - invalid-potfiles-in
 
   * checks/changelog-file.pm:
     + [CL] Correct operator precedence in "epoch-change-without-comment"
@@ -42,7 +44,7 @@ lintian (2.5.62) UNRELEASED; urgency=medium
       in the future again to avoid hundreds of false positives in the
       OpenSSL license.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 05 Dec 2017 15:27:44 +0000
+ -- Chris Lamb <lamby@debian.org>  Thu, 07 Dec 2017 16:28:15 +0000
 
 lintian (2.5.61) unstable; urgency=medium
 
