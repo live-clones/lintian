@@ -24,6 +24,10 @@ lintian (2.5.62) UNRELEASED; urgency=medium
     + [CL] Correct false positives in the
       "source-includes-file-in-files-excluded" tag where a Files-Excluded
       of "lib/*" would be triggered for "foolib/filename".
+    + [CL] Correct another false positive in the
+      "source-includes-file-in-files-excluded" tag where we would warn when
+      the maintainer has removed upstream's debian/ directory and then we
+      would trigger it on the maintainer's replacement files.
 
   * data/spelling/corrections:
     + [AB] Remove "publically". It's a seldom, but valid English word
