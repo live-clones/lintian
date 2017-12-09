@@ -49,6 +49,9 @@ my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
 my $ARCH_64BIT_EQUIVS
   = Lintian::Data->new('binaries/arch-64bit-equivs', qr/\s*\=\>\s*/);
 
+my %PATH_DIRECTORIES = map { $_ => 1 } qw(
+  bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
+
 sub _embedded_libs {
     my ($key, $val, undef) = @_;
     my $result = {'libname' => $key,};
@@ -341,6 +344,10 @@ sub run {
 
         # ELF?
         next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
+
+        tag 'development-package-ships-elf-binary-in-path', $file
+          if exists($PATH_DIRECTORIES{$file->dirname})
+          and $info->field('section', 'NONE') eq 'libdevel';
 
         $objdump = $info->objdump_info->{$fname};
 

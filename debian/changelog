@@ -2,6 +2,12 @@ lintian (2.5.63) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.{pm,desc}:
+    + [CL] Add an experimental check for development packages that ship
+      ELF binaries in $PATH. Host architecture binaries are generally not
+      executable so such files are useless for cross builds.
+      (Closes: #794295)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 07 Dec 2017 16:51:09 +0000
 
 lintian (2.5.62) unstable; urgency=medium

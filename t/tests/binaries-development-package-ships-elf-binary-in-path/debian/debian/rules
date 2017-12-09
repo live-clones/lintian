@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+DESTDIR := debian/$(shell dh_listpackages)
+
+%:
+	dh $@
+
+override_dh_install:
+	mkdir -p $(DESTDIR)/usr/bin
+	cp -a /bin/true $(DESTDIR)/usr/bin/elf-binary
+	
+	mkdir -p $(DESTDIR)/var/lib/private
+	cp -a /bin/true $(DESTDIR)/var/lib/private/elf-binary
+	
+	dh_shlibdeps
+	dh_install

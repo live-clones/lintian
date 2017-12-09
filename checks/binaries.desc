@@ -468,3 +468,22 @@ Info: The listed ELF binary appears to be (partially) built without
  the SOVERSION bump, at the cost of more complex maintenance.
 Ref: http://www.unix.org/version2/whatsnew/lfs20mar.html,
  https://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html
+
+Tag: development-package-ships-elf-binary-in-path
+Severity: minor
+Certainty: possible
+Experimental: yes
+Info: This package installs the specified ELF binary in <tt>$PATH</tt> and is
+ development package in the <tt>libdevel</tt> section of the archive.
+ .
+ When performing a cross build, host architecture binaries are generally not
+ executable. However development packages need to be installed for the host
+ architecture; such executables are thus useless for cross builds.
+ .
+ (Commonly, executables in development packages provide values that are
+ relevant for using the library. Source packages that use such
+ development packages tend to execute those executables to discover how
+ to use the library.)
+ .
+ An alternative approach is to use pkg-config(1).
+Ref: #794295, #794103
