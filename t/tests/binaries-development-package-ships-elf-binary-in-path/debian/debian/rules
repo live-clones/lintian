@@ -8,6 +8,6 @@ override_dh_auto_build:
 	cp /bin/true same
 	cp /bin/true foreign
 	
-	cp /etc/rc.local none-script
-	cp /etc/rc.local same-script
-	cp /etc/rc.local foreign-script
+	cp script none-script
+	cp script same-script
+	cp script foreign-script
