@@ -347,7 +347,7 @@ sub run {
 
         tag 'development-package-ships-elf-binary-in-path', $file
           if exists($PATH_DIRECTORIES{$file->dirname})
-          and $info->field('section', 'NONE') eq 'libdevel'
+          and $info->field('section', 'NONE') =~ m/(?:^|\/)libdevel$/
           and $info->field('multi-arch', 'NONE') ne 'foreign';
 
         $objdump = $info->objdump_info->{$fname};

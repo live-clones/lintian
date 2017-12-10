@@ -40,3 +40,14 @@ Description: {$description} (M-A: same)
  things.  It should not be installed like a regular package.
  .
  This package specifies Multi-Arch: same.
+
+Package: libcontrib-dev
+Architecture: any
+Section: contrib/libdevel
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (contrib)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ This package is in the contrib/libdevel section.

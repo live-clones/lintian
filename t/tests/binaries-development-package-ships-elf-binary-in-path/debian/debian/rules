@@ -7,7 +7,9 @@ override_dh_auto_build:
 	cp /bin/true none
 	cp /bin/true same
 	cp /bin/true foreign
+	cp /bin/true contrib
 	
 	cp script none-script
 	cp script same-script
 	cp script foreign-script
+	cp script contrib-script

@@ -1,0 +1,4 @@
+contrib	/usr/bin
+contrib	/var/lib/private
+contrib-script	/usr/bin
+contrib-script	/var/lib/private
