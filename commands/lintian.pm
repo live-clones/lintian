@@ -84,7 +84,6 @@ my %conf_opt;                   #names of options set in the cfg file
 my %opt = (                     #hash of some flags from cmd or cfg
     # Init some cmd-line value defaults
     'debug'             => 0,
-    'tag-display-limit' => 'auto',
 );
 
 my ($experimental_output_opts, $collmap, %overrides, $unpacker, @scripts);
@@ -193,7 +192,9 @@ EOT-EOT-EOT
         # Not a special option per se, but most people will probably
         # not need it
         print <<"EOT-EOT-EOT";
+    --tag-display-limit X     Specify "tag per package" display limit
     --no-tag-display-limit    Disable "tag per package" display limit
+                              (equivalant to --tag-display-limit=0)
 EOT-EOT-EOT
     }
 
@@ -549,6 +550,7 @@ my %opthash = (
     'fail-on-warnings' => \$opt{'fail-on-warnings'},
     'keep-lab' => \$opt{'keep-lab'},
     'no-tag-display-limit' => sub { $opt{'tag-display-limit'} = 0; },
+    'tag-display-limit=i' => \$opt{'tag-display-limit'},
 
     # ------------------ configuration options
     'cfg=s' => \$opt{'LINTIAN_CFG'},
@@ -1241,6 +1243,7 @@ sub parse_config_file {
         'override'             => \&cfg_override,
         'show-overrides'       => \$opt{'show-overrides'},
         'suppress-tags'        => \&record_suppress_tags,
+        'tag-display-limit'    => \$opt{'tag-display-limit'},
         'verbose'              => \&cfg_verbosity,
     );
 
@@ -1296,7 +1299,7 @@ sub parse_config_file {
                 # Translate boolean strings to "0" or "1"; ignore
                 # errors as not all values are (intended to be)
                 # booleans.
-                if (none { $var eq $_ } qw(jobs)) {
+                if (none { $var eq $_ } qw(jobs tag-display-limit)) {
                     eval { $val = parse_boolean($val); };
                 }
                 if (ref $ref eq 'SCALAR'){
@@ -1424,7 +1427,7 @@ sub configure_output {
                 'The color value must be one of',
                 'never", "always", "auto" or "html"'));
     }
-    if ($opt{'tag-display-limit'} eq 'auto') {
+    if (not defined $opt{'tag-display-limit'}) {
         if (-t STDOUT) {
             $opt{'tag-display-limit'}
               = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
