@@ -12,6 +12,9 @@ lintian (2.5.63) UNRELEASED; urgency=medium
     + [CL] Correct parsing of "jobs=42" in lintianrc. If specified, it would
       be coerced to a boolean resulting in a value of 1.
 
+  * doc/lintianrc.example:
+    + [CL] Add missing "jobs" entry.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 07 Dec 2017 16:51:09 +0000
 
 lintian (2.5.62) unstable; urgency=medium

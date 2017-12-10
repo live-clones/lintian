@@ -16,6 +16,9 @@
 # Enable info tags by default (--display info)
 #display-info = yes
 
+# Limit the number of parallel unpacking jobs to X (--jobs)
+#jobs = 8
+
 # Enable pedantic tags by default (--pedantic)
 #pedantic = yes
 
