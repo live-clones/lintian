@@ -473,8 +473,8 @@ Tag: development-package-ships-elf-binary-in-path
 Severity: minor
 Certainty: possible
 Experimental: yes
-Info: This development package (in the <tt>libdevel</tt> section of the
- archive) installs an ELF binary within <tt>$PATH</tt>.
+Info: This development package (ie. from the <tt>libdevel</tt> section of
+ the archive) installs an ELF binary within <tt>$PATH</tt>.
  .
  Commonly, executables in development packages provide values that are
  relevant for using the library. Source packages that use such
@@ -485,7 +485,7 @@ Info: This development package (in the <tt>libdevel</tt> section of the
  executable. However, development packages need to be installed on the host
  architecture so such files are useless.
  .
- .
- An alternative approach is to use pkg-config(1) or to specify
- <tt>Multi-Arch: foreign</tt>.
+ An alternative approach is to use <tt>pkg-config(1)</tt> or potentially
+ splitting architecture-independent development tools into a separate
+ package that can be marked <tt>Multi-Arch: foreign</tt>.
 Ref: #794295, #794103
