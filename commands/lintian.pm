@@ -1428,7 +1428,7 @@ sub configure_output {
                 'never", "always", "auto" or "html"'));
     }
     if (not defined $opt{'tag-display-limit'}) {
-        if (-t STDOUT) {
+        if (-t STDOUT and not $opt{'verbose'}) {
             $opt{'tag-display-limit'}
               = Lintian::Output::DEFAULT_INTERACTIVE_TAG_LIMIT();
         } else {
