@@ -1,2 +1,4 @@
 same	/usr/bin
 same	/var/lib/private
+same-script	/usr/bin
+same-script	/var/lib/private

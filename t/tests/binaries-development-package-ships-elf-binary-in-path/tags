@@ -7,7 +7,10 @@ I: libmultiarch-none-dev: hardening-no-bindnow var/lib/private/none
 I: libmultiarch-same-dev: hardening-no-bindnow usr/bin/same
 I: libmultiarch-same-dev: hardening-no-bindnow var/lib/private/same
 W: libmultiarch-foreign-dev: binary-without-manpage usr/bin/foreign
+W: libmultiarch-foreign-dev: binary-without-manpage usr/bin/foreign-script
 W: libmultiarch-none-dev: binary-without-manpage usr/bin/none
+W: libmultiarch-none-dev: binary-without-manpage usr/bin/none-script
 W: libmultiarch-same-dev: binary-without-manpage usr/bin/same
+W: libmultiarch-same-dev: binary-without-manpage usr/bin/same-script
 X: libmultiarch-none-dev: development-package-ships-elf-binary-in-path usr/bin/none
 X: libmultiarch-same-dev: development-package-ships-elf-binary-in-path usr/bin/same
