@@ -8,14 +8,19 @@ Tag: new-package-should-not-package-python2-module
 Severity: normal
 Certainty: certain
 Info: This package appears to be the initial packaging of a new upstream
- software package but it appears to package a module for Python 2.
+ software package (ie. it contains a single changelog entry) but it ships
+ a module for Python 2.
  .
- The 2.x series of Python is due for deprecation and will not be maintained
- past 2020 so it is recommended that Python 2 modules are not packaged unless
- necessary such as directly requested by an end-user or required as part of a
- dependency chain.
+ Python 2 modules should not be packaged unless strictly necessary (such as
+ being explicitly requested by an end-user or required as part of a dependency
+ chain) as the 2.x series of Python is due for deprecation and will not be
+ maintained past 2020.
  .
- This warning can be ignored if the package is not intended for Debian or
+ If upstream have not moved or have no intention to move to Python 3, please be
+ certain that Debian would benefit from the inclusion of this package before
+ uploading.
+ .
+ This warning can also be ignored if the package is not intended for Debian or
  if it is a split of an existing Debian package.
 
 Tag: python-foo-but-no-python3-foo
@@ -26,6 +31,9 @@ Info: This package appears to generate a Python 2 module without a
  .
  The 2.x series of Python is due for deprecation and will not be maintained
  past 2020.
+ .
+ If upstream have not moved or have no intention to move to Python 3, please be
+ certain that Debian would benefit from the inclusion of this package.
 
 Tag: build-depends-on-python-sphinx-only
 Severity: normal
@@ -60,6 +68,9 @@ Info: The package specifies a dependency on Python 2.x which is due for
  deprecation and will not be maintained past 2020.
  .
  Please port the package to use Python 3 instead.
+ .
+ If upstream have not moved or have no intention to move to Python 3, please be
+ certain that Debian would benefit from the inclusion of this package.
 
 Tag: django-package-does-not-depend-on-django
 Severity: normal

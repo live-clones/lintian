@@ -7,6 +7,10 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       ELF binaries in $PATH. Host architecture binaries are generally not
       executable so such files are useless for cross builds.
       (Closes: #794295)
+  * checks/python.pm:
+    + [CL] Clarify that new-package-should-not-package-python2-module
+      triggers when there is a single changelog entry as well as providing
+      general guidance where upstreams have not ported to Python 3 yet.
 
   * commands/lintian.pm:
     + [CL] Correct parsing of "jobs=42" in lintianrc. If specified, it
