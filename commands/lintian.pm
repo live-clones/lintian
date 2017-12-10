@@ -31,7 +31,7 @@ use utf8;
 
 use Cwd qw(abs_path);
 use Getopt::Long();
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any none);
 use POSIX qw(:sys_wait_h);
 use Time::HiRes qw(gettimeofday tv_interval);
 
@@ -1296,7 +1296,9 @@ sub parse_config_file {
                 # Translate boolean strings to "0" or "1"; ignore
                 # errors as not all values are (intended to be)
                 # booleans.
-                eval { $val = parse_boolean($val); };
+                if (none { $var eq $_ } qw(jobs)) {
+                    eval { $val = parse_boolean($val); };
+                }
                 if (ref $ref eq 'SCALAR'){
                     # Check it was already set
                     next if defined $$ref;

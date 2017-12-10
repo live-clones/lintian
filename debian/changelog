@@ -8,6 +8,10 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       executable so such files are useless for cross builds.
       (Closes: #794295)
 
+  * commands/lintian.pm:
+    + [CL] Correct parsing of "jobs=42" in lintianrc. If specified, it would
+      be coerced to a boolean resulting in a value of 1.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 07 Dec 2017 16:51:09 +0000
 
 lintian (2.5.62) unstable; urgency=medium
