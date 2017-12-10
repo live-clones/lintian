@@ -6,11 +6,37 @@ Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 
-Package: libfoo-dev
+Package: libmultiarch-none-dev
 Architecture: any
 Section: libdevel
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: {$description} (M-A: none)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
+ .
+ This package does not specify a Multi-Arch field.
+
+Package: libmultiarch-foreign-dev
+Architecture: any
+Section: libdevel
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Multi-Arch: foreign
+Description: {$description} (M-A: foreign)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ This package specifies Multi-Arch: foreign.
+
+Package: libmultiarch-same-dev
+Architecture: any
+Section: libdevel
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Multi-Arch: same
+Description: {$description} (M-A: same)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ This package specifies Multi-Arch: same.

@@ -473,17 +473,19 @@ Tag: development-package-ships-elf-binary-in-path
 Severity: minor
 Certainty: possible
 Experimental: yes
-Info: This package installs the specified ELF binary in <tt>$PATH</tt> and is
- development package in the <tt>libdevel</tt> section of the archive.
+Info: This development package (in the <tt>libdevel</tt> section of the
+ archive) installs an ELF binary within <tt>$PATH</tt>.
  .
- When performing a cross build, host architecture binaries are generally not
- executable. However development packages need to be installed for the host
- architecture; such executables are thus useless for cross builds.
- .
- (Commonly, executables in development packages provide values that are
+ Commonly, executables in development packages provide values that are
  relevant for using the library. Source packages that use such
  development packages tend to execute those executables to discover how
- to use the library.)
+ to use the library.
  .
- An alternative approach is to use pkg-config(1).
+ When performing a cross build, host architecture binaries are generally not
+ executable. However, development packages need to be installed on the host
+ architecture so such files are useless.
+ .
+ .
+ An alternative approach is to use pkg-config(1) or to specify
+ <tt>Multi-Arch: foreign</tt>.
 Ref: #794295, #794103
