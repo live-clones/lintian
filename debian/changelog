@@ -14,6 +14,9 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       report.  (Closes: #882684)
     + [CL] Raise the certainty of multiarch-foreign-shared-library from
       "wild guess" to "possible" on the suggestion of Helmut Grohne.
+  * checks/python.pm:
+    + [CL] Also check for packages installing modules called "site" or
+      "docs" into the global namespace.  (Closes: #769365)
   * checks/scripts.desc:
     + [CL] Update description of python-script-but-no-python-dep to refer
       to pybuild.  (Closes: #660718)

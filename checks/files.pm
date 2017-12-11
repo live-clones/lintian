@@ -1412,7 +1412,7 @@ sub run {
             }
             tag 'python-module-in-wrong-location', @correction
               if (@correction);
-            if (    $rest =~ m,^(tests?)(?:\.py|/__init__\.py)$,
+            if (    $rest =~ m,^(docs?|site|tests?)s?(?:\.py|/__init__\.py)$,
                 and $file->is_regular_file) {
                 tag 'python-module-has-overly-generic-name', $fname, "($1)";
             }
