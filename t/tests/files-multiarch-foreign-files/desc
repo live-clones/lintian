@@ -1,0 +1,7 @@
+Testname: files-multiarch-foreign-files
+Version: 1.0
+Description: Test for files violating Multi-Arch: foreign
+Test-for:
+ multiarch-foreign-cmake-file
+ multiarch-foreign-pkgconfig
+ multiarch-foreign-static-library

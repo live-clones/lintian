@@ -300,6 +300,7 @@ sub run {
     my $pkg_section = $info->field('section', '');
     my $arch = $info->field('architecture', '');
     my $multiarch = $info->field('multi-arch', 'no');
+    my $multiarch_dir = $MULTIARCH_DIRS->value($arch);
     my $ppkg = quotemeta($pkg);
 
     # get the last changelog timestamp
@@ -1118,6 +1119,16 @@ sub run {
                        |(?:(?:usr|var)/)?tmp)|var/www/}xsm
               ) {
                 tag 'file-in-unusual-dir', $file;
+            }
+
+            if ($fname =~ m,^usr/lib/\Q$multiarch_dir\E/(.*)$,) {
+                my $tail = $1;
+                tag 'multiarch-foreign-cmake-file', $file
+                  if ($tail =~ m,^cmake/.+\.cmake$,);
+                tag 'multiarch-foreign-pkgconfig', $file
+                  if ($tail =~ m,^pkgconfig/[^/]+\.pc$,);
+                tag 'multiarch-foreign-static-library', $file
+                  if ($tail =~ m,^lib[^/]+\.a$,);
             }
         }
 

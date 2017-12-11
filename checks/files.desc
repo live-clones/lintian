@@ -1784,3 +1784,36 @@ Severity: important
 Certainty: certain
 Info: This package installs a Python module with an overly generic name to
  a global namespace.
+
+Tag: multiarch-foreign-cmake-file
+Severity: important
+Certainty: certain
+Info: The package is architecture-dependent, ships a cmake file in a public,
+ architecture-dependent cmake search path and is marked <tt>Multi-Arch:
+ foreign</tt>. CMake will be unable to find this file, unless it is installed
+ for a matching architecture, but the <tt>foreign</tt> marking says that the
+ architecture should not matter.
+ .
+ Please remove the <tt>Multi-Arch: foreign</tt> stanza.
+
+Tag: multiarch-foreign-pkgconfig
+Severity: important
+Certainty: certain
+Info: The package is architecture-dependent, ships a pkg-config file in a
+ public, architecture-dependent pkg-config search path and is marked
+ <tt>Multi-Arch: foreign</tt>. pkg-config will be unable to find this file,
+ unless it is installed for a matching architecture, but the <tt>foreign</tt>
+ marking says that the architecture should not matter.
+ .
+ Please remove the <tt>Multi-Arch: foreign</tt> stanza.
+
+Tag: multiarch-foreign-static-library
+Severity: important
+Certainty: possible
+Info: The package is architecture-dependent, ships a static library in a
+ public, architecture-dependent library search path and is marked
+ <tt>Multi-Arch: foreign</tt>. A compiler will be unable to find this file,
+ unless it is installed for a matching architecture, but the <tt>foreign</tt>
+ marking says that the architecture should not matter.
+ .
+ Please remove the <tt>Multi-Arch: foreign</tt> stanza.
