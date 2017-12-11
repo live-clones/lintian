@@ -7,6 +7,10 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       ELF binaries in $PATH. Host architecture binaries are generally not
       executable so such files are useless for cross builds.
       (Closes: #794295)
+  * checks/source-copyright.desc:
+    + [CL] Update description of source-includes-file-in-files-excluded
+      to clarify the potential problem and to reference the relevant
+      wishlist bug against git-buildpackage.
   * checks/python.pm:
     + [CL] Clarify that new-package-should-not-package-python2-module
       triggers when there is a single changelog entry as well as providing
