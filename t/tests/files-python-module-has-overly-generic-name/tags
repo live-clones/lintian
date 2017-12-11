@@ -1,3 +1,6 @@
+E: python3-foo: python-module-has-overly-generic-name usr/lib/python3/dist-packages/doc/__init__.py (doc)
+E: python3-foo: python-module-has-overly-generic-name usr/lib/python3/dist-packages/docs/__init__.py (docs)
+E: python3-foo: python-module-has-overly-generic-name usr/lib/python3/dist-packages/site.py (site)
 E: python3-foo: python-module-has-overly-generic-name usr/lib/python3/dist-packages/test/__init__.py (test)
 E: python3-foo: python-module-has-overly-generic-name usr/lib/python3/dist-packages/tests.py (tests)
 E: python3-foo: python-module-has-overly-generic-name usr/lib/python3/dist-packages/tests/__init__.py (tests)
