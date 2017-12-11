@@ -1121,7 +1121,8 @@ sub run {
                 tag 'file-in-unusual-dir', $file;
             }
 
-            if ($fname =~ m,^usr/lib/\Q$multiarch_dir\E/(.*)$,) {
+            if (defined($multiarch_dir)
+                and $fname =~ m,^usr/lib/\Q$multiarch_dir\E/(.*)$,) {
                 my $tail = $1;
                 tag 'multiarch-foreign-cmake-file', $file
                   if ($tail =~ m,^cmake/.+\.cmake$,);
