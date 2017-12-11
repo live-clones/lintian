@@ -1744,7 +1744,7 @@ Info: The package contains files in the listed directory, but does
 
 Tag: multiarch-foreign-shared-library
 Severity: important
-Certainty: wild-guess
+Certainty: possible
 Info: The package is architecture-dependent, ships a shared library in
  a public library search path and is marked <tt>Multi-Arch:
  foreign</tt>. Typically, shared libraries are marked <tt>Multi-Arch:

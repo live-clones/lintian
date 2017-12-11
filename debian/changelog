@@ -12,6 +12,8 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       pkg-config or static libraries in public, architecture-dependent
       search paths. Thanks to Helmut Grohne for the initial patch and
       report.  (Closes: #882684)
+    + [CL] Raise the certainty of multiarch-foreign-shared-library from
+      "wild guess" to "possible" on the suggestion of Helmut Grohne.
   * checks/source-copyright.desc:
     + [CL] Update description of source-includes-file-in-files-excluded
       to clarify the potential problem and to reference the relevant
