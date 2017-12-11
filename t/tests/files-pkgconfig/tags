@@ -31,4 +31,7 @@ E: pkgconfig-all: pkg-config-bad-directive usr/lib/pkgconfig/indep-really-bad.pc
 E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-1.pc full text contains architecture specific dir ARCH
 E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-2.pc full text contains architecture specific dir ARCH
 E: pkgconfig-all: pkg-config-multi-arch-wrong-dir usr/lib/pkgconfig/indep-include-arch-3.pc full text contains architecture specific dir ARCH
+E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-cross.pc
+E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-good.pc
+E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-include-arch.pc
 E: pkgconfig-any: pkg-config-multi-arch-wrong-dir usr/lib/ARCH/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH
