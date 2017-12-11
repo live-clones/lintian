@@ -19,7 +19,7 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       "docs" into the global namespace.  (Closes: #769365)
   * checks/scripts.desc:
     + [CL] Update description of python-script-but-no-python-dep to refer
-      to pybuild.  (Closes: #660718)
+      to ${python3:Depends}. Thanks to Mattia Rizzolo.  (Closes: #660718)
   * checks/source-copyright.desc:
     + [CL] Update description of source-includes-file-in-files-excluded
       to clarify the potential problem and to reference the relevant
