@@ -461,7 +461,6 @@ sub run {
 
         if ($file->basename eq 'gschemas.compiled') {
             tag 'package-contains-compiled-glib-schema', $file;
-            warn $fname;
         }
 
         # check for generic obsolete path

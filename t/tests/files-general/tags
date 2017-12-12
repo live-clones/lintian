@@ -33,4 +33,3 @@ W: files-general: nfs-temporary-file-in-package usr/share/foo/.nfs-fake-tmpfile
 W: files-general: obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
 W: files-general: raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
 W: files-general: windows-devel-file-in-package usr/lib/foo/foo.vcproj
-usr/share/glib-2.0/schemas/gschemas.compiled at /home/lamby/git/debian/lintian/lintian/checks/files.pm line 464.
