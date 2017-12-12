@@ -1816,3 +1816,11 @@ Info: The package is architecture-dependent, ships a static library in a
  marking says that the architecture should not matter.
  .
  Please remove the <tt>Multi-Arch: foreign</tt> stanza.
+
+Tag: package-contains-compiled-glib-schema
+Severity: serious
+Certainty: certain
+Info: This package contains a file named <tt>gschemas.compiled</tt>. This
+ file is generated automatically by triggers and it must not be shipped in
+ any package.
+Refs: #883801

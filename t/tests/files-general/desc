@@ -23,6 +23,7 @@ Test-For:
  non-conf-file-in-modprobe.d
  non-standard-toplevel-dir
  obsolete-comments-style-in-php-ini
+ package-contains-compiled-glib-schema
  package-contains-empty-directory
  package-contains-info-dir-file
  package-contains-mime-cache-file

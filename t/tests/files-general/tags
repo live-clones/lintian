@@ -11,6 +11,7 @@ E: files-general: global-data-in-games-directory usr/share/games/icons/hicolor/2
 E: files-general: lengthy-symlink usr/share/doc/bar/star ../bar/foo
 E: files-general: non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
 E: files-general: non-standard-toplevel-dir new-top-level-dir/
+E: files-general: package-contains-compiled-glib-schema usr/share/glib-2.0/schemas/gschemas.compiled
 E: files-general: package-contains-info-dir-file usr/share/info/dir.gz
 E: files-general: package-contains-mime-cache-file usr/share/mime/types
 E: files-general: package-contains-mimeinfo.cache-file usr/share/applications/mimeinfo.cache
@@ -32,3 +33,4 @@ W: files-general: nfs-temporary-file-in-package usr/share/foo/.nfs-fake-tmpfile
 W: files-general: obsolete-comments-style-in-php-ini etc/php/7.0/mods-available/php-foo.ini
 W: files-general: raster-image-in-scalable-directory usr/share/icons/hicolor/scalable/apps/lintian-16x16.png
 W: files-general: windows-devel-file-in-package usr/lib/foo/foo.vcproj
+usr/share/glib-2.0/schemas/gschemas.compiled at /home/lamby/git/debian/lintian/lintian/checks/files.pm line 464.

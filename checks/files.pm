@@ -459,6 +459,11 @@ sub run {
             push(@devhelp_links, $blessed);
         }
 
+        if ($file->basename eq 'gschemas.compiled') {
+            tag 'package-contains-compiled-glib-schema', $file;
+            warn $fname;
+        }
+
         # check for generic obsolete path
         foreach my $obsolete_path ($OBSOLETE_PATHS->all) {
             my $obs_data = $OBSOLETE_PATHS->value($obsolete_path);

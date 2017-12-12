@@ -14,6 +14,8 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       report.  (Closes: #882684)
     + [CL] Raise the certainty of multiarch-foreign-shared-library from
       "wild guess" to "possible" on the suggestion of Helmut Grohne.
+    + [CL] Test for packages shipping "gschemas.compiled" files. Thanks
+      to Andreas Beckmann for the idea.  (Closes: #884142)
   * checks/python.pm:
     + [CL] Also check for packages installing modules called "site" or
       "docs" into the global namespace.  (Closes: #769365)
