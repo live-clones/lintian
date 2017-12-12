@@ -390,7 +390,7 @@ lintian (2.5.56) unstable; urgency=medium
       POD synopsis tests if Test::Pod is not available.  (Closes: #878522)
   * t/tests/debconf-config-*, t/tests/legacy-maintainer-scripts:
     + [CL] Split out checks for debconf-config-not-executable into a
-      separate test protected by a Test-Requires now that dpkg >= 1.19.0
+      separate test protected by a Test-Depends now that dpkg >= 1.19.0
       will bail out on that condition.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 27 Oct 2017 18:29:35 +0000
