@@ -11,6 +11,10 @@ E: files-general: global-data-in-games-directory usr/share/games/icons/hicolor/2
 E: files-general: lengthy-symlink usr/share/doc/bar/star ../bar/foo
 E: files-general: non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
 E: files-general: non-standard-toplevel-dir new-top-level-dir/
+E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/encodings.dir
+E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.alias
+E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.dir
+E: files-general: package-contains-compiled-font-file usr/share/fonts/X11/misc/fonts.scale
 E: files-general: package-contains-compiled-glib-schema usr/share/glib-2.0/schemas/gschemas.compiled
 E: files-general: package-contains-info-dir-file usr/share/info/dir.gz
 E: files-general: package-contains-mime-cache-file usr/share/mime/types

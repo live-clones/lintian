@@ -22,6 +22,11 @@ override_dh_install:
 	touch $(tmp)/usr/doc/FSSTND
 	touch $(tmp)/usr/share/foo/'*'
 	touch $(tmp)/usr/share/foo/'ws '
+	touch $(tmp)/usr/share/fonts/X11/misc/fonts.dir
+	touch $(tmp)/usr/share/fonts/X11/misc/fonts.scale
+	touch $(tmp)/usr/share/fonts/X11/misc/fonts.alias
+	touch $(tmp)/usr/share/fonts/X11/misc/encodings.dir
+	touch $(tmp)/usr/share/fonts/X11/misc/false-positive
 	touch $(tmp)/usr/share/foo/.nfs-fake-tmpfile
 	touch $(tmp)/usr/share/glib-2.0/schemas/gschemas.compiled
 	# If the following line gets messed up, it can be

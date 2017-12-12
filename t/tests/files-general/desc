@@ -33,3 +33,4 @@ Test-For:
  star-file
  stray-directory-in-manpage-directory
  windows-devel-file-in-package
+ package-contains-compiled-font-file

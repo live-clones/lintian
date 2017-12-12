@@ -834,6 +834,9 @@ sub run {
                 } elsif (
                     $dir !~ /^(?:100dpi|75dpi|misc|Type1|encodings|util)$/) {
                     tag 'file-in-unknown-x11-font-directory', $file;
+                } elsif ($file->basename eq 'encodings.dir'
+                    or $file->basename =~ m{fonts\.(dir|scale|alias)}) {
+                    tag 'package-contains-compiled-font-file', $file;
                 }
                 if ($dir =~ /^(?:100dpi|75dpi|misc)$/) {
                     $x11_font_dirs{$dir}++;

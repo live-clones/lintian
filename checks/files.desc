@@ -1824,3 +1824,10 @@ Info: This package contains a file named <tt>gschemas.compiled</tt>. This
  file is generated automatically by triggers and it must not be shipped in
  any package.
 Refs: #883801
+
+Tag: package-contains-compiled-font-file
+Severity: serious
+Certainty: certain
+Info: This package appears to contain a compiled font file. These files
+ should be generated automatically by triggers and it must not be shipped
+ in any package.
