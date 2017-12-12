@@ -41,7 +41,7 @@ Description: {$description} (M-A: same)
  .
  This package specifies Multi-Arch: same.
 
-Package: libcontrib-dev
+Package: libmultiarch-contrib-dev
 Architecture: any
 Section: contrib/libdevel
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
