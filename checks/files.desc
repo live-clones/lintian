@@ -1442,7 +1442,6 @@ Info: This package contains a file in a path reserved solely for
  By using CMake Config files in the unversioned path, the package will
  continue to work as expected when a new version of CMake is uploaded.
 
-
 Tag: package-modifies-ld.so-search-path
 Severity: important
 Certainty: possible
