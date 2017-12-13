@@ -41,6 +41,10 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       in lintianrc.  (Closes: #813525)
     + [CL] Make -v imply --no-tag-display-limit.  (Closes: #812756)
 
+  * data/files/privacy-breaker-fragments:
+    + [CL] Don't match, for example, "FB.login()" when used as a
+      documentation example.  (Closes: #884296)
+
   * doc/lintianrc.example:
     + [CL] Add missing "jobs" entry.
 
