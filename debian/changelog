@@ -51,6 +51,12 @@ lintian (2.5.63) UNRELEASED; urgency=medium
   * doc/lintianrc.example:
     + [CL] Add missing "jobs" entry.
 
+  * profiles/pureos/main.profile:
+    + [CL] Add a profile for Purism's PureOS.  (Closes: #884408)
+
+  * vendors/pureos/main/data/changes-file/known-dists:
+    + [CL] Add data file for PureOS.
+
  -- Chris Lamb <lamby@debian.org>  Thu, 07 Dec 2017 16:51:09 +0000
 
 lintian (2.5.62) unstable; urgency=medium
