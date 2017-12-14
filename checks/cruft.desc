@@ -902,7 +902,7 @@ Info: This file appears to contain one or more lines with trailing
  .
  Whitespace can be removed with the following code snippet:
  .
-  $ sed -i -e 's@[[:space:]]*$@@g' debian/control
+  $ sed -i -e 's@[[:space:]]*$@@g' debian/control debian/changelog
  .
  If you use Emacs, you can also use "M-x wh-cl" (whitespace-cleanup).
  .

@@ -7,6 +7,9 @@ lintian (2.5.63) UNRELEASED; urgency=medium
       ELF binaries in $PATH. Host architecture binaries are generally not
       executable so such files are useless for cross builds.
       (Closes: #794295)
+  * checks/cruft.desc:
+    + [CL] Add debian/changelog to the file-contains-trailing-whitespace
+      example to make it even easier to copy-paste.
   * checks/files.{pm,desc}:
     + [CL] Warn about Multi-Arch: foreign packages that ship CMake,
       pkg-config or static libraries in public, architecture-dependent
