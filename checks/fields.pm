@@ -591,6 +591,11 @@ sub run {
 
         tag 'unknown-priority', $priority
           unless $KNOWN_PRIOS->known($priority);
+
+        tag 'excessive-priority-for-library-package', $priority
+          if $pkg =~ m/^lib.+-dev$/o
+          and $info->field('section', '') eq 'libdevel';
+           any { $_ eq $priority } qw(required important standard)
     }
 
     #---- Standards-Version

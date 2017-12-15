@@ -10,6 +10,9 @@ lintian (2.5.63) UNRELEASED; urgency=medium
   * checks/cruft.desc:
     + [CL] Add debian/changelog to the file-contains-trailing-whitespace
       example to make it even easier to copy-paste.
+  * checks/fields.{pm,desc}:
+    + [CL] Warn about library packages with excessive priority. Thanks to
+      Josh Triplett for the report.  (Closes: #834290)
   * checks/files.{pm,desc}:
     + [CL] Warn about Multi-Arch: foreign packages that ship CMake,
       pkg-config or static libraries in public, architecture-dependent

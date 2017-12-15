@@ -1343,3 +1343,16 @@ Severity: pedantic
 Certainty: certain
 Info: The Homepage field uses an unencrypted transport protocol for the
  URI.
+
+Tag: excessive-priority-for-library-package
+Severity: normal
+Certainty: possible
+Info: The given package appears to be a library package, but it has "Priority"
+ of "required", "important", or "standard".
+ .
+ In general, a library package should only get pulled in on a system because
+ some other package depends on it; no library package needs installation on a
+ system where nothing uses it.
+ .
+ Please update <tt>debian/control</tt> and downgrade the severity to, for
+ example, <tt>Priority: optional</tt>.
