@@ -60,6 +60,10 @@ lintian (2.5.63) UNRELEASED; urgency=medium
   * profiles/pureos/main.profile:
     + [CL] Add a profile for Purism's PureOS.  (Closes: #884408)
 
+  * reporting/images/*.png:
+    + [CL] Apply patch from Ville Skyttä that runs the .PNG files through
+      the "zopflipng" minimiser tool to save space.  (Closes: #884559)
+
   * reporting/templates/maintainer.tmpl:
     + [CL] Add links from each maintainer page (which does not include
       pedantic tags, etc.) to the corresponding package on the full report,
