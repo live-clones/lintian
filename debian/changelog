@@ -30,6 +30,9 @@ lintian (2.5.63) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Update description of python-script-but-no-python-dep to refer
       to ${python3:Depends}. Thanks to Mattia Rizzolo.  (Closes: #660718)
+    + [CL] Prevent a false-positive in missing-dep-for-interpreter by
+      matching ABI-versioned virtual packages for Erlang. Thanks to
+      Jean Parpaillon for the report.  (Closes: #810204)
   * checks/source-copyright.desc:
     + [CL] Update description of source-includes-file-in-files-excluded
       to clarify the potential problem and to reference the relevant

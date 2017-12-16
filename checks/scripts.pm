@@ -468,6 +468,9 @@ sub run {
                         qr/^ocaml(?:-base)?(?:-nox)?-\d\.[\d.]+/)
                   ) {
                     # ABI-versioned virtual packages for ocaml
+                } elsif ($base eq 'escript'
+                    && $all_parsed->matches(qr/^erlang-abi-[\d+\.]+$/)) {
+                    # ABI-versioned virtual packages for erlang
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
                       "($filename)";
