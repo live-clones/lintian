@@ -593,8 +593,10 @@ sub run {
           unless $KNOWN_PRIOS->known($priority);
 
         tag 'excessive-priority-for-library-package', $priority
-          if $pkg =~ m/^lib.+-dev$/o
-          and $info->field('section', '') eq 'libdevel'
+          if $pkg =~ m/^lib/o
+          and $pkg !~ m/-bin$/o
+          and $pkg !~ m/^libc[0-9.]+$/o
+          and any { $_ eq $info->field('section', '') } qw(libdevel libs)
           and any { $_ eq $priority } qw(required important standard);
     }
 
