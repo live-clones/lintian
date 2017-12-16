@@ -1,5 +1,4 @@
 Source: {$source}
-Priority: optional
 Section: libs
 Maintainer: {$author}
 Standards-Version: {$standards_version}
@@ -16,3 +15,16 @@ Description: {$description} (dev)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: lib{$source}-false-positive-dev
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Section: libdevel
+Priority: optional
+Description: {$description} (false positive)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ (This is a false positive)

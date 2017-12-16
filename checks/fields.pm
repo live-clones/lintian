@@ -594,8 +594,8 @@ sub run {
 
         tag 'excessive-priority-for-library-package', $priority
           if $pkg =~ m/^lib.+-dev$/o
-          and $info->field('section', '') eq 'libdevel';
-           any { $_ eq $priority } qw(required important standard)
+          and $info->field('section', '') eq 'libdevel'
+          and any { $_ eq $priority } qw(required important standard);
     }
 
     #---- Standards-Version
