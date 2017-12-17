@@ -1,6 +1,14 @@
-lintian (2.5.63) UNRELEASED; urgency=medium
+lintian (2.5.63) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - development-package-ships-elf-binary-in-path
+      - excessive-priority-for-library-package
+      - multiarch-foreign-cmake-file
+      - multiarch-foreign-pkgconfig
+      - multiarch-foreign-static-library
+      - package-contains-compiled-font-file
+      - package-contains-compiled-glib-schema
 
   * checks/binaries.{pm,desc}:
     + [CL] Add an experimental check for development packages that ship
@@ -53,6 +61,8 @@ lintian (2.5.63) UNRELEASED; urgency=medium
   * data/files/privacy-breaker-fragments:
     + [CL] Don't match, for example, "FB.login()" when used as a
       documentation example.  (Closes: #884296)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * doc/lintianrc.example:
     + [CL] Add missing "jobs" entry.
@@ -72,7 +82,7 @@ lintian (2.5.63) UNRELEASED; urgency=medium
   * vendors/pureos/main/data/changes-file/known-dists:
     + [CL] Add data file for PureOS.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 07 Dec 2017 16:51:09 +0000
+ -- Chris Lamb <lamby@debian.org>  Sun, 17 Dec 2017 20:19:20 +0000
 
 lintian (2.5.62) unstable; urgency=medium
 
