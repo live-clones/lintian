@@ -2,6 +2,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * t/tests/files-multiarch-foreign-files:
+    + [CL] Don't hardcode architecture triplet to fix FTBFS on non-amd64
+      architectures.  (Closes: #884683)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 18 Dec 2017 10:37:45 +0000
 
 lintian (2.5.65) unstable; urgency=medium
