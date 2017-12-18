@@ -1128,7 +1128,7 @@ sub run {
                 tag 'file-in-unusual-dir', $file;
             }
 
-            if (defined($multiarch_dir)
+            if (    defined($multiarch_dir)
                 and $multiarch eq 'foreign'
                 and $fname =~ m,^usr/lib/\Q$multiarch_dir\E/(.*)$,) {
                 my $tail = $1;
