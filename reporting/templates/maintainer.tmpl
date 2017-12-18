@@ -121,7 +121,9 @@
                     $OUT .= qq(    <a href="https://packages.debian.org/src:$source">Info</a>\n);
                     $OUT .= qq(    <a href="https://tracker.debian.org/$source">Package Tracker</a>\n);
                     $OUT .= qq(    <a href="https://bugs.debian.org/src:$source">Bugs</a>\n);
-                    $OUT .= qq(    <a href="${path_prefix}full/$id#$anchor">Full report</a>\n);
+                    if ($errors) {
+                        $OUT .= qq(    <a href="${path_prefix}full/$id#$anchor">Full report</a>\n);
+                    }
                     $OUT .= qq[  (${status}, last processed by Lintian/$last_processed_by)];
                     $OUT .= qq(   </p>\n  </div>\n);
                     $OUT .= qq(  <ul class="report">\n) unless $is_binary;
