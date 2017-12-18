@@ -1,11 +1,9 @@
-lintian (2.5.65) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.65) unstable; urgency=medium
 
   * t/tests/files-pkgconfig:
     + [CL] Update tests to reflect change in Multi-Arch foreign detection.
 
- -- Chris Lamb <lamby@debian.org>  Mon, 18 Dec 2017 09:32:55 +0000
+ -- Chris Lamb <lamby@debian.org>  Mon, 18 Dec 2017 10:04:30 +0000
 
 lintian (2.5.64) unstable; urgency=medium
 
