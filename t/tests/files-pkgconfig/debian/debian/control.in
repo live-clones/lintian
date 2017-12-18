@@ -8,6 +8,7 @@ Rules-Requires-Root: no
 
 Package: pkgconfig-all
 Architecture: all
+Multi-Arch: foreign
 Depends: $\{misc:Depends\}, $\{shlib:Depends\}
 Description: Contains test file for pkgconfig arch all
  This is a test package designed to exercise some feature or tag of
@@ -18,6 +19,7 @@ Description: Contains test file for pkgconfig arch all
 
 Package: pkgconfig-any
 Architecture: any
+Multi-Arch: foreign
 Depends: $\{misc:Depends\}, $\{shlib:Depends\}
 Description: Contains test file for pkgconfig arch any
  This is a test package designed to exercise some feature or tag of
