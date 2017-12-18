@@ -9,6 +9,8 @@ lintian (2.5.64) UNRELEASED; urgency=medium
 
   * reporting/templates/maintainer.tmpl:
     + [CL] Don't link full report entries to themselves.  (Closes: #884572)
+    + [CL] Link to the package's short report entry from the "full" version
+      if it isn't empty.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 17 Dec 2017 20:24:47 +0000
 

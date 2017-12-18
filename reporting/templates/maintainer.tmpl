@@ -78,6 +78,7 @@
         }
         for my $version (sort by_version keys %$data) {
             my @tags = @{$data->{$version}};
+            my @error_tags = grep { $_->{code} eq 'E' or $_->{code} eq 'W' } @tags;
             my $first = 1;
             my $binary = '';
             my $tag = '';
@@ -88,8 +89,8 @@
             my $has_extra = 0;
 
             if ($errors) {
-                @tags = grep { $_->{code} eq 'E' or $_->{code} eq 'W' } @tags;
-                next if not @tags;
+                @tags = @error_tags;
+                next if not @error_tags;
             }
 
             for my $info (@tags) {
@@ -123,6 +124,8 @@
                     $OUT .= qq(    <a href="https://bugs.debian.org/src:$source">Bugs</a>\n);
                     if ($errors) {
                         $OUT .= qq(    <a href="${path_prefix}full/$id#$anchor">Full report</a>\n);
+                    } else if (@error_tags) {
+                        $OUT .= qq(    <a href="${path_prefix}maintainer/$id#$anchor">Short report</a>\n);
                     }
                     $OUT .= qq[  (${status}, last processed by Lintian/$last_processed_by)];
                     $OUT .= qq(   </p>\n  </div>\n);
