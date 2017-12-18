@@ -1,3 +1,9 @@
+lintian (2.5.66) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Chris Lamb <lamby@debian.org>  Mon, 18 Dec 2017 10:37:45 +0000
+
 lintian (2.5.65) unstable; urgency=medium
 
   * t/tests/files-pkgconfig:
