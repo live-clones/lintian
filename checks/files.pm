@@ -1129,6 +1129,7 @@ sub run {
             }
 
             if (defined($multiarch_dir)
+                and $multiarch eq 'foreign'
                 and $fname =~ m,^usr/lib/\Q$multiarch_dir\E/(.*)$,) {
                 my $tail = $1;
                 tag 'multiarch-foreign-cmake-file', $file
