@@ -80,3 +80,12 @@ Info: This package appears to be library module for the Django web development
  itself.
  .
  Please add a Depends on <tt>python-django</tt> or <tt>python3-django</tt>.
+
+Tag: mismatched-python-substvar
+Severity: normal
+Certainty: certain
+Info: The specified package declares a dependency on <tt>${python:Depends}</tt>
+ whilst appearing to be a Python 2.x package or a dependency on
+ <tt>${python3:Depends}</tt> when it appears to be a package for Python 2.x.
+ .
+ Please adjust the substvar to match the intended Python version.

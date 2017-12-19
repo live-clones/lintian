@@ -1,0 +1,4 @@
+E: python-mismatched-python-substvar source: python-depends-but-no-python-helper python-python-mismatched-python-substvar-nonrel python3-python-mismatched-python-substvar
+E: python-mismatched-python-substvar source: python3-depends-but-no-python3-helper python-python-mismatched-python-substvar python3-python-mismatched-python-substvar-nonrel
+W: python-mismatched-python-substvar source: mismatched-python-substvar python-python-mismatched-python-substvar ${python3:Depends}
+W: python-mismatched-python-substvar source: mismatched-python-substvar python3-python-mismatched-python-substvar ${python:Depends}

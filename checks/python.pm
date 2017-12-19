@@ -29,6 +29,11 @@ use Lintian::Tags qw(tag);
 
 my @PYTHON2 = qw(python python2.7 python-dev);
 
+my %MISMATCHED_SUBSTVARS = (
+    '^python3-.+' => '${python:Depends}',
+    '^python2?-.+' => '${python3:Depends}',
+);
+
 sub run {
     my ($pkg, $type, $info) = @_;
 
@@ -62,6 +67,16 @@ sub _run_source {
     tag 'alternatively-build-depends-on-python-sphinx-and-python3-sphinx'
       if $info->field('build-depends', '')
       =~ m,\bpython-sphinx\s+\|\s+python3-sphinx\b,g;
+
+    # Mismatched substvars
+    foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
+        my $substvar = $MISMATCHED_SUBSTVARS{$regex};
+        for my $binpkg ($info->binaries) {
+            next if $binpkg !~ qr/$regex/;
+            tag 'mismatched-python-substvar', $binpkg, $substvar
+              if $info->binary_relation($binpkg, 'all')->implies($substvar);
+        }
+    }
 
     return;
 }

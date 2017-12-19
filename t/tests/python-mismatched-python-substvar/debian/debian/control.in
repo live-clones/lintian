@@ -1,0 +1,55 @@
+Source: {$source}
+Priority: optional
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: {$build_depends}
+Rules-Requires-Root: no
+
+Package: python-{$source}
+Section: python
+Architecture: all
+Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Description: Mismatched substvar for Python 2.X
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ For Python 2.X.
+
+Package: python3-{$source}
+Section: python
+Architecture: all
+Depends: $\{misc:Depends\}, $\{python:Depends\}
+Description: Mismatched substvar for Python 3.X
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ For Python 3.X.
+
+Package: python-{$source}-nonrel
+Section: python
+Architecture: all
+Depends: $\{misc:Depends\}, $\{python:Depends\}
+Description: False positive for Python 2.X
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ False positive package For Python 2.X.
+
+Package: python3-{$source}-nonrel
+Section: python
+Architecture: all
+Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Description: False positive Python 3.X
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ False positive package for Python 3.X.

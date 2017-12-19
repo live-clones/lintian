@@ -1,0 +1,5 @@
+Testname: python-mismatched-python-substvar
+Version: 1.0
+Description: Check for Python packages with mismatched substvars.
+Test-For:
+ mismatched-python-substvar
