@@ -1,0 +1,5 @@
+[Unit]
+Documentation=https://example.com/
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,5 @@
+Testname: init.d-lsb-depends-nonrel
+Version: 1.0
+Description: Test for packages missing dependencies on lsb-base (false positive)
+Test-Against:
+ init.d-script-needs-depends-on-lsb-base

@@ -325,8 +325,9 @@ sub check_init {
             $tag{$1} = 1;
         }
 
-        if ($l =~ m{^\s*\.\s+/lib/lsb/init-functions}
-            && !$info->relation('strong')->implies('lsb-base')) {
+        if (   $l =~ m{^\s*\.\s+/lib/lsb/init-functions}
+            && !$info->relation('strong')->implies('lsb-base')
+            && none { $_->basename =~ m/\.service$/ } $info->sorted_index) {
             tag 'init.d-script-needs-depends-on-lsb-base',
               $initd_path, "(line $.)";
         }
