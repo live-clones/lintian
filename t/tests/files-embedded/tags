@@ -1,4 +1,5 @@
 W: files-embedded: embedded-feedparser-library usr/share/php/feedparser.py
+W: files-embedded: embedded-javascript-library usr/share/php/bootstrap-1.1.js please use libjs-twitter-bootstrap
 W: files-embedded: embedded-javascript-library usr/share/php/jquery.js please use libjs-jquery
 W: files-embedded: embedded-javascript-library usr/share/php/jquery.min.js please use libjs-jquery
 W: files-embedded: embedded-javascript-library usr/share/php/tiny_mce_popup.js please use tinymce

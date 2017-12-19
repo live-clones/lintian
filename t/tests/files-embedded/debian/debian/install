@@ -1,5 +1,6 @@
 IPv4.php usr/share/php
 jquery*  usr/share/php
+bootstrap*  usr/share/php
 feedparser.py usr/share/php
 rss_parse.php usr/share/php
 tiny_mce_popup.js usr/share/php

@@ -15,7 +15,7 @@ libjs-cropper                ~~ (?i)/cropper(?:\.uncompressed)?$EXT
 libjs-dojo-\w+               ~~ (?i)/(?:dojo|dijit)$EXT
 libjs-excanvas               ~~ (?i)/excanvas(?:-r[0-9]+)?$EXT
 libjs-jac                    ~~ (?i)/jsjac$EXT
-libjs-jquery                 ~~ (?i)/jquery$EXT
+libjs-jquery                 ~~ (?i)/jquery(?:-[\d\.]+)?$EXT
 libjs-jquery-cookie          ~~ (?i)/jquery\.cookie$EXT
 libjs-jquery-easing          ~~ (?i)/jquery\.easing$EXT
 libjs-jquery-event-drag      ~~ (?i)/jquery\.event\.drap$EXT
@@ -37,10 +37,12 @@ libjs-jquery-tipsy           ~~ (?i)/jquery\.tipsy$EXT
 libjs-jquery-treetable       ~~ (?i)/jquery\.treetable$EXT
 libjs-mochikit               ~~ (?i)/mochikit$EXT
 libjs-mootools               ~~ (?i)/mootools(?:(?:\.v|-)[\d\.]+)?(?:-(?:(?:core(?:-server)?)|more)(?:-(?:yc|jm|nc))?)?$EXT
+libjs-mustache               ~~ (?i)/mustache$EXT
 libjs-prototype              ~~ (?i)/prototype(?:-[\d\.]+)?$EXT
 libjs-raphael                ~~ (?i)/raphael(?:[\.-]min)?$EXT
 libjs-scriptaculous          ~~ (?i)/scriptaculous$EXT
 libjs-strophe                ~~ (?i)/strophe$EXT
+libjs-twitter-bootstrap      ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT
 libjs-underscore             ~~ (?i)/underscore$EXT
 libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
 # Disabled due to false positives.  Needs a content check adding to verify
