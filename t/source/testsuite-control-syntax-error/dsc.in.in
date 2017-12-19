@@ -5,7 +5,7 @@ Architecture: all
 Version: 1
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7)
+Build-Depends: {$build_depends}
 Testsuite: autopkgtest
 Checksums-Sha1:
  @SHA1@ @SIZE@ testsuite-control-syntax-error_1.tar.gz
