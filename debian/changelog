@@ -11,6 +11,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
       Python 3.x packages using ${python:Depends}. Thanks to Mattia
       Rizzolo for the idea.  (Closes: #884676)
 
+  * data/debhelper/compat-level:
+    + [MR] Bump the experimental debhelper compat level to 12.
+      (Closes: #884678)
+
   * t/tests/files-multiarch-foreign-files:
     + [CL] Don't hardcode architecture triplet to fix FTBFS on non-amd64
       architectures.  (Closes: #884683)
