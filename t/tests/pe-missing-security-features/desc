@@ -1,0 +1,5 @@
+Testname: pe-missing-security-features
+Version: 1.0
+Description: Check for PE binaries missing security features
+Test-Against:
+ portable-executable-missing-security-features

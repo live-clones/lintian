@@ -2,6 +2,11 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/pe.{pm,desc}:
+    + [CL] Check for Microsoft Windows Portable Executable (PE) files that
+      are missing security hardening features. Thanks to Petter
+      Reinholdtsen for the report.  (Closes: #837548)
+
   * t/tests/files-multiarch-foreign-files:
     + [CL] Don't hardcode architecture triplet to fix FTBFS on non-amd64
       architectures.  (Closes: #884683)
