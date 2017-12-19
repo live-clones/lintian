@@ -2,7 +2,7 @@ Source: {$source}
 Section: {$section}
 Priority: optional
 Maintainer: {$author}
-Build-Depends: debhelper (>= 7)
+Build-Depends: {$build_depends}
 Standards-Version: {$standards_version}
 
 Package: magic-architecture-srcpkg-ok-data
