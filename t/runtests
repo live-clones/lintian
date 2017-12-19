@@ -1074,7 +1074,7 @@ sub check_test_is_sane {
     $data->{options} ||= '-I -E';
     $data->{todo} ||= 'no';
     $data->{'test-depends'} //= '';
-    $data->{'dh_compat_level'} //= '9';
+    $data->{'dh_compat_level'} //= '11';
     $data->{'default-build-depends'}
       //= "debhelper (>= $data->{dh_compat_level}~)";
     $data->{'extra-build-depends'} //= '';

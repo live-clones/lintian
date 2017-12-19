@@ -2,4 +2,4 @@ P: control-file-duplicate source: duplicate-in-relation-field in control-file-du
 P: control-file-duplicate source: duplicate-in-relation-field in control-file-duplicate suggests: baz (= 1.0), baz, baz (>= 2.0)
 P: control-file-duplicate source: duplicate-in-relation-field in source build-conflicts: bar, bar [i386]
 P: control-file-duplicate source: duplicate-in-relation-field in source build-depends-indep: foobar, foobar
-P: control-file-duplicate source: duplicate-in-relation-field in source build-depends: debhelper (>= 9~), debhelper
+P: control-file-duplicate source: duplicate-in-relation-field in source build-depends: debhelper (>= 11~), debhelper
