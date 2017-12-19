@@ -112,6 +112,12 @@ sub run {
 
         my $package = strftime('%Y-%m-%d', gmtime $pkgdate);
         my $release = strftime('%Y-%m-%d', gmtime $STANDARDS->value($stdver));
+        if ($package eq $release) {
+            # Increase the precision if required
+            my $fmt = '%Y-%m-%d %H:%M:%S UTC';
+            $package = strftime($fmt, gmtime $pkgdate);
+            $release = strftime($fmt, gmtime $STANDARDS->value($stdver));
+        }
         tag 'timewarp-standards-version', "($package < $release)";
     }
 

@@ -13,6 +13,11 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Warn about Python 2.x packages using ${python3:Depends} and
       Python 3.x packages using ${python:Depends}. Thanks to Mattia
       Rizzolo for the idea.  (Closes: #884676)
+  * checks/standards-version.pm:
+    + [CL] Avoid misleading tag descriptions when emitting valid
+      timewarp-standards-version warnings if the date parts are identical
+      (ie. "2017-11-30 < 2017-11-30"). Thanks to Andrea Bolognani
+      eof@kiyuko.org> for the report.  (Closes: #884785)
 
   * data/debhelper/compat-level:
     + [MR] Bump the experimental debhelper compat level to 12.
