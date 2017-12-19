@@ -1,5 +1,4 @@
 E: systemd-general: init-script-is-not-a-file etc/init.d/fifo-pipe-as-init
-E: systemd-general: init.d-script-needs-depends-on-lsb-base etc/init.d/systemd-aliasd (line 30)
 E: systemd-general: service-file-is-not-a-file etc/systemd/system/fifo-pipe-as-init.service
 E: systemd-general: service-key-has-whitespace etc/systemd/system/test.service at line 4
 E: systemd-general: service-key-has-whitespace usr/lib/systemd/system/test.service at line 4
