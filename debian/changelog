@@ -30,6 +30,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Also emit embedded-javascript-library for Twitter Bootstrap and
       "mustache".
 
+  * reporting/templates/maintainer.tmpl:
+    + [CL] Correct invalid "else if" syntax with "elsif". Thanks to Uwe
+      Kleine-Koenig for the report.
+
   * t/tests/files-multiarch-foreign-files:
     + [CL] Don't hardcode architecture triplet to fix FTBFS on non-amd64
       architectures.  (Closes: #884683)

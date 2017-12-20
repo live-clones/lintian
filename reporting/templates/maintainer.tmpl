@@ -124,7 +124,7 @@
                     $OUT .= qq(    <a href="https://bugs.debian.org/src:$source">Bugs</a>\n);
                     if ($errors) {
                         $OUT .= qq(    <a href="${path_prefix}full/$id#$anchor">Full report</a>\n);
-                    } else if (@error_tags) {
+                    } elsif (@error_tags) {
                         $OUT .= qq(    <a href="${path_prefix}maintainer/$id#$anchor">Short report</a>\n);
                     }
                     $OUT .= qq[  (${status}, last processed by Lintian/$last_processed_by)];
