@@ -42,6 +42,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Check for Apache 2.0 packages that do not distribute their
       accompanying "NOTICE" files.  (Closes: #885042)
 
+  * collection/src-orig-index:
+    + [CL] Correct references to generated filename.
+
   * data/debhelper/compat-level:
     + [MR] Bump the experimental debhelper compat level to 12.
       (Closes: #884678)

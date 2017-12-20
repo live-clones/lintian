@@ -39,14 +39,14 @@ sub collect {
     my ($pkg, $type, $dir) = @_;
     my $info = Lintian::Collect->new($pkg, $type, $dir);
 
-    if (-f "$dir/orig-index.gz") {
-        unlink("$dir/orig-index.gz");
+    if (-f "$dir/src-orig-index.gz") {
+        unlink("$dir/src-orig-index.gz");
     }
 
     # Nothing to do for native packages where the two indices are
     # identical.
     if ($info->native) {
-        link("$dir/index.gz", "$dir/orig-index.gz");
+        link("$dir/index.gz", "$dir/src-orig-index.gz");
         return;
     }
 
@@ -210,7 +210,7 @@ sub index_orig {
   # Now that we have the file names we want, write them out sorted to the index
   # file.
     spawn(
-        { fail => 'error', out => "$dir/orig-index.gz" },
+        { fail => 'error', out => "$dir/src-orig-index.gz" },
         sub { print @result },
         '|', ['sort', '-k', '6'],
         '|', ['gzip', '-9nc']);
