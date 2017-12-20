@@ -32,7 +32,7 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   * reporting/templates/maintainer.tmpl:
     + [CL] Correct invalid "else if" syntax with "elsif". Thanks to Uwe
-      Kleine-Koenig for the report.
+      Kleine-König for the report.
 
   * t/tests/files-multiarch-foreign-files:
     + [CL] Don't hardcode architecture triplet to fix FTBFS on non-amd64
