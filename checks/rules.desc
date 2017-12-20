@@ -282,3 +282,14 @@ Info: The <tt>debian/rules</tt> file for this package appears to set
  <tt>noopt</tt>.
  .
  This has been obsoleted in favour of <tt>dpkg-buildflags</tt>.
+
+Tag: override_dh_clean-does-not-call-dh_clean
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/rules</tt> file for this package uses
+ the <tt>override_dh_clean</tt> but this target does not reference
+ <tt>dh_clean</tt>. This can result in packages not cleaning up properly via
+ <tt>debian/rules clean</tt>.
+ .
+ Please add a call to <tt>dh_clean</tt>.
+Ref: #884419, #884815

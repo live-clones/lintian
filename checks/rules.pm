@@ -19,7 +19,7 @@ use warnings;
 use autodie;
 use Carp qw(croak);
 
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any none);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
@@ -165,7 +165,7 @@ sub run {
     my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
     my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
     my (@current_targets, %rules_per_target,  %debhelper_group);
-    my %seen;
+    my (%seen, %overridden);
     my $maybe_skipping;
     my %variables;
     my $uses_makefile_pl = 0;
@@ -308,6 +308,7 @@ sub run {
                 qr/^$_$/;
             } split(' ', $target_dependencies);
             for my $target (@current_targets) {
+                $overridden{$1}++ if $target =~ m/override_(.+)/;
                 if ($target =~ m/%/o) {
                     my $pattern = quotemeta $target;
                     $pattern =~ s/\\%/.*/g;
@@ -424,6 +425,12 @@ sub run {
         }
         tag 'binary-arch-rules-but-pkg-is-arch-indep' if $nonempty;
     }
+
+    tag 'override_dh_clean-does-not-call-dh_clean'
+      if (
+        $overridden{'dh_clean'}
+        and none { m/^\t\s*-?dh_clean\b/ }
+        @{$rules_per_target{'override_dh_clean'}});
 
     # Make sure that all the required build dependencies are there.  Don't
     # issue missing-build-dependency errors for debhelper, since there's
