@@ -1292,6 +1292,7 @@ sub run {
 
     #----- Vcs-*
 
+    my %seen_vcs;
     while (my ($vcs, $splitter) = each %VCS_EXTRACT) {
         if (defined $info->field("vcs-$vcs")) {
             my $uri = $info->field("vcs-$vcs");
@@ -1331,8 +1332,11 @@ sub run {
             }
             tag 'vcs-browser-links-to-empty-view', $uri
               if $vcs eq 'browser' and $uri =~ m%rev=0&sc=0%;
+            $seen_vcs{$vcs}++ if $vcs ne 'browser';
         }
     }
+    tag 'vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs
+      if keys %seen_vcs > 1;
 
     #---- Checksums
 

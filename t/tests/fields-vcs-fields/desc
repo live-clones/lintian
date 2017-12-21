@@ -11,3 +11,4 @@ Test-For:
  vcs-field-uses-insecure-uri
  vcs-field-uses-not-recommended-uri-format
  vcs-browser-links-to-empty-view
+ vcs-fields-use-more-than-one-vcs

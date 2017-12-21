@@ -2,6 +2,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.{pm,desc}:
+    + [CL] Emit a wishlist warning for packages that mix-and-match more
+      than one version control system in Vcs-* headers.  (Closes: #884503)
   * checks/init.d.{pm,desc}:
     + [CL] Don't emit init.d-script-needs-depends-on-lsb-base if the
       package ships a Systemd service file.  (Closes: #864999)

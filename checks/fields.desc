@@ -1356,3 +1356,8 @@ Info: The given package appears to be a library package, but it has "Priority"
  .
  Please update <tt>debian/control</tt> and downgrade the severity to, for
  example, <tt>Priority: optional</tt>.
+
+Tag: vcs-fields-use-more-than-one-vcs
+Severity: wishlist
+Certainty: possible
+Info: The Vcs-* fields mix more than one version control system.
