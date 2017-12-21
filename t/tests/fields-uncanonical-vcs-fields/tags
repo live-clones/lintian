@@ -6,6 +6,7 @@ I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-cvs :ps
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-git git://git.debian.org/~djpig/foobar.git -b master
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-hg http://hg.debian.org/hg/foobar/pkg/foobar
 I: fields-uncanonical-vcs-fields source: vcs-field-uses-insecure-uri vcs-svn svn://svn.debian.org/svn/foobar/trunk
+I: fields-uncanonical-vcs-fields source: vcs-fields-use-more-than-one-vcs bzr cvs git hg mtn svn
 W: fields-uncanonical-vcs-fields source: vcs-field-bitrotted :pserver:anonymous@cvs.alioth.debian.org:/cvsroot/foobar :pserver:anonymous@anonscm.debian.org:/cvs/foobar
 W: fields-uncanonical-vcs-fields source: vcs-field-bitrotted https://svn.debian.org/wsvn/foobar/trunk?foo=bar;op=log;something=else https://anonscm.debian.org/viewvc/foobar/trunk?foo=bar;something=else
 W: fields-uncanonical-vcs-fields source: vcs-git-uses-invalid-user-uri git://git.debian.org/~djpig/foobar.git https://anonscm.debian.org/git/users/djpig/foobar.git

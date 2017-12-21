@@ -5,3 +5,4 @@ Test-For:
  vcs-field-bitrotted
  vcs-field-not-canonical
  vcs-git-uses-invalid-user-uri
+ vcs-fields-use-more-than-one-vcs
