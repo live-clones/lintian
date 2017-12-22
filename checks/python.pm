@@ -27,6 +27,7 @@ use List::MoreUtils qw(any);
 
 use Lintian::Tags qw(tag);
 
+my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @PYTHON2 = qw(python python2.7 python-dev);
 
 my %MISMATCHED_SUBSTVARS = (
@@ -94,7 +95,7 @@ sub _run_binary {
 
     # Python applications
     if ($pkg !~ /^python[23]?-/ and not any { $_ eq $pkg } @PYTHON2) {
-        for my $field (qw(Depends Pre-Depends Recommends Suggests)) {
+        for my $field (@FIELDS) {
             for my $dep (@PYTHON2) {
                 tag 'dependency-on-python-version-marked-for-end-of-life',
                   "($field: $dep)"
