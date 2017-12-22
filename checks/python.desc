@@ -89,3 +89,14 @@ Info: The specified package declares a dependency on <tt>${python:Depends}</tt>
  <tt>${python3:Depends}</tt> when it appears to be a package for Python 2.x.
  .
  Please adjust the substvar to match the intended Python version.
+
+Tag: python-package-depends-on-variant-of-itself
+Severity: normal
+Certainty: certain
+Info: Either the specified Python 3.x package declares a dependency on the
+ Python 2.x version of itself, or specified Python 2.x package depends on
+ the the Python 3.x version of itself.
+ .
+ This is likely a typo in <tt>debian/control</tt> or due to misconfigured
+ calls to, for example, <tt>dh_installdocs --link-doc=PKG</tt>.
+Ref: #884692

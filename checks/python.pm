@@ -112,6 +112,21 @@ sub _run_binary {
           if not $info->relation('strong')->implies($version);
     }
 
+    if ($pkg =~ /^python([23]?)-(.*)(?<!-doc)$/) {
+        my $version = $1 // '2'; # Assume python-foo is a Python 2.x package
+        my @candidates
+          = ($version eq '2')
+          ? ("python3-$2")
+          : ("python-$2", "python2-$2");
+        for my $field (@FIELDS) {
+            for my $other (@candidates) {
+                tag 'python-package-depends-on-variant-of-itself',
+                  "($field: $other)"
+                  if $info->relation($field)->implies("$other:any");
+            }
+        }
+    }
+
     return;
 }
 
