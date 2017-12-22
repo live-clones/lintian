@@ -1,0 +1,4 @@
+W: cruft-autotools-pkg-config-invocation-missing-arch-prefix source: autotools-pkg-config-invocation-missing-arch-prefix configure.ac (line 1)
+W: cruft-autotools-pkg-config-invocation-missing-arch-prefix source: autotools-pkg-config-invocation-missing-arch-prefix configure.in (line 1)
+W: cruft-autotools-pkg-config-invocation-missing-arch-prefix source: autotools-pkg-config-invocation-missing-arch-prefix src/configure.ac (line 1)
+W: cruft-autotools-pkg-config-invocation-missing-arch-prefix source: autotools-pkg-config-invocation-missing-arch-prefix src/configure.in (line 1)

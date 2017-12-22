@@ -678,6 +678,18 @@ sub find_cruft {
             tag 'r-data-without-readme-source', $name;
         }
 
+        if (   $name =~ m,configure.(in|ac)$,
+            && $entry->is_file
+            && $entry->is_open_ok) {
+            my $fd = $entry->open;
+            while (my $line = <$fd>) {
+                tag 'autotools-pkg-config-invocation-missing-arch-prefix',
+                  $name, "(line $.)"
+                  if $line=~ m{AC_PATH_PROG\s*\([^,]+,\s*\[?pkg-config\]?\s*,};
+            }
+            close($fd);
+        }
+
         # Lena Söderberg image
         if ($basename =~ /\blenn?a\b/i) {
             if(    $file_info =~ /\bimage\b/i

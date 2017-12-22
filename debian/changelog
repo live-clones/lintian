@@ -2,6 +2,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.{pm,desc}:
+    + [CL] Check for packages that invoke AC_PATH_PROG without considering
+      cross-compilation. Thanks to Helmut Grohne for the idea and
+      proof-of-concept implementation.  (Closes: #884798)
   * checks/fields.{pm,desc}:
     + [CL] Emit a wishlist warning for packages that mix-and-match more
       than one version control system in Vcs-* headers.  (Closes: #884503)
