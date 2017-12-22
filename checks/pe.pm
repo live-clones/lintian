@@ -34,6 +34,7 @@ sub run {
     foreach my $file ($info->sorted_index) {
         next unless $file->is_file;
         next unless $file->file_info =~ /^PE32\+? executable/;
+        next unless $file->is_open_ok;
 
         my $buf;
         my $fd = $file->open;
