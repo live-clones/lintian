@@ -10,4 +10,4 @@ Disable-Tags: changelog-should-mention-nmu,
  team-upload-has-incorrect-version-number,
  uploader-address-causes-mail-loops-or-bounces,
  upstart-job-in-etc-init.d-not-registered-via-update-rc.d,
- no-human-maintainers
+ no-human-maintainers, bugs-field-in-debian-control

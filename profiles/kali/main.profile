@@ -2,4 +2,5 @@
 Profile: kali/main
 Extends: debian/main
 Disable-Tags: changelog-should-mention-nmu,
- source-nmu-has-incorrect-version-number
+ source-nmu-has-incorrect-version-number,
+ bugs-field-in-debian-control
