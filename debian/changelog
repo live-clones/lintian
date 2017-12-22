@@ -3,8 +3,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/control-file.{pm,desc}:
-    + [CL] Warn when packages specify a "Bugs:" field in debian/control as
-      this can make reportbug unable to report bugs.  (Closes: #741071)
+    + [CL] Warn when packages specify a "Bugs" field in debian/control that
+      does not refer to official Debian infrastructure as this can make
+      reportbug unable to report bugs.  (Closes: #741071)
   * checks/cruft.{pm,desc}:
     + [CL] Check for packages that invoke AC_PATH_PROG without considering
       cross-compilation. Thanks to Helmut Grohne for the idea and

@@ -101,7 +101,7 @@ sub run {
             if ($field eq 'xc-package-type') {
                 tag 'xc-package-type-in-debian-control', "line $.";
             }
-            if ($field eq 'bugs') {
+            if ($field eq 'bugs' and not m/\.debian\.org/) {
                 tag 'bugs-field-in-debian-control', "line $.";
             }
             unless (/^\S+: \S/ || /^\S+:$/) {

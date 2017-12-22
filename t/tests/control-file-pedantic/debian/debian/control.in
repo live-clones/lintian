@@ -13,7 +13,7 @@ Section: debian-installer
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
 XC-Package-Type: udeb
-Bugs: https://example.com/
+Bugs: debbugs://bugs.debian.org/
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
