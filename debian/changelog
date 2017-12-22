@@ -18,7 +18,7 @@ lintian (2.5.66) UNRELEASED; urgency=medium
       Rizzolo for the idea.  (Closes: #884676)
     + [CL] Factor out definition of dependency fields.
     + [CL] Warn about Python 3.x packages that depend on the Python 2.x
-      variants of themselves (and vice versa).  (Closes: #884692)
+      variants of themselves (and vice versa).  (Closes: #782277)
   * checks/rules.{desc,pm}:
     + [CL] Check for override_dh_clean targets that are missing calls to
       dh_clean. Thanks to Andreas Beckmann for the idea.  (Closes: #884817)
