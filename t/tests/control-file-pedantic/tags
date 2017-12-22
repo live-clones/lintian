@@ -1,2 +1,1 @@
-P: control-file-pedantic source: xc-package-type-in-debian-control line 15
-W: control-file-pedantic source: bugs-field-does-not-refer-to-debian-infrastructure line 9
+P: control-file-pedantic source: xc-package-type-in-debian-control line 14

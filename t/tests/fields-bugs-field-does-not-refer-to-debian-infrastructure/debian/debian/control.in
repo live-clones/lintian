@@ -6,12 +6,11 @@ Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}
 Rules-Requires-Root: no
 Homepage: https://lintian.debian.org/
+Bugs: https://upstream.org/
 
-Package: {$source}-udeb
-Section: debian-installer
+Package: {$source}
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
-XC-Package-Type: udeb
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

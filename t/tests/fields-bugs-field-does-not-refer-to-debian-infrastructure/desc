@@ -1,0 +1,5 @@
+Testname: fields-bugs-field-does-not-refer-to-debian-infrastructure
+Version: 1.0
+Description: Check for packages with invalid Bugs fields
+Test-For:
+ bugs-field-does-not-refer-to-debian-infrastructure

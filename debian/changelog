@@ -2,10 +2,6 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/control-file.{pm,desc}:
-    + [CL] Warn when packages specify a "Bugs" field in debian/control that
-      does not refer to official Debian infrastructure as this can make
-      reportbug unable to report bugs.  (Closes: #741071)
   * checks/cruft.{pm,desc}:
     + [CL] Check for packages that invoke AC_PATH_PROG without considering
       cross-compilation. Thanks to Helmut Grohne for the idea and
@@ -13,6 +9,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
   * checks/fields.{pm,desc}:
     + [CL] Emit a wishlist warning for packages that mix-and-match more
       than one version control system in Vcs-* headers.  (Closes: #884503)
+    + [CL] Warn when packages specify a "Bugs" field in debian/control that
+      does not refer to official Debian infrastructure as this can make
+      reportbug unable to report bugs.  (Closes: #741071)
   * checks/init.d.{pm,desc}:
     + [CL] Don't emit init.d-script-needs-depends-on-lsb-base if the
       package ships a Systemd service file.  (Closes: #864999)

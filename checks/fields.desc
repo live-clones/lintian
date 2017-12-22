@@ -1361,3 +1361,13 @@ Tag: vcs-fields-use-more-than-one-vcs
 Severity: wishlist
 Certainty: possible
 Info: The Vcs-* fields mix more than one version control system.
+
+Tag: bugs-field-does-not-refer-to-debian-infrastructure
+Severity: normal
+Certainty: possible
+Info: The <tt>debian/control</tt> file contains an Bugs field that does
+ not refer to Debian infrastructure. This is recognized by the string
+ ".debian.org".
+ .
+ This can likely to make reportbug unable to report bugs.
+Ref: #740944

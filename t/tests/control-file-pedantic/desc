@@ -4,5 +4,4 @@ Skeleton: pedantic
 Options: --pedantic -I -E
 Description: Pedantic tests for control file issues
 Test-For:
- bugs-field-does-not-refer-to-debian-infrastructure
  xc-package-type-in-debian-control
