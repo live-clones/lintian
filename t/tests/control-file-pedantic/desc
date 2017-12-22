@@ -3,4 +3,6 @@ Version: 1.0
 Skeleton: pedantic
 Options: --pedantic -I -E
 Description: Pedantic tests for control file issues
-Test-For: xc-package-type-in-debian-control
+Test-For:
+ bugs-field-in-debian-control
+ xc-package-type-in-debian-control

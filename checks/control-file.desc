@@ -330,3 +330,10 @@ Severity: classification
 Certainty: certain
 Info: Package requires fakeroot or similar to build binary targets and explicitly declares it.
 Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
+
+Tag: bugs-field-in-debian-control
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/control</tt> file contains an Bugs field. This can make
+ reportbug unable to report bugs.
+Ref: #740944
