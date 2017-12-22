@@ -331,7 +331,7 @@ Certainty: certain
 Info: Package requires fakeroot or similar to build binary targets and explicitly declares it.
 Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
 
-Tag: bugs-field-in-debian-control
+Tag: bugs-field-does-not-refer-to-debian-infrastructure
 Severity: normal
 Certainty: possible
 Info: The <tt>debian/control</tt> file contains an Bugs field that does

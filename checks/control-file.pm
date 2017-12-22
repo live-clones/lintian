@@ -102,7 +102,7 @@ sub run {
                 tag 'xc-package-type-in-debian-control', "line $.";
             }
             if ($field eq 'bugs' and not m/\.debian\.org/) {
-                tag 'bugs-field-in-debian-control', "line $.";
+                tag 'bugs-field-does-not-refer-to-debian-infrastructure', "line $.";
             }
             unless (/^\S+: \S/ || /^\S+:$/) {
                 tag 'debian-control-has-unusual-field-spacing', "line $.";
