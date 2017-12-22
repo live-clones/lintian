@@ -1,0 +1,4 @@
+W: cruft-autotools-pkg-config-macro-not-cross-compilation-safe source: autotools-pkg-config-macro-not-cross-compilation-safe configure.ac (line 1)
+W: cruft-autotools-pkg-config-macro-not-cross-compilation-safe source: autotools-pkg-config-macro-not-cross-compilation-safe configure.in (line 1)
+W: cruft-autotools-pkg-config-macro-not-cross-compilation-safe source: autotools-pkg-config-macro-not-cross-compilation-safe src/configure.ac (line 1)
+W: cruft-autotools-pkg-config-macro-not-cross-compilation-safe source: autotools-pkg-config-macro-not-cross-compilation-safe src/configure.in (line 1)

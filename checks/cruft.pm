@@ -683,7 +683,7 @@ sub find_cruft {
             && $entry->is_open_ok) {
             my $fd = $entry->open;
             while (my $line = <$fd>) {
-                tag 'autotools-pkg-config-invocation-missing-arch-prefix',
+                tag 'autotools-pkg-config-macro-not-cross-compilation-safe',
                   $name, "(line $.)"
                   if $line=~ m{AC_PATH_PROG\s*\([^,]+,\s*\[?pkg-config\]?\s*,};
             }

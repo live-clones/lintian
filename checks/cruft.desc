@@ -911,7 +911,7 @@ Info: This file appears to contain one or more lines with trailing
  .
   $ sed -i -e 's@[ ]*$@@g' debian/rules
 
-Tag: autotools-pkg-config-invocation-missing-arch-prefix
+Tag: autotools-pkg-config-macro-not-cross-compilation-safe
 Severity: normal
 Certainty: possible
 Info: The package appears to use <tt>AC_PATH_PROG</tt> to discover the

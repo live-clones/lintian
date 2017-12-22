@@ -1,0 +1,5 @@
+Testname: cruft-autotools-pkg-config-macro-not-cross-compilation-safe
+Version: 1.0
+Description: Check for packages that look for pkg-config incorrectly
+Test-For:
+ autotools-pkg-config-macro-not-cross-compilation-safe
