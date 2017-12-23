@@ -49,6 +49,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Also emit embedded-javascript-library for Twitter Bootstrap and
       "mustache".
 
+  * debian/control:
+    + [CL] Tag relevant build-dependencies with <!nocheck>.
+
   * reporting/templates/maintainer.tmpl:
     + [CL] Correct invalid "else if" syntax with "elsif". Thanks to Uwe
       Kleine-König for the report.
