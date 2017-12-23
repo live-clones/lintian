@@ -688,11 +688,12 @@ sub run {
             }
             # ---------------- arch-indep pkgconfig
             elsif ($file->is_regular_file
-                && $fname
-                =~ m,^usr/(?:lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,) {
-                my $pkg_config_arch = $1 // '';
+                && $fname=~ m,^usr/(lib(/[^/]+)?|share)/pkgconfig/[^/]+\.pc$,){
+                my $prefix = $1;
+                my $pkg_config_arch = $2 // '';
                 $pkg_config_arch =~ s,\A/,,ms;
-
+                tag 'pkg-config-unavailable-for-cross-compilation', $file
+                  if $prefix eq 'lib';
                 my $fd = $file->open(':raw');
                 my $sfd = Lintian::SlidingWindow->new($fd);
               BLOCK:

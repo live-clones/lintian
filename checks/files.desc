@@ -1831,3 +1831,18 @@ Certainty: certain
 Info: This package appears to contain a compiled font file. These files
  should be generated automatically by triggers and it must not be shipped
  in any package.
+
+Tag: pkg-config-unavailable-for-cross-compilation
+Severity: normal
+Certainty: certain
+Info: The specified pkg-config(1) file is installed to
+ <tt>/usr/lib/pkgconfig</tt>. As the cross-compilation wrapper of pkg-config
+ does not search this directory the file is unavailable under
+ cross-compilation.
+ .
+ Please install the file to <tt>/usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig</tt>
+ instead.
+ .
+ For projects that use GNU Autotools, a simple method is moving to a debhelper
+ compat level of 9 or higher. In the rare case that this file is architecture
+ independent it can be installed to <tt>/usr/share/pkgconfig</tt> instead.

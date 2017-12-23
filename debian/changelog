@@ -12,6 +12,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Warn when packages specify a "Bugs" field in debian/control that
       does not refer to official Debian infrastructure as this can make
       reportbug unable to report bugs.  (Closes: #741071)
+  * checks/files.{pm,desc}:
+    + [CL] Warn maintainers about packages that ship pkg-config files under
+      /usr/lib/pkgconfig as they are unavailable under cross-compilation.
+      Thanks to Helmut Grohne for the idea.  (Closes: #885096)
   * checks/init.d.{pm,desc}:
     + [CL] Don't emit init.d-script-needs-depends-on-lsb-base if the
       package ships a Systemd service file.  (Closes: #864999)

@@ -35,3 +35,8 @@ E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-cross.
 E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-good.pc
 E: pkgconfig-any: multiarch-foreign-pkgconfig usr/lib/ARCH/pkgconfig/arch-include-arch.pc
 E: pkgconfig-any: pkg-config-multi-arch-wrong-dir usr/lib/ARCH/pkgconfig/arch-cross.pc full text contains architecture specific dir ARCH
+W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-good.pc
+W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-1.pc
+W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-2.pc
+W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-include-arch-3.pc
+W: pkgconfig-all: pkg-config-unavailable-for-cross-compilation usr/lib/pkgconfig/indep-really-bad.pc
