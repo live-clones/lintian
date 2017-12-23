@@ -34,6 +34,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
       timewarp-standards-version warnings if the date parts are identical
       (ie. "2017-11-30 < 2017-11-30"). Thanks to Andrea Bolognani
       eof@kiyuko.org> for the report.  (Closes: #884785)
+  * checks/source-copyright.{desc,pm}:
+    + [CL] Check for Apache 2.0 packages that do not distribute their
+      accompanying "NOTICE" files.  (Closes: #885042)
 
   * data/debhelper/compat-level:
     + [MR] Bump the experimental debhelper compat level to 12.

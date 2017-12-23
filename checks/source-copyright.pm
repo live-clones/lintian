@@ -59,7 +59,7 @@ my %dep5_renamed_fields        = (
 );
 
 sub run {
-    my (undef, undef, $info) = @_;
+    my (undef, undef, $info, undef, $group) = @_;
     my $debian_dir = $info->index_resolved_path('debian/');
     return if not $debian_dir;
     my $copyright_path = $debian_dir->child('copyright');
@@ -81,6 +81,7 @@ sub run {
 
     if ($copyright_path->is_open_ok) {
         _check_dep5_copyright($info, $copyright_path);
+        _check_apache_notice_files($info, $group, $copyright_path);
     }
     return;
 }
@@ -145,6 +146,30 @@ sub _find_dep5_version {
     }
 
     tag 'unknown-copyright-format-uri', $original_uri;
+    return;
+}
+
+sub _check_apache_notice_files {
+    my ($info, $group, $copyright_path) = @_;
+
+    my @procs = $group->get_processables('binary');
+    return if not @procs;
+    return if $copyright_path->file_contents !~ m/apache[-\s]+2\./i;
+
+    my @notice_files = grep {
+              $_->basename eq 'NOTICE'
+          and $_->is_open_ok
+          and $_->file_contents =~ m/apache/i
+    } $info->sorted_index;
+    return if not @notice_files;
+
+    foreach my $binpkg (@procs) {
+        my @files = $binpkg->info->sorted_index;
+        return if any { $_->basename =~ m/^NOTICE(\.gz)?$/} @files;
+    }
+
+    tag 'missing-notice-file-for-apache-license', join(' ', @notice_files);
+
     return;
 }
 

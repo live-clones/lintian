@@ -1,0 +1,5 @@
+Testname: source-copyright-missing-notice-file-for-apache-license-unrel
+Version: 1.0
+Description: Test for no packages missing Apache NOTICE files (false-positive)
+Test-Against:
+ missing-notice-file-for-apache-license
