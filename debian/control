@@ -70,7 +70,7 @@ Build-Depends: aspell <!nocheck>,
                t1utils <!nocheck>,
                unzip <!nocheck>,
                xz-utils <!nocheck>,
-               zi <!nocheck>,
+               zip <!nocheck>,
 Standards-Version: 4.1.2
 Rules-Requires-Root: no
 Vcs-Git: https://anonscm.debian.org/git/lintian/lintian.git
