@@ -157,7 +157,7 @@ sub _check_apache_notice_files {
     return if $copyright_path->file_contents !~ m/apache[-\s]+2\./i;
 
     my @notice_files = grep {
-              $_->basename eq 'NOTICE'
+              $_->basename =~ m/^NOTICE(\.txt)?$/
           and $_->is_open_ok
           and $_->file_contents =~ m/apache/i
     } $info->sorted_index;
