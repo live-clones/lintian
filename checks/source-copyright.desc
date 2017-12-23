@@ -340,5 +340,5 @@ Info: The package appears to be licensed under the Apache 2.0 license and
       within such NOTICE file [..]
  .
  Please include the file in your package, for example by adding
- <tt>path/to/NOTICE</tt> to a <tt>debian/package.install</tt> file.
+ <tt>path/to/NOTICE</tt> to a <tt>debian/package.docs</tt> file.
 Ref: /usr/share/common-licenses/Apache-2.0
