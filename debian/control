@@ -16,7 +16,7 @@ Build-Depends: aspell <!nocheck>,
                binutils <!nocheck>,
                bzip2 <!nocheck>,
                cdbs <!nocheck>,
-               debhelper (>= 9),
+               debhelper (>= 11~),
 # Prefer the headless variant as it saves about 25% (installed-size), but
 # it is not available in Jessie.
                default-jdk-headless <!nocheck> | default-jdk <!nocheck>,

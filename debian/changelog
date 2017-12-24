@@ -53,8 +53,11 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Also emit embedded-javascript-library for Twitter Bootstrap and
       "mustache".
 
+  * debian/compat:
+    + [NT] Bump debhelper compat level to 11.
   * debian/control:
     + [CL] Tag relevant build-dependencies with <!nocheck>.
+    + [NT] Bump versioned Build-Dependency on debhelper to 11~.
 
   * reporting/templates/maintainer.tmpl:
     + [CL] Correct invalid "else if" syntax with "elsif". Thanks to Uwe
