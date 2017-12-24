@@ -538,7 +538,7 @@ sub _fetch_index_data {
             push(@check_dirs, $parent) if not exists($idxh{$parent});
         }
     }
-    if (!$allow_empty and !exists($idxh{''})) {
+    if (!$allow_empty && !exists($idxh{''})) {
         internal_error('The root dir should be present or have been faked');
     }
     if (%rhlinks) {
