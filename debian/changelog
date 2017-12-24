@@ -44,6 +44,7 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   * collection/src-orig-index:
     + [CL] Correct references to generated filename.
+    + [CL] Update bitrotted calls to Lintian::Command:spawn.
 
   * data/debhelper/compat-level:
     + [MR] Bump the experimental debhelper compat level to 12.
