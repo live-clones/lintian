@@ -19,6 +19,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
   * checks/init.d.{pm,desc}:
     + [CL] Don't emit init.d-script-needs-depends-on-lsb-base if the
       package ships a Systemd service file.  (Closes: #864999)
+  * checks/obsolete-sites.pm:
+    + [CL] Ignore commented-out lines to avoid false-positives where the
+      maintainer references the old location.  (Closes: #806237)
   * checks/pe.{pm,desc}:
     + [CL] Check for Microsoft Windows Portable Executable (PE) files that
       are missing security hardening features. Thanks to Petter

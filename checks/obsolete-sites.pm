@@ -61,6 +61,9 @@ sub search_for_obsolete_sites {
 
         my $dcontents = $dfile->file_contents;
 
+        # Strip comments
+        $dcontents =~ s/^\s*#.*$//gm;
+
         foreach my $site ($OBSOLETE_SITES->all) {
             if ($dcontents
                 =~ m((\w+://(?:[\w.]*\.)?\Q$site\E[/:][^\s\"<>\$]*))i) {
