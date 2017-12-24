@@ -207,12 +207,12 @@ sub index_orig {
         }
         push @result, @index;
     }
-  # Now that we have the file names we want, write them out sorted to the index
-  # file.
+    # Now that we have the file names we want, write them out sorted to the
+    # index file.
     my %opts = (
-      out => "$dir/src-orig-index.gz",
-      fail => 'error',
-      pipe_in => FileHandle->new
+        out => "$dir/src-orig-index.gz",
+        fail => 'error',
+        pipe_in => FileHandle->new
     );
     spawn(\%opts, ['sort', '-k', '6'], '|', ['gzip', '-9nc']);
     print {$opts{pipe_in}} @result;
