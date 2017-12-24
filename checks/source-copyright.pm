@@ -640,7 +640,7 @@ sub get_all_files {
 
 sub check_files_excluded {
     my ($info, $excluded) = @_;
-    my @files = get_all_files($info);
+    my @files = grep { $_->is_file } $info->sorted_orig_index;
     my @wildcards = split /[\n\t ]+/, $excluded;
     for my $wildcard (@wildcards) {
         $wildcard =~ s/^\s+|\s+$//g;

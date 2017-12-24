@@ -41,6 +41,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
   * checks/source-copyright.{desc,pm}:
     + [CL] Check for Apache 2.0 packages that do not distribute their
       accompanying "NOTICE" files.  (Closes: #885042)
+    + [CL] Use the list of files in the orig tarball (rather than in the
+      regular index) to prevent false positives when checking for the
+      source-includes-file-in-files-excluded tag when a patch system
+      re-adds files that were removed.  (Closes: #884848)
 
   * collection/src-orig-index:
     + [CL] Correct references to generated filename.
