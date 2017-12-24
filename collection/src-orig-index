@@ -215,6 +215,7 @@ sub index_orig {
         pipe_in => FileHandle->new
     );
     spawn(\%opts, ['sort', '-k', '6'], '|', ['gzip', '-9nc']);
+    $opts{pipe_in}->blocking(1);
     print {$opts{pipe_in}} @result;
     close($opts{pipe_in});
     reap(\%opts);
