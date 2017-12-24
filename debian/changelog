@@ -70,6 +70,10 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Tag relevant build-dependencies with <!nocheck>.
     + [NT] Bump versioned Build-Dependency on debhelper to 11~.
 
+  * lib/Lintian/Collect/{Package,Source}.pm:
+    + [CL] Don't require that src-orig-index.gz actually contains any files
+      rather than faking an entry.
+
   * reporting/templates/maintainer.tmpl:
     + [CL] Correct invalid "else if" syntax with "elsif". Thanks to Uwe
       Kleine-König for the report.

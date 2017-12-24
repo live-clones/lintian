@@ -420,6 +420,7 @@ sub _fetch_index_data {
     my $field = $load_info->{'field'};
     my $index = $load_info->{'index_file'};
     my $indexown = $load_info->{'index_owner_file'};
+    my $allow_empty = $load_info->{'allow_empty'} // 0;
     my $idx = open_gz("$base_dir/${index}.gz");
     my $fs_info = Lintian::Path::FSInfo->new(
         '_collect' => $self,
@@ -537,7 +538,7 @@ sub _fetch_index_data {
             push(@check_dirs, $parent) if not exists($idxh{$parent});
         }
     }
-    if (!exists($idxh{''})) {
+    if (!$allow_empty and !exists($idxh{''})) {
         internal_error('The root dir should be present or have been faked');
     }
     if (%rhlinks) {

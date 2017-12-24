@@ -299,6 +299,7 @@ sub orig_index {
         # source packages do not have anchored roots as they can be
         # unpacked anywhere...
         'has_anchored_root_dir' => 1,
+        'allow_empty' => 1,
     };
     return $self->_fetch_index_data($load_info, $file);
 }
