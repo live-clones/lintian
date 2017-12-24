@@ -22,3 +22,4 @@ else
 endif
 	dh binary-indep --remaining
 	-dh_strip_nondeterminism
+	-dh_scour

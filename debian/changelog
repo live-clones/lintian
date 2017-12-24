@@ -47,6 +47,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
       (Closes: #884678)
     + [CL] Bump the recommended debehlper compat level to 11, emitting a
       pedantic warning when using lower level.  (Closes: #884699)
+  * data/debhelper/dh_commands:
+    + [CL] dh_scour is now provided by python3-scour, not python-scour.
+      Thanks to Jeremy Bicha.  (Closes: #885106)
   * data/files/js-libraries:
     + [CL] Detect embedded jQuery libraries with version number in their
       filenames (eg. jquery-1.10.2.min.js).  (Closes: #833613)
