@@ -8,7 +8,7 @@ Rules-Requires-Root: no
 
 Package: python-foo
 Architecture: all
-Depends: $\{misc:Depends\}, python2.7, python3-foo
+Depends: $\{misc:Depends\}, python2.7, python3-foo, python3-foo, python3-bar, python-falsepositive
 Description: Python 2 package depending on python3-foo
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -17,7 +17,7 @@ Description: Python 2 package depending on python3-foo
 
 Package: python2-foo
 Architecture: all
-Depends: $\{misc:Depends\}, python2.7, python3-foo
+Depends: $\{misc:Depends\}, python2.7, python3-foo, python2-bar, python2-falsepositive
 Description: Python 2 package depending on python3-foo (explicit)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -28,7 +28,7 @@ Description: Python 2 package depending on python3-foo (explicit)
 
 Package: python3-foo
 Architecture: all
-Depends: $\{misc:Depends\}, python3, python-foo, python2-foo
+Depends: $\{misc:Depends\}, python3, python-foo, python2-foo, python2-bar, python3-falsepositive
 Description: Python 3 package depending on python-foo and python2-foo
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

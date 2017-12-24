@@ -26,6 +26,7 @@ use autodie;
 use List::MoreUtils qw(any);
 
 use Lintian::Tags qw(tag);
+use Lintian::Relation qw(:constants);
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @PYTHON2 = qw(python python2.7 python-dev);
@@ -112,17 +113,19 @@ sub _run_binary {
           if not $info->relation('strong')->implies($version);
     }
 
-    if ($pkg =~ /^python([23]?)-(.*)(?<!-doc)$/) {
-        my $version = $1 // '2'; # Assume python-foo is a Python 2.x package
-        my @candidates
-          = ($version eq '2')
-          ? ("python3-$2")
-          : ("python-$2", "python2-$2");
+    if ($pkg =~ /^python([23]?)-.*(?<!-doc)$/) {
+        my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
+        my @prefixes = ($version eq '2') ? 'python3' : ('python', 'python2');
+
         for my $field (@FIELDS) {
-            for my $other (@candidates) {
-                tag 'python-package-depends-on-variant-of-itself',
-                  "($field: $other)"
-                  if $info->relation($field)->implies("$other:any");
+            for my $prefix (@prefixes) {
+                my $visit = sub {
+                    #<<< No tidy (tag name too long)
+                    tag 'python-package-depends-on-package-from-other-python-variant',
+                        "($field: $_)" if m/^$prefix-/;
+                    #>>>
+                };
+                $info->relation($field)->visit($visit, VISIT_PRED_NAME);
             }
         }
     }
