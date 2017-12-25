@@ -205,7 +205,7 @@ Info: The package activates the ldconfig trigger even though no shared
  library loader.
  .
  Note this may be triggered by a bug in debhelper, that causes it to
- auto-generate an ldconfig trigger for packages that does not need it.
+ auto-generate an ldconfig trigger for packages that do not need it.
 Ref: policy 8.1.1, #204975
 
 Tag: udeb-postinst-must-not-call-ldconfig
