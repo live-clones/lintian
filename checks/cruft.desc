@@ -609,7 +609,7 @@ Info: The given source file is cropped from playboy centerfold.
  Please use well known and free test images.
  .
  Please also submit md5sum, sha1sum, and sha256 of this file
- as a bug report for lintian.
+ as a bug report for Lintian.
 
 
 Tag: license-problem-bad-php-license
@@ -775,7 +775,7 @@ Certainty: certain
 Info: The source file includes a line length that is well beyond
  the normally human made code line length.
  .
- This very long line length does not allow lintian to do
+ This very long line length does not allow Lintian to do
  correctly some source file checks.
  .
  This line could also be the result of some text injected by

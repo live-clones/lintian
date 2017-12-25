@@ -325,7 +325,7 @@ Info: This package appears to be covered by the GNU GPL but depends on
  unless there is a license exception explicitly permitting this.
  .
  If only the Debian packaging, or some other part of the package not
- linked with OpenSSL, is covered by the GNU GPL, please add a lintian
+ linked with OpenSSL, is covered by the GNU GPL, please add a Lintian
  override for this tag.  Lintian currently has no good way of
  distinguishing between that case and problematic packages.
 

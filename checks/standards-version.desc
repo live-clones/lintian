@@ -25,9 +25,9 @@ Tag: newer-standards-version
 Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version which is
- newer than the highest one lintian is programmed to check.  If the source
- package is correct, then please upgrade lintian to the newest version.
- (If there is no newer lintian version, then please bug &maint; to make
+ newer than the highest one Lintian is programmed to check.  If the source
+ package is correct, then please upgrade Lintian to the newest version.
+ (If there is no newer Lintian version, then please bug &maint; to make
  one.)
 
 Tag: ancient-standards-version

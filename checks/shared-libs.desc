@@ -30,7 +30,7 @@ Info: The listed shared libraries contain object code that was compiled
  .
  In some cases, exceptions to this rule are warranted. If this is such a
  case, follow the procedure outlined in Policy and then please document
- the exception by adding a lintian override to this package.
+ the exception by adding a Lintian override to this package.
  .
  To check whether a shared library has this problem, run <tt>readelf
  -d</tt> on the shared library.  If a tag of type TEXTREL is present, the
@@ -179,7 +179,7 @@ Info: This package declares in its shlibs control file either a dependency
  one of its Provides.
  .
  In unusual circumstances where it's necessary to declare more complex
- dependencies in the shlibs control file, please add a lintian override
+ dependencies in the shlibs control file, please add a Lintian override
  for this warning.
 Ref: policy 8.6
 
@@ -365,7 +365,7 @@ Info: This package declares in its symbols control file a dependency on
  one of its Provides.
  .
  In unusual circumstances where it's necessary to declare more complex
- dependencies in the symbols control file, please add a lintian override
+ dependencies in the symbols control file, please add a Lintian override
  for this warning.
 Ref: policy 8.6
 

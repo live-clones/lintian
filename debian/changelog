@@ -2,6 +2,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/*.desc:
+    + [CL] Standardise on capital-L "Lintian" in package descriptions.
+      Thanks to Adam D. Barratt for the suggestion.
   * checks/cruft.{pm,desc}:
     + [CL] Check for packages that invoke AC_PATH_PROG without considering
       cross-compilation. Thanks to Helmut Grohne for the idea and

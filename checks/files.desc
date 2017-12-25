@@ -207,14 +207,14 @@ Tag: setuid-binary
 Severity: normal
 Certainty: possible
 Info: The file is tagged SETUID. In some cases this is intentional, but in
- other cases this is a bug. If this is intentional, please add a lintian
+ other cases this is a bug. If this is intentional, please add a Lintian
  override to document this fact.
 
 Tag: setgid-binary
 Severity: normal
 Certainty: possible
 Info: The file is tagged SETGID. In some cases this is intentional, but in
- other cases this is a bug. If this is intentional, please add a lintian
+ other cases this is a bug. If this is intentional, please add a Lintian
  override to document this fact.
 
 Tag: setuid-gid-binary
@@ -222,7 +222,7 @@ Severity: normal
 Certainty: possible
 Info: The file is tagged SETUID and SETGID. In some cases this is
  intentional, but in other cases this is a bug. If this is intentional,
- please add a lintian override to document this fact.
+ please add a Lintian override to document this fact.
 
 Tag: non-standard-file-perm
 Severity: normal
@@ -922,7 +922,7 @@ Severity: normal
 Certainty: possible
 Info: This package installs a file or directory whose name ends in
  whitespace.  This might be intentional but it's normally a mistake.  If
- it is intentional, add a lintian override.
+ it is intentional, add a Lintian override.
  .
  One possible cause is using debhelper 5.0.57 or earlier to install a
  doc-base file with a Document field that ends in whitespace.
@@ -931,7 +931,7 @@ Tag: package-contains-empty-directory
 Severity: wishlist
 Certainty: possible
 Info: This package installs an empty directory.  This might be intentional
- but it's normally a mistake.  If it is intentional, add a lintian override.
+ but it's normally a mistake.  If it is intentional, add a Lintian override.
  .
  If a package ships with or installs empty directories, you can remove them
  in debian/rules by calling:
@@ -1522,7 +1522,7 @@ Info: This binary package appears to be empty, and its description does
  description one of the phrases "metapackage", "dummy", "dependency
  package", or "empty package".
  .
- Previously, lintian also accepted the use of "virtual package".  This
+ Previously, Lintian also accepted the use of "virtual package".  This
  was removed to avoid overloading the term.  If you have been relying on
  the phrase "virtual package" to avoid this warning, please replace it
  with one of the others.

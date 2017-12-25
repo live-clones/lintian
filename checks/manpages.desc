@@ -46,10 +46,10 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  case of the man page match the case of the binary.
  .
  If the man pages are provided by another package on which this package
- depends, lintian may not be able to determine that man pages are
+ depends, Lintian may not be able to determine that man pages are
  available.  In this case, after confirming that all binaries do have
  man pages after this package and its dependencies are installed, please
- add a lintian override.
+ add a Lintian override.
 Ref: policy 12.1
 
 Tag: manpage-in-wrong-directory

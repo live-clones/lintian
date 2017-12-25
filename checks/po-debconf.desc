@@ -12,7 +12,7 @@ Info: This package seems to be using debconf templates, but it does not
  use po-debconf to make translations possible (<tt>debian/po</tt> doesn't
  exist).  Debian Policy requires that all packages using debconf use a
  gettext-based translation system.  If this package uses one other than
- po-debconf, please report this as a lintian bug along with how to detect
+ po-debconf, please report this as a Lintian bug along with how to detect
  that system.
 Ref: policy 3.9.1
 

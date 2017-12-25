@@ -30,7 +30,7 @@ Info: This package contains a program in $PATH but is named like a
  package.  See the reference for some (not perl-specific) reasoning.
  .
  In case the program in $PATH is only a helper tool and the package is
- primarily a library, please add a lintian override for this tag.
+ primarily a library, please add a Lintian override for this tag.
 Ref: https://pkg-perl.alioth.debian.org/policy.html#package_naming_policy
 
 Tag: application-in-library-section
@@ -47,4 +47,4 @@ Info: This package contains a binary in $PATH but is in a section just
  package.
  .
  In case the program in $PATH is only a helper tool and the package is
- primarily a library, please add a lintian override for this tag.
+ primarily a library, please add a Lintian override for this tag.

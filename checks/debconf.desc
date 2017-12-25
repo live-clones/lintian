@@ -340,7 +340,7 @@ Info: Templates which are not used by the package should be removed from
  - the template is not used by the maintainer scripts but is used by
  a program in the package
  .
- - the maintainer scripts are written in perl.  lintian currently only
+ - the maintainer scripts are written in perl.  Lintian currently only
  understands the shell script debconf functions.
  .
  If any of the above apply, please install an override.

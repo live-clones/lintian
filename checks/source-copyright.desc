@@ -14,7 +14,7 @@ Certainty: certain
 Info: The file <tt>debian/copyright</tt> is a symlink instead of a regular
  file.  This makes package checking and manipulation more difficult.
  .
- This problem may have prevented lintian from performing other checks.
+ This problem may have prevented Lintian from performing other checks.
 
 Tag: no-debian-copyright
 Severity: minor
@@ -35,7 +35,7 @@ Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Tag: unknown-copyright-format-uri
 Severity: pedantic
 Certainty: wild-guess
-Info: The copyright file appears to intended as machine-readable, but lintian
+Info: The copyright file appears to intended as machine-readable, but Lintian
  cannot recognize its format URI.  It could be a typo for a common URI or a
  syntax error in the first paragraph.  Please file a bug against Lintian if you
  believe that the copyright file in syntactically valid and the URI is
@@ -75,7 +75,7 @@ Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: A newer version of the machine-readable copyright file specification,
  than the one referenced by the copyright file, is available.
  .
- This problem may have prevented lintian from performing other checks.
+ This problem may have prevented Lintian from performing other checks.
 
 Tag: syntax-error-in-dep5-copyright
 Severity: normal

@@ -10,7 +10,7 @@ Severity: important
 Certainty: certain
 Info: The package contains a menu file that is in the old menu file format.
  This format is deprecated. Convert the menu file to the new menu format.
- Note that lintian will not test this file for any other problems.
+ Note that Lintian will not test this file for any other problems.
 
 Tag: whitespace-after-continuation-character
 Severity: important
@@ -150,10 +150,10 @@ Info: This icon file couldn't be found.  If the path to the icon in the
  icon is installed in <tt>/usr/share/pixmaps</tt>, the default location.
  .
  If the icon is provided by another package on which this package
- depends, lintian may not be able to determine that icon pages are
+ depends, Lintian may not be able to determine that icon pages are
  available.  In this case, after confirming that all icons are
  available after this package and its dependencies are installed,
- please add a lintian override.
+ please add a Lintian override.
 Ref: menu 3.7
 
 Tag: menu-icon-too-big
@@ -167,9 +167,9 @@ Tag: menu-icon-cannot-be-parsed
 Severity: normal
 Certainty: certain
 Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
- or perhaps it means the lintian parsing needs to be improved.  If the
+ or perhaps it means the Lintian parsing needs to be improved.  If the
  window managers and standard tools accept the file then probably it's the
- latter; please file a bug on lintian then.
+ latter; please file a bug on Lintian then.
 
 Tag: su-wrapper-without--c
 Severity: important

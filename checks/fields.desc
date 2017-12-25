@@ -557,7 +557,7 @@ Info: The package lists an old version of Emacs as its first dependency.
  flavors it supports.
  .
  If the package intentionally only supports older versions of Emacs (if,
- for example, it was included with later versions of Emacs), add a lintian
+ for example, it was included with later versions of Emacs), add a Lintian
  override.
 
 Tag: depends-on-metapackage
@@ -1273,7 +1273,7 @@ Info: This .dsc file contains no Checksum-Sha256 field and hence only
  .
  This issue will only show up for source packages built with
  dpkg-source before 1.14.17 (March 2008) and hence will probably never
- show up when you run lintian locally but only on
+ show up when you run Lintian locally but only on
  https://lintian.debian.org/ for source packages in the archive.
  .
  Accordingly it can be fixed by simply rebuilding the source package

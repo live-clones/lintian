@@ -14,7 +14,7 @@ Info: The file <tt>debian/rules</tt> is a symlink instead of a regular
  package under multiple names, make <tt>debian/rules</tt> the real
  file and the other names symlinks to it.
  .
- This problem may have prevented lintian from performing other checks,
+ This problem may have prevented Lintian from performing other checks,
  leading to undetected changelog errors.
 
 Tag: debian-rules-not-a-makefile
@@ -168,7 +168,7 @@ Ref: policy 4.2
 Info: The package doesn't specify a build dependency on a package that is
  used in <tt>debian/rules</tt>.
  .
- lintian intentionally does not take into account transitive dependencies.
+ Lintian intentionally does not take into account transitive dependencies.
  Even if the package build-depends on some package that in turn
  depends on the needed package, an explicit build dependency should
  be added.  Otherwise, a latent bug is created that will appear without

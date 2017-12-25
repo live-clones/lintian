@@ -151,7 +151,7 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
  .
  A common error is to name the Debian changelog like an upstream changelog
- (/usr/share/doc/<i>pkg</i>/changelog.gz); therefore, lintian will apply
+ (/usr/share/doc/<i>pkg</i>/changelog.gz); therefore, Lintian will apply
  further checks to such a file if it exists even after issuing this error.
 Ref: policy 12.7
 

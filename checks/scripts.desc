@@ -59,7 +59,7 @@ Certainty: possible
 Info: This package contains a script for an interpreter that is not shipped
  in the package and is not known to Lintian.  It is possible that there is
  a typo or the interpreter is not executable.  If not, please file a
- wishlist bug against lintian, so it can be added to the list of known
+ wishlist bug against Lintian, so it can be added to the list of known
  interpreters.
 
 Tag: example-unusual-interpreter
@@ -68,7 +68,7 @@ Certainty: possible
 Info: This package contains an example script for an interpreter that
  is not shipped in the package and is not known to Lintian.  It is
  possible that there is a typo or the interpreter is not executable.
- If not, please file a wishlist bug against lintian, so it can be
+ If not, please file a wishlist bug against Lintian, so it can be
  added to the list of known interpreters.
 
 Tag: php-script-with-unusual-interpreter
@@ -125,7 +125,7 @@ Severity: important
 Certainty: possible
 Info: This package contains a maintainer script that uses an interpreter
  that the Lintian maintainers have not heard of.  This is usually a typo
- for a common interpreter.  If not, please file a wishlist bug on lintian
+ for a common interpreter.  If not, please file a wishlist bug on Lintian
  so that the Lintian maintainers can add this interpreter to their list.
 
 Tag: interpreter-in-usr-local

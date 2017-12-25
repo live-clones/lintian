@@ -37,7 +37,7 @@ Ref: dpkg-source(1)
 Tag: unknown-file-in-debian-source
 Severity: important
 Certainty: possible
-Info: The source package contains a file in debian/source/ that lintian
+Info: The source package contains a file in debian/source/ that Lintian
  doesn't know about. Currently the following files are recognized:
  .
   * format
@@ -48,7 +48,7 @@ Info: The source package contains a file in debian/source/ that lintian
  .
  This tag is emitted in case you mistyped the name of one of the above
  files. If that's not the case and if the file can be legitimately be
- expected in source packages, please file a bug against lintian asking
+ expected in source packages, please file a bug against Lintian asking
  for the file to be recognized.
 
 Tag: git-patches-not-exported
