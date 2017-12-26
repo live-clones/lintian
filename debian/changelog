@@ -1,6 +1,19 @@
-lintian (2.5.66) UNRELEASED; urgency=medium
+lintian (2.5.66) unstable; urgency=medium
 
-  XXX: generate tag summary
+  Merry Christmas!
+
+  * Summary of tag changes:
+    + Added:
+      - autotools-pkg-config-macro-not-cross-compilation-safe
+      - bugs-field-does-not-refer-to-debian-infrastructure
+      - mismatched-python-substvar
+      - missing-notice-file-for-apache-license
+      - override_dh_clean-does-not-call-dh_clean
+      - package-contains-python-doctree-file
+      - pkg-config-unavailable-for-cross-compilation
+      - portable-executable-missing-security-features
+      - python-package-depends-on-package-from-other-python-variant
+      - vcs-fields-use-more-than-one-vcs
 
   * checks/*.desc:
     + [CL] Standardise on capital-L "Lintian" in package descriptions.
@@ -78,6 +91,8 @@ lintian (2.5.66) UNRELEASED; urgency=medium
   * data/files/php-libraries:
     + [CL] Avoid a embedded-php-library false positive for streams.php.
       (Closes: #637473)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * debian/compat:
     + [NT] Bump debhelper compat level to 11.
@@ -103,7 +118,7 @@ lintian (2.5.66) UNRELEASED; urgency=medium
     + [CL] Exclude some tests in this coverage check now that they are
       specified in a data file rather than in the code itself.
 
- -- Chris Lamb <lamby@debian.org>  Mon, 18 Dec 2017 10:37:45 +0000
+ -- Chris Lamb <lamby@debian.org>  Tue, 26 Dec 2017 14:59:29 +0000
 
 lintian (2.5.65) unstable; urgency=medium
 
