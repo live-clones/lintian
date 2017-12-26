@@ -713,6 +713,7 @@ sub run {
                 and not m/\bmks?temp\b/
                 and not m/\btempfile\b/
                 and not m/\bmkdir\b/
+                and not m/\bXXXXXX\b/
                 and not m/\$RANDOM/) {
                 #<<< no perltidy - tag name too long
                 tag 'possibly-insecure-handling-of-tmp-files-in-maintainer-script',

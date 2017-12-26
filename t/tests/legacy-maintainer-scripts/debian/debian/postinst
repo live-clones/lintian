@@ -46,7 +46,7 @@ FOO=`mktemp /tmp/scripts.XXXXXX`
 rm "$FOO"
 FOO=`tempfile -n/tmp/scripts.tmp`
 mkdir /var/tmp/scripts
-
+FOO="/tmp/false.positive.XXXXXX"
 # invalid
 echo foo >>/tmp/scripts.tmp
 rm /tmp/scripts.tmp
