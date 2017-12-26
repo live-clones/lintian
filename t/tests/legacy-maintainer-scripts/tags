@@ -6,16 +6,16 @@ E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package etc/init.d/foo
 E: maintainer-scripts: install-info-used-in-maintainer-script postinst:28
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:55
-E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:91
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:92
+E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:93
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:40 '/dev/device'
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:41 '/dev/device1'
-E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:83 '/etc/services'
-E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:84 '/etc/protocols'
-E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:85 '/etc/rpc'
-E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly postinst:80
+E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:84 '/etc/services'
+E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:85 '/etc/protocols'
+E: maintainer-scripts: maintainer-script-should-not-modify-netbase-managed-file postinst:86 '/etc/rpc'
+E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly postinst:81
 E: maintainer-scripts: maintainer-script-should-not-use-dpkg-status-directly preinst:12
-E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:98
+E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:100
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postinst:99
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog postrm:47
 E: maintainer-scripts: maintainer-script-should-not-use-install-sgmlcatalog prerm:58
@@ -50,7 +50,7 @@ W: maintainer-scripts source: debian-watch-file-unknown-version 5
 W: maintainer-scripts source: dfsg-version-in-native-package 7+dfsg-0.1
 W: maintainer-scripts source: dm-upload-allowed-is-obsolete
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
-W: maintainer-scripts: command-with-path-in-maintainer-script postinst:171 /usr/bin/baz
+W: maintainer-scripts: command-with-path-in-maintainer-script postinst:172 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep
 W: maintainer-scripts: config-does-not-load-confmodule
 W: maintainer-scripts: maintainer-script-empty config
@@ -59,28 +59,28 @@ W: maintainer-scripts: maintainer-script-ignores-errors preinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-gconf2 postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-ucf postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-xml-core postinst
-W: maintainer-scripts: maintainer-script-should-not-hide-init-failure postinst:55
-W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:165 'chown -R root.root'
+W: maintainer-scripts: maintainer-script-should-not-hide-init-failure postinst:56
+W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:166 'chown -R root.root'
 W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:33 'chown root.root'
-W: maintainer-scripts: maintainer-script-should-not-use-gconftool postinst:68
-W: maintainer-scripts: maintainer-script-should-not-use-start-stop-daemon postinst:159
+W: maintainer-scripts: maintainer-script-should-not-use-gconftool postinst:69
+W: maintainer-scripts: maintainer-script-should-not-use-start-stop-daemon postinst:160
 W: maintainer-scripts: maintainer-script-should-not-use-update-alternatives-remove postrm:4
 W: maintainer-scripts: maintscript-calls-ldconfig postrm
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:108 '${H[@]}'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:143 'echo -e'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:144 '${!foo}'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:146 'select foo'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:149 '    exec -l'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:150 '    exec -c'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:151 '    exec -a'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:153 'let '
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:154 'test -a'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:155 '$RANDOM'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:109 '${H[@]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:144 'echo -e'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:145 '${!foo}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:147 'select foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:150 '    exec -l'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:151 '    exec -c'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:152 '    exec -a'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:154 'let '
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:155 'test -a'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:156 '$RANDOM'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:16 '. /usr/share/lintian/shell foo'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 '. "$(dirname $0)/shell"'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:175 '$RANDOM'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:176 '$RANDOM'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:22 'H[0]='
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:23 '${H[0]}'
@@ -157,7 +157,7 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:90 '  echo -n
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:95 'ech.os() {'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:97 '>&bar'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:98 '>& bar'
-W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:50
+W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:51
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:40
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postrm-does-not-purge-debconf
