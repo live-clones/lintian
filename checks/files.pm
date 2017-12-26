@@ -459,6 +459,8 @@ sub run {
             push(@devhelp_links, $blessed);
         }
 
+        tag 'package-contains-python-doctree-file', $file
+          if $file->basename =~ m/\.doctree$/;
         if ($file->basename eq 'gschemas.compiled') {
             tag 'package-contains-compiled-glib-schema', $file;
         }
