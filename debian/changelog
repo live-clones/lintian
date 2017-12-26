@@ -21,6 +21,7 @@ lintian (2.5.66) UNRELEASED; urgency=medium
       Thanks to Helmut Grohne for the idea.  (Closes: #885096)
     + [CL] Warn about packages that ship non-reproducible Python .doctree
       files.  (Closes: #885327)
+    + [CL] Factor out simple filename checks into a Lintian::Data variable.
   * checks/init.d.{pm,desc}:
     + [CL] Don't emit init.d-script-needs-depends-on-lsb-base if the
       package ships a Systemd service file.  (Closes: #864999)

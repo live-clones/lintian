@@ -31,6 +31,7 @@ use Lintian::SlidingWindow;
 
 use constant BLOCKSIZE => 16_384;
 
+my $FNAMES = Lintian::Data->new('files/fnames', qr/\s*\~\~\s*/);
 my $FONT_PACKAGES = Lintian::Data->new('files/fonts', qr/\s++/);
 my $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/);
 my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
@@ -406,8 +407,10 @@ sub run {
             tag 'file-name-is-not-valid-UTF-8', $file;
         }
 
-        if ($fname =~ m,[*?],) {
-            tag 'file-name-contains-wildcard-character', $file;
+        # check for generic bad filenames
+        foreach my $tag ($FNAMES->all()) {
+            my $regex = $FNAMES->value($tag);
+            tag $tag, $file if $fname =~ m/$regex/;
         }
 
         if ($file->is_hardlink) {
@@ -457,12 +460,6 @@ sub run {
             and $fname =~ m,^usr/share/(?:devhelp/books|gtk-doc/html)/,) {
             my $blessed = $file->link_normalized // '<broken-link>';
             push(@devhelp_links, $blessed);
-        }
-
-        tag 'package-contains-python-doctree-file', $file
-          if $file->basename =~ m/\.doctree$/;
-        if ($file->basename eq 'gschemas.compiled') {
-            tag 'package-contains-compiled-glib-schema', $file;
         }
 
         # check for generic obsolete path
@@ -1178,11 +1175,6 @@ sub run {
                 || $fname =~ m,^usr/share/,o)
           ) {
             tag 'package-installs-python-egg', $file;
-        }
-
-        # ---------------- .coverage (coverage.py output)
-        if ($file->basename eq '.coverage') {
-            tag 'package-contains-python-coverage-file', $file;
         }
 
         # ---------------- .class (compiled Java files)
