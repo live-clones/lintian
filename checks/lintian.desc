@@ -15,6 +15,9 @@ Info: Lintian discovered an unused override entry in its database.
  architectures.  In this case, the override may need an architecture
  qualifier.
  .
+ Alternatively, the additional information provided by Lintian in the
+ tag's output may changed since the override was last modified.
+ .
  If the override is unused, please remove it from the overrides file.
 
 
