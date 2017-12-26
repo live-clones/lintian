@@ -65,6 +65,8 @@ our $EXCLUDE =join(
       ^source-contains-data-.*$
       ^invalid-short-name-in-dep5-copyright$
       ^trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir$
+      ^file-name-contains-wildcard-character$
+      ^package-contains-.*$
       ));
 
 # Exclude "lintian.desc" as it does not have a perl module like other
