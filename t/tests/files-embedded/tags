@@ -4,4 +4,5 @@ W: files-embedded: embedded-javascript-library usr/share/php/jquery.js please us
 W: files-embedded: embedded-javascript-library usr/share/php/jquery.min.js please use libjs-jquery
 W: files-embedded: embedded-javascript-library usr/share/php/tiny_mce_popup.js please use tinymce
 W: files-embedded: embedded-php-library usr/share/php/rss_parse.php please use libphp-magpierss
+W: files-embedded: embedded-php-library usr/share/php/streams.php please use php-php-gettext
 X: files-embedded: embedded-pear-module usr/share/php/IPv4.php please use php-net-ipv4

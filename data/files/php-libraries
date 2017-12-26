@@ -26,7 +26,7 @@ libphp-simplepie     ~~ (?i)/(?:class[\.-])?simplepie(?:\.(?:php|inc))+$
 libphp-jpgraph       ~~ (?i)/jpgraph\.php$
 php-fpdf             ~~ (?i)/fpdf\.php$
 php-getid3           ~~ (?i)/getid3\.(?:lib\.)?(?:\.(?:php|inc))+$
-php-php-gettext      ~~ (?i)/streams\.php$
+php-php-gettext      ~~ (?i)/(?<!pomo/)streams\.php$
 libphp-magpierss     ~~ (?i)/rss_parse\.(?:php|inc)$
 php-simpletest       ~~ (?i)/unit_tester\.php$
 libsparkline-php     ~~ (?i)/Sparkline\.php$

@@ -72,6 +72,9 @@ lintian (2.5.66) UNRELEASED; urgency=medium
       filenames (eg. jquery-1.10.2.min.js).  (Closes: #833613)
     + [CL] Also emit embedded-javascript-library for Twitter Bootstrap and
       "mustache".
+  * data/files/php-libraries:
+    + [CL] Avoid a embedded-php-library false positive for streams.php.
+      (Closes: #637473)
 
   * debian/compat:
     + [NT] Bump debhelper compat level to 11.
