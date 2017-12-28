@@ -134,4 +134,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 4.1.2.
+ This version of Lintian is calibrated for policy version 4.1.3.
