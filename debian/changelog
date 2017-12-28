@@ -2,6 +2,10 @@ lintian (2.5.67) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.{desc,pm}:
+    + [CL] Warn about changelog entries that have incorrectly formatted dates.
+      (Closes: #793406)
+
   * data/standards-version/release-dates:
     + [CL] Correct date(1) invocation example in comment.
     + [CL] Add 4.1.3 as a known standards version.

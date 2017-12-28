@@ -38,6 +38,8 @@ use Lintian::Data ();
 
 my $BUGS_NUMBER
   = Lintian::Data->new('changelog-file/bugs-number', qr/\s*=\s*/o);
+my $INVALID_DATES
+  = Lintian::Data->new('changelog-file/invalid-dates', qr/\s*=\>\s*/o);
 
 my $SPELLING_ERROR_IN_NEWS
   = spelling_tag_emitter('spelling-error-in-news-debian');
@@ -278,7 +280,15 @@ sub run {
         }
 
         if ($first_timestamp) {
+            my $warned = 0;
             my $dch_date = $entries[0]->Date;
+            foreach my $re ($INVALID_DATES->all()) {
+                if ($dch_date =~ m/($re)/i) {
+                    my $repl = $INVALID_DATES->value($re);
+                    tag 'invalid-date-in-debian-changelog', "($1 -> $repl)";
+                    $warned = 1;
+                }
+            }
             my ($weekday_declared, $date) = split(m/,\s*/, $dch_date, 2);
             $date //= '';
             my ($tz, $weekday_actual);
@@ -287,7 +297,7 @@ sub run {
                 $tz = $1;
                 $weekday_actual = time2str('%a', $first_timestamp, $tz);
             }
-            if ($tz and $weekday_declared ne $weekday_actual) {
+            if (not $warned and $tz and $weekday_declared ne $weekday_actual) {
                 my $real_weekday = time2str('%A', $first_timestamp, $tz);
                 my $short_date = time2str('%Y-%m-%d', $first_timestamp, $tz);
                 tag 'debian-changelog-has-wrong-day-of-week',
