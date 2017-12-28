@@ -1,2 +1,3 @@
 W: changes-upstream-signature-missing changes: orig-tarball-missing-upstream-signature changes-upstream-signature-missing_1.0.orig-component.tar.gz
 W: changes-upstream-signature-missing changes: orig-tarball-missing-upstream-signature changes-upstream-signature-missing_1.0.orig.tar.gz
+W: changes-upstream-signature-missing source: debian-watch-could-verify-download debian/upstream/signing-key.asc
