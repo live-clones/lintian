@@ -190,7 +190,7 @@ sub run {
     for my $key_name ($SIGNING_KEY_FILENAMES->all) {
         my $path = $info->index_resolved_path("debian/$key_name");
         if ($path and $path->is_file) {
-            $key_found = 1;
+            $key_found = $path;
             last;
         }
     }
@@ -200,7 +200,7 @@ sub run {
         tag 'debian-watch-file-pubkey-file-is-missing' unless $key_found;
     } else {
         # Check upstream key is used if present
-        tag 'debian-watch-could-verify-download' if $key_found;
+        tag 'debian-watch-could-verify-download', $key_found if $key_found;
     }
 
     my $changes = $info->changelog;
