@@ -195,17 +195,12 @@ sub run {
         }
     }
 
-    # Check upstream key is present if needed
     if ($withgpgverification) {
-        if (not $key_found) {
-            tag 'debian-watch-file-pubkey-file-is-missing';
-        }
-    }
-    # Check upstream key is used if present
-    else {
-        if ($key_found) {
-            tag 'debian-watch-could-verify-download';
-        }
+        # Check upstream key is present if needed
+        tag 'debian-watch-file-pubkey-file-is-missing' unless $key_found;
+    } else {
+        # Check upstream key is used if present
+        tag 'debian-watch-could-verify-download' if $key_found;
     }
 
     my $changes = $info->changelog;

@@ -185,9 +185,11 @@ Tag: debian-watch-could-verify-download
 Severity: normal
 Certainty: certain
 Ref: uscan(1)
-Info: One or more upstream signing keys are present but are not being
- used.  Please enable the cryptographic verification of downloads with
- the option 'pgpsigurlmangle' in your watch file or get rid of the key.
+Info: One or more upstream signing keys are present in the Debian package
+ but are not being used.
+ .
+ Please enable the cryptographic verification of downloads with the
+ "pgpsigurlmangle" option in your watch file or remove the key.
 
 Tag: debian-watch-contains-dh_make-template
 Severity: wishlist
