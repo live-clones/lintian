@@ -185,17 +185,26 @@ sub run {
     tag 'debian-watch-contains-dh_make-template' if ($template);
     tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
 
-    if ($withgpgverification) {
-        my $found = 0;
-        for my $key_name ($SIGNING_KEY_FILENAMES->all) {
-            my $path = $info->index_resolved_path("debian/$key_name");
-            if ($path and $path->is_file) {
-                $found = 1;
-                last;
-            }
+    # Look for upstream signing key
+    my $key_found = 0;
+    for my $key_name ($SIGNING_KEY_FILENAMES->all) {
+        my $path = $info->index_resolved_path("debian/$key_name");
+        if ($path and $path->is_file) {
+            $key_found = 1;
+            last;
         }
-        if (not $found) {
+    }
+
+    # Check upstream key is present if needed
+    if ($withgpgverification) {
+        if (not $key_found) {
             tag 'debian-watch-file-pubkey-file-is-missing';
+        }
+    }
+    # Check upstream key is used if present
+    else {
+        if ($key_found) {
+            tag 'debian-watch-could-verify-download';
         }
     }
 
