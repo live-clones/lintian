@@ -5,7 +5,7 @@
 #
 # To get the date of a new standards version, try:
 #
-#     date '+%s' -s '<date of release>'
+#     date '+%s' -d '<date of release>'
 
 4.1.2  1512080585
 4.1.1  1506553200
