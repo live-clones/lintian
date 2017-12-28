@@ -5,6 +5,9 @@ lintian (2.5.67) UNRELEASED; urgency=medium
   * checks/changelog-file.{desc,pm}:
     + [CL] Warn about changelog entries that have incorrectly formatted
       dates.  (Closes: #793406)
+  * checks/files.pm:
+    + [CL] Split out python-module-has-overly-generic-name regular
+      expression into a data file.
   * checks/watch-file.{desc,pm}:
     + [CL] Apply patch from Felix Lechner <felix.lechner@lease-up.com> to
       check for packages where an upstream signature exists but is not

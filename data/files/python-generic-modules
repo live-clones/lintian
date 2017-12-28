@@ -1,0 +1,5 @@
+# Regular expressions (/i) of overly-generic Python module names.
+
+docs?
+site
+tests?
