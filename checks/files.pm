@@ -38,7 +38,7 @@ my $LOCALE_CODES = Lintian::Data->new('files/locale-codes', qr/\s++/);
 my $INCORRECT_LOCALE_CODES
   = Lintian::Data->new('files/incorrect-locale-codes', qr/\s++/);
 my $MULTIARCH_DIRS = Lintian::Data->new('common/multiarch-dirs', qr/\s++/);
-my $GENERIC_PYTHON_MODULES = Lintian::Data->new('files/python-generic-modules');
+my $GENERIC_PYTHON_MODULES= Lintian::Data->new('files/python-generic-modules');
 
 my $PRIVACY_BREAKER_WEBSITES= Lintian::Data->new(
     'files/privacy-breaker-websites',
@@ -1418,7 +1418,7 @@ sub run {
               if (@correction);
             for my $regex ($GENERIC_PYTHON_MODULES->all) {
                 tag 'python-module-has-overly-generic-name', $fname, "($1)"
-                    if $rest =~ m,^($regex)(?:\.py|/__init__\.py)$,i
+                  if $rest =~ m,^($regex)(?:\.py|/__init__\.py)$,i;
             }
         }
 
