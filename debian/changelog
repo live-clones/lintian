@@ -84,7 +84,7 @@ lintian (2.5.66) unstable; urgency=medium
   * data/debhelper/compat-level:
     + [MR] Bump the experimental debhelper compat level to 12.
       (Closes: #884678)
-    + [CL] Bump the recommended debehlper compat level to 11, emitting a
+    + [CL] Bump the recommended debhelper compat level to 11, emitting a
       pedantic warning when using lower level.  (Closes: #884699)
   * data/debhelper/dh_commands:
     + [CL] dh_scour is now provided by python3-scour, not python-scour.
