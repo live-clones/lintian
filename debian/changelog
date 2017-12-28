@@ -13,6 +13,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       check for packages where an upstream signature exists but is not
       being used.  (Closes: #885621)
 
+  * data/files/python-generic-modules:
+    + [CL] Add "examples".
   * data/standards-version/release-dates:
     + [CL] Correct date(1) invocation example in comment.
     + [CL] Add 4.1.3 as a known standards version.
