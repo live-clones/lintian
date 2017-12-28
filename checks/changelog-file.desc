@@ -433,7 +433,7 @@ Info: The previous version of this package had a different version epoch
  Lintian looks in this version's changelog entry for the phrase "epoch".
 
 Tag: invalid-date-in-debian-changelog
-Severity: normal
+Severity: important
 Certainty: certain
 Info: The date format in the latest changelog entry file appears to be invalid.
  .
