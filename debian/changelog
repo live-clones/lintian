@@ -13,8 +13,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       that depend on Python {3,2} packages when the package being depended
       on ends with -doc. We were previously only catching the case for
       dependencies *from* packages with such names.  (Closes: #885693)
-    + [CL] Also ignore -common and -tools packages for intra-Python variant
-      dependency checking, python-foo-but-no-python3-foo, etc.
+    + [CL] Also ignore -docs, -common, -tools packages for intra-Python
+      variant dependency checking, python-foo-but-no-python3-foo, etc.
   * checks/rules.{desc.pm}:
     + [CL] Suggest using /usr/share/dpkg/architecture.mk as a solution to
       debian-rules-sets-dpkg-architecture-variable rather than simply
