@@ -127,7 +127,7 @@ sub _run_binary {
                     return if m/-(docs?|common|tools)$/;
                     #<<< No tidy (tag name too long)
                     tag 'python-package-depends-on-package-from-other-python-variant',
-                        "($field: $_)" if m/^$prefix-/;
+                        "$field: $_" if m/^$prefix-/;
                     #>>>
                 };
                 $info->relation($field)->visit($visit, VISIT_PRED_NAME);
