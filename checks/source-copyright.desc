@@ -330,7 +330,8 @@ Severity: serious
 Certainty: possible
 Info: The package appears to be licensed under the Apache 2.0 license and
  a <tt>NOTICE</tt> file (or similar) exists in the source tree. However, no
- files called <tt>NOTICE</tt> are installed in any of the binary packages.
+ files called <tt>NOTICE</tt> (or <tt>NOTICE.gz</tt>) are installed in any
+ of the binary packages.
  .
  The Apache 2.0 license requires distributing of such files:
  .
