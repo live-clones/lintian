@@ -113,15 +113,15 @@ sub _run_binary {
           if not $info->relation('strong')->implies($version);
     }
 
-    if ($pkg =~ /^python([23]?)-.*(?<!-doc)$/) {
+    if ($pkg =~ /^python([23]?)-.*(?<!-doc)(?<!-common)$/) {
         my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
         my @prefixes = ($version eq '2') ? 'python3' : ('python', 'python2');
 
         for my $field (@FIELDS) {
             for my $prefix (@prefixes) {
                 my $visit = sub {
-                    # Depending on python-module-doc is always fine
-                    return if m/-doc$/;
+                    # Depending on python-module-doc, etc. is always fine
+                    return if m/-(doc|common)$/;
                     #<<< No tidy (tag name too long)
                     tag 'python-package-depends-on-package-from-other-python-variant',
                         "($field: $_)" if m/^$prefix-/;
