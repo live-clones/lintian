@@ -31,6 +31,9 @@ use Lintian::Relation qw(:constants);
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @PYTHON2 = qw(python python2.7 python-dev);
 
+my $RE_SUFFIX_LOOKAHEAD= '(?<!-dev)(?<!-doc)(?<!-docs)(?<!-common)(?<!-tools)';
+my $RE_SUFFIX_ALTERNATES = '(dev|docs?|common|tools)';
+
 my %MISMATCHED_SUBSTVARS = (
     '^python3-.+' => '${python:Depends}',
     '^python2?-.+' => '${python3:Depends}',
@@ -54,8 +57,7 @@ sub _run_source {
     my @package_names = $info->binaries;
     foreach my $bin (@package_names) {
         # Python 2 modules
-        if ($bin=~ /^python2?-(.*(?<!-dev)(?<!-doc)(?<!-docs)(?<!-common)(?<!-tools))$/)
-        {
+        if ($bin=~ /^python2?-(.*$RE_SUFFIX_LOOKAHEAD)$/){
             my $suffix = $1;
             tag 'python-foo-but-no-python3-foo', $bin
               unless any { $_ eq "python3-${suffix}" } @package_names;
@@ -75,7 +77,7 @@ sub _run_source {
     foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
         my $substvar = $MISMATCHED_SUBSTVARS{$regex};
         for my $binpkg ($info->binaries) {
-            next if $binpkg =~ m/-(dev|docs?|common|tools)$/;
+            next if $binpkg =~ m/-$RE_SUFFIX_ALTERNATES/;
             next if $binpkg !~ qr/$regex/;
             tag 'mismatched-python-substvar', $binpkg, $substvar
               if $info->binary_relation($binpkg, 'all')->implies($substvar);
@@ -115,8 +117,7 @@ sub _run_binary {
           if not $info->relation('strong')->implies($version);
     }
 
-    if ($pkg =~ /^python([23]?)-.*(?<!-dev)(?<!-doc)(?<!-docs)(?<!-common)(?<!-tools)$/)
-    {
+    if ($pkg =~ /^python([23]?)-.*$RE_SUFFIX_LOOKAHEAD$/){
         my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
         my @prefixes = ($version eq '2') ? 'python3' : ('python', 'python2');
 
@@ -124,7 +125,7 @@ sub _run_binary {
             for my $prefix (@prefixes) {
                 my $visit = sub {
                     # Depending on python-module-doc, etc. is always fine
-                    return if m/-(dev|docs?|common|tools)$/;
+                    return if m/-$RE_SUFFIX_ALTERNATES$/;
                     #<<< No tidy (tag name too long)
                     tag 'python-package-depends-on-package-from-other-python-variant',
                         "$field: $_" if m/^$prefix-/;
