@@ -117,6 +117,14 @@ Info: The standard environment variable for build options is
  DEB_BUILD_OPTIONS.  Usually, referring to DEB_BUILD_OPTS is a mistake and
  DEB_BUILD_OPTIONS was intended instead.
 
+Tag: debian-rules-should-not-use-DH_EXTRA_ADDONS
+Severity: normal
+Certainty: certain
+Info: The DH_EXTRA_ADDONS variable is designed for local or downstream build
+ use and not for use in debian/rules
+ .
+ dh(1)'s <tt>--with</tt> should be used instead.
+
 Tag: debian-rules-should-not-automatically-update-control
 Severity: serious
 Certainty: possible

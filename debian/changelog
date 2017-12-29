@@ -26,6 +26,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       suggestion.
     + [CL] Include the line number when warning about instances of
       override_dh_clean targets that are missing calls to dh_clean.
+    + [CL] Apply patch from Paul Tagliamonte to check for files
+      that use DH_EXTRA_ADDONS. Thanks! (Closes: #885790)
   * checks/source-copyright.desc:
     + [CL] Also mention that we check for NOTICE.gz files when looking for
       Apache 2.0 packages that do not distribute their accompanying NOTICE

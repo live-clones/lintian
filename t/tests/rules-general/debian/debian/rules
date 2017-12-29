@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
 DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes
+DH_EXTRA_ADDONS = systemd
 
 %:
 	dh $@
