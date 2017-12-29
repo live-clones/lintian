@@ -27,7 +27,7 @@ lintian (2.5.67) UNRELEASED; urgency=medium
     + [CL] Include the line number when warning about instances of
       override_dh_clean targets that are missing calls to dh_clean.
     + [CL] Apply patch from Paul Tagliamonte to check for files
-      that use DH_EXTRA_ADDONS. Thanks! (Closes: #885790)
+      that use DH_EXTRA_ADDONS. Thanks!  (Closes: #885790)
     + [CL] Update $PYTHON3X_DEPEND to prevent false positives in
       missing-python-build-dependency.  (Closes: #750537)
   * checks/source-copyright.desc:
