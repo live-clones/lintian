@@ -1,7 +1,7 @@
-W: python-foo: python-package-depends-on-package-from-other-python-variant (Depends: python3-bar)
-W: python-foo: python-package-depends-on-package-from-other-python-variant (Depends: python3-foo)
+W: python-foo: python-package-depends-on-package-from-other-python-variant Depends: python3-bar
+W: python-foo: python-package-depends-on-package-from-other-python-variant Depends: python3-foo
 W: python-package-depends-on-package-from-other-python-variant source: intra-source-package-circular-dependency python-foo python2-foo python3-foo
-W: python2-foo: python-package-depends-on-package-from-other-python-variant (Depends: python3-foo)
-W: python3-foo: python-package-depends-on-package-from-other-python-variant (Depends: python-foo)
-W: python3-foo: python-package-depends-on-package-from-other-python-variant (Depends: python2-bar)
-W: python3-foo: python-package-depends-on-package-from-other-python-variant (Depends: python2-foo)
+W: python2-foo: python-package-depends-on-package-from-other-python-variant Depends: python3-foo
+W: python3-foo: python-package-depends-on-package-from-other-python-variant Depends: python-foo
+W: python3-foo: python-package-depends-on-package-from-other-python-variant Depends: python2-bar
+W: python3-foo: python-package-depends-on-package-from-other-python-variant Depends: python2-foo
