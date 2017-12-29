@@ -15,6 +15,11 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       dependencies *from* packages with such names.  (Closes: #885693)
     + [CL] Also ignore -common packages for intra-Python variant dependency
       checking.
+  * checks/rules.desc:
+    + [CL] Suggest using /usr/share/dpkg/architecture.mk as a solution to
+      debian-rules-sets-dpkg-architecture-variable rather than simply
+      replacing assignments with ?=. Thanks to Helmut Grohne for the
+      suggestion.
   * checks/watch-file.{desc,pm}:
     + [CL] Apply patch from Felix Lechner <felix.lechner@lease-up.com> to
       check for packages where an upstream signature exists but is not
