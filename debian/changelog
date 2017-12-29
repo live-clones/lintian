@@ -13,8 +13,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       that depend on Python {3,2} packages when the package being depended
       on ends with -doc. We were previously only catching the case for
       dependencies *from* packages with such names.  (Closes: #885693)
-    + [CL] Also ignore -docs, -common, -tools packages for intra-Python
-      variant dependency checking, python-foo-but-no-python3-foo, etc.
+    + [CL] Also ignore -doc, -docs, -dev, -common and -tools packages for
+      intra-Python variant dependency checking, python-but-no-python3, etc.
     + [CL] Drop parens in depends-on-package-from-other-python-variant
       output.
   * checks/rules.{desc.pm}:
