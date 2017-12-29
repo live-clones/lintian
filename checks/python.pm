@@ -32,6 +32,10 @@ my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
 my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
 my @PYTHON2 = qw(python python2.7 python-dev);
 
+my %DJANGO_PACKAGES = (
+    '^python3-django-' => 'python3-django',
+    '^python2?-django-' => 'python-django',
+);
 my %MISMATCHED_SUBSTVARS = (
     '^python3-.+' => '${python:Depends}',
     '^python2?-.+' => '${python3:Depends}',
@@ -109,12 +113,12 @@ sub _run_binary {
     }
 
     # Django modules
-    if (    $pkg =~ /^(python[23]?-django)-/
-        and $pkg !~ /^python3?-django$/
-        and none { $pkg =~ m/$_$/ } @IGNORE) {
-        my $version = $1;
-        tag 'django-package-does-not-depend-on-django', $version
-          if not $info->relation('strong')->implies($version);
+    foreach my $regex (keys %DJANGO_PACKAGES) {
+        my $basepkg = $DJANGO_PACKAGES{$regex};
+        next if $pkg !~ /$regex/;
+        next if $pkg =~ /^python3?-django$/;
+        tag 'django-package-does-not-depend-on-django', $basepkg
+          if not $info->relation('strong')->implies($basepkg);
     }
 
     if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {

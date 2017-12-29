@@ -17,6 +17,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       intra-Python variant dependency checking, python-but-no-python3, etc.
     + [CL] Drop parens in depends-on-package-from-other-python-variant
       output.
+    + [CL] Refactor django-package-does-not-depend-on-django check to
+      correctly check Django packages called python2-django-foo.
   * checks/rules.{desc.pm}:
     + [CL] Suggest using /usr/share/dpkg/architecture.mk as a solution to
       debian-rules-sets-dpkg-architecture-variable rather than simply
