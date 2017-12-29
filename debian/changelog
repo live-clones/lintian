@@ -15,11 +15,13 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       dependencies *from* packages with such names.  (Closes: #885693)
     + [CL] Also ignore -common and -tools packages for intra-Python variant
       dependency checking, python-foo-but-no-python3-foo, etc.
-  * checks/rules.desc:
+  * checks/rules.{desc.pm}:
     + [CL] Suggest using /usr/share/dpkg/architecture.mk as a solution to
       debian-rules-sets-dpkg-architecture-variable rather than simply
       replacing assignments with ?=. Thanks to Helmut Grohne for the
       suggestion.
+    + [CL] Include the line number when warning about instances of
+      override_dh_clean targets that are missing calls to dh_clean.
   * checks/source-copyright.desc:
     + [CL] Also mention that we check for NOTICE.gz files when looking for
       Apache 2.0 packages that do not distribute their accompanying NOTICE
