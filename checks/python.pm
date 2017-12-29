@@ -23,16 +23,14 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any none);
 
 use Lintian::Tags qw(tag);
 use Lintian::Relation qw(:constants);
 
 my @FIELDS = qw(Depends Pre-Depends Recommends Suggests);
+my @IGNORE = qw(-dev$ -docs?$ -common$ -tools$);
 my @PYTHON2 = qw(python python2.7 python-dev);
-
-my $RE_SUFFIX_LOOKAHEAD= '(?<!-dev)(?<!-doc)(?<!-docs)(?<!-common)(?<!-tools)';
-my $RE_SUFFIX_ALTERNATES = '(dev|docs?|common|tools)';
 
 my %MISMATCHED_SUBSTVARS = (
     '^python3-.+' => '${python:Depends}',
@@ -57,8 +55,9 @@ sub _run_source {
     my @package_names = $info->binaries;
     foreach my $bin (@package_names) {
         # Python 2 modules
-        if ($bin=~ /^python2?-(.*$RE_SUFFIX_LOOKAHEAD)$/){
+        if ($bin =~ /^python2?-(.*)$/) {
             my $suffix = $1;
+            next if any { $bin =~ /$_/ } @IGNORE;
             tag 'python-foo-but-no-python3-foo', $bin
               unless any { $_ eq "python3-${suffix}" } @package_names;
         }
@@ -77,7 +76,7 @@ sub _run_source {
     foreach my $regex (keys %MISMATCHED_SUBSTVARS) {
         my $substvar = $MISMATCHED_SUBSTVARS{$regex};
         for my $binpkg ($info->binaries) {
-            next if $binpkg =~ m/-$RE_SUFFIX_ALTERNATES/;
+            next if any { $binpkg =~ /$_/ } @IGNORE;
             next if $binpkg !~ qr/$regex/;
             tag 'mismatched-python-substvar', $binpkg, $substvar
               if $info->binary_relation($binpkg, 'all')->implies($substvar);
@@ -93,13 +92,13 @@ sub _run_binary {
     my @entries = $info->changelog ? $info->changelog->data : ();
 
     # Python 2 modules
-    if ($pkg =~ /^python2?-.*(?<!-doc)$/) {
+    if ($pkg =~ /^python2?-/ and none { $pkg =~ /$_$/ } @IGNORE) {
         tag 'new-package-should-not-package-python2-module'
           if @entries == 1;
     }
 
     # Python applications
-    if ($pkg !~ /^python[23]?-/ and not any { $_ eq $pkg } @PYTHON2) {
+    if ($pkg !~ /^python[23]?-/ and none { $_ eq $pkg } @PYTHON2) {
         for my $field (@FIELDS) {
             for my $dep (@PYTHON2) {
                 tag 'dependency-on-python-version-marked-for-end-of-life',
@@ -110,25 +109,26 @@ sub _run_binary {
     }
 
     # Django modules
-    if (    $pkg =~ /^(python[23]?-django)-.*(?<!-doc)$/
-        and $pkg !~ /^python3?-django$/) {
+    if (    $pkg =~ /^(python[23]?-django)-/
+        and $pkg !~ /^python3?-django$/
+        and none { $pkg =~ m/$_$/ } @IGNORE) {
         my $version = $1;
         tag 'django-package-does-not-depend-on-django', $version
           if not $info->relation('strong')->implies($version);
     }
 
-    if ($pkg =~ /^python([23]?)-.*$RE_SUFFIX_LOOKAHEAD$/){
+    if ($pkg =~ /^python([23]?)-/ and none { $pkg =~ /$_/ } @IGNORE) {
         my $version = $1 || '2'; # Assume python-foo is a Python 2.x package
         my @prefixes = ($version eq '2') ? 'python3' : ('python', 'python2');
 
         for my $field (@FIELDS) {
             for my $prefix (@prefixes) {
                 my $visit = sub {
-                    # Depending on python-module-doc, etc. is always fine
-                    return if m/-$RE_SUFFIX_ALTERNATES$/;
+                    my $rel = $_;
+                    return if any { $rel =~ /$_/ } @IGNORE;
                     #<<< No tidy (tag name too long)
                     tag 'python-package-depends-on-package-from-other-python-variant',
-                        "$field: $_" if m/^$prefix-/;
+                        "$field: $rel" if /^$prefix-/;
                     #>>>
                 };
                 $info->relation($field)->visit($visit, VISIT_PRED_NAME);
