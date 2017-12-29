@@ -5,7 +5,8 @@ Maintainer: {$author}
 Standards-Version: {$standards_version}
 Build-Depends: {$build_depends}, dh-elpa
 Homepage: https://lintian.debian.org/
-Rules-Requires-Root: no
+# dh-elpa in stretch chokes on unknown fields T_T
+#Rules-Requires-Root: no
 
 Package: elpa-foo
 Section: lisp
