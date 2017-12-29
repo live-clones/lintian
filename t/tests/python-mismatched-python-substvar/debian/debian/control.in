@@ -53,3 +53,15 @@ Description: False positive Python 3.X
  be an empty package.
  .
  False positive package for Python 3.X.
+
+Package: python-{$source}-tools
+Section: python
+Architecture: all
+Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Description: Generic tools package
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Generic -tools packages are allowed.
