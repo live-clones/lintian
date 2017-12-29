@@ -8,6 +8,11 @@ lintian (2.5.67) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [CL] Split out python-module-has-overly-generic-name regular
       expression into a data file.
+  * checks/python.pm:
+    + [CL] Prevent false positives when checking for Python {2,3} packages
+      that depend on Python {3,2} packages when the package being depended
+      on ends with -doc. We were previously only catching the case for
+      dependencies *from* packages with such names.  (Closes: #885693)
   * checks/watch-file.{desc,pm}:
     + [CL] Apply patch from Felix Lechner <felix.lechner@lease-up.com> to
       check for packages where an upstream signature exists but is not

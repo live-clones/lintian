@@ -120,6 +120,8 @@ sub _run_binary {
         for my $field (@FIELDS) {
             for my $prefix (@prefixes) {
                 my $visit = sub {
+                    # Depending on python-module-doc is always fine
+                    return if m/-doc$/;
                     #<<< No tidy (tag name too long)
                     tag 'python-package-depends-on-package-from-other-python-variant',
                         "($field: $_)" if m/^$prefix-/;
