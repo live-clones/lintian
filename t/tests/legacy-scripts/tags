@@ -11,16 +11,16 @@ E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-brok
 E: scripts: init.d-script-has-duplicate-lsb-section etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section etc/init.d/lsb-broken:15
 E: scripts: init.d-script-needs-depends-on-lsb-base etc/init.d/skeleton (line 35)
-E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken)
-E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo)
-E: scripts: missing-dep-for-interpreter python2 => python:any | python-minimal:any (usr/bin/py2foo)
+E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken) #!/usr/bin/jruby
+E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo) #!/usr/local/bin/lefty
+E: scripts: missing-dep-for-interpreter python2 => python:any | python-minimal:any (usr/bin/py2foo) #!python2
 E: scripts: package-installs-python-bytecode usr/lib/python2.3/site-packages/test.pyc
-E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0envfoo
-E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo
-E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo
-E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpfoo
+E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0envfoo #!php7.0
+E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo #!/usr/bin/php7.0
+E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo #!php
+E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpfoo #!/usr/bin/php
 E: scripts: python-script-but-no-python-dep usr/bin/py2.Xfoo
-E: scripts: python-script-but-no-python-dep usr/bin/pyfoo
+E: scripts: python-script-but-no-python-dep usr/bin/pyfoo #!python
 E: scripts: script-without-interpreter control/prerm
 E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
 E: scripts: wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)

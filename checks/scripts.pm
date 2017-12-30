@@ -455,9 +455,11 @@ sub run {
             }
             if ($depends && !$all_parsed->implies($depends)) {
                 if ($base =~ /^php/) {
-                    tag 'php-script-but-no-php-cli-dep', $filename;
+                    tag 'php-script-but-no-php-cli-dep', $filename,
+                      "#!$interpreter";
                 } elsif ($base =~ /^(python|ruby|[mg]awk)$/) {
-                    tag("$base-script-but-no-$base-dep", $filename);
+                    tag("$base-script-but-no-$base-dep",
+                        $filename, "#!$interpreter");
                 } elsif ($base eq 'csh' && $filename =~ m,^etc/csh/login\.d/,){
                     # Initialization files for csh.
                 } elsif ($base eq 'fish' && $filename =~ m,^etc/fish\.d/,) {
@@ -473,7 +475,7 @@ sub run {
                     # ABI-versioned virtual packages for erlang
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
-                      "($filename)";
+                      "($filename)", "#!$interpreter";
                 }
             }
         } elsif ($VERSIONED_INTERPRETERS->known($base)) {
@@ -490,7 +492,7 @@ sub run {
                     tag "$1-script-but-no-$1-dep", $filename;
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
-                      "($filename)";
+                      "($filename)", "#!$interpreter";
                 }
             }
         } else {
@@ -502,7 +504,7 @@ sub run {
                     tag "$1-script-but-no-$1-dep", $filename;
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
-                      "($filename)";
+                      "($filename)", "#!$interpreter";
                 }
             }
         }
