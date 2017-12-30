@@ -2,6 +2,9 @@ lintian (2.5.67) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/apache2.pm:
+    + [CL] Include the offending filename and line number in the output of
+      apache2-deprecated-auth-config and apache2-unparsable-dependency.
   * checks/changelog-file.{desc,pm}:
     + [CL] Warn about changelog entries that have incorrectly formatted
       dates.  (Closes: #793406)

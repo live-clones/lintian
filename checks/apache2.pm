@@ -229,7 +229,7 @@ sub inspect_conf_file {
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
             qr{</?Limit.*?>}xsm, qr{</?LimitExcept.*?>}xsm) {
             if (m{\A \s* ($directive) (?:\s+|\Z)}xsm) {
-                tag 'apache2-deprecated-auth-config', $1;
+                tag 'apache2-deprecated-auth-config', $file, "(line $.)", $1;
             }
         }
 
@@ -239,7 +239,7 @@ sub inspect_conf_file {
               if $field eq 'Conflicts' and $conftype ne 'mods';
             my @dependencies = split(/[\n\s]+/, $value);
             foreach my $dep (@dependencies) {
-                tag 'apache2-unparsable-dependency', $file, $dep
+                tag 'apache2-unparsable-dependency', $file, "(line $.)", $dep
                   if $dep =~ m/[^\w\.]/
                   or $dep =~ /^mod\_/
                   or $dep =~ m/\.(?:conf|load)/;
