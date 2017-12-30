@@ -144,3 +144,7 @@ Info: The package is using some of the deprecated authentication configuration
  semantics. The configuration directives should be replaced with a suitable
  combination of &lt;RequireAll&gt;, &lt;RequireAny&gt;, Require all, Require local,
  Require ip, and Require method.
+ .
+ Alternatively, the offending lines can be wrapped between
+ &lt;IfModule !mod_authz_core.c&gt; ... &lt;/IfModule&gt; or
+ &lt;IfVersion &lt; 2.3&gt; ... &lt;/IfVersion&gt; directives.

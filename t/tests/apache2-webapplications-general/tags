@@ -1,4 +1,5 @@
 E: phpmyfoo2: apache2-configuration-files-need-conf-suffix etc/apache2/conf-available/phpmyfoo2
+W: phpmyfoo2: non-standard-apache2-configuration-name false-positives.conf != phpmyfoo2.conf
 W: phpmyfoo2: non-standard-apache2-configuration-name local-phpmyfoo2.conf != phpmyfoo2.conf
 W: phpmyfoo2: non-standard-apache2-configuration-name phpmyfoo2 != phpmyfoo2.conf
 W: phpmyfoo3: apache2-deprecated-auth-config etc/apache2/conf.d/phpmyfoo.conf (line 11) </Limit>

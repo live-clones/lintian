@@ -2,9 +2,12 @@ lintian (2.5.67) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/apache2.pm:
+  * checks/apache2.{desc,pm}:
     + [CL] Include the offending filename and line number in the output of
       apache2-deprecated-auth-config and apache2-unparsable-dependency.
+    + [CL] Avoid false positives in apache2-deprecated-auth-config where
+      the offending lines are wrapped in suitable "IfModule" or "IfVersion"
+      directives.  (Closes: #788991, 710656)
   * checks/changelog-file.{desc,pm}:
     + [CL] Warn about changelog entries that have incorrectly formatted
       dates.  (Closes: #793406)

@@ -224,11 +224,15 @@ sub inspect_conf_file {
     # Don't follow unsafe links
     return if not $file->is_open_ok;
     my $fd = $file->open;
+    my $skip = 0;
     while (<$fd>)  {
+        $skip++
+          if m{<\s*IfModule.*!\s*mod_authz_core}
+          or m{<\s*IfVersion\s+<\s*2\.3};
 
         for my $directive ('Order', 'Satisfy', 'Allow', 'Deny',
             qr{</?Limit.*?>}xsm, qr{</?LimitExcept.*?>}xsm) {
-            if (m{\A \s* ($directive) (?:\s+|\Z)}xsm) {
+            if (m{\A \s* ($directive) (?:\s+|\Z)}xsm and not $skip) {
                 tag 'apache2-deprecated-auth-config', $file, "(line $.)", $1;
             }
         }
@@ -246,6 +250,7 @@ sub inspect_conf_file {
             }
         }
 
+        $skip-- if m{<\s*/\s*If(Module|Version)};
     }
     close($fd);
     return;
