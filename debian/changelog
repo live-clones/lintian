@@ -7,7 +7,7 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       apache2-deprecated-auth-config and apache2-unparsable-dependency.
     + [CL] Avoid false positives in apache2-deprecated-auth-config where
       the offending lines are wrapped in suitable "IfModule" or "IfVersion"
-      directives.  (Closes: #788991, 710656)
+      directives.  (Closes: #788991, #710656)
   * checks/changelog-file.{desc,pm}:
     + [CL] Warn about changelog entries that have incorrectly formatted
       dates.  (Closes: #793406)
