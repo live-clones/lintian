@@ -52,6 +52,10 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       check for packages where an upstream signature exists but is not
       being used.  (Closes: #885621)
 
+  * data/fields/name_section_mappings:
+    + [CL] Ensure that PAM modules are placed in the "admin" section,
+      additionally preventing a false positive for libpam-krb5 which was
+      being caught by a "libfoo1" => "libs" entry.  (Closes: #885899)
   * data/files/python-generic-modules:
     + [CL] Add "examples".
   * data/standards-version/release-dates:

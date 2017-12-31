@@ -34,6 +34,7 @@ lib.*-cil(?:-dev)?$          => cli-mono
 # data files
 ^gir\d+\.\d+-.*-\d+\.\d+$    => introspection
 ^(?:x?fonts|ttf)-                       => fonts
+^libpam-                                => admin
 ^(?:aspell|hunspell|myspell|mythes)-    => localization
 ^hyphen-[a-z]{2}(?:-[a-z]{2})?$         => localization
 ^dict-freedict-                         => localization
