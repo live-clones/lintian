@@ -42,7 +42,7 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       to dh_fixperms.  (Closes: #885910)
   * checks/scripts.pm:
     + [CL] Include the offending/unknown shebang in the output of various
-      interpreter-relateed tags.  (Closes: #673734)
+      interpreter-related tags.  (Closes: #673734)
   * checks/source-copyright.desc:
     + [CL] Also mention that we check for NOTICE.gz files when looking for
       Apache 2.0 packages that do not distribute their accompanying NOTICE
