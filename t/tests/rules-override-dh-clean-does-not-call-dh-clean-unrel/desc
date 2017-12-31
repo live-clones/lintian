@@ -1,5 +1,0 @@
-Testname: rules-override-dh-clean-does-not-call-dh-clean-unrel
-Version: 1.0
-Description: Test for missing calls to dh_clean in override_dh_clean (false positive)
-Test-Against:
- override_dh_clean-does-not-call-dh_clean

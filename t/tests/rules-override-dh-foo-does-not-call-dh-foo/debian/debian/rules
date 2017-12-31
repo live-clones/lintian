@@ -3,5 +3,5 @@
 %:
 	dh $@
 
-# Empty target
+# Empty targets
 override_dh_clean:

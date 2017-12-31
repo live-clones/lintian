@@ -36,6 +36,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
       that use DH_EXTRA_ADDONS. Thanks!  (Closes: #885790)
     + [CL] Update $PYTHON3X_DEPEND to prevent false positives in
       missing-python-build-dependency.  (Closes: #750537)
+    + [CL] Refactor check for override_dh_clean-does-not-call-dh_clean
+      tag into a loop.
   * checks/scripts.pm:
     + [CL] Include the offending/unknown shebang in the output of various
       interpreter-relateed tags.  (Closes: #673734)
