@@ -293,7 +293,7 @@ lintian (2.5.63) unstable; urgency=medium
 
   * reporting/templates/maintainer.tmpl:
     + [CL] Add links from each maintainer page (which does not include
-      pedantic tags, etc.) to the corresponding package on the full report,
+      pedantic tags, etc.) to the corresponding package on the full report.
       Thanks to Paul Wise for the idea and report.  (Closes: #884572)
 
   * vendors/pureos/main/data/changes-file/known-dists:
