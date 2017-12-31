@@ -21,6 +21,7 @@ E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
 E: manpages-general: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
 I: manpages-general: FSSTND-dir-in-manual-page usr/share/man/man1/test.1p.gz:13 /var/catman/
 I: manpages-general: spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling
+W: manpages-general source: override_dh_fixperms-does-not-call-dh_fixperms (line 66)
 W: manpages-general: binary-without-english-manpage usr/bin/binary-without-english-manpage
 W: manpages-general: binary-without-manpage usr/bin/rstartd
 W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz

@@ -5,6 +5,7 @@ TMP:=debian/$(shell dh_listpackages)/
 	dh $@
 
 override_dh_fixperms:
+	dh_fixperms
 	chmod 0755 $(TMP)/usr/bin/01-normal-script
 	chmod 0644 $(TMP)/usr/bin/02-no-exec-script
 	rm -f $(TMP)/usr/bin/03-hardlink-script

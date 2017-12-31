@@ -1,3 +1,4 @@
 E: libexecbit1: shlib-with-executable-bit usr/lib/libexecbit.so.1.0.1 0755
 W: libexecbit1: non-standard-file-perm usr/lib/libbadperm.so.1.0.1 0600 != 0644
 W: libexecbit1: shlib-with-bad-permissions usr/lib/libbadperm.so.1.0.1 0600
+W: shared-libs-exec-bit source: override_dh_fixperms-does-not-call-dh_fixperms (line 8)
