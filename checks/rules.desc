@@ -305,3 +305,16 @@ Info: The <tt>debian/rules</tt> file for this package uses
  .
  Please add a call to <tt>dh_clean</tt>.
 Ref: #884419, #884815
+
+Tag: override_dh_fixperms-does-not-call-dh_fixperms
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/rules</tt> file for this package uses
+ the <tt>override_dh_fixperms</tt> but this target does not reference
+ <tt>dh_fixperms</tt>.
+ .
+ This can result in packages inheriting the <tt>umask(2)</tt> of the build
+ process, rendering the package unreproducible.
+ .
+ Please add a call to <tt>dh_fixperms</tt>.
+Ref: #885909

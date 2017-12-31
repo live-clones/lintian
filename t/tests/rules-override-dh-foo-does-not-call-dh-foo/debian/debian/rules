@@ -5,3 +5,4 @@
 
 # Empty targets
 override_dh_clean:
+override_dh_fixperms:

@@ -426,7 +426,7 @@ sub run {
         tag 'binary-arch-rules-but-pkg-is-arch-indep' if $nonempty;
     }
 
-    foreach my $suffix (qw(dh_clean)) {
+    foreach my $suffix (qw(dh_clean dh_fixperms)) {
         my $line = $overridden{$suffix};
         tag "override_$suffix-does-not-call-$suffix", "(line $line)"
           if $line

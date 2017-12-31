@@ -1,1 +1,2 @@
 W: rules-override-dh-foo-does-not-call-dh-foo source: override_dh_clean-does-not-call-dh_clean (line 7)
+W: rules-override-dh-foo-does-not-call-dh-foo source: override_dh_fixperms-does-not-call-dh_fixperms (line 8)
