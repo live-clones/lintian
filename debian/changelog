@@ -86,7 +86,7 @@ lintian (2.5.66) unstable; urgency=medium
       - vcs-fields-use-more-than-one-vcs
 
   * checks/*.desc:
-    + [CL] Standardise on capital-L "Lintian" in package descriptions.
+    + [CL] Standardise on capital-L "Lintian" in tag descriptions.
       Thanks to Adam D. Barratt for the suggestion.
   * checks/cruft.{pm,desc}:
     + [CL] Check for packages that invoke AC_PATH_PROG without considering
