@@ -67,6 +67,7 @@ our $EXCLUDE =join(
       ^trailing-slash-for-dpkg-maintscript-helper-symlink_to_dir$
       ^file-name-contains-wildcard-character$
       ^package-contains-.*$
+      ^override_dh_.+-does-not-call-dh_.+$
       ));
 
 # Exclude "lintian.desc" as it does not have a perl module like other
