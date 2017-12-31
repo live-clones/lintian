@@ -5,6 +5,6 @@ E: libapache2-modbaz: apache2-module-depends-on-real-apache2-package apache2.2-c
 E: libapache2-modbaz: apache2-module-does-not-depend-on-apache2-api
 W: libapache2-mod-foo2: apache2-reverse-dependency-calls-wrapper-script postinst a2enmod
 W: libapache2-mod-foo2: apache2-reverse-dependency-calls-wrapper-script postrm a2dismod
-W: libapache2-mod-foo: apache2-unparsable-dependency etc/apache2/mods-available/foo.load baz4.load
-W: libapache2-mod-foo: apache2-unparsable-dependency etc/apache2/mods-available/foo.load mod_baz3
+W: libapache2-mod-foo: apache2-unparsable-dependency etc/apache2/mods-available/foo.load (line 2) baz4.load
+W: libapache2-mod-foo: apache2-unparsable-dependency etc/apache2/mods-available/foo.load (line 2) mod_baz3
 W: libapache2-modbaz: non-standard-apache2-module-package-name libapache2-modbaz != libapache2-mod-baz
