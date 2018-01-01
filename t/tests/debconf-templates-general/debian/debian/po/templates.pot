@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-01 22:54+0200\n"
+"POT-Creation-Date: 2018-01-01 22:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -214,4 +214,10 @@ msgid ""
 "One green bottle sitting on the wall, One green bottle sitting on the wall, "
 "And if one green bottle should accidentally fall, There'll be no green "
 "bottles sitting on the wall."
+msgstr ""
+
+#. Type: entropy
+#. Description
+#: ../templates:23001
+msgid "Template with entropy type"
 msgstr ""

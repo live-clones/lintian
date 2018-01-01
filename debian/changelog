@@ -8,6 +8,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/huge-usr-share.pm:
     + [CL] Bump arch-dep-package-has-big-usr-share thresholds; they were
       last set in 2004.  (Closes: #648755)
+  * checks/debconf.pm:
+    + [CL] Don't warn about unknown template type "entropy" when a package
+      depends on cdebconf.  (Closes: #677870)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 01 Jan 2018 15:41:06 +0000
 

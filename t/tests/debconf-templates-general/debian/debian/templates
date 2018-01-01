@@ -118,3 +118,7 @@ _Description: Name the title of this song:
  One green bottle sitting on the wall,
  And if one green bottle should accidentally fall,
  There'll be no green bottles sitting on the wall.
+
+Template: debconf/entropy-type
+Type: entropy
+_Description: Template with entropy type

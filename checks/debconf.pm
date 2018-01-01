@@ -210,7 +210,10 @@ sub run {
         if (not exists $template->{type}) {
             tag 'no-template-type', "$template->{template}";
         } elsif (not $valid_types{$template->{type}}) {
-            tag 'unknown-template-type', "$template->{type}";
+            # cdebconf has a special "entropy" type
+            tag 'unknown-template-type', "$template->{type}"
+              unless ($template->{type} eq 'entropy'
+                and $alldependencies->implies('cdebconf'));
         } elsif ($template->{type} eq 'select') {
             $isselect = 1;
         } elsif ($template->{type} eq 'multiselect') {
