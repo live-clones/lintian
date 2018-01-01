@@ -1306,7 +1306,7 @@ sub run {
             and not $fname =~ m,^usr/share/common-licenses/[^/]+$,o
             and not defined $link
             # Sphinx includes license files
-            and not $fname =~ m,/_sources/license\.rst(\.txt)?$,o
+            and not $fname =~ m,/_sources/license\.txt(\.rst)?$,oi
           ) {
 
             # okay, we cannot rule it out based on file name; but if
