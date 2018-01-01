@@ -2,6 +2,8 @@ lintian (2.5.68) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.pm:
+    + [FL] Fix version parsing for hyphen in upstream versions.
   * checks/cruft.pm:
     + [CL] Avoid a false-positive reported by Theppitak Karoonboonyanan
       when matching autotools-pkg-config-macro-not-cross-compilation-safe

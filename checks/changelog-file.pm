@@ -328,10 +328,10 @@ sub run {
             $first_upstream =~ s/-[^-]+$//;
             my $second_upstream = $second_version;
             $second_upstream =~ s/-[^-]+$//;
-            my $first_debian = $first_version;
-            $first_debian =~ s/^[^-]+-//;
-            my $second_debian = $second_version;
-            $second_debian =~ s/^[^-]+-//;
+            my $first_debian =substr $first_version, length($first_upstream);
+            $first_debian =~ s/-([^-]+)$/$1/ if length($first_debian) > 0;
+            my $second_debian =substr $second_version,length($second_upstream);
+            $second_debian =~ s/-([^-]+)$/$1/ if length($second_debian) > 0;
 
             if ($first_upstream eq $second_upstream) {
                 if ($entries[0]->Changes
