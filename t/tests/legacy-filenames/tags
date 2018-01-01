@@ -63,6 +63,7 @@ W: filenames source: diff-contains-svk-commit-file data/svk-commitsEr9P.tmp
 W: filenames source: diff-contains-svn-commit-file data/svn-commit.tmp
 W: filenames source: diff-contains-svn-conflict-file data/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-control-dir .svn
+W: filenames source: native-package-with-dash-version
 W: filenames source: no-section-field-for-source
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage usr/bin/X11/testxbin

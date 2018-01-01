@@ -49,6 +49,7 @@ W: maintainer-scripts source: debian-watch-file-should-mangle-version line 7
 W: maintainer-scripts source: debian-watch-file-unknown-version 5
 W: maintainer-scripts source: dfsg-version-in-native-package 7+dfsg-0.1
 W: maintainer-scripts source: dm-upload-allowed-is-obsolete
+W: maintainer-scripts source: native-package-with-dash-version
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
 W: maintainer-scripts: command-with-path-in-maintainer-script postinst:172 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep

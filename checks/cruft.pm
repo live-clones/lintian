@@ -346,7 +346,7 @@ sub run {
     my $version = $info->field('version', '0-1');
 
     if ($info->native) {
-        if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
+        if ($version =~ /-/) {
             tag 'native-package-with-dash-version';
         }
     }else {
