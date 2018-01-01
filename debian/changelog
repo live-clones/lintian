@@ -14,6 +14,8 @@ lintian (2.5.67) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [CL] Split out python-module-has-overly-generic-name regular
       expression into a data file.
+    + [CL] Don't warn about extra license files installed via Sphinx.
+      Thanks, Stuart Prescott!  (Closes: #885968)
   * checks/python.pm:
     + [CL] Prevent false positives when checking for Python {2,3} packages
       that depend on Python {3,2} packages when the package being depended
