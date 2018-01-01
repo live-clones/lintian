@@ -7,4 +7,4 @@ override_dh_install:
 	echo "Hallo World" > debian/huge-usr-share-percent/usr/lib/a/some-file
 	install -d debian/huge-usr-share-percent/usr/share/a
 	dd if=/dev/zero of=debian/huge-usr-share-percent/usr/share/a/zero \
-	    bs=1024k count=2
+	    bs=1024k count=4

@@ -7,7 +7,6 @@ Test-Against:
  control-file-is-empty
 Test-For:
  ancient-standards-version
- arch-dep-package-has-big-usr-share
  binary-control-field-duplicates-source
  binary-has-unneeded-section
  binary-without-manpage
@@ -94,3 +93,5 @@ Test-For:
  unstripped-binary-or-object
  vcs-field-uses-insecure-uri
  xs-vcs-header-in-debian-control
+Test-Against:
+ arch-dep-package-has-big-usr-share

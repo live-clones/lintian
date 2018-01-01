@@ -5,6 +5,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/scripts.desc:
     + [CL] Also mention Recommends and Suggests in the opening paragraph of
       python-script-but-no-python-dep.  (Closes: #687141)
+  * checks/huge-usr-share.pm:
+    + [CL] Bump arch-dep-package-has-big-usr-share thresholds; they were
+      last set in 2004.  (Closes: #648755)
 
  -- Chris Lamb <lamby@debian.org>  Mon, 01 Jan 2018 15:41:06 +0000
 

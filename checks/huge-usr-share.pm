@@ -27,8 +27,8 @@ use Lintian::Tags qw(tag);
 
 # Threshold in kB of /usr/share to trigger this warning.  Consider that the
 # changelog alone can be quite big, and cannot be moved away.
-my $THRESHOLD_SIZE_SOFT = 2048;
-my $THRESHOLD_SIZE_HARD = 4096;
+my $THRESHOLD_SIZE_SOFT = 4096;
+my $THRESHOLD_SIZE_HARD = 8192;
 my $THRESHOLD_PERC = 50;
 
 sub run {
