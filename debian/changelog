@@ -2,6 +2,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/scripts.desc:
+    + [CL] Also mention Recommends and Suggests in the opening paragraph of
+      python-script-but-no-python-dep.  (Closes: #687141)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 01 Jan 2018 15:41:06 +0000
 
 lintian (2.5.67) unstable; urgency=medium

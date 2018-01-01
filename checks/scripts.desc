@@ -240,7 +240,8 @@ Severity: important
 Certainty: certain
 Info: Packages with Python scripts should depend on the package
  <tt>python</tt>.  Those with scripts that specify a specific version of
- Python must depend on that version of Python (exactly).
+ Python must depend, recommend or suggest on that version of Python
+ (exactly).
  .
  For example, if a script in the package uses <tt>#!/usr/bin/python</tt>,
  the package needs a dependency on <tt>python</tt>.  If a script uses
