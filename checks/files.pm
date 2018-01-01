@@ -1305,8 +1305,8 @@ sub run {
             # base-files (which is required to ship them)
             and not $fname =~ m,^usr/share/common-licenses/[^/]+$,o
             and not defined $link
-            # Sphinx includes license files
-            and not $fname =~ m,/_sources/license\.txt(\.rst)?$,oi
+            # Sphinx includes various license files
+            and not $fname =~ m,/_sources/license(\.rst)?\.txt$,oi
           ) {
 
             # okay, we cannot rule it out based on file name; but if
