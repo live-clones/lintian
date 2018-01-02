@@ -17,6 +17,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/rules.pm:
     + [CL] Also allow $(overridden_command) when checking for the
       override_dh_fixperms-does-not-call-dh_fixperms etc. tags.
+  * checks/shared-libs.pm:
+    + [CL] Skip Objective-C libraries for the no-symbols-control-file tag
+      as instance/class methods do not appear in the symbol table. Thanks
+      to Yavor Doganov for the report and help.  (Closes: #749202)
 
   * data/files/fnames:
     + [CL] Warn about packages that ship (non-reproducible) Python

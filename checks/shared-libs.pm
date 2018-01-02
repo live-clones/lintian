@@ -440,6 +440,10 @@ sub run {
             for my $shlib (@shlibs, keys %unversioned_shlibs) {
                 # skip it if it's not a public shared library
                 next unless $ldconfig_dirs->known(dirname($shlib));
+                # Skip Objective C libraries as instance/class methods do not
+                # appear in the symbol table
+                next if any { @{$_}[2] =~ m/^__objc_/ }
+                @{$objdump->{$shlib}{SYMBOLS}};
                 tag 'no-symbols-control-file', $shlib
                   unless is_nss_plugin($shlib);
             }
