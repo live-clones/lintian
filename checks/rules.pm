@@ -426,12 +426,12 @@ sub run {
         tag 'binary-arch-rules-but-pkg-is-arch-indep' if $nonempty;
     }
 
-    foreach my $suffix (qw(dh_clean dh_fixperms)) {
-        my $line = $overridden{$suffix};
-        tag "override_$suffix-does-not-call-$suffix", "(line $line)"
+    foreach my $cmd (qw(dh_clean dh_fixperms)) {
+        my $line = $overridden{$cmd};
+        tag "override_$cmd-does-not-call-$cmd", "(line $line)"
           if $line
-          and none { m/^\t\s*-?$suffix\b/ }
-        @{$rules_per_target{"override_$suffix"}};
+          and none { m/^\t\s*-?$cmd\b/ }
+        @{$rules_per_target{"override_$cmd"}};
     }
 
     # Make sure that all the required build dependencies are there.  Don't
