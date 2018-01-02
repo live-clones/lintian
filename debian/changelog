@@ -26,6 +26,11 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Warn about packages that ship (non-reproducible) Python
       Hypothesis examples.  (Closes: #886101)
 
+  * t/tests/files-multiarch-foreign-files:
+    + [CL] Ensure that we install to a multiarch directory on all
+      architectures to prevent a FTBFS on, for example, i386.
+      (Closes: #886163)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 01 Jan 2018 15:41:06 +0000
 
 lintian (2.5.67) unstable; urgency=medium
