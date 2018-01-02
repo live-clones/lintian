@@ -116,7 +116,7 @@ sub _run_binary {
     foreach my $regex (keys %DJANGO_PACKAGES) {
         my $basepkg = $DJANGO_PACKAGES{$regex};
         next if $pkg !~ /$regex/;
-        next if $pkg =~ /^python3?-django$/;
+        next if any { $pkg =~ /$_/ } @IGNORE;
         tag 'django-package-does-not-depend-on-django', $basepkg
           if not $info->relation('strong')->implies($basepkg);
     }
