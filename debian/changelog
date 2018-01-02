@@ -29,6 +29,11 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Warn about packages that ship (non-reproducible) Python
       Hypothesis examples.  (Closes: #886101)
 
+  * reporting/templates/maintainer.tmpl:
+    + [CL] Make the previously-hidden package anchor links visible so that
+      one can right-click and copy the URL instead of constructing it
+      manually.
+
   * t/tests/files-multiarch-foreign-files:
     + [CL] Ensure that we install to a multiarch directory on all
       architectures to prevent a FTBFS on, for example, i386.
