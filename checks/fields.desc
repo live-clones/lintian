@@ -1371,3 +1371,17 @@ Info: The <tt>debian/control</tt> file contains a Bugs field that does
  .
  This is likely to make reportbug(1) unable to report bugs.
 Ref: #740944
+
+Tag: orphaned-package-not-maintained-in-debian-infrastracture
+Severity: normal
+Certainty: certain
+Info:
+ This package is orphaned but the specified VCS field does not point to
+ an area within the *.debian.org infrastructure
+ . 
+ This prevents other developers and external contributors to collaborate
+ on its maintenance.
+ .
+ Please move the packaging to under the *.debian.org umbrella.
+ Alternatively, update the specified VCS field is either stale from
+ before it was orphaned, or is otherwise wrong.

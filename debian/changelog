@@ -11,6 +11,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/debconf.pm:
     + [CL] Don't warn about unknown template type "entropy" when a package
       depends on cdebconf.  (Closes: #677870)
+  * checks/fields.pm:
+    + [CL] Warn about orphaned packages that are not maintained in the
+      Debian infrastucture.  (Closes: #886057)
   * checks/python.pm:
     + [CL] Don't warn about django-package-does-not-depend-on-django for
       -doc packages, etc.

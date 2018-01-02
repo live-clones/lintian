@@ -1,0 +1,7 @@
+Testname: files-orphaned-package-not-maintained-in-debian-infrastracture
+Description: Test for orphaned package not maintained in Debian infrastucture
+Version: 1.0
+Test-For:
+ orphaned-package-not-maintained-in-debian-infrastracture
+Test-Against:
+ changelog-should-mention-qa
