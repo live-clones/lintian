@@ -14,6 +14,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/python.pm:
     + [CL] Don't warn about django-package-does-not-depend-on-django for
       -doc packages, etc.
+  * checks/rules.pm:
+    + [CL] Also allow $(overridden_command) when checking for the
+      override_dh_fixperms-does-not-call-dh_fixperms etc. tags.
 
   * data/files/fnames:
     + [CL] Warn about packages that ship (non-reproducible) Python

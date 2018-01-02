@@ -9,4 +9,4 @@ override_dh_clean:
 
 override_dh_fixperms:
 	true
-	dh_fixperms # This rule is a false positive
+	$(overridden_command) # This rule is a false positive

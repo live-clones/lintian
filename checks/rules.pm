@@ -430,7 +430,7 @@ sub run {
         my $line = $overridden{$cmd};
         tag "override_$cmd-does-not-call-$cmd", "(line $line)"
           if $line
-          and none { m/^\t\s*-?$cmd\b/ }
+          and none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
         @{$rules_per_target{"override_$cmd"}};
     }
 
