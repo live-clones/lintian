@@ -1871,3 +1871,21 @@ Info: This package appears to contain a pickled cache of reStructuredText
            dh_auto_clean
            rm -rf debian/doctrees
 Ref: http://sphinx-doc.org/invocation.html#cmdoption-sphinx-build-d
+
+Tag: package-contains-python-hypothesis-example
+Severity: normal
+Certainty: certain
+Info: This package appears to contain the output of running a Python
+ "Hypothesis" testsuite.
+ .
+ These are not useful in the binary package or to end-users. In addition,
+ as they contain random/non-determinstic contents, they can affect the
+ reproducibility of the package.
+ .
+ You can disable generation of these files by, for example:
+ .
+   export HYPOTHESIS_DATABASE_FILE = $(CURDIR)/debian/hypothesis
+ .
+   override_dh_auto_clean:
+           dh_auto_clean
+           rm -rf $(CURDIR)/debian/hypothesis

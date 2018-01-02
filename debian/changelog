@@ -12,6 +12,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Don't warn about unknown template type "entropy" when a package
       depends on cdebconf.  (Closes: #677870)
 
+  * data/files/fnames:
+    + [CL] Warn about packages that ship (non-reproducible) Python
+      Hypothesis examples.  (Closes: #886101)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 01 Jan 2018 15:41:06 +0000
 
 lintian (2.5.67) unstable; urgency=medium

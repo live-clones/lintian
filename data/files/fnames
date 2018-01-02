@@ -4,3 +4,4 @@ file-name-contains-wildcard-character   ~~ [*?]
 package-contains-compiled-glib-schema   ~~ (^|/)gschemas\.compiled$
 package-contains-python-coverage-file   ~~ (^|/)\.coverage$
 package-contains-python-doctree-file    ~~ \.doctree$
+package-contains-python-hypothesis-example    ~~ /\.hypothesis/examples/[^\)]+/.+
