@@ -25,8 +25,8 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       as instance/class methods do not appear in the symbol table. Thanks
       to Yavor Doganov for the report and help.  (Closes: #749202)
   * checks/standards-version.desc:
-    + [CL] Downgrade severity of newer-standards-version from normal ("W:")
-      to wishlist ("I:").  (Closes: #886210)
+    + [CL] Downgrade severity of out-of-date-standards-version from normal
+      ("W:") to wishlist ("I:").  (Closes: #886210)
 
   * data/files/fnames:
     + [CL] Warn about packages that ship (non-reproducible) Python

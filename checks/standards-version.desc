@@ -22,7 +22,7 @@ Info: The source package refers to a Standards-Version which never
  control field appropriately.
 
 Tag: newer-standards-version
-Severity: wishlist
+Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version which is
  newer than the highest one Lintian is programmed to check.  If the source
@@ -48,7 +48,7 @@ Info: The source package refers to a Standards-Version that has been
  Policy.
 
 Tag: out-of-date-standards-version
-Severity: normal
+Severity: wishlist
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/upgrading-checklist.txt
 Info: The source package refers to a Standards-Version older than the one
