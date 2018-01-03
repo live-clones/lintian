@@ -7,11 +7,11 @@ E: scripts-control-interpreters-paths: wrong-path-for-interpreter #!/bin/python 
 E: scripts-control-interpreters-paths: wrong-path-for-interpreter #!/usr/bin/bash != /bin/bash (control/postinst)
 E: scripts-control-interpreters-python: preinst-interpreter-without-predepends #!/usr/bin/python
 E: scripts-control-interpreters-unknown: unknown-control-interpreter control/postinst #!/usr/bin/unknown
+I: scripts-control-interpreters-prepython: dependency-on-python-version-marked-for-end-of-life (Pre-Depends: python)
+I: scripts-control-interpreters-python: dependency-on-python-version-marked-for-end-of-life (Depends: python)
 W: scripts-control-interpreters-forbidden: unusual-control-interpreter control/postinst #!/usr/bin/python
 W: scripts-control-interpreters-paths: unusual-control-interpreter control/prerm #!/bin/python
-W: scripts-control-interpreters-prepython: dependency-on-python-version-marked-for-end-of-life (Pre-Depends: python)
 W: scripts-control-interpreters-prepython: unusual-control-interpreter control/postinst #!/usr/bin/python
 W: scripts-control-interpreters-prepython: unusual-control-interpreter control/preinst #!/usr/bin/python
-W: scripts-control-interpreters-python: dependency-on-python-version-marked-for-end-of-life (Depends: python)
 W: scripts-control-interpreters-python: unusual-control-interpreter control/postinst #!/usr/bin/python
 W: scripts-control-interpreters-python: unusual-control-interpreter control/preinst #!/usr/bin/python

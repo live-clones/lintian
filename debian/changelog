@@ -14,9 +14,13 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/fields.pm:
     + [CL] Warn about orphaned packages that are not maintained in the
       Debian infrastucture.  (Closes: #886057)
-  * checks/python.pm:
+  * checks/python.{pm,desc}:
     + [CL] Don't warn about django-package-does-not-depend-on-django for
       -doc packages, etc.
+    + [CL] Lower the severity of the
+      "dependency-on-python-version-marked-for-end-of-life" tag from normal
+      ("W:") to wishlist ("I:") as it is not necessarily actionable by the
+      maintainer. This reverts bug #883581.  (Closes: #886259)
   * checks/rules.pm:
     + [CL] Also allow $(overridden_command) when checking for the
       override_dh_fixperms-does-not-call-dh_fixperms etc. tags.

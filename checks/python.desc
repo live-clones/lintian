@@ -61,16 +61,16 @@ Info: This package alternatively Build-Depends on the Python 2 or Python 3
  <tt>python3-sphinx</tt>.
 
 Tag: dependency-on-python-version-marked-for-end-of-life
-Severity: normal
+Severity: wishlist
 Certainty: certain
 Ref: https://wiki.debian.org/Python/Python3Port, https://www.python.org/dev/peps/pep-0373/
 Info: The package specifies a dependency on Python 2.x which is due for
  deprecation and will not be maintained past 2020.
  .
- Please port the package to use Python 3 instead.
+ Please port the package to use Python 3 instead or ask upstream to do so.
  .
- If upstream have not moved or have no intention to move to Python 3, please be
- certain that Debian would benefit from the inclusion of this package.
+ If upstream have not moved (or have no intention to move) to Python 3, please
+ be certain that Debian benefits from the inclusion of this package.
 
 Tag: django-package-does-not-depend-on-django
 Severity: normal

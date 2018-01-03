@@ -1,1 +1,1 @@
-W: scripts-missing-dep-fp: dependency-on-python-version-marked-for-end-of-life (Depends: python)
+I: scripts-missing-dep-fp: dependency-on-python-version-marked-for-end-of-life (Depends: python)
