@@ -10,6 +10,5 @@ Test-For: control-interpreter-in-usr-local
  preinst-interpreter-without-predepends
  control-interpreter-without-depends
  unknown-control-interpreter
-Test-Against:
  dependency-on-python-version-marked-for-end-of-life
 References: Debian Bug#508307
