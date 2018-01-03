@@ -28,4 +28,26 @@ Description: {$description} - debug
  .
  This is a fake debug package.
 
+Package: python3-modulename
+Architecture: any
+Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Description: {$description} (Python 3.x)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Python 3.x version.
 
+Package: python3-modulename-dbg
+Architecture: any
+Section: debug
+Depends: $\{misc:Depends\}, python3-modulename (= $\{binary:Version\}),
+ $\{shlibs:Depends\}
+Description: {$description} - debug (Python 3.x) version
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This is a fake Python 3.x debug package.

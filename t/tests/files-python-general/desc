@@ -8,3 +8,5 @@ Test-For:
  package-installs-python-egg
  package-installs-python-pycache-dir
  python-debug-in-wrong-location
+Test-Against:
+  debian-control-has-obsolete-dbg-package

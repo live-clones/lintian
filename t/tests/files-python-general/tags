@@ -2,7 +2,6 @@ E: python-kinterbasdb: package-installs-python-bytecode usr/share/python-kinterb
 E: python-kinterbasdb: package-installs-python-bytecode usr/share/python-kinterbasdb/code.pyo
 E: python-kinterbasdb: package-installs-python-egg usr/share/python-kinterbasdb/python.egg
 E: python-kinterbasdb: package-installs-python-pycache-dir usr/share/python-kinterbasdb/__pycache__/
-I: files-python-general source: debian-control-has-obsolete-dbg-package python-kinterbasdb-dbg
 W: files-python-general source: package-uses-deprecated-debhelper-compat-version 7
 W: files-python-general source: python-foo-but-no-python3-foo python-kinterbasdb
 W: files-python-general source: python-foo-but-no-python3-foo python-kinterbasdb-dbg

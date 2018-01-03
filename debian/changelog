@@ -32,6 +32,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Downgrade severity of out-of-date-standards-version from normal
       ("W:") to wishlist ("I:").  (Closes: #886210)
 
+  * data/common/dbg-pkg:
+    + [CL] Identify both python-foo-dbg and python3-foo-dbg as known debug
+      packages to avoid a false-positive for the former when checking for
+      debian-control-has-obsolete-dbg-package.  (Closes: #886271)
   * data/files/fnames:
     + [CL] Warn about packages that ship (non-reproducible) Python
       Hypothesis examples.  (Closes: #886101)
