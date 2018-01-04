@@ -1,7 +1,7 @@
-Testname: files-orphaned-package-not-maintained-in-debian-infrastracture
+Testname: files-orphaned-package-not-maintained-in-debian-infrastructure
 Description: Test for orphaned package not maintained in Debian infrastucture
 Version: 1.0
 Test-For:
- orphaned-package-not-maintained-in-debian-infrastracture
+ orphaned-package-not-maintained-in-debian-infrastructure
 Test-Against:
  changelog-should-mention-qa

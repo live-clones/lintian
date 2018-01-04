@@ -1372,7 +1372,7 @@ Info: The <tt>debian/control</tt> file contains a Bugs field that does
  This is likely to make reportbug(1) unable to report bugs.
 Ref: #740944
 
-Tag: orphaned-package-not-maintained-in-debian-infrastracture
+Tag: orphaned-package-not-maintained-in-debian-infrastructure
 Severity: normal
 Certainty: certain
 Info:

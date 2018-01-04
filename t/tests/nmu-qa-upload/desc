@@ -7,4 +7,4 @@ Test-For:
  orphaned-package-should-not-have-uploaders
  qa-upload-has-incorrect-version-number
 Test-Against:
- orphaned-package-not-maintained-in-debian-infrastracture
+ orphaned-package-not-maintained-in-debian-infrastructure

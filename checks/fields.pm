@@ -1338,7 +1338,7 @@ sub run {
             $seen_vcs{$vcs}++ if $vcs ne 'browser';
             if (    $info->field('maintainer', '') =~ /packages\@qa.debian.org/
                 and $uri !~ m/\.debian\.org/) {
-                tag 'orphaned-package-not-maintained-in-debian-infrastracture',
+                tag 'orphaned-package-not-maintained-in-debian-infrastructure',
                   "vcs-$vcs", $uri;
             }
         }
