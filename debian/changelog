@@ -32,6 +32,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Skip Objective-C libraries for the no-symbols-control-file tag
       as instance/class methods do not appear in the symbol table. Thanks
       to Yavor Doganov for the report and help.  (Closes: #749202)
+  * checks/source-copyright.desc:
+    + [CL] Avoid false positives for missing-notice-file-for-apache-license
+      by also looking for files with a .txt extension in binary packages.
+      Thanks to Ferenc Wágner for the report.  (Closes: #886343)
   * checks/standards-version.desc:
     + [CL] Downgrade severity of out-of-date-standards-version from normal
       ("W:") to wishlist ("I:").  (Closes: #886210)
