@@ -1333,9 +1333,12 @@ sub run {
                     tag $tag, $parts[0], $canonicalized;
                 }
             }
-            tag 'vcs-browser-links-to-empty-view', $uri
-              if $vcs eq 'browser' and $uri =~ m%rev=0&sc=0%;
-            $seen_vcs{$vcs}++ if $vcs ne 'browser';
+            if ($vcs eq 'browser') {
+                tag 'vcs-browser-links-to-empty-view', $uri
+                  if $uri =~ m%rev=0&sc=0%;
+                next;
+            }
+            $seen_vcs{$vcs}++;
             if (    $info->field('maintainer', '') =~ /packages\@qa.debian.org/
                 and $uri !~ m/\.debian\.org/) {
                 tag 'orphaned-package-not-maintained-in-debian-infrastructure',
