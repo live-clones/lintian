@@ -1,5 +1,7 @@
 # Any Standards Version released before this day is "ancient"
-# That date has to be within 22 and 26 months in the past
-# at release time
+#
+# Since #886219 this is defined as "a release of Policy from the previous
+# stable release cycle."
+#
 # Format is ANCIENT < Date
-ANCIENT < 27 January 2016
+ANCIENT < 25 April 2015
