@@ -6,18 +6,15 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Avoid a false-positive reported by Theppitak Karoonboonyanan
       when matching autotools-pkg-config-macro-not-cross-compilation-safe
       by skipping comment lines.  (Closes: #886297)
-  * checks/scripts.desc:
-    + [CL] Also mention Recommends and Suggests in the opening paragraph of
-      python-script-but-no-python-dep.  (Closes: #687141)
-  * checks/huge-usr-share.pm:
-    + [CL] Bump arch-dep-package-has-big-usr-share thresholds; they were
-      last set in 2004.  (Closes: #648755)
   * checks/debconf.pm:
     + [CL] Don't warn about unknown template type "entropy" when a package
       depends on cdebconf.  (Closes: #677870)
   * checks/fields.pm:
     + [CL] Warn about orphaned packages that are not maintained in the
       Debian infrastucture.  (Closes: #886057)
+  * checks/huge-usr-share.pm:
+    + [CL] Bump arch-dep-package-has-big-usr-share thresholds; they were
+      last set in 2004.  (Closes: #648755)
   * checks/python.{pm,desc}:
     + [CL] Don't warn about django-package-does-not-depend-on-django for
       -doc packages, etc.
@@ -28,6 +25,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/rules.pm:
     + [CL] Also allow $(overridden_command) when checking for the
       override_dh_fixperms-does-not-call-dh_fixperms etc. tags.
+  * checks/scripts.desc:
+    + [CL] Also mention Recommends and Suggests in the opening paragraph of
+      python-script-but-no-python-dep.  (Closes: #687141)
   * checks/shared-libs.pm:
     + [CL] Skip Objective-C libraries for the no-symbols-control-file tag
       as instance/class methods do not appear in the symbol table. Thanks
