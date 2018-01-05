@@ -1236,8 +1236,9 @@ sub run {
         tag 'redundant-bugs-field'
           if $bugs =~ m,^debbugs://bugs.debian.org/?$,i;
 
-        tag 'bugs-field-does-not-refer-to-debian-infrastructure', "line $."
-          if $bugs !~ m,\.debian\.org,;
+        tag 'bugs-field-does-not-refer-to-debian-infrastructure', $bugs,
+          "(line $.)"
+          unless $bugs =~ m,\.debian\.org,;
     }
 
     #----- Python-Version
