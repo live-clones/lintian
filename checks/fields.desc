@@ -1385,3 +1385,18 @@ Info:
  Please move the packaging to under the *.debian.org umbrella.
  Alternatively, update the specified VCS field is either stale from
  before it was orphaned, or is otherwise wrong.
+
+Tag: vcs-deprecated-in-debian-infrastructure
+Severity: pedantic
+Certainty: certain
+Info: The spcified Vcs-* header points to an area within the *.debian.org
+ infrastructure but refers to a version control system that has been
+ deprecated.
+ .
+ After 1st May 2018, Debian will not offer hosting for any version
+ control system other than Git.
+ .
+ Whilst maintainers are free to use other version control systems hosted
+ elsewhere, potential contributors are likely to be most familiar with
+ Git.
+Ref: https://lists.debian.org/debian-devel-announce/2017/08/msg00008.html

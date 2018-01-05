@@ -1339,10 +1339,14 @@ sub run {
                 next;
             }
             $seen_vcs{$vcs}++;
-            if (    $info->field('maintainer', '') =~ /packages\@qa.debian.org/
-                and $uri !~ m/\.debian\.org/) {
+            if ($uri =~ m/\.debian\.org/) {
+                tag 'vcs-deprecated-in-debian-infrastructure', "vcs-$vcs",
+                  if $vcs ne 'git';
+            } else {
                 tag 'orphaned-package-not-maintained-in-debian-infrastructure',
-                  "vcs-$vcs", $uri;
+                  "vcs-$vcs", $uri
+                  if $info->field('maintainer', '')
+                  =~ /packages\@qa.debian.org/;
             }
         }
     }

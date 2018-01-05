@@ -1,0 +1,2 @@
+I: fields-vcs-deprecated-in-debian-infrastructure source: vcs-field-uses-insecure-uri vcs-svn svn://anonscm.debian.org/foobar/trunk
+P: fields-vcs-deprecated-in-debian-infrastructure source: vcs-deprecated-in-debian-infrastructure vcs-svn

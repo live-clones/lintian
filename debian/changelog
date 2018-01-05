@@ -12,6 +12,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/fields.pm:
     + [CL] Warn about orphaned packages that are not maintained in the
       Debian infrastucture.  (Closes: #886057)
+    + [CL] Emit pedantic warnings for packages that refer to a non-Git
+      version control systems hosted in the Debian infrastructure for the
+      upcoming salsa.debian.org migration.  (Closes: #885974)
   * checks/huge-usr-share.pm:
     + [CL] Bump arch-dep-package-has-big-usr-share thresholds; they were
       last set in 2004.  (Closes: #648755)
