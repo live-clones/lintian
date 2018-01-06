@@ -9,6 +9,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       when matching autotools-pkg-config-macro-not-cross-compilation-safe
       by skipping comment lines.  (Closes: #886297)
     + [FL] Fix version parsing for native packages.
+  * checks/control-file.{desc.pm}:
+    + [CL] Check for packages that should specify Rules-Require-Root.
+      (Closes: #886479)
   * checks/debconf.pm:
     + [CL] Don't warn about unknown template type "entropy" when a package
       depends on cdebconf.  (Closes: #677870)

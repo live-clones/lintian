@@ -330,3 +330,23 @@ Severity: classification
 Certainty: certain
 Info: Package requires fakeroot or similar to build binary targets and explicitly declares it.
 Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
+
+Tag: should-specify-rules-requires-root
+Severity: wishlist
+Certainty: certain
+Info: This package builds a binary package containing at least one path
+ with a UNIX ownership other than "root:root". It therefore requires
+ <tt>fakeroot(1)</tt> or similar to build its binary targets.
+ .
+ Traditionally, Debian packages have required root privileges for some
+ debian/rules target requiring a split between build and binary targets.
+ This makes the builds slower due to the increased amount of invocations
+ as well as the overhead of fakeroot itself.
+ .
+ By declaring when a package really does require root privileges the
+ default, archive-wide, behaviour can be switched, optimising packaging
+ build times in the common case.
+ .
+ Please specify (eg.) <tt>Rules-Requires-Root: binary-targets</tt> in
+ the <tt>debian/control</tt> source stanza.
+Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz

@@ -47,7 +47,7 @@ my $KNOWN_DBG_PACKAGE = Lintian::Data->new(
     });
 
 sub run {
-    my ($pkg, undef, $info) = @_;
+    my ($pkg, undef, $info, undef, $group) = @_;
     my $debian_dir = $info->index_resolved_path('debian/');
     my $dcontrol;
     $dcontrol = $debian_dir->child('control') if $debian_dir;
@@ -379,6 +379,20 @@ sub run {
         }
     } else {
         tag 'rules-requires-root-implicitly';
+    }
+
+    if ($info->source_field('rules-requires-root', 'no') eq 'no') {
+      BINARY:
+        foreach my $proc ($group->get_binary_processables) {
+            my $pkg = $proc->pkg_name;
+            foreach my $file ($proc->info->sorted_index) {
+                my $owner = $file->owner . ':' . $file->group;
+                next if $owner ne 'root:root';
+                tag 'should-specify-rules-requires-root', $pkg, $file,
+                  "($owner)";
+                last BINARY;
+            }
+        }
     }
 
     # find binary packages that Pre-Depend on multiarch-support without going
