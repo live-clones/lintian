@@ -1238,7 +1238,7 @@ sub run {
 
         tag 'bugs-field-does-not-refer-to-debian-infrastructure', $bugs,
           "(line $.)"
-          unless $bugs =~ m,\.debian\.org,;
+          unless $bugs =~ m,\.debian\.org, or $pkg =~ /[-]dbgsym$/;
     }
 
     #----- Python-Version

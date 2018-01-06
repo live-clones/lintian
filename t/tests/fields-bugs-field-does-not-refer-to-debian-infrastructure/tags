@@ -1,1 +1,2 @@
+E: fields-bugs-field-does-not-refer-to-debian-infrastructure source: debian-control-has-dbgsym-package fields-bugs-field-does-not-refer-to-debian-infrastructure-dbgsym
 W: fields-bugs-field-does-not-refer-to-debian-infrastructure: bugs-field-does-not-refer-to-debian-infrastructure https://upstream.org/ (line 11)

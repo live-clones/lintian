@@ -17,6 +17,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       upcoming salsa.debian.org migration.  (Closes: #885974)
     + [CL] Include the offending "Bugs" field value in the output of the
       bugs-field-does-not-refer-to-debian-infrastructure tag.
+    + [CL] Ensure that bugs-field-does-not-refer-to-debian-infrastructure
+      can be overridden by not emitting them for -dbgsym packages. Thanks
+      to Thorsten Glaser for the report.  (Closes: #886426)
   * checks/huge-usr-share.pm:
     + [CL] Bump arch-dep-package-has-big-usr-share thresholds; they were
       last set in 2004.  (Closes: #648755)
