@@ -387,7 +387,7 @@ sub run {
             my $pkg = $proc->pkg_name;
             foreach my $file ($proc->info->sorted_index) {
                 my $owner = $file->owner . ':' . $file->group;
-                next if $owner ne 'root:root';
+                next if $owner eq 'root:root';
                 tag 'should-specify-rules-requires-root', $pkg, $file,
                   "($owner)";
                 last BINARY;
