@@ -44,15 +44,9 @@ sub run {
             seek($fd, 0x3c, 0) or internal_error("seek: $!");
             read($fd, $buf, 4) or internal_error("read: $!");
             my $pe_offset = unpack('V', $buf);
-
             # Read magic to determine whether we are are PE32 or PE32+
-            seek($fd, $pe_offset + 24, 0) or internal_error("seek: $!");
-            read($fd, $buf, 2) or internal_error("read: $!");
-            my $magic = unpack('v', $buf);
-
+            seek($fd, $pe_offset + 26 + 64, 0) or internal_error("seek: $!");
             # Read and parse DLLCharacteristics value
-            seek($fd, (($magic == 0x20B) ? 68 : 64), 1)
-              or internal_error("seek: $!");
             read($fd, $buf, 2) or internal_error("read: $!");
         };
 
