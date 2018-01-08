@@ -1,0 +1,6 @@
+Testname: debhelper-dh-quilt-addon-but-quilt-source-format
+Version: 1.0-1
+Type: non-native
+Description: Test for quilt packages that specify dh --with-quilt
+Test-For:
+ dh-quilt-addon-but-quilt-source-format

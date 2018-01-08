@@ -1,0 +1,2 @@
+E: debhelper-dh-quilt-addon-but-quilt-source-format source: missing-build-dependency-for-dh-addon quilt => quilt
+W: debhelper-dh-quilt-addon-but-quilt-source-format source: dh-quilt-addon-but-quilt-source-format dh ... --with quilt (line 4)

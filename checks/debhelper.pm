@@ -148,6 +148,10 @@ sub run {
                           "dh ... --with ${orig_addon} (line $.)";
                         $uses_autotools_dev_dh = 1;
                     }
+                    tag 'dh-quilt-addon-but-quilt-source-format',
+                      "dh ... --with ${orig_addon}", "(line $.)"
+                      if $addon eq 'quilt'
+                      and $info->field('format', '') eq '3.0 (quilt)';
                     if (defined $depends) {
                         $missingbdeps_addons{$depends} = $addon;
                     }

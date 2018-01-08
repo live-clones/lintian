@@ -15,6 +15,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/debconf.pm:
     + [CL] Don't warn about unknown template type "entropy" when a package
       depends on cdebconf.  (Closes: #677870)
+  * checks/debhelper.{desc,pm}:
+    + [CL] Add a check for packages that specify "dh --with quilt" but use
+      the "3.0 (quilt)" source format. Thanks to Mattia Rizzolo for the
+      idea.  (Closes: #886566)
   * checks/fields.pm:
     + [CL] Warn about orphaned packages that are not maintained in the
       Debian infrastucture.  (Closes: #886057)

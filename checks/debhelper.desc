@@ -397,3 +397,12 @@ Info: The debhelper tools from autotools-dev has been replaced by the tool
  <tt>dh_clean</tt>, so they can most likely just be removed without
  any further changes.
 Ref: #878528
+
+Tag: dh-quilt-addon-but-quilt-source-format
+Severity: normal
+Certainty: certain
+Info: The package (for example) <tt>dh $@ --with quilt</tt> in
+ <tt>debian/rules</tt> but is already using the <tt>3.0 (quilt)</tt>
+ source format via the <tt>debian/source/format</tt> file.
+ .
+ Please remove the <tt>--with quilt</tt> argument.
