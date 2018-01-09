@@ -2,9 +2,11 @@ lintian (2.5.69) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/python.pm:
+  * checks/python.{pm,desc}:
     + [CL] Don't emit new-package-should-not-package-python2-module if
       the maintainer justifies its inclusion in the changelog entry.
+    + [CL] Improve the description and reasoning for the
+      new-package-should-not-package-python2-module tag.
 
  -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
 
