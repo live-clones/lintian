@@ -7,6 +7,8 @@ lintian (2.5.69) UNRELEASED; urgency=medium
       the maintainer justifies its inclusion in the changelog entry.
     + [CL] Improve the description and reasoning for the
       new-package-should-not-package-python2-module tag.
+    + [CL] Include the offending package name when warning about
+      new-package-should-not-package-python2-module.
 
  -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
 

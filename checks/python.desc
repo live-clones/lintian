@@ -9,7 +9,7 @@ Severity: normal
 Certainty: certain
 Info: This package appears to be the initial packaging of a new upstream
  software package (ie. it contains a single changelog entry). However, it
- ships a module for Python 2.
+ ships the specified module for Python 2.
  .
  Python 2.x modules should not be packaged unless strictly necessary (such
  as being explicitly requested by an end-user or required as part of a
@@ -25,7 +25,7 @@ Info: This package appears to be the initial packaging of a new upstream
  if it is a split of an existing Debian package.
  .
  Please add a justification to your changelog entry; Lintian looks in this
- version's changelog entry for the relevant package name or the phrase
+ version's changelog entry for the specified package name or the phrase
  "Python 2 version" or similar.
 
 Tag: python-foo-but-no-python3-foo
