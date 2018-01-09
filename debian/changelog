@@ -71,8 +71,9 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       (Closes: #886574)
 
   * collection/src-orig-index:
-    + [CL] Return the replacement value after injecting any tarball prefix,
-      not the result of said replacement (ie. "2").  (Closes: #886586)
+    + [CL] Return the replaced string after injecting any tarball prefix
+      (ie. "foo/bar\n"), not Perl's result of the replacement (ie. "1").
+      (Closes: #886586)
 
   * data/common/dbg-pkg:
     + [CL] Identify both python-foo-dbg and python3-foo-dbg as known debug
