@@ -30,6 +30,7 @@ Test-For:
  package-contains-mimeinfo.cache-file
  package-modifies-ld.so-search-path
  package-contains-python-doctree-file
+ package-contains-python-tests-in-global-namespace
  raster-image-in-scalable-directory
  star-file
  stray-directory-in-manpage-directory

@@ -1889,3 +1889,14 @@ Info: This package appears to contain the output of running a Python
    override_dh_auto_clean:
            dh_auto_clean
            rm -rf $(CURDIR)/debian/hypothesis
+
+Tag: package-contains-python-tests-in-global-namespace
+Severity: normal
+Certainty: certain
+Info: This package appears to contain Python test files such as
+ <tt>test_foo.py</tt> in the global module namespace.
+ .
+ Whilst the tests may be useful in the binary package, it is probably a
+ mistake to pollute the "top-level" namespace in this way.
+ .
+ Please install them in an subdirectory instead.

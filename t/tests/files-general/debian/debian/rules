@@ -31,6 +31,7 @@ override_dh_install:
 	touch $(tmp)/usr/share/foo/foo.doctree
 	touch $(tmp)/usr/share/foo/gschemas.compiled
 	touch $(tmp)/usr/share/glib-2.0/schemas/gschemas.compiled
+	touch $(tmp)/usr/lib/python3/dist-packages/test_foo.py
 	# If the following line gets messed up, it can be
 	# restored with something like:
 	#   sed -i 's/@FILE@/bokm\xe5l/'

@@ -10,6 +10,10 @@ lintian (2.5.69) UNRELEASED; urgency=medium
     + [CL] Include the offending package name when warning about
       new-package-should-not-package-python2-module.
 
+  * data/files/fnames:
+    + [CL] Warn about packages that ship (eg.) test_foo.py files in the
+      global Python module namespace.
+
  -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
 
 lintian (2.5.68) unstable; urgency=medium

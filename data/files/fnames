@@ -5,3 +5,4 @@ package-contains-compiled-glib-schema   ~~ ^usr/share/glib-[^\/]+/schemas/gschem
 package-contains-python-coverage-file   ~~ (^|/)\.coverage$
 package-contains-python-doctree-file    ~~ \.doctree$
 package-contains-python-hypothesis-example    ~~ /\.hypothesis/examples/[^\)]+/.+
+package-contains-python-tests-in-global-namespace    ~~ ^usr/lib/python[^\/]+/(dist|site)-packages/test_.+\.py$
