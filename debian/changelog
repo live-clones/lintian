@@ -65,6 +65,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * checks/standards-version.desc:
     + [CL] Downgrade severity of out-of-date-standards-version from normal
       ("W:") to wishlist ("I:").  (Closes: #886210)
+  * checks/watch-file.pm:
+    + [CL] Apply patch from Carlos Maddela <e7appew@gmail.com> to prevent
+      false-positives when options contain escaped quotation marks.
+      (Closes: #886574)
 
   * collection/src-orig-index:
     + [CL] Return the replacement value after injecting any tarball prefix,

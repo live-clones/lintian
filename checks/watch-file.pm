@@ -98,7 +98,7 @@ sub run {
                 $prerelease_mangle, $prerelease_umangle
             ) = (0, 0, 0, 0);
             my ($opts, @opts);
-            if (   s/^opt(?:ion)?s=\"([^\"]+)\"\s+//
+            if (   s/^opt(?:ion)?s=\"((?:[^\"]|\\\")+)\"\s+//
                 || s/^opt(?:ion)?s=(\S+)\s+//) {
                 $opts = $1;
                 @opts = split($watchver >= 4 ? '\s*,\s*' : ',', $opts);
