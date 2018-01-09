@@ -62,8 +62,8 @@ sub _run_source {
         if ($bin =~ /^python2?-(.*)$/) {
             my $suffix = $1;
             next if any { $bin =~ /$_/ } @IGNORE;
-            tag 'python-foo-but-no-python3-foo', $bin
-              unless any { $_ eq "python3-${suffix}" } @package_names;
+            next if any { $_ eq "python3-${suffix}" } @package_names;
+            tag 'python-foo-but-no-python3-foo', $bin;
         }
     }
 
