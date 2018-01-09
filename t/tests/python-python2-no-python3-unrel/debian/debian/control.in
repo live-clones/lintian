@@ -59,3 +59,26 @@ Description: Python 2 package with corresponding Python 3 package (tools)
  be an empty package.
  .
  This package contains tools.
+
+Package: python-{$source}-2
+Architecture: all
+Depends: $\{misc:Depends\}
+Description: Python 2 package with corresponding Python 3 package (2)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package is another module.
+
+Package: entirely-unrelated-name
+Architecture: all
+Depends: $\{misc:Depends\}, $\{python3:Depends\}
+Description: Python 3 version of python-{$source}-2
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ This package is the Python 3 variant of the previous package but with a
+ different name.

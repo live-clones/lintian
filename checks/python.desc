@@ -26,14 +26,18 @@ Info: This package appears to be the initial packaging of a new upstream
 Tag: python-foo-but-no-python3-foo
 Severity: normal
 Certainty: certain
-Info: This package appears to generate a Python 2 module without a
- corresponding Python 3 version.
+Info: This source package appears to generate the specified Python 2 package
+ without creating a variant for Python 3.
  .
  The 2.x series of Python is due for deprecation and will not be maintained
  past 2020.
  .
- If upstream have not moved or have no intention to move to Python 3, please be
- certain that Debian would benefit from the inclusion of this package.
+ If upstream have not moved or have no intention to move to Python 3, please
+ be certain that Debian would benefit from the continued inclusion of this
+ package and, if not, consider removing it.
+ .
+ Alternatively, ensure that the corresponding package specifies the
+ <tt>${python3:Depends}</tt> substvar in its binary depedencies.
 
 Tag: build-depends-on-python-sphinx-only
 Severity: normal

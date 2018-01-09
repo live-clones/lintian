@@ -44,6 +44,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       "dependency-on-python-version-marked-for-end-of-life" tag from normal
       ("W:") to wishlist ("I:") as it is not necessarily actionable by the
       maintainer. This reverts bug #883581.  (Closes: #886259)
+    + [CL] When checking for a Python 3 variant of a Python 2.x package
+      also consider any package that declares a binary dependency on the
+      ${python3:Depends} substvar to catch packages that have been renamed.
+      Thanks to Scott Kitterman for the report.  (Closes: #886303)
   * checks/rules.pm:
     + [CL] Also allow $(overridden_command) when checking for the
       override_dh_fixperms-does-not-call-dh_fixperms etc. tags.

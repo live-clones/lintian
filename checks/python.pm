@@ -63,6 +63,12 @@ sub _run_source {
             my $suffix = $1;
             next if any { $bin =~ /$_/ } @IGNORE;
             next if any { $_ eq "python3-${suffix}" } @package_names;
+            # Don't trigger if we ship any Python 3 module
+            next if any {
+                $info->binary_relation($_, 'all')
+                  ->implies('${python3:Depends}')
+            }
+            @package_names;
             tag 'python-foo-but-no-python3-foo', $bin;
         }
     }
