@@ -201,7 +201,8 @@ sub index_orig {
                 # unpacked to.
                 @index = map {
                     s{^((?:\S++\s++){5})(?:\./)?\Q$prefix\E(?:/+)?}
-                    {$1$compname/}
+                    {$1$compname/};
+                    $_;
                 } @index;
             }
         }

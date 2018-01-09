@@ -62,6 +62,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
     + [CL] Downgrade severity of out-of-date-standards-version from normal
       ("W:") to wishlist ("I:").  (Closes: #886210)
 
+  * collection/src-orig-index:
+    + [CL] Return the replacement value after injecting any tarball prefix,
+      not the result of said replacement (ie. "2").  (Closes: #886586)
+
   * data/common/dbg-pkg:
     + [CL] Identify both python-foo-dbg and python3-foo-dbg as known debug
       packages to avoid a false-positive for the former when checking for
