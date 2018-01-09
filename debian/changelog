@@ -1,6 +1,12 @@
-lintian (2.5.68) UNRELEASED; urgency=medium
+lintian (2.5.68) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - dh-quilt-addon-but-quilt-source-format
+      - orphaned-package-not-maintained-in-debian-infrastructure
+      - package-contains-python-hypothesis-example
+      - should-specify-rules-requires-root
+      - vcs-deprecated-in-debian-infrastructure
 
   * checks/changelog-file.pm:
     + [FL] Fix version parsing for hyphen in upstream versions.
@@ -86,6 +92,8 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       usr/share/glib-*/schemas as it is valid for packages to generate
       schemas at build time. Thanks to Jonathan Carter (highvoltage) for
       the followup.  (Closes: #884142)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/standards-version/ancient-date:
     + [CL] Change the policy of "ancient-standards-version" to "a release
       of Policy from the previous stable release cycle" and update the
@@ -101,7 +109,7 @@ lintian (2.5.68) UNRELEASED; urgency=medium
       architectures to prevent a FTBFS on, for example, i386.
       (Closes: #886163)
 
- -- Chris Lamb <lamby@debian.org>  Mon, 01 Jan 2018 15:41:06 +0000
+ -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 14:33:30 +0000
 
 lintian (2.5.67) unstable; urgency=medium
 
