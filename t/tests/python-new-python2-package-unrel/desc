@@ -1,0 +1,5 @@
+Testname: python-new-python2-package-unrel
+Version: 1.0
+Description: Check various Python 2 issues (false positives)
+Test-Against:
+ new-package-should-not-package-python2-module

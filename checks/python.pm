@@ -102,9 +102,12 @@ sub _run_binary {
     my @entries = $info->changelog ? $info->changelog->data : ();
 
     # Python 2 modules
-    if ($pkg =~ /^python2?-/ and none { $pkg =~ /$_$/ } @IGNORE) {
-        tag 'new-package-should-not-package-python2-module'
-          if @entries == 1;
+    if (    $pkg =~ /^python2?-/
+        and none { $pkg =~ /$_$/ } @IGNORE
+        and @entries == 1
+        and $entries[0]->Changes !~ /\bpython 2(\.x)? (variant|version)\b/im
+        and index($entries[0]->Changes, $pkg) == -1) {
+        tag 'new-package-should-not-package-python2-module';
     }
 
     # Python applications
