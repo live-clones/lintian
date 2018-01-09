@@ -82,6 +82,10 @@ lintian (2.5.68) UNRELEASED; urgency=medium
   * data/files/fnames:
     + [CL] Warn about packages that ship (non-reproducible) Python
       Hypothesis examples.  (Closes: #886101)
+    + [CL] Only test for packages shipping gschemas.compiled files in
+      usr/share/glib-*/schemas as it is valid for packages to generate
+      schemas at build time. Thanks to Jonathan Carter (highvoltage) for
+      the followup.  (Closes: #884142)
   * data/standards-version/ancient-date:
     + [CL] Change the policy of "ancient-standards-version" to "a release
       of Policy from the previous stable release cycle" and update the
