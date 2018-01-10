@@ -1899,4 +1899,4 @@ Info: This package appears to contain Python test files such as
  Whilst the tests may be useful in the binary package, it is probably a
  mistake to pollute the "top-level" namespace in this way.
  .
- Please install them in an subdirectory instead.
+ Please install them to a subdirectory instead.
