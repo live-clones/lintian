@@ -105,7 +105,8 @@ sub _run_binary {
     if (    $pkg =~ /^python2?-/
         and none { $pkg =~ /$_$/ } @IGNORE
         and @entries == 1
-        and $entries[0]->Changes !~ /\bpython 2(?:\.x)? (?:variant|version)\b/im
+        and $entries[0]->Changes
+        !~ /\bpython 2(?:\.x)? (?:variant|version)\b/im
         and index($entries[0]->Changes, $pkg) == -1) {
         tag 'new-package-should-not-package-python2-module', $pkg;
     }
