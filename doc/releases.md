@@ -92,7 +92,7 @@ You can find lintian's crontab via either:
 
 OR
 
-    less /srv/lintian.debian.org/etc/crontab
+    less /srv/lintian.debian.org/etc/cron
 
 If the archive-wide run is currently active, check the harness log
 (`tail -f /srv/lintian.debian.org/logs/harness.log`).
