@@ -10,8 +10,8 @@ plan skip_all => 'Not needed for coverage of Lintian'
 eval 'use Test::MinimumVersion';
 plan skip_all => 'Test::MinimumVersion required to run this test' if $@;
 
-# squeeze => 5.10.1, Wheezy => 5.14.2
-our $REQUIRED = 'v5.14.2';
+# squeeze => 5.10.1, Wheezy => 5.14.2, stretch => 5.24.1
+our $REQUIRED = 'v5.24.1';
 
 my @test_paths = program_name_to_perl_paths($0);
 $ENV{'LINTIAN_TEST_ROOT'} //= '.';
