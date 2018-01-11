@@ -86,11 +86,8 @@ sub run {
     return;
 }
 
-# Note that we allow people to use "https://" even the
-# policy says it must be "http://".  It might be
-# pedantically wrong, but it is not worth arguing over On
-# the plus side, it gives security to people blindly
-# copy-wasting the URLs using "https://".
+# The policy states, since 4.0.0, that people should use "https://" for the
+# format URI. This is checked later in check_dep5_copyright.
 # return undef is not dep5 and '' if unknown version
 sub _find_dep5_version {
     my ($original_uri) = @_;
@@ -220,6 +217,8 @@ sub _check_dep5_copyright {
         tag 'unversioned-copyright-format-uri', $uri;
     }elsif (versions_compare $version, '<<', $dep5_last_normative_change) {
         tag 'out-of-date-copyright-format-uri', $uri;
+    }elsif ($uri =~ m,^http://www\.debian\.org/,) {
+        tag 'insecure-copyright-format-uri', $uri;
     }
 
     if (versions_compare $version, '<<', $dep5_last_overhaul) {

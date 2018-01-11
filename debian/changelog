@@ -9,6 +9,9 @@ lintian (2.5.69) UNRELEASED; urgency=medium
       new-package-should-not-package-python2-module tag.
     + [CL] Include the offending package name when warning about
       new-package-should-not-package-python2-module.
+  * checks/source-copyright.{desc,pm}:
+    + [CL] Warn about insecure "Format:" URIs that reference debian.org.
+      Based on a patch by Nicolas Braud-Santoni.  (Closes: #886930)
 
   * data/files/fnames:
     + [CL] Warn about packages that ship (eg.) test_foo.py files in the
