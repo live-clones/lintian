@@ -16,6 +16,10 @@ lintian (2.5.69) UNRELEASED; urgency=medium
   * data/files/fnames:
     + [CL] Warn about packages that ship (eg.) test_foo.py files in the
       global Python module namespace.
+  * data/fields/name_section_mappings:
+    + [CL] Ensure that NSS (Name Services Switch) modules are placed in the
+      "admin" section. Thanks to Mathieu Parent (sathieu) for the patch.
+      (Closes: #886961)
 
  -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
 

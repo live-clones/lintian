@@ -12,6 +12,7 @@ W: libfields-wrong-section-perl: wrong-section-according-to-package-name libfiel
 W: libfields-wrong-section-ruby1.8: wrong-section-according-to-package-name libfields-wrong-section-ruby1.8 => ruby
 W: libghc-fields-wrong-section: wrong-section-according-to-package-name libghc-fields-wrong-section => haskell
 W: libjs-fields-wrong-section: wrong-section-according-to-package-name libjs-fields-wrong-section => javascript
+W: libnss-fields-wrong-section: wrong-section-according-to-package-name libnss-fields-wrong-section => admin
 W: libpam-fields-wrong-section1: wrong-section-according-to-package-name libpam-fields-wrong-section1 => admin
 W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
 W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
