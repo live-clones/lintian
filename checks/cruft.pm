@@ -1406,6 +1406,8 @@ sub _clean_block {
 
     # Texinfo end tag (could be more clever but brute force is fast)
     $text =~ s/}/ /gxms;
+    # Tex section titles
+    $text =~ s/^\s*\\(sub)*section\*?\{\s*\S+/ /gxms;
     # single char at end
     # String, C-style comment/javadoc indent,
     # quotes for strings, pipe and backslash, tilde in some txt
