@@ -68,6 +68,7 @@ our $EXCLUDE =join(
       ^file-name-contains-wildcard-character$
       ^package-contains-.*$
       ^override_dh_.+-does-not-call-dh_.+$
+      ^xz-compression-level-too-high$
       ));
 
 # Exclude "lintian.desc" as it does not have a perl module like other
