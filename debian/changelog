@@ -15,6 +15,9 @@ lintian (2.5.69) UNRELEASED; urgency=medium
       new-package-should-not-package-python2-module tag.
     + [CL] Include the offending package name when warning about
       new-package-should-not-package-python2-module.
+  * checks/rules.pm:
+    + [CL] Allow rules-not-should-not-use data-based tags to capture
+      variables and include them in the emitted tag.
   * checks/source-copyright.{desc,pm}:
     + [CL] Warn about insecure "Format:" URIs that reference debian.org.
       Based on a patch by Nicolas Braud-Santoni.  (Closes: #886930)

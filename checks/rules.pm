@@ -230,7 +230,11 @@ sub run {
         foreach my $bad_construct ($BAD_CONSTRUCT_IN_RULES->all) {
             my $badregex = $BAD_CONSTRUCT_IN_RULES->value($bad_construct);
             if ($line =~ m/$badregex/) {
-                tag $bad_construct, "line $.";
+                if (defined($+{info})) {
+                    tag $bad_construct, $+{info}, "(line $.)";
+                } else {
+                    tag $bad_construct, "line $.";
+                }
             }
         }
 
