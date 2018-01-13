@@ -319,3 +319,21 @@ Info: The <tt>debian/rules</tt> file for this package has an
  .
  Please add a call to <tt>dh_fixperms</tt>.
 Ref: #885909
+
+Tag: xz-compression-level-too-high
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/rules</tt> file for this package has a call to
+ <tt>dh_builddeb(1)</tt> that specifies an overly eager xz(1) compression
+ level.
+ .
+ Whilst higher levels might reduce the size of big files, it has the side
+ effect of consuming a lot of memory during both compression and
+ extraction.
+ .
+ This can not only also waste time unnecessarily, it can cause packages to
+ FTBFS or even fail to install in resource-constrained environments or
+ architectures.
+ .
+ Please remove the call and let dpkg-deb(1) select suitable defaults.
+Ref: #829100, dpkg-deb(1)

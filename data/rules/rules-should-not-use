@@ -9,4 +9,4 @@ debian-rules-should-not-use-DH_EXTRA_ADDONS              ~~ ^\s*DH_EXTRA_ADDONS\
 debian-rules-should-not-use-or-modify-user-only-variable ~~ \bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b
 debian-rules-should-not-use-pwd                          ~~ \$[\(\{]PWD[\)\}]
 debian-rules-should-not-use-underscore-variable          ~~ \$[\(\{]_[\)\}]
-
+xz-compression-level-too-high                            ~~ dh_builddeb\b.*--.*(?:-z\s*(?<info>9).*-Z\s*xz|-Z\s*xz.*-z\s*(?<info>9))

@@ -32,6 +32,7 @@ lintian (2.5.69) UNRELEASED; urgency=medium
   * data/rules/rules-should-not-use:
     + [CL] Include the assigned value in the Lintian output for the
       debian-rules-should-not-use-DH_EXTRA_ADDONS tag.
+    + [CL] Detect overly-compressed xz packages.  (Closes: #829100)
 
  -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
 
