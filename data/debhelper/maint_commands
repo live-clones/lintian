@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2016-07-31 15:44
+# It was generated on 2018-01-13 21:51
 
 dh_apache2
 dh_apparmor
@@ -20,6 +20,7 @@ dh_installinit
 dh_installlisting
 dh_installmenu
 dh_installmodules
+dh_installsystemd
 dh_installtex
 dh_installwm
 dh_installxfonts
@@ -33,6 +34,7 @@ dh_php
 dh_runit
 dh_systemd_enable
 dh_systemd_start
+dh_sysuser
 dh_ucf
 dh_usrlocal
 dh_vdrplugin_enable

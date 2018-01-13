@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2016-07-31 15:44
+# It was generated on 2018-01-13 21:51
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_addons-manual.
@@ -13,6 +13,7 @@ aspell_simple=dictionaries-common-dev
 autoreconf=dh-autoreconf
 autotools_dev=autotools-dev
 bash_completion=bash-completion
+build_stamp=debhelper
 buildinfo=dh-buildinfo
 cli=cli-common-dev
 cli_nant=cli-common-dev
@@ -23,6 +24,7 @@ d_i=dh-di
 dist_zilla=dh-dist-zilla
 dkms=dkms
 dpatch=dpatch
+dwz=debhelper
 eclipse_helper=javahelper
 elpa=dh-elpa
 germinate=germinate
@@ -34,6 +36,7 @@ javahelper=javahelper
 jh_maven_repo_helper=maven-repo-helper
 kde=pkg-kde-tools
 kf5=pkg-kde-tools
+kodiaddon=kodi-addons-dev
 libva=libva-dev
 linktree=dh-linktree
 lisp=dh-lisp
@@ -41,9 +44,9 @@ lua=dh-lua
 maven_repo_helper=maven-repo-helper
 nodejs=nodejs-dev
 ocaml=dh-ocaml
-parrot=parrot-devel
 perl_dbi=libdbi-perl
 perl_imager=libimager-perl
+perl_openssl=perl-openssl-defaults
 php=dh-php
 phpcomposer=pkg-php-tools
 phppear=pkg-php-tools
@@ -56,18 +59,23 @@ python2=python
 python3=dh-python
 python_support=debhelper
 python_virtualenv=dh-virtualenv
+qmlcdeps=pkg-kde-tools
 quilt=quilt
 rebar=dh-rebar
 ruby=gem2deb
 runit=dh-runit
-scour=python-scour
+scour=python3-scour
 sodeps=pkg-kde-tools
 sphinxdoc=sphinx-common
 swi_prolog=swi-prolog-nox
 systemd=debhelper
+sysuser=dh-sysuser
 tex=tex-common
+uwsgi=uwsgi-dev
 vdrplugin=vdr-dev
+vignette=dh-r
 xine=libxine2-dev
+xml_core=xml-core
 xsf=xserver-xorg-dev
 xsp=dh-xsp
 xul_ext=mozilla-devscripts

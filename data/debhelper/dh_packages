@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2016-07-31 15:44
+# It was generated on 2018-01-13 21:51
 
 apache2-dev
 autotools-dev
@@ -28,9 +28,11 @@ dh-metainit
 dh-ocaml
 dh-php
 dh-python
+dh-r
 dh-rebar
 dh-runit
 dh-strip-nondeterminism
+dh-sysuser
 dh-virtualenv
 dh-xsp
 dictionaries-common-dev
@@ -43,7 +45,8 @@ germinate
 gnome-pkg-tools
 gnustep-make
 gobject-introspection
-haskell-devscripts
+haskell-devscripts-minimal
+kodi-addons-dev
 libaqbanking-dev
 libdbi-perl
 libgcj-common
@@ -54,27 +57,29 @@ libva-dev
 libxine2-dev
 mozilla-devscripts
 nodejs-dev
-parrot-devel
 pdl
+perl-openssl-defaults
 pidgin-dev
 pkg-components
 pkg-kde-tools
 pkg-php-tools
+postgresql-server-dev-all
 ppp-dev
 pyppd
 python
 python-numpy
 python-ply
-python-scour
 python-sip-dev
 python-van.pydeb
 python3-numpy
 python3-ply
+python3-scour
 python3-sip-dev
 quilt
 sphinx-common
 swi-prolog-nox
 tex-common
+uwsgi-dev
 vagrant
 vdr-dev
 xml-core

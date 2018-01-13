@@ -30,6 +30,8 @@ lintian (2.5.69) UNRELEASED; urgency=medium
       the output of the ancient-standards-version and the
       out-of-date-standards-version tags.
 
+  * data/debhelper/*:
+    + [ADB] Refresh.
   * data/files/fnames:
     + [CL] Warn about packages that ship (eg.) test_foo.py files in the
       global Python module namespace.
