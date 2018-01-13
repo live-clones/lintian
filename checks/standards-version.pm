@@ -147,6 +147,8 @@ sub run {
         # version following it has been out for at least two years (so
         # the current version is never obsolete).
         my $rdate = $STANDARDS->value($stdver);
+        my $released = strftime('%Y-%m-%d', gmtime $rdate);
+        $tag = "$version (released $released) (current is $CURRENT)";
         if ($rdate < $ANCIENT_DATE) {
             tag 'ancient-standards-version', $tag;
         } else {

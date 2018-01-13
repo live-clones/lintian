@@ -39,7 +39,7 @@ I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2.Xfoo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
-W: scripts source: ancient-standards-version 3.2.1 (current is CURRENT)
+W: scripts source: ancient-standards-version 3.2.1 (released 2000-08-24) (current is CURRENT)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: changelog-should-mention-nmu
 W: scripts source: debhelper-but-no-misc-depends scripts

@@ -40,7 +40,7 @@ I: maintainer-scripts source: debian-rules-missing-good-practice-target-dfsg get
 I: maintainer-scripts source: debian-watch-uses-insecure-uri http://domain.tld/foo-(.+)\.tar\.gz
 I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm
-W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is CURRENT)
+W: maintainer-scripts source: ancient-standards-version 3.1.1 (released 1999-11-16) (current is CURRENT)
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: debhelper-but-no-misc-depends maintainer-scripts
 W: maintainer-scripts source: debian-watch-file-in-native-package

@@ -59,7 +59,7 @@ I: binary: desktop-entry-lacks-icon-entry usr/share/applications/goodbye.desktop
 I: binary: desktop-entry-lacks-keywords-entry usr/share/applications/goodbye.desktop
 I: binary: desktop-entry-lacks-keywords-entry usr/share/applications/hello.desktop
 I: binary: no-md5sums-control-file
-W: binary source: ancient-standards-version 3.2.1 (current is CURRENT)
+W: binary source: ancient-standards-version 3.2.1 (released 2000-08-24) (current is CURRENT)
 W: binary source: debian-rules-ignores-make-clean-error line 14
 W: binary source: debian-rules-missing-recommended-target build-indep
 W: binary source: debian-rules-should-not-use-pwd line 9
