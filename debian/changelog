@@ -29,6 +29,9 @@ lintian (2.5.69) UNRELEASED; urgency=medium
     + [CL] Ensure that NSS (Name Services Switch) modules are placed in the
       "admin" section. Thanks to Mathieu Parent (sathieu) for the patch.
       (Closes: #886961)
+  * data/rules/rules-should-not-use:
+    + [CL] Include the assigned value in the Lintian output for the
+      debian-rules-should-not-use-DH_EXTRA_ADDONS tag.
 
  -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
 

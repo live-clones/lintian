@@ -1,6 +1,6 @@
 E: rules-general source: clean-should-be-satisfied-by-build-depends debhelper
 E: rules-general source: debian-rules-should-not-automatically-update-control line 3
 W: rules-general source: debian-rules-should-not-use-DEB_BUILD_OPTS line 11
-W: rules-general source: debian-rules-should-not-use-DH_EXTRA_ADDONS line 4
+W: rules-general source: debian-rules-should-not-use-DH_EXTRA_ADDONS systemd (line 4)
 W: rules-general source: debian-rules-should-not-use-pwd line 11
 W: rules-general source: debian-rules-should-not-use-underscore-variable line 12
