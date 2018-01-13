@@ -1341,7 +1341,7 @@ sub run {
             }
             $seen_vcs{$vcs}++;
             if ($uri =~ m/\.debian\.org/) {
-                tag 'vcs-deprecated-in-debian-infrastructure', "vcs-$vcs",
+                tag 'vcs-deprecated-in-debian-infrastructure', "vcs-$vcs", $uri
                   if $vcs ne 'git';
             } else {
                 tag 'orphaned-package-not-maintained-in-debian-infrastructure',
