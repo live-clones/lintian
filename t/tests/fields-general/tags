@@ -1,5 +1,5 @@
 I: fields-general source: debian-control-has-obsolete-dbg-package fields-general-dbg
+I: fields-general-debug: wrong-section-according-to-package-name fields-general-debug
 W: fields-general source: dbg-package-missing-depends fields-general-dbg
 W: fields-general-dbg: superfluous-clutter-in-homepage <http://lintian.debian.org/>
-W: fields-general-debug: wrong-section-according-to-package-name fields-general-debug
 W: fields-general: bad-homepage ttp://lintian.debian.org/

@@ -31,10 +31,13 @@ I: libbaz source: debian-control-has-obsolete-dbg-package libbaz2-dbg
 I: libbaz1-dev: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1-dev: package-contains-empty-directory usr/include/
+I: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
 I: libbaz1: binary-has-unneeded-section usr/lib/ma-dir/perl/version/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
 I: libbaz2-dbg: no-md5sums-control-file
+I: libbaz2-dbg: wrong-section-according-to-package-name libbaz2-dbg => debug
 I: libbaz2-dev: no-md5sums-control-file
+I: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel
 I: libbaz2: no-md5sums-control-file
 I: libbaz2: no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
 N: 4 tags overridden (4 warnings)
@@ -50,7 +53,6 @@ W: libbaz source: debhelper-but-no-misc-depends libbaz2-dev
 W: libbaz source: native-package-with-dash-version
 W: libbaz source: package-uses-deprecated-debhelper-compat-version 6
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
-W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
 W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz.so usr/lib/libbaz.so
 W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libbaz3.so.1.0.3b usr/lib/libbaz3.so
 W: libbaz1: dev-pkg-without-shlib-symlink usr/lib/libfoo2.so.1.0.3b usr/lib/libbaz2.so
@@ -71,9 +73,7 @@ W: libbaz1: unused-shlib-entry-in-control-file libdoesntexist2 1.0
 W: libbaz1: unused-shlib-entry-in-control-file udeb: libdoesntexist2 1.0
 W: libbaz1: unused-shlib-entry-in-symbols-control-file libbaz 2
 W: libbaz1: zero-byte-file-in-doc-directory usr/share/doc/README.Debian
-W: libbaz2-dbg: wrong-section-according-to-package-name libbaz2-dbg => debug
 W: libbaz2-dev: new-package-should-close-itp-bug
-W: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel
 W: libbaz2: debian-changelog-file-is-a-symlink
 W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz

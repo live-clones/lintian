@@ -5,6 +5,9 @@ lintian (2.5.69) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] Ignore TeX \section (etc.) titles when checking for GFDL
       license. Thanks, Norbert Preining for the report.  (Closes: #863384)
+  * checks/fields.desc:
+    + [CL] Downgrade severity of wrong-section-according-to-package-name
+      from "W:" to "I:".  (Closes: #883772)
   * checks/python.{pm,desc}:
     + [CL] Don't emit new-package-should-not-package-python2-module if
       the maintainer justifies its inclusion in the changelog entry.
