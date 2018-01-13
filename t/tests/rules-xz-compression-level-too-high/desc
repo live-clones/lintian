@@ -1,4 +1,4 @@
-Testname: rules-overeager-compression
+Testname: rules-xz-compression-level-too-high
 Version: 1.0
 Description: Test for over-eager tarball compression
 Test-For:
