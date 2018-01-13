@@ -1382,9 +1382,8 @@ Info:
  This prevents other developers and external contributors to collaborate
  on its maintenance.
  .
- Please move the packaging to under the *.debian.org umbrella.
- Alternatively, update the specified VCS field is either stale from
- before it was orphaned, or is otherwise wrong.
+ Please move the packaging to under the *.debian.org umbrella or update
+ the specified VCS field if it is otherwise wrong.
 
 Tag: vcs-deprecated-in-debian-infrastructure
 Severity: pedantic
