@@ -99,7 +99,17 @@ sub _run_source {
 sub _run_binary {
     my ($pkg, $info) = @_;
 
+    my $deps = Lintian::Relation->and($info->relation('all'),
+        $info->relation('provides'), $pkg);
     my @entries = $info->changelog ? $info->changelog->data : ();
+
+    if (
+        any { m,^usr/lib/python[\d.]+/(?:site|dist)-packages, }
+        $info->sorted_index
+        and not $deps->implies('python:any | python-minimal:any')
+      ) {
+        tag 'python-package-missing-depends-on-python';
+    }
 
     # Python 2 modules
     if (    $pkg =~ /^python2?-/

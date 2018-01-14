@@ -19,6 +19,8 @@ lintian (2.5.69) UNRELEASED; urgency=medium
       new-package-should-not-package-python2-module tag.
     + [CL] Include the offending package name when warning about
       new-package-should-not-package-python2-module.
+    + [CL] Warn about packages that ship Python modules but are missing
+      dependencies on any Python interpreter.  (Closes: #887083)
   * checks/rules.pm:
     + [CL] Allow rules-not-should-not-use data-based tags to capture
       variables and include them in the emitted tag.
