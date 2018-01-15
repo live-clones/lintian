@@ -22,7 +22,8 @@ Info: This package appears to be the initial packaging of a new upstream
  upload.
  .
  This warning can be ignored if the package is not intended for Debian or
- if it is a split of an existing Debian package.
+ if it is a split of an existing Debian package. This warning can also be
+ ignored if viewed on https://lintian.debian.org/.
  .
  Please add a justification to your changelog entry; Lintian looks in this
  version's changelog entry for the specified package name or the phrase
