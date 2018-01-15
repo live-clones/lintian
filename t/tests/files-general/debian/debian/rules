@@ -8,6 +8,14 @@ tmp := $(CURDIR)/debian/$(shell dh_listpackages)
 override_dh_install:
 	dh_install
 	echo "#fake conf file" > $(tmp)/etc/pam.conf
+	# true positives
+	touch $(tmp)/etc/skel/.lintianrc
+	# false positives
+	touch $(tmp)/etc/skel/.bashrc
+	touch $(tmp)/etc/skel/.bash_logout
+	touch $(tmp)/etc/skel/.profile
+	touch $(tmp)/etc/skel/.kshrc
+	touch $(tmp)/etc/skel/.mkshrc
 	echo "Back-up file" > $(tmp)/usr/share/foo/file~
 	# The name of the "binary" is "Tori no Uta"
 	# If it is ever messed up, it can be restored by
