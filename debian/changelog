@@ -1,6 +1,12 @@
-lintian (2.5.69) UNRELEASED; urgency=medium
+lintian (2.5.69) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - insecure-copyright-format-uri
+      - package-contains-file-in-etc-skel
+      - package-contains-python-tests-in-global-namespace
+      - python-package-missing-depends-on-python
+      - xz-compression-level-too-high
 
   * checks/cruft.pm:
     + [CL] Ignore TeX \section (etc.) titles when checking for GFDL
@@ -52,8 +58,10 @@ lintian (2.5.69) UNRELEASED; urgency=medium
     + [CL] Include the assigned value in the Lintian output for the
       debian-rules-should-not-use-DH_EXTRA_ADDONS tag.
     + [CL] Detect overly-compressed xz packages.  (Closes: #829100)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 09 Jan 2018 20:55:21 +0530
+ -- Chris Lamb <lamby@debian.org>  Tue, 16 Jan 2018 00:41:30 +0000
 
 lintian (2.5.68) unstable; urgency=medium
 
