@@ -1,3 +1,9 @@
+lintian (2.5.71) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 16 Jan 2018 18:03:37 +1100
+
 lintian (2.5.70) unstable; urgency=medium
 
   * checks/python.pm:
