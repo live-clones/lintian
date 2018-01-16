@@ -2,6 +2,11 @@ lintian (2.5.71) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * lib/Lintian/Collect/Package.pm:
+    + [CL] Fix "Use of uninitialized value in string ne" warnings that
+      would have appeared as part of the src-orig-index handling in 2.5.66.
+      (Closes: #887428)
+
  -- Chris Lamb <lamby@debian.org>  Tue, 16 Jan 2018 18:03:37 +1100
 
 lintian (2.5.70) unstable; urgency=medium

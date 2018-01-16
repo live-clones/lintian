@@ -576,7 +576,7 @@ sub _fetch_index_data {
                   | Lintian::Path::TYPE_HARDLINK;
                 $le->{link} = $target;
             }
-            if ($target ne $e->{name}) {
+            if (defined($target) and $target ne $e->{name}) {
                 $idxh{$target}{'_path_info'}
                   = ($idxh{$target}{'_path_info'}
                       & ~Lintian::Path::TYPE_HARDLINK)
