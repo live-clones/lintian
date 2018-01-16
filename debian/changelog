@@ -1,13 +1,14 @@
-lintian (2.5.70) UNRELEASED; urgency=medium
-
-  XXX: generate tag summary
+lintian (2.5.70) unstable; urgency=medium
 
   * checks/python.pm:
     + [CL] Fix false positives in python-package-missing-depends-on-python
       for Python 3 packages; we were not checking python3:any or
       python3-minimal:any.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 16 Jan 2018 12:08:07 +1100
+  * data/spelling/corrections:
+    + [PW] Add bumpded -> bumped correction.
+
+ -- Chris Lamb <lamby@debian.org>  Tue, 16 Jan 2018 06:44:46 +0000
 
 lintian (2.5.69) unstable; urgency=medium
 
