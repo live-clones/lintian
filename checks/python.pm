@@ -36,6 +36,12 @@ my %DJANGO_PACKAGES = (
     '^python3-django-' => 'python3-django',
     '^python2?-django-' => 'python-django',
 );
+
+my %REQUIRED_DEPENDS = (
+    'python2' => 'python-minimal:any | python:any',
+    'python3' => 'python3-minimal:any | python3:any',
+);
+
 my %MISMATCHED_SUBSTVARS = (
     '^python3-.+' => '${python:Depends}',
     '^python2?-.+' => '${python3:Depends}',
@@ -103,12 +109,15 @@ sub _run_binary {
         $info->relation('provides'), $pkg);
     my @entries = $info->changelog ? $info->changelog->data : ();
 
-    if (
-        any { m,^usr/lib/python[\d.]+/(?:site|dist)-packages, }
-        $info->sorted_index
-        and not $deps->implies('python:any | python-minimal:any')
-      ) {
-        tag 'python-package-missing-depends-on-python';
+    # Check for missing dependencies
+    foreach my $file ($info->sorted_index) {
+        if (    $file->is_file
+            and $file
+            =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
+            and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
+            tag 'python-package-missing-depends-on-python';
+            last;
+        }
     }
 
     # Python 2 modules
