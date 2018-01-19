@@ -1286,7 +1286,7 @@ sub run {
             and not $fname =~ m{ \. (?:
                   # Common "non-license" file extensions...
                    el|[ch]|cc|p[ylmc]|[hu]i|p_hi|html|php|rb|xpm
-                     |png|jpe?g|gif|svg|dtd|mk|lisp|yml
+                     |png|jpe?g|gif|svg|dtd|mk|lisp|yml|rs
                ) \Z}xsm
             and not $fname=~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
             and not $fname =~ m,/under\S+License\.docbook$,
