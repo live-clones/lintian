@@ -4,9 +4,11 @@ lintian (2.5.71) UNRELEASED; urgency=medium
 
   * checks/files.pm:
     + [CL] Ignore Rust .rs files in extra-license-file.  (Closes: #887715)
-  * checks/python.pm:
+  * checks/python.{desc,pm}:
     + [CL] Don't emit "python-package-missing-depends-on-python" for debug
       packages
+    + [CL] Include possibility that the file should not even be installed
+      in the description of python-package-missing-depends-on-python.
 
   * data/rules/rules-should-not-use:
     + [CL] Add more context to xz-compression-level-too-high tag output.
