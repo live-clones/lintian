@@ -110,13 +110,15 @@ sub _run_binary {
     my @entries = $info->changelog ? $info->changelog->data : ();
 
     # Check for missing dependencies
-    foreach my $file ($info->sorted_index) {
-        if (    $file->is_file
-            and $file
-            =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
-            and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
-            tag 'python-package-missing-depends-on-python';
-            last;
+    if ($pkg !~ /-dbg$/) {
+        foreach my $file ($info->sorted_index) {
+            if (    $file->is_file
+                and $file
+                =~ m,usr/lib/(?<version>python[23])[\d.]*/(?:site|dist)-packages,
+                and not $deps->implies($REQUIRED_DEPENDS{$+{version}})) {
+                tag 'python-package-missing-depends-on-python';
+                last;
+            }
         }
     }
 
