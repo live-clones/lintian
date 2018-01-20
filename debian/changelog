@@ -5,6 +5,9 @@ lintian (2.5.71) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [CL] Ignore Rust .rs files in extra-license-file.  (Closes: #887715)
 
+  * data/rules/rules-should-not-use:
+    + [CL] Add more context to xz-compression-level-too-high tag output.
+
   * lib/Lintian/Collect/Package.pm:
     + [CL] Fix "Use of uninitialized value in string ne" warnings that
       would have appeared as part of the src-orig-index handling in 2.5.66.
