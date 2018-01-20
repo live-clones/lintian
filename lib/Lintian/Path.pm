@@ -405,7 +405,7 @@ symlinks, even if the symlink points to a dir.
 
 Returns a truth value if this entry is a regular file (or a hardlink to one).
 
-NB: Unlike the "-f $dir" operator this will never return true for
+NB: Unlike the "-f $file" operator this will never return true for
 symlinks, even if the symlink points to a file (or hardlink).
 
 =item is_regular_file
@@ -414,7 +414,7 @@ Returns a truth value if this entry is a regular file.
 
 This is eqv. to $path->is_file and not $path->is_hardlink.
 
-NB: Unlike the "-f $dir" operator this will never return true for
+NB: Unlike the "-f $file" operator this will never return true for
 symlinks, even if the symlink points to a file.
 
 =cut
