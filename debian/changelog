@@ -1,6 +1,8 @@
-lintian (2.5.71) UNRELEASED; urgency=medium
+lintian (2.5.71) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - patch-file-present-but-not-mentioned-in-series
 
   * checks/files.pm:
     + [CL] Ignore Rust .rs files in extra-license-file.  (Closes: #887715)
@@ -14,6 +16,8 @@ lintian (2.5.71) UNRELEASED; urgency=medium
     + [CL] Include possibility that the file should not even be installed
       in the description of python-package-missing-depends-on-python.
 
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/rules/rules-should-not-use:
     + [CL] Add more context to xz-compression-level-too-high tag output.
 
@@ -25,7 +29,7 @@ lintian (2.5.71) UNRELEASED; urgency=medium
   * t/tests/files-multiarch-foreign-files:
     + [CL] Only run on amd64.  (Closes: #886163)
 
- -- Chris Lamb <lamby@debian.org>  Tue, 16 Jan 2018 18:03:37 +1100
+ -- Chris Lamb <lamby@debian.org>  Sun, 21 Jan 2018 05:24:47 +0000
 
 lintian (2.5.70) unstable; urgency=medium
 
