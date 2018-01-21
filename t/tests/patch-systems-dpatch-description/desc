@@ -5,3 +5,4 @@ Extra-Build-Depends: dpatch
 Test-For:
  dpatch-index-references-non-existent-patch
  dpatch-missing-description
+ patch-file-present-but-not-mentioned-in-series

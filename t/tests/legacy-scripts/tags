@@ -50,6 +50,7 @@ W: scripts source: debian-watch-file-should-use-sf-redirector line 8
 W: scripts source: debian-watch-file-specifies-old-upstream-version 5 line 8
 W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method line 5
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
+W: scripts source: patch-file-present-but-not-mentioned-in-series 03_specified_without_dpatch.dpatch
 W: scripts source: patch-system-but-no-source-readme
 W: scripts source: source-nmu-has-incorrect-version-number 6ds-1ubuntu0.5.10.1
 W: scripts: binary-without-manpage usr/bin/envfoo

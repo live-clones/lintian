@@ -48,6 +48,7 @@ sub run {
     return if not $droot;
     my $dpdir = $droot->resolve_path('patches');
     my $patch_series;
+    my %known_files;
 
     # Find debian/patches/series, assuming debian/patches is a (symlink to a)
     # dir.  There are cases, where it is a file (ctwm: #778556)
@@ -72,6 +73,7 @@ sub run {
               $dpdir->children;
             if ($opt_file and $opt_file->is_open_ok) {
                 my $fd = $opt_file->open;
+                $known_files{$opt_file->basename}++;
                 while(<$fd>) {
                     if (/DPATCH_OPTION_CPP=1/) {
                         $list_uses_cpp = 1;
@@ -82,6 +84,7 @@ sub run {
             }
             for my $list_file (@list_files) {
                 my @patches;
+                $known_files{$list_file->basename}++;
                 my $fd = $list_file->open;
                 while(<$fd>) {
                     chomp;
@@ -99,6 +102,7 @@ sub run {
 
                 # Check each patch.
                 foreach my $patch_name (@patches) {
+                    $known_files{$patch_name}++;
                     my $patch_file = $dpdir->child($patch_name);
                     $patch_file = $dpdir->child("${patch_name}.dpatch")
                       if not $patch_file;
@@ -219,6 +223,28 @@ sub run {
         my $readme = $droot->resolve_path('README.source');
         tag 'patch-system-but-no-source-readme'
           if not $readme;
+    }
+
+    #----- look for unreferenced files in debian/patches
+    if ($dpdir and $format ne '2.0') {
+        # Check all series filesf, including $vendor.series
+        foreach my $file ($dpdir->children) {
+            next unless $file =~ /\/series(\..+)?$/;
+            next unless $file->is_open_ok;
+            $known_files{$file->basename}++;
+            my $fd = $file->open;
+            while (<$fd>) {
+                $known_files{$1}++ if m{^\s*(\S+)};
+            }
+            close($fd);
+        }
+
+        foreach my $file ($dpdir->children('breadth-first')) {
+            # Use path relative to debian/patches for "subdir/foo"
+            my $name = substr($file, length $dpdir);
+            tag 'patch-file-present-but-not-mentioned-in-series', $name
+              unless $known_files{$name} or $file->is_dir;
+        }
     }
 
     #----- general cruft checking:

@@ -10,3 +10,4 @@ Test-For:
  patch-system-but-direct-changes-in-diff
  quilt-patch-with-non-standard-options
  quilt-series-references-non-existent-patch
+ patch-file-present-but-not-mentioned-in-series

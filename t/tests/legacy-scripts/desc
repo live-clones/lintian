@@ -53,6 +53,7 @@ Test-For:
  package-installs-python-bytecode
  package-uses-debhelper-but-lacks-build-depends
  package-uses-deprecated-debhelper-compat-version
+ patch-file-present-but-not-mentioned-in-series
  patch-system-but-no-source-readme
  php-script-but-no-php-cli-dep
  php-script-with-unusual-interpreter

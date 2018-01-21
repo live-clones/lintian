@@ -20,3 +20,5 @@ Test-For:
  diff-contains-svn-conflict-file
  diff-contains-svn-control-dir
  unsupported-source-format
+Test-Against:
+ patch-file-present-but-not-mentioned-in-series
