@@ -66,6 +66,7 @@ sub run {
     my $seen_dh = 0;
     my $seen_python_helper = 0;
     my $seen_python3_helper = 0;
+    my %overrides;
 
     $drules = $droot->child('rules') if $droot;
 
@@ -195,6 +196,7 @@ sub run {
             # Can be multiple targets per rule.
             while ($targets =~ /\boverride_(dh_[^\s]+)/g) {
                 my $dhcommand = $1;
+                $overrides{$dhcommand} = $.;
                 # If maintainer is using wildcards, it's unlikely to be a typo.
                 next if ($dhcommand =~ /%/);
                 next if ($dh_commands_depends->known($dhcommand));
@@ -320,6 +322,13 @@ sub run {
 
     if ($seendhcleank) {
         tag 'dh-clean-k-is-deprecated';
+    }
+
+    for my $suffix (qw(enable start)) {
+        my $line = $overrides{"dh_systemd_$suffix"};
+        tag 'debian-rules-uses-deprecated-systemd-override',
+          "override_dh_systemd_$suffix", "(line $line)"
+          if $line and $level >= 11;
     }
 
     # Check the files in the debian directory for various debhelper-related
