@@ -31,6 +31,9 @@ Comment:
  PW  == Paul Wise <pabs@debian.org>
  CL  == Chris Lamb <lamby@debian.org>
  EB  == Edward Betts <edward@debian.org>
+ GN  == Gergely Nagy <algernon@debian.org>
+ SL  == Sylvestre Ledru <sylvestre@debian.org>
+ SRL  == Steve Langasek <vorlon@debian.org>
  .
  Lintian is maintained in git.  The current development version may
  be checked out from:
