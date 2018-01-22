@@ -202,3 +202,9 @@ Info: The specified patch is present under the <tt>debian/patches</tt>
  .
  This may mean that a patch was created with the intention of modifying
  the package but is not being applied.
+ .
+ Please either add the filename to the series file, or ensure it is
+ commented-out in a form that Lintian can recognise, for example:
+ .
+   0001_fix-foo.patch
+   # 0002_fix-bar.patch

@@ -237,7 +237,7 @@ sub run {
             $known_files{$file->basename}++;
             my $fd = $file->open;
             while (<$fd>) {
-                $known_files{$1}++ if m{^\s*(\S+)};
+                $known_files{$1}++ if m{^\s*(?:#+\s*)?(\S+)};
             }
             close($fd);
         }
