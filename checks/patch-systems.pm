@@ -48,7 +48,10 @@ sub run {
     return if not $droot;
     my $dpdir = $droot->resolve_path('patches');
     my $patch_series;
-    my %known_files;
+    my %known_files = (
+        'README' => 1,
+        'README.patches' => 1,
+    );
 
     # Find debian/patches/series, assuming debian/patches is a (symlink to a)
     # dir.  There are cases, where it is a file (ctwm: #778556)

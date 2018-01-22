@@ -6,6 +6,9 @@ lintian (2.5.72) UNRELEASED; urgency=medium
     + [CL] Warn about packages that use about dh_systemd_enable or
       dh_systemd_start overrides whilst using debhelper compat level 11 as
       they are no longer being called.  (Closes: #887899)
+  * checks/patch-systems.{desc,pm}:
+    + [CL] Ignore files called "README" or "README.patches" when checking
+      packages for patch-file-present-but-not-mentioned-in-series.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 21 Jan 2018 16:42:25 +1100
 
