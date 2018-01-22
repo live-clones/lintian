@@ -11,6 +11,8 @@ lintian (2.5.72) UNRELEASED; urgency=medium
       packages for patch-file-present-but-not-mentioned-in-series.
     + [CL] Ignore commented-out patches in series files when checking the
       patch-file-present-but-not-mentioned-in-series tag.
+    + [CL] Check "$vendor.series" (not "series.$vendor") when checking for
+      the patch-file-present-but-not-mentioned-in-series tag.
 
  -- Chris Lamb <lamby@debian.org>  Sun, 21 Jan 2018 16:42:25 +1100
 

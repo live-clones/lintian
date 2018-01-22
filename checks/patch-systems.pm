@@ -232,7 +232,7 @@ sub run {
     if ($dpdir and $format ne '2.0') {
         # Check all series filesf, including $vendor.series
         foreach my $file ($dpdir->children) {
-            next unless $file =~ /\/series(\..+)?$/;
+            next unless $file =~ /\/(.+\.)?series$/;
             next unless $file->is_open_ok;
             $known_files{$file->basename}++;
             my $fd = $file->open;
