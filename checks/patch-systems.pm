@@ -48,10 +48,7 @@ sub run {
     return if not $droot;
     my $dpdir = $droot->resolve_path('patches');
     my $patch_series;
-    my %known_files = (
-        'README' => 1,
-        'README.patches' => 1,
-    );
+    my %known_files;
 
     # Find debian/patches/series, assuming debian/patches is a (symlink to a)
     # dir.  There are cases, where it is a file (ctwm: #778556)
@@ -243,6 +240,7 @@ sub run {
         }
 
         foreach my $file ($dpdir->children('breadth-first')) {
+            next if $file->basename =~ /^README(\.patches)?$/;
             # Use path relative to debian/patches for "subdir/foo"
             my $name = substr($file, length $dpdir);
             tag 'patch-file-present-but-not-mentioned-in-series', $name
