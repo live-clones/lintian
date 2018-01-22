@@ -13,6 +13,9 @@ lintian (2.5.72) UNRELEASED; urgency=medium
       patch-file-present-but-not-mentioned-in-series tag.
     + [CL] Check "$vendor.series" (not "series.$vendor") when checking for
       the patch-file-present-but-not-mentioned-in-series tag.
+  * checks/source-copyright.desc:
+    + [CL] Clarify that paragraph ordering matters in the description of
+      the unused-file-paragraph-in-dep5-copyright tag.  (Closes: #762261)
 
  -- Chris Lamb <lamby@debian.org>  Sun, 21 Jan 2018 16:42:25 +1100
 
