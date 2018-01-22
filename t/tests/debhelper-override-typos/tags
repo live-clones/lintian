@@ -1,3 +1,4 @@
+E: debhelper-override-typos source: debian-rules-uses-deprecated-systemd-override override_dh_systemd_enable (line 28)
 W: debhelper-override-typos source: typo-in-debhelper-override-target override_dh_instakk -> override_dh_install (line 14)
 W: debhelper-override-typos source: typo-in-debhelper-override-target override_dh_instakk -> override_dh_install (line 8)
 W: debhelper-override-typos source: typo-in-debhelper-override-target override_dh_install_changelogs -> override_dh_installchangelogs (line 11)
