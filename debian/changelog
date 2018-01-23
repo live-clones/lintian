@@ -30,7 +30,7 @@ lintian (2.5.72) UNRELEASED; urgency=medium
     + [CL] Clarify that paragraph ordering matters in the description of
       the unused-file-paragraph-in-dep5-copyright tag.  (Closes: #762261)
   * checks/watch-file.{desc,pm}:
-    + [CL] Rename the debian-watch-does-not-check-gpg-signature tag to
+    + [CL] Rename the debian-watch-may-check-gpg-signature tag to
       debian-watch-does-not-check-gpg-signature to avoid confusion around
       the "may check" implying that the package in question does such
       checking and we disapprove of it. Thanks to Andreas Beckmann for the
