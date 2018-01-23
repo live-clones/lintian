@@ -391,7 +391,6 @@ sub run {
             'tEh' => 1, # From #782902, too
             'ang' => 1, # The Go stdlib html/ package contains "ang;"
             'writeN' => 1, # The Go stdlib text/tabwriter pkg contains "writeN"
-            'writeN' => 1, # The Go stdlib text/tabwriter pkg contains "writeN"
             'ot' => 1, # The Go stdlib runtime/ package contains "ot"
             'cymK' => 1, # The Go runtime contains "cymK" (#888074)
         };

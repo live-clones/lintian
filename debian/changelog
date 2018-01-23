@@ -5,6 +5,7 @@ lintian (2.5.72) UNRELEASED; urgency=medium
   * checks/binaries.pm:
     + [CL] Avoid a false positive for spelling-error-in-binary that was
       causing a FTBFS on armhf.  (Closes: #888074)
+    + [CL] Drop a duplicate line in spelling-error-in-binary exceptions.
   * checks/debhelper.{desc,pm}:
     + [CL] Warn about packages that use about dh_systemd_enable or
       dh_systemd_start overrides whilst using debhelper compat level 11 as
