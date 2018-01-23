@@ -244,6 +244,7 @@ Description: {$description} (fonts)
 Package: xfonts-{$source}1
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Multi-Arch: foreign
 Description: {$description} (xfonts)
  Test for xfonts modules.
  .
