@@ -228,3 +228,26 @@ Description: {$description} (PAM module with number suffix)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: fonts-{$source}1
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Multi-Arch: foreign
+Description: {$description} (fonts)
+ Test for font modules.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: xfonts-{$source}1
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (xfonts)
+ Test for xfonts modules.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

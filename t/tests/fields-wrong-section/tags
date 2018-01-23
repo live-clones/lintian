@@ -2,6 +2,7 @@ I: fields-wrong-section source: debian-control-has-obsolete-dbg-package fields-w
 I: fields-wrong-section-contrib-doc: wrong-section-according-to-package-name fields-wrong-section-contrib-doc => contrib/doc
 I: fields-wrong-section-dbg: wrong-section-according-to-package-name fields-wrong-section-dbg => debug
 I: fields-wrong-section-doc: wrong-section-according-to-package-name fields-wrong-section-doc => doc
+I: fonts-fields-wrong-section1: wrong-section-according-to-package-name fonts-fields-wrong-section1 => fonts
 I: gir1.2-fields-wrong-section-0.1: wrong-section-according-to-package-name gir1.2-fields-wrong-section-0.1 => introspection
 I: libfields-wrong-section-cil: wrong-section-according-to-package-name libfields-wrong-section-cil => cli-mono
 I: libfields-wrong-section-dev: wrong-section-according-to-package-name libfields-wrong-section-dev => libdevel
@@ -18,3 +19,4 @@ I: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-f
 I: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
 I: python3-fields-wrong-section: wrong-section-according-to-package-name python3-fields-wrong-section => python
 I: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r
+I: xfonts-fields-wrong-section1: wrong-section-according-to-package-name xfonts-fields-wrong-section1 => x11

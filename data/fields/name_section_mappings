@@ -33,7 +33,8 @@ lib.*-cil(?:-dev)?$          => cli-mono
 ^lib.*-(tcl|lua|gst)$                   => interpreters
 # data files
 ^gir\d+\.\d+-.*-\d+\.\d+$    => introspection
-^(?:x?fonts|ttf)-                       => fonts
+^xfonts-                                => x11
+^(?:fonts|ttf)-                       => fonts
 ^lib(?:nss|pam)-                                => admin
 ^(?:aspell|hunspell|myspell|mythes)-    => localization
 ^hyphen-[a-z]{2}(?:-[a-z]{2})?$         => localization

@@ -17,6 +17,11 @@ lintian (2.5.72) UNRELEASED; urgency=medium
     + [CL] Clarify that paragraph ordering matters in the description of
       the unused-file-paragraph-in-dep5-copyright tag.  (Closes: #762261)
 
+  * data/fields/name_section_mappings:
+    + [CL] Ensure xfonts-foo are recognised as part of the "x11" section to
+      match the definition on https://packages.debian.org/en/sid/.
+      (Closes: #878609)
+
   * debian/copyright:
     + [CL] Add missing initials for Gergely Nagy, Sylvestre Ledru and Steve
       Langasek.  (Closes: #831729)
