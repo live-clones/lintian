@@ -393,6 +393,7 @@ sub run {
             'writeN' => 1, # The Go stdlib text/tabwriter pkg contains "writeN"
             'writeN' => 1, # The Go stdlib text/tabwriter pkg contains "writeN"
             'ot' => 1, # The Go stdlib runtime/ package contains "ot"
+            'cymK' => 1, # The Go runtime contains "cymK" (#888074)
         };
         my $tag_emitter
           = spelling_tag_emitter('spelling-error-in-binary', $file);
