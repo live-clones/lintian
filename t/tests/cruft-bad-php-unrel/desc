@@ -1,0 +1,6 @@
+Testname: cruft-bad-php-unrel
+Version: 1.0
+Description: Check for the bad php license (false-positives)
+Test-Against:
+ license-problem-php-license
+ license-problem-bad-php-license
