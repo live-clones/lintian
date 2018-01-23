@@ -6,6 +6,11 @@ lintian (2.5.72) UNRELEASED; urgency=medium
     + [CL] Avoid a false positive for spelling-error-in-binary that was
       causing a FTBFS on armhf.  (Closes: #888074)
     + [CL] Drop a duplicate line in spelling-error-in-binary exceptions.
+  * checks/cruft.{desc,pm}:
+    + [CL] Do not emit "license-problem-php-license" when the source comes
+      from pecl.php.net: "The last agreement with FTP Masters was that PHP
+      license is OK when the sources some from PECL repository."
+      (Closes: #810780)
   * checks/debhelper.{desc,pm}:
     + [CL] Warn about packages that use about dh_systemd_enable or
       dh_systemd_start overrides whilst using debhelper compat level 11 as

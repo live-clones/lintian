@@ -930,11 +930,11 @@ sub full_text_check {
         # permission to distribute those.
         if(
             _license_check(
-                $source_pkg, $name,
-                $basename,$NON_DISTRIBUTABLE_LICENSES,
-                $block,$blocknumber,
-                \$cleanedblock,\%matchedkeyword,
-                \%licenseproblemhash
+                $info, $source_pkg,
+                $name,$basename,
+                $NON_DISTRIBUTABLE_LICENSES,$block,
+                $blocknumber,\$cleanedblock,
+                \%matchedkeyword,\%licenseproblemhash
             )
           ){
             return;
@@ -947,9 +947,10 @@ sub full_text_check {
         }
 
         _license_check(
-            $source_pkg, $name, $basename,
-            $NON_FREE_LICENSES,$block,  $blocknumber,
-            \$cleanedblock, \%matchedkeyword,\%licenseproblemhash
+            $info, $source_pkg, $name,
+            $basename,$NON_FREE_LICENSES,$block,
+            $blocknumber,\$cleanedblock, \%matchedkeyword,
+            \%licenseproblemhash
         );
 
         # check only in block 0
@@ -1163,10 +1164,10 @@ sub _tag_gfdl {
 # return True in case of license problem
 sub _check_gfdl_license_problem {
     my (
-        $source_pkg, $name,$basename,
-        $block,$blocknumber,$cleanedblock,
-        $matchedkeyword,$licenseproblemhash,$licenseproblem,
-        %matchedhash
+        $info, $source_pkg, $name,
+        $basename,$block,$blocknumber,
+        $cleanedblock,$matchedkeyword,$licenseproblemhash,
+        $licenseproblem,%matchedhash
     )= @_;
     my $rawgfdlsections  = $matchedhash{rawgfdlsections}  || '';
     my $rawcontextbefore = $matchedhash{rawcontextbefore} || '';
@@ -1276,10 +1277,10 @@ sub _check_gfdl_license_problem {
 # whitelist good rfc
 sub _rfc_whitelist_filename {
     my (
-        $source_pkg, $name, $basename,
-        $block,$blocknumber, $cleanedblock,
-        $matchedkeyword,$licenseproblemhash, $licenseproblem,
-        %matchedhash
+        $info, $source_pkg, $name,
+        $basename,$block,$blocknumber,
+        $cleanedblock,$matchedkeyword,$licenseproblemhash,
+        $licenseproblem,%matchedhash
     )= @_;
     return 0 if $name eq 'debian/copyright';
     my $lcname = lc($basename);
@@ -1297,11 +1298,18 @@ sub _rfc_whitelist_filename {
 # whitelist php source
 sub _php_source_whitelist {
     my (
-        $source_pkg, $name, $basename,
-        $block,$blocknumber, $cleanedblock,
-        $matchedkeyword,$licenseproblemhash, $licenseproblem,
-        %matchedhash
+        $info, $source_pkg, $name,
+        $basename,$block,$blocknumber,
+        $cleanedblock,$matchedkeyword,$licenseproblemhash,
+        $licenseproblem,%matchedhash
     )= @_;
+
+    my $copyright_path = $info->index_resolved_path('debian/copyright');
+    if (    $copyright_path
+        and $copyright_path->file_contents
+        =~ m{^Source: https?://pecl.php.net/package/.*$}m) {
+        return 0;
+    }
 
     if($source_pkg =~ m,^php\d*(?:\.\d+)?$,xms) {
         return 0;
@@ -1460,9 +1468,10 @@ sub _md5sum_based_check {
 # check bad license
 sub _license_check {
     my (
-        $source_pkg, $name, $basename,
-        $licensesdatas, $block, $blocknumber,
-        $cleanedblock,$matchedkeyword, $licenseproblemhash
+        $info, $source_pkg, $name,
+        $basename,$licensesdatas, $block,
+        $blocknumber,$cleanedblock,$matchedkeyword,
+        $licenseproblemhash
     )= @_;
     my $ret = 0;
 
@@ -1517,10 +1526,10 @@ sub _license_check {
 
         if(defined($licenseproblemdata->{'callsub'})) {
             my $subresult= $licenseproblemdata->{'callsub'}->(
-                $source_pkg, $name, $basename,
-                $block,$blocknumber,$cleanedblock,
-                $matchedkeyword,$licenseproblemhash,$licenseproblem,
-                %+
+                $info, $source_pkg, $name,
+                $basename,$block,$blocknumber,
+                $cleanedblock,$matchedkeyword,$licenseproblemhash,
+                $licenseproblem,%+
             );
             if($subresult) {
                 $licenseproblemhash->{$licenseproblem} = 1;
