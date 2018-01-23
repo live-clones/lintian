@@ -183,7 +183,8 @@ sub run {
     close($fd);
 
     tag 'debian-watch-contains-dh_make-template' if ($template);
-    tag 'debian-watch-may-check-gpg-signature' unless ($withgpgverification);
+    tag 'debian-watch-does-not-check-gpg-signature'
+      unless ($withgpgverification);
 
     # Look for upstream signing key
     my $key_found = 0;

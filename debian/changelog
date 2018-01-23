@@ -29,6 +29,12 @@ lintian (2.5.72) UNRELEASED; urgency=medium
   * checks/source-copyright.desc:
     + [CL] Clarify that paragraph ordering matters in the description of
       the unused-file-paragraph-in-dep5-copyright tag.  (Closes: #762261)
+  * checks/watch-file.{desc,pm}:
+    + [CL] Rename the debian-watch-does-not-check-gpg-signature tag to
+      debian-watch-does-not-check-gpg-signature to avoid confusion around
+      the "may check" implying that the package in question does such
+      checking and we disapprove of it. Thanks to Andreas Beckmann for the
+      suggestion.  (Closes: #735040)
 
   * data/fields/name_section_mappings:
     + [CL] Ensure xfonts-foo are recognised as part of the "x11" section to

@@ -45,7 +45,7 @@
 #TMPDIR="/var/tmp"
 
 # Suppress the listed tags (--suppress-tags)
-#suppress-tags = debian-watch-may-check-gpg-signature
+#suppress-tags = debian-watch-does-not-check-gpg-signature
  
 # Specify "tag per package" display limit (--tag-display-limit)
 #tag-display-limit = 42

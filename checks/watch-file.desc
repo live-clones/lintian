@@ -151,7 +151,7 @@ Info: The watch file specifies an upstream version number which matches
  upstream version.  Otherwise, DEHS and similar projects will think the
  package is out of date even when it may not be.
 
-Tag: debian-watch-may-check-gpg-signature
+Tag: debian-watch-does-not-check-gpg-signature
 Severity: pedantic
 Certainty: certain
 Ref: uscan(1)

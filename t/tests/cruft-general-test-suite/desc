@@ -21,4 +21,4 @@ Test-Against:
  source-contains-svn-conflict-file
  source-contains-svn-control-dir
 Test-For:
- debian-watch-may-check-gpg-signature
+ debian-watch-does-not-check-gpg-signature
