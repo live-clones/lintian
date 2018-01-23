@@ -38,6 +38,9 @@ E: more-filename-games: no-copyright-file
 I: filename-games: no-md5sums-control-file
 I: filename-games: package-contains-empty-directory usr/games/
 I: filenames: duplicated-compressed-file usr/share/filenames/prototype.js.gz
+I: filenames: extra-license-file usr/share/pixmaps/COPYING
+I: filenames: extra-license-file usr/share/pixmaps/license.foo
+I: filenames: extra-license-file usr/share/pixmaps/license.txt
 I: filenames: no-md5sums-control-file
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.arch-ids/
 I: filenames: package-contains-empty-directory usr/lib/ma-dir/perl/version/.be/
@@ -84,9 +87,6 @@ W: filenames: embedded-javascript-library usr/share/filenames/yahoo-dom-event.js
 W: filenames: embedded-javascript-library usr/share/filenames/yahoo-min.js please use libjs-yui
 W: filenames: executable-not-elf-or-script usr/bin/bin/bad
 W: filenames: executable-not-elf-or-script usr/bin/mh/read
-W: filenames: extra-license-file usr/share/pixmaps/COPYING
-W: filenames: extra-license-file usr/share/pixmaps/license.foo
-W: filenames: extra-license-file usr/share/pixmaps/license.txt
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\ 

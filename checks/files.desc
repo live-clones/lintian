@@ -554,7 +554,7 @@ Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
  existed there.
 
 Tag: extra-license-file
-Severity: normal
+Severity: wishlist
 Certainty: possible
 Ref: policy 12.5
 Info: All license information should be collected in the
