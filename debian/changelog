@@ -16,6 +16,8 @@ lintian (2.5.72) UNRELEASED; urgency=medium
     + [CL] Warn about packages that use about dh_systemd_enable or
       dh_systemd_start overrides whilst using debhelper compat level 11 as
       they are no longer being called.  (Closes: #887899)
+    + [CL] Include the offending context and line when emitting the
+      brace-expansion-in-debhelper-config-file tag.
   * checks/fields.pm:
     + [CL] Also check xfonts-foo for font-package-not-multi-arch-foreign.
   * checks/files.desc:
