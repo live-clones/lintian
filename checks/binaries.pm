@@ -48,6 +48,8 @@ my $ARCH_REGEX = Lintian::Data->new('binaries/arch-regex', qr/\s*\~\~/o,
     sub { return qr/$_[1]/ });
 my $ARCH_64BIT_EQUIVS
   = Lintian::Data->new('binaries/arch-64bit-equivs', qr/\s*\=\>\s*/);
+my $BINARY_SPELLING_EXCEPTIONS
+  = Lintian::Data->new('binaries/spelling-exceptions', qr/\s+/);
 
 my %PATH_DIRECTORIES = map { $_ => 1 } qw(
   bin/ sbin/ usr/bin/ usr/sbin/ usr/games/ );
@@ -386,13 +388,7 @@ sub run {
         my $strings = slurp_entire_file($info->strings($file));
         my $exceptions = {
             %{ $group->info->spelling_exceptions },
-            'teH' => 1, # From #711207
-            'tEH' => 1, # From #782902
-            'tEh' => 1, # From #782902, too
-            'ang' => 1, # The Go stdlib html/ package contains "ang;"
-            'writeN' => 1, # The Go stdlib text/tabwriter pkg contains "writeN"
-            'ot' => 1, # The Go stdlib runtime/ package contains "ot"
-            'cymK' => 1, # The Go runtime contains "cymK" (#888074)
+            map { $_ => 1} $BINARY_SPELLING_EXCEPTIONS->all
         };
         my $tag_emitter
           = spelling_tag_emitter('spelling-error-in-binary', $file);
