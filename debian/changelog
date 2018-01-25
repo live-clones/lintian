@@ -18,6 +18,9 @@ lintian (2.5.72) UNRELEASED; urgency=medium
       they are no longer being called.  (Closes: #887899)
     + [CL] Include the offending context and line when emitting the
       brace-expansion-in-debhelper-config-file tag.
+    + [CL] Avoid false positives and remove an existing (incorrect) test
+      for apparent brace expansions in config files that do not include a
+      comma.  (Closes: #888304)
   * checks/fields.pm:
     + [CL] Also check xfonts-foo for font-package-not-multi-arch-foreign.
   * checks/files.desc:

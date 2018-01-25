@@ -427,7 +427,7 @@ sub run {
                 while (<$fd>) {
                     next if /^\s*$/;
                     next if (/^\#/ and $level >= 5);
-                    if (m/((?<!\\)\{(?:[^\s\\\},]*?,)*[^\\\}\s,]+,*\})/) {
+                    if (m/((?<!\\)\{(?:[^\s\\\}]*?,)+[^\\\}\s,]*,*\})/) {
                         tag 'brace-expansion-in-debhelper-config-file',$file,
                           $1,"(line $.)";
                         last;

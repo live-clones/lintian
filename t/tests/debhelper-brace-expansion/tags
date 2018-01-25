@@ -3,4 +3,3 @@ W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file de
 W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-3.install {foo,} (line 1)
 W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-4.install {,,foo} (line 1)
 W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-5.install {,foo,} (line 1)
-W: debhelper-brace-expansion source: brace-expansion-in-debhelper-config-file debian/debhelper-brace-problem-6.install {foo} (line 1)
