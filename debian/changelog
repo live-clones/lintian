@@ -25,6 +25,7 @@ lintian (2.5.72) UNRELEASED; urgency=medium
   * checks/patch-systems.{desc,pm}:
     + [CL] Ignore files called "README" or "README.patches" when checking
       packages for patch-file-present-but-not-mentioned-in-series.
+      (Closes: #888413)
     + [CL] Ignore commented-out patches in series files when checking the
       patch-file-present-but-not-mentioned-in-series tag.
     + [CL] Check "$vendor.series" (not "series.$vendor") when checking for
