@@ -86,7 +86,7 @@ while (my $line = <$readelf>) {
         print "Filename: $bin\n";
 
     } elsif ($line
-        =~ m/^readelf: Error: Reading 0x[0-9a-fA-F]+ bytes extends past end of file for section headers/
+        =~ m/^readelf: Error: Reading (0x)?[0-9a-fA-F]+ bytes extends past end of file for section headers/
         or $line
         =~ m/^readelf: Error: Unable to read in 0x[0-9a-fA-F]+ bytes of/
         or $line

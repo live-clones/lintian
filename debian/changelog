@@ -7,6 +7,10 @@ lintian (2.5.72) UNRELEASED; urgency=medium
       causing a FTBFS on armhf.  (Closes: #888074)
     + [CL] Drop a duplicate line in spelling-error-in-binary exceptions.
     + [CL] Move spelling-error-in-binary exceptions to a data file.
+    + [CL] Support binutils 2.29.90.20180122 (vs. 2.29.1) when parsing ELF
+      files for errors as the newer version modified the readelf output.
+      This was causing a testsuite failure when checking the
+      apparently-corrupted-elf-binary tag.  (Closes: #888456)
   * checks/cruft.{desc,pm}:
     + [CL] Do not emit "license-problem-php-license" when the source comes
       from pecl.php.net: "The last agreement with FTP Masters was that PHP
