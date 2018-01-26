@@ -55,6 +55,9 @@ lintian (2.5.72) UNRELEASED; urgency=medium
       match the definition on https://packages.debian.org/en/sid/.
       (Closes: #878609)
 
+  * debian/control:
+    + [CL] docbook-xml is required to build the documentation, so drop
+      "<!nocheck>" build restriction.
   * debian/copyright:
     + [CL] Add missing initials for Gergely Nagy, Sylvestre Ledru and Steve
       Langasek.  (Closes: #831729)
