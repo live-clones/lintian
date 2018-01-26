@@ -16,6 +16,9 @@ lintian (2.5.72) UNRELEASED; urgency=medium
       from pecl.php.net: "The last agreement with FTP Masters was that PHP
       license is OK when the sources some from PECL repository."
       (Closes: #810780)
+    + [CL] Allow, for example, debian/missing-sources/foo.js directories to
+      represent the source for foo.js. This is useful when foo.js is the
+      result of concatenating multiple files.  (Closes: #836771)
   * checks/debhelper.{desc,pm}:
     + [CL] Warn about packages that use about dh_systemd_enable or
       dh_systemd_start overrides whilst using debhelper compat level 11 as

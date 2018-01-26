@@ -879,8 +879,8 @@ sub check_missing_source {
             if($newpath eq '') {
                 next PATH;
             }
-            # found source return
-            if($info->index($newpath)) {
+            # found source file or directory
+            if($info->index_resolved_path($newpath)) {
                 return;
             }
         }

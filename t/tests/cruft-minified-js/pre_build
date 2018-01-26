@@ -24,6 +24,7 @@ uglifyjs -o "$uglyjson" "$json"
 cp "$uglyjson" "$jsdir/jswithoutminext/json.js"
 # fake not sourced
 cp "$uglyjson" "$jsdir/minwithoutsource/notsourced.min.js"
+cp "$uglyjson" "$jsdir/minwithoutsource/subdir.min.js"
 # fake install but not sourced
 cp "$uglyjson" "$jsdir/jswithoutminextwithoutsource/jsonnotsourced.js"
 # fake source and min alone
