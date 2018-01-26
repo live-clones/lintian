@@ -56,6 +56,11 @@ lintian (2.5.72) UNRELEASED; urgency=medium
     + [CL] Add missing initials for Gergely Nagy, Sylvestre Ledru and Steve
       Langasek.  (Closes: #831729)
 
+  * lib/Lintian/Check.pm:
+    + [CL] Avoid false positives in the spelling-error-in-description
+      (etc.) tags where the repetition is part of an acronym expansion such
+      as "ORA (ORA Recursive Acronym)".  (Closes: #883719)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 21 Jan 2018 16:42:25 +1100
 
 lintian (2.5.71) unstable; urgency=medium

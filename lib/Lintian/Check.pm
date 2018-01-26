@@ -269,6 +269,7 @@ sub check_spelling {
 
     my (%seen, %duplicates, $last_word, $quoted);
     my $counter = 0;
+    my $text_orig = $text;
 
     if (!%CORRECTIONS) {
         my $corrections_multiword
@@ -304,7 +305,8 @@ sub check_spelling {
             $code_ref->("$word $word (duplicate word)", $word)
               if not $quoted
               and not $duplicates{$word}++
-              and not $ends_with_punct;
+              and not $ends_with_punct
+              and $text_orig !~ /\b$word\s*\($word\b/;
         }
 
         if ($word =~ m/^[A-Za-z]+$/ and not $ends_with_punct) {

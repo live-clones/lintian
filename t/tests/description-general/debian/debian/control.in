@@ -155,3 +155,5 @@ Description: test for spelling - debian developement
  Some more stuff about this Debian test package. (dummy)
  .
  Duplicate: Duplicate (false positive due to colon)
+ .
+ FOO (FOO Owsome Object) is a recursive acronym.
