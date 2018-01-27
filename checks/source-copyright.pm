@@ -178,7 +178,7 @@ sub _check_dep5_copyright {
     if (    $contents =~ m/^Files-Excluded:/
         and $contents
         !~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0$}) {
-        tag 'files-excluded-ignored-without-copyright-format-1.0';
+        tag 'files-excluded-without-copyright-format-1.0';
     }
 
     if (
