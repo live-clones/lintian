@@ -2,6 +2,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [CL] When looking for the source of "build/foo/bar.min.js", also check
+      "src/foo/bar.js".  (Closes: #832027)
+
   * data/files/python-generic-modules:
     + [CL] Detect "backports" (and "backport") as overly generic Python
       module names.  (Closes: #888559)

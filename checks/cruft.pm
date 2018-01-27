@@ -39,6 +39,8 @@ use constant BLOCKSIZE => 16_384;
 use constant INSANE_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
 
+use File::Basename qw(basename);
+
 use Lintian::Data;
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
@@ -819,6 +821,7 @@ sub check_missing_source {
     my ($file, $info, $name, $basename, $dirname,$replacementspairref,
         $extratext)
       = @_;
+    my $basename_of_dirname = basename($dirname);
     $extratext //= '';
 
     # do not check missing source for non free
@@ -857,6 +860,7 @@ sub check_missing_source {
             my $newpath;
             # first replace dir name
             $path =~ s/\$dirname/$dirname/g;
+            $path =~ s/\$basename_of_dirname/$basename_of_dirname/g;
             # absolute path
             if(substr($path,0,1) eq '/') {
                 $path =~ s,^/+,,g;

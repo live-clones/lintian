@@ -17,6 +17,8 @@ mkdir -p "$jsdir/json"
 mkdir -p "$jsdir/sourced"
 mkdir -p "$jsdir/sourced_variant"
 mkdir -p "$jsdir/jswithoutminextwithoutsource/"
+mkdir -p "$srcdir/src/js"
+mkdir -p "$srcdir/build/js"
 
 # create a js file
 uglifyjs -o "$uglyjson" "$json"
@@ -32,6 +34,9 @@ cp "$uglyjson" "$jsdir/sourced/sourced.min.js"
 cp "$json" "$jsdir/sourced/sourced.js"
 cp "$uglyjson" "$jsdir/sourced_variant/sourced.min.js"
 cp "$json" "$jsdir/sourced_variant/sourced_orig.js"
+# sourced in parent's parent
+cp "$uglyjson" "$srcdir/build/js/foo.min.js"
+cp "$json" "$srcdir/src/js/foo.js"
 
 
 

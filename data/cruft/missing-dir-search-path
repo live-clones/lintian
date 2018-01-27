@@ -1,5 +1,6 @@
 # where we could find missing source leading / means relative to root package
 # $dirname will be replaced by path of current
+# $basename_of_dirname will be replaced by basename($dirname)
 
 # likely in current dir
 ./
@@ -9,6 +10,7 @@
 ./src/
 # maybe in ../src subdir
 ../src/
+../../src/$basename_of_dirname/
 # libtool
 /.libs/
 /.libs/$dirname/
