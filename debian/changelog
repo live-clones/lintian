@@ -2,6 +2,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/files/python-generic-modules:
+    + [CL] Detect "backports" (and "backport") as overly generic Python
+      module names.  (Closes: #888559)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 26 Jan 2018 16:33:51 +1100
 
 lintian (2.5.72) unstable; urgency=medium
