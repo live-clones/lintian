@@ -175,6 +175,12 @@ sub _check_dep5_copyright {
     my $contents = $copyright_path->file_contents;
     my (@dep5, @lines);
 
+    if (    $contents =~ m/^Files-Excluded:/
+        and $contents
+        !~ m{^Format:.*/doc/packaging-manuals/copyright-format/1.0$}) {
+        tag 'files-excluded-ignored-without-copyright-format-1.0';
+    }
+
     if (
         $contents !~ m{
                (?:^ | \n)
@@ -186,6 +192,7 @@ sub _check_dep5_copyright {
                  | VERSIONED_FORMAT_URL
                ) }x
       ){
+
         tag 'no-dep5-copyright';
         return;
     }

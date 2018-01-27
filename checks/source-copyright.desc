@@ -358,3 +358,19 @@ Info: The package appears to be licensed under the Apache 2.0 license and
  Please include the file in your package, for example by adding
  <tt>path/to/NOTICE</tt> to a <tt>debian/package.docs</tt> file.
 Ref: /usr/share/common-licenses/Apache-2.0
+
+Tag: files-excluded-without-copyright-format-1.0
+Severity: serious
+Certainty: certain
+Info: The <tt>Files-Excluded</tt> field in <tt>debian/copyright</tt> is
+ used to exclude files from upstream source packages such as when they
+ violate the Debian Free Software Guidelines
+ .
+ However, this field will be ignored by uscan(1) if the <tt>copyright</tt>
+ file is not declared as following the <tt>1.0</tt> format.
+ .
+ Please ensure your <tt>debian/copyright</tt> file starts with the
+ following line:
+ .
+   Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Ref: uscan(1)

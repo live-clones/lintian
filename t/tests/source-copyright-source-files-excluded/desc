@@ -2,5 +2,7 @@ Testname: source-copyright-source-files-excluded
 Version: 1.0-1
 Type: non-native
 Description: Test for files listed in Files-Excluded
+Test-Against:
+ files-excluded-without-copyright-format-1.0
 Test-For:
  source-includes-file-in-files-excluded

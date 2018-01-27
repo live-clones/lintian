@@ -2,6 +2,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/source-copyright.{desc,pm}:
+    + [CL] Warn about packages that specify a Files-Excluded header without
+      a valid Format header as the former will be ignored by uscan(1).
+      Thanks to Gunnar Wolf for the initial patch.  (Closes: #745743)
   * checks/cruft.pm:
     + [CL] When looking for the source of "build/foo/bar.min.js", also
       check "src/foo/bar.js".  (Closes: #832027)
