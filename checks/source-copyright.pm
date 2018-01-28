@@ -348,6 +348,10 @@ sub _parse_dep5 {
                   "paragraph at line $current_line)";
             }
 
+            tag 'global-files-wildcard-not-first-paragraph-in-dep5-copyright',
+              "(paragraph at line $current_line)"
+              if $files eq '*' and $i > 1;
+
             # Files paragraph
             if (not @commas_in_files and $files =~ /,/) {
                 @commas_in_files = ($i, $files_fname);
