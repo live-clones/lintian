@@ -2,6 +2,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [CL] When looking for the source of "build/foo/bar.min.js", also
+      check "src/foo/bar.js".  (Closes: #832027)
   * checks/fields.{desc,pm}:
     + [CL] Add a pedantic warning for co-maintained packages that are not
       managed in a revision control system.  (Closes: #884497)
@@ -12,9 +15,6 @@ lintian (2.5.73) UNRELEASED; urgency=medium
     + [CL] Warn when a "Files: *" DEP-5 paragraph exists but it is not the
       first paragraph. Thank to Christoph Biedl for the report and idea.
       (Closes: #879235)
-  * checks/cruft.pm:
-    + [CL] When looking for the source of "build/foo/bar.min.js", also
-      check "src/foo/bar.js".  (Closes: #832027)
 
   * data/files/python-generic-modules:
     + [CL] Detect "backports" (and "backport") as overly generic Python
