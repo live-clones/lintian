@@ -1,0 +1,3 @@
+W: fields-multi-arch-same-package-has-arch-specific-overrides source: multi-arch-same-package-has-arch-specific-overrides debian/fields-multi-arch-same-package-has-arch-specific-overrides.lintian-overrides.amd64
+W: fields-multi-arch-same-package-has-arch-specific-overrides-nonrel: package-has-long-file-name 79 (88) > 80
+W: fields-multi-arch-same-package-has-arch-specific-overrides: package-has-long-file-name 72 (81) > 80
