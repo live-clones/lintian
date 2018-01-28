@@ -1,1 +1,2 @@
-FIXME
+I: source-copyright-global-files-wildcard-not-first-paragraph source: unused-file-paragraph-in-dep5-copyright paragraph at line 6
+W: source-copyright-global-files-wildcard-not-first-paragraph source: global-files-wildcard-not-first-paragraph-in-dep5-copyright (paragraph at line 10)

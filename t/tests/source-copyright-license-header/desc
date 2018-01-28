@@ -3,3 +3,4 @@ Version: 1.0
 Description: Test for license field referencing header
 Test-For:
  dep5-file-paragraph-references-header-paragraph
+ global-files-wildcard-not-first-paragraph-in-dep5-copyright
