@@ -29,10 +29,13 @@ use constant DH_MAKE_PERL_TEMPLATE => 'this description was'
 
 use Encode qw(decode);
 
+use Lintian::Data;
 use Lintian::Check
   qw(check_spelling check_spelling_picky spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(strip);
+
+my $PLANNED_FEATURES = Lintian::Data->new('description/planned-features');
 
 my $SPELLING_ERROR_IN_SYNOPSIS
   = spelling_tag_emitter('spelling-error-in-description-synopsis');
@@ -151,6 +154,11 @@ sub run {
         if (m,^\s*Homepage: <?https?://,i) {
             tag 'description-contains-homepage';
             $flagged_homepage = 1;
+        }
+
+        foreach my $regex ($PLANNED_FEATURES->all()) {
+            tag 'description-mentions-planned-features', "(line $lines)"
+              if m/$regex/i;
         }
 
         if (index(lc($_), DH_MAKE_PERL_TEMPLATE) != -1) {
