@@ -1356,11 +1356,8 @@ sub run {
 
     #---- Checksums
 
-    if ($type eq 'source') {
-        if (!$info->field('checksums-sha256')) {
-            tag 'no-strong-digests-in-dsc';
-        }
-    }
+    tag 'no-strong-digests-in-dsc'
+      if $type eq 'source' && !$info->field('checksums-sha256');
 
     #----- Field checks (without checking the value)
 
