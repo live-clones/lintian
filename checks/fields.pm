@@ -354,6 +354,17 @@ sub run {
             $arch =~ s/\n//o;
             tag 'illegal-multi-arch-value', $arch, $march if ($arch eq 'all');
         }
+
+    }
+
+    if ($type eq 'source') {
+        for my $bin ($info->binaries) {
+            my $arch = $info->binary_field($bin, 'architecture');
+            my $fname = "debian/$bin.lintian-overrides.$arch";
+            next unless $info->binary_field($bin, 'multi-arch', '') eq 'same';
+            tag 'multi-arch-same-package-has-arch-specific-overrides', $fname
+              if $info->index_resolved_path($fname);
+        }
     }
 
     if ($type eq 'binary'){
