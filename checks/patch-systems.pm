@@ -60,6 +60,7 @@ sub run {
     #----- dpatch
     if ($build_deps->implies('dpatch')) {
         my $list_file;
+        tag 'package-uses-deprecated-dpatch-patch-system';
         $uses_patch_system++;
         $list_file = $dpdir->resolve_path('00list') if $dpdir;
         #check for a debian/patches file:
