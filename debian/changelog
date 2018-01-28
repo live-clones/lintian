@@ -2,6 +2,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.{desc,pm}:
+    + [CL] Add a pedantic warning for co-maintained packages that are not
+      managed in a revision control system.  (Closes: #884497)
   * checks/source-copyright.{desc,pm}:
     + [CL] Warn about packages that specify a Files-Excluded header without
       a valid Format header as the former will be ignored by uscan(1).

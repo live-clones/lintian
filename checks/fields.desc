@@ -1399,3 +1399,12 @@ Info: The spcified Vcs-* header points to an area within the *.debian.org
  elsewhere, potential contributors are likely to be most familiar with
  Git.
 Ref: https://lists.debian.org/debian-devel-announce/2017/08/msg00008.html
+
+Tag: co-maintained-package-with-no-vcs-headers
+Severity: pedantic
+Certainty: possible
+Info: Based on the content of the maintainer and uploader fields this
+ package is co-maintained but there are no Vcs-* fields.
+ .
+ It is recommended that shared maintenance of packages are co-ordinated
+ via a revision control system.

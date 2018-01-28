@@ -1,0 +1,7 @@
+Testname: fields-co-maintained-package-with-no-vcs-headers
+Version: 1.0
+Description: Check for co-maintained packages with no VCS headers
+Options: -I -E --pedantic
+Skeleton: pedantic
+Test-For:
+ co-maintained-package-with-no-vcs-headers

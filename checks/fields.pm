@@ -418,11 +418,15 @@ sub run {
     #---- Maintainer
     #---- Uploaders
 
+    my $is_comaintained = 0;
     for my $f (qw(maintainer uploaders)) {
         if (not defined $info->field($f)) {
             tag 'no-maintainer-field' if $f eq 'maintainer';
         } else {
             my $maintainer = $info->field($f);
+
+            my $is_list = $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/;
+            $is_comaintained = 1 if $is_list;
 
             # Note, not expected to hit on uploaders anymore, as dpkg
             # now strips newlines for the .dsc, and the newlines don't
@@ -439,6 +443,7 @@ sub run {
                 my @uploaders = map { split /\@\S+\K\s*,\s*/ }
                   split />\K\s*,\s*/, $maintainer;
                 for my $uploader (@uploaders) {
+                    $is_comaintained = 1;
                     check_maintainer($uploader, 'uploader');
                     if (   ((true { $_ eq $uploader } @uploaders) > 1)
                         and($duplicate_uploaders{$uploader}++ == 0)) {
@@ -448,7 +453,7 @@ sub run {
             } else {
                 check_maintainer($maintainer, $f);
                 if (   $type eq 'source'
-                    && $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/
+                    && $is_list
                     && !defined $info->field('uploaders')) {
                     tag 'no-human-maintainers';
                 }
@@ -1353,6 +1358,11 @@ sub run {
     }
     tag 'vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs
       if keys %seen_vcs > 1;
+
+    tag 'co-maintained-package-with-no-vcs-headers'
+      if $type eq 'source'
+      and $is_comaintained
+      and not %seen_vcs;
 
     #---- Checksums
 
