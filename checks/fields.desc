@@ -1414,4 +1414,4 @@ Severity: normal
 Certainty: certain
 Info: The specified file contains architecture-specific Lintian overrides
  but this package is declared as <tt>Multi-Arch: same</tt>.
-Ref: https://lintian.debian.org/manual/section-2.4.html#section-2.4.3, #787406
+Ref: lintian 2.4.3, #787406
