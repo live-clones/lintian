@@ -377,7 +377,7 @@ Ref: uscan(1)
 
 Tag: global-files-wildcard-not-first-paragraph-in-dep5-copyright
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The specified paragraph in the machine readable copyright file references
  all possible files but is not the first paragraph. For example:
  .
