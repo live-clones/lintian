@@ -3,4 +3,5 @@ Version: 1.0
 Options: -I -E --pedantic
 Description: Check for empty fields
 Test-For:
+ co-maintained-package-with-no-vcs-headers
  debian-control-has-empty-field
