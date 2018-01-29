@@ -195,6 +195,7 @@ sub run {
 
     my $files = $info->files;
     my $path = readlink($info->lab_data_path('changes'));
+    my %num_checksums;
     $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {
         my $file_info = $files->{$file};
@@ -239,11 +240,21 @@ sub run {
             next unless exists $file_info->{checksums}{$alg};
 
             my $real_checksum = get_file_checksum($alg, $filename);
+            $num_checksums{$alg}++;
 
             if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
                 tag 'checksum-mismatch-in-changes-file', $alg, $file;
             }
         }
+    }
+
+    # Check that we have a consistent number of checksums and files
+    foreach my $alg (keys %num_checksums) {
+        my $seen = $num_checksums{$alg};
+        my $expected = keys %{$files};
+        tag 'checksum-count-mismatch-in-changes-file',
+          "$seen $alg checksums != $expected files"
+          if $seen != $expected;
     }
 
     return;

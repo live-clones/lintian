@@ -21,6 +21,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       file-size-mismatch-in-changes-file and
       checksum-mismatch-in-changes-file tags were not being checked if a
       package contained an upstream signature.
+    + [CL] Check for inconsistencies between "Files" and Checksums-*
+      sections in .changes files.  (Closes: #658542)
   * checks/fields.{desc,pm}:
     + [CL] Add a pedantic warning for co-maintained packages that are not
       managed in a revision control system.  (Closes: #884497)
