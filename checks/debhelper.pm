@@ -41,7 +41,7 @@ my $maint_commands = Lintian::Data->new('debhelper/maint_commands');
 my $dh_commands_depends = Lintian::Data->new('debhelper/dh_commands', '=');
 my $filename_configs = Lintian::Data->new('debhelper/filename-config-files');
 my $dh_ver_deps= Lintian::Data->new('debhelper/dh_commands-manual', qr/\|\|/o);
-my $dh_addons = Lintian::Data->new('debhelper/dh_addons', '=');
+my $dh_addons = Lintian::Data->new('common/dh_addons', '=');
 my $dh_addons_manual
   = Lintian::Data->new('debhelper/dh_addons-manual', qr/\|\|/o);
 my $compat_level = Lintian::Data->new('debhelper/compat-level',qr/=/);

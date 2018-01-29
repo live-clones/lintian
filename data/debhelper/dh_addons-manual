@@ -1,5 +1,5 @@
 # Manually maintained list of dependencies needed for dh addons. This overrides
-# information from data/debhelper/dh_addons (the latter file is automatically
+# information from data/common/dh_addons (the latter file is automatically
 # generated).
 #
 # Please keep this sorted.
