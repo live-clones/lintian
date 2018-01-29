@@ -1,6 +1,7 @@
 # -*- perl -*-
 # Lintian::Collect::Buildinfo -- interface to .buildinfo file data collection
 
+# Copyright (C) 2010 Adam D. Barratt
 # Copyright (C) 2018 Chris Lamb
 #
 # This program is free software; you can redistribute it and/or modify it
