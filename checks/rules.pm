@@ -166,7 +166,7 @@ sub run {
     my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
     my (@current_targets, %rules_per_target,  %debhelper_group);
     my (%seen, %overridden);
-    my $maybe_skipping;
+    my ($maybe_skipping, @conditionals);
     my %variables;
     my $uses_makefile_pl = 0;
     my $includes = 0;
@@ -251,7 +251,8 @@ sub run {
         }
 
         # Keep track of whether this portion of debian/rules may be optional
-        if (/^ifn?(?:eq|def)\s/) {
+        if (/^ifn?(?:eq|def)\s(.*)/) {
+            push(@conditionals, $1);
             $maybe_skipping++;
         } elsif (/^endif\s/) {
             $maybe_skipping--;
@@ -436,6 +437,13 @@ sub run {
           if $line
           and none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
         @{$rules_per_target{"override_$cmd"}};
+    }
+
+    if (my $line = $overridden{'dh_auto_test'}) {
+        tag 'override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES',
+          "(line $line)"
+          if $rules_per_target{'override_dh_auto_test'}
+          and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
     }
 
     # Make sure that all the required build dependencies are there.  Don't

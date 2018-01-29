@@ -25,6 +25,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * checks/patch-systems.{desc,pm}:
     + [CL] Emit a pedantic warning for packages that are using the dpatch
       patch system.  (Closes: #884500)
+  * checks/rules.pm:
+    + [CL] Check for override_dh_auto_test targets that do not check
+      DEB_BUILD_OPTIONS for "nocheck".  (Closes: #712394)
   * checks/source-copyright.{desc,pm}:
     + [CL] Warn about packages that specify a Files-Excluded header without
       a valid Format header as the former will be ignored by uscan(1).
