@@ -4,7 +4,9 @@ Version: 1.0-1
 Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
+Test-Depends: javahelper
 Test-For:
+ bad-jar-name
  codeless-jar
  executable-jar-without-main-class
  jar-not-in-usr-share

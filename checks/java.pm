@@ -23,11 +23,12 @@ use strict;
 use warnings;
 use autodie;
 
+use File::Basename;
 use List::MoreUtils qw(any none);
 use Lintian::Data ();
 
 use Lintian::Tags qw(tag);
-use Lintian::Util qw(normalize_pkg_path);
+use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
 
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
 
@@ -75,6 +76,8 @@ sub run {
         if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
         }
+        tag 'bad-jar-name', $jar_file
+          unless basename($jar_file) =~ /^$PKGNAME_REGEX\.jar$/;
         # check for common code files like .class or .clj (Clojure files)
         foreach
           my $class (grep { m/\.(?:class|cljc?)$/oi } sort keys %{$files}){

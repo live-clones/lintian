@@ -98,3 +98,11 @@ Severity: normal
 Certainty: certain
 Info: The package contains a Jar file, but Lintian is unable to parse it.
  It is possible that the Jar file is corrupt.
+
+Tag: bad-jar-name
+Severity: normal
+Certainty: certain
+Info: The package contains a specified Jar file, but the name does not
+ correspond to Java policy guidelines. This can cause tools in the Debian
+ Java toolchain to fail.
+Ref: java-policy 2.4
