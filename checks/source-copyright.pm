@@ -30,7 +30,7 @@ use constant {
     WC_TYPE_DECENDANTS => 'DECENDANTS',
 };
 
-use List::MoreUtils qw(any);
+use List::MoreUtils qw(any none);
 use Text::Levenshtein qw(distance);
 
 use Lintian::Relation::Version qw(versions_compare);
@@ -277,6 +277,10 @@ sub _parse_dep5 {
         tag 'missing-field-in-dep5-copyright', 'format',
           "(line $lines[0]{'format'})";
     }
+
+    tag 'missing-explanation-for-contrib-or-non-free-package'
+      if $info->source_field('section') =~ m{^(contrib|non-free)(/.+)?$}
+      and none { defined $first_para->{$_} } qw(comment disclaimer);
 
     my (undef, $full_license_header, undef,@short_licenses_header)
       =parse_license($first_para->{'license'}, 1);

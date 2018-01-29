@@ -1,0 +1,6 @@
+Testname: source-copyright-missing-non-free-explanation-unrel
+Version: 1.0
+Description: Test for missing contrib/non-free explanations
+Section: contrib/doc
+Test-Against:
+ missing-explanation-for-contrib-or-non-free-package

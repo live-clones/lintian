@@ -45,6 +45,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
     + [CL] Warn when a "Files: *" DEP-5 paragraph exists but it is not the
       first paragraph. Thank to Christoph Biedl for the report and idea.
       (Closes: #879235)
+    + [CL] Ask maintainers to add a comment header to debian/copyright if
+      their package is in contrib or non-free.  (Closes: #773562)
 
   * data/common/dh_addons:
     + [CL] Move/create from data/debhelper/dh_addons as we plan to use

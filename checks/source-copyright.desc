@@ -390,3 +390,14 @@ Info: The specified paragraph in the machine readable copyright file references
  As the paragraphs is matched on a "last match wins" principle, all proceeding
  paragraphs are overridden.
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Tag: missing-explanation-for-contrib-or-non-free-package
+Severity: wishlist
+Certainty: certain
+Info: The specified package is in the contrib or non-free archive
+ area but does not include a "Comment" (or "Disclaimer") header in
+ its copyright file.
+ .
+ Please add a brief comment why this package cannot be part of the
+ main Debian distribution.
+Ref: policy 12.5
