@@ -272,12 +272,10 @@ sub _parse_dep5 {
         }
     }
     check_files_excluded($info, $first_para->{'files-excluded'} // '');
-    if (    not defined $first_para->{'format'}
-        and not defined $first_para->{'format-specification'}){
-        tag 'missing-field-in-dep5-copyright', 'format',
-          "(line $lines[0]{'format'})";
-    }
 
+    tag 'missing-field-in-dep5-copyright', 'format',
+      "(line $lines[0]{'format'})"
+      if none { defined $first_para->{$_} } qw(format format-specification);
     tag 'missing-explanation-for-contrib-or-non-free-package'
       if $info->source_field('section') =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(comment disclaimer);
