@@ -60,7 +60,7 @@ sub do_tests {
 
     opendir(my $dirfd, "$DATADIR/changes");
     foreach my $pkgbase (readdir $dirfd) {
-        next unless $pkgbase =~ m/\.(?:changes|u?deb|dsc)$/;
+        next unless $pkgbase =~ m/\.(?:buildinfo|changes|u?deb|dsc)$/;
         my $path = "$DATADIR/changes/$pkgbase";
         my $proc = Lintian::Processable::Package->new($path);
         my $entry = $LAB_A->get_package($proc);

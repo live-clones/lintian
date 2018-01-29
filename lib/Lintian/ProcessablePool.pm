@@ -42,6 +42,7 @@ Lintian::ProcessablePool -- Pool of processables
  $pool->add_file('foo.changes');
  $pool->add_file('bar.dsc');
  $pool->add_file('baz.deb');
+ $pool->add_file('qux.buildinfo');
  foreach my $gname ($pool->get_group_names){
     my $group = $pool->get_group($gname);
     process($gname, $group);
@@ -81,11 +82,12 @@ processables from the same source package (if any).
 
 sub add_file {
     my ($self, $file) = @_;
-    if ($file =~ m/\.changes$/o){
+    if ($file =~ m/\.(buildinfo|changes)$/o){
+        my $type = $1;
         croak "$file does not exist" unless -f $file;
         my $pkg_path = Cwd::abs_path($file);
         croak "Cannot resolve $file: $!" unless $pkg_path;
-        return $self->_add_changes_file($pkg_path);
+        return $self->_add_file($type, $pkg_path);
     }
 
     my $proc = Lintian::Processable::Package->new($file);
@@ -186,11 +188,16 @@ sub empty{
 
 #### Internal subs ####
 
-sub _add_changes_file{
-    my ($self, $pkg_path) = @_;
+sub _add_file{
+    my ($self, $type, $pkg_path) = @_;
     my $group = Lintian::ProcessableGroup->new($self->{'lab'}, $pkg_path);
-    my $cproc = $group->get_changes_processable;
-    my $gid = $self->_get_group_id($cproc);
+    my $proc;
+    if ($type eq 'buildinfo') {
+        $proc = $group->get_buildinfo_processable;
+    } elsif ($type eq 'changes') {
+        $proc = $group->get_changes_processable;
+    }
+    my $gid = $self->_get_group_id($proc);
     my $ogroup = $self->{groups}{$gid};
     if (defined($ogroup)){
         # Group already exists...
@@ -198,8 +205,13 @@ sub _add_changes_file{
         # Merge architectures/packages ...
         # Accept all new
 
-        if (!defined($ogroup->get_changes_processable)) {
-            $ogroup->add_processable($cproc);
+        if ($type eq 'buildinfo'
+            && !defined($ogroup->get_buildinfo_processable)) {
+            $ogroup->add_processable($proc);
+            $added = 1;
+        }elsif ($type eq 'changes'
+            && !defined($ogroup->get_changes_processable)) {
+            $ogroup->add_processable($proc);
             $added = 1;
         }
 

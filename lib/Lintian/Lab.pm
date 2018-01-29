@@ -44,6 +44,7 @@ use constant {
 # A private table of supported types.
 my %SUPPORTED_TYPES = (
     'binary'  => 1,
+    'buildinfo' => 1,
     'changes' => 1,
     'source'  => 1,
     'udeb'    => 1,

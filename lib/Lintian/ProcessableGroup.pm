@@ -45,16 +45,17 @@ Lintian::ProcessableGroup -- A group of objects that Lintian can process
 
 Instances of this perl class are sets of
 L<processables|Lintian::Processable>.  It allows at most one source
-and one changes package per set, but multiple binary packages
+and one changes or buildinfo package per set, but multiple binary packages
 (provided that the binary is not already in the set).
 
 =head1 METHODS
 
 =over 4
 
-=item Lintian::ProcessableGroup->new ([LAB[, CHANGES]])
+=item Lintian::ProcessableGroup->new ([LAB[, FILE]])
 
-Creates a group and optionally add all processables from CHANGES.
+Creates a group and optionally add all processables from .changes
+or .buildinfo file FILE.
 
 If the LAB parameter is given, all processables added to this group
 will be stored as a L<lab entry|Lintian::Lab::Entry> from LAB.
@@ -62,11 +63,12 @@ will be stored as a L<lab entry|Lintian::Lab::Entry> from LAB.
 =cut
 
 sub new {
-    my ($class, $lab, $changes) = @_;
+    my ($class, $lab, $file) = @_;
     my $self = {'lab' => $lab,};
     bless $self, $class;
-    $self->_init_group_from_changes($changes)
-      if defined $changes;
+    if (defined $file and $file =~ m/\.(buildinfo|changes)$/) {
+        $self->_init_group_from_file($1, $file);
+    }
     return $self;
 }
 
@@ -81,42 +83,43 @@ sub _lab_proc {
 }
 
 # Internal initialization sub
-#  populates $self from a changes file.
-sub _init_group_from_changes {
-    my ($self, $changes) = @_;
-    my ($cinfo, $cdir);
-    internal_error("$changes does not exist") unless -e $changes;
-    $cinfo = get_dsc_info($changes)
-      or internal_error("$changes is not a valid changes file");
-    $self->add_new_processable($changes, 'changes');
-    $cdir = $changes;
-    if ($changes =~ m,^/+[^/]++$,o){
+#  populates $self from a buildinfo or changes file.
+sub _init_group_from_file {
+    my ($self, $type, $filename) = @_;
+    my ($info, $dir);
+    internal_error("$filename does not exist") unless -e $filename;
+    $info = get_dsc_info($filename)
+      or internal_error("$filename is not a valid $type file");
+    $self->add_new_processable($filename, $type);
+    $dir = $filename;
+    if ($filename =~ m,^/+[^/]++$,o){
         # it is "/files.changes?"
         #  - In case you were wondering, we were told not to ask :)
         #   See #624149
-        $cdir = '/';
+        $dir = '/';
     } else {
         # it is "<something>/files.changes"
-        $cdir =~ s,(.+)/[^/]+$,$1,;
+        $dir =~ s,(.+)/[^/]+$,$1,;
     }
-    for my $line (split(/\n/o, $cinfo->{'files'}//'')) {
+    my $key = $type eq 'buildinfo' ? 'checksums-sha256' : 'files';
+    for my $line (split(/\n/o, $info->{$key}//'')) {
         my ($file);
         next unless defined $line;
         strip($line);
         next if $line eq '';
         # Ignore files that may lead to path traversal issues.
 
-        # We do not need (in order) md5sum, size, section or priority
+        # We do not need (eg.) md5sum, size, section or priority
         # - just the file name please.
-        (undef, undef, undef, undef, $file) = split(/\s+/o, $line);
+        $file = (split(/\s+/o, $line))[-1];
 
         # If the field is malformed, $file may be undefined; we also
         # skip it, if it contains a "/" since that is most likely a
         # traversal attempt
         next if !$file || $file =~ m,/,o;
 
-        if (not -f "$cdir/$file") {
-            print STDERR "$cdir/$file does not exist, exiting\n";
+        if (not -f "$dir/$file") {
+            print STDERR "$dir/$file does not exist, exiting\n";
             exit 2;
         }
 
@@ -125,7 +128,7 @@ sub _init_group_from_changes {
             next;
         }
 
-        $self->add_new_processable("$cdir/$file");
+        $self->add_new_processable("$dir/$file");
 
     }
     return 1;
@@ -165,10 +168,10 @@ sub add_processable{
     my ($self, $processable) = @_;
     my $pkg_type = $processable->pkg_type;
 
-    if ($pkg_type eq 'changes'){
-        internal_error('Cannot add another changes file')
-          if (exists $self->{changes});
-        $self->{changes} = $self->_lab_proc($processable);
+    if ($pkg_type eq 'changes' or $pkg_type eq 'buildinfo'){
+        internal_error("Cannot add another $pkg_type file")
+          if (exists $self->{$pkg_type});
+        $self->{$pkg_type} = $self->_lab_proc($processable);
     } elsif ($pkg_type eq 'source'){
         internal_error('Cannot add another source package')
           if (exists $self->{source});
@@ -262,6 +265,20 @@ If $group does not have a source processable, this method returns C<undef>.
 sub get_source_processable {
     my ($self) = @_;
     return $self->{source};
+}
+
+=item $group->get_buildinfo_processable
+
+Returns the processable identified as the "buildinfo" processable (e.g.
+the buildinfo file).
+
+If $group does not have a buildinfo processable, this method returns C<undef>.
+
+=cut
+
+sub get_buildinfo_processable {
+    my ($self) = @_;
+    return $self->{buildinfo};
 }
 
 =item $group->get_changes_processable

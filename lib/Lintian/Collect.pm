@@ -87,6 +87,9 @@ sub new {
     } elsif ($type eq 'binary' or $type eq 'udeb') {
         require Lintian::Collect::Binary;
         $object = Lintian::Collect::Binary->new($pkg);
+    } elsif ($type eq 'buildinfo') {
+        require Lintian::Collect::Buildinfo;
+        $object = Lintian::Collect::Buildinfo->new($pkg);
     } elsif ($type eq 'changes') {
         require Lintian::Collect::Changes;
         $object = Lintian::Collect::Changes->new($pkg);

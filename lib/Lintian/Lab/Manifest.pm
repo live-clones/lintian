@@ -77,6 +77,8 @@ use constant BINLIST_FORMAT =>
   q{Lintian's list of binary packages in the archive--V5};
 use constant SRCLIST_FORMAT =>
   q{Lintian's list of source packages in the archive--V5};
+use constant BLDLIST_FORMAT =>
+  q{Lintian's list of buildinfo packages in the archive--V1};
 use constant CHGLIST_FORMAT =>
   q{Lintian's list of changes packages in the archive--V1};
 
@@ -95,6 +97,9 @@ my @BIN_FILE_FIELDS = (
     'architecture','file','timestamp','area',
 );
 
+# buildinfo packages lists
+my @BLD_FILE_FIELDS = ('source','version','architecture','file','timestamp',);
+
 # changes packages lists
 my @CHG_FILE_FIELDS = ('source','version','architecture','file','timestamp',);
 
@@ -106,6 +111,8 @@ my @SRC_QUERY = ('source','version',);
 my @GROUP_QUERY = ('source','version','identifier',);
 
 my @BIN_QUERY = ('package','version','architecture',);
+
+my @BLD_QUERY = ('source','version','architecture',);
 
 my @CHG_QUERY = ('source','version','architecture',);
 
@@ -119,6 +126,11 @@ my %TYPE2INFO = (
         'file-fields'  => \@BIN_FILE_FIELDS,
         'file-header'  => BINLIST_FORMAT,
         'query-fields' => \@BIN_QUERY
+    },
+    'buildinfo' => {
+        'file-fields'  => \@BLD_FILE_FIELDS,
+        'file-header'  => BLDLIST_FORMAT,
+        'query-fields' => \@BLD_QUERY
     },
     'changes' => {
         'file-fields'  => \@CHG_FILE_FIELDS,

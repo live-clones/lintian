@@ -16,7 +16,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-## Represents something Lintian can process (e.g. a deb, dsc or a changes)
+## Represents something Lintian can process (e.g. a deb, dsc, buildinfo or a changes)
 package Lintian::Processable::Package;
 
 use parent qw(Lintian::Processable Class::Accessor::Fast);
@@ -144,13 +144,13 @@ sub new {
         $self->{pkg_src} = $pkg_name; # it is own source pkg
         $self->{pkg_src_version} = $pkg_version;
         $self->{'extra-fields'} = $dinfo;
-    } elsif ($pkg_type eq 'changes'){
+    } elsif ($pkg_type eq 'buildinfo' or $pkg_type eq 'changes'){
         my $cinfo = get_dsc_info($pkg_path)
-          or croak "$pkg_path is not a valid changes file";
+          or croak "$pkg_path is not a valid $pkg_type file";
         my $pkg_version = $cinfo->{version};
         my $pkg_name = $cinfo->{source}//'';
         unless ($pkg_name) {
-            $pkg_name = _derive_name($pkg_path, 'changes')
+            $pkg_name = _derive_name($pkg_path, $pkg_type)
               or croak "Cannot determine the name of $pkg_path";
         }
         $self->{pkg_name} = $pkg_name;

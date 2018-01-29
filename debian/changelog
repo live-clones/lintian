@@ -43,6 +43,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
     + [CL] Detect "backports" (and "backport") as overly generic Python
       module names.  (Closes: #888559)
 
+  * lib/Lintian/*:
+    + [CL] Add support for passing .buildinfo files to Lintian.
+      (Closes: #853274)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 26 Jan 2018 16:33:51 +1100
 
 lintian (2.5.72) unstable; urgency=medium

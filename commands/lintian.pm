@@ -1508,17 +1508,15 @@ sub setup_work_pool {
     for my $arg (@ARGV) {
         # file?
         if (-f $arg) {
-            if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
+            if ($arg =~ m/\.(?:u?deb|dsc|changes|buildinfo)$/o){
                 eval {$pool->add_file($arg);};
                 if ($@) {
                     print STDERR "Skipping $arg: $@";
                     $exit_code = 2;
                 }
             } else {
-                fatal_error(
-                    join(q{ },
-                        "bad package file name $arg",
-                        '(neither .deb, .udeb, .changes or .dsc file)'));
+                fatal_error("bad package file name $arg (neither .deb, "
+                      . '.udeb, .changes .dsc or .buildinfo file)');
             }
         } else {
             # parameter is a package name--so look it up

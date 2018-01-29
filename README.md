@@ -4,8 +4,8 @@ Lintian - Static Debian package analysis tool
 Lintian is a static analysis tool for finding many bugs, policy
 violations and other issues in Debian based packages.  It can process
 binary Debian packages (.deb), micro/installer packages (.udeb),
-Debian source packages (.dsc) and (to a limited degree) the "changes"
-files.
+Debian source packages (.dsc) and (to a limited degree) the "buildinfo"
+and "changes" files.
 
 
 Running Lintian
