@@ -17,6 +17,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
     + [CL] Warn about Multi-Arch: same packages that ship
       architecture-specific Lintian overrides. Thanks to Sebastian
       Ramacher for the report.  (Closes: #787469)
+    + [CL] Check for packages that specify binary dependencies on toolchain
+      packages such as cdbs or debhelper.  (Closes: #700953)
   * checks/java.{desc,pm}:
     + [CL] Check for .jar files that do not match the Debian Java policy.
       (Closes: #791552)

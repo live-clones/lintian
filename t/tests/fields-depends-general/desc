@@ -2,6 +2,7 @@ Testname: fields-depends-general
 Version: 1.0
 Description: General tests for binary package dependencies
 Test-For:
+ binary-package-depends-on-toolchain-package
  breaks-without-version
  conflicts-with-dependency
  conflicts-with-version

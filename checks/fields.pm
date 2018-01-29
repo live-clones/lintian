@@ -43,6 +43,7 @@ use constant {
 };
 
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
+our $KNOWN_TOOLCHAIN = Lintian::Data->new('fields/toolchain');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
 our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
 our $KNOWN_SECTIONS = Lintian::Data->new('fields/archive-sections');
@@ -892,6 +893,10 @@ sub run {
                         && $pkg =~ m/^lib/
                         && $pkg !~ m/-(?:dev|docs?|tools|bin)$/
                         && $part_d_orig =~ m/-docs?$/);
+
+                    tag 'binary-package-depends-on-toolchain-package',
+                      "$field: $part_d_orig"
+                      if $KNOWN_TOOLCHAIN->known($d_pkg);
 
                     # default-jdk-doc must depend on openjdk-X-doc (or
                     # classpath-doc) to be useful; other packages

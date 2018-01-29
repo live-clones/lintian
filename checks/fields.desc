@@ -1406,7 +1406,7 @@ Certainty: possible
 Info: Based on the content of the maintainer and uploader fields this
  package is co-maintained but there are no Vcs-* fields.
  .
- It is recommended that shared maintenance of packages are co-ordinated
+ It is recommended 
  via a revision control system.
 
 Tag: multi-arch-same-package-has-arch-specific-overrides
@@ -1415,3 +1415,13 @@ Certainty: certain
 Info: The specified file contains architecture-specific Lintian overrides
  but this package is declared as <tt>Multi-Arch: same</tt>.
 Ref: lintian 2.4.3, #787406
+
+Tag: binary-package-depends-on-toolchain-package
+Severity: normal
+Certainty: possible
+Info: The package specifies a binary dependecy on a "toolchain" package
+ such as debhelper or cdbs. This is likely to a mistake as these packages
+ are typically specified as build-dependencis.
+ .
+ If the package intentionally requires such a dependency, please add a
+ Lintian override.
