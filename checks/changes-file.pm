@@ -205,8 +205,8 @@ sub run {
             && $file =~ m/\.orig(-[A-Za-z\d-]+)?\.tar\./
             && $file !~ m/\.asc$/
             && $info->field('version') !~ m/(?:dfsg|debian|ds|repack)/) {
-            next if exists $files->{"$file.asc"};
-            tag 'orig-tarball-missing-upstream-signature', $file;
+            tag 'orig-tarball-missing-upstream-signature', $file
+              unless exists $files->{"$file.asc"};
         }
 
         # check section
