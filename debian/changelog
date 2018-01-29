@@ -5,9 +5,12 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] When looking for the source of "build/foo/bar.min.js", also
       check "src/foo/bar.js".  (Closes: #832027)
-  * checks/description.pm:
+  * checks/description.{desc.pm}:
     + [CL] Check for packages that mention planned/upcoming features in
       their long description.  (Closes: #782990)
+    + [CL] Improve the description-synopsis-might-not-be-phrased-properly
+      tag also detect multiple sentences and improve the tag description.
+      (Closes: #778427)
   * checks/fields.{desc,pm}:
     + [CL] Add a pedantic warning for co-maintained packages that are not
       managed in a revision control system.  (Closes: #884497)

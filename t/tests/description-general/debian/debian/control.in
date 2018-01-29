@@ -55,6 +55,15 @@ Description: some Lintian test package
  .
  Homepage: <http://lintian.debian.org/>
 
+Package: {$source}-5
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$source} starts a sentence. Then starts another.
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
 Package: {$source}-ends-etc
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}

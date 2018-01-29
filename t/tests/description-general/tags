@@ -12,6 +12,7 @@ E: foo-duplicate: description-is-pkg-name foo duplicate
 I: description-general source: duplicate-long-description foo-duplicate foo-bar-duplicate
 I: description-general-3: using-first-person-in-description line 5: I
 I: description-general-4: capitalization-error-in-description debian Debian
+I: description-general-5: description-synopsis-might-not-be-phrased-properly
 I: description-general-syn-spelling: capitalization-error-in-description-synopsis debian Debian
 I: description-general: description-synopsis-might-not-be-phrased-properly
 W: description-general-2: description-starts-with-leading-spaces

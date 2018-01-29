@@ -141,13 +141,16 @@ Info: The extended description contains the statement that it was
 Tag: description-synopsis-might-not-be-phrased-properly
 Severity: minor
 Certainty: possible
-Info: The synopsis (first line in the package "Description:" field, the
- short description) ends with a full stop "." character. This is not
- necessary, as the synopsis doesn't need to be a full sentence. It is
- recommended that a descriptive phrase is used instead.
+Info: The package synopsis (also known as the "short" descriptiom,, ie. the
+ first line in the package "Description:" field) either ends with a full
+ stop "." character or starts another additonal sentence.
  .
- Note also that the synopsis is not part of the rest of the "Description:"
- field.
+ This is not necessary as the synopsis does nott need to be a full
+ sentence.  It is recommended that a single descriptive phrase is used
+ instead.
+ .
+ Note also that the synopsis is not part of the rest of the "long"
+ Description: field.
 Ref: devref 6.2.2
 
 Tag: description-synopsis-is-duplicated
