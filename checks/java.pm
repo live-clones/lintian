@@ -53,7 +53,7 @@ sub run {
         my $files = $java_info->{$jar_file}{files};
         my $manifest = $java_info->{$jar_file}{manifest};
         my $operm = $info->index($jar_file)->operm;
-        my $jar_dir;
+        my $jar_dir = dirname($jar_file);
         my $classes = 0;
         my $datafiles = 1;
         my $cp = '';
@@ -69,10 +69,7 @@ sub run {
         # Ignore Mozilla's jar files, see #635495
         next if $jar_file =~ m#usr/lib/xul(?:-ext|runner[^/]*+)/#o;
 
-        $jar_dir = $jar_file;
-        $jar_dir =~ s,[^/]+$,,o;
         $has_jars = 1;
-
         if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
         }
