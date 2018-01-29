@@ -23,7 +23,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::Moreutils qw(any);
+use List::MoreUtils qw(any);
 
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
