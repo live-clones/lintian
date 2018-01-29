@@ -6,7 +6,7 @@ Info: This script looks for mistakes in debian/source/* files.
 Needs-Info: unpacked, diffstat
 
 Tag: missing-debian-source-format
-Severity: wishlist
+Severity: normal
 Certainty: certain
 Info: Explicitly selecting a source format by putting the format in
  <tt>debian/source/format</tt> is recommended.  This allows for

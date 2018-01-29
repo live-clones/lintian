@@ -5,6 +5,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] When looking for the source of "build/foo/bar.min.js", also
       check "src/foo/bar.js".  (Closes: #832027)
+  * checks/debian-source-dir.desc:
+    + [CL] Upgrade severity of missing-debian-source-format from wishlist
+      ("I") to normal ("W").  (Closes: #702671)
   * checks/description.{desc.pm}:
     + [CL] Check for packages that mention planned/upcoming features in
       their long description.  (Closes: #782990)
