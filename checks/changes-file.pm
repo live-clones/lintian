@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use List::Moreutils qw(any);
+
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 use Lintian::Data;
@@ -186,6 +188,9 @@ sub run {
                 last;
             }
         }
+        tag 'source-format-1.0-with-upstream-signature'
+          if $src->info->field('format', '1.0') eq '1.0'
+          and any { m/\.asc$/ } %{$info->files};
     }
 
     my $files = $info->files;
