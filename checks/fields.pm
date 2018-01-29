@@ -104,6 +104,9 @@ my $NAME_SECTION_MAPPINGS = Lintian::Data->new(
         return {'regex' =>  qr/$_[0]/x, 'section' => $_[1]};
     });
 
+our $DH_ADDONS = Lintian::Data->new('common/dh_addons', '=');
+our %DH_ADDONS_VALUES = map { $DH_ADDONS->value($_) => 1 } $DH_ADDONS->all;
+
 my %VCS_EXTRACT = (
     browser => sub { return @_;},
     arch    => sub { return @_;},
@@ -896,7 +899,8 @@ sub run {
 
                     tag 'binary-package-depends-on-toolchain-package',
                       "$field: $part_d_orig"
-                      if $KNOWN_TOOLCHAIN->known($d_pkg);
+                      if $KNOWN_TOOLCHAIN->known($d_pkg)
+                      and not $DH_ADDONS_VALUES{$pkg};
 
                     # default-jdk-doc must depend on openjdk-X-doc (or
                     # classpath-doc) to be useful; other packages
