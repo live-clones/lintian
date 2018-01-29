@@ -924,3 +924,13 @@ Info: The package appears to use <tt>AC_PATH_PROG</tt> to discover the
  A better way would be to use the <tt>PKG_PROG_PKG_CONFIG</tt> macro from
  <tt>pkg.m4</tt> and then using the <tt>$PKG_CONFIG</tt> shell variable.
 Ref: #884798
+
+Tag: package-does-not-install-examples
+Severity: pedantic
+Certainty: possible
+Info: The original source tarball contains the specified examples
+ directory. However, no examples are installed in any binary packages.
+ .
+ Please use <tt>dh_installexamples</tt> to install these to the most
+ relevant package.
+Ref: dh_installexamples(1)

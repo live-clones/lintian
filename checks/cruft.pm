@@ -40,6 +40,7 @@ use constant INSANE_LINE_LENGTH => 512;
 use constant SAFE_LINE_LENGTH => 256;
 
 use File::Basename qw(basename);
+use List::MoreUtils qw(any);
 
 use Lintian::Data;
 use Lintian::Relation ();
@@ -335,7 +336,7 @@ our @TRAILING_WHITESPACE_FILES = (
 );
 
 sub run {
-    my (undef, undef, $info, $proc) = @_;
+    my (undef, undef, $info, $proc, $group) = @_;
     my $source_pkg = $proc->pkg_src;
     my $d_files = $info->index_resolved_path('debian/files');
 
@@ -372,7 +373,7 @@ sub run {
     }elsif (not $info->native) {
         check_diffstat($info->diffstat, \%warned);
     }
-    find_cruft($source_pkg, $info, \%warned, $ltinbd);
+    find_cruft($source_pkg, $info, \%warned, $ltinbd, $group);
 
     for my $file (@EOL_TERMINATORS_FILES) {
         my $path = $info->index_resolved_path("debian/$file");
@@ -564,7 +565,7 @@ sub istestset {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    my ($source_pkg, $info, $warned, $ltinbd) = @_;
+    my ($source_pkg, $info, $warned, $ltinbd, $group) = @_;
     my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
     my @worklist;
 
@@ -604,6 +605,8 @@ sub find_cruft {
                         last;
                     }
                 }
+                tag 'package-does-not-install-examples', $entry
+                  if $basename eq 'examples' and not _ships_examples($group);
             }
 
             push(@worklist, $entry->children);
@@ -1548,6 +1551,18 @@ sub _license_check {
         }
     }
     return $ret;
+}
+
+sub _ships_examples {
+    my ($group) = @_;
+    my @procs = $group->get_processables('binary');
+    return if not @procs;
+    foreach my $binpkg (@procs) {
+        my $name = $binpkg->pkg_name;
+        my @files = $binpkg->info->sorted_index;
+        return 1 if any { m{^usr/share/doc/$name/examples/$} } @files;
+    }
+    return;
 }
 
 1;

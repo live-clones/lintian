@@ -2,9 +2,11 @@ lintian (2.5.73) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/cruft.pm:
+  * checks/cruft.{desc,pm}:
     + [CL] When looking for the source of "build/foo/bar.min.js", also
       check "src/foo/bar.js".  (Closes: #832027)
+    + [CL] Check for upstream tarballs that ship examples but none is
+      installed in any binary package.  (Closes: #539326)
   * checks/debian-source-dir.desc:
     + [CL] Upgrade severity of missing-debian-source-format from wishlist
       ("I") to normal ("W").  (Closes: #702671)
