@@ -206,13 +206,3 @@ Info: The packaging includes an upstream signing key but the corresponding
  .
  Support for signatures was added to <tt>pristine-tar</tt> in version 1.41
  and support in <tt>git-buildpackage</tt> is being tracked in #872864.
-
-Tag: source-format-1.0-with-upstream-signature
-Severity: normal
-Certainty: certain
-Info: The packaging includes an upstream signature but the package uses
- source format "1.0".
- .
- Whilst these have been supported for extraction and building since dpkg
- 1.18.5, this means they are unsupported in stretch.
-Ref: dpkg-source(1), #823190

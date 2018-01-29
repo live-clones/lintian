@@ -15,8 +15,6 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       tag also detect multiple sentences and improve the tag description.
       (Closes: #778427)
   * checks/changes-file.{desc.pm}:
-    + [CL] Check for source format 1.0 files that ship upstream signatures
-      as this is not supported in stretch.  (Closes: #823190)
     + [CL] Fix an issue where the bad-section-in-changes-file,
       file-size-mismatch-in-changes-file and
       checksum-mismatch-in-changes-file tags were not being checked if a
