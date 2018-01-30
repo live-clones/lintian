@@ -339,7 +339,7 @@ Info: The <tt>debian/rules</tt> file for this package has a call to
 Ref: #829100, dpkg-deb(1)
 
 Tag: override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
-Severity: normal
+Severity: wishlist
 Certainty: possible
 Info: The <tt>debian/rules</tt> file for this package has an
  <tt>override_dh_auto_test</tt> target that does not appear to

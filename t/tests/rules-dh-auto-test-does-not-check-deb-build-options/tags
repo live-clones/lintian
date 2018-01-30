@@ -1,1 +1,1 @@
-W: rules-dh-auto-test-does-not-check-deb-build-options source: override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES (line 6)
+I: rules-dh-auto-test-does-not-check-deb-build-options source: override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES (line 6)
