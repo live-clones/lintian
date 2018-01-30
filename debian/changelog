@@ -31,6 +31,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       Ramacher for the report.  (Closes: #787469)
     + [CL] Check for packages that specify binary dependencies on toolchain
       packages such as cdbs or debhelper.  (Closes: #700953)
+    + [CL] Emit a warning about documentation packages that end with -docs.
+      (Closes: #664520)
   * checks/java.{desc,pm}:
     + [CL] Check for .jar files that do not match the Debian Java policy.
       (Closes: #791552)

@@ -254,6 +254,7 @@ sub run {
             unfold('package', \$name);
             tag 'bad-package-name' unless $name =~ /^$PKGNAME_REGEX$/i;
             tag 'package-not-lowercase' if ($name =~ /[A-Z]/);
+            tag 'unusual-documentation-package-name' if $name =~ /-docs$/;
         }
     }
 

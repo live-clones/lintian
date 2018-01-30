@@ -1,0 +1,6 @@
+Testname: fields-unusual-doc-package-name
+Version: 1.0
+Type: native
+Description: Check for -docs packages
+Test-For:
+ unusual-documentation-package-name
