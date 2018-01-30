@@ -277,7 +277,7 @@ sub _parse_dep5 {
       "(line $lines[0]{'format'})"
       if none { defined $first_para->{$_} } qw(format format-specification);
     tag 'missing-explanation-for-contrib-or-non-free-package'
-      if $info->source_field('section') =~ m{^(contrib|non-free)(/.+)?$}
+      if $info->source_field('section', '') =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(comment disclaimer);
 
     my (undef, $full_license_header, undef,@short_licenses_header)
