@@ -1434,3 +1434,4 @@ Info: The specified package appears to be a documentation package
  packages use the more usual "-doc" suffix instead.
  .
  Please remove the superfluous trailing "s" from the package name.
+Ref: policy 12.3
