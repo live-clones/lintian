@@ -443,7 +443,9 @@ sub run {
         tag 'override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES',
           "(line $line)"
           if $rules_per_target{'override_dh_auto_test'}
-          and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
+          and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals
+          and none { m/\bdh_auto_test\b/ }
+        $rules_per_target{'override_dh_auto_test'};
     }
 
     # Make sure that all the required build dependencies are there.  Don't
