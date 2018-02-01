@@ -3,10 +3,28 @@
   head("Lintian Tag: ${q_tag}") }
   <h1><span class="type-{$code}">{$code}</span> {${q_tag}}</h1>
 
+{ if ($statistics{total} <= $shown_count) {
+  $OUT .= qq(
   <p>
-    All reports of {$tag} for the archive. The extended description of this
+    All reports of ${tag} for the archive. The extended description of this
     tag is:
   </p>
+);
+  } else {
+  $OUT .= qq(
+    <p>
+      A subset of the reports of ${tag} for the archive.  Unfortunately the full
+      list is too long, so only ${shown_count} instances are listed on this page.
+      At most ${tag_limit_per_package} tags are shown per package.
+      <a href="{resource_path('lintian.log.gz')}">If you need the full list of tags,
+       please download the lintian.log.gz file and extract the data you need.</a>
+    </p>
+    <p>
+      The extended description of this tag is:
+    </p>
+  );
+  }
+}
 
   <blockquote class="type-{$code}">
 {$description}

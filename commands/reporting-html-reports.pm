@@ -404,17 +404,40 @@ sub process_data {
         my $description = $info->description('html', '    ');
         my ($count, $overrides) = (0, 0);
         my $tmpl = 'tag-not-seen';
+        my $shown_count = 0;
+        my $tag_list = $by_tag{$tag};
+        my $tag_limit_total = 1024;
+        my $tag_limit_per_package = 3;
+
         if (exists $by_tag{$tag}) {
             $tmpl = 'tag';
             $count = $tag_statistics{$tag}{'count'};
             $overrides = $tag_statistics{$tag}{'overrides'};
+            $shown_count = $count + $overrides;
+        }
+        if ($shown_count > $tag_limit_total) {
+            my (@replacement_list, %seen);
+            for my $orig_info (
+                sort { $a->{pkg_info}{package} cmp $b->{pkg_info}{package} }
+                @{$tag_list}) {
+                my $pkg_info = $orig_info->{pkg_info};
+                my $key
+                  = "$pkg_info->{package} $pkg_info->{type} $pkg_info->{version}";
+                next if ++$seen{$key} > $tag_limit_per_package;
+                push(@replacement_list, $orig_info);
+                last if @replacement_list >= $tag_limit_total;
+            }
+            $tag_list = \@replacement_list;
+            $shown_count = scalar(@replacement_list);
         }
 
         my %maint_data = (
             description => $description,
             tag         => $tag,
             code        => $info->code,
-            tags        => $by_tag{$tag},
+            tags        => $tag_list,
+            shown_count => $shown_count,
+            tag_limit_per_package => $tag_limit_per_package,
             graphs      => $GRAPHS,
             graphs_days => $GRAPHS_RANGE_DAYS,
             statistics  => {

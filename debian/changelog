@@ -54,6 +54,11 @@ lintian (2.5.73) UNRELEASED; urgency=medium
     + [CL] Ask maintainers to add a comment header to debian/copyright if
       their package is in contrib or non-free.  (Closes: #773562)
 
+  * commands/reporting-html-reports.pm:
+    + [NT] Add a limit to how many instances of a tag is deplayed on a tag
+      page as 151 000 instances of unstripped-static-library is hardly
+      human readable.
+
   * data/common/dh_addons:
     + [CL] Move/create from data/debhelper/dh_addons as we plan to use
       it elsewhere.
@@ -70,6 +75,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * lib/Lintian/*:
     + [CL] Add support for passing .buildinfo files to Lintian.
       (Closes: #853274)
+
+  * reporting/templates/tag.tmpl:
+    + [NT] Update template to mention tag limit when not all instances
+      are shown.
 
  -- Chris Lamb <lamby@debian.org>  Fri, 26 Jan 2018 16:33:51 +1100
 
