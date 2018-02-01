@@ -142,7 +142,7 @@ else
     done
 
     for f in addons; do
-        rf="$lintian_data/general/dh_$f"
+        rf="$lintian_data/common/dh_$f"
         [ ! -f "$rf" ] ||
             mv "$rf" "${rf}.old"
         create_data_file "$rf" < "dh_$f"
