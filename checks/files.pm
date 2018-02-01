@@ -139,12 +139,19 @@ sub _load_file_package_list_mapping {
         sub {
             my $pkg = strip($_[0]);
             my $pkg_regexp = qr/^$pkg$/x;
-            my $file_regexp = strip($_[1]);
+            my @sliptline = split(/\s*\~\~/, $_[1], 2);
+            my $file_regexp = strip($sliptline[0]);
             $file_regexp =~ s/\$EXT/$ext/g;
+            my $recontents = $reinside;
+            if (scalar(@sliptline) == 2) {
+                my $contents = strip($sliptline[1]);
+                $recontents = qr/$contents/;
+            }
             return {
                 'pkg_re' => $pkg_regexp,
                 'pkg' => $pkg,
                 'match' => qr/$file_regexp/,
+                'contents_re' => $recontents,
             };
         });
     return {
@@ -152,7 +159,6 @@ sub _load_file_package_list_mapping {
         'mapping' => $mapping,
         'ext' => $ext,
         'tag' => $tagname,
-        'reinside' => $reinside,
     };
 }
 
@@ -210,13 +216,13 @@ sub _detect_embedded_libraries {
         if($fname =~ m/$typere/) {
             my $mapping = $type->{'mapping'};
             my $typetag = $type->{'tag'};
-            my $reinside = $type->{'reinside'};
           LIBRARY:
             foreach my $library ($mapping->all) {
                 my $library_data = $mapping->value($library);
                 my $mainre = $library_data->{'pkg_re'};
                 my $mainpkg = $library_data->{'pkg'};
                 my $filere = $library_data->{'match'};
+                my $reinside = $library_data->{'contents_re'};
                 unless ($fname =~ m,$filere,) {
                     next LIBRARY;
                 }
@@ -226,9 +232,7 @@ sub _detect_embedded_libraries {
                 if(defined($reinside)) {
                     my $foundre = 0;
                     my $fd = $file->open(':raw');
-
-                    my $sfd
-                      = Lintian::SlidingWindow->new($fd,sub { $_=lc($_); });
+                    my $sfd = Lintian::SlidingWindow->new($fd);
 
                   READWINDOW:
                     while (my $block = $sfd->readwindow) {

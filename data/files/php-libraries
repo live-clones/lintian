@@ -1,6 +1,7 @@
 # list of php-libraries included in package
 # format is main package regexp ~~ basename without extension
 #                                  regexp (x modifier)
+#                               ~~ contents regexp (optional)
 #
 # Note: + we automatically add ^ and $ for main package name
 #       + we automatically add a few PHP extensions at the end

@@ -35,6 +35,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       (Closes: #664520)
     + [CL] Ensure salsa.debian.org Vcs-Git and Vcs-Browser URIs are
       canonical and do not redirect.  (Closes: #888809)
+  * checks/files.pm:
+    + [CL] Support scanning contents of (eg.) data/files/js-libraries.
   * checks/java.{desc,pm}:
     + [CL] Check for .jar files that do not match the Debian Java policy.
       (Closes: #791552)

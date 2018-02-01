@@ -1,6 +1,7 @@
 # list of js-libraries included in package
 # format is main package regexp ~~ basename without extension
 #                                  regexp (x modifier)
+#                               ~~ contents regexp (optional)
 # 
 # Note: + we automatically add ^ and $ for main package name
 #       + we automatically add a bunch of js extensions at the end
@@ -42,7 +43,7 @@ libjs-prototype              ~~ (?i)/prototype(?:-[\d\.]+)?$EXT
 libjs-raphael                ~~ (?i)/raphael(?:[\.-]min)?$EXT
 libjs-scriptaculous          ~~ (?i)/scriptaculous$EXT
 libjs-strophe                ~~ (?i)/strophe$EXT
-libjs-twitter-bootstrap      ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT
+libjs-twitter-bootstrap      ~~ (?i)/bootstrap(?:-[\d\.]+)?$EXT$ ~~ Twitter
 libjs-underscore             ~~ (?i)/underscore$EXT
 libjs-yui                    ~~ (?i)/(?:yahoo|yui)-(?:dom-event)?$EXT
 # Disabled due to false positives.  Needs a content check adding to verify
