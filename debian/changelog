@@ -55,6 +55,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * data/common/dh_addons:
     + [CL] Move/create from data/debhelper/dh_addons as we plan to use
       it elsewhere.
+  * data/debhelper/dh_commands:
+    + [CL] Update requirement for dh_scour (again!) from python3-scour to
+      scour.  (Closes: #889016)
   * data/files/python-generic-modules:
     + [CL] Detect "backports" (and "backport") as overly generic Python
       module names.  (Closes: #888559)
