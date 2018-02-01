@@ -70,6 +70,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * data/debhelper/dh_commands-manual:
     + [NT] Remove dh_systemd* entries.  Debian stable have a recent
       enough version of debhelper that this entry no longer matters.
+  * data/files/js-libraries:
+    + [CL] Avoid false-positives when detecting Twitter's bootstrap
+      library.  (Closes: #888972)
   * data/files/python-generic-modules:
     + [CL] Detect "backports" (and "backport") as overly generic Python
       module names.  (Closes: #888559)

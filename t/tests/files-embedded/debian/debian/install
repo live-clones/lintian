@@ -1,6 +1,7 @@
 IPv4.php usr/share/php
 jquery*  usr/share/php
-bootstrap*  usr/share/php
+bootstrap-*  usr/share/php
+bootstrap.js  usr/share/xul-ext/lintian
 feedparser.py usr/share/php
 streams.php usr/share/php
 streams.php usr/share/php/pomo
