@@ -33,6 +33,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       packages such as cdbs or debhelper.  (Closes: #700953)
     + [CL] Emit a warning about documentation packages that end with -docs.
       (Closes: #664520)
+    + [CL] Ensure salsa.debian.org Vcs-Git and Vcs-Browser URIs are
+      canonical and do not redirect.  (Closes: #888809)
   * checks/java.{desc,pm}:
     + [CL] Check for .jar files that do not match the Debian Java policy.
       (Closes: #791552)

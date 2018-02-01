@@ -129,6 +129,8 @@ my %VCS_CANONIFY = (
                   {https://anonscm.debian.org/git/};
         $_[0] =~ s{https?\Q://bzr.debian.org/loggerhead/\E}
                   {https://anonscm.debian.org/loggerhead/};
+        $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/]+)\.git/?$}
+                  {https://salsa.debian.org/$1};
         if ($_[0] =~ m{https?\Q://anonscm.debian.org/viewvc/\E}xsm) {
             if ($_[0] =~ s{\?(.*[;\&])?op=log(?:[;\&](.*))?\Z}{}xsm) {
                 my (@keep) = ($1, $2, $3);
@@ -172,6 +174,8 @@ my %VCS_CANONIFY = (
                   {https://anonscm.debian.org/git/};
         $_[0] =~ s{\Qgit://anonscm.debian.org/git/\E}
                   {https://anonscm.debian.org/git/};
+        $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/]+)(?!\.git)$}
+                  {https://salsa.debian.org/$1.git};
     },
     hg      => sub {
         $_[0] =~ s{https?\Q://hg.debian.org/\E}
