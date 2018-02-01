@@ -5,3 +5,4 @@ Options: -I -E --pedantic
 Skeleton: pedantic
 Test-Against:
  vcs-deprecated-in-debian-infrastructure
+ vcs-field-not-canonical

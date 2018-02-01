@@ -175,7 +175,7 @@ my %VCS_CANONIFY = (
                   {https://anonscm.debian.org/git/};
         $_[0] =~ s{\Qgit://anonscm.debian.org/git/\E}
                   {https://anonscm.debian.org/git/};
-        $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/]+)(?!\.git)$}
+        $_[0] =~ s{https?\Q://salsa.debian.org/\E([^/]+/[^/\.]+)(?!\.git)$}
                   {https://salsa.debian.org/$1.git};
     },
     hg      => sub {
