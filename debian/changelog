@@ -62,7 +62,7 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       scour.  (Closes: #889016)
   * data/debhelper/dh_commands-manual:
     + [NT] Remove dh_systemd* entries.  Debian stable have a recent
-       enough version of debhelper that this entry no longer matters.
+      enough version of debhelper that this entry no longer matters.
   * data/files/python-generic-modules:
     + [CL] Detect "backports" (and "backport") as overly generic Python
       module names.  (Closes: #888559)
