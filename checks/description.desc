@@ -141,11 +141,11 @@ Info: The extended description contains the statement that it was
 Tag: description-synopsis-might-not-be-phrased-properly
 Severity: minor
 Certainty: possible
-Info: The package synopsis (also known as the "short" descriptiom,, ie. the
- first line in the package "Description:" field) either ends with a full
- stop "." character or starts another additonal sentence.
+Info: The package synopsis (also known as the "short" description, ie. the
+ first line in the package's "Description:" field) either ends with a full
+ stop "." character or starts another sentence.
  .
- This is not necessary as the synopsis does nott need to be a full
+ This is not necessary as the synopsis does not need to be a full
  sentence.  It is recommended that a single descriptive phrase is used
  instead.
  .
@@ -254,8 +254,8 @@ Certainty: wild-guess
 Info: This package appears to mention planned or upcoming features of
  the software.
  .
- Package descriptions should not mention features that not yet implemented
- as they waste the time of people searching for particular keywords. They
- are also liable to become outdated quickly.
+ Package descriptions should not mention features that are not yet implemented
+ as they waste the time of people searching for particular keywords. They are
+ also liable to become outdated quickly.
  .
  Please remove such statements from the package description.
