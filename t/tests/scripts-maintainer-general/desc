@@ -25,6 +25,7 @@ Test-For:
  maintainer-script-should-not-use-install-sgmlcatalog
  maintainer-script-should-not-modify-ld-so-conf
  maintainer-script-should-not-modify-netbase-managed-file
+ maintainer-script-should-not-use-recursive-chown-or-chmod
  maintainer-script-should-not-use-start-stop-daemon
  maintainer-script-should-not-use-service
  maintainer-script-should-not-use-update-alternatives-remove

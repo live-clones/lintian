@@ -206,4 +206,15 @@ if [ -d /usr/share/doc/tworld ]; then
    fi
 fi
 
+chown root:root /good
+chmod 777 /good
+chown -R root:root /bad
+chown root:root -R /bad
+chown root:root --recursive /bad
+chown --recursive root:root /bad
+chmod -R 777 /bad
+chmod 777 -R /bad
+chmod 777 --recursive /bad
+chmod --recursive 777 /bad
+
 #DEBHELPER#

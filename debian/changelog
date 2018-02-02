@@ -76,6 +76,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * data/files/python-generic-modules:
     + [CL] Detect "backports" (and "backport") as overly generic Python
       module names.  (Closes: #888559)
+  * data/scripts/maintainer-script-bad-command:
+    + [CL] Warn if the maintainer scripts include "chown -R" or "chmod -R"
+      to prevent hardlink attacks on kernels that do not have
+      fs.protected_hardlinks=1.  (Closes: #889066)
 
   * lib/Lintian/*:
     + [CL] Add support for passing .buildinfo files to Lintian.

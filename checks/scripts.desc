@@ -806,3 +806,11 @@ Info: You used <tt>/usr/bin/nodejs</tt> or <tt>/usr/bin/env nodejs</tt> as an
  .
  Please update your package to use the <tt>node</tt> variant.
 Ref: #614907, #862051
+
+Tag: maintainer-script-should-not-use-recursive-chown-or-chmod
+Severity: normal
+Certainty: certain
+Info: The maintainer script appears to call <tt>chmod</tt> or <tt>chown</tt>
+ with the recursive <tt>-R</tt> argument. This is vulnerable to hardlink
+ attacks on kernels that do not have <tt>fs.protected_hardlinks=1</tt>
+Ref: #889060
