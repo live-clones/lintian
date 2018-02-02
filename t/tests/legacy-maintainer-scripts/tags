@@ -64,6 +64,7 @@ W: maintainer-scripts: maintainer-script-should-not-hide-init-failure postinst:5
 W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:166 'chown -R root.root'
 W: maintainer-scripts: maintainer-script-should-not-use-deprecated-chown-usage postinst:33 'chown root.root'
 W: maintainer-scripts: maintainer-script-should-not-use-gconftool postinst:69
+W: maintainer-scripts: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:166
 W: maintainer-scripts: maintainer-script-should-not-use-start-stop-daemon postinst:160
 W: maintainer-scripts: maintainer-script-should-not-use-update-alternatives-remove postrm:4
 W: maintainer-scripts: maintscript-calls-ldconfig postrm
