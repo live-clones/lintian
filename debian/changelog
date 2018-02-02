@@ -46,6 +46,9 @@ lintian (2.5.73) UNRELEASED; urgency=medium
   * checks/rules.pm:
     + [CL] Check for override_dh_auto_test targets that do not check
       DEB_BUILD_OPTIONS for "nocheck".  (Closes: #712394)
+  * checks/scripts.desc:
+    + [CL] Update the maintainer-script-should-not-use-service tag to
+      include advice and Debian Policy reference.  (Closes: #889154)
   * checks/source-copyright.{desc,pm}:
     + [CL] Warn about packages that specify a Files-Excluded header without
       a valid Format header as the former will be ignored by uscan(1).
