@@ -15,3 +15,4 @@ source-contains-prebuilt-javascript-object  ~~ .*                               
 source-contains-prebuilt-python-object      ~~ ^python \s \d(\.\d+)? \s byte-compiled                                    ~~ .*                                ~~ s/(?i)(?:\.cpython-\d{2}|\.pypy)?\.py[co]$/.py/
 source-contains-prebuilt-silverlight-object ~~ ^Zip \s archive \s data                                                   ~~ (?i)\.xac$
 source-contains-prebuilt-windows-binary     ~~ \b(?:PE(?:32|64)|(?:MS-DOS|COFF)\s executable)\b
+source-contains-prebuilt-wasm-binary        ~~ ^WebAssembly \s \(wasm\) \s binary \s module

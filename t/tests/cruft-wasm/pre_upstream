@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist in the diff so that we can
+# trigger all the tags.
+
+set -e
+dir="$1"
+srcdir="$1"
+
+printf "\0asm\001\0\0\0" > "$srcdir/fake.wasm"
+

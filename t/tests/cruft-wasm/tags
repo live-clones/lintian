@@ -1,0 +1,2 @@
+P: cruft-wasm source: debian-watch-does-not-check-gpg-signature
+P: cruft-wasm source: source-contains-prebuilt-wasm-binary fake.wasm
