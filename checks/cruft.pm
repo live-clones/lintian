@@ -344,6 +344,9 @@ sub run {
         tag 'debian-files-list-in-source';
     }
 
+    tag 'package-uses-deprecated-source-override-location'
+      if $info->index_resolved_path('debian/source.lintian-overrides');
+
     # This doesn't really belong here, but there isn't a better place at the
     # moment to put this check.
     my $version = $info->field('version', '0-1');
