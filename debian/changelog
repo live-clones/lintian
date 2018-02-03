@@ -87,6 +87,10 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       to prevent hardlink attacks on kernels that do not have
       fs.protected_hardlinks=1.  (Closes: #889066)
 
+  * doc/lintian.xml:
+    + [CL] Use the debian/source/lintian-overrides location in override
+      example.
+
   * lib/Lintian/*:
     + [CL] Add support for passing .buildinfo files to Lintian.
       (Closes: #853274)

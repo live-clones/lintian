@@ -594,7 +594,7 @@ foo binary: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
 </screen>
         <para>An example file for a source package would look like:</para>
         <screen>
-debian/source.lintian-overrides in your base source directory
+debian/source/lintian-overrides in your base source directory
 foo source: debian-files-list-in-source
 # Upstream distributes it like this, repacking would be overkill though, so
 # tell lintian to not complain:
