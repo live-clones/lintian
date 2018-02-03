@@ -1,6 +1,22 @@
-lintian (2.5.73) UNRELEASED; urgency=medium
+lintian (2.5.73) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - bad-jar-name
+      - binary-package-depends-on-toolchain-package
+      - checksum-count-mismatch-in-changes-file
+      - co-maintained-package-with-no-vcs-headers
+      - description-mentions-planned-features
+      - files-excluded-without-copyright-format-1.0
+      - global-files-wildcard-not-first-paragraph-in-dep5-copyright
+      - maintainer-script-should-not-use-recursive-chown-or-chmod
+      - missing-explanation-for-contrib-or-non-free-package
+      - multi-arch-same-package-has-arch-specific-overrides
+      - override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
+      - package-does-not-install-examples
+      - package-uses-deprecated-dpatch-patch-system
+      - package-uses-deprecated-source-override-location
+      - unusual-documentation-package-name
 
   * checks/cruft.{desc,pm}:
     + [CL] When looking for the source of "build/foo/bar.min.js", also
@@ -67,6 +83,8 @@ lintian (2.5.73) UNRELEASED; urgency=medium
       page as 151 000 instances of unstripped-static-library is hardly
       human readable.
 
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
   * data/common/dh_addons:
     + [CL] Move/create from data/debhelper/dh_addons as we plan to use
       it elsewhere.
@@ -102,7 +120,7 @@ lintian (2.5.73) UNRELEASED; urgency=medium
     + [NT] Update template to mention tag limit when not all instances
       are shown.
 
- -- Chris Lamb <lamby@debian.org>  Fri, 26 Jan 2018 16:33:51 +1100
+ -- Chris Lamb <lamby@debian.org>  Sat, 03 Feb 2018 10:25:40 +0000
 
 lintian (2.5.72) unstable; urgency=medium
 
