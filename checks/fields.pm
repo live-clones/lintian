@@ -907,6 +907,7 @@ sub run {
                       "$field: $part_d_orig"
                       if $KNOWN_TOOLCHAIN->known($d_pkg)
                       and not $pkg =~ m/^dh-/
+                      and not $pkg =~ m/-(source|src)$/
                       and not $DH_ADDONS_VALUES{$pkg};
 
                     # default-jdk-doc must depend on openjdk-X-doc (or
