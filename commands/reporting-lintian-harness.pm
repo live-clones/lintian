@@ -213,7 +213,7 @@ sub process_worklist {
     log_msg('Command line used: ' . join(q{ }, @LINTIAN_CMD));
     while (@worklist) {
         my $len = scalar @worklist;
-        my (@work_splice, @completed, %processed);
+        my (@work_splice, @completed, %processed, %errors);
         my ($lintpipe, $lint_stdin, $status_fd, $lint_status_out);
         my $got_alarm = 0;
 
@@ -299,8 +299,10 @@ sub process_worklist {
             my $time_limit
               = $start_time + BACKLOG_PROCESSING_TIME_LIMIT - time();
             my $count = 0;
+            my $signalled_lintian = 0;
             my $sig_handler = sub {
                 my ($signal_name) = @_;
+                $signalled_lintian = 1;
                 $count++;
                 if ($signal_name eq 'ALRM') {
                     $got_alarm = 1 if $got_alarm >= 0;
@@ -345,6 +347,9 @@ sub process_worklist {
                     log_msg("  [lintian] error processing $group_id "
                           . "(time: $runtime)");
                     $processed{$group_id} = 1;
+                    # We ignore errors if we sent lintian a signal to avoid
+                    # *some* false-positives.
+                    $errors{$group_id} if not $signalled_lintian;
                 } elsif ($line =~ m/^ack-signal (SIG\S+)$/) {
                     my $signal = $1;
                     log_msg(
@@ -409,6 +414,11 @@ sub process_worklist {
             next if not exists($state->{'groups'}{$group_id});
             $group_data = $state->{'groups'}{$group_id};
             $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
+            if ($errors{$group_id}) {
+                ++$group_data->{'processing-errors'};
+            } else {
+                delete($group_data->{'processing-errors'});
+            }
             delete($group_data->{'out-of-date'});
         }
         save_state_cache($OPT{'state-dir'}, $state);
