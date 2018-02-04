@@ -30,6 +30,7 @@ E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseformtracking.xml
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecseimagemagick.js
 E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/googlecsejs.xml (http://www.google.fr/coop/cse/brand?form=cse-search-box&amp;lang=en)
+E: files-privacybreach: privacy-breach-google-cse usr/share/files-privacy-breach/privacy-breach-google-cse/search.js
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/asyncload.html
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/explicitload.html (https://apis.google.com/js/plusone.js)
 E: files-privacybreach: privacy-breach-google-plus usr/share/files-privacy-breach/privacy-breach-google-plus/simplebutton.xml

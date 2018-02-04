@@ -18,6 +18,9 @@ lintian (2.5.74) UNRELEASED; urgency=medium
       maintainer-script-should-not-use-recursive-chown-or-chmod tag.
       Heavily based on a patch by Daniel Kahn Gillmor - thanks!
       (Closes: #889489)
+   
+  * data/files/privacy-breaker-fragments:
+    + [BR] Detects new fragments for google cse
 
   * commands/reporting-{html-reports,lintian-harness}.pm:
     + [NT] Register packages that fail during archive wide processing.

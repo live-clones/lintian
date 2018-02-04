@@ -19,11 +19,12 @@ customsearchcontrol        ~~ google\.search\.customsearchcontrol\s*\(\s*'      
 google.load                ~~ google\.load\s*\(\s*'search'                                                                                                 ~~ privacy-breach-google-cse
 customsearchengine         ~~ </?\s*customsearchengine\s*>                                                                                                 ~~ privacy-breach-google-cse
 partner-pub                ~~ value\s*=\s*"partner-pub-\d+:?\d+"                                                                                           ~~ privacy-breach-google-cse
+cse.js                     ~~ //www[.]google[.]com/cse/cse[.]js\?cx[=]                                                                                     ~~ privacy-breach-google-cse
 plusone                    ~~ (?:<g:plusone|google\.com/js/plusone\.js\?onload=onloadcallback|src\s*=\s*'https?://apis\.google\.com/js/plusone\.js')       ~~ privacy-breach-google-plus
 flattr                     ~~ (?:api\.flattr\.com/js/\d(\.\d)?/load\.js|<a\s+class\s*=\s*"flattrbutton"|data-flattr-uid\s*=|flattrloader\.(?:setup\s*\(\)|render\s*\(|addloadevent\s*\()) ~~ privacy-breach-donation
-facebook                   ~~ (?:facebook-jssdk|xmlns:fb="https?://www.facebook.com/20\d\d/fbml)                                                 ~~ privacy-breach-facebook
-ogp.me/ns/fb               ~~ xmlns:fb="https?://ogp.me/ns/fb\#?"                                                                                      ~~ privacy-breach-facebook
-fb.                        ~~ fb\.(?:canvas|api|init|login|getloginstatus|event|ui|xfbml)(?!\()(?!<)                                                                  ~~ privacy-breach-facebook
+facebook                   ~~ (?:facebook-jssdk|xmlns:fb="https?://www.facebook.com/20\d\d/fbml)                                                           ~~ privacy-breach-facebook
+ogp.me/ns/fb               ~~ xmlns:fb="https?://ogp.me/ns/fb\#?"                                                                                          ~~ privacy-breach-facebook
+fb.                        ~~ fb\.(?:canvas|api|init|login|getloginstatus|event|ui|xfbml)(?!\()(?!<)                                                       ~~ privacy-breach-facebook
 fb:                        ~~ </?fb:(?:activity|comments|friendpile|like|like-box|login-button|name|profile-pic|recommendations)\s+[^>]*>                  ~~ privacy-breach-facebook
 piwik                      ~~ (?:piwik_url\s*=|[\'"]piwik\.js[\'\"]|end\s+piwik\h+(?:tag|code)|[\'\"]settrackerurl[\'\"])                                  ~~ privacy-breach-piwik
 pkbaseurl                  ~~ pkbaseurl\s*=                                                                                                                ~~ privacy-breach-piwik
