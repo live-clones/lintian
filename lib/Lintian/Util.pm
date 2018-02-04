@@ -1720,11 +1720,19 @@ gcc-5 + gcc-5-cross + gcc-6 + gcc-6-cross).
 
 sub find_backlog {
     my ($lintian_version, $state) = @_;
-    my (@backlog, %by_version);
+    my (@backlog, %by_version, @low_priority);
     for my $group_id (keys(%{$state->{'groups'}})) {
         my $last_version = '0';
         my $group_data = $state->{'groups'}{$group_id};
         my $is_out_of_date;
+        if (exists($group_data->{'processing-errors'})
+            and $group_data->{'processing-errors'} > 2) {
+            # To avoid possible "starvation", we will give lower priority
+            # to packages that repeatedly fail.  They will be retried as
+            # the backlog is cleared.
+            push(@low_priority, $group_id);
+            next;
+        }
         if (exists($group_data->{'out-of-date'})) {
             $is_out_of_date = $group_data->{'out-of-date'};
         }
@@ -1738,6 +1746,7 @@ sub find_backlog {
     for my $v (sort(versions_comparator keys(%by_version))) {
         push(@backlog, shuffle(@{$by_version{$v}}));
     }
+    push(@backlog, shuffle(@low_priority)) if @low_priority;
     return @backlog;
 }
 
