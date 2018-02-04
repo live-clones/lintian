@@ -227,7 +227,7 @@ sub run {
     }
 
     #----- look for unreferenced files in debian/patches
-    if ($dpdir->is_dir and $format ne '2.0') {
+    if ($dpdir and $dpdir->is_dir and $format ne '2.0') {
         # Check all series files, including $vendor.series
         foreach my $file ($dpdir->children) {
             next unless $file =~ /\/(.+\.)?series$/;
