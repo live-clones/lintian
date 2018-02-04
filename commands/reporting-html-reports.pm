@@ -726,9 +726,9 @@ sub update_history_and_make_graphs {
                 (my $label = $v) =~ s/\-[\w\d]+$//;
                 print {$common} "set label '$label' at '$versions{$v}',graph ",
                   "1.04 rotate by 90 font ',8'\n";
-            }
 
-            $last_version = $versions{$v};
+                $last_version = $versions{$v};
+            }
         }
         close($common);
 
