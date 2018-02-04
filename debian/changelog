@@ -2,8 +2,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/cruft.{desc}:
-    + [BR] Check for wasm file. (Closes: #889102)
+  * checks/cruft.desc:
+    + [BR] Check for wasm files.  (Closes: #889102)
 
  -- Chris Lamb <lamby@debian.org>  Sat, 03 Feb 2018 10:51:52 +0000
 
