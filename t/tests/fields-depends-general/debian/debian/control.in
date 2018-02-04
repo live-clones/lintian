@@ -55,3 +55,15 @@ Description: {$description} - Fake Doc package
  be an empty package.
  .
  The fake doc package.
+
+Package: dh-{$source}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, debhelper
+Description: {$description} - Fake Debhelper package
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ The fake Debhelper package to test false-positives in
+ binary-package-depends-on-toolchain-package.
