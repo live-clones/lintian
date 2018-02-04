@@ -8,6 +8,11 @@ lintian (2.5.74) UNRELEASED; urgency=medium
     + [CL] Avoid false positives when checking binary packages depending on
       toolchain packages by ignoring packages starting with "dh-". Thanks to
       Josh Triplett for the report.  (Closes: #889486)
+  * checks/scripts.desc:
+    + [CL] Improve, elaborate and tidy the long description of the
+      maintainer-script-should-not-use-recursive-chown-or-chmod tag.
+      Heavily based on a patch by Daniel Kahn Gillmor - thanks!
+      (Closes: #889489)
 
  -- Chris Lamb <lamby@debian.org>  Sat, 03 Feb 2018 10:51:52 +0000
 
