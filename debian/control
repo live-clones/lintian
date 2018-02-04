@@ -93,6 +93,8 @@ Depends: binutils,
          libdigest-sha-perl,
          libdpkg-perl,
          libemail-valid-perl,
+# libfile-basedir-perl is deliberately *not* installed on our archive-wide
+# processing host
          libfile-basedir-perl,
          libipc-run-perl,
          liblist-moreutils-perl,
