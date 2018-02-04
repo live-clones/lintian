@@ -47,14 +47,13 @@ sub run {
     my $droot = $info->index_resolved_path('debian/');
     return if not $droot;
     my $dpdir = $droot->resolve_path('patches');
-    my $resolved;
     my $patch_series;
     my %known_files;
 
     # Find debian/patches/series, assuming debian/patches is a (symlink to a)
     # dir.  There are cases, where it is a file (ctwm: #778556)
     if ($dpdir and ($dpdir->is_dir or $dpdir->is_symlink)) {
-        $resolved = $dpdir->resolve_path;
+        my $resolved = $dpdir->resolve_path;
         $patch_series = $resolved->resolve_path('series') if $resolved->is_dir;
     }
 
@@ -228,7 +227,7 @@ sub run {
     }
 
     #----- look for unreferenced files in debian/patches
-    if ($resolved and $format ne '2.0') {
+    if ($dpdir->is_dir and $format ne '2.0') {
         # Check all series files, including $vendor.series
         foreach my $file ($dpdir->children) {
             next unless $file =~ /\/(.+\.)?series$/;
