@@ -349,7 +349,7 @@ sub process_worklist {
                     $processed{$group_id} = 1;
                     # We ignore errors if we sent lintian a signal to avoid
                     # *some* false-positives.
-                    $errors{$group_id} if not $signalled_lintian;
+                    $errors{$group_id} = 1 if not $signalled_lintian;
                 } elsif ($line =~ m/^ack-signal (SIG\S+)$/) {
                     my $signal = $1;
                     log_msg(
