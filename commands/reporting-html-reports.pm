@@ -616,6 +616,13 @@ sub collect_statistics {
     $statistics{'groups-known'} = scalar(keys(%{$state_cache->{'groups'}}));
     $statistics{'groups-backlog'}
       = scalar(find_backlog($LINTIAN_VERSION,$state_cache));
+    my $pkgs_w_errors = 0;
+    for my $group_data (values(%{$state_cache->{'groups'}})) {
+        $pkgs_w_errors++
+          if exists($group_data->{'processing-errors'})
+          and $group_data->{'processing-errors'};
+    }
+    $statistics{'groups-with-errors'} = $pkgs_w_errors;
 
     for my $attr (@attrs) {
         my $old = $old_statistics->{$attr} || 0;
