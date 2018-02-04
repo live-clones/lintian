@@ -6,8 +6,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
     + [BR] Check for wasm files.  (Closes: #889102)
   * checks/fields.pm:
     + [CL] Avoid false positives when checking binary packages depending on
-      toolchain packages by ignoring packages starting with "dh-". Thanks to
-      Josh Triplett for the report.  (Closes: #889486)
+      toolchain packages by ignoring packages starting with "dh-". Thanks
+      to Josh Triplett for the report.  (Closes: #889486)
   * checks/scripts.desc:
     + [CL] Improve, elaborate and tidy the long description of the
       maintainer-script-should-not-use-recursive-chown-or-chmod tag.
