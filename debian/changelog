@@ -4,6 +4,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
 
   * checks/cruft.desc:
     + [BR] Check for wasm files.  (Closes: #889102)
+    + [CL] Factor out call to _ships_examples to avoid excessive looping
+      over $sorted_index.
   * checks/fields.pm:
     + [CL] Avoid false positives when checking binary packages depending on
       toolchain packages by ignoring packages starting with "dh-" or ending

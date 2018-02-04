@@ -571,6 +571,7 @@ sub find_cruft {
     my ($source_pkg, $info, $warned, $ltinbd, $group) = @_;
     my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
     my @worklist;
+    my $ships_examples = _ships_examples($group);
 
     # start with the top-level dirs
     push(@worklist, $info->index('')->children);
@@ -609,7 +610,7 @@ sub find_cruft {
                     }
                 }
                 tag 'package-does-not-install-examples', $entry
-                  if $basename eq 'examples' and not _ships_examples($group);
+                  if $basename eq 'examples' and not $ships_examples;
             }
 
             push(@worklist, $entry->children);
