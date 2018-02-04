@@ -2188,11 +2188,12 @@ sub detect_privacy_breach {
             if(index($block,$keyword) > -1) {
                 my $keyvalue = $PRIVACY_BREAKER_FRAGMENTS->value($keyword);
                 my $regex = $keyvalue->{'regex'};
-                if ($block =~ m{$regex}) {
+                if ($block =~ m{($regex)}) {
+                    my $capture = $1;
                     my $breaker_tag = $keyvalue->{'tag'};
                     unless (exists $privacybreachhash{'tag-'.$breaker_tag}){
                         $privacybreachhash{'tag-'.$breaker_tag} = 1;
-                        tag $breaker_tag, $file;
+                        tag $breaker_tag, $file, "(choke on: $capture)";
                     }
                 }
             }
