@@ -1560,7 +1560,7 @@ sub _license_check {
 sub _ships_examples {
     my ($group) = @_;
     my @procs = $group->get_processables('binary');
-    return if not @procs;
+    return 1 if not @procs;
     foreach my $binpkg (@procs) {
         my $name = $binpkg->pkg_name;
         my @files = $binpkg->info->sorted_index;
