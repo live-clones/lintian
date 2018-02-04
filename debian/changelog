@@ -19,6 +19,20 @@ lintian (2.5.74) UNRELEASED; urgency=medium
       Heavily based on a patch by Daniel Kahn Gillmor - thanks!
       (Closes: #889489)
 
+  * commands/reporting-{html-reports,lintian-harness}.pm:
+    + [NT] Register packages that fail during archive wide processing.
+
+  * lib/Lintian/Util.pm:
+    + [NT] Give lower processing priority to packages that repeatedly
+      trigger errors during archive-wide processing.
+
+  * reporting/templates/index.tmpl:
+    + [NT] Display summary of how many groups had errors during their
+      last processing.
+  * reporting/templates/{lintian.css,maintainer}.tmpl:
+    + [NT] Use a distinct error status instead of "Outdated" for
+      packages with errors during their last processing.
+
  -- Chris Lamb <lamby@debian.org>  Sat, 03 Feb 2018 10:51:52 +0000
 
 lintian (2.5.73) unstable; urgency=medium
