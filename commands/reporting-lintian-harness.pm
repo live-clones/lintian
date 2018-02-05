@@ -415,6 +415,8 @@ sub process_worklist {
             $group_data = $state->{'groups'}{$group_id};
             $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
             delete($group_data->{'out-of-date'});
+            # Always clear the error counter after a successful run.
+            delete($group_data->{'processing-errors'});
         }
         for my $group_id (sort(keys(%errors))) {
             my $group_data;
