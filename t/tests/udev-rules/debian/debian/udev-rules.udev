@@ -15,3 +15,10 @@ ACTION=="add", ATTR{idVendor}=="0000", ATTR{idProduct}=="0005", \
 
 SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="0000", ATTR{idProduct}=="000a", \
     ID_TEST_DEVICE="1"
+
+SUBSYSTEM!="usb", GOTO="target"
+ATTR{idVendor}=="0000", ATTR{idProduct}=="0000", RUN+="missing-subsystem-false-positive"
+LABEL="target"
+
+# Ensure we trigger this one after a GOTO
+ATTR{idVendor}=="0000", ATTR{idProduct}=="0000", RUN+="missing-subsystem"

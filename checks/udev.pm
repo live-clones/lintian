@@ -43,7 +43,7 @@ sub run {
 }
 
 sub check_rule {
-    my ($file, $linenum, $rule) = @_;
+    my ($file, $linenum, $in_goto, $rule) = @_;
 
     # for USB, if everyone or the plugdev group members are
     # allowed access, the uaccess tag should be used too.
@@ -78,6 +78,7 @@ sub check_rule {
     # subsystem, as vendor/product is subsystem specific.
     if (   $rule =~ m/ATTR\{idVendor\}=="[0-9a-fA-F]+"/
         && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
+        && $in_goto !~ m/SUBSYSTEM!="[^"]+"/
         && $rule !~ m/SUBSYSTEM=="[^"]+"/) {
         tag(
             'udev-rule-missing-subsystem',
@@ -95,6 +96,7 @@ sub check_udev_rules {
     my $linenum = 0;
     my $cont;
     my $retval = 0;
+    my $in_goto = '';
     while (<$fd>) {
         chomp;
         $linenum++;
@@ -107,7 +109,9 @@ sub check_udev_rules {
             next;
         }
         next if /^#.*/; # Skip comments
-        $retval |= $check->($file, $linenum, $_);
+        $in_goto = '' if m/LABEL="[^"]+"/;
+        $in_goto = $_ if m/GOTO="[^"]+"/;
+        $retval |= $check->($file, $linenum, $in_goto, $_);
     }
     close($fd);
     return $retval;
