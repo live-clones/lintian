@@ -421,6 +421,7 @@ sub process_worklist {
             # In theory, they can disappear - in practise, that requires
             # an external call to (e.g.) dplint reporting-sync-state.
             next if not exists($state->{'groups'}{$group_id});
+            $group_data = $state->{'groups'}{$group_id};
             if ($errors{$group_id}) {
                 ++$group_data->{'processing-errors'};
                 # Set the "last-processed-by" flag so we can clear the
