@@ -177,6 +177,9 @@ sub run {
         }
         my $line = $_;
 
+        tag 'debian-rules-is-dh_make-template'
+          if $. == 2 and $line eq "# See debhelper(7) (uncomment to enable)\n";
+
         next if /^\s*\#/;
         if (m/^\s*[s-]?include\s+(\S++)/o){
             my $makefile = $1;

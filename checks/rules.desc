@@ -337,3 +337,11 @@ Info: The <tt>debian/rules</tt> file for this package has a call to
  .
  Please remove the call and let dpkg-deb(1) select suitable defaults.
 Ref: #829100, dpkg-deb(1)
+
+Tag: debian-rules-is-dh_make-template
+Severity: important
+Certainty: certain
+Info: The debian/rules file appears to be an unmodified or insufficiently
+ modified copy of the dh_make template.
+ .
+ Please double-check the rules file.

@@ -29,6 +29,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
     + [CL] Remove override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
       (for now) as there are just too many false-positive cases to check.
       (Closes: #889592)
+    + [CL] Check for debian/rules files that are dh_make templates.
+      (Closes: #679124)
   * checks/scripts.desc:
     + [CL] Improve, elaborate and tidy the long description of the
       maintainer-script-should-not-use-recursive-chown-or-chmod tag.
