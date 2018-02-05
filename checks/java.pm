@@ -72,9 +72,9 @@ sub run {
         $has_jars = 1;
         if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
             $has_public_jars = 1;
+            tag 'bad-jar-name', $jar_file
+              unless basename($jar_file) =~ /^$PKGNAME_REGEX\.jar$/;
         }
-        tag 'bad-jar-name', $jar_file
-          unless basename($jar_file) =~ /^$PKGNAME_REGEX\.jar$/;
         # check for common code files like .class or .clj (Clojure files)
         foreach
           my $class (grep { m/\.(?:class|cljc?)$/oi } sort keys %{$files}){

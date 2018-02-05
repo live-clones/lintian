@@ -18,6 +18,9 @@ lintian (2.5.74) UNRELEASED; urgency=medium
   * checks/fields.desc:
     + [CL] Downgrade severity of build-depends-on-obsolete-package from
       error to warning.  (Closes: #889638)
+  * checks/java.{desc,pm}:
+    + [CL] Only warn about bad-jar-name for "public" .jar files.
+      (Closes: #889628)
   * checks/patch-systems.pm:
     + [CL] Avoid emitting "Can't use an undefined value as an ARRAY
       reference" warnings when debian/patches is a file, not a directory.
