@@ -1,4 +1,3 @@
-E: debconf source: build-depends-on-obsolete-package build-depends: dpatch
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=5 compat=5
 E: debconf source: untranslatable-debconf-templates debconf-test.templates: 47
 E: debconf source: untranslatable-debconf-templates debconf-test.templates: 58
@@ -32,6 +31,7 @@ I: debconf-test: unused-debconf-template debconf/testnote
 I: debconf-test: unused-debconf-template debconf/teststring
 I: debconf-test: unused-debconf-template debconf/translate
 W: debconf source: ancient-standards-version 3.7.2 (released 2006-05-03) (current is CURRENT)
+W: debconf source: build-depends-on-obsolete-package build-depends: dpatch
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 56)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 60)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3

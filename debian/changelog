@@ -15,6 +15,9 @@ lintian (2.5.74) UNRELEASED; urgency=medium
       (Closes: #889486)
   * checks/files.pm:
     + [BR] Add context for privacy breach in order to improve debugging.
+  * checks/fields.desc:
+    + [CL] Downgrade severity of build-depends-on-obsolete-package from
+      error to warning.  (Closes: #889638)
   * checks/patch-systems.pm:
     + [CL] Avoid emitting "Can't use an undefined value as an ARRAY
       reference" warnings when debian/patches is a file, not a directory.

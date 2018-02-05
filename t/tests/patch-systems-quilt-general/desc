@@ -4,6 +4,7 @@ Version: 1.0-1
 Extra-Build-Depends: quilt, dpatch
 Description: General tests of a quilt patch system
 Test-For:
+ build-depends-on-obsolete-package
  dpatch-build-dep-but-no-patch-list
  more-than-one-patch-system
  patch-modifying-debian-files

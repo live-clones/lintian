@@ -5,6 +5,7 @@ Extra-Build-Depends: dpatch
 Options: --pedantic -I
 Skeleton: pedantic
 Test-For:
+ build-depends-on-obsolete-package
  dpatch-index-references-non-existent-patch
  dpatch-missing-description
  package-uses-deprecated-dpatch-patch-system
