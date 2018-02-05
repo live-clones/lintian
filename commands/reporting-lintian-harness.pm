@@ -414,12 +414,21 @@ sub process_worklist {
             next if not exists($state->{'groups'}{$group_id});
             $group_data = $state->{'groups'}{$group_id};
             $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
+            delete($group_data->{'out-of-date'});
+        }
+        for my $group_id (sort(keys(%errors))) {
+            my $group_data;
+            # In theory, they can disappear - in practise, that requires
+            # an external call to (e.g.) dplint reporting-sync-state.
+            next if not exists($state->{'groups'}{$group_id});
             if ($errors{$group_id}) {
                 ++$group_data->{'processing-errors'};
+                # Set the "last-processed-by" flag so we can clear the
+                # error if there is a new version of lintian.
+                $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
             } else {
                 delete($group_data->{'processing-errors'});
             }
-            delete($group_data->{'out-of-date'});
         }
         save_state_cache($OPT{'state-dir'}, $state);
         last if $exit_code;
