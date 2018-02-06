@@ -417,6 +417,7 @@ sub process_worklist {
             delete($group_data->{'out-of-date'});
             # Always clear the error counter after a successful run.
             delete($group_data->{'processing-errors'});
+            delete($group_data->{'last-error-by'});
         }
         for my $group_id (sort(keys(%errors))) {
             my $group_data;
