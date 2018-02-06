@@ -443,7 +443,7 @@ sub run {
     }
 
     if (my $line = $overridden{'dh_auto_test'}) {
-        my @lines = grep { $_ !~ m/^\t\s*(?::|dh_auto_test|echo)\s+/ }
+        my @lines = grep { $_ !~ m/^\t\s*-?(?::|dh_auto_test|echo)\s+/ }
           @{$rules_per_target{'override_dh_auto_test'}};
         tag 'override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES',
           "(line $line)"
