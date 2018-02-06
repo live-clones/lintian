@@ -120,7 +120,7 @@ my (%statistics, %tag_statistics);
 my (%by_maint, %by_uploader, %by_tag, %maintainer_table, %delta);
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
   errors warnings info experimental pedantic overridden groups-known
-  groups-backlog classifications processing-errors);
+  groups-backlog classifications groups-with-errors);
 
 sub required_cfg_value {
     my (@keys) = @_;
