@@ -39,6 +39,9 @@ use Lintian::Data;
 # Init script that do not need a service file
 my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
 
+# Usual WantedBy= targets
+my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
+
 sub run {
     my (undef, undef, $info) = @_;
 
@@ -212,14 +215,20 @@ sub check_systemd_service_file {
     }
 
     if (not $file->is_symlink or $file->link ne '/dev/null') {
+        my @wanted_by
+          = extract_service_file_values($file, 'Install', 'WantedBy',1);
+        foreach my $target (@wanted_by) {
+            tag 'systemd-service-file-refers-to-unusual-wantedby-target',
+              $file, $target
+              unless any { $target eq $_ } $WANTEDBY_WHITELIST->all;
+        }
         tag 'systemd-service-file-missing-documentation-key', $file,
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);
         #<<< no perltidy - These are better formatted one per line
         tag 'systemd-service-file-missing-install-key', $file,
-          unless extract_service_file_values($file, 'Install', 'WantedBy',1)
+          unless @wanted_by
           or extract_service_file_values($file, 'Install', 'RequiredBy',1)
           or extract_service_file_values($file, 'Install', 'Also',1)
-
           or any { /^oneshot$/ } extract_service_file_values($file, 'Service', 'Type')
           or $file =~ m,@\.service$,;
         #>>>

@@ -14,4 +14,5 @@ Test-For:
  systemd-service-file-missing-documentation-key
  systemd-service-file-refers-to-obsolete-bindto
  systemd-service-file-refers-to-obsolete-target
+ systemd-service-file-refers-to-unusual-wantedby-target
  systemd-tmpfiles.d-outside-usr-lib

@@ -23,3 +23,5 @@ W: systemd-general: systemd-service-file-refers-to-obsolete-bindto etc/systemd/s
 W: systemd-general: systemd-service-file-refers-to-obsolete-bindto usr/lib/systemd/system/test.service
 W: systemd-general: systemd-service-file-refers-to-obsolete-target etc/systemd/system/test.service syslog.target
 W: systemd-general: systemd-service-file-refers-to-obsolete-target usr/lib/systemd/system/test.service syslog.target
+W: systemd-general: systemd-service-file-refers-to-unusual-wantedby-target etc/systemd/system/test.service unusual.target
+W: systemd-general: systemd-service-file-refers-to-unusual-wantedby-target usr/lib/systemd/system/test.service unusual.target
