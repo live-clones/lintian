@@ -1,8 +1,0 @@
-#!/usr/bin/make -f
-
-%:
-	dh $@
-
-# Disbled via colon
-override_dh_auto_test:
-	: Disabled

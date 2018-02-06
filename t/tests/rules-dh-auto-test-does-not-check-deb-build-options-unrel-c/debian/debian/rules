@@ -3,6 +3,15 @@
 %:
 	dh $@
 
-# Calls parent with arguments
 override_dh_auto_test:
-	dh_auto_test -- VERBOSE=1
+	dh_auto_test
+	dh_auto_test # Comment
+	mkdir ignore/
+	-dh_auto_test -- SUFFIX=1
+	@dh_auto_test -- SUFFIX=1
+	-cp -r ignore ignore/
+	FOO=mydir dh_auto_test -- BAR=2
+	: Disabled
+	echo "Disabled"
+	@echo "Disabled"
+	-echo "Disabled"

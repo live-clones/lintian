@@ -443,12 +443,15 @@ sub run {
     }
 
     if (my $line = $overridden{'dh_auto_test'}) {
-        my @lines = grep { $_ !~ m/^\t\s*-?(?::|dh_auto_test|echo)\s+/ }
-          @{$rules_per_target{'override_dh_auto_test'}};
+        my @lines = grep {
+                  $_ !~ m/^\t\s*\:/
+              and $_ !~ m/\bdh_auto_test\b/
+              and $_ !~ m/^\t\s*[-@]?(?:cp|echo|mkdir)/
+        }@{$rules_per_target{'override_dh_auto_test'}};
+        warn @lines;
         tag 'override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS',
           "(line $line)"
-          if @lines
-          and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
+          if @lines and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
     }
 
     # Make sure that all the required build dependencies are there.  Don't
