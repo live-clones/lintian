@@ -161,8 +161,12 @@ sub _check_apache_notice_files {
     return if not @notice_files;
 
     foreach my $binpkg (@procs) {
-        my @files = $binpkg->info->sorted_index;
-        return if any { $_->basename =~ m/^NOTICE(\.txt)?(\.gz)?$/} @files;
+        my @files = map { $_->name } $binpkg->info->sorted_index;
+        my $java_info = $binpkg->info->java_info;
+        for my $jar_file (sort keys %{$java_info}) {
+            push @files, keys %{$java_info->{$jar_file}{files}};
+        }
+        return if any { m{/NOTICE(\.txt)?(\.gz)?$} } @files;
     }
 
     tag 'missing-notice-file-for-apache-license', join(' ', @notice_files);
