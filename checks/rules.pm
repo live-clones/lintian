@@ -448,7 +448,6 @@ sub run {
               and $_ !~ m/\bdh_auto_test\b/
               and $_ !~ m/^\t\s*[-@]?(?:cp|echo|mkdir)/
         }@{$rules_per_target{'override_dh_auto_test'}};
-        warn @lines;
         tag 'override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS',
           "(line $line)"
           if @lines and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
