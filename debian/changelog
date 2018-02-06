@@ -29,6 +29,12 @@ lintian (2.5.74) UNRELEASED; urgency=medium
     + [CL] Fix a number of false-positives when checking the
       "override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES" tag
       (Closes: #889592)
+    + [CL] Make a large number of changes suggested by Mattia Rizzolo to
+      the override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES tag,
+      renaming it to reference DEB_BUILD_OPTIONS throughout, add Debian
+      Policy 4.9.1 to the tag's Ref, lower "Certanty" to "wild-guess" and
+      mark the tag as experimental, updating the tests to match.
+      (Closes: #889746)
     + [CL] Check for debian/rules files that are dh_make templates.
       (Closes: #679124)
   * checks/scripts.desc:

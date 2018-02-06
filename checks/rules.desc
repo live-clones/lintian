@@ -347,12 +347,13 @@ Info: The debian/rules file appears to be an unmodified or insufficiently
  .
  Please double-check the rules file.
 
-Tag: override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
+Tag: override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 Severity: wishlist
-Certainty: possible
+Certainty: wild-guess
+Experimental: yes
 Info: The <tt>debian/rules</tt> file for this package has an
  <tt>override_dh_auto_test</tt> target that does not appear to
- check <tt>DEB_BUILD_PROFILES</tt> against <tt>nocheck</tt>.
+ check <tt>DEB_BUILD_OPTIONS</tt> against <tt>nocheck</tt>.
  .
  As this check is not automatically performed by debhelper(1), the
  specified testsuite is run regardless of using the <tt>nocheck</tt>
@@ -370,4 +371,4 @@ Info: The <tt>debian/rules</tt> file for this package has an
   # Disabled
   : Disabled
   echo "Disbled"
-Ref: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
+Ref: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
