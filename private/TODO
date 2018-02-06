@@ -70,10 +70,6 @@ private:
 
 reporting:
 
-- Rewrite the config handling of the reporting framework (both
-  reporting-harness and reporting-html-reports).  Currently, you have to
-  run these tools in the folder with the config file.
-
 - Replace the template framework with template-toolkit.
 
 t:
