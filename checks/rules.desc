@@ -338,6 +338,7 @@ Info: The <tt>debian/rules</tt> file for this package has a call to
  Please remove the call and let dpkg-deb(1) select suitable defaults.
 Ref: #829100, dpkg-deb(1)
 
+
 Tag: debian-rules-is-dh_make-template
 Severity: important
 Certainty: certain
@@ -345,3 +346,28 @@ Info: The debian/rules file appears to be an unmodified or insufficiently
  modified copy of the dh_make template.
  .
  Please double-check the rules file.
+
+Tag: override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
+Severity: wishlist
+Certainty: possible
+Info: The <tt>debian/rules</tt> file for this package has an
+ <tt>override_dh_auto_test</tt> target that does not appear to
+ check <tt>DEB_BUILD_PROFILES</tt> against <tt>nocheck</tt>.
+ .
+ As this check is not automatically performed by debhelper(1), the
+ specified testsuite is run regardless of using the <tt>nocheck</tt>
+ build profile.
+ .
+ Please add a check such as:
+ .
+  override_dh_auto_test:
+  ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+          ./run-upstream-testsuite
+  endif
+ .
+ Lintian will ignore targets such as:
+ .
+  # Disabled
+  : Disabled
+  echo "Disbled"
+Ref: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names

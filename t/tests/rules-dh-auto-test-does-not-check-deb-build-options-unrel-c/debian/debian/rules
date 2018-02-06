@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+# Calls parent with arguments
+override_dh_auto_test:
+	dh_auto_test -- VERBOSE=1

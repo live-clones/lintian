@@ -26,8 +26,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
       reference" warnings when debian/patches is a file, not a directory.
       (Closes: #889535)
   * checks/rules.{desc,pm}:
-    + [CL] Remove override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
-      (for now) as there are just too many false-positive cases to check.
+    + [CL] Fix a number of false-positives when checking the
+      "override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES" tag
       (Closes: #889592)
     + [CL] Check for debian/rules files that are dh_make templates.
       (Closes: #679124)
