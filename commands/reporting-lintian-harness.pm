@@ -428,7 +428,7 @@ sub process_worklist {
                 ++$group_data->{'processing-errors'};
                 # Set the "last-processed-by" flag so we can clear the
                 # error if there is a new version of lintian.
-                $group_data->{'last-processed-by'} = $LINTIAN_VERSION;
+                $group_data->{'last-error-by'} = $LINTIAN_VERSION;
             } else {
                 delete($group_data->{'processing-errors'});
             }

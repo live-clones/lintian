@@ -300,12 +300,15 @@ sub cleanup_group_state {
             log_debug("Marking ${group_id} as out of date: In backlog")
               if $backlog->{$group_id};
         }
-        if (    exists($group_data->{'processing-errors'})
-            and exists($group_data->{'last-processed-by'})
-            and $group_data->{'last-processed-by'} ne $OPT{'desired-version'}){
+        if (
+            exists($group_data->{'processing-errors'})
+            and (not exists($group_data->{'last-error-by'})
+                or $group_data->{'last-error-by'} ne $OPT{'desired-version'})
+          ) {
             log_debug(
                 "Clearing error flag for ${group_id}: New version of lintian");
             delete($group_data->{'processing-errors'});
+            delete($group_data->{'last-error-by'});
         }
     }
 
