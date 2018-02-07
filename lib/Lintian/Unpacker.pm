@@ -360,51 +360,7 @@ sub process_tasks {
     my %failed;
     my $debug_enabled = $Lintian::Output::GLOBAL->debug;
     my %active = map { $_ => 1 } keys %$worklists;
-    my $find_task = sub {
-      PROC:
-        foreach my $procid (keys %active) {
-            my $wlist = $worklists->{$procid};
-            my $cmap = $wlist->{'collmap'};
-            my @todo = $cmap->selectable;
-            unless (@todo) {
-                delete $active{$procid};
-                next PROC;
-            }
-            my $lpkg = $wlist->{'lab-entry'};
-            my $needed = $wlist->{'needed'};
-            my $pkg_type = $lpkg->pkg_type;
-            foreach my $coll (@todo) {
-                my $cs = $colls->getp($coll);
-
-                # current type?
-                unless ($cs->is_type($pkg_type)) {
-                    $cmap->satisfy($coll);
-                    next;
-                }
-
-                # check if it has been run previously
-                if ($lpkg->is_coll_finished($coll, $cs->version)) {
-                    $cmap->satisfy($coll);
-                    next;
-                }
-
-                # Check if its actually on our TODO list.
-                if (defined $needed and not exists $needed->{$coll}) {
-                    $cmap->satisfy($coll);
-                    next;
-                }
-                # Not run before (or out of date)
-                $lpkg->_clear_coll_status($coll);
-
-                # collect info
-                $cmap->select($coll);
-                $wlist->{'changed'} = 1;
-                debug_msg(3, "READY ${coll}-${procid}");
-                return ("${coll}-${procid}", $cs, $lpkg, $cmap);
-            }
-        }
-        return;
-    };
+    my $find_next_task = _generate_find_next_tasks_sub(\%active, $worklists, $colls);
     my $schedule_task = sub {
         my ($task_id, $cs, $lpkg, $cmap) = @_;
         my $coll = $cs->name;
@@ -480,7 +436,7 @@ sub process_tasks {
                     return if exists $failed{$procid};
                     $active{$procid} = 1 if $cmap->selectable;
                     while (1) {
-                        my @task = $find_task->();
+                        my @task = $find_next_task->();
                         last if not @task;
                         $sch_task_inner->(@task);
                         last
@@ -504,7 +460,7 @@ sub process_tasks {
     };
 
     while (1) {
-        my @task = $find_task->();
+        my @task = $find_next_task->();
         last if not @task;
         $schedule_task->(@task);
         last if $jobs and scalar(keys(%{$running_jobs})) >= $jobs;
@@ -512,6 +468,56 @@ sub process_tasks {
 
     $loop->run;
     return;
+}
+
+
+sub _generate_find_next_tasks_sub {
+    my ($active_procs, $worklists, $colls) = @_;
+    return sub {
+        PROC:
+        foreach my $procid (keys(%{$active_procs})) {
+            my $wlist = $worklists->{$procid};
+            my $cmap = $wlist->{'collmap'};
+            my @todo = $cmap->selectable;
+            unless (@todo) {
+                delete($active_procs->{$procid});
+                next PROC;
+            }
+            my $lpkg = $wlist->{'lab-entry'};
+            my $needed = $wlist->{'needed'};
+            my $pkg_type = $lpkg->pkg_type;
+            foreach my $coll (@todo) {
+                my $cs = $colls->getp($coll);
+
+                # current type?
+                if (not $cs->is_type($pkg_type)) {
+                    $cmap->satisfy($coll);
+                    next;
+                }
+
+                # check if it has been run previously
+                if ($lpkg->is_coll_finished($coll, $cs->version)) {
+                    $cmap->satisfy($coll);
+                    next;
+                }
+
+                # Check if its actually on our TODO list.
+                if (defined $needed and not exists $needed->{$coll}) {
+                    $cmap->satisfy($coll);
+                    next;
+                }
+                # Not run before (or out of date)
+                $lpkg->_clear_coll_status($coll);
+
+                # collect info
+                $cmap->select($coll);
+                $wlist->{'changed'} = 1;
+                debug_msg(3, "READY ${coll}-${procid}");
+                return ("${coll}-${procid}", $cs, $lpkg, $cmap);
+            }
+        }
+        return;
+    };
 }
 
 =item reset_worklist
