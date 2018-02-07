@@ -2,6 +2,10 @@ lintian (2.5.74) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.desc:
+    + [CL] Improve the long description of epoch-change-without-comment.
+      Based on suggestions by Raphael Hertzog and Ian Jackson - thanks!
+      (Closes: #889814)
   * checks/cruft.desc:
     + [BR] Check for wasm files.  (Closes: #889102)
     + [CL] Factor out call to _ships_examples to avoid excessive looping
