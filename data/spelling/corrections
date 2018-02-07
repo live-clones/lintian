@@ -852,6 +852,11 @@ concurent||concurrent
 concurently||concurrently
 conditionaly||conditionally
 conditionnaly||conditionally
+condtional||conditional
+condtionally||conditionally
+condtion||condition
+condtioned||conditioned
+condtions||conditions
 conect||connect
 conected||connected
 conecting||connecting
@@ -2896,6 +2901,8 @@ possibilty||possibility
 possibily||possibly
 possiblities||possibilities
 possiblity||possibility
+postcondtion||postcondition
+postcondtions||postconditions
 postgressql||PostgreSQL
 postion||position
 postions||positions
@@ -2915,6 +2922,12 @@ preceeds||precedes
 precendence||precedence
 precison||precision
 precission||precision
+precondtioner||preconditioner
+precondtioners||preconditioners
+precondtionner||preconditioner
+precondtionners||preconditioners
+precondtion||precondition
+precondtions||preconditions
 predicitons||predictions
 predifined||predefined
 prefered||preferred
@@ -3788,6 +3801,7 @@ thansk||thanks
 thant||than
 thats||that's
 theer||there
+theoreticall||theoretically
 therby||thereby
 theres||there's
 therfore||therefore
@@ -3937,6 +3951,7 @@ uncomplete||incomplete
 unconditionaly||unconditionally
 unconditionnal||unconditional
 unconditionnaly||unconditionally
+uncondtionally||unconditionally
 uncorrect||incorrect
 uncorrectly||incorrectly
 uncoverted||unconverted
