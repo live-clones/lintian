@@ -10,6 +10,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
       any binary packages in our laboratory.  (Closes: #889591)
     + [CL] Improve the description of package-does-not-install-examples to
       give more debhelper advice.
+    + [CL] Assume that if a source package generates a binary ending in
+      "-examples" then it does ship examples.
   * checks/fields.pm:
     + [CL] Avoid false positives when checking binary packages depending on
       toolchain packages by ignoring packages starting with "dh-" or ending

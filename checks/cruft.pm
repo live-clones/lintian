@@ -1563,6 +1563,7 @@ sub _ships_examples {
     return 1 if not @procs;
     foreach my $binpkg (@procs) {
         my $name = $binpkg->pkg_name;
+        return 1 if $name =~ m{-examples$};
         my @files = $binpkg->info->sorted_index;
         return 1 if any { m{^usr/share/doc/$name/examples/$} } @files;
     }

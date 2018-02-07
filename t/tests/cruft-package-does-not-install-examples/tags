@@ -1,1 +1,1 @@
-P: cruft-package-does-not-install-examples source: package-does-not-install-examples examples/
+P: foo source: package-does-not-install-examples examples/
