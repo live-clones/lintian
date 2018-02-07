@@ -1,4 +1,5 @@
 I: spelling-general: spelling-error-in-copyright deafult default
+W: spelling-general source: spelling-error-in-patch-description debian/patches/add-readme speling spelling
 W: spelling-general: spelling-error-in-changelog speling spelling
 W: spelling-general: spelling-error-in-doc-base-abstract-field spelling-general:5 meta-package metapackage
 W: spelling-general: spelling-error-in-doc-base-abstract-field spelling-general:5 speling spelling

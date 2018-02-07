@@ -27,11 +27,12 @@ use autodie;
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
+use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
 
 sub run {
-    my (undef, undef, $info) = @_;
+    my (undef, undef, $info, undef, $group) = @_;
 
     # Some (cruft) checks are valid for every patch system, so we need
     # to record that:
@@ -114,24 +115,24 @@ sub run {
                     }
                     next unless $patch_file->is_open_ok;
 
-                    my $has_comment = 0;
+                    my $description = '';
                     my $fd = $patch_file->open;
                     while (<$fd>) {
                         # stop if something looking like a patch
                         # starts:
                         last if /^---/;
                         # note comment if we find a proper one
-                        $has_comment = 1
+                        $description .= $1
                           if (/^\#+\s*DP:\s*(\S.*)$/
                             && $1 !~ /^no description\.?$/i);
-                        $has_comment = 1
-                          if (/^\# (?:Description|Subject)/);
+                        $description .= $1
+                          if (/^\# (?:Description|Subject): (.*)/);
                     }
                     close($fd);
-                    unless ($has_comment) {
+                    unless ($description) {
                         tag 'dpatch-missing-description', $patch_name;
                     }
-                    check_patch($patch_file);
+                    check_patch($group, $patch_file, $description);
                 }
             }
         }
@@ -176,7 +177,7 @@ sub run {
                     next;
                 }
                 next if not $patch->is_open_ok;
-                my $has_description = 0;
+                my $description = '';
                 my $has_template_description = 0;
                 my $patch_fd = $patch->open;
                 while (<$patch_fd>) {
@@ -184,20 +185,20 @@ sub run {
                     last if /^---/;
                     next if /^\s*$/;
                     # Skip common "lead-in" lines
-                    $has_description = 1
+                    $description .= $_
                       unless m{^(?:Index: |=+$|diff .+|index )};
                     $has_template_description = 1
                       if index($_, PATCH_DESC_TEMPLATE) != -1;
                 }
                 close($patch_fd);
-                unless ($has_description) {
+                unless ($description) {
                     tag 'quilt-patch-missing-description', $patch_filename;
                 }
                 if ($has_template_description) {
                     tag 'quilt-patch-using-template-description',
                       $patch_filename;
                 }
-                check_patch($patch);
+                check_patch($group, $patch, $description);
             }
         }
         if ($quilt_format) { # 3.0 (quilt) specific checks
@@ -277,10 +278,12 @@ sub run {
 
 # Checks on patches common to all build systems.
 sub check_patch {
-    my ($patch_file) = @_;
-
-    return if not $patch_file->is_open_ok;
-
+    my ($group, $patch_file, $description) = @_;
+    my $tag_emitter
+      = spelling_tag_emitter('spelling-error-in-patch-description',
+        $patch_file);
+    check_spelling($description, $group->info->spelling_exceptions,
+        $tag_emitter);
     # Use --strip=1 to strip off the first layer of directory in case
     # the parent directory in which the patches were generated was
     # named "debian".  This will produce false negatives for --strip=0

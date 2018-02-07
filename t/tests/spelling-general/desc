@@ -1,8 +1,10 @@
 Testname: spelling-general
-Version: 1.0
+Version: 1.0-1
+Type: non-native
 Description: General checks for spelling errors
 Test-For:
  spelling-error-in-changelog
  spelling-error-in-copyright
  spelling-error-in-doc-base-abstract-field
  spelling-error-in-doc-base-title-field
+ spelling-error-in-patch-description

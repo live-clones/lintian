@@ -218,3 +218,10 @@ Info: The dpatch patch system has been deprecated and superceded by the
  Please migrate the patches in the <tt>debian/patches</tt> directory and
  the <tt>00list</tt> file to use this source format.
 Ref: dpatch(1), dpkg-source(1)
+
+Tag: spelling-error-in-patch-description
+Severity: minor
+Certainty: certain
+Info: Lintian found a spelling or capitalization error in the description
+ for this patch. Lintian has a list of common misspellings that it looks
+ for. It does not have a dictionary like a spelling checker does.

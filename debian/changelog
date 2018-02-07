@@ -37,10 +37,11 @@ lintian (2.5.74) UNRELEASED; urgency=medium
   * checks/init.d.{desc,pm}:
     + [CL] Warn about packages that use ENABLED="true" (etc.) in
       /etc/default files.
-  * checks/patch-systems.pm:
+  * checks/patch-systems.{desc,pm}:
     + [CL] Avoid emitting "Can't use an undefined value as an ARRAY
       reference" warnings when debian/patches is a file, not a directory.
       (Closes: #889535)
+    + [CL] Check spelling of patch headers.  (Closes: #756130)
   * checks/rules.{desc,pm}:
     + [CL] Fix a number of false-positives when checking the
       "override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES" tag
