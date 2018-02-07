@@ -386,7 +386,7 @@ Info: The specified file under <tt>/etc/default/</tt> includes a line
  including <tt>service package start</tt> returning success without the
  service actually starting.
  .
- Please remove this mechanism and either move to automatically starting
- this daemon or disable autostarting via <tt>defaults-disabled</tt> or
- similar.
-Ref: policy 9.3.3.1, update-rc.d(8)
+ Please remove this mechanism and disable enabling the daemon on install
+ via <tt>dh_installinit --no-enable</tt> or move to automatically
+ starting it.
+Ref: policy 9.3.3.1, update-rc.d(8), dh_installinit(1)
