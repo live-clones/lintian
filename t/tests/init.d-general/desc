@@ -5,5 +5,6 @@ Test-For:
  duplicate-updaterc.d-calls-in-postinst
  init.d-script-does-not-implement-optional-option
  init.d-script-does-not-implement-required-option
+ init.d-script-should-always-start-service
  init.d-script-sourcing-without-test
  init.d-script-uses-usr-interpreter
