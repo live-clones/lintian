@@ -61,3 +61,13 @@ Description: {$description} - unparsable
  java-related QA code in lintian. The unparsable part.
  .
  This package should not be installed.
+
+Package: libcontains-source-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description} - contains .java source
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. This package should not be
+ installed.
+ .
+ This package tests for .java files inside jars.

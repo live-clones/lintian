@@ -29,6 +29,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
   * checks/java.{desc,pm}:
     + [CL] Only warn about bad-jar-name for "public" .jar files.
       (Closes: #889628)
+    + [CL] Check for .jar files that embed Foo.java alongside a Foo.class
+      file.  (Closes: #762113)
   * checks/init.d.{desc,pm}:
     + [CL] Warn about packages that use ENABLED="true" (etc.) in
       /etc/default files.

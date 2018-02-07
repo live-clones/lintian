@@ -79,6 +79,8 @@ sub run {
         foreach
           my $class (grep { m/\.(?:class|cljc?)$/oi } sort keys %{$files}){
             my $mver = $files->{$class};
+            (my $src = $class) =~ s/\.[^.]+$/\.java/;
+            tag 'jar-contains-source', $jar_file, $src if %{$files}{$src};
             $classes = 1;
             next if $class =~ m/\.cljc?$/;
             # .class but no major version?

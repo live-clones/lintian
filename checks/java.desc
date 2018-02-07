@@ -106,3 +106,16 @@ Info: The package ships the specified "public" Jar file under
  <tt>/usr/share/java/</tt>, but the name does not correspond to Java policy
  guidelines. This can cause tools in the Debian Java toolchain to fail.
 Ref: java-policy 2.4
+
+Tag: jar-contains-source
+Severity: normal
+Certainty: certain
+Info: The package ships the specified Jar file containing a
+ <tt>.java</tt> file alongside a corresponding <tt>.class</tt> file.
+ .
+ This wastes disk space as the source is always available via <tt>apt
+ source</tt>.
+ .
+ Please ensure that the specified <tt>.java</tt> files are not shipped in
+ the Jar file.
+Ref: java-policy 2.4

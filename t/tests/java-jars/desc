@@ -9,6 +9,7 @@ Test-For:
  bad-jar-name
  codeless-jar
  executable-jar-without-main-class
+ jar-contains-source
  jar-not-in-usr-share
  javalib-but-no-public-jars
  maven-plugin-in-usr-share-java
