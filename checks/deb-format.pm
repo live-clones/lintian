@@ -162,6 +162,8 @@ sub run {
             } elsif ($data_member eq 'data.tar') {
                 tag 'uses-no-compression-for-data-tarball';
             }
+            tag 'data-tarball-compression-format',
+              $data_member =~ s/^data\.tar\.?//r || '(none)';
         }
     } else {
         # unpack will probably fail so we'll never get here, but may as well be
