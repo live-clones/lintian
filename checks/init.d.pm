@@ -200,6 +200,7 @@ sub run {
         # other issues if it was included in the package.
         check_init($initd_path, $info);
     }
+    check_defaults($info);
 
     return unless $initd_dir and $initd_dir->is_dir;
 
@@ -481,6 +482,22 @@ sub check_init {
           $initd_path, $option;
     }
 
+    return;
+}
+
+sub check_defaults {
+    my ($info) = @_;
+    my $dir = $info->index_resolved_path('etc/default/');
+    return unless $dir and $dir->is_dir;
+    for my $path ($dir->children) {
+        return if not $path->is_open_ok;
+        my $fd = $path->open;
+        while (<$fd>) {
+            tag 'init.d-script-should-always-start-service', $path, "(line $.)"
+              if m/^\s*#*\s*(?:ENABLED|DISABLED)=/;
+        }
+        close($fd);
+    }
     return;
 }
 
