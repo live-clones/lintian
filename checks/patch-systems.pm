@@ -126,7 +126,7 @@ sub run {
                           if (/^\#+\s*DP:\s*(\S.*)$/
                             && $1 !~ /^no description\.?$/i);
                         $description .= $1
-                          if (/^\# (?:Description|Subject): (.*)/);
+                          if /^\# (?:Description|Subject): (.*)/;
                     }
                     close($fd);
                     unless ($description) {
