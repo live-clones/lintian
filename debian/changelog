@@ -1,6 +1,24 @@
-lintian (2.5.74) UNRELEASED; urgency=medium
+lintian (2.5.74) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - control-tarball-compression-format
+      - data-tarball-compression-format
+      - debian-rules-is-dh_make-template
+      - init.d-script-should-always-start-service
+      - jar-contains-source
+      - missing-systemd-service-for-init.d-script
+      - override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
+      - source-contains-prebuilt-wasm-binary
+      - spelling-error-in-patch-description
+      - systemd-service-file-refers-to-unusual-wantedby-target
+    + Renamed:
+      - systemd-no-service-for-init-script ->
+        omitted-systemd-service-for-init.d-script
+      - systemd-no-service-for-init-rcS-script ->
+        missing-systemd-service-for-init.d-rcS-script
+    + Removed:
+      - override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
 
   * checks/changelog-file.desc:
     + [CL] Improve the long description of epoch-change-without-comment.
@@ -82,6 +100,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
 
   * data/files/privacy-breaker-fragments:
     + [BR] Detect new fragments for Google CSE.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * lib/Lintian/Util.pm:
     + [NT] Give lower processing priority to packages that repeatedly
@@ -94,7 +114,7 @@ lintian (2.5.74) UNRELEASED; urgency=medium
     + [NT] Use a distinct error status instead of "Outdated" for
       packages with errors during their last processing.
 
- -- Chris Lamb <lamby@debian.org>  Sat, 03 Feb 2018 10:51:52 +0000
+ -- Chris Lamb <lamby@debian.org>  Thu, 08 Feb 2018 17:41:55 +0000
 
 lintian (2.5.73) unstable; urgency=medium
 
