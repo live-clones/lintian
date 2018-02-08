@@ -14,7 +14,6 @@ lintian (2.5.74) unstable; urgency=medium
       - init.d-script-should-always-start-service
       - jar-contains-source
       - missing-systemd-service-for-init.d-script
-      - override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
       - source-contains-prebuilt-wasm-binary
       - spelling-error-in-patch-description
       - systemd-service-file-refers-to-unusual-wantedby-target
@@ -23,8 +22,8 @@ lintian (2.5.74) unstable; urgency=medium
         omitted-systemd-service-for-init.d-script
       - systemd-no-service-for-init-rcS-script ->
         missing-systemd-service-for-init.d-rcS-script
-    + Removed:
-      - override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES
+      - override_dh_auto_test-does-not-check-DEB_BUILD_PROFILES ->
+        override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
 
   * checks/changelog-file.desc:
     + [CL] Improve the long description of epoch-change-without-comment.
