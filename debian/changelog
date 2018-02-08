@@ -76,7 +76,7 @@ lintian (2.5.74) UNRELEASED; urgency=medium
   * checks/udev.pm:
     + [CL] Add simple GOTO parsing to avoid false positives when checking
       for udev rules for SUBSYSTEM specifiers.  (Closes: #869547, #889639)
-   
+
   * commands/reporting-{html-reports,lintian-harness}.pm:
     + [NT] Register packages that fail during archive wide processing.
 
