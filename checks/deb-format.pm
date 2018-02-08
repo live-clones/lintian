@@ -131,6 +131,8 @@ sub run {
             } elsif ($ctrl_member eq 'control.tar') {
                 tag 'uses-no-compression-for-control-tarball';
             }
+            tag 'control-tarball-compression-format',
+              $ctrl_member =~ s/^control\.tar\.?//r || '(none)';
         }
 
         if (not defined($data_member)) {

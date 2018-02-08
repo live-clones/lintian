@@ -19,6 +19,8 @@ lintian (2.5.74) UNRELEASED; urgency=medium
   * checks/deb-format.{desc,pm}:
     + [CL] Add a classification tag for the .deb data tarball compression
       format.  (Closes: #738442)
+    + [CL] Add a classification tag for the control tarball compression
+      format.  (Closes: #889856)
   * checks/fields.pm:
     + [CL] Avoid false positives when checking binary packages depending on
       toolchain packages by ignoring packages starting with "dh-" or ending

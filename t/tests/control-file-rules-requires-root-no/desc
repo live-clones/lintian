@@ -3,4 +3,6 @@ Version: 1.0
 Description: Test for "Rules-Requires-Root: no"
 Options: -L +classification
 Test-For:
-  rules-does-not-require-root
+ control-tarball-compression-format
+ data-tarball-compression-format
+ rules-does-not-require-root

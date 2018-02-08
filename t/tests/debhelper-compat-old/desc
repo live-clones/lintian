@@ -5,6 +5,8 @@ Skeleton: pedantic
 Options: --pedantic -I -E -L +classification
 Profile: lintian-test
 Test-For:
+ control-tarball-compression-format
+ data-tarball-compression-format
  package-uses-old-debhelper-compat-version
  debian-build-system
  rules-does-not-require-root
