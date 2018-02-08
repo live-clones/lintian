@@ -131,15 +131,20 @@ sub check_init_script {
 
     tag 'init.d-script-does-not-source-init-functions', $file
       unless $lsb_source_seen;
-    # Only tag if the maintainer of this package did any effort to
-    # make the package work with systemd.
-    tag 'systemd-no-service-for-init-script', $basename
-      if (%{$services} and not $services->{$servicename});
 
-    # rcS scripts are particularly bad, warn even if there is
-    # no systemd integration
-    tag 'systemd-no-service-for-init-rcS-script', $basename
-      if (not $services->{$servicename} and $is_rcs_script);
+    if (!$services->{$servicename}) {
+        # rcS scripts are particularly bad; always tag
+        if ($is_rcs_script) {
+            tag 'missing-systemd-service-for-init.d-rcS-script', $basename;
+        } else {
+            if (%{$services}) {
+                tag 'omitted-systemd-service-for-init.d-script', $basename;
+            } else {
+                tag 'missing-systemd-service-for-init.d-script', $basename;
+            }
+        }
+    }
+
     return;
 }
 

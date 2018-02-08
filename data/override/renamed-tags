@@ -7,4 +7,6 @@ package-install-apt-sources => package-installs-apt-sources
 package-install-ieee-data => package-installs-ieee-data
 package-install-into-obsolete-dir => package-installs-into-obsolete-dir
 privacy-breach-may-use-debian-package => privacy-breach-uses-embedded-file
+systemd-no-service-for-init-script => omitted-systemd-service-for-init.d-script
+systemd-no-service-for-init-rcS-script => missing-systemd-service-for-init.d-rcS-script
 transitional-package-should-be-oldlibs-extra => transitional-package-should-be-oldlibs-optional

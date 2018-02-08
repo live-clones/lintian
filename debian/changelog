@@ -67,6 +67,12 @@ lintian (2.5.74) UNRELEASED; urgency=medium
   * checks/systemd.{desc,pm}:
     + [CL] Warn about unit files that install to usual WantedBy= targets.
       Thanks to Sam Morris for the initial patch.  (Closes: #817170)
+    + [CL] Rework the no service detection, improving the (rarely
+      overridden) tag names to better match what they detect as well as
+      adding a new "missing-systemd-service-for-init.d-script" pedantic tag
+      where we do not have an equivalent unit as this implies missing
+      bespoke security hardening support, etc. Thanks to Lucas Nussbaum for
+      his input.  (Closes: #858588)
   * checks/udev.pm:
     + [CL] Add simple GOTO parsing to avoid false positives when checking
       for udev rules for SUBSYSTEM specifiers.  (Closes: #869547, #889639)

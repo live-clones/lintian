@@ -43,20 +43,33 @@ Info: The systemd service file refers to the obsolete BindTo= option.
  <tt>BindsTo=</tt> which should be used instead.
 Ref: https://github.com/systemd/systemd/commit/7f2cddae09fd2579ae24434df577bb5e5a157d86
 
-Tag: systemd-no-service-for-init-script
+Tag: omitted-systemd-service-for-init.d-script
 Severity: serious
 Certainty: certain
-Info: The listed init.d script has no systemd equivalent.
+Info: The specified init.d script has no systemd equivalent and the
+ package ships other units.
+ .
+ This typically occurs when a maintainer missed script when adding
+ systemd integration, or a new init script was added in a new upstream
+ version.
  .
  Systemd has a SysV init.d script compatibility mode. It provides access to
  each SysV init.d script as long as there is no native service file with the
  same name (e.g. <tt>/lib/systemd/system/rsyslog.service</tt> corresponds to
  <tt>/etc/init.d/rsyslog</tt>).
- .
- Your package ships a service file, but for the listed init.d script, there is
- no corresponding systemd service file.
 
-Tag: systemd-no-service-for-init-rcS-script
+Tag: missing-systemd-service-for-init.d-script
+Severity: pedantic
+Certainty: certain
+Info: The specified init.d script has no equivalent systemd service.
+ .
+ Whilst systemd has a SysV init.d script compatibility mode, providing
+ native systemd support has many advantages such as being able to specify
+ security hardening features.
+ .
+ Please provide a suitable .service file for this script.
+
+Tag: missing-systemd-service-for-init.d-rcS-script
 Severity: serious
 Certainty: certain
 Ref: https://wiki.debian.org/Teams/pkg-systemd/rcSMigration
