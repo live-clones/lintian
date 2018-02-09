@@ -3,3 +3,4 @@ Version: 1.0
 Description: Check changelog for accidental epoch changes
 Test-For:
  epoch-change-without-comment
+ latest-debian-changelog-entry-without-new-version
