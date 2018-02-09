@@ -1,4 +1,4 @@
-{$source} ({$version}) unstable; urgency=low
+{$source} (1:{$version}) unstable; urgency=low
 
 
   * Test: {$testname}
@@ -21,6 +21,7 @@
     üüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüüü
 
   * It might even fix TEMP-1234567-abcdef, though probably not.
+  * We refer to the epoch bump here.
 
  -- {$author}  {$date}
 
