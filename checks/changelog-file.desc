@@ -210,6 +210,9 @@ Severity: normal
 Certainty: certain
 Info: The latest Debian changelog entry has a version number that's either
  the same or smaller than the version number of the entry before.
+ .
+ All versions for a source package must be unique, even with a leading
+ epoch stripped off.
 
 Tag: latest-debian-changelog-entry-changed-to-native
 Severity: normal
