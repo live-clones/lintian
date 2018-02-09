@@ -6,6 +6,10 @@ lintian (2.5.75) UNRELEASED; urgency=medium
     + [CL] Avoid false positives when checking for typos by ignoring files
       or patch descriptions that contain the words "typo" or "spelling".
       Thanks to Bas Couwenberg for the report.  (Closes: #889964)
+  * checks/python.desc:
+    + [CL] Underline that maintainers do not need to override the
+      new-package-should-not-package-python2-module tag but rather leave a
+      comment in debian/changelog.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 08 Feb 2018 18:00:44 +0000
 
