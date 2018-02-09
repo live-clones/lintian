@@ -318,10 +318,8 @@ sub run {
             my $second_version = $entries[1]->Version;
             if ($first_version and $second_version) {
                 tag 'latest-debian-changelog-entry-without-new-version'
-                  unless versions_gt(
-                    $first_version =~ s/^([^:]+)://r,
-                    $second_version =~ s/^([^:]+)://r
-                  ) or $entries[0]->Changes =~ /backport/i;
+                  unless versions_gt($first_version, $second_version)
+                  or $entries[0]->Changes =~ /backport/i;
                 tag 'latest-debian-changelog-entry-changed-to-native'
                   if $native_pkg and $second_version =~ m/-/;
             }
