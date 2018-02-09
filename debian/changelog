@@ -2,6 +2,11 @@ lintian (2.5.75) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/patch-systems.{desc,pm}:
+    + [CL] Avoid false positives when checking for typos by ignoring files
+      or patch descriptions that contain the words "typo" or "spelling".
+      Thanks to Bas Couwenberg for the report.  (Closes: #889964)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 08 Feb 2018 18:00:44 +0000
 
 lintian (2.5.74) unstable; urgency=medium

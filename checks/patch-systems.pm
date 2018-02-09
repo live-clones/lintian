@@ -27,6 +27,8 @@ use autodie;
 use constant PATCH_DESC_TEMPLATE => 'TODO: Put a short summary on'
   . ' the line above and replace this paragraph';
 
+use List::MoreUtils qw(none);
+
 use Lintian::Check qw(check_spelling spelling_tag_emitter);
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(internal_error strip);
@@ -283,7 +285,8 @@ sub check_patch {
       = spelling_tag_emitter('spelling-error-in-patch-description',
         $patch_file);
     check_spelling($description, $group->info->spelling_exceptions,
-        $tag_emitter);
+        $tag_emitter)
+      if none { /(spelling|typo)/i } ($patch_file, $description);
     # Use --strip=1 to strip off the first layer of directory in case
     # the parent directory in which the patches were generated was
     # named "debian".  This will produce false negatives for --strip=0
