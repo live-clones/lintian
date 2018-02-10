@@ -128,6 +128,8 @@ sub new {
     }
     my $self = {
         'cache' => {},
+        'coll-priorities' => undef,
+        'coll2priority' => {},
         'collmap' => $ccmap,
         'jobs' => $jobs,
         'profile' => $profile,
@@ -251,6 +253,11 @@ sub prepare_tasks {
     }
     return unless %worklists;
     $self->{'worktable'} = \%worklists;
+    if (not $self->{'coll-priorities'}) {
+        my $coll2priority = $self->{'coll2priority'};
+        my @priorities = sort { $coll2priority->{$a} <=> $coll2priority->{$b} } keys(%{$coll2priority});
+        $self->{'coll-priorities'} = \@priorities;
+    }
     return 1;
 }
 
@@ -259,9 +266,14 @@ sub _gen_type_coll {
     my $collmap = $self->{'collmap'};
     my $cmap = Lintian::DepMap::Properties->new;
     my $cond = { 'type' => $pkg_type };
+    my $coll2priority = $self->{'coll2priority'};
 
     foreach my $node ($collmap->known) {
         my $coll = $collmap->getp($node);
+        if (not exists($coll2priority->{$node})) {
+            $coll2priority->{$node} = $coll->priority;
+            $self->{'coll-priorities'} = undef;
+        }
         $cmap->add($node, $coll->needs_info($cond), $coll);
     }
 
@@ -360,7 +372,7 @@ sub process_tasks {
     my %failed;
     my $debug_enabled = $Lintian::Output::GLOBAL->debug;
     my %active = map { $_ => 1 } keys %$worklists;
-    my $find_next_task = _generate_find_next_tasks_sub(\%active, $worklists, $colls);
+    my $find_next_task = $self->_generate_find_next_tasks_sub(\%active, $worklists, $colls);
     my $schedule_task = sub {
         my ($task_id, $cs, $lpkg, $cmap) = @_;
         my $coll = $cs->name;
@@ -472,28 +484,37 @@ sub process_tasks {
 
 
 sub _generate_find_next_tasks_sub {
-    my ($active_procs, $worklists, $colls) = @_;
-    my @queue;
+    my ($self, $active_procs, $worklists, $colls) = @_;
+    my (@queue);
+    my @coll_priorities = @{$self->{'coll-priorities'}};
+    my %colls_not_scheduled;
+    my $debug_enabled = $Lintian::Output::GLOBAL->debug;
+    for my $coll (@coll_priorities) {
+        my %procs;
+        for my $procid (keys(%{$worklists})) {
+            $procs{$procid} = 1;
+        }
+        $colls_not_scheduled{$coll} = \%procs;
+    }
+
     return sub {
         if (@queue) {
-            debug_msg(4, "QUEUE non-empty queue with " . scalar(@queue) . " item(s).  Taking one.");
+            debug_msg(4, 'QUEUE non-empty queue with ' . scalar(@queue) . ' item(s).  Taking one.')
+              if $debug_enabled;
             return @{shift(@queue)};
         }
-        PROC:
-        foreach my $procid (keys(%{$active_procs})) {
-            my $wlist = $worklists->{$procid};
-            my $cmap = $wlist->{'collmap'};
-            my @todo = $cmap->selectable;
-            unless (@todo) {
-                delete($active_procs->{$procid});
-                next PROC;
-            }
-            my $lpkg = $wlist->{'lab-entry'};
-            my $needed = $wlist->{'needed'};
-            my $pkg_type = $lpkg->pkg_type;
-            foreach my $coll (@todo) {
-                my $cs = $colls->getp($coll);
-
+        for (my $i = 0; $i < @coll_priorities ; $i++) {
+            my $coll = $coll_priorities[$i];
+            my $cs = $colls->getp($coll);
+            my $procs = $colls_not_scheduled{$coll};
+            foreach my $procid (grep { $procs->{$_} } keys(%{$active_procs})) {
+                my $wlist = $worklists->{$procid};
+                my $cmap = $wlist->{'collmap'};
+                next if not $cmap->selectable($coll);
+                my $lpkg = $wlist->{'lab-entry'};
+                my $needed = $wlist->{'needed'};
+                my $pkg_type = $lpkg->pkg_type;
+                delete($procs->{$procid});
                 # current type?
                 if (not $cs->is_type($pkg_type)) {
                     $cmap->satisfy($coll);
@@ -517,15 +538,26 @@ sub _generate_find_next_tasks_sub {
                 # collect info
                 $cmap->select($coll);
                 $wlist->{'changed'} = 1;
-                debug_msg(3, "READY ${coll}-${procid}");
+                debug_msg(3, "READY ${coll}-${procid}") if $debug_enabled;
                 push(@queue, ["${coll}-${procid}", $cs, $lpkg, $cmap]);
+                # If we are dealing with the highest priority type of task, then
+                # keep filling the cache (i.e. $i == 0).  Otherwise, stop here
+                # to avoid priority inversion due to filling the queue with
+                # unimportant tasks.
+                last if $i;
             }
-            delete($active_procs->{$procid});
+            if (not keys(%{$procs})) {
+                debug_msg(3, "DISCARD $coll (all instances have been scheduled)") if $debug_enabled;
+                splice(@coll_priorities, $i, 1);
+                $i--;
+            }
             last if @queue;
         }
 
-        debug_msg(4, "QUEUE refilled with " . scalar(@queue) . " item(s).  Taking one.");
-        return @{shift(@queue)} if @queue;
+        if (@queue) {
+            debug_msg(4, 'QUEUE refilled with ' . scalar(@queue) . ' item(s).  Taking one.') if $debug_enabled;
+            return @{shift(@queue)};
+        }
         return;
     };
 }

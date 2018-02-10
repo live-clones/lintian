@@ -3,4 +3,5 @@ Info: This script create an index file of the contents of the orig tarballs.
 Type: source
 Needs-Info: unpacked
 Version: 1
+Priority: 7
 Interface: perl-coll
