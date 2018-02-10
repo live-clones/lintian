@@ -473,7 +473,12 @@ sub process_tasks {
 
 sub _generate_find_next_tasks_sub {
     my ($active_procs, $worklists, $colls) = @_;
+    my @queue;
     return sub {
+        if (@queue) {
+            debug_msg(4, "QUEUE non-empty queue with " . scalar(@queue) . " item(s).  Taking one.");
+            return @{shift(@queue)};
+        }
         PROC:
         foreach my $procid (keys(%{$active_procs})) {
             my $wlist = $worklists->{$procid};
@@ -513,9 +518,14 @@ sub _generate_find_next_tasks_sub {
                 $cmap->select($coll);
                 $wlist->{'changed'} = 1;
                 debug_msg(3, "READY ${coll}-${procid}");
-                return ("${coll}-${procid}", $cs, $lpkg, $cmap);
+                push(@queue, ["${coll}-${procid}", $cs, $lpkg, $cmap]);
             }
+            delete($active_procs->{$procid});
+            last if @queue;
         }
+
+        debug_msg(4, "QUEUE refilled with " . scalar(@queue) . " item(s).  Taking one.");
+        return @{shift(@queue)} if @queue;
         return;
     };
 }
