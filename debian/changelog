@@ -5,6 +5,9 @@ lintian (2.5.75) UNRELEASED; urgency=medium
   * checks/changelog-file.desc:
     + [CL] When checking latest-debian-changelog-entry-without-new-version
       ignore any change of epoch.  (Closes: #889991)
+  * checks/init.desc:
+    + [CL] Improve various parts of the long description for
+      init.d-script-should-always-start-service.
   * checks/patch-systems.{desc,pm}:
     + [CL] Avoid false positives when checking for typos by ignoring files
       or patch descriptions that contain the words "typo" or "spelling".
