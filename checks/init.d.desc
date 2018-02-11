@@ -377,7 +377,7 @@ Certainty: possible
 Info: The specified file under <tt>/etc/default/</tt> includes a line
  such as <tt>ENABLED=</tt> or <tt>DISABLED=</tt>.
  .
- This was a older practice used so that the package's init script would
+ This is an older practice used so that the package's init script would
  not start the service until the local system administrator changed this
  value.
  .
