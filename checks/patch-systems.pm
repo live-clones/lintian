@@ -281,12 +281,15 @@ sub run {
 # Checks on patches common to all build systems.
 sub check_patch {
     my ($group, $patch_file, $description) = @_;
-    my $tag_emitter
-      = spelling_tag_emitter('spelling-error-in-patch-description',
-        $patch_file);
-    check_spelling($description, $group->info->spelling_exceptions,
-        $tag_emitter)
-      if none { /(spelling|typo)/i } ($patch_file, $description);
+    if (none { /(spelling|typo)/i } ($patch_file, $description)) {
+        my $tag_emitter
+          = spelling_tag_emitter('spelling-error-in-patch-description',
+            $patch_file);
+        # Check the first line seperately to avoid duplicates
+        foreach my $x (split(/\n/, $description, 2)) {
+            check_spelling($x, $group->info->spelling_exceptions,$tag_emitter);
+        }
+    }
     # Use --strip=1 to strip off the first layer of directory in case
     # the parent directory in which the patches were generated was
     # named "debian".  This will produce false negatives for --strip=0
