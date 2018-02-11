@@ -43,7 +43,7 @@ my $INIT_WHITELIST = Lintian::Data->new('systemd/init-whitelist');
 my $WANTEDBY_WHITELIST = Lintian::Data->new('systemd/wantedby-whitelist');
 
 sub run {
-    my (undef, undef, $info) = @_;
+    my ($pkg, undef, $info) = @_;
 
     # non-service checks
     if (my $tmpfiles = $info->index_resolved_path('etc/tmpfiles.d/')) {
@@ -55,7 +55,7 @@ sub run {
     }
 
     my @init_scripts = get_init_scripts($info);
-    my @service_files = get_systemd_service_files($info);
+    my @service_files = get_systemd_service_files($pkg, $info);
 
     # A hash of names reference which are provided by the service files.
     # This includes Alias= directives, so after parsing
@@ -149,13 +149,13 @@ sub check_init_script {
 }
 
 sub get_systemd_service_files {
-    my ($info) = @_;
+    my ($pkg, $info) = @_;
     my @res;
     my @potential
       = grep { m,/systemd/system/.*\.service$, } $info->sorted_index;
 
     for my $file (@potential) {
-        push(@res, $file) if check_systemd_service_file($info, $file);
+        push(@res, $file) if check_systemd_service_file($pkg, $info, $file);
     }
     return @res;
 }
@@ -191,7 +191,7 @@ sub get_systemd_service_names {
 }
 
 sub check_systemd_service_file {
-    my ($info, $file) = @_;
+    my ($pkg, $info, $file) = @_;
 
     tag 'systemd-service-file-outside-lib', $file
       if ($file =~ m,^etc/systemd/system/,);
@@ -225,7 +225,8 @@ sub check_systemd_service_file {
         foreach my $target (@wanted_by) {
             tag 'systemd-service-file-refers-to-unusual-wantedby-target',
               $file, $target
-              unless any { $target eq $_ } $WANTEDBY_WHITELIST->all;
+              unless any { $target eq $_ } $WANTEDBY_WHITELIST->all
+              or $pkg eq 'systemd';
         }
         tag 'systemd-service-file-missing-documentation-key', $file,
           unless extract_service_file_values($file, 'Unit', 'Documentation',1);
