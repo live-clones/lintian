@@ -382,7 +382,7 @@ Info: The specified file under <tt>/etc/default/</tt> includes a line
  value.
  .
  However, this hides from the underlying init system whether or not the
- daemon should actually be started, leading to confusing behavior
+ daemon should actually be started leading to confusing behavior
  including <tt>service package start</tt> returning success without the
  service actually starting.
  .
