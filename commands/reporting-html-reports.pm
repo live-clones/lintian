@@ -56,7 +56,7 @@ my (
     $RESOURCE_MANAGER, $LINTIAN_VERSION, $timestamp,
     $TEMPLATE_CONFIG_VARS,$HARNESS_STATE_DIR, $HISTORY_DIR,
     $HISTORY, $GRAPHS, $LINTIAN_ROOT,
-    $HTML_TMP_DIR,
+    $HTML_TMP_DIR, $SCOUR_ENABLED,
 );
 # FIXME: Should become obsolete if gnuplot is replaced by R like piuparts.d.o /
 # reproducible.d.n is using
@@ -207,6 +207,16 @@ sub init_globals {
         } else {
             $GRAPHS = 0;
             print "No graphs as \"gnuplot\" is not in PATH\n";
+        }
+        if ($GRAPHS) {
+            if (check_path('scour')) {
+                $SCOUR_ENABLED = 1;
+                print "Minimizing generated SVG files (scour is in PATH)\n";
+            } else {
+                $SCOUR_ENABLED = 0;
+                print 'No minimization of generated SVG files'
+                  . " as \"scour\" is not in PATH\n";
+            }
         }
     } else {
         $HISTORY = 0;
@@ -673,6 +683,14 @@ sub generate_package_index_packages {
     return;
 }
 
+sub run_scour {
+    my ($input_file, $output_file) = @_;
+    run_cmd('scour', '-i',$input_file, '-o',$output_file, '-q',
+        '--enable-id-stripping', '--enable-comment-stripping',
+        '--shorten-ids', '--indent=none');
+    return 1;
+}
+
 sub update_history_and_make_graphs {
     my ($attrs_ref, $statistics_ref, $tag_statistics_ref) = @_;
     # Update history.
@@ -743,6 +761,19 @@ sub update_history_and_make_graphs {
         run_cmd({ 'chdir' => $graph_dir},
             'gnuplot',"$LINTIAN_ROOT/reporting/graphs/statistics.gpi");
 
+        if ($SCOUR_ENABLED) {
+            # Do a little "rename" dance to ensure that we keep the
+            # "statistics.svg"-basename without having to use a
+            # subdirectory.
+            rename(
+                "${graph_dir}/statistics.svg",
+                "${graph_dir}/_statistics-orig.svg"
+            );
+            run_scour(
+                "${graph_dir}/_statistics-orig.svg",
+                "${graph_dir}/statistics.svg"
+            );
+        }
         $RESOURCE_MANAGER->install_resource("${graph_dir}/statistics.svg");
     }
 
@@ -767,11 +798,23 @@ sub update_history_and_make_graphs {
     }
 
     if ($GRAPHS) {
+        my $svg_dir = "${graph_dir}/tags";
         close($gnuplot_fd);
         run_cmd({'chdir' => $graph_dir}, 'gnuplot', 'call.gpi');
         unlink($commonf);
+        if ($SCOUR_ENABLED) {
+            # Obvious optimization potential; run scour in parallel
+            my $optimized_dir = "${graph_dir}/tags-optimized";
+            mkdir($optimized_dir);
+            print "Minimizing tag graphs; this may take a while ...\n";
+            for my $tag (sort(keys(%{$tag_statistics_ref}))) {
+                run_scour("${svg_dir}/${tag}.svg",
+                    "${optimized_dir}/${tag}.svg");
+            }
+            $svg_dir = $optimized_dir;
+        }
         for my $tag (sort(keys(%{$tag_statistics_ref}))) {
-            my $graph_file = "${graph_dir}/tags/${tag}.svg";
+            my $graph_file = "${svg_dir}/${tag}.svg";
             $RESOURCE_MANAGER->install_resource($graph_file);
         }
         delete_dir($graph_dir);
