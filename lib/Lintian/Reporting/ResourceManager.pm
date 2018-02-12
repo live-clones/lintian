@@ -45,7 +45,7 @@ Lintian::Reporting::ResourceManager -- A simple resource manager for html_report
  # Move the resource
  $resMan->install_resource('path/to/generated-styles.css');
  print 'Image: ' . $resMan->resource_URL('my-image.png'), "\n";
- print 'CSS: ' . $resMan->resource_URL('my-styles.css'), "\n";
+ print 'CSS: ' . $resMan->resource_URL('generated-styles.css'), "\n";
 
 =head1 DESCRIPTION
 
