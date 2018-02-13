@@ -28,6 +28,10 @@ lintian (2.5.75) UNRELEASED; urgency=medium
   * checks/scripts.{desc,pm}:
     + [CL] Check for maintainer scripts that call udevadm without a guard
       as it can fail within a chroot.  (Closes: #890224)
+  * checks/source-copyright.{desc,pm}:
+    + [CL] Emit a pendatic warning for packages with repacked upstream
+      tarballs that lack a Files-Excluded or Comment header in
+      debian/copyright.
 
   * commands/reporting-html-reports.html:
     + [NT] Minimize generated SVG files if scour is installed and

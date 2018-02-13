@@ -283,6 +283,9 @@ sub _parse_dep5 {
     tag 'missing-explanation-for-contrib-or-non-free-package'
       if $info->source_field('section', '') =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(comment disclaimer);
+    tag 'missing-explanation-for-repacked-upstream-tarball'
+      if $info->field('version', '') =~ m{(?:dfsg|debian|ds|repack)}
+      and none { defined $first_para->{$_} } qw(comment files-excluded);
 
     my (undef, $full_license_header, undef,@short_licenses_header)
       =parse_license($first_para->{'license'}, 1);
