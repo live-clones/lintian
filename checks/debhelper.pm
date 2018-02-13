@@ -64,6 +64,7 @@ sub run {
 
     my ($bdepends_noarch, $bdepends, %build_systems, $uses_autotools_dev_dh);
     my $seen_dh = 0;
+    my $seen_dh_parallel = 0;
     my $seen_python_helper = 0;
     my $seen_python3_helper = 0;
     my %overrides;
@@ -134,6 +135,7 @@ sub run {
             delete($build_systems{'debhelper'});
             $seen_dh = 1;
             $seencommand = 1;
+            $seen_dh_parallel = 1 if m/--parallel/;
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
             while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
@@ -330,6 +332,10 @@ sub run {
           "override_dh_systemd_$suffix", "(line $line)"
           if $line and $level >= 11;
     }
+
+    tag 'debian-rules-uses-unnecessary-dh-argument', 'dh ... --parallel',
+      "(line $.)"
+      if $seen_dh_parallel and $level >= 10;
 
     # Check the files in the debian directory for various debhelper-related
     # things.

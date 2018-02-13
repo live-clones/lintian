@@ -1,0 +1,5 @@
+Testname: debhelper-dh-unnecessary-arguments
+Version: 1.0
+Description: Check for packages using --parallel
+Test-For:
+ debian-rules-uses-unnecessary-dh-argument

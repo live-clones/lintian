@@ -5,7 +5,9 @@ lintian (2.5.75) UNRELEASED; urgency=medium
   * checks/changelog-file.desc:
     + [CL] When checking latest-debian-changelog-entry-without-new-version
       ignore any change of epoch.  (Closes: #889991)
-  * checks/debhelper.desc:
+  * checks/debhelper.{desc,pm}:
+    + [CL] Warn when specifying --parallel to dh(1) in compat levels >= 10.
+      Thanks to Nicolas Braud-Santoni for the idea.  (Closes: #890358)
     + [CL] Add a missing verb to the long description of the
       dh-quilt-addon-but-quilt-source-format tag.
   * checks/files.pm:

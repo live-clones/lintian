@@ -420,3 +420,13 @@ Info: The <tt>debian/rules</tt> file for this package has an
  .
  Please replace these with calls to <tt>dh_installsystemd</tt>.
 Ref: debhelper(7)
+
+Tag: debian-rules-uses-unnecessary-dh-argument
+Severity: minor
+Certainty: certain
+Info: The <tt>debian/rules</tt> file passes the specified argument to
+ <tt>dh $@</tt> but it is enabled by default from this debhelper
+ compatibility level onwards.
+ .
+ Please remove the argument from the call to <tt>dh(1)</tt>.
+Ref: debhelper(7), dh(1)
