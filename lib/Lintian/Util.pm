@@ -1725,8 +1725,12 @@ sub find_backlog {
         my $last_version = '0';
         my $group_data = $state->{'groups'}{$group_id};
         my $is_out_of_date;
-        if (exists($group_data->{'processing-errors'})
-            and $group_data->{'processing-errors'} > 2) {
+        # Does this group repeatedly fail with the current version
+        # of lintian?
+        if (    exists($group_data->{'processing-errors'})
+            and $group_data->{'processing-errors'} > 2
+            and exists($group_data->{'last-error-by'})
+            and $group_data->{'last-error-by'} ne $lintian_version) {
             # To avoid possible "starvation", we will give lower priority
             # to packages that repeatedly fail.  They will be retried as
             # the backlog is cleared.

@@ -308,9 +308,10 @@ sub cleanup_group_state {
             or $group_data->{'last-error-by'} ne $OPT{'desired-version'})
       ) {
         log_debug(
-            "Clearing error flag for ${group_id}: New version of lintian");
+            "Clearing error-counter for ${group_id}: New version of lintian");
         delete($group_data->{'processing-errors'});
-        delete($group_data->{'last-error-by'});
+        # Leave "last-error-by" as we can use that to tell if the previous
+        # version triggered errors.
     }
 
     if (not %{$members}) {

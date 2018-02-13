@@ -426,8 +426,16 @@ sub process_worklist {
             next if not exists($state->{'groups'}{$group_id});
             $group_data = $state->{'groups'}{$group_id};
             if ($errors{$group_id}) {
-                ++$group_data->{'processing-errors'};
-                # Set the "last-processed-by" flag so we can clear the
+                if (not exists($group_data->{'last-error-by'})
+                    or $group_data->{'last-error-by'} ne $LINTIAN_VERSION) {
+                    # If it is a new lintian version then (re)set the counter
+                    # to 1.  Case also triggers for the very first issue.
+                    $group_data->{'processing-errors'} = 1;
+                } else {
+                    # Repeated error with the same version
+                    ++$group_data->{'processing-errors'};
+                }
+                # Set the "last-error-by" flag so we can clear the
                 # error if there is a new version of lintian.
                 $group_data->{'last-error-by'} = $LINTIAN_VERSION;
             } else {
