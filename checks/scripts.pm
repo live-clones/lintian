@@ -641,9 +641,13 @@ sub run {
         # now scan the file contents themselves
         my $fd = $path->open;
 
-        my ($saw_init, $saw_invoke, $saw_debconf,
-            $saw_bange, $saw_sete, $has_code,
-            $saw_statoverride_list, $saw_statoverride_add);
+        my (
+            $saw_init, $saw_invoke,
+            $saw_debconf,$saw_bange,
+            $saw_sete, $has_code,
+            $saw_statoverride_list, $saw_statoverride_add,
+            $saw_udevadm_guard
+        );
         my %warned;
         my $cat_string = '';
 
@@ -709,6 +713,12 @@ sub run {
                 my $cmd = $1;
                 $seen_helper_cmds{$cmd} = () unless $seen_helper_cmds{$cmd};
                 $seen_helper_cmds{$cmd}{$file} = 1;
+            }
+
+            if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
+                $saw_udevadm_guard = 1 if m/\bif\s+/g;
+                tag 'udevadm-called-without-guard', "$file:$."
+                  unless $saw_udevadm_guard or m/\|\|/;
             }
 
             if (    m,[^\w](?:(?:/var)?/tmp|\$TMPDIR)/[^)\]}\s],

@@ -25,6 +25,9 @@ lintian (2.5.75) UNRELEASED; urgency=medium
     + [CL] Underline that maintainers do not need to override the
       new-package-should-not-package-python2-module tag but rather leave a
       comment in debian/changelog.
+  * checks/scripts.{desc,pm}:
+    + [CL] Check for maintainer scripts that call udevadm without a guard
+      as it can fail within a chroot.  (Closes: #890224)
 
   * commands/reporting-html-reports.html:
     + [NT] Minimize generated SVG files if scour is installed and

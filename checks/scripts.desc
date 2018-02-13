@@ -838,3 +838,17 @@ Info: The maintainer script appears to call <tt>chmod</tt> or
   - Use <tt>runuser(1)</tt> to perform any initialization work as the
     user you were previously <tt>chown</tt>ing to.
 Ref: #889060, #889488, runuser(1)
+
+Tag: udevadm-called-without-guard
+Severity: normal
+Certainty: possible
+Info: The specified maintainer script uses <tt>set -e</tt> but seems to
+ call <tt>udevadm(8)</tt> without a conditional guard.
+ .
+ <tt>udevadm</tt> can exist but be non-functional (such as inside a
+ chroot) and thus can result in package installation or upgrade failure
+ if the call fails.
+ .
+ Please guard the return code of the call via wrapping it in a suitable
+ <tt>if</tt> construct or by appending <tt>|| true</tt>.
+Ref: #890224, udevadm(8)
