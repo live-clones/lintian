@@ -2051,17 +2051,13 @@ sub _check_tag_url_privacy_breach {
                       >,xismog;
         my $relcontent = $1;
         if (defined($relcontent)) {
-            if ($relcontent eq 'schema.dct') {
-                # see #736992
-                return;
-            } elsif  ($relcontent eq 'bookmark') {
-                # see #746656
-                return;
-            } elsif ($relcontent eq 'generator-home') {
-                # generator-home is used by texinfo
-                return;
-                # reparse for alternate (css alternate is loaded)
-            } elsif ($relcontent eq 'alternate') {
+            my %allowed = (
+                'bookmark'          => 1, # #746656
+                'generator-home'    => 1, # texinfo
+                'schema.dct'        => 1, # #736992
+            );
+            return if ($allowed{$relcontent});
+            if ($relcontent eq 'alternate') {
                 my $type = $fulltag;
                 $type =~ m,<link
                       (?:\s[^>]+)? \s+

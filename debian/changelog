@@ -5,6 +5,9 @@ lintian (2.5.75) UNRELEASED; urgency=medium
   * checks/changelog-file.desc:
     + [CL] When checking latest-debian-changelog-entry-without-new-version
       ignore any change of epoch.  (Closes: #889991)
+  * checks/files.pm:
+    + [CL] Tidy logic for detecting allowed rel="" values in <link/>
+      HTML tags.
   * checks/init.desc:
     + [CL] Improve various parts of the long description for
       init.d-script-should-always-start-service.
