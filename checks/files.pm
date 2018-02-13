@@ -2053,6 +2053,7 @@ sub _check_tag_url_privacy_breach {
         if (defined($relcontent)) {
             my %allowed = (
                 'bookmark'          => 1, # #746656
+                'canonical'         => 1, # #762753
                 'generator-home'    => 1, # texinfo
                 'schema.dct'        => 1, # #736992
             );

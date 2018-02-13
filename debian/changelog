@@ -8,6 +8,9 @@ lintian (2.5.75) UNRELEASED; urgency=medium
   * checks/files.pm:
     + [CL] Tidy logic for detecting allowed rel="" values in <link/>
       HTML tags.
+    + [CL] Allow rel="canonical" in <link/> HTML tags; they are used by
+      search engines (etc.) and do not cause internet access.
+      (Closes: #762753)
   * checks/init.desc:
     + [CL] Improve various parts of the long description for
       init.d-script-should-always-start-service.
