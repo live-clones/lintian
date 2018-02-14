@@ -59,6 +59,7 @@ sub collect {
         } elsif (-f "$override.gz") {
             $file = "$override.gz";
         }
+        last if $file;
     }
 
     if (defined $file and not is_ancestor_of("$dir/unpacked", $file)) {

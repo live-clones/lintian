@@ -38,6 +38,11 @@ lintian (2.5.75) UNRELEASED; urgency=medium
       tarballs that lack a Files-Excluded or Comment header in
       debian/copyright.
 
+  * collection/override-file:
+    + [CL] Actually pick the first out of debian/source/lintian-overrides
+      and debian/source.lintian-overrides. Thanks to Thorsten Glaser for
+      the report.  (Closes: #890361)
+
   * commands/reporting-html-reports.html:
     + [NT] Minimize generated SVG files if scour is installed and
       available in PATH.
