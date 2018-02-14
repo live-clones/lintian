@@ -1,6 +1,10 @@
-lintian (2.5.75) UNRELEASED; urgency=medium
+lintian (2.5.75) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-uses-unnecessary-dh-argument
+      - missing-explanation-for-repacked-upstream-tarball
+      - udevadm-called-without-guard
 
   * checks/changelog-file.desc:
     + [CL] When checking latest-debian-changelog-entry-without-new-version
@@ -47,7 +51,10 @@ lintian (2.5.75) UNRELEASED; urgency=medium
     + [NT] Minimize generated SVG files if scour is installed and
       available in PATH.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 08 Feb 2018 18:00:44 +0000
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
+ -- Chris Lamb <lamby@debian.org>  Wed, 14 Feb 2018 14:24:49 +0000
 
 lintian (2.5.74) unstable; urgency=medium
 
