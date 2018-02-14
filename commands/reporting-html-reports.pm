@@ -1158,8 +1158,8 @@ sub output_template {
                 %{$data},
             }) or die "Filling out footer of $file: $Text::Template::ERROR\n";
     };
-    $data->{config_vars} ||= $TEMPLATE_CONFIG_VARS,
-      open(my $fd, '>:encoding(UTF-8)', "$HTML_TMP_DIR/$file");
+    $data->{config_vars} ||= $TEMPLATE_CONFIG_VARS;
+    open(my $fd, '>:encoding(UTF-8)', "$HTML_TMP_DIR/$file");
     $template->fill_in(OUTPUT => $fd, HASH => $data)
       or die "filling out $file failed: $Text::Template::ERROR\n";
     close($fd);
