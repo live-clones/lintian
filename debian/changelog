@@ -32,7 +32,7 @@ lintian (2.5.75) UNRELEASED; urgency=medium
       comment in debian/changelog.
   * checks/scripts.{desc,pm}:
     + [CL] Check for maintainer scripts that call udevadm without a guard
-      as it can fail within a chroot.  (Closes: #890224)
+      as it can fail within a chroot.  (Closes: #890298)
   * checks/source-copyright.{desc,pm}:
     + [CL] Emit a pendatic warning for packages with repacked upstream
       tarballs that lack a Files-Excluded or Comment header in
