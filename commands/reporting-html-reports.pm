@@ -917,7 +917,7 @@ sub parse_lintian_log {
         # Ignore unknown tags - happens if we removed a tag that is
         # still present in the log file.
         my $tag_info = $profile->get_tag($tag, 1);
-        next unless $tag_info;
+        next if not $tag_info or $tag_info->severity eq 'classification';
 
         # Update statistics.
         my $key = $expanded_code{$code};
