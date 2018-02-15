@@ -399,6 +399,7 @@ sub process_worklist {
         } else {
             log_msg('Lintian finished successfully');
         }
+        log_msg('Updating the lintian log used for reporting');
         my $filter = generate_log_filter($state, \%processed);
         seek($nfd, 0, SEEK_END);
         update_lintian_log($filter, $nfd, $new_lintian_log);
