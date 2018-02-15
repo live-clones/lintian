@@ -444,9 +444,10 @@ sub run {
 
     if (my $line = $overridden{'dh_auto_test'}) {
         my @lines = grep {
-                  $_ !~ m/^\t\s*\:/
-              and $_ !~ m/\bdh_auto_test\b/
-              and $_ !~ m/^\t\s*[-@]?(?:cp|echo|mkdir)/
+                  $_ !~ m{^\t\s*[\:\[]}
+              and $_ !~ m{\bdh_auto_test\b}
+              and $_
+              !~ m{^\t\s*[-@]?(?:(?:/usr)?/bin/)?(?:cp|chmod|echo|ln|mv|mkdir|rm|test|true)}
         } @{$rules_per_target{'override_dh_auto_test'}};
         tag 'override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS',
           "(line $line)"
