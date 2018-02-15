@@ -4,7 +4,7 @@ lintian (2.5.76) UNRELEASED; urgency=medium
 
   * checks/cruft.pm:
     + [CL] Avoid false-positives in Jush's syntax highlighting definition
-       files.
+      files.
 
   * debian/source/lintian-overrides:
     + [CL] Drop all the overrides for Lintian titself now that we use the
