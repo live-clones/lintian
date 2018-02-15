@@ -748,6 +748,7 @@ sub main {
         # Do not start a new group if we have a signal pending.
         retrigger_signal() if $received_signal;
 
+        v_msg("Starting on group $gname");
         my $total_raw_res = timed_task {
             my @group_lpkg;
             my $raw_res = timed_task {
@@ -808,6 +809,7 @@ sub main {
         } else {
             print {$STATUS_FD} "error ${gname}${total_tres}\n";
         }
+        v_msg("Finished processing group $gname");
     }
 
     # Write the lab state to the disk, so it remembers the new packages
