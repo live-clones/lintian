@@ -1,0 +1,5 @@
+#!/bin/sh
+
+mkdir -p $1/debian/missing-sources
+cp $1/hello.c $1/debian/missing-sources/sourced.c
+ln -s sourced.c $1/debian/missing-sources/symlink-to-sourced.c

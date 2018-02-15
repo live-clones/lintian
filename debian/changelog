@@ -6,6 +6,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Drop all the overrides for Lintian titself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
 
+  * t/tests/cruft-upstream-binaries:
+    + [CL] Add a testcase to check that symlinked missing-sources do the
+      right thing (re. #890468).
+
  -- Chris Lamb <lamby@debian.org>  Wed, 14 Feb 2018 15:06:27 +0000
 
 lintian (2.5.75) unstable; urgency=medium
