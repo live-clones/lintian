@@ -104,7 +104,8 @@ foreach (split /\n/,$changes) {
         ok($prev_head eq '-', 'line is a continuation of tag change')
           or diag("line: $line");
     } else {
-        ok(m/^(:?\.|lintian.+)$/, 'line is an entry header')
+        ok(m/^(:?\.|lintian.+)$/,
+            'line is an entry header (possible leading whitespace?)')
           or diag("line: $line");
     }
 

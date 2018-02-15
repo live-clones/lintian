@@ -10,6 +10,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Drop all the overrides for Lintian titself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
 
+  * t/scripts/changelog-format.t:
+    + [CL] Provide some possibly-helpful advice when violating the "entry
+      header" changelog test.
   * t/tests/cruft-upstream-binaries:
     + [CL] Add a testcase to check that symlinked missing-sources do the
       right thing (re. #890468).
