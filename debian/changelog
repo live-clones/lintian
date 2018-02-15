@@ -5,6 +5,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] Avoid false-positives in Jush's syntax highlighting definition
       files.
+  * checks/fields.desc:
+    + [CL] Correct a grammatical error and tighten up the language of the
+      "binary-package-depends-on-toolchain-package" tag's description.
+      Thanks to Gregor Herrmann for the report.  (Closes: #890530)
 
   * debian/source/lintian-overrides:
     + [CL] Drop all the overrides for Lintian titself now that we use the

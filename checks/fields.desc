@@ -1419,12 +1419,12 @@ Ref: lintian 2.4.3, #787406
 Tag: binary-package-depends-on-toolchain-package
 Severity: normal
 Certainty: possible
-Info: The package specifies a binary dependecy on a "toolchain" package
- such as debhelper or cdbs. This is likely to a mistake as these packages
- are typically specified as build-dependencis.
+Info: This package specifies a binary dependency on a "toolchain" package
+ such as debhelper or cdbs. This is likely to be a mistake; these
+ packages are typically specified as build-dependencies instead.
  .
  If the package intentionally requires such a dependency, please add a
- Lintian override.
+ Lintian override with a justifying remark.
 
 Tag: unusual-documentation-package-name
 Severity: wishlist
