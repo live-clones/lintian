@@ -1023,6 +1023,11 @@ sub _search_in_block0 {
         elsif ($block =~ m/css_browser_selector\(/) {
             return;
         }
+        # Avoid false-positives in Jush's syntax highlighting definition files.
+        elsif ($block =~ m/jush\.tr\./) {
+            return;
+        }
+
         # now search hidden minified
         _linelength_test($entry, $info, $name, $basename, $dirname,$block);
     }
