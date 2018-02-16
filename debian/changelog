@@ -28,6 +28,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
   * lib/Lintian/Util.pm:
     + [CL] Factor out the regex that matches "repacked" tarballs based on
       their filename.
+  * lib/Lintian/Collect/{Changes,Sources}.pm:
+    + [CL] Add repacked subroutines to check whether a package has been
+      repacked or not.
 
   * t/scripts/changelog-format.t:
     + [CL] Provide some possibly-helpful advice when violating the "entry

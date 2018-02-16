@@ -200,7 +200,7 @@ sub run {
         if (   $has_signing_key
             && $file =~ m/\.orig(-[A-Za-z\d-]+)?\.tar\./
             && $file !~ m/\.asc$/
-            && $info->field('version') !~ m/(?:dfsg|debian|ds|repack)/) {
+            && !$info->repacked) {
             tag 'orig-tarball-missing-upstream-signature', $file
               unless exists $files->{"$file.asc"};
         }

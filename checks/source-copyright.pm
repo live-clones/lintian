@@ -284,7 +284,7 @@ sub _parse_dep5 {
       if $info->source_field('section', '') =~ m{^(contrib|non-free)(/.+)?$}
       and none { defined $first_para->{$_} } qw(comment disclaimer);
     tag 'missing-explanation-for-repacked-upstream-tarball'
-      if $info->field('version', '') =~ m{(?:dfsg|debian|ds|repack)}
+      if $info->repacked
       and none { defined $first_para->{$_} } qw(comment files-excluded);
 
     my (undef, $full_license_header, undef,@short_licenses_header)

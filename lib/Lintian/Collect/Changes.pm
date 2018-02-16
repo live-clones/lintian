@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use parent 'Lintian::Collect';
 
-use Lintian::Util qw(strip);
+use Lintian::Util qw(strip $PKGREPACK_REGEX);
 
 =head1 NAME
 
@@ -166,6 +166,23 @@ sub files {
 
     $self->{files} = \%files;
     return $self->{files};
+}
+
+=item repacked
+
+Returns true if the source package referenced in this changes file has been
+"repacked" and false otherwise. This is determined from the version name
+containing "dfsg" or similar.
+
+Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
+=cut
+
+sub repacked {
+    my ($self) = @_;
+    return $self->{repacked} if exists $self->{repacked};
+    $self->{repacked} = $self->field('version', '') =~ $PKGREPACK_REGEX;
+    return $self->{repacked};
 }
 
 =back

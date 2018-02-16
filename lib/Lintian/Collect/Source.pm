@@ -29,7 +29,8 @@ use Scalar::Util qw(blessed);
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
-use Lintian::Util qw(get_file_checksum read_dpkg_control $PKGNAME_REGEX);
+use Lintian::Util
+  qw(get_file_checksum read_dpkg_control $PKGNAME_REGEX $PKGREPACK_REGEX);
 
 =head1 NAME
 
@@ -184,6 +185,22 @@ sub native {
         }
     }
     return $self->{native};
+}
+
+=item repacked
+
+Returns true if the source package has been "repacked" and false otherwise.
+This is determined from the version name containing "dfsg" or similar.
+
+Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
+
+=cut
+
+sub repacked {
+    my ($self) = @_;
+    return $self->{repacked} if exists $self->{repacked};
+    $self->{repacked} = $self->field('', '1.0-1') =~ $PKGREPACK_REGEX;
+    return $self->{repacked};
 }
 
 =item binaries
