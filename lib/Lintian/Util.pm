@@ -93,6 +93,7 @@ BEGIN {
           pipe_tee
           untaint
           $PKGNAME_REGEX
+          $PKGREPACK_REGEX
           $PKGVERSION_REGEX
           ),
         @{ $EXPORT_TAGS{constants} });
@@ -215,6 +216,15 @@ is not anchored and does not enforce any "boundary" characters.
 =cut
 
 our $PKGNAME_REGEX = qr/[a-z0-9][-+\.a-z0-9]+/o;
+
+=item $PKGREPACK_REGEX
+
+Regular expression that matches "repacked" package names.  The expression is
+not anchored and does not enforce any "boundary" characters.
+
+=cut
+
+our $PKGREPACK_REGEX = qr/(dfsg|debian|ds|repack)/o;
 
 =item $PKGVERSION_REGEX
 

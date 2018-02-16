@@ -22,6 +22,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Drop all the overrides for Lintian titself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
 
+  * lib/Lintian/Util.pm:
+    + [CL] Factor out the regex that matches "repacked" tarballs based on
+      their filename.
+
   * t/scripts/changelog-format.t:
     + [CL] Provide some possibly-helpful advice when violating the "entry
       header" changelog test.
