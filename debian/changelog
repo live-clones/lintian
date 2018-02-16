@@ -13,6 +13,8 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Update override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
       to fix a number of false positives. Thanks to Gregor Herrmann for
       the report.  (Closes: #890537)
+    + [CL] Also check, for example, "override_dh_fixperms-indep" targets
+      for "override_dh_fixperms-does-not-call-dh_fixperms", etc.
   * checks/scripts.pm:
     + [CL] Prevent some false-positives in udevadm-called-without-guard.
 

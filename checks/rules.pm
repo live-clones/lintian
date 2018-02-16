@@ -435,11 +435,13 @@ sub run {
     }
 
     foreach my $cmd (qw(dh_clean dh_fixperms)) {
-        my $line = $overridden{$cmd};
-        tag "override_$cmd-does-not-call-$cmd", "(line $line)"
-          if $line
-          and none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
-        @{$rules_per_target{"override_$cmd"}};
+        foreach my $suffix ('', '-indep') {
+            my $line = $overridden{"$cmd$suffix"};
+            tag "override_$cmd-does-not-call-$cmd", "(line $line)"
+              if $line
+              and none { m/^\t\s*-?($cmd\b|\$\(overridden_command\))/ }
+            @{$rules_per_target{"override_$cmd$suffix"}};
+        }
     }
 
     if (my $line = $overridden{'dh_auto_test'}) {
