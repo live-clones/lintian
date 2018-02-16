@@ -715,8 +715,8 @@ sub run {
                 $seen_helper_cmds{$cmd}{$file} = 1;
             }
 
+            $saw_udevadm_guard = 1 if m/\b(if|which|command)\s+.*udevadm/g;
             if (m,$LEADIN(?:/bin/)?udevadm\s, and $saw_sete) {
-                $saw_udevadm_guard = 1 if m/\bif\s+/g;
                 tag 'udevadm-called-without-guard', "$file:$."
                   unless $saw_udevadm_guard or m/\|\|/;
             }
