@@ -17,6 +17,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
       for "override_dh_fixperms-does-not-call-dh_fixperms", etc.
   * checks/scripts.pm:
     + [CL] Prevent some false-positives in udevadm-called-without-guard.
+  * checks/watch-file.pm:
+    + [CL] Use our new $PKGREPACK_REGEX to match and capture the suffix
+      when looking at potential debian/watch mangling issues.
 
   * debian/source/lintian-overrides:
     + [CL] Drop all the overrides for Lintian titself now that we use the

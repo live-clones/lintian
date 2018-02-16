@@ -26,6 +26,7 @@ use warnings;
 use autodie;
 
 use Lintian::Tags qw(tag);
+use Lintian::Util qw($PKGREPACK_REGEX);
 
 our $WATCH_VERSION = Lintian::Data->new('watch-file/version', qr/\s*=\s*/o);
 our $SIGNING_KEY_FILENAMES= Lintian::Data->new('common/signing-key-filenames');
@@ -49,7 +50,7 @@ sub run {
     # source package sign, for fine grained version mangling check
     # If the version field is missing, we assume a neutral non-native one.
     my $version = $info->field('version', '0-1');
-    if ($version =~ /(dfsg|debian|ds|repack)/) {
+    if ($version =~ $PKGREPACK_REGEX) {
         $repack = $1;
     }
     if ($version =~ /(alpha|beta|rc)/i) {
