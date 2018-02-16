@@ -434,7 +434,7 @@ sub run {
     }
 
     foreach my $cmd (qw(dh_clean dh_fixperms)) {
-        foreach my $suffix ('', '-indep') {
+        foreach my $suffix ('', '-indep', '-arch') {
             my $line = $overridden{"$cmd$suffix"};
             tag "override_$cmd-does-not-call-$cmd", "(line $line)"
               if $line

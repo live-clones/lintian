@@ -7,3 +7,4 @@
 override_dh_clean:
 override_dh_fixperms:
 override_dh_fixperms-indep:
+override_dh_fixperms-arch:
