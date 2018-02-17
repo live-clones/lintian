@@ -178,7 +178,7 @@ sub run {
         my $line = $_;
 
         tag 'debian-rules-is-dh_make-template'
-          if $. == 2 and $line eq "# See debhelper(7) (uncomment to enable)\n";
+          if $line =~ m/dh_make generated override targets/;
 
         next if /^\s*\#/;
         if (m/^\s*[s-]?include\s+(\S++)/o){
