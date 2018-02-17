@@ -35,6 +35,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
       should migrate to the compressed variant, which has been around
       for years and only consumes ~1/20th of the space.
 
+  * data/scripts/interpreters:
+    + [CL] Add cwl-runner (to cwltool) as an interpreter for CWL scripts.
+      Thanks to Michael Crusoe for the report.  (Closes: #890667)
+
   * debian/source/lintian-overrides:
     + [CL] Drop all the overrides for Lintian titself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
