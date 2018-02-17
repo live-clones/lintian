@@ -199,7 +199,7 @@ Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/
 sub repacked {
     my ($self) = @_;
     return $self->{repacked} if exists $self->{repacked};
-    $self->{repacked} = $self->field('', '1.0-1') =~ $PKGREPACK_REGEX;
+    $self->{repacked} = $self->field('version', '') =~ $PKGREPACK_REGEX;
     return $self->{repacked};
 }
 
