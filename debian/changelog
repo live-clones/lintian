@@ -22,6 +22,12 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Use our new $PKGREPACK_REGEX to match and capture the suffix
       when looking at potential debian/watch mangling issues.
 
+  * commands/reporting-html-reports.pm:
+    + [NT] Stop including the uncompressed lintian log in the website
+      as it consumes considerable space for no reason.  Consumers
+      should migrate to the compressed variant, which has been around
+      for years and only consumes ~1/20th of the space.
+
   * debian/source/lintian-overrides:
     + [CL] Drop all the overrides for Lintian titself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.

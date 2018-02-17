@@ -543,16 +543,8 @@ sub setup_output_dir {
             'in'  => $lintian_log_file,
             'out' => "$output_dir/lintian.log.gz",
         );
-        $RESOURCE_MANAGER->install_resource(
-            'lintian.log',
-            {
-                'install_method' => 'copy',
-                'source_file' => $lintian_log_file,
-            });
         run_cmd(\%opts, 'gzip', '-9nc');
         $RESOURCE_MANAGER->install_resource("$output_dir/lintian.log.gz");
-        symlink($RESOURCE_MANAGER->resource_URL('lintian.log'),
-            "$output_dir/lintian.log");
         symlink($RESOURCE_MANAGER->resource_URL('lintian.log.gz'),
             "$output_dir/lintian.log.gz");
     }
