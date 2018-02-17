@@ -172,7 +172,7 @@ sub files {
 
 Returns true if the source package referenced in this changes file has been
 "repacked" and false otherwise. This is determined from the version name
-containing various known strings.
+containing "dfsg" or similar.
 
 Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
 
