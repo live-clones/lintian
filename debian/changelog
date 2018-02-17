@@ -39,6 +39,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Add repacked subroutines to check whether a package has been
       repacked or not.
 
+  * reporting/templates/maintainer.tmpl:
+    + [CL] Link package entries directly to sources.debian.org.
+
   * t/scripts/changelog-format.t:
     + [CL] Provide some possibly-helpful advice when violating the "entry
       header" changelog test.
