@@ -5,6 +5,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] Avoid false-positives in Jush's syntax highlighting definition
       files.
+  * checks/debhelper.{desc,pm}:
+    + [CL] Warn if packages define multiple compatibility levels in the
+      "compat" file, typically via "echo 11 >> debian/compat" (instead of
+      ">").
   * checks/fields.desc:
     + [CL] Correct a grammatical error and tighten up the language of the
       "binary-package-depends-on-toolchain-package" tag's description.

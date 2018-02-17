@@ -282,6 +282,7 @@ sub run {
     if ($compat_file and $compat_file->is_open_ok) {
         my $compat_file = $compat_file->file_contents;
         ($compat) = split(/\n/, $compat_file);
+        tag 'debhelper-compat-file-contains-multiple-levels' if $compat > 1;
         strip($compat);
         if ($compat ne '') {
             my $compat_value = $compat;
