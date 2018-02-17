@@ -2,4 +2,4 @@ Testname: debhelper-compat-multiple
 Version: 1.0
 Description: Test debian/compat file with multiple entries
 Test-For:
- debhelper-compat-file-multiple
+ debhelper-compat-file-contains-multiple-levels
