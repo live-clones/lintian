@@ -190,7 +190,7 @@ sub native {
 =item repacked
 
 Returns true if the source package has been "repacked" and false otherwise.
-This is determined from the version name containing "dfsg" or similar.
+This is determined from the version containing various known strings.
 
 Needs-Info requirements for using I<repacked>: L<Same as field|Lintian::Collect/field ([FIELD[, DEFAULT]])>
 
