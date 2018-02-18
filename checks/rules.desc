@@ -374,3 +374,14 @@ Info: The <tt>debian/rules</tt> file for this package has an
   mkdir foo/
   ENV=var dh_auto_test -- ARG=value
 Ref: policy 4.9.1, https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
+
+Tag: unnecessary-source-date-epoch-assignment
+Severity: wishlist
+Certainty: certain
+Info: There is an assignment to a <tt>SOURCE_DATE_EPOCH</tt> variable in the
+ <tt>debian/rules</tt> file.
+ .
+ As of dpkg 1.18.8, this is no longer necessary as dpkg exports this
+ variable if it is not already set. However, you can also include
+ <tt>/usr/share/dpkg/pkg-info.mk</tt> or <tt>/usr/share/dpkg/default.pk</tt>
+ to ensure it is exported.

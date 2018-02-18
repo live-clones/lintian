@@ -13,7 +13,7 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Correct a grammatical error and tighten up the language of the
       "binary-package-depends-on-toolchain-package" tag's description.
       Thanks to Gregor Herrmann for the report.  (Closes: #890530)
-  * checks/rules.pm:
+  * checks/rules.{desc,pm}:
     + [CL] Update override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
       to fix a number of false positives. Thanks to Gregor Herrmann for
       the report.  (Closes: #890537)
@@ -23,6 +23,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Prevent a large number of false-positives when checking the
       debian-rules-is-dh_make-template tag.  Thanks to Evgeni Golov for
       the report.  (Closes: #890660)
+    + [CL] Check for unnecessary SOURCE_DATE_EPOCH assignments; it is
+      either exported by dpkg >= 1.18.8 or one can include pkg-info.pk,
+      etc.  (Closes: #832099)
   * checks/scripts.pm:
     + [CL] Prevent some false-positives in udevadm-called-without-guard.
   * checks/watch-file.pm:

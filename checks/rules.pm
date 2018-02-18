@@ -251,6 +251,8 @@ sub run {
             # rather well.
             my ($var, $value) = ($1, $2);
             $variables{$var} = $value;
+            tag 'unnecessary-source-date-epoch-assignment', "(line $.)"
+              if $var eq 'SOURCE_DATE_EPOCH';
         }
 
         # Keep track of whether this portion of debian/rules may be optional
