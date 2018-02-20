@@ -13,6 +13,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Correct a grammatical error and tighten up the language of the
       "binary-package-depends-on-toolchain-package" tag's description.
       Thanks to Gregor Herrmann for the report.  (Closes: #890530)
+  * checks/init.d.pm:
+    + [CL] Also check for "RUN=" and "DAEMONRUN=" when evalating lines in
+      /etc/default for "init.d-script-should-always-start-service"
+      violations. Thanks to Laurent Bigonville.  (Closes: #890916)
   * checks/rules.{desc,pm}:
     + [CL] Update override_dh_auto_test-does-not-check-DEB_BUILD_OPTIONS
       to fix a number of false positives. Thanks to Gregor Herrmann for

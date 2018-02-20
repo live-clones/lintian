@@ -375,7 +375,7 @@ Tag: init.d-script-should-always-start-service
 Severity: important
 Certainty: possible
 Info: The specified file under <tt>/etc/default/</tt> includes a line
- such as <tt>ENABLED=</tt> or <tt>DISABLED=</tt>.
+ such as <tt>ENABLED=</tt>, <tt>DISABLED=</tt>, <tt>RUN=</tt>, etc.
  .
  This is an older practice used so that the package's init script would
  not start the service until the local system administrator changed this

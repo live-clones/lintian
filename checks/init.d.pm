@@ -494,7 +494,7 @@ sub check_defaults {
         my $fd = $path->open;
         while (<$fd>) {
             tag 'init.d-script-should-always-start-service', $path, "(line $.)"
-              if m/^\s*#*\s*(?:ENABLED|DISABLED)=/;
+              if m/^\s*#*\s*(?:ENABLED|DISABLED|[A-Z]*RUN)=/;
         }
         close($fd);
     }
