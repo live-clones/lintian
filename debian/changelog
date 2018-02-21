@@ -1,6 +1,22 @@
-lintian (2.5.76) UNRELEASED; urgency=medium
+lintian (2.5.76) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debhelper-compat-file-contains-multiple-levels
+      - debian-changelog-line-too-short
+      - unnecessary-source-date-epoch-assignment
+      - upstream-metadata-file-is-missing
+    + Renamed:
+      - co-maintained-package-with-no-vcs-headers ->
+        co-maintained-package-with-no-vcs-fields.
+      - desktop-contains-deprecated-header ->
+        desktop-contains-deprecated-key.
+      - xs-testsuite-header-in-debian-control ->
+        xs-testsuite-field-in-debian-control.
+      - unnecessary-testsuite-autopkgtest-header ->
+        unnecessary-testsuite-autopkgtest-field.
+      - xs-vcs-header-in-debian-control ->
+        xs-vcs-field-in-debian-control.
 
   * General:
     + [CL] Apply a patch series from Ben Finney to correct inconsistent use
@@ -57,17 +73,18 @@ lintian (2.5.76) UNRELEASED; urgency=medium
       should migrate to the compressed variant, which has been around
       for years and only consumes ~1/20th of the space.
 
+  * data/files/python-generic-modules:
+    + [CL] Detect "core" as an overly-generic module name.  Thanks to
+      Andreas Beckmann for the report.  (Closes: #891027)
   * data/scripts/interpreters:
     + [CL] Add cwl-runner (to cwltool) as an interpreter for CWL scripts.
       Thanks to Michael Crusoe for the report.  (Closes: #890667)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * debian/source/lintian-overrides:
     + [CL] Drop all the overrides for Lintian itself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
-
-  * data/files/python-generic-modules:
-    + [CL] Detect "core" as an overly-generic module name.  Thanks to
-      Andreas Beckmann for the report.  (Closes: #891027)
 
   * lib/Lintian/Util.pm:
     + [CL] Factor out the regex that matches "repacked" tarballs based on
@@ -86,7 +103,7 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Add a testcase to check that symlinked missing-sources do the
       right thing (re. #890468).
 
- -- Chris Lamb <lamby@debian.org>  Wed, 14 Feb 2018 15:06:27 +0000
+ -- Chris Lamb <lamby@debian.org>  Wed, 21 Feb 2018 18:42:26 +0000
 
 lintian (2.5.75) unstable; urgency=medium
 
