@@ -47,3 +47,4 @@ W: generic-dh-make-2008: new-package-should-close-itp-bug
 W: generic-dh-make-2008: readme-debian-contains-debmake-template
 W: generic-dh-make-2008: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: wrong-bug-number-in-closes l3:#nnnn
+X: generic-dh-make-2008 source: upstream-metadata-file-is-missing

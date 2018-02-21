@@ -22,6 +22,7 @@ Test-For:
  readme-debian-contains-debmake-template
  section-is-dh_make-template
  superfluous-clutter-in-homepage
+ upstream-metadata-file-is-missing
  wrong-bug-number-in-closes
 Test-Against:
  homepage-field-uses-insecure-uri
