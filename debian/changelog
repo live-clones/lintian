@@ -5,6 +5,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] Avoid false-positives in Jush's syntax highlighting definition
       files.
+    + [CL] Avoid a false-positive when matching the fake Lena Söderberg
+      image in libplacebo.  Thanks to Thorsten Alteholz for the report.
+      (Closes: #890943)
   * checks/debhelper.{desc,pm}:
     + [CL] Warn if packages define multiple compatibility levels in the
       "compat" file, typically via "echo 11 >> debian/compat" (instead of

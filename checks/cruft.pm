@@ -154,6 +154,9 @@ my $RFC_WHITELIST =  Lintian::Data->new(
         return qr/$_[0]/xms;
     });
 
+# "Known good" files that match eg. lena.jpg.
+my $LENNA_WHITELIST = Lintian::Data->new('cruft/lenna-whitelist');
+
 # prebuilt-file or forbidden copyright
 my $BAD_LINK_COPYRIGHT =  Lintian::Data->new(
     'cruft/bad-link-copyright',
@@ -707,7 +710,8 @@ sub find_cruft {
                 or $file_info =~ /\bbitmap\b/i
                 or $file_info =~ /^PDF Document\b/i
                 or $file_info =~ /^Postscript Document\b/i) {
-                tag 'license-problem-non-free-img-lenna', $name;
+                tag 'license-problem-non-free-img-lenna', $name
+                  unless $LENNA_WHITELIST->known($md5sum);
             }
 
         }
