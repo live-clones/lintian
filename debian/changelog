@@ -62,7 +62,7 @@ lintian (2.5.76) UNRELEASED; urgency=medium
       Thanks to Michael Crusoe for the report.  (Closes: #890667)
 
   * debian/source/lintian-overrides:
-    + [CL] Drop all the overrides for Lintian titself now that we use the
+    + [CL] Drop all the overrides for Lintian itself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
 
   * data/files/python-generic-modules:
