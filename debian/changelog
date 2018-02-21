@@ -65,6 +65,10 @@ lintian (2.5.76) UNRELEASED; urgency=medium
     + [CL] Drop all the overrides for Lintian titself now that we use the
       <!nocheck> build profile for the previously-spurious warnings.
 
+  * data/files/python-generic-modules:
+    + [CL] Detect "core" as an overly-generic module name.  Thanks to
+      Andreas Beckmann for the report.  (Closes: #891027)
+
   * lib/Lintian/Util.pm:
     + [CL] Factor out the regex that matches "repacked" tarballs based on
       their filename.
