@@ -5,5 +5,5 @@ Description: Tests for missing upstream metadata file
 Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
- debian-watch-may-check-gpg-signature
+ debian-watch-does-not-check-gpg-signature
  upstream-metadata-file-is-missing
