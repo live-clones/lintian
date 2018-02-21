@@ -1,0 +1,14 @@
+{$source} ({$version}) unstable; urgency=low
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+  * The following lines are too short.
+  * R³
+  * dh 11
+  * 12345
+
+  * The following entries are long enough.
+  * dh 11.
+  * 123456
+
+ -- {$author}  {$date}

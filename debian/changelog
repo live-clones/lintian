@@ -7,6 +7,9 @@ lintian (2.5.76) UNRELEASED; urgency=medium
       of "header" terminology (versus "field", etc.) in descriptions and
       tag names.  Thanks!  (Closes: #890959)
 
+  * checks/changelog-file.{desc,pm}:
+    + [CL] Warn about changelog files that are too short.  Thanks to Adrian
+      Bunk for the suggestion.  (Closes: #890920)
   * checks/cruft.pm:
     + [CL] Avoid false-positives in Jush's syntax highlighting definition
       files.
