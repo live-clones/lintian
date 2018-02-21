@@ -140,7 +140,7 @@ Info: This package does not declare a test suite. Having a test suite helps with
  For more information on how to add functional tests to your package, browse to
  https://ci.debian.net/doc/.
 
-Tag: unnecessary-testsuite-autopkgtest-header
+Tag: unnecessary-testsuite-autopkgtest-field
 Severity: normal
 Certainty: certain
 Info: You do not need to specify a <tt>Testsuite: autopkgtest</tt> field if

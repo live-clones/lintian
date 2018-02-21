@@ -92,11 +92,11 @@ sub run {
             if ($field =~ /^xs-vcs-/) {
                 my $base = $field;
                 $base =~ s/^xs-//;
-                tag 'xs-vcs-header-in-debian-control', $field
+                tag 'xs-vcs-field-in-debian-control', $field
                   if $src_fields->known($base);
             }
             if ($field eq 'xs-testsuite') {
-                tag 'xs-testsuite-header-in-debian-control', $field;
+                tag 'xs-testsuite-field-in-debian-control', $field;
             }
             if ($field eq 'xc-package-type') {
                 tag 'xc-package-type-in-debian-control', "line $.";

@@ -159,21 +159,21 @@ Tag: invalid-short-name-in-dep5-copyright
 Severity: minor
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The license header contains a short name observed to be a
+Info: The “License” field contains a short name observed to be a
  misspelling of one of the standard short names.
 
 Tag: space-in-std-shortname-in-dep5-copyright
 Severity: minor
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The license header contains a short name with a space, which
+Info: The “License” field contains a short name with a space, which
  does not conform to the specification.
 
 Tag: bad-exception-format-in-dep5-copyright
 Severity: minor
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The license header contains a short name with a bad exception
+Info: The “License” field contains a short name with a bad exception
  format. According to specification format of exception is:
  shortlicencename with exceptionname exception.
  .
@@ -191,8 +191,8 @@ Tag: missing-license-text-in-dep5-copyright
 Severity: normal
 Certainty: possible
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Info: The standalone license header contains only short license name, but not
- the license text.
+Info: The standalone “License” paragraph contains only short license
+ name, but not the license text.
 
 Tag: unused-license-paragraph-in-dep5-copyright
 Severity: minor
@@ -330,7 +330,7 @@ Info: The <tt>Files</tt> paragraph in debian/copyright appears to be
 Tag: source-includes-file-in-files-excluded
 Severity: serious
 Certainty: possible
-Info: A file specified in the <tt>Files-Excluded</tt> header in
+Info: A file specified in the <tt>Files-Excluded</tt> field in
  debian/copyright exists in the source tree.
  .
  This might be a DFSG violation, the referenced files are probably not
@@ -395,7 +395,7 @@ Tag: missing-explanation-for-contrib-or-non-free-package
 Severity: wishlist
 Certainty: certain
 Info: The specified package is in the contrib or non-free archive
- area but does not include a "Comment" (or "Disclaimer") header in
+ area but does not include a "Comment" (or "Disclaimer") field in
  its copyright file.
  .
  Please add a brief comment why this package cannot be part of the
@@ -408,7 +408,7 @@ Certainty: possible
 Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  or <tt>debian</tt> which normally indicates that the upstream source
  has been repackaged, but there is no "Comment" or "Files-Excluded"
- header in its copyright file which explains the reason why.
+ field in its copyright file which explains the reason why.
  .
  Please add a comment why this tarball was repacked or add a suitable
- "Files-Excluded" header.
+ "Files-Excluded" field.

@@ -3,7 +3,7 @@
 # tag-stats - tag classification statistics
 #
 # This script displays statistics and data for tag classification based on
-# Severity/Certainty headers and their mapping to a E/W/I code.
+# Severity/Certainty fields and their mapping to a E/W/I code.
 #
 # The verbose options (-v, -vv, -vvv) can be used to display a detailed list
 # of which tags are assigned to each category.

@@ -25,7 +25,7 @@ Test-For:
  depends-on-metapackage
  description-contains-homepage
  desktop-command-not-in-package
- desktop-contains-deprecated-header
+ desktop-contains-deprecated-key
  desktop-entry-contains-encoding-key
  desktop-entry-contains-unknown-key
  desktop-entry-file-has-crs
@@ -92,6 +92,6 @@ Test-For:
  unquoted-string-in-menu-item
  unstripped-binary-or-object
  vcs-field-uses-insecure-uri
- xs-vcs-header-in-debian-control
+ xs-vcs-field-in-debian-control
 Test-Against:
  arch-dep-package-has-big-usr-share

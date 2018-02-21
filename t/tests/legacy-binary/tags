@@ -49,7 +49,7 @@ E: binary: unstripped-binary-or-object usr/bin/hello
 I: binary source: binary-control-field-duplicates-source field "vcs-svn" in package binary
 I: binary source: vcs-field-uses-insecure-uri vcs-browser http://svn.wolffelaar.nl/lintian/trunk
 I: binary source: vcs-field-uses-insecure-uri vcs-svn http://svn.wolffelaar.nl/lintian/trunk
-I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
+I: binary source: xs-vcs-field-in-debian-control xs-vcs-browser
 I: binary-data: capitalization-error-in-description subversion Subversion
 I: binary: binary-has-unneeded-section usr/bin/hello-static .comment
 I: binary: capitalization-error-in-description debian Debian
@@ -86,7 +86,7 @@ W: binary: command-in-menu-file-and-desktop-file hello usr/share/menu/binary:5
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package usr/share/applications/goodbye.desktop goodbye
-W: binary: desktop-contains-deprecated-header usr/share/applications/hello.desktop:4
+W: binary: desktop-contains-deprecated-key usr/share/applications/hello.desktop:4
 W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.desktop:5 SpecialTag
 W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.desktop:7 icon
 W: binary: desktop-entry-file-has-crs usr/share/applications/hello.desktop:7

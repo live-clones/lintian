@@ -287,15 +287,15 @@ sub _parse_dep5 {
       if $info->repacked
       and none { defined $first_para->{$_} } qw(comment files-excluded);
 
-    my (undef, $full_license_header, undef,@short_licenses_header)
+    my (undef, $full_license_field, undef,@short_licenses_field)
       =parse_license($first_para->{'license'}, 1);
-    for my $short_license (@short_licenses_header) {
+    for my $short_license (@short_licenses_field) {
         $required_standalone_licenses{$short_license} = 0
-          if not defined($full_license_header);
+          if not defined($full_license_field);
         $short_licenses_seen{$short_license}          = 1;
     }
-    if(defined($full_license_header)) {
-        for (@short_licenses_header) {
+    if(defined($full_license_field)) {
+        for (@short_licenses_field) {
             $standalone_licenses{$_} = -1;
             $full_licenses_seen{$_} = 1;
         }

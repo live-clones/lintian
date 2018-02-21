@@ -1387,7 +1387,7 @@ sub run {
     tag 'vcs-fields-use-more-than-one-vcs', sort keys %seen_vcs
       if keys %seen_vcs > 1;
 
-    tag 'co-maintained-package-with-no-vcs-headers'
+    tag 'co-maintained-package-with-no-vcs-fields'
       if $type eq 'source'
       and $is_comaintained
       and not %seen_vcs;

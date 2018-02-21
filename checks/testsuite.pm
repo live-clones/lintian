@@ -106,7 +106,7 @@ sub run {
             check_control_contents($info, $path);
         }
 
-        tag 'unnecessary-testsuite-autopkgtest-header'
+        tag 'unnecessary-testsuite-autopkgtest-field'
           if $info->source_field('testsuite') // '' eq 'autopkgtest';
     }
     return;

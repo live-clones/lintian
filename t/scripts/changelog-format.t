@@ -36,7 +36,7 @@ my $line = 0;
 my $prev_head = '';
 my $release_header = 0;
 my $is_release = 1;
-my $saw_todo_header = 0;
+my $saw_todo_marker = 0;
 $is_release = 0 if $changelog->dpkg->{'Distribution'} eq 'UNRELEASED';
 
 foreach (split /\n/,$changes) {
@@ -54,7 +54,7 @@ foreach (split /\n/,$changes) {
 
     # Ignore the reminder to generate the tag summary
     if ($line < 10 && m/XXX: generate tag summary/) {
-        $saw_todo_header = 1;
+        $saw_todo_marker = 1;
         next;
     }
 
@@ -121,11 +121,11 @@ foreach (split /\n/,$changes) {
 }
 
 if ($is_release) {
-    ok(!$saw_todo_header,
+    ok(!$saw_todo_marker,
         'RELEASE BUILD WITH TODO-marker in changelog for tag summary!')
       or diag('Replace it with output of private/generate-tag-summary');
 } else {
-    ok($saw_todo_header,
+    ok($saw_todo_marker,
         'UNRELEASED but NO TODO-marker in changelog for tag summary!')
       or diag('Instead an "XXX: generate tag summary" in d/changelog');
 }

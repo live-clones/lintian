@@ -2,6 +2,11 @@ lintian (2.5.76) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * General:
+    + [CL] Apply a patch series from Ben Finney to correct inconsistent use
+      of "header" terminology (versus "field", etc.) in descriptions and
+      tag names.  Thanks!  (Closes: #890959)
+
   * checks/cruft.pm:
     + [CL] Avoid false-positives in Jush's syntax highlighting definition
       files.

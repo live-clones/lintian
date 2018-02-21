@@ -225,9 +225,9 @@ sub run {
 
     # This check is a bit prone to false positives, since some other
     # licenses mention the GPL.  Also exclude any mention of the GPL
-    # following what looks like mail headers, since sometimes e-mail
-    # discussions of licensing are included in the copyright file but
-    # aren't referring to the license of the package.
+    # following what looks like mail header fields, since sometimes
+    # e-mail discussions of licensing are included in the copyright
+    # file but aren't referring to the license of the package.
     if (
         not(
                m,/usr/share/common-licenses,

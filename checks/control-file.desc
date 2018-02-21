@@ -105,20 +105,20 @@ Info: The <tt>debian/control</tt> file places the indicated binary package
  area of the archive, with the single exception that source packages in
  main may also build binary packages in contrib.
 
-Tag: xs-vcs-header-in-debian-control
+Tag: xs-vcs-field-in-debian-control
 Severity: wishlist
 Certainty: certain
 Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  of dpkg 1.14.6, the XS- prefix is no longer necessary.  dpkg now
- recognizes these headers and handles them correctly.  Consider removing
+ recognizes these fields and handles them correctly.  Consider removing
  the XS- prefix for this field.
 
-Tag: xs-testsuite-header-in-debian-control
+Tag: xs-testsuite-field-in-debian-control
 Severity: wishlist
 Certainty: certain
 Info: There is an XS-Testsuite field in the <tt>debian/control</tt> file.  As
  of dpkg 1.17.10, the XS- prefix is no longer necessary.  dpkg now
- recognizes this header and handles it correctly.  As of dpkg 1.17.11 the
+ recognizes this field and handles it correctly.  As of dpkg 1.17.11 the
  field is automatically added by dpkg-source with the value "autopkgtest" if
  there is a non-empty <tt>debian/tests/control</tt> file present.  Consider
  either removing the XS- prefix for this field or removing the field

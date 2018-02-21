@@ -1,2 +1,2 @@
-I: testsuite-unknown-suite source: xs-testsuite-header-in-debian-control xs-testsuite
+I: testsuite-unknown-suite source: xs-testsuite-field-in-debian-control xs-testsuite
 W: testsuite-unknown-suite source: unknown-testsuite golf

@@ -1,3 +1,3 @@
-P: control-has-empty-field source: co-maintained-package-with-no-vcs-headers
+P: control-has-empty-field source: co-maintained-package-with-no-vcs-fields
 P: control-has-empty-field source: debian-control-has-empty-field field "suggests" in package control-has-empty-field
 P: control-has-empty-field source: debian-control-has-empty-field field "vcs-browser" in source paragraph

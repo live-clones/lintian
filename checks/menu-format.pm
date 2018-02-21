@@ -577,7 +577,7 @@ sub verify_desktop_file {
         unless ($saw_first) {
             return unless $line =~ /^\[(KDE )?Desktop Entry\]\s*$/;
             $saw_first = 1;
-            tag 'desktop-contains-deprecated-header', "$file:$."
+            tag 'desktop-contains-deprecated-key', "$file:$."
               if ($line =~ /^\[KDE Desktop Entry\]\s*$/);
         }
 

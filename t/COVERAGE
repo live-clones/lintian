@@ -44,7 +44,7 @@ init.d postrm-does-not-call-updaterc.d-for-init.d-script
 init.d preinst-calls-updaterc.d
 init.d prerm-calls-updaterc.d
 
-menu-format desktop-contains-deprecated-header
+menu-format desktop-contains-deprecated-key
 menu-format desktop-entry-missing-required-key
 menu-format menu-item-missing-required-tag
 menu-format menu-item-needs-tag-has-unknown-value
@@ -86,7 +86,7 @@ Breakdown of remaining tags in legacy test suite by test case:
 
 binary
   binary-has-unneeded-section
-  desktop-contains-deprecated-header
+  desktop-contains-deprecated-key
   desktop-entry-missing-required-key
   doc-base-document-field-ends-in-whitespace
   doc-base-file-duplicated-format
