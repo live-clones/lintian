@@ -350,3 +350,27 @@ Info: This package builds a binary package containing at least one path
  Please specify (eg.) <tt>Rules-Requires-Root: binary-targets</tt> in
  the <tt>debian/control</tt> source stanza.
 Ref: /usr/share/doc/dpkg-dev/rootless-builds.txt.gz
+
+Tag: missing-built-using-field-for-golang-package
+Severity: wishlist
+Certainty: certain
+Info: This package builds a binary package which does not include
+ <tt>${misc:Built-Using}</tt> in its <tt>Built-Using</tt> control field.
+ .
+ The <tt>${misc:Built-Using}</tt> substvar is populated by
+ <tt>dh-golang(1)</tt> and used for scheduling binNMUs.
+ .
+ Please add the following line to your package definition:
+ .
+  <tt>Built-Using: ${misc:Built-Using}</tt>
+
+Tag: built-using-field-on-arch-all-package
+Severity: wishlist
+Certainty: certain
+Info: This package builds a binary arch:all package which incorrectly
+ specifies a Built-Using control field.
+ .
+ <tt>Built-Using</tt> only applies to architecture-specific packages.
+ .
+ Please remove the <tt>Built-Using</tt> line from your package
+ definition.

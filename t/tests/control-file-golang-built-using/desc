@@ -1,0 +1,6 @@
+Testname: control-file-golang-built-using
+Version: 1.0
+Description: False-positive test for Built-Using field
+Architecture: any
+Test-Against: missing-built-using-field-for-golang-package
+Test-For: built-using-field-on-arch-all-package
