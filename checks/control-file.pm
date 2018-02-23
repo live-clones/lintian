@@ -427,9 +427,9 @@ sub run {
           unless $relation->implies('${gir:Depends}');
     }
 
-    # Verify that golang binary packages set Built-Using (except for arch:all
-    # library packages).
     if ($info->relation('build-depends')->implies('golang-go | golang-any')) {
+        # Verify that golang binary packages set Built-Using (except for
+        # arch:all library packages).
         foreach my $bin (@package_names) {
             my $bu = $info->binary_field($bin, 'built-using');
             my $arch = $info->binary_field($bin, 'architecture');
@@ -442,6 +442,9 @@ sub run {
                 }
             }
         }
+
+        tag 'missing-xs-go-import-path-for-golang-package'
+          unless $info->source_field('xs-go-import-path', '');
     }
 
     return;
