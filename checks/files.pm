@@ -2051,11 +2051,20 @@ sub _check_tag_url_privacy_breach {
                       >,xismog;
         my $relcontent = $1;
         if (defined($relcontent)) {
+            # See, for example, https://www.w3schools.com/tags/att_link_rel.asp
             my %allowed = (
+                'alternate'         => 1, # #891301
+                'author'            => 1, # #891301
                 'bookmark'          => 1, # #746656
                 'canonical'         => 1, # #762753
+                'generator'         => 1, # #891301
                 'generator-home'    => 1, # texinfo
+                'help'              => 1, # #891301
+                'license'           => 1, # #891301
+                'next'              => 1, # #891301
+                'prev'              => 1, # #891301
                 'schema.dct'        => 1, # #736992
+                'search'            => 1, # #891301
             );
             return if ($allowed{$relcontent});
             if ($relcontent eq 'alternate') {

@@ -7,6 +7,10 @@ lintian (2.5.77) UNRELEASED; urgency=medium
       with invalid or missing Built-Using headers.  (Closes: #891072)
     + [CL] Apply patch from Michael Stapelberg to warn when packages do not
       specify a XS-Go-Import-Path.  (Closes: #891184)
+  * checks/rules.pm:
+    + [CL] Allow rel="generator" and others; they do not cause internet
+      access by default.  Thanks to Raphaël Hertzog for the report.
+      (Closes: #891301)
   * checks/version-substvars.pm:
     + [CL] Fix a bug in version-substvar-for-external-package parsing to
       prevent false-positives when the LHS of the binary relation contains
