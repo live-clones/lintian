@@ -16,6 +16,10 @@ lintian (2.5.77) UNRELEASED; urgency=medium
       prevent false-positives when the LHS of the binary relation contains
       a substvar.  Thanks to Andreas Beckmann.  (Closes: #726589)
 
+  * data/common/architectures, etc.:
+    + [CL] Update architecture lists to ensure the inclusion of riscv64.
+      This will change everything.  (Closes: #891387)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 21 Feb 2018 19:26:55 +0000
 
 lintian (2.5.76) unstable; urgency=medium
