@@ -1398,8 +1398,8 @@ sub run {
     if (!defined $info->field('vcs-browser')) {
         foreach my $regex ($KNOWN_VCS_BROWSERS->all) {
             my $vcs = $KNOWN_VCS_BROWSERS->value($regex);
-            if ($info->field("vcs-$vcs", '') =~ m/^$regex/xi) {
-                tag 'missing-vcs-browser-field', "vcs-$vcs";
+            if ($info->field("vcs-$vcs", '') =~ m/^($regex.*)/xi) {
+                tag 'missing-vcs-browser-field', "vcs-$vcs", $1;
                 last; # Only warn once
             }
         }
