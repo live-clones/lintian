@@ -2,6 +2,12 @@ lintian (2.5.78) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.{desc,pm}:
+    + [CL] Warn about packages that are missing a Vcs-Browser header when
+      we know that they have at least one Vcs-* header that has has a
+      browser-based interface.  Thanks to Paul Wise for the report.
+      (Closes: #891688)
+
  -- Chris Lamb <lamby@debian.org>  Tue, 27 Feb 2018 14:04:15 +0000
 
 lintian (2.5.77) unstable; urgency=medium

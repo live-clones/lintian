@@ -52,6 +52,8 @@ our $known_build_essential
 our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
 our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
 our $KNOWN_BUILD_PROFILES = Lintian::Data->new('fields/build-profiles');
+our $KNOWN_VCS_BROWSERS
+  = Lintian::Data->new('fields/vcs-browsers', qr/\s*~~\s*/, sub { $_[1]; });
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
@@ -1391,6 +1393,17 @@ sub run {
       if $type eq 'source'
       and $is_comaintained
       and not %seen_vcs;
+
+    # Check for missing Vcs-Browser headers
+    if (!defined $info->field('vcs-browser')) {
+        foreach my $regex ($KNOWN_VCS_BROWSERS->all) {
+            my $vcs = $KNOWN_VCS_BROWSERS->value($regex);
+            if ($info->field("vcs-$vcs", '') =~ m/^$regex/xi) {
+                tag 'missing-vcs-browser-field', "vcs-$vcs";
+                last; # Only warn once
+            }
+        }
+    }
 
     #---- Checksums
 
