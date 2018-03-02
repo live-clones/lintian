@@ -14,6 +14,9 @@ lintian (2.5.78) UNRELEASED; urgency=medium
       fairly-common French word.  It was causing a false-positive in the
       spelling-error-in-binary tag for osmocom-analog.  Thorsten Alteholz
       for the report.  (Closes: #891794)
+    + [CL] Drop the wil → will correction as Wil is "a rather common
+      name in the Netherlands".  Thanks to Paul Gevers for the report.
+      (Closes: #891935)
 
  -- Chris Lamb <lamby@debian.org>  Tue, 27 Feb 2018 14:04:15 +0000
 
