@@ -4,7 +4,7 @@ lintian (2.5.78) UNRELEASED; urgency=medium
 
   * checks/fields.{desc,pm}:
     + [CL] Warn about packages that are missing a Vcs-Browser header when
-      we know that they have at least one Vcs-* header that has has a
+      we know that they have at least one Vcs-* header that has a
       browser-based interface.  Thanks to Paul Wise for the report.
       (Closes: #891688)
 
