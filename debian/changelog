@@ -1,6 +1,8 @@
-lintian (2.5.78) UNRELEASED; urgency=medium
+lintian (2.5.78) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - missing-vcs-browser-field
 
   * checks/fields.{desc,pm}:
     + [CL] Warn about packages that are missing a Vcs-Browser header when
@@ -17,8 +19,10 @@ lintian (2.5.78) UNRELEASED; urgency=medium
     + [CL] Drop the wil → will correction as Wil is "a rather common
       name in the Netherlands".  Thanks to Paul Gevers for the report.
       (Closes: #891935)
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Tue, 27 Feb 2018 14:04:15 +0000
+ -- Chris Lamb <lamby@debian.org>  Mon, 05 Mar 2018 09:05:57 +0000
 
 lintian (2.5.77) unstable; urgency=medium
 
