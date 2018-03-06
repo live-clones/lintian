@@ -16,9 +16,11 @@
 
 # Last seen in sarge.
 xlibs-dev
+exim => exim4
 
 # Last seen in etch.
 gcc-2.95
+apache => apache2
 
 # Last seen in lenny.
 cdrecord
