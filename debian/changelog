@@ -2,6 +2,9 @@ lintian (2.5.79) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/cruft.pm:
+    + [CL] Check all subdirectories under /usr/share/doc/foo to test
+      whether we ship example files, not just /usr/share/doc/foo/examples/.
   * data/fields/obsolete-packages:
     + [PW] Add exim and apache, replaced by exim4 and apache2
 
