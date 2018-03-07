@@ -2,7 +2,10 @@ lintian (2.5.79) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
-  * checks/changelog-file.desc:
+  * checks/changelog-file.{desc,pm}
+    + [CL] Ignore entries that end with ":" to avoid false-positives in the
+      debian-changelog-line-too-short.  Thanks to Mattia Rizollo for the
+      report.  (Closes: #892197)
     + [CL] Update the description of improbable-bug-number-in-closes
       removing the specific number as it can get out of sync with the
       actual check.
@@ -11,13 +14,10 @@ lintian (2.5.79) UNRELEASED; urgency=medium
       package provides a "foo.tar.asc" for a "foo.tar.gz".  We previously
       only checked for a "foo.tar.gz.asc".  Thanks to Uwe Kleine-König for
       the report.  (Closes: #892255)
-  * checks/changelog-file.pm:
-    + [CL] Ignore entries that end with ":" to avoid false-positives in the
-      debian-changelog-line-too-short.  Thanks to Mattia Rizollo for the
-      report.  (Closes: #892197)
   * checks/cruft.pm:
     + [CL] Check all subdirectories under /usr/share/doc/foo to test
       whether we ship example files, not just /usr/share/doc/foo/examples/.
+
   * data/fields/obsolete-packages:
     + [PW] Add exim and apache, replaced by exim4 and apache2
 
