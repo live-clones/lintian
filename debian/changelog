@@ -2,6 +2,10 @@ lintian (2.5.79) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.pm:
+    + [CL] Ignore entries that end with ":" to avoid false-positives in the
+      debian-changelog-line-too-short.  Thanks to Mattia Rizollo for the
+      report.  (Closes: #892197)
   * checks/cruft.pm:
     + [CL] Check all subdirectories under /usr/share/doc/foo to test
       whether we ship example files, not just /usr/share/doc/foo/examples/.

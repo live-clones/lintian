@@ -484,7 +484,7 @@ sub run {
         for my $i (0 .. $#lines) {
             my $line = $i + $chloff;
             tag 'debian-changelog-line-too-short', $1, "(line $line)"
-              if $lines[$i] =~ /^   [*]\s(.{1,5})$/;
+              if $lines[$i] =~ /^   [*]\s(.{1,5})$/ and $1 !~ /:$/;
             if (length($lines[$i]) > 81
                 and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
                 tag 'debian-changelog-line-too-long', "line $line";
