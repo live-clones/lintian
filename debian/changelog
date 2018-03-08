@@ -2,6 +2,11 @@ lintian (2.5.79) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changes-file.pm:
+    + [CL] Don't emit orig-tarball-missing-upstream-signature when the
+      package provides a "foo.tar.asc" for a "foo.tar.gz".  We previously
+      only checked for a "foo.tar.gz.asc".  Thanks to Uwe Kleine-König for
+      the report.  (Closes: #892255)
   * checks/changelog-file.pm:
     + [CL] Ignore entries that end with ":" to avoid false-positives in the
       debian-changelog-line-too-short.  Thanks to Mattia Rizollo for the

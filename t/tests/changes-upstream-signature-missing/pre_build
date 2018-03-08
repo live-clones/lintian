@@ -12,3 +12,7 @@ cp ${DIR}/../${NAME}_${VERSION}.orig.tar.gz ${DIR}/../${NAME}_${VERSION}.orig-co
 # Don't emit if we have a signature
 cp ${DIR}/../${NAME}_${VERSION}.orig.tar.gz ${DIR}/../${NAME}_${VERSION}.orig-signed.tar.gz
 touch ${DIR}/../${NAME}_${VERSION}.orig-signed.tar.gz.asc
+
+# Don't emit if we have .tar.asc (NB. not a .tar.gz.asc)
+cp ${DIR}/../${NAME}_${VERSION}.orig.tar.gz ${DIR}/../${NAME}_${VERSION}.orig-noext.tar.gz
+touch ${DIR}/../${NAME}_${VERSION}.orig-noext.tar.gz.asc

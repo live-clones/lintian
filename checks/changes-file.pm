@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use autodie;
 
+use List::MoreUtils qw(none);
+
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 use Lintian::Data;
@@ -198,11 +200,11 @@ sub run {
         # Ensure all orig tarballs have a signature if we have an upstream
         # signature.
         if (   $has_signing_key
-            && $file =~ m/\.orig(-[A-Za-z\d-]+)?\.tar\./
+            && $file =~ m/(^.*\.orig(?:-[A-Za-z\d-]+)?\.tar)\./
             && $file !~ m/\.asc$/
             && !$info->repacked) {
             tag 'orig-tarball-missing-upstream-signature', $file
-              unless exists $files->{"$file.asc"};
+              if none { exists $files->{"$_.asc"} } ($file, $1);
         }
 
         # check section
