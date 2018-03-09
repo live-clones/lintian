@@ -70,6 +70,9 @@ sub search_for_obsolete_sites {
                 tag 'obsolete-url-in-packaging', $file, $1;
             }
         }
+
+        tag 'obsolete-url-in-packaging', $file, $1
+          if $dcontents =~m{(ftp://(?:ftp|security)\.debian\.org)}i;
     }
 
     return;
