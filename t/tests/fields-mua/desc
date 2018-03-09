@@ -1,0 +1,7 @@
+Testname: fields-mua
+Version: 1.0
+Description: Test for tags related to MUA etc.
+Test-For:
+ default-mta-dependency-does-not-specify-mail-transport-agent
+ mail-transport-agent-dependency-does-not-specify-default-mta
+ default-mta-dependency-not-listed-first

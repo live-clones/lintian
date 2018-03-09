@@ -17,6 +17,12 @@ lintian (2.5.79) UNRELEASED; urgency=medium
   * checks/cruft.pm:
     + [CL] Check all subdirectories under /usr/share/doc/foo to test
       whether we ship example files, not just /usr/share/doc/foo/examples/.
+  * checks/fields.{desc,pm}:
+    + [CL] Warn about packages that have either have dependency on
+      default-mta but do not specify mail-transport-agent, have a
+      mail-transport-agent dependency but do not specify default-mta and
+      packages that do not specify default-mta first in their alternatives.
+      Thanks to Paul Wise for the report.  (Closes: #892143)
 
   * data/fields/obsolete-packages:
     + [PW] Add exim and apache, replaced by exim4 and apache2

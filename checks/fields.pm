@@ -743,6 +743,7 @@ sub run {
 
             tag 'alternates-not-allowed', $field
               if ($data =~ /\|/ && !&$is_dep_field($field));
+            check_field($info, $field, $data);
 
             for my $dep (split /\s*,\s*/, $data) {
                 my (@alternatives, @seen_obsolete_packages);
@@ -1042,6 +1043,7 @@ sub run {
                 #Get data and clean it
                 my $data = $info->field($field);
                 unfold($field, \$data);
+                check_field($info, $field, $data);
                 $depend{$field} = $data;
 
                 for my $dep (split /\s*,\s*/, $data) {
@@ -1487,6 +1489,28 @@ sub unfold {
         # Vcs-Browser: $
         #  http://somewhere.com/$
         $$line=~s/^\s*+//;
+    }
+    return;
+}
+
+sub check_field {
+    my ($info, $field, $data) = @_;
+    my @seen;
+    $info->relation($field)->visit(sub { push @seen, $_; }, VISIT_PRED_NAME);
+
+    my $has_default_mta = any { $_ eq 'default-mta' } @seen;
+    my $has_mail_transport_agent = any { $_ eq 'mail-transport-agent' } @seen;
+
+    if ($has_default_mta) {
+        tag 'default-mta-dependency-not-listed-first',"$field: $data"
+          if $seen[0] ne 'default-mta';
+        tag 'default-mta-dependency-does-not-specify-mail-transport-agent',
+          "$field: $data"
+          unless $has_mail_transport_agent;
+    } elsif ($has_mail_transport_agent) {
+        tag 'mail-transport-agent-dependency-does-not-specify-default-mta',
+          "$field: $data"
+          unless $has_default_mta;
     }
     return;
 }

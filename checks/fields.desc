@@ -1446,3 +1446,43 @@ Info: A Vcs-* field in this package is pointing to a repository that
  unnecessary and time-consuming clones of the repository.
  .
  Please add a suitable Vcs-Browser field to the package.
+
+Tag: default-mta-dependency-does-not-specify-mail-transport-agent
+Severity: normal
+Certainty: certain
+Info: This package has a relationship with the default-mta virtual
+ package but does not specify the mail-transport-agent as an
+ alternative.
+ .
+ default-mta and mail-transport-agent should only ever be in a set of
+ alternatives together, with default-mta listed first.
+ .
+ Please add a "or" depedency on mail-transport-agent after
+ default-mta.
+
+Tag: mail-transport-agent-dependency-does-not-specify-default-mta
+Severity: normal
+Certainty: certain
+Info: This package has a relationship with the mail-transport-argent
+ virtual package but does not specify the default-mta as an
+ alternative.
+ .
+ default-mta and mail-transport-agent should only ever be in a set of
+ alternatives together, with default-mta listed first.
+ .
+ Please add a "or" depedency on default-mta before
+ mail-transport-agent.
+
+Tag: default-mta-dependency-not-listed-first
+Severity: normal
+Certainty: certain
+Info: This package has a relationship with the mail-transport-argent
+ or default-mta packages but does not specify the default-mta as an
+ first option.
+ .
+ default-mta and mail-transport-agent should only ever be in a set of
+ alternatives together, with default-mta listed in the primary
+ position.
+ .
+ Please rearrange the dependencies such that default-mta is listed
+ first.
