@@ -24,8 +24,8 @@ lintian (2.5.79) UNRELEASED; urgency=medium
       packages that do not specify default-mta first in their alternatives.
       Thanks to Paul Wise for the report.  (Closes: #892143)
   * checks/obsolete-sites.pm:
-    + [CL] Emit a warning if a package uses a deprecated FTP package download
-      location.  (Closes: #892249)
+    + [CL] Emit a warning if a package uses a deprecated FTP package
+      download location.  (Closes: #892249)
 
   * data/fields/obsolete-packages:
     + [PW] Add exim and apache, replaced by exim4 and apache2
