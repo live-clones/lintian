@@ -744,7 +744,7 @@ sub run {
 
             tag 'alternates-not-allowed', $field
               if ($data =~ /\|/ && !&$is_dep_field($field));
-            check_field($info, $field, $data);
+            check_field($info, $field, $data) if &$is_dep_field($field);
 
             for my $dep (split /\s*,\s*/, $data) {
                 my (@alternatives, @seen_obsolete_packages);

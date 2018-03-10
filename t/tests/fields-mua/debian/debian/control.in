@@ -43,6 +43,7 @@ Depends: $\{misc:Depends\}, default-mta | mail-transport-agent
 Pre-Depends: default-mta | exim4 | mail-transport-agent
 Recommends: default-mta | mail-transport-agent | exim4
 Suggests: lintian
+Provides: mail-transport-agent
 Description: {$description} (good 1)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

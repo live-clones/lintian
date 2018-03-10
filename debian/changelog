@@ -2,6 +2,11 @@ lintian (2.5.80) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.pm:
+    + [CL] Only check dependency fields in binary packages for
+      mail-transport-agent-dependency-does-not-specify-default-mta etc.
+      (Closes: #892550)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 09 Mar 2018 22:59:07 -0800
 
 lintian (2.5.79) unstable; urgency=medium
