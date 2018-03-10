@@ -1463,7 +1463,7 @@ Info: This package has a relationship with the default-mta virtual
 Tag: mail-transport-agent-dependency-does-not-specify-default-mta
 Severity: normal
 Certainty: certain
-Info: This package has a relationship with the mail-transport-argent
+Info: This package has a relationship with the mail-transport-agent
  virtual package but does not specify the default-mta as an
  alternative.
  .
@@ -1476,7 +1476,7 @@ Info: This package has a relationship with the mail-transport-argent
 Tag: default-mta-dependency-not-listed-first
 Severity: normal
 Certainty: certain
-Info: This package has a relationship with the mail-transport-argent
+Info: This package has a relationship with the mail-transport-agent
  or default-mta packages but does not specify the default-mta as an
  first option.
  .
