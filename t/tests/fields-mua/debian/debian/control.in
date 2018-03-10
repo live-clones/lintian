@@ -13,7 +13,7 @@ Homepage: http://lintian.debian.org/
 Package: {$source}-bad-1
 Architecture: all
 # default-mta missing mail-transport-agent
-Depends: $\{misc:Depends\}, default-mta,
+Depends: $\{misc:Depends\}, default-mta, exim4, nullmailer
 Pre-Depends: mail-transport-agent
 Recommends: default-mta, mail-transport-agent
 Suggests: exim4 | mail-transport-agent

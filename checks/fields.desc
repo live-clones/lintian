@@ -1486,3 +1486,13 @@ Info: This package has a relationship with the mail-transport-agent
  .
  Please rearrange the dependencies such that default-mta is listed
  first.
+
+Tag: depends-on-mail-transport-agent-without-alternatives
+Severity: normal
+Certainty: certain
+Info: This package has a relationship with a mail-transport-agent but
+ does not specify default-mta and mail-transport-agent as alternatives.
+ .
+ Please change the dependency to:
+ .
+  default-mta | pkgname | mail-transport-agent

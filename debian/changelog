@@ -23,6 +23,10 @@ lintian (2.5.79) UNRELEASED; urgency=medium
       mail-transport-agent dependency but do not specify default-mta and
       packages that do not specify default-mta first in their alternatives.
       Thanks to Paul Wise for the report.  (Closes: #892143)
+    + [CL] Warn about packages that have a relationship with a
+      mail-transport-agent but do not specify default-mta and
+      mail-transport-agent as alternatives.  (Closes: #892144)
+
   * checks/obsolete-sites.pm:
     + [CL] Emit a warning if a package uses a deprecated FTP package
       download location.  (Closes: #892249)

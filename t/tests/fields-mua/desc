@@ -5,3 +5,4 @@ Test-For:
  default-mta-dependency-does-not-specify-mail-transport-agent
  mail-transport-agent-dependency-does-not-specify-default-mta
  default-mta-dependency-not-listed-first
+ depends-on-mail-transport-agent-without-alternatives

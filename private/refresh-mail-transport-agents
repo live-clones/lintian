@@ -1,0 +1,79 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+
+# Generate a list of packages that provide mail-transport-agent
+
+# Copyright (C) 2008 Niko Tyni
+# Copyright (C) 2018 Chris Lamb <lamby@debian.org>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
+use AptPkg::Config '$_config';
+use AptPkg::System '$_system';
+use AptPkg::Cache;
+use List::MoreUtils qw(none uniq);
+
+# initialise the global config object with the default values and
+# setup the $_system object
+$_config->init;
+$_system = $_config->system;
+
+# suppress cache building messages
+$_config->{quiet} = 2;
+
+# set up the cache
+my $cache = AptPkg::Cache->new;
+# end from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
+
+# check we have a cache of Debian sid packages available
+warn(
+    join(q{ },
+        'Warning: this list should only be updated on a system',
+        'with an up to date APT cache of the Debian unstable distribution'))
+  if (
+    none {
+             defined $_->{Origin}
+          && defined $_->{Archive}
+          && $_->{Origin} eq 'Debian'
+          && $_->{Archive} eq 'unstable';
+    }
+    @{$cache->files});
+
+my $versions = $cache->{'mail-transport-agent'}
+  or die('no mail-transport-agent packages found in the APT cache');
+
+my @packages = (
+    'exim4', # Provided by exim4-daemon-{light, heavy}
+);
+
+for my $provides (@{$versions->{ProvidesList}}) {
+    push @packages, $provides->{OwnerPkg}->{Name};
+}
+
+print <<EOF;
+# Packages that provide mail-transport-agent
+#
+EOF
+
+for my $pkg (sort(uniq(@packages))) {
+    print "$pkg\n";
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
