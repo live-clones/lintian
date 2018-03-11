@@ -6,6 +6,11 @@ lintian (2.5.80) UNRELEASED; urgency=medium
     + [CL] Only check dependency fields in binary packages for
       mail-transport-agent-dependency-does-not-specify-default-mta etc.
       (Closes: #892550)
+  * checks/rules.pm:
+    + [CL] Don't emit unnecessary-source-date-epoch-assignment if the
+      package has explicit Build-Depends on dpkg-dev (>= 1.18.8) or
+      debhelper (>= 10.10).  Thanks to Andreas Metzler for the report.
+      (Closes: #892549)
 
  -- Chris Lamb <lamby@debian.org>  Fri, 09 Mar 2018 22:59:07 -0800
 

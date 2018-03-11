@@ -1,0 +1,16 @@
+Source: {$source}
+Priority: optional
+Section: python
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: {$build_depends}, dpkg-dev (>= 1.18.8), debhelper (>= 10.10)
+Rules-Requires-Root: no
+
+Package: {$source}
+Architecture: all
+Depends: $\{misc:Depends\}
+Description: Test package
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

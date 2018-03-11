@@ -162,6 +162,7 @@ sub run {
     # other files, since to chase all includes we'd have to have all
     # of its build dependencies installed.
     local $_;
+    my $build_all = $info->relation('build-depends-all');
     my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
     my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
     my (@current_targets, %rules_per_target,  %debhelper_group);
@@ -252,7 +253,9 @@ sub run {
             my ($var, $value) = ($1, $2);
             $variables{$var} = $value;
             tag 'unnecessary-source-date-epoch-assignment', "(line $.)"
-              if $var eq 'SOURCE_DATE_EPOCH';
+              if $var eq 'SOURCE_DATE_EPOCH'
+              and not $build_all->implies(
+                'dpkg-dev (>= 1.18.8) | debhelper (>= 10.10)');
         }
 
         # Keep track of whether this portion of debian/rules may be optional
