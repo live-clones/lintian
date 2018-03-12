@@ -249,7 +249,8 @@ sub run {
     my $str_deps = $info->relation('strong');
     my $has_sensible_utils
       =Lintian::Relation->and($str_deps, $info->relation('recommends'))
-      ->implies('sensible-utils');
+      ->implies('sensible-utils')
+      || ($pkg eq 'sensible-utils');
 
     for my $filename (sort keys %{$info->scripts}) {
         my $interpreter = $info->scripts->{$filename}{interpreter};
