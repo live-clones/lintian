@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-01-13 21:51
+# It was generated on 2018-03-12 00:09
 
 apache2-dev
 autotools-dev
@@ -26,6 +26,8 @@ dh-lua
 dh-make
 dh-metainit
 dh-ocaml
+dh-octave
+dh-octave-autopkgtest
 dh-php
 dh-python
 dh-r
@@ -73,9 +75,9 @@ python-sip-dev
 python-van.pydeb
 python3-numpy
 python3-ply
-python3-scour
 python3-sip-dev
 quilt
+scour
 sphinx-common
 swi-prolog-nox
 tex-common

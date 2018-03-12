@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-01-13 21:51
+# It was generated on 2018-03-12 00:09
 
 dh_apache2
 dh_cme_upgrade
@@ -22,6 +22,7 @@ dh_lisp
 dh_makefont
 dh_nativejava
 dh_nodejs
+dh_octave_make
 dh_phppear
 dh_pidgin
 dh_ppp

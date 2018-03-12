@@ -1,5 +1,5 @@
 # This file is generated from private/refresh-debhelper-data.
-# It was generated on 2018-01-13 21:51
+# It was generated on 2018-03-12 00:09
 #
 # If the script generates an insufficient/incorrect value for a
 # single item, please have a look at dh_commands-manual.
@@ -132,6 +132,12 @@ dh_ocaml=dh-ocaml
 dh_ocamlclean=dh-ocaml
 dh_ocamldoc=dh-ocaml
 dh_ocamlinit=dh-ocaml
+dh_octave_changelogs=dh-octave
+dh_octave_check=dh-octave-autopkgtest
+dh_octave_clean=dh-octave
+dh_octave_make=dh-octave
+dh_octave_substvar=dh-octave
+dh_octave_version=dh-octave
 dh_pdl=pdl
 dh_perl=debhelper
 dh_perl_dbi=libdbi-perl

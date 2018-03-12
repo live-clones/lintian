@@ -12,6 +12,10 @@ lintian (2.5.80) UNRELEASED; urgency=medium
       debhelper (>= 10.10).  Thanks to Andreas Metzler for the report.
       (Closes: #892549)
 
+  * data/debhelper/*, data/common/dh_addons:
+    + [CL] Refresh all debhelper data, correcting the entry for dh-scour.
+      (Closes: #889016)
+
  -- Chris Lamb <lamby@debian.org>  Fri, 09 Mar 2018 22:59:07 -0800
 
 lintian (2.5.79) unstable; urgency=medium
