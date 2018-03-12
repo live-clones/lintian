@@ -16,7 +16,7 @@ Test-For:
  conflicts-with-dependency
  conflicts-with-version
  depends-exclusively-on-makedev
- depends-on-build-essential-package-without-using-version
+ build-depends-on-build-essential-package-without-using-version
  depends-on-essential-package-without-using-version
  depends-on-obsolete-package
  depends-on-old-emacs

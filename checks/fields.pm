@@ -1114,7 +1114,7 @@ sub run {
                           if ($d_pkg eq 'build-essential');
 
                         #<<< no tidy, tag name too long
-                        tag 'depends-on-build-essential-package-without-using-version',
+                        tag 'build-depends-on-build-essential-package-without-using-version',
                         #>>>
                           "$d_pkg [$field: $part_d_orig]"
                           if ($known_build_essential->known($d_pkg)

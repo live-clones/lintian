@@ -2,6 +2,7 @@
 debian-changelog-has-wrong-weekday => debian-changelog-has-wrong-day-of-week
 debian-watch-may-check-gpg-signature => debian-watch-does-not-check-gpg-signature
 dep5-file-paragraph-reference-header-paragraph => dep5-file-paragraph-references-header-paragraph
+depends-on-build-essential-package-without-using-version => build-depends-on-build-essential-package-without-using-version
 fields-co-maintained-package-with-no-vcs-headers => fields-co-maintained-package-with-no-vcs-fields
 package-install-apt-preferences => package-installs-apt-preferences
 package-install-apt-sources => package-installs-apt-sources

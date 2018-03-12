@@ -672,12 +672,12 @@ Info: The restriction formula in the source relation includes an unknown build
  and "pkg.<i>srcpkg</i>.<i>anything</i>".
 Ref: https://wiki.debian.org/BuildProfileSpec#Registered_profile_names
 
-Tag: depends-on-build-essential-package-without-using-version
+Tag: build-depends-on-build-essential-package-without-using-version
 Severity: important
 Certainty: certain
 Ref: policy 4.2
-Info: The package declares a depends on a build essential package without
- using a versioned depends.  Packages do not have to build-depend on any
+Info: The package declares a build-depends on a build essential package
+ without using a versioned depends.  Packages do not have to depend on any
  package included in build-essential.  It is the responsibility of anyone
  building packages to have all build-essential packages installed.  The
  only reason for an explicit dependency on a package included in

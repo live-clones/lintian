@@ -11,6 +11,11 @@ lintian (2.5.80) UNRELEASED; urgency=medium
       package has explicit Build-Depends on dpkg-dev (>= 1.18.8) or
       debhelper (>= 10.10).  Thanks to Andreas Metzler for the report.
       (Closes: #892549)
+  * checks/fields.{desc,pm}:
+    + [CL] Clarify the meaning of the
+      depends-on-build-essential-package-without-using-version tag by
+      prefixing it with "build-".  Thanks to Sven Joachim and Laurent
+      Bigonville.  (Closes: #892597)
 
   * data/debhelper/*, data/common/dh_addons:
     + [CL] Refresh all debhelper data, correcting the entry for dh-scour.
