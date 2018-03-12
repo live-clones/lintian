@@ -12,19 +12,6 @@ Info: The package appears to be an Apache2 HTTPD server module but it isn't
  <tt>libapache2-mod-name</tt> with <tt>mod-name</tt> being the actual
  <tt>mod_name.so</tt> equivalent.
 
-
-Tag: apache2-module-depends-on-real-apache2-package
-Severity: serious
-Certainty: certain
-Info: The package is an Apache2 HTTPD server module but it depends on a real
- Apache2 package. Binary module packages must depend on the virtual
- <tt>apache2-api-YYYYMMNN</tt> package only in order to ease transitions in
- future.
- .
- In particular, module packages must not pull the full web server or any of its
- associated data packages as a dependency. That's left to the user.
-
-
 Tag: apache2-module-does-not-depend-on-apache2-api
 Severity: serious
 Certainty: certain

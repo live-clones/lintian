@@ -2,6 +2,10 @@ lintian (2.5.80) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/apache2.{desc,pm}:
+    + [CL] Drop apache2-module-depends-on-real-apache2-package tag as there
+      are separate tags for missing apache2-api-* dependencies.  Thanks to
+      Thijs Kinkhorst et al.  (Closes: #796285)
   * checks/fields.pm:
     + [CL] Only check dependency fields in binary packages for
       mail-transport-agent-dependency-does-not-specify-default-mta etc.

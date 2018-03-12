@@ -2,7 +2,6 @@ Testname: apache2-modules-general
 Version: 1.0
 Description: Several tests related to Apache2 module packages
 Test-For:
- apache2-module-depends-on-real-apache2-package
  apache2-module-does-not-depend-on-apache2-api
  non-standard-apache2-module-package-name
  apache2-module-does-not-ship-load-file

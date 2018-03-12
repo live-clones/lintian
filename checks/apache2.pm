@@ -132,13 +132,6 @@ sub check_module_package {
     my $expected_name = 'libapache2-' . lc($module);
 
     my $rel;
-    my $visit = sub {
-        if (m/^apache2(?:\.2)?-(?:common|data|bin)$/) {
-            tag 'apache2-module-depends-on-real-apache2-package', $_;
-            return 1;
-        }
-        return 0;
-    };
 
     $expected_name =~ tr/_/-/;
     if ($expected_name ne $pkg) {
@@ -146,7 +139,6 @@ sub check_module_package {
           $expected_name;
     }
 
-    $info->relation('strong')->visit($visit, VISIT_STOP_FIRST_MATCH);
     $rel = Lintian::Relation->and($info->relation('strong'),
         $info->relation('recommends'));
     if (!$rel->matches(qr/^apache2-api-\d+$/o)) {
