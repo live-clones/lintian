@@ -1363,6 +1363,9 @@ sub _clean_block {
     # po comment may include html tag
     $text =~ s/\"\s?\v\#~\s?\"//gxms;
 
+    # strip .rtf paragraph marks (#892967)
+    $text =~ s/\\par\b//gxms;
+
     $text =~ s/\\url[{][^}]*?[}]/ /gxms;      # (la)?tex url
     $text =~ s/\\emph[{]/ /gxms;              # (la)?tex emph
     $text =~ s/\\href[{][^}]*?[}]
