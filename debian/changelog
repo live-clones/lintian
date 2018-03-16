@@ -6,10 +6,13 @@ lintian (2.5.80) UNRELEASED; urgency=medium
     + [CL] Drop apache2-module-depends-on-real-apache2-package tag as there
       are separate tags for missing apache2-api-* dependencies.  Thanks to
       Thijs Kinkhorst et al.  (Closes: #796285)
-  * checks/cruft.pm:
+  * checks/cruft.{desc,pm}:
     + [CL] Strip \par elements from files prior to license checks to
       avoid false-positives when checking .rtf files.  Thanks to Adam
       Borowski for the report and testcase.  (Closes: #892967)
+    + [CL] Look under all of /usr/share/doc (not just /usr/share/doc/$pkg)
+      when looking for installed examples and update tag description to
+      match.  Thanks to Ferenc Wágner for the report.  (Closes: #892905)
   * checks/fields.pm:
     + [CL] Only check dependency fields in binary packages for
       mail-transport-agent-dependency-does-not-specify-default-mta etc.

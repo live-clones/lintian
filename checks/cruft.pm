@@ -1579,7 +1579,7 @@ sub _ships_examples {
         return 1 if $name =~ m{-examples$};
         my @files = $binpkg->info->sorted_index;
         return 1
-          if any { m{^usr/share/doc/\Q$name\E/(.+/)?examples/$} } @files;
+          if any { m{^usr/share/doc/(.+/)?examples/$} } @files;
     }
     return;
 }
