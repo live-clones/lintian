@@ -5,6 +5,8 @@ Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
 Test-Depends: javahelper
+Test-Against:
+ source-contains-prebuilt-java-object
 Test-For:
  bad-jar-name
  codeless-jar

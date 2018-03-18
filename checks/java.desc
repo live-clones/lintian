@@ -1,7 +1,7 @@
 Check-Script: java
 Author: Vincent Fourmond <fourmond@debian.org>
 Abbrev: java
-Type: binary
+Type: binary, source
 Needs-Info: java-info, unpacked
 Info: This script checks if the packages comply with various aspects of the
  Debian Java policy.
@@ -119,3 +119,11 @@ Info: The package ships the specified Jar file containing a
  Please ensure that the specified <tt>.java</tt> files are not shipped in
  the Jar file.
 Ref: java-policy 2.4
+
+Tag: source-contains-prebuilt-java-object
+Severity: pedantic
+Certainty: possible
+Info: The source tarball contains a prebuilt Java class file.  These are often
+ included by mistake when developers generate a tarball without cleaning
+ the source directory first.  If there is no sign this was intended,
+ consider reporting it as an upstream bug.

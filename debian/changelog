@@ -13,6 +13,10 @@ lintian (2.5.80) UNRELEASED; urgency=medium
     + [CL] Look under all of /usr/share/doc (not just /usr/share/doc/$pkg)
       when looking for installed examples and update tag description to
       match.  Thanks to Ferenc Wágner for the report.  (Closes: #892905)
+  * checks/java.{desc,pm}:
+    + [CL] Only emit source-contains-prebuilt-java-object reported for .jar
+      files that contain classes.  Thanks to Emmanuel Bourg for the report.
+      (Closes: #789802)
   * checks/fields.pm:
     + [CL] Only check dependency fields in binary packages for
       mail-transport-agent-dependency-does-not-specify-default-mta etc.

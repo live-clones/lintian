@@ -30,15 +30,25 @@ use Lintian::Data ();
 use Lintian::Tags qw(tag);
 use Lintian::Util qw(normalize_pkg_path $PKGNAME_REGEX);
 
+our $CLASS_REGEX = qr/\.(?:class|cljc?)/o;
 our $MAX_BYTECODE = Lintian::Data->new('java/constants', qr/\s*=\s*/o);
 
 sub run {
-    my ($pkg, undef, $info) = @_;
+    my ($pkg, $type, $info) = @_;
     my $java_info = $info->java_info;
     my $missing_jarwrapper = 0;
     my $has_public_jars = 0;
     my $has_jars = 0;
     my $jmajlow = '-';
+
+    if ($type eq 'source') {
+        for my $jar_file (sort keys %{$java_info}) {
+            my $files = $java_info->{$jar_file}{files};
+            tag 'source-contains-prebuilt-java-object', $jar_file
+              if any { m/$CLASS_REGEX$/i } keys %{$files};
+        }
+        return;
+    }
 
     my $depends = $info->relation('strong')->unparse;
     # Remove all libX-java-doc packages to avoid thinking they are java libs
@@ -76,8 +86,7 @@ sub run {
               unless basename($jar_file) =~ /^$PKGNAME_REGEX\.jar$/;
         }
         # check for common code files like .class or .clj (Clojure files)
-        foreach
-          my $class (grep { m/\.(?:class|cljc?)$/oi } sort keys %{$files}){
+        foreach my $class (grep { m/$CLASS_REGEX$/i } sort keys %{$files}){
             my $mver = $files->{$class};
             (my $src = $class) =~ s/\.[^.]+$/\.java/;
             tag 'jar-contains-source', $jar_file, $src if %{$files}{$src};

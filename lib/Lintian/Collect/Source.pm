@@ -30,7 +30,7 @@ use Lintian::Relation;
 use Parse::DebianChangelog;
 
 use Lintian::Util
-  qw(get_file_checksum read_dpkg_control $PKGNAME_REGEX $PKGREPACK_REGEX);
+  qw(get_file_checksum read_dpkg_control open_gz $PKGNAME_REGEX $PKGREPACK_REGEX);
 
 =head1 NAME
 
@@ -443,6 +443,92 @@ sub _load_dctrl {
     $self->{binary_field} = \%packages;
 
     return 1;
+}
+
+=item java_info
+
+Returns a hashref containing information about JAR files found in
+source packages, in the form I<file name> -> I<info>, where I<info> is
+a hash containing the following keys:
+
+=over 4
+
+=item manifest
+
+A hash containing the contents of the JAR file manifest. For instance,
+to find the classpath of I<$file>, you could use:
+
+ if (exists $info->java_info->{$file}{'manifest'}) {
+     my $cp = $info->java_info->{$file}{'manifest'}{'Class-Path'};
+     # ...
+ }
+
+NB: Not all jar files have a manifest.  For those without, this will
+value will not be available.  Use exists (rather than defined) to
+check for it.
+
+=item files
+
+A table of the files in the JAR.  Each key is a file name and its value
+is its "Major class version" for Java or "-" if it is not a class file.
+
+=item error
+
+If it exists, this is an error that occurred during reading of the zip
+file.  If it exists, it is unlikely that the other fields will be
+present.
+
+=back
+
+Needs-Info requirements for using I<java_info>: java-info
+
+=cut
+
+sub java_info {
+    my ($self) = @_;
+    return $self->{java_info} if exists $self->{java_info};
+    my $javaf = $self->lab_data_path('java-info.gz');
+    my %java_info;
+    if (!-f $javaf) {
+        # no java-info.gz => no jar files to collect data.  Just
+        # return an empty hash ref.
+        $self->{java_info} = \%java_info;
+        return $self->{java_info};
+    }
+    my $idx = open_gz($javaf);
+    my $file;
+    my $file_list;
+    my $manifest = 0;
+    local $_;
+    while (<$idx>) {
+        chomp;
+        next if m/^\s*$/o;
+
+        if (m#^-- ERROR:\s*(\S.++)$#o) {
+            $java_info{$file}{error} = $1;
+        } elsif (m#^-- MANIFEST: (?:\./)?(?:.+)$#o) {
+            # TODO: check $file == $1 ?
+            $java_info{$file}{manifest} = {};
+            $manifest = $java_info{$file}{manifest};
+            $file_list = 0;
+        } elsif (m#^-- (?:\./)?(.+)$#o) {
+            $file = $1;
+            $java_info{$file}{files} = {};
+            $file_list = $java_info{$file}{files};
+            $manifest = 0;
+        } else {
+            if ($manifest && m#^  (\S+):\s(.*)$#o) {
+                $manifest->{$1} = $2;
+            } elsif ($file_list) {
+                my ($fname, $clmajor) = (m#^([^-].*):\s*([-\d]+)$#);
+                $file_list->{$fname} = $clmajor;
+            }
+
+        }
+    }
+    $self->{java_info} = \%java_info;
+    close($idx);
+    return $self->{java_info};
 }
 
 =item binary_relation (PACKAGE, FIELD)

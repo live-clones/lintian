@@ -16,7 +16,6 @@ P: cruft-general-upstream source: source-contains-hg-tags-file .hgtags
 P: cruft-general-upstream source: source-contains-prebuilt-flash-object fakeflash.swf
 P: cruft-general-upstream source: source-contains-prebuilt-flash-project fakefla.fla
 P: cruft-general-upstream source: source-contains-prebuilt-flash-project fakeflasourced.fla
-P: cruft-general-upstream source: source-contains-prebuilt-java-object fake.jar
 P: cruft-general-upstream source: source-contains-prebuilt-javascript-object fake.min.js
 P: cruft-general-upstream source: source-contains-prebuilt-python-object fake.pyc
 P: cruft-general-upstream source: source-contains-prebuilt-python-object fake.pyo
