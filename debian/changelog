@@ -2,6 +2,11 @@ lintian (2.5.81) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/control-file.desc:
+    + [CL] Correct location of "AutomaticDebugPackages" wiki page in the
+      description of the debian-control-has-obsolete-dbg-package tag.
+      Thanks to Antonio Ospite for the report.  (Closes: #893480)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Mar 2018 22:55:23 -0400
 
 lintian (2.5.80) unstable; urgency=medium
