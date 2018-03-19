@@ -17,7 +17,12 @@ lintian (2.5.80) UNRELEASED; urgency=medium
     + [CL] Only emit source-contains-prebuilt-java-object reported for .jar
       files that contain classes.  Thanks to Emmanuel Bourg for the report.
       (Closes: #789802)
-  * checks/fields.pm:
+  * checks/fields.{desc,pm}:
+    + [CL] Upgrade vcs-deprecated-in-debian-infrastructure to "W:" from "P"
+      due to Alioth becoming read-only from May 1st, as well as
+      additionally checking Vcs-Browser fields hosted on Alioth and
+      updating the tag description with more details.  Thanks to Stuart
+      Prescott for his input.  (Closes: #886096)
     + [CL] Only check dependency fields in binary packages for
       mail-transport-agent-dependency-does-not-specify-default-mta etc.
       (Closes: #892550)

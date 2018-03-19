@@ -1380,17 +1380,18 @@ sub run {
             if ($vcs eq 'browser') {
                 tag 'vcs-browser-links-to-empty-view', $uri
                   if $uri =~ m%rev=0&sc=0%;
-                next;
+            } else {
+                $seen_vcs{$vcs}++;
             }
-            $seen_vcs{$vcs}++;
-            if ($uri =~ m/\.debian\.org/) {
+            if ($uri =~ m{//([^.]+)\.debian\.org/}) {
                 tag 'vcs-deprecated-in-debian-infrastructure', "vcs-$vcs", $uri
-                  if $vcs ne 'git';
+                  if $1 ne 'salsa';
             } else {
                 tag 'orphaned-package-not-maintained-in-debian-infrastructure',
                   "vcs-$vcs", $uri
                   if $info->field('maintainer', '')
-                  =~ /packages\@qa.debian.org/;
+                  =~ /packages\@qa.debian.org/
+                  and $vcs ne 'browser';
             }
         }
     }
