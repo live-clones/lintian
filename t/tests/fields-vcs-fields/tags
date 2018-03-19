@@ -3,4 +3,9 @@ I: fields-vcs-fields source: vcs-field-uses-insecure-uri vcs-cvs :pserver:anonym
 I: fields-vcs-fields source: vcs-field-uses-insecure-uri vcs-svn svn://anonscm.debian.org/foobar/trunk
 I: fields-vcs-fields source: vcs-fields-use-more-than-one-vcs bzr cvs git hg mtn svn
 W: fields-vcs-fields source: vcs-browser-links-to-empty-view https://anonscm.debian.org/viewvc/foobar/trunk?rev=0&sc=0
+W: fields-vcs-fields source: vcs-deprecated-in-debian-infrastructure vcs-browser https://anonscm.debian.org/viewvc/foobar/trunk?rev=0&sc=0
+W: fields-vcs-fields source: vcs-deprecated-in-debian-infrastructure vcs-bzr nosmart+http://anonscm.debian.org/bzr/collab-maint/foobar
+W: fields-vcs-fields source: vcs-deprecated-in-debian-infrastructure vcs-git https://anonscm.debian.org/users/djpig/foobar.git -b master
+W: fields-vcs-fields source: vcs-deprecated-in-debian-infrastructure vcs-hg https://anonscm.debian.org/hg/foobar/pkg/foobar
+W: fields-vcs-fields source: vcs-deprecated-in-debian-infrastructure vcs-svn svn://anonscm.debian.org/foobar/trunk
 W: fields-vcs-fields source: vcs-field-uses-not-recommended-uri-format vcs-mtn www.example.org org.debian.foobar
