@@ -78,7 +78,7 @@ sub check_rule {
     # subsystem, as vendor/product is subsystem specific.
     if (   $rule =~ m/ATTR\{idVendor\}=="[0-9a-fA-F]+"/
         && $rule =~ m/ATTR\{idProduct\}=="[0-9a-fA-F]*"/
-        && $in_goto !~ m/SUBSYSTEM!="[^"]+"/
+        && !$in_goto
         && $rule !~ m/SUBSYSTEM=="[^"]+"/) {
         tag(
             'udev-rule-missing-subsystem',
@@ -110,7 +110,7 @@ sub check_udev_rules {
         }
         next if /^#.*/; # Skip comments
         $in_goto = '' if m/LABEL="[^"]+"/;
-        $in_goto = $_ if m/GOTO="[^"]+"/;
+        $in_goto = $_ if m/SUBSYSTEM!="[^"]+"/ && m/GOTO="[^"]+"/;
         $retval |= $check->($file, $linenum, $in_goto, $_);
     }
     close($fd);

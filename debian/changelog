@@ -10,6 +10,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Add .ogg files to the list of non-license file extensions to
       avoid a false-positive in extra-license-file. Thanks to Innocent De
       Marchi for the report.  (Closes: #894139)
+  * checks/udev.pm:
+    + [CL] Apply patch from Thomas Dallmair to avoid false positives in the
+      udev-rule-missing-subsystem tag when SUBSYSTEM GOTO is not the last
+      "GOTO" statement.  Thanks!  (Closes: #894356)
 
   * lib/Lintian/Check.pm:
     + [CL] Avoid false positives in spelling detection by allowing "(s)"
