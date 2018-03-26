@@ -6,6 +6,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Correct location of "AutomaticDebugPackages" wiki page in the
       description of the debian-control-has-obsolete-dbg-package tag.
       Thanks to Antonio Ospite for the report.  (Closes: #893480)
+  * checks/files.pm:
+    + [CL] Add .ogg files to the list of non-license file extensions to
+      avoid a false-positive in extra-license-file. Thanks to Innocent De
+      Marchi for the report.  (Closes: #894139)
 
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Mar 2018 22:55:23 -0400
 
