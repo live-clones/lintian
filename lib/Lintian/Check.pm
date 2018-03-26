@@ -285,7 +285,9 @@ sub check_spelling {
         }
     }
 
-    $text =~ tr/()[]//d;
+    $text =~ tr/[]//d;
+    # Strip () except for "(s)" suffixes.
+    $text =~ s/(\((?!s\))|(?<!\(s)\))//gi;
     $text =~ s/(\w-)\s*\n\s*/$1/;
     $text =~ tr/\r\n \t/ /s;
     $text =~ s/\s++/ /g;

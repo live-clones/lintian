@@ -11,6 +11,13 @@ lintian (2.5.81) UNRELEASED; urgency=medium
       avoid a false-positive in extra-license-file. Thanks to Innocent De
       Marchi for the report.  (Closes: #894139)
 
+  * lib/Lintian/Check.pm:
+    + [CL] Avoid false positives in spelling detection by allowing "(s)"
+      suffixes instead of universally stripping all parenthesis.  This
+      prevents, for example, "directory(s)" from triggering false-positive
+      whilst still warning about "directorys".  Thanks to Patrick Matthäi
+      for the report.  (Closes: #894077)
+
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Mar 2018 22:55:23 -0400
 
 lintian (2.5.80) unstable; urgency=medium
