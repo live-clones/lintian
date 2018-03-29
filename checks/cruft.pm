@@ -439,6 +439,12 @@ sub run {
         }
     }
 
+    foreach my $file ($info->sorted_orig_index) {
+        tag 'source-contains-empty-directory', $file
+          if $file->is_dir
+          and scalar($file->children) == 0;
+    }
+
     return;
 }    # </run>
 

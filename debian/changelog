@@ -6,6 +6,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Correct location of "AutomaticDebugPackages" wiki page in the
       description of the debian-control-has-obsolete-dbg-package tag.
       Thanks to Antonio Ospite for the report.  (Closes: #893480)
+  * checks/cruft.{desc,pm}:
+    + [CL] Add a pedantic warning for upstream tarballs that contain empty
+      directories as these can cause problems with git-buildpackage.
+      Thanks to Balint Reczey for the idea!  (Closes: #894368)
   * checks/files.pm:
     + [CL] Add .ogg files to the list of non-license file extensions to
       avoid a false-positive in extra-license-file. Thanks to Innocent De
