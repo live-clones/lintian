@@ -10,6 +10,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Add a pedantic warning for upstream tarballs that contain empty
       directories as these can cause problems with git-buildpackage.
       Thanks to Balint Reczey for the idea!  (Closes: #894368)
+  * checks/java.pm:
+    + [CL] Apply patch from Bas Couwenberg to bump the maximum permissible
+      bytecode version number now that openjdk-9 is now the default-jdk.
+      (Closes: #894397)
   * checks/files.pm:
     + [CL] Add .ogg files to the list of non-license file extensions to
       avoid a false-positive in extra-license-file. Thanks to Innocent De
