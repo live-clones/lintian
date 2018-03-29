@@ -214,6 +214,7 @@ sub run {
         #     51 -> Java7
         #     52 -> Java8
         #     53 -> Java9
+        #     54 -> Java10
         my $bad = 0;
 
         # If the lowest version used is greater than the requested
