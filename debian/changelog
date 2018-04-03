@@ -20,6 +20,9 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Add .ogg files to the list of non-license file extensions to
       avoid a false-positive in extra-license-file. Thanks to Innocent De
       Marchi for the report.  (Closes: #894139)
+    + [CL] Avoid false-positives in Mallard XML files; <link href="...">
+      tags are anchor element and not followed automatically. Thanks to
+      Simon McVittie for the report.  (Closes: #894690)
   * checks/udev.pm:
     + [CL] Apply patch from Thomas Dallmair to avoid false positives in the
       udev-rule-missing-subsystem tag when SUBSYSTEM GOTO is not the last

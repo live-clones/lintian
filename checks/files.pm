@@ -2092,6 +2092,15 @@ sub _check_tag_url_privacy_breach {
         return;
     }
 
+    # In Mallard XML, <link> is a clickable anchor that will not be
+    # followed automatically.
+    if(    $file->basename =~ '.xml$'
+        && $tagattr eq 'link'
+        && $file->file_contents
+        =~ qr{ xmlns="http://projectmallard\.org/1\.0/"}) {
+        return;
+    }
+
     # track well known site
     foreach my $breaker ($PRIVACY_BREAKER_WEBSITES->all) {
         my $value = $PRIVACY_BREAKER_WEBSITES->value($breaker);
