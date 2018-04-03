@@ -27,6 +27,11 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Apply patch from Thomas Dallmair to avoid false positives in the
       udev-rule-missing-subsystem tag when SUBSYSTEM GOTO is not the last
       "GOTO" statement.  Thanks!  (Closes: #894356)
+  * checks/upstream-metadata.pm:
+    + Re-enable YAML parsing of upstream metadata which was disabled in
+      2.5.51 (via #861958) to close CVE-2017-8829 as we can now use the
+      $LoadBlessed option of YAML:XS. Thanks to Dylan Aïssi for the report.
+      (Closes: #894747)
 
   * lib/Lintian/Check.pm:
     + [CL] Avoid false positives in spelling detection by allowing "(s)"

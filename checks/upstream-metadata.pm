@@ -27,6 +27,8 @@ use Lintian::Tags qw(tag);
 
 use YAML::XS;
 
+$YAML::XS::LoadBlessed = 0;
+
 sub run {
     my (undef, undef, $info) = @_;
     my $yamlfile = $info->index_resolved_path('debian/upstream/metadata');
@@ -38,7 +40,6 @@ sub run {
 
     if ($yamlfile->is_open_ok) {
         my $yaml;
-        return if 1; # YAML::XS executes code
         eval { $yaml = YAML::XS::LoadFile($yamlfile->fs_path); };
         if (!$yaml) {
             my $msg;
