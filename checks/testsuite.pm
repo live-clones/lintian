@@ -51,6 +51,7 @@ my %KNOWN_RESTRICTIONS = map { $_ => 1 } qw(
   build-needed
   isolation-container
   isolation-machine
+  needs-reboot
   needs-recommends
   needs-root
   rw-build-tree
