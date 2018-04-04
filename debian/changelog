@@ -42,6 +42,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
       $LoadBlessed option of YAML::XS if we have version 0.69 or above
       Thanks to Dylan Aïssi for the report.  (Closes: #894747)
 
+  * commands/lintian.pm, checks/{fields,patch-systems,python}, ...:
+    + [CL] Apply patch from Ville Skyttä correcting many spelling mistakes
+      in Lintian itself.  Thanks!  (Closes: #894834)
+
   * lib/Lintian/Check.pm:
     + [CL] Avoid false positives in spelling detection by allowing "(s)"
       suffixes instead of universally stripping all parenthesis.  This

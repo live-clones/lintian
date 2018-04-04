@@ -285,7 +285,7 @@ sub check_patch {
         my $tag_emitter
           = spelling_tag_emitter('spelling-error-in-patch-description',
             $patch_file);
-        # Check the first line seperately to avoid duplicates
+        # Check the first line separately to avoid duplicates
         foreach my $x (split(/\n/, $description, 2)) {
             check_spelling($x, $group->info->spelling_exceptions,$tag_emitter);
         }

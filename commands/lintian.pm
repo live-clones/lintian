@@ -194,7 +194,7 @@ EOT-EOT-EOT
         print <<"EOT-EOT-EOT";
     --tag-display-limit X     Specify "tag per package" display limit
     --no-tag-display-limit    Disable "tag per package" display limit
-                              (equivalant to --tag-display-limit=0)
+                              (equivalent to --tag-display-limit=0)
 EOT-EOT-EOT
     }
 

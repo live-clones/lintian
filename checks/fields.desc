@@ -1458,7 +1458,7 @@ Info: This package has a relationship with the default-mta virtual
  default-mta and mail-transport-agent should only ever be in a set of
  alternatives together, with default-mta listed first.
  .
- Please add a "or" depedency on mail-transport-agent after
+ Please add a "or" dependency on mail-transport-agent after
  default-mta.
 
 Tag: mail-transport-agent-dependency-does-not-specify-default-mta
@@ -1471,7 +1471,7 @@ Info: This package has a relationship with the mail-transport-agent
  default-mta and mail-transport-agent should only ever be in a set of
  alternatives together, with default-mta listed first.
  .
- Please add a "or" depedency on default-mta before
+ Please add a "or" dependency on default-mta before
  mail-transport-agent.
 
 Tag: default-mta-dependency-not-listed-first

@@ -43,7 +43,7 @@ Info: This source package appears to generate the specified Python 2 package
  package and, if not, consider removing it.
  .
  Alternatively, ensure that the corresponding package specifies the
- <tt>${python3:Depends}</tt> substvar in its binary depedencies.
+ <tt>${python3:Depends}</tt> substvar in its binary dependencies.
 
 Tag: build-depends-on-python-sphinx-only
 Severity: normal

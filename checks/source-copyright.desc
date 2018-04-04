@@ -53,7 +53,7 @@ Severity: pedantic
 Certainty: certain
 Ref: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Info: Format URI of the machine-readable copyright file uses the plain HTTP
- unencrypted transport protocol.  Using HTTPS is prefered since policy 4.0.0.
+ unencrypted transport protocol.  Using HTTPS is preferred since policy 4.0.0.
  .
  Please use
  <tt>https://www.debian.org/doc/packaging-manuals/copyright-format/<i>version</i>/</tt>
