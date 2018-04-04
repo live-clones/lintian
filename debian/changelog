@@ -10,6 +10,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Add a pedantic warning for upstream tarballs that contain empty
       directories as these can cause problems with git-buildpackage.
       Thanks to Balint Reczey for the idea!  (Closes: #894368)
+  * checks/gir.{desc,pm}:
+    + [CL] Apply a patch series from Simon McVittie to match the Gobject
+      Introspection policy and fixing a series of false-positives. Thanks!
+      (Closes: #881491)
   * checks/java.{desc,pm}:
     + [CL] Apply patch from Bas Couwenberg to bump the maximum permissible
       bytecode version number now that openjdk-9 is now the default-jdk.
