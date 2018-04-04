@@ -39,6 +39,8 @@ sub run {
     }
 
     if ($yamlfile->is_open_ok) {
+        # Need 0.69 for $LoadBlessed (#861958)
+        return if $YAML::XS::VERSION < 0.69;
         my $yaml;
         eval { $yaml = YAML::XS::LoadFile($yamlfile->fs_path); };
         if (!$yaml) {

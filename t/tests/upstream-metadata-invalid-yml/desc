@@ -1,4 +1,5 @@
 Testname: upstream-metadata-invalid-yml
 Version: 1.0
 Description: Tests for upstream-metadata being invalid yml
+Test-Depends: libyaml-libyaml-perl (>= 0.69)
 Test-For: upstream-metadata-yaml-invalid
