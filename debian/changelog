@@ -46,6 +46,9 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Apply patch from Ville Skyttä correcting many spelling mistakes
       in Lintian itself.  Thanks!  (Closes: #894834)
 
+  * data/standards-version/release-dates:
+    + [CL] Add 4.1.4 as a known Standards-Version.
+
   * lib/Lintian/Check.pm:
     + [CL] Avoid false positives in spelling detection by allowing "(s)"
       suffixes instead of universally stripping all parenthesis.  This
