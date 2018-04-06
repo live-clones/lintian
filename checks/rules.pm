@@ -409,10 +409,6 @@ sub run {
                     tag 'debian-rules-missing-required-target', $target;
                 } elsif ($typerule eq 'recommended_allindep') {
                     tag 'debian-rules-missing-recommended-target', $target;
-                } elsif ($typerule eq 'goodpractice_dfsg') {
-                    tag 'debian-rules-missing-good-practice-target-dfsg',
-                      $target
-                      if $info->repacked;
                 } else {
                     $typerule ||= '<N/A>';
                     croak(

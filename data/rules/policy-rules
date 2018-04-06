@@ -5,8 +5,6 @@
 # - "required"  => For required rules (prior to 3.9.4)
 # - recommended_allindep => For the new required targets in 3.9.4
 #    (these used to just be recommended)
-# - goodpractice_dfsg => Target recommended for repacked packages
-#    (e.g. packages with non-free files removed)
 build             required
 binary            required
 binary-arch       required
@@ -14,4 +12,3 @@ binary-indep      required
 clean             required
 build-arch        recommended_allindep
 build-indep       recommended_allindep
-get-orig-source   goodpractice_dfsg

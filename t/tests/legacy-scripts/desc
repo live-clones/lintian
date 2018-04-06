@@ -14,7 +14,6 @@ Test-For:
  copyright-file-lacks-pointer-to-perl-license
  debhelper-but-no-misc-depends
  debhelper-compat-file-is-missing
- debian-rules-missing-good-practice-target-dfsg
  debian-watch-file-declares-multiple-versions
  debian-watch-file-should-dversionmangle-not-uversionmangle
  debian-watch-file-should-use-sf-redirector

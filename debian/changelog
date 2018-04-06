@@ -27,6 +27,10 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Avoid false-positives in Mallard XML files; <link href="...">
       tags are anchor element and not followed automatically. Thanks to
       Simon McVittie for the report.  (Closes: #894690)
+  * checks/rules.{desc,pm}:
+    + [CL] Stop recommending that packages with repacked tarballs specify a
+      get-orig-source target; this was removed in Debian Policy 4.1.4 in
+      favour of uscan(1) and debian/watch.
   * checks/testsuite.{desc,pm}:
     + [CL] Apply patch from Georg Faerber to add missing "needs-reboot" to
       the list of known autopkgtest restrictions.  (Closes: #894817)
