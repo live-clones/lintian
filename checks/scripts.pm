@@ -490,7 +490,7 @@ sub run {
             my $depends = join(' | ',  @depends);
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(wish|tclsh)/) {
-                    tag "$1-script-but-no-$1-dep", $filename;
+                    tag "$1-script-but-no-$1-dep", $filename, "#!$interpreter";
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
                       "($filename)", "#!$interpreter";
