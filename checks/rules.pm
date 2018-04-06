@@ -456,6 +456,9 @@ sub run {
           if @lines and none { m/(DEB_BUILD_OPTIONS|nocheck)/ } @conditionals;
     }
 
+    tag 'debian-rules-contains-unnecessary-get-orig-source-target'
+      if any { m/^\s+uscan\b/ } @{$rules_per_target{'get-orig-source'}};
+
     # Make sure that all the required build dependencies are there.  Don't
     # issue missing-build-dependency errors for debhelper, since there's
     # another test that does that and it would just be a duplicate.

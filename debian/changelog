@@ -31,6 +31,9 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [CL] Stop recommending that packages with repacked tarballs specify a
       get-orig-source target; this was removed in Debian Policy 4.1.4 in
       favour of uscan(1) and debian/watch.
+    + [CL] Warn about packages that have apparently unnecessary
+      "get-orig-source" targets such as single-line calls to uscan(1).
+      Thanks to Mattia Rizzolo for the idea.  (Closes: #895036)
   * checks/scripts.pm:
     + [CL] Also include the offending/unknown shebang in the output of
       missing (unversioned) interpreters.
