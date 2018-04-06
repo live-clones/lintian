@@ -502,7 +502,7 @@ sub run {
             $depends =~ s/\$1/$version/g;
             unless ($all_parsed->implies($depends)) {
                 if ($base =~ /^(python|ruby)/) {
-                    tag "$1-script-but-no-$1-dep", $filename;
+                    tag "$1-script-but-no-$1-dep", $filename,"#!$interpreter";
                 } else {
                     tag 'missing-dep-for-interpreter', "$base => $depends",
                       "($filename)", "#!$interpreter";

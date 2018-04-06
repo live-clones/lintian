@@ -19,7 +19,7 @@ E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/php7.0foo #!/usr/bin
 E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpenvfoo #!php
 E: scripts: php-script-but-no-php-cli-dep usr/share/scripts/phpfoo #!/usr/bin/php
 E: scripts: python-package-missing-depends-on-python
-E: scripts: python-script-but-no-python-dep usr/bin/py2.Xfoo
+E: scripts: python-script-but-no-python-dep usr/bin/py2.Xfoo #!python2.2
 E: scripts: python-script-but-no-python-dep usr/bin/pyfoo #!python
 E: scripts: script-without-interpreter control/prerm
 E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
