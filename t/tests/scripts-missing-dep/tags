@@ -3,7 +3,7 @@ E: scripts-missing-dep: mawk-script-but-no-mawk-dep usr/bin/mawk-script #!/usr/b
 E: scripts-missing-dep: php-script-but-no-php-cli-dep usr/bin/php-script #!/usr/bin/php
 E: scripts-missing-dep: python-script-but-no-python-dep usr/bin/python-script #!/usr/bin/python
 E: scripts-missing-dep: ruby-script-but-no-ruby-dep usr/bin/ruby-script #!/usr/bin/ruby
-E: scripts-missing-dep: tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script
-E: scripts-missing-dep: wish-script-but-no-wish-dep usr/bin/wish-script
+E: scripts-missing-dep: tclsh-script-but-no-tclsh-dep usr/bin/tclsh-script #!/usr/bin/tclsh
+E: scripts-missing-dep: wish-script-but-no-wish-dep usr/bin/wish-script #!/usr/bin/wish
 W: scripts-missing-dep: maintainer-script-needs-depends-on-adduser postinst
 W: scripts-missing-dep: maintainer-script-needs-depends-on-update-inetd postinst
