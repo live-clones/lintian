@@ -68,6 +68,9 @@ lintian (2.5.81) UNRELEASED; urgency=medium
       prevents, for example, "directory(s)" from triggering false-positive
       whilst still warning about "directorys".  Thanks to Patrick Matthäi
       for the report.  (Closes: #894077)
+  * lib/Lintian/Util.pm:
+    + [NT] Fix a bug in do_fork that could cause lintian to fork bomb.
+      (See #890873)
 
  -- Chris Lamb <lamby@debian.org>  Sun, 18 Mar 2018 22:55:23 -0400
 

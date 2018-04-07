@@ -904,8 +904,16 @@ sub do_fork() {
             }
         }
     }
-    sigprocmask(SIG_SETMASK, $orig_mask, undef)
-      or die("sigprocmask failed: $!\n");
+    if (!sigprocmask(SIG_SETMASK, $orig_mask, undef)) {
+        # The child MUST NOT use die as the caller cannot distinguish
+        # the caller from the child via an exception.
+        my $sigproc_error = $!;
+        if (not defined($pid) or $pid != 0) {
+            die("sigprocmask failed (do_fork, parent): $sigproc_error\n");
+        }
+        print STDERR "sigprocmask failed (do_fork, child): $sigproc_error\n";
+        POSIX::_exit(255);
+    }
     if (not defined($pid)) {
         $! = $fork_error;
     }
