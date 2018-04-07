@@ -1,6 +1,13 @@
-lintian (2.5.81) UNRELEASED; urgency=medium
+lintian (2.5.81) unstable; urgency=medium
 
-  XXX: generate tag summary
+  The "Policy 4.1.4" release.
+
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-contains-unnecessary-get-orig-source-target
+      - source-contains-empty-directory
+    + Removed:
+      - debian-rules-missing-good-practice-target-dfsg
 
   * checks/control-file.desc:
     + [CL] Correct location of "AutomaticDebugPackages" wiki page in the
@@ -61,6 +68,8 @@ lintian (2.5.81) UNRELEASED; urgency=medium
 
   * data/standards-version/release-dates:
     + [CL] Add 4.1.4 as a known Standards-Version.
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
 
   * lib/Lintian/Check.pm:
     + [CL] Avoid false positives in spelling detection by allowing "(s)"
@@ -72,7 +81,7 @@ lintian (2.5.81) UNRELEASED; urgency=medium
     + [NT] Fix a bug in do_fork that could cause lintian to fork bomb.
       (See #890873)
 
- -- Chris Lamb <lamby@debian.org>  Sun, 18 Mar 2018 22:55:23 -0400
+ -- Chris Lamb <lamby@debian.org>  Sat, 07 Apr 2018 08:17:26 +0000
 
 lintian (2.5.80) unstable; urgency=medium
 
