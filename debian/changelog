@@ -1,3 +1,9 @@
+lintian (2.5.82) UNRELEASED; urgency=medium
+
+  XXX: generate tag summary
+
+ -- Chris Lamb <lamby@debian.org>  Sat, 07 Apr 2018 10:14:46 +0100
+
 lintian (2.5.81) unstable; urgency=medium
 
   The "Policy 4.1.4" release.
