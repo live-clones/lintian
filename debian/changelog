@@ -2,6 +2,12 @@ lintian (2.5.82) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/python.pm:
+    + [CL] Apply patch from Pierre-Elliott Bécue to loosen the changelog
+      parsing of the new-package-should-not-package-python2-module tag to
+      allow (for example) "Python 2 variant" as well as "Python2
+      variant".  Thanks!  (Closes: #895128)
+
  -- Chris Lamb <lamby@debian.org>  Sat, 07 Apr 2018 10:14:46 +0100
 
 lintian (2.5.81) unstable; urgency=medium
