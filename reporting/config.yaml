@@ -66,3 +66,7 @@ lintian:
 ## via "$config_vars{VAR}"
 template-variables:
   LINTIAN_SOURCE: https://anonscm.debian.org/git/lintian/lintian.git
+
+## Source packages to not process
+blacklist:
+- gcc-8-cross-ports # #890873

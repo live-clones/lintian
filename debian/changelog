@@ -8,6 +8,11 @@ lintian (2.5.82) UNRELEASED; urgency=medium
       allow (for example) "Python 2 variant" as well as "Python2
       variant".  Thanks!  (Closes: #895128)
 
+  * commands/reporting-sync-state.pm:
+    + [CL] Add support for blacklisting source packages in order to prevent
+      some currently-problematic packages such as gcc-8-cross-ports
+      preventing the update of https://lintian.debian.org/.  (See #890873)
+
  -- Chris Lamb <lamby@debian.org>  Sat, 07 Apr 2018 10:14:46 +0100
 
 lintian (2.5.81) unstable; urgency=medium

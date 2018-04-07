@@ -88,8 +88,24 @@ sub required_cfg_non_empty_list_value {
     return $v;
 }
 
+sub optional_cfg_list_value {
+    my (@keys) = @_;
+    my $v = $CONFIG;
+    for my $key (@keys) {
+        if (not exists($v->{$key})) {
+            return [];
+        }
+        $v = $v->{$key};
+    }
+    if (ref($v) ne 'ARRAY') {
+        my $k = join('.', @keys);
+        die("Invalid configuration: ${k} must be a list (or missing)\n");
+    }
+    return $v;
+}
+
 sub main {
-    my ($state_dir, $state, $archives);
+    my ($state_dir, $state, $archives, %blacklist);
     STDOUT->autoflush;
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     Getopt::Long::GetOptions(%OPT_HASH) or die("error parsing options\n");
@@ -105,6 +121,7 @@ sub main {
           . (scalar(keys(%{$state->{'groups'}})))
           . ' groups');
     $archives = required_cfg_value('archives');
+    %blacklist = map { $_ => 1 } @{optional_cfg_list_value('blacklist')};
     for my $archive (sort(keys(%{$archives}))) {
         log_debug("Processing archive $archive");
         my $path = required_cfg_value('archives', $archive, 'base-dir');
@@ -117,7 +134,7 @@ sub main {
           = required_cfg_non_empty_list_value('archives', $archive,
             'distributions');
         local_mirror_manifests($state, $path, $distributions, $components,
-            $archs);
+            $archs, \%blacklist);
     }
 
     cleanup_state($state);
@@ -333,11 +350,15 @@ sub cleanup_group_state {
 
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
 sub _parse_srcs_pg {
-    my ($state, $extra_metadata, $paragraph) = @_;
+    my ($state, $blacklist, $extra_metadata, $paragraph) = @_;
     my $dir = $paragraph->{'directory'}//'';
     my $group_id = $paragraph->{'package'} . '/' . $paragraph->{'version'};
     my $member_id = "source:${group_id}";
     my (%data, %group_metadata, $group_mirror_md);
+    if (exists $blacklist->{$paragraph->{'package'}}) {
+        log_debug("Ignoring blacklisted package src:$paragraph->{'package'}");
+        return;
+    }
     # only include the source if it has any binaries to be checked.
     # - Otherwise we may end up checking a source with no binaries
     #   (happens if the architecture is "behind" in building)
@@ -369,7 +390,7 @@ sub _parse_srcs_pg {
 
 # Helper for local_mirror_manifests - it parses a paragraph from Packages file
 sub _parse_pkgs_pg {
-    my ($state, $extra_metadata, $type, $paragraph) = @_;
+    my ($state, $blacklist, $extra_metadata, $type, $paragraph) = @_;
     my ($group_id, $member_id, %data, %group_metadata, $b64_checksum);
     my $package = $paragraph->{'package'};
     my $version = $paragraph->{'version'};
@@ -379,6 +400,11 @@ sub _parse_pkgs_pg {
     } elsif ($paragraph->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
         $paragraph->{'source'} = $1;
         $paragraph->{'source-version'} = $2;
+    }
+    if (exists $blacklist->{$paragraph->{'source'}}) {
+        log_debug("Ignoring binary package $package: it is part of "
+              . "blacklisted source package $paragraph->{'source'}");
+        return;
     }
     if (not defined($paragraph->{'source-version'})) {
         $paragraph->{'source-version'} = $paragraph->{'version'};
@@ -413,9 +439,10 @@ sub _parse_pkgs_pg {
 # $dists  - listref of dists to consider (e.g. ['unstable'])
 # $components  - listref of components to consider (e.g. ['main', 'contrib', 'non-free'])
 # $archs  - listref of archs to consider (e.g. ['i386', 'amd64'])
+# $blacklist  - hashref of source packages to ignore (e.g. {'gcc-8-cross-ports' => 1})
 #
 sub local_mirror_manifests {
-    my ($state, $mirdir, $dists, $components, $archs) = @_;
+    my ($state, $mirdir, $dists, $components, $archs, $blacklist) = @_;
     foreach my $dist (@$dists) {
         foreach my $component (@{$components}) {
             my $srcs = "$mirdir/dists/$dist/$component/source/Sources";
@@ -434,11 +461,13 @@ sub local_mirror_manifests {
                   = "${dist_path}/debian-installer/binary-$arch/Packages";
                 my $pkgfd = _open_data_file($pkgs);
                 my $binsub = sub {
-                    _parse_pkgs_pg($state, \%extra_metadata, 'binary', @_);
+                    _parse_pkgs_pg($state, $blacklist, \%extra_metadata,
+                        'binary', @_);
                 };
                 my $upkgfd;
                 my $udebsub = sub {
-                    _parse_pkgs_pg($state, \%extra_metadata, 'udeb', @_);
+                    _parse_pkgs_pg($state, $blacklist, \%extra_metadata,
+                        'udeb', @_);
                 };
                 visit_dpkg_paragraph($binsub, $pkgfd);
                 close($pkgfd);
@@ -447,7 +476,8 @@ sub local_mirror_manifests {
                 close($upkgfd);
             }
             $srcfd = _open_data_file($srcs);
-            $srcsub = sub { _parse_srcs_pg($state, \%extra_metadata, @_) };
+            $srcsub
+              = sub { _parse_srcs_pg($state, $blacklist, \%extra_metadata, @_) };
             visit_dpkg_paragraph($srcsub, $srcfd);
             close($srcfd);
         }
