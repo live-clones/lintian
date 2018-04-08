@@ -13,6 +13,10 @@ lintian (2.5.82) UNRELEASED; urgency=medium
       some currently-problematic packages such as gcc-8-cross-ports
       preventing the update of https://lintian.debian.org/.  (See #890873)
 
+  * lib/Lintian/Collect/Package.pm:
+    + [CL] Allow spaces within the ownership field of tar -tvf output
+      whilst still allowing spaces in filenames.  (Closes: #895175)
+
  -- Chris Lamb <lamby@debian.org>  Sat, 07 Apr 2018 10:14:46 +0100
 
 lintian (2.5.81) unstable; urgency=medium

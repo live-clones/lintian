@@ -437,7 +437,16 @@ sub _fetch_index_data {
 
         my (%file, $perm, $operm, $ownership, $name, $raw_type, $size);
         my ($date, $time);
-        ($perm,$ownership,$size,$date,$time,$name)=split(' ', $line, 6);
+
+        # Parse line from output of "tar -tvf" allowing for spaces within the
+        # ownership field whilst still allowing spaces in filenames. (#895175)
+        #
+        # Note this cannot ever be 100% reliable as the filename might contain
+        # "fake" dates.
+        ($perm,$ownership,$size,$date,$time,$name)
+          = $line
+          =~ /^([-drwx]{10}) (.*?) (\d+) (\d{4}-\d\d-\d\d) (\d\d:\d\d) (.*)$/;
+        $ownership =~ s/\s+$//;
 
         $file{'date_time'} = "${date} ${time}";
         $raw_type = substr($perm, 0, 1);
