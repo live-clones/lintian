@@ -21,7 +21,7 @@ Build-Depends: aspell <!nocheck>,
 # it is not available in Jessie.
                default-jdk-headless <!nocheck> | default-jdk <!nocheck>,
 # Use bash as a Jessie indicator (dh-elpa is only used for a test)
-               dh-elpa  <!nocheck> | bash (<< 4.4) <!nocheck>,
+               dh-elpa <!nocheck> | bash (<< 4.4) <!nocheck>,
                diffstat <!nocheck>,
                docbook-utils,
                docbook-xml,
