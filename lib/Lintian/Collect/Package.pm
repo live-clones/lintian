@@ -444,8 +444,7 @@ sub _fetch_index_data {
         # Note this cannot ever be 100% reliable as the filename might contain
         # "fake" dates.
         ($perm,$ownership,$size,$date,$time,$name)
-          = $line
-          =~ /^([-drwx]{10}) (.*?) (\d+) ([-\d]{10}) ([:\d]{5,8}) (.*)$/;
+          = $line=~ /^(.{10}) (.*?) (\d+) ([-\d]{10}) ([:\d]{5,8}) (.*)$/;
         $ownership =~ s/\s+$//;
 
         $file{'date_time'} = "${date} ${time}";
