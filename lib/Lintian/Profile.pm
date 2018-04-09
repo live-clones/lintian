@@ -591,7 +591,7 @@ sub _load_check {
             last;
         }
     }
-    croak "$profile references unknown $check" unless defined $dir;
+    croak "$profile references unknown check $check" unless defined $dir;
     return $self->_parse_check($check, $dir);
 }
 
