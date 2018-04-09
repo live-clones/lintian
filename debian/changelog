@@ -24,6 +24,12 @@ lintian (2.5.82) UNRELEASED; urgency=medium
       some currently-problematic packages such as gcc-8-cross-ports
       preventing the update of https://lintian.debian.org/.  (See #890873)
 
+  * vendors/pureos/main/data/changes-file/derivative-versions:
+    + [CL] Ensure that PureOS packages always end with (eg. pureosX).
+  * vendors/pureos/main/data/fields/derivative-fields:
+    + [CL] Add PureOS-specific field name validation, such as ensuring the
+      Maintainer field is updated to the mailing list.
+
   * lib/Lintian/Collect/Package.pm:
     + [CL] Allow spaces within the ownership field of tar -tvf output
       whilst still allowing spaces in filenames.  (Closes: #895175)
