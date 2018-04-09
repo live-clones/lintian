@@ -57,6 +57,16 @@ our $KNOWN_VCS_BROWSERS
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 } ('non-free', 'contrib');
 
+my $DERIVATIVE_FIELDS = Lintian::Data->new(
+    'fields/derivative-fields',
+    qr/\s*\~\~\s*/,
+    sub {
+        my ($regexp, $explanation) = split(/\s*\~\~\s*/, $_[1], 2);
+        return {
+            'regexp' => qr/$regexp/,
+            'explanation' => $explanation,
+        };
+    });
 my $KNOWN_PRIOS = Lintian::Data->new('fields/priorities');
 
 our @supported_source_formats = (qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/);
@@ -1418,6 +1428,18 @@ sub run {
 
     tag 'no-strong-digests-in-dsc'
       if $type eq 'source' && !$info->field('checksums-sha256');
+
+    #----- Derivative-specific field checks
+
+    if ($type eq 'source') {
+        foreach my $field ($DERIVATIVE_FIELDS->all) {
+            my $val = $info->field($field, '-');
+            my $data = $DERIVATIVE_FIELDS->value($field);
+            tag 'invalid-field-for-derivative',
+              "$field: $val ($data->{'explanation'})"
+              if $val !~ m/$data->{'regexp'}/;
+        }
+    }
 
     #----- Field checks (without checking the value)
 

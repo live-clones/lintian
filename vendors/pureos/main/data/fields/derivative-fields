@@ -1,0 +1,8 @@
+maintainer			~~	^PureOS Maintainers <pureos-project\@lists\.puri\.sm>$	~~ != PureOS Maintainers <pureos-project@lists.puri.sm>
+uploaders			~~	^-$							~~ field must be empty
+xsbc-original-maintainer	~~	.							~~ must be set to original Maintainer field
+vcs-cvs				~~	^-$							~~ field must be empty
+vcs-hg				~~	^-$							~~ field must be empty
+vcs-svn				~~	^-$							~~ field must be empty
+vcs-git				~~	^https://code.puri.sm/pureos/.+\.git$			~~ must point to code.puri.sm
+vcs-browser			~~	^https://code.puri.sm/pureos/.+(?!\.git)$		~~ must point to code.puri.sm
