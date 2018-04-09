@@ -465,6 +465,16 @@ sub run {
     while (my ($dep, $addon) = each %missingbdeps_addons) {
         tag 'missing-build-dependency-for-dh-addon', "$addon => $dep"
           unless ($bdepends_noarch->implies($dep));
+
+        # As a special case, the python3 addon needs a dependency on
+        # dh-python unless the -dev packages are used.
+        my $pkg = 'dh-python';
+        tag 'missing-build-dependency-for-dh-addon',"$addon => $pkg"
+          if $addon eq 'python3'
+          && $bdepends_noarch->implies($dep)
+          && !$bdepends_noarch->implies(
+            'python3-dev:any | python3-all-dev:any')
+          && !$bdepends_noarch->implies($pkg);
     }
 
     $dh_bd_version = $level if not defined($dh_bd_version);

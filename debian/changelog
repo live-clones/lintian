@@ -2,6 +2,10 @@ lintian (2.5.82) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/debhelper.pm:
+    + [CL] Add a special case for the python3 addon as it needs a
+      dependency on dh-python unless the -dev packages are used.
+      Thanks to Julian Andres Klode for the report.  (Closes: #895284)
   * checks/python.pm:
     + [CL] Apply patch from Pierre-Elliott Bécue to loosen the changelog
       parsing of the new-package-should-not-package-python2-module tag to
