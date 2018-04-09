@@ -1,5 +1,6 @@
 Testname: debhelper-dh-with-python3-unrel
 Version: 1.0
 Description: Check dependency requirements for dh --with python3 (false positive)
+Test-Depends: dh-python
 Test-Against:
  missing-build-dependency-for-dh-addon
