@@ -1,0 +1,5 @@
+# Derivative-specific version number validation
+#
+# format: $regex ~~ explanation
+
+.	~~	always matches

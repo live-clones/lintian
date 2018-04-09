@@ -32,6 +32,8 @@ use Lintian::Util qw(get_file_checksum);
 
 my $KNOWN_DISTS = Lintian::Data->new('changes-file/known-dists');
 my $SIGNING_KEY_FILENAMES = Lintian::Data->new('common/signing-key-filenames');
+my $DERIVATIVE_VERSIONS= Lintian::Data->new('changes-file/derivative-versions',
+    qr/\s*~~\s*/, sub { $_[1]; });
 
 sub run {
     my (undef, undef, $info, undef, $group) = @_;
@@ -252,6 +254,14 @@ sub run {
         tag 'checksum-count-mismatch-in-changes-file',
           "$seen $alg checksums != $expected files"
           if $seen != $expected;
+    }
+
+    # Check version field
+    my $version = $info->field('version');
+    foreach my $re ($DERIVATIVE_VERSIONS->all) {
+        next if $version =~ m/$re/;
+        my $explanation = $DERIVATIVE_VERSIONS->value($re);
+        tag 'invalid-version-number-for-derivative', $version,"($explanation)";
     }
 
     return;

@@ -2,6 +2,10 @@ lintian (2.5.82) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changes-file.{desc,pm}:
+    + [CL] Add support for derivative-specific version validation to permit
+      enforcement of additional restrictions on the version number such as
+      being suffixed by "derivativeos1", etc.
   * checks/debhelper.pm:
     + [CL] Add a special case for the python3 addon as it needs a
       dependency on dh-python unless the -dev packages are used.
