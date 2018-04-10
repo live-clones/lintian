@@ -217,5 +217,6 @@ chmod 777 -R /bad
 chmod 777 --recursive /bad
 chmod --recursive 777 /bad
 find /bad -maxdepth 2 -type d -exec chown root:root {} \; # (#895370)
+find /bad -maxdepth 2 -type d -exec chmod 777  # (#895370)
 
 #DEBHELPER#

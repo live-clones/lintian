@@ -50,6 +50,7 @@ W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:217
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:218
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:219
+W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:220
 W: scripts-maintainer-general: maintainer-script-should-not-use-recursive-chown-or-chmod postinst:84
 W: scripts-maintainer-general: maintainer-script-should-not-use-start-stop-daemon postinst:138
 W: scripts-maintainer-general: maintainer-script-should-not-use-start-stop-daemon postinst:78
