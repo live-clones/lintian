@@ -26,7 +26,7 @@ lintian (2.5.82) UNRELEASED; urgency=medium
 
   * data/scripts/maintainer-script-bad-command:
     + [CL] Also check for find(1) calls when checking for maintainer
-      scripts that use a recursive chown.  Thanks to Daniel Kahn Gillmore
+      scripts that use a recursive chown.  Thanks to Daniel Kahn Gillmor
       for the report.  (Closes: #895370)
 
   * vendors/pureos/main/data/changes-file/derivative-versions:
