@@ -24,6 +24,11 @@ lintian (2.5.82) UNRELEASED; urgency=medium
       some currently-problematic packages such as gcc-8-cross-ports
       preventing the update of https://lintian.debian.org/.  (See #890873)
 
+  * data/scripts/maintainer-script-bad-command:
+    + [CL] Also check for find(1) calls when checking for maintainer
+      scripts that use a recursive chown.  Thanks to Daniel Kahn Gillmore
+      for the report.  (Closes: #895370)
+
   * vendors/pureos/main/data/changes-file/derivative-versions:
     + [CL] Ensure that PureOS packages always end with (eg. pureosX).
   * vendors/pureos/main/data/fields/derivative-fields:
