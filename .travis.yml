@@ -47,3 +47,6 @@ script:
 branches:
   except:
     - /^debian\/\d/
+
+if:
+  tag IS blank
