@@ -233,7 +233,7 @@ sub init_globals {
     # Provide a default URL for the source code.  It might not be correct for
     # the given installation, but it is better than nothing.
     $TEMPLATE_CONFIG_VARS->{'LINTIAN_SOURCE'}
-      //= 'https://anonscm.debian.org/git/lintian/lintian.git';
+      //= 'https://salsa.debian.org/lintian/lintian.git';
 
     my $profile = dplint::load_profile();
 

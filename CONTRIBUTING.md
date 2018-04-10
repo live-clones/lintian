@@ -11,7 +11,7 @@ Getting started
 
 Please checkout the repository from anonscm.debian.org:
 
-    $ git clone https://anonscm.debian.org/git/lintian/lintian.git
+    $ git clone https://salsa.debian.org/lintian/lintian.git
     $ cd lintian
 
 You will also need a number of dependencies.  On a very recent Debian

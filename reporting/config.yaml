@@ -65,7 +65,7 @@ lintian:
 ## All of these variables will be available for templates to consume
 ## via "$config_vars{VAR}"
 template-variables:
-  LINTIAN_SOURCE: https://anonscm.debian.org/git/lintian/lintian.git
+  LINTIAN_SOURCE: https://salsa.debian.org/git/lintian/lintian.git
 
 ## Source packages to not process
 blacklist:
