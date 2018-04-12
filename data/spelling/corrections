@@ -14,8 +14,6 @@
 #
 # Note that corrections involving multiple word mistakes or case errors
 # should be included in the appropriate data file, rather than here.
-#
-# Please keep the list sorted using `make sort`
 
 abailable||available
 abandonded||abandoned
