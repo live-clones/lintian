@@ -2,6 +2,10 @@ lintian (2.5.83) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * data/spelling/corrections:
+    + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
+      for the report.  (Closes: #895573)
+
  -- Chris Lamb <lamby@debian.org>  Thu, 12 Apr 2018 12:07:28 +0100
 
 lintian (2.5.82) unstable; urgency=medium
