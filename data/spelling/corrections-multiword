@@ -5,7 +5,7 @@
 # The format of each line is:
 # SPELLING_MISTAKE_REGEX||correction
 #
-# Please keep the list sorted using `make sort`
+# Please keep the list sorted using `make sort` in this directory.
 
 (?i)allows to||allows one to
 (?i)allow to||allow one to

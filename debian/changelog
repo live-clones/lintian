@@ -5,7 +5,6 @@ lintian (2.5.83) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
       for the report.  (Closes: #895573)
-    + [CL] Drop reference to "make sort" as it no longer exists.
 
  -- Chris Lamb <lamby@debian.org>  Thu, 12 Apr 2018 12:07:28 +0100
 
