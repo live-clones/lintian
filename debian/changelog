@@ -2,6 +2,9 @@ lintian (2.5.83) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.desc:
+    + [ADB] Add missing URL in vcs-deprecated-in-debian-infrastructure's
+      description, which was accidentally lost in lintian 2.5.80.
   * checks/version-substvars.desc:
     + [CL] Correct confusing not-binnmuable-any-depends-all tag
       description caused by blind replacement of ${Source-Version} to

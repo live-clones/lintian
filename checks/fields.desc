@@ -1395,6 +1395,7 @@ Info: The specified Vcs-* field points to an area within the *.debian.org
  After 1st May 2018, Debian will not offer hosting for any version
  control system other than Git and the Alioth service will become
  read-only in May 2018. Packages should migrate to Git hosting on
+ https://salsa.debian.org.
  .
  For further information about salsa.debian.org, including how to add
  HTTP redirects from alioth, please consult the Debian Wiki.
