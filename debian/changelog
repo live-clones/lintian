@@ -2,6 +2,11 @@ lintian (2.5.83) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/version-substvars.desc:
+    + [CL] Correct confusing not-binnmuable-any-depends-all tag
+      description caused by blind replacement of ${Source-Version} to
+      ${source:Version} in 4fd0fa4bc3.  (Closes: #895656)
+
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
       for the report.  (Closes: #895573)
