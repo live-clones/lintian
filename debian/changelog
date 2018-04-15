@@ -9,6 +9,10 @@ lintian (2.5.83) UNRELEASED; urgency=medium
     + [CL] Correct confusing not-binnmuable-any-depends-all tag
       description caused by blind replacement of ${Source-Version} to
       ${source:Version} in 4fd0fa4bc3.  (Closes: #895656)
+    + [CL] Correct classification of the maybe-not-arch-all-binnmuable
+      tag by marking it as "experimental", downgrading the certainty to
+      "wild guess" and re-adding a note recommending against making any
+      changes at this point.  Thanks, Jeremy Bicha!  (Closes: #895674)
 
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
