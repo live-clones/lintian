@@ -18,6 +18,9 @@ lintian (2.5.83) UNRELEASED; urgency=medium
     + [CL] Add "selectOn" to the list of spelling-error-in-binary
       exceptions; it exists in the source as part of a "void
       ToolBoxWidget::selectOn()" method signature, etc.  (Closes: #895818)
+  * data/rules/should-not-use:
+    + [CL] Detect debian/rules files that specify the sanitize=+all build
+      flag.  (Closes: #895811)
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
       for the report.  (Closes: #895573)

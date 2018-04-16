@@ -391,3 +391,21 @@ Info: This package's <tt>debian/rules</tt> file contains a
  and a <tt>Files-Excluded</tt> header in the <tt>debian/copyright</tt>
  file.
 Ref: uscan(1)
+
+Tag: debian-rules-should-not-use-sanitize-all-buildflag
+Severity: important
+Certainty: certain
+Info: This package's <tt>debian/rules</tt> file contains a
+ <tt>DEB_BUILD_MAINT_OPTIONS</tt> assignment that enables the
+ <tt>sanitize=+all</tt> build flag.
+ .
+ This option instructs the compiler to enable options designed to
+ protect the binary against memory corruptions, memory leaks, use after
+ free, threading data races, and undefined behavior bugs.
+ .
+ However, this options should not be used for production Debian binaries
+ as they can reduce reliability for conformant code, reduce security or
+ even functionality.
+ .
+ Please remove the reference to <tt>sanitize=+all</tt>.
+Ref: dpkg-buildflags(1), #895811

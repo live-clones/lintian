@@ -8,5 +8,6 @@ debian-rules-should-not-use-DEB_BUILD_OPTS               ~~ \$[\(\{]DEB_BUILD_OP
 debian-rules-should-not-use-DH_EXTRA_ADDONS              ~~ ^\s*DH_EXTRA_ADDONS\s*=\s*(?<info>.*)\n
 debian-rules-should-not-use-or-modify-user-only-variable ~~ \bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b
 debian-rules-should-not-use-pwd                          ~~ \$[\(\{]PWD[\)\}]
+debian-rules-should-not-use-sanitize-all-buildflag       ~~ ^\s*(?:export\s+)?DEB_BUILD_MAINT_OPTIONS\s*:?=.*\bsanitize=\+all\b
 debian-rules-should-not-use-underscore-variable          ~~ \$[\(\{]_[\)\}]
 xz-compression-level-too-high                            ~~ (?<info>dh_builddeb\b.*--.*(?:-z\s*9.*-Z\s*xz|-Z\s*xz.*-z\s*9)\S*)
