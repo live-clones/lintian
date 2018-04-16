@@ -14,6 +14,10 @@ lintian (2.5.83) UNRELEASED; urgency=medium
       "wild guess" and re-adding a note recommending against making any
       changes at this point.  Thanks, Jeremy Bicha!  (Closes: #895674)
 
+  * data/binaries/spelling-exceptions:
+    + [CL] Add "selectOn" to the list of spelling-error-in-binary
+      exceptions; it exists in the source as part of a "void
+      ToolBoxWidget::selectOn()" method signature, etc.  (Closes: #895818)
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
       for the report.  (Closes: #895573)
