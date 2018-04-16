@@ -20,7 +20,7 @@ lintian (2.5.83) UNRELEASED; urgency=medium
       ToolBoxWidget::selectOn()" method signature, etc.  (Closes: #895818)
   * data/rules/should-not-use:
     + [CL] Detect debian/rules files that specify the sanitize=+all build
-      flag.  (Closes: #895811)
+      flag.  (Closes: #895831)
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
       for the report.  (Closes: #895573)
