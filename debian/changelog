@@ -18,6 +18,7 @@ lintian (2.5.83) UNRELEASED; urgency=medium
     + [CL] Add "selectOn" to the list of spelling-error-in-binary
       exceptions; it exists in the source as part of a "void
       ToolBoxWidget::selectOn()" method signature, etc.  (Closes: #895818)
+    + [CL] Add "wIH" to the list of exceptions.  (Closes: #895841)
   * data/rules/should-not-use:
     + [CL] Detect debian/rules files that specify the sanitize=+all build
       flag.  (Closes: #895831)
