@@ -1,6 +1,8 @@
-lintian (2.5.83) UNRELEASED; urgency=medium
+lintian (2.5.83) unstable; urgency=medium
 
-  XXX: generate tag summary
+  * Summary of tag changes:
+    + Added:
+      - debian-rules-should-not-use-sanitize-all-buildflag
 
   * checks/fields.desc:
     + [ADB] Add missing URL in vcs-deprecated-in-debian-infrastructure's
@@ -25,8 +27,9 @@ lintian (2.5.83) UNRELEASED; urgency=medium
   * data/spelling/corrections:
     + [CL] Add "toogle" → "toggle" correction.  Thanks to Thorsten Glaser
       for the report.  (Closes: #895573)
+    + [PW] Add a number of corrections.
 
- -- Chris Lamb <lamby@debian.org>  Thu, 12 Apr 2018 12:07:28 +0100
+ -- Chris Lamb <lamby@debian.org>  Wed, 18 Apr 2018 10:59:00 +0000
 
 lintian (2.5.82) unstable; urgency=medium
 
