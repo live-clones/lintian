@@ -21,6 +21,10 @@ lintian (2.5.84) UNRELEASED; urgency=medium
       introduced in e0c833b3 and disable "anchored roots", otherwise
       resolve_path breaks (eg. systemd-complex-service-file).
 
+  * profiles/pureos/main.profile:
+    + [CL] Also disable the "changelog-should-mention-nmu" and
+      "source-nmu-has-incorrect-version-number" tags.
+
  -- Chris Lamb <lamby@debian.org>  Wed, 18 Apr 2018 12:54:55 +0100
 
 lintian (2.5.83) unstable; urgency=medium
