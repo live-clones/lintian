@@ -18,7 +18,8 @@ lintian (2.5.84) UNRELEASED; urgency=medium
       false-positives for the source-contains-empty-directory tag.  Thanks
       to James McCoy for the report.  (Closes: #896010)
     + [CL] Correct "as_anchored_root_dir" -> "has_anchored_root_dir" typo
-      introduced in e0c833b3.
+      introduced in e0c833b3 and disable "anchored roots", otherwise
+      resolve_path breaks (eg. systemd-complex-service-file).
 
  -- Chris Lamb <lamby@debian.org>  Wed, 18 Apr 2018 12:54:55 +0100
 

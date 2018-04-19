@@ -307,7 +307,7 @@ sub index {
         'index_file' => 'index',
         'index_owner_file' => 'index-owner-id',
         'fs_root_sub' => 'unpacked',
-        'has_anchored_root_dir' => 1,
+        'has_anchored_root_dir' => 0,
         'file_info_sub' => 'file_info',
     };
     return $self->_fetch_index_data($load_info, $file);
