@@ -426,7 +426,7 @@ sub _fetch_index_data {
         '_collect' => $self,
         '_collect_path_sub' => $load_info->{'fs_root_sub'},
         '_collect_file_info_sub' => $load_info->{'file_info_sub'},
-        'has_anchored_root_dir' => $load_info->{'as_anchored_root_dir'},
+        'has_anchored_root_dir' => $load_info->{'has_anchored_root_dir'},
     );
 
     if ($indexown) {
