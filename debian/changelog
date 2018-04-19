@@ -9,8 +9,7 @@ lintian (2.5.84) UNRELEASED; urgency=medium
       dropped after the release of Debian "buster".  Thanks to Adrian Bunk
       for the suggestion.  (Closes: #896079)
 
-  * checks/files.desc, checks/menu-format.desc, checks/menu-format.pm
-    data/menu-format/known-desktop-keys:
+  * checks/{files.desc,menu-format.*}, data/menu-format/known-desktop-keys:
     + [PW] Link to the latest version for all FreeDesktop standards
 
  -- Chris Lamb <lamby@debian.org>  Wed, 18 Apr 2018 12:54:55 +0100
