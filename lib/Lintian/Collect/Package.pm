@@ -507,6 +507,10 @@ sub _fetch_index_data {
         } elsif ($raw_type eq 'l') {
             ($name, $file{link}) = split ' -> ', $name, 2;
             $file{link} = dequote_name($file{link}, 0);
+        } elsif ($raw_type eq 'd') {
+            # Ensure directory names always end with  / or we will add them
+            # multiple times to our index.
+            $name .= '/' if substr($name, -1) ne '/';
         }
         # We store the name here, but will replace it later.  The
         # reason for storing it now is that we may need it during the

@@ -12,6 +12,12 @@ lintian (2.5.84) UNRELEASED; urgency=medium
   * checks/{files.desc,menu-format.*}, data/menu-format/known-desktop-keys:
     + [PW] Link to the latest version for all FreeDesktop standards
 
+  * lib/Lintian/Collect/Package.pm:
+    + [CL] Ensure directory names always end in a trailing "/" to prevent
+      them being added multiple times to our index.  This was resulting in
+      false-positives for the source-contains-empty-directory tag.  Thanks
+      to James McCoy for the report.  (Closes: #896010)
+
  -- Chris Lamb <lamby@debian.org>  Wed, 18 Apr 2018 12:54:55 +0100
 
 lintian (2.5.83) unstable; urgency=medium
