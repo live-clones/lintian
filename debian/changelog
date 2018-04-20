@@ -2,6 +2,10 @@ lintian (2.5.84) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/fields.pm:
+    + [CL] Don't warn about binary-package-depends-on-toolchain-package for
+      Conflicts/Breaks relations.  Thanks to Guillem Jover for the report.
+      (Closes: #896133)
   * checks/python.desc:
     + [CL] Replace all instances of "specifies a dependency on Python 2.x
       which not be maintained past 2020" with a clarification that this

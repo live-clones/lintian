@@ -26,6 +26,7 @@ Package: lib{$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, libdb1-compat, perl-modules-5.22
 Recommends: debconf-doc, cdbs
+Conflicts: debhelper
 Section: libs
 Description: {$description} -- fake library
  This is a fake library designed to exercise some feature or tag of
