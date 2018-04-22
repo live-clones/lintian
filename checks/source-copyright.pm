@@ -438,7 +438,7 @@ sub _parse_dep5 {
                         if(defined($full_licenses_seen{$_})
                             and $_ ne 'public-domain') {
                             tag 'dep5-copyright-license-name-not-unique',
-                              "(paragraph at line $current_line)";
+                              $_, "(paragraph at line $current_line)";
                         } else {
                             $full_licenses_seen{$_} = $current_line;
                         }

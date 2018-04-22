@@ -12,6 +12,9 @@ lintian (2.5.84) UNRELEASED; urgency=medium
       refers to upstream's policy followed by a suggestion that it may be
       dropped after the release of Debian "buster".  Thanks to Adrian Bunk
       for the suggestion.  (Closes: #896079)
+  * checks/source-copyright.pm:
+    + [CL] Add the offending license name to the output of the
+      "dep5-copyright-license-name-not-unique" tag.
 
   * checks/{files.desc,menu-format.*}, data/menu-format/known-desktop-keys:
     + [PW] Link to the latest version for all FreeDesktop standards
