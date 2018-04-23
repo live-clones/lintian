@@ -2,6 +2,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.pm:
+    + [CL] Include the offending version numbers in the output of the
+      non-consecutive-debian-revision tag.
+
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
       annotated release tags.

@@ -344,7 +344,8 @@ sub run {
                 }
                 if ($first_debian =~ /^\d+$/ and $second_debian =~ /^\d+$/) {
                     unless ($first_debian == $second_debian + 1) {
-                        tag 'non-consecutive-debian-revision';
+                        tag 'non-consecutive-debian-revision',
+                          "$first_version -> $second_version";
                     }
                 }
             }
