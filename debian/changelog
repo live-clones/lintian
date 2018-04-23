@@ -2,6 +2,12 @@ lintian (2.5.85) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/description.pm:
+    + [CL] Rework the description-synopsis-might-not-be-phrased-properly
+      tag to ensure we do not cause false-positives for literal "e.g.",
+      "eg.", ellipsis ("..."), "etc.", splitting out the tests to make
+      it clearer and to catch some other corner cases.  Thanks to Andreas
+      Beckmann for the detailed report.  (Closes: #896671)
   * checks/changelog-file.pm:
     + [CL] Prevent false-positives in the non-consecutive-debian-revision
       and possible-new-upstream-release-without-new-version tags by

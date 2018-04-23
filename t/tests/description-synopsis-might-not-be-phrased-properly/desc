@@ -1,0 +1,5 @@
+Testname: description-synopsis-might-not-be-phrased-properly
+Version: 1.0
+Description: Tests for fullstop detection
+Test-For:
+ description-synopsis-might-not-be-phrased-properly

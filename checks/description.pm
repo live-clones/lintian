@@ -85,8 +85,11 @@ sub run {
         if ($synopsis =~ m/^(an?|the)\s/i) {
             tag 'description-synopsis-starts-with-article';
         }
-        if ($synopsis =~ m/(?<!etc)\.(?:\s*$|\s+\S+)/i) {
-            tag 'description-synopsis-might-not-be-phrased-properly';
+        if ($synopsis =~ m/(.*\.)(?:\s*$|\s+\S+)/i) {
+            tag 'description-synopsis-might-not-be-phrased-properly',
+                 unless $1 =~ m/\s+etc\.$/
+              or $1 =~ m/\s+e\.?g\.$/
+              or $1 =~ m/(?<!\.)\.\.\.$/;
         }
         if ($synopsis =~ m/\t/) {
             tag 'description-contains-tabs' unless $tabs++;

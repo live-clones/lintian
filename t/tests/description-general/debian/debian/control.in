@@ -9,7 +9,7 @@ Rules-Requires-Root: no
 Package: {$source}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$source} is a package which tests lintian's description checks.
+Description: {$source} is a package which tests lintian's description checks
  missing
  The the synopsis should not start with the package's name. Moreover,
  the long	description
@@ -54,27 +54,6 @@ Description: some Lintian test package
  Some mroe stuff about this debian test package. (dummy)
  .
  Homepage: <http://lintian.debian.org/>
-
-Package: {$source}-5
-Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$source} starts a sentence. Then starts another.
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
-
-Package: {$source}-ends-etc
-Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: This description ends, etc.
- This is another real Lintian bug which has been discovered with this
- testset.
- .
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
 
 Package: {$source}-short
 Architecture: {$architecture}
