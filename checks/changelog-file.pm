@@ -337,7 +337,8 @@ sub run {
             my $second_debian =substr $second_version,length($second_upstream);
             $second_debian =~ s/-([^-]+)$/$1/ if length($second_debian) > 0;
 
-            if ($first_upstream eq $second_upstream) {
+            if (    $first_upstream eq $second_upstream
+                and $entries[0]->Source eq $entries[1]->Source) {
                 if ($entries[0]->Changes
                     =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
                     tag 'possible-new-upstream-release-without-new-version';

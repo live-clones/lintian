@@ -3,6 +3,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
   XXX: generate tag summary
 
   * checks/changelog-file.pm:
+    + [CL] Prevent false-positives in the non-consecutive-debian-revision
+      and possible-new-upstream-release-without-new-version tags by
+      skipping them if the source package was renamed.  Thanks to Andreas
+      Beckmann for the report.  (Closes: #896675)
     + [CL] Include the offending version numbers in the output of the
       non-consecutive-debian-revision tag.
 
