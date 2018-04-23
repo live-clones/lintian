@@ -1,6 +1,5 @@
-lintian (2.5.84) UNRELEASED; urgency=medium
+lintian (2.5.84) unstable; urgency=medium
 
-  XXX: generate tag summary
 
   * checks/binaries.pm:
     + [CL] Apply patch from Steve McIntyre to fix profiling detection on
@@ -22,6 +21,9 @@ lintian (2.5.84) UNRELEASED; urgency=medium
     + [CL] Add the offending license name to the output of the
       "dep5-copyright-license-name-not-unique" tag.
 
+  * data/spelling/corrections:
+    + [PW] Add a number of corrections.
+
   * lib/Lintian/Collect/Package.pm:
     + [CL] Ensure directory names always end in a trailing "/" to prevent
       them being added multiple times to our index.  This was resulting in
@@ -35,7 +37,7 @@ lintian (2.5.84) UNRELEASED; urgency=medium
     + [CL] Also disable the "changelog-should-mention-nmu" and
       "source-nmu-has-incorrect-version-number" tags.
 
- -- Chris Lamb <lamby@debian.org>  Wed, 18 Apr 2018 12:54:55 +0100
+ -- Chris Lamb <lamby@debian.org>  Mon, 23 Apr 2018 11:50:51 +0000
 
 lintian (2.5.83) unstable; urgency=medium
 
