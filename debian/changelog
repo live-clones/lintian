@@ -2,10 +2,13 @@ lintian (2.5.85) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * doc/releases.md:
+    + [CL] Clarify that we should add an extra bit of whitespace for
+      annotated release tags.
+
  -- Chris Lamb <lamby@debian.org>  Mon, 23 Apr 2018 14:12:59 +0200
 
 lintian (2.5.84) unstable; urgency=medium
-
 
   * checks/binaries.pm:
     + [CL] Apply patch from Steve McIntyre to fix profiling detection on
