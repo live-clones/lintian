@@ -2,6 +2,10 @@ lintian (2.5.84) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/binaries.pm:
+    + [CL] Apply patch from Steve McIntyre to fix profiling detection on
+      armhf which was causing test failures in Ubuntu on that architecture.
+      (Closes: #895574)
   * checks/fields.pm:
     + [CL] Don't warn about binary-package-depends-on-toolchain-package for
       Conflicts/Breaks relations.  Thanks to Guillem Jover for the report.

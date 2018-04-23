@@ -192,7 +192,8 @@ sub run {
             # According to the binutils documentation[1], the profiling symbol
             # can be named "mcount", "_mcount" or even "__mcount".
             # [1] http://sourceware.org/binutils/docs/gprof/Implementation.html
-            if ($sec =~ /^GLIBC_.*/ and $sym =~ m{\A _?+ _?+ mcount \Z}xsm){
+            if (    $sec =~ /^GLIBC_.*/
+                and $sym =~ m{\A _?+ _?+ (gnu_)?+mcount(_nc)?+ \Z}xsm) {
                 $is_profiled = 1;
             } elsif ($arch ne 'hppa') {
                 # This code was used to detect profiled code in Wheezy
