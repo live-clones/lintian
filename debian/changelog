@@ -10,6 +10,8 @@ lintian (2.5.84) UNRELEASED; urgency=medium
     + [CL] Don't warn about binary-package-depends-on-toolchain-package for
       Conflicts/Breaks relations.  Thanks to Guillem Jover for the report.
       (Closes: #896133)
+  * checks/{files.desc,menu-format.*}, data/menu-format/known-desktop-keys:
+    + [PW] Link to the latest version for all FreeDesktop standards
   * checks/python.desc:
     + [CL] Replace all instances of "specifies a dependency on Python 2.x
       which not be maintained past 2020" with a clarification that this
@@ -19,9 +21,6 @@ lintian (2.5.84) UNRELEASED; urgency=medium
   * checks/source-copyright.pm:
     + [CL] Add the offending license name to the output of the
       "dep5-copyright-license-name-not-unique" tag.
-
-  * checks/{files.desc,menu-format.*}, data/menu-format/known-desktop-keys:
-    + [PW] Link to the latest version for all FreeDesktop standards
 
   * lib/Lintian/Collect/Package.pm:
     + [CL] Ensure directory names always end in a trailing "/" to prevent
