@@ -330,8 +330,7 @@ my @file_checks = (
 # to the debian/ source directory
 our @EOL_TERMINATORS_FILES = qw(control changelog);
 
-# List of files to check for a trailing whitespace characters relative
-# to the debian/ source directory
+# List of files to check for a trailing whitespace characters
 our @TRAILING_WHITESPACE_FILES = (
     ['debian/changelog'        => qr,\s+\n$,],
     ['debian/control'          => qr,\s+\n$,],
