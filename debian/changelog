@@ -2,6 +2,13 @@ lintian (2.5.85) UNRELEASED; urgency=medium
 
   XXX: generate tag summary
 
+  * checks/changelog-file.pm:
+    + [CL] Prevent false-positives in the non-consecutive-debian-revision
+      and possible-new-upstream-release-without-new-version tags by
+      skipping them if the source package was renamed.  Thanks to Andreas
+      Beckmann for the report.  (Closes: #896675)
+    + [CL] Include the offending version numbers in the output of the
+      non-consecutive-debian-revision tag.
   * checks/cruft.pm:
     + [CL] Drop now-misleading comment regarding trailing whitespace
       filenames being relative.
@@ -11,13 +18,6 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       "eg.", ellipsis ("..."), "etc.", splitting out the tests to make
       it clearer and to catch some other corner cases.  Thanks to Andreas
       Beckmann for the detailed report.  (Closes: #896671)
-  * checks/changelog-file.pm:
-    + [CL] Prevent false-positives in the non-consecutive-debian-revision
-      and possible-new-upstream-release-without-new-version tags by
-      skipping them if the source package was renamed.  Thanks to Andreas
-      Beckmann for the report.  (Closes: #896675)
-    + [CL] Include the offending version numbers in the output of the
-      non-consecutive-debian-revision tag.
 
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
