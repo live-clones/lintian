@@ -135,7 +135,7 @@ sub run {
             delete($build_systems{'debhelper'});
             $seen_dh = 1;
             $seencommand = 1;
-            $seen_dh_parallel = 1 if m/--parallel/;
+            $seen_dh_parallel = $. if m/--parallel/;
             $needbuilddepends = 1;
             $needtomodifyscripts = 1;
             while (m/\s--with(?:=|\s+)(['"]?)(\S+)\1/go) {
@@ -335,7 +335,7 @@ sub run {
     }
 
     tag 'debian-rules-uses-unnecessary-dh-argument', 'dh ... --parallel',
-      "(line $.)"
+      "(line $seen_dh_parallel)"
       if $seen_dh_parallel and $level >= 10;
 
     # Check the files in the debian directory for various debhelper-related

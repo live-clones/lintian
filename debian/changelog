@@ -14,6 +14,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       whitespace at end of files.
     + [CL] Drop now-misleading comment regarding trailing whitespace
       filenames being relative.
+  * checks/debhelper.pm:
+    + [CL] Don't use $. out-of-context when reporting on dh --parallel.
   * checks/description.pm:
     + [CL] Rework the description-synopsis-might-not-be-phrased-properly
       tag to ensure we do not cause false-positives for literal "e.g.",
