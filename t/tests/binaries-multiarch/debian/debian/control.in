@@ -19,4 +19,3 @@ Description: {$description}
  Note there is an explicitly pre-depends on multiarch-support, since
  older versions of debhelper might not use it yet.  dpkg-dev will
  remove the duplicate entry (if any).
-

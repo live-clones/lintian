@@ -12,4 +12,3 @@ override_dh_installdocs:
 	# This should (now) trigger a no-copyright-file (as there is no copyright file
 	# in the right location).
 	mv debian/copyright-old-style/usr/share/doc/copyright-old-style/copyright debian/copyright-old-style/usr/doc/copyright/copyright-old-style
-

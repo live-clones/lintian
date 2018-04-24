@@ -31,4 +31,3 @@ Description: {$description} (unknown profile)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
-

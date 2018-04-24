@@ -10,6 +10,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Include the offending version numbers in the output of the
       non-consecutive-debian-revision tag.
   * checks/cruft.pm:
+    + [CL] Make the file-contains-trailing-whitespace tag also emit for
+      whitespace at end of files.
     + [CL] Drop now-misleading comment regarding trailing whitespace
       filenames being relative.
   * checks/description.pm:

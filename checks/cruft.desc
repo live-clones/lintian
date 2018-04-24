@@ -905,9 +905,9 @@ Info: This file appears to contain one or more lines with trailing
  .
  Whilst typically harmless and merely unsightly, they can often cause
  difficult-to-spot issues where tools interpret the whitespace characters
- literally and are thus best avoided in their entirity.
+ literally. They are thus best avoided in their entirity.
  .
- Whitespace can be removed with the following code snippet:
+ Whitespace at the end of lines may be removed with the following:
  .
   $ sed -i -e 's@[[:space:]]*$@@g' debian/control debian/changelog
  .
@@ -917,6 +917,10 @@ Info: This file appears to contain one or more lines with trailing
  (eg. for Makefiles), you can use the following code snippet:
  .
   $ sed -i -e 's@[ ]*$@@g' debian/rules
+ .
+ To remove empty lines from the end of a file, you can use:
+ .
+  $ sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' debian/rules
 
 Tag: autotools-pkg-config-macro-not-cross-compilation-safe
 Severity: normal

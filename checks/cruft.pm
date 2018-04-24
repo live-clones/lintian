@@ -397,11 +397,20 @@ sub run {
         my $path = $info->index_resolved_path($file->[0]);
         next if not $path or not $path->is_open_ok;
         my $fd = $path->open;
+        my @empty_lines;
         while (my $line = <$fd>) {
+            if ($line eq "\n") {
+                push @empty_lines, $.;
+                next;
+            }
+            @empty_lines = (); # reset; line is not empty
             tag 'file-contains-trailing-whitespace', "$path (line $.)"
               if ($line =~ $file->[1]);
         }
         close($fd);
+        for my $num (@empty_lines) {
+            tag 'file-contains-trailing-whitespace', "$path (line $num)";
+        }
     }
 
     if (my $pycompat = $info->index_resolved_path('debian/pycompat')) {
