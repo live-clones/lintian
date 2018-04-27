@@ -41,6 +41,7 @@ our $EXCLUDE =join(
       .*-address-causes-mail-loops-or-bounces$
       ^wrong-debian-qa-address-set-as-maintainer$
       ^wrong-debian-qa-group-name$
+      ^changed-by-invalid-for-derivative$
       ^example.*interpreter.*
       ^example-script-.*$
       ^example-shell-script-.*$
