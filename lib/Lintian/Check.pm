@@ -209,6 +209,20 @@ sub check_maintainer {
                   if ($name ne 'Debian QA Group');
             }
         }
+
+        # Changed-by specific tests.
+        if ($field eq 'changed-by') {
+            my $DERIVATIVE_CHANGED_BY
+              = Lintian::Data->new('common/derivative-changed-by',
+                qr/\s*~~\s*/, sub { $_[1]; });
+
+            foreach my $re ($DERIVATIVE_CHANGED_BY->all) {
+                next if $maintainer =~ m/$re/;
+                my $explanation = $DERIVATIVE_CHANGED_BY->value($re);
+                tag "$field-invalid-for-derivative", $maintainer,
+                  "($explanation)";
+            }
+        }
     }
     return;
 }

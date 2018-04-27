@@ -1,0 +1,7 @@
+# Derivative-specific changed-by validation.
+#
+# Checked in order, any must match.
+#
+# format: $regex ~~ explanation
+
+.	~~	always matches

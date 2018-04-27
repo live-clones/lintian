@@ -27,6 +27,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Clarify that we should add an extra bit of whitespace for
       annotated release tags.
 
+  * lib/Lintian/Check.pm:
+    + [CL] Add support for derivative-specific "Changed-By" validation to
+      enforce additional restrictions on the uploader.
+
   * t/tests/{binaries-libc-link,legacy-libbaz}/desc:
     + [CL] Mark currently-failing tests as requiring file (<= 5.33) to
       ensure the testsuite passes whilst we wait for a resolution on the
