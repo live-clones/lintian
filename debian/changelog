@@ -27,6 +27,13 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Clarify that we should add an extra bit of whitespace for
       annotated release tags.
 
+  * t/tests/{binaries-libc-link,legacy-libbaz}/desc:
+    + [CL] Mark currently-failing tests as requiring file (<= 5.33) to
+      ensure the testsuite passes whilst we wait for a resolution on the
+      changes made in file 5.34 around shared library permissions affecting
+      the output of $fileinfo.  This does not resolve the underlying issue,
+      however.  See #896840 for more info.
+
  -- Chris Lamb <lamby@debian.org>  Mon, 23 Apr 2018 14:12:59 +0200
 
 lintian (2.5.84) unstable; urgency=medium
