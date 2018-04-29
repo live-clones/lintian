@@ -37,6 +37,9 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Add support for derivative-specific "Changed-By" validation to
       enforce additional restrictions on the uploader.
 
+  * t/tests/cruft-package-does-not-install-examples-symlink/*:
+    + [CL] Add a passing testcase for ensuring /usr/share/doc/$pkg/examples
+      can be a symlink for package-does-not-install-examples. (re. #897157)
   * t/tests/{binaries-libc-link,legacy-libbaz}/desc:
     + [CL] Mark currently-failing tests as requiring file (<= 5.33) to
       ensure the testsuite passes whilst we wait for a resolution on the
