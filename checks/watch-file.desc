@@ -205,4 +205,4 @@ Info: The watch file uses an unencrypted transport protocol for the
  transport such as HTTPS for anonymous read-only access.
  .
  Upstream may already provide a HTTPS variant of the URI. If not,
- please contact them and ask them consider adding one.
+ please contact them and ask them to consider adding one.
