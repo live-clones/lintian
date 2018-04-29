@@ -22,6 +22,8 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       "eg.", ellipsis ("..."), "etc.", splitting out the tests to make
       it clearer and to catch some other corner cases.  Thanks to Andreas
       Beckmann for the detailed report.  (Closes: #896671)
+    + [CL] Include the synopsis itself for context, etc. when emitting the
+      description-synopsis-might-not-be-phrased-properly tag.
   * checks/watch-file.desc:
     + [CL] Update description of debian-watch-uses-insecure-uri to clarify
       what to do if there is currently no secure URI.  Thanks to Andreas

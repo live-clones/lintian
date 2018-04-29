@@ -27,7 +27,7 @@ E: relations: needlessly-depends-on-awk pre-depends
 E: relations: no-copyright-file
 I: relations source: build-depends-on-python-dev-with-no-arch-any
 I: relations source: ored-build-depends-on-obsolete-package build-depends-indep: gs
-I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
+I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly "Duplicate library dependency relationships."
 I: relations-multiple-libs: ored-depends-on-obsolete-package suggests: gs
 I: relations: conflicts-with-version foobar (<< 5+5)
 I: relations: ored-depends-on-obsolete-package recommends: gs-aladdin

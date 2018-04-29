@@ -87,7 +87,8 @@ sub run {
         }
         if ($synopsis =~ m/(.*\.)(?:\s*$|\s+\S+)/i) {
             tag 'description-synopsis-might-not-be-phrased-properly',
-                 unless $1 =~ m/\s+etc\.$/
+              "\"$synopsis\""
+              unless $1 =~ m/\s+etc\.$/
               or $1 =~ m/\s+e\.?g\.$/
               or $1 =~ m/(?<!\.)\.\.\.$/;
         }

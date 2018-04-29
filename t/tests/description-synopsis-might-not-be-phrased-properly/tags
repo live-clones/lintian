@@ -1,5 +1,5 @@
-I: description-synopsis-might-not-be-phrased-properly-2-ellipsis: description-synopsis-might-not-be-phrased-properly
-I: description-synopsis-might-not-be-phrased-properly-4-ellipsis: description-synopsis-might-not-be-phrased-properly
-I: description-synopsis-might-not-be-phrased-properly-full-stop: description-synopsis-might-not-be-phrased-properly
-I: description-synopsis-might-not-be-phrased-properly-misspelt: description-synopsis-might-not-be-phrased-properly
-I: description-synopsis-might-not-be-phrased-properly-two-sentences: description-synopsis-might-not-be-phrased-properly
+I: description-synopsis-might-not-be-phrased-properly-2-ellipsis: description-synopsis-might-not-be-phrased-properly "This synopsis contains a 2-ellipsis .. and other words"
+I: description-synopsis-might-not-be-phrased-properly-4-ellipsis: description-synopsis-might-not-be-phrased-properly "This synopsis contains a 4-ellipsis .... and other words"
+I: description-synopsis-might-not-be-phrased-properly-full-stop: description-synopsis-might-not-be-phrased-properly "This synopsis ends with a full-stop."
+I: description-synopsis-might-not-be-phrased-properly-misspelt: description-synopsis-might-not-be-phrased-properly "This synopsis ends with mispelling of stretc."
+I: description-synopsis-might-not-be-phrased-properly-two-sentences: description-synopsis-might-not-be-phrased-properly "This synopsis starts a sentence. Then starts another."
