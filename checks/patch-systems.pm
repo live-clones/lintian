@@ -244,7 +244,9 @@ sub run {
         }
 
         foreach my $file ($dpdir->children('breadth-first')) {
-            next if $file->basename =~ /^README(\.patches)?$/;
+            next
+              if $file->basename =~ /^README(\.patches)?$/
+              or $file->basename =~ /\.in/g;
             # Use path relative to debian/patches for "subdir/foo"
             my $name = substr($file, length $dpdir);
             tag 'patch-file-present-but-not-mentioned-in-series', $name
