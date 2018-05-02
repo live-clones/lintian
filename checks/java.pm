@@ -98,7 +98,7 @@ sub run {
                 or $mver
                 > $MAX_BYTECODE->value('max-bytecode-existing-version')) {
                 # First public major version was 45 (Java1), latest
-                # version is 53 (Java9).
+                # version is 54 (Java10).
                 tag 'unknown-java-class-version', $jar_file,
                   "($class -> $mver)";
                 # Skip the rest of this Jar.

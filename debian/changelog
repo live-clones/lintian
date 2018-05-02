@@ -41,6 +41,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       what to do if there is currently no secure URI.  Thanks to Andreas
       Tille for the report.  (Closes: #897082)
 
+  * data/java/constants:
+    + [CL] Update bytecode checks for OpenJDK 10 add bytecode number for
+      OpenJDK 11.  (Closes: #897424)
+
   * doc/releases.md:
     + [CL] Clarify that we should add an extra bit of whitespace for
       annotated release tags.
