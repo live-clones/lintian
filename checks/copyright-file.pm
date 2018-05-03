@@ -335,7 +335,7 @@ qr/GNU (?:Lesser|Library) General Public License|(?-i:\bLGPL\b)/i
     }
 
     check_spelling($_, $group->info->spelling_exceptions,
-        $SPELLING_ERROR_IN_COPYRIGHT);
+        $SPELLING_ERROR_IN_COPYRIGHT, 0);
 
     # Now, check for linking against libssl if the package is covered
     # by the GPL.  (This check was requested by ftp-master.)  First,

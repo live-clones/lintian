@@ -17,6 +17,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
     + [CL] Also allow /usr/share/doc/$pkg/examples to be a symlink when
       checking for packages that ship examples.  Thanks to Rafael
       Laboissière for the report.  (Closes: #897157)
+  * checks/copyright-file.pm:
+    + [CL] Disable the duplicate word "spelling" detection in copyright
+      files to their extensive use of headings and other structures causing
+      false positives.  Thanks, Stuart Prescott.  (Closes: #897402)
   * checks/debhelper.pm:
     + [CL] Don't use $. out-of-context when reporting on dh --parallel.
   * checks/description.pm:

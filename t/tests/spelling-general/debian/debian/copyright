@@ -1,3 +1,5 @@
+This duplicate duplicate word should not trigger. (re. #897402)
+
 This is part of the testsuite of lintian. See the file debian/copyright
 in the lintian source directory for more details.
 
