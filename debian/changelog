@@ -68,6 +68,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       the output of $fileinfo.  This does not resolve the underlying issue,
       however.  See #896840 for more info.
 
+  * vendors/ubuntu/main/data/changes-file/known-dists:
+    + [CL] Apply patch from Adam Conrad to add cosmic as a known Ubuntu
+      distribution.  (Closes: #897638)
+
  -- Chris Lamb <lamby@debian.org>  Mon, 23 Apr 2018 14:12:59 +0200
 
 lintian (2.5.84) unstable; urgency=medium
