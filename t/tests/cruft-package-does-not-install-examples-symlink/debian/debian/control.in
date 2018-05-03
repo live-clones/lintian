@@ -16,14 +16,3 @@ Description: Has a symlink to examples
  be an empty package.
  .
  This package has a symlink to examples.
-
-Package: {$source}-common
-Architecture: all
-Depends: $\{misc:Depends\}
-Description: Has the examples
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.  It may
- be an empty package.
- .
- This package ships the examples.

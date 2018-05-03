@@ -1,12 +1,9 @@
 #!/usr/bin/make -f
 
-PKG = $(shell dh_listpackages | sort | head -n1)
+PKG = $(shell dh_listpackages)
 
 %:
 	dh $@
 
-override_dh_installexamples:
-	dh_installexamples -p $(PKG)-common examples/*
-
 override_dh_link:
-	dh_link /usr/share/doc/$(PKG)-common/examples /usr/share/doc/$(PKG)/examples
+	dh_link /etc /usr/share/doc/$(PKG)/examples
