@@ -1525,15 +1525,17 @@ sub unfold {
 
 sub check_field {
     my ($info, $field, $data) = @_;
-    my @seen;
-    $info->relation($field)->visit(sub { push @seen, $_; }, VISIT_PRED_NAME);
 
-    my $has_default_mta = any { $_ eq 'default-mta' } @seen;
-    my $has_mail_transport_agent = any { $_ eq 'mail-transport-agent' } @seen;
+    my $has_default_mta
+      = $info->relation($field)->matches(qr/^default-mta$/, VISIT_PRED_NAME);
+    my $has_mail_transport_agent = $info->relation($field)
+      ->matches(qr/^mail-transport-agent$/, VISIT_PRED_NAME);
+
+    tag 'default-mta-dependency-not-listed-first',"$field: $data"
+      if $info->relation($field)
+      ->matches(qr/\|\s+default-mta/, VISIT_OR_CLAUSE_FULL);
 
     if ($has_default_mta) {
-        tag 'default-mta-dependency-not-listed-first',"$field: $data"
-          if $seen[0] ne 'default-mta';
         tag 'default-mta-dependency-does-not-specify-mail-transport-agent',
           "$field: $data"
           unless $has_mail_transport_agent;

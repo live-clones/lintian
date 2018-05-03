@@ -31,6 +31,10 @@ lintian (2.5.85) UNRELEASED; urgency=medium
       Beckmann for the detailed report.  (Closes: #896671)
     + [CL] Include the synopsis itself for context, etc. when emitting the
       description-synopsis-might-not-be-phrased-properly tag.
+  * checks/fields.pm:
+      + [CL] Correct a default-mta-dependency-not-listed-first false-
+        positive where we incorrect emitted the tag for, e.g.
+        "Depends: a, default-mta | b".  (Closes: #897166)
   * checks/patch-systems.pm:
     + [CL] Ignore templated ".in" files in debian/patches for the
       patch-file-present-but-not-mentioned-in-series tag.
